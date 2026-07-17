@@ -3,16 +3,20 @@ import { test, expect } from "@playwright/test";
 test.describe("Homepage learning-platform transparency", () => {
   test("homepage surfaces the courses and the public resource map", async ({ page }) => {
     await page.goto("/");
-    const section = page.getByTestId("ressourcen-section");
-    await section.scrollIntoViewIfNeeded();
-    await expect(section).toContainText("Vier Kurse");
-    await expect(section).toContainText("KI-Führerschein");
-    await expect(section).toContainText("Lernbücher");
-    await expect(section).toContainText("Arbeitsvorlagen");
-    await expect(section).toContainText("Praxisbeispiele");
-    await expect(section).toContainText("Workshops");
-    await expect(section).toContainText("Open Source");
-    await expect(section).toContainText("Blog");
+    // Courses live in the Kurse section...
+    const kurse = page.getByTestId("kurse-section");
+    await kurse.scrollIntoViewIfNeeded();
+    await expect(kurse).toContainText("Vier Kurse");
+    await expect(kurse).toContainText("KI-Führerschein");
+    // ...and the supporting resources in their own Ressourcen section.
+    const ressourcen = page.getByTestId("ressourcen-section");
+    await ressourcen.scrollIntoViewIfNeeded();
+    await expect(ressourcen).toContainText("Lernbücher");
+    await expect(ressourcen).toContainText("Arbeitsvorlagen");
+    await expect(ressourcen).toContainText("Praxisbeispiele");
+    await expect(ressourcen).toContainText("Workshops");
+    await expect(ressourcen).toContainText("Open Source");
+    await expect(ressourcen).toContainText("Blog");
   });
 
   test("homepage explains the simplified public/private boundary", async ({ page }) => {

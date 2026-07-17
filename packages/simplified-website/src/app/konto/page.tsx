@@ -119,12 +119,11 @@ export default async function KontoPage() {
               synchronisiert.
             </p>
           </div>
-          <form
-            action="/auth/logout"
-            method="post"
-            className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-3 font-mono text-[12px] font-bold uppercase tracking-[0.08em] text-muted-foreground shadow-tile transition-colors hover:border-foreground hover:text-foreground"
-          >
-            <button type="submit" className="inline-flex items-center gap-2">
+          <form action="/auth/logout" method="post">
+            <button
+              type="submit"
+              className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-3 font-mono text-[12px] font-bold uppercase tracking-[0.08em] text-muted-foreground shadow-tile transition-colors hover:border-foreground hover:text-foreground"
+            >
               Logout
               <LogOut size={14} aria-hidden="true" />
             </button>

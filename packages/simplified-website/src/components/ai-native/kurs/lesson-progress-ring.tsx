@@ -115,7 +115,7 @@ export function LessonProgressRing({
             `${sectionsRead}/${totalSections}`
           )
         ) : (
-          `, /${totalSections}`
+          `0/${totalSections}`
         )}
       </span>
     </div>

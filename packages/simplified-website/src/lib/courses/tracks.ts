@@ -50,40 +50,6 @@ export function trackMetaFor(slug: string): TrackMeta {
   );
 }
 
-/** Section headers + explainers for the three-track /kurse layout. */
-export const TRACK_SECTIONS: ReadonlyArray<{
-  readonly track: CourseTrack;
-  readonly accent: TrackAccent;
-  readonly title: string;
-  readonly eyebrow: string;
-  readonly blurb: string;
-}> = [
-  {
-    track: "zertifikat",
-    accent: "kupfer",
-    title: "Zertifikatskurse",
-    eyebrow: "Deutsch · mit Nachweis",
-    blurb:
-      "Der Lernpfad in vier Schritten, auf Deutsch, mit gespeichertem Fortschritt und Teilnahmebestätigung. Fang oben an und arbeite dich vor.",
-  },
-  {
-    track: "github-lab",
-    accent: "sand",
-    title: "GitHub-Labs",
-    eyebrow: "Englisch · Open Source · extern",
-    blurb:
-      "Technische Vertiefung als interaktive Browserkurse, quelloffen auf GitHub (MIT). Extern gehostet, ohne Konto, mit Live-Simulationen.",
-  },
-  {
-    track: "brainster",
-    accent: "amber",
-    title: "Angewandte Kurse",
-    eyebrow: "Praxis · Live gebaut",
-    blurb:
-      "Kurse aus echten Workshops: ein Arbeitsablauf, den du Schritt für Schritt mitbaust, mit Material zum Nachbauen mit eigenen Zahlen.",
-  },
-];
-
 /** Applied ("Brainster") course track. Business reports is live; forecasting is in preparation. */
 export interface BrainsterCourse {
   readonly slug: string;

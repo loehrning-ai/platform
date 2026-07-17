@@ -21,6 +21,11 @@ import {
   importProgress,
   buildProgressUrl,
 } from "@/lib/course/progress";
+import {
+  getWorkshopQuestionCount,
+  getWorkshopPassThreshold,
+  getWorkshopTimeLimitMinutes,
+} from "@/lib/course/config";
 import type { BlockSummary } from "@/lib/course/types";
 
 // Client half of the course hub (performance hardening): receives slim
@@ -317,7 +322,9 @@ export function KursContent({ blocks, totalLessons }: KursContentProps) {
                   <div>
                     <h2 className="text-lg font-semibold">Workshop-Quiz</h2>
                     <p className="text-sm text-muted-foreground">
-                      25 Praxisfragen &middot; 70% zum Bestehen &middot; 30 Minuten
+                      {getWorkshopQuestionCount(COURSE_SLUG)} Praxisfragen &middot;{" "}
+                      {Math.round(getWorkshopPassThreshold(COURSE_SLUG) * 100)}% zum
+                      Bestehen &middot; {getWorkshopTimeLimitMinutes(COURSE_SLUG)} Minuten
                     </p>
                   </div>
                 </div>

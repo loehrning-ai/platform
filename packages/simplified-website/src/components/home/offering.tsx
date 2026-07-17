@@ -8,7 +8,7 @@ import { EASE_OUT_EXPO } from "@/lib/animations";
 import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
 import { PersonaCourseLinks } from "@/app/kurse/persona-filter";
 import { Card, IconTile } from "@/components/ui/card";
-import { trackMetaFor } from "@/lib/courses/tracks";
+import { courseBadges, trackMetaFor } from "@/lib/courses/tracks";
 import { iconByName } from "@/lib/courses/track-icon";
 
 // The three GitHub-Labs previews shown in the imagery band. Real screenshots
@@ -20,6 +20,20 @@ const META_LINE =
   "font-mono text-[10.5px] uppercase tracking-[0.1em] text-muted-foreground";
 const BADGE_CHIP =
   "inline-flex w-fit items-center rounded-full bg-card-hover px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground";
+
+// Honest per-course badges (Deutsch · mit Zertifikat / mit Lernnachweis), driven
+// by COURSE_FACTS so the homepage matches /kurse instead of a hardcoded label.
+function CourseBadges({ slug }: { readonly slug: string }) {
+  return (
+    <span className="flex flex-wrap gap-1.5">
+      {courseBadges(slug).map((badge) => (
+        <span key={badge.label} className={BADGE_CHIP}>
+          {badge.label}
+        </span>
+      ))}
+    </span>
+  );
+}
 
 export function Offering() {
   const prefersReducedMotion = useReducedMotion();
@@ -127,7 +141,7 @@ export function Offering() {
               </div>
 
               <div className="flex shrink-0 flex-col gap-3 border-t border-border pt-5 md:min-w-[180px] md:border-l md:border-t-0 md:pl-6 md:pt-0">
-                <span className={BADGE_CHIP}>{featuredMeta.badge}</span>
+                <CourseBadges slug={featured.slug} />
                 <dl className="flex flex-col gap-1.5 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
                   <div className="flex items-center justify-between gap-3">
                     <dt>Dauer</dt>
@@ -181,7 +195,7 @@ export function Offering() {
                     {course.tagline}
                   </p>
                   <div className="mt-5 flex flex-col gap-2">
-                    <span className={BADGE_CHIP}>{meta.badge}</span>
+                    <CourseBadges slug={course.slug} />
                     <span className={`flex flex-wrap gap-x-2 gap-y-1 ${META_LINE}`}>
                       <span>{course.duration}</span>
                       <span aria-hidden="true">·</span>
