@@ -108,7 +108,7 @@ export function KursContent({ blocks, totalLessons }: KursContentProps) {
           {/* Header */}
           <div>
             <p className="mb-2 font-mono text-xs font-bold uppercase tracking-wider text-brand-orange">
-              Ihr Kurs
+              Dein Kurs
             </p>
             <h1 className="text-3xl font-bold tracking-[-0.03em] sm:text-4xl">
               KI-Führerschein
@@ -123,7 +123,7 @@ export function KursContent({ blocks, totalLessons }: KursContentProps) {
           <div className="border border-border/50 bg-card/30 px-5 py-4 text-xs leading-relaxed text-muted-foreground">
             <span className="font-bold uppercase tracking-wider text-muted">Hinweis</span>
             <span className="mx-2 text-border">|</span>
-            Dieser Kurs vermittelt Wissen über KI-Kompetenz nach EU AI Act Artikel 4. Er ersetzt keine Rechtsberatung. Für konkrete Compliance-Fragen konsultieren Sie eine Rechtsanwältin oder einen Compliance-Beauftragten.
+            Dieser Kurs vermittelt Wissen über KI-Kompetenz nach EU AI Act Artikel 4. Er ersetzt keine Rechtsberatung. Für konkrete Compliance-Fragen wende dich an eine Rechtsanwältin oder einen Compliance-Beauftragten.
           </div>
 
           {/* Import success notification */}

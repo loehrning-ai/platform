@@ -99,7 +99,7 @@ export function KursContent({ blocks, totalLessons }: KursContentProps) {
 
           <div>
             <p className="mb-2 font-mono text-xs font-bold uppercase tracking-wider text-brand-orange">
-              Ihr Kurs
+              Dein Kurs
             </p>
             <h1 className="text-3xl font-bold tracking-[-0.03em] sm:text-4xl">
               KI und Gesellschaft
