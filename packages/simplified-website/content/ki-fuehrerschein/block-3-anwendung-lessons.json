@@ -1,0 +1,373 @@
+{
+  "blockId": "block_3",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-06-22",
+  "nextReview": "2026-12-22",
+  "reviewCadence": "vendor",
+  "riskClass": "vendor",
+  "triggerEvents": [
+    "vendor-api-change",
+    "model-deprecation"
+  ],
+  "lessons": [
+    {
+      "id": "block_3_lesson_1",
+      "blockId": "block_3",
+      "number": 1,
+      "title": "E-Mail beantworten mit KI",
+      "subtitle": "Reklamationen professionell und schnell beantworten",
+      "durationMinutes": 8,
+      "keyConcepts": [
+        "Prompt Engineering",
+        "KI-Assistent",
+        "Reklamation",
+        "Prüfschritt"
+      ],
+      "sections": [
+        {
+          "id": "block_3_lesson_1_section_1",
+          "title": "Die Situation und Schritt-für-Schritt-Anleitung",
+          "readTimeMinutes": 4,
+          "content": "In deinem Posteingang liegt eine Kundenreklamation. Firma Bergmann, Bestandskunde seit 4 Jahren, bestellt regelmäßig Hydraulikkomponenten. Die letzte Lieferung kam 8 Arbeitstage zu spät. Der Einkaufsleiter schreibt:\n\n\"Sehr geehrte Damen und Herren, die Lieferung unserer Bestellung HB-2026-0412 ist mit 8 Arbeitstagen Verspätung eingetroffen. Das hat unsere Produktion erheblich gestört. Wir erwarten eine Stellungnahme und möchten wissen, wie Sie sicherstellen, dass das nicht wieder passiert.\"\n\nDu musst antworten. Professionell. Schnell. Ohne falsche Zusagen.\n\n**Mit Copilot in Outlook** (wenn du M365 in deinem Unternehmen nutzt):\n\n1. Öffne die E-Mail von Firma Bergmann in Outlook.\n2. Klick auf **Antworten**.\n3. Klick auf das **Copilot-Symbol** in der Symbolleiste.\n4. Wähle **Mit Copilot entwerfen**.\n5. Gib folgenden Prompt ein: \"Antworte professionell auf diese Reklamation. Ton: verständnisvoll aber sachlich. Maximal 150 Wörter. Biete eine Lösung an, mache keine Zusagen ohne Rücksprache mit dem Vertrieb.\"\n6. Copilot generiert einen Entwurf. Lies ihn.\n7. Klick bei Bedarf auf **Anpassen**.\n8. Klick auf **Einfügen**, wenn der Entwurf passt.\n\n**Kostenlose Alternativen** (ohne M365):\n\nDu kannst dieselbe Aufgabe mit diesen kostenlosen Tools erledigen. Kopiere den Prompt und die Kunden-E-Mail in das Tool deiner Wahl. Entferne vorher alle personenbezogenen Daten (Kundennamen, Kundennummern), die für die Antwort nicht nötig sind:\n\n- **ChatGPT** (kostenlose Version, OpenAI): Verbraucherangebot; prüfe Datenkontrollen und aktuelle Bedingungen. Nicht für Firmendaten ohne Freigabe.\n- **Gemini** (kostenlose Version von Google): Verbraucherangebot; prüfe Datenkontrollen und aktuelle Bedingungen. Nicht für Firmendaten ohne Freigabe.\n- **Le Chat** (kostenloser Assistent von Mistral AI, einem europäischen Anbieter): Französischer Anbieter; Firmensitz und Datenregion sind nicht dasselbe. Prüfe die aktuellen Vertrags- und Verarbeitungsbedingungen.",
+          "keyTakeaway": "Mit einem KI-Assistenten beantwortest du eine Kundenreklamation in 4 statt 12 Minuten. Der richtige Prompt steuert Ton, Länge und Einschränkungen."
+        },
+        {
+          "id": "block_3_lesson_1_section_2",
+          "title": "Zeitvergleich, Prüfschritt und Prompt-Analyse",
+          "readTimeMinutes": 4,
+          "content": "**Zeitvergleich:** Ohne KI brauchst du 12 Minuten (Formulierung überlegen, schreiben, Ton prüfen). Mit KI brauchst du 4 Minuten (Ton prüfen und anpassen plus Faktencheck). Ersparnis: 8 Minuten pro Reklamationsantwort. Bei 3 Reklamationen pro Woche: 24 Minuten.\n\n**Der Prüfschritt:** Bevor du auf Senden klickst, drei Fragen:\n\n1. **Stimmt der Ton?** Verständnisvoll, aber nicht unterwürfig. Sachlich, aber nicht kalt.\n2. **Keine falschen Zusagen?** KI neigt dazu, konkrete Liefertermine oder Kompensationen anzubieten. Streiche alles, was du nicht autorisiert bist zuzusagen.\n3. **Keine vertraulichen Daten?** Prüfe, ob der Entwurf interne Informationen enthält, die der Kunde nicht sehen soll.\n\nDieser Prüfschritt dauert 60 Sekunden. Überspring ihn nie.\n\n**Warum der Prompt funktioniert:** Der Prompt enthält vier Steuerungselemente:\n\n1. **\"Professionell\"** setzt den Grundton.\n2. **\"Verständnisvoll aber sachlich\"** verhindert übertriebenes Entschuldigen und kalte Sachlichkeit.\n3. **\"Maximal 150 Wörter\"** erzwingt Kürze.\n4. **\"Mache keine Zusagen ohne Rücksprache mit dem Vertrieb\"** ist die wichtigste Einschränkung. KI bietet gerne konkrete Lösungen an: Rabatte, Expresslieferungen, Gutschriften. Nichts davon hast du autorisiert.\n\nOhne diese Steuerungselemente erhältst du einen generischen Text, den du komplett umschreiben musst. Mit ihnen erhältst du einen Entwurf, den du in 2 Minuten finalisierst.",
+          "keyTakeaway": "Der Prüfschritt (Ton, Zusagen, vertrauliche Daten) dauert 60 Sekunden und darf nie übersprungen werden. Ein guter Prompt enthält Ton, Länge und Einschränkungen."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_3_lesson_1_q1",
+          "questionText": "Du lässt einen KI-Assistenten eine Reklamationsantwort entwerfen. Was musst du vor dem Senden unbedingt prüfen?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Ob die E-Mail mindestens 300 Wörter lang ist",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Ob die KI konkrete Zusagen gemacht hat, die du nicht autorisiert bist zu geben",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Ob die E-Mail eine automatische Signatur enthält",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Ob der Entwurf auf Englisch verfasst wurde",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "KI neigt dazu, konkrete Lösungen anzubieten: Rabatte, Expresslieferungen, Gutschriften. Diese Zusagen sind nicht autorisiert. Der Prüfschritt vor dem Senden umfasst: Ton, keine falschen Zusagen, keine vertraulichen Daten."
+        },
+        {
+          "id": "block_3_lesson_1_q2",
+          "questionText": "Welches Steuerungselement im Prompt ist laut dem Kurs das wichtigste bei einer Reklamationsantwort?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "\"Professionell\" für den Grundton",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "\"Maximal 150 Wörter\" für die Kürze",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "\"Mache keine Zusagen ohne Rücksprache mit dem Vertrieb\"",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "\"Verwende Aufzählungszeichen\"",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Die Einschränkung \"Mache keine Zusagen ohne Rücksprache mit dem Vertrieb\" ist die wichtigste, weil KI gerne konkrete Lösungen anbietet (Rabatte, Expresslieferungen, Gutschriften), die du nicht autorisiert hast."
+        }
+      ],
+      "widgets": [
+        {
+          "kind": "compare",
+          "placement": "after-intro",
+          "courseSlug": "ki-fuehrerschein",
+          "props": {
+            "title": "Gleiche Aufgabe, zwei Prompts",
+            "badLabel": "Schwacher Prompt",
+            "goodLabel": "Starker Prompt",
+            "bad": "Schreib mir eine Antwort auf diese Kunden-Mail.",
+            "good": "Rolle: Du bist Kundenservice-Mitarbeiterin eines Handwerksbetriebs. Kontext: Der Kunde reklamiert eine um zwei Wochen verspätete Lieferung. Aufgabe: Schreibe eine Antwort, die sich entschuldigt, um Verständnis bittet und einen Rückruf durch den Vertrieb bis morgen 12 Uhr ankündigt. Format: höflicher E-Mail-Text, maximal 120 Wörter, mit Anrede und Gruß. Vorgaben: keine Zusagen zu Terminen oder Rabatten ohne Freigabe, kein Fachjargon, keine Schuldzuweisung an Lieferanten.",
+            "note": "Der starke Prompt folgt dem RCTFC-Schema (Rolle, Kontext, Aufgabe, Format, Vorgaben). Je präziser die Eingabe, desto weniger musst du an der Ausgabe nacharbeiten."
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_3_lesson_2",
+      "blockId": "block_3",
+      "number": 2,
+      "title": "Meeting zusammenfassen",
+      "subtitle": "Meeting-Protokolle in 5 statt 30 Minuten",
+      "durationMinutes": 7,
+      "keyConcepts": [
+        "KI-Assistent",
+        "Meeting-Protokoll",
+        "Action Items",
+        "Datenschutz"
+      ],
+      "sections": [
+        {
+          "id": "block_3_lesson_2_section_1",
+          "title": "Variante A: Copilot in Microsoft Teams",
+          "readTimeMinutes": 3,
+          "content": "Du kommst aus einem 30-Minuten-Meeting. Fünf Teilnehmer: Vertriebsleitung, zwei Außendienstmitarbeitende, Innendienst, Marketingleitung. Es ging um die Pipeline, einen Neukunden, eine Messevorbereitung und ein CRM-Problem. Du musst ein Protokoll schreiben. Ohne KI dauert das 20 bis 30 Minuten. Mit KI unter 5.\n\n**Variante A: Copilot in Microsoft Teams** (wenn du M365 nutzt)\n\nWenn das Meeting in Teams stattfand und die Aufzeichnung aktiviert war:\n\n1. Öffne den Teams-Chat des Meetings.\n2. Klick auf **Zusammenfassung** (oder **Recap**) im oberen Bereich.\n3. Copilot zeigt automatisch: Zusammenfassung, Aufgaben, Schlüsselmomente.\n4. Klick auf **Aufgaben**, um die erkannten Action Items zu sehen.\n5. Korrigiere die Zuordnung der Verantwortlichen, falls die KI Namen verwechselt hat.\n\nDas dauert 3 Minuten. Inklusive Korrektur.\n\n**Typische Fehler bei automatischen Meeting-Zusammenfassungen:** KI verwechselt gelegentlich Sprecher, wenn mehrere Personen ähnliche Stimmen haben. Prüfe immer, ob die Aufgaben den richtigen Personen zugeordnet sind. Außerdem fasst KI beiläufige Bemerkungen manchmal als Entscheidungen zusammen. \"Wäre schön, wenn wir das mal angehen\" ist kein Beschluss. Streiche alles, was nicht eindeutig entschieden wurde.",
+          "keyTakeaway": "Automatische Meeting-Zusammenfassungen erstellen Protokolle in 3 Minuten, verwechseln aber gelegentlich Sprecher und interpretieren beiläufige Bemerkungen als Beschlüsse."
+        },
+        {
+          "id": "block_3_lesson_2_section_2",
+          "title": "Variante B: Manuell mit Prompt",
+          "readTimeMinutes": 4,
+          "content": "Wenn das Meeting nicht aufgezeichnet wurde oder du kein M365 hast, nutze deine handschriftlichen Notizen oder Stichpunkte mit folgendem Prompt:\n\n\"Fasse folgendes Protokoll zusammen. Extrahiere: (1) Entscheidungen (2) Aufgaben mit Verantwortlichen und Fristen (3) Offene Fragen (4) Nächste Schritte\"\n\n**Vorher (deine Stichpunkte):**\n- Pipeline 1,2 Mio offen, 400k heiss\n- Neukunde Stöcker will Pilot Pred. Maintenance, 35k\n- Hartmann will Wartungsvertrag auf 2. Werk, 8k/Monat, Deadline 15.04.\n- CRM-Daten veraltet, 30% ohne aktuelle Telefonnr.\n- Aksoy braucht techn. Datenblatt PM-Lösung\n\n**Nachher (strukturiertes Protokoll):**\n- **Entscheidungen:** Hartmann-Angebot hat Priorität. CRM-Bereinigung im April genehmigt.\n- **Aufgaben:** Nowak: Angebot Hartmann bis 07.04. / Richter: CRM-Bereinigung planen / Marketing: Datenblatt PM bis 10.04.\n- **Offene Fragen:** Entscheider bei Stöcker (techn. Leiter vs. GF)?\n- **Nächste Schritte:** Außendienst liefert aktuelle Kontaktdaten für CRM.\n\nZeitersparnis: 15 bis 25 Minuten pro Meeting.\n\n**Wichtig bei dieser Variante:** Kopiere nur deine eigenen Notizen in das KI-Tool. Keine vollständigen Meetingaufzeichnungen mit Personennamen und internen Zahlen in kostenlose Tools eingeben. Für Personalgespräche, Betriebsratssitzungen, Disziplinarverfahren oder vertrauliche Strategiediskussionen gilt: handschriftliches Protokoll, kein KI-Tool. Das schützt die betroffenen Personen.\n\n**Welches Tool für Variante B:** ChatGPT (kostenlose Version), Gemini oder Le Chat sind geeignet, solange keine personenbezogenen oder vertraulichen Firmendaten in den Prompt eingehen.",
+          "keyTakeaway": "Zeitersparnis: 15 bis 25 Minuten pro Meeting. Für Personalgespräche und Disziplinarverfahren: handschriftliches Protokoll, kein KI-Tool."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_3_lesson_2_q1",
+          "questionText": "Welchen typischen Fehler machen automatische KI-Meeting-Zusammenfassungen?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Sie löschen die Meeting-Aufzeichnung nach der Zusammenfassung",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Sie verwechseln gelegentlich Sprecher und fassen beiläufige Bemerkungen als Entscheidungen zusammen",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Sie können nur englische Meetings zusammenfassen",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Sie senden die Zusammenfassung automatisch an alle Teilnehmer",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "KI verwechselt gelegentlich Sprecher bei ähnlichen Stimmen und interpretiert beiläufige Bemerkungen wie \"Wäre schön, wenn wir das mal angehen\" als Beschlüsse. Beides muss manuell korrigiert werden."
+        },
+        {
+          "id": "block_3_lesson_2_q2",
+          "questionText": "Welche Art von Meeting darf auf keinen Fall mit KI zusammengefasst werden?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Vertriebsmeetings mit Pipeline-Besprechung",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Wöchentliche Team-Standups",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Personalgespräche wie Abmahnungen oder Gehaltsverhandlungen",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Meetings mit mehr als 5 Teilnehmern",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Meetings mit sensiblen Inhalten (Personalgespräche, Betriebsratssitzungen, Disziplinarverfahren, vertrauliche Strategiediskussionen) dürfen nicht mit KI zusammengefasst werden. Personenbezogene Daten besonderer Kategorien gehören in kein externes Tool."
+        }
+      ]
+    },
+    {
+      "id": "block_3_lesson_3",
+      "blockId": "block_3",
+      "number": 3,
+      "title": "Daten analysieren mit KI",
+      "subtitle": "Quartalszahlen auswerten ohne Formelkenntnisse",
+      "durationMinutes": 8,
+      "keyConcepts": [
+        "Datenanalyse",
+        "Pivot-Tabelle",
+        "Stichprobenprüfung",
+        "Datenschutz"
+      ],
+      "sections": [
+        {
+          "id": "block_3_lesson_3_section_1",
+          "title": "Schritt für Schritt: Daten analysieren",
+          "readTimeMinutes": 4,
+          "content": "Dein Chef will bis 15 Uhr die Quartalszahlen ausgewertet haben. Du hast eine Excel-Tabelle mit 4 Produktlinien und 4 Quartalen. Du bist kein Excel-Experte. Normalerweise verbringst du 45 Minuten mit Formeln, Pivot-Tabellen und Diagrammen. Heute nicht.\n\n**Mit Copilot in Excel** (wenn du M365 nutzt):\n\n1. Öffne die Excel-Datei mit deinen Quartalszahlen.\n2. Stelle sicher, dass die Daten als **Tabelle** formatiert sind (Strg+T).\n3. Klick auf das **Copilot-Symbol** in der Symbolleiste.\n4. Gib ein: \"Analysiere diese Tabelle. Finde die Top-5 Produkte nach Umsatz. Zeige den Trend über die letzten 4 Quartale. Markiere Ausreißer.\"\n5. Copilot zeigt dir eine Analyse mit Diagrammen.\n\n**Kostenlose Alternative mit ChatGPT oder Le Chat:**\n\nDu kannst die Zahlen (als Text oder CSV) in ChatGPT (kostenlose Version) oder Le Chat einfügen und denselben Prompt verwenden. Wichtig: Keine internen Quartalszahlen in kostenlose Tools eingeben, wenn sie vertraulich sind (Stufe 3). Für vertrauliche Finanzdaten: Copilot im Unternehmens-Tenant oder lokale KI verwenden.\n\n**Beispiel: Was die KI findet**\n\nBei einer Tabelle mit 4 Produktlinien (HZ-300, LA-500, PV-100, KM-800) über 4 Quartale erkennt die KI:\n- **KM-800** ist die umsatzstärkste Produktlinie (2.265 TEUR gesamt, stabiler Aufwärtstrend).\n- **LA-500** zeigt einen **Einbruch** von Q2 zu Q4 (395 auf 290 TEUR). Das ist der Ausreißer.\n- **HZ-300** und **PV-100** wachsen stetig, aber langsam.",
+          "keyTakeaway": "KI-Assistenten schreiben Formeln im Hintergrund und liefern nicht nur Zahlen, sondern Interpretationen. Für vertrauliche Finanzdaten nur Copilot oder lokale KI verwenden."
+        },
+        {
+          "id": "block_3_lesson_3_section_2",
+          "title": "Prüfschritt und Warnung bei Finanzdaten",
+          "readTimeMinutes": 4,
+          "content": "**Warum das funktioniert:** Du brauchst keine Excel-Kenntnisse. KI schreibt die Formeln im Hintergrund: SUMME, MITTELWERT, prozentuale Veränderungen und bedingte Formatierungen. Der entscheidende Vorteil: KI liefert nicht nur Zahlen, sondern Interpretationen.\n\n**Prüfschritt:**\n\n1. **Stichproben prüfen.** Wähle 2 bis 3 Werte und rechne nach. Wenn die KI 23% sagt und du bei 26,6% landest, hat sie möglicherweise einen anderen Bezugspunkt gewählt. Frag nach.\n2. **Kontext ergänzen.** KI weiß nicht, warum ein Produkt eingebrochen ist. Vielleicht gab es einen Produktrückruf. Diese Information musst du hinzufügen.\n3. **Keine Prognosen übernehmen.** Wenn die KI sagt \"Q1 2026 wird voraussichtlich bei 270 TEUR liegen\", ist das eine statistische Extrapolation. Keine Marktanalyse.\n\n**Datenschutz bei Finanzdaten:**\n\nMicrosoft 365 Copilot arbeitet innerhalb der Microsoft-365-Dienstgrenze. Nutze ihn für interne Daten nur, wenn Vertrag, Tenant-Geografie, Berechtigungen und Datenklassen betrieblich geprüft und freigegeben sind.\n\nChatGPT (kostenlose Version) ist für vertrauliche Umsatzzahlen, Deckungsbeiträge oder Margenanalysen **nicht** geeignet. Für öffentlich zugängliche Daten oder eigene Lernübungen ohne Firmendaten kannst du die kostenlose Version nutzen.",
+          "keyTakeaway": "Immer Stichproben nachrechnen, da KI unterschiedliche Bezugspunkte wählen kann. Vertrauliche Finanzdaten nur in Copilot oder Enterprise-KI eingeben."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_3_lesson_3_q1",
+          "questionText": "Ein KI-Assistent analysiert deine Quartalszahlen und meldet einen Umsatzrückgang von 23%. Was solltest du tun?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Die Zahl direkt in den Bericht übernehmen, KI rechnet korrekt",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "2 bis 3 Stichproben manuell nachrechnen und den Bezugspunkt prüfen",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Die gesamte Analyse verwerfen und manuell neu beginnen",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Den Prompt nochmals eingeben, bis die KI eine andere Zahl liefert",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "KI kann unterschiedliche Bezugspunkte wählen (z.B. Q1 statt Q2), was zu abweichenden Prozentwerten führt. Stichproben prüfen und bei Abweichungen nachfragen ist der richtige Prüfschritt."
+        },
+        {
+          "id": "block_3_lesson_3_q2",
+          "questionText": "Warum dürfen vertrauliche Umsatzzahlen nicht in die kostenlose ChatGPT-Version eingegeben werden?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Die kostenlose Version hat eine zu kleine Zeichenbegrenzung",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Für das Verbraucherangebot fehlen dem Betrieb ein geprüfter Vertrag, eine Freigabe und verbindliche Datenkontrollen",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Die kostenlose Version kann keine Zahlen verarbeiten",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Copilot ist kostenlos und ChatGPT kostenpflichtig",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Ein nicht freigegebenes Verbraucherangebot hat keinen betrieblich geprüften Vertrags- und Konfigurationsrahmen. Nutze vertrauliche Finanzdaten nur in einem ausdrücklich freigegebenen Unternehmensprodukt; auch dort müssen Datenklasse, Vertrag, Berechtigungen und Region geprüft sein."
+        }
+      ]
+    },
+    {
+      "id": "block_3_lesson_4",
+      "blockId": "block_3",
+      "number": 4,
+      "title": "Bericht schreiben",
+      "subtitle": "Vom Stichpunkt zum Bericht in 10 Minuten",
+      "durationMinutes": 7,
+      "keyConcepts": [
+        "Statusbericht",
+        "Strukturierung",
+        "Priorisierung",
+        "KI-Assistent"
+      ],
+      "sections": [
+        {
+          "id": "block_3_lesson_4_section_1",
+          "title": "Schritt für Schritt: Bericht erstellen",
+          "readTimeMinutes": 4,
+          "content": "Jeden Freitag schreibst du einen Statusbericht. 7 Stichpunkte aus deiner Woche müssen in einen lesbaren Bericht für die Geschäftsführung. Normalerweise brauchst du 45 Minuten: Formulieren, Strukturieren, Korrekturlesen. Heute brauchst du 10.\n\n**Mit einem KI-Assistenten deiner Wahl:**\n\n1. Öffne ChatGPT (kostenlose Version), Le Chat, Gemini oder Copilot.\n2. Gib ein: \"Erstelle aus diesen Stichpunkten einen strukturierten Bericht. Format: Zusammenfassung (3 Sätze), Details als Unterpunkte, Nächste Schritte mit Verantwortlichen.\"\n3. Füge deine Stichpunkte ein. Kein Unternehmensname oder vertrauliche Zahlen nötig, wenn der Bericht intern ist.\n4. Die KI generiert einen strukturierten Bericht.\n5. Lies, korrigiere, gib frei.\n\n**Hinweis zum Tool:** Für einen internen Statusbericht ohne streng vertrauliche Daten (Stufe 2) sind kostenlose Tools geeignet. Für einen Bericht mit unveröffentlichten Quartalszahlen oder Geschäftsgeheimnissen: Copilot im Unternehmens-Tenant verwenden.\n\n**Vorher (deine Stichpunkte):** 7 unstrukturierte Bulletpoints. Keine Priorisierung. Kein roter Faden.\n\n**Nachher (KI-generierter Bericht):**\n\n**Zusammenfassung:** Der Website-Relaunch liegt im Zeitplan mit geplantem Launch am 20.04. Die Google-Ads-Performance ist im Zielkorridor. Handlungsbedarf besteht beim Cookie-Banner, für den eine DSGVO-konforme Nachbesserung erforderlich ist.\n\n**Risiko:** Cookie-Banner ist nicht DSGVO-konform (Anwaltliche Beanstandung). Agentur-Angebot liegt vor: 1.800 EUR, 5 Werktage.\n\n**Nächste Schritte:** Freigabe 1.800 EUR Cookie-Banner-Update (Entscheidung GF), SEO-Texte finalisieren bis 10.04. (Marketing), Website-Launch vorbereiten bis 20.04. (Entwicklung).\n\nDas ist kein perfekter Bericht. Aber es ist ein solider Entwurf, der 80% der Arbeit erledigt.",
+          "keyTakeaway": "KI verwandelt unstrukturierte Stichpunkte in einen lesbaren Bericht mit Zusammenfassung, Details, Risiken und nächsten Schritten."
+        },
+        {
+          "id": "block_3_lesson_4_section_2",
+          "title": "Was du anpassen musst",
+          "readTimeMinutes": 3,
+          "content": "Die restlichen 20% sind deine Korrekturen. Drei Dinge korrigierst du immer:\n\n1. **Priorisierung.** Die KI weiß nicht, dass das Cookie-Banner dringender ist als der LinkedIn-Erfolg. Verschiebe Risiken nach oben.\n2. **Bewertungen.** \"Die positive LinkedIn-Entwicklung zeigt, dass unsere Content-Strategie greift\" klingt gut. Aber das steht nicht in deinen Stichpunkten. Streiche oder belege.\n3. **Fehlender Kontext.** Warum ist das Cookie-Banner plötzlich ein Thema? Das weiß die KI nicht. Ergänze den Kontext, der die Dringlichkeit erklärt.\n\n**Zeitersparnis:**\n\n- Ohne KI: 45 Minuten (Strukturieren, Formulieren, Formatieren, Korrekturlesen)\n- Mit KI: 10 Minuten (Korrekturlesen und Anpassen)\n- Ersparnis: 35 Minuten pro Wochenbericht",
+          "keyTakeaway": "KI kann nicht priorisieren, keine Bewertungen belegen und keinen fehlenden Kontext ergänzen. Diese drei Korrekturen machen aus dem 80%-Entwurf einen guten Bericht."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_3_lesson_4_q1",
+          "questionText": "Ein KI-Assistent erstellt einen Statusbericht aus deinen Stichpunkten. Was ist die wichtigste Korrektur, die du vornehmen musst?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Die Schriftart ändern",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Priorisierung anpassen, weil die KI nicht weiß, was dringend ist",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Alle Zahlen entfernen",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Den Bericht komplett neu schreiben",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Die KI weiß nicht, welche Themen dringend sind. Risiken und dringende Entscheidungen müssen nach oben verschoben werden. Außerdem müssen unbelegte Bewertungen und fehlender Kontext ergänzt werden."
+        },
+        {
+          "id": "block_3_lesson_4_q2",
+          "questionText": "Wie viel Zeit sparst du laut der Berechnung pro Wochenbericht mit KI-Unterstützung?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "5 Minuten",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "15 Minuten",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "35 Minuten",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "60 Minuten",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Ohne KI dauert ein Wochenbericht 45 Minuten. Mit KI nur 10 Minuten (Korrekturlesen und Anpassen). Ersparnis: 35 Minuten pro Bericht."
+        }
+      ]
+    }
+  ]
+}

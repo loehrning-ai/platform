@@ -1,0 +1,223 @@
+import { describe, expect, it } from "vitest";
+import { existsSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { join } from "node:path";
+import {
+  ALL_COURSE_CATALOG,
+  COURSE_CATALOG,
+  IMPORTED_COURSE_CATALOG,
+  IMPORTED_COURSE_SOURCE_COMMIT,
+  getCatalogCourse,
+  getImportedCourse,
+} from "./catalog";
+import {
+  getBlocks,
+  getTotalLessonCount,
+} from "@/lib/course/data";
+import {
+  getAllLessons as getAllAiNativeLessons,
+  getModules as getAiNativeModules,
+} from "@/lib/ai-native/data";
+import { COURSE_SLUGS } from "@/lib/course/types";
+
+function sha256(path: string): string {
+  return createHash("sha256").update(readFileSync(path)).digest("hex");
+}
+
+describe("course catalog (shared course architecture)", () => {
+  it("lists all four native courses in the recommended learning order", () => {
+    expect(COURSE_CATALOG.map((c) => c.slug)).toEqual([
+      "ki-fuehrerschein",
+      "ki-und-gesellschaft",
+      "eu-ai-act-kurs",
+      "ai-native",
+    ]);
+  });
+
+  it("numbers the learning-path steps 1 through 4", () => {
+    expect(COURSE_CATALOG.map((c) => c.step)).toEqual([1, 2, 3, 4]);
+  });
+
+  it("only references slugs registered in the shared course engine", () => {
+    for (const c of COURSE_CATALOG) {
+      expect(COURSE_SLUGS).toContain(c.slug);
+    }
+  });
+
+  it("keeps imported open-source courses outside the native progress engine", () => {
+    expect(IMPORTED_COURSE_CATALOG.map((c) => c.slug)).toEqual([
+      "data-engineering-fundamentals",
+      "data-science",
+      "data-infrastructure",
+      "codex",
+      "claude",
+      "ai-native-operator",
+    ]);
+    for (const c of IMPORTED_COURSE_CATALOG) {
+      expect(COURSE_SLUGS).not.toContain(c.slug);
+      expect(c.href).toBe(`/kurse/open-source/${c.slug}`);
+      expect(c.launchHref).toMatch(/^https:\/\/www\.timloehr\.me\/interactive-courses\//);
+      // public-content contract: "Quelle" list links are commit-pinned so the
+      // /open-source list and the detail pages agree on the same tree.
+      expect(c.sourceHref).toBe(
+        `https://github.com/Mavengence/interactive-courses/tree/${IMPORTED_COURSE_SOURCE_COMMIT}/${c.slug === "ai-native-operator" ? "ai-native" : c.slug}`,
+      );
+      expect(c.sourceCommitHref).toMatch(
+        new RegExp(
+          `^https://github\\.com/Mavengence/interactive-courses/tree/${IMPORTED_COURSE_SOURCE_COMMIT}/`,
+        ),
+      );
+      expect(c.licenseHref).toMatch(/^\/imported-courses\/licenses\//);
+    }
+  });
+
+  it("keeps every launchHref host on the external-dependency allowlist", () => {
+    // public-content contract (DECISION recorded there): the live courses run on
+    // timloehr.me while that domain is live. When publishing and domain-retirement gates retires or
+    // migrates timloehr.me, every launchHref must be repointed in the SAME
+    // commit that retires it, and this allowlist must be extended to the
+    // loehrning-ai org pages host in that commit. This test exists to force
+    // that coordination; never delete it, update the allowlist instead.
+    const LAUNCH_HREF_HOST_ALLOWLIST: readonly string[] = [
+      "www.timloehr.me",
+      "timloehr.me",
+    ];
+    for (const c of IMPORTED_COURSE_CATALOG) {
+      const host = new URL(c.launchHref).host;
+      expect(
+        LAUNCH_HREF_HOST_ALLOWLIST,
+        `${c.slug}: launchHref host ${host} is not on the allowlist`,
+      ).toContain(host);
+    }
+  });
+
+  it("keeps imported course structure aligned with the source repository", () => {
+    expect(
+      IMPORTED_COURSE_CATALOG.map((c) => ({
+        slug: c.slug,
+        unitCount: c.unitCount,
+        unitLabel: c.unitLabel,
+        totalLessons: c.totalLessons,
+        lessonCountLabel: c.lessonCountLabel,
+      })),
+    ).toEqual([
+      {
+        slug: "data-engineering-fundamentals",
+        unitCount: 10,
+        unitLabel: "Kapitel",
+        totalLessons: 10,
+        lessonCountLabel: "10 Kapitel",
+      },
+      {
+        slug: "data-science",
+        unitCount: 12,
+        unitLabel: "Kapitel",
+        totalLessons: 12,
+        lessonCountLabel: "12 Kapitel",
+      },
+      {
+        slug: "data-infrastructure",
+        unitCount: 4,
+        unitLabel: "Tracks",
+        totalLessons: 12,
+        lessonCountLabel: "12 Lektionen",
+      },
+      {
+        slug: "codex",
+        unitCount: 12,
+        unitLabel: "Lektionen",
+        totalLessons: 12,
+        lessonCountLabel: "12 Lektionen + Capstone",
+      },
+      {
+        slug: "claude",
+        unitCount: 4,
+        unitLabel: "Tracks",
+        totalLessons: 12,
+        lessonCountLabel: "12 Lektionen",
+      },
+      {
+        slug: "ai-native-operator",
+        unitCount: 9,
+        unitLabel: "Module",
+        totalLessons: 39,
+        lessonCountLabel: "39 Lektionen",
+      },
+    ]);
+  });
+
+  it("exposes a combined display catalog without changing native course semantics", () => {
+    expect(ALL_COURSE_CATALOG).toHaveLength(10);
+    expect(COURSE_CATALOG).toHaveLength(4);
+    expect(IMPORTED_COURSE_CATALOG).toHaveLength(6);
+  });
+
+  it("has positive native course counts for progress-bearing courses", () => {
+    for (const c of COURSE_CATALOG) {
+      expect(c.totalLessons).toBeGreaterThan(0);
+      expect(c.unitCount).toBeGreaterThan(0);
+    }
+  });
+
+  it("derives native catalog counts from the current course content", async () => {
+    const ki = getCatalogCourse("ki-fuehrerschein");
+    expect(ki?.totalLessons).toBe(getTotalLessonCount("ki-fuehrerschein"));
+    expect(ki?.unitCount).toBe(getBlocks("ki-fuehrerschein").length);
+
+    const eu = getCatalogCourse("eu-ai-act-kurs");
+    expect(eu?.totalLessons).toBe(getTotalLessonCount("eu-ai-act-kurs"));
+    expect(eu?.unitCount).toBe(getBlocks("eu-ai-act-kurs").length);
+
+    const society = getCatalogCourse("ki-und-gesellschaft");
+    expect(society?.totalLessons).toBe(getTotalLessonCount("ki-und-gesellschaft"));
+    expect(society?.unitCount).toBe(getBlocks("ki-und-gesellschaft").length);
+
+    const aiNative = getCatalogCourse("ai-native");
+    expect(aiNative?.totalLessons).toBe((await getAllAiNativeLessons()).length);
+    expect(aiNative?.unitCount).toBe(getAiNativeModules().length);
+  });
+
+  it("has local screenshot and license files for imported courses", () => {
+    for (const c of IMPORTED_COURSE_CATALOG) {
+      expect(c.totalLessons).toBeGreaterThan(0);
+      expect(c.unitCount).toBeGreaterThan(0);
+      expect(c.imageSrc).toMatch(/^\/imported-courses\/screenshots\/.+\.jpg$/);
+      expect(c.lessonCountLabel).toContain(String(c.totalLessons));
+      expect(c.sourceFacts.length).toBeGreaterThanOrEqual(4);
+      expect(c.sourceCommit).toBe(IMPORTED_COURSE_SOURCE_COMMIT);
+      expect(c.sourceImagePath).toMatch(/^docs\/screenshots\/.+\.jpg$/);
+      expect(c.sourceLicensePath).toMatch(/(^LICENSE$|LICENSE\.txt$|\/LICENSE$)/);
+      expect(c.imageSha256).toMatch(/^[a-f0-9]{64}$/);
+      expect(c.licenseSha256).toMatch(/^[a-f0-9]{64}$/);
+      expect(c.licenseSizeBytes).toBeGreaterThan(0);
+      const imagePath = join(process.cwd(), "public", c.imageSrc);
+      const licensePath = join(process.cwd(), "public", c.licenseHref);
+      expect(existsSync(imagePath)).toBe(true);
+      expect(existsSync(licensePath)).toBe(true);
+      expect(sha256(imagePath)).toBe(c.imageSha256);
+      expect(sha256(licensePath)).toBe(c.licenseSha256);
+      expect(statSync(licensePath).size).toBe(c.licenseSizeBytes);
+    }
+  });
+
+  it("uses internal landing + start hrefs that begin with the course base path", () => {
+    for (const c of COURSE_CATALOG) {
+      expect(c.href).toBe(`/${c.slug === "ai-native" ? "ai-native" : c.slug}`);
+      expect(c.startHref.startsWith(c.href)).toBe(true);
+      expect(c.continueHref.startsWith(c.href)).toBe(true);
+    }
+  });
+
+  it("getCatalogCourse resolves by slug and returns undefined for unknown", () => {
+    expect(getCatalogCourse("ai-native")?.title).toBe("AI-Native Arbeitskurs");
+    // @ts-expect-error — exercising the not-found branch with an invalid slug
+    expect(getCatalogCourse("does-not-exist")).toBeUndefined();
+  });
+
+  it("getImportedCourse resolves imported course slugs only", () => {
+    expect(getImportedCourse("claude")?.title).toBe("Claude Course");
+    expect(getImportedCourse("ai-native-operator")?.language).toBe("Englisch");
+    expect(getImportedCourse("ai-native")).toBeUndefined();
+  });
+});

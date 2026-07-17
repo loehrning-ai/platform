@@ -1,0 +1,278 @@
+{
+  "blockId": "block_1",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-06-22",
+  "nextReview": "2026-12-22",
+  "reviewCadence": "evergreen",
+  "riskClass": "evergreen",
+  "triggerEvents": [
+    "major-conceptual-update"
+  ],
+  "blockLastVerified": "2026-06-20",
+  "lessons": [
+    {
+      "id": "block_1_lesson_1",
+      "blockId": "block_1",
+      "number": 1,
+      "title": "KI ist überall",
+      "subtitle": "Erkenne, was du bereits nutzt",
+      "durationMinutes": 4,
+      "keyConcepts": [
+        "KI-System",
+        "KI-Kompetenz",
+        "EU AI Act Art. 4",
+        "Maschinelles Lernen"
+      ],
+      "sections": [
+        {
+          "id": "block_1_lesson_1_section_1",
+          "title": "Die unsichtbare KI",
+          "readTimeMinutes": 2,
+          "content": "Du nutzt Künstliche Intelligenz. Jeden Tag. Seit Jahren. Du wusstest es nur nicht.\n\nDein Spamfilter sortiert täglich Dutzende E-Mails aus, bevor du sie siehst. Das ist KI. Die Autovervollständigung und die Schnellantworten in Outlook (\"Klingt gut, danke!\")? KI. Die Google-Suche, die versteht, was du meinst, obwohl du es falsch geschrieben hast? KI.\n\nUnd das sind nur die offensichtlichen Beispiele.\n\nDenk an dein Smartphone. Die Gesichtserkennung beim Entsperren ist KI. Die Fotos-App, die automatisch Personen erkennt und sortiert, ist KI. Der Routenplaner, der Staus vorhersagt und Alternativrouten berechnet, ist KI. Sogar die Tastatur auf deinem Handy, die Wörter vorhersagt, während du tippst, ist KI.",
+          "keyTakeaway": "KI ist keine Zukunftstechnologie. Du nutzt sie bereits jeden Tag, ohne es zu wissen."
+        },
+        {
+          "id": "block_1_lesson_1_section_2",
+          "title": "KI im Alltag",
+          "readTimeMinutes": 2,
+          "content": "Im Büro geht es weiter. Excel erkennt Muster in deinen Daten und schlägt Diagramme vor. Teams kann Meetings transkribieren. CRM-Systeme berechnen, welche Leads am wahrscheinlichsten kaufen. DeepL übersetzt E-Mails an internationale Partner. Und wenn du ein Dokument scannst, erkennt OCR-Software den Text automatisch.\n\nIn der Praxis nutzen viele Büromitarbeitende täglich mehr KI-Werkzeuge als ihnen bewusst ist: von Spamfiltern über Textvorschläge bis zur Routenplanung. Die meisten nehmen es nicht als KI wahr, weil die Tools einfach funktionieren. Weil niemand \"Achtung, hier kommt KI\" davorgeschrieben hat.\n\nDas ist der erste Schritt zur KI-Kompetenz: erkennen, was du bereits nutzt. Wer seine KI-Systeme nicht kennt, kann sie nicht verantwortungsvoll einsetzen. Artikel 4 verlangt bei Anbietern und Betreibern angemessene KI-Kompetenzmaßnahmen, abhängig von Rolle, Kontext und Risiko. Bewusstsein ist ein Baustein, nicht der ganze Nachweis.\n\nDie gute Nachricht: Du musst kein KI-Ingenieur werden. Du musst verstehen, welche Systeme da sind, welche Daten hineindürfen und wann ein Mensch prüfen muss.",
+          "keyTakeaway": "Viele Menschen nutzen täglich mehr KI-Systeme als ihnen bewusst ist. Bewusstsein ist der erste Baustein für rollen- und risikogerechte KI-Kompetenz nach Art. 4.",
+          "sources": [
+            {
+              "claimId": "ai-act-article-4-literacy-2025-02-02",
+              "lastVerified": "2026-06-20"
+            }
+          ]
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_1_lesson_1_q1",
+          "questionText": "Eine Kollegin sagt: 'Ich nutze keine KI bei der Arbeit.' Sie verwendet aber täglich Outlook-Schnellantworten, Teams-Transkription und Google Maps für die Routenplanung. Was stimmt?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Sie hat Recht, das sind normale Softwarefunktionen, keine KI",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Sie nutzt mindestens drei KI-gestützte Systeme, ohne es zu wissen",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Nur die Teams-Transkription zählt als KI",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Das lässt sich ohne technisches Expertenwissen nicht beurteilen",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Viele alltägliche Tools enthalten KI-Komponenten: Spamfilter, Textvorschläge, Sprachassistenten, Karten-Apps. Die meisten Menschen nehmen diese Systeme nicht als KI wahr, obwohl KI-Kompetenz nach Art. 4 EU AI Act genau hier ansetzt."
+        },
+        {
+          "id": "block_1_lesson_1_q2",
+          "questionText": "Was verlangt Artikel 4 der EU-KI-Verordnung von Anbietern und Betreibern von KI-Systemen?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Jedes Unternehmen muss eine eigene KI entwickeln",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Alle Mitarbeitenden müssen ein Informatik-Studium absolvieren",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Unternehmen müssen die KI-Kompetenz ihrer Mitarbeitenden sicherstellen",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "KI-Systeme dürfen nur von IT-Abteilungen genutzt werden",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Artikel 4 verlangt angemessene KI-Kompetenzmaßnahmen für Personen, die im Auftrag von Anbietern oder Betreibern mit KI-Systemen umgehen. Bewusstsein ist ein Einstieg; Kontext, Rolle und Risiko bestimmen die Tiefe."
+        }
+      ]
+    },
+    {
+      "id": "block_1_lesson_2",
+      "blockId": "block_1",
+      "number": 2,
+      "title": "KI-Werkzeuge im Vergleich",
+      "subtitle": "Copilot, ChatGPT und andere: was passt zu dir?",
+      "durationMinutes": 3,
+      "keyConcepts": [
+        "Microsoft Copilot",
+        "ChatGPT",
+        "Gemini",
+        "Le Chat",
+        "Datenschutz"
+      ],
+      "sections": [
+        {
+          "id": "block_1_lesson_2_section_1",
+          "title": "Die wichtigsten KI-Assistenten",
+          "readTimeMinutes": 2,
+          "content": "Es gibt viele KI-Assistenten. Hier sind vier verbreitete Angebote:\n\n**Microsoft 365 Copilot**: In Outlook, Excel, Teams, Word und PowerPoint integriert. Copilot arbeitet innerhalb der Microsoft-365-Dienstgrenze und berücksichtigt die Berechtigungen des angemeldeten Nutzers. Ob Daten innerhalb der EU gespeichert und verarbeitet werden, hängt unter anderem von Tenant-Geografie, Vertrag und Multi-Geo-Konfiguration ab. Prüfe die tatsächliche Datenregion im Microsoft-365-Admin-Center.\n\n**ChatGPT** (Verbraucherangebot von OpenAI): Im Browser erreichbar. Datenkontrollen und Nutzungsbedingungen können sich nach Produkt und Einstellung unterscheiden. Nutze das Verbraucherangebot nicht für vertrauliche oder fremde personenbezogene Daten.\n\n**Gemini** (Verbraucherangebot von Google): Mit Google-Diensten integriert. Auch hier gelten produkt- und kontospezifische Datenkontrollen. Nutze es nicht für Firmendaten, solange dein Unternehmen es nicht geprüft und freigegeben hat.\n\n**Le Chat** (Mistral AI): Assistent eines französischen Anbieters. Der Firmensitz allein belegt keine bestimmte Datenregion; prüfe die aktuellen Vertrags-, Speicher- und Verarbeitungsbedingungen.\n\nAlle vier helfen beim Schreiben, Zusammenfassen, Beantworten von Fragen und bei einfachen Analysen.",
+          "keyTakeaway": "Entscheidend sind nicht Anbietername oder Firmensitz, sondern das konkrete Produkt, der Vertrag, die Tenant-Konfiguration, Berechtigungen und die tatsächlich zugesagte Datenregion."
+        },
+        {
+          "id": "block_1_lesson_2_section_2",
+          "title": "Welches Tool passt wann?",
+          "readTimeMinutes": 1,
+          "content": "Die einfache Faustregel:\n\n- **Private Texte, Lernaufgaben, keine vertraulichen Daten:** Ein Verbraucherangebot kann geeignet sein. Gib niemals persönliche Daten anderer Personen, Firmendaten oder Zugangsdaten ein.\n\n- **Berufliche Aufgaben mit internen Informationen:** Nutze nur ein von IT und Datenschutz freigegebenes Produkt in der genehmigten Konfiguration, zum Beispiel Microsoft 365 Copilot oder ChatGPT Business. Ein vorhandenes M365-Konto allein ist noch keine Freigabe.\n\n- **Hohe lokale Kontrolle:** Lokale KI-Modelle können auf dem eigenen Rechner laufen. Prüfe trotzdem, ob Erweiterungen, Telemetrie oder Modell-Downloads Netzwerkzugriffe auslösen.\n\nDen Unterschied zwischen privater und beruflicher Nutzung lernst du genauer in Block 2.",
+          "keyTakeaway": "Für private Aufgaben ohne vertrauliche Daten sind kostenlose Tools geeignet. Für berufliche Aufgaben immer zuerst die IT-Abteilung fragen."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_1_lesson_2_q1",
+          "questionText": "Du möchtest einen persönlichen Brief mit einem KI-Assistenten schreiben. Welche Option ist für diesen Zweck geeignet?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Nur kostenpflichtige Business-Tools sind für Texte erlaubt",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "ChatGPT (kostenlose Version), Gemini oder Le Chat sind für private Texte ohne vertrauliche Daten geeignet",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Kein KI-Tool darf für das Schreiben von Texten genutzt werden",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Nur Copilot, weil er der sicherste KI-Assistent ist",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Für private Texte ohne vertrauliche Daten sind kostenlose Tools wie ChatGPT, Gemini oder Le Chat geeignet. Wichtig: Keine persönlichen Daten anderer Personen oder Firmendaten eingeben."
+        },
+        {
+          "id": "block_1_lesson_2_q2",
+          "questionText": "Was ist der wichtigste Unterschied zwischen den kostenlosem ChatGPT und Microsoft Copilot für Unternehmen?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "ChatGPT liefert bessere Antworten als Copilot",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Ein freigegebenes Copilot-Setup arbeitet innerhalb der Microsoft-365-Dienstgrenze; ein Verbraucherangebot hat keinen betrieblich geprüften Vertrag oder Tenant-Kontext",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Copilot ist kostenlos, ChatGPT ist kostenpflichtig",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Es gibt keinen relevanten Unterschied",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Microsoft 365 Copilot arbeitet innerhalb der Microsoft-365-Dienstgrenze und berücksichtigt Nutzerberechtigungen. Datenresidenz und zulässige Datenklassen müssen für den konkreten Tenant geprüft werden. Ein nicht freigegebenes Verbraucherangebot eignet sich nicht für Firmendaten."
+        }
+      ]
+    },
+    {
+      "id": "block_1_lesson_3",
+      "blockId": "block_1",
+      "number": 3,
+      "title": "Übung: Schnell-Inventar",
+      "subtitle": "Erstelle dein persönliches KI-Inventar in 3 Minuten",
+      "durationMinutes": 3,
+      "keyConcepts": [
+        "KI-Inventar",
+        "Shadow AI",
+        "Selbsteinschätzung"
+      ],
+      "sections": [
+        {
+          "id": "block_1_lesson_3_section_1",
+          "title": "Das KI-Inventar",
+          "readTimeMinutes": 1,
+          "content": "Nimm dir drei Minuten. Geh die folgende Tabelle durch und fülle die letzten beiden Spalten aus. Sei ehrlich bei \"Wusste ich vorher?\". Es geht nicht um richtig oder falsch. Es geht darum, ein Bewusstsein zu schaffen.\n\n| Nr. | Tool | Hat KI? | Wusste ich vorher? |\n|-----|------|---------|---------------------|\n| 1 | Outlook (Copilot, Schnellantworten) | Ja | |\n| 2 | Excel (Copilot, Muster-Erkennung) | Ja | |\n| 3 | Teams (Copilot, Transkription) | Ja | |\n| 4 | Google-Suche | Ja | |\n| 5 | Spamfilter (Outlook / Gmail) | Ja | |\n| 6 | Smartphone-Tastatur (Wortvorhersage) | Ja | |\n| 7 | Navigation (Google Maps, Apple Maps) | Ja | |\n| 8 | | | |\n| 9 | | | |\n| 10 | | | |\n\nErgänze die leeren Zeilen mit Tools, die du täglich nutzt. Denk an: Übersetzungstools (DeepL, Google Translate), dein CRM-System, Buchhaltungssoftware, Scanner-Apps, Fotoverwaltung, Musikempfehlungen (Spotify), Online-Shopping-Empfehlungen (Amazon).",
+          "keyTakeaway": "Ein KI-Inventar ist der erste Schritt zur Kompetenz nach EU AI Act Art. 4."
+        },
+        {
+          "id": "block_1_lesson_3_section_2",
+          "title": "Auswertung",
+          "readTimeMinutes": 2,
+          "content": "**Was du vermutlich feststellst:** In der Praxis sind es oft deutlich mehr KI-Systeme als zunächst vermutet: häufig mehr als zehn, wenn man alle Werkzeuge mitzählt. Die meisten davon waren vorher nicht als KI bewusst.\n\nWenn du bei mehr als der Hälfte \"Nein\" angekreuzt hast, bist du in guter Gesellschaft. Das zeigt genau das, was Art. 4 EU AI Act adressiert: KI-Kompetenz beginnt mit Bewusstsein, nicht mit Technikwissen.\n\n**Dein Ergebnis ist dein erstes Artefakt:** ein ausgefülltes KI-Inventar. Heb es auf. Du wirst es noch brauchen. In Block 2 lernst du, welche Daten in welches dieser Tools gehören. Und welche auf keinen Fall.",
+          "keyTakeaway": "Viele Menschen nutzen mehr KI-Systeme als ihnen bewusst ist. Das KI-Inventar ist dein erstes Artefakt für die Umsetzung von Art. 4 EU AI Act."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_1_lesson_3_q1",
+          "questionText": "Eine Kollegin sagt: 'Ich nutze keine KI bei der Arbeit.' Sie verwendet aber täglich Outlook-Schnellantworten, Teams-Transkription und Google Maps. Wie viele KI-Systeme nutzt sie mindestens?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Keines, das sind normale Softwarefunktionen",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Eines, nur die Teams-Transkription",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Mindestens drei KI-Systeme",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Das lässt sich nicht feststellen",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Outlook-Schnellantworten, Teams-Transkription und Google Maps nutzen jeweils KI. Viele Mitarbeitende nutzen täglich mehr KI-gestützte Systeme als ihnen bewusst ist, weil die Tools einfach funktionieren ohne als KI erkennbar zu sein."
+        },
+        {
+          "id": "block_1_lesson_3_q2",
+          "questionText": "Warum ist ein KI-Inventar wichtig?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Es wird für die Steuererklärung benötigt",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Ohne Inventar kannst du nicht beurteilen, welche Risiken bestehen und welche Regeln gelten",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Es ist nur für Unternehmen ab 250 Mitarbeitenden Pflicht",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Es dient ausschließlich der IT-Budgetplanung",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Ein KI-Inventar ist die Grundlage jeder KI-Governance. Nur wer weiß, welche KI-Systeme im Einsatz sind, kann Risiken bewerten, Datenregeln zuordnen und die Anforderungen der EU-KI-Verordnung erfüllen."
+        }
+      ]
+    }
+  ]
+}

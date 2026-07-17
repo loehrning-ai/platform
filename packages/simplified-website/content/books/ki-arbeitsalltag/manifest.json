@@ -1,0 +1,83 @@
+{
+  "bookSlug": "ki-arbeitsalltag",
+  "title": "KI im Arbeitsalltag",
+  "owner": "editorial:books",
+  "lastReviewed": "2026-07-14",
+  "nextReview": "2026-10-14",
+  "reviewCadence": "quarterly",
+  "riskClass": "legal",
+  "adaptationNote": "Keine Kapitel entfernt. Leichtes Re-Framing für allgemeines Publikum.",
+  "chapters": [
+    {
+      "slug": "00_intro",
+      "title": "Wie du dieses Buch nutzt",
+      "sourceFile": "00_intro.md"
+    },
+    {
+      "slug": "01_ki_ueberall",
+      "title": "KI ist überall: Das vollständige Inventar",
+      "sourceFile": "01_ki_ueberall.md"
+    },
+    {
+      "slug": "02_persoenliches_profil",
+      "title": "Dein persönliches KI-Profil aufbauen",
+      "sourceFile": "02_persoenliches_profil.md"
+    },
+    {
+      "slug": "03_daten_klassifizierung",
+      "title": "Wohin gehen deine Daten wirklich?",
+      "sourceFile": "03_daten_klassifizierung.md"
+    },
+    {
+      "slug": "04_vier_stufen",
+      "title": "Die vier Stufen der Datenklassifizierung im Detail",
+      "sourceFile": "04_vier_stufen.md"
+    },
+    {
+      "slug": "05_compliance",
+      "title": "AVV, DSGVO, Shadow AI: Was du wissen musst",
+      "sourceFile": "05_compliance.md"
+    },
+    {
+      "slug": "06_emails_meetings_berichte",
+      "title": "E-Mails, Meetings, Berichte: Die drei Zeitfresser",
+      "sourceFile": "06_emails_meetings_berichte.md"
+    },
+    {
+      "slug": "07_excel_datenanalyse",
+      "title": "Excel und Datenanalyse: Zahlen, die stimmen",
+      "sourceFile": "07_excel_datenanalyse.md"
+    },
+    {
+      "slug": "08_prompting_kraft",
+      "title": "Prompting: Von der Anfrage zum Ergebnis",
+      "sourceFile": "08_prompting_kraft.md"
+    },
+    {
+      "slug": "09_ki_luegt",
+      "title": "Warum KI überzeugend lügt",
+      "sourceFile": "09_ki_luegt.md"
+    },
+    {
+      "slug": "10_dreischritt_pruefung",
+      "title": "Die 3-Schritt-Prüfung als Gewohnheit",
+      "sourceFile": "10_dreischritt_pruefung.md"
+    },
+    {
+      "slug": "11_ki_nutzungsrichtlinie",
+      "title": "Die KI-Nutzungsrichtlinie: Was sie bedeutet und warum sie dich schützt",
+      "sourceFile": "11_ki_nutzungsrichtlinie.md"
+    },
+    {
+      "slug": "12_rollout",
+      "title": "Rollout: Wie du KI in dein Team bringst",
+      "sourceFile": "12_rollout.md"
+    },
+    {
+      "slug": "13_anhang",
+      "title": "Glossar, Checklisten, Ressourcen",
+      "sourceFile": "13_anhang.md"
+    }
+  ],
+  "droppedChapters": []
+}

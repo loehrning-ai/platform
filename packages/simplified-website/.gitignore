@@ -1,0 +1,17 @@
+node_modules/
+.next/
+.DS_Store
+*.tsbuildinfo
+.dev-ports.json
+.env*
+!.env*.example
+.vercel
+playwright-report/
+test-results/
+blob-report/
+# Generated Playwright authentication storage can contain a real session token.
+tests/e2e/.auth/
+supabase/.temp/
+
+# Temporary responsive-audit harnesses.
+tests/e2e/_*.spec.ts

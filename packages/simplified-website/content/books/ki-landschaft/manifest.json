@@ -1,0 +1,72 @@
+{
+  "bookSlug": "ki-landschaft",
+  "title": "KI im deutschen Mittelstand",
+  "owner": "editorial:books",
+  "lastReviewed": "2026-07-14",
+  "nextReview": "2026-10-14",
+  "reviewCadence": "quarterly",
+  "riskClass": "statistical",
+  "adaptationNote": "Die offene Ausgabe entfernt Beratungsmarkt-Preisgestaltung, private Unternehmensdaten, proprietäre Scores und daraus abgeleitete Rankings. Sie nutzt stattdessen nachvollziehbare Selbstprüfungen und verlinkte Primärquellen.",
+  "chapters": [
+    {
+      "slug": "01_eisberg",
+      "title": "Das Eisberg-Problem",
+      "sourceFile": "01_eisberg.md"
+    },
+    {
+      "slug": "02_methodik",
+      "title": "Methodik ohne Scheingenauigkeit",
+      "sourceFile": "02_methodik.md"
+    },
+    {
+      "slug": "03_reifegrad_ueberblick",
+      "title": "Evidenzbasierte Selbstprüfung",
+      "sourceFile": "03_reifegrad_ueberblick.md"
+    },
+    {
+      "slug": "04_bundesland",
+      "title": "Regionale Rahmenbedingungen",
+      "sourceFile": "04_bundesland.md"
+    },
+    {
+      "slug": "05_branchen",
+      "title": "Branchenmuster als Hypothesen",
+      "sourceFile": "05_branchen.md"
+    },
+    {
+      "slug": "06_eu_ki_verordnung",
+      "title": "EU-KI-Verordnung und Artikel 4",
+      "sourceFile": "06_eu_ki_verordnung.md"
+    },
+    {
+      "slug": "07_schnellstart",
+      "title": "Schnellstart in drei Schritten",
+      "sourceFile": "07_schnellstart.md"
+    },
+    {
+      "slug": "08_fahrplan",
+      "title": "Fahrplan für die nächsten Monate",
+      "sourceFile": "08_fahrplan.md"
+    },
+    {
+      "slug": "09_ausblick",
+      "title": "Ausblick",
+      "sourceFile": "09_ausblick.md"
+    },
+    {
+      "slug": "10_anhang",
+      "title": "Anhang",
+      "sourceFile": "10_anhang.md"
+    }
+  ],
+  "droppedChapters": [
+    {
+      "sourceFile": "06_beratungsmarkt.md",
+      "reason": "commercial-price-positioning"
+    },
+    {
+      "sourceFile": "07_beratungskosten.md",
+      "reason": "commercial-price-positioning"
+    }
+  ]
+}

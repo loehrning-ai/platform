@@ -1,0 +1,227 @@
+[
+  {
+    "id": "kug-q01",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Wie hoch schätzt die OECD (2023) den Anteil der Berufe in Deutschland, die als hoch automatisierungsexponiert gelten?",
+    "answerOptions": [
+      { "id": "a", "text": "Rund 47 Prozent der Berufe", "isCorrect": false },
+      { "id": "b", "text": "Rund 9 Prozent der Berufe", "isCorrect": true },
+      { "id": "c", "text": "Über 60 Prozent der Berufe", "isCorrect": false },
+      { "id": "d", "text": "Weniger als 1 Prozent der Berufe", "isCorrect": false }
+    ],
+    "explanation": "Die OECD aktualisierte 2023 ihre Analyse mit verfeinerter Methodik: Rund 9 Prozent der Berufe in Deutschland gelten als hoch automatisierungsexponiert, also als Berufe, in denen die überwiegende Mehrheit der Tätigkeiten durch aktuelle KI ersetzbar wäre. Die häufig zitierte 47-Prozent-Zahl stammt aus einer älteren Studie (Frey/Osborne, 2013) mit einer anderen Methodik. (Quelle: OECD Employment Outlook 2023)",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "kug-q02",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Was unterscheidet das 'Amplifier-Modell' von der einfachen Automatisierungsthese?",
+    "answerOptions": [
+      { "id": "a", "text": "Das Amplifier-Modell sagt voraus, dass alle Jobs durch KI verschwinden", "isCorrect": false },
+      { "id": "b", "text": "KI verstärkt die Produktivität menschlicher Fähigkeiten, anstatt sie vollständig zu ersetzen", "isCorrect": true },
+      { "id": "c", "text": "Das Modell bezieht sich ausschließlich auf physische Arbeit in der Fertigung", "isCorrect": false },
+      { "id": "d", "text": "Es beschreibt, wie KI Lautsprecher und Audio-Geräte steuert", "isCorrect": false }
+    ],
+    "explanation": "Das Amplifier-Modell besagt, dass KI menschliche Fähigkeiten verstärkt und beschleunigt, anstatt Menschen vollständig zu ersetzen. Ein Arzt, der KI nutzt, diagnostiziert schneller. Ein Programmierer, der KI nutzt, schreibt effektiver. Das ist grundlegend anders als die Automatisierungsthese, die von vollständiger Substitution ausgeht.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "kug-q03",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Welche Fähigkeiten gehören laut Kursmaterial zur praktischen KI-Kompetenz für Nicht-Programmiererinnen?",
+    "answerOptions": [
+      { "id": "a", "text": "Programmieren können, Modelle trainieren, Daten analysieren", "isCorrect": false },
+      { "id": "b", "text": "Englisch sprechen, internationale KI-Tools nutzen, Zertifizierungen sammeln", "isCorrect": false },
+      { "id": "c", "text": "Verstehen was KI kann, verantwortungsvoll nutzen, kritisch bewerten", "isCorrect": true },
+      { "id": "d", "text": "Deepfakes erkennen, Chatbots programmieren, Datenbanken pflegen", "isCorrect": false }
+    ],
+    "explanation": "KI-Kompetenz erfordert kein Informatikstudium. Zum Kern gehört: verstehen, was ein KI-System kann und wo seine Grenzen liegen, es verantwortungsvoll und regelkonform einsetzen (etwa beim Datenschutz), und seine Ausgaben kritisch bewerten, statt sie unreflektiert zu übernehmen.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "kug-q04",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Was garantiert Paragraph 87 Abs. 1 Nr. 6 BetrVG dem Betriebsrat?",
+    "answerOptions": [
+      { "id": "a", "text": "Das Recht, KI-Systeme selbst zu programmieren", "isCorrect": false },
+      { "id": "b", "text": "Ein Mitbestimmungsrecht bei der Einführung technischer Überwachungseinrichtungen, einschließlich KI-Systemen", "isCorrect": true },
+      { "id": "c", "text": "Das Recht, Beschäftigte in KI-Tools auszubilden", "isCorrect": false },
+      { "id": "d", "text": "Das Recht auf vollständige Ablehnung aller KI-Systeme", "isCorrect": false }
+    ],
+    "explanation": "BetrVG § 87 Abs. 1 Nr. 6 gibt dem Betriebsrat ein Mitbestimmungsrecht bei Einführung und Anwendung technischer Einrichtungen, die geeignet sind, das Verhalten oder die Leistung der Arbeitnehmer zu überwachen. Das schließt KI-Systeme ein, die Arbeitsabläufe oder Ergebnisse tracken. Betriebsräte haben damit ein erzwingbares Mitbestimmungsrecht: Ohne Einigung entscheidet die Einigungsstelle, deutlich mehr als ein reines Informationsrecht.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "kug-q05",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Wie entstehen Deepfakes?",
+    "answerOptions": [
+      { "id": "a", "text": "Durch aufwendige manuelle Bildbearbeitung durch spezialisierte Grafiker", "isCorrect": false },
+      { "id": "b", "text": "Neuronale Netze lernen Muster aus Bildern, Videos oder Audios und generieren neue, nie existente Inhalte", "isCorrect": true },
+      { "id": "c", "text": "Ausschließlich durch staatliche Geheimdienste mit Spezialhardware", "isCorrect": false },
+      { "id": "d", "text": "Durch einfaches Kopieren und Überblenden von bestehendem Material", "isCorrect": false }
+    ],
+    "explanation": "Deepfakes entstehen durch neuronale Netze, die aus vielen Beispielen (Bildern, Videos, Audio-Clips) lernen, wie eine Person aussieht oder klingt, und daraus neue, nie existente Inhalte generieren. Diese Technologie ist heute für jedermann zugänglich und erfordert keinen technischen Hintergrund mehr.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "kug-q06",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Ab wann sind Anbieter nach dem EU AI Act verpflichtet, KI-generierte Inhalte zu kennzeichnen?",
+    "answerOptions": [
+      { "id": "a", "text": "Ab dem 2. Februar 2025", "isCorrect": false },
+      { "id": "b", "text": "Ab dem 2. August 2026", "isCorrect": true },
+      { "id": "c", "text": "Ab dem 1. Januar 2027", "isCorrect": false },
+      { "id": "d", "text": "Diese Pflicht ist noch nicht beschlossen", "isCorrect": false }
+    ],
+    "explanation": "Art. 50 wird am 2. August 2026 anwendbar. Anbieter erfasster generativer Systeme müssen Ausgaben nach Abs. 2 maschinenlesbar markieren; Betreiber legen Deepfakes nach Abs. 4 grundsätzlich sichtbar offen. (Quelle: Verordnung (EU) 2024/1689, Art. 50)",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "kug-q07",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Was ist der einfachste und wirksamste erste Schritt, wenn du einen Deepfake entdeckst?",
+    "answerOptions": [
+      { "id": "a", "text": "Sofort das BKA anrufen und Anzeige erstatten", "isCorrect": false },
+      { "id": "b", "text": "Den Inhalt an alle Bekannten weiterleiten, damit er geprüft werden kann", "isCorrect": false },
+      { "id": "c", "text": "Den Inhalt nicht teilen und die Verbreitung stoppen", "isCorrect": true },
+      { "id": "d", "text": "Einen eigenen Fakt-Check-Post auf Social Media veröffentlichen", "isCorrect": false }
+    ],
+    "explanation": "Der einfachste und wirksamste erste Schritt ist: nicht teilen. Jede Weiterleitung vergrößert den Schaden. Weitere Schritte (auf der Plattform melden, BKA Onlinewache, betroffene Person warnen) folgen danach. Nicht-Teilen ist kein passiver Akt, sondern eine aktive Entscheidung.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "kug-q08",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Was schützt Paragraf 22 KUG (Kunsturhebergesetz)?",
+    "answerOptions": [
+      { "id": "a", "text": "Das Recht, Kunstwerke ohne Lizenz zu veröffentlichen", "isCorrect": false },
+      { "id": "b", "text": "Das Recht, von KI erstellte Bilder zu löschen", "isCorrect": false },
+      { "id": "c", "text": "Das Recht am eigenen Bild: Fotos und Videos dürfen nicht ohne Einwilligung veröffentlicht werden", "isCorrect": true },
+      { "id": "d", "text": "Den Schutz von Journalisten bei verdeckter Recherche", "isCorrect": false }
+    ],
+    "explanation": "Paragraf 22 KUG (Kunsturhebergesetz) schützt das Recht am eigenen Bild. Bilder oder Videos einer Person dürfen nicht ohne deren Einwilligung veröffentlicht werden. Deepfakes, die das Gesicht einer anderen Person verwenden, können dieses Recht verletzen und rechtliche Schritte begründen.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "kug-q09",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Was zeigte die ProPublica-Analyse des COMPAS-Systems (2016)?",
+    "answerOptions": [
+      { "id": "a", "text": "Das System funktionierte fehlerfrei und fair für alle Bevölkerungsgruppen", "isCorrect": false },
+      { "id": "b", "text": "Schwarze Angeklagte wurden doppelt so häufig fälschlicherweise als hohes Rückfallrisiko eingestuft wie weiße Angeklagte", "isCorrect": true },
+      { "id": "c", "text": "Das System war technisch defekt und produzierte zufällige Ergebnisse", "isCorrect": false },
+      { "id": "d", "text": "Das System wurde ausschließlich in Florida eingesetzt und hatte keine weiteren Auswirkungen", "isCorrect": false }
+    ],
+    "explanation": "ProPublica analysierte 2016 über 7.000 Datensätze aus Florida und stellte fest, dass schwarze Angeklagte doppelt so häufig fälschlicherweise als hohes Rückfallrisiko eingestuft wurden wie weiße Angeklagte mit ähnlichem Vorstrafenhintergrund. Die Analyse löste eine fundamentale Debatte über Fairness-Definitionen in KI-Systemen aus.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "kug-q10",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Was ergab Joy Buolamwinis Gender Shades Studie (2018) zu Gesichtserkennungssystemen?",
+    "answerOptions": [
+      { "id": "a", "text": "Alle Systeme erkannten Gesichter mit unter 5 Prozent Fehlerrate", "isCorrect": false },
+      { "id": "b", "text": "Die Fehlerraten unterschieden sich nur geringfügig zwischen den vier untersuchten Gruppen", "isCorrect": false },
+      { "id": "c", "text": "Nur ältere Systeme zeigten Bias, moderne Systeme sind davon frei", "isCorrect": false },
+      { "id": "d", "text": "Hellhäutige Männer hatten Fehlerraten unter 1 Prozent, dunkelhäutige Frauen bis 34,7 Prozent", "isCorrect": true }
+    ],
+    "explanation": "Die Gender Shades Studie (2018) analysierte kommerzielle Gesichtsklassifikationssysteme von IBM, Microsoft und Face++. Das Ergebnis: Fehlerraten unter 1 Prozent bei hellhäutigen Männern versus bis zu 34,7 Prozent bei dunkelhäutigen Frauen. Das entspricht einem Faktor von über 30. Die Ursache: Überrepräsentation heller, männlicher Gesichter in den Trainingsdaten.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "kug-q11",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Welches Recht garantiert DSGVO Artikel 22 bei automatisierten Entscheidungen?",
+    "answerOptions": [
+      { "id": "a", "text": "Das Recht auf vollständige Löschung aller eigenen Daten", "isCorrect": false },
+      { "id": "b", "text": "Das Recht auf menschliche Überprüfung und das Recht, nicht allein einer automatisierten Entscheidung unterworfen zu sein", "isCorrect": true },
+      { "id": "c", "text": "Das Recht, den Quellcode des KI-Systems einzusehen", "isCorrect": false },
+      { "id": "d", "text": "Das Recht, das Modell zu deaktivieren", "isCorrect": false }
+    ],
+    "explanation": "DSGVO Art. 22 gibt Personen das Recht, nicht ausschließlich einer automatisierten Entscheidung mit erheblichen Auswirkungen auf sie unterworfen zu sein. Das schließt ein Recht auf menschliche Überprüfung ein. Dieses Recht ist heute anwendbar, zum Beispiel bei abgelehnten Kredit- oder Bewerbungsentscheidungen.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "kug-q12",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Welche der folgenden Aussagen zu Deepfake-Erkennungstools ist korrekt?",
+    "answerOptions": [
+      { "id": "a", "text": "Moderne Tools erkennen jeden Deepfake mit nahezu 100 Prozent Genauigkeit", "isCorrect": false },
+      { "id": "b", "text": "Erkennungstools laufen strukturell hinter Generierungstools her und ein negatives Ergebnis ist kein Beweis der Echtheit", "isCorrect": true },
+      { "id": "c", "text": "Nur staatliche Stellen haben Zugang zu verlässlichen Erkennungstools", "isCorrect": false },
+      { "id": "d", "text": "Die Rückwärtsbildersuche erkennt alle KI-generierten Bilder zuverlässig", "isCorrect": false }
+    ],
+    "explanation": "Deepfake-Erkennungstools werden auf bekannten Mustern trainiert. Sobald neue Generierungstechniken verfügbar sind, müssen Erkennungstools nachziehen. Strukturell bedeutet das: ein negatives Ergebnis (kein KI-Muster erkannt) ist kein Beweis, dass das Bild echt ist. Es bedeutet nur 'kein bekanntes Muster gefunden'.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "kug-q13",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Welches kostenlose Browser-Werkzeug ist speziell für die Analyse von Nachrichtenvideos auf Herkunft und Metadaten ausgelegt?",
+    "answerOptions": [
+      { "id": "a", "text": "Hive Moderation (hivemoderation.com/demo)", "isCorrect": false },
+      { "id": "b", "text": "InVID/WeVerify (weverify.eu)", "isCorrect": true },
+      { "id": "c", "text": "Google Reverse Image Search", "isCorrect": false },
+      { "id": "d", "text": "TinEye (tineye.com)", "isCorrect": false }
+    ],
+    "explanation": "InVID/WeVerify (weverify.eu) ist eine EU Horizon 2020-finanzierte Browser-Erweiterung für Chrome und Firefox, die speziell für die Analyse von Videos entwickelt wurde. Sie analysiert Metadaten, ermöglicht Geolokation und bietet Schlüsselframe-Rückwärtssuche. Google Reverse Image Search und TinEye funktionieren für Bilder, Hive Moderation prüft auf KI-Generierung.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "kug-q14",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Warum reproduzieren KI-Modelle häufig bestehende gesellschaftliche Ungleichheiten?",
+    "answerOptions": [
+      { "id": "a", "text": "Weil KI-Entwickler absichtlich diskriminierende Systeme bauen", "isCorrect": false },
+      { "id": "b", "text": "Weil Trainingsdaten grundsätzlich zu klein sind, unabhängig von ihrer Zusammensetzung", "isCorrect": false },
+      { "id": "c", "text": "Weil es keine Möglichkeit gibt, faire KI-Systeme zu bauen", "isCorrect": false },
+      { "id": "d", "text": "Weil Trainingsdaten Aufzeichnungen vergangener, oft ungleicher Strukturen sind und Modelle diese Muster lernen", "isCorrect": true }
+    ],
+    "explanation": "KI-Modelle lernen aus Daten. Daten sind Aufzeichnungen der Vergangenheit. Die Vergangenheit enthält Diskriminierung, Machtstrukturen und Ungleichheit. Ohne aktive Gegenmaßnahmen (Daten-Audits, Bias-Messung, gezielte Korrekturen) reproduzieren und verstärken Modelle diese Muster. Das ist kein Vorsatz, sondern ein systemisches Problem.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "kug-q15",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Welche Aussage zum EU AI Act und Deepfakes ist korrekt?",
+    "answerOptions": [
+      { "id": "a", "text": "Der EU AI Act verbietet alle Deepfakes ab sofort", "isCorrect": false },
+      { "id": "b", "text": "Der EU AI Act hat keine Regelung zu KI-generierten Inhalten", "isCorrect": false },
+      { "id": "c", "text": "Art. 50 trennt technische Anbieter-Markierung und sichtbare Betreiber-Offenlegung; der zuständige Beschwerdeweg muss aktuell geprüft werden", "isCorrect": true },
+      { "id": "d", "text": "Deepfakes sind nur für Anbieter relevant, nicht für Einzelpersonen", "isCorrect": false }
+    ],
+    "explanation": "Art. 50 verbietet Deepfakes nicht pauschal. Anbieter erfasster generativer Systeme müssen Ausgaben technisch markieren; Betreiber müssen Deepfakes grundsätzlich sichtbar offenlegen. Art. 85 sieht Beschwerden bei der zuständigen Marktüberwachungsbehörde vor. Das beschlossene deutsche KI-MIG war am 14. Juli 2026 noch nicht verkündet, daher ist der aktuelle Behördenkanal zu prüfen.",
+    "version": 1,
+    "active": true
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "slug": "wie-ki-funktioniert",
+  "title": "Wie KI wirklich funktioniert",
+  "subtitle": "Vier Lektionen für neugierige Menschen ohne technisches Vorwissen",
+  "durationMinutes": 40,
+  "lessonCount": 4,
+  "stage": "pruefen",
+  "access": "public",
+  "language": "de",
+  "lastReviewed": "2026-06-22",
+  "nextReview": "2026-12-22",
+  "reviewCadence": "semi-annual",
+  "riskClass": "evergreen",
+  "owner": "editorial:conceptual-blocks"
+}

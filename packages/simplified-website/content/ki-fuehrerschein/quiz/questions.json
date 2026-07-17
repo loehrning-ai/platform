@@ -1,0 +1,302 @@
+[
+  {
+    "id": "q_w01",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Dein Outlook-Spamfilter sortiert täglich unerwünschte E-Mails aus. Handelt es sich dabei um ein KI-System?",
+    "answerOptions": [
+      { "id": "a", "text": "Ja, der Spamfilter nutzt maschinelles Lernen, um Muster in E-Mails zu erkennen.", "isCorrect": true },
+      { "id": "b", "text": "Nein, das ist eine einfache Regel-basierte Filterung.", "isCorrect": false },
+      { "id": "c", "text": "Nur wenn der Filter von Microsoft stammt.", "isCorrect": false },
+      { "id": "d", "text": "Nur wenn der Filter auch Anhänge analysiert.", "isCorrect": false }
+    ],
+    "explanation": "Moderne Spamfilter nutzen maschinelles Lernen, um aus Millionen von E-Mails Spam-Muster zu erkennen. Sie lernen kontinuierlich dazu und passen sich an neue Spam-Varianten an. Das erfüllt die Definition eines KI-Systems nach EU AI Act Art. 3(1).",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w02",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Du möchtest einen kurzen Text mit einem KI-Assistenten schreiben. Welche der folgenden Optionen ist für private Texte ohne Firmendaten geeignet?",
+    "answerOptions": [
+      { "id": "a", "text": "Nur kostenpflichtige Business-Tools dürfen für Texte genutzt werden.", "isCorrect": false },
+      { "id": "b", "text": "Kostenlose Tools wie ChatGPT, Gemini oder Le Chat (solange keine vertraulichen Daten eingegeben werden).", "isCorrect": true },
+      { "id": "c", "text": "Nur Copilot, weil er der einzige sichere KI-Assistent ist.", "isCorrect": false },
+      { "id": "d", "text": "Kein KI-Tool darf für das Schreiben von Texten genutzt werden.", "isCorrect": false }
+    ],
+    "explanation": "Für private Texte ohne vertrauliche Daten sind kostenlose Tools wie ChatGPT (OpenAI), Gemini (Google) oder Le Chat (Mistral AI) geeignet. Wichtig: Keine persönlichen oder vertraulichen Informationen eingeben, da diese Tools keine Auftragsverarbeitung für Firmendaten bieten.",
+    "version": 2,
+    "active": true
+  },
+  {
+    "id": "q_w03",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Eine Kollegin sagt: 'Ich nutze keine KI bei der Arbeit.' Sie verwendet aber täglich Outlook mit Schnellantworten, Teams-Transkription und Google Maps für Kundenbesuche. Wie viele KI-Systeme nutzt sie mindestens?",
+    "answerOptions": [
+      { "id": "a", "text": "Keines, das sind normale Softwarefunktionen.", "isCorrect": false },
+      { "id": "b", "text": "Eines, nur die Teams-Transkription ist KI.", "isCorrect": false },
+      { "id": "c", "text": "Mindestens drei KI-Systeme.", "isCorrect": true },
+      { "id": "d", "text": "Das lässt sich nicht feststellen.", "isCorrect": false }
+    ],
+    "explanation": "Outlook-Schnellantworten, Teams-Transkription und Google Maps nutzen jeweils KI. Viele Menschen nutzen täglich mehr KI-Systeme als ihnen bewusst ist, weil die Tools einfach funktionieren ohne als KI erkennbar zu sein. Das Erkennen vorhandener KI ist der erste Schritt zur KI-Kompetenz.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w04",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Warum ist ein KI-Inventar (Liste aller genutzten KI-Systeme) für Unternehmen wichtig?",
+    "answerOptions": [
+      { "id": "a", "text": "Es wird für die Steuererklärung benötigt.", "isCorrect": false },
+      { "id": "b", "text": "Ohne Inventar lässt sich nicht beurteilen, welche Risiken bestehen und welche Regeln gelten.", "isCorrect": true },
+      { "id": "c", "text": "Es ist nur für Unternehmen mit mehr als 250 Mitarbeitenden Pflicht.", "isCorrect": false },
+      { "id": "d", "text": "Es dient ausschließlich der IT-Budgetplanung.", "isCorrect": false }
+    ],
+    "explanation": "Ein KI-Inventar ist die Grundlage jeder KI-Governance. Nur wer weiß, welche KI-Systeme im Einsatz sind, kann Risiken bewerten, Datenregeln zuordnen und die Anforderungen der EU-KI-Verordnung erfüllen. Ohne Inventar gibt es keine Kontrolle.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w05",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Ein Mitarbeiter gibt eine Kundenliste mit Namen und E-Mail-Adressen in ChatGPT Free ein, um personalisierte Anschreiben zu erstellen. Welche Datenstufe haben diese Daten?",
+    "answerOptions": [
+      { "id": "a", "text": "Öffentlich, weil E-Mail-Adressen auf Visitenkarten stehen.", "isCorrect": false },
+      { "id": "b", "text": "Intern, weil es geschäftliche Kontaktdaten sind.", "isCorrect": false },
+      { "id": "c", "text": "Vertraulich, weil es personenbezogene Kundendaten sind.", "isCorrect": true },
+      { "id": "d", "text": "Streng vertraulich, weil E-Mail-Adressen Passwörter enthalten können.", "isCorrect": false }
+    ],
+    "explanation": "Kundendaten mit Namen und E-Mail-Adressen sind personenbezogene Daten und mindestens vertraulich. Sie dürfen nur in Tools mit Auftragsverarbeitungsvertrag (AVV) eingegeben werden. ChatGPT Free hat keinen AVV. Diese Eingabe verstößt gegen die DSGVO.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w06",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Welche der folgenden Daten dürfen in ChatGPT Business (mit Unternehmensvertrag) eingegeben werden?",
+    "answerOptions": [
+      { "id": "a", "text": "Quartalszahlen und Umsatzdaten.", "isCorrect": false },
+      { "id": "b", "text": "Entwürfe für einen internen Newsletter.", "isCorrect": true },
+      { "id": "c", "text": "Gehaltsabrechnungen von Mitarbeitenden.", "isCorrect": false },
+      { "id": "d", "text": "Patentanmeldungen vor der Veröffentlichung.", "isCorrect": false }
+    ],
+    "explanation": "ChatGPT Business ist für Daten bis zur Stufe 'Intern' zugelassen. Ein interner Newsletter-Entwurf ist interne Information. Quartalszahlen sind vertraulich (nur Copilot). Gehaltsabrechnungen und Patentanmeldungen sind streng vertraulich (kein KI-Tool).",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w07",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Warum dürfen kostenlose KI-Tools (ChatGPT Free, Gemini Free) nicht mit Unternehmensdaten verwendet werden?",
+    "answerOptions": [
+      { "id": "a", "text": "Weil sie schlechtere Antworten liefern als bezahlte Versionen.", "isCorrect": false },
+      { "id": "b", "text": "Weil meist ein betrieblich geprüfter Vertrag, verbindliche Datenkontrollen und eine dokumentierte Freigabe fehlen.", "isCorrect": true },
+      { "id": "c", "text": "Weil sie nur auf Englisch funktionieren.", "isCorrect": false },
+      { "id": "d", "text": "Weil sie keine Internetverbindung benötigen.", "isCorrect": false }
+    ],
+    "explanation": "Bei nicht freigegebenen Verbraucherangeboten fehlen dem Betrieb meist ein geprüfter AVV, verbindliche Datenkontrollen und eine zugesagte Datenregion. Die Nutzung mit personenbezogenen Firmendaten kann deshalb unzulässig sein; die konkrete Bewertung hängt von Zweck, Rechtsgrundlage, Vertrag und Konfiguration ab.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w08",
+    "questionType": "single_choice",
+    "difficulty": "hard",
+    "questionText": "Deine Kollegin möchte eine Lieferantenliste mit Firmennamen, Ansprechpartnern und Einkaufskonditionen in Copilot analysieren. Was ist korrekt?",
+    "answerOptions": [
+      { "id": "a", "text": "Das ist erlaubt, weil Copilot bis zur Stufe 'Vertraulich' zugelassen ist.", "isCorrect": false },
+      { "id": "b", "text": "Das ist verboten, weil Einkaufskonditionen streng vertraulich sind.", "isCorrect": false },
+      { "id": "c", "text": "Die Firmennamen und Ansprechpartner können eingegeben werden, die Einkaufskonditionen müssen vorher als vertraulich eingestuft und der Zugriff auf den Unternehmenstenant beschränkt sein.", "isCorrect": true },
+      { "id": "d", "text": "Lieferantendaten dürfen grundsätzlich in kein KI-Tool eingegeben werden.", "isCorrect": false }
+    ],
+    "explanation": "Die Antwort erfordert differenziertes Denken: Firmennamen sind oft öffentlich, Ansprechpartner sind personenbezogene Daten (intern/vertraulich), und Einkaufskonditionen sind vertrauliche Geschäftsinformationen. In Copilot mit Unternehmenstenant ist das zulässig, aber die Einstufung muss bewusst erfolgen.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w09",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Was ist der wichtigste Unterschied zwischen einem guten und einem schlechten Prompt?",
+    "answerOptions": [
+      { "id": "a", "text": "Ein guter Prompt ist länger als 500 Wörter.", "isCorrect": false },
+      { "id": "b", "text": "Ein guter Prompt enthält Rolle, Kontext, Aufgabe, Format und Einschränkungen.", "isCorrect": true },
+      { "id": "c", "text": "Ein guter Prompt verwendet englische Fachbegriffe.", "isCorrect": false },
+      { "id": "d", "text": "Ein guter Prompt beginnt immer mit 'Bitte'.", "isCorrect": false }
+    ],
+    "explanation": "Das RCTFC-Schema (Rolle, Context, Task, Format, Constraints) sorgt dafür, dass die KI genau versteht, was du brauchst. Ein Prompt wie 'Schreib mir eine E-Mail' liefert generische Ergebnisse. Ein Prompt mit Rolle, Kontext und klarem Format liefert brauchbare Entwürfe.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w10",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Du nutzt einen KI-Assistenten, um eine E-Mail an einen wichtigen Kunden zu verfassen. Der generierte Text klingt professionell. Was ist dein nächster Schritt?",
+    "answerOptions": [
+      { "id": "a", "text": "Sofort absenden, KI-Assistenten machen keine Fehler bei E-Mails.", "isCorrect": false },
+      { "id": "b", "text": "Die 3-Schritt-Prüfung durchführen: Stimmt es? Fehlt was? Passt es?", "isCorrect": true },
+      { "id": "c", "text": "Den Text durch ein zweites KI-Tool prüfen lassen.", "isCorrect": false },
+      { "id": "d", "text": "Die E-Mail erst nächste Woche senden, um Abstand zu gewinnen.", "isCorrect": false }
+    ],
+    "explanation": "Jeder KI-generierte Output muss vor der Verwendung geprüft werden. Die 3-Schritt-Prüfung (Sachlich korrekt? Vollständig? Angemessen?) ist Pflicht. Auch professionell klingende Texte können falsche Fakten, fehlende Informationen oder einen unpassenden Ton enthalten.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w11",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Welche Einschränkung sollte ein guter Prompt für eine E-Mail-Vorlage enthalten?",
+    "answerOptions": [
+      { "id": "a", "text": "'Keine personenbezogenen Daten Dritter nennen' und 'Keine Zusagen machen, die nicht autorisiert sind'.", "isCorrect": true },
+      { "id": "b", "text": "'Mindestens 1.000 Wörter schreiben'.", "isCorrect": false },
+      { "id": "c", "text": "'Emojis verwenden, um freundlich zu wirken'.", "isCorrect": false },
+      { "id": "d", "text": "'So viele Fachbegriffe wie möglich einbauen'.", "isCorrect": false }
+    ],
+    "explanation": "Gute Prompt-Einschränkungen (Constraints) verhindern häufige Fehler. 'Keine personenbezogenen Daten Dritter nennen' schützt vor DSGVO-Verstößen. 'Keine Zusagen machen, die nicht autorisiert sind' verhindert, dass die KI Versprechen generiert, die du nicht einhalten kannst.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w12",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Du bittest einen KI-Assistenten, aus deinen Meeting-Notizen ein Protokoll zu erstellen. Der Output enthält einen Punkt, der so nicht besprochen wurde. Was tust du?",
+    "answerOptions": [
+      { "id": "a", "text": "Den Punkt übernehmen, weil der KI-Assistent vielleicht etwas erkannt hat, das du übersehen hast.", "isCorrect": false },
+      { "id": "b", "text": "Den Punkt entfernen und im Prompt die Einschränkung 'Nur Informationen aus meinen Notizen verwenden' ergänzen.", "isCorrect": true },
+      { "id": "c", "text": "Das gesamte Protokoll verwerfen und von Hand schreiben.", "isCorrect": false },
+      { "id": "d", "text": "Den Punkt mit einem Fragezeichen versehen und so an alle senden.", "isCorrect": false }
+    ],
+    "explanation": "KI-Systeme können Informationen hinzufügen, die nicht in den Eingabedaten stehen. Das ist eine Form von Halluzination. Die richtige Reaktion: den falschen Punkt entfernen und den Prompt mit einer klaren Einschränkung verbessern, damit es beim nächsten Mal nicht wieder passiert.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w13",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Was ist eine KI-Halluzination?",
+    "answerOptions": [
+      { "id": "a", "text": "Ein technischer Systemfehler, bei dem die KI abstürzt.", "isCorrect": false },
+      { "id": "b", "text": "Ein plausibel klingender Output, der sachlich falsch ist.", "isCorrect": true },
+      { "id": "c", "text": "Eine absichtliche Manipulation durch Hacker.", "isCorrect": false },
+      { "id": "d", "text": "Ein visueller Fehler in der Benutzeroberfläche.", "isCorrect": false }
+    ],
+    "explanation": "Bei einer Halluzination erzeugt die KI überzeugend klingende, aber faktisch falsche Informationen. Das passiert, weil Large Language Models Text durch statistische Token-Vorhersage generieren, nicht durch Faktenprüfung. Deshalb ist die 3-Schritt-Prüfung bei jedem Output Pflicht.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w14",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Copilot erstellt dir eine Marktanalyse mit der Aussage: 'Der deutsche KI-Markt wuchs 2025 um 34,2% auf 12,8 Milliarden Euro (Quelle: Bitkom 2025).' Wie prüfst du das?",
+    "answerOptions": [
+      { "id": "a", "text": "Die Zahl klingt plausibel, das reicht.", "isCorrect": false },
+      { "id": "b", "text": "Die Bitkom-Website aufrufen und nach der genannten Studie suchen.", "isCorrect": true },
+      { "id": "c", "text": "ChatGPT fragen, ob die Zahl stimmt.", "isCorrect": false },
+      { "id": "d", "text": "Die Zahl durch eine eigene Schätzung ersetzen.", "isCorrect": false }
+    ],
+    "explanation": "KI-Systeme erfinden regelmäßig plausibel klingende Quellenangaben und Zahlen. Eine Quelle wie 'Bitkom 2025' kann komplett frei erfunden sein. Die einzig zuverlässige Prüfung: die Originalquelle selbst aufrufen. Ein zweites KI-Tool zu fragen hilft nicht, da es denselben Fehler machen kann.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w15",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "In welcher Situation solltest du einem KI-Output NICHT vertrauen, auch nicht nach der 3-Schritt-Prüfung?",
+    "answerOptions": [
+      { "id": "a", "text": "Beim Verfassen eines internen Newsletter-Beitrags.", "isCorrect": false },
+      { "id": "b", "text": "Bei rechtlichen Einschätzungen, medizinischen Empfehlungen oder Entscheidungen mit erheblichen Konsequenzen für Personen.", "isCorrect": true },
+      { "id": "c", "text": "Beim Übersetzen einer E-Mail von Deutsch nach Englisch.", "isCorrect": false },
+      { "id": "d", "text": "Beim Erstellen einer Agenda für ein Team-Meeting.", "isCorrect": false }
+    ],
+    "explanation": "Bei rechtlichen, medizinischen oder personalrelevanten Entscheidungen reicht keine KI-Prüfung. Hier ist Fachexpertise gefragt. KI kann unterstützen (Recherche, Strukturierung), aber die Bewertung und Entscheidung liegt bei qualifizierten Personen. Das ist auch die Intention von 'Human-in-the-Loop' in der EU-KI-Verordnung.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w16",
+    "questionType": "single_choice",
+    "difficulty": "hard",
+    "questionText": "Copilot fasst ein 45-minütiges Teams-Meeting zusammen. Die Zusammenfassung nennt als Ergebnis: 'Das Team hat sich auf einen Projektstart am 1. Juni geeinigt.' Du erinnerst dich, dass der Termin offen blieb. Was schließt du daraus?",
+    "answerOptions": [
+      { "id": "a", "text": "Copilot hat wahrscheinlich recht, weil es das gesamte Audio analysiert hat.", "isCorrect": false },
+      { "id": "b", "text": "Die KI hat eine vage Diskussion als Entscheidung interpretiert. Das ist eine typische Halluzination bei Meeting-Zusammenfassungen.", "isCorrect": true },
+      { "id": "c", "text": "Der Termin wurde wahrscheinlich besprochen, als du kurz abgelenkt warst.", "isCorrect": false },
+      { "id": "d", "text": "Copilot erfindet keine konkreten Daten, also stimmt der Termin.", "isCorrect": false }
+    ],
+    "explanation": "KI-Systeme neigen dazu, vage Diskussionen als klare Entscheidungen zusammenzufassen. Das ist eine häufige Form der Halluzination bei Meeting-Zusammenfassungen. Eine Formulierung wie 'Wir könnten im Juni starten' wird zu 'Das Team hat sich auf den 1. Juni geeinigt.' Deshalb: Meeting-Protokolle immer von Teilnehmenden prüfen lassen.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w17",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Welcher der folgenden Punkte gehört in eine KI-Nutzungsrichtlinie?",
+    "answerOptions": [
+      { "id": "a", "text": "Eine technische Erklärung, wie neuronale Netze funktionieren.", "isCorrect": false },
+      { "id": "b", "text": "Eine Liste genehmigter KI-Tools mit den zugelassenen Datenstufen.", "isCorrect": true },
+      { "id": "c", "text": "Die vollständige EU-KI-Verordnung im Originaltext.", "isCorrect": false },
+      { "id": "d", "text": "Eine Anleitung zum Programmieren eigener KI-Modelle.", "isCorrect": false }
+    ],
+    "explanation": "Eine KI-Nutzungsrichtlinie muss praxisnah sein. Der wichtigste Bestandteil ist die Liste genehmigter Tools mit den zugelassenen Datenstufen. Damit weiß jeder Mitarbeitende sofort: Welches Tool darf ich nutzen? Welche Daten darf ich eingeben?",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w18",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Was fordert Artikel 4 der EU-KI-Verordnung von Unternehmen, die KI-Systeme einsetzen?",
+    "answerOptions": [
+      { "id": "a", "text": "Dass alle Mitarbeitenden einen Hochschulabschluss in Informatik haben.", "isCorrect": false },
+      { "id": "b", "text": "Dass die KI-Kompetenz der Mitarbeitenden sichergestellt wird, angepasst an ihre Rolle und den Kontext der KI-Nutzung.", "isCorrect": true },
+      { "id": "c", "text": "Dass nur die IT-Abteilung KI-Systeme nutzen darf.", "isCorrect": false },
+      { "id": "d", "text": "Dass Unternehmen eine jährliche KI-Prüfung durch externe Auditoren durchführen lassen.", "isCorrect": false }
+    ],
+    "explanation": "Artikel 4 der EU-KI-Verordnung verpflichtet Anbieter und Betreiber, angemessene KI-Kompetenz für Personen sicherzustellen, die in ihrem Auftrag mit KI-Systemen umgehen. Das Niveau richtet sich nach Rolle, Kontext und Risiko. Seit 2. Februar 2025 anwendbar; die Norm ist kein fixes Zertifikatsformat.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w19",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Ein Mitarbeiter gibt versehentlich Gehaltsdaten in ChatGPT Business ein. Was ist der korrekte Eskalationsweg?",
+    "answerOptions": [
+      { "id": "a", "text": "Abwarten, ob jemand es bemerkt.", "isCorrect": false },
+      { "id": "b", "text": "Den Chat-Verlauf löschen und niemandem erzählen.", "isCorrect": false },
+      { "id": "c", "text": "Sofort Vorgesetzte informieren, innerhalb von 4 Stunden IT-Leitung und Datenschutzbeauftragten, innerhalb von 24 Stunden Geschäftsführung.", "isCorrect": true },
+      { "id": "d", "text": "Eine E-Mail an die IT-Abteilung schreiben und auf Antwort warten.", "isCorrect": false }
+    ],
+    "explanation": "Gehaltsdaten sind streng vertraulich und dürfen in kein KI-Tool eingegeben werden. Dies ist ein KI-bezogener Vorfall mit personenbezogenen Daten. Der Eskalationspfad: sofort Vorgesetzte, innerhalb von 4h IT + Datenschutz, innerhalb von 24h Geschäftsführung. Zusätzlich muss geprüft werden, ob eine Meldepflicht nach DSGVO Art. 33 besteht (72-Stunden-Frist).",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w20",
+    "questionType": "single_choice",
+    "difficulty": "hard",
+    "questionText": "Ein neues KI-Tool (z.B. ein branchenspezifischer Chatbot) soll eingeführt werden. Die KI-Nutzungsrichtlinie existiert bereits. Was muss passieren?",
+    "answerOptions": [
+      { "id": "a", "text": "Nichts, die bestehende Richtlinie gilt automatisch für alle neuen Tools.", "isCorrect": false },
+      { "id": "b", "text": "Die Richtlinie muss außerplanmäßig überprüft und das neue Tool mit Datenstufe, Verantwortlichem und AVV-Status in die Richtlinie aufgenommen werden.", "isCorrect": true },
+      { "id": "c", "text": "Erst beim nächsten vierteljährlichen Review muss das Tool aufgenommen werden.", "isCorrect": false },
+      { "id": "d", "text": "Nur die IT-Abteilung muss informiert werden, die Richtlinie bleibt unverändert.", "isCorrect": false }
+    ],
+    "explanation": "Die KI-Nutzungsrichtlinie enthält einen anlassbezogenen Review-Mechanismus. Neue KI-Tools sind ein solcher Anlass. Vor der Einführung muss das Tool bewertet werden: Welche Datenstufe? Gibt es einen AVV? Wer ist verantwortlich? Erst nach Aufnahme in die Richtlinie darf das Tool genutzt werden. Nicht auf den regulären Review warten.",
+    "version": 1,
+    "active": true
+  }
+]

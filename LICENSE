@@ -1,0 +1,9 @@
+This repository contains material under multiple licenses.
+
+Application implementation code and configuration are licensed under the MIT
+License except the exact reserved paths listed in LICENSE_POLICY.md. Content,
+fonts, imported assets, editorial works, and brand assets have different terms
+or explicit rights reservations.
+
+The authoritative path-by-path scope is LICENSE_POLICY.md. Full reusable
+license texts are stored in LICENSES/.

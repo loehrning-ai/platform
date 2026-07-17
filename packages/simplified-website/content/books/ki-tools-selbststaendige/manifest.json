@@ -1,0 +1,83 @@
+{
+  "bookSlug": "ki-tools-selbststaendige",
+  "title": "KI-Tools für Selbstständige",
+  "owner": "editorial:books",
+  "lastReviewed": "2026-07-14",
+  "nextReview": "2026-10-14",
+  "reviewCadence": "quarterly",
+  "riskClass": "vendor",
+  "adaptationNote": "Nachwort-Kapitel (Autor-/Sales-Block) nicht importiert. Kommerzieller Self-Promo-Text entfernt.",
+  "chapters": [
+    {
+      "slug": "01_ki_fuer_selbststaendige",
+      "title": "Warum KI dein wichtigstes Werkzeug ist",
+      "sourceFile": "01_ki_fuer_selbststaendige.md"
+    },
+    {
+      "slug": "02_grundlagen",
+      "title": "KI-Grundlagen: nur was du brauchst",
+      "sourceFile": "02_grundlagen.md"
+    },
+    {
+      "slug": "03_prompting",
+      "title": "Die KRAFT-Methode: Prompting, das funktioniert",
+      "sourceFile": "03_prompting.md"
+    },
+    {
+      "slug": "04_akquise",
+      "title": "Kundengewinnung mit KI",
+      "sourceFile": "04_akquise.md"
+    },
+    {
+      "slug": "05_content",
+      "title": "Content-Erstellung: Blog, Social, Newsletter",
+      "sourceFile": "05_content.md"
+    },
+    {
+      "slug": "06_office",
+      "title": "Büroarbeit automatisieren",
+      "sourceFile": "06_office.md"
+    },
+    {
+      "slug": "07_finanzen",
+      "title": "Buchhaltung, Angebote, Rechnungen",
+      "sourceFile": "07_finanzen.md"
+    },
+    {
+      "slug": "08_recht",
+      "title": "DSGVO, Verträge, Steuern: KI im rechtlichen Rahmen",
+      "sourceFile": "08_recht.md"
+    },
+    {
+      "slug": "09_branchen",
+      "title": "KI nach Branche: dein individueller Fahrplan",
+      "sourceFile": "09_branchen.md"
+    },
+    {
+      "slug": "10_automatisierung",
+      "title": "Automatisierung: Abläufe kontrolliert ausführen",
+      "sourceFile": "10_automatisierung.md"
+    },
+    {
+      "slug": "11_skalierung",
+      "title": "Vom Freelancer zum Unternehmer: mit KI skalieren",
+      "sourceFile": "11_skalierung.md"
+    },
+    {
+      "slug": "12_toolbox",
+      "title": "Die KI-Toolbox: auswählen statt sammeln",
+      "sourceFile": "12_toolbox.md"
+    },
+    {
+      "slug": "13_prompt_bibliothek",
+      "title": "Anhang: 50+ Prompts nach Kategorie",
+      "sourceFile": "13_prompt_bibliothek.md"
+    }
+  ],
+  "droppedChapters": [
+    {
+      "sourceFile": "14_nachwort.md",
+      "reason": "commercial-author-sales-block"
+    }
+  ]
+}

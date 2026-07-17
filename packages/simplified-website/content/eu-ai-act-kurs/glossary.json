@@ -1,0 +1,186 @@
+[
+  {
+    "term": "KI-Verordnung",
+    "definition": "Die Verordnung (EU) 2024/1689 zur Festlegung harmonisierter Vorschriften für künstliche Intelligenz. Erster umfassender Rechtsrahmen für KI weltweit, in Kraft seit dem 1. August 2024, gestaffelt anwendbar bis 2028.",
+    "english": "AI Act",
+    "category": "regulatorik",
+    "relatedTerms": ["Risikobasierter Ansatz", "KI-System"],
+    "relatedBlocks": ["block_1"]
+  },
+  {
+    "term": "KI-System",
+    "definition": "Ein maschinengestütztes System, das mit Autonomie betrieben wird, sich nach der Einführung anpassen kann und aus Eingaben Ergebnisse wie Vorhersagen, Empfehlungen oder Entscheidungen ableitet (Art. 3 Nr. 1 der Verordnung (EU) 2024/1689).",
+    "english": "AI System",
+    "category": "regulatorik",
+    "relatedTerms": ["GPAI-Modell", "Anbieter"],
+    "relatedBlocks": ["block_1"]
+  },
+  {
+    "term": "Risikobasierter Ansatz",
+    "definition": "Das Grundprinzip der Verordnung (EU) 2024/1689: Pflichten richten sich nach dem Risiko eines KI-Systems, nicht nach der Technik. Vier Stufen von verboten über hochriskant und begrenzt bis minimal bestimmen den Umfang der Auflagen.",
+    "english": "Risk-Based Approach",
+    "category": "regulatorik",
+    "relatedTerms": ["Risikopyramide", "KI-Verordnung"],
+    "relatedBlocks": ["block_1", "block_2"]
+  },
+  {
+    "term": "Verbotene Praktiken",
+    "definition": "KI-Anwendungen mit unannehmbarem Risiko, die nach Art. 5 der Verordnung (EU) 2024/1689 untersagt sind: unter anderem Social Scoring durch Behörden, manipulatives Verhalten zum Schaden von Personen und ungezielte biometrische Massenüberwachung. Anwendbar seit dem 2. Februar 2025.",
+    "english": "Prohibited Practices",
+    "category": "regulatorik",
+    "relatedTerms": ["Risikopyramide", "Social Scoring"],
+    "relatedBlocks": ["block_2"]
+  },
+  {
+    "term": "Hochrisiko-System",
+    "definition": "KI-System mit erheblichem Risiko für Gesundheit, Sicherheit oder Grundrechte, eingeordnet über Art. 6 mit Anhang I oder Anhang III. Parlament und Rat haben den 2. Dezember 2027 für eigenständige Anhang-III-Systeme und den 2. August 2028 für produktintegrierte Systeme beschlossen. Am 14. Juli 2026 war die Änderungsverordnung noch nicht im Amtsblatt veröffentlicht und noch nicht in Kraft.",
+    "english": "High-Risk System",
+    "category": "regulatorik",
+    "relatedTerms": ["Anhang III", "Konformitätsbewertung"],
+    "relatedBlocks": ["block_2", "block_3"]
+  },
+  {
+    "term": "Anhang III",
+    "definition": "Anhang III der Verordnung (EU) 2024/1689 listet die Einsatzbereiche, in denen ein KI-System als hochriskant gilt: biometrische Identifizierung, kritische Infrastruktur, Bildung, Beschäftigung, Zugang zu Diensten, Strafverfolgung, Migration und Justiz.",
+    "english": "Annex III",
+    "category": "regulatorik",
+    "relatedTerms": ["Hochrisiko-System", "Anhang I"],
+    "relatedBlocks": ["block_2"]
+  },
+  {
+    "term": "Transparenzpflicht",
+    "definition": "Pflichten für KI mit begrenztem Risiko nach Art. 50 der Verordnung (EU) 2024/1689: Nutzer müssen erkennen können, dass sie mit einer KI interagieren, und KI-erzeugte oder manipulierte Inhalte (Deepfakes, generierte Texte) sind als solche zu kennzeichnen.",
+    "english": "Transparency Obligation",
+    "category": "regulatorik",
+    "relatedTerms": ["Wasserzeichen", "Deepfake"],
+    "relatedBlocks": ["block_2", "block_4"]
+  },
+  {
+    "term": "Minimales Risiko",
+    "definition": "Die unterste Stufe der Risikopyramide. KI-Systeme wie Spamfilter, KI in der Lagerverwaltung oder Empfehlungssysteme unterliegen keinen besonderen risikoklassenspezifischen Pflichten der Verordnung (EU) 2024/1689. Art. 4 KI-Kompetenz gilt für Anbieter und Betreiber trotzdem seit 2. Februar 2025.",
+    "english": "Minimal Risk",
+    "category": "regulatorik",
+    "relatedTerms": ["Risikopyramide", "Verhaltenskodex"],
+    "relatedBlocks": ["block_2"]
+  },
+  {
+    "term": "Konformitätsbewertung",
+    "definition": "Verfahren zum Nachweis, dass ein Hochrisiko-System die Anforderungen der Verordnung (EU) 2024/1689 erfüllt. Ergebnis ist eine EU-Konformitätserklärung und in der Regel eine CE-Kennzeichnung vor dem Inverkehrbringen (Art. 43, 47, 48).",
+    "english": "Conformity Assessment",
+    "category": "regulatorik",
+    "relatedTerms": ["Hochrisiko-System", "CE-Kennzeichnung"],
+    "relatedBlocks": ["block_3"]
+  },
+  {
+    "term": "Risikomanagementsystem",
+    "definition": "Ein fortlaufender, dokumentierter Prozess über den gesamten Lebenszyklus eines Hochrisiko-Systems, der Risiken identifiziert, bewertet und mindert (Art. 9 der Verordnung (EU) 2024/1689). Grundlage für alle weiteren Hochrisiko-Pflichten.",
+    "english": "Risk Management System",
+    "category": "regulatorik",
+    "relatedTerms": ["Hochrisiko-System", "Technische Dokumentation"],
+    "relatedBlocks": ["block_3"]
+  },
+  {
+    "term": "Menschliche Aufsicht",
+    "definition": "Pflicht nach Art. 14 der Verordnung (EU) 2024/1689: Hochrisiko-Systeme müssen so gestaltet sein, dass Menschen den Betrieb überwachen, Ausgaben verstehen, eingreifen und das System notfalls abschalten können.",
+    "english": "Human Oversight",
+    "category": "regulatorik",
+    "relatedTerms": ["Hochrisiko-System", "Risikomanagementsystem"],
+    "relatedBlocks": ["block_3"]
+  },
+  {
+    "term": "GPAI-Modell",
+    "definition": "Ein KI-Modell mit allgemeinem Verwendungszweck (General-Purpose AI), das ein breites Spektrum von Aufgaben erfüllt und in nachgelagerte Systeme integriert werden kann. Eigene Pflichten nach Art. 53 ff. der Verordnung (EU) 2024/1689, anwendbar ab dem 2. August 2025.",
+    "english": "General-Purpose AI Model",
+    "category": "technik",
+    "relatedTerms": ["Systemisches Risiko", "GPAI Code of Practice"],
+    "relatedBlocks": ["block_4"]
+  },
+  {
+    "term": "Systemisches Risiko",
+    "definition": "Besonderes Risiko sehr leistungsfähiger GPAI-Modelle. Modelle, die mit mehr als 10^25 FLOP trainiert wurden, gelten als Modelle mit systemischem Risiko und unterliegen verschärften Pflichten wie Modellbewertung und Vorfallmeldung (Art. 51, 55 der Verordnung (EU) 2024/1689).",
+    "english": "Systemic Risk",
+    "category": "technik",
+    "relatedTerms": ["GPAI-Modell", "GPAI Code of Practice"],
+    "relatedBlocks": ["block_4"]
+  },
+  {
+    "term": "KI-Kompetenz",
+    "definition": "Organisationspflicht nach Art. 4 der Verordnung (EU) 2024/1689: Anbieter und Betreiber müssen für ein ausreichendes Maß an KI-Kompetenz ihres Personals sorgen. Anwendbar seit dem 2. Februar 2025.",
+    "english": "AI Literacy",
+    "category": "regulatorik",
+    "relatedTerms": ["Betreiber", "Anbieter"],
+    "relatedBlocks": ["block_4"]
+  },
+  {
+    "term": "Wasserzeichen",
+    "definition": "Maschinenlesbare Kennzeichnung KI-erzeugter Inhalte. Anbieter generativer KI müssen Ausgaben so markieren, dass erkennbar ist, dass sie künstlich erzeugt oder manipuliert wurden (Art. 50 Abs. 2 der Verordnung (EU) 2024/1689).",
+    "english": "Watermarking",
+    "category": "technik",
+    "relatedTerms": ["Transparenzpflicht", "Deepfake"],
+    "relatedBlocks": ["block_4"]
+  },
+  {
+    "term": "Deepfake",
+    "definition": "Durch KI erzeugtes oder manipuliertes Bild-, Audio- oder Videomaterial, das echten Personen, Gegenständen oder Ereignissen ähnelt und fälschlich als echt erscheinen könnte. Muss nach Art. 50 Abs. 4 der Verordnung (EU) 2024/1689 offengelegt werden.",
+    "english": "Deepfake",
+    "category": "technik",
+    "relatedTerms": ["Wasserzeichen", "Transparenzpflicht"],
+    "relatedBlocks": ["block_4"]
+  },
+  {
+    "term": "Anbieter",
+    "definition": "Natürliche oder juristische Person, die ein KI-System oder GPAI-Modell entwickelt oder entwickeln lässt und unter eigenem Namen in Verkehr bringt (Art. 3 Nr. 3 der Verordnung (EU) 2024/1689).",
+    "english": "Provider",
+    "category": "regulatorik",
+    "relatedTerms": ["Betreiber", "KI-System"],
+    "relatedBlocks": ["block_5"]
+  },
+  {
+    "term": "Betreiber",
+    "definition": "Natürliche oder juristische Person, die ein KI-System in eigener Verantwortung verwendet, sofern dies nicht im Rahmen einer rein persönlichen Tätigkeit geschieht (Art. 3 Nr. 4 der Verordnung (EU) 2024/1689). Der Mittelstand ist meist Betreiber, nicht Anbieter.",
+    "english": "Deployer",
+    "category": "regulatorik",
+    "relatedTerms": ["Anbieter", "KI-Kompetenz"],
+    "relatedBlocks": ["block_5"]
+  },
+  {
+    "term": "AI Office",
+    "definition": "Das Büro für künstliche Intelligenz der Europäischen Kommission. Beaufsichtigt GPAI-Modelle, koordiniert die Durchsetzung der Verordnung (EU) 2024/1689 EU-weit und betreut den GPAI Code of Practice.",
+    "english": "AI Office",
+    "category": "regulatorik",
+    "relatedTerms": ["Marktüberwachungsbehörde", "GPAI Code of Practice"],
+    "relatedBlocks": ["block_5"]
+  },
+  {
+    "term": "Sanktionen",
+    "definition": "Bußgelder bei Verstößen gegen die Verordnung (EU) 2024/1689: bis zu 35 Mio EUR oder 7 Prozent des weltweiten Jahresumsatzes bei verbotenen Praktiken, gestaffelt niedriger bei sonstigen Verstößen (Art. 99).",
+    "english": "Penalties",
+    "category": "regulatorik",
+    "relatedTerms": ["AI Office", "Marktüberwachungsbehörde"],
+    "relatedBlocks": ["block_5"]
+  },
+  {
+    "term": "Reallabor",
+    "definition": "Regulatorische Sandbox nach Art. 57 ff. der Verordnung (EU) 2024/1689: ein von einer Behörde begleiteter, geschützter Rahmen, in dem innovative KI-Systeme vor der Markteinführung unter realen Bedingungen erprobt werden können.",
+    "english": "Regulatory Sandbox",
+    "category": "praxis",
+    "relatedTerms": ["AI Office", "Konformitätsbewertung"],
+    "relatedBlocks": ["block_5"]
+  },
+  {
+    "term": "DSGVO-Brücke",
+    "definition": "Die praktische Verbindung zwischen Datenschutz-Grundverordnung und KI-Verordnung. Wer DSGVO-Prozesse wie Verzeichnis der Verarbeitungstätigkeiten und Datenschutz-Folgenabschätzung pflegt, hat einen großen Teil der Governance-Grundlage für die Verordnung (EU) 2024/1689 bereits aufgebaut.",
+    "english": "GDPR Bridge",
+    "category": "praxis",
+    "relatedTerms": ["Betreiber", "Technische Dokumentation"],
+    "relatedBlocks": ["block_6"]
+  },
+  {
+    "term": "KI-Inventar",
+    "definition": "Eine gepflegte Liste aller im Unternehmen eingesetzten KI-Systeme samt Zweck, Risikoklasse und Verantwortlichen. Erster und wichtigster Schritt eines Mittelstands-Audits zur Verordnung (EU) 2024/1689.",
+    "english": "AI Inventory",
+    "category": "praxis",
+    "relatedTerms": ["Risikobasierter Ansatz", "Betreiber"],
+    "relatedBlocks": ["block_6"]
+  }
+]

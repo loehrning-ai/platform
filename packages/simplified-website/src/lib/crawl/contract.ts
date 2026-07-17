@@ -1,0 +1,416 @@
+import { absoluteUrl, SITE_ORIGIN } from "@/lib/seo/entity";
+
+export type CrawlClass =
+  | "public-indexable"
+  | "public-access"
+  | "public-noindex"
+  | "public-machine"
+  | "public-assets"
+  | "protected"
+  | "retired";
+
+export type AuthBehavior = "public" | "protected" | "gone" | "redirect";
+export type RobotsBehavior = "allow" | "disallow";
+export type CachePolicy = "public-static" | "public-short" | "private-no-store";
+
+export interface CrawlRoute {
+  readonly pattern: string;
+  readonly routeClass: CrawlClass;
+  readonly auth: AuthBehavior;
+  readonly robots: RobotsBehavior;
+  readonly includeInSitemap: boolean;
+  readonly cache: CachePolicy;
+  readonly xRobotsTag?: string;
+  readonly redirectTo?: string;
+  readonly status?: 301 | 410;
+  readonly explanation: string;
+  readonly owner: string;
+  readonly priority?: number;
+  readonly changeFrequency?: "daily" | "weekly" | "monthly" | "yearly";
+}
+
+export const NOINDEX_HEADER = "noindex, nofollow, noarchive";
+
+const PUBLIC_INDEXABLE_PATHS = [
+  "/",
+  "/einstieg",
+  "/wie-ki-funktioniert",
+  "/wie-ki-funktioniert/:lektionId",
+  "/standortbestimmung",
+  "/kurse",
+  "/kurse/open-source/:slug",
+  "/ki-fuehrerschein",
+  "/eu-ai-act-kurs",
+  "/ai-native",
+  "/ki-und-gesellschaft",
+  "/blog",
+  "/blog/:slug",
+  "/buecher",
+  "/buecher/:slug",
+  "/demos",
+  "/demos/:slug",
+  "/vorlagen",
+  "/vorlagen/:slug",
+  "/workshops",
+  "/workshops/:slug",
+  "/open-source",
+  "/open-source/lizenzrichtlinie",
+  "/open-source/:kind/:slug",
+  "/ueber-mich",
+  "/ueber-die-plattform",
+  "/neuigkeiten",
+  "/hilfe",
+  "/bekannte-grenzen",
+  "/impressum",
+  "/datenschutz",
+] as const;
+
+const PUBLIC_NOINDEX_PATHS = [
+  "/login",
+  "/auth/callback",
+  "/auth/logout",
+  "/feedback",
+  "/api/feedback",
+  "/api/ai-native/grade-exercise",
+  "/api/demos/:slug/briefing.pdf",
+  "/api/vorlagen/:slug/download.md",
+  "/api/vorlagen/:slug/download.pdf",
+  "/api/vorlagen/:slug/download.csv",
+  "/ki-fuehrerschein/verifizierung",
+  "/eu-ai-act-kurs/verifizierung",
+  "/ai-native/verifizierung",
+  "/ki-und-gesellschaft/verifizierung",
+  "/ki-fuehrerschein/kurs/quiz",
+  "/ki-fuehrerschein/kurs/zertifikat",
+  "/eu-ai-act-kurs/kurs/quiz",
+  "/eu-ai-act-kurs/kurs/zertifikat",
+  "/ai-native/kurs/quiz",
+  "/ai-native/kurs/zertifikat",
+  "/ki-und-gesellschaft/kurs/zertifikat",
+  "/ki-und-gesellschaft/kurs/quiz",
+] as const;
+
+const PUBLIC_ACCESS_PATHS = [
+  "/ki-fuehrerschein/kurs",
+  "/ki-fuehrerschein/kurs/:path*",
+  "/eu-ai-act-kurs/kurs",
+  "/eu-ai-act-kurs/kurs/:path*",
+  "/ai-native/kurs",
+  "/ai-native/kurs/:path*",
+  "/ai-native/demos",
+  "/ai-native/demos/:path*",
+  "/ai-native/fluency-test",
+  "/ai-native/glossar",
+  "/ai-native/capstone-gallery",
+  "/ki-und-gesellschaft/kurs",
+  "/ki-und-gesellschaft/kurs/:path*",
+] as const;
+
+const PUBLIC_MACHINE_PATHS = [
+  "/robots.txt",
+  "/sitemap.xml",
+  "/llms.txt",
+  "/api/books.json",
+  "/api/knowledge-graph.json",
+  "/api/health",
+] as const;
+
+const PUBLIC_ASSET_PATHS = [
+  "/favicon.ico",
+  "/favicon-16x16.png",
+  "/favicon-32x32.png",
+  "/apple-touch-icon.png",
+  "/icon-192.png",
+  "/icon-512.png",
+  "/icon-192-maskable.png",
+  "/icon-512-maskable.png",
+  "/og-image.png",
+  "/logo.svg",
+  "/logo-white.svg",
+  "/logo-square-512.png",
+  "/site.webmanifest",
+  "/book-covers/:path*",
+  "/imported-courses/:path*",
+  "/ueber-mich/tim-loehr.jpg",
+  "/logo/:path*",
+  "/workshops/:slug/:path*",
+  "/_next/:path*",
+  "/opengraph-image",
+] as const;
+
+const PROTECTED_PATHS = [
+  "/konto",
+  "/konto/:path*",
+  "/api/account/:path*",
+  "/api/progress",
+  "/api/progress/:path*",
+  "/api/ai-native/:path*",
+  "/api/demos/:path*",
+  "/api/vorlagen/:path*",
+] as const;
+
+const RETIRED_ROUTES: readonly CrawlRoute[] = [
+  route("/downloads/:path*.pdf", "retired", "Retired PDF downloads return 410.", {
+    auth: "gone",
+    robots: "disallow",
+    cache: "public-short",
+    status: 410,
+  }),
+  route("/foerdermittel", "retired", "Commercial funding page removed.", {
+    auth: "gone",
+    robots: "disallow",
+    cache: "public-short",
+    status: 410,
+  }),
+  route("/leistungen", "retired", "Commercial service page redirects to platform trust.", {
+    auth: "redirect",
+    robots: "disallow",
+    cache: "public-short",
+    redirectTo: "/ueber-die-plattform",
+    status: 301,
+  }),
+  route("/leistungen/:path*", "retired", "Commercial service pages redirect to platform trust.", {
+    auth: "redirect",
+    robots: "disallow",
+    cache: "public-short",
+    redirectTo: "/ueber-die-plattform",
+    status: 301,
+  }),
+  route("/kontakt", "retired", "Contact funnel retired; feedback is the public input path.", {
+    auth: "redirect",
+    robots: "disallow",
+    cache: "public-short",
+    redirectTo: "/feedback",
+    status: 301,
+  }),
+  route("/ki-transformation-check", "retired", "Commercial diagnostic route retired.", {
+    auth: "redirect",
+    robots: "disallow",
+    cache: "public-short",
+    redirectTo: "/standortbestimmung",
+    status: 301,
+  }),
+  route("/arbeitsweise", "retired", "Legacy platform route renamed.", {
+    auth: "redirect",
+    robots: "disallow",
+    cache: "public-short",
+    redirectTo: "/ueber-die-plattform",
+    status: 301,
+  }),
+  route("/daten-audit", "retired", "Commercial audit route retired.", {
+    auth: "redirect",
+    robots: "disallow",
+    cache: "public-short",
+    redirectTo: "/ueber-die-plattform",
+    status: 301,
+  }),
+  route("/digifyde", "retired", "Legacy diagnostic brand route retired.", {
+    auth: "redirect",
+    robots: "disallow",
+    cache: "public-short",
+    redirectTo: "/standortbestimmung",
+    status: 301,
+  }),
+  route("/ki-readiness", "retired", "Legacy readiness route retired.", {
+    auth: "redirect",
+    robots: "disallow",
+    cache: "public-short",
+    redirectTo: "/standortbestimmung",
+    status: 301,
+  }),
+  route("/eu-ai-act-check", "retired", "Legacy diagnostic route retired.", {
+    auth: "redirect",
+    robots: "disallow",
+    cache: "public-short",
+    redirectTo: "/standortbestimmung",
+    status: 301,
+  }),
+  route("/eu-ai-act-check/:path*", "retired", "Legacy diagnostic route retired.", {
+    auth: "redirect",
+    robots: "disallow",
+    cache: "public-short",
+    redirectTo: "/standortbestimmung",
+    status: 301,
+  }),
+  route("/methodik", "retired", "Legacy methodology route consolidated into blog.", {
+    auth: "redirect",
+    robots: "disallow",
+    cache: "public-short",
+    redirectTo: "/blog",
+    status: 301,
+  }),
+  route("/blog/digify", "retired", "Retired commercial blog post.", {
+    auth: "redirect",
+    robots: "disallow",
+    cache: "public-short",
+    redirectTo: "/blog",
+    status: 301,
+  }),
+  route("/blog/ki-beratungsluecke", "retired", "Retired commercial blog post.", {
+    auth: "redirect",
+    robots: "disallow",
+    cache: "public-short",
+    redirectTo: "/blog/eu-ai-act-grundlagen",
+    status: 301,
+  }),
+];
+
+function route(
+  pattern: string,
+  routeClass: CrawlClass,
+  explanation: string,
+  overrides: Partial<CrawlRoute> = {},
+): CrawlRoute {
+  const protectedRoute = routeClass === "protected";
+  const retiredRoute = routeClass === "retired";
+  const noindex = routeClass === "public-noindex" || protectedRoute || retiredRoute;
+  return {
+    pattern,
+    routeClass,
+    auth: protectedRoute ? "protected" : retiredRoute ? "gone" : "public",
+    robots: protectedRoute || retiredRoute ? "disallow" : "allow",
+    // Sitemap membership is explicit per pattern (public-content contract):
+    // public-indexable patterns default to inclusion; ":"-patterns are
+    // enumerated per known slug in src/app/sitemap.ts. Keeping a pattern out
+    // of the sitemap requires an explicit includeInSitemap: false override
+    // (e.g. /buecher/:slug/:chapter), never a silent ":"-filter.
+    includeInSitemap: routeClass === "public-indexable",
+    cache: protectedRoute ? "private-no-store" : routeClass === "public-assets" ? "public-static" : "public-short",
+    xRobotsTag: noindex ? NOINDEX_HEADER : undefined,
+    explanation,
+    owner: "crawl-contract",
+    ...overrides,
+  };
+}
+
+export const CRAWL_CONTRACT: readonly CrawlRoute[] = [
+  // Specific retired routes must precede broad dynamic patterns such as
+  // /blog/:slug so redirects and 410 responses cannot be shadowed.
+  ...RETIRED_ROUTES,
+  ...PUBLIC_INDEXABLE_PATHS.map((path) =>
+    route(path, "public-indexable", "Public canonical HTML for search and AI retrieval.", {
+      priority: path === "/" ? 1 : path === "/kurse" ? 0.85 : 0.6,
+      changeFrequency: path === "/" || path === "/kurse" || path === "/blog" ? "weekly" : "monthly",
+    }),
+  ),
+  // Book chapter readers carry index metadata (see src/app/buecher/[slug]/[chapter]/page.tsx)
+  // but stay out of the sitemap by deliberate per-pattern flag; public-content contract
+  // owns sitemap semantics for detail pages.
+  route("/buecher/:slug/:chapter", "public-indexable", "Public book chapter reader for search and AI retrieval.", {
+    includeInSitemap: false,
+    priority: 0.6,
+    changeFrequency: "monthly",
+  }),
+  // Exact noindex utility routes must precede course-reader catch-alls.
+  ...PUBLIC_NOINDEX_PATHS.map((path) =>
+    route(path, "public-noindex", "Public utility page; crawlable so crawlers can see noindex."),
+  ),
+  ...PUBLIC_ACCESS_PATHS.map((path) =>
+    route(path, "public-access", "Public learning content intentionally accessible without login but not listed in sitemap."),
+  ),
+  ...PUBLIC_MACHINE_PATHS.map((path) =>
+    route(path, "public-machine", "Public machine-readable surface.", {
+      includeInSitemap: false,
+    }),
+  ),
+  ...PUBLIC_ASSET_PATHS.map((path) =>
+    route(path, "public-assets", "Public static proof or platform asset.", {
+      includeInSitemap: false,
+    }),
+  ),
+  ...PROTECTED_PATHS.map((path) =>
+    route(path, "protected", "Private account, state, or provider-backed API surface."),
+  ),
+];
+
+export function matchesPattern(pathname: string, pattern: string): boolean {
+  if (pattern === pathname) return true;
+  const regex = pattern
+    .split("/")
+    .map((segment) => {
+      if (segment === "") return "";
+      if (segment === ":path*") return ".*";
+      if (segment === ":path*.pdf") return ".*\\.pdf";
+      if (segment.startsWith(":")) return "[^/]+";
+      return segment.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    })
+    .join("/");
+  return new RegExp(`^${regex}$`).test(pathname);
+}
+
+export function getCrawlRoute(pathname: string): CrawlRoute {
+  return (
+    CRAWL_CONTRACT.find((entry) => matchesPattern(pathname, entry.pattern)) ??
+    // Fail-closed default: an unlisted route is noindex until it earns an
+    // explicit CRAWL_CONTRACT class. Access stays public so the route still
+    // resolves, but middleware emits X-Robots-Tag: noindex (src/middleware.ts).
+    route(pathname, "public-noindex", "Unlisted route defaults to noindex (fail-closed). Add an explicit contract class before indexing.")
+  );
+}
+
+export function isPublicRoute(pathname: string): boolean {
+  const entry = getCrawlRoute(pathname);
+  return entry.auth === "public";
+}
+
+export function isProtectedRoute(pathname: string): boolean {
+  return getCrawlRoute(pathname).auth === "protected";
+}
+
+export function isRetiredRoute(pathname: string): boolean {
+  return getCrawlRoute(pathname).routeClass === "retired";
+}
+
+// Static (non-":") sitemap URLs only. Dynamic ":"-patterns with
+// includeInSitemap: true are not silently dropped: src/app/sitemap.ts
+// enumerates their known slugs from the catalogs.
+export function sitemapStaticPaths(): readonly string[] {
+  return CRAWL_CONTRACT
+    .filter((entry) => entry.includeInSitemap && !entry.pattern.includes(":"))
+    .map((entry) => entry.pattern);
+}
+
+export function robotsAllowPaths(): readonly string[] {
+  return Array.from(
+    new Set(
+      CRAWL_CONTRACT
+        .filter((entry) => entry.robots === "allow")
+        .map((entry) => robotsPattern(entry.pattern)),
+    ),
+  );
+}
+
+export function robotsDisallowPaths(): readonly string[] {
+  return Array.from(
+    new Set(
+      CRAWL_CONTRACT
+        .filter((entry) => entry.robots === "disallow")
+        .map((entry) => robotsPattern(entry.pattern)),
+    ),
+  );
+}
+
+function robotsPattern(pattern: string): string {
+  if (pattern.startsWith("/api/") && pattern.includes("/:slug/")) {
+    return pattern.replace("/:slug/", "/*/");
+  }
+  return pattern
+    .replace(/\/:path\*\.pdf$/, "/")
+    .replace(/\/:path\*$/, "/")
+    .replace(/\/:kind\/:slug$/, "/")
+    .replace(/\/:slug\/:chapter$/, "/")
+    .replace(/\/:slug$/, "/")
+    .replace(/\/:lektionId$/, "/");
+}
+
+export function canonicalFor(pathname: string): string {
+  return absoluteUrl(pathname);
+}
+
+export function cacheHeaderFor(entry: CrawlRoute): string {
+  if (entry.cache === "private-no-store") return "private, no-store";
+  if (entry.cache === "public-static") return "public, max-age=31536000, immutable";
+  return "public, max-age=3600, s-maxage=3600";
+}
+
+export { SITE_ORIGIN };

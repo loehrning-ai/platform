@@ -1,0 +1,512 @@
+#!/usr/bin/env node
+// Fixture-based test for scan-export.mjs.
+//
+// Runs the real scanner CLI over planted temporary directories and asserts on
+// exit codes and reported findings. Every planted value is obviously fake and
+// self labelled (EXAMPLE / FAKE); no real secret is used. Run with:
+//   node scripts/open-source/__tests__/scan-export.test.mjs
+// or: bun run test:scan-export
+import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
+import { mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const here = dirname(fileURLToPath(import.meta.url));
+const scanScript = join(here, "..", "scan-export.mjs");
+
+// Obviously fake, self labelled planted values. NOT real credentials.
+// Fragments are joined at runtime so scanning this fixture source does not flag
+// the inert test strings themselves.
+const FAKE = {
+  ghp: [`gh${"p"}_`, "FAKEEXAMPLE".repeat(4)].join(""),
+  jwt: [
+    "eyJhbGciOi",
+    "JIUzI1NiIsInR5cCI6",
+    "IkpXVCJ9.eyJmYWtlIjoi",
+    "ZXhhbXBsZSJ9.ZmFrZQ",
+    "c2lnbmF0dXJlRXhhbXBsZQ",
+  ].join(""),
+  skAnt: ["sk", "ant", "EXAMPLE", "0".repeat(28)].join("-"),
+  akia: ["AK", "IA", "IOSFODNN7EXAMPLE"].join(""),
+  base64: "A1b2C3d4".repeat(6),
+  macLocalPath: [
+    ["/Users", "real-contributor"].join("/"),
+    "Projects",
+    "internal-notes.md",
+  ].join("/"),
+  linuxLocalPath: [
+    ["/home", "build-contributor"].join("/"),
+    "src",
+    "private.ts",
+  ].join("/"),
+  linuxPublicNamedPath: [
+    ["/home", "public"].join("/"),
+    "src",
+    "private.ts",
+  ].join("/"),
+  windowsLocalPath: [
+    ["C:", "Users", "DevContributor"].join("\\"),
+    "repo",
+    "private.ts",
+  ].join("\\"),
+  tildeLocalPath: ["~", "Downloads", "private-working-copy.zip"].join("/"),
+  vault: `See ${["mavengence", "obsidian"].join("_")}/INDEX.md for context.`,
+  internalPlan: ["plan", "057"].join(" "),
+  internalStage: ["019", "Stage", "15"].join(" "),
+};
+const ENV_NAMES = {
+  anthropic: ["ANTHROPIC", "API", "KEY"].join("_"),
+  database: ["DATABASE", "URL"].join("_"),
+  serviceRole: ["SUPABASE", "SERVICE", "ROLE", "KEY"].join("_"),
+};
+const INTERNAL_REFERENCES = {
+  planPath: ["plans", "roadmap.md"].join("/"),
+  todoFile: ["TODO", "S.md"].join(""),
+  runbookFile: ["RUN", "BOOK.md"].join(""),
+};
+
+function runScan(flag, dir, profile = null) {
+  const args = [scanScript, flag, dir];
+  if (profile) args.push("--profile", profile);
+  return spawnSync(process.execPath, args, { encoding: "utf8" });
+}
+
+function combined(result) {
+  return `${result.stdout ?? ""}${result.stderr ?? ""}`;
+}
+
+async function writeTree(root, files) {
+  for (const [rel, content] of Object.entries(files)) {
+    const full = join(root, rel);
+    await mkdir(dirname(full), { recursive: true });
+    await writeFile(full, content);
+  }
+}
+
+function sha256(content) {
+  return createHash("sha256").update(content).digest("hex");
+}
+
+function manifestAsset(path, content, overrides = {}) {
+  return {
+    path,
+    sizeBytes: Buffer.byteLength(content),
+    sha256: sha256(content),
+    owner: "loehrning-ai maintainers",
+    source: "repository-owned test fixture",
+    license: "MIT",
+    redistribution: "permitted",
+    ...overrides,
+  };
+}
+
+function manifestJson(assets) {
+  return `${JSON.stringify({ version: 1, assets }, null, 2)}\n`;
+}
+
+async function main() {
+  const workdir = await mkdtemp(join(tmpdir(), "scan-export-fixture-"));
+  const clean = join(workdir, "clean");
+  const dirty = join(workdir, "dirty");
+  const advisory = join(workdir, "advisory");
+  const platformClean = join(workdir, "platform-clean");
+  const platformDirty = join(workdir, "platform-dirty");
+  const profileOnly = join(workdir, "profile-only");
+  try {
+    // 1. CLEAN fixture: no findings at all. Note the teaching "claude" course
+    //    directory (no leading dot) must NOT be flagged.
+    await writeTree(clean, {
+      "README.md": "# Interactive Courses\n\nMIT licensed teaching material.\n",
+      "index.html":
+        "<html><body><h1>Data Engineering</h1><p>Willkommen.</p></body></html>\n",
+      "claude/js/widgets.js":
+        'export const drill = { title: "Redaction" };\nconsole.log("hello");\n',
+      "docs/generic-local-paths.md":
+        "Generic setup examples:\n" +
+        "- /Users/<username>/Projects/example\n" +
+        "- /home/$USER/src/example\n" +
+        "- C:\\Users\\%USERNAME%\\src\\example\n" +
+        "- /Users/example-user/Projects/example\n" +
+        "- C:\\Users\\Public\\Documents\\example\n" +
+        "- https://docs.example.invalid/Users/real-looking-user/guide\n",
+    });
+
+    // 2. DIRTY fixture: one blocking class per planted item, across files, with
+    //    the four widget secrets on distinct lines to prove full-pass reporting.
+    await writeTree(dirty, {
+      "claude/js/widgets.js":
+        `const gh = "${FAKE.ghp}";\n` +
+        `const jwt = "${FAKE.jwt}";\n` +
+        `const sk = "${FAKE.skAnt}";\n` +
+        `const aws = "${FAKE.akia}";\n`,
+      "data/blob.txt": `const t = "${FAKE.base64}";\n`,
+      "notes/local.md":
+        `${FAKE.macLocalPath}\n` +
+        `${FAKE.linuxLocalPath}\n` +
+        `${FAKE.windowsLocalPath}\n` +
+        `${FAKE.linuxPublicNamedPath}\n` +
+        `Source: ${FAKE.tildeLocalPath}\n` +
+        `${FAKE.vault}\n${FAKE.internalPlan}\n${FAKE.internalStage}\n`,
+      "CLAUDE.md": "# internal instructions\n",
+      [INTERNAL_REFERENCES.planPath]: "# internal roadmap\n",
+      "docs/privacy/policy.md": "internal privacy handling\n",
+    });
+
+    // 3. ADVISORY fixture: WARN + ASSET only, must still exit 0.
+    await writeTree(advisory, {
+      "pricing.html":
+        "<p>Der Preis beträgt EUR 5000 pro Monat. Transparent pricing.</p>\n",
+      "big.txt": "Lorem ipsum dolor sit amet consectetur adipiscing.\n".repeat(
+        30000,
+      ),
+      "bun.lock":
+        '{ "pkg": { "integrity": "sha512-A1b2C3d4A1b2C3d4A1b2C3d4A1b2C3d4A1b2C3d4A1b2C3d4==" } }\n',
+    });
+    // >1MB binary asset with NUL bytes: ASSET note, never read as text.
+    await mkdir(join(advisory, "img"), { recursive: true });
+    const png = Buffer.concat([
+      Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00]),
+      Buffer.alloc(1024 * 1024 + 512),
+    ]);
+    await writeFile(join(advisory, "img", "logo.png"), png);
+
+    // 4. PLATFORM CLEAN fixture: example env files, generated directories, and
+    //    a recognized binary whose exact path and SHA-256 are in the manifest.
+    const font = Buffer.from([0x00, 0x01, 0x02, 0x03, 0x04, 0xff]);
+    const fontPath = "packages/simplified-website/src/assets/example.ttf";
+    const logoSvg = Buffer.from(
+      '<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0h1v1z"/></svg>\n',
+    );
+    const logoPath = "packages/simplified-website/public/logo.svg";
+    await writeTree(platformClean, {
+      "README.md":
+        "# Public platform fixture\n\n" +
+        "Source: https://example.com/media/20240506_DSK_Orientation_Example_Document.pdf\n" +
+        "The risk-area identifier is ordinary prose, not an API credential.\n",
+      "package.json": '{"name":"public-platform","private":true}\n',
+      "bun.lock": '{"lockfileVersion":1}\n',
+      ".env.example":
+        `${ENV_NAMES.anthropic}=<your-api-key>\n` +
+        "NEXT_PUBLIC_SUPABASE_URL=https://example.com\n" +
+        "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=example-publishable-key\n",
+      ".gitignore":
+        `${INTERNAL_REFERENCES.todoFile}\n` +
+        `${INTERNAL_REFERENCES.runbookFile}\n` +
+        `${INTERNAL_REFERENCES.planPath}\n`,
+      "packages/simplified-website/tests/e2e/.env.test.example":
+        `${ENV_NAMES.serviceRole}=\${SUPABASE_SERVICE_ROLE_KEY}\n` +
+        `${ENV_NAMES.database}=postgresql://test:test@localhost:5432/test\n`,
+      ".bun-cache/ignored.js": `const ignored = "${FAKE.ghp}";\n`,
+      ".lighthouseci/ignored.txt": FAKE.macLocalPath,
+      ".next/ignored.txt": FAKE.macLocalPath,
+      ".mypy_cache/ignored.txt": FAKE.macLocalPath,
+      ".pytest_cache/ignored.txt": FAKE.macLocalPath,
+      ".ruff_cache/ignored.txt": FAKE.macLocalPath,
+      ".venv/ignored.py": `credential = "${FAKE.ghp}"\n`,
+      "packages/python-tool/__pycache__/ignored.pyc": FAKE.jwt,
+      "packages/python-tool/venv/ignored.py": `credential = "${FAKE.ghp}"\n`,
+      "packages/simplified-website/tests/e2e/.auth/state.json": FAKE.jwt,
+      "packages/simplified-website/src/nul-fixture.ts": Buffer.from(
+        'export const malformed = "\0garbage";\n',
+      ),
+      [fontPath]: font,
+      [logoPath]: logoSvg,
+      "ASSET_MANIFEST.json": manifestJson([
+        manifestAsset(fontPath, font),
+        manifestAsset(logoPath, logoSvg),
+      ]),
+    });
+
+    // 5. PLATFORM DIRTY fixture: every strict public-tree boundary is planted.
+    const mismatchFont = Buffer.from([0x77, 0x4f, 0x46, 0x32, 0x00, 0x01]);
+    const unlistedPng = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x00]);
+    await writeTree(platformDirty, {
+      "README.md": "# Dirty public platform fixture\n",
+      ".env.local": "SHOULD_NOT_EXIST=1\n",
+      ".netrc": "machine example.invalid login fixture password fixture\n",
+      ".docker/config.json": '{"auths":{"example.invalid":{}}}\n',
+      ".aws/credentials": "[default]\naws_access_key_id=fixture\n",
+      ".kube/config": "current-context: fixture\n",
+      ".ssh/config": "Host example.invalid\n",
+      "credentials.json": '{"fixture":true}\n',
+      ".env.example": `${ENV_NAMES.anthropic}=live-production-value\n`,
+      ".codex/internal.md": "private agent instructions\n",
+      ".claude.json": '{"private":true}\n',
+      ".cursorrules": "private agent instructions\n",
+      ".windsurfrules": "private agent instructions\n",
+      "discuss-launch.md": "internal discussion\n",
+      "notes/operator.local.md": "internal local note\n",
+      ".gemini/internal.md": "private agent instructions\n",
+      ".windsurf/internal.md": "private agent instructions\n",
+      ".roo/internal.md": "private agent instructions\n",
+      ".aider.conf.yml": "model: local\n",
+      ".github/copilot-instructions.md": "private agent instructions\n",
+      "unexpected/.auth/state.txt": "generated authenticated state\n",
+      "src/unsafe-env.ts": `const value = \`${ENV_NAMES.database}=literal\`;\n`,
+      "src/unsafe-bracket-env.ts": `process.env[\"${ENV_NAMES.anthropic}\"] = \"literal\";\n`,
+      "src/literal-secret.ts": `export const ${["pass", "word"].join("")} = \"${["hunter", "2"].join("")}\";\n`,
+      "src/internal-references.ts":
+        `export const todo = \"${INTERNAL_REFERENCES.todoFile}\";\n` +
+        `export const runbook = \"${INTERNAL_REFERENCES.runbookFile}\";\n` +
+        `export const plan = \"${INTERNAL_REFERENCES.planPath}\";\n`,
+      "packages/simplified-website/docs/operations/internal.md":
+        "internal operations\n",
+      "packages/simplified-website/bun.lock": '{"stale":true}\n',
+      "packages/legacy/bun.lockb": "legacy binary lock fixture\n",
+      "examples/tool/package-lock.json": '{"lockfileVersion":3}\n',
+      "nested/deeper/npm-shrinkwrap.json": '{"lockfileVersion":3}\n',
+      "packages/python-tool/pnpm-lock.yaml": "lockfileVersion: '9.0'\n",
+      "docs/sample/yarn.lock": "# generated lockfile\n",
+      "package-lock.json": '{"lockfileVersion":3}\n',
+      "packages/simplified-website/logo/source.svg": "<svg/>\n",
+      "packages/simplified-website/public/fonts/old.woff2": mismatchFont,
+      "assets/mismatch.woff2": mismatchFont,
+      "assets/unlisted.png": unlistedPng,
+      "assets/unknown.bin": Buffer.from([0x00, 0x01, 0x02]),
+      "ASSET_MANIFEST.json": manifestJson([
+        manifestAsset("assets/mismatch.woff2", mismatchFont, {
+          sizeBytes: 999,
+          sha256: "0".repeat(64),
+        }),
+        manifestAsset("assets/missing.jpg", Buffer.from("missing")),
+        manifestAsset("../escape.png", Buffer.from("escape")),
+        manifestAsset("assets/bad.gif", Buffer.from("bad"), {
+          sha256: "invalid",
+          sizeBytes: 0,
+          owner: "",
+          source: "",
+          license: "",
+          redistribution: "",
+        }),
+      ]),
+    });
+    await symlink("README.md", join(platformDirty, "linked-readme.md"));
+
+    // 6. PROFILE fixture: platform-only private paths remain compatible with the
+    //    existing interactive-course exporter profile.
+    await writeTree(profileOnly, {
+      "ASSET_MANIFEST.json": manifestJson([]),
+      "packages/simplified-website/docs/operations/internal.md":
+        "internal operations\n",
+      "packages/simplified-website/bun.lock": '{"stale":true}\n',
+    });
+
+    // --- clean: exits 0 in both modes ---
+    const cleanSource = runScan("--source", clean);
+    assert.equal(
+      cleanSource.status,
+      0,
+      `clean --source should exit 0\n${combined(cleanSource)}`,
+    );
+    assert.match(
+      combined(cleanSource),
+      /no findings/,
+      "clean run should report no findings",
+    );
+
+    const cleanDest = runScan("--dest", clean);
+    assert.equal(
+      cleanDest.status,
+      0,
+      `clean --dest should exit 0\n${combined(cleanDest)}`,
+    );
+
+    // --- dirty: exits non-zero and lists every planted class + every line ---
+    const dirtyRes = runScan("--source", dirty);
+    const dirtyOut = combined(dirtyRes);
+    assert.notEqual(
+      dirtyRes.status,
+      0,
+      `dirty --source should exit non-zero\n${dirtyOut}`,
+    );
+    for (const needle of [
+      "claude/js/widgets.js",
+      "GitHub token",
+      "JWT",
+      "sk- API key",
+      "AWS access key",
+      "high-entropy base64",
+      "local machine user path",
+      "private Obsidian vault reference",
+      "internal plan identifier",
+      "CLAUDE.md",
+      "plans",
+      "docs/privacy",
+    ]) {
+      assert.ok(
+        dirtyOut.includes(needle),
+        `dirty output should mention: ${needle}\n${dirtyOut}`,
+      );
+    }
+    for (const ln of [
+      "widgets.js:1",
+      "widgets.js:2",
+      "widgets.js:3",
+      "widgets.js:4",
+    ]) {
+      assert.ok(
+        dirtyOut.includes(ln),
+        `dirty output should list line ${ln}\n${dirtyOut}`,
+      );
+    }
+    for (const ln of [
+      "notes/local.md:1",
+      "notes/local.md:2",
+      "notes/local.md:3",
+      "notes/local.md:4",
+      "notes/local.md:5",
+    ]) {
+      assert.ok(
+        dirtyOut.includes(`${ln}  [local machine user path]`),
+        `dirty output should list cross-platform local path at ${ln}\n${dirtyOut}`,
+      );
+    }
+
+    // --dest parity on the same dirty tree.
+    const dirtyDest = runScan("--dest", dirty);
+    assert.notEqual(
+      dirtyDest.status,
+      0,
+      "dirty --dest should exit non-zero (parity)",
+    );
+
+    // --- advisory: WARN + ASSET only, exits 0, lockfile hash not a base64 hit ---
+    const advRes = runScan("--source", advisory);
+    const advOut = combined(advRes);
+    assert.equal(
+      advRes.status,
+      0,
+      `advisory should exit 0 (WARN/ASSET only)\n${advOut}`,
+    );
+    assert.ok(/WARN/.test(advOut), "advisory should surface WARN findings");
+    assert.ok(/pric|Preis/i.test(advOut), "advisory should flag pricing");
+    assert.ok(
+      /large file/i.test(advOut),
+      "advisory should flag the large text file",
+    );
+    assert.ok(/ASSET/.test(advOut), "advisory should record the binary asset");
+    assert.ok(
+      !/base64/.test(advOut),
+      "lockfile integrity hash must not trip the base64 heuristic",
+    );
+
+    // --- platform clean: strict mode accepts safe examples, ignores generated
+    // directories, recognizes the font, and validates the exact asset hash ---
+    const platformCleanRes = runScan("--dest", platformClean, "platform");
+    assert.equal(
+      platformCleanRes.status,
+      0,
+      `clean platform fixture should exit 0\n${combined(platformCleanRes)}`,
+    );
+    assert.match(combined(platformCleanRes), /no findings/);
+
+    // --- platform dirty: all public-tree policy violations block in one pass ---
+    const platformDirtyRes = runScan("--dest", platformDirty, "platform");
+    const platformDirtyOut = combined(platformDirtyRes);
+    assert.equal(
+      platformDirtyRes.status,
+      1,
+      `dirty platform fixture should exit 1\n${platformDirtyOut}`,
+    );
+    for (const needle of [
+      "secret-like filename",
+      "sensitive environment example",
+      "DATABASE_URL assignment",
+      "ANTHROPIC_API_KEY assignment",
+      "internal TODO or operations-runbook reference",
+      "internal plan identifier",
+      "internal operations documentation",
+      "non-canonical JavaScript lockfile",
+      "redundant logo working asset kit",
+      "unused duplicate public font files",
+      "literal password assignment",
+      "unexpected authenticated storage directory",
+      "AI tooling directory",
+      "AI tooling instruction file",
+      "internal local planning note",
+      "symbolic link",
+      "not a recognized asset type",
+      "missing from ASSET_MANIFEST.json",
+      "does not match ASSET_MANIFEST.json",
+      "asset sizeBytes must be a positive safe integer",
+      "byte size does not match ASSET_MANIFEST.json",
+      "stale ASSET_MANIFEST.json entry",
+      "normalized repo-relative POSIX path",
+      "asset owner must be a non-empty string",
+    ]) {
+      assert.ok(
+        platformDirtyOut.includes(needle),
+        `dirty platform output should mention: ${needle}\n${platformDirtyOut}`,
+      );
+    }
+    for (const lockfilePath of [
+      "packages/simplified-website/bun.lock",
+      "packages/legacy/bun.lockb",
+      "examples/tool/package-lock.json",
+      "nested/deeper/npm-shrinkwrap.json",
+      "packages/python-tool/pnpm-lock.yaml",
+      "docs/sample/yarn.lock",
+      "package-lock.json",
+    ]) {
+      assert.ok(
+        platformDirtyOut.includes(lockfilePath),
+        `dirty platform output should list forbidden lockfile: ${lockfilePath}\n${platformDirtyOut}`,
+      );
+    }
+
+    // --- profile boundaries and required manifest ---
+    const profileDefault = runScan("--dest", profileOnly);
+    assert.equal(
+      profileDefault.status,
+      0,
+      `default profile must preserve exporter compatibility\n${combined(profileDefault)}`,
+    );
+    const profilePlatform = runScan("--dest", profileOnly, "platform");
+    assert.equal(
+      profilePlatform.status,
+      1,
+      "platform-only private paths must block",
+    );
+
+    const missingManifest = runScan("--dest", clean, "platform");
+    assert.equal(
+      missingManifest.status,
+      1,
+      "platform profile must require ASSET_MANIFEST.json",
+    );
+    assert.match(combined(missingManifest), /required asset manifest/);
+
+    // The scanner and denylist sources themselves remain scan-safe. Warnings are
+    // allowed, but inert fixture strings must never create blocking findings.
+    const selfScan = runScan("--source", join(here, ".."));
+    assert.equal(
+      selfScan.status,
+      0,
+      `scanner source must self-scan cleanly\n${combined(selfScan)}`,
+    );
+
+    // --- usage guard ---
+    const noArgs = spawnSync(process.execPath, [scanScript], {
+      encoding: "utf8",
+    });
+    assert.equal(noArgs.status, 2, "no args should exit 2");
+    const invalidProfile = spawnSync(
+      process.execPath,
+      [scanScript, "--dest", clean, "--profile", "invalid"],
+      { encoding: "utf8" },
+    );
+    assert.equal(invalidProfile.status, 2, "invalid profile should exit 2");
+
+    console.log("scan-export fixture test: ALL ASSERTIONS PASSED");
+  } finally {
+    await rm(workdir, { recursive: true, force: true });
+  }
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

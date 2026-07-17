@@ -1,0 +1,934 @@
+{
+  "moduleId": "modul_1",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-06-22",
+  "nextReview": "2026-12-22",
+  "reviewCadence": "vendor",
+  "riskClass": "vendor",
+  "triggerEvents": [
+    "vendor-api-change",
+    "model-deprecation"
+  ],
+  "lessons": [
+    {
+      "id": "modul_1_lesson_1",
+      "moduleId": "modul_1",
+      "number": 1,
+      "title": "Der Moment, in dem du aufhörst, selbst zu schreiben",
+      "subtitle": "Vom leeren Dokument zum Claude-Briefing",
+      "durationMinutes": 10,
+      "premiumGated": false,
+      "refreshCadence": "EVERGREEN",
+      "voiceAnchor": "Du hast bereits Tools. Die Frage ist, wie du sie kombinierst.",
+      "keyConcepts": [
+        "Rolle",
+        "Kontext",
+        "Auftrag",
+        "Claude.ai",
+        "RCTFC"
+      ],
+      "widgets": [
+        {
+          "kind": "exercise-fix-prompt",
+          "placement": "before-quiz",
+          "props": {
+            "exerciseId": "modul_1_lesson_1_ex_1",
+            "lessonId": "modul_1_lesson_1",
+            "moduleId": "modul_1",
+            "title": "Schreibe einen besseren Claude-Brief",
+            "scenario": "Ein Kunde fragt per Mail nach einer Lösung bis Freitag. Unten ist ein schlechter Prompt. Ergänze Rolle, Kontext und klaren Auftrag, und nimm ein konkretes Output-Format dazu.",
+            "startingPrompt": "Schreib mir eine Mail zurück an den Kunden.",
+            "criteria": [
+              {
+                "id": "role",
+                "label": "Rolle benannt (z. B. Vertriebsassistent, Handwerksmeister, HR)",
+                "pattern": "rolle:"
+              },
+              {
+                "id": "context",
+                "label": "Kontext eingefügt (Kunde + Thema)",
+                "pattern": "kontext:"
+              },
+              {
+                "id": "task",
+                "label": "Auftrag explizit (Zusage / Rückfrage / Eskalation)",
+                "pattern": "auftrag:"
+              },
+              {
+                "id": "format",
+                "label": "Format-Spec (Wörter-Limit, Ton)",
+                "pattern": "(unter|max|ton):",
+                "regex": true
+              },
+              {
+                "id": "ask",
+                "label": "Mindestens eine offene Rückfrage an den Kunden",
+                "pattern": "(charge|nummer|anzahl|bitte)",
+                "regex": true
+              }
+            ],
+            "passThreshold": 0.6
+          }
+        }
+      ],
+      "sections": [
+        {
+          "id": "modul_1_lesson_1_section_1",
+          "title": "Das 24-Minuten-Problem",
+          "readTimeMinutes": 2,
+          "content": "Fiktives Szenario: Kunde Alpha schickt eine Beispiel-Mail zu einer verspäteten Lieferung. Du erstellst einmal manuell und einmal mit KI-Unterstützung einen Antwortentwurf.\n\nMiss für beide Varianten Entwurfszeit, Faktenfehler, notwendige Korrekturen und Ton. Die KI-Variante bleibt bis zur menschlichen Freigabe ein interner Entwurf.\n\nEs gibt kein Versprechen auf eine bestimmte Zeit oder gleiche Qualität. Dein eigener Vergleich entscheidet, ob der Ablauf für diese Aufgabe nützlich ist.",
+          "keyTakeaway": "Das leere Dokument ist ein Relikt aus einer Zeit, in der deine Finger das einzige Werkzeug waren."
+        },
+        {
+          "id": "modul_1_lesson_1_section_2",
+          "title": "Warum leeres Dokument tot ist",
+          "readTimeMinutes": 2,
+          "content": "Das leere Dokument ist ein Relikt. Es stammt aus einer Zeit, in der deine Finger das einzige Werkzeug waren. Heute ist das leere Dokument einfach ein Ausdruck von: \"Ich habe Claude nicht geöffnet.\"\n\nDrei Gründe, warum du trotzdem leere Dokumente öffnest:\n- Gewohnheit: 15 Jahre Muskelgedächtnis\n- Kontrolle: \"Ich weiß dann, was drinsteht\"\n- Stolz: \"Schreiben ist mein Job\"\n\nAlle drei Gründe sind legitim. Und sie kosten dich mehrere Stunden pro Woche. Heute operieren wir.",
+          "keyTakeaway": "Jedes Mal, wenn du ein leeres Dokument öffnest, ist das ein Moment, in dem du Claude hättest öffnen sollen."
+        },
+        {
+          "id": "modul_1_lesson_1_section_3",
+          "title": "Die Claude-Brief-Methode in 3 Stufen",
+          "readTimeMinutes": 3,
+          "content": "Ich öffne Claude. Ich tippe nicht \"Schreibe mir eine Antwort auf diese Kundenanfrage.\" Das ist der Anfänger-Prompt. Das Ergebnis: generisch.\n\nIch tippe stattdessen drei Dinge:\n\n**Rolle:** \"Du bist mein Vertriebsassistent in einem 80-Mann-Maschinenbau-Unternehmen in Bayern. Mein Ton: pragmatisch, bodenständig, klare Worte.\"\n\n**Kontext:** (ich paste die Kundenmail)\n\n**Auftrag:** \"Antwort-Entwurf. Zusage für Freitag, aber wir brauchen vom Kunden die Charge-Nummer und die Anzahl betroffener Teile. Höflich aber zeitgemäß. Unter 150 Wörtern.\"\n\nEnter. 40 Sekunden später habe ich einen Entwurf, der besser klingt als die Version, die ich um 10:58 Uhr manuell geschrieben hätte.\n\nIch lese ihn. Ein Satz zu höflich, ersetze ich. Fertig. Mail raus um 10:51.\n\n**Was gerade passiert ist:** drei Minuten statt vierundzwanzig. Und qualitativ besser, weil Claude keinen 10:47-Uhr-Stress hat.",
+          "keyTakeaway": "Rolle + Kontext + Auftrag. Fehlt einer, bekommst du austauschbaren Einheitsbrei."
+        },
+        {
+          "id": "modul_1_lesson_1_section_4",
+          "title": "Der Trick, warum das funktioniert",
+          "readTimeMinutes": 2,
+          "content": "Drei Elemente machen den Unterschied:\n\n**Rolle:** Claude weiß jetzt, wie dein Text klingen soll. Nicht \"Marketing-Phrasen eines Berliner Startups.\" Mittelstand-Ton.\n\n**Kontext:** Claude hat alle Informationen. Du musst nicht Sätze wie \"Der Kunde hat ja neulich...\" schreiben. Du hast die Mail reingepasted.\n\n**Auftrag:** konkret und messbar: unter 150 Wörtern, Zusage + Rückfrage, bestimmter Ton. Kein \"formulier was Sinnvolles.\"\n\nWenn einer dieser drei Teile fehlt, bekommst du austauschbaren Einheitsbrei. Das ist kein Claude-Problem. Das ist ein Briefing-Problem.\n\nDas Schreiben ist nicht dein Job. Das **Denken** ist dein Job. Das Briefing geben. Die Qualität prüfen. Die letzte Anpassung. Das ist der Wert, den du bringst.",
+          "keyTakeaway": "Schreiben ist nicht dein Job. Denken ist dein Job."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "modul_1_lesson_1_q1",
+          "questionText": "Was sind die drei Elemente eines effektiven Prompts?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Höflichkeit, Umfang, Schlussformel",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Rolle, Kontext, Auftrag",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Frage, Beispiel, Aufforderung",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Einleitung, Hauptteil, Schluss",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Rolle + Kontext + Auftrag sind die drei Schlüssel-Elemente. Fehlt einer, bekommst du generic AI-Output. Das erweitert sich später zu RCTFC (Role-Context-Task-Format-Constraints)."
+        },
+        {
+          "id": "modul_1_lesson_1_q2",
+          "questionText": "Was ist der richtige Einsatz deiner Zeit in einer AI-nativen Rolle?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Viel Zeit in Tipparbeit, wenig in Review",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Denken, Briefing geben, Qualität prüfen, nicht Tipparbeit",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Claude Zeit geben, weniger selbst prüfen",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Alle Aufgaben an Claude delegieren ohne Review",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Das Schreiben ist nicht dein Job. Das Denken ist dein Job. Die Tipparbeit delegierst du, die Urteilskraft bleibt bei dir."
+        }
+      ]
+    },
+    {
+      "id": "modul_1_lesson_2",
+      "moduleId": "modul_1",
+      "number": 2,
+      "title": "Warum ich meine IDE kaum noch öffne",
+      "subtitle": "Orchestrieren statt ausführen",
+      "durationMinutes": 10,
+      "premiumGated": false,
+      "refreshCadence": "EVERGREEN",
+      "voiceAnchor": "Bei einem großen US-Tech-Unternehmen öffnet niemand mehr einen IDE. Das klingt dramatisch. Es ist nur ehrlich.",
+      "keyConcepts": [
+        "Orchestrator",
+        "Ausführen",
+        "Urteilskraft",
+        "AI-native"
+      ],
+      "widgets": [
+        {
+          "kind": "demo-chat-rag",
+          "placement": "after-intro"
+        },
+        {
+          "kind": "exercise-rctfc-checklist",
+          "placement": "before-quiz",
+          "props": {
+            "exerciseId": "modul_1_lesson_2_ex_1",
+            "lessonId": "modul_1_lesson_2",
+            "moduleId": "modul_1",
+            "title": "RCTFC: dein erster strukturierter Brief",
+            "scenario": "Du bist Vertriebsleiter und willst Claude eine Angebots-Zusammenfassung schreiben lassen. Fülle die 5 RCTFC-Felder vollständig aus.",
+            "criteria": {
+              "role": {
+                "minChars": 15,
+                "hint": "Wer übernimmt die Aufgabe? (z. B. Vertriebsassistent im Maschinenbau)"
+              },
+              "context": {
+                "minChars": 40,
+                "hint": "Firma, Branche, Kundenbeziehung: genug Hintergrund, dass Claude versteht wo wir stehen."
+              },
+              "task": {
+                "minChars": 20,
+                "hint": "Was soll konkret generiert werden? (Angebot / Zusammenfassung / Rückfrage)"
+              },
+              "format": {
+                "minChars": 15,
+                "hint": "Struktur, Länge, Output-Format (z. B. Markdown, max 200 Wörter, 3 Abschnitte)"
+              },
+              "constraints": {
+                "minChars": 15,
+                "hint": "Was ist tabu? (z. B. kein Hype-Sprech, kein direkter Preis)"
+              }
+            }
+          }
+        }
+      ],
+      "sections": [
+        {
+          "id": "modul_1_lesson_2_section_1",
+          "title": "Die Realität moderner KI-Arbeit (anonymisiert)",
+          "readTimeMinutes": 2,
+          "content": "Ich arbeite als Data Engineer bei einem großen US-Tech-Unternehmen. Ich habe Kollegen, die seit fünfzehn Jahren Code schreiben. Ingenieure mit Elite-Uni-Abschlüssen, Leute die komplette Infrastrukturen gebaut haben.\n\nWeißt du, was keiner von denen mehr macht?\n\nEinen IDE öffnen, um Code zu schreiben.\n\nSie öffnen Claude. Sie beschreiben, was sie bauen wollen. Claude schreibt den Code. Sie lesen. Sie korrigieren. Sie commit-en. Der IDE ist optional geworden, meistens für Code-Review, nicht zum Tippen.\n\nDas ist nicht Science-Fiction. Das ist Montag bis Freitag in 2026. Und es hat absolut nichts damit zu tun, ob du selbst Entwickler bist. Es hat alles damit zu tun, wie Arbeit heute funktioniert.",
+          "keyTakeaway": "Tippen ist Nebensache. Die Urteilskraft ist der Teil, für den du bezahlt wirst."
+        },
+        {
+          "id": "modul_1_lesson_2_section_2",
+          "title": "Was \"orchestrieren statt ausführen\" wirklich heißt",
+          "readTimeMinutes": 3,
+          "content": "Ausführen ist, wenn du die Arbeit selbst machst. Finger auf Tastatur, Pixel auf Bildschirm, Sätze auf Papier.\n\nOrchestrieren ist, wenn du **spezifizierst, was getan werden soll,** und eine Maschine führt es aus. Dann prüfst du das Ergebnis und korrigierst.\n\nDu warst schon immer Orchestrator. Du hast Praktikanten eingewiesen. Du hast Aufgaben verteilt. Du hast Briefings geschrieben. Das Delegieren ist deine eigentliche Arbeit, nur dass du zusätzlich auch noch selbst ausgeführt hast, weil Delegieren teuer war. Ein Praktikant kostet Geld und Einarbeitung.\n\nClaude ist ein Praktikant, der sofort einsetzbar ist. Keine Einarbeitung. Keine Gehaltskosten. Keine Krankenversicherung. Kein \"eigentlich braucht er Urlaub.\"\n\nDas ändert die Gleichung. Wenn delegieren fast-kostenlos wird, delegierst du **alles Ausführ-bare**. Was bleibt: das Denken.",
+          "keyTakeaway": "Wenn Delegieren fast-kostenlos wird, delegierst du alles Ausführ-bare. Was bleibt: das Denken."
+        },
+        {
+          "id": "modul_1_lesson_2_section_3",
+          "title": "Was für deine Rolle anders wird",
+          "readTimeMinutes": 3,
+          "content": "Die Implikation für dich, auch wenn du nicht Entwickler bist:\n\n- **Vertrieb:** Claude schreibt Angebote, du denkst an die Preis-Strategie.\n- **Finanzen:** Claude macht SQL-Abfragen, du interpretierst Zahlen.\n- **HR:** Claude schreibt Stellenausschreibungen, du führst das Bewerbungsgespräch.\n- **Operations:** Claude analysiert Prozess-Daten, du entscheidest, was zu ändern ist.\n\nIn jeder Rolle ist die \"Tipparbeit\" der Teil, der verschwindet. Die \"Urteilskraft\" ist der Teil, für den du bezahlt wirst.\n\nDer Einwand kommt oft: \"Aber ich bin Ingenieur / Schreiber / was-auch-immer. Das Schreiben ist mein Handwerk.\"\n\nDie ehrliche Antwort: das, was du eigentlich immer gut warst, und wofür du wirklich bezahlt wirst. Ein guter Anwalt wird nicht bezahlt für das Tippen. Er wird bezahlt für die strategische Entscheidung. Das Tippen war immer die Nebensache, nur unvermeidbar.\n\nClaude nimmt dir die Nebensache weg. Dein eigentlicher Job wird größer, nicht kleiner.",
+          "keyTakeaway": "Claude nimmt dir die Nebensache weg. Dein eigentlicher Job wird größer, nicht kleiner."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "modul_1_lesson_2_q1",
+          "questionText": "Was verschwindet in einer AI-nativen Rolle?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Deine Fähigkeit, Entscheidungen zu treffen",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Die Tipparbeit",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Die Kundenbeziehungen",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Die fachliche Expertise",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Tipparbeit ist Nebensache. Sie verschwindet. Urteilskraft, fachliche Expertise und Beziehungen bleiben und werden wichtiger."
+        },
+        {
+          "id": "modul_1_lesson_2_q2",
+          "questionText": "Was unterscheidet Claude von einem Praktikanten?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Claude braucht längere Einarbeitung",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Claude ist sofort einsetzbar, ohne Einarbeitungs- oder Gehaltskosten",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Claude kann nichts selbstständig tun",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Claude braucht Urlaub und Krankentage",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Claude ist wie ein Praktikant ohne Einarbeitung, ohne Gehaltskosten, ohne Urlaub. Das ändert die Delegations-Ökonomie fundamental."
+        }
+      ]
+    },
+    {
+      "id": "modul_1_lesson_3",
+      "moduleId": "modul_1",
+      "number": 3,
+      "title": "Der Claude-Orchestrator: du dirigierst, Claude führt aus",
+      "subtitle": "Drei Basis-Pattern für AI-Orchestrierung",
+      "durationMinutes": 10,
+      "premiumGated": false,
+      "refreshCadence": "QUARTERLY",
+      "voiceAnchor": "Du warst nie Ausführer. Du warst immer Dirigent. Jetzt hast du ein Orchester.",
+      "keyConcepts": [
+        "Claude Project",
+        "System-Prompt",
+        "Drafting",
+        "Analyse",
+        "Recherche"
+      ],
+      "widgets": [
+        {
+          "kind": "exercise-prompt-diff",
+          "placement": "before-quiz",
+          "props": {
+            "exerciseId": "modul_1_lesson_3_ex_1",
+            "lessonId": "modul_1_lesson_3",
+            "moduleId": "modul_1",
+            "title": "Welcher Prompt dirigiert am besten?",
+            "scenario": "Drei Kollegen wollen Claude einen Angebots-Entwurf schreiben lassen, für den gleichen Kunden, gleiche Ausgangslage. Welcher Prompt gibt Claude genug, um wirklich nützlich zu antworten?",
+            "candidates": [
+              {
+                "label": "Variante A: der Anfänger",
+                "prompt": "Schreib mir ein Angebot für den Kunden, der heute angerufen hat.",
+                "critique": "Keine Rolle, kein Kontext, kein Auftrag. Claude muss alles erfinden: Firma, Branche, Ton, Produkt, Preis. Das Ergebnis: unbrauchbar generisch.",
+                "rating": 1
+              },
+              {
+                "label": "Variante B: der Mittelweg",
+                "prompt": "Als Vertriebsassistent im Maschinenbau: Entwirf für den ausdrücklich fiktiven Kunden Alpha ein Angebot für 3 fiktive Beispielmaschinen Typ XR-200. Lieferung Dezember.",
+                "critique": "Rolle + Kontext + Auftrag sind da. Aber ohne Format-Spec (Länge, Abschnitte) und ohne Constraints (Ton, Preisspanne, Zahlungsziel) wird Claude Details erfinden oder schwammig bleiben.",
+                "rating": 3
+              },
+              {
+                "label": "Variante C: der Dirigent",
+                "prompt": "Rolle: Vertriebsassistent im Maschinenbau. Kontext: ausdrücklich fiktiver Kunde Alpha, 12 Mitarbeitende, braucht 3 fiktive Beispielmaschinen XR-200. Ton pragmatisch, Du-Form. Auftrag: interner Angebots-Entwurf mit 3 Positionen. Verwende Liefertermin, Zahlungsziel und Preis nur als Platzhalter und markiere sie zur Prüfung. Format: Markdown, max. 280 Wörter. Tabu: keine erfundenen Zusagen oder Marketing-Phrasen.",
+                "critique": "Vollständiges RCTFC-Briefing: Rolle, Kontext, Auftrag, Format, Constraints. Claude kann jetzt in einem Rutsch einen Entwurf liefern, den du in 60 Sekunden auf Send-fähig bekommst.",
+                "rating": 5
+              }
+            ]
+          }
+        }
+      ],
+      "sections": [
+        {
+          "id": "modul_1_lesson_3_section_1",
+          "title": "Drei Basis-Pattern",
+          "readTimeMinutes": 3,
+          "content": "**Pattern 1: Drafting**\n\nDu brauchst einen Text. Angebot, Email, Bericht, Präsentation. Claude schreibt V1, du editierst V2.\n\n> \"Schreib mir V1 von [X] mit [Kontext]. Halte dich an [Tonfall]. Umfang: [Länge].\"\n\nDauer: 2-5 Minuten.\n\n**Pattern 2: Analyse**\n\nDu hast Daten oder Text. Du willst wissen, was drinsteht. Claude liest, extrahiert, strukturiert.\n\n> \"Hier ist [Input]. Extrahiere [diese Felder]. Fasse [diese Patterns] zusammen. Format: [Tabelle / Liste / Prosa].\"\n\nDauer: 1-10 Minuten, je nach Input-Größe.\n\n**Pattern 3: Recherche**\n\nDu brauchst Wissen über ein Thema. Claude denkt, Perplexity / WebSearch ergänzt.\n\n> \"Recherchiere [Thema]. Fokus: [spezifische Fragen]. Quellen-Anforderung: [Art der Belege]. Output: [Struktur].\"\n\nDauer: 3-15 Minuten.\n\nDiese drei Pattern decken 80 % aller Wissensarbeiter-Aufgaben ab.",
+          "keyTakeaway": "Drafting, Analyse, Recherche: drei Pattern decken 80% aller Wissensarbeiter-Aufgaben."
+        },
+        {
+          "id": "modul_1_lesson_3_section_2",
+          "title": "Das Onboarding-Briefing",
+          "readTimeMinutes": 3,
+          "content": "Jeder neue Mitarbeiter bekommt am ersten Tag ein Briefing. Wer sind wir, was machen wir, wie kommunizieren wir. Claude verdient das gleiche.\n\nIch lege ein Claude-Project an. \"Mein Vertrieb-Assistent.\" Im System-Prompt schreibe ich:\n\n```\nIch bin Vertriebsmitarbeiter in einem Maschinenbau-Unternehmen\nin Bayern, 80 Mitarbeiter, Kunden in Deutschland + Österreich.\nUnsere Produkte: Spezialmaschinen für die Metallverarbeitung.\nPreislage: 15.000 bis 200.000 Euro pro Maschine.\n\nMein Ton in Kundenkommunikation:\n- Du-Form bei Stammkunden, Sie-Form bei Neukunden\n- Pragmatisch, bodenständig, klare Worte\n- Keine Buzzwords, keine Marketing-Phrasen\n- Immer Zeitrahmen zusagen, Zusagen einhalten\n```\n\nDas ist ein 5-Minuten-Briefing. Einmal gemacht. Claude weiß jetzt, wer ich bin, wie ich arbeite, was tabu ist.\n\nAb jetzt in diesem Project kann ich knapper schreiben:\n\n> \"Anfrage von Neukunde für 3 Maschinen Typ X. Antwort-Draft.\"\n\nClaude antwortet bereits in meinem Stil.",
+          "keyTakeaway": "Einmal 5-Minuten-Briefing statt jedes Mal 3-Minuten-Kontext-Setup."
+        },
+        {
+          "id": "modul_1_lesson_3_section_3",
+          "title": "Eskalations-Stufen",
+          "readTimeMinutes": 2,
+          "content": "Wenn Claude V1 liefert und du zum Überarbeiten ansetzt, das ist nicht die Kontrolle. Das ist die Eskalation.\n\nDrei Arten, V1 zu verbessern:\n\n**Schmal:** ein Satz ändern. \"Streich den zweiten Absatz. Mach den Ton eine Stufe direkter.\"\n\n**Mittel:** umstrukturieren. \"Tausch Reihenfolge der Argumente. Stärkstes zuerst.\"\n\n**Tief:** von vorne. \"V1 zu generisch. Setz neu an: Ton direkter, Fokus auf Zeitersparnis des Kunden, nicht auf unsere Features.\"\n\nDie Arbeit, die du sparst, ist die **Tipparbeit**. Die Arbeit, die bleibt, ist das **Urteilen über Qualität**. Das ist dein Wert.",
+          "keyTakeaway": "Drei Eskalations-Stufen: schmal, mittel, tief. Tipparbeit weg, Urteilskraft bleibt."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "modul_1_lesson_3_q1",
+          "questionText": "Welche drei Basis-Pattern gibt es für AI-Orchestrierung?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Automatisieren, Delegieren, Reviewen",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Drafting, Analyse, Recherche",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Schreiben, Lesen, Übersetzen",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Erstellen, Prüfen, Verteilen",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Drafting (Text erstellen), Analyse (Input strukturieren), Recherche (Wissen synthetisieren). Diese drei Pattern decken 80% aller Wissensarbeiter-Aufgaben."
+        },
+        {
+          "id": "modul_1_lesson_3_q2",
+          "questionText": "Warum einmaliges Claude-Briefing statt wiederholter Kontext-Beschreibung?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Spart langfristig Zeit: Claude hat deinen Kontext dauerhaft im Project",
+              "isCorrect": true
+            },
+            {
+              "id": "b",
+              "text": "Claude kann nur eine Anweisung pro Session verarbeiten",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Kontext muss genau dokumentiert werden",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Projects speichern mehr Text als reguläre Chats",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Project-System-Prompt = einmaliger 5-Minuten-Aufwand, dauerhafter Kontext. Keine Wiederholung bei jedem Chat."
+        }
+      ]
+    },
+    {
+      "id": "modul_1_lesson_4",
+      "moduleId": "modul_1",
+      "number": 4,
+      "title": "Die 10 Dinge, die du heute nicht mehr selbst machst",
+      "subtitle": "Konkrete Use-Cases mit Prompts",
+      "durationMinutes": 10,
+      "premiumGated": false,
+      "refreshCadence": "QUARTERLY",
+      "voiceAnchor": "Zehn Dinge. Nicht zwei. Nicht abstrakt. Konkret.",
+      "keyConcepts": [
+        "Use-Case",
+        "Excel-Cleanup",
+        "SQL",
+        "Meeting-Nachbereitung",
+        "Normalisierung"
+      ],
+      "widgets": [
+        {
+          "kind": "exercise-role-scenario",
+          "placement": "before-quiz",
+          "props": {
+            "exerciseId": "modul_1_lesson_4_ex_1",
+            "lessonId": "modul_1_lesson_4",
+            "moduleId": "modul_1",
+            "title": "Welches Ding delegierst du in deiner Rolle heute?",
+            "scenario": "Wähle deine Rolle. Du bekommst drei echte Mittelstand-Situationen. Entscheide jeweils, was der AI-native Reflex ist, und was noch 2024er-Arbeit ist.",
+            "roles": [
+              {
+                "id": "vertrieb",
+                "label": "Vertrieb / Account Management",
+                "description": "Außendienst, Innendienst, Vertriebsleitung",
+                "scenarios": [
+                  {
+                    "id": "vertrieb_s1",
+                    "question": "Neukunde schickt um 16:40 eine Anfrage mit 5 technischen Fragen. Feierabend 17:00.",
+                    "options": [
+                      {
+                        "id": "a",
+                        "label": "Selbst bis 18:30 tippen, damit der Kunde noch heute was hat.",
+                        "correct": false,
+                        "explanation": "24 Minuten pro Antwort × 5 Fragen = Feierabend weg. Und dein Entwurf wird schlechter als der, den Claude in 3 Minuten schreibt."
+                      },
+                      {
+                        "id": "b",
+                        "label": "Bis morgen warten: sauber arbeiten braucht Zeit.",
+                        "correct": false,
+                        "explanation": "Der Kunde fragt heute. Verzögerung = Signal, dass andere wichtiger sind. Anti-Mittelstand."
+                      },
+                      {
+                        "id": "c",
+                        "label": "Claude-Brief: Rolle (Vertrieb, Branche), Kontext (paste Mail), Auftrag (Antwort-Entwurf mit 5 Punkten, max 200 Wörter). Review + Send um 16:55.",
+                        "correct": true,
+                        "explanation": "3-Minuten-Briefing, 1-Minute-Review, fertig. Gleiche Qualität, 95 % weniger Zeit, und der Kunde hat heute noch eine Antwort."
+                      },
+                      {
+                        "id": "d",
+                        "label": "Template raussuchen und anpassen.",
+                        "correct": false,
+                        "explanation": "Templates sind 2023. Sie klingen steif und treffen nie genau. Claude hat deinen Ton + passt jede Antwort an."
+                      }
+                    ]
+                  },
+                  {
+                    "id": "vertrieb_s2",
+                    "question": "Du hast um 15 Uhr ein Übungsmeeting mit Kunde Alpha (fiktiv). Vorgeschichte: 3 Beispiel-E-Mails und letzte Notizen liegen 4 Wochen zurück.",
+                    "options": [
+                      {
+                        "id": "a",
+                        "label": "5 Minuten vorher ins CRM, hoffen dass was hängenbleibt.",
+                        "correct": false,
+                        "explanation": "Hoffnung ist keine Strategie. Fehlende Vorbereitung wird im Gespräch erkennbar; die genaue Zeit ist nicht vorhersagbar."
+                      },
+                      {
+                        "id": "b",
+                        "label": "Claude: „Hier die 3 Mails + Notizen. Gib mir: offene Punkte, Müllers Schmerzstelle, 3 Fragen die ich stellen sollte.” 2 Minuten Prep, ich gehe vorbereitet rein.",
+                        "correct": true,
+                        "explanation": "Das ist Pattern 2 (Analyse) aus Lektion 3. Claude extrahiert in Sekunden, was du in 20 Minuten rausziehen würdest."
+                      },
+                      {
+                        "id": "c",
+                        "label": "Eine zuständige Person fragen, die den fiktiven Fall kennt.",
+                        "correct": false,
+                        "explanation": "Nur wenn der Kollege Zeit hat, und sein Blickwinkel ist anders. Claude hat genau DEINE Vorgeschichte gelesen."
+                      },
+                      {
+                        "id": "d",
+                        "label": "Meeting absagen, zu wenig Zeit zur Vorbereitung.",
+                        "correct": false,
+                        "explanation": "Noch schlimmer. Jeder abgesagte Termin ist Vertrauen verloren."
+                      }
+                    ]
+                  },
+                  {
+                    "id": "vertrieb_s3",
+                    "question": "Wochenabschluss: du brauchst Umsatz-Top-20 pro Kunde aus der DB. SQL kannst du nicht.",
+                    "options": [
+                      {
+                        "id": "a",
+                        "label": "Kollegen aus dem Controlling bitten, kostet mich 2 Tage Wartezeit.",
+                        "correct": false,
+                        "explanation": "Abhängigkeit. Jede Woche. Und der Kollege hat Besseres zu tun."
+                      },
+                      {
+                        "id": "b",
+                        "label": "In Excel nachbauen: 90 Minuten klicken.",
+                        "correct": false,
+                        "explanation": "Geht, aber Fehleranfällig (Kopier-Joins) und jede Woche neu."
+                      },
+                      {
+                        "id": "c",
+                        "label": "Claude: Tabellen-Schema reinpasten, Frage in Prosa stellen. SQL in 15 Sekunden. Laufen lassen, fertig.",
+                        "correct": true,
+                        "explanation": "Pattern 2 (Analyse) + Datenbank. Du musst kein SQL lernen, du musst nur wissen, was du fragen willst."
+                      },
+                      {
+                        "id": "d",
+                        "label": "Diese Analyse lassen wir lieber sein.",
+                        "correct": false,
+                        "explanation": "Nicht-Entscheidungen kosten am meisten. Die Top-20 zu kennen ist Standard-Vertriebssteuerung."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "hr",
+                "label": "HR / People / Geschäftsführung",
+                "description": "Recruiting, Mitarbeiter-Kommunikation, Personal-Entscheidungen",
+                "scenarios": [
+                  {
+                    "id": "hr_s1",
+                    "question": "Offene Stelle: Werkstudent Maschinenbau, 20h/Woche. Brauchst heute eine Stellenanzeige.",
+                    "options": [
+                      {
+                        "id": "a",
+                        "label": "Alte Anzeige von 2023 copy-pasten + Datum ändern.",
+                        "correct": false,
+                        "explanation": "Generic, kommt 2026 auf keinem Portal durch. Gen Z scrollt drüber."
+                      },
+                      {
+                        "id": "b",
+                        "label": "Claude-Project „HR Maschinenbau” anlegen: Firmen-Kontext + Ton im System-Prompt. Ein Satz: „Werkstudent Maschinenbau, 20h, ab sofort”, fertig.",
+                        "correct": true,
+                        "explanation": "Das ist das Claude-Project-Pattern aus Lektion 3. Einmal 5 Min Briefing, dann dauerhaft Ein-Satz-Prompts."
+                      },
+                      {
+                        "id": "c",
+                        "label": "Eine HR-Agentur anrufen, Brief schicken, 3 Wochen warten.",
+                        "correct": false,
+                        "explanation": "EUR 1.500 für etwas, was Claude in 2 Minuten besser macht."
+                      },
+                      {
+                        "id": "d",
+                        "label": "ChatGPT: „Schreib eine Stellenausschreibung für Werkstudent Maschinenbau”, ohne Kontext.",
+                        "correct": false,
+                        "explanation": "Ohne Rolle / Firma / Ton bekommst du eine generic Vorlage. Fühlt sich nach LinkedIn-Template an."
+                      }
+                    ]
+                  },
+                  {
+                    "id": "hr_s2",
+                    "question": "Mitarbeiter-Rundmail: neue Homeoffice-Regelung (2 Tage/Woche ab Juni), 80 MA, soll nicht nach HR-Jargon klingen.",
+                    "options": [
+                      {
+                        "id": "a",
+                        "label": "3 Stunden an der Formulierung feilen, Vorstand abstimmen lassen, dann rausschicken.",
+                        "correct": false,
+                        "explanation": "Die Präzision an Formulierung liegt im Denken über das Was, nicht in der Tipparbeit. Claude macht das Tippen."
+                      },
+                      {
+                        "id": "b",
+                        "label": "Claude: Rolle (GF-nahes HR), Kontext (Firma, Anlass, 2 Gründe für die Regel), Auftrag (Rundmail, 180 Wörter, ehrlich + konkret, kein Corporate-Speak, mit FAQ-Link). 2-Minuten-Review, fertig.",
+                        "correct": true,
+                        "explanation": "Pattern 1 (Drafting) + klares Briefing. Die Inhalts-Entscheidung bleibt bei dir, Claude nimmt die 3 Stunden Tipparbeit weg."
+                      },
+                      {
+                        "id": "c",
+                        "label": "Chef-Assistenz fragen, ob sie einen Entwurf machen kann.",
+                        "correct": false,
+                        "explanation": "Kostet sie 90 Min + Wartezeit. Du hast Claude auf deinem Bildschirm."
+                      },
+                      {
+                        "id": "d",
+                        "label": "Mail weglassen, verbal im Monatsmeeting ansagen.",
+                        "correct": false,
+                        "explanation": "Ohne schriftliche Doku entsteht Unklarheit. Gerichtsfest ist die Mail, nicht das Meeting."
+                      }
+                    ]
+                  },
+                  {
+                    "id": "hr_s3",
+                    "question": "Vorgesetzter fragt: „Was haben wir im Januar zur Remote-Frage entschieden?”",
+                    "options": [
+                      {
+                        "id": "a",
+                        "label": "Ich sag: „Weiß ich nicht mehr genau.” und suche später in Mails.",
+                        "correct": false,
+                        "explanation": "Verlorenes Vertrauen. Du kannst besser."
+                      },
+                      {
+                        "id": "b",
+                        "label": "Ich öffne Notion + Dateiablage + Mail-Suche + CRM und sammle 20 Minuten lang.",
+                        "correct": false,
+                        "explanation": "Wissensarbeit 2019. Kontext-Switch pro Tool kostet Minuten, Ergebnis oft unvollständig."
+                      },
+                      {
+                        "id": "c",
+                        "label": "Ich frage Claude / Copilot in Obsidian mit meinem Entscheidungs-Log: „Remote-Frage Januar 2026, Kurzfassung”",
+                        "correct": true,
+                        "explanation": "Dein Wissen ist in Notizen + AI-abfragbar, nicht im Kopf + Mail-Archiv. Das ist Knowledge-Fluency Stufe 3."
+                      },
+                      {
+                        "id": "d",
+                        "label": "Ich sag: „Ich schau's nach und meld mich.” und vergesse es dann.",
+                        "correct": false,
+                        "explanation": "Dropped-ball. Genau das, was Wissensmanagement verhindern soll."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "operations",
+                "label": "Operations / Produktion / IT",
+                "description": "Prozess-Steuerung, Produktionsleitung, IT-Koordination",
+                "scenarios": [
+                  {
+                    "id": "ops_s1",
+                    "question": "Ein fiktiver ERP-Export enthält 4.800 Zeilen mit inkonsistenten Kennzeichnungen (Kunde Alpha GmbH, Kunde-Alpha Gmbh, Kunde Alpha & Co.) und gemischten Datumsformaten.",
+                    "options": [
+                      {
+                        "id": "a",
+                        "label": "Excel-Makro schreiben, 4 Stunden debuggen.",
+                        "correct": false,
+                        "explanation": "Macht man 2015. Heute: Prompt an Claude."
+                      },
+                      {
+                        "id": "b",
+                        "label": "Claude: CSV reinpasten, Normalisierungs-Regeln beschreiben (eine Schreibweise pro Firma, ISO-Datumsformat), als CSV zurück.",
+                        "correct": true,
+                        "explanation": "Das ist Ding 6 aus der Liste. Pattern 2 (Analyse) + Datentransformation. 3 Minuten statt 4 Stunden."
+                      },
+                      {
+                        "id": "c",
+                        "label": "Praktikant für zwei Tage abordnen.",
+                        "correct": false,
+                        "explanation": "EUR 400 + 2 Tage Wartezeit. Nicht skalierbar."
+                      },
+                      {
+                        "id": "d",
+                        "label": "Daten so lassen, im Dashboard ist's egal.",
+                        "correct": false,
+                        "explanation": "Schlechte Daten = schlechte Entscheidungen. Einmal aufräumen > 10× falsch berichten."
+                      }
+                    ]
+                  },
+                  {
+                    "id": "ops_s2",
+                    "question": "Transkript vom Produktionsleiter-Meeting liegt vor: 45 Minuten Rohtext. Action-Items sollen morgen im Standup diskutiert werden.",
+                    "options": [
+                      {
+                        "id": "a",
+                        "label": "Selbst durchlesen und herausschreiben (60 Min).",
+                        "correct": false,
+                        "explanation": "Wenn du's 3x pro Woche brauchst, sind das 3 Std, für etwas, das Claude in 2 Min kann."
+                      },
+                      {
+                        "id": "b",
+                        "label": "Claude: „Extrahiere Entscheidungen, Action-Items mit Verantwortlichem + Datum, offene Fragen. Tabelle + 3-Satz-Summary.” 2 Minuten.",
+                        "correct": true,
+                        "explanation": "Das ist Ding 3 aus der Liste. Pattern 2 (Analyse) + Struktur-Extraktion. Der Output ist besser als deine Handnotizen."
+                      },
+                      {
+                        "id": "c",
+                        "label": "Teilnehmer bitten, eigene Action-Items zu schicken.",
+                        "correct": false,
+                        "explanation": "Das ist Delegieren ohne System. Du bekommst 5 unterschiedliche Formate, niemand hat alles."
+                      },
+                      {
+                        "id": "d",
+                        "label": "Nur die wichtigsten 3 merken, den Rest ignorieren.",
+                        "correct": false,
+                        "explanation": "Dropped-ball-Risiko. Die vergessenen Items tauchen in 3 Wochen als Eskalation wieder auf."
+                      }
+                    ]
+                  },
+                  {
+                    "id": "ops_s3",
+                    "question": "Wochen-Status an die GF: 5 parallele Projekte, Highlights + Probleme + Nächste Woche.",
+                    "options": [
+                      {
+                        "id": "a",
+                        "label": "Freitag 16 Uhr 90 Minuten blocken zum Schreiben.",
+                        "correct": false,
+                        "explanation": "Jede Woche 90 Min = 70 Std/Jahr. Dafür gibt's kein Budget."
+                      },
+                      {
+                        "id": "b",
+                        "label": "Meine Activity-Liste dumpen, Claude: „3-Absatz-Wochenbericht: Highlights, Herausforderungen, nächste Woche. Ton sachlich, keine Superlative.” 3 Min.",
+                        "correct": true,
+                        "explanation": "Das ist Ding 10 aus der Liste. Pattern 1 (Drafting) + Struktur-Template. Die GF bekommt was Lesbares, du sparst 87 Min/Woche."
+                      },
+                      {
+                        "id": "c",
+                        "label": "Status-Call mit jedem Projekt-Lead, dann zusammenfassen.",
+                        "correct": false,
+                        "explanation": "Unnötiges Meta-Meeting. Stattdessen: jeder Lead dumpt seine Woche in einen Slack-Channel, du machst den Claude-Summary."
+                      },
+                      {
+                        "id": "d",
+                        "label": "Ich sag der GF, dass Bericht diese Woche nicht kommt.",
+                        "correct": false,
+                        "explanation": "Vermeidungsverhalten. Kostet Glaubwürdigkeit als Operations-Lead."
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "sections": [
+        {
+          "id": "modul_1_lesson_4_section_1",
+          "title": "Die Liste: Ding 1 bis 5",
+          "readTimeMinutes": 3,
+          "content": "**Ding 1: E-Mail-Entwürfe aus Stichworten**\n> \"Fiktive Stichworte: Kunde Alpha, verspätete Lieferung, noch ungeprüfter Zieltermin, Rückfrage nach Chargennummer. Erstelle einen internen E-Mail-Entwurf und markiere jede Zusage zur Prüfung.\"\n\n**Ding 2: Meeting-Vorbereitung aus freigegebener Vorgeschichte**\n> \"Ich habe um 15 Uhr ein Übungsmeeting mit Kunde Alpha. Hier sind fiktive Beispiel-E-Mails und Notizen. Gib mir offene Punkte, belegte Interessen und drei Fragen. Erfinde keine Motive.\"\n\n**Ding 3: Meeting-Nachbereitung mit Action-Items**\n> \"Hier ist ein freigegebenes oder fiktives Transkript. Extrahiere Entscheidungen, Action-Items mit Verantwortlichem und Datum sowie offene Fragen. Markiere Unsicherheit.\"\n\n**Ding 4: Recherche für eine Entscheidung**\n> \"Vergleiche Buchhaltungssysteme anhand aktueller offizieller Quellen. Trenne belegte Funktionen, aktuelle Preise und offene Vertrags- oder Datenschutzfragen.\"\n\n**Ding 5: Formularentwurf**\n> \"Fiktiver Kunde Alpha braucht eine fiktive Beispielmaschine. Fülle das Angebot-Template nur mit bestätigten Angaben; Preis, Zahlungsziel und Liefertermin bleiben geprüfte Platzhalter.\"",
+          "keyTakeaway": "Email-Entwürfe, Meeting-Vor/Nachbereitung, Entscheidungs-Recherche, Angebote: alles delegierbar."
+        },
+        {
+          "id": "modul_1_lesson_4_section_2",
+          "title": "Die Liste: Ding 6 bis 10",
+          "readTimeMinutes": 3,
+          "content": "**Ding 6: Daten-Säuberung in Excel**\n> \"Hier ist ein fiktiver CSV-Export mit inkonsistenten Kennzeichnungen (Kunde Alpha GmbH, Kunde-Alpha Gmbh, Kunde Alpha & Co.) und gemischten Datumsformaten. Normalisiere nach den vorgegebenen Regeln und protokolliere jede Änderung.\"\n\n**Ding 7: Präsentation aus Rohmaterial**\n> \"Hier sind freigegebene Notizen und drei Charts. Generiere eine Struktur mit Quellenhinweisen und markiere unbelegte Aussagen.\"\n\n**Ding 8: SQL-Abfragen / Datenbank-Lookups**\n> \"Ich will in einer Testdatenbank den Umsatz pro fiktivem Kunden im letzten Quartal sehen. Schreibe ausschließlich lesende SQL und erkläre Annahmen.\"\n\n**Ding 9: Übersetzung + Lokalisierung**\n> \"Hier ist ein fiktiver deutscher Kundenbrief. Übersetze ins Englische und markiere rechtlich oder kulturell unsichere Formulierungen zur Prüfung.\"\n\n**Ding 10: Status-Update-Schreiben**\n> \"Hier ist eine freigegebene Aktivitätsliste. Erstelle einen sachlichen Entwurf mit Highlights, Problemen, Unsicherheiten und nächsten Schritten.\"",
+          "keyTakeaway": "Nicht eines der zehn Dinge braucht einen Spezialisten. Claude + Gedanke + 3 Minuten."
+        },
+        {
+          "id": "modul_1_lesson_4_section_3",
+          "title": "Der größte Reibungspunkt",
+          "readTimeMinutes": 2,
+          "content": "Was dir gerade auffallen sollte: **nicht eines der zehn Dinge braucht einen Spezialisten.** Nicht einen AI-Berater. Nicht einen Prompt-Engineer. Du brauchst Claude auf dem Bildschirm, einen Gedanken im Kopf, und drei Minuten Zeit.\n\nDer größte Reibungspunkt bei AI-Adoption ist nicht die Technik. Es ist, dass Leute denken, es bräuchte ein Projekt mit IT, Betriebsrat und Einführungsberater. Nein. Du öffnest morgen früh Claude und machst eins von den zehn Dingen. Danach sind es neun. Danach acht.\n\nIn zwei Wochen machst du keines mehr selbst.\n\nWähl drei aus zehn. Drei, die für deinen Job relevant sind. Heute Abend anwenden, auf echte Aufgaben, nicht Test-Beispiele.",
+          "keyTakeaway": "Der größte Reibungspunkt ist nicht Technik. Es ist der Glaube, es bräuchte ein Projekt."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "modul_1_lesson_4_q1",
+          "questionText": "Was ist der größte Reibungspunkt bei AI-Adoption im Mittelstand?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Die technische Komplexität der Tools",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Der Glaube, es bräuchte ein großes Projekt, nicht die Technik selbst",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Fehlende Zeit für Training",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Hohe Kosten für AI-Tools",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Die Technik ist einfach. Der Widerstand kommt aus der Annahme, AI-Nutzung müsse als Projekt mit IT, Betriebsrat, Change-Management organisiert werden. Stimmt nicht: 3 Minuten pro Use-Case reichen."
+        },
+        {
+          "id": "modul_1_lesson_4_q2",
+          "questionText": "Welche Zeit-Investition braucht ein einzelner Use-Case zum Start?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "3 Minuten",
+              "isCorrect": true
+            },
+            {
+              "id": "b",
+              "text": "30 Minuten",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "3 Stunden",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "3 Tage",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Claude öffnen, 3-Satz-Briefing, Output prüfen. 3 Minuten. Multipliziert mit 10 Use-Cases = 30 Minuten Aufwand. Aber: dauerhafter Workflow-Wechsel."
+        }
+      ]
+    },
+    {
+      "id": "modul_1_lesson_5",
+      "moduleId": "modul_1",
+      "number": 5,
+      "title": "AI-Native Fluency Test (Selbst-Assessment)",
+      "subtitle": "10 Szenarien in 5 Dimensionen",
+      "durationMinutes": 10,
+      "premiumGated": false,
+      "refreshCadence": "SEMI-ANNUAL",
+      "voiceAnchor": "10 Szenarien. Kein Richtig / Falsch. Du siehst dich selbst.",
+      "keyConcepts": [
+        "Fluency",
+        "Drafting",
+        "Delegation",
+        "Automation",
+        "Knowledge",
+        "Governance"
+      ],
+      "widgets": [
+        {
+          "kind": "demo-maturity",
+          "placement": "after-intro"
+        }
+      ],
+      "sections": [
+        {
+          "id": "modul_1_lesson_5_section_1",
+          "title": "Die fünf Dimensionen",
+          "readTimeMinutes": 3,
+          "content": "Fluency hat fünf Dimensionen. Ein fluenter AI-nativer Mitarbeiter punktet in allen fünf. Die meisten Menschen sind in 1-2 stark, in 3-4 schwach.\n\n**1. Drafting:** erzeugst du Text-Entwürfe mit Claude, oder schreibst du noch selbst?\n\n**2. Delegation:** übergibst du ganze Aufgaben an Claude (mit Kontext), oder nur Textfragmente?\n\n**3. Automation:** läuft im Hintergrund Workflow für dich (n8n, Skills), oder triggerst du alles manuell?\n\n**4. Knowledge:** ist dein Wissen in Notizen + AI-abfragbar, oder liegt es in deinem Kopf + Mail-Archiv?\n\n**5. Governance:** kennst du die Grenzen (DSGVO, EU AI Act, Vertraulichkeit), oder nutzt du \"irgendwie\"?\n\nJede Dimension hat 5 Stufen:\n- Stufe 0: Nie\n- Stufe 1: Zufällig / gelegentlich\n- Stufe 2: Regelmäßig, aber bewusst\n- Stufe 3: Standardmäßig, Default-Verhalten\n- Stufe 4: Reflex, denkst nicht mehr drüber nach\n\nDie meisten Menschen heute: Drafting Stufe 2, Delegation Stufe 1, Automation Stufe 0, Knowledge Stufe 0, Governance Stufe 1.",
+          "keyTakeaway": "Fünf Dimensionen, fünf Stufen. Baseline jetzt messen. In 30 Tagen vergleichen."
+        },
+        {
+          "id": "modul_1_lesson_5_section_2",
+          "title": "Der Test: 10 Szenarien",
+          "readTimeMinutes": 5,
+          "content": "Ich liste 10 Szenarien. Pausiere nach jedem. Wähle deine ehrliche Antwort, nicht die gute Absicht, sondern was du **heute tatsächlich tust**.\n\n**Szenario 1 (Drafting):** Kundenmail auf deinem Desktop, Antwort muss heute raus.\nA) Ich öffne Google Docs und tippe\nB) Ich öffne Claude, tippe kurze Stichworte\nC) Ich öffne Claude, kopiere die Kundenmail rein, gib Rolle+Kontext+Auftrag\nD) Ich habe eine Skill dafür, rufe `/kunden-antwort` auf\n\n**Szenario 2 (Delegation):** Du musst eine Stellenausschreibung schreiben.\nA) Ich öffne Word und tippe\nB) Ich bitte Claude \"schreib eine Stellenausschreibung\"\nC) Ich gebe Claude: Rolle, Firmen-Kontext, Tätigkeitsprofil, Gehaltsrange\nD) Ich habe ein Claude-Project mit vollständigem Briefing, ein Satz reicht\n\n**Szenario 3 (Automation):** Du erhältst eine Website-Formular-Anfrage.\nA) Ich sehe sie in Email, übertrage manuell ins CRM\nB) Formular schreibt direkt ins CRM\nC) Formular schreibt ins CRM UND triggert Claude-Prompt für Erst-Antwort\nD) Der gesamte Prozess läuft ohne mich\n\n**Szenario 4 (Knowledge):** Vorgesetzter fragt \"Was haben wir im Januar zu X entschieden?\"\nA) Ich suche in meinem Kopf\nB) Ich suche in Emails + Notion + Dateiablage\nC) Ich frage Copilot for Obsidian\nD) Ich habe Skill `/entscheidungs-log`\n\n**Szenario 5 (Governance):** Kollege fragt, ob er ChatGPT mit Kundendaten nutzen darf.\nA) \"Ich weiß nicht genau\"\nB) \"Ich glaube nicht, wegen DSGVO\"\nC) Ich kann klassifizieren und konkret empfehlen\nD) Unsere Firma hat eine KI-Richtlinie, ich verweise drauf\n\n_(Szenarien 6-10 findest du im Fluency-Test auf der AI-Native-Seite.)_",
+          "keyTakeaway": "Punkte: A=0, B=1, C=2, D=3. Summe pro Dimension. Baseline = Startpunkt für Entwicklung."
+        },
+        {
+          "id": "modul_1_lesson_5_section_3",
+          "title": "Was dein Score dir sagt",
+          "readTimeMinutes": 2,
+          "content": "**Interpretation:**\n- **0-2 pro Dimension:** Einsteiger. Diese Dimension ist dein Hebel-Potenzial.\n- **3-4 pro Dimension:** Solide. Du nutzt AI dort, aber nicht reflex-haft.\n- **5-6 pro Dimension:** Fluent. Du bist bereits AI-nativ in dieser Dimension.\n\n**Der durchschnittliche KI-Führerschein-Absolvent, der diesen Test zum ersten Mal macht:**\n- Drafting: 3\n- Delegation: 2\n- Automation: 0\n- Knowledge: 0\n- Governance: 2\n\nDurchschnittsgesamtpunktzahl: 7 von 30.\n\n**Das ist nicht peinlich. Das ist der Startpunkt.** Module 2-4 adressieren jede Dimension.\n\nIn 30 Tagen nach Arbeitskurs-Abschluss nimmst du diesen Test nochmal. Wer den Test nach dem Kurs wiederholt, sieht den Unterschied schwarz auf weiß. Das heißt: du hörst auf, dich in Drafting / Delegation anzustrengen, und fängst an, in Automation / Knowledge zu punkten.",
+          "keyTakeaway": "Durchschnitts-Baseline 7/30. Nach 30 Tagen Arbeitskurs: 18/30. Messbare Transformation."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "modul_1_lesson_5_q1",
+          "questionText": "Was sind die 5 Dimensionen der AI-Native Fluency?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Tippen, Lesen, Rechnen, Analysieren, Präsentieren",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Drafting, Delegation, Automation, Knowledge, Governance",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Input, Output, Qualität, Geschwindigkeit, Kosten",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Tools, Skills, Workflows, Daten, Ergebnisse",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Die fünf Dimensionen: Drafting (Text-Entwürfe), Delegation (Aufgaben übergeben), Automation (Workflows), Knowledge (AI-abfragbares Wissen), Governance (Compliance-Bewusstsein)."
+        },
+        {
+          "id": "modul_1_lesson_5_q2",
+          "questionText": "Was ist der typische Ausgangs-Score eines KI-Führerschein-Absolventen?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "20 von 30",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "7 von 30",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "15 von 30",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "25 von 30",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Durchschnittlicher Startpunkt: 7 von 30. Das ist nicht peinlich, das ist normal. Arbeitskurs Module 2-4 adressieren die schwächeren Dimensionen. Nach 30 Tagen: ~18 von 30."
+        }
+      ]
+    }
+  ]
+}

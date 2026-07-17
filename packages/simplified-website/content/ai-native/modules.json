@@ -1,0 +1,83 @@
+{
+  "modules": [
+    {
+      "id": "modul_1",
+      "number": 1,
+      "title": "Von der Aufgabe zum Workflow",
+      "subtitle": "Vom Ausführen zum Orchestrieren",
+      "description": "Du kombinierst vorhandene Tools so, dass du weniger tippst und gezielter entscheidest. Der Claude-Orchestrator: du dirigierst, Claude führt aus.",
+      "durationMinutes": 50,
+      "lessonCount": 5,
+      "premiumGated": false,
+      "voiceAnchor": "Du hast bereits Tools. In diesem Kurs lernst du, wie du sie so kombinierst, dass du weniger tippst und gezielter entscheidest.",
+      "topics": [
+        "Der Moment, in dem du aufhörst, selbst zu schreiben",
+        "Warum moderne Teams Arbeit an KI delegieren",
+        "Der Claude-Orchestrator: du dirigierst, Claude führt aus",
+        "Die 10 Dinge, die du heute nicht mehr selbst machst",
+        "AI-Native Fluency Test (Selbst-Assessment)"
+      ]
+    },
+    {
+      "id": "modul_2",
+      "number": 2,
+      "title": "Claude ist dein Kollege",
+      "subtitle": "Der Claude-Stack: Projects, Skills, Plugins, MCP",
+      "description": "Claude ist keine Software. Claude ist der Kollege, den du seit 5 Jahren einstellen wolltest.",
+      "durationMinutes": 70,
+      "lessonCount": 7,
+      "premiumGated": false,
+      "voiceAnchor": "Claude ist keine Software. Claude ist der Kollege, den du seit 5 Jahren einstellen wolltest.",
+      "topics": [
+        "Projects, Memory, Artifacts: dein Claude-Arbeitsplatz",
+        "Connector-Prinzip: Gmail, Kalender, Drive als simulierte OAuth-Übung",
+        "Skills: dein persönliches Kommando-Repertoire",
+        "Plugins + MCP: Claude trifft deine Systeme",
+        "Design Skill + Artifacts",
+        "Claude Code für Nicht-Entwickler",
+        "Memory & CLAUDE.md"
+      ]
+    },
+    {
+      "id": "modul_3",
+      "number": 3,
+      "title": "Dein Zweites Gehirn",
+      "subtitle": "Obsidian + Claude als Business-Intelligence",
+      "description": "Dein Wissen ist nicht in deinem Kopf. Es ist in 200 Mails, 50 Notion-Seiten, 30 Ordnern. Claude weiß das besser als du.",
+      "durationMinutes": 85,
+      "lessonCount": 7,
+      "premiumGated": false,
+      "voiceAnchor": "Dein Wissen ist nicht in deinem Kopf. Es ist in 200 Mails, 50 Notion-Seiten, 30 Ordnern.",
+      "topics": [
+        "Setup-Walkthrough (Bonus, keine Zeit-Cap)",
+        "Warum du ein zweites Gehirn brauchst",
+        "PARA + MOC: das Mittelstand-Skelett",
+        "Smart Connections + Copilot",
+        "Obsidian Web Clipper",
+        "Daily Workflow + Prompt-Mastery (RCTFC, JSON-Output)",
+        "Claude + Obsidian via MCP"
+      ]
+    },
+    {
+      "id": "modul_4",
+      "number": 4,
+      "title": "Automatisiere deinen Job",
+      "subtitle": "n8n + EU AI Act + Capstone",
+      "description": "Jeder manuelle Handgriff, den du zum dritten Mal machst, ist ein n8n-Flow, der noch nicht existiert.",
+      "durationMinutes": 80,
+      "lessonCount": 8,
+      "premiumGated": false,
+      "voiceAnchor": "Jeder manuelle Handgriff, den du zum dritten Mal machst, ist ein n8n-Flow, der noch nicht existiert.",
+      "topics": [
+        "n8n selbst hosten: DSGVO-Basics in 30 Minuten aufgesetzt",
+        "Sandbox-Build 1: E-Mail-Triage → Review-Liste",
+        "Sandbox-Build 2: Meeting → To-Do-Entwurf",
+        "Sandbox-Build 3: Wochenbericht aus Notizen",
+        "Local AI mit LM Studio",
+        "EU AI Act Deep-Dive (Annex III)",
+        "Capstone Brief: Pilot in 7 Tagen",
+        "Capstone Review + Privacy-Primer"
+      ]
+    }
+  ]
+}

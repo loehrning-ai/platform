@@ -1,0 +1,367 @@
+{
+  "blockId": "block_4",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-06-22",
+  "nextReview": "2026-12-22",
+  "reviewCadence": "evergreen",
+  "riskClass": "evergreen",
+  "triggerEvents": [
+    "major-conceptual-update"
+  ],
+  "lessons": [
+    {
+      "id": "block_4_lesson_1",
+      "blockId": "block_4",
+      "number": 1,
+      "title": "KI lügt überzeugend",
+      "subtitle": "Drei reale Fälle mit realen Konsequenzen",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "Halluzination",
+        "Mata v. Avianca",
+        "Samsung Datenleck",
+        "Air Canada"
+      ],
+      "sections": [
+        {
+          "id": "block_4_lesson_1_section_1",
+          "title": "Drei Fälle",
+          "readTimeMinutes": 3,
+          "content": "Drei Fälle. Alle real. Alle vermeidbar.\n\n**Fall 1: Mata v. Avianca (2023)**\nJuni 2023, New York. Die Anwälte Steven Schwartz und Peter LoDuca reichen einen Schriftsatz im Fall Mata gegen Avianca Airlines ein. Sechs Gerichtsentscheidungen als Belege. Aktenzeichen, Richternamen, Zitate aus den Urteilen. Alles überzeugend. Alles aus ChatGPT. Alles erfunden.\n\nRichter P. Kevin Castel prüfte die Zitate. Keines der sechs Urteile existierte. Die Aktenzeichen waren frei erfunden. Die zitierten Richter gab es, aber sie hatten die genannten Fälle nie verhandelt. ChatGPT hatte nicht \"recherchiert\". Es hatte das wahrscheinlichste nächste Wort berechnet. Und für juristische Zitate sieht das wahrscheinlichste nächste Wort täuschend echt aus.\n\nDas Gericht verhängte 5.000 USD Strafe. Nicht weil die Anwälte KI nutzten. Sondern weil sie nicht prüften.\n\n**Fall 2: Samsung Datenlecks (2023)**\nSamsung, März 2023. Das Unternehmen erlaubt seinen Semiconductor-Ingenieuren die Nutzung von ChatGPT. Innerhalb von 20 Tagen drei separate Datenlecks: proprietärer Quellcode, transkribierte Inhalte interner Meetings, Testsequenzen der Chipproduktion. Alles in ChatGPT eingegeben. Alles potenziell in den Trainingsdaten gelandet. Samsung konnte die Daten nicht zurückfordern. Folge: unternehmensweites ChatGPT-Verbot auf allen Firmengeräten.\n\n**Fall 3: Air Canada Chatbot (2024)**\nAir Canadas Chatbot versprach einem Passagier einen Trauerfall-Rabatt, den es laut Unternehmenspolicy nicht gab. Air Canada argumentierte, der Chatbot sei \"ein separates Rechtssubjekt\". Das Gericht sah das anders: Air Canada hafte für die Aussagen seines eigenen Tools. Schadenersatz: 650 CAD plus Zinsen.",
+          "keyTakeaway": "In allen drei Fällen funktionierte die KI wie vorgesehen. Der Schaden entstand, weil Menschen die Ausgabe verwendeten, ohne sie zu prüfen."
+        },
+        {
+          "id": "block_4_lesson_1_section_2",
+          "title": "Was diese Fälle gemeinsam haben",
+          "readTimeMinutes": 2,
+          "content": "In keinem Fall war die KI \"defekt\". Sie funktionierte exakt wie vorgesehen: Sie generierte die statistisch wahrscheinlichste Fortsetzung. Das Problem war, dass Menschen die Ausgabe verwendeten, ohne sie zu prüfen.\n\nDiese drei Fälle haben reale Konsequenzen: Geldstrafen, Datenverluste, Schadenersatzforderungen. In keinem Fall war der Schaden technisch unvermeidbar. In jedem Fall hätte eine 60-Sekunden-Prüfung genügt.\n\nKI ist dein schnellster Assistent, aber dein unzuverlässigster Faktenchecker.\n\nHalluzinationen sind kein Softwarefehler, der irgendwann gepatcht wird. Sie sind eine fundamentale Eigenschaft der Technologie. Auch GPT-5, Claude 5 und jedes zukünftige Modell werden halluzinieren. Weniger häufig. Aber niemals null.",
+          "keyTakeaway": "Halluzinationen sind kein Bug, sondern eine fundamentale Eigenschaft von Sprachmodellen. Auch zukünftige Modelle werden halluzinieren."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_4_lesson_1_q1",
+          "questionText": "Warum wurden die Anwälte im Fall Mata v. Avianca zu 5.000 USD Strafe verurteilt?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Weil sie ChatGPT für juristische Arbeit genutzt haben",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Weil sie die von ChatGPT generierten Gerichtsentscheidungen nicht auf ihre Existenz geprüft haben",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Weil ChatGPT in New Yorker Gerichten verboten ist",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Weil sie keine Copilot-Lizenz hatten",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Das Gericht stellte klar: Die Strafe erfolgte nicht wegen der KI-Nutzung, sondern weil die Anwälte die Ausgaben nicht prüften. Alle sechs zitierten Gerichtsentscheidungen waren frei erfunden. Die Verantwortung liegt beim Menschen, der den Output verwendet."
+        },
+        {
+          "id": "block_4_lesson_1_q2",
+          "questionText": "Was trifft auf KI-Halluzinationen zu?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Sie werden in zukünftigen Modellversionen vollständig behoben",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Sie treten nur bei kostenlosen KI-Tools auf",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Sie sind eine fundamentale Eigenschaft der Technologie und werden nie ganz verschwinden",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Sie passieren nur bei juristischen Texten",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Halluzinationen sind kein Softwarefehler, der irgendwann gepatcht wird. Sie sind eine fundamentale Eigenschaft von Sprachmodellen. Auch GPT-5, Claude 5 und jedes zukünftige Modell werden halluzinieren. Weniger häufig, aber niemals null."
+        }
+      ]
+    },
+    {
+      "id": "block_4_lesson_2",
+      "blockId": "block_4",
+      "number": 2,
+      "title": "Die 3-Schritt-Prüfung",
+      "subtitle": "60 Sekunden, die den Unterschied machen",
+      "durationMinutes": 7,
+      "keyConcepts": [
+        "3-Schritt-Prüfung",
+        "Faktencheck",
+        "Vollständigkeit",
+        "Angemessenheit"
+      ],
+      "sections": [
+        {
+          "id": "block_4_lesson_2_section_1",
+          "title": "Schritt 1 und 2: Sachlich korrekt und vollständig?",
+          "readTimeMinutes": 4,
+          "content": "Jeder KI-Output durchläuft drei Fragen. Nicht optional. Nicht \"wenn Zeit ist\". Jedes Mal.\n\n**Schritt 1: Stimmt das sachlich?**\nDer häufigste und teuerste Fehler bei KI-Outputs. Prüfe:\n- Zahlen: Stimmt der Umsatz? Stimmt das Datum? Stimmt die Prozentzahl? Öffne den Geschäftsbericht oder die Primärquelle.\n- Zitate: Googele die exakte Phrase in Anführungszeichen. Existiert die Quelle? Stimmt der Wortlaut?\n- Personen und Organisationen: Existiert der genannte Experte? Gibt es den Verband wirklich? ChatGPT erfindet Professoren, Institute und Fachverbände mit beeindruckender Detailtreue.\n- Rechtliche Verweise: EUR-Lex für EU-Verordnungen. Gesetze-im-Internet.de für deutsches Recht. Nie eine Artikelnummer ungeprüft übernehmen.\n\nFaustregel: Je plausibler die Behauptung klingt, desto sorgfältiger prüfen. Offensichtliche Fehler fallen auf. Die subtilen kosten dich.\n\n**Schritt 2: Ist es vollständig?**\nKI liefert selten die ganze Wahrheit. Sie liefert die wahrscheinlichste Antwort. Frage aktiv:\n- Was fehlt? Welche Gegenargumente werden verschwiegen?\n- Was wurde vereinfacht? Welche Nuancen gingen verloren?\n- Welche Perspektive fehlt? Gibt es eine andere Sichtweise, die relevant ist?\n- Ist es aktuell? Das Modell kennt nur Daten bis zum Trainingszeitpunkt.\n\nBeispiel: Du lässt eine Zusammenfassung der EU-KI-Verordnung erstellen. Die KI nennt korrekt die Pflichten für Hochrisiko-KI. Aber sie erwähnt nicht den Digital Omnibus, der die Fristen möglicherweise verschiebt. Oder sie verschweigt, dass Artikel 4 (KI-Kompetenz) bereits seit Februar 2025 anwendbar ist.",
+          "keyTakeaway": "Schritt 1 prüft Fakten: Zahlen, Zitate, Personen, Rechtsverweise. Schritt 2 prüft Vollständigkeit: Was fehlt, was ist vereinfacht, was ist veraltet?"
+        },
+        {
+          "id": "block_4_lesson_2_section_2",
+          "title": "Schritt 3 und die Prüfung in der Praxis",
+          "readTimeMinutes": 3,
+          "content": "**Schritt 3: Ist es angemessen?**\nAuch wenn der Inhalt stimmt, kann der Ton falsch sein. Prüfe:\n- Passt der Ton für die Zielgruppe? Eine E-Mail an den Vorstand klingt anders als eine an einen Neukunden.\n- Gibt es unangebrachte Formulierungen? KI reproduziert Bias aus Trainingsdaten.\n- Ist die Sprache diskriminierungsfrei? Achte auf geschlechtskodierte Sprache, Altersannahmen, kulturelle Stereotypen.\n\nDiese 3 Fragen in 60 Sekunden beantworten. Jedes Mal. Das klingt nach viel. In der Praxis wird es zur Gewohnheit. Wie der Schulterblick beim Spurwechsel. Anfangs bewusst. Nach zwei Wochen automatisch.\n\n**Ein konkretes Beispiel:** Du hast gerade mit einem KI-Assistenten eine Antwort auf eine Kundenreklamation erstellt (Block 3, Lektion 1). Bevor du sendest:\n- Sachlich: Stimmt die Bestellnummer? Stimmt das Lieferdatum? Hat die KI ein konkretes Datum genannt, das nicht in der Original-E-Mail stand?\n- Vollständig: Hat die Antwort alle Punkte des Kunden adressiert? Oder nur den offensichtlichsten?\n- Angemessen: Ist der Ton für einen Bestandskunden mit 4 Jahren Geschäftsbeziehung angemessen? Nicht zu distanziert, nicht zu kumpelhaft?\n\n60 Sekunden. Drei Fragen. Dann senden.",
+          "keyTakeaway": "Schritt 3 prüft Ton, Bias und Angemessenheit. Die 3-Schritt-Prüfung dauert 60 Sekunden und wird nach zwei Wochen zur Gewohnheit."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_4_lesson_2_q1",
+          "questionText": "Was sind die drei Schritte der KI-Output-Prüfung?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Rechtschreibung, Grammatik, Formatierung",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Sachlich korrekt, vollständig, angemessen",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Kopieren, einfügen, senden",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Prompt schreiben, Ergebnis lesen, speichern",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Die 3-Schritt-Prüfung fragt: 1. Stimmt das sachlich? (Fakten, Zahlen, Quellen) 2. Ist es vollständig? (Fehlende Perspektiven, Vereinfachungen) 3. Ist es angemessen? (Ton, Bias, Zielgruppe). 60 Sekunden, jedes Mal."
+        },
+        {
+          "id": "block_4_lesson_2_q2",
+          "questionText": "Warum solltest du bei Schritt 1 besonders aufmerksam sein, wenn eine KI-Aussage sehr plausibel klingt?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Plausible Aussagen sind immer korrekt",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Offensichtliche Fehler fallen auf, aber subtile, plausibel klingende Fehler kosten dich",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Plausible Aussagen müssen nicht geprüft werden",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Nur unplausible Aussagen enthalten Halluzinationen",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Je plausibler die Behauptung klingt, desto sorgfältiger prüfen. KI erzeugt überzeugende, aber falsche Informationen. Erfundene Verbände, falsche Unternehmenszahlen und nicht existierende Personen klingen oft völlig glaubwürdig."
+        }
+      ]
+    },
+    {
+      "id": "block_4_lesson_3",
+      "blockId": "block_4",
+      "number": 3,
+      "title": "Übung: 3 Fehler finden",
+      "subtitle": "Eine KI-generierte Marktanalyse prüfen",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "Faktencheck",
+        "Halluzination erkennen",
+        "Quellprüfung"
+      ],
+      "sections": [
+        {
+          "id": "block_4_lesson_3_section_1",
+          "title": "Die Marktanalyse",
+          "readTimeMinutes": 3,
+          "content": "Jetzt prüfst du selbst. Die folgende \"Marktanalyse\" stammt von einer KI und enthält drei versteckte Fehler. Finde alle drei.\n\n\"Der deutsche Maschinenbau erzielte 2024 einen Gesamtumsatz von 256 Milliarden EUR und bleibt damit eine der umsatzstärksten Industriebranchen Deutschlands. Laut dem VDMA beschäftigt die Branche rund 1,05 Millionen Menschen.\n\nBesonders stark entwickelt sich der Bereich Automatisierung: Bosch Rexroth erzielte 2024 einen Umsatz von 8,2 Milliarden EUR und baut seine Marktposition im Bereich industrielle Hydraulik weiter aus.\n\nDer Bundesverband Intelligente Fertigung e.V. (BIF) prognostiziert für 2025 ein Wachstum von 2,8% im Bereich Smart Factory. Die EU-Maschinenverordnung EU 2024/1789, die ab 2027 die alte Maschinenrichtlinie ablöst, wird den Investitionsbedarf in der Branche zusätzlich erhöhen.\n\nDie Exportquote der Branche liegt stabil bei rund 79%. Die USA, China und Frankreich sind die drei wichtigsten Absatzmärkte.\"\n\nDieser Text enthält typische KI-Halluzinationsmuster: erfundene Verbände, falsche Unternehmenszahlen und falsche Verordnungsnummern. Genau die Muster, die du in der 3-Schritt-Prüfung gelernt hast.",
+          "keyTakeaway": "KI-generierte Texte können erfundene Verbände, falsche Zahlen und falsche Verordnungsnummern enthalten, die auf den ersten Blick glaubwürdig wirken."
+        },
+        {
+          "id": "block_4_lesson_3_section_2",
+          "title": "Deine Aufgabe",
+          "readTimeMinutes": 2,
+          "content": "Lies den Text. Prüfe jede Behauptung. Finde die drei Fehler. Nutze Google, Unternehmens-Websites und EUR-Lex.\n\nNimm dir 10 Minuten. Notiere für jeden gefundenen Fehler:\n1. Was ist falsch?\n2. Was ist die korrekte Information?\n3. Wie hast du den Fehler gefunden (welche Quelle)?\n\nDie Musterlösung findest du im Übungsbereich dieses Blocks.\n\nDiese Übung trainiert genau die Fähigkeit, die Artikel 4 der EU-KI-Verordnung verlangt: KI-Kompetenz bedeutet, Fehler zu erkennen, bevor sie Schaden anrichten.",
+          "keyTakeaway": "Die drei Fehlertypen in der Übung (erfundener Verband, falsche Unternehmenszahl, falsche Verordnungsnummer) sind typische KI-Halluzinationsmuster."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_4_lesson_3_q1",
+          "questionText": "Welches Halluzinationsmuster ist bei KI-generierten Fachtexten besonders tückisch?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Offensichtliche Grammatikfehler",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Erfundene Verbände und Institute, die seriös klingen, aber nicht existieren",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Fehlende Satzzeichen",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Zu kurze Texte",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "KI erfindet Verbände, Institute und Personen mit beeindruckender Detailtreue. \"Bundesverband für Digitale Transformation e.V.\" klingt seriös, existiert aber nicht. Jeden Verbandsnamen googeln, bevor du ihn übernimmst."
+        },
+        {
+          "id": "block_4_lesson_3_q2",
+          "questionText": "Mit welcher Methode lässt sich am zuverlässigsten prüfen, ob eine EU-Verordnungsnummer in einem KI-generierten Text korrekt ist?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Die KI nochmals fragen, ob die Nummer stimmt",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Die Nummer auf EUR-Lex nachschlagen",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Prüfen, ob die Nummer plausibel klingt",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Einen Kollegen fragen",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "EUR-Lex ist die offizielle Datenbank für EU-Recht. Dort lässt sich jede Verordnungsnummer prüfen. Nie dieselbe KI nochmal fragen: Ein Modell, das einen Fehler gemacht hat, wird denselben Fehler in der Regel bestätigen."
+        }
+      ]
+    },
+    {
+      "id": "block_4_lesson_4",
+      "blockId": "block_4",
+      "number": 4,
+      "title": "Die goldene Regel",
+      "subtitle": "Nie ungeprüft versenden",
+      "durationMinutes": 3,
+      "keyConcepts": [
+        "Verifikations-Mentalität",
+        "Prüfpflicht",
+        "Verantwortung"
+      ],
+      "sections": [
+        {
+          "id": "block_4_lesson_4_section_1",
+          "title": "Drei Erkenntnisse",
+          "readTimeMinutes": 1,
+          "content": "Nach 20 Minuten in diesem Block stehen drei Erkenntnisse:\n\n1. KI erzeugt plausibel klingende, sachlich falsche Informationen. Regelmäßig. Überzeugend. Ohne Warnung.\n2. Die 3-Schritt-Prüfung (sachlich, vollständig, angemessen) kostet 60 Sekunden und verhindert die teuersten Fehler.\n3. Je überzeugender eine KI-Ausgabe klingt, desto sorgfältiger prüfen.\n\nDiese drei Erkenntnisse sind das Fundament der Verifikations-Mentalität. Nicht die KI ist das Risiko. Der Mensch, der nicht prüft, ist das Risiko.",
+          "keyTakeaway": "KI halluziniert regelmäßig, die 3-Schritt-Prüfung kostet 60 Sekunden, und je plausibler der Output, desto gründlicher die Prüfung."
+        },
+        {
+          "id": "block_4_lesson_4_section_2",
+          "title": "Die Regel",
+          "readTimeMinutes": 2,
+          "content": "Daraus folgt eine Regel. Eine einzige. Die wichtigste Regel dieses gesamten Kurses:\n\nNie ungeprüft versenden. Nie.\n\nDas gilt für E-Mails. Das gilt für Berichte. Das gilt für Analysen. Das gilt für Präsentationen. Das gilt für Social-Media-Posts. Das gilt für alles, was du nach außen schickst.\n\n\"Aber ich hatte keine Zeit zum Prüfen.\" Dann hattest du keine Zeit, es mit KI zu machen. Denn ein ungeprüfter KI-Output ist schlimmer als kein Output. Ein manuell geschriebener, langsamer Text ist dir als Autor zuzurechnen. Ein ungeprüfter KI-Text mit Halluzinationen ist dir als Autor zuzurechnen, aber du kennst den Inhalt nicht einmal.\n\nWenn du nicht sicher bist, ob etwas stimmt: Frag eine zweite Quelle. Frag einen Kollegen. Frag Google. Aber frag nicht dieselbe KI nochmal. Ein LLM, das einen Fehler gemacht hat, wird denselben Fehler in der Regel bestätigen. Es hat kein Konzept von \"wahr\". Es hat Wahrscheinlichkeiten.\n\nDie Verifikations-Mentalität ist keine Bremse. Sie ist das, was den Geschwindigkeitsgewinn aus Block 3 sicher macht. In Block 3 hast du gelernt, 8 Minuten bei einer E-Mail zu sparen. Investiere 1 Minute davon in die Prüfung. Du bist immer noch 7 Minuten schneller. Und der Output ist verlässlich.\n\nDiese 60 Sekunden sind gut investiert: Sie sichern den Zeitgewinn aus Block 3 ab.",
+          "keyTakeaway": "Nie ungeprüft versenden. Ein ungeprüfter KI-Output ist schlimmer als kein Output, weil du den Inhalt nicht einmal kennst."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_4_lesson_4_q1",
+          "questionText": "Warum ist ein ungeprüfter KI-Output schlimmer als ein manuell geschriebener Text?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Weil KI-Texte immer falsch sind",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Weil du als Autor haftest, aber den Inhalt nicht einmal kennst",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Weil manuelle Texte nie Fehler enthalten",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Weil KI-Texte länger sind",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Ein manuell geschriebener Text ist dir als Autor zuzurechnen, und du kennst den Inhalt. Ein ungeprüfter KI-Text ist dir ebenfalls als Autor zuzurechnen, aber du kennst den Inhalt nicht einmal. Das macht das Risiko größer."
+        },
+        {
+          "id": "block_4_lesson_4_q2",
+          "questionText": "Was solltest du tun, wenn du nicht sicher bist, ob eine KI-Aussage stimmt?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Dieselbe KI nochmals fragen",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Die Aussage trotzdem verwenden, da KI meistens richtig liegt",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Eine unabhängige zweite Quelle nutzen: Google, Fachwebsite oder einen Kollegen fragen",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Den Text löschen und komplett neu anfangen",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Nie dieselbe KI nochmal fragen. Ein LLM, das einen Fehler gemacht hat, wird denselben Fehler in der Regel bestätigen. Es hat kein Konzept von \"wahr\". Stattdessen unabhängige Quellen nutzen: Google, Fachwebsites, EUR-Lex oder einen Kollegen."
+        }
+      ],
+      "widgets": [
+        {
+          "kind": "failure-tagger",
+          "placement": "before-quiz",
+          "courseSlug": "ki-fuehrerschein",
+          "props": {
+            "lessonId": "block_4_lesson_4",
+            "cpId": "failure-tagger",
+            "scenario": "Fünf echt aussehende KI-Antworten aus dem Büro-Alltag, jede auf ihre Art kaputt. Ordne jeder zu, wie sie schiefgelaufen ist. Erst wer den Fehlertyp benennen kann, prüft gezielt."
+          }
+        }
+      ]
+    }
+  ]
+}

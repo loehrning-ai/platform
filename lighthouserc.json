@@ -1,0 +1,122 @@
+{
+  "ci": {
+    "collect": {
+      "startServerCommand": "cd packages/simplified-website && bun run start",
+      "startServerReadyPattern": "Ready in",
+      "startServerReadyTimeout": 120000,
+      "url": [
+        "http://localhost:3000/",
+        "http://localhost:3000/einstieg",
+        "http://localhost:3000/wie-ki-funktioniert",
+        "http://localhost:3000/wie-ki-funktioniert/lektion-1-vorhersage",
+        "http://localhost:3000/standortbestimmung",
+        "http://localhost:3000/kurse",
+        "http://localhost:3000/kurse/open-source/data-engineering-fundamentals",
+        "http://localhost:3000/ki-fuehrerschein",
+        "http://localhost:3000/eu-ai-act-kurs",
+        "http://localhost:3000/ai-native",
+        "http://localhost:3000/ki-und-gesellschaft",
+        "http://localhost:3000/blog",
+        "http://localhost:3000/blog/eu-ai-act-grundlagen",
+        "http://localhost:3000/workshops",
+        "http://localhost:3000/workshops/geschaeftsberichte-mit-ki-lesen",
+        "http://localhost:3000/buecher",
+        "http://localhost:3000/buecher/ki-arbeitsalltag",
+        "http://localhost:3000/buecher/ki-arbeitsalltag/02_persoenliches_profil",
+        "http://localhost:3000/demos",
+        "http://localhost:3000/demos/prompt-scanner",
+        "http://localhost:3000/vorlagen",
+        "http://localhost:3000/vorlagen/ki-nutzungsrichtlinie",
+        "http://localhost:3000/open-source",
+        "http://localhost:3000/open-source/lizenzrichtlinie",
+        "http://localhost:3000/ueber-mich",
+        "http://localhost:3000/ueber-die-plattform",
+        "http://localhost:3000/neuigkeiten",
+        "http://localhost:3000/hilfe",
+        "http://localhost:3000/bekannte-grenzen",
+        "http://localhost:3000/impressum",
+        "http://localhost:3000/datenschutz"
+      ],
+      "numberOfRuns": 3,
+      "settings": {
+        "budgets": [
+          {
+            "path": "/*",
+            "resourceSizes": [
+              {
+                "resourceType": "script",
+                "budget": 400
+              },
+              {
+                "resourceType": "total",
+                "budget": 1600
+              }
+            ],
+            "resourceCounts": [
+              {
+                "resourceType": "third-party",
+                "budget": 12
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": [
+          "warn",
+          {
+            "minScore": 0.8
+          }
+        ],
+        "categories:accessibility": [
+          "error",
+          {
+            "minScore": 0.95
+          }
+        ],
+        "categories:best-practices": [
+          "warn",
+          {
+            "minScore": 0.9
+          }
+        ],
+        "categories:seo": [
+          "warn",
+          {
+            "minScore": 0.9
+          }
+        ],
+        "largest-contentful-paint": [
+          "warn",
+          {
+            "maxNumericValue": 4000
+          }
+        ],
+        "cumulative-layout-shift": [
+          "warn",
+          {
+            "maxNumericValue": 0.1
+          }
+        ],
+        "total-blocking-time": [
+          "warn",
+          {
+            "maxNumericValue": 600
+          }
+        ],
+        "resource-summary:script:size": [
+          "warn",
+          {
+            "maxNumericValue": 400000
+          }
+        ]
+      }
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": ".lighthouseci/reports"
+    }
+  }
+}

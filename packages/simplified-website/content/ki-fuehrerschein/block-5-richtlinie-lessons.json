@@ -1,0 +1,371 @@
+{
+  "blockId": "block_5",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-06-22",
+  "nextReview": "2026-12-22",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "eu-ai-act-amendment",
+    "commission-qa-update"
+  ],
+  "blockLastVerified": "2026-06-20",
+  "lessons": [
+    {
+      "id": "block_5_lesson_1",
+      "blockId": "block_5",
+      "number": 1,
+      "title": "Warum jedes Unternehmen eine KI-Richtlinie braucht",
+      "subtitle": "Shadow AI, Samsung und Artikel 4",
+      "durationMinutes": 6,
+      "keyConcepts": [
+        "Shadow AI",
+        "EU AI Act Art. 4",
+        "Compliance",
+        "Bußgeld"
+      ],
+      "sections": [
+        {
+          "id": "block_5_lesson_1_section_1",
+          "title": "Das Problem: Shadow AI",
+          "readTimeMinutes": 3,
+          "content": "> **Im Beruf:** Dieser Block richtet sich an Mitarbeitende und Verantwortliche in Unternehmen. Wenn du KI nur privat nutzt, kannst du ihn überspringen. Die Grundlagen aus den Blöcken 1 bis 4 reichen für den Alltag aus. Wer in einem Büro arbeitet, findet hier eine praktische Vorlage für eine KI-Nutzungsrichtlinie.\n\n68% der Mitarbeitenden nutzen KI-Tools ohne Genehmigung ihrer IT-Abteilung (Quelle: Salesforce Generative AI Snapshot Research, Oktober 2024). Der Fachbegriff dafür: Shadow AI.\n\nDu kennst den Samsung-Fall aus Block 4: drei Datenlecks in 20 Tagen, weil es keine Regeln gab. Genau dagegen hilft eine Richtlinie.\n\nDas ist kein Einzelfall. In vielen Unternehmen passiert Ähnliches, nur kleiner und unbemerkt. Ein Vertriebsmitarbeiter gibt Kundendaten in ChatGPT Free ein, um eine E-Mail zu formulieren. Eine Personalerin lädt Lebensläufe hoch, um Bewerbungen zusammenzufassen. Ein Controller kopiert Quartalszahlen in ein KI-Tool, um eine Präsentation zu erstellen.\n\nOhne Richtlinie haben Mitarbeitende keine Orientierung. Sie wollen produktiv sein. Sie nutzen, was verfügbar ist. Und sie machen Fehler, die niemand bemerkt.",
+          "keyTakeaway": "68% der Mitarbeitenden nutzen KI ohne Genehmigung. Ohne Richtlinie gibt es keine Orientierung, und Datenlecks wie bei Samsung sind die Folge."
+        },
+        {
+          "id": "block_5_lesson_1_section_2",
+          "title": "Die Pflicht: Artikel 4 seit Februar 2025",
+          "readTimeMinutes": 3,
+          "content": "Seit dem 2. Februar 2025 ist Artikel 4 der EU-KI-Verordnung anwendbar. Anbieter und Betreiber müssen geeignete Maßnahmen treffen, damit Personen, die in ihrem Auftrag mit KI-Systemen umgehen, ein ausreichendes Maß an KI-Kompetenz haben. Das ist rollen- und kontextabhängig; die Kommission schreibt kein einheitliches Zertifikat und kein fixes Schulungsformat vor.\n\nWas bedeutet das konkret? Anbieter und Betreiber brauchen nachvollziehbare Bausteine: Rollen, erlaubte Tools, Datenregeln, Prüfroutinen, Eskalation und Lernnachweise. Eine KI-Richtlinie ist ein wichtiger Teil dieser Dokumentation.\n\nDiese Richtlinie ist kein vollständiger Artikel-4-Nachweis. Sie dokumentiert, welche Tools genehmigt sind, welche Daten wohin dürfen, wie Outputs geprüft werden und was bei Vorfällen passiert. Je nach Use Case kommen Schulung, Inventar, Risikoklassifizierung, Datenschutzprüfung und weitere interne Prozesse dazu.",
+          "keyTakeaway": "Seit dem 2. Februar 2025 ist Artikel 4 anwendbar. Eine KI-Richtlinie ist ein Dokumentationsbaustein für KI-Kompetenzmaßnahmen, aber kein vollständiger Artikel-4-Nachweis.",
+          "sources": [
+            {
+              "claimId": "ai-act-article-4-literacy-2025-02-02",
+              "lastVerified": "2026-06-20"
+            },
+            {
+              "claimId": "ai-literacy-no-specific-format",
+              "lastVerified": "2026-06-20"
+            }
+          ]
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_5_lesson_1_q1",
+          "questionText": "Seit wann ist Artikel 4 der EU-KI-Verordnung anwendbar?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Seit dem 1. Januar 2024",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Seit dem 2. Februar 2025",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Ab August 2026",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Er ist noch nicht in Kraft",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Artikel 4 der EU-KI-Verordnung ist seit dem 2. Februar 2025 anwendbar. Er verlangt angemessene KI-Kompetenzmaßnahmen für Personen, die im Auftrag von Anbietern oder Betreibern mit KI-Systemen umgehen."
+        },
+        {
+          "id": "block_5_lesson_1_q2",
+          "questionText": "Wie viel Prozent der Mitarbeitenden nutzen laut Salesforce-Studie KI-Tools ohne Genehmigung ihrer IT-Abteilung?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "23%",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "45%",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "68%",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "91%",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "68% der Mitarbeitenden nutzen KI-Tools ohne Genehmigung. Dieses Phänomen heißt Shadow AI und ist eines der größten Compliance-Risiken für Unternehmen."
+        }
+      ]
+    },
+    {
+      "id": "block_5_lesson_2",
+      "blockId": "block_5",
+      "number": 2,
+      "title": "Die 6 Bausteine deiner KI-Richtlinie",
+      "subtitle": "Alles, was deine Richtlinie enthalten muss",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "KI-Richtlinie",
+        "Geltungsbereich",
+        "Genehmigte Tools",
+        "Datenregeln",
+        "Prüfpflicht",
+        "Eskalation"
+      ],
+      "sections": [
+        {
+          "id": "block_5_lesson_2_section_1",
+          "title": "Bausteine 1 bis 3: Geltungsbereich, Tools, Daten",
+          "readTimeMinutes": 3,
+          "content": "Deine KI-Richtlinie besteht aus sechs Bausteinen. Jeden einzelnen hast du bereits in den vorherigen Blöcken vorbereitet. Jetzt setzt du sie zusammen.\n\n**Baustein 1: Geltungsbereich.** Für wen gilt die Richtlinie? Alle Mitarbeitenden? Auch Freelancer und Dienstleister? Ab wann? Wann wird sie überprüft?\n\n**Baustein 2: Genehmigte Tools.** Welche KI-Tools dürfen genutzt werden? Mit welcher Datenstufe? Wer ist verantwortlich? Das ist das KI-Inventar aus Block 1, ergänzt um die Freigabe.\n\n**Baustein 3: Datenregeln.** Welche Daten dürfen in welches Tool? Das ist die Datenklassifizierungs-Karte aus Block 2, direkt übertragen.",
+          "keyTakeaway": "Die ersten drei Bausteine definieren: Wer ist betroffen, welche Tools sind erlaubt und welche Daten dürfen wohin."
+        },
+        {
+          "id": "block_5_lesson_2_section_2",
+          "title": "Bausteine 4 bis 6: Prüfpflicht, Eskalation, Review",
+          "readTimeMinutes": 2,
+          "content": "**Baustein 4: Prüfpflicht.** Wie wird jeder KI-Output geprüft, bevor er verwendet wird? Das ist die 3-Schritt-Prüfung aus Block 4.\n\n**Baustein 5: Eskalationspfad.** Was passiert bei einem Vorfall? Wer wird wann informiert? In welcher Reihenfolge?\n\n**Baustein 6: Review-Zyklus.** Wer ist verantwortlich für die Aktualisierung? Wie oft wird überprüft? Wie werden Änderungen kommuniziert?\n\nSechs Bausteine. Ein Dokument. 20 Minuten.\n\nJeder Baustein greift auf Ergebnisse aus den vorherigen Blöcken zurück. Das KI-Inventar (Block 1), die Datenklassifizierung (Block 2), die Prompt-Vorlagen (Block 3) und die 3-Schritt-Prüfung (Block 4) fließen direkt in die Richtlinie ein. Nichts davon war überflüssig.",
+          "keyTakeaway": "Bausteine 4 bis 6 regeln Qualitätssicherung, Vorfallmanagement und kontinuierliche Aktualisierung. Alle sechs Bausteine bauen auf den vorherigen Blöcken auf."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_5_lesson_2_q1",
+          "questionText": "Aus wie vielen Bausteinen besteht eine vollständige KI-Richtlinie?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "3 Bausteine",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "4 Bausteine",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "6 Bausteine",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "10 Bausteine",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Eine vollständige KI-Richtlinie besteht aus sechs Bausteinen: Geltungsbereich, Genehmigte Tools, Datenregeln, Prüfpflicht, Eskalationspfad und Review-Zyklus."
+        },
+        {
+          "id": "block_5_lesson_2_q2",
+          "questionText": "Welcher Baustein der KI-Richtlinie basiert direkt auf der 3-Schritt-Prüfung aus Block 4?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Baustein 2: Genehmigte Tools",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Baustein 3: Datenregeln",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Baustein 4: Prüfpflicht",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Baustein 6: Review-Zyklus",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Baustein 4 (Prüfpflicht) übernimmt direkt die 3-Schritt-Prüfung aus Block 4: Sachlich korrekt? Vollständig? Angemessen? Jeder KI-Output muss vor der Verwendung geprüft werden."
+        }
+      ]
+    },
+    {
+      "id": "block_5_lesson_3",
+      "blockId": "block_5",
+      "number": 3,
+      "title": "Übung: Richtlinie ausfüllen",
+      "subtitle": "Deine KI-Nutzungsrichtlinie Schritt für Schritt erstellen",
+      "durationMinutes": 10,
+      "keyConcepts": [
+        "KI-Nutzungsrichtlinie",
+        "Vorlage",
+        "AVV"
+      ],
+      "sections": [
+        {
+          "id": "block_5_lesson_3_section_1",
+          "title": "Die Vorlage: Geltungsbereich, Tools, Daten",
+          "readTimeMinutes": 5,
+          "content": "Füll die folgende Vorlage aus. Nutze deine Ergebnisse aus den vorherigen Blöcken. Wo du Namen, Telefonnummern oder spezifische Angaben einsetzen musst, findest du Platzhalter in eckigen Klammern.\n\n**1. Geltungsbereich:** Diese Richtlinie gilt für alle Mitarbeitenden, einschließlich Festangestellte, befristet Beschäftigte, Auszubildende, Praktikanten und externe Dienstleister, sofern sie Zugang zu Unternehmensdaten haben. Die Richtlinie gilt für alle KI-Systeme, unabhängig davon, ob sie vom Unternehmen bereitgestellt oder privat genutzt werden.\n\n**2. Genehmigte KI-Tools:** Alle freigegebenen Tools mit Anbieter, zugelassener Datenstufe und verantwortlicher Person auflisten. Nicht genehmigte Tools (ChatGPT Free, Gemini Free, Claude Free) sind untersagt. Warum? Kostenlose Versionen haben keine Auftragsverarbeitungsverträge (AVV). Eingaben können für Modelltraining verwendet werden.\n\n**3. Datenregeln:** Vier Stufen: Öffentlich (alle genehmigten Tools), Intern (Copilot, ChatGPT Business, DeepL Pro), Vertraulich (nur Copilot mit Unternehmenstenant), Streng vertraulich (kein KI-Tool). Im Zweifel gilt die höhere Datenstufe.",
+          "keyTakeaway": "Die Abschnitte Geltungsbereich, Genehmigte Tools und Datenregeln bilden das Fundament der Richtlinie. Kostenlose KI-Tools ohne AVV sind grundsätzlich untersagt."
+        },
+        {
+          "id": "block_5_lesson_3_section_2",
+          "title": "Prüfpflicht, Eskalation und Unterschriften",
+          "readTimeMinutes": 5,
+          "content": "**4. Prüfpflicht:** Jeder KI-generierte Output muss vor der Verwendung geprüft werden. Die 3-Schritt-Prüfung: Sachlich korrekt? Vollständig? Angemessen? Bei externen Dokumenten (an Kunden, Partner, Behörden) ist eine Prüfung durch eine zweite Person erforderlich.\n\n**5. Eskalation bei Vorfällen:** Ein KI-bezogener Vorfall liegt vor, wenn vertrauliche Daten in ein nicht genehmigtes Tool eingegeben wurden, KI-generierte Falschinformationen versendet wurden oder personenbezogene Daten ohne Rechtsgrundlage verarbeitet wurden. Eskalationsstufen: Sofort den Vorgesetzten informieren, innerhalb 4 Stunden IT-Leitung und Datenschutzbeauftragten, innerhalb 24 Stunden Geschäftsführung. Bei Datenschutzverletzungen besteht nach DSGVO Art. 33 eine Meldepflicht innerhalb von 72 Stunden.\n\n**6. Review und Aktualisierung:** Vierteljährliche Überprüfung. Anlassbezogener Review bei neuen KI-Tools, Sicherheitsvorfällen oder Änderungen der Rechtslage. Jede Änderung erhöht die Versionsnummer.\n\n**Unterschriften:** Geschäftsführung, IT-Leitung, Datenschutzbeauftragter und Betriebsrat (falls vorhanden) unterschreiben das Dokument.",
+          "keyTakeaway": "Prüfpflicht, Eskalationspfad mit klaren Fristen und vierteljährlicher Review-Zyklus vervollständigen die Richtlinie. Die Unterschriften machen sie verbindlich."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_5_lesson_3_q1",
+          "questionText": "Warum sind kostenlose KI-Tools wie ChatGPT Free in der Richtlinie als untersagt aufgeführt?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Weil sie schlechtere Ergebnisse liefern als kostenpflichtige Versionen",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Weil nicht freigegebene Verbraucherangebote meist keinen betrieblich geprüften AVV und keine verbindliche Konfiguration zur Datennutzung bieten",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Weil sie nur auf Englisch verfügbar sind",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Weil sie eine Internetverbindung benötigen",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Bei nicht freigegebenen Verbraucherangeboten fehlen dem Betrieb meist ein geprüfter AVV, verbindliche Datenkontrollen und eine zugesagte Datenregion. Ob Eingaben für Training genutzt werden können, hängt vom konkreten Produkt und den Einstellungen ab."
+        },
+        {
+          "id": "block_5_lesson_3_q2",
+          "questionText": "Innerhalb welcher Frist muss nach DSGVO Art. 33 eine Datenschutzverletzung an die Aufsichtsbehörde gemeldet werden?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Innerhalb von 24 Stunden",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Innerhalb von 48 Stunden",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Innerhalb von 72 Stunden",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Innerhalb von 7 Tagen",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Nach DSGVO Art. 33 besteht bei Datenschutzverletzungen mit personenbezogenen Daten eine Meldepflicht an die Aufsichtsbehörde innerhalb von 72 Stunden."
+        }
+      ]
+    },
+    {
+      "id": "block_5_lesson_4",
+      "blockId": "block_5",
+      "number": 4,
+      "title": "Zusammenfassung",
+      "subtitle": "Deine 5 Dokumente auf einen Blick",
+      "durationMinutes": 4,
+      "keyConcepts": [
+        "KI-Inventar",
+        "Datenklassifizierung",
+        "Prompt-Vorlagen",
+        "3-Schritt-Prüfung",
+        "KI-Richtlinie"
+      ],
+      "sections": [
+        {
+          "id": "block_5_lesson_4_section_1",
+          "title": "Fünf Dokumente, ein System",
+          "readTimeMinutes": 2,
+          "content": "Du hast jetzt fünf Dokumente:\n\n1. **KI-Inventar** (Block 1) mit allen KI-Systemen, die du nutzt oder kennst.\n2. **Datenklassifizierungs-Karte** (Block 2) mit vier Stufen und klaren Regeln, was wohin darf.\n3. **4 Prompt-Vorlagen** (Block 3) für E-Mail, Meeting, Datenanalyse und Bericht.\n4. **3-Schritt-Prüfung** (Block 4) als Checkliste für jeden KI-Output.\n5. **KI-Nutzungsrichtlinie** (Block 5) als dein zentrales Governance-Dokument.\n\nDamit bist du weiter als viele Unternehmen. Und die Dokumente sind nicht theoretisch. Sie sind ausgefüllt.",
+          "keyTakeaway": "Fünf konkrete, ausgefüllte Dokumente. Nicht theoretisch, sondern auf die eigene Situation zugeschnitten."
+        },
+        {
+          "id": "block_5_lesson_4_section_2",
+          "title": "Nächste Schritte",
+          "readTimeMinutes": 2,
+          "content": "Diese Richtlinie ist ein Dokumentationsbaustein für Artikel 4 der EU-KI-Verordnung. Was als nächstes kommt:\n\n1. **Formal freigeben.** Geschäftsführung, Datenschutz, IT und ggf. Betriebsrat in den Freigabeprozess einbinden.\n2. **Kommunizieren.** Mitarbeitende müssen wissen, welche Tools erlaubt sind, welche Daten tabu sind und wohin Vorfälle gemeldet werden.\n3. **Mit Schulung verbinden.** Die Richtlinie allein ersetzt keine rollen- und risikogerechten KI-Kompetenzmaßnahmen.\n4. **In drei Monaten überprüfen.** Den Termin jetzt im Kalender eintragen.\n\nKI-Kompetenz ist kein Zertifikat an der Wand. Sie will gepflegt werden: Richtlinie überprüfen, mit Mitarbeitenden sprechen, neue Tools und Regeln einarbeiten. Die Richtlinie ist der Anfang.",
+          "keyTakeaway": "Drucken, unterschreiben, kommunizieren, in drei Monaten überprüfen. KI-Kompetenz ist kein Zertifikat an der Wand, sondern will gepflegt werden."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_5_lesson_4_q1",
+          "questionText": "Wie viele Dokumente entstehen im Laufe des gesamten KI-Führerscheins?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "2 Dokumente",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "3 Dokumente",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "5 Dokumente",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "8 Dokumente",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Im Laufe der fünf Blöcke entstehen fünf Dokumente: KI-Inventar, Datenklassifizierungs-Karte, Prompt-Vorlagen, 3-Schritt-Prüfung und die KI-Nutzungsrichtlinie."
+        },
+        {
+          "id": "block_5_lesson_4_q2",
+          "questionText": "Was ist der wichtigste nächste Schritt nach Erstellung der KI-Richtlinie?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Die Richtlinie in einem Ordner ablegen und bei Bedarf heraussuchen",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Unterschreiben lassen, an alle kommunizieren und in drei Monaten überprüfen",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Abwarten, bis die EU weitere Vorgaben macht",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Einen externen Berater mit der Umsetzung beauftragen",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Eine Richtlinie wirkt nur, wenn sie unterschrieben, kommuniziert und regelmäßig überprüft wird. KI-Kompetenz ist ein lebendiges System, kein einmaliges Dokument."
+        }
+      ]
+    }
+  ]
+}

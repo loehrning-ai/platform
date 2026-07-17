@@ -1,0 +1,25 @@
+{
+  "id": "lektion-2-trainingsdaten",
+  "blockId": "wie-ki-funktioniert",
+  "number": 2,
+  "title": "Trainingsdaten und Vorurteile: warum KI nicht neutral ist",
+  "subtitle": "KI lernt aus echten Daten. Und diese Daten tragen menschliche Muster.",
+  "durationMinutes": 10,
+  "keyConcepts": ["Training", "Bias", "Trainingsdaten", "Vorurteil", "Datenverteilung"],
+  "sections": [
+    {
+      "id": "lektion-2-abschnitt-1",
+      "title": "Wie ein Modell lernt und warum Daten zählen",
+      "readTimeMinutes": 5,
+      "content": "Ein KI-Modell lernt, indem es Milliarden von Textbeispielen sieht und dabei Muster erkennt. Diese Texte stammen aus dem Internet, aus digitalisierten Büchern, aus Nachrichtenartikeln und aus vielen anderen Quellen. Zusammen spiegeln sie die Welt wider, wie sie ist. Nicht wie sie sein sollte.\n\nDas klingt neutral. Es ist es nicht.\n\nStell dir vor, in den Trainingsdaten kommt die Kombination \"Arzt\" und \"er\" zehnmal häufiger vor als \"Ärztin\" und \"sie\". Dann wird das Modell diese Verknüpfung lernen. Wenn du das Modell bittest, eine Geschichte über einen Arzt zu schreiben, wird es wahrscheinlich automatisch die männliche Form wählen. Das ist kein Fehler, den jemand absichtlich eingebaut hat. Es ist ein Echo der Daten.\n\nZwei gut belegte Beispiele helfen, das greifbar zu machen.\n\nErstes Beispiel: Maschinelle Übersetzung. Sprachen ohne grammatisches Geschlecht, wie das Ungarische, kennen kein \"er\" oder \"sie\". Wenn Übersetzungssysteme aus dem Ungarischen ins Deutsche übersetzen, müssen sie eine Entscheidung treffen. Frühe Systeme entschieden sich dabei systematisch häufiger für die männliche Form, weil diese in den Trainingsdaten häufiger mit beruflichen Titeln verknüpft war. Ein Arzt wurde seltener zur Ärztin, als statistisch zu erwarten gewesen wäre.\n\nZweites Beispiel: Bilderkennung. Modelle, die hauptsächlich mit Bildern aus westlichen Ländern trainiert wurden, erkennen Alltagsgegenstände aus anderen Kulturen schlechter. Ein Werkzeug, das in Europa häufig vorkommt, wird zuverlässig erkannt. Ein Werkzeug, das in bestimmten Regionen Afrikas oder Asiens alltäglich ist, aber in den Trainingsdaten selten auftaucht, wird öfter falsch klassifiziert.\n\nDiese Beispiele zeigen: Bias in KI-Ausgaben entsteht aus der Verteilung der Daten, nicht aus Absicht.",
+      "keyTakeaway": "KI-Modelle lernen aus echten Daten, und diese Daten tragen menschliche Muster und Ungleichgewichte. Das macht KI nicht böse, aber du musst ihre Ausgaben kritisch lesen."
+    },
+    {
+      "id": "lektion-2-abschnitt-2",
+      "title": "Was du tun kannst",
+      "readTimeMinutes": 5,
+      "content": "Das Wissen über Bias macht dich nicht hilflos. Es macht dich kompetenter.\n\nEin praktisches Experiment: Bitte ein KI-Tool deiner Wahl, eine Stellenanzeige für eine leitende Position zu formulieren. Lies das Ergebnis aufmerksam durch. Liest du etwas, das nur auf eine bestimmte Gruppe zugeschnitten wirkt? Werden bestimmte Eigenschaften betont, die kulturell eher einer Gruppe zugeordnet werden? Probiere es aus, bevor du weiterliest.\n\nDieses Experiment ist kein Test mit Bestehen oder Durchfallen. Es ist eine Übung im Hinschauen. Die meisten Menschen, die dieses Experiment zum ersten Mal machen, bemerken Dinge, die ihnen vorher nicht aufgefallen wären.\n\nWas du konkret tun kannst, wenn du KI-generierte Texte verwendest:\n\nErstens: Bei Texten, die Personen oder Gruppen beschreiben, prüfe die gewählten Pronomen und Attribute. Spiegeln sie das wider, was du beabsichtigst?\n\nZweitens: Bei Bildbeschreibungen oder Empfehlungen, die für diverse Zielgruppen gedacht sind, prüfe, ob die Ausgabe eine bestimmte Gruppe unverhältnismäßig stark repräsentiert.\n\nDrittens: Bei Entscheidungen, die echte Menschen betreffen, verlasse dich nicht allein auf die KI-Ausgabe. Bringe menschliches Urteil ein.\n\nDie Fähigkeit, Bias in KI-Ausgaben zu erkennen, ist eine konkrete KI-Kompetenz. Sie setzt kein technisches Hintergrundwissen voraus. Sie setzt voraus, genau hinzuschauen.",
+      "keyTakeaway": "KI-Modelle lernen aus echten Daten, und diese Daten tragen menschliche Vorurteile. Deine Aufgabe ist es, diese Muster in den Ausgaben zu erkennen."
+    }
+  ]
+}

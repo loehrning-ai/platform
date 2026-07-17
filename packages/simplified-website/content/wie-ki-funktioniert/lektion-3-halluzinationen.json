@@ -1,0 +1,25 @@
+{
+  "id": "lektion-3-halluzinationen",
+  "blockId": "wie-ki-funktioniert",
+  "number": 3,
+  "title": "Halluzinationen: warum KI manchmal einfach erfindet",
+  "subtitle": "KI-Modelle erzeugen überzeugende Texte. Das macht ihre Fehler besonders gefährlich.",
+  "durationMinutes": 10,
+  "keyConcepts": ["Halluzination", "Faktenprüfung", "Konfidenz", "Cutoff"],
+  "sections": [
+    {
+      "id": "lektion-3-abschnitt-1",
+      "title": "Was eine Halluzination ist und wann sie auftritt",
+      "readTimeMinutes": 5,
+      "content": "Im Jahr 2023 reichten zwei Anwälte in den USA einen Schriftsatz ein, der sechs Gerichtsentscheidungen als Belege zitierte. Keines dieser Urteile existierte. Die Anwälte hatten die Quellenrecherche an ChatGPT delegiert, das Urteile erfunden hatte. Der Fall wurde international bekannt. (Quelle: Mata v. Avianca, US District Court S.D.N.Y., 2023.)\n\nWas hier passiert ist, nennt sich Halluzination. Ein KI-Modell halluziniert, wenn es eine Aussage mit Überzeugung formuliert, die nicht der Realität entspricht. Es erfindet Quellen, gibt Jahreszahlen falsch an, verwechselt Personen oder beschreibt Dinge, die nicht existieren. Das Besondere: Das Modell weiß nicht, dass es falsch liegt. Es hat keine Möglichkeit, seine Ausgabe gegen die Realität zu prüfen.\n\nDu erinnerst dich an Lektion 1: Ein Sprachmodell optimiert auf sprachliche Überzeugungskraft, nicht auf Wahrheit. Halluzinationen sind keine Fehler, die Entwickler vergessen haben zu beheben. Sie sind eine strukturelle Eigenschaft der Methode.\n\nEs gibt vier typische Auslöser, bei denen Halluzinationen besonders häufig auftreten.\n\nErstens: sehr spezifische Fakten. Jahreszahlen, Seitennummern, Autorennamen, ISBN-Nummern. Das Modell kennt ungefähre Muster, aber exakte Fakten sind für es schwer zu generieren.\n\nZweitens: seltene oder sehr neue Ereignisse. Ereignisse, die nach dem Trainingszeitraum des Modells liegen, sind ihm unbekannt. Aber das Modell sagt das nicht immer klar. Es spekuliert.\n\nDrittens: Selbstreferenz. Wenn du das Modell nach sich selbst fragst, nach seiner Entwicklungsgeschichte oder seinen Fähigkeiten, sind die Antworten oft unzuverlässig.\n\nViertens: lange Ketten von Schlussfolgerungen. Je mehr Schritte zwischen einer Frage und einer Antwort liegen, desto wahrscheinlicher wird ein Fehler eingebaut.",
+      "keyTakeaway": "KI-Modelle halluzinieren, weil sie auf sprachliche Kohärenz optimieren, nicht auf faktische Richtigkeit. Das Modell weiß nicht, dass es falsch liegt."
+    },
+    {
+      "id": "lektion-3-abschnitt-2",
+      "title": "Wie du dich schützt",
+      "readTimeMinutes": 5,
+      "content": "Das Wissen über Halluzinationen führt zu vier konkreten Verhaltensregeln. Keine davon ist schwer. Alle vier machen einen echten Unterschied.\n\nErstens: Bei wichtigen Fakten immer eine zweite Quelle prüfen. Bevor du eine Jahreszahl, einen Namen oder eine Statistik aus einer KI-Ausgabe verwendest, schau kurz nach. Eine Websuche reicht oft.\n\nZweitens: Bei Zitaten und Quellenangaben nie ungeprüft übernehmen. Das ist die direkteste Lehre aus dem Mata-v.-Avianca-Fall. Wenn ein KI-Modell eine Quelle nennt, prüfe, ob sie existiert. Das gilt für Bücher, Studien, Gerichtsurteile, Zeitungsartikel.\n\nDrittens: Bei medizinischen, rechtlichen oder finanziellen Informationen immer eine Fachperson einbeziehen. KI-Ausgaben können einen ersten Überblick geben. Aber für Entscheidungen, die deine Gesundheit, dein Recht oder dein Geld betreffen, braucht es menschliche Fachkompetenz.\n\nViertens: Bei Unsicherheit das Modell fragen, wie sicher es ist. Nicht alle Modelle beantworten diese Frage zuverlässig. Aber manchmal signalisiert das Modell selbst, wenn eine Aussage spekulativ ist.\n\nEin kleines Experiment: Stell einem KI-Tool eine Frage zu einem sehr spezifischen historischen Ereignis, zum Beispiel einem Datum oder einem Namen, das nicht allgemein bekannt ist. Prüfe die Antwort anschließend auf einer zuverlässigen Nachrichtenquelle oder einem Lexikon. Wie viele Details stimmen? Wie viele sind erfunden oder verschoben?\n\nDas Ziel ist nicht Misstrauen, sondern Urteilsvermögen. KI ist ein nützliches Werkzeug. Wer seine Schwächen kennt, nutzt es besser.",
+      "keyTakeaway": "Prüfe wichtige Fakten immer nach. KI-Modelle halluzinieren strukturell, nicht aus Versehen."
+    }
+  ]
+}

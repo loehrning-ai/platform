@@ -1,0 +1,392 @@
+{
+  "version": "3.0",
+  "scoringVersion": "3.0",
+  "effectiveDate": "2026-04-18",
+  "axes": [
+    {
+      "id": "datenfundament",
+      "label_de": "Datenfundament",
+      "scope_de": "Wo und wie liegen die Daten des Unternehmens. Zentralisierung, Qualität, Zugänglichkeit und Governance der Kerndaten (Kunden, Produkte, Lieferanten, Prozesse). Diese Achse misst, wie schnell interne Daten eine KI-Anwendung füttern können — nicht, welche Tools jemand einsetzt.\n",
+      "scraped_weight": 0.2,
+      "self_weight": 0.8,
+      "rationale_de": "Datenfundament ist überwiegend intern. Von außen scrapbare Signale (Structured Data, Schema.org, DB-Hinweise) decken nur einen kleinen Teil der Realität ab. Der Selbsteinschätzung kommt hier das höhere Gewicht zu.\n"
+    },
+    {
+      "id": "technologie",
+      "label_de": "Technologie",
+      "scope_de": "Infrastruktur, Cloud-Anteil, API-Reife, Integrationstiefe, ERP/CRM-Tiefe und Cybersicherheits-Posture. Wie modern und vernetzt ist der Tech-Stack — und wie schnell lässt sich darauf Neues aufsetzen.\n",
+      "scraped_weight": 0.7,
+      "self_weight": 0.3,
+      "rationale_de": "Technologie ist öffentlich beobachtbar (HTTP-Header, Tech-Detection, Sicherheits-Header, Cloud-Provider, SaaS-Muster). Scraping hat hier die höhere Evidenz; Selbsteinschätzung dient als Ergänzung.\n"
+    },
+    {
+      "id": "organisation",
+      "label_de": "Organisation",
+      "scope_de": "Führungs-Commitment, Datenkompetenz, Veränderungsfähigkeit, Talent-Dichte (IT-, Data-, KI-Rollen) und externe Partnerschaften. Kann das Unternehmen digitale und KI-Veränderung absorbieren.\n",
+      "scraped_weight": 0.4,
+      "self_weight": 0.6,
+      "rationale_de": "Scraping liefert Proxies (Karriereseite, Team-Seite, GitHub, öffentliche Rollen) — aber echte organisatorische Reife ist eine interne Realität. Selbsteinschätzung dominiert, Scraping ergänzt.\n"
+    },
+    {
+      "id": "strategie",
+      "label_de": "Strategie",
+      "scope_de": "Klarheit der Digital- und KI-Strategie. Business-Case-Disziplin, Use-Case-Portfolio, ROI-Tracking, Wettbewerbsbeobachtung, KI-Fahrplan. Hat das Unternehmen einen Plan — und ist er aktiv.\n",
+      "scraped_weight": 0.3,
+      "self_weight": 0.7,
+      "rationale_de": "Öffentliche Strategie-Signale (AI-Seiten, Case Studies, Blog-Inhalte, Geschäftsberichts-Zitate, erhaltene Förderungen) sind real, aber unvollständig. Selbsteinschätzung trägt das größere Gewicht.\n"
+    },
+    {
+      "id": "compliance",
+      "label_de": "Compliance",
+      "scope_de": "Datenschutz-Reife (DSGVO), KI-Governance, Dokumentation, Audit-Readiness. Ist das Unternehmen sicher als KI-Nutzer einzusetzen. Getrennt von der regulatorischen Risikoklasse nach EU AI Act (siehe risk_badge).\n",
+      "scraped_weight": 0.5,
+      "self_weight": 0.5,
+      "rationale_de": "Compliance-Signale sind gemischt öffentlich-privat. Register-Zertifikate (ISO 27001, BSI Grundschutz, TISAX), rechtliche Seiten (Impressum, Datenschutz, Whistleblower) und AI-Policies sind scrapbar; interne Audit-Prozesse sind es nicht. Gleichgewichtete Fusion.\n"
+    }
+  ],
+  "stages": {
+    "datenfundament": [
+      {
+        "level": 1,
+        "label_de": "Excel-Chaos",
+        "description_de": "Daten liegen verstreut in E-Mail, lokalen Ordnern, privaten Tabellen. Keine zentrale Quelle der Wahrheit, keine klare Besitzerschaft. Abteilungsübergreifende Auswertungen sind manuell und langsam.\n"
+      },
+      {
+        "level": 2,
+        "label_de": "Erste Zentralisierung",
+        "description_de": "Ein ERP oder CRM ist im Einsatz, aber die Datenqualität ist uneinheitlich. Viele manuelle Übertragungen, Insellösungen neben den Kernsystemen. Duplikate und Inkonsistenzen kommen regelmäßig vor.\n"
+      },
+      {
+        "level": 3,
+        "label_de": "Integrierte Kernsysteme",
+        "description_de": "Kerndaten sind in zentralen Systemen verfügbar. Prozesse für Dateneingabe und -pflege sind definiert; erste abteilungsübergreifende Analysen funktionieren. Stammdaten werden regelmäßig gepflegt.\n"
+      },
+      {
+        "level": 4,
+        "label_de": "Data-Governance etabliert",
+        "description_de": "Datenstrategie dokumentiert, Verantwortlichkeiten klar, automatisierte Qualitätskontrollen im Einsatz. Data Warehouse oder BI-System fasst die wichtigsten Quellen zusammen; Self-Service-Analytics für Fachbereiche.\n"
+      },
+      {
+        "level": 5,
+        "label_de": "Datengetrieben",
+        "description_de": "Daten sind strategischer Asset. APIs, automatisierte Pipelines, Master-Data-Management, datenbasierte Entscheidungen auf allen Ebenen. Die Datengrundlage ist KI-ready — neue Modelle benötigen keine Monate Datenvorbereitung.\n"
+      }
+    ],
+    "technologie": [
+      {
+        "level": 1,
+        "label_de": "Legacy-Festgefahren",
+        "description_de": "Überwiegend On-Premise-Server, ältere Betriebssysteme, kaum Cloud-Nutzung. Wenig Integrationsfähigkeit zwischen Systemen; Datenaustausch über CSV-Exporte und manuelle Übertragung.\n"
+      },
+      {
+        "level": 2,
+        "label_de": "Erste Cloud-Schritte",
+        "description_de": "Einzelne SaaS-Tools im Einsatz (Microsoft 365, Google Workspace, Cloud-Buchhaltung). Keine Cloud-Strategie, Mix aus On-Premise und extern. Einige Schnittstellen, aber viele Prozesse weiterhin manuell verknüpft.\n"
+      },
+      {
+        "level": 3,
+        "label_de": "Hybrid mit Klarheit",
+        "description_de": "Cloud-First-Ansatz für neue Projekte. Wichtige Workloads bereits in der Cloud, die meisten Kernsysteme über APIs verbunden. Neue Integrationen sind in Wochen, nicht Monaten möglich.\n"
+      },
+      {
+        "level": 4,
+        "label_de": "Cloud-Native",
+        "description_de": "Vollständig Cloud-basierte oder Hybrid-Infrastruktur mit klarer Strategie. Containerisierung und CI/CD im Einsatz. API-First-Architektur — Systeme sind modular und können schnell mit neuen KI-Services verbunden werden.\n"
+      },
+      {
+        "level": 5,
+        "label_de": "Technologie-Vorreiter",
+        "description_de": "Modulare Plattform-Architektur, eigene APIs, Edge-Compute wo sinnvoll, moderne Tool-Chain. GPU-Ressourcen oder ML-Plattformen vorhanden oder budgetiert. Technologie ist ein strategisches Differenzierungsmerkmal.\n"
+      }
+    ],
+    "organisation": [
+      {
+        "level": 1,
+        "label_de": "KI-blind",
+        "description_de": "KI ist kein Thema auf Führungsebene. Geringe Datenkompetenz, keine Veränderungsbereitschaft. Ängste vor Jobverlust, Überwachung oder Kontrollverlust dominieren die Stimmung.\n"
+      },
+      {
+        "level": 2,
+        "label_de": "Punktuelle Offenheit",
+        "description_de": "Einzelne Champions experimentieren mit ChatGPT oder ähnlichen Tools. Geschäftsführung ist interessiert, aber es gibt keinen konkreten Auftrag oder Budget. Der Betriebsrat hat Bedenken.\n"
+      },
+      {
+        "level": 3,
+        "label_de": "Strukturiertes Lernen",
+        "description_de": "Datenkompetenz ist in mehreren Abteilungen vorhanden. Der Betriebsrat ist eingebunden, erste positive Erfahrungen mit KI sind dokumentiert. Schulungsprogramme sind im Aufbau.\n"
+      },
+      {
+        "level": 4,
+        "label_de": "KI-fit",
+        "description_de": "Data Literacy ist Teil der Unternehmenskultur. Dediziertes KI-Budget und Verantwortliche vorhanden. Change Management etabliert; interne Daten-Scientists oder starke externe Partner stehen bereit.\n"
+      },
+      {
+        "level": 5,
+        "label_de": "KI-Exzellenz",
+        "description_de": "Eigenes Data/AI-Team mit mehreren Rollen, KI-Champions in jeder Abteilung. Lern- und Innovationskultur, Partnerschaften mit Hochschulen oder Forschung. KI-Kompetenz ist ein messbares Asset.\n"
+      }
+    ],
+    "strategie": [
+      {
+        "level": 1,
+        "label_de": "Reaktiv",
+        "description_de": "KI ist kein expliziter Teil der Unternehmensstrategie. Keine Use Cases identifiziert, keine Wettbewerbsbeobachtung. Investitionen werden nach Bauchgefühl entschieden.\n"
+      },
+      {
+        "level": 2,
+        "label_de": "Neugierig",
+        "description_de": "Ideen sind vorhanden, aber unpriorisiert. KI wird in der Digitalisierungs- strategie erwähnt; vereinzelt werden Business Cases skizziert. Wettbewerber werden gelegentlich wahrgenommen, aber nicht systematisch beobachtet.\n"
+      },
+      {
+        "level": 3,
+        "label_de": "Fokussiert",
+        "description_de": "2-5 konkrete KI-Use-Cases sind identifiziert und nach Nutzen und Aufwand priorisiert. Standardisierter Business-Case-Prozess für IT-Investitionen. Branchen-KI-Trends werden regelmäßig beobachtet.\n"
+      },
+      {
+        "level": 4,
+        "label_de": "Strategisch verankert",
+        "description_de": "KI ist Teil der Geschäftsstrategie mit einem 12-24-Monats-Fahrplan, Zielen und Meilensteinen. Use-Case-Portfolio mit laufenden oder abgeschlossenen Piloten; ROI wird nachverfolgt. Systematisches Benchmarking gegen Wettbewerber.\n"
+      },
+      {
+        "level": 5,
+        "label_de": "KI-getrieben",
+        "description_de": "KI ist Kern der Geschäftsstrategie. Datengetriebenes Investment-Framework mit Post-Implementation-Reviews und Portfolio-Management. Kontinuierliche Competitive Intelligence speist strategische Anpassungen.\n"
+      }
+    ],
+    "compliance": [
+      {
+        "level": 1,
+        "label_de": "Unvorbereitet",
+        "description_de": "Kein Überblick über die EU KI-Verordnung. Keine Dokumentation eingesetzter KI-Systeme, keine Risikobewertung. KI-spezifische Risiken wie Bias oder Halluzinationen wurden noch nicht betrachtet.\n"
+      },
+      {
+        "level": 2,
+        "label_de": "Erstes Bewusstsein",
+        "description_de": "Grundzüge der EU KI-Verordnung sind bekannt, aber die konkreten Pflichten für das eigene Unternehmen bleiben unklar. Eine informelle Liste eingesetzter KI-Tools existiert, ist aber unvollständig.\n"
+      },
+      {
+        "level": 3,
+        "label_de": "Grundlegende Struktur",
+        "description_de": "Die Verordnung ist analysiert, Pflichten sind verstanden (Deployer, ggf. Anbieter). Grundsätze für verantwortungsvollen KI-Einsatz sind formuliert; ein KI-Inventar mit Beschreibung, Zweck und Verantwortlichkeiten existiert.\n"
+      },
+      {
+        "level": 4,
+        "label_de": "Compliance-fähig",
+        "description_de": "Vollständiges KI-Register inklusive Risikoklassifizierung und DPIA. Compliance-Fahrplan mit dedizierten Verantwortlichen. Risikomanagement und Monitoring-Prozesse sind etabliert.\n"
+      },
+      {
+        "level": 5,
+        "label_de": "Audit-ready",
+        "description_de": "Umfassendes Governance-Framework mit automatisierten Kontrollen, regelmäßigen Audits und Impact Assessments. Transparenz und Erklärbarkeit sind Kernprinzipien; neue KI-Systeme durchlaufen einen standardisierten Freigabeprozess.\n"
+      }
+    ]
+  },
+  "compositeBands": [
+    {
+      "score_min": 0,
+      "score_max": 20,
+      "label_de": "Analog",
+      "color_token": "red",
+      "description_de": "Klassische Unternehmens-IT, kaum Cloud, viel Papier und Excel."
+    },
+    {
+      "score_min": 20,
+      "score_max": 40,
+      "label_de": "Basis-Digital",
+      "color_token": "orange",
+      "description_de": "Erste Cloud-Nutzung, moderne Website, erste Schnittstellen."
+    },
+    {
+      "score_min": 40,
+      "score_max": 60,
+      "label_de": "Digital Aktiv",
+      "color_token": "yellow",
+      "description_de": "Durchgängige Digitalisierung, erste Analytics-Strukturen."
+    },
+    {
+      "score_min": 60,
+      "score_max": 80,
+      "label_de": "Digital Fortgeschritten",
+      "color_token": "blue",
+      "description_de": "Cloud-native Infrastruktur, datengetriebene Prozesse, erste KI-Pilots."
+    },
+    {
+      "score_min": 80,
+      "score_max": 100,
+      "label_de": "Digitaler Vorreiter",
+      "color_token": "green",
+      "description_de": "Plattform-Architektur, Data-First-Kultur, KI im produktiven Einsatz."
+    }
+  ],
+  "percentile": {
+    "cell_dimensions": [
+      "wz_code_2digit",
+      "size_bucket",
+      "axis_id"
+    ],
+    "size_buckets": [
+      {
+        "id": "micro",
+        "label_de": "<10 MA",
+        "min": 1,
+        "max": 9
+      },
+      {
+        "id": "small",
+        "label_de": "10-49 MA",
+        "min": 10,
+        "max": 49
+      },
+      {
+        "id": "medium",
+        "label_de": "50-249 MA",
+        "min": 50,
+        "max": 249
+      },
+      {
+        "id": "upper_mid",
+        "label_de": "250-999 MA",
+        "min": 250,
+        "max": 999
+      },
+      {
+        "id": "large",
+        "label_de": "1.000+ MA",
+        "min": 1000,
+        "max": null
+      }
+    ],
+    "minimum_cell_density": 30,
+    "fallback_order": [
+      "wz_2digit_x_size",
+      "wz_1digit_x_size",
+      "all_x_size",
+      "all"
+    ],
+    "breakpoints": [
+      5,
+      15,
+      30,
+      50,
+      70,
+      85,
+      95
+    ],
+    "labels_de": {
+      "top_5": "Top 5% Ihrer Vergleichsgruppe",
+      "top_15": "Top 15% Ihrer Vergleichsgruppe",
+      "top_30": "Oberes Drittel Ihrer Vergleichsgruppe",
+      "top_50": "Oberhalb des Durchschnitts",
+      "top_70": "Im Durchschnitt",
+      "top_85": "Unterhalb des Durchschnitts",
+      "top_95": "Unteres Drittel Ihrer Vergleichsgruppe",
+      "bottom_5": "Untere 5% Ihrer Vergleichsgruppe"
+    },
+    "empty_cell_placeholder_de": "Peer-Benchmark wird aktualisiert"
+  },
+  "penalties": [
+    {
+      "condition_id": "no_website",
+      "trigger_de": "Keine Website erreichbar",
+      "description_de": "Ohne Online-Präsenz fehlen 60% der scrapbaren Signale.",
+      "cap": 25
+    },
+    {
+      "condition_id": "server_error",
+      "trigger_de": "Website liefert Server-Fehler (5xx)",
+      "description_de": "Server-Probleme verhindern eine vollständige Analyse.",
+      "cap": 30
+    },
+    {
+      "condition_id": "no_legal",
+      "trigger_de": "Kein Impressum UND keine Datenschutzerklärung",
+      "description_de": "In Deutschland rechtlich erforderlich; fehlende Pflichtangaben signalisieren mangelnde Professionalität.",
+      "cap": 40
+    },
+    {
+      "condition_id": "ecommerce_no_https",
+      "trigger_de": "E-Commerce ohne HTTPS",
+      "description_de": "Bezahlvorgang ohne Verschlüsselung ist ein kritisches Sicherheitsdefizit.",
+      "cap": 45
+    },
+    {
+      "condition_id": "no_https",
+      "trigger_de": "Kein HTTPS",
+      "description_de": "Seit 2018 Standard; fehlende Verschlüsselung untergräbt jede Digital-Ambition.",
+      "cap": 55
+    },
+    {
+      "condition_id": "ai_washing_suspect_strategie_over_datenfundament",
+      "trigger_de": "Starke KI-Kommunikation bei schwachem Datenfundament",
+      "description_de": "Wenn Strategie/KI-Sichtbarkeit > 60 und Datenfundament < 30 liegt, deutet das auf Marketing ohne Substanz hin.",
+      "cap_axis": "strategie",
+      "cap": 60
+    }
+  ],
+  "riskBadge": {
+    "independence_note_de": "Compliance-Reife (Achse) und EU AI Act Risikoklasse (Badge) sind getrennt. Die Achse misst, wie reif Ihre Governance ist. Der Badge misst, welche regulatorischen Pflichten auf Ihre konkreten KI-Systeme fallen. Beides zusammen ergibt das Bild.\n",
+    "levels": [
+      {
+        "id": "PROHIBITED",
+        "label_de": "Verbotene Praktik",
+        "color_token": "red",
+        "penalty_info_de": "Bis EUR 35M oder 7% des weltweiten Jahresumsatzes.",
+        "active_since": "2025-02-02"
+      },
+      {
+        "id": "HIGH_RISK",
+        "label_de": "Hochrisiko-System",
+        "color_token": "orange",
+        "penalty_info_de": "Bis EUR 15M oder 3% des weltweiten Jahresumsatzes. Nach politischer Einigung: standalone Anhang-III-Systeme ab 2027-12-02, produktintegrierte Hochrisiko-Systeme ab 2028-08-02.",
+        "active_since": "2027-12-02"
+      },
+      {
+        "id": "LIMITED_RISK",
+        "label_de": "Transparenzpflichtig",
+        "color_token": "yellow",
+        "penalty_info_de": "Art. 50 Transparenzpflichten; Verstöße fallen grundsätzlich in den Rahmen bis EUR 15M oder 3% des weltweiten Jahresumsatzes.",
+        "active_since": "2026-08-02"
+      },
+      {
+        "id": "MINIMAL_RISK",
+        "label_de": "Minimales Risiko",
+        "color_token": "green",
+        "penalty_info_de": "Artikel 4 KI-Kompetenz (seit 2. Februar 2025).",
+        "active_since": "2025-02-02"
+      }
+    ]
+  },
+  "reproducibility": {
+    "hashes_persisted": [
+      {
+        "field": "raw_content_hash",
+        "description_de": "SHA256 des zusammengeführten gefetchten Seiteninhalts"
+      },
+      {
+        "field": "registry_snapshot_json",
+        "description_de": "Serialisierte Antworten der abgefragten öffentlichen Register"
+      },
+      {
+        "field": "llm_prompt_hash",
+        "description_de": "SHA256 des LLM-Prompts (statisch + dynamisch)"
+      },
+      {
+        "field": "llm_response_hash",
+        "description_de": "SHA256 der LLM-Antwort (nach Strukturvalidierung)"
+      },
+      {
+        "field": "methodology_yaml_hash",
+        "description_de": "SHA256 dieser YAML-Datei zum Scan-Zeitpunkt"
+      },
+      {
+        "field": "signals_yaml_hash",
+        "description_de": "SHA256 der Signal-Katalog-YAML zum Scan-Zeitpunkt"
+      }
+    ]
+  },
+  "methodologyYamlSha": "9c78ae58d9b22e04457ee9ffb3158e5151ba0b2ad179720a6e6ee42862dc958d",
+  "signalsYamlSha": "16d4500e8b288bcb8359dbd2cecbd3e2ab67620926fc39dc55329378c2339397",
+  "scoringSignalCount": 130,
+  "totalSignalCount": 133,
+  "benchmarkN": 0
+}

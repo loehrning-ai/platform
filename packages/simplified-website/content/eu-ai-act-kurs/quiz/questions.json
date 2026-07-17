@@ -1,0 +1,842 @@
+[
+  {
+    "id": "q_w01",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Unter welcher Bezeichnung ist die EU-KI-Verordnung im Amtsblatt veröffentlicht?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Richtlinie (EU) 2024/1689",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Verordnung (EU) 2024/1689",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "Verordnung (EU) 2023/1689",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Richtlinie (EU) 2025/1689",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Die EU-KI-Verordnung heißt offiziell Verordnung (EU) 2024/1689. Eine Verordnung gilt unmittelbar in allen Mitgliedstaaten, eine Richtlinie muss erst in nationales Recht umgesetzt werden.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w02",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Seit wann ist Artikel 4 (KI-Kompetenz) anwendbar?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Seit 1. August 2024",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Seit 2. Februar 2025",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "Seit 2. August 2025",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Ab 2. August 2026",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Art. 113 Buchst. a macht Art. 4 und die Verbote nach Art. 5 ab dem 2. Februar 2025 anwendbar. Die Kommissions-FAQ nennt den 2. August 2026 für den Beginn der nationalen Aufsicht und Durchsetzung von Art. 4. Daraus folgt nicht automatisch derselbe Bußgeldbetrag für jeden Verstoß. (Quelle: claimId ai-literacy-supervision-2026-08-02)",
+    "version": 1,
+    "active": true,
+    "claimId": "ai-literacy-supervision-2026-08-02"
+  },
+  {
+    "id": "q_w03",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Ein deutscher Mittelständler setzt Microsoft Copilot ein. In welcher Rolle nach Art. 3 ist er?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Anbieter, weil er KI im Unternehmen einsetzt",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Betreiber, weil er ein fertiges KI-System unter eigener Verantwortung nutzt",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "Händler, weil er Microsoft-Lizenzen verteilt",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Einführer, weil die KI aus den USA stammt",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Nach Art. 3 Nr. 4 ist Betreiber, wer ein KI-System unter eigener Verantwortung einsetzt. Anbieter wäre der Hersteller (hier Microsoft), nicht der Nutzer. Mittelstand ist fast immer Betreiber.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w04",
+    "questionType": "single_choice",
+    "difficulty": "hard",
+    "questionText": "Ein US-SaaS-Anbieter verkauft seine KI-Plattform an eine Firma in Berlin. Gilt die EU-KI-Verordnung für den US-Anbieter?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Nein, US-Unternehmen sind nicht erfasst",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Nur wenn er ein EU-Tochterunternehmen hat",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Ja, nach Art. 2 Abs. 1 lit. a erfasst die Verordnung auch Anbieter aus Drittländern, die KI in der EU in Verkehr bringen",
+        "isCorrect": true
+      },
+      {
+        "id": "d",
+        "text": "Nur bei Hochrisiko-Systemen",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Die Exterritorialität erfasst Anbieter und Betreiber aus Drittländern über zwei Auslöser: Art. 2 Abs. 1 lit. a (Inverkehrbringen oder Inbetriebnahme in der EU) und Art. 2 Abs. 1 lit. c (Output des KI-Systems wird in der EU verwendet). Block 1 L3 betont lit. c besonders, weil dies die häufigere Konstellation für Lernende ist, die ausländische SaaS-Anbieter beurteilen: der Anbieter sitzt in den USA, der Output kommt beim deutschen Nutzer an. Standort oder Nationalität des Anbieters ist irrelevant; beide Auslöser begründen die Geltung unabhängig voneinander.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w05",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Wie viele verbotene Praktiken listet Artikel 5 der KI-Verordnung?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "4",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "6",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "8",
+        "isCorrect": true
+      },
+      {
+        "id": "d",
+        "text": "10",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Art. 5 Abs. 1 Buchst. a bis h listet acht verbotene Praktiken, darunter Social Scoring, manipulative Techniken, biometrische Echtzeit-Identifikation im öffentlichen Raum und Emotionserkennung am Arbeitsplatz.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w06",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Ein Mittelständler führt ein KI-Tool zum Screening von Bewerbungsunterlagen ein. Welche Risikoklasse?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Minimales Risiko, HR ist kein kritischer Bereich",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Begrenztes Risiko mit reiner Transparenzpflicht",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Hochrisiko nach Anhang III Nr. 4 Buchst. a",
+        "isCorrect": true
+      },
+      {
+        "id": "d",
+        "text": "Verboten nach Art. 5",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Anhang III Nr. 4 Buchst. a erfasst KI-Systeme für die Einstellung oder Auswahl natürlicher Personen, insbesondere Bewertung von Bewerbungen, als hochriskant. Damit greifen alle Hochrisiko-Pflichten aus Kapitel III Abschnitt 2.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w07",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Welche Risikoklasse hat ein klassischer E-Mail-Spamfilter nach der EU-KI-Verordnung?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Hochrisiko",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Begrenztes Risiko",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Minimales Risiko",
+        "isCorrect": true
+      },
+      {
+        "id": "d",
+        "text": "Verboten",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Spamfilter fallen weder unter Anhang I noch Anhang III und lösen keine Transparenzpflicht nach Art. 50 aus. Sie sind damit minimales Risiko. Es gelten nur freiwillige Verhaltenskodizes nach Art. 95.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w08",
+    "questionType": "single_choice",
+    "difficulty": "hard",
+    "questionText": "Ein Unternehmen plant eine KI, die die Emotionen von Mitarbeitenden während Video-Calls auswertet. Zulässig?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Ja, mit Einwilligung der Mitarbeitenden",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Ja, wenn der Betriebsrat zustimmt",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Nein, verboten nach Art. 5 Abs. 1 Buchst. f",
+        "isCorrect": true
+      },
+      {
+        "id": "d",
+        "text": "Ja, als Hochrisiko-System mit Konformitätsbewertung",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Art. 5 Abs. 1 Buchst. f verbietet den Einsatz von Emotionserkennung am Arbeitsplatz und in Bildungseinrichtungen, außer aus medizinischen oder sicherheitstechnischen Gründen. Einwilligung oder Betriebsratszustimmung heilen das Verbot nicht.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w09",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Was verlangt Artikel 50 bei einem öffentlich zugänglichen Chatbot auf Ihrer Website?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Konformitätsbewertung durch eine notifizierte Stelle",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Hinweis, dass die Nutzerin oder der Nutzer mit einem KI-System interagiert",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "Eine CE-Kennzeichnung auf der Startseite",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Meldung an die Bundesnetzagentur",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Art. 50 Abs. 1 verpflichtet Anbieter, Chatbots so zu gestalten, dass Nutzer klar erkennen, mit einem KI-System zu interagieren, soweit das nicht offensichtlich ist. Form: klar und eindeutig, barrierefrei.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w10",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Wie lange müssen Hochrisiko-KI-Systeme ihre automatischen Logs mindestens aufbewahren?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "30 Tage",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "3 Monate",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "6 Monate",
+        "isCorrect": true
+      },
+      {
+        "id": "d",
+        "text": "10 Jahre",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Art. 19 Abs. 1 verpflichtet Anbieter, die automatisch erzeugten Protokolle mindestens 6 Monate aufzubewahren, soweit Unionsrecht oder nationales Recht nichts Längeres vorschreibt. Für Betreiber gilt Art. 26 Abs. 6 analog.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w11",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Welcher Artikel regelt die Anforderungen an Trainings-, Validierungs- und Testdaten für Hochrisiko-KI?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Art. 9",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Art. 10",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "Art. 13",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Art. 26",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Art. 10 fordert für Hochrisiko-Systeme geeignete Daten-Governance: relevante, repräsentative, fehlerfreie und vollständige Datensätze. Art. 9 regelt das Risikomanagementsystem; Art. 13 betrifft Transparenz gegenüber Betreibern.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w12",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Ein Hochrisiko-System aus Anhang III Nr. 4 (HR-Bewerberauswahl) soll in Verkehr gebracht werden. Welcher Konformitätsbewertungspfad gilt?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Nur notifizierte Stelle nach Anhang VII",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Interne Kontrolle nach Anhang VI (Art. 43 Abs. 2); eine notifizierte Stelle ist nicht vorgesehen.",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "Zulassung durch die Bundesnetzagentur",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Kein Konformitätsverfahren nötig",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Art. 43 Abs. 2 schreibt für Systeme aus Anhang III Nr. 2 bis 8 (darunter Nr. 4, Bewerberauswahl) stets die interne Kontrolle nach Anhang VI vor; eine notifizierte Stelle ist hier nicht vorgesehen. Nur für Biometrie-Systeme aus Anhang III Nr. 1 hängt der Pfad nach Art. 43 Abs. 1 davon ab, ob harmonisierte Normen vollständig angewendet wurden: dann Anhang VI, sonst Anhang VII mit notifizierter Stelle.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w13",
+    "questionType": "single_choice",
+    "difficulty": "hard",
+    "questionText": "Was gehört NICHT in die technische Dokumentation nach Anhang IV?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Allgemeine Beschreibung des KI-Systems inklusive Zweckbestimmung",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Beschreibung der Elemente und Entwicklungsphasen",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Angaben zu Überwachung, Betrieb und Kontrolle",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Quartalsweise Ergebnisrechnung des Anbieters",
+        "isCorrect": true
+      }
+    ],
+    "explanation": "Anhang IV listet 9 inhaltliche Blöcke, darunter Systembeschreibung, Entwicklungsphasen, Überwachung, Leistungskennzahlen, Risikomanagementsystem und Änderungen. Finanzberichte des Anbieters sind nicht Teil der Dokumentation.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w14",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Welche Kennzeichnung ist für Hochrisiko-KI-Systeme Pflicht, bevor sie in Verkehr gebracht werden?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "TÜV-Siegel",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "CE-Kennzeichnung",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "BSI-Grundschutzzertifikat",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "DSGVO-Konformitätssiegel",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Art. 48 schreibt die CE-Kennzeichnung für Hochrisiko-KI vor. Sie dokumentiert, dass der Anbieter die Konformitätsbewertung nach Art. 43 durchgeführt und die EU-Konformitätserklärung ausgestellt hat.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w15",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Ab welcher kumulierten Trainings-Compute gilt ein GPAI-Modell als Modell mit systemischem Risiko?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "10^22 FLOPs",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "10^23 FLOPs",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "10^25 FLOPs",
+        "isCorrect": true
+      },
+      {
+        "id": "d",
+        "text": "10^27 FLOPs",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Art. 51 Abs. 2 legt die Schwelle bei 10^25 Gleitkommaoperationen fest. Die Kommission kann diesen Wert per delegiertem Rechtsakt anpassen. GPT-4-, Claude-3- und Gemini-Ultra-Klasse überschreiten diese Schwelle.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w16",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Art. 4 verpflichtet zur Sicherstellung ausreichender KI-Kompetenz. An wen richtet sich die Pflicht primär?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Nur an Anbieter von Hochrisiko-Systemen",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "An Anbieter und Betreiber von KI-Systemen als Organisationspflicht",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "An einzelne Mitarbeitende, die KI nutzen",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "An IT-Abteilungen in Unternehmen mit mehr als 250 Mitarbeitenden",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Art. 4 Abs. 1 adressiert Anbieter und Betreiber als Organisationen. Diese müssen sicherstellen, dass ihr Personal und beauftragte Personen über ausreichende KI-Kompetenz verfügen. Vergleichbar mit Arbeitsschutz oder Art. 32 DSGVO.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w17",
+    "questionType": "single_choice",
+    "difficulty": "hard",
+    "questionText": "Wann hat die EU-Kommission den GPAI Code of Practice in seiner finalen Version veröffentlicht?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Dezember 2024",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Mai 2025",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "10. Juli 2025",
+        "isCorrect": true
+      },
+      {
+        "id": "d",
+        "text": "2. August 2026",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Der GPAI Code of Practice wurde am 10. Juli 2025 vom AI Office veröffentlicht. Unterzeichner wie OpenAI, Anthropic, Google und Mistral können die Einhaltung als Mittel zum Nachweis der Compliance nutzen (Art. 53 Abs. 4, Art. 55 Abs. 2), das ist jedoch keine Konformitätsvermutung im rechtlichen Sinne. Harmonisierte Normen nach Art. 40-41 würden eine Konformitätsvermutung begründen; der CoP tut das nicht. (Quelle: AI Office, GPAI Code of Practice, 10. Juli 2025; Art. 53 Abs. 4 Verordnung (EU) 2024/1689)",
+    "version": 1,
+    "active": true,
+    "claimId": "gpai-code-compliance-demonstration-only"
+  },
+  {
+    "id": "q_w18",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Welche Pflicht trifft Sie als Betreiber, wenn Sie ein generatives KI-Tool einsetzen, um Marketing-Texte für Ihre Website zu produzieren?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Keine, Betreiber haben keine Transparenzpflichten",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "KI-generierte Inhalte müssen nach Art. 50 Abs. 4 als solche offengelegt werden, wenn sie öffentlich zugänglich zu Themen von öffentlichem Interesse gemacht werden",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "Sie müssen eine Konformitätsbewertung durchführen",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Sie müssen CE-Kennzeichen auf jede Seite setzen",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Art. 50 Abs. 4 verpflichtet Betreiber, die ein KI-System zur Erzeugung oder Bearbeitung öffentlich zugänglicher Texte zu Themen von öffentlichem Interesse verwenden, zur Offenlegung, soweit kein menschliches Review erfolgt. Reines Produktmarketing fällt nur eingeschränkt darunter.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w19",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Was ist die höchste Bußgeldstufe nach Art. 99 für verbotene Praktiken?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Bis 10 Mio. EUR oder 2 % des Jahresumsatzes",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Bis 15 Mio. EUR oder 3 % des Jahresumsatzes",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Bis 35 Mio. EUR oder 7 % des weltweiten Jahresumsatzes",
+        "isCorrect": true
+      },
+      {
+        "id": "d",
+        "text": "Bis 50 Mio. EUR oder 10 % des Jahresumsatzes",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Art. 99 Abs. 3 sieht für Verstöße gegen Art. 5 (verbotene Praktiken) bis zu 35 Mio. EUR oder 7 % des weltweiten Jahresumsatzes vor, je nachdem welcher Betrag höher ist. Andere Verstöße liegen bei 3 % bzw. 1 %.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w20",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Welche Behörde sieht das von Bundestag und Bundesrat beschlossene KI-MIG als zentrale Anlaufstelle vor?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Bundesamt für Sicherheit in der Informationstechnik (BSI)",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Bundesnetzagentur (BNetzA)",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "Bundeskartellamt",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Bundesministerium für Wirtschaft und Klimaschutz",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Das beschlossene KI-MIG sieht die Bundesnetzagentur als zentrale Anlaufstelle vor, soweit keine Fachbehörde zuständig ist. Am 14. Juli 2026 war das Gesetz noch nicht verkündet. Die vorgesehene Rolle und ein konkreter Beschwerdekanal dürfen daher nicht als bereits wirksam ausgegeben werden.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w21",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Innerhalb welcher Frist müssen Anbieter einen schweren Vorfall im Regelfall melden?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Sofort, spätestens binnen 24 Stunden",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Unverzüglich, spätestens 15 Tage nach Kenntnis",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "Binnen 3 Monaten",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Jährlich im Rahmen der Nachmarktbeobachtung",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Art. 73 Abs. 2 schreibt die Meldung schwerer Vorfälle unverzüglich, spätestens 15 Tage nach Kenntnis vor. Bei Tod verkürzt sich die Frist auf 10 Tage, bei weitverbreiteten Verstößen oder kritischer Infrastruktur auf 2 Tage.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w22",
+    "questionType": "single_choice",
+    "difficulty": "hard",
+    "questionText": "Wer darf nach Art. 85 eine Beschwerde gegen einen mutmaßlichen Verstoß gegen die KI-Verordnung einreichen?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Nur direkt Betroffene",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Nur Mitbewerber und Verbraucherverbände",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Jede natürliche oder juristische Person",
+        "isCorrect": true
+      },
+      {
+        "id": "d",
+        "text": "Nur durch einen Rechtsanwalt mit Mandatsnachweis",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Art. 85 gibt jeder natürlichen oder juristischen Person das Recht, eine Beschwerde bei der zuständigen Marktüberwachungsbehörde einzureichen. Eine unmittelbare Betroffenheit ist nicht erforderlich. Die Behörde prüft und entscheidet nach Ermessen.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w23",
+    "questionType": "single_choice",
+    "difficulty": "hard",
+    "questionText": "Ein privates Mittelstandsunternehmen setzt ein KI-gestütztes CV-Screening-Tool ein (Hochrisiko nach Anhang III Nr. 4). Muss es eine Grundrechtsfolgenabschätzung nach Art. 27 durchführen?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Ja, für alle Hochrisiko-Systeme",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Ja, sobald mehr als 100 Bewerbungen pro Jahr bearbeitet werden",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Nein, Art. 27 gilt nur für öffentliche Stellen und Anhang III Nr. 5 Buchst. b und c",
+        "isCorrect": true
+      },
+      {
+        "id": "d",
+        "text": "Nein, weil CV-Screening kein Hochrisiko-System ist",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Art. 27 Abs. 1 beschränkt die FRIA auf Betreiber, die Einrichtungen des öffentlichen Rechts sind oder private Stellen, die öffentliche Dienstleistungen erbringen, sowie Betreiber von Systemen nach Anhang III Nr. 5 lit. b und c. Ein privater HR-Einsatz nach Nr. 4 fällt nicht darunter. Eine DSFA nach Art. 35 DSGVO ist separat zu prüfen; sie ist nur bei voraussichtlich hohem Risiko erforderlich.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w24",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Welcher DSGVO-Artikel ist der zentrale Brückenpunkt zur Risikoarbeit unter der KI-Verordnung?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Art. 6 DSGVO (Rechtmäßigkeit der Verarbeitung)",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Art. 32 DSGVO (Sicherheit der Verarbeitung)",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Art. 35 DSGVO (Datenschutz-Folgenabschätzung)",
+        "isCorrect": true
+      },
+      {
+        "id": "d",
+        "text": "Art. 44 DSGVO (Drittlandübermittlung)",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Art. 26 Abs. 9 KI-VO verweist explizit auf die DSFA nach Art. 35 DSGVO. Betreiber von Hochrisiko-Systemen können vorhandene DSFAs als Grundlage nutzen und um KI-spezifische Inhalte wie Trainingsdaten, menschliche Aufsicht und Logging ergänzen.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w25",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Was ist der erste Schritt im 5-Schritte-Audit eines Mittelständlers zur KI-Verordnung?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Konformitätsbewertung beauftragen",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "KI-Inventar erstellen (alle im Unternehmen genutzten KI-Systeme erfassen)",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "CE-Kennzeichnung beantragen",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Datenschutz-Folgenabschätzung durchführen",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Ohne Inventar keine Klassifikation, ohne Klassifikation keine Pflichten. Schritt 1 ist ein vollständiges KI-Inventar (Anbieter, Zweck, Datenflüsse). Erst danach folgen Risikoeinstufung, Dokumentation, Gap-Analyse und Abhilfemaßnahmen.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w26",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Sie interagieren mit einem Support-Chatbot. Ab wann muss die KI-Interaktion nach Art. 50 Abs. 1 grundsätzlich erkennbar sein?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Ab dem 2. August 2026, vor oder beim Start der Interaktion (Art. 50 Abs. 1)",
+        "isCorrect": true
+      },
+      {
+        "id": "b",
+        "text": "Ab dem 2. Februar 2025, wenn das Chatbot-System registriert ist",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Erst ab dem 2. Dezember 2027, wenn die Hochrisiko-Regeln greifen",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Nur bei Chatbots mit einer GPAI-Lizenz",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Art. 50 Abs. 1 verpflichtet Anbieter, Systeme zur direkten Interaktion grundsätzlich so zu gestalten, dass Betroffene vor oder bei der ersten Interaktion über die KI-Interaktion informiert werden, sofern dies nicht ohnehin offensichtlich ist. Die Pflicht wird am 2. August 2026 anwendbar. (Quelle: Art. 50 Abs. 1, Art. 113 Verordnung (EU) 2024/1689)",
+    "claimId": "ai-act-transparency-application-2026-08-02",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w27",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Wer ist von der KI-Verordnung ausgenommen, wenn er KI rein privat nutzt?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Niemand, die Verordnung gilt für alle natürlichen Personen",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Natürliche Personen bei rein privater Nutzung: keine Betreiber im Sinne von Art. 2 Abs. 10",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "Nur Personen in Nicht-EU-Ländern",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Nur Rentnerinnen und Rentner",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Art. 2 Abs. 10 der Verordnung (EU) 2024/1689 nimmt natürliche Personen ausdrücklich aus, die KI-Systeme ausschließlich für rein persönliche, nicht-berufliche Tätigkeiten nutzen. Wer ChatGPT zuhause für eigene Texte nutzt, ist keine Betreiberin im rechtlichen Sinne. Sobald die Nutzung im beruflichen Kontext erfolgt, greift die Verordnung.",
+    "version": 1,
+    "active": true
+  }
+]

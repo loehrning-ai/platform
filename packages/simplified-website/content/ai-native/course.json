@@ -1,0 +1,26 @@
+{
+  "courseId": "ai-native-arbeitskurs",
+  "title": "AI-Native Arbeitskurs",
+  "tagline": "Du dirigierst. Claude führt aus.",
+  "language": "de",
+  "createdAt": "2026-04-18",
+  "version": "1.0",
+  "pricing": {
+    "free": true,
+    "includes": [
+      "Module 1-4 komplett (27 Lektionen + Setup)",
+      "AI-Native Lernmaterialien",
+      "öffentliche Kursmaterialien",
+      "Capstone-Rubrik",
+      "Teilnahmebestätigung mit QR-Verifikation"
+    ]
+  },
+  "prerequisites": {
+    "recommended": "ki-fuehrerschein",
+    "note": "KI-Führerschein empfohlen, aber nicht erzwungen."
+  },
+  "totalLessons": 27,
+  "totalModules": 4,
+  "targetDurationHours": 12,
+  "supportedLanguages": ["de"]
+}
