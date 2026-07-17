@@ -22,7 +22,7 @@ describe("sitemap()", () => {
   it("returns only public indexable routes", () => {
     // Sitemap composition (public-content contract):
     //   24 static pages = the non-dynamic public-indexable contract entries
-    //     (home, einstieg, wie-ki-funktioniert, standortbestimmung, glossar,
+    //     (home, einstieg, wie-ki-funktioniert, ki-check, glossar,
     //     kurse, the four course landings, blog, buecher, demos, vorlagen,
     //     workshops, open-source, open-source/lizenzrichtlinie, ueber-mich,
     //     ueber-die-plattform, neuigkeiten, hilfe, bekannte-grenzen,
@@ -56,9 +56,9 @@ describe("sitemap()", () => {
     expect(result.some((e) => e.url.endsWith("/wie-ki-funktioniert"))).toBe(true);
   });
 
-  it("includes /standortbestimmung, /einstieg, and /wie-ki-funktioniert as indexable public routes", () => {
+  it("includes /ki-check, /einstieg, and /wie-ki-funktioniert as indexable public routes", () => {
     const urls = result.map((e) => e.url);
-    expect(urls).toContain("https://loehrning.ai/standortbestimmung");
+    expect(urls).toContain("https://loehrning.ai/ki-check");
     expect(urls).not.toContain("https://loehrning.ai/glossar");
     expect(urls).toContain("https://loehrning.ai/einstieg");
     expect(urls).toContain("https://loehrning.ai/wie-ki-funktioniert");

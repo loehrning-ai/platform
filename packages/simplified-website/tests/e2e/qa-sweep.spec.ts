@@ -60,7 +60,7 @@ test.describe("QA sweep - retired commercial routes", () => {
     ["/leistungen/diagnose", "/ueber-die-plattform"],
     ["/daten-audit", "/ueber-die-plattform"],
     ["/kontakt", "/feedback"],
-    ["/ki-transformation-check", "/standortbestimmung"],
+    ["/ki-transformation-check", "/ki-check"],
     ["/foerdermittel", ""],
   ] as const) {
     test(`${route} is not a live commercial page`, async ({ request }) => {

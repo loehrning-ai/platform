@@ -1,9 +1,9 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("deleted commercial journey APIs", () => {
-  test("/ki-transformation-check redirects to Standortbestimmung", async ({ page }) => {
+  test("/ki-transformation-check redirects to KI-Check", async ({ page }) => {
     await page.goto("/ki-transformation-check", { waitUntil: "domcontentloaded" });
-    await expect(page).toHaveURL(/\/standortbestimmung$/);
+    await expect(page).toHaveURL(/\/ki-check$/);
   });
 
   test("/api/scan is absent or noindexed", async ({ request }) => {

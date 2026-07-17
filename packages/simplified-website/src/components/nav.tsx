@@ -46,12 +46,12 @@ interface AkademieItem extends NavItem {
   readonly disabled?: boolean;
 }
 
-// Course-only dropdown: an entry aid (Standortbestimmung), the hub, then the
+// Course-only dropdown: an entry aid (KI-Check), the hub, then the
 // four certified courses in learning-path order. "Open Source" was removed from
 // here — it is not a course and already has its own top-level link, so it no
 // longer appears twice.
 const akademieNavItems: readonly AkademieItem[] = [
-  { href: "/standortbestimmung", label: "Standortbestimmung", icon: MapPin },
+  { href: "/ki-check", label: "KI-Check", icon: MapPin },
   { href: "/kurse", label: "Alle Kurse", icon: Sparkles },
   { href: "/ki-fuehrerschein", label: "KI-Führerschein", icon: GraduationCap },
   { href: "/ki-und-gesellschaft", label: "KI und Gesellschaft", icon: Users },

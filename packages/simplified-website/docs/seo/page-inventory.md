@@ -26,7 +26,7 @@ cd packages/simplified-website && bun scripts/generate-page-inventory.mjs
 | https://loehrning.ai | src/app/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
 | https://loehrning.ai/einstieg | src/app/einstieg/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
 | https://loehrning.ai/wie-ki-funktioniert | src/app/wie-ki-funktioniert/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
-| https://loehrning.ai/standortbestimmung | src/app/standortbestimmung/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
+| https://loehrning.ai/ki-check | src/app/ki-check/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
 | https://loehrning.ai/kurse | src/app/kurse/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
 | https://loehrning.ai/ki-fuehrerschein | src/app/ki-fuehrerschein/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
 | https://loehrning.ai/eu-ai-act-kurs | src/app/eu-ai-act-kurs/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
@@ -225,6 +225,7 @@ cd packages/simplified-website && bun scripts/generate-page-inventory.mjs
 | `/kontakt` | Contact funnel retired; feedback is the public input path. |
 | `/ki-transformation-check` | Commercial diagnostic route retired. |
 | `/arbeitsweise` | Legacy platform route renamed. |
+| `/standortbestimmung` | Route renamed to /ki-check. |
 | `/daten-audit` | Commercial audit route retired. |
 | `/digifyde` | Legacy diagnostic brand route retired. |
 | `/ki-readiness` | Legacy readiness route retired. |

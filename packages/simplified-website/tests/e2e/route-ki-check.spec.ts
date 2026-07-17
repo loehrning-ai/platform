@@ -5,7 +5,7 @@ import { recommend } from "../../src/lib/ki-check/recommend";
 import type { Answer } from "../../src/lib/ki-check/types";
 
 /**
- * /standortbestimmung - the KI-Check self-assessment (regression coverage).
+ * /ki-check - the KI-Check self-assessment (regression coverage).
  * The single live self-assessment surface (/ki-transformation-check 301-redirects
  * here). Covers smoke + console gate, the ten-question wizard, and mobile reflow.
  * Questions, option text and the expected recommendation are derived from the
@@ -13,7 +13,7 @@ import type { Answer } from "../../src/lib/ki-check/types";
  * a broken quiz-to-course wiring still fails.
  */
 
-const ROUTE = "/standortbestimmung";
+const ROUTE = "/ki-check";
 
 /** First-option answers drive a deterministic run (all score 1 -> foundation). */
 const ANSWERS: Answer[] = QUESTIONS.map((q) => ({
@@ -61,7 +61,7 @@ async function answerAndAdvance(
   }).toPass({ timeout: 30_000 });
 }
 
-test.describe("/standortbestimmung", () => {
+test.describe("/ki-check", () => {
   test("smoke: loads 200 with an h1 and the first question, no console error", async ({
     page,
   }) => {

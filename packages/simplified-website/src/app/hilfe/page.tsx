@@ -22,7 +22,7 @@ function getFaqItems(accountEnabled: boolean, feedbackEnabled: boolean): readonl
     id: "anfang",
     question: "Wo fange ich an?",
     answer:
-      `Am besten mit der Standortbestimmung (/standortbestimmung): Das dauert ca. 5 Minuten und zeigt dir, welcher Kurs als nächstes zu dir passt. Oder wähle direkt auf der Kursübersicht (/kurse) einen der ${COURSE_CATALOG.length} Kurse auf dem KI-Kompetenzweg.`,
+      `Am besten mit dem KI-Check (/ki-check): Das dauert ca. 5 Minuten und zeigt dir, welcher Kurs als nächstes zu dir passt. Oder wähle direkt auf der Kursübersicht (/kurse) einen der ${COURSE_CATALOG.length} Kurse auf dem KI-Kompetenzweg.`,
   },
   {
     id: "konto",

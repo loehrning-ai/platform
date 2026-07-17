@@ -151,8 +151,8 @@ export default function KursePage() {
                 Über die Plattform
                 <span aria-hidden="true">→</span>
               </BrandButton>
-              <BrandButton href="/standortbestimmung" variant="outline" size="md">
-                Standortbestimmung
+              <BrandButton href="/ki-check" variant="outline" size="md">
+                KI-Check
                 <span aria-hidden="true">→</span>
               </BrandButton>
             </div>

@@ -270,7 +270,7 @@ export default function EinstiegPage() {
               <p className="text-[14px] text-muted-foreground">
                 Nicht sicher, wo du stehst?{" "}
                 <Link
-                  href="/standortbestimmung"
+                  href="/ki-check"
                   className="text-foreground underline-offset-4 hover:underline"
                 >
                   Fünf kurze Fragen zeigen dir den passenden Kurs.

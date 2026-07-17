@@ -29,11 +29,11 @@ import type { LearningEdge } from "./types";
 
 describe("getLearningNode", () => {
   it("returns the node whose id matches the request", () => {
-    const node = getLearningNode("self-test:standortbestimmung");
+    const node = getLearningNode("self-test:ki-check");
     expect(node).toBeDefined();
-    expect(node?.id).toBe("self-test:standortbestimmung");
+    expect(node?.id).toBe("self-test:ki-check");
     // Correct entry, not merely some entry.
-    expect(node?.route).toBe("/standortbestimmung");
+    expect(node?.route).toBe("/ki-check");
     expect(node?.type).toBe("self_test");
   });
 
@@ -66,7 +66,7 @@ describe("getNodesByStage", () => {
 
   it("includes the known pruefen members and excludes other stages", () => {
     const ids = new Set(getNodesByStage("pruefen").map((n) => n.id));
-    expect(ids.has("self-test:standortbestimmung")).toBe(true);
+    expect(ids.has("self-test:ki-check")).toBe(true);
     expect(ids.has("on-ramp:einstieg")).toBe(true);
     expect(ids.has("conceptual-block:wie-ki-funktioniert")).toBe(true);
     // course:ki-fuehrerschein is stage "grundlagen", never "pruefen".
@@ -81,7 +81,7 @@ describe("getNodesByStage", () => {
     }
     const dokIds = new Set(dokumentieren.map((n) => n.id));
     // A "pruefen" node must not leak into the "dokumentieren" bucket.
-    expect(dokIds.has("self-test:standortbestimmung")).toBe(false);
+    expect(dokIds.has("self-test:ki-check")).toBe(false);
   });
 });
 

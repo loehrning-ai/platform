@@ -261,10 +261,10 @@ const CONCEPTUAL_BLOCK_NODE: LearningNode = {
 
 export const LEARNING_NODES: readonly LearningNode[] = [
   {
-    id: "self-test:standortbestimmung",
+    id: "self-test:ki-check",
     type: "self_test",
-    title: "Standortbestimmung",
-    route: "/standortbestimmung",
+    title: "KI-Check",
+    route: "/ki-check",
     access: "public" as const,
     language: "de",
     audience: ["mitarbeitende", "verantwortliche", "praktiker"],
@@ -284,7 +284,7 @@ export const LEARNING_NODES: readonly LearningNode[] = [
 ];
 
 export const LEARNING_EDGES: readonly LearningEdge[] = [
-  { from: "self-test:standortbestimmung", to: "course:ki-fuehrerschein", type: "recommended_before" },
+  { from: "self-test:ki-check", to: "course:ki-fuehrerschein", type: "recommended_before" },
   { from: "on-ramp:einstieg", to: "course:ki-fuehrerschein", type: "next_step" },
   { from: "conceptual-block:wie-ki-funktioniert", to: "course:ki-fuehrerschein", type: "recommended_before" },
   { from: "course:ki-fuehrerschein", to: "course:ki-und-gesellschaft", type: "next_step" },
@@ -321,7 +321,7 @@ export const LEARNING_EDGES: readonly LearningEdge[] = [
 ];
 
 export const PATHWAY_STAGES = [
-  { id: "pruefen", title: "Prüfen", description: "Standortbestimmung: Was ist KI, und wo stehst du?" },
+  { id: "pruefen", title: "Prüfen", description: "KI-Check: Was ist KI, und wo stehst du?" },
   { id: "grundlagen", title: "Grundlagen", description: "KI-Kompetenz für sichere Alltagsnutzung aufbauen." },
   { id: "regeln", title: "Regeln", description: "AI-Act-Rollen, Risikoklassen und Pflichten einordnen." },
   { id: "anwenden", title: "Anwenden", description: "Workflows, Tools und Automatisierung mit Review-Grenzen üben." },

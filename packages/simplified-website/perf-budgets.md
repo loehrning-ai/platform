@@ -17,7 +17,7 @@ silently ate the 120s `startServerReadyTimeout`).
 | `/` | Homepage |
 | `/einstieg` | Learning entry point |
 | `/wie-ki-funktioniert` | Public foundational explainer |
-| `/standortbestimmung` | Public self-assessment |
+| `/ki-check` | Public self-assessment |
 | `/kurse` | Course hub |
 | `/ki-fuehrerschein` | Free course landing page |
 | `/ki-und-gesellschaft` | Society course landing page |

@@ -4,7 +4,7 @@ test.describe("retired journey routes", () => {
   test("/ki-transformation-check redirects and stays noindex", async ({ request }) => {
     const res = await request.get("/ki-transformation-check", { maxRedirects: 0 });
     expect([301, 308]).toContain(res.status());
-    expect(res.headers()["location"]).toContain("/standortbestimmung");
+    expect(res.headers()["location"]).toContain("/ki-check");
     expect(res.headers()["x-robots-tag"]).toContain("noindex");
   });
 
@@ -16,7 +16,7 @@ test.describe("retired journey routes", () => {
       );
     });
     await page.goto("/ki-transformation-check", { waitUntil: "domcontentloaded" });
-    await expect(page).toHaveURL(/\/standortbestimmung$/);
+    await expect(page).toHaveURL(/\/ki-check$/);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 });

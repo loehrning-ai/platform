@@ -8,7 +8,7 @@ import { test, expect } from "@playwright/test";
 
 test("a11y: retired journey redirects to an accessible public page", async ({ page }) => {
   await page.goto("/ki-transformation-check");
-  await expect(page).toHaveURL(/\/standortbestimmung$/);
+  await expect(page).toHaveURL(/\/ki-check$/);
   await expect(page.locator("h1")).toHaveCount(1);
 });
 

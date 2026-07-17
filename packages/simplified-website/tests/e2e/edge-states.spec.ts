@@ -104,9 +104,9 @@ test.describe("edge: retired routes 301 to a live destination or 410 Gone", () =
   // /blog/:slug (public-indexable) pattern first, so the middleware never
   // redirects them (they 404 as missing posts instead).
   const RETIRED_REDIRECTS: readonly (readonly [string, string])[] = [
-    ["/digifyde", "/standortbestimmung"],
-    ["/ki-readiness", "/standortbestimmung"],
-    ["/eu-ai-act-check", "/standortbestimmung"],
+    ["/digifyde", "/ki-check"],
+    ["/ki-readiness", "/ki-check"],
+    ["/eu-ai-act-check", "/ki-check"],
     ["/methodik", "/blog"],
     ["/arbeitsweise", "/ueber-die-plattform"],
   ] as const;
@@ -124,14 +124,14 @@ test.describe("edge: retired routes 301 to a live destination or 410 Gone", () =
     });
   }
 
-  test("/digifyde followed end-to-end resolves to the live /standortbestimmung page (200)", async ({
+  test("/digifyde followed end-to-end resolves to the live /ki-check page (200)", async ({
     page,
   }) => {
     // page.goto follows the 301; the returned response is the FINAL document.
     const response = await page.goto("/digifyde", {
       waitUntil: "domcontentloaded",
     });
-    await expect(page).toHaveURL(/\/standortbestimmung$/);
+    await expect(page).toHaveURL(/\/ki-check$/);
     expect(response?.status()).toBe(200);
     // Content-agnostic proof the destination actually rendered.
     await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();

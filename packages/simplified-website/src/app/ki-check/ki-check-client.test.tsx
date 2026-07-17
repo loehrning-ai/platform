@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { StandortbestimmungClient } from "./standortbestimmung-client";
+import { KiCheckClient } from "./ki-check-client";
 import { QUESTIONS } from "@/lib/ki-check/questions";
 
 /**
@@ -62,9 +62,9 @@ function answerFirstAndAdvance(question: (typeof QUESTIONS)[number], isLast: boo
   );
 }
 
-describe("StandortbestimmungClient", () => {
+describe("KiCheckClient", () => {
   it("shows one question at a time and requires a choice before advancing", () => {
-    render(<StandortbestimmungClient />);
+    render(<KiCheckClient />);
 
     // First question visible; the next question is not.
     expect(
@@ -83,7 +83,7 @@ describe("StandortbestimmungClient", () => {
   });
 
   it("reveals the picked option's meaning", () => {
-    render(<StandortbestimmungClient />);
+    render(<KiCheckClient />);
     const meaning = QUESTIONS[0].options[0].meaning;
     expect(screen.queryByText(meaning)).not.toBeInTheDocument();
     fireEvent.click(
@@ -93,7 +93,7 @@ describe("StandortbestimmungClient", () => {
   });
 
   it("moves focus to each new question and then to the result heading", () => {
-    render(<StandortbestimmungClient />);
+    render(<KiCheckClient />);
 
     for (let i = 0; i < QUESTIONS.length; i += 1) {
       const heading = screen.getByRole("heading", {
@@ -110,7 +110,7 @@ describe("StandortbestimmungClient", () => {
   });
 
   it("renders a composite score, a stage and a course recommendation", () => {
-    render(<StandortbestimmungClient />);
+    render(<KiCheckClient />);
     for (let i = 0; i < QUESTIONS.length; i += 1) {
       answerFirstAndAdvance(QUESTIONS[i], i === QUESTIONS.length - 1);
     }
@@ -125,7 +125,7 @@ describe("StandortbestimmungClient", () => {
   });
 
   it("returns focus to the first question after a restart", () => {
-    render(<StandortbestimmungClient />);
+    render(<KiCheckClient />);
     for (let i = 0; i < QUESTIONS.length; i += 1) {
       answerFirstAndAdvance(QUESTIONS[i], i === QUESTIONS.length - 1);
     }
@@ -140,7 +140,7 @@ describe("StandortbestimmungClient", () => {
   });
 
   it("lets the user step back to revise an earlier answer", () => {
-    render(<StandortbestimmungClient />);
+    render(<KiCheckClient />);
     answerFirstAndAdvance(QUESTIONS[0], false);
 
     // On question 2, go back.

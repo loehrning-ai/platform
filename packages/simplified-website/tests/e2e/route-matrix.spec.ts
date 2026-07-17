@@ -26,7 +26,7 @@ const PUBLIC_ROUTES = [
   "/",
   "/einstieg",
   "/wie-ki-funktioniert",
-  "/standortbestimmung",
+  "/ki-check",
   "/kurse",
   "/ki-fuehrerschein",
   "/eu-ai-act-kurs",

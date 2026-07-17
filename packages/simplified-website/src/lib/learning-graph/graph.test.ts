@@ -57,13 +57,13 @@ describe("learning graph", () => {
     }
   });
 
-  it("standortbestimmung node replaces placeholder, no node points to /ki-transformation-check", () => {
+  it("ki-check node replaces placeholder, no node points to /ki-transformation-check", () => {
     for (const node of LEARNING_NODES) {
       expect(node.route).not.toBe("/ki-transformation-check");
     }
-    const sbNode = LEARNING_NODES.find((n) => n.id === "self-test:standortbestimmung");
+    const sbNode = LEARNING_NODES.find((n) => n.id === "self-test:ki-check");
     expect(sbNode).toBeDefined();
-    expect(sbNode?.route).toBe("/standortbestimmung");
+    expect(sbNode?.route).toBe("/ki-check");
   });
 
   it("traverseNextStep follows the next_step chain correctly", () => {
@@ -94,7 +94,7 @@ describe("learning graph", () => {
     }
   });
 
-  it("no self_test node is gated (standortbestimmung must be public)", () => {
+  it("no self_test node is gated (ki-check must be public)", () => {
     const selfTests = LEARNING_NODES.filter((n) => n.type === "self_test");
     expect(selfTests.length).toBeGreaterThan(0);
     for (const st of selfTests) {

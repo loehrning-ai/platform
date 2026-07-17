@@ -55,7 +55,7 @@ const slideVariants = {
   exit: { opacity: 0, x: -28 },
 };
 
-export function StandortbestimmungClient() {
+export function KiCheckClient() {
   const [index, setIndex] = useState(0);
   // questionId -> chosen option index. Single source of truth for the whole run.
   const [choices, setChoices] = useState<Record<string, number>>({});

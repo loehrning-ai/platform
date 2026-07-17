@@ -3,7 +3,7 @@
  * house a11y.spec.ts does NOT already scan (regression coverage). a11y.spec.ts
  * already covers /open-source, /feedback, /ueber-mich, /vorlagen, /kurse (and
  * more); this file fills the gap: /einstieg, /wie-ki-funktioniert,
- * /standortbestimmung, /bekannte-grenzen, /neuigkeiten, /hilfe,
+ * /ki-check, /bekannte-grenzen, /neuigkeiten, /hilfe,
  * /login. Pattern is intentionally identical to a11y.spec.ts (same AxeBuilder
  * tags, serious/critical filter, reduced-motion + settle + polled scan). One
  * axe test per small route-group; failures name the offending route(s).
@@ -16,7 +16,7 @@ import AxeBuilder from "@axe-core/playwright";
 // server pages; /login renders its form for the unauthenticated e2e context and
 // only redirects an already-signed-in user, so axe sees the real page).
 const GROUPS: Record<string, readonly string[]> = {
-  "Lern-Einstieg": ["/einstieg", "/wie-ki-funktioniert", "/standortbestimmung"],
+  "Lern-Einstieg": ["/einstieg", "/wie-ki-funktioniert", "/ki-check"],
   "Referenz & Wissen": ["/bekannte-grenzen", "/neuigkeiten"],
   "Hilfe & Konto": ["/hilfe", "/login"],
 };

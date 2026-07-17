@@ -98,7 +98,7 @@ describe("<Nav />", () => {
     const items = within(menu as HTMLElement).getAllByRole("link");
     expect(items.length).toBe(6);
     const hrefs = items.map((item) => item.getAttribute("href"));
-    expect(hrefs).toContain("/standortbestimmung");
+    expect(hrefs).toContain("/ki-check");
     expect(hrefs).toContain("/ki-und-gesellschaft");
     // Open Source is a top-level link only — no longer duplicated in the dropdown.
     expect(hrefs).not.toContain("/open-source");

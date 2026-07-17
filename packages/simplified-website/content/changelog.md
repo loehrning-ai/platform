@@ -10,7 +10,7 @@ Zum Start verfügbar: Kurse, Lernbücher, Demos und Vorlagen, kostenlos und ohne
 - AI-Native Arbeitskurs (4 Module, Praxisübungen)
 - 8 Governance-Arbeitsvorlagen
 - 3 Lernbücher
-- Standortbestimmung (Lernpfad-Empfehlung)
+- KI-Check (Lernpfad-Empfehlung)
 - Einführung "Wie KI wirklich funktioniert"
 - Kurs "KI und Gesellschaft"
 
