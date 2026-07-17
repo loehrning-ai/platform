@@ -31,7 +31,7 @@ afterEach(() => {
   storeMock.getStreak.mockReturnValue({ days: 0, last: null });
 });
 
-describe("CourseGallery (three-track course architecture)", () => {
+describe("CourseGallery (learner-first: path + deeper shelf)", () => {
   it("renders one card per native course with a free price + progress dots", () => {
     render(<CourseGallery />);
     expect(screen.getByText("KI-Führerschein")).toBeInTheDocument();
@@ -45,9 +45,11 @@ describe("CourseGallery (three-track course architecture)", () => {
     expect(screen.getByTestId("progress-dots-ai-native")).toBeInTheDocument();
   });
 
-  it("labels all three tracks so their difference is legible", () => {
+  it("labels the path and the deeper shelf so their difference is legible", () => {
     render(<CourseGallery />);
-    expect(screen.getByText("Zertifikatskurse")).toBeInTheDocument();
+    expect(screen.getByText("Der Lernpfad")).toBeInTheDocument();
+    expect(screen.getByText("Tiefer gehen")).toBeInTheDocument();
+    // The deeper shelf keeps two legible sub-labels.
     expect(screen.getByText("GitHub-Labs")).toBeInTheDocument();
     expect(screen.getByText("Angewandte Kurse")).toBeInTheDocument();
   });
@@ -64,12 +66,14 @@ describe("CourseGallery (three-track course architecture)", () => {
         expect(scoped.getByText(fact)).toBeInTheDocument();
       }
 
-      // GitHub identity: stroke-only icon link, badge row, commit pin.
+      // GitHub identity: stroke-only icon link, honest badge chips, commit pin.
       expect(scoped.getByRole("link", { name: "Quellcode auf GitHub" })).toHaveAttribute(
         "href",
         course.sourceHref,
       );
-      expect(scoped.getByText("GitHub · MIT · Englisch · extern")).toBeInTheDocument();
+      expect(scoped.getByText("Englisch")).toBeInTheDocument();
+      expect(scoped.getByText("extern · GitHub")).toBeInTheDocument();
+      expect(scoped.getByText("MIT")).toBeInTheDocument();
       expect(
         scoped.getByRole("link", { name: new RegExp(`Quell-Commit ${course.sourceCommit.slice(0, 7)}`) }),
       ).toHaveAttribute("href", course.sourceCommitHref);

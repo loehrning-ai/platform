@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { GraduationCap, Github, Presentation } from "lucide-react";
+import { GraduationCap, Github } from "lucide-react";
 import { JsonLd, SITE_URL } from "@/lib/seo/json-ld";
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { COURSES_GRAPH } from "@/lib/seo/course-discovery";
@@ -41,25 +41,19 @@ export const metadata: Metadata = {
   },
 };
 
-/** The three course tracks, spelled out once so the difference is obvious. */
+/** Two ideas, spelled out once so a person knows where to look. */
 const TRACK_DIFF = [
   {
     icon: GraduationCap,
     accent: "kupfer" as const,
-    label: "Zertifikatskurse",
-    text: "auf Deutsch, mit gespeichertem Fortschritt und Teilnahmebestätigung.",
+    label: "Der Lernpfad",
+    text: "vier deutsche Kurse mit gespeichertem Fortschritt und Nachweis. Fang bei Schritt 1 an.",
   },
   {
     icon: Github,
     accent: "sand" as const,
-    label: "GitHub-Labs",
-    text: "open-source und englisch, extern gehostet, ohne Konto.",
-  },
-  {
-    icon: Presentation,
-    accent: "amber" as const,
-    label: "Angewandte Kurse",
-    text: "Praxis aus echten Workshops, die du live mitbaust.",
+    label: "Tiefer gehen",
+    text: "technische Open-Source-Labs auf Englisch und angewandte Kurse aus Workshops. Ohne Konto.",
   },
 ];
 
@@ -72,19 +66,19 @@ export default function KursePage() {
         <div className="mb-9 h-[3px] w-[154px] rounded-full bg-brand-orange" />
 
         <div className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-          § Freie KI-Lernplattform · drei Kursarten, ein roter Faden
+          § Freie KI-Lernplattform · ein Lernpfad, plus Vertiefung
         </div>
 
         <h1 className="mt-6 max-w-[1180px] text-[40px] font-bold leading-[0.94] tracking-[-0.05em] text-foreground sm:text-[56px] md:text-[80px]">
           KI lernen.<br />
-          <span className="text-brand-orange">Daten verstehen.</span>
+          <span className="text-brand-orange">Schritt für Schritt.</span>
         </h1>
 
-        <p className="mt-9 max-w-[780px] text-[18px] leading-[1.5] text-muted-foreground sm:text-[21px]">
-          {COURSE_CATALOG.length} deutsche Zertifikatskurse bilden den roten
-          Faden: KI-Kompetenz, gesellschaftliche Einordnung, EU-AI-Act-Verständnis
-          und AI-native Arbeit. Dazu kommen quelloffene GitHub-Labs zur technischen
-          Vertiefung und angewandte Kurse aus echten Workshops.
+        <p className="mt-9 max-w-[720px] text-[18px] leading-[1.5] text-muted-foreground sm:text-[21px]">
+          {COURSE_CATALOG.length} deutsche Kurse bilden den Lernpfad: von der
+          KI-Kompetenz über die gesellschaftliche Einordnung und den EU AI Act bis
+          zum AI-nativen Arbeiten. Wer tiefer will, findet technische Labs auf
+          GitHub und angewandte Kurse aus echten Workshops.
         </p>
 
         {/* Beginner entry point */}
@@ -117,7 +111,7 @@ export default function KursePage() {
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
             Was ist der Unterschied?
           </p>
-          <ul className="mt-5 grid gap-5 sm:grid-cols-3">
+          <ul className="mt-5 grid gap-5 sm:grid-cols-2">
             {TRACK_DIFF.map((item) => (
               <li key={item.label} className="flex items-start gap-3">
                 <IconTile icon={item.icon} accent={item.accent} />
