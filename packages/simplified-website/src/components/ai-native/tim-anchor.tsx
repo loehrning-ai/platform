@@ -16,7 +16,7 @@ const TIMELINE: readonly (readonly [string, string])[] = [
   ["2022", "M.Sc. Informatik · FAU Erlangen-Nürnberg"],
   ["2019–2024", "Datenrollen in internationalen Produkt- und Infrastrukturteams"],
   ["2024-heute", "Dateninfrastruktur und Analytics in einem globalen Technologieumfeld"],
-  ["2025-heute", "loehrning.ai · freie Kurse, Demos und Arbeitsnotizen zu KI-nativer Arbeit"],
+  ["2026-heute", "loehrning.ai · freie Kurse, Demos und Arbeitsnotizen zu KI-nativer Arbeit"],
 ];
 
 export function AiNativeTimAnchor() {

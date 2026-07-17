@@ -41,7 +41,7 @@ export function UeberMichContent({
               <m.p
                 custom={0}
                 variants={fadeUp}
-                className="text-sm font-semibold uppercase tracking-wider text-brand-sand"
+                className="text-sm font-semibold uppercase tracking-wider text-brand-orange"
               >
                 Über Tim Löhr
               </m.p>
@@ -114,7 +114,7 @@ export function UeberMichContent({
             <m.p
               custom={0}
               variants={fadeUp}
-              className="text-sm font-semibold uppercase tracking-wider text-brand-sand"
+              className="text-sm font-semibold uppercase tracking-wider text-brand-orange"
             >
               Transparenz
             </m.p>
@@ -205,7 +205,7 @@ export function UeberMichContent({
             <m.p
               custom={0}
               variants={fadeUp}
-              className="text-sm font-semibold uppercase tracking-wider text-brand-sand"
+              className="text-sm font-semibold uppercase tracking-wider text-brand-orange"
             >
               Editorial
             </m.p>
@@ -243,7 +243,7 @@ export function UeberMichContent({
               <p>
                 Die vollständigen Redaktionsrichtlinien sind im Repository unter{" "}
                 <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">
-                  CONTENT_VOICE.md
+                  CONTENT_GUIDE.md
                 </code>{" "}
                 dokumentiert.
               </p>
@@ -263,7 +263,7 @@ export function UeberMichContent({
             <m.p
               custom={0}
               variants={fadeUp}
-              className="text-sm font-semibold uppercase tracking-wider text-brand-sand"
+              className="text-sm font-semibold uppercase tracking-wider text-brand-orange"
             >
               Kontakt
             </m.p>

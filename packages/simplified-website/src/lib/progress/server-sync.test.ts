@@ -13,6 +13,7 @@
 
 import { describe, it, expect } from "vitest";
 import { isUnifiedProgress, mergeUnifiedProgress } from "./server-sync";
+import { COURSE_SLUGS } from "@/lib/course/types";
 import type {
   UnifiedCourseSlice,
   UnifiedExerciseResult,
@@ -99,6 +100,36 @@ describe("isUnifiedProgress", () => {
       },
     });
     expect(isUnifiedProgress(state)).toBe(true);
+  });
+
+  it("accepts EVERY canonical course slug (regression: ki-und-gesellschaft was rejected)", () => {
+    // The valid-slug set was hardcoded to 3 slugs, missing ki-und-gesellschaft.
+    // A store touching that course was rejected on PUT, silently killing the
+    // learner's entire cross-device sync. Guard all four here so a new course
+    // added to COURSE_SLUGS without wiring is caught.
+    for (const slug of COURSE_SLUGS) {
+      const state = progress({ courses: { [slug]: slice() } });
+      expect(isUnifiedProgress(state), `slug ${slug} must be accepted`).toBe(true);
+    }
+    // ki-und-gesellschaft specifically, populated like a real learner's slice.
+    expect(
+      isUnifiedProgress(
+        progress({
+          courses: {
+            "ki-und-gesellschaft": slice({
+              lessons: { l1: lesson() },
+              workshopQuiz: { passed: true, score: 80, completedAt: "2026-06-01T00:00:00.000Z" },
+            }),
+          },
+        }),
+      ),
+    ).toBe(true);
+  });
+
+  it("rejects a store containing an unknown course slug", () => {
+    expect(
+      isUnifiedProgress(progress({ courses: { "not-a-real-course": slice() } })),
+    ).toBe(false);
   });
 
   it("rejects non-record roots", () => {

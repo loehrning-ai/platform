@@ -7,8 +7,13 @@ import type {
   UnifiedWorkshopQuiz,
 } from "./types";
 import { UNIFIED_SCHEMA_VERSION } from "./types";
+import { COURSE_SLUGS as CANONICAL_COURSE_SLUGS } from "@/lib/course/types";
 
-const COURSE_SLUGS = new Set(["ki-fuehrerschein", "eu-ai-act-kurs", "ai-native"]);
+// Derive the valid-slug set from the single canonical list so a new course can
+// never silently break progress sync. (This previously hardcoded only 3 of the
+// 4 slugs, missing "ki-und-gesellschaft" — any learner who touched that course
+// had their entire unified progress rejected as invalid on PUT.)
+const COURSE_SLUGS = new Set<string>(CANONICAL_COURSE_SLUGS);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);

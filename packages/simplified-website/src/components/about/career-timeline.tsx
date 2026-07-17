@@ -28,7 +28,7 @@ const milestones = [
     color: "text-muted-foreground",
   },
   {
-    period: "2025-heute",
+    period: "2026-heute",
     role: "Kurator",
     company: "loehrning.ai",
     description: "Freie KI-Kurse, Vorlagen, Demos und Arbeitsnotizen",
