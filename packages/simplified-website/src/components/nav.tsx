@@ -28,6 +28,12 @@ import {
   Sparkles,
   Users,
   Zap,
+  BookOpen,
+  Code2,
+  FileText,
+  LayoutDashboard,
+  Pencil,
+  Presentation,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -46,17 +52,26 @@ interface AkademieItem extends NavItem {
   readonly disabled?: boolean;
 }
 
-// Course-only dropdown: an entry aid (KI-Check), the hub, then the
-// four certified courses in learning-path order. "Open Source" was removed from
-// here — it is not a course and already has its own top-level link, so it no
-// longer appears twice.
+// Kurse dropdown: the hub, then the four certified courses in learning-path
+// order. Courses only — the KI-Check entry tool now lives under Ressourcen.
 const akademieNavItems: readonly AkademieItem[] = [
-  { href: "/ki-check", label: "KI-Check", icon: MapPin },
   { href: "/kurse", label: "Alle Kurse", icon: Sparkles },
   { href: "/ki-fuehrerschein", label: "KI-Führerschein", icon: GraduationCap },
   { href: "/ki-und-gesellschaft", label: "KI und Gesellschaft", icon: Users },
   { href: "/eu-ai-act-kurs", label: "EU AI Act Kurs", icon: ShieldCheck },
   { href: "/ai-native", label: "AI-Native Arbeitskurs", icon: Zap },
+];
+
+// Ressourcen dropdown: the self-assessment entry tool plus everything to read,
+// try, and apply — including Open Source (which no longer sits top-level).
+const ressourcenNavItems: readonly AkademieItem[] = [
+  { href: "/ki-check", label: "KI-Check", icon: MapPin },
+  { href: "/blog", label: "Blog", icon: Pencil },
+  { href: "/buecher", label: "Lernbücher", icon: BookOpen },
+  { href: "/demos", label: "Praxisbeispiele", icon: LayoutDashboard },
+  { href: "/vorlagen", label: "Arbeitsvorlagen", icon: FileText },
+  { href: "/workshops", label: "Workshops", icon: Presentation },
+  { href: "/open-source", label: "Open Source", icon: Code2 },
 ];
 
 const akademiePaths = [
@@ -67,13 +82,19 @@ const akademiePaths = [
   "/ki-und-gesellschaft",
 ];
 
-const primaryLinks = [
-  { href: "/open-source", label: "Open Source" },
-  { href: "/workshops", label: "Workshops" },
-  { href: "/blog", label: "Blog" },
-] as const;
+const ressourcenPaths = [
+  "/ki-check",
+  "/blog",
+  "/buecher",
+  "/demos",
+  "/vorlagen",
+  "/workshops",
+  "/open-source",
+];
 
-type DropdownId = "akademie" | null;
+const primaryLinks = [{ href: "/ueber-mich", label: "Über mich" }] as const;
+
+type DropdownId = "akademie" | "ressourcen" | null;
 
 /* ─── Scroll-driven logo with icon mark ──────────────────────────────────── */
 
@@ -195,6 +216,9 @@ export function Nav() {
   const isKurseActive = akademiePaths.some(
     (p) => pathname === p || pathname.startsWith(p + "/"),
   );
+  const isRessourcenActive = ressourcenPaths.some(
+    (p) => pathname === p || pathname.startsWith(p + "/"),
+  );
 
   function openMenu(id: DropdownId) {
     clearTimeout(dropdownTimeout.current);
@@ -257,14 +281,16 @@ export function Nav() {
   // jump, Escape closes and returns focus to the trigger, Tab closes.
   const akademieTriggerRef = useRef<HTMLButtonElement>(null);
   const akademieMenuRef = useRef<HTMLDivElement>(null);
+  const ressourcenTriggerRef = useRef<HTMLButtonElement>(null);
+  const ressourcenMenuRef = useRef<HTMLDivElement>(null);
   const pendingMenuFocus = useRef<"first" | "last" | null>(null);
 
-  function menuRefFor(_id: Exclude<DropdownId, null>) {
-    return akademieMenuRef;
+  function menuRefFor(id: Exclude<DropdownId, null>) {
+    return id === "ressourcen" ? ressourcenMenuRef : akademieMenuRef;
   }
 
-  function triggerRefFor(_id: Exclude<DropdownId, null>) {
-    return akademieTriggerRef;
+  function triggerRefFor(id: Exclude<DropdownId, null>) {
+    return id === "ressourcen" ? ressourcenTriggerRef : akademieTriggerRef;
   }
 
   function menuItemsOf(menu: HTMLElement | null): HTMLElement[] {
@@ -337,6 +363,158 @@ export function Nav() {
     };
   }
 
+  // One desktop dropdown (trigger + animated menu), shared by Kurse + Ressourcen
+  // so both keep identical keyboard/focus/ARIA behaviour.
+  function renderDropdown(
+    id: Exclude<DropdownId, null>,
+    label: string,
+    items: readonly AkademieItem[],
+    menuId: string,
+    active: boolean,
+  ) {
+    const triggerRef = triggerRefFor(id);
+    const menuRef = menuRefFor(id);
+    return (
+      <div
+        className="relative"
+        onMouseEnter={() => openMenu(id)}
+        onMouseLeave={closeMenu}
+      >
+        <button
+          ref={triggerRef}
+          aria-controls={menuId}
+          aria-expanded={openDropdown === id}
+          onClick={() => setOpenDropdown(openDropdown === id ? null : id)}
+          onKeyDown={handleTriggerKeyDown(id)}
+          className={cn(
+            "inline-flex items-center gap-1 text-sm outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+            active ? "text-foreground" : "text-muted-foreground",
+          )}
+        >
+          {label}
+          <ChevronDown
+            size={13}
+            className={cn(
+              "transition-transform duration-200",
+              openDropdown === id && "rotate-180",
+            )}
+          />
+        </button>
+
+        <AnimatePresence>
+          {openDropdown === id && (
+            <m.div
+              ref={menuRef}
+              id={menuId}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 6 }}
+              transition={{ duration: 0.12 }}
+              className="absolute left-0 top-full mt-2 w-60 rounded-xl border border-border bg-card p-2 shadow-card-hover"
+              aria-label={label}
+              onKeyDown={handleMenuKeyDown(id)}
+            >
+              {items.map((item) => {
+                const Icon = item.icon;
+                if (item.disabled) {
+                  return (
+                    <span
+                      key={item.label}
+                      data-nav-menu-item
+                      aria-disabled="true"
+                      className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted cursor-default"
+                    >
+                      <Icon size={15} />
+                      <span>{item.label}</span>
+                      {item.badge && (
+                        <span className="ml-auto rounded-full bg-card-hover px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-muted">
+                          {item.badge}
+                        </span>
+                      )}
+                    </span>
+                  );
+                }
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    data-nav-menu-item
+                    onClick={() => setOpenDropdown(null)}
+                    aria-current={isActivePath(item.href) ? "page" : undefined}
+                    className={cn(
+                      "flex items-center gap-2 rounded-lg px-3 py-2 text-sm outline-none transition-colors hover:bg-card-hover focus-visible:bg-card-hover focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange",
+                      pathname === item.href ||
+                        pathname.startsWith(item.href + "/")
+                        ? "text-foreground"
+                        : "text-muted-foreground hover:text-foreground",
+                    )}
+                  >
+                    <Icon size={15} />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </m.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  }
+
+  // One labelled group of links in the mobile dialog, shared by Kurse +
+  // Ressourcen.
+  function renderMobileGroup(
+    label: string,
+    items: readonly AkademieItem[],
+  ) {
+    return (
+      <div className="space-y-2">
+        <span className="text-sm font-medium text-muted-foreground">
+          {label}
+        </span>
+        <div className="ml-3 flex flex-col gap-1 border-l border-border pl-3">
+          {items.map((item) => {
+            const Icon = item.icon;
+            if (item.disabled) {
+              return (
+                <span
+                  key={item.label}
+                  className="inline-flex items-center gap-2 text-sm text-muted"
+                >
+                  <Icon size={14} />
+                  {item.label}
+                  {item.badge && (
+                    <span className="rounded-full bg-card-hover px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-muted">
+                      {item.badge}
+                    </span>
+                  )}
+                </span>
+              );
+            }
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMobileOpen(false)}
+                aria-current={isActivePath(item.href) ? "page" : undefined}
+                className={cn(
+                  "inline-flex min-h-[44px] items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground",
+                  (pathname === item.href ||
+                    pathname.startsWith(item.href + "/")) &&
+                    "text-foreground",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                )}
+              >
+                <Icon size={14} />
+                {item.label}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <nav
       aria-label="Hauptnavigation"
@@ -355,94 +533,20 @@ export function Nav() {
 
         {/* Desktop */}
         <div className="hidden items-center gap-6 lg:flex xl:gap-7">
-          {/* Kurse dropdown */}
-          <div
-            className="relative"
-            onMouseEnter={() => openMenu("akademie")}
-            onMouseLeave={closeMenu}
-          >
-            <button
-              ref={akademieTriggerRef}
-              aria-controls="akademie-nav-menu"
-              aria-expanded={openDropdown === "akademie"}
-              onClick={() =>
-                setOpenDropdown(openDropdown === "akademie" ? null : "akademie")
-              }
-              onKeyDown={handleTriggerKeyDown("akademie")}
-              className={cn(
-                "inline-flex items-center gap-1 text-sm outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                isKurseActive ? "text-foreground" : "text-muted-foreground",
-              )}
-            >
-              Kurse
-              <ChevronDown
-                size={13}
-                className={cn(
-                  "transition-transform duration-200",
-                  openDropdown === "akademie" && "rotate-180",
-                )}
-              />
-            </button>
-
-            <AnimatePresence>
-              {openDropdown === "akademie" && (
-                <m.div
-                  ref={akademieMenuRef}
-                  id="akademie-nav-menu"
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 6 }}
-                  transition={{ duration: 0.12 }}
-                  className="absolute left-0 top-full mt-2 w-60 rounded-xl border border-border bg-card p-2 shadow-card-hover"
-                  aria-label="Kurse"
-                  onKeyDown={handleMenuKeyDown("akademie")}
-                >
-                  {akademieNavItems.map((item) => {
-                    const Icon = item.icon;
-                    if (item.disabled) {
-                      return (
-                        <span
-                          key={item.label}
-                          data-nav-menu-item
-                          aria-disabled="true"
-                          className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted cursor-default"
-                        >
-                          <Icon size={15} />
-                          <span>{item.label}</span>
-                          {item.badge && (
-                            <span className="ml-auto rounded-full bg-card-hover px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-muted">
-                              {item.badge}
-                            </span>
-                          )}
-                        </span>
-                      );
-                    }
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        data-nav-menu-item
-                        onClick={() => setOpenDropdown(null)}
-                        aria-current={
-                          isActivePath(item.href) ? "page" : undefined
-                        }
-                        className={cn(
-                          "flex items-center gap-2 rounded-lg px-3 py-2 text-sm outline-none transition-colors hover:bg-card-hover focus-visible:bg-card-hover focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange",
-                          pathname === item.href ||
-                            pathname.startsWith(item.href + "/")
-                            ? "text-foreground"
-                            : "text-muted-foreground hover:text-foreground",
-                        )}
-                      >
-                        <Icon size={15} />
-                        <span>{item.label}</span>
-                      </Link>
-                    );
-                  })}
-                </m.div>
-              )}
-            </AnimatePresence>
-          </div>
+          {renderDropdown(
+            "akademie",
+            "Kurse",
+            akademieNavItems,
+            "akademie-nav-menu",
+            isKurseActive,
+          )}
+          {renderDropdown(
+            "ressourcen",
+            "Ressourcen",
+            ressourcenNavItems,
+            "ressourcen-nav-menu",
+            isRessourcenActive,
+          )}
 
           {primaryLinks.map((link) => (
             <Link
@@ -506,55 +610,11 @@ export function Nav() {
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden overscroll-contain border-b border-border bg-background lg:hidden"
           >
-            <div className="flex max-h-[calc(100dvh-4rem)] flex-col gap-1 overflow-y-auto overscroll-contain px-6 py-6">
-              <div className="space-y-2">
-                <span className="text-sm font-medium text-muted-foreground">
-                  Kurse
-                </span>
-                <div className="ml-3 flex flex-col gap-1 border-l border-border pl-3">
-                  {akademieNavItems.map((item) => {
-                    const Icon = item.icon;
-                    if (item.disabled) {
-                      return (
-                        <span
-                          key={item.label}
-                          className="inline-flex items-center gap-2 text-sm text-muted"
-                        >
-                          <Icon size={14} />
-                          {item.label}
-                          {item.badge && (
-                            <span className="rounded-full bg-card-hover px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-muted">
-                              {item.badge}
-                            </span>
-                          )}
-                        </span>
-                      );
-                    }
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => setMobileOpen(false)}
-                        aria-current={
-                          isActivePath(item.href) ? "page" : undefined
-                        }
-                        className={cn(
-                          "inline-flex min-h-[44px] items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground",
-                          (pathname === item.href ||
-                            pathname.startsWith(item.href + "/")) &&
-                            "text-foreground",
-                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                        )}
-                      >
-                        <Icon size={14} />
-                        {item.label}
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
+            <div className="flex max-h-[calc(100dvh-4rem)] flex-col gap-4 overflow-y-auto overscroll-contain px-6 py-6">
+              {renderMobileGroup("Kurse", akademieNavItems)}
+              {renderMobileGroup("Ressourcen", ressourcenNavItems)}
 
-              <div className="mt-3 flex flex-col gap-1 border-t border-border pt-3">
+              <div className="mt-1 flex flex-col gap-1 border-t border-border pt-3">
                 {primaryLinks.map((link) => (
                   <Link
                     key={link.href}

@@ -10,6 +10,16 @@ vi.mock("next/navigation", () => ({
   usePathname: () => navigationMock.pathname,
 }));
 
+/** Open a desktop dropdown by its trigger label and return its menu element. */
+function openDropdown(label: RegExp): HTMLElement {
+  const trigger = screen.getByRole("button", { name: label });
+  fireEvent.click(trigger);
+  const menu = trigger.getAttribute("aria-controls");
+  const el = menu ? document.getElementById(menu) : null;
+  expect(el).not.toBeNull();
+  return el as HTMLElement;
+}
+
 describe("<Nav />", () => {
   beforeEach(() => {
     navigationMock.pathname = "/";
@@ -17,32 +27,84 @@ describe("<Nav />", () => {
 
   it("renders the brand link", () => {
     render(<Nav />);
-    const links = screen.getAllByRole("link");
-    expect(links.length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link").length).toBeGreaterThan(0);
   });
 
-  it("renders Open Source, Workshops and Blog as primary nav links", () => {
-    render(<Nav />);
-    const text = document.body.textContent ?? "";
-    expect(text).toMatch(/Open Source/);
-    expect(text).toMatch(/Workshops/);
-    expect(text).toMatch(/Blog/);
-    expect(text).not.toMatch(/Glossar/);
-    expect(text).not.toMatch(/KI-Check/);
-  });
-
-  it("does not render Demos, Vorlagen or Bücher as primary nav links", () => {
-    render(<Nav />);
-    const text = document.body.textContent ?? "";
-    expect(text).not.toMatch(/^Praxisbeispiele$/m);
-    expect(text).not.toMatch(/^Arbeitsvorlagen$/m);
-    expect(text).not.toMatch(/^Lernbücher$/m);
-  });
-
-  it("renders the Kurse dropdown trigger", () => {
+  it("exposes exactly two dropdowns (Kurse, Ressourcen) and Über mich", () => {
     render(<Nav />);
     const text = document.body.textContent ?? "";
     expect(text).toMatch(/Kurse/);
+    expect(text).toMatch(/Ressourcen/);
+    expect(text).toMatch(/Über mich/);
+    // Über mich is a real top-level link.
+    const ueber = screen
+      .getAllByRole("link", { name: /Über mich/ })
+      .find((l) => l.getAttribute("href") === "/ueber-mich");
+    expect(ueber).toBeDefined();
+  });
+
+  it("keeps resource areas out of the top level (they live in the dropdown)", () => {
+    render(<Nav />);
+    const text = document.body.textContent ?? "";
+    // Closed dropdowns: these labels are not visible as primary nav text.
+    expect(text).not.toMatch(/^Praxisbeispiele$/m);
+    expect(text).not.toMatch(/^Arbeitsvorlagen$/m);
+    expect(text).not.toMatch(/^Lernbücher$/m);
+    expect(text).not.toMatch(/Glossar/);
+  });
+
+  it("Kurse dropdown holds the courses only — no KI-Check, no Open Source", () => {
+    render(<Nav />);
+    const menu = openDropdown(/Kurse/);
+    const hrefs = within(menu)
+      .getAllByRole("link")
+      .map((i) => i.getAttribute("href"));
+    expect(hrefs.length).toBe(5);
+    expect(hrefs).toContain("/kurse");
+    expect(hrefs).toContain("/ki-fuehrerschein");
+    expect(hrefs).toContain("/ki-und-gesellschaft");
+    expect(hrefs).toContain("/eu-ai-act-kurs");
+    expect(hrefs).toContain("/ai-native");
+    expect(hrefs).not.toContain("/ki-check");
+    expect(hrefs).not.toContain("/open-source");
+  });
+
+  it("Ressourcen dropdown holds KI-Check plus the reading/applying resources", () => {
+    render(<Nav />);
+    const menu = openDropdown(/Ressourcen/);
+    const hrefs = within(menu)
+      .getAllByRole("link")
+      .map((i) => i.getAttribute("href"));
+    expect(hrefs).toEqual([
+      "/ki-check",
+      "/blog",
+      "/buecher",
+      "/demos",
+      "/vorlagen",
+      "/workshops",
+      "/open-source",
+    ]);
+    within(menu)
+      .getAllByRole("link")
+      .forEach((i) => expect(i).toHaveAttribute("data-nav-menu-item", "true"));
+  });
+
+  it("does not render retired project/contact links in the nav", () => {
+    render(<Nav />);
+    const text = document.body.textContent ?? "";
+    expect(text).not.toMatch(/Kontakt/);
+    expect(text).not.toMatch(/Arbeitsweise/);
+    expect(text).not.toMatch(/Über Tim/);
+  });
+
+  it("keeps navigation visible on /feedback", () => {
+    navigationMock.pathname = "/feedback";
+    render(<Nav />);
+    expect(
+      screen.getByRole("navigation", { name: "Hauptnavigation" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Kurse/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Ressourcen/ })).toBeInTheDocument();
   });
 
   it("contains scroll chaining inside the mobile navigation dialog", () => {
@@ -51,9 +113,7 @@ describe("<Nav />", () => {
     toggle.focus();
     fireEvent.click(toggle);
     const dialog = screen.getByRole("dialog", { name: "Hauptnavigation" });
-    expect(dialog).toHaveClass(
-      "overscroll-contain",
-    );
+    expect(dialog).toHaveClass("overscroll-contain");
     const links = within(dialog).getAllByRole("link");
     expect(links[0]).toHaveFocus();
     links.at(-1)?.focus();
@@ -63,61 +123,12 @@ describe("<Nav />", () => {
     expect(toggle).toHaveFocus();
   });
 
-  it("does not render the removed Ressourcen dropdown trigger", () => {
-    render(<Nav />);
-    const text = document.body.textContent ?? "";
-    expect(text).not.toMatch(/Ressourcen/);
-  });
-
-  it("does not render project/profile links in primary navigation", () => {
-    render(<Nav />);
-    const text = document.body.textContent ?? "";
-    expect(text).not.toMatch(/Über Tim/);
-    expect(text).not.toMatch(/Kontakt/);
-    expect(text).not.toMatch(/Arbeitsweise/);
-  });
-
-  it("keeps navigation visible on /feedback", () => {
-    navigationMock.pathname = "/feedback";
-    render(<Nav />);
-    expect(
-      screen.getByRole("navigation", { name: "Hauptnavigation" }),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Blog/ })).toBeInTheDocument();
-  });
-
-  it("exposes a course-only Kurse dropdown without the duplicate Open Source link", () => {
-    render(<Nav />);
-    const trigger = screen.getByRole("button", { name: /Kurse/ });
-    expect(trigger).toHaveAttribute("aria-controls", "akademie-nav-menu");
-    expect(trigger).toHaveAttribute("aria-expanded", "false");
-    fireEvent.click(trigger);
-    expect(trigger).toHaveAttribute("aria-expanded", "true");
-    const menu = document.getElementById("akademie-nav-menu");
-    expect(menu).not.toBeNull();
-    const items = within(menu as HTMLElement).getAllByRole("link");
-    expect(items.length).toBe(6);
-    const hrefs = items.map((item) => item.getAttribute("href"));
-    expect(hrefs).toContain("/ki-check");
-    expect(hrefs).toContain("/ki-und-gesellschaft");
-    // Open Source is a top-level link only — no longer duplicated in the dropdown.
-    expect(hrefs).not.toContain("/open-source");
-    items.forEach((item) => expect(item).toHaveAttribute("data-nav-menu-item", "true"));
-  });
-
-  it("Workshops link has href /workshops in the nav", () => {
-    render(<Nav />);
-    const links = screen.getAllByRole("link", { name: /Workshops/ });
-    const found = links.some((l) => l.getAttribute("href") === "/workshops");
-    expect(found).toBe(true);
-  });
-
-  it("marks the current primary route for assistive navigation", () => {
-    navigationMock.pathname = "/blog/eu-ai-act-grundlagen";
+  it("marks the current top-level route for assistive navigation", () => {
+    navigationMock.pathname = "/ueber-mich";
     render(<Nav />);
     const current = screen
-      .getAllByRole("link", { name: "Blog" })
-      .find((link) => link.getAttribute("href") === "/blog");
+      .getAllByRole("link", { name: /Über mich/ })
+      .find((link) => link.getAttribute("href") === "/ueber-mich");
     expect(current).toHaveAttribute("aria-current", "page");
   });
 
@@ -132,13 +143,24 @@ describe("<Nav />", () => {
     expect(items[0]).toHaveFocus();
   });
 
+  it("ArrowDown on the Ressourcen trigger opens its own menu and focuses its first item", () => {
+    render(<Nav />);
+    const trigger = screen.getByRole("button", { name: /Ressourcen/ });
+    trigger.focus();
+    fireEvent.keyDown(trigger, { key: "ArrowDown" });
+    const menu = document.getElementById("ressourcen-nav-menu");
+    expect(menu).not.toBeNull();
+    const items = within(menu as HTMLElement).getAllByRole("link");
+    expect(items[0]).toHaveFocus();
+    expect(items[0]).toHaveAttribute("href", "/ki-check");
+  });
+
   it("Escape inside the menu closes it and returns focus to the trigger", () => {
     render(<Nav />);
     const trigger = screen.getByRole("button", { name: /Kurse/ });
     trigger.focus();
     fireEvent.keyDown(trigger, { key: "ArrowDown" });
     const menu = document.getElementById("akademie-nav-menu");
-    expect(menu).not.toBeNull();
     const items = within(menu as HTMLElement).getAllByRole("link");
     fireEvent.keyDown(items[0], { key: "Escape" });
     expect(trigger).toHaveFocus();
@@ -151,7 +173,6 @@ describe("<Nav />", () => {
     trigger.focus();
     fireEvent.keyDown(trigger, { key: "ArrowDown" });
     const menu = document.getElementById("akademie-nav-menu");
-    expect(menu).not.toBeNull();
     const items = within(menu as HTMLElement).getAllByRole("link");
     fireEvent.keyDown(items[0], { key: "ArrowDown" });
     expect(items[1]).toHaveFocus();
