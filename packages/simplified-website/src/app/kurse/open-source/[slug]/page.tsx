@@ -156,7 +156,9 @@ export default async function OpenSourceCoursePage({ params }: PageProps) {
                   Umfang
                 </p>
                 <p className="mt-2 text-sm font-semibold text-foreground">
-                  {course.unitCount} {course.unitLabel} · {course.lessonCountLabel}
+                  {course.lessonCountLabel === `${course.unitCount} ${course.unitLabel}`
+                    ? course.lessonCountLabel
+                    : `${course.unitCount} ${course.unitLabel} · ${course.lessonCountLabel}`}
                 </p>
               </div>
               <div>

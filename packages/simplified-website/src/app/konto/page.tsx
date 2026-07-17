@@ -89,8 +89,10 @@ export default async function KontoPage() {
   });
 
   const coursesDone = courseState.filter((c) => c.recordEarned).length;
+  // "Next" and the "all done" banner use the SAME definition as the count
+  // (record earned), so the celebration can never contradict the "X/4" tally.
   const nextCourse =
-    courseState.find((c) => c.done < c.course.totalLessons)?.course ?? null;
+    courseState.find((c) => !c.recordEarned)?.course ?? null;
   const { earned: earnedCount, total: totalCompetencies } =
     competencyProgress(progress);
   const earned = earnedCompetencies(progress);

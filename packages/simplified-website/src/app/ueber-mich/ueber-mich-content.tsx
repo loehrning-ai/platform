@@ -347,8 +347,8 @@ export function UeberMichContent({
               variants={fadeUp}
               className="text-3xl font-bold tracking-[-0.04em] sm:text-4xl"
             >
-              Weiter in die{" "}
-              <span className="text-gradient-static">Ressourcen</span>.
+              Weiter zu den{" "}
+              <span className="text-gradient-static">Kursen</span>.
             </m.h2>
             <m.p
               custom={1}

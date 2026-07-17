@@ -31,7 +31,7 @@ export default function NeuigkeitenPage() {
           Diese Seite dokumentiert Inhaltsaktualisierungen, neue Kurse und
           Korrekturen auf der Plattform.
         </p>
-        <div className="prose prose-invert mt-12 max-w-none">
+        <div className="prose mt-12 max-w-none">
           <MarkdownRenderer content={changelog} />
         </div>
       </div>

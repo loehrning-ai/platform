@@ -105,7 +105,7 @@ export default function KursePage() {
 
         {/* Was ist der Unterschied? The three tracks at a glance */}
         <section
-          aria-label="Was ist der Unterschied zwischen den drei Kursarten?"
+          aria-label="Was ist der Unterschied zwischen den zwei Kursarten?"
           className="mt-10 rounded-2xl border border-border bg-kupfer-mist p-6 sm:p-7"
         >
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">

@@ -62,7 +62,7 @@ function getFaqItems(accountEnabled: boolean, feedbackEnabled: boolean): readonl
     id: "zertifikat",
     question: "Was bedeutet das Teilnahme-Zertifikat?",
     answer:
-      "Das Zertifikat bestätigt deine Teilnahme und den bestandenen Quiz. Es ist kein offizieller Nachweis im Sinne des Artikel 4 EU KI-Verordnung. Die Europäische Kommission hat klargestellt, dass kein bestimmtes Zertifikat gesetzlich vorgeschrieben ist. Interne Aufzeichnungen können ausreichen. Bitte prüfe das mit deinem Arbeitgeber oder Rechtsbeistand. Das Zertifikat wird lokal in deinem Browser erstellt und ist nicht servergeprüft. Mehr dazu: /bekannte-grenzen.",
+      "Das Zertifikat bestätigt deine Teilnahme und das bestandene Quiz. Es ist kein offizieller Nachweis im Sinne des Artikels 4 der EU-KI-Verordnung. Die Europäische Kommission hat klargestellt, dass kein bestimmtes Zertifikat gesetzlich vorgeschrieben ist. Interne Aufzeichnungen können ausreichen. Bitte prüfe das mit deinem Arbeitgeber oder Rechtsbeistand. Das Zertifikat wird lokal in deinem Browser erstellt und ist nicht servergeprüft. Mehr dazu: /bekannte-grenzen.",
   },
   {
     id: "praxisbeispiel",

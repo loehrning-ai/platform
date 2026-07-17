@@ -136,7 +136,7 @@ export function KursContent({ blocks, totalLessons }: KursContentProps) {
             <m.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-center gap-2 border border-brand-sand/30 bg-brand-sand/10 px-4 py-3 text-sm text-brand-sand"
+              className="flex items-center gap-2 border border-brand-sand/30 bg-brand-sand/10 px-4 py-3 text-sm text-foreground"
             >
               <CheckCircle2 className="h-4 w-4 shrink-0" />
               Fortschritt erfolgreich importiert.
@@ -339,7 +339,7 @@ export function KursContent({ blocks, totalLessons }: KursContentProps) {
                 ) : progress.quizPassed ? (
                   <Link
                     href="/eu-ai-act-kurs/kurs/zertifikat"
-                    className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-brand-sand"
+                    className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-brand-orange"
                   >
                     <CheckCircle2 className="h-4 w-4" />
                     Bestanden: Teilnahmebestätigung herunterladen

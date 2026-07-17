@@ -16,7 +16,7 @@ export const SITE_GRAPH: JsonLdGraph = {
       // guidance; the 1200x630 OG image stays a social-preview asset only.
       logo: `${SITE_URL}/logo-square-512.png`,
       description: SITE_ENTITY.description,
-      foundingDate: "2025",
+      foundingDate: "2026",
       founder: { "@id": PERSON_ID },
       areaServed: ["DE", "AT", "CH"],
       knowsAbout: [
