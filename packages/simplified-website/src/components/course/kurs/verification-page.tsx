@@ -176,7 +176,7 @@ export function VerificationPage({ courseSlug }: VerificationPageProps) {
                 loehrning.ai | {config.certificateReferenceLabel}
               </p>
               <p className="mt-3 border border-border bg-background p-3 text-xs leading-relaxed text-muted-foreground">
-                Lokal erzeugte Teilnahmebestätigung. Die QR-Daten sind lesbar,
+                {config.recordNoun.label}, lokal erzeugt. Die QR-Daten sind lesbar,
                 aber nicht servergeprüft, nicht kryptografisch signiert und keine
                 behördliche oder rechtliche Bescheinigung.
               </p>

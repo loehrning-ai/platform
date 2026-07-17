@@ -164,7 +164,7 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
 
           {/* Certificate form */}
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold">Teilnahmebestätigung herunterladen</h2>
+            <h2 className="text-lg font-semibold">{config.recordNoun.label} herunterladen</h2>
             <p className="text-sm text-muted-foreground">
               Trag deinen Namen ein. Die PDF wird lokal in deinem Browser aus
               deinem Lernstand erstellt, sie wird nicht serverseitig ausgestellt.
@@ -201,7 +201,7 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
               }`}
             >
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-              {loading ? "Wird generiert…" : "Teilnahmebestätigung herunterladen"}
+              {loading ? "Wird generiert…" : `${config.recordNoun.label} herunterladen`}
             </button>
 
             {downloaded && (
@@ -210,14 +210,14 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
                 animate={{ opacity: 1 }}
                 className="text-sm text-brand-sand"
               >
-                Deine Teilnahmebestätigung wurde heruntergeladen.
+                {config.recordNoun.possessive} wurde heruntergeladen.
               </m.p>
             )}
 
             <p className="text-xs text-muted">
               Der Name wird nur in die heruntergeladene Datei geschrieben. Der
               Kursfortschritt bleibt lokal im Browser gespeichert; die PDF ist keine
-              behördliche oder rechtliche Bescheinigung. Dieses Zertifikat basiert
+              behördliche oder rechtliche Bescheinigung. {config.recordNoun.demonstrative} basiert
               auf deiner eigenen Einschätzung, nicht auf einer externen Prüfung.
             </p>
           </div>

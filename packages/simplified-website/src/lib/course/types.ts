@@ -189,4 +189,18 @@ export interface CourseConfig {
   readonly quizPassMessage: string;
   /** File-name stem for the downloaded certificate (no extension). */
   readonly certificateFileStem: string;
+  /**
+   * The record this course issues, in grammatically correct German forms so the
+   * certificate + verification screens read consistently. Most courses issue a
+   * "Teilnahmebestätigung" (die); ki-und-gesellschaft issues a "Lernnachweis"
+   * (der), so the possessive/demonstrative articles differ.
+   */
+  readonly recordNoun: {
+    /** Bare noun, e.g. "Teilnahmebestätigung" / "Lernnachweis". */
+    readonly label: string;
+    /** With possessive article, e.g. "Deine Teilnahmebestätigung" / "Dein Lernnachweis". */
+    readonly possessive: string;
+    /** With demonstrative article, e.g. "Diese Teilnahmebestätigung" / "Dieser Lernnachweis". */
+    readonly demonstrative: string;
+  };
 }

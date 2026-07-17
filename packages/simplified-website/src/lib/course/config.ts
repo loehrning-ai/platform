@@ -32,6 +32,11 @@ export const KI_FUEHRERSCHEIN_CONFIG: CourseConfig = {
   quizPassMessage:
     "Herzlichen Glückwunsch! Du hast den KI-Führerschein bestanden.",
   certificateFileStem: "KI-Fuehrerschein",
+  recordNoun: {
+    label: "Teilnahmebestätigung",
+    possessive: "Deine Teilnahmebestätigung",
+    demonstrative: "Diese Teilnahmebestätigung",
+  },
 };
 
 // ─── EU AI Act Kurs ────────────────────────────────────────────
@@ -60,6 +65,11 @@ export const EU_AI_ACT_KURS_CONFIG: CourseConfig = {
   quizPassMessage:
     "Herzlichen Glückwunsch! Du hast den EU AI Act Kurs bestanden.",
   certificateFileStem: "EU-AI-Act-Kurs",
+  recordNoun: {
+    label: "Teilnahmebestätigung",
+    possessive: "Deine Teilnahmebestätigung",
+    demonstrative: "Diese Teilnahmebestätigung",
+  },
 };
 
 // ─── AI-Native (shared course architecture) ────────────
@@ -92,6 +102,11 @@ export const AI_NATIVE_CONFIG: CourseConfig = {
   quizPassMessage:
     "Herzlichen Glückwunsch! Du hast den AI-Native Arbeitskurs bestanden.",
   certificateFileStem: "AI-Native-Arbeitskurs",
+  recordNoun: {
+    label: "Teilnahmebestätigung",
+    possessive: "Deine Teilnahmebestätigung",
+    demonstrative: "Diese Teilnahmebestätigung",
+  },
 };
 
 // ─── KI und Gesellschaft (KI und Gesellschaft course review) ───────────────────────────
@@ -112,6 +127,11 @@ export const KI_UND_GESELLSCHAFT_CONFIG: CourseConfig = {
   quizPassMessage:
     "Herzlichen Glückwunsch! Du hast KI und Gesellschaft abgeschlossen.",
   certificateFileStem: "lernnachweis-ki-gesellschaft",
+  recordNoun: {
+    label: "Lernnachweis",
+    possessive: "Dein Lernnachweis",
+    demonstrative: "Dieser Lernnachweis",
+  },
 };
 
 // ─── Config registry ───────────────────────────────────────────
