@@ -213,8 +213,11 @@ export function HeroSection() {
     target: sectionRef,
     offset: ["start start", "end start"],
   });
+  // Subtle parallax rise only. The hero content must NOT fade out on scroll —
+  // fading the main headline to opacity 0 partway down the hero read as a
+  // glitch (text vanishes, then the next section fades in). It now scrolls off
+  // the top naturally, staying fully visible the whole way.
   const contentY = useTransform(scrollYProgress, [0, 1], [0, -60]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   // Globe scroll transforms
   const globeY = useTransform(scrollYProgress, [0, 1], [0, -80]);
@@ -436,7 +439,7 @@ export function HeroSection() {
       `}</style>
 
       <m.div
-        style={{ y: contentY, opacity: contentOpacity }}
+        style={{ y: contentY }}
         className="relative z-10 mx-auto w-full max-w-6xl"
       >
         <div className="grid grid-cols-1 items-start gap-0 lg:grid-cols-[1fr_minmax(0,440px)] xl:grid-cols-[1fr_520px]">
