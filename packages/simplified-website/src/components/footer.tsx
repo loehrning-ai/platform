@@ -46,10 +46,10 @@ export function Footer() {
                   KI-Führerschein
                 </Link>
                 <Link
-                  href="/open-source"
+                  href="/ki-und-gesellschaft"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Open Source
+                  KI und Gesellschaft
                 </Link>
                 <Link
                   href="/eu-ai-act-kurs"
@@ -63,40 +63,46 @@ export function Footer() {
                 >
                   AI-Native Arbeitskurs
                 </Link>
-                <Link
-                  href="/ki-und-gesellschaft"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  KI und Gesellschaft
-                </Link>
               </div>
             </div>
             <div className="space-y-3">
               <h2 className="text-sm font-semibold text-foreground">Anwenden</h2>
               <div className="flex flex-col gap-2">
                 <Link
-                  href="/demos"
+                  href="/blog"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Demos
-                </Link>
-                <Link
-                  href="/vorlagen"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Governance-Vorlagen
+                  Blog
                 </Link>
                 <Link
                   href="/buecher"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Bücher
+                  Lernbücher
                 </Link>
                 <Link
-                  href="/blog"
+                  href="/demos"
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  Blog
+                  Praxisbeispiele
+                </Link>
+                <Link
+                  href="/vorlagen"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Arbeitsvorlagen
+                </Link>
+                <Link
+                  href="/workshops"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Workshops
+                </Link>
+                <Link
+                  href="/open-source"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Open Source
                 </Link>
               </div>
             </div>

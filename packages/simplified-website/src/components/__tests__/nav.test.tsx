@@ -86,7 +86,7 @@ describe("<Nav />", () => {
     expect(screen.getByRole("link", { name: /Blog/ })).toBeInTheDocument();
   });
 
-  it("exposes Standortbestimmung inside the Kurse dropdown", () => {
+  it("exposes a course-only Kurse dropdown without the duplicate Open Source link", () => {
     render(<Nav />);
     const trigger = screen.getByRole("button", { name: /Kurse/ });
     expect(trigger).toHaveAttribute("aria-controls", "akademie-nav-menu");
@@ -96,11 +96,12 @@ describe("<Nav />", () => {
     const menu = document.getElementById("akademie-nav-menu");
     expect(menu).not.toBeNull();
     const items = within(menu as HTMLElement).getAllByRole("link");
-    expect(items.length).toBe(7);
+    expect(items.length).toBe(6);
     const hrefs = items.map((item) => item.getAttribute("href"));
     expect(hrefs).toContain("/standortbestimmung");
-    expect(hrefs).toContain("/open-source");
     expect(hrefs).toContain("/ki-und-gesellschaft");
+    // Open Source is a top-level link only — no longer duplicated in the dropdown.
+    expect(hrefs).not.toContain("/open-source");
     items.forEach((item) => expect(item).toHaveAttribute("data-nav-menu-item", "true"));
   });
 

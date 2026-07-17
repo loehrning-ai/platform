@@ -21,7 +21,6 @@ import {
   Menu,
   X,
   ChevronDown,
-  Code2,
   Github,
   GraduationCap,
   MapPin,
@@ -47,14 +46,17 @@ interface AkademieItem extends NavItem {
   readonly disabled?: boolean;
 }
 
+// Course-only dropdown: an entry aid (Standortbestimmung), the hub, then the
+// four certified courses in learning-path order. "Open Source" was removed from
+// here — it is not a course and already has its own top-level link, so it no
+// longer appears twice.
 const akademieNavItems: readonly AkademieItem[] = [
   { href: "/standortbestimmung", label: "Standortbestimmung", icon: MapPin },
   { href: "/kurse", label: "Alle Kurse", icon: Sparkles },
-  { href: "/open-source", label: "Open Source", icon: Code2 },
   { href: "/ki-fuehrerschein", label: "KI-Führerschein", icon: GraduationCap },
+  { href: "/ki-und-gesellschaft", label: "KI und Gesellschaft", icon: Users },
   { href: "/eu-ai-act-kurs", label: "EU AI Act Kurs", icon: ShieldCheck },
   { href: "/ai-native", label: "AI-Native Arbeitskurs", icon: Zap },
-  { href: "/ki-und-gesellschaft", label: "KI und Gesellschaft", icon: Users },
 ];
 
 const akademiePaths = [
@@ -249,7 +251,7 @@ export function Nav() {
     closeMobileMenu,
   );
 
-  // ── WAI-ARIA menu keyboard support (Kurse / Ressourcen dropdowns) ──
+  // ── WAI-ARIA menu keyboard support (Kurse dropdown) ──
   // Trigger: ArrowDown/ArrowUp opens the menu and moves focus to the
   // first/last item. Inside the menu: ArrowDown/ArrowUp cycle, Home/End
   // jump, Escape closes and returns focus to the trigger, Tab closes.
