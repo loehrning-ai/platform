@@ -242,7 +242,7 @@ export function UeberMichContent({
               </p>
               <p>
                 Die vollständigen Redaktionsrichtlinien sind im Repository unter{" "}
-                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">
+                <code className="rounded border border-border bg-card px-1.5 py-0.5 font-mono text-xs text-brand-orange">
                   CONTENT_GUIDE.md
                 </code>{" "}
                 dokumentiert.
