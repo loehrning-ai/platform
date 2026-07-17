@@ -72,6 +72,11 @@ describe("createBrowserSupabaseClient", () => {
     expect(createBrowserClientMock).toHaveBeenCalledWith(
       "https://proj.supabase.co",
       "publishable-abc",
+      // Auth cookie hardening: Secure (prod-gated) + SameSite=Lax are passed
+      // through so the browser client sets the same flags as the server clients.
+      expect.objectContaining({
+        cookieOptions: expect.objectContaining({ sameSite: "lax" }),
+      }),
     );
   });
 
