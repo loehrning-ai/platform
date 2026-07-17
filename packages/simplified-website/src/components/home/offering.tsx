@@ -3,80 +3,17 @@
 import Link from "next/link";
 import Image from "next/image";
 import { m, useReducedMotion } from "framer-motion";
-import {
-  ArrowRight,
-  BookOpen,
-  FileText,
-  Github,
-  Pencil,
-  Play,
-  Presentation,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowRight, Github } from "lucide-react";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
 import { PersonaCourseLinks } from "@/app/kurse/persona-filter";
-import { Card, IconTile, type CardAccent } from "@/components/ui/card";
+import { Card, IconTile } from "@/components/ui/card";
 import { trackMetaFor } from "@/lib/courses/tracks";
 import { iconByName } from "@/lib/courses/track-icon";
 
-// Supporting resources shown under the courses. Each row carries its own lucide
-// icon + track accent so the grid reads as a set of tinted tiles, not a flat
-// list. Workshops is included so the landing page surfaces every public
-// offering, not only the core courses.
-const RESOURCE_ROWS: ReadonlyArray<{
-  readonly label: string;
-  readonly qual: string;
-  readonly href: string;
-  readonly icon: LucideIcon;
-  readonly accent: CardAccent;
-}> = [
-  {
-    label: "Lernbücher",
-    qual: "Lesefassungen zum Nachschlagen, wenn ein Thema tiefer sitzen soll.",
-    href: "/buecher",
-    icon: BookOpen,
-    accent: "amber",
-  },
-  {
-    label: "Praxisbeispiele",
-    qual: "Interaktive Beispiele zum Durchklicken, statt Theorie auf Folien.",
-    href: "/demos",
-    icon: Play,
-    accent: "sand",
-  },
-  {
-    label: "Arbeitsvorlagen",
-    qual: "Fertige Vorlagen für Inventar, Richtlinien und Risikoeinschätzung.",
-    href: "/vorlagen",
-    icon: FileText,
-    accent: "kupfer",
-  },
-  {
-    label: "Workshops",
-    qual: "Live gebaute Arbeitsbeispiele mit Material zum Mitnehmen.",
-    href: "/workshops",
-    icon: Presentation,
-    accent: "amber",
-  },
-  {
-    label: "Open Source",
-    qual: "Werkzeuge und Projekte, offen auf GitHub veröffentlicht.",
-    href: "/open-source",
-    icon: Github,
-    accent: "sand",
-  },
-  {
-    label: "Blog",
-    qual: "Einordnungen zu KI und Recht, jede Aussage mit Primärquelle.",
-    href: "/blog",
-    icon: Pencil,
-    accent: "kupfer",
-  },
-];
-
 // The three GitHub-Labs previews shown in the imagery band. Real screenshots
-// from public/imported-courses/screenshots, linking through to the /kurse hub.
+// from public/imported-courses/screenshots, linking through to each lab's
+// detail route on the /kurse hub.
 const LAB_PREVIEWS = IMPORTED_COURSE_CATALOG.slice(0, 3);
 
 const META_LINE =
@@ -99,9 +36,9 @@ export function Offering() {
 
   return (
     <section
-      id="ressourcen"
+      id="kurse"
       className="relative scroll-mt-24 bg-background py-20 md:py-24"
-      data-testid="ressourcen-section"
+      data-testid="kurse-section"
     >
       <div className="mx-auto max-w-5xl px-6">
         <m.div
@@ -307,9 +244,9 @@ export function Offering() {
                 className="group/lab overflow-hidden rounded-xl border border-border bg-card shadow-card transition-shadow hover:shadow-card-hover"
               >
                 <Link
-                  href="/kurse"
+                  href={course.href}
                   className="block"
-                  aria-label={`${course.title} im Kurskatalog ansehen`}
+                  aria-label={`${course.title}: Details ansehen`}
                 >
                   <span className="relative block aspect-[16/10] overflow-hidden bg-card-hover">
                     <Image
@@ -325,7 +262,7 @@ export function Offering() {
                 <div className="flex items-start justify-between gap-2 p-4">
                   <div className="min-w-0">
                     <Link
-                      href="/kurse"
+                      href={course.href}
                       className="block truncate text-sm font-bold tracking-[-0.01em] text-foreground hover:text-brand-orange"
                     >
                       {course.title}
@@ -348,32 +285,6 @@ export function Offering() {
             ))}
           </div>
         </m.div>
-
-        {/* Supporting resources — warm tinted tiles, one lucide icon per row. */}
-        <p className="overline mb-6 mt-16">Und dazu</p>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {RESOURCE_ROWS.map((row, i) => (
-            <m.div key={row.label} {...reveal(i * 0.05)} className="h-full">
-              <Card href={row.href} accent={row.accent} className="h-full">
-                <div className="flex items-start gap-4">
-                  <IconTile icon={row.icon} accent={row.accent} />
-                  <div className="min-w-0">
-                    <span className="flex items-center gap-1.5 text-base font-bold tracking-[-0.02em] text-foreground group-hover:text-brand-orange">
-                      <span>{row.label}</span>
-                      <ArrowRight
-                        size={14}
-                        className="shrink-0 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-brand-orange"
-                      />
-                    </span>
-                    <span className="mt-2 block text-sm leading-relaxed text-muted-foreground">
-                      {row.qual}
-                    </span>
-                  </div>
-                </div>
-              </Card>
-            </m.div>
-          ))}
-        </div>
       </div>
     </section>
   );

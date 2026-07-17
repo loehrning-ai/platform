@@ -20,25 +20,9 @@ describe("Offering section", () => {
     }
   });
 
-  it("renders the supporting resources including Workshops and Blog", () => {
+  it("uses the kurse-section testid (resources now live in their own section)", () => {
     render(<Offering />);
-    const expected: ReadonlyArray<readonly [string, string]> = [
-      ["Lernbücher", "/buecher"],
-      ["Praxisbeispiele", "/demos"],
-      ["Arbeitsvorlagen", "/vorlagen"],
-      ["Workshops", "/workshops"],
-      ["Open Source", "/open-source"],
-      ["Blog", "/blog"],
-    ];
-    for (const [label, href] of expected) {
-      const link = screen.getByText(label).closest("a");
-      expect(link).toHaveAttribute("href", href);
-    }
-  });
-
-  it("uses the ressourcen-section testid", () => {
-    render(<Offering />);
-    expect(screen.getByTestId("ressourcen-section")).toBeInTheDocument();
+    expect(screen.getByTestId("kurse-section")).toBeInTheDocument();
   });
 
   it("renders the direct persona course links", () => {

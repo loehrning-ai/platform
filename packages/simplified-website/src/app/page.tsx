@@ -20,19 +20,19 @@ export default function HomePage() {
       {/* Scroll progress — 2px Kupfer line at viewport top */}
       <ScrollProgress />
 
-      {/* 1. Hero */}
+      {/* 1. Hero — the promise, stated once */}
       <HeroSection />
 
-      {/* 2. Course-first resource overview */}
+      {/* 2. Kurse — the learning path + deeper labs */}
       <Offering />
 
-      {/* 3. Learning workflow */}
+      {/* 3. Ressourcen — supporting material, one clear home */}
       <Workflow />
 
-      {/* 4. Platform principles */}
+      {/* 4. Platform principles / trust */}
       <CredibilityStrip />
 
-      {/* 5. Closing resource CTA */}
+      {/* 5. Closing CTA */}
       <FinalCta />
     </>
   );

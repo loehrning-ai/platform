@@ -2,24 +2,38 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { Workflow } from "./workflow";
 
-describe("Workflow section", () => {
-  it("renders the section headline both lines", () => {
+describe("Ressourcen section (Workflow)", () => {
+  it("exposes the ressourcen-section anchor and heading", () => {
     render(<Workflow />);
-    expect(screen.getByText(/Ein Lernpfad\./)).toBeInTheDocument();
-    expect(screen.getByText(/Kurs, Übung, Ressource\./)).toBeInTheDocument();
+    expect(screen.getByTestId("ressourcen-section")).toBeInTheDocument();
+    expect(screen.getByText("Ressourcen")).toBeInTheDocument();
+    expect(screen.getByText(/Material zum Anwenden/)).toBeInTheDocument();
   });
 
-  it("renders all three station headers", () => {
+  it("surfaces every supporting resource area as a single linked set", () => {
     render(<Workflow />);
-    expect(screen.getByText(/Kurs wählen/)).toBeInTheDocument();
-    expect(screen.getByText(/Fortschritt speichern/)).toBeInTheDocument();
-    expect(screen.getByText(/Material anwenden/)).toBeInTheDocument();
+    const expected: ReadonlyArray<readonly [string, string]> = [
+      ["Blog", "/blog"],
+      ["Lernbücher", "/buecher"],
+      ["Praxisbeispiele", "/demos"],
+      ["Arbeitsvorlagen", "/vorlagen"],
+      ["Workshops", "/workshops"],
+      ["Open Source", "/open-source"],
+    ];
+    for (const [label, href] of expected) {
+      const link = screen.getByText(label).closest("a");
+      expect(link).toHaveAttribute("href", href);
+    }
   });
 
-  it("connects the workflow to the public blog methodology", () => {
+  it("showcases the account feature once, linking to /konto", () => {
     render(<Workflow />);
-    expect(screen.getByText(/Im Blog: Der EU AI Act/)).toBeInTheDocument();
-    expect(screen.getByText(/Primärquellen/)).toBeInTheDocument();
-    expect(screen.getByText(/deine Rechte/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/dein Fortschritt, deine Zertifikate und deine Kompetenzen/),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Zum Konto/ })).toHaveAttribute(
+      "href",
+      "/konto",
+    );
   });
 });
