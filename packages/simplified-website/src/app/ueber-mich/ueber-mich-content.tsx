@@ -6,6 +6,7 @@ import { ArrowRight, Github, Linkedin, Mail } from "lucide-react";
 import { BrandButton } from "@/components/ui/brand-button";
 import { fadeUp } from "@/lib/animations";
 import { CareerTimeline } from "@/components/about/career-timeline";
+import { CredibilityLogos } from "@/components/about/credibility-logos";
 import { AiNativeSection } from "@/components/about/ai-native-section";
 import { Credentials } from "@/components/about/credentials";
 import { TIM_ENTITY } from "@/lib/seo/entity";
@@ -68,11 +69,36 @@ export function UeberMichContent({
                 Du findest hier kostenlose Kurse, Bücher, Demos, Vorlagen und
                 meine Arbeitsnotizen zu KI-nativer Arbeit.
               </m.p>
+              <m.div
+                custom={4}
+                variants={fadeUp}
+                className="mt-8 flex flex-wrap gap-3"
+              >
+                <a
+                  href={TIM_ENTITY.linkedInUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-card/40 px-4 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <Linkedin size={16} className="text-brand-sand" />
+                  Auf LinkedIn vernetzen
+                </a>
+                <a
+                  href={TIM_ENTITY.personalGithubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-card/40 px-4 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <Github size={16} className="text-brand-sand" />
+                  GitHub
+                </a>
+              </m.div>
             </m.div>
           </div>
         </div>
       </section>
 
+      <CredibilityLogos />
       <CareerTimeline />
       <AiNativeSection />
       <Credentials />
