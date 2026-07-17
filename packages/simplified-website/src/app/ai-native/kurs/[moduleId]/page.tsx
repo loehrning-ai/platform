@@ -51,12 +51,12 @@ export default async function AiNativeModulePage({ params }: PageProps) {
 
   return (
     <>
-      {/* Dark dot-grid hero */}
-      <section className="dark-section bg-[var(--color-dark-bg)] bg-dot-pattern-dark py-14 md:py-20">
+      {/* Module hero */}
+      <section className="bg-background py-14 md:py-20">
         <div className="mx-auto max-w-[960px] px-6 lg:px-12">
           <nav
             aria-label="Breadcrumb"
-            className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--color-dark-muted)]"
+            className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
           >
             <Link
               href="/ai-native"
@@ -78,14 +78,14 @@ export default async function AiNativeModulePage({ params }: PageProps) {
             <div className="min-w-[260px] flex-1">
               <div className="mb-2.5 flex flex-wrap items-center gap-3.5">
                 <TierChip tier="FREE" />
-                <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-dark-muted)]">
+                <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
                   {mod.subtitle} · {lessons.length} Lektionen · {mod.durationMinutes}{" "}
                   Min.
                 </span>
               </div>
               <ClipHeading
                 as="h1"
-                className="font-bold leading-[0.92] tracking-[-0.04em] text-[var(--color-dark-fg)]"
+                className="font-bold leading-[0.92] tracking-[-0.04em] text-foreground"
                 style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
               >
                 {mod.title}.
@@ -97,14 +97,14 @@ export default async function AiNativeModulePage({ params }: PageProps) {
             <div className="mt-12">
               <VoiceAnchor
                 author={`Voice-Anchor · Modul ${mod.number}`}
-                className="text-[var(--color-dark-fg)]"
+                className="text-foreground"
               >
                 {mod.voiceAnchor}
               </VoiceAnchor>
             </div>
           )}
 
-          <p className="mt-10 max-w-[640px] text-[17px] leading-[1.65] text-[var(--color-dark-muted)]">
+          <p className="mt-10 max-w-[640px] text-[17px] leading-[1.65] text-muted-foreground">
             {mod.description}
           </p>
         </div>

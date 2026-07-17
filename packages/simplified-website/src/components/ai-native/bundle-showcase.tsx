@@ -12,7 +12,7 @@ import {
 import { AI_NATIVE_BUNDLE_ITEMS } from "@/lib/ai-native/content";
 import { cn } from "@/lib/utils";
 
-/* BundleShowcase — dark section with hover/click-driven split:
+/* BundleShowcase — section with hover/click-driven split:
  *   LEFT:  numbered list of learning-material bausteine + access block
  *   RIGHT: sticky detail pane showing active baustein's full info */
 
@@ -23,11 +23,11 @@ export function AiNativeBundleShowcase() {
   const CurrentIcon = current.icon;
 
   return (
-    <SectionShell id="os-bundle" num="VIII" label="Lernmaterialien" dark>
-      <Eyebrow className="text-brand-sand">Kursmaterial</Eyebrow>
+    <SectionShell id="os-bundle" num="VIII" label="Lernmaterialien">
+      <Eyebrow>Kursmaterial</Eyebrow>
       <ClipHeading
         as="h2"
-        className="mt-2.5 font-bold leading-none tracking-[-0.035em] text-[var(--color-dark-fg)]"
+        className="mt-2.5 font-bold leading-none tracking-[-0.035em] text-foreground"
         style={{ fontSize: "clamp(2rem, 4.5vw, 3.5rem)" }}
       >
         Die <span className="text-brand-orange">Lernmaterialien</span>.
@@ -39,7 +39,7 @@ export function AiNativeBundleShowcase() {
         {/* LEFT — list + access */}
         <div>
           <FadeBlock delay={1}>
-            <p className="max-w-[520px] text-[17px] leading-[1.6] text-[var(--color-dark-muted)]">
+            <p className="max-w-[520px] text-[17px] leading-[1.6] text-muted-foreground">
               Der Arbeitskurs ist das Fundament. Die Lernmaterialien sind in
               den Lektionen eingebettet, Prompt-Muster, Diagramme und
               Checklisten direkt im Kontext.
@@ -61,13 +61,13 @@ export function AiNativeBundleShowcase() {
                     "grid grid-cols-[44px_1fr_auto] items-center gap-4 border-l-2 px-4 py-3.5 text-left transition-[background-color,border-color,color,opacity,transform,box-shadow] duration-150",
                     isActive
                       ? "border-brand-orange bg-brand-orange/10"
-                      : "border-[var(--color-dark-border)] hover:bg-[rgba(243,240,233,0.04)]",
+                      : "border-border hover:bg-card",
                   )}
                 >
                   <span
                     className={cn(
                       "font-mono text-[11px] font-bold uppercase tracking-[0.14em]",
-                      isActive ? "text-brand-orange" : "text-[var(--color-dark-muted)]",
+                      isActive ? "text-brand-orange" : "text-muted-foreground",
                     )}
                   >
                     {String(i + 1).padStart(2, "0")}
@@ -76,13 +76,13 @@ export function AiNativeBundleShowcase() {
                     className={cn(
                       "text-[15px] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
                       isActive
-                        ? "font-semibold text-[var(--color-dark-fg)]"
-                        : "text-[var(--color-dark-fg)]/80",
+                        ? "font-semibold text-foreground"
+                        : "text-foreground/80",
                     )}
                   >
                     {item.title}
                   </span>
-                  <span className="font-mono text-[10.5px] tracking-[0.1em] text-[var(--color-dark-muted)]">
+                  <span className="font-mono text-[10.5px] tracking-[0.1em] text-muted-foreground">
                     {item.count}
                   </span>
                 </button>
@@ -91,7 +91,7 @@ export function AiNativeBundleShowcase() {
           </div>
 
           <FadeBlock delay={3}>
-            <div className="mt-10 border border-[var(--color-dark-border)] bg-brand-orange/5 p-6">
+            <div className="mt-10 border border-border bg-brand-orange/5 p-6">
               <div className="flex flex-wrap items-baseline gap-2.5">
                 <span
                   className="font-mono font-bold tracking-[-0.04em] text-brand-orange"
@@ -99,11 +99,11 @@ export function AiNativeBundleShowcase() {
                 >
                   Kostenlos
                 </span>
-                <span className="ml-auto font-mono text-[10.5px] uppercase tracking-[0.14em] text-[var(--color-dark-muted)]">
+                <span className="ml-auto font-mono text-[10.5px] uppercase tracking-[0.14em] text-muted-foreground">
                   ohne Anmeldung
                 </span>
               </div>
-              <p className="mt-3.5 text-[14px] leading-[1.55] text-[var(--color-dark-muted)]">
+              <p className="mt-3.5 text-[14px] leading-[1.55] text-muted-foreground">
                 Arbeitskurs Modul 1-4, komplett kostenlos ohne Anmeldung. Alle
                 Lernmaterialien sind in den Lektionen eingebettet.
               </p>
@@ -111,7 +111,6 @@ export function AiNativeBundleShowcase() {
                 <BrandButton
                   href="/ai-native/kurs/modul_1"
                   variant="primary"
-                  surface="dark"
                   size="sm"
                 >
                   Kurs starten <ArrowRight size={13} />
@@ -123,31 +122,31 @@ export function AiNativeBundleShowcase() {
 
         {/* RIGHT — sticky detail pane */}
         <div className="lg:sticky lg:top-24 lg:self-start">
-          <div className="border border-[var(--color-dark-border)] bg-[rgba(243,240,233,0.04)] p-8 min-h-[420px]">
+          <div className="border border-border bg-card p-8 min-h-[420px]">
             <div className="flex items-start justify-between gap-4">
               <span className="font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
                 Baustein {String(active + 1).padStart(2, "0")}
               </span>
-              <span className="inline-flex h-10 w-10 items-center justify-center border border-[var(--color-dark-border)] bg-brand-orange/10 text-brand-orange">
+              <span className="inline-flex h-10 w-10 items-center justify-center border border-border bg-brand-orange/10 text-brand-orange">
                 <CurrentIcon size={18} />
               </span>
             </div>
-            <h3 className="mt-4 text-[26px] font-bold leading-[1.2] tracking-[-0.01em] text-[var(--color-dark-fg)]">
+            <h3 className="mt-4 text-[26px] font-bold leading-[1.2] tracking-[-0.01em] text-foreground">
               {current.title}
             </h3>
-            <p className="mt-4 text-[16px] leading-[1.6] text-[var(--color-dark-muted)]">
+            <p className="mt-4 text-[16px] leading-[1.6] text-muted-foreground">
               {current.description}
             </p>
-            <div className="mt-7 border-t border-dashed border-[var(--color-dark-border)] pt-5">
-              <span className="font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-[var(--color-dark-muted)]">
+            <div className="mt-7 border-t border-dashed border-border pt-5">
+              <span className="font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
                 Wo
               </span>
-              <p className="mt-2 font-mono text-[14px] text-brand-amber">
+              <p className="mt-2 font-mono text-[14px] text-foreground">
                 {current.count}
               </p>
             </div>
-            <div className="mt-5 border-t border-dashed border-[var(--color-dark-border)] pt-5">
-              <p className="text-[13px] leading-[1.55] text-[var(--color-dark-muted)]">
+            <div className="mt-5 border-t border-dashed border-border pt-5">
+              <p className="text-[13px] leading-[1.55] text-muted-foreground">
                 Die Lernmaterialien sind direkt in den Lektionen eingebettet
                 und dort im fachlichen Kontext erklärt.
               </p>

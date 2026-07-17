@@ -66,17 +66,17 @@ export function AiNativeWeekInLife() {
   const active = mode === "before" ? BEFORE : AFTER;
 
   return (
-    <SectionShell num="VI" label="Dashboard in 30 Minuten" dark>
-      <Eyebrow className="text-brand-sand">Ein konkretes Beispiel</Eyebrow>
+    <SectionShell num="VI" label="Dashboard in 30 Minuten">
+      <Eyebrow>Ein konkretes Beispiel</Eyebrow>
       <ClipHeading
         as="h2"
-        className="mt-2.5 font-bold leading-none tracking-[-0.035em] text-[var(--color-dark-fg)]"
+        className="mt-2.5 font-bold leading-none tracking-[-0.035em] text-foreground"
         style={{ fontSize: "clamp(2rem, 4.5vw, 3.5rem)" }}
       >
         Ein Dashboard. Zwei Welten.
       </ClipHeading>
       <FadeBlock delay={1}>
-        <p className="mt-4 max-w-[720px] text-[17px] leading-[1.6] text-[var(--color-dark-muted)]">
+        <p className="mt-4 max-w-[720px] text-[17px] leading-[1.6] text-muted-foreground">
           Früher: ein ganzer Arbeitstag. Eine Query, ein Widget, ein Titel.
           Dann nochmal. Und nochmal. Heute: ein Briefing, ein Notebook, ein
           generiertes Dashboard. Vor dem Mittagessen fertig.
@@ -85,7 +85,7 @@ export function AiNativeWeekInLife() {
 
       {/* Toggle */}
       <FadeBlock delay={2}>
-        <div className="mt-10 inline-flex border border-[var(--color-dark-border)]">
+        <div className="mt-10 inline-flex border border-border">
           {(["before", "after"] as const).map((m) => {
             const isActive = mode === m;
             const flow = m === "before" ? BEFORE : AFTER;
@@ -99,8 +99,8 @@ export function AiNativeWeekInLife() {
                   isActive
                     ? m === "after"
                       ? "bg-brand-orange text-white"
-                      : "bg-[rgba(243,240,233,0.08)] text-[var(--color-dark-fg)]"
-                    : "text-[var(--color-dark-muted)] hover:text-[var(--color-dark-fg)]",
+                      : "bg-card text-foreground"
+                    : "text-muted-foreground hover:text-foreground",
                 )}
                 aria-pressed={isActive}
               >
@@ -118,12 +118,12 @@ export function AiNativeWeekInLife() {
 
       {/* Timeline */}
       <div className="mt-10">
-        <div className="grid gap-6 border-t border-[var(--color-dark-border)] py-6 md:grid-cols-[1fr_auto]">
+        <div className="grid gap-6 border-t border-border py-6 md:grid-cols-[1fr_auto]">
           <div>
             <p
               className={cn(
                 "font-mono text-[11px] uppercase tracking-[0.14em]",
-                active.accent === "orange" ? "text-brand-orange" : "text-[var(--color-dark-muted)]",
+                active.accent === "orange" ? "text-brand-orange" : "text-muted-foreground",
               )}
             >
               {active.label}
@@ -131,13 +131,13 @@ export function AiNativeWeekInLife() {
             <p
               className={cn(
                 "mt-2 font-mono font-bold tracking-[-0.02em]",
-                active.accent === "orange" ? "text-brand-orange" : "text-[var(--color-dark-fg)]",
+                active.accent === "orange" ? "text-brand-orange" : "text-foreground",
               )}
               style={{ fontSize: "clamp(2rem, 4vw, 2.75rem)" }}
             >
               {active.total}
             </p>
-            <p className="mt-1 text-[13.5px] text-[var(--color-dark-muted)]">
+            <p className="mt-1 text-[13.5px] text-muted-foreground">
               {active.subtotal}
             </p>
           </div>
@@ -145,13 +145,13 @@ export function AiNativeWeekInLife() {
             <span
               className={cn(
                 "font-bold tracking-[-0.03em]",
-                active.accent === "orange" ? "text-brand-orange" : "text-[var(--color-dark-fg)]",
+                active.accent === "orange" ? "text-brand-orange" : "text-foreground",
               )}
               style={{ fontSize: "clamp(2.75rem, 5vw, 3.5rem)" }}
             >
               {active.steps.length}
             </span>
-            <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-[var(--color-dark-muted)]">
+            <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-muted-foreground">
               Schritte
             </span>
           </div>
@@ -164,7 +164,7 @@ export function AiNativeWeekInLife() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="relative mt-6 border-l border-[var(--color-dark-border)] pl-0"
+            className="relative mt-6 border-l border-border pl-0"
           >
             {active.steps.map((step, i) => (
               <m.li
@@ -180,18 +180,18 @@ export function AiNativeWeekInLife() {
                   className={cn(
                     "absolute -left-[5px] top-1 block h-2.5 w-2.5 rounded-full border-2",
                     active.accent === "orange"
-                      ? "border-brand-orange bg-[var(--color-dark-bg)]"
-                      : "border-[var(--color-dark-muted)] bg-[var(--color-dark-bg)]",
+                      ? "border-brand-orange bg-background"
+                      : "border-muted-foreground bg-background",
                   )}
                 />
-                <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--color-dark-muted)]">
+                <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
                   {step.t}
                 </span>
                 <div>
-                  <p className="text-[15.5px] font-semibold tracking-[-0.01em] text-[var(--color-dark-fg)]">
+                  <p className="text-[15.5px] font-semibold tracking-[-0.01em] text-foreground">
                     {step.title}
                   </p>
-                  <p className="mt-1 text-[14px] leading-[1.55] text-[var(--color-dark-muted)]">
+                  <p className="mt-1 text-[14px] leading-[1.55] text-muted-foreground">
                     {step.desc}
                   </p>
                 </div>
@@ -203,7 +203,7 @@ export function AiNativeWeekInLife() {
 
       {/* Diff footer */}
       <FadeBlock delay={3}>
-        <div className="mt-8 grid gap-6 border-t border-[var(--color-dark-border)] pt-6 md:grid-cols-3">
+        <div className="mt-8 grid gap-6 border-t border-border pt-6 md:grid-cols-3">
           {[
             { n: "16×", label: "schneller", sub: "vom Briefing bis zum Dashboard" },
             { n: "1", label: "Notebook", sub: "statt Copy-paste durch sechs Tabs" },
@@ -216,10 +216,10 @@ export function AiNativeWeekInLife() {
               >
                 {item.n}
               </span>
-              <p className="mt-1 text-[15px] font-semibold text-[var(--color-dark-fg)]">
+              <p className="mt-1 text-[15px] font-semibold text-foreground">
                 {item.label}
               </p>
-              <p className="mt-0.5 text-[13.5px] text-[var(--color-dark-muted)]">
+              <p className="mt-0.5 text-[13.5px] text-muted-foreground">
                 {item.sub}
               </p>
             </div>

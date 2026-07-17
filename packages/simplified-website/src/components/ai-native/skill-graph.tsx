@@ -63,11 +63,11 @@ const COLUMNS: readonly Column[] = [
 
 export function AiNativeSkillGraph() {
   return (
-    <SectionShell num="IV" label="Skill Graph" dark>
-      <Eyebrow className="text-brand-sand">Wie alles zusammenhängt</Eyebrow>
+    <SectionShell num="IV" label="Skill Graph">
+      <Eyebrow>Wie alles zusammenhängt</Eyebrow>
       <ClipHeading
         as="h2"
-        className="mt-2.5 font-bold leading-none tracking-[-0.035em] text-[var(--color-dark-fg)]"
+        className="mt-2.5 font-bold leading-none tracking-[-0.035em] text-foreground"
         style={{ fontSize: "clamp(2rem, 4.5vw, 3.5rem)" }}
       >
         Vier Module.
@@ -75,7 +75,7 @@ export function AiNativeSkillGraph() {
         Ein Bogen.
       </ClipHeading>
       <FadeBlock delay={1}>
-        <p className="mt-5 max-w-[680px] text-[18px] leading-[1.55] text-[var(--color-dark-muted)]">
+        <p className="mt-5 max-w-[680px] text-[18px] leading-[1.55] text-muted-foreground">
           Kein Ranking, keine Hierarchie. Jedes Modul öffnet die nächste
           Fähigkeit. Wer bei Modul vier steht, kommt leichter zu Modul eins
           zurück, nicht umgekehrt.
@@ -84,16 +84,16 @@ export function AiNativeSkillGraph() {
 
       {/* Stat row */}
       <FadeBlock delay={2}>
-        <div className="mt-10 grid grid-cols-2 gap-6 border-y border-[var(--color-dark-border)] py-6 md:grid-cols-4">
+        <div className="mt-10 grid grid-cols-2 gap-6 border-y border-border py-6 md:grid-cols-4">
           <div>
             <CountUp value={4} className="text-[2.5rem] text-brand-orange" />
-            <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-[var(--color-dark-muted)]">
+            <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground">
               Module
             </p>
           </div>
           <div>
             <CountUp value={27} className="text-[2.5rem] text-brand-orange" />
-            <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-[var(--color-dark-muted)]">
+            <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground">
               Lektionen
             </p>
           </div>
@@ -103,7 +103,7 @@ export function AiNativeSkillGraph() {
               suffix="h"
               className="text-[2.5rem] text-brand-orange"
             />
-            <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-[var(--color-dark-muted)]">
+            <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground">
               Kernzeit
             </p>
           </div>
@@ -114,7 +114,7 @@ export function AiNativeSkillGraph() {
             >
               ∞
             </span>
-            <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-[var(--color-dark-muted)]">
+            <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground">
               eigene Praxis
             </p>
           </div>
@@ -127,38 +127,38 @@ export function AiNativeSkillGraph() {
           {COLUMNS.map((col) => (
             <article
               key={col.n}
-              className="flex flex-col border-t border-t-[var(--color-dark-border)] pt-5"
+              className="flex flex-col border-t border-t-border pt-5"
             >
               <div className="flex items-center justify-between">
                 <span className="font-mono text-[13px] font-bold tracking-[0.02em] text-brand-orange">
                   {col.n}
                 </span>
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-[var(--color-dark-muted)]">
+                  <span className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground">
                     {col.tag}
                   </span>
                 </div>
               </div>
-              <h3 className="mt-4 text-[20px] font-bold leading-[1.1] tracking-[-0.02em] text-[var(--color-dark-fg)]">
+              <h3 className="mt-4 text-[20px] font-bold leading-[1.1] tracking-[-0.02em] text-foreground">
                 {col.title}
               </h3>
-              <p className="mt-2 text-[14.5px] leading-[1.45] text-brand-amber">
+              <p className="mt-2 text-[14.5px] leading-[1.45] text-foreground">
                 {col.hook}
               </p>
-              <p className="mt-3 text-[14px] leading-[1.55] text-[var(--color-dark-muted)]">
+              <p className="mt-3 text-[14px] leading-[1.55] text-muted-foreground">
                 {col.body}
               </p>
               <div className="mt-5 flex flex-wrap gap-1.5">
                 {col.skills.map((s) => (
                   <span
                     key={s}
-                    className="border border-[var(--color-dark-border)] px-2 py-0.5 font-mono text-[10.5px] uppercase tracking-[0.12em] text-[var(--color-dark-muted)]"
+                    className="border border-border px-2 py-0.5 font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted-foreground"
                   >
                     {s}
                   </span>
                 ))}
               </div>
-              <div className="mt-auto pt-5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-[var(--color-dark-muted)]">
+              <div className="mt-auto pt-5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-muted-foreground">
                 {col.meta}
               </div>
             </article>
@@ -168,8 +168,8 @@ export function AiNativeSkillGraph() {
 
       {/* Legend */}
       <FadeBlock delay={5}>
-        <div className="mt-12 border-t border-[var(--color-dark-border)] pt-6">
-          <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-dark-muted)]">
+        <div className="mt-12 border-t border-border pt-6">
+          <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
             <span>Fundament</span>
             <span>→</span>
             <span>Werkzeuge</span>
@@ -178,7 +178,7 @@ export function AiNativeSkillGraph() {
             <span>→</span>
             <span className="text-brand-orange">Capstone</span>
           </div>
-          <p className="mt-4 max-w-[640px] text-[14px] leading-[1.55] text-[var(--color-dark-muted)]">
+          <p className="mt-4 max-w-[640px] text-[14px] leading-[1.55] text-muted-foreground">
             <span className="font-bold text-brand-orange">
               Alle 4 Module sind kostenlos
             </span>{" "}

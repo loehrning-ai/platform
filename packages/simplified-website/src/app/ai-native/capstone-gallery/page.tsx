@@ -58,12 +58,12 @@ const RUBRIC: readonly (readonly [string, string])[] = [
 export default function CapstoneGalleryPage() {
   return (
     <>
-      {/* Dark hero */}
-      <section className="dark-section bg-[var(--color-dark-bg)] bg-dot-pattern-dark py-20 md:py-24">
+      {/* Hero */}
+      <section className="bg-background py-20 md:py-24">
         <div className="mx-auto max-w-[960px] px-6 lg:px-12">
           <nav
             aria-label="Breadcrumb"
-            className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--color-dark-muted)]"
+            className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
           >
             <Link href="/ai-native" className="hover:text-brand-orange">
               Kurs
@@ -80,7 +80,7 @@ export default function CapstoneGalleryPage() {
 
           <ClipHeading
             as="h1"
-            className="mt-4 font-bold leading-[0.92] tracking-[-0.04em] text-[var(--color-dark-fg)]"
+            className="mt-4 bg-background font-bold leading-[0.92] tracking-[-0.04em] text-foreground"
             style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
           >
             Noch keine
@@ -89,12 +89,12 @@ export default function CapstoneGalleryPage() {
           </ClipHeading>
 
           <FadeBlock delay={2}>
-            <p className="mt-8 max-w-[640px] text-[18px] leading-[1.6] text-[var(--color-dark-muted)]">
+            <p className="mt-8 max-w-[640px] text-[18px] leading-[1.6] text-muted-foreground">
               Diese Gallery bleibt leer, bis ein reales Projekt die Rubrik
               erfüllt und die Autorin oder der Autor der Veröffentlichung
               ausdrücklich zugestimmt hat.
             </p>
-            <p className="mt-4 max-w-[640px] text-[15px] text-[var(--color-dark-muted)]">
+            <p className="mt-4 max-w-[640px] text-[15px] text-muted-foreground">
               Keine erfundenen Projekte, keine Beispielprofile und keine
               angekündigten Veröffentlichungsdaten.
             </p>
@@ -175,17 +175,17 @@ export default function CapstoneGalleryPage() {
       </section>
 
       {/* Course continuation */}
-      <section className="dark-section bg-[var(--color-dark-bg)] py-24">
+      <section className="bg-background py-24">
         <div className="mx-auto max-w-[720px] px-6 lg:px-12">
           <ClipHeading
             as="h2"
-            className="font-bold leading-none tracking-[-0.035em] text-[var(--color-dark-fg)]"
+            className="bg-background font-bold leading-none tracking-[-0.035em] text-foreground"
             style={{ fontSize: "clamp(2rem, 4.5vw, 3.5rem)" }}
           >
             Capstone selbst entwickeln.
           </ClipHeading>
           <FadeBlock delay={1}>
-            <p className="mt-5 text-[17px] leading-[1.6] text-[var(--color-dark-muted)]">
+            <p className="mt-5 text-[17px] leading-[1.6] text-muted-foreground">
               Der Kurs führt von der Problemdefinition bis zu einem begrenzten,
               prüfbaren Arbeitsprototyp. Eine Veröffentlichung ist davon
               getrennt und niemals Voraussetzung für den Kursabschluss.
@@ -193,18 +193,10 @@ export default function CapstoneGalleryPage() {
           </FadeBlock>
           <FadeBlock delay={2}>
             <div className="mt-8 flex flex-wrap gap-3.5">
-              <BrandButton
-                href="/ai-native/kurs/modul_1"
-                variant="primary"
-                surface="dark"
-              >
+              <BrandButton href="/ai-native/kurs/modul_1" variant="primary">
                 Modul 1 starten <ArrowRight size={14} />
               </BrandButton>
-              <BrandButton
-                href="/ai-native#os-bundle"
-                variant="outline"
-                surface="dark"
-              >
+              <BrandButton href="/ai-native#os-bundle" variant="outline">
                 Lernmaterialien ansehen
               </BrandButton>
             </div>

@@ -99,7 +99,7 @@ export function AiNativeContinueBanner(): JSX.Element | null {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -12 }}
         transition={{ duration: 0.35, ease: EASE_OUT_EXPO }}
-        className="dark-section border-b border-[var(--color-dark-border)] bg-[var(--color-dark-bg)] px-6 py-3 md:px-12"
+        className="border-b border-border bg-background px-6 py-3 md:px-12"
         aria-label="Zurück zum letzten Kursschritt"
       >
         <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-3">
@@ -107,9 +107,9 @@ export function AiNativeContinueBanner(): JSX.Element | null {
             <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-brand-orange">
               ◆ Fortsetzen
             </span>
-            <span className="text-[13.5px] text-[var(--color-dark-fg)]">
+            <span className="text-[13.5px] text-foreground">
               Modul {state.moduleNumber}:{" "}
-              <span className="font-mono text-[12.5px] text-[var(--color-dark-muted)]">
+              <span className="font-mono text-[12.5px] text-muted-foreground">
                 {state.lessonsCompleted} / {state.totalLessons} Lektionen · {pct}%
               </span>
             </span>
@@ -125,7 +125,7 @@ export function AiNativeContinueBanner(): JSX.Element | null {
               type="button"
               onClick={dismiss}
               aria-label="Banner schließen"
-              className="flex h-7 w-7 items-center justify-center border border-[var(--color-dark-border)] text-[var(--color-dark-muted)] transition-colors hover:border-brand-orange hover:text-brand-orange"
+              className="flex h-7 w-7 items-center justify-center border border-border text-muted-foreground transition-colors hover:border-brand-orange hover:text-brand-orange"
             >
               <X size={14} />
             </button>

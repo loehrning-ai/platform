@@ -90,7 +90,12 @@ function CommandPalette() {
 
   return (
     <FadeBlock delay={4} className="relative">
-      <div className="overflow-hidden border border-[var(--color-dark-border)] bg-[rgba(243,240,233,0.02)]">
+      {/* Self-contained dark "terminal window" on the now-light hero. The
+          `dark-section` class scopes the dark token overrides (incl. the
+          AA-on-dark Kupfer accent #e07050) and paints the solid dark
+          background, so this code window stays readable + AA even though its
+          parent section is light. */}
+      <div className="dark-section overflow-hidden border border-[var(--color-dark-border)] bg-[var(--color-dark-bg)]">
         {/* header */}
         <div className="flex items-center justify-between border-b border-[var(--color-dark-border)] px-4 py-2.5 font-mono text-[10.5px] uppercase tracking-[0.12em] text-[var(--color-dark-muted)]">
           <span>claude · live demo</span>
@@ -141,7 +146,7 @@ function CommandPalette() {
 
 export function AiNativeHero() {
   return (
-    <section className="dark-section relative flex min-h-[100dvh] items-center bg-[var(--color-dark-bg)] bg-dot-pattern-dark px-6 pb-12 pt-24 md:pt-28 lg:px-12 lg:pb-14">
+    <section className="relative flex min-h-[100dvh] items-center bg-background px-6 pb-12 pt-24 md:pt-28 lg:px-12 lg:pb-14">
       <div className="mx-auto w-full max-w-[1280px]">
         <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
           {/* LEFT — copy + CTAs */}
@@ -155,13 +160,13 @@ export function AiNativeHero() {
 
             <ClipHeading
               as="h1"
-              /* bg-[var(--color-dark-bg)] is visually a no-op here (dark text box
-                 on the identical dark-section background) but gives axe an opaque
+              /* bg-background is visually a no-op here (light text box on the
+                 identical light section background) but gives axe an opaque
                  background to resolve against. The revealUp clipPath on the h1
-                 otherwise blocks axe's background walk-up to the dark <section>,
-                 making it fall back to the light page canvas and falsely flag the
-                 kupfer (#E07050) word at 2.79:1 instead of the real 6.18:1. */
-              className="mt-5 bg-[var(--color-dark-bg)] font-bold leading-[0.92] tracking-[-0.04em] text-[var(--color-dark-fg)]"
+                 otherwise blocks axe's background walk-up to the <section>, so
+                 supplying the same light canvas keeps the kupfer word's contrast
+                 measured against the real background. */
+              className="mt-5 bg-background font-bold leading-[0.92] tracking-[-0.04em] text-foreground"
               style={{ fontSize: "clamp(2.25rem, 6vw, 4.75rem)" }}
             >
               Kontext geben.
@@ -170,9 +175,9 @@ export function AiNativeHero() {
             </ClipHeading>
 
             <FadeBlock delay={3}>
-              <p className="mt-5 max-w-[520px] text-[17px] leading-[1.55] text-[var(--color-dark-muted)]">
+              <p className="mt-5 max-w-[520px] text-[17px] leading-[1.55] text-muted-foreground">
                 AI-native arbeiten heißt:{" "}
-                <strong className="text-[var(--color-dark-fg)]">
+                <strong className="text-foreground">
                   Intent formulieren, Kontext geben, Output verifizieren.
                 </strong>{" "}
                 In vier Modulen, 27 Lektionen, auf Deutsch, mit Claude als
@@ -184,14 +189,12 @@ export function AiNativeHero() {
               <BrandButton
                 href="/ai-native/kurs/modul_1"
                 variant="primary"
-                surface="dark"
               >
                 Kurs starten <ArrowRight size={15} />
               </BrandButton>
               <BrandButton
                 href="/ai-native/fluency-test"
                 variant="outline"
-                surface="dark"
               >
                 Fluency-Test · 5 Min
               </BrandButton>
@@ -199,7 +202,7 @@ export function AiNativeHero() {
 
             <FadeBlock
               delay={7}
-              className="mt-6 flex flex-wrap gap-x-5 gap-y-1.5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-[var(--color-dark-muted)]"
+              className="mt-6 flex flex-wrap gap-x-5 gap-y-1.5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-muted-foreground"
             >
               <span>
                 <span className="text-brand-orange">▸</span> 27 Lektionen
@@ -217,7 +220,7 @@ export function AiNativeHero() {
 
             {/* Trust signals — hidden on short viewports to keep hero in one screen */}
             <FadeBlock delay={8}>
-              <ul className="mt-6 hidden space-y-1.5 text-[13px] text-[var(--color-dark-muted)] md:block">
+              <ul className="mt-6 hidden space-y-1.5 text-[13px] text-muted-foreground md:block">
                 {AI_NATIVE_TRUST_SIGNALS.map((signal, i) => (
                   <li key={i} className="flex items-start gap-3">
                     <span className="mt-2 h-px w-4 shrink-0 bg-brand-sand/50" />
@@ -229,7 +232,7 @@ export function AiNativeHero() {
 
             {/* Quick-nav footer — preserves AI-native navigation links; hidden on shorter screens */}
             <FadeBlock delay={9}>
-              <div className="mt-6 hidden flex-wrap gap-x-6 gap-y-2 text-xs text-[var(--color-dark-muted)] lg:flex">
+              <div className="mt-6 hidden flex-wrap gap-x-6 gap-y-2 text-xs text-muted-foreground lg:flex">
                 <a
                   href="/ai-native/demos"
                   className="transition-colors hover:text-brand-orange"
