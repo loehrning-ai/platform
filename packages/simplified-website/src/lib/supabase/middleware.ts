@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import type { User } from "@supabase/supabase-js";
-import { getSupabasePublicConfig } from "./config";
+import { AUTH_COOKIE_OPTIONS, getSupabasePublicConfig } from "./config";
 
 export async function refreshAuthSession(
   request: NextRequest,
@@ -21,6 +21,7 @@ export async function refreshAuthSession(
   if (!config) return { configured: false, response, user: null };
 
   const supabase = createServerClient(config.url, config.publishableKey, {
+    cookieOptions: AUTH_COOKIE_OPTIONS,
     cookies: {
       getAll() {
         return request.cookies.getAll();

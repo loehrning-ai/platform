@@ -33,3 +33,15 @@ export function hasSupabasePublicConfig(): boolean {
   return getSupabasePublicConfig() !== null;
 }
 
+/**
+ * Cookie options shared by every @supabase/ssr client. `secure` is gated to
+ * production so auth cookies are HTTPS-only in the deployed app, while local
+ * http dev (localhost) still sets them. `sameSite: "lax"` matches the library
+ * default and is what makes login/logout CSRF-safe. httpOnly is intentionally
+ * left at the library default (false) because the browser client reads the token.
+ */
+export const AUTH_COOKIE_OPTIONS = {
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax",
+} as const;
+

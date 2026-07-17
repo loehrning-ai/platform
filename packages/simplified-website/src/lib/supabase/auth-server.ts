@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import type { SupabaseClient, User } from "@supabase/supabase-js";
-import { getSupabasePublicConfig } from "./config";
+import { AUTH_COOKIE_OPTIONS, getSupabasePublicConfig } from "./config";
 
 export async function createAuthServerClient(): Promise<SupabaseClient | null> {
   const config = getSupabasePublicConfig();
@@ -10,6 +10,7 @@ export async function createAuthServerClient(): Promise<SupabaseClient | null> {
   const cookieStore = await cookies();
 
   return createServerClient(config.url, config.publishableKey, {
+    cookieOptions: AUTH_COOKIE_OPTIONS,
     cookies: {
       getAll() {
         return cookieStore.getAll();
