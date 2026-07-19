@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { notFound } from "next/navigation";
 import { STATUS_LABELS } from "@/components/open-source/status-labels";
 import {
   OPEN_SOURCE_PROJECT_ARTIFACTS,
@@ -26,27 +27,27 @@ export function generateStaticParams() {
   }));
 }
 
-export default function Image({
+export default async function Image({
   params,
 }: {
-  params: { kind: string; slug: string };
+  params: Promise<{ kind: string; slug: string }>;
 }) {
-  const artifact = getOpenSourceArtifactByRoute(params.kind, params.slug);
-  const title = artifact?.title ?? "Open-Source-Artefakt";
-  const description =
-    artifact?.description ??
-    "Werkzeuge und Projekte von loehrning.ai: öffentliches Repository, Commit-Pin, Lizenz, Anleitung.";
-  const chips = artifact
-    ? [
-        artifact.license.licenseId ?? "Lizenz hinterlegt",
-        artifact.language,
-        // Narrowed before `guide` is read: a video artifact has no guide.
-        ...(artifact.kind === "tool" || artifact.kind === "project"
-          ? [STATUS_LABELS[artifact.guide.status]]
-          : []),
-        artifact.source.revision.slice(0, 7),
-      ]
-    : ["Open Source", "Commit-Pin", "Lizenz", "Anleitung"];
+  const { kind, slug } = await params;
+  const artifact = getOpenSourceArtifactByRoute(kind, slug);
+  // A card only exists for a published artifact; an unlisted route resolves to
+  // 404 rather than serving a generic card for an unbounded slug space.
+  if (!artifact) notFound();
+  const title = artifact.title;
+  const description = artifact.description;
+  const chips = [
+    artifact.license.licenseId ?? "Lizenz hinterlegt",
+    artifact.language,
+    // Narrowed before `guide` is read: a video artifact has no guide.
+    ...(artifact.kind === "tool" || artifact.kind === "project"
+      ? [STATUS_LABELS[artifact.guide.status]]
+      : []),
+    artifact.source.revision.slice(0, 7),
+  ];
 
   return new ImageResponse(
     (

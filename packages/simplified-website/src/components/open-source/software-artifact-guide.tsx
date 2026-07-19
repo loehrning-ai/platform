@@ -34,7 +34,7 @@ function Procedure({
             >
               {String(index + 1).padStart(2, "0")}
             </span>
-            <div>
+            <div className="min-w-0">
               <h3 className="font-semibold text-foreground">{step.title}</h3>
               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                 {step.detail}
