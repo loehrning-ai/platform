@@ -117,6 +117,40 @@ describe("OpenSourceArtifactCard", () => {
     }
   });
 
+  it("leads with the guide screenshot under its published alt text", () => {
+    const artifact = toolFixture("dashboard-generator", "Dashboard Generator");
+    render(<OpenSourceArtifactCard artifact={artifact} />);
+
+    const screenshot = screen.getByRole("img", {
+      name: GUIDE.screenshot.alt,
+    });
+    expect(screenshot).toBeInTheDocument();
+    expect(screenshot).toHaveAttribute(
+      "alt",
+      "The example tool showing its generated report.",
+    );
+  });
+
+  it("names the license by its identifier when one is recorded", () => {
+    const base = toolFixture("dashboard-generator", "Dashboard Generator");
+    const identified: ToolArtifact = {
+      ...base,
+      license: { ...base.license, licenseId: "MIT" },
+    };
+    render(<OpenSourceArtifactCard artifact={identified} />);
+
+    expect(screen.getByText("MIT")).toBeInTheDocument();
+    expect(screen.queryByText("LICENSE")).not.toBeInTheDocument();
+  });
+
+  it("falls back to the license source path when no identifier is recorded", () => {
+    const artifact = toolFixture("dashboard-generator", "Dashboard Generator");
+    expect(artifact.license.licenseId).toBeUndefined();
+    render(<OpenSourceArtifactCard artifact={artifact} />);
+
+    expect(screen.getByText("LICENSE")).toBeInTheDocument();
+  });
+
   it("uses the launch route as the primary action when a tool declares one", () => {
     const launchable: ToolArtifact = {
       ...toolFixture("example-tool", "Example Tool"),

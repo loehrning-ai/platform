@@ -26,7 +26,7 @@ export function OpenSourceArtifactSections({
         >
           {section.heading}
         </h2>
-        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-6 flex flex-col gap-6">
           {section.artifacts.map((artifact) => (
             <OpenSourceArtifactCard key={artifact.id} artifact={artifact} />
           ))}
