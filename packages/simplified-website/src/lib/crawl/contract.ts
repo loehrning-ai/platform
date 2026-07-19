@@ -432,13 +432,19 @@ function robotsPattern(pattern: string): string {
   if (pattern.startsWith("/api/") && pattern.includes("/:slug/")) {
     return pattern.replace("/:slug/", "/*/");
   }
-  return pattern
+  const collapsed = pattern
     .replace(/\/:path\*\.pdf$/, "/")
     .replace(/\/:path\*$/, "/")
     .replace(/\/:kind\/:slug$/, "/")
     .replace(/\/:slug\/:chapter$/, "/")
     .replace(/\/:slug$/, "/")
     .replace(/\/:lektionId$/, "/");
+  // Strip any residual interior route-matcher segment (e.g. /workshops/:slug/)
+  // so no ":"-parameter literal ever ships in robots.txt.
+  const interiorParam = collapsed.indexOf("/:");
+  return interiorParam === -1
+    ? collapsed
+    : `${collapsed.slice(0, interiorParam)}/`;
 }
 
 export function canonicalFor(pathname: string): string {

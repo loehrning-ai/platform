@@ -56,7 +56,10 @@ export async function GET() {
     },
     {
       status: status === "ok" ? 200 : 503,
-      headers: { "Cache-Control": "no-store" },
+      headers: {
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive",
+      },
     },
   );
 }
