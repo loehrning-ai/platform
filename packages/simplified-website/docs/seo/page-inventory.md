@@ -234,3 +234,7 @@ cd packages/simplified-website && bun scripts/generate-page-inventory.mjs
 | `/methodik` | Legacy methodology route consolidated into blog. |
 | `/blog/digify` | Retired commercial blog post. |
 | `/blog/ki-beratungsluecke` | Retired commercial blog post. |
+| `/glossar` | Glossary moved under the AI-native course. |
+| `/blog/deepfake-erkennen` | Retired blog post. |
+| `/blog/eu-ai-act-update-2026-06` | Superseded by the definitive EU AI Act post. |
+| `/blog/ki-und-arbeit` | Retired blog post. |
