@@ -86,6 +86,20 @@ describe("crawl contract", () => {
     expect(retired.redirectTo).toBe("/blog");
   });
 
+  // Routes dropped in the open-source split (2026-07-16). All four were
+  // previously indexable, so a bare 404 would strand real inbound links.
+  it.each([
+    ["/glossar", "/ai-native/glossar"],
+    ["/blog/deepfake-erkennen", "/blog"],
+    ["/blog/eu-ai-act-update-2026-06", "/blog/eu-ai-act-grundlagen"],
+    ["/blog/ki-und-arbeit", "/blog"],
+  ])("301s the split-retired route %s to %s", (from, to) => {
+    const entry = getCrawlRoute(from);
+    expect(entry.routeClass).toBe("retired");
+    expect(entry.redirectTo).toBe(to);
+    expect(entry.status).toBe(301);
+  });
+
   it("classifies imported course details as indexable discovery pages", () => {
     const imported = getCrawlRoute("/kurse/open-source/codex");
     expect(imported.routeClass).toBe("public-indexable");

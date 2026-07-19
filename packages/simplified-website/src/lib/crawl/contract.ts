@@ -260,6 +260,37 @@ const RETIRED_ROUTES: readonly CrawlRoute[] = [
     redirectTo: "/blog/eu-ai-act-grundlagen",
     status: 301,
   }),
+  // Retired in the open-source split (2026-07-16). These four were previously
+  // indexable, so they need 301s rather than bare 404s: /glossar was in
+  // PUBLIC_INDEXABLE_PATHS, and the three posts shipped with OG images.
+  route("/glossar", "retired", "Glossary moved under the AI-native course.", {
+    auth: "redirect",
+    robots: "disallow",
+    cache: "public-short",
+    redirectTo: "/ai-native/glossar",
+    status: 301,
+  }),
+  route("/blog/deepfake-erkennen", "retired", "Retired blog post.", {
+    auth: "redirect",
+    robots: "disallow",
+    cache: "public-short",
+    redirectTo: "/blog",
+    status: 301,
+  }),
+  route("/blog/eu-ai-act-update-2026-06", "retired", "Superseded by the definitive EU AI Act post.", {
+    auth: "redirect",
+    robots: "disallow",
+    cache: "public-short",
+    redirectTo: "/blog/eu-ai-act-grundlagen",
+    status: 301,
+  }),
+  route("/blog/ki-und-arbeit", "retired", "Retired blog post.", {
+    auth: "redirect",
+    robots: "disallow",
+    cache: "public-short",
+    redirectTo: "/blog",
+    status: 301,
+  }),
 ];
 
 function route(
