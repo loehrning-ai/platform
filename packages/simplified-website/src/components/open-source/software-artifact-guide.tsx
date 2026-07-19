@@ -6,13 +6,7 @@ import type {
   SoftwareArtifactProcedure,
   ToolArtifact,
 } from "@/lib/open-source/artifacts";
-
-const STATUS_LABELS = {
-  experimental: "Experimentell",
-  stable: "Stabil",
-  maintenance: "Wartungsmodus",
-  archived: "Archiviert",
-} as const;
+import { STATUS_LABELS } from "./status-labels";
 
 function Procedure({
   id,

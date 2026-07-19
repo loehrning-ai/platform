@@ -38,6 +38,11 @@ export interface OpenSourceArtifactLicense {
   readonly sha256: string;
   /** Exact byte size of the locally hosted license text. */
   readonly sizeBytes: number;
+  /**
+   * Optional SPDX or LicenseRef identifier for the license text. Present so a
+   * card or data plate can name the license without parsing its full text.
+   */
+  readonly licenseId?: string;
 }
 
 interface OpenSourceArtifactBase<Kind extends OpenSourceArtifactKind> {
@@ -121,6 +126,13 @@ export interface SoftwareArtifactRelatedLearning {
 export interface SoftwareArtifactGuide {
   readonly status: SoftwareArtifactStatus;
   readonly statusNote: string;
+  /**
+   * Optional data-residency disclosure: where the artifact sends data and what
+   * stays local. The honesty guardrail requires this disclosure for any tool
+   * that can call a cloud LLM, and a fixed structured slot is auditable in a
+   * way that free prose inside `statusNote` is not.
+   */
+  readonly dataFlow?: string;
   readonly prerequisites: readonly SoftwareArtifactPrerequisite[];
   readonly installation: SoftwareArtifactProcedure;
   readonly usage: SoftwareArtifactProcedure;
@@ -543,6 +555,9 @@ function assertSoftwareArtifactGuide(
     artifactError(id, "guide.status", "must be a supported publication status");
   }
   assertText(id, "guide.statusNote", value.statusNote);
+  if (value.dataFlow !== undefined) {
+    assertText(id, "guide.dataFlow", value.dataFlow);
+  }
 
   assertNonEmptyArray(id, "guide.prerequisites", value.prerequisites);
   const prerequisiteLabels: string[] = [];
@@ -753,6 +768,16 @@ export function assertOpenSourceArtifacts(
       artifact.license.sizeBytes <= 0
     ) {
       artifactError(id, "license.sizeBytes", "must be a positive safe integer");
+    }
+    if (artifact.license.licenseId !== undefined) {
+      assertText(id, "license.licenseId", artifact.license.licenseId);
+      if (!/^[A-Za-z0-9.-]+$/.test(artifact.license.licenseId)) {
+        artifactError(
+          id,
+          "license.licenseId",
+          "must be an SPDX or LicenseRef identifier",
+        );
+      }
     }
 
     if (artifact.kind === "tool" || artifact.kind === "project") {

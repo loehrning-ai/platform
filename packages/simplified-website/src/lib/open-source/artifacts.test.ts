@@ -196,6 +196,48 @@ describe("open-source artifact registry", () => {
     ).toThrow(/license\.sha256/);
   });
 
+  it("accepts the optional license identifier and validates its format", () => {
+    expect(() =>
+      assertOpenSourceArtifacts([
+        {
+          ...TOOL,
+          license: { ...TOOL.license, licenseId: "MIT" },
+        },
+      ]),
+    ).not.toThrow();
+    expect(() =>
+      assertOpenSourceArtifacts([
+        {
+          ...TOOL,
+          license: { ...TOOL.license, licenseId: "MIT License" },
+        },
+      ]),
+    ).toThrow(/license\.licenseId/);
+  });
+
+  it("accepts the optional data-flow disclosure and rejects an empty one", () => {
+    expect(() =>
+      assertOpenSourceArtifacts([
+        {
+          ...TOOL,
+          guide: {
+            ...GUIDE,
+            dataFlow:
+              "Runs locally by default; only the optional AI step sends data, and you choose where the AI runs.",
+          },
+        },
+      ]),
+    ).not.toThrow();
+    expect(() =>
+      assertOpenSourceArtifacts([
+        {
+          ...TOOL,
+          guide: { ...GUIDE, dataFlow: "   " },
+        },
+      ]),
+    ).toThrow(/guide\.dataFlow/);
+  });
+
   it("requires revision URLs to stay on the exact source ancestry", () => {
     const artifact = TOOL;
     const source = new URL(artifact.source.href);
