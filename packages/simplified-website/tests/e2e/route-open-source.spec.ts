@@ -35,6 +35,17 @@ const DETAIL_ARTIFACTS = [
   ...OPEN_SOURCE_VIDEO_ARTIFACTS,
 ] as const;
 
+// The hub's "Stand" line is derived from the same three published arrays the
+// page composes into OPEN_SOURCE_ARTIFACTS, so this expectation tracks
+// publication instead of pinning copy. Mirrors publishedArtifactsStatus() in
+// src/app/open-source/page.tsx, including the German singular adjective ending.
+const PUBLISHED_ARTIFACTS_STATUS =
+  DETAIL_ARTIFACTS.length === 0
+    ? "Noch kein Eintrag veröffentlicht"
+    : DETAIL_ARTIFACTS.length === 1
+      ? "1 veröffentlichter Eintrag"
+      : `${DETAIL_ARTIFACTS.length} veröffentlichte Einträge`;
+
 const STATUS_LABELS = {
   experimental: "Experimentell",
   stable: "Stabil",
@@ -273,14 +284,14 @@ test.describe("/open-source hub", () => {
     );
   });
 
-  test("names the GitHub organization as the publication target without claiming anything is published yet", async ({
+  test("names the GitHub organization as the publication target and reports the registry-derived published count", async ({
     page,
   }) => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     await expect(page.getByText("Quellenprinzip").first()).toBeVisible();
     await expect(
-      page.getByText(/Erste Werkzeuge in Vorbereitung/i).first(),
+      page.getByText(PUBLISHED_ARTIFACTS_STATUS).first(),
     ).toBeVisible();
     await expect(
       page.getByRole("heading", { name: "Veröffentlichungsstandard" }),
@@ -353,7 +364,7 @@ test.describe("/open-source mobile", () => {
       page.getByRole("heading", { name: "Veröffentlichungsstandard" }),
     ).toBeVisible();
     await expect(
-      page.getByText(/Erste Werkzeuge in Vorbereitung/i).first(),
+      page.getByText(PUBLISHED_ARTIFACTS_STATUS).first(),
     ).toBeVisible();
 
     const { scrollWidth, innerWidth } = await page.evaluate(() => ({

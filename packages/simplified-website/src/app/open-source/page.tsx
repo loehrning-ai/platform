@@ -76,6 +76,19 @@ const OPEN_SOURCE_GRAPH = {
   ],
 };
 
+/**
+ * Status line for the Quellenprinzip panel, derived from the canonical
+ * registry rather than hand-maintained copy (CONTENT_GUIDE.md: collection
+ * counts come from their canonical registries). The singular branch is
+ * grammatical, not decorative: German adjective endings must agree with the
+ * noun, so "1 veröffentlichte Einträge" would be wrong.
+ */
+function publishedArtifactsStatus(count: number): string {
+  if (count === 0) return "Noch kein Eintrag veröffentlicht";
+  if (count === 1) return "1 veröffentlichter Eintrag";
+  return `${count} veröffentlichte Einträge`;
+}
+
 export default function OpenSourcePage() {
   return (
     <>
@@ -144,7 +157,7 @@ export default function OpenSourcePage() {
                     Stand
                   </dt>
                   <dd className="mt-1 text-muted-foreground">
-                    Erste Werkzeuge in Vorbereitung
+                    {publishedArtifactsStatus(OPEN_SOURCE_ARTIFACTS.length)}
                   </dd>
                 </div>
               </dl>
@@ -152,6 +165,13 @@ export default function OpenSourcePage() {
           </div>
 
           <OpenSourceArtifactSections />
+
+          {OPEN_SOURCE_ARTIFACTS.length > 0 ? (
+            <p className="mt-10 border-t border-border pt-4 font-mono text-xs text-muted-foreground">
+              Die Repositories, Anleitungen und Commits auf GitHub sind auf
+              Englisch. Diese Seite bleibt deutsch.
+            </p>
+          ) : null}
 
           <section className="mt-14 border-t border-border pt-8">
             <h2 className="text-2xl font-bold tracking-[-0.03em] text-foreground">
