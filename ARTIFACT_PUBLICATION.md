@@ -47,6 +47,13 @@ arrays are deliberate release state, not placeholders.
   `packages/simplified-website/tests/e2e/route-open-source.spec.ts`.
 - Lighthouse representatives: `lighthouserc.json`, checked by
   `scripts/verify-lighthouse-routes.ts`.
+- Records staged before their source commit exists:
+  `packages/simplified-website/src/lib/open-source/pending/`. This is not a
+  second catalog and never becomes one. A module there is imported by nothing
+  but its own colocated spec, contributes no candidate, no route, no discovery
+  data, and no collection count, and is typed so that its `source` field does
+  not exist. It is a holding area with exactly one exit, described below; a
+  record either moves into `artifacts.ts` or is deleted.
 
 Do not create a second catalog in a page component, navigation component,
 Markdown file, or route. Collection counts and routes must remain derived from
@@ -104,6 +111,50 @@ This sequence prevents a detail page from citing a revision that cannot
 contain the files it describes. A source change after Commit A requires a new
 pin and a new registry review. Never rewrite the old commit reference in place
 without re-running the complete admission path.
+
+### Staging a record before Commit A
+
+Writing a candidate is often ready long before its repository is public.
+Commit A does not exist yet, so no honest `source.revision` exists either. The
+registry validator performs zero network I/O and checks only shape, so a
+fabricated 40-character SHA would pass every gate in this repository while
+encoding a provenance claim nobody can check, and a matching fabricated
+`revisionHref` would even look internally consistent. Never write one, and
+never park a record in `draft` with an invented pin: `draft` means complete and
+verified but unexposed, not incomplete.
+
+Stage the record instead:
+
+1. Put it in `packages/simplified-website/src/lib/open-source/pending/<slug>.ts`,
+   typed `satisfies PendingToolArtifact` (or the project equivalent), where the
+   pending type is a *distributive* `Omit` of the artifact type over `"source"`.
+   The distribution matters: the tool and project types are intersections with
+   a three-member delivery union, and a plain `Omit` collapses that union and
+   loses the correlation between `delivery` and `launchHref`. With `source`
+   absent from the type, an unverified pin cannot be written at all.
+2. Derive the id, the detail href, and both asset paths from one `SLUG`
+   constant via template literals, so a rename before publication stays a
+   single edit.
+3. Export a `composeForValidation(source)` helper from that same module, not
+   from its spec: `tsconfig.typecheck.json` excludes `*.test.ts`, so a
+   composition proof written only in a test would never be typechecked.
+4. Colocate a spec that runs the real validator over the composed record using
+   an obvious fixture pin, asserts the record carries no `source` property,
+   asserts its id is absent from `OPEN_SOURCE_ARTIFACT_CANDIDATES`, and rehashes
+   both stored assets against the record and against `ASSET_MANIFEST.json`.
+   The fixture pin is the only place a 40-character hex string may appear.
+5. Land the assets and their `ASSET_MANIFEST.json` rows normally. Asset review
+   does not wait for the source pin, and `bun run artifact-assets:check` keeps
+   reporting empty lanes because the staged record is not a candidate.
+
+On admission, publish Commit A, then move the record into its candidate array
+in `artifacts.ts` in one commit: swap `satisfies PendingToolArtifact` for the
+real artifact type, add the three `source` fields, repoint any documentation
+href that pointed at an internal page while the repository was private, verify
+that `git show <sha>:LICENSE | shasum -a 256` equals the recorded
+`license.sha256`, update the `source` strings of both manifest rows, and delete
+the pending module together with its spec. A staged record that is abandoned is
+deleted, not left to rot.
 
 ## Supported code hosting and delivery
 
