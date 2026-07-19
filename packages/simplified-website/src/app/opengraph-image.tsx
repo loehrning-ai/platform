@@ -37,6 +37,8 @@ export default function Image() {
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div
             style={{
+              display: "flex",
+              flexDirection: "column",
               fontSize: "76px",
               fontWeight: 800,
               color: "#0B0908",
@@ -44,16 +46,21 @@ export default function Image() {
               letterSpacing: "0",
             }}
           >
-            KI lernen.
-            <br />
-            Kostenlos.
-            <br />
-            Auf Deutsch.
+            <div>KI lernen.</div>
+            <div>Kostenlos.</div>
+            <div>Auf Deutsch.</div>
           </div>
-          <div style={{ fontSize: "28px", color: "#4f4640", lineHeight: 1.3 }}>
-            Kurse, Vorlagen, Bücher, Demos und Blog.
-            <br />
-            Ohne Login. Mit offener Methodik und Lernmaterialien.
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              fontSize: "28px",
+              color: "#4f4640",
+              lineHeight: 1.3,
+            }}
+          >
+            <div>Kurse, Vorlagen, Bücher, Demos und Blog.</div>
+            <div>Ohne Login. Mit offener Methodik und Lernmaterialien.</div>
           </div>
         </div>
 

@@ -40,17 +40,17 @@ export default function Image() {
           </div>
           <div
             style={{
+              display: "flex",
+              flexDirection: "column",
               fontSize: "64px",
               fontWeight: 800,
               color: "#0B0908",
               lineHeight: 1.05,
             }}
           >
-            Was ist KI?
-            <br />
-            Ein Einstieg
-            <br />
-            ohne Vorwissen.
+            <div>Was ist KI?</div>
+            <div>Ein Einstieg</div>
+            <div>ohne Vorwissen.</div>
           </div>
           <div style={{ fontSize: "24px", color: "#4f4640", lineHeight: 1.4 }}>
             10 Minuten. Kein Vorwissen. Kein Login.
