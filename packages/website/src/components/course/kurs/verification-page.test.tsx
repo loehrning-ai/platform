@@ -119,6 +119,27 @@ describe("VerificationPage", () => {
     expect(screen.queryByText(/Ergebnis: 0%/)).toBeNull();
   });
 
+  it("renders all-lessons-done completion without a fake quiz score (plan 007 stage 4)", async () => {
+    const payload = {
+      n: "Tim Löhr",
+      s: null,
+      m: "completion",
+      d: "2026-06-03T10:00:00.000Z",
+      c: "ki-fuehrerschein",
+      v: 1,
+    };
+    setHash("#" + encodeHash(payload));
+    render(<VerificationPage courseSlug="ki-fuehrerschein" />);
+
+    await waitFor(() =>
+      expect(screen.getByText("QR-Daten gelesen")).toBeInTheDocument(),
+    );
+    expect(
+      screen.getByText("Abschlussweg: Alle Lektionen abgeschlossen"),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/Ergebnis: 0%/)).toBeNull();
+  });
+
   it("falls back to the invalid state for a malformed hash", async () => {
     setHash("#not-valid-base64url!!!");
     render(<VerificationPage courseSlug="ki-fuehrerschein" />);

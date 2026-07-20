@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   COURSE_FACTS,
   COURSE_SECTIONS,
+  RECORD_LABEL,
   courseBadges,
   courseFactsFor,
   courseGroupFor,
@@ -119,5 +120,14 @@ describe("learner-first course model", () => {
     expect(COURSE_FACTS["data-engineering-fundamentals"].badge).toBe(
       "GitHub · MIT · Englisch",
     );
+  });
+
+  it("RecordKind gains a 'certificate' value with a matching RECORD_LABEL entry (plan 007 stage 4)", () => {
+    expect(RECORD_LABEL.certificate).toBe("mit Certificate");
+    // No course flips to this record kind in this plan — verified fact, not
+    // assumption: every imported course still reads "none".
+    for (const course of IMPORTED_COURSE_CATALOG) {
+      expect(COURSE_FACTS[course.slug].record).toBe("none");
+    }
   });
 });

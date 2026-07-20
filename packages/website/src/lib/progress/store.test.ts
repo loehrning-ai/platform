@@ -258,6 +258,25 @@ describe("unified progress store", () => {
       expect(isCertificateEligible("ki-fuehrerschein")).toBe(false);
     });
 
+    // plan 007 stage 4: the all-lessons-completed fallback used to resolve
+    // totalLessons from COURSE_CATALOG only, so it was silently unreachable
+    // for any course outside the 4-course native spine. "codex" (12 lessons,
+    // ALL_COURSE_CATALOG) exercises a slug outside that spine.
+    it("resolves totalLessons from the unified catalog for a course outside the native spine", () => {
+      for (let i = 1; i <= 12; i += 1) {
+        markLessonCompleted("codex", `lesson-${i}`);
+      }
+      expect(isWorkshopQuizPassed("codex")).toBe(false);
+      expect(isCertificateEligible("codex")).toBe(true);
+    });
+
+    it("stays ineligible below the full lesson count for a non-native-spine course", () => {
+      for (let i = 1; i <= 11; i += 1) {
+        markLessonCompleted("codex", `lesson-${i}`);
+      }
+      expect(isCertificateEligible("codex")).toBe(false);
+    });
+
     it("never throws on corrupted storage, reads as not eligible", () => {
       window.localStorage.setItem(
         UNIFIED_STORAGE_KEY,

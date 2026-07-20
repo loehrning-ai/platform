@@ -19,7 +19,7 @@ import {
   type UnifiedLessonProgress,
   type UnifiedProgress,
 } from "./types";
-import { COURSE_CATALOG } from "@/lib/courses/catalog";
+import { ALL_COURSE_CATALOG, COURSE_CATALOG } from "@/lib/courses/catalog";
 import { computeNewlyEarnedBadges } from "./badges";
 import { freshUnified, migrateLegacyToUnified } from "./migrate";
 
@@ -484,7 +484,11 @@ export function isCertificateEligible(slug: CourseSlug): boolean {
   try {
     const slice = getCourseSlice(slug);
     if (slice.workshopQuiz.passed || slice.capstoneSubmitted) return true;
-    const total = COURSE_CATALOG.find((c) => c.slug === slug)?.totalLessons;
+    // ALL_COURSE_CATALOG (native + imported), not COURSE_CATALOG alone: a
+    // course outside the 4-course native spine (e.g. once its own plan wires
+    // up progress tracking) must be able to reach this fallback too (plan
+    // 007 stage 4) instead of silently resolving totalLessons as undefined.
+    const total = ALL_COURSE_CATALOG.find((c) => c.slug === slug)?.totalLessons;
     if (!total) return false;
     let done = 0;
     for (const lesson of Object.values(slice.lessons)) {

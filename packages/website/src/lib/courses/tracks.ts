@@ -77,8 +77,13 @@ export type CourseAccent = "kupfer" | "sand" | "amber";
  * What kind of record a course issues, if any. Source of truth for the native
  * courses is `lib/course/config.ts` (`certificateTitle`); the guard test in
  * `tracks.test.ts` fails loudly if this drifts from it.
+ *
+ * "certificate" (plan 007 stage 4) is the English-track record kind for the
+ * imported courses. Pinned here, final: no course flips to it in this plan —
+ * each imported course's own plan flips its single `COURSE_FACTS` entry once
+ * it ships real native routes + certificate wiring.
  */
-export type RecordKind = "zertifikat" | "lernnachweis" | "none";
+export type RecordKind = "zertifikat" | "lernnachweis" | "certificate" | "none";
 
 /** Semantic tone of a badge chip; the UI maps each tone to a warm colour. */
 export type BadgeTone = "record" | "language" | "external";
@@ -157,9 +162,10 @@ export function courseIconName(slug: string): string {
   return COURSE_FACTS[slug]?.iconName ?? "BookOpen";
 }
 
-const RECORD_LABEL: Record<Exclude<RecordKind, "none">, string> = {
+export const RECORD_LABEL: Record<Exclude<RecordKind, "none">, string> = {
   zertifikat: "mit Zertifikat",
   lernnachweis: "mit Lernnachweis",
+  certificate: "mit Certificate",
 };
 
 /**

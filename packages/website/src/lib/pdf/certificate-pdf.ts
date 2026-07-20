@@ -7,7 +7,10 @@
  */
 
 import type { CourseConfig } from "@/lib/course/types";
-import { CERTIFICATE_QR_VERSION } from "@/lib/course/certificate-constants";
+import {
+  CERTIFICATE_QR_VERSION,
+  type CertificateCompletionMode,
+} from "@/lib/course/certificate-constants";
 
 // --- Brand tokens (Berliner Werkzeug CI v3.0) ---
 
@@ -22,10 +25,16 @@ const LEINEN = "#D4CEC5";
 export interface CertificateData {
   readonly name: string;
   readonly score: number | null; // 0-1 normalized for quiz path
-  readonly completionMode: "quiz" | "capstone";
+  readonly completionMode: CertificateCompletionMode;
   readonly completionDate: string; // formatted German date string
   readonly completedAt: string; // ISO timestamp
 }
+
+/** German completion line for the non-quiz certificate paths. */
+const COMPLETION_LABEL: Record<Exclude<CertificateCompletionMode, "quiz">, string> = {
+  capstone: "Abschluss: Capstone-Rubrik vollständig",
+  completion: "Abschluss: Alle Lektionen abgeschlossen",
+};
 
 // --- Verification URL ---
 
@@ -122,9 +131,9 @@ export async function generateCertificatePdf(
   doc.text(`Datum:      ${data.completionDate}`, leftX, y);
   y += 7;
   doc.text(
-    data.score === null
-      ? "Abschluss: Capstone-Rubrik vollständig"
-      : `Ergebnis:   ${Math.round(data.score * 100)}% (bestanden)`,
+    data.completionMode === "quiz"
+      ? `Ergebnis:   ${Math.round((data.score ?? 0) * 100)}% (bestanden)`
+      : COMPLETION_LABEL[data.completionMode],
     leftX,
     y,
   );

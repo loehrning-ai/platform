@@ -5,11 +5,16 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { m } from "framer-motion";
 import { ArrowLeft, Download, GraduationCap, Loader2, User } from "lucide-react";
-import { isCertificateEligible, getWorkshopQuizResult } from "@/lib/course/progress";
+import {
+  isCertificateEligible,
+  isCapstoneSubmitted,
+  getWorkshopQuizResult,
+} from "@/lib/course/progress";
 // JSON-free config module (performance hardening): importing from ./data here
 // would pull the full lesson/quiz JSON graph into this client bundle.
 import { getCourseConfig } from "@/lib/course/config";
 import { certificateFormSchema } from "@/lib/course/validation";
+import type { CertificateCompletionMode } from "@/lib/course/certificate-constants";
 import type { CourseSlug } from "@/lib/course/types";
 
 /**
@@ -21,6 +26,24 @@ import type { CourseSlug } from "@/lib/course/types";
 interface CertificatePageProps {
   readonly courseSlug: CourseSlug;
 }
+
+/** Downloaded-file completion line for the two non-quiz eligibility paths. */
+const TEXT_FALLBACK_COMPLETION_LABEL: Record<
+  Exclude<CertificateCompletionMode, "quiz">,
+  string
+> = {
+  capstone: "Abschluss: Capstone-Rubrik vollständig",
+  completion: "Abschluss: Alle Lektionen abgeschlossen",
+};
+
+/** On-screen preview completion line for the two non-quiz eligibility paths. */
+const PREVIEW_COMPLETION_LABEL: Record<
+  Exclude<CertificateCompletionMode, "quiz">,
+  string
+> = {
+  capstone: "Abschlussweg: Capstone-Rubrik",
+  completion: "Abschlussweg: Alle Lektionen abgeschlossen",
+};
 
 export function CertificatePage({ courseSlug }: CertificatePageProps) {
   const config = getCourseConfig(courseSlug);
@@ -34,13 +57,14 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
   // (hydration hazard), so it lives in state populated by the effect below.
   const [completion, setCompletion] = useState<{
     quizResult: { passed: boolean; score: number; completedAt: string | null };
-    completionMode: "quiz" | "capstone";
+    completionMode: CertificateCompletionMode;
     completionDate: string;
   } | null>(null);
 
   useEffect(() => {
-    // Eligible when the workshop quiz is passed OR (AI-Native) the learner
-    // marks the capstone rubric as complete.
+    // Eligible via one of three paths: workshop quiz passed, (AI-Native) the
+    // capstone rubric submitted, or every catalog lesson completed (plan 007
+    // stage 4's generic "completion" fallback).
     const ok = isCertificateEligible(courseSlug);
     setEligible(ok);
     if (!ok) {
@@ -49,7 +73,11 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
     }
 
     const quizResult = getWorkshopQuizResult(courseSlug);
-    const completionMode = quizResult.passed ? "quiz" : "capstone";
+    const completionMode: CertificateCompletionMode = quizResult.passed
+      ? "quiz"
+      : isCapstoneSubmitted(courseSlug)
+        ? "capstone"
+        : "completion";
     const completionDate = new Date(
       quizResult.completedAt ?? Date.now(),
     ).toLocaleDateString("de-DE", {
@@ -113,7 +141,7 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
         `Datum: ${completionDate}`,
         completionMode === "quiz"
           ? `Ergebnis: ${Math.round(quizResult.score * 100)}% (bestanden)`
-          : "Abschluss: Capstone-Rubrik vollständig",
+          : TEXT_FALLBACK_COMPLETION_LABEL[completionMode],
         "",
         "loehrning.ai | Tim Löhr",
       ].join("\n");
@@ -166,7 +194,7 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
             <p className="mt-1 font-mono text-sm text-muted-foreground">
               {completionMode === "quiz"
                 ? `Ergebnis: ${Math.round(quizResult.score * 100)}%`
-                : "Abschlussweg: Capstone-Rubrik"}
+                : PREVIEW_COMPLETION_LABEL[completionMode]}
             </p>
             <div className="mx-auto mt-6 h-px w-20 bg-border" />
             <p className="mt-4 text-xs text-muted">

@@ -7,7 +7,10 @@ import { m } from "framer-motion";
 // JSON-free config module (performance hardening): importing from ./data here
 // would pull the full lesson/quiz JSON graph into this client bundle.
 import { getCourseConfig } from "@/lib/course/config";
-import { CERTIFICATE_QR_VERSION } from "@/lib/course/certificate-constants";
+import {
+  CERTIFICATE_QR_VERSION,
+  type CertificateCompletionMode,
+} from "@/lib/course/certificate-constants";
 import type { CourseSlug } from "@/lib/course/types";
 
 /**
@@ -19,11 +22,17 @@ import type { CourseSlug } from "@/lib/course/types";
 interface VerificationData {
   n: string; // name
   s: number | null; // score percentage for quiz path
-  m: "quiz" | "capstone"; // completion mode
+  m: CertificateCompletionMode; // completion mode
   d: string; // completedAt ISO
   c: CourseSlug; // course slug
   v: number; // version
 }
+
+/** Completion line for the two non-quiz eligibility paths. */
+const COMPLETION_LABEL: Record<Exclude<CertificateCompletionMode, "quiz">, string> = {
+  capstone: "Abschlussweg: Capstone-Rubrik",
+  completion: "Abschlussweg: Alle Lektionen abgeschlossen",
+};
 
 type DecodeResult =
   | { readonly ok: true; readonly data: VerificationData }
@@ -65,9 +74,9 @@ function decodeHash(hash: string, courseSlug: CourseSlug): DecodeResult {
           parsed.s >= 0 &&
           parsed.s <= 100)
       ) ||
-      !(parsed.m === "quiz" || parsed.m === "capstone") ||
+      !(parsed.m === "quiz" || parsed.m === "capstone" || parsed.m === "completion") ||
       (parsed.m === "quiz" && parsed.s === null) ||
-      (parsed.m === "capstone" && parsed.s !== null) ||
+      (parsed.m !== "quiz" && parsed.s !== null) ||
       typeof parsed.d !== "string" ||
       Number.isNaN(Date.parse(parsed.d)) ||
       parsed.v !== CERTIFICATE_QR_VERSION ||
@@ -167,7 +176,7 @@ export function VerificationPage({ courseSlug }: VerificationPageProps) {
                 <p>
                   {data.m === "quiz"
                     ? `Ergebnis: ${data.s}%`
-                    : "Abschlussweg: Capstone-Rubrik"}
+                    : COMPLETION_LABEL[data.m]}
                 </p>
                 {completionDate && <p>Datum: {completionDate}</p>}
               </div>

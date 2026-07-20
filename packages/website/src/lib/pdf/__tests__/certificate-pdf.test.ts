@@ -63,7 +63,7 @@ function lastQrUrl(): string {
 function decodeFragment(url: string): {
   n: string;
   s: number | null;
-  m: "quiz" | "capstone";
+  m: "quiz" | "capstone" | "completion";
   d: string;
   c: string;
   v: number;
@@ -145,6 +145,20 @@ describe("certificate verification-URL encoding", () => {
       s: null,
       m: "capstone",
       c: "ai-native",
+    });
+  });
+
+  // plan 007 stage 4: third completionMode for courses whose eligibility path
+  // is "all lessons done" rather than a quiz or capstone.
+  it("encodes all-lessons-done completion without a fake quiz score", async () => {
+    await generateCertificatePdf(
+      makeData({ score: null, completionMode: "completion" }),
+      KI_FUEHRERSCHEIN_CONFIG,
+    );
+    expect(decodeFragment(lastQrUrl())).toMatchObject({
+      s: null,
+      m: "completion",
+      c: "ki-fuehrerschein",
     });
   });
 
