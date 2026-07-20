@@ -182,6 +182,8 @@ export interface GlossaryEntry {
 export interface CourseConfig {
   readonly slug: CourseSlug;
   readonly title: string;
+  /** Content language. All 4 native courses are "de"; imported courses register "en". */
+  readonly language: "de" | "en";
   readonly basePath: string; // e.g., "/ki-fuehrerschein"
   /**
    * Root path the course lives under for shared route components. Same as

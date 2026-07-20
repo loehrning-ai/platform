@@ -174,4 +174,10 @@ describe("config object coherence", () => {
       expect(config.certificateFileStem.length).toBeGreaterThan(0);
     }
   });
+
+  it("declares a language for every registered config, 'de' for all four native courses (plan 007 stage 2)", () => {
+    for (const config of configs) {
+      expect(config.language).toBe("de");
+    }
+  });
 });

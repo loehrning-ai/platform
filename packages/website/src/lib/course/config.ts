@@ -13,6 +13,7 @@ import type { BlockId, CourseConfig, CourseSlug } from "./types";
 export const KI_FUEHRERSCHEIN_CONFIG: CourseConfig = {
   slug: "ki-fuehrerschein",
   title: "KI-Führerschein",
+  language: "de",
   basePath: "/ki-fuehrerschein",
   coursePath: "/ki-fuehrerschein/kurs",
   blockIds: ["block_1", "block_2", "block_3", "block_4", "block_5"],
@@ -44,6 +45,7 @@ export const KI_FUEHRERSCHEIN_CONFIG: CourseConfig = {
 export const EU_AI_ACT_KURS_CONFIG: CourseConfig = {
   slug: "eu-ai-act-kurs",
   title: "EU AI Act Kurs",
+  language: "de",
   basePath: "/eu-ai-act-kurs",
   coursePath: "/eu-ai-act-kurs/kurs",
   blockIds: ["block_1", "block_2", "block_3", "block_4", "block_5", "block_6"],
@@ -84,6 +86,7 @@ export const EU_AI_ACT_KURS_CONFIG: CourseConfig = {
 export const AI_NATIVE_CONFIG: CourseConfig = {
   slug: "ai-native",
   title: "AI-Native Arbeitskurs",
+  language: "de",
   basePath: "/ai-native",
   coursePath: "/ai-native/kurs",
   blockIds: [],
@@ -114,6 +117,7 @@ export const AI_NATIVE_CONFIG: CourseConfig = {
 export const KI_UND_GESELLSCHAFT_CONFIG: CourseConfig = {
   slug: "ki-und-gesellschaft",
   title: "KI und Gesellschaft",
+  language: "de",
   basePath: "/ki-und-gesellschaft",
   coursePath: "/ki-und-gesellschaft/kurs",
   blockIds: ["block_1", "block_2", "block_3"],
