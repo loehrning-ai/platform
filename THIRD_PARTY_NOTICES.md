@@ -18,6 +18,16 @@ The application uses the `geist` package, distributed under the SIL Open Font Li
 
 Imported screenshots and license copies under `packages/website/public/imported-courses/` come from commit-pinned interactive-course projects. Source paths, commits, SHA-256 values, and corresponding license locations are recorded in the course catalog and asset manifest.
 
+### Imported course provenance convention
+
+Every course ported from `github.com/Mavengence/interactive-courses` (six as of plan 007: `data-engineering-fundamentals`, `data-science`, `data-infrastructure`, `codex`, `claude`, `ai-native-operator`) follows the same three-part provenance convention, established here so each course's own plan (008-013) can apply it mechanically without re-deriving the pattern:
+
+1. **One `ASSET_MANIFEST.json` entry per asset.** Every screenshot and license copy checked into `packages/website/public/imported-courses/` gets its own entry (`path`, `sizeBytes`, `sha256`, `owner`, `source`, `license`, `redistribution`), matching the existing entries for the six courses landed so far. `catalog.test.ts`'s hash/size assertions read directly from this manifest, so a stale or missing entry fails CI rather than silently drifting from the checked-in file.
+2. **One `THIRD_PARTY_NOTICES.md` paragraph per course**, added by that course's own plan in the same commit that lands its assets — not batched here. Each paragraph names the course, its upstream source path (commit-pinned, matching `IMPORTED_COURSE_SOURCE_COMMIT` in `catalog.ts`), its license, and its copyright holder.
+3. **The codex distinct-copyright-holder template sentence.** Five of the six courses' license files read `Copyright (c) 2026 Tim Löhr` (or `Tim Löhr (Mavengence)`); `codex/LICENSE.txt` is the one exception, reading `Copyright (c) 2026 Codex Course`. Any course plan whose upstream license file names a copyright holder other than Tim Löhr must call this out explicitly in its notices paragraph, using this template sentence: *"Unlike the other imported courses, `<course>`'s upstream license names `<copyright holder>` as the copyright holder, not Tim Löhr — see `public/imported-courses/licenses/<course>-MIT-LICENSE.txt`."* This keeps a real, non-Tim-Löhr-held copyright from being silently mis-attributed by a paragraph that assumes the common case.
+
+The convention does not require a course to have shipped its native routes yet — provenance is about content ORIGIN, independent of `nativeStatus`.
+
 ## Framework and library notices
 
 Next.js, React, Tailwind CSS, Framer Motion, Lucide, Supabase clients, Sentry clients, and other dependencies are not relicensed by this repository. Consult each installed package's license and the root `bun.lock` before redistribution.
