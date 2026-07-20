@@ -35,11 +35,12 @@ export interface EarnedCompetency extends Competency {
 }
 
 /**
- * Competencies granted per certified course. Keyed by `CourseSlug`, so adding
- * a certified course without competencies is a compile error. Wording is drawn
- * from the actual course content / certificate modules — nothing aspirational.
+ * Competencies granted per certified course. `Partial` because `CourseSlug`
+ * also spans the 6 imported open-source courses, which grant competencies
+ * only once their own plan flips them to a certified record — see
+ * `isCourseRecordEarned`, which never looks up a slug outside `COURSE_CATALOG`.
  */
-export const COURSE_COMPETENCIES: Record<CourseSlug, readonly Competency[]> = {
+export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency[]>> = {
   "ki-fuehrerschein": [
     {
       id: "ki-grundlagen-verstehen",
@@ -139,7 +140,7 @@ export function earnedCompetencies(
   const earned: EarnedCompetency[] = [];
   for (const course of COURSE_CATALOG) {
     if (!isCourseRecordEarned(progress, course.slug)) continue;
-    for (const competency of COURSE_COMPETENCIES[course.slug]) {
+    for (const competency of COURSE_COMPETENCIES[course.slug] ?? []) {
       earned.push({
         ...competency,
         courseSlug: course.slug,

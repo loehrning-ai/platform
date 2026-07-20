@@ -20,6 +20,7 @@ import {
   getModules as getAiNativeModules,
 } from "@/lib/ai-native/data";
 import { COURSE_SLUGS } from "@/lib/course/types";
+import { getRegisteredCourseSlugs } from "@/lib/course/config";
 
 function sha256(path: string): string {
   return createHash("sha256").update(readFileSync(path)).digest("hex");
@@ -55,7 +56,11 @@ describe("course catalog (shared course architecture)", () => {
       "ai-native-operator",
     ]);
     for (const c of IMPORTED_COURSE_CATALOG) {
-      expect(COURSE_SLUGS).not.toContain(c.slug);
+      // CourseSlug (plan 007 stage 1) now spans both native and imported
+      // courses by design, so the meaningful invariant is that imported
+      // courses stay unregistered in the shared progress engine, not that
+      // their slug is absent from the wider CourseSlug union.
+      expect(getRegisteredCourseSlugs()).not.toContain(c.slug);
       expect(c.href).toBe(`/kurse/open-source/${c.slug}`);
       expect(c.launchHref).toMatch(/^https:\/\/www\.timloehr\.me\/interactive-courses\//);
       // public-content contract: "Quelle" list links are commit-pinned so the
