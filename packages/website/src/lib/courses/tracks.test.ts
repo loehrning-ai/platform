@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync, readdirSync, statSync } from "node:fs";
+import { extname, join, relative, resolve } from "node:path";
 import {
   COURSE_FACTS,
   COURSE_SECTIONS,
@@ -129,5 +131,82 @@ describe("learner-first course model", () => {
     for (const course of IMPORTED_COURSE_CATALOG) {
       expect(COURSE_FACTS[course.slug].record).toBe("none");
     }
+  });
+
+  it("RECORD_LABEL is a closed set of exactly the 3 non-'none' RecordKind values (plan 007 stage 12)", () => {
+    expect(Object.keys(RECORD_LABEL).sort()).toEqual(
+      ["certificate", "lernnachweis", "zertifikat"].sort(),
+    );
+  });
+});
+
+// ─── Dead-code regression guard (plan 007 stage 12) ────────────────────────
+//
+// TRACK_META/TrackMeta/CourseTrack/TrackAccent/trackMetaFor were removed in
+// plan 007 stage 3, replaced by CourseFacts.accent/.badge. This grep-based
+// check fails CI the moment any of those five identifiers is reintroduced as
+// CODE anywhere in src/ — comments that merely document the historical
+// removal (this file included) are intentionally excluded, since banning the
+// word itself in prose would make it impossible to explain the migration.
+
+const FORBIDDEN_IDENTIFIERS = [
+  "TRACK_META",
+  "TrackMeta",
+  "trackMetaFor",
+  "CourseTrack",
+  "TrackAccent",
+] as const;
+
+/** This file's own path, relative to src/ — excluded since it necessarily
+ * names the forbidden identifiers as string literals to check for them. */
+const SELF_PATH = "lib/courses/tracks.test.ts";
+
+function walkSourceFiles(dir: string): string[] {
+  const results: string[] = [];
+  for (const entry of readdirSync(dir)) {
+    if (entry === "node_modules" || entry.startsWith(".")) continue;
+    const full = join(dir, entry);
+    if (statSync(full).isDirectory()) {
+      results.push(...walkSourceFiles(full));
+    } else if ([".ts", ".tsx"].includes(extname(entry))) {
+      results.push(full);
+    }
+  }
+  return results;
+}
+
+/** Strips // line comments and /* block comments *\/ so only real code is scanned. */
+function stripComments(source: string): string {
+  return source
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .split("\n")
+    .map((line) => {
+      const idx = line.indexOf("//");
+      return idx === -1 ? line : line.slice(0, idx);
+    })
+    .join("\n");
+}
+
+describe("dead-code regression guard: TRACK_META removal", () => {
+  it("finds no TRACK_META/TrackMeta/trackMetaFor/CourseTrack/TrackAccent as real code anywhere in src/", () => {
+    const srcDir = resolve(process.cwd(), "src");
+    const files = walkSourceFiles(srcDir).filter(
+      (file) => relative(srcDir, file) !== SELF_PATH,
+    );
+
+    const hits: string[] = [];
+    for (const file of files) {
+      const code = stripComments(readFileSync(file, "utf-8"));
+      for (const identifier of FORBIDDEN_IDENTIFIERS) {
+        if (new RegExp(`\\b${identifier}\\b`).test(code)) {
+          hits.push(`${relative(srcDir, file)}: ${identifier}`);
+        }
+      }
+    }
+
+    expect(
+      hits,
+      `Forbidden dead-code identifiers found (plan 007 stage 3 removed these): ${hits.join(", ")}`,
+    ).toEqual([]);
   });
 });

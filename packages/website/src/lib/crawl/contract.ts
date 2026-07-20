@@ -85,6 +85,37 @@ const PUBLIC_NOINDEX_PATHS = [
   "/ki-und-gesellschaft/kurs/quiz",
 ] as const;
 
+// ─── Adding a new course's routes (plan 007 stage 12) ───────────────────
+//
+// contract-completeness.test.ts walks the real src/app tree and fails the
+// build the moment ANY page.tsx/route.ts lands without a matching entry
+// below — this is not optional documentation, it is a CI gate. Every course
+// plan (008-013) adding real native routes must add its contract entries in
+// the SAME commit as the routes themselves, not as an afterthought once CI
+// already failed.
+//
+// Mirror the existing KI-Führerschein entries as the template:
+//   - the course-reader tree (lesson pages, block index, etc.) goes in
+//     PUBLIC_ACCESS_PATHS below, as a "/:course/kurs" + "/:course/kurs/:path*"
+//     pair — see "/ki-fuehrerschein/kurs" + "/ki-fuehrerschein/kurs/:path*".
+//     Public learning content, intentionally accessible without login, but
+//     deliberately NOT in the sitemap (courses are discovered via /kurse,
+//     not indexed lesson-by-lesson).
+//   - the workshop-quiz and certificate screens go in PUBLIC_NOINDEX_PATHS
+//     as exact (non-wildcard) entries — see "/ki-fuehrerschein/kurs/quiz"
+//     and "/ki-fuehrerschein/kurs/zertifikat". Crawlable so crawlers can SEE
+//     the noindex tag (never blocked via robots.txt), but never indexed:
+//     a quiz/certificate page has no content value for search or AI
+//     retrieval and the certificate route encodes a QR payload in the URL
+//     hash that must never end up in a search snippet.
+//   - the verification route (if the course issues a certificate) is also
+//     PUBLIC_NOINDEX_PATHS — see "/ki-fuehrerschein/verifizierung" — for the
+//     same QR-payload-in-URL reason.
+// Any other bespoke top-level route a course plan builds (a glossary, a
+// demo gallery, ...) follows the same PUBLIC_ACCESS_PATHS pattern as
+// "/ai-native/glossar"/"/ai-native/demos" above: public, accessible, out of
+// the sitemap unless there is a specific reason to index it.
+
 const PUBLIC_ACCESS_PATHS = [
   "/ki-fuehrerschein/kurs",
   "/ki-fuehrerschein/kurs/:path*",
