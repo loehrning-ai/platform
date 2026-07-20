@@ -143,6 +143,20 @@ const REGISTRY: Record<WidgetKind, () => Promise<{ default: WidgetComponent }>> 
     import("@/components/widgets/practice/semantic-space").then((m) => ({
       default: m.SemanticSpaceWidget as unknown as WidgetComponent,
     })),
+
+  // ─── Claude Course — simulated-Claude widgets (plan 008) ───
+  "prompt-sandbox": () =>
+    import("@/components/widgets/claude/prompt-sandbox").then((m) => ({
+      default: m.PromptSandboxWidget as unknown as WidgetComponent,
+    })),
+  "prompt-compare": () =>
+    import("@/components/widgets/claude/prompt-compare").then((m) => ({
+      default: m.PromptCompareWidget as unknown as WidgetComponent,
+    })),
+  "prompt-grader": () =>
+    import("@/components/widgets/claude/prompt-grader").then((m) => ({
+      default: m.PromptGraderWidget as unknown as WidgetComponent,
+    })),
 } as const satisfies Record<WidgetKind, () => Promise<{ default: WidgetComponent }>>;
 
 const lazyCache = new Map<WidgetKind, ComponentType<Record<string, unknown>>>();

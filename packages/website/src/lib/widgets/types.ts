@@ -97,17 +97,33 @@ export const PRACTICE_KINDS = [
   "semantic-space",
 ] as const;
 
+/**
+ * Claude Course native widget kinds (plan 008), ported from
+ * `claude/js/widgets.js`. Unlike PRACTICE_KINDS these never call a live
+ * Claude API — the source course itself never did (its own `claude-demo.js`
+ * comment confirms this); all "AI" behavior is a deterministic canned
+ * responder in `lib/claude-course/simulated-claude.ts`. Registered
+ * incrementally as each batch of components lands (plan 008 stages 4-6).
+ */
+export const CLAUDE_KINDS = [
+  "prompt-sandbox",
+  "prompt-compare",
+  "prompt-grader",
+] as const;
+
 export type DemoKind = (typeof DEMO_KINDS)[number];
 export type ExerciseKind = (typeof EXERCISE_KINDS)[number];
 export type TierAKind = (typeof TIER_A_KINDS)[number];
 export type PracticeKind = (typeof PRACTICE_KINDS)[number];
-export type WidgetKind = DemoKind | ExerciseKind | TierAKind | PracticeKind;
+export type ClaudeKind = (typeof CLAUDE_KINDS)[number];
+export type WidgetKind = DemoKind | ExerciseKind | TierAKind | PracticeKind | ClaudeKind;
 
 export const ALL_WIDGET_KINDS: readonly WidgetKind[] = [
   ...DEMO_KINDS,
   ...EXERCISE_KINDS,
   ...TIER_A_KINDS,
   ...PRACTICE_KINDS,
+  ...CLAUDE_KINDS,
 ];
 
 /** Placement slots inside a lesson. Additions require schema migration. */
@@ -203,6 +219,13 @@ export function isPracticeKind(value: unknown): value is PracticeKind {
   return (
     typeof value === "string" &&
     (PRACTICE_KINDS as readonly string[]).includes(value)
+  );
+}
+
+export function isClaudeKind(value: unknown): value is ClaudeKind {
+  return (
+    typeof value === "string" &&
+    (CLAUDE_KINDS as readonly string[]).includes(value)
   );
 }
 

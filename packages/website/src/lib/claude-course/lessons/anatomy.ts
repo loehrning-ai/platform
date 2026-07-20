@@ -53,6 +53,18 @@ const lesson: ClaudeLesson = {
   ],
   widgets: [
     {
+      kind: "prompt-compare",
+      placement: "after-intro",
+      courseSlug: "claude",
+      props: {
+        lessonId: "anatomy",
+        cpId: "compare",
+        weak: "write a launch email for our new SSO rollout",
+        strong:
+          "You are a senior comms writer, writing for an engineering audience.\n\n<context>\nWe are rolling out OAuth 2.1 SSO to replace legacy cookie auth on internal tools.\nMigration window: 6 weeks, opt-in first, then forced cutover.\nThe on-call rotation is @auth-oncall.\nAudience: ~3000 engineers across the organization, mixed seniority.\n</context>\n\n<task>\nDraft a launch email announcing the rollout to engineering.\n</task>\n\n<constraints>\n- Under 250 words.\n- No marketing language. Crisp, factual.\n- Must include: the migration window, the opt-in date, the forced-cutover date, and how to get help.\n- Tone: internal voice, direct, respectful of readers' time.\n- Give readers a clear single next action.\n</constraints>\n\n<format>\nMarkdown. Subject line first, then body. Sign-off from \"The Identity Platform team.\"\n</format>",
+      },
+    },
+    {
       kind: "drag-reorder",
       placement: "before-quiz",
       courseSlug: "claude",
@@ -95,6 +107,18 @@ const lesson: ClaudeLesson = {
           "format",
         ],
         copy: CLAUDE_DRAG_REORDER_COPY,
+      },
+    },
+    {
+      kind: "prompt-grader",
+      placement: "end",
+      courseSlug: "claude",
+      props: {
+        lessonId: "anatomy",
+        cpId: "grade",
+        task: "Rewrite a rambling Slack message into a crisp update with tl;dr, status, blockers, and next step.",
+        rubric:
+          "Must include all six parts (role, context, task, constraints, examples or rubric, format). Bonus for XML tags. Penalize vagueness, reward specificity.",
       },
     },
   ],

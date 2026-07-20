@@ -39,6 +39,18 @@ const lesson: ClaudeLesson = {
   ],
   widgets: [
     {
+      kind: "prompt-sandbox",
+      placement: "after-intro",
+      courseSlug: "claude",
+      props: {
+        lessonId: "reviews",
+        cpId: "review",
+        title: "Review a diff",
+        hint: "Paste a small diff. Ask for a staff-level review using the template above.",
+        placeholder: "You are reviewing a PR as a staff engineer…\n\nDIFF:\n<paste diff>",
+      },
+    },
+    {
       kind: "quiz",
       placement: "before-quiz",
       courseSlug: "claude",

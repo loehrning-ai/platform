@@ -46,6 +46,18 @@ const lesson: ClaudeLesson = {
   ],
   widgets: [
     {
+      kind: "prompt-compare",
+      placement: "after-intro",
+      courseSlug: "claude",
+      props: {
+        lessonId: "gdocs",
+        cpId: "cmp",
+        weak: "turn these bullets into a design doc: auth migration, 4 weeks, oauth 2.1, replace legacy cookie, sre audience, kill switch exists, on-call rotation exists",
+        strong:
+          "You are a senior engineer drafting a design doc for an SRE audience.\n\nSource material (bullet dump):\n- auth migration project, 4-week window\n- moving to OAuth 2.1, replacing legacy cookie auth\n- on-call: @auth-oncall\n- kill switch exists and tested\n\nProduce a design doc with this exact structure:\n# Title\n## TL;DR (3 bullets, <15 words each)\n## Context\n## Proposal\n## Rollout plan\n## Risks & mitigations\n## Success metrics\n## Open questions\n\nVoice rules:\n- Short sentences. Active verbs.\n- No marketing language.\n- Numbers before adjectives.\n- SRE-native vocabulary is fine; don't define p99 etc.\n\nOutput as clean markdown.",
+      },
+    },
+    {
       kind: "quiz",
       placement: "end",
       courseSlug: "claude",

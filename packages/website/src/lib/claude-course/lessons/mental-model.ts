@@ -63,6 +63,18 @@ const lesson: ClaudeLesson = {
   ],
   widgets: [
     {
+      kind: "prompt-sandbox",
+      placement: "before-quiz",
+      courseSlug: "claude",
+      props: {
+        lessonId: "mental-model",
+        cpId: "feel-it",
+        title: "Ask about something it can't know",
+        hint: 'Try: "Which oncall rotation owns the auth service in my team?", then watch it answer.',
+        placeholder: "Ask Claude something that depends on context you haven't given it…",
+      },
+    },
+    {
       kind: "quiz",
       placement: "after-intro",
       courseSlug: "claude",

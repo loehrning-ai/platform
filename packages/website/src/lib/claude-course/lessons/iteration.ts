@@ -52,6 +52,18 @@ const lesson: ClaudeLesson = {
   ],
   widgets: [
     {
+      kind: "prompt-sandbox",
+      placement: "after-intro",
+      courseSlug: "claude",
+      props: {
+        lessonId: "iteration",
+        cpId: "loop",
+        title: "Run a turn-1, then iterate",
+        hint: "Ask for a quick draft. Then paste the output back with a specific correction and ask again.",
+        placeholder: "Turn 1 prompt goes here. Then update this box and re-run for turn 2.",
+      },
+    },
+    {
       kind: "quiz",
       placement: "before-quiz",
       courseSlug: "claude",

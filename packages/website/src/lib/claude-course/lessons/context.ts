@@ -67,6 +67,19 @@ const lesson: ClaudeLesson = {
   ],
   widgets: [
     {
+      kind: "prompt-sandbox",
+      placement: "end",
+      courseSlug: "claude",
+      props: {
+        lessonId: "context",
+        cpId: "feel",
+        title: "Context in, context out",
+        hint: "Paste something, a thread, a PR description, then ask something that depends on it.",
+        placeholder:
+          "<documents>\n<document index=\"1\">\n[paste a short doc here]\n</document>\n</documents>\n\n<question>\nAsk something only answerable from the doc\n</question>",
+      },
+    },
+    {
       kind: "quiz",
       placement: "before-quiz",
       courseSlug: "claude",

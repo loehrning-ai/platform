@@ -39,6 +39,19 @@ const lesson: ClaudeLesson = {
   ],
   widgets: [
     {
+      kind: "prompt-sandbox",
+      placement: "after-intro",
+      courseSlug: "claude",
+      props: {
+        lessonId: "grounding",
+        cpId: "try",
+        title: "Force citations",
+        hint: 'Paste a short doc. Then add: "Answer only from the doc. Quote line numbers. If not present, say NOT_IN_CONTEXT."',
+        placeholder:
+          "DOC:\n<paste short doc>\n\nQUESTION:\n<ask>\n\nRULES:\n- Answer only from the doc.\n- Quote the exact line for every claim.\n- If not in the doc, respond exactly: NOT_IN_CONTEXT",
+      },
+    },
+    {
       kind: "quiz",
       placement: "before-quiz",
       courseSlug: "claude",

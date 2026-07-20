@@ -114,6 +114,18 @@ const lesson: ClaudeLesson = {
       },
     },
     {
+      kind: "prompt-grader",
+      placement: "before-quiz",
+      courseSlug: "claude",
+      props: {
+        lessonId: "evals",
+        cpId: "grader",
+        task: "Write a prompt for generating weekly status updates that a judge model can score.",
+        rubric:
+          "All Boris sections present, constraints specific, format explicit, includes a way to detect missing data.",
+      },
+    },
+    {
       kind: "quiz",
       placement: "end",
       courseSlug: "claude",
