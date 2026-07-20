@@ -158,6 +158,21 @@ describe("course catalog (shared course architecture)", () => {
     expect(IMPORTED_COURSE_CATALOG).toHaveLength(6);
   });
 
+  // plan 007 stage 10: the structural split is asserted via nativeStatus,
+  // not array identity — catches an entry silently drifting out of sync
+  // (e.g. landing in COURSE_CATALOG without nativeStatus: "live").
+  it("partitions ALL_COURSE_CATALOG by nativeStatus exactly onto COURSE_CATALOG/IMPORTED_COURSE_CATALOG", () => {
+    const liveSlugs = ALL_COURSE_CATALOG.filter((c) => c.nativeStatus === "live").map(
+      (c) => c.slug,
+    );
+    const pendingSlugs = ALL_COURSE_CATALOG.filter((c) => c.nativeStatus === "pending").map(
+      (c) => c.slug,
+    );
+    expect(liveSlugs).toEqual(COURSE_CATALOG.map((c) => c.slug));
+    expect(pendingSlugs).toEqual(IMPORTED_COURSE_CATALOG.map((c) => c.slug));
+    expect(liveSlugs.length + pendingSlugs.length).toBe(ALL_COURSE_CATALOG.length);
+  });
+
   it("carries nativeStatus: the 4 native courses are 'live', the 6 imported courses are 'pending' (plan 007 stage 6)", () => {
     for (const c of COURSE_CATALOG) {
       expect(c.nativeStatus, c.slug).toBe("live");
