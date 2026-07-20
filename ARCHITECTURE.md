@@ -2,7 +2,7 @@
 
 ## Current shape
 
-The repository contains one deployable Next.js application at `packages/simplified-website`. Root scripts are the stable command contract for local work and CI. The application is build-safe without credentials: optional Supabase, Anthropic, Sentry, and analytics features activate only when explicitly configured. Anthropic-backed exercises depend on the complete Supabase configuration because their durable production quota limiter fails closed without it.
+The repository contains one deployable Next.js application at `packages/website`. Root scripts are the stable command contract for local work and CI. The application is build-safe without credentials: optional Supabase, Anthropic, Sentry, and analytics features activate only when explicitly configured. Anthropic-backed exercises depend on the complete Supabase configuration because their durable production quota limiter fails closed without it.
 
 The public-repository boundary is multi-license. Application code is open source, while source-visible editorial and brand material can remain rights-reserved. Route visibility, repository visibility, and reuse permission are separate decisions; `LICENSE_POLICY.md` is the canonical file-level policy.
 
@@ -22,9 +22,14 @@ Content registries are the source of truth:
 
 New routes must be registered consistently in navigation, crawl policy, sitemap, machine-readable discovery, tests, and Lighthouse coverage.
 The committed page inventory is generated from the same crawl and artifact
-registries. `bun run --cwd packages/simplified-website page-inventory:check`
+registries. `bun run --cwd packages/website page-inventory:check`
 blocks drift; regenerate it only with the package's `page-inventory:generate`
 command.
+
+Deployment and runtime operations are documented in
+[packages/website/docs/deployment.md](packages/website/docs/deployment.md).
+The repeatable local Lighthouse budgets for the public routes are defined in
+[packages/website/perf-budgets.md](packages/website/perf-budgets.md).
 
 ## Asset and media admission boundary
 

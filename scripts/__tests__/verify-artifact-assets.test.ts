@@ -7,7 +7,7 @@ import type {
   OpenSourceArtifact,
   ToolArtifact,
   VideoArtifact,
-} from "../../packages/simplified-website/src/lib/open-source/artifacts";
+} from "../../packages/website/src/lib/open-source/artifacts";
 import {
   type ArtifactManifest,
   verifyArtifactAssets,
@@ -25,7 +25,7 @@ afterEach(async () => {
 async function fixture() {
   const repositoryRoot = await mkdtemp(path.join(tmpdir(), "artifact-assets-"));
   roots.push(repositoryRoot);
-  const relativePath = "packages/simplified-website/public/media/example.mp4";
+  const relativePath = "packages/website/public/media/example.mp4";
   const absolutePath = path.join(repositoryRoot, relativePath);
   const content = Buffer.from("example-video-bytes");
   await mkdir(path.dirname(absolutePath), { recursive: true });
@@ -60,10 +60,10 @@ async function publicationFixture() {
   roots.push(repositoryRoot);
 
   const licensePath =
-    "packages/simplified-website/public/licenses/example-tool-MIT.txt";
+    "packages/website/public/licenses/example-tool-MIT.txt";
   const licenseBytes = Buffer.from("MIT fixture license\n");
   const screenshotPath =
-    "packages/simplified-website/public/tool-screenshots/example-tool.png";
+    "packages/website/public/tool-screenshots/example-tool.png";
   const screenshotBytes = pngHeader(640, 360);
   await mkdir(path.join(repositoryRoot, path.dirname(licensePath)), {
     recursive: true,

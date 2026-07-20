@@ -12,11 +12,11 @@ The application uses the `geist` package, distributed under the SIL Open Font Li
 
 ## Geographic outline data
 
-`packages/simplified-website/src/lib/country-polylines-3d.ts` contains transformed geographic outline data from `world-atlas`'s `countries-50m.json`, processed with `topojson-client`. Both packages are distributed under the ISC License. The generated file retains source and transformation attribution. The complete upstream notices, including their distinct copyright years, are reproduced in `LICENSES/world-atlas-ISC.txt` and `LICENSES/topojson-client-ISC.txt`.
+`packages/website/src/lib/country-polylines-3d.ts` contains transformed geographic outline data from `world-atlas`'s `countries-50m.json`, processed with `topojson-client`. Both packages are distributed under the ISC License. The generated file retains source and transformation attribution. The complete upstream notices, including their distinct copyright years, are reproduced in `LICENSES/world-atlas-ISC.txt` and `LICENSES/topojson-client-ISC.txt`.
 
 ## Imported interactive-course assets
 
-Imported screenshots and license copies under `packages/simplified-website/public/imported-courses/` come from commit-pinned interactive-course projects. Source paths, commits, SHA-256 values, and corresponding license locations are recorded in the course catalog and asset manifest.
+Imported screenshots and license copies under `packages/website/public/imported-courses/` come from commit-pinned interactive-course projects. Source paths, commits, SHA-256 values, and corresponding license locations are recorded in the course catalog and asset manifest.
 
 ## Framework and library notices
 

@@ -5,8 +5,8 @@
     "": {
       "name": "loehrning-ai-open-source-platform",
     },
-    "packages/simplified-website": {
-      "name": "@loehrning/simplified-website",
+    "packages/website": {
+      "name": "@loehrning/website",
       "version": "1.0.0",
       "dependencies": {
         "@anthropic-ai/sdk": "^0.39.0",
@@ -32,8 +32,10 @@
         "rehype-autolink-headings": "^7.1.0",
         "rehype-slug": "^6.0.0",
         "remark-gfm": "^4.0.1",
+        "remark-parse": "^11.0.0",
         "server-only": "^0.0.1",
         "tailwind-merge": "^3.0.0",
+        "unified": "^11.0.5",
         "zod": "^4.3.6",
       },
       "devDependencies": {
@@ -45,10 +47,12 @@
         "@tailwindcss/postcss": "^4.0.0",
         "@testing-library/jest-dom": "^6.9.1",
         "@testing-library/react": "^16.3.2",
+        "@types/mdast": "^4.0.4",
         "@types/node": "^22.13.0",
         "@types/qrcode": "^1.5.6",
         "@types/react": "^19.0.0",
         "@types/react-dom": "^19.0.0",
+        "@types/unist": "^3.0.3",
         "@vitejs/plugin-react": "^5.0.0",
         "@vitest/coverage-v8": "^4.1.5",
         "eslint": "^9",
@@ -300,7 +304,7 @@
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.31", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="],
 
-    "@loehrning/simplified-website": ["@loehrning/simplified-website@workspace:packages/simplified-website"],
+    "@loehrning/website": ["@loehrning/website@workspace:packages/website"],
 
     "@next/bundle-analyzer": ["@next/bundle-analyzer@15.5.20", "", { "dependencies": { "webpack-bundle-analyzer": "4.10.1" } }, "sha512-OyB5HvHVRz2KdD9k7Al/FHDkkjqctljKhyDtasRjbsL6MnpLxP8b2Izk01bv4ubcgurU17WRJqbUdd+HA+PttA=="],
 

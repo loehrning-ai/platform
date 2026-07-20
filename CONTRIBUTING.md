@@ -31,7 +31,9 @@ build first. Do not invoke an internal `*:built` command unless `bun run verify`
 has just built the same workspace. Provider-free auth coverage is
 `bun run test:e2e:auth-scaffold`; it is not live login proof. The isolated live
 provider contract is documented in
-[`packages/simplified-website/docs/ci-contract.md`](packages/simplified-website/docs/ci-contract.md).
+[`packages/website/docs/ci-contract.md`](packages/website/docs/ci-contract.md).
+The E2E tiers and their commands are summarized in
+[`packages/website/tests/README.md`](packages/website/tests/README.md).
 
 ## Content changes
 

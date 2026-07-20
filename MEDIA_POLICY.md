@@ -34,7 +34,7 @@ Machine-generated captions or transcripts are drafts. A human must review names,
 
 ## Storage and privacy
 
-The current implementation admits only repository-local first-party media below `packages/simplified-website/public/media/`. Its typed registry requires local public URLs, its asset verifier reads stored repository bytes, and its player assumes direct same-origin files. This is the only supported media-delivery choice today. Large files still require an explicit storage review before they are committed because repository history is not a media distribution system.
+The current implementation admits only repository-local first-party media below `packages/website/public/media/`. Its typed registry requires local public URLs, its asset verifier reads stored repository bytes, and its player assumes direct same-origin files. This is the only supported media-delivery choice today. Large files still require an explicit storage review before they are committed because repository history is not a media distribution system.
 
 Remote media is a future architecture change, not a registry option. It requires a deliberate schema change, explicit remote-asset integrity and availability verification, exact Content Security Policy changes, privacy and transfer review, consent behavior where applicable, player failure handling, and new automated plus manual browser coverage. Do not place a remote URL into the current local-file fields or bypass the asset verifier.
 

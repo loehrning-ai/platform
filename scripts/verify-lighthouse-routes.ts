@@ -3,21 +3,21 @@
 import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { BLOG_POSTS } from "../packages/simplified-website/src/lib/blog-metadata";
-import { books } from "../packages/simplified-website/src/lib/books";
-import { IMPORTED_COURSE_CATALOG } from "../packages/simplified-website/src/lib/courses/catalog";
+import { BLOG_POSTS } from "../packages/website/src/lib/blog-metadata";
+import { books } from "../packages/website/src/lib/books";
+import { IMPORTED_COURSE_CATALOG } from "../packages/website/src/lib/courses/catalog";
 import {
   CRAWL_CONTRACT,
   matchesPattern,
   type CrawlRoute,
-} from "../packages/simplified-website/src/lib/crawl/contract";
-import { demos } from "../packages/simplified-website/src/lib/demos";
-import { OPEN_SOURCE_ARTIFACTS } from "../packages/simplified-website/src/lib/open-source/artifacts";
-import { WIE_KI_LEKTIONEN } from "../packages/simplified-website/src/lib/wie-ki-funktioniert";
-import { getWorkshopSlugs } from "../packages/simplified-website/src/lib/workshops";
+} from "../packages/website/src/lib/crawl/contract";
+import { demos } from "../packages/website/src/lib/demos";
+import { OPEN_SOURCE_ARTIFACTS } from "../packages/website/src/lib/open-source/artifacts";
+import { WIE_KI_LEKTIONEN } from "../packages/website/src/lib/wie-ki-funktioniert";
+import { getWorkshopSlugs } from "../packages/website/src/lib/workshops";
 
 const REPOSITORY_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const WEBSITE_ROOT = path.join(REPOSITORY_ROOT, "packages", "simplified-website");
+const WEBSITE_ROOT = path.join(REPOSITORY_ROOT, "packages", "website");
 export const LIGHTHOUSE_ORIGIN = "http://localhost:3000";
 
 type LighthouseConfig = {
@@ -192,14 +192,6 @@ async function publishedBookChapterPaths(): Promise<string[]> {
   return paths;
 }
 
-async function publishedVorlagenPaths(): Promise<string[]> {
-  const contentRoot = path.join(WEBSITE_ROOT, "content", "vorlagen");
-  return (await readdir(contentRoot))
-    .filter((file) => file.endsWith(".md"))
-    .map((file) => `/vorlagen/${file.replace(/\.md$/, "")}`)
-    .sort();
-}
-
 export async function buildPublishedDynamicCandidates(): Promise<
   ReadonlyMap<string, readonly string[]>
 > {
@@ -222,7 +214,6 @@ export async function buildPublishedDynamicCandidates(): Promise<
     ],
     ["/buecher/:slug", books.map((book) => `/buecher/${book.id}`)],
     ["/demos/:slug", demos.map((demo) => `/demos/${demo.slug}`)],
-    ["/vorlagen/:slug", await publishedVorlagenPaths()],
     ["/open-source/:kind/:slug", openSourceDetails],
     ["/buecher/:slug/:chapter", await publishedBookChapterPaths()],
   ]);

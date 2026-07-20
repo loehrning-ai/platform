@@ -22,33 +22,33 @@ arrays are deliberate release state, not placeholders.
 ## Canonical files
 
 - Imported linked courses (course-catalog lane, not the artifact registry):
-  `packages/simplified-website/src/lib/courses/catalog.ts`, in
+  `packages/website/src/lib/courses/catalog.ts`, in
   `IMPORTED_COURSE_CATALOG`.
 - Tool, project, and video records:
-  `packages/simplified-website/src/lib/open-source/artifacts.ts`, in
+  `packages/website/src/lib/open-source/artifacts.ts`, in
   `OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES`,
   `OPEN_SOURCE_PROJECT_ARTIFACT_CANDIDATES`, and
   `OPEN_SOURCE_VIDEO_ARTIFACT_CANDIDATES`. The corresponding
   `OPEN_SOURCE_*_ARTIFACTS` arrays are derived, published-only views; never
   edit or replace them with a second hand-maintained catalog.
 - Shared tool/project detail renderer:
-  `packages/simplified-website/src/components/open-source/software-artifact-guide.tsx`.
+  `packages/website/src/components/open-source/software-artifact-guide.tsx`.
 - Shared tool/project/video route:
-  `packages/simplified-website/src/app/open-source/[kind]/[slug]/page.tsx`.
+  `packages/website/src/app/open-source/[kind]/[slug]/page.tsx`.
 - Crawl policy and sitemap:
-  `packages/simplified-website/src/lib/crawl/contract.ts` and
-  `packages/simplified-website/src/app/sitemap.ts`.
+  `packages/website/src/lib/crawl/contract.ts` and
+  `packages/website/src/app/sitemap.ts`.
 - Generated publication inventory:
-  `packages/simplified-website/docs/seo/page-inventory.md`.
+  `packages/website/docs/seo/page-inventory.md`.
 - Asset ledger and admission checks: `ASSET_MANIFEST.json`,
   `scripts/scaffold-asset.mjs`, and `scripts/verify-artifact-assets.ts`.
 - Media policy: `MEDIA_POLICY.md`.
 - Data-driven browser admission coverage:
-  `packages/simplified-website/tests/e2e/route-open-source.spec.ts`.
+  `packages/website/tests/e2e/route-open-source.spec.ts`.
 - Lighthouse representatives: `lighthouserc.json`, checked by
   `scripts/verify-lighthouse-routes.ts`.
 - Records staged before their source commit exists:
-  `packages/simplified-website/src/lib/open-source/pending/`. This is not a
+  `packages/website/src/lib/open-source/pending/`. This is not a
   second catalog and never becomes one. A module there is imported by nothing
   but its own colocated spec, contributes no candidate, no route, no discovery
   data, and no collection count, and is typed so that its `source` field does
@@ -125,7 +125,7 @@ verified but unexposed, not incomplete.
 
 Stage the record instead:
 
-1. Put it in `packages/simplified-website/src/lib/open-source/pending/<slug>.ts`,
+1. Put it in `packages/website/src/lib/open-source/pending/<slug>.ts`,
    typed `satisfies PendingToolArtifact` (or the project equivalent), where the
    pending type is a *distributive* `Omit` of the artifact type over `"source"`.
    The distribution matters: the tool and project types are intersections with
@@ -181,7 +181,7 @@ file.
 
 Video delivery is narrower: the current implementation supports only reviewed
 repository-local first-party files under
-`packages/simplified-website/public/media/`. Remote video, iframe, streaming,
+`packages/website/public/media/`. Remote video, iframe, streaming,
 object-storage, and third-party-player delivery are not supported by the
 current schema or verifier. `MEDIA_POLICY.md` defines the change required
 before any remote media design can be admitted.
@@ -342,19 +342,19 @@ media files must be repository-local and independently recorded in
   },
   mediaFiles: {
     video: {
-      path: `packages/simplified-website/public/media/${slug}/video.webm`,
+      path: `packages/website/public/media/${slug}/video.webm`,
       sha256, sizeBytes, mimeType: "video/webm",
     },
     captions: {
-      path: `packages/simplified-website/public/media/${slug}/captions.vtt`,
+      path: `packages/website/public/media/${slug}/captions.vtt`,
       sha256, sizeBytes, mimeType: "text/vtt",
     },
     transcript: {
-      path: `packages/simplified-website/public/media/${slug}/transcript.md`,
+      path: `packages/website/public/media/${slug}/transcript.md`,
       sha256, sizeBytes, mimeType: "text/markdown",
     },
     poster: {
-      path: `packages/simplified-website/public/media/${slug}/poster.webp`,
+      path: `packages/website/public/media/${slug}/poster.webp`,
       sha256, sizeBytes, mimeType: "image/webp",
     },
   },
@@ -363,7 +363,7 @@ media files must be repository-local and independently recorded in
 
 The `watchHref`, caption, transcript, and poster URLs must resolve exactly to
 their `mediaFiles.*.path` values after removing
-`packages/simplified-website/public`. The accessibility review date must be a
+`packages/website/public`. The accessibility review date must be a
 real date no later than `datePublished`.
 
 ## License and asset admission
@@ -374,13 +374,13 @@ must have reviewed `ASSET_MANIFEST.json` records. Registry SHA-256, exact byte
 size, MIME type, and image dimensions must describe the stored bytes, not an
 upstream expectation. `bun run artifact-assets:check` verifies the artifact
 registry lanes; imported-course license and screenshot bytes are verified by
-`packages/simplified-website/src/lib/courses/catalog.test.ts` against the
+`packages/website/src/lib/courses/catalog.test.ts` against the
 catalog hashes.
 
 Generate each candidate record without writing the manifest:
 
 ```bash
-bun run asset:record -- packages/simplified-website/public/<reviewed-path> \
+bun run asset:record -- packages/website/public/<reviewed-path> \
   --owner "Named rights holder" \
   --source "Immutable provenance" \
   --license "SPDX or reviewed LicenseRef" \
@@ -407,8 +407,8 @@ JSON-LD, and page inventory. After adding an entry:
 2. Regenerate the committed inventory:
 
    ```bash
-   bun run --cwd packages/simplified-website page-inventory:generate
-   bun run --cwd packages/simplified-website page-inventory:check
+   bun run --cwd packages/website page-inventory:generate
+   bun run --cwd packages/website page-inventory:check
    ```
 
 3. Add one real detail URL from every non-empty artifact kind to
@@ -420,7 +420,7 @@ JSON-LD, and page inventory. After adding an entry:
    `OPEN_SOURCE_ARTIFACTS`.
 
 The registry-driven cases in
-`packages/simplified-website/tests/e2e/route-open-source.spec.ts` automatically
+`packages/website/tests/e2e/route-open-source.spec.ts` automatically
 exercise every published tool, project, and video. They verify page metadata,
 pinned source, license, launch behavior, complete software guides, and video
 caption/transcript/fallback behavior. Empty arrays register zero artifact cases.

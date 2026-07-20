@@ -47,9 +47,9 @@ id_ed25519
 playwright-report/
 test-results/
 blob-report/
-packages/simplified-website/tests/e2e/.auth/
-packages/simplified-website/supabase/.temp/
-packages/simplified-website/tests/e2e/_*.spec.ts
+packages/website/tests/e2e/.auth/
+packages/website/supabase/.temp/
+packages/website/tests/e2e/_*.spec.ts
 **/bun.lock
 !/bun.lock
 **/bun.lockb

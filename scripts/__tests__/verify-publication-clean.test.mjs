@@ -33,17 +33,17 @@ test("reports generated directories, Git metadata, secrets, and excluded specs",
   for (const directory of [
     ".git",
     "node_modules",
-    "packages/simplified-website/.next",
-    "packages/simplified-website/tests/e2e/.auth",
+    "packages/website/.next",
+    "packages/website/tests/e2e/.auth",
   ]) {
     await mkdir(path.join(root, directory), { recursive: true });
   }
-  await mkdir(path.join(root, "packages/simplified-website/tests/e2e"), {
+  await mkdir(path.join(root, "packages/website/tests/e2e"), {
     recursive: true,
   });
   await writeFile(path.join(root, ".env.local"), "TOKEN=secret\n");
   await writeFile(
-    path.join(root, "packages/simplified-website/tests/e2e/_local.spec.ts"),
+    path.join(root, "packages/website/tests/e2e/_local.spec.ts"),
     "export {};\n",
   );
 
@@ -51,9 +51,9 @@ test("reports generated directories, Git metadata, secrets, and excluded specs",
     ".env.local",
     ".git/",
     "node_modules/",
-    "packages/simplified-website/.next/",
-    "packages/simplified-website/tests/e2e/_local.spec.ts",
-    "packages/simplified-website/tests/e2e/.auth/",
+    "packages/website/.next/",
+    "packages/website/tests/e2e/_local.spec.ts",
+    "packages/website/tests/e2e/.auth/",
   ]);
   await assert.rejects(
     () => verifyPublicationClean(root),

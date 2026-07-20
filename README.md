@@ -2,8 +2,6 @@
 
 Open-source application code for [loehrning.ai](https://loehrning.ai), a free German-language platform for practical AI literacy and EU AI Act learning.
 
-This standalone tree was extracted from the loehrning.ai monorepo on 2026-07-14. At extraction time it intentionally contained no Git metadata and was not connected to a Git remote.
-
 The application includes four native learning paths, six linked open-source technical labs, three browser-readable books, governance templates, interactive demonstrations, and public learning APIs. The public learning surface works without an account. Optional account, analytics, observability, and AI-assisted features remain disabled when their environment variables are absent. Anthropic-backed exercises additionally require the complete Supabase quota backend; production rate limiting fails closed without it.
 
 "Open source" applies to the application code and the files explicitly assigned an open license. It does not automatically apply to every course, book, brand asset, or other source-visible editorial file. Those materials remain reviewable and buildable in this repository, but reuse is governed file-by-file by [LICENSE_POLICY.md](LICENSE_POLICY.md). This is not a repository-wide open-content license.
@@ -25,7 +23,7 @@ bun install --frozen-lockfile
 bun run dev
 ```
 
-Open `http://localhost:3000`. No credentials are required for courses, books, demos, templates, or the production build. Copy `packages/simplified-website/.env.example` to an ignored local environment file only when testing optional integrations.
+Open `http://localhost:3000`. No credentials are required for courses, books, demos, templates, or the production build. Copy `packages/website/.env.example` to an ignored local environment file only when testing optional integrations.
 
 A clean production build uses only repository-local and system fonts. It does not download fonts from Google or require provider credentials.
 
@@ -58,7 +56,7 @@ same workspace.
 not prove live login. The separate `bun run test:e2e:authenticated-live` gate
 fails unless a dedicated Supabase test project supplies the exact six-variable
 contract documented in
-[`packages/simplified-website/docs/ci-contract.md`](packages/simplified-website/docs/ci-contract.md).
+[`packages/website/docs/ci-contract.md`](packages/website/docs/ci-contract.md).
 It has no service-role, legacy anon-key, or mock-key fallback.
 
 `bun run verify:release` runs environment validation and the build in strict
@@ -109,11 +107,14 @@ Anthropic activation requires `AI_NATIVE_PRACTICE_ENABLED=true`, its API key, th
 
 ```text
 packages/
-  simplified-website/
+  website/
     content/       Authored courses, books, and templates
     public/        Public static assets and imported-course proof
     src/           Next.js application and tests
     tests/e2e/     Playwright browser tests
+scripts/           Root verification, release, and packaging gates
+LICENSES/          License texts referenced by LICENSE_POLICY.md
+.github/           CI workflows and issue templates
 ```
 
 The repository is deliberately a one-workspace monorepo. Future standalone learning modules or tools can be added under `packages/` after they pass the licensing, secret-scan, build, and browser-proof gates documented in [ARCHITECTURE.md](ARCHITECTURE.md). The exact registry, commit-pinning, asset, discovery, and browser admission sequence is [ARTIFACT_PUBLICATION.md](ARTIFACT_PUBLICATION.md).
@@ -123,7 +124,7 @@ Provider-free runtime does not mean provider-neutral source publication. GitHub 
 No standalone tool, project, or hosted video has been added in this preparation pass. Future media must satisfy [MEDIA_POLICY.md](MEDIA_POLICY.md). Generate a read-only candidate asset record with explicit human-supplied metadata:
 
 ```bash
-bun run asset:record -- packages/simplified-website/public/path/to/file.ext \
+bun run asset:record -- packages/website/public/path/to/file.ext \
   --owner "Named owner" \
   --source "Immutable source or provenance" \
   --license "License identifier" \

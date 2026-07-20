@@ -1,37 +1,37 @@
 {
   "version": 1,
-  "generated": "2026-07-19",
+  "generated": "2026-07-20",
   "hashAlgorithm": "sha256",
   "assets": [
     {
-      "path": "packages/simplified-website/public/apple-touch-icon.png",
-      "sizeBytes": 4339,
-      "sha256": "392cd3d987df28245e3d6b2f674ec530d50ded8a95b25f410742280b9ffccdf1",
+      "path": "packages/website/public/apple-touch-icon.png",
+      "sizeBytes": 708,
+      "sha256": "ff76630583ce573bc5ae953ecb33d40f6a4eb2fa141fafb3f3e133b8ec922d16",
       "owner": "Tim Löhr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
-      "path": "packages/simplified-website/public/artifacts/tools/tech-cv/LICENSE.txt",
+      "path": "packages/website/public/artifacts/tools/tech-cv/LICENSE.txt",
       "sizeBytes": 1066,
       "sha256": "36beaa24d27fc788e411a7fd7cc93d752878e6c51240a8abcc1156ff1451c5bd",
       "owner": "Tim Löhr",
-      "source": "Prepared for publication; provenance pinned at admission (see packages/simplified-website/src/lib/open-source/pending/tech-cv.ts)",
+      "source": "Prepared for publication; provenance pinned at admission (see packages/website/src/lib/open-source/pending/tech-cv.ts)",
       "license": "MIT",
       "redistribution": "Redistribution of this license notice is required with the corresponding MIT-licensed work"
     },
     {
-      "path": "packages/simplified-website/public/artifacts/tools/tech-cv/screenshot.webp",
+      "path": "packages/website/public/artifacts/tools/tech-cv/screenshot.webp",
       "sizeBytes": 133876,
       "sha256": "4788ac350cb1e428be06cb9063dd8307754d5e973b0482f95723657e4a27c6f0",
       "owner": "Tim Löhr",
-      "source": "Prepared for publication; provenance pinned at admission (see packages/simplified-website/src/lib/open-source/pending/tech-cv.ts)",
+      "source": "Prepared for publication; provenance pinned at admission (see packages/website/src/lib/open-source/pending/tech-cv.ts)",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/tech-cv/LICENSE.txt"
     },
     {
-      "path": "packages/simplified-website/public/book-covers/ki-arbeitsalltag-2026-1.png",
+      "path": "packages/website/public/book-covers/ki-arbeitsalltag-2026-1.png",
       "sizeBytes": 401757,
       "sha256": "e89ea724f9c8adf0f53930869b2709121f1079b82725e65f386a8cdc83903bfb",
       "owner": "Tim Löhr",
@@ -40,7 +40,7 @@
       "redistribution": "Included for repository operation; reuse is not granted"
     },
     {
-      "path": "packages/simplified-website/public/book-covers/ki-arbeitsalltag-2026-2.png",
+      "path": "packages/website/public/book-covers/ki-arbeitsalltag-2026-2.png",
       "sizeBytes": 59384,
       "sha256": "26520a076bb00122253d1410e75a6d7d773be159e023dcdede2cc7a0eab3d080",
       "owner": "Tim Löhr",
@@ -49,7 +49,7 @@
       "redistribution": "Included for repository operation; reuse is not granted"
     },
     {
-      "path": "packages/simplified-website/public/book-covers/ki-arbeitsalltag-2026-3.png",
+      "path": "packages/website/public/book-covers/ki-arbeitsalltag-2026-3.png",
       "sizeBytes": 86818,
       "sha256": "e1248a373c0b8b7d9576d0472faacd2e17e093e92e0f584289fb1d9f04d03d3b",
       "owner": "Tim Löhr",
@@ -58,7 +58,7 @@
       "redistribution": "Included for repository operation; reuse is not granted"
     },
     {
-      "path": "packages/simplified-website/public/book-covers/ki-landschaft-2026-1.png",
+      "path": "packages/website/public/book-covers/ki-landschaft-2026-1.png",
       "sizeBytes": 427289,
       "sha256": "7ae71f17b749988a8b49ec16e30787ca1f21f37d9668fbdf06b4fcd42208d6a1",
       "owner": "Tim Löhr",
@@ -67,7 +67,7 @@
       "redistribution": "Included for repository operation; reuse is not granted"
     },
     {
-      "path": "packages/simplified-website/public/book-covers/ki-landschaft-2026-2.png",
+      "path": "packages/website/public/book-covers/ki-landschaft-2026-2.png",
       "sizeBytes": 61718,
       "sha256": "ab4f4bfcf31f85d2a6674a38446a70955472d7f351dc95b777259553445bd621",
       "owner": "Tim Löhr",
@@ -76,7 +76,7 @@
       "redistribution": "Included for repository operation; reuse is not granted"
     },
     {
-      "path": "packages/simplified-website/public/book-covers/ki-landschaft-2026-3.png",
+      "path": "packages/website/public/book-covers/ki-landschaft-2026-3.png",
       "sizeBytes": 77683,
       "sha256": "358cf7e5cce481e9995bc55190824f10fb1a23001fcc591319dfe27a8e47a235",
       "owner": "Tim Löhr",
@@ -85,7 +85,7 @@
       "redistribution": "Included for repository operation; reuse is not granted"
     },
     {
-      "path": "packages/simplified-website/public/book-covers/ki-tools-selbststaendige-2026-1.png",
+      "path": "packages/website/public/book-covers/ki-tools-selbststaendige-2026-1.png",
       "sizeBytes": 476986,
       "sha256": "dacfdbd6f5088357d1f079d74f3bb36ce986c5c14013cd6398a55155984de58d",
       "owner": "Tim Löhr",
@@ -94,7 +94,7 @@
       "redistribution": "Included for repository operation; reuse is not granted"
     },
     {
-      "path": "packages/simplified-website/public/book-covers/ki-tools-selbststaendige-2026-2.png",
+      "path": "packages/website/public/book-covers/ki-tools-selbststaendige-2026-2.png",
       "sizeBytes": 53015,
       "sha256": "88a79b99da1cbed8a277755f8d42a3b13989ac9f9ed24027551912bc40d82ec7",
       "owner": "Tim Löhr",
@@ -103,7 +103,7 @@
       "redistribution": "Included for repository operation; reuse is not granted"
     },
     {
-      "path": "packages/simplified-website/public/book-covers/ki-tools-selbststaendige-2026-3.png",
+      "path": "packages/website/public/book-covers/ki-tools-selbststaendige-2026-3.png",
       "sizeBytes": 65721,
       "sha256": "36c74ea8df27a7ed48c80796111530087c174a1ea71bb1a2cae813d0426a1845",
       "owner": "Tim Löhr",
@@ -112,187 +112,187 @@
       "redistribution": "Included for repository operation; reuse is not granted"
     },
     {
-      "path": "packages/simplified-website/public/favicon-16x16.png",
-      "sizeBytes": 431,
-      "sha256": "2a9743140e0556e675a9dff94e483c0d5a80b74755ef9a35c9953d1743817651",
+      "path": "packages/website/public/favicon-16x16.png",
+      "sizeBytes": 221,
+      "sha256": "97532161d0a5db008c4fa674f3e02b1a7eb67d364b3d9d30eb344484ce05e1ab",
       "owner": "Tim Löhr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
-      "path": "packages/simplified-website/public/favicon-32x32.png",
-      "sizeBytes": 777,
-      "sha256": "7035cbd1fe023c2ee7a5bc60aece6db67e2bc64dca3f35b09d0cde00c6b7e8b3",
+      "path": "packages/website/public/favicon-32x32.png",
+      "sizeBytes": 246,
+      "sha256": "03e92a40107626d250cecc50aee9a7cd2f17bf585e2fd6428d6bf25230b9eb91",
       "owner": "Tim Löhr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
-      "path": "packages/simplified-website/public/favicon.ico",
-      "sizeBytes": 437,
-      "sha256": "e62fdacf41d2721d46d83b22d862548133c252acab92c63b79773eadf930c3dd",
+      "path": "packages/website/public/favicon.ico",
+      "sizeBytes": 228,
+      "sha256": "e08b33d21bbee868ed24cf2cb109d128fbc7df492337d290978ccd18c544346b",
       "owner": "Tim Löhr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
-      "path": "packages/simplified-website/public/icon-192-maskable.png",
-      "sizeBytes": 4461,
-      "sha256": "6aa19ab6af165b6a7688229669625fe03c66a75e0d206cefbfc84c83bbd980d1",
+      "path": "packages/website/public/icon-192-maskable.png",
+      "sizeBytes": 804,
+      "sha256": "6d1249e75984a37b97cf58b273cf529f079d07f277a07a57987bee9807ca8f9c",
       "owner": "Tim Löhr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
-      "path": "packages/simplified-website/public/icon-192.png",
-      "sizeBytes": 4569,
-      "sha256": "2c56fbe72b0292707b7bc89de0847aa62f9eadcee1883a891b9c742f93252086",
+      "path": "packages/website/public/icon-192.png",
+      "sizeBytes": 635,
+      "sha256": "6f14224d8343d843b38fdab64514a5697043e0c4acd55cb15445af62ddec0b51",
       "owner": "Tim Löhr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
-      "path": "packages/simplified-website/public/icon-512-maskable.png",
-      "sizeBytes": 13443,
-      "sha256": "bfbe1158c3da4f5fdacf19f97cc10ab01977bec996c8dc8966151db66c366081",
+      "path": "packages/website/public/icon-512-maskable.png",
+      "sizeBytes": 2214,
+      "sha256": "4bc840f999f0e00e2d153bbdc8edfc2069951b93bbedc229b12a0ffa8e3465d1",
       "owner": "Tim Löhr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
-      "path": "packages/simplified-website/public/icon-512.png",
-      "sizeBytes": 13460,
-      "sha256": "b0914eaaaa5f743e885b267a44af18958f2bee0da20953aa2ab6d8cf07185bc1",
+      "path": "packages/website/public/icon-512.png",
+      "sizeBytes": 2083,
+      "sha256": "037e7e10d17924e650e16520607f65e57da69282d3224d2924a6d63909de3a6a",
       "owner": "Tim Löhr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
-      "path": "packages/simplified-website/public/imported-courses/licenses/codex-MIT-LICENSE.txt",
+      "path": "packages/website/public/imported-courses/licenses/codex-MIT-LICENSE.txt",
       "sizeBytes": 1068,
       "sha256": "7b42b5981763ae5341a686ac738900f07ca2b837ff0ffe3efaafef45ade801f6",
       "owner": "Tim Löhr and the corresponding interactive-course project",
-      "source": "Commit-pinned source recorded in packages/simplified-website/src/lib/courses/catalog.ts",
+      "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Redistribution of this license notice is required with the corresponding MIT-licensed work"
     },
     {
-      "path": "packages/simplified-website/public/imported-courses/licenses/data-engineering-fundamentals-MIT-LICENSE.txt",
+      "path": "packages/website/public/imported-courses/licenses/data-engineering-fundamentals-MIT-LICENSE.txt",
       "sizeBytes": 1079,
       "sha256": "7cd9f643d6d743ff0600dda3da55383162723a0d5e874c5b73a3501c5e5b75e0",
       "owner": "Tim Löhr and the corresponding interactive-course project",
-      "source": "Commit-pinned source recorded in packages/simplified-website/src/lib/courses/catalog.ts",
+      "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Redistribution of this license notice is required with the corresponding MIT-licensed work"
     },
     {
-      "path": "packages/simplified-website/public/imported-courses/licenses/interactive-courses-MIT-LICENSE.txt",
+      "path": "packages/website/public/imported-courses/licenses/interactive-courses-MIT-LICENSE.txt",
       "sizeBytes": 1066,
       "sha256": "cc41d8f9e6580c3cd9ebe68f40af8e599d09beb147c3378ea010974ea76e07f3",
       "owner": "Tim Löhr and the corresponding interactive-course project",
-      "source": "Commit-pinned source recorded in packages/simplified-website/src/lib/courses/catalog.ts",
+      "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Redistribution of this license notice is required with the corresponding MIT-licensed work"
     },
     {
-      "path": "packages/simplified-website/public/imported-courses/screenshots/ai-native-operator.jpg",
+      "path": "packages/website/public/imported-courses/screenshots/ai-native-operator.jpg",
       "sizeBytes": 220018,
       "sha256": "316f9b6a2a1aa2ea25ed27da113ed30028597fe0fb15416c52bad8fadbbdedf5",
       "owner": "Tim Löhr and the corresponding interactive-course project",
-      "source": "Commit-pinned source recorded in packages/simplified-website/src/lib/courses/catalog.ts",
+      "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file in public/imported-courses/licenses/"
     },
     {
-      "path": "packages/simplified-website/public/imported-courses/screenshots/claude.jpg",
+      "path": "packages/website/public/imported-courses/screenshots/claude.jpg",
       "sizeBytes": 232845,
       "sha256": "4d0c51a947792c1e8203e962eede06854c3ee946ab220a68fb844d0971fbdf0b",
       "owner": "Tim Löhr and the corresponding interactive-course project",
-      "source": "Commit-pinned source recorded in packages/simplified-website/src/lib/courses/catalog.ts",
+      "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file in public/imported-courses/licenses/"
     },
     {
-      "path": "packages/simplified-website/public/imported-courses/screenshots/codex.jpg",
+      "path": "packages/website/public/imported-courses/screenshots/codex.jpg",
       "sizeBytes": 269791,
       "sha256": "6e67076e584ca88b8b497bacebc1f2b5373fe8c6a1547108f65f66b856ee5c46",
       "owner": "Tim Löhr and the corresponding interactive-course project",
-      "source": "Commit-pinned source recorded in packages/simplified-website/src/lib/courses/catalog.ts",
+      "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file in public/imported-courses/licenses/"
     },
     {
-      "path": "packages/simplified-website/public/imported-courses/screenshots/data-engineering-fundamentals.jpg",
+      "path": "packages/website/public/imported-courses/screenshots/data-engineering-fundamentals.jpg",
       "sizeBytes": 310689,
       "sha256": "fa3df8661bdc942b1bb712480e85767e30ff43e5612e73b2f12ccc85d9db8f60",
       "owner": "Tim Löhr and the corresponding interactive-course project",
-      "source": "Commit-pinned source recorded in packages/simplified-website/src/lib/courses/catalog.ts",
+      "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file in public/imported-courses/licenses/"
     },
     {
-      "path": "packages/simplified-website/public/imported-courses/screenshots/data-infrastructure.jpg",
+      "path": "packages/website/public/imported-courses/screenshots/data-infrastructure.jpg",
       "sizeBytes": 311055,
       "sha256": "17bf2d0b0c371df8a1deedee4230c94aa058a7efda828400e96999ffaca42258",
       "owner": "Tim Löhr and the corresponding interactive-course project",
-      "source": "Commit-pinned source recorded in packages/simplified-website/src/lib/courses/catalog.ts",
+      "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file in public/imported-courses/licenses/"
     },
     {
-      "path": "packages/simplified-website/public/imported-courses/screenshots/data-science.jpg",
+      "path": "packages/website/public/imported-courses/screenshots/data-science.jpg",
       "sizeBytes": 326305,
       "sha256": "3b687b55058b216e4a2a91b1f202327460d5302295aee48c4b9d0c9e06d1b3ce",
       "owner": "Tim Löhr and the corresponding interactive-course project",
-      "source": "Commit-pinned source recorded in packages/simplified-website/src/lib/courses/catalog.ts",
+      "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file in public/imported-courses/licenses/"
     },
     {
-      "path": "packages/simplified-website/public/logo-square-512.png",
-      "sizeBytes": 19779,
-      "sha256": "13c472876258b5f2d37baf2aaafc8a69b3443eef43810aa4af3e1789469811a5",
+      "path": "packages/website/public/logo-square-512.png",
+      "sizeBytes": 2083,
+      "sha256": "037e7e10d17924e650e16520607f65e57da69282d3224d2924a6d63909de3a6a",
       "owner": "Tim Löhr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
-      "path": "packages/simplified-website/public/logo-white.svg",
-      "sizeBytes": 29094,
-      "sha256": "46d28b419c8464fb5c8551681447e06ec86ef0c45340de84bdc9ca08c57f8ef5",
+      "path": "packages/website/public/logo-white.svg",
+      "sizeBytes": 5400,
+      "sha256": "dcb2fed3b5b9840145f6b1794eca9478c07e0a0b93e8ec5dac7107f21132d7be",
       "owner": "Tim Löhr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
-      "path": "packages/simplified-website/public/logo.svg",
-      "sizeBytes": 29165,
-      "sha256": "46cb871c12e5eb79feacacae5bdde6bb9833beecd11f19c374fc018c7b497023",
+      "path": "packages/website/public/logo.svg",
+      "sizeBytes": 5400,
+      "sha256": "88caaeb331ee63acf52003323df5ec4ad5c1eb7b5aa35699e36dc3266dd99871",
       "owner": "Tim Löhr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
-      "path": "packages/simplified-website/public/og-image.png",
-      "sizeBytes": 21345,
-      "sha256": "08807a5a8d042419ed2460ad4d2e513efbe32d1e489954ab13cacbf43744a203",
+      "path": "packages/website/public/og-image.png",
+      "sizeBytes": 48057,
+      "sha256": "94288b4a4defb3eb341ceeb551de65141ae4ecfa5e9c62e93691425b27fda4bd",
       "owner": "Tim Löhr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
-      "path": "packages/simplified-website/public/ueber-mich/tim-loehr.jpg",
+      "path": "packages/website/public/ueber-mich/tim-loehr.jpg",
       "sizeBytes": 127871,
       "sha256": "bc40fd98819953ddfff54cec26ad4ef6d8564ed4c8c574873e4b59268aff1ddb",
       "owner": "Tim Löhr",
@@ -301,7 +301,7 @@
       "redistribution": "Included for repository operation; no standalone reuse rights granted"
     },
     {
-      "path": "packages/simplified-website/public/workshops/geschaeftsberichte-mit-ki-lesen/norda-analyst-kit.zip",
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/norda-analyst-kit.zip",
       "sizeBytes": 41470,
       "sha256": "59f5f2ff62fe0e744c9de5e6dc0870b8b0f1c5fbfc9644b01d9856f57729d973",
       "owner": "Tim Löhr",
@@ -310,7 +310,7 @@
       "redistribution": "Frei herunterladbar für Workshop-Teilnehmende und Website-Besucher"
     },
     {
-      "path": "packages/simplified-website/src/fonts/LoehrningSans-Bold.ttf",
+      "path": "packages/website/src/fonts/LoehrningSans-Bold.ttf",
       "sizeBytes": 417076,
       "sha256": "96d7568b98e9dbc086e8bfc28e965f667c226721076f019cf12f8f6f10efbff0",
       "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
@@ -319,7 +319,7 @@
       "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/simplified-website/src/fonts/LoehrningSans-Medium.ttf",
+      "path": "packages/website/src/fonts/LoehrningSans-Medium.ttf",
       "sizeBytes": 414040,
       "sha256": "3f6d8a71b8fdbcab081a29c95abfa917ba0f622aca81ad026436628531fc3664",
       "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
@@ -328,7 +328,7 @@
       "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/simplified-website/src/fonts/LoehrningSans-Regular.ttf",
+      "path": "packages/website/src/fonts/LoehrningSans-Regular.ttf",
       "sizeBytes": 408424,
       "sha256": "fa1520b484cec6ba46c870e2f0b0802720fc95fd9810ea245bb96559d2ae342a",
       "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
@@ -337,7 +337,7 @@
       "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/simplified-website/src/fonts/LoehrningSans-SemiBold.ttf",
+      "path": "packages/website/src/fonts/LoehrningSans-SemiBold.ttf",
       "sizeBytes": 415960,
       "sha256": "0888713110a628683cccf1c0c51614dc2e2f82924bb0133acceec48d742d4c24",
       "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
@@ -346,7 +346,7 @@
       "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/simplified-website/src/fonts/typing/Typing-Bold.ttf",
+      "path": "packages/website/src/fonts/typing/Typing-Bold.ttf",
       "sizeBytes": 879720,
       "sha256": "0b68b5f13390656f1e283a51c702b266d8c4e46a17d0be2f67b7f6fcc3a32ded",
       "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
@@ -355,7 +355,7 @@
       "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/simplified-website/src/fonts/typing/Typing-Medium.ttf",
+      "path": "packages/website/src/fonts/typing/Typing-Medium.ttf",
       "sizeBytes": 879740,
       "sha256": "70bde4ea7e363336467a125e9d3d631bde090ebe24a569b2d6c39f90c2df3e97",
       "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
@@ -364,7 +364,7 @@
       "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/simplified-website/src/fonts/typing/Typing-Regular.ttf",
+      "path": "packages/website/src/fonts/typing/Typing-Regular.ttf",
       "sizeBytes": 879708,
       "sha256": "f21310e3ef46427a43f91a7c8d1ceb6836bbc3707965eee636206a6ee0b1c6e8",
       "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
@@ -373,13 +373,121 @@
       "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/simplified-website/src/fonts/typing/Typing-SemiBold.ttf",
+      "path": "packages/website/src/fonts/typing/Typing-SemiBold.ttf",
       "sizeBytes": 879756,
       "sha256": "19f9c2cae411db1ab3e334a0ad269357a7dfc65232364601fad02329ab69ae98",
       "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
       "source": "https://github.com/rsms/inter",
       "license": "OFL-1.1",
       "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/src/fonts/LoehrningSans-Bold.woff2",
+      "sizeBytes": 23948,
+      "sha256": "31bea60fecac37cd0c39679e26b9d981f08a6f148085bbcb103f8768713007b1",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "https://github.com/rsms/inter",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/src/fonts/LoehrningSans-Medium.woff2",
+      "sizeBytes": 23924,
+      "sha256": "a38caa38466b1a94ffc8d80ea4b389965d7d951d98cb97811bd6a2acca9c71ba",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "https://github.com/rsms/inter",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/src/fonts/LoehrningSans-Regular.woff2",
+      "sizeBytes": 23780,
+      "sha256": "d8810e14e49e36a635a66723b00e1db7afd7ad6342ab164b1c7428e9c796e4c0",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "https://github.com/rsms/inter",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/src/fonts/LoehrningSans-SemiBold.woff2",
+      "sizeBytes": 24096,
+      "sha256": "0e878e65a550506ae4295fd9adbd1779fd7bb2abae423d81258344aec2edde01",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "https://github.com/rsms/inter",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/src/fonts/typing/Typing-Bold.woff2",
+      "sizeBytes": 60916,
+      "sha256": "ca6dba1056629a9e0ff4fa578306666581a1ec56e48799538ae203e69ed745d2",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "https://github.com/rsms/inter",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/src/fonts/typing/Typing-Medium.woff2",
+      "sizeBytes": 60948,
+      "sha256": "c67df698a4065d33f11a931c37b424d9653da9ad62217ec8de3b5a3cac01d2f3",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "https://github.com/rsms/inter",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/src/fonts/typing/Typing-Regular.woff2",
+      "sizeBytes": 61064,
+      "sha256": "53682db1ecfdd18db0af16fcb234a01e4b834ba6914d85806747bb011a59533c",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "https://github.com/rsms/inter",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/src/fonts/typing/Typing-SemiBold.woff2",
+      "sizeBytes": 60860,
+      "sha256": "47338939923cdc67d4d95d0267efbf3d5f22d0beb171a56d90fd24ad6bee315f",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "https://github.com/rsms/inter",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/public/course-covers/ai-native.png",
+      "sizeBytes": 123634,
+      "sha256": "1ee107380da60c86cfbb5951f45a0f037df7f74dc7535d83cdeded3858f32461",
+      "owner": "Tim Löhr",
+      "source": "Authored loehrning.ai course cover",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
+    },
+    {
+      "path": "packages/website/public/course-covers/eu-ai-act-kurs.png",
+      "sizeBytes": 234807,
+      "sha256": "83ffce8920ed861deb22132886823cdf3f58b439c038115f0da404a47708317e",
+      "owner": "Tim Löhr",
+      "source": "Authored loehrning.ai course cover",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
+    },
+    {
+      "path": "packages/website/public/course-covers/ki-fuehrerschein.png",
+      "sizeBytes": 214833,
+      "sha256": "13ecc254f595665c24e86bbf84e8c58a0df478b5f6f5edc4cf082fdf1eed231d",
+      "owner": "Tim Löhr",
+      "source": "Authored loehrning.ai course cover",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
+    },
+    {
+      "path": "packages/website/public/course-covers/ki-und-gesellschaft.png",
+      "sizeBytes": 205959,
+      "sha256": "23e9bc9d433a9909b8cd4510bb6019b5a6444219eb060d241f1628ac8c0130b9",
+      "owner": "Tim Löhr",
+      "source": "Authored loehrning.ai course cover",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
     }
   ]
 }

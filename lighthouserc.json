@@ -1,7 +1,7 @@
 {
   "ci": {
     "collect": {
-      "startServerCommand": "cd packages/simplified-website && bun run start",
+      "startServerCommand": "cd packages/website && bun run start",
       "startServerReadyPattern": "Ready in",
       "startServerReadyTimeout": 120000,
       "url": [
@@ -21,12 +21,10 @@
         "http://localhost:3000/workshops",
         "http://localhost:3000/workshops/geschaeftsberichte-mit-ki-lesen",
         "http://localhost:3000/buecher",
-        "http://localhost:3000/buecher/ki-arbeitsalltag",
-        "http://localhost:3000/buecher/ki-arbeitsalltag/02_persoenliches_profil",
+        "http://localhost:3000/buecher/ki-landschaft",
+        "http://localhost:3000/buecher/ki-landschaft/02_methodik",
         "http://localhost:3000/demos",
         "http://localhost:3000/demos/prompt-scanner",
-        "http://localhost:3000/vorlagen",
-        "http://localhost:3000/vorlagen/ki-nutzungsrichtlinie",
         "http://localhost:3000/open-source",
         "http://localhost:3000/open-source/lizenzrichtlinie",
         "http://localhost:3000/ueber-mich",

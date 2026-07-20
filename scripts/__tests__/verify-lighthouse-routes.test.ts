@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import { readFile } from "node:fs/promises";
-import { CRAWL_CONTRACT } from "../../packages/simplified-website/src/lib/crawl/contract";
+import { CRAWL_CONTRACT } from "../../packages/website/src/lib/crawl/contract";
 import {
   buildPublishedDynamicCandidates,
   verifyLighthouseRouteConfig,

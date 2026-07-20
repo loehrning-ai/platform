@@ -9,13 +9,13 @@ import {
   type OpenSourceArtifact,
   type OpenSourceMediaFile,
   type VideoArtifact,
-} from "../packages/simplified-website/src/lib/open-source/artifacts";
+} from "../packages/website/src/lib/open-source/artifacts";
 
 const defaultRepositoryRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   "..",
 );
-const PUBLIC_DIRECTORY = "packages/simplified-website/public";
+const PUBLIC_DIRECTORY = "packages/website/public";
 
 export type ArtifactManifestEntry = {
   path: string;
