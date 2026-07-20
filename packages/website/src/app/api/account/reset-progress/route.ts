@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAuthServerClient, getAuthenticatedUser } from "@/lib/supabase/auth-server";
-import { isUnifiedProgress } from "@/lib/progress/server-sync";
-import type { UnifiedProgress } from "@/lib/progress/types";
+import { deleteCourseProgressRow } from "@/lib/progress/server-store";
 import { COURSE_SLUGS, type CourseSlug } from "@/lib/course/types";
 import { readBoundedJson } from "@/lib/http/read-json-body";
 import { reportApiError } from "@/lib/observability/api-error";
@@ -66,36 +65,17 @@ export async function POST(request: Request) {
 
   const { courseSlug } = parsed.data;
 
-  const { data: existing } = await supabase
-    .from("user_course_progress")
-    .select("progress")
-    .eq("user_id", user.id)
-    .maybeSingle();
+  // Per-course-row schema (plan 007 stage 5): resetting one course is a
+  // single-row delete, not a read-modify-write of a shared blob. Other
+  // courses' rows and the cross-course ledger row are never touched.
+  const deleted = await deleteCourseProgressRow(supabase, user.id, courseSlug);
 
-  if (!existing) {
-    return privateJson({ ok: true, message: "no_progress_to_reset" });
-  }
-
-  if (!isUnifiedProgress(existing.progress)) {
-    return privateJson({ error: "invalid_progress_format" }, { status: 500 });
-  }
-
-  const current = existing.progress as UnifiedProgress;
-  const updatedCourses = { ...current.courses };
-  delete updatedCourses[courseSlug];
-
-  const updated: UnifiedProgress = {
-    ...current,
-    courses: updatedCourses,
-  };
-
-  const { error } = await supabase
-    .from("user_course_progress")
-    .update({ progress: updated, updated_at: new Date().toISOString() })
-    .eq("user_id", user.id);
-
-  if (error) {
-    reportApiError({ route: "/api/account/reset-progress", step: "supabase-write", error });
+  if (!deleted.ok) {
+    reportApiError({
+      route: "/api/account/reset-progress",
+      step: "supabase-write",
+      error: deleted.error,
+    });
     return privateJson({ error: "reset_failed" }, { status: 500 });
   }
 

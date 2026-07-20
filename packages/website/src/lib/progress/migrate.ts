@@ -12,7 +12,9 @@
 import type { CourseSlug } from "@/lib/course/types";
 import { COURSE_SLUGS } from "@/lib/course/types";
 import {
+  MAX_EXERCISE_SUMMARY_BYTES,
   UNIFIED_SCHEMA_VERSION,
+  truncateToByteLength,
   type UnifiedCourseSlice,
   type UnifiedExerciseResult,
   type UnifiedLessonProgress,
@@ -163,4 +165,57 @@ export function migrateLegacyToUnified(): UnifiedProgress {
   }
 
   return { ...unified, courses };
+}
+
+// ─── v2->v3 migration step (plan 007 stage 5) ────────────────────
+
+function truncateExerciseResult(result: UnifiedExerciseResult): UnifiedExerciseResult {
+  if (result.summary === undefined) return result;
+  const truncated = truncateToByteLength(result.summary, MAX_EXERCISE_SUMMARY_BYTES);
+  if (truncated === result.summary) return result;
+  return { ...result, summary: truncated };
+}
+
+function truncateLessonSummaries(lesson: UnifiedLessonProgress): UnifiedLessonProgress {
+  let changed = false;
+  const exercisesCompleted: Record<string, UnifiedExerciseResult> = {};
+  for (const [exerciseId, result] of Object.entries(lesson.exercisesCompleted)) {
+    const next = truncateExerciseResult(result);
+    exercisesCompleted[exerciseId] = next;
+    if (next !== result) changed = true;
+  }
+  return changed ? { ...lesson, exercisesCompleted } : lesson;
+}
+
+function truncateSliceSummaries(slice: UnifiedCourseSlice): UnifiedCourseSlice {
+  let changed = false;
+  const lessons: Record<string, UnifiedLessonProgress> = {};
+  for (const [lessonId, lesson] of Object.entries(slice.lessons)) {
+    const next = truncateLessonSummaries(lesson);
+    lessons[lessonId] = next;
+    if (next !== lesson) changed = true;
+  }
+  return changed ? { ...slice, lessons } : slice;
+}
+
+/**
+ * v2->v3 migration step: re-normalizes any `exercisesCompleted[*].summary`
+ * written before MAX_EXERCISE_SUMMARY_BYTES existed, so historical data never
+ * violates the new per-row DB size constraint once synced. Pure and
+ * structure-sharing: returns the exact same reference when nothing needs
+ * truncation. Wired into store.ts's `parseUnified()` and server-sync.ts's
+ * `mergeUnifiedProgress()` (both real read paths), not just tested standalone.
+ */
+export function truncateExerciseSummaries(progress: UnifiedProgress): UnifiedProgress {
+  let changed = false;
+  const courses: Partial<Record<CourseSlug, UnifiedCourseSlice>> = {};
+  for (const [slug, slice] of Object.entries(progress.courses) as [
+    CourseSlug,
+    UnifiedCourseSlice,
+  ][]) {
+    const next = truncateSliceSummaries(slice);
+    courses[slug] = next;
+    if (next !== slice) changed = true;
+  }
+  return changed ? { ...progress, courses } : progress;
 }

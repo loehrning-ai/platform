@@ -16,7 +16,7 @@ import {
   isCourseRecordEarned,
 } from "@/lib/courses/competencies";
 import { createAuthServerClient, getAuthenticatedUser } from "@/lib/supabase/auth-server";
-import { isUnifiedProgress } from "@/lib/progress/server-sync";
+import { fetchUnifiedProgressForUser } from "@/lib/progress/server-store";
 import type { UnifiedProgress } from "@/lib/progress/types";
 import { Card, IconTile } from "@/components/ui/card";
 import { BrandButton } from "@/components/ui/brand-button";
@@ -60,13 +60,11 @@ export default async function KontoPage() {
   let updatedAt: string | null = null;
   const supabase = await createAuthServerClient();
   if (supabase && user) {
-    const { data } = await supabase
-      .from("user_course_progress")
-      .select("progress, updated_at")
-      .eq("user_id", user.id)
-      .maybeSingle();
-    if (isUnifiedProgress(data?.progress)) progress = data.progress;
-    updatedAt = typeof data?.updated_at === "string" ? data.updated_at : null;
+    const fetched = await fetchUnifiedProgressForUser(supabase, user.id);
+    if (fetched.ok) {
+      progress = fetched.result.progress;
+      updatedAt = fetched.result.updatedAt;
+    }
   }
 
   // Course-level rollups.
