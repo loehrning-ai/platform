@@ -83,6 +83,11 @@ const PUBLIC_NOINDEX_PATHS = [
   "/ai-native/kurs/zertifikat",
   "/ki-und-gesellschaft/kurs/zertifikat",
   "/ki-und-gesellschaft/kurs/quiz",
+  // Claude Course (plan 008 stage 1) — added ahead of the routes themselves
+  // (stage 9) so contract-completeness.test.ts never goes red mid-plan.
+  "/kurse/open-source/claude/kurs/quiz",
+  "/kurse/open-source/claude/kurs/zertifikat",
+  "/kurse/open-source/claude/verifizierung",
 ] as const;
 
 // ─── Adding a new course's routes (plan 007 stage 12) ───────────────────
@@ -130,6 +135,9 @@ const PUBLIC_ACCESS_PATHS = [
   "/ai-native/capstone-gallery",
   "/ki-und-gesellschaft/kurs",
   "/ki-und-gesellschaft/kurs/:path*",
+  // Claude Course (plan 008 stage 1) — see the noindex entries above.
+  "/kurse/open-source/claude/kurs",
+  "/kurse/open-source/claude/kurs/:path*",
 ] as const;
 
 const PUBLIC_MACHINE_PATHS = [

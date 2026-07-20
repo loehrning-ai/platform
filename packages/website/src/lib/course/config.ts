@@ -138,16 +138,61 @@ export const KI_UND_GESELLSCHAFT_CONFIG: CourseConfig = {
   },
 };
 
+// ─── Claude Course (plan 008 stage 1) ───────────────────────────
+//
+// First imported course folded into the shared engine (plan 007 widened
+// CourseSlug + added the "en" language + "certificate" RecordKind for this
+// purpose). Content lives in `lib/claude-course` keyed by its own flat
+// lesson-id scheme (NOT the shared BlockId JSON system), mirroring
+// AI_NATIVE_CONFIG's `blockIds: []` precedent above. Registering the config
+// here does not itself expose any UI: the catalog entry stays
+// `nativeStatus: "pending"` and `COURSE_FACTS.claude` stays
+// `{record: "none", external: true}` until plan 008 stage 10 ships the real
+// routes and flips both in the same commit (mirroring plan 007's own
+// "machinery now, flip later" sequencing so no misleading badge ships early).
+
+export const CLAUDE_CONFIG: CourseConfig = {
+  slug: "claude",
+  title: "Claude Course",
+  language: "en",
+  basePath: "/kurse/open-source/claude",
+  coursePath: "/kurse/open-source/claude/kurs",
+  blockIds: [],
+  workshopQuizQuestionCount: 15,
+  workshopQuizTimeLimitMinutes: 20,
+  workshopQuizPassThreshold: 0.7,
+  certificateTitle: "Claude Course",
+  certificateSubtitle:
+    "Certificate of completion. Issued by loehrning.ai, an independent education platform. This confirmation is not an accredited qualification.",
+  certificateModules: [
+    "Foundations: mental model, prompt anatomy, context windows",
+    "Workflows: CLAUDE.md, iteration, Google Docs",
+    "Going deeper: agents and tool use, code review, grounding",
+    "Team and rigor: sharing prompts, evals, safety",
+  ],
+  certificateReferenceLabel:
+    "Personal certificate of completion: prompting Claude effectively",
+  quizPassMessage:
+    "Congratulations! You passed the Claude Course workshop quiz.",
+  certificateFileStem: "Claude-Course",
+  recordNoun: {
+    label: "Certificate of Completion",
+    possessive: "Your certificate of completion",
+    demonstrative: "This certificate of completion",
+  },
+};
+
 // ─── Config registry ───────────────────────────────────────────
 
-// All three courses are registered in the shared engine ().
-// `config()` guards every lookup with a clear error so any future
-// unregistered slug fails loudly instead of returning `undefined`.
+// All registered courses share the engine (). `config()`
+// guards every lookup with a clear error so any future unregistered slug
+// fails loudly instead of returning `undefined`.
 const COURSE_CONFIGS: Partial<Record<CourseSlug, CourseConfig>> = {
   "ki-fuehrerschein": KI_FUEHRERSCHEIN_CONFIG,
   "eu-ai-act-kurs": EU_AI_ACT_KURS_CONFIG,
   "ai-native": AI_NATIVE_CONFIG,
   "ki-und-gesellschaft": KI_UND_GESELLSCHAFT_CONFIG,
+  claude: CLAUDE_CONFIG,
 };
 
 function config(courseSlug: CourseSlug): CourseConfig {

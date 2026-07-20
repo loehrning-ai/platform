@@ -5,6 +5,7 @@ import {
   EU_AI_ACT_KURS_CONFIG,
   AI_NATIVE_CONFIG,
   KI_UND_GESELLSCHAFT_CONFIG,
+  CLAUDE_CONFIG,
   getRegisteredCourseSlugs,
   isCourseRegistered,
   getCourseConfig,
@@ -20,10 +21,11 @@ import {
 const UNREGISTERED = "does-not-exist" as unknown as CourseSlug;
 
 describe("getRegisteredCourseSlugs", () => {
-  it("returns exactly the four registered course slugs", () => {
+  it("returns exactly the five registered course slugs (plan 008 stage 1 adds claude)", () => {
     const slugs = [...getRegisteredCourseSlugs()].sort();
     expect(slugs).toEqual([
       "ai-native",
+      "claude",
       "eu-ai-act-kurs",
       "ki-fuehrerschein",
       "ki-und-gesellschaft",
@@ -37,10 +39,35 @@ describe("isCourseRegistered", () => {
     expect(isCourseRegistered("eu-ai-act-kurs")).toBe(true);
     expect(isCourseRegistered("ai-native")).toBe(true);
     expect(isCourseRegistered("ki-und-gesellschaft")).toBe(true);
+    expect(isCourseRegistered("claude")).toBe(true);
   });
 
   it("is false for an unregistered slug", () => {
     expect(isCourseRegistered(UNREGISTERED)).toBe(false);
+  });
+});
+
+describe("CLAUDE_CONFIG (plan 008 stage 1)", () => {
+  it("registers claude with English-language content and a quiz-gated cert path", () => {
+    expect(getCourseConfig("claude")).toBe(CLAUDE_CONFIG);
+    expect(CLAUDE_CONFIG.slug).toBe("claude");
+    expect(CLAUDE_CONFIG.language).toBe("en");
+    expect(CLAUDE_CONFIG.basePath).toBe("/kurse/open-source/claude");
+    expect(CLAUDE_CONFIG.coursePath).toBe("/kurse/open-source/claude/kurs");
+    expect(CLAUDE_CONFIG.blockIds).toEqual([]);
+  });
+
+  it("has a non-empty certificate file stem and no em/en dashes in its copy", () => {
+    expect(CLAUDE_CONFIG.certificateFileStem.length).toBeGreaterThan(0);
+    const copy = [
+      CLAUDE_CONFIG.title,
+      CLAUDE_CONFIG.certificateTitle,
+      CLAUDE_CONFIG.certificateSubtitle,
+      CLAUDE_CONFIG.certificateReferenceLabel,
+      CLAUDE_CONFIG.quizPassMessage,
+      ...CLAUDE_CONFIG.certificateModules,
+    ].join(" ");
+    expect([...copy].some((ch) => ch === "—" || ch === "–")).toBe(false);
   });
 });
 

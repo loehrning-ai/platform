@@ -59,8 +59,16 @@ describe("course catalog (shared course architecture)", () => {
       // CourseSlug (plan 007 stage 1) now spans both native and imported
       // courses by design, so the meaningful invariant is that imported
       // courses stay unregistered in the shared progress engine, not that
-      // their slug is absent from the wider CourseSlug union.
-      expect(getRegisteredCourseSlugs()).not.toContain(c.slug);
+      // their slug is absent from the wider CourseSlug union. "claude" is a
+      // deliberate, documented exception mid-migration (plan 008 stage 1):
+      // its CourseConfig is registered ahead of its native routes landing
+      // (mirroring AI_NATIVE_CONFIG's own precedent) but the catalog entry
+      // itself stays "pending" until plan 008 stage 10 flips it.
+      if (c.slug === "claude") {
+        expect(getRegisteredCourseSlugs()).toContain(c.slug);
+      } else {
+        expect(getRegisteredCourseSlugs()).not.toContain(c.slug);
+      }
       expect(c.href).toBe(`/kurse/open-source/${c.slug}`);
       expect(c.launchHref).toMatch(/^https:\/\/www\.timloehr\.me\/interactive-courses\//);
       // public-content contract: "Quelle" list links are commit-pinned so the

@@ -22,6 +22,7 @@ export const WIDGET_COURSE_SLUGS = [
   "ki-fuehrerschein",
   "eu-ai-act-kurs",
   "ai-native",
+  "claude",
 ] as const;
 
 export type WidgetCourseSlug = (typeof WIDGET_COURSE_SLUGS)[number];

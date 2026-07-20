@@ -74,6 +74,27 @@ describe("crawl contract", () => {
     }
   });
 
+  it("classifies the Claude Course routes registered ahead of their pages (plan 008 stage 1)", () => {
+    for (const path of [
+      "/kurse/open-source/claude/kurs",
+      "/kurse/open-source/claude/kurs/mental-model",
+    ]) {
+      const entry = getCrawlRoute(path);
+      expect(entry.routeClass, path).toBe("public-access");
+      expect(entry.auth, path).toBe("public");
+      expect(entry.includeInSitemap, path).toBe(false);
+    }
+    for (const path of [
+      "/kurse/open-source/claude/kurs/quiz",
+      "/kurse/open-source/claude/kurs/zertifikat",
+      "/kurse/open-source/claude/verifizierung",
+    ]) {
+      const entry = getCrawlRoute(path);
+      expect(entry.routeClass, path).toBe("public-noindex");
+      expect(entry.xRobotsTag, path).toContain("noindex");
+    }
+  });
+
   it("keeps retired blog slugs ahead of the broad blog pattern", () => {
     const retired = getCrawlRoute("/blog/digify");
     expect(retired.routeClass).toBe("retired");
