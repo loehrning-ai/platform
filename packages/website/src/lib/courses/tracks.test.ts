@@ -106,4 +106,18 @@ describe("learner-first course model", () => {
     expect(COURSE_SECTIONS.spine.title).toBe("Der Lernpfad");
     expect(COURSE_SECTIONS.deeper.title).toBe("Tiefer gehen");
   });
+
+  it("carries an accent + badge for every course (plan 007 stage 3: migrated from TRACK_META)", () => {
+    for (const slug of ALL_SLUGS) {
+      const facts = COURSE_FACTS[slug];
+      expect(facts.accent, slug).toMatch(/^(kupfer|sand|amber)$/);
+      expect(facts.badge.length, slug).toBeGreaterThan(0);
+    }
+    expect(COURSE_FACTS["ki-fuehrerschein"].accent).toBe("kupfer");
+    expect(COURSE_FACTS["ki-fuehrerschein"].badge).toBe("Zertifikat · Deutsch");
+    expect(COURSE_FACTS["data-engineering-fundamentals"].accent).toBe("sand");
+    expect(COURSE_FACTS["data-engineering-fundamentals"].badge).toBe(
+      "GitHub · MIT · Englisch",
+    );
+  });
 });

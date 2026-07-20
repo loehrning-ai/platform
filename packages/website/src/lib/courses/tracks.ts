@@ -1,54 +1,15 @@
 /**
  * Course-track taxonomy (CI v3.1). Kept separate from catalog.ts so the catalog
  * stays plain data (no React/icon imports leak into build scripts). The UI joins
- * a course slug to its track meta to render the icon tile, accent and badge that
+ * a course slug to its facts to render the icon tile, accent and badge that
  * make the three course types legible at a glance.
  *
- * Three tracks:
+ * Three tracks, folded into `CourseFacts.accent`/`.badge` below (plan 007
+ * stage 3 — the former standalone `TRACK_META` table is gone):
  *   zertifikat  — the 4 native German certified courses (Kupfer)
  *   github-lab  — the 6 English MIT technical courses, external (Sand)
  *   brainster   — applied client workshops turned courses (Amber)
  */
-
-export type CourseTrack = "zertifikat" | "github-lab" | "brainster";
-export type TrackAccent = "kupfer" | "sand" | "amber";
-
-export interface TrackMeta {
-  readonly track: CourseTrack;
-  readonly accent: TrackAccent;
-  /** lucide-react export name; resolved to a component in the UI layer. */
-  readonly iconName: string;
-  /** Short type badge shown on the card. */
-  readonly badge: string;
-}
-
-/** Per-course track meta, keyed by catalog slug. */
-export const TRACK_META: Record<string, TrackMeta> = {
-  // Zertifikatskurse — native, certified, German
-  "ki-fuehrerschein": { track: "zertifikat", accent: "kupfer", iconName: "GraduationCap", badge: "Zertifikat · Deutsch" },
-  "ki-und-gesellschaft": { track: "zertifikat", accent: "kupfer", iconName: "Users", badge: "Zertifikat · Deutsch" },
-  "eu-ai-act-kurs": { track: "zertifikat", accent: "kupfer", iconName: "Scale", badge: "Zertifikat · Deutsch" },
-  "ai-native": { track: "zertifikat", accent: "kupfer", iconName: "Bot", badge: "Zertifikat · Deutsch" },
-
-  // GitHub-Labs — imported, MIT, English, external
-  "data-engineering-fundamentals": { track: "github-lab", accent: "sand", iconName: "Database", badge: "GitHub · MIT · Englisch" },
-  "data-science": { track: "github-lab", accent: "sand", iconName: "LineChart", badge: "GitHub · MIT · Englisch" },
-  "data-infrastructure": { track: "github-lab", accent: "sand", iconName: "Server", badge: "GitHub · MIT · Englisch" },
-  "codex": { track: "github-lab", accent: "sand", iconName: "TerminalSquare", badge: "GitHub · MIT · Englisch" },
-  "claude": { track: "github-lab", accent: "sand", iconName: "Sparkles", badge: "GitHub · MIT · Englisch" },
-  "ai-native-operator": { track: "github-lab", accent: "sand", iconName: "Workflow", badge: "GitHub · MIT · Englisch" },
-};
-
-export function trackMetaFor(slug: string): TrackMeta {
-  return (
-    TRACK_META[slug] ?? {
-      track: "zertifikat",
-      accent: "kupfer",
-      iconName: "BookOpen",
-      badge: "Kurs",
-    }
-  );
-}
 
 /** Applied ("Brainster") course track. Business reports is live; forecasting is in preparation. */
 export interface BrainsterCourse {
@@ -104,11 +65,13 @@ export const BRAINSTER_COURSE_CATALOG: readonly BrainsterCourse[] = [
 //      workshop courses.
 // Instead of a colour code, each course carries honest badges derived from
 // real facts: its language, whether it issues a record (and which kind), and
-// whether it is hosted externally. The three-track exports above stay until
-// the last consumer is migrated, then get removed.
+// whether it is hosted externally.
 
 /** The two learner-facing groups. */
 export type CourseGroup = "spine" | "deeper";
+
+/** Warm accent hue keyed to a course's track (kupfer/sand/amber, CI v3.1). */
+export type CourseAccent = "kupfer" | "sand" | "amber";
 
 /**
  * What kind of record a course issues, if any. Source of truth for the native
@@ -135,6 +98,10 @@ export interface CourseFacts {
   readonly record: RecordKind;
   /** True when the course is hosted outside loehrning.ai (GitHub labs). */
   readonly external: boolean;
+  /** Warm accent hue for the card/icon-tile pairing (plan 007 stage 3, folded in from the former TRACK_META). */
+  readonly accent: CourseAccent;
+  /** Short type badge shown on the card (plan 007 stage 3, folded in from the former TRACK_META). */
+  readonly badge: string;
 }
 
 /**
@@ -144,27 +111,40 @@ export interface CourseFacts {
  */
 export const COURSE_FACTS: Record<string, CourseFacts> = {
   // Spine — certified German courses (progress + record), shown in step order.
-  "ki-fuehrerschein": { group: "spine", iconName: "GraduationCap", language: "Deutsch", record: "zertifikat", external: false },
-  "ki-und-gesellschaft": { group: "spine", iconName: "Users", language: "Deutsch", record: "lernnachweis", external: false },
-  "eu-ai-act-kurs": { group: "spine", iconName: "Scale", language: "Deutsch", record: "zertifikat", external: false },
-  "ai-native": { group: "spine", iconName: "Bot", language: "Deutsch", record: "zertifikat", external: false },
+  "ki-fuehrerschein": { group: "spine", iconName: "GraduationCap", language: "Deutsch", record: "zertifikat", external: false, accent: "kupfer", badge: "Zertifikat · Deutsch" },
+  "ki-und-gesellschaft": { group: "spine", iconName: "Users", language: "Deutsch", record: "lernnachweis", external: false, accent: "kupfer", badge: "Zertifikat · Deutsch" },
+  "eu-ai-act-kurs": { group: "spine", iconName: "Scale", language: "Deutsch", record: "zertifikat", external: false, accent: "kupfer", badge: "Zertifikat · Deutsch" },
+  "ai-native": { group: "spine", iconName: "Bot", language: "Deutsch", record: "zertifikat", external: false, accent: "kupfer", badge: "Zertifikat · Deutsch" },
 
   // Deeper — external GitHub labs (English, no native record).
-  "data-engineering-fundamentals": { group: "deeper", iconName: "Database", language: "Englisch", record: "none", external: true },
-  "data-science": { group: "deeper", iconName: "LineChart", language: "Englisch", record: "none", external: true },
-  "data-infrastructure": { group: "deeper", iconName: "Server", language: "Englisch", record: "none", external: true },
-  "codex": { group: "deeper", iconName: "TerminalSquare", language: "Englisch", record: "none", external: true },
-  "claude": { group: "deeper", iconName: "Sparkles", language: "Englisch", record: "none", external: true },
-  "ai-native-operator": { group: "deeper", iconName: "Workflow", language: "Englisch", record: "none", external: true },
+  "data-engineering-fundamentals": { group: "deeper", iconName: "Database", language: "Englisch", record: "none", external: true, accent: "sand", badge: "GitHub · MIT · Englisch" },
+  "data-science": { group: "deeper", iconName: "LineChart", language: "Englisch", record: "none", external: true, accent: "sand", badge: "GitHub · MIT · Englisch" },
+  "data-infrastructure": { group: "deeper", iconName: "Server", language: "Englisch", record: "none", external: true, accent: "sand", badge: "GitHub · MIT · Englisch" },
+  "codex": { group: "deeper", iconName: "TerminalSquare", language: "Englisch", record: "none", external: true, accent: "sand", badge: "GitHub · MIT · Englisch" },
+  "claude": { group: "deeper", iconName: "Sparkles", language: "Englisch", record: "none", external: true, accent: "sand", badge: "GitHub · MIT · Englisch" },
+  "ai-native-operator": { group: "deeper", iconName: "Workflow", language: "Englisch", record: "none", external: true, accent: "sand", badge: "GitHub · MIT · Englisch" },
 
   // Deeper — applied courses from real workshops (German).
-  "geschaeftsberichte-mit-ki-lesen": { group: "deeper", iconName: "Presentation", language: "Deutsch", record: "none", external: false },
-  "ai-forecasting": { group: "deeper", iconName: "TrendingUp", language: "Deutsch", record: "none", external: false },
+  "geschaeftsberichte-mit-ki-lesen": { group: "deeper", iconName: "Presentation", language: "Deutsch", record: "none", external: false, accent: "amber", badge: "Workshop · Deutsch" },
+  "ai-forecasting": { group: "deeper", iconName: "TrendingUp", language: "Deutsch", record: "none", external: false, accent: "amber", badge: "Workshop · Deutsch" },
 };
 
 /** Facts for a slug, or undefined if it is not a known course. */
 export function courseFactsFor(slug: string): CourseFacts | undefined {
   return COURSE_FACTS[slug];
+}
+
+/**
+ * Facts for a slug, throwing if unknown. For call sites over a slug already
+ * guaranteed to be classified (the native catalog, the KI-Check dimension
+ * map) — mirrors `lib/course/config.ts`'s `config()` throw convention.
+ */
+export function courseFacts(slug: string): CourseFacts {
+  const facts = COURSE_FACTS[slug];
+  if (!facts) {
+    throw new Error(`Course "${slug}" has no entry in COURSE_FACTS.`);
+  }
+  return facts;
 }
 
 /** Which group a course belongs to, or undefined for an unknown slug. */
