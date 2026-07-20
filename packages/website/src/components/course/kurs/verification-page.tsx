@@ -11,7 +11,7 @@ import {
   CERTIFICATE_QR_VERSION,
   type CertificateCompletionMode,
 } from "@/lib/course/certificate-constants";
-import type { CourseSlug } from "@/lib/course/types";
+import { COURSE_SLUGS, type CourseSlug } from "@/lib/course/types";
 
 /**
  * Shared certificate-verification screen for every free course.
@@ -39,12 +39,12 @@ type DecodeResult =
   | { readonly ok: false; readonly reason: "malformed" | "course-mismatch" };
 type DecodeFailureReason = Extract<DecodeResult, { ok: false }>["reason"];
 
+// Derived from the canonical COURSE_SLUGS union (plan 007 stage 8) — every
+// course's QR certificate decodes correctly, not just the original 4.
 function isCourseSlug(value: unknown): value is CourseSlug {
   return (
-    value === "ki-fuehrerschein" ||
-    value === "eu-ai-act-kurs" ||
-    value === "ai-native" ||
-    value === "ki-und-gesellschaft"
+    typeof value === "string" &&
+    (COURSE_SLUGS as readonly string[]).includes(value)
   );
 }
 

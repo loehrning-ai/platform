@@ -140,6 +140,35 @@ describe("VerificationPage", () => {
     expect(screen.queryByText(/Ergebnis: 0%/)).toBeNull();
   });
 
+  // plan 007 stage 8: isCourseSlug() used to hardcode the original 4 slugs,
+  // so a well-formed QR payload for any other course decoded as "malformed"
+  // rather than the more specific "course-mismatch". "codex" isn't
+  // registered in the shared engine yet (that's each course plan's own
+  // job), so it can't be passed as the courseSlug PROP here (getCourseConfig
+  // would throw) — but it CAN appear as the QR payload's embedded course
+  // slug, decoded against a real registered course. Before the fix, the
+  // guard rejected "codex" outright as malformed; after the fix, it's
+  // accepted as a real CourseSlug and correctly reported as a mismatch.
+  it("round-trips a non-original-4 course slug in the QR payload as a mismatch, not malformed", async () => {
+    const payload = {
+      n: "Tim Löhr",
+      s: null,
+      m: "completion",
+      d: "2026-06-03T10:00:00.000Z",
+      c: "codex",
+      v: 1,
+    };
+    setHash("#" + encodeHash(payload));
+    render(<VerificationPage courseSlug="ki-fuehrerschein" />);
+
+    await waitFor(() =>
+      expect(
+        screen.getByText("Zertifikatcode passt nicht zu diesem Kurs."),
+      ).toBeInTheDocument(),
+    );
+    expect(screen.queryByText("Zertifikatcode nicht lesbar")).toBeNull();
+  });
+
   it("falls back to the invalid state for a malformed hash", async () => {
     setHash("#not-valid-base64url!!!");
     render(<VerificationPage courseSlug="ki-fuehrerschein" />);
