@@ -31,6 +31,23 @@ afterEach(() => {
 });
 
 describe("CourseGallery (learner-first: path + deeper shelf)", () => {
+  // plan 007 stage 7: both sections branch on nativeStatus, not which array a
+  // course came from. Today COURSE_CATALOG is 100% "live" and
+  // IMPORTED_COURSE_CATALOG is 100% "pending", so this pins the same visible
+  // split as the array-membership tests below, just asserted via the field
+  // the gallery now actually reads.
+  it("renders exactly the nativeStatus === 'live' courses in Der Lernpfad and 'pending' ones in Tiefer gehen", () => {
+    render(<CourseGallery />);
+    for (const course of COURSE_CATALOG) {
+      expect(course.nativeStatus).toBe("live");
+      expect(screen.getByTestId(`progress-dots-${course.slug}`)).toBeInTheDocument();
+    }
+    for (const course of IMPORTED_COURSE_CATALOG) {
+      expect(course.nativeStatus).toBe("pending");
+      expect(screen.queryByTestId(`progress-dots-${course.slug}`)).toBeNull();
+    }
+  });
+
   it("renders one card per native course with a free price + progress dots", () => {
     render(<CourseGallery />);
     expect(screen.getByText("KI-Führerschein")).toBeInTheDocument();

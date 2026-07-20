@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
-import { m } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { useState, useCallback, useEffect } from "react";
 import { LessonSidebar } from "./lesson-sidebar";
 import { LessonContent } from "./lesson-content";
+import { LessonShell } from "@/components/course/lesson-shell";
 import {
   markSectionRead,
   markLessonCompleted,
@@ -16,7 +15,6 @@ import {
 import type { CourseSlug, Lesson } from "@/lib/course/types";
 import { FreshnessBadge } from "@/components/ui/freshness-badge";
 import type { BlockFreshness } from "@/lib/course/data";
-import { useFocusTrap } from "@/lib/a11y/use-focus-trap";
 
 interface LessonLayoutProps {
   readonly courseSlug: CourseSlug;
@@ -28,38 +26,6 @@ interface LessonLayoutProps {
 export function LessonLayout({ courseSlug, lessons, freshnessMeta }: LessonLayoutProps) {
   const [activeLessonId, setActiveLessonId] = useState(lessons[0]?.id ?? "");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const closeSidebar = useCallback(() => setSidebarOpen(false), []);
-  const sidebarRef = useFocusTrap<HTMLElement>(sidebarOpen, closeSidebar);
-  const layoutRef = useRef<HTMLDivElement>(null);
-  const toggleButtonRef = useRef<HTMLButtonElement>(null);
-
-  // Keep sibling content behind the mobile drawer out of the accessibility tree.
-  useEffect(() => {
-    const layout = layoutRef.current;
-    const drawer = sidebarRef.current;
-    const toggle = toggleButtonRef.current;
-    if (!sidebarOpen || !layout || !drawer) return;
-
-    // The backdrop overlay stays interactive (data-sidebar-backdrop): marking
-    // it inert would remove it from hit-testing and kill its click-to-close.
-    const toInert = Array.from(layout.children).filter(
-      (el): el is HTMLElement =>
-        el instanceof HTMLElement &&
-        el !== drawer &&
-        !el.contains(drawer) &&
-        !el.contains(toggle) &&
-        !el.hasAttribute("data-sidebar-backdrop"),
-    );
-    for (const el of toInert) {
-      el.setAttribute("inert", "");
-    }
-
-    return () => {
-      for (const el of toInert) {
-        el.removeAttribute("inert");
-      }
-    };
-  }, [sidebarOpen, sidebarRef]);
 
   // Hydrate progress from localStorage (client-side only)
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
@@ -84,8 +50,10 @@ export function LessonLayout({ courseSlug, lessons, freshnessMeta }: LessonLayou
 
   const handleSelectLesson = useCallback((lessonId: string) => {
     setActiveLessonId(lessonId);
+    // Closing hands focus back to the toggle button via LessonShell's
+    // useFocusTrap restore-on-close (it snapshots whatever had focus when the
+    // drawer opened, which is the toggle button itself).
     setSidebarOpen(false);
-    toggleButtonRef.current?.focus();
   }, []);
 
   const handleMarkSectionRead = useCallback(
@@ -121,91 +89,44 @@ export function LessonLayout({ courseSlug, lessons, freshnessMeta }: LessonLayou
 
   if (!activeLesson) return null;
 
+  const sidebar = (
+    <LessonSidebar
+      lessons={lessons}
+      activeLessonId={activeLessonId}
+      completedLessonIds={completedIds}
+      onSelectLesson={handleSelectLesson}
+    />
+  );
+
   return (
-    <div ref={layoutRef} className="flex min-h-[calc(100svh-7rem)]">
-      {/* Desktop Sidebar */}
-      <aside className="hidden w-56 shrink-0 border-r border-border bg-background p-4 md:block lg:w-64">
-        <LessonSidebar
-          lessons={lessons}
-          activeLessonId={activeLessonId}
-          completedLessonIds={completedIds}
-          onSelectLesson={handleSelectLesson}
-        />
-      </aside>
-
-      {/* Mobile Toggle */}
-      <button
-        ref={toggleButtonRef}
-        type="button"
-        onClick={() => setSidebarOpen((open) => !open)}
-        aria-expanded={sidebarOpen}
-        aria-controls="mobile-lesson-nav"
-        aria-label={sidebarOpen ? "Navigation schließen" : "Navigation öffnen"}
-        className="fixed bottom-6 left-6 z-40 flex h-12 w-12 items-center justify-center border-2 border-foreground bg-brand-orange text-white shadow-[4px_4px_0_0_var(--color-foreground)] md:hidden"
-      >
-        {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-      </button>
-
-      {/* Mobile Overlay */}
-      {sidebarOpen && (
-        <>
-          <div
-            data-sidebar-backdrop
-            className="fixed inset-0 z-30 bg-foreground/40 md:hidden"
-            role="presentation"
-            onClick={() => {
-              setSidebarOpen(false);
-              toggleButtonRef.current?.focus();
-            }}
-          />
-          <m.aside
-            ref={sidebarRef}
-            id="mobile-lesson-nav"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Lektionsnavigation"
-            initial={{ x: -280 }}
-            animate={{ x: 0 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-y-0 left-0 z-30 w-72 overflow-y-auto overscroll-contain border-r border-border bg-background p-4 pt-20 md:hidden"
-          >
-            <LessonSidebar
-              lessons={lessons}
-              activeLessonId={activeLessonId}
-              completedLessonIds={completedIds}
-              onSelectLesson={handleSelectLesson}
-            />
-          </m.aside>
-        </>
-      )}
-
-      {/* Main Content */}
-      <div className="flex-1 px-6 py-8 lg:px-10">
-        <div className="mx-auto max-w-3xl">
-          {freshnessMeta?.lastReviewed && freshnessMeta?.nextReview && (
-            <div className="mb-4">
-              <FreshnessBadge
-                lastReviewed={freshnessMeta.lastReviewed}
-                nextReview={freshnessMeta.nextReview}
-                riskClass={freshnessMeta.riskClass}
-              />
-            </div>
-          )}
-          <LessonContent
-            courseSlug={courseSlug}
-            lesson={activeLesson}
-            totalLessons={lessons.length}
-            readSectionIds={readIds}
-            isCompleted={completedIds.has(activeLessonId)}
-            quizBestScore={quizScores[activeLessonId] ?? null}
-            hasNextLesson={hasNextLesson}
-            onMarkSectionRead={handleMarkSectionRead}
-            onMarkLessonComplete={handleMarkLessonComplete}
-            onQuizComplete={handleQuizComplete}
-            onNextLesson={handleNextLesson}
+    <LessonShell
+      navOpen={sidebarOpen}
+      onNavOpenChange={setSidebarOpen}
+      navLabel="Lektionsnavigation"
+      sidebar={sidebar}
+    >
+      {freshnessMeta?.lastReviewed && freshnessMeta?.nextReview && (
+        <div className="mb-4">
+          <FreshnessBadge
+            lastReviewed={freshnessMeta.lastReviewed}
+            nextReview={freshnessMeta.nextReview}
+            riskClass={freshnessMeta.riskClass}
           />
         </div>
-      </div>
-    </div>
+      )}
+      <LessonContent
+        courseSlug={courseSlug}
+        lesson={activeLesson}
+        totalLessons={lessons.length}
+        readSectionIds={readIds}
+        isCompleted={completedIds.has(activeLessonId)}
+        quizBestScore={quizScores[activeLessonId] ?? null}
+        hasNextLesson={hasNextLesson}
+        onMarkSectionRead={handleMarkSectionRead}
+        onMarkLessonComplete={handleMarkLessonComplete}
+        onQuizComplete={handleQuizComplete}
+        onNextLesson={handleNextLesson}
+      />
+    </LessonShell>
   );
 }
