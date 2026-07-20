@@ -132,6 +132,41 @@ describe("unified progress store", () => {
       expect(r?.completed).toBe(true);
       expect(r?.attempts).toBe(2);
     });
+
+    // plan 007 stage 5: summaries are capped in UTF-8 bytes at write time so a
+    // single oversized AI summary can never blow the per-course-row DB budget.
+    it("truncates an oversized exercise summary at write time (byte-based cap)", () => {
+      const longSummary = "Über KI-Kompetenz und Verantwortung. ".repeat(50);
+      saveExerciseResult("ai-native", "l1", {
+        exerciseId: "ex2",
+        kind: "exercise-fix-prompt",
+        completed: true,
+        score: 0.9,
+        attempts: 1,
+        completedAt: null,
+        skipped: false,
+        summary: longSummary,
+      });
+      const r = getExerciseResult("ai-native", "l1", "ex2");
+      expect(r?.summary).toBeDefined();
+      expect(new TextEncoder().encode(r?.summary ?? "").length).toBeLessThanOrEqual(500);
+      expect(r?.summary?.length).toBeLessThan(longSummary.length);
+    });
+
+    it("keeps a short exercise summary unchanged", () => {
+      saveExerciseResult("ai-native", "l1", {
+        exerciseId: "ex3",
+        kind: "exercise-fix-prompt",
+        completed: true,
+        score: 0.7,
+        attempts: 1,
+        completedAt: null,
+        skipped: false,
+        summary: "Gute Arbeit, weiter so.",
+      });
+      const r = getExerciseResult("ai-native", "l1", "ex3");
+      expect(r?.summary).toBe("Gute Arbeit, weiter so.");
+    });
   });
 
   describe("xp / badges accrual", () => {
@@ -374,12 +409,62 @@ describe("unified progress store", () => {
   });
 
   describe("getUnifiedState shape", () => {
-    it("exposes a v2 root with courses + gamification ledger", () => {
+    it("exposes a v3 root with courses + gamification ledger", () => {
       markLessonCompleted("ai-native", "l1");
       const s = getUnifiedState();
-      expect(s.schemaVersion).toBe(2);
+      expect(s.schemaVersion).toBe(3);
       expect(s.courses["ai-native"]).toBeDefined();
       expect(getCourseSlice("ai-native").lessons["l1"].completed).toBe(true);
+    });
+  });
+
+  describe("v2->v3 migration step wired into the read path (plan 007 stage 5)", () => {
+    it("truncates a pre-existing oversized exercise summary on load", () => {
+      const longSummary = "Über KI-Kompetenz und Verantwortung. ".repeat(50);
+      window.localStorage.setItem(
+        UNIFIED_STORAGE_KEY,
+        JSON.stringify({
+          schemaVersion: 2,
+          courses: {
+            "ai-native": {
+              lessons: {
+                l1: {
+                  sectionsRead: [],
+                  quizScore: null,
+                  quizTotal: null,
+                  completed: false,
+                  exercisesCompleted: {
+                    ex1: {
+                      exerciseId: "ex1",
+                      kind: "exercise-fix-prompt",
+                      completed: true,
+                      score: 0.9,
+                      attempts: 1,
+                      completedAt: null,
+                      skipped: false,
+                      summary: longSummary,
+                    },
+                  },
+                },
+              },
+              workshopQuiz: { passed: false, score: 0, completedAt: null },
+              capstoneSubmitted: false,
+              startedAt: "2026-01-01T00:00:00.000Z",
+              lastActivity: "2026-01-01T00:00:00.000Z",
+            },
+          },
+          xp: 0,
+          checkpoints: {},
+          badges: {},
+          streak: { days: 0, last: null },
+          lastActivity: "2026-01-01T00:00:00.000Z",
+        }),
+      );
+      __resetCacheForTests();
+      const r = getExerciseResult("ai-native", "l1", "ex1");
+      expect(r?.summary).toBeDefined();
+      expect(new TextEncoder().encode(r?.summary ?? "").length).toBeLessThanOrEqual(500);
+      expect(getUnifiedState().schemaVersion).toBe(3);
     });
   });
 });
