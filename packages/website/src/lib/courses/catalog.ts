@@ -39,6 +39,35 @@ export interface CatalogCourse {
   /** Course landing-page screenshot shown on the Lernpfad card banner. */
   readonly coverImage: string;
   readonly coverImageAlt: string;
+  /**
+   * Every entry in COURSE_CATALOG is "live" by construction (a course only
+   * ever enters this array once it is fully native). The single field the
+   * gallery + generateStaticParams branch on instead of array membership
+   * (plan 007 stage 6/7); this plan does not flip any of the 6 imported
+   * courses to "live".
+   */
+  readonly nativeStatus: "live";
+  // The optional fields below mirror ImportedCourse's provenance fields so a
+  // course that later flips from imported to native (its own plan, not this
+  // one) can retain open-source attribution (source repo, license, commit)
+  // on its CatalogCourse entry instead of losing that history at the flip.
+  readonly imageSrc?: string;
+  readonly imageAlt?: string;
+  readonly launchHref?: string;
+  readonly sourceHref?: string;
+  readonly sourceCommitHref?: string;
+  readonly licenseHref?: string;
+  readonly sourceImagePath?: string;
+  readonly sourceLicensePath?: string;
+  readonly imageSha256?: string;
+  readonly licenseSha256?: string;
+  readonly licenseSizeBytes?: number;
+  readonly sourceCommit?: string;
+  readonly lessonCountLabel?: string;
+  readonly language?: string;
+  readonly topics?: readonly string[];
+  readonly sourceFacts?: readonly string[];
+  readonly integrationNote?: string;
 }
 
 export interface ImportedCourse {
@@ -75,6 +104,12 @@ export interface ImportedCourse {
   readonly topics: readonly string[];
   readonly sourceFacts: readonly string[];
   readonly integrationNote: string;
+  /**
+   * Every entry in IMPORTED_COURSE_CATALOG is "pending" by construction — the
+   * single field the gallery + generateStaticParams branch on instead of
+   * array membership (plan 007 stage 6/7).
+   */
+  readonly nativeStatus: "pending";
 }
 
 // Step 1 → 2 → 3 → 4. Lesson counts mirror the live course content:
@@ -101,6 +136,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     audience: "Alle Mitarbeiter, die KI nutzen",
     coverImage: "/course-covers/ki-fuehrerschein.png",
     coverImageAlt: "Startseite des KI-Führerschein-Kurses",
+    nativeStatus: "live",
   },
   {
     slug: "ki-und-gesellschaft",
@@ -120,6 +156,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     audience: "Alle ohne Vorkenntnisse",
     coverImage: "/course-covers/ki-und-gesellschaft.png",
     coverImageAlt: "Startseite des Kurses KI und Gesellschaft",
+    nativeStatus: "live",
   },
   {
     slug: "eu-ai-act-kurs",
@@ -139,6 +176,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     audience: "Compliance, IT-Leitung, Geschäftsführung",
     coverImage: "/course-covers/eu-ai-act-kurs.png",
     coverImageAlt: "Startseite des EU AI Act Kurses",
+    nativeStatus: "live",
   },
   {
     slug: "ai-native",
@@ -158,6 +196,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     audience: "Mitarbeiter, Selbstständige und Studierende",
     coverImage: "/course-covers/ai-native.png",
     coverImageAlt: "Startseite des AI-Native Arbeitskurses",
+    nativeStatus: "live",
   },
 ] as const;
 
@@ -199,6 +238,7 @@ export const IMPORTED_COURSE_CATALOG: readonly ImportedCourse[] = [
     sourceFacts: ["10 Kapitel", "15 Live-Simulatoren", "No signup", "Runs in your browser"],
     integrationNote:
       "Als Open-Source-Interaktivkurs angebunden; native Fortschritts- und Zertifikatslogik bleibt den deutschen Plattformkursen vorbehalten.",
+    nativeStatus: "pending",
   },
   {
     slug: "data-science",
@@ -232,6 +272,7 @@ export const IMPORTED_COURSE_CATALOG: readonly ImportedCourse[] = [
     sourceFacts: ["12 Kapitel", "Live-Simulationen", "CLT", "ROC/PR"],
     integrationNote:
       "Als externer Open-Source-Kurs gerahmt, damit die interaktiven Simulationen erhalten bleiben, ohne globale CSP-Regeln zu lockern.",
+    nativeStatus: "pending",
   },
   {
     slug: "data-infrastructure",
@@ -265,6 +306,7 @@ export const IMPORTED_COURSE_CATALOG: readonly ImportedCourse[] = [
     sourceFacts: ["4 Tracks", "12 Lektionen", "40+ Live-Simulationen", "IC5 Interview"],
     integrationNote:
       "Als Open-Source-Browserkurs verlinkt; Fortschritt bleibt extern, damit die interaktiven Simulatoren und das Interview-Replay ohne globale Sicherheitslockerung lauffähig bleiben.",
+    nativeStatus: "pending",
   },
   {
     slug: "codex",
@@ -298,6 +340,7 @@ export const IMPORTED_COURSE_CATALOG: readonly ImportedCourse[] = [
     sourceFacts: ["12 Lektionen", "Capstone", "Parallel Workflows", "PR Review"],
     integrationNote:
       "Der Kurs wird als Open-Source-Modul geführt; eine native Version müsste die Codex-spezifischen Widgets in das bestehende Widget-System portieren.",
+    nativeStatus: "pending",
   },
   {
     slug: "claude",
@@ -331,6 +374,7 @@ export const IMPORTED_COURSE_CATALOG: readonly ImportedCourse[] = [
     sourceFacts: ["4 Tracks", "12 Lektionen", "Hands-on Widgets", "9 Badges"],
     integrationNote:
       "Als Open-Source-Kurs angebunden; der deutsche AI-Native Arbeitskurs bleibt der native Claude-Praxispfad auf loehrning.ai.",
+    nativeStatus: "pending",
   },
   {
     slug: "ai-native-operator",
@@ -364,6 +408,7 @@ export const IMPORTED_COURSE_CATALOG: readonly ImportedCourse[] = [
     sourceFacts: ["9 Module", "39 Lektionen", "30 Übungen", "Quizzes"],
     integrationNote:
       "Divergent vom deutschen AI-Native Arbeitskurs; als fortgeschrittenes Open-Source-Modul separat eingebunden.",
+    nativeStatus: "pending",
   },
 ] as const;
 

@@ -158,6 +158,20 @@ describe("course catalog (shared course architecture)", () => {
     expect(IMPORTED_COURSE_CATALOG).toHaveLength(6);
   });
 
+  it("carries nativeStatus: the 4 native courses are 'live', the 6 imported courses are 'pending' (plan 007 stage 6)", () => {
+    for (const c of COURSE_CATALOG) {
+      expect(c.nativeStatus, c.slug).toBe("live");
+    }
+    for (const c of IMPORTED_COURSE_CATALOG) {
+      expect(c.nativeStatus, c.slug).toBe("pending");
+    }
+    // Every ALL_COURSE_CATALOG entry exposes nativeStatus uniformly,
+    // regardless of which underlying array it came from.
+    for (const c of ALL_COURSE_CATALOG) {
+      expect(["live", "pending"]).toContain(c.nativeStatus);
+    }
+  });
+
   it("has positive native course counts for progress-bearing courses", () => {
     for (const c of COURSE_CATALOG) {
       expect(c.totalLessons).toBeGreaterThan(0);

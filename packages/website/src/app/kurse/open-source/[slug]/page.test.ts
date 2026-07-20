@@ -9,6 +9,19 @@ describe("imported course detail discovery metadata", () => {
     );
   });
 
+  // plan 007 stage 6: generateStaticParams is the single owner of this
+  // exclusion mechanism, deriving purely from nativeStatus === "pending" so
+  // a course plan's single-field flip is enough to drop it from this route
+  // without any course plan adding its own separate filtering logic here.
+  it("derives purely from nativeStatus === 'pending', excluding anything 'live'", () => {
+    for (const course of IMPORTED_COURSE_CATALOG) {
+      expect(course.nativeStatus).toBe("pending");
+    }
+    const params = generateStaticParams();
+    const liveSlug = "ki-fuehrerschein"; // a real 'live' slug, never a static param here
+    expect(params.map((p) => p.slug)).not.toContain(liveSlug);
+  });
+
   it("marks every substantial detail page indexable with its local canonical", async () => {
     for (const course of IMPORTED_COURSE_CATALOG) {
       const metadata = await generateMetadata({

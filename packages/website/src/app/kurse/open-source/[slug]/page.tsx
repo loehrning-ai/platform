@@ -16,8 +16,15 @@ type PageProps = {
 
 export const dynamicParams = false;
 
+// The single owner of this exclusion mechanism (plan 007 stage 6): derives
+// purely from nativeStatus === "pending" so a course plan's own single-field
+// flip on its CatalogCourse/ImportedCourse entry is enough to drop it from
+// this generic external-course template — no course plan should add its own
+// separate filtering logic to this file.
 export function generateStaticParams() {
-  return IMPORTED_COURSE_CATALOG.map((course) => ({ slug: course.slug }));
+  return IMPORTED_COURSE_CATALOG.filter((course) => course.nativeStatus === "pending").map(
+    (course) => ({ slug: course.slug }),
+  );
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
