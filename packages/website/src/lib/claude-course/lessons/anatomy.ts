@@ -3,6 +3,7 @@
 // FillBlank x1 (drill), RewriteArena x1 (arena), PromptGrader x1 (grader).
 // Wired incrementally as each widget kind lands (plan 008 stages 3-4).
 import type { ClaudeLesson } from "../types";
+import { CLAUDE_DRAG_REORDER_COPY } from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "anatomy",
@@ -33,7 +34,7 @@ const lesson: ClaudeLesson = {
       title: "The six parts",
       readTimeMinutes: 4,
       content:
-        "- **01 · Role — who is Claude right now?** Sets tone, vocabulary, depth. \"Senior staff engineer\" and \"executive coach\" produce completely different outputs for the same task.\n  ```\n  You are a senior technical editor for internal docs.\n  ```\n- **02 · Context — what do they need to know?** Background, source docs, audience, constraints you live with. The onboarding you'd give a new hire. Paste generously, context is the product.\n  ```\n  Audience: SREs. We ship weekly. Migrating from v1 to v2 of the auth library in Q2.\n  ```\n- **03 · Task — what, exactly, do you want?** One verb. One clear ask. If you find yourself writing \"and also\", split into a second prompt or number the asks.\n  ```\n  Draft a rollout doc with sections: overview, risks, on-call runbook.\n  ```\n- **04 · Constraints — what must be true?** Length, tone, things to avoid, must-include facts. State them as rules, Claude respects rules better than vibes.\n  ```\n  <600 words. No marketing language. Must mention the kill-switch.\n  ```\n- **05 · Examples — show, don't just tell.** One or two concrete examples of what \"good\" looks like. Few-shot examples beat abstract instructions, this is the single biggest quality lever most people skip.\n  ```\n  <example>\n  Input: …\n  Output: …\n  </example>\n  ```\n- **06 · Format — how should the answer look?** Markdown? JSON? A table? Paste-ready Gdoc? Be explicit. The difference between \"I'll reformat this later\" and \"paste, done\" is one sentence.\n  ```\n  Output as markdown with H2 sections. Bullet lists, not prose paragraphs.\n  ```\n\n> **Why this order?** Claude reads top to bottom. Role first sets the voice before the task arrives. Context grounds it. Task states the ask. Constraints and examples shape the output. Format last so it's freshest in the model's working memory when generation starts. Anthropic's research on positional attention backs this up: what you put near the start and near the end gets weighted more than what's in the middle.",
+        "- **01 · Role: who is Claude right now?** Sets tone, vocabulary, depth. \"Senior staff engineer\" and \"executive coach\" produce completely different outputs for the same task.\n  ```\n  You are a senior technical editor for internal docs.\n  ```\n- **02 · Context: what do they need to know?** Background, source docs, audience, constraints you live with. The onboarding you'd give a new hire. Paste generously, context is the product.\n  ```\n  Audience: SREs. We ship weekly. Migrating from v1 to v2 of the auth library in Q2.\n  ```\n- **03 · Task: what, exactly, do you want?** One verb. One clear ask. If you find yourself writing \"and also\", split into a second prompt or number the asks.\n  ```\n  Draft a rollout doc with sections: overview, risks, on-call runbook.\n  ```\n- **04 · Constraints: what must be true?** Length, tone, things to avoid, must-include facts. State them as rules, Claude respects rules better than vibes.\n  ```\n  <600 words. No marketing language. Must mention the kill-switch.\n  ```\n- **05 · Examples: show, don't just tell.** One or two concrete examples of what \"good\" looks like. Few-shot examples beat abstract instructions, this is the single biggest quality lever most people skip.\n  ```\n  <example>\n  Input: …\n  Output: …\n  </example>\n  ```\n- **06 · Format: how should the answer look?** Markdown? JSON? A table? Paste-ready Gdoc? Be explicit. The difference between \"I'll reformat this later\" and \"paste, done\" is one sentence.\n  ```\n  Output as markdown with H2 sections. Bullet lists, not prose paragraphs.\n  ```\n\n> **Why this order?** Claude reads top to bottom. Role first sets the voice before the task arrives. Context grounds it. Task states the ask. Constraints and examples shape the output. Format last so it's freshest in the model's working memory when generation starts. Anthropic's research on positional attention backs this up: what you put near the start and near the end gets weighted more than what's in the middle.",
     },
     {
       id: "xml-tags",
@@ -50,7 +51,53 @@ const lesson: ClaudeLesson = {
         "- **Tell it to think.** Adding \"think step by step in `<thinking>` tags before answering\" visibly improves output on anything requiring reasoning: planning, debugging, analysis. On newer Claudes, extended thinking is a first-class mode you can turn on.\n- **Prefill the response.** When using the API, starting the assistant turn with `{` or `<doc>` forces the shape you want without Claude narrating first (\"Sure, I'd be happy to…\"). In chat surfaces, use \"Start your response with…\" for the same effect.\n- **Give it an out.** Add \"If you don't have enough information, say so and ask for what you need.\" This single sentence drops hallucination rates dramatically. Claude wants to be honest, give it permission.",
     },
   ],
-  widgets: [],
+  widgets: [
+    {
+      kind: "drag-reorder",
+      placement: "before-quiz",
+      courseSlug: "claude",
+      props: {
+        lessonId: "anatomy",
+        cpId: "reorder",
+        title: "Put them in order",
+        prompt: "Drag to put the six-part template in order.",
+        hint: "Drag a card, or use the up/down buttons. A strong prompt reads top-to-bottom: role, context, task, constraints, examples, format.",
+        blocks: [
+          { id: "role", label: "Role", sample: '"You are a senior technical editor."' },
+          {
+            id: "context",
+            label: "Context",
+            sample: '"We are migrating to OAuth 2.1; audience is SRE."',
+          },
+          { id: "task", label: "Task", sample: '"Draft a rollout doc."' },
+          {
+            id: "constraints",
+            label: "Constraints",
+            sample: '"Under 600 words. No marketing language."',
+          },
+          {
+            id: "examples",
+            label: "Examples",
+            sample: '"<example>…prior rollout doc…</example>"',
+          },
+          {
+            id: "format",
+            label: "Format",
+            sample: '"Markdown with H2 sections and bullet lists."',
+          },
+        ],
+        correctOrder: [
+          "role",
+          "context",
+          "task",
+          "constraints",
+          "examples",
+          "format",
+        ],
+        copy: CLAUDE_DRAG_REORDER_COPY,
+      },
+    },
+  ],
 };
 
 export default lesson;

@@ -2,7 +2,7 @@
 //
 // Structured as a Partial<Record<ClaudeLessonId, () => Promise<...>>> loader
 // map, mirroring `lib/course/questions.ts`'s QUESTION_LOADERS and
-// `lib/ai-native/data.ts`'s LESSON_LOADERS — a per-lesson dynamic import, not
+// `lib/ai-native/data.ts`'s LESSON_LOADERS, a per-lesson dynamic import, not
 // one eagerly-imported array, so no lesson route's bundle pays for a
 // sibling lesson's content.
 

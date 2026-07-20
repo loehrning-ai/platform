@@ -2,6 +2,7 @@
 // Widget manifest: PromptCompare x1 (cmp), FillBlank x1 (drill), Quiz x1
 // (q1). Wired incrementally (plan 008 stages 3, 4).
 import type { ClaudeLesson } from "../types";
+import { CLAUDE_QUIZ_COPY } from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "gdocs",
@@ -43,7 +44,29 @@ const lesson: ClaudeLesson = {
         "After the first draft, resist the urge to immediately ask for a better version. Instead ask: \"What are the three weakest parts of this doc, and why?\" You'll get a better doc by fixing specific weaknesses than by asking for a \"better version\", vague corrections produce vague outputs.\n\nThis is chain-of-thought applied to your own writing. You're forcing Claude to diagnose before it prescribes.",
     },
   ],
-  widgets: [],
+  widgets: [
+    {
+      kind: "quiz",
+      placement: "end",
+      courseSlug: "claude",
+      props: {
+        lessonId: "gdocs",
+        cpId: "q1",
+        question:
+          "Your first-draft Gdoc is close, but the voice is off. What's the strongest next move?",
+        options: [
+          'Ask for "a more professional tone."',
+          "Start over with a new prompt.",
+          'Paste 2-3 paragraphs of a reference doc with the voice you want and say "rewrite matching this voice."',
+          'Ask Claude to "be less AI."',
+        ],
+        correct: 2,
+        explanation:
+          "Voice transfer via example is far more effective than describing the voice. Show, don't tell.",
+        copy: CLAUDE_QUIZ_COPY,
+      },
+    },
+  ],
 };
 
 export default lesson;

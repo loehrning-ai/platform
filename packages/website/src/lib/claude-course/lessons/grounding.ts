@@ -2,6 +2,7 @@
 // Widget manifest: PromptSandbox x1 (sb), Quiz x1 (q1), RewriteArena x1
 // (arena). Wired incrementally (plan 008 stages 4, 5).
 import type { ClaudeLesson } from "../types";
+import { CLAUDE_QUIZ_COPY } from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "grounding",
@@ -36,7 +37,29 @@ const lesson: ClaudeLesson = {
         "**Green flags:** quotes from context with line numbers. \"I can't find this in the attached docs.\" Acknowledgements of uncertainty.\n\n**Red flags:** oddly specific numbers with no source. Named people/projects that don't appear in context. Confident plural claims (\"studies show…\").",
     },
   ],
-  widgets: [],
+  widgets: [
+    {
+      kind: "quiz",
+      placement: "before-quiz",
+      courseSlug: "claude",
+      props: {
+        lessonId: "grounding",
+        cpId: "q1",
+        question:
+          "What's the most reliable way to stop Claude from inventing facts?",
+        options: [
+          'Add "do not hallucinate" to every prompt.',
+          "Use a smarter model.",
+          'Provide the source data and require citations or an explicit "not in context" signal.',
+          "Ask twice and compare answers.",
+        ],
+        correct: 2,
+        explanation:
+          'Structural grounding beats pleading. Give the data, require citations, and allow a clean "I don\'t know" signal.',
+        copy: CLAUDE_QUIZ_COPY,
+      },
+    },
+  ],
 };
 
 export default lesson;

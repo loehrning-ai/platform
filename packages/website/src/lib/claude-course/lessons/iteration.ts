@@ -1,8 +1,9 @@
 // Ported from claude/lessons/05-iteration.html.
-// Widget manifest: PromptSandbox x1 (sb), PromptDiff x1 (diff) — mounted here,
-// must not be dropped — Quiz x1 (q1), RewriteArena x1 (arena). Wired
+// Widget manifest: PromptSandbox x1 (sb), PromptDiff x1 (diff), mounted here,
+// must not be dropped, Quiz x1 (q1), RewriteArena x1 (arena). Wired
 // incrementally (plan 008 stages 4, 5).
 import type { ClaudeLesson } from "../types";
+import { CLAUDE_QUIZ_COPY } from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "iteration",
@@ -49,7 +50,29 @@ const lesson: ClaudeLesson = {
         "Most failed iterations come from vague corrections. Here's the vocabulary that actually works:\n\n**Do:** \"Cut the first paragraph.\" · \"Use the voice from this example: …\" · \"Make the bullets parallel, each should start with a verb.\" · \"Assume the reader already knows X; skip the intro.\"\n\n**Don't:** \"Make it better.\" · \"Less AI-sounding.\" · \"Sharper.\" · \"You know what I mean.\"",
     },
   ],
-  widgets: [],
+  widgets: [
+    {
+      kind: "quiz",
+      placement: "before-quiz",
+      courseSlug: "claude",
+      props: {
+        lessonId: "iteration",
+        cpId: "q1",
+        question:
+          "Which turn-2 correction is most likely to actually change the output?",
+        options: [
+          '"Make it better."',
+          '"Less AI sounding."',
+          '"Cut the opening paragraph and start with the status in one sentence."',
+          '"Try again."',
+        ],
+        correct: 2,
+        explanation:
+          "Specific, actionable, testable. The others are vibes, Claude can't act on them.",
+        copy: CLAUDE_QUIZ_COPY,
+      },
+    },
+  ],
 };
 
 export default lesson;

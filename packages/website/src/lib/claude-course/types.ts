@@ -1,7 +1,7 @@
 // ─── Claude Course types (plan 008 stage 2) ─────────────────────────
 //
 // Own separate content module, keyed by a flat lesson-id scheme (NOT the
-// shared BlockId JSON system) — mirroring `lib/ai-native`'s precedent of
+// shared BlockId JSON system), mirroring `lib/ai-native`'s precedent of
 // extending `BaseLesson` with a course-specific container id. Content loads
 // per-lesson via dynamic `import()` (see ./data), not one eagerly-imported
 // module, so no lesson route's bundle pays for a sibling lesson's content.
@@ -77,7 +77,7 @@ export function isClaudeLessonId(value: unknown): value is ClaudeLessonId {
  * widgets) and adds the two Claude-Course-specific fields: which of the 4
  * tracks it belongs to, and the one-line hook shown on its lesson card.
  * `quiz` stays `[]` for every lesson: the source course has no separate
- * end-of-lesson quiz block — every `Quiz` mount IS the lesson's quiz content,
+ * end-of-lesson quiz block, every `Quiz` mount IS the lesson's quiz content,
  * represented as a `"quiz"` kind widget instead (see ./lessons/*.ts).
  */
 export interface ClaudeLesson extends BaseLesson {

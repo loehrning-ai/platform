@@ -2,6 +2,7 @@
 // Widget manifest: ClaudeMdBuilder x1 (builder), Quiz x2 (q1, q2),
 // SocraticTutor x1 (tutor). Wired incrementally (plan 008 stage 6).
 import type { ClaudeLesson } from "../types";
+import { CLAUDE_QUIZ_COPY } from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "claude-md",
@@ -45,17 +46,59 @@ const lesson: ClaudeLesson = {
       title: "A battle-tested template",
       readTimeMinutes: 1,
       content:
-        "```\n# <Project name>\n\n## What this is\nOne or two sentences. Who uses it, what it does. Link to the README for more.\n\n## Stack\n- Language / framework / versions\n- Build + test tools\n- Notable libs Claude should know about\n\n## Conventions\n- File layout rules (e.g. \"colocate tests as `*.test.ts`\")\n- Style rules the team enforces\n- Naming conventions\n- Error-handling pattern\n\n## Commands\n- `yarn build` — production build\n- `yarn test` — unit tests (run before committing)\n- `yarn test:e2e` — e2e suite (slow, only on CI)\n- `arc lint` — linter + formatter\n\n## Don't\n- Add new npm deps without asking\n- Use `any` in TypeScript\n- Edit files in `generated/`\n- Ship code without a matching test\n\n## Terminology\n- \"Workspace\" (not \"project\") — our product uses this term consistently\n- \"Member\" (not \"user\") in customer-facing copy\n\n## Where things live\n- Source: `src/`\n- Tests: colocated (`*.test.ts`)\n- Architecture notes: `@docs/architecture.md`\n- Deployment: `@docs/deploy.md`\n```",
+        "```\n# <Project name>\n\n## What this is\nOne or two sentences. Who uses it, what it does. Link to the README for more.\n\n## Stack\n- Language / framework / versions\n- Build + test tools\n- Notable libs Claude should know about\n\n## Conventions\n- File layout rules (e.g. \"colocate tests as `*.test.ts`\")\n- Style rules the team enforces\n- Naming conventions\n- Error-handling pattern\n\n## Commands\n- `yarn build`: production build\n- `yarn test`: unit tests (run before committing)\n- `yarn test:e2e`: e2e suite (slow, only on CI)\n- `arc lint`: linter + formatter\n\n## Don't\n- Add new npm deps without asking\n- Use `any` in TypeScript\n- Edit files in `generated/`\n- Ship code without a matching test\n\n## Terminology\n- \"Workspace\" (not \"project\"): our product uses this term consistently\n- \"Member\" (not \"user\") in customer-facing copy\n\n## Where things live\n- Source: `src/`\n- Tests: colocated (`*.test.ts`)\n- Architecture notes: `@docs/architecture.md`\n- Deployment: `@docs/deploy.md`\n```",
     },
     {
       id: "auto-memory",
       title: "Auto memory: the new half of the system",
       readTimeMinutes: 2,
       content:
-        "Recent Claude Code versions add auto memory, Claude writes its own notes to a separate memory file as it learns your preferences, without you typing anything. Correct it once (\"we prefix debug logs with `[DEBUG]`\"), and it'll remember next session.\n\nTwo things carry knowledge across sessions now:\n\n- **CLAUDE.md** — instructions you write, to steer behavior deliberately.\n- **Auto memory** — notes Claude writes, accumulating from your corrections.\n\nUse CLAUDE.md for things you want a team to share and version-control. Let auto memory pick up personal habits. Don't try to hand-maintain both.",
+        "Recent Claude Code versions add auto memory, Claude writes its own notes to a separate memory file as it learns your preferences, without you typing anything. Correct it once (\"we prefix debug logs with `[DEBUG]`\"), and it'll remember next session.\n\nTwo things carry knowledge across sessions now:\n\n- **CLAUDE.md**: instructions you write, to steer behavior deliberately.\n- **Auto memory**: notes Claude writes, accumulating from your corrections.\n\nUse CLAUDE.md for things you want a team to share and version-control. Let auto memory pick up personal habits. Don't try to hand-maintain both.",
     },
   ],
-  widgets: [],
+  widgets: [
+    {
+      kind: "quiz",
+      placement: "before-quiz",
+      courseSlug: "claude",
+      props: {
+        lessonId: "claude-md",
+        cpId: "q1",
+        question: "Which belongs in your root CLAUDE.md?",
+        options: [
+          "A list of API keys so Claude can help you test.",
+          "A paste of your whole monorepo for reference.",
+          "A short, specific list of conventions, commands, and anti-patterns the team enforces.",
+          "A changelog of what your team shipped last quarter.",
+        ],
+        correct: 2,
+        explanation:
+          "CLAUDE.md is standing context. Keep it crisp and specific, conventions, commands, anti-patterns. Never secrets.",
+        copy: CLAUDE_QUIZ_COPY,
+      },
+    },
+    {
+      kind: "quiz",
+      placement: "before-quiz",
+      courseSlug: "claude",
+      props: {
+        lessonId: "claude-md",
+        cpId: "q2",
+        question:
+          "In a monorepo with CLAUDE.md files in frontend/ and services/auth/, when do those sub-folder files get loaded?",
+        options: [
+          "At every session start, always.",
+          "Only when Claude reads files inside that sub-folder, they're lazy-loaded.",
+          "Never, only the root CLAUDE.md loads.",
+          "Randomly, based on file size.",
+        ],
+        correct: 1,
+        explanation:
+          "Descendant CLAUDE.md files are lazy-loaded only when Claude touches files in that directory. This is how you scale CLAUDE.md across a big repo without blowing your context budget.",
+        copy: CLAUDE_QUIZ_COPY,
+      },
+    },
+  ],
 };
 
 export default lesson;

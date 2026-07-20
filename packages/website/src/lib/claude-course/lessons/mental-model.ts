@@ -4,6 +4,7 @@
 // as each widget kind lands (plan 008 stages 3-6); see the code comment on
 // `widgets` below for current status.
 import type { ClaudeLesson } from "../types";
+import { CLAUDE_QUIZ_COPY } from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "mental-model",
@@ -60,7 +61,71 @@ const lesson: ClaudeLesson = {
         "Most bad Claude outputs trace back to one of three failures. Once you can name them, you can fix them.\n\n- **Hallucination.** Claude invents a plausible fact. Almost always a grounding failure, the fact wasn't in the window, so the model generated a shaped-right guess. Fix: paste the real source, or give it a tool to look it up.\n- **Drift.** Output starts strong, slowly wanders off-spec. Usually a constraint failure, the format or rules weren't strong enough to hold across a long generation. Fix: tighten constraints, ask for structured output, or break the task into steps.\n- **Generic slop.** Output is technically on-topic but reads like a LinkedIn post. A specificity failure, not enough context, not enough role, not enough concrete examples. Fix: add a few-shot example of what \"good\" looks like.",
     },
   ],
-  widgets: [],
+  widgets: [
+    {
+      kind: "quiz",
+      placement: "after-intro",
+      courseSlug: "claude",
+      props: {
+        lessonId: "mental-model",
+        cpId: "q1",
+        question:
+          'You ask Claude, "which of our microservices has the highest p99 latency?" and you\'ve pasted no data. What happens?',
+        options: [
+          "Claude queries your observability stack and answers accurately.",
+          "Claude refuses to answer without data.",
+          "Claude invents a plausible answer that sounds right but isn't grounded.",
+          'Claude returns the string "unknown".',
+        ],
+        correct: 2,
+        explanation:
+          "Claude doesn't refuse by default and doesn't know your systems. Without data in the window, it generates a plausible-sounding completion. That's a grounding failure, the textbook hallucination pattern.",
+        copy: CLAUDE_QUIZ_COPY,
+      },
+    },
+    {
+      kind: "quiz",
+      placement: "after-intro",
+      courseSlug: "claude",
+      props: {
+        lessonId: "mental-model",
+        cpId: "q2",
+        question:
+          "Across two separate chats, does Claude remember what you told it last week?",
+        options: [
+          "Yes, it has a personal memory of you.",
+          "No, unless the product surface explicitly adds memory, each chat is a blank window.",
+          "Yes, but only within the same calendar day.",
+          "Only if you paid extra.",
+        ],
+        correct: 1,
+        explanation:
+          "The base model is stateless. Some surfaces (Projects, CLAUDE.md, auto-memory) graft persistence on top, but the safe default assumption is \"no memory.\"",
+        copy: CLAUDE_QUIZ_COPY,
+      },
+    },
+    {
+      kind: "quiz",
+      placement: "after-intro",
+      courseSlug: "claude",
+      props: {
+        lessonId: "mental-model",
+        cpId: "q3",
+        question:
+          "Which is the single best summary of Claude's job during a generation?",
+        options: [
+          "Retrieve the correct answer from its training data.",
+          "Predict the most likely helpful continuation given everything in the window.",
+          "Refuse when uncertain.",
+          "Reason from first principles independently of input.",
+        ],
+        correct: 1,
+        explanation:
+          "It's a completion engine, trained to be helpful, harmless, and honest. That framing explains both its strengths (creative drafting, structured transformation) and its failure modes (confident wrongness without grounding).",
+        copy: CLAUDE_QUIZ_COPY,
+      },
+    },
+  ],
 };
 
 export default lesson;

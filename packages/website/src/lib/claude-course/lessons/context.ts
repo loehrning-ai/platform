@@ -2,6 +2,7 @@
 // Widget manifest: SemanticSpace x1 (sem), Tokenizer x1 (tok), Quiz x3 (q1,
 // q2, q3), PromptSandbox x1 (sb). Wired incrementally (plan 008 stages 4, 7).
 import type { ClaudeLesson } from "../types";
+import { CLAUDE_QUIZ_COPY } from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "context",
@@ -64,7 +65,65 @@ const lesson: ClaudeLesson = {
         "Sooner or later you'll have more context than the window holds. Three patterns Anthropic's teams use:\n\n1. **Summarize first, ground second.** Use a first pass to extract the relevant slice. Feed only the slice to the second pass with the real question.\n2. **Chain, don't cram.** Break one giant prompt into several: extract, classify, draft, review. Each stage has a cleaner, smaller window.\n3. **Retrieval, if you have it.** If you're in an agentic surface (Claude Code, a custom app), give Claude tools to grep or search, let it pull only what it needs. Anthropic's own Claude Code uses regex + grep for this rather than vector search, because the model is good at crafting queries.",
     },
   ],
-  widgets: [],
+  widgets: [
+    {
+      kind: "quiz",
+      placement: "before-quiz",
+      courseSlug: "claude",
+      props: {
+        lessonId: "context",
+        cpId: "q1",
+        question:
+          "You paste a 200-page doc and ask a question. Why might Claude miss a fact buried on page 103?",
+        options: [
+          "It ran out of memory.",
+          "Positional bias, content in the middle of a long window gets less attention than content near the ends.",
+          "Claude can only read PDFs.",
+          "Large windows trigger safety blocks.",
+        ],
+        correct: 1,
+        explanation:
+          "Place critical facts near the start or end. For very long docs, summarize key points and restate them close to your question.",
+        copy: CLAUDE_QUIZ_COPY,
+      },
+    },
+    {
+      kind: "quiz",
+      placement: "before-quiz",
+      courseSlug: "claude",
+      props: {
+        lessonId: "context",
+        cpId: "q2",
+        question: "Roughly how many tokens is a 10,000-word document?",
+        options: ["~1,000", "~5,000", "~13,000", "~100,000"],
+        correct: 2,
+        explanation:
+          "1 word ≈ 1.3 tokens. So 10,000 words is ~13,000 tokens. Useful when estimating whether a set of docs will fit.",
+        copy: CLAUDE_QUIZ_COPY,
+      },
+    },
+    {
+      kind: "quiz",
+      placement: "before-quiz",
+      courseSlug: "claude",
+      props: {
+        lessonId: "context",
+        cpId: "q3",
+        question:
+          "You have three source docs and a question. Where does Anthropic recommend putting the question?",
+        options: [
+          "At the very top, Claude reads top to bottom.",
+          "After the docs, near the end of the prompt.",
+          "Interleaved with the docs.",
+          "Order doesn't matter.",
+        ],
+        correct: 1,
+        explanation:
+          "Long documents go at the top, question near the end. Queries placed at the end of a long context can improve response quality by up to 30%.",
+        copy: CLAUDE_QUIZ_COPY,
+      },
+    },
+  ],
 };
 
 export default lesson;

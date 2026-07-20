@@ -2,6 +2,7 @@
 // Widget manifest: PromptLibraryShaper x1 (shaper), SocraticTutor x1
 // (tutor), Quiz x1 (q1). Wired incrementally (plan 008 stage 6).
 import type { ClaudeLesson } from "../types";
+import { CLAUDE_QUIZ_COPY } from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "team",
@@ -48,7 +49,29 @@ const lesson: ClaudeLesson = {
         "> **15 minutes on Fridays.** One teammate demos a prompt they found useful this week. Over a quarter, that's 12 new team-level capabilities.",
     },
   ],
-  widgets: [],
+  widgets: [
+    {
+      kind: "quiz",
+      placement: "end",
+      courseSlug: "claude",
+      props: {
+        lessonId: "team",
+        cpId: "q1",
+        question:
+          "Your team-shared prompt works for you but falls flat for others. The most common cause?",
+        options: [
+          "Different Claude models.",
+          'Hardcoded specifics (project names, paths) and missing "when to use" notes.',
+          "Time of day.",
+          "Not enough adjectives.",
+        ],
+        correct: 1,
+        explanation:
+          'Shareable prompts are parameterized and documented. Strip specifics, state when to use, and show a sample output.',
+        copy: CLAUDE_QUIZ_COPY,
+      },
+    },
+  ],
 };
 
 export default lesson;

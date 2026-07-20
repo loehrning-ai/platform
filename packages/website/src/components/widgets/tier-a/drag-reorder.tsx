@@ -33,6 +33,33 @@ export interface ReorderBlock {
   readonly sample?: string;
 }
 
+/**
+ * Chrome-copy override (plan 008 stage 3): additive, default-preserving —
+ * every field defaults to the original German literal so the 3 existing
+ * native courses render byte-identical when `copy` is omitted.
+ */
+export interface DragReorderWidgetCopy {
+  readonly kindLabel: string;
+  readonly shuffleLabel: string;
+  readonly moveUpSuffix: string;
+  readonly moveDownSuffix: string;
+  readonly correctStatusLabel: string;
+  readonly wrongStatusLabel: string;
+  readonly idleStatusLabel: string;
+  readonly checkLabel: string;
+}
+
+const DEFAULT_COPY: DragReorderWidgetCopy = {
+  kindLabel: "Sortieren",
+  shuffleLabel: "Mischen",
+  moveUpSuffix: "nach oben",
+  moveDownSuffix: "nach unten",
+  correctStatusLabel: "Genau diese Reihenfolge. Das ist die Risikopyramide.",
+  wrongStatusLabel: "Noch nicht ganz. Grüne Zeilen stehen schon richtig.",
+  idleStatusLabel: "Sortiere, dann prüfe.",
+  checkLabel: "Reihenfolge prüfen",
+};
+
 export interface DragReorderWidgetProps {
   readonly lessonId: string;
   readonly cpId: string;
@@ -43,6 +70,7 @@ export interface DragReorderWidgetProps {
   readonly blocks?: readonly ReorderBlock[];
   /** Block ids in the correct top-to-bottom order. Defaults to the EU tiers. */
   readonly correctOrder?: readonly string[];
+  readonly copy?: Partial<DragReorderWidgetCopy>;
 }
 
 /** Default EU-AI-Act risk tiers, highest risk first (the correct answer). */
@@ -112,7 +140,9 @@ export function DragReorderWidget({
   hint = "Zieh eine Karte oder nutze die Pfeil-Tasten. Faustregel: je größer der mögliche Schaden für Menschen, desto strenger die Stufe.",
   blocks = DEFAULT_BLOCKS,
   correctOrder = DEFAULT_CORRECT,
+  copy,
 }: DragReorderWidgetProps): JSX.Element {
+  const c = { ...DEFAULT_COPY, ...copy };
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [order, setOrder] = useState<ReorderBlock[]>(() =>
     initialScramble(blocks, correctOrder),
@@ -156,7 +186,7 @@ export function DragReorderWidget({
 
   return (
     <WidgetFrame
-      kindLabel="Sortieren"
+      kindLabel={c.kindLabel}
       title={title}
       scenario={hint}
       done={done}
@@ -172,7 +202,7 @@ export function DragReorderWidget({
           className="inline-flex shrink-0 items-center gap-1.5 border-2 border-border bg-background px-3 py-1.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:border-brand-orange/60"
         >
           <RotateCcw size={12} aria-hidden="true" />
-          Mischen
+          {c.shuffleLabel}
         </button>
       </div>
 
@@ -248,7 +278,7 @@ export function DragReorderWidget({
                   type="button"
                   onClick={() => nudge(i, -1)}
                   disabled={i === 0}
-                  aria-label={`${b.label} nach oben`}
+                  aria-label={`${b.label} ${c.moveUpSuffix}`}
                   className={cn(
                     "inline-flex h-6 w-7 items-center justify-center border-2 border-border bg-background text-muted-foreground transition-colors",
                     i === 0
@@ -262,7 +292,7 @@ export function DragReorderWidget({
                   type="button"
                   onClick={() => nudge(i, 1)}
                   disabled={i === order.length - 1}
-                  aria-label={`${b.label} nach unten`}
+                  aria-label={`${b.label} ${c.moveDownSuffix}`}
                   className={cn(
                     "inline-flex h-6 w-7 items-center justify-center border-2 border-border bg-background text-muted-foreground transition-colors",
                     i === order.length - 1
@@ -291,16 +321,16 @@ export function DragReorderWidget({
         >
           {checked
             ? ok
-              ? "Genau diese Reihenfolge. Das ist die Risikopyramide."
-              : "Noch nicht ganz. Grüne Zeilen stehen schon richtig."
-            : "Sortiere, dann prüfe."}
+              ? c.correctStatusLabel
+              : c.wrongStatusLabel
+            : c.idleStatusLabel}
         </span>
         <button
           type="button"
           onClick={check}
           className="inline-flex items-center gap-1.5 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
         >
-          Reihenfolge prüfen
+          {c.checkLabel}
         </button>
       </div>
     </WidgetFrame>

@@ -2,6 +2,7 @@
 // Widget manifest: PromptSandbox x1 (sb), Quiz x1 (q1), RewriteArena x1
 // (arena). Wired incrementally (plan 008 stages 4, 5).
 import type { ClaudeLesson } from "../types";
+import { CLAUDE_QUIZ_COPY } from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "reviews",
@@ -36,7 +37,29 @@ const lesson: ClaudeLesson = {
         "- **Before you push.** Paste your own diff, ask for a staff-level review. Catches things you'll be embarrassed by later.\n- **On a big diff.** Before reading 2,000 lines yourself, ask Claude for a call-graph summary and a list of behavioral changes.\n- **Across the repo.** \"Are there other callers of this function I missed?\", paste the call sites, let Claude reason about ripple.",
     },
   ],
-  widgets: [],
+  widgets: [
+    {
+      kind: "quiz",
+      placement: "before-quiz",
+      courseSlug: "claude",
+      props: {
+        lessonId: "reviews",
+        cpId: "q1",
+        question:
+          "Your review prompt produces 40 style nits and misses a real correctness bug. What's the fix?",
+        options: [
+          "Use a larger model.",
+          "Tell Claude explicitly to ignore style and focus on correctness and behavior changes.",
+          "Shorten the diff randomly.",
+          "Ask twice in different wording.",
+        ],
+        correct: 1,
+        explanation:
+          "Prompts control focus. Tell the reviewer what to prioritize and what to ignore.",
+        copy: CLAUDE_QUIZ_COPY,
+      },
+    },
+  ],
 };
 
 export default lesson;

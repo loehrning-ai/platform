@@ -2,6 +2,7 @@
 // Widget manifest: SocraticTutor x1 (tutor), AgentLoop x1 (loop), Quiz x2
 // (q1, q2). Wired incrementally (plan 008 stages 6).
 import type { ClaudeLesson } from "../types";
+import { CLAUDE_QUIZ_COPY } from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "agents",
@@ -46,7 +47,49 @@ const lesson: ClaudeLesson = {
         "**Agent fits:** multi-step investigation (trace a bug across files). Research and synthesis (gather data, summarize). Repetitive work with clear stopping criteria.\n\n**Agent overkill:** one-shot writing tasks. Anything where a single structured prompt plus a paste of context would work. Tasks without a crisp \"done\" condition.",
     },
   ],
-  widgets: [],
+  widgets: [
+    {
+      kind: "quiz",
+      placement: "end",
+      courseSlug: "claude",
+      props: {
+        lessonId: "agents",
+        cpId: "q1",
+        question:
+          "An agent has no max-step budget. What's the most likely failure mode?",
+        options: [
+          "The agent refuses to start.",
+          "The agent runs until tokens/budget are exhausted, often without converging.",
+          "The agent produces zero output.",
+          "Nothing, budgets are optional.",
+        ],
+        correct: 1,
+        explanation:
+          "Agents loop. Without a step or token budget, they can churn indefinitely. Always cap.",
+        copy: CLAUDE_QUIZ_COPY,
+      },
+    },
+    {
+      kind: "quiz",
+      placement: "end",
+      courseSlug: "claude",
+      props: {
+        lessonId: "agents",
+        cpId: "q2",
+        question: "Which task is an agent overkill?",
+        options: [
+          "Summarize a meeting transcript into 5 bullets.",
+          "Investigate a flaky test across 4 files.",
+          "Gather data from 3 dashboards and draft a weekly update.",
+          "Repeatedly fix lint errors across a monorepo until clean.",
+        ],
+        correct: 0,
+        explanation:
+          "A single prompt plus the transcript is enough. Agents earn their complexity when the task needs multiple tool calls.",
+        copy: CLAUDE_QUIZ_COPY,
+      },
+    },
+  ],
 };
 
 export default lesson;
