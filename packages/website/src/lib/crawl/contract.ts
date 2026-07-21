@@ -102,13 +102,16 @@ const PUBLIC_NOINDEX_PATHS = [
   // "completion" eligibility path as codex.
   "/kurse/open-source/data-infrastructure/kurs/zertifikat",
   "/kurse/open-source/data-infrastructure/verifizierung",
-  // Data Engineering Fundamentals course (plan 011 stage 1) — added ahead of
-  // the routes themselves (stage 10) so contract-completeness.test.ts never
-  // goes red mid-plan. No "/kurs/quiz" entry: this course has no quiz
-  // mechanism in source at all, it uses the same generic
-  // all-lessons-completed "completion" eligibility path as codex/
+  // Data Engineering Fundamentals course (plan 011 stage 1, corrected stage
+  // 10): unlike claude/codex/data-infrastructure, this course's Done
+  // Criteria puts all 12 chapters directly under
+  // data-engineering-fundamentals/[chapterId] — no "/kurs" segment, since
+  // source has no natural index-vs-reader split (its own "Overview" chapter
+  // already plays that role, ported as chapterId "home"). No "/quiz" entry:
+  // this course has no quiz mechanism in source at all, it uses the same
+  // generic all-lessons-completed "completion" eligibility path as codex/
   // data-infrastructure.
-  "/kurse/open-source/data-engineering-fundamentals/kurs/zertifikat",
+  "/kurse/open-source/data-engineering-fundamentals/zertifikat",
   "/kurse/open-source/data-engineering-fundamentals/verifizierung",
 ] as const;
 
@@ -166,9 +169,14 @@ const PUBLIC_ACCESS_PATHS = [
   // Data Infrastructure course (plan 010 stage 1) — see the noindex entries above.
   "/kurse/open-source/data-infrastructure/kurs",
   "/kurse/open-source/data-infrastructure/kurs/:path*",
-  // Data Engineering Fundamentals course (plan 011 stage 1) — see the noindex entries above.
-  "/kurse/open-source/data-engineering-fundamentals/kurs",
-  "/kurse/open-source/data-engineering-fundamentals/kurs/:path*",
+  // Data Engineering Fundamentals course (plan 011 stage 10, corrected —
+  // see the noindex-block comment above): the 12 chapters live directly
+  // under the course root, so one wildcard covers them all instead of the
+  // "/kurs" + "/kurs/:path*" pair every other course uses. The bare course
+  // root itself is already covered by "/kurse/open-source/:slug" above
+  // (PUBLIC_INDEXABLE_PATHS matches by path string regardless of whether
+  // the dynamic [slug] route or this static folder serves it).
+  "/kurse/open-source/data-engineering-fundamentals/:path*",
 ] as const;
 
 const PUBLIC_MACHINE_PATHS = [

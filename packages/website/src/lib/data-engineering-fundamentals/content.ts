@@ -19,12 +19,6 @@ import { DEF_CHAPTER_IDS, isDefChapterId } from "./types";
 
 export interface ChapterBodyProps {
   readonly chapter: ChapterMeta;
-  /**
-   * Only the "home" (Ch_Overview) chapter uses this — every other chapter
-   * component ignores it. Kept on the shared prop shape so `getDefChapterComponent`
-   * returns one uniform component type instead of a per-chapter union.
-   */
-  readonly goTo: (id: DefChapterId) => void;
 }
 
 export type DefChapterComponent = ComponentType<ChapterBodyProps>;

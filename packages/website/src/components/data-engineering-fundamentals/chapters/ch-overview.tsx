@@ -1,22 +1,31 @@
 "use client";
 
 import { useState, type CSSProperties } from "react";
+import { useRouter } from "next/navigation";
 import { PipelineBar, OV_STAGES } from "../simulators/pipeline-bar";
 import type { DefChapterId } from "@/lib/data-engineering-fundamentals/types";
 
-// ─── Ch_Overview (plan 011 stage 9) ──────────────────────────────────
+// ─── Ch_Overview (plan 011 stage 9, navigation fixed stage 10) ───────
 // Ported from `src/chapters/Ch_Overview.js`. Bespoke hero/flow layout
 // (not the shared Hero primitive — source builds its own markup here).
+//
+// Uses `useRouter()` internally instead of accepting a `goTo` callback prop:
+// a function prop can't cross the server->client boundary when this
+// component is resolved dynamically in `[chapterId]/page.tsx` (a Server
+// Component), so every other chapter component takes only `{chapter}` and
+// this is the one chapter that needs real navigation, done client-side.
 
 const TOOLS = ["Kafka", "Flink", "Spark", "Trino", "Snowflake", "ClickHouse", "Airflow", "dbt", "Great Expectations", "DataHub", "Cube", "Apache Ranger"];
 
-export interface ChOverviewProps {
-  readonly goTo: (id: DefChapterId) => void;
+function chapterHref(id: DefChapterId | string): string {
+  return `/kurse/open-source/data-engineering-fundamentals/${id}`;
 }
 
-export function ChOverview({ goTo }: ChOverviewProps) {
+export function ChOverview() {
+  const router = useRouter();
   const [activeId, setActiveId] = useState("ingest");
   const active = OV_STAGES.find((s) => s.id === activeId) ?? OV_STAGES[0];
+  const goTo = (id: DefChapterId | string) => router.push(chapterHref(id));
 
   return (
     <>
@@ -52,7 +61,7 @@ export function ChOverview({ goTo }: ChOverviewProps) {
           <h2 className="ov2-h2">One pipeline. Ten chapters. Every dot is a real row.</h2>
           <p className="ov2-lede">Hover a stop to preview. Click to open. Each stands alone; the capstone stitches all ten together.</p>
         </div>
-        <PipelineBar goTo={(id) => goTo(id as DefChapterId)} activeId={activeId} setActiveId={setActiveId} />
+        <PipelineBar goTo={goTo} activeId={activeId} setActiveId={setActiveId} />
         <div className="ov2-detail" style={{ "--hex": active.hex, "--ink": active.ink } as CSSProperties}>
           <div className="ov2-detail-n">{active.n}</div>
           <div className="ov2-detail-main">
@@ -62,7 +71,7 @@ export function ChOverview({ goTo }: ChOverviewProps) {
             </div>
             <div className="ov2-detail-body">{active.body}</div>
           </div>
-          <button className="btn btn-primary ov2-detail-btn" onClick={() => goTo(active.chap as DefChapterId)}>
+          <button className="btn btn-primary ov2-detail-btn" onClick={() => goTo(active.chap)}>
             Open chapter →
           </button>
         </div>
