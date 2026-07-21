@@ -15,6 +15,8 @@ import Ch04Feature from "./ch04-feature";
 import Ch05Model from "./ch05-model";
 import Ch07Interpret from "./ch07-interpret";
 import Ch08Experiment from "./ch08-experiment";
+import Ch09Causal from "./ch09-causal";
+import Ch10Peeking from "./ch10-peeking";
 
 afterEach(() => {
   cleanup();
@@ -104,6 +106,29 @@ describe("data-science chapter components render with real ported content, not p
     expect(screen.getByText(/Power is how/)).toBeInTheDocument();
     expect(screen.getAllByText("Running experiment").length).toBeGreaterThan(0);
     expect(screen.getByLabelText("True lift")).toBeInTheDocument();
+    expect(screen.getByText("Key takeaways")).toBeInTheDocument();
+  });
+});
+
+describe("data-science chapter components render with real ported content, not placeholders (plan 012 stage 10)", () => {
+  it("Ch09Causal renders the real hero and all 5 simulators", () => {
+    render(<Ch09Causal chapter={getDsChapterMeta("causal")} />);
+    expect(screen.getByText(/hypothesis/)).toBeInTheDocument();
+    expect(screen.getAllByText("Confounding · the lurking variable").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("DAG patterns · should you adjust for Z?").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("DAGs · the three patterns").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Difference-in-Differences").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Instrumental Variables").length).toBeGreaterThan(0);
+    expect(screen.getByText("Key takeaways")).toBeInTheDocument();
+  });
+
+  it("Ch10Peeking renders the real hero and all 4 simulators", () => {
+    render(<Ch10Peeking chapter={getDsChapterMeta("peek")} />);
+    expect(screen.getAllByText(/lie/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Peeking False-Positive Inflator").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Multiple Testing & FWER").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("CUPED — Variance Reduction via Covariates").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Statistical Power").length).toBeGreaterThan(0);
     expect(screen.getByText("Key takeaways")).toBeInTheDocument();
   });
 });

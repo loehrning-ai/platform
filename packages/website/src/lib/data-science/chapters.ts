@@ -34,6 +34,8 @@ const CHAPTER_LOADERS: Partial<Record<DsChapterId, DsChapterLoader>> = {
   eval: () => import("@/components/data-science/chapters/ch06-evaluate"),
   interp: () => import("@/components/data-science/chapters/ch07-interpret"),
   exp: () => import("@/components/data-science/chapters/ch08-experiment"),
+  causal: () => import("@/components/data-science/chapters/ch09-causal"),
+  peek: () => import("@/components/data-science/chapters/ch10-peeking"),
 };
 
 const chapterCache = new Map<DsChapterId, DsChapterComponent>();
