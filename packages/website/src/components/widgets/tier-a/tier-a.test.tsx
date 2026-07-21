@@ -188,6 +188,47 @@ describe("FlashcardsWidget", () => {
     render(<FlashcardsWidget lessonId="l1" cpId="fc1" cards={cards} />);
     expect(screen.getByText("Was ist GPAI?")).toBeInTheDocument();
   });
+
+  it("supports a full English copy override without touching German defaults (plan 009 stage 3)", () => {
+    const { container } = render(
+      <FlashcardsWidget
+        lessonId="l1"
+        cpId="fc1"
+        cards={cards}
+        copy={{
+          kindLabel: "Review",
+          revealHint: "Click to reveal ↻",
+          backLabel: "Answer",
+          flipBackHint: "Click to flip back",
+          prevLabel: "← Prev",
+          nextLabel: "Next →",
+          emptyLabel: "No cards available.",
+          ariaLabelTemplate: "Card {current} of {total}. Press Space or click to flip.",
+        }}
+      />,
+    );
+    expect(container.textContent).toContain("Review");
+    expect(screen.getByText("Click to reveal ↻")).toBeInTheDocument();
+    expect(screen.getByText("← Prev")).toBeInTheDocument();
+    expect(screen.getByText("Next →")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Card 1 of 2\. Press Space or click to flip\./ }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Karten")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Klick zum Aufdecken/)).not.toBeInTheDocument();
+  });
+
+  it("renders an English empty-deck label override", () => {
+    render(
+      <FlashcardsWidget
+        lessonId="l1"
+        cpId="fc1"
+        cards={[]}
+        copy={{ emptyLabel: "No cards available." }}
+      />,
+    );
+    expect(screen.getByText("No cards available.")).toBeInTheDocument();
+  });
 });
 
 // ─── Compare ─────────────────────────────────────────────────────
@@ -219,6 +260,12 @@ describe("CompareWidget", () => {
     );
     expect(screen.getByText("Vorher")).toBeInTheDocument();
     expect(screen.getByText("Nachher")).toBeInTheDocument();
+  });
+
+  it("supports an English kindLabel override without touching the German default (plan 009 stage 3)", () => {
+    const { container } = render(<CompareWidget bad="A" good="B" kindLabel="Compare" />);
+    expect(container.textContent).toContain("Compare");
+    expect(container.textContent).not.toContain("Vergleich");
   });
 });
 
@@ -258,6 +305,19 @@ describe("TaskSpecWidget", () => {
     expect(btn.getAttribute("aria-pressed")).toBe("true");
     fireEvent.click(btn);
     expect(btn.getAttribute("aria-pressed")).toBe("false");
+  });
+
+  it("supports an English tierLabels override without touching German defaults (plan 009 stage 3)", () => {
+    render(
+      <TaskSpecWidget
+        lessonId="l1"
+        cpId="ts1"
+        items={items}
+        tierLabels={{ weak: "weak", meh: "meh", strong: "strong" }}
+      />,
+    );
+    expect(screen.getByText("weak")).toBeInTheDocument();
+    expect(screen.queryByText("schwach")).not.toBeInTheDocument();
   });
 });
 

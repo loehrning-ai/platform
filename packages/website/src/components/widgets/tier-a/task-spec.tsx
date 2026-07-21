@@ -25,6 +25,27 @@ export interface TaskSpecItem {
   readonly body?: readonly string[];
 }
 
+/**
+ * Tier-label override (plan 009 stage 3): the "schwach/mittel/stark" score
+ * band was a hardcoded German internal display string with NO override
+ * mechanism at all (unlike `title`/`desc`/`goal`, which were already plain
+ * per-instance props) — reusing this widget verbatim for an English course
+ * would have rendered German tier words inside otherwise-English chrome.
+ * Additive and default-preserving: defaults to the original German literals
+ * so the 3 native courses render byte-identical.
+ */
+export interface TaskSpecTierLabels {
+  readonly weak: string;
+  readonly meh: string;
+  readonly strong: string;
+}
+
+const DEFAULT_TIER_LABELS: TaskSpecTierLabels = {
+  weak: "schwach",
+  meh: "mittel",
+  strong: "stark",
+};
+
 export interface TaskSpecWidgetProps {
   readonly lessonId: string;
   readonly cpId: string;
@@ -34,14 +55,15 @@ export interface TaskSpecWidgetProps {
   readonly items: readonly TaskSpecItem[];
   /** How many items must be on to count as "stark" + award XP. Default 3. */
   readonly threshold?: number;
+  readonly tierLabels?: Partial<TaskSpecTierLabels>;
 }
 
-type Tier = "schwach" | "mittel" | "stark";
+type TierLevel = "weak" | "meh" | "strong";
 
-function tierFor(on: number, threshold: number): Tier {
-  if (on >= threshold) return "stark";
-  if (on >= 1) return "mittel";
-  return "schwach";
+function tierLevelFor(on: number, threshold: number): TierLevel {
+  if (on >= threshold) return "strong";
+  if (on >= 1) return "meh";
+  return "weak";
 }
 
 export function TaskSpecWidget({
@@ -52,7 +74,9 @@ export function TaskSpecWidget({
   goal = "Beschreibe die Änderung in einem Satz.",
   items,
   threshold = 3,
+  tierLabels,
 }: TaskSpecWidgetProps): JSX.Element {
+  const labels = { ...DEFAULT_TIER_LABELS, ...tierLabels };
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [on, setOn] = useState<ReadonlySet<number>>(() => new Set());
 
@@ -71,7 +95,8 @@ export function TaskSpecWidget({
       return next;
     });
 
-  const tier = tierFor(count, threshold);
+  const tierLevel = tierLevelFor(count, threshold);
+  const tier = labels[tierLevel];
   const pct = total === 0 ? 0 : Math.round((count / total) * 100);
 
   const assembled = useMemo(() => {
@@ -150,12 +175,12 @@ export function TaskSpecWidget({
                 / {total} Signale
               </span>
               <span
-                data-tier={tier}
+                data-tier={tierLevel}
                 className={cn(
                   "ml-auto font-mono text-[10.5px] font-bold uppercase tracking-[0.14em]",
-                  tier === "stark"
+                  tierLevel === "strong"
                     ? "text-[#22c55e]"
-                    : tier === "mittel"
+                    : tierLevel === "meh"
                       ? "text-brand-amber"
                       : "text-muted-foreground",
                 )}
@@ -167,9 +192,9 @@ export function TaskSpecWidget({
               <div
                 className={cn(
                   "h-full transition-[width,background-color] duration-300",
-                  tier === "stark"
+                  tierLevel === "strong"
                     ? "bg-[#22c55e]"
-                    : tier === "mittel"
+                    : tierLevel === "meh"
                       ? "bg-brand-amber"
                       : "bg-muted-foreground",
                 )}
