@@ -318,6 +318,26 @@ describe("unified progress store", () => {
       expect(isCertificateEligible("codex")).toBe(false);
     });
 
+    // plan 010 stage 12: data-infrastructure is still nativeStatus "pending"
+    // in catalog.ts (IMPORTED_COURSE_CATALOG) as of this test — it flips to
+    // "live" in stage 13 — but its 12-lesson totalLessons is already resolved
+    // via ALL_COURSE_CATALOG regardless of which of the two arrays it lives
+    // in, so this generic fallback path is exercisable ahead of that flip.
+    it("resolves eligibility for data-infrastructure via the all-lessons-completed path", () => {
+      for (let i = 1; i <= 12; i += 1) {
+        markLessonCompleted("data-infrastructure", `lesson-${i}`);
+      }
+      expect(isWorkshopQuizPassed("data-infrastructure")).toBe(false);
+      expect(isCertificateEligible("data-infrastructure")).toBe(true);
+    });
+
+    it("stays ineligible below the full lesson count for data-infrastructure", () => {
+      for (let i = 1; i <= 11; i += 1) {
+        markLessonCompleted("data-infrastructure", `lesson-${i}`);
+      }
+      expect(isCertificateEligible("data-infrastructure")).toBe(false);
+    });
+
     it("never throws on corrupted storage, reads as not eligible", () => {
       window.localStorage.setItem(
         UNIFIED_STORAGE_KEY,
