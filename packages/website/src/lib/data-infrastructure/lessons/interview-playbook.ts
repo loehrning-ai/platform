@@ -155,3 +155,92 @@ const lesson: DataInfraLesson = {
 };
 
 export default lesson;
+
+/**
+ * The 12-entry interview walkthrough, ported verbatim from source's inline
+ * `D.InterviewMove(..., { moves: [...] })` call (lesson 12's own <script>
+ * block) — trusted static content, never user input, so `body`/`note` are
+ * rendered as raw HTML by the InterviewMove widget (real formatting tags
+ * like <b>/<code>/<p> in the source, not sanitizable plain text).
+ */
+export interface InterviewMoveItem {
+  readonly tag: string;
+  readonly title: string;
+  readonly body: string;
+  readonly note: string;
+}
+
+export const INTERVIEW_MOVES: readonly InterviewMoveItem[] = [
+  {
+    tag: "clarify",
+    title: "00:00 — Mirror the prompt back",
+    body: '<p>Prompt: <em>"Design real-time analytics for a marketplace — sellers see live order/revenue/inventory dashboards."</em></p><p>I say back: <b>"So we need second-fresh dashboards for each seller, scoped to their own data, over an event stream of orders. Tell me if I have the shape right."</b></p>',
+    note: "This is not throat-clearing. It anchors the contract and gives the interviewer a chance to correct you cheaply, before any architecture.",
+  },
+  {
+    tag: "scope",
+    title: "02:00 — Pin scale and freshness",
+    body: '<p>Three numbers I always extract: <b>writes/sec, reads/sec, freshness target</b>.</p><p>"How many orders per second at peak?" → ~10k/s. "How many sellers loading dashboards?" → 50k DAU, ~500 concurrent. "How fresh?" → "feels live" → <b>under 5 seconds</b>.</p>',
+    note: "Without these, every later choice is a guess. With them, choices defend themselves.",
+  },
+  {
+    tag: "estimate",
+    title: "05:00 — Back-of-envelope the data",
+    body: '<p>10k orders/s × 86,400 = ~860M/day. At 1KB each → <b>~860GB/day raw</b>. Compressed Parquet ~10× → ~86GB/day on the lakehouse. 7-day hot tier ≈ 600GB.</p><p>Cache fan-out: 50k sellers × 50KB pre-agg ≈ <b>2.5GB hot in Redis/Druid</b>. Fits in one node.</p>',
+    note: "Numbers shift the conversation from vibes to engineering. If you don't do this, the interviewer will ask you to.",
+  },
+  {
+    tag: "api",
+    title: "08:00 — Sketch the consumer contract first",
+    body: "<p>Two endpoints — and I write them on the board:</p><pre>GET /seller/:id/dashboard   → { revenue_24h, orders_24h, top_skus[10] }\nWS  /seller/:id/stream      → { event: 'order', ts, amount, sku }</pre><p>Dashboard load is one cache hit. Live updates push deltas. <b>No SQL on the read path.</b></p>",
+    note: "Designing the consumer's shape first prevents the classic mistake of building beautiful infra that nobody can use.",
+  },
+  {
+    tag: "data model",
+    title: "12:00 — Pick the event shape",
+    body: "<p>One canonical event: <code>order_placed</code>. Fields: <code>order_id, seller_id, ts_event, amount_cents, sku, currency, schema_version</code>.</p><p>Partition key = <b>seller_id</b> — every downstream thing scales with sellers, so co-locate by seller from the source.</p>",
+    note: "The partition key is the most consequential decision. Get it wrong and you re-shuffle for the rest of the design.",
+  },
+  {
+    tag: "streaming",
+    title: "17:00 — The pipeline · CDC → Kafka → Flink",
+    body: "<p>Postgres orders table is source of truth. <b>Debezium CDC</b> → Kafka topic <code>orders.cdc</code> (partitioned by seller_id, 64 partitions). <b>Flink</b> reads, applies upserts, computes 1-minute tumbling windows per seller.</p><p>Watermark = max(event_ts) − 30s. Late events past 30s go to a side output.</p>",
+    note: 'Saying "Flink" without saying "watermark" is a tell. Watermarks are the one thing you must pronounce correctly.',
+  },
+  {
+    tag: "storage",
+    title: "22:00 — Two sinks, one source",
+    body: "<p>Flink writes <b>two places</b>:<br>1. <b>Iceberg</b> <code>fact_orders</code> on S3 — partitioned by <code>day, seller_id_bucket</code>. This is the durable lakehouse layer for ad-hoc/BI.<br>2. <b>Druid</b> rollups — pre-aggregated <code>(seller_id, minute) → revenue, orders, top_skus</code>. This is the dashboard read path.</p>",
+    note: "One pipeline, two materializations. Don't make the analyst query Druid; don't make the dashboard query Iceberg.",
+  },
+  {
+    tag: "serving",
+    title: "27:00 — The hot read path",
+    body: "<p>Dashboard endpoint hits <b>Druid</b> directly: <code>SELECT sum(revenue) WHERE seller_id=? AND minute &gt;= now()-1d</code>. Druid sub-second on rollups.</p><p>WebSocket stream subscribes to a <b>Kafka consumer group per seller-shard</b>, filters server-side, fans out via a thin gateway. <b>No DB on the websocket path.</b></p>",
+    note: "Live = stream from the bus. Aggregates = serve from the rollup store. Never confuse the two.",
+  },
+  {
+    tag: "tradeoff",
+    title: "32:00 — Call the consistency model",
+    body: '<p>This is <b>PA/EL under PACELC</b>: during a partition we stay available and accept stale reads; in normal operation we optimize latency over linearizability.</p><p>The seller seeing "$1,247 revenue" might be 4 seconds behind truth. <b>That is acceptable</b> for this product. I\'d call this out to the interviewer explicitly.</p>',
+    note: "Naming the consistency model is a senior signal. Most candidates handwave it.",
+  },
+  {
+    tag: "scale",
+    title: "37:00 — Hot sellers and skew",
+    body: "<p>One seller (Black Friday top brand) takes 30% of traffic → its Kafka partition melts.</p><p>Fix: <b>two-level keying</b>. Hash <code>(seller_id, order_id % 4)</code> for the bus to spread, then re-key to seller_id before the windowed aggregation. Pre-aggregate per sub-key, then merge.</p>",
+    note: "Skew handling is the #1 follow-up at IC5. Have an answer ready before they ask.",
+  },
+  {
+    tag: "tradeoff",
+    title: "40:00 — What I'm NOT building",
+    body: '<p>Out of scope, called out: multi-region failover, GDPR right-to-delete on the stream, fraud detection, A/B exposure of dashboard variants, mobile push.</p><p>"If we had another 30 minutes I\'d sketch the multi-region story — async replication of Iceberg + Kafka MirrorMaker, with <b>region-local serving</b>."</p>',
+    note: "Showing what you cut is as important as what you build. It proves you saw the whole space.",
+  },
+  {
+    tag: "follow-up",
+    title: "43:00 — The closing move",
+    body: '<p>"The thing I\'d watch in production: the <b>watermark lag</b> on Flink. If event-time falls behind processing-time by more than 60s, dashboards silently go stale even though Druid is healthy. I\'d page on that, not on raw Kafka lag."</p><p>This is the move that wins the loop.</p>',
+    note: "End on the operational story. The interviewer is now picturing you on call. That's the hire signal.",
+  },
+];
