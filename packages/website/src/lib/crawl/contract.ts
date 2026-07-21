@@ -122,6 +122,16 @@ const PUBLIC_NOINDEX_PATHS = [
   // eligibility path.
   "/kurse/open-source/data-science/zertifikat",
   "/kurse/open-source/data-science/verifizierung",
+  // AI-Native Operator course (plan 013 stage 1) — added ahead of the real
+  // routes (stages 7-10) so contract-completeness.test.ts never goes red
+  // mid-plan. Same flat-course-root shape as data-engineering-fundamentals/
+  // data-science (no "/kurs" segment): 9 modules x 39 lessons live directly
+  // under the course root. Unlike those two, this course DOES have a real
+  // quiz gate (9 module knowledge-checks pooled into one workshop quiz), so
+  // it gets its own "/quiz" entry, matching claude's precedent.
+  "/kurse/open-source/ai-native-operator/quiz",
+  "/kurse/open-source/ai-native-operator/zertifikat",
+  "/kurse/open-source/ai-native-operator/verifizierung",
 ] as const;
 
 // ─── Adding a new course's routes (plan 007 stage 12) ───────────────────
@@ -189,6 +199,11 @@ const PUBLIC_ACCESS_PATHS = [
   // Data Science course (plan 012 stage 1, ahead of stage 5's real routes)
   // — same flat-chapter shape as data-engineering-fundamentals above.
   "/kurse/open-source/data-science/:path*",
+  // AI-Native Operator course (plan 013 stage 1, ahead of stages 7-8's real
+  // routes) — one wildcard covers both the "/:moduleId" module-hub routes
+  // and the "/:moduleId/:lessonNum" lesson routes (no "/kurs" segment),
+  // same flat-course-root shape as data-engineering-fundamentals/data-science.
+  "/kurse/open-source/ai-native-operator/:path*",
 ] as const;
 
 const PUBLIC_MACHINE_PATHS = [
