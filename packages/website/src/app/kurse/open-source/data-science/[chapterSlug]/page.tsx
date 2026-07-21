@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { MarkChapterVisited } from "@/components/data-science/mark-chapter-visited";
 import { getDsChapterComponent } from "@/lib/data-science/chapters";
 import {
   DS_CHAPTERS,
@@ -50,6 +51,7 @@ export default async function DsChapterRoute({ params }: PageProps) {
 
   return (
     <div className="content">
+      <MarkChapterVisited chapterId={chapterSlug} />
       <ChapterComponent chapter={meta} />
       <nav className="tb" aria-label="Chapter pagination" style={{ marginTop: 48 }}>
         {prev ? (
