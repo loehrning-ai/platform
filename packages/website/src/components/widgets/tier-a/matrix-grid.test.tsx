@@ -62,15 +62,15 @@ describe("MatrixGridWidget ", () => {
 
   it("does not award the checkpoint until every row has a pick", () => {
     render(<MatrixGridWidget lessonId="mindset/3" cpId="matrix" rows={rows} cols={cols} />);
-    fireEvent.click(screen.getByRole("radio", { name: "Internal email draft — Skim" }));
+    fireEvent.click(screen.getByRole("radio", { name: "Internal email draft, Skim" }));
     expect(isCheckpointDone("mindset/3", "matrix")).toBe(false);
-    fireEvent.click(screen.getByRole("radio", { name: "Board-facing number — Verify against source" }));
+    fireEvent.click(screen.getByRole("radio", { name: "Board-facing number, Verify against source" }));
     expect(isCheckpointDone("mindset/3", "matrix")).toBe(true);
   });
 
   it("marks the chosen cell aria-checked and persists the pick", () => {
     render(<MatrixGridWidget lessonId="mindset/3" cpId="matrix" rows={rows} cols={cols} />);
-    const cell = screen.getByRole("radio", { name: "Internal email draft — Skim" });
+    const cell = screen.getByRole("radio", { name: "Internal email draft, Skim" });
     fireEvent.click(cell);
     expect(cell).toHaveAttribute("aria-checked", "true");
     const raw = window.localStorage.getItem("matrix::mindset/3::matrix");

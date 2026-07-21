@@ -161,7 +161,7 @@ export function PeekingSimulator() {
               <Bar label="Peeking FPR" value={results.fpr} max={50} color={BAD} />
               {inflation !== null && (
                 <div style={{ marginTop: 10, padding: "8px 12px", background: "rgba(239,68,68,0.1)", borderRadius: 8, fontSize: 12.5, color: BAD }}>
-                  <strong>{inflation}× inflation</strong> — peeking multiplied your false-positive rate by {inflation}×
+                  <strong>{inflation}× inflation</strong>, peeking multiplied your false-positive rate by {inflation}×
                 </div>
               )}
               <div style={{ marginTop: 8, fontSize: 11.5, color: INK3 }}>

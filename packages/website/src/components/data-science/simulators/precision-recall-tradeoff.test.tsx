@@ -15,7 +15,7 @@ describe("PrecisionRecallTradeoff ", () => {
 
   it("renders the real panel copy and cost-calculator controls", () => {
     render(<PrecisionRecallTradeoff />);
-    expect(screen.getByText("Precision–recall tradeoff")).toBeInTheDocument();
+    expect(screen.getByText("Precision-recall tradeoff")).toBeInTheDocument();
     expect(screen.getByText("Business cost calculator")).toBeInTheDocument();
     expect(screen.getByLabelText("Decision threshold")).toBeInTheDocument();
     expect(screen.getByLabelText("Cost per missed fraud in dollars")).toBeInTheDocument();

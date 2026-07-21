@@ -111,7 +111,7 @@ export function LIMEExplainer() {
       eyebrow="SIMULATION"
       title="LIME · local linear explanation"
       meta={`P(class B) = ${round(localExplanation.prob, 3)}`}
-      caption="LIME samples points around the query (dashed circle), weights them by distance, and fits a simple linear model locally. The dotted line is the local decision boundary — valid only within the circle."
+      caption="LIME samples points around the query (dashed circle), weights them by distance, and fits a simple linear model locally. The dotted line is the local decision boundary, valid only within the circle."
     >
       <div className="sim-row">
         <div className="sim-controls" style={{ minWidth: 200 }}>

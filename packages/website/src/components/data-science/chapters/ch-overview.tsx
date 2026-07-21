@@ -27,10 +27,10 @@ const STAGES: readonly StageCard[] = [
   { id: "explore", n: "02", title: "Explore", tag: "look before you leap", blurb: "Distributions, outliers, correlation mazes.", hue: "#1CA5D9" },
   { id: "clean", n: "03", title: "Clean", tag: "missing · drifting · leaky", blurb: "Impute. Scale. Protect the future from the present.", hue: "#1FAF7E" },
   { id: "feature", n: "04", title: "Feature", tag: "information, engineered", blurb: "Encode, interact, bucket, normalize.", hue: "#6BCF3F" },
-  { id: "model", n: "05", title: "Model", tag: "the bias/variance dance", blurb: "Fit, cross-validate, tune — watch train and test separate.", hue: "#E8A031" },
+  { id: "model", n: "05", title: "Model", tag: "the bias/variance dance", blurb: "Fit, cross-validate, tune, watch train and test separate.", hue: "#E8A031" },
   { id: "eval", n: "06", title: "Evaluate", tag: "the honest number", blurb: "Confusion, ROC, calibration, threshold sliders.", hue: "#F25F3A" },
   { id: "interp", n: "07", title: "Interpret", tag: "ask why", blurb: "SHAP waterfalls, permutation, partial dependence.", hue: "#E8318F" },
-  { id: "exp", n: "08", title: "Experiment", tag: "the only proof", blurb: "A/B, power, MDE — watch 10k visitors roll in, live.", hue: "#5B3EE8" },
+  { id: "exp", n: "08", title: "Experiment", tag: "the only proof", blurb: "A/B, power, MDE, watch 10k visitors roll in, live.", hue: "#5B3EE8" },
   { id: "causal", n: "09", title: "Causal", tag: "beyond correlation", blurb: "DAGs, confounders, backdoor paths.", hue: "#1CA5D9" },
   { id: "peek", n: "10", title: "Peeking", tag: "how p-values lie", blurb: "Run 50 experiments in parallel, watch false positives bloom.", hue: "#D83A3A" },
   { id: "deploy", n: "11", title: "Deploy", tag: "alive in production", blurb: "Monitor drift. Retrain on signal, not schedule.", hue: "#1FAF7E" },
@@ -51,7 +51,7 @@ const HUE_INK: Record<string, string> = {
 };
 
 const OUTCOMES = [
-  { icon: "◇", t: "Explore any dataset without flailing", d: "Distributions, missingness, correlation maps — a mental checklist for your first 30 minutes with new data." },
+  { icon: "◇", t: "Explore any dataset without flailing", d: "Distributions, missingness, correlation maps, a mental checklist for your first 30 minutes with new data." },
   { icon: "○", t: "Train a model that doesn't secretly cheat", d: "Spot leakage. Split honestly. Pick the metric before the algorithm." },
   { icon: "△", t: "Read a confusion matrix like a pro", d: "Threshold slider, precision/recall tradeoff, calibration, class imbalance." },
   { icon: "□", t: "Design an A/B test that holds up", d: "Power, MDE, sample size, novelty effects, SRM checks, CUPED." },
@@ -90,7 +90,7 @@ export default function ChOverview() {
           </h1>
           <p className="ov-hero-hook">
             Twelve chapters. One animated loop. Built for the graduate who wants to ship real work
-            — not memorize equations. Every chapter opens with a
+           , not memorize equations. Every chapter opens with a
             <strong> simulation you can break</strong>, not a wall of text.
           </p>
           <div className="ov-hero-cta">
@@ -151,7 +151,7 @@ export default function ChOverview() {
           </h2>
           <p className="ov-lede">
             Half the course is how to build a model. The other half is how to
-            <em> know if it worked</em> — the part most courses skip.
+            <em> know if it worked</em>, the part most courses skip.
           </p>
         </div>
         <div className="ov-curriculum">

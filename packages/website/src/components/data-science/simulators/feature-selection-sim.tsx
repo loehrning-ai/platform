@@ -43,7 +43,7 @@ const METHOD_DESC: Record<SelectionMethod, string> = {
   corr: "Remove features with low correlation to the target, then remove pairwise-correlated duplicates (keep highest corr). Fast but misses nonlinear relationships.",
   mi: "Measures how much knowing a feature reduces uncertainty about the target. Captures nonlinear dependencies. More expensive but rarely misses a useful feature.",
   lasso:
-    "Fit a regularized linear model; features with zero coefficient are discarded. Jointly considers all features — handles multicollinearity. Assumes linearity.",
+    "Fit a regularized linear model; features with zero coefficient are discarded. Jointly considers all features, handles multicollinearity. Assumes linearity.",
 };
 
 function scoreLabelFor(method: SelectionMethod): string {

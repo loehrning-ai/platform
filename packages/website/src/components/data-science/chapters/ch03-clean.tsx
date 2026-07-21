@@ -30,13 +30,13 @@ export default function Ch03Clean() {
         <p className="prose">
           Rubin (1976) categorized missing data into three mechanisms that completely change how
           you should respond. <strong>MCAR</strong> (missing completely at random) means a sensor
-          dropped a packet — the gap is unrelated to any value in the dataset. You can drop or
+          dropped a packet, the gap is unrelated to any value in the dataset. You can drop or
           impute without bias.
           <strong> MAR</strong> (missing at random) means missingness depends on{" "}
           <em>other observed columns</em>: income data might be missing more often for EU users if
           the survey skipped a page in German. You can impute, but you need to model the
           relationship. <strong>MNAR</strong> (missing not at random) is the dangerous one: the
-          missing value predicts its own absence — high earners skip the income field, low
+          missing value predicts its own absence, high earners skip the income field, low
           scorers skip the score. Imputation will be systematically biased unless you model the
           missingness process itself.
         </p>
@@ -44,7 +44,7 @@ export default function Ch03Clean() {
         <p className="prose" style={{ marginTop: 18 }}>
           Notice how MNAR dramatically increases the missing rate in the high-value tail. If you
           impute with the observed mean, you&apos;ll underestimate the true mean. The pattern of
-          absence is data — always add a <code>feature_was_missing</code> indicator column before
+          absence is data, always add a <code>feature_was_missing</code> indicator column before
           you fill any gaps.
         </p>
       </section>
@@ -53,7 +53,7 @@ export default function Ch03Clean() {
         <SectionLabel n="03.2">Imputation</SectionLabel>
         <h2 className="h2">Filling the blanks without lying to your model.</h2>
         <p className="prose">
-          The wrong imputation strategy doesn&apos;t just add noise — it systematically biases
+          The wrong imputation strategy doesn&apos;t just add noise, it systematically biases
           your model toward the wrong answer. Mean imputation compresses variance, making your
           model underestimate uncertainty. Forward-fill in time series creates temporal
           artifacts. KNN imputation is slower but tracks local structure. The benchmark is
@@ -78,7 +78,7 @@ export default function Ch03Clean() {
         </h2>
         <p className="prose">
           Many algorithms are sensitive to the raw magnitude of features. Regularized linear
-          models penalize large coefficients — but a coefficient for income in raw dollars will
+          models penalize large coefficients, but a coefficient for income in raw dollars will
           naturally be tiny compared to one for age, so L2 regularization ignores income
           entirely. Distance-based models like kNN, SVM, and PCA are even more exposed: Euclidean
           distance in a 200,000-dollar space dwarfs anything in age-space. Scaling puts features
@@ -90,7 +90,7 @@ export default function Ch03Clean() {
           items={[
             "<b>StandardScaler for Gaussian-ish features.</b> Zero mean, unit variance. Works best when the feature's distribution is roughly symmetric. Affected by outliers.",
             "<b>MinMaxScaler when you need bounded output [0, 1].</b> Good for neural networks. A single extreme outlier will crush all other values toward zero.",
-            "<b>RobustScaler when outliers are real and informative.</b> Uses median and IQR. The outliers still exist in the data — they're just not ruining the scale for everyone else.",
+            "<b>RobustScaler when outliers are real and informative.</b> Uses median and IQR. The outliers still exist in the data, they're just not ruining the scale for everyone else.",
             "<b>Never scale tree-based models.</b> Decision trees split on threshold values, not distances. Scaling changes nothing for Random Forests, XGBoost, or LightGBM.",
           ]}
         />
@@ -119,14 +119,14 @@ export default function Ch03Clean() {
           items={[
             "<b>Fitting the scaler on the full dataset.</b> Your test set just saw the training mean. Fit on train only, transform both.",
             '<b>Target encoding without out-of-fold.</b> "Mean target per category" computed across all rows lets each row see its own label.',
-            "<b>Post-event features.</b> <code>total_purchases_lifetime</code> used to predict <code>will_churn</code> — if computed after the churn date, you've time-traveled.",
+            "<b>Post-event features.</b> <code>total_purchases_lifetime</code> used to predict <code>will_churn</code>, if computed after the churn date, you've time-traveled.",
             "<b>Snooping the test set during EDA.</b> You look at test, see a pattern, adjust train. You just leaked your test set through your eyeballs.",
           ]}
         />
         <BestPractices
           items={[
             "<b>Split before you touch anything.</b> First line of every notebook: <code>train, test = split(df)</code>. Then lock the test set.",
-            "<b>Use sklearn Pipelines.</b> <code>Pipeline</code> forces fit-on-train, transform-on-both. It's not boilerplate — it's a safety guarantee.",
+            "<b>Use sklearn Pipelines.</b> <code>Pipeline</code> forces fit-on-train, transform-on-both. It's not boilerplate, it's a safety guarantee.",
             "<b>Time splits for temporal data.</b> Random splits let future data train on past labels. Use <code>TimeSeriesSplit</code> or a fixed cutoff date.",
             `<b>Ask: would this feature exist at prediction time?</b> For every feature, state the exact moment it would be computed in production. If the answer is "after we already know the outcome," it's leaky.`,
           ]}

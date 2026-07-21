@@ -30,7 +30,7 @@ describe("LeakageDetector ", () => {
     fireEvent.click(screen.getByRole("button", { name: "Audit features" }));
     expect(screen.getByText(/leaky feature.* found/)).toBeInTheDocument();
     expect(
-      screen.getByText("Computed using the target label across all rows — the model literally sees the answer."),
+      screen.getByText("Computed using the target label across all rows, the model literally sees the answer."),
     ).toBeInTheDocument();
   });
 

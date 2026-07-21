@@ -169,7 +169,7 @@ export const COURSE_META = {
   duration: "~14 hours of reading + 30 exercises",
   outcomes: [
     "Diagnose your own AI maturity across 9 dimensions, honestly.",
-    'Operate at "L3 — Conductor": directing fleets of agents, not keystroking.',
+    'Operate at "L3, Conductor": directing fleets of agents, not keystroking.',
     "Redesign a product, a team, or an org around AI-native primitives.",
     "Build a governance + measurement system that lets you go faster, not slower.",
   ],

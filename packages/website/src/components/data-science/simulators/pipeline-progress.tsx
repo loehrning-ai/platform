@@ -26,7 +26,7 @@ const PIPELINE_STEPS: readonly PipelineStep[] = [
     label: "Feature Engineering",
     icon: "🔧",
     log: [
-      "> V1–V28: PCA-transformed (already anonymised)",
+      "> V1-V28: PCA-transformed (already anonymised)",
       "> Amount: raw transaction value in EUR",
       "> Time: seconds elapsed since first transaction",
       "> Adding: log1p(Amount) to reduce skew",
@@ -38,7 +38,7 @@ const PIPELINE_STEPS: readonly PipelineStep[] = [
     label: "Scale Amount & Time",
     icon: "⚖️",
     log: [
-      "> StandardScaler on Amount and Time (not V1–V28)",
+      "> StandardScaler on Amount and Time (not V1-V28)",
       "> Amount mean: 88.35 → scaled: 0.00",
       "> Amount std:  250.12",
       "> Time mean:   94813 → scaled: 0.00",
@@ -124,9 +124,9 @@ export function PipelineProgress() {
   return (
     <Panel
       eyebrow="SIMULATOR"
-      title="ML pipeline — step-by-step"
+      title="ML pipeline, step-by-step"
       meta={`Step ${currentStep + 1} / ${PIPELINE_STEPS.length}`}
-      caption="Each step is a real decision point. Run them in order — the output of each step feeds the next."
+      caption="Each step is a real decision point. Run them in order, the output of each step feeds the next."
     >
       <div className="sim-row">
         <div style={{ display: "flex", flexDirection: "column", gap: 2, minWidth: 170 }}>

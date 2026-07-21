@@ -26,9 +26,9 @@ export default function Ch05Model() {
           Slide the knob. Reshuffle the data. <em>Watch the cloud fan out.</em>
         </h2>
         <p className="prose">
-          At low complexity, every resample lands on almost the same stiff line — low variance,
+          At low complexity, every resample lands on almost the same stiff line, low variance,
           but high bias (the line can&apos;t bend to match the truth). At high complexity, each
-          resample finds a different wild curve through the same-ish noise — bias falls toward
+          resample finds a different wild curve through the same-ish noise, bias falls toward
           zero, but variance explodes.
         </p>
         <BiasVarianceSim />
@@ -41,18 +41,18 @@ export default function Ch05Model() {
         </h2>
         <ul className="prose" style={{ paddingLeft: 20 }}>
           <li>
-            <strong>Logistic / linear regression</strong> — interpretable, fast, hard to beat on
+            <strong>Logistic / linear regression</strong>, interpretable, fast, hard to beat on
             tabular with good features.
           </li>
           <li>
-            <strong>Gradient-boosted trees (XGBoost, LightGBM)</strong> — the tabular workhorse.
+            <strong>Gradient-boosted trees (XGBoost, LightGBM)</strong>, the tabular workhorse.
             Rarely a wrong answer.
           </li>
           <li>
-            <strong>Random forest</strong> — robust, low-tuning, good first escalation.
+            <strong>Random forest</strong>, robust, low-tuning, good first escalation.
           </li>
           <li>
-            <strong>Deep nets</strong> — unstructured data (text, images, audio). Rarely the right
+            <strong>Deep nets</strong>, unstructured data (text, images, audio). Rarely the right
             call for tabular.
           </li>
         </ul>
@@ -69,8 +69,8 @@ export default function Ch05Model() {
       <Takeaway
         items={[
           "<b>Generalization is the goal, not fit.</b> Always measure on held-out data.",
-          "<b>Cross-validation is non-optional</b> — single split lies about variance.",
-          "<b>Total error = Bias² + Variance + irreducible noise.</b> You can only move the first two — noise is a floor.",
+          "<b>Cross-validation is non-optional</b>, single split lies about variance.",
+          "<b>Total error = Bias² + Variance + irreducible noise.</b> You can only move the first two, noise is a floor.",
         ]}
       />
     </>

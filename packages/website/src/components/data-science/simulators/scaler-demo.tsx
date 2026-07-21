@@ -48,7 +48,7 @@ function robust(vals: readonly number[]): number[] {
 }
 
 const SCALER_FORMULA: Record<Scaler, string> = {
-  raw: "No transformation — raw values keep their original scale.",
+  raw: "No transformation, raw values keep their original scale.",
   standard: "z = (x − μ) / σ   →  mean=0, std=1. Sensitive to outliers.",
   minmax: "x′ = (x − min) / (max − min)   →  range [0, 1]. Crushed by outliers.",
   robust: "x′ = (x − Q2) / IQR   →  median-centered, ignores tail extremes. Best with outliers.",
@@ -118,7 +118,7 @@ export function ScalerDemo() {
           </p>
           <div className="galton-note" style={{ marginTop: 10 }}>
             <span className="tag-pill">Rule</span>
-            Always fit scaler on <strong>train</strong> only — then transform train and test.
+            Always fit scaler on <strong>train</strong> only, then transform train and test.
             Fitting on the full dataset leaks test statistics into training.
           </div>
         </div>

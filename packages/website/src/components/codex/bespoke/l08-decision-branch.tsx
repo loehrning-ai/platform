@@ -28,7 +28,7 @@ interface Scenario {
 
 const SCENARIOS: readonly Scenario[] = [
   {
-    text: "Tests 1 of 3 passing — the 2 failures look flaky.",
+    text: "Tests 1 of 3 passing, the 2 failures look flaky.",
     correct: "nudge",
     explanation:
       "Correct. The failures might be transient. Ask Codex to investigate the flaky tests before attempting a fix.",

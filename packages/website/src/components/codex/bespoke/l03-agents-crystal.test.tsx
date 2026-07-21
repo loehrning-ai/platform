@@ -55,7 +55,7 @@ describe("L03AgentsCrystal", () => {
     render(<L03AgentsCrystal lessonId="L03" cpId="bespoke" />);
     fireEvent.click(screen.getByText("review voice"));
     expect(
-      screen.getByText("feat: auth — tighten rate-limit and error boundaries"),
+      screen.getByText("feat: auth, tighten rate-limit and error boundaries"),
     ).toBeInTheDocument();
   });
 

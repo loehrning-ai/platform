@@ -33,7 +33,7 @@ type ScenarioKey = "confounder" | "collider" | "mediator";
 const SCENARIOS: Record<ScenarioKey, ViewerScenario> = {
   confounder: {
     name: "Confounding",
-    blurb: `"Coffee correlates with heart disease" — but age causes both. Age is the confounder. Control for it and coffee's effect vanishes.`,
+    blurb: `"Coffee correlates with heart disease", but age causes both. Age is the confounder. Control for it and coffee's effect vanishes.`,
     nodes: [
       { id: "age", lab: "Age", x: 0.5, y: 0.15, role: "confounder" },
       { id: "cof", lab: "Coffee", x: 0.2, y: 0.65 },
@@ -47,7 +47,7 @@ const SCENARIOS: Record<ScenarioKey, ViewerScenario> = {
   },
   collider: {
     name: "Collider bias",
-    blurb: '"Talent is negatively correlated with looks in Hollywood." Both cause success — conditioning on success creates a fake negative link.',
+    blurb: '"Talent is negatively correlated with looks in Hollywood." Both cause success, conditioning on success creates a fake negative link.',
     nodes: [
       { id: "tal", lab: "Talent", x: 0.2, y: 0.25 },
       { id: "loo", lab: "Looks", x: 0.8, y: 0.25 },

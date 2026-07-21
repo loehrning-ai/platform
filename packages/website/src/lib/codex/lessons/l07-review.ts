@@ -145,8 +145,8 @@ const lesson: CodexLesson = {
           // regex scans the raw .ts source for and would otherwise flag as
           // a leaked address.
           markdown:
-            'Here\'s a before/after that shows the pattern. Spec was: "add a /debug/user endpoint." The agent completed the task correctly, but:\n\n```\n# what Codex produced — functional, insecure\n\n' +
-            '@app.route("/debug/user")           # no auth guard\ndef debug_user():\n    user_id = request.args.get("id")  # no validation\n    try:\n        u = db.session.query(User).get(user_id)\n        return jsonify(u.__dict__)       # exposes all columns\n    except Exception as e:\n        return str(e), 500              # leaks stack trace\n\n# corrected version — same feature, secure\n\n' +
+            'Here\'s a before/after that shows the pattern. Spec was: "add a /debug/user endpoint." The agent completed the task correctly, but:\n\n```\n# what Codex produced, functional, insecure\n\n' +
+            '@app.route("/debug/user")           # no auth guard\ndef debug_user():\n    user_id = request.args.get("id")  # no validation\n    try:\n        u = db.session.query(User).get(user_id)\n        return jsonify(u.__dict__)       # exposes all columns\n    except Exception as e:\n        return str(e), 500              # leaks stack trace\n\n# corrected version, same feature, secure\n\n' +
             '@app.route("/debug/user")\n' +
             '@require_admin                         # auth guard restored\ndef debug_user():\n    user_id = int(request.args.get("id", 0))  # validated\n    try:\n        u = db.session.query(User).get(user_id)\n        if not u: return jsonify({"error": "not found"}), 404\n        return jsonify(u.to_safe_dict())  # explicit field allowlist\n    except ValueError:\n        return jsonify({"error": "invalid id"}), 400  # safe message\n```',
         },
@@ -165,7 +165,7 @@ const lesson: CodexLesson = {
       placement: "after-intro",
       courseSlug: "codex",
       props: {
-        title: 'PR: "add caching to /users/:id" — what\'s wrong?',
+        title: 'PR: "add caching to /users/:id", what\'s wrong?',
         file: "api/users.py · +18 / −3",
         lines: [
           { type: "context", text: "from flask import Blueprint, jsonify" },
@@ -200,7 +200,7 @@ const lesson: CodexLesson = {
         question:
           "Codex opens a PR with 18 new passing tests. You're reviewing. What do you do FIRST with those tests?",
         options: [
-          "Trust them — they're green, so they work.",
+          "Trust them, they're green, so they work.",
           'Read each one and ask: "would this test fail if the implementation were wrong?" If the answer isn\'t obviously yes, the test proves nothing.',
           "Delete them and write your own.",
           "Skip to the implementation code; tests are a formality.",

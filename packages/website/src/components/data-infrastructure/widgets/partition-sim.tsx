@@ -52,7 +52,7 @@ function buildStrategy(key: StrategyKey): StrategyMeta {
     case "none":
       return {
         bytes: "100 GB",
-        verdict: "full scan — 30× wasted",
+        verdict: "full scan, 30× wasted",
         verdictTone: "bad",
         skew: "n/a",
         parts: [{ label: "all data", bytes: 100 }],
@@ -76,7 +76,7 @@ function buildStrategy(key: StrategyKey): StrategyMeta {
       const parts = Array.from({ length: 24 }, (_, i) => ({ label: `hash_${i}`, bytes: 4.2 }));
       return {
         bytes: "100 GB",
-        verdict: "no prune — query doesn't mention user",
+        verdict: "no prune, query doesn't mention user",
         verdictTone: "bad",
         skew: "even",
         parts,
@@ -87,7 +87,7 @@ function buildStrategy(key: StrategyKey): StrategyMeta {
       const parts = COUNTRY_WEIGHTS.map(([label, bytes]) => ({ label, bytes }));
       return {
         bytes: "100 GB",
-        verdict: "no prune — also: heavy US skew",
+        verdict: "no prune, also: heavy US skew",
         verdictTone: "bad",
         skew: "⚠ US 62%",
         parts,
@@ -192,7 +192,7 @@ export function PartitionSim({ lessonId, cpId }: PartitionSimProps): JSX.Element
   return (
     <div className="border-2 border-border bg-card/40 p-5 md:p-6">
       <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        Sim · Partition the orders table — pick a key {done ? "✓" : ""}
+        Sim · Partition the orders table, pick a key {done ? "✓" : ""}
       </p>
 
       {contextUnavailable ? (
@@ -223,7 +223,7 @@ export function PartitionSim({ lessonId, cpId }: PartitionSimProps): JSX.Element
             onChange={(e) => setStrategy(e.target.value as StrategyKey)}
             className="border-2 border-border bg-background px-2 py-1.5 font-mono text-[12px]"
           >
-            <option value="none">— no partition (full scan)</option>
+            <option value="none">, no partition (full scan)</option>
             <option value="date">order_date (daily)</option>
             <option value="user">user_id (hash 24)</option>
             <option value="country">country (skewed)</option>

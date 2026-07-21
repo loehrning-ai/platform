@@ -88,7 +88,7 @@ export function PermutationImportance() {
           </button>
           <p className="prose" style={{ fontSize: 11, marginTop: 10, lineHeight: 1.5 }}>
             Each run adds small random noise to simulate repeated permutations. The ranking stays
-            stable — that&apos;s the signal.
+            stable, that&apos;s the signal.
           </p>
         </div>
         <div className="plot-wrap" style={{ flex: 1 }}>

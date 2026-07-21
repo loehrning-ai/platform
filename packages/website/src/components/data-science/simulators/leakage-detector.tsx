@@ -20,11 +20,11 @@ const FEATURE_POOL: readonly FeatureDef[] = [
   { name: "plan_type", leaky: false, reason: "" },
   { name: "support_tickets", leaky: false, reason: "" },
   { name: "last_login_days_ago", leaky: false, reason: "" },
-  { name: "target_mean_encoded", leaky: true, reason: "Computed using the target label across all rows — the model literally sees the answer." },
+  { name: "target_mean_encoded", leaky: true, reason: "Computed using the target label across all rows, the model literally sees the answer." },
   { name: "days_after_churn", leaky: true, reason: "A post-event feature: it's only defined if the user already churned. Instant 100% accuracy, zero prod value." },
-  { name: "customer_id_hash", leaky: true, reason: "High-cardinality ID proxy. Model memorises IDs that churn — perfectly fitted to training set, useless on new users." },
+  { name: "customer_id_hash", leaky: true, reason: "High-cardinality ID proxy. Model memorises IDs that churn, perfectly fitted to training set, useless on new users." },
   { name: "total_revenue_lifetime", leaky: true, reason: "If computed using future periods, revenue after the churn date leaks into the label window." },
-  { name: "email_domain_target", leaky: true, reason: "Target-encoded without out-of-fold splits — each row saw its own label during encoding." },
+  { name: "email_domain_target", leaky: true, reason: "Target-encoded without out-of-fold splits, each row saw its own label during encoding." },
 ];
 
 const DEFAULT_SELECTED = ["user_age", "session_duration", "plan_type"];
@@ -151,7 +151,7 @@ export function LeakageDetector() {
               color: "#3A3540",
             }}
           >
-            Clean feature set. No leakage detected — none of the selected features encode future
+            Clean feature set. No leakage detected, none of the selected features encode future
             information or the target directly.
           </div>
         )}

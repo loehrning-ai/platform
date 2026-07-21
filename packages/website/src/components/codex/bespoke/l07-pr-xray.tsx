@@ -39,9 +39,9 @@ const CODE_LINES: readonly string[] = [
 ];
 
 const BUGS: Record<number, string> = {
-  4: "Inconsistent units — WINDOW (ms) is never used",
-  11: "Off-by-one — > allows a 101st request",
-  15: "TTL unit mismatch — hardcoded 60, comment is wrong",
+  4: "Inconsistent units, WINDOW (ms) is never used",
+  11: "Off-by-one, > allows a 101st request",
+  15: "TTL unit mismatch, hardcoded 60, comment is wrong",
 };
 
 const TOTAL_BUGS = Object.keys(BUGS).length;

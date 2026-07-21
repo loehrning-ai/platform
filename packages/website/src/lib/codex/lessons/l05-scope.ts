@@ -89,7 +89,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'The antidote is a single sentence you can add to any task spec: *"Only change files directly required for this task. If you notice other issues, note them in the PR description but do not fix them."* That one instruction cuts the "bonus work" problem by roughly half.\n\nThe other half is fixed by scoping the spec to be so specific that there\'s no room for interpretation. Compare:\n\n```\n# Too open — invites bonus work\n## Goal\nAdd pagination to the users list endpoint. The current implementation\nreturns all users; we need page-based results.\n\n# Surgical — leaves no room for wandering\n## Goal\nAdd page and page_size query params to GET /users in api/users.py.\nDefault: page=1, page_size=20. Max page_size=100 (raise 400 if exceeded).\nReturn {"items": [...], "total": N, "page": N, "pages": N}.\n\n## Scope\nTouch only api/users.py and tests/api/test_users.py. Nothing else.\n```',
+            'The antidote is a single sentence you can add to any task spec: *"Only change files directly required for this task. If you notice other issues, note them in the PR description but do not fix them."* That one instruction cuts the "bonus work" problem by roughly half.\n\nThe other half is fixed by scoping the spec to be so specific that there\'s no room for interpretation. Compare:\n\n```\n# Too open, invites bonus work\n## Goal\nAdd pagination to the users list endpoint. The current implementation\nreturns all users; we need page-based results.\n\n# Surgical, leaves no room for wandering\n## Goal\nAdd page and page_size query params to GET /users in api/users.py.\nDefault: page=1, page_size=20. Max page_size=100 (raise 400 if exceeded).\nReturn {"items": [...], "total": N, "page": N, "pages": N}.\n\n## Scope\nTouch only api/users.py and tests/api/test_users.py. Nothing else.\n```',
         },
       ],
     },
@@ -128,10 +128,10 @@ const lesson: CodexLesson = {
       placement: "after-intro",
       courseSlug: "codex",
       props: {
-        title: "Same goal — before and after slicing",
+        title: "Same goal, before and after slicing",
         kindLabel: CODEX_COMPARE_KIND_LABEL,
-        badLabel: "Too big — one task",
-        goodLabel: "Sliced — three tasks",
+        badLabel: "Too big, one task",
+        goodLabel: "Sliced, three tasks",
         bad: 'Goal\nAdd soft-delete to Users, Projects, and Teams.\nInclude a "restore" endpoint for each.\nAlso add an audit log of who deleted what.\nMigrate existing hard-deletes we\'ve been stashing in cold storage.',
         good:
           "Task A: schema\nAdd deleted_at and deleted_by to users, projects, teams.\nAdd migration. Don't touch queries yet.\n\nTask B: API\nUpdate list/get endpoints to filter deleted_at IS NULL.\nAdd DELETE → sets deleted_at. Add POST /restore.\n\nTask C: audit\nLog soft-deletes to the audit_events table.\nMigrate cold-storage rows in a separate PR.",
@@ -206,7 +206,7 @@ const lesson: CodexLesson = {
         question:
           'You catch yourself writing: "Add feature X, and while we\'re in there, fix the existing pagination bug, and refactor the error handler." What should you do?',
         options: [
-          "Ship it as one task — Codex can handle it.",
+          "Ship it as one task, Codex can handle it.",
           "Split into three tasks. Sequence them so each builds on the last, and each can be reviewed in isolation.",
           'Add "please be careful" to the spec.',
           "Take the weekend off.",

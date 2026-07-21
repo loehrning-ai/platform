@@ -250,7 +250,7 @@ export function BackfillDag({ lessonId, cpId }: BackfillDagProps): JSX.Element {
           first-attempt failure, then retry
         </div>
         <div>
-          3 retries on days <code>06</code>, <code>14</code>, <code>22</code> — typical flake rate
+          3 retries on days <code>06</code>, <code>14</code>, <code>22</code>, typical flake rate
         </div>
         <div>Independent per day: any worker can take any day, so wall time scales near-linearly with worker count.</div>
       </div>

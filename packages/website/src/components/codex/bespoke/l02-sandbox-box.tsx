@@ -68,7 +68,7 @@ export function L02SandboxBox({ lessonId, cpId }: L02SandboxBoxProps): JSX.Eleme
 
     if (next && (id === "net" || id === "secrets")) {
       setWarning(
-        id === "net" ? "NET ON — supply-chain risk" : "SECRETS EXPOSED — rotate after run",
+        id === "net" ? "NET ON, supply-chain risk" : "SECRETS EXPOSED, rotate after run",
       );
       if (warningTimeoutRef.current) clearTimeout(warningTimeoutRef.current);
       warningTimeoutRef.current = setTimeout(() => {
@@ -109,7 +109,7 @@ export function L02SandboxBox({ lessonId, cpId }: L02SandboxBoxProps): JSX.Eleme
           testsOn ? "text-[#22c55e]" : "text-brand-amber",
         )}
       >
-        {testsOn ? "codex can verify work" : "codex cannot verify work — flying blind"}
+        {testsOn ? "codex can verify work" : "codex cannot verify work, flying blind"}
       </p>
 
       {warning && (

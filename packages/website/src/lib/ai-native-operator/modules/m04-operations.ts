@@ -22,7 +22,7 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "The status meeting is dead",
         readTimeMinutes: 5,
         content:
-          "Five people each report what they did. Four of them are reporting it to four others who do not need to know. The decision-makers wait through the rest. This ritual was never efficient — it was a coordination tax. AI removes the tax.",
+          "Five people each report what they did. Four of them are reporting it to four others who do not need to know. The decision-makers wait through the rest. This ritual was never efficient, it was a coordination tax. AI removes the tax.",
       },
       {
         id: "s2",
@@ -36,7 +36,7 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "What you lose, and how to recover it",
         readTimeMinutes: 4,
         content:
-          'You lose serendipity — the side conversations that produced unexpected ideas. Recover this through a different ritual: a weekly "open hour" where the team is together with no agenda. The serendipity was never in the status meeting; it was in being in the same room.',
+          'You lose serendipity, the side conversations that produced unexpected ideas. Recover this through a different ritual: a weekly "open hour" where the team is together with no agenda. The serendipity was never in the status meeting; it was in being in the same room.',
       },
     ],
     exerciseKind: "reflect-box",
@@ -74,14 +74,14 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "The blank-page tax",
         readTimeMinutes: 6,
         content:
-          "Most knowledge work begins by staring at a blank page for 20 minutes. AI eliminates this tax. The first draft is no longer where you spend your effort — it is where you start your effort. The blank page should never appear again in your team's life.",
+          "Most knowledge work begins by staring at a blank page for 20 minutes. AI eliminates this tax. The first draft is no longer where you spend your effort, it is where you start your effort. The blank page should never appear again in your team's life.",
       },
       {
         id: "s2",
         title: "The brief-first habit",
         readTimeMinutes: 6,
         content:
-          "For every doc — design, technical, planning, performance, comms — start with a one-paragraph brief. The agent drafts. You sharpen. The shape of the work has changed: 80% editor, 20% writer. The output quality is higher, not lower, because editing is harder than writing and you spend the time on the harder part.",
+          "For every doc, design, technical, planning, performance, comms, start with a one-paragraph brief. The agent drafts. You sharpen. The shape of the work has changed: 80% editor, 20% writer. The output quality is higher, not lower, because editing is harder than writing and you spend the time on the harder part.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -108,9 +108,9 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Ticket triage agents",
     subtitle:
-      "Set up an agent that classifies, enriches, deduplicates, and assigns inbound tickets — leaving humans to handle exceptions only.",
+      "Set up an agent that classifies, enriches, deduplicates, and assigns inbound tickets, leaving humans to handle exceptions only.",
     objective:
-      "Set up an agent that classifies, enriches, deduplicates, and assigns inbound tickets — leaving humans to handle exceptions only.",
+      "Set up an agent that classifies, enriches, deduplicates, and assigns inbound tickets, leaving humans to handle exceptions only.",
     durationMinutes: 17,
     keyConcepts: [],
     quiz: [],
@@ -120,14 +120,14 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "The triage pipeline",
         readTimeMinutes: 6,
         content:
-          "Inbound ticket → agent reads → agent classifies (severity, area, owner) → agent enriches (links related tickets, recent context) → agent assigns. Human reviews exceptions only — the ones where the agent flagged uncertainty.",
+          "Inbound ticket → agent reads → agent classifies (severity, area, owner) → agent enriches (links related tickets, recent context) → agent assigns. Human reviews exceptions only, the ones where the agent flagged uncertainty.",
       },
       {
         id: "s2",
         title: "The 95/5 rule",
         readTimeMinutes: 6,
         content:
-          "A well-designed triage agent handles 95% of tickets without human touch. The remaining 5% are the genuinely ambiguous ones, and they go to a human with full context. The human spends 1 hour a day on triage instead of 4 — and the work is more interesting because all the easy cases are gone.",
+          "A well-designed triage agent handles 95% of tickets without human touch. The remaining 5% are the genuinely ambiguous ones, and they go to a human with full context. The human spends 1 hour a day on triage instead of 4, and the work is more interesting because all the easy cases are gone.",
       },
       {
         id: "s3",
@@ -160,7 +160,7 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Module 4 — knowledge check",
+    title: "Module 4, knowledge check",
     subtitle: "Operational basics, locked.",
     objective: "Operational basics, locked.",
     durationMinutes: 7,
@@ -181,7 +181,7 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
           { id: "d", text: "Rotate the meeting time.", isCorrect: false },
         ],
         explanation:
-          "When a status meeting is mostly information that already exists in writing, the fix is to route it async and let an agent summarize the channel for conflicts, blockers, and decisions needed — reserving the synchronous time for moments that actually require a live decision. Shortening or reorganizing the same ritual doesn't remove the coordination tax, it just trims it.",
+          "When a status meeting is mostly information that already exists in writing, the fix is to route it async and let an agent summarize the channel for conflicts, blockers, and decisions needed, reserving the synchronous time for moments that actually require a live decision. Shortening or reorganizing the same ritual doesn't remove the coordination tax, it just trims it.",
       },
       {
         id: "ano-operations-q2",
@@ -194,7 +194,7 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
           { id: "d", text: "The ones from VIP customers only.", isCorrect: false },
         ],
         explanation:
-          "A well-designed triage agent should escalate the cases where it is genuinely unsure, not a random sample or an arbitrary rule like ticket age or customer tier — flagged uncertainty is the signal that a human's judgment is actually needed. Escalating anything else wastes the human's attention on cases the agent could already handle.",
+          "A well-designed triage agent should escalate the cases where it is genuinely unsure, not a random sample or an arbitrary rule like ticket age or customer tier, flagged uncertainty is the signal that a human's judgment is actually needed. Escalating anything else wastes the human's attention on cases the agent could already handle.",
       },
     ],
     sections: [],

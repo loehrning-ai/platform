@@ -15,7 +15,7 @@ describe("BiasVarianceSim ", () => {
 
   it("renders the real panel copy and controls", () => {
     render(<BiasVarianceSim />);
-    expect(screen.getByText("Bias–variance dance")).toBeInTheDocument();
+    expect(screen.getByText("Bias-variance dance")).toBeInTheDocument();
     expect(screen.getByLabelText("Model complexity (polynomial degree)")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /New training data/ })).toBeInTheDocument();
   });

@@ -42,7 +42,7 @@ const lesson: CodexLesson = {
         },
       ],
       keyTakeaway:
-        "Codex is an autonomous software engineering agent that plans, edits, tests, and hands back a patch — with nothing interactive in between.",
+        "Codex is an autonomous software engineering agent that plans, edits, tests, and hands back a patch, with nothing interactive in between.",
     },
     {
       id: "s2",
@@ -93,7 +93,7 @@ const lesson: CodexLesson = {
         },
       ],
       keyTakeaway:
-        "A run is plan, probe, try, test, revise, patch — never a straight line from task to code.",
+        "A run is plan, probe, try, test, revise, patch, never a straight line from task to code.",
     },
     {
       id: "s4",
@@ -249,7 +249,7 @@ const lesson: CodexLesson = {
           'You open a Codex task: "refactor our auth module." No other detail. The agent returns a PR that rewrites your user model and breaks three downstream services. What went wrong?',
         options: [
           "Codex has a bug and shouldn't be used for auth.",
-          "The task was ambiguous — \"refactor auth\" spans a huge scope and the agent picked an aggressive interpretation.",
+          "The task was ambiguous, \"refactor auth\" spans a huge scope and the agent picked an aggressive interpretation.",
           "The sandbox didn't have the downstream services available.",
           "You needed to give it write access to prod.",
         ],
@@ -270,8 +270,8 @@ const lesson: CodexLesson = {
         question:
           "Between two Codex runs on the same repo, does the agent remember what you discussed last time?",
         options: [
-          "Yes — Codex has persistent memory across sessions.",
-          "No — every run gets a fresh sandbox. The only persistence is what's committed to your repo (AGENTS.md, tests, docs).",
+          "Yes, Codex has persistent memory across sessions.",
+          "No, every run gets a fresh sandbox. The only persistence is what's committed to your repo (AGENTS.md, tests, docs).",
           "Only within the same conversation thread.",
           "Only if you're on the team plan.",
         ],

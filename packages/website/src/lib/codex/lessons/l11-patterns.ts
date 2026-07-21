@@ -33,13 +33,13 @@ const lesson: CodexLesson = {
     },
     {
       id: "s2",
-      title: "Pattern 01 — TDD with AI",
+      title: "Pattern 01, TDD with AI",
       readTimeMinutes: 2,
       blocks: [
         {
           kind: "prose",
           markdown:
-            "**The idea:** write tests first (or have the agent write them first), then implement. The test suite becomes the acceptance criterion, and the agent can iterate autonomously until all tests pass.\n\n**Why it works:** the agent has a concrete, unambiguous signal for \"done.\" Without tests, it is guessing. With tests, it can iterate, run, fail, patch, run again, without any human in the loop. The result is a PR with verified behavior, not just plausible code.\n\n**The two-phase approach:**\n\n1. *Phase 1 — tests only:* \"Write the test suite for this feature. Do not implement the feature yet. Tests should fail.\" Review the tests; they are your acceptance criteria made concrete.\n2. *Phase 2 — implementation:* \"Implement the feature until all tests from phase 1 pass.\" The agent now has an objective to optimize against.\n\n**The failure mode:** asking for tests and implementation in a single task. The agent writes the implementation first and then writes tests that pass against what it just built, which proves nothing. The tests are circular. Always split the phases.",
+            "**The idea:** write tests first (or have the agent write them first), then implement. The test suite becomes the acceptance criterion, and the agent can iterate autonomously until all tests pass.\n\n**Why it works:** the agent has a concrete, unambiguous signal for \"done.\" Without tests, it is guessing. With tests, it can iterate, run, fail, patch, run again, without any human in the loop. The result is a PR with verified behavior, not just plausible code.\n\n**The two-phase approach:**\n\n1. *Phase 1, tests only:* \"Write the test suite for this feature. Do not implement the feature yet. Tests should fail.\" Review the tests; they are your acceptance criteria made concrete.\n2. *Phase 2, implementation:* \"Implement the feature until all tests from phase 1 pass.\" The agent now has an objective to optimize against.\n\n**The failure mode:** asking for tests and implementation in a single task. The agent writes the implementation first and then writes tests that pass against what it just built, which proves nothing. The tests are circular. Always split the phases.",
         },
         {
           kind: "callout",
@@ -50,7 +50,7 @@ const lesson: CodexLesson = {
     },
     {
       id: "s3",
-      title: "Pattern 02 — Brownfield onboarding",
+      title: "Pattern 02, Brownfield onboarding",
       readTimeMinutes: 2,
       blocks: [
         {
@@ -62,7 +62,7 @@ const lesson: CodexLesson = {
     },
     {
       id: "s4",
-      title: "Pattern 03 — Refactoring with AI",
+      title: "Pattern 03, Refactoring with AI",
       readTimeMinutes: 2,
       blocks: [
         {
@@ -74,7 +74,7 @@ const lesson: CodexLesson = {
     },
     {
       id: "s5",
-      title: "Pattern 04 — Debugging with AI",
+      title: "Pattern 04, Debugging with AI",
       readTimeMinutes: 2,
       blocks: [
         {
@@ -86,7 +86,7 @@ const lesson: CodexLesson = {
     },
     {
       id: "s6",
-      title: "Pattern 05 — The two-revision rule",
+      title: "Pattern 05, The two-revision rule",
       readTimeMinutes: 2,
       blocks: [
         {
@@ -160,8 +160,8 @@ const lesson: CodexLesson = {
           "You ask an agent to write tests for a new feature and implement it in a single task. The tests all pass. What is the likely problem?",
         options: [
           "The implementation is probably wrong.",
-          "The tests probably do not verify real behavior — the agent likely wrote the implementation first and then wrote tests that pass against what it built, making them circular.",
-          "Nothing — green tests mean the feature is correct.",
+          "The tests probably do not verify real behavior, the agent likely wrote the implementation first and then wrote tests that pass against what it built, making them circular.",
+          "Nothing, green tests mean the feature is correct.",
           "The tests are probably too slow.",
         ],
         correct: 1,
@@ -182,7 +182,7 @@ const lesson: CodexLesson = {
           "A PR has gone through three rounds of comments and the agent still has not landed the fix correctly. What is the right move?",
         options: [
           "Add more detail to the next comment and try a fourth round.",
-          "Re-spec the task from scratch. Three revision rounds signals the original spec was underspecified — no amount of nudging will fix that. Rewrite, rerun.",
+          "Re-spec the task from scratch. Three revision rounds signals the original spec was underspecified, no amount of nudging will fix that. Rewrite, rerun.",
           "Accept the PR as-is since you have spent enough time on it.",
           "Switch to a different AI tool.",
         ],

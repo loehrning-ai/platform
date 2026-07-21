@@ -76,7 +76,7 @@ const DISC_QUESTIONS: readonly Question[] = [
     shortcut: "udf cidr_parse",
     accept: /^\s*udf\s+\S+/i,
     tip: "The UDF-catalog shortcut is <code>udf</code>. Try a likely symbolic name: <code>udf cidr_parse</code> or <code>udf parse_cidr</code>.",
-    why: "<code>udf &lt;name&gt;</code> looks up the UDF catalog by symbolic name. The catalog tells you who maintains the function and how often it is called — both matter before you take a runtime dependency.",
+    why: "<code>udf &lt;name&gt;</code> looks up the UDF catalog by symbolic name. The catalog tells you who maintains the function and how often it is called, both matter before you take a runtime dependency.",
     result: {
       kind: "udf",
       title: "cidr_parse(STRING cidr) → STRUCT<net, mask, first, last>",
@@ -93,7 +93,7 @@ const DISC_QUESTIONS: readonly Question[] = [
     shortcut: "wut dataset_acl",
     accept: /^\s*wut\s+\S+/i,
     tip: 'The glossary shortcut is <code>wut</code> ("what is this thing"). Pass the term: <code>wut &lt;term&gt;</code>.',
-    why: '<code>wut &lt;term&gt;</code> ("what is this thing") hits the glossary. Use it when you see an unfamiliar acronym in a Slack thread or a YAML file — three keystrokes saves you a tab into the wiki.',
+    why: '<code>wut &lt;term&gt;</code> ("what is this thing") hits the glossary. Use it when you see an unfamiliar acronym in a Slack thread or a YAML file, three keystrokes saves you a tab into the wiki.',
     result: {
       kind: "wut",
       title: "dataset_acl",
@@ -106,7 +106,7 @@ const DISC_QUESTIONS: readonly Question[] = [
     shortcut: "ds produce dim_accounts",
     accept: /^\s*ds\s+produce\s+\S+/i,
     tip: "The lineage shortcut is <code>ds</code>, with a <code>produce</code> subcommand for downstream: <code>ds produce &lt;table&gt;</code>.",
-    why: "<code>ds produce &lt;table&gt;</code> walks one hop downstream: which facts, dimensions, metrics, and dashboards read this table. Always check this before deprecating or schema-changing — it tells you who you are about to break.",
+    why: "<code>ds produce &lt;table&gt;</code> walks one hop downstream: which facts, dimensions, metrics, and dashboards read this table. Always check this before deprecating or schema-changing, it tells you who you are about to break.",
     result: {
       kind: "lineage",
       title: "dim_accounts · downstream (1 hop)",

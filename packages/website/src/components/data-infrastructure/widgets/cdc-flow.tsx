@@ -30,16 +30,16 @@ const LAMBDA_NOTE =
   "Two pipelines computing the same logic, then merged. Killer flaw: two codebases for one transform.";
 
 const PAYLOAD_LINES: readonly { key: string; value: string; note: string }[] = [
-  { key: '"op":', value: '"u"', note: "— c·u·d·r (create / update / delete / read=snapshot)" },
-  { key: '"ts_ms":', value: "1714233601000", note: "— commit time on source" },
-  { key: '"source":', value: "{ db, schema, lsn, ... }", note: "— provenance" },
-  { key: '"before":', value: '{ id:42, plan:"free" }', note: "— prior row state (UPDATE / DELETE only)" },
-  { key: '"after":', value: '{ id:42, plan:"pro" }', note: "— new row state (INSERT / UPDATE only)" },
+  { key: '"op":', value: '"u"', note: ", c·u·d·r (create / update / delete / read=snapshot)" },
+  { key: '"ts_ms":', value: "1714233601000", note: ", commit time on source" },
+  { key: '"source":', value: "{ db, schema, lsn, ... }", note: ", provenance" },
+  { key: '"before":', value: '{ id:42, plan:"free" }', note: ", prior row state (UPDATE / DELETE only)" },
+  { key: '"after":', value: '{ id:42, plan:"pro" }', note: ", new row state (INSERT / UPDATE only)" },
 ];
 
 const WHY_CDC_WINS = [
   "captures DELETEs (no row to SELECT)",
-  "no load on source — reads WAL directly",
+  "no load on source, reads WAL directly",
   "ordered, gap-free by LSN",
   "replayable from any offset",
 ];
@@ -243,8 +243,8 @@ function LambdaDiagram(): JSX.Element {
           </g>
         );
       })}
-      <StageBox x={branchX} y={speedY} w={branchW} h={cellH} label="Speed layer — Flink · approximate" />
-      <StageBox x={branchX} y={batchY} w={branchW} h={cellH} label="Batch layer — Spark · correct, hourly" />
+      <StageBox x={branchX} y={speedY} w={branchW} h={cellH} label="Speed layer, Flink · approximate" />
+      <StageBox x={branchX} y={batchY} w={branchW} h={cellH} label="Batch layer, Spark · correct, hourly" />
       <Arrow
         x1={padL + 4 * (cellW + gap) - gap}
         y1={sharedY + cellH / 2}
@@ -257,11 +257,11 @@ function LambdaDiagram(): JSX.Element {
         x2={branchX - 4}
         y2={batchY + cellH / 2}
       />
-      <StageBox x={mergeX} y={mergeY} w={mergeW} h={mergeH} label="Merge / serve — batch ⊕ recent-speed-delta → Iceberg" />
+      <StageBox x={mergeX} y={mergeY} w={mergeW} h={mergeH} label="Merge / serve, batch ⊕ recent-speed-delta → Iceberg" />
       <Arrow x1={branchX + branchW} y1={speedY + cellH / 2} x2={mergeX - 4} y2={mergeY + mergeH / 2 - 6} />
       <Arrow x1={branchX + branchW} y1={batchY + cellH / 2} x2={mergeX - 4} y2={mergeY + mergeH / 2 + 6} />
       <text x={padL} y={320} className="fill-[#b85a4a] text-[11px] font-semibold">
-        ⚠ Two codebases. Every aggregation expressed twice — once streaming, once batch. Drift between the two is the
+        ⚠ Two codebases. Every aggregation expressed twice, once streaming, once batch. Drift between the two is the
         dominant operational pain.
       </text>
     </svg>

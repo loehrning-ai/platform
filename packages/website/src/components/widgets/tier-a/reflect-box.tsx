@@ -40,7 +40,7 @@ export function ReflectBoxWidget({
   title = "Reflect",
   scenario,
   rows = 4,
-  placeholder = "Type here. Saved locally — only you see this.",
+  placeholder = "Type here. Saved locally, only you see this.",
 }: ReflectBoxWidgetProps): JSX.Element {
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [value, setValue] = useDraftValue<string>(`reflect::${lessonId}::${cpId}`, "");

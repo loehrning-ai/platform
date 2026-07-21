@@ -28,7 +28,7 @@ const STACK_ROWS = [
 export const metadata: Metadata = {
   title: "Data Infrastructure: an IC5 system-design field guide",
   description:
-    "A 12-lesson, deeply interactive guide to data engineering system design at the IC5/staff level. Storage, streaming, lakehouses, observability — and a live interview replay.",
+    "A 12-lesson, deeply interactive guide to data engineering system design at the IC5/staff level. Storage, streaming, lakehouses, observability, and a live interview replay.",
   robots: { index: true, follow: true },
   alternates: { canonical: `${SITE_URL}/kurse/open-source/data-infrastructure` },
   openGraph: {
@@ -92,7 +92,7 @@ export default async function DataInfrastructureLandingPage() {
         </h1>
         <p className="mt-7 max-w-[680px] text-[18px] leading-[1.6] text-muted-foreground">
           A field guide to the data stack at the level of an IC5 / staff system-design interview. Storage
-          internals, streaming semantics, lakehouse table formats, and the operational craft — built around
+          internals, streaming semantics, lakehouse table formats, and the operational craft, built around
           interactive simulators of every concept that&apos;s usually drawn on a whiteboard.
         </p>
 
@@ -178,7 +178,7 @@ export default async function DataInfrastructureLandingPage() {
             Four tracks. Twelve lessons. One mock interview.
           </h2>
           <p className="mt-3 max-w-[600px] text-[15px] leading-relaxed text-muted-foreground">
-            Linear the first time — each lesson assumes the last. The capstone (lesson 12) is a 45-minute IC5
+            Linear the first time, each lesson assumes the last. The capstone (lesson 12) is a 45-minute IC5
             system-design walkthrough you can step through one move at a time.
           </p>
 
@@ -225,7 +225,7 @@ export default async function DataInfrastructureLandingPage() {
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">start now</p>
           <h2 className="mt-2 text-[26px] font-bold text-foreground sm:text-[32px]">Open lesson 01.</h2>
           <p className="mx-auto mt-3 max-w-[440px] text-[14px] leading-relaxed text-muted-foreground">
-            The stack, top to bottom — in twelve minutes. Then the rest of the course is just zooming in.
+            The stack, top to bottom, in twelve minutes. Then the rest of the course is just zooming in.
           </p>
           <Link
             href="/kurse/open-source/data-infrastructure/kurs/mental-model"

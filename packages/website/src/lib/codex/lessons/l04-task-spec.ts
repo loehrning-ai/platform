@@ -153,8 +153,8 @@ const lesson: CodexLesson = {
       props: {
         title: "Three shapes of the same task",
         kindLabel: CODEX_COMPARE_KIND_LABEL,
-        badLabel: "Weak — one line",
-        goodLabel: "Strong — four parts",
+        badLabel: "Weak, one line",
+        goodLabel: "Strong, four parts",
         bad: "task:\nadd pagination to /users",
         good:
           "Goal\nUsers can page through GET /users results via ?page=N, 20 items per page.\n\nConstraints\n- Keep existing response schema; add a top-level \"pagination\" object.\n- Offset-based (?page=N), not cursor.\n- No new dependencies.\n\nAcceptance\n- Tests cover page 1, page 2, out-of-range (page=999 → empty).\n- make test && make lint pass.\n- Existing filters (?role, ?status) still work.\n\nOut of scope\n- Don't touch the single-user detail endpoint.\n- Don't refactor the filter builder.",
@@ -176,7 +176,7 @@ const lesson: CodexLesson = {
           "The PR will be too small and miss edge cases.",
           'The agent will "helpfully" expand the PR into nearby code, refactoring things you didn\'t ask about, making it hard to review.',
           "Codex will refuse to work without explicit scope.",
-          "Nothing — out-of-scope sections are decorative.",
+          "Nothing, out-of-scope sections are decorative.",
         ],
         correct: 1,
         explanation:

@@ -158,7 +158,7 @@ export function BiasVarianceSim() {
   return (
     <Panel
       eyebrow="LIVE · ENSEMBLE"
-      title="Bias–variance dance"
+      title="Bias-variance dance"
       meta={`degree ${complexity} · ${resampleFits.length} bootstraps`}
       caption="Gray cloud = the range of fits you'd get from resampling. Narrow cloud + close to truth = good. Narrow + far = bias. Wide & wild = variance. The tradeoff is the dance."
     >
@@ -221,7 +221,7 @@ export function BiasVarianceSim() {
           <div className="galton-note">
             <span className="tag-pill">tip</span>
             At low <code className="mono">deg</code>, bias is huge (stiff line misses curve). At
-            high <code className="mono">deg</code>, bias collapses but variance explodes — the
+            high <code className="mono">deg</code>, bias collapses but variance explodes, the
             gray cloud fans wildly.
           </div>
         </div>

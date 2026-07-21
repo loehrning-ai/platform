@@ -138,7 +138,7 @@ export default function DatenschutzPage() {
               CourseSlug union: the 6 imported courses have no server-tracked
               progress to reset (external, unregistered in the shared
               engine), so listing them here would offer a reset action that
-              does nothing — a compliance-sensitive page must never imply
+              does nothing, a compliance-sensitive page must never imply
               there is data to reset when there is none.
             */}
             {COURSE_CATALOG.map((course) => {

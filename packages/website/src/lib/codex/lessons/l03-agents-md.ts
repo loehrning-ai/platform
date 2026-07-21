@@ -6,7 +6,7 @@ import { CODEX_QUIZ_COPY, CODEX_QUIZ_TITLE, CODEX_TASK_SPEC_TIER_LABELS } from "
 const lesson: CodexLesson = {
   id: "L03",
   number: 3,
-  title: "AGENTS.md — Codex's Memory",
+  title: "AGENTS.md, Codex's Memory",
   subtitle:
     'One file, committed to your repo. It\'s the difference between "write a PR" and "write a PR the way we write PRs here."',
   durationMinutes: 11,
@@ -128,7 +128,7 @@ const lesson: CodexLesson = {
           {
             section: "Known quirks",
             hint: "The undocumented minefields. Saves wasted runs.",
-            body: ["test_webhooks.py is flaky — re-run once.", "user_service.py is 400 lines — don't add to it."],
+            body: ["test_webhooks.py is flaky, re-run once.", "user_service.py is 400 lines, don't add to it."],
           },
           {
             section: "Definitely don't",
@@ -148,7 +148,7 @@ const lesson: CodexLesson = {
       placement: "end",
       courseSlug: "codex",
       props: {
-        title: "Without AGENTS.md — generic, doesn't match repo",
+        title: "Without AGENTS.md, generic, doesn't match repo",
         file: "api/health.py · +15 / −0",
         lines: [
           { type: "add", text: "from flask import Blueprint, jsonify" },
@@ -173,7 +173,7 @@ const lesson: CodexLesson = {
       placement: "end",
       courseSlug: "codex",
       props: {
-        title: "With AGENTS.md — fits the codebase, tests included",
+        title: "With AGENTS.md, fits the codebase, tests included",
         file: "api/health.py · +12 / −0",
         lines: [
           { type: "add", text: "from flask import Blueprint, jsonify" },
@@ -192,7 +192,7 @@ const lesson: CodexLesson = {
           { type: "add", text: '        log.error("health_check_failed", error=str(e))' },
           { type: "add", text: '        return jsonify({"ok": False}), 503' },
           { type: "context", text: "" },
-          { type: "context", text: "# --- tests/api/test_health.py — also added ---" },
+          { type: "context", text: "# --- tests/api/test_health.py, also added ---" },
         ],
         note: "Notice the specifics: OperationalError (not generic Exception), structlog with kwargs (not f-strings), 503 not 500, and a test file in tests/api/. None of this was in the task. All of it was in AGENTS.md.",
       },

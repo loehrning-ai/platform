@@ -19,13 +19,13 @@ import type { JsonLdGraph } from "@/lib/seo/json-ld";
 export const metadata: Metadata = {
   title: "Data Science Fundamentals · Interactive Course",
   description:
-    "Twelve interactive chapters covering the full data science loop — from EDA and feature engineering to A/B testing, causal inference, and production deployment. Every chapter opens with a live simulation.",
+    "Twelve interactive chapters covering the full data science loop, from EDA and feature engineering to A/B testing, causal inference, and production deployment. Every chapter opens with a live simulation.",
   robots: { index: true, follow: true },
   alternates: { canonical: `${SITE_URL}/kurse/open-source/data-science` },
   openGraph: {
     title: "Data Science Fundamentals · Interactive Course",
     description:
-      "Twelve interactive chapters covering the full data science loop — from EDA and feature engineering to A/B testing, causal inference, and production deployment.",
+      "Twelve interactive chapters covering the full data science loop, from EDA and feature engineering to A/B testing, causal inference, and production deployment.",
     url: `${SITE_URL}/kurse/open-source/data-science`,
     siteName: "loehrning.ai",
     locale: "en_US",
@@ -60,7 +60,7 @@ export default async function DataScienceOverviewPage() {
         "@type": "Course",
         name: "Data Science Fundamentals",
         description:
-          "Twelve interactive chapters covering the full data science loop — EDA, feature engineering, statistical thinking, CLT, bias/variance, ROC/PR, SHAP, A/B test power, causal DAGs, drift, production deployment, and a capstone.",
+          "Twelve interactive chapters covering the full data science loop, EDA, feature engineering, statistical thinking, CLT, bias/variance, ROC/PR, SHAP, A/B test power, causal DAGs, drift, production deployment, and a capstone.",
         url: `${SITE_URL}/kurse/open-source/data-science`,
         inLanguage: "en",
         isAccessibleForFree: true,

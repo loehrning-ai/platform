@@ -20,7 +20,7 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "The vanity metric",
         readTimeMinutes: 9,
         content:
-          'Adoption dashboards counting active users, prompts sent, tokens consumed — these tell you nothing about whether AI is working. They are the AI-era equivalent of "lines of code shipped." Comforting; useless.',
+          'Adoption dashboards counting active users, prompts sent, tokens consumed, these tell you nothing about whether AI is working. They are the AI-era equivalent of "lines of code shipped." Comforting; useless.',
       },
       {
         id: "s2",
@@ -73,7 +73,7 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Why teams skip it (and shouldn't)",
         readTimeMinutes: 7,
         content:
-          'Baselining is unglamorous and feels slow. The pressure to "just ship the AI tool" is high. Skipping it costs you the ability to ever prove the ROI — and that means the program eventually loses funding when budgets tighten.',
+          'Baselining is unglamorous and feels slow. The pressure to "just ship the AI tool" is high. Skipping it costs you the ability to ever prove the ROI, and that means the program eventually loses funding when budgets tighten.',
       },
     ],
     exerciseKind: "reflect-box",
@@ -133,11 +133,11 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           scenario:
             "Sketch the 5-slide leverage review for your team next quarter. Slide titles + one-line content per slide.",
           placeholders: [
-            "Slide 1 — Outcomes this quarter",
-            "Slide 2 — Metric movement",
-            "Slide 3 — What worked",
-            "Slide 4 — Causes of misses",
-            "Slide 5 — Next quarter's bets",
+            "Slide 1, Outcomes this quarter",
+            "Slide 2, Metric movement",
+            "Slide 3, What worked",
+            "Slide 4, Causes of misses",
+            "Slide 5, Next quarter's bets",
           ],
         },
       },
@@ -149,7 +149,7 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Module 9 — knowledge check & capstone",
+    title: "Module 9, knowledge check & capstone",
     subtitle: "Confirm measurement primitives, then commit.",
     objective: "Confirm measurement primitives, then commit.",
     durationMinutes: 15,
@@ -166,7 +166,7 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           { id: "d", text: "How many seats?", isCorrect: false },
         ],
         explanation:
-          "The hardest and most legitimate question a board member can ask about a productivity claim is what the baseline was and when it was measured — without a baseline taken under comparable conditions, a 30% gain is a story, not a result. Model choice, vendor, and seat count are all secondary to whether the comparison is even valid.",
+          "The hardest and most legitimate question a board member can ask about a productivity claim is what the baseline was and when it was measured, without a baseline taken under comparable conditions, a 30% gain is a story, not a result. Model choice, vendor, and seat count are all secondary to whether the comparison is even valid.",
       },
       {
         id: "ano-measurement-q2",
@@ -182,14 +182,14 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           { id: "d", text: "Internal survey sentiment.", isCorrect: false },
         ],
         explanation:
-          "The reliable signal that an AI program is working is outcome metrics — cycle time, defect rate, throughput — moving against a measured baseline, because those numbers reflect the work actually getting better. Active-user counts, token volume, and survey sentiment are activity or vibes metrics that can rise even while nothing real improves.",
+          "The reliable signal that an AI program is working is outcome metrics, cycle time, defect rate, throughput, moving against a measured baseline, because those numbers reflect the work actually getting better. Active-user counts, token volume, and survey sentiment are activity or vibes metrics that can rise even while nothing real improves.",
       },
       {
         id: "ano-measurement-q3",
         questionText: "A quarterly leverage review should look most like:",
         answerOptions: [
           { id: "a", text: "A project status update.", isCorrect: false },
-          { id: "b", text: "A revenue review — with the same rigor and seriousness.", isCorrect: true },
+          { id: "b", text: "A revenue review, with the same rigor and seriousness.", isCorrect: true },
           { id: "c", text: "A demo day.", isCorrect: false },
           { id: "d", text: "A retrospective.", isCorrect: false },
         ],

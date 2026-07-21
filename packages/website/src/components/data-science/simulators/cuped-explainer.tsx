@@ -106,7 +106,7 @@ export function CUPEDExplainer() {
   return (
     <Panel
       eyebrow="EXPLAINER"
-      title="CUPED — Variance Reduction via Covariates"
+      title="CUPED, Variance Reduction via Covariates"
       caption="Toggle CUPED to see how pre-experiment covariates shrink confidence intervals without changing the point estimate."
     >
       <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>

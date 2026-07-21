@@ -116,7 +116,7 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
           together, you scaled them together, and if you wanted to try a new engine you migrated terabytes first.
         </p>
         <p className="prose">
-          The <b>lakehouse</b> move was to put the bytes in a shared object store: S3, GCS, or Azure Blob — as open columnar files (Parquet, ORC) —
+          The <b>lakehouse</b> move was to put the bytes in a shared object store: S3, GCS, or Azure Blob, as open columnar files (Parquet, ORC) ,
           and let <em>any</em> engine read them. Compute became a job, not a server. Storage became a commodity.
         </p>
         <LakehouseDiagram />
@@ -219,7 +219,7 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
           "<b>The small-files problem.</b> 10 000 × 1 MB Parquet files is worse than 10 × 1 GB: file-listing overhead, per-file footer reads, and task spin-up dominate. Compact on a schedule.",
           "<b>Landing raw CSV in the warehouse.</b> Types unknown, no column pruning, no compression. Always convert to Parquet at ingest.",
           "<b><code>SELECT *</code> on a 300-column fact table.</b> Undoes everything columnar gave you. Ask for exactly the columns you need.",
-          "<b>Treating Trino and PrestoDB as identical.</b> Trino (formerly PrestoSQL) and PrestoDB diverged around 2020 and have since drifted significantly — function names, connector behavior, and optimizer defaults all differ. Check which one your cluster runs before copy-pasting docs.",
+          "<b>Treating Trino and PrestoDB as identical.</b> Trino (formerly PrestoSQL) and PrestoDB diverged around 2020 and have since drifted significantly, function names, connector behavior, and optimizer defaults all differ. Check which one your cluster runs before copy-pasting docs.",
           "<b>Treating SQL as opaque magic.</b> Every query has a plan, and the plan is inspectable. <code>EXPLAIN ANALYZE</code> before you tune anything.",
           "<b>Choosing Spark for a job Presto would finish in seconds.</b> Spark cold-start is 2–10× Presto's: the JVM warm-up alone eats any interactive budget.",
         ]}

@@ -144,7 +144,7 @@ export function ConfoundingSimulator() {
       eyebrow="SIMULATION"
       title="Confounding · the lurking variable"
       meta={sc.label}
-      caption="Both variables really do correlate — they share a common cause. Stratify by the confounder and each group's correlation collapses toward zero."
+      caption="Both variables really do correlate, they share a common cause. Stratify by the confounder and each group's correlation collapses toward zero."
     >
       <div className="sim-row" style={{ gridTemplateColumns: "220px 1fr" }}>
         <div className="sim-controls">

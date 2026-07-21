@@ -52,7 +52,7 @@ describe("L02SandboxBox", () => {
   it("turning tests off flips the verification readout", () => {
     render(<L02SandboxBox lessonId="L02" cpId="bespoke" />);
     fireEvent.click(screen.getByLabelText("tests"));
-    expect(screen.getByText("codex cannot verify work — flying blind")).toBeInTheDocument();
+    expect(screen.getByText("codex cannot verify work, flying blind")).toBeInTheDocument();
   });
 
   it("shows a transient warning when network is turned on, then clears it", () => {

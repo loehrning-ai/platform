@@ -223,7 +223,7 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
             </h2>
             <p className="text-sm text-muted-foreground">
               {config.language === "en"
-                ? "Enter your name. The PDF is generated locally in your browser from your progress — it isn't issued server-side."
+                ? "Enter your name. The PDF is generated locally in your browser from your progress, it isn't issued server-side."
                 : "Trag deinen Namen ein. Die PDF wird lokal in deinem Browser aus deinem Lernstand erstellt, sie wird nicht serverseitig ausgestellt."}
             </p>
 

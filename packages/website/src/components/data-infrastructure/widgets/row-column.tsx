@@ -125,7 +125,7 @@ export function RowColumn({ lessonId, cpId }: RowColumnProps): JSX.Element {
       });
     }
 
-    if (stats.rb !== "—") {
+    if (stats.rb !== ",") {
       ctx.fillStyle = "#2a5a45";
       ctx.font = "bold 13px monospace";
       ctx.fillText("SUM →", w - 60, 16);
@@ -181,13 +181,13 @@ export function RowColumn({ lessonId, cpId }: RowColumnProps): JSX.Element {
   return (
     <div className="border-2 border-border bg-card/40 p-5 md:p-6">
       <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        Sim · SELECT SUM(amount) WHERE country=&apos;US&apos; — row vs column {done ? "✓" : ""}
+        Sim · SELECT SUM(amount) WHERE country=&apos;US&apos;, row vs column {done ? "✓" : ""}
       </p>
 
       {contextUnavailable ? (
         <CanvasFallbackNotice
           title="Row vs column storage"
-          summary="A row-store scans all 4 columns of every row; a column-store touches only the 2 columns the query needs — country and amount."
+          summary="A row-store scans all 4 columns of every row; a column-store touches only the 2 columns the query needs, country and amount."
         />
       ) : (
         <div ref={wrapRef} className="h-[340px] w-full">

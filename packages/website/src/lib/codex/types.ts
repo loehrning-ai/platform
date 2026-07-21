@@ -64,25 +64,25 @@ export interface CodexTrack {
 export const CODEX_TRACKS: readonly CodexTrack[] = [
   {
     id: "fundamentals",
-    label: "Track 01 — Fundamentals",
+    label: "Track 01, Fundamentals",
     title: "The mental model",
     hint: "Three lessons on what Codex is and how it sees your repo.",
   },
   {
     id: "task-craft",
-    label: "Track 02 — Task Craft",
+    label: "Track 02, Task Craft",
     title: "Writing tasks that work",
     hint: "Where most of the quality lives. Spec it right, ship it right.",
   },
   {
     id: "in-the-loop",
-    label: "Track 03 — In the Loop",
+    label: "Track 03, In the Loop",
     title: "Working with the agent",
     hint: "Review, iterate, give it the tools it needs to finish the job.",
   },
   {
     id: "advanced",
-    label: "Track 04 — Advanced",
+    label: "Track 04, Advanced",
     title: "Scale it into your workflow",
     hint: "Parallel agents, proven patterns, and the daily loop.",
   },

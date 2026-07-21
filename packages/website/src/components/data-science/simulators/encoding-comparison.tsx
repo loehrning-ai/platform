@@ -25,9 +25,9 @@ const DESCRIPTIONS: Record<EncodingMode, string> = {
   onehot:
     "Creates one binary column per category. Safe, interpretable. Explodes at high cardinality (1000 cities → 1000 columns). No ordinal assumption.",
   label:
-    'Assigns each category an integer 1–N. Compact but <strong>introduces false ordering</strong>: Berlin (5) is not "greater than" London (2). Breaks linear models.',
+    'Assigns each category an integer 1-N. Compact but <strong>introduces false ordering</strong>: Berlin (5) is not "greater than" London (2). Breaks linear models.',
   target:
-    "Replaces category with mean(target | category). Very powerful for tree models. <strong>Must be computed out-of-fold</strong> — computing on training data leaks the target.",
+    "Replaces category with mean(target | category). Very powerful for tree models. <strong>Must be computed out-of-fold</strong>, computing on training data leaks the target.",
   frequency:
     "Replaces category with its frequency (count or ratio). Preserves cardinality signal without arbitrary ordering. Treats two equally-frequent cities as identical.",
 };
@@ -80,7 +80,7 @@ export function EncodingComparison() {
       eyebrow="SIMULATION"
       title="Categorical encoding methods"
       meta="City column · 5 categories"
-      caption="One-hot is the safe default. Target encoding is the sharp knife — always out-of-fold. Label encoding silently breaks linear models."
+      caption="One-hot is the safe default. Target encoding is the sharp knife, always out-of-fold. Label encoding silently breaks linear models."
     >
       <div className="sim-row">
         <div className="sim-controls">
@@ -181,7 +181,7 @@ export function EncodingComparison() {
             color: "var(--good-ink)",
           }}
         >
-          ✓ Computed out-of-fold (correct). Values shown are held-out fold means — no target leakage.
+          ✓ Computed out-of-fold (correct). Values shown are held-out fold means, no target leakage.
         </div>
       )}
     </Panel>

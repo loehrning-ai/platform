@@ -20,14 +20,14 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Why a registry exists",
         readTimeMinutes: 9,
         content:
-          'Without a registry, you cannot answer the question "which models are running on which data right now?" — and that question gets asked the day you have an incident, a regulator, or an audit. The registry is the boring foundation that makes everything else possible.',
+          'Without a registry, you cannot answer the question "which models are running on which data right now?", and that question gets asked the day you have an incident, a regulator, or an audit. The registry is the boring foundation that makes everything else possible.',
       },
       {
         id: "s2",
         title: "What the registry tracks",
         readTimeMinutes: 9,
         content:
-          "For each model: provider, version, intended use case, data classification approved, permitted tools, owner, last review date, eval scores. Nothing exotic — just the facts, in one place, kept current.",
+          "For each model: provider, version, intended use case, data classification approved, permitted tools, owner, last review date, eval scores. Nothing exotic, just the facts, in one place, kept current.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -65,7 +65,7 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "The release gate",
         readTimeMinutes: 12,
         content:
-          "Every model change — provider swap, version bump, prompt edit, tool addition — must pass a defined eval suite before reaching production. Regressions block. The system enforces, not the human memory.",
+          "Every model change, provider swap, version bump, prompt edit, tool addition, must pass a defined eval suite before reaching production. Regressions block. The system enforces, not the human memory.",
       },
       {
         id: "s2",
@@ -98,8 +98,8 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
     number: 3,
     kind: "reading",
     title: "Agent identity and audit",
-    subtitle: "Every agent has an identity. Permissions, audit, and accountability — same as a human user.",
-    objective: "Every agent has an identity. Permissions, audit, and accountability — same as a human user.",
+    subtitle: "Every agent has an identity. Permissions, audit, and accountability, same as a human user.",
+    objective: "Every agent has an identity. Permissions, audit, and accountability, same as a human user.",
     durationMinutes: 20,
     keyConcepts: [],
     quiz: [],
@@ -109,7 +109,7 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Why identity matters",
         readTimeMinutes: 10,
         content:
-          "When an agent takes an action — sends an email, opens a PR, deletes a record — you must be able to answer: which agent, on whose behalf, with what authorization. Without identity, the audit log is a story you tell yourself. With it, you have ground truth.",
+          "When an agent takes an action, sends an email, opens a PR, deletes a record, you must be able to answer: which agent, on whose behalf, with what authorization. Without identity, the audit log is a story you tell yourself. With it, you have ground truth.",
       },
       {
         id: "s2",
@@ -141,7 +141,7 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Module 8 — knowledge check",
+    title: "Module 8, knowledge check",
     subtitle: "Lock governance basics.",
     objective: "Lock governance basics.",
     durationMinutes: 8,

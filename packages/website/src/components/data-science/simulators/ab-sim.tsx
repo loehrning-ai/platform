@@ -264,7 +264,7 @@ export function ABSim() {
           <div className="ab-verdict" data-sig={significant ? "yes" : "no"}>
             <div className="ab-verdict-k">p-value</div>
             <div className="ab-verdict-v">{latest.pval < 1e-3 ? "<0.001" : latest.pval.toFixed(3)}</div>
-            <div className="ab-verdict-note">{significant ? "✓ significant (α=0.05)" : "— not yet significant"}</div>
+            <div className="ab-verdict-note">{significant ? "✓ significant (α=0.05)" : ", not yet significant"}</div>
           </div>
           <div className="ab-power">
             <div className="ab-power-head">

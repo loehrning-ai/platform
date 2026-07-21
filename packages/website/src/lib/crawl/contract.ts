@@ -38,6 +38,19 @@ const PUBLIC_INDEXABLE_PATHS = [
   "/wie-ki-funktioniert/:lektionId",
   "/ki-check",
   "/kurse",
+  // The 6 imported courses' own landing pages. Each is now a real static
+  // route (its own page.tsx), not a match of the generic dynamic
+  // "/kurse/open-source/:slug" pattern below — these must precede that
+  // wildcard so verify-lighthouse-routes.ts's dynamic-candidates check
+  // (built from IMPORTED_COURSE_CATALOG, which no longer lists any of
+  // these 6 since they all flipped to nativeStatus "live") is not asked to
+  // vouch for a URL that isn't a dynamic-route candidate anymore.
+  "/kurse/open-source/claude",
+  "/kurse/open-source/codex",
+  "/kurse/open-source/data-infrastructure",
+  "/kurse/open-source/data-engineering-fundamentals",
+  "/kurse/open-source/data-science",
+  "/kurse/open-source/ai-native-operator",
   "/kurse/open-source/:slug",
   "/ki-fuehrerschein",
   "/eu-ai-act-kurs",
@@ -188,13 +201,12 @@ const PUBLIC_ACCESS_PATHS = [
   // Data Infrastructure course — see the noindex entries above.
   "/kurse/open-source/data-infrastructure/kurs",
   "/kurse/open-source/data-infrastructure/kurs/:path*",
-  // Data Engineering Fundamentals course (, corrected —
-  // see the noindex-block comment above): the 12 chapters live directly
-  // under the course root, so one wildcard covers them all instead of the
-  // "/kurs" + "/kurs/:path*" pair every other course uses. The bare course
-  // root itself is already covered by "/kurse/open-source/:slug" above
-  // (PUBLIC_INDEXABLE_PATHS matches by path string regardless of whether
-  // the dynamic [slug] route or this static folder serves it).
+  // Data Engineering Fundamentals course — see the
+  // noindex-block comment above: the 12 chapters live directly under the
+  // course root, so one wildcard covers them all instead of the "/kurs" +
+  // "/kurs/:path*" pair every other course uses. The bare course root
+  // itself has its own explicit static entry in PUBLIC_INDEXABLE_PATHS
+  // above (it is a real page.tsx now, not the dynamic [slug] route).
   "/kurse/open-source/data-engineering-fundamentals/:path*",
   // Data Science course 
   // — same flat-chapter shape as data-engineering-fundamentals above.

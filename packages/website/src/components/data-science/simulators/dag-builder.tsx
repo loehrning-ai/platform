@@ -48,7 +48,7 @@ const DAGS: readonly DagPattern[] = [
     ],
     edges: [{ from: "X", to: "Y", type: "causal" }],
     question: "Can we estimate X → Y?",
-    answer: "Yes — directly.",
+    answer: "Yes, directly.",
     adjustZ: null,
     adjustIcon: "—",
     explanation: "No confounders, no colliders. A simple regression of Y on X recovers the causal effect. This is the ideal scenario.",
@@ -67,7 +67,7 @@ const DAGS: readonly DagPattern[] = [
       { from: "X", to: "Y", type: "spurious" },
     ],
     question: "Can we estimate X → Y?",
-    answer: "Yes — but only after controlling for Z.",
+    answer: "Yes, but only after controlling for Z.",
     adjustZ: true,
     adjustIcon: "✓ Adjust for Z",
     explanation: "Z opens a backdoor path X ← Z → Y. Including Z in the regression blocks this path and isolates the X → Y effect. Classic omitted-variable bias if you skip it.",
@@ -86,10 +86,10 @@ const DAGS: readonly DagPattern[] = [
       { from: "X", to: "Y", type: "direct" },
     ],
     question: "Can we estimate X → Y total effect?",
-    answer: "Yes — but do NOT control for Z.",
+    answer: "Yes, but do NOT control for Z.",
     adjustZ: false,
     adjustIcon: "✗ Do not adjust for Z",
-    explanation: "Z is on the causal path from X to Y. Conditioning on it blocks the indirect pathway and you measure only the direct effect — not the total. Control for Z only when you explicitly want the direct effect.",
+    explanation: "Z is on the causal path from X to Y. Conditioning on it blocks the indirect pathway and you measure only the direct effect, not the total. Control for Z only when you explicitly want the direct effect.",
   },
   {
     title: "Collider",
@@ -105,10 +105,10 @@ const DAGS: readonly DagPattern[] = [
       { from: "X", to: "Y", type: "spurious" },
     ],
     question: "Can we estimate X → Y?",
-    answer: "Yes — but NEVER condition on Z.",
+    answer: "Yes, but NEVER condition on Z.",
     adjustZ: false,
     adjustIcon: "✗ Do not adjust for Z",
-    explanation: 'Z is a collider: both X and Y point into it. Conditioning on Z opens a fake association between X and Y. This is selection bias — e.g., conditioning on "hired by top firm" creates spurious talent-looks tradeoff.',
+    explanation: 'Z is a collider: both X and Y point into it. Conditioning on Z opens a fake association between X and Y. This is selection bias, e.g., conditioning on "hired by top firm" creates spurious talent-looks tradeoff.',
   },
 ];
 
@@ -156,7 +156,7 @@ export function DAGBuilder() {
       eyebrow="SIMULATION"
       title="DAG patterns · should you adjust for Z?"
       meta={dag.tag}
-      caption="Four structural patterns. Each has a different answer to 'should I include Z in my regression?' The answer is never obvious from data alone — only the DAG tells you."
+      caption="Four structural patterns. Each has a different answer to 'should I include Z in my regression?' The answer is never obvious from data alone, only the DAG tells you."
     >
       <div className="sim-row" style={{ gridTemplateColumns: "1fr 1fr" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>

@@ -50,7 +50,7 @@ export function InteractionTerms() {
       eyebrow="SIMULATION"
       title="Interaction terms: A×B vs A+B"
       meta={`A=${featureA}, B=${featureB}`}
-      caption="When the effect of A depends on B, you need A×B — the additive A+B misses it. CTR example: a highly relevant ad shown to a young user converts far more than either signal predicts alone."
+      caption="When the effect of A depends on B, you need A×B, the additive A+B misses it. CTR example: a highly relevant ad shown to a young user converts far more than either signal predicts alone."
     >
       <div className="sim-row">
         <div className="sim-controls" style={{ flex: "0 0 200px" }}>

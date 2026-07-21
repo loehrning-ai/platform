@@ -15,7 +15,7 @@ describe("CUPEDExplainer ", () => {
 
   it("renders the real panel copy and CUPED formula", () => {
     render(<CUPEDExplainer />);
-    expect(screen.getByText("CUPED — Variance Reduction via Covariates")).toBeInTheDocument();
+    expect(screen.getByText("CUPED, Variance Reduction via Covariates")).toBeInTheDocument();
     expect(screen.getByText("CUPED FORMULA")).toBeInTheDocument();
   });
 

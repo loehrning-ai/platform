@@ -32,9 +32,9 @@ export function DatasetExplorer() {
   return (
     <Panel
       eyebrow="SIMULATOR"
-      title="Dataset explorer — class imbalance"
+      title="Dataset explorer, class imbalance"
       meta={`Strategy: ${s.label}`}
-      caption="Real-world fraud datasets are severely imbalanced. A naive model predicting 'always legitimate' scores 99.83% accuracy — a useless metric here."
+      caption="Real-world fraud datasets are severely imbalanced. A naive model predicting 'always legitimate' scores 99.83% accuracy, a useless metric here."
     >
       <div className="sim-row">
         <div className="sim-controls">
@@ -114,7 +114,7 @@ export function DatasetExplorer() {
           </svg>
           {strategy === "smote" && (
             <div style={{ fontSize: 12, color: "var(--ink-3)", marginTop: 4, lineHeight: 1.6 }}>
-              <strong style={{ color: "var(--mint-ink)" }}>SMOTE:</strong> Synthetic Minority Oversampling —
+              <strong style={{ color: "var(--mint-ink)" }}>SMOTE:</strong> Synthetic Minority Oversampling ,
               interpolates new fraud samples between existing ones. Balanced dataset, but adds synthetic data
               risk.
             </div>

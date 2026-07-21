@@ -262,7 +262,7 @@ export function GaltonSim() {
       eyebrow="LIVE · PHYSICS"
       title="Galton Board · Sampling Distribution"
       meta={`n = ${n} · ${totalSamples} samples · ${totalBalls} balls`}
-      caption="Top: balls drop through a peg grid, stacking into the population shape. Bottom: every n balls, their mean drops into the sampling distribution. Watch the bottom curve narrow and become bell-shaped — that's the CLT, live."
+      caption="Top: balls drop through a peg grid, stacking into the population shape. Bottom: every n balls, their mean drops into the sampling distribution. Watch the bottom curve narrow and become bell-shaped, that's the CLT, live."
     >
       <div className="sim-row galton-row">
         <div className="sim-controls">

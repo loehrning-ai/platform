@@ -228,7 +228,7 @@ const lesson: CodexLesson = {
         options: [
           "The model disagrees with you. Argue your position more forcefully.",
           'This is a context rot signal. Close the session. Start a new one with a spec that includes "do not use [rejected approach] because [reason]."',
-          "Repeat the rejection in the same session — it'll eventually stick.",
+          "Repeat the rejection in the same session, it'll eventually stick.",
           "Accept the suggestion. The model may have found a better reason for it.",
         ],
         correct: 1,

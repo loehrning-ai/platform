@@ -108,7 +108,7 @@ export function ThresholdSim() {
       eyebrow="LIVE · SWEEP"
       title="Threshold · confusion · ROC"
       meta={`τ = ${thr.toFixed(2)}`}
-      caption="Drag τ. Dots above flip to 'predicted positive' — some are right (violet), some are false alarms (orange). The ROC curve traces every possible τ; the square is where you are now."
+      caption="Drag τ. Dots above flip to 'predicted positive', some are right (violet), some are false alarms (orange). The ROC curve traces every possible τ; the square is where you are now."
     >
       <div className="sim-row" style={{ gridTemplateColumns: "260px 1fr" }}>
         <div className="sim-controls">

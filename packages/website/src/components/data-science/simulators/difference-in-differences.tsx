@@ -101,7 +101,7 @@ export function DifferenceInDifferences() {
           </div>
           {!parallelOk && (
             <div style={{ marginTop: 8, padding: "8px 10px", borderRadius: 6, background: "rgba(255,77,162,0.08)", border: "1px solid rgba(255,77,162,0.3)", fontSize: 11, color: "var(--magenta-ink)" }}>
-              Parallel trends violated — DiD is biased by +5 pts.
+              Parallel trends violated, DiD is biased by +5 pts.
             </div>
           )}
         </div>

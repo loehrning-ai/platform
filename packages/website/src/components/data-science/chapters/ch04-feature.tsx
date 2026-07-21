@@ -30,7 +30,7 @@ export default function Ch04Feature() {
         <p className="prose">
           Every ML model ingests numbers, but your data is full of strings. How you encode a
           categorical feature changes what the model can learn. <strong>One-hot</strong> is the
-          safe default. <strong>Target encoding</strong> is the sharp knife — powerful but leaks
+          safe default. <strong>Target encoding</strong> is the sharp knife, powerful but leaks
           the label if done naively. <strong>Label encoding</strong> is almost always wrong for
           nominal categories. <strong>Frequency encoding</strong> is the underrated middle ground.
         </p>
@@ -39,7 +39,7 @@ export default function Ch04Feature() {
 
       <AntiPatterns
         items={[
-          "<b>Label encoding nominals.</b> Berlin (5) is not 5× New York (1). Breaks linear models silently — the model trains without error, just learns nonsense.",
+          "<b>Label encoding nominals.</b> Berlin (5) is not 5× New York (1). Breaks linear models silently, the model trains without error, just learns nonsense.",
           "<b>Target encoding on the full training set.</b> You are telling the model the answer. Always compute target means out-of-fold.",
           "<b>One-hotting 10,000 zip codes.</b> Dimensionality explosion. Use target or frequency encoding above ~50 categories.",
         ]}
@@ -57,7 +57,7 @@ export default function Ch04Feature() {
         <h2 className="h2">Adding x² teaches the model to bend.</h2>
         <p className="prose">
           A linear model can only draw straight lines. Adding <code>x²</code> or <code>x³</code>{" "}
-          as explicit features lets it fit curves — without changing the model at all. The
+          as explicit features lets it fit curves, without changing the model at all. The
           tradeoff is the bias-variance knife edge: too few terms and you underfit (miss the
           signal), too many and you overfit (chase the noise).
         </p>
@@ -88,7 +88,7 @@ export default function Ch04Feature() {
         items={[
           "<b>Selecting features on the full dataset before train/test split.</b> You have used future information. The selected subset will look better than it is.",
           "<b>Dropping features because they have low correlation.</b> Correlation is linear only. A feature with r=0.04 can have high mutual information (e.g. day_of_week vs. weekend_sales).",
-          "<b>Engineering 300 features then hoping LASSO handles it.</b> Add, measure, keep — one or a small batch at a time. Random noise features still occasionally survive regularization.",
+          "<b>Engineering 300 features then hoping LASSO handles it.</b> Add, measure, keep, one or a small batch at a time. Random noise features still occasionally survive regularization.",
         ]}
       />
 
@@ -98,7 +98,7 @@ export default function Ch04Feature() {
         <p className="prose">
           Interaction effects are everywhere in real data: the effect of an ad&apos;s relevance
           depends on who is seeing it. The effect of a drug depends on patient age. A linear
-          model can&apos;t capture this — the A×B term must be explicitly constructed as a new
+          model can&apos;t capture this, the A×B term must be explicitly constructed as a new
           feature. Tree models learn interactions automatically; linear models need your help.
         </p>
         <InteractionTerms />
@@ -116,9 +116,9 @@ export default function Ch04Feature() {
         items={[
           "<b>Encoding is a model choice, not a preprocessing step.</b> Target encoding with leakage is a silent bug that inflates cross-validation scores and fails in production.",
           "<b>Polynomial expansion ↔ bias-variance tradeoff.</b> Degree 1 = underfit, degree 3+ on 40 points = overfit. Always validate on held-out data.",
-          "<b>Feature selection must happen inside cross-validation.</b> Selecting features before splitting is a form of data leakage — the same kind as target encoding on the full set.",
+          "<b>Feature selection must happen inside cross-validation.</b> Selecting features before splitting is a form of data leakage, the same kind as target encoding on the full set.",
           "<b>Interaction terms encode domain knowledge.</b> You can't mine every pair at scale. Hypothesize, compute one term, measure lift, repeat.",
-          "<b>Inference parity is the hard constraint.</b> Every feature, encoding, and interaction must be computable at serve time with the data you will actually have — before the label is known.",
+          "<b>Inference parity is the hard constraint.</b> Every feature, encoding, and interaction must be computable at serve time with the data you will actually have, before the label is known.",
         ]}
       />
     </>

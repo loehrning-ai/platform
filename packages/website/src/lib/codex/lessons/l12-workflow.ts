@@ -167,7 +167,7 @@ const lesson: CodexLesson = {
         question: 'The ask is "CSV export, nightly, live by Friday." What do you do first?',
         options: [
           "Open the agent, paste Priya's message verbatim, hit run.",
-          "Decompose: (a) write the export endpoint, (b) add the nightly schedule, (c) wire up the delivery destination. Three smaller tasks — the first one is a morning's work.",
+          "Decompose: (a) write the export endpoint, (b) add the nightly schedule, (c) wire up the delivery destination. Three smaller tasks, the first one is a morning's work.",
           "Ask Priya for the exact CSV columns and ship it as one big task.",
           "Tell Priya it is not feasible this week.",
         ],
@@ -185,7 +185,7 @@ const lesson: CodexLesson = {
         cpId: "q2",
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
-        question: "Best opening for the spec of task (a) — the export endpoint?",
+        question: "Best opening for the spec of task (a), the export endpoint?",
         options: [
           '"Add a CSV export of subscriptions."',
           '"Goal: GET /admin/exports/subscriptions.csv returns all active subscriptions as CSV, streamed (not loaded into memory). Columns: id, customer_email, plan, status, current_period_end."',
@@ -254,9 +254,9 @@ const lesson: CodexLesson = {
         question: "First scan of the PR. What is the biggest concern?",
         options: [
           "The endpoint does not use streaming.",
-          "The test mocks active_subscriptions() and then asserts the response contains what the mock returned — it is testing the mock, not the behavior.",
+          "The test mocks active_subscriptions() and then asserts the response contains what the mock returned, it is testing the mock, not the behavior.",
           "The imports are in the wrong order.",
-          "Nothing — tests pass.",
+          "Nothing, tests pass.",
         ],
         correct: 1,
         explanation:
@@ -276,7 +276,7 @@ const lesson: CodexLesson = {
         options: [
           '"test is weak, please improve"',
           '"make it test the real thing"',
-          '"tests/api/admin/test_exports.py::test_export_subscriptions mocks active_subscriptions and then asserts the response contains the mock data — which proves nothing. Rewrite to: seed 3 real subscription rows in the test db (2 active, 1 canceled), hit the endpoint, assert the CSV has 2 data rows with the right emails, and the canceled one is absent."',
+          '"tests/api/admin/test_exports.py::test_export_subscriptions mocks active_subscriptions and then asserts the response contains the mock data, which proves nothing. Rewrite to: seed 3 real subscription rows in the test db (2 active, 1 canceled), hit the endpoint, assert the CSV has 2 data rows with the right emails, and the canceled one is absent."',
           '"add more tests"',
         ],
         correct: 2,
@@ -296,7 +296,7 @@ const lesson: CodexLesson = {
         question: "Before you move to task 02, what is the highest-leverage habit?",
         options: [
           "Close the PR tab and move on.",
-          '"Note the lesson learned — \\"tests that mock their own subject are a failure mode here\\" — and add a line to your agent instructions file so the next run does not repeat it."',
+          '"Note the lesson learned, \\"tests that mock their own subject are a failure mode here\\", and add a line to your agent instructions file so the next run does not repeat it."',
           "Rewrite the PR description yourself.",
           "Archive the PR in a private document.",
         ],

@@ -15,7 +15,7 @@ describe("DatasetExplorer ", () => {
 
   it("renders the real panel copy defaulting to raw (no) sampling", () => {
     render(<DatasetExplorer />);
-    expect(screen.getByText("Dataset explorer — class imbalance")).toBeInTheDocument();
+    expect(screen.getByText("Dataset explorer, class imbalance")).toBeInTheDocument();
     expect(screen.getByText(/Predict all-legit/)).toBeInTheDocument();
     expect(screen.getAllByText(/99.83% accuracy/).length).toBeGreaterThan(0);
     expect(screen.getByText(/Catches/)).toBeInTheDocument();

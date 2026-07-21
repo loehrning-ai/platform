@@ -26,8 +26,8 @@ export default function Ch08Experiment() {
           Run the test <em>before</em> you run the test.
         </h2>
         <p className="prose">
-          A single A/B run doesn&apos;t tell you much. Move the <em>true lift</em> slider to 0 —
-          watch the CI wobble around zero, never resolve. Now set it to +2pp — watch it drift
+          A single A/B run doesn&apos;t tell you much. Move the <em>true lift</em> slider to 0 ,
+          watch the CI wobble around zero, never resolve. Now set it to +2pp, watch it drift
           upward and the band finally clear zero. <strong>That is what &quot;we need more
           users&quot; means.</strong>
         </p>
@@ -38,23 +38,23 @@ export default function Ch08Experiment() {
         <SectionLabel n="08.2">The four pre-commits</SectionLabel>
         <ol className="prose" style={{ paddingLeft: 20 }}>
           <li>
-            <strong>Primary metric</strong> — one number. Declare it. Log it.
+            <strong>Primary metric</strong>, one number. Declare it. Log it.
           </li>
           <li>
-            <strong>MDE</strong> — the smallest lift you care about. Smaller MDE → huge sample
+            <strong>MDE</strong>, the smallest lift you care about. Smaller MDE → huge sample
             size.
           </li>
           <li>
-            <strong>Power</strong> — 80% is standard. Below 50% and you&apos;re gambling.
+            <strong>Power</strong>, 80% is standard. Below 50% and you&apos;re gambling.
           </li>
           <li>
-            <strong>Duration</strong> — at least 1 full week for weekly seasonality. 2 is safer.
+            <strong>Duration</strong>, at least 1 full week for weekly seasonality. 2 is safer.
           </li>
         </ol>
         <AntiPatterns
           items={[
             "<b>Peeking.</b> Checking p-values daily and stopping when significant inflates FPR to ~25% (see Ch 10).",
-            "<b>HARKing.</b> Hypothesizing after results are known — slicing until something pops.",
+            "<b>HARKing.</b> Hypothesizing after results are known, slicing until something pops.",
             "<b>Multiple comparisons without correction.</b> 20 independent metrics at α=0.05 → ~64% chance at least one is a false positive.",
           ]}
         />

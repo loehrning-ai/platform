@@ -21,21 +21,21 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Why context is everything",
         readTimeMinutes: 8,
         content:
-          "The same model, with rich context, gives expert-level answers. Without context, generic ones. The investment that compounds is the context layer — the unified, permissioned, queryable surface over all of your work artifacts.",
+          "The same model, with rich context, gives expert-level answers. Without context, generic ones. The investment that compounds is the context layer, the unified, permissioned, queryable surface over all of your work artifacts.",
       },
       {
         id: "s2",
         title: "What to include",
         readTimeMinutes: 8,
         content:
-          "Docs (Confluence, Notion, Drive). Code (Git). Tickets (Jira, Linear). Conversations (Slack, email — with care). Calendars. CRMs. The agent should see the same surface a thoughtful new hire would, after their first month — but on day one.",
+          "Docs (Confluence, Notion, Drive). Code (Git). Tickets (Jira, Linear). Conversations (Slack, email, with care). Calendars. CRMs. The agent should see the same surface a thoughtful new hire would, after their first month, but on day one.",
       },
       {
         id: "s3",
         title: "The build",
         readTimeMinutes: 8,
         content:
-          "Most teams should not build the context layer from scratch. Use MCP-compatible connectors. Standardize on identity and permissions. Invest in the index quality and the freshness — the quality of agent answers is downstream.",
+          "Most teams should not build the context layer from scratch. Use MCP-compatible connectors. Standardize on identity and permissions. Invest in the index quality and the freshness, the quality of agent answers is downstream.",
       },
     ],
     callout: {
@@ -67,8 +67,8 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
     number: 2,
     kind: "reading",
     title: "Permission-aware retrieval",
-    subtitle: "Make the agent see exactly what the user sees — nothing more, nothing less.",
-    objective: "Make the agent see exactly what the user sees — nothing more, nothing less.",
+    subtitle: "Make the agent see exactly what the user sees, nothing more, nothing less.",
+    objective: "Make the agent see exactly what the user sees, nothing more, nothing less.",
     durationMinutes: 20,
     keyConcepts: [],
     quiz: [],
@@ -78,14 +78,14 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "The leak that ends the program",
         readTimeMinutes: 7,
         content:
-          "A single incident — agent returns a doc the user shouldn't see, agent leaks a customer record — sets the program back two years. Permission-aware retrieval is the discipline that prevents this.",
+          "A single incident, agent returns a doc the user shouldn't see, agent leaks a customer record, sets the program back two years. Permission-aware retrieval is the discipline that prevents this.",
       },
       {
         id: "s2",
         title: "How it works",
         readTimeMinutes: 7,
         content:
-          'The agent inherits the calling user\'s identity. Every retrieval is filtered by the user\'s ACLs. The index stores ACLs alongside the content. There is no "agent identity" with elevated access — the agent is always acting on behalf of a specific user, with that user\'s permissions.',
+          'The agent inherits the calling user\'s identity. Every retrieval is filtered by the user\'s ACLs. The index stores ACLs alongside the content. There is no "agent identity" with elevated access, the agent is always acting on behalf of a specific user, with that user\'s permissions.',
       },
       {
         id: "s3",
@@ -118,9 +118,9 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
     number: 3,
     kind: "reading",
     title: "Live knowledge graphs",
-    subtitle: "Move from snapshot indexes to live, governed knowledge — agents working with fresh context.",
+    subtitle: "Move from snapshot indexes to live, governed knowledge, agents working with fresh context.",
     objective:
-      "Move from snapshot indexes to live, governed knowledge — agents working with fresh context.",
+      "Move from snapshot indexes to live, governed knowledge, agents working with fresh context.",
     durationMinutes: 22,
     keyConcepts: [],
     quiz: [],
@@ -137,7 +137,7 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "The investment that pays",
         readTimeMinutes: 11,
         content:
-          "Streaming change events into the index. Per-source freshness SLAs. Stale-data detection — the agent should know when it's working with stale context and warn the user.",
+          "Streaming change events into the index. Per-source freshness SLAs. Stale-data detection, the agent should know when it's working with stale context and warn the user.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -162,7 +162,7 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Module 7 — knowledge check",
+    title: "Module 7, knowledge check",
     subtitle: "Confirm context discipline.",
     objective: "Confirm context discipline.",
     durationMinutes: 9,
@@ -199,7 +199,7 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
           { id: "d", text: "They miss new files.", isCorrect: false },
         ],
         explanation:
-          "Nightly snapshots are dangerous for agentic workflows specifically because the agent reasons from yesterday's state but acts in today's reality — a deleted record, a changed price, a closed ticket won't show up until the next sync, and the agent will confidently act on stale facts. Build cost and storage are real concerns but not the reason this pattern is called out as dangerous.",
+          "Nightly snapshots are dangerous for agentic workflows specifically because the agent reasons from yesterday's state but acts in today's reality, a deleted record, a changed price, a closed ticket won't show up until the next sync, and the agent will confidently act on stale facts. Build cost and storage are real concerns but not the reason this pattern is called out as dangerous.",
       },
     ],
     sections: [],

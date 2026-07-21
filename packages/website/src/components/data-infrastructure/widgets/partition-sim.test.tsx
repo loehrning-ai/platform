@@ -50,7 +50,7 @@ describe("PartitionSim", () => {
     render(<PartitionSim lessonId="di-partitioning" cpId="part" />);
     fireEvent.change(screen.getByLabelText("Partition strategy"), { target: { value: "country" } });
     expect(screen.getByText("⚠ US 62%")).toBeInTheDocument();
-    expect(screen.getByText(/no prune — also: heavy US skew/)).toBeInTheDocument();
+    expect(screen.getByText(/no prune, also: heavy US skew/)).toBeInTheDocument();
   });
 
   it("falls back to a static summary, without crashing, when getContext('2d') returns null", () => {

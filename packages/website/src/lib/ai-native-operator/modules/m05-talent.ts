@@ -29,14 +29,14 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "What to test instead",
         readTimeMinutes: 7,
         content:
-          "Give the candidate a real problem, real tools, real time — 60 minutes, an agent IDE, a representative codebase. Ask them to ship something small and real. Watch how they direct, review, and decide. Watch what they choose NOT to delegate. Watch how they verify.",
+          "Give the candidate a real problem, real tools, real time, 60 minutes, an agent IDE, a representative codebase. Ask them to ship something small and real. Watch how they direct, review, and decide. Watch what they choose NOT to delegate. Watch how they verify.",
       },
       {
         id: "s3",
         title: "The rubric",
         readTimeMinutes: 6,
         content:
-          "Score on five dimensions: spec quality, agent direction, judgment in review, calibrated trust, and final quality. The best candidates are not the fastest — they are the ones who consistently produce the right outcome with the least keystroke effort.",
+          "Score on five dimensions: spec quality, agent direction, judgment in review, calibrated trust, and final quality. The best candidates are not the fastest, they are the ones who consistently produce the right outcome with the least keystroke effort.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -73,7 +73,7 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "A four-level rubric",
         readTimeMinutes: 6,
         content:
-          "L1 — uses AI for occasional tasks. L2 — AI is the default first draft. L3 — runs agent fleets, builds evals, ships at 3-5x velocity. L4 — designs agentic systems for the team or company; sets the standard. The senior IC bar should sit at L3+; the staff/principal bar at L4.",
+          "L1, uses AI for occasional tasks. L2, AI is the default first draft. L3, runs agent fleets, builds evals, ships at 3-5x velocity. L4, designs agentic systems for the team or company; sets the standard. The senior IC bar should sit at L3+; the staff/principal bar at L4.",
       },
       {
         id: "s2",
@@ -87,7 +87,7 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "The brutal truth about senior ICs",
         readTimeMinutes: 6,
         content:
-          "Some of your best 2024 engineers will not make L3 in 2026. Their craft was real but their adaptation is slow. Have the conversation early. Coach. If they cannot move, they will be passed by their juniors — and the worst outcome is them finding out via a comp letter.",
+          "Some of your best 2024 engineers will not make L3 in 2026. Their craft was real but their adaptation is slow. Have the conversation early. Coach. If they cannot move, they will be passed by their juniors, and the worst outcome is them finding out via a comp letter.",
       },
     ],
     exerciseKind: "slot-fill",
@@ -101,12 +101,12 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "AI Fluency Ladder",
           scenario:
-            "Draft the L1–L4 AI fluency rubric for your role family. Two sentences per level, plus an example artifact someone at that level would produce.",
+            "Draft the L1-L4 AI fluency rubric for your role family. Two sentences per level, plus an example artifact someone at that level would produce.",
           placeholders: [
-            "L1 — uses AI for occasional tasks",
-            "L2 — AI is default first draft",
-            "L3 — runs agent fleets, builds evals",
-            "L4 — designs systems for the team",
+            "L1, uses AI for occasional tasks",
+            "L2, AI is default first draft",
+            "L3, runs agent fleets, builds evals",
+            "L4, designs systems for the team",
           ],
         },
       },
@@ -144,13 +144,13 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "The hard part",
         readTimeMinutes: 7,
         content:
-          "Measurement. AI leverage is real but slippery. Use a small set of outcome metrics — cycle time, defect rate, throughput — and trust the trend. Avoid metrics that game easily. Calibrate by manager + skip-level review.",
+          "Measurement. AI leverage is real but slippery. Use a small set of outcome metrics, cycle time, defect rate, throughput, and trust the trend. Avoid metrics that game easily. Calibrate by manager + skip-level review.",
       },
     ],
     callout: {
       kind: "warn",
       h: "A failure mode to avoid",
-      text: 'Do not measure "AI usage" — number of prompts, tokens used, agents spawned. These metrics game instantly and tell you nothing. Measure outcomes. Outcomes are harder to define, harder to game, and the only thing that matters.',
+      text: 'Do not measure "AI usage", number of prompts, tokens used, agents spawned. These metrics game instantly and tell you nothing. Measure outcomes. Outcomes are harder to define, harder to game, and the only thing that matters.',
     },
     exerciseKind: "reflect-box",
     widgets: [
@@ -175,7 +175,7 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Module 5 — knowledge check",
+    title: "Module 5, knowledge check",
     subtitle: "Lock the talent shifts.",
     objective: "Lock the talent shifts.",
     durationMinutes: 8,
@@ -195,7 +195,7 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           { id: "d", text: "Years of experience.", isCorrect: false },
         ],
         explanation:
-          "A live-build interview is designed to surface exactly the skills that matter in AI-native work: how well the candidate specs the problem, directs the agent, judges the output in review, calibrates trust, and lands at a correct final result — not how fast they type or whether they can invert a binary tree from memory.",
+          "A live-build interview is designed to surface exactly the skills that matter in AI-native work: how well the candidate specs the problem, directs the agent, judges the output in review, calibrates trust, and lands at a correct final result, not how fast they type or whether they can invert a binary tree from memory.",
       },
       {
         id: "ano-talent-q2",

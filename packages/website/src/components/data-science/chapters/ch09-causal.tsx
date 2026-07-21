@@ -31,7 +31,7 @@ export default function Ch09Causal() {
           The correlation that <em>looks</em> causal.
         </h2>
         <p className="prose">
-          Ice cream sales and drowning deaths are correlated at r ≈ 0.85 — yet nobody believes ice
+          Ice cream sales and drowning deaths are correlated at r ≈ 0.85, yet nobody believes ice
           cream causes drowning. The driver is temperature: hot weather increases both. Stratify by
           temperature and each group&apos;s correlation collapses toward zero. This is the
           confounder in action.
@@ -46,7 +46,7 @@ export default function Ch09Causal() {
         </h2>
         <p className="prose">
           A Directed Acyclic Graph (DAG) is a causal model. Every node is a variable; every arrow is
-          a direct causal claim. The structure tells you which variables to adjust for — and which
+          a direct causal claim. The structure tells you which variables to adjust for, and which
           to leave out. The four structural patterns cover almost every mistake you&apos;ll
           encounter.
         </p>
@@ -95,7 +95,7 @@ export default function Ch09Causal() {
 
       <AntiPatterns
         items={[
-          "<b>Controlling for a collider.</b> Opens a fake correlation between its parents — selection bias in disguise.",
+          "<b>Controlling for a collider.</b> Opens a fake correlation between its parents, selection bias in disguise.",
           "<b>Controlling for a mediator.</b> Zeros out the very effect you're trying to measure.",
           "<b>Regressing on everything.</b> More controls ≠ better estimate. The DAG determines the adjustment set.",
           "<b>Using a weak instrument.</b> F-stat < 10 means IV estimates inherit OLS bias while adding variance.",
@@ -104,7 +104,7 @@ export default function Ch09Causal() {
       />
       <BestPractices
         items={[
-          "<b>Draw the DAG first.</b> On paper, before any code. Share it with domain experts — they'll spot wrong arrows.",
+          "<b>Draw the DAG first.</b> On paper, before any code. Share it with domain experts, they'll spot wrong arrows.",
           "<b>Use the backdoor criterion.</b> Find the minimal adjustment set that blocks all non-causal paths.",
           "<b>Test pre-period trends for DiD.</b> If control and treated diverge before treatment, the design is invalid.",
           "<b>Always report the first-stage F-stat for IV.</b> Rule of thumb: F > 10 means the instrument is relevant.",
@@ -113,7 +113,7 @@ export default function Ch09Causal() {
       />
       <Takeaway
         items={[
-          "<b>Draw the DAG before the regression.</b> The DAG tells you what to include — not stepwise selection, not VIF.",
+          "<b>Draw the DAG before the regression.</b> The DAG tells you what to include, not stepwise selection, not VIF.",
           `<b>"Controlling for X" is not harmless.</b> It depends entirely on X's structural role.`,
           "<b>Causal inference from observational data requires strong assumptions.</b> State them. Defend them.",
           "<b>When in doubt, run an experiment.</b> All quasi-experimental methods are second-best to randomisation.",

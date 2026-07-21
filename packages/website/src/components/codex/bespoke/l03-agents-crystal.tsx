@@ -58,7 +58,7 @@ function applyConvention(preview: PrPreview, id: Convention["id"]): PrPreview {
     case "branch":
       return { ...preview, branch: "feat codex-refactor-auth" };
     case "review":
-      return { ...preview, title: "feat: auth — tighten rate-limit and error boundaries" };
+      return { ...preview, title: "feat: auth, tighten rate-limit and error boundaries" };
   }
 }
 

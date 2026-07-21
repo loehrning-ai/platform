@@ -12,7 +12,7 @@ interface ChecklistItem {
 const CHECKLIST_ITEMS: readonly ChecklistItem[] = [
   { id: "model_card", label: "Model card written", desc: "Document intended use, limitations, training data, and known failure modes." },
   { id: "fairness", label: "Fairness audit done", desc: "Check fraud flag rates across demographic segments. Disparate impact threshold: 0.8 ratio." },
-  { id: "drift", label: "Feature drift monitoring set up", desc: "PSI or KS test on V1–V28 distributions weekly. Alert at PSI > 0.2." },
+  { id: "drift", label: "Feature drift monitoring set up", desc: "PSI or KS test on V1-V28 distributions weekly. Alert at PSI > 0.2." },
   { id: "champion", label: "Champion/challenger pipeline", desc: "New model trained in shadow; replaces champion only if PR-AUC lifts by ≥ 0.5pp." },
   { id: "rollback", label: "Rollback plan documented", desc: "One-command revert to prior model version. Test it in staging before going live." },
   { id: "sla", label: "SLA defined", desc: "Scoring latency p99 < 50ms. Batch inference: 100k txns in < 2 minutes." },
@@ -46,7 +46,7 @@ export function PostDeployChecklist() {
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
           <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--ink-3)" }}>Readiness</span>
           <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: barColor, fontWeight: 700 }}>
-            {pct}%{pct === 100 ? " — ship it." : ""}
+            {pct}%{pct === 100 ? ", ship it." : ""}
           </span>
         </div>
         <div style={{ height: 6, background: "var(--bg-hi)", borderRadius: 3 }}>

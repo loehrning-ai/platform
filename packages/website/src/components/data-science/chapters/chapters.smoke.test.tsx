@@ -129,7 +129,7 @@ describe("data-science chapter components render with real ported content, not p
     expect(screen.getAllByText(/lie/).length).toBeGreaterThan(0);
     expect(screen.getAllByText("Peeking False-Positive Inflator").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Multiple Testing & FWER").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("CUPED — Variance Reduction via Covariates").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("CUPED, Variance Reduction via Covariates").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Statistical Power").length).toBeGreaterThan(0);
     expect(screen.getByText("Key takeaways")).toBeInTheDocument();
   });
@@ -149,9 +149,9 @@ describe("data-science chapter components render with real ported content, not p
   it("Ch12Capstone renders the real hero, all 4 simulators, and the closing CTA", () => {
     render(<Ch12Capstone />);
     expect(screen.getByText(/the full DS loop/)).toBeInTheDocument();
-    expect(screen.getAllByText("Dataset explorer — class imbalance").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("ML pipeline — step-by-step").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Precision–recall tradeoff").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Dataset explorer, class imbalance").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("ML pipeline, step-by-step").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Precision-recall tradeoff").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Production readiness checklist").length).toBeGreaterThan(0);
     expect(screen.getByText("Key takeaways")).toBeInTheDocument();
     expect(screen.getByText("You've reached the end.")).toBeInTheDocument();

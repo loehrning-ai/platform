@@ -42,9 +42,9 @@ describe("CapTriangle", () => {
   it("renders the canvas and all three pick buttons plus the split toggle", () => {
     render(<CapTriangle lessonId="di-cap-pacelc" cpId="cap" />);
     expect(screen.getByRole("img", { name: /Interactive CAP theorem triangle/ })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /CP —/ })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /AP —/ })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /CA —/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /CP,/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /AP,/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /CA,/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /inject network split/ })).toBeInTheDocument();
   });
 
@@ -72,14 +72,14 @@ describe("CapTriangle", () => {
     render(<CapTriangle lessonId="di-cap-pacelc" cpId="cap" />);
     expect(isCheckpointDone("di-cap-pacelc", "cap")).toBe(false);
     act(() => {
-      fireEvent.click(screen.getByRole("button", { name: /CP —/ }));
+      fireEvent.click(screen.getByRole("button", { name: /CP,/ }));
     });
     expect(isCheckpointDone("di-cap-pacelc", "cap")).toBe(false);
     act(() => {
-      fireEvent.click(screen.getByRole("button", { name: /AP —/ }));
+      fireEvent.click(screen.getByRole("button", { name: /AP,/ }));
     });
     expect(isCheckpointDone("di-cap-pacelc", "cap")).toBe(true);
     expect(getXp()).toBe(XP.CHECKPOINT);
-    expect(screen.getByText(/AP — both sides keep serving/)).toBeInTheDocument();
+    expect(screen.getByText(/AP, both sides keep serving/)).toBeInTheDocument();
   });
 });

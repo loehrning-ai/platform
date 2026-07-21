@@ -124,7 +124,7 @@ export function BloomFilter({ lessonId, cpId }: BloomFilterProps): JSX.Element {
   return (
     <div className="border-2 border-border bg-card/40 p-5 md:p-6">
       <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        Sim · Bloom filter — fast &quot;definitely no&quot; checks {done ? "✓" : ""}
+        Sim · Bloom filter, fast &quot;definitely no&quot; checks {done ? "✓" : ""}
       </p>
 
       {contextUnavailable ? (
@@ -189,7 +189,7 @@ export function BloomFilter({ lessonId, cpId }: BloomFilterProps): JSX.Element {
           <>
             Try adding a few keys and then checking new ones. Bloom can say{" "}
             <b className="text-[#3f8264]">&quot;definitely no&quot;</b> instantly, or{" "}
-            <b className="text-brand-orange">&quot;maybe&quot;</b> — never a false negative, only false positives.
+            <b className="text-brand-orange">&quot;maybe&quot;</b>, never a false negative, only false positives.
           </>
         )}
         {outcome?.kind === "add" && (
@@ -199,7 +199,7 @@ export function BloomFilter({ lessonId, cpId }: BloomFilterProps): JSX.Element {
         )}
         {outcome?.kind === "maybe" && (
           <>
-            <b className="text-brand-orange">&quot;maybe&quot;</b> · all 3 bits set. Real hit or false positive — go check
+            <b className="text-brand-orange">&quot;maybe&quot;</b> · all 3 bits set. Real hit or false positive, go check
             the actual file.
           </>
         )}

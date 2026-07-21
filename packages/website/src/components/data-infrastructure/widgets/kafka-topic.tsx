@@ -338,7 +338,7 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
                   >
                     <div className="font-semibold text-foreground">c{c}</div>
                     <div className="text-muted-foreground">{isDead ? "dead" : `p${assigned.join(",p")}`}</div>
-                    <div className="text-muted-foreground">{isDead ? "—" : `${lag} lag`}</div>
+                    <div className="text-muted-foreground">{isDead ? "," : `${lag} lag`}</div>
                   </div>
                 );
               })}

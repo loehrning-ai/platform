@@ -13,7 +13,7 @@ export default function Ch06Evaluate() {
       <Hero
         eyebrow="Chapter 06 · Evaluate"
         title='Pick the metric <em>before</em> <span class="accent">you pick the model.</span>'
-        hook="Accuracy is lazy. For fraud, cancer, churn, ads — <strong>precision, recall, or F1</strong>. Understand the tradeoff viscerally by sliding τ."
+        hook="Accuracy is lazy. For fraud, cancer, churn, ads, <strong>precision, recall, or F1</strong>. Understand the tradeoff viscerally by sliding τ."
         meta={[
           { k: "Read", v: "8 min" },
           { k: "Focus", v: "Confusion · ROC · PR" },
@@ -28,7 +28,7 @@ export default function Ch06Evaluate() {
         </h2>
         <p className="prose">
           Every classifier&apos;s output can be broken into four boxes: TP, FP, FN, TN. Every real
-          metric — precision, recall, F1, ROC-AUC — is a ratio of these four.
+          metric, precision, recall, F1, ROC-AUC, is a ratio of these four.
         </p>
         <ThresholdSim />
       </section>

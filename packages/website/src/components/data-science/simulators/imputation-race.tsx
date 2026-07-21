@@ -125,7 +125,7 @@ export function ImputationRace() {
           </div>
           <div className="galton-note">
             <span className="tag-pill">Tip</span>
-            KNN tracks the linear trend. Mean/median ignore it — notice the flat cluster of yellow
+            KNN tracks the linear trend. Mean/median ignore it, notice the flat cluster of yellow
             dots.
           </div>
         </div>

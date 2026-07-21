@@ -80,7 +80,7 @@ export function MatrixGridWidget({
                         type="button"
                         role="radio"
                         aria-checked={active}
-                        aria-label={`${row} — ${col}`}
+                        aria-label={`${row}, ${col}`}
                         onClick={() => pick(row, colIndex)}
                         className={cn(
                           "inline-flex h-7 w-7 items-center justify-center rounded-full border-2 transition-colors",

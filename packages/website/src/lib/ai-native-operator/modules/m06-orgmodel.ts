@@ -20,7 +20,7 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "The shape that wins",
         readTimeMinutes: 7,
         content:
-          "The classical 30-person product team — PM, designer, eng, data, ops, marketing, support — is over for most surfaces. Two to four humans plus a fleet of agents will own a full product surface. The handoff chain compresses to nearly nothing. Decisions move in hours, not quarters.",
+          "The classical 30-person product team, PM, designer, eng, data, ops, marketing, support, is over for most surfaces. Two to four humans plus a fleet of agents will own a full product surface. The handoff chain compresses to nearly nothing. Decisions move in hours, not quarters.",
       },
       {
         id: "s2",
@@ -34,7 +34,7 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "When the cap is wrong",
         readTimeMinutes: 6,
         content:
-          "Some surfaces still require larger teams — physical product, regulated industries, deeply specialized domains. Be honest about which is which. The cap is a default, not a dogma.",
+          "Some surfaces still require larger teams, physical product, regulated industries, deeply specialized domains. Be honest about which is which. The cap is a default, not a dogma.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -81,7 +81,7 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "When specialists still matter",
         readTimeMinutes: 9,
         content:
-          "For genuinely deep, novel work — frontier research, regulatory design, architecture-defining decisions. Treat specialists as advisors and reviewers, not owners of execution. They scale through their judgment, not their hours.",
+          "For genuinely deep, novel work, frontier research, regulatory design, architecture-defining decisions. Treat specialists as advisors and reviewers, not owners of execution. They scale through their judgment, not their hours.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -125,7 +125,7 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "The two-approver default",
         readTimeMinutes: 7,
         content:
-          "For most decisions, two humans are enough: the directly responsible owner and one accountable senior. Both get a full agent-prepared briefing — risks, options, recommended path. They decide in minutes.",
+          "For most decisions, two humans are enough: the directly responsible owner and one accountable senior. Both get a full agent-prepared briefing, risks, options, recommended path. They decide in minutes.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -150,7 +150,7 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Module 6 — knowledge check",
+    title: "Module 6, knowledge check",
     subtitle: "Org primitives, locked.",
     objective: "Org primitives, locked.",
     durationMinutes: 8,
@@ -178,7 +178,7 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
           { id: "d", text: "Eliminated entirely.", isCorrect: false },
         ],
         explanation:
-          "In an AI-native org, specialists earn their leverage as advisors and reviewers whose judgment scales across many decisions, not as the sole owners of hands-on execution — that work increasingly routes through generalists wielding agents. Treating specialists as bottlenecked individual executors wastes the part of their value that actually compounds.",
+          "In an AI-native org, specialists earn their leverage as advisors and reviewers whose judgment scales across many decisions, not as the sole owners of hands-on execution, that work increasingly routes through generalists wielding agents. Treating specialists as bottlenecked individual executors wastes the part of their value that actually compounds.",
       },
     ],
     sections: [],

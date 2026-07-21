@@ -8,7 +8,7 @@ const lesson: CodexLesson = {
   number: 9,
   title: "The AI Tools Ecosystem",
   subtitle:
-    "Claude Code, Copilot, Cursor, Aider, Cline — each solves a different slice of the problem. Picking the wrong one for a job is expensive. Picking the right one is a force multiplier.",
+    "Claude Code, Copilot, Cursor, Aider, Cline, each solves a different slice of the problem. Picking the wrong one for a job is expensive. Picking the right one is a force multiplier.",
   durationMinutes: 11,
   trackId: "in-the-loop",
   hook: "Know the landscape.",
@@ -89,7 +89,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "MCP stands for Model Context Protocol, a standard for connecting AI agents to external tools, data sources, and services. Think of it as a plugin system for your agent.\n\nWithout MCP, an agent can only see your local filesystem and run shell commands. With MCP, it can query a database, search the web, create GitHub issues, read Slack threads, or call any API, all through a standard interface the agent already knows how to use.\n\nThe architecture is simple:\n\n```\n# How MCP works (conceptually)\n\n# 1. You configure MCP servers in your agent's config\n#    (e.g. ~/.claude/settings.json for Claude Code)\n\n# 2. Each server exposes \"tools\" — named functions the agent can call\n#    e.g. mcp__github__create_issue({ title, body, labels })\n#         mcp__postgres__query({ sql })\n#         mcp__slack__send_message({ channel, text })\n\n# 3. The agent decides when to call them, just like any other tool\n#    You don't have to orchestrate the calls manually\n\n# Example: Claude Code with GitHub and Postgres MCP servers\n# Agent can now: read the DB schema, open a GitHub issue,\n# and commit a migration — all in one session\n```\n\nSupported by: Claude Code, Cline, Cursor (via extensions), and a growing list of other agents. MCP servers exist for GitHub, GitLab, Postgres, Supabase, Stripe, Slack, Google Drive, Jira, Linear, and dozens more. You can also write custom MCP servers for your internal tools.\n\nThe practical upside: your agent can participate in your full toolchain, not just your local filesystem. A task that previously required manual steps (\"run the query, paste the result into the prompt\") becomes a single agent-handled loop.",
+            "MCP stands for Model Context Protocol, a standard for connecting AI agents to external tools, data sources, and services. Think of it as a plugin system for your agent.\n\nWithout MCP, an agent can only see your local filesystem and run shell commands. With MCP, it can query a database, search the web, create GitHub issues, read Slack threads, or call any API, all through a standard interface the agent already knows how to use.\n\nThe architecture is simple:\n\n```\n# How MCP works (conceptually)\n\n# 1. You configure MCP servers in your agent's config\n#    (e.g. ~/.claude/settings.json for Claude Code)\n\n# 2. Each server exposes \"tools\", named functions the agent can call\n#    e.g. mcp__github__create_issue({ title, body, labels })\n#         mcp__postgres__query({ sql })\n#         mcp__slack__send_message({ channel, text })\n\n# 3. The agent decides when to call them, just like any other tool\n#    You don't have to orchestrate the calls manually\n\n# Example: Claude Code with GitHub and Postgres MCP servers\n# Agent can now: read the DB schema, open a GitHub issue,\n# and commit a migration, all in one session\n```\n\nSupported by: Claude Code, Cline, Cursor (via extensions), and a growing list of other agents. MCP servers exist for GitHub, GitLab, Postgres, Supabase, Stripe, Slack, Google Drive, Jira, Linear, and dozens more. You can also write custom MCP servers for your internal tools.\n\nThe practical upside: your agent can participate in your full toolchain, not just your local filesystem. A task that previously required manual steps (\"run the query, paste the result into the prompt\") becomes a single agent-handled loop.",
         },
       ],
     },
@@ -141,10 +141,10 @@ const lesson: CodexLesson = {
         question:
           "You need to explore an unfamiliar 80k-line codebase and understand how the authentication flow works before making any changes. Which tool fits best?",
         options: [
-          "GitHub Copilot — it's always on and knows your code.",
-          "Cursor or Cline — IDE-native agents with whole-codebase chat let you ask questions and explore interactively before touching anything.",
-          'Codex — submit a task: "explain the auth flow."',
-          "Aider — open-source and model-agnostic.",
+          "GitHub Copilot, it's always on and knows your code.",
+          "Cursor or Cline, IDE-native agents with whole-codebase chat let you ask questions and explore interactively before touching anything.",
+          'Codex, submit a task: "explain the auth flow."',
+          "Aider, open-source and model-agnostic.",
         ],
         correct: 1,
         explanation:

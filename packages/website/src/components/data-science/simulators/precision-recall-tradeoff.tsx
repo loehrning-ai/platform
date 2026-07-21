@@ -51,7 +51,7 @@ export function PrecisionRecallTradeoff() {
   return (
     <Panel
       eyebrow="SIMULATOR"
-      title="Precision–recall tradeoff"
+      title="Precision-recall tradeoff"
       meta={`Threshold: ${threshold.toFixed(2)} · F1: ${round(current.f1, 3)}`}
       caption="In fraud detection, a missed fraud costs far more than a false alarm. Choose your threshold based on business costs, not just F1."
     >
@@ -181,7 +181,7 @@ export function PrecisionRecallTradeoff() {
             )}
             {threshold > 0.45 && (
               <>
-                <strong style={{ color: "var(--mint-ink)" }}>High threshold:</strong> Very precise — catches only the most obvious fraud.
+                <strong style={{ color: "var(--mint-ink)" }}>High threshold:</strong> Very precise, catches only the most obvious fraud.
                 Misses edge cases.
               </>
             )}

@@ -23,7 +23,7 @@ export default async function DataInfrastructureKursIndexPage() {
         Four tracks. Twelve lessons.
       </h1>
       <p className="mt-3 max-w-[600px] text-[16px] leading-[1.5] text-muted-foreground">
-        Storage internals, streaming semantics, lakehouse formats, and the operational craft — built around
+        Storage internals, streaming semantics, lakehouse formats, and the operational craft, built around
         interactive simulators of every concept that's usually drawn on a whiteboard.
       </p>
 

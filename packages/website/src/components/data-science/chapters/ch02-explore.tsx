@@ -14,7 +14,7 @@ export default function Ch02Explore() {
     <div className="chapter-root">
       <Hero
         eyebrow="Chapter 02"
-        title="Exploratory Data Analysis — <em>look before you leap.</em>"
+        title="Exploratory Data Analysis, <em>look before you leap.</em>"
         hook="Thirty minutes of plots save thirty days of debugging. Before a single <code>.fit()</code>, answer: what shape, what outliers, what correlations? This chapter is the checklist."
         meta={[
           { k: "Topics", v: "Distributions · Outliers · Correlations" },
@@ -26,21 +26,21 @@ export default function Ch02Explore() {
 
       <SectionLabel n="01">Distribution Shapes</SectionLabel>
       <p className="prose">
-        The histogram is the first thing you draw on any new dataset — not a mean, not a scatter
+        The histogram is the first thing you draw on any new dataset, not a mean, not a scatter
         plot. A histogram tells you at a glance whether your data is roughly bell-shaped (safe to
         use parametric tests), skewed (log-transform candidate), bimodal (hidden
         sub-populations?), or uniform (likely a synthetic key, not a real measurement).
       </p>
       <p className="prose">
         <strong>Skewness</strong> measures asymmetry. Positive skew (long right tail) pushes the
-        mean above the median — classic for income, latency, claim sizes.
+        mean above the median, classic for income, latency, claim sizes.
         <strong> Kurtosis</strong> (excess) measures tail weight. Heavy-tailed distributions
         (kurtosis &gt; 0) produce more extreme events than a normal, which matters for risk and
         anomaly detection. Change N to see how estimation stabilises with more data.
       </p>
       <DistributionExplorer />
       <BestPractices
-        title="Best practices — distributions"
+        title="Best practices, distributions"
         items={[
           "<b>Always plot a histogram before computing statistics.</b> Summary stats can be identical for wildly different distributions (Anscombe's Quartet is the classic proof).",
           "<b>If skewness &gt; 1, consider log-transforming</b> before fitting linear models or computing Pearson r.",
@@ -51,14 +51,14 @@ export default function Ch02Explore() {
 
       <SectionLabel n="02">Outlier Detection</SectionLabel>
       <p className="prose">
-        Outliers are not bugs — they are signals. A transaction 50× the typical value could be
+        Outliers are not bugs, they are signals. A transaction 50× the typical value could be
         fraud, a test-account flush, or a genuine whale customer. The right move is to detect,
         investigate, and then decide: remove, cap (winsorise), or model separately. Never silently
         drop outliers without documenting why.
       </p>
       <p className="prose">
         Three detection strategies dominate in practice.
-        <strong> Z-score</strong> (threshold = 3σ) is fast but assumes normality — it collapses on
+        <strong> Z-score</strong> (threshold = 3σ) is fast but assumes normality, it collapses on
         heavily skewed data.
         <strong> IQR fences</strong> (Tukey, 1.5 × IQR) are distribution-free and robust to skew.
         They are the default in most box-plot implementations.
@@ -81,12 +81,12 @@ export default function Ch02Explore() {
         A correlation matrix gives you a bird&apos;s-eye view of linear relationships across all
         feature pairs. It answers: which features move together, which are independent, and
         which might be proxies for the same underlying cause. This matters for feature selection
-        (collinear features add noise) and for understanding the domain (high income–satisfaction
+        (collinear features add noise) and for understanding the domain (high income-satisfaction
         correlation hints at a mechanism worth investigating).
       </p>
       <p className="prose">
         Drag the <strong>noise slider</strong> to simulate measurement noise or a smaller
-        effective sample. Watch Pearson r decay toward 0 — this is the attenuation bias that
+        effective sample. Watch Pearson r decay toward 0, this is the attenuation bias that
         plagues survey data, wearable sensors, and self-reported measurements. Correcting for
         attenuation (disattenuation) is an underused technique in applied ML.
       </p>
@@ -97,13 +97,13 @@ export default function Ch02Explore() {
           "<b>Equating high correlation with causation.</b> Spurious correlates are everywhere. Always ask: is there a common cause? (Ch 09 covers causal graphs.)",
           "<b>Computing Pearson r on non-linear relationships.</b> Two variables with a perfect U-shape have r ≈ 0. Use Spearman rank correlation or mutual information instead.",
           "<b>Ignoring multicollinearity.</b> Two features with r = 0.95 carry almost the same information. Keeping both inflates variance in linear models and makes coefficients unstable.",
-          "<b>Reading a correlation matrix and skipping the scatter plots.</b> Always spot-check the highest correlations visually — outliers can manufacture or destroy Pearson r.",
+          "<b>Reading a correlation matrix and skipping the scatter plots.</b> Always spot-check the highest correlations visually, outliers can manufacture or destroy Pearson r.",
         ]}
       />
       <BestPractices
-        title="Best practices — correlations"
+        title="Best practices, correlations"
         items={[
-          "<b>Plot the correlation matrix as a heatmap</b> — not a table of numbers. The visual makes high/low clusters obvious at a glance.",
+          "<b>Plot the correlation matrix as a heatmap</b>, not a table of numbers. The visual makes high/low clusters obvious at a glance.",
           "<b>For non-normal or ordinal data, use Spearman's ρ</b> instead of Pearson r.",
           "<b>After finding strong correlations, cluster features</b> (hierarchical clustering on the distance matrix 1−|r|) to reveal groups of redundant predictors.",
           "<b>Check the target variable last.</b> Strong correlation with the target is useful; strong correlation between two features you plan to use together is a red flag.",
@@ -112,10 +112,10 @@ export default function Ch02Explore() {
 
       <Takeaway
         items={[
-          "<b>Histogram first, stats second.</b> Mean and variance are summaries of a shape you haven't seen yet — look at the shape first.",
+          "<b>Histogram first, stats second.</b> Mean and variance are summaries of a shape you haven't seen yet, look at the shape first.",
           "<b>Outliers are signals, not noise.</b> Detect with Z-score for normal data, IQR for skewed data, and Isolation Forest for high-dimensional data. Then investigate before deleting.",
           "<b>Correlation r measures linear association only.</b> Always complement with scatter plots and consider Spearman for ordinal or non-normal data.",
-          "<b>Noise attenuates correlations.</b> Measurement error biases r toward zero — the true relationship is stronger than your matrix suggests.",
+          "<b>Noise attenuates correlations.</b> Measurement error biases r toward zero, the true relationship is stronger than your matrix suggests.",
           "<b>EDA is a checklist, not a one-time event.</b> Rerun it after every data join, imputation step, or feature engineering pass. New transformations create new distributions.",
         ]}
       />

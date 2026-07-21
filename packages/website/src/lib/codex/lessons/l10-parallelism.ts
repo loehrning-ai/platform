@@ -39,7 +39,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "When running multiple local AI agents simultaneously (Claude Code, Cursor, Aider), the usual pattern is to open multiple terminal tabs, each on a different branch. The problem: each agent's edits bleed into the others because they all share the same working directory.\n\n**Git worktrees** solve this. A worktree is a second (or third, or tenth) checkout of your repo, each pointing to a different branch, each with its own working directory on disk. The same git repository, multiple isolated workspaces.\n\n```\n# Set up three parallel worktrees\ngit worktree add ../myrepo-feat-auth feat/auth\ngit worktree add ../myrepo-feat-export feat/export\ngit worktree add ../myrepo-feat-api feat/api\n\n# Now start an agent in each one\n# (using Claude Code as an example)\ncd ../myrepo-feat-auth  &&  claude -n \"auth-refactor\"\ncd ../myrepo-feat-export &&  claude -n \"csv-export\"\ncd ../myrepo-feat-api   &&  claude -n \"api-v2\"\n\n# Each agent operates in its own directory — no shared file state\n# Clean up when done:\ngit worktree remove ../myrepo-feat-auth\n```\n\nWorktrees are especially useful for overnight runs: start three or four agent sessions before you leave, each in its own worktree on its own branch. Come back in the morning to review the PRs. No merge conflicts to untangle, the branches never touched each other.",
+            "When running multiple local AI agents simultaneously (Claude Code, Cursor, Aider), the usual pattern is to open multiple terminal tabs, each on a different branch. The problem: each agent's edits bleed into the others because they all share the same working directory.\n\n**Git worktrees** solve this. A worktree is a second (or third, or tenth) checkout of your repo, each pointing to a different branch, each with its own working directory on disk. The same git repository, multiple isolated workspaces.\n\n```\n# Set up three parallel worktrees\ngit worktree add ../myrepo-feat-auth feat/auth\ngit worktree add ../myrepo-feat-export feat/export\ngit worktree add ../myrepo-feat-api feat/api\n\n# Now start an agent in each one\n# (using Claude Code as an example)\ncd ../myrepo-feat-auth  &&  claude -n \"auth-refactor\"\ncd ../myrepo-feat-export &&  claude -n \"csv-export\"\ncd ../myrepo-feat-api   &&  claude -n \"api-v2\"\n\n# Each agent operates in its own directory, no shared file state\n# Clean up when done:\ngit worktree remove ../myrepo-feat-auth\n```\n\nWorktrees are especially useful for overnight runs: start three or four agent sessions before you leave, each in its own worktree on its own branch. Come back in the morning to review the PRs. No merge conflicts to untangle, the branches never touched each other.",
         },
       ],
     },
@@ -162,8 +162,8 @@ const lesson: CodexLesson = {
         question:
           "You have five services that each need the same new logging middleware added. What's the right parallelization strategy?",
         options: [
-          "Five parallel tasks — one per service. Each also writes the middleware itself.",
-          "One task to write the middleware and land it in a shared library. Then five parallel tasks — one per service — to adopt it.",
+          "Five parallel tasks, one per service. Each also writes the middleware itself.",
+          "One task to write the middleware and land it in a shared library. Then five parallel tasks, one per service, to adopt it.",
           "One sequential task that adds it to all five services.",
           "Let each team member do their own service by hand.",
         ],
@@ -185,7 +185,7 @@ const lesson: CodexLesson = {
           "You want to run two local AI agent sessions on the same repository simultaneously without them interfering with each other's edits. What's the right setup?",
         options: [
           "Open two terminal tabs in the same directory. Agents won't conflict if they're careful.",
-          "Use git worktrees — check out each branch into a separate directory so each agent has its own isolated working tree.",
+          "Use git worktrees, check out each branch into a separate directory so each agent has its own isolated working tree.",
           "Create a full clone of the repository for each agent.",
           "Use a single session and alternate between tasks manually.",
         ],

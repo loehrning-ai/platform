@@ -42,7 +42,7 @@ describe("InterviewMove ", () => {
   it("renders the canvas progress track and the first move's real title", () => {
     render(<InterviewMove lessonId="di-interview-playbook" cpId="iv" />);
     expect(screen.getByRole("img", { name: /Interview-replay progress track/ })).toBeInTheDocument();
-    expect(screen.getByText("00:00 — Mirror the prompt back")).toBeInTheDocument();
+    expect(screen.getByText("00:00, Mirror the prompt back")).toBeInTheDocument();
     expect(screen.getByText(/Design real-time analytics for a marketplace/)).toBeInTheDocument();
   });
 
@@ -65,11 +65,11 @@ describe("InterviewMove ", () => {
     expect(prev).toBeDisabled();
 
     fireEvent.click(next);
-    expect(screen.getByText("02:00 — Pin scale and freshness")).toBeInTheDocument();
+    expect(screen.getByText("02:00, Pin scale and freshness")).toBeInTheDocument();
     expect(prev).not.toBeDisabled();
 
     fireEvent.click(prev);
-    expect(screen.getByText("00:00 — Mirror the prompt back")).toBeInTheDocument();
+    expect(screen.getByText("00:00, Mirror the prompt back")).toBeInTheDocument();
   });
 
   it("awards the checkpoint once the final move (43:00) is reached, not before", () => {
@@ -79,7 +79,7 @@ describe("InterviewMove ", () => {
     for (let i = 0; i < 10; i++) fireEvent.click(next);
     expect(isCheckpointDone("di-interview-playbook", "iv")).toBe(false);
     fireEvent.click(next);
-    expect(screen.getByText("43:00 — The closing move")).toBeInTheDocument();
+    expect(screen.getByText("43:00, The closing move")).toBeInTheDocument();
     expect(next).toBeDisabled();
     expect(isCheckpointDone("di-interview-playbook", "iv")).toBe(true);
     expect(getXp()).toBe(XP.CHECKPOINT);

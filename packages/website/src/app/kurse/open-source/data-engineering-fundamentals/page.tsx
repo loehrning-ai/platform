@@ -15,7 +15,7 @@ import type { JsonLdGraph } from "@/lib/seo/json-ld";
 export const metadata: Metadata = {
   title: "Data Engineering Fundamentals: production-ready pipelines, source to serving",
   description:
-    "A 12-chapter, deeply interactive crash course on data engineering: storage internals, streaming, orchestration, data quality, discovery, governance — with 17 live simulators and a sabotage-able capstone.",
+    "A 12-chapter, deeply interactive crash course on data engineering: storage internals, streaming, orchestration, data quality, discovery, governance, with 17 live simulators and a sabotage-able capstone.",
   robots: { index: true, follow: true },
   alternates: { canonical: `${SITE_URL}/kurse/open-source/data-engineering-fundamentals` },
   openGraph: {
@@ -49,7 +49,7 @@ export default function DataEngineeringFundamentalsLandingPage() {
         "@type": "Course",
         name: "Data Engineering Fundamentals",
         description:
-          "The system, not the tools: storage & formats, ingest, streaming, storage patterns, compute, orchestration, quality, discovery, serving, and governance — built around interactive simulators of every concept usually drawn on a whiteboard.",
+          "The system, not the tools: storage & formats, ingest, streaming, storage patterns, compute, orchestration, quality, discovery, serving, and governance, built around interactive simulators of every concept usually drawn on a whiteboard.",
         url: `${SITE_URL}/kurse/open-source/data-engineering-fundamentals`,
         inLanguage: "en",
         isAccessibleForFree: true,
@@ -74,7 +74,7 @@ export default function DataEngineeringFundamentalsLandingPage() {
         </h1>
         <p className="mt-7 max-w-[680px] text-[18px] leading-[1.6] text-muted-foreground">
           The system, not the tools. Storage &amp; formats, ingest, streaming, storage patterns, compute, orchestration, data quality, discovery,
-          serving, and governance — no slides, no toy code. By the end, you&apos;ll know where a pipeline fails before it does.
+          serving, and governance, no slides, no toy code. By the end, you&apos;ll know where a pipeline fails before it does.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-3">
@@ -124,7 +124,7 @@ export default function DataEngineeringFundamentalsLandingPage() {
             One pipeline. Twelve chapters. A capstone you can break.
           </h2>
           <p className="mt-3 max-w-[600px] text-[15px] leading-relaxed text-muted-foreground">
-            Linear the first time — each chapter assumes the last. The capstone (chapter 10) stitches all six contracts together and lets you
+            Linear the first time, each chapter assumes the last. The capstone (chapter 10) stitches all six contracts together and lets you
             sabotage any one to watch exactly what fails downstream.
           </p>
 

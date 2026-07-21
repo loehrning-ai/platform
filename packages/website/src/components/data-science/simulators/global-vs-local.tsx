@@ -66,7 +66,7 @@ export function GlobalVsLocal() {
           ? `point #${selected} selected · score ${round(points[selected].score, 3)}`
           : "20 data points · click one"
       }
-      caption="Global importance is the same for every prediction — it describes the model overall. Local SHAP values change for every data point. Click any dot to see how its explanation differs from the global view."
+      caption="Global importance is the same for every prediction, it describes the model overall. Local SHAP values change for every data point. Click any dot to see how its explanation differs from the global view."
     >
       <div className="sim-row">
         <div className="plot-wrap" style={{ flex: "0 0 auto", width: SW + 20 }}>

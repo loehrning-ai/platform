@@ -185,7 +185,7 @@ export function CorrelationMatrix() {
                       fontSize="11"
                       fontWeight="600"
                     >
-                      {isDiag ? "—" : r.toFixed(2)}
+                      {isDiag ? "," : r.toFixed(2)}
                     </text>
                   </g>
                 );

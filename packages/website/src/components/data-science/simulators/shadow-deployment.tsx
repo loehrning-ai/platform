@@ -10,7 +10,7 @@ const STRATEGY_INFO: Record<StrategyKey, { label: string; color: string; desc: s
   shadow: {
     label: "Shadow deploy",
     color: "#A78BFA",
-    desc: "v2 gets all traffic mirrored silently. Its predictions are logged but never served. Zero user impact — the safest way to evaluate.",
+    desc: "v2 gets all traffic mirrored silently. Its predictions are logged but never served. Zero user impact, the safest way to evaluate.",
   },
   canary: {
     label: "Canary deploy",
@@ -117,7 +117,7 @@ export function ShadowDeployment() {
               {discRate > 0.3 ? "⚠" : "✓"} Discrepancy rate: {(discRate * 100).toFixed(0)}%
             </span>
             <div style={{ color: "var(--ink-3)", marginTop: 3, fontFamily: "inherit", fontSize: 10.5 }}>
-              {discRate > 0.3 ? "High — investigate v2 before promoting." : "Low — safe to ramp v2 further."}
+              {discRate > 0.3 ? "High, investigate v2 before promoting." : "Low, safe to ramp v2 further."}
             </div>
           </div>
         </div>

@@ -24,9 +24,9 @@ interface CapTriangleProps {
 type CapPick = "CP" | "AP" | "CA";
 
 const PICK_TEXT: Record<CapPick, string> = {
-  CP: "CP — refuses writes on the minority side during partition. HBase, MongoDB (default), Spanner.",
-  AP: "AP — both sides keep serving; reads may be stale, will reconcile later. Cassandra, DynamoDB, Riak.",
-  CA: "CA — only safe on a single node. Real distributed systems must pick CP or AP. Single-node Postgres.",
+  CP: "CP, refuses writes on the minority side during partition. HBase, MongoDB (default), Spanner.",
+  AP: "AP, both sides keep serving; reads may be stale, will reconcile later. Cassandra, DynamoDB, Riak.",
+  CA: "CA, only safe on a single node. Real distributed systems must pick CP or AP. Single-node Postgres.",
 };
 
 interface RequestParticle {
@@ -257,7 +257,7 @@ export function CapTriangle({ lessonId, cpId }: CapTriangleProps): JSX.Element {
   return (
     <div className="border-2 border-border bg-card/40 p-5 md:p-6">
       <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        Sim · CAP — pick the partition you accept {done ? "✓" : ""}
+        Sim · CAP, pick the partition you accept {done ? "✓" : ""}
       </p>
 
       {contextUnavailable ? (
@@ -290,7 +290,7 @@ export function CapTriangle({ lessonId, cpId }: CapTriangleProps): JSX.Element {
                 : "border-border bg-background text-foreground hover:border-brand-orange/60",
             )}
           >
-            {p === "CP" ? "CP — consistent + partition-tolerant" : p === "AP" ? "AP — available + partition-tolerant" : "CA — single-node only"}
+            {p === "CP" ? "CP, consistent + partition-tolerant" : p === "AP" ? "AP, available + partition-tolerant" : "CA, single-node only"}
           </button>
         ))}
         <button

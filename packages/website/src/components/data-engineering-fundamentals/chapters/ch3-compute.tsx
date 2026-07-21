@@ -48,7 +48,7 @@ export function Ch3Compute({ chapter }: Ch3ComputeProps) {
         <h2 className="h2">Three engines, one set of bytes.</h2>
         <p className="prose">
           Decoupled storage means the same Parquet files can be read by any engine. Pick the one that fits the query. Interactive &amp; &lt; 100
-          GB? <b>Presto</b>. Durable and repeatable ETL?<b> Spark</b>. Large ad-hoc rewrites or analyst-heavy workloads? <b>Snowflake</b> — spin up
+          GB? <b>Presto</b>. Durable and repeatable ETL?<b> Spark</b>. Large ad-hoc rewrites or analyst-heavy workloads? <b>Snowflake</b>, spin up
           a bigger virtual warehouse, run it, tear it down.
         </p>
         <EngineMatrix />

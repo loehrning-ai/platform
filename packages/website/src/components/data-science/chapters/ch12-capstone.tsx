@@ -23,7 +23,7 @@ export default function Ch12Capstone() {
       <Hero
         eyebrow="Chapter 12 · Capstone"
         title='<em>Credit card fraud detection:</em> <span class="accent">the full DS loop.</span>'
-        hook="284,807 transactions. 0.17% fraud. One complete walkthrough — from raw data to a model in production. Every chapter earns its place here."
+        hook="284,807 transactions. 0.17% fraud. One complete walkthrough, from raw data to a model in production. Every chapter earns its place here."
         meta={[
           { k: "Dataset", v: "Kaggle · 284K transactions" },
           { k: "Target", v: "Fraud · 0.17% base rate" },
@@ -32,10 +32,10 @@ export default function Ch12Capstone() {
       />
 
       <section className="section">
-        <SectionLabel n="12.1">The data — and why it&apos;s hard</SectionLabel>
+        <SectionLabel n="12.1">The data, and why it&apos;s hard</SectionLabel>
         <h2 className="h2">284,807 transactions. 492 frauds. An 578:1 class imbalance.</h2>
         <p className="prose">
-          The Kaggle Credit Card Fraud dataset is a classic of applied ML — not because it&apos;s clean, but
+          The Kaggle Credit Card Fraud dataset is a classic of applied ML, not because it&apos;s clean, but
           because it <em>isn&apos;t</em>. The imbalance is so extreme that the naive baseline (predict everything
           as legitimate) achieves <strong>99.83% accuracy</strong>while catching zero fraud. Accuracy is the
           wrong metric. The right one is PR-AUC.
@@ -44,11 +44,11 @@ export default function Ch12Capstone() {
       </section>
 
       <section className="section">
-        <SectionLabel n="12.2">The pipeline — step by step</SectionLabel>
+        <SectionLabel n="12.2">The pipeline, step by step</SectionLabel>
         <h2 className="h2">Six decisions. Each one a chapter in this course.</h2>
         <p className="prose">
           Run each pipeline step in order. The output of one becomes the input of the next. Watch the log.
-          Notice where leakage could enter (scaling before the split is the classic mistake — we prevent it
+          Notice where leakage could enter (scaling before the split is the classic mistake, we prevent it
           here).
         </p>
         <PipelineProgress />
@@ -72,7 +72,7 @@ export default function Ch12Capstone() {
       />
 
       <section className="section">
-        <SectionLabel n="12.3">Precision–recall tradeoff — choose your threshold</SectionLabel>
+        <SectionLabel n="12.3">Precision-recall tradeoff, choose your threshold</SectionLabel>
         <h2 className="h2">The threshold is a business decision, not a ML decision.</h2>
         <p className="prose">
           Every fraud model produces a probability score per transaction. You decide the cutoff. Too low: you
@@ -84,7 +84,7 @@ export default function Ch12Capstone() {
       </section>
 
       <section className="section">
-        <SectionLabel n="12.4">Shipping to production — the checklist</SectionLabel>
+        <SectionLabel n="12.4">Shipping to production, the checklist</SectionLabel>
         <h2 className="h2">A model in a notebook is a demo. A model in prod is an engineering system.</h2>
         <p className="prose">
           Before your fraud model touches a single live transaction, eight things must be true. Work through the
@@ -97,13 +97,13 @@ export default function Ch12Capstone() {
         items={[
           "<b>Skipping shadow mode.</b> The first time you see a model's live distribution should never be in production.",
           "<b>No model card.</b> Without documentation, the next engineer (or regulator) has no idea what the model was designed for.",
-          "<b>No drift monitor.</b> Fraud patterns shift — card skimming, online fraud, pandemic spending. Models stale faster than you think.",
+          "<b>No drift monitor.</b> Fraud patterns shift, card skimming, online fraud, pandemic spending. Models stale faster than you think.",
           "<b>One threshold forever.</b> Business costs change. Revisit the threshold quarterly at minimum.",
         ]}
       />
       <BestPractices
         items={[
-          "<b>Shadow first, always.</b> Two weeks of shadow mode catches training–serving skew before it harms users.",
+          "<b>Shadow first, always.</b> Two weeks of shadow mode catches training-serving skew before it harms users.",
           "<b>Champion/challenger every sprint.</b> Always have a challenger in shadow. Replace only on measurable lift.",
           "<b>Tie your alert threshold to business cost, not arbitrary quantiles.</b>",
           "<b>Model cards are compliance.</b> EU AI Act Art. 13 requires transparency documentation for high-risk systems.",
@@ -112,9 +112,9 @@ export default function Ch12Capstone() {
       <Takeaway
         items={[
           "<b>Imbalance is the rule, not the exception.</b> PR-AUC over accuracy. Always.",
-          "<b>The pipeline order is sacrosanct.</b> Split → scale → fit. Leakage is silent — it only shows up in prod.",
+          "<b>The pipeline order is sacrosanct.</b> Split → scale → fit. Leakage is silent, it only shows up in prod.",
           "<b>The threshold is a business decision.</b> Minimise expected cost, not F1.",
-          "<b>Production is a system, not a model.</b> Monitoring, rollback, drift alerts — the model is 20% of the work.",
+          "<b>Production is a system, not a model.</b> Monitoring, rollback, drift alerts, the model is 20% of the work.",
           "<b>The loop never ends.</b> Retrain cadence, new features, new fraud patterns. Ship. Monitor. Iterate.",
         ]}
       />

@@ -16,7 +16,7 @@ export default function Ch10Peeking() {
       <Hero
         eyebrow="Chapter 10 · Peeking & Experimental Integrity"
         title='How <em>p-values</em> <span class="accent">lie.</span>'
-        hook="Peeking. Multiple comparisons. Optional stopping. Variance inflation. The subtle ways significance gets manufactured — and the statistical tools to prevent it."
+        hook="Peeking. Multiple comparisons. Optional stopping. Variance inflation. The subtle ways significance gets manufactured, and the statistical tools to prevent it."
         meta={[
           { k: "Read", v: "12 min" },
           { k: "Focus", v: "Peeking · CUPED · Power · MC" },
@@ -30,15 +30,15 @@ export default function Ch10Peeking() {
         <p className="prose">
           Suppose you run an A/B test and check the p-value each day. If it ever dips below 0.05
           you stop and declare victory. The problem: even when H₀ is <em>exactly true</em>, you
-          will find p&lt;0.05 ~22–30% of the time with daily checks over 7 weeks — not the 5% you
+          will find p&lt;0.05 ~22-30% of the time with daily checks over 7 weeks, not the 5% you
           budgeted. This is <strong>optional stopping bias</strong>.
         </p>
         <PeekingSimulator />
         <AntiPatterns
           items={[
-            "<strong>Continuous monitoring with naive α</strong> — checking significance every day and stopping at first p&lt;0.05 breaks the Type-I error guarantee.",
-            '<strong>"It was significant yesterday"</strong> — the p-value is a random variable; a single dip below threshold is not a discovery.',
-            "<strong>HARKing (Hypothesising After Results are Known)</strong> — writing a hypothesis after seeing the data guarantees inflated FPR.",
+            "<strong>Continuous monitoring with naive α</strong>, checking significance every day and stopping at first p&lt;0.05 breaks the Type-I error guarantee.",
+            '<strong>"It was significant yesterday"</strong>, the p-value is a random variable; a single dip below threshold is not a discovery.',
+            "<strong>HARKing (Hypothesising After Results are Known)</strong>, writing a hypothesis after seeing the data guarantees inflated FPR.",
           ]}
         />
         <BestPractices
@@ -52,7 +52,7 @@ export default function Ch10Peeking() {
 
       <section className="section">
         <SectionLabel n="10.2">Multiple Comparisons</SectionLabel>
-        <h2 className="h2">Test 20 metrics. Expect 1 false positive — by construction.</h2>
+        <h2 className="h2">Test 20 metrics. Expect 1 false positive, by construction.</h2>
         <p className="prose">
           The family-wise error rate (FWER) for <em>n</em> independent tests at α = 0.05 is
           1 − (1 − 0.05)ⁿ. At n = 20 that is 64%. Slide the dial below to see how fast this
@@ -62,7 +62,7 @@ export default function Ch10Peeking() {
         <AntiPatterns
           items={[
             "<strong>Reporting every green metric</strong> without FWER correction turns noise into a press release.",
-            "<strong>Post-hoc segmentation fishing</strong> — slicing by 20 segments until one looks good is the same as 20 tests.",
+            "<strong>Post-hoc segmentation fishing</strong>, slicing by 20 segments until one looks good is the same as 20 tests.",
           ]}
         />
         <BestPractices
@@ -76,11 +76,11 @@ export default function Ch10Peeking() {
 
       <section className="section">
         <SectionLabel n="10.3">CUPED</SectionLabel>
-        <h2 className="h2">Same data, higher power — for free.</h2>
+        <h2 className="h2">Same data, higher power, for free.</h2>
         <p className="prose">
           CUPED (Controlled-experiment Using Pre-Experiment Data) uses a pre-period covariate X
           correlated with the outcome Y to construct an adjusted metric Ŷ with lower variance. The
-          point estimate is unbiased and the confidence interval shrinks — you reach significance
+          point estimate is unbiased and the confidence interval shrinks, you reach significance
           faster or need fewer users. Variance reductions of 20–60% are common.
         </p>
         <CUPEDExplainer />
@@ -89,7 +89,7 @@ export default function Ch10Peeking() {
             "<strong>Always apply CUPED</strong> when you have pre-period data. It is never harmful.",
             "Good covariates: prior purchase rate, prior visit frequency, account age, prior metric value.",
             "θ is estimated on the <em>combined</em> data (not per arm) to avoid leakage from treatment assignment.",
-            "CUPED is compatible with any test statistic — just replace Y with Ŷ.",
+            "CUPED is compatible with any test statistic, just replace Y with Ŷ.",
           ]}
         />
       </section>
@@ -105,9 +105,9 @@ export default function Ch10Peeking() {
         <PowerCalculator />
         <AntiPatterns
           items={[
-            "<strong>Running until significant</strong> — equivalent to peeking; confounds effect size and luck.",
-            "<strong>Ignoring MDE when setting duration</strong> — a test with 30% power is mostly noise.",
-            '<strong>Reporting underpowered null results</strong> as "no effect found" — absence of evidence ≠ evidence of absence.',
+            "<strong>Running until significant</strong>, equivalent to peeking; confounds effect size and luck.",
+            "<strong>Ignoring MDE when setting duration</strong>, a test with 30% power is mostly noise.",
+            '<strong>Reporting underpowered null results</strong> as "no effect found", absence of evidence ≠ evidence of absence.',
           ]}
         />
         <BestPractices
@@ -115,7 +115,7 @@ export default function Ch10Peeking() {
             "Target ≥ 80% power (industry standard). 90% for high-stakes decisions.",
             "Use historical variance and conversion rate to size tests ahead of time.",
             "Reduce required n by applying CUPED (lowers σ²) or by increasing α for exploration.",
-            "Use a power calculator — not intuition — every time.",
+            "Use a power calculator, not intuition, every time.",
           ]}
         />
       </section>

@@ -10,7 +10,7 @@ afterEach(() => {
 describe("PipelineProgress ", () => {
   it("renders the real panel copy and all 6 pipeline steps", () => {
     render(<PipelineProgress />);
-    expect(screen.getByText("ML pipeline — step-by-step")).toBeInTheDocument();
+    expect(screen.getByText("ML pipeline, step-by-step")).toBeInTheDocument();
     expect(screen.getByText("Load & Inspect")).toBeInTheDocument();
     expect(screen.getByText("Feature Engineering")).toBeInTheDocument();
     expect(screen.getByText("Scale Amount & Time")).toBeInTheDocument();
