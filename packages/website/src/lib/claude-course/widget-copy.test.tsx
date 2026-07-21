@@ -46,6 +46,10 @@ function installLocalStoragePolyfill(): void {
 // German-only chrome strings that must never appear once a claude-course
 // widget instance opts into the English `copy` override.
 const GERMAN_ONLY_MARKERS = [
+  "Schneller Check",
+  "Sortiere die Risikostufen",
+  "Benenne den Fehlertyp",
+  "Redigiere, bevor du einfügst",
   "Richtig",
   "Nicht ganz",
   "Sortieren",
@@ -116,6 +120,16 @@ describe("claude-course reused Tier-A widgets render zero German-only chrome (pl
 
         const props = widget.props as Record<string, unknown>;
         expect(props.copy, `${lesson.id}/${widget.kind}`).toBeDefined();
+        // `title` is a SEPARATE per-instance prop, not part of `copy` (see
+        // widget-copy.ts's CLAUDE_QUIZ_TITLE comment): each of these 4
+        // components defaults it to a hardcoded German literal independently
+        // of the copy object, so a widget instance can pass an English
+        // `copy` and still render a German title. Every claude instance must
+        // set it explicitly.
+        expect(
+          typeof props.title === "string" && props.title.length > 0,
+          `${lesson.id}/${widget.kind} is missing an explicit English \`title\` prop`,
+        ).toBe(true);
 
         const Component =
           COMPONENT_BY_KIND[widget.kind as keyof typeof COMPONENT_BY_KIND];

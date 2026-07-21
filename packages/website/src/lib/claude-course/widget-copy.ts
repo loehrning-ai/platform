@@ -24,6 +24,16 @@ export const CLAUDE_QUIZ_COPY: QuizWidgetCopy = {
   incorrectLabel: "Not quite.",
 };
 
+/**
+ * QuizWidget's `title` is a separate prop from `copy` (an existing per-instance
+ * override, not course-wide chrome: see the redaction-drill instance in
+ * content/ki-fuehrerschein/block-2-datenschutz-lessons.json for a real
+ * bespoke-title precedent), so it defaults to the German "Schneller Check"
+ * independently of `copy`. Every claude-course quiz instance must pass this
+ * explicitly alongside `copy: CLAUDE_QUIZ_COPY`.
+ */
+export const CLAUDE_QUIZ_TITLE = "Quick Check";
+
 export const CLAUDE_DRAG_REORDER_COPY: DragReorderWidgetCopy = {
   kindLabel: "Order the sections",
   shuffleLabel: "Shuffle",

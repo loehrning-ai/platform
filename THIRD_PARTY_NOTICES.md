@@ -28,6 +28,10 @@ Every course ported from `github.com/Mavengence/interactive-courses` (six as of 
 
 The convention does not require a course to have shipped its native routes yet — provenance is about content ORIGIN, independent of `nativeStatus`.
 
+### Claude Course
+
+`claude` (12 English lessons on prompting, Claude Code, context engineering, agents, grounding, and evals) is ported from the pinned commit `0e5dfd327ce44663696b52eb6643bab147947101` of `github.com/Mavengence/interactive-courses`, path `claude/` (see `sourceHref` in `catalog.ts`). It is distributed under the MIT License, Copyright (c) 2026 Tim Löhr, reproduced at `public/imported-courses/licenses/interactive-courses-MIT-LICENSE.txt` (the repository's shared root license, not a course-specific one; see `ASSET_MANIFEST.json`).
+
 ## Framework and library notices
 
 Next.js, React, Tailwind CSS, Framer Motion, Lucide, Supabase clients, Sentry clients, and other dependencies are not relicensed by this repository. Consult each installed package's license and the root `bun.lock` before redistribution.

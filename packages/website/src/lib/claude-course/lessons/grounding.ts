@@ -2,7 +2,7 @@
 // Widget manifest: PromptSandbox x1 (sb), Quiz x1 (q1), RewriteArena x1
 // (arena). Wired incrementally (plan 008 stages 4, 5).
 import type { ClaudeLesson } from "../types";
-import { CLAUDE_QUIZ_COPY } from "../widget-copy";
+import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "grounding",
@@ -69,6 +69,7 @@ const lesson: ClaudeLesson = {
         correct: 2,
         explanation:
           'Structural grounding beats pleading. Give the data, require citations, and allow a clean "I don\'t know" signal.',
+        title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
     },

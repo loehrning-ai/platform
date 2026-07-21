@@ -2,7 +2,7 @@
 // Widget manifest: PromptLibraryShaper x1 (shaper), SocraticTutor x1
 // (tutor), Quiz x1 (q1). Wired incrementally (plan 008 stage 6).
 import type { ClaudeLesson } from "../types";
-import { CLAUDE_QUIZ_COPY } from "../widget-copy";
+import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "team",
@@ -77,6 +77,7 @@ const lesson: ClaudeLesson = {
         correct: 1,
         explanation:
           'Shareable prompts are parameterized and documented. Strip specifics, state when to use, and show a sample output.',
+        title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
     },

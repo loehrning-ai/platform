@@ -3,7 +3,7 @@
 // must not be dropped, Quiz x1 (q1), RewriteArena x1 (arena). Wired
 // incrementally (plan 008 stages 4, 5).
 import type { ClaudeLesson } from "../types";
-import { CLAUDE_QUIZ_COPY } from "../widget-copy";
+import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "iteration",
@@ -93,6 +93,7 @@ const lesson: ClaudeLesson = {
         correct: 2,
         explanation:
           "Specific, actionable, testable. The others are vibes, Claude can't act on them.",
+        title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
     },

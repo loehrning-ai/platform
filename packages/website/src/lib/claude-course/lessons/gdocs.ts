@@ -2,7 +2,7 @@
 // Widget manifest: PromptCompare x1 (cmp), FillBlank x1 (drill), Quiz x1
 // (q1). Wired incrementally (plan 008 stages 3, 4).
 import type { ClaudeLesson } from "../types";
-import { CLAUDE_QUIZ_COPY } from "../widget-copy";
+import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "gdocs",
@@ -92,6 +92,7 @@ const lesson: ClaudeLesson = {
         correct: 2,
         explanation:
           "Voice transfer via example is far more effective than describing the voice. Show, don't tell.",
+        title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
     },

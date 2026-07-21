@@ -3,7 +3,7 @@
 // q2, q3), PromptSandbox x1 (sb). Wired incrementally (plan 008 stages 4, 7).
 import type { ClaudeLesson } from "../types";
 import {
-  CLAUDE_QUIZ_COPY,
+  CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE,
   CLAUDE_SEMANTIC_SPACE_SEED,
   CLAUDE_SEMANTIC_SPACE_KEYWORDS,
   CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS,
@@ -130,6 +130,7 @@ const lesson: ClaudeLesson = {
         correct: 1,
         explanation:
           "Place critical facts near the start or end. For very long docs, summarize key points and restate them close to your question.",
+        title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
     },
@@ -145,6 +146,7 @@ const lesson: ClaudeLesson = {
         correct: 2,
         explanation:
           "1 word ≈ 1.3 tokens. So 10,000 words is ~13,000 tokens. Useful when estimating whether a set of docs will fit.",
+        title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
     },
@@ -166,6 +168,7 @@ const lesson: ClaudeLesson = {
         correct: 1,
         explanation:
           "Long documents go at the top, question near the end. Queries placed at the end of a long context can improve response quality by up to 30%.",
+        title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
     },

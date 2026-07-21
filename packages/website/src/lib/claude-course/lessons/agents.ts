@@ -2,7 +2,7 @@
 // Widget manifest: SocraticTutor x1 (tutor), AgentLoop x1 (loop), Quiz x2
 // (q1, q2). Wired incrementally (plan 008 stages 6).
 import type { ClaudeLesson } from "../types";
-import { CLAUDE_QUIZ_COPY } from "../widget-copy";
+import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "agents",
@@ -75,6 +75,7 @@ const lesson: ClaudeLesson = {
         correct: 1,
         explanation:
           "Agents loop. Without a step or token budget, they can churn indefinitely. Always cap.",
+        title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
     },
@@ -95,6 +96,7 @@ const lesson: ClaudeLesson = {
         correct: 0,
         explanation:
           "A single prompt plus the transcript is enough. Agents earn their complexity when the task needs multiple tool calls.",
+        title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
     },

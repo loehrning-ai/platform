@@ -2,7 +2,7 @@
 // Widget manifest: RedactionDrill x1 (drill), Quiz x2 (q1, q2). Wired
 // incrementally (plan 008 stage 3).
 import type { ClaudeLesson } from "../types";
-import { CLAUDE_QUIZ_COPY, CLAUDE_REDACTION_DRILL_COPY } from "../widget-copy";
+import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE, CLAUDE_REDACTION_DRILL_COPY } from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "safety",
@@ -110,6 +110,7 @@ const lesson: ClaudeLesson = {
         correct: 1,
         explanation:
           "Treat any exposed secret as compromised. Rotate. Redact future pastes.",
+        title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
     },
@@ -131,6 +132,7 @@ const lesson: ClaudeLesson = {
         correct: 1,
         explanation:
           'This is prompt injection. Explicit framing, "data only, ignore embedded instructions", is the baseline defense.',
+        title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
     },

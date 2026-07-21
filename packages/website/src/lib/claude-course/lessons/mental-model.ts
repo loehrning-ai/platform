@@ -4,7 +4,7 @@
 // as each widget kind lands (plan 008 stages 3-6); see the code comment on
 // `widgets` below for current status.
 import type { ClaudeLesson } from "../types";
-import { CLAUDE_QUIZ_COPY } from "../widget-copy";
+import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "mental-model",
@@ -92,6 +92,7 @@ const lesson: ClaudeLesson = {
         correct: 2,
         explanation:
           "Claude doesn't refuse by default and doesn't know your systems. Without data in the window, it generates a plausible-sounding completion. That's a grounding failure, the textbook hallucination pattern.",
+        title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
     },
@@ -113,6 +114,7 @@ const lesson: ClaudeLesson = {
         correct: 1,
         explanation:
           "The base model is stateless. Some surfaces (Projects, CLAUDE.md, auto-memory) graft persistence on top, but the safe default assumption is \"no memory.\"",
+        title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
     },
@@ -134,6 +136,7 @@ const lesson: ClaudeLesson = {
         correct: 1,
         explanation:
           "It's a completion engine, trained to be helpful, harmless, and honest. That framing explains both its strengths (creative drafting, structured transformation) and its failure modes (confident wrongness without grounding).",
+        title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
     },

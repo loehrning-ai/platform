@@ -32,6 +32,9 @@ const PUBLIC_ROUTES = [
   "/eu-ai-act-kurs",
   "/ai-native",
   "/ki-und-gesellschaft",
+  // plan 008 stage 13: claude's landing (nested under /kurse/open-source/,
+  // unlike the four top-level German courses above).
+  "/kurse/open-source/claude",
   "/blog",
   "/open-source",
   "/open-source/lizenzrichtlinie",
@@ -189,6 +192,16 @@ test.describe("sitemap lists only contract-included paths", () => {
     const response = await request.get("/sitemap.xml");
     const body = await response.text();
     expect(body).not.toContain("/ai-native/kurs");
+  });
+
+  // plan 008 stage 13: claude's reader tree is public-access (not indexed),
+  // same convention as the other three courses' /kurs subtrees above.
+  test("sitemap.xml does not contain /kurse/open-source/claude/kurs", async ({
+    request,
+  }) => {
+    const response = await request.get("/sitemap.xml");
+    const body = await response.text();
+    expect(body).not.toContain("/kurse/open-source/claude/kurs");
   });
 
   test("sitemap.xml does not contain /ki-transformation-check", async ({

@@ -2,7 +2,7 @@
 // Widget manifest: FailureTagger x1 (tagger), PromptGrader x1 (grader), Quiz
 // x2 (q1, q2). Wired incrementally (plan 008 stages 3, 4).
 import type { ClaudeLesson } from "../types";
-import { CLAUDE_FAILURE_TAGGER_COPY, CLAUDE_QUIZ_COPY } from "../widget-copy";
+import { CLAUDE_FAILURE_TAGGER_COPY, CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "evals",
@@ -142,6 +142,7 @@ const lesson: ClaudeLesson = {
         ],
         correct: 1,
         explanation: "Vibes lie. Even 5 examples beat gut feel.",
+        title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
     },
@@ -163,6 +164,7 @@ const lesson: ClaudeLesson = {
         correct: 1,
         explanation:
           "Binary search. Prompts rot when people only add. Subtract to isolate.",
+        title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
     },

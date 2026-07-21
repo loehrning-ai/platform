@@ -28,6 +28,14 @@ const COURSES = [
     slug: "ai-native",
     title: /AI-Native/,
   },
+  // plan 008 stage 13: claude's basePath is nested under /kurse/open-source/
+  // (unlike the other three courses' top-level paths), exercising the same
+  // shared VerificationPage/decodeHash logic on a differently-shaped URL.
+  {
+    route: "/kurse/open-source/claude/verifizierung",
+    slug: "claude",
+    title: /Claude Course/,
+  },
 ] as const;
 
 /** Encode a certificate payload exactly like the app's serializer (base64url). */

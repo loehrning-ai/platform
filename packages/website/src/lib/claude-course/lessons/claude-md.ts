@@ -2,7 +2,7 @@
 // Widget manifest: ClaudeMdBuilder x1 (builder), Quiz x2 (q1, q2),
 // SocraticTutor x1 (tutor). Wired incrementally (plan 008 stage 6).
 import type { ClaudeLesson } from "../types";
-import { CLAUDE_QUIZ_COPY } from "../widget-copy";
+import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "claude-md",
@@ -83,6 +83,7 @@ const lesson: ClaudeLesson = {
         correct: 2,
         explanation:
           "CLAUDE.md is standing context. Keep it crisp and specific, conventions, commands, anti-patterns. Never secrets.",
+        title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
     },
@@ -104,6 +105,7 @@ const lesson: ClaudeLesson = {
         correct: 1,
         explanation:
           "Descendant CLAUDE.md files are lazy-loaded only when Claude touches files in that directory. This is how you scale CLAUDE.md across a big repo without blowing your context budget.",
+        title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
     },
