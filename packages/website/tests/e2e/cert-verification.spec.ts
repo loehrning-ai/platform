@@ -36,6 +36,14 @@ const COURSES = [
     slug: "claude",
     title: /Claude Course/,
   },
+  // plan 009 stage 8: codex, same nested-path shape as claude and the same
+  // "completion" (all-lessons-done) eligibility path rather than a quiz —
+  // still exercises the identical hash-decode/course-match logic.
+  {
+    route: "/kurse/open-source/codex/verifizierung",
+    slug: "codex",
+    title: /Codex Course/,
+  },
 ] as const;
 
 /** Encode a certificate payload exactly like the app's serializer (base64url). */
