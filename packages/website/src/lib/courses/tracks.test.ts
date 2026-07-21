@@ -43,7 +43,7 @@ describe("learner-first course model", () => {
     }
   });
 
-  it("puts the four certified German courses on the spine, everything else deeper", () => {
+  it("puts every COURSE_CATALOG course on the spine, everything else deeper (plan 008 stage 10 adds claude, English, to the spine)", () => {
     for (const course of COURSE_CATALOG) {
       expect(courseGroupFor(course.slug)).toBe("spine");
     }
@@ -57,13 +57,17 @@ describe("learner-first course model", () => {
 
   it("keeps the record badge honest against lib/course/config.ts", () => {
     // The native courses' record kind must match what the engine actually
-    // issues: a "Lernnachweis"-titled record is a Lernnachweis, otherwise a
+    // issues: a "Lernnachweis"-titled record is a Lernnachweis, an English
+    // config (plan 008: claude) issues a "certificate", otherwise a
     // Teilnahmebestätigung (Zertifikat).
     for (const course of COURSE_CATALOG) {
       const config = getCourseConfig(course.slug as CourseSlug);
-      const expected = /lernnachweis/i.test(config.certificateTitle)
-        ? "lernnachweis"
-        : "zertifikat";
+      const expected =
+        config.language === "en"
+          ? "certificate"
+          : /lernnachweis/i.test(config.certificateTitle)
+            ? "lernnachweis"
+            : "zertifikat";
       expect(COURSE_FACTS[course.slug].record, course.slug).toBe(expected);
     }
   });

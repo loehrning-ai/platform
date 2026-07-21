@@ -198,6 +198,58 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     coverImageAlt: "Startseite des AI-Native Arbeitskurses",
     nativeStatus: "live",
   },
+  // Claude Course (plan 008 stage 10): first imported course flipped from
+  // "pending" to "live" now that it has real native routes, per-lesson
+  // content, and certificate/verification wiring. Its URL structure stays
+  // under /kurse/open-source/claude (not top-level like the 4 German
+  // courses) to keep the public URL stable across the imported-to-native
+  // flip; startHref/continueHref both still start with `href` per the
+  // catalog's own invariant. Provenance fields are retained (not deleted)
+  // so open-source attribution survives the flip, per catalog.ts's own
+  // documented convention for ImportedCourse-only fields on CatalogCourse.
+  {
+    slug: "claude",
+    step: 5,
+    title: "Claude Course",
+    eyebrow: "Schritt 05 · Prompting",
+    tagline: "Prompting, Kontext, Claude Code, Agents, Grounding und Evals.",
+    description:
+      "Prompt like you mean it: Zwölf hands-on Lektionen zu Prompt-Anatomie, Context Engineering, CLAUDE.md, Iteration, Google Docs, Agents & Tool Use, Reviews, Grounding, Prompt Debugging & Evals, Team Workflows und Safety. Auf Englisch, jetzt nativ auf loehrning.ai mit Fortschritt und Zertifikat.",
+    href: "/kurse/open-source/claude",
+    startHref: "/kurse/open-source/claude/kurs/mental-model",
+    continueHref: "/kurse/open-source/claude/kurs",
+    duration: "ca. 2 Std.",
+    totalLessons: 12,
+    unitLabel: "Tracks",
+    unitCount: 4,
+    audience: "Wissensarbeiter, Entwickler, Teams mit Claude Code",
+    coverImage: "/imported-courses/screenshots/claude.jpg",
+    coverImageAlt: "Startseite des Claude Course",
+    nativeStatus: "live",
+    imageSrc: "/imported-courses/screenshots/claude.jpg",
+    imageAlt: "Screenshot des Claude Course",
+    launchHref: "https://www.timloehr.me/interactive-courses/claude/",
+    // IMPORTED_COURSE_SOURCE_COMMIT/BASE are declared further down this file
+    // (used by IMPORTED_COURSE_CATALOG below), so this entry inlines the same
+    // pinned commit literally rather than forward-referencing them.
+    sourceHref:
+      "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101/claude",
+    sourceCommitHref:
+      "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101/claude",
+    licenseHref: "/imported-courses/licenses/interactive-courses-MIT-LICENSE.txt",
+    sourceImagePath: "docs/screenshots/claude.jpg",
+    sourceLicensePath: "LICENSE",
+    imageSha256: "4d0c51a947792c1e8203e962eede06854c3ee946ab220a68fb844d0971fbdf0b",
+    licenseSha256: "cc41d8f9e6580c3cd9ebe68f40af8e599d09beb147c3378ea010974ea76e07f3",
+    licenseSizeBytes: 1066,
+    sourceCommit: "0e5dfd327ce44663696b52eb6643bab147947101",
+    lessonCountLabel: "12 Lektionen",
+    language: "Englisch",
+    topics: ["Claude", "Claude Code", "MCP", "Prompting", "Evals"],
+    sourceFacts: ["4 Tracks", "12 Lektionen", "Hands-on Widgets", "Jetzt nativ"],
+    integrationNote:
+      "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
+  },
 ] as const;
 
 export const IMPORTED_COURSE_SOURCE_COMMIT =
@@ -342,43 +394,11 @@ export const IMPORTED_COURSE_CATALOG: readonly ImportedCourse[] = [
       "Der Kurs wird als Open-Source-Modul geführt; eine native Version müsste die Codex-spezifischen Widgets in das bestehende Widget-System portieren.",
     nativeStatus: "pending",
   },
-  {
-    slug: "claude",
-    step: 5,
-    title: "Claude Course",
-    eyebrow: "Technisches Lab · Prompting",
-    tagline: "Prompting, Kontext, Claude Code, Agents, Grounding und Evals.",
-    description:
-      "Prompt like you mean it: Zwölf hands-on Lektionen zu Prompt-Anatomie, Context Engineering, CLAUDE.md, Iteration, Google Docs, Agents & Tool Use, Reviews, Grounding, Prompt Debugging & Evals, Team Workflows und Safety. Jede Lektion enthält ein interaktives Widget.",
-    href: "/kurse/open-source/claude",
-    imageSrc: "/imported-courses/screenshots/claude.jpg",
-    imageAlt: "Screenshot des Claude Course",
-    launchHref: "https://www.timloehr.me/interactive-courses/claude/",
-    sourceHref: `${IMPORTED_COURSE_SOURCE_BASE}/claude`,
-    sourceCommitHref: `${IMPORTED_COURSE_SOURCE_BASE}/claude`,
-    licenseHref: "/imported-courses/licenses/interactive-courses-MIT-LICENSE.txt",
-    sourceImagePath: "docs/screenshots/claude.jpg",
-    sourceLicensePath: "LICENSE",
-    imageSha256: "4d0c51a947792c1e8203e962eede06854c3ee946ab220a68fb844d0971fbdf0b",
-    licenseSha256: "cc41d8f9e6580c3cd9ebe68f40af8e599d09beb147c3378ea010974ea76e07f3",
-    licenseSizeBytes: 1066,
-    sourceCommit: IMPORTED_COURSE_SOURCE_COMMIT,
-    duration: "ca. 2 Std.",
-    totalLessons: 12,
-    unitLabel: "Tracks",
-    unitCount: 4,
-    lessonCountLabel: "12 Lektionen",
-    audience: "Wissensarbeiter, Entwickler, Teams mit Claude Code",
-    language: "Englisch",
-    topics: ["Claude", "Claude Code", "MCP", "Prompting", "Evals"],
-    sourceFacts: ["4 Tracks", "12 Lektionen", "Hands-on Widgets", "9 Badges"],
-    integrationNote:
-      "Als Open-Source-Kurs angebunden; der deutsche AI-Native Arbeitskurs bleibt der native Claude-Praxispfad auf loehrning.ai.",
-    nativeStatus: "pending",
-  },
+  // "claude" moved to COURSE_CATALOG above (plan 008 stage 10: flipped to
+  // nativeStatus "live" now that it has real native routes).
   {
     slug: "ai-native-operator",
-    step: 6,
+    step: 5,
     title: "The AI-Native Operator",
     eyebrow: "Technisches Lab · AI Operating Model",
     tagline: "Arbeitsweise, Engineering-Praxis und Organisationsdesign für AI-natives Arbeiten.",

@@ -115,18 +115,24 @@ export interface CourseFacts {
  * so adding a course without classifying it fails CI.
  */
 export const COURSE_FACTS: Record<string, CourseFacts> = {
-  // Spine — certified German courses (progress + record), shown in step order.
+  // Spine, certified courses with live progress + record (shown in step
+  // order). "claude" joined the spine in plan 008 stage 10: nativeStatus
+  // "live" entries must render with the spine card treatment (live progress
+  // dots, certified checkmark) per `course-gallery.tsx`'s isLiveCourse
+  // split, and `tracks.test.ts` enforces group:"spine" for every
+  // COURSE_CATALOG member, so this is the only value consistent with the
+  // codebase's existing invariant even though claude is English, not German.
   "ki-fuehrerschein": { group: "spine", iconName: "GraduationCap", language: "Deutsch", record: "zertifikat", external: false, accent: "kupfer", badge: "Zertifikat · Deutsch" },
   "ki-und-gesellschaft": { group: "spine", iconName: "Users", language: "Deutsch", record: "lernnachweis", external: false, accent: "kupfer", badge: "Zertifikat · Deutsch" },
   "eu-ai-act-kurs": { group: "spine", iconName: "Scale", language: "Deutsch", record: "zertifikat", external: false, accent: "kupfer", badge: "Zertifikat · Deutsch" },
   "ai-native": { group: "spine", iconName: "Bot", language: "Deutsch", record: "zertifikat", external: false, accent: "kupfer", badge: "Zertifikat · Deutsch" },
+  "claude": { group: "spine", iconName: "Sparkles", language: "Englisch", record: "certificate", external: false, accent: "kupfer", badge: "Certificate · Englisch" },
 
   // Deeper — external GitHub labs (English, no native record).
   "data-engineering-fundamentals": { group: "deeper", iconName: "Database", language: "Englisch", record: "none", external: true, accent: "sand", badge: "GitHub · MIT · Englisch" },
   "data-science": { group: "deeper", iconName: "LineChart", language: "Englisch", record: "none", external: true, accent: "sand", badge: "GitHub · MIT · Englisch" },
   "data-infrastructure": { group: "deeper", iconName: "Server", language: "Englisch", record: "none", external: true, accent: "sand", badge: "GitHub · MIT · Englisch" },
   "codex": { group: "deeper", iconName: "TerminalSquare", language: "Englisch", record: "none", external: true, accent: "sand", badge: "GitHub · MIT · Englisch" },
-  "claude": { group: "deeper", iconName: "Sparkles", language: "Englisch", record: "none", external: true, accent: "sand", badge: "GitHub · MIT · Englisch" },
   "ai-native-operator": { group: "deeper", iconName: "Workflow", language: "Englisch", record: "none", external: true, accent: "sand", badge: "GitHub · MIT · Englisch" },
 
   // Deeper — applied courses from real workshops (German).

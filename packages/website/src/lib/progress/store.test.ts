@@ -201,6 +201,11 @@ describe("unified progress store", () => {
     });
 
     it("ignores unknown imported-course slices when counting lesson badges", () => {
+      // "codex" and "data-science" stand in for still-external, unregistered
+      // courses. "claude" is deliberately not used here any more: plan 008
+      // stage 10 registered and flipped it to a native course, so a
+      // "claude" slice IS now counted, which would break this test's
+      // premise if reused.
       const lesson = {
         sectionsRead: [],
         quizScore: null,
@@ -224,7 +229,7 @@ describe("unified progress store", () => {
         JSON.stringify({
           schemaVersion: 2,
           courses: {
-            claude: slice,
+            codex: slice,
             "data-science": slice,
           },
           xp: 0,

@@ -109,6 +109,26 @@ export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency
       description: "Baut Automationen mit n8n und beachtet dabei den EU AI Act.",
     },
   ],
+  // English course (plan 008 stage 10): the labels/descriptions stay English
+  // to match the course's own content language (`CLAUDE_CONFIG.language`),
+  // unlike the four German competency sets above.
+  claude: [
+    {
+      id: "structured-prompting",
+      label: "Structured prompting",
+      description: "Writes role, context, task, constraints, examples, and format instead of guessing.",
+    },
+    {
+      id: "context-engineering",
+      label: "Context engineering",
+      description: "Grounds Claude in real data and structures the context window deliberately.",
+    },
+    {
+      id: "safe-team-workflows",
+      label: "Safe team workflows",
+      description: "Shares prompts and CLAUDE.md files safely, with evals and without leaking sensitive data.",
+    },
+  ],
 };
 
 const COURSE_TITLE: Record<string, string> = Object.fromEntries(
