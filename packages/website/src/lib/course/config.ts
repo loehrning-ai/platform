@@ -7,6 +7,9 @@
 // so existing server-side imports keep working unchanged.
 
 import type { BlockId, CourseConfig, CourseSlug } from "./types";
+import { CODEX_CONFIG } from "@/lib/codex/config";
+
+export { CODEX_CONFIG };
 
 // ─── KI-Führerschein ───────────────────────────────────────────
 
@@ -212,6 +215,7 @@ const COURSE_CONFIGS: Partial<Record<CourseSlug, CourseConfig>> = {
   "ai-native": AI_NATIVE_CONFIG,
   "ki-und-gesellschaft": KI_UND_GESELLSCHAFT_CONFIG,
   claude: CLAUDE_CONFIG,
+  codex: CODEX_CONFIG,
 };
 
 function config(courseSlug: CourseSlug): CourseConfig {

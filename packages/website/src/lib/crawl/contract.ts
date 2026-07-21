@@ -88,6 +88,13 @@ const PUBLIC_NOINDEX_PATHS = [
   "/kurse/open-source/claude/kurs/quiz",
   "/kurse/open-source/claude/kurs/zertifikat",
   "/kurse/open-source/claude/verifizierung",
+  // Codex Course (plan 009 stage 1) — added ahead of the routes themselves
+  // (stage 6) so contract-completeness.test.ts never goes red mid-plan.
+  // No "/kurs/quiz" entry: codex has no separate gating quiz, it uses plan
+  // 007 stage 4's generic all-lessons-completed "completion" eligibility
+  // path, so no such route is ever built.
+  "/kurse/open-source/codex/kurs/zertifikat",
+  "/kurse/open-source/codex/verifizierung",
 ] as const;
 
 // ─── Adding a new course's routes (plan 007 stage 12) ───────────────────
@@ -138,6 +145,9 @@ const PUBLIC_ACCESS_PATHS = [
   // Claude Course (plan 008 stage 1) — see the noindex entries above.
   "/kurse/open-source/claude/kurs",
   "/kurse/open-source/claude/kurs/:path*",
+  // Codex Course (plan 009 stage 1) — see the noindex entries above.
+  "/kurse/open-source/codex/kurs",
+  "/kurse/open-source/codex/kurs/:path*",
 ] as const;
 
 const PUBLIC_MACHINE_PATHS = [

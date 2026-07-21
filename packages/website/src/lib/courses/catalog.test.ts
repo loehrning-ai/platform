@@ -56,6 +56,14 @@ describe("course catalog (shared course architecture)", () => {
       "codex",
       "ai-native-operator",
     ]);
+    // "codex" is a deliberate, temporary exception (plan 009 stage 1,
+    // mirroring plan 008 stage 1's own claude deviation note): its
+    // CourseConfig is registered ahead of its routes so downstream stages
+    // never hit an "unregistered slug" throw, but it stays in
+    // IMPORTED_COURSE_CATALOG (nativeStatus "pending") until stage 7 flips
+    // it, so it is briefly BOTH "registered in the shared engine" AND
+    // "imported". Removed once stage 7 moves it into COURSE_CATALOG.
+    const TEMPORARILY_REGISTERED_IMPORTED_SLUGS = ["codex"];
     for (const c of IMPORTED_COURSE_CATALOG) {
       // CourseSlug (plan 007 stage 1) now spans both native and imported
       // courses by design, so the meaningful invariant is that imported
@@ -64,7 +72,9 @@ describe("course catalog (shared course architecture)", () => {
       // this array entirely in plan 008 stage 10 (flipped to nativeStatus
       // "live", moved into COURSE_CATALOG), so no per-slug exception is
       // needed here any more.
-      expect(getRegisteredCourseSlugs()).not.toContain(c.slug);
+      if (!TEMPORARILY_REGISTERED_IMPORTED_SLUGS.includes(c.slug)) {
+        expect(getRegisteredCourseSlugs()).not.toContain(c.slug);
+      }
       expect(c.href).toBe(`/kurse/open-source/${c.slug}`);
       expect(c.launchHref).toMatch(/^https:\/\/www\.timloehr\.me\/interactive-courses\//);
       // public-content contract: "Quelle" list links are commit-pinned so the

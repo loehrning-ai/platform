@@ -6,6 +6,7 @@ import {
   AI_NATIVE_CONFIG,
   KI_UND_GESELLSCHAFT_CONFIG,
   CLAUDE_CONFIG,
+  CODEX_CONFIG,
   getRegisteredCourseSlugs,
   isCourseRegistered,
   getCourseConfig,
@@ -21,11 +22,12 @@ import {
 const UNREGISTERED = "does-not-exist" as unknown as CourseSlug;
 
 describe("getRegisteredCourseSlugs", () => {
-  it("returns exactly the five registered course slugs (plan 008 stage 1 adds claude)", () => {
+  it("returns exactly the six registered course slugs (plan 009 stage 1 adds codex)", () => {
     const slugs = [...getRegisteredCourseSlugs()].sort();
     expect(slugs).toEqual([
       "ai-native",
       "claude",
+      "codex",
       "eu-ai-act-kurs",
       "ki-fuehrerschein",
       "ki-und-gesellschaft",
@@ -40,6 +42,7 @@ describe("isCourseRegistered", () => {
     expect(isCourseRegistered("ai-native")).toBe(true);
     expect(isCourseRegistered("ki-und-gesellschaft")).toBe(true);
     expect(isCourseRegistered("claude")).toBe(true);
+    expect(isCourseRegistered("codex")).toBe(true);
   });
 
   it("is false for an unregistered slug", () => {
@@ -68,6 +71,17 @@ describe("CLAUDE_CONFIG (plan 008 stage 1)", () => {
       ...CLAUDE_CONFIG.certificateModules,
     ].join(" ");
     expect([...copy].some((ch) => ch === "—" || ch === "–")).toBe(false);
+  });
+});
+
+describe("CODEX_CONFIG (plan 009 stage 1)", () => {
+  it("registers codex with English-language content and the all-lessons-completion cert path", () => {
+    expect(getCourseConfig("codex")).toBe(CODEX_CONFIG);
+    expect(CODEX_CONFIG.slug).toBe("codex");
+    expect(CODEX_CONFIG.language).toBe("en");
+    expect(CODEX_CONFIG.basePath).toBe("/kurse/open-source/codex");
+    expect(CODEX_CONFIG.coursePath).toBe("/kurse/open-source/codex/kurs");
+    expect(CODEX_CONFIG.blockIds).toEqual([]);
   });
 });
 

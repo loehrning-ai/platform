@@ -33,11 +33,12 @@ describe("course engine union (shared course architecture + 6)", () => {
     expect(isCourseRegistered("ai-native")).toBe(true);
   });
 
-  it("getRegisteredCourseSlugs returns all five courses (plan 008 stage 1 adds claude)", () => {
+  it("getRegisteredCourseSlugs returns all six courses (plan 009 stage 1 adds codex)", () => {
     const slugs = getRegisteredCourseSlugs();
     expect([...slugs].sort()).toEqual([
       "ai-native",
       "claude",
+      "codex",
       "eu-ai-act-kurs",
       "ki-fuehrerschein",
       "ki-und-gesellschaft",

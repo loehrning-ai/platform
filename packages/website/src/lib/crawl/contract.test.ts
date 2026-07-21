@@ -95,6 +95,28 @@ describe("crawl contract", () => {
     }
   });
 
+  it("classifies the Codex Course routes registered ahead of their pages (plan 009 stage 1)", () => {
+    for (const path of [
+      "/kurse/open-source/codex/kurs",
+      "/kurse/open-source/codex/kurs/L01",
+    ]) {
+      const entry = getCrawlRoute(path);
+      expect(entry.routeClass, path).toBe("public-access");
+      expect(entry.auth, path).toBe("public");
+      expect(entry.includeInSitemap, path).toBe(false);
+    }
+    // Codex has no separate gating quiz (all-lessons-completion cert path),
+    // so unlike claude there is no "/kurs/quiz" noindex entry here.
+    for (const path of [
+      "/kurse/open-source/codex/kurs/zertifikat",
+      "/kurse/open-source/codex/verifizierung",
+    ]) {
+      const entry = getCrawlRoute(path);
+      expect(entry.routeClass, path).toBe("public-noindex");
+      expect(entry.xRobotsTag, path).toContain("noindex");
+    }
+  });
+
   it("keeps retired blog slugs ahead of the broad blog pattern", () => {
     const retired = getCrawlRoute("/blog/digify");
     expect(retired.routeClass).toBe("retired");

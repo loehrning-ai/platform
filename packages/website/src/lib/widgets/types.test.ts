@@ -24,6 +24,7 @@ import {
   CLAUDE_KINDS,
   ALL_WIDGET_KINDS,
   WIDGET_PLACEMENTS,
+  WIDGET_COURSE_SLUGS,
   isDemoKind,
   isExerciseKind,
   isTierAKind,
@@ -217,6 +218,12 @@ describe("widgets/types: kind partition invariant", () => {
         }
       }
     }
+  });
+});
+
+describe("widgets/types: WIDGET_COURSE_SLUGS (plan 009 stage 1 adds codex)", () => {
+  it("includes codex so a widget spec can declare it as its host course", () => {
+    expect([...WIDGET_COURSE_SLUGS]).toContain("codex");
   });
 });
 
