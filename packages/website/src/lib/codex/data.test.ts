@@ -13,42 +13,33 @@ beforeEach(() => {
   __resetCodexLessonCacheForTests();
 });
 
-// Lessons registered so far. Plan 009 stage 3 lands tracks 1-2 (L01-L06);
-// stage 4 lands tracks 3-4 (L07-L12) and this list tightens to all 12 —
-// see LESSON_LOADERS in ./data, which is `Partial` for the same reason.
-const REGISTERED_IDS = ["L01", "L02", "L03", "L04", "L05", "L06"] as const;
-
-describe("codex content module (plan 009 stage 3/4)", () => {
+describe("codex content module (plan 009 stages 3-4)", () => {
   it("has exactly 12 lesson ids, matching the source's window.LESSONS", () => {
     expect(CODEX_LESSON_IDS).toHaveLength(12);
     expect(new Set(CODEX_LESSON_IDS).size).toBe(12);
   });
 
-  it("loads exactly the registered lessons so far, uniquely numbered from 1", async () => {
+  it("loads exactly 12 lessons, uniquely numbered 1-12", async () => {
     const lessons = await getAllCodexLessons();
-    expect(lessons).toHaveLength(REGISTERED_IDS.length);
-    expect(new Set(lessons.map((l) => l.id)).size).toBe(REGISTERED_IDS.length);
+    expect(lessons).toHaveLength(12);
+    expect(new Set(lessons.map((l) => l.id)).size).toBe(12);
     expect(lessons.map((l) => l.number)).toEqual(
-      Array.from({ length: REGISTERED_IDS.length }, (_, i) => i + 1),
+      Array.from({ length: 12 }, (_, i) => i + 1),
     );
   });
 
-  it("resolves each registered lesson id individually via the per-lesson loader", async () => {
-    for (const id of REGISTERED_IDS) {
+  it("resolves each lesson id individually via the per-lesson loader", async () => {
+    for (const id of CODEX_LESSON_IDS) {
       const lesson = await getCodexLesson(id);
       expect(lesson, id).toBeDefined();
       expect(lesson?.id).toBe(id);
     }
   });
 
-  it("returns undefined for a lesson id not yet registered (L07-L12, until stage 4)", async () => {
-    const unregisteredIds = CODEX_LESSON_IDS.filter(
-      (id) => !(REGISTERED_IDS as readonly string[]).includes(id),
-    );
-    expect(unregisteredIds.length).toBeGreaterThan(0);
-    for (const id of unregisteredIds) {
-      expect(await getCodexLesson(id), id).toBeUndefined();
-    }
+  it("returns undefined for an unregistered id", async () => {
+    // @ts-expect-error deliberately invalid id to exercise the guard
+    const lesson = await getCodexLesson("L99");
+    expect(lesson).toBeUndefined();
   });
 
   it("every lesson has non-empty sections with real content and structured blocks, a valid track, and an empty quiz array", async () => {

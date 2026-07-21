@@ -1,7 +1,12 @@
 // Ported from codex/lessons/04-task-spec.html + codex/js/lessons/L04.js.
 import type { CodexLesson } from "../types";
 import { buildSections } from "../blocks";
-import { CODEX_QUIZ_COPY, CODEX_QUIZ_TITLE, CODEX_TASK_SPEC_TIER_LABELS } from "../widget-copy";
+import {
+  CODEX_QUIZ_COPY,
+  CODEX_QUIZ_TITLE,
+  CODEX_TASK_SPEC_TIER_LABELS,
+  CODEX_COMPARE_KIND_LABEL,
+} from "../widget-copy";
 
 const lesson: CodexLesson = {
   id: "L04",
@@ -147,6 +152,7 @@ const lesson: CodexLesson = {
       courseSlug: "codex",
       props: {
         title: "Three shapes of the same task",
+        kindLabel: CODEX_COMPARE_KIND_LABEL,
         badLabel: "Weak — one line",
         goodLabel: "Strong — four parts",
         bad: "task:\nadd pagination to /users",

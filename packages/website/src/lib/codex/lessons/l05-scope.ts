@@ -1,7 +1,7 @@
 // Ported from codex/lessons/05-scope.html + codex/js/lessons/L05.js.
 import type { CodexLesson } from "../types";
 import { buildSections } from "../blocks";
-import { CODEX_QUIZ_COPY, CODEX_QUIZ_TITLE } from "../widget-copy";
+import { CODEX_QUIZ_COPY, CODEX_QUIZ_TITLE, CODEX_COMPARE_KIND_LABEL } from "../widget-copy";
 
 const lesson: CodexLesson = {
   id: "L05",
@@ -129,6 +129,7 @@ const lesson: CodexLesson = {
       courseSlug: "codex",
       props: {
         title: "Same goal — before and after slicing",
+        kindLabel: CODEX_COMPARE_KIND_LABEL,
         badLabel: "Too big — one task",
         goodLabel: "Sliced — three tasks",
         bad: 'Goal\nAdd soft-delete to Users, Projects, and Teams.\nInclude a "restore" endpoint for each.\nAlso add an audit log of who deleted what.\nMigrate existing hard-deletes we\'ve been stashing in cold storage.',

@@ -1,6 +1,6 @@
-// ─── Codex Course content loader (plan 009 stage 3) ─────────────────
+// ─── Codex Course content loader (plan 009 stages 3-4) ───────────────
 //
-// Structured as a Partial<Record<LessonId, () => Promise<...>>> loader map,
+// Structured as a Record<LessonId, () => Promise<...>> loader map,
 // mirroring `lib/course/questions.ts`'s QUESTION_LOADERS and
 // `lib/claude-course/data.ts`'s LESSON_LOADERS: a per-lesson dynamic
 // import(), not one eagerly-imported array, so no lesson route's bundle
@@ -9,11 +9,9 @@
 import type { CodexLesson, LessonId } from "./types";
 import { CODEX_LESSON_IDS, CODEX_TRACKS } from "./types";
 
-// Partial for now: plan 009 stage 3 lands tracks 1-2 (L01-L06), stage 4
-// lands tracks 3-4 (L07-L12). Tightens to a full Record<LessonId, ...> once
-// stage 4 registers the remaining six entries.
-const LESSON_LOADERS: Partial<
-  Record<LessonId, () => Promise<{ default: CodexLesson }>>
+const LESSON_LOADERS: Record<
+  LessonId,
+  () => Promise<{ default: CodexLesson }>
 > = {
   L01: () => import("./lessons/l01-mental-model"),
   L02: () => import("./lessons/l02-sandbox"),
@@ -21,6 +19,12 @@ const LESSON_LOADERS: Partial<
   L04: () => import("./lessons/l04-task-spec"),
   L05: () => import("./lessons/l05-scope"),
   L06: () => import("./lessons/l06-acceptance"),
+  L07: () => import("./lessons/l07-review"),
+  L08: () => import("./lessons/l08-iterate"),
+  L09: () => import("./lessons/l09-tools"),
+  L10: () => import("./lessons/l10-parallelism"),
+  L11: () => import("./lessons/l11-patterns"),
+  L12: () => import("./lessons/l12-workflow"),
 };
 
 // Memoized per lesson so a single request that touches a lesson more than
