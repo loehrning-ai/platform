@@ -40,7 +40,21 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "operations/1",
+          cpId: "exercise",
+          title: "Meeting Audit",
+          scenario:
+            "List your five most frequent recurring meetings. For each, mark whether it is a decision meeting (keep) or a status meeting (kill, replace with async + AI summary).",
+          rows: 5,
+        },
+      },
+    ],
   },
   {
     id: "operations/2",
@@ -71,7 +85,20 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "operations/2",
+          cpId: "exercise",
+          scenario:
+            "Pick one doc on your plate this week. Write the one-paragraph brief now. (You can paste this brief into your tool of choice when you sit down to draft.)",
+          rows: 4,
+        },
+      },
+    ],
   },
   {
     id: "operations/3",
@@ -111,7 +138,21 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "operations/3",
+          cpId: "exercise",
+          title: "Triage Pipeline",
+          scenario:
+            "Sketch your triage pipeline. Inputs, classification dimensions, enrichment sources, escalation rules.",
+          rows: 5,
+        },
+      },
+    ],
   },
   {
     id: "operations/4",

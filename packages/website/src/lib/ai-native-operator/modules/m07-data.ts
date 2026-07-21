@@ -44,7 +44,21 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
       text: "Phase 1: docs + code (most ROI per week of work). Phase 2: tickets + recent decisions. Phase 3: conversations (only with explicit privacy review). Skipping straight to phase 3 is the most common path to disaster.",
     },
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "data/1",
+          cpId: "exercise",
+          title: "Context Sources",
+          scenario:
+            "List the top 5 sources of context your team's agents need. For each: who owns it, what is the access model, how stale is it.",
+          rows: 5,
+        },
+      },
+    ],
   },
   {
     id: "data/2",
@@ -82,7 +96,20 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "data/2",
+          cpId: "exercise",
+          scenario:
+            'For your context layer, can you answer: "Which user, on which day, retrieved which document via which agent, with which ACLs applied?" If no, name the gap.',
+          rows: 3,
+        },
+      },
+    ],
   },
   {
     id: "data/3",
@@ -114,7 +141,20 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "data/3",
+          cpId: "exercise",
+          scenario:
+            "For each major source of context, what is the current freshness? What is the target freshness? Where is the gap?",
+          rows: 4,
+        },
+      },
+    ],
   },
   {
     id: "data/4",

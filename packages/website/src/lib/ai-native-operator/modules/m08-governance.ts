@@ -31,7 +31,20 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "governance/1",
+          cpId: "exercise",
+          scenario:
+            "Can you produce a list of every AI model running in your org right now? What it does, what data it sees? If no, your registry is the next step.",
+          rows: 3,
+        },
+      },
+    ],
   },
   {
     id: "governance/2",
@@ -63,7 +76,20 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "governance/2",
+          cpId: "exercise",
+          scenario:
+            "For your most-deployed agent, what eval gates exist today? What gates would you add to be confident in any model upgrade?",
+          rows: 4,
+        },
+      },
+    ],
   },
   {
     id: "governance/3",
@@ -94,7 +120,20 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "governance/3",
+          cpId: "exercise",
+          scenario:
+            "For your most consequential agent action (write/destructive), can you produce an audit trail with agent ID, user, authorization, and timestamp? If no, name the gap.",
+          rows: 3,
+        },
+      },
+    ],
   },
   {
     id: "governance/4",

@@ -45,7 +45,20 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
       attr: "Tobi Lütke · Shopify · 2025",
     },
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "mindset/1",
+          cpId: "exercise",
+          scenario:
+            "List three tasks you did this week that took more than 30 minutes. For each, write one sentence describing how an AI could have done the first 80%.",
+          rows: 3,
+        },
+      },
+    ],
   },
   {
     id: "mindset/2",
@@ -95,7 +108,36 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
       text: "Most people overestimate their level by one. The senior engineer who uses Cursor for autocomplete thinks they are L2; they are L1. The L2 engineer thinks they are L3; they are L2. Calibrate down. The course is more useful that way.",
     },
     exerciseKind: "self-rate",
-    widgets: [],
+    widgets: [
+      {
+        kind: "self-rate",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "mindset/2",
+          cpId: "exercise",
+          title: "Self-Rating",
+          scenario: "Rate yourself on each axis. Be honest. The scoring is for you alone.",
+          axes: [
+            {
+              id: "tasks",
+              label: "Default task posture",
+              anchors: ["Hand-do everything", "Sometimes ask AI", "AI drafts first", "Delegate by default"],
+            },
+            {
+              id: "tools",
+              label: "Tool depth",
+              anchors: ["Browser tab", "Copilot autocomplete", "Agent IDE daily", "Multi-agent fleets"],
+            },
+            {
+              id: "trust",
+              label: "Trust calibration",
+              anchors: ["No trust", "Brittle trust", "Verification habits", "Calibrated by domain"],
+            },
+          ],
+        },
+      },
+    ],
   },
   {
     id: "mindset/3",
@@ -140,7 +182,29 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
       text: "A common pattern: confident senior + confident agent + no verification = a wrong answer that nobody catches. The seniority of the human is a multiplier, not a corrective. Build the habit before the cost.",
     },
     exerciseKind: "matrix-grid",
-    widgets: [],
+    widgets: [
+      {
+        kind: "matrix-grid",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "mindset/3",
+          cpId: "exercise",
+          title: "Verification Matrix",
+          scenario:
+            "For each task type below, mark how much you should verify in your current role. There is no right answer — calibrate to your context.",
+          rows: [
+            "Internal email draft",
+            "External customer email",
+            "Code patch under 50 lines",
+            "Code patch over 200 lines",
+            "Board-facing number",
+            "Performance review draft",
+          ],
+          cols: ["Skim", "Read carefully", "Verify against source", "Have a second human review"],
+        },
+      },
+    ],
   },
   {
     id: "mindset/4",
@@ -180,7 +244,27 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "plays",
-    widgets: [],
+    widgets: [
+      {
+        kind: "plays",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "mindset/4",
+          cpId: "exercise",
+          title: "Your Next Moves",
+          scenario: "Pick three plays you will personally adopt this month.",
+          minPick: 3,
+          options: [
+            'For every new task, write a one-line "AI delegation plan" before starting.',
+            "Run one weekly retro with my team about what AI did and didn't do well.",
+            "Publicly share one delegation per week — what worked, what didn't.",
+            "Stop celebrating long hours. Start celebrating leveraged outcomes.",
+            "Ask one peer to call me out when I revert to manual habits.",
+          ],
+        },
+      },
+    ],
   },
   {
     id: "mindset/5",

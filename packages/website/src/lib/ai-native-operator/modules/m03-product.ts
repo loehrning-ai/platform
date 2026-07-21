@@ -38,7 +38,20 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "product/1",
+          cpId: "exercise",
+          scenario:
+            "Audit your product. List three flows where the AI is a bolt-on. For each, sketch in one sentence how it could be the product instead.",
+          rows: 3,
+        },
+      },
+    ],
   },
   {
     id: "product/2",
@@ -78,7 +91,20 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "product/2",
+          cpId: "exercise",
+          scenario:
+            "Pick one flow in your product with more than five post-intent steps. Sketch the one-step version. What is the user input? What is the agent output? What controls remain?",
+          rows: 4,
+        },
+      },
+    ],
   },
   {
     id: "product/3",
@@ -121,7 +147,20 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
       text: "Pick one surface in your product where users have wildly different goals — a dashboard, a homepage, a settings panel. Make that surface generative. Leave the rest static for now.",
     },
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "product/3",
+          cpId: "exercise",
+          scenario:
+            "Which surface in your product has the highest variance in user intent? That is your first candidate for generative UI.",
+          rows: 3,
+        },
+      },
+    ],
   },
   {
     id: "product/4",
@@ -159,7 +198,21 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "product/4",
+          cpId: "exercise",
+          title: "Real-Time Eval Design",
+          scenario:
+            "For your most user-facing AI surface, design three real-time eval signals. What thresholds trigger alert? What thresholds trigger auto-rollback?",
+          rows: 4,
+        },
+      },
+    ],
   },
   {
     id: "product/5",

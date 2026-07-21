@@ -40,7 +40,20 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "talent/1",
+          cpId: "exercise",
+          title: "Rubric Builder",
+          scenario: "Draft your live-build problem. What is the task? What tools? What is the rubric?",
+          rows: 5,
+        },
+      },
+    ],
   },
   {
     id: "talent/2",
@@ -78,7 +91,26 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "slot-fill",
-    widgets: [],
+    widgets: [
+      {
+        kind: "slot-fill",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "talent/2",
+          cpId: "exercise",
+          title: "AI Fluency Ladder",
+          scenario:
+            "Draft the L1–L4 AI fluency rubric for your role family. Two sentences per level, plus an example artifact someone at that level would produce.",
+          placeholders: [
+            "L1 — uses AI for occasional tasks",
+            "L2 — AI is default first draft",
+            "L3 — runs agent fleets, builds evals",
+            "L4 — designs systems for the team",
+          ],
+        },
+      },
+    ],
   },
   {
     id: "talent/3",
@@ -121,7 +153,21 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
       text: 'Do not measure "AI usage" — number of prompts, tokens used, agents spawned. These metrics game instantly and tell you nothing. Measure outcomes. Outcomes are harder to define, harder to game, and the only thing that matters.',
     },
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "talent/3",
+          cpId: "exercise",
+          title: "Leverage Comp Design",
+          scenario:
+            "Sketch the leverage-comp formula for one team. What outcomes do you measure? What weights? How do you calibrate?",
+          rows: 5,
+        },
+      },
+    ],
   },
   {
     id: "talent/4",

@@ -40,7 +40,20 @@ export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "engineering/1",
+          cpId: "exercise",
+          scenario:
+            "For your last shipped PR or feature: how much of it could a competent agent have done if you had given it the right spec? Be honest.",
+          rows: 4,
+        },
+      },
+    ],
   },
   {
     id: "engineering/2",
@@ -105,7 +118,20 @@ export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
       ],
     },
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "engineering/2",
+          cpId: "exercise",
+          title: "Spec Builder",
+          scenario: "Write a 5-section spec for a real ticket on your backlog. Use the structure above.",
+          rows: 4,
+        },
+      },
+    ],
   },
   {
     id: "engineering/3",
@@ -145,7 +171,21 @@ export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "slot-fill",
-    widgets: [],
+    widgets: [
+      {
+        kind: "slot-fill",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "engineering/3",
+          cpId: "exercise",
+          title: "Your Starter Fleet",
+          scenario:
+            "Design your starter fleet. Three agents, each with a one-sentence role and a typical task type.",
+          placeholders: ["Agent A — role", "Agent B — role", "Agent C — role"],
+        },
+      },
+    ],
   },
   {
     id: "engineering/4",
@@ -190,7 +230,27 @@ export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
       text: "Group your eval cases by: (1) golden — must always pass, (2) typical — represent the real workload, (3) adversarial — known failure modes you have seen in prod. Track scores per group; a regression in any one is a release blocker.",
     },
     exerciseKind: "slot-fill",
-    widgets: [],
+    widgets: [
+      {
+        kind: "slot-fill",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "engineering/4",
+          cpId: "exercise",
+          title: "Eval Test Cases",
+          scenario:
+            "For one of your agents, list five test cases — three typical, two adversarial. Be specific about input and expected output.",
+          placeholders: [
+            "Test case 1 (typical)",
+            "Test case 2 (typical)",
+            "Test case 3 (typical)",
+            "Test case 4 (adversarial)",
+            "Test case 5 (adversarial)",
+          ],
+        },
+      },
+    ],
   },
   {
     id: "engineering/5",

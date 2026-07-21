@@ -7,6 +7,21 @@
 // of source prose. Per-module (not per-lesson) keeps file count sane (9
 // files instead of 39) while still keeping the initial-load JSON out of
 // every route's bundle.
+//
+// ─── Widget dispatch mapping (plan 013 stage 6) ─────────────────────
+//
+// Every one of the 30 reading lessons' `widgets` arrays (authored in
+// ./modules/*.ts) routes its single exercise through a TIER_A kind
+// (reflect-box / matrix-grid / slot-fill / self-rate / plays) — never
+// through the AI-graded "exercise-free-response" kind. This is deliberate,
+// not an oversight: `ai-native-operator/course-app.js` (264 lines, read in
+// full) never calls any AI/grading endpoint anywhere in the source, so
+// wiring these through an AI-graded widget would misrepresent the source AND
+// reintroduce exactly the per-exercise AI-feedback-text storage-bloat risk
+// this course's port was designed to avoid (see progress-budget.test.ts).
+// Completion is checkpoint-boolean via useCheckpoint; free text/picks stay
+// local-draft-only via useDraftValue and are never persisted server-side.
+// See widget-wiring.test.ts for the exhaustive guard over all 30 exercises.
 
 import type { AiNativeOperatorLesson, ModuleId } from "./types";
 import { MODULE_IDS, MODULE_LESSON_COUNTS } from "./types";

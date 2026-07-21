@@ -38,7 +38,21 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "orgmodel/1",
+          cpId: "exercise",
+          title: "AI-Native Team Shape",
+          scenario:
+            "Pick one team or product surface. Sketch the AI-native shape: how many humans, what roles, what the agent fleet covers.",
+          rows: 5,
+        },
+      },
+    ],
   },
   {
     id: "orgmodel/2",
@@ -71,7 +85,20 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "orgmodel/2",
+          cpId: "exercise",
+          scenario:
+            "Identify two specialist roles on your team that could move to advisor mode in the next 6 months. What does the transition look like?",
+          rows: 3,
+        },
+      },
+    ],
   },
   {
     id: "orgmodel/3",
@@ -102,7 +129,20 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "orgmodel/3",
+          cpId: "exercise",
+          scenario:
+            "Pick one approval chain on your team. Map the current chain. Sketch the two-approver version. Where does the agent help?",
+          rows: 4,
+        },
+      },
+    ],
   },
   {
     id: "orgmodel/4",

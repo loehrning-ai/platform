@@ -31,7 +31,21 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "measurement/1",
+          cpId: "exercise",
+          title: "Outcome KPI Picker",
+          scenario:
+            "For your team, pick 2-3 outcome KPIs that AI should measurably move. State the current baseline and the 90-day target.",
+          rows: 4,
+        },
+      },
+    ],
   },
   {
     id: "measurement/2",
@@ -63,7 +77,20 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "reflect-box",
-    widgets: [],
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "measurement/2",
+          cpId: "exercise",
+          scenario:
+            "Pick one AI rollout you did or are planning. What is the baseline measurement? If you don't have one, stop and gather it.",
+          rows: 3,
+        },
+      },
+    ],
   },
   {
     id: "measurement/3",
@@ -94,7 +121,27 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
     ],
     exerciseKind: "slot-fill",
-    widgets: [],
+    widgets: [
+      {
+        kind: "slot-fill",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "measurement/3",
+          cpId: "exercise",
+          title: "Leverage Review Slides",
+          scenario:
+            "Sketch the 5-slide leverage review for your team next quarter. Slide titles + one-line content per slide.",
+          placeholders: [
+            "Slide 1 — Outcomes this quarter",
+            "Slide 2 — Metric movement",
+            "Slide 3 — What worked",
+            "Slide 4 — Causes of misses",
+            "Slide 5 — Next quarter's bets",
+          ],
+        },
+      },
+    ],
   },
   {
     id: "measurement/4",
