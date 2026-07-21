@@ -31,7 +31,7 @@ function sha256(path: string): string {
 }
 
 describe("course catalog (shared course architecture)", () => {
-  it("lists all nine native courses in the recommended learning order (plan 012 stage 14 adds data-science)", () => {
+  it("lists all ten native courses in the recommended learning order (plan 013 stage 12 adds ai-native-operator)", () => {
     expect(COURSE_CATALOG.map((c) => c.slug)).toEqual([
       "ki-fuehrerschein",
       "ki-und-gesellschaft",
@@ -42,11 +42,12 @@ describe("course catalog (shared course architecture)", () => {
       "data-infrastructure",
       "data-engineering-fundamentals",
       "data-science",
+      "ai-native-operator",
     ]);
   });
 
-  it("numbers the learning-path steps 1 through 9", () => {
-    expect(COURSE_CATALOG.map((c) => c.step)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  it("numbers the learning-path steps 1 through 10", () => {
+    expect(COURSE_CATALOG.map((c) => c.step)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
   });
 
   it("only references slugs registered in the shared course engine", () => {
@@ -55,38 +56,28 @@ describe("course catalog (shared course architecture)", () => {
     }
   });
 
-  it("keeps ai-native-operator's catalog entry pending until plan 013's own flip stage", () => {
-    expect(IMPORTED_COURSE_CATALOG.map((c) => c.slug)).toEqual([
-      "ai-native-operator",
-    ]);
-    for (const c of IMPORTED_COURSE_CATALOG) {
-      // CourseSlug (plan 007 stage 1) now spans both native and imported
-      // courses by design, so the meaningful invariant is a course's
-      // catalog placement (COURSE_CATALOG vs IMPORTED_COURSE_CATALOG /
-      // nativeStatus), not shared-engine registration. Registering a
-      // config in COURSE_CONFIGS (plan 013 stage 4) does not itself expose
-      // any UI (no route exists until stages 7-10 land), mirroring every
-      // sibling course's own stage-1-config-registration-vs-later-catalog-
-      // flip gap ("claude" registered CLAUDE_CONFIG in plan 008 stage 1 but
-      // didn't leave this array until stage 10; codex/data-infrastructure/
-      // data-engineering-fundamentals/data-science each had the same gap).
-      // So getRegisteredCourseSlugs() legitimately DOES contain
-      // "ai-native-operator" from plan 013 stage 4 onward, ahead of its own
-      // stage 12 catalog flip — that is not a premature-UI-exposure risk.
-      expect(c.href).toBe(`/kurse/open-source/${c.slug}`);
-      expect(c.launchHref).toMatch(/^https:\/\/www\.timloehr\.me\/interactive-courses\//);
-      // public-content contract: "Quelle" list links are commit-pinned so the
-      // /open-source list and the detail pages agree on the same tree.
-      expect(c.sourceHref).toBe(
-        `https://github.com/Mavengence/interactive-courses/tree/${IMPORTED_COURSE_SOURCE_COMMIT}/${c.slug === "ai-native-operator" ? "ai-native" : c.slug}`,
-      );
-      expect(c.sourceCommitHref).toMatch(
-        new RegExp(
-          `^https://github\\.com/Mavengence/interactive-courses/tree/${IMPORTED_COURSE_SOURCE_COMMIT}/`,
-        ),
-      );
-      expect(c.licenseHref).toMatch(/^\/imported-courses\/licenses\//);
-    }
+  it("IMPORTED_COURSE_CATALOG is empty: every ported course has now flipped to nativeStatus live (plan 013 stage 12)", () => {
+    expect(IMPORTED_COURSE_CATALOG).toEqual([]);
+  });
+
+  it("ai-native-operator's flipped COURSE_CATALOG entry retains its provenance fields (plan 013 stage 12)", () => {
+    const c = getCatalogCourse("ai-native-operator")!;
+    expect(c.href).toBe("/kurse/open-source/ai-native-operator");
+    expect(c.nativeStatus).toBe("live");
+    expect(c.launchHref).toMatch(/^https:\/\/www\.timloehr\.me\/interactive-courses\//);
+    // public-content contract: "Quelle" list links are commit-pinned so the
+    // /open-source list and the detail pages agree on the same tree. The
+    // upstream source folder is "ai-native" (never "ai-native-operator") —
+    // the exact collision risk this migration guarded against throughout.
+    expect(c.sourceHref).toBe(
+      `https://github.com/Mavengence/interactive-courses/tree/${IMPORTED_COURSE_SOURCE_COMMIT}/ai-native`,
+    );
+    expect(c.sourceCommitHref).toMatch(
+      new RegExp(
+        `^https://github\\.com/Mavengence/interactive-courses/tree/${IMPORTED_COURSE_SOURCE_COMMIT}/`,
+      ),
+    );
+    expect(c.licenseHref).toMatch(/^\/imported-courses\/licenses\//);
   });
 
   it("keeps every launchHref host on the external-dependency allowlist", () => {
@@ -109,30 +100,25 @@ describe("course catalog (shared course architecture)", () => {
     }
   });
 
-  it("keeps imported course structure aligned with the source repository", () => {
-    expect(
-      IMPORTED_COURSE_CATALOG.map((c) => ({
-        slug: c.slug,
-        unitCount: c.unitCount,
-        unitLabel: c.unitLabel,
-        totalLessons: c.totalLessons,
-        lessonCountLabel: c.lessonCountLabel,
-      })),
-    ).toEqual([
-      {
-        slug: "ai-native-operator",
-        unitCount: 9,
-        unitLabel: "Module",
-        totalLessons: 39,
-        lessonCountLabel: "39 Lektionen",
-      },
-    ]);
+  it("keeps ai-native-operator's structure aligned with the source repository, now inside COURSE_CATALOG", () => {
+    const c = getCatalogCourse("ai-native-operator")!;
+    expect({
+      unitCount: c.unitCount,
+      unitLabel: c.unitLabel,
+      totalLessons: c.totalLessons,
+      lessonCountLabel: c.lessonCountLabel,
+    }).toEqual({
+      unitCount: 9,
+      unitLabel: "Module",
+      totalLessons: 39,
+      lessonCountLabel: "39 Lektionen",
+    });
   });
 
   it("exposes a combined display catalog without changing native course semantics", () => {
     expect(ALL_COURSE_CATALOG).toHaveLength(10);
-    expect(COURSE_CATALOG).toHaveLength(9);
-    expect(IMPORTED_COURSE_CATALOG).toHaveLength(1);
+    expect(COURSE_CATALOG).toHaveLength(10);
+    expect(IMPORTED_COURSE_CATALOG).toHaveLength(0);
   });
 
   // plan 007 stage 10: the structural split is asserted via nativeStatus,
@@ -306,11 +292,12 @@ describe("course catalog (shared course architecture)", () => {
 
   it("uses internal landing + start hrefs that begin with the course base path", () => {
     // "claude"/"codex"/"data-infrastructure"/"data-engineering-fundamentals"/
-    // "data-science" are deliberate exceptions (plan 008 stage 10, plan 009
-    // stage 7, plan 010 stage 13, plan 011 stage 12, plan 012 stage 14):
-    // their URLs stay under /kurse/open-source/<slug> across the
-    // imported-to-native flip instead of moving to a top-level /<slug> path
-    // like the 4 German courses, so their public URLs never break.
+    // "data-science"/"ai-native-operator" are deliberate exceptions (plan
+    // 008 stage 10, plan 009 stage 7, plan 010 stage 13, plan 011 stage 12,
+    // plan 012 stage 14, plan 013 stage 12): their URLs stay under
+    // /kurse/open-source/<slug> across the imported-to-native flip instead
+    // of moving to a top-level /<slug> path like the 4 German courses, so
+    // their public URLs never break.
     const HREF_OVERRIDE: Partial<Record<string, string>> = {
       "ai-native": "ai-native",
       claude: "kurse/open-source/claude",
@@ -318,6 +305,7 @@ describe("course catalog (shared course architecture)", () => {
       "data-infrastructure": "kurse/open-source/data-infrastructure",
       "data-engineering-fundamentals": "kurse/open-source/data-engineering-fundamentals",
       "data-science": "kurse/open-source/data-science",
+      "ai-native-operator": "kurse/open-source/ai-native-operator",
     };
     for (const c of COURSE_CATALOG) {
       expect(c.href).toBe(`/${HREF_OVERRIDE[c.slug] ?? c.slug}`);
@@ -334,11 +322,16 @@ describe("course catalog (shared course architecture)", () => {
     expect(getCatalogCourse("does-not-exist")).toBeUndefined();
   });
 
-  it("getImportedCourse resolves imported course slugs only, not claude or codex (both moved to COURSE_CATALOG)", () => {
-    expect(getImportedCourse("ai-native-operator")?.language).toBe("Englisch");
+  it("getImportedCourse resolves nothing: every imported course (including ai-native-operator, plan 013 stage 12) has moved to COURSE_CATALOG", () => {
+    expect(getImportedCourse("ai-native-operator")).toBeUndefined();
     expect(getImportedCourse("ai-native")).toBeUndefined();
     expect(getImportedCourse("claude")).toBeUndefined();
     expect(getImportedCourse("codex")).toBeUndefined();
     expect(getImportedCourse("data-science")).toBeUndefined();
+  });
+
+  it("getCatalogCourse resolves ai-native-operator with its English-track facts", () => {
+    expect(getCatalogCourse("ai-native-operator")?.language).toBe("Englisch");
+    expect(getCatalogCourse("ai-native-operator")?.title).toBe("The AI-Native Operator");
   });
 });

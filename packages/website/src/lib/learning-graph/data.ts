@@ -74,6 +74,15 @@ const COURSE_NODE_META: Partial<Record<CourseSlug, CourseNodeMeta>> = {
     stage: "anwenden",
     evidenceMode: "self_attested",
   },
+  // AI-Native Operator (plan 013 stage 12): sixth and last imported course
+  // to flip to nativeStatus "live" — every ported course now needs
+  // course-node metadata like the 4 German courses above.
+  "ai-native-operator": {
+    audience: ["praktiker", "technische-vertiefung"],
+    level: "advanced",
+    stage: "anwenden",
+    evidenceMode: "self_attested",
+  },
 };
 
 function courseNodeMeta(slug: CourseSlug): CourseNodeMeta {

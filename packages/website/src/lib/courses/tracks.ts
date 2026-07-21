@@ -128,18 +128,22 @@ export const COURSE_FACTS: Record<string, CourseFacts> = {
 
   // Deeper — the 6 ported/imported English-track courses. "claude" (plan
   // 008), "codex" (plan 009), "data-infrastructure" (plan 010),
-  // "data-engineering-fundamentals" (plan 011), and "data-science" (plan
-  // 012) flipped nativeStatus to "live" (real routes, real progress,
-  // certificate), but stay in the "deeper" shelf per the confirmed
-  // /discuss decision: only the 4 German certified courses form the
-  // ordered spine. nativeStatus and group are independent axes — joining
-  // COURSE_CATALOG does not mean joining the spine.
+  // "data-engineering-fundamentals" (plan 011), "data-science" (plan 012),
+  // and "ai-native-operator" (plan 013) all flipped nativeStatus to "live"
+  // (real routes, real progress, certificate), but stay in the "deeper"
+  // shelf per the confirmed /discuss decision: only the 4 German certified
+  // courses form the ordered spine. nativeStatus and group are independent
+  // axes — joining COURSE_CATALOG does not mean joining the spine. Every
+  // one of the 6 ported courses is "deeper" — never "spine" — this is the
+  // single most important invariant in this migration (plan 008's
+  // post-implementation correction note has the full story of the one
+  // time this was gotten wrong).
   "claude": { group: "deeper", iconName: "Sparkles", language: "Englisch", record: "certificate", external: false, accent: "sand", badge: "Certificate · Englisch" },
   "codex": { group: "deeper", iconName: "TerminalSquare", language: "Englisch", record: "certificate", external: false, accent: "sand", badge: "Certificate · Englisch" },
   "data-engineering-fundamentals": { group: "deeper", iconName: "Database", language: "Englisch", record: "certificate", external: false, accent: "sand", badge: "Certificate · Englisch" },
   "data-science": { group: "deeper", iconName: "LineChart", language: "Englisch", record: "certificate", external: false, accent: "sand", badge: "Certificate · Englisch" },
   "data-infrastructure": { group: "deeper", iconName: "Server", language: "Englisch", record: "certificate", external: false, accent: "sand", badge: "Certificate · Englisch" },
-  "ai-native-operator": { group: "deeper", iconName: "Workflow", language: "Englisch", record: "none", external: true, accent: "sand", badge: "GitHub · MIT · Englisch" },
+  "ai-native-operator": { group: "deeper", iconName: "Workflow", language: "Englisch", record: "certificate", external: false, accent: "sand", badge: "Certificate · Englisch" },
 
   // Deeper — applied courses from real workshops (German).
   "geschaeftsberichte-mit-ki-lesen": { group: "deeper", iconName: "Presentation", language: "Deutsch", record: "none", external: false, accent: "amber", badge: "Workshop · Deutsch" },

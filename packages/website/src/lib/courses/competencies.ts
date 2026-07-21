@@ -201,6 +201,24 @@ export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency
       description: "Runs the five-act system-design interview structure — clarify, skeleton, deep dive, failure modes, trade-offs — under time pressure.",
     },
   ],
+  // English course (plan 013 stage 12): same reasoning as claude/codex above.
+  "ai-native-operator": [
+    {
+      id: "maturity-self-diagnosis",
+      label: "Honest AI-maturity self-diagnosis",
+      description: "Places themselves and their team on the L0-L3 maturity ladder honestly, calibrating trust to task type and cost of error rather than a single global verdict.",
+    },
+    {
+      id: "spec-first-delegation",
+      label: "Spec-first delegation",
+      description: "Writes an agent spec with a tight goal sentence, explicit non-goals, and concrete test cases, and directs a small fleet of agents against it instead of hand-typing the work.",
+    },
+    {
+      id: "governance-as-speed",
+      label: "Governance as a speed enabler",
+      description: "Builds the model registry, eval-driven release gate, and agent-identity audit trail that let a team move faster with agents, not slower.",
+    },
+  ],
 };
 
 const COURSE_TITLE: Record<string, string> = Object.fromEntries(

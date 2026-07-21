@@ -106,8 +106,9 @@ describe("learner-first course model", () => {
     expect(gesellschaft).toContainEqual({ label: "mit Lernnachweis", tone: "record" });
 
     // data-engineering-fundamentals flipped to a certified native course in
-    // plan 011 stage 12, data-science in plan 012 stage 14 —
-    // ai-native-operator is now the only "extern · GitHub" example left.
+    // plan 011 stage 12, data-science in plan 012 stage 14,
+    // ai-native-operator in plan 013 stage 12 — every ported course is now
+    // a certified native course; none render "extern · GitHub" anymore.
     const certifiedLab = courseBadges("data-engineering-fundamentals");
     expect(certifiedLab).toEqual([
       { label: "Englisch", tone: "language" },
@@ -120,12 +121,12 @@ describe("learner-first course model", () => {
       { label: "mit Certificate", tone: "record" },
     ]);
 
-    const lab = courseBadges("ai-native-operator");
-    expect(lab).toEqual([
+    const certifiedAno = courseBadges("ai-native-operator");
+    expect(certifiedAno).toEqual([
       { label: "Englisch", tone: "language" },
-      { label: "extern · GitHub", tone: "external" },
+      { label: "mit Certificate", tone: "record" },
     ]);
-    expect(lab.some((b) => b.tone === "record")).toBe(false);
+    expect(certifiedAno.some((b) => b.tone === "external")).toBe(false);
 
     expect(courseBadges("does-not-exist")).toEqual([]);
   });

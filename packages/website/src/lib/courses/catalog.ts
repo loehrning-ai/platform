@@ -447,54 +447,73 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     integrationNote:
       "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
   },
-] as const;
-
-export const IMPORTED_COURSE_SOURCE_COMMIT =
-  "0e5dfd327ce44663696b52eb6643bab147947101";
-
-const IMPORTED_COURSE_SOURCE_BASE = `https://github.com/Mavengence/interactive-courses/tree/${IMPORTED_COURSE_SOURCE_COMMIT}`;
-
-export const IMPORTED_COURSE_CATALOG: readonly ImportedCourse[] = [
-  // "claude"/"codex"/"data-infrastructure"/"data-engineering-fundamentals"/
-  // "data-science" moved to COURSE_CATALOG above (plan 008 stage 10 / plan
-  // 009 stage 7 / plan 010 stage 13 / plan 011 stage 12 / plan 012 stage
-  // 14: flipped to nativeStatus "live" now that they have real native
-  // routes).
+  // AI-Native Operator (plan 013 stage 12): sixth and last imported course
+  // flipped from "pending" to "live". Its URL structure stays under
+  // /kurse/open-source/ai-native-operator (not top-level like the 4 German
+  // courses, and never the bare /ai-native slug already owned by the
+  // native German course); startHref/continueHref both still start with
+  // `href` per the catalog's own invariant. No "/kurs" segment (matches
+  // data-engineering-fundamentals/data-science): modules and lessons live
+  // directly under the course root. sourceHref/sourceCommitHref inline the
+  // pinned commit literally (IMPORTED_COURSE_SOURCE_BASE/_COMMIT are
+  // declared further down this file, used by IMPORTED_COURSE_CATALOG,
+  // which this entry left) — same as claude/codex/data-infrastructure/
+  // data-engineering-fundamentals/data-science above.
   {
     slug: "ai-native-operator",
-    step: 1,
+    step: 10,
     title: "The AI-Native Operator",
-    eyebrow: "Technisches Lab · AI Operating Model",
+    eyebrow: "Schritt 10 · AI Operating Model",
     tagline: "Arbeitsweise, Engineering-Praxis und Organisationsdesign für AI-natives Arbeiten.",
     description:
-      "Neununddreißig praktische Lektionen in neun Modulen zu Mindset, Engineering-Praxis und Organisationsdesign für das Arbeiten mit KI-Agenten. Eine hash-geroutete Journey mit interaktiven Übungen und Quizzes.",
+      "Neununddreißig praktische Lektionen in neun Modulen zu Mindset, Engineering-Praxis, Product Building, Operations, Talent, Org-Design, Data-Infrastruktur, Governance und Measurement für das Arbeiten mit KI-Agenten. Mit 30 interaktiven Übungen und einem 22-Fragen-Workshop-Quiz. Auf Englisch, jetzt nativ auf loehrning.ai mit Fortschritt und Zertifikat.",
     href: "/kurse/open-source/ai-native-operator",
+    startHref: "/kurse/open-source/ai-native-operator/mindset/1",
+    continueHref: "/kurse/open-source/ai-native-operator",
+    duration: "ca. 14 Std.",
+    totalLessons: 39,
+    unitLabel: "Module",
+    unitCount: 9,
+    audience: "Fach- und Führungskräfte",
+    coverImage: "/imported-courses/screenshots/ai-native-operator.jpg",
+    coverImageAlt: "Startseite von The AI-Native Operator",
+    nativeStatus: "live",
     imageSrc: "/imported-courses/screenshots/ai-native-operator.jpg",
-    imageAlt: "Preview of The AI-Native Operator course",
+    imageAlt: "Screenshot of The AI-Native Operator course",
     launchHref: "https://www.timloehr.me/interactive-courses/ai-native/",
-    sourceHref: `${IMPORTED_COURSE_SOURCE_BASE}/ai-native`,
-    sourceCommitHref: `${IMPORTED_COURSE_SOURCE_BASE}/ai-native`,
+    sourceHref:
+      "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101/ai-native",
+    sourceCommitHref:
+      "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101/ai-native",
     licenseHref: "/imported-courses/licenses/interactive-courses-MIT-LICENSE.txt",
     sourceImagePath: "docs/screenshots/ai-native.jpg",
     sourceLicensePath: "LICENSE",
     imageSha256: "316f9b6a2a1aa2ea25ed27da113ed30028597fe0fb15416c52bad8fadbbdedf5",
     licenseSha256: "cc41d8f9e6580c3cd9ebe68f40af8e599d09beb147c3378ea010974ea76e07f3",
     licenseSizeBytes: 1066,
-    sourceCommit: IMPORTED_COURSE_SOURCE_COMMIT,
-    duration: "ca. 14 Std. Lektüre + 30 Übungen",
-    totalLessons: 39,
-    unitLabel: "Module",
-    unitCount: 9,
+    sourceCommit: "0e5dfd327ce44663696b52eb6643bab147947101",
     lessonCountLabel: "39 Lektionen",
-    audience: "Fach- und Führungskräfte",
     language: "Englisch",
     topics: ["Agents", "Workflows", "Orchestration", "Evals", "Org Design"],
-    sourceFacts: ["9 Module", "39 Lektionen", "30 Übungen", "Quizzes"],
+    sourceFacts: ["9 Module", "39 Lektionen", "30 Übungen", "Jetzt nativ"],
     integrationNote:
-      "Divergent vom deutschen AI-Native Arbeitskurs; als fortgeschrittenes Open-Source-Modul separat eingebunden.",
-    nativeStatus: "pending",
+      "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
   },
 ] as const;
+
+export const IMPORTED_COURSE_SOURCE_COMMIT =
+  "0e5dfd327ce44663696b52eb6643bab147947101";
+
+// "claude"/"codex"/"data-infrastructure"/"data-engineering-fundamentals"/
+// "data-science"/"ai-native-operator" all moved to COURSE_CATALOG above
+// (plan 008 stage 10 / plan 009 stage 7 / plan 010 stage 13 / plan 011
+// stage 12 / plan 012 stage 14 / plan 013 stage 12: flipped to
+// nativeStatus "live" now that they have real native routes). Every
+// imported course has now shipped natively — this array is empty by
+// construction until (if ever) a new course import starts its own pending
+// window, matching the exact same "machinery now, flip later" shape the
+// array always had.
+export const IMPORTED_COURSE_CATALOG: readonly ImportedCourse[] = [] as const;
 
 export const ALL_COURSE_CATALOG = [
   ...COURSE_CATALOG,

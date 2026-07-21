@@ -201,16 +201,17 @@ describe("unified progress store", () => {
     });
 
     it("ignores unknown imported-course slices when counting lesson badges", () => {
-      // "totally-unregistered-course" and "ai-native-operator" stand in for
-      // still-external, unregistered courses. "claude"/"codex"/
-      // "data-infrastructure"/"data-engineering-fundamentals"/"data-science"
-      // are deliberately not used here any more: plan 008 stage 10, plan 009
-      // stage 7, plan 010 stage 13, plan 011 stage 12, and plan 012 stage 14
-      // registered and flipped them to native courses, so their slices ARE
-      // now counted, which would break this test's premise if reused. The
-      // first placeholder is a slug that was never a real catalog member
-      // (not just "currently still external"), so this test stays valid
-      // even once "ai-native-operator" itself eventually flips (plan 013).
+      // "totally-unregistered-course" and "another-unregistered-course"
+      // stand in for slugs that were never real catalog members. None of
+      // the 6 originally-imported courses ("claude"/"codex"/
+      // "data-infrastructure"/"data-engineering-fundamentals"/
+      // "data-science"/"ai-native-operator") are used here any more: plan
+      // 008 stage 10, plan 009 stage 7, plan 010 stage 13, plan 011 stage
+      // 12, plan 012 stage 14, and plan 013 stage 12 registered and
+      // flipped every one of them to native courses, so their slices ARE
+      // now counted — reusing any of them here would break this test's
+      // premise. Purely-synthetic placeholder slugs keep the test valid
+      // permanently, independent of future catalog flips.
       const lesson = {
         sectionsRead: [],
         quizScore: null,
@@ -235,7 +236,7 @@ describe("unified progress store", () => {
           schemaVersion: 2,
           courses: {
             "totally-unregistered-course": slice,
-            "ai-native-operator": slice,
+            "another-unregistered-course": slice,
           },
           xp: 0,
           checkpoints: {},
