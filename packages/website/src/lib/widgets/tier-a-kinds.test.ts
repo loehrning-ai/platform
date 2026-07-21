@@ -30,6 +30,10 @@ describe("Tier-A widget kinds", () => {
       "interactive-diagram",
       "risk-pyramid",
       "obligation-layers",
+      // — Codex Course (plan 009 stage 2): the two genuinely new widget
+      // kinds, ported from codex/js/widgets.js's Terminal and Diff.
+      "terminal-replay",
+      "diff-viewer",
     ]);
   });
 
@@ -45,6 +49,8 @@ describe("Tier-A widget kinds", () => {
     expect(isTierAKind("failure-tagger")).toBe(true);
     expect(isTierAKind("redaction-drill")).toBe(true);
     expect(isTierAKind("drag-reorder")).toBe(true);
+    expect(isTierAKind("terminal-replay")).toBe(true);
+    expect(isTierAKind("diff-viewer")).toBe(true);
     expect(isTierAKind("demo-roi")).toBe(false);
     expect(isTierAKind("nope")).toBe(false);
   });

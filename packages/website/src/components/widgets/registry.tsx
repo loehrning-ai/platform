@@ -130,6 +130,16 @@ const REGISTRY: Record<WidgetKind, () => Promise<{ default: WidgetComponent }>> 
       default: m.ObligationLayersDiagram as unknown as WidgetComponent,
     })),
 
+  // ─── Codex Course, two genuinely new Tier-A kinds (plan 009 stage 2) ───
+  "terminal-replay": () =>
+    import("@/components/widgets/tier-a/terminal-replay").then((m) => ({
+      default: m.TerminalReplayWidget as unknown as WidgetComponent,
+    })),
+  "diff-viewer": () =>
+    import("@/components/widgets/tier-a/diff-viewer").then((m) => ({
+      default: m.DiffViewerWidget as unknown as WidgetComponent,
+    })),
+
   // ─── Practice Room — live Claude widgets (shared course architecture) ───
   "prompt-orrery": () =>
     import("@/components/widgets/practice/prompt-orrery").then((m) => ({

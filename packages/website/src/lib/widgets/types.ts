@@ -83,6 +83,13 @@ export const TIER_A_KINDS = [
   "interactive-diagram",
   "risk-pyramid",
   "obligation-layers",
+  // ─── Codex Course (plan 009 stage 2) ───
+  // The two genuinely new widget kinds codex needs, ported from
+  // `codex/js/widgets.js`'s Terminal (character-typewriter session replay)
+  // and Diff (stateless unified-diff line list). Every other codex widget
+  // instance reuses quiz/compare/task-spec/flashcards above verbatim.
+  "terminal-replay",
+  "diff-viewer",
 ] as const;
 
 /**
