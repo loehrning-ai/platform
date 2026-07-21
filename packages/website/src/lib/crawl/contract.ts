@@ -113,6 +113,15 @@ const PUBLIC_NOINDEX_PATHS = [
   // data-infrastructure.
   "/kurse/open-source/data-engineering-fundamentals/zertifikat",
   "/kurse/open-source/data-engineering-fundamentals/verifizierung",
+  // Data Science course (plan 012 stage 1) — added ahead of the routes
+  // themselves (stage 5) so contract-completeness.test.ts never goes red
+  // mid-plan. Same shape as data-engineering-fundamentals: chapters live
+  // directly under data-science/[chapterSlug] — no "/kurs" segment — and
+  // no "/quiz" entry, since this course has no quiz mechanism in source at
+  // all and uses the generic all-lessons-completed "completion"
+  // eligibility path.
+  "/kurse/open-source/data-science/zertifikat",
+  "/kurse/open-source/data-science/verifizierung",
 ] as const;
 
 // ─── Adding a new course's routes (plan 007 stage 12) ───────────────────
@@ -177,6 +186,9 @@ const PUBLIC_ACCESS_PATHS = [
   // (PUBLIC_INDEXABLE_PATHS matches by path string regardless of whether
   // the dynamic [slug] route or this static folder serves it).
   "/kurse/open-source/data-engineering-fundamentals/:path*",
+  // Data Science course (plan 012 stage 1, ahead of stage 5's real routes)
+  // — same flat-chapter shape as data-engineering-fundamentals above.
+  "/kurse/open-source/data-science/:path*",
 ] as const;
 
 const PUBLIC_MACHINE_PATHS = [

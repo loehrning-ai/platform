@@ -33,7 +33,7 @@ describe("course engine union (shared course architecture + 6)", () => {
     expect(isCourseRegistered("ai-native")).toBe(true);
   });
 
-  it("getRegisteredCourseSlugs returns all eight courses (plan 011 stage 1 adds data-engineering-fundamentals)", () => {
+  it("getRegisteredCourseSlugs returns all nine courses (plan 012 stage 1 adds data-science)", () => {
     const slugs = getRegisteredCourseSlugs();
     expect([...slugs].sort()).toEqual([
       "ai-native",
@@ -41,6 +41,7 @@ describe("course engine union (shared course architecture + 6)", () => {
       "codex",
       "data-engineering-fundamentals",
       "data-infrastructure",
+      "data-science",
       "eu-ai-act-kurs",
       "ki-fuehrerschein",
       "ki-und-gesellschaft",

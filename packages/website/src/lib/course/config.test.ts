@@ -9,6 +9,7 @@ import {
   CODEX_CONFIG,
   DATA_INFRASTRUCTURE_CONFIG,
   DATA_ENGINEERING_FUNDAMENTALS_CONFIG,
+  DATA_SCIENCE_CONFIG,
   getRegisteredCourseSlugs,
   isCourseRegistered,
   getCourseConfig,
@@ -24,7 +25,7 @@ import {
 const UNREGISTERED = "does-not-exist" as unknown as CourseSlug;
 
 describe("getRegisteredCourseSlugs", () => {
-  it("returns exactly the eight registered course slugs (plan 011 stage 1 adds data-engineering-fundamentals)", () => {
+  it("returns exactly the nine registered course slugs (plan 012 stage 1 adds data-science)", () => {
     const slugs = [...getRegisteredCourseSlugs()].sort();
     expect(slugs).toEqual([
       "ai-native",
@@ -32,6 +33,7 @@ describe("getRegisteredCourseSlugs", () => {
       "codex",
       "data-engineering-fundamentals",
       "data-infrastructure",
+      "data-science",
       "eu-ai-act-kurs",
       "ki-fuehrerschein",
       "ki-und-gesellschaft",
@@ -49,6 +51,7 @@ describe("isCourseRegistered", () => {
     expect(isCourseRegistered("codex")).toBe(true);
     expect(isCourseRegistered("data-infrastructure")).toBe(true);
     expect(isCourseRegistered("data-engineering-fundamentals")).toBe(true);
+    expect(isCourseRegistered("data-science")).toBe(true);
   });
 
   it("is false for an unregistered slug", () => {
@@ -122,6 +125,21 @@ describe("DATA_ENGINEERING_FUNDAMENTALS_CONFIG (plan 011 stage 1)", () => {
       "/kurse/open-source/data-engineering-fundamentals",
     );
     expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.blockIds).toEqual([]);
+  });
+});
+
+describe("DATA_SCIENCE_CONFIG (plan 012 stage 1)", () => {
+  it("registers data-science with English-language content and the all-lessons-completion cert path", () => {
+    expect(getCourseConfig("data-science")).toBe(DATA_SCIENCE_CONFIG);
+    expect(DATA_SCIENCE_CONFIG.slug).toBe("data-science");
+    expect(DATA_SCIENCE_CONFIG.language).toBe("en");
+    expect(DATA_SCIENCE_CONFIG.basePath).toBe("/kurse/open-source/data-science");
+    // Like data-engineering-fundamentals, this course has no `/kurs`-nested
+    // route — chapters live directly under `[chapterSlug]`, and the
+    // Overview renders at the course root — so coursePath must point at
+    // the real landing page, not a route that 404s.
+    expect(DATA_SCIENCE_CONFIG.coursePath).toBe("/kurse/open-source/data-science");
+    expect(DATA_SCIENCE_CONFIG.blockIds).toEqual([]);
   });
 });
 
