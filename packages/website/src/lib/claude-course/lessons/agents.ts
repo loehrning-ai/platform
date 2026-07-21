@@ -49,6 +49,15 @@ const lesson: ClaudeLesson = {
   ],
   widgets: [
     {
+      kind: "agent-loop",
+      placement: "after-intro",
+      courseSlug: "claude",
+      props: {
+        lessonId: "agents",
+        cpId: "loop",
+      },
+    },
+    {
       kind: "quiz",
       placement: "end",
       courseSlug: "claude",

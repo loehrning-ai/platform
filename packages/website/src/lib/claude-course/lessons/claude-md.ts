@@ -58,6 +58,15 @@ const lesson: ClaudeLesson = {
   ],
   widgets: [
     {
+      kind: "claude-md-builder",
+      placement: "after-intro",
+      courseSlug: "claude",
+      props: {
+        lessonId: "claude-md",
+        cpId: "built",
+      },
+    },
+    {
       kind: "quiz",
       placement: "before-quiz",
       courseSlug: "claude",

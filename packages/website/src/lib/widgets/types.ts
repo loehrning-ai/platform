@@ -113,6 +113,10 @@ export const CLAUDE_KINDS = [
   "fill-blank",
   "prompt-diff",
   "socratic-tutor",
+  "agent-loop",
+  "tokenizer",
+  "claude-md-builder",
+  "prompt-library-shaper",
 ] as const;
 
 export type DemoKind = (typeof DEMO_KINDS)[number];

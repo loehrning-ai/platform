@@ -51,6 +51,15 @@ const lesson: ClaudeLesson = {
   ],
   widgets: [
     {
+      kind: "prompt-library-shaper",
+      placement: "after-intro",
+      courseSlug: "claude",
+      props: {
+        lessonId: "team",
+        cpId: "shaper",
+      },
+    },
+    {
       kind: "quiz",
       placement: "end",
       courseSlug: "claude",

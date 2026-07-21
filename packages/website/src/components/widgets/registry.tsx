@@ -144,7 +144,12 @@ const REGISTRY: Record<WidgetKind, () => Promise<{ default: WidgetComponent }>> 
       default: m.SemanticSpaceWidget as unknown as WidgetComponent,
     })),
 
-  // ─── Claude Course — simulated-Claude widgets (plan 008) ───
+  // ─── Claude Course, simulated-Claude widgets (plan 008) ───
+  // `CheckpointFooter` (claude/js/widgets.js) is deliberately NOT ported:
+  // confirmed via `grep -o "mountWidget([^)]*CheckpointFooter" claude/lessons/*.html`
+  // returning zero matches across all 12 source lessons, it is dead code in
+  // the pinned source (every lesson's "mark complete" affordance is instead
+  // driven by the individual widget checkpoints already wired below).
   "prompt-sandbox": () =>
     import("@/components/widgets/claude/prompt-sandbox").then((m) => ({
       default: m.PromptSandboxWidget as unknown as WidgetComponent,
@@ -172,6 +177,22 @@ const REGISTRY: Record<WidgetKind, () => Promise<{ default: WidgetComponent }>> 
   "socratic-tutor": () =>
     import("@/components/widgets/claude/socratic-tutor").then((m) => ({
       default: m.SocraticTutorWidget as unknown as WidgetComponent,
+    })),
+  "agent-loop": () =>
+    import("@/components/widgets/claude/agent-loop").then((m) => ({
+      default: m.AgentLoopWidget as unknown as WidgetComponent,
+    })),
+  tokenizer: () =>
+    import("@/components/widgets/claude/tokenizer").then((m) => ({
+      default: m.TokenizerWidget as unknown as WidgetComponent,
+    })),
+  "claude-md-builder": () =>
+    import("@/components/widgets/claude/claude-md-builder").then((m) => ({
+      default: m.ClaudeMdBuilderWidget as unknown as WidgetComponent,
+    })),
+  "prompt-library-shaper": () =>
+    import("@/components/widgets/claude/prompt-library-shaper").then((m) => ({
+      default: m.PromptLibraryShaperWidget as unknown as WidgetComponent,
     })),
 } as const satisfies Record<WidgetKind, () => Promise<{ default: WidgetComponent }>>;
 

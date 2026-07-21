@@ -67,6 +67,15 @@ const lesson: ClaudeLesson = {
   ],
   widgets: [
     {
+      kind: "tokenizer",
+      placement: "after-intro",
+      courseSlug: "claude",
+      props: {
+        lessonId: "context",
+        cpId: "tok",
+      },
+    },
+    {
       kind: "prompt-sandbox",
       placement: "end",
       courseSlug: "claude",

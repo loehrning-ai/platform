@@ -15,6 +15,10 @@ import { RewriteArenaWidget } from "./rewrite-arena";
 import { FillBlankWidget } from "./fill-blank";
 import { PromptDiffWidget } from "./prompt-diff";
 import { SocraticTutorWidget } from "./socratic-tutor";
+import { AgentLoopWidget } from "./agent-loop";
+import { TokenizerWidget } from "./tokenizer";
+import { ClaudeMdBuilderWidget } from "./claude-md-builder";
+import { PromptLibraryShaperWidget } from "./prompt-library-shaper";
 
 function installLocalStoragePolyfill(): void {
   const store = new Map<string, string>();
@@ -342,5 +346,108 @@ describe("SocraticTutorWidget", () => {
     setReducedMotion(true);
     render(<SocraticTutorWidget lessonId="l1" cpId="tutor1" topic="topic" />);
     expect(screen.getByRole("textbox", { name: /your question/i })).toBeInTheDocument();
+  });
+});
+
+// ─── AgentLoop ───────────────────────────────────────────────────
+
+describe("AgentLoopWidget", () => {
+  it("shows the empty state before running", () => {
+    render(<AgentLoopWidget lessonId="l1" cpId="loop1" />);
+    expect(screen.getByText(/Click "Start loop"/i)).toBeInTheDocument();
+  });
+
+  it("runs the canned script and awards the checkpoint", async () => {
+    render(<AgentLoopWidget lessonId="l1" cpId="loop1" />);
+    fireEvent.click(screen.getByRole("button", { name: /Start loop/i }));
+    await waitFor(() => expect(isCheckpointDone("l1", "loop1")).toBe(true));
+    expect(screen.getAllByText(/answer/i).length).toBeGreaterThan(0);
+  });
+
+  it("renders with reduced motion enabled", () => {
+    setReducedMotion(true);
+    render(<AgentLoopWidget lessonId="l1" cpId="loop1" />);
+    expect(screen.getByRole("button", { name: /Start loop/i })).toBeInTheDocument();
+  });
+});
+
+// ─── Tokenizer ───────────────────────────────────────────────────
+
+describe("TokenizerWidget", () => {
+  it("renders the default text tokenized into colored spans", () => {
+    render(<TokenizerWidget lessonId="l1" cpId="tok1" />);
+    expect(screen.getByRole("textbox", { name: /text to tokenize/i })).toHaveValue(
+      "The quick brown fox jumps over the lazy dog.",
+    );
+  });
+
+  it("awards the checkpoint once the text exceeds 80 characters", () => {
+    render(<TokenizerWidget lessonId="l1" cpId="tok1" />);
+    const textarea = screen.getByRole("textbox", { name: /text to tokenize/i });
+    fireEvent.change(textarea, {
+      target: { value: "x".repeat(90) },
+    });
+    expect(isCheckpointDone("l1", "tok1")).toBe(true);
+  });
+
+  it("does not award the checkpoint under 80 characters", () => {
+    render(<TokenizerWidget lessonId="l1" cpId="tok1" />);
+    const textarea = screen.getByRole("textbox", { name: /text to tokenize/i });
+    fireEvent.change(textarea, { target: { value: "short" } });
+    expect(isCheckpointDone("l1", "tok1")).toBe(false);
+  });
+});
+
+// ─── ClaudeMdBuilder ─────────────────────────────────────────────
+
+describe("ClaudeMdBuilderWidget", () => {
+  it("keeps generate disabled until project and stack are filled", () => {
+    render(<ClaudeMdBuilderWidget lessonId="l1" cpId="builder1" />);
+    expect(screen.getByRole("button", { name: /Generate CLAUDE.md/i })).toBeDisabled();
+  });
+
+  it("generates a CLAUDE.md from the form and awards the checkpoint", async () => {
+    render(<ClaudeMdBuilderWidget lessonId="l1" cpId="builder1" />);
+    fireEvent.change(screen.getByPlaceholderText(/Reporting dashboard/i), {
+      target: { value: "My project" },
+    });
+    fireEvent.change(screen.getByPlaceholderText(/TypeScript, React 18/i), {
+      target: { value: "TypeScript" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Generate CLAUDE.md/i }));
+    await waitFor(() => expect(isCheckpointDone("l1", "builder1")).toBe(true));
+    expect(screen.getAllByText(/My project/).length).toBeGreaterThan(0);
+  });
+
+  it("renders with reduced motion enabled", () => {
+    setReducedMotion(true);
+    render(<ClaudeMdBuilderWidget lessonId="l1" cpId="builder1" />);
+    expect(screen.getByRole("button", { name: /Generate CLAUDE.md/i })).toBeInTheDocument();
+  });
+});
+
+// ─── PromptLibraryShaper ─────────────────────────────────────────
+
+describe("PromptLibraryShaperWidget", () => {
+  it("starts with the sample prompt and a sub-100 shareability score", () => {
+    render(<PromptLibraryShaperWidget lessonId="l1" cpId="shaper1" />);
+    expect(screen.getByText(/shareability · /)).toBeInTheDocument();
+  });
+
+  it("loading the ideal version raises the score to 80+ and reviewing awards the checkpoint", async () => {
+    render(<PromptLibraryShaperWidget lessonId="l1" cpId="shaper1" />);
+    fireEvent.click(screen.getByRole("button", { name: /Load an ideal version/i }));
+    // Matches the source's own `loadIdeal()` text exactly, which itself
+    // scores 80 (not 100) against these checks: "EXAMPLE OUTPUT" has no
+    // colon and no code fence, so the "sample output" check stays unmet.
+    expect(screen.getByText("shareability · 80")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /Let Claude review/i }));
+    await waitFor(() => expect(isCheckpointDone("l1", "shaper1")).toBe(true));
+  });
+
+  it("renders with reduced motion enabled", () => {
+    setReducedMotion(true);
+    render(<PromptLibraryShaperWidget lessonId="l1" cpId="shaper1" />);
+    expect(screen.getByRole("button", { name: /Let Claude review/i })).toBeInTheDocument();
   });
 });
