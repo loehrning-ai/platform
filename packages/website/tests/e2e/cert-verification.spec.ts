@@ -44,6 +44,16 @@ const COURSES = [
     slug: "codex",
     title: /Codex Course/,
   },
+  // plan 010 stage 14: data-infrastructure, same nested-path shape and
+  // "completion" eligibility path as codex. The m: "quiz" payload below is
+  // shared test-mechanism scaffolding, not a claim this course actually
+  // issues quiz-mode certificates — it only exercises decodeHash/course-
+  // match/bit-flip-rejection generically, identically to every other row.
+  {
+    route: "/kurse/open-source/data-infrastructure/verifizierung",
+    slug: "data-infrastructure",
+    title: /Data Infrastructure/,
+  },
 ] as const;
 
 /** Encode a certificate payload exactly like the app's serializer (base64url). */

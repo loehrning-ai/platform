@@ -37,6 +37,8 @@ const PUBLIC_ROUTES = [
   "/kurse/open-source/claude",
   // plan 009 stage 8: codex's landing, same nested convention as claude.
   "/kurse/open-source/codex",
+  // plan 010 stage 14: data-infrastructure's landing, same nested convention.
+  "/kurse/open-source/data-infrastructure",
   "/blog",
   "/open-source",
   "/open-source/lizenzrichtlinie",
@@ -214,6 +216,16 @@ test.describe("sitemap lists only contract-included paths", () => {
     const response = await request.get("/sitemap.xml");
     const body = await response.text();
     expect(body).not.toContain("/kurse/open-source/codex/kurs");
+  });
+
+  // plan 010 stage 14: data-infrastructure's reader tree is public-access
+  // (not indexed), same convention as claude/codex above.
+  test("sitemap.xml does not contain /kurse/open-source/data-infrastructure/kurs", async ({
+    request,
+  }) => {
+    const response = await request.get("/sitemap.xml");
+    const body = await response.text();
+    expect(body).not.toContain("/kurse/open-source/data-infrastructure/kurs");
   });
 
   test("sitemap.xml does not contain /ki-transformation-check", async ({
