@@ -161,6 +161,20 @@ export function orderedModuleMetas(): readonly AiNativeOperatorModuleMeta[] {
   return MODULE_IDS.map((id) => MODULE_META[id]);
 }
 
+/** Ported verbatim from `course-data.js`'s `COURSE_META` (title/subtitle/outcomes). */
+export const COURSE_META = {
+  title: "The AI-Native Operator",
+  subtitle:
+    "A 9-module course for individuals, leaders, and executives who intend to compete in 2026 and beyond.",
+  duration: "~14 hours of reading + 30 exercises",
+  outcomes: [
+    "Diagnose your own AI maturity across 9 dimensions, honestly.",
+    'Operate at "L3 — Conductor": directing fleets of agents, not keystroking.',
+    "Redesign a product, a team, or an org around AI-native primitives.",
+    "Build a governance + measurement system that lets you go faster, not slower.",
+  ],
+} as const;
+
 // ─── Callouts ────────────────────────────────────────────────────
 
 /** Ported from `course-app.js`'s `Callout` component (quote/spec/note/warn). */
