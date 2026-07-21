@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { MarkChapterVisited } from "@/components/data-engineering-fundamentals/mark-chapter-visited";
 import { getDefChapterComponent } from "@/lib/data-engineering-fundamentals/content";
 import { DEF_CHAPTERS, DEF_CHAPTER_IDS, getDefChapterMeta, isDefChapterId } from "@/lib/data-engineering-fundamentals/types";
 import { SITE_URL } from "@/lib/seo/json-ld";
@@ -44,6 +45,7 @@ export default async function DefChapterRoute({ params }: PageProps) {
 
   return (
     <div className="content">
+      <MarkChapterVisited chapterId={chapterId} />
       <ChapterComponent chapter={meta} />
       <nav className="tb" aria-label="Chapter pagination" style={{ marginTop: 48 }}>
         {prev ? (
