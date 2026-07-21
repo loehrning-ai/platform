@@ -57,6 +57,14 @@ describe("course catalog (shared course architecture)", () => {
       "data-science",
       "ai-native-operator",
     ]);
+    // Temporary per-slug exception (plan 011 stage 1, mirroring plan 010
+    // stage 1's own note): "data-engineering-fundamentals" registers its
+    // CourseConfig ahead of the catalog flip (stage 12), same sequencing as
+    // claude/codex/data-infrastructure's own stage-1 precedent. Removed once
+    // the catalog entry flips and this slug leaves IMPORTED_COURSE_CATALOG.
+    const REGISTERED_AHEAD_OF_CATALOG_FLIP: readonly string[] = [
+      "data-engineering-fundamentals",
+    ];
     for (const c of IMPORTED_COURSE_CATALOG) {
       // CourseSlug (plan 007 stage 1) now spans both native and imported
       // courses by design, so the meaningful invariant is that imported
@@ -65,7 +73,9 @@ describe("course catalog (shared course architecture)", () => {
       // this array entirely in plan 008 stage 10, "codex" in plan 009 stage
       // 7, "data-infrastructure" in plan 010 stage 13 (all three flipped to
       // nativeStatus "live", moved into COURSE_CATALOG).
-      expect(getRegisteredCourseSlugs()).not.toContain(c.slug);
+      if (!REGISTERED_AHEAD_OF_CATALOG_FLIP.includes(c.slug)) {
+        expect(getRegisteredCourseSlugs()).not.toContain(c.slug);
+      }
       expect(c.href).toBe(`/kurse/open-source/${c.slug}`);
       expect(c.launchHref).toMatch(/^https:\/\/www\.timloehr\.me\/interactive-courses\//);
       // public-content contract: "Quelle" list links are commit-pinned so the

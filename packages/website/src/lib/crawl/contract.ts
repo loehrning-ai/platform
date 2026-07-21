@@ -102,6 +102,14 @@ const PUBLIC_NOINDEX_PATHS = [
   // "completion" eligibility path as codex.
   "/kurse/open-source/data-infrastructure/kurs/zertifikat",
   "/kurse/open-source/data-infrastructure/verifizierung",
+  // Data Engineering Fundamentals course (plan 011 stage 1) — added ahead of
+  // the routes themselves (stage 10) so contract-completeness.test.ts never
+  // goes red mid-plan. No "/kurs/quiz" entry: this course has no quiz
+  // mechanism in source at all, it uses the same generic
+  // all-lessons-completed "completion" eligibility path as codex/
+  // data-infrastructure.
+  "/kurse/open-source/data-engineering-fundamentals/kurs/zertifikat",
+  "/kurse/open-source/data-engineering-fundamentals/verifizierung",
 ] as const;
 
 // ─── Adding a new course's routes (plan 007 stage 12) ───────────────────
@@ -158,6 +166,9 @@ const PUBLIC_ACCESS_PATHS = [
   // Data Infrastructure course (plan 010 stage 1) — see the noindex entries above.
   "/kurse/open-source/data-infrastructure/kurs",
   "/kurse/open-source/data-infrastructure/kurs/:path*",
+  // Data Engineering Fundamentals course (plan 011 stage 1) — see the noindex entries above.
+  "/kurse/open-source/data-engineering-fundamentals/kurs",
+  "/kurse/open-source/data-engineering-fundamentals/kurs/:path*",
 ] as const;
 
 const PUBLIC_MACHINE_PATHS = [

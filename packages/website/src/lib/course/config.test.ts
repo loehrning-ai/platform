@@ -8,6 +8,7 @@ import {
   CLAUDE_CONFIG,
   CODEX_CONFIG,
   DATA_INFRASTRUCTURE_CONFIG,
+  DATA_ENGINEERING_FUNDAMENTALS_CONFIG,
   getRegisteredCourseSlugs,
   isCourseRegistered,
   getCourseConfig,
@@ -23,12 +24,13 @@ import {
 const UNREGISTERED = "does-not-exist" as unknown as CourseSlug;
 
 describe("getRegisteredCourseSlugs", () => {
-  it("returns exactly the seven registered course slugs (plan 010 stage 1 adds data-infrastructure)", () => {
+  it("returns exactly the eight registered course slugs (plan 011 stage 1 adds data-engineering-fundamentals)", () => {
     const slugs = [...getRegisteredCourseSlugs()].sort();
     expect(slugs).toEqual([
       "ai-native",
       "claude",
       "codex",
+      "data-engineering-fundamentals",
       "data-infrastructure",
       "eu-ai-act-kurs",
       "ki-fuehrerschein",
@@ -46,6 +48,7 @@ describe("isCourseRegistered", () => {
     expect(isCourseRegistered("claude")).toBe(true);
     expect(isCourseRegistered("codex")).toBe(true);
     expect(isCourseRegistered("data-infrastructure")).toBe(true);
+    expect(isCourseRegistered("data-engineering-fundamentals")).toBe(true);
   });
 
   it("is false for an unregistered slug", () => {
@@ -98,6 +101,23 @@ describe("DATA_INFRASTRUCTURE_CONFIG (plan 010 stage 1)", () => {
       "/kurse/open-source/data-infrastructure/kurs",
     );
     expect(DATA_INFRASTRUCTURE_CONFIG.blockIds).toEqual([]);
+  });
+});
+
+describe("DATA_ENGINEERING_FUNDAMENTALS_CONFIG (plan 011 stage 1)", () => {
+  it("registers data-engineering-fundamentals with English-language content and the all-lessons-completion cert path", () => {
+    expect(getCourseConfig("data-engineering-fundamentals")).toBe(
+      DATA_ENGINEERING_FUNDAMENTALS_CONFIG,
+    );
+    expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.slug).toBe("data-engineering-fundamentals");
+    expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.language).toBe("en");
+    expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.basePath).toBe(
+      "/kurse/open-source/data-engineering-fundamentals",
+    );
+    expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.coursePath).toBe(
+      "/kurse/open-source/data-engineering-fundamentals/kurs",
+    );
+    expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.blockIds).toEqual([]);
   });
 });
 
