@@ -201,12 +201,12 @@ describe("unified progress store", () => {
     });
 
     it("ignores unknown imported-course slices when counting lesson badges", () => {
-      // "data-infrastructure" and "data-science" stand in for still-
-      // external, unregistered courses. "claude" and "codex" are
-      // deliberately not used here any more: plan 008 stage 10 and plan
-      // 009 stage 7 registered and flipped them to native courses, so
-      // their slices ARE now counted, which would break this test's
-      // premise if reused.
+      // "data-engineering-fundamentals" and "data-science" stand in for
+      // still-external, unregistered courses. "claude"/"codex"/
+      // "data-infrastructure" are deliberately not used here any more: plan
+      // 008 stage 10, plan 009 stage 7, and plan 010 stage 13 registered and
+      // flipped them to native courses, so their slices ARE now counted,
+      // which would break this test's premise if reused.
       const lesson = {
         sectionsRead: [],
         quizScore: null,
@@ -230,7 +230,7 @@ describe("unified progress store", () => {
         JSON.stringify({
           schemaVersion: 2,
           courses: {
-            "data-infrastructure": slice,
+            "data-engineering-fundamentals": slice,
             "data-science": slice,
           },
           xp: 0,

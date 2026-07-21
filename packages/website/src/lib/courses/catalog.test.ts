@@ -29,7 +29,7 @@ function sha256(path: string): string {
 }
 
 describe("course catalog (shared course architecture)", () => {
-  it("lists all six native courses in the recommended learning order (plan 009 stage 7 adds codex)", () => {
+  it("lists all seven native courses in the recommended learning order (plan 010 stage 13 adds data-infrastructure)", () => {
     expect(COURSE_CATALOG.map((c) => c.slug)).toEqual([
       "ki-fuehrerschein",
       "ki-und-gesellschaft",
@@ -37,11 +37,12 @@ describe("course catalog (shared course architecture)", () => {
       "ai-native",
       "claude",
       "codex",
+      "data-infrastructure",
     ]);
   });
 
-  it("numbers the learning-path steps 1 through 6", () => {
-    expect(COURSE_CATALOG.map((c) => c.step)).toEqual([1, 2, 3, 4, 5, 6]);
+  it("numbers the learning-path steps 1 through 7", () => {
+    expect(COURSE_CATALOG.map((c) => c.step)).toEqual([1, 2, 3, 4, 5, 6, 7]);
   });
 
   it("only references slugs registered in the shared course engine", () => {
@@ -54,7 +55,6 @@ describe("course catalog (shared course architecture)", () => {
     expect(IMPORTED_COURSE_CATALOG.map((c) => c.slug)).toEqual([
       "data-engineering-fundamentals",
       "data-science",
-      "data-infrastructure",
       "ai-native-operator",
     ]);
     for (const c of IMPORTED_COURSE_CATALOG) {
@@ -63,12 +63,8 @@ describe("course catalog (shared course architecture)", () => {
       // courses stay unregistered in the shared progress engine, not that
       // their slug is absent from the wider CourseSlug union. "claude" left
       // this array entirely in plan 008 stage 10, "codex" in plan 009 stage
-      // 7 (both flipped to nativeStatus "live", moved into COURSE_CATALOG).
-      // "data-infrastructure" is mid-flight for plan 010 (stage 1 already
-      // registered its CourseConfig ahead of the routes/catalog work, same
-      // sequencing claude/codex used) — exempted here until stage 13 flips
-      // its catalog entry and removes it from this array too.
-      if (c.slug === "data-infrastructure") continue;
+      // 7, "data-infrastructure" in plan 010 stage 13 (all three flipped to
+      // nativeStatus "live", moved into COURSE_CATALOG).
       expect(getRegisteredCourseSlugs()).not.toContain(c.slug);
       expect(c.href).toBe(`/kurse/open-source/${c.slug}`);
       expect(c.launchHref).toMatch(/^https:\/\/www\.timloehr\.me\/interactive-courses\//);
@@ -131,13 +127,6 @@ describe("course catalog (shared course architecture)", () => {
         lessonCountLabel: "12 Kapitel",
       },
       {
-        slug: "data-infrastructure",
-        unitCount: 4,
-        unitLabel: "Tracks",
-        totalLessons: 12,
-        lessonCountLabel: "12 Lektionen",
-      },
-      {
         slug: "ai-native-operator",
         unitCount: 9,
         unitLabel: "Module",
@@ -149,8 +138,8 @@ describe("course catalog (shared course architecture)", () => {
 
   it("exposes a combined display catalog without changing native course semantics", () => {
     expect(ALL_COURSE_CATALOG).toHaveLength(10);
-    expect(COURSE_CATALOG).toHaveLength(6);
-    expect(IMPORTED_COURSE_CATALOG).toHaveLength(4);
+    expect(COURSE_CATALOG).toHaveLength(7);
+    expect(IMPORTED_COURSE_CATALOG).toHaveLength(3);
   });
 
   // plan 007 stage 10: the structural split is asserted via nativeStatus,
@@ -272,15 +261,16 @@ describe("course catalog (shared course architecture)", () => {
   });
 
   it("uses internal landing + start hrefs that begin with the course base path", () => {
-    // "claude"/"codex" are deliberate exceptions (plan 008 stage 10, plan
-    // 009 stage 7): their URLs stay under /kurse/open-source/<slug> across
-    // the imported-to-native flip instead of moving to a top-level
-    // /<slug> path like the 4 German courses, so their public URLs never
-    // break.
+    // "claude"/"codex"/"data-infrastructure" are deliberate exceptions
+    // (plan 008 stage 10, plan 009 stage 7, plan 010 stage 13): their URLs
+    // stay under /kurse/open-source/<slug> across the imported-to-native
+    // flip instead of moving to a top-level /<slug> path like the 4 German
+    // courses, so their public URLs never break.
     const HREF_OVERRIDE: Partial<Record<string, string>> = {
       "ai-native": "ai-native",
       claude: "kurse/open-source/claude",
       codex: "kurse/open-source/codex",
+      "data-infrastructure": "kurse/open-source/data-infrastructure",
     };
     for (const c of COURSE_CATALOG) {
       expect(c.href).toBe(`/${HREF_OVERRIDE[c.slug] ?? c.slug}`);

@@ -147,6 +147,24 @@ export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency
       description: "Decomposes work into independent tasks and runs multiple agents across git worktrees without merge conflicts.",
     },
   ],
+  // English course (plan 010 stage 13): same reasoning as claude/codex above.
+  "data-infrastructure": [
+    {
+      id: "system-design-tradeoffs",
+      label: "System-design trade-offs",
+      description: "Names the CAP/PACELC trade-off explicitly and matches storage/streaming choices to real latency and freshness targets.",
+    },
+    {
+      id: "storage-format-internals",
+      label: "Storage-format internals",
+      description: "Reasons about row-vs-columnar layout, Parquet row groups, predicate pushdown, and lakehouse table formats at the byte level.",
+    },
+    {
+      id: "ic5-interview-structure",
+      label: "IC5 interview structure",
+      description: "Runs the five-act system-design interview structure — clarify, skeleton, deep dive, failure modes, trade-offs — under time pressure.",
+    },
+  ],
 };
 
 const COURSE_TITLE: Record<string, string> = Object.fromEntries(

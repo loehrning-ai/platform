@@ -38,11 +38,11 @@ const COURSE_NODE_META: Partial<Record<CourseSlug, CourseNodeMeta>> = {
     stage: "anwenden",
     evidenceMode: "self_attested",
   },
-  // Claude Course (plan 008 stage 10) / Codex Course (plan 009 stage 7):
-  // imported courses flipped to nativeStatus "live", so they now need
-  // course-node metadata like the 4 German courses above (their still-
-  // imported siblings surface as `open_source_lab` nodes via `labNodes`
-  // instead).
+  // Claude Course (plan 008 stage 10) / Codex Course (plan 009 stage 7) /
+  // Data Infrastructure (plan 010 stage 13): imported courses flipped to
+  // nativeStatus "live", so they now need course-node metadata like the 4
+  // German courses above (their still-imported siblings surface as
+  // `open_source_lab` nodes via `labNodes` instead).
   claude: {
     audience: ["praktiker", "technische-vertiefung"],
     level: "advanced",
@@ -50,6 +50,12 @@ const COURSE_NODE_META: Partial<Record<CourseSlug, CourseNodeMeta>> = {
     evidenceMode: "self_attested",
   },
   codex: {
+    audience: ["praktiker", "technische-vertiefung"],
+    level: "advanced",
+    stage: "anwenden",
+    evidenceMode: "self_attested",
+  },
+  "data-infrastructure": {
     audience: ["praktiker", "technische-vertiefung"],
     level: "advanced",
     stage: "anwenden",

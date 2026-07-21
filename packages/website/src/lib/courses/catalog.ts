@@ -299,6 +299,58 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     integrationNote:
       "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
   },
+  // Data Infrastructure (plan 010 stage 13): third imported course flipped
+  // from "pending" to "live" now that it has real native routes, per-lesson
+  // content, and certificate/verification wiring. Its URL structure stays
+  // under /kurse/open-source/data-infrastructure (not top-level like the 4
+  // German courses) to keep the public URL stable across the
+  // imported-to-native flip; startHref/continueHref both still start with
+  // `href` per the catalog's own invariant. Provenance fields are retained
+  // (not deleted) so open-source attribution survives the flip, per
+  // catalog.ts's own documented convention for ImportedCourse-only fields
+  // on CatalogCourse. sourceHref/sourceCommitHref inline the pinned commit
+  // literally (IMPORTED_COURSE_SOURCE_BASE/_COMMIT are declared further
+  // down, used by IMPORTED_COURSE_CATALOG) — same as claude/codex above.
+  {
+    slug: "data-infrastructure",
+    step: 7,
+    title: "Data Infrastructure",
+    eyebrow: "Schritt 07 · System Design",
+    tagline: "Der Data Stack auf Staff-Engineer-System-Design-Tiefe.",
+    description:
+      "12 Lektionen zu Storage-Internals, CAP/PACELC, Modeling, Parquet/ORC/Avro, Lakehouse-Formaten, Streaming/Watermarks, CDC/Lambda/Kappa, Idempotenz und Daten-SLAs. Mit interaktiven Simulationen und IC5-Interview-Replay. Auf Englisch, jetzt nativ auf loehrning.ai mit Fortschritt und Zertifikat.",
+    href: "/kurse/open-source/data-infrastructure",
+    startHref: "/kurse/open-source/data-infrastructure/kurs/mental-model",
+    continueHref: "/kurse/open-source/data-infrastructure/kurs",
+    duration: "ca. 3 Std.",
+    totalLessons: 12,
+    unitLabel: "Tracks",
+    unitCount: 4,
+    audience: "Senior/Staff Data Engineers, IC5+-Kandidaten, Datenplattform-Teams",
+    coverImage: "/imported-courses/screenshots/data-infrastructure.jpg",
+    coverImageAlt: "Startseite von Data Infrastructure",
+    nativeStatus: "live",
+    imageSrc: "/imported-courses/screenshots/data-infrastructure.jpg",
+    imageAlt: "Screenshot des Kurses Data Infrastructure - IC5 System Design Field Guide",
+    launchHref: "https://www.timloehr.me/interactive-courses/data-infrastructure/",
+    sourceHref:
+      "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101/data-infrastructure",
+    sourceCommitHref:
+      "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101/data-infrastructure",
+    licenseHref: "/imported-courses/licenses/interactive-courses-MIT-LICENSE.txt",
+    sourceImagePath: "docs/screenshots/data-infrastructure.jpg",
+    sourceLicensePath: "LICENSE",
+    imageSha256: "17bf2d0b0c371df8a1deedee4230c94aa058a7efda828400e96999ffaca42258",
+    licenseSha256: "cc41d8f9e6580c3cd9ebe68f40af8e599d09beb147c3378ea010974ea76e07f3",
+    licenseSizeBytes: 1066,
+    sourceCommit: "0e5dfd327ce44663696b52eb6643bab147947101",
+    lessonCountLabel: "12 Lektionen",
+    language: "Englisch",
+    topics: ["Snowflake", "BigQuery", "Kafka", "Iceberg", "Spark"],
+    sourceFacts: ["4 Tracks", "12 Lektionen", "Live-Simulationen", "Jetzt nativ"],
+    integrationNote:
+      "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
+  },
 ] as const;
 
 export const IMPORTED_COURSE_SOURCE_COMMIT =
@@ -375,46 +427,12 @@ export const IMPORTED_COURSE_CATALOG: readonly ImportedCourse[] = [
       "Als externer Open-Source-Kurs gerahmt, damit die interaktiven Simulationen erhalten bleiben, ohne globale CSP-Regeln zu lockern.",
     nativeStatus: "pending",
   },
-  {
-    slug: "data-infrastructure",
-    step: 3,
-    title: "Data Infrastructure",
-    eyebrow: "Technisches Lab · System Design",
-    tagline: "Der Data Stack auf Staff-Engineer-System-Design-Tiefe.",
-    description:
-      "12 Lektionen zu Storage-Internals, CAP/PACELC, Modeling, Parquet/ORC/Avro, Lakehouse-Formaten, Streaming/Watermarks, CDC/Lambda/Kappa, Idempotenz und Daten-SLAs. Mit interaktiven Diagrammen, 40+ Live-Simulationen und IC5-Interview-Replay.",
-    href: "/kurse/open-source/data-infrastructure",
-    imageSrc: "/imported-courses/screenshots/data-infrastructure.jpg",
-    imageAlt: "Screenshot des Kurses Data Infrastructure - IC5 System Design Field Guide",
-    launchHref: "https://www.timloehr.me/interactive-courses/data-infrastructure/",
-    sourceHref: `${IMPORTED_COURSE_SOURCE_BASE}/data-infrastructure`,
-    sourceCommitHref: `${IMPORTED_COURSE_SOURCE_BASE}/data-infrastructure`,
-    licenseHref: "/imported-courses/licenses/interactive-courses-MIT-LICENSE.txt",
-    sourceImagePath: "docs/screenshots/data-infrastructure.jpg",
-    sourceLicensePath: "LICENSE",
-    imageSha256: "17bf2d0b0c371df8a1deedee4230c94aa058a7efda828400e96999ffaca42258",
-    licenseSha256: "cc41d8f9e6580c3cd9ebe68f40af8e599d09beb147c3378ea010974ea76e07f3",
-    licenseSizeBytes: 1066,
-    sourceCommit: IMPORTED_COURSE_SOURCE_COMMIT,
-    duration: "ca. 3 Std.",
-    totalLessons: 12,
-    unitLabel: "Tracks",
-    unitCount: 4,
-    lessonCountLabel: "12 Lektionen",
-    audience: "Senior/Staff Data Engineers, IC5+-Kandidaten, Datenplattform-Teams",
-    language: "Englisch",
-    topics: ["Snowflake", "BigQuery", "Kafka", "Iceberg", "Spark"],
-    sourceFacts: ["4 Tracks", "12 Lektionen", "40+ Live-Simulationen", "IC5 Interview"],
-    integrationNote:
-      "Als Open-Source-Browserkurs verlinkt; Fortschritt bleibt extern, damit die interaktiven Simulatoren und das Interview-Replay ohne globale Sicherheitslockerung lauffähig bleiben.",
-    nativeStatus: "pending",
-  },
-  // "claude"/"codex" moved to COURSE_CATALOG above (plan 008 stage 10 /
-  // plan 009 stage 7: flipped to nativeStatus "live" now that they have
-  // real native routes).
+  // "claude"/"codex"/"data-infrastructure" moved to COURSE_CATALOG above
+  // (plan 008 stage 10 / plan 009 stage 7 / plan 010 stage 13: flipped to
+  // nativeStatus "live" now that they have real native routes).
   {
     slug: "ai-native-operator",
-    step: 4,
+    step: 3,
     title: "The AI-Native Operator",
     eyebrow: "Technisches Lab · AI Operating Model",
     tagline: "Arbeitsweise, Engineering-Praxis und Organisationsdesign für AI-natives Arbeiten.",
