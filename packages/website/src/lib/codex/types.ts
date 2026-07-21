@@ -147,6 +147,7 @@ export interface CodexSection extends LessonSection {
  * as a `"quiz"` kind widget instead (see ./lessons/*.ts).
  */
 export interface CodexLesson extends BaseLesson {
+  readonly id: LessonId;
   readonly sections: readonly CodexSection[];
   readonly trackId: Track;
   readonly hook: string;
