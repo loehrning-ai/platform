@@ -351,6 +351,55 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     integrationNote:
       "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
   },
+  // Data Engineering Fundamentals (plan 011 stage 12): fourth imported
+  // course flipped from "pending" to "live". totalLessons/unitCount
+  // reconciled from the catalog's stale 10 to the real 12 (App.js's
+  // CHAPTERS array: home/fund/ingest/stream/store/comp/orch/qual/disc/
+  // serve/gov/cap) — the pre-flip ImportedCourse entry undercounted this
+  // by 2. URL structure has no "/kurs" segment (unlike every other
+  // course): startHref/continueHref both point directly under
+  // /kurse/open-source/data-engineering-fundamentals, matching this
+  // course's own flat [chapterId] route tree (plan 011 stage 10).
+  {
+    slug: "data-engineering-fundamentals",
+    step: 8,
+    title: "Data Engineering Fundamentals",
+    eyebrow: "Schritt 08 · Data Engineering",
+    tagline: "Produktionsreife Datenpipelines, von der Quelle bis zum Serving.",
+    description:
+      "12 Kapitel zu Storage & Formaten, Ingest, Streaming, Storage-Mustern, Compute, Orchestrierung, Data Quality, Discovery, Serving und Governance. Mit 17 interaktiven Simulationen und einem sabotierbaren Capstone. Auf Englisch, jetzt nativ auf loehrning.ai mit Fortschritt und Zertifikat.",
+    href: "/kurse/open-source/data-engineering-fundamentals",
+    startHref: "/kurse/open-source/data-engineering-fundamentals/home",
+    continueHref: "/kurse/open-source/data-engineering-fundamentals",
+    duration: "ca. 90 Min.",
+    totalLessons: 12,
+    unitLabel: "Kapitel",
+    unitCount: 12,
+    audience: "Data Engineers, Analytics Engineers, Plattform-Teams",
+    coverImage: "/imported-courses/screenshots/data-engineering-fundamentals.jpg",
+    coverImageAlt: "Startseite von Data Engineering Fundamentals",
+    nativeStatus: "live",
+    imageSrc: "/imported-courses/screenshots/data-engineering-fundamentals.jpg",
+    imageAlt: "Screenshot des Kurses Data Engineering Fundamentals",
+    launchHref: "https://www.timloehr.me/interactive-courses/data-engineering-fundamentals/",
+    sourceHref:
+      "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101/data-engineering-fundamentals",
+    sourceCommitHref:
+      "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101/data-engineering-fundamentals",
+    licenseHref: "/imported-courses/licenses/data-engineering-fundamentals-MIT-LICENSE.txt",
+    sourceImagePath: "docs/screenshots/data-engineering-fundamentals.jpg",
+    sourceLicensePath: "data-engineering-fundamentals/LICENSE",
+    imageSha256: "fa3df8661bdc942b1bb712480e85767e30ff43e5612e73b2f12ccc85d9db8f60",
+    licenseSha256: "7cd9f643d6d743ff0600dda3da55383162723a0d5e874c5b73a3501c5e5b75e0",
+    licenseSizeBytes: 1079,
+    sourceCommit: "0e5dfd327ce44663696b52eb6643bab147947101",
+    lessonCountLabel: "12 Kapitel",
+    language: "Englisch",
+    topics: ["Python", "SQL", "Airflow", "dbt", "Spark", "Kafka"],
+    sourceFacts: ["12 Kapitel", "17 Live-Simulationen", "Jetzt nativ"],
+    integrationNote:
+      "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
+  },
 ] as const;
 
 export const IMPORTED_COURSE_SOURCE_COMMIT =
@@ -360,42 +409,8 @@ const IMPORTED_COURSE_SOURCE_BASE = `https://github.com/Mavengence/interactive-c
 
 export const IMPORTED_COURSE_CATALOG: readonly ImportedCourse[] = [
   {
-    slug: "data-engineering-fundamentals",
-    step: 1,
-    title: "Data Engineering Fundamentals",
-    eyebrow: "Technisches Lab · Data Engineering",
-    tagline: "Produktionsreife Datenpipelines von Grund auf.",
-    description:
-      "Optionaler englischer Browserkurs zu ETL-Patterns, Batch und Streaming, Partitionierung, Orchestrierung und Datenqualität. 10 Kapitel, 15 Live-Simulatoren, extern gehostet.",
-    href: "/kurse/open-source/data-engineering-fundamentals",
-    imageSrc: "/imported-courses/screenshots/data-engineering-fundamentals.jpg",
-    imageAlt: "Screenshot des Kurses Data Engineering Fundamentals",
-    launchHref: "https://www.timloehr.me/interactive-courses/data-engineering-fundamentals/",
-    sourceHref: `${IMPORTED_COURSE_SOURCE_BASE}/data-engineering-fundamentals`,
-    sourceCommitHref: `${IMPORTED_COURSE_SOURCE_BASE}/data-engineering-fundamentals`,
-    licenseHref: "/imported-courses/licenses/data-engineering-fundamentals-MIT-LICENSE.txt",
-    sourceImagePath: "docs/screenshots/data-engineering-fundamentals.jpg",
-    sourceLicensePath: "data-engineering-fundamentals/LICENSE",
-    imageSha256: "fa3df8661bdc942b1bb712480e85767e30ff43e5612e73b2f12ccc85d9db8f60",
-    licenseSha256: "7cd9f643d6d743ff0600dda3da55383162723a0d5e874c5b73a3501c5e5b75e0",
-    licenseSizeBytes: 1079,
-    sourceCommit: IMPORTED_COURSE_SOURCE_COMMIT,
-    duration: "ca. 90 Min.",
-    totalLessons: 10,
-    unitLabel: "Kapitel",
-    unitCount: 10,
-    lessonCountLabel: "10 Kapitel",
-    audience: "Data Engineers, Analytics Engineers, Plattform-Teams",
-    language: "Englisch",
-    topics: ["Python", "SQL", "Airflow", "dbt", "Spark", "Kafka"],
-    sourceFacts: ["10 Kapitel", "15 Live-Simulatoren", "No signup", "Runs in your browser"],
-    integrationNote:
-      "Als Open-Source-Interaktivkurs angebunden; native Fortschritts- und Zertifikatslogik bleibt den deutschen Plattformkursen vorbehalten.",
-    nativeStatus: "pending",
-  },
-  {
     slug: "data-science",
-    step: 2,
+    step: 1,
     title: "Data Science Fundamentals",
     eyebrow: "Technisches Lab · Data Science",
     tagline: "Von Verteilungen bis Deployment, mit einer Live-Simulation pro Kapitel.",
@@ -427,12 +442,13 @@ export const IMPORTED_COURSE_CATALOG: readonly ImportedCourse[] = [
       "Als externer Open-Source-Kurs gerahmt, damit die interaktiven Simulationen erhalten bleiben, ohne globale CSP-Regeln zu lockern.",
     nativeStatus: "pending",
   },
-  // "claude"/"codex"/"data-infrastructure" moved to COURSE_CATALOG above
-  // (plan 008 stage 10 / plan 009 stage 7 / plan 010 stage 13: flipped to
-  // nativeStatus "live" now that they have real native routes).
+  // "claude"/"codex"/"data-infrastructure"/"data-engineering-fundamentals"
+  // moved to COURSE_CATALOG above (plan 008 stage 10 / plan 009 stage 7 /
+  // plan 010 stage 13 / plan 011 stage 12: flipped to nativeStatus "live"
+  // now that they have real native routes).
   {
     slug: "ai-native-operator",
-    step: 3,
+    step: 2,
     title: "The AI-Native Operator",
     eyebrow: "Technisches Lab · AI Operating Model",
     tagline: "Arbeitsweise, Engineering-Praxis und Organisationsdesign für AI-natives Arbeiten.",

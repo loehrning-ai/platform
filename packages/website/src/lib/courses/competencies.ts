@@ -147,6 +147,24 @@ export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency
       description: "Decomposes work into independent tasks and runs multiple agents across git worktrees without merge conflicts.",
     },
   ],
+  // English course (plan 011 stage 12): same reasoning as claude/codex above.
+  "data-engineering-fundamentals": [
+    {
+      id: "idempotent-pipeline-writes",
+      label: "Idempotent pipeline writes",
+      description: "Writes every scheduled task as INSERT OVERWRITE keyed by <DATEID>, so retries and backfills never double-write or drift with wall-clock time.",
+    },
+    {
+      id: "streaming-boundary-guards",
+      label: "Streaming boundary guards",
+      description: "Applies dedup-by-event_id and watermark-based late-drop as two independent guards at every stream-to-warehouse boundary.",
+    },
+    {
+      id: "data-quality-signal-barrier",
+      label: "Data-quality signal barrier",
+      description: "Gates downstream consumption on a signal table written only after row-count, freshness, schema, and uniqueness checks pass — never on the raw data table.",
+    },
+  ],
   // English course (plan 010 stage 13): same reasoning as claude/codex above.
   "data-infrastructure": [
     {

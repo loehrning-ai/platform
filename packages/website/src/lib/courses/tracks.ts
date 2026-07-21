@@ -127,15 +127,16 @@ export const COURSE_FACTS: Record<string, CourseFacts> = {
   "ai-native": { group: "spine", iconName: "Bot", language: "Deutsch", record: "zertifikat", external: false, accent: "kupfer", badge: "Zertifikat · Deutsch" },
 
   // Deeper — the 6 ported/imported English-track courses. "claude" (plan
-  // 008), "codex" (plan 009), and "data-infrastructure" (plan 010) flipped
-  // nativeStatus to "live" (real routes, real progress, certificate), but
-  // stay in the "deeper" shelf per the confirmed /discuss decision: only
-  // the 4 German certified courses form the ordered spine. nativeStatus and
-  // group are independent axes — joining COURSE_CATALOG does not mean
-  // joining the spine.
+  // 008), "codex" (plan 009), "data-infrastructure" (plan 010), and
+  // "data-engineering-fundamentals" (plan 011) flipped nativeStatus to
+  // "live" (real routes, real progress, certificate), but stay in the
+  // "deeper" shelf per the confirmed /discuss decision: only the 4 German
+  // certified courses form the ordered spine. nativeStatus and group are
+  // independent axes — joining COURSE_CATALOG does not mean joining the
+  // spine.
   "claude": { group: "deeper", iconName: "Sparkles", language: "Englisch", record: "certificate", external: false, accent: "sand", badge: "Certificate · Englisch" },
   "codex": { group: "deeper", iconName: "TerminalSquare", language: "Englisch", record: "certificate", external: false, accent: "sand", badge: "Certificate · Englisch" },
-  "data-engineering-fundamentals": { group: "deeper", iconName: "Database", language: "Englisch", record: "none", external: true, accent: "sand", badge: "GitHub · MIT · Englisch" },
+  "data-engineering-fundamentals": { group: "deeper", iconName: "Database", language: "Englisch", record: "certificate", external: false, accent: "sand", badge: "Certificate · Englisch" },
   "data-science": { group: "deeper", iconName: "LineChart", language: "Englisch", record: "none", external: true, accent: "sand", badge: "GitHub · MIT · Englisch" },
   "data-infrastructure": { group: "deeper", iconName: "Server", language: "Englisch", record: "certificate", external: false, accent: "sand", badge: "Certificate · Englisch" },
   "ai-native-operator": { group: "deeper", iconName: "Workflow", language: "Englisch", record: "none", external: true, accent: "sand", badge: "GitHub · MIT · Englisch" },

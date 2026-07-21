@@ -201,12 +201,13 @@ describe("unified progress store", () => {
     });
 
     it("ignores unknown imported-course slices when counting lesson badges", () => {
-      // "data-engineering-fundamentals" and "data-science" stand in for
-      // still-external, unregistered courses. "claude"/"codex"/
-      // "data-infrastructure" are deliberately not used here any more: plan
-      // 008 stage 10, plan 009 stage 7, and plan 010 stage 13 registered and
-      // flipped them to native courses, so their slices ARE now counted,
-      // which would break this test's premise if reused.
+      // "data-science" and "ai-native-operator" stand in for still-external,
+      // unregistered courses. "claude"/"codex"/"data-infrastructure"/
+      // "data-engineering-fundamentals" are deliberately not used here any
+      // more: plan 008 stage 10, plan 009 stage 7, plan 010 stage 13, and
+      // plan 011 stage 12 registered and flipped them to native courses, so
+      // their slices ARE now counted, which would break this test's premise
+      // if reused.
       const lesson = {
         sectionsRead: [],
         quizScore: null,
@@ -230,8 +231,8 @@ describe("unified progress store", () => {
         JSON.stringify({
           schemaVersion: 2,
           courses: {
-            "data-engineering-fundamentals": slice,
             "data-science": slice,
+            "ai-native-operator": slice,
           },
           xp: 0,
           checkpoints: {},
@@ -336,6 +337,24 @@ describe("unified progress store", () => {
         markLessonCompleted("data-infrastructure", `lesson-${i}`);
       }
       expect(isCertificateEligible("data-infrastructure")).toBe(false);
+    });
+
+    // plan 011 stage 12: data-engineering-fundamentals is now nativeStatus
+    // "live" (COURSE_CATALOG), reconciled to its real 12 chapters — this is
+    // the "all 12 chapters visited" completion criterion the plan documents.
+    it("resolves eligibility for data-engineering-fundamentals via the all-chapters-visited path", () => {
+      for (let i = 1; i <= 12; i += 1) {
+        markLessonCompleted("data-engineering-fundamentals", `chapter-${i}`);
+      }
+      expect(isWorkshopQuizPassed("data-engineering-fundamentals")).toBe(false);
+      expect(isCertificateEligible("data-engineering-fundamentals")).toBe(true);
+    });
+
+    it("stays ineligible below the full chapter count for data-engineering-fundamentals", () => {
+      for (let i = 1; i <= 11; i += 1) {
+        markLessonCompleted("data-engineering-fundamentals", `chapter-${i}`);
+      }
+      expect(isCertificateEligible("data-engineering-fundamentals")).toBe(false);
     });
 
     it("never throws on corrupted storage, reads as not eligible", () => {
