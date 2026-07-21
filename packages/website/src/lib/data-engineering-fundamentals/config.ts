@@ -13,7 +13,14 @@ export const DATA_ENGINEERING_FUNDAMENTALS_CONFIG: CourseConfig = {
   title: "Data Engineering Fundamentals",
   language: "en",
   basePath: "/kurse/open-source/data-engineering-fundamentals",
-  coursePath: "/kurse/open-source/data-engineering-fundamentals/kurs",
+  // Unlike codex/data-infrastructure (which nest chapters under a real
+  // `.../kurs/[id]` route), this course's chapters live directly under
+  // `.../data-engineering-fundamentals/[chapterId]` with no `/kurs`
+  // segment (plan 011 stage 10 Done Criteria) — there is no
+  // `src/app/kurse/open-source/data-engineering-fundamentals/kurs`
+  // route at all. `coursePath` must point at the real landing page so
+  // certificate-page.tsx's "back to course" link/redirect resolves.
+  coursePath: "/kurse/open-source/data-engineering-fundamentals",
   blockIds: [],
   // No quiz/scoring mechanism exists in source at all (grep across all 14
   // source chapter files for a "Quiz" component returns nothing —

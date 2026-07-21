@@ -114,8 +114,12 @@ describe("DATA_ENGINEERING_FUNDAMENTALS_CONFIG (plan 011 stage 1)", () => {
     expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.basePath).toBe(
       "/kurse/open-source/data-engineering-fundamentals",
     );
+    // Unlike codex/data-infrastructure, this course has no `/kurs`-nested
+    // route at all (plan 011 stage 10 Done Criteria: chapters live directly
+    // under `[chapterId]`) — coursePath must point at the real landing page,
+    // not a route that 404s (plan 011 stage 14 fix).
     expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.coursePath).toBe(
-      "/kurse/open-source/data-engineering-fundamentals/kurs",
+      "/kurse/open-source/data-engineering-fundamentals",
     );
     expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.blockIds).toEqual([]);
   });
