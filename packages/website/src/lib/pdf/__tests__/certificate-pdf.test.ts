@@ -9,7 +9,7 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-import { AI_NATIVE_CONFIG, KI_FUEHRERSCHEIN_CONFIG } from "@/lib/course/config";
+import { AI_NATIVE_CONFIG, CLAUDE_CONFIG, KI_FUEHRERSCHEIN_CONFIG } from "@/lib/course/config";
 import { generateCertificatePdf, type CertificateData } from "../certificate-pdf";
 
 const { qrToDataUrlMock } = vi.hoisted(() => ({
@@ -98,6 +98,16 @@ describe("certificate verification-URL encoding", () => {
     await generateCertificatePdf(makeData(), KI_FUEHRERSCHEIN_CONFIG);
     expect(lastQrUrl()).toMatch(
       /^https:\/\/loehrning\.ai\/ki-fuehrerschein\/verifizierung#./,
+    );
+  });
+
+  // plan 008 stage 11: claude's basePath is nested under /kurse/open-source/
+  // (unlike the 4 German courses' top-level paths), confirming
+  // generateCertificatePdf works unmodified for that URL shape too.
+  it("targets claude's nested basePath verification route unmodified", async () => {
+    await generateCertificatePdf(makeData(), CLAUDE_CONFIG);
+    expect(lastQrUrl()).toMatch(
+      /^https:\/\/loehrning\.ai\/kurse\/open-source\/claude\/verifizierung#./,
     );
   });
 

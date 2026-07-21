@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import type { CourseSlug } from "./types";
 import { loadWorkshopQuestions } from "./questions";
+import { assertValidQuizQuestions } from "./quiz-validation";
 
 // loadWorkshopQuestions dynamically imports the real per-course quiz JSON that
 // ships in `content/<slug>/quiz/questions.json`, memoizing the result. These
@@ -37,5 +38,18 @@ describe("loadWorkshopQuestions", () => {
     await expect(loadWorkshopQuestions(UNREGISTERED)).rejects.toThrow(
       'Course "no-such-course" has no workshop quiz questions registered.',
     );
+  });
+
+  it("loads the claude questions (19 questions, reusing the inline lesson Quiz content, plan 008 stage 11)", async () => {
+    const questions = await loadWorkshopQuestions("claude");
+    expect(questions).toHaveLength(19);
+    assertValidQuizQuestions(questions);
+    for (const q of questions) {
+      expect(q.explanation.trim().length).toBeGreaterThan(0);
+      expect(q.answerOptions.length).toBeGreaterThanOrEqual(3);
+    }
+    // English content: no German quiz chrome/explanations leaked in.
+    const allText = questions.map((q) => q.questionText + q.explanation).join(" ");
+    expect(allText).not.toMatch(/\b(nicht|und|oder|der|die|das)\b/i);
   });
 });

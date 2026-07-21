@@ -169,6 +169,29 @@ describe("VerificationPage", () => {
     expect(screen.queryByText("Zertifikatcode nicht lesbar")).toBeNull();
   });
 
+  // plan 008 stage 11: claude is now a fully registered course (unlike
+  // "codex" above, which is still unregistered), so this exercises the real
+  // happy path end to end for the course this plan ported.
+  it("round-trips a real claude certificate QR payload successfully", async () => {
+    const payload = {
+      n: "Ada Lovelace",
+      s: 92,
+      m: "quiz",
+      d: "2026-07-01T10:00:00.000Z",
+      c: "claude",
+      v: 1,
+    };
+    setHash("#" + encodeHash(payload));
+    render(<VerificationPage courseSlug="claude" />);
+
+    await waitFor(() =>
+      expect(screen.getByText("QR-Daten gelesen")).toBeInTheDocument(),
+    );
+    expect(screen.getByText("Ada Lovelace")).toBeInTheDocument();
+    expect(screen.getByText("Claude Course")).toBeInTheDocument();
+    expect(screen.queryByText("Zertifikatcode nicht lesbar")).toBeNull();
+  });
+
   it("falls back to the invalid state for a malformed hash", async () => {
     setHash("#not-valid-base64url!!!");
     render(<VerificationPage courseSlug="ki-fuehrerschein" />);
