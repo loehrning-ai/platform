@@ -150,6 +150,21 @@ export const KI_UND_GESELLSCHAFT_CONFIG: CourseConfig = {
 // `{record: "none", external: true}` until plan 008 stage 10 ships the real
 // routes and flips both in the same commit (mirroring plan 007's own
 // "machinery now, flip later" sequencing so no misleading badge ships early).
+//
+// Progress-budget audit (plan 008 stage 12, see src/lib/claude-course/
+// progress-budget.test.ts for the computation): the course's 46 checkpoints
+// (its lesson widgets that award one, more than the plan's original "~34-40"
+// estimate) do NOT count against this course's own per-course progress row.
+// `checkpoints` lives on `UnifiedProgress` itself, one level up from
+// `UnifiedCourseSlice`, and persists server-side in the shared "_meta" row
+// (course_slug = "_meta", src/lib/progress/server-sync.ts's
+// META_ROW_COURSE_SLUG), not the "claude" row. Both rows share the same
+// 65536-byte pg_column_size CHECK constraint (supabase/migrations/
+// 009_user_course_progress_per_course.sql). Measured worst case: this
+// course's own row (12 lessons, every section read, quiz passed) serializes
+// to ~2-3 KB, under 5% of the cap; its 46 checkpoint keys add ~970 bytes to
+// the shared "_meta" row, under 1.5 KB even generously rounded, comfortable
+// headroom alongside every other course's checkpoints in that same row.
 
 export const CLAUDE_CONFIG: CourseConfig = {
   slug: "claude",
