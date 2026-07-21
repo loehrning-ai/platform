@@ -153,3 +153,27 @@ export interface TermProps {
 export function Term({ meta }: TermProps) {
   return <code className="term">{meta}</code>;
 }
+
+export interface CodeBlockProps {
+  readonly title: string;
+  readonly lang: string;
+  /** Pre-tokenized syntax-highlighted HTML, as source's `code-body` blocks carry. */
+  readonly html: string;
+}
+
+/**
+ * The `.code`/`.code-head`/`.code-body` block repeated verbatim across every
+ * source chapter file (SQL/Python/YAML snippets with `tok-*` syntax-highlight
+ * spans baked in as HTML, matching source's own pre-tokenized strings).
+ */
+export function CodeBlock({ title, lang, html }: CodeBlockProps) {
+  return (
+    <div className="code">
+      <div className="code-head">
+        <span>{title}</span>
+        <span className="lang">{lang}</span>
+      </div>
+      <div className="code-body" dangerouslySetInnerHTML={{ __html: html }} />
+    </div>
+  );
+}
