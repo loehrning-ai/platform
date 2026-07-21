@@ -76,6 +76,17 @@ const COURSES = [
     slug: "data-science",
     title: /Data Science Fundamentals/,
   },
+  // plan 013 stage 13: ai-native-operator, sixth and last imported course to
+  // flip. Same nested-path shape as claude/codex/data-*, but unlike the four
+  // "completion"-eligibility siblings, this course genuinely has a
+  // quiz-gated cert path (9 module knowledge-checks pooled into one
+  // workshop quiz), so m: "quiz" here is a real payload shape, not
+  // test-mechanism scaffolding.
+  {
+    route: "/kurse/open-source/ai-native-operator/verifizierung",
+    slug: "ai-native-operator",
+    title: /The AI-Native Operator/,
+  },
 ] as const;
 
 /** Encode a certificate payload exactly like the app's serializer (base64url). */

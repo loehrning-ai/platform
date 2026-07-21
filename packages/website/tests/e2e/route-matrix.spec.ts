@@ -48,6 +48,10 @@ const PUBLIC_ROUTES = [
   // — its Overview additionally renders AT this exact route (not a
   // separate "/home" chapter), see the sitemap no-leak test below.
   "/kurse/open-source/data-science",
+  // plan 013 stage 13: ai-native-operator's landing, sixth and last
+  // imported course to flip. Same nested convention and no-"/kurs"-segment
+  // module/lesson tree as data-engineering-fundamentals/data-science above.
+  "/kurse/open-source/ai-native-operator",
   "/blog",
   "/open-source",
   "/open-source/lizenzrichtlinie",
@@ -265,6 +269,19 @@ test.describe("sitemap lists only contract-included paths", () => {
     expect(body).toContain("/kurse/open-source/data-science<");
     expect(body).not.toContain("/kurse/open-source/data-science/fund");
     expect(body).not.toContain("/kurse/open-source/data-science/cap");
+  });
+
+  // plan 013 stage 13: ai-native-operator's module/lesson tree has no
+  // "/kurs" segment either — the no-leak check confirms a real module or
+  // lesson path never appears, while the bare course root DOES appear.
+  test("sitemap.xml lists the ai-native-operator landing but not its module/lesson routes", async ({
+    request,
+  }) => {
+    const response = await request.get("/sitemap.xml");
+    const body = await response.text();
+    expect(body).toContain("/kurse/open-source/ai-native-operator<");
+    expect(body).not.toContain("/kurse/open-source/ai-native-operator/mindset");
+    expect(body).not.toContain("/kurse/open-source/ai-native-operator/measurement");
   });
 
   test("sitemap.xml does not contain /ki-transformation-check", async ({
