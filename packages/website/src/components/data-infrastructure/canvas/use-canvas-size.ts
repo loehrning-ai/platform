@@ -1,6 +1,6 @@
 "use client";
 
-// ─── useCanvasAutoSize (plan 010 stage 2) ───────────────────────────
+// ─── useCanvasAutoSize ───────────────────────────
 //
 // The source hardcodes a 2x backing-store multiplier for every canvas
 // (`cvs.width = r.width * 2`) and then hand-computes scaleX/scaleY per draw
@@ -38,7 +38,7 @@ export function useCanvasAutoSize(
     const wrap = wrapRef.current;
     if (!canvas || !wrap) return;
 
-    // Real bug found during live QA (plan 010 stage 14): ResizeObserver
+    // Real bug found during live QA: ResizeObserver
     // fires an "initial" callback asynchronously right after .observe() is
     // called, even when the size hasn't changed since the synchronous
     // resize() call below. Reassigning canvas.width/height ALWAYS clears the

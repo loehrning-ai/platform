@@ -25,7 +25,7 @@ export interface CompareWidgetProps {
   /** Optional takeaway note shown below the columns. */
   readonly note?: string;
   /**
-   * Chrome kindLabel override (plan 009 stage 3): was hardcoded German with
+   * Chrome kindLabel override: was hardcoded German with
    * no override, unlike `title`/`badLabel`/`goodLabel` which were already
    * plain per-instance props. Defaults to the original German literal so
    * the 3 native courses render byte-identical; codex passes "Compare".

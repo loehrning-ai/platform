@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { PipelineBar, OV_STAGES } from "../simulators/pipeline-bar";
 import type { DefChapterId } from "@/lib/data-engineering-fundamentals/types";
 
-// ─── Ch_Overview (plan 011 stage 9, navigation fixed stage 10) ───────
+// ─── Ch_Overview ───────
 // Ported from `src/chapters/Ch_Overview.js`. Bespoke hero/flow layout
 // (not the shared Hero primitive — source builds its own markup here).
 //

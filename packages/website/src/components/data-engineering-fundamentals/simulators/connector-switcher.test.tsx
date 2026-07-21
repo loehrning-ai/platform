@@ -4,7 +4,7 @@ import { ConnectorSwitcher } from "./connector-switcher";
 
 afterEach(cleanup);
 
-describe("ConnectorSwitcher (plan 011 stage 4)", () => {
+describe("ConnectorSwitcher ", () => {
   it("defaults to the Snowflake connector with fan-out worker nodes", () => {
     render(<ConnectorSwitcher />);
     expect(screen.getByText("Workers fan out to read Parquet files from S3. Predicate pushdown via stripe stats. The big-data default.")).toBeInTheDocument();

@@ -21,8 +21,8 @@ interface LessonSidebarProps {
 
 /**
  * AiNativeOperatorLessonSidebar — module-grouped lesson nav for
- * `<LessonShell>`'s `sidebar` slot (plan 007 stage 7 primitive), mirroring
- * `CodexLessonSidebar`'s track-grouped precedent (plan 009 stage 1).
+ * `<LessonShell>`'s `sidebar` slot ( primitive), mirroring
+ * `CodexLessonSidebar`'s track-grouped precedent.
  */
 export function AiNativeOperatorLessonSidebar({ lessons }: LessonSidebarProps): JSX.Element {
   const pathname = usePathname();

@@ -10,7 +10,7 @@ interface DataInfraProgressBandProps {
 
 /**
  * Live per-track + overall progress readout for the course landing page
- * (plan 010 stage 11 — "live progress percentages from the Supabase store").
+ *.
  * Hydration-safe: renders the zero state on first paint (matching the
  * server-rendered markup), then fills in from the unified progress store
  * (localStorage cache + server-synced) after mount.

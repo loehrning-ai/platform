@@ -3,7 +3,7 @@ import { existsSync, readFileSync, statSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 
-// ─── Governance: social-preview asset provenance (plan 011 stage 13) ─
+// ─── Governance: social-preview asset provenance ─
 //
 // The two real binary assets this course adds beyond its pre-existing
 // screenshot+license entries (assets/social-preview.png/.svg in the

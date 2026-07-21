@@ -139,7 +139,7 @@ export default function DatenschutzPage() {
               progress to reset (external, unregistered in the shared
               engine), so listing them here would offer a reset action that
               does nothing — a compliance-sensitive page must never imply
-              there is data to reset when there is none (plan 007 stage 9).
+              there is data to reset when there is none.
             */}
             {COURSE_CATALOG.map((course) => {
               const slug = course.slug;

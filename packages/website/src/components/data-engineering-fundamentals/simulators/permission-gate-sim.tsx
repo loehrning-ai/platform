@@ -3,7 +3,7 @@
 import { useState, type CSSProperties } from "react";
 import { Panel } from "../primitives";
 
-// ─── PermissionGateSim (plan 011 stage 8) ────────────────────────────
+// ─── PermissionGateSim ────────────────────────────
 // Ported from `src/chapters/Ch8_Govern.js`: drag actor annotations onto
 // columns and ship a dbt spec — the Access Gateway blocks any deploy with
 // an unannotated PII column.

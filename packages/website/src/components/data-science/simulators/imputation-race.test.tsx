@@ -4,7 +4,7 @@ import { ImputationRace } from "./imputation-race";
 
 afterEach(() => cleanup());
 
-describe("ImputationRace (plan 012 stage 7)", () => {
+describe("ImputationRace ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<ImputationRace />);
     expect(container.querySelector("svg")).not.toBeNull();

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Panel } from "../primitives";
 
-// ─── WatermarkSim (plan 011 stage 5) ─────────────────────────────────
+// ─── WatermarkSim ─────────────────────────────────
 // Ported from `src/chapters/Ch1_Ingest.js`: drag the watermark line to see
 // which late events get dropped from the window.
 

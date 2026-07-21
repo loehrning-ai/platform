@@ -25,7 +25,7 @@ afterEach(() => {
 });
 
 
-describe("all 12 chapter components render with real ported content, not placeholders (plan 011 stage 9)", () => {
+describe("all 12 chapter components render with real ported content, not placeholders ", () => {
   it("ChOverview renders the real hero copy and all 10 pipeline stops", () => {
     render(<ChOverview />);
     expect(screen.getByText(/Think like a/)).toBeInTheDocument();

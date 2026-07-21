@@ -189,7 +189,7 @@ describe("FlashcardsWidget", () => {
     expect(screen.getByText("Was ist GPAI?")).toBeInTheDocument();
   });
 
-  it("supports a full English copy override without touching German defaults (plan 009 stage 3)", () => {
+  it("supports a full English copy override without touching German defaults ", () => {
     const { container } = render(
       <FlashcardsWidget
         lessonId="l1"
@@ -262,7 +262,7 @@ describe("CompareWidget", () => {
     expect(screen.getByText("Nachher")).toBeInTheDocument();
   });
 
-  it("supports an English kindLabel override without touching the German default (plan 009 stage 3)", () => {
+  it("supports an English kindLabel override without touching the German default ", () => {
     const { container } = render(<CompareWidget bad="A" good="B" kindLabel="Compare" />);
     expect(container.textContent).toContain("Compare");
     expect(container.textContent).not.toContain("Vergleich");
@@ -307,7 +307,7 @@ describe("TaskSpecWidget", () => {
     expect(btn.getAttribute("aria-pressed")).toBe("false");
   });
 
-  it("supports an English tierLabels override without touching German defaults (plan 009 stage 3)", () => {
+  it("supports an English tierLabels override without touching German defaults ", () => {
     render(
       <TaskSpecWidget
         lessonId="l1"

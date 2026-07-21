@@ -1,7 +1,7 @@
 import { Hero, SectionLabel, AntiPatterns, Takeaway } from "@/components/data-science/shared/primitives";
 import { GaltonSim } from "@/components/data-science/simulators/galton-sim";
 
-// ─── Ch01: Fundamentals (plan 012 stage 6) ─────────────────────────────
+// ─── Ch01: Fundamentals ─────────────────────────────
 //
 // Typed port of Ch01_Fundamentals.js. GaltonSim lives in its own file
 // (simulators/galton-sim.tsx) per the plan's "own component files"

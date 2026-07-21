@@ -2,7 +2,7 @@ import { Hero, SectionLabel, CodeBlock, AntiPatterns, BestPractices, Takeaway } 
 import { TrustMeterSim } from "../simulators/trust-meter-sim";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 
-// ─── Ch5_Quality (plan 011 stage 9) ──────────────────────────────────
+// ─── Ch5_Quality ──────────────────────────────────
 // Ported from `src/chapters/Ch5_Quality.js`.
 
 const DQ_OPERATOR_PY = `<span class="tok-c"># 1) Write the partition (idempotent, see Ch5)</span>

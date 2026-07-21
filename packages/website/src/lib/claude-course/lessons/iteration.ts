@@ -1,7 +1,7 @@
 // Ported from claude/lessons/05-iteration.html.
 // Widget manifest: PromptSandbox x1 (sb), PromptDiff x1 (diff), mounted here,
 // must not be dropped, Quiz x1 (q1), RewriteArena x1 (arena). Wired
-// incrementally (plan 008 stages 4, 5).
+// incrementally.
 import type { ClaudeLesson } from "../types";
 import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 

@@ -1,11 +1,11 @@
 import { test, expect, type Page } from "@playwright/test";
 
 /**
- * Codex Course golden path (plan 009 stage 8): home -> lesson -> checkpoint
+ * Codex Course golden path: home -> lesson -> checkpoint
  * -> certificate -> QR verify, in one spec. Mirrors route-claude.spec.ts's
  * established pattern, with two deliberate differences:
  *   - no quiz-route leg: codex has no separate gating quiz (unlike claude),
- *     it uses plan 007 stage 4's generic all-lessons-completed "completion"
+ * it uses 's generic all-lessons-completed "completion"
  *     eligibility path instead.
  *   - the certificate/QR-verify seeds "all 12 lessons completed" rather
  *     than "workshop quiz passed", and the QR payload uses

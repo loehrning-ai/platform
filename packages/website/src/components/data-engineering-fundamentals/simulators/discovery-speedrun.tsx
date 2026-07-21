@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Panel } from "../primitives";
 
-// ─── DiscoverySpeedrun (plan 011 stage 7) ────────────────────────────
+// ─── DiscoverySpeedrun ────────────────────────────
 // Ported from `src/chapters/Ch6_Discover.js`: a timed practice round of six
 // data-discovery shortcuts. Not a pass/fail quiz gate — free-text input
 // matched by regex, penalties for tips/solutions, a baseline leaderboard.

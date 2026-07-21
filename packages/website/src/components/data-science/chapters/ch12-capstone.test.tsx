@@ -8,7 +8,7 @@ vi.mock("next/navigation", () => ({
 
 import Ch12Capstone from "./ch12-capstone";
 
-describe("Ch12Capstone (plan 012 stage 11)", () => {
+describe("Ch12Capstone ", () => {
   beforeEach(() => {
     push.mockClear();
   });

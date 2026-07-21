@@ -3,7 +3,7 @@ import { __resetAiNativeOperatorCacheForTests, getAllLessons } from "./data";
 import { TIER_A_KINDS } from "@/lib/widgets/types";
 
 /**
- * Explicit non-AI-graded wiring guard (plan 013 stage 6). Confirmed by full
+ * Explicit non-AI-graded wiring guard. Confirmed by full
  * source read: none of the 30 exercises call any AI/grading endpoint in the
  * 264-line source app. Every reading lesson's single exercise must be wired
  * through a TIER_A kind (checkpoint-boolean via useCheckpoint) — never
@@ -12,7 +12,7 @@ import { TIER_A_KINDS } from "@/lib/widgets/types";
  * per-exercise AI-feedback-text storage-bloat risk this course's port was
  * explicitly designed to avoid.
  */
-describe("ai-native-operator widget wiring is exclusively TIER_A, never AI-graded (plan 013 stage 6)", () => {
+describe("ai-native-operator widget wiring is exclusively TIER_A, never AI-graded ", () => {
   beforeEach(() => {
     __resetAiNativeOperatorCacheForTests();
   });

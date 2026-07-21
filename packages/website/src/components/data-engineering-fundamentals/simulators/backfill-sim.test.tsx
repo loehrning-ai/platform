@@ -7,7 +7,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("BackfillSim (plan 011 stage 6)", () => {
+describe("BackfillSim ", () => {
   it("defaults to OVERWRITE mode with 7 pending partitions", () => {
     render(<BackfillSim />);
     expect(screen.getByRole("button", { name: /OVERWRITE/ }).className).toContain("on");

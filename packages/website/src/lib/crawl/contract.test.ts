@@ -74,7 +74,7 @@ describe("crawl contract", () => {
     }
   });
 
-  it("classifies the Claude Course routes registered ahead of their pages (plan 008 stage 1)", () => {
+  it("classifies the Claude Course routes registered ahead of their pages ", () => {
     for (const path of [
       "/kurse/open-source/claude/kurs",
       "/kurse/open-source/claude/kurs/mental-model",
@@ -95,7 +95,7 @@ describe("crawl contract", () => {
     }
   });
 
-  it("classifies the Codex Course routes registered ahead of their pages (plan 009 stage 1)", () => {
+  it("classifies the Codex Course routes registered ahead of their pages ", () => {
     for (const path of [
       "/kurse/open-source/codex/kurs",
       "/kurse/open-source/codex/kurs/L01",

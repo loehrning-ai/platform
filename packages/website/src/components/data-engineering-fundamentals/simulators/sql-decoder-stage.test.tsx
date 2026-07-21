@@ -4,7 +4,7 @@ import { SqlDecoderStage } from "./sql-decoder-stage";
 
 afterEach(cleanup);
 
-describe("SqlDecoderStage (plan 011 stage 4)", () => {
+describe("SqlDecoderStage ", () => {
   it("defaults to the hash-join preset with real SQL and 6 workers", () => {
     render(<SqlDecoderStage />);
     expect(screen.getByText(/JOIN users u ON s.user_id = u.user_id/)).toBeInTheDocument();

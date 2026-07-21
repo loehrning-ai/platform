@@ -4,7 +4,7 @@ import Link from "next/link";
 import { DS_CHAPTERS, type DsChapterId } from "@/lib/data-science/types";
 import { dsChapterHref } from "@/lib/data-science/routes";
 
-// ─── DsChapterSidebar (plan 012 stage 5) ──────────────────────────────
+// ─── DsChapterSidebar ──────────────────────────────
 //
 // Nav rail consumed by both LessonShell's desktop rail and mobile drawer
 // (see reader-shell.tsx). Uses this course's own scoped classNames

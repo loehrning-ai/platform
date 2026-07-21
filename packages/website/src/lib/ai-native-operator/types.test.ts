@@ -10,7 +10,7 @@ import {
   type AiNativeOperatorLesson,
 } from "./types";
 
-describe("ai-native-operator types (plan 013 stage 1)", () => {
+describe("ai-native-operator types ", () => {
   it("has exactly 9 module ids matching course-data.js's MODULES order", () => {
     expect([...MODULE_IDS]).toEqual([
       "mindset",

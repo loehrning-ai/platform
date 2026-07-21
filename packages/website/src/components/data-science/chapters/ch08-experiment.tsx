@@ -1,7 +1,7 @@
 import { Hero, SectionLabel, AntiPatterns, Takeaway } from "@/components/data-science/shared/primitives";
 import { ABSim } from "@/components/data-science/simulators/ab-sim";
 
-// ─── Ch08: Experiment (plan 012 stage 9) ───────────────────────────────
+// ─── Ch08: Experiment ───────────────────────────────
 //
 // Typed port of Ch08_Experiment.js. ABSim lives in its own file
 // (simulators/ab-sim.tsx).

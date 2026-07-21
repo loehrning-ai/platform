@@ -4,7 +4,7 @@
  * a course slug to its facts to render the icon tile, accent and badge that
  * make the three course types legible at a glance.
  *
- * Three tracks, folded into `CourseFacts.accent`/`.badge` below (plan 007
+ * Three tracks, folded into `CourseFacts.accent`/`.badge` below (
  * stage 3 — the former standalone `TRACK_META` table is gone):
  *   zertifikat  — the 4 native German certified courses (Kupfer)
  *   github-lab  — the 6 English MIT technical courses, external (Sand)
@@ -78,7 +78,7 @@ export type CourseAccent = "kupfer" | "sand" | "amber";
  * courses is `lib/course/config.ts` (`certificateTitle`); the guard test in
  * `tracks.test.ts` fails loudly if this drifts from it.
  *
- * "certificate" (plan 007 stage 4) is the English-track record kind for the
+ * "certificate" is the English-track record kind for the
  * imported courses. Pinned here, final: no course flips to it in this plan —
  * each imported course's own plan flips its single `COURSE_FACTS` entry once
  * it ships real native routes + certificate wiring.
@@ -103,9 +103,9 @@ export interface CourseFacts {
   readonly record: RecordKind;
   /** True when the course is hosted outside loehrning.ai (GitHub labs). */
   readonly external: boolean;
-  /** Warm accent hue for the card/icon-tile pairing (plan 007 stage 3, folded in from the former TRACK_META). */
+  /** Warm accent hue for the card/icon-tile pairing. */
   readonly accent: CourseAccent;
-  /** Short type badge shown on the card (plan 007 stage 3, folded in from the former TRACK_META). */
+  /** Short type badge shown on the card. */
   readonly badge: string;
 }
 
@@ -127,15 +127,15 @@ export const COURSE_FACTS: Record<string, CourseFacts> = {
   "ai-native": { group: "spine", iconName: "Bot", language: "Deutsch", record: "zertifikat", external: false, accent: "kupfer", badge: "Zertifikat · Deutsch" },
 
   // Deeper — the 6 ported/imported English-track courses. "claude" (plan
-  // 008), "codex" (plan 009), "data-infrastructure" (plan 010),
-  // "data-engineering-fundamentals" (plan 011), "data-science" (plan 012),
-  // and "ai-native-operator" (plan 013) all flipped nativeStatus to "live"
+  // 008), "codex", "data-infrastructure",
+  // "data-engineering-fundamentals", "data-science",
+  // and "ai-native-operator" all flipped nativeStatus to "live"
   // (real routes, real progress, certificate), but stay in the "deeper"
   // shelf per the confirmed /discuss decision: only the 4 German certified
   // courses form the ordered spine. nativeStatus and group are independent
   // axes — joining COURSE_CATALOG does not mean joining the spine. Every
   // one of the 6 ported courses is "deeper" — never "spine" — this is the
-  // single most important invariant in this migration (plan 008's
+  // single most important invariant in this migration (
   // post-implementation correction note has the full story of the one
   // time this was gotten wrong).
   "claude": { group: "deeper", iconName: "Sparkles", language: "Englisch", record: "certificate", external: false, accent: "sand", badge: "Certificate · Englisch" },

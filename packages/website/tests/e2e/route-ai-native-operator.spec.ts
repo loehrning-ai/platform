@@ -1,7 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 
 /**
- * AI-Native Operator Course golden path (plan 013 stage 13): home -> module
+ * AI-Native Operator Course golden path: home -> module
  * -> lesson -> checkpoint -> quiz -> certificate -> QR verify, in one spec.
  * Mirrors route-claude.spec.ts/route-codex.spec.ts's established pattern,
  * with two deliberate differences reflecting this course's own structure:

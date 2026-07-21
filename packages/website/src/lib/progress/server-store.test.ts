@@ -1,4 +1,4 @@
-// ─── server-store.ts I/O-layer tests (plan 007 stage 5) ──
+// ─── server-store.ts I/O-layer tests ──
 //
 // server-store.ts is the per-course-row persistence layer on top of the pure
 // merge primitives in server-sync.ts. It is the ONLY place that talks to the

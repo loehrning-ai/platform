@@ -1,7 +1,7 @@
 import { Hero, SectionLabel, AntiPatterns, Takeaway } from "@/components/data-science/shared/primitives";
 import { BiasVarianceSim } from "@/components/data-science/simulators/bias-variance-sim";
 
-// ─── Ch05: Model (plan 012 stage 8) ────────────────────────────────────
+// ─── Ch05: Model ────────────────────────────────────
 //
 // Typed port of Ch05_Model.js. BiasVarianceSim lives in its own file per
 // the split established since stage 6.

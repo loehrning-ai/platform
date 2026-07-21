@@ -11,7 +11,7 @@ import {
   __resetCacheForTests,
 } from "./progress";
 
-describe("data-science progress facade (plan 012 stage 12)", () => {
+describe("data-science progress facade ", () => {
   afterEach(() => {
     resetProgress();
     __resetCacheForTests();

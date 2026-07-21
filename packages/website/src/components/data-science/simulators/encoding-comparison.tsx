@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 
-// ─── EncodingComparison (plan 012 stage 8) ─────────────────────────────
+// ─── EncodingComparison ─────────────────────────────
 //
 // Typed port of Ch04_Feature.js's `EncodingComparison`: a categorical
 // encoding-strategy demo (one-hot / label / target / frequency), no RNG.

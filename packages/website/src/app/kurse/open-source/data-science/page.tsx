@@ -8,7 +8,7 @@ import { dsChapterHref } from "@/lib/data-science/routes";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 import type { JsonLdGraph } from "@/lib/seo/json-ld";
 
-// ─── Data Science course root — the ported Overview chapter (plan 012 stage 5) ─
+// ─── Data Science course root — the ported Overview chapter ─
 //
 // Unlike a from-scratch marketing landing page, this course's "landing
 // page" IS the source's own Overview chapter (id "home", App.js's own

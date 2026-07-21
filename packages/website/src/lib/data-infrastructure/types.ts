@@ -1,4 +1,4 @@
-// ─── Data Infrastructure course types (plan 010 stage 1) ────────────
+// ─── Data Infrastructure course types ────────────
 //
 // Own separate content module, keyed by the source's own flat lesson-id
 // scheme ("mental-model".."interview-playbook", matching `js/lessons.js`'s
@@ -9,7 +9,7 @@
 //
 // Checkpoint-id collision guard: the unified progress store's `checkpoints`
 // ledger (src/lib/progress/store.ts) is keyed globally by `${lessonId}::${cpId}`,
-// NOT scoped per course. Claude Course (plan 008) already registered a lesson
+// NOT scoped per course. Claude Course already registered a lesson
 // literally named "mental-model" — this course's source lesson-id scheme
 // collides with it exactly (both courses' source content independently use
 // "mental-model" as lesson 1's id). `DataInfraLessonId` stays the clean

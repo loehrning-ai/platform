@@ -1,7 +1,7 @@
 "use client";
 
 // Ported from data-infrastructure/js/data-widgets.js's InterviewMove (lines
-// 2477-2718): canvas progress track + a step-through move stage (plan 010
+// 2477-2718): canvas progress track + a step-through move stage (
 // stage 9). The 12-entry `moves` array is trusted static content ported
 // verbatim into `lib/data-infrastructure/lessons/interview-playbook.ts`
 // (INTERVIEW_MOVES) — rendered here via dangerouslySetInnerHTML since the

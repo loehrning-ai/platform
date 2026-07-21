@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("DAGViewer (plan 012 stage 10)", () => {
+describe("DAGViewer ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<DAGViewer />);
     expect(container.querySelector("svg")).not.toBeNull();

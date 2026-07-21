@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { mulberry32, randn, round } from "@/lib/data-science/sim-kit";
 
-// ─── ImputationRace (plan 012 stage 7) ─────────────────────────────────
+// ─── ImputationRace ─────────────────────────────────
 //
 // Typed port of Ch03_Clean.js's `ImputationRace`. Seeded with
 // `mulberry32(19)` for the truth series and `mulberry32(55)` for the

@@ -1,7 +1,7 @@
 "use client";
 
 // Ported from data-infrastructure/js/data-widgets.js's BloomFilter (lines
-// 1675-1914) — plan 010 stage 8.
+// 1675-1914) —.
 
 import { useCallback, useRef, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";

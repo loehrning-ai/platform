@@ -6,7 +6,7 @@ import {
   __resetDefChapterCacheForTests,
 } from "./content";
 
-describe("data-engineering-fundamentals content loader map (plan 011 stage 9)", () => {
+describe("data-engineering-fundamentals content loader map ", () => {
   it("resolves a real component for every one of the 12 chapter ids", async () => {
     __resetDefChapterCacheForTests();
     for (const id of DEF_CHAPTER_IDS) {

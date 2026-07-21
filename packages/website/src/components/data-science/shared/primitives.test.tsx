@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { Hero, SectionLabel, Panel, AntiPatterns, BestPractices, Takeaway } from "./primitives";
 
-describe("data-science shared primitives (plan 012 stage 4)", () => {
+describe("data-science shared primitives ", () => {
   it("Hero renders eyebrow, title (with inline markup), hook, and meta", () => {
     render(
       <Hero

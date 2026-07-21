@@ -9,10 +9,10 @@
 //   • mergeUnifiedProgress(a, b)       last-writer-wins-ish CRDT merge used to
 //                                      reconcile local + remote progress
 //                                      (the full, client-facing blob shape).
-//   • mergeCourseSlice/mergeMetaFields (plan 007 stage 5) — the same merge
+// • mergeCourseSlice/mergeMetaFields — the same merge
 //     logic, decomposed so the per-course-row persistence layer
 //     (server-store.ts) can merge one row at a time instead of one blob.
-//   • isUnifiedCourseSlice/isUnifiedMetaFields/META_ROW_COURSE_SLUG (plan 007
+// • isUnifiedCourseSlice/isUnifiedMetaFields/META_ROW_COURSE_SLUG (
 //     stage 5) — row-shape validators for the per-row DB persistence layer.
 // Every assertion below is derived by reading the source and pins real
 // input -> real output (no mock return values are asserted).
@@ -155,9 +155,9 @@ describe("isUnifiedProgress", () => {
     expect(isUnifiedProgress([])).toBe(false);
   });
 
-  it("rejects the wrong schemaVersion (strict === 3, number not string; plan 007 stage 5)", () => {
+  it("rejects the wrong schemaVersion (strict === 3, number not string; )", () => {
     expect(isUnifiedProgress({ ...progress(), schemaVersion: 1 })).toBe(false);
-    // v2 (pre plan-007-stage-5 shared blob) must not be accepted as-is; a v2
+    // v2 (pre shared blob) must not be accepted as-is; a v2
     // payload has to go through the migrate.ts v2->v3 step first.
     expect(isUnifiedProgress({ ...progress(), schemaVersion: 2 })).toBe(false);
     // A stringified "3" must not slip through the strict identity check.
@@ -509,7 +509,7 @@ describe("mergeUnifiedProgress - purity", () => {
   });
 });
 
-// ── Per-row merge primitives (plan 007 stage 5) ─────────────────────────────
+// ── Per-row merge primitives ─────────────────────────────
 // mergeCourseSlice/mergeMetaFields decompose the same merge logic
 // mergeUnifiedProgress uses internally, so the per-course-row persistence
 // layer (server-store.ts) can merge one DB row at a time — a checkpoint in
@@ -602,7 +602,7 @@ describe("isUnifiedCourseSlice / isUnifiedMetaFields / META_ROW_COURSE_SLUG (row
   });
 });
 
-// ── Exercise-summary byte cap enforced on every merge (plan 007 stage 5) ───
+// ── Exercise-summary byte cap enforced on every merge ───
 
 describe("mergeUnifiedProgress - exercise summary byte cap", () => {
   it("truncates a merged-in oversized summary to the byte cap", () => {

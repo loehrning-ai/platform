@@ -2,7 +2,7 @@
 
 // Ported from data-infrastructure/js/data-widgets.js's CapTriangle (lines
 // 228-470) — single-canvas, click-driven, no DOM-overlay coordinate mapping
-// (plan 010 stage 6). Deliberate simplification from source: the source
+//. Deliberate simplification from source: the source
 // auto-emits a "client request" particle every ~800ms forever, which never
 // lets the widget settle; here a small burst of request particles fires on
 // each pick/split interaction instead, preserving the real visual (traffic

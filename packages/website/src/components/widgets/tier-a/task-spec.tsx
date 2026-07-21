@@ -26,7 +26,7 @@ export interface TaskSpecItem {
 }
 
 /**
- * Tier-label override (plan 009 stage 3): the "schwach/mittel/stark" score
+ * Tier-label override: the "schwach/mittel/stark" score
  * band was a hardcoded German internal display string with NO override
  * mechanism at all (unlike `title`/`desc`/`goal`, which were already plain
  * per-instance props) — reusing this widget verbatim for an English course

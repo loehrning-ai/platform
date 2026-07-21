@@ -10,11 +10,11 @@ import { dsChapterHref } from "@/lib/data-science/routes";
 import { DS_FONT_VARIABLES } from "@/lib/data-science/fonts";
 import "@/components/data-science/ds-v8-scope.css";
 
-// ─── DsReaderShell (plan 012 stage 5) ─────────────────────────────────
+// ─── DsReaderShell ─────────────────────────────────
 //
 // Reusable chrome for every reader route (the Overview at the course root
 // AND every numbered [chapterSlug] route), built on the shared LessonShell
-// (plan 007 stage 7) instead of re-deriving App.js's vanilla-JS
+// instead of re-deriving App.js's vanilla-JS
 // Sidebar/TopBar. A component, not a Next.js layout.tsx: the Overview
 // lives at the course root (a sibling of [chapterSlug], not nested under
 // it), so a shared layout.tsx file can't wrap both without also wrapping

@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { clamp, mulberry32, round } from "@/lib/data-science/sim-kit";
 
-// ─── PermutationImportance (plan 012 stage 9) ──────────────────────────
+// ─── PermutationImportance ──────────────────────────
 //
 // Typed port of Ch07_Interpret.js's `PermutationImportance`: a
 // feature-shuffle importance demo. Seeded with `mulberry32(seed * 31337)`.

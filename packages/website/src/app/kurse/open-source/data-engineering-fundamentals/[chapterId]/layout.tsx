@@ -8,8 +8,8 @@ import { isInteractiveShortcutTarget } from "@/lib/a11y/keyboard-shortcuts";
 import { DEF_CHAPTERS, isDefChapterId, type DefChapterId } from "@/lib/data-engineering-fundamentals/types";
 import "@/components/data-engineering-fundamentals/de-course.css";
 
-// ─── Chapter-reader chrome (plan 011 stage 10) ───────────────────────
-// Built on the shared LessonShell (plan 007 stage 7) instead of
+// ─── Chapter-reader chrome ───────────────────────
+// Built on the shared LessonShell instead of
 // re-deriving App.js's vanilla-JS sidebar/topbar. Ports 2 of the source's
 // 6 global keyboard shortcuts — ArrowLeft/Right (prev/next chapter) and
 // j/k (scroll) — scoped to this route subtree's mount lifetime so they

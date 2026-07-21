@@ -28,7 +28,7 @@ beforeEach(() => {
 });
 afterEach(() => cleanup());
 
-describe("CourseProgressBar (plan 013 stage 7)", () => {
+describe("CourseProgressBar ", () => {
   it("shows 0 / 39 lessons with no progress", async () => {
     render(<CourseProgressBar />);
     expect(await screen.findByText("0 / 39 lessons")).toBeInTheDocument();

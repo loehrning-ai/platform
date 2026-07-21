@@ -20,7 +20,7 @@ interface AiNativeOperatorLessonReaderProps {
 
 /**
  * AiNativeOperatorLessonReader — bespoke content renderer for the
- * AI-Native Operator course (plan 013 stage 8), mirroring
+ * AI-Native Operator course, mirroring
  * ClaudeLessonReader/CodexLessonReader's precedent of a course-owned
  * reader rather than reusing `LessonContent` (German-hardcoded chrome).
  * Widgets render through the shared, kind-agnostic registry.
@@ -41,7 +41,7 @@ export function AiNativeOperatorLessonReader({
   const widgets = useMemo(() => lesson.widgets ?? [], [lesson.widgets]);
   const endWidgets = useMemo(() => resolveWidgetsForSlot(widgets, "end"), [widgets]);
 
-  // Lesson-visit completion (plan 013 stage 9): mark done unconditionally on
+  // Lesson-visit completion: mark done unconditionally on
   // mount, matching the source's own `useEffect(() => markDone(...), [...])`
   // in LessonView (course-app.js:82-84) — completion here tracks "visited",
   // not "read every section" or "answered the quiz correctly". The

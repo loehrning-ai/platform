@@ -51,7 +51,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("MatrixGridWidget (plan 013 stage 5)", () => {
+describe("MatrixGridWidget ", () => {
   const rows = ["Internal email draft", "Board-facing number"];
   const cols = ["Skim", "Read carefully", "Verify against source"];
 

@@ -109,7 +109,7 @@ export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency
       description: "Baut Automationen mit n8n und beachtet dabei den EU AI Act.",
     },
   ],
-  // English course (plan 008 stage 10): the labels/descriptions stay English
+  // English course: the labels/descriptions stay English
   // to match the course's own content language (`CLAUDE_CONFIG.language`),
   // unlike the four German competency sets above.
   claude: [
@@ -129,7 +129,7 @@ export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency
       description: "Shares prompts and CLAUDE.md files safely, with evals and without leaking sensitive data.",
     },
   ],
-  // English course (plan 009 stage 7): same reasoning as claude above.
+  // English course: same reasoning as claude above.
   codex: [
     {
       id: "task-spec-authoring",
@@ -147,7 +147,7 @@ export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency
       description: "Decomposes work into independent tasks and runs multiple agents across git worktrees without merge conflicts.",
     },
   ],
-  // English course (plan 011 stage 12): same reasoning as claude/codex above.
+  // English course: same reasoning as claude/codex above.
   "data-engineering-fundamentals": [
     {
       id: "idempotent-pipeline-writes",
@@ -165,7 +165,7 @@ export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency
       description: "Gates downstream consumption on a signal table written only after row-count, freshness, schema, and uniqueness checks pass — never on the raw data table.",
     },
   ],
-  // English course (plan 012 stage 14): same reasoning as claude/codex above.
+  // English course: same reasoning as claude/codex above.
   "data-science": [
     {
       id: "metric-before-model",
@@ -183,7 +183,7 @@ export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency
       description: "Draws the DAG before the regression and identifies confounders, mediators, and colliders to choose the correct adjustment set.",
     },
   ],
-  // English course (plan 010 stage 13): same reasoning as claude/codex above.
+  // English course: same reasoning as claude/codex above.
   "data-infrastructure": [
     {
       id: "system-design-tradeoffs",
@@ -201,7 +201,7 @@ export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency
       description: "Runs the five-act system-design interview structure — clarify, skeleton, deep dive, failure modes, trade-offs — under time pressure.",
     },
   ],
-  // English course (plan 013 stage 12): same reasoning as claude/codex above.
+  // English course: same reasoning as claude/codex above.
   "ai-native-operator": [
     {
       id: "maturity-self-diagnosis",

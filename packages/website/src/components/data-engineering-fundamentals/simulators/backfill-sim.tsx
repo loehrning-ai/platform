@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Panel } from "../primitives";
 
-// ─── BackfillSim (plan 011 stage 6) ──────────────────────────────────
+// ─── BackfillSim ──────────────────────────────────
 // Ported from `src/chapters/Ch4_Orchestrate.js`: 7-partition backfill,
 // INSERT OVERWRITE (idempotent) vs plain INSERT (retries double rows).
 

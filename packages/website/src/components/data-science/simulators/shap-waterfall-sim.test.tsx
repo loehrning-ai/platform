@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("SHAPWaterfallSim (plan 012 stage 9)", () => {
+describe("SHAPWaterfallSim ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<SHAPWaterfallSim />);
     expect(container.querySelector("svg")).not.toBeNull();

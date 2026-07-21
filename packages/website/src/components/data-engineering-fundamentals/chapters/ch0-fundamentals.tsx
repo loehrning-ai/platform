@@ -6,7 +6,7 @@ import { SqlDecoderStage } from "../simulators/sql-decoder-stage";
 import { ConnectorSwitcher } from "../simulators/connector-switcher";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 
-// ─── Ch0_Fundamentals (plan 011 stage 9) ─────────────────────────────
+// ─── Ch0_Fundamentals ─────────────────────────────
 // Ported from `src/chapters/Ch0_Fundamentals.js`.
 
 function LakehouseDiagram() {

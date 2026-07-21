@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { clamp, mulberry32, randn, round } from "@/lib/data-science/sim-kit";
 
-// ─── ThresholdSim (plan 012 stage 6) ───────────────────────────────────
+// ─── ThresholdSim ───────────────────────────────────
 //
 // Typed port of Ch06_Evaluate.js's `ThresholdSim`: a confusion-matrix and
 // ROC-sweep demo. Seeded with `mulberry32(7)` — never reseed or swap for

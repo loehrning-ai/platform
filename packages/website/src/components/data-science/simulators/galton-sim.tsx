@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { clamp, mulberry32, round } from "@/lib/data-science/sim-kit";
 
-// ─── GaltonSim (plan 012 stage 6) ──────────────────────────────────────
+// ─── GaltonSim ──────────────────────────────────────
 //
 // Typed port of Ch01_Fundamentals.js's `GaltonSim`: a physics-driven
 // Central Limit Theorem demo. Balls drop through a peg grid (top), stack

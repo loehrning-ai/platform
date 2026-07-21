@@ -1,6 +1,6 @@
 import { Inter, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 
-// ─── Self-hosted fonts (plan 012 stage 2) ─────────────────────────────
+// ─── Self-hosted fonts ─────────────────────────────
 //
 // The source (`index.html`) loads all three families from
 // fonts.googleapis.com in one request:

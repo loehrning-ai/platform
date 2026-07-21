@@ -16,8 +16,8 @@ import { CodexBlockView } from "./codex-blocks";
 import { CodexBespokeInteractive } from "./bespoke-registry";
 
 /**
- * CodexLessonReader — bespoke content renderer for the Codex Course (plan
- * 009 stage 6), mirroring `ClaudeLessonReader`'s own precedent of a
+ * CodexLessonReader — bespoke content renderer for the Codex Course,
+ * mirroring `ClaudeLessonReader`'s own precedent of a
  * course-owned reader rather than reusing the shared `LessonLayout`
  * directly. Two reasons this course needs its own reader, not just one:
  * `CodexLesson` doesn't satisfy the shared `Lesson` type's `blockId`

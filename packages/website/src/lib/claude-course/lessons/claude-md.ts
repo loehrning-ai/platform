@@ -1,6 +1,6 @@
 // Ported from claude/lessons/04-claude-md.html.
 // Widget manifest: ClaudeMdBuilder x1 (builder), Quiz x2 (q1, q2),
-// SocraticTutor x1 (tutor). Wired incrementally (plan 008 stage 6).
+// SocraticTutor x1 (tutor). Wired incrementally.
 import type { ClaudeLesson } from "../types";
 import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 

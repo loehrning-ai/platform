@@ -21,8 +21,8 @@ interface CodexLessonSidebarProps {
 
 /**
  * CodexLessonSidebar — track-grouped lesson nav for `<LessonShell>`'s
- * `sidebar` slot (plan 007 stage 7 primitive), mirroring
- * `ClaudeLessonSidebar`'s own precedent (plan 008 stage 9).
+ * `sidebar` slot ( primitive), mirroring
+ * `ClaudeLessonSidebar`'s own precedent.
  */
 export function CodexLessonSidebar({ lessons }: CodexLessonSidebarProps): JSX.Element {
   const pathname = usePathname();

@@ -1,4 +1,4 @@
-// ─── AI-Native Operator Course config (plan 013 stage 4) ────────────────
+// ─── AI-Native Operator Course config ────────────────
 //
 // Own module (mirroring `lib/codex/config.ts`/`lib/data-science/config.ts`)
 // so the course-config object lives beside its own content module;
@@ -8,9 +8,9 @@
 //
 // Unlike codex/data-infrastructure/data-engineering-fundamentals/
 // data-science, this course DOES have a real quiz gate: 9 module
-// knowledge-checks pooled into one 22-question workshop quiz (plan 013
+// knowledge-checks pooled into one 22-question workshop quiz (
 // stage 3), so it follows claude's quiz-gated `CourseConfig` shape rather
-// than plan 007's generic "completion" fallback.
+// than generic "completion" fallback.
 
 import type { CourseConfig } from "@/lib/course/types";
 
@@ -30,8 +30,8 @@ export const AI_NATIVE_OPERATOR_CONFIG: CourseConfig = {
   blockIds: [],
   // Bank size equals served count (matches every other course's convention:
   // ki-fuehrerschein 20/20, eu-ai-act-kurs 27/27, ai-native 24/24,
-  // ki-und-gesellschaft 15/15, claude 19/19). The 22-question bank (plan
-  // 013 stage 3) pools all 9 module knowledge-checks' questions verbatim.
+  // ki-und-gesellschaft 15/15, claude 19/19). The 22-question bank pools
+  // all 9 module knowledge-checks' questions verbatim.
   workshopQuizQuestionCount: 22,
   workshopQuizTimeLimitMinutes: 28,
   workshopQuizPassThreshold: 0.7,

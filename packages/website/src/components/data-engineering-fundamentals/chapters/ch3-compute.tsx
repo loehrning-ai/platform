@@ -2,7 +2,7 @@ import { Hero, SectionLabel, AntiPatterns, BestPractices, Takeaway } from "../pr
 import { ShuffleSim } from "../simulators/shuffle-sim";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 
-// ─── Ch3_Compute (plan 011 stage 9) ──────────────────────────────────
+// ─── Ch3_Compute ──────────────────────────────────
 // Ported from `src/chapters/Ch3_Compute.js`.
 
 function EngineMatrix() {

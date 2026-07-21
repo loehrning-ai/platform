@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 
-// ─── CanvasFallbackNotice (plan 010 stage 2) ────────────────────────
+// ─── CanvasFallbackNotice ────────────────────────
 //
 // Every canvas widget must null-check `canvas.getContext('2d')` — privacy-
 // hardened browsers (Brave's canvas-fingerprint blocking, Firefox's

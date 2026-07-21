@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Panel } from "../primitives";
 
-// ─── ConveyorSim (plan 011 stage 5) ──────────────────────────────────
+// ─── ConveyorSim ──────────────────────────────────
 // Ported from `src/chapters/Ch1_5_Streaming.js`: events fall onto a
 // conveyor belt and travel toward a gate that dedups by event_id and drops
 // late arrivals past the watermark. DOM-diffed via refs (matching source's

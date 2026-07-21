@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
 
-// ─── Data Science shared hooks (plan 012 stage 4) ─────────────────────
+// ─── Data Science shared hooks ─────────────────────
 //
 // Typed port of `src/v8/shared.js`'s `useInView`/`useInterval`/`useTicker`.
 

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Panel } from "../primitives";
 
-// ─── ByteTrace (plan 011 stage 4) ────────────────────────────────────
+// ─── ByteTrace ────────────────────────────────────
 // Ported from `src/chapters/Ch0_StackSims.js`: traces `dim_users.user_email`
 // through 8 stops from SQL parse to physical bytes, warm vs cold cache.
 

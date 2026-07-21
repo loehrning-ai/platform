@@ -190,7 +190,7 @@ describe("SemanticSpaceWidget", () => {
   });
 });
 
-describe("SemanticSpaceWidget — claude-course English override (plan 008 stage 7)", () => {
+describe("SemanticSpaceWidget — claude-course English override ", () => {
   it("renders the overridden English seed words, not the German defaults", async () => {
     const { CLAUDE_SEMANTIC_SPACE_SEED, CLAUDE_SEMANTIC_SPACE_KEYWORDS, CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS, CLAUDE_SEMANTIC_SPACE_QUADRANT_LABELS, CLAUDE_SEMANTIC_SPACE_COPY } =
       await import("@/lib/claude-course/widget-copy");

@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { clamp, mulberry32, normInv, randn, round } from "@/lib/data-science/sim-kit";
 
-// ─── PeekingSimulator (plan 012 stage 10) ──────────────────────────────
+// ─── PeekingSimulator ──────────────────────────────
 //
 // Typed port of Ch10_Peeking.js's `PeekingSimulator`: false-positive-
 // inflation Monte Carlo demo. Seeded with `mulberry32(seed)`, seed

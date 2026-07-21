@@ -7,7 +7,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("DriftSimulator (plan 012 stage 11)", () => {
+describe("DriftSimulator ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<DriftSimulator />);
     expect(container.querySelectorAll("svg").length).toBeGreaterThan(0);

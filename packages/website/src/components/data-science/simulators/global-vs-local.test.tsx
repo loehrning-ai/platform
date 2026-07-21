@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("GlobalVsLocal (plan 012 stage 9)", () => {
+describe("GlobalVsLocal ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<GlobalVsLocal />);
     expect(container.querySelectorAll("svg").length).toBeGreaterThan(0);

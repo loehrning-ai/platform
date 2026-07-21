@@ -4,7 +4,7 @@ import { DAGDiagram } from "./dag-diagram";
 
 afterEach(cleanup);
 
-describe("DAGDiagram (plan 011 stage 6)", () => {
+describe("DAGDiagram ", () => {
   it("renders all 6 nodes with the real dataset names", () => {
     render(<DAGDiagram />);
     for (const name of ["raw_events", "clean_events", "deduped_sessions", "daily_rollup", "exec_dashboard", "ml_features"]) {

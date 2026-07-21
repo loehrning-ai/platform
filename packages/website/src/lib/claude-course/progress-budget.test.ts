@@ -1,7 +1,7 @@
-// ─── Progress-budget audit (plan 008 stage 12) ──────────────────────
+// ─── Progress-budget audit ──────────────────────
 //
 // Two DB rows can grow from a learner working through this course
-// (plan 007 stage 5's per-course-row redesign, supabase/migrations/
+// ('s per-course-row redesign, supabase/migrations/
 // 009_user_course_progress_per_course.sql):
 //   1. course_slug = "claude"  -> holds only this course's UnifiedCourseSlice
 //      (lessons/workshopQuiz/capstoneSubmitted/startedAt/lastActivity). It
@@ -26,7 +26,7 @@ function byteLength(value: unknown): number {
   return Buffer.byteLength(JSON.stringify(value), "utf8");
 }
 
-describe("claude course's contribution to the two progress-budget rows (plan 008 stage 12)", () => {
+describe("claude course's contribution to the two progress-budget rows ", () => {
   it("this course's own per-course row (course_slug='claude') stays far under the 65536-byte cap", async () => {
     const lessons = await getAllClaudeLessons();
     expect(lessons.length).toBe(12);
@@ -75,9 +75,9 @@ describe("claude course's contribution to the two progress-budget rows (plan 008
       }
     }
 
-    // Documents the real count (46), which exceeds the plan's original
-    // "~34-40" estimate, see plans/008-claude.md Stage 12 note. Every
-    // lesson widget that awards a checkpoint declares both lessonId + cpId,
+    // Documents the real count (46), which exceeds the original "~34-40"
+    // estimate. Every lesson widget that awards a checkpoint declares both
+    // lessonId + cpId,
     // so this reflects the actual awarding surface, not a hand-maintained list.
     expect(keys.length).toBe(46);
     expect(new Set(keys).size).toBe(keys.length); // no two widgets share a key

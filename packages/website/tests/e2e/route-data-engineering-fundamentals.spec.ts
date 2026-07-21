@@ -1,19 +1,19 @@
 import { test, expect, type Page } from "@playwright/test";
 
 /**
- * Data Engineering Fundamentals golden path (plan 011 stage 14): landing ->
+ * Data Engineering Fundamentals golden path: landing ->
  * chapter -> certificate -> QR verify, in one spec. Mirrors
  * route-codex.spec.ts / route-data-infrastructure.spec.ts's established
  * pattern, with deliberate differences specific to this course's real
  * architecture:
  *   - no separate "kurs" hub route: the landing page itself
  *     (src/app/kurse/open-source/data-engineering-fundamentals/page.tsx) IS
- *     the chapter grid — there is no nested `/kurs` route at all (plan 011
+ * the chapter grid — there is no nested `/kurs` route at all (
  *     stage 10 Done Criteria, and stage 14's coursePath fix).
  *   - no checkpoint/quiz leg: grepping the pinned source's chapter files for
  *     a quiz component returns nothing (config.ts's own comment). This
  *     course's completion criterion is literally "all 12 chapters visited"
- *     (MarkChapterVisited, plan 011 stage 11) — so the "checkpoint" leg
+ * (MarkChapterVisited, ) — so the "checkpoint" leg
  *     below asserts that mounting a chapter route marks it completed in the
  *     unified progress store, not a quiz-answer interaction.
  *   - the certificate/QR-verify seeds "all 12 chapters completed" with
@@ -118,7 +118,7 @@ test.describe("Data Engineering Fundamentals golden path", () => {
     expect(res?.status()).toBe(200);
     await expect(page.locator("h1")).toHaveCount(1);
 
-    // MarkChapterVisited's mount effect (plan 011 stage 11) — no quiz
+    // MarkChapterVisited's mount effect — no quiz
     // interaction exists for this course, the route visit itself is the
     // completion signal.
     await expect

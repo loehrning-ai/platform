@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { clamp, mulberry32, round } from "@/lib/data-science/sim-kit";
 
-// ─── LIMEExplainer (plan 012 stage 9) ──────────────────────────────────
+// ─── LIMEExplainer ──────────────────────────────────
 //
 // Typed port of Ch07_Interpret.js's `LIMEExplainer`: a local linear
 // explanation demo. Seeded with `mulberry32(42)` on every recompute — the

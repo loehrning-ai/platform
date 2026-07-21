@@ -7,7 +7,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("WatermarkSim (plan 011 stage 5)", () => {
+describe("WatermarkSim ", () => {
   it("renders the readout grid and default balanced mode", () => {
     render(<WatermarkSim />);
     expect(screen.getByText("Included")).toBeInTheDocument();

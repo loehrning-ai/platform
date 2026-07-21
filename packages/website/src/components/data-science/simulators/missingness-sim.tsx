@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { inkOf, mulberry32, round } from "@/lib/data-science/sim-kit";
 
-// ─── MissingnessSim (plan 012 stage 7) ─────────────────────────────────
+// ─── MissingnessSim ─────────────────────────────────
 //
 // Typed port of Ch03_Clean.js's `MissingnessSim`. Seeded with
 // `mulberry32(77)` for the base table and `mulberry32(42)` for the

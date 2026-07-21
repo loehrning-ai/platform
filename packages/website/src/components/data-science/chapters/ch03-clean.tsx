@@ -4,7 +4,7 @@ import { ImputationRace } from "@/components/data-science/simulators/imputation-
 import { ScalerDemo } from "@/components/data-science/simulators/scaler-demo";
 import { LeakageDetector } from "@/components/data-science/simulators/leakage-detector";
 
-// ─── Ch03: Clean (plan 012 stage 7) ────────────────────────────────────
+// ─── Ch03: Clean ────────────────────────────────────
 //
 // Typed port of Ch03_Clean.js. Each of its four named simulators lives
 // in its own file under simulators/, matching the split established in

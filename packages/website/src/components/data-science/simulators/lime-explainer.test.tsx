@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("LIMEExplainer (plan 012 stage 9)", () => {
+describe("LIMEExplainer ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<LIMEExplainer />);
     expect(container.querySelector("svg")).not.toBeNull();

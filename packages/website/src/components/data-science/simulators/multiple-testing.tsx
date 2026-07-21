@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { clamp, mulberry32, normCdf, randn, round } from "@/lib/data-science/sim-kit";
 
-// ─── MultipleTesting (plan 012 stage 10) ───────────────────────────────
+// ─── MultipleTesting ───────────────────────────────
 //
 // Typed port of Ch10_Peeking.js's `MultipleTesting`: FWER/Bonferroni
 // slider demo. Seeded with `mulberry32(n * 17 + 3)`, reseeded per `n`.

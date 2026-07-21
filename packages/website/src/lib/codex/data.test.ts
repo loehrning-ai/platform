@@ -13,7 +13,7 @@ beforeEach(() => {
   __resetCodexLessonCacheForTests();
 });
 
-describe("codex content module (plan 009 stages 3-4)", () => {
+describe("codex content module ", () => {
   it("has exactly 12 lesson ids, matching the source's window.LESSONS", () => {
     expect(CODEX_LESSON_IDS).toHaveLength(12);
     expect(new Set(CODEX_LESSON_IDS).size).toBe(12);

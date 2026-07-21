@@ -4,7 +4,7 @@ import { useState, type ReactNode } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { round } from "@/lib/data-science/sim-kit";
 
-// ─── DifferenceInDifferences (plan 012 stage 10) ───────────────────────
+// ─── DifferenceInDifferences ───────────────────────
 //
 // Typed port of Ch09_Causal.js's `DifferenceInDifferences`: DiD slider
 // demo. Pure arithmetic, no RNG.

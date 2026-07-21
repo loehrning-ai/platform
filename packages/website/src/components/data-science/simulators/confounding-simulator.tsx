@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { inkOf, mulberry32, randn, round } from "@/lib/data-science/sim-kit";
 
-// ─── ConfoundingSimulator (plan 012 stage 10) ──────────────────────────
+// ─── ConfoundingSimulator ──────────────────────────
 //
 // Typed port of Ch09_Causal.js's `ConfoundingSimulator`: ice-cream/
 // drowning + shoe-size/reading scenario picker. Seeded with

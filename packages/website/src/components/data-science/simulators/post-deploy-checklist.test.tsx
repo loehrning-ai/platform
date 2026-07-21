@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("PostDeployChecklist (plan 012 stage 11)", () => {
+describe("PostDeployChecklist ", () => {
   it("no canvas element in the DOM", () => {
     const { container } = render(<PostDeployChecklist />);
     expect(container.querySelector("canvas")).toBeNull();

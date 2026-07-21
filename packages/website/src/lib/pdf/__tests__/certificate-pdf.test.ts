@@ -101,7 +101,7 @@ describe("certificate verification-URL encoding", () => {
     );
   });
 
-  // plan 008 stage 11: claude's basePath is nested under /kurse/open-source/
+  //: claude's basePath is nested under /kurse/open-source/
   // (unlike the 4 German courses' top-level paths), confirming
   // generateCertificatePdf works unmodified for that URL shape too.
   it("targets claude's nested basePath verification route unmodified", async () => {
@@ -158,7 +158,7 @@ describe("certificate verification-URL encoding", () => {
     });
   });
 
-  // plan 007 stage 4: third completionMode for courses whose eligibility path
+  //: third completionMode for courses whose eligibility path
   // is "all lessons done" rather than a quiz or capstone.
   it("encodes all-lessons-done completion without a fake quiz score", async () => {
     await generateCertificatePdf(

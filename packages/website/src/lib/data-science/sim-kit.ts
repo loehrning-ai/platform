@@ -1,4 +1,4 @@
-// ─── Data Science sim-kit: pure math/RNG helpers (plan 012 stage 4) ──
+// ─── Data Science sim-kit: pure math/RNG helpers ──
 //
 // Typed port of `src/v8/shared.js`'s non-React exports, replacing the
 // source's `window.X` global-export pattern (a plain-script, no-bundler

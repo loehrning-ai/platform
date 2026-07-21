@@ -1,8 +1,8 @@
 -- Restructures user_course_progress from one shared JSONB blob per user
 -- (PRIMARY KEY (user_id)) to one row per (user_id, course_slug). No
--- production Supabase project exists yet (plans/STATUS.md), so this is a
--- clean table restructure rather than a zero-downtime data migration: there
--- is no live data to carry forward.
+-- production Supabase project exists yet, so this is a clean table
+-- restructure rather than a zero-downtime data migration: there is no
+-- live data to carry forward.
 --
 -- Two row shapes share this table, distinguished by course_slug:
 --   * a real CourseSlug        -> progress holds that course's UnifiedCourseSlice

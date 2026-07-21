@@ -4,7 +4,7 @@ import { ScalerDemo } from "./scaler-demo";
 
 afterEach(() => cleanup());
 
-describe("ScalerDemo (plan 012 stage 7)", () => {
+describe("ScalerDemo ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<ScalerDemo />);
     expect(container.querySelector("svg")).not.toBeNull();

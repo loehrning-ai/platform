@@ -1,4 +1,4 @@
-// ─── Data Science chapter-component loader (plan 012 stage 1) ────────
+// ─── Data Science chapter-component loader ────────
 //
 // Structured as a per-chapter dynamic-import loader map, mirroring
 // `lib/data-engineering-fundamentals/content.ts`'s `CHAPTER_LOADERS`: a

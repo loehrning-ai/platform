@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { clamp, inkOf, mulberry32, randn, round } from "@/lib/data-science/sim-kit";
 
-// ─── PolynomialExpansion (plan 012 stage 8) ────────────────────────────
+// ─── PolynomialExpansion ────────────────────────────
 //
 // Typed port of Ch04_Feature.js's `PolynomialExpansion`: a polynomial
 // curve-fit demo, seeded with `mulberry32(42)`. `fitPoly`/`evalPoly`/

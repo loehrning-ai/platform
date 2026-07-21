@@ -7,7 +7,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("DiscoverySpeedrun (plan 011 stage 7)", () => {
+describe("DiscoverySpeedrun ", () => {
   it("shows the intro screen with all 6 shortcuts before starting", () => {
     render(<DiscoverySpeedrun />);
     expect(screen.getByText("Discovery Speedrun")).toBeInTheDocument();

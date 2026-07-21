@@ -43,7 +43,7 @@ export interface CatalogCourse {
    * Every entry in COURSE_CATALOG is "live" by construction (a course only
    * ever enters this array once it is fully native). The single field the
    * gallery + generateStaticParams branch on instead of array membership
-   * (plan 007 stage 6/7); this plan does not flip any of the 6 imported
+   *; this plan does not flip any of the 6 imported
    * courses to "live".
    */
   readonly nativeStatus: "live";
@@ -107,7 +107,7 @@ export interface ImportedCourse {
   /**
    * Every entry in IMPORTED_COURSE_CATALOG is "pending" by construction — the
    * single field the gallery + generateStaticParams branch on instead of
-   * array membership (plan 007 stage 6/7).
+   * array membership.
    */
   readonly nativeStatus: "pending";
 }
@@ -198,7 +198,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     coverImageAlt: "Startseite des AI-Native Arbeitskurses",
     nativeStatus: "live",
   },
-  // Claude Course (plan 008 stage 10): first imported course flipped from
+  // Claude Course: first imported course flipped from
   // "pending" to "live" now that it has real native routes, per-lesson
   // content, and certificate/verification wiring. Its URL structure stays
   // under /kurse/open-source/claude (not top-level like the 4 German
@@ -250,7 +250,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     integrationNote:
       "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
   },
-  // Codex Course (plan 009 stage 7): second imported course flipped from
+  // Codex Course: second imported course flipped from
   // "pending" to "live" now that it has real native routes, per-lesson
   // content, and certificate/verification wiring. Its URL structure stays
   // under /kurse/open-source/codex (not top-level like the 4 German
@@ -299,7 +299,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     integrationNote:
       "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
   },
-  // Data Infrastructure (plan 010 stage 13): third imported course flipped
+  // Data Infrastructure: third imported course flipped
   // from "pending" to "live" now that it has real native routes, per-lesson
   // content, and certificate/verification wiring. Its URL structure stays
   // under /kurse/open-source/data-infrastructure (not top-level like the 4
@@ -351,7 +351,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     integrationNote:
       "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
   },
-  // Data Engineering Fundamentals (plan 011 stage 12): fourth imported
+  // Data Engineering Fundamentals: fourth imported
   // course flipped from "pending" to "live". totalLessons/unitCount
   // reconciled from the catalog's stale 10 to the real 12 (App.js's
   // CHAPTERS array: home/fund/ingest/stream/store/comp/orch/qual/disc/
@@ -359,7 +359,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
   // by 2. URL structure has no "/kurs" segment (unlike every other
   // course): startHref/continueHref both point directly under
   // /kurse/open-source/data-engineering-fundamentals, matching this
-  // course's own flat [chapterId] route tree (plan 011 stage 10).
+  // course's own flat [chapterId] route tree.
   {
     slug: "data-engineering-fundamentals",
     step: 8,
@@ -400,11 +400,11 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     integrationNote:
       "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
   },
-  // Data Science (plan 012 stage 14): fifth imported course flipped from
+  // Data Science: fifth imported course flipped from
   // "pending" to "live". Like data-engineering-fundamentals, chapters live
   // directly under data-science/[chapterSlug] with no "/kurs" segment —
   // but unlike it, the Overview renders at the bare course root itself
-  // (plan 012 stage 5's route split: "home" is not a [chapterSlug] entry),
+  // ('s route split: "home" is not a [chapterSlug] entry),
   // so startHref/continueHref both point at the course root directly
   // rather than at a "/home" sub-path.
   {
@@ -447,7 +447,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     integrationNote:
       "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
   },
-  // AI-Native Operator (plan 013 stage 12): sixth and last imported course
+  // AI-Native Operator: sixth and last imported course
   // flipped from "pending" to "live". Its URL structure stays under
   // /kurse/open-source/ai-native-operator (not top-level like the 4 German
   // courses, and never the bare /ai-native slug already owned by the
@@ -506,8 +506,8 @@ export const IMPORTED_COURSE_SOURCE_COMMIT =
 
 // "claude"/"codex"/"data-infrastructure"/"data-engineering-fundamentals"/
 // "data-science"/"ai-native-operator" all moved to COURSE_CATALOG above
-// (plan 008 stage 10 / plan 009 stage 7 / plan 010 stage 13 / plan 011
-// stage 12 / plan 012 stage 14 / plan 013 stage 12: flipped to
+// ( / / / 
+// stage 12 / /: flipped to
 // nativeStatus "live" now that they have real native routes). Every
 // imported course has now shipped natively — this array is empty by
 // construction until (if ever) a new course import starts its own pending

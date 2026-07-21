@@ -2,7 +2,7 @@
 
 // Ported from data-infrastructure/js/data-widgets.js's RowColumn (lines
 // 475-699) — single-canvas, click-driven, no DOM-overlay coordinate mapping
-// (plan 010 stage 6).
+//.
 
 import { useCallback, useMemo, useRef, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";

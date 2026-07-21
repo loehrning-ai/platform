@@ -5,13 +5,13 @@ import { getAllLessons, __resetAiNativeOperatorCacheForTests } from "./data";
 import questionsJson from "../../../content/ai-native-operator/quiz/questions.json";
 
 /**
- * Workshop quiz question pool (plan 013 stage 3). The 9 module knowledge-check
+ * Workshop quiz question pool. The 9 module knowledge-check
  * lessons' ~22 questions have zero `explanation` text in the source — every
  * explanation below is net-new content authored for this port, validated via
- * plan 007's shared `assertValidQuizQuestions` (exactly one correct answer +
+ * shared `assertValidQuizQuestions` (exactly one correct answer +
  * non-empty explanation per question).
  */
-describe("ai-native-operator workshop quiz pool (plan 013 stage 3)", () => {
+describe("ai-native-operator workshop quiz pool ", () => {
   it("every quiz-kind lesson's questions pass the shared quiz validator", async () => {
     __resetAiNativeOperatorCacheForTests();
     const all = await getAllLessons();

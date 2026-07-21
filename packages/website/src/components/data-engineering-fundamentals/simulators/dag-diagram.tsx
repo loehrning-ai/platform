@@ -1,4 +1,4 @@
-// ─── DAGDiagram (plan 011 stage 6) ───────────────────────────────────
+// ─── DAGDiagram ───────────────────────────────────
 // Ported from `src/chapters/Ch4_Orchestrate.js`: static pipeline DAG —
 // raw_events -> clean_events/deduped_sessions -> daily_rollup -> two sinks.
 // No client state; pure presentational SVG.

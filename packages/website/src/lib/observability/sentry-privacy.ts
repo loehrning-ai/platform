@@ -1,6 +1,6 @@
 import { COURSE_SLUGS } from "@/lib/course/types";
 
-// Derived from the canonical COURSE_SLUGS union (plan 007 stage 8) so a
+// Derived from the canonical COURSE_SLUGS union so a
 // course outside the original 4 still gets its verification route redacted
 // — every course slug is a bare kebab-case identifier (letters, digits,
 // hyphens only), so no regex-escaping is needed for the alternation.

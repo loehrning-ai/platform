@@ -1,4 +1,4 @@
-// ─── Progress-budget audit (plan 010 stage 12) ──────────────────────
+// ─── Progress-budget audit ──────────────────────
 //
 // Mirrors `lib/claude-course/progress-budget.test.ts`'s two-row model
 // (supabase/migrations/009_user_course_progress_per_course.sql): a
@@ -44,7 +44,7 @@ const BESPOKE_CPIDS: Record<DataInfraLessonId, readonly string[]> = {
   "interview-playbook": ["iv"],
 };
 
-describe("data-infrastructure's contribution to the two progress-budget rows (plan 010 stage 12)", () => {
+describe("data-infrastructure's contribution to the two progress-budget rows ", () => {
   it("this course's own per-course row (course_slug='data-infrastructure') stays far under the 65536-byte cap", async () => {
     const lessons = await getAllDataInfraLessons();
     expect(lessons.length).toBe(12);

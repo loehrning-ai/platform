@@ -7,7 +7,7 @@ import {
   CODEX_FLASHCARDS_COPY,
 } from "./widget-copy";
 
-describe("codex widget-copy (plan 009 stage 3)", () => {
+describe("codex widget-copy ", () => {
   it("matches codex/js/widgets.js's real English chrome, not a German translation", () => {
     expect(CODEX_QUIZ_COPY).toEqual({
       kindLabel: "Check",

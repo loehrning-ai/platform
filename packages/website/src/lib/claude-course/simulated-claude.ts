@@ -1,4 +1,4 @@
-// ─── Simulated Claude responses (plan 008 stage 4) ──────────────────
+// ─── Simulated Claude responses ──────────────────
 //
 // Ported 1:1 (behavior and copy) from `claude/js/claude-demo.js`, the
 // source course's own demo-mode shim. Its own file comment confirms this
@@ -9,7 +9,7 @@
 // prompt string, then regex-sniffs it to route) to direct, typed function
 // calls, one function per widget need, since every caller here is a
 // same-process TypeScript component, not a fetch() boundary. Wiring a real
-// Anthropic call is an explicit non-goal (plan 008 constraints).
+// Anthropic call is an explicit non-goal ( constraints).
 //
 // No network call anywhere in this file.
 

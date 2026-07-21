@@ -1,6 +1,6 @@
 /**
- * Shared quiz-content-validation helper (plan 007 stage 10). Every course
- * plan's own content guard test (data.test.ts-equivalents in plans 008-013)
+ * Shared quiz-content-validation helper. Every course
+ * plan's own content guard test (data.test.ts-equivalents in )
  * calls this instead of re-deriving the same "exactly one correct answer,
  * non-empty explanation" check per quiz question.
  */

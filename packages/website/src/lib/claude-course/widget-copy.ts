@@ -1,4 +1,4 @@
-// ─── Claude Course chrome-copy overrides (plan 008 stage 3) ─────────
+// ─── Claude Course chrome-copy overrides ─────────
 //
 // English chrome copy for the 4 reused Tier-A widgets (quiz, drag-reorder,
 // failure-tagger, redaction-drill), passed as their `copy` prop from every
@@ -91,7 +91,7 @@ export const CLAUDE_REDACTION_DRILL_COPY: RedactionDrillWidgetCopy = {
     "You over-redacted {n} safe fields, fine, but unnecessary.",
 };
 
-// ─── SemanticSpace overrides (plan 008 stage 7) ─────────────────────
+// ─── SemanticSpace overrides ─────────────────────
 //
 // The internal cluster ids stay the component's own German ones
 // (technik/vertrieb/werkstatt/verwaltung/user, never displayed), but the

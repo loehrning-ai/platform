@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
-// ─── PipelineBar / StageIcon (plan 011 stage 8) ──────────────────────
+// ─── PipelineBar / StageIcon ──────────────────────
 // Ported from `src/chapters/Ch_Overview.js`: the horizontal 10-stop
 // pipeline diagram driven by an animated token stream, used by the
 // overview chapter's hero flow section.

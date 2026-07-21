@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { clamp } from "@/lib/data-science/sim-kit";
 
-// ─── InteractionTerms (plan 012 stage 8) ───────────────────────────────
+// ─── InteractionTerms ───────────────────────────────
 //
 // Typed port of Ch04_Feature.js's `InteractionTerms`: an A×B vs A+B
 // interaction heatmap, two range sliders, no RNG.

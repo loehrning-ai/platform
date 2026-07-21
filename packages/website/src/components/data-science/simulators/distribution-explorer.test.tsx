@@ -4,7 +4,7 @@ import { DistributionExplorer } from "./distribution-explorer";
 
 afterEach(() => cleanup());
 
-describe("DistributionExplorer (plan 012 stage 7)", () => {
+describe("DistributionExplorer ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<DistributionExplorer />);
     expect(container.querySelector("svg")).not.toBeNull();

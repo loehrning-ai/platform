@@ -1,4 +1,4 @@
-// ─── Codex Course content loader (plan 009 stages 3-4) ───────────────
+// ─── Codex Course content loader ───────────────
 //
 // Structured as a Record<LessonId, () => Promise<...>> loader map,
 // mirroring `lib/course/questions.ts`'s QUESTION_LOADERS and

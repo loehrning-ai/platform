@@ -8,7 +8,7 @@ import { PrecisionRecallTradeoff } from "@/components/data-science/simulators/pr
 import { PostDeployChecklist } from "@/components/data-science/simulators/post-deploy-checklist";
 import { dsChapterHref } from "@/lib/data-science/routes";
 
-// ─── Ch12: Capstone (plan 012 stage 11) ────────────────────────────────
+// ─── Ch12: Capstone ────────────────────────────────
 //
 // Typed port of Ch12_Capstone.js. The only chapter in this course whose
 // source component destructures and calls `goTo` — its final CTA returns

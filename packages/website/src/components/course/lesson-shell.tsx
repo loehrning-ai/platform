@@ -6,7 +6,7 @@ import { Menu, X } from "lucide-react";
 import { useFocusTrap } from "@/lib/a11y/use-focus-trap";
 
 /**
- * Shared, structure-agnostic lesson-reader chrome (plan 007 stage 7):
+ * Shared, structure-agnostic lesson-reader chrome:
  * desktop sidebar rail + mobile nav drawer (toggle, backdrop, focus trap,
  * inert-sibling sweep, aria wiring), extracted from lesson-layout.tsx. It
  * knows nothing about lessons — `sidebar`/`children` are opaque ReactNode

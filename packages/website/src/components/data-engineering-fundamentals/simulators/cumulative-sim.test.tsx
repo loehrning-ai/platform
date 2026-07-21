@@ -4,7 +4,7 @@ import { CumulativeSim } from "./cumulative-sim";
 
 afterEach(cleanup);
 
-describe("CumulativeSim (plan 011 stage 6)", () => {
+describe("CumulativeSim ", () => {
   it("defaults to Day 3 with the unit-mix-up bug flagged as DRIFT", () => {
     render(<CumulativeSim />);
     expect(screen.getByText("Day 3/5")).toBeInTheDocument();

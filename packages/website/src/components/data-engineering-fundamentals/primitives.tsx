@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 
-// ─── Data Engineering Fundamentals shared primitives (plan 011 stage 2) ─
+// ─── Data Engineering Fundamentals shared primitives ─
 //
 // Typed port of `src/chapters/shared.js`'s presentational primitives,
 // replacing the source's `window.X` global-export pattern (a plain-script,

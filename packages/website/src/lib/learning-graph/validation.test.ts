@@ -101,7 +101,7 @@ describe("getNodesForCourse", () => {
     // eu-ai-act-kurs course node belongs to another bundle.
     expect(ids.has("course:eu-ai-act-kurs")).toBe(false);
     // Imported labs carry no courseSlug and must never appear. Empty by
-    // design (plan 013 stage 12 flipped the last imported course), so this
+    // design ( flipped the last imported course), so this
     // loop is now vacuous — it stays enforced the moment a future course
     // import adds a new pending entry.
     const labs = LEARNING_NODES.filter((n) => n.type === "open_source_lab");

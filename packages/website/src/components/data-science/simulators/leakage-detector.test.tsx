@@ -4,7 +4,7 @@ import { LeakageDetector } from "./leakage-detector";
 
 afterEach(() => cleanup());
 
-describe("LeakageDetector (plan 012 stage 7)", () => {
+describe("LeakageDetector ", () => {
   it("renders exclusively via HTML — no canvas element in the DOM", () => {
     const { container } = render(<LeakageDetector />);
     expect(container.querySelector("canvas")).toBeNull();

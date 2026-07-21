@@ -21,7 +21,7 @@ function certificateFragment(): string {
 }
 
 describe("Sentry certificate and URL privacy", () => {
-  // plan 007 stage 8: derived from the canonical COURSE_SLUGS union (now 10
+  //: derived from the canonical COURSE_SLUGS union (now 10
   // values) instead of a hardcoded 4-slug list — a course outside the
   // original 4 must redact its verification route just as reliably, or its
   // learner's name + score would leak to Sentry.

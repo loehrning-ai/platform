@@ -10,7 +10,7 @@ import {
   simulatedDelayMs,
 } from "./simulated-claude";
 
-describe("simulated-claude (plan 008 stage 4, ported from claude-demo.js)", () => {
+describe("simulated-claude ", () => {
   describe("genericAnswer", () => {
     it("returns a structured launch-email answer for a detailed launch-email prompt", () => {
       const out = genericAnswer(

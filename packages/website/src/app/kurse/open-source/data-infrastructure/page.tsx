@@ -8,7 +8,7 @@ import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 import type { JsonLdGraph } from "@/lib/seo/json-ld";
 
 /**
- * Data Infrastructure native landing page (plan 010 stage 11), converting
+ * Data Infrastructure native landing page, converting
  * the source's hero/stack-diagram/track-grid/stats-band into the platform's
  * course-landing patterns, following `/ai-native`'s precedent of a live,
  * client-rendered progress readout embedded in an otherwise server-rendered

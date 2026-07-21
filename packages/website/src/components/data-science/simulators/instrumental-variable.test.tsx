@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("InstrumentalVariable (plan 012 stage 10)", () => {
+describe("InstrumentalVariable ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<InstrumentalVariable />);
     expect(container.querySelector("svg")).not.toBeNull();

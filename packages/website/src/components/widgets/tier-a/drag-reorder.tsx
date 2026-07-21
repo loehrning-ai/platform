@@ -34,7 +34,7 @@ export interface ReorderBlock {
 }
 
 /**
- * Chrome-copy override (plan 008 stage 3): additive, default-preserving —
+ * Chrome-copy override: additive, default-preserving —
  * every field defaults to the original German literal so the 3 existing
  * native courses render byte-identical when `copy` is omitted.
  */

@@ -1,6 +1,6 @@
 // Ported from claude/lessons/10-team.html.
 // Widget manifest: PromptLibraryShaper x1 (shaper), SocraticTutor x1
-// (tutor), Quiz x1 (q1). Wired incrementally (plan 008 stage 6).
+// (tutor), Quiz x1 (q1). Wired incrementally.
 import type { ClaudeLesson } from "../types";
 import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 

@@ -4,7 +4,7 @@ import { MissingnessSim } from "./missingness-sim";
 
 afterEach(() => cleanup());
 
-describe("MissingnessSim (plan 012 stage 7)", () => {
+describe("MissingnessSim ", () => {
   it("renders exclusively via HTML table/SVG — no canvas element in the DOM", () => {
     const { container } = render(<MissingnessSim />);
     expect(container.querySelector("table")).not.toBeNull();

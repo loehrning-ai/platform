@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 import { DataInfraBespokeInteractives } from "./bespoke-registry";
 
 /**
- * DataInfraLessonReader — course-owned content renderer (plan 010 stage 10),
+ * DataInfraLessonReader — course-owned content renderer,
  * mirroring `ClaudeLessonReader`'s precedent: plain-markdown sections (this
  * course has no block system, unlike codex), widgets through the shared
  * registry, and a fixed "live simulators" section rendering this lesson's

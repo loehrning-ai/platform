@@ -4,7 +4,7 @@ import { HeroOrrery } from "./hero-orrery";
 import { HeroTransform } from "./hero-transform";
 
 /**
- * Landing-page hero demos (plan 008 stage 8). Ported from
+ * Landing-page hero demos. Ported from
  * `claude/js/widgets.js`'s PromptOrrery/PromptTransform: confirmed zero
  * props, no checkpoint, never mounted inside a lesson (source: only
  * `index.html`'s hero section), these are deliberately bespoke,

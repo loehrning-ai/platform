@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 
-// ─── FeatureSelectionSim (plan 012 stage 8) ────────────────────────────
+// ─── FeatureSelectionSim ────────────────────────────
 //
 // Typed port of Ch04_Feature.js's `FeatureSelectionSim`: a feature-
 // selection method comparison (correlation filter / mutual information /

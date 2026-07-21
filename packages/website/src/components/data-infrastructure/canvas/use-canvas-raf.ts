@@ -1,6 +1,6 @@
 "use client";
 
-// ─── useCanvasRAF (plan 010 stage 2) ────────────────────────────────
+// ─── useCanvasRAF ────────────────────────────────
 //
 // Ports the source's shared `RAF()` helper (js/data-widgets.js lines 13-25):
 // pause entirely while the tab is hidden (background tabs never burn CPU

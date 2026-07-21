@@ -133,7 +133,7 @@ describe("unified progress store", () => {
       expect(r?.attempts).toBe(2);
     });
 
-    // plan 007 stage 5: summaries are capped in UTF-8 bytes at write time so a
+    //: summaries are capped in UTF-8 bytes at write time so a
     // single oversized AI summary can never blow the per-course-row DB budget.
     it("truncates an oversized exercise summary at write time (byte-based cap)", () => {
       const longSummary = "Über KI-Kompetenz und Verantwortung. ".repeat(50);
@@ -205,12 +205,11 @@ describe("unified progress store", () => {
       // stand in for slugs that were never real catalog members. None of
       // the 6 originally-imported courses ("claude"/"codex"/
       // "data-infrastructure"/"data-engineering-fundamentals"/
-      // "data-science"/"ai-native-operator") are used here any more: plan
-      // 008 stage 10, plan 009 stage 7, plan 010 stage 13, plan 011 stage
-      // 12, plan 012 stage 14, and plan 013 stage 12 registered and
-      // flipped every one of them to native courses, so their slices ARE
-      // now counted — reusing any of them here would break this test's
-      // premise. Purely-synthetic placeholder slugs keep the test valid
+      // "data-science"/"ai-native-operator") are used here any more: the
+      // migration registered and flipped every one of them to native
+      // courses, so their slices ARE now counted — reusing any of them
+      // here would break this test's premise. Purely-synthetic placeholder
+      // slugs keep the test valid
       // permanently, independent of future catalog flips.
       const lesson = {
         sectionsRead: [],
@@ -304,7 +303,7 @@ describe("unified progress store", () => {
       expect(isCertificateEligible("ki-fuehrerschein")).toBe(false);
     });
 
-    // plan 007 stage 4: the all-lessons-completed fallback used to resolve
+    //: the all-lessons-completed fallback used to resolve
     // totalLessons from COURSE_CATALOG only, so it was silently unreachable
     // for any course outside the 4-course native spine. "codex" (12 lessons,
     // ALL_COURSE_CATALOG) exercises a slug outside that spine.
@@ -323,7 +322,7 @@ describe("unified progress store", () => {
       expect(isCertificateEligible("codex")).toBe(false);
     });
 
-    // plan 010 stage 12: data-infrastructure is still nativeStatus "pending"
+    //: data-infrastructure is still nativeStatus "pending"
     // in catalog.ts (IMPORTED_COURSE_CATALOG) as of this test — it flips to
     // "live" in stage 13 — but its 12-lesson totalLessons is already resolved
     // via ALL_COURSE_CATALOG regardless of which of the two arrays it lives
@@ -343,7 +342,7 @@ describe("unified progress store", () => {
       expect(isCertificateEligible("data-infrastructure")).toBe(false);
     });
 
-    // plan 011 stage 12: data-engineering-fundamentals is now nativeStatus
+    //: data-engineering-fundamentals is now nativeStatus
     // "live" (COURSE_CATALOG), reconciled to its real 12 chapters — this is
     // the "all 12 chapters visited" completion criterion the plan documents.
     it("resolves eligibility for data-engineering-fundamentals via the all-chapters-visited path", () => {
@@ -467,7 +466,7 @@ describe("unified progress store", () => {
     });
   });
 
-  describe("v2->v3 migration step wired into the read path (plan 007 stage 5)", () => {
+  describe("v2->v3 migration step wired into the read path ", () => {
     it("truncates a pre-existing oversized exercise summary on load", () => {
       const longSummary = "Über KI-Kompetenz und Verantwortung. ".repeat(50);
       window.localStorage.setItem(

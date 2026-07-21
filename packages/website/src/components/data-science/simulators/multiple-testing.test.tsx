@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("MultipleTesting (plan 012 stage 10)", () => {
+describe("MultipleTesting ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<MultipleTesting />);
     expect(container.querySelector("svg")).not.toBeNull();

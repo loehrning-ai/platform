@@ -51,7 +51,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("ReflectBoxWidget (plan 013 stage 5)", () => {
+describe("ReflectBoxWidget ", () => {
   it("renders a labeled textarea", () => {
     render(<ReflectBoxWidget lessonId="mindset/1" cpId="reflect" title="Reflect" />);
     expect(screen.getByRole("textbox", { name: "Reflect" })).toBeInTheDocument();

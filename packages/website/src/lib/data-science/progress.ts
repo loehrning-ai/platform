@@ -7,7 +7,7 @@
  * files — nothing), so certificate eligibility resolves via the unified
  * store's generic all-lessons-completed fallback path
  * (`isCertificateEligible`), keyed off `ALL_COURSE_CATALOG`'s `totalLessons`
- * for this slug (12 — the numbered chapters, set in plan 012 stage 14).
+ * for this slug (12 — the numbered chapters, set in ).
  *
  * Only the 12 numbered chapters are mappable through this facade — "home"
  * (the Overview) is deliberately excluded at the type level, matching the

@@ -7,7 +7,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("FlowingPipeline (plan 012 stage 7)", () => {
+describe("FlowingPipeline ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<FlowingPipeline onStageClick={() => {}} />);
     expect(container.querySelector("svg")).not.toBeNull();

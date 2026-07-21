@@ -7,7 +7,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("PipelineProgress (plan 012 stage 11)", () => {
+describe("PipelineProgress ", () => {
   it("renders the real panel copy and all 6 pipeline steps", () => {
     render(<PipelineProgress />);
     expect(screen.getByText("ML pipeline — step-by-step")).toBeInTheDocument();

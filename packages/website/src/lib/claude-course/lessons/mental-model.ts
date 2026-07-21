@@ -1,7 +1,7 @@
 // Ported from claude/lessons/01-mental-model.html.
 // Widget manifest (verified via grep of mountWidget calls): Quiz x3 (q1, q2,
 // q3), PromptSandbox x1 (sb1), SocraticTutor x1 (tutor). Wired incrementally
-// as each widget kind lands (plan 008 stages 3-6); see the code comment on
+// as each widget kind lands; see the code comment on
 // `widgets` below for current status.
 import type { ClaudeLesson } from "../types";
 import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";

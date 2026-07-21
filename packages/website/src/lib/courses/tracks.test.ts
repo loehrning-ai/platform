@@ -44,12 +44,12 @@ describe("learner-first course model", () => {
   });
 
   it("keeps the spine to exactly the 4 native German certified courses, everything else deeper", () => {
-    // group is independent of nativeStatus/catalog membership (plan 007
+    // group is independent of nativeStatus/catalog membership (
     // stage 6 unified CatalogCourse/ImportedCourse behind nativeStatus,
     // which is orthogonal to which learner-facing shelf a course sits in).
     // A ported course can flip to nativeStatus "live" and join
     // COURSE_CATALOG while staying "deeper" — claude did exactly this in
-    // plan 008. Do NOT derive spine membership from COURSE_CATALOG
+    //. Do NOT derive spine membership from COURSE_CATALOG
     // membership; assert against the explicit, confirmed spine slug set.
     const SPINE_SLUGS: readonly CourseSlug[] = [
       "ki-fuehrerschein",
@@ -71,7 +71,7 @@ describe("learner-first course model", () => {
   it("keeps the record badge honest against lib/course/config.ts", () => {
     // The native courses' record kind must match what the engine actually
     // issues: a "Lernnachweis"-titled record is a Lernnachweis, an English
-    // config (plan 008: claude) issues a "certificate", otherwise a
+    // config (claude) issues a "certificate", otherwise a
     // Teilnahmebestätigung (Zertifikat).
     for (const course of COURSE_CATALOG) {
       const config = getCourseConfig(course.slug as CourseSlug);
@@ -106,8 +106,8 @@ describe("learner-first course model", () => {
     expect(gesellschaft).toContainEqual({ label: "mit Lernnachweis", tone: "record" });
 
     // data-engineering-fundamentals flipped to a certified native course in
-    // plan 011 stage 12, data-science in plan 012 stage 14,
-    // ai-native-operator in plan 013 stage 12 — every ported course is now
+    //, data-science in,
+    // ai-native-operator in — every ported course is now
     // a certified native course; none render "extern · GitHub" anymore.
     const certifiedLab = courseBadges("data-engineering-fundamentals");
     expect(certifiedLab).toEqual([
@@ -143,7 +143,7 @@ describe("learner-first course model", () => {
     expect(COURSE_SECTIONS.deeper.title).toBe("Tiefer gehen");
   });
 
-  it("carries an accent + badge for every course (plan 007 stage 3: migrated from TRACK_META)", () => {
+  it("carries an accent + badge for every course (migrated from TRACK_META)", () => {
     for (const slug of ALL_SLUGS) {
       const facts = COURSE_FACTS[slug];
       expect(facts.accent, slug).toMatch(/^(kupfer|sand|amber)$/);
@@ -157,7 +157,7 @@ describe("learner-first course model", () => {
     );
   });
 
-  it("RecordKind gains a 'certificate' value with a matching RECORD_LABEL entry (plan 007 stage 4)", () => {
+  it("RecordKind gains a 'certificate' value with a matching RECORD_LABEL entry ", () => {
     expect(RECORD_LABEL.certificate).toBe("mit Certificate");
     // No course flips to this record kind in this plan — verified fact, not
     // assumption: every imported course still reads "none".
@@ -166,17 +166,17 @@ describe("learner-first course model", () => {
     }
   });
 
-  it("RECORD_LABEL is a closed set of exactly the 3 non-'none' RecordKind values (plan 007 stage 12)", () => {
+  it("RECORD_LABEL is a closed set of exactly the 3 non-'none' RecordKind values ", () => {
     expect(Object.keys(RECORD_LABEL).sort()).toEqual(
       ["certificate", "lernnachweis", "zertifikat"].sort(),
     );
   });
 });
 
-// ─── Dead-code regression guard (plan 007 stage 12) ────────────────────────
+// ─── Dead-code regression guard ────────────────────────
 //
 // TRACK_META/TrackMeta/CourseTrack/TrackAccent/trackMetaFor were removed in
-// plan 007 stage 3, replaced by CourseFacts.accent/.badge. This grep-based
+//, replaced by CourseFacts.accent/.badge. This grep-based
 // check fails CI the moment any of those five identifiers is reintroduced as
 // CODE anywhere in src/ — comments that merely document the historical
 // removal (this file included) are intentionally excluded, since banning the
@@ -239,7 +239,7 @@ describe("dead-code regression guard: TRACK_META removal", () => {
 
     expect(
       hits,
-      `Forbidden dead-code identifiers found (plan 007 stage 3 removed these): ${hits.join(", ")}`,
+      `Forbidden dead-code identifiers found (removed as legacy TRACK_META): ${hits.join(", ")}`,
     ).toEqual([]);
   });
 });

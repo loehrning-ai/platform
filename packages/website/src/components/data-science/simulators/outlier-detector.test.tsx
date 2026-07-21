@@ -4,7 +4,7 @@ import { OutlierDetector } from "./outlier-detector";
 
 afterEach(() => cleanup());
 
-describe("OutlierDetector (plan 012 stage 7)", () => {
+describe("OutlierDetector ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<OutlierDetector />);
     expect(container.querySelector("svg")).not.toBeNull();

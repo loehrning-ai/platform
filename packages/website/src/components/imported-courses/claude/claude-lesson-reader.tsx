@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * ClaudeLessonReader, bespoke content renderer for the Claude Course
- * (plan 008 stage 9), mirroring AI-Native's own precedent of a course-owned
+ *, mirroring AI-Native's own precedent of a course-owned
  * reader component rather than reusing `LessonContent` (which hardcodes
  * German chrome, "Lernen", "Quiz", "Lektion abschließen", with no override
  * mechanism, the same problem Tier-A widgets had before stage 3's

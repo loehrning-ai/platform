@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Panel } from "../primitives";
 
-// ─── SqlDecoderStage (plan 011 stage 4) ──────────────────────────────
+// ─── SqlDecoderStage ──────────────────────────────
 // Ported from `src/chapters/Ch0_StackSims.js`: SQL → AST → logical →
 // physical → stages, with a worker-skew/salting-fix toggle for the hash-join
 // preset.

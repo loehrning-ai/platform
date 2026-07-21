@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
 
-// ─── Data Engineering Fundamentals shared hooks (plan 011 stage 2) ──
+// ─── Data Engineering Fundamentals shared hooks ──
 //
 // Typed port of `src/chapters/shared.js`'s `useInView`/`useInterval`.
 

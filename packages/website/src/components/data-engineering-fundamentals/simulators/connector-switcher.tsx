@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Panel } from "../primitives";
 
-// ─── ConnectorSwitcher (plan 011 stage 4) ────────────────────────────
+// ─── ConnectorSwitcher ────────────────────────────
 // Ported from `src/chapters/Ch0_StackSims.js`: same SQL statement, three
 // physically different connector runtimes.
 

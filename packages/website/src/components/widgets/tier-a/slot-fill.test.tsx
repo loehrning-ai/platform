@@ -51,7 +51,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("SlotFillWidget (plan 013 stage 5)", () => {
+describe("SlotFillWidget ", () => {
   const placeholders = ["Agent A — role", "Agent B — role", "Agent C — role"];
 
   it("renders one text input per placeholder", () => {

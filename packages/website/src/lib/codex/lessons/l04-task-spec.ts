@@ -157,7 +157,7 @@ const lesson: CodexLesson = {
         goodLabel: "Strong — four parts",
         bad: "task:\nadd pagination to /users",
         good:
-          "Goal\nUsers can page through GET /users results via ?page=N, 20 items per page.\n\nConstraints\n- Keep existing response schema; add a top-level \"pagination\" object.\n- Offset-based (?page=N), not cursor.\n- No new dependencies.\n\nAcceptance\n- Tests cover page 1, page 2, out-of-range (page=999 → empty).\n- make test && make lint pass.\n- Existing filters (?role, ?status) still work.\n\nOut of scope\n- Don't touch /users/:id.\n- Don't refactor the filter builder.",
+          "Goal\nUsers can page through GET /users results via ?page=N, 20 items per page.\n\nConstraints\n- Keep existing response schema; add a top-level \"pagination\" object.\n- Offset-based (?page=N), not cursor.\n- No new dependencies.\n\nAcceptance\n- Tests cover page 1, page 2, out-of-range (page=999 → empty).\n- make test && make lint pass.\n- Existing filters (?role, ?status) still work.\n\nOut of scope\n- Don't touch the single-user detail endpoint.\n- Don't refactor the filter builder.",
         note: "Middle tier, omitted for space: goal + acceptance, no constraints or scope. Gets pagination working but \"helpfully\" rewrites the filter builder. Ninety percent of the code is right. The other ten costs you an afternoon.",
       },
     },

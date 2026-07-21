@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-// ─── Data Science shared primitives (plan 012 stage 4) ────────────────
+// ─── Data Science shared primitives ────────────────
 //
 // Typed port of `src/v8/shared.js`'s presentational primitives, replacing
 // the source's `window.X` global-export pattern (a plain-script,

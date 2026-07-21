@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import { useTicker } from "@/lib/data-science/hooks";
 import type { DsNumberedChapterId } from "@/lib/data-science/types";
 
-// ─── FlowingPipeline (plan 012 stage 7) ────────────────────────────────
+// ─── FlowingPipeline ────────────────────────────────
 //
 // Typed port of Ch_Overview.js's `FlowingPipeline`: an animated loop
 // diagram of the first 6 DS-loop stages, with particles flowing along a

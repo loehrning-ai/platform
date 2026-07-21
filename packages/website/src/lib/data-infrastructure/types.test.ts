@@ -8,7 +8,7 @@ import {
   type DataInfraLesson,
 } from "./types";
 
-describe("data-infrastructure types (plan 010 stage 1)", () => {
+describe("data-infrastructure types ", () => {
   it("has exactly 12 lesson ids, matching the source's window.LESSONS order", () => {
     expect(DATA_INFRA_LESSON_IDS).toHaveLength(12);
     expect([...DATA_INFRA_LESSON_IDS]).toEqual([

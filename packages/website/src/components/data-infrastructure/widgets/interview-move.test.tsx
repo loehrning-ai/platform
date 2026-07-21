@@ -38,7 +38,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("InterviewMove (plan 010 stage 9)", () => {
+describe("InterviewMove ", () => {
   it("renders the canvas progress track and the first move's real title", () => {
     render(<InterviewMove lessonId="di-interview-playbook" cpId="iv" />);
     expect(screen.getByRole("img", { name: /Interview-replay progress track/ })).toBeInTheDocument();

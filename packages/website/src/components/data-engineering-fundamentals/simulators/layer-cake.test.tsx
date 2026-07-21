@@ -4,7 +4,7 @@ import { LayerCake } from "./layer-cake";
 
 afterEach(cleanup);
 
-describe("LayerCake (plan 011 stage 4)", () => {
+describe("LayerCake ", () => {
   it("renders all 7 stack layers and an empty-state detail panel", () => {
     render(<LayerCake />);
     for (const name of [

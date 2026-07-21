@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("InteractionTerms (plan 012 stage 8)", () => {
+describe("InteractionTerms ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<InteractionTerms />);
     expect(container.querySelector("canvas")).toBeNull();

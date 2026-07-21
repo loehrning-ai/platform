@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { clamp, mulberry32, randn, round } from "@/lib/data-science/sim-kit";
 
-// ─── BiasVarianceSim (plan 012 stage 8) ────────────────────────────────
+// ─── BiasVarianceSim ────────────────────────────────
 //
 // Typed port of Ch05_Model.js's `BiasVarianceSim`: a bias/variance
 // bootstrap-resampling demo. Seeded via `mulberry32(dataSeed)`, where

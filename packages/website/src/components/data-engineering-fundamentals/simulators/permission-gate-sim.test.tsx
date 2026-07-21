@@ -7,7 +7,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("PermissionGateSim (plan 011 stage 8)", () => {
+describe("PermissionGateSim ", () => {
   it("renders all 5 columns with the 3 PII columns flagged as needing an actor", () => {
     render(<PermissionGateSim />);
     expect(screen.getByText("employee_email")).toBeInTheDocument();

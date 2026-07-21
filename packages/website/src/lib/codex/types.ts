@@ -1,4 +1,4 @@
-// ─── Codex Course types (plan 009 stage 1) ──────────────────────────
+// ─── Codex Course types ──────────────────────────
 //
 // Own separate content module, keyed by the source's own flat lesson-id
 // scheme ("L01".."L12", matching `codex/js/lessons/L01.js`..`L12.js` and the

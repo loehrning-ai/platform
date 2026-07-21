@@ -4,7 +4,7 @@ import { ByteTrace } from "./byte-trace";
 
 afterEach(cleanup);
 
-describe("ByteTrace (plan 011 stage 4)", () => {
+describe("ByteTrace ", () => {
   it("renders the warm/cold headline and all 8 trace stops", () => {
     render(<ByteTrace />);
     expect(screen.getAllByText("Warm cache").length).toBeGreaterThan(0);

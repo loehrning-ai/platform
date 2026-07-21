@@ -1,6 +1,6 @@
 // Ported from claude/lessons/11-evals.html.
 // Widget manifest: FailureTagger x1 (tagger), PromptGrader x1 (grader), Quiz
-// x2 (q1, q2). Wired incrementally (plan 008 stages 3, 4).
+// x2 (q1, q2). Wired incrementally.
 import type { ClaudeLesson } from "../types";
 import { CLAUDE_FAILURE_TAGGER_COPY, CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 

@@ -4,7 +4,7 @@ import { DriftSimulator } from "@/components/data-science/simulators/drift-simul
 import { ShadowDeployment } from "@/components/data-science/simulators/shadow-deployment";
 import { FeatureStoreDiagram } from "@/components/data-science/simulators/feature-store-diagram";
 
-// ─── Ch11: Deploy (plan 012 stage 11) ──────────────────────────────────
+// ─── Ch11: Deploy ──────────────────────────────────
 //
 // Typed port of Ch11_Deploy.js (830 lines in source, over the 800-line
 // cap). Split into this narrative-only file plus 4 dedicated simulator

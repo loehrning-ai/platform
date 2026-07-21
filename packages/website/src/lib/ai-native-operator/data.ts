@@ -1,4 +1,4 @@
-// ─── AI-Native Operator Course content loader (plan 013 stage 2) ────────
+// ─── AI-Native Operator Course content loader ────────
 //
 // Structured as a Record<ModuleId, () => Promise<...>> loader map, mirroring
 // `lib/codex/data.ts`'s LESSON_LOADERS / `lib/course/questions.ts`'s
@@ -8,7 +8,7 @@
 // files instead of 39) while still keeping the initial-load JSON out of
 // every route's bundle.
 //
-// ─── Widget dispatch mapping (plan 013 stage 6) ─────────────────────
+// ─── Widget dispatch mapping ─────────────────────
 //
 // Every one of the 30 reading lessons' `widgets` arrays (authored in
 // ./modules/*.ts) routes its single exercise through a TIER_A kind

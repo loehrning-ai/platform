@@ -7,7 +7,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("TrustMeterSim (plan 011 stage 7)", () => {
+describe("TrustMeterSim ", () => {
   it("defaults to a trusted 100/100 score with all 4 checks on", () => {
     const { container } = render(<TrustMeterSim />);
     expect(container.querySelector(".tm-score-big")?.textContent).toContain("100");

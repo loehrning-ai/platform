@@ -2,7 +2,7 @@ import { Hero, SectionLabel, CodeBlock, AntiPatterns, BestPractices, Takeaway } 
 import { CumulativeSim } from "../simulators/cumulative-sim";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 
-// ─── Ch2_Store (plan 011 stage 9) ────────────────────────────────────
+// ─── Ch2_Store ────────────────────────────────────
 // Ported from `src/chapters/Ch2_Store.js`.
 
 const CUMULATIVE_SQL = `<span class="tok-k">INSERT OVERWRITE TABLE</span> user_lifetime_points <span class="tok-k">PARTITION</span> (ds=<span class="tok-s">'&lt;DATEID&gt;'</span>)

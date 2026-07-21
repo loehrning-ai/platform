@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { DsReaderShell } from "@/components/data-science/reader-shell";
 import { isDsNumberedChapterId } from "@/lib/data-science/types";
 
-// ─── Chapter-reader chrome (plan 012 stage 5) ─────────────────────────
+// ─── Chapter-reader chrome ─────────────────────────
 //
 // Delegates to the reusable DsReaderShell (also consumed directly by the
 // course-root page.tsx, which has no layout.tsx of its own — see that

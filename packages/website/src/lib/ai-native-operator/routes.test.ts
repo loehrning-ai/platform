@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { AI_NATIVE_OPERATOR_BASE_PATH, courseHref, lessonHref, moduleHref } from "./routes";
 
-describe("ai-native-operator route helpers (plan 013 stage 7)", () => {
+describe("ai-native-operator route helpers ", () => {
   it("courseHref points at the course root under /kurse/open-source", () => {
     expect(AI_NATIVE_OPERATOR_BASE_PATH).toBe("/kurse/open-source/ai-native-operator");
     expect(courseHref()).toBe("/kurse/open-source/ai-native-operator");

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { CODEX_CONFIG } from "./config";
 
-describe("CODEX_CONFIG (plan 009 stage 1)", () => {
+describe("CODEX_CONFIG ", () => {
   it("registers codex with English-language content and the all-lessons-completion cert path", () => {
     expect(CODEX_CONFIG.slug).toBe("codex");
     expect(CODEX_CONFIG.language).toBe("en");

@@ -20,7 +20,7 @@ Imported screenshots and license copies under `packages/website/public/imported-
 
 ### Imported course provenance convention
 
-Every course ported from `github.com/Mavengence/interactive-courses` (six as of plan 007: `data-engineering-fundamentals`, `data-science`, `data-infrastructure`, `codex`, `claude`, `ai-native-operator`) follows the same three-part provenance convention, established here so each course's own plan (008-013) can apply it mechanically without re-deriving the pattern:
+Every course ported from `github.com/Mavengence/interactive-courses` (six as of: `data-engineering-fundamentals`, `data-science`, `data-infrastructure`, `codex`, `claude`, `ai-native-operator`) follows the same three-part provenance convention, established here so each course's own plan (008-013) can apply it mechanically without re-deriving the pattern:
 
 1. **One `ASSET_MANIFEST.json` entry per asset.** Every screenshot and license copy checked into `packages/website/public/imported-courses/` gets its own entry (`path`, `sizeBytes`, `sha256`, `owner`, `source`, `license`, `redistribution`), matching the existing entries for the six courses landed so far. `catalog.test.ts`'s hash/size assertions read directly from this manifest, so a stale or missing entry fails CI rather than silently drifting from the checked-in file.
 2. **One `THIRD_PARTY_NOTICES.md` paragraph per course**, added by that course's own plan in the same commit that lands its assets — not batched here. Each paragraph names the course, its upstream source path (commit-pinned, matching `IMPORTED_COURSE_SOURCE_COMMIT` in `catalog.ts`), its license, and its copyright holder.

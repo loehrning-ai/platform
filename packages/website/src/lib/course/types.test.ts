@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { COURSE_SLUGS } from "./types";
 
-describe("COURSE_SLUGS (plan 007 stage 1)", () => {
+describe("COURSE_SLUGS ", () => {
   it("widens to exactly the 10 confirmed course slugs", () => {
     expect([...COURSE_SLUGS].sort()).toEqual(
       [

@@ -1,4 +1,4 @@
-// ─── Data Engineering Fundamentals course config (plan 011 stage 1) ─
+// ─── Data Engineering Fundamentals course config ─
 //
 // Own module (mirroring `lib/data-infrastructure/config.ts`) so the
 // course-config object lives beside its own content module;
@@ -16,7 +16,7 @@ export const DATA_ENGINEERING_FUNDAMENTALS_CONFIG: CourseConfig = {
   // Unlike codex/data-infrastructure (which nest chapters under a real
   // `.../kurs/[id]` route), this course's chapters live directly under
   // `.../data-engineering-fundamentals/[chapterId]` with no `/kurs`
-  // segment (plan 011 stage 10 Done Criteria) — there is no
+  // segment ( Done Criteria) — there is no
   // `src/app/kurse/open-source/data-engineering-fundamentals/kurs`
   // route at all. `coursePath` must point at the real landing page so
   // certificate-page.tsx's "back to course" link/redirect resolves.
@@ -25,7 +25,7 @@ export const DATA_ENGINEERING_FUNDAMENTALS_CONFIG: CourseConfig = {
   // No quiz/scoring mechanism exists in source at all (grep across all 14
   // source chapter files for a "Quiz" component returns nothing —
   // `DiscoverySpeedrun` is a timed practice game, not a pass/fail gate).
-  // Certificate eligibility resolves via plan 007's generic
+  // Certificate eligibility resolves via generic
   // all-lessons-completed "completion" path (src/lib/progress/store.ts's
   // isCertificateEligible). No `/kurs/quiz` route is built for this course;
   // these three fields are kept only for CourseConfig-shape compatibility

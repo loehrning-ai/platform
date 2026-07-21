@@ -1,4 +1,4 @@
-// ─── Data Infrastructure course config (plan 010 stage 1) ───────────
+// ─── Data Infrastructure course config ───────────
 //
 // Own module (mirroring `lib/codex/config.ts`) so the course-config object
 // lives beside its own content module; `lib/course/config.ts` imports and
@@ -16,7 +16,7 @@ export const DATA_INFRASTRUCTURE_CONFIG: CourseConfig = {
   blockIds: [],
   // This course has no separate gating exam or capstone rubric — lesson 12
   // ("The IC5 Interview, Live") is itself a step-through walkthrough, not a
-  // scored gate. Certificate eligibility resolves via plan 007 stage 4's
+  // scored gate. Certificate eligibility resolves via 's
   // generic all-lessons-completed "completion" path (src/lib/progress/store.ts's
   // isCertificateEligible), same as codex/data-engineering-fundamentals/
   // data-science. No `/kurs/quiz` route is built for this course; these three

@@ -8,7 +8,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("ThresholdSim (plan 012 stage 6)", () => {
+describe("ThresholdSim ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<ThresholdSim />);
     expect(container.querySelectorAll("svg").length).toBeGreaterThan(0);

@@ -42,7 +42,7 @@ if (typeof window !== "undefined") {
   }
 
   /* ------------------------------------------------------------------ */
-  /* Canvas 2D context stub (plan 010 stage 2) — jsdom does not implement */
+  /* Canvas 2D context stub — jsdom does not implement */
   /* CanvasRenderingContext2D without the native `canvas` npm package, so  */
   /* HTMLCanvasElement.getContext('2d') returns null out of the box. The   */
   /* data-infrastructure course's 10 canvas widgets each need a *working*  */

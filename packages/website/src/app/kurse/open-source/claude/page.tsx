@@ -9,7 +9,7 @@ import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 import type { JsonLdGraph } from "@/lib/seo/json-ld";
 
 /**
- * Claude Course native landing page (plan 008 stage 9/10). Once
+ * Claude Course native landing page. Once
  * `catalog.ts`'s claude entry flips to `nativeStatus: "live"` (stage 10),
  * this static route replaces the generic external-course template for
  * `/kurse/open-source/claude` (Next.js resolves the static segment ahead of

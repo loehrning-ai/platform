@@ -102,7 +102,7 @@ beforeEach(() => {
 
 afterEach(() => cleanup());
 
-describe("CodexLessonReader (plan 009 stage 6)", () => {
+describe("CodexLessonReader ", () => {
   it("renders the lesson header, sections, and key takeaway", () => {
     render(<CodexLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />);
     expect(screen.getByText("Test Lesson Title")).toBeInTheDocument();

@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("FeatureSelectionSim (plan 012 stage 8)", () => {
+describe("FeatureSelectionSim ", () => {
   it("renders exclusively via plain markup — no canvas element in the DOM", () => {
     const { container } = render(<FeatureSelectionSim />);
     expect(container.querySelector("canvas")).toBeNull();

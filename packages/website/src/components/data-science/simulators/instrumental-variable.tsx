@@ -3,7 +3,7 @@
 import { useState, type ReactNode } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 
-// ─── InstrumentalVariable (plan 012 stage 10) ──────────────────────────
+// ─── InstrumentalVariable ──────────────────────────
 //
 // Typed port of Ch09_Causal.js's `InstrumentalVariable`: IV strength
 // selector. No RNG. `arrow` closes over this component's own `nodes`/

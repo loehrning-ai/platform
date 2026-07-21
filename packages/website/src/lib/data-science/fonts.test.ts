@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { dsInter, dsInstrumentSerif, dsJetBrainsMono, DS_FONT_VARIABLES } from "./fonts";
 
-// ─── Self-hosted font matrix (plan 012 stage 2) ───────────────────────
+// ─── Self-hosted font matrix ───────────────────────
 // The source loads:
 //   family=Inter:wght@400;500;600;700;800;900
 //   &family=Instrument+Serif:ital@0;1
@@ -22,7 +22,7 @@ interface MockFontResult {
   };
 }
 
-describe("data-science self-hosted fonts (plan 012 stage 2)", () => {
+describe("data-science self-hosted fonts ", () => {
   it("requests Inter with the exact source weight matrix (400-900)", () => {
     const font = dsInter as unknown as MockFontResult;
     expect(font.__mockOptions.weight).toEqual([

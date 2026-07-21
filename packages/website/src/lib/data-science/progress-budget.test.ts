@@ -1,8 +1,8 @@
-// ─── Progress-budget audit (plan 012 stage 14) ────────────────────────
+// ─── Progress-budget audit ────────────────────────
 //
 // This course has no quiz/capstone/checkpoint mechanism at all — the
 // chosen completion criterion is literally "all 12 numbered chapters
-// visited" (plan 012 stage 12's MarkChapterVisited), so
+// visited" ('s MarkChapterVisited), so
 // `exercisesCompleted` stays permanently empty and there is no
 // cross-course "_meta" row contribution to measure (unlike
 // data-infrastructure/claude/codex, which award per-widget checkpoints).
@@ -21,7 +21,7 @@ function byteLength(value: unknown): number {
   return Buffer.byteLength(JSON.stringify(value), "utf8");
 }
 
-describe("data-science's contribution to the per-course progress-budget row (plan 012 stage 14)", () => {
+describe("data-science's contribution to the per-course progress-budget row ", () => {
   it("a fully-completed run (all 12 numbered chapters) stays far under the 65536-byte cap", () => {
     const lessonEntries: Record<string, UnifiedLessonProgress> = {};
     for (const chapterId of DS_NUMBERED_CHAPTER_IDS) {

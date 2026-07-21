@@ -1,4 +1,4 @@
-// ─── Data Infrastructure course content loader (plan 010 stage 3) ───
+// ─── Data Infrastructure course content loader ───
 //
 // Structured as a Record<DataInfraLessonId, () => Promise<...>> loader map,
 // mirroring `lib/codex/data.ts`'s LESSON_LOADERS: a per-lesson dynamic

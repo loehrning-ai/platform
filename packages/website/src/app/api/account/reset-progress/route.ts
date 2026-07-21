@@ -65,7 +65,7 @@ export async function POST(request: Request) {
 
   const { courseSlug } = parsed.data;
 
-  // Per-course-row schema (plan 007 stage 5): resetting one course is a
+  // Per-course-row schema: resetting one course is a
   // single-row delete, not a read-modify-write of a shared blob. Other
   // courses' rows and the cross-course ledger row are never touched.
   const deleted = await deleteCourseProgressRow(supabase, user.id, courseSlug);

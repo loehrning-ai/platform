@@ -1,6 +1,6 @@
 import type { DsChapterId } from "./types";
 
-// ─── Data Science route helpers (plan 012 stage 5) ────────────────────
+// ─── Data Science route helpers ────────────────────
 //
 // Single source of truth for this course's URLs. "home" (the Overview)
 // resolves to the bare course root — it is not a [chapterSlug] route entry

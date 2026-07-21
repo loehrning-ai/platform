@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { Callout } from "./callout";
 
-describe("Callout (plan 013 stage 8)", () => {
+describe("Callout ", () => {
   it("renders a quote callout with text and attribution", () => {
     render(<Callout c={{ kind: "quote", text: "Ship it.", attr: "Someone · 2026" }} />);
     expect(screen.getByText(/Ship it\./)).toBeInTheDocument();

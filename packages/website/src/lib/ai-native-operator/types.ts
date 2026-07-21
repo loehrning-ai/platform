@@ -1,4 +1,4 @@
-// ─── AI-Native Operator Course types (plan 013 stage 1) ─────────────────
+// ─── AI-Native Operator Course types ─────────────────
 //
 // Own separate content module, keyed by its own `ModuleId` + lesson-number
 // scheme (NOT the shared `BlockId` JSON system), mirroring
@@ -228,7 +228,7 @@ export type AiNativeOperatorExerciseKind =
  * callout. `sections`/`objective` are meaningful for `kind: "reading"`
  * lessons; `kind: "quiz"` lessons carry their questions in the shared
  * `quiz: readonly LessonQuizQuestion[]` field instead (9 lessons, ~22
- * questions total, explanations authored fresh in plan 013 stage 3 — the
+ * questions total, explanations authored fresh in — the
  * source has none).
  */
 export interface AiNativeOperatorLesson extends BaseLesson {

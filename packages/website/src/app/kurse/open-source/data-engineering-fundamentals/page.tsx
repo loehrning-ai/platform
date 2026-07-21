@@ -5,9 +5,9 @@ import { DEF_CHAPTERS } from "@/lib/data-engineering-fundamentals/types";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 import type { JsonLdGraph } from "@/lib/seo/json-ld";
 
-// ─── Data Engineering Fundamentals native landing page (plan 011 stage 10) ─
+// ─── Data Engineering Fundamentals native landing page ─
 // Converts the source's hero/pipeline-flow into the platform's course-landing
-// pattern (following data-infrastructure's plan 010 stage 11 precedent):
+// pattern (following data-infrastructure's precedent):
 // Tailwind chrome for this marketing page, while the chapter readers
 // themselves (under /[chapterId]) use the ported de-course.css design
 // system for full source fidelity.

@@ -50,7 +50,7 @@ function installLocalStoragePolyfill(): void {
 }
 
 /**
- * Claude Course native widget tests (plan 008 stages 4-6). Each widget gets
+ * Claude Course native widget tests. Each widget gets
  * happy-path + checkpoint-award + reduced-motion render, mirroring
  * `tier-a.test.tsx`'s conventions. All widgets here call the deterministic
  * `lib/claude-course/simulated-claude.ts` responder (real `setTimeout`

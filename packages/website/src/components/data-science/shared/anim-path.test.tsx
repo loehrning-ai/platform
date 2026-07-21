@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { render } from "@testing-library/react";
 import { AnimPath } from "./anim-path";
 
-describe("AnimPath (plan 012 stage 4)", () => {
+describe("AnimPath ", () => {
   it("renders an SVG path with the given d attribute", () => {
     const { container } = render(
       <svg>

@@ -38,9 +38,9 @@ const COURSE_NODE_META: Partial<Record<CourseSlug, CourseNodeMeta>> = {
     stage: "anwenden",
     evidenceMode: "self_attested",
   },
-  // Claude Course (plan 008 stage 10) / Codex Course (plan 009 stage 7) /
-  // Data Infrastructure (plan 010 stage 13) / Data Engineering Fundamentals
-  // (plan 011 stage 12) / Data Science (plan 012 stage 14): imported
+  // Claude Course / Codex Course /
+  // Data Infrastructure / Data Engineering Fundamentals
+  // / Data Science: imported
   // courses flipped to nativeStatus "live", so they now need course-node
   // metadata like the 4 German courses above (their still-imported
   // siblings surface as `open_source_lab` nodes via `labNodes` instead).
@@ -74,7 +74,7 @@ const COURSE_NODE_META: Partial<Record<CourseSlug, CourseNodeMeta>> = {
     stage: "anwenden",
     evidenceMode: "self_attested",
   },
-  // AI-Native Operator (plan 013 stage 12): sixth and last imported course
+  // AI-Native Operator: sixth and last imported course
   // to flip to nativeStatus "live" — every ported course now needs
   // course-node metadata like the 4 German courses above.
   "ai-native-operator": {

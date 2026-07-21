@@ -130,7 +130,7 @@ const REGISTRY: Record<WidgetKind, () => Promise<{ default: WidgetComponent }>> 
       default: m.ObligationLayersDiagram as unknown as WidgetComponent,
     })),
 
-  // ─── Codex Course, two genuinely new Tier-A kinds (plan 009 stage 2) ───
+  // ─── Codex Course, two genuinely new Tier-A kinds ───
   "terminal-replay": () =>
     import("@/components/widgets/tier-a/terminal-replay").then((m) => ({
       default: m.TerminalReplayWidget as unknown as WidgetComponent,
@@ -140,7 +140,7 @@ const REGISTRY: Record<WidgetKind, () => Promise<{ default: WidgetComponent }>> 
       default: m.DiffViewerWidget as unknown as WidgetComponent,
     })),
 
-  // ─── AI-Native Operator Course, three genuinely new Tier-A kinds (plan 013 stage 5) ───
+  // ─── AI-Native Operator Course, three genuinely new Tier-A kinds ───
   "reflect-box": () =>
     import("@/components/widgets/tier-a/reflect-box").then((m) => ({
       default: m.ReflectBoxWidget as unknown as WidgetComponent,
@@ -168,7 +168,7 @@ const REGISTRY: Record<WidgetKind, () => Promise<{ default: WidgetComponent }>> 
       default: m.SemanticSpaceWidget as unknown as WidgetComponent,
     })),
 
-  // ─── Claude Course, simulated-Claude widgets (plan 008) ───
+  // ─── Claude Course, simulated-Claude widgets ───
   // `CheckpointFooter` (claude/js/widgets.js) is deliberately NOT ported:
   // confirmed via `grep -o "mountWidget([^)]*CheckpointFooter" claude/lessons/*.html`
   // returning zero matches across all 12 source lessons, it is dead code in

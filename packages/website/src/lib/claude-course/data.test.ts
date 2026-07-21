@@ -13,7 +13,7 @@ beforeEach(() => {
   __resetClaudeLessonCacheForTests();
 });
 
-describe("claude-course content module (plan 008 stage 2)", () => {
+describe("claude-course content module ", () => {
   it("has exactly 12 lesson ids, matching the source's window.LESSONS", () => {
     expect(CLAUDE_LESSON_IDS).toHaveLength(12);
     expect(new Set(CLAUDE_LESSON_IDS).size).toBe(12);

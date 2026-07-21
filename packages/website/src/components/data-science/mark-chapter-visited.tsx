@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { markChapterVisited } from "@/lib/data-science/progress";
 import type { DsNumberedChapterId } from "@/lib/data-science/types";
 
-// ─── MarkChapterVisited (plan 012 stage 12) ───────────────────────────
+// ─── MarkChapterVisited ───────────────────────────
 //
 // This course has no quiz/capstone gate and no per-widget checkpoint ledger
 // (grepped across all 15 source files — nothing). Certificate eligibility

@@ -1,7 +1,7 @@
 import { Hero, SectionLabel, AntiPatterns, Takeaway } from "@/components/data-science/shared/primitives";
 import { ThresholdSim } from "@/components/data-science/simulators/threshold-sim";
 
-// ─── Ch06: Evaluate (plan 012 stage 6) ─────────────────────────────────
+// ─── Ch06: Evaluate ─────────────────────────────────
 //
 // Typed port of Ch06_Evaluate.js. ThresholdSim lives in its own file
 // (simulators/threshold-sim.tsx) per the plan's "own component files"

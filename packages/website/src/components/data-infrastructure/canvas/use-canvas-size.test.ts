@@ -4,7 +4,7 @@ import { createRef } from "react";
 import { useCanvasAutoSize } from "./use-canvas-size";
 
 /**
- * Regression test for a real bug found during plan 010 stage 14's live QA
+ * Regression test for a real bug found during 's live QA
  * pass: every canvas widget on every lesson rendered completely blank on
  * first load. Root cause: ResizeObserver fires an "initial" callback
  * asynchronously right after `.observe()`, even when nothing changed since
@@ -48,7 +48,7 @@ afterEach(() => {
   delete (globalThis as any).ResizeObserver;
 });
 
-describe("useCanvasAutoSize (plan 010 stage 14 regression)", () => {
+describe("useCanvasAutoSize ( regression)", () => {
   it("does not reassign canvas.width/height (and does not re-clear the canvas) when a ResizeObserver callback fires with an unchanged size", () => {
     const ro = installMockResizeObserver();
     const canvas = document.createElement("canvas");

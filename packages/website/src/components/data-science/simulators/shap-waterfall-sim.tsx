@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { clamp, round } from "@/lib/data-science/sim-kit";
 
-// ─── SHAPWaterfallSim (plan 012 stage 9) ───────────────────────────────
+// ─── SHAPWaterfallSim ───────────────────────────────
 //
 // Typed port of Ch07_Interpret.js's `SHAPWaterfallSim`: a loan-approval
 // SHAP waterfall chart. No RNG — every feature's contribution is a pure

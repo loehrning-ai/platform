@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { clamp, mulberry32, round } from "@/lib/data-science/sim-kit";
 
-// ─── GlobalVsLocal (plan 012 stage 9) ──────────────────────────────────
+// ─── GlobalVsLocal ──────────────────────────────────
 //
 // Typed port of Ch07_Interpret.js's `GlobalVsLocal`: click-a-point
 // global-vs-local SHAP comparison. Seeded with `mulberry32(999)`.

@@ -71,7 +71,7 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
 
   useEffect(() => {
     // Eligible via one of three paths: workshop quiz passed, (AI-Native) the
-    // capstone rubric submitted, or every catalog lesson completed (plan 007
+    // capstone rubric submitted, or every catalog lesson completed (
     // stage 4's generic "completion" fallback).
     const ok = isCertificateEligible(courseSlug);
     setEligible(ok);

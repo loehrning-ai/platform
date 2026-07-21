@@ -10,7 +10,7 @@ import {
   Term,
 } from "./primitives";
 
-describe("data-engineering-fundamentals shared primitives (plan 011 stage 2)", () => {
+describe("data-engineering-fundamentals shared primitives ", () => {
   it("Hero renders eyebrow, title, hook, and meta rows", () => {
     render(
       <Hero

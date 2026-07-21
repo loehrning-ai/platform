@@ -21,7 +21,7 @@ interface ClaudeLessonSidebarProps {
 
 /**
  * ClaudeLessonSidebar, track-grouped lesson nav for `<LessonShell>`'s
- * `sidebar` slot (plan 007 stage 7 primitive, reused per plan 008 stage 9).
+ * `sidebar` slot ( primitive, reused per ).
  */
 export function ClaudeLessonSidebar({ lessons }: ClaudeLessonSidebarProps): JSX.Element {
   const pathname = usePathname();

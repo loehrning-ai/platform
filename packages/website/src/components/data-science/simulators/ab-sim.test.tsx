@@ -8,7 +8,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("ABSim (plan 012 stage 9)", () => {
+describe("ABSim ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<ABSim />);
     expect(container.querySelector("svg")).not.toBeNull();

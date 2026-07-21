@@ -3,7 +3,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import type { CatalogCourse } from "@/lib/courses/catalog";
 
 /**
- * plan 007 stage 10: proves the gallery's card treatment is driven purely by
+ *: proves the gallery's card treatment is driven purely by
  * nativeStatus, not by which array/shape a course object came from. A course
  * plan flip never happens mid-test in real code, so this drives it with a
  * mocked fixture: an object carrying BOTH the CatalogCourse fields the spine

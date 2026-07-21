@@ -1,4 +1,4 @@
-// ─── Data Engineering Fundamentals course types (plan 011 stage 1) ──
+// ─── Data Engineering Fundamentals course types ──
 //
 // Own separate content module (mirroring `lib/data-infrastructure`/
 // `lib/codex`'s precedent), keyed by the source's own flat chapter-id scheme

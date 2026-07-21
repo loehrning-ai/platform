@@ -7,7 +7,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("ShuffleSim (plan 011 stage 6)", () => {
+describe("ShuffleSim ", () => {
   it("defaults to hash strategy with 6 workers", () => {
     render(<ShuffleSim />);
     expect(screen.getByRole("button", { name: "Hash" }).className).toContain("on");

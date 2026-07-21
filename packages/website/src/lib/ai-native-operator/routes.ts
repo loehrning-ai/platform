@@ -1,4 +1,4 @@
-// ─── AI-Native Operator Course route helpers (plan 013 stage 7) ─────────
+// ─── AI-Native Operator Course route helpers ─────────
 //
 // No "/kurs" segment (mirroring data-engineering-fundamentals/data-science):
 // modules and lessons live directly under the course root.

@@ -29,7 +29,7 @@ describe("checkpointKey", () => {
   });
 });
 
-// plan 007 stage 5: progress storage redesign bumps the unified schema to 3
+//: progress storage redesign bumps the unified schema to 3
 // (one row per (user_id, course_slug) instead of one shared blob per user).
 describe("UNIFIED_SCHEMA_VERSION", () => {
   it("is 3", () => {
@@ -37,7 +37,7 @@ describe("UNIFIED_SCHEMA_VERSION", () => {
   });
 });
 
-// plan 007 stage 5: exercise summaries are capped by UTF-8 BYTE length, not
+//: exercise summaries are capped by UTF-8 BYTE length, not
 // character count, because German umlauts/ß are 2 bytes each and the real
 // Postgres constraint is byte-based (pg_column_size).
 describe("truncateToByteLength", () => {

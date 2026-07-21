@@ -86,7 +86,7 @@ beforeEach(() => {
 
 afterEach(() => cleanup());
 
-describe("ClaudeLessonReader (plan 008 stage 9)", () => {
+describe("ClaudeLessonReader ", () => {
   it("renders the lesson header, sections, and key takeaway", () => {
     render(
       <ClaudeLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />,

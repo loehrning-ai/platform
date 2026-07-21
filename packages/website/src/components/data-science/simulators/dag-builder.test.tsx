@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("DAGBuilder (plan 012 stage 10)", () => {
+describe("DAGBuilder ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<DAGBuilder />);
     expect(container.querySelector("svg")).not.toBeNull();

@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("ShadowDeployment (plan 012 stage 11)", () => {
+describe("ShadowDeployment ", () => {
   it("renders exclusively via table/no SVG canvas — no canvas element in the DOM", () => {
     const { container } = render(<ShadowDeployment />);
     expect(container.querySelector("canvas")).toBeNull();

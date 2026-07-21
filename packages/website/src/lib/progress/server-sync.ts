@@ -18,7 +18,7 @@ const COURSE_SLUGS = new Set<string>(CANONICAL_COURSE_SLUGS);
 
 /**
  * Reserved course_slug value for the per-user cross-course ledger row
- * (xp/checkpoints/badges/streak) in the per-course-row DB schema (plan 007
+ * (xp/checkpoints/badges/streak) in the per-course-row DB schema (
  * stage 5). Can never collide with a real CourseSlug: every course slug is a
  * bare kebab-case identifier with no leading underscore.
  */
@@ -133,7 +133,7 @@ function isUnifiedStreak(value: unknown): value is UnifiedStreak {
   );
 }
 
-/** Row-shape validator for the "_meta" DB row (plan 007 stage 5). */
+/** Row-shape validator for the "_meta" DB row. */
 export function isUnifiedMetaFields(value: unknown): value is UnifiedMetaFields {
   return (
     isRecord(value) &&
@@ -242,7 +242,7 @@ function mergeWorkshopQuiz(
 }
 
 /**
- * Merge one course's slice. Exported (plan 007 stage 5) so the per-course-row
+ * Merge one course's slice. Exported so the per-course-row
  * persistence layer (server-store.ts) can merge a single DB row without
  * touching every other course's row.
  */
@@ -293,8 +293,8 @@ export function isUnifiedProgress(value: unknown): value is UnifiedProgress {
 }
 
 /**
- * Merge the cross-course ledger fields (the "_meta" DB row's payload, plan
- * 007 stage 5). Decomposed out of mergeUnifiedProgress so the per-row
+ * Merge the cross-course ledger fields (the "_meta" DB row's payload).
+ * Decomposed out of mergeUnifiedProgress so the per-row
  * persistence layer can merge this one row without touching any course row.
  */
 export function mergeMetaFields(
@@ -329,7 +329,7 @@ export function mergeUnifiedProgress(
 
   const meta = mergeMetaFields(local, remote);
 
-  // v2->v3 migration step (plan 007 stage 5), wired into this real read path:
+  // v2->v3 migration step, wired into this real read path:
   // any exercise summary carried over from a payload that predates the byte
   // cap gets re-normalized here, so a merge can never produce a result that
   // violates the per-row DB size constraint.

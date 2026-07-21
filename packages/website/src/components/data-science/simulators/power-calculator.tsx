@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { clamp, normCdf, normInv, round } from "@/lib/data-science/sim-kit";
 
-// ─── PowerCalculator (plan 012 stage 10) ───────────────────────────────
+// ─── PowerCalculator ───────────────────────────────
 //
 // Typed port of Ch10_Peeking.js's `PowerCalculator`: statistical power
 // calculator. No RNG — pure normCdf/normInv math.

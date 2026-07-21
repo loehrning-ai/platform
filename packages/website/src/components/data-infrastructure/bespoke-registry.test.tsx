@@ -38,7 +38,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("DataInfraBespokeInteractives (plan 010 stage 10)", () => {
+describe("DataInfraBespokeInteractives ", () => {
   it("mounts without crashing for every one of the 12 real lesson ids", () => {
     for (const id of DATA_INFRA_LESSON_IDS) {
       expect(() => {

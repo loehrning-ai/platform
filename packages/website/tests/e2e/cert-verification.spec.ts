@@ -31,7 +31,7 @@ const COURSES = [
     title: /AI-Native/,
     lang: "de",
   },
-  // plan 008 stage 13: claude's basePath is nested under /kurse/open-source/
+  //: claude's basePath is nested under /kurse/open-source/
   // (unlike the other three courses' top-level paths), exercising the same
   // shared VerificationPage/decodeHash logic on a differently-shaped URL.
   // English course (CourseConfig.language: "en") — the verification page
@@ -43,7 +43,7 @@ const COURSES = [
     title: /Claude Course/,
     lang: "en",
   },
-  // plan 009 stage 8: codex, same nested-path shape as claude and the same
+  //: codex, same nested-path shape as claude and the same
   // "completion" (all-lessons-done) eligibility path rather than a quiz —
   // still exercises the identical hash-decode/course-match logic.
   {
@@ -52,7 +52,7 @@ const COURSES = [
     title: /Codex Course/,
     lang: "en",
   },
-  // plan 010 stage 14: data-infrastructure, same nested-path shape and
+  //: data-infrastructure, same nested-path shape and
   // "completion" eligibility path as codex. The m: "quiz" payload below is
   // shared test-mechanism scaffolding, not a claim this course actually
   // issues quiz-mode certificates — it only exercises decodeHash/course-
@@ -63,7 +63,7 @@ const COURSES = [
     title: /Data Infrastructure/,
     lang: "en",
   },
-  // plan 011 stage 14: data-engineering-fundamentals, same nested-path shape
+  //: data-engineering-fundamentals, same nested-path shape
   // and "completion" (all-12-chapters-visited) eligibility path as codex and
   // data-infrastructure — no quiz/capstone mechanism exists in source. The
   // m: "quiz" payload below is shared test-mechanism scaffolding only; it
@@ -75,7 +75,7 @@ const COURSES = [
     title: /Data Engineering Fundamentals/,
     lang: "en",
   },
-  // plan 012 stage 14: data-science, same nested-path shape and
+  //: data-science, same nested-path shape and
   // "completion" (all-12-numbered-chapters-visited) eligibility path as
   // codex/data-infrastructure/data-engineering-fundamentals — no
   // quiz/capstone mechanism exists in source. The m: "quiz" payload below
@@ -87,7 +87,7 @@ const COURSES = [
     title: /Data Science Fundamentals/,
     lang: "en",
   },
-  // plan 013 stage 13: ai-native-operator, sixth and last imported course to
+  //: ai-native-operator, sixth and last imported course to
   // flip. Same nested-path shape as claude/codex/data-*, but unlike the four
   // "completion"-eligibility siblings, this course genuinely has a
   // quiz-gated cert path (9 module knowledge-checks pooled into one

@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { mulberry32, randn, round } from "@/lib/data-science/sim-kit";
 
-// ─── CUPEDExplainer (plan 012 stage 10) ────────────────────────────────
+// ─── CUPEDExplainer ────────────────────────────────
 //
 // Typed port of Ch10_Peeking.js's `CUPEDExplainer`: variance-reduction
 // demo. Seeded with `mulberry32(99)`.

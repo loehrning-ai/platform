@@ -133,7 +133,7 @@ function SubHeader({ children }: { readonly children: React.ReactNode }) {
 }
 
 // Both sections branch card treatment on nativeStatus, not on which array a
-// course came from (plan 007 stage 7) — so a course plan's single-field flip
+// course came from — so a course plan's single-field flip
 // is sufficient to move it between "Der Lernpfad" and "Tiefer gehen".
 function isLiveCourse(course: CatalogCourse | ImportedCourse): course is CatalogCourse {
   return course.nativeStatus === "live";

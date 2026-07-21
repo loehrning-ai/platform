@@ -1,7 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 
 /**
- * Claude Course golden path (plan 008 stage 13): home -> lesson -> checkpoint
+ * Claude Course golden path: home -> lesson -> checkpoint
  * -> quiz -> certificate -> QR verify, in one spec. Mirrors the established
  * per-course patterns rather than inventing new ones:
  *   - landing/reader smoke: route-ki-fuehrerschein.spec.ts

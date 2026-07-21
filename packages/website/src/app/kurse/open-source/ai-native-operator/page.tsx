@@ -8,7 +8,7 @@ import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 import type { JsonLdGraph } from "@/lib/seo/json-ld";
 
 /**
- * AI-Native Operator course native landing page (plan 013 stage 7). Once
+ * AI-Native Operator course native landing page. Once
  * `catalog.ts`'s ai-native-operator entry flips to `nativeStatus: "live"`
  * (stage 12), this static route replaces the generic external-course
  * template for `/kurse/open-source/ai-native-operator` (Next.js resolves

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useInView, useInterval, useTicker } from "./hooks";
 
-describe("data-science shared hooks (plan 012 stage 4)", () => {
+describe("data-science shared hooks ", () => {
   afterEach(() => {
     vi.restoreAllMocks();
     vi.useRealTimers();

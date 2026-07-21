@@ -4,7 +4,7 @@ import { MultipleTesting } from "@/components/data-science/simulators/multiple-t
 import { PeekingSimulator } from "@/components/data-science/simulators/peeking-simulator";
 import { PowerCalculator } from "@/components/data-science/simulators/power-calculator";
 
-// ─── Ch10: Peeking (plan 012 stage 10) ─────────────────────────────────
+// ─── Ch10: Peeking ─────────────────────────────────
 //
 // Typed port of Ch10_Peeking.js. All 4 simulators live in their own
 // files under simulators/, which is itself what keeps this narrative

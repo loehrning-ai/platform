@@ -4,7 +4,7 @@ import { render, screen, cleanup, fireEvent, within } from "@testing-library/rea
 import { useState } from "react";
 
 /**
- * lesson-shell.test.tsx (plan 007 stage 7)
+ * lesson-shell.test.tsx 
  *
  * LessonShell is the structure-agnostic mobile-nav-drawer chrome extracted
  * from lesson-layout.tsx: mobile toggle, backdrop, focus-trapped dialog

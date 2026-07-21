@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { lerp, mulberry32, randn, round } from "@/lib/data-science/sim-kit";
 
-// ─── CorrelationMatrix (plan 012 stage 7) ──────────────────────────────
+// ─── CorrelationMatrix ──────────────────────────────
 //
 // Typed port of Ch02_Explore.js's `CorrelationMatrix`. Seeded with
 // `mulberry32(42 + Math.round(noise * 100))` (source's own formula) —

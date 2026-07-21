@@ -30,11 +30,11 @@ describe("Tier-A widget kinds", () => {
       "interactive-diagram",
       "risk-pyramid",
       "obligation-layers",
-      // — Codex Course (plan 009 stage 2): the two genuinely new widget
+      // — Codex Course: the two genuinely new widget
       // kinds, ported from codex/js/widgets.js's Terminal and Diff.
       "terminal-replay",
       "diff-viewer",
-      // — AI-Native Operator Course (plan 013 stage 5): the three genuinely
+      // — AI-Native Operator Course: the three genuinely
       // new widget kinds, ported from ai-native-operator/course-app.js's
       // ReflectBox, MatrixEx, and Slots.
       "reflect-box",

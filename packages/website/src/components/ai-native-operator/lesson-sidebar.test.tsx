@@ -55,7 +55,7 @@ beforeEach(() => {
 
 afterEach(() => cleanup());
 
-describe("AiNativeOperatorLessonSidebar (plan 013 stage 8)", () => {
+describe("AiNativeOperatorLessonSidebar ", () => {
   it("groups lessons by module with real module names", () => {
     render(<AiNativeOperatorLessonSidebar lessons={NAV_ITEMS} />);
     expect(screen.getByText(/M01 · Mindset & Culture/)).toBeInTheDocument();

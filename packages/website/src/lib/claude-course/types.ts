@@ -1,4 +1,4 @@
-// ─── Claude Course types (plan 008 stage 2) ─────────────────────────
+// ─── Claude Course types ─────────────────────────
 //
 // Own separate content module, keyed by a flat lesson-id scheme (NOT the
 // shared BlockId JSON system), mirroring `lib/ai-native`'s precedent of

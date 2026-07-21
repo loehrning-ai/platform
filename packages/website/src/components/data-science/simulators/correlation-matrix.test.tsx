@@ -4,7 +4,7 @@ import { CorrelationMatrix } from "./correlation-matrix";
 
 afterEach(() => cleanup());
 
-describe("CorrelationMatrix (plan 012 stage 7)", () => {
+describe("CorrelationMatrix ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<CorrelationMatrix />);
     expect(container.querySelectorAll("svg").length).toBeGreaterThan(0);

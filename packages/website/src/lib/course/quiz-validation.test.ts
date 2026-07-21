@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { assertValidQuizQuestions } from "./quiz-validation";
 
 /**
- * Shared quiz-content-validation helper (plan 007 stage 10), exported for
+ * Shared quiz-content-validation helper, exported for
  * every course plan's own content guard test to call instead of each
  * re-deriving the same "exactly one isCorrect, non-empty explanation"
  * check (previously duplicated across data.test.ts, questions.test.ts,

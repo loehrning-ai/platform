@@ -7,7 +7,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("LivingPipeline (plan 011 stage 8)", () => {
+describe("LivingPipeline ", () => {
   it("renders all 6 sabotage buttons, all healthy by default", () => {
     render(<LivingPipeline />);
     for (const title of ["Cumulative merge", "Idempotent write", "Watermark + dedup", "Data-quality gate", "Access Gateway deploy", "Semantic binding"]) {

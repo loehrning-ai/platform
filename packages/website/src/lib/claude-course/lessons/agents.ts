@@ -1,6 +1,6 @@
 // Ported from claude/lessons/07-agents.html.
 // Widget manifest: SocraticTutor x1 (tutor), AgentLoop x1 (loop), Quiz x2
-// (q1, q2). Wired incrementally (plan 008 stages 6).
+// (q1, q2). Wired incrementally.
 import type { ClaudeLesson } from "../types";
 import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 

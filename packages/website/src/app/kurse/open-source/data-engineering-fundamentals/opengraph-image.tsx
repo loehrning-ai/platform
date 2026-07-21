@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-// ─── OG/Twitter image (plan 011 stage 10) ────────────────────────────
+// ─── OG/Twitter image ────────────────────────────
 // This course now resolves as a static folder, shadowing the [slug]
 // dynamic-segment subtree (and its own opengraph-image.tsx/twitter-
 // image.tsx) for this one path — without a local image route here, the

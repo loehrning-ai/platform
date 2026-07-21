@@ -11,7 +11,7 @@ import {
   type ChapterMeta,
 } from "./types";
 
-describe("data-science: plan 007 prerequisites (plan 012 stage 1 guard)", () => {
+describe("data-science: prerequisites ( guard)", () => {
   it("CourseSlug already includes this course's slug", () => {
     expect(COURSE_SLUGS).toContain("data-science");
   });
@@ -21,7 +21,7 @@ describe("data-science: plan 007 prerequisites (plan 012 stage 1 guard)", () => 
   });
 });
 
-describe("data-science types (plan 012 stage 1)", () => {
+describe("data-science types ", () => {
   it("has exactly 13 chapter ids, matching App.js's real CHAPTERS array order", () => {
     expect(DS_CHAPTER_IDS).toHaveLength(13);
     expect([...DS_CHAPTER_IDS]).toEqual([

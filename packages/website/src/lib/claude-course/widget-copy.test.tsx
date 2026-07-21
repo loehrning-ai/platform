@@ -7,7 +7,7 @@ import { RedactionDrillWidget } from "@/components/widgets/tier-a/redaction-dril
 import { getAllClaudeLessons, __resetClaudeLessonCacheForTests } from "./data";
 
 /**
- * Plan 008 stage 3: proves every claude-course instance of the 4 reused
+ *: proves every claude-course instance of the 4 reused
  * Tier-A widgets (quiz, drag-reorder, failure-tagger, redaction-drill) opts
  * into the English `copy` override and renders zero German-only chrome
  * strings. This is a DOM check, not an eyeball check, per the plan's
@@ -108,7 +108,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("claude-course reused Tier-A widgets render zero German-only chrome (plan 008 stage 3)", () => {
+describe("claude-course reused Tier-A widgets render zero German-only chrome ", () => {
   it("every quiz/drag-reorder/failure-tagger/redaction-drill instance across all 12 lessons opts into English copy", async () => {
     const lessons = await getAllClaudeLessons();
     let checkedCount = 0;

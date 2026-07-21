@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("PeekingSimulator (plan 012 stage 10)", () => {
+describe("PeekingSimulator ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<PeekingSimulator />);
     expect(container.querySelector("canvas")).toBeNull();

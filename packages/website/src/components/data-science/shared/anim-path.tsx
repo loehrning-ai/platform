@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// ─── AnimPath (plan 012 stage 4) ───────────────────────────────────────
+// ─── AnimPath ───────────────────────────────────────
 //
 // Typed port of `src/v8/shared.js`'s `AnimPath`: measures the path's own
 // length on mount/`d`-change, then animates `stroke-dashoffset` from that

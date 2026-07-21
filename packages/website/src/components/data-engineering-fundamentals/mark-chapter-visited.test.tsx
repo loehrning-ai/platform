@@ -36,7 +36,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("MarkChapterVisited (plan 011 stage 11)", () => {
+describe("MarkChapterVisited ", () => {
   it("marks the chapter completed on mount", () => {
     resetProgress("data-engineering-fundamentals");
     expect(isLessonCompleted("data-engineering-fundamentals", "fund")).toBe(false);

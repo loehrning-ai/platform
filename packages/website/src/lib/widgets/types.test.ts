@@ -221,13 +221,13 @@ describe("widgets/types: kind partition invariant", () => {
   });
 });
 
-describe("widgets/types: WIDGET_COURSE_SLUGS (plan 009 stage 1 adds codex)", () => {
+describe("widgets/types: WIDGET_COURSE_SLUGS ( adds codex)", () => {
   it("includes codex so a widget spec can declare it as its host course", () => {
     expect([...WIDGET_COURSE_SLUGS]).toContain("codex");
   });
 });
 
-describe("widgets/types: WIDGET_COURSE_SLUGS (plan 013 stage 4 adds ai-native-operator)", () => {
+describe("widgets/types: WIDGET_COURSE_SLUGS ( adds ai-native-operator)", () => {
   it("includes ai-native-operator, distinct from the bare ai-native slug", () => {
     expect([...WIDGET_COURSE_SLUGS]).toContain("ai-native-operator");
     expect([...WIDGET_COURSE_SLUGS]).toContain("ai-native");

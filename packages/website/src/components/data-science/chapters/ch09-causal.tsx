@@ -5,7 +5,7 @@ import { DAGViewer } from "@/components/data-science/simulators/dag-viewer";
 import { DifferenceInDifferences } from "@/components/data-science/simulators/difference-in-differences";
 import { InstrumentalVariable } from "@/components/data-science/simulators/instrumental-variable";
 
-// ─── Ch09: Causal (plan 012 stage 10) ──────────────────────────────────
+// ─── Ch09: Causal ──────────────────────────────────
 //
 // Typed port of Ch09_Causal.js (833 lines in source, over the 800-line
 // cap). All 5 simulators live in their own files under simulators/,

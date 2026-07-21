@@ -124,7 +124,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // only tools, projects, and videos published under the GitHub
   // organization). Filtered by href prefix rather than IMPORTED_COURSE_CATALOG
   // alone: a course can flip to nativeStatus "live" (moving into
-  // COURSE_CATALOG, plan 008 stage 10) while keeping this same URL
+  // COURSE_CATALOG, ) while keeping this same URL
   // structure, and its sitemap entry must not silently disappear.
   const importedCourseEntries: Entry[] = contractIncludesPattern("/kurse/open-source/:slug")
     ? ALL_COURSE_CATALOG.filter((course) => course.href.startsWith("/kurse/open-source/")).map(

@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { deriveSectionContent } from "./blocks";
 import type { CodexBlock } from "./types";
 
-describe("deriveSectionContent (plan 009 stage 3)", () => {
+describe("deriveSectionContent ", () => {
   it("joins every block kind into readable plain markdown", () => {
     const blocks: readonly CodexBlock[] = [
       { kind: "prose", markdown: "Some prose." },

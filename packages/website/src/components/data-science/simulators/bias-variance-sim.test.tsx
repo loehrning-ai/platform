@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("BiasVarianceSim (plan 012 stage 8)", () => {
+describe("BiasVarianceSim ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<BiasVarianceSim />);
     expect(container.querySelector("canvas")).toBeNull();

@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("PermutationImportance (plan 012 stage 9)", () => {
+describe("PermutationImportance ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<PermutationImportance />);
     expect(container.querySelector("svg")).not.toBeNull();

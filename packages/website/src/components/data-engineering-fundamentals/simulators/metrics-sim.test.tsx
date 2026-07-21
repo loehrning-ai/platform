@@ -7,7 +7,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("MetricsSim (plan 011 stage 7)", () => {
+describe("MetricsSim ", () => {
   it("defaults to governed mode with the DAU question", () => {
     render(<MetricsSim />);
     expect(screen.getAllByText("governed").length).toBeGreaterThan(0);

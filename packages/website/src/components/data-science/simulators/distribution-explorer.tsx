@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { mulberry32, randn, round } from "@/lib/data-science/sim-kit";
 
-// ─── DistributionExplorer (plan 012 stage 7) ───────────────────────────
+// ─── DistributionExplorer ───────────────────────────
 //
 // Typed port of Ch02_Explore.js's `DistributionExplorer`. Seeded from
 // `shape`/`n` (`mulberry32(shape.charCodeAt(0) * 17 + n)`, source's own

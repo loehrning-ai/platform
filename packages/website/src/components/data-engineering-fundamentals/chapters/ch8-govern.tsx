@@ -2,7 +2,7 @@ import { Hero, SectionLabel, CodeBlock, AntiPatterns, BestPractices, Takeaway } 
 import { PermissionGateSim } from "../simulators/permission-gate-sim";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 
-// ─── Ch8_Govern (plan 011 stage 9) ───────────────────────────────────
+// ─── Ch8_Govern ───────────────────────────────────
 // Ported from `src/chapters/Ch8_Govern.js`.
 
 const ANNOTATED_SPEC_YAML = `<span class="tok-k">dataset</span>: <span class="tok-s">dim_users</span>

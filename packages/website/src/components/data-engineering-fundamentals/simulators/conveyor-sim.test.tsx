@@ -7,7 +7,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("ConveyorSim (plan 011 stage 5)", () => {
+describe("ConveyorSim ", () => {
   it("renders in beginner mode by default, hiding the late-drawer and late-% slider", () => {
     render(<ConveyorSim />);
     expect(screen.getByText("Beginner mode")).toBeInTheDocument();

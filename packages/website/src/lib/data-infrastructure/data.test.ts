@@ -13,7 +13,7 @@ beforeEach(() => {
   __resetDataInfraLessonCacheForTests();
 });
 
-describe("data-infrastructure content module (plan 010 stage 3)", () => {
+describe("data-infrastructure content module ", () => {
   it("has exactly 12 lesson ids, matching the source's window.LESSONS", () => {
     expect(DATA_INFRA_LESSON_IDS).toHaveLength(12);
     expect(new Set(DATA_INFRA_LESSON_IDS).size).toBe(12);

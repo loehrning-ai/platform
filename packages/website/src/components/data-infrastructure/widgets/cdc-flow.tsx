@@ -2,7 +2,7 @@
 
 // Ported from data-infrastructure/js/data-widgets.js's CDCFlow (lines 1919-2108).
 // Real JSX <svg> rendering, not the source's innerHTML string-building
-// (plan 010 stage 4). Not canvas: no RAF loop, no getContext null-check.
+//. Not canvas: no RAF loop, no getContext null-check.
 
 import { useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";

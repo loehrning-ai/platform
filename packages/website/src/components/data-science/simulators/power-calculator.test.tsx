@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("PowerCalculator (plan 012 stage 10)", () => {
+describe("PowerCalculator ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<PowerCalculator />);
     expect(container.querySelector("svg")).not.toBeNull();

@@ -1,10 +1,10 @@
 import { test, expect, type Page } from "@playwright/test";
 
 /**
- * Data Infrastructure golden path (plan 010 stage 14): home -> lesson ->
+ * Data Infrastructure golden path: home -> lesson ->
  * checkpoint -> certificate -> QR verify, in one spec. Mirrors
  * route-codex.spec.ts's established pattern: no quiz-route leg (this course
- * has no separate gating quiz either, it uses plan 007 stage 4's generic
+ * has no separate gating quiz either, it uses 's generic
  * all-lessons-completed "completion" eligibility path), and the
  * certificate/QR-verify seeds "all 12 lessons completed" with
  * m: "completion", s: null.

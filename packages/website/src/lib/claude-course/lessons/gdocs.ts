@@ -1,6 +1,6 @@
 // Ported from claude/lessons/06-gdocs.html.
 // Widget manifest: PromptCompare x1 (cmp), FillBlank x1 (drill), Quiz x1
-// (q1). Wired incrementally (plan 008 stages 3, 4).
+// (q1). Wired incrementally.
 import type { ClaudeLesson } from "../types";
 import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 

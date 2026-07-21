@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { mulberry32, randn } from "@/lib/data-science/sim-kit";
 
-// ─── OutlierDetector (plan 012 stage 7) ────────────────────────────────
+// ─── OutlierDetector ────────────────────────────────
 //
 // Typed port of Ch02_Explore.js's `OutlierDetector`. Seeded with
 // `mulberry32(99)` — never reseed or swap for `Math.random()`.

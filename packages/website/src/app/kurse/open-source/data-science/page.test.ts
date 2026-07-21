@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { metadata } from "./page";
 
-describe("data-science course root / Overview route (plan 012 stage 5)", () => {
+describe("data-science course root / Overview route ", () => {
   it("carries the real source title/description, not placeholders", () => {
     expect(metadata.title).toBe("Data Science Fundamentals · Interactive Course");
     expect(metadata.description).toContain("data science loop");

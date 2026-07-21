@@ -3,7 +3,7 @@ import { BackfillSim } from "../simulators/backfill-sim";
 import { DAGDiagram } from "../simulators/dag-diagram";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 
-// ─── Ch4_Orchestrate (plan 011 stage 9) ──────────────────────────────
+// ─── Ch4_Orchestrate ──────────────────────────────
 // Ported from `src/chapters/Ch4_Orchestrate.js`.
 
 const IDEMPOTENT_WRITE_SQL = `<span class="tok-c"># ✓ Idempotent: rerunning produces the same partition.</span>

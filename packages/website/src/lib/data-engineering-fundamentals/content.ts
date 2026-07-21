@@ -1,4 +1,4 @@
-// ─── Data Engineering Fundamentals chapter-component loader (plan 011 stage 1, populated stage 9) ───
+// ─── Data Engineering Fundamentals chapter-component loader ───
 //
 // Structured as a per-chapter dynamic-import loader map, mirroring
 // `lib/data-infrastructure/data.ts`'s `LESSON_LOADERS`: a per-chapter

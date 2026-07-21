@@ -7,7 +7,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("PipelineBar (plan 011 stage 8)", () => {
+describe("PipelineBar ", () => {
   it("renders all 10 stage stops with real titles", () => {
     render(<PipelineBar goTo={() => {}} activeId="ingest" setActiveId={() => {}} />);
     expect(screen.getByText("Ingest")).toBeInTheDocument();
@@ -28,7 +28,7 @@ describe("PipelineBar (plan 011 stage 8)", () => {
   });
 });
 
-describe("StageIcon (plan 011 stage 8)", () => {
+describe("StageIcon ", () => {
   it("renders a real svg for a known kind and nothing for an unknown kind", () => {
     const { container: known } = render(<StageIcon kind="ingest" color="#000" />);
     expect(known.querySelector("svg")).toBeInTheDocument();

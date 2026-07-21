@@ -1,6 +1,6 @@
 // Ported from claude/lessons/03-context.html.
 // Widget manifest: SemanticSpace x1 (sem), Tokenizer x1 (tok), Quiz x3 (q1,
-// q2, q3), PromptSandbox x1 (sb). Wired incrementally (plan 008 stages 4, 7).
+// q2, q3), PromptSandbox x1 (sb). Wired incrementally.
 import type { ClaudeLesson } from "../types";
 import {
   CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE,
@@ -55,7 +55,7 @@ const lesson: ClaudeLesson = {
       title: "The long-context template",
       readTimeMinutes: 2,
       content:
-        "Here's the shape Anthropic recommends when you have real documents to ground on. Memorize this structure.\n\n```\n<documents>\n  <document index=\"1\" source=\"rollout-plan.md\">\n  [full text of doc 1]\n  </document>\n  <document index=\"2\" source=\"oncall-runbook.md\">\n  [full text of doc 2]\n  </document>\n</documents>\n\n<instructions>\nAnswer using ONLY the documents above. If the answer isn't there, say so.\nCite sources as [doc-1] or [doc-2] inline.\n</instructions>\n\n<question>\nWhat's our rollback procedure if the forced cutover fails?\n</question>\n```\n\nThree things this does: grounds the answer in real sources, gives Claude permission to say \"not in the docs\" (which drops hallucinations), and makes the output auditable.",
+        "Here's the shape Anthropic recommends when you have real documents to ground on. Memorize this structure.\n\n```\n<documents>\n  <document index=\"1\" source=\"rollout-plan.md\">\n  [full text of doc 1]\n  </document>\n  <document index=\"2\" source=\"oncall-guide.md\">\n  [full text of doc 2]\n  </document>\n</documents>\n\n<instructions>\nAnswer using ONLY the documents above. If the answer isn't there, say so.\nCite sources as [doc-1] or [doc-2] inline.\n</instructions>\n\n<question>\nWhat's our rollback procedure if the forced cutover fails?\n</question>\n```\n\nThree things this does: grounds the answer in real sources, gives Claude permission to say \"not in the docs\" (which drops hallucinations), and makes the output auditable.",
     },
     {
       id: "tokens-briefly",

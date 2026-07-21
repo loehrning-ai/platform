@@ -4,7 +4,7 @@ import { LIMEExplainer } from "@/components/data-science/simulators/lime-explain
 import { PermutationImportance } from "@/components/data-science/simulators/permutation-importance";
 import { GlobalVsLocal } from "@/components/data-science/simulators/global-vs-local";
 
-// ─── Ch07: Interpret (plan 012 stage 9) ────────────────────────────────
+// ─── Ch07: Interpret ────────────────────────────────
 //
 // Typed port of Ch07_Interpret.js (710 lines in source). All 4 simulators
 // live in their own files under simulators/, which is itself what keeps

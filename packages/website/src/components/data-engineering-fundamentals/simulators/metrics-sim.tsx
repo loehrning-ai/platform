@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Panel } from "../primitives";
 
-// ─── MetricsSim (plan 011 stage 7) ───────────────────────────────────
+// ─── MetricsSim ───────────────────────────────────
 // Ported from `src/chapters/Ch7_Serve.js`: the same question, resolved
 // through a governed metrics registry vs an ungoverned ad-hoc query that
 // hits a deprecated table and a renamed column.

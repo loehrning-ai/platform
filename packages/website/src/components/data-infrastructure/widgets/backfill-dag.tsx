@@ -2,7 +2,7 @@
 
 // Ported from data-infrastructure/js/data-widgets.js's BackfillDAG (lines
 // 2114-2253). Real JSX <svg> rendering, not the source's innerHTML
-// string-building (plan 010 stage 4). Not canvas: no RAF loop, no
+// string-building. Not canvas: no RAF loop, no
 // getContext null-check. The 30-day/1-4-10-worker schedules are
 // deterministic, computed at render time from the ported `schedule()`
 // algorithm — never persisted as per-user progress (they are shared static

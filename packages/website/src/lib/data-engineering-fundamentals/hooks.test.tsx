@@ -39,7 +39,7 @@ function InViewProbe() {
   );
 }
 
-describe("useInView (plan 011 stage 2)", () => {
+describe("useInView ", () => {
   it("starts false, flips true once IntersectionObserver reports intersecting, then disconnects", () => {
     const original = globalThis.IntersectionObserver;
     globalThis.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver;
@@ -63,7 +63,7 @@ function IntervalProbe({ ms }: { readonly ms: number | null }) {
   return <div data-testid="count">{count}</div>;
 }
 
-describe("useInterval (plan 011 stage 2)", () => {
+describe("useInterval ", () => {
   it("ticks on the given interval", () => {
     vi.useFakeTimers();
     const { getByTestId } = render(<IntervalProbe ms={100} />);

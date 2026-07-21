@@ -47,7 +47,7 @@ type DecodeResult =
   | { readonly ok: false; readonly reason: "malformed" | "course-mismatch" };
 type DecodeFailureReason = Extract<DecodeResult, { ok: false }>["reason"];
 
-// Derived from the canonical COURSE_SLUGS union (plan 007 stage 8) — every
+// Derived from the canonical COURSE_SLUGS union — every
 // course's QR certificate decodes correctly, not just the original 4.
 function isCourseSlug(value: unknown): value is CourseSlug {
   return (

@@ -1,7 +1,7 @@
 "use client";
 
 // Ported from data-infrastructure/js/data-widgets.js's SnapshotTimeline
-// (lines 1434-1670) — plan 010 stage 8.
+// (lines 1434-1670) —.
 //
 // The source's only selection mechanism is canvas mouse hit-testing
 // (`pickAt()` via raw `mousemove`/`click` listeners), with no keyboard or

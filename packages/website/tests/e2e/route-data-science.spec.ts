@@ -1,7 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 
 /**
- * Data Science Fundamentals golden path (plan 012 stage 14): landing ->
+ * Data Science Fundamentals golden path: landing ->
  * chapter -> certificate -> QR verify, in one spec. Mirrors
  * route-data-engineering-fundamentals.spec.ts's established pattern, with
  * deliberate differences specific to this course's real architecture:
@@ -10,7 +10,7 @@ import { test, expect, type Page } from "@playwright/test";
  *     curriculum grid), not a from-scratch marketing splash and not a
  *     grid of real chapter routes' <a href> links — the Overview's
  *     curriculum cards and "Begin" CTA are <button onClick> elements that
- *     call router.push client-side (plan 012 stage 5/7's ported
+ * call router.push client-side ('s ported
  *     `goTo`-replacement pattern), so this spec drives navigation via a
  *     role-based button click, not an `a[href]` locator.
  *   - "home" is never a [chapterSlug] route entry (Done Criteria: no home
@@ -18,7 +18,7 @@ import { test, expect, type Page } from "@playwright/test";
  *   - no checkpoint/quiz leg: grepping the pinned source's chapter files
  *     for a quiz component returns nothing. This course's completion
  *     criterion is literally "all 12 numbered chapters visited"
- *     (MarkChapterVisited, plan 012 stage 12) — so the "chapter" leg below
+ * (MarkChapterVisited, ) — so the "chapter" leg below
  *     asserts that mounting a chapter route marks it completed in the
  *     unified progress store, not a quiz-answer interaction.
  *   - the certificate/QR-verify seeds "all 12 numbered chapters completed"
@@ -124,7 +124,7 @@ test.describe("Data Science Fundamentals golden path", () => {
     expect(res?.status()).toBe(200);
     await expect(page.locator("h1")).toHaveCount(1);
 
-    // MarkChapterVisited's mount effect (plan 012 stage 12) — no quiz
+    // MarkChapterVisited's mount effect — no quiz
     // interaction exists for this course, the route visit itself is the
     // completion signal.
     await expect

@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("DatasetExplorer (plan 012 stage 11)", () => {
+describe("DatasetExplorer ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<DatasetExplorer />);
     expect(container.querySelector("svg")).not.toBeNull();

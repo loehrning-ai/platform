@@ -6,7 +6,7 @@ import { TOTAL_LESSON_COUNT } from "@/lib/ai-native-operator/types";
 
 /**
  * CourseProgressBar — reading-progress bar sourced from the unified store
- * (plan 013 stage 7), mirroring the source's own `Sidebar` progress readout
+ *, mirroring the source's own `Sidebar` progress readout
  * (course-app.js:38, "N / 39 lessons · X%") but as a page-level bar rather
  * than sidebar chrome. SSR-safe: renders "0 / 39" until mounted, then
  * subscribes to the unified store for live cross-tab updates.

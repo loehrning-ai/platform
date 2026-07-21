@@ -4,7 +4,7 @@ import { Scanner } from "./scanner";
 
 afterEach(cleanup);
 
-describe("Scanner (plan 011 stage 4)", () => {
+describe("Scanner ", () => {
   it("defaults to row-oriented mode with the Snappy checkbox disabled", () => {
     render(<Scanner />);
     expect(screen.getByRole("button", { name: /Row-oriented/ }).className).toContain("on");

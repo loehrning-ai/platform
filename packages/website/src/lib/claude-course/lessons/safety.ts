@@ -1,6 +1,6 @@
 // Ported from claude/lessons/12-safety.html.
 // Widget manifest: RedactionDrill x1 (drill), Quiz x2 (q1, q2). Wired
-// incrementally (plan 008 stage 3).
+// incrementally.
 import type { ClaudeLesson } from "../types";
 import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE, CLAUDE_REDACTION_DRILL_COPY } from "../widget-copy";
 
@@ -67,7 +67,7 @@ const lesson: ClaudeLesson = {
               },
               { text: "[2024-11-03 14:22] POST /api/v2/orders " },
               {
-                text: "Authorization: Bearer sk-ant-a01-Xh4B7zK9mQ2pL8vN3sD5fR6tY7uI",
+                text: "Authorization: Bearer sk-ant-demo-key",
                 sensitive: "API token",
               },
               { text: "\n[2024-11-03 14:22] user_id=" },

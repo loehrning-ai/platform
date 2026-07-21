@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { DsChapterSidebar } from "./ds-chapter-sidebar";
 
-describe("DsChapterSidebar (plan 012 stage 5)", () => {
+describe("DsChapterSidebar ", () => {
   it("renders a nav item for all 13 chapters, home included", () => {
     render(<DsChapterSidebar activeId="home" />);
     expect(screen.getAllByRole("link")).toHaveLength(13);

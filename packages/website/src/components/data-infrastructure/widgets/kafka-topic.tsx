@@ -1,7 +1,7 @@
 "use client";
 
 // Ported from data-infrastructure/js/data-widgets.js's KafkaTopic (lines
-// 920-1194) — structurally the hardest widget (plan 010 stage 7). Canvas
+// 920-1194) — structurally the hardest widget. Canvas
 // particles fly between real DOM nodes (producer/partition/consumer boxes)
 // via their cached `getBoundingClientRect()` rects. `useLayoutEffect`-gated:
 // rects are cached synchronously right after the DOM overlay commits, before

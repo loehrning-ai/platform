@@ -8,7 +8,7 @@ import {
   type CodexLesson,
 } from "./types";
 
-describe("codex types (plan 009 stage 1)", () => {
+describe("codex types ", () => {
   it("has exactly 12 lesson ids, L01 through L12, matching the source's window.LESSONS order", () => {
     expect(CODEX_LESSON_IDS).toHaveLength(12);
     expect([...CODEX_LESSON_IDS]).toEqual([

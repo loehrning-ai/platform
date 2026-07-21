@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("FeatureStoreDiagram (plan 012 stage 11)", () => {
+describe("FeatureStoreDiagram ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<FeatureStoreDiagram />);
     expect(container.querySelector("svg")).not.toBeNull();

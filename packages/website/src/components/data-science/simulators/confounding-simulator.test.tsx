@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("ConfoundingSimulator (plan 012 stage 10)", () => {
+describe("ConfoundingSimulator ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<ConfoundingSimulator />);
     expect(container.querySelector("svg")).not.toBeNull();

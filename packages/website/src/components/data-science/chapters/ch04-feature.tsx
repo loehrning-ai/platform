@@ -4,7 +4,7 @@ import { PolynomialExpansion } from "@/components/data-science/simulators/polyno
 import { FeatureSelectionSim } from "@/components/data-science/simulators/feature-selection-sim";
 import { InteractionTerms } from "@/components/data-science/simulators/interaction-terms";
 
-// ─── Ch04: Feature Engineering (plan 012 stage 8) ──────────────────────
+// ─── Ch04: Feature Engineering ──────────────────────
 //
 // Typed port of Ch04_Feature.js. Each of its 4 named simulators lives in
 // its own file under simulators/, matching the split established since

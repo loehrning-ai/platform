@@ -21,8 +21,8 @@ interface DataInfraLessonSidebarProps {
 
 /**
  * DataInfraLessonSidebar — track-grouped lesson nav for `<LessonShell>`'s
- * `sidebar` slot (plan 007 stage 7 primitive), mirroring
- * `CodexLessonSidebar`'s precedent (plan 009).
+ * `sidebar` slot ( primitive), mirroring
+ * `CodexLessonSidebar`'s precedent.
  */
 export function DataInfraLessonSidebar({ lessons }: DataInfraLessonSidebarProps): JSX.Element {
   const pathname = usePathname();

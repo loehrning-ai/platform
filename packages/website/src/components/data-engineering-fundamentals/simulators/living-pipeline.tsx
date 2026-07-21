@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
-// ─── LivingPipeline (plan 011 stage 8) ───────────────────────────────
+// ─── LivingPipeline ───────────────────────────────
 // Ported from `src/chapters/Ch9_Capstone.js`: real user rows stream through
 // six sabotage-able gates (merge/write/watermark/dq/govern/semantic).
 // DOM-diffed via refs for the row layer (matching source's own direct-DOM

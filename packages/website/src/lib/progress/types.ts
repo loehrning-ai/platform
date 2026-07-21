@@ -16,7 +16,7 @@ export const UNIFIED_STORAGE_KEY = "loehrning-progress-v2";
 
 /**
  * Schema version. Increment on any shape change + extend the migrator.
- * v3 (plan 007 stage 5): server-side progress storage moves from one shared
+ * v3: server-side progress storage moves from one shared
  * JSONB blob per user to one row per (user_id, course_slug), and exercise
  * summaries are capped at MAX_EXERCISE_SUMMARY_BYTES. The client-side shape
  * (UnifiedProgress/UnifiedCourseSlice) is otherwise unchanged.

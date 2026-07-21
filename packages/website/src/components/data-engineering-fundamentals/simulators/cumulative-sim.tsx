@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { Panel } from "../primitives";
 
-// ─── CumulativeSim (plan 011 stage 6) ────────────────────────────────
+// ─── CumulativeSim ────────────────────────────────
 // Ported from `src/chapters/Ch2_Store.js`: day-by-day `user_lifetime_points`
 // scrubber. A unit-mix-up bug halves points from day 3 onward until the
 // learner hits "Patch & backfill".

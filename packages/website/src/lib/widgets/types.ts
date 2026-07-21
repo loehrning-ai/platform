@@ -84,14 +84,14 @@ export const TIER_A_KINDS = [
   "interactive-diagram",
   "risk-pyramid",
   "obligation-layers",
-  // ─── Codex Course (plan 009 stage 2) ───
+  // ─── Codex Course ───
   // The two genuinely new widget kinds codex needs, ported from
   // `codex/js/widgets.js`'s Terminal (character-typewriter session replay)
   // and Diff (stateless unified-diff line list). Every other codex widget
   // instance reuses quiz/compare/task-spec/flashcards above verbatim.
   "terminal-replay",
   "diff-viewer",
-  // ─── AI-Native Operator Course (plan 013 stage 5) ───
+  // ─── AI-Native Operator Course ───
   // The three genuinely new widget kinds this course needs, ported from
   // `ai-native-operator/course-app.js`'s ReflectBox (free-text reflection,
   // 23 of 30 exercises), MatrixEx (row x column selection grid, 1
@@ -117,12 +117,12 @@ export const PRACTICE_KINDS = [
 ] as const;
 
 /**
- * Claude Course native widget kinds (plan 008), ported from
+ * Claude Course native widget kinds, ported from
  * `claude/js/widgets.js`. Unlike PRACTICE_KINDS these never call a live
  * Claude API — the source course itself never did (its own `claude-demo.js`
  * comment confirms this); all "AI" behavior is a deterministic canned
  * responder in `lib/claude-course/simulated-claude.ts`. Registered
- * incrementally as each batch of components lands (plan 008 stages 4-6).
+ * incrementally as each batch of components lands.
  */
 export const CLAUDE_KINDS = [
   "prompt-sandbox",

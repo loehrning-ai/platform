@@ -60,7 +60,7 @@ describe("learning graph", () => {
     }
   });
 
-  it("separates imported labs from native German certificate courses (empty by design: plan 013 stage 12 flipped the last one)", () => {
+  it("separates imported labs from native German certificate courses (empty by design: flipped the last one)", () => {
     // Every course ported from github.com/Mavengence/interactive-courses
     // has now flipped to nativeStatus "live" (claude/codex/data-
     // infrastructure/data-engineering-fundamentals/data-science/ai-native-
@@ -107,7 +107,7 @@ describe("learning graph", () => {
     expect(PATHWAY_STAGE_DISPLAY["vertiefen"].displayLabel).toBe("Vertiefen");
   });
 
-  it("all open_source_lab nodes have language 'en' (empty by design: plan 013 stage 12 flipped the last one)", () => {
+  it("all open_source_lab nodes have language 'en' (empty by design: flipped the last one)", () => {
     const labs = LEARNING_NODES.filter((n) => n.type === "open_source_lab");
     expect(labs.length).toBe(0);
     for (const lab of labs) {

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Panel } from "../primitives";
 
-// ─── TrustMeterSim (plan 011 stage 7) ────────────────────────────────
+// ─── TrustMeterSim ────────────────────────────────
 // Ported from `src/chapters/Ch5_Quality.js`: 4 toggleable DQ checks feed a
 // trust score; inject a corruption on day 18, run 30 days, see whether the
 // check catches it (signal blocked, oncall paged) or the wrong number ships.

@@ -1,4 +1,4 @@
-// ─── Claude Course content loader (plan 008 stage 2) ────────────────
+// ─── Claude Course content loader ────────────────
 //
 // Structured as a Partial<Record<ClaudeLessonId, () => Promise<...>>> loader
 // map, mirroring `lib/course/questions.ts`'s QUESTION_LOADERS and

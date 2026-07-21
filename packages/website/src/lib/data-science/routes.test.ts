@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { DS_CHAPTERS } from "./types";
 import { DS_COURSE_BASE_PATH, dsChapterHref } from "./routes";
 
-describe("data-science routes (plan 012 stage 5)", () => {
+describe("data-science routes ", () => {
   it("points 'home' at the bare course root, not a [chapterSlug] segment", () => {
     expect(dsChapterHref("home")).toBe(DS_COURSE_BASE_PATH);
     expect(dsChapterHref("home")).toBe("/kurse/open-source/data-science");

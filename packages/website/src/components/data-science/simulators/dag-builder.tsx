@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { inkOf } from "@/lib/data-science/sim-kit";
 
-// ─── DAGBuilder (plan 012 stage 10) ────────────────────────────────────
+// ─── DAGBuilder ────────────────────────────────────
 //
 // Typed port of Ch09_Causal.js's `DAGBuilder`: 4-pattern DAG selector
 // (direct/fork/mediator/collider). No RNG. `edgePath` closes over this

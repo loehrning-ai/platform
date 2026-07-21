@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 
-// ─── DAGViewer (plan 012 stage 10) ─────────────────────────────────────
+// ─── DAGViewer ─────────────────────────────────────
 //
 // Typed port of Ch09_Causal.js's `DAGViewer`: 3-scenario reference DAG
 // viewer (confounding/collider/mediation). No RNG.

@@ -10,8 +10,8 @@
 export const CERTIFICATE_QR_VERSION = 1 as const;
 
 /**
- * Which certificate-eligibility path a learner completed. "completion" (plan
- * 007 stage 4) is a strict addition to the QR payload's `m` field — every
+ * Which certificate-eligibility path a learner completed. "completion" is a
+ * strict addition to the QR payload's `m` field — every
  * existing "quiz"/"capstone" QR code still decodes, so it does not require a
  * CERTIFICATE_QR_VERSION bump.
  */

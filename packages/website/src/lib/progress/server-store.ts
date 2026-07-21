@@ -1,4 +1,4 @@
-// ─── Per-course-row persistence layer (plan 007 stage 5) ──
+// ─── Per-course-row persistence layer ──
 //
 // The DB table `user_course_progress` is one row per (user_id, course_slug)
 // instead of one shared JSONB blob per user (supabase/migrations/009). This

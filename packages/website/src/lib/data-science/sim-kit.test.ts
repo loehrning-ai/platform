@@ -11,7 +11,7 @@ import {
   inkOf,
 } from "./sim-kit";
 
-describe("data-science sim-kit (plan 012 stage 4)", () => {
+describe("data-science sim-kit ", () => {
   describe("mulberry32", () => {
     it("is deterministic: the same seed produces the same sequence", () => {
       const a = mulberry32(42);

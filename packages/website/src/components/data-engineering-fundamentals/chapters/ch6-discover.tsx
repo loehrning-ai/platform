@@ -3,7 +3,7 @@ import { DiscoverySpeedrun } from "../simulators/discovery-speedrun";
 import { LineageCamera } from "../simulators/lineage-camera";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 
-// ─── Ch6_Discover (plan 011 stage 9) ─────────────────────────────────
+// ─── Ch6_Discover ─────────────────────────────────
 // Ported from `src/chapters/Ch6_Discover.js`.
 
 const DATASETSPEC_YAML = `<span class="tok-k">dataset</span>: <span class="tok-s">dim_users</span>

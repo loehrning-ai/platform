@@ -7,10 +7,10 @@ import { FlashcardsWidget } from "@/components/widgets/tier-a/flashcards";
 import { getAllCodexLessons, __resetCodexLessonCacheForTests } from "./data";
 
 /**
- * Plan 009 stage 4: proves every codex-course instance of the 4 reused
+ *: proves every codex-course instance of the 4 reused
  * Tier-A widgets (quiz, compare, task-spec, flashcards) across all 12
  * lessons renders zero German-only chrome strings. Mirrors claude-course's
- * own widget-copy.test.tsx regression (plan 008 stage 3), run here once all
+ * own widget-copy.test.tsx regression, run here once all
  * 12 lessons exist so the sweep covers the whole course in one pass.
  */
 
@@ -90,7 +90,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("codex course reused Tier-A widgets render zero German-only chrome (plan 009 stage 4)", () => {
+describe("codex course reused Tier-A widgets render zero German-only chrome ", () => {
   it("every quiz/compare/task-spec/flashcards instance across all 12 lessons opts into English copy", async () => {
     const lessons = await getAllCodexLessons();
     let checkedCount = 0;
@@ -102,7 +102,7 @@ describe("codex course reused Tier-A widgets render zero German-only chrome (pla
 
         const props = widget.props as Record<string, unknown>;
         if (widget.kind === "quiz") {
-          // The exact bug plan 008 caught only via a live QA pass: `title`
+          // The exact bug caught only via a live QA pass: `title`
           // is a SEPARATE prop from `copy`, defaulting independently to
           // German ("Schneller Check"). Every codex quiz instance must set
           // it explicitly, checked here directly rather than left to chance.

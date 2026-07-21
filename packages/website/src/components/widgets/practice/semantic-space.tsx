@@ -17,7 +17,7 @@ import { usePracticeApi } from "./use-practice-api";
  * is German Mittelstand (Technik / Vertrieb / Werkstatt / Verwaltung); the
  * cluster ids themselves stay German internally (they are never displayed),
  * but `seed`, `clusterKeywords`, `quadrantLabels`, and `copy` are all
- * additive, default-preserving override props (plan 008 stage 7); the claude
+ * additive, default-preserving override props; the claude
  * course wires its own English seed points and keyword lists so the
  * offline-heuristic MATCHING logic, not just the display labels, works
  * correctly for English words a learner types.

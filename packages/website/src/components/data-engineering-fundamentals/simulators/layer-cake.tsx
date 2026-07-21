@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Panel } from "../primitives";
 
-// ─── LayerCake (plan 011 stage 4) ────────────────────────────────────
+// ─── LayerCake ────────────────────────────────────
 // Ported from `src/chapters/Ch0_StackSims.js`. Seven-layer warehouse stack:
 // hover reveals detail, "Trace a query" animates a pulse down then up the
 // stack, "Failure mode" lets the learner mark a layer down and see the

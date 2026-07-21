@@ -4,7 +4,7 @@ import { LineageCamera } from "./lineage-camera";
 
 afterEach(cleanup);
 
-describe("LineageCamera (plan 011 stage 7)", () => {
+describe("LineageCamera ", () => {
   it("defaults the focus to fct_events", () => {
     render(<LineageCamera />);
     expect(screen.getByText("Lineage of fct_events")).toBeInTheDocument();

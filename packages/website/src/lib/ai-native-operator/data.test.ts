@@ -8,7 +8,7 @@ import {
 } from "./data";
 import { MODULE_IDS, MODULE_LESSON_COUNTS, TOTAL_LESSON_COUNT } from "./types";
 
-describe("ai-native-operator content module (plan 013 stage 2)", () => {
+describe("ai-native-operator content module ", () => {
   beforeEach(() => {
     __resetAiNativeOperatorCacheForTests();
   });

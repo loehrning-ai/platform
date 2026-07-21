@@ -85,7 +85,7 @@ beforeEach(() => {
 
 afterEach(() => cleanup());
 
-describe("DataInfraLessonReader (plan 010 stage 10)", () => {
+describe("DataInfraLessonReader ", () => {
   it("renders the lesson header, sections, and key takeaway", () => {
     render(<DataInfraLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />);
     expect(screen.getByText("Test Lesson Title")).toBeInTheDocument();

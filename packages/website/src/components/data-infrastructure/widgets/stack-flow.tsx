@@ -1,8 +1,8 @@
 "use client";
 
 // Ported from data-infrastructure/js/data-widgets.js's StackFlow (lines
-// 47-223) — the fidelity template for the remaining canvas widgets (plan
-// 010 stage 5). Canvas particles fly left-to-right through each stack
+// 47-223) — the fidelity template for the remaining canvas widgets. Canvas
+// particles fly left-to-right through each stack
 // layer's lane, whose horizontal span is read from a real DOM overlay
 // element's getBoundingClientRect(). `useLayoutEffect`-gated: the lane rects
 // are cached synchronously right after the DOM overlay commits (layout

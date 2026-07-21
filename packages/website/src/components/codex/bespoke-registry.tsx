@@ -15,7 +15,7 @@ import { L12DailyLoop } from "./bespoke/l12-daily-loop";
 
 /**
  * One-off bespoke interactives, keyed by lesson id — outside the shared
- * `WidgetKind` registry by design (plan 009 stage 5), each ported from its
+ * `WidgetKind` registry by design, each ported from its
  * own `codex/js/lessons/L0N.js` mount function and never reused elsewhere.
  */
 interface BespokeComponentProps {

@@ -97,7 +97,7 @@ export async function PUT(request: Request) {
   const incoming: UnifiedProgress = parsed.data.progress;
 
   // Persists one row per touched course plus the cross-course ledger row
-  // (plan 007 stage 5) — a checkpoint in one course no longer requires
+  // — a checkpoint in one course no longer requires
   // re-serializing every other course's row. The client-facing shape here is
   // unchanged: still the full aggregated UnifiedProgress object.
   const result = await upsertUnifiedProgressForUser(auth.supabase, auth.user.id, incoming);

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { mulberry32, normCdf } from "@/lib/data-science/sim-kit";
 
-// ─── ABSim (plan 012 stage 9) ──────────────────────────────────────────
+// ─── ABSim ──────────────────────────────────────────
 //
 // Typed port of Ch08_Experiment.js's `ABSim`: a live-running A/B test
 // simulator. Its seed is randomized once per fresh state

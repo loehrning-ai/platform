@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { describe, it, expect } from "vitest";
 import postcss from "postcss";
 
-// ─── Scoped stylesheet regression guard (plan 012 stage 3) ───────────
+// ─── Scoped stylesheet regression guard ───────────
 //
 // `ds-v8-scope.css` is a scoped port of the source's 4 CSS files
 // (v8-styles.css + src/v8/overview.css + src/v8/sims.css +
@@ -15,7 +15,7 @@ import postcss from "postcss";
 // uses (not a one-time manual grep) so a future hand-edit that
 // reintroduces an unscoped selector fails CI, not just this port's
 // initial commit. Mirrors data-engineering-fundamentals's
-// de-course-css.test.ts (plan 011 stage 3) precedent.
+// de-course-css.test.ts precedent.
 
 const CSS_PATH = join(__dirname, "ds-v8-scope.css");
 const css = readFileSync(CSS_PATH, "utf8");
@@ -74,7 +74,7 @@ function collectRuleSelectors(node: import("postcss").Container, out: string[]):
   });
 }
 
-describe("ds-v8-scope.css (plan 012 stage 3)", () => {
+describe("ds-v8-scope.css ", () => {
   it("exists and is a substantial, real port (not a stub)", () => {
     expect(statSync(CSS_PATH).size).toBeGreaterThan(40_000);
   });

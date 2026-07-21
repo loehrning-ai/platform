@@ -32,23 +32,23 @@ const PUBLIC_ROUTES = [
   "/eu-ai-act-kurs",
   "/ai-native",
   "/ki-und-gesellschaft",
-  // plan 008 stage 13: claude's landing (nested under /kurse/open-source/,
+  //: claude's landing (nested under /kurse/open-source/,
   // unlike the four top-level German courses above).
   "/kurse/open-source/claude",
-  // plan 009 stage 8: codex's landing, same nested convention as claude.
+  //: codex's landing, same nested convention as claude.
   "/kurse/open-source/codex",
-  // plan 010 stage 14: data-infrastructure's landing, same nested convention.
+  //: data-infrastructure's landing, same nested convention.
   "/kurse/open-source/data-infrastructure",
-  // plan 011 stage 14: data-engineering-fundamentals's landing, same nested
+  //: data-engineering-fundamentals's landing, same nested
   // convention — note its chapter tree has no "/kurs" segment (unlike the
   // three courses above), see the sitemap no-leak test below.
   "/kurse/open-source/data-engineering-fundamentals",
-  // plan 012 stage 14: data-science's landing, same nested convention and
+  //: data-science's landing, same nested convention and
   // no-"/kurs"-segment chapter tree as data-engineering-fundamentals above
   // — its Overview additionally renders AT this exact route (not a
   // separate "/home" chapter), see the sitemap no-leak test below.
   "/kurse/open-source/data-science",
-  // plan 013 stage 13: ai-native-operator's landing, sixth and last
+  //: ai-native-operator's landing, sixth and last
   // imported course to flip. Same nested convention and no-"/kurs"-segment
   // module/lesson tree as data-engineering-fundamentals/data-science above.
   "/kurse/open-source/ai-native-operator",
@@ -211,7 +211,7 @@ test.describe("sitemap lists only contract-included paths", () => {
     expect(body).not.toContain("/ai-native/kurs");
   });
 
-  // plan 008 stage 13: claude's reader tree is public-access (not indexed),
+  //: claude's reader tree is public-access (not indexed),
   // same convention as the other three courses' /kurs subtrees above.
   test("sitemap.xml does not contain /kurse/open-source/claude/kurs", async ({
     request,
@@ -221,7 +221,7 @@ test.describe("sitemap lists only contract-included paths", () => {
     expect(body).not.toContain("/kurse/open-source/claude/kurs");
   });
 
-  // plan 009 stage 8: codex's reader tree is public-access (not indexed),
+  //: codex's reader tree is public-access (not indexed),
   // same convention as claude's above.
   test("sitemap.xml does not contain /kurse/open-source/codex/kurs", async ({
     request,
@@ -231,7 +231,7 @@ test.describe("sitemap lists only contract-included paths", () => {
     expect(body).not.toContain("/kurse/open-source/codex/kurs");
   });
 
-  // plan 010 stage 14: data-infrastructure's reader tree is public-access
+  //: data-infrastructure's reader tree is public-access
   // (not indexed), same convention as claude/codex above.
   test("sitemap.xml does not contain /kurse/open-source/data-infrastructure/kurs", async ({
     request,
@@ -241,7 +241,7 @@ test.describe("sitemap lists only contract-included paths", () => {
     expect(body).not.toContain("/kurse/open-source/data-infrastructure/kurs");
   });
 
-  // plan 011 stage 14: data-engineering-fundamentals's chapter tree has no
+  //: data-engineering-fundamentals's chapter tree has no
   // "/kurs" segment (unlike claude/codex/data-infrastructure above) — the
   // no-leak check instead confirms a real chapter path never appears,
   // while the bare course root DOES appear (public-indexable via the
@@ -256,7 +256,7 @@ test.describe("sitemap lists only contract-included paths", () => {
     expect(body).not.toContain("/kurse/open-source/data-engineering-fundamentals/fund");
   });
 
-  // plan 012 stage 14: data-science's chapter tree has no "/kurs" segment
+  //: data-science's chapter tree has no "/kurs" segment
   // either, and unlike data-engineering-fundamentals its Overview renders
   // directly AT the bare course root (no "/home" sub-path at all) — the
   // no-leak check confirms a real numbered-chapter path never appears,
@@ -271,7 +271,7 @@ test.describe("sitemap lists only contract-included paths", () => {
     expect(body).not.toContain("/kurse/open-source/data-science/cap");
   });
 
-  // plan 013 stage 13: ai-native-operator's module/lesson tree has no
+  //: ai-native-operator's module/lesson tree has no
   // "/kurs" segment either — the no-leak check confirms a real module or
   // lesson path never appears, while the bare course root DOES appear.
   test("sitemap.xml lists the ai-native-operator landing but not its module/lesson routes", async ({

@@ -40,7 +40,7 @@ describe("loadWorkshopQuestions", () => {
     );
   });
 
-  it("loads the claude questions (19 questions, reusing the inline lesson Quiz content, plan 008 stage 11)", async () => {
+  it("loads the claude questions (19 questions, reusing the inline lesson Quiz content, )", async () => {
     const questions = await loadWorkshopQuestions("claude");
     expect(questions).toHaveLength(19);
     assertValidQuizQuestions(questions);

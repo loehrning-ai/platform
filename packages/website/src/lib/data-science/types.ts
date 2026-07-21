@@ -1,4 +1,4 @@
-// ─── Data Science course types (plan 012 stage 1) ────────────────────
+// ─── Data Science course types ────────────────────
 //
 // Own separate content module (mirroring `lib/ai-native`'s precedent), keyed
 // by the source's own flat chapter-id scheme ("home".."cap", matching

@@ -2,7 +2,7 @@ import { Hero, SectionLabel, CodeBlock, AntiPatterns, BestPractices, Takeaway } 
 import { ConveyorSim } from "../simulators/conveyor-sim";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 
-// ─── Ch1_5_Streaming (plan 011 stage 9) ──────────────────────────────
+// ─── Ch1_5_Streaming ──────────────────────────────
 // Ported from `src/chapters/Ch1_5_Streaming.js`. `N.*` term references
 // resolve to their real/vendor name (see primitives.tsx's Term doc comment
 // on why `internalMode` is dropped): Flink, Kafka Streams, Kafka.

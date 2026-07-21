@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("EncodingComparison (plan 012 stage 8)", () => {
+describe("EncodingComparison ", () => {
   it("renders exclusively via a table — no canvas element in the DOM", () => {
     const { container } = render(<EncodingComparison />);
     expect(container.querySelector("canvas")).toBeNull();

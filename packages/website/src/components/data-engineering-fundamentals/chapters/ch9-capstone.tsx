@@ -2,7 +2,7 @@ import { Hero, SectionLabel, Takeaway } from "../primitives";
 import { LivingPipeline } from "../simulators/living-pipeline";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 
-// ─── Ch9_Capstone (plan 011 stage 9) ─────────────────────────────────
+// ─── Ch9_Capstone ─────────────────────────────────
 // Ported from `src/chapters/Ch9_Capstone.js`.
 
 export interface Ch9CapstoneProps {

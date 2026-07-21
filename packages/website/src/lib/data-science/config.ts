@@ -1,4 +1,4 @@
-// ─── Data Science course config (plan 012 stage 1) ───────────────────
+// ─── Data Science course config ───────────────────
 //
 // Own module (mirroring `lib/data-engineering-fundamentals/config.ts`) so
 // the course-config object lives beside its own content module;
@@ -24,7 +24,7 @@ export const DATA_SCIENCE_CONFIG: CourseConfig = {
   blockIds: [],
   // No quiz/scoring mechanism exists in source at all (grep across all 15
   // source files for a "Quiz" component returns nothing). Certificate
-  // eligibility resolves via plan 007's generic all-lessons-completed
+  // eligibility resolves via generic all-lessons-completed
   // "completion" path (src/lib/progress/store.ts's isCertificateEligible).
   // No `/kurs/quiz` route is built for this course; these three fields are
   // kept only for CourseConfig-shape compatibility and are never read by

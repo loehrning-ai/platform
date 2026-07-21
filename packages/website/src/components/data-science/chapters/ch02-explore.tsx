@@ -3,7 +3,7 @@ import { DistributionExplorer } from "@/components/data-science/simulators/distr
 import { OutlierDetector } from "@/components/data-science/simulators/outlier-detector";
 import { CorrelationMatrix } from "@/components/data-science/simulators/correlation-matrix";
 
-// ─── Ch02: Explore (plan 012 stage 7) ──────────────────────────────────
+// ─── Ch02: Explore ──────────────────────────────────
 //
 // Typed port of Ch02_Explore.js. Each of its three named simulators
 // (DistributionExplorer, OutlierDetector, CorrelationMatrix) lives in its

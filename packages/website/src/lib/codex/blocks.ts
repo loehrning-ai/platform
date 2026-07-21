@@ -1,4 +1,4 @@
-// ─── CodexBlock helpers (plan 009 stage 3) ──────────────────────────
+// ─── CodexBlock helpers ──────────────────────────
 //
 // `CodexSection.content` (inherited from the shared `LessonSection`) is a
 // derived plain-markdown fallback for any generic consumer that only knows

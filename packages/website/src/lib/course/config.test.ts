@@ -26,7 +26,7 @@ import {
 const UNREGISTERED = "does-not-exist" as unknown as CourseSlug;
 
 describe("getRegisteredCourseSlugs", () => {
-  it("returns exactly the ten registered course slugs (plan 013 stage 4 adds ai-native-operator)", () => {
+  it("returns exactly the ten registered course slugs ( adds ai-native-operator)", () => {
     const slugs = [...getRegisteredCourseSlugs()].sort();
     expect(slugs).toEqual([
       "ai-native",
@@ -62,7 +62,7 @@ describe("isCourseRegistered", () => {
   });
 });
 
-describe("CLAUDE_CONFIG (plan 008 stage 1)", () => {
+describe("CLAUDE_CONFIG ", () => {
   it("registers claude with English-language content and a quiz-gated cert path", () => {
     expect(getCourseConfig("claude")).toBe(CLAUDE_CONFIG);
     expect(CLAUDE_CONFIG.slug).toBe("claude");
@@ -86,7 +86,7 @@ describe("CLAUDE_CONFIG (plan 008 stage 1)", () => {
   });
 });
 
-describe("CODEX_CONFIG (plan 009 stage 1)", () => {
+describe("CODEX_CONFIG ", () => {
   it("registers codex with English-language content and the all-lessons-completion cert path", () => {
     expect(getCourseConfig("codex")).toBe(CODEX_CONFIG);
     expect(CODEX_CONFIG.slug).toBe("codex");
@@ -97,7 +97,7 @@ describe("CODEX_CONFIG (plan 009 stage 1)", () => {
   });
 });
 
-describe("DATA_INFRASTRUCTURE_CONFIG (plan 010 stage 1)", () => {
+describe("DATA_INFRASTRUCTURE_CONFIG ", () => {
   it("registers data-infrastructure with English-language content and the all-lessons-completion cert path", () => {
     expect(getCourseConfig("data-infrastructure")).toBe(DATA_INFRASTRUCTURE_CONFIG);
     expect(DATA_INFRASTRUCTURE_CONFIG.slug).toBe("data-infrastructure");
@@ -110,7 +110,7 @@ describe("DATA_INFRASTRUCTURE_CONFIG (plan 010 stage 1)", () => {
   });
 });
 
-describe("DATA_ENGINEERING_FUNDAMENTALS_CONFIG (plan 011 stage 1)", () => {
+describe("DATA_ENGINEERING_FUNDAMENTALS_CONFIG ", () => {
   it("registers data-engineering-fundamentals with English-language content and the all-lessons-completion cert path", () => {
     expect(getCourseConfig("data-engineering-fundamentals")).toBe(
       DATA_ENGINEERING_FUNDAMENTALS_CONFIG,
@@ -121,9 +121,9 @@ describe("DATA_ENGINEERING_FUNDAMENTALS_CONFIG (plan 011 stage 1)", () => {
       "/kurse/open-source/data-engineering-fundamentals",
     );
     // Unlike codex/data-infrastructure, this course has no `/kurs`-nested
-    // route at all (plan 011 stage 10 Done Criteria: chapters live directly
+    // route at all ( Done Criteria: chapters live directly
     // under `[chapterId]`) — coursePath must point at the real landing page,
-    // not a route that 404s (plan 011 stage 14 fix).
+    // not a route that 404s ( fix).
     expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.coursePath).toBe(
       "/kurse/open-source/data-engineering-fundamentals",
     );
@@ -131,7 +131,7 @@ describe("DATA_ENGINEERING_FUNDAMENTALS_CONFIG (plan 011 stage 1)", () => {
   });
 });
 
-describe("DATA_SCIENCE_CONFIG (plan 012 stage 1)", () => {
+describe("DATA_SCIENCE_CONFIG ", () => {
   it("registers data-science with English-language content and the all-lessons-completion cert path", () => {
     expect(getCourseConfig("data-science")).toBe(DATA_SCIENCE_CONFIG);
     expect(DATA_SCIENCE_CONFIG.slug).toBe("data-science");
@@ -146,7 +146,7 @@ describe("DATA_SCIENCE_CONFIG (plan 012 stage 1)", () => {
   });
 });
 
-describe("AI_NATIVE_OPERATOR_CONFIG (plan 013 stage 4)", () => {
+describe("AI_NATIVE_OPERATOR_CONFIG ", () => {
   it("registers ai-native-operator with English-language content and a quiz-gated cert path", () => {
     expect(getCourseConfig("ai-native-operator")).toBe(AI_NATIVE_OPERATOR_CONFIG);
     expect(AI_NATIVE_OPERATOR_CONFIG.slug).toBe("ai-native-operator");
@@ -311,7 +311,7 @@ describe("config object coherence", () => {
     }
   });
 
-  it("declares a language for every registered config, 'de' for all four native courses (plan 007 stage 2)", () => {
+  it("declares a language for every registered config, 'de' for all four native courses ", () => {
     for (const config of configs) {
       expect(config.language).toBe("de");
     }

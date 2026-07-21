@@ -20,7 +20,7 @@ function setReducedMotion(matches: boolean): void {
   })) as any;
 }
 
-describe("useCanvasRAF (plan 010 stage 2)", () => {
+describe("useCanvasRAF ", () => {
   let rafCallbacks: FrameRequestCallback[];
   let rafSpy: ReturnType<typeof vi.fn>;
   let cancelSpy: ReturnType<typeof vi.fn>;

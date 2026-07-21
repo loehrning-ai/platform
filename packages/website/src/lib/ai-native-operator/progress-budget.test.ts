@@ -1,7 +1,7 @@
-// ─── Progress-budget audit (plan 013 stage 11) ──────────────────────
+// ─── Progress-budget audit ──────────────────────
 //
 // Two DB rows can grow from a learner working through this course
-// (plan 007 stage 5's per-course-row redesign, supabase/migrations/
+// ('s per-course-row redesign, supabase/migrations/
 // 009_user_course_progress_per_course.sql):
 //   1. course_slug = "ai-native-operator" -> holds only this course's
 //      UnifiedCourseSlice (lessons/workshopQuiz/capstoneSubmitted/
@@ -67,7 +67,7 @@ function byteLength(value: unknown): number {
   return Buffer.byteLength(JSON.stringify(value), "utf8");
 }
 
-describe("ai-native-operator's contribution to the two progress-budget rows (plan 013 stage 11)", () => {
+describe("ai-native-operator's contribution to the two progress-budget rows ", () => {
   beforeEach(() => {
     if (
       typeof window.localStorage === "undefined" ||
@@ -110,7 +110,7 @@ describe("ai-native-operator's contribution to the two progress-budget rows (pla
     };
 
     const bytes = byteLength(slice);
-    // Proposed budget: comfortably under 5KB (plan 013's Done Criteria),
+    // Proposed budget: comfortably under 5KB ( Done Criteria),
     // itself comfortably inside the 65536-byte per-course cap.
     expect(bytes).toBeLessThan(5 * 1024);
   });

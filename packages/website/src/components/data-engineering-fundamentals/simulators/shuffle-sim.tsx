@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Panel } from "../primitives";
 
-// ─── ShuffleSim (plan 011 stage 6) ───────────────────────────────────
+// ─── ShuffleSim ───────────────────────────────────
 // Ported from `src/chapters/Ch3_Compute.js`: hash vs broadcast join, key
 // skew slider drives one worker "hot" while the rest idle.
 

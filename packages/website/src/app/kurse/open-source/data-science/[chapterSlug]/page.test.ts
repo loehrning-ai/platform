@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { DS_NUMBERED_CHAPTER_IDS } from "@/lib/data-science/types";
 import { generateMetadata, generateStaticParams, dynamicParams } from "./page";
 
-describe("data-science chapter route (plan 012 stage 5)", () => {
+describe("data-science chapter route ", () => {
   it("generates exactly the 12 numbered chapter ids as static params, in source order — 'home' is not among them", () => {
     expect(generateStaticParams()).toEqual(
       DS_NUMBERED_CHAPTER_IDS.map((chapterSlug) => ({ chapterSlug })),

@@ -7,7 +7,7 @@ import {
 } from "@/lib/data-science/progress";
 import { MarkChapterVisited } from "./mark-chapter-visited";
 
-describe("MarkChapterVisited (plan 012 stage 12)", () => {
+describe("MarkChapterVisited ", () => {
   afterEach(() => {
     resetProgress();
     __resetCacheForTests();

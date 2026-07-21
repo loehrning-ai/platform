@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("PolynomialExpansion (plan 012 stage 8)", () => {
+describe("PolynomialExpansion ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<PolynomialExpansion />);
     expect(container.querySelector("canvas")).toBeNull();

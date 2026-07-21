@@ -9,7 +9,7 @@ import {
   type ChapterMeta,
 } from "./types";
 
-describe("data-engineering-fundamentals: plan 007 prerequisites (plan 011 stage 1 guard)", () => {
+describe("data-engineering-fundamentals: prerequisites ( guard)", () => {
   it("CourseSlug already includes this course's slug", () => {
     expect(COURSE_SLUGS).toContain("data-engineering-fundamentals");
   });
@@ -19,7 +19,7 @@ describe("data-engineering-fundamentals: plan 007 prerequisites (plan 011 stage 
   });
 });
 
-describe("data-engineering-fundamentals types (plan 011 stage 1)", () => {
+describe("data-engineering-fundamentals types ", () => {
   it("has exactly 12 chapter ids, matching App.js's real CHAPTERS array order", () => {
     expect(DEF_CHAPTER_IDS).toHaveLength(12);
     expect([...DEF_CHAPTER_IDS]).toEqual([

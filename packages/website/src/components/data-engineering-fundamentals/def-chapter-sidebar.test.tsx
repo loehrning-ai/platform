@@ -4,7 +4,7 @@ import { DefChapterSidebar } from "./def-chapter-sidebar";
 
 afterEach(cleanup);
 
-describe("DefChapterSidebar (plan 011 stage 10)", () => {
+describe("DefChapterSidebar ", () => {
   it("renders all 12 chapters with real titles and durations", () => {
     render(<DefChapterSidebar activeId="fund" />);
     expect(screen.getByText("Overview")).toBeInTheDocument();

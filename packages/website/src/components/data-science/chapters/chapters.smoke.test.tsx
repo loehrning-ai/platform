@@ -25,7 +25,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("data-science chapter components render with real ported content, not placeholders (plan 012 stage 6)", () => {
+describe("data-science chapter components render with real ported content, not placeholders ", () => {
   it("Ch01Fundamentals renders the real hero, DS-loop stages, and GaltonSim", () => {
     render(<Ch01Fundamentals chapter={getDsChapterMeta("fund")} />);
     expect(screen.getByText("turns noise")).toBeInTheDocument();
@@ -44,7 +44,7 @@ describe("data-science chapter components render with real ported content, not p
   });
 });
 
-describe("data-science chapter components render with real ported content, not placeholders (plan 012 stage 7)", () => {
+describe("data-science chapter components render with real ported content, not placeholders ", () => {
   it("ChOverview renders the real hero copy, all 12 curriculum cards, and the FlowingPipeline", () => {
     render(<ChOverview chapter={getDsChapterMeta("home")} />);
     expect(screen.getByText(/turns noise into decisions/)).toBeInTheDocument();
@@ -73,7 +73,7 @@ describe("data-science chapter components render with real ported content, not p
   });
 });
 
-describe("data-science chapter components render with real ported content, not placeholders (plan 012 stage 8)", () => {
+describe("data-science chapter components render with real ported content, not placeholders ", () => {
   it("Ch04Feature renders the real hero and all 4 simulators", () => {
     render(<Ch04Feature chapter={getDsChapterMeta("feature")} />);
     expect(screen.getByText(/fancier models/)).toBeInTheDocument();
@@ -92,7 +92,7 @@ describe("data-science chapter components render with real ported content, not p
   });
 });
 
-describe("data-science chapter components render with real ported content, not placeholders (plan 012 stage 9)", () => {
+describe("data-science chapter components render with real ported content, not placeholders ", () => {
   it("Ch07Interpret renders the real hero and all 4 simulators", () => {
     render(<Ch07Interpret chapter={getDsChapterMeta("interp")} />);
     expect(screen.getByText(/is a/)).toBeInTheDocument();
@@ -112,7 +112,7 @@ describe("data-science chapter components render with real ported content, not p
   });
 });
 
-describe("data-science chapter components render with real ported content, not placeholders (plan 012 stage 10)", () => {
+describe("data-science chapter components render with real ported content, not placeholders ", () => {
   it("Ch09Causal renders the real hero and all 5 simulators", () => {
     render(<Ch09Causal chapter={getDsChapterMeta("causal")} />);
     expect(screen.getByText(/hypothesis/)).toBeInTheDocument();
@@ -135,7 +135,7 @@ describe("data-science chapter components render with real ported content, not p
   });
 });
 
-describe("data-science chapter components render with real ported content, not placeholders (plan 012 stage 11)", () => {
+describe("data-science chapter components render with real ported content, not placeholders ", () => {
   it("Ch11Deploy renders the real hero and all 4 simulators", () => {
     render(<Ch11Deploy chapter={getDsChapterMeta("deploy")} />);
     expect(screen.getByText(/chapter one/)).toBeInTheDocument();

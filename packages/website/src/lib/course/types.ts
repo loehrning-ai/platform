@@ -20,7 +20,7 @@ export type BlockId = (typeof BLOCK_IDS)[number];
 // The upstream open-source source folder "ai-native" (github.com/Mavengence/
 // interactive-courses) maps to slug "ai-native-operator" below, never to
 // "ai-native" — that slug is already the native German AI-Native Arbeitskurs
-// and the two must never collide (plan 007 stage 1).
+// and the two must never collide.
 export const COURSE_SLUGS = [
   "ki-fuehrerschein",
   "eu-ai-act-kurs",

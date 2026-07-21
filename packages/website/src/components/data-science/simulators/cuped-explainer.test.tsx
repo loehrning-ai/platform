@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("CUPEDExplainer (plan 012 stage 10)", () => {
+describe("CUPEDExplainer ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<CUPEDExplainer />);
     expect(container.querySelector("svg")).not.toBeNull();

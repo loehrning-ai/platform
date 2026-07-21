@@ -8,7 +8,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("GaltonSim (plan 012 stage 6)", () => {
+describe("GaltonSim ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<GaltonSim />);
     expect(container.querySelector("svg")).not.toBeNull();

@@ -2,7 +2,7 @@ import { Hero, SectionLabel, AntiPatterns, BestPractices, Takeaway } from "../pr
 import { MetricsSim } from "../simulators/metrics-sim";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 
-// ─── Ch7_Serve (plan 011 stage 9) ────────────────────────────────────
+// ─── Ch7_Serve ────────────────────────────────────
 // Ported from `src/chapters/Ch7_Serve.js`.
 
 const METRICS = [

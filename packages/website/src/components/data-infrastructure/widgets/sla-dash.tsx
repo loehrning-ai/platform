@@ -2,7 +2,7 @@
 
 // Ported from data-infrastructure/js/data-widgets.js's SLAdash (lines
 // 2259-2470): 4-panel canvas NOC dashboard (freshness, row volume, null
-// rate, consumer lag), each against a live SLO threshold (plan 010 stage 9).
+// rate, consumer lag), each against a live SLO threshold.
 
 import { useCallback, useEffect, useRef, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";

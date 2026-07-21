@@ -1,4 +1,4 @@
-// ─── Data Infrastructure chrome-copy overrides (plan 010 stage 3) ───
+// ─── Data Infrastructure chrome-copy overrides ───
 //
 // English chrome copy for the reused Tier-A widgets (`quiz`/`flashcards`),
 // mirroring `lib/codex/widget-copy.ts`'s precedent. Source strings ported

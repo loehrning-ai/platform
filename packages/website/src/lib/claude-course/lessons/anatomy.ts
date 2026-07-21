@@ -1,7 +1,7 @@
 // Ported from claude/lessons/02-anatomy.html.
 // Widget manifest: PromptCompare x1 (cmp), DragReorder x1 (reorder),
 // FillBlank x1 (drill), RewriteArena x1 (arena), PromptGrader x1 (grader).
-// Wired incrementally as each widget kind lands (plan 008 stages 3-4).
+// Wired incrementally as each widget kind lands.
 import type { ClaudeLesson } from "../types";
 import { CLAUDE_DRAG_REORDER_COPY } from "../widget-copy";
 

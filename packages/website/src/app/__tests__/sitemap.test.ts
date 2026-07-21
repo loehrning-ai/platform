@@ -29,8 +29,7 @@ describe("sitemap()", () => {
     //   + WIE_KI_LEKTIONEN.length individual lektion routes
     //   + catalog detail pages (buecher + demos + workshops slugs)
     //   + every course detail page under /kurse/open-source/:slug, both
-    //     still-imported ones and any flipped to native (plan 008 stage 10:
-    //     claude keeps this URL shape after going native, so it is counted
+    // still-imported ones and any flipped to native (    //     claude keeps this URL shape after going native, so it is counted
     //     by href prefix against the combined catalog, not
     //     IMPORTED_COURSE_CATALOG alone)
     //   + every published open-source artifact (tools, projects, and videos)
@@ -166,7 +165,7 @@ describe("sitemap()", () => {
     }
   });
 
-  it("still includes claude's /kurse/open-source/claude landing page after its plan 008 stage 10 flip to native", () => {
+  it("still includes claude's /kurse/open-source/claude landing page after its flip to native", () => {
     const urls = result.map((entry) => entry.url);
     expect(urls).toContain("https://loehrning.ai/kurse/open-source/claude");
     // Its lesson-reader routes stay out of the sitemap, same as the 4

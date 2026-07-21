@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 
-// ─── ScalerDemo (plan 012 stage 7) ─────────────────────────────────────
+// ─── ScalerDemo ─────────────────────────────────────
 //
 // Typed port of Ch03_Clean.js's `ScalerDemo`. Feature values are
 // hardcoded (no RNG in source), so there's nothing to seed here.

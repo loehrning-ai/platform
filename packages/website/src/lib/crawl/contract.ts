@@ -83,26 +83,26 @@ const PUBLIC_NOINDEX_PATHS = [
   "/ai-native/kurs/zertifikat",
   "/ki-und-gesellschaft/kurs/zertifikat",
   "/ki-und-gesellschaft/kurs/quiz",
-  // Claude Course (plan 008 stage 1) — added ahead of the routes themselves
+  // Claude Course — added ahead of the routes themselves
   // (stage 9) so contract-completeness.test.ts never goes red mid-plan.
   "/kurse/open-source/claude/kurs/quiz",
   "/kurse/open-source/claude/kurs/zertifikat",
   "/kurse/open-source/claude/verifizierung",
-  // Codex Course (plan 009 stage 1) — added ahead of the routes themselves
-  // (stage 6) so contract-completeness.test.ts never goes red mid-plan.
-  // No "/kurs/quiz" entry: codex has no separate gating quiz, it uses plan
-  // 007 stage 4's generic all-lessons-completed "completion" eligibility
-  // path, so no such route is ever built.
+  // Codex Course — added ahead of the routes themselves so
+  // contract-completeness.test.ts never goes red mid-migration.
+  // No "/kurs/quiz" entry: codex has no separate gating quiz, it uses the
+  // generic all-lessons-completed "completion" eligibility path, so no such
+  // route is ever built.
   "/kurse/open-source/codex/kurs/zertifikat",
   "/kurse/open-source/codex/verifizierung",
-  // Data Infrastructure course (plan 010 stage 1) — added ahead of the
+  // Data Infrastructure course — added ahead of the
   // routes themselves (stage 10) so contract-completeness.test.ts never
   // goes red mid-plan. No "/kurs/quiz" entry: this course has no separate
   // gating quiz either, it uses the same generic all-lessons-completed
   // "completion" eligibility path as codex.
   "/kurse/open-source/data-infrastructure/kurs/zertifikat",
   "/kurse/open-source/data-infrastructure/verifizierung",
-  // Data Engineering Fundamentals course (plan 011 stage 1, corrected stage
+  // Data Engineering Fundamentals course (, corrected stage
   // 10): unlike claude/codex/data-infrastructure, this course's Done
   // Criteria puts all 12 chapters directly under
   // data-engineering-fundamentals/[chapterId] — no "/kurs" segment, since
@@ -113,7 +113,7 @@ const PUBLIC_NOINDEX_PATHS = [
   // data-infrastructure.
   "/kurse/open-source/data-engineering-fundamentals/zertifikat",
   "/kurse/open-source/data-engineering-fundamentals/verifizierung",
-  // Data Science course (plan 012 stage 1) — added ahead of the routes
+  // Data Science course — added ahead of the routes
   // themselves (stage 5) so contract-completeness.test.ts never goes red
   // mid-plan. Same shape as data-engineering-fundamentals: chapters live
   // directly under data-science/[chapterSlug] — no "/kurs" segment — and
@@ -122,7 +122,7 @@ const PUBLIC_NOINDEX_PATHS = [
   // eligibility path.
   "/kurse/open-source/data-science/zertifikat",
   "/kurse/open-source/data-science/verifizierung",
-  // AI-Native Operator course (plan 013 stage 1) — added ahead of the real
+  // AI-Native Operator course — added ahead of the real
   // routes (stages 7-10) so contract-completeness.test.ts never goes red
   // mid-plan. Same flat-course-root shape as data-engineering-fundamentals/
   // data-science (no "/kurs" segment): 9 modules x 39 lessons live directly
@@ -134,7 +134,7 @@ const PUBLIC_NOINDEX_PATHS = [
   "/kurse/open-source/ai-native-operator/verifizierung",
 ] as const;
 
-// ─── Adding a new course's routes (plan 007 stage 12) ───────────────────
+// ─── Adding a new course's routes ───────────────────
 //
 // contract-completeness.test.ts walks the real src/app tree and fails the
 // build the moment ANY page.tsx/route.ts lands without a matching entry
@@ -179,16 +179,16 @@ const PUBLIC_ACCESS_PATHS = [
   "/ai-native/capstone-gallery",
   "/ki-und-gesellschaft/kurs",
   "/ki-und-gesellschaft/kurs/:path*",
-  // Claude Course (plan 008 stage 1) — see the noindex entries above.
+  // Claude Course — see the noindex entries above.
   "/kurse/open-source/claude/kurs",
   "/kurse/open-source/claude/kurs/:path*",
-  // Codex Course (plan 009 stage 1) — see the noindex entries above.
+  // Codex Course — see the noindex entries above.
   "/kurse/open-source/codex/kurs",
   "/kurse/open-source/codex/kurs/:path*",
-  // Data Infrastructure course (plan 010 stage 1) — see the noindex entries above.
+  // Data Infrastructure course — see the noindex entries above.
   "/kurse/open-source/data-infrastructure/kurs",
   "/kurse/open-source/data-infrastructure/kurs/:path*",
-  // Data Engineering Fundamentals course (plan 011 stage 10, corrected —
+  // Data Engineering Fundamentals course (, corrected —
   // see the noindex-block comment above): the 12 chapters live directly
   // under the course root, so one wildcard covers them all instead of the
   // "/kurs" + "/kurs/:path*" pair every other course uses. The bare course
@@ -196,10 +196,10 @@ const PUBLIC_ACCESS_PATHS = [
   // (PUBLIC_INDEXABLE_PATHS matches by path string regardless of whether
   // the dynamic [slug] route or this static folder serves it).
   "/kurse/open-source/data-engineering-fundamentals/:path*",
-  // Data Science course (plan 012 stage 1, ahead of stage 5's real routes)
+  // Data Science course 
   // — same flat-chapter shape as data-engineering-fundamentals above.
   "/kurse/open-source/data-science/:path*",
-  // AI-Native Operator course (plan 013 stage 1, ahead of stages 7-8's real
+  // AI-Native Operator course (, ahead of stages 7-8's real
   // routes) — one wildcard covers both the "/:moduleId" module-hub routes
   // and the "/:moduleId/:lessonNum" lesson routes (no "/kurs" segment),
   // same flat-course-root shape as data-engineering-fundamentals/data-science.

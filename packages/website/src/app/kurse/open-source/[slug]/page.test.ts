@@ -9,7 +9,7 @@ describe("imported course detail discovery metadata", () => {
     );
   });
 
-  // plan 007 stage 6: generateStaticParams is the single owner of this
+  //: generateStaticParams is the single owner of this
   // exclusion mechanism, deriving purely from nativeStatus === "pending" so
   // a course plan's single-field flip is enough to drop it from this route
   // without any course plan adding its own separate filtering logic here.

@@ -21,7 +21,7 @@ import { WidgetFrame } from "./_frame";
 const LETTERS = ["A", "B", "C", "D", "E", "F"] as const;
 
 /**
- * Chrome-copy override (plan 008 stage 3): the button/status strings below
+ * Chrome-copy override: the button/status strings below
  * were hardcoded German literals with no override mechanism, which would
  * ship English quiz questions wrapped in German chrome for the (English)
  * Claude Course. Additive and default-preserving: every field defaults to

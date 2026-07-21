@@ -6,7 +6,7 @@ afterEach(() => {
   cleanup();
 });
 
-describe("ModelServingArchitecture (plan 012 stage 11)", () => {
+describe("ModelServingArchitecture ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
     const { container } = render(<ModelServingArchitecture />);
     expect(container.querySelector("svg")).not.toBeNull();

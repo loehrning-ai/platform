@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { describe, it, expect } from "vitest";
 import postcss from "postcss";
 
-// ─── Scoped stylesheet regression guard (plan 011 stage 3) ──────────
+// ─── Scoped stylesheet regression guard ──────────
 //
 // `de-course.css` is a scoped port of the source's `styles.css` (5294
 // lines) + `lib/theme-tokens.css` (233 lines), every selector prefixed
@@ -30,7 +30,7 @@ function collectRuleSelectors(node: import("postcss").Container, out: string[]):
   });
 }
 
-describe("de-course.css (plan 011 stage 3)", () => {
+describe("de-course.css ", () => {
   it("exists and is a substantial, real port (not a stub)", () => {
     expect(statSync(CSS_PATH).size).toBeGreaterThan(200_000);
   });

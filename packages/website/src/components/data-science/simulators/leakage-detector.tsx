@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 
-// ─── LeakageDetector (plan 012 stage 7) ────────────────────────────────
+// ─── LeakageDetector ────────────────────────────────
 //
 // Typed port of Ch03_Clean.js's `LeakageDetector`. Feature pool is
 // hardcoded (no RNG in source).

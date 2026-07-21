@@ -2,7 +2,7 @@ import { Hero, SectionLabel, CodeBlock, AntiPatterns, BestPractices, Takeaway } 
 import { WatermarkSim } from "../simulators/watermark-sim";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 
-// ─── Ch1_Ingest (plan 011 stage 9) ───────────────────────────────────
+// ─── Ch1_Ingest ───────────────────────────────────
 // Ported from `src/chapters/Ch1_Ingest.js`.
 
 function IngestStreams() {

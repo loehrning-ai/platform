@@ -27,7 +27,7 @@ export interface Flashcard {
 }
 
 /**
- * Chrome-copy override (plan 009 stage 3): kindLabel and every button/hint
+ * Chrome-copy override: kindLabel and every button/hint
  * string below were hardcoded German literals with no override mechanism —
  * `title` was already a plain per-instance prop, but the rest was not.
  * Additive and default-preserving: every field defaults to the original

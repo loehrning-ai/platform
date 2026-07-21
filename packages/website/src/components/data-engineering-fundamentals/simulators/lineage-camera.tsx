@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Panel } from "../primitives";
 
-// ─── LineageCamera (plan 011 stage 7) ────────────────────────────────
+// ─── LineageCamera ────────────────────────────────
 // Ported from `src/chapters/Ch6_Discover.js`: click a node in the lineage
 // graph to re-focus the camera; unrelated edges fade.
 

@@ -1,4 +1,4 @@
-// ─── Codex Course config (plan 009 stage 1) ─────────────────────────
+// ─── Codex Course config ─────────────────────────
 //
 // Own module (not inlined into `lib/course/config.ts`, unlike claude's
 // CLAUDE_CONFIG) so the course-config object lives beside its own content
@@ -17,7 +17,7 @@ export const CODEX_CONFIG: CourseConfig = {
   blockIds: [],
   // Codex has no separate gating exam: lesson 12 IS the capstone content,
   // but there is no aggregate end-of-course quiz. Certificate eligibility
-  // resolves via plan 007 stage 4's generic all-lessons-completed
+  // resolves via 's generic all-lessons-completed
   // "completion" path (src/lib/progress/store.ts's isCertificateEligible),
   // same as data-infrastructure/data-engineering-fundamentals/data-science.
   // No `/kurs/quiz` route is built for this course; these three fields are

@@ -149,20 +149,20 @@ export const KI_UND_GESELLSCHAFT_CONFIG: CourseConfig = {
   },
 };
 
-// ─── Claude Course (plan 008 stage 1) ───────────────────────────
+// ─── Claude Course ───────────────────────────
 //
-// First imported course folded into the shared engine (plan 007 widened
+// First imported course folded into the shared engine ( widened
 // CourseSlug + added the "en" language + "certificate" RecordKind for this
 // purpose). Content lives in `lib/claude-course` keyed by its own flat
 // lesson-id scheme (NOT the shared BlockId JSON system), mirroring
 // AI_NATIVE_CONFIG's `blockIds: []` precedent above. Registering the config
 // here does not itself expose any UI: the catalog entry stays
 // `nativeStatus: "pending"` and `COURSE_FACTS.claude` stays
-// `{record: "none", external: true}` until plan 008 stage 10 ships the real
-// routes and flips both in the same commit (mirroring plan 007's own
+// `{record: "none", external: true}` until ships the real
+// routes and flips both in the same commit (mirroring own
 // "machinery now, flip later" sequencing so no misleading badge ships early).
 //
-// Progress-budget audit (plan 008 stage 12, see src/lib/claude-course/
+// Progress-budget audit (, see src/lib/claude-course/
 // progress-budget.test.ts for the computation): the course's 46 checkpoints
 // (its lesson widgets that award one, more than the plan's original "~34-40"
 // estimate) do NOT count against this course's own per-course progress row.

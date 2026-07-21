@@ -8,7 +8,7 @@ vi.mock("next/navigation", () => ({
 
 import { DsReaderShell } from "./reader-shell";
 
-describe("DsReaderShell (plan 012 stage 5)", () => {
+describe("DsReaderShell ", () => {
   beforeEach(() => {
     push.mockClear();
   });

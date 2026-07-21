@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Panel } from "../primitives";
 
-// ─── Scanner (plan 011 stage 4) ──────────────────────────────────────
+// ─── Scanner ──────────────────────────────────────
 // Ported from `src/chapters/Ch0_Fundamentals.js`: row-oriented vs columnar
 // disk-scan visualizer, 100 cols × 40 rows, real cells animate as "read".
 

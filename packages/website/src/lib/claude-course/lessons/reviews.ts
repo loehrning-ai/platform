@@ -1,6 +1,6 @@
 // Ported from claude/lessons/08-reviews.html.
 // Widget manifest: PromptSandbox x1 (sb), Quiz x1 (q1), RewriteArena x1
-// (arena). Wired incrementally (plan 008 stages 4, 5).
+// (arena). Wired incrementally.
 import type { ClaudeLesson } from "../types";
 import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 

@@ -119,7 +119,7 @@ describe("VerificationPage", () => {
     expect(screen.queryByText(/Ergebnis: 0%/)).toBeNull();
   });
 
-  it("renders all-lessons-done completion without a fake quiz score (plan 007 stage 4)", async () => {
+  it("renders all-lessons-done completion without a fake quiz score ", async () => {
     const payload = {
       n: "Tim Löhr",
       s: null,
@@ -140,7 +140,7 @@ describe("VerificationPage", () => {
     expect(screen.queryByText(/Ergebnis: 0%/)).toBeNull();
   });
 
-  // plan 007 stage 8: isCourseSlug() used to hardcode the original 4 slugs,
+  //: isCourseSlug() used to hardcode the original 4 slugs,
   // so a well-formed QR payload for any other course decoded as "malformed"
   // rather than the more specific "course-mismatch". "codex" isn't
   // registered in the shared engine yet (that's each course plan's own
@@ -169,7 +169,7 @@ describe("VerificationPage", () => {
     expect(screen.queryByText("Zertifikatcode nicht lesbar")).toBeNull();
   });
 
-  // plan 008 stage 11: claude is now a fully registered course (unlike
+  //: claude is now a fully registered course (unlike
   // "codex" above, which is still unregistered), so this exercises the real
   // happy path end to end for the course this plan ported. claude is an
   // English-language course (CourseConfig.language: "en"), so this page

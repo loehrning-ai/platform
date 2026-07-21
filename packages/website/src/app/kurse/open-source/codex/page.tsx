@@ -7,7 +7,7 @@ import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 import type { JsonLdGraph } from "@/lib/seo/json-ld";
 
 /**
- * Codex Course native landing page (plan 009 stage 6). Once `catalog.ts`'s
+ * Codex Course native landing page. Once `catalog.ts`'s
  * codex entry flips to `nativeStatus: "live"` (stage 7), this static route
  * replaces the generic external-course template for
  * `/kurse/open-source/codex` (Next.js resolves the static segment ahead of

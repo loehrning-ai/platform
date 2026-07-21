@@ -107,7 +107,7 @@ beforeEach(() => {
 
 afterEach(() => cleanup());
 
-describe("AiNativeOperatorLessonReader (plan 013 stage 8)", () => {
+describe("AiNativeOperatorLessonReader ", () => {
   it("renders the header, objective, sections, and callout for a reading lesson", () => {
     render(<AiNativeOperatorLessonReader lesson={READING_LESSON} prevHref={null} prevTitle={null} next={NEXT_LESSON} />);
     expect(screen.getByText("Test reading lesson")).toBeInTheDocument();
@@ -157,7 +157,7 @@ describe("AiNativeOperatorLessonReader (plan 013 stage 8)", () => {
     expect(screen.getByText("Course complete — return to overview")).toBeInTheDocument();
   });
 
-  it("marks the lesson completed on mount, matching the source's own visit-based scheme (plan 013 stage 9)", () => {
+  it("marks the lesson completed on mount, matching the source's own visit-based scheme ", () => {
     expect(isLessonCompleted("ai-native-operator", "mindset/1")).toBe(false);
     render(<AiNativeOperatorLessonReader lesson={READING_LESSON} prevHref={null} prevTitle={null} next={NEXT_LESSON} />);
     expect(isLessonCompleted("ai-native-operator", "mindset/1")).toBe(true);

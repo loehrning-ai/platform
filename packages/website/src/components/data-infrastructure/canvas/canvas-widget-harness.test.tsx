@@ -6,7 +6,7 @@ import { useCanvasAutoSize } from "./use-canvas-size";
 import { CanvasFallbackNotice } from "./canvas-fallback";
 
 /**
- * Throwaway integration harness (plan 010 stage 2's own "done when" bar): a
+ * Throwaway integration harness ('s own "done when" bar): a
  * minimal canvas widget composing all three Stage 2 utilities exactly the
  * way every real widget in stages 4-9 will, proving the null-context
  * fallback, the RAF/settled loop, and the DPR-aware resize hook all compose
@@ -44,7 +44,7 @@ function TestCanvasWidget(): JSX.Element {
   );
 }
 
-describe("canvas widget harness (plan 010 stage 2)", () => {
+describe("canvas widget harness ", () => {
   it("renders a real canvas element when getContext succeeds", () => {
     render(<TestCanvasWidget />);
     expect(screen.getByRole("img", { name: "Test canvas widget" })).toBeInTheDocument();

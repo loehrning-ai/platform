@@ -16,7 +16,7 @@ type PageProps = {
 
 export const dynamicParams = false;
 
-// The single owner of this exclusion mechanism (plan 007 stage 6): derives
+// The single owner of this exclusion mechanism: derives
 // purely from nativeStatus === "pending" so a course plan's own single-field
 // flip on its CatalogCourse/ImportedCourse entry is enough to drop it from
 // this generic external-course template — no course plan should add its own

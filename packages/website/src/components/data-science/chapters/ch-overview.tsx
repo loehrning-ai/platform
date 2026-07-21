@@ -6,7 +6,7 @@ import { FlowingPipeline } from "@/components/data-science/simulators/flowing-pi
 import { dsChapterHref } from "@/lib/data-science/routes";
 import type { DsChapterId } from "@/lib/data-science/types";
 
-// ─── Ch_Overview (plan 012 stage 7) ────────────────────────────────────
+// ─── Ch_Overview ────────────────────────────────────
 //
 // Typed port of Ch_Overview.js. Source's `goTo(id)` callback (passed down
 // from App.js's own state) is replaced with real navigation via

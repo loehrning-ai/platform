@@ -167,7 +167,7 @@ export function migrateLegacyToUnified(): UnifiedProgress {
   return { ...unified, courses };
 }
 
-// ─── v2->v3 migration step (plan 007 stage 5) ────────────────────
+// ─── v2->v3 migration step ────────────────────
 
 function truncateExerciseResult(result: UnifiedExerciseResult): UnifiedExerciseResult {
   if (result.summary === undefined) return result;

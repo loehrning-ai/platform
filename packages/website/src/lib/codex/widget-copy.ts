@@ -1,4 +1,4 @@
-// ─── Codex Course chrome-copy overrides (plan 009 stage 3) ──────────
+// ─── Codex Course chrome-copy overrides ──────────
 //
 // English chrome copy for the reused Tier-A widgets whose defaults were
 // German with no (quiz) or no-until-now (compare/task-spec/flashcards)
@@ -9,10 +9,10 @@
 // translation.
 //
 // Found and fixed during this stage's live-browser-QA-mirroring source
-// check (the same class of bug plan 008 caught only via a live QA pass):
+// check (the same class of bug caught only via a live QA pass):
 // `compare.tsx`'s and `flashcards.tsx`'s `kindLabel` were hardcoded German
 // with NO override prop at all (unlike claude's four reused widgets, which
-// already had a `copy`-style mechanism from plan 008 stage 3); `task-spec.tsx`'s
+// already had a `copy`-style mechanism from ); `task-spec.tsx`'s
 // internal "schwach/mittel/stark" tier band was hardcoded German with no
 // prop whatsoever. All three were extended with additive,
 // default-preserving overrides in this same stage.
