@@ -29,6 +29,8 @@ const CHAPTER_LOADERS: Partial<Record<DsChapterId, DsChapterLoader>> = {
   fund: () => import("@/components/data-science/chapters/ch01-fundamentals"),
   explore: () => import("@/components/data-science/chapters/ch02-explore"),
   clean: () => import("@/components/data-science/chapters/ch03-clean"),
+  feature: () => import("@/components/data-science/chapters/ch04-feature"),
+  model: () => import("@/components/data-science/chapters/ch05-model"),
   eval: () => import("@/components/data-science/chapters/ch06-evaluate"),
 };
 

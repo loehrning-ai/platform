@@ -11,6 +11,8 @@ import Ch06Evaluate from "./ch06-evaluate";
 import ChOverview from "./ch-overview";
 import Ch02Explore from "./ch02-explore";
 import Ch03Clean from "./ch03-clean";
+import Ch04Feature from "./ch04-feature";
+import Ch05Model from "./ch05-model";
 
 afterEach(() => {
   cleanup();
@@ -61,6 +63,25 @@ describe("data-science chapter components render with real ported content, not p
     expect(screen.getByText("Imputation Race")).toBeInTheDocument();
     expect(screen.getAllByText("Feature Scaling").length).toBeGreaterThan(0);
     expect(screen.getByText("Leakage Detector")).toBeInTheDocument();
+    expect(screen.getByText("Key takeaways")).toBeInTheDocument();
+  });
+});
+
+describe("data-science chapter components render with real ported content, not placeholders (plan 012 stage 8)", () => {
+  it("Ch04Feature renders the real hero and all 4 simulators", () => {
+    render(<Ch04Feature chapter={getDsChapterMeta("feature")} />);
+    expect(screen.getByText(/fancier models/)).toBeInTheDocument();
+    expect(screen.getAllByText("Categorical encoding methods").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Polynomial feature expansion").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Feature selection methods").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Interaction terms: A×B vs A+B").length).toBeGreaterThan(0);
+    expect(screen.getByText("Key takeaways")).toBeInTheDocument();
+  });
+
+  it("Ch05Model renders the real hero and BiasVarianceSim", () => {
+    render(<Ch05Model chapter={getDsChapterMeta("model")} />);
+    expect(screen.getAllByText(/dance/).length).toBeGreaterThan(0);
+    expect(screen.getByLabelText("Model complexity (polynomial degree)")).toBeInTheDocument();
     expect(screen.getByText("Key takeaways")).toBeInTheDocument();
   });
 });
