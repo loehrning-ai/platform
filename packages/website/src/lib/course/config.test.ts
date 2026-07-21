@@ -7,6 +7,7 @@ import {
   KI_UND_GESELLSCHAFT_CONFIG,
   CLAUDE_CONFIG,
   CODEX_CONFIG,
+  DATA_INFRASTRUCTURE_CONFIG,
   getRegisteredCourseSlugs,
   isCourseRegistered,
   getCourseConfig,
@@ -22,12 +23,13 @@ import {
 const UNREGISTERED = "does-not-exist" as unknown as CourseSlug;
 
 describe("getRegisteredCourseSlugs", () => {
-  it("returns exactly the six registered course slugs (plan 009 stage 1 adds codex)", () => {
+  it("returns exactly the seven registered course slugs (plan 010 stage 1 adds data-infrastructure)", () => {
     const slugs = [...getRegisteredCourseSlugs()].sort();
     expect(slugs).toEqual([
       "ai-native",
       "claude",
       "codex",
+      "data-infrastructure",
       "eu-ai-act-kurs",
       "ki-fuehrerschein",
       "ki-und-gesellschaft",
@@ -43,6 +45,7 @@ describe("isCourseRegistered", () => {
     expect(isCourseRegistered("ki-und-gesellschaft")).toBe(true);
     expect(isCourseRegistered("claude")).toBe(true);
     expect(isCourseRegistered("codex")).toBe(true);
+    expect(isCourseRegistered("data-infrastructure")).toBe(true);
   });
 
   it("is false for an unregistered slug", () => {
@@ -82,6 +85,19 @@ describe("CODEX_CONFIG (plan 009 stage 1)", () => {
     expect(CODEX_CONFIG.basePath).toBe("/kurse/open-source/codex");
     expect(CODEX_CONFIG.coursePath).toBe("/kurse/open-source/codex/kurs");
     expect(CODEX_CONFIG.blockIds).toEqual([]);
+  });
+});
+
+describe("DATA_INFRASTRUCTURE_CONFIG (plan 010 stage 1)", () => {
+  it("registers data-infrastructure with English-language content and the all-lessons-completion cert path", () => {
+    expect(getCourseConfig("data-infrastructure")).toBe(DATA_INFRASTRUCTURE_CONFIG);
+    expect(DATA_INFRASTRUCTURE_CONFIG.slug).toBe("data-infrastructure");
+    expect(DATA_INFRASTRUCTURE_CONFIG.language).toBe("en");
+    expect(DATA_INFRASTRUCTURE_CONFIG.basePath).toBe("/kurse/open-source/data-infrastructure");
+    expect(DATA_INFRASTRUCTURE_CONFIG.coursePath).toBe(
+      "/kurse/open-source/data-infrastructure/kurs",
+    );
+    expect(DATA_INFRASTRUCTURE_CONFIG.blockIds).toEqual([]);
   });
 });
 

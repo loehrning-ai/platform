@@ -63,8 +63,12 @@ describe("course catalog (shared course architecture)", () => {
       // courses stay unregistered in the shared progress engine, not that
       // their slug is absent from the wider CourseSlug union. "claude" left
       // this array entirely in plan 008 stage 10, "codex" in plan 009 stage
-      // 7 (both flipped to nativeStatus "live", moved into COURSE_CATALOG),
-      // so no per-slug exception is needed here any more.
+      // 7 (both flipped to nativeStatus "live", moved into COURSE_CATALOG).
+      // "data-infrastructure" is mid-flight for plan 010 (stage 1 already
+      // registered its CourseConfig ahead of the routes/catalog work, same
+      // sequencing claude/codex used) — exempted here until stage 13 flips
+      // its catalog entry and removes it from this array too.
+      if (c.slug === "data-infrastructure") continue;
       expect(getRegisteredCourseSlugs()).not.toContain(c.slug);
       expect(c.href).toBe(`/kurse/open-source/${c.slug}`);
       expect(c.launchHref).toMatch(/^https:\/\/www\.timloehr\.me\/interactive-courses\//);

@@ -8,8 +8,10 @@
 
 import type { BlockId, CourseConfig, CourseSlug } from "./types";
 import { CODEX_CONFIG } from "@/lib/codex/config";
+import { DATA_INFRASTRUCTURE_CONFIG } from "@/lib/data-infrastructure/config";
 
 export { CODEX_CONFIG };
+export { DATA_INFRASTRUCTURE_CONFIG };
 
 // ─── KI-Führerschein ───────────────────────────────────────────
 
@@ -216,6 +218,7 @@ const COURSE_CONFIGS: Partial<Record<CourseSlug, CourseConfig>> = {
   "ki-und-gesellschaft": KI_UND_GESELLSCHAFT_CONFIG,
   claude: CLAUDE_CONFIG,
   codex: CODEX_CONFIG,
+  "data-infrastructure": DATA_INFRASTRUCTURE_CONFIG,
 };
 
 function config(courseSlug: CourseSlug): CourseConfig {
