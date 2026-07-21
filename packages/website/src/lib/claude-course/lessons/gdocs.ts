@@ -58,6 +58,23 @@ const lesson: ClaudeLesson = {
       },
     },
     {
+      kind: "fill-blank",
+      placement: "before-quiz",
+      courseSlug: "claude",
+      props: {
+        lessonId: "gdocs",
+        cpId: "drill",
+        goal: "Turn a bullet dump into a crisp 3-bullet TL;DR.",
+        template:
+          "Turn these bullets into a TL;DR for a {{0}} audience.\n\nBULLETS\n{{1}}\n\nSTYLE\n- Exactly 3 bullets\n- {{2}}\n\nFORMAT\nMarkdown, no preamble.",
+        blanks: [
+          { label: "Audience", hint: "e.g. SRE, exec, design-review" },
+          { label: "Bullets", hint: "paste your raw notes" },
+          { label: "Style rules", hint: "e.g. <15 words each, numbers before adjectives" },
+        ],
+      },
+    },
+    {
       kind: "quiz",
       placement: "end",
       courseSlug: "claude",

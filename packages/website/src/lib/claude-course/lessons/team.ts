@@ -71,6 +71,17 @@ const lesson: ClaudeLesson = {
         copy: CLAUDE_QUIZ_COPY,
       },
     },
+    {
+      kind: "socratic-tutor",
+      placement: "end",
+      courseSlug: "claude",
+      props: {
+        lessonId: "team",
+        cpId: "tutor",
+        topic: "building a team-wide Claude practice",
+        persona: "Push on ownership, staleness, and how to avoid \"one person owns all the prompts.\"",
+      },
+    },
   ],
 };
 

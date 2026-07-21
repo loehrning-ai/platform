@@ -8,7 +8,7 @@ import { RunConsole } from "./_run-console";
 import { genericAnswer, simulatedDelayMs } from "@/lib/claude-course/simulated-claude";
 
 /**
- * PromptCompare — run a weak and a strong prompt side by side against the
+ * PromptCompare, run a weak and a strong prompt side by side against the
  * simulated Claude. Ported from `claude/js/widgets.js:77` (PromptCompare).
  */
 export interface PromptCompareWidgetProps {

@@ -71,6 +71,19 @@ const lesson: ClaudeLesson = {
         copy: CLAUDE_QUIZ_COPY,
       },
     },
+    {
+      kind: "rewrite-arena",
+      placement: "end",
+      courseSlug: "claude",
+      props: {
+        lessonId: "reviews",
+        cpId: "arena",
+        task: "Write a review prompt for a PR that claims to be a refactor.",
+        original: "review this PR and tell me if its good",
+        criteria:
+          "names reviewer role, sets focus, excludes style, asks for severity tagging, prevents praise padding",
+      },
+    },
   ],
 };
 

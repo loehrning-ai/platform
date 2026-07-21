@@ -11,6 +11,10 @@ import { isCheckpointDone, __resetCacheForTests } from "@/lib/progress";
 import { PromptSandboxWidget } from "./prompt-sandbox";
 import { PromptCompareWidget } from "./prompt-compare";
 import { PromptGraderWidget } from "./prompt-grader";
+import { RewriteArenaWidget } from "./rewrite-arena";
+import { FillBlankWidget } from "./fill-blank";
+import { PromptDiffWidget } from "./prompt-diff";
+import { SocraticTutorWidget } from "./socratic-tutor";
 
 function installLocalStoragePolyfill(): void {
   const store = new Map<string, string>();
@@ -194,5 +198,149 @@ describe("PromptGraderWidget", () => {
       />,
     );
     expect(screen.getByRole("textbox", { name: /your prompt/i })).toBeInTheDocument();
+  });
+});
+
+// ─── RewriteArena ────────────────────────────────────────────────
+
+describe("RewriteArenaWidget", () => {
+  it("keeps the enter-arena button disabled below 20 characters", () => {
+    render(
+      <RewriteArenaWidget
+        lessonId="l1"
+        cpId="arena1"
+        original="make it sound better and shorter"
+        task="Correct a first draft."
+        criteria="specificity"
+      />,
+    );
+    expect(screen.getByRole("button", { name: /Enter the arena/i })).toBeDisabled();
+  });
+
+  it("judges a strong rewrite as the winner and awards the checkpoint", async () => {
+    render(
+      <RewriteArenaWidget
+        lessonId="l1"
+        cpId="arena1"
+        original="make it sound better and shorter"
+        task="Correct a first draft."
+        criteria="specificity, testability"
+      />,
+    );
+    fireEvent.change(screen.getByRole("textbox", { name: /your rewrite/i }), {
+      target: {
+        value:
+          "You are a senior editor. Context: internal status update. Format as three bullets. For example: shipped X.",
+      },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Enter the arena/i }));
+    await waitFor(() => expect(isCheckpointDone("l1", "arena1")).toBe(true));
+    expect(screen.getAllByText("Your rewrite wins").length).toBeGreaterThan(0);
+  });
+
+  it("renders with reduced motion enabled", () => {
+    setReducedMotion(true);
+    render(
+      <RewriteArenaWidget
+        lessonId="l1"
+        cpId="arena1"
+        original="original"
+        task="task"
+        criteria="criteria"
+      />,
+    );
+    expect(screen.getByRole("textbox", { name: /your rewrite/i })).toBeInTheDocument();
+  });
+});
+
+// ─── FillBlank ───────────────────────────────────────────────────
+
+describe("FillBlankWidget", () => {
+  const template = "You are {{0}}.\n\nTASK\n{{1}}";
+  const blanks = [{ label: "Role", hint: "e.g. a PM" }, { label: "Task", hint: "one verb" }];
+
+  it("renders the goal, template preview, and one input per blank", () => {
+    render(
+      <FillBlankWidget lessonId="l1" cpId="fb1" goal="Summarize a PRD." template={template} blanks={blanks} />,
+    );
+    expect(screen.getByText(/Summarize a PRD\./)).toBeInTheDocument();
+    expect(screen.getAllByRole("textbox")).toHaveLength(2);
+  });
+
+  it("keeps the check button disabled until every blank is filled, then awards the checkpoint", async () => {
+    render(
+      <FillBlankWidget lessonId="l1" cpId="fb1" goal="Summarize a PRD." template={template} blanks={blanks} />,
+    );
+    const check = screen.getByRole("button", { name: /Have Claude check it/i });
+    expect(check).toBeDisabled();
+    const inputs = screen.getAllByRole("textbox");
+    fireEvent.change(inputs[0], { target: { value: "a senior PM" } });
+    expect(check).toBeDisabled();
+    fireEvent.change(inputs[1], { target: { value: "summarize the PRD" } });
+    expect(check).not.toBeDisabled();
+    fireEvent.click(check);
+    await waitFor(() => expect(isCheckpointDone("l1", "fb1")).toBe(true));
+  });
+
+  it("renders with reduced motion enabled", () => {
+    setReducedMotion(true);
+    render(
+      <FillBlankWidget lessonId="l1" cpId="fb1" goal="Goal" template={template} blanks={blanks} />,
+    );
+    expect(screen.getAllByRole("textbox")).toHaveLength(2);
+  });
+});
+
+// ─── PromptDiff ──────────────────────────────────────────────────
+
+describe("PromptDiffWidget", () => {
+  it("renders both prompts and a takeaway with no checkpoint chrome", () => {
+    render(
+      <PromptDiffWidget
+        weak="make it better and shorter please"
+        strong="Cut the opening paragraph. Start with the status in one sentence."
+        takeaway="The strong correction is actionable."
+      />,
+    );
+    expect(screen.getByText("What changed, word by word")).toBeInTheDocument();
+    expect(screen.getByText(/The strong correction is actionable\./)).toBeInTheDocument();
+    expect(screen.queryByText(/XP/)).not.toBeInTheDocument();
+  });
+
+  it("marks a word only present in the strong prompt as changed", () => {
+    const { container } = render(
+      <PromptDiffWidget weak="hello world" strong="hello there world" />,
+    );
+    const added = container.querySelector(".bg-\\[\\#22c55e\\]\\/20");
+    expect(added?.textContent).toBe("there");
+  });
+});
+
+// ─── SocraticTutor ───────────────────────────────────────────────
+
+describe("SocraticTutorWidget", () => {
+  it("shows the topic-scoped empty state before any message", () => {
+    render(<SocraticTutorWidget lessonId="l1" cpId="tutor1" topic="prompt anatomy" />);
+    expect(screen.getByText(/prompt anatomy/)).toBeInTheDocument();
+  });
+
+  it("replies with a probing question and awards the checkpoint after 3 user turns", async () => {
+    render(<SocraticTutorWidget lessonId="l1" cpId="tutor1" topic="grounding" />);
+    const input = screen.getByRole("textbox", { name: /your question/i });
+    const ask = screen.getByRole("button", { name: /Ask/i });
+
+    for (let turn = 1; turn <= 3; turn += 1) {
+      fireEvent.change(input, { target: { value: `question ${turn}` } });
+      fireEvent.click(ask);
+      // eslint-disable-next-line no-await-in-loop
+      await waitFor(() => expect(screen.getAllByText("tutor").length).toBe(turn));
+    }
+    expect(isCheckpointDone("l1", "tutor1")).toBe(true);
+  });
+
+  it("renders with reduced motion enabled", () => {
+    setReducedMotion(true);
+    render(<SocraticTutorWidget lessonId="l1" cpId="tutor1" topic="topic" />);
+    expect(screen.getByRole("textbox", { name: /your question/i })).toBeInTheDocument();
   });
 });

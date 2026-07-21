@@ -13,7 +13,7 @@ import {
 } from "@/lib/claude-course/simulated-claude";
 
 /**
- * PromptGrader — write a prompt for a task, get a rubric-graded breakdown
+ * PromptGrader, write a prompt for a task, get a rubric-graded breakdown
  * from the simulated Claude. Ported from `claude/js/widgets.js:115`
  * (PromptGrader).
  */

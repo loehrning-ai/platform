@@ -4,7 +4,7 @@ import { type JSX, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Dots + RunConsole — shared chrome for the claude-course "simulated Claude"
+ * Dots + RunConsole, shared chrome for the claude-course "simulated Claude"
  * widgets (plan 008 stage 4). Ported from `claude/js/widgets.js`'s `Dots`
  * and `RunConsole`, simplified to a loading -> output swap (no word-by-word
  * streaming reveal) to match this platform's existing Practice Room widgets

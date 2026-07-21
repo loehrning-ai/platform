@@ -8,7 +8,7 @@ import { RunConsole } from "./_run-console";
 import { genericAnswer, simulatedDelayMs } from "@/lib/claude-course/simulated-claude";
 
 /**
- * PromptSandbox — free-form prompt box run against the simulated Claude.
+ * PromptSandbox, free-form prompt box run against the simulated Claude.
  * Ported from `claude/js/widgets.js:54` (PromptSandbox). No network call
  * (see `lib/claude-course/simulated-claude.ts`); the checkpoint awards once
  * the learner runs a prompt of at least `minChars` characters.

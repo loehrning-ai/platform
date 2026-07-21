@@ -98,6 +98,17 @@ const lesson: ClaudeLesson = {
         copy: CLAUDE_QUIZ_COPY,
       },
     },
+    {
+      kind: "socratic-tutor",
+      placement: "end",
+      courseSlug: "claude",
+      props: {
+        lessonId: "claude-md",
+        cpId: "tutor",
+        topic: "using CLAUDE.md effectively in a team",
+        persona: "Push the learner to think about staleness, review cadence, what belongs at root vs. sub-folder, and where CLAUDE.md ends and docs/ begins.",
+      },
+    },
   ],
 };
 

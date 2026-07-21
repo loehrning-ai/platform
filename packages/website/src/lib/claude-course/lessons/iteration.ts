@@ -52,6 +52,18 @@ const lesson: ClaudeLesson = {
   ],
   widgets: [
     {
+      kind: "prompt-diff",
+      placement: "after-intro",
+      courseSlug: "claude",
+      props: {
+        weak: "make it better and shorter please",
+        strong:
+          "Cut the opening paragraph. Start with the status in one sentence, then three bullets in the voice of the attached example. No closing pleasantries.",
+        takeaway:
+          "The strong correction is actionable, testable, and uses concrete reference (the attached example). Claude can do something with it.",
+      },
+    },
+    {
       kind: "prompt-sandbox",
       placement: "after-intro",
       courseSlug: "claude",
@@ -82,6 +94,18 @@ const lesson: ClaudeLesson = {
         explanation:
           "Specific, actionable, testable. The others are vibes, Claude can't act on them.",
         copy: CLAUDE_QUIZ_COPY,
+      },
+    },
+    {
+      kind: "rewrite-arena",
+      placement: "end",
+      courseSlug: "claude",
+      props: {
+        lessonId: "iteration",
+        cpId: "arena",
+        task: "Correct a first-draft status update that opened with too much throat-clearing.",
+        original: "make it sound better and shorter",
+        criteria: "specificity, testability, actionable instruction, avoids vibes",
       },
     },
   ],

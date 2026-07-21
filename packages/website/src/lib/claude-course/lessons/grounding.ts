@@ -72,6 +72,19 @@ const lesson: ClaudeLesson = {
         copy: CLAUDE_QUIZ_COPY,
       },
     },
+    {
+      kind: "rewrite-arena",
+      placement: "end",
+      courseSlug: "claude",
+      props: {
+        lessonId: "grounding",
+        cpId: "arena",
+        task: "Write a prompt for answering questions about an attached policy doc with zero hallucination tolerance.",
+        original: "answer questions about this doc and dont make stuff up",
+        criteria:
+          "requires citations, provides an explicit out-of-context signal, restricts answers to attached context",
+      },
+    },
   ],
 };
 

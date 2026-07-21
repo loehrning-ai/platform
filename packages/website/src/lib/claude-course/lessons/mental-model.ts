@@ -137,6 +137,17 @@ const lesson: ClaudeLesson = {
         copy: CLAUDE_QUIZ_COPY,
       },
     },
+    {
+      kind: "socratic-tutor",
+      placement: "end",
+      courseSlug: "claude",
+      props: {
+        lessonId: "mental-model",
+        cpId: "tutor",
+        topic: "the mental model for what Claude is",
+        persona: "Keep the learner honest. If they gesture vaguely, press them. Use concrete, real-world examples.",
+      },
+    },
   ],
 };
 

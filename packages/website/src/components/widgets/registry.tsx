@@ -157,6 +157,22 @@ const REGISTRY: Record<WidgetKind, () => Promise<{ default: WidgetComponent }>> 
     import("@/components/widgets/claude/prompt-grader").then((m) => ({
       default: m.PromptGraderWidget as unknown as WidgetComponent,
     })),
+  "rewrite-arena": () =>
+    import("@/components/widgets/claude/rewrite-arena").then((m) => ({
+      default: m.RewriteArenaWidget as unknown as WidgetComponent,
+    })),
+  "fill-blank": () =>
+    import("@/components/widgets/claude/fill-blank").then((m) => ({
+      default: m.FillBlankWidget as unknown as WidgetComponent,
+    })),
+  "prompt-diff": () =>
+    import("@/components/widgets/claude/prompt-diff").then((m) => ({
+      default: m.PromptDiffWidget as unknown as WidgetComponent,
+    })),
+  "socratic-tutor": () =>
+    import("@/components/widgets/claude/socratic-tutor").then((m) => ({
+      default: m.SocraticTutorWidget as unknown as WidgetComponent,
+    })),
 } as const satisfies Record<WidgetKind, () => Promise<{ default: WidgetComponent }>>;
 
 const lazyCache = new Map<WidgetKind, ComponentType<Record<string, unknown>>>();

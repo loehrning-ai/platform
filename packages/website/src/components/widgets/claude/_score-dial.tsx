@@ -3,7 +3,7 @@
 import { type JSX } from "react";
 
 /**
- * ScoreDial — circular 0-100 gauge, ported from `claude/js/widgets.js`'s
+ * ScoreDial, circular 0-100 gauge, ported from `claude/js/widgets.js`'s
  * `ScoreDial`. Pure SVG, no motion to gate (a static arc, no animation).
  */
 export function ScoreDial({ score }: { readonly score: number }): JSX.Element {

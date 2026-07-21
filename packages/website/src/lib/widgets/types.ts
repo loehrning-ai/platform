@@ -109,6 +109,10 @@ export const CLAUDE_KINDS = [
   "prompt-sandbox",
   "prompt-compare",
   "prompt-grader",
+  "rewrite-arena",
+  "fill-blank",
+  "prompt-diff",
+  "socratic-tutor",
 ] as const;
 
 export type DemoKind = (typeof DEMO_KINDS)[number];

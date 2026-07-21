@@ -89,6 +89,17 @@ const lesson: ClaudeLesson = {
         copy: CLAUDE_QUIZ_COPY,
       },
     },
+    {
+      kind: "socratic-tutor",
+      placement: "end",
+      courseSlug: "claude",
+      props: {
+        lessonId: "agents",
+        cpId: "tutor",
+        topic: "designing agentic workflows safely",
+        persona: "Push on guardrails, budgets, and what \"done\" looks like.",
+      },
+    },
   ],
 };
 

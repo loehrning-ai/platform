@@ -110,6 +110,41 @@ const lesson: ClaudeLesson = {
       },
     },
     {
+      kind: "fill-blank",
+      placement: "before-quiz",
+      courseSlug: "claude",
+      props: {
+        lessonId: "anatomy",
+        cpId: "drill",
+        goal: "Summarize a 30-page PRD into an executive brief.",
+        template:
+          "You are {{0}}.\n\n<context>\n{{1}}\n</context>\n\n<task>\n{{2}}\n</task>\n\n<constraints>\n{{3}}\n</constraints>\n\n<format>\n{{4}}\n</format>",
+        blanks: [
+          { label: "Role", hint: "e.g. a senior PM who writes exec summaries" },
+          {
+            label: "Context",
+            hint: "what's the PRD about? who reads this brief? what decisions hang on it?",
+          },
+          { label: "Task", hint: 'one verb, "summarize", "extract", "draft"' },
+          { label: "Constraints", hint: "length, tone, must-includes, must-avoids" },
+          { label: "Format", hint: "bullets? sections? markdown? specific structure?" },
+        ],
+      },
+    },
+    {
+      kind: "rewrite-arena",
+      placement: "before-quiz",
+      courseSlug: "claude",
+      props: {
+        lessonId: "anatomy",
+        cpId: "arena",
+        task: "Produce release notes for an internal tooling update.",
+        original: "write release notes for our new changes this week plz, make it good",
+        criteria:
+          "presence of role, context, task, constraints, and format; specificity; use of XML tags; few-shot example; absence of filler",
+      },
+    },
+    {
       kind: "prompt-grader",
       placement: "end",
       courseSlug: "claude",
