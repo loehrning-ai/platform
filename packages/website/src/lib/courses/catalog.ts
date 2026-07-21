@@ -250,6 +250,55 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     integrationNote:
       "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
   },
+  // Codex Course (plan 009 stage 7): second imported course flipped from
+  // "pending" to "live" now that it has real native routes, per-lesson
+  // content, and certificate/verification wiring. Its URL structure stays
+  // under /kurse/open-source/codex (not top-level like the 4 German
+  // courses) to keep the public URL stable across the imported-to-native
+  // flip; startHref/continueHref both still start with `href` per the
+  // catalog's own invariant. Provenance fields are retained (not deleted)
+  // so open-source attribution survives the flip, per catalog.ts's own
+  // documented convention for ImportedCourse-only fields on CatalogCourse.
+  {
+    slug: "codex",
+    step: 6,
+    title: "Codex Course",
+    eyebrow: "Schritt 06 · Coding Agents",
+    tagline: "Terminal-first Playbook für Codex, Tasks, Tools und Parallelisierung.",
+    description:
+      "Zwölf Lektionen mit Capstone zu Mental Model, Sandbox, AGENTS.md, Task Specs, Scoping, Acceptance Criteria, Code Review, Iteration, Tool Use, Parallelisierung und Patterns. Auf Englisch, jetzt nativ auf loehrning.ai mit Fortschritt und Zertifikat.",
+    href: "/kurse/open-source/codex",
+    startHref: "/kurse/open-source/codex/kurs/L01",
+    continueHref: "/kurse/open-source/codex/kurs",
+    duration: "ca. 2 Std.",
+    totalLessons: 12,
+    unitLabel: "Lektionen",
+    unitCount: 12,
+    audience: "Entwickler, die mit AI-Coding-Tools arbeiten",
+    coverImage: "/imported-courses/screenshots/codex.jpg",
+    coverImageAlt: "Startseite des Codex Course",
+    nativeStatus: "live",
+    imageSrc: "/imported-courses/screenshots/codex.jpg",
+    imageAlt: "Screenshot des Codex Course",
+    launchHref: "https://www.timloehr.me/interactive-courses/codex/",
+    sourceHref:
+      "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101/codex",
+    sourceCommitHref:
+      "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101/codex",
+    licenseHref: "/imported-courses/licenses/codex-MIT-LICENSE.txt",
+    sourceImagePath: "docs/screenshots/codex.jpg",
+    sourceLicensePath: "codex/LICENSE.txt",
+    imageSha256: "6e67076e584ca88b8b497bacebc1f2b5373fe8c6a1547108f65f66b856ee5c46",
+    licenseSha256: "7b42b5981763ae5341a686ac738900f07ca2b837ff0ffe3efaafef45ade801f6",
+    licenseSizeBytes: 1068,
+    sourceCommit: "0e5dfd327ce44663696b52eb6643bab147947101",
+    lessonCountLabel: "12 Lektionen + Capstone",
+    language: "Englisch",
+    topics: ["Codex", "OpenAI", "AGENTS.md", "Sandboxing", "Pull Requests"],
+    sourceFacts: ["12 Lektionen", "Capstone", "Parallel Workflows", "Jetzt nativ"],
+    integrationNote:
+      "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
+  },
 ] as const;
 
 export const IMPORTED_COURSE_SOURCE_COMMIT =
@@ -360,45 +409,12 @@ export const IMPORTED_COURSE_CATALOG: readonly ImportedCourse[] = [
       "Als Open-Source-Browserkurs verlinkt; Fortschritt bleibt extern, damit die interaktiven Simulatoren und das Interview-Replay ohne globale Sicherheitslockerung lauffähig bleiben.",
     nativeStatus: "pending",
   },
-  {
-    slug: "codex",
-    step: 4,
-    title: "Codex Course",
-    eyebrow: "Technisches Lab · Coding Agents",
-    tagline: "Terminal-first Playbook für Codex, Tasks, Tools und Parallelisierung.",
-    description:
-      "Zwölf Lektionen mit Capstone zu Mental Model, Sandbox, AGENTS.md, Task Specs, Scoping, Acceptance Criteria, Code Review, Iteration, Tool Use, Parallelisierung und Patterns. Der End-to-End-Workflow führt vom Task zur ausgelieferten PR.",
-    href: "/kurse/open-source/codex",
-    imageSrc: "/imported-courses/screenshots/codex.jpg",
-    imageAlt: "Screenshot des Codex Course",
-    launchHref: "https://www.timloehr.me/interactive-courses/codex/",
-    sourceHref: `${IMPORTED_COURSE_SOURCE_BASE}/codex`,
-    sourceCommitHref: `${IMPORTED_COURSE_SOURCE_BASE}/codex`,
-    licenseHref: "/imported-courses/licenses/codex-MIT-LICENSE.txt",
-    sourceImagePath: "docs/screenshots/codex.jpg",
-    sourceLicensePath: "codex/LICENSE.txt",
-    imageSha256: "6e67076e584ca88b8b497bacebc1f2b5373fe8c6a1547108f65f66b856ee5c46",
-    licenseSha256: "7b42b5981763ae5341a686ac738900f07ca2b837ff0ffe3efaafef45ade801f6",
-    licenseSizeBytes: 1068,
-    sourceCommit: IMPORTED_COURSE_SOURCE_COMMIT,
-    duration: "ca. 2 Std.",
-    totalLessons: 12,
-    unitLabel: "Lektionen",
-    unitCount: 12,
-    lessonCountLabel: "12 Lektionen + Capstone",
-    audience: "Entwickler, die mit AI-Coding-Tools arbeiten",
-    language: "Englisch",
-    topics: ["Codex", "OpenAI", "AGENTS.md", "Sandboxing", "Pull Requests"],
-    sourceFacts: ["12 Lektionen", "Capstone", "Parallel Workflows", "PR Review"],
-    integrationNote:
-      "Der Kurs wird als Open-Source-Modul geführt; eine native Version müsste die Codex-spezifischen Widgets in das bestehende Widget-System portieren.",
-    nativeStatus: "pending",
-  },
-  // "claude" moved to COURSE_CATALOG above (plan 008 stage 10: flipped to
-  // nativeStatus "live" now that it has real native routes).
+  // "claude"/"codex" moved to COURSE_CATALOG above (plan 008 stage 10 /
+  // plan 009 stage 7: flipped to nativeStatus "live" now that they have
+  // real native routes).
   {
     slug: "ai-native-operator",
-    step: 5,
+    step: 4,
     title: "The AI-Native Operator",
     eyebrow: "Technisches Lab · AI Operating Model",
     tagline: "Arbeitsweise, Engineering-Praxis und Organisationsdesign für AI-natives Arbeiten.",

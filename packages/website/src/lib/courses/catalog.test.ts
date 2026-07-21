@@ -20,6 +20,7 @@ import {
   getModules as getAiNativeModules,
 } from "@/lib/ai-native/data";
 import { getClaudeTotalLessons, getClaudeTracks } from "@/lib/claude-course/data";
+import { getCodexTotalLessons, getCodexTracks } from "@/lib/codex/data";
 import { COURSE_SLUGS } from "@/lib/course/types";
 import { getRegisteredCourseSlugs } from "@/lib/course/config";
 
@@ -28,18 +29,19 @@ function sha256(path: string): string {
 }
 
 describe("course catalog (shared course architecture)", () => {
-  it("lists all five native courses in the recommended learning order (plan 008 stage 10 adds claude)", () => {
+  it("lists all six native courses in the recommended learning order (plan 009 stage 7 adds codex)", () => {
     expect(COURSE_CATALOG.map((c) => c.slug)).toEqual([
       "ki-fuehrerschein",
       "ki-und-gesellschaft",
       "eu-ai-act-kurs",
       "ai-native",
       "claude",
+      "codex",
     ]);
   });
 
-  it("numbers the learning-path steps 1 through 5", () => {
-    expect(COURSE_CATALOG.map((c) => c.step)).toEqual([1, 2, 3, 4, 5]);
+  it("numbers the learning-path steps 1 through 6", () => {
+    expect(COURSE_CATALOG.map((c) => c.step)).toEqual([1, 2, 3, 4, 5, 6]);
   });
 
   it("only references slugs registered in the shared course engine", () => {
@@ -53,28 +55,17 @@ describe("course catalog (shared course architecture)", () => {
       "data-engineering-fundamentals",
       "data-science",
       "data-infrastructure",
-      "codex",
       "ai-native-operator",
     ]);
-    // "codex" is a deliberate, temporary exception (plan 009 stage 1,
-    // mirroring plan 008 stage 1's own claude deviation note): its
-    // CourseConfig is registered ahead of its routes so downstream stages
-    // never hit an "unregistered slug" throw, but it stays in
-    // IMPORTED_COURSE_CATALOG (nativeStatus "pending") until stage 7 flips
-    // it, so it is briefly BOTH "registered in the shared engine" AND
-    // "imported". Removed once stage 7 moves it into COURSE_CATALOG.
-    const TEMPORARILY_REGISTERED_IMPORTED_SLUGS = ["codex"];
     for (const c of IMPORTED_COURSE_CATALOG) {
       // CourseSlug (plan 007 stage 1) now spans both native and imported
       // courses by design, so the meaningful invariant is that imported
       // courses stay unregistered in the shared progress engine, not that
       // their slug is absent from the wider CourseSlug union. "claude" left
-      // this array entirely in plan 008 stage 10 (flipped to nativeStatus
-      // "live", moved into COURSE_CATALOG), so no per-slug exception is
-      // needed here any more.
-      if (!TEMPORARILY_REGISTERED_IMPORTED_SLUGS.includes(c.slug)) {
-        expect(getRegisteredCourseSlugs()).not.toContain(c.slug);
-      }
+      // this array entirely in plan 008 stage 10, "codex" in plan 009 stage
+      // 7 (both flipped to nativeStatus "live", moved into COURSE_CATALOG),
+      // so no per-slug exception is needed here any more.
+      expect(getRegisteredCourseSlugs()).not.toContain(c.slug);
       expect(c.href).toBe(`/kurse/open-source/${c.slug}`);
       expect(c.launchHref).toMatch(/^https:\/\/www\.timloehr\.me\/interactive-courses\//);
       // public-content contract: "Quelle" list links are commit-pinned so the
@@ -143,13 +134,6 @@ describe("course catalog (shared course architecture)", () => {
         lessonCountLabel: "12 Lektionen",
       },
       {
-        slug: "codex",
-        unitCount: 12,
-        unitLabel: "Lektionen",
-        totalLessons: 12,
-        lessonCountLabel: "12 Lektionen + Capstone",
-      },
-      {
         slug: "ai-native-operator",
         unitCount: 9,
         unitLabel: "Module",
@@ -161,8 +145,8 @@ describe("course catalog (shared course architecture)", () => {
 
   it("exposes a combined display catalog without changing native course semantics", () => {
     expect(ALL_COURSE_CATALOG).toHaveLength(10);
-    expect(COURSE_CATALOG).toHaveLength(5);
-    expect(IMPORTED_COURSE_CATALOG).toHaveLength(5);
+    expect(COURSE_CATALOG).toHaveLength(6);
+    expect(IMPORTED_COURSE_CATALOG).toHaveLength(4);
   });
 
   // plan 007 stage 10: the structural split is asserted via nativeStatus,
@@ -180,7 +164,7 @@ describe("course catalog (shared course architecture)", () => {
     expect(liveSlugs.length + pendingSlugs.length).toBe(ALL_COURSE_CATALOG.length);
   });
 
-  it("carries nativeStatus: the 5 native courses are 'live', the 5 imported courses are 'pending' (plan 007 stage 6, plan 008 stage 10)", () => {
+  it("carries nativeStatus: the 6 native courses are 'live', the 4 imported courses are 'pending' (plan 007 stage 6, plan 008 stage 10, plan 009 stage 7)", () => {
     for (const c of COURSE_CATALOG) {
       expect(c.nativeStatus, c.slug).toBe("live");
     }
@@ -221,6 +205,15 @@ describe("course catalog (shared course architecture)", () => {
     const claude = getCatalogCourse("claude");
     expect(claude?.totalLessons).toBe(getClaudeTotalLessons());
     expect(claude?.unitCount).toBe(getClaudeTracks().length);
+
+    // codex's catalog unit is lessons (unitLabel "Lektionen"), not tracks
+    // (unlike claude, which uses unitLabel "Tracks") — matches its
+    // original ImportedCourse entry's own convention, preserved across the
+    // nativeStatus flip.
+    const codex = getCatalogCourse("codex");
+    expect(codex?.totalLessons).toBe(getCodexTotalLessons());
+    expect(codex?.unitCount).toBe(getCodexTotalLessons());
+    expect(getCodexTracks().length).toBe(4);
   });
 
   it("retains claude's open-source provenance fields after the plan 008 stage 10 flip to native", () => {
@@ -235,6 +228,20 @@ describe("course catalog (shared course architecture)", () => {
     expect(existsSync(licensePath)).toBe(true);
     expect(sha256(imagePath)).toBe(claude!.imageSha256);
     expect(sha256(licensePath)).toBe(claude!.licenseSha256);
+  });
+
+  it("retains codex's open-source provenance fields after the plan 009 stage 7 flip to native", () => {
+    const codex = getCatalogCourse("codex");
+    expect(codex?.imageSrc).toMatch(/^\/imported-courses\/screenshots\/.+\.jpg$/);
+    expect(codex?.sourceCommit).toBe(IMPORTED_COURSE_SOURCE_COMMIT);
+    expect(codex?.imageSha256).toMatch(/^[a-f0-9]{64}$/);
+    expect(codex?.licenseSha256).toMatch(/^[a-f0-9]{64}$/);
+    const imagePath = join(process.cwd(), "public", codex!.imageSrc!);
+    const licensePath = join(process.cwd(), "public", codex!.licenseHref!);
+    expect(existsSync(imagePath)).toBe(true);
+    expect(existsSync(licensePath)).toBe(true);
+    expect(sha256(imagePath)).toBe(codex!.imageSha256);
+    expect(sha256(licensePath)).toBe(codex!.licenseSha256);
   });
 
   it("has local screenshot and license files for imported courses", () => {
@@ -261,13 +268,15 @@ describe("course catalog (shared course architecture)", () => {
   });
 
   it("uses internal landing + start hrefs that begin with the course base path", () => {
-    // "claude" is a deliberate exception (plan 008 stage 10): its URL stays
-    // under /kurse/open-source/claude across the imported-to-native flip
-    // instead of moving to a top-level /claude path like the 4 German
-    // courses, so its public URL never breaks.
+    // "claude"/"codex" are deliberate exceptions (plan 008 stage 10, plan
+    // 009 stage 7): their URLs stay under /kurse/open-source/<slug> across
+    // the imported-to-native flip instead of moving to a top-level
+    // /<slug> path like the 4 German courses, so their public URLs never
+    // break.
     const HREF_OVERRIDE: Partial<Record<string, string>> = {
       "ai-native": "ai-native",
       claude: "kurse/open-source/claude",
+      codex: "kurse/open-source/codex",
     };
     for (const c of COURSE_CATALOG) {
       expect(c.href).toBe(`/${HREF_OVERRIDE[c.slug] ?? c.slug}`);
@@ -279,14 +288,15 @@ describe("course catalog (shared course architecture)", () => {
   it("getCatalogCourse resolves by slug and returns undefined for unknown", () => {
     expect(getCatalogCourse("ai-native")?.title).toBe("AI-Native Arbeitskurs");
     expect(getCatalogCourse("claude")?.title).toBe("Claude Course");
+    expect(getCatalogCourse("codex")?.title).toBe("Codex Course");
     // @ts-expect-error — exercising the not-found branch with an invalid slug
     expect(getCatalogCourse("does-not-exist")).toBeUndefined();
   });
 
-  it("getImportedCourse resolves imported course slugs only, not claude (plan 008 stage 10 moved it to COURSE_CATALOG)", () => {
-    expect(getImportedCourse("codex")?.title).toBe("Codex Course");
+  it("getImportedCourse resolves imported course slugs only, not claude or codex (both moved to COURSE_CATALOG)", () => {
     expect(getImportedCourse("ai-native-operator")?.language).toBe("Englisch");
     expect(getImportedCourse("ai-native")).toBeUndefined();
     expect(getImportedCourse("claude")).toBeUndefined();
+    expect(getImportedCourse("codex")).toBeUndefined();
   });
 });

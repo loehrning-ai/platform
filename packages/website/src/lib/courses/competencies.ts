@@ -129,6 +129,24 @@ export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency
       description: "Shares prompts and CLAUDE.md files safely, with evals and without leaking sensitive data.",
     },
   ],
+  // English course (plan 009 stage 7): same reasoning as claude above.
+  codex: [
+    {
+      id: "task-spec-authoring",
+      label: "Task spec authoring",
+      description: "Writes goal, constraints, acceptance criteria, and out-of-scope so an agent lands the PR right the first time.",
+    },
+    {
+      id: "agent-pr-review",
+      label: "Agent PR review",
+      description: "Runs the review checklist that catches circular tests, scope creep, and Codex-specific security misses.",
+    },
+    {
+      id: "parallel-agent-workflows",
+      label: "Parallel agent workflows",
+      description: "Decomposes work into independent tasks and runs multiple agents across git worktrees without merge conflicts.",
+    },
+  ],
 };
 
 const COURSE_TITLE: Record<string, string> = Object.fromEntries(
