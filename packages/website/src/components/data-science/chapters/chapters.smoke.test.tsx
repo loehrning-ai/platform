@@ -13,6 +13,8 @@ import Ch02Explore from "./ch02-explore";
 import Ch03Clean from "./ch03-clean";
 import Ch04Feature from "./ch04-feature";
 import Ch05Model from "./ch05-model";
+import Ch07Interpret from "./ch07-interpret";
+import Ch08Experiment from "./ch08-experiment";
 
 afterEach(() => {
   cleanup();
@@ -82,6 +84,26 @@ describe("data-science chapter components render with real ported content, not p
     render(<Ch05Model chapter={getDsChapterMeta("model")} />);
     expect(screen.getAllByText(/dance/).length).toBeGreaterThan(0);
     expect(screen.getByLabelText("Model complexity (polynomial degree)")).toBeInTheDocument();
+    expect(screen.getByText("Key takeaways")).toBeInTheDocument();
+  });
+});
+
+describe("data-science chapter components render with real ported content, not placeholders (plan 012 stage 9)", () => {
+  it("Ch07Interpret renders the real hero and all 4 simulators", () => {
+    render(<Ch07Interpret chapter={getDsChapterMeta("interp")} />);
+    expect(screen.getByText(/is a/)).toBeInTheDocument();
+    expect(screen.getAllByText("SHAP waterfall · loan approval").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("LIME · local linear explanation").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Permutation importance").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Global vs local explanations").length).toBeGreaterThan(0);
+    expect(screen.getByText("Key takeaways")).toBeInTheDocument();
+  });
+
+  it("Ch08Experiment renders the real hero and ABSim", () => {
+    render(<Ch08Experiment chapter={getDsChapterMeta("exp")} />);
+    expect(screen.getByText(/Power is how/)).toBeInTheDocument();
+    expect(screen.getAllByText("Running experiment").length).toBeGreaterThan(0);
+    expect(screen.getByLabelText("True lift")).toBeInTheDocument();
     expect(screen.getByText("Key takeaways")).toBeInTheDocument();
   });
 });
