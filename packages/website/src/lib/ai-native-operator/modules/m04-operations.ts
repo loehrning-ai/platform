@@ -124,7 +124,38 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
     objective: "Operational basics, locked.",
     durationMinutes: 7,
     keyConcepts: [],
-    quiz: [],
+    quiz: [
+      {
+        id: "ano-operations-q1",
+        questionText:
+          "A weekly status meeting with 8 attendees mostly reports information already in writing. The right move is:",
+        answerOptions: [
+          { id: "a", text: "Make the meeting shorter.", isCorrect: false },
+          {
+            id: "b",
+            text: "Replace with async status + AI summary; reserve sync time for decisions.",
+            isCorrect: true,
+          },
+          { id: "c", text: "Add an agenda.", isCorrect: false },
+          { id: "d", text: "Rotate the meeting time.", isCorrect: false },
+        ],
+        explanation:
+          "When a status meeting is mostly information that already exists in writing, the fix is to route it async and let an agent summarize the channel for conflicts, blockers, and decisions needed — reserving the synchronous time for moments that actually require a live decision. Shortening or reorganizing the same ritual doesn't remove the coordination tax, it just trims it.",
+      },
+      {
+        id: "ano-operations-q2",
+        questionText:
+          "A well-designed ticket triage agent handles ~95% of tickets without human touch. The 5% that escalate to humans should be:",
+        answerOptions: [
+          { id: "a", text: "Random sample.", isCorrect: false },
+          { id: "b", text: "The oldest tickets.", isCorrect: false },
+          { id: "c", text: "The cases where the agent flagged uncertainty.", isCorrect: true },
+          { id: "d", text: "The ones from VIP customers only.", isCorrect: false },
+        ],
+        explanation:
+          "A well-designed triage agent should escalate the cases where it is genuinely unsure, not a random sample or an arbitrary rule like ticket age or customer tier — flagged uncertainty is the signal that a human's judgment is actually needed. Escalating anything else wastes the human's attention on cases the agent could already handle.",
+      },
+    ],
     sections: [],
     widgets: [],
   },

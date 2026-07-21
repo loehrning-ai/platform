@@ -134,7 +134,36 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
     objective: "Lock the talent shifts.",
     durationMinutes: 8,
     keyConcepts: [],
-    quiz: [],
+    quiz: [
+      {
+        id: "ano-talent-q1",
+        questionText: "A live-build interview tests:",
+        answerOptions: [
+          { id: "a", text: "Speed of typing.", isCorrect: false },
+          { id: "b", text: "Ability to invert a binary tree.", isCorrect: false },
+          {
+            id: "c",
+            text: "Spec quality, agent direction, judgment in review, calibrated trust, and final quality.",
+            isCorrect: true,
+          },
+          { id: "d", text: "Years of experience.", isCorrect: false },
+        ],
+        explanation:
+          "A live-build interview is designed to surface exactly the skills that matter in AI-native work: how well the candidate specs the problem, directs the agent, judges the output in review, calibrates trust, and lands at a correct final result — not how fast they type or whether they can invert a binary tree from memory.",
+      },
+      {
+        id: "ano-talent-q2",
+        questionText: "You are designing leverage-tied comp. Which metric is the WORST choice?",
+        answerOptions: [
+          { id: "a", text: "Team cycle time.", isCorrect: false },
+          { id: "b", text: "Defect rate.", isCorrect: false },
+          { id: "c", text: "Number of prompts sent per week.", isCorrect: true },
+          { id: "d", text: "Throughput per engineer.", isCorrect: false },
+        ],
+        explanation:
+          "Prompt count is a pure activity metric: it rewards typing more prompts, not producing better outcomes, and it is trivially gamed the moment it's tied to pay. Cycle time, defect rate, and throughput are all real outcome signals that move because the work actually got better, not because someone performed more AI usage.",
+      },
+    ],
     sections: [],
     widgets: [],
   },

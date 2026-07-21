@@ -172,7 +172,52 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
     objective: "Confirm the product mindset shift is internalized.",
     durationMinutes: 8,
     keyConcepts: [],
-    quiz: [],
+    quiz: [
+      {
+        id: "ano-product-q1",
+        questionText: "Diagnostic for whether AI is a feature or a product:",
+        answerOptions: [
+          { id: "a", text: "Whether marketing calls it AI-powered.", isCorrect: false },
+          { id: "b", text: "Whether it uses an LLM under the hood.", isCorrect: false },
+          {
+            id: "c",
+            text: "Whether the product still works if you remove the AI. If no, AI is the product.",
+            isCorrect: true,
+          },
+          { id: "d", text: "Whether it has a chat interface.", isCorrect: false },
+        ],
+        explanation:
+          "The clean diagnostic is counterfactual: remove the AI and ask if the product still works. If it does, the AI was a bolt-on feature riding alongside the real value. If it doesn't, the AI is the product itself — the reasoning system is the engine, not a chat bubble in the corner.",
+      },
+      {
+        id: "ano-product-q2",
+        questionText: "A flow has 7 steps after the user states intent. The AI-native instinct is:",
+        answerOptions: [
+          { id: "a", text: "Add a chat bubble for help.", isCorrect: false },
+          { id: "b", text: "Compress the 7 steps into one delegated action.", isCorrect: true },
+          { id: "c", text: "Reorder the steps for clarity.", isCorrect: false },
+          { id: "d", text: "Add tooltips.", isCorrect: false },
+        ],
+        explanation:
+          "The AI-native instinct is compression, not decoration: take the steps that happen after the user has already stated their intent and collapse them into one delegated action. Adding a help bubble or tooltips to a long flow just makes the long flow easier to tolerate — it doesn't remove the tax.",
+      },
+      {
+        id: "ano-product-q3",
+        questionText: "Generative UI is most appropriate for:",
+        answerOptions: [
+          { id: "a", text: "Payment flows.", isCorrect: false },
+          { id: "b", text: "Legal disclosures.", isCorrect: false },
+          {
+            id: "c",
+            text: "Surfaces with high variance in user intent — dashboards, homepages, settings.",
+            isCorrect: true,
+          },
+          { id: "d", text: "Every screen in the product.", isCorrect: false },
+        ],
+        explanation:
+          "Generative UI earns its keep on surfaces where users arrive with wildly different goals — a dashboard, a homepage, a settings panel — because a fixed layout can't serve all of them well. Payment and legal flows are exactly where consistency IS the value, so they should stay static and predictable, not generated.",
+      },
+    ],
     sections: [],
     widgets: [],
   },

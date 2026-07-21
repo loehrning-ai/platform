@@ -127,7 +127,41 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
     objective: "Confirm context discipline.",
     durationMinutes: 9,
     keyConcepts: [],
-    quiz: [],
+    quiz: [
+      {
+        id: "ano-data-q1",
+        questionText:
+          "An agent returns a confidential document the calling user should not see. The right architectural fix is:",
+        answerOptions: [
+          { id: "a", text: "Add a content filter on the response.", isCorrect: false },
+          {
+            id: "b",
+            text: "Permission-aware retrieval: agent inherits user identity, retrieval is filtered by user ACLs.",
+            isCorrect: true,
+          },
+          { id: "c", text: "Hide the agent from senior users.", isCorrect: false },
+          { id: "d", text: "Disable retrieval temporarily.", isCorrect: false },
+        ],
+        explanation:
+          "The architectural fix is permission-aware retrieval: the agent inherits the calling user's identity, and every retrieval is filtered by that user's real ACLs, so there is never an \"agent identity\" with elevated access. A response-level content filter is a patch on the symptom; the leak keeps being possible until the retrieval layer itself respects permissions.",
+      },
+      {
+        id: "ano-data-q2",
+        questionText: 'Why are nightly snapshots "radioactive" for agentic workflows?',
+        answerOptions: [
+          { id: "a", text: "They are slow to build.", isCorrect: false },
+          { id: "b", text: "They use too much storage.", isCorrect: false },
+          {
+            id: "c",
+            text: "The agent answers based on yesterday's reality, takes action in today's, and the answer is wrong.",
+            isCorrect: true,
+          },
+          { id: "d", text: "They miss new files.", isCorrect: false },
+        ],
+        explanation:
+          "Nightly snapshots are dangerous for agentic workflows specifically because the agent reasons from yesterday's state but acts in today's reality — a deleted record, a changed price, a closed ticket won't show up until the next sync, and the agent will confidently act on stale facts. Build cost and storage are real concerns but not the reason this pattern is called out as dangerous.",
+      },
+    ],
     sections: [],
     widgets: [],
   },

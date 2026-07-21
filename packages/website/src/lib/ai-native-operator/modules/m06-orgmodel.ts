@@ -115,7 +115,32 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
     objective: "Org primitives, locked.",
     durationMinutes: 8,
     keyConcepts: [],
-    quiz: [],
+    quiz: [
+      {
+        id: "ano-orgmodel-q1",
+        questionText: "A team requests +5 headcount. AI-native leadership response is:",
+        answerOptions: [
+          { id: "a", text: "Approve if budget exists.", isCorrect: false },
+          { id: "b", text: "Deny outright.", isCorrect: false },
+          { id: "c", text: '"Show me what you tried with agents first."', isCorrect: true },
+          { id: "d", text: "Approve only senior hires.", isCorrect: false },
+        ],
+        explanation:
+          "\"Show me what you tried with agents first\" turns a headcount request into a forcing function: it makes teams demonstrate they've actually pushed on agentic leverage before adding humans, rather than defaulting to hiring as the first lever. Approving on budget alone or denying outright both skip that diagnostic step.",
+      },
+      {
+        id: "ano-orgmodel-q2",
+        questionText: "Specialists are most useful in an AI-native org as:",
+        answerOptions: [
+          { id: "a", text: "Deep individual contributors who own execution.", isCorrect: false },
+          { id: "b", text: "Advisors and reviewers who scale through judgment.", isCorrect: true },
+          { id: "c", text: "Managers of generalists.", isCorrect: false },
+          { id: "d", text: "Eliminated entirely.", isCorrect: false },
+        ],
+        explanation:
+          "In an AI-native org, specialists earn their leverage as advisors and reviewers whose judgment scales across many decisions, not as the sole owners of hands-on execution — that work increasingly routes through generalists wielding agents. Treating specialists as bottlenecked individual executors wastes the part of their value that actually compounds.",
+      },
+    ],
     sections: [],
     widgets: [],
   },

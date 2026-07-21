@@ -203,7 +203,54 @@ export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
     objective: "Confirm engineering primitives are clear before you scale them.",
     durationMinutes: 9,
     keyConcepts: [],
-    quiz: [],
+    quiz: [
+      {
+        id: "ano-engineering-q1",
+        questionText: "What is the most important section of an agent spec?",
+        answerOptions: [
+          { id: "a", text: "The opening sentence and the test cases", isCorrect: true },
+          { id: "b", text: "The middle prose explaining context", isCorrect: false },
+          { id: "c", text: "The list of files", isCorrect: false },
+          { id: "d", text: "The author and timestamp", isCorrect: false },
+        ],
+        explanation:
+          "The opening sentence and the test cases constrain the search space the most: the sentence sets the goal the agent optimizes for, and the test cases pin down exactly what \"correct\" means. Long explanatory prose in the middle does comparatively little work and can even invite drift if it's vague.",
+      },
+      {
+        id: "ano-engineering-q2",
+        questionText:
+          "A teammate ships an agent change without running the eval suite. What is the right response?",
+        answerOptions: [
+          { id: "a", text: "Allow it; evals slow things down.", isCorrect: false },
+          {
+            id: "b",
+            text: "Block the change. Eval-driven release is the discipline that lets you go fast safely.",
+            isCorrect: true,
+          },
+          { id: "c", text: "Run the eval after merge.", isCorrect: false },
+          { id: "d", text: "Add a comment to the PR but merge anyway.", isCorrect: false },
+        ],
+        explanation:
+          "Eval-driven release means no agent change reaches production without passing the suite — regressions are a hard block, enforced by the system rather than relying on someone remembering to check. Skipping the gate \"just this once\" is exactly how a model upgrade or prompt tweak silently breaks a workflow nobody is watching.",
+      },
+      {
+        id: "ano-engineering-q3",
+        questionText:
+          "Your fleet of three agents is producing low-quality PRs. What is the most likely cause?",
+        answerOptions: [
+          { id: "a", text: "The agents need to be replaced with newer models.", isCorrect: false },
+          { id: "b", text: "You are micromanaging.", isCorrect: false },
+          {
+            id: "c",
+            text: "The specs are bad, the context is shallow, or the eval gates are missing.",
+            isCorrect: true,
+          },
+          { id: "d", text: "Agents fundamentally cannot do this work.", isCorrect: false },
+        ],
+        explanation:
+          "Low-quality PRs from a fleet almost always trace upstream to the inputs the fleet was given: vague specs, shallow context, or missing eval gates. Swapping models or micromanaging treats the symptom; tightening the spec, deepening the context, and raising the eval bar treats the cause.",
+      },
+    ],
     sections: [],
     widgets: [],
   },

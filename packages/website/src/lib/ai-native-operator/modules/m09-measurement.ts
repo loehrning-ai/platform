@@ -107,7 +107,49 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
     objective: "Confirm measurement primitives, then commit.",
     durationMinutes: 15,
     keyConcepts: [],
-    quiz: [],
+    quiz: [
+      {
+        id: "ano-measurement-q1",
+        questionText:
+          "Your AI rollout claims 30% productivity gain. The hardest question a board member can ask is:",
+        answerOptions: [
+          { id: "a", text: "What model are you using?", isCorrect: false },
+          { id: "b", text: "What is the baseline measurement and when was it taken?", isCorrect: true },
+          { id: "c", text: "Who is the vendor?", isCorrect: false },
+          { id: "d", text: "How many seats?", isCorrect: false },
+        ],
+        explanation:
+          "The hardest and most legitimate question a board member can ask about a productivity claim is what the baseline was and when it was measured — without a baseline taken under comparable conditions, a 30% gain is a story, not a result. Model choice, vendor, and seat count are all secondary to whether the comparison is even valid.",
+      },
+      {
+        id: "ano-measurement-q2",
+        questionText: "The most reliable signal that an AI program is working:",
+        answerOptions: [
+          { id: "a", text: "Number of active users.", isCorrect: false },
+          { id: "b", text: "Tokens per month.", isCorrect: false },
+          {
+            id: "c",
+            text: "Outcome metrics (cycle time, defect rate, throughput) moving against a measured baseline.",
+            isCorrect: true,
+          },
+          { id: "d", text: "Internal survey sentiment.", isCorrect: false },
+        ],
+        explanation:
+          "The reliable signal that an AI program is working is outcome metrics — cycle time, defect rate, throughput — moving against a measured baseline, because those numbers reflect the work actually getting better. Active-user counts, token volume, and survey sentiment are activity or vibes metrics that can rise even while nothing real improves.",
+      },
+      {
+        id: "ano-measurement-q3",
+        questionText: "A quarterly leverage review should look most like:",
+        answerOptions: [
+          { id: "a", text: "A project status update.", isCorrect: false },
+          { id: "b", text: "A revenue review — with the same rigor and seriousness.", isCorrect: true },
+          { id: "c", text: "A demo day.", isCorrect: false },
+          { id: "d", text: "A retrospective.", isCorrect: false },
+        ],
+        explanation:
+          "A quarterly leverage review earns its seriousness by mirroring a revenue review: the same cadence, the same rigor, real numbers that moved and why, presented to people who will ask hard questions. Treating it like an informal status update or a demo day undersells the discipline the program needs to keep its funding.",
+      },
+    ],
     sections: [],
     widgets: [],
   },

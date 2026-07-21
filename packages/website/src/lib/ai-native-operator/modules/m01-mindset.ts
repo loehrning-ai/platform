@@ -193,7 +193,58 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
     objective: "Confirm you can articulate the why, the levels, and the practice — in your own words.",
     durationMinutes: 8,
     keyConcepts: [],
-    quiz: [],
+    quiz: [
+      {
+        id: "ano-mindset-q1",
+        questionText:
+          'A teammate says "I tried AI and it gave me a wrong answer, so I don\'t trust it." What is the most useful response?',
+        answerOptions: [
+          { id: "a", text: "Agree — AI is unreliable for serious work.", isCorrect: false },
+          {
+            id: "b",
+            text: "Trust is calibrated per task type. The question is when you should verify, not whether to use it.",
+            isCorrect: true,
+          },
+          { id: "c", text: "Use a different model.", isCorrect: false },
+          { id: "d", text: "Wait six months for the technology to improve.", isCorrect: false },
+        ],
+        explanation:
+          "Trust is a calibrated, domain-specific function of how often a model is right on a given task and what failure costs — not a single global verdict earned or lost from one interaction. Dismissing AI after one wrong answer is the same error as blindly trusting it after one right one; both skip the calibration step that separates senior practitioners from everyone else.",
+      },
+      {
+        id: "ano-mindset-q2",
+        questionText: "Which best describes L3 (Conductor)?",
+        answerOptions: [
+          { id: "a", text: "You use Cursor or Claude Code for autocomplete daily.", isCorrect: false },
+          { id: "b", text: "AI writes your first draft of every doc.", isCorrect: false },
+          {
+            id: "c",
+            text: "You direct multiple agents in parallel; the unit of work is a delegation, not a keystroke.",
+            isCorrect: true,
+          },
+          { id: "d", text: "You have read three books on AI.", isCorrect: false },
+        ],
+        explanation:
+          "L3 is defined by the unit of work changing from a keystroke to a delegation: the operator directs multiple agents in parallel — assigning, checking in, redirecting — while the agents do the spec-to-PR work. Daily autocomplete use (L1) and AI-first-draft habits (L2) are real progress, but neither involves orchestrating a fleet.",
+      },
+      {
+        id: "ano-mindset-q3",
+        questionText:
+          'A senior engineer hand-codes a feature overnight to "prove they still can." In an AI-native culture, the leader\'s response is:',
+        answerOptions: [
+          { id: "a", text: "Celebrate the heroic effort publicly.", isCorrect: false },
+          {
+            id: "b",
+            text: "Privately appreciate the craft, then redirect: ask them to scale that taste through specs and evals.",
+            isCorrect: true,
+          },
+          { id: "c", text: "Punish them for not using AI.", isCorrect: false },
+          { id: "d", text: "Ignore it.", isCorrect: false },
+        ],
+        explanation:
+          "The craft behind a hand-coded overnight feature is real and worth acknowledging privately — but publicly celebrating solo heroics re-anchors the culture on hours and individual effort instead of leverage. The AI-native move is to redirect that same taste and standards toward specs, evals, and review, where it scales across a whole fleet of agents instead of one person's night.",
+      },
+    ],
     sections: [],
     widgets: [],
   },

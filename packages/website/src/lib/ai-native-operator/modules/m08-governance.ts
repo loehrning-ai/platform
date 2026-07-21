@@ -107,7 +107,37 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
     objective: "Lock governance basics.",
     durationMinutes: 8,
     keyConcepts: [],
-    quiz: [],
+    quiz: [
+      {
+        id: "ano-governance-q1",
+        questionText:
+          'Your security team asks: "Which AI models are running on customer PII right now?" You can\'t answer. Highest-leverage fix:',
+        answerOptions: [
+          { id: "a", text: "Disable all AI temporarily.", isCorrect: false },
+          { id: "b", text: "Stand up the model registry.", isCorrect: true },
+          { id: "c", text: "Hire a CISO.", isCorrect: false },
+          { id: "d", text: "Add encryption.", isCorrect: false },
+        ],
+        explanation:
+          "Not being able to name every model touching customer PII is a registry gap, and the highest-leverage fix is standing one up: provider, version, data classification, owner, and last review date, in one place, kept current. Disabling AI or hiring a CISO react to the symptom; the registry is the boring infrastructure that lets you actually answer the question next time.",
+      },
+      {
+        id: "ano-governance-q2",
+        questionText: 'An agent deletes a record. To answer "who did this and why," you need:',
+        answerOptions: [
+          { id: "a", text: "Sentiment analysis of recent prompts.", isCorrect: false },
+          { id: "b", text: "A rough estimate based on agent name.", isCorrect: false },
+          {
+            id: "c",
+            text: "Agent identity + on-behalf-of-user + timestamp + authorization, all in the audit log.",
+            isCorrect: true,
+          },
+          { id: "d", text: "A team retrospective.", isCorrect: false },
+        ],
+        explanation:
+          "Answering \"who did this and why\" for an agent's destructive action requires a real audit trail: the agent's identity, the user it was acting on behalf of, its authorization, and a timestamp, all captured in the log at the moment of the action. Sentiment analysis or a retrospective can only ever produce a guess after the fact.",
+      },
+    ],
     sections: [],
     widgets: [],
   },
