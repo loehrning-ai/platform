@@ -1,0 +1,10 @@
+# TODOS
+
+## Course-registration registry-of-registries pattern
+- **What:** Extract a per-course registration pattern (each course contributes one small module — content loader, config, widget kinds, catalog entry, crawl-contract paths — auto-aggregated once at build time) instead of every course editing the same handful of shared files directly.
+- **Why:** Flagged during the HOLD-mode architecture review of plans 007-013 (porting 6 interactive courses natively). Adding these 6 courses means every one of them edits `src/lib/courses/catalog.ts`, `src/lib/courses/tracks.ts`, `src/lib/widgets/types.ts` + `registry.tsx`, `src/lib/course/config.ts`, and `src/lib/crawl/contract.ts`. Workable for 6 plans with careful sequencing (several of those plans' own risk sections already flag serialized-landing-order requirements for `catalog.ts`/`tracks.ts`), but a 7th or 8th course added later would mean touching the same 5 shared files a 7th/8th time, with merge risk compounding roughly linearly as the catalog grows.
+- **Pros/cons:** Pro — removes the shared-file bottleneck permanently, makes future course additions genuinely isolated (no cross-PR merge coordination). Con — real refactor work with no immediate payoff; the 6-course migration ships fine without it, and the pattern is speculative until a concrete 7th course actually motivates it.
+- **Context:** Surfaced by the Architecture Review section of the multi-agent plan review run 2026-07-20, low severity, explicitly framed as "out of scope for this plan set to fix now" in the review itself. Plan 007 (`plans/007-shared-course-infra.md`) documents the current shared-file list a future course must touch.
+- **Effort:** M (a real but contained refactor — one aggregation point, not a rewrite).
+- **Priority:** P3 — revisit only if/when a 7th+ course is actually proposed, not before.
+- **Depends on:** Plans 007-013 (this migration) landing first, so there's a real 6-course pattern to generalize from rather than guessing at the abstraction upfront.
