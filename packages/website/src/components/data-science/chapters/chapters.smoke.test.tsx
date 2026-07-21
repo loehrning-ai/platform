@@ -8,6 +8,9 @@ vi.mock("next/navigation", () => ({
 
 import Ch01Fundamentals from "./ch01-fundamentals";
 import Ch06Evaluate from "./ch06-evaluate";
+import ChOverview from "./ch-overview";
+import Ch02Explore from "./ch02-explore";
+import Ch03Clean from "./ch03-clean";
 
 afterEach(() => {
   cleanup();
@@ -29,6 +32,35 @@ describe("data-science chapter components render with real ported content, not p
     expect(screen.getByText(/pick the model/)).toBeInTheDocument();
     expect(screen.getByText("Threshold · confusion · ROC")).toBeInTheDocument();
     expect(screen.getByText(/PR-AUC/)).toBeInTheDocument();
+    expect(screen.getByText("Key takeaways")).toBeInTheDocument();
+  });
+});
+
+describe("data-science chapter components render with real ported content, not placeholders (plan 012 stage 7)", () => {
+  it("ChOverview renders the real hero copy, all 12 curriculum cards, and the FlowingPipeline", () => {
+    render(<ChOverview chapter={getDsChapterMeta("home")} />);
+    expect(screen.getByText(/turns noise into decisions/)).toBeInTheDocument();
+    expect(screen.getByText("Capstone")).toBeInTheDocument();
+    expect(screen.getByText("Fundamentals")).toBeInTheDocument();
+    expect(screen.getAllByText(/Data/).length).toBeGreaterThan(0);
+  });
+
+  it("Ch02Explore renders the real hero, all 3 simulators, and the takeaways", () => {
+    render(<Ch02Explore chapter={getDsChapterMeta("explore")} />);
+    expect(screen.getByText(/look before you leap/)).toBeInTheDocument();
+    expect(screen.getByText("Distribution Explorer")).toBeInTheDocument();
+    expect(screen.getByText("Outlier Detector")).toBeInTheDocument();
+    expect(screen.getByText("Correlation Matrix")).toBeInTheDocument();
+    expect(screen.getByText("Key takeaways")).toBeInTheDocument();
+  });
+
+  it("Ch03Clean renders the real hero, all 4 simulators, and the takeaways", () => {
+    render(<Ch03Clean chapter={getDsChapterMeta("clean")} />);
+    expect(screen.getByText(/actually/)).toBeInTheDocument();
+    expect(screen.getByText("Missingness Patterns")).toBeInTheDocument();
+    expect(screen.getByText("Imputation Race")).toBeInTheDocument();
+    expect(screen.getAllByText("Feature Scaling").length).toBeGreaterThan(0);
+    expect(screen.getByText("Leakage Detector")).toBeInTheDocument();
     expect(screen.getByText("Key takeaways")).toBeInTheDocument();
   });
 });
