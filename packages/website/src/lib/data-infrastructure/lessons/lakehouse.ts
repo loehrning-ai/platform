@@ -139,6 +139,7 @@ const lesson: DataInfraLesson = {
       props: {
         lessonId: LID,
         cpId: "flash",
+        title: "Flashcards",
         copy: DATA_INFRA_FLASHCARDS_COPY,
         cards: [
           {

@@ -103,9 +103,17 @@ describe("data-infrastructure content module (plan 010 stage 3)", () => {
       expect(flashWidgets.length, lesson.id).toBe(1);
       const props = flashWidgets[0].props as {
         lessonId: string;
+        title?: string;
         cards: readonly { term?: string; q: string; a: string }[];
       };
       expect(props.lessonId, lesson.id).toBe(`di-${lesson.id}`);
+      // Regression guard: FlashcardsWidget's own default title is the German
+      // "Karteikarten" (only claude/codex-style copy overrides exist for
+      // kindLabel/hints, not the per-instance title) — found via live QA
+      // that every lesson file was missing an explicit English title,
+      // silently leaking German chrome onto this English-language course.
+      expect(props.title, lesson.id).toBeTruthy();
+      expect(props.title, lesson.id).not.toBe("Karteikarten");
       expect(props.cards.length, lesson.id).toBeGreaterThan(0);
       for (const card of props.cards) {
         expect(card.q.trim().length, lesson.id).toBeGreaterThan(0);
