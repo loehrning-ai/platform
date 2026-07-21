@@ -140,6 +140,20 @@ const REGISTRY: Record<WidgetKind, () => Promise<{ default: WidgetComponent }>> 
       default: m.DiffViewerWidget as unknown as WidgetComponent,
     })),
 
+  // ─── AI-Native Operator Course, three genuinely new Tier-A kinds (plan 013 stage 5) ───
+  "reflect-box": () =>
+    import("@/components/widgets/tier-a/reflect-box").then((m) => ({
+      default: m.ReflectBoxWidget as unknown as WidgetComponent,
+    })),
+  "matrix-grid": () =>
+    import("@/components/widgets/tier-a/matrix-grid").then((m) => ({
+      default: m.MatrixGridWidget as unknown as WidgetComponent,
+    })),
+  "slot-fill": () =>
+    import("@/components/widgets/tier-a/slot-fill").then((m) => ({
+      default: m.SlotFillWidget as unknown as WidgetComponent,
+    })),
+
   // ─── Practice Room — live Claude widgets (shared course architecture) ───
   "prompt-orrery": () =>
     import("@/components/widgets/practice/prompt-orrery").then((m) => ({

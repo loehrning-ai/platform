@@ -91,6 +91,16 @@ export const TIER_A_KINDS = [
   // instance reuses quiz/compare/task-spec/flashcards above verbatim.
   "terminal-replay",
   "diff-viewer",
+  // ─── AI-Native Operator Course (plan 013 stage 5) ───
+  // The three genuinely new widget kinds this course needs, ported from
+  // `ai-native-operator/course-app.js`'s ReflectBox (free-text reflection,
+  // 23 of 30 exercises), MatrixEx (row x column selection grid, 1
+  // instance), and Slots (numbered short-text slots, 4 instances). Every
+  // other exercise instance reuses self-rate/plays above verbatim; the 9
+  // quiz-kind lessons reuse "quiz" above verbatim.
+  "reflect-box",
+  "matrix-grid",
+  "slot-fill",
 ] as const;
 
 /**
