@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, type JSX } from "react";
+import { useEffect, useMemo, type JSX } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, GraduationCap } from "lucide-react";
 import { RenderWidget, resolveWidgetsForSlot } from "@/components/widgets/registry";
+import { markLessonCompleted } from "@/lib/progress";
 import { MODULE_META } from "@/lib/ai-native-operator/types";
 import { courseHref } from "@/lib/ai-native-operator/routes";
 import { Callout } from "./callout";
@@ -39,6 +40,16 @@ export function AiNativeOperatorLessonReader({
   const meta = MODULE_META[lesson.moduleId];
   const widgets = useMemo(() => lesson.widgets ?? [], [lesson.widgets]);
   const endWidgets = useMemo(() => resolveWidgetsForSlot(widgets, "end"), [widgets]);
+
+  // Lesson-visit completion (plan 013 stage 9): mark done unconditionally on
+  // mount, matching the source's own `useEffect(() => markDone(...), [...])`
+  // in LessonView (course-app.js:82-84) — completion here tracks "visited",
+  // not "read every section" or "answered the quiz correctly". The
+  // '{moduleId}/{lessonNum}' key format matches lesson.id exactly (see
+  // lessonProgressKey in lib/ai-native-operator/types.ts).
+  useEffect(() => {
+    markLessonCompleted("ai-native-operator", lesson.id);
+  }, [lesson.id]);
 
   const nextIcon =
     next.kind === "course-complete" ? (

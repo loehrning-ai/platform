@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, beforeEach, afterEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import { AiNativeOperatorLessonReader } from "./lesson-reader";
-import { __resetCacheForTests } from "@/lib/progress";
+import { __resetCacheForTests, isLessonCompleted } from "@/lib/progress";
 import type { AiNativeOperatorLesson } from "@/lib/ai-native-operator/types";
 import type { NextTarget } from "./lesson-page";
 
@@ -155,6 +155,18 @@ describe("AiNativeOperatorLessonReader (plan 013 stage 8)", () => {
       />,
     );
     expect(screen.getByText("Course complete — return to overview")).toBeInTheDocument();
+  });
+
+  it("marks the lesson completed on mount, matching the source's own visit-based scheme (plan 013 stage 9)", () => {
+    expect(isLessonCompleted("ai-native-operator", "mindset/1")).toBe(false);
+    render(<AiNativeOperatorLessonReader lesson={READING_LESSON} prevHref={null} prevTitle={null} next={NEXT_LESSON} />);
+    expect(isLessonCompleted("ai-native-operator", "mindset/1")).toBe(true);
+  });
+
+  it("marks a quiz-kind lesson completed on mount too, without requiring a correct answer", () => {
+    expect(isLessonCompleted("ai-native-operator", "mindset/5")).toBe(false);
+    render(<AiNativeOperatorLessonReader lesson={QUIZ_LESSON} prevHref={null} prevTitle={null} next={NEXT_LESSON} />);
+    expect(isLessonCompleted("ai-native-operator", "mindset/5")).toBe(true);
   });
 
   it("renders the next-module transition label", () => {
