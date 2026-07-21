@@ -11,11 +11,13 @@ import { CODEX_CONFIG } from "@/lib/codex/config";
 import { DATA_INFRASTRUCTURE_CONFIG } from "@/lib/data-infrastructure/config";
 import { DATA_ENGINEERING_FUNDAMENTALS_CONFIG } from "@/lib/data-engineering-fundamentals/config";
 import { DATA_SCIENCE_CONFIG } from "@/lib/data-science/config";
+import { AI_NATIVE_OPERATOR_CONFIG } from "@/lib/ai-native-operator/config";
 
 export { CODEX_CONFIG };
 export { DATA_INFRASTRUCTURE_CONFIG };
 export { DATA_ENGINEERING_FUNDAMENTALS_CONFIG };
 export { DATA_SCIENCE_CONFIG };
+export { AI_NATIVE_OPERATOR_CONFIG };
 
 // ─── KI-Führerschein ───────────────────────────────────────────
 
@@ -225,6 +227,7 @@ const COURSE_CONFIGS: Partial<Record<CourseSlug, CourseConfig>> = {
   "data-infrastructure": DATA_INFRASTRUCTURE_CONFIG,
   "data-engineering-fundamentals": DATA_ENGINEERING_FUNDAMENTALS_CONFIG,
   "data-science": DATA_SCIENCE_CONFIG,
+  "ai-native-operator": AI_NATIVE_OPERATOR_CONFIG,
 };
 
 function config(courseSlug: CourseSlug): CourseConfig {

@@ -24,6 +24,7 @@ export const WIDGET_COURSE_SLUGS = [
   "ai-native",
   "claude",
   "codex",
+  "ai-native-operator",
 ] as const;
 
 export type WidgetCourseSlug = (typeof WIDGET_COURSE_SLUGS)[number];

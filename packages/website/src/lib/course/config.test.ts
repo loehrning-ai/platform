@@ -10,6 +10,7 @@ import {
   DATA_INFRASTRUCTURE_CONFIG,
   DATA_ENGINEERING_FUNDAMENTALS_CONFIG,
   DATA_SCIENCE_CONFIG,
+  AI_NATIVE_OPERATOR_CONFIG,
   getRegisteredCourseSlugs,
   isCourseRegistered,
   getCourseConfig,
@@ -25,10 +26,11 @@ import {
 const UNREGISTERED = "does-not-exist" as unknown as CourseSlug;
 
 describe("getRegisteredCourseSlugs", () => {
-  it("returns exactly the nine registered course slugs (plan 012 stage 1 adds data-science)", () => {
+  it("returns exactly the ten registered course slugs (plan 013 stage 4 adds ai-native-operator)", () => {
     const slugs = [...getRegisteredCourseSlugs()].sort();
     expect(slugs).toEqual([
       "ai-native",
+      "ai-native-operator",
       "claude",
       "codex",
       "data-engineering-fundamentals",
@@ -52,6 +54,7 @@ describe("isCourseRegistered", () => {
     expect(isCourseRegistered("data-infrastructure")).toBe(true);
     expect(isCourseRegistered("data-engineering-fundamentals")).toBe(true);
     expect(isCourseRegistered("data-science")).toBe(true);
+    expect(isCourseRegistered("ai-native-operator")).toBe(true);
   });
 
   it("is false for an unregistered slug", () => {
@@ -140,6 +143,40 @@ describe("DATA_SCIENCE_CONFIG (plan 012 stage 1)", () => {
     // the real landing page, not a route that 404s.
     expect(DATA_SCIENCE_CONFIG.coursePath).toBe("/kurse/open-source/data-science");
     expect(DATA_SCIENCE_CONFIG.blockIds).toEqual([]);
+  });
+});
+
+describe("AI_NATIVE_OPERATOR_CONFIG (plan 013 stage 4)", () => {
+  it("registers ai-native-operator with English-language content and a quiz-gated cert path", () => {
+    expect(getCourseConfig("ai-native-operator")).toBe(AI_NATIVE_OPERATOR_CONFIG);
+    expect(AI_NATIVE_OPERATOR_CONFIG.slug).toBe("ai-native-operator");
+    expect(AI_NATIVE_OPERATOR_CONFIG.language).toBe("en");
+    expect(AI_NATIVE_OPERATOR_CONFIG.basePath).toBe("/kurse/open-source/ai-native-operator");
+    // No "/kurs" segment (matching data-engineering-fundamentals/data-science):
+    // modules and lessons live directly under the course root.
+    expect(AI_NATIVE_OPERATOR_CONFIG.coursePath).toBe("/kurse/open-source/ai-native-operator");
+    expect(AI_NATIVE_OPERATOR_CONFIG.blockIds).toEqual([]);
+    expect(AI_NATIVE_OPERATOR_CONFIG.workshopQuizQuestionCount).toBe(22);
+    expect(AI_NATIVE_OPERATOR_CONFIG.workshopQuizPassThreshold).toBe(0.7);
+    expect(AI_NATIVE_OPERATOR_CONFIG.certificateModules).toHaveLength(9);
+  });
+
+  it("has a non-empty certificate file stem and no em/en dashes in its copy", () => {
+    expect(AI_NATIVE_OPERATOR_CONFIG.certificateFileStem.length).toBeGreaterThan(0);
+    const copy = [
+      AI_NATIVE_OPERATOR_CONFIG.title,
+      AI_NATIVE_OPERATOR_CONFIG.certificateTitle,
+      AI_NATIVE_OPERATOR_CONFIG.certificateSubtitle,
+      AI_NATIVE_OPERATOR_CONFIG.certificateReferenceLabel,
+      AI_NATIVE_OPERATOR_CONFIG.quizPassMessage,
+      ...AI_NATIVE_OPERATOR_CONFIG.certificateModules,
+    ].join(" ");
+    expect([...copy].some((ch) => ch === "—" || ch === "–")).toBe(false);
+  });
+
+  it("never collides with the bare 'ai-native' slug's config", () => {
+    expect(AI_NATIVE_OPERATOR_CONFIG.slug).not.toBe(AI_NATIVE_CONFIG.slug);
+    expect(AI_NATIVE_OPERATOR_CONFIG.basePath).not.toBe(AI_NATIVE_CONFIG.basePath);
   });
 });
 

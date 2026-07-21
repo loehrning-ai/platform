@@ -55,21 +55,24 @@ describe("course catalog (shared course architecture)", () => {
     }
   });
 
-  it("keeps imported open-source courses outside the native progress engine", () => {
+  it("keeps ai-native-operator's catalog entry pending until plan 013's own flip stage", () => {
     expect(IMPORTED_COURSE_CATALOG.map((c) => c.slug)).toEqual([
       "ai-native-operator",
     ]);
     for (const c of IMPORTED_COURSE_CATALOG) {
       // CourseSlug (plan 007 stage 1) now spans both native and imported
-      // courses by design, so the meaningful invariant is that imported
-      // courses stay unregistered in the shared progress engine, not that
-      // their slug is absent from the wider CourseSlug union. "claude" left
-      // this array entirely in plan 008 stage 10, "codex" in plan 009 stage
-      // 7, "data-infrastructure" in plan 010 stage 13, "data-engineering-
-      // fundamentals" in plan 011 stage 12, "data-science" in plan 012
-      // stage 14 (all five flipped to nativeStatus "live", moved into
-      // COURSE_CATALOG).
-      expect(getRegisteredCourseSlugs()).not.toContain(c.slug);
+      // courses by design, so the meaningful invariant is a course's
+      // catalog placement (COURSE_CATALOG vs IMPORTED_COURSE_CATALOG /
+      // nativeStatus), not shared-engine registration. Registering a
+      // config in COURSE_CONFIGS (plan 013 stage 4) does not itself expose
+      // any UI (no route exists until stages 7-10 land), mirroring every
+      // sibling course's own stage-1-config-registration-vs-later-catalog-
+      // flip gap ("claude" registered CLAUDE_CONFIG in plan 008 stage 1 but
+      // didn't leave this array until stage 10; codex/data-infrastructure/
+      // data-engineering-fundamentals/data-science each had the same gap).
+      // So getRegisteredCourseSlugs() legitimately DOES contain
+      // "ai-native-operator" from plan 013 stage 4 onward, ahead of its own
+      // stage 12 catalog flip — that is not a premature-UI-exposure risk.
       expect(c.href).toBe(`/kurse/open-source/${c.slug}`);
       expect(c.launchHref).toMatch(/^https:\/\/www\.timloehr\.me\/interactive-courses\//);
       // public-content contract: "Quelle" list links are commit-pinned so the

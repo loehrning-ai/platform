@@ -227,6 +227,16 @@ describe("widgets/types: WIDGET_COURSE_SLUGS (plan 009 stage 1 adds codex)", () 
   });
 });
 
+describe("widgets/types: WIDGET_COURSE_SLUGS (plan 013 stage 4 adds ai-native-operator)", () => {
+  it("includes ai-native-operator, distinct from the bare ai-native slug", () => {
+    expect([...WIDGET_COURSE_SLUGS]).toContain("ai-native-operator");
+    expect([...WIDGET_COURSE_SLUGS]).toContain("ai-native");
+    expect(
+      (WIDGET_COURSE_SLUGS as readonly string[]).filter((s) => s === "ai-native").length,
+    ).toBe(1);
+  });
+});
+
 describe("widgets/types: guards reject non-string input", () => {
   it("returns false for null, undefined, numbers, booleans, objects, arrays, symbols", () => {
     for (const guard of ALL_GUARDS) {
