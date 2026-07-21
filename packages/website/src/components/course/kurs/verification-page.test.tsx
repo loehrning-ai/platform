@@ -171,7 +171,10 @@ describe("VerificationPage", () => {
 
   // plan 008 stage 11: claude is now a fully registered course (unlike
   // "codex" above, which is still unregistered), so this exercises the real
-  // happy path end to end for the course this plan ported.
+  // happy path end to end for the course this plan ported. claude is an
+  // English-language course (CourseConfig.language: "en"), so this page
+  // correctly renders its English copy branch, not the German one every
+  // other test case here exercises via the native German courses.
   it("round-trips a real claude certificate QR payload successfully", async () => {
     const payload = {
       n: "Ada Lovelace",
@@ -185,11 +188,11 @@ describe("VerificationPage", () => {
     render(<VerificationPage courseSlug="claude" />);
 
     await waitFor(() =>
-      expect(screen.getByText("QR-Daten gelesen")).toBeInTheDocument(),
+      expect(screen.getByText("QR data read")).toBeInTheDocument(),
     );
     expect(screen.getByText("Ada Lovelace")).toBeInTheDocument();
     expect(screen.getByText("Claude Course")).toBeInTheDocument();
-    expect(screen.queryByText("Zertifikatcode nicht lesbar")).toBeNull();
+    expect(screen.queryByText("Certificate code unreadable")).toBeNull();
   });
 
   it("falls back to the invalid state for a malformed hash", async () => {

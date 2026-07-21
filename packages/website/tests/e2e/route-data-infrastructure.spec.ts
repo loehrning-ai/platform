@@ -156,10 +156,10 @@ test.describe("Data Infrastructure golden path", () => {
     });
     await page.goto(`${VERIFY_ROUTE}#${hash}`, { waitUntil: "domcontentloaded" });
 
-    await expect(page.getByText("QR-Daten gelesen", { exact: true })).toBeVisible();
+    await expect(page.getByText("QR data read", { exact: true })).toBeVisible();
     await expect(page.getByText("Ada Lovelace")).toBeVisible();
-    await expect(page.getByText("Abschlussweg: Alle Lektionen abgeschlossen")).toBeVisible();
+    await expect(page.getByText("Completion path: all lessons finished")).toBeVisible();
     await expect(page.getByRole("heading", { name: /Data Infrastructure/ })).toBeVisible();
-    await expect(page.getByText("Zertifikatcode nicht lesbar")).toHaveCount(0);
+    await expect(page.getByText("Certificate code unreadable")).toHaveCount(0);
   });
 });

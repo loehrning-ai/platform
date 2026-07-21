@@ -153,9 +153,9 @@ test.describe("Claude Course golden path", () => {
     });
     await page.goto(`${VERIFY_ROUTE}#${hash}`, { waitUntil: "domcontentloaded" });
 
-    await expect(page.getByText("QR-Daten gelesen", { exact: true })).toBeVisible();
+    await expect(page.getByText("QR data read", { exact: true })).toBeVisible();
     await expect(page.getByText("Ada Lovelace")).toBeVisible();
     await expect(page.getByRole("heading", { name: /Claude Course/ })).toBeVisible();
-    await expect(page.getByText("Zertifikatcode nicht lesbar")).toHaveCount(0);
+    await expect(page.getByText("Certificate code unreadable")).toHaveCount(0);
   });
 });

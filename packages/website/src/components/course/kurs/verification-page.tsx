@@ -28,10 +28,18 @@ interface VerificationData {
   v: number; // version
 }
 
-/** Completion line for the two non-quiz eligibility paths. */
-const COMPLETION_LABEL: Record<Exclude<CertificateCompletionMode, "quiz">, string> = {
-  capstone: "Abschlussweg: Capstone-Rubrik",
-  completion: "Abschlussweg: Alle Lektionen abgeschlossen",
+type NonQuizMode = Exclude<CertificateCompletionMode, "quiz">;
+
+/** Completion line for the two non-quiz eligibility paths, by course language. */
+const COMPLETION_LABEL: Record<"de" | "en", Record<NonQuizMode, string>> = {
+  de: {
+    capstone: "Abschlussweg: Capstone-Rubrik",
+    completion: "Abschlussweg: Alle Lektionen abgeschlossen",
+  },
+  en: {
+    capstone: "Completion path: capstone rubric",
+    completion: "Completion path: all lessons finished",
+  },
 };
 
 type DecodeResult =
@@ -127,7 +135,7 @@ export function VerificationPage({ courseSlug }: VerificationPageProps) {
   }, [courseSlug]);
 
   const completionDate = data?.d
-    ? new Date(data.d).toLocaleDateString("de-DE", {
+    ? new Date(data.d).toLocaleDateString(config.language === "en" ? "en-US" : "de-DE", {
         day: "2-digit",
         month: "long",
         year: "numeric",
@@ -147,7 +155,7 @@ export function VerificationPage({ courseSlug }: VerificationPageProps) {
             className="mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
-            Zurück zum {config.title}
+            {config.language === "en" ? `Back to ${config.title}` : `Zurück zum ${config.title}`}
           </Link>
 
           {/*
@@ -156,13 +164,15 @@ export function VerificationPage({ courseSlug }: VerificationPageProps) {
             The client-side decode used to leave the
             "checking" state with zero headings).
           */}
-          <h1 className="sr-only">Zertifikatdaten prüfen</h1>
+          <h1 className="sr-only">
+            {config.language === "en" ? "Verify certificate data" : "Zertifikatdaten prüfen"}
+          </h1>
 
           {data && (
             <div className="border-2 border-brand-sand bg-card p-8 text-center">
               <CheckCircle2 className="mx-auto h-12 w-12 text-brand-sand" />
               <p className="mt-2 font-mono text-xs font-bold uppercase tracking-wider text-brand-sand">
-                QR-Daten gelesen
+                {config.language === "en" ? "QR data read" : "QR-Daten gelesen"}
               </p>
               <h2 className="mt-4 text-2xl font-bold tracking-[-0.03em]">
                 {config.certificateTitle}
@@ -175,19 +185,27 @@ export function VerificationPage({ courseSlug }: VerificationPageProps) {
               <div className="mt-4 space-y-1 font-mono text-sm text-muted-foreground">
                 <p>
                   {data.m === "quiz"
-                    ? `Ergebnis: ${data.s}%`
-                    : COMPLETION_LABEL[data.m]}
+                    ? config.language === "en"
+                      ? `Score: ${data.s}%`
+                      : `Ergebnis: ${data.s}%`
+                    : COMPLETION_LABEL[config.language][data.m]}
                 </p>
-                {completionDate && <p>Datum: {completionDate}</p>}
+                {completionDate && (
+                  <p>{config.language === "en" ? "Date" : "Datum"}: {completionDate}</p>
+                )}
               </div>
               <div className="mx-auto mt-6 h-px w-16 bg-border" />
               <p className="mt-4 text-xs text-muted">
                 loehrning.ai | {config.certificateReferenceLabel}
               </p>
               <p className="mt-3 border border-border bg-background p-3 text-xs leading-relaxed text-muted-foreground">
-                {config.recordNoun.label}, lokal erzeugt. Die QR-Daten sind lesbar,
-                aber nicht servergeprüft, nicht kryptografisch signiert und keine
-                behördliche oder rechtliche Bescheinigung.
+                {config.language === "en"
+                  ? <>{config.recordNoun.label}, generated locally. The QR data is
+                      readable, but not server-verified, not cryptographically signed,
+                      and not an official or legally binding credential.</>
+                  : <>{config.recordNoun.label}, lokal erzeugt. Die QR-Daten sind lesbar,
+                      aber nicht servergeprüft, nicht kryptografisch signiert und keine
+                      behördliche oder rechtliche Bescheinigung.</>}
               </p>
             </div>
           )}
@@ -196,14 +214,22 @@ export function VerificationPage({ courseSlug }: VerificationPageProps) {
             <div className="border-2 border-destructive/30 bg-card p-8 text-center">
               <XCircle className="mx-auto h-12 w-12 text-destructive" />
               <h2 className="mt-4 text-2xl font-bold tracking-[-0.03em]">
-                {invalidReason === "course-mismatch"
-                  ? "Zertifikatcode passt nicht zu diesem Kurs."
-                  : "Zertifikatcode nicht lesbar"}
+                {config.language === "en"
+                  ? invalidReason === "course-mismatch"
+                    ? "Certificate code doesn't match this course."
+                    : "Certificate code unreadable"
+                  : invalidReason === "course-mismatch"
+                    ? "Zertifikatcode passt nicht zu diesem Kurs."
+                    : "Zertifikatcode nicht lesbar"}
               </h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                {invalidReason === "course-mismatch"
-                  ? "Der Link enthält lesbare Daten, verweist aber auf einen anderen Kurs."
-                  : "Der Link enthält keine lesbaren Zertifikatdaten oder wurde beschädigt."}
+                {config.language === "en"
+                  ? invalidReason === "course-mismatch"
+                    ? "The link contains readable data, but points to a different course."
+                    : "The link doesn't contain readable certificate data, or it's been corrupted."
+                  : invalidReason === "course-mismatch"
+                    ? "Der Link enthält lesbare Daten, verweist aber auf einen anderen Kurs."
+                    : "Der Link enthält keine lesbaren Zertifikatdaten oder wurde beschädigt."}
               </p>
             </div>
           )}
@@ -211,7 +237,9 @@ export function VerificationPage({ courseSlug }: VerificationPageProps) {
           {!data && !invalidReason && (
             <div className="py-16 text-center">
               <p role="status" aria-live="polite" className="text-muted-foreground">
-                Zertifikatdaten werden gelesen…
+                {config.language === "en"
+                  ? "Reading certificate data…"
+                  : "Zertifikatdaten werden gelesen…"}
               </p>
             </div>
           )}

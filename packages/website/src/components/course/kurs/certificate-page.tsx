@@ -27,22 +27,30 @@ interface CertificatePageProps {
   readonly courseSlug: CourseSlug;
 }
 
+type NonQuizMode = Exclude<CertificateCompletionMode, "quiz">;
+
 /** Downloaded-file completion line for the two non-quiz eligibility paths. */
-const TEXT_FALLBACK_COMPLETION_LABEL: Record<
-  Exclude<CertificateCompletionMode, "quiz">,
-  string
-> = {
-  capstone: "Abschluss: Capstone-Rubrik vollständig",
-  completion: "Abschluss: Alle Lektionen abgeschlossen",
+const TEXT_FALLBACK_COMPLETION_LABEL: Record<"de" | "en", Record<NonQuizMode, string>> = {
+  de: {
+    capstone: "Abschluss: Capstone-Rubrik vollständig",
+    completion: "Abschluss: Alle Lektionen abgeschlossen",
+  },
+  en: {
+    capstone: "Completion: capstone rubric fulfilled",
+    completion: "Completion: all lessons finished",
+  },
 };
 
 /** On-screen preview completion line for the two non-quiz eligibility paths. */
-const PREVIEW_COMPLETION_LABEL: Record<
-  Exclude<CertificateCompletionMode, "quiz">,
-  string
-> = {
-  capstone: "Abschlussweg: Capstone-Rubrik",
-  completion: "Abschlussweg: Alle Lektionen abgeschlossen",
+const PREVIEW_COMPLETION_LABEL: Record<"de" | "en", Record<NonQuizMode, string>> = {
+  de: {
+    capstone: "Abschlussweg: Capstone-Rubrik",
+    completion: "Abschlussweg: Alle Lektionen abgeschlossen",
+  },
+  en: {
+    capstone: "Completion path: capstone rubric",
+    completion: "Completion path: all lessons finished",
+  },
 };
 
 export function CertificatePage({ courseSlug }: CertificatePageProps) {
@@ -80,13 +88,13 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
         : "completion";
     const completionDate = new Date(
       quizResult.completedAt ?? Date.now(),
-    ).toLocaleDateString("de-DE", {
+    ).toLocaleDateString(config.language === "en" ? "en-US" : "de-DE", {
       day: "2-digit",
       month: "long",
       year: "numeric",
     });
     setCompletion({ quizResult, completionMode, completionDate });
-  }, [router, courseSlug, config.coursePath]);
+  }, [router, courseSlug, config.coursePath, config.language]);
 
   const handleDownload = async () => {
     if (!completion) return;
@@ -138,10 +146,12 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
         `${config.certificateTitle.toUpperCase()}: ${config.certificateSubtitle}`,
         "",
         `Name: ${name.trim()}`,
-        `Datum: ${completionDate}`,
+        `${config.language === "en" ? "Date" : "Datum"}: ${completionDate}`,
         completionMode === "quiz"
-          ? `Ergebnis: ${Math.round(quizResult.score * 100)}% (bestanden)`
-          : TEXT_FALLBACK_COMPLETION_LABEL[completionMode],
+          ? config.language === "en"
+            ? `Score: ${Math.round(quizResult.score * 100)}% (passed)`
+            : `Ergebnis: ${Math.round(quizResult.score * 100)}% (bestanden)`
+          : TEXT_FALLBACK_COMPLETION_LABEL[config.language][completionMode],
         "",
         "loehrning.ai | Tim Löhr",
       ].join("\n");
@@ -177,7 +187,7 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
             className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
-            Zurück zum Kurs
+            {config.language === "en" ? "Back to course" : "Zurück zum Kurs"}
           </Link>
 
           {/* Certificate Preview */}
@@ -189,12 +199,14 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
             <p className="mt-1 text-muted-foreground">{config.certificateSubtitle}</p>
             <div className="mx-auto mt-6 h-px w-20 bg-brand-orange" />
             <p className="mt-6 font-mono text-sm text-muted-foreground">
-              Abgeschlossen am {completionDate}
+              {config.language === "en" ? "Completed on" : "Abgeschlossen am"} {completionDate}
             </p>
             <p className="mt-1 font-mono text-sm text-muted-foreground">
               {completionMode === "quiz"
-                ? `Ergebnis: ${Math.round(quizResult.score * 100)}%`
-                : PREVIEW_COMPLETION_LABEL[completionMode]}
+                ? config.language === "en"
+                  ? `Score: ${Math.round(quizResult.score * 100)}%`
+                  : `Ergebnis: ${Math.round(quizResult.score * 100)}%`
+                : PREVIEW_COMPLETION_LABEL[config.language][completionMode]}
             </p>
             <div className="mx-auto mt-6 h-px w-20 bg-border" />
             <p className="mt-4 text-xs text-muted">
@@ -204,10 +216,15 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
 
           {/* Certificate form */}
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold">{config.recordNoun.label} herunterladen</h2>
+            <h2 className="text-lg font-semibold">
+              {config.language === "en"
+                ? `Download ${config.recordNoun.label}`
+                : `${config.recordNoun.label} herunterladen`}
+            </h2>
             <p className="text-sm text-muted-foreground">
-              Trag deinen Namen ein. Die PDF wird lokal in deinem Browser aus
-              deinem Lernstand erstellt, sie wird nicht serverseitig ausgestellt.
+              {config.language === "en"
+                ? "Enter your name. The PDF is generated locally in your browser from your progress — it isn't issued server-side."
+                : "Trag deinen Namen ein. Die PDF wird lokal in deinem Browser aus deinem Lernstand erstellt, sie wird nicht serverseitig ausgestellt."}
             </p>
 
             <div className="space-y-3">
@@ -216,8 +233,8 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
                   <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <input
                     type="text"
-                    aria-label="Vor- und Nachname"
-                    placeholder="Vor- und Nachname"
+                    aria-label={config.language === "en" ? "Full name" : "Vor- und Nachname"}
+                    placeholder={config.language === "en" ? "Full name" : "Vor- und Nachname"}
                     value={name}
                     onChange={(e) => { setName(e.target.value); setErrors((prev) => { const { name: _, ...rest } = prev; return rest; }); }}
                     aria-invalid={!!errors.name}
@@ -241,7 +258,11 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
               }`}
             >
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-              {loading ? "Wird generiert…" : `${config.recordNoun.label} herunterladen`}
+              {loading
+                ? config.language === "en" ? "Generating…" : "Wird generiert…"
+                : config.language === "en"
+                  ? `Download ${config.recordNoun.label}`
+                  : `${config.recordNoun.label} herunterladen`}
             </button>
 
             {downloaded && (
@@ -250,15 +271,22 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
                 animate={{ opacity: 1 }}
                 className="text-sm text-brand-sand"
               >
-                {config.recordNoun.possessive} wurde heruntergeladen.
+                {config.language === "en"
+                  ? `${config.recordNoun.possessive} has been downloaded.`
+                  : `${config.recordNoun.possessive} wurde heruntergeladen.`}
               </m.p>
             )}
 
             <p className="text-xs text-muted">
-              Der Name wird nur in die heruntergeladene Datei geschrieben. Der
-              Kursfortschritt bleibt lokal im Browser gespeichert; die PDF ist keine
-              behördliche oder rechtliche Bescheinigung. {config.recordNoun.demonstrative} basiert
-              auf deiner eigenen Einschätzung, nicht auf einer externen Prüfung.
+              {config.language === "en"
+                ? <>The name is only written into the downloaded file. Your course progress
+                    stays local in the browser; the PDF is not an official or legally
+                    binding credential. {config.recordNoun.demonstrative} is based on your
+                    own self-assessment, not an external exam.</>
+                : <>Der Name wird nur in die heruntergeladene Datei geschrieben. Der
+                    Kursfortschritt bleibt lokal im Browser gespeichert; die PDF ist keine
+                    behördliche oder rechtliche Bescheinigung. {config.recordNoun.demonstrative} basiert
+                    auf deiner eigenen Einschätzung, nicht auf einer externen Prüfung.</>}
             </p>
           </div>
         </m.div>
