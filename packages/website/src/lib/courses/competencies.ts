@@ -165,6 +165,24 @@ export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency
       description: "Gates downstream consumption on a signal table written only after row-count, freshness, schema, and uniqueness checks pass — never on the raw data table.",
     },
   ],
+  // English course (plan 012 stage 14): same reasoning as claude/codex above.
+  "data-science": [
+    {
+      id: "metric-before-model",
+      label: "Choosing the metric before the model",
+      description: "Picks precision, recall, F1, or PR-AUC from the real cost of a false positive vs. a false negative, not library defaults.",
+    },
+    {
+      id: "sampling-clt-intuition",
+      label: "Sampling & CLT intuition",
+      description: "Explains why a sampling distribution trends normal regardless of the population's shape, and uses it to size confidence intervals.",
+    },
+    {
+      id: "causal-dag-literacy",
+      label: "Causal DAG literacy",
+      description: "Draws the DAG before the regression and identifies confounders, mediators, and colliders to choose the correct adjustment set.",
+    },
+  ],
   // English course (plan 010 stage 13): same reasoning as claude/codex above.
   "data-infrastructure": [
     {

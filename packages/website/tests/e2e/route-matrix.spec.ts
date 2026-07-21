@@ -43,6 +43,11 @@ const PUBLIC_ROUTES = [
   // convention — note its chapter tree has no "/kurs" segment (unlike the
   // three courses above), see the sitemap no-leak test below.
   "/kurse/open-source/data-engineering-fundamentals",
+  // plan 012 stage 14: data-science's landing, same nested convention and
+  // no-"/kurs"-segment chapter tree as data-engineering-fundamentals above
+  // — its Overview additionally renders AT this exact route (not a
+  // separate "/home" chapter), see the sitemap no-leak test below.
+  "/kurse/open-source/data-science",
   "/blog",
   "/open-source",
   "/open-source/lizenzrichtlinie",
@@ -245,6 +250,21 @@ test.describe("sitemap lists only contract-included paths", () => {
     expect(body).toContain("/kurse/open-source/data-engineering-fundamentals<");
     expect(body).not.toContain("/kurse/open-source/data-engineering-fundamentals/home");
     expect(body).not.toContain("/kurse/open-source/data-engineering-fundamentals/fund");
+  });
+
+  // plan 012 stage 14: data-science's chapter tree has no "/kurs" segment
+  // either, and unlike data-engineering-fundamentals its Overview renders
+  // directly AT the bare course root (no "/home" sub-path at all) — the
+  // no-leak check confirms a real numbered-chapter path never appears,
+  // while the bare course root DOES appear.
+  test("sitemap.xml lists the data-science landing but not its chapter routes", async ({
+    request,
+  }) => {
+    const response = await request.get("/sitemap.xml");
+    const body = await response.text();
+    expect(body).toContain("/kurse/open-source/data-science<");
+    expect(body).not.toContain("/kurse/open-source/data-science/fund");
+    expect(body).not.toContain("/kurse/open-source/data-science/cap");
   });
 
   test("sitemap.xml does not contain /ki-transformation-check", async ({

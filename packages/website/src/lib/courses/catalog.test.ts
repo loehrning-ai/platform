@@ -24,13 +24,14 @@ import { getCodexTotalLessons, getCodexTracks } from "@/lib/codex/data";
 import { COURSE_SLUGS } from "@/lib/course/types";
 import { getRegisteredCourseSlugs } from "@/lib/course/config";
 import { DEF_CHAPTER_IDS } from "@/lib/data-engineering-fundamentals/types";
+import { DS_NUMBERED_CHAPTER_IDS } from "@/lib/data-science/types";
 
 function sha256(path: string): string {
   return createHash("sha256").update(readFileSync(path)).digest("hex");
 }
 
 describe("course catalog (shared course architecture)", () => {
-  it("lists all eight native courses in the recommended learning order (plan 011 stage 12 adds data-engineering-fundamentals)", () => {
+  it("lists all nine native courses in the recommended learning order (plan 012 stage 14 adds data-science)", () => {
     expect(COURSE_CATALOG.map((c) => c.slug)).toEqual([
       "ki-fuehrerschein",
       "ki-und-gesellschaft",
@@ -40,11 +41,12 @@ describe("course catalog (shared course architecture)", () => {
       "codex",
       "data-infrastructure",
       "data-engineering-fundamentals",
+      "data-science",
     ]);
   });
 
-  it("numbers the learning-path steps 1 through 8", () => {
-    expect(COURSE_CATALOG.map((c) => c.step)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+  it("numbers the learning-path steps 1 through 9", () => {
+    expect(COURSE_CATALOG.map((c) => c.step)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
   });
 
   it("only references slugs registered in the shared course engine", () => {
@@ -55,16 +57,8 @@ describe("course catalog (shared course architecture)", () => {
 
   it("keeps imported open-source courses outside the native progress engine", () => {
     expect(IMPORTED_COURSE_CATALOG.map((c) => c.slug)).toEqual([
-      "data-science",
       "ai-native-operator",
     ]);
-    // Temporary per-slug exception (plan 012 stage 1, mirroring plan 010/011
-    // stage 1's own note): "data-science" registers its CourseConfig ahead
-    // of the catalog flip (stage 14), same sequencing as claude/codex/
-    // data-infrastructure/data-engineering-fundamentals's own stage-1
-    // precedent. Removed once the catalog entry flips and this slug leaves
-    // IMPORTED_COURSE_CATALOG.
-    const REGISTERED_AHEAD_OF_CATALOG_FLIP: readonly string[] = ["data-science"];
     for (const c of IMPORTED_COURSE_CATALOG) {
       // CourseSlug (plan 007 stage 1) now spans both native and imported
       // courses by design, so the meaningful invariant is that imported
@@ -72,11 +66,10 @@ describe("course catalog (shared course architecture)", () => {
       // their slug is absent from the wider CourseSlug union. "claude" left
       // this array entirely in plan 008 stage 10, "codex" in plan 009 stage
       // 7, "data-infrastructure" in plan 010 stage 13, "data-engineering-
-      // fundamentals" in plan 011 stage 12 (all four flipped to nativeStatus
-      // "live", moved into COURSE_CATALOG).
-      if (!REGISTERED_AHEAD_OF_CATALOG_FLIP.includes(c.slug)) {
-        expect(getRegisteredCourseSlugs()).not.toContain(c.slug);
-      }
+      // fundamentals" in plan 011 stage 12, "data-science" in plan 012
+      // stage 14 (all five flipped to nativeStatus "live", moved into
+      // COURSE_CATALOG).
+      expect(getRegisteredCourseSlugs()).not.toContain(c.slug);
       expect(c.href).toBe(`/kurse/open-source/${c.slug}`);
       expect(c.launchHref).toMatch(/^https:\/\/www\.timloehr\.me\/interactive-courses\//);
       // public-content contract: "Quelle" list links are commit-pinned so the
@@ -124,13 +117,6 @@ describe("course catalog (shared course architecture)", () => {
       })),
     ).toEqual([
       {
-        slug: "data-science",
-        unitCount: 12,
-        unitLabel: "Kapitel",
-        totalLessons: 12,
-        lessonCountLabel: "12 Kapitel",
-      },
-      {
         slug: "ai-native-operator",
         unitCount: 9,
         unitLabel: "Module",
@@ -142,8 +128,8 @@ describe("course catalog (shared course architecture)", () => {
 
   it("exposes a combined display catalog without changing native course semantics", () => {
     expect(ALL_COURSE_CATALOG).toHaveLength(10);
-    expect(COURSE_CATALOG).toHaveLength(8);
-    expect(IMPORTED_COURSE_CATALOG).toHaveLength(2);
+    expect(COURSE_CATALOG).toHaveLength(9);
+    expect(IMPORTED_COURSE_CATALOG).toHaveLength(1);
   });
 
   // plan 007 stage 10: the structural split is asserted via nativeStatus,
@@ -251,6 +237,33 @@ describe("course catalog (shared course architecture)", () => {
     expect(sha256(licensePath)).toBe(def!.licenseSha256);
   });
 
+  it("reconciles data-science's totalLessons/unitCount to the 12 numbered chapters (plan 012 stage 14)", () => {
+    const ds = getCatalogCourse("data-science");
+    expect(ds?.totalLessons).toBe(DS_NUMBERED_CHAPTER_IDS.length);
+    expect(ds?.totalLessons).toBe(12);
+    expect(ds?.unitCount).toBe(12);
+    expect(ds?.lessonCountLabel).toBe("12 Kapitel");
+    expect(ds?.nativeStatus).toBe("live");
+    // Unlike data-engineering-fundamentals, the Overview lives at the bare
+    // course root (not a "/home" chapter slug) — startHref points directly
+    // there.
+    expect(ds?.startHref).toBe("/kurse/open-source/data-science");
+  });
+
+  it("retains data-science's open-source provenance fields after the plan 012 stage 14 flip to native", () => {
+    const ds = getCatalogCourse("data-science");
+    expect(ds?.imageSrc).toMatch(/^\/imported-courses\/screenshots\/.+\.jpg$/);
+    expect(ds?.sourceCommit).toBe(IMPORTED_COURSE_SOURCE_COMMIT);
+    expect(ds?.imageSha256).toMatch(/^[a-f0-9]{64}$/);
+    expect(ds?.licenseSha256).toMatch(/^[a-f0-9]{64}$/);
+    const imagePath = join(process.cwd(), "public", ds!.imageSrc!);
+    const licensePath = join(process.cwd(), "public", ds!.licenseHref!);
+    expect(existsSync(imagePath)).toBe(true);
+    expect(existsSync(licensePath)).toBe(true);
+    expect(sha256(imagePath)).toBe(ds!.imageSha256);
+    expect(sha256(licensePath)).toBe(ds!.licenseSha256);
+  });
+
   it("retains codex's open-source provenance fields after the plan 009 stage 7 flip to native", () => {
     const codex = getCatalogCourse("codex");
     expect(codex?.imageSrc).toMatch(/^\/imported-courses\/screenshots\/.+\.jpg$/);
@@ -289,18 +302,19 @@ describe("course catalog (shared course architecture)", () => {
   });
 
   it("uses internal landing + start hrefs that begin with the course base path", () => {
-    // "claude"/"codex"/"data-infrastructure"/"data-engineering-fundamentals"
-    // are deliberate exceptions (plan 008 stage 10, plan 009 stage 7, plan
-    // 010 stage 13, plan 011 stage 12): their URLs stay under
-    // /kurse/open-source/<slug> across the imported-to-native flip instead
-    // of moving to a top-level /<slug> path like the 4 German courses, so
-    // their public URLs never break.
+    // "claude"/"codex"/"data-infrastructure"/"data-engineering-fundamentals"/
+    // "data-science" are deliberate exceptions (plan 008 stage 10, plan 009
+    // stage 7, plan 010 stage 13, plan 011 stage 12, plan 012 stage 14):
+    // their URLs stay under /kurse/open-source/<slug> across the
+    // imported-to-native flip instead of moving to a top-level /<slug> path
+    // like the 4 German courses, so their public URLs never break.
     const HREF_OVERRIDE: Partial<Record<string, string>> = {
       "ai-native": "ai-native",
       claude: "kurse/open-source/claude",
       codex: "kurse/open-source/codex",
       "data-infrastructure": "kurse/open-source/data-infrastructure",
       "data-engineering-fundamentals": "kurse/open-source/data-engineering-fundamentals",
+      "data-science": "kurse/open-source/data-science",
     };
     for (const c of COURSE_CATALOG) {
       expect(c.href).toBe(`/${HREF_OVERRIDE[c.slug] ?? c.slug}`);
@@ -322,5 +336,6 @@ describe("course catalog (shared course architecture)", () => {
     expect(getImportedCourse("ai-native")).toBeUndefined();
     expect(getImportedCourse("claude")).toBeUndefined();
     expect(getImportedCourse("codex")).toBeUndefined();
+    expect(getImportedCourse("data-science")).toBeUndefined();
   });
 });

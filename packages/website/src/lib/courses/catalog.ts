@@ -400,6 +400,53 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     integrationNote:
       "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
   },
+  // Data Science (plan 012 stage 14): fifth imported course flipped from
+  // "pending" to "live". Like data-engineering-fundamentals, chapters live
+  // directly under data-science/[chapterSlug] with no "/kurs" segment —
+  // but unlike it, the Overview renders at the bare course root itself
+  // (plan 012 stage 5's route split: "home" is not a [chapterSlug] entry),
+  // so startHref/continueHref both point at the course root directly
+  // rather than at a "/home" sub-path.
+  {
+    slug: "data-science",
+    step: 9,
+    title: "Data Science Fundamentals",
+    eyebrow: "Schritt 09 · Data Science",
+    tagline: "Von Verteilungen bis Deployment, mit einer Live-Simulation pro Kapitel.",
+    description:
+      "12 Kapitel durch den kompletten Data-Science-Loop: Sampling & Zentraler Grenzwertsatz, explorative Datenanalyse, Feature Engineering, Bias/Variance, ROC/PR-Evaluation, SHAP/LIME-Interpretierbarkeit, A/B-Test-Power, Causal DAGs, Peeking-Fallstricke und Production-Drift-Monitoring. Mit 22 interaktiven Simulationen und einem Fraud-Detection-Capstone. Auf Englisch, jetzt nativ auf loehrning.ai mit Fortschritt und Zertifikat.",
+    href: "/kurse/open-source/data-science",
+    startHref: "/kurse/open-source/data-science",
+    continueHref: "/kurse/open-source/data-science",
+    duration: "ca. 2 Std.",
+    totalLessons: 12,
+    unitLabel: "Kapitel",
+    unitCount: 12,
+    audience: "Data Scientists, ML Engineers, Analysten",
+    coverImage: "/imported-courses/screenshots/data-science.jpg",
+    coverImageAlt: "Startseite von Data Science Fundamentals",
+    nativeStatus: "live",
+    imageSrc: "/imported-courses/screenshots/data-science.jpg",
+    imageAlt: "Screenshot des Kurses Data Science Fundamentals",
+    launchHref: "https://www.timloehr.me/interactive-courses/data-science/",
+    sourceHref:
+      "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101/data-science",
+    sourceCommitHref:
+      "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101/data-science",
+    licenseHref: "/imported-courses/licenses/interactive-courses-MIT-LICENSE.txt",
+    sourceImagePath: "docs/screenshots/data-science.jpg",
+    sourceLicensePath: "LICENSE",
+    imageSha256: "3b687b55058b216e4a2a91b1f202327460d5302295aee48c4b9d0c9e06d1b3ce",
+    licenseSha256: "cc41d8f9e6580c3cd9ebe68f40af8e599d09beb147c3378ea010974ea76e07f3",
+    licenseSizeBytes: 1066,
+    sourceCommit: "0e5dfd327ce44663696b52eb6643bab147947101",
+    lessonCountLabel: "12 Kapitel",
+    language: "Englisch",
+    topics: ["Python", "pandas", "scikit-learn", "PyTorch", "MLflow"],
+    sourceFacts: ["12 Kapitel", "22 Live-Simulationen", "Jetzt nativ"],
+    integrationNote:
+      "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
+  },
 ] as const;
 
 export const IMPORTED_COURSE_SOURCE_COMMIT =
@@ -408,47 +455,14 @@ export const IMPORTED_COURSE_SOURCE_COMMIT =
 const IMPORTED_COURSE_SOURCE_BASE = `https://github.com/Mavengence/interactive-courses/tree/${IMPORTED_COURSE_SOURCE_COMMIT}`;
 
 export const IMPORTED_COURSE_CATALOG: readonly ImportedCourse[] = [
-  {
-    slug: "data-science",
-    step: 1,
-    title: "Data Science Fundamentals",
-    eyebrow: "Technisches Lab · Data Science",
-    tagline: "Von Verteilungen bis Deployment, mit einer Live-Simulation pro Kapitel.",
-    description:
-      "Zwölf interaktive Kapitel durch den Data-Science-Loop: EDA, Feature Engineering, statistisches Denken, CLT, Bias/Variance, ROC/PR, SHAP, A/B-Test-Power, Causal DAGs, Drift, Production Deployment und Capstone.",
-    href: "/kurse/open-source/data-science",
-    imageSrc: "/imported-courses/screenshots/data-science.jpg",
-    imageAlt: "Screenshot des Kurses Data Science Fundamentals",
-    launchHref: "https://www.timloehr.me/interactive-courses/data-science/",
-    sourceHref: `${IMPORTED_COURSE_SOURCE_BASE}/data-science`,
-    sourceCommitHref: `${IMPORTED_COURSE_SOURCE_BASE}/data-science`,
-    licenseHref: "/imported-courses/licenses/interactive-courses-MIT-LICENSE.txt",
-    sourceImagePath: "docs/screenshots/data-science.jpg",
-    sourceLicensePath: "LICENSE",
-    imageSha256: "3b687b55058b216e4a2a91b1f202327460d5302295aee48c4b9d0c9e06d1b3ce",
-    licenseSha256: "cc41d8f9e6580c3cd9ebe68f40af8e599d09beb147c3378ea010974ea76e07f3",
-    licenseSizeBytes: 1066,
-    sourceCommit: IMPORTED_COURSE_SOURCE_COMMIT,
-    duration: "ca. 2 Std.",
-    totalLessons: 12,
-    unitLabel: "Kapitel",
-    unitCount: 12,
-    lessonCountLabel: "12 Kapitel",
-    audience: "Data Scientists, ML Engineers, Analysten",
-    language: "Englisch",
-    topics: ["Python", "pandas", "scikit-learn", "PyTorch", "MLflow"],
-    sourceFacts: ["12 Kapitel", "Live-Simulationen", "CLT", "ROC/PR"],
-    integrationNote:
-      "Als externer Open-Source-Kurs gerahmt, damit die interaktiven Simulationen erhalten bleiben, ohne globale CSP-Regeln zu lockern.",
-    nativeStatus: "pending",
-  },
-  // "claude"/"codex"/"data-infrastructure"/"data-engineering-fundamentals"
-  // moved to COURSE_CATALOG above (plan 008 stage 10 / plan 009 stage 7 /
-  // plan 010 stage 13 / plan 011 stage 12: flipped to nativeStatus "live"
-  // now that they have real native routes).
+  // "claude"/"codex"/"data-infrastructure"/"data-engineering-fundamentals"/
+  // "data-science" moved to COURSE_CATALOG above (plan 008 stage 10 / plan
+  // 009 stage 7 / plan 010 stage 13 / plan 011 stage 12 / plan 012 stage
+  // 14: flipped to nativeStatus "live" now that they have real native
+  // routes).
   {
     slug: "ai-native-operator",
-    step: 2,
+    step: 1,
     title: "The AI-Native Operator",
     eyebrow: "Technisches Lab · AI Operating Model",
     tagline: "Arbeitsweise, Engineering-Praxis und Organisationsdesign für AI-natives Arbeiten.",

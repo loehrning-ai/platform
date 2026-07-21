@@ -65,6 +65,17 @@ const COURSES = [
     slug: "data-engineering-fundamentals",
     title: /Data Engineering Fundamentals/,
   },
+  // plan 012 stage 14: data-science, same nested-path shape and
+  // "completion" (all-12-numbered-chapters-visited) eligibility path as
+  // codex/data-infrastructure/data-engineering-fundamentals — no
+  // quiz/capstone mechanism exists in source. The m: "quiz" payload below
+  // is shared test-mechanism scaffolding only; it exercises decodeHash/
+  // course-match/bit-flip-rejection generically, same as every other row.
+  {
+    route: "/kurse/open-source/data-science/verifizierung",
+    slug: "data-science",
+    title: /Data Science Fundamentals/,
+  },
 ] as const;
 
 /** Encode a certificate payload exactly like the app's serializer (base64url). */

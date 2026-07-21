@@ -201,13 +201,16 @@ describe("unified progress store", () => {
     });
 
     it("ignores unknown imported-course slices when counting lesson badges", () => {
-      // "data-science" and "ai-native-operator" stand in for still-external,
-      // unregistered courses. "claude"/"codex"/"data-infrastructure"/
-      // "data-engineering-fundamentals" are deliberately not used here any
-      // more: plan 008 stage 10, plan 009 stage 7, plan 010 stage 13, and
-      // plan 011 stage 12 registered and flipped them to native courses, so
-      // their slices ARE now counted, which would break this test's premise
-      // if reused.
+      // "totally-unregistered-course" and "ai-native-operator" stand in for
+      // still-external, unregistered courses. "claude"/"codex"/
+      // "data-infrastructure"/"data-engineering-fundamentals"/"data-science"
+      // are deliberately not used here any more: plan 008 stage 10, plan 009
+      // stage 7, plan 010 stage 13, plan 011 stage 12, and plan 012 stage 14
+      // registered and flipped them to native courses, so their slices ARE
+      // now counted, which would break this test's premise if reused. The
+      // first placeholder is a slug that was never a real catalog member
+      // (not just "currently still external"), so this test stays valid
+      // even once "ai-native-operator" itself eventually flips (plan 013).
       const lesson = {
         sectionsRead: [],
         quizScore: null,
@@ -231,7 +234,7 @@ describe("unified progress store", () => {
         JSON.stringify({
           schemaVersion: 2,
           courses: {
-            "data-science": slice,
+            "totally-unregistered-course": slice,
             "ai-native-operator": slice,
           },
           xp: 0,
