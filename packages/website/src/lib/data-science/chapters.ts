@@ -24,7 +24,10 @@ export interface DsChapterBodyProps {
 export type DsChapterComponent = ComponentType<DsChapterBodyProps>;
 type DsChapterLoader = () => Promise<{ default: DsChapterComponent }>;
 
-const CHAPTER_LOADERS: Partial<Record<DsChapterId, DsChapterLoader>> = {};
+const CHAPTER_LOADERS: Partial<Record<DsChapterId, DsChapterLoader>> = {
+  fund: () => import("@/components/data-science/chapters/ch01-fundamentals"),
+  eval: () => import("@/components/data-science/chapters/ch06-evaluate"),
+};
 
 const chapterCache = new Map<DsChapterId, DsChapterComponent>();
 
