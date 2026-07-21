@@ -1,0 +1,131 @@
+// Ported verbatim from course-data.js's MODULES[3] ("operations", M04).
+import type { AiNativeOperatorLesson } from "../types";
+
+export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
+  {
+    id: "operations/1",
+    moduleId: "operations",
+    lessonNumber: 1,
+    number: 1,
+    kind: "reading",
+    title: "Async-default meetings",
+    subtitle:
+      "Reclaim a third of your week by routing status through async + AI summary instead of synchronous time.",
+    objective:
+      "Reclaim a third of your week by routing status through async + AI summary instead of synchronous time.",
+    durationMinutes: 14,
+    keyConcepts: [],
+    quiz: [],
+    sections: [
+      {
+        id: "s1",
+        title: "The status meeting is dead",
+        readTimeMinutes: 5,
+        content:
+          "Five people each report what they did. Four of them are reporting it to four others who do not need to know. The decision-makers wait through the rest. This ritual was never efficient — it was a coordination tax. AI removes the tax.",
+      },
+      {
+        id: "s2",
+        title: "The new ritual",
+        readTimeMinutes: 5,
+        content:
+          "Each person posts a one-paragraph status to a channel. An agent summarizes the channel. The summary surfaces conflicts, blockers, and decisions needed. The leader spends 5 minutes reading. A 30-minute meeting only happens when a real-time decision is required.",
+      },
+      {
+        id: "s3",
+        title: "What you lose, and how to recover it",
+        readTimeMinutes: 4,
+        content:
+          'You lose serendipity — the side conversations that produced unexpected ideas. Recover this through a different ritual: a weekly "open hour" where the team is together with no agenda. The serendipity was never in the status meeting; it was in being in the same room.',
+      },
+    ],
+    exerciseKind: "reflect-box",
+    widgets: [],
+  },
+  {
+    id: "operations/2",
+    moduleId: "operations",
+    lessonNumber: 2,
+    number: 2,
+    kind: "reading",
+    title: "AI in every doc",
+    subtitle: "Eliminate the blank page from your team's working life.",
+    objective: "Eliminate the blank page from your team's working life.",
+    durationMinutes: 12,
+    keyConcepts: [],
+    quiz: [],
+    sections: [
+      {
+        id: "s1",
+        title: "The blank-page tax",
+        readTimeMinutes: 6,
+        content:
+          "Most knowledge work begins by staring at a blank page for 20 minutes. AI eliminates this tax. The first draft is no longer where you spend your effort — it is where you start your effort. The blank page should never appear again in your team's life.",
+      },
+      {
+        id: "s2",
+        title: "The brief-first habit",
+        readTimeMinutes: 6,
+        content:
+          "For every doc — design, technical, planning, performance, comms — start with a one-paragraph brief. The agent drafts. You sharpen. The shape of the work has changed: 80% editor, 20% writer. The output quality is higher, not lower, because editing is harder than writing and you spend the time on the harder part.",
+      },
+    ],
+    exerciseKind: "reflect-box",
+    widgets: [],
+  },
+  {
+    id: "operations/3",
+    moduleId: "operations",
+    lessonNumber: 3,
+    number: 3,
+    kind: "reading",
+    title: "Ticket triage agents",
+    subtitle:
+      "Set up an agent that classifies, enriches, deduplicates, and assigns inbound tickets — leaving humans to handle exceptions only.",
+    objective:
+      "Set up an agent that classifies, enriches, deduplicates, and assigns inbound tickets — leaving humans to handle exceptions only.",
+    durationMinutes: 17,
+    keyConcepts: [],
+    quiz: [],
+    sections: [
+      {
+        id: "s1",
+        title: "The triage pipeline",
+        readTimeMinutes: 6,
+        content:
+          "Inbound ticket → agent reads → agent classifies (severity, area, owner) → agent enriches (links related tickets, recent context) → agent assigns. Human reviews exceptions only — the ones where the agent flagged uncertainty.",
+      },
+      {
+        id: "s2",
+        title: "The 95/5 rule",
+        readTimeMinutes: 6,
+        content:
+          "A well-designed triage agent handles 95% of tickets without human touch. The remaining 5% are the genuinely ambiguous ones, and they go to a human with full context. The human spends 1 hour a day on triage instead of 4 — and the work is more interesting because all the easy cases are gone.",
+      },
+      {
+        id: "s3",
+        title: "The escalation path",
+        readTimeMinutes: 5,
+        content:
+          "When the agent is wrong, what happens? The eng team needs a clear escalation path: who reviews, who fixes, who closes the loop with the user. Triage agents fail silently if you let them. Build the loop.",
+      },
+    ],
+    exerciseKind: "reflect-box",
+    widgets: [],
+  },
+  {
+    id: "operations/4",
+    moduleId: "operations",
+    lessonNumber: 4,
+    number: 4,
+    kind: "quiz",
+    title: "Module 4 — knowledge check",
+    subtitle: "Operational basics, locked.",
+    objective: "Operational basics, locked.",
+    durationMinutes: 7,
+    keyConcepts: [],
+    quiz: [],
+    sections: [],
+    widgets: [],
+  },
+];
