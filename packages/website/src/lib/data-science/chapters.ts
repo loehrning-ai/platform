@@ -10,8 +10,10 @@
 // The source is already a hand-built React layout per chapter (Hero +
 // prose + inline simulators in a fixed arrangement), so each loader
 // resolves a real chapter COMPONENT, not a data object. `CHAPTER_LOADERS`
-// starts `Partial` and is populated incrementally as each chapter is
-// ported (stages 6-11 populate all 13 entries).
+// started `Partial` and was populated incrementally as each chapter was
+// ported (stages 6-11 populated all 13 entries; kept `Partial` in its
+// type since that's the honest shape of a loader map, even though every
+// key is now present).
 
 import type { ComponentType } from "react";
 import type { ChapterMeta, DsChapterId } from "./types";
@@ -36,6 +38,8 @@ const CHAPTER_LOADERS: Partial<Record<DsChapterId, DsChapterLoader>> = {
   exp: () => import("@/components/data-science/chapters/ch08-experiment"),
   causal: () => import("@/components/data-science/chapters/ch09-causal"),
   peek: () => import("@/components/data-science/chapters/ch10-peeking"),
+  deploy: () => import("@/components/data-science/chapters/ch11-deploy"),
+  cap: () => import("@/components/data-science/chapters/ch12-capstone"),
 };
 
 const chapterCache = new Map<DsChapterId, DsChapterComponent>();

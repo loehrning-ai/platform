@@ -14,13 +14,15 @@ const POPULATED_IDS = [
   "exp",
   "causal",
   "peek",
+  "deploy",
+  "cap",
 ] as const;
 const UNPOPULATED_IDS = DS_CHAPTER_IDS.filter(
   (id) => !(POPULATED_IDS as readonly string[]).includes(id),
 );
 
-describe("data-science chapter-component loader map (plan 012 stages 1, 6, 7, 8, 9, 10)", () => {
-  it("resolves a real component for every populated id (fund, eval — stage 6; home, explore, clean — stage 7; feature, model — stage 8; interp, exp — stage 9; causal, peek — stage 10)", async () => {
+describe("data-science chapter-component loader map (plan 012 stages 1, 6, 7, 8, 9, 10, 11)", () => {
+  it("resolves a real component for every populated id (fund, eval — stage 6; home, explore, clean — stage 7; feature, model — stage 8; interp, exp — stage 9; causal, peek — stage 10; deploy, cap — stage 11 — all 13 chapters now populated)", async () => {
     __resetDsChapterCacheForTests();
     for (const id of POPULATED_IDS) {
       const Component = await getDsChapterComponent(id);

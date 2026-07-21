@@ -17,6 +17,8 @@ import Ch07Interpret from "./ch07-interpret";
 import Ch08Experiment from "./ch08-experiment";
 import Ch09Causal from "./ch09-causal";
 import Ch10Peeking from "./ch10-peeking";
+import Ch11Deploy from "./ch11-deploy";
+import Ch12Capstone from "./ch12-capstone";
 
 afterEach(() => {
   cleanup();
@@ -130,5 +132,28 @@ describe("data-science chapter components render with real ported content, not p
     expect(screen.getAllByText("CUPED — Variance Reduction via Covariates").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Statistical Power").length).toBeGreaterThan(0);
     expect(screen.getByText("Key takeaways")).toBeInTheDocument();
+  });
+});
+
+describe("data-science chapter components render with real ported content, not placeholders (plan 012 stage 11)", () => {
+  it("Ch11Deploy renders the real hero and all 4 simulators", () => {
+    render(<Ch11Deploy chapter={getDsChapterMeta("deploy")} />);
+    expect(screen.getByText(/chapter one/)).toBeInTheDocument();
+    expect(screen.getAllByText("Model serving architecture").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Drift simulator").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Shadow & canary deployment").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Feature store & training-serving skew").length).toBeGreaterThan(0);
+    expect(screen.getByText("Key takeaways")).toBeInTheDocument();
+  });
+
+  it("Ch12Capstone renders the real hero, all 4 simulators, and the closing CTA", () => {
+    render(<Ch12Capstone />);
+    expect(screen.getByText(/the full DS loop/)).toBeInTheDocument();
+    expect(screen.getAllByText("Dataset explorer — class imbalance").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("ML pipeline — step-by-step").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Precision–recall tradeoff").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Production readiness checklist").length).toBeGreaterThan(0);
+    expect(screen.getByText("Key takeaways")).toBeInTheDocument();
+    expect(screen.getByText("You've reached the end.")).toBeInTheDocument();
   });
 });
