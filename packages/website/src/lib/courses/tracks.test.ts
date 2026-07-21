@@ -43,15 +43,28 @@ describe("learner-first course model", () => {
     }
   });
 
-  it("puts every COURSE_CATALOG course on the spine, everything else deeper (plan 008 stage 10 adds claude, English, to the spine)", () => {
-    for (const course of COURSE_CATALOG) {
-      expect(courseGroupFor(course.slug)).toBe("spine");
+  it("keeps the spine to exactly the 4 native German certified courses, everything else deeper", () => {
+    // group is independent of nativeStatus/catalog membership (plan 007
+    // stage 6 unified CatalogCourse/ImportedCourse behind nativeStatus,
+    // which is orthogonal to which learner-facing shelf a course sits in).
+    // A ported course can flip to nativeStatus "live" and join
+    // COURSE_CATALOG while staying "deeper" — claude did exactly this in
+    // plan 008. Do NOT derive spine membership from COURSE_CATALOG
+    // membership; assert against the explicit, confirmed spine slug set.
+    const SPINE_SLUGS: readonly CourseSlug[] = [
+      "ki-fuehrerschein",
+      "eu-ai-act-kurs",
+      "ai-native",
+      "ki-und-gesellschaft",
+    ];
+    for (const slug of ALL_SLUGS) {
+      const expected = SPINE_SLUGS.includes(slug as CourseSlug) ? "spine" : "deeper";
+      expect(courseGroupFor(slug), `${slug} should be group:"${expected}"`).toBe(expected);
     }
-    for (const course of IMPORTED_COURSE_CATALOG) {
-      expect(courseGroupFor(course.slug)).toBe("deeper");
-    }
-    for (const course of BRAINSTER_COURSE_CATALOG) {
-      expect(courseGroupFor(course.slug)).toBe("deeper");
+    // Every spine slug must also be a live, native COURSE_CATALOG entry —
+    // spine implies native, but native does not imply spine.
+    for (const slug of SPINE_SLUGS) {
+      expect(COURSE_CATALOG.some((c) => c.slug === slug), `${slug} must be in COURSE_CATALOG`).toBe(true);
     }
   });
 

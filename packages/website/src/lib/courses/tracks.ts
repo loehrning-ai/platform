@@ -115,20 +115,23 @@ export interface CourseFacts {
  * so adding a course without classifying it fails CI.
  */
 export const COURSE_FACTS: Record<string, CourseFacts> = {
-  // Spine, certified courses with live progress + record (shown in step
-  // order). "claude" joined the spine in plan 008 stage 10: nativeStatus
-  // "live" entries must render with the spine card treatment (live progress
-  // dots, certified checkmark) per `course-gallery.tsx`'s isLiveCourse
-  // split, and `tracks.test.ts` enforces group:"spine" for every
-  // COURSE_CATALOG member, so this is the only value consistent with the
-  // codebase's existing invariant even though claude is English, not German.
+  // Spine — the 4 native, certified German courses (shown in step order).
+  // group is independent of nativeStatus/catalog membership: a course can be
+  // native (COURSE_CATALOG, nativeStatus "live") and still belong to the
+  // "deeper" shelf, as every English-track ported course below does. Only
+  // these 4 slugs are ever "spine" — do not add a course here just because
+  // it joined COURSE_CATALOG.
   "ki-fuehrerschein": { group: "spine", iconName: "GraduationCap", language: "Deutsch", record: "zertifikat", external: false, accent: "kupfer", badge: "Zertifikat · Deutsch" },
   "ki-und-gesellschaft": { group: "spine", iconName: "Users", language: "Deutsch", record: "lernnachweis", external: false, accent: "kupfer", badge: "Zertifikat · Deutsch" },
   "eu-ai-act-kurs": { group: "spine", iconName: "Scale", language: "Deutsch", record: "zertifikat", external: false, accent: "kupfer", badge: "Zertifikat · Deutsch" },
   "ai-native": { group: "spine", iconName: "Bot", language: "Deutsch", record: "zertifikat", external: false, accent: "kupfer", badge: "Zertifikat · Deutsch" },
-  "claude": { group: "spine", iconName: "Sparkles", language: "Englisch", record: "certificate", external: false, accent: "kupfer", badge: "Certificate · Englisch" },
 
-  // Deeper — external GitHub labs (English, no native record).
+  // Deeper — the 6 ported/imported English-track courses. "claude" flipped
+  // nativeStatus to "live" in plan 008 (real routes, real progress,
+  // certificate), but stays in the "deeper" shelf per the confirmed
+  // /discuss decision: only the 4 German certified courses form the ordered
+  // spine. nativeStatus and group are independent axes.
+  "claude": { group: "deeper", iconName: "Sparkles", language: "Englisch", record: "certificate", external: false, accent: "sand", badge: "Certificate · Englisch" },
   "data-engineering-fundamentals": { group: "deeper", iconName: "Database", language: "Englisch", record: "none", external: true, accent: "sand", badge: "GitHub · MIT · Englisch" },
   "data-science": { group: "deeper", iconName: "LineChart", language: "Englisch", record: "none", external: true, accent: "sand", badge: "GitHub · MIT · Englisch" },
   "data-infrastructure": { group: "deeper", iconName: "Server", language: "Englisch", record: "none", external: true, accent: "sand", badge: "GitHub · MIT · Englisch" },
