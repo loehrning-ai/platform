@@ -2,7 +2,14 @@
 // Widget manifest: SemanticSpace x1 (sem), Tokenizer x1 (tok), Quiz x3 (q1,
 // q2, q3), PromptSandbox x1 (sb). Wired incrementally (plan 008 stages 4, 7).
 import type { ClaudeLesson } from "../types";
-import { CLAUDE_QUIZ_COPY } from "../widget-copy";
+import {
+  CLAUDE_QUIZ_COPY,
+  CLAUDE_SEMANTIC_SPACE_SEED,
+  CLAUDE_SEMANTIC_SPACE_KEYWORDS,
+  CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS,
+  CLAUDE_SEMANTIC_SPACE_QUADRANT_LABELS,
+  CLAUDE_SEMANTIC_SPACE_COPY,
+} from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "context",
@@ -66,6 +73,23 @@ const lesson: ClaudeLesson = {
     },
   ],
   widgets: [
+    {
+      kind: "semantic-space",
+      placement: "after-intro",
+      courseSlug: "claude",
+      props: {
+        lessonId: "context",
+        cpId: "drop",
+        title: "Meaning lives in space",
+        scenario:
+          "Try it. The canvas below is a 2D projection of semantic space. The real thing has thousands of dimensions, but two is enough to see the shape. Drop a word, Claude places it near its neighbors.",
+        seed: CLAUDE_SEMANTIC_SPACE_SEED,
+        clusterKeywords: CLAUDE_SEMANTIC_SPACE_KEYWORDS,
+        clusterLabels: CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS,
+        quadrantLabels: CLAUDE_SEMANTIC_SPACE_QUADRANT_LABELS,
+        copy: CLAUDE_SEMANTIC_SPACE_COPY,
+      },
+    },
     {
       kind: "tokenizer",
       placement: "after-intro",
