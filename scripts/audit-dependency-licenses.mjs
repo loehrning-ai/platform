@@ -14,6 +14,11 @@ const REVIEWED_LICENSE_EXCEPTIONS = [
     rationale: "optional prebuilt image-processing runtime",
   },
   {
+    id: /^@img\/sharp-libvips-[^@]+@1\.3\.2$/,
+    license: "LGPL-3.0-or-later",
+    rationale: "optional prebuilt image-processing runtime (libvips bump via sharp ^0.35.0, same license as 1.2.4)",
+  },
+  {
     id: /^@sentry\/cli(?:-[a-z0-9-]+)?@2\.58\.6$/,
     license: "FSL-1.1-MIT",
     rationale: "optional build-time Sentry CLI; excluded from the source tree",
