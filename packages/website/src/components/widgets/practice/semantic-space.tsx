@@ -8,26 +8,36 @@ import { LiveNote } from "./_live-note";
 import { usePracticeApi } from "./use-practice-api";
 
 /**
- * SemanticSpace — words live in a 2D meaning map; related words sit near each
+ * SemanticSpace, words live in a 2D meaning map; related words sit near each
  * other. With live mode Claude places a dropped word; without it a
  * deterministic local heuristic places it near a keyword-matched seed (so the
  * concept lands offline).
  *
- * Ported from `claude/js/widgets.js:497` (SemanticSpace). German Mittelstand
- * vocabulary (Technik / Vertrieb / Werkstatt / Verwaltung), CI v3.0 styling,
- * keyboard nav (input + Enter + button), no animation that needs gating
- * (placement is a single CSS-positioned pill).
+ * Ported from `claude/js/widgets.js:497` (SemanticSpace). Default vocabulary
+ * is German Mittelstand (Technik / Vertrieb / Werkstatt / Verwaltung); the
+ * cluster ids themselves stay German internally (they are never displayed),
+ * but `seed`, `clusterKeywords`, `quadrantLabels`, and `copy` are all
+ * additive, default-preserving override props; the claude
+ * course wires its own English seed points and keyword lists so the
+ * offline-heuristic MATCHING logic, not just the display labels, works
+ * correctly for English words a learner types.
  */
 
-type Cluster = "technik" | "vertrieb" | "werkstatt" | "verwaltung" | "user";
+export type Cluster = "technik" | "vertrieb" | "werkstatt" | "verwaltung" | "user";
 
-interface Point {
+export interface Point {
   readonly w: string;
   readonly x: number;
   readonly y: number;
   readonly cluster: Cluster;
   readonly why?: string;
   readonly near?: string;
+}
+
+export interface QuadrantLabel {
+  readonly label: string;
+  readonly x: number;
+  readonly y: number;
 }
 
 const SEED: readonly Point[] = [
@@ -60,24 +70,72 @@ const CLUSTER_KEYWORDS: Record<Exclude<Cluster, "user">, readonly string[]> = {
   verwaltung: ["rechnung", "lohn", "ablage", "buchhaltung", "akte", "antrag"],
 };
 
+const DEFAULT_QUADRANT_LABELS: readonly QuadrantLabel[] = [
+  { label: "Technik", x: 14, y: 4 },
+  { label: "Vertrieb", x: 80, y: 4 },
+  { label: "Werkstatt", x: 14, y: 70 },
+  { label: "Verwaltung", x: 62, y: 70 },
+];
+
+export interface SemanticSpaceCopy {
+  readonly kindLabel: string;
+  readonly canvasAriaLabel: string;
+  readonly placeholder: string;
+  readonly inputAriaLabel: string;
+  readonly placingLabel: string;
+  readonly placeLabel: string;
+  readonly landedNearText: string;
+  readonly emptyStatusText: string;
+  /** `{cluster}` is replaced with the matched cluster id. */
+  readonly nearPlacedTemplate: string;
+  /** `{cluster}` is replaced with the matched cluster id. */
+  readonly heuristicTemplate: string;
+}
+
+const DEFAULT_COPY: SemanticSpaceCopy = {
+  kindLabel: "Bedeutungsraum",
+  canvasAriaLabel: "Bedeutungsraum mit platzierten Wörtern",
+  placeholder: "Versuch: Lieferung, Datenschutz, Drehbank …",
+  inputAriaLabel: "Neues Wort",
+  placingLabel: "Platziere …",
+  placeLabel: "Einordnen",
+  landedNearText: "landete nahe",
+  emptyStatusText: "Wirf ein Wort ein und sieh, wo es landet.",
+  nearPlacedTemplate: 'Nahe an "{cluster}" platziert (Stichwort-Treffer).',
+  heuristicTemplate: 'Ohne Live-Modus heuristisch in den Bereich "{cluster}" gelegt.',
+};
+
+const DEFAULT_CLUSTER_LABELS: Record<Exclude<Cluster, "user">, string> = {
+  technik: "technik",
+  vertrieb: "vertrieb",
+  werkstatt: "werkstatt",
+  verwaltung: "verwaltung",
+};
+
+function fillCluster(template: string, clusterLabel: string): string {
+  return template.replace("{cluster}", clusterLabel);
+}
+
 /** Deterministic offline placement: nearest cluster by keyword overlap. */
-function localPlace(word: string): Point {
+function localPlace(
+  word: string,
+  seed: readonly Point[],
+  clusterKeywords: Record<Exclude<Cluster, "user">, readonly string[]>,
+  clusterLabels: Record<Exclude<Cluster, "user">, string>,
+  copy: SemanticSpaceCopy,
+): Point {
   const lower = word.toLowerCase();
-  let best: Exclude<Cluster, "user"> = "verwaltung";
+  const clusterIds = Object.keys(clusterKeywords) as Exclude<Cluster, "user">[];
+  let best: Exclude<Cluster, "user"> = clusterIds[clusterIds.length - 1];
   let bestHits = -1;
-  for (const cluster of Object.keys(CLUSTER_KEYWORDS) as Exclude<
-    Cluster,
-    "user"
-  >[]) {
-    const hits = CLUSTER_KEYWORDS[cluster].filter((k) =>
-      lower.includes(k),
-    ).length;
+  for (const cluster of clusterIds) {
+    const hits = clusterKeywords[cluster].filter((k) => lower.includes(k)).length;
     if (hits > bestHits) {
       bestHits = hits;
       best = cluster;
     }
   }
-  const anchors = SEED.filter((p) => p.cluster === best);
+  const anchors = seed.filter((p) => p.cluster === best);
   const cx = anchors.reduce((s, p) => s + p.x, 0) / anchors.length;
   const cy = anchors.reduce((s, p) => s + p.y, 0) / anchors.length;
   // Small deterministic jitter from the word length so repeats do not stack.
@@ -88,9 +146,10 @@ function localPlace(word: string): Point {
     y: Math.max(0.05, Math.min(0.95, cy - jitter)),
     cluster: "user",
     near: anchors[0]?.w,
-    why: bestHits > 0
-      ? `Nahe an "${best}" platziert (Stichwort-Treffer).`
-      : `Ohne Live-Modus heuristisch in den Bereich "${best}" gelegt.`,
+    why:
+      bestHits > 0
+        ? fillCluster(copy.nearPlacedTemplate, clusterLabels[best])
+        : fillCluster(copy.heuristicTemplate, clusterLabels[best]),
   };
 }
 
@@ -99,6 +158,15 @@ export interface SemanticSpaceWidgetProps {
   readonly cpId: string;
   readonly title?: string;
   readonly scenario?: string;
+  /** Override the default German seed points. */
+  readonly seed?: readonly Point[];
+  /** Override the default German keyword-matching lists (functional, not just cosmetic). */
+  readonly clusterKeywords?: Record<Exclude<Cluster, "user">, readonly string[]>;
+  /** Override the human-readable cluster names interpolated into the "why" text. */
+  readonly clusterLabels?: Record<Exclude<Cluster, "user">, string>;
+  /** Override the default German quadrant overlay labels. */
+  readonly quadrantLabels?: readonly QuadrantLabel[];
+  readonly copy?: Partial<SemanticSpaceCopy>;
 }
 
 export function SemanticSpaceWidget({
@@ -106,9 +174,15 @@ export function SemanticSpaceWidget({
   cpId,
   title = "Bedeutung lebt im Raum",
   scenario = "Claude stellt Wörter als Vektoren dar. Verwandte Wörter liegen nah beieinander. Wirf ein Wort ein.",
+  seed = SEED,
+  clusterKeywords = CLUSTER_KEYWORDS,
+  clusterLabels = DEFAULT_CLUSTER_LABELS,
+  quadrantLabels = DEFAULT_QUADRANT_LABELS,
+  copy,
 }: SemanticSpaceWidgetProps): JSX.Element {
+  const chrome = { ...DEFAULT_COPY, ...copy };
   const { done, complete } = useCheckpoint(lessonId, cpId);
-  const [points, setPoints] = useState<readonly Point[]>(SEED);
+  const [points, setPoints] = useState<readonly Point[]>(seed);
   const [input, setInput] = useState("");
   const [highlight, setHighlight] = useState<string | null>(null);
   const api = usePracticeApi();
@@ -131,7 +205,7 @@ export function SemanticSpaceWidget({
           near: live.near,
           why: live.why,
         }
-      : localPlace(word);
+      : localPlace(word, seed, clusterKeywords, clusterLabels, chrome);
 
     setPoints((prev) => [...prev, next]);
     setHighlight(word);
@@ -143,7 +217,7 @@ export function SemanticSpaceWidget({
 
   return (
     <WidgetFrame
-      kindLabel="Bedeutungsraum"
+      kindLabel={chrome.kindLabel}
       title={title}
       scenario={scenario}
       done={done}
@@ -152,17 +226,10 @@ export function SemanticSpaceWidget({
       <div
         className="relative w-full overflow-hidden rounded-lg border-2 border-border bg-card/40"
         style={{ aspectRatio: "5 / 3" }}
-        aria-label="Bedeutungsraum mit platzierten Wörtern"
+        aria-label={chrome.canvasAriaLabel}
         role="img"
       >
-        {(
-          [
-            { label: "Technik", x: 14, y: 4 },
-            { label: "Vertrieb", x: 80, y: 4 },
-            { label: "Werkstatt", x: 14, y: 70 },
-            { label: "Verwaltung", x: 62, y: 70 },
-          ] as const
-        ).map((q) => (
+        {quadrantLabels.map((q) => (
           <span
             key={q.label}
             className="pointer-events-none absolute select-none font-mono text-[10px] font-semibold uppercase tracking-[0.16em] opacity-50"
@@ -208,8 +275,8 @@ export function SemanticSpaceWidget({
               void place();
             }
           }}
-          placeholder="Versuch: Lieferung, Datenschutz, Drehbank …"
-          aria-label="Neues Wort"
+          placeholder={chrome.placeholder}
+          aria-label={chrome.inputAriaLabel}
           className="flex-1 border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
         />
         <button
@@ -220,7 +287,7 @@ export function SemanticSpaceWidget({
             "border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-foreground shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:hover:translate-x-0 disabled:hover:translate-y-0",
           )}
         >
-          {api.loading ? "Platziere …" : "Einordnen"}
+          {api.loading ? chrome.placingLabel : chrome.placeLabel}
         </button>
       </div>
 
@@ -233,7 +300,8 @@ export function SemanticSpaceWidget({
             <span className="font-semibold">{highlighted.w}</span>
             {highlighted.near ? (
               <>
-                {" "}landete nahe{" "}
+                {" "}
+                {chrome.landedNearText}{" "}
                 <span className="font-semibold">{highlighted.near}</span>.{" "}
               </>
             ) : (
@@ -242,9 +310,7 @@ export function SemanticSpaceWidget({
             {highlighted.why}
           </span>
         ) : (
-          <span className="italic text-muted-foreground">
-            Wirf ein Wort ein und sieh, wo es landet.
-          </span>
+          <span className="italic text-muted-foreground">{chrome.emptyStatusText}</span>
         )}
       </div>
       <LiveNote available={api.available} />

@@ -8,7 +8,7 @@ import { EASE_OUT_EXPO } from "@/lib/animations";
 import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
 import { PersonaCourseLinks } from "@/app/kurse/persona-filter";
 import { Card, IconTile } from "@/components/ui/card";
-import { courseBadges, trackMetaFor } from "@/lib/courses/tracks";
+import { courseBadges, courseFacts } from "@/lib/courses/tracks";
 import { iconByName } from "@/lib/courses/track-icon";
 
 // The three GitHub-Labs previews shown in the imagery band. Real screenshots
@@ -45,7 +45,7 @@ export function Offering() {
   });
 
   const [featured, ...restCourses] = COURSE_CATALOG;
-  const featuredMeta = trackMetaFor(featured.slug);
+  const featuredMeta = courseFacts(featured.slug);
   const FeaturedIcon = iconByName(featuredMeta.iconName);
 
   return (
@@ -171,7 +171,7 @@ export function Offering() {
             icon tile and certificate badge. */}
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {restCourses.map((course, i) => {
-            const meta = trackMetaFor(course.slug);
+            const meta = courseFacts(course.slug);
             const Icon = iconByName(meta.iconName);
             return (
               <m.div key={course.slug} {...reveal(i * 0.06)} className="h-full">

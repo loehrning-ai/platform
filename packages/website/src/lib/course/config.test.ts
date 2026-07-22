@@ -5,6 +5,12 @@ import {
   EU_AI_ACT_KURS_CONFIG,
   AI_NATIVE_CONFIG,
   KI_UND_GESELLSCHAFT_CONFIG,
+  CLAUDE_CONFIG,
+  CODEX_CONFIG,
+  DATA_INFRASTRUCTURE_CONFIG,
+  DATA_ENGINEERING_FUNDAMENTALS_CONFIG,
+  DATA_SCIENCE_CONFIG,
+  AI_NATIVE_OPERATOR_CONFIG,
   getRegisteredCourseSlugs,
   isCourseRegistered,
   getCourseConfig,
@@ -20,10 +26,16 @@ import {
 const UNREGISTERED = "does-not-exist" as unknown as CourseSlug;
 
 describe("getRegisteredCourseSlugs", () => {
-  it("returns exactly the four registered course slugs", () => {
+  it("returns exactly the ten registered course slugs ( adds ai-native-operator)", () => {
     const slugs = [...getRegisteredCourseSlugs()].sort();
     expect(slugs).toEqual([
       "ai-native",
+      "ai-native-operator",
+      "claude",
+      "codex",
+      "data-engineering-fundamentals",
+      "data-infrastructure",
+      "data-science",
       "eu-ai-act-kurs",
       "ki-fuehrerschein",
       "ki-und-gesellschaft",
@@ -37,10 +49,134 @@ describe("isCourseRegistered", () => {
     expect(isCourseRegistered("eu-ai-act-kurs")).toBe(true);
     expect(isCourseRegistered("ai-native")).toBe(true);
     expect(isCourseRegistered("ki-und-gesellschaft")).toBe(true);
+    expect(isCourseRegistered("claude")).toBe(true);
+    expect(isCourseRegistered("codex")).toBe(true);
+    expect(isCourseRegistered("data-infrastructure")).toBe(true);
+    expect(isCourseRegistered("data-engineering-fundamentals")).toBe(true);
+    expect(isCourseRegistered("data-science")).toBe(true);
+    expect(isCourseRegistered("ai-native-operator")).toBe(true);
   });
 
   it("is false for an unregistered slug", () => {
     expect(isCourseRegistered(UNREGISTERED)).toBe(false);
+  });
+});
+
+describe("CLAUDE_CONFIG ", () => {
+  it("registers claude with English-language content and a quiz-gated cert path", () => {
+    expect(getCourseConfig("claude")).toBe(CLAUDE_CONFIG);
+    expect(CLAUDE_CONFIG.slug).toBe("claude");
+    expect(CLAUDE_CONFIG.language).toBe("en");
+    expect(CLAUDE_CONFIG.basePath).toBe("/kurse/open-source/claude");
+    expect(CLAUDE_CONFIG.coursePath).toBe("/kurse/open-source/claude/kurs");
+    expect(CLAUDE_CONFIG.blockIds).toEqual([]);
+  });
+
+  it("has a non-empty certificate file stem and no em/en dashes in its copy", () => {
+    expect(CLAUDE_CONFIG.certificateFileStem.length).toBeGreaterThan(0);
+    const copy = [
+      CLAUDE_CONFIG.title,
+      CLAUDE_CONFIG.certificateTitle,
+      CLAUDE_CONFIG.certificateSubtitle,
+      CLAUDE_CONFIG.certificateReferenceLabel,
+      CLAUDE_CONFIG.quizPassMessage,
+      ...CLAUDE_CONFIG.certificateModules,
+    ].join(" ");
+    expect([...copy].some((ch) => ch === "—" || ch === "–")).toBe(false);
+  });
+});
+
+describe("CODEX_CONFIG ", () => {
+  it("registers codex with English-language content and the all-lessons-completion cert path", () => {
+    expect(getCourseConfig("codex")).toBe(CODEX_CONFIG);
+    expect(CODEX_CONFIG.slug).toBe("codex");
+    expect(CODEX_CONFIG.language).toBe("en");
+    expect(CODEX_CONFIG.basePath).toBe("/kurse/open-source/codex");
+    expect(CODEX_CONFIG.coursePath).toBe("/kurse/open-source/codex/kurs");
+    expect(CODEX_CONFIG.blockIds).toEqual([]);
+  });
+});
+
+describe("DATA_INFRASTRUCTURE_CONFIG ", () => {
+  it("registers data-infrastructure with English-language content and the all-lessons-completion cert path", () => {
+    expect(getCourseConfig("data-infrastructure")).toBe(DATA_INFRASTRUCTURE_CONFIG);
+    expect(DATA_INFRASTRUCTURE_CONFIG.slug).toBe("data-infrastructure");
+    expect(DATA_INFRASTRUCTURE_CONFIG.language).toBe("en");
+    expect(DATA_INFRASTRUCTURE_CONFIG.basePath).toBe("/kurse/open-source/data-infrastructure");
+    expect(DATA_INFRASTRUCTURE_CONFIG.coursePath).toBe(
+      "/kurse/open-source/data-infrastructure/kurs",
+    );
+    expect(DATA_INFRASTRUCTURE_CONFIG.blockIds).toEqual([]);
+  });
+});
+
+describe("DATA_ENGINEERING_FUNDAMENTALS_CONFIG ", () => {
+  it("registers data-engineering-fundamentals with English-language content and the all-lessons-completion cert path", () => {
+    expect(getCourseConfig("data-engineering-fundamentals")).toBe(
+      DATA_ENGINEERING_FUNDAMENTALS_CONFIG,
+    );
+    expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.slug).toBe("data-engineering-fundamentals");
+    expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.language).toBe("en");
+    expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.basePath).toBe(
+      "/kurse/open-source/data-engineering-fundamentals",
+    );
+    // Unlike codex/data-infrastructure, this course has no `/kurs`-nested
+    // route at all ( Done Criteria: chapters live directly
+    // under `[chapterId]`) — coursePath must point at the real landing page,
+    // not a route that 404s ( fix).
+    expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.coursePath).toBe(
+      "/kurse/open-source/data-engineering-fundamentals",
+    );
+    expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.blockIds).toEqual([]);
+  });
+});
+
+describe("DATA_SCIENCE_CONFIG ", () => {
+  it("registers data-science with English-language content and the all-lessons-completion cert path", () => {
+    expect(getCourseConfig("data-science")).toBe(DATA_SCIENCE_CONFIG);
+    expect(DATA_SCIENCE_CONFIG.slug).toBe("data-science");
+    expect(DATA_SCIENCE_CONFIG.language).toBe("en");
+    expect(DATA_SCIENCE_CONFIG.basePath).toBe("/kurse/open-source/data-science");
+    // Like data-engineering-fundamentals, this course has no `/kurs`-nested
+    // route — chapters live directly under `[chapterSlug]`, and the
+    // Overview renders at the course root — so coursePath must point at
+    // the real landing page, not a route that 404s.
+    expect(DATA_SCIENCE_CONFIG.coursePath).toBe("/kurse/open-source/data-science");
+    expect(DATA_SCIENCE_CONFIG.blockIds).toEqual([]);
+  });
+});
+
+describe("AI_NATIVE_OPERATOR_CONFIG ", () => {
+  it("registers ai-native-operator with English-language content and a quiz-gated cert path", () => {
+    expect(getCourseConfig("ai-native-operator")).toBe(AI_NATIVE_OPERATOR_CONFIG);
+    expect(AI_NATIVE_OPERATOR_CONFIG.slug).toBe("ai-native-operator");
+    expect(AI_NATIVE_OPERATOR_CONFIG.language).toBe("en");
+    expect(AI_NATIVE_OPERATOR_CONFIG.basePath).toBe("/kurse/open-source/ai-native-operator");
+    // No "/kurs" segment (matching data-engineering-fundamentals/data-science):
+    // modules and lessons live directly under the course root.
+    expect(AI_NATIVE_OPERATOR_CONFIG.coursePath).toBe("/kurse/open-source/ai-native-operator");
+    expect(AI_NATIVE_OPERATOR_CONFIG.blockIds).toEqual([]);
+    expect(AI_NATIVE_OPERATOR_CONFIG.workshopQuizQuestionCount).toBe(22);
+    expect(AI_NATIVE_OPERATOR_CONFIG.workshopQuizPassThreshold).toBe(0.7);
+    expect(AI_NATIVE_OPERATOR_CONFIG.certificateModules).toHaveLength(9);
+  });
+
+  it("has a non-empty certificate file stem and no em/en dashes in its copy", () => {
+    expect(AI_NATIVE_OPERATOR_CONFIG.certificateFileStem.length).toBeGreaterThan(0);
+    const copy = [
+      AI_NATIVE_OPERATOR_CONFIG.title,
+      AI_NATIVE_OPERATOR_CONFIG.certificateTitle,
+      AI_NATIVE_OPERATOR_CONFIG.certificateSubtitle,
+      AI_NATIVE_OPERATOR_CONFIG.certificateReferenceLabel,
+      AI_NATIVE_OPERATOR_CONFIG.quizPassMessage,
+      ...AI_NATIVE_OPERATOR_CONFIG.certificateModules,
+    ].join(" ");
+    expect([...copy].some((ch) => ch === "—" || ch === "–")).toBe(false);
+  });
+
+  it("never collides with the bare 'ai-native' slug's config", () => {
+    expect(AI_NATIVE_OPERATOR_CONFIG.slug).not.toBe(AI_NATIVE_CONFIG.slug);
+    expect(AI_NATIVE_OPERATOR_CONFIG.basePath).not.toBe(AI_NATIVE_CONFIG.basePath);
   });
 });
 
@@ -172,6 +308,12 @@ describe("config object coherence", () => {
   it("has a non-empty certificate file stem for every course", () => {
     for (const config of configs) {
       expect(config.certificateFileStem.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("declares a language for every registered config, 'de' for all four native courses ", () => {
+    for (const config of configs) {
+      expect(config.language).toBe("de");
     }
   });
 });

@@ -119,6 +119,82 @@ describe("VerificationPage", () => {
     expect(screen.queryByText(/Ergebnis: 0%/)).toBeNull();
   });
 
+  it("renders all-lessons-done completion without a fake quiz score ", async () => {
+    const payload = {
+      n: "Tim Löhr",
+      s: null,
+      m: "completion",
+      d: "2026-06-03T10:00:00.000Z",
+      c: "ki-fuehrerschein",
+      v: 1,
+    };
+    setHash("#" + encodeHash(payload));
+    render(<VerificationPage courseSlug="ki-fuehrerschein" />);
+
+    await waitFor(() =>
+      expect(screen.getByText("QR-Daten gelesen")).toBeInTheDocument(),
+    );
+    expect(
+      screen.getByText("Abschlussweg: Alle Lektionen abgeschlossen"),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/Ergebnis: 0%/)).toBeNull();
+  });
+
+  //: isCourseSlug() used to hardcode the original 4 slugs,
+  // so a well-formed QR payload for any other course decoded as "malformed"
+  // rather than the more specific "course-mismatch". "codex" isn't
+  // registered in the shared engine yet (that's each course plan's own
+  // job), so it can't be passed as the courseSlug PROP here (getCourseConfig
+  // would throw) — but it CAN appear as the QR payload's embedded course
+  // slug, decoded against a real registered course. Before the fix, the
+  // guard rejected "codex" outright as malformed; after the fix, it's
+  // accepted as a real CourseSlug and correctly reported as a mismatch.
+  it("round-trips a non-original-4 course slug in the QR payload as a mismatch, not malformed", async () => {
+    const payload = {
+      n: "Tim Löhr",
+      s: null,
+      m: "completion",
+      d: "2026-06-03T10:00:00.000Z",
+      c: "codex",
+      v: 1,
+    };
+    setHash("#" + encodeHash(payload));
+    render(<VerificationPage courseSlug="ki-fuehrerschein" />);
+
+    await waitFor(() =>
+      expect(
+        screen.getByText("Zertifikatcode passt nicht zu diesem Kurs."),
+      ).toBeInTheDocument(),
+    );
+    expect(screen.queryByText("Zertifikatcode nicht lesbar")).toBeNull();
+  });
+
+  //: claude is now a fully registered course (unlike
+  // "codex" above, which is still unregistered), so this exercises the real
+  // happy path end to end for the course this plan ported. claude is an
+  // English-language course (CourseConfig.language: "en"), so this page
+  // correctly renders its English copy branch, not the German one every
+  // other test case here exercises via the native German courses.
+  it("round-trips a real claude certificate QR payload successfully", async () => {
+    const payload = {
+      n: "Ada Lovelace",
+      s: 92,
+      m: "quiz",
+      d: "2026-07-01T10:00:00.000Z",
+      c: "claude",
+      v: 1,
+    };
+    setHash("#" + encodeHash(payload));
+    render(<VerificationPage courseSlug="claude" />);
+
+    await waitFor(() =>
+      expect(screen.getByText("QR data read")).toBeInTheDocument(),
+    );
+    expect(screen.getByText("Ada Lovelace")).toBeInTheDocument();
+    expect(screen.getByText("Claude Course")).toBeInTheDocument();
+    expect(screen.queryByText("Certificate code unreadable")).toBeNull();
+  });
+
   it("falls back to the invalid state for a malformed hash", async () => {
     setHash("#not-valid-base64url!!!");
     render(<VerificationPage courseSlug="ki-fuehrerschein" />);

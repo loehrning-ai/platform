@@ -13,9 +13,9 @@ import {
   Sparkles,
 } from "lucide-react";
 import {
-  COURSE_CATALOG,
-  IMPORTED_COURSE_CATALOG,
+  ALL_COURSE_CATALOG,
   type CatalogCourse,
+  type ImportedCourse,
 } from "@/lib/courses/catalog";
 import {
   COURSE_SECTIONS,
@@ -132,6 +132,20 @@ function SubHeader({ children }: { readonly children: React.ReactNode }) {
   );
 }
 
+// Both sections branch card treatment on nativeStatus, not on which array a
+// course came from — so a course plan's single-field flip
+// is sufficient to move it between "Der Lernpfad" and "Tiefer gehen".
+function isLiveCourse(course: CatalogCourse | ImportedCourse): course is CatalogCourse {
+  return course.nativeStatus === "live";
+}
+
+function isPendingCourse(course: CatalogCourse | ImportedCourse): course is ImportedCourse {
+  return course.nativeStatus === "pending";
+}
+
+const LIVE_COURSES = ALL_COURSE_CATALOG.filter(isLiveCourse);
+const PENDING_COURSES = ALL_COURSE_CATALOG.filter(isPendingCourse);
+
 export function CourseGallery() {
   const [stats, setStats] = useState<Record<string, CourseStat>>({});
   const [xp, setXp] = useState(0);
@@ -145,7 +159,7 @@ export function CourseGallery() {
   useEffect(() => {
     function refresh() {
       const next: Record<string, CourseStat> = {};
-      for (const course of COURSE_CATALOG) next[course.slug] = readStat(course);
+      for (const course of LIVE_COURSES) next[course.slug] = readStat(course);
       setStats(next);
       setXp(getXp());
       setStreakDays(getStreak().days);
@@ -207,7 +221,7 @@ export function CourseGallery() {
         />
 
         <ol className="grid gap-6 sm:grid-cols-2">
-          {COURSE_CATALOG.map((course) => {
+          {LIVE_COURSES.map((course) => {
             const Icon = iconByName(courseIconName(course.slug));
             const stat = stats[course.slug] ?? { completed: 0, certified: false };
             const dots = dotCount(course);
@@ -361,7 +375,7 @@ export function CourseGallery() {
           </SubHeader>
 
           <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {IMPORTED_COURSE_CATALOG.map((course) => {
+            {PENDING_COURSES.map((course) => {
               const Icon = iconByName(courseIconName(course.slug));
               return (
                 <li key={course.slug}>

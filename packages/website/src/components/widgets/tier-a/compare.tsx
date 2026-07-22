@@ -24,6 +24,13 @@ export interface CompareWidgetProps {
   readonly goodLabel?: string;
   /** Optional takeaway note shown below the columns. */
   readonly note?: string;
+  /**
+   * Chrome kindLabel override: was hardcoded German with
+   * no override, unlike `title`/`badLabel`/`goodLabel` which were already
+   * plain per-instance props. Defaults to the original German literal so
+   * the 3 native courses render byte-identical; codex passes "Compare".
+   */
+  readonly kindLabel?: string;
 }
 
 export function CompareWidget({
@@ -33,9 +40,10 @@ export function CompareWidget({
   badLabel = "Schwach",
   goodLabel = "Stark",
   note,
+  kindLabel = "Vergleich",
 }: CompareWidgetProps): JSX.Element {
   return (
-    <WidgetFrame kindLabel="Vergleich" title={title}>
+    <WidgetFrame kindLabel={kindLabel} title={title}>
       <div className="grid gap-3 md:grid-cols-2">
         <CompareColumn label={badLabel} body={bad} tone="bad" />
         <CompareColumn label={goodLabel} body={good} tone="good" />

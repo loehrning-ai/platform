@@ -20,6 +20,9 @@ const QUESTION_LOADERS: Partial<
   "ai-native": () => import("../../../content/ai-native/quiz/questions.json"),
   "ki-und-gesellschaft": () =>
     import("../../../content/ki-und-gesellschaft/quiz/questions.json"),
+  claude: () => import("../../../content/claude/quiz/questions.json"),
+  "ai-native-operator": () =>
+    import("../../../content/ai-native-operator/quiz/questions.json"),
 };
 
 // Memoize per course so retries within one session import the JSON only once.

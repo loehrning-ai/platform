@@ -130,6 +130,30 @@ const REGISTRY: Record<WidgetKind, () => Promise<{ default: WidgetComponent }>> 
       default: m.ObligationLayersDiagram as unknown as WidgetComponent,
     })),
 
+  // ─── Codex Course, two genuinely new Tier-A kinds ───
+  "terminal-replay": () =>
+    import("@/components/widgets/tier-a/terminal-replay").then((m) => ({
+      default: m.TerminalReplayWidget as unknown as WidgetComponent,
+    })),
+  "diff-viewer": () =>
+    import("@/components/widgets/tier-a/diff-viewer").then((m) => ({
+      default: m.DiffViewerWidget as unknown as WidgetComponent,
+    })),
+
+  // ─── AI-Native Operator Course, three genuinely new Tier-A kinds ───
+  "reflect-box": () =>
+    import("@/components/widgets/tier-a/reflect-box").then((m) => ({
+      default: m.ReflectBoxWidget as unknown as WidgetComponent,
+    })),
+  "matrix-grid": () =>
+    import("@/components/widgets/tier-a/matrix-grid").then((m) => ({
+      default: m.MatrixGridWidget as unknown as WidgetComponent,
+    })),
+  "slot-fill": () =>
+    import("@/components/widgets/tier-a/slot-fill").then((m) => ({
+      default: m.SlotFillWidget as unknown as WidgetComponent,
+    })),
+
   // ─── Practice Room — live Claude widgets (shared course architecture) ───
   "prompt-orrery": () =>
     import("@/components/widgets/practice/prompt-orrery").then((m) => ({
@@ -142,6 +166,57 @@ const REGISTRY: Record<WidgetKind, () => Promise<{ default: WidgetComponent }>> 
   "semantic-space": () =>
     import("@/components/widgets/practice/semantic-space").then((m) => ({
       default: m.SemanticSpaceWidget as unknown as WidgetComponent,
+    })),
+
+  // ─── Claude Course, simulated-Claude widgets ───
+  // `CheckpointFooter` (claude/js/widgets.js) is deliberately NOT ported:
+  // confirmed via `grep -o "mountWidget([^)]*CheckpointFooter" claude/lessons/*.html`
+  // returning zero matches across all 12 source lessons, it is dead code in
+  // the pinned source (every lesson's "mark complete" affordance is instead
+  // driven by the individual widget checkpoints already wired below).
+  "prompt-sandbox": () =>
+    import("@/components/widgets/claude/prompt-sandbox").then((m) => ({
+      default: m.PromptSandboxWidget as unknown as WidgetComponent,
+    })),
+  "prompt-compare": () =>
+    import("@/components/widgets/claude/prompt-compare").then((m) => ({
+      default: m.PromptCompareWidget as unknown as WidgetComponent,
+    })),
+  "prompt-grader": () =>
+    import("@/components/widgets/claude/prompt-grader").then((m) => ({
+      default: m.PromptGraderWidget as unknown as WidgetComponent,
+    })),
+  "rewrite-arena": () =>
+    import("@/components/widgets/claude/rewrite-arena").then((m) => ({
+      default: m.RewriteArenaWidget as unknown as WidgetComponent,
+    })),
+  "fill-blank": () =>
+    import("@/components/widgets/claude/fill-blank").then((m) => ({
+      default: m.FillBlankWidget as unknown as WidgetComponent,
+    })),
+  "prompt-diff": () =>
+    import("@/components/widgets/claude/prompt-diff").then((m) => ({
+      default: m.PromptDiffWidget as unknown as WidgetComponent,
+    })),
+  "socratic-tutor": () =>
+    import("@/components/widgets/claude/socratic-tutor").then((m) => ({
+      default: m.SocraticTutorWidget as unknown as WidgetComponent,
+    })),
+  "agent-loop": () =>
+    import("@/components/widgets/claude/agent-loop").then((m) => ({
+      default: m.AgentLoopWidget as unknown as WidgetComponent,
+    })),
+  tokenizer: () =>
+    import("@/components/widgets/claude/tokenizer").then((m) => ({
+      default: m.TokenizerWidget as unknown as WidgetComponent,
+    })),
+  "claude-md-builder": () =>
+    import("@/components/widgets/claude/claude-md-builder").then((m) => ({
+      default: m.ClaudeMdBuilderWidget as unknown as WidgetComponent,
+    })),
+  "prompt-library-shaper": () =>
+    import("@/components/widgets/claude/prompt-library-shaper").then((m) => ({
+      default: m.PromptLibraryShaperWidget as unknown as WidgetComponent,
     })),
 } as const satisfies Record<WidgetKind, () => Promise<{ default: WidgetComponent }>>;
 

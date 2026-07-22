@@ -132,6 +132,41 @@ describe("unified progress store", () => {
       expect(r?.completed).toBe(true);
       expect(r?.attempts).toBe(2);
     });
+
+    //: summaries are capped in UTF-8 bytes at write time so a
+    // single oversized AI summary can never blow the per-course-row DB budget.
+    it("truncates an oversized exercise summary at write time (byte-based cap)", () => {
+      const longSummary = "Über KI-Kompetenz und Verantwortung. ".repeat(50);
+      saveExerciseResult("ai-native", "l1", {
+        exerciseId: "ex2",
+        kind: "exercise-fix-prompt",
+        completed: true,
+        score: 0.9,
+        attempts: 1,
+        completedAt: null,
+        skipped: false,
+        summary: longSummary,
+      });
+      const r = getExerciseResult("ai-native", "l1", "ex2");
+      expect(r?.summary).toBeDefined();
+      expect(new TextEncoder().encode(r?.summary ?? "").length).toBeLessThanOrEqual(500);
+      expect(r?.summary?.length).toBeLessThan(longSummary.length);
+    });
+
+    it("keeps a short exercise summary unchanged", () => {
+      saveExerciseResult("ai-native", "l1", {
+        exerciseId: "ex3",
+        kind: "exercise-fix-prompt",
+        completed: true,
+        score: 0.7,
+        attempts: 1,
+        completedAt: null,
+        skipped: false,
+        summary: "Gute Arbeit, weiter so.",
+      });
+      const r = getExerciseResult("ai-native", "l1", "ex3");
+      expect(r?.summary).toBe("Gute Arbeit, weiter so.");
+    });
   });
 
   describe("xp / badges accrual", () => {
@@ -166,6 +201,16 @@ describe("unified progress store", () => {
     });
 
     it("ignores unknown imported-course slices when counting lesson badges", () => {
+      // "totally-unregistered-course" and "another-unregistered-course"
+      // stand in for slugs that were never real catalog members. None of
+      // the 6 originally-imported courses ("claude"/"codex"/
+      // "data-infrastructure"/"data-engineering-fundamentals"/
+      // "data-science"/"ai-native-operator") are used here any more: the
+      // migration registered and flipped every one of them to native
+      // courses, so their slices ARE now counted — reusing any of them
+      // here would break this test's premise. Purely-synthetic placeholder
+      // slugs keep the test valid
+      // permanently, independent of future catalog flips.
       const lesson = {
         sectionsRead: [],
         quizScore: null,
@@ -189,8 +234,8 @@ describe("unified progress store", () => {
         JSON.stringify({
           schemaVersion: 2,
           courses: {
-            claude: slice,
-            "data-science": slice,
+            "totally-unregistered-course": slice,
+            "another-unregistered-course": slice,
           },
           xp: 0,
           checkpoints: {},
@@ -256,6 +301,63 @@ describe("unified progress store", () => {
         markLessonCompleted("ki-fuehrerschein", `block-lesson-${i}`);
       }
       expect(isCertificateEligible("ki-fuehrerschein")).toBe(false);
+    });
+
+    //: the all-lessons-completed fallback used to resolve
+    // totalLessons from COURSE_CATALOG only, so it was silently unreachable
+    // for any course outside the 4-course native spine. "codex" (12 lessons,
+    // ALL_COURSE_CATALOG) exercises a slug outside that spine.
+    it("resolves totalLessons from the unified catalog for a course outside the native spine", () => {
+      for (let i = 1; i <= 12; i += 1) {
+        markLessonCompleted("codex", `lesson-${i}`);
+      }
+      expect(isWorkshopQuizPassed("codex")).toBe(false);
+      expect(isCertificateEligible("codex")).toBe(true);
+    });
+
+    it("stays ineligible below the full lesson count for a non-native-spine course", () => {
+      for (let i = 1; i <= 11; i += 1) {
+        markLessonCompleted("codex", `lesson-${i}`);
+      }
+      expect(isCertificateEligible("codex")).toBe(false);
+    });
+
+    //: data-infrastructure is still nativeStatus "pending"
+    // in catalog.ts (IMPORTED_COURSE_CATALOG) as of this test — it flips to
+    // "live" in stage 13 — but its 12-lesson totalLessons is already resolved
+    // via ALL_COURSE_CATALOG regardless of which of the two arrays it lives
+    // in, so this generic fallback path is exercisable ahead of that flip.
+    it("resolves eligibility for data-infrastructure via the all-lessons-completed path", () => {
+      for (let i = 1; i <= 12; i += 1) {
+        markLessonCompleted("data-infrastructure", `lesson-${i}`);
+      }
+      expect(isWorkshopQuizPassed("data-infrastructure")).toBe(false);
+      expect(isCertificateEligible("data-infrastructure")).toBe(true);
+    });
+
+    it("stays ineligible below the full lesson count for data-infrastructure", () => {
+      for (let i = 1; i <= 11; i += 1) {
+        markLessonCompleted("data-infrastructure", `lesson-${i}`);
+      }
+      expect(isCertificateEligible("data-infrastructure")).toBe(false);
+    });
+
+    //: data-engineering-fundamentals is now nativeStatus
+    // "live" (COURSE_CATALOG), reconciled to its real 12 chapters — this is
+    // the "all 12 chapters visited" completion criterion the plan documents.
+    it("resolves eligibility for data-engineering-fundamentals via the all-chapters-visited path", () => {
+      for (let i = 1; i <= 12; i += 1) {
+        markLessonCompleted("data-engineering-fundamentals", `chapter-${i}`);
+      }
+      expect(isWorkshopQuizPassed("data-engineering-fundamentals")).toBe(false);
+      expect(isCertificateEligible("data-engineering-fundamentals")).toBe(true);
+    });
+
+    it("stays ineligible below the full chapter count for data-engineering-fundamentals", () => {
+      for (let i = 1; i <= 11; i += 1) {
+        markLessonCompleted("data-engineering-fundamentals", `chapter-${i}`);
+      }
+      expect(isCertificateEligible("data-engineering-fundamentals")).toBe(false);
     });
 
     it("never throws on corrupted storage, reads as not eligible", () => {
@@ -355,12 +457,62 @@ describe("unified progress store", () => {
   });
 
   describe("getUnifiedState shape", () => {
-    it("exposes a v2 root with courses + gamification ledger", () => {
+    it("exposes a v3 root with courses + gamification ledger", () => {
       markLessonCompleted("ai-native", "l1");
       const s = getUnifiedState();
-      expect(s.schemaVersion).toBe(2);
+      expect(s.schemaVersion).toBe(3);
       expect(s.courses["ai-native"]).toBeDefined();
       expect(getCourseSlice("ai-native").lessons["l1"].completed).toBe(true);
+    });
+  });
+
+  describe("v2->v3 migration step wired into the read path ", () => {
+    it("truncates a pre-existing oversized exercise summary on load", () => {
+      const longSummary = "Über KI-Kompetenz und Verantwortung. ".repeat(50);
+      window.localStorage.setItem(
+        UNIFIED_STORAGE_KEY,
+        JSON.stringify({
+          schemaVersion: 2,
+          courses: {
+            "ai-native": {
+              lessons: {
+                l1: {
+                  sectionsRead: [],
+                  quizScore: null,
+                  quizTotal: null,
+                  completed: false,
+                  exercisesCompleted: {
+                    ex1: {
+                      exerciseId: "ex1",
+                      kind: "exercise-fix-prompt",
+                      completed: true,
+                      score: 0.9,
+                      attempts: 1,
+                      completedAt: null,
+                      skipped: false,
+                      summary: longSummary,
+                    },
+                  },
+                },
+              },
+              workshopQuiz: { passed: false, score: 0, completedAt: null },
+              capstoneSubmitted: false,
+              startedAt: "2026-01-01T00:00:00.000Z",
+              lastActivity: "2026-01-01T00:00:00.000Z",
+            },
+          },
+          xp: 0,
+          checkpoints: {},
+          badges: {},
+          streak: { days: 0, last: null },
+          lastActivity: "2026-01-01T00:00:00.000Z",
+        }),
+      );
+      __resetCacheForTests();
+      const r = getExerciseResult("ai-native", "l1", "ex1");
+      expect(r?.summary).toBeDefined();
+      expect(new TextEncoder().encode(r?.summary ?? "").length).toBeLessThanOrEqual(500);
+      expect(getUnifiedState().schemaVersion).toBe(3);
     });
   });
 });

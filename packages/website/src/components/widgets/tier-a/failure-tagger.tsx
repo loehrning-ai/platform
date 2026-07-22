@@ -48,6 +48,41 @@ export interface FailureCase {
   readonly why: string;
 }
 
+/**
+ * Chrome-copy override: additive, default-preserving —
+ * every field defaults to the original German literal so the 3 existing
+ * native courses render byte-identical when `copy` is omitted.
+ */
+export interface FailureTaggerWidgetCopy {
+  readonly kindLabel: string;
+  readonly promptLabel: string;
+  readonly outputLabel: string;
+  readonly tagAriaLabelPrefix: string;
+  readonly correctSuffix: string;
+  readonly taggedSuffix: string;
+  readonly submitLabel: string;
+  readonly passedLabel: string;
+  readonly retryPromptLabel: string;
+  readonly resetLabel: string;
+  readonly perCaseCorrectLabel: string;
+  readonly perCaseWrongLabel: string;
+}
+
+const DEFAULT_COPY: FailureTaggerWidgetCopy = {
+  kindLabel: "Eval-Drill",
+  promptLabel: "Auftrag",
+  outputLabel: "KI-Antwort",
+  tagAriaLabelPrefix: "Fehlertyp für:",
+  correctSuffix: "richtig",
+  taggedSuffix: "zugeordnet",
+  submitLabel: "Auswerten",
+  passedLabel: "Bestanden",
+  retryPromptLabel: "Nochmal ansehen",
+  resetLabel: "Zurücksetzen",
+  perCaseCorrectLabel: "Richtig.",
+  perCaseWrongLabel: "Daneben.",
+};
+
 export interface FailureTaggerWidgetProps {
   readonly lessonId: string;
   readonly cpId: string;
@@ -59,6 +94,7 @@ export interface FailureTaggerWidgetProps {
   readonly modes?: readonly FailureMode[];
   /** Minimum correct answers to award XP. Default: all but one. */
   readonly passThreshold?: number;
+  readonly copy?: Partial<FailureTaggerWidgetCopy>;
 }
 
 const DEFAULT_MODES: readonly FailureMode[] = [
@@ -144,7 +180,9 @@ export function FailureTaggerWidget({
   cases = DEFAULT_CASES,
   modes = DEFAULT_MODES,
   passThreshold,
+  copy,
 }: FailureTaggerWidgetProps): JSX.Element {
+  const chrome = { ...DEFAULT_COPY, ...copy };
   const reduced = useReducedMotion();
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [picks, setPicks] = useState<Readonly<Record<string, FailureModeId>>>(
@@ -176,7 +214,7 @@ export function FailureTaggerWidget({
 
   return (
     <WidgetFrame
-      kindLabel="Eval-Drill"
+      kindLabel={chrome.kindLabel}
       title={title}
       scenario={scenario}
       done={done}
@@ -223,13 +261,13 @@ export function FailureTaggerWidget({
               )}
             >
               <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-                Auftrag
+                {chrome.promptLabel}
               </p>
               <p className="mt-1 text-[13.5px] leading-[1.55] text-foreground">
                 {c.prompt}
               </p>
               <p className="mt-3 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-                KI-Antwort
+                {chrome.outputLabel}
               </p>
               <p className="mt-1 whitespace-pre-wrap border-l-[3px] border-brand-orange/40 pl-3 text-[13.5px] leading-[1.55] text-foreground">
                 {c.output}
@@ -237,7 +275,7 @@ export function FailureTaggerWidget({
 
               <div
                 role="radiogroup"
-                aria-label={`Fehlertyp für: ${c.prompt}`}
+                aria-label={`${chrome.tagAriaLabelPrefix} ${c.prompt}`}
                 className="mt-3 flex flex-wrap gap-2"
               >
                 {modes.map((m) => {
@@ -294,7 +332,7 @@ export function FailureTaggerWidget({
                         isCorrect ? "text-[#22c55e]" : "text-destructive",
                       )}
                     >
-                      {isCorrect ? "Richtig." : "Daneben."}
+                      {isCorrect ? chrome.perCaseCorrectLabel : chrome.perCaseWrongLabel}
                     </span>{" "}
                     {c.why}
                   </m.p>
@@ -309,8 +347,8 @@ export function FailureTaggerWidget({
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
         <span className="font-mono text-[11px] tracking-[0.1em] text-muted-foreground">
           {submitted
-            ? `${correctCount} / ${cases.length} richtig`
-            : `${Object.keys(picks).length} / ${cases.length} zugeordnet`}
+            ? `${correctCount} / ${cases.length} ${chrome.correctSuffix}`
+            : `${Object.keys(picks).length} / ${cases.length} ${chrome.taggedSuffix}`}
         </span>
         {!submitted ? (
           <button
@@ -324,7 +362,7 @@ export function FailureTaggerWidget({
                 : "cursor-not-allowed bg-muted text-muted-foreground opacity-60 shadow-none",
             )}
           >
-            Auswerten
+            {chrome.submitLabel}
           </button>
         ) : (
           <div className="flex items-center gap-3">
@@ -339,14 +377,14 @@ export function FailureTaggerWidget({
               ) : (
                 <XCircle size={14} />
               )}
-              {passed ? "Bestanden" : "Nochmal ansehen"}
+              {passed ? chrome.passedLabel : chrome.retryPromptLabel}
             </span>
             <button
               type="button"
               onClick={reset}
               className="border-2 border-foreground bg-background px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-foreground shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
             >
-              Zurücksetzen
+              {chrome.resetLabel}
             </button>
           </div>
         )}

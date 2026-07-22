@@ -256,6 +256,24 @@
       "redistribution": "Permitted under the corresponding file in public/imported-courses/licenses/"
     },
     {
+      "path": "packages/website/public/imported-courses/social-previews/data-engineering-fundamentals.png",
+      "sizeBytes": 61263,
+      "sha256": "517bb5816c53554943affefed22a82596a2ceb4042f2b2b8c4938d583010e15d",
+      "owner": "Tim Löhr and the corresponding interactive-course project",
+      "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file in public/imported-courses/licenses/"
+    },
+    {
+      "path": "packages/website/public/imported-courses/social-previews/data-engineering-fundamentals.svg",
+      "sizeBytes": 5825,
+      "sha256": "5e1b2466d2d349e3fabd32320fd196c9f1e6bbfd07190ec5784927300902dfa3",
+      "owner": "Tim Löhr and the corresponding interactive-course project",
+      "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file in public/imported-courses/licenses/"
+    },
+    {
       "path": "packages/website/public/logo-square-512.png",
       "sizeBytes": 2083,
       "sha256": "037e7e10d17924e650e16520607f65e57da69282d3224d2924a6d63909de3a6a",

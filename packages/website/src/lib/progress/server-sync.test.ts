@@ -3,17 +3,32 @@
 // server-sync.ts is the pure logic behind the account/progress API routes
 // (/api/progress, /api/account/export). It is NOT covered by the migrate/store
 // suites, and the only other reference (account/route.test.ts) mocks it away.
-// Two exported functions, both pure:
+// Exported functions, all pure:
 //   • isUnifiedProgress(value)         runtime type-guard that gates untrusted
 //                                      payloads read back from the server/DB.
 //   • mergeUnifiedProgress(a, b)       last-writer-wins-ish CRDT merge used to
-//                                      reconcile local + remote progress.
+//                                      reconcile local + remote progress
+//                                      (the full, client-facing blob shape).
+// • mergeCourseSlice/mergeMetaFields — the same merge
+//     logic, decomposed so the per-course-row persistence layer
+//     (server-store.ts) can merge one row at a time instead of one blob.
+// • isUnifiedCourseSlice/isUnifiedMetaFields/META_ROW_COURSE_SLUG (
+//     stage 5) — row-shape validators for the per-row DB persistence layer.
 // Every assertion below is derived by reading the source and pins real
 // input -> real output (no mock return values are asserted).
 
 import { describe, it, expect } from "vitest";
-import { isUnifiedProgress, mergeUnifiedProgress } from "./server-sync";
+import {
+  META_ROW_COURSE_SLUG,
+  isUnifiedCourseSlice,
+  isUnifiedMetaFields,
+  isUnifiedProgress,
+  mergeCourseSlice,
+  mergeMetaFields,
+  mergeUnifiedProgress,
+} from "./server-sync";
 import { COURSE_SLUGS } from "@/lib/course/types";
+import { MAX_EXERCISE_SUMMARY_BYTES } from "./types";
 import type {
   UnifiedCourseSlice,
   UnifiedExerciseResult,
@@ -60,7 +75,7 @@ function slice(over: Partial<UnifiedCourseSlice> = {}): UnifiedCourseSlice {
 
 function progress(over: Partial<UnifiedProgress> = {}): UnifiedProgress {
   return {
-    schemaVersion: 2,
+    schemaVersion: 3,
     courses: {},
     xp: 0,
     checkpoints: {},
@@ -79,7 +94,7 @@ function clone<T>(value: T): T {
 // ── isUnifiedProgress ──────────────────────────────────────────────────────
 
 describe("isUnifiedProgress", () => {
-  it("accepts a minimal empty v2 store", () => {
+  it("accepts a minimal empty v3 store", () => {
     expect(isUnifiedProgress(progress())).toBe(true);
   });
 
@@ -140,11 +155,13 @@ describe("isUnifiedProgress", () => {
     expect(isUnifiedProgress([])).toBe(false);
   });
 
-  it("rejects the wrong schemaVersion (strict === 2, number not string)", () => {
+  it("rejects the wrong schemaVersion (strict === 3, number not string; )", () => {
     expect(isUnifiedProgress({ ...progress(), schemaVersion: 1 })).toBe(false);
-    expect(isUnifiedProgress({ ...progress(), schemaVersion: 3 })).toBe(false);
-    // A stringified "2" must not slip through the strict identity check.
-    expect(isUnifiedProgress({ ...progress(), schemaVersion: "2" })).toBe(false);
+    // v2 (pre shared blob) must not be accepted as-is; a v2
+    // payload has to go through the migrate.ts v2->v3 step first.
+    expect(isUnifiedProgress({ ...progress(), schemaVersion: 2 })).toBe(false);
+    // A stringified "3" must not slip through the strict identity check.
+    expect(isUnifiedProgress({ ...progress(), schemaVersion: "3" })).toBe(false);
   });
 
   it("rejects non-finite or negative xp", () => {
@@ -203,9 +220,9 @@ describe("isUnifiedProgress", () => {
 // ── mergeUnifiedProgress ─────────────────────────────────────────────────────
 
 describe("mergeUnifiedProgress - top-level ledger", () => {
-  it("pins schemaVersion to 2 and takes the max xp", () => {
+  it("pins schemaVersion to 3 and takes the max xp", () => {
     const merged = mergeUnifiedProgress(progress({ xp: 100 }), progress({ xp: 250 }));
-    expect(merged.schemaVersion).toBe(2);
+    expect(merged.schemaVersion).toBe(3);
     expect(merged.xp).toBe(250);
     // symmetric on the other ordering
     expect(mergeUnifiedProgress(progress({ xp: 250 }), progress({ xp: 100 })).xp).toBe(250);
@@ -489,5 +506,202 @@ describe("mergeUnifiedProgress - purity", () => {
     // Inputs are untouched (immutable-merge contract).
     expect(local).toEqual(localSnap);
     expect(remote).toEqual(remoteSnap);
+  });
+});
+
+// ── Per-row merge primitives ─────────────────────────────
+// mergeCourseSlice/mergeMetaFields decompose the same merge logic
+// mergeUnifiedProgress uses internally, so the per-course-row persistence
+// layer (server-store.ts) can merge one DB row at a time — a checkpoint in
+// one course no longer requires re-serializing every other course's row.
+
+describe("mergeCourseSlice", () => {
+  it("matches mergeUnifiedProgress's per-course result exactly", () => {
+    const localSlice = slice({
+      lessons: { l1: lesson({ completed: true }) },
+      capstoneSubmitted: false,
+      startedAt: "2026-02-01T00:00:00.000Z",
+      lastActivity: "2026-03-01T00:00:00.000Z",
+    });
+    const remoteSlice = slice({
+      lessons: { l2: lesson({ completed: true }) },
+      capstoneSubmitted: true,
+      startedAt: "2026-01-01T00:00:00.000Z",
+      lastActivity: "2026-04-01T00:00:00.000Z",
+    });
+    const viaWholeBlob = mergeUnifiedProgress(
+      progress({ courses: { "ai-native": localSlice } }),
+      progress({ courses: { "ai-native": remoteSlice } }),
+    ).courses["ai-native"];
+    const viaRow = mergeCourseSlice(localSlice, remoteSlice);
+    expect(viaRow).toEqual(viaWholeBlob);
+  });
+
+  it("returns the remote slice unchanged when local is undefined (new row)", () => {
+    const remoteSlice = slice({ capstoneSubmitted: true });
+    expect(mergeCourseSlice(undefined, remoteSlice)).toEqual(remoteSlice);
+  });
+
+  it("returns the local slice unchanged when remote is undefined (no existing row)", () => {
+    const localSlice = slice({ capstoneSubmitted: true });
+    expect(mergeCourseSlice(localSlice, undefined)).toEqual(localSlice);
+  });
+});
+
+describe("mergeMetaFields", () => {
+  function meta(over: Partial<Pick<UnifiedProgress, "xp" | "checkpoints" | "badges" | "streak" | "lastActivity">> = {}) {
+    return {
+      xp: 0,
+      checkpoints: {},
+      badges: {},
+      streak: { days: 0, last: null },
+      lastActivity: "2026-06-03T00:00:00.000Z",
+      ...over,
+    };
+  }
+
+  it("matches mergeUnifiedProgress's top-level ledger result exactly", () => {
+    const local = meta({ xp: 100, checkpoints: { "l1::c1": true } });
+    const remote = meta({ xp: 250, badges: { "first-light": "2026-02-01T00:00:00.000Z" } });
+    const viaWholeBlob = mergeUnifiedProgress(progress(local), progress(remote));
+    const viaMeta = mergeMetaFields(local, remote);
+    expect(viaMeta).toEqual({
+      xp: viaWholeBlob.xp,
+      checkpoints: viaWholeBlob.checkpoints,
+      badges: viaWholeBlob.badges,
+      streak: viaWholeBlob.streak,
+      lastActivity: viaWholeBlob.lastActivity,
+    });
+  });
+});
+
+describe("isUnifiedCourseSlice / isUnifiedMetaFields / META_ROW_COURSE_SLUG (row validators)", () => {
+  it("META_ROW_COURSE_SLUG never collides with a real CourseSlug", () => {
+    expect(META_ROW_COURSE_SLUG).toBe("_meta");
+    expect(COURSE_SLUGS).not.toContain(META_ROW_COURSE_SLUG);
+  });
+
+  it("isUnifiedCourseSlice accepts a valid slice and rejects a malformed one", () => {
+    expect(isUnifiedCourseSlice(slice())).toBe(true);
+    expect(isUnifiedCourseSlice({ ...slice(), lessons: null })).toBe(false);
+    expect(isUnifiedCourseSlice(null)).toBe(false);
+  });
+
+  it("isUnifiedMetaFields accepts a valid meta payload and rejects a malformed one", () => {
+    const valid = {
+      xp: 10,
+      checkpoints: { "l1::c1": true },
+      badges: { "first-light": "2026-01-01T00:00:00.000Z" },
+      streak: { days: 1, last: "2026-01-01" },
+      lastActivity: "2026-01-01T00:00:00.000Z",
+    };
+    expect(isUnifiedMetaFields(valid)).toBe(true);
+    expect(isUnifiedMetaFields({ ...valid, xp: -1 })).toBe(false);
+    expect(isUnifiedMetaFields({ ...valid, lastActivity: 42 })).toBe(false);
+    expect(isUnifiedMetaFields(null)).toBe(false);
+  });
+});
+
+// ── Exercise-summary byte cap enforced on every merge ───
+
+describe("mergeUnifiedProgress - exercise summary byte cap", () => {
+  it("truncates a merged-in oversized summary to the byte cap", () => {
+    const longSummary = "Über KI-Kompetenz und Verantwortung. ".repeat(50);
+    const local = progress({
+      courses: {
+        "ai-native": slice({
+          lessons: {
+            l1: lesson({
+              exercisesCompleted: {
+                exA: exercise({ summary: longSummary }),
+              },
+            }),
+          },
+        }),
+      },
+    });
+    const remote = progress();
+    const merged = mergeUnifiedProgress(local, remote);
+    const summary =
+      merged.courses["ai-native"]?.lessons.l1.exercisesCompleted.exA.summary;
+    expect(summary).toBeDefined();
+    expect(new TextEncoder().encode(summary ?? "").length).toBeLessThanOrEqual(
+      MAX_EXERCISE_SUMMARY_BYTES,
+    );
+  });
+
+  // "Mixed-version merge": an old device (pre-stage-5 client, no byte cap
+  // enforced at write time) has already been forward-migrated to schemaVersion
+  // 3 by store.ts's parseUnified() before it can reach this merge at all — so
+  // by the time two devices' payloads meet here, both are already valid v3
+  // UnifiedProgress objects. What can still differ is DATA characteristic of
+  // an old, pre-cap client: an oversized exercise summary. This pins that
+  // racing an old-data device against a new-data device is deterministic
+  // (same result regardless of merge order) and lossless (every field except
+  // the oversized summary text survives intact; the summary is trimmed, not
+  // dropped).
+  it("resolves a race between an old-data device and a new-data device deterministically and losslessly", () => {
+    const oldDeviceSummary = "Über KI-Kompetenz und Verantwortung. ".repeat(50);
+    const oldDevice = progress({
+      xp: 100,
+      courses: {
+        "ai-native": slice({
+          lessons: {
+            l1: lesson({
+              completed: true,
+              exercisesCompleted: {
+                exA: exercise({
+                  summary: oldDeviceSummary,
+                  completed: true,
+                  score: 6,
+                  attempts: 3,
+                }),
+              },
+            }),
+          },
+        }),
+      },
+    });
+    const newDevice = progress({
+      xp: 250,
+      courses: {
+        "ai-native": slice({
+          lessons: {
+            l1: lesson({
+              completed: true,
+              exercisesCompleted: {
+                exA: exercise({
+                  summary: "Kurze Zusammenfassung.",
+                  completed: true,
+                  score: 9,
+                  attempts: 1,
+                }),
+              },
+            }),
+          },
+        }),
+      },
+    });
+
+    const forward = mergeUnifiedProgress(oldDevice, newDevice);
+    const backward = mergeUnifiedProgress(newDevice, oldDevice);
+
+    for (const merged of [forward, backward]) {
+      const exA = merged.courses["ai-native"]!.lessons.l1.exercisesCompleted.exA;
+      // Lossless: completed/score/attempts merge exactly like every other
+      // exercise-merge test (max score, max attempts, OR completed).
+      expect(exA.completed).toBe(true);
+      expect(exA.score).toBe(9);
+      expect(exA.attempts).toBe(3);
+      // The oversized summary from the old device is trimmed, not dropped.
+      expect(exA.summary).toBeDefined();
+      expect(new TextEncoder().encode(exA.summary ?? "").length).toBeLessThanOrEqual(
+        MAX_EXERCISE_SUMMARY_BYTES,
+      );
+      expect(merged.xp).toBe(250);
+      expect(merged.schemaVersion).toBe(3);
+    }
+    // Deterministic: same result regardless of which side is "local".
+    expect(forward).toEqual(backward);
   });
 });

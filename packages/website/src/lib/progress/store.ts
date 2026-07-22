@@ -10,18 +10,24 @@
 
 import type { CourseSlug } from "@/lib/course/types";
 import {
+  MAX_EXERCISE_SUMMARY_BYTES,
   UNIFIED_SCHEMA_VERSION,
   UNIFIED_STORAGE_KEY,
   XP,
   checkpointKey,
+  truncateToByteLength,
   type UnifiedCourseSlice,
   type UnifiedExerciseResult,
   type UnifiedLessonProgress,
   type UnifiedProgress,
 } from "./types";
-import { COURSE_CATALOG } from "@/lib/courses/catalog";
+import { ALL_COURSE_CATALOG, COURSE_CATALOG } from "@/lib/courses/catalog";
 import { computeNewlyEarnedBadges } from "./badges";
-import { freshUnified, migrateLegacyToUnified } from "./migrate";
+import {
+  freshUnified,
+  migrateLegacyToUnified,
+  truncateExerciseSummaries,
+} from "./migrate";
 
 // ─── In-memory cache + cross-tab sync ──────────────────────────
 
@@ -98,8 +104,11 @@ function parseUnified(raw: string): UnifiedProgress | null {
       typeof parsed.courses === "object" &&
       parsed.courses !== null
     ) {
-      // Fill in any fields a slightly-older v2 payload might miss.
-      return {
+      // Fill in any fields a slightly-older v2 payload might miss, then run
+      // the v2->v3 migration step: any exercise summary written before
+      // MAX_EXERCISE_SUMMARY_BYTES existed gets re-normalized here so it can
+      // never violate the new per-row DB size constraint on next sync.
+      return truncateExerciseSummaries({
         schemaVersion: UNIFIED_SCHEMA_VERSION,
         courses: parsed.courses ?? {},
         xp: typeof parsed.xp === "number" ? parsed.xp : 0,
@@ -110,7 +119,7 @@ function parseUnified(raw: string): UnifiedProgress | null {
           typeof parsed.lastActivity === "string"
             ? parsed.lastActivity
             : nowIso(),
-      };
+      });
     }
   } catch {
     // corrupt unified payload — fall through to migration (never wipe)
@@ -394,6 +403,12 @@ export function saveExerciseResult(
         ? Math.max(prev.score, result.score)
         : (result.score ?? prev?.score ?? null),
     completed: (prev?.completed ?? false) || result.completed,
+    // Byte-cap (not char-cap) at write time: the DB's per-row size budget is
+    // byte-based, and German umlauts/ß are 2 bytes each.
+    summary:
+      result.summary !== undefined
+        ? truncateToByteLength(result.summary, MAX_EXERCISE_SUMMARY_BYTES)
+        : result.summary,
   };
   commit(
     withSlice(state, slug, {
@@ -484,7 +499,11 @@ export function isCertificateEligible(slug: CourseSlug): boolean {
   try {
     const slice = getCourseSlice(slug);
     if (slice.workshopQuiz.passed || slice.capstoneSubmitted) return true;
-    const total = COURSE_CATALOG.find((c) => c.slug === slug)?.totalLessons;
+    // ALL_COURSE_CATALOG (native + imported), not COURSE_CATALOG alone: a
+    // course outside the 4-course native spine (e.g. once it wires up
+    // progress tracking) must be able to reach this fallback too, instead
+    // of silently resolving totalLessons as undefined.
+    const total = ALL_COURSE_CATALOG.find((c) => c.slug === slug)?.totalLessons;
     if (!total) return false;
     let done = 0;
     for (const lesson of Object.values(slice.lessons)) {

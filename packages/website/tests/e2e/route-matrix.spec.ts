@@ -32,6 +32,26 @@ const PUBLIC_ROUTES = [
   "/eu-ai-act-kurs",
   "/ai-native",
   "/ki-und-gesellschaft",
+  //: claude's landing (nested under /kurse/open-source/,
+  // unlike the four top-level German courses above).
+  "/kurse/open-source/claude",
+  //: codex's landing, same nested convention as claude.
+  "/kurse/open-source/codex",
+  //: data-infrastructure's landing, same nested convention.
+  "/kurse/open-source/data-infrastructure",
+  //: data-engineering-fundamentals's landing, same nested
+  // convention — note its chapter tree has no "/kurs" segment (unlike the
+  // three courses above), see the sitemap no-leak test below.
+  "/kurse/open-source/data-engineering-fundamentals",
+  //: data-science's landing, same nested convention and
+  // no-"/kurs"-segment chapter tree as data-engineering-fundamentals above
+  // — its Overview additionally renders AT this exact route (not a
+  // separate "/home" chapter), see the sitemap no-leak test below.
+  "/kurse/open-source/data-science",
+  //: ai-native-operator's landing, sixth and last
+  // imported course to flip. Same nested convention and no-"/kurs"-segment
+  // module/lesson tree as data-engineering-fundamentals/data-science above.
+  "/kurse/open-source/ai-native-operator",
   "/blog",
   "/open-source",
   "/open-source/lizenzrichtlinie",
@@ -189,6 +209,79 @@ test.describe("sitemap lists only contract-included paths", () => {
     const response = await request.get("/sitemap.xml");
     const body = await response.text();
     expect(body).not.toContain("/ai-native/kurs");
+  });
+
+  //: claude's reader tree is public-access (not indexed),
+  // same convention as the other three courses' /kurs subtrees above.
+  test("sitemap.xml does not contain /kurse/open-source/claude/kurs", async ({
+    request,
+  }) => {
+    const response = await request.get("/sitemap.xml");
+    const body = await response.text();
+    expect(body).not.toContain("/kurse/open-source/claude/kurs");
+  });
+
+  //: codex's reader tree is public-access (not indexed),
+  // same convention as claude's above.
+  test("sitemap.xml does not contain /kurse/open-source/codex/kurs", async ({
+    request,
+  }) => {
+    const response = await request.get("/sitemap.xml");
+    const body = await response.text();
+    expect(body).not.toContain("/kurse/open-source/codex/kurs");
+  });
+
+  //: data-infrastructure's reader tree is public-access
+  // (not indexed), same convention as claude/codex above.
+  test("sitemap.xml does not contain /kurse/open-source/data-infrastructure/kurs", async ({
+    request,
+  }) => {
+    const response = await request.get("/sitemap.xml");
+    const body = await response.text();
+    expect(body).not.toContain("/kurse/open-source/data-infrastructure/kurs");
+  });
+
+  //: data-engineering-fundamentals's chapter tree has no
+  // "/kurs" segment (unlike claude/codex/data-infrastructure above) — the
+  // no-leak check instead confirms a real chapter path never appears,
+  // while the bare course root DOES appear (public-indexable via the
+  // generic "/kurse/open-source/:slug" pattern).
+  test("sitemap.xml lists the data-engineering-fundamentals landing but not its chapter routes", async ({
+    request,
+  }) => {
+    const response = await request.get("/sitemap.xml");
+    const body = await response.text();
+    expect(body).toContain("/kurse/open-source/data-engineering-fundamentals<");
+    expect(body).not.toContain("/kurse/open-source/data-engineering-fundamentals/home");
+    expect(body).not.toContain("/kurse/open-source/data-engineering-fundamentals/fund");
+  });
+
+  //: data-science's chapter tree has no "/kurs" segment
+  // either, and unlike data-engineering-fundamentals its Overview renders
+  // directly AT the bare course root (no "/home" sub-path at all) — the
+  // no-leak check confirms a real numbered-chapter path never appears,
+  // while the bare course root DOES appear.
+  test("sitemap.xml lists the data-science landing but not its chapter routes", async ({
+    request,
+  }) => {
+    const response = await request.get("/sitemap.xml");
+    const body = await response.text();
+    expect(body).toContain("/kurse/open-source/data-science<");
+    expect(body).not.toContain("/kurse/open-source/data-science/fund");
+    expect(body).not.toContain("/kurse/open-source/data-science/cap");
+  });
+
+  //: ai-native-operator's module/lesson tree has no
+  // "/kurs" segment either — the no-leak check confirms a real module or
+  // lesson path never appears, while the bare course root DOES appear.
+  test("sitemap.xml lists the ai-native-operator landing but not its module/lesson routes", async ({
+    request,
+  }) => {
+    const response = await request.get("/sitemap.xml");
+    const body = await response.text();
+    expect(body).toContain("/kurse/open-source/ai-native-operator<");
+    expect(body).not.toContain("/kurse/open-source/ai-native-operator/mindset");
+    expect(body).not.toContain("/kurse/open-source/ai-native-operator/measurement");
   });
 
   test("sitemap.xml does not contain /ki-transformation-check", async ({

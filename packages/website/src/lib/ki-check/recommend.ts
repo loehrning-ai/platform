@@ -6,7 +6,7 @@
 // gap, breaking ties along the learning path order.
 
 import { getCatalogCourse } from "@/lib/courses/catalog";
-import { trackMetaFor } from "@/lib/courses/tracks";
+import { courseFacts, type CourseAccent } from "@/lib/courses/tracks";
 import type { CourseSlug } from "@/lib/course/types";
 import type { DimensionId, DimensionResult, KiCheckResult } from "./types";
 
@@ -40,7 +40,7 @@ export interface KiCheckRecommendation {
   readonly startHref: string;
   readonly badge: string;
   readonly iconName: string;
-  readonly accent: "kupfer" | "sand" | "amber";
+  readonly accent: CourseAccent;
   readonly focusDimensionId: DimensionId;
   readonly focusDimensionName: string;
   readonly reasoning: string;
@@ -70,7 +70,7 @@ function build(
 ): KiCheckRecommendation {
   const slug = DIMENSION_COURSE[focus.id];
   const course = getCatalogCourse(slug);
-  const meta = trackMetaFor(slug);
+  const meta = courseFacts(slug);
 
   const title = course?.title ?? "Zertifikatskurs";
   const template =

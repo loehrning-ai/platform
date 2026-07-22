@@ -38,6 +38,19 @@ const PUBLIC_INDEXABLE_PATHS = [
   "/wie-ki-funktioniert/:lektionId",
   "/ki-check",
   "/kurse",
+  // The 6 imported courses' own landing pages. Each is now a real static
+  // route (its own page.tsx), not a match of the generic dynamic
+  // "/kurse/open-source/:slug" pattern below — these must precede that
+  // wildcard so verify-lighthouse-routes.ts's dynamic-candidates check
+  // (built from IMPORTED_COURSE_CATALOG, which no longer lists any of
+  // these 6 since they all flipped to nativeStatus "live") is not asked to
+  // vouch for a URL that isn't a dynamic-route candidate anymore.
+  "/kurse/open-source/claude",
+  "/kurse/open-source/codex",
+  "/kurse/open-source/data-infrastructure",
+  "/kurse/open-source/data-engineering-fundamentals",
+  "/kurse/open-source/data-science",
+  "/kurse/open-source/ai-native-operator",
   "/kurse/open-source/:slug",
   "/ki-fuehrerschein",
   "/eu-ai-act-kurs",
@@ -83,7 +96,87 @@ const PUBLIC_NOINDEX_PATHS = [
   "/ai-native/kurs/zertifikat",
   "/ki-und-gesellschaft/kurs/zertifikat",
   "/ki-und-gesellschaft/kurs/quiz",
+  // Claude Course — added ahead of the routes themselves
+  // (stage 9) so contract-completeness.test.ts never goes red mid-plan.
+  "/kurse/open-source/claude/kurs/quiz",
+  "/kurse/open-source/claude/kurs/zertifikat",
+  "/kurse/open-source/claude/verifizierung",
+  // Codex Course — added ahead of the routes themselves so
+  // contract-completeness.test.ts never goes red mid-migration.
+  // No "/kurs/quiz" entry: codex has no separate gating quiz, it uses the
+  // generic all-lessons-completed "completion" eligibility path, so no such
+  // route is ever built.
+  "/kurse/open-source/codex/kurs/zertifikat",
+  "/kurse/open-source/codex/verifizierung",
+  // Data Infrastructure course — added ahead of the
+  // routes themselves (stage 10) so contract-completeness.test.ts never
+  // goes red mid-plan. No "/kurs/quiz" entry: this course has no separate
+  // gating quiz either, it uses the same generic all-lessons-completed
+  // "completion" eligibility path as codex.
+  "/kurse/open-source/data-infrastructure/kurs/zertifikat",
+  "/kurse/open-source/data-infrastructure/verifizierung",
+  // Data Engineering Fundamentals course (, corrected stage
+  // 10): unlike claude/codex/data-infrastructure, this course's Done
+  // Criteria puts all 12 chapters directly under
+  // data-engineering-fundamentals/[chapterId] — no "/kurs" segment, since
+  // source has no natural index-vs-reader split (its own "Overview" chapter
+  // already plays that role, ported as chapterId "home"). No "/quiz" entry:
+  // this course has no quiz mechanism in source at all, it uses the same
+  // generic all-lessons-completed "completion" eligibility path as codex/
+  // data-infrastructure.
+  "/kurse/open-source/data-engineering-fundamentals/zertifikat",
+  "/kurse/open-source/data-engineering-fundamentals/verifizierung",
+  // Data Science course — added ahead of the routes
+  // themselves (stage 5) so contract-completeness.test.ts never goes red
+  // mid-plan. Same shape as data-engineering-fundamentals: chapters live
+  // directly under data-science/[chapterSlug] — no "/kurs" segment — and
+  // no "/quiz" entry, since this course has no quiz mechanism in source at
+  // all and uses the generic all-lessons-completed "completion"
+  // eligibility path.
+  "/kurse/open-source/data-science/zertifikat",
+  "/kurse/open-source/data-science/verifizierung",
+  // AI-Native Operator course — added ahead of the real
+  // routes (stages 7-10) so contract-completeness.test.ts never goes red
+  // mid-plan. Same flat-course-root shape as data-engineering-fundamentals/
+  // data-science (no "/kurs" segment): 9 modules x 39 lessons live directly
+  // under the course root. Unlike those two, this course DOES have a real
+  // quiz gate (9 module knowledge-checks pooled into one workshop quiz), so
+  // it gets its own "/quiz" entry, matching claude's precedent.
+  "/kurse/open-source/ai-native-operator/quiz",
+  "/kurse/open-source/ai-native-operator/zertifikat",
+  "/kurse/open-source/ai-native-operator/verifizierung",
 ] as const;
+
+// ─── Adding a new course's routes ───────────────────
+//
+// contract-completeness.test.ts walks the real src/app tree and fails the
+// build the moment ANY page.tsx/route.ts lands without a matching entry
+// below — this is not optional documentation, it is a CI gate. Every course
+// plan (008-013) adding real native routes must add its contract entries in
+// the SAME commit as the routes themselves, not as an afterthought once CI
+// already failed.
+//
+// Mirror the existing KI-Führerschein entries as the template:
+//   - the course-reader tree (lesson pages, block index, etc.) goes in
+//     PUBLIC_ACCESS_PATHS below, as a "/:course/kurs" + "/:course/kurs/:path*"
+//     pair — see "/ki-fuehrerschein/kurs" + "/ki-fuehrerschein/kurs/:path*".
+//     Public learning content, intentionally accessible without login, but
+//     deliberately NOT in the sitemap (courses are discovered via /kurse,
+//     not indexed lesson-by-lesson).
+//   - the workshop-quiz and certificate screens go in PUBLIC_NOINDEX_PATHS
+//     as exact (non-wildcard) entries — see "/ki-fuehrerschein/kurs/quiz"
+//     and "/ki-fuehrerschein/kurs/zertifikat". Crawlable so crawlers can SEE
+//     the noindex tag (never blocked via robots.txt), but never indexed:
+//     a quiz/certificate page has no content value for search or AI
+//     retrieval and the certificate route encodes a QR payload in the URL
+//     hash that must never end up in a search snippet.
+//   - the verification route (if the course issues a certificate) is also
+//     PUBLIC_NOINDEX_PATHS — see "/ki-fuehrerschein/verifizierung" — for the
+//     same QR-payload-in-URL reason.
+// Any other bespoke top-level route a course plan builds (a glossary, a
+// demo gallery, ...) follows the same PUBLIC_ACCESS_PATHS pattern as
+// "/ai-native/glossar"/"/ai-native/demos" above: public, accessible, out of
+// the sitemap unless there is a specific reason to index it.
 
 const PUBLIC_ACCESS_PATHS = [
   "/ki-fuehrerschein/kurs",
@@ -99,6 +192,30 @@ const PUBLIC_ACCESS_PATHS = [
   "/ai-native/capstone-gallery",
   "/ki-und-gesellschaft/kurs",
   "/ki-und-gesellschaft/kurs/:path*",
+  // Claude Course — see the noindex entries above.
+  "/kurse/open-source/claude/kurs",
+  "/kurse/open-source/claude/kurs/:path*",
+  // Codex Course — see the noindex entries above.
+  "/kurse/open-source/codex/kurs",
+  "/kurse/open-source/codex/kurs/:path*",
+  // Data Infrastructure course — see the noindex entries above.
+  "/kurse/open-source/data-infrastructure/kurs",
+  "/kurse/open-source/data-infrastructure/kurs/:path*",
+  // Data Engineering Fundamentals course — see the
+  // noindex-block comment above: the 12 chapters live directly under the
+  // course root, so one wildcard covers them all instead of the "/kurs" +
+  // "/kurs/:path*" pair every other course uses. The bare course root
+  // itself has its own explicit static entry in PUBLIC_INDEXABLE_PATHS
+  // above (it is a real page.tsx now, not the dynamic [slug] route).
+  "/kurse/open-source/data-engineering-fundamentals/:path*",
+  // Data Science course 
+  // — same flat-chapter shape as data-engineering-fundamentals above.
+  "/kurse/open-source/data-science/:path*",
+  // AI-Native Operator course (, ahead of stages 7-8's real
+  // routes) — one wildcard covers both the "/:moduleId" module-hub routes
+  // and the "/:moduleId/:lessonNum" lesson routes (no "/kurs" segment),
+  // same flat-course-root shape as data-engineering-fundamentals/data-science.
+  "/kurse/open-source/ai-native-operator/:path*",
 ] as const;
 
 const PUBLIC_MACHINE_PATHS = [

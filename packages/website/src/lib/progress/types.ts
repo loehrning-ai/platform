@@ -14,8 +14,37 @@ import type { CourseSlug } from "@/lib/course/types";
 /** Root localStorage key for the unified store. Bump suffix on breaking change. */
 export const UNIFIED_STORAGE_KEY = "loehrning-progress-v2";
 
-/** Schema version. Increment on any shape change + extend the migrator. */
-export const UNIFIED_SCHEMA_VERSION = 2 as const;
+/**
+ * Schema version. Increment on any shape change + extend the migrator.
+ * v3: server-side progress storage moves from one shared
+ * JSONB blob per user to one row per (user_id, course_slug), and exercise
+ * summaries are capped at MAX_EXERCISE_SUMMARY_BYTES. The client-side shape
+ * (UnifiedProgress/UnifiedCourseSlice) is otherwise unchanged.
+ */
+export const UNIFIED_SCHEMA_VERSION = 3 as const;
+
+/**
+ * Cap on `UnifiedExerciseResult.summary`, enforced in UTF-8 BYTES (not
+ * characters): the real Postgres constraint (`pg_column_size`) is byte-based,
+ * and German umlauts/ß are 2 bytes each, so a naive `.length` cap
+ * under-protects the actual per-row size budget. 500 bytes covers the
+ * "1-2 sentence" summary the widget layer generates with comfortable margin.
+ */
+export const MAX_EXERCISE_SUMMARY_BYTES = 500;
+
+/**
+ * Truncate a string to at most `maxBytes` UTF-8 bytes without splitting a
+ * multi-byte character in half. Returns the input unchanged if it already
+ * fits.
+ */
+export function truncateToByteLength(value: string, maxBytes: number): string {
+  const bytes = new TextEncoder().encode(value);
+  if (bytes.length <= maxBytes) return value;
+  const truncatedBytes = bytes.slice(0, maxBytes);
+  return new TextDecoder("utf-8")
+    .decode(truncatedBytes)
+    .replace(/�+$/, "");
+}
 
 /** Per-exercise result, mirroring the widget `ExerciseResult`. */
 export interface UnifiedExerciseResult {
@@ -26,6 +55,8 @@ export interface UnifiedExerciseResult {
   readonly attempts: number;
   readonly completedAt: string | null;
   readonly skipped: boolean;
+  /** 1-2 sentence AI/rule-graded summary, capped at MAX_EXERCISE_SUMMARY_BYTES. */
+  readonly summary?: string;
 }
 
 /** One lesson's progress within a course. Superset of both legacy lesson shapes. */

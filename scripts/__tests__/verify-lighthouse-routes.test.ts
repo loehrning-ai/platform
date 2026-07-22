@@ -32,7 +32,13 @@ describe("Lighthouse route contract", () => {
     });
     expect(summary.configuredRoutes).toBeGreaterThan(25);
     expect(summary.staticRoutes).toBeGreaterThan(20);
-    expect(summary.dynamicPatterns).toBe(9);
+    // 8 dynamic public-indexable patterns: /wie-ki-funktioniert/:lektionId,
+    // /kurse/open-source/:slug, /blog/:slug, /buecher/:slug, /demos/:slug,
+    // /workshops/:slug, /open-source/:kind/:slug, /buecher/:slug/:chapter.
+    // The 6 imported courses' own landing pages are now explicit static
+    // entries (their own real routes), not matches of the
+    // "/kurse/open-source/:slug" wildcard, so they don't add to this count.
+    expect(summary.dynamicPatterns).toBe(8);
   });
 
   it("fails when a static public page is omitted", async () => {

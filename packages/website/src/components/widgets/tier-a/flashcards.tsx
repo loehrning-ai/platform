@@ -26,11 +26,48 @@ export interface Flashcard {
   readonly a: string;
 }
 
+/**
+ * Chrome-copy override: kindLabel and every button/hint
+ * string below were hardcoded German literals with no override mechanism —
+ * `title` was already a plain per-instance prop, but the rest was not.
+ * Additive and default-preserving: every field defaults to the original
+ * German literal, so the 3 native courses render byte-identical.
+ * `ariaLabelTemplate` supports `{current}`/`{total}` placeholders.
+ */
+export interface FlashcardsWidgetCopy {
+  readonly kindLabel: string;
+  readonly revealHint: string;
+  readonly backLabel: string;
+  readonly flipBackHint: string;
+  readonly prevLabel: string;
+  readonly nextLabel: string;
+  readonly emptyLabel: string;
+  readonly ariaLabelTemplate: string;
+}
+
+const DEFAULT_FLASHCARDS_COPY: FlashcardsWidgetCopy = {
+  kindLabel: "Karten",
+  revealHint: "Klick zum Aufdecken ↻",
+  backLabel: "Antwort",
+  flipBackHint: "Klick zum Zurückdrehen",
+  prevLabel: "← Zurück",
+  nextLabel: "Weiter →",
+  emptyLabel: "Keine Karten vorhanden.",
+  ariaLabelTemplate: "Karte {current} von {total}. Leertaste oder Klick zum Umdrehen.",
+};
+
+function renderAriaLabel(template: string, current: number, total: number): string {
+  return template
+    .replace("{current}", String(current))
+    .replace("{total}", String(total));
+}
+
 export interface FlashcardsWidgetProps {
   readonly lessonId: string;
   readonly cpId: string;
   readonly title?: string;
   readonly cards: readonly Flashcard[];
+  readonly copy?: Partial<FlashcardsWidgetCopy>;
 }
 
 export function FlashcardsWidget({
@@ -38,7 +75,9 @@ export function FlashcardsWidget({
   cpId,
   title = "Karteikarten",
   cards,
+  copy,
 }: FlashcardsWidgetProps): JSX.Element {
+  const c = { ...DEFAULT_FLASHCARDS_COPY, ...copy };
   const reduced = useReducedMotion();
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [idx, setIdx] = useState(0);
@@ -86,10 +125,8 @@ export function FlashcardsWidget({
 
   if (total === 0) {
     return (
-      <WidgetFrame kindLabel="Karten" title={title}>
-        <p className="text-[14px] text-muted-foreground">
-          Keine Karten vorhanden.
-        </p>
+      <WidgetFrame kindLabel={c.kindLabel} title={title}>
+        <p className="text-[14px] text-muted-foreground">{c.emptyLabel}</p>
       </WidgetFrame>
     );
   }
@@ -97,13 +134,13 @@ export function FlashcardsWidget({
   const card = cards[idx];
 
   return (
-    <WidgetFrame kindLabel="Karten" title={title} done={done} xpLabel="+5 XP">
+    <WidgetFrame kindLabel={c.kindLabel} title={title} done={done} xpLabel="+5 XP">
       <div ref={deckRef}>
         <div className="[perspective:1200px]">
           <button
             type="button"
             onClick={flip}
-            aria-label={`Karte ${idx + 1} von ${total}. Leertaste oder Klick zum Umdrehen.`}
+            aria-label={renderAriaLabel(c.ariaLabelTemplate, idx + 1, total)}
             data-flipped={flipped ? "1" : "0"}
             className={cn(
               "relative block min-h-[160px] w-full border-2 border-border bg-background text-left transition-transform duration-500 [transform-style:preserve-3d]",
@@ -126,7 +163,7 @@ export function FlashcardsWidget({
                 {card.q}
               </span>
               <span className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted-foreground">
-                Klick zum Aufdecken ↻
+                {c.revealHint}
               </span>
             </span>
             {/* Back */}
@@ -138,13 +175,13 @@ export function FlashcardsWidget({
               )}
             >
               <span className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-[#22c55e]">
-                Antwort
+                {c.backLabel}
               </span>
               <span className="text-[15px] leading-[1.5] text-foreground">
                 {card.a}
               </span>
               <span className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted-foreground">
-                Klick zum Zurückdrehen
+                {c.flipBackHint}
               </span>
             </span>
           </button>
@@ -174,7 +211,7 @@ export function FlashcardsWidget({
             onClick={() => go(-1)}
             className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-brand-orange"
           >
-            ← Zurück
+            {c.prevLabel}
           </button>
           <span className="font-mono text-[11px] tracking-[0.1em] text-muted-foreground">
             {idx + 1} / {total}
@@ -184,7 +221,7 @@ export function FlashcardsWidget({
             onClick={() => go(1)}
             className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-brand-orange"
           >
-            Weiter →
+            {c.nextLabel}
           </button>
         </div>
       </div>

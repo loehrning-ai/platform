@@ -9,7 +9,7 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-import { AI_NATIVE_CONFIG, KI_FUEHRERSCHEIN_CONFIG } from "@/lib/course/config";
+import { AI_NATIVE_CONFIG, CLAUDE_CONFIG, KI_FUEHRERSCHEIN_CONFIG } from "@/lib/course/config";
 import { generateCertificatePdf, type CertificateData } from "../certificate-pdf";
 
 const { qrToDataUrlMock } = vi.hoisted(() => ({
@@ -63,7 +63,7 @@ function lastQrUrl(): string {
 function decodeFragment(url: string): {
   n: string;
   s: number | null;
-  m: "quiz" | "capstone";
+  m: "quiz" | "capstone" | "completion";
   d: string;
   c: string;
   v: number;
@@ -98,6 +98,16 @@ describe("certificate verification-URL encoding", () => {
     await generateCertificatePdf(makeData(), KI_FUEHRERSCHEIN_CONFIG);
     expect(lastQrUrl()).toMatch(
       /^https:\/\/loehrning\.ai\/ki-fuehrerschein\/verifizierung#./,
+    );
+  });
+
+  //: claude's basePath is nested under /kurse/open-source/
+  // (unlike the 4 German courses' top-level paths), confirming
+  // generateCertificatePdf works unmodified for that URL shape too.
+  it("targets claude's nested basePath verification route unmodified", async () => {
+    await generateCertificatePdf(makeData(), CLAUDE_CONFIG);
+    expect(lastQrUrl()).toMatch(
+      /^https:\/\/loehrning\.ai\/kurse\/open-source\/claude\/verifizierung#./,
     );
   });
 
@@ -145,6 +155,20 @@ describe("certificate verification-URL encoding", () => {
       s: null,
       m: "capstone",
       c: "ai-native",
+    });
+  });
+
+  //: third completionMode for courses whose eligibility path
+  // is "all lessons done" rather than a quiz or capstone.
+  it("encodes all-lessons-done completion without a fake quiz score", async () => {
+    await generateCertificatePdf(
+      makeData({ score: null, completionMode: "completion" }),
+      KI_FUEHRERSCHEIN_CONFIG,
+    );
+    expect(decodeFragment(lastQrUrl())).toMatchObject({
+      s: null,
+      m: "completion",
+      c: "ki-fuehrerschein",
     });
   });
 

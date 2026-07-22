@@ -100,9 +100,12 @@ describe("getNodesForCourse", () => {
     const ids = new Set(getNodesForCourse("ki-fuehrerschein").map((n) => n.id));
     // eu-ai-act-kurs course node belongs to another bundle.
     expect(ids.has("course:eu-ai-act-kurs")).toBe(false);
-    // Imported labs carry no courseSlug and must never appear.
+    // Imported labs carry no courseSlug and must never appear. Empty by
+    // design ( flipped the last imported course), so this
+    // loop is now vacuous — it stays enforced the moment a future course
+    // import adds a new pending entry.
     const labs = LEARNING_NODES.filter((n) => n.type === "open_source_lab");
-    expect(labs.length).toBeGreaterThan(0);
+    expect(labs.length).toBe(0);
     for (const lab of labs) {
       expect(ids.has(lab.id)).toBe(false);
     }

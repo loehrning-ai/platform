@@ -21,10 +21,33 @@ vi.mock("@/lib/security/rate-limit", () => ({
   ),
 }));
 
-import { PUT } from "./route";
+// server-store.ts's own read/merge/write/conflict logic is covered in
+// server-store.test.ts (against a fake DB). Mocked here so this file stays
+// focused on ONE thing: does route.ts correctly translate a server-store
+// outcome into the right HTTP status + body (the client-facing contract).
+const mockFetchUnifiedProgressForUser = vi.fn();
+const mockUpsertUnifiedProgressForUser = vi.fn();
+vi.mock("@/lib/progress/server-store", () => ({
+  fetchUnifiedProgressForUser: (...args: unknown[]) =>
+    mockFetchUnifiedProgressForUser(...args),
+  upsertUnifiedProgressForUser: (...args: unknown[]) =>
+    mockUpsertUnifiedProgressForUser(...args),
+}));
+
+import { GET, PUT } from "./route";
 import { consumeRateLimit } from "@/lib/security/rate-limit";
 
 const mockedRateLimit = consumeRateLimit as unknown as ReturnType<typeof vi.fn>;
+
+const VALID_PROGRESS = {
+  schemaVersion: 3,
+  courses: {},
+  xp: 0,
+  checkpoints: {},
+  badges: {},
+  streak: { days: 0, last: null },
+  lastActivity: "2026-06-03T00:00:00.000Z",
+};
 
 function streamingRequest(body: string): Request {
   const bytes = new TextEncoder().encode(body);
@@ -104,5 +127,99 @@ describe("PUT /api/progress payload boundary", () => {
       error: "rate_limit_exceeded",
     });
     expect(mockFrom).not.toHaveBeenCalled();
+  });
+});
+
+describe("GET /api/progress", () => {
+  beforeEach(() => {
+    mockFetchUnifiedProgressForUser.mockReset();
+  });
+
+  it("returns the assembled progress + updatedAt from server-store", async () => {
+    mockFetchUnifiedProgressForUser.mockResolvedValueOnce({
+      ok: true,
+      result: { progress: VALID_PROGRESS, updatedAt: "2026-06-03T00:00:00.000Z" },
+    });
+    const response = await GET();
+    expect(response.status).toBe(200);
+    expect((await response.json()) as unknown).toEqual({
+      progress: VALID_PROGRESS,
+      updatedAt: "2026-06-03T00:00:00.000Z",
+    });
+  });
+
+  it("answers 500 when server-store reports a read failure", async () => {
+    mockFetchUnifiedProgressForUser.mockResolvedValueOnce({
+      ok: false,
+      error: new Error("db down"),
+    });
+    const response = await GET();
+    expect(response.status).toBe(500);
+    expect((await response.json()) as unknown).toEqual({
+      error: "progress_read_failed",
+    });
+  });
+});
+
+describe("PUT /api/progress happy path + conflict", () => {
+  beforeEach(() => {
+    mockUpsertUnifiedProgressForUser.mockReset();
+    mockedRateLimit.mockReset();
+    mockedRateLimit.mockResolvedValue(true);
+  });
+
+  function putRequest(progress: unknown): Request {
+    return new Request("http://localhost/api/progress", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ progress }),
+    });
+  }
+
+  it("returns ok + the full assembled state on a successful write", async () => {
+    mockUpsertUnifiedProgressForUser.mockResolvedValueOnce({
+      ok: true,
+      result: { progress: VALID_PROGRESS, updatedAt: "2026-06-03T00:00:00.000Z" },
+    });
+    const response = await PUT(putRequest(VALID_PROGRESS));
+    expect(response.status).toBe(200);
+    expect((await response.json()) as unknown).toEqual({
+      ok: true,
+      progress: VALID_PROGRESS,
+      updatedAt: "2026-06-03T00:00:00.000Z",
+    });
+  });
+
+  it("returns 400 for a payload that fails isUnifiedProgress before ever touching server-store", async () => {
+    const response = await PUT(putRequest({ not: "valid" }));
+    expect(response.status).toBe(400);
+    expect(mockUpsertUnifiedProgressForUser).not.toHaveBeenCalled();
+  });
+
+  it("returns 409 with the latest assembled state on a per-row conflict", async () => {
+    mockUpsertUnifiedProgressForUser.mockResolvedValueOnce({
+      ok: false,
+      conflict: true,
+      result: { progress: VALID_PROGRESS, updatedAt: "2026-06-03T00:00:00.000Z" },
+    });
+    const response = await PUT(putRequest(VALID_PROGRESS));
+    expect(response.status).toBe(409);
+    expect((await response.json()) as unknown).toEqual({
+      error: "progress_conflict",
+      progress: VALID_PROGRESS,
+      updatedAt: "2026-06-03T00:00:00.000Z",
+    });
+  });
+
+  it("answers 500 when server-store reports a non-conflict write failure", async () => {
+    mockUpsertUnifiedProgressForUser.mockResolvedValueOnce({
+      ok: false,
+      error: new Error("db down"),
+    });
+    const response = await PUT(putRequest(VALID_PROGRESS));
+    expect(response.status).toBe(500);
+    expect((await response.json()) as unknown).toEqual({
+      error: "progress_write_failed",
+    });
   });
 });

@@ -7,7 +7,10 @@
  */
 
 import type { CourseConfig } from "@/lib/course/types";
-import { CERTIFICATE_QR_VERSION } from "@/lib/course/certificate-constants";
+import {
+  CERTIFICATE_QR_VERSION,
+  type CertificateCompletionMode,
+} from "@/lib/course/certificate-constants";
 
 // --- Brand tokens (Berliner Werkzeug CI v3.0) ---
 
@@ -22,10 +25,24 @@ const LEINEN = "#D4CEC5";
 export interface CertificateData {
   readonly name: string;
   readonly score: number | null; // 0-1 normalized for quiz path
-  readonly completionMode: "quiz" | "capstone";
+  readonly completionMode: CertificateCompletionMode;
   readonly completionDate: string; // formatted German date string
   readonly completedAt: string; // ISO timestamp
 }
+
+type NonQuizMode = Exclude<CertificateCompletionMode, "quiz">;
+
+/** Completion line for the non-quiz certificate paths, by course language. */
+const COMPLETION_LABEL: Record<"de" | "en", Record<NonQuizMode, string>> = {
+  de: {
+    capstone: "Abschluss: Capstone-Rubrik vollständig",
+    completion: "Abschluss: Alle Lektionen abgeschlossen",
+  },
+  en: {
+    capstone: "Completion: capstone rubric fulfilled",
+    completion: "Completion: all lessons finished",
+  },
+};
 
 // --- Verification URL ---
 
@@ -93,10 +110,14 @@ export async function generateCertificatePdf(
   doc.setLineWidth(0.5);
   doc.line(W / 2 - 40, 58, W / 2 + 40, 58);
 
+  const isEn = course.language === "en";
+
   doc.setFont("helvetica", "normal");
   doc.setFontSize(12);
   doc.setTextColor(SCHIEFER);
-  doc.text("Hiermit wird bestätigt, dass", W / 2, 72, { align: "center" });
+  doc.text(isEn ? "This certifies that" : "Hiermit wird bestätigt, dass", W / 2, 72, {
+    align: "center",
+  });
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(24);
@@ -107,7 +128,9 @@ export async function generateCertificatePdf(
   doc.setFontSize(11);
   doc.setTextColor(SCHIEFER);
   doc.text(
-    `den ${course.certificateTitle} der loehrning.ai erfolgreich absolviert hat.`,
+    isEn
+      ? `has successfully completed the ${course.certificateTitle} by loehrning.ai.`
+      : `den ${course.certificateTitle} der loehrning.ai erfolgreich absolviert hat.`,
     W / 2,
     98,
     { align: "center" },
@@ -119,12 +142,14 @@ export async function generateCertificatePdf(
   doc.setFont("courier", "normal");
   doc.setFontSize(10);
   doc.setTextColor(DRUCKERTINTE);
-  doc.text(`Datum:      ${data.completionDate}`, leftX, y);
+  doc.text(`${isEn ? "Date:      " : "Datum:      "}${data.completionDate}`, leftX, y);
   y += 7;
   doc.text(
-    data.score === null
-      ? "Abschluss: Capstone-Rubrik vollständig"
-      : `Ergebnis:   ${Math.round(data.score * 100)}% (bestanden)`,
+    data.completionMode === "quiz"
+      ? isEn
+        ? `Score:      ${Math.round((data.score ?? 0) * 100)}% (passed)`
+        : `Ergebnis:   ${Math.round((data.score ?? 0) * 100)}% (bestanden)`
+      : COMPLETION_LABEL[course.language][data.completionMode],
     leftX,
     y,
   );
@@ -155,8 +180,10 @@ export async function generateCertificatePdf(
   doc.setFont("helvetica", "normal");
   doc.setFontSize(7);
   doc.setTextColor(SCHIEFER);
-  doc.text("QR-Code scannen", W - 62.5, 147, { align: "center" });
-  doc.text("Daten lesbar, nicht geprüft", W - 62.5, 151, { align: "center" });
+  doc.text(isEn ? "Scan QR code" : "QR-Code scannen", W - 62.5, 147, { align: "center" });
+  doc.text(isEn ? "Data readable, not verified" : "Daten lesbar, nicht geprüft", W - 62.5, 151, {
+    align: "center",
+  });
 
   doc.setDrawColor(LEINEN);
   doc.setLineWidth(0.3);
@@ -169,12 +196,20 @@ export async function generateCertificatePdf(
 
   doc.setFont("helvetica", "italic");
   doc.setFontSize(8);
-  doc.text("Lokal erzeugte Teilnahmebestätigung. Keine kryptografische Signatur.", W / 2, H - 16, {
-    align: "center",
-  });
-  doc.text("Keine behördliche oder rechtliche Bescheinigung.", W / 2, H - 11, {
-    align: "center",
-  });
+  doc.text(
+    isEn
+      ? "Locally generated certificate of completion. No cryptographic signature."
+      : "Lokal erzeugte Teilnahmebestätigung. Keine kryptografische Signatur.",
+    W / 2,
+    H - 16,
+    { align: "center" },
+  );
+  doc.text(
+    isEn ? "Not an official or legally binding credential." : "Keine behördliche oder rechtliche Bescheinigung.",
+    W / 2,
+    H - 11,
+    { align: "center" },
+  );
 
   doc.setFillColor(KUPFER);
   doc.rect(0, H - 4, W, 4, "F");

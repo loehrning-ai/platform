@@ -7,7 +7,11 @@ import {
   consumeRateLimit,
   hashedClientRateLimitKey,
 } from "@/lib/security/rate-limit";
-import { isUnifiedProgress, mergeUnifiedProgress } from "@/lib/progress/server-sync";
+import { isUnifiedProgress } from "@/lib/progress/server-sync";
+import {
+  fetchUnifiedProgressForUser,
+  upsertUnifiedProgressForUser,
+} from "@/lib/progress/server-store";
 import type { UnifiedProgress } from "@/lib/progress/types";
 
 const MAX_PROGRESS_PAYLOAD_BYTES = 262_144;
@@ -54,20 +58,15 @@ export async function GET() {
   const auth = await requireUser();
   if ("error" in auth) return auth.error;
 
-  const { data, error } = await auth.supabase
-    .from("user_course_progress")
-    .select("progress, updated_at")
-    .eq("user_id", auth.user.id)
-    .maybeSingle();
-
-  if (error) {
-    reportApiError({ route: "/api/progress", step: "supabase-read", error });
+  const fetched = await fetchUnifiedProgressForUser(auth.supabase, auth.user.id);
+  if (!fetched.ok) {
+    reportApiError({ route: "/api/progress", step: "supabase-read", error: fetched.error });
     return privateJson({ error: "progress_read_failed" }, { status: 500 });
   }
 
   return privateJson({
-    progress: isUnifiedProgress(data?.progress) ? data.progress : null,
-    updatedAt: data?.updated_at ?? null,
+    progress: fetched.result.progress,
+    updatedAt: fetched.result.updatedAt,
   });
 }
 
@@ -95,73 +94,33 @@ export async function PUT(request: Request) {
     return privateJson({ error: "invalid_progress" }, { status: 400 });
   }
 
-  let incoming: UnifiedProgress = parsed.data.progress;
+  const incoming: UnifiedProgress = parsed.data.progress;
 
-  for (let attempt = 0; attempt < 2; attempt += 1) {
-    const { data: existing, error: readError } = await auth.supabase
-      .from("user_course_progress")
-      .select("progress, updated_at")
-      .eq("user_id", auth.user.id)
-      .maybeSingle();
+  // Persists one row per touched course plus the cross-course ledger row
+  // — a checkpoint in one course no longer requires
+  // re-serializing every other course's row. The client-facing shape here is
+  // unchanged: still the full aggregated UnifiedProgress object.
+  const result = await upsertUnifiedProgressForUser(auth.supabase, auth.user.id, incoming);
 
-    if (readError) {
-      reportApiError({ route: "/api/progress", step: "supabase-read", error: readError });
-      return privateJson({ error: "progress_read_failed" }, { status: 500 });
-    }
-
-    const progress = isUnifiedProgress(existing?.progress)
-      ? mergeUnifiedProgress(incoming, existing.progress)
-      : incoming;
-    const updatedAt = new Date().toISOString();
-
-    if (existing?.updated_at) {
-      const { data, error } = await auth.supabase
-        .from("user_course_progress")
-        .update({ progress, updated_at: updatedAt })
-        .eq("user_id", auth.user.id)
-        .eq("updated_at", existing.updated_at)
-        .select("progress, updated_at")
-        .maybeSingle();
-
-      if (error) {
-        reportApiError({ route: "/api/progress", step: "supabase-write", error });
-        return privateJson({ error: "progress_write_failed" }, { status: 500 });
-      }
-      if (data) {
-        return privateJson({ ok: true, progress: data.progress, updatedAt: data.updated_at });
-      }
-      incoming = progress;
-      continue;
-    }
-
-    const { data, error } = await auth.supabase
-      .from("user_course_progress")
-      .insert({
-        user_id: auth.user.id,
-        progress,
-        updated_at: updatedAt,
-      })
-      .select("progress, updated_at")
-      .maybeSingle();
-
-    if (!error && data) {
-      return privateJson({ ok: true, progress: data.progress, updatedAt: data.updated_at });
-    }
-    incoming = progress;
+  if (!result.ok && !result.conflict) {
+    reportApiError({ route: "/api/progress", step: "supabase-write", error: result.error });
+    return privateJson({ error: "progress_write_failed" }, { status: 500 });
   }
 
-  const { data: latest } = await auth.supabase
-    .from("user_course_progress")
-    .select("progress, updated_at")
-    .eq("user_id", auth.user.id)
-    .maybeSingle();
+  if (!result.ok) {
+    return privateJson(
+      {
+        error: "progress_conflict",
+        progress: result.result.progress,
+        updatedAt: result.result.updatedAt,
+      },
+      { status: 409 },
+    );
+  }
 
-  return privateJson(
-    {
-      error: "progress_conflict",
-      progress: isUnifiedProgress(latest?.progress) ? latest.progress : null,
-      updatedAt: latest?.updated_at ?? null,
-    },
-    { status: 409 },
-  );
+  return privateJson({
+    ok: true,
+    progress: result.result.progress,
+    updatedAt: result.result.updatedAt,
+  });
 }

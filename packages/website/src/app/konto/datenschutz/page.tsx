@@ -2,15 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { COURSE_SLUGS } from "@/lib/course/types";
+import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { UNIFIED_STORAGE_KEY } from "@/lib/progress/types";
-
-const COURSE_LABELS: Record<string, string> = {
-  "ki-fuehrerschein": "KI-Führerschein",
-  "eu-ai-act-kurs": "EU AI Act Kurs",
-  "ai-native": "AI-Native",
-  "ki-und-gesellschaft": "KI und Gesellschaft",
-};
 
 export default function DatenschutzPage() {
   const [exportState, setExportState] = useState<"idle" | "loading" | "error">("idle");
@@ -140,12 +133,21 @@ export default function DatenschutzPage() {
             Setzt den Serverfortschritt für den ausgewählten Kurs zurück. Dein lokaler Lernstand im Browser bleibt erhalten, bis du ihn dort manuell löschst.
           </p>
           <ul className="mt-4 space-y-3">
-            {COURSE_SLUGS.map((slug) => {
+            {/*
+              Scoped to COURSE_CATALOG (nativeStatus === "live"), not the full
+              CourseSlug union: the 6 imported courses have no server-tracked
+              progress to reset (external, unregistered in the shared
+              engine), so listing them here would offer a reset action that
+              does nothing, a compliance-sensitive page must never imply
+              there is data to reset when there is none.
+            */}
+            {COURSE_CATALOG.map((course) => {
+              const slug = course.slug;
               const state = resetStates[slug] ?? "idle";
               return (
                 <li key={slug} className="flex items-center gap-4">
                   <span className="w-48 font-mono text-[12px] text-foreground">
-                    {COURSE_LABELS[slug] ?? slug}
+                    {course.title}
                   </span>
                   <button
                     type="button"

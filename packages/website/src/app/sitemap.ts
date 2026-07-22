@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { WIE_KI_LEKTIONEN } from "@/lib/wie-ki-funktioniert";
 import { BLOG_POSTS } from "@/lib/blog-metadata";
 import { books } from "@/lib/books";
-import { IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
+import { ALL_COURSE_CATALOG } from "@/lib/courses/catalog";
 import { demos } from "@/lib/demos";
 import { getWorkshopSlugs } from "@/lib/workshops";
 import { CRAWL_CONTRACT, getCrawlRoute, SITE_ORIGIN } from "@/lib/crawl/contract";
@@ -119,11 +119,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
       }))
     : [];
 
-  // Imported course detail pages live under /kurse; they are catalog content,
-  // not open-source artifacts (the registry below covers only tools, projects,
-  // and videos published under the GitHub organization).
+  // Course detail pages living under /kurse/open-source/:slug; they are
+  // catalog content, not open-source artifacts (the registry below covers
+  // only tools, projects, and videos published under the GitHub
+  // organization). Filtered by href prefix rather than IMPORTED_COURSE_CATALOG
+  // alone: a course can flip to nativeStatus "live" (moving into
+  // COURSE_CATALOG, ) while keeping this same URL
+  // structure, and its sitemap entry must not silently disappear.
   const importedCourseEntries: Entry[] = contractIncludesPattern("/kurse/open-source/:slug")
-    ? IMPORTED_COURSE_CATALOG.map((course) => makeEntry(course.href, 0.6, "monthly"))
+    ? ALL_COURSE_CATALOG.filter((course) => course.href.startsWith("/kurse/open-source/")).map(
+        (course) => makeEntry(course.href, 0.6, "monthly"),
+      )
     : [];
 
   const openSourceArtifactEntries: Entry[] = OPEN_SOURCE_ARTIFACTS

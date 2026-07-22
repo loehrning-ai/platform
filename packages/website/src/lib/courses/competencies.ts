@@ -35,11 +35,12 @@ export interface EarnedCompetency extends Competency {
 }
 
 /**
- * Competencies granted per certified course. Keyed by `CourseSlug`, so adding
- * a certified course without competencies is a compile error. Wording is drawn
- * from the actual course content / certificate modules — nothing aspirational.
+ * Competencies granted per certified course. `Partial` because `CourseSlug`
+ * also spans the 6 imported open-source courses, which grant competencies
+ * only once their own plan flips them to a certified record — see
+ * `isCourseRecordEarned`, which never looks up a slug outside `COURSE_CATALOG`.
  */
-export const COURSE_COMPETENCIES: Record<CourseSlug, readonly Competency[]> = {
+export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency[]>> = {
   "ki-fuehrerschein": [
     {
       id: "ki-grundlagen-verstehen",
@@ -108,6 +109,116 @@ export const COURSE_COMPETENCIES: Record<CourseSlug, readonly Competency[]> = {
       description: "Baut Automationen mit n8n und beachtet dabei den EU AI Act.",
     },
   ],
+  // English course: the labels/descriptions stay English
+  // to match the course's own content language (`CLAUDE_CONFIG.language`),
+  // unlike the four German competency sets above.
+  claude: [
+    {
+      id: "structured-prompting",
+      label: "Structured prompting",
+      description: "Writes role, context, task, constraints, examples, and format instead of guessing.",
+    },
+    {
+      id: "context-engineering",
+      label: "Context engineering",
+      description: "Grounds Claude in real data and structures the context window deliberately.",
+    },
+    {
+      id: "safe-team-workflows",
+      label: "Safe team workflows",
+      description: "Shares prompts and CLAUDE.md files safely, with evals and without leaking sensitive data.",
+    },
+  ],
+  // English course: same reasoning as claude above.
+  codex: [
+    {
+      id: "task-spec-authoring",
+      label: "Task spec authoring",
+      description: "Writes goal, constraints, acceptance criteria, and out-of-scope so an agent lands the PR right the first time.",
+    },
+    {
+      id: "agent-pr-review",
+      label: "Agent PR review",
+      description: "Runs the review checklist that catches circular tests, scope creep, and Codex-specific security misses.",
+    },
+    {
+      id: "parallel-agent-workflows",
+      label: "Parallel agent workflows",
+      description: "Decomposes work into independent tasks and runs multiple agents across git worktrees without merge conflicts.",
+    },
+  ],
+  // English course: same reasoning as claude/codex above.
+  "data-engineering-fundamentals": [
+    {
+      id: "idempotent-pipeline-writes",
+      label: "Idempotent pipeline writes",
+      description: "Writes every scheduled task as INSERT OVERWRITE keyed by <DATEID>, so retries and backfills never double-write or drift with wall-clock time.",
+    },
+    {
+      id: "streaming-boundary-guards",
+      label: "Streaming boundary guards",
+      description: "Applies dedup-by-event_id and watermark-based late-drop as two independent guards at every stream-to-warehouse boundary.",
+    },
+    {
+      id: "data-quality-signal-barrier",
+      label: "Data-quality signal barrier",
+      description: "Gates downstream consumption on a signal table written only after row-count, freshness, schema, and uniqueness checks pass — never on the raw data table.",
+    },
+  ],
+  // English course: same reasoning as claude/codex above.
+  "data-science": [
+    {
+      id: "metric-before-model",
+      label: "Choosing the metric before the model",
+      description: "Picks precision, recall, F1, or PR-AUC from the real cost of a false positive vs. a false negative, not library defaults.",
+    },
+    {
+      id: "sampling-clt-intuition",
+      label: "Sampling & CLT intuition",
+      description: "Explains why a sampling distribution trends normal regardless of the population's shape, and uses it to size confidence intervals.",
+    },
+    {
+      id: "causal-dag-literacy",
+      label: "Causal DAG literacy",
+      description: "Draws the DAG before the regression and identifies confounders, mediators, and colliders to choose the correct adjustment set.",
+    },
+  ],
+  // English course: same reasoning as claude/codex above.
+  "data-infrastructure": [
+    {
+      id: "system-design-tradeoffs",
+      label: "System-design trade-offs",
+      description: "Names the CAP/PACELC trade-off explicitly and matches storage/streaming choices to real latency and freshness targets.",
+    },
+    {
+      id: "storage-format-internals",
+      label: "Storage-format internals",
+      description: "Reasons about row-vs-columnar layout, Parquet row groups, predicate pushdown, and lakehouse table formats at the byte level.",
+    },
+    {
+      id: "ic5-interview-structure",
+      label: "IC5 interview structure",
+      description: "Runs the five-act system-design interview structure — clarify, skeleton, deep dive, failure modes, trade-offs — under time pressure.",
+    },
+  ],
+  // English course: same reasoning as claude/codex above.
+  "ai-native-operator": [
+    {
+      id: "maturity-self-diagnosis",
+      label: "Honest AI-maturity self-diagnosis",
+      description: "Places themselves and their team on the L0-L3 maturity ladder honestly, calibrating trust to task type and cost of error rather than a single global verdict.",
+    },
+    {
+      id: "spec-first-delegation",
+      label: "Spec-first delegation",
+      description: "Writes an agent spec with a tight goal sentence, explicit non-goals, and concrete test cases, and directs a small fleet of agents against it instead of hand-typing the work.",
+    },
+    {
+      id: "governance-as-speed",
+      label: "Governance as a speed enabler",
+      description: "Builds the model registry, eval-driven release gate, and agent-identity audit trail that let a team move faster with agents, not slower.",
+    },
+  ],
 };
 
 const COURSE_TITLE: Record<string, string> = Object.fromEntries(
@@ -139,7 +250,7 @@ export function earnedCompetencies(
   const earned: EarnedCompetency[] = [];
   for (const course of COURSE_CATALOG) {
     if (!isCourseRecordEarned(progress, course.slug)) continue;
-    for (const competency of COURSE_COMPETENCIES[course.slug]) {
+    for (const competency of COURSE_COMPETENCIES[course.slug] ?? []) {
       earned.push({
         ...competency,
         courseSlug: course.slug,

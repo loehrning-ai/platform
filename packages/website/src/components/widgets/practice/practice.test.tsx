@@ -189,3 +189,51 @@ describe("SemanticSpaceWidget", () => {
     );
   });
 });
+
+describe("SemanticSpaceWidget — claude-course English override ", () => {
+  it("renders the overridden English seed words, not the German defaults", async () => {
+    const { CLAUDE_SEMANTIC_SPACE_SEED, CLAUDE_SEMANTIC_SPACE_KEYWORDS, CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS, CLAUDE_SEMANTIC_SPACE_QUADRANT_LABELS, CLAUDE_SEMANTIC_SPACE_COPY } =
+      await import("@/lib/claude-course/widget-copy");
+    render(
+      <SemanticSpaceWidget
+        lessonId="L"
+        cpId="sem"
+        seed={CLAUDE_SEMANTIC_SPACE_SEED}
+        clusterKeywords={CLAUDE_SEMANTIC_SPACE_KEYWORDS}
+        clusterLabels={CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS}
+        quadrantLabels={CLAUDE_SEMANTIC_SPACE_QUADRANT_LABELS}
+        copy={CLAUDE_SEMANTIC_SPACE_COPY}
+      />,
+    );
+    expect(screen.getByText("kubernetes")).toBeInTheDocument();
+    expect(screen.getByText("espresso")).toBeInTheDocument();
+    expect(screen.queryByText("Kunde")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("New word")).toBeInTheDocument();
+  });
+
+  it("the offline heuristic matches an English word to the right cluster (functional, not just cosmetic)", async () => {
+    mockFetchUnavailable();
+    const { CLAUDE_SEMANTIC_SPACE_SEED, CLAUDE_SEMANTIC_SPACE_KEYWORDS, CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS, CLAUDE_SEMANTIC_SPACE_QUADRANT_LABELS, CLAUDE_SEMANTIC_SPACE_COPY } =
+      await import("@/lib/claude-course/widget-copy");
+    render(
+      <SemanticSpaceWidget
+        lessonId="L"
+        cpId="sem"
+        seed={CLAUDE_SEMANTIC_SPACE_SEED}
+        clusterKeywords={CLAUDE_SEMANTIC_SPACE_KEYWORDS}
+        clusterLabels={CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS}
+        quadrantLabels={CLAUDE_SEMANTIC_SPACE_QUADRANT_LABELS}
+        copy={CLAUDE_SEMANTIC_SPACE_COPY}
+      />,
+    );
+    const input = screen.getByLabelText("New word");
+    // "sprint" only appears in the English "technik" keyword list, not in
+    // the component's own default German lists — proves the MATCHING logic
+    // itself uses the override, not just the seed display labels.
+    fireEvent.change(input, { target: { value: "sprint" } });
+    fireEvent.click(screen.getByRole("button", { name: /Place in space/i }));
+    await waitFor(() => expect(isCheckpointDone("L", "sem")).toBe(true));
+    expect(screen.getByText(/tech cluster/)).toBeInTheDocument();
+    expect(screen.queryByText(/technik/)).not.toBeInTheDocument();
+  });
+});

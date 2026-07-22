@@ -21,6 +21,7 @@ import {
   saveWorkshopQuizResult as uSaveWorkshopQuizResult,
   getWorkshopQuizResult as uGetWorkshopQuizResult,
   isWorkshopQuizPassed as uIsWorkshopQuizPassed,
+  isCapstoneSubmitted as uIsCapstoneSubmitted,
   isCertificateEligible as uIsCertificateEligible,
   getBlockCompletedLessons as uGetBlockCompletedLessons,
   areAllBlockLessonsCompleted as uAreAllBlockLessonsCompleted,
@@ -113,6 +114,11 @@ export function getWorkshopQuizResult(courseSlug: CourseSlug): {
 
 export function isWorkshopQuizPassed(courseSlug: CourseSlug): boolean {
   return uIsWorkshopQuizPassed(courseSlug);
+}
+
+/** True once the capstone rubric was submitted (AI-Native's second eligibility path). */
+export function isCapstoneSubmitted(courseSlug: CourseSlug): boolean {
+  return uIsCapstoneSubmitted(courseSlug);
 }
 
 /**

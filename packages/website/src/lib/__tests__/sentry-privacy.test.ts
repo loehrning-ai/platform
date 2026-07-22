@@ -7,6 +7,7 @@ import {
   prepareSentryEvent,
   prepareSentrySpan,
 } from "@/lib/observability/sentry-privacy";
+import { COURSE_SLUGS } from "@/lib/course/types";
 
 function certificateFragment(): string {
   return btoa(
@@ -20,17 +21,17 @@ function certificateFragment(): string {
 }
 
 describe("Sentry certificate and URL privacy", () => {
-  it("recognizes every certificate verification route with a private fragment", () => {
-    for (const course of [
-      "ki-fuehrerschein",
-      "eu-ai-act-kurs",
-      "ai-native",
-      "ki-und-gesellschaft",
-    ]) {
+  //: derived from the canonical COURSE_SLUGS union (now 10
+  // values) instead of a hardcoded 4-slug list — a course outside the
+  // original 4 must redact its verification route just as reliably, or its
+  // learner's name + score would leak to Sentry.
+  it("recognizes every certificate verification route with a private fragment, for every canonical course slug", () => {
+    for (const course of COURSE_SLUGS) {
       expect(
         isCertificateVerificationUrl(
           `https://loehrning.ai/${course}/verifizierung#${certificateFragment()}`,
         ),
+        course,
       ).toBe(true);
     }
   });

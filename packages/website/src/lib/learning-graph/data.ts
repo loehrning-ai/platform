@@ -1,5 +1,6 @@
 import { books } from "@/lib/books";
 import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
+import { getCourseConfig } from "@/lib/course/config";
 import type { CourseSlug } from "@/lib/course/types";
 import { demos } from "@/lib/demos";
 import type { LearningEdge, LearningNode } from "./types";
@@ -9,7 +10,10 @@ type CourseNodeMeta = Pick<
   "audience" | "level" | "stage" | "evidenceMode"
 >;
 
-const COURSE_NODE_META: Record<CourseSlug, CourseNodeMeta> = {
+// Partial: CourseSlug also spans the 6 imported open-source courses, which
+// surface as `open_source_lab` nodes (`labNodes` below) rather than `course`
+// nodes, so they never index into this map.
+const COURSE_NODE_META: Partial<Record<CourseSlug, CourseNodeMeta>> = {
   "ki-fuehrerschein": {
     audience: ["mitarbeitende", "verantwortliche"],
     level: "entry",
@@ -34,7 +38,60 @@ const COURSE_NODE_META: Record<CourseSlug, CourseNodeMeta> = {
     stage: "anwenden",
     evidenceMode: "self_attested",
   },
+  // Claude Course / Codex Course /
+  // Data Infrastructure / Data Engineering Fundamentals
+  // / Data Science: imported
+  // courses flipped to nativeStatus "live", so they now need course-node
+  // metadata like the 4 German courses above (their still-imported
+  // siblings surface as `open_source_lab` nodes via `labNodes` instead).
+  claude: {
+    audience: ["praktiker", "technische-vertiefung"],
+    level: "advanced",
+    stage: "anwenden",
+    evidenceMode: "self_attested",
+  },
+  codex: {
+    audience: ["praktiker", "technische-vertiefung"],
+    level: "advanced",
+    stage: "anwenden",
+    evidenceMode: "self_attested",
+  },
+  "data-infrastructure": {
+    audience: ["praktiker", "technische-vertiefung"],
+    level: "advanced",
+    stage: "anwenden",
+    evidenceMode: "self_attested",
+  },
+  "data-engineering-fundamentals": {
+    audience: ["praktiker", "technische-vertiefung"],
+    level: "advanced",
+    stage: "anwenden",
+    evidenceMode: "self_attested",
+  },
+  "data-science": {
+    audience: ["praktiker", "technische-vertiefung"],
+    level: "advanced",
+    stage: "anwenden",
+    evidenceMode: "self_attested",
+  },
+  // AI-Native Operator: sixth and last imported course
+  // to flip to nativeStatus "live" — every ported course now needs
+  // course-node metadata like the 4 German courses above.
+  "ai-native-operator": {
+    audience: ["praktiker", "technische-vertiefung"],
+    level: "advanced",
+    stage: "anwenden",
+    evidenceMode: "self_attested",
+  },
 };
+
+function courseNodeMeta(slug: CourseSlug): CourseNodeMeta {
+  const meta = COURSE_NODE_META[slug];
+  if (!meta) {
+    throw new Error(`Course "${slug}" has no learning-graph node metadata registered.`);
+  }
+  return meta;
+}
 
 const courseNodes: readonly LearningNode[] = COURSE_CATALOG.map((course) => ({
   id: `course:${course.slug}`,
@@ -42,8 +99,8 @@ const courseNodes: readonly LearningNode[] = COURSE_CATALOG.map((course) => ({
   title: course.title,
   route: course.href,
   access: "public-preview",
-  language: "de",
-  ...COURSE_NODE_META[course.slug],
+  language: getCourseConfig(course.slug).language,
+  ...courseNodeMeta(course.slug),
   sourceOwner: "editorial:courses",
   courseSlug: course.slug,
   summary: course.description,

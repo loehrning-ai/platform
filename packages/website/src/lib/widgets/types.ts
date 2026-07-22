@@ -22,6 +22,9 @@ export const WIDGET_COURSE_SLUGS = [
   "ki-fuehrerschein",
   "eu-ai-act-kurs",
   "ai-native",
+  "claude",
+  "codex",
+  "ai-native-operator",
 ] as const;
 
 export type WidgetCourseSlug = (typeof WIDGET_COURSE_SLUGS)[number];
@@ -81,6 +84,23 @@ export const TIER_A_KINDS = [
   "interactive-diagram",
   "risk-pyramid",
   "obligation-layers",
+  // ─── Codex Course ───
+  // The two genuinely new widget kinds codex needs, ported from
+  // `codex/js/widgets.js`'s Terminal (character-typewriter session replay)
+  // and Diff (stateless unified-diff line list). Every other codex widget
+  // instance reuses quiz/compare/task-spec/flashcards above verbatim.
+  "terminal-replay",
+  "diff-viewer",
+  // ─── AI-Native Operator Course ───
+  // The three genuinely new widget kinds this course needs, ported from
+  // `ai-native-operator/course-app.js`'s ReflectBox (free-text reflection,
+  // 23 of 30 exercises), MatrixEx (row x column selection grid, 1
+  // instance), and Slots (numbered short-text slots, 4 instances). Every
+  // other exercise instance reuses self-rate/plays above verbatim; the 9
+  // quiz-kind lessons reuse "quiz" above verbatim.
+  "reflect-box",
+  "matrix-grid",
+  "slot-fill",
 ] as const;
 
 /**
@@ -96,17 +116,41 @@ export const PRACTICE_KINDS = [
   "semantic-space",
 ] as const;
 
+/**
+ * Claude Course native widget kinds, ported from
+ * `claude/js/widgets.js`. Unlike PRACTICE_KINDS these never call a live
+ * Claude API — the source course itself never did (its own `claude-demo.js`
+ * comment confirms this); all "AI" behavior is a deterministic canned
+ * responder in `lib/claude-course/simulated-claude.ts`. Registered
+ * incrementally as each batch of components lands.
+ */
+export const CLAUDE_KINDS = [
+  "prompt-sandbox",
+  "prompt-compare",
+  "prompt-grader",
+  "rewrite-arena",
+  "fill-blank",
+  "prompt-diff",
+  "socratic-tutor",
+  "agent-loop",
+  "tokenizer",
+  "claude-md-builder",
+  "prompt-library-shaper",
+] as const;
+
 export type DemoKind = (typeof DEMO_KINDS)[number];
 export type ExerciseKind = (typeof EXERCISE_KINDS)[number];
 export type TierAKind = (typeof TIER_A_KINDS)[number];
 export type PracticeKind = (typeof PRACTICE_KINDS)[number];
-export type WidgetKind = DemoKind | ExerciseKind | TierAKind | PracticeKind;
+export type ClaudeKind = (typeof CLAUDE_KINDS)[number];
+export type WidgetKind = DemoKind | ExerciseKind | TierAKind | PracticeKind | ClaudeKind;
 
 export const ALL_WIDGET_KINDS: readonly WidgetKind[] = [
   ...DEMO_KINDS,
   ...EXERCISE_KINDS,
   ...TIER_A_KINDS,
   ...PRACTICE_KINDS,
+  ...CLAUDE_KINDS,
 ];
 
 /** Placement slots inside a lesson. Additions require schema migration. */
@@ -202,6 +246,13 @@ export function isPracticeKind(value: unknown): value is PracticeKind {
   return (
     typeof value === "string" &&
     (PRACTICE_KINDS as readonly string[]).includes(value)
+  );
+}
+
+export function isClaudeKind(value: unknown): value is ClaudeKind {
+  return (
+    typeof value === "string" &&
+    (CLAUDE_KINDS as readonly string[]).includes(value)
   );
 }
 

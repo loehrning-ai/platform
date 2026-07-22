@@ -19,7 +19,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 
 ## Indexable pages (class: public-indexable)
 
-### Static pages (22)
+### Static pages (28)
 
 | Canonical URL | Source/proof asset | Freshness evidence | In sitemap | Owner |
 | --- | --- | --- | --- | --- |
@@ -28,6 +28,12 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | https://loehrning.ai/wie-ki-funktioniert | src/app/wie-ki-funktioniert/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
 | https://loehrning.ai/ki-check | src/app/ki-check/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
 | https://loehrning.ai/kurse | src/app/kurse/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
+| https://loehrning.ai/kurse/open-source/claude | src/app/kurse/open-source/claude/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
+| https://loehrning.ai/kurse/open-source/codex | src/app/kurse/open-source/codex/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
+| https://loehrning.ai/kurse/open-source/data-infrastructure | src/app/kurse/open-source/data-infrastructure/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
+| https://loehrning.ai/kurse/open-source/data-engineering-fundamentals | src/app/kurse/open-source/data-engineering-fundamentals/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
+| https://loehrning.ai/kurse/open-source/data-science | src/app/kurse/open-source/data-science/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
+| https://loehrning.ai/kurse/open-source/ai-native-operator | src/app/kurse/open-source/ai-native-operator/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
 | https://loehrning.ai/ki-fuehrerschein | src/app/ki-fuehrerschein/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
 | https://loehrning.ai/eu-ai-act-kurs | src/app/eu-ai-act-kurs/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
 | https://loehrning.ai/ai-native | src/app/ai-native/page.tsx | canonical content date 2026-07-16 | yes | Tim Löhr |
@@ -84,16 +90,10 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | https://loehrning.ai/demos/roi-rechner | Annahmen-Rechner. | Welche Annahmen machen einen KI-Use-Case plausibel? Das Praxisbeispiel legt Formel und Unsicherheitsband offe… | src/lib/demos.ts | canonical content date 2026-07-16 | Tim Löhr |
 | https://loehrning.ai/demos/llm-observability | LLM-Qualitätsmessung. | Wie misst man, ob ein LLM-System besser oder schlechter wird? Das Praxisbeispiel zeigt Eval-Metriken, Drift-E… | src/lib/demos.ts | canonical content date 2026-07-16 | Tim Löhr |
 
-### Technische Labore (importierte Kurse) (6)
+### Technische Labore (importierte Kurse) (0)
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
-| https://loehrning.ai/kurse/open-source/data-engineering-fundamentals | Data Engineering Fundamentals | Optionaler englischer Browserkurs zu ETL-Patterns, Batch und Streaming, Partitionierung, Orchestrierung und D… | src/lib/courses/catalog.ts | source revision 0e5dfd327ce44663696b52eb6643bab147947101 | Tim Löhr |
-| https://loehrning.ai/kurse/open-source/data-science | Data Science Fundamentals | Zwölf interaktive Kapitel durch den Data-Science-Loop: EDA, Feature Engineering, statistisches Denken, CLT, B… | src/lib/courses/catalog.ts | source revision 0e5dfd327ce44663696b52eb6643bab147947101 | Tim Löhr |
-| https://loehrning.ai/kurse/open-source/data-infrastructure | Data Infrastructure | 12 Lektionen zu Storage-Internals, CAP/PACELC, Modeling, Parquet/ORC/Avro, Lakehouse-Formaten, Streaming/Wate… | src/lib/courses/catalog.ts | source revision 0e5dfd327ce44663696b52eb6643bab147947101 | Tim Löhr |
-| https://loehrning.ai/kurse/open-source/codex | Codex Course | Zwölf Lektionen mit Capstone zu Mental Model, Sandbox, AGENTS.md, Task Specs, Scoping, Acceptance Criteria, C… | src/lib/courses/catalog.ts | source revision 0e5dfd327ce44663696b52eb6643bab147947101 | Tim Löhr |
-| https://loehrning.ai/kurse/open-source/claude | Claude Course | Prompt like you mean it: Zwölf hands-on Lektionen zu Prompt-Anatomie, Context Engineering, CLAUDE.md, Iterati… | src/lib/courses/catalog.ts | source revision 0e5dfd327ce44663696b52eb6643bab147947101 | Tim Löhr |
-| https://loehrning.ai/kurse/open-source/ai-native-operator | The AI-Native Operator | Neununddreißig praktische Lektionen in neun Modulen zu Mindset, Engineering-Praxis und Organisationsdesign fü… | src/lib/courses/catalog.ts | source revision 0e5dfd327ce44663696b52eb6643bab147947101 | Tim Löhr |
 
 ### Open-Source-Artefakte (0)
 
@@ -121,6 +121,15 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | `/ai-native/capstone-gallery` | Public learning content intentionally accessible without login but not listed in sitemap. |
 | `/ki-und-gesellschaft/kurs` | Public learning content intentionally accessible without login but not listed in sitemap. |
 | `/ki-und-gesellschaft/kurs/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
+| `/kurse/open-source/claude/kurs` | Public learning content intentionally accessible without login but not listed in sitemap. |
+| `/kurse/open-source/claude/kurs/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
+| `/kurse/open-source/codex/kurs` | Public learning content intentionally accessible without login but not listed in sitemap. |
+| `/kurse/open-source/codex/kurs/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
+| `/kurse/open-source/data-infrastructure/kurs` | Public learning content intentionally accessible without login but not listed in sitemap. |
+| `/kurse/open-source/data-infrastructure/kurs/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
+| `/kurse/open-source/data-engineering-fundamentals/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
+| `/kurse/open-source/data-science/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
+| `/kurse/open-source/ai-native-operator/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
 
 ## Public-noindex patterns
 
@@ -145,6 +154,20 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | `/ai-native/kurs/zertifikat` | Public utility page; crawlable so crawlers can see noindex. |
 | `/ki-und-gesellschaft/kurs/zertifikat` | Public utility page; crawlable so crawlers can see noindex. |
 | `/ki-und-gesellschaft/kurs/quiz` | Public utility page; crawlable so crawlers can see noindex. |
+| `/kurse/open-source/claude/kurs/quiz` | Public utility page; crawlable so crawlers can see noindex. |
+| `/kurse/open-source/claude/kurs/zertifikat` | Public utility page; crawlable so crawlers can see noindex. |
+| `/kurse/open-source/claude/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
+| `/kurse/open-source/codex/kurs/zertifikat` | Public utility page; crawlable so crawlers can see noindex. |
+| `/kurse/open-source/codex/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
+| `/kurse/open-source/data-infrastructure/kurs/zertifikat` | Public utility page; crawlable so crawlers can see noindex. |
+| `/kurse/open-source/data-infrastructure/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
+| `/kurse/open-source/data-engineering-fundamentals/zertifikat` | Public utility page; crawlable so crawlers can see noindex. |
+| `/kurse/open-source/data-engineering-fundamentals/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
+| `/kurse/open-source/data-science/zertifikat` | Public utility page; crawlable so crawlers can see noindex. |
+| `/kurse/open-source/data-science/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
+| `/kurse/open-source/ai-native-operator/quiz` | Public utility page; crawlable so crawlers can see noindex. |
+| `/kurse/open-source/ai-native-operator/zertifikat` | Public utility page; crawlable so crawlers can see noindex. |
+| `/kurse/open-source/ai-native-operator/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
 
 ## Machine-readable surfaces (public-machine)
 

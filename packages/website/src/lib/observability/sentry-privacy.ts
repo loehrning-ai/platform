@@ -1,5 +1,17 @@
-const VERIFICATION_PATH = /^\/(?:ki-fuehrerschein|eu-ai-act-kurs|ai-native|ki-und-gesellschaft)\/verifizierung\/?$/;
-const VERIFICATION_REFERENCE = /(?:^|[^a-z0-9_-])(?:https?:\/\/[^/\s"'<>]+)?\/(?:ki-fuehrerschein|eu-ai-act-kurs|ai-native|ki-und-gesellschaft)\/verifizierung(?:[/?#\s"'<>),.;!?]|$)/i;
+import { COURSE_SLUGS } from "@/lib/course/types";
+
+// Derived from the canonical COURSE_SLUGS union so a
+// course outside the original 4 still gets its verification route redacted
+// — every course slug is a bare kebab-case identifier (letters, digits,
+// hyphens only), so no regex-escaping is needed for the alternation.
+const COURSE_SLUG_ALTERNATION = COURSE_SLUGS.join("|");
+const VERIFICATION_PATH = new RegExp(
+  `^/(?:${COURSE_SLUG_ALTERNATION})/verifizierung/?$`,
+);
+const VERIFICATION_REFERENCE = new RegExp(
+  `(?:^|[^a-z0-9_-])(?:https?://[^/\\s"'<>]+)?/(?:${COURSE_SLUG_ALTERNATION})/verifizierung(?:[/?#\\s"'<>),.;!?]|$)`,
+  "i",
+);
 
 type UnknownRecord = Record<string, unknown>;
 

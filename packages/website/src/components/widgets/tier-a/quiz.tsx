@@ -20,6 +20,28 @@ import { WidgetFrame } from "./_frame";
 
 const LETTERS = ["A", "B", "C", "D", "E", "F"] as const;
 
+/**
+ * Chrome-copy override: the button/status strings below
+ * were hardcoded German literals with no override mechanism, which would
+ * ship English quiz questions wrapped in German chrome for the (English)
+ * Claude Course. Additive and default-preserving: every field defaults to
+ * the original German literal, so the 3 existing native courses
+ * (ki-fuehrerschein, eu-ai-act-kurs, ai-native) render byte-identical.
+ */
+export interface QuizWidgetCopy {
+  readonly kindLabel: string;
+  readonly optionsAriaLabel: string;
+  readonly correctLabel: string;
+  readonly incorrectLabel: string;
+}
+
+const DEFAULT_COPY: QuizWidgetCopy = {
+  kindLabel: "Check",
+  optionsAriaLabel: "Antwortoptionen",
+  correctLabel: "Richtig.",
+  incorrectLabel: "Nicht ganz.",
+};
+
 export interface QuizWidgetProps {
   readonly lessonId: string;
   readonly cpId: string;
@@ -29,6 +51,7 @@ export interface QuizWidgetProps {
   /** 0-based index of the correct option. */
   readonly correct: number;
   readonly explanation: string;
+  readonly copy?: Partial<QuizWidgetCopy>;
 }
 
 export function QuizWidget({
@@ -39,7 +62,9 @@ export function QuizWidget({
   options,
   correct,
   explanation,
+  copy,
 }: QuizWidgetProps): JSX.Element {
+  const c = { ...DEFAULT_COPY, ...copy };
   const reduced = useReducedMotion();
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [picked, setPicked] = useState<number | null>(null);
@@ -76,7 +101,7 @@ export function QuizWidget({
 
   return (
     <WidgetFrame
-      kindLabel="Check"
+      kindLabel={c.kindLabel}
       title={title}
       done={done}
       xpLabel="+10 XP"
@@ -87,7 +112,7 @@ export function QuizWidget({
         </p>
         <div
           role="radiogroup"
-          aria-label="Antwortoptionen"
+          aria-label={c.optionsAriaLabel}
           className="flex flex-col gap-2"
         >
           {options.map((option, i) => {
@@ -135,7 +160,7 @@ export function QuizWidget({
               )}
             >
               <p className="mb-1 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em]">
-                {isCorrect ? "Richtig." : "Nicht ganz."}
+                {isCorrect ? c.correctLabel : c.incorrectLabel}
               </p>
               {explanation}
             </m.div>

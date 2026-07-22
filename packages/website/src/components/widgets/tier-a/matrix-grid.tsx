@@ -1,0 +1,106 @@
+"use client";
+
+import { useEffect, type JSX } from "react";
+import { useCheckpoint } from "@/lib/progress";
+import { useDraftValue } from "./use-draft-value";
+import { cn } from "@/lib/utils";
+import { WidgetFrame } from "./_frame";
+
+/**
+ * MatrixGrid — a row-by-column selection matrix: for each row, pick exactly
+ * one column. Ported from `ai-native-operator/course-app.js:159` (MatrixEx).
+ * English copy — 1 instance in the AI-Native Operator course (mindset
+ * lesson 3, "trust calibration").
+ *
+ *  - Each row is a `role="radiogroup"`; each cell is a `role="radio"`
+ *    button, mirroring the source's own aria wiring.
+ *  - The chosen column per row persists locally (private, not gamified) via
+ *    useDraftValue, keyed by row label — matches the source's own
+ *    `useLocalStore(lessonKey + "/matrix", {})`.
+ *  - Once every row has a pick, awards the checkpoint once.
+ *  - No motion to gate; selection is a CSS color/glyph change only.
+ */
+
+export interface MatrixGridWidgetProps {
+  readonly lessonId: string;
+  readonly cpId: string;
+  readonly title?: string;
+  readonly scenario?: string;
+  readonly rows: readonly string[];
+  readonly cols: readonly string[];
+}
+
+type Picks = Readonly<Record<string, number>>;
+
+export function MatrixGridWidget({
+  lessonId,
+  cpId,
+  title = "Matrix",
+  scenario,
+  rows,
+  cols,
+}: MatrixGridWidgetProps): JSX.Element {
+  const { done, complete } = useCheckpoint(lessonId, cpId);
+  const [picks, setPicks] = useDraftValue<Picks>(`matrix::${lessonId}::${cpId}`, {});
+
+  const allRowsPicked = rows.length > 0 && rows.every((row) => picks[row] != null);
+
+  useEffect(() => {
+    if (allRowsPicked) complete();
+  }, [allRowsPicked, complete]);
+
+  const pick = (row: string, colIndex: number) => setPicks({ ...picks, [row]: colIndex });
+
+  return (
+    <WidgetFrame kindLabel="Matrix" title={title} scenario={scenario} done={done} xpLabel="+10 XP">
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse text-[13px]">
+          <thead>
+            <tr>
+              <th className="p-2 text-left" />
+              {cols.map((col) => (
+                <th
+                  key={col}
+                  className="p-2 text-center font-mono text-[10.5px] font-bold uppercase tracking-[0.08em] text-muted-foreground"
+                >
+                  {col}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row} role="radiogroup" aria-label={row}>
+                <td className="p-2 pr-4 text-[13px] font-medium text-foreground">{row}</td>
+                {cols.map((col, colIndex) => {
+                  const active = picks[row] === colIndex;
+                  return (
+                    <td key={col} className="p-2 text-center">
+                      <button
+                        type="button"
+                        role="radio"
+                        aria-checked={active}
+                        aria-label={`${row}, ${col}`}
+                        onClick={() => pick(row, colIndex)}
+                        className={cn(
+                          "inline-flex h-7 w-7 items-center justify-center rounded-full border-2 transition-colors",
+                          active
+                            ? "border-brand-orange bg-brand-orange text-white"
+                            : "border-border bg-background text-transparent hover:border-brand-orange/60",
+                        )}
+                      >
+                        <span aria-hidden="true">{active ? "●" : ""}</span>
+                      </button>
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </WidgetFrame>
+  );
+}
+
+export default MatrixGridWidget;

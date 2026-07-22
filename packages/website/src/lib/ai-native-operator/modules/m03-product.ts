@@ -1,0 +1,277 @@
+// Ported verbatim from course-data.js's MODULES[2] ("product", M03).
+import type { AiNativeOperatorLesson } from "../types";
+
+export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
+  {
+    id: "product/1",
+    moduleId: "product",
+    lessonNumber: 1,
+    number: 1,
+    kind: "reading",
+    title: "The death of the chat bubble",
+    subtitle: 'Recognize when "AI feature" is a bolt-on and when it is the actual product.',
+    objective: 'Recognize when "AI feature" is a bolt-on and when it is the actual product.',
+    durationMinutes: 13,
+    keyConcepts: [],
+    quiz: [],
+    sections: [
+      {
+        id: "s1",
+        title: "The bolt-on era",
+        readTimeMinutes: 4,
+        content:
+          '2023-2024 produced a generation of products with a chat bubble in the corner. The bubble said "Ask AI anything." Most of them died. They died because the bubble did not change the product, it was a separate room nobody visited. The interface stayed static, the flows stayed long, the value stayed the same.',
+      },
+      {
+        id: "s2",
+        title: "The integrated era",
+        readTimeMinutes: 5,
+        content:
+          'The products that won made the AI invisible and the value loud. The interface adapts to user intent. Forms ask one question instead of twelve. The reasoning system is the engine; the UI is a thin shell. When you use them, you do not say "I used AI", you say "I got the thing I wanted, faster."',
+      },
+      {
+        id: "s3",
+        title: "The diagnostic question",
+        readTimeMinutes: 4,
+        content:
+          "Ask of any AI product: if you removed the AI, would the product still work? If yes, the AI is a feature. If no, the AI is the product. Only the second category matters.",
+      },
+    ],
+    exerciseKind: "reflect-box",
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "product/1",
+          cpId: "exercise",
+          scenario:
+            "Audit your product. List three flows where the AI is a bolt-on. For each, sketch in one sentence how it could be the product instead.",
+          rows: 3,
+        },
+      },
+    ],
+  },
+  {
+    id: "product/2",
+    moduleId: "product",
+    lessonNumber: 2,
+    number: 2,
+    kind: "reading",
+    title: "Find the intent moment",
+    subtitle:
+      "Identify the moment in any flow where the user states intent, and replace the next five steps with one delegation.",
+    objective:
+      "Identify the moment in any flow where the user states intent, and replace the next five steps with one delegation.",
+    durationMinutes: 18,
+    keyConcepts: [],
+    quiz: [],
+    sections: [
+      {
+        id: "s1",
+        title: "Where intent lives",
+        readTimeMinutes: 6,
+        content:
+          "In every flow there is a moment when the user expresses what they want. It might be a search query, a button click, an email subject line, a verbal request. Before that moment, the product is exploration. After it, the product is execution. The AI-native opportunity is at and after that moment: collapse the next N steps into one delegated action.",
+      },
+      {
+        id: "s2",
+        title: "The five-to-one rule",
+        readTimeMinutes: 6,
+        content:
+          'A useful design heuristic: take any flow with more than five steps after intent and ask, "what would it take to compress this to one?" Sometimes you cannot. Often you can. The teams that consistently apply this rule are the ones whose flows feel like magic.',
+      },
+      {
+        id: "s3",
+        title: "The structured + conversational hybrid",
+        readTimeMinutes: 6,
+        content:
+          "Pure chat is rarely the right UI. Mix conversation with structured controls. Let the AI choose the surface, a form, a chat, a calendar, a map, for the moment. The user does not care about modality; they care about getting the thing they wanted.",
+      },
+    ],
+    exerciseKind: "reflect-box",
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "product/2",
+          cpId: "exercise",
+          scenario:
+            "Pick one flow in your product with more than five post-intent steps. Sketch the one-step version. What is the user input? What is the agent output? What controls remain?",
+          rows: 4,
+        },
+      },
+    ],
+  },
+  {
+    id: "product/3",
+    moduleId: "product",
+    lessonNumber: 3,
+    number: 3,
+    kind: "reading",
+    title: "Generative UI",
+    subtitle: "Stop designing every screen. Design the system that designs screens.",
+    objective: "Stop designing every screen. Design the system that designs screens.",
+    durationMinutes: 21,
+    keyConcepts: [],
+    quiz: [],
+    sections: [
+      {
+        id: "s1",
+        title: "From screens to systems",
+        readTimeMinutes: 7,
+        content:
+          "The classical PM and designer ship screens, wireframes, mockups, prototypes. The AI-native PM and designer ship a system: a library of components, a set of constraints, a few patterns. The model assembles screens from that vocabulary in response to intent.",
+      },
+      {
+        id: "s2",
+        title: "The constraint hierarchy",
+        readTimeMinutes: 7,
+        content:
+          "Generative UI is only useful when the constraints are right. Too few constraints and you get a chaotic experience that violates brand and accessibility. Too many constraints and you get the same product everyone has. The art is in the middle, define the components, the patterns, the dos and donts. Let the model improvise the rest.",
+      },
+      {
+        id: "s3",
+        title: "When NOT to generate",
+        readTimeMinutes: 7,
+        content:
+          "Some screens should never be generated: legal flows, payment, anything where consistency is the value. Identify these explicitly. Generative UI is a tool, not an ideology.",
+      },
+    ],
+    callout: {
+      kind: "note",
+      h: "A pragmatic starting point",
+      text: "Pick one surface in your product where users have wildly different goals, a dashboard, a homepage, a settings panel. Make that surface generative. Leave the rest static for now.",
+    },
+    exerciseKind: "reflect-box",
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "product/3",
+          cpId: "exercise",
+          scenario:
+            "Which surface in your product has the highest variance in user intent? That is your first candidate for generative UI.",
+          rows: 3,
+        },
+      },
+    ],
+  },
+  {
+    id: "product/4",
+    moduleId: "product",
+    lessonNumber: 4,
+    number: 4,
+    kind: "reading",
+    title: "Real-time evals on user-facing AI",
+    subtitle: "Score every AI response in production. Detect regressions before users do.",
+    objective: "Score every AI response in production. Detect regressions before users do.",
+    durationMinutes: 17,
+    keyConcepts: [],
+    quiz: [],
+    sections: [
+      {
+        id: "s1",
+        title: "The production reality",
+        readTimeMinutes: 6,
+        content:
+          "Internal evals catch most regressions. Some they will not. A model upgrade, a prompt tweak, a new tool, any of these can shift behavior in production in ways your eval suite did not anticipate. Real-time evals are the safety net.",
+      },
+      {
+        id: "s2",
+        title: "What to score",
+        readTimeMinutes: 6,
+        content:
+          "Score every AI-facing response on a small set of dimensions: correctness (where you can verify), helpfulness (proxied by user signal), safety (rule-based filters). Sample for human review. Watch the distributions, not the individual scores.",
+      },
+      {
+        id: "s3",
+        title: "The auto-rollback discipline",
+        readTimeMinutes: 5,
+        content:
+          "When a real-time eval crosses a threshold, the system rolls back automatically. The human reads the postmortem after. This discipline takes work to build and saves you the day a model upgrade quietly breaks 12% of your traffic.",
+      },
+    ],
+    exerciseKind: "reflect-box",
+    widgets: [
+      {
+        kind: "reflect-box",
+        placement: "end",
+        courseSlug: "ai-native-operator",
+        props: {
+          lessonId: "product/4",
+          cpId: "exercise",
+          title: "Real-Time Eval Design",
+          scenario:
+            "For your most user-facing AI surface, design three real-time eval signals. What thresholds trigger alert? What thresholds trigger auto-rollback?",
+          rows: 4,
+        },
+      },
+    ],
+  },
+  {
+    id: "product/5",
+    moduleId: "product",
+    lessonNumber: 5,
+    number: 5,
+    kind: "quiz",
+    title: "Module 3, knowledge check",
+    subtitle: "Confirm the product mindset shift is internalized.",
+    objective: "Confirm the product mindset shift is internalized.",
+    durationMinutes: 8,
+    keyConcepts: [],
+    quiz: [
+      {
+        id: "ano-product-q1",
+        questionText: "Diagnostic for whether AI is a feature or a product:",
+        answerOptions: [
+          { id: "a", text: "Whether marketing calls it AI-powered.", isCorrect: false },
+          { id: "b", text: "Whether it uses an LLM under the hood.", isCorrect: false },
+          {
+            id: "c",
+            text: "Whether the product still works if you remove the AI. If no, AI is the product.",
+            isCorrect: true,
+          },
+          { id: "d", text: "Whether it has a chat interface.", isCorrect: false },
+        ],
+        explanation:
+          "The clean diagnostic is counterfactual: remove the AI and ask if the product still works. If it does, the AI was a bolt-on feature riding alongside the real value. If it doesn't, the AI is the product itself, the reasoning system is the engine, not a chat bubble in the corner.",
+      },
+      {
+        id: "ano-product-q2",
+        questionText: "A flow has 7 steps after the user states intent. The AI-native instinct is:",
+        answerOptions: [
+          { id: "a", text: "Add a chat bubble for help.", isCorrect: false },
+          { id: "b", text: "Compress the 7 steps into one delegated action.", isCorrect: true },
+          { id: "c", text: "Reorder the steps for clarity.", isCorrect: false },
+          { id: "d", text: "Add tooltips.", isCorrect: false },
+        ],
+        explanation:
+          "The AI-native instinct is compression, not decoration: take the steps that happen after the user has already stated their intent and collapse them into one delegated action. Adding a help bubble or tooltips to a long flow just makes the long flow easier to tolerate, it doesn't remove the tax.",
+      },
+      {
+        id: "ano-product-q3",
+        questionText: "Generative UI is most appropriate for:",
+        answerOptions: [
+          { id: "a", text: "Payment flows.", isCorrect: false },
+          { id: "b", text: "Legal disclosures.", isCorrect: false },
+          {
+            id: "c",
+            text: "Surfaces with high variance in user intent, dashboards, homepages, settings.",
+            isCorrect: true,
+          },
+          { id: "d", text: "Every screen in the product.", isCorrect: false },
+        ],
+        explanation:
+          "Generative UI earns its keep on surfaces where users arrive with wildly different goals, a dashboard, a homepage, a settings panel, because a fixed layout can't serve all of them well. Payment and legal flows are exactly where consistency IS the value, so they should stay static and predictable, not generated.",
+      },
+    ],
+    sections: [],
+    widgets: [],
+  },
+];

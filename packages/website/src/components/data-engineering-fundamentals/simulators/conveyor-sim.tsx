@@ -1,0 +1,484 @@
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Panel } from "../primitives";
+
+// ─── ConveyorSim ──────────────────────────────────
+// Ported from `src/chapters/Ch1_5_Streaming.js`: events fall onto a
+// conveyor belt and travel toward a gate that dedups by event_id and drops
+// late arrivals past the watermark. DOM-diffed via refs (matching source's
+// own direct-DOM `renderStage` approach) rather than React state per frame,
+// since this is a 60fps particle system.
+
+const CV_STAGE_SECONDS = 30;
+const CV_WATERMARK_LAG = 4;
+const CV_GATE_X = 70;
+const CV_BASELINE_Y = 78;
+
+type EventState = "falling" | "onbelt" | "passed" | "dup" | "late";
+
+interface ConveyorEvent {
+  id: string;
+  et: number;
+  at: number;
+  lane: number;
+  y: number;
+  targetY: number;
+  state: EventState;
+  bornReal: number;
+  onBeltAt?: number;
+  gated?: boolean;
+  endedAt?: number;
+  twinLedgerIdx?: number;
+}
+
+interface TwinLink {
+  id: string;
+  fromT: number;
+  ledgerIdx: number;
+}
+
+interface LateEntry {
+  readonly id: string;
+  readonly et: number;
+  readonly at: number;
+  readonly lag: number;
+}
+
+function eventTimeToX(et: number, now: number): number {
+  const age = now - et;
+  return 100 - (age / CV_STAGE_SECONDS) * 100;
+}
+
+export function ConveyorSim() {
+  const [rate, setRate] = useState(10);
+  const [dupPct, setDupPct] = useState(22);
+  const [latePct, setLatePct] = useState(15);
+  const [dedupOn, setDedupOn] = useState(true);
+  const [lateGateOn, setLateGateOn] = useState(true);
+  const [beginner, setBeginner] = useState(true);
+  const [running, setRunning] = useState(true);
+  const [ledger, setLedger] = useState<readonly string[]>([]);
+  const [lateDrawer, setLateDrawer] = useState<readonly LateEntry[]>([]);
+  const [rtCount, setRtCount] = useState(0);
+  const [whCount, setWhCount] = useState(0);
+  const [rtTotal, setRtTotal] = useState(0);
+  const [snapped, setSnapped] = useState(0);
+  const [droppedLate, setDroppedLate] = useState(0);
+  const [driftSeries, setDriftSeries] = useState<readonly { t: number; rt: number }[]>([]);
+
+  const simT = useRef(0);
+  const events = useRef<ConveyorEvent[]>([]);
+  const seenIds = useRef<Set<string>>(new Set());
+  const seenOrder = useRef<string[]>([]);
+  const passedStamps = useRef<number[]>([]);
+  const twinLinks = useRef<TwinLink[]>([]);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number | null>(null);
+  const eventsLayerRef = useRef<HTMLDivElement>(null);
+  const linksSvgRef = useRef<SVGSVGElement>(null);
+  const poolRef = useRef<string[]>([]);
+
+  const reset = () => {
+    simT.current = 0;
+    events.current = [];
+    seenIds.current = new Set();
+    seenOrder.current = [];
+    passedStamps.current = [];
+    twinLinks.current = [];
+    setLedger([]);
+    setLateDrawer([]);
+    setRtCount(0);
+    setWhCount(0);
+    setRtTotal(0);
+    setSnapped(0);
+    setDroppedLate(0);
+    setDriftSeries([]);
+  };
+
+  const nextId = () => {
+    const id = `E${Math.random().toString(36).slice(2, 5).toUpperCase()}`;
+    poolRef.current.push(id);
+    if (poolRef.current.length > 60) poolRef.current.shift();
+    return id;
+  };
+
+  const reuseId = () => {
+    if (poolRef.current.length < 2) return nextId();
+    const idx = Math.max(0, poolRef.current.length - 1 - Math.floor(Math.random() * 20));
+    return poolRef.current[idx];
+  };
+
+  function renderStage(list: readonly ConveyorEvent[], now: number, links: readonly TwinLink[]) {
+    const layer = eventsLayerRef.current;
+    if (layer) {
+      const need = list.length;
+      const pool = layer.children;
+      while (pool.length < need) {
+        const el = document.createElement("div");
+        el.className = "cv-ev";
+        const inner = document.createElement("span");
+        el.appendChild(inner);
+        layer.appendChild(el);
+      }
+      while (pool.length > need) layer.removeChild(pool[pool.length - 1]);
+      list.forEach((e, i) => {
+        const el = pool[i] as HTMLElement;
+        const x = eventTimeToX(e.et, now);
+        el.style.left = x.toFixed(2) + "%";
+        el.style.top = e.y.toFixed(2) + "%";
+        el.className = `cv-ev cv-${e.state}${e.state === "dup" ? " cv-dup" : ""}`;
+        const inner = el.firstChild as HTMLElement;
+        if (inner.textContent !== e.id) inner.textContent = e.id;
+      });
+    }
+    const lyr2 = linksSvgRef.current;
+    if (lyr2) {
+      while (lyr2.lastChild) lyr2.removeChild(lyr2.lastChild);
+      const ns = "http://www.w3.org/2000/svg";
+      links.forEach((l) => {
+        const path = document.createElementNS(ns, "path");
+        const age = now - l.fromT;
+        const op = Math.max(0, 1 - age / 0.55);
+        const fromX = CV_GATE_X;
+        const fromY = CV_BASELINE_Y;
+        const toX = 99.5;
+        const toY = 6 + l.ledgerIdx * 4.6;
+        path.setAttribute("d", `M ${fromX} ${fromY} Q 92 ${fromY - 25} ${toX} ${toY}`);
+        path.setAttribute("stroke", "#E41E3F");
+        path.setAttribute("stroke-width", "0.45");
+        path.setAttribute("fill", "none");
+        path.setAttribute("stroke-dasharray", "1.2 0.8");
+        path.setAttribute("vector-effect", "non-scaling-stroke");
+        path.setAttribute("opacity", op.toFixed(2));
+        lyr2.appendChild(path);
+      });
+    }
+  }
+
+  useEffect(() => {
+    if (!running) return;
+    let last = performance.now();
+    let spawnBank = 0;
+    let rtBank = 0;
+    const rtWindow: number[] = [];
+    const tick = (now: number) => {
+      const dtMs = Math.min(64, now - last);
+      last = now;
+      const dt = dtMs / 1000;
+      simT.current += dt;
+      spawnBank += dt * rate;
+      while (spawnBank >= 1) {
+        spawnBank -= 1;
+        const isLate = Math.random() * 100 < latePct;
+        const isDup = Math.random() * 100 < dupPct;
+        let et: number;
+        if (isLate) {
+          const wm2 = simT.current - CV_WATERMARK_LAG;
+          et = wm2 - (0.4 + Math.random() * 3.5);
+        } else {
+          et = simT.current - Math.random() * 0.6;
+        }
+        const id = isDup ? reuseId() : nextId();
+        const lane = Math.floor(Math.random() * 5);
+        events.current.push({
+          id,
+          et,
+          at: simT.current,
+          lane,
+          y: 20 + Math.random() * 15,
+          targetY: CV_BASELINE_Y - 10 + lane * 5,
+          state: "falling",
+          bornReal: now,
+        });
+      }
+
+      const wm = simT.current - CV_WATERMARK_LAG;
+      events.current.forEach((e) => {
+        if (e.state === "falling") {
+          const targetY = e.targetY ?? CV_BASELINE_Y;
+          e.y = Math.min(targetY, e.y + dt * 80);
+          if (e.y >= targetY) {
+            e.state = "onbelt";
+            e.onBeltAt = simT.current;
+          }
+        }
+        if (e.state === "onbelt") {
+          const x = eventTimeToX(e.et, simT.current);
+          if (x <= CV_GATE_X + 0.4 && !e.gated) {
+            e.gated = true;
+            if (lateGateOn && e.et < wm) {
+              e.state = "late";
+              e.endedAt = simT.current;
+              setLateDrawer((arr) => [{ id: e.id, et: e.et, at: e.at, lag: e.at - e.et }, ...arr].slice(0, 6));
+              setDroppedLate((n) => n + 1);
+              return;
+            }
+            if (dedupOn && seenIds.current.has(e.id)) {
+              e.state = "dup";
+              e.endedAt = simT.current;
+              e.twinLedgerIdx = seenOrder.current.indexOf(e.id);
+              twinLinks.current.push({ id: e.id, fromT: simT.current, ledgerIdx: e.twinLedgerIdx });
+              setSnapped((n) => n + 1);
+              return;
+            }
+            e.state = "passed";
+            seenIds.current.add(e.id);
+            seenOrder.current.unshift(e.id);
+            if (seenOrder.current.length > 18) {
+              const dropped = seenOrder.current.pop();
+              if (dropped) seenIds.current.delete(dropped);
+            }
+            passedStamps.current.push(e.et);
+            rtWindow.push(simT.current);
+            setRtTotal((n) => n + 1);
+          }
+        }
+      });
+
+      events.current = events.current.filter((e) => {
+        if (e.state === "dup" || e.state === "late") return simT.current - (e.endedAt ?? 0) < 0.55;
+        if (e.state === "passed") return eventTimeToX(e.et, simT.current) > -4;
+        return true;
+      });
+      twinLinks.current = twinLinks.current.filter((l) => simT.current - l.fromT < 0.55);
+
+      while (passedStamps.current.length > 0 && passedStamps.current[0] <= wm - 0.05) {
+        passedStamps.current.shift();
+        setWhCount((n) => n + 1);
+      }
+
+      const oneAgo = simT.current - 1;
+      while (rtWindow.length > 0 && rtWindow[0] < oneAgo) rtWindow.shift();
+      rtBank += dt;
+      if (rtBank > 0.2) {
+        rtBank = 0;
+        setRtCount(rtWindow.length);
+        setDriftSeries((prev) => [...prev, { t: simT.current, rt: rtWindow.length }].slice(-90));
+      }
+
+      if (Math.floor(simT.current * 10) % 2 === 0) {
+        setLedger([...seenOrder.current]);
+      }
+
+      renderStage(events.current, simT.current, twinLinks.current);
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [running, rate, dupPct, latePct, dedupOn, lateGateOn]);
+
+  useEffect(() => {
+    reset();
+     
+  }, [dedupOn, lateGateOn]);
+
+  const watermarkX = 100 - (CV_WATERMARK_LAG / CV_STAGE_SECONDS) * 100;
+  const drift = rtTotal - whCount;
+  const spark = useMemo(() => {
+    if (driftSeries.length < 2) return "";
+    const max = Math.max(1, ...driftSeries.map((p) => p.rt));
+    const min = Math.min(0, ...driftSeries.map((p) => p.rt));
+    const range = max - min || 1;
+    return driftSeries
+      .map((p, i) => {
+        const x = (i / (driftSeries.length - 1)) * 100;
+        const y = 100 - ((p.rt - min) / range) * 100;
+        return `${i === 0 ? "M" : "L"} ${x.toFixed(1)} ${y.toFixed(1)}`;
+      })
+      .join(" ");
+  }, [driftSeries]);
+
+  return (
+    <Panel
+      eyebrow="live simulator · streaming boundary"
+      title="The Ingestion Conveyor Belt"
+      meta={`${rate}/s · dup ${dupPct}% · late ${latePct}%`}
+      caption={`Time advances left→right. The watermark trails ~${CV_WATERMARK_LAG}s behind "now". Two independent guards: dedup by event_id, drop-late by watermark: protect the warehouse boundary.`}
+    >
+      <div className="cv-stage" ref={stageRef}>
+        <div className="cv-field">
+          <svg className="cv-bg-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <defs>
+              <pattern id="cv-grid" x="0" y="0" width="5" height="10" patternUnits="userSpaceOnUse">
+                <path d="M 5 0 L 0 0 0 10" fill="none" stroke="rgba(11,18,31,0.05)" strokeWidth="0.15" vectorEffect="non-scaling-stroke" />
+              </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#cv-grid)" />
+            <line x1="0" y1={CV_BASELINE_Y} x2="100" y2={CV_BASELINE_Y} stroke="rgba(11,18,31,0.14)" strokeWidth="1" strokeDasharray="2 2" vectorEffect="non-scaling-stroke" />
+            <rect x="0" y="0" width={watermarkX} height="100" fill="rgba(49,162,76,0.04)" />
+            <line x1={watermarkX} y1="0" x2={watermarkX} y2="100" stroke="#B8770A" strokeWidth="1.5" strokeDasharray="3 2" vectorEffect="non-scaling-stroke" />
+            <line x1={CV_GATE_X} y1="0" x2={CV_GATE_X} y2="100" stroke="#2D7DFF" strokeWidth="1.8" vectorEffect="non-scaling-stroke" />
+            <rect x={CV_GATE_X - 3} y="60" width="6" height="18" fill="rgba(45,125,255,0.12)" stroke="#2D7DFF" strokeWidth="0.8" vectorEffect="non-scaling-stroke" />
+          </svg>
+          <div className="cv-labels">
+            <div className="cv-label-settled" style={{ left: 0, width: `${watermarkX}%` }}>
+              ◄ SETTLED · behind watermark
+            </div>
+            <div className="cv-label-watermark" style={{ left: `${watermarkX}%` }}>
+              WATERMARK
+              <br />
+              <span>now − {CV_WATERMARK_LAG}s</span>
+            </div>
+            <div className="cv-label-gate" style={{ left: `${CV_GATE_X}%` }}>
+              <div className="g">GATE</div>
+              <div className="gsub">{dedupOn && lateGateOn ? "dedup · late" : dedupOn ? "dedup only" : lateGateOn ? "late only" : "pass-all"}</div>
+            </div>
+            <div className="cv-label-now">NOW ►</div>
+          </div>
+          <div className="cv-events-layer" ref={eventsLayerRef} />
+          <svg className="cv-links-svg" viewBox="0 0 100 100" preserveAspectRatio="none" ref={linksSvgRef} />
+        </div>
+        <div className="cv-ledger">
+          <div className="cv-ledger-head">
+            <span>SEEN</span>
+            <span className="n">{ledger.length}</span>
+          </div>
+          <div className="cv-ledger-body">
+            {ledger.length === 0 ? (
+              <div className="empty">ledger empty</div>
+            ) : (
+              ledger.map((id, i) => (
+                <div key={id + "-" + i} className="cv-ledger-row">
+                  <span className="i">{i + 1}</span>
+                  <code>{id}</code>
+                </div>
+              ))
+            )}
+          </div>
+          <div className="cv-ledger-foot">{dedupOn ? "dedup by event_id · on" : "dedup · OFF"}</div>
+        </div>
+      </div>
+
+      {!beginner && (
+        <div className="cv-drawer-2">
+          <div className="cv-drawer-head">
+            <span className="k">LATE DRAWER</span>
+            <span className="c">{lateDrawer.length}</span>
+            <span className="h">events arrived after their window closed</span>
+          </div>
+          <div className="cv-drawer-rows">
+            {lateDrawer.length === 0 ? (
+              <div className="empty">no late events in the window</div>
+            ) : (
+              lateDrawer.map((e, i) => (
+                <div key={i} className="cv-late-row">
+                  <code>{e.id}</code>
+                  <span className="et">event-time t={e.et.toFixed(1)}s</span>
+                  <span className="lag">+{e.lag.toFixed(1)}s late</span>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+
+      <div className={`cv-readouts ${beginner ? "cv-readouts-beginner" : ""}`}>
+        <div className="cv-r cv-r-rt">
+          <div className="k">Real-time (events/s)</div>
+          <div className="v">{rtCount}</div>
+          <div className="s">1-second rolling window · jittery</div>
+        </div>
+        <div className="cv-r cv-r-wh">
+          <div className="k">Warehouse · settled rows</div>
+          <div className="v">{whCount.toLocaleString()}</div>
+          <div className="s">event-time ≤ watermark · stable</div>
+        </div>
+        {!beginner && (
+          <div className={`cv-r ${Math.abs(drift) > 8 ? "warn" : ""}`}>
+            <div className="k">Passed − settled</div>
+            <div className="v">
+              {drift >= 0 ? "+" : ""}
+              {drift}
+            </div>
+            <div className="s">in-flight (passed, not yet behind watermark)</div>
+            <svg className="cv-spark" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <path d={spark} stroke="var(--accent)" strokeWidth="1.2" fill="none" />
+            </svg>
+          </div>
+        )}
+        <div className={`cv-r cv-r-gate ${snapped + droppedLate > 0 ? "danger" : ""}`}>
+          <div className="k">Gate actions</div>
+          <div className="v cv-gate-nums">
+            <span>
+              <b>{snapped}</b> dedup
+            </span>
+            {!beginner && (
+              <span>
+                <b>{droppedLate}</b> late
+              </span>
+            )}
+          </div>
+          <div className="s">blocked at the boundary</div>
+        </div>
+      </div>
+
+      <label className="cv-mode">
+        <input type="checkbox" checked={beginner} onChange={(e) => setBeginner(e.target.checked)} />
+        <span className="cv-mode-name">Beginner mode</span>
+        <span className="cv-mode-sub">{beginner ? "focus on dedup only · late drawer hidden" : "all guards visible"}</span>
+      </label>
+
+      <div className="cv-ctls">
+        <div className="cv-guards">
+          <label className={`cv-guard ${dedupOn ? "on" : ""}`}>
+            <input type="checkbox" checked={dedupOn} onChange={(e) => setDedupOn(e.target.checked)} />
+            <div>
+              <div className="n">
+                Dedup by <code>event_id</code>
+              </div>
+              <div className="d">Suppress events whose id the gate has already passed</div>
+            </div>
+          </label>
+          {!beginner && (
+            <label className={`cv-guard ${lateGateOn ? "on" : ""}`}>
+              <input type="checkbox" checked={lateGateOn} onChange={(e) => setLateGateOn(e.target.checked)} />
+              <div>
+                <div className="n">Drop late (past watermark)</div>
+                <div className="d">Events whose event-time trails the watermark at arrival</div>
+              </div>
+            </label>
+          )}
+        </div>
+        <div className="cv-sliders">
+          <div className="cv-slider">
+            <div className="row">
+              <span className="lab">Event rate</span>
+              <span className="val">{rate}/s</span>
+            </div>
+            <input type="range" min={3} max={60} value={rate} onChange={(e) => setRate(+e.target.value)} />
+          </div>
+          <div className="cv-slider warn">
+            <div className="row">
+              <span className="lab">Duplicate %</span>
+              <span className="val">{dupPct}%</span>
+            </div>
+            <input type="range" min={0} max={45} value={dupPct} onChange={(e) => setDupPct(+e.target.value)} />
+          </div>
+          {!beginner && (
+            <div className="cv-slider warn">
+              <div className="row">
+                <span className="lab">Late %</span>
+                <span className="val">{latePct}%</span>
+              </div>
+              <input type="range" min={0} max={35} value={latePct} onChange={(e) => setLatePct(+e.target.value)} />
+            </div>
+          )}
+        </div>
+        <div className="cv-btns">
+          <button className="btn btn-primary" onClick={() => setRunning((r) => !r)}>
+            {running ? "⏸ Pause" : "▶ Resume"}
+          </button>
+          <button className="btn" onClick={reset}>
+            ↻ Reset
+          </button>
+        </div>
+      </div>
+    </Panel>
+  );
+}
+
+export default ConveyorSim;

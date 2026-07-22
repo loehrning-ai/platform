@@ -7,12 +7,24 @@
 // so existing server-side imports keep working unchanged.
 
 import type { BlockId, CourseConfig, CourseSlug } from "./types";
+import { CODEX_CONFIG } from "@/lib/codex/config";
+import { DATA_INFRASTRUCTURE_CONFIG } from "@/lib/data-infrastructure/config";
+import { DATA_ENGINEERING_FUNDAMENTALS_CONFIG } from "@/lib/data-engineering-fundamentals/config";
+import { DATA_SCIENCE_CONFIG } from "@/lib/data-science/config";
+import { AI_NATIVE_OPERATOR_CONFIG } from "@/lib/ai-native-operator/config";
+
+export { CODEX_CONFIG };
+export { DATA_INFRASTRUCTURE_CONFIG };
+export { DATA_ENGINEERING_FUNDAMENTALS_CONFIG };
+export { DATA_SCIENCE_CONFIG };
+export { AI_NATIVE_OPERATOR_CONFIG };
 
 // ─── KI-Führerschein ───────────────────────────────────────────
 
 export const KI_FUEHRERSCHEIN_CONFIG: CourseConfig = {
   slug: "ki-fuehrerschein",
   title: "KI-Führerschein",
+  language: "de",
   basePath: "/ki-fuehrerschein",
   coursePath: "/ki-fuehrerschein/kurs",
   blockIds: ["block_1", "block_2", "block_3", "block_4", "block_5"],
@@ -44,6 +56,7 @@ export const KI_FUEHRERSCHEIN_CONFIG: CourseConfig = {
 export const EU_AI_ACT_KURS_CONFIG: CourseConfig = {
   slug: "eu-ai-act-kurs",
   title: "EU AI Act Kurs",
+  language: "de",
   basePath: "/eu-ai-act-kurs",
   coursePath: "/eu-ai-act-kurs/kurs",
   blockIds: ["block_1", "block_2", "block_3", "block_4", "block_5", "block_6"],
@@ -84,6 +97,7 @@ export const EU_AI_ACT_KURS_CONFIG: CourseConfig = {
 export const AI_NATIVE_CONFIG: CourseConfig = {
   slug: "ai-native",
   title: "AI-Native Arbeitskurs",
+  language: "de",
   basePath: "/ai-native",
   coursePath: "/ai-native/kurs",
   blockIds: [],
@@ -114,6 +128,7 @@ export const AI_NATIVE_CONFIG: CourseConfig = {
 export const KI_UND_GESELLSCHAFT_CONFIG: CourseConfig = {
   slug: "ki-und-gesellschaft",
   title: "KI und Gesellschaft",
+  language: "de",
   basePath: "/ki-und-gesellschaft",
   coursePath: "/ki-und-gesellschaft/kurs",
   blockIds: ["block_1", "block_2", "block_3"],
@@ -134,16 +149,85 @@ export const KI_UND_GESELLSCHAFT_CONFIG: CourseConfig = {
   },
 };
 
+// ─── Claude Course ───────────────────────────
+//
+// First imported course folded into the shared engine ( widened
+// CourseSlug + added the "en" language + "certificate" RecordKind for this
+// purpose). Content lives in `lib/claude-course` keyed by its own flat
+// lesson-id scheme (NOT the shared BlockId JSON system), mirroring
+// AI_NATIVE_CONFIG's `blockIds: []` precedent above. Registering the config
+// here does not itself expose any UI: the catalog entry stays
+// `nativeStatus: "pending"` and `COURSE_FACTS.claude` stays
+// `{record: "none", external: true}` until ships the real
+// routes and flips both in the same commit (mirroring own
+// "machinery now, flip later" sequencing so no misleading badge ships early).
+//
+// Progress-budget audit (, see src/lib/claude-course/
+// progress-budget.test.ts for the computation): the course's 46 checkpoints
+// (its lesson widgets that award one, more than the plan's original "~34-40"
+// estimate) do NOT count against this course's own per-course progress row.
+// `checkpoints` lives on `UnifiedProgress` itself, one level up from
+// `UnifiedCourseSlice`, and persists server-side in the shared "_meta" row
+// (course_slug = "_meta", src/lib/progress/server-sync.ts's
+// META_ROW_COURSE_SLUG), not the "claude" row. Both rows share the same
+// 65536-byte pg_column_size CHECK constraint (supabase/migrations/
+// 009_user_course_progress_per_course.sql). Measured worst case: this
+// course's own row (12 lessons, every section read, quiz passed) serializes
+// to ~2-3 KB, under 5% of the cap; its 46 checkpoint keys add ~970 bytes to
+// the shared "_meta" row, under 1.5 KB even generously rounded, comfortable
+// headroom alongside every other course's checkpoints in that same row.
+
+export const CLAUDE_CONFIG: CourseConfig = {
+  slug: "claude",
+  title: "Claude Course",
+  language: "en",
+  basePath: "/kurse/open-source/claude",
+  coursePath: "/kurse/open-source/claude/kurs",
+  blockIds: [],
+  // Bank size equals served count (matches every other course's convention:
+  // ki-fuehrerschein 20/20, eu-ai-act-kurs 27/27, ai-native 24/24,
+  // ki-und-gesellschaft 15/15). The 19-question bank (stage 11) reuses all
+  // 19 already-authored inline lesson Quiz questions verbatim.
+  workshopQuizQuestionCount: 19,
+  workshopQuizTimeLimitMinutes: 25,
+  workshopQuizPassThreshold: 0.7,
+  certificateTitle: "Claude Course",
+  certificateSubtitle:
+    "Certificate of completion. Issued by loehrning.ai, an independent education platform. This confirmation is not an accredited qualification.",
+  certificateModules: [
+    "Foundations: mental model, prompt anatomy, context windows",
+    "Workflows: CLAUDE.md, iteration, Google Docs",
+    "Going deeper: agents and tool use, code review, grounding",
+    "Team and rigor: sharing prompts, evals, safety",
+  ],
+  certificateReferenceLabel:
+    "Personal certificate of completion: prompting Claude effectively",
+  quizPassMessage:
+    "Congratulations! You passed the Claude Course workshop quiz.",
+  certificateFileStem: "Claude-Course",
+  recordNoun: {
+    label: "Certificate of Completion",
+    possessive: "Your certificate of completion",
+    demonstrative: "This certificate of completion",
+  },
+};
+
 // ─── Config registry ───────────────────────────────────────────
 
-// All three courses are registered in the shared engine ().
-// `config()` guards every lookup with a clear error so any future
-// unregistered slug fails loudly instead of returning `undefined`.
+// All registered courses share the engine (). `config()`
+// guards every lookup with a clear error so any future unregistered slug
+// fails loudly instead of returning `undefined`.
 const COURSE_CONFIGS: Partial<Record<CourseSlug, CourseConfig>> = {
   "ki-fuehrerschein": KI_FUEHRERSCHEIN_CONFIG,
   "eu-ai-act-kurs": EU_AI_ACT_KURS_CONFIG,
   "ai-native": AI_NATIVE_CONFIG,
   "ki-und-gesellschaft": KI_UND_GESELLSCHAFT_CONFIG,
+  claude: CLAUDE_CONFIG,
+  codex: CODEX_CONFIG,
+  "data-infrastructure": DATA_INFRASTRUCTURE_CONFIG,
+  "data-engineering-fundamentals": DATA_ENGINEERING_FUNDAMENTALS_CONFIG,
+  "data-science": DATA_SCIENCE_CONFIG,
+  "ai-native-operator": AI_NATIVE_OPERATOR_CONFIG,
 };
 
 function config(courseSlug: CourseSlug): CourseConfig {

@@ -50,6 +50,77 @@ export interface RedactionScenario {
   readonly segments: readonly RedactionSegment[];
 }
 
+/**
+ * Chrome-copy override: additive, default-preserving —
+ * every field defaults to the original German literal so the 3 existing
+ * native courses render byte-identical when `copy` is omitted. The four
+ * "*Template" fields take a literal `{n}` placeholder, interpolated at
+ * render time (see `fillCount` below) so both German and English grammar
+ * can express singular/plural without a shared sentence shape.
+ */
+export interface RedactionDrillWidgetCopy {
+  readonly kindLabel: string;
+  readonly chooseScenarioAriaLabel: string;
+  readonly scenarioWord: string;
+  readonly redactedTag: string;
+  readonly redactedAriaPrefix: string;
+  readonly redactedAriaSuffix: string;
+  readonly riskyAriaPrefix: string;
+  readonly riskyAriaSuffix: string;
+  readonly legendRiskyLabel: string;
+  readonly legendRedactedChip: string;
+  readonly legendCleanedLabel: string;
+  readonly countSuffix: string;
+  readonly submitLabel: string;
+  readonly resetLabel: string;
+  readonly cleanStatusLabel: string;
+  readonly leakStatusLabel: string;
+  readonly allScenariosCleanLabel: string;
+  readonly scenarioOfWord: string;
+  readonly safeHeadline: string;
+  readonly safeBodyTemplate: string;
+  readonly notSafeHeadline: string;
+  readonly missingSingularTemplate: string;
+  readonly missingPluralTemplate: string;
+  readonly mistakesSingularTemplate: string;
+  readonly mistakesPluralTemplate: string;
+}
+
+const DEFAULT_COPY: RedactionDrillWidgetCopy = {
+  kindLabel: "Datenschutz-Drill",
+  chooseScenarioAriaLabel: "Szenario wählen",
+  scenarioWord: "Szenario",
+  redactedTag: "<REDIGIERT>",
+  redactedAriaPrefix: "Redigiert:",
+  redactedAriaSuffix: "(klicken zum Wiederherstellen)",
+  riskyAriaPrefix: "Riskant:",
+  riskyAriaSuffix: "(klicken zum Redigieren)",
+  legendRiskyLabel: "riskant, zum Redigieren klicken",
+  legendRedactedChip: "redigiert",
+  legendCleanedLabel: "bereinigt",
+  countSuffix: "erfasst",
+  submitLabel: "Einfügen prüfen",
+  resetLabel: "Nochmal",
+  cleanStatusLabel: "Sauber",
+  leakStatusLabel: "Leck",
+  allScenariosCleanLabel: "Beide Szenarien bereinigt",
+  scenarioOfWord: "von",
+  safeHeadline: "Sicher zum Einfügen.",
+  safeBodyTemplate:
+    "Alle {n} sensiblen Stellen erfasst, keine Übertreibung. Genau diese Gewohnheit zählt: lesen, bevor man einfügt.",
+  notSafeHeadline: "Noch nicht abschicken.",
+  missingSingularTemplate: "{n} sensible Stelle ist noch offen (rot markiert).",
+  missingPluralTemplate: "{n} sensible Stellen sind noch offen (rot markiert).",
+  mistakesSingularTemplate:
+    "Sie haben {n} harmlose Stelle redigiert (amber). Unnötig, aber kein Schaden.",
+  mistakesPluralTemplate:
+    "Sie haben {n} harmlose Stellen redigiert (amber). Unnötig, aber kein Schaden.",
+};
+
+function fillCount(template: string, n: number): string {
+  return template.replace("{n}", String(n));
+}
+
 export interface RedactionDrillWidgetProps {
   readonly lessonId: string;
   readonly cpId: string;
@@ -57,6 +128,7 @@ export interface RedactionDrillWidgetProps {
   readonly scenario?: string;
   /** Override the default two scenarios. */
   readonly scenarios?: readonly RedactionScenario[];
+  readonly copy?: Partial<RedactionDrillWidgetCopy>;
 }
 
 /**
@@ -127,7 +199,9 @@ export function RedactionDrillWidget({
   title = "Redigiere, bevor du einfügst",
   scenario = "Bevor Sie ein Protokoll oder eine E-Mail in ein KI-Tool kopieren: lesen, dann einfügen. Klicken Sie jede Stelle an, die niemals Ihr Haus verlassen darf.",
   scenarios = DEFAULT_SCENARIOS,
+  copy,
 }: RedactionDrillWidgetProps): JSX.Element {
+  const chrome = { ...DEFAULT_COPY, ...copy };
   const reduced = useReducedMotion();
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [active, setActive] = useState(0);
@@ -211,7 +285,7 @@ export function RedactionDrillWidget({
 
   return (
     <WidgetFrame
-      kindLabel="Datenschutz-Drill"
+      kindLabel={chrome.kindLabel}
       title={title}
       scenario={scenario}
       done={done}
@@ -220,7 +294,7 @@ export function RedactionDrillWidget({
       {/* Scenario tabs */}
       <div
         role="group"
-        aria-label="Szenario wählen"
+        aria-label={chrome.chooseScenarioAriaLabel}
         className="mb-4 flex flex-wrap gap-2"
       >
         {scenarios.map((s, i) => {
@@ -254,7 +328,7 @@ export function RedactionDrillWidget({
               {sDone && (
                 <CheckCircle2 size={12} className="text-[#22c55e]" />
               )}
-              Szenario {i + 1}
+              {chrome.scenarioWord} {i + 1}
             </button>
           );
         })}
@@ -296,7 +370,7 @@ export function RedactionDrillWidget({
                 disabled={submitted}
                 onClick={() => toggle(i)}
                 aria-pressed={true}
-                aria-label={`Redigiert: ${seg.sensitive ?? "harmlos"} (klicken zum Wiederherstellen)`}
+                aria-label={`${chrome.redactedAriaPrefix} ${seg.sensitive ?? "harmlos"} ${chrome.redactedAriaSuffix}`}
                 className={cn(
                   "mx-0.5 inline-block px-2 align-baseline font-mono text-[12px] font-bold uppercase tracking-[0.05em] text-white",
                   isMistake
@@ -306,7 +380,7 @@ export function RedactionDrillWidget({
                       : "bg-foreground",
                 )}
               >
-                &lt;REDIGIERT&gt;
+                {chrome.redactedTag}
               </button>
             );
           }
@@ -320,7 +394,7 @@ export function RedactionDrillWidget({
               onClick={() => toggle(i)}
               title={seg.sensitive}
               aria-pressed={false}
-              aria-label={`Riskant: ${seg.sensitive} (klicken zum Redigieren)`}
+              aria-label={`${chrome.riskyAriaPrefix} ${seg.sensitive} ${chrome.riskyAriaSuffix}`}
               className={cn(
                 "mx-0.5 inline align-baseline border-b-2 px-1 font-mono text-[13px] transition-colors",
                 isMissed
@@ -341,19 +415,19 @@ export function RedactionDrillWidget({
             aria-hidden="true"
             className="inline-block h-3.5 w-3.5 border-b-2 border-dashed border-brand-amber bg-brand-amber/20"
           />
-          riskant, zum Redigieren klicken
+          {chrome.legendRiskyLabel}
         </span>
         <span className="inline-flex items-center gap-1.5">
           <span
             aria-hidden="true"
             className="inline-block bg-foreground px-1.5 font-mono text-[8px] font-bold uppercase text-white"
           >
-            redigiert
+            {chrome.legendRedactedChip}
           </span>
-          bereinigt
+          {chrome.legendCleanedLabel}
         </span>
         <span className="ml-auto font-mono">
-          {caught} / {totalSensitive} erfasst
+          {caught} / {totalSensitive} {chrome.countSuffix}
         </span>
       </div>
 
@@ -378,31 +452,33 @@ export function RedactionDrillWidget({
             {allClean ? (
               <p>
                 <span className="font-semibold text-[#22c55e]">
-                  Sicher zum Einfügen.
+                  {chrome.safeHeadline}
                 </span>{" "}
-                Alle {totalSensitive} sensiblen Stellen erfasst, keine
-                Übertreibung. Genau diese Gewohnheit zählt: lesen, bevor man
-                einfügt.
+                {fillCount(chrome.safeBodyTemplate, totalSensitive)}
               </p>
             ) : (
               <div>
                 <p className="font-semibold text-destructive">
-                  Noch nicht abschicken.
+                  {chrome.notSafeHeadline}
                 </p>
                 {totalSensitive - caught > 0 && (
                   <p className="mt-1">
-                    {totalSensitive - caught}{" "}
-                    {totalSensitive - caught === 1
-                      ? "sensible Stelle ist"
-                      : "sensible Stellen sind"}{" "}
-                    noch offen (rot markiert).
+                    {fillCount(
+                      totalSensitive - caught === 1
+                        ? chrome.missingSingularTemplate
+                        : chrome.missingPluralTemplate,
+                      totalSensitive - caught,
+                    )}
                   </p>
                 )}
                 {mistakes > 0 && (
                   <p className="mt-1">
-                    Sie haben {mistakes} harmlose{" "}
-                    {mistakes === 1 ? "Stelle" : "Stellen"} redigiert (amber).
-                    Unnötig, aber kein Schaden.
+                    {fillCount(
+                      mistakes === 1
+                        ? chrome.mistakesSingularTemplate
+                        : chrome.mistakesPluralTemplate,
+                      mistakes,
+                    )}
                   </p>
                 )}
               </div>
@@ -415,8 +491,8 @@ export function RedactionDrillWidget({
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
         <span className="font-mono text-[11px] tracking-[0.1em] text-muted-foreground">
           {allScenariosClean
-            ? "Beide Szenarien bereinigt"
-            : `Szenario ${active + 1} von ${scenarios.length}`}
+            ? chrome.allScenariosCleanLabel
+            : `${chrome.scenarioWord} ${active + 1} ${chrome.scenarioOfWord} ${scenarios.length}`}
         </span>
         {!submitted ? (
           <button
@@ -424,7 +500,7 @@ export function RedactionDrillWidget({
             onClick={submit}
             className="inline-flex items-center gap-1.5 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
           >
-            Einfügen prüfen
+            {chrome.submitLabel}
           </button>
         ) : (
           <div className="flex items-center gap-3">
@@ -435,14 +511,14 @@ export function RedactionDrillWidget({
               )}
             >
               {allClean ? <CheckCircle2 size={14} /> : <XCircle size={14} />}
-              {allClean ? "Sauber" : "Leck"}
+              {allClean ? chrome.cleanStatusLabel : chrome.leakStatusLabel}
             </span>
             <button
               type="button"
               onClick={reset}
               className="border-2 border-foreground bg-background px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-foreground shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
             >
-              Nochmal
+              {chrome.resetLabel}
             </button>
           </div>
         )}

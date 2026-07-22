@@ -60,9 +60,17 @@ describe("learning graph", () => {
     }
   });
 
-  it("separates imported labs from native German certificate courses", () => {
+  it("separates imported labs from native German certificate courses (empty by design: flipped the last one)", () => {
+    // Every course ported from github.com/Mavengence/interactive-courses
+    // has now flipped to nativeStatus "live" (claude/codex/data-
+    // infrastructure/data-engineering-fundamentals/data-science/ai-native-
+    // operator), so IMPORTED_COURSE_CATALOG — and therefore this node
+    // type — is empty by construction, not a bug. The invariant this test
+    // guards (every lab is English/public-preview/external) still holds
+    // vacuously and stays enforced the moment a future course import adds
+    // a new pending entry.
     const labs = LEARNING_NODES.filter((node) => node.type === "open_source_lab");
-    expect(labs.length).toBeGreaterThan(0);
+    expect(labs.length).toBe(0);
     for (const lab of labs) {
       expect(lab.language).toBe("en");
       expect(lab.access).toBe("public-preview");
@@ -99,9 +107,9 @@ describe("learning graph", () => {
     expect(PATHWAY_STAGE_DISPLAY["vertiefen"].displayLabel).toBe("Vertiefen");
   });
 
-  it("all open_source_lab nodes have language 'en'", () => {
+  it("all open_source_lab nodes have language 'en' (empty by design: flipped the last one)", () => {
     const labs = LEARNING_NODES.filter((n) => n.type === "open_source_lab");
-    expect(labs.length).toBeGreaterThan(0);
+    expect(labs.length).toBe(0);
     for (const lab of labs) {
       expect(lab.language).toBe("en");
     }

@@ -4,7 +4,7 @@ import { WIE_KI_LEKTIONEN } from "@/lib/wie-ki-funktioniert";
 import { BLOG_POSTS } from "@/lib/blog-metadata";
 import { books } from "@/lib/books";
 import { demos } from "@/lib/demos";
-import { IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
+import { ALL_COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
 import { OPEN_SOURCE_ARTIFACTS } from "@/lib/open-source/artifacts";
 import { getWorkshopSlugs } from "@/lib/workshops";
 import { CRAWL_CONTRACT } from "@/lib/crawl/contract";
@@ -28,8 +28,10 @@ describe("sitemap()", () => {
     //     impressum, datenschutz)
     //   + WIE_KI_LEKTIONEN.length individual lektion routes
     //   + catalog detail pages (buecher + demos + workshops slugs)
-    //   + every imported course detail page under /kurse/open-source/:slug
-    //     (catalog-driven; not part of the open-source artifact registry)
+    //   + every course detail page under /kurse/open-source/:slug, both
+    // still-imported ones and any flipped to native (    //     claude keeps this URL shape after going native, so it is counted
+    //     by href prefix against the combined catalog, not
+    //     IMPORTED_COURSE_CATALOG alone)
     //   + every published open-source artifact (tools, projects, and videos)
     //     from the canonical registry
     //   + BLOG_POSTS.length (manifest-driven)
@@ -41,12 +43,15 @@ describe("sitemap()", () => {
     const expectedStatic = CRAWL_CONTRACT.filter(
       (entry) => entry.includeInSitemap && !entry.pattern.includes(":"),
     ).length;
+    const openSourceSlugCourseCount = ALL_COURSE_CATALOG.filter((course) =>
+      course.href.startsWith("/kurse/open-source/"),
+    ).length;
     expect(result.length).toBe(
       expectedStatic +
         wieKiLektionCount +
         detailPageCount +
         BLOG_POSTS.length +
-        IMPORTED_COURSE_CATALOG.length +
+        openSourceSlugCourseCount +
         OPEN_SOURCE_ARTIFACTS.length,
     );
     expect(result.some((e) => e.url.endsWith("/ueber-die-plattform"))).toBe(true);
@@ -131,6 +136,7 @@ describe("sitemap()", () => {
       expect(url).not.toMatch(/\/eu-ai-act-kurs\/kurs/);
       expect(url).not.toMatch(/\/ai-native\/kurs/);
       expect(url).not.toMatch(/\/ai-native\/demos/);
+      expect(url).not.toMatch(/\/kurse\/open-source\/claude\/kurs/);
       expect(url).not.toMatch(/\/ai-native\/glossar/);
       expect(url).not.toMatch(/\/kontakt$/);
       expect(url).not.toMatch(/\/ki-transformation-check$/);
@@ -157,6 +163,14 @@ describe("sitemap()", () => {
     for (const course of IMPORTED_COURSE_CATALOG) {
       expect(urls).toContain(`https://loehrning.ai${course.href}`);
     }
+  });
+
+  it("still includes claude's /kurse/open-source/claude landing page after its flip to native", () => {
+    const urls = result.map((entry) => entry.url);
+    expect(urls).toContain("https://loehrning.ai/kurse/open-source/claude");
+    // Its lesson-reader routes stay out of the sitemap, same as the 4
+    // German courses' /kurs sub-tree.
+    expect(urls).not.toContain("https://loehrning.ai/kurse/open-source/claude/kurs");
   });
 
   it("does not include book chapter reader paths (explicit includeInSitemap: false)", () => {

@@ -30,6 +30,16 @@ describe("Tier-A widget kinds", () => {
       "interactive-diagram",
       "risk-pyramid",
       "obligation-layers",
+      // — Codex Course: the two genuinely new widget
+      // kinds, ported from codex/js/widgets.js's Terminal and Diff.
+      "terminal-replay",
+      "diff-viewer",
+      // — AI-Native Operator Course: the three genuinely
+      // new widget kinds, ported from ai-native-operator/course-app.js's
+      // ReflectBox, MatrixEx, and Slots.
+      "reflect-box",
+      "matrix-grid",
+      "slot-fill",
     ]);
   });
 
@@ -45,6 +55,11 @@ describe("Tier-A widget kinds", () => {
     expect(isTierAKind("failure-tagger")).toBe(true);
     expect(isTierAKind("redaction-drill")).toBe(true);
     expect(isTierAKind("drag-reorder")).toBe(true);
+    expect(isTierAKind("terminal-replay")).toBe(true);
+    expect(isTierAKind("diff-viewer")).toBe(true);
+    expect(isTierAKind("reflect-box")).toBe(true);
+    expect(isTierAKind("matrix-grid")).toBe(true);
+    expect(isTierAKind("slot-fill")).toBe(true);
     expect(isTierAKind("demo-roi")).toBe(false);
     expect(isTierAKind("nope")).toBe(false);
   });

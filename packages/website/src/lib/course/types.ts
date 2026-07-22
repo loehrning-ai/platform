@@ -16,11 +16,22 @@ export type BlockId = (typeof BLOCK_IDS)[number];
 // All three courses now share the one course engine (shared course architecture,
 //). 'ai-native' is part of the union so its lessons,
 // progress, and config flow through the same shared types + components.
+//
+// The upstream open-source source folder "ai-native" (github.com/Mavengence/
+// interactive-courses) maps to slug "ai-native-operator" below, never to
+// "ai-native" — that slug is already the native German AI-Native Arbeitskurs
+// and the two must never collide.
 export const COURSE_SLUGS = [
   "ki-fuehrerschein",
   "eu-ai-act-kurs",
   "ai-native",
   "ki-und-gesellschaft",
+  "data-engineering-fundamentals",
+  "data-science",
+  "data-infrastructure",
+  "codex",
+  "claude",
+  "ai-native-operator",
 ] as const;
 
 export type CourseSlug = (typeof COURSE_SLUGS)[number];
@@ -171,6 +182,8 @@ export interface GlossaryEntry {
 export interface CourseConfig {
   readonly slug: CourseSlug;
   readonly title: string;
+  /** Content language. All 4 native courses are "de"; imported courses register "en". */
+  readonly language: "de" | "en";
   readonly basePath: string; // e.g., "/ki-fuehrerschein"
   /**
    * Root path the course lives under for shared route components. Same as

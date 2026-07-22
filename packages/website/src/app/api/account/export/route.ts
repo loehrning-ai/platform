@@ -1,6 +1,6 @@
 import { createAuthServerClient, getAuthenticatedUser } from "@/lib/supabase/auth-server";
 import { reportApiError } from "@/lib/observability/api-error";
-import { isUnifiedProgress } from "@/lib/progress/server-sync";
+import { fetchUnifiedProgressForUser } from "@/lib/progress/server-store";
 
 function jsonError(message: string, status: number): Response {
   return new Response(JSON.stringify({ error: message }), {
@@ -29,16 +29,12 @@ export async function GET() {
     return jsonError("auth_not_configured", 503);
   }
 
-  const { data, error } = await supabase
-    .from("user_course_progress")
-    .select("progress, updated_at")
-    .eq("user_id", user.id)
-    .maybeSingle();
+  const fetched = await fetchUnifiedProgressForUser(supabase, user.id);
 
   // A failed read must not silently export progress: null — that would look
   // like "no data stored" in a DSGVO data export. Fail loudly instead.
-  if (error) {
-    reportApiError({ route: "/api/account/export", step: "supabase-read", error });
+  if (!fetched.ok) {
+    reportApiError({ route: "/api/account/export", step: "supabase-read", error: fetched.error });
     return jsonError("export_failed", 500);
   }
 
@@ -48,8 +44,8 @@ export async function GET() {
   const payload = {
     email: user.email ?? null,
     exported_at: new Date().toISOString(),
-    progress: isUnifiedProgress(data?.progress) ? data.progress : null,
-    progress_updated_at: data?.updated_at ?? null,
+    progress: fetched.result.progress,
+    progress_updated_at: fetched.result.updatedAt,
     // certificates array is empty until ADR 004 server-signed certificates ship
     certificates: [] as unknown[],
   };

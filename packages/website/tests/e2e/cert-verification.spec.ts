@@ -17,18 +17,109 @@ const COURSES = [
     route: "/ki-fuehrerschein/verifizierung",
     slug: "ki-fuehrerschein",
     title: /KI-Führerschein/,
+    lang: "de",
   },
   {
     route: "/eu-ai-act-kurs/verifizierung",
     slug: "eu-ai-act-kurs",
     title: /EU AI Act/,
+    lang: "de",
   },
   {
     route: "/ai-native/verifizierung",
     slug: "ai-native",
     title: /AI-Native/,
+    lang: "de",
+  },
+  //: claude's basePath is nested under /kurse/open-source/
+  // (unlike the other three courses' top-level paths), exercising the same
+  // shared VerificationPage/decodeHash logic on a differently-shaped URL.
+  // English course (CourseConfig.language: "en") — the verification page
+  // renders its English copy branch (fixed post-migration: this page used to
+  // hardcode German chrome regardless of course language).
+  {
+    route: "/kurse/open-source/claude/verifizierung",
+    slug: "claude",
+    title: /Claude Course/,
+    lang: "en",
+  },
+  //: codex, same nested-path shape as claude and the same
+  // "completion" (all-lessons-done) eligibility path rather than a quiz —
+  // still exercises the identical hash-decode/course-match logic.
+  {
+    route: "/kurse/open-source/codex/verifizierung",
+    slug: "codex",
+    title: /Codex Course/,
+    lang: "en",
+  },
+  //: data-infrastructure, same nested-path shape and
+  // "completion" eligibility path as codex. The m: "quiz" payload below is
+  // shared test-mechanism scaffolding, not a claim this course actually
+  // issues quiz-mode certificates — it only exercises decodeHash/course-
+  // match/bit-flip-rejection generically, identically to every other row.
+  {
+    route: "/kurse/open-source/data-infrastructure/verifizierung",
+    slug: "data-infrastructure",
+    title: /Data Infrastructure/,
+    lang: "en",
+  },
+  //: data-engineering-fundamentals, same nested-path shape
+  // and "completion" (all-12-chapters-visited) eligibility path as codex and
+  // data-infrastructure — no quiz/capstone mechanism exists in source. The
+  // m: "quiz" payload below is shared test-mechanism scaffolding only; it
+  // exercises decodeHash/course-match/bit-flip-rejection generically, same
+  // as every other row.
+  {
+    route: "/kurse/open-source/data-engineering-fundamentals/verifizierung",
+    slug: "data-engineering-fundamentals",
+    title: /Data Engineering Fundamentals/,
+    lang: "en",
+  },
+  //: data-science, same nested-path shape and
+  // "completion" (all-12-numbered-chapters-visited) eligibility path as
+  // codex/data-infrastructure/data-engineering-fundamentals — no
+  // quiz/capstone mechanism exists in source. The m: "quiz" payload below
+  // is shared test-mechanism scaffolding only; it exercises decodeHash/
+  // course-match/bit-flip-rejection generically, same as every other row.
+  {
+    route: "/kurse/open-source/data-science/verifizierung",
+    slug: "data-science",
+    title: /Data Science Fundamentals/,
+    lang: "en",
+  },
+  //: ai-native-operator, sixth and last imported course to
+  // flip. Same nested-path shape as claude/codex/data-*, but unlike the four
+  // "completion"-eligibility siblings, this course genuinely has a
+  // quiz-gated cert path (9 module knowledge-checks pooled into one
+  // workshop quiz), so m: "quiz" here is a real payload shape, not
+  // test-mechanism scaffolding.
+  {
+    route: "/kurse/open-source/ai-native-operator/verifizierung",
+    slug: "ai-native-operator",
+    title: /The AI-Native Operator/,
+    lang: "en",
   },
 ] as const;
+
+/** Language-branched copy the verification page renders (post-i18n-fix). */
+const COPY = {
+  de: {
+    h1: "Zertifikatdaten prüfen",
+    backLink: /Zurück zum/,
+    unreadable: "Zertifikatcode nicht lesbar",
+    read: "QR-Daten gelesen",
+    score: "Ergebnis: 92%",
+    mismatch: "Zertifikatcode passt nicht zu diesem Kurs.",
+  },
+  en: {
+    h1: "Verify certificate data",
+    backLink: /Back to/,
+    unreadable: "Certificate code unreadable",
+    read: "QR data read",
+    score: "Score: 92%",
+    mismatch: "Certificate code doesn't match this course.",
+  },
+} as const;
 
 /** Encode a certificate payload exactly like the app's serializer (base64url). */
 function encodeCertHash(payload: {
@@ -46,7 +137,8 @@ function encodeCertHash(payload: {
     .replace(/=+$/, "");
 }
 
-for (const { route, title, slug } of COURSES) {
+for (const { route, title, slug, lang } of COURSES) {
+  const copy = COPY[lang];
   const validHash = encodeCertHash({
     n: "Max Mustermann",
     s: 92,
@@ -65,13 +157,13 @@ for (const { route, title, slug } of COURSES) {
 
       // Exactly one (sr-only) h1 in every render state.
       await expect(page.locator("h1")).toHaveCount(1);
-      await expect(page.locator("h1")).toHaveText("Zertifikatdaten prüfen");
+      await expect(page.locator("h1")).toHaveText(copy.h1);
       await expect(
-        page.getByRole("link", { name: /Zurück zum/ }),
+        page.getByRole("link", { name: copy.backLink }),
       ).toBeVisible();
 
       // Without a verification hash the page shows the rejection state.
-      await expect(page.getByText("Zertifikatcode nicht lesbar")).toBeVisible();
+      await expect(page.getByText(copy.unreadable)).toBeVisible();
     });
 
     test("an undecodable verification code shows the rejection state", async ({
@@ -80,8 +172,8 @@ for (const { route, title, slug } of COURSES) {
       await page.goto(`${route}#not-a-valid-certificate-code!!`, {
         waitUntil: "domcontentloaded",
       });
-      await expect(page.getByText("Zertifikatcode nicht lesbar")).toBeVisible();
-      await expect(page.getByText("QR-Daten gelesen", { exact: true })).toHaveCount(0);
+      await expect(page.getByText(copy.unreadable)).toBeVisible();
+      await expect(page.getByText(copy.read, { exact: true })).toHaveCount(0);
     });
 
     test("a valid verification code renders the verified certificate", async ({
@@ -91,12 +183,12 @@ for (const { route, title, slug } of COURSES) {
         waitUntil: "domcontentloaded",
       });
 
-      await expect(page.getByText("QR-Daten gelesen", { exact: true })).toBeVisible();
+      await expect(page.getByText(copy.read, { exact: true })).toBeVisible();
       await expect(page.getByText("Max Mustermann")).toBeVisible();
-      await expect(page.getByText("Ergebnis: 92%")).toBeVisible();
+      await expect(page.getByText(copy.score)).toBeVisible();
       // Course-specific certificate title comes from the course config.
       await expect(page.getByRole("heading", { name: title })).toBeVisible();
-      await expect(page.getByText("Zertifikatcode nicht lesbar")).toHaveCount(0);
+      await expect(page.getByText(copy.unreadable)).toHaveCount(0);
     });
 
     // -----------------------------------------------------------------------
@@ -113,19 +205,19 @@ for (const { route, title, slug } of COURSES) {
       page,
     }) => {
       // Flip one character in the base64url-encoded payload to produce
-      // an undecodable JSON string. The verification page must show
-      // "Zertifikatcode nicht lesbar" and must NOT show "QR-Daten gelesen".
+      // an undecodable JSON string. The verification page must show the
+      // rejection copy and must NOT show the "data read" copy.
       const flipped = validHash.slice(0, -1) + (validHash.at(-1) === "A" ? "B" : "A");
 
       await page.goto(`${route}#${flipped}`, { waitUntil: "domcontentloaded" });
 
       await expect(
-        page.getByText("Zertifikatcode nicht lesbar"),
+        page.getByText(copy.unreadable),
         "Bit-flipped payload must trigger rejection",
       ).toBeVisible();
       await expect(
-        page.getByText("QR-Daten gelesen", { exact: true }),
-        "Bit-flipped payload must NOT show 'QR-Daten gelesen'",
+        page.getByText(copy.read, { exact: true }),
+        "Bit-flipped payload must NOT show the 'data read' copy",
       ).toHaveCount(0);
 
       // Must not render learner data or download controls
@@ -176,12 +268,12 @@ for (const { route, title, slug } of COURSES) {
       });
 
       await expect(
-        page.getByText("Zertifikatcode passt nicht zu diesem Kurs."),
+        page.getByText(copy.mismatch),
         `Cross-course replay on ${route} must show course-mismatch rejection`,
       ).toBeVisible();
       await expect(
-        page.getByText("QR-Daten gelesen", { exact: true }),
-        "Cross-course replay must NOT show 'QR-Daten gelesen'",
+        page.getByText(copy.read, { exact: true }),
+        "Cross-course replay must NOT show the 'data read' copy",
       ).toHaveCount(0);
 
       // Must not render learner data or download controls
