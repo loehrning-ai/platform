@@ -131,8 +131,8 @@
     },
     {
       "path": "packages/website/public/favicon.ico",
-      "sizeBytes": 228,
-      "sha256": "e08b33d21bbee868ed24cf2cb109d128fbc7df492337d290978ccd18c544346b",
+      "sizeBytes": 1614,
+      "sha256": "5f273c8678f86b1bb1c0fa8295f77a4c9bebf41e8d2a173793dfd3468955ef9f",
       "owner": "Tim Löhr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
@@ -302,8 +302,8 @@
     },
     {
       "path": "packages/website/public/og-image.png",
-      "sizeBytes": 48057,
-      "sha256": "94288b4a4defb3eb341ceeb551de65141ae4ecfa5e9c62e93691425b27fda4bd",
+      "sizeBytes": 47915,
+      "sha256": "02a3e7bb310ece64183fa491f70c170c5829ea83797f7774043fec349a67dbec",
       "owner": "Tim Löhr",
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
