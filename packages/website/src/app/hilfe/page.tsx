@@ -28,8 +28,8 @@ function getFaqItems(accountEnabled: boolean, feedbackEnabled: boolean): readonl
     id: "konto",
     question: "Warum brauche ich ein Konto?",
     answer: accountEnabled
-      ? "Du brauchst kein Konto, um Kurse, Bücher oder Demos zu nutzen. Alle Inhalte sind ohne Anmeldung zugänglich. Das aktivierte Lernkonto synchronisiert Fortschritt über mehrere Geräte und verwendet einen Einmal-Link per E-Mail. Die Daten liegen auf Servern in der EU."
-      : "Du brauchst kein Konto. Kurse, Bücher, Demos und Downloads sind ohne Anmeldung zugänglich. Das optionale Lernkonto und die geräteübergreifende Synchronisierung sind in dieser Version deaktiviert; Fortschritt bleibt lokal in diesem Browser.",
+      ? "Für die meisten Kurse, Bücher und Demos brauchst du kein Konto. Die vier zertifizierten Kurse (KI-Führerschein, EU AI Act Kurs, AI-Native Arbeitskurs, KI und Gesellschaft) erfordern ein kostenloses Lernkonto, damit dein Fortschritt zur Zertifikatsausstellung nachvollziehbar bleibt. Das Lernkonto synchronisiert Fortschritt über mehrere Geräte und verwendet einen Einmal-Link per E-Mail. Die Daten liegen auf Servern in der EU."
+      : "Für die meisten Kurse, Bücher, Demos und Downloads brauchst du kein Konto. Das optionale Lernkonto und die geräteübergreifende Synchronisierung sind in dieser Version deaktiviert; Fortschritt bleibt lokal in diesem Browser. Die vier zertifizierten Kurse (KI-Führerschein, EU AI Act Kurs, AI-Native Arbeitskurs, KI und Gesellschaft) erfordern normalerweise ein Lernkonto und sind in dieser Version vorübergehend nicht erreichbar.",
   },
   {
     id: "fortschritt-weg",

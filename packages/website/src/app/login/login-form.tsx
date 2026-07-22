@@ -99,8 +99,8 @@ export function LoginForm({
       </div>
       <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
         {configured
-          ? "Das Lernkonto speichert Kursfortschritt, XP und Zertifikatsstatus. Sämtliche Lerninhalte und Downloads bleiben ohne Login zugänglich."
-          : "Kurse, Bücher, Demos und Downloads bleiben ohne Konto zugänglich."}
+          ? "Das Lernkonto speichert Kursfortschritt, XP und Zertifikatsstatus. Die meisten Lerninhalte und Downloads bleiben ohne Login zugänglich; die vier zertifizierten Kurse erfordern ein Lernkonto."
+          : "Die meisten Kurse, Bücher, Demos und Downloads bleiben ohne Konto zugänglich."}
       </p>
       {message && (
         <p

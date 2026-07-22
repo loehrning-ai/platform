@@ -34,7 +34,7 @@ export default async function LoginPage({
           {configured ? "Fortschritt sichern." : "Ohne Anmeldung lernen."}
         </h1>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-          Alle Kurse, Bücher und Demos sind ohne Anmeldung zugänglich.
+          Die meisten Kurse, Bücher und Demos sind ohne Anmeldung zugänglich.
           {configured
             ? " Das aktivierte Lernkonto kann Fortschritt zwischen Geräten synchronisieren."
             : " Das optionale Lernkonto ist in dieser Version deaktiviert; Fortschritt bleibt lokal in deinem Browser."}
@@ -76,6 +76,17 @@ function loginReasonMessage(
         <>
           Melde dich an, um deinen Lernfortschritt auf allen Geräten zu sichern.
           Du kannst alle Kurse und Bücher auch ohne Anmeldung nutzen.{" "}
+          <Link href="/kurse" className="underline underline-offset-2 hover:text-foreground">
+            Zurück zum Kursangebot
+          </Link>
+        </>
+      );
+    case "kurs-login":
+      return (
+        <>
+          Dieser Kurs gehört zu unseren zertifizierten Lernpfaden und
+          erfordert ein Lernkonto. Alle anderen Kurse, Bücher und Demos
+          bleiben ohne Anmeldung nutzbar.{" "}
           <Link href="/kurse" className="underline underline-offset-2 hover:text-foreground">
             Zurück zum Kursangebot
           </Link>

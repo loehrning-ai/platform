@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "KI im Alltag: Was du wissen solltest (kostenlos)",
     description:
-      "5 Blöcke, 18 Lektionen, ca. 1 Std. 40 Min. Keine Vorkenntnisse nötig. Lokale Teilnahmebestätigung. Kostenlos ohne Anmeldung. Auf Deutsch.",
+      "5 Blöcke, 18 Lektionen, ca. 1 Std. 40 Min. Keine Vorkenntnisse nötig. Lokale Teilnahmebestätigung. Kostenlos mit Lernkonto. Auf Deutsch.",
     url: `${SITE_URL}/ki-fuehrerschein`,
     type: "website",
   },
@@ -88,7 +88,7 @@ export default async function KiFuehrerscheinLandingPage() {
 
         <p className="mt-9 max-w-[780px] text-[18px] leading-[1.5] text-muted-foreground sm:text-[21px]">
           Dieser Kurs erklärt, wie KI funktioniert, was du dabei beachten solltest und wie du KI sinnvoll im Alltag einsetzt.
-          Keine Vorkenntnisse nötig: fünf Blöcke, 18 Lektionen, ca. 1 Std. 40 Min., lokale Teilnahmebestätigung, Fortschritt im Browser.
+          Keine Vorkenntnisse nötig: fünf Blöcke, 18 Lektionen, ca. 1 Std. 40 Min., lokale Teilnahmebestätigung, Fortschritt im Lernkonto.
         </p>
 
         <div className="mt-12 flex flex-wrap items-center gap-5">

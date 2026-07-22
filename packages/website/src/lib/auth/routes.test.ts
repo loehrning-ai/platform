@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  isGatedCoursePath,
   isProtectedPlatformPath,
   isPublicPlatformPath,
   sanitizeNextPath,
@@ -26,14 +27,10 @@ describe("platform route access model", () => {
     }
   });
 
-  it("treats all educational content as public (optional-account policy D1: optional login)", () => {
+  it("treats non-certified educational content as public (optional-account policy D1: optional login)", () => {
     for (const path of [
-      "/ki-fuehrerschein/kurs",
-      "/ki-fuehrerschein/kurs/block-1",
-      "/eu-ai-act-kurs/kurs",
-      "/eu-ai-act-kurs/kurs/block-1",
-      "/ai-native/kurs",
-      "/ai-native/kurs/modul_1",
+      "/kurse/open-source/codex/kurs",
+      "/kurse/open-source/codex/kurs/L01",
       "/ai-native/demos",
       "/ai-native/fluency-test",
       "/ai-native/glossar",
@@ -46,6 +43,54 @@ describe("platform route access model", () => {
     ]) {
       expect(isPublicPlatformPath(path), path).toBe(true);
       expect(isProtectedPlatformPath(path), path).toBe(false);
+    }
+  });
+
+  it("requires login for the 4 native certified courses' lesson content (exception to policy D1)", () => {
+    for (const path of [
+      "/ki-fuehrerschein/kurs",
+      "/ki-fuehrerschein/kurs/block-1",
+      "/eu-ai-act-kurs/kurs",
+      "/eu-ai-act-kurs/kurs/block-1",
+      "/ai-native/kurs",
+      "/ai-native/kurs/modul_1",
+      "/ki-und-gesellschaft/kurs",
+      "/ki-und-gesellschaft/kurs/block-1",
+    ]) {
+      expect(isProtectedPlatformPath(path), path).toBe(true);
+      expect(isPublicPlatformPath(path), path).toBe(false);
+    }
+    // Landing pages and third-party certificate verification stay public.
+    for (const path of [
+      "/ki-fuehrerschein",
+      "/eu-ai-act-kurs",
+      "/ai-native",
+      "/ki-und-gesellschaft",
+      "/ki-fuehrerschein/verifizierung",
+      "/ai-native/verifizierung",
+    ]) {
+      expect(isPublicPlatformPath(path), path).toBe(true);
+      expect(isProtectedPlatformPath(path), path).toBe(false);
+    }
+  });
+
+  it("identifies gated-course paths for the login page's reason messaging", () => {
+    for (const path of [
+      "/ki-fuehrerschein/kurs",
+      "/ki-fuehrerschein/kurs/block-1",
+      "/eu-ai-act-kurs/kurs",
+      "/ai-native/kurs/modul_1",
+      "/ki-und-gesellschaft/kurs",
+    ]) {
+      expect(isGatedCoursePath(path), path).toBe(true);
+    }
+    for (const path of [
+      "/ki-fuehrerschein",
+      "/kurse/open-source/codex/kurs",
+      "/konto",
+      "/ai-native/kurs-vorschau",
+    ]) {
+      expect(isGatedCoursePath(path), path).toBe(false);
     }
   });
 

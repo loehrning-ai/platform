@@ -2,13 +2,15 @@ import { test, expect, type Page } from "@playwright/test";
 
 /**
  * /ki-fuehrerschein course track smoke + interaction (regression coverage).
- * Landing (indexable) -> CTA into the /kurs hub -> one public-access block
- * reader. Real block ids come from KI_FUEHRERSCHEIN_CONFIG.blockIds
- * (src/lib/course/config.ts): block_1..block_5. The reader is `public-access`
- * in the crawl contract, so it carries NO X-Robots-Tag header; the /kurs
- * layout's Next.js `robots` metadata is the ONLY noindex signal, which is why
- * the reader test asserts the emitted <meta name="robots"> in the fetched HTML
- * rather than a header. Assertions target roles + stable structure, not copy.
+ * Landing (indexable) -> CTA into the /kurs hub, which now requires login
+ * (exception to policy D1 — see src/lib/crawl/contract.ts PROTECTED_PATHS).
+ * Real block ids come from KI_FUEHRERSCHEIN_CONFIG.blockIds
+ * (src/lib/course/config.ts): block_1..block_5. The reader is `protected` in
+ * the crawl contract, so an anonymous visitor is redirected by
+ * src/middleware.ts to /login?next=<path>&reason=kurs-login before ever
+ * reaching the reader shell — these tests assert that redirect, not the
+ * reader content itself (which needs a live session; see
+ * tests/e2e/authenticated-routes.authed.spec.ts).
  */
 
 const ROUTE = "/ki-fuehrerschein";
@@ -63,7 +65,7 @@ test.describe("/ki-fuehrerschein landing", () => {
     await expect(page.getByText("KI ist schon da").first()).toBeVisible();
   });
 
-  test("primary CTA starts the course hub", async ({ page }) => {
+  test("primary CTA leads to the login-gated course hub", async ({ page }) => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     const startCta = page
@@ -73,58 +75,43 @@ test.describe("/ki-fuehrerschein landing", () => {
     await expect(startCta).toHaveAttribute("href", COURSE_PATH);
 
     await startCta.click();
-    await expect(page).toHaveURL(/\/ki-fuehrerschein\/kurs$/);
-    await expect(
-      page.getByRole("heading", { level: 1, name: /KI-Führerschein/i }),
-    ).toBeVisible();
+    // The course hub requires login; middleware redirects anonymous
+    // visitors to /login with next= pointing back at the hub.
+    await page.waitForURL(/\/login/);
+    const url = new URL(page.url());
+    expect(url.pathname, "CTA must land on /login for an anonymous visitor").toBe(
+      "/login",
+    );
+    expect(url.searchParams.get("next")).toBe(COURSE_PATH);
+    expect(url.searchParams.get("reason")).toBe("kurs-login");
   });
 });
 
-test.describe("/ki-fuehrerschein course reader", () => {
-  test("hub links into a block reader that resolves", async ({ page }) => {
+test.describe("/ki-fuehrerschein course reader (login-gated)", () => {
+  test("anonymous visit to the course hub redirects to /login", async ({
+    page,
+  }) => {
     await page.goto(COURSE_PATH, { waitUntil: "domcontentloaded" });
-    await expect(
-      page.getByRole("heading", { level: 1, name: /KI-Führerschein/i }),
-    ).toBeVisible();
-
-    // Fresh context = no saved progress, so the first block card links out via
-    // "Block starten"; tolerate "Weitermachen" too in case state ever leaks.
-    const blockLink = page
-      .getByRole("link", { name: /Block starten|Weitermachen/i })
-      .first();
-    await expect(blockLink).toBeVisible();
-    await expect(blockLink).toHaveAttribute("href", BLOCK_ROUTE);
-
-    await blockLink.click();
-    await expect(page).toHaveURL(/\/ki-fuehrerschein\/kurs\/block_1$/);
-
-    // The reader shell always renders a back-link to the block hub plus a
-    // lesson heading, so an emptied reader is caught.
-    await expect(
-      page.getByRole("link", { name: /Alle Blöcke/i }),
-    ).toBeVisible();
-    await expect(page.getByRole("heading", { level: 2 }).first()).toBeVisible();
+    const url = new URL(page.url());
+    expect(url.pathname, `${COURSE_PATH} must redirect to /login`).toBe(
+      "/login",
+    );
+    expect(url.searchParams.get("next")).toBe(COURSE_PATH);
+    expect(url.searchParams.get("reason")).toBe("kurs-login");
   });
 
-  test("block reader is served with a robots noindex meta", async ({
+  test("anonymous request to a block reader gets a 307 to /login", async ({
     request,
   }) => {
-    const response = await request.get(BLOCK_ROUTE);
-    expect(response.status(), `status for ${BLOCK_ROUTE}`).toBe(200);
+    const response = await request.get(BLOCK_ROUTE, { maxRedirects: 0 });
+    expect(response.status(), `status for ${BLOCK_ROUTE}`).toBe(307);
 
-    const body = await response.text();
-    // Extract the emitted robots meta tag (attribute order-independent) and
-    // assert it carries noindex, the sole thing keeping this public-access
-    // reader out of the search index.
-    const robotsMeta = body.match(/<meta[^>]*name=["']robots["'][^>]*>/i);
-    expect(
-      robotsMeta,
-      `${BLOCK_ROUTE} must emit a robots meta tag`,
-    ).not.toBeNull();
-    expect(
-      robotsMeta?.[0] ?? "",
-      `${BLOCK_ROUTE} robots meta must be noindex`,
-    ).toMatch(/noindex/i);
+    const location = response.headers()["location"];
+    expect(location, `${BLOCK_ROUTE} must set a Location header`).toBeTruthy();
+    const redirectUrl = new URL(location ?? "", "http://localhost");
+    expect(redirectUrl.pathname).toBe("/login");
+    expect(redirectUrl.searchParams.get("next")).toBe(BLOCK_ROUTE);
+    expect(redirectUrl.searchParams.get("reason")).toBe("kurs-login");
   });
 });
 

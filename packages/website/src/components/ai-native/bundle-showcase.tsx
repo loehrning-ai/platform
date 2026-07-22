@@ -100,11 +100,11 @@ export function AiNativeBundleShowcase() {
                   Kostenlos
                 </span>
                 <span className="ml-auto font-mono text-[10.5px] uppercase tracking-[0.14em] text-muted-foreground">
-                  ohne Anmeldung
+                  mit Lernkonto
                 </span>
               </div>
               <p className="mt-3.5 text-[14px] leading-[1.55] text-muted-foreground">
-                Arbeitskurs Modul 1-4, komplett kostenlos ohne Anmeldung. Alle
+                Arbeitskurs Modul 1-4, komplett kostenlos mit Lernkonto. Alle
                 Lernmaterialien sind in den Lektionen eingebettet.
               </p>
               <div className="mt-5">

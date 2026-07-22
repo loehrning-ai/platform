@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { cacheHeaderFor, getCrawlRoute, NOINDEX_HEADER } from "@/lib/crawl/contract";
-import { isProtectedPlatformPath } from "@/lib/auth/routes";
+import { isGatedCoursePath, isProtectedPlatformPath } from "@/lib/auth/routes";
 import { refreshAuthSession } from "@/lib/supabase/middleware";
 
 function preserveAuthHeaders(source: NextResponse, target: NextResponse): NextResponse {
@@ -85,6 +85,8 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     } else if (pathname === "/konto" || pathname.startsWith("/konto/")) {
       // Redirect to konto specifically — nudge to save progress, not a hard gate.
       loginUrl.searchParams.set("reason", "progress-save");
+    } else if (isGatedCoursePath(pathname)) {
+      loginUrl.searchParams.set("reason", "kurs-login");
     }
     const redirect = NextResponse.redirect(loginUrl);
     redirect.headers.set("Cache-Control", "private, no-store");

@@ -1,12 +1,15 @@
 import { test, expect, type Page } from "@playwright/test";
 
 /**
- * /eu-ai-act-kurs smoke + funnel (regression coverage wave 2). Stufe 3 of the
- * login-free learning path: a course landing that funnels into the hub at
- * /eu-ai-act-kurs/kurs, from which every real block (EU_AI_ACT_KURS_CONFIG
- * .blockIds = block_1..block_6) resolves at /eu-ai-act-kurs/kurs/block_N.
- * Assertions target ROLES, hrefs, and stable structure so a wording refresh
- * stays green while a dead funnel, unresolved block, or mobile overflow fails.
+ * /eu-ai-act-kurs smoke + funnel (regression coverage wave 2). The landing
+ * funnels into the hub at /eu-ai-act-kurs/kurs, which now requires login
+ * (exception to policy D1 — see src/lib/crawl/contract.ts PROTECTED_PATHS).
+ * An anonymous visitor following the funnel or a real block link
+ * (EU_AI_ACT_KURS_CONFIG.blockIds = block_1..block_6) is redirected by
+ * src/middleware.ts to /login?next=<path>&reason=kurs-login before reaching
+ * the hub/reader — these tests assert that redirect, not the reader content
+ * itself (which needs a live session; see
+ * tests/e2e/authenticated-routes.authed.spec.ts).
  */
 
 const LANDING = "/eu-ai-act-kurs";
@@ -74,8 +77,8 @@ test.describe("/eu-ai-act-kurs landing", () => {
   });
 });
 
-test.describe("/eu-ai-act-kurs funnel + block resolution", () => {
-  test("start CTA navigates to the hub and exposes a real block link", async ({
+test.describe("/eu-ai-act-kurs funnel (login-gated hub)", () => {
+  test("start CTA redirects an anonymous visitor to /login", async ({
     page,
   }) => {
     await page.goto(LANDING, { waitUntil: "domcontentloaded" });
@@ -85,36 +88,27 @@ test.describe("/eu-ai-act-kurs funnel + block resolution", () => {
       .first()
       .click();
 
-    await expect(page).toHaveURL(/\/eu-ai-act-kurs\/kurs$/);
-    await expect(
-      page.getByRole("heading", { level: 1, name: "EU AI Act Kurs" }),
-    ).toBeVisible();
-
-    // First block card links to the real first blockId (fresh progress => label
-    // "Block starten"; regex also tolerates a restored-progress "Weitermachen").
-    const firstBlockLink = page
-      .getByRole("link", { name: /Block starten|Weitermachen/i })
-      .first();
-    await expect(firstBlockLink).toBeVisible();
-    await expect(firstBlockLink).toHaveAttribute("href", BLOCK);
+    await page.waitForURL(/\/login/);
+    const url = new URL(page.url());
+    expect(url.pathname, "CTA must land on /login for an anonymous visitor").toBe(
+      "/login",
+    );
+    expect(url.searchParams.get("next")).toBe(HUB);
+    expect(url.searchParams.get("reason")).toBe("kurs-login");
   });
 
-  test("a /kurs/block_1 block page resolves for anonymous readers", async ({
-    page,
+  test("a /kurs/block_1 request gets a 307 to /login for anonymous readers", async ({
+    request,
   }) => {
-    const response = await page.goto(BLOCK, { waitUntil: "domcontentloaded" });
+    const response = await request.get(BLOCK, { maxRedirects: 0 });
+    expect(response.status(), `status for ${BLOCK}`).toBe(307);
 
-    expect(response?.status(), `status for ${BLOCK}`).toBe(200);
-    await expect(page).not.toHaveURL(/\/login/);
-
-    // Server-rendered block shell: back link + ordinal prove it is not notFound.
-    await expect(page.getByRole("link", { name: "Alle Blöcke" })).toBeVisible();
-    await expect(page.getByText(/Block 1 \/ 6/)).toBeVisible();
-
-    // Lesson body renders a level-2 title (block pages have no h1).
-    await expect(
-      page.getByRole("heading", { level: 2 }).first(),
-    ).toBeVisible();
+    const location = response.headers()["location"];
+    expect(location, `${BLOCK} must set a Location header`).toBeTruthy();
+    const redirectUrl = new URL(location ?? "", "http://localhost");
+    expect(redirectUrl.pathname).toBe("/login");
+    expect(redirectUrl.searchParams.get("next")).toBe(BLOCK);
+    expect(redirectUrl.searchParams.get("reason")).toBe("kurs-login");
   });
 });
 

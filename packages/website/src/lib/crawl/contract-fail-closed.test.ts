@@ -69,7 +69,7 @@ describe("crawl contract fail-closed fallback (regression coverage)", () => {
     // The fallback flip must not leak into listed public-access routes, which
     // deliberately carry NO X-Robots-Tag (their noindex lives in page-level
     // Next.js metadata; see src/app/__tests__/course-reader-noindex.test.ts).
-    const entry = getCrawlRoute("/ki-fuehrerschein/kurs");
+    const entry = getCrawlRoute("/kurse/open-source/claude/kurs");
     expect(entry.routeClass).toBe("public-access");
     expect(entry.auth).toBe("public");
     expect(entry.xRobotsTag).toBeUndefined();

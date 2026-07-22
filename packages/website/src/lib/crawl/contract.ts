@@ -84,18 +84,15 @@ const PUBLIC_NOINDEX_PATHS = [
   "/api/feedback",
   "/api/ai-native/grade-exercise",
   "/api/demos/:slug/briefing.pdf",
+  // The 4 native certified courses' verification routes stay public-noindex
+  // even though their /kurs* lesson content is now login-gated (below) —
+  // verification exists for third parties (e.g. an employer) checking a
+  // certificate is real, who have no loehrning.ai account and should not
+  // need one.
   "/ki-fuehrerschein/verifizierung",
   "/eu-ai-act-kurs/verifizierung",
   "/ai-native/verifizierung",
   "/ki-und-gesellschaft/verifizierung",
-  "/ki-fuehrerschein/kurs/quiz",
-  "/ki-fuehrerschein/kurs/zertifikat",
-  "/eu-ai-act-kurs/kurs/quiz",
-  "/eu-ai-act-kurs/kurs/zertifikat",
-  "/ai-native/kurs/quiz",
-  "/ai-native/kurs/zertifikat",
-  "/ki-und-gesellschaft/kurs/zertifikat",
-  "/ki-und-gesellschaft/kurs/quiz",
   // Claude Course — added ahead of the routes themselves
   // (stage 9) so contract-completeness.test.ts never goes red mid-plan.
   "/kurse/open-source/claude/kurs/quiz",
@@ -156,42 +153,42 @@ const PUBLIC_NOINDEX_PATHS = [
 // the SAME commit as the routes themselves, not as an afterthought once CI
 // already failed.
 //
-// Mirror the existing KI-Führerschein entries as the template:
+// Mirror the existing Claude Course entries as the template:
 //   - the course-reader tree (lesson pages, block index, etc.) goes in
 //     PUBLIC_ACCESS_PATHS below, as a "/:course/kurs" + "/:course/kurs/:path*"
-//     pair — see "/ki-fuehrerschein/kurs" + "/ki-fuehrerschein/kurs/:path*".
-//     Public learning content, intentionally accessible without login, but
-//     deliberately NOT in the sitemap (courses are discovered via /kurse,
-//     not indexed lesson-by-lesson).
+//     pair — see "/kurse/open-source/claude/kurs" +
+//     "/kurse/open-source/claude/kurs/:path*". Public learning content,
+//     intentionally accessible without login, but deliberately NOT in the
+//     sitemap (courses are discovered via /kurse, not indexed lesson-by-lesson).
 //   - the workshop-quiz and certificate screens go in PUBLIC_NOINDEX_PATHS
-//     as exact (non-wildcard) entries — see "/ki-fuehrerschein/kurs/quiz"
-//     and "/ki-fuehrerschein/kurs/zertifikat". Crawlable so crawlers can SEE
-//     the noindex tag (never blocked via robots.txt), but never indexed:
+//     as exact (non-wildcard) entries — see
+//     "/kurse/open-source/claude/kurs/quiz" and
+//     "/kurse/open-source/claude/kurs/zertifikat". Crawlable so crawlers can
+//     SEE the noindex tag (never blocked via robots.txt), but never indexed:
 //     a quiz/certificate page has no content value for search or AI
 //     retrieval and the certificate route encodes a QR payload in the URL
 //     hash that must never end up in a search snippet.
 //   - the verification route (if the course issues a certificate) is also
-//     PUBLIC_NOINDEX_PATHS — see "/ki-fuehrerschein/verifizierung" — for the
-//     same QR-payload-in-URL reason.
+//     PUBLIC_NOINDEX_PATHS — see "/kurse/open-source/claude/verifizierung" —
+//     for the same QR-payload-in-URL reason.
 // Any other bespoke top-level route a course plan builds (a glossary, a
 // demo gallery, ...) follows the same PUBLIC_ACCESS_PATHS pattern as
 // "/ai-native/glossar"/"/ai-native/demos" above: public, accessible, out of
 // the sitemap unless there is a specific reason to index it.
+//
+// Exception — the 4 native certified courses (ki-fuehrerschein,
+// eu-ai-act-kurs, ai-native, ki-und-gesellschaft): their lesson content
+// (/:course/kurs + /:course/kurs/:path*, which also covers their nested
+// quiz/zertifikat pages) is login-gated in PROTECTED_PATHS instead of this
+// template — see the comment there. Only their landing pages and
+// /verifizierung stay public.
 
 const PUBLIC_ACCESS_PATHS = [
-  "/ki-fuehrerschein/kurs",
-  "/ki-fuehrerschein/kurs/:path*",
-  "/eu-ai-act-kurs/kurs",
-  "/eu-ai-act-kurs/kurs/:path*",
-  "/ai-native/kurs",
-  "/ai-native/kurs/:path*",
   "/ai-native/demos",
   "/ai-native/demos/:path*",
   "/ai-native/fluency-test",
   "/ai-native/glossar",
   "/ai-native/capstone-gallery",
-  "/ki-und-gesellschaft/kurs",
-  "/ki-und-gesellschaft/kurs/:path*",
   // Claude Course — see the noindex entries above.
   "/kurse/open-source/claude/kurs",
   "/kurse/open-source/claude/kurs/:path*",
@@ -270,6 +267,20 @@ const PROTECTED_PATHS = [
   "/api/ai-native/:path*",
   "/api/demos/:path*",
   "/api/buecher/:slug/download.pdf",
+  // The 4 native certified courses' lesson content requires login (unlike
+  // every other course, which stays optional-account per policy D1 — see
+  // src/lib/auth/routes.test.ts). Each course's "/kurs/:path*" wildcard also
+  // covers its nested quiz/zertifikat pages, so no separate entries are
+  // needed for those. Landing pages and /verifizierung stay public — see
+  // PUBLIC_INDEXABLE_PATHS / PUBLIC_NOINDEX_PATHS above.
+  "/ki-fuehrerschein/kurs",
+  "/ki-fuehrerschein/kurs/:path*",
+  "/eu-ai-act-kurs/kurs",
+  "/eu-ai-act-kurs/kurs/:path*",
+  "/ai-native/kurs",
+  "/ai-native/kurs/:path*",
+  "/ki-und-gesellschaft/kurs",
+  "/ki-und-gesellschaft/kurs/:path*",
 ] as const;
 
 const RETIRED_ROUTES: readonly CrawlRoute[] = [

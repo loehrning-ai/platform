@@ -35,7 +35,7 @@ export function AiNativeFinalCta() {
         <FadeBlock delay={2}>
           <p className="mt-6 text-[18px] leading-[1.55] text-muted-foreground">
             Komplett kostenlos: alle vier Module, 27 Lektionen und Fortschritt
-            ohne Anmeldung. Keine Kreditkarte, keine Bezahlstufe.
+            mit deinem Lernkonto. Keine Kreditkarte, keine Bezahlstufe.
           </p>
         </FadeBlock>
         <FadeBlock delay={4}>

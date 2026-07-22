@@ -122,7 +122,17 @@ test("ki-und-gesellschaft landing is public", async ({ page }) => {
 // Gated routes: anonymous request must redirect to /login
 // ---------------------------------------------------------------------------
 
-const GATED_ROUTES = ["/konto"] as const;
+const GATED_ROUTES = [
+  "/konto",
+  // The 4 native certified courses' lesson content requires login (exception
+  // to policy D1 — every other course stays optional-account). Landing pages
+  // and /verifizierung stay public; see the PUBLIC_ROUTES list above.
+  "/ki-fuehrerschein/kurs",
+  "/ki-fuehrerschein/kurs/block_1",
+  "/eu-ai-act-kurs/kurs",
+  "/ai-native/kurs",
+  "/ki-und-gesellschaft/kurs",
+] as const;
 
 test.describe("gated routes redirect anonymous users", () => {
   for (const route of GATED_ROUTES) {

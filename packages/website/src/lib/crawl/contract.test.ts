@@ -22,7 +22,6 @@ describe("crawl contract", () => {
       "/buecher/ki-arbeitsalltag",
       "/demos",
       "/demos/excel",
-      "/ki-fuehrerschein/kurs/block-1",
       "/kurse/open-source/codex",
       "/open-source/lizenzrichtlinie",
       "/open-source/tools/example-tool",
@@ -33,7 +32,7 @@ describe("crawl contract", () => {
     }
   });
 
-  it("keeps account and state APIs protected", () => {
+  it("keeps account, state APIs, and the 4 native certified courses' lesson content protected", () => {
     for (const path of [
       "/konto",
       "/konto/datenschutz",
@@ -41,6 +40,12 @@ describe("crawl contract", () => {
       "/api/progress",
       "/api/ai-native/practice",
       "/api/demos/example/future-write",
+      "/ki-fuehrerschein/kurs",
+      "/ki-fuehrerschein/kurs/block-1",
+      "/eu-ai-act-kurs/kurs",
+      "/ai-native/kurs",
+      "/ai-native/kurs/modul_1",
+      "/ki-und-gesellschaft/kurs",
     ]) {
       const entry = getCrawlRoute(path);
       expect(entry.routeClass, path).toBe("protected");
@@ -53,6 +58,8 @@ describe("crawl contract", () => {
       "/feedback",
       "/api/demos/excel/briefing.pdf",
       "/api/ai-native/grade-exercise",
+      "/ki-fuehrerschein/verifizierung",
+      "/ai-native/verifizierung",
     ]) {
       const entry = getCrawlRoute(path);
       expect(entry.routeClass, path).toBe("public-noindex");
@@ -63,10 +70,9 @@ describe("crawl contract", () => {
 
   it("keeps exact course utilities ahead of public reader catch-alls", () => {
     for (const path of [
-      "/ki-fuehrerschein/kurs/quiz",
-      "/eu-ai-act-kurs/kurs/zertifikat",
-      "/ai-native/kurs/quiz",
-      "/ki-und-gesellschaft/kurs/quiz",
+      "/kurse/open-source/claude/kurs/quiz",
+      "/kurse/open-source/claude/kurs/zertifikat",
+      "/kurse/open-source/codex/kurs/zertifikat",
     ]) {
       const entry = getCrawlRoute(path);
       expect(entry.routeClass, path).toBe("public-noindex");

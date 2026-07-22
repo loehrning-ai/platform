@@ -8,6 +8,23 @@ export function isProtectedPlatformPath(pathname: string): boolean {
   return isProtectedRoute(pathname);
 }
 
+// The 4 native certified courses' lesson content requires login (see
+// PROTECTED_PATHS in src/lib/crawl/contract.ts) — every other course stays
+// optional-account per policy D1. Used by middleware to pick the login
+// page's "kurs-login" messaging over the generic redirect reason.
+const GATED_COURSE_PREFIXES = [
+  "/ki-fuehrerschein/kurs",
+  "/eu-ai-act-kurs/kurs",
+  "/ai-native/kurs",
+  "/ki-und-gesellschaft/kurs",
+] as const;
+
+export function isGatedCoursePath(pathname: string): boolean {
+  return GATED_COURSE_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+  );
+}
+
 function hasControlCharacter(value: string): boolean {
   return Array.from(value).some((character) => {
     const code = character.charCodeAt(0);

@@ -35,7 +35,7 @@ export function AiNativeModulesOverview() {
         <SectionHeader
           eyebrow="Curriculum"
           heading="4 Module, 1 Denkweise"
-          description="Alle vier Module kostenlos ohne Anmeldung. Fortschritt bleibt lokal im Browser; Quiz und Teilnahmebestätigung gehören zum Kurs. Selbst-paced in 4-8 Wochen."
+          description="Alle vier Module kostenlos mit Lernkonto. Quiz und Teilnahmebestätigung gehören zum Kurs. Selbst-paced in 4-8 Wochen."
         />
 
         <m.div

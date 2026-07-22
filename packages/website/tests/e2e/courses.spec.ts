@@ -16,28 +16,6 @@ import { IMPORTED_COURSE_CATALOG } from "../../src/lib/courses/catalog";
 
 const UNIFIED_KEY = "loehrning-progress-v2";
 
-/** A minimal unified-store payload with the AI-Native workshop quiz passed. */
-function passedAiNativeState() {
-  const now = new Date().toISOString();
-  return {
-    schemaVersion: 2,
-    courses: {
-      "ai-native": {
-        lessons: {},
-        workshopQuiz: { passed: true, score: 90, completedAt: now },
-        capstoneSubmitted: false,
-        startedAt: now,
-        lastActivity: now,
-      },
-    },
-    xp: 50,
-    checkpoints: {},
-    badges: {},
-    streak: { days: 1, last: now.slice(0, 10) },
-    lastActivity: now,
-  };
-}
-
 async function seedProgress(page: Page, value: object) {
   // Inject before any app script runs so the first render already sees it.
   await page.addInitScript(
@@ -212,7 +190,7 @@ test.describe("/kurse unified hub", () => {
   });
 });
 
-test.describe("AI-Native public preview and public-noindex course app", () => {
+test.describe("AI-Native public preview and login-gated course app (: /ai-native/kurs* now requires login, exception to policy D1 — see src/lib/crawl/contract.ts PROTECTED_PATHS)", () => {
   test("public course preview has no price or premium gate", async ({
     page,
   }) => {
@@ -222,83 +200,23 @@ test.describe("AI-Native public preview and public-noindex course app", () => {
     expect(body).not.toMatch(/Jetzt kaufen|Jetzt sichern|Premium · /);
   });
 
-  test("course index renders without login", async ({ page }) => {
-    const res = await page.goto("/ai-native/kurs", { waitUntil: "domcontentloaded" });
-    expect(res?.status()).toBe(200);
-    await expect(page).not.toHaveURL(/\/login/);
-    await expect(page.locator("h1").first()).toBeVisible();
-  });
-
-  test("a course lesson renders without login", async ({
-    page,
-  }) => {
-    const res = await page.goto("/ai-native/kurs/modul_4/modul_4_lesson_1", {
-      waitUntil: "domcontentloaded",
+  for (const path of [
+    "/ai-native/kurs",
+    "/ai-native/kurs/modul_4",
+    "/ai-native/kurs/modul_4/modul_4_lesson_1",
+    "/ai-native/kurs/zertifikat",
+    "/ai-native/kurs/quiz",
+  ]) {
+    test(`${path} redirects an anonymous visitor to /login`, async ({
+      page,
+    }) => {
+      await page.goto(path, { waitUntil: "domcontentloaded" });
+      const url = new URL(page.url());
+      expect(url.pathname, `${path} must redirect to /login`).toBe("/login");
+      expect(url.searchParams.get("next")).toBe(path);
+      expect(url.searchParams.get("reason")).toBe("kurs-login");
     });
-    expect(res?.status()).toBe(200);
-    await expect(page).not.toHaveURL(/\/login/);
-    await expect(page.locator("h1").first()).toBeVisible();
-  });
-
-  test("lesson shortcuts stay inside the reader and ignore nested controls", async ({
-    page,
-  }) => {
-    await page.goto("/ai-native/kurs/modul_4/modul_4_lesson_1", {
-      waitUntil: "domcontentloaded",
-    });
-    const reader = page.locator("#lesson-body");
-    await expect(reader).toHaveAttribute("data-current-index", "0");
-
-    const markRead = page.getByRole("button", {
-      name: "Abschnitt 1 als gelesen markieren",
-    });
-    await markRead.focus();
-    await page.keyboard.press("ArrowDown");
-    await expect(reader).toHaveAttribute("data-current-index", "0");
-
-    await reader.focus();
-    await page.keyboard.press("ArrowDown");
-    await expect(reader).toHaveAttribute("data-current-index", "1");
-  });
-
-  test("module page renders without login", async ({ page }) => {
-    const res = await page.goto("/ai-native/kurs/modul_4", { waitUntil: "domcontentloaded" });
-    expect(res?.status()).toBe(200);
-    await expect(page).not.toHaveURL(/\/login/);
-    await expect(page.locator("h1").first()).toBeVisible();
-  });
-});
-
-test.describe("Workshop quiz → certificate gate", () => {
-  test("certificate form renders without login and uses local proof state", async ({
-    page,
-  }) => {
-    const res = await page.goto("/ai-native/kurs/zertifikat", {
-      waitUntil: "domcontentloaded",
-    });
-    expect(res?.status()).toBe(200);
-    await expect(page).not.toHaveURL(/\/login/);
-    await expect(page.locator("h1").first()).toBeVisible();
-  });
-
-  test("local progress can unlock the public certificate surface", async ({ page }) => {
-    await seedProgress(page, passedAiNativeState());
-    const res = await page.goto("/ai-native/kurs/zertifikat", {
-      waitUntil: "domcontentloaded",
-    });
-    expect(res?.status()).toBe(200);
-    await expect(page).not.toHaveURL(/\/login/);
-    await expect(page.locator("h1").first()).toBeVisible();
-  });
-
-  test("the workshop quiz route renders without login", async ({
-    page,
-  }) => {
-    const res = await page.goto("/ai-native/kurs/quiz", { waitUntil: "domcontentloaded" });
-    expect(res?.status()).toBe(200);
-    await expect(page).not.toHaveURL(/\/login/);
-    await expect(page.locator("h1").first()).toBeVisible();
-  });
+  }
 });
 
 test.describe("certificate verification page", () => {

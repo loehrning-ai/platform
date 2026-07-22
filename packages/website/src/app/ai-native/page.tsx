@@ -16,13 +16,13 @@ import { AiNativeFinalCta } from "@/components/ai-native/final-cta";
 export const metadata: Metadata = {
   title: "AI-Native Arbeitskurs: Arbeiten mit Claude",
   description:
-    "Kostenloser AI-Native Arbeitskurs für Mitarbeiter, Selbstständige und Studierende. 27 Lektionen, 4 Module, Claude-first, auf Deutsch, mit lokal gespeichertem Fortschritt.",
+    "Kostenloser AI-Native Arbeitskurs für Mitarbeiter, Selbstständige und Studierende. 27 Lektionen, 4 Module, Claude-first, auf Deutsch. Erfordert ein kostenloses Lernkonto.",
   robots: { index: true, follow: true },
   alternates: { canonical: "https://loehrning.ai/ai-native" },
   openGraph: {
     title: "AI-Native Arbeitskurs: Arbeiten mit Claude",
     description:
-      "Komplett kostenlos ohne Anmeldung. 27 Lektionen, 4 Module, auf Deutsch. Mit Skills-Mustern, Prompts, Vault-Struktur und n8n-Flow-Beispielen.",
+      "Komplett kostenlos, mit Lernkonto. 27 Lektionen, 4 Module, auf Deutsch. Mit Skills-Mustern, Prompts, Vault-Struktur und n8n-Flow-Beispielen.",
     url: "https://loehrning.ai/ai-native",
     type: "website",
   },
@@ -57,7 +57,7 @@ const courseJsonLd = {
       "@type": "Course",
       name: "AI-Native Arbeitskurs",
       description:
-        "Claude-first AI-Arbeitsweise für Mittelstand. 27 Lektionen, 4 Module, kostenlos ohne Anmeldung, mit prüfbaren Sandbox-Übungen.",
+        "Claude-first AI-Arbeitsweise für Mittelstand. 27 Lektionen, 4 Module, kostenlos mit Lernkonto, mit prüfbaren Sandbox-Übungen.",
       provider: { "@id": ORG_ID },
       isAccessibleForFree: true,
       inLanguage: "de",

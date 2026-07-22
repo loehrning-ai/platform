@@ -88,7 +88,9 @@ test.describe("/kurse hub", () => {
     ).toBeVisible();
   });
 
-  test("primary CTA navigates into a course track", async ({ page }) => {
+  test("primary CTA links to the course track, which login-gates an anonymous visitor", async ({
+    page,
+  }) => {
     // "load" so the Next <Link> is hydrated before the click; clicking mid-
     // hydration cancels the client navigation and the URL stays on /kurse.
     await page.goto(ROUTE, { waitUntil: "load" });
@@ -100,10 +102,17 @@ test.describe("/kurse hub", () => {
     await expect(startCta).toBeVisible();
     await expect(startCta).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
 
+    // KI-Führerschein's /kurs* is login-gated (exception to policy D1 — see
+    // src/lib/crawl/contract.ts PROTECTED_PATHS), so an anonymous click is
+    // redirected to /login with next= pointing back at the hub.
     await startCta.click();
-    await expect(page).toHaveURL(/\/ki-fuehrerschein\/kurs/);
-    await expect(page).not.toHaveURL(/\/login/);
-    await expect(page.getByRole("heading", { level: 1 }).first()).toBeVisible();
+    await page.waitForURL(/\/login/);
+    const url = new URL(page.url());
+    expect(url.pathname, "CTA must land on /login for an anonymous visitor").toBe(
+      "/login",
+    );
+    expect(url.searchParams.get("next")).toBe("/ki-fuehrerschein/kurs");
+    expect(url.searchParams.get("reason")).toBe("kurs-login");
   });
 
   test("learning-goal recommendations link directly to the matching courses", async ({
