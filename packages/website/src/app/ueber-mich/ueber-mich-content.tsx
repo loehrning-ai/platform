@@ -45,7 +45,7 @@ export function UeberMichContent() {
                 variants={fadeUp}
                 className="mt-4 text-3xl font-bold tracking-[-0.04em] sm:text-4xl md:text-5xl"
               >
-                Ich bin Tim Löhr — loehrning.ai ist mein Hobbyprojekt.
+                Ich bin Tim Löhr. loehrning.ai ist mein Hobbyprojekt.
               </m.h1>
               <m.p
                 custom={2}
