@@ -108,19 +108,11 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 
 | Pattern | Explanation |
 | --- | --- |
-| `/ki-fuehrerschein/kurs` | Public learning content intentionally accessible without login but not listed in sitemap. |
-| `/ki-fuehrerschein/kurs/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
-| `/eu-ai-act-kurs/kurs` | Public learning content intentionally accessible without login but not listed in sitemap. |
-| `/eu-ai-act-kurs/kurs/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
-| `/ai-native/kurs` | Public learning content intentionally accessible without login but not listed in sitemap. |
-| `/ai-native/kurs/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
 | `/ai-native/demos` | Public learning content intentionally accessible without login but not listed in sitemap. |
 | `/ai-native/demos/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
 | `/ai-native/fluency-test` | Public learning content intentionally accessible without login but not listed in sitemap. |
 | `/ai-native/glossar` | Public learning content intentionally accessible without login but not listed in sitemap. |
 | `/ai-native/capstone-gallery` | Public learning content intentionally accessible without login but not listed in sitemap. |
-| `/ki-und-gesellschaft/kurs` | Public learning content intentionally accessible without login but not listed in sitemap. |
-| `/ki-und-gesellschaft/kurs/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
 | `/kurse/open-source/claude/kurs` | Public learning content intentionally accessible without login but not listed in sitemap. |
 | `/kurse/open-source/claude/kurs/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
 | `/kurse/open-source/codex/kurs` | Public learning content intentionally accessible without login but not listed in sitemap. |
@@ -146,14 +138,6 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | `/eu-ai-act-kurs/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
 | `/ai-native/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
 | `/ki-und-gesellschaft/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
-| `/ki-fuehrerschein/kurs/quiz` | Public utility page; crawlable so crawlers can see noindex. |
-| `/ki-fuehrerschein/kurs/zertifikat` | Public utility page; crawlable so crawlers can see noindex. |
-| `/eu-ai-act-kurs/kurs/quiz` | Public utility page; crawlable so crawlers can see noindex. |
-| `/eu-ai-act-kurs/kurs/zertifikat` | Public utility page; crawlable so crawlers can see noindex. |
-| `/ai-native/kurs/quiz` | Public utility page; crawlable so crawlers can see noindex. |
-| `/ai-native/kurs/zertifikat` | Public utility page; crawlable so crawlers can see noindex. |
-| `/ki-und-gesellschaft/kurs/zertifikat` | Public utility page; crawlable so crawlers can see noindex. |
-| `/ki-und-gesellschaft/kurs/quiz` | Public utility page; crawlable so crawlers can see noindex. |
 | `/kurse/open-source/claude/kurs/quiz` | Public utility page; crawlable so crawlers can see noindex. |
 | `/kurse/open-source/claude/kurs/zertifikat` | Public utility page; crawlable so crawlers can see noindex. |
 | `/kurse/open-source/claude/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
@@ -221,6 +205,14 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | `/api/ai-native/:path*` | Private account, state, or provider-backed API surface. |
 | `/api/demos/:path*` | Private account, state, or provider-backed API surface. |
 | `/api/buecher/:slug/download.pdf` | Private account, state, or provider-backed API surface. |
+| `/ki-fuehrerschein/kurs` | Private account, state, or provider-backed API surface. |
+| `/ki-fuehrerschein/kurs/:path*` | Private account, state, or provider-backed API surface. |
+| `/eu-ai-act-kurs/kurs` | Private account, state, or provider-backed API surface. |
+| `/eu-ai-act-kurs/kurs/:path*` | Private account, state, or provider-backed API surface. |
+| `/ai-native/kurs` | Private account, state, or provider-backed API surface. |
+| `/ai-native/kurs/:path*` | Private account, state, or provider-backed API surface. |
+| `/ki-und-gesellschaft/kurs` | Private account, state, or provider-backed API surface. |
+| `/ki-und-gesellschaft/kurs/:path*` | Private account, state, or provider-backed API surface. |
 
 ## Retired patterns
 
