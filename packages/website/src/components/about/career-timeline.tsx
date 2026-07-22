@@ -21,7 +21,7 @@ const milestones = [
     color: "text-muted-foreground",
   },
   {
-    period: "2024-heute",
+    period: "2024-2026",
     role: "Data Engineer",
     company: "Meta",
     description: "Datenqualität, Pipelines und Analytics-Systeme",

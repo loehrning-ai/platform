@@ -8,10 +8,16 @@ import { TIM_ENTITY } from "@/lib/seo/entity";
 // employers. Former employers are named as biography only;
 // TIM_ENTITY.noEndorsementNotice makes the "no endorsement" framing explicit
 // right below.
+//
+// Sizes are optical, not literal: Apple's and Meta's marks are flat single
+// glyphs that stay crisp at ~30px. Red Bull's mark carries far more detail
+// (two bulls + motion linework), so at that same size it collapses into an
+// illegible blob — it needs a larger box to resolve to the same visual
+// weight as the other two.
 const STATIONS = [
-  { name: "Apple", src: "/ueber-mich/logos/apple.svg" },
-  { name: "Red Bull", src: "/ueber-mich/logos/red-bull.svg" },
-  { name: "Meta", src: "/ueber-mich/logos/meta.svg" },
+  { name: "Apple", src: "/ueber-mich/logos/apple.svg", size: "h-7 w-7 sm:h-8 sm:w-8", px: 32 },
+  { name: "Red Bull", src: "/ueber-mich/logos/red-bull.svg", size: "h-11 w-11 sm:h-[52px] sm:w-[52px]", px: 52 },
+  { name: "Meta", src: "/ueber-mich/logos/meta.svg", size: "h-7 w-7 sm:h-8 sm:w-8", px: 32 },
 ] as const;
 
 export function CredibilityLogos() {
@@ -32,16 +38,16 @@ export function CredibilityLogos() {
             className="mt-7 flex flex-wrap items-center justify-center gap-x-10 gap-y-6 sm:gap-x-16"
           >
             {STATIONS.map((s) => (
-              <li key={s.name}>
+              <li key={s.name} className="flex h-8 items-center sm:h-[52px]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={s.src}
                   alt={s.name}
-                  width={32}
-                  height={32}
+                  width={s.px}
+                  height={s.px}
                   loading="lazy"
                   decoding="async"
-                  className="h-7 w-7 opacity-90 transition-[opacity,transform] duration-200 hover:scale-110 hover:opacity-100 sm:h-8 sm:w-8"
+                  className={`${s.size} opacity-90 transition-[opacity,transform] duration-200 hover:scale-110 hover:opacity-100`}
                 />
               </li>
             ))}

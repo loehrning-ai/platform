@@ -69,7 +69,7 @@ describe("<CareerTimeline>", () => {
     render(<CareerTimeline />);
     // Desktop grid + mobile list both stay in the DOM under jsdom, so each
     // milestone's period and company string appears exactly twice.
-    for (const period of ["2019-2022", "2022-2024", "2024-heute", "2026-heute"]) {
+    for (const period of ["2019-2022", "2022-2024", "2024-2026", "2026-heute"]) {
       expect(screen.getAllByText(period)).toHaveLength(2);
     }
     for (const company of ["Apple", "Red Bull", "Meta", "loehrning.ai"]) {

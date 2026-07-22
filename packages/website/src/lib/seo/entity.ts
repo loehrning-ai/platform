@@ -13,7 +13,7 @@ export const TIM_ENTITY = {
   portraitPath: "/ueber-mich/tim-loehr.jpg",
   portraitUrl: `${SITE_ORIGIN}/ueber-mich/tim-loehr.jpg`,
   email: "tim@loehrning.ai",
-  role: "Data Engineer und Betreiber von loehrning.ai",
+  role: "Kurator von loehrning.ai",
   linkedInUrl: "https://www.linkedin.com/in/timloehr/",
   personalGithubUrl: "https://github.com/Mavengence",
   knowsAbout: [

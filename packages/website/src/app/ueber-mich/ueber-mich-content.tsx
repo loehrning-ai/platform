@@ -45,16 +45,17 @@ export function UeberMichContent() {
                 variants={fadeUp}
                 className="mt-4 text-3xl font-bold tracking-[-0.04em] sm:text-4xl md:text-5xl"
               >
-                Ich bin Tim Löhr, Data Engineer bei Meta.
+                Ich bin Tim Löhr — loehrning.ai ist mein Hobbyprojekt.
               </m.h1>
               <m.p
                 custom={2}
                 variants={fadeUp}
                 className="mt-6 max-w-2xl text-lg text-muted-foreground"
               >
-                Davor war ich Data Scientist bei Apple und Red Bull. loehrning.ai
-                habe ich gebaut, um das Wissen aus dieser Arbeit öffentlich zu
-                machen: als freies Lernarchiv, nicht hinter einer Paywall.
+                Hauptberuflich war ich Data Scientist bei Apple und Red Bull
+                und zuletzt Data Engineer bei Meta. loehrning.ai baue ich aus
+                Spaß an der Sache, um das Wissen aus dieser Arbeit öffentlich
+                zu machen: als freies Lernarchiv, nicht hinter einer Paywall.
               </m.p>
               <m.p
                 custom={3}
