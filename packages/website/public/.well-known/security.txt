@@ -1,0 +1,5 @@
+Contact: mailto:tim@loehrning.ai
+Expires: 2027-07-22T23:59:59Z
+Canonical: https://loehrning.ai/.well-known/security.txt
+Policy: https://github.com/loehrning-ai/platform/blob/main/SECURITY.md
+Preferred-Languages: en, de

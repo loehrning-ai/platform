@@ -5,6 +5,7 @@ const mockSelect = vi.fn(() => ({
   eq: vi.fn(() => ({ maybeSingle: mockMaybeSingle })),
 }));
 const mockFrom = vi.fn(() => ({ select: mockSelect }));
+const mockServiceClient = { id: "service-client" };
 
 vi.mock("@/lib/supabase/auth-server", () => ({
   getAuthenticatedUser: vi.fn(async () => ({
@@ -12,6 +13,10 @@ vi.mock("@/lib/supabase/auth-server", () => ({
     user: { id: "user-1" },
   })),
   createAuthServerClient: vi.fn(async () => ({ from: mockFrom })),
+}));
+
+vi.mock("@/lib/supabase/server", () => ({
+  tryCreateServiceClient: vi.fn(() => mockServiceClient),
 }));
 
 vi.mock("@/lib/security/rate-limit", () => ({
@@ -36,8 +41,12 @@ vi.mock("@/lib/progress/server-store", () => ({
 
 import { GET, PUT } from "./route";
 import { consumeRateLimit } from "@/lib/security/rate-limit";
+import { tryCreateServiceClient } from "@/lib/supabase/server";
 
 const mockedRateLimit = consumeRateLimit as unknown as ReturnType<typeof vi.fn>;
+const mockedServiceClient = tryCreateServiceClient as unknown as ReturnType<
+  typeof vi.fn
+>;
 
 const VALID_PROGRESS = {
   schemaVersion: 3,
@@ -75,6 +84,8 @@ describe("PUT /api/progress payload boundary", () => {
     mockMaybeSingle.mockReset();
     mockedRateLimit.mockReset();
     mockedRateLimit.mockResolvedValue(true);
+    mockedServiceClient.mockReset();
+    mockedServiceClient.mockReturnValue(mockServiceClient);
   });
 
   it("rejects a declared oversized payload before parsing", async () => {
@@ -166,6 +177,8 @@ describe("PUT /api/progress happy path + conflict", () => {
     mockUpsertUnifiedProgressForUser.mockReset();
     mockedRateLimit.mockReset();
     mockedRateLimit.mockResolvedValue(true);
+    mockedServiceClient.mockReset();
+    mockedServiceClient.mockReturnValue(mockServiceClient);
   });
 
   function putRequest(progress: unknown): Request {
@@ -188,6 +201,21 @@ describe("PUT /api/progress happy path + conflict", () => {
       progress: VALID_PROGRESS,
       updatedAt: "2026-06-03T00:00:00.000Z",
     });
+    expect(mockUpsertUnifiedProgressForUser).toHaveBeenCalledWith(
+      mockServiceClient,
+      "user-1",
+      VALID_PROGRESS,
+    );
+  });
+
+  it("fails closed when the server-only progress store is unavailable", async () => {
+    mockedServiceClient.mockReturnValueOnce(null);
+    const response = await PUT(putRequest(VALID_PROGRESS));
+    expect(response.status).toBe(503);
+    expect((await response.json()) as unknown).toEqual({
+      error: "progress_store_unavailable",
+    });
+    expect(mockUpsertUnifiedProgressForUser).not.toHaveBeenCalled();
   });
 
   it("returns 400 for a payload that fails isUnifiedProgress before ever touching server-store", async () => {

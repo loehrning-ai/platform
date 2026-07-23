@@ -36,7 +36,7 @@ export function isPracticeEnabled(): boolean {
   return isAnthropicRuntimeReady();
 }
 
-/** Response cache keyed on request payload hash — 1h TTL. */
+/** Response cache keyed on authenticated-user scope plus request hash — 1h TTL. */
 interface CachedResponse {
   readonly response: PracticeResponse;
   readonly expires: number;
@@ -45,8 +45,11 @@ const responseCache = new Map<string, CachedResponse>();
 const CACHE_TTL_MS = HOUR_MS;
 const CACHE_MAX_ENTRIES = 500;
 
-export async function hashRequest(req: PracticeRequestParsed): Promise<string> {
-  const payload = JSON.stringify(req);
+export async function hashRequest(
+  userId: string,
+  req: PracticeRequestParsed,
+): Promise<string> {
+  const payload = JSON.stringify({ userId, request: req });
   const data = new TextEncoder().encode(payload);
   const hash = await crypto.subtle.digest("SHA-256", data);
   return Array.from(new Uint8Array(hash))

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createAuthServerClient, getAuthenticatedUser } from "@/lib/supabase/auth-server";
+import { getAuthenticatedUser } from "@/lib/supabase/auth-server";
+import { tryCreateServiceClient } from "@/lib/supabase/server";
 import { deleteCourseProgressRow } from "@/lib/progress/server-store";
 import { COURSE_SLUGS, type CourseSlug } from "@/lib/course/types";
 import { readBoundedJson } from "@/lib/http/read-json-body";
@@ -41,9 +42,6 @@ export async function POST(request: Request) {
   }
   if (!user) return privateJson({ error: "unauthorized" }, { status: 401 });
 
-  const supabase = await createAuthServerClient();
-  if (!supabase) return privateJson({ error: "auth_not_configured" }, { status: 503 });
-
   // Durable, forgery-resistant rate limit keyed on the hashed trusted client IP.
   const allowed = await consumeRateLimit({
     key: await hashedClientRateLimitKey("account-reset-progress", request),
@@ -65,10 +63,22 @@ export async function POST(request: Request) {
 
   const { courseSlug } = parsed.data;
 
+  // Direct authenticated writes are revoked in the database. Only this
+  // validated, rate-limited server path may mutate progress, and the target
+  // user ID comes from the verified session rather than the request body.
+  const serviceClient = tryCreateServiceClient();
+  if (!serviceClient) {
+    return privateJson({ error: "progress_store_unavailable" }, { status: 503 });
+  }
+
   // Per-course-row schema: resetting one course is a
   // single-row delete, not a read-modify-write of a shared blob. Other
   // courses' rows and the cross-course ledger row are never touched.
-  const deleted = await deleteCourseProgressRow(supabase, user.id, courseSlug);
+  const deleted = await deleteCourseProgressRow(
+    serviceClient,
+    user.id,
+    courseSlug,
+  );
 
   if (!deleted.ok) {
     reportApiError({

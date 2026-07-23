@@ -120,12 +120,20 @@ describe("practice engine — pure helpers", () => {
       expect(readCache("nope")).toBeNull();
     });
 
-    it("hashRequest is deterministic and input-sensitive", async () => {
-      const a = await hashRequest(req);
-      const b = await hashRequest({ mode: "complete", prompt: "hi" });
-      const c = await hashRequest({ mode: "complete", prompt: "bye" });
+    it("hashRequest is deterministic and input- and user-sensitive", async () => {
+      const a = await hashRequest("user-1", req);
+      const b = await hashRequest("user-1", {
+        mode: "complete",
+        prompt: "hi",
+      });
+      const c = await hashRequest("user-1", {
+        mode: "complete",
+        prompt: "bye",
+      });
+      const otherUser = await hashRequest("user-2", req);
       expect(a).toBe(b);
       expect(a).not.toBe(c);
+      expect(a).not.toBe(otherUser);
     });
   });
 });

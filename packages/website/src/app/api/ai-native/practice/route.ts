@@ -37,6 +37,20 @@ import { practiceRequestSchema } from "./validation";
 export const runtime = "edge";
 
 const MAX_BODY_BYTES = 32 * 1024;
+const PRIVATE_RESPONSE_HEADERS = {
+  "Cache-Control": "private, no-store",
+  "X-Robots-Tag": "noindex, nofollow, noarchive",
+} as const;
+
+function jsonResponse(
+  body: PracticeResponse | PracticeError,
+  status = 200,
+): NextResponse {
+  return NextResponse.json(body, {
+    status,
+    headers: PRIVATE_RESPONSE_HEADERS,
+  });
+}
 
 export async function POST(req: Request): Promise<Response> {
   const start = Date.now();
@@ -46,34 +60,24 @@ export async function POST(req: Request): Promise<Response> {
     // Supabase Auth unreachable: not the same as "logged out". Report and
     // answer 503 so an outage does not masquerade as an auth failure.
     reportApiError({ request: req, step: "auth-get-user", error: authError });
-    return NextResponse.json(
+    return jsonResponse(
       { error: "auth_unavailable" } satisfies PracticeError,
-      {
-        status: 503,
-        headers: {
-          "Cache-Control": "private, no-store",
-          "X-Robots-Tag": "noindex, nofollow, noarchive",
-        },
-      },
+      503,
     );
   }
   if (!configured || !user) {
-    return NextResponse.json(
-      { error: configured ? "unauthorized" : "auth_not_configured" } satisfies PracticeError,
+    return jsonResponse(
       {
-        status: configured ? 401 : 503,
-        headers: {
-          "Cache-Control": "private, no-store",
-          "X-Robots-Tag": "noindex, nofollow, noarchive",
-        },
-      },
+        error: configured ? "unauthorized" : "auth_not_configured",
+      } satisfies PracticeError,
+      configured ? 401 : 503,
     );
   }
 
   if (!isPracticeEnabled()) {
-    return NextResponse.json(
+    return jsonResponse(
       { error: "Live-Modus ist nicht aktiviert." } satisfies PracticeError,
-      { status: 503 },
+      503,
     );
   }
 
@@ -83,48 +87,48 @@ export async function POST(req: Request): Promise<Response> {
     max: 20,
   });
   if (!withinLimit) {
-    return NextResponse.json(
+    return jsonResponse(
       {
         error: "Zu viele Anfragen. Versuch's in einer Stunde erneut.",
       } satisfies PracticeError,
-      { status: 429 },
+      429,
     );
   }
 
   const body = await readBoundedJson(req, MAX_BODY_BYTES);
   if (!body.ok && body.error === "body_too_large") {
-    return NextResponse.json(
+    return jsonResponse(
       { error: "Anfrage zu groß." } satisfies PracticeError,
-      { status: 413 },
+      413,
     );
   }
   if (!body.ok) {
-    return NextResponse.json(
+    return jsonResponse(
       { error: "Ungültiger JSON-Body." } satisfies PracticeError,
-      { status: 400 },
+      400,
     );
   }
 
   const parsed = practiceRequestSchema.safeParse(body.value);
   if (!parsed.success) {
-    return NextResponse.json(
+    return jsonResponse(
       { error: "Validierung fehlgeschlagen." } satisfies PracticeError,
-      { status: 400 },
+      400,
     );
   }
   const request = parsed.data;
 
-  const cacheKey = await hashRequest(request);
+  const cacheKey = await hashRequest(user.id, request);
   const cached = readCache(cacheKey);
   if (cached) {
-    return NextResponse.json({ ...cached, cached: true });
+    return jsonResponse({ ...cached, cached: false });
   }
 
   const anthropic = tryGetAnthropicClient();
   if (!anthropic) {
-    return NextResponse.json(
+    return jsonResponse(
       { error: "Live-Modus ist nicht konfiguriert." } satisfies PracticeError,
-      { status: 503 },
+      503,
     );
   }
 
@@ -158,7 +162,7 @@ export async function POST(req: Request): Promise<Response> {
       }),
     );
 
-    return NextResponse.json(result);
+    return jsonResponse(result);
   } catch (err) {
     // PII hygiene preserved: mode + duration only, never the prompt/word.
     reportApiError({
@@ -167,9 +171,9 @@ export async function POST(req: Request): Promise<Response> {
       error: err,
       extra: { mode: request.mode, durationMs: Date.now() - start },
     });
-    return NextResponse.json(
+    return jsonResponse(
       { error: "Live-Modus fehlgeschlagen." } satisfies PracticeError,
-      { status: 500 },
+      500,
     );
   }
 }

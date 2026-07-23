@@ -58,7 +58,20 @@ export default function DatenschutzPage() {
     setErrorMsg(null);
     try {
       const res = await fetch("/api/account/delete", { method: "DELETE" });
-      if (!res.ok) throw new Error(`Fehler ${res.status}`);
+      if (!res.ok) {
+        const body = (await res.json().catch(() => null)) as {
+          readonly error?: string;
+        } | null;
+        if (
+          res.status === 403 &&
+          body?.error === "reauthentication_required"
+        ) {
+          throw new Error(
+            "Sicherheitsprüfung erforderlich: Melde dich ab und erneut per Login-Link an. Die Kontolöschung ist danach 15 Minuten lang freigegeben.",
+          );
+        }
+        throw new Error(`Fehler ${res.status}`);
+      }
       const data: unknown = await res.json();
       if (data && typeof data === "object" && "deleted" in data && data.deleted) {
         // Clear localStorage gamification data

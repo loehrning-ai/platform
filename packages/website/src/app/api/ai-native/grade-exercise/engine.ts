@@ -33,7 +33,7 @@ export function buildFallbackGrade(): Omit<GradeResponse, "cached"> {
   };
 }
 
-/** Response cache keyed on request payload hash — 1h TTL. */
+/** Response cache keyed on caller scope plus request payload hash — 1h TTL. */
 interface CachedResponse {
   readonly response: GradeResponse;
   readonly expires: number;
@@ -43,6 +43,7 @@ const CACHE_TTL_MS = HOUR_MS;
 const CACHE_MAX_ENTRIES = 500;
 
 export async function hashRequest(
+  scope: string,
   kind: string,
   lessonId: string,
   exerciseId: string,
@@ -51,6 +52,7 @@ export async function hashRequest(
   userInput: unknown,
 ): Promise<string> {
   const payload = JSON.stringify({
+    scope,
     kind,
     lessonId,
     exerciseId,

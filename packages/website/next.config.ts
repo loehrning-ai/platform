@@ -108,8 +108,17 @@ const nextConfig: NextConfig = {
     // and the browser blocks the chunk — killing hydration site-wide.
   },
   // Retired commercial routes are handled in middleware so status,
-  // X-Robots-Tag, and cache behavior stay in the crawl contract.
-  redirects: async () => [],
+  // X-Robots-Tag, and cache behavior stay in the crawl contract. The only
+  // infrastructure redirect establishes one canonical host so cookies,
+  // analytics, and search signals do not split across apex and www.
+  redirects: async () => [
+    {
+      source: "/:path*",
+      has: [{ type: "host", value: "www.loehrning.ai" }],
+      destination: "https://loehrning.ai/:path*",
+      permanent: true,
+    },
+  ],
   headers: async () => [
     {
       source: "/:path*",

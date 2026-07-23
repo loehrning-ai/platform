@@ -14,12 +14,16 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 const mockGetUser = vi.fn<
   () => Promise<{
     configured: boolean;
-    user: { id: string } | null;
+    user: { id: string; last_sign_in_at?: string } | null;
     error?: unknown;
   }>
->(async () => ({ configured: true, user: { id: "user-1" } }));
+>(async () => ({
+  configured: true,
+  user: { id: "user-1", last_sign_in_at: new Date().toISOString() },
+}));
 const mockAuthServerClient = vi.fn<() => Promise<unknown>>(async () => null);
-const mockAdminClient = vi.fn(() => {
+const mockServiceClient = vi.fn<() => unknown>(() => ({ id: "service-client" }));
+const mockAdminClient = vi.fn<() => unknown>(() => {
   throw new Error("admin client unavailable");
 });
 
@@ -29,6 +33,9 @@ vi.mock("@/lib/supabase/auth-server", () => ({
 }));
 vi.mock("@/lib/supabase/admin", () => ({
   createAdminClient: () => mockAdminClient(),
+}));
+vi.mock("@/lib/supabase/server", () => ({
+  tryCreateServiceClient: () => mockServiceClient(),
 }));
 vi.mock("@/lib/observability/api-error", () => ({ reportApiError: vi.fn() }));
 vi.mock("@/lib/security/rate-limit", () => ({
@@ -83,9 +90,14 @@ function oversizedResetReq(): Request {
 describe("account routes fail closed without a valid session", () => {
   beforeEach(() => {
     mockGetUser.mockReset();
-    mockGetUser.mockResolvedValue({ configured: true, user: { id: "user-1" } });
+    mockGetUser.mockResolvedValue({
+      configured: true,
+      user: { id: "user-1", last_sign_in_at: new Date().toISOString() },
+    });
     mockAuthServerClient.mockReset();
     mockAuthServerClient.mockResolvedValue(null);
+    mockServiceClient.mockReset();
+    mockServiceClient.mockReturnValue({ id: "service-client" });
     mockedRateLimit.mockReset();
     mockedRateLimit.mockResolvedValue(true);
   });
@@ -121,6 +133,93 @@ describe("account routes fail closed without a valid session", () => {
       "rate_limit_exceeded",
     );
     expect(mockAdminClient).not.toHaveBeenCalled();
+  });
+
+  it("DELETE requires a sign-in from the last 15 minutes", async () => {
+    mockGetUser.mockResolvedValueOnce({
+      configured: true,
+      user: {
+        id: "user-1",
+        last_sign_in_at: new Date(Date.now() - 16 * 60 * 1000).toISOString(),
+      },
+    });
+    const res = await DELETE(deleteReq());
+    expect(res.status).toBe(403);
+    expect(((await res.json()) as { error: string }).error).toBe(
+      "reauthentication_required",
+    );
+    expect(mockedRateLimit).not.toHaveBeenCalled();
+    expect(mockAdminClient).not.toHaveBeenCalled();
+  });
+
+  it("DELETE revokes every refresh session before deleting the user", async () => {
+    const globalSignOut = vi.fn(async () => ({ error: null }));
+    const deleteUser = vi.fn(async () => ({ error: null }));
+    const localSignOut = vi.fn(async () => ({ error: null }));
+    mockAdminClient.mockReturnValueOnce({
+      auth: { admin: { signOut: globalSignOut, deleteUser } },
+    });
+    mockAuthServerClient.mockResolvedValueOnce({
+      auth: {
+        getSession: vi.fn(async () => ({
+          data: {
+            session: {
+              access_token: "verified-access-token",
+              user: { id: "user-1" },
+            },
+          },
+          error: null,
+        })),
+        signOut: localSignOut,
+      },
+    });
+
+    const res = await DELETE(deleteReq());
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ deleted: true });
+    expect(globalSignOut).toHaveBeenCalledWith(
+      "verified-access-token",
+      "global",
+    );
+    expect(deleteUser).toHaveBeenCalledWith("user-1");
+    expect(globalSignOut.mock.invocationCallOrder[0]).toBeLessThan(
+      deleteUser.mock.invocationCallOrder[0] ?? Number.MAX_SAFE_INTEGER,
+    );
+    expect(localSignOut).toHaveBeenCalledWith({ scope: "local" });
+  });
+
+  it("DELETE fails closed when global session revocation fails", async () => {
+    const deleteUser = vi.fn(async () => ({ error: null }));
+    mockAdminClient.mockReturnValueOnce({
+      auth: {
+        admin: {
+          signOut: vi.fn(async () => ({
+            error: new Error("auth revoke failed"),
+          })),
+          deleteUser,
+        },
+      },
+    });
+    mockAuthServerClient.mockResolvedValueOnce({
+      auth: {
+        getSession: vi.fn(async () => ({
+          data: {
+            session: {
+              access_token: "verified-access-token",
+              user: { id: "user-1" },
+            },
+          },
+          error: null,
+        })),
+      },
+    });
+
+    const res = await DELETE(deleteReq());
+    expect(res.status).toBe(503);
+    expect(((await res.json()) as { error: string }).error).toBe(
+      "session_revocation_failed",
+    );
+    expect(deleteUser).not.toHaveBeenCalled();
   });
 
   it("export returns 503 when auth is not configured", async () => {
@@ -172,7 +271,6 @@ describe("account routes fail closed without a valid session", () => {
   });
 
   it("reset-progress returns 429 when the rate limit is exceeded", async () => {
-    mockAuthServerClient.mockResolvedValueOnce({});
     mockedRateLimit.mockResolvedValueOnce(false);
     const res = await RESET_POST(resetReq({ courseSlug: "ki-fuehrerschein" }));
     expect(res.status).toBe(429);
@@ -182,8 +280,6 @@ describe("account routes fail closed without a valid session", () => {
   });
 
   it("reset-progress returns 400 on an unknown course slug (Zod refine)", async () => {
-    // Reach the body validation: authed user + a truthy auth-server client.
-    mockAuthServerClient.mockResolvedValueOnce({});
     const res = await RESET_POST(
       resetReq({ courseSlug: "definitely-not-a-course" }),
     );
@@ -194,7 +290,6 @@ describe("account routes fail closed without a valid session", () => {
   });
 
   it("reset-progress rejects an oversized stream without Content-Length", async () => {
-    mockAuthServerClient.mockResolvedValueOnce({});
     const request = oversizedResetReq();
     expect(request.headers.get("content-length")).toBeNull();
     const res = await RESET_POST(request);
