@@ -75,6 +75,13 @@ function textBlock(text: string) {
   };
 }
 
+function expectPrivateNoStore(res: Response) {
+  expect(res.headers.get("cache-control")).toBe("private, no-store");
+  expect(res.headers.get("x-robots-tag")).toBe(
+    "noindex, nofollow, noarchive",
+  );
+}
+
 describe("POST /api/ai-native/practice", () => {
   beforeEach(() => {
     __resetEngineState();
@@ -103,6 +110,7 @@ describe("POST /api/ai-native/practice", () => {
     delete process.env.AI_NATIVE_PRACTICE_ENABLED;
     const res = await POST(makeReq(VALID_COMPLETE));
     expect(res.status).toBe(503);
+    expectPrivateNoStore(res);
     expect(mockCreate).not.toHaveBeenCalled();
   });
 
@@ -110,6 +118,7 @@ describe("POST /api/ai-native/practice", () => {
     mockedAuth.mockResolvedValueOnce({ configured: true, user: null });
     const res = await POST(makeReq(VALID_COMPLETE));
     expect(res.status).toBe(401);
+    expectPrivateNoStore(res);
     expect(mockCreate).not.toHaveBeenCalled();
   });
 
@@ -148,6 +157,7 @@ describe("POST /api/ai-native/practice", () => {
     mockCreate.mockResolvedValueOnce(textBlock("Hier ist deine Mail."));
     const res = await POST(makeReq(VALID_COMPLETE));
     expect(res.status).toBe(200);
+    expectPrivateNoStore(res);
     const json = (await res.json()) as { mode: string; text: string };
     expect(json.mode).toBe("complete");
     expect(json.text).toBe("Hier ist deine Mail.");
@@ -178,16 +188,42 @@ describe("POST /api/ai-native/practice", () => {
     expect(json.x).toBeLessThanOrEqual(0.95);
   });
 
-  it("ok: serves a cached response on the second identical request", async () => {
-    mockCreate.mockResolvedValueOnce(textBlock("Einmalig."));
+  it("scopes cached responses by user and never discloses cache membership", async () => {
+    mockCreate
+      .mockResolvedValueOnce(textBlock("Antwort für Nutzer eins."))
+      .mockResolvedValueOnce(textBlock("Antwort für Nutzer zwei."));
+
     const first = await POST(makeReq(VALID_COMPLETE));
     expect(first.status).toBe(200);
+    expectPrivateNoStore(first);
+    expect((await first.json()) as { cached: boolean }).toMatchObject({
+      cached: false,
+    });
+
+    mockedAuth.mockResolvedValueOnce({
+      configured: true,
+      user: { id: "user-2" },
+    });
     const second = await POST(makeReq(VALID_COMPLETE));
     expect(second.status).toBe(200);
-    const json = (await second.json()) as { cached: boolean };
-    expect(json.cached).toBe(true);
-    // Claude was only called once.
-    expect(mockCreate).toHaveBeenCalledTimes(1);
+    expectPrivateNoStore(second);
+    expect((await second.json()) as { text: string; cached: boolean }).toEqual(
+      expect.objectContaining({
+        text: "Antwort für Nutzer zwei.",
+        cached: false,
+      }),
+    );
+
+    const third = await POST(makeReq(VALID_COMPLETE));
+    expect(third.status).toBe(200);
+    expectPrivateNoStore(third);
+    expect((await third.json()) as { text: string; cached: boolean }).toEqual(
+      expect.objectContaining({
+        text: "Antwort für Nutzer eins.",
+        cached: false,
+      }),
+    );
+    expect(mockCreate).toHaveBeenCalledTimes(2);
   });
 
   // ── timeout / error ─────────────────────────────────────────────

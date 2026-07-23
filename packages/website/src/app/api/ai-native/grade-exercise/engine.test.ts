@@ -133,23 +133,112 @@ describe("grade-exercise engine — pure helpers", () => {
 
   describe("hashRequest", () => {
     it("is deterministic — same input yields same hash", async () => {
-      const a = await hashRequest("k", "l", "e", "scenario", ["rubric"], { x: 1 });
-      const b = await hashRequest("k", "l", "e", "scenario", ["rubric"], { x: 1 });
+      const a = await hashRequest(
+        "user:one",
+        "k",
+        "l",
+        "e",
+        "scenario",
+        ["rubric"],
+        { x: 1 },
+      );
+      const b = await hashRequest(
+        "user:one",
+        "k",
+        "l",
+        "e",
+        "scenario",
+        ["rubric"],
+        { x: 1 },
+      );
       expect(a).toBe(b);
     });
 
     it("differs when userInput differs", async () => {
-      const a = await hashRequest("k", "l", "e", "scenario", ["rubric"], { x: 1 });
-      const b = await hashRequest("k", "l", "e", "scenario", ["rubric"], { x: 2 });
+      const a = await hashRequest(
+        "user:one",
+        "k",
+        "l",
+        "e",
+        "scenario",
+        ["rubric"],
+        { x: 1 },
+      );
+      const b = await hashRequest(
+        "user:one",
+        "k",
+        "l",
+        "e",
+        "scenario",
+        ["rubric"],
+        { x: 2 },
+      );
       expect(a).not.toBe(b);
     });
 
     it("differs when the canonical scenario or rubric changes", async () => {
-      const base = await hashRequest("k", "l", "e", "one", ["a"], "answer");
-      const scenarioChanged = await hashRequest("k", "l", "e", "two", ["a"], "answer");
-      const rubricChanged = await hashRequest("k", "l", "e", "one", ["b"], "answer");
+      const base = await hashRequest(
+        "user:one",
+        "k",
+        "l",
+        "e",
+        "one",
+        ["a"],
+        "answer",
+      );
+      const scenarioChanged = await hashRequest(
+        "user:one",
+        "k",
+        "l",
+        "e",
+        "two",
+        ["a"],
+        "answer",
+      );
+      const rubricChanged = await hashRequest(
+        "user:one",
+        "k",
+        "l",
+        "e",
+        "one",
+        ["b"],
+        "answer",
+      );
       expect(base).not.toBe(scenarioChanged);
       expect(base).not.toBe(rubricChanged);
+    });
+
+    it("differs across authenticated-user and trusted-IP scopes", async () => {
+      const userOne = await hashRequest(
+        "user:one",
+        "k",
+        "l",
+        "e",
+        "scenario",
+        ["rubric"],
+        "answer",
+      );
+      const userTwo = await hashRequest(
+        "user:two",
+        "k",
+        "l",
+        "e",
+        "scenario",
+        ["rubric"],
+        "answer",
+      );
+      const anonymous = await hashRequest(
+        `ai-native-grade:sha256:${"a".repeat(64)}`,
+        "k",
+        "l",
+        "e",
+        "scenario",
+        ["rubric"],
+        "answer",
+      );
+
+      expect(userOne).not.toBe(userTwo);
+      expect(userOne).not.toBe(anonymous);
     });
   });
 });

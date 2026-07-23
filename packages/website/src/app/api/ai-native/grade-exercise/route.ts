@@ -56,9 +56,13 @@ export async function POST(req: Request): Promise<Response> {
     reportApiError({ request: req, step: "auth-get-user", error: authError });
   }
   const isAuthenticated = Boolean(user) && !authError;
+  const trustedIpScope = await hashedClientRateLimitKey(
+    "ai-native-grade",
+    req,
+  );
 
   const withinLimit = await consumeRateLimit({
-    key: await hashedClientRateLimitKey("ai-native-grade", req),
+    key: trustedIpScope,
     windowSeconds: 3600,
     max: isAuthenticated ? 20 : 5,
   });
@@ -108,6 +112,7 @@ export async function POST(req: Request): Promise<Response> {
   const { scenario, rubric, rubricIds } = canonical;
 
   const cacheKey = await hashRequest(
+    isAuthenticated && user ? `user:${user.id}` : trustedIpScope,
     kind,
     lessonId,
     exerciseId,
@@ -117,7 +122,7 @@ export async function POST(req: Request): Promise<Response> {
   );
   const cached = readCache(cacheKey);
   if (cached) {
-    return jsonResponse({ ...cached, cached: true });
+    return jsonResponse({ ...cached, cached: false });
   }
 
   const anthropic = tryGetAnthropicClient();

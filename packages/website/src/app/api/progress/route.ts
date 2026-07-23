@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAuthServerClient, getAuthenticatedUser } from "@/lib/supabase/auth-server";
+import { tryCreateServiceClient } from "@/lib/supabase/server";
 import { readBoundedJson } from "@/lib/http/read-json-body";
 import { reportApiError } from "@/lib/observability/api-error";
 import {
@@ -96,11 +97,25 @@ export async function PUT(request: Request) {
 
   const incoming: UnifiedProgress = parsed.data.progress;
 
+  // Mutations use the server-only service client after the cookie-bound
+  // session has been verified with getUser(). The authenticated browser role
+  // has no direct INSERT/UPDATE/DELETE grants, so callers cannot bypass this
+  // route's payload validation, canonical slug set, or durable rate limit by
+  // writing to PostgREST themselves. user.id remains server-derived.
+  const serviceClient = tryCreateServiceClient();
+  if (!serviceClient) {
+    return privateJson({ error: "progress_store_unavailable" }, { status: 503 });
+  }
+
   // Persists one row per touched course plus the cross-course ledger row
   // — a checkpoint in one course no longer requires
   // re-serializing every other course's row. The client-facing shape here is
   // unchanged: still the full aggregated UnifiedProgress object.
-  const result = await upsertUnifiedProgressForUser(auth.supabase, auth.user.id, incoming);
+  const result = await upsertUnifiedProgressForUser(
+    serviceClient,
+    auth.user.id,
+    incoming,
+  );
 
   if (!result.ok && !result.conflict) {
     reportApiError({ route: "/api/progress", step: "supabase-write", error: result.error });

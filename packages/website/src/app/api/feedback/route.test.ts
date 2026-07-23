@@ -104,7 +104,7 @@ describe("POST /api/feedback negative paths", () => {
     const migration = readFileSync(
       resolve(
         process.cwd(),
-        "supabase/migrations/20260714182753_feedback_retention.sql",
+        "supabase/migrations/20260716160507_20260714182753_feedback_retention.sql",
       ),
       "utf8",
     ).toLowerCase();

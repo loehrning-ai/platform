@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { getAuthenticatedUser } from "@/lib/supabase/auth-server";
+import {
+  createAuthServerClient,
+  getAuthenticatedUser,
+} from "@/lib/supabase/auth-server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { reportApiError } from "@/lib/observability/api-error";
 import {
@@ -12,6 +15,7 @@ import {
 // fallback) keyed on a SHA-256 digest of the Vercel-trusted client IP.
 const RATE_LIMIT_WINDOW_SECONDS = 24 * 60 * 60;
 const RATE_LIMIT_MAX = 3;
+const RECENT_SIGN_IN_MAX_AGE_MS = 15 * 60 * 1000;
 
 function privateJson(body: unknown, init?: ResponseInit) {
   const headers = new Headers(init?.headers);
@@ -29,6 +33,20 @@ export async function DELETE(request: Request) {
     return privateJson({ error: "auth_unavailable" }, { status: 503 });
   }
   if (!user) return privateJson({ error: "unauthorized" }, { status: 401 });
+
+  // A long-lived stolen session must not be sufficient for irreversible
+  // deletion. Magic-link login updates last_sign_in_at, so users with an older
+  // session must sign out and authenticate again before retrying.
+  const lastSignInAt = Date.parse(user.last_sign_in_at ?? "");
+  if (
+    !Number.isFinite(lastSignInAt) ||
+    Date.now() - lastSignInAt > RECENT_SIGN_IN_MAX_AGE_MS
+  ) {
+    return privateJson(
+      { error: "reauthentication_required" },
+      { status: 403 },
+    );
+  }
 
   // Durable, forgery-resistant rate limit keyed on the hashed trusted client IP.
   const allowed = await consumeRateLimit({
@@ -48,6 +66,45 @@ export async function DELETE(request: Request) {
     return privateJson({ error: "admin_client_unavailable" }, { status: 503 });
   }
 
+  const authClient = await createAuthServerClient();
+  if (!authClient) {
+    return privateJson({ error: "auth_not_configured" }, { status: 503 });
+  }
+  const {
+    data: { session },
+    error: sessionError,
+  } = await authClient.auth.getSession();
+  if (
+    sessionError ||
+    !session?.access_token ||
+    session.user.id !== user.id
+  ) {
+    if (sessionError) {
+      reportApiError({
+        route: "/api/account/delete",
+        step: "auth-get-session",
+        error: sessionError,
+      });
+    }
+    return privateJson({ error: "session_unavailable" }, { status: 503 });
+  }
+
+  // Revoke every refresh session before deleting the identity. Supabase access
+  // JWTs cannot be revoked before their one-hour expiry, but deleting the user
+  // cascades all owned rows and getUser() rejects subsequent application use.
+  const { error: revokeError } = await adminClient.auth.admin.signOut(
+    session.access_token,
+    "global",
+  );
+  if (revokeError) {
+    reportApiError({
+      route: "/api/account/delete",
+      step: "auth-revoke-sessions",
+      error: revokeError,
+    });
+    return privateJson({ error: "session_revocation_failed" }, { status: 503 });
+  }
+
   const { error } = await adminClient.auth.admin.deleteUser(user.id);
 
   if (error) {
@@ -55,6 +112,20 @@ export async function DELETE(request: Request) {
     return privateJson({ error: "delete_failed" }, { status: 500 });
   }
 
-  // Client must clear localStorage and redirect to / on receiving { deleted: true }
+  // Remove the cookie-backed session from this response as well. The global
+  // revocation above may make the second Auth call answer 401; auth-js treats
+  // that as an expected stale session and still expires local cookies.
+  const { error: localSignOutError } = await authClient.auth.signOut({
+    scope: "local",
+  });
+  if (localSignOutError) {
+    reportApiError({
+      route: "/api/account/delete",
+      step: "auth-clear-session",
+      error: localSignOutError,
+    });
+  }
+
+  // Client clears the non-auth learning cache and redirects on success.
   return privateJson({ deleted: true });
 }
