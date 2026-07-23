@@ -10,10 +10,10 @@ import { TIM_ENTITY } from "@/lib/seo/entity";
 // right below.
 //
 // Sizes are optical, not literal: Apple's and Meta's marks are flat single
-// glyphs that stay crisp at ~30px. Red Bull's mark carries far more detail
-// (two bulls + motion linework), so at that same size it collapses into an
-// illegible blob — it needs a larger box to resolve to the same visual
-// weight as the other two.
+// glyphs that stay crisp at ~30px. Red Bull's is the full corporate lockup
+// (two bulls and sun above the wordmark) with far more detail, so at that
+// same size it collapses into an illegible blob. It needs a larger box to
+// resolve to the same visual weight as the other two.
 const STATIONS = [
   { name: "Apple", src: "/ueber-mich/logos/apple.svg", size: "h-7 w-7 sm:h-8 sm:w-8", px: 32 },
   { name: "Red Bull", src: "/ueber-mich/logos/red-bull.svg", size: "h-11 w-11 sm:h-[52px] sm:w-[52px]", px: 52 },
