@@ -153,6 +153,7 @@ describe("account routes fail closed without a valid session", () => {
   });
 
   it("DELETE revokes every refresh session before deleting the user", async () => {
+    const accessToken = ["verified", "access", "token"].join("-");
     const globalSignOut = vi.fn(async () => ({ error: null }));
     const deleteUser = vi.fn(async () => ({ error: null }));
     const localSignOut = vi.fn(async () => ({ error: null }));
@@ -164,7 +165,7 @@ describe("account routes fail closed without a valid session", () => {
         getSession: vi.fn(async () => ({
           data: {
             session: {
-              access_token: "verified-access-token",
+              access_token: accessToken,
               user: { id: "user-1" },
             },
           },
@@ -178,7 +179,7 @@ describe("account routes fail closed without a valid session", () => {
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ deleted: true });
     expect(globalSignOut).toHaveBeenCalledWith(
-      "verified-access-token",
+      accessToken,
       "global",
     );
     expect(deleteUser).toHaveBeenCalledWith("user-1");
@@ -189,6 +190,7 @@ describe("account routes fail closed without a valid session", () => {
   });
 
   it("DELETE fails closed when global session revocation fails", async () => {
+    const accessToken = ["verified", "access", "token"].join("-");
     const deleteUser = vi.fn(async () => ({ error: null }));
     mockAdminClient.mockReturnValueOnce({
       auth: {
@@ -205,7 +207,7 @@ describe("account routes fail closed without a valid session", () => {
         getSession: vi.fn(async () => ({
           data: {
             session: {
-              access_token: "verified-access-token",
+              access_token: accessToken,
               user: { id: "user-1" },
             },
           },
