@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
     return response;
   }
 
-  function redirectToLogin(reason: string) {
+  function failureRedirect(reason: string) {
     const loginUrl = new URL("/login", redirectOrigin);
     loginUrl.searchParams.set("next", next);
     loginUrl.searchParams.set("reason", reason);
@@ -113,27 +113,22 @@ export async function GET(request: NextRequest) {
     return "invalid-link";
   }
 
-  // `trustedCallbackOrigin` parses hostile request authority data and compares
-  // every component against fixed production, Vercel-system, or loopback
-  // allowlists. The exhaustive route tests prove lookalike hosts, ports,
-  // schemes, credentials, and forwarded headers cannot pass this boundary.
-  // codeql[js/user-controlled-bypass]
-  if (!trustedOrigin) return redirectToLogin("untrusted-origin");
-  if (code === null) return redirectToLogin("missing-code");
-  if (!isSupabasePkceCode(code)) return redirectToLogin("invalid-code-format");
+  if (!trustedOrigin) return failureRedirect("untrusted-origin");
+  if (code === null) return failureRedirect("missing-code");
+  if (!isSupabasePkceCode(code)) return failureRedirect("invalid-code-format");
 
   const supabase = await createAuthServerClient();
-  if (!supabase) return redirectToLogin("auth-not-configured");
+  if (!supabase) return failureRedirect("auth-not-configured");
 
   let exchange;
   try {
     exchange = await supabase.auth.exchangeCodeForSession(code);
   } catch (error) {
-    return redirectToLogin(classifyAuthError(error));
+    return failureRedirect(classifyAuthError(error));
   }
-  if (exchange.error) return redirectToLogin(classifyAuthError(exchange.error));
+  if (exchange.error) return failureRedirect(classifyAuthError(exchange.error));
   if (!exchange.data.session || !exchange.data.user?.id) {
-    return redirectToLogin("invalid-link");
+    return failureRedirect("invalid-link");
   }
 
   let verification;
@@ -141,7 +136,7 @@ export async function GET(request: NextRequest) {
     verification = await supabase.auth.getUser();
   } catch {
     await supabase.auth.signOut({ scope: "local" }).catch(() => undefined);
-    return redirectToLogin("invalid-link");
+    return failureRedirect("invalid-link");
   }
   if (
     verification.error ||
@@ -149,7 +144,7 @@ export async function GET(request: NextRequest) {
     verification.data.user.id !== exchange.data.user.id
   ) {
     await supabase.auth.signOut({ scope: "local" }).catch(() => undefined);
-    return redirectToLogin(
+    return failureRedirect(
       verification.error ? classifyAuthError(verification.error) : "invalid-link",
     );
   }
