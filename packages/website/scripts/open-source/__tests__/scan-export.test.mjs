@@ -9,10 +9,24 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
+import {
+  mkdir,
+  mkdtemp,
+  rename,
+  rm,
+  symlink,
+  truncate,
+  utimes,
+  writeFile,
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  MAX_BUFFERED_FILE_BYTES,
+  MAX_SCANNED_FILE_BYTES,
+  readStableRegularFile,
+} from "../scan-export.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const scanScript = join(here, "..", "scan-export.mjs");
@@ -115,6 +129,8 @@ async function main() {
   const platformClean = join(workdir, "platform-clean");
   const platformDirty = join(workdir, "platform-dirty");
   const profileOnly = join(workdir, "profile-only");
+  const oversized = join(workdir, "oversized");
+  const oversizedPlatform = join(workdir, "oversized-platform");
   try {
     // 1. CLEAN fixture: no findings at all. Note the teaching "claude" course
     //    directory (no leading dot) must NOT be flagged.
@@ -252,8 +268,7 @@ async function main() {
         `export const todo = \"${INTERNAL_REFERENCES.todoFile}\";\n` +
         `export const runbook = \"${INTERNAL_REFERENCES.runbookFile}\";\n` +
         `export const plan = \"${INTERNAL_REFERENCES.planPath}\";\n`,
-      "packages/website/docs/operations/internal.md":
-        "internal operations\n",
+      "packages/website/docs/operations/internal.md": "internal operations\n",
       "packages/website/bun.lock": '{"stale":true}\n',
       "packages/legacy/bun.lockb": "legacy binary lock fixture\n",
       "examples/tool/package-lock.json": '{"lockfileVersion":3}\n',
@@ -289,10 +304,37 @@ async function main() {
     //    existing interactive-course exporter profile.
     await writeTree(profileOnly, {
       "ASSET_MANIFEST.json": manifestJson([]),
-      "packages/website/docs/operations/internal.md":
-        "internal operations\n",
+      "packages/website/docs/operations/internal.md": "internal operations\n",
       "packages/website/bun.lock": '{"stale":true}\n',
     });
+
+    // 7. OVERSIZED fixtures: sparse files prove stat-time rejection without
+    // allocating their declared size in the test or scanner process.
+    const oversizedTextPath = join(oversized, "hostile.txt");
+    await mkdir(dirname(oversizedTextPath), { recursive: true });
+    await writeFile(oversizedTextPath, "");
+    await truncate(oversizedTextPath, MAX_BUFFERED_FILE_BYTES + 1);
+
+    const oversizedBinaryRel = "assets/hostile.mp4";
+    const oversizedBinaryPath = join(oversizedPlatform, oversizedBinaryRel);
+    const oversizedBinarySize = MAX_SCANNED_FILE_BYTES + 1;
+    await mkdir(dirname(oversizedBinaryPath), { recursive: true });
+    await writeFile(oversizedBinaryPath, "");
+    await truncate(oversizedBinaryPath, oversizedBinarySize);
+    await writeFile(
+      join(oversizedPlatform, "ASSET_MANIFEST.json"),
+      manifestJson([
+        {
+          path: oversizedBinaryRel,
+          sizeBytes: oversizedBinarySize,
+          sha256: "0".repeat(64),
+          owner: "loehrning-ai maintainers",
+          source: "repository-owned sparse test fixture",
+          license: "MIT",
+          redistribution: "permitted",
+        },
+      ]),
+    );
 
     // --- clean: exits 0 in both modes ---
     const cleanSource = runScan("--source", clean);
@@ -478,6 +520,205 @@ async function main() {
       "platform profile must require ASSET_MANIFEST.json",
     );
     assert.match(combined(missingManifest), /required asset manifest/);
+
+    const oversizedTextScan = runScan("--source", oversized);
+    assert.equal(
+      oversizedTextScan.status,
+      1,
+      `oversized text must fail closed\n${combined(oversizedTextScan)}`,
+    );
+    assert.match(combined(oversizedTextScan), /EFBIG|byte size limit/);
+
+    const oversizedBinaryScan = runScan(
+      "--dest",
+      oversizedPlatform,
+      "platform",
+    );
+    assert.equal(
+      oversizedBinaryScan.status,
+      1,
+      `oversized manifest binary must fail closed\n${combined(oversizedBinaryScan)}`,
+    );
+    assert.match(combined(oversizedBinaryScan), /EFBIG|byte size limit/);
+
+    // Descriptor reads must fail closed if a path or file changes after open.
+    const raceRoot = join(workdir, "race");
+    await mkdir(raceRoot, { recursive: true });
+
+    const swappedPath = join(raceRoot, "swapped.txt");
+    const swappedTarget = join(workdir, "swapped-target.txt");
+    await writeFile(swappedPath, "expected\n");
+    await writeFile(swappedTarget, "expected\n");
+    await assert.rejects(
+      readStableRegularFile({
+        rootDirectory: raceRoot,
+        filePath: swappedPath,
+        hooks: {
+          afterOpen: async ({ absolutePath }) => {
+            await rm(absolutePath);
+            await symlink(swappedTarget, absolutePath);
+          },
+        },
+      }),
+      /symbolic-link path component|pathname/,
+      "a final-component symlink swap must be rejected",
+    );
+
+    const mutatedPath = join(raceRoot, "mutated.txt");
+    await writeFile(mutatedPath, "expected\n");
+    await assert.rejects(
+      readStableRegularFile({
+        rootDirectory: raceRoot,
+        filePath: mutatedPath,
+        hooks: {
+          afterRead: async ({ absolutePath }) => {
+            await writeFile(absolutePath, "replaced\n");
+            await utimes(absolutePath, new Date(1_000), new Date(2_000));
+          },
+        },
+      }),
+      /changed while it was being scanned/,
+      "same-size mutation in the descriptor read window must be rejected",
+    );
+
+    const growingPath = join(raceRoot, "growing.txt");
+    const growingOriginal = Buffer.from("bounded\n");
+    let growingBytesRead = null;
+    await writeFile(growingPath, growingOriginal);
+    await assert.rejects(
+      readStableRegularFile({
+        rootDirectory: raceRoot,
+        filePath: growingPath,
+        hooks: {
+          afterOpen: async ({ absolutePath }) => {
+            await truncate(absolutePath, MAX_SCANNED_FILE_BYTES + 1);
+          },
+          afterRead: async ({ bytes }) => {
+            growingBytesRead = bytes?.byteLength ?? null;
+          },
+        },
+      }),
+      /changed while it was being scanned/,
+      "growth after descriptor stat must be bounded and rejected",
+    );
+    assert.equal(
+      growingBytesRead,
+      growingOriginal.byteLength,
+      "post-stat growth must not expand the descriptor read allocation",
+    );
+
+    const outsideParent = join(workdir, "outside-parent");
+    await mkdir(outsideParent, { recursive: true });
+    await writeFile(join(outsideParent, "outside.txt"), "outside\n");
+    const linkedParent = join(raceRoot, "linked-parent");
+    await symlink(outsideParent, linkedParent, "dir");
+    await assert.rejects(
+      readStableRegularFile({
+        rootDirectory: raceRoot,
+        filePath: join(linkedParent, "outside.txt"),
+      }),
+      /symbolic-link path component|inside the scan root/,
+      "a symlinked parent path must be rejected",
+    );
+
+    const swappedParent = join(raceRoot, "swapped-parent");
+    const swappedParentOutside = join(workdir, "swapped-parent-outside");
+    await mkdir(swappedParent, { recursive: true });
+    await mkdir(swappedParentOutside, { recursive: true });
+    await writeFile(join(swappedParent, "file.txt"), "expected\n");
+    await writeFile(join(swappedParentOutside, "file.txt"), "expected\n");
+    await assert.rejects(
+      readStableRegularFile({
+        rootDirectory: raceRoot,
+        filePath: join(swappedParent, "file.txt"),
+        hooks: {
+          afterOpen: async ({ absolutePath }) => {
+            const parentPath = dirname(absolutePath);
+            await rename(parentPath, `${parentPath}.original`);
+            await symlink(swappedParentOutside, parentPath, "dir");
+          },
+        },
+      }),
+      /symbolic-link path component|pathname|inside the scan root/,
+      "a parent-directory replacement after open must be rejected",
+    );
+
+    let oversizedTextReadStarted = false;
+    await assert.rejects(
+      readStableRegularFile({
+        rootDirectory: oversized,
+        filePath: oversizedTextPath,
+        hooks: {
+          afterOpen: async () => {
+            oversizedTextReadStarted = true;
+          },
+        },
+      }),
+      (error) => error?.code === "EFBIG" && /size limit/.test(error.message),
+      "a sparse oversized text file must be rejected from descriptor metadata",
+    );
+    assert.equal(
+      oversizedTextReadStarted,
+      false,
+      "oversized text must be rejected before allocating or reading contents",
+    );
+
+    let oversizedBinaryReadStarted = false;
+    await assert.rejects(
+      readStableRegularFile({
+        rootDirectory: oversizedPlatform,
+        filePath: oversizedBinaryPath,
+        readContents: false,
+        hashContents: true,
+        hooks: {
+          afterOpen: async () => {
+            oversizedBinaryReadStarted = true;
+          },
+        },
+      }),
+      (error) => error?.code === "EFBIG" && /size limit/.test(error.message),
+      "a sparse oversized binary must be rejected before streaming its hash",
+    );
+    assert.equal(
+      oversizedBinaryReadStarted,
+      false,
+      "oversized binary must be rejected before any streaming read",
+    );
+
+    const streamedPath = join(raceRoot, "streamed.bin");
+    const streamedContent = Buffer.alloc(256 * 1024, 0x61);
+    await writeFile(streamedPath, streamedContent);
+    const streamed = await readStableRegularFile({
+      rootDirectory: raceRoot,
+      filePath: streamedPath,
+      readContents: false,
+      hashContents: true,
+    });
+    assert.equal(streamed.bytes, null);
+    assert.equal(streamed.sha256, sha256(streamedContent));
+
+    let streamMutated = false;
+    await assert.rejects(
+      readStableRegularFile({
+        rootDirectory: raceRoot,
+        filePath: streamedPath,
+        readContents: false,
+        hashContents: true,
+        hooks: {
+          afterChunk: async ({ absolutePath }) => {
+            if (streamMutated) return;
+            streamMutated = true;
+            await writeFile(
+              absolutePath,
+              Buffer.alloc(streamedContent.byteLength, 0x62),
+            );
+            await utimes(absolutePath, new Date(1_000), new Date(2_000));
+          },
+        },
+      }),
+      /changed while it was being scanned/,
+      "same-size mutation during streamed hashing must be rejected",
+    );
 
     // The scanner and denylist sources themselves remain scan-safe. Warnings are
     // allowed, but inert fixture strings must never create blocking findings.

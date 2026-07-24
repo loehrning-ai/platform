@@ -162,8 +162,70 @@ const ALLOWED_DEMO_CONTEXTS = [
   /\bfiktiv zur Demo\b/i,
   /\bNicht Demo\b/i,
   /\bHive(?: Moderation)? Demo\b/i,
-  /hivemoderation\.com\/demo/i,
 ];
+
+const URL_LEADING_PUNCTUATION = new Set(["(", "[", "{", "<", "\"", "'"]);
+const URL_TRAILING_PUNCTUATION = new Set([
+  ")",
+  "]",
+  "}",
+  ">",
+  "\"",
+  "'",
+  ".",
+  ",",
+  ";",
+  "!",
+  "?",
+]);
+
+function stripUrlPunctuation(value) {
+  let start = 0;
+  let end = value.length;
+  while (start < end && URL_LEADING_PUNCTUATION.has(value[start])) start++;
+  while (end > start && URL_TRAILING_PUNCTUATION.has(value[end - 1])) end--;
+  return value.slice(start, end);
+}
+
+/**
+ * The Hive demo is a named third-party product, not a platform-owned "Demo"
+ * label. Exempt only its exact HTTPS URL (or the same bare host/path in prose).
+ * Parsing the candidate prevents lookalike hosts such as
+ * `hivemoderation.com.evil.example/demo` from suppressing the warning.
+ */
+export function containsExactHiveDemoUrl(line) {
+  for (const rawToken of line.split(/\s+/)) {
+    const token = stripUrlPunctuation(rawToken);
+    if (!token.toLowerCase().includes("hivemoderation.com")) continue;
+
+    try {
+      const explicitScheme = token.includes("://");
+      const parsed = new URL(explicitScheme ? token : `https://${token}`);
+      if (
+        parsed.protocol === "https:" &&
+        parsed.username === "" &&
+        parsed.password === "" &&
+        parsed.hostname === "hivemoderation.com" &&
+        parsed.port === "" &&
+        parsed.pathname === "/demo" &&
+        parsed.search === "" &&
+        parsed.hash === ""
+      ) {
+        return true;
+      }
+    } catch {
+      // Malformed and partial URL-like tokens are not eligible exemptions.
+    }
+  }
+  return false;
+}
+
+export function hasAllowedDemoContext(line) {
+  return (
+    ALLOWED_DEMO_CONTEXTS.some((allowed) => allowed.test(line)) ||
+    containsExactHiveDemoUrl(line)
+  );
+}
 
 /**
  * Incorrect quiz options deliberately contain misconceptions, wrong dates,
@@ -231,7 +293,7 @@ function checkBannedPhrases() {
       for (const { phrase, pattern } of BANNED_PHRASES_WARN_CONTENT) {
         if (pattern.test(line)) {
           if (isIncorrectAnswerOption) continue;
-          if (ALLOWED_DEMO_CONTEXTS.some((allowed) => allowed.test(line))) continue;
+          if (hasAllowedDemoContext(line)) continue;
           if (isTypeOnlyDemoReference(line)) continue;
           // Skip code comments, import statements, variable names, object keys
           const isCodeLine = /^\s*(\/\/|import |export |const |let |var |function |interface |type |class |\/\*|@|\*)/
@@ -667,8 +729,20 @@ const FRESHNESS_EXCLUDED = [
   "modules.json",
 ];
 
-function isFreshnessExcluded(filePath) {
-  return FRESHNESS_EXCLUDED.some((excluded) => filePath.endsWith(excluded) || filePath.endsWith(excluded.replace("/", "/")));
+export function isFreshnessExcluded(filePath) {
+  const segments = filePath
+    .replaceAll("\\", "/")
+    .split("/")
+    .filter(Boolean);
+
+  return FRESHNESS_EXCLUDED.some((excluded) => {
+    const excludedSegments = excluded.split("/");
+    if (excludedSegments.length > segments.length) return false;
+    const offset = segments.length - excludedSegments.length;
+    return excludedSegments.every(
+      (segment, index) => segments[offset + index] === segment,
+    );
+  });
 }
 
 const NATIVE_COURSE_DIRS = [
@@ -1002,4 +1076,7 @@ function runAllChecks() {
   }
 }
 
-runAllChecks();
+const invokedPath = process.argv[1] ? resolve(process.argv[1]) : "";
+if (invokedPath === fileURLToPath(import.meta.url)) {
+  runAllChecks();
+}

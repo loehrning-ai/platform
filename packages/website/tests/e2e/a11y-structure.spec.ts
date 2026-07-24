@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { OPEN_SOURCE_ARTIFACTS } from "../../src/lib/open-source/artifacts";
 
 /**
  * Landmark / document-structure sweep (regression coverage).
@@ -21,6 +22,7 @@ const ROUTES = [
   "/hilfe",
   "/ueber-mich",
   "/einstieg",
+  ...OPEN_SOURCE_ARTIFACTS.map((artifact) => artifact.href),
 ] as const;
 
 /**

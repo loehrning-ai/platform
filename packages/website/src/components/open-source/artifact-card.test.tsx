@@ -1,11 +1,17 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import type { SoftwareArtifactGuide, ToolArtifact } from "@/lib/open-source/artifacts";
+import {
+  assertOpenSourceArtifacts,
+  type SoftwareArtifactGuide,
+  type ToolArtifact,
+} from "@/lib/open-source/artifacts";
 import { OpenSourceArtifactCard } from "./artifact-card";
 
 const GUIDE = {
   status: "experimental",
   statusNote: "The interface is usable, but compatibility may change.",
+  dataFlow:
+    "The example stays local and sends no data to third-party services.",
   prerequisites: [
     {
       label: "Bun 1.3",
@@ -47,7 +53,8 @@ const GUIDE = {
     href: "https://docs.example.com/example-tool",
   },
   screenshot: {
-    src: "/imported-courses/screenshots/codex.jpg",
+    src: "/artifacts/tools/example-tool/screenshot.jpg",
+    sourcePath: "docs/screenshots/example-tool.jpg",
     alt: "The example tool showing its generated report.",
     sha256: "c".repeat(64),
     sizeBytes: 123,
@@ -64,7 +71,7 @@ const GUIDE = {
 } as const satisfies SoftwareArtifactGuide;
 
 function toolFixture(slug: string, title: string): ToolArtifact {
-  return {
+  const artifact: ToolArtifact = {
     id: `tool:${slug}`,
     kind: "tool",
     publicationLifecycle: "published",
@@ -74,20 +81,29 @@ function toolFixture(slug: string, title: string): ToolArtifact {
     description: `${title} generates a local report.`,
     href: `/open-source/tools/${slug}`,
     language: "Deutsch",
+    languageTag: "de",
     source: {
       href: `https://github.com/loehrning-ai/${slug}`,
       revision: "a".repeat(40),
       revisionHref: `https://github.com/loehrning-ai/${slug}/commit/${"a".repeat(40)}`,
     },
     license: {
-      href: `/licenses/${slug}-license.txt`,
+      href: `/artifacts/tools/${slug}/LICENSE.txt`,
       sourcePath: "LICENSE",
       sha256: "b".repeat(64),
       sizeBytes: 1,
     },
     delivery: "source-only",
-    guide: GUIDE,
+    guide: {
+      ...GUIDE,
+      screenshot: {
+        ...GUIDE.screenshot,
+        src: `/artifacts/tools/${slug}/screenshot.jpg`,
+      },
+    },
   };
+  assertOpenSourceArtifacts([artifact]);
+  return artifact;
 }
 
 describe("OpenSourceArtifactCard", () => {
@@ -162,5 +178,27 @@ describe("OpenSourceArtifactCard", () => {
     expect(
       screen.getByRole("link", { name: `Öffnen ${launchable.title}` }),
     ).toHaveAttribute("href", "/demos/example-tool");
+    expect(
+      screen.getByRole("link", { name: `Detail ${launchable.title}` }),
+    ).toHaveAttribute("href", launchable.href);
+  });
+
+  it("retains the detail route and discloses every external new-tab action", () => {
+    const launchable: ToolArtifact = {
+      ...toolFixture("external-tool", "External Tool"),
+      delivery: "external-service",
+      launchHref: "https://example.com/external-tool",
+    };
+    render(<OpenSourceArtifactCard artifact={launchable} />);
+
+    expect(
+      screen.getByRole("link", { name: `Detail ${launchable.title}` }),
+    ).toHaveAttribute("href", launchable.href);
+    expect(
+      screen.getByRole("link", { name: `Öffnen ${launchable.title}` }),
+    ).toHaveAccessibleDescription("Wird in einem neuen Tab geöffnet.");
+    expect(
+      screen.getByRole("link", { name: `Quelle ${launchable.title}` }),
+    ).toHaveAccessibleDescription("Wird in einem neuen Tab geöffnet.");
   });
 });

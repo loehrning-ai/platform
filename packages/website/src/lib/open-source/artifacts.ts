@@ -2,11 +2,7 @@
 // publication) under the GitHub organization `loehrning-ai`: tools, projects,
 // and videos. Imported interactive courses are catalog content of /kurse
 // (src/lib/courses/catalog.ts) and are deliberately not part of this registry.
-export const OPEN_SOURCE_ARTIFACT_KINDS = [
-  "tool",
-  "project",
-  "video",
-] as const;
+export const OPEN_SOURCE_ARTIFACT_KINDS = ["tool", "project", "video"] as const;
 
 export type OpenSourceArtifactKind =
   (typeof OPEN_SOURCE_ARTIFACT_KINDS)[number];
@@ -19,6 +15,34 @@ export const OPEN_SOURCE_ARTIFACT_PUBLICATION_LIFECYCLES = [
 
 export type OpenSourceArtifactPublicationLifecycle =
   (typeof OPEN_SOURCE_ARTIFACT_PUBLICATION_LIFECYCLES)[number];
+
+/**
+ * Conservative metadata budgets for cards and social previews. Sixty Unicode
+ * code points keeps titles inside common one-line preview limits; 160 keeps
+ * descriptions inside the conventional search/social summary budget.
+ */
+export const OPEN_SOURCE_ARTIFACT_TEXT_LIMITS = {
+  title: 60,
+  description: 160,
+} as const;
+
+/** A license must remain small enough to inspect and serve as plain text. */
+export const OPEN_SOURCE_ARTIFACT_LICENSE_MAX_BYTES = 256 * 1024;
+
+/** Browser screenshots/posters stay bounded for build-time verification. */
+export const OPEN_SOURCE_ARTIFACT_IMAGE_MAX_BYTES = 20 * 1024 * 1024;
+
+/**
+ * Media verification reads from a stable descriptor into memory. Per-role
+ * limits prevent a malformed candidate from exhausting CI memory while
+ * retaining enough headroom for repository-hosted publication assets.
+ */
+export const OPEN_SOURCE_ARTIFACT_MEDIA_MAX_BYTES = {
+  video: 100 * 1024 * 1024,
+  captions: 5 * 1024 * 1024,
+  transcript: 5 * 1024 * 1024,
+  poster: OPEN_SOURCE_ARTIFACT_IMAGE_MAX_BYTES,
+} as const;
 
 export interface OpenSourceArtifactSource {
   /** Commit-pinned repository or source-tree URL. */
@@ -45,21 +69,37 @@ export interface OpenSourceArtifactLicense {
   readonly licenseId?: string;
 }
 
-interface OpenSourceArtifactBase<Kind extends OpenSourceArtifactKind> {
+interface OpenSourceArtifactBaseFields<Kind extends OpenSourceArtifactKind> {
   readonly id: `${Kind}:${string}`;
   readonly kind: Kind;
-  /** Controls public discovery only; every lifecycle state is validated. */
-  readonly publicationLifecycle: OpenSourceArtifactPublicationLifecycle;
   readonly slug: string;
   readonly title: string;
   readonly eyebrow: string;
   readonly description: string;
   /** Stable internal detail route. */
   readonly href: string;
+  /** Human-readable label rendered in cards and data plates. */
   readonly language: string;
   readonly source: OpenSourceArtifactSource;
   readonly license: OpenSourceArtifactLicense;
 }
+
+type OpenSourceArtifactBase<Kind extends OpenSourceArtifactKind> =
+  OpenSourceArtifactBaseFields<Kind> &
+    (
+      | {
+          /** Controls public discovery; drafts remain outside public output. */
+          readonly publicationLifecycle: "draft";
+          /** Optional only while the record remains a non-public draft. */
+          readonly languageTag?: string;
+        }
+      | {
+          /** Published and withdrawn records retain complete discovery data. */
+          readonly publicationLifecycle: "published" | "withdrawn";
+          /** Canonical BCP 47 tag used directly in machine-readable metadata. */
+          readonly languageTag: string;
+        }
+    );
 
 export const SOFTWARE_ARTIFACT_STATUSES = [
   "experimental",
@@ -101,6 +141,8 @@ export interface SoftwareArtifactDocumentation {
 
 export interface SoftwareArtifactScreenshot {
   readonly src: string;
+  /** Exact image path in the pinned upstream source tree. */
+  readonly sourcePath: string;
   readonly alt: string;
   /** SHA-256 of the exact stored image. */
   readonly sha256: string;
@@ -127,12 +169,11 @@ export interface SoftwareArtifactGuide {
   readonly status: SoftwareArtifactStatus;
   readonly statusNote: string;
   /**
-   * Optional data-residency disclosure: where the artifact sends data and what
-   * stays local. The honesty guardrail requires this disclosure for any tool
-   * that can call a cloud LLM, and a fixed structured slot is auditable in a
-   * way that free prose inside `statusNote` is not.
+   * Mandatory data-residency disclosure: where the artifact sends data and
+   * what stays local. A fixed structured slot is auditable in a way that free
+   * prose inside `statusNote` is not.
    */
-  readonly dataFlow?: string;
+  readonly dataFlow: string;
   readonly prerequisites: readonly SoftwareArtifactPrerequisite[];
   readonly installation: SoftwareArtifactProcedure;
   readonly usage: SoftwareArtifactProcedure;
@@ -165,11 +206,10 @@ export type SoftwareArtifactDelivery =
       readonly launchHref: string;
     };
 
-interface SoftwareArtifactBase<
-  Kind extends "tool" | "project",
-> extends OpenSourceArtifactBase<Kind> {
-  readonly guide: SoftwareArtifactGuide;
-}
+type SoftwareArtifactBase<Kind extends "tool" | "project"> =
+  OpenSourceArtifactBase<Kind> & {
+    readonly guide: SoftwareArtifactGuide;
+  };
 
 export type ToolArtifact = SoftwareArtifactBase<"tool"> &
   SoftwareArtifactDelivery;
@@ -180,6 +220,8 @@ export type ProjectArtifact = SoftwareArtifactBase<"project"> &
 export interface OpenSourceMediaFile {
   /** Normalized path from the repository root. */
   readonly path: string;
+  /** Exact media path in the pinned upstream source tree. */
+  readonly sourcePath: string;
   /** Lowercase SHA-256 of the exact stored file. */
   readonly sha256: string;
   /** Exact size of the stored file. */
@@ -208,7 +250,7 @@ export interface VideoPublicationMetadata {
   readonly accessibilityReviewDate: `${number}-${number}-${number}`;
 }
 
-export interface VideoArtifact extends OpenSourceArtifactBase<"video"> {
+export type VideoArtifact = OpenSourceArtifactBase<"video"> & {
   readonly watchHref: string;
   readonly captionsHref: string;
   readonly transcriptHref: string;
@@ -225,7 +267,7 @@ export interface VideoArtifact extends OpenSourceArtifactBase<"video"> {
   readonly duration: `PT${string}`;
   /** ISO calendar date. */
   readonly datePublished: `${number}-${number}-${number}`;
-}
+};
 
 export type OpenSourceArtifact = ToolArtifact | ProjectArtifact | VideoArtifact;
 
@@ -240,6 +282,23 @@ function assertText(
 ): asserts value is string {
   if (typeof value !== "string" || value.trim().length === 0) {
     artifactError(id, field, "must be a non-empty string");
+  }
+}
+
+function assertBcp47LanguageTag(
+  id: string,
+  field: string,
+  value: unknown,
+): asserts value is string {
+  assertText(id, field, value);
+  let canonical: string[];
+  try {
+    canonical = Intl.getCanonicalLocales(value);
+  } catch {
+    artifactError(id, field, "must be a valid canonical BCP 47 language tag");
+  }
+  if (canonical.length !== 1 || canonical[0] !== value) {
+    artifactError(id, field, "must be a valid canonical BCP 47 language tag");
   }
 }
 
@@ -290,7 +349,7 @@ function assertPublicHref(id: string, field: string, value: unknown): void {
 function assertRevisionHrefAncestry(
   id: string,
   source: OpenSourceArtifactSource | undefined,
-): void {
+): string {
   const sourceHref = assertHttpsHref(id, "source.href", source?.href);
   assertText(id, "source.revision", source?.revision);
   if (!/^[a-f0-9]{40}$/.test(source.revision)) {
@@ -336,6 +395,22 @@ function assertRevisionHrefAncestry(
   if (sourceSegments.length < 2) {
     artifactError(id, "source.href", "must include an owner and repository");
   }
+  if (sourceSegments[0] !== "loehrning-ai") {
+    artifactError(
+      id,
+      "source.href",
+      "must be owned by github.com/loehrning-ai",
+    );
+  }
+  if (!/^[A-Za-z0-9._-]+(?:\.git)?$/.test(sourceSegments[1])) {
+    artifactError(id, "source.href", "must include a clean repository name");
+  }
+  const normalizedRepositoryName = sourceSegments[1]
+    .replace(/\.git$/i, "")
+    .toLocaleLowerCase("en");
+  if (normalizedRepositoryName.length === 0) {
+    artifactError(id, "source.href", "must include a repository name");
+  }
   const repositorySegments = sourceSegments.slice(0, 2);
   const sourceIsRepositoryRoot = sourceSegments.length === 2;
   const sourceIsPinnedTree =
@@ -379,6 +454,33 @@ function assertRevisionHrefAncestry(
       id,
       "source.revisionHref",
       "must stay below the source origin and repository path",
+    );
+  }
+  return `https://github.com/loehrning-ai/${normalizedRepositoryName}`;
+}
+
+function assertSoftwareArtifactAssetHref(
+  id: string,
+  field: string,
+  value: unknown,
+  kind: "tool" | "project",
+  slug: string,
+): void {
+  assertInternalHref(id, field, value);
+  const href = value as string;
+  const parsed = new URL(href, "https://artifact.invalid");
+  const expectedPrefix = `/artifacts/${kind}s/${slug}/`;
+  if (
+    parsed.search ||
+    parsed.hash ||
+    parsed.pathname !== href ||
+    !parsed.pathname.startsWith(expectedPrefix) ||
+    parsed.pathname.length === expectedPrefix.length
+  ) {
+    artifactError(
+      id,
+      field,
+      `must be a plain asset path below ${expectedPrefix}`,
     );
   }
 }
@@ -449,6 +551,22 @@ const VIDEO_MEDIA_MIME_TYPES = {
 
 type VideoMediaRole = keyof typeof VIDEO_MEDIA_MIME_TYPES;
 
+function assertUpstreamSourcePath(
+  id: string,
+  field: string,
+  value: unknown,
+): asserts value is string {
+  assertText(id, field, value);
+  if (
+    pathIsUnsafe(value) ||
+    value.includes("?") ||
+    value.includes("#") ||
+    value.split("/").some((segment) => segment === ".")
+  ) {
+    artifactError(id, field, "must be a normalized safe upstream source path");
+  }
+}
+
 function assertMediaFile(
   id: string,
   field: string,
@@ -466,12 +584,22 @@ function assertMediaFile(
       `must be a safe repository path below ${PUBLIC_MEDIA_PREFIX}`,
     );
   }
+  assertUpstreamSourcePath(id, `${field}.sourcePath`, value.sourcePath);
   assertText(id, `${field}.sha256`, value.sha256);
   if (!/^[a-f0-9]{64}$/.test(value.sha256)) {
     artifactError(id, `${field}.sha256`, "must be a lowercase SHA-256 digest");
   }
-  if (!Number.isSafeInteger(value.sizeBytes) || value.sizeBytes <= 0) {
-    artifactError(id, `${field}.sizeBytes`, "must be a positive safe integer");
+  const maximumSizeBytes = OPEN_SOURCE_ARTIFACT_MEDIA_MAX_BYTES[role];
+  if (
+    !Number.isSafeInteger(value.sizeBytes) ||
+    value.sizeBytes <= 0 ||
+    value.sizeBytes > maximumSizeBytes
+  ) {
+    artifactError(
+      id,
+      `${field}.sizeBytes`,
+      `must be between 1 and ${String(maximumSizeBytes)} bytes`,
+    );
   }
   assertText(id, `${field}.mimeType`, value.mimeType);
   const extension = value.path.split(".").at(-1)?.toLowerCase() ?? "";
@@ -481,6 +609,15 @@ function assertMediaFile(
       id,
       `${field}.mimeType`,
       `must match the stored file extension (${expectedMimeType ?? "unsupported"})`,
+    );
+  }
+  const sourceExtension =
+    value.sourcePath.split(".").at(-1)?.toLowerCase() ?? "";
+  if (VIDEO_MEDIA_MIME_TYPES[role].get(sourceExtension) !== value.mimeType) {
+    artifactError(
+      id,
+      `${field}.sourcePath`,
+      "must identify the same supported media type as the stored file",
     );
   }
 }
@@ -555,9 +692,7 @@ function assertSoftwareArtifactGuide(
     artifactError(id, "guide.status", "must be a supported publication status");
   }
   assertText(id, "guide.statusNote", value.statusNote);
-  if (value.dataFlow !== undefined) {
-    assertText(id, "guide.dataFlow", value.dataFlow);
-  }
+  assertText(id, "guide.dataFlow", value.dataFlow);
 
   assertNonEmptyArray(id, "guide.prerequisites", value.prerequisites);
   const prerequisiteLabels: string[] = [];
@@ -615,6 +750,11 @@ function assertSoftwareArtifactGuide(
     );
   }
   assertInternalHref(id, "guide.screenshot.src", value.screenshot.src);
+  assertUpstreamSourcePath(
+    id,
+    "guide.screenshot.sourcePath",
+    value.screenshot.sourcePath,
+  );
   const screenshotPath = new URL(
     value.screenshot.src,
     "https://artifact.invalid",
@@ -624,6 +764,13 @@ function assertSoftwareArtifactGuide(
       id,
       "guide.screenshot.src",
       "must reference a browser-safe JPEG, PNG, or WebP image",
+    );
+  }
+  if (!/\.(?:jpe?g|png|webp)$/i.test(value.screenshot.sourcePath)) {
+    artifactError(
+      id,
+      "guide.screenshot.sourcePath",
+      "must identify a browser-safe JPEG, PNG, or WebP image",
     );
   }
   assertText(id, "guide.screenshot.alt", value.screenshot.alt);
@@ -637,12 +784,13 @@ function assertSoftwareArtifactGuide(
   }
   if (
     !Number.isSafeInteger(value.screenshot.sizeBytes) ||
-    value.screenshot.sizeBytes <= 0
+    value.screenshot.sizeBytes <= 0 ||
+    value.screenshot.sizeBytes > OPEN_SOURCE_ARTIFACT_IMAGE_MAX_BYTES
   ) {
     artifactError(
       id,
       "guide.screenshot.sizeBytes",
-      "must be a positive safe integer",
+      `must be between 1 and ${String(OPEN_SOURCE_ARTIFACT_IMAGE_MAX_BYTES)} bytes`,
     );
   }
   for (const dimension of ["width", "height"] as const) {
@@ -700,6 +848,7 @@ export function assertOpenSourceArtifacts(
 ): void {
   const ids = new Set<string>();
   const slugsByKind = new Set<string>();
+  const artifactByRepository = new Map<string, string>();
 
   for (const artifact of artifacts) {
     const id = typeof artifact?.id === "string" ? artifact.id : "<unknown>";
@@ -739,16 +888,77 @@ export function assertOpenSourceArtifacts(
     ] as const) {
       assertText(id, field, value);
     }
+    if (artifact.languageTag === undefined) {
+      if (artifact.publicationLifecycle !== "draft") {
+        artifactError(
+          id,
+          "languageTag",
+          "must be present before an artifact can be published",
+        );
+      }
+    } else {
+      assertBcp47LanguageTag(id, "languageTag", artifact.languageTag);
+    }
+    for (const [field, value, limit] of [
+      ["title", artifact.title, OPEN_SOURCE_ARTIFACT_TEXT_LIMITS.title],
+      [
+        "description",
+        artifact.description,
+        OPEN_SOURCE_ARTIFACT_TEXT_LIMITS.description,
+      ],
+    ] as const) {
+      if (Array.from(value).length > limit) {
+        artifactError(
+          id,
+          field,
+          `must not exceed ${String(limit)} Unicode code points`,
+        );
+      }
+    }
     assertInternalHref(id, "href", artifact.href);
     const expectedHref = `/open-source/${artifact.kind}s/${artifact.slug}`;
     if (artifact.href !== expectedHref) {
       artifactError(id, "href", `must equal ${expectedHref}`);
     }
 
-    assertRevisionHrefAncestry(id, artifact.source);
+    const normalizedRepositorySource = assertRevisionHrefAncestry(
+      id,
+      artifact.source,
+    );
+    const existingArtifactId = artifactByRepository.get(
+      normalizedRepositorySource,
+    );
+    if (existingArtifactId !== undefined) {
+      artifactError(
+        id,
+        "source.href",
+        `must not reuse repository ${normalizedRepositorySource} already registered by ${existingArtifactId}`,
+      );
+    }
+    artifactByRepository.set(normalizedRepositorySource, id);
 
     assertInternalHref(id, "license.href", artifact.license?.href);
-    assertText(id, "license.sourcePath", artifact.license?.sourcePath);
+    const licenseHref = new URL(
+      artifact.license.href,
+      "https://artifact.invalid",
+    );
+    if (
+      licenseHref.search ||
+      licenseHref.hash ||
+      licenseHref.pathname !== artifact.license.href ||
+      !licenseHref.pathname.toLowerCase().endsWith(".txt")
+    ) {
+      artifactError(
+        id,
+        "license.href",
+        "must be a plain internal path to a .txt license file",
+      );
+    }
+    assertUpstreamSourcePath(
+      id,
+      "license.sourcePath",
+      artifact.license?.sourcePath,
+    );
     if (
       pathIsUnsafe(artifact.license.sourcePath) ||
       !/(?:license|copying)/i.test(artifact.license.sourcePath)
@@ -765,9 +975,14 @@ export function assertOpenSourceArtifacts(
     }
     if (
       !Number.isSafeInteger(artifact.license?.sizeBytes) ||
-      artifact.license.sizeBytes <= 0
+      artifact.license.sizeBytes <= 0 ||
+      artifact.license.sizeBytes > OPEN_SOURCE_ARTIFACT_LICENSE_MAX_BYTES
     ) {
-      artifactError(id, "license.sizeBytes", "must be a positive safe integer");
+      artifactError(
+        id,
+        "license.sizeBytes",
+        `must be between 1 and ${String(OPEN_SOURCE_ARTIFACT_LICENSE_MAX_BYTES)} bytes`,
+      );
     }
     if (artifact.license.licenseId !== undefined) {
       assertText(id, "license.licenseId", artifact.license.licenseId);
@@ -783,6 +998,36 @@ export function assertOpenSourceArtifacts(
     if (artifact.kind === "tool" || artifact.kind === "project") {
       assertSoftwareArtifactDelivery(id, artifact);
       assertSoftwareArtifactGuide(id, artifact.guide);
+      assertSoftwareArtifactAssetHref(
+        id,
+        "license.href",
+        artifact.license.href,
+        artifact.kind,
+        artifact.slug,
+      );
+      if (artifact.license.href === artifact.guide.screenshot.src) {
+        artifactError(
+          id,
+          "guide.screenshot.src",
+          "must not reuse the license file path",
+        );
+      }
+      if (
+        artifact.license.sourcePath === artifact.guide.screenshot.sourcePath
+      ) {
+        artifactError(
+          id,
+          "guide.screenshot.sourcePath",
+          "must not reuse the upstream license source path",
+        );
+      }
+      assertSoftwareArtifactAssetHref(
+        id,
+        "guide.screenshot.src",
+        artifact.guide.screenshot.src,
+        artifact.kind,
+        artifact.slug,
+      );
     }
 
     if (artifact.kind === "video") {
@@ -829,13 +1074,11 @@ export function assertOpenSourceArtifacts(
         );
       }
       for (const field of ["captionLanguage", "transcriptLanguage"] as const) {
-        if (!/^[a-z]{2,3}(?:-[A-Z]{2})?$/.test(artifact.publication[field])) {
-          artifactError(
-            id,
-            `publication.${field}`,
-            "must be a BCP 47 language tag",
-          );
-        }
+        assertBcp47LanguageTag(
+          id,
+          `publication.${field}`,
+          artifact.publication[field],
+        );
       }
       if (!isRealIsoDate(artifact.publication.accessibilityReviewDate)) {
         artifactError(
@@ -880,6 +1123,36 @@ export function assertOpenSourceArtifacts(
       if (new Set(mediaPaths).size !== mediaPaths.length) {
         artifactError(id, "mediaFiles", "must not reuse the same file path");
       }
+      const mediaSourcePaths = mediaEntries.map(([, file]) => file.sourcePath);
+      if (new Set(mediaSourcePaths).size !== mediaSourcePaths.length) {
+        artifactError(
+          id,
+          "mediaFiles",
+          "must not reuse the same upstream source path",
+        );
+      }
+      if (
+        mediaEntries.some(
+          ([, file]) => publicHrefForMediaFile(file) === artifact.license.href,
+        )
+      ) {
+        artifactError(
+          id,
+          "mediaFiles",
+          "must not reuse the license file path for a media role",
+        );
+      }
+      if (
+        mediaEntries.some(
+          ([, file]) => file.sourcePath === artifact.license.sourcePath,
+        )
+      ) {
+        artifactError(
+          id,
+          "mediaFiles",
+          "must not reuse the upstream license source path for a media role",
+        );
+      }
       for (const [hrefField, fileKey] of [
         ["watchHref", "video"],
         ["captionsHref", "captions"],
@@ -912,7 +1185,10 @@ function pathIsUnsafe(value: string): boolean {
 
 export type PublishedOpenSourceArtifact<
   Artifact extends OpenSourceArtifact = OpenSourceArtifact,
-> = Artifact & { readonly publicationLifecycle: "published" };
+> = Artifact & {
+  readonly publicationLifecycle: "published";
+  readonly languageTag: string;
+};
 
 /**
  * Validates every candidate before hiding non-public lifecycle states. Draft

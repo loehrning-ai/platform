@@ -164,6 +164,23 @@ describe("crawl contract", () => {
     }
   });
 
+  it("classifies every stored artifact file as a public static asset", () => {
+    for (const path of [
+      "/artifacts/projects/example-project/LICENSE.txt",
+      "/artifacts/projects/example-project/screenshot.webp",
+      "/artifacts/videos/example-video/transcript.md",
+    ]) {
+      const entry = getCrawlRoute(path);
+      expect(entry.pattern, path).toBe("/artifacts/:path*");
+      expect(entry.routeClass, path).toBe("public-assets");
+      expect(entry.auth, path).toBe("public");
+      expect(entry.robots, path).toBe("allow");
+      expect(entry.includeInSitemap, path).toBe(false);
+      expect(entry.cache, path).toBe("public-static");
+      expect(entry.xRobotsTag, path).toBeUndefined();
+    }
+  });
+
   it("lists only indexable static routes in sitemapStaticPaths", () => {
     const paths = sitemapStaticPaths();
     expect(paths).toContain("/");
@@ -181,6 +198,7 @@ describe("crawl contract", () => {
     const disallow = robotsDisallowPaths();
     expect(allow).toContain("/buecher");
     expect(allow).toContain("/book-covers/");
+    expect(allow).toContain("/artifacts/");
     expect(allow).toContain("/api/knowledge-graph.json");
     expect(allow).toContain("/kurse/open-source/");
     expect(allow).toContain("/open-source/");

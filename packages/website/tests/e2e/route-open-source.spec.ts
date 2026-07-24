@@ -271,7 +271,7 @@ test.describe("/open-source hub", () => {
 
     const h1 = page.getByRole("heading", { level: 1 });
     await expect(h1).toBeVisible();
-    await expect(h1).toContainText(/Werkzeuge und Projekte/i);
+    await expect(h1).toContainText(/Werkzeuge, Projekte und Videos/i);
 
     // Structural heading at the foot of the page proves it rendered fully.
     await expect(
@@ -450,6 +450,25 @@ for (const artifact of DETAIL_ARTIFACTS) {
         artifact.posterSrc,
         artifact.mediaFiles.poster.mimeType,
       );
+    });
+
+    test("has no horizontal overflow at the mobile audit viewport", async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto(artifact.href, { waitUntil: "domcontentloaded" });
+      await expect(
+        page.getByRole("heading", { level: 1, name: artifact.title }),
+      ).toBeVisible();
+
+      const { scrollWidth, innerWidth } = await page.evaluate(() => ({
+        scrollWidth: document.scrollingElement?.scrollWidth ?? 0,
+        innerWidth: window.innerWidth,
+      }));
+      expect(
+        scrollWidth,
+        `${artifact.id}: horizontal overflow at 390px (${scrollWidth} > ${innerWidth})`,
+      ).toBeLessThanOrEqual(innerWidth + 1);
     });
   });
 }

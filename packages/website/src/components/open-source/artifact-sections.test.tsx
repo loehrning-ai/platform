@@ -5,11 +5,14 @@ import type {
   SoftwareArtifactGuide,
   ToolArtifact,
 } from "@/lib/open-source/artifacts";
+import { assertOpenSourceArtifacts } from "@/lib/open-source/artifacts";
 import { OpenSourceArtifactSections } from "./artifact-sections";
 
 const GUIDE = {
   status: "experimental",
   statusNote: "The interface is usable, but compatibility may change.",
+  dataFlow:
+    "The example stays local and sends no data to third-party services.",
   prerequisites: [
     {
       label: "Bun 1.3",
@@ -51,7 +54,8 @@ const GUIDE = {
     href: "https://docs.example.com/example-tool",
   },
   screenshot: {
-    src: "/imported-courses/screenshots/codex.jpg",
+    src: "/artifacts/tools/example-tool/screenshot.jpg",
+    sourcePath: "docs/screenshots/example-tool.jpg",
     alt: "The example tool showing its generated report.",
     sha256: "c".repeat(64),
     sizeBytes: 123,
@@ -77,13 +81,14 @@ const TOOL = {
   description: "Generates a local report from pinned source data.",
   href: "/open-source/tools/example-tool",
   language: "Deutsch",
+  languageTag: "de",
   source: {
     href: "https://github.com/loehrning-ai/example-tool",
     revision: "a".repeat(40),
     revisionHref: `https://github.com/loehrning-ai/example-tool/commit/${"a".repeat(40)}`,
   },
   license: {
-    href: "/licenses/example-tool-license.txt",
+    href: "/artifacts/tools/example-tool/LICENSE.txt",
     sourcePath: "LICENSE",
     sha256: "b".repeat(64),
     sizeBytes: 1,
@@ -91,6 +96,8 @@ const TOOL = {
   delivery: "source-only",
   guide: GUIDE,
 } as const satisfies ToolArtifact;
+
+assertOpenSourceArtifacts([TOOL]);
 
 describe("OpenSourceArtifactSections", () => {
   it("renders no section headings while every publication lane is empty", () => {

@@ -6,6 +6,11 @@
 
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { OPEN_SOURCE_ARTIFACTS } from "../../src/lib/open-source/artifacts";
+
+const OPEN_SOURCE_DETAIL_ROUTES = OPEN_SOURCE_ARTIFACTS.map(
+  (artifact) => artifact.href,
+);
 
 const ROUTES = [
   "/",
@@ -25,6 +30,7 @@ const ROUTES = [
   "/ai-native/verifizierung",
   "/impressum",
   "/datenschutz",
+  ...OPEN_SOURCE_DETAIL_ROUTES,
 ];
 
 /**
@@ -149,7 +155,7 @@ for (const route of ROUTES) {
 // 8c: Keyboard-tab focus-not-obscured test (WCAG 2.4.11)
 // ---------------------------------------------------------------------------
 
-const KEYBOARD_ROUTES = ["/", "/kurse"] as const;
+const KEYBOARD_ROUTES = ["/", "/kurse", ...OPEN_SOURCE_DETAIL_ROUTES] as const;
 
 for (const route of KEYBOARD_ROUTES) {
   test(`a11y: ${route} focused elements not obscured by sticky nav (WCAG 2.4.11)`, async ({
@@ -205,7 +211,13 @@ for (const route of KEYBOARD_ROUTES) {
 // 8f: Overflow test at 320px (WCAG 1.4.10 Reflow)
 // ---------------------------------------------------------------------------
 
-const REFLOW_ROUTES_A11Y = ["/", "/kurse", "/ki-fuehrerschein", "/impressum"] as const;
+const REFLOW_ROUTES_A11Y = [
+  "/",
+  "/kurse",
+  "/ki-fuehrerschein",
+  "/impressum",
+  ...OPEN_SOURCE_DETAIL_ROUTES,
+] as const;
 
 for (const route of REFLOW_ROUTES_A11Y) {
   test(`a11y: ${route} no horizontal overflow at 320px (WCAG 1.4.10)`, async ({

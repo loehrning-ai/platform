@@ -231,7 +231,7 @@ Add a complete object to `OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES`:
   publicationLifecycle: "draft", // or "published" / "withdrawn"
   slug, title, eyebrow, description,
   href: `/open-source/tools/${slug}`,
-  language,
+  language, languageTag: canonicalBcp47LanguageTag,
   source: {
     href: githubRepositoryOrSourcePath,
     revision: fullFortyCharacterCommitSha,
@@ -250,6 +250,7 @@ Add a complete object to `OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES`:
   delivery: "source-only",
   guide: {
     status, statusNote,
+    dataFlow: explicitLocalAndRemoteDataResidencyDisclosure,
     prerequisites: [{ label, detail, href }],
     installation: { summary, steps: [{ title, detail, command }] },
     usage: { summary, steps: [{ title, detail, command }] },
@@ -261,6 +262,7 @@ Add a complete object to `OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES`:
     documentation: { label, href },
     screenshot: {
       src: `/artifacts/tools/${slug}/screenshot.webp`,
+      sourcePath: exactUpstreamScreenshotPath,
       alt, sha256: screenshotSha256, sizeBytes, width, height,
     },
     relatedLearning: [{ title, description, href: internalLearningRoute }],
@@ -280,6 +282,7 @@ namespace:
   kind: "project",
   publicationLifecycle: "draft", // or "published" / "withdrawn"
   href: `/open-source/projects/${slug}`,
+  languageTag: canonicalBcp47LanguageTag,
   source: { href, revision, revisionHref },
   license: {
     href: `/artifacts/projects/${slug}/LICENSE.txt`,
@@ -291,10 +294,13 @@ namespace:
   // { delivery: "external-service", launchHref: "https://..." }
   delivery: "source-only",
   guide: {
-    status, statusNote, prerequisites,
+    status, statusNote,
+    dataFlow: explicitLocalAndRemoteDataResidencyDisclosure,
+    prerequisites,
     installation, usage, integration, documentation,
     screenshot: {
       src: `/artifacts/projects/${slug}/screenshot.webp`,
+      sourcePath: exactUpstreamScreenshotPath,
       alt, sha256, sizeBytes, width, height,
     },
     relatedLearning,
@@ -320,7 +326,7 @@ media files must be repository-local and independently recorded in
   publicationLifecycle: "draft", // or "published" / "withdrawn"
   slug, title, eyebrow, description,
   href: `/open-source/videos/${slug}`,
-  language,
+  language, languageTag: canonicalBcp47LanguageTag,
   source: { href, revision, revisionHref },
   license: {
     href: `/media/${slug}/LICENSE.txt`,
@@ -343,18 +349,22 @@ media files must be repository-local and independently recorded in
   mediaFiles: {
     video: {
       path: `packages/website/public/media/${slug}/video.webm`,
+      sourcePath: exactUpstreamVideoPath,
       sha256, sizeBytes, mimeType: "video/webm",
     },
     captions: {
       path: `packages/website/public/media/${slug}/captions.vtt`,
+      sourcePath: exactUpstreamCaptionsPath,
       sha256, sizeBytes, mimeType: "text/vtt",
     },
     transcript: {
       path: `packages/website/public/media/${slug}/transcript.md`,
+      sourcePath: exactUpstreamTranscriptPath,
       sha256, sizeBytes, mimeType: "text/markdown",
     },
     poster: {
       path: `packages/website/public/media/${slug}/poster.webp`,
+      sourcePath: exactUpstreamPosterPath,
       sha256, sizeBytes, mimeType: "image/webp",
     },
   },
@@ -376,6 +386,13 @@ upstream expectation. `bun run artifact-assets:check` verifies the artifact
 registry lanes; imported-course license and screenshot bytes are verified by
 `packages/website/src/lib/courses/catalog.test.ts` against the
 catalog hashes.
+
+Each artifact-manifest row must identify the exact immutable upstream file at
+the artifact's pinned repository and commit. A redistributed screenshot or
+media row must also set `redistributionLicenseHref` to that artifact's locally
+served license path. The verifier rejects mutable source URLs, mismatched
+owners, repositories, revisions, or paths, local role aliases, and unlicensed
+redistribution claims.
 
 Generate each candidate record without writing the manifest:
 

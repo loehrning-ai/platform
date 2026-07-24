@@ -17,9 +17,9 @@ interface ArtifactPrimaryAction {
   readonly external: boolean;
 }
 
-function getPrimaryAction(
+function getLaunchAction(
   artifact: OpenSourceArtifact,
-): ArtifactPrimaryAction {
+): ArtifactPrimaryAction | null {
   switch (artifact.kind) {
     case "tool":
       return artifact.launchHref
@@ -28,7 +28,7 @@ function getPrimaryAction(
             label: "Öffnen",
             external: artifact.launchHref.startsWith("http"),
           }
-        : { href: artifact.href, label: "Detail", external: false };
+        : null;
     case "project":
       return artifact.launchHref
         ? {
@@ -36,13 +36,9 @@ function getPrimaryAction(
             label: "Praxisbeispiel",
             external: artifact.launchHref.startsWith("http"),
           }
-        : { href: artifact.href, label: "Detail", external: false };
+        : null;
     case "video":
-      return {
-        href: artifact.href,
-        label: "Detail",
-        external: false,
-      };
+      return null;
   }
 }
 
@@ -85,12 +81,14 @@ export function OpenSourceArtifactCard({
 }: {
   artifact: OpenSourceArtifact;
 }) {
-  const primaryAction = getPrimaryAction(artifact);
+  const launchAction = getLaunchAction(artifact);
   const idPrefix = `open-source-artifact-${artifact.kind}-${artifact.slug}`;
   const titleId = `${idPrefix}-title`;
-  const primaryActionId = `${idPrefix}-primary-action`;
+  const detailActionId = `${idPrefix}-detail-action`;
+  const launchActionId = `${idPrefix}-launch-action`;
   const sourceActionId = `${idPrefix}-source-action`;
   const licenseActionId = `${idPrefix}-license-action`;
+  const newTabDisclosureId = `${idPrefix}-new-tab-disclosure`;
   const guide = artifact.kind === "video" ? null : artifact.guide;
 
   return (
@@ -158,32 +156,45 @@ export function OpenSourceArtifactCard({
           </ul>
         ) : null}
         <div className="mt-5 flex flex-wrap gap-2">
-          {primaryAction.external ? (
+          <span id={newTabDisclosureId} className="sr-only">
+            Wird in einem neuen Tab geöffnet.
+          </span>
+          <Link
+            href={artifact.href}
+            aria-labelledby={`${detailActionId} ${titleId}`}
+            className="inline-flex items-center gap-1 border border-border px-3 py-2 text-xs font-semibold text-foreground hover:border-brand-orange"
+          >
+            <span id={detailActionId}>Detail</span>{" "}
+            <ArrowRight size={12} aria-hidden="true" />
+          </Link>
+          {launchAction?.external ? (
             <a
-              href={primaryAction.href}
+              href={launchAction.href}
               target="_blank"
               rel="noopener noreferrer"
-              aria-labelledby={`${primaryActionId} ${titleId}`}
+              aria-labelledby={`${launchActionId} ${titleId}`}
+              aria-describedby={newTabDisclosureId}
               className="inline-flex items-center gap-1 border border-border px-3 py-2 text-xs font-semibold text-foreground hover:border-brand-orange"
             >
-              <span id={primaryActionId}>{primaryAction.label}</span>{" "}
+              <span id={launchActionId}>{launchAction.label}</span>{" "}
               <ExternalLink size={12} aria-hidden="true" />
             </a>
-          ) : (
+          ) : launchAction ? (
             <Link
-              href={primaryAction.href}
-              aria-labelledby={`${primaryActionId} ${titleId}`}
+              href={launchAction.href}
+              aria-labelledby={`${launchActionId} ${titleId}`}
               className="inline-flex items-center gap-1 border border-border px-3 py-2 text-xs font-semibold text-foreground hover:border-brand-orange"
             >
-              <span id={primaryActionId}>{primaryAction.label}</span>{" "}
+              <span id={launchActionId}>{launchAction.label}</span>{" "}
               <ArrowRight size={12} aria-hidden="true" />
             </Link>
-          )}
+          ) : null}
           <a
             href={artifact.source.href}
             target="_blank"
             rel="noopener noreferrer"
             aria-labelledby={`${sourceActionId} ${titleId}`}
+            aria-describedby={newTabDisclosureId}
             className="inline-flex items-center gap-1 border border-border px-3 py-2 text-xs font-semibold text-foreground hover:border-brand-orange"
           >
             <span id={sourceActionId}>Quelle</span>{" "}

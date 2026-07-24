@@ -7,24 +7,65 @@ import { GITHUB_ORG, SAME_AS_URLS } from "../entity";
 import { JsonLd } from "../json-ld";
 import { SITE_GRAPH } from "../site-graph";
 
-const ORG_URL_PATTERN = /github\.com\/loehrning-ai/;
+const EXPECTED_GITHUB_ORG_URL = new URL(GITHUB_ORG.url);
 
-function renderedSiteJsonLd(): string {
+function isExactGitHubOrgUrl(value: unknown): value is string {
+  if (typeof value !== "string") return false;
+  try {
+    const parsed = new URL(value);
+    return (
+      parsed.protocol === EXPECTED_GITHUB_ORG_URL.protocol &&
+      parsed.username === "" &&
+      parsed.password === "" &&
+      parsed.hostname === EXPECTED_GITHUB_ORG_URL.hostname &&
+      parsed.port === "" &&
+      parsed.pathname === EXPECTED_GITHUB_ORG_URL.pathname &&
+      parsed.search === "" &&
+      parsed.hash === ""
+    );
+  } catch {
+    return false;
+  }
+}
+
+function renderedSiteJsonLd(): typeof SITE_GRAPH {
   const { container } = render(<JsonLd data={SITE_GRAPH} id="site-jsonld-under-test" />);
   const script = container.querySelector('script#site-jsonld-under-test[type="application/ld+json"]');
   expect(script, "site JSON-LD script must render").not.toBeNull();
   const json = script?.innerHTML ?? "";
   expect(() => JSON.parse(json), "site JSON-LD must serialize to valid JSON").not.toThrow();
-  return json;
+  return JSON.parse(json) as typeof SITE_GRAPH;
+}
+
+function organizationSameAs(graph: typeof SITE_GRAPH): unknown[] {
+  const org = graph["@graph"].find((node) => node["@type"] === "Organization");
+  expect(org, "Organization node must exist in the site graph").toBeDefined();
+  expect(Array.isArray(org?.sameAs), "Organization sameAs must be an array").toBe(true);
+  return Array.isArray(org?.sameAs) ? org.sameAs : [];
 }
 
 describe("GitHub organization links", () => {
   it("rendered site JSON-LD links the verified GitHub organization", () => {
-    expect(renderedSiteJsonLd()).toMatch(ORG_URL_PATTERN);
+    const orgLinks = organizationSameAs(renderedSiteJsonLd());
+    expect(orgLinks.filter(isExactGitHubOrgUrl)).toEqual([GITHUB_ORG.url]);
   });
 
   it("sameAs lists the verified GitHub organization", () => {
-    expect(SAME_AS_URLS.some((url) => ORG_URL_PATTERN.test(url))).toBe(true);
+    expect(SAME_AS_URLS.filter(isExactGitHubOrgUrl)).toEqual([GITHUB_ORG.url]);
+  });
+
+  it.each([
+    "https://evil.example/github.com/loehrning-ai",
+    "https://github.com.evil.example/loehrning-ai",
+    "https://github.com/loehrning-ai.evil",
+    "https://attacker@github.com/loehrning-ai",
+    "http://github.com/loehrning-ai",
+    "https://github.com:444/loehrning-ai",
+    "https://github.com/loehrning-ai/repos",
+    "https://github.com/loehrning-ai?redirect=evil",
+    "https://github.com/loehrning-ai#spoof",
+  ])("rejects GitHub organization URL lookalike %s", (lookalike) => {
+    expect(isExactGitHubOrgUrl(lookalike)).toBe(false);
   });
 
   it("knowledge-graph payload links the verified GitHub organization without repository-status placeholders", async () => {
