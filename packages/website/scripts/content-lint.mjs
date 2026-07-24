@@ -196,7 +196,7 @@ function stripUrlPunctuation(value) {
 export function containsExactHiveDemoUrl(line) {
   for (const rawToken of line.split(/\s+/)) {
     const token = stripUrlPunctuation(rawToken);
-    if (!token.toLowerCase().includes("hivemoderation.com")) continue;
+    if (token === "") continue;
 
     try {
       const explicitScheme = token.includes("://");

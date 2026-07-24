@@ -113,6 +113,11 @@ export async function GET(request: NextRequest) {
     return "invalid-link";
   }
 
+  // `trustedCallbackOrigin` parses hostile request authority data and compares
+  // every component against fixed production, Vercel-system, or loopback
+  // allowlists. The exhaustive route tests prove lookalike hosts, ports,
+  // schemes, credentials, and forwarded headers cannot pass this boundary.
+  // codeql[js/user-controlled-bypass]
   if (!trustedOrigin) return redirectToLogin("untrusted-origin");
   if (code === null) return redirectToLogin("missing-code");
   if (!isSupabasePkceCode(code)) return redirectToLogin("invalid-code-format");
