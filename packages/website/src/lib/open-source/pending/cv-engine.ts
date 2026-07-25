@@ -206,9 +206,9 @@ export const PENDING_CV_ENGINE_ARTIFACT = {
       sourcePath: "docs/screenshots/preview-card.webp",
       // Rendered twice and visibly: as the image alt text and again as the
       // figure caption below it. Written as publishable prose for that reason.
-      alt: "Der Editor in zwei Spalten: links die YAML-Ansicht von content/cv.yaml, deren erste Kommentarzeilen die Einseitenregel festhalten, rechts die A4-Vorschau in Seitenansicht mit der grünen Plakette 1 page in der Kopfzeile.",
-      sha256: "4788ac350cb1e428be06cb9063dd8307754d5e973b0482f95723657e4a27c6f0",
-      sizeBytes: 133876,
+      alt: "Der Editor in zwei Spalten: links die YAML-Ansicht des gespeicherten Lebenslaufs, deren erste Kommentarzeilen die Einseitenregel festhalten, rechts die A4-Vorschau in Seitenansicht mit der grünen Plakette 1 page in der Kopfzeile.",
+      sha256: "8c402e73a3ac46498d5fbfe6f39e03eebf532e62fe4b5ae69941211e96492aff",
+      sizeBytes: 132292,
       width: 1696,
       height: 1060,
     },
