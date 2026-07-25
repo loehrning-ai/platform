@@ -1,7 +1,17 @@
 #!/usr/bin/env node
 import { createHash } from "node:crypto";
-import { readdir, readFile, stat } from "node:fs/promises";
-import { extname, join, posix, relative } from "node:path";
+import { constants } from "node:fs";
+import { lstat, open, readdir, realpath } from "node:fs/promises";
+import {
+  extname,
+  isAbsolute,
+  join,
+  posix,
+  relative,
+  resolve,
+  sep,
+} from "node:path";
+import { pathToFileURL } from "node:url";
 import {
   BINARY_ASSET_EXTENSIONS,
   EXPORT_PROFILES,
@@ -91,6 +101,13 @@ const KNOWN_TEXT_EXTENSIONS = new Set([
 ]);
 
 const LARGE_FILE_BYTES = 1024 * 1024;
+/** Text is scanned completely, but never allocated beyond this hard ceiling. */
+export const MAX_BUFFERED_FILE_BYTES = 16 * 1024 * 1024;
+/** No export candidate file may exceed the artifact publication ceiling. */
+export const MAX_SCANNED_FILE_BYTES = 100 * 1024 * 1024;
+/** The manifest is parsed in memory and needs a substantially tighter bound. */
+export const MAX_ASSET_MANIFEST_BYTES = 2 * 1024 * 1024;
+const DESCRIPTOR_READ_CHUNK_BYTES = 64 * 1024;
 
 // Severity model:
 //   FAIL  blocks the export and sets a non-zero exit code.
@@ -106,23 +123,28 @@ function argValue(name) {
   return process.argv[index + 1] ?? null;
 }
 
-const source = argValue("--source");
-const dest = argValue("--dest");
-const profile = argValue("--profile") ?? "interactive-courses";
-if ((source && dest) || (!source && !dest)) {
+const isDirectRun =
+  typeof process.argv[1] === "string" &&
+  import.meta.url === pathToFileURL(resolve(process.argv[1])).href;
+const source = isDirectRun ? argValue("--source") : null;
+const dest = isDirectRun ? argValue("--dest") : null;
+const profile = isDirectRun
+  ? (argValue("--profile") ?? "interactive-courses")
+  : "interactive-courses";
+if (isDirectRun && ((source && dest) || (!source && !dest))) {
   console.error(
     "Usage: scan-export.mjs (--source <dir> | --dest <dir>) [--profile interactive-courses|platform]",
   );
   process.exit(2);
 }
-if (!EXPORT_PROFILES.includes(profile)) {
+if (isDirectRun && !EXPORT_PROFILES.includes(profile)) {
   console.error(
     `scan-export: unsupported profile ${JSON.stringify(profile)}; expected ${EXPORT_PROFILES.join(" or ")}`,
   );
   process.exit(2);
 }
 const mode = dest ? "dest" : "source";
-const root = dest ?? source;
+let root = dest ?? source;
 
 const findings = [];
 let filesChecked = 0;
@@ -136,6 +158,322 @@ function addFinding(path, line, severity, label) {
 
 function toPosixPath(path) {
   return path.replace(/\\/g, "/");
+}
+
+function isContainedPath(rootDirectory, candidatePath) {
+  const candidateRelativePath = relative(rootDirectory, candidatePath);
+  return (
+    candidateRelativePath !== ".." &&
+    !candidateRelativePath.startsWith(`..${sep}`) &&
+    !isAbsolute(candidateRelativePath)
+  );
+}
+
+function fileReadError(label, message, code = "ESECURITY") {
+  const error = new Error(`${label} ${message}`);
+  error.code = code;
+  return error;
+}
+
+function sameFileIdentity(left, right) {
+  return left.dev === right.dev && left.ino === right.ino;
+}
+
+function sameStableFileState(left, right) {
+  return (
+    sameFileIdentity(left, right) &&
+    left.mode === right.mode &&
+    left.nlink === right.nlink &&
+    left.uid === right.uid &&
+    left.gid === right.gid &&
+    left.rdev === right.rdev &&
+    left.size === right.size &&
+    left.mtimeNs === right.mtimeNs &&
+    left.ctimeNs === right.ctimeNs
+  );
+}
+
+async function assertOpenedPathIdentity({
+  canonicalRoot,
+  absolutePath,
+  openedInfo,
+  label,
+}) {
+  const relativePath = relative(canonicalRoot, absolutePath);
+  if (!isContainedPath(canonicalRoot, absolutePath) || relativePath === "") {
+    throw fileReadError(label, "path escapes the scan root");
+  }
+
+  const components = relativePath.split(sep);
+  let currentPath = canonicalRoot;
+  let finalPathInfo = null;
+  for (let index = 0; index < components.length; index += 1) {
+    currentPath = join(currentPath, components[index]);
+    let componentInfo;
+    try {
+      componentInfo = await lstat(currentPath, { bigint: true });
+    } catch (error) {
+      throw fileReadError(
+        label,
+        `path changed while it was being scanned (${error?.code ?? "lstat error"})`,
+        error?.code,
+      );
+    }
+    const isFinalComponent = index === components.length - 1;
+    if (componentInfo.isSymbolicLink()) {
+      throw fileReadError(label, "must not use a symbolic-link path component");
+    }
+    if (
+      (!isFinalComponent && !componentInfo.isDirectory()) ||
+      (isFinalComponent && !componentInfo.isFile())
+    ) {
+      throw fileReadError(label, "path changed while it was being scanned");
+    }
+    if (isFinalComponent) finalPathInfo = componentInfo;
+  }
+
+  if (!finalPathInfo || !sameFileIdentity(openedInfo, finalPathInfo)) {
+    throw fileReadError(label, "pathname no longer identifies the opened file");
+  }
+
+  let resolvedPath;
+  try {
+    resolvedPath = await realpath(absolutePath);
+  } catch (error) {
+    throw fileReadError(
+      label,
+      `path changed while it was being scanned (${error?.code ?? "realpath error"})`,
+      error?.code,
+    );
+  }
+  if (!isContainedPath(canonicalRoot, resolvedPath)) {
+    throw fileReadError(label, "must resolve inside the scan root");
+  }
+
+  let confirmedInfo;
+  try {
+    confirmedInfo = await lstat(absolutePath, { bigint: true });
+  } catch (error) {
+    throw fileReadError(
+      label,
+      `path changed while it was being scanned (${error?.code ?? "lstat error"})`,
+      error?.code,
+    );
+  }
+  if (
+    confirmedInfo.isSymbolicLink() ||
+    !confirmedInfo.isFile() ||
+    !sameFileIdentity(openedInfo, confirmedInfo)
+  ) {
+    throw fileReadError(
+      label,
+      "pathname changed identity while it was being scanned",
+    );
+  }
+}
+
+async function readDescriptorBytes({
+  fileHandle,
+  expectedSizeBytes,
+  absolutePath,
+  label,
+  hooks,
+}) {
+  const bytes = Buffer.alloc(expectedSizeBytes);
+  let offset = 0;
+  while (offset < expectedSizeBytes) {
+    const length = Math.min(
+      DESCRIPTOR_READ_CHUNK_BYTES,
+      expectedSizeBytes - offset,
+    );
+    const { bytesRead } = await fileHandle.read(
+      bytes,
+      offset,
+      length,
+      offset,
+    );
+    if (bytesRead === 0) break;
+    offset += bytesRead;
+    await hooks?.afterChunk?.({
+      absolutePath,
+      bytesRead,
+      label,
+      totalBytesRead: offset,
+    });
+  }
+  return offset === expectedSizeBytes ? bytes : bytes.subarray(0, offset);
+}
+
+async function hashDescriptorBytes({
+  fileHandle,
+  expectedSizeBytes,
+  absolutePath,
+  label,
+  hooks,
+}) {
+  const hash = createHash("sha256");
+  const chunk = Buffer.alloc(
+    Math.min(DESCRIPTOR_READ_CHUNK_BYTES, expectedSizeBytes),
+  );
+  let offset = 0;
+  while (offset < expectedSizeBytes) {
+    const length = Math.min(chunk.byteLength, expectedSizeBytes - offset);
+    const { bytesRead } = await fileHandle.read(chunk, 0, length, offset);
+    if (bytesRead === 0) break;
+    hash.update(chunk.subarray(0, bytesRead));
+    offset += bytesRead;
+    await hooks?.afterChunk?.({
+      absolutePath,
+      bytesRead,
+      label,
+      totalBytesRead: offset,
+    });
+  }
+  return {
+    bytesRead: offset,
+    sha256: hash.digest("hex"),
+  };
+}
+
+/**
+ * Opens and optionally reads or hashes one regular file without returning to
+ * its pathname for data. Buffering is stat-bounded before allocation; hashes
+ * are streamed through a fixed-size buffer. Optional hooks exist only to make
+ * filesystem race regressions deterministic in the scanner test.
+ */
+export async function readStableRegularFile({
+  rootDirectory,
+  filePath,
+  readContents = true,
+  hashContents = false,
+  maxBytes = readContents
+    ? MAX_BUFFERED_FILE_BYTES
+    : MAX_SCANNED_FILE_BYTES,
+  hooks,
+}) {
+  if (!Number.isSafeInteger(maxBytes) || maxBytes <= 0) {
+    throw new TypeError("maxBytes must be a positive safe integer");
+  }
+  const requestedRoot = resolve(rootDirectory);
+  let canonicalRoot;
+  try {
+    canonicalRoot = await realpath(requestedRoot);
+  } catch (error) {
+    throw fileReadError(
+      "scan root",
+      `does not exist (${error?.code ?? "realpath error"})`,
+      error?.code,
+    );
+  }
+  const requestedPath = isAbsolute(filePath)
+    ? resolve(filePath)
+    : resolve(requestedRoot, filePath);
+  const requestedRelativePath = relative(requestedRoot, requestedPath);
+  if (
+    requestedRelativePath === "" ||
+    !isContainedPath(requestedRoot, requestedPath)
+  ) {
+    throw fileReadError(
+      toPosixPath(requestedRelativePath) || ".",
+      "path escapes the scan root",
+    );
+  }
+  const absolutePath = resolve(canonicalRoot, requestedRelativePath);
+  const label = toPosixPath(relative(canonicalRoot, absolutePath)) || ".";
+  if (!isContainedPath(canonicalRoot, absolutePath) || label === ".") {
+    throw fileReadError(label, "path escapes the scan root");
+  }
+
+  let fileHandle;
+  try {
+    fileHandle = await open(
+      absolutePath,
+      constants.O_RDONLY | constants.O_NOFOLLOW,
+    );
+  } catch (error) {
+    throw fileReadError(
+      label,
+      `cannot be opened as a regular non-symlink file (${error?.code ?? "open error"})`,
+      error?.code,
+    );
+  }
+
+  try {
+    const before = await fileHandle.stat({ bigint: true });
+    if (!before.isFile()) {
+      throw fileReadError(label, "must be a regular file");
+    }
+    if (
+      before.size > BigInt(Number.MAX_SAFE_INTEGER) ||
+      before.size > BigInt(maxBytes)
+    ) {
+      throw fileReadError(
+        label,
+        `exceeds the ${String(maxBytes)} byte size limit`,
+        "EFBIG",
+      );
+    }
+    const expectedSizeBytes = Number(before.size);
+    await hooks?.afterOpen?.({ absolutePath, label });
+    await assertOpenedPathIdentity({
+      canonicalRoot,
+      absolutePath,
+      openedInfo: before,
+      label,
+    });
+
+    const bytes = readContents
+      ? await readDescriptorBytes({
+          fileHandle,
+          expectedSizeBytes,
+          absolutePath,
+          label,
+          hooks,
+        })
+      : null;
+    const hashed = hashContents
+      ? readContents
+        ? {
+            bytesRead: bytes.byteLength,
+            sha256: createHash("sha256").update(bytes).digest("hex"),
+          }
+        : await hashDescriptorBytes({
+            fileHandle,
+            expectedSizeBytes,
+            absolutePath,
+            label,
+            hooks,
+          })
+      : null;
+    const bytesRead = bytes?.byteLength ?? hashed?.bytesRead ?? 0;
+    await hooks?.afterRead?.({
+      absolutePath,
+      bytes,
+      label,
+      sha256: hashed?.sha256 ?? null,
+    });
+
+    const after = await fileHandle.stat({ bigint: true });
+    if (!sameStableFileState(before, after)) {
+      throw fileReadError(label, "changed while it was being scanned");
+    }
+    if ((readContents || hashContents) && BigInt(bytesRead) !== before.size) {
+      throw fileReadError(label, "changed length while it was being scanned");
+    }
+    await assertOpenedPathIdentity({
+      canonicalRoot,
+      absolutePath,
+      openedInfo: after,
+      label,
+    });
+    return {
+      bytes,
+      sha256: hashed?.sha256 ?? null,
+      sizeBytes: expectedSizeBytes,
+    };
+  } finally {
+    await fileHandle.close();
+  }
 }
 
 function isEnvExample(rel) {
@@ -196,8 +534,7 @@ function isSecretLikePath(rel) {
 
 function isAllowedGeneratedAuthDirectory(rel) {
   return (
-    rel === "packages/website/tests/e2e/.auth" ||
-    rel === "tests/e2e/.auth"
+    rel === "packages/website/tests/e2e/.auth" || rel === "tests/e2e/.auth"
   );
 }
 
@@ -253,13 +590,18 @@ async function loadAssetManifest() {
 
   let raw;
   try {
-    raw = await readFile(join(root, ASSET_MANIFEST_BASENAME), "utf8");
+    const result = await readStableRegularFile({
+      rootDirectory: root,
+      filePath: join(root, ASSET_MANIFEST_BASENAME),
+      maxBytes: MAX_ASSET_MANIFEST_BYTES,
+    });
+    raw = result.bytes.toString("utf8");
   } catch (error) {
     addFinding(
       ASSET_MANIFEST_BASENAME,
       null,
       FAIL,
-      `required asset manifest is missing or unreadable (${error?.code ?? "read error"})`,
+      `required asset manifest is missing or unreadable (${error?.code ?? "read error"}); ${error?.message ?? "manual review"}`,
     );
     return;
   }
@@ -523,24 +865,34 @@ async function walk(dir) {
     }
     const basename = entry.name.toLowerCase();
     const ext = extname(entry.name).slice(1).toLowerCase();
-    let info;
+    const binaryAsset = BINARY_ASSET_EXTENSIONS.has(ext);
+    const manifestEntry =
+      profile === "platform" ? assetManifestEntries.get(rel) : null;
+    let openedFile;
     try {
-      info = await stat(full);
+      openedFile = await readStableRegularFile({
+        rootDirectory: root,
+        filePath: full,
+        readContents: !binaryAsset,
+        hashContents: binaryAsset && Boolean(manifestEntry),
+        maxBytes: binaryAsset
+          ? MAX_SCANNED_FILE_BYTES
+          : MAX_BUFFERED_FILE_BYTES,
+      });
     } catch (error) {
       addFinding(
         rel,
         null,
-        profile === "platform" ? FAIL : WARN,
-        `unreadable file metadata (${error?.code ?? "stat error"}); manual review`,
+        error?.code === "EFBIG" || profile === "platform" ? FAIL : WARN,
+        `file cannot be verified (${error?.code ?? "read error"}); ${error?.message ?? "manual review"}`,
       );
       continue;
     }
-    const isLarge = info.size > LARGE_FILE_BYTES;
+    const isLarge = openedFile.sizeBytes > LARGE_FILE_BYTES;
 
-    if (BINARY_ASSET_EXTENSIONS.has(ext)) {
+    if (binaryAsset) {
       if (profile === "platform") {
         assetPathsSeen.add(rel);
-        const manifestEntry = assetManifestEntries.get(rel);
         if (!manifestEntry) {
           addFinding(
             rel,
@@ -549,7 +901,7 @@ async function walk(dir) {
             "recognized binary is missing from ASSET_MANIFEST.json",
           );
         } else {
-          if (info.size !== manifestEntry.sizeBytes) {
+          if (openedFile.sizeBytes !== manifestEntry.sizeBytes) {
             addFinding(
               rel,
               null,
@@ -557,25 +909,19 @@ async function walk(dir) {
               "binary byte size does not match ASSET_MANIFEST.json",
             );
           }
-          try {
-            const binary = await readFile(full);
-            const actualSha256 = createHash("sha256")
-              .update(binary)
-              .digest("hex");
-            if (actualSha256 !== manifestEntry.sha256) {
-              addFinding(
-                rel,
-                null,
-                FAIL,
-                "binary sha256 does not match ASSET_MANIFEST.json",
-              );
-            }
-          } catch (error) {
+          if (!openedFile.sha256) {
             addFinding(
               rel,
               null,
               FAIL,
-              `binary is unreadable (${error?.code ?? "read error"}); manifest cannot be verified`,
+              "binary contents were not hashed; manifest cannot be verified",
+            );
+          } else if (openedFile.sha256 !== manifestEntry.sha256) {
+            addFinding(
+              rel,
+              null,
+              FAIL,
+              "binary sha256 does not match ASSET_MANIFEST.json",
             );
           }
         }
@@ -583,17 +929,29 @@ async function walk(dir) {
       // Binary assets are never decoded as text. Oversized ones remain visible
       // as an audit note after their platform-manifest hash is verified.
       if (isLarge) {
-        addFinding(rel, null, ASSET, `large binary asset, ${info.size} bytes`);
+        addFinding(
+          rel,
+          null,
+          ASSET,
+          `large binary asset, ${openedFile.sizeBytes} bytes`,
+        );
       }
       continue;
     }
 
-    let buffer = null;
-    const manifestEntry =
-      profile === "platform" ? assetManifestEntries.get(rel) : null;
+    const buffer = openedFile.bytes;
+    if (!buffer) {
+      addFinding(
+        rel,
+        null,
+        profile === "platform" ? FAIL : WARN,
+        "file contents were not read; manual review",
+      );
+      continue;
+    }
     if (manifestEntry) {
       assetPathsSeen.add(rel);
-      if (info.size !== manifestEntry.sizeBytes) {
+      if (openedFile.sizeBytes !== manifestEntry.sizeBytes) {
         addFinding(
           rel,
           null,
@@ -601,38 +959,14 @@ async function walk(dir) {
           "asset byte size does not match ASSET_MANIFEST.json",
         );
       }
-      try {
-        buffer = await readFile(full);
-        const actualSha256 = createHash("sha256").update(buffer).digest("hex");
-        if (actualSha256 !== manifestEntry.sha256) {
-          addFinding(
-            rel,
-            null,
-            FAIL,
-            "asset sha256 does not match ASSET_MANIFEST.json",
-          );
-        }
-      } catch (error) {
+      const actualSha256 = createHash("sha256").update(buffer).digest("hex");
+      if (actualSha256 !== manifestEntry.sha256) {
         addFinding(
           rel,
           null,
           FAIL,
-          `asset is unreadable (${error?.code ?? "read error"}); manifest cannot be verified`,
+          "asset sha256 does not match ASSET_MANIFEST.json",
         );
-        continue;
-      }
-    }
-    if (!buffer) {
-      try {
-        buffer = await readFile(full);
-      } catch (error) {
-        addFinding(
-          rel,
-          null,
-          profile === "platform" ? FAIL : WARN,
-          `unreadable file (${error?.code ?? "read error"}); manual review`,
-        );
-        continue;
       }
     }
     if (
@@ -652,38 +986,12 @@ async function walk(dir) {
         rel,
         null,
         WARN,
-        `large file, ${info.size} bytes; manual review required`,
+        `large file, ${openedFile.sizeBytes} bytes; manual review required`,
       );
     }
     scanText(rel, basename, buffer.toString("utf8"));
   }
 }
-
-const rootInfo = await stat(root).catch(() => null);
-if (!rootInfo || !rootInfo.isDirectory()) {
-  console.error(`scan-export: not a directory: ${root}`);
-  process.exit(2);
-}
-
-await loadAssetManifest();
-await walk(root);
-
-if (profile === "platform") {
-  for (const path of assetManifestEntries.keys()) {
-    if (!assetPathsSeen.has(path)) {
-      addFinding(
-        path,
-        null,
-        FAIL,
-        "stale ASSET_MANIFEST.json entry has no matching asset file",
-      );
-    }
-  }
-}
-
-const fails = findings.filter((f) => f.severity === FAIL);
-const warns = findings.filter((f) => f.severity === WARN);
-const assets = findings.filter((f) => f.severity === ASSET);
 
 function format(finding) {
   const location = finding.line
@@ -692,37 +1000,80 @@ function format(finding) {
   return `- ${location}  [${finding.label}]`;
 }
 
-if (findings.length === 0) {
+async function main() {
+  let canonicalRoot;
+  try {
+    canonicalRoot = await realpath(resolve(root));
+    const rootHandle = await open(
+      canonicalRoot,
+      constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_DIRECTORY,
+    );
+    try {
+      const rootInfo = await rootHandle.stat({ bigint: true });
+      if (!rootInfo.isDirectory()) throw new Error("not a directory");
+    } finally {
+      await rootHandle.close();
+    }
+  } catch {
+    console.error(`scan-export: not a directory: ${root}`);
+    process.exit(2);
+  }
+  root = canonicalRoot;
+
+  await loadAssetManifest();
+  await walk(root);
+
+  if (profile === "platform") {
+    for (const path of assetManifestEntries.keys()) {
+      if (!assetPathsSeen.has(path)) {
+        addFinding(
+          path,
+          null,
+          FAIL,
+          "stale ASSET_MANIFEST.json entry has no matching asset file",
+        );
+      }
+    }
+  }
+
+  const fails = findings.filter((f) => f.severity === FAIL);
+  const warns = findings.filter((f) => f.severity === WARN);
+  const assets = findings.filter((f) => f.severity === ASSET);
+
+  if (findings.length === 0) {
+    console.log(
+      `scan-export (${mode}, ${profile}) passed: ${filesChecked} files checked, no findings`,
+    );
+    process.exit(0);
+  }
+
+  const emit = fails.length > 0 ? console.error : console.warn;
+
+  if (fails.length > 0) {
+    console.error(
+      `scan-export (${mode}, ${profile}) FAILED: ${fails.length} blocking finding(s) over ${filesChecked} files`,
+    );
+    for (const finding of fails) console.error(format(finding));
+  }
+  if (warns.length > 0) {
+    emit(
+      `scan-export (${mode}, ${profile}) WARN: ${warns.length} finding(s) need manual sign-off`,
+    );
+    for (const finding of warns) emit(format(finding));
+  }
+  if (assets.length > 0) {
+    emit(
+      `scan-export (${mode}, ${profile}) ASSET: ${assets.length} large binary asset(s)`,
+    );
+    for (const finding of assets) emit(format(finding));
+  }
+
+  if (fails.length > 0) process.exit(1);
+
   console.log(
-    `scan-export (${mode}, ${profile}) passed: ${filesChecked} files checked, no findings`,
+    `scan-export (${mode}, ${profile}) passed with no blocking findings: ${filesChecked} files checked, ${warns.length} warning(s), ${assets.length} asset note(s)`,
   );
   process.exit(0);
 }
 
-const emit = fails.length > 0 ? console.error : console.warn;
-
-if (fails.length > 0) {
-  console.error(
-    `scan-export (${mode}, ${profile}) FAILED: ${fails.length} blocking finding(s) over ${filesChecked} files`,
-  );
-  for (const finding of fails) console.error(format(finding));
-}
-if (warns.length > 0) {
-  emit(
-    `scan-export (${mode}, ${profile}) WARN: ${warns.length} finding(s) need manual sign-off`,
-  );
-  for (const finding of warns) emit(format(finding));
-}
-if (assets.length > 0) {
-  emit(
-    `scan-export (${mode}, ${profile}) ASSET: ${assets.length} large binary asset(s)`,
-  );
-  for (const finding of assets) emit(format(finding));
-}
-
-if (fails.length > 0) process.exit(1);
-
-console.log(
-  `scan-export (${mode}, ${profile}) passed with no blocking findings: ${filesChecked} files checked, ${warns.length} warning(s), ${assets.length} asset note(s)`,
-);
-process.exit(0);
+if (isDirectRun) await main();

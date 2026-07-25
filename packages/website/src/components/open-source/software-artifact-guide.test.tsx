@@ -1,6 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import type { ToolArtifact } from "@/lib/open-source/artifacts";
+import {
+  assertOpenSourceArtifacts,
+  type ToolArtifact,
+} from "@/lib/open-source/artifacts";
 import { SoftwareArtifactGuide } from "./software-artifact-guide";
 
 const TOOL = {
@@ -13,13 +16,14 @@ const TOOL = {
   description: "Builds a structured local report.",
   href: "/open-source/tools/report-builder",
   language: "Deutsch",
+  languageTag: "de",
   source: {
     href: "https://github.com/loehrning-ai/report-builder",
     revision: "a".repeat(40),
     revisionHref: `https://github.com/loehrning-ai/report-builder/commit/${"a".repeat(40)}`,
   },
   license: {
-    href: "/licenses/report-builder.txt",
+    href: "/artifacts/tools/report-builder/LICENSE.txt",
     sourcePath: "LICENSE",
     sha256: "b".repeat(64),
     sizeBytes: 1,
@@ -28,6 +32,8 @@ const TOOL = {
   guide: {
     status: "experimental",
     statusNote: "The input contract is usable but may still change.",
+    dataFlow:
+      "Input and generated reports remain on the local machine.",
     prerequisites: [
       {
         label: "Bun",
@@ -70,7 +76,8 @@ const TOOL = {
       href: "/hilfe",
     },
     screenshot: {
-      src: "/imported-courses/screenshots/codex.jpg",
+      src: "/artifacts/tools/report-builder/screenshot.jpg",
+      sourcePath: "docs/screenshots/report-builder.jpg",
       alt: "Report Builder showing a completed report preview.",
       sha256: "6e67076e584ca88b8b497bacebc1f2b5373fe8c6a1547108f65f66b856ee5c46",
       sizeBytes: 269791,
@@ -87,18 +94,22 @@ const TOOL = {
   },
 } as const satisfies ToolArtifact;
 
+assertOpenSourceArtifacts([TOOL]);
+
 describe("SoftwareArtifactGuide", () => {
   it("renders the complete operating contract for a future tool detail page", () => {
-    render(<SoftwareArtifactGuide artifact={TOOL} />);
+    const { container } = render(<SoftwareArtifactGuide artifact={TOOL} />);
 
     expect(screen.getByText("Experimentell")).toBeInTheDocument();
     expect(
-      screen.getByRole("img", {
+      screen.getByRole("figure", {
         name: "Report Builder showing a completed report preview.",
       }),
     ).toBeInTheDocument();
+    expect(container.querySelector("figure img")).toHaveAttribute("alt", "");
     for (const heading of [
       "Voraussetzungen",
+      "Datenfluss",
       "Installation",
       "Verwendung",
       "Integration",
@@ -106,9 +117,25 @@ describe("SoftwareArtifactGuide", () => {
     ]) {
       expect(screen.getByRole("heading", { name: heading })).toBeInTheDocument();
     }
+    expect(
+      screen.getByText(
+        "Input and generated reports remain on the local machine.",
+      ),
+    ).toBeInTheDocument();
     expect(screen.getByText("bun install")).toBeInTheDocument();
     expect(screen.getByText("bun run report -- input.json")).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Befehl für Install dependencies"),
+    ).toHaveAttribute("tabindex", "0");
+    expect(
+      screen.getByLabelText("Befehl für Generate the report"),
+    ).toHaveAttribute("tabindex", "0");
     expect(screen.getByText("JSON")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", {
+        name: "Bun, öffnet in neuem Tab",
+      }),
+    ).toHaveAttribute("target", "_blank");
     expect(screen.getByRole("link", { name: "Operating guide" })).toHaveAttribute(
       "href",
       "/hilfe",

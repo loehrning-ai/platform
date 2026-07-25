@@ -187,6 +187,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | `/site.webmanifest` | Public static proof or platform asset. |
 | `/book-covers/:path*` | Public static proof or platform asset. |
 | `/imported-courses/:path*` | Public static proof or platform asset. |
+| `/artifacts/:path*` | Public static proof or platform asset. |
 | `/ueber-mich/tim-loehr.jpg` | Public static proof or platform asset. |
 | `/logo/:path*` | Public static proof or platform asset. |
 | `/workshops/:slug/:path*` | Public static proof or platform asset. |

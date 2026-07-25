@@ -9,13 +9,13 @@ import { absoluteUrl, GITHUB_ORG } from "@/lib/seo/entity";
 export const metadata: Metadata = {
   title: "Open Source",
   description:
-    "Werkzeuge und Projekte von loehrning.ai, veröffentlicht unter github.com/loehrning-ai: Veröffentlichungsstandard, Lizenzrichtlinie und aktueller Stand.",
+    "Werkzeuge, Projekte und Videos von loehrning.ai, veröffentlicht unter github.com/loehrning-ai: Veröffentlichungsstandard, Lizenzrichtlinie und aktueller Stand.",
   alternates: { canonical: "/open-source" },
   robots: { index: true, follow: true },
   openGraph: {
     title: "Open Source | loehrning.ai",
     description:
-      "Veröffentlichungsstandard für Werkzeuge und Projekte der GitHub-Organisation loehrning-ai: öffentliches Repository, Commit-Pin, Lizenz, Anleitung.",
+      "Veröffentlichungsstandard für Werkzeuge, Projekte und Videos der GitHub-Organisation loehrning-ai: öffentliches Repository, Commit-Pin, Lizenz, Anleitung.",
     url: `${SITE_URL}/open-source`,
     type: "website",
   },
@@ -47,7 +47,7 @@ const OPEN_SOURCE_GRAPH = {
         name: artifact.title,
         url: absoluteUrl(artifact.href),
         isAccessibleForFree: true,
-        inLanguage: artifact.language === "Englisch" ? "en" : "de",
+        inLanguage: artifact.languageTag,
         license: absoluteUrl(artifact.license.href),
         codeRepository: artifact.source.href,
         version: artifact.source.revision,
@@ -102,10 +102,11 @@ export default function OpenSourcePage() {
           <div className="mt-5 grid gap-8 lg:grid-cols-[1fr_320px] lg:items-start">
             <div>
               <h1 className="max-w-4xl text-4xl font-bold leading-[0.95] tracking-[-0.04em] sm:text-6xl">
-                Werkzeuge und Projekte auf GitHub.
+                Werkzeuge, Projekte und Videos auf GitHub.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-                Hier erscheinen Werkzeuge und Projekte, die unter der
+                Hier findest du veröffentlichte Werkzeuge, Projekte und Videos
+                aus der
                 GitHub-Organisation{" "}
                 <a
                   href={GITHUB_ORG.url}
@@ -114,10 +115,12 @@ export default function OpenSourcePage() {
                   className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-sm font-semibold text-foreground underline-offset-4 hover:underline"
                 >
                   {GITHUB_ORG.slug}
-                </a>{" "}
-                veröffentlicht werden. Die ersten Werkzeuge sind in
-                Vorbereitung; bis ein Repository den Veröffentlichungsstandard
-                erfüllt, bleibt dieser Bereich leer.
+                  <span className="sr-only">
+                    , öffnet in neuem Tab
+                  </span>
+                </a>
+                . Jeder Eintrag verweist auf den geprüften Quellstand, seine
+                Lizenz und die zugehörige Anleitung.
               </p>
               <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted-foreground">
                 Die technischen Lernkurse findest du unter{" "}
@@ -133,7 +136,7 @@ export default function OpenSourcePage() {
 
             <aside className="border border-border bg-card/35 p-5">
               <div className="flex items-center gap-2 text-sm font-bold text-foreground">
-                <Github size={16} />
+                <Github size={16} aria-hidden="true" />
                 Quellenprinzip
               </div>
               <dl className="mt-4 space-y-3 text-sm">
@@ -149,6 +152,9 @@ export default function OpenSourcePage() {
                       className="text-foreground underline-offset-4 hover:underline"
                     >
                       GitHub · {GITHUB_ORG.slug}
+                      <span className="sr-only">
+                        , öffnet in neuem Tab
+                      </span>
                     </a>
                   </dd>
                 </div>

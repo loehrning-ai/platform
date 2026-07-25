@@ -28,7 +28,8 @@
       "owner": "Tim Löhr",
       "source": "Prepared for publication; provenance pinned at admission (see packages/website/src/lib/open-source/pending/tech-cv.ts)",
       "license": "MIT",
-      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/tech-cv/LICENSE.txt"
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/tech-cv/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/tech-cv/LICENSE.txt"
     },
     {
       "path": "packages/website/public/book-covers/ki-arbeitsalltag-2026-1.png",

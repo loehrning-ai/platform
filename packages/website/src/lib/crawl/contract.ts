@@ -240,6 +240,7 @@ const PUBLIC_ASSET_PATHS = [
   "/site.webmanifest",
   "/book-covers/:path*",
   "/imported-courses/:path*",
+  "/artifacts/:path*",
   "/ueber-mich/tim-loehr.jpg",
   "/logo/:path*",
   "/workshops/:slug/:path*",

@@ -40,7 +40,11 @@ function Procedure({
                 {step.detail}
               </p>
               {step.command ? (
-                <pre className="mt-3 overflow-x-auto border border-border bg-card p-3 text-sm">
+                <pre
+                  tabIndex={0}
+                  aria-label={`Befehl für ${step.title}`}
+                  className="mt-3 overflow-x-auto border border-border bg-card p-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
+                >
                   <code>{step.command}</code>
                 </pre>
               ) : null}
@@ -82,16 +86,34 @@ export function SoftwareArtifactGuide({
         </p>
       </section>
 
-      <figure>
+      <section
+        className="border-b border-border pb-8"
+        aria-labelledby={`${idPrefix}-data-flow`}
+      >
+        <h2
+          id={`${idPrefix}-data-flow`}
+          className="text-2xl font-bold tracking-[-0.03em]"
+        >
+          Datenfluss
+        </h2>
+        <p className="mt-3 leading-relaxed text-muted-foreground">
+          {guide.dataFlow}
+        </p>
+      </section>
+
+      <figure aria-labelledby={`${idPrefix}-screenshot-caption`}>
         <Image
           src={guide.screenshot.src}
-          alt={guide.screenshot.alt}
+          alt=""
           width={guide.screenshot.width}
           height={guide.screenshot.height}
           sizes="(min-width: 896px) 848px, calc(100vw - 48px)"
           className="h-auto w-full border border-border bg-card object-contain"
         />
-        <figcaption className="mt-2 text-sm text-muted-foreground">
+        <figcaption
+          id={`${idPrefix}-screenshot-caption`}
+          className="mt-2 text-sm text-muted-foreground"
+        >
           {guide.screenshot.alt}
         </figcaption>
       </figure>
@@ -119,6 +141,9 @@ export function SoftwareArtifactGuide({
                       className="inline-flex items-center gap-1 underline-offset-4 hover:underline"
                     >
                       {prerequisite.label}
+                      <span className="sr-only">
+                        , öffnet in neuem Tab
+                      </span>
                       <ExternalLink size={13} aria-hidden="true" />
                     </a>
                   ) : (
@@ -190,7 +215,11 @@ export function SoftwareArtifactGuide({
                 {step.detail}
               </p>
               {step.command ? (
-                <pre className="mt-3 overflow-x-auto border border-border bg-card p-3 text-sm">
+                <pre
+                  tabIndex={0}
+                  aria-label={`Befehl für ${step.title}`}
+                  className="mt-3 overflow-x-auto border border-border bg-card p-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
+                >
                   <code>{step.command}</code>
                 </pre>
               ) : null}
@@ -218,6 +247,7 @@ export function SoftwareArtifactGuide({
               className="mt-4 inline-flex items-center gap-1 font-semibold underline-offset-4 hover:underline"
             >
               {guide.documentation.label}
+              <span className="sr-only">, öffnet in neuem Tab</span>
               <ExternalLink size={14} aria-hidden="true" />
             </a>
           ) : (

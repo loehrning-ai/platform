@@ -5,6 +5,8 @@ import sitemap from "@/app/sitemap";
 import { COURSES_GRAPH } from "@/lib/seo/course-discovery";
 import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
 import { getCrawlRoute } from "@/lib/crawl/contract";
+import { OPEN_SOURCE_ARTIFACTS } from "@/lib/open-source/artifacts";
+import { absoluteUrl } from "@/lib/seo/entity";
 
 type ItemListEntry = {
   readonly url: string;
@@ -18,6 +20,10 @@ type KnowledgeGraphPayload = {
       readonly id: string;
       readonly kind: string;
       readonly url: string;
+      readonly sourceUrl: string;
+      readonly sourceCommit: string;
+      readonly licenseUrl: string;
+      readonly accessUrl: string;
     }[];
   };
 };
@@ -81,6 +87,63 @@ describe("course discovery consistency", () => {
         ),
         course.slug,
       ).toBe(false);
+    }
+  });
+});
+
+describe("open-source artifact discovery consistency", () => {
+  it("publishes every artifact with synchronized identity, provenance, license, and delivery", async () => {
+    const sitemapUrls = (await sitemap()).map((entry) => entry.url);
+    const llmsLines = (await getLlmsTxt({} as never).text()).split("\n");
+    const knowledgeGraph = (await (
+      await getKnowledgeGraph()
+    ).json()) as KnowledgeGraphPayload;
+
+    expect(knowledgeGraph.catalogs.openSourceArtifacts).toHaveLength(
+      OPEN_SOURCE_ARTIFACTS.length,
+    );
+
+    for (const artifact of OPEN_SOURCE_ARTIFACTS) {
+      const canonicalUrl = absoluteUrl(artifact.href);
+      const expectedId = `${artifact.kind}:${artifact.slug}`;
+      const expectedAccessUrl =
+        artifact.kind === "video"
+          ? absoluteUrl(artifact.watchHref)
+          : artifact.delivery === "source-only"
+            ? canonicalUrl
+            : absoluteUrl(artifact.launchHref);
+
+      expect(artifact.id, artifact.slug).toBe(expectedId);
+      expect(getCrawlRoute(artifact.href).routeClass, artifact.id).toBe(
+        "public-indexable",
+      );
+      expect(
+        sitemapUrls.filter((url) => url === canonicalUrl),
+        `${artifact.id} canonical sitemap entry`,
+      ).toHaveLength(1);
+      expect(
+        llmsLines.filter(
+          (line) => line === `- ${artifact.title}: ${canonicalUrl}`,
+        ),
+        `${artifact.id} canonical llms.txt entry`,
+      ).toHaveLength(1);
+
+      const graphEntries =
+        knowledgeGraph.catalogs.openSourceArtifacts.filter(
+          (entry) => entry.id === artifact.id,
+        );
+      expect(graphEntries, `${artifact.id} knowledge-graph entry`).toHaveLength(
+        1,
+      );
+      expect(graphEntries[0]).toEqual({
+        id: expectedId,
+        kind: artifact.kind,
+        url: canonicalUrl,
+        sourceUrl: artifact.source.href,
+        sourceCommit: artifact.source.revision,
+        licenseUrl: absoluteUrl(artifact.license.href),
+        accessUrl: expectedAccessUrl,
+      });
     }
   });
 });

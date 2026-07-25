@@ -63,12 +63,13 @@ export const PENDING_TECH_CV_ARTIFACT = {
   title: "Tech CV",
   eyebrow: "Werkzeug · Lebenslauf-Rendering",
   description:
-    "Ein lokaler Editor für einen einseitigen Lebenslauf: links ein strukturiertes Formular, rechts eine A4-Vorschau, die genau das zeigt, was der PDF-Build druckt. Läuft der Lebenslauf auf eine zweite Seite, bricht der Build ab und nennt die Überschrift, an der es passiert.",
+    "Lokaler Editor für einseitige Lebensläufe mit strukturiertem Formular, A4-Live-Vorschau, optionaler KI und einem PDF-Build, der Überläufe blockiert.",
   href: HREF,
   // Exact string, not a near miss: the detail route maps `"Englisch"` to
   // `inLanguage: "en"` in its JSON-LD and silently falls back to `"de"` for
   // every other value. The repository, its README and its commits are English.
   language: "Englisch",
+  languageTag: "en",
   license: {
     href: LICENSE_HREF,
     sourcePath: "LICENSE",
@@ -201,6 +202,7 @@ export const PENDING_TECH_CV_ARTIFACT = {
     },
     screenshot: {
       src: SCREENSHOT_SRC,
+      sourcePath: "docs/screenshots/preview-card.webp",
       // Rendered twice and visibly: as the image alt text and again as the
       // figure caption below it. Written as publishable prose for that reason.
       alt: "Der Editor in zwei Spalten: links die YAML-Ansicht von content/cv.yaml, deren erste Kommentarzeilen die Einseitenregel festhalten, rechts die A4-Vorschau in Seitenansicht mit der grünen Plakette 1 page in der Kopfzeile.",
