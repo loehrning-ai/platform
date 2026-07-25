@@ -13,23 +13,23 @@
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
-      "path": "packages/website/public/artifacts/tools/tech-cv/LICENSE.txt",
+      "path": "packages/website/public/artifacts/tools/cv-engine/LICENSE.txt",
       "sizeBytes": 1066,
       "sha256": "36beaa24d27fc788e411a7fd7cc93d752878e6c51240a8abcc1156ff1451c5bd",
       "owner": "Tim Löhr",
-      "source": "Prepared for publication; provenance pinned at admission (see packages/website/src/lib/open-source/pending/tech-cv.ts)",
+      "source": "Prepared for publication; provenance pinned at admission (see packages/website/src/lib/open-source/pending/cv-engine.ts)",
       "license": "MIT",
       "redistribution": "Redistribution of this license notice is required with the corresponding MIT-licensed work"
     },
     {
-      "path": "packages/website/public/artifacts/tools/tech-cv/screenshot.webp",
+      "path": "packages/website/public/artifacts/tools/cv-engine/screenshot.webp",
       "sizeBytes": 133876,
       "sha256": "4788ac350cb1e428be06cb9063dd8307754d5e973b0482f95723657e4a27c6f0",
       "owner": "Tim Löhr",
-      "source": "Prepared for publication; provenance pinned at admission (see packages/website/src/lib/open-source/pending/tech-cv.ts)",
+      "source": "Prepared for publication; provenance pinned at admission (see packages/website/src/lib/open-source/pending/cv-engine.ts)",
       "license": "MIT",
-      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/tech-cv/LICENSE.txt",
-      "redistributionLicenseHref": "/artifacts/tools/tech-cv/LICENSE.txt"
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
     },
     {
       "path": "packages/website/public/book-covers/ki-arbeitsalltag-2026-1.png",
