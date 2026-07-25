@@ -4,15 +4,15 @@ import type {
 } from "../artifacts";
 
 /**
- * Staging module for the Tech CV artifact record. It is deliberately not
+ * Staging module for the CV Engine artifact record. It is deliberately not
  * imported by the registry, by any page, or by any component.
  *
  * Why this file exists at all: `assertOpenSourceArtifacts` runs at module load
  * over the unfiltered candidate array and requires `source.revision` to match
  * a 40 character lowercase commit SHA. The validator performs zero network
  * I/O, so a fabricated SHA would satisfy every gate in this repository while
- * encoding a provenance claim nobody can check. The Tech CV repository has not
- * been published, so no such commit exists yet.
+ * encoding a provenance claim nobody can check. The CV Engine repository has
+ * not been published, so no such commit exists yet.
  *
  * The record therefore lives here, typed so that the `source` field cannot be
  * written at all. When the repository is published, follow the "Staging a
@@ -44,26 +44,26 @@ type DistributiveOmit<T, K extends PropertyKey> = T extends unknown
 export type PendingToolArtifact = DistributiveOmit<ToolArtifact, "source">;
 
 /**
- * The slug is provisional. Everything derived from it is built with template
- * literals so a rename stays a single edit here plus a `git mv` of the two
- * asset files and their `ASSET_MANIFEST.json` rows.
+ * The slug matches the public repository name exactly. Everything derived from
+ * it is built with template literals so a rename stays a single edit here plus
+ * a `git mv` of the two asset files and their `ASSET_MANIFEST.json` rows.
  */
-const SLUG = "tech-cv";
+const SLUG = "cv-engine";
 
 const ID = `tool:${SLUG}` as const;
 const HREF = `/open-source/tools/${SLUG}` as const;
 const LICENSE_HREF = `/artifacts/tools/${SLUG}/LICENSE.txt` as const;
 const SCREENSHOT_SRC = `/artifacts/tools/${SLUG}/screenshot.webp` as const;
 
-export const PENDING_TECH_CV_ARTIFACT = {
+export const PENDING_CV_ENGINE_ARTIFACT = {
   id: ID,
   kind: "tool",
   publicationLifecycle: "draft",
   slug: SLUG,
-  title: "Tech CV",
+  title: "CV Engine",
   eyebrow: "Werkzeug · Lebenslauf-Rendering",
   description:
-    "Lokaler Editor für einseitige Lebensläufe mit strukturiertem Formular, A4-Live-Vorschau, optionaler KI und einem PDF-Build, der Überläufe blockiert.",
+    "Lokaler YAML-zu-PDF-Build für einseitige Lebensläufe, mit Browser-Editor, A4-Vorschau und optionaler KI. Überläufe blockiert der Build, statt sie zu drucken.",
   href: HREF,
   // Exact string, not a near miss: the detail route maps `"Englisch"` to
   // `inLanguage: "en"` in its JSON-LD and silently falls back to `"de"` for
@@ -86,7 +86,7 @@ export const PENDING_TECH_CV_ARTIFACT = {
     statusNote:
       "Experimentell: das Schema in cv.yaml und die Vorlagen können sich noch ändern, es gibt keine gehostete Instanz, und Issues werden nicht garantiert beantwortet. Du betreibst das Werkzeug selbst, auf deinem eigenen Rechner. Bevor du etwas konfigurierst, lies docs/data-flow.md im Repository: dort steht als Diagramm, welcher Weg deiner Daten lokal bleibt und welcher nicht.",
     dataFlow:
-      "Der Kern rendert vollständig lokal. cv.yaml, Schriften und CSS liegen im Checkout, der PDF-Build öffnet keinen Socket und braucht keinen API-Schlüssel. Nur die optionalen KI-Funktionen für Import und Textgenerierung rufen einen Anbieter auf, und zwar mit deinem eigenen Schlüssel; zeigst du sie auf ein lokales Ollama, endet auch dieser Aufruf auf deinem Rechner, denn du wählst, wo die KI läuft. Das vollständige Diagramm liegt als docs/data-flow.md im Repository.",
+      "Der Kern rendert vollständig lokal. cv.yaml, Schriften und CSS liegen im Checkout, der PDF-Build öffnet keinen Socket und braucht keinen API-Schlüssel. Der Browser-Editor ohne Konfiguration spricht nur mit 127.0.0.1 und hält seine Dokumente im Arbeitsspeicher des Servers; erst wenn du die Supabase-Variante selbst betreibst, liegen sie dauerhaft in deinem eigenen Projekt. Nach außen gehen allein die optionalen KI-Funktionen für Import und Textgenerierung, und zwar mit deinem eigenen Schlüssel; zeigst du sie auf ein lokales Ollama, endet auch dieser Aufruf auf deinem Rechner, denn du wählst, wo die KI läuft. Das vollständige Diagramm liegt als docs/data-flow.md im Repository.",
     prerequisites: [
       {
         label: "Python 3.13",
@@ -132,18 +132,19 @@ export const PENDING_TECH_CV_ARTIFACT = {
     },
     usage: {
       summary:
-        "Formular links, A4-Vorschau rechts, und ein Build, der die zweite Seite nicht durchgehen lässt.",
+        "Deine YAML-Datei ist der dauerhafte Weg, der Browser-Editor ist die Probierfläche, und der Build lässt die zweite Seite nicht durch.",
       steps: [
         {
-          title: "Den Editor starten",
+          title: "Die eigene Datei anlegen und schreiben",
           detail:
-            "Flask bindet auf 127.0.0.1:5567, also nur auf deinen eigenen Rechner. Links das Formular oder wahlweise die Rohdatei als YAML, rechts dieselbe A4-Seite, die WeasyPrint später druckt.",
-          command: "python3 tools/editor/server.py",
+            "content/cv.yaml ist der dauerhafte lokale Ort für deinen Lebenslauf, und die Datei ist im Repository bewusst von Git ausgenommen, damit deine Daten nicht versehentlich in einen Fork wandern. Du bearbeitest sie mit dem Editor, den du ohnehin benutzt.",
+          command: "cp content/cv.example.yaml content/cv.yaml",
         },
         {
-          title: "Im Formular schreiben",
+          title: "Formular und Vorschau ausprobieren",
           detail:
-            "Jedes Feld ist ein beschriftetes Eingabefeld, jede Liste lässt sich umsortieren und kürzen. Die Vorschau zeichnet 400 Millisekunden nach dem letzten Tastendruck neu, gespeichert wird nach 1,5 Sekunden Ruhe. Die Plakette über der Vorschau zeigt die Seitenzahl: grün bei einer Seite, rot ab der zweiten.",
+            "Flask bindet auf 127.0.0.1:5567, also nur auf deinen eigenen Rechner: links das Formular oder wahlweise die Rohdatei als YAML, rechts dieselbe A4-Seite, die WeasyPrint später druckt. Die Plakette über der Vorschau zeigt die Seitenzahl, grün bei einer Seite und rot ab der zweiten. Wichtig: dieser Modus hält alles nur im Arbeitsspeicher des Servers. Er schreibt nicht in content/cv.yaml, und ein Neustart setzt ihn zurück. Lade das PDF aus der Oberfläche herunter, bevor du den Prozess beendest. Wer dauerhaft im Formular arbeiten will, betreibt die Supabase-Variante aus DEPLOY.md selbst.",
+          command: "ONEPAGER_DEMO_MODE=true python3 tools/editor/server.py",
         },
         {
           title: "Layout wechseln, statt Inhalt zu streichen",
@@ -175,8 +176,8 @@ export const PENDING_TECH_CV_ARTIFACT = {
         {
           title: "Den Lebenslauf versionieren",
           detail:
-            "Eine Datei, ein Diff. Du siehst nach zwei Jahren, was du geändert hast, statt eine weitere Word-Datei anzulegen.",
-          command: "git diff content/cv.yaml",
+            "Eine Datei, ein Diff. Du siehst nach zwei Jahren, was du geändert hast, statt eine weitere Word-Datei anzulegen. Im Werkzeug-Repository ist content/cv.yaml absichtlich ignoriert, damit deine Daten dort nicht landen; versioniere sie in deinem eigenen privaten Repository.",
+          command: "git diff cv.yaml",
         },
         {
           title: "Vorhandene Dateien einlesen",
@@ -205,9 +206,9 @@ export const PENDING_TECH_CV_ARTIFACT = {
       sourcePath: "docs/screenshots/preview-card.webp",
       // Rendered twice and visibly: as the image alt text and again as the
       // figure caption below it. Written as publishable prose for that reason.
-      alt: "Der Editor in zwei Spalten: links die YAML-Ansicht von content/cv.yaml, deren erste Kommentarzeilen die Einseitenregel festhalten, rechts die A4-Vorschau in Seitenansicht mit der grünen Plakette 1 page in der Kopfzeile.",
-      sha256: "4788ac350cb1e428be06cb9063dd8307754d5e973b0482f95723657e4a27c6f0",
-      sizeBytes: 133876,
+      alt: "Der Editor in zwei Spalten: links die YAML-Ansicht des gespeicherten Lebenslaufs, deren erste Kommentarzeilen die Einseitenregel festhalten, rechts die A4-Vorschau in Seitenansicht mit der grünen Plakette 1 page in der Kopfzeile.",
+      sha256: "8c402e73a3ac46498d5fbfe6f39e03eebf532e62fe4b5ae69941211e96492aff",
+      sizeBytes: 132292,
       width: 1696,
       height: 1060,
     },
@@ -241,5 +242,5 @@ export const PENDING_TECH_CV_ARTIFACT = {
 export function composeForValidation(
   source: OpenSourceArtifactSource,
 ): ToolArtifact {
-  return { ...PENDING_TECH_CV_ARTIFACT, source };
+  return { ...PENDING_CV_ENGINE_ARTIFACT, source };
 }

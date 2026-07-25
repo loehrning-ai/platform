@@ -7,11 +7,11 @@ import {
   assertOpenSourceArtifacts,
   type OpenSourceArtifactSource,
 } from "../artifacts";
-import { PENDING_TECH_CV_ARTIFACT, composeForValidation } from "./tech-cv";
+import { PENDING_CV_ENGINE_ARTIFACT, composeForValidation } from "./cv-engine";
 
 /**
  * The only 40 character hex string in this subtree, and a repository URL named
- * so it can never be mistaken for a published location. The Tech CV repository
+ * so it can never be mistaken for a published location. The CV Engine repository
  * has not been pushed; this fixture exists purely to drive the validator.
  */
 const FIXTURE_SOURCE: OpenSourceArtifactSource = {
@@ -58,7 +58,7 @@ function decodeWebpDimensions(bytes: Buffer): {
   };
 }
 
-describe("pending Tech CV artifact record", () => {
+describe("pending CV Engine artifact record", () => {
   it("passes the real registry validator once a provenance pin is supplied", () => {
     expect(() =>
       assertOpenSourceArtifacts([composeForValidation(FIXTURE_SOURCE)]),
@@ -66,36 +66,36 @@ describe("pending Tech CV artifact record", () => {
   });
 
   it("has no source field in which an unverified pin could be written", () => {
-    expect(Object.hasOwn(PENDING_TECH_CV_ARTIFACT, "source")).toBe(false);
+    expect(Object.hasOwn(PENDING_CV_ENGINE_ARTIFACT, "source")).toBe(false);
   });
 
   it("stays out of every candidate lane until the repository is published", () => {
     expect(
       OPEN_SOURCE_ARTIFACT_CANDIDATES.some(
-        (artifact) => artifact.id === PENDING_TECH_CV_ARTIFACT.id,
+        (artifact) => artifact.id === PENDING_CV_ENGINE_ARTIFACT.id,
       ),
     ).toBe(false);
   });
 
   it("derives its identity and route from the single slug constant", () => {
-    expect(PENDING_TECH_CV_ARTIFACT.id).toBe("tool:tech-cv");
-    expect(PENDING_TECH_CV_ARTIFACT.href).toBe("/open-source/tools/tech-cv");
-    expect(PENDING_TECH_CV_ARTIFACT.slug).toBe("tech-cv");
+    expect(PENDING_CV_ENGINE_ARTIFACT.id).toBe("tool:cv-engine");
+    expect(PENDING_CV_ENGINE_ARTIFACT.href).toBe("/open-source/tools/cv-engine");
+    expect(PENDING_CV_ENGINE_ARTIFACT.slug).toBe("cv-engine");
   });
 
   it("matches the bytes and dimensions of both stored assets and their manifest rows", () => {
     const assets = readManifestAssets();
 
-    const licensePath = PENDING_TECH_CV_ARTIFACT.license.href;
+    const licensePath = PENDING_CV_ENGINE_ARTIFACT.license.href;
     const licenseBytes = readFileSync(
       resolve(process.cwd(), `public${licensePath}`),
     );
     expect(createHash("sha256").update(licenseBytes).digest("hex")).toBe(
-      PENDING_TECH_CV_ARTIFACT.license.sha256,
+      PENDING_CV_ENGINE_ARTIFACT.license.sha256,
     );
-    expect(licenseBytes.length).toBe(PENDING_TECH_CV_ARTIFACT.license.sizeBytes);
+    expect(licenseBytes.length).toBe(PENDING_CV_ENGINE_ARTIFACT.license.sizeBytes);
 
-    const screenshot = PENDING_TECH_CV_ARTIFACT.guide.screenshot;
+    const screenshot = PENDING_CV_ENGINE_ARTIFACT.guide.screenshot;
     const screenshotBytes = readFileSync(
       resolve(process.cwd(), `public${screenshot.src}`),
     );
@@ -111,8 +111,8 @@ describe("pending Tech CV artifact record", () => {
     for (const stored of [
       {
         path: `${PUBLIC_PREFIX}${licensePath}`,
-        sha256: PENDING_TECH_CV_ARTIFACT.license.sha256,
-        sizeBytes: PENDING_TECH_CV_ARTIFACT.license.sizeBytes,
+        sha256: PENDING_CV_ENGINE_ARTIFACT.license.sha256,
+        sizeBytes: PENDING_CV_ENGINE_ARTIFACT.license.sizeBytes,
       },
       {
         path: `${PUBLIC_PREFIX}${screenshot.src}`,
