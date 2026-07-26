@@ -32,7 +32,7 @@ export function ShelfReveal({
 
   return (
     <m.div
-      className={className}
+      className={className ? `js-reveal ${className}` : "js-reveal"}
       variants={fadeUp}
       initial="hidden"
       whileInView="visible"

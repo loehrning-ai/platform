@@ -2,15 +2,15 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 export const alt =
-  "loehrning.ai Kurse: KI, EU AI Act, Daten und Open-Source-Interaktivkurse";
+  "loehrning.ai Kurse: vier deutsche Kernkurse und sechs Technikkurse auf Englisch";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 const labels = [
   "KI-Führerschein",
+  "KI und Gesellschaft",
   "EU AI Act Kurs",
   "AI-Native Arbeitskurs",
-  "Open-Source-Interaktivkurse",
 ];
 
 export default function Image() {
@@ -63,8 +63,8 @@ export default function Image() {
               maxWidth: 900,
             }}
           >
-            Plattformkurse mit Fortschritt und Zertifikat plus technische Labore
-            aus dem GitHub-Kursrepo.
+            Vier deutsche Kernkurse mit Fortschritt und Zertifikat, dazu sechs
+            technische Kurse auf Englisch.
           </div>
         </div>
 

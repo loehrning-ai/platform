@@ -92,6 +92,14 @@ export default function RootLayout({
           Zum Inhalt springen
         </a>
         <ScrollToTop />
+        {/* Framer entrance wrappers serialize opacity:0 into the server HTML.
+            With scripting unavailable nothing ever reveals them, so every
+            .js-reveal element renders settled. !important beats the inline
+            style; harmless once hydration takes over (the noscript style is
+            inert with JS enabled). */}
+        <noscript>
+          <style>{`.js-reveal{opacity:1 !important;transform:none !important}`}</style>
+        </noscript>
         <div className="pointer-events-none fixed inset-0 z-0 bg-grid opacity-[0.3]" />
         <MotionProvider>
           <Nav />

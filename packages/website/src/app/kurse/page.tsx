@@ -15,7 +15,7 @@ const KURSE_SOCIAL_IMAGE = {
   url: `${SITE_URL}/kurse/opengraph-image`,
   width: 1200,
   height: 630,
-  alt: "loehrning.ai Kurse: KI, EU AI Act, Daten und Open-Source-Interaktivkurse",
+  alt: "loehrning.ai Kurse: vier deutsche Kernkurse und sechs Technikkurse auf Englisch",
 };
 
 export const metadata: Metadata = {
@@ -62,7 +62,7 @@ export default function KursePage() {
       <JsonLd data={COURSES_GRAPH} id="kurse-hub-jsonld" />
       <div className="mx-auto max-w-[1180px] px-6 pb-32 pt-20">
         {/* Top rule: brand signature */}
-        <div className="mb-9 h-[3px] w-[154px] rounded-full bg-brand-orange" />
+        <div className="mb-9 h-[3px] w-[154px] bg-brand-orange" />
 
         <div className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
           § Freie KI-Lernplattform · ein Lernpfad, plus Vertiefung

@@ -10,10 +10,11 @@ import { useRef, type ReactNode } from "react";
  * then run exactly once and settle.
  *
  * Deliberately no framer variants on the children: the plate stays a server
- * component, renders fully visible without JS (progressive enhancement),
- * carries no inline opacity for the reduced-motion samplers, and the global
- * `prefers-reduced-motion` kill-switch collapses the keyframes to their end
- * state.
+ * component and carries no inline opacity for the reduced-motion samplers;
+ * the global `prefers-reduced-motion` kill-switch collapses the keyframes to
+ * their end state. Note the plate's own no-JS safety only holds together
+ * with the layout's `.js-reveal` noscript escape hatch, because the grid
+ * wraps cards in framer entrance wrappers that serialize opacity:0.
  */
 export function PlateReveal({
   className,

@@ -67,9 +67,8 @@ test.describe("/kurse unified hub", () => {
     await expect(page.locator("body")).toContainText("EU AI Act Kurs");
     await expect(page.locator("body")).toContainText("AI-Native Arbeitskurs");
 
-    await expect(page.locator("body")).toContainText(
-      "Optionale technische Vertiefung aus dem GitHub-Kursrepo",
-    );
+    await expect(page.locator("body")).toContainText("Tiefer gehen");
+    await expect(page.locator("body")).toContainText("Technikkurse");
     for (const course of IMPORTED_COURSE_CATALOG) {
       await expect(
         page.locator("body"),
@@ -146,7 +145,7 @@ test.describe("/kurse unified hub", () => {
     expect(res?.status()).toBe(404);
   });
 
-  test("imported-course progress-like storage never activates native progress UI", async ({
+  test("ported-course progress feeds the native progress UI", async ({
     page,
   }) => {
     await seedProgress(page, {
@@ -173,15 +172,12 @@ test.describe("/kurse unified hub", () => {
     });
 
     await page.goto("/kurse", { waitUntil: "domcontentloaded" });
-    await expect(page.getByTestId("kurse-gamification")).toHaveCount(0);
-    await expect(page.getByTestId("progress-dots-claude")).toHaveCount(0);
-    await expect(page.getByTestId("progress-dots-data-science")).toHaveCount(0);
-    await expect(page.getByText("Fortschritt teilen")).toHaveCount(0);
-
-    await page.goto("/kurse/open-source/claude", { waitUntil: "domcontentloaded" });
-    await expect(page.getByText("Weiterlernen")).toHaveCount(0);
-    await expect(page.getByText("Fortschritt teilen")).toHaveCount(0);
-    await expect(page.locator('[data-testid^="progress-dots-"]')).toHaveCount(0);
+    // The six ported courses are native since the interactive-courses
+    // migration: stored progress hydrates their dots and the shared
+    // gamification banner exactly like the German spine courses.
+    await expect(page.getByTestId("kurse-gamification")).toBeVisible();
+    await expect(page.getByTestId("progress-dots-claude")).toHaveCount(1);
+    await expect(page.getByTestId("progress-dots-data-science")).toHaveCount(1);
   });
 
   test("is axe-clean", async ({ page }) => {

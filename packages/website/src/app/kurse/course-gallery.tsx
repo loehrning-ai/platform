@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { m } from "framer-motion";
 import {
   ArrowRight,
@@ -257,7 +258,7 @@ export function CourseGallery() {
             const startHref = stat.completed > 0 ? course.continueHref : course.startHref;
 
             return (
-              <m.li key={course.slug} variants={staggerItem}>
+              <m.li key={course.slug} variants={staggerItem} className="js-reveal">
                 <Card interactive accent="kupfer" className="h-full">
                   <PlateReveal>
                     <CoursePlate
@@ -280,6 +281,14 @@ export function CourseGallery() {
                     <span className="sr-only">Schritt {course.step}: </span>
                     {course.title}
                   </h3>
+                  {/* Accessible twin of the aria-hidden plate: same facts,
+                      unpadded values, announced AFTER the heading so they
+                      attach to the right course. */}
+                  <p className="sr-only">
+                    Umfang: {course.unitCount} {course.unitLabel},{" "}
+                    {course.totalLessons} Lektionen. Dauer: {course.duration}.
+                    Preis: Kostenlos.
+                  </p>
                   <p className="mt-2 text-[15px] font-semibold leading-snug text-foreground">
                     {course.tagline}
                   </p>
@@ -420,7 +429,7 @@ export function CourseGallery() {
                 : null;
 
               return (
-                <m.li key={course.slug} variants={staggerItem}>
+                <m.li key={course.slug} variants={staggerItem} className="js-reveal">
                   <Card interactive accent="sand" className="h-full">
                     {/* Framed specimen: the pinned course screenshot mounted on
                         a mat at its true 16:10, with the provenance caption
@@ -555,7 +564,7 @@ export function CourseGallery() {
             {PENDING_COURSES.map((course) => {
               const Icon = iconByName(courseIconName(course.slug));
               return (
-                <m.li key={course.slug} variants={staggerItem}>
+                <m.li key={course.slug} variants={staggerItem} className="js-reveal">
                   <Card accent="sand" className="h-full">
                     {/* Screenshot preview + stroke-only GitHub link */}
                     <div className="relative overflow-hidden rounded-lg border border-border">
@@ -618,7 +627,7 @@ export function CourseGallery() {
                       {course.sourceFacts.slice(0, 4).map((fact) => (
                         <li
                           key={fact}
-                          className="rounded-full bg-brand-sand/20 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-foreground"
+                          className="rounded-none bg-brand-sand/20 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-foreground"
                         >
                           {fact}
                         </li>
@@ -626,7 +635,7 @@ export function CourseGallery() {
                       {course.topics.slice(0, 3).map((topic) => (
                         <li
                           key={topic}
-                          className="rounded-full bg-card-hover px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground"
+                          className="rounded-none bg-card-hover px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground"
                         >
                           {topic}
                         </li>
@@ -661,6 +670,17 @@ export function CourseGallery() {
               );
             })}
           </m.ul>
+
+          <p className="mt-8 text-sm leading-relaxed text-muted-foreground">
+            Angewandte Kurse aus echten Workshops findest du unter{" "}
+            <Link
+              href="/workshops"
+              className="font-semibold text-foreground underline-offset-4 hover:underline"
+            >
+              /workshops
+            </Link>
+            .
+          </p>
         </div>
       </section>
     </div>

@@ -172,7 +172,7 @@ export function Offering() {
                     aria-hidden="true"
                     className="absolute right-3 top-2 font-mono text-[36px] font-bold leading-none text-brand-orange/15"
                   >
-                    01
+                    {String(featured.step).padStart(2, "0")}
                   </span>
                   <dl className="relative flex flex-col font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
                     <div className="flex items-center justify-between gap-3 border-b border-border/60 py-1.5">
@@ -211,7 +211,7 @@ export function Offering() {
                   <div className="flex items-start gap-4">
                     <span
                       aria-hidden="true"
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-none border border-border bg-background font-mono text-[15px] font-bold text-brand-orange shadow-tile"
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-none border border-border bg-background font-mono text-[15px] font-bold text-foreground shadow-tile"
                     >
                       {String(course.step).padStart(2, "0")}
                     </span>

@@ -12,7 +12,8 @@ import { cn } from "@/lib/utils";
  *
  * Server-safe on purpose: no hooks, no framer. The assembly animation is CSS
  * keyframes gated by a `data-assembled` attribute that `PlateReveal` sets in
- * view; without JS the plate renders fully visible and settled.
+ * view; without JS the plate itself renders settled, and the framer card
+ * wrapper around it is covered by the layout's `.js-reveal` noscript rule.
  */
 
 const RECORD_PLATE_LABEL: Record<RecordKind, string | null> = {
@@ -118,10 +119,15 @@ export function CoursePlate({
     },
     { label: "Dauer", value: duration },
     ...(recordLabel ? [{ label: "Nachweis", value: recordLabel }] : []),
-    { label: "Preis", value: "Kostenlos", accent: true },
+    // Ink on purpose: the plate carries no Kupfer accent of its own, so the
+    // page's accent budget stays with the CTA and the "erreicht" stamp.
+    { label: "Preis", value: "Kostenlos" },
   ];
 
   return (
+    // rounded-t-xl is inherited geometry, not plate grammar: the plate bleeds
+    // to the edges of the rounded Card shell, so its top corners must follow
+    // the shell. Everything belonging to the plate itself stays square.
     <div className="relative -mx-6 -mt-6 mb-5 overflow-hidden rounded-t-xl border-b border-border bg-background bg-dot-pattern">
       <Rivets />
       <div className="grid grid-cols-[1fr_auto] gap-x-5 p-5 sm:p-6">
@@ -139,7 +145,7 @@ export function CoursePlate({
             aria-hidden="true"
             className="plate-rule mt-2 block h-px w-full origin-left bg-border"
           />
-          <dl className="mt-2">
+          <dl aria-hidden="true" className="mt-2">
             {rows.map((row, i) => (
               <div
                 key={row.label}
@@ -163,7 +169,7 @@ export function CoursePlate({
           <PlateForm family={family} rotation={rotation} />
           <span
             aria-hidden="true"
-            className="plate-numeral relative font-mono text-[56px] font-bold leading-none tracking-[-0.04em] text-brand-orange sm:text-[72px]"
+            className="plate-numeral relative font-mono text-[56px] font-bold leading-none tracking-[-0.04em] text-brand-orange/20 sm:text-[72px]"
           >
             {pad(step)}
           </span>

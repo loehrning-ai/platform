@@ -129,24 +129,24 @@ export function OpenSourceArtifactCard({
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           {artifact.description}
         </p>
-        <dl className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] text-muted-foreground">
+        {/* The separator dots are ::before pseudo-content, never DOM
+            children: a <dl> may only directly contain dt/dd groups (or divs
+            wrapping them), and pseudo-elements are invisible to the
+            accessibility tree by nature. */}
+        <dl className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] text-muted-foreground [&>div]:flex [&>div]:items-baseline [&>div+div]:before:mr-2 [&>div+div]:before:content-['·']">
           <div>
             <dt className="sr-only">Lizenz</dt>
             <dd>{artifact.license.licenseId ?? artifact.license.sourcePath}</dd>
           </div>
-          <span aria-hidden="true">·</span>
           <div>
             <dt className="sr-only">Commit</dt>
             <dd>{artifact.source.revision.slice(0, 10)}</dd>
           </div>
           {guide ? (
-            <>
-              <span aria-hidden="true">·</span>
-              <div>
-                <dt className="sr-only">Status</dt>
-                <dd>{STATUS_LABELS[guide.status]}</dd>
-              </div>
-            </>
+            <div>
+              <dt className="sr-only">Status</dt>
+              <dd>{STATUS_LABELS[guide.status]}</dd>
+            </div>
           ) : null}
         </dl>
         <div className="mt-auto pt-4">

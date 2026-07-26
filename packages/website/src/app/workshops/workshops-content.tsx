@@ -102,7 +102,7 @@ export function WorkshopsContent({ workshops }: Props) {
             viewport={{ once: true, margin: "-40px" }}
           >
             {workshops.map((workshop) => (
-              <m.div key={workshop.slug} variants={staggerItem} className="h-full">
+              <m.div key={workshop.slug} variants={staggerItem} className="js-reveal h-full">
                 <WorkshopCard workshop={workshop} />
               </m.div>
             ))}
@@ -152,10 +152,7 @@ function WorkshopCard({ workshop }: { readonly workshop: Workshop }) {
   ] as const;
 
   return (
-    <Link
-      href={`/workshops/${workshop.slug}`}
-      className="group flex h-full flex-col rounded-none border border-border border-t-[3px] border-t-brand-orange bg-card/30 transition-colors hover:bg-card/60"
-    >
+    <div className="group relative flex h-full flex-col rounded-none border border-border border-t-[3px] border-t-brand-orange bg-card/30 transition-colors hover:bg-card/60">
       {/* Typenschild: the workshop's facts as a data plate. Every future
           workshop generates its own from duration/steps/audience/materials,
           so the card needs no photography. Numeral stays ink: the single
@@ -176,7 +173,7 @@ function WorkshopCard({ workshop }: { readonly workshop: Workshop }) {
           <span>zum Nachbauen</span>
         </div>
         <span aria-hidden="true" className="mt-2 block h-px w-full bg-border" />
-        <div className="grid grid-cols-[1fr_auto] gap-x-4">
+        <div aria-hidden="true" className="grid grid-cols-[1fr_auto] gap-x-4">
           <dl className="mt-1">
             {rows.map((row) => (
               <div
@@ -203,7 +200,7 @@ function WorkshopCard({ workshop }: { readonly workshop: Workshop }) {
           {workshop.steps.map((step, i) => (
             <span
               key={step.title}
-              className="h-1 flex-1 bg-border transition-colors duration-200 group-hover:bg-brand-orange"
+              className="h-1 flex-1 bg-border transition-colors duration-200 group-hover:bg-foreground/40"
               style={{ transitionDelay: `${i * 35}ms` }}
             />
           ))}
@@ -212,14 +209,27 @@ function WorkshopCard({ workshop }: { readonly workshop: Workshop }) {
 
       <div className="flex flex-1 flex-col p-6">
         <h2 className="mb-2 text-lg font-semibold leading-snug tracking-[-0.02em] group-hover:text-brand-orange">
-          {workshop.title}
+          {/* Stretched link: names the card by its title alone and keeps the
+              whole card clickable without pouring the plate into the link's
+              accessible name. */}
+          <Link
+            href={`/workshops/${workshop.slug}`}
+            className="after:absolute after:inset-0"
+          >
+            {workshop.title}
+          </Link>
         </h2>
+        <p className="sr-only">
+          {workshop.format}. Dauer: {workshop.duration}. {workshop.steps.length}{" "}
+          Schritte. {workshop.audience.length} Zielgruppen.{" "}
+          {workshop.materials.length} Downloads.
+        </p>
         <p className="mb-5 flex-1 text-sm leading-relaxed text-muted-foreground">
           {workshop.description}
         </p>
         <div className="flex items-center justify-between border-t border-border pt-3">
           <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
-            {workshop.audience.length} Zielgruppen
+            {workshop.format}
           </span>
           <span className="inline-flex items-center gap-1 text-xs font-medium text-brand-orange opacity-70 transition-opacity group-hover:opacity-100">
             Workshop öffnen
@@ -227,6 +237,6 @@ function WorkshopCard({ workshop }: { readonly workshop: Workshop }) {
           </span>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
