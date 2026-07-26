@@ -17,7 +17,7 @@
       "sizeBytes": 1066,
       "sha256": "36beaa24d27fc788e411a7fd7cc93d752878e6c51240a8abcc1156ff1451c5bd",
       "owner": "Tim Löhr",
-      "source": "Prepared for publication; provenance pinned at admission (see packages/website/src/lib/open-source/pending/cv-engine.ts)",
+      "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/LICENSE",
       "license": "MIT",
       "redistribution": "Redistribution of this license notice is required with the corresponding MIT-licensed work"
     },
@@ -26,7 +26,7 @@
       "sizeBytes": 132292,
       "sha256": "8c402e73a3ac46498d5fbfe6f39e03eebf532e62fe4b5ae69941211e96492aff",
       "owner": "Tim Löhr",
-      "source": "Prepared for publication; provenance pinned at admission (see packages/website/src/lib/open-source/pending/cv-engine.ts)",
+      "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/preview-card.webp",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
       "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"

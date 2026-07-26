@@ -1190,20 +1190,44 @@ describe("open-source artifact registry", () => {
     ).toThrow(/guide/);
   });
 
-  it("keeps every publication lane empty until a loehrning-ai repository exists", () => {
-    expect(OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES).toEqual([]);
+  it("admits exactly the pinned cv-engine tool and keeps the other lanes empty", () => {
+    // The tool lane carries its first admitted record. Every claim here is a
+    // tripwire: an accidental second entry, a slug drift, or a silently
+    // changed pin fails loudly instead of shipping.
+    expect(OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES).toHaveLength(1);
+    const [cvEngine] = OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES;
+    expect(cvEngine.id).toBe("tool:cv-engine");
+    expect(cvEngine.slug).toBe("cv-engine");
+    expect(cvEngine.href).toBe("/open-source/tools/cv-engine");
+    expect(cvEngine.source.href).toBe(
+      "https://github.com/loehrning-ai/cv-engine",
+    );
+    expect(cvEngine.source.revision).toBe(
+      "f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e",
+    );
+    expect(cvEngine.source.revisionHref).toBe(
+      "https://github.com/loehrning-ai/cv-engine/commit/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e",
+    );
+    expect(OPEN_SOURCE_ARTIFACT_CANDIDATE_REGISTRY.tool).toHaveLength(1);
+    expect(OPEN_SOURCE_ARTIFACT_CANDIDATES).toHaveLength(1);
+
+    // The record enters as draft: complete, pinned, and validated, but not
+    // yet exposed through any published view. Flipping the lifecycle is a
+    // separate, deliberate commit that also updates these assertions.
+    expect(cvEngine.publicationLifecycle).toBe("draft");
+    expect(OPEN_SOURCE_TOOL_ARTIFACTS).toEqual([]);
+    expect(OPEN_SOURCE_ARTIFACT_REGISTRY.tool).toHaveLength(0);
+    expect(OPEN_SOURCE_ARTIFACTS).toEqual([]);
+
+    // The project and video lanes remain deliberately empty until a
+    // loehrning-ai repository of that kind is published.
     expect(OPEN_SOURCE_PROJECT_ARTIFACT_CANDIDATES).toEqual([]);
     expect(OPEN_SOURCE_VIDEO_ARTIFACT_CANDIDATES).toEqual([]);
-    expect(OPEN_SOURCE_TOOL_ARTIFACTS).toEqual([]);
     expect(OPEN_SOURCE_PROJECT_ARTIFACTS).toEqual([]);
     expect(OPEN_SOURCE_VIDEO_ARTIFACTS).toEqual([]);
-    expect(OPEN_SOURCE_ARTIFACT_CANDIDATE_REGISTRY.tool).toHaveLength(0);
     expect(OPEN_SOURCE_ARTIFACT_CANDIDATE_REGISTRY.project).toHaveLength(0);
     expect(OPEN_SOURCE_ARTIFACT_CANDIDATE_REGISTRY.video).toHaveLength(0);
-    expect(OPEN_SOURCE_ARTIFACT_CANDIDATES).toEqual([]);
-    expect(OPEN_SOURCE_ARTIFACT_REGISTRY.tool).toHaveLength(0);
     expect(OPEN_SOURCE_ARTIFACT_REGISTRY.project).toHaveLength(0);
     expect(OPEN_SOURCE_ARTIFACT_REGISTRY.video).toHaveLength(0);
-    expect(OPEN_SOURCE_ARTIFACTS).toEqual([]);
   });
 });
