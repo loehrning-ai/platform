@@ -1232,7 +1232,7 @@ const CV_ENGINE_REVISION = "f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e";
 const CV_ENGINE_TOOL_ARTIFACT = {
   id: `tool:${CV_ENGINE_SLUG}`,
   kind: "tool",
-  publicationLifecycle: "draft",
+  publicationLifecycle: "published",
   slug: CV_ENGINE_SLUG,
   title: "CV Engine",
   eyebrow: "Werkzeug · Lebenslauf-Rendering",
@@ -1382,8 +1382,9 @@ const CV_ENGINE_TOOL_ARTIFACT = {
     screenshot: {
       src: `/artifacts/tools/${CV_ENGINE_SLUG}/screenshot.webp`,
       sourcePath: "docs/screenshots/preview-card.webp",
-      // Rendered twice and visibly: as the image alt text and again as the
-      // figure caption below it. Written as publishable prose for that reason.
+      // Rendered once and visibly: as the figure caption, which also labels
+      // the figure (the img itself carries an empty alt so screen readers
+      // hear the prose exactly once). Written as publishable prose.
       alt: "Der Editor in zwei Spalten: links die YAML-Ansicht des gespeicherten Lebenslaufs, deren erste Kommentarzeilen die Einseitenregel festhalten, rechts die A4-Vorschau in Seitenansicht mit der grünen Plakette 1 page in der Kopfzeile.",
       sha256: "8c402e73a3ac46498d5fbfe6f39e03eebf532e62fe4b5ae69941211e96492aff",
       sizeBytes: 132292,

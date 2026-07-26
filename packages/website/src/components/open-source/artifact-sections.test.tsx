@@ -100,12 +100,38 @@ const TOOL = {
 assertOpenSourceArtifacts([TOOL]);
 
 describe("OpenSourceArtifactSections", () => {
-  it("renders no section headings while every publication lane is empty", () => {
-    render(<OpenSourceArtifactSections />);
+  it("renders no section headings when every provided lane is empty", () => {
+    // Explicit empty lanes, not the registry default: the live registry now
+    // carries a published tool, so this case pins the empty-state BEHAVIOR
+    // (a future project/video-only wipe, a filtered view) rather than the
+    // registry's current population.
+    const sections: readonly OpenSourceArtifactSection[] = [
+      { kind: "tool", heading: "Werkzeuge", artifacts: [] },
+      { kind: "project", heading: "Projekte", artifacts: [] },
+      { kind: "video", heading: "Videos", artifacts: [] },
+    ];
+    render(<OpenSourceArtifactSections sections={sections} />);
 
     expect(
       screen.queryByRole("heading", { name: "Werkzeuge" }),
     ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { name: "Projekte" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { name: "Videos" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("renders the live registry's published cv-engine tool by default", () => {
+    render(<OpenSourceArtifactSections />);
+
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Werkzeuge" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 3, name: "CV Engine" }),
+    ).toBeInTheDocument();
     expect(
       screen.queryByRole("heading", { name: "Projekte" }),
     ).not.toBeInTheDocument();

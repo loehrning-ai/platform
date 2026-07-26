@@ -1211,13 +1211,13 @@ describe("open-source artifact registry", () => {
     expect(OPEN_SOURCE_ARTIFACT_CANDIDATE_REGISTRY.tool).toHaveLength(1);
     expect(OPEN_SOURCE_ARTIFACT_CANDIDATES).toHaveLength(1);
 
-    // The record enters as draft: complete, pinned, and validated, but not
-    // yet exposed through any published view. Flipping the lifecycle is a
-    // separate, deliberate commit that also updates these assertions.
-    expect(cvEngine.publicationLifecycle).toBe("draft");
-    expect(OPEN_SOURCE_TOOL_ARTIFACTS).toEqual([]);
-    expect(OPEN_SOURCE_ARTIFACT_REGISTRY.tool).toHaveLength(0);
-    expect(OPEN_SOURCE_ARTIFACTS).toEqual([]);
+    // The record is published: it is the one entry every published view,
+    // discovery surface, and static detail route derives from.
+    expect(cvEngine.publicationLifecycle).toBe("published");
+    expect(OPEN_SOURCE_TOOL_ARTIFACTS).toHaveLength(1);
+    expect(OPEN_SOURCE_TOOL_ARTIFACTS[0]?.id).toBe("tool:cv-engine");
+    expect(OPEN_SOURCE_ARTIFACT_REGISTRY.tool).toHaveLength(1);
+    expect(OPEN_SOURCE_ARTIFACTS).toHaveLength(1);
 
     // The project and video lanes remain deliberately empty until a
     // loehrning-ai repository of that kind is published.
