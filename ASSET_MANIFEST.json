@@ -471,42 +471,6 @@
       "source": "https://github.com/rsms/inter",
       "license": "OFL-1.1",
       "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
-    },
-    {
-      "path": "packages/website/public/course-covers/ai-native.png",
-      "sizeBytes": 24634,
-      "sha256": "899c5581b930d6fe4ccbd90dfc037b04828d3a1d20817e894bb2bff56167f1f9",
-      "owner": "Tim Löhr",
-      "source": "Authored loehrning.ai course cover",
-      "license": "LicenseRef-Loehrning-Editorial",
-      "redistribution": "Included for repository operation; reuse is not granted"
-    },
-    {
-      "path": "packages/website/public/course-covers/eu-ai-act-kurs.png",
-      "sizeBytes": 23182,
-      "sha256": "9c67301f9bfa4afd8986d9c5555ed071d42c434be68de21fe30513fb7e5fb427",
-      "owner": "Tim Löhr",
-      "source": "Authored loehrning.ai course cover",
-      "license": "LicenseRef-Loehrning-Editorial",
-      "redistribution": "Included for repository operation; reuse is not granted"
-    },
-    {
-      "path": "packages/website/public/course-covers/ki-fuehrerschein.png",
-      "sizeBytes": 23872,
-      "sha256": "456c0f0bb2e29a8f422c113edf4b9ff869bcf6ff7d4e28d3738f5b9c2204b436",
-      "owner": "Tim Löhr",
-      "source": "Authored loehrning.ai course cover",
-      "license": "LicenseRef-Loehrning-Editorial",
-      "redistribution": "Included for repository operation; reuse is not granted"
-    },
-    {
-      "path": "packages/website/public/course-covers/ki-und-gesellschaft.png",
-      "sizeBytes": 24774,
-      "sha256": "e59e6966a88f9381bfe05feb44139e75eaadcd63a2e5def1178a06b39f1e1735",
-      "owner": "Tim Löhr",
-      "source": "Authored loehrning.ai course cover",
-      "license": "LicenseRef-Loehrning-Editorial",
-      "redistribution": "Included for repository operation; reuse is not granted"
     }
   ]
 }

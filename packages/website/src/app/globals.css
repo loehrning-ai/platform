@@ -326,6 +326,75 @@
   }
 }
 
+/* ── Typenschild assembly ─────────────────────────────────────────────────
+   The course data plates "assemble" exactly once when they scroll into view:
+   the rule draws, the fact rows stamp in left-to-right, the numeral settles.
+   Gated by [data-assembled] (set by PlateReveal); without JS the plate
+   renders settled and fully visible. `backwards` fill keeps the pre-state
+   only while the animation is armed; every animation is finite and ends at
+   full opacity, and the global reduced-motion kill-switch below collapses
+   all of it to 0.01ms. */
+@keyframes plate-rule-in {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes plate-row-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes plate-numeral-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+[data-assembled] .plate-rule {
+  animation: plate-rule-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+[data-assembled] .plate-row {
+  animation: plate-row-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(var(--row-i, 0) * 60ms);
+}
+
+[data-assembled] .plate-numeral {
+  animation: plate-numeral-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) 120ms backwards;
+}
+
+/* One-shot stamp landing for status chips ("erreicht", "Link kopiert"):
+   the rectangular stamp presses onto the paper. Finite, settles at scale 1. */
+@keyframes stamp-in {
+  0% {
+    opacity: 0;
+    transform: scale(1.12);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.stamp-in {
+  animation: stamp-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

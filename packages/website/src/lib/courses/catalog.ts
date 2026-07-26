@@ -36,9 +36,13 @@ export interface CatalogCourse {
   readonly unitCount: number;
   /** Audience line. */
   readonly audience: string;
-  /** Course landing-page screenshot shown on the Lernpfad card banner. */
-  readonly coverImage: string;
-  readonly coverImageAlt: string;
+  /**
+   * Card banner image. The four German spine courses render a programmatic
+   * Typenschild instead (src/app/kurse/course-plate.tsx) and carry no cover
+   * asset; the six ported courses keep their provenance-pinned screenshots.
+   */
+  readonly coverImage?: string;
+  readonly coverImageAlt?: string;
   /**
    * Every entry in COURSE_CATALOG is "live" by construction (a course only
    * ever enters this array once it is fully native). The single field the
@@ -134,8 +138,6 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     unitLabel: "Blöcke",
     unitCount: 5,
     audience: "Alle Mitarbeiter, die KI nutzen",
-    coverImage: "/course-covers/ki-fuehrerschein.png",
-    coverImageAlt: "Startseite des KI-Führerschein-Kurses",
     nativeStatus: "live",
   },
   {
@@ -154,8 +156,6 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     unitLabel: "Blöcke",
     unitCount: 3,
     audience: "Alle ohne Vorkenntnisse",
-    coverImage: "/course-covers/ki-und-gesellschaft.png",
-    coverImageAlt: "Startseite des Kurses KI und Gesellschaft",
     nativeStatus: "live",
   },
   {
@@ -174,8 +174,6 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     unitLabel: "Blöcke",
     unitCount: 6,
     audience: "Compliance, IT-Leitung, Geschäftsführung",
-    coverImage: "/course-covers/eu-ai-act-kurs.png",
-    coverImageAlt: "Startseite des EU AI Act Kurses",
     nativeStatus: "live",
   },
   {
@@ -194,8 +192,6 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     unitLabel: "Module",
     unitCount: 4,
     audience: "Mitarbeiter, Selbstständige und Studierende",
-    coverImage: "/course-covers/ai-native.png",
-    coverImageAlt: "Startseite des AI-Native Arbeitskurses",
     nativeStatus: "live",
   },
   // Claude Course: first imported course flipped from
