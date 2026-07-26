@@ -1,12 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import type {
-  OpenSourceArtifactSection,
   SoftwareArtifactGuide,
   ToolArtifact,
 } from "@/lib/open-source/artifacts";
 import { assertOpenSourceArtifacts } from "@/lib/open-source/artifacts";
-import { OpenSourceArtifactSections } from "./artifact-sections";
+import { OpenSourceArtifactShelf } from "./artifact-shelf";
 
 const GUIDE = {
   status: "experimental",
@@ -99,66 +98,61 @@ const TOOL = {
 
 assertOpenSourceArtifacts([TOOL]);
 
-describe("OpenSourceArtifactSections", () => {
-  it("renders no section headings when every provided lane is empty", () => {
-    // Explicit empty lanes, not the registry default: the live registry now
-    // carries a published tool, so this case pins the empty-state BEHAVIOR
-    // (a future project/video-only wipe, a filtered view) rather than the
-    // registry's current population.
-    const sections: readonly OpenSourceArtifactSection[] = [
-      { kind: "tool", heading: "Werkzeuge", artifacts: [] },
-      { kind: "project", heading: "Projekte", artifacts: [] },
-      { kind: "video", heading: "Videos", artifacts: [] },
-    ];
-    render(<OpenSourceArtifactSections sections={sections} />);
+describe("OpenSourceArtifactShelf", () => {
+  it("renders nothing at all when the shelf is empty", () => {
+    // No placeholder copy, no empty-state promise: with zero entries the
+    // Werkverzeichnis simply does not appear. The retired lane headings must
+    // never return as headings.
+    const { container } = render(<OpenSourceArtifactShelf artifacts={[]} />);
 
+    expect(container).toBeEmptyDOMElement();
     expect(
-      screen.queryByRole("heading", { name: "Werkzeuge" }),
+      screen.queryByRole("heading", { name: "Alle Werke" }),
     ).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole("heading", { name: "Projekte" }),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole("heading", { name: "Videos" }),
-    ).not.toBeInTheDocument();
+    for (const retired of ["Werkzeuge", "Projekte", "Videos"]) {
+      expect(
+        screen.queryByRole("heading", { name: retired }),
+      ).not.toBeInTheDocument();
+    }
   });
 
   it("renders the live registry's published cv-engine tool by default", () => {
-    render(<OpenSourceArtifactSections />);
+    render(<OpenSourceArtifactShelf />);
 
     expect(
-      screen.getByRole("heading", { level: 2, name: "Werkzeuge" }),
+      screen.getByRole("heading", { level: 2, name: "Alle Werke" }),
     ).toBeInTheDocument();
+    expect(screen.getByText("1 Eintrag")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { level: 3, name: "CV Engine" }),
     ).toBeInTheDocument();
-    expect(
-      screen.queryByRole("heading", { name: "Projekte" }),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole("heading", { name: "Videos" }),
-    ).not.toBeInTheDocument();
+    expect(screen.getByText("Werkzeug")).toBeInTheDocument();
+    for (const retired of ["Werkzeuge", "Projekte", "Videos"]) {
+      expect(
+        screen.queryByRole("heading", { name: retired }),
+      ).not.toBeInTheDocument();
+    }
   });
 
-  it("renders a published artifact under its kind heading and skips empty lanes", () => {
-    const sections: readonly OpenSourceArtifactSection[] = [
-      { kind: "tool", heading: "Werkzeuge", artifacts: [TOOL] },
-      { kind: "project", heading: "Projekte", artifacts: [] },
-      { kind: "video", heading: "Videos", artifacts: [] },
-    ];
-    render(<OpenSourceArtifactSections sections={sections} />);
+  it("renders provided artifacts in one grid with kind stamps and count", () => {
+    render(<OpenSourceArtifactShelf artifacts={[TOOL]} />);
 
     expect(
-      screen.getByRole("heading", { level: 2, name: "Werkzeuge" }),
+      screen.getByRole("heading", { level: 2, name: "Alle Werke" }),
     ).toBeInTheDocument();
+    expect(screen.getByText("1 Eintrag")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { level: 3, name: TOOL.title }),
     ).toBeInTheDocument();
+    // The kind is a stamp on the card, never a heading.
+    expect(screen.getByText("Werkzeug")).toBeInTheDocument();
     expect(
-      screen.queryByRole("heading", { name: "Projekte" }),
+      screen.queryByRole("heading", { name: "Werkzeug" }),
     ).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole("heading", { name: "Videos" }),
-    ).not.toBeInTheDocument();
+    for (const retired of ["Werkzeuge", "Projekte", "Videos"]) {
+      expect(
+        screen.queryByRole("heading", { name: retired }),
+      ).not.toBeInTheDocument();
+    }
   });
 });

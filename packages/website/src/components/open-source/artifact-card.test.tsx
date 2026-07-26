@@ -124,8 +124,12 @@ describe("OpenSourceArtifactCard", () => {
       expect(
         screen.getByRole("link", { name: `Detail ${artifact.title}` }),
       ).toHaveAttribute("href", artifact.href);
+      // The GitHub action names the repo: the visible mono path sits inside
+      // the composed accessible name (label-in-name, WCAG 2.5.3).
       expect(
-        screen.getByRole("link", { name: `Quelle ${artifact.title}` }),
+        screen.getByRole("link", {
+          name: `Quelle loehrning-ai/${artifact.slug} ${artifact.title}`,
+        }),
       ).toHaveAttribute("href", artifact.source.href);
       expect(
         screen.getByRole("link", { name: `Lizenz ${artifact.title}` }),
@@ -198,7 +202,9 @@ describe("OpenSourceArtifactCard", () => {
       screen.getByRole("link", { name: `Öffnen ${launchable.title}` }),
     ).toHaveAccessibleDescription("Wird in einem neuen Tab geöffnet.");
     expect(
-      screen.getByRole("link", { name: `Quelle ${launchable.title}` }),
+      screen.getByRole("link", {
+        name: `Quelle loehrning-ai/${launchable.slug} ${launchable.title}`,
+      }),
     ).toHaveAccessibleDescription("Wird in einem neuen Tab geöffnet.");
   });
 });
