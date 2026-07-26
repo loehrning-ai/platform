@@ -16,8 +16,9 @@ Candidate records are always complete and validated; their
 creates discovery data, a sitemap entry, a page-inventory row, and, for tools,
 projects, and videos, a static detail route. Do not add a partial record.
 
-No tool, project, or video is published in the current registry. The empty
-arrays are deliberate release state, not placeholders.
+The registry currently publishes one tool: `tool:cv-engine`, pinned to the
+single root commit of `github.com/loehrning-ai/cv-engine`. The project and
+video lanes are deliberately empty release state, not placeholders.
 
 ## Canonical files
 

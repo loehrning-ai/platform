@@ -95,10 +95,11 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
 
-### Open-Source-Artefakte (0)
+### Open-Source-Artefakte (1)
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
+| https://loehrning.ai/open-source/tools/cv-engine | CV Engine | Lokaler YAML-zu-PDF-Build für einseitige Lebensläufe, mit Browser-Editor, A4-Vorschau und optionaler KI. Über… | src/lib/open-source/artifacts.ts | source revision f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e | Tim Löhr |
 
 ### Indexable patterns deliberately excluded from the sitemap
 
