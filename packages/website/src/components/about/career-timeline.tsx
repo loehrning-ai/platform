@@ -7,21 +7,28 @@ import { fadeUp } from "@/lib/animations";
 // übernimmt TIM_ENTITY.noEndorsementNotice auf der /ueber-mich-Seite.
 const milestones = [
   {
-    period: "2019-2022",
+    period: "2021",
+    role: "Werkstudent",
+    company: "Amazon",
+    description: "Erste Datenrolle neben dem Studium",
+    color: "text-muted-foreground",
+  },
+  {
+    period: "2022-2024",
     role: "Data Scientist",
     company: "Apple",
     description: "Analytics, Datenmodelle und operative Auswertung",
     color: "text-muted-foreground",
   },
   {
-    period: "2022-2024",
+    period: "2024-2025",
     role: "Data Scientist",
     company: "Red Bull",
     description: "KI-Tools für Fachbereiche, MLOps und Supply-Chain-Analytics",
     color: "text-muted-foreground",
   },
   {
-    period: "2024-2026",
+    period: "2025-2026",
     role: "Data Engineer",
     company: "Meta",
     description: "Datenqualität, Pipelines und Analytics-Systeme",
@@ -53,14 +60,17 @@ export function CareerTimeline() {
             Karriere
           </m.h2>
 
-          {/* Desktop: horizontal 5-col — only at lg+ where 5 columns have room;
-              tablet keeps the legible vertical list below (was cramped at md) */}
+          {/* Desktop: horizontal strip — only at lg+ where the columns have
+              room; tablet keeps the legible vertical list below (was cramped
+              at md). The column count is a literal because Tailwind cannot
+              generate a class from a runtime value: it must stay equal to
+              `milestones.length`, which career-timeline.test.tsx asserts. */}
           <div className="mt-10 hidden lg:block">
             <div className="relative">
               {/* Line */}
               <div className="absolute left-0 right-0 top-4 h-px bg-border/50" />
 
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-5 gap-4">
                 {milestones.map((mil, i) => (
                   <m.div
                     key={mil.period}
