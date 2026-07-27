@@ -69,6 +69,16 @@ function ArtifactCardMedia({ artifact }: { artifact: OpenSourceArtifact }) {
 
   return (
     <div className="relative aspect-[8/5] w-full overflow-hidden border-b border-border bg-card">
+      {/* The preview is a second route to the detail page. It is deliberately
+          removed from the accessibility tree and the tab order: the footer's
+          "Detail {Titel}" link already leads here, so an equal image link
+          would only add a duplicate tab stop and a duplicate announcement. */}
+      <Link
+        href={artifact.href}
+        aria-hidden="true"
+        tabIndex={-1}
+        className="absolute inset-0 z-10"
+      />
       <Image
         src={media.src}
         alt={media.alt}
@@ -76,7 +86,7 @@ function ArtifactCardMedia({ artifact }: { artifact: OpenSourceArtifact }) {
         sizes={CARD_MEDIA_SIZES}
         className="object-cover object-top transition-transform duration-300 ease-out group-hover:scale-[1.03]"
       />
-      <span className="absolute left-3 top-3 border border-border bg-background px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-foreground">
+      <span className="absolute left-3 top-3 z-20 border border-border bg-background px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-foreground">
         {KIND_LABELS[artifact.kind]}
       </span>
     </div>

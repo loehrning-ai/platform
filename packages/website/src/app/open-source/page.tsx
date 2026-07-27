@@ -103,7 +103,12 @@ export default function OpenSourcePage() {
           <div className="mt-5 grid gap-8 lg:grid-cols-[1fr_320px] lg:items-start">
             <div>
               <h1 className="max-w-4xl text-4xl font-bold leading-[0.95] tracking-[-0.04em] sm:text-6xl">
-                Das Werkverzeichnis. Offen auf GitHub.
+                {/* The trailing space is load-bearing: without it the line
+                    break joins the sentences in the accessible name, and a
+                    screen reader announces "Werkverzeichnis.Offen". */}
+                Das Werkverzeichnis.{" "}
+                <br />
+                Offen auf GitHub.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
                 Hier findest du jedes veröffentlichte Werk aus der
