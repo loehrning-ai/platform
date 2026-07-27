@@ -98,8 +98,17 @@ Self-referential source publication requires two changes:
 
 1. Commit A adds and verifies the artifact source, documentation, license, and
    reviewed assets while its public artifact array remains unchanged. Publish
-   Commit A to the intended public GitHub repository and record its full
-   40-character SHA.
+   Commit A to the intended public GitHub repository. **Before recording its
+   SHA, harden the new repository**: apply a `Protect main` branch ruleset
+   (deletion, non_fast_forward, required_linear_history, pull_request,
+   required_status_checks with the repository's real check names, and an
+   empty `bypass_actors` so no role, including admins, bypasses), and enable
+   secret scanning, push protection, Dependabot security updates, and private
+   vulnerability reporting. The pin recorded in Commit B is an immutability
+   claim about Commit A; without force-push and deletion protection in place
+   first, the pinned commit could be rewritten after Commit B cites it, which
+   is exactly the provenance failure this sequence exists to prevent. Only
+   then record the full 40-character SHA.
 2. Commit B adds the complete candidate entry. Set `source.revision` to Commit
    A, set `source.href` to the public GitHub source location, and set
    `source.revisionHref` to a GitHub `/tree/<commit>/<path>` or
