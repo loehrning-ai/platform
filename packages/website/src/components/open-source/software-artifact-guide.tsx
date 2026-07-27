@@ -118,6 +118,60 @@ export function SoftwareArtifactGuide({
         </figcaption>
       </figure>
 
+      {guide.demo && guide.demo.length > 0 ? (
+        <section
+          className="border-t border-border pt-8"
+          aria-labelledby={`${idPrefix}-demo`}
+        >
+          <h2
+            id={`${idPrefix}-demo`}
+            className="text-2xl font-bold tracking-[-0.03em]"
+          >
+            Kurzdemo
+          </h2>
+          <p className="mt-3 leading-relaxed text-muted-foreground">
+            Vier Aufnahmen aus dem Werkzeug, in der Reihenfolge, in der du es
+            benutzt. Alle stammen aus dem gepinnten Quellstand.
+          </p>
+          <ol className="mt-6 space-y-8">
+            {guide.demo.map((step, index) => (
+              <li key={step.src}>
+                <figure aria-labelledby={`${idPrefix}-demo-${index}-caption`}>
+                  <div className="flex items-baseline gap-3">
+                    <span
+                      aria-hidden="true"
+                      className="font-mono text-[11px] font-bold text-brand-orange"
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <figcaption
+                      id={`${idPrefix}-demo-${index}-caption`}
+                      className="text-[15px] font-semibold leading-snug text-foreground"
+                    >
+                      {step.caption}
+                    </figcaption>
+                  </div>
+                  {/* Empty alt: the caption above already labels the figure,
+                      and the descriptive alt text is rendered below it, so a
+                      screen reader hears each frame described exactly once. */}
+                  <Image
+                    src={step.src}
+                    alt=""
+                    width={step.width}
+                    height={step.height}
+                    sizes="(min-width: 896px) 848px, calc(100vw - 48px)"
+                    className="mt-3 h-auto w-full border border-border bg-card object-contain"
+                  />
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {step.alt}
+                  </p>
+                </figure>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ) : null}
+
       <section
         className="border-t border-border pt-8"
         aria-labelledby={`${idPrefix}-prerequisites`}

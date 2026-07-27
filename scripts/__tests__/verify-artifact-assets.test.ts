@@ -109,19 +109,27 @@ async function publicationFixture() {
   const screenshotPath =
     "packages/website/public/artifacts/tools/example-tool/screenshot.png";
   const screenshotBytes = pngHeader(640, 360);
+  const demoPath =
+    "packages/website/public/artifacts/tools/example-tool/demo/step-01.png";
+  const demoBytes = pngHeader(800, 500);
   await mkdir(path.join(repositoryRoot, path.dirname(licensePath)), {
     recursive: true,
   });
   await mkdir(path.join(repositoryRoot, path.dirname(screenshotPath)), {
     recursive: true,
   });
+  await mkdir(path.join(repositoryRoot, path.dirname(demoPath)), {
+    recursive: true,
+  });
   await writeFile(path.join(repositoryRoot, licensePath), licenseBytes);
   await writeFile(path.join(repositoryRoot, screenshotPath), screenshotBytes);
+  await writeFile(path.join(repositoryRoot, demoPath), demoBytes);
 
   const licenseSha256 = createHash("sha256").update(licenseBytes).digest("hex");
   const screenshotSha256 = createHash("sha256")
     .update(screenshotBytes)
     .digest("hex");
+  const demoSha256 = createHash("sha256").update(demoBytes).digest("hex");
   const revision = "b".repeat(40);
   const artifact = {
     id: "tool:example-tool",
@@ -147,6 +155,18 @@ async function publicationFixture() {
         width: 640,
         height: 360,
       },
+      demo: [
+        {
+          src: "/artifacts/tools/example-tool/demo/step-01.png",
+          sourcePath: "docs/screenshots/step-01.png",
+          alt: "The example tool mid-run.",
+          caption: "Run the tool.",
+          sha256: demoSha256,
+          sizeBytes: demoBytes.byteLength,
+          width: 800,
+          height: 500,
+        },
+      ],
     },
   } as unknown as ToolArtifact;
   const manifest: ArtifactManifest = {
@@ -166,10 +186,20 @@ async function publicationFixture() {
         redistribution: "Permitted under the artifact license.",
         redistributionLicenseHref: "/artifacts/tools/example-tool/LICENSE.txt",
       },
+      {
+        path: demoPath,
+        sha256: demoSha256,
+        sizeBytes: demoBytes.byteLength,
+        source: `https://raw.githubusercontent.com/loehrning-ai/example-tool/${revision}/docs/screenshots/step-01.png`,
+        redistribution: "Permitted under the artifact license.",
+        redistributionLicenseHref: "/artifacts/tools/example-tool/LICENSE.txt",
+      },
     ],
   };
   return {
     artifact,
+    demoBytes,
+    demoPath,
     licenseBytes,
     licensePath,
     manifest,
@@ -550,7 +580,53 @@ describe("artifact publication integrity", () => {
         artifacts: [artifact],
         manifest,
       }),
-    ).resolves.toEqual({ licenses: 1, screenshots: 1, mediaFiles: 0 });
+    ).resolves.toEqual({
+      licenses: 1,
+      screenshots: 1,
+      demoFrames: 1,
+      mediaFiles: 0,
+    });
+  });
+
+  it("rejects tampered demo frame bytes", async () => {
+    const { artifact, manifest, repositoryRoot, demoPath, demoBytes } =
+      await publicationFixture();
+    await writeFile(
+      path.join(repositoryRoot, demoPath),
+      Buffer.alloc(demoBytes.byteLength, 0x79),
+    );
+
+    await expect(
+      verifyArtifactPublicationAssets({
+        repositoryRoot,
+        artifacts: [artifact],
+        manifest,
+      }),
+    ).rejects.toThrow(/demo\[0\]/);
+  });
+
+  it("rejects a demo frame whose manifest source is not pinned to the artifact revision", async () => {
+    const { artifact, manifest, repositoryRoot, demoPath } =
+      await publicationFixture();
+    const driftedManifest = {
+      ...manifest,
+      assets: manifest.assets.map((entry) =>
+        entry.path === demoPath
+          ? {
+              ...entry,
+              source: `https://raw.githubusercontent.com/loehrning-ai/example-tool/${"c".repeat(40)}/docs/screenshots/step-01.png`,
+            }
+          : entry,
+      ),
+    };
+
+    await expect(
+      verifyArtifactPublicationAssets({
+        repositoryRoot,
+        artifacts: [artifact],
+        manifest: driftedManifest,
+      }),
+    ).rejects.toThrow(/pinned SHA/);
   });
 
   it("rejects tampered license and screenshot bytes", async () => {

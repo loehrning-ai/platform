@@ -32,6 +32,46 @@
       "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
     },
     {
+      "path": "packages/website/public/artifacts/tools/cv-engine/demo/form-experience.png",
+      "sizeBytes": 581785,
+      "sha256": "e9491465d35749032cb6a3c73939e63cbe22c8638a15e6f5cb3ea92d089867f3",
+      "owner": "Tim Löhr",
+      "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/form-experience.png",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/demo/yaml-view.png",
+      "sizeBytes": 690749,
+      "sha256": "77532bbde5e16deee660c4632934dc7f4748fed190d24d2e8326f3ab666c4688",
+      "owner": "Tim Löhr",
+      "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/yaml-view.png",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/demo/theme-picker.png",
+      "sizeBytes": 644467,
+      "sha256": "ea72ade6eb5739df78ca4e80c3fb6f9c700a413a9a730fd5a0b81d92c9c370a5",
+      "owner": "Tim Löhr",
+      "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/theme-picker.png",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/demo/cv.png",
+      "sizeBytes": 344513,
+      "sha256": "179d73376d5c629723ec3bf6e041e2ab904ad5c984b57f8701b179cffa14e150",
+      "owner": "Tim Löhr",
+      "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/cv.png",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
       "path": "packages/website/public/book-covers/ki-arbeitsalltag-2026-1.png",
       "sizeBytes": 401757,
       "sha256": "e89ea724f9c8adf0f53930869b2709121f1079b82725e65f386a8cdc83903bfb",
