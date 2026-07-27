@@ -451,7 +451,12 @@ export function CourseGallery() {
                             href={course.sourceHref}
                             target="_blank"
                             rel="noopener noreferrer"
-                            aria-label={`Quellcode auf GitHub: ${course.title}`}
+                            // The visible repo path must appear in the
+                            // accessible name (WCAG 2.5.3 Label in Name), or
+                            // speech input cannot address the link by what it
+                            // reads. Same composition as the Werkverzeichnis
+                            // card's source action.
+                            aria-label={`Quellcode auf GitHub: ${repoPath}, ${course.title}`}
                             className="inline-flex min-w-0 items-center gap-1 truncate transition-colors hover:text-foreground"
                           >
                             <Github className="h-3 w-3 shrink-0" strokeWidth={1.75} aria-hidden="true" />

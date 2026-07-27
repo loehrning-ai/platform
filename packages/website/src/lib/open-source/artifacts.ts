@@ -1456,9 +1456,13 @@ const CV_ENGINE_TOOL_ARTIFACT = {
       {
         src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/theme-picker.png`,
         sourcePath: "docs/screenshots/theme-picker.png",
-        alt: "Die geöffnete Vorlagenauswahl über der Vorschau: eine Liste benannter Vorlagen mit Akzentfarbe, Schriftart und Dichte je Eintrag.",
+        // "Darstellung", not "Vorlage": the panel in this frame sets accent,
+        // font, density and paper tone. The eight Vorlagen named in the
+        // Verwendung section (classic, modern, sidebar und so weiter) are a
+        // different setting and are not shown here.
+        alt: "Das geöffnete Feld für die Darstellung über dem Formular: Regler für Akzentfarbe, Schrift, Dichte und Papierton, darunter benannte Voreinstellungen wie Default, Forest oder Harvard Crimson.",
         caption:
-          "Passt der Text nicht auf eine Seite, wechselst du Vorlage, Akzent oder Dichte, statt Inhalt zu streichen.",
+          "Passt der Text nicht auf eine Seite, änderst du Akzent, Schrift oder Dichte, statt Inhalt zu streichen.",
         sha256:
           "ea72ade6eb5739df78ca4e80c3fb6f9c700a413a9a730fd5a0b81d92c9c370a5",
         sizeBytes: 644467,

@@ -97,9 +97,19 @@ describe("CourseGallery (learner-first: path + deeper shelf)", () => {
       expect(card).not.toBeNull();
       const scoped = within(card as HTMLElement);
       expect(scoped.getByAltText(course.coverImageAlt ?? "")).toBeInTheDocument();
-      expect(
-        scoped.getByRole("link", { name: `Quellcode auf GitHub: ${course.title}` }),
-      ).toHaveAttribute("href", course.sourceHref);
+      // The visible text of this link is the repo path, so the accessible
+      // name has to contain it (WCAG 2.5.3): an aria-label that names only
+      // the course would leave the link unaddressable by speech input.
+      const repoPath = new URL(course.sourceHref ?? "")
+        .pathname.split("/")
+        .filter(Boolean)
+        .slice(0, 2)
+        .join("/");
+      const sourceLink = scoped.getByRole("link", {
+        name: `Quellcode auf GitHub: ${repoPath}, ${course.title}`,
+      });
+      expect(sourceLink).toHaveAttribute("href", course.sourceHref);
+      expect(sourceLink).toHaveTextContent(repoPath);
       expect(scoped.getByText("MIT")).toBeInTheDocument();
       expect(
         scoped.getByRole("link", {

@@ -194,6 +194,17 @@ describe("SoftwareArtifactGuide", () => {
     for (const img of container.querySelectorAll("ol img")) {
       expect(img).toHaveAttribute("alt", "");
     }
+    // A figcaption is only the figure's caption when it is a direct child of
+    // it; nested in a wrapper it is invalid and the native association is
+    // lost. The frame number lives inside the caption and must stay
+    // aria-hidden, or it would leak into the figure's accessible name (which
+    // the exact-name lookups above would then fail).
+    for (const figure of container.querySelectorAll("ol figure")) {
+      const captions = figure.querySelectorAll("figcaption");
+      expect(captions).toHaveLength(1);
+      expect(captions[0].parentElement).toBe(figure);
+      expect(captions[0].querySelector("[aria-hidden='true']")).not.toBeNull();
+    }
   });
 
   it("omits the demo section entirely when no frames are declared", () => {

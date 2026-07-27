@@ -137,20 +137,23 @@ export function SoftwareArtifactGuide({
             {guide.demo.map((step, index) => (
               <li key={step.src}>
                 <figure aria-labelledby={`${idPrefix}-demo-${index}-caption`}>
-                  <div className="flex items-baseline gap-3">
+                  {/* The figcaption is a direct child of its figure, as the
+                      HTML content model requires: a nested one would not be
+                      the figure's caption at all. The frame number lives
+                      inside it and is aria-hidden, so it is skipped when the
+                      accessible name is computed from this element. */}
+                  <figcaption
+                    id={`${idPrefix}-demo-${index}-caption`}
+                    className="flex items-baseline gap-3 text-[15px] font-semibold leading-snug text-foreground"
+                  >
                     <span
                       aria-hidden="true"
                       className="font-mono text-[11px] font-bold text-brand-orange"
                     >
                       {String(index + 1).padStart(2, "0")}
                     </span>
-                    <figcaption
-                      id={`${idPrefix}-demo-${index}-caption`}
-                      className="text-[15px] font-semibold leading-snug text-foreground"
-                    >
-                      {step.caption}
-                    </figcaption>
-                  </div>
+                    <span>{step.caption}</span>
+                  </figcaption>
                   {/* Empty alt: the caption above already labels the figure,
                       and the descriptive alt text is rendered below it, so a
                       screen reader hears each frame described exactly once. */}
