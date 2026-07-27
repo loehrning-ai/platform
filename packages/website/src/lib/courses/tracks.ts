@@ -213,8 +213,8 @@ export const COURSE_SECTIONS: Readonly<
   },
   deeper: {
     title: "Tiefer gehen",
-    eyebrow: "Praxis · Labs · extern",
+    eyebrow: "Englisch · portiert von GitHub · mit Certificate",
     blurb:
-      "Technische Open-Source-Labs auf Englisch und angewandte Kurse aus echten Workshops. Ohne Konto, direkt im Browser oder auf GitHub.",
+      "Sechs technische Kurse auf Englisch, portiert aus offenen GitHub-Repositories und hier nativ nutzbar. Dein Fortschritt wird gespeichert, jeder Kurs nennt seinen geprüften Quellstand.",
   },
 };

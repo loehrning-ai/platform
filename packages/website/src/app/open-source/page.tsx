@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Github } from "lucide-react";
-import { OpenSourceArtifactSections } from "@/components/open-source/artifact-sections";
+import { OpenSourceArtifactShelf } from "@/components/open-source/artifact-shelf";
+import { DrawRule } from "@/components/motion/draw-rule";
 import { OPEN_SOURCE_ARTIFACTS } from "@/lib/open-source/artifacts";
 import { JsonLd, SITE_URL, WEBSITE_ID } from "@/lib/seo/json-ld";
 import { absoluteUrl, GITHUB_ORG } from "@/lib/seo/entity";
@@ -9,13 +10,13 @@ import { absoluteUrl, GITHUB_ORG } from "@/lib/seo/entity";
 export const metadata: Metadata = {
   title: "Open Source",
   description:
-    "Werkzeuge, Projekte und Videos von loehrning.ai, veröffentlicht unter github.com/loehrning-ai: Veröffentlichungsstandard, Lizenzrichtlinie und aktueller Stand.",
+    "Das Werkverzeichnis von loehrning.ai auf github.com/loehrning-ai: Werkzeuge, Projekte und Videos mit geprüftem Quellstand, Lizenz und Anleitung.",
   alternates: { canonical: "/open-source" },
   robots: { index: true, follow: true },
   openGraph: {
     title: "Open Source | loehrning.ai",
     description:
-      "Veröffentlichungsstandard für Werkzeuge, Projekte und Videos der GitHub-Organisation loehrning-ai: öffentliches Repository, Commit-Pin, Lizenz, Anleitung.",
+      "Werkverzeichnis der GitHub-Organisation loehrning-ai: öffentliches Repository, Commit-Pin, Lizenz und Anleitung für jeden Eintrag.",
     url: `${SITE_URL}/open-source`,
     type: "website",
   },
@@ -95,18 +96,22 @@ export default function OpenSourcePage() {
       <JsonLd data={OPEN_SOURCE_GRAPH} id="open-source-jsonld" />
       <section className="py-20">
         <div className="mx-auto max-w-6xl px-6">
-          <div className="h-[3px] w-28 bg-brand-orange" />
+          <DrawRule className="h-[3px] w-28 bg-brand-orange" />
           <p className="mt-8 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
             Open Source
           </p>
           <div className="mt-5 grid gap-8 lg:grid-cols-[1fr_320px] lg:items-start">
             <div>
               <h1 className="max-w-4xl text-4xl font-bold leading-[0.95] tracking-[-0.04em] sm:text-6xl">
-                Werkzeuge, Projekte und Videos auf GitHub.
+                {/* The trailing space is load-bearing: without it the line
+                    break joins the sentences in the accessible name, and a
+                    screen reader announces "Werkverzeichnis.Offen". */}
+                Das Werkverzeichnis.{" "}
+                <br />
+                Offen auf GitHub.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-                Hier findest du veröffentlichte Werkzeuge, Projekte und Videos
-                aus der
+                Hier findest du jedes veröffentlichte Werk aus der
                 GitHub-Organisation{" "}
                 <a
                   href={GITHUB_ORG.url}
@@ -119,7 +124,8 @@ export default function OpenSourcePage() {
                     , öffnet in neuem Tab
                   </span>
                 </a>
-                . Jeder Eintrag verweist auf den geprüften Quellstand, seine
+                : Werkzeuge, Projekte und Videos, alle in einem Verzeichnis.
+                Jeder Eintrag verweist auf den geprüften Quellstand, seine
                 Lizenz und die zugehörige Anleitung.
               </p>
               <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted-foreground">
@@ -170,7 +176,7 @@ export default function OpenSourcePage() {
             </aside>
           </div>
 
-          <OpenSourceArtifactSections />
+          <OpenSourceArtifactShelf />
 
           {OPEN_SOURCE_ARTIFACTS.length > 0 ? (
             <p className="mt-10 border-t border-border pt-4 font-mono text-xs text-muted-foreground">

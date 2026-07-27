@@ -1,7 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { Offering } from "./offering";
-import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
+import { COURSE_CATALOG } from "@/lib/courses/catalog";
+import { courseGroupFor } from "@/lib/courses/tracks";
+
+const SPINE = COURSE_CATALOG.filter(
+  (course) => courseGroupFor(course.slug) !== "deeper",
+);
+const DEEPER = COURSE_CATALOG.filter(
+  (course) => courseGroupFor(course.slug) === "deeper",
+);
 
 describe("Offering section", () => {
   it("renders the course-led headline", () => {
@@ -12,9 +20,10 @@ describe("Offering section", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders each core course as a linked card", () => {
+  it("renders exactly the four spine courses as linked cards", () => {
     render(<Offering />);
-    for (const course of COURSE_CATALOG) {
+    expect(SPINE).toHaveLength(4);
+    for (const course of SPINE) {
       const link = screen.getByText(course.title).closest("a");
       expect(link).toHaveAttribute("href", course.href);
     }
@@ -30,17 +39,19 @@ describe("Offering section", () => {
     expect(screen.getByTestId("persona-filter")).toBeInTheDocument();
   });
 
-  it("renders the GitHub-Labs imagery band with real screenshots", () => {
+  it("renders the Technikkurse imagery band with real screenshots", () => {
     render(<Offering />);
-    expect(screen.getByText("GitHub-Labs")).toBeInTheDocument();
-    for (const course of IMPORTED_COURSE_CATALOG.slice(0, 3)) {
-      expect(screen.getByAltText(course.imageAlt)).toBeInTheDocument();
+    expect(screen.getByText("Technikkurse")).toBeInTheDocument();
+    const previews = DEEPER.slice(0, 3);
+    expect(previews).toHaveLength(3);
+    for (const course of previews) {
+      expect(screen.getByAltText(course.imageAlt ?? "")).toBeInTheDocument();
     }
   });
 
-  it("gives each GitHub-Labs preview an external source-code link", () => {
+  it("gives each Technikkurse preview an external source-code link", () => {
     render(<Offering />);
-    for (const course of IMPORTED_COURSE_CATALOG.slice(0, 3)) {
+    for (const course of DEEPER.slice(0, 3)) {
       const sourceLink = screen.getByRole("link", {
         name: `Quellcode auf GitHub: ${course.title}`,
       });

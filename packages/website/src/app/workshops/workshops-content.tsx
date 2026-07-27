@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { m } from "framer-motion";
-import { ChevronRight, Clock, Presentation, Users } from "lucide-react";
+import { ChevronRight, Presentation } from "lucide-react";
 import { fadeUp, staggerContainer, staggerItem } from "@/lib/animations";
 import type { Workshop } from "@/lib/workshops";
 
@@ -94,11 +94,19 @@ export function WorkshopsContent({ workshops }: Props) {
       {/* Workshop list */}
       <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-6">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <m.div
+            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+          >
             {workshops.map((workshop) => (
-              <WorkshopCard key={workshop.slug} workshop={workshop} />
+              <m.div key={workshop.slug} variants={staggerItem} className="js-reveal h-full">
+                <WorkshopCard workshop={workshop} />
+              </m.div>
             ))}
-          </div>
+          </m.div>
         </div>
       </section>
 
@@ -133,54 +141,102 @@ export function WorkshopsContent({ workshops }: Props) {
   );
 }
 
+const pad = (value: number) => String(value).padStart(2, "0");
+
 function WorkshopCard({ workshop }: { readonly workshop: Workshop }) {
+  const rows = [
+    { label: "Dauer", value: workshop.duration },
+    { label: "Schritte", value: pad(workshop.steps.length) },
+    { label: "Zielgruppen", value: pad(workshop.audience.length) },
+    { label: "Material", value: `${pad(workshop.materials.length)} Downloads` },
+  ] as const;
+
   return (
-    <Link
-      href={`/workshops/${workshop.slug}`}
-      className="group flex h-full flex-col rounded-none border border-border border-t-[3px] border-t-brand-orange bg-card/30 p-6 transition-colors hover:bg-card/60"
-    >
-      {/* Top row */}
-      <div className="mb-3 flex items-start justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <Presentation className="h-4 w-4 text-muted-foreground" />
-          <span className="font-mono text-xs text-muted-foreground">
+    <div className="group relative flex h-full flex-col rounded-none border border-border border-t-[3px] border-t-brand-orange bg-card/30 transition-colors hover:bg-card/60">
+      {/* Typenschild: the workshop's facts as a data plate. Every future
+          workshop generates its own from duration/steps/audience/materials,
+          so the card needs no photography. Numeral stays ink: the single
+          Kupfer accent on this view is the top border + CTA. */}
+      <div className="relative border-b border-border bg-background/60 bg-dot-pattern p-5">
+        <span aria-hidden="true" className="absolute left-2 top-2 h-1 w-1 bg-foreground/25" />
+        <span aria-hidden="true" className="absolute right-2 top-2 h-1 w-1 bg-foreground/25" />
+        <span aria-hidden="true" className="absolute bottom-2 left-2 h-1 w-1 bg-foreground/25" />
+        <span aria-hidden="true" className="absolute bottom-2 right-2 h-1 w-1 bg-foreground/25" />
+        <div
+          aria-hidden="true"
+          className="flex items-baseline justify-between gap-4 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground"
+        >
+          <span className="inline-flex items-center gap-1.5">
+            <Presentation className="h-3.5 w-3.5" aria-hidden="true" />
             {workshop.format}
           </span>
+          <span>zum Nachbauen</span>
+        </div>
+        <span aria-hidden="true" className="mt-2 block h-px w-full bg-border" />
+        <div aria-hidden="true" className="grid grid-cols-[1fr_auto] gap-x-4">
+          <dl className="mt-1">
+            {rows.map((row) => (
+              <div
+                key={row.label}
+                className="flex items-baseline justify-between gap-4 border-b border-border/60 py-[6px] font-mono text-[10.5px] uppercase tracking-[0.08em] last:border-b-0"
+              >
+                <dt className="text-muted-foreground">{row.label}</dt>
+                <dd className="min-w-0 text-right font-bold text-foreground">
+                  {row.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <span
+            aria-hidden="true"
+            className="mt-2 font-mono text-[52px] font-bold leading-none tracking-[-0.04em] text-foreground/15"
+          >
+            {pad(workshop.steps.length)}
+          </span>
+        </div>
+        {/* Schrittleiste: the step rail fills on hover, demonstrating the
+            step count the plate states. Decorative; the dl carries the fact. */}
+        <div aria-hidden="true" className="mt-3 flex gap-1">
+          {workshop.steps.map((step, i) => (
+            <span
+              key={step.title}
+              className="h-1 flex-1 bg-border transition-colors duration-200 group-hover:bg-foreground/40"
+              style={{ transitionDelay: `${i * 35}ms` }}
+            />
+          ))}
         </div>
       </div>
 
-      {/* Title */}
-      <h2 className="mb-2 text-lg font-semibold leading-snug tracking-[-0.02em] group-hover:text-brand-orange">
-        {workshop.title}
-      </h2>
-
-      {/* Description */}
-      <p className="mb-5 flex-1 text-sm leading-relaxed text-muted-foreground">
-        {workshop.description}
-      </p>
-
-      {/* Meta */}
-      <div className="mb-4 flex flex-wrap gap-1.5">
-        <span className="inline-flex items-center gap-1 rounded-none border border-border bg-card/40 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground">
-          <Clock className="h-3 w-3" />
-          {workshop.duration}
-        </span>
-        <span className="inline-flex items-center gap-1 rounded-none border border-border bg-card/40 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground">
-          <Users className="h-3 w-3" />
-          {workshop.audience.length} Zielgruppen
-        </span>
+      <div className="flex flex-1 flex-col p-6">
+        <h2 className="mb-2 text-lg font-semibold leading-snug tracking-[-0.02em] group-hover:text-brand-orange">
+          {/* Stretched link: names the card by its title alone and keeps the
+              whole card clickable without pouring the plate into the link's
+              accessible name. */}
+          <Link
+            href={`/workshops/${workshop.slug}`}
+            className="after:absolute after:inset-0"
+          >
+            {workshop.title}
+          </Link>
+        </h2>
+        <p className="sr-only">
+          {workshop.format}. Dauer: {workshop.duration}. {workshop.steps.length}{" "}
+          Schritte. {workshop.audience.length} Zielgruppen.{" "}
+          {workshop.materials.length} Downloads.
+        </p>
+        <p className="mb-5 flex-1 text-sm leading-relaxed text-muted-foreground">
+          {workshop.description}
+        </p>
+        <div className="flex items-center justify-between border-t border-border pt-3">
+          <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
+            {workshop.format}
+          </span>
+          <span className="inline-flex items-center gap-1 text-xs font-medium text-brand-orange opacity-70 transition-opacity group-hover:opacity-100">
+            Workshop öffnen
+            <ChevronRight className="h-3 w-3 arrow-nudge" />
+          </span>
+        </div>
       </div>
-
-      {/* Footer */}
-      <div className="flex items-center justify-between border-t border-border pt-3">
-        <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
-          {workshop.steps.length} Schritte
-        </span>
-        <span className="inline-flex items-center gap-1 text-xs font-medium text-brand-orange opacity-70 transition-opacity group-hover:opacity-100">
-          Workshop öffnen
-          <ChevronRight className="h-3 w-3" />
-        </span>
-      </div>
-    </Link>
+    </div>
   );
 }

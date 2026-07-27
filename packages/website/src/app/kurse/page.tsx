@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { GraduationCap, Github } from "lucide-react";
 import { JsonLd, SITE_URL } from "@/lib/seo/json-ld";
-import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { COURSES_GRAPH } from "@/lib/seo/course-discovery";
 import { Card, IconTile } from "@/components/ui/card";
 import { BrandButton } from "@/components/ui/brand-button";
@@ -11,12 +10,12 @@ import { PersonaCourseLinks } from "./persona-filter";
 
 const KURSE_SOCIAL_TITLE = "Kurse: kostenlose KI-Lernplattform auf Deutsch";
 const KURSE_SOCIAL_DESCRIPTION =
-  `${COURSE_CATALOG.length} deutsche Kernkurse mit Login-Fortschritt, Zertifikaten und optionalen technischen Laboren.`;
+  "Vier deutsche Kernkurse mit Login-Fortschritt und Zertifikat, dazu sechs technische Kurse auf Englisch und angewandte Workshops.";
 const KURSE_SOCIAL_IMAGE = {
   url: `${SITE_URL}/kurse/opengraph-image`,
   width: 1200,
   height: 630,
-  alt: "loehrning.ai Kurse: KI, EU AI Act, Daten und Open-Source-Interaktivkurse",
+  alt: "loehrning.ai Kurse: vier deutsche Kernkurse und sechs Technikkurse auf Englisch",
 };
 
 export const metadata: Metadata = {
@@ -53,7 +52,7 @@ const TRACK_DIFF = [
     icon: Github,
     accent: "sand" as const,
     label: "Tiefer gehen",
-    text: "technische Open-Source-Labs auf Englisch und angewandte Kurse aus Workshops. Ohne Konto.",
+    text: "sechs technische Kurse auf Englisch, portiert von GitHub, mit Fortschritt und Certificate. Dazu angewandte Kurse aus Workshops.",
   },
 ];
 
@@ -63,7 +62,7 @@ export default function KursePage() {
       <JsonLd data={COURSES_GRAPH} id="kurse-hub-jsonld" />
       <div className="mx-auto max-w-[1180px] px-6 pb-32 pt-20">
         {/* Top rule: brand signature */}
-        <div className="mb-9 h-[3px] w-[154px] rounded-full bg-brand-orange" />
+        <div className="mb-9 h-[3px] w-[154px] bg-brand-orange" />
 
         <div className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
           § Freie KI-Lernplattform · ein Lernpfad, plus Vertiefung
@@ -75,10 +74,11 @@ export default function KursePage() {
         </h1>
 
         <p className="mt-9 max-w-[720px] text-[18px] leading-[1.5] text-muted-foreground sm:text-[21px]">
-          {COURSE_CATALOG.length} deutsche Kurse bilden den Lernpfad: von der
-          KI-Kompetenz über die gesellschaftliche Einordnung und den EU AI Act bis
-          zum AI-nativen Arbeiten. Wer tiefer will, findet technische Labs auf
-          GitHub und angewandte Kurse aus echten Workshops.
+          Vier deutsche Kurse bilden den Lernpfad: von der KI-Kompetenz über
+          die gesellschaftliche Einordnung und den EU AI Act bis zum AI-nativen
+          Arbeiten. Danach vertiefst du dein Wissen: sechs technische Kurse auf
+          Englisch, portiert aus offenen GitHub-Repositories, plus angewandte
+          Kurse aus echten Workshops.
         </p>
 
         {/* Beginner entry point */}

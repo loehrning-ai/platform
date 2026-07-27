@@ -1190,6 +1190,61 @@ describe("open-source artifact registry", () => {
     ).toThrow(/guide/);
   });
 
+  it("verifies every demo frame with the lead screenshot's contract", () => {
+    const [cvEngine] = OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES;
+    const demo = cvEngine.guide.demo ?? [];
+    expect(demo).toHaveLength(4);
+    for (const step of demo) {
+      expect(step.sha256).toMatch(/^[a-f0-9]{64}$/);
+      expect(step.sourcePath).toMatch(/^docs\/screenshots\/.+\.png$/);
+      expect(step.src.startsWith("/artifacts/tools/cv-engine/demo/")).toBe(true);
+      expect(step.caption.length).toBeGreaterThan(0);
+      expect(step.alt.length).toBeGreaterThan(0);
+    }
+
+    const base = { ...cvEngine };
+    const withUnhashedFrame = {
+      ...base,
+      guide: {
+        ...base.guide,
+        demo: [{ ...demo[0], sha256: "not-a-digest" }],
+      },
+    };
+    expect(() =>
+      assertOpenSourceArtifacts([withUnhashedFrame as typeof cvEngine]),
+    ).toThrow(/guide\.demo\[0\]\.sha256/);
+
+    const withForeignFrame = {
+      ...base,
+      guide: {
+        ...base.guide,
+        demo: [{ ...demo[0], src: "https://cdn.example.com/frame.png" }],
+      },
+    };
+    expect(() =>
+      assertOpenSourceArtifacts([withForeignFrame as typeof cvEngine]),
+    ).toThrow(/guide\.demo\[0\]\.src/);
+
+    const withRepeatedLeadShot = {
+      ...base,
+      guide: {
+        ...base.guide,
+        demo: [{ ...demo[0], src: base.guide.screenshot.src }],
+      },
+    };
+    expect(() =>
+      assertOpenSourceArtifacts([withRepeatedLeadShot as typeof cvEngine]),
+    ).toThrow(/must not repeat the lead screenshot/);
+
+    const withCaptionlessFrame = {
+      ...base,
+      guide: { ...base.guide, demo: [{ ...demo[0], caption: "   " }] },
+    };
+    expect(() =>
+      assertOpenSourceArtifacts([withCaptionlessFrame as typeof cvEngine]),
+    ).toThrow(/guide\.demo\[0\]\.caption/);
+  });
+
   it("admits exactly the pinned cv-engine tool and keeps the other lanes empty", () => {
     // The tool lane carries its first admitted record. Every claim here is a
     // tripwire: an accidental second entry, a slug drift, or a silently

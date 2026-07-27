@@ -5,21 +5,41 @@ import Image from "next/image";
 import { m, useReducedMotion } from "framer-motion";
 import { ArrowRight, Github } from "lucide-react";
 import { EASE_OUT_EXPO } from "@/lib/animations";
-import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
+import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { PersonaCourseLinks } from "@/app/kurse/persona-filter";
 import { Card, IconTile } from "@/components/ui/card";
-import { courseBadges, courseFacts } from "@/lib/courses/tracks";
+import { courseBadges, courseFacts, courseGroupFor } from "@/lib/courses/tracks";
 import { iconByName } from "@/lib/courses/track-icon";
 
-// The three GitHub-Labs previews shown in the imagery band. Real screenshots
-// from public/imported-courses/screenshots, linking through to each lab's
-// detail route on the /kurse hub.
-const LAB_PREVIEWS = IMPORTED_COURSE_CATALOG.slice(0, 3);
+// The homepage splits along the declared classification: the four German
+// spine courses carry the "Vier Kurse." section, and the Technikkurse band
+// previews three of the six ported English courses. Real screenshots from
+// public/imported-courses/screenshots, linking to each course's detail route.
+const SPINE_HOME_COURSES = COURSE_CATALOG.filter(
+  (course) => courseGroupFor(course.slug) !== "deeper",
+);
+const DEEPER_HOME_COURSES = COURSE_CATALOG.filter(
+  (course) => courseGroupFor(course.slug) === "deeper",
+);
+const LAB_PREVIEWS = DEEPER_HOME_COURSES.flatMap((course) =>
+  course.imageSrc && course.imageAlt && course.sourceHref
+    ? [
+        {
+          slug: course.slug,
+          href: course.href,
+          title: course.title,
+          imageSrc: course.imageSrc,
+          imageAlt: course.imageAlt,
+          sourceHref: course.sourceHref,
+        },
+      ]
+    : [],
+).slice(0, 3);
 
 const META_LINE =
   "font-mono text-[10.5px] uppercase tracking-[0.1em] text-muted-foreground";
 const BADGE_CHIP =
-  "inline-flex w-fit items-center rounded-full bg-card-hover px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground";
+  "inline-flex w-fit items-center rounded-none bg-card-hover px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground";
 
 // Honest per-course badges (Deutsch · mit Zertifikat / mit Lernnachweis), driven
 // by COURSE_FACTS so the homepage matches /kurse instead of a hardcoded label.
@@ -44,7 +64,7 @@ export function Offering() {
     transition: { duration: 0.5, delay, ease: EASE_OUT_EXPO },
   });
 
-  const [featured, ...restCourses] = COURSE_CATALOG;
+  const [featured, ...restCourses] = SPINE_HOME_COURSES;
   const featuredMeta = courseFacts(featured.slug);
   const FeaturedIcon = iconByName(featuredMeta.iconName);
 
@@ -118,7 +138,7 @@ export function Offering() {
                     accent={featuredMeta.accent}
                     size="lg"
                   />
-                  <span className="inline-flex items-center rounded-full bg-brand-orange/10 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-brand-orange">
+                  <span className="inline-flex items-center rounded-none bg-brand-orange/10 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-brand-orange">
                     Empfohlener Start
                   </span>
                 </div>
@@ -140,28 +160,41 @@ export function Offering() {
                 </p>
               </div>
 
-              <div className="flex shrink-0 flex-col gap-3 border-t border-border pt-5 md:min-w-[180px] md:border-l md:border-t-0 md:pl-6 md:pt-0">
+              <div className="flex shrink-0 flex-col gap-3 md:min-w-[200px]">
                 <CourseBadges slug={featured.slug} />
-                <dl className="flex flex-col gap-1.5 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
-                  <div className="flex items-center justify-between gap-3">
-                    <dt>Dauer</dt>
-                    <dd className="font-bold text-foreground">
-                      {featured.duration}
-                    </dd>
-                  </div>
-                  <div className="flex items-center justify-between gap-3">
-                    <dt>{featured.unitLabel}</dt>
-                    <dd className="font-bold text-foreground">
-                      {featured.unitCount}
-                    </dd>
-                  </div>
-                  <div className="flex items-center justify-between gap-3">
-                    <dt>Lektionen</dt>
-                    <dd className="font-bold text-foreground">
-                      {featured.totalLessons}
-                    </dd>
-                  </div>
-                </dl>
+                {/* Mini Typenschild: the featured course's data plate. */}
+                <div className="relative border border-border bg-background bg-dot-pattern p-4">
+                  <span aria-hidden="true" className="absolute left-1.5 top-1.5 h-1 w-1 bg-foreground/25" />
+                  <span aria-hidden="true" className="absolute right-1.5 top-1.5 h-1 w-1 bg-foreground/25" />
+                  <span aria-hidden="true" className="absolute bottom-1.5 left-1.5 h-1 w-1 bg-foreground/25" />
+                  <span aria-hidden="true" className="absolute bottom-1.5 right-1.5 h-1 w-1 bg-foreground/25" />
+                  <span
+                    aria-hidden="true"
+                    className="absolute right-3 top-2 font-mono text-[36px] font-bold leading-none text-brand-orange/15"
+                  >
+                    {String(featured.step).padStart(2, "0")}
+                  </span>
+                  <dl className="relative flex flex-col font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
+                    <div className="flex items-center justify-between gap-3 border-b border-border/60 py-1.5">
+                      <dt>Dauer</dt>
+                      <dd className="font-bold text-foreground">
+                        {featured.duration}
+                      </dd>
+                    </div>
+                    <div className="flex items-center justify-between gap-3 border-b border-border/60 py-1.5">
+                      <dt>{featured.unitLabel}</dt>
+                      <dd className="font-bold text-foreground">
+                        {featured.unitCount}
+                      </dd>
+                    </div>
+                    <div className="flex items-center justify-between gap-3 py-1.5">
+                      <dt>Lektionen</dt>
+                      <dd className="font-bold text-foreground">
+                        {featured.totalLessons}
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
               </div>
             </div>
           </Card>
@@ -172,12 +205,16 @@ export function Offering() {
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {restCourses.map((course, i) => {
             const meta = courseFacts(course.slug);
-            const Icon = iconByName(meta.iconName);
             return (
               <m.div key={course.slug} {...reveal(i * 0.06)} className="h-full">
                 <Card href={course.href} accent={meta.accent} className="h-full">
                   <div className="flex items-start gap-4">
-                    <IconTile icon={Icon} accent={meta.accent} />
+                    <span
+                      aria-hidden="true"
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-none border border-border bg-background font-mono text-[15px] font-bold text-foreground shadow-tile"
+                    >
+                      {String(course.step).padStart(2, "0")}
+                    </span>
                     <div className="min-w-0">
                       <span className="block font-mono text-[10.5px] font-bold uppercase tracking-[0.12em] text-brand-orange">
                         {course.eyebrow}
@@ -215,8 +252,8 @@ export function Offering() {
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.5 }}
         >
-          Dazu {IMPORTED_COURSE_CATALOG.length} technische Labore auf Englisch,
-          von Data Engineering bis System Design.{" "}
+          Dazu {DEEPER_HOME_COURSES.length} technische Kurse auf Englisch, von
+          Data Engineering bis System Design.{" "}
           <Link
             href="/kurse"
             className="font-bold text-brand-orange underline-offset-4 hover:underline"
@@ -236,10 +273,11 @@ export function Offering() {
               <IconTile icon={Github} accent="sand" />
               <div>
                 <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-sand">
-                  GitHub-Labs
+                  Technikkurse
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Technische Browserkurse, quelloffen auf GitHub.
+                  Portiert aus offenen GitHub-Repositories. Auf Englisch, mit
+                  Certificate.
                 </p>
               </div>
             </div>
@@ -247,7 +285,7 @@ export function Offering() {
               href="/kurse"
               className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-foreground underline-offset-4 hover:underline"
             >
-              Alle Labs ansehen &#8594;
+              Alle Technikkurse ansehen &#8594;
             </Link>
           </div>
 
@@ -282,7 +320,7 @@ export function Offering() {
                       {course.title}
                     </Link>
                     <span className="mt-1 block font-mono text-[9.5px] uppercase tracking-[0.08em] text-muted-foreground">
-                      GitHub · MIT · Englisch · extern
+                      GitHub · MIT · Englisch
                     </span>
                   </div>
                   <a

@@ -38,6 +38,7 @@ export type ArtifactManifest = {
 export type ArtifactVerificationSummary = {
   licenses: number;
   screenshots: number;
+  demoFrames: number;
   mediaFiles: number;
 };
 
@@ -756,6 +757,7 @@ export async function verifyArtifactPublicationAssets({
   const summary: ArtifactVerificationSummary = {
     licenses: 0,
     screenshots: 0,
+    demoFrames: 0,
     mediaFiles: 0,
   };
 
@@ -843,6 +845,60 @@ export async function verifyArtifactPublicationAssets({
         );
       }
       summary.screenshots += 1;
+
+      // Every demo frame carries the identical contract: pinned manifest
+      // source at the artifact's own revision, byte-exact digest and size,
+      // and dimensions matching the registry. A walkthrough cannot become a
+      // back door for unverified imagery.
+      for (const [index, step] of (artifact.guide.demo ?? []).entries()) {
+        const label = `${artifact.id} demo[${index}]`;
+        const stepPath = publicHrefToRepositoryPath(
+          step.src,
+          `${label} src`,
+        );
+        assertDistinctRolePaths(artifact.id, [
+          ["license", licensePath],
+          [`demo[${index}]`, stepPath],
+        ]);
+        assertDistinctRolePaths(artifact.id, [
+          ["screenshot", screenshotPath],
+          [`demo[${index}]`, stepPath],
+        ]);
+        const stepEntry = requireManifestEntry(
+          manifestByPath,
+          stepPath,
+          label,
+        );
+        assertPinnedManifestSource({
+          artifact,
+          entry: stepEntry,
+          label,
+          expectedSourcePath: step.sourcePath,
+        });
+        assertArtifactRedistribution(artifact, stepEntry, `demo[${index}]`);
+        const stepBytes = await readVerifiedFile({
+          repositoryRoot,
+          repositoryPath: stepPath,
+          label,
+          expectedSha256: step.sha256,
+          expectedSizeBytes: step.sizeBytes,
+          manifestByPath,
+          hooks,
+          maxSizeBytes: OPEN_SOURCE_ARTIFACT_IMAGE_MAX_BYTES,
+        });
+        const stepDimensions = imageDimensions(stepBytes, label);
+        if (
+          stepDimensions.width !== step.width ||
+          stepDimensions.height !== step.height
+        ) {
+          fail(
+            `${label} dimensions differ: ` +
+              `registry=${step.width}x${step.height}, ` +
+              `file=${stepDimensions.width}x${stepDimensions.height}`,
+          );
+        }
+        summary.demoFrames += 1;
+      }
     }
   }
 
@@ -875,6 +931,7 @@ async function main(): Promise<void> {
   process.stdout.write(
     "Artifact candidate asset verification passed: " +
       `${summary.licenses} licenses, ${summary.screenshots} tool/project screenshots, ` +
+      `${summary.demoFrames} demo frames, ` +
       `${summary.mediaFiles} video files.\n`,
   );
 }

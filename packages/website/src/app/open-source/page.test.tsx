@@ -95,7 +95,6 @@ const { PROJECT } = vi.hoisted(() => {
 
 vi.mock("@/lib/open-source/artifacts", () => ({
   OPEN_SOURCE_ARTIFACTS: [PROJECT],
-  OPEN_SOURCE_ARTIFACT_SECTIONS: [],
 }));
 
 import OpenSourcePage from "./page";
@@ -115,12 +114,17 @@ describe("OpenSourcePage", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "Werkzeuge, Projekte und Videos auf GitHub.",
+        name: "Das Werkverzeichnis. Offen auf GitHub.",
       }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/veröffentlichte Werkzeuge, Projekte und Videos/),
+      screen.getByText(/jedes veröffentlichte Werk/),
     ).toBeInTheDocument();
+    // The mocked published project renders on the shelf with its kind stamp.
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Alle Werke" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Projekt")).toBeInTheDocument();
     expect(screen.queryByText(/in Vorbereitung/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/bleibt dieser Bereich leer/i)).not.toBeInTheDocument();
 

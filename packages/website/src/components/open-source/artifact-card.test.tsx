@@ -124,8 +124,12 @@ describe("OpenSourceArtifactCard", () => {
       expect(
         screen.getByRole("link", { name: `Detail ${artifact.title}` }),
       ).toHaveAttribute("href", artifact.href);
+      // The GitHub action names the repo: the visible mono path sits inside
+      // the composed accessible name (label-in-name, WCAG 2.5.3).
       expect(
-        screen.getByRole("link", { name: `Quelle ${artifact.title}` }),
+        screen.getByRole("link", {
+          name: `Quelle loehrning-ai/${artifact.slug} ${artifact.title}`,
+        }),
       ).toHaveAttribute("href", artifact.source.href);
       expect(
         screen.getByRole("link", { name: `Lizenz ${artifact.title}` }),
@@ -144,6 +148,29 @@ describe("OpenSourceArtifactCard", () => {
     expect(screenshot).toHaveAttribute(
       "alt",
       "The example tool showing its generated report.",
+    );
+  });
+
+  it("makes the preview a second route to the detail page without a second tab stop", () => {
+    const artifact = toolFixture("dashboard-generator", "Dashboard Generator");
+    const { container } = render(<OpenSourceArtifactCard artifact={artifact} />);
+
+    // The preview is deliberately absent from the accessibility tree: the
+    // footer "Detail {Titel}" link already announces this destination, so an
+    // equal image link would only duplicate the tab stop and the announcement.
+    expect(
+      screen.getAllByRole("link", { name: `Detail ${artifact.title}` }),
+    ).toHaveLength(1);
+
+    const preview = container.querySelector<HTMLAnchorElement>(
+      `a[href="${artifact.href}"][aria-hidden="true"]`,
+    );
+    expect(preview).not.toBeNull();
+    expect(preview).toHaveAttribute("tabindex", "-1");
+    // Pointer target, not decoration: it must actually cover the image.
+    expect(preview).toHaveClass("absolute", "inset-0");
+    expect(preview?.parentElement).toContainElement(
+      screen.getByRole("img", { name: GUIDE.screenshot.alt }),
     );
   });
 
@@ -198,7 +225,9 @@ describe("OpenSourceArtifactCard", () => {
       screen.getByRole("link", { name: `Öffnen ${launchable.title}` }),
     ).toHaveAccessibleDescription("Wird in einem neuen Tab geöffnet.");
     expect(
-      screen.getByRole("link", { name: `Quelle ${launchable.title}` }),
+      screen.getByRole("link", {
+        name: `Quelle loehrning-ai/${launchable.slug} ${launchable.title}`,
+      }),
     ).toHaveAccessibleDescription("Wird in einem neuen Tab geöffnet.");
   });
 });

@@ -65,7 +65,60 @@ describe("CourseGallery (learner-first: path + deeper shelf)", () => {
     render(<CourseGallery />);
     expect(screen.getByText("Der Lernpfad")).toBeInTheDocument();
     expect(screen.getByText("Tiefer gehen")).toBeInTheDocument();
-    expect(screen.getByText("GitHub-Labs")).toBeInTheDocument();
+    expect(screen.getByText("Technikkurse")).toBeInTheDocument();
+  });
+
+  it("splits the path from the shelf along the declared classification", () => {
+    render(<CourseGallery />);
+    const spine = ["ki-fuehrerschein", "ki-und-gesellschaft", "eu-ai-act-kurs", "ai-native"];
+    const lernpfad = document.getElementById("lernpfad") as HTMLElement;
+    const shelf = document.getElementById("tiefer-gehen") as HTMLElement;
+    for (const course of COURSE_CATALOG) {
+      const home = spine.includes(course.slug) ? lernpfad : shelf;
+      expect(within(home).getByText(course.title)).toBeInTheDocument();
+    }
+    // Spine plates are data, not pictures: no <img> inside the Lernpfad, and
+    // the plate rows carry the facts the old body meta line stated.
+    expect(lernpfad.querySelector("img")).toBeNull();
+    expect(within(lernpfad).getAllByText("Umfang")).toHaveLength(4);
+    expect(within(lernpfad).getAllByText("Dauer")).toHaveLength(4);
+    expect(within(lernpfad).getAllByText("Nachweis")).toHaveLength(4);
+    expect(within(lernpfad).getAllByText("Kostenlos")).toHaveLength(4);
+  });
+
+  it("mounts every ported course as a framed specimen with visible provenance", () => {
+    render(<CourseGallery />);
+    const deeper = COURSE_CATALOG.filter(
+      (course) => !["ki-fuehrerschein", "ki-und-gesellschaft", "eu-ai-act-kurs", "ai-native"].includes(course.slug),
+    );
+    expect(deeper).toHaveLength(6);
+    for (const course of deeper) {
+      const card = screen.getByText(course.title).closest("li");
+      expect(card).not.toBeNull();
+      const scoped = within(card as HTMLElement);
+      expect(scoped.getByAltText(course.coverImageAlt ?? "")).toBeInTheDocument();
+      // The visible text of this link is the repo path, so the accessible
+      // name has to contain it (WCAG 2.5.3): an aria-label that names only
+      // the course would leave the link unaddressable by speech input.
+      const repoPath = new URL(course.sourceHref ?? "")
+        .pathname.split("/")
+        .filter(Boolean)
+        .slice(0, 2)
+        .join("/");
+      const sourceLink = scoped.getByRole("link", {
+        name: `Quellcode auf GitHub: ${repoPath}, ${course.title}`,
+      });
+      expect(sourceLink).toHaveAttribute("href", course.sourceHref);
+      expect(sourceLink).toHaveTextContent(repoPath);
+      expect(scoped.getByText("MIT")).toBeInTheDocument();
+      expect(
+        scoped.getByRole("link", {
+          name: `Quell-Commit ${course.sourceCommit?.slice(0, 7)} auf GitHub`,
+        }),
+      ).toHaveAttribute("href", course.sourceCommitHref);
+      // Native progress stays: the specimen is still a real course card.
+      expect(scoped.getByTestId(`progress-dots-${course.slug}`)).toBeInTheDocument();
+    }
   });
 
   it("renders GitHub-Labs with source identity and no fake progress widgets", () => {
@@ -105,7 +158,7 @@ describe("CourseGallery (learner-first: path + deeper shelf)", () => {
       expect(scoped.getByAltText(course.imageAlt)).toBeInTheDocument();
       expect(screen.queryByTestId(`progress-dots-${course.slug}`)).toBeNull();
     }
-    expect(screen.getByText("GitHub-Labs")).toBeInTheDocument();
+    expect(screen.getByText("Technikkurse")).toBeInTheDocument();
     expect(storeMock.getCompletedLessonsCount.mock.calls.map(([slug]) => slug)).toEqual(
       COURSE_CATALOG.map((course) => course.slug),
     );

@@ -14,8 +14,8 @@ import {
 
 const TIMELINE: readonly (readonly [string, string])[] = [
   ["2022", "M.Sc. Informatik · FAU Erlangen-Nürnberg"],
-  ["2019–2024", "Datenrollen in internationalen Produkt- und Infrastrukturteams"],
-  ["2024-heute", "Dateninfrastruktur und Analytics in einem globalen Technologieumfeld"],
+  ["2021-2025", "Datenrollen in internationalen Produkt- und Infrastrukturteams"],
+  ["2025-2026", "Dateninfrastruktur und Analytics in einem globalen Technologieumfeld"],
   ["2026-heute", "loehrning.ai · freie Kurse, Demos und Arbeitsnotizen zu KI-nativer Arbeit"],
 ];
 

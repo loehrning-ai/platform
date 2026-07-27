@@ -328,7 +328,20 @@ test.describe("/open-source hub", () => {
 
     const h1 = page.getByRole("heading", { level: 1 });
     await expect(h1).toBeVisible();
-    await expect(h1).toContainText(/Werkzeuge, Projekte und Videos/i);
+    await expect(h1).toContainText(/Werkverzeichnis/i);
+
+    // The shelf: one unified grid, the kind as a stamp on the card (never a
+    // heading), and the GitHub action naming the repo path.
+    await expect(
+      page.getByRole("heading", { level: 2, name: "Alle Werke" }),
+    ).toBeVisible();
+    await expect(page.getByText("Werkzeug", { exact: true })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Werkzeuge", exact: true }),
+    ).toHaveCount(0);
+    await expect(
+      page.getByRole("link", { name: /Quelle loehrning-ai\/cv-engine/ }),
+    ).toHaveAttribute("href", "https://github.com/loehrning-ai/cv-engine");
 
     // Structural heading at the foot of the page proves it rendered fully.
     await expect(

@@ -152,6 +152,17 @@ export interface SoftwareArtifactScreenshot {
   readonly height: number;
 }
 
+/**
+ * One frame of the optional short demo. It carries the exact same provenance
+ * contract as the lead screenshot (pinned upstream path, digest, byte size,
+ * dimensions) plus the caption that makes the sequence readable as a story.
+ * Demo frames are real captures from the pinned revision, never mock-ups.
+ */
+export interface SoftwareArtifactDemoStep extends SoftwareArtifactScreenshot {
+  /** One sentence naming what this frame demonstrates. */
+  readonly caption: string;
+}
+
 export interface SoftwareArtifactRelatedLearning {
   readonly title: string;
   readonly description: string;
@@ -180,6 +191,12 @@ export interface SoftwareArtifactGuide {
   readonly integration: SoftwareArtifactIntegration;
   readonly documentation: SoftwareArtifactDocumentation;
   readonly screenshot: SoftwareArtifactScreenshot;
+  /**
+   * Optional ordered walkthrough shown on the detail page. Every frame is
+   * verified exactly like the lead screenshot, so a demo can never introduce
+   * an unpinned or unhashed image.
+   */
+  readonly demo?: readonly SoftwareArtifactDemoStep[];
   readonly relatedLearning: readonly SoftwareArtifactRelatedLearning[];
 }
 
@@ -681,6 +698,63 @@ function assertProcedure(
   assertUniqueTextValues(id, `${field}.steps`, titles);
 }
 
+/**
+ * The provenance contract shared by the lead screenshot and every demo frame:
+ * a locally stored browser-safe image, an exact path in the pinned upstream
+ * tree, published alt text, and a byte-exact digest, size, and geometry.
+ */
+function assertSoftwareArtifactImage(
+  id: string,
+  field: string,
+  image: SoftwareArtifactScreenshot,
+): void {
+  if (!image || typeof image !== "object") {
+    artifactError(id, field, "must define an accessible image");
+  }
+  assertInternalHref(id, `${field}.src`, image.src);
+  assertUpstreamSourcePath(id, `${field}.sourcePath`, image.sourcePath);
+  const storedPath = new URL(image.src, "https://artifact.invalid").pathname;
+  if (!/\.(?:jpe?g|png|webp)$/i.test(storedPath)) {
+    artifactError(
+      id,
+      `${field}.src`,
+      "must reference a browser-safe JPEG, PNG, or WebP image",
+    );
+  }
+  if (!/\.(?:jpe?g|png|webp)$/i.test(image.sourcePath)) {
+    artifactError(
+      id,
+      `${field}.sourcePath`,
+      "must identify a browser-safe JPEG, PNG, or WebP image",
+    );
+  }
+  assertText(id, `${field}.alt`, image.alt);
+  assertText(id, `${field}.sha256`, image.sha256);
+  if (!/^[a-f0-9]{64}$/.test(image.sha256)) {
+    artifactError(id, `${field}.sha256`, "must be a lowercase SHA-256 digest");
+  }
+  if (
+    !Number.isSafeInteger(image.sizeBytes) ||
+    image.sizeBytes <= 0 ||
+    image.sizeBytes > OPEN_SOURCE_ARTIFACT_IMAGE_MAX_BYTES
+  ) {
+    artifactError(
+      id,
+      `${field}.sizeBytes`,
+      `must be between 1 and ${String(OPEN_SOURCE_ARTIFACT_IMAGE_MAX_BYTES)} bytes`,
+    );
+  }
+  for (const dimension of ["width", "height"] as const) {
+    if (!Number.isSafeInteger(image[dimension]) || image[dimension] <= 0) {
+      artifactError(
+        id,
+        `${field}.${dimension}`,
+        "must be a positive safe integer",
+      );
+    }
+  }
+}
+
 function assertSoftwareArtifactGuide(
   id: string,
   value: SoftwareArtifactGuide | undefined,
@@ -742,68 +816,31 @@ function assertSoftwareArtifactGuide(
   assertText(id, "guide.documentation.label", value.documentation.label);
   assertPublicHref(id, "guide.documentation.href", value.documentation.href);
 
-  if (!value.screenshot || typeof value.screenshot !== "object") {
-    artifactError(
-      id,
-      "guide.screenshot",
-      "must define an accessible screenshot",
-    );
-  }
-  assertInternalHref(id, "guide.screenshot.src", value.screenshot.src);
-  assertUpstreamSourcePath(
-    id,
-    "guide.screenshot.sourcePath",
-    value.screenshot.sourcePath,
-  );
-  const screenshotPath = new URL(
-    value.screenshot.src,
-    "https://artifact.invalid",
-  ).pathname;
-  if (!/\.(?:jpe?g|png|webp)$/i.test(screenshotPath)) {
-    artifactError(
-      id,
-      "guide.screenshot.src",
-      "must reference a browser-safe JPEG, PNG, or WebP image",
-    );
-  }
-  if (!/\.(?:jpe?g|png|webp)$/i.test(value.screenshot.sourcePath)) {
-    artifactError(
-      id,
-      "guide.screenshot.sourcePath",
-      "must identify a browser-safe JPEG, PNG, or WebP image",
-    );
-  }
-  assertText(id, "guide.screenshot.alt", value.screenshot.alt);
-  assertText(id, "guide.screenshot.sha256", value.screenshot.sha256);
-  if (!/^[a-f0-9]{64}$/.test(value.screenshot.sha256)) {
-    artifactError(
-      id,
-      "guide.screenshot.sha256",
-      "must be a lowercase SHA-256 digest",
-    );
-  }
-  if (
-    !Number.isSafeInteger(value.screenshot.sizeBytes) ||
-    value.screenshot.sizeBytes <= 0 ||
-    value.screenshot.sizeBytes > OPEN_SOURCE_ARTIFACT_IMAGE_MAX_BYTES
-  ) {
-    artifactError(
-      id,
-      "guide.screenshot.sizeBytes",
-      `must be between 1 and ${String(OPEN_SOURCE_ARTIFACT_IMAGE_MAX_BYTES)} bytes`,
-    );
-  }
-  for (const dimension of ["width", "height"] as const) {
-    if (
-      !Number.isSafeInteger(value.screenshot[dimension]) ||
-      value.screenshot[dimension] <= 0
-    ) {
-      artifactError(
-        id,
-        `guide.screenshot.${dimension}`,
-        "must be a positive safe integer",
-      );
+  assertSoftwareArtifactImage(id, "guide.screenshot", value.screenshot);
+
+  // The optional demo is verified frame by frame with the SAME contract as
+  // the lead screenshot: a walkthrough can never smuggle in an unpinned,
+  // unhashed, or foreign image, and its captions must be real prose.
+  if (value.demo !== undefined) {
+    assertNonEmptyArray(id, "guide.demo", value.demo);
+    const demoSources: string[] = [];
+    for (const [index, step] of value.demo.entries()) {
+      const field = `guide.demo[${index}]`;
+      if (!step || typeof step !== "object") {
+        artifactError(id, field, "must define a structured demo step");
+      }
+      assertSoftwareArtifactImage(id, field, step);
+      assertText(id, `${field}.caption`, step.caption);
+      if (step.src === value.screenshot.src) {
+        artifactError(
+          id,
+          `${field}.src`,
+          "must not repeat the lead screenshot",
+        );
+      }
+      demoSources.push(step.src);
     }
+    assertUniqueTextValues(id, "guide.demo", demoSources);
   }
 
   assertNonEmptyArray(id, "guide.relatedLearning", value.relatedLearning);
@@ -1391,6 +1428,60 @@ const CV_ENGINE_TOOL_ARTIFACT = {
       width: 1696,
       height: 1060,
     },
+    demo: [
+      {
+        src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/form-experience.png`,
+        sourcePath: "docs/screenshots/form-experience.png",
+        alt: "Das Formular des Editors, aufgeklappt bei Experience: pro Eintrag eine Karte mit beschrifteten Feldern für Rolle, Firma, Zeitraum und Stichpunkte, daneben Pfeile zum Umsortieren.",
+        caption:
+          "Jedes Feld ist ein beschriftetes Eingabefeld. Listen lassen sich umsortieren und kürzen, ohne YAML anzufassen.",
+        sha256:
+          "e9491465d35749032cb6a3c73939e63cbe22c8638a15e6f5cb3ea92d089867f3",
+        sizeBytes: 581785,
+        width: 2880,
+        height: 1800,
+      },
+      {
+        src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/yaml-view.png`,
+        sourcePath: "docs/screenshots/yaml-view.png",
+        alt: "Dieselbe Ansicht mit aktivem YAML-Tab: links der Rohtext des Lebenslaufs mit Syntaxhervorhebung, rechts unverändert die A4-Vorschau.",
+        caption:
+          "Wer lieber Text schreibt, wechselt auf den YAML-Tab. Formular und Datei sind dieselbe Quelle, sie laufen nicht auseinander.",
+        sha256:
+          "77532bbde5e16deee660c4632934dc7f4748fed190d24d2e8326f3ab666c4688",
+        sizeBytes: 690749,
+        width: 2880,
+        height: 1800,
+      },
+      {
+        src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/theme-picker.png`,
+        sourcePath: "docs/screenshots/theme-picker.png",
+        // "Darstellung", not "Vorlage": the panel in this frame sets accent,
+        // font, density and paper tone. The eight Vorlagen named in the
+        // Verwendung section (classic, modern, sidebar und so weiter) are a
+        // different setting and are not shown here.
+        alt: "Das geöffnete Feld für die Darstellung über dem Formular: Regler für Akzentfarbe, Schrift, Dichte und Papierton, darunter benannte Voreinstellungen wie Default, Forest oder Harvard Crimson.",
+        caption:
+          "Passt der Text nicht auf eine Seite, änderst du Akzent, Schrift oder Dichte, statt Inhalt zu streichen.",
+        sha256:
+          "ea72ade6eb5739df78ca4e80c3fb6f9c700a413a9a730fd5a0b81d92c9c370a5",
+        sizeBytes: 644467,
+        width: 2880,
+        height: 1800,
+      },
+      {
+        src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/cv.png`,
+        sourcePath: "docs/screenshots/cv.png",
+        alt: "Das fertige PDF als einzelne A4-Seite, aus der PDF-Datei gerastert: Kopfzeile, Erfahrung, Ausbildung, Fähigkeiten und Projekte auf einer Seite.",
+        caption:
+          "Der Build rendert genau eine Seite. Läuft der Lebenslauf über, endet der Befehl mit Fehler und nennt die Überschrift, die nicht mehr passt.",
+        sha256:
+          "179d73376d5c629723ec3bf6e041e2ab904ad5c984b57f8701b179cffa14e150",
+        sizeBytes: 344513,
+        width: 1241,
+        height: 1754,
+      },
+    ],
     relatedLearning: [
       {
         title: "AI-Native Arbeitskurs",

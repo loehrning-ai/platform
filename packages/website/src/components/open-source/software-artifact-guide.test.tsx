@@ -145,4 +145,72 @@ describe("SoftwareArtifactGuide", () => {
       "/kurse/open-source/codex",
     );
   });
+
+  it("renders an ordered demo whose frames are labelled exactly once", () => {
+    const withDemo = {
+      ...TOOL,
+      guide: {
+        ...TOOL.guide,
+        demo: [
+          {
+            src: "/artifacts/tools/report-builder/demo/one.png",
+            sourcePath: "docs/screenshots/one.png",
+            alt: "The form view with a completed entry.",
+            caption: "Type into the form.",
+            sha256: "d".repeat(64),
+            sizeBytes: 10,
+            width: 1200,
+            height: 800,
+          },
+          {
+            src: "/artifacts/tools/report-builder/demo/two.png",
+            sourcePath: "docs/screenshots/two.png",
+            alt: "The generated one-page report.",
+            caption: "Build the report.",
+            sha256: "e".repeat(64),
+            sizeBytes: 12,
+            width: 1200,
+            height: 800,
+          },
+        ],
+      },
+    } as const;
+
+    const { container } = render(<SoftwareArtifactGuide artifact={withDemo} />);
+
+    expect(
+      screen.getByRole("heading", { name: "Kurzdemo" }),
+    ).toBeInTheDocument();
+    // Ordered: the sequence is the point of a walkthrough.
+    expect(container.querySelector("ol")).toBeInTheDocument();
+    for (const step of withDemo.guide.demo) {
+      // The caption labels the figure; the descriptive alt renders as visible
+      // prose beneath it, so the frame is described once, not twice.
+      expect(
+        screen.getByRole("figure", { name: step.caption }),
+      ).toBeInTheDocument();
+      expect(screen.getByText(step.alt)).toBeInTheDocument();
+    }
+    for (const img of container.querySelectorAll("ol img")) {
+      expect(img).toHaveAttribute("alt", "");
+    }
+    // A figcaption is only the figure's caption when it is a direct child of
+    // it; nested in a wrapper it is invalid and the native association is
+    // lost. The frame number lives inside the caption and must stay
+    // aria-hidden, or it would leak into the figure's accessible name (which
+    // the exact-name lookups above would then fail).
+    for (const figure of container.querySelectorAll("ol figure")) {
+      const captions = figure.querySelectorAll("figcaption");
+      expect(captions).toHaveLength(1);
+      expect(captions[0].parentElement).toBe(figure);
+      expect(captions[0].querySelector("[aria-hidden='true']")).not.toBeNull();
+    }
+  });
+
+  it("omits the demo section entirely when no frames are declared", () => {
+    render(<SoftwareArtifactGuide artifact={TOOL} />);
+    expect(
+      screen.queryByRole("heading", { name: "Kurzdemo" }),
+    ).not.toBeInTheDocument();
+  });
 });
