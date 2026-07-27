@@ -151,6 +151,29 @@ describe("OpenSourceArtifactCard", () => {
     );
   });
 
+  it("makes the preview a second route to the detail page without a second tab stop", () => {
+    const artifact = toolFixture("dashboard-generator", "Dashboard Generator");
+    const { container } = render(<OpenSourceArtifactCard artifact={artifact} />);
+
+    // The preview is deliberately absent from the accessibility tree: the
+    // footer "Detail {Titel}" link already announces this destination, so an
+    // equal image link would only duplicate the tab stop and the announcement.
+    expect(
+      screen.getAllByRole("link", { name: `Detail ${artifact.title}` }),
+    ).toHaveLength(1);
+
+    const preview = container.querySelector<HTMLAnchorElement>(
+      `a[href="${artifact.href}"][aria-hidden="true"]`,
+    );
+    expect(preview).not.toBeNull();
+    expect(preview).toHaveAttribute("tabindex", "-1");
+    // Pointer target, not decoration: it must actually cover the image.
+    expect(preview).toHaveClass("absolute", "inset-0");
+    expect(preview?.parentElement).toContainElement(
+      screen.getByRole("img", { name: GUIDE.screenshot.alt }),
+    );
+  });
+
   it("names the license by its identifier when one is recorded", () => {
     const base = toolFixture("dashboard-generator", "Dashboard Generator");
     const identified: ToolArtifact = {
