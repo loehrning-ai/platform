@@ -39,7 +39,7 @@
     "verify": "bun run page-inventory:check && bun run test:env-contract && bun run test:e2e-auth-env-contract && bun run typecheck && bun run lint && bun run test && bun run build"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.39.0",
+    "@anthropic-ai/sdk": "^0.115.0",
     "@react-pdf/renderer": "^4.3.2",
     "@sentry/nextjs": "^10.51.0",
     "@supabase/ssr": "^0.12.0",
@@ -53,8 +53,8 @@
     "geist": "^1.7.0",
     "gray-matter": "^4.0.3",
     "jspdf": "^4.2.1",
-    "lucide-react": "^0.577.0",
-    "next": "15.5.22",
+    "lucide-react": "^1.28.0",
+    "next": "16.2.12",
     "qrcode": "^1.5.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
