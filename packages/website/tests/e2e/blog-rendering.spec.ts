@@ -40,11 +40,49 @@ test("blog: eu-ai-act-grundlagen renders BlogPosting JSON-LD + canonical", async
   await expectNoOldBlogCopy(page);
 });
 
-test("blog: eu-ai-act-grundlagen separates in-force law from adopted amendments", async ({ page }) => {
+test("blog: eu-ai-act-grundlagen states the enacted Omnibus and revised application dates", async ({ page }) => {
   await page.goto("/blog/eu-ai-act-grundlagen");
-  const text = await page.locator("body").innerText();
-  // The post must carry the load-bearing status distinction (in-force vs adopted).
-  expect(text).toMatch(/noch nicht in Kraft/);
-  expect(text).toMatch(/2\. August 2026/);
+  const article = page.locator("article.post-shell");
+  // The route can initially stream the shared blog loading shell. Wait for
+  // the article landmark itself instead of sampling that fallback.
+  await expect(article).toBeVisible({ timeout: 15_000 });
+  await expect(article).toContainText("veröffentlicht und in Kraft", {
+    timeout: 15_000,
+  });
+  // WebKit can collapse layout whitespace around the styled inline <span>
+  // differently in innerText. textContent reflects the actual accessible DOM
+  // phrase that toContainText above has already waited for.
+  const text = (await article.textContent()) ?? "";
+  // The post must not regress to the superseded pre-publication status.
+  expect(text).toMatch(/veröffentlicht und in Kraft/);
+  expect(text).toMatch(/27\. Juli 2026/);
   expect(text).toMatch(/2\. Dezember 2027/);
+  expect(text).toMatch(/2\. August 2028/);
+  expect(text).not.toMatch(/noch nicht in Kraft/);
+});
+
+test.describe("blog without JavaScript", () => {
+  test.use({ javaScriptEnabled: false });
+
+  test("keeps substantive article sections visible and section navigation native", async ({
+    page,
+  }) => {
+    const response = await page.goto("/blog/eu-ai-act-grundlagen", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(response?.status()).toBe(200);
+
+    const timelineSteps = page.locator(".pipeline__step");
+    const riskSteps = page.locator(".ladder__step");
+    await expect(timelineSteps.first()).toBeVisible();
+    await expect(riskSteps.first()).toBeVisible();
+    await expect(timelineSteps.first()).toContainText(/2024|2025|2026/);
+    await expect(riskSteps.first()).not.toHaveCSS("opacity", "0");
+
+    const timelineLink = page.locator('.railbar__item[href="#zeitplan"]');
+    await expect(timelineLink).toBeVisible();
+    await timelineLink.click();
+    await expect(page).toHaveURL(/#zeitplan$/);
+    await expect(page.locator("#zeitplan")).toBeVisible();
+  });
 });

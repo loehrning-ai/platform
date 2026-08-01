@@ -132,13 +132,13 @@ export function PromptOrreryWidget({
 
   const qColor =
     quality >= 80
-      ? "text-[#22c55e]"
+      ? "text-risk-green"
       : quality >= 40
         ? "text-brand-amber"
         : "text-destructive";
   const qBar =
     quality >= 80
-      ? "bg-[#22c55e]"
+      ? "bg-risk-green"
       : quality >= 40
         ? "bg-brand-amber"
         : "bg-destructive";

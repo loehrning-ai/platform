@@ -108,7 +108,7 @@ export function L05ScopeSlider({ lessonId, cpId }: L05ScopeSliderProps): JSX.Ele
           <span
             className={cn(
               "font-mono text-[15px] font-bold",
-              tone === "ok" ? "text-[#22c55e]" : tone === "warn" ? "text-brand-amber" : "text-destructive",
+              tone === "ok" ? "text-risk-green" : tone === "warn" ? "text-brand-amber" : "text-destructive",
             )}
           >
             success: {pct}%
@@ -117,7 +117,7 @@ export function L05ScopeSlider({ lessonId, cpId }: L05ScopeSliderProps): JSX.Ele
             <span className="font-mono text-[11px] text-muted-foreground">holding sweet spot…</span>
           )}
           {locked && (
-            <span className="font-mono text-[11px] font-bold text-[#22c55e]">
+            <span className="font-mono text-[11px] font-bold text-risk-green">
               sweet spot locked {done ? "✓" : ""}
             </span>
           )}

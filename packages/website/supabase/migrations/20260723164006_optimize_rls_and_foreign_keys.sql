@@ -1,23 +1,34 @@
 -- Preserve the existing authorization contract while making RLS evaluation
 -- constant per statement and adding indexes for every active foreign key.
 
-drop policy if exists "Service role full access"
-  on public.journey_leads;
-create policy "Service role full access"
-  on public.journey_leads
-  for all
-  to service_role
-  using (true)
-  with check (true);
+-- These two journey tables belong to a legacy shared-project surface and do
+-- not exist in a clean platform-only project. PostgreSQL resolves the target
+-- relation before applying `if exists` to the policy, so guard the relation.
+do $migration$
+begin
+  if to_regclass('public.journey_leads') is not null then
+    drop policy if exists "Service role full access"
+      on public.journey_leads;
+    create policy "Service role full access"
+      on public.journey_leads
+      for all
+      to service_role
+      using (true)
+      with check (true);
+  end if;
 
-drop policy if exists "Service role full access"
-  on public.journey_consultations;
-create policy "Service role full access"
-  on public.journey_consultations
-  for all
-  to service_role
-  using (true)
-  with check (true);
+  if to_regclass('public.journey_consultations') is not null then
+    drop policy if exists "Service role full access"
+      on public.journey_consultations;
+    create policy "Service role full access"
+      on public.journey_consultations
+      for all
+      to service_role
+      using (true)
+      with check (true);
+  end if;
+end
+$migration$;
 
 drop policy if exists "Service role full access"
   on public.rate_limits;
@@ -28,44 +39,16 @@ create policy "Service role full access"
   using (true)
   with check (true);
 
+-- Browser grants were revoked in the preceding hardening migration. Do not
+-- leave dormant permissive policies that a future broad GRANT could reactivate.
 drop policy if exists "Users can read own assessment_runs"
   on public.assessment_runs;
-create policy "Users can read own assessment_runs"
-  on public.assessment_runs
-  for select
-  to authenticated
-  using ((select auth.uid()) = user_id);
-
 drop policy if exists "Users can insert own assessment_runs"
   on public.assessment_runs;
-create policy "Users can insert own assessment_runs"
-  on public.assessment_runs
-  for insert
-  to authenticated
-  with check ((select auth.uid()) = user_id);
-
 drop policy if exists "Users can read own assessment_answers"
   on public.assessment_answers;
-create policy "Users can read own assessment_answers"
-  on public.assessment_answers
-  for select
-  to authenticated
-  using ((select auth.uid()) = user_id);
-
 drop policy if exists "Users can insert own assessment_answers"
   on public.assessment_answers;
-create policy "Users can insert own assessment_answers"
-  on public.assessment_answers
-  for insert
-  to authenticated
-  with check (
-    (select auth.uid()) = user_id
-    and run_id in (
-      select run.id
-      from public.assessment_runs as run
-      where run.user_id = (select auth.uid())
-    )
-  );
 
 drop policy if exists "Users can read their own course progress"
   on public.user_course_progress;
@@ -87,23 +70,32 @@ create policy "Service role full access"
   using (true)
   with check (true);
 
-drop policy if exists "Service role full access"
-  on public.daily_usage;
-create policy "Service role full access"
-  on public.daily_usage
-  for all
-  to service_role
-  using (true)
-  with check (true);
+-- Optional shared-project tables, absent in a clean platform-only project.
+do $migration$
+begin
+  if to_regclass('public.daily_usage') is not null then
+    drop policy if exists "Service role full access"
+      on public.daily_usage;
+    create policy "Service role full access"
+      on public.daily_usage
+      for all
+      to service_role
+      using (true)
+      with check (true);
+  end if;
 
-drop policy if exists "Service role full access"
-  on public.deep_analysis_jobs;
-create policy "Service role full access"
-  on public.deep_analysis_jobs
-  for all
-  to service_role
-  using (true)
-  with check (true);
+  if to_regclass('public.deep_analysis_jobs') is not null then
+    drop policy if exists "Service role full access"
+      on public.deep_analysis_jobs;
+    create policy "Service role full access"
+      on public.deep_analysis_jobs
+      for all
+      to service_role
+      using (true)
+      with check (true);
+  end if;
+end
+$migration$;
 
 create index if not exists assessment_answers_run_id_idx
   on public.assessment_answers (run_id);

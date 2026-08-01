@@ -7,6 +7,7 @@ import { CheckCircle2 } from "lucide-react";
 import { getCompletedLessonIds } from "@/lib/course/progress";
 import { CODEX_TRACKS } from "@/lib/codex/types";
 import { cn } from "@/lib/utils";
+import { subscribe } from "@/lib/progress";
 
 export interface CodexLessonNavItem {
   readonly id: string;
@@ -29,7 +30,9 @@ export function CodexLessonSidebar({ lessons }: CodexLessonSidebarProps): JSX.El
   const [completedIds, setCompletedIds] = useState<ReadonlySet<string>>(new Set());
 
   useEffect(() => {
-    setCompletedIds(getCompletedLessonIds("codex"));
+    return subscribe(() => {
+      setCompletedIds(getCompletedLessonIds("codex"));
+    });
   }, [pathname]);
 
   return (
@@ -59,7 +62,7 @@ export function CodexLessonSidebar({ lessons }: CodexLessonSidebarProps): JSX.El
                       )}
                     >
                       {completedIds.has(lesson.id) ? (
-                        <CheckCircle2 size={13} className="shrink-0 text-[#22c55e]" aria-hidden="true" />
+                        <CheckCircle2 size={13} className="shrink-0 text-risk-green" aria-hidden="true" />
                       ) : (
                         <span className="w-[13px] shrink-0 text-center font-mono text-[10px] text-muted-foreground">
                           {lesson.number}

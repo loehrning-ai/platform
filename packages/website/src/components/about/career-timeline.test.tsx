@@ -60,9 +60,12 @@ import { CareerTimeline } from "./career-timeline";
 describe("<CareerTimeline>", () => {
   it("renders the section heading once", () => {
     render(<CareerTimeline />);
-    expect(
-      screen.getByRole("heading", { name: "Karriere", level: 2 }),
-    ).toBeInTheDocument();
+    const heading = screen.getByRole("heading", {
+      name: "Karriere",
+      level: 2,
+    });
+    expect(heading).toBeInTheDocument();
+    expect(heading).toHaveClass("js-reveal");
   });
 
   it("mounts every milestone period and company in both responsive layouts", () => {

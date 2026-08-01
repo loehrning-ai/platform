@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import * as Sentry from "@sentry/nextjs";
 import Link from "next/link";
 import { ArrowLeft, RotateCcw } from "lucide-react";
+import { reportClientBoundaryError } from "@/lib/observability/client-boundary-error";
 
 export default function KursError({
   error,
@@ -13,7 +13,7 @@ export default function KursError({
   readonly reset: () => void;
 }) {
   useEffect(() => {
-    Sentry.captureException(error);
+    reportClientBoundaryError("eu-ai-act-course", error);
   }, [error]);
 
   return (

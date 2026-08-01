@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { DsChapterSidebar } from "./ds-chapter-sidebar";
@@ -27,6 +29,9 @@ describe("DsChapterSidebar ", () => {
       "href",
       "/kurse/open-source/data-science/fund",
     );
+
+    const source = readFileSync(join(__dirname, "ds-chapter-sidebar.tsx"), "utf8");
+    expect(source).toContain("prefetch={false}");
   });
 
   it("calls onNavigate when a link is clicked", () => {

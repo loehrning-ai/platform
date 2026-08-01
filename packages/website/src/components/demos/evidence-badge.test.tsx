@@ -17,18 +17,19 @@ import { EvidenceBadge, SimulationDisclosure } from "./evidence-badge";
 
 describe("<EvidenceBadge> mode badge + tooltip", () => {
   it.each([
-    ["synthetic", "Synthetisch", "erfundene Beispieldaten"],
-    ["rule_based", "Regelbasiert", "If-Else-Regeln"],
-    ["recorded_trace", "Aufgezeichnete Spur", "aufgezeichnete Beispielspur"],
-    ["live_api", "Live-API", "tatsächliche Anfragen"],
+    ["synthetic", "Synthetisch", "erfundene Beispieldaten", "#9a3412"],
+    ["rule_based", "Regelbasiert", "If-Else-Regeln", "#1d4ed8"],
+    ["recorded_trace", "Aufgezeichnete Spur", "aufgezeichnete Beispielspur", "#4b5563"],
+    ["live_api", "Live-API", "tatsächliche Anfragen", "#166534"],
   ] as const)(
-    "labels the %s badge and reveals/hides its tooltip on toggle",
-    (mode, label, tooltipFragment) => {
+    "labels the %s badge with an AA-safe tone and reveals/hides its tooltip",
+    (mode, label, tooltipFragment, foreground) => {
       render(<EvidenceBadge evidenceMode={mode} externalActionMode="none" />);
 
       const button = screen.getByRole("button", {
         name: new RegExp(`Evidenzmodus: ${label}`),
       });
+      expect(button).toHaveStyle({ color: foreground });
       // Collapsed by default.
       expect(button).toHaveAttribute("aria-expanded", "false");
       expect(screen.queryByRole("tooltip")).toBeNull();

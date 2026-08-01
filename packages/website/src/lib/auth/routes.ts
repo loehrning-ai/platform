@@ -34,7 +34,9 @@ function hasControlCharacter(value: string): boolean {
 
 export function sanitizeNextPath(value: string | null): string {
   const fallback = "/konto";
-  if (!value || !value.startsWith("/")) return fallback;
+  if (!value || value.length > 2_048 || !value.startsWith("/")) {
+    return fallback;
+  }
 
   // WHATWG URL parsing normalizes backslashes into slashes. Without rejecting
   // them first, a value such as `/\\evil.example` becomes a cross-origin URL.
@@ -52,13 +54,23 @@ export function sanitizeNextPath(value: string | null): string {
     const internalOrigin = "https://redirect.invalid";
     const parsed = new URL(value, internalOrigin);
     if (parsed.origin !== internalOrigin) return fallback;
+    // Dot-segment normalization can turn an initially single-slash value such
+    // as `/%2e%2e//evil.example` into a scheme-relative `//evil.example`.
+    // Reject the normalized form before another URL constructor consumes it.
+    if (!parsed.pathname.startsWith("/") || parsed.pathname.startsWith("//")) {
+      return fallback;
+    }
     if (parsed.pathname === "/login" || parsed.pathname.startsWith("/login/")) {
       return fallback;
     }
     if (parsed.pathname === "/auth" || parsed.pathname.startsWith("/auth/")) {
       return fallback;
     }
-    return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+    const sanitized = `${parsed.pathname}${parsed.search}${parsed.hash}`;
+    if (new URL(sanitized, internalOrigin).origin !== internalOrigin) {
+      return fallback;
+    }
+    return sanitized;
   } catch {
     return fallback;
   }

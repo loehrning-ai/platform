@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { CourseProgressBar } from "@/components/ai-native-operator/course-progress-bar";
+import { CourseAssessmentCta } from "@/components/course/kurs/course-assessment-cta";
 import { COURSE_META, MODULE_IDS, TOTAL_LESSON_COUNT, orderedModuleMetas } from "@/lib/ai-native-operator/types";
 import { lessonHref, moduleHref } from "@/lib/ai-native-operator/routes";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
@@ -186,25 +187,7 @@ export default function AiNativeOperatorLandingPage() {
           </div>
         </section>
 
-        <div className="mt-16 border-2 border-foreground bg-card p-8 text-center shadow-[6px_6px_0_var(--color-foreground)]">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-            start now
-          </p>
-          <h2 className="mt-2 text-[26px] font-bold text-foreground sm:text-[32px]">
-            Ready for Module 01?
-          </h2>
-          <p className="mx-auto mt-3 max-w-[440px] text-[14px] leading-relaxed text-muted-foreground">
-            Mindset & Culture. Fourteen minutes for the first lesson, and a reflection exercise
-            to calibrate where you honestly stand.
-          </p>
-          <Link
-            href={lessonHref(firstModuleId, 1)}
-            className="mt-6 inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-6 py-4 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)]"
-          >
-            Begin
-            <ArrowRight size={15} aria-hidden="true" />
-          </Link>
-        </div>
+        <CourseAssessmentCta courseSlug="ai-native-operator" />
       </section>
     </>
   );

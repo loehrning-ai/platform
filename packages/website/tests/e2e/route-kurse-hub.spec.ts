@@ -2,10 +2,9 @@ import { test, expect, type Page } from "@playwright/test";
 
 /**
  * /kurse hub smoke + interaction (regression coverage). The unified course hub:
- * three native German course-track cards (KI-Führerschein → EU AI Act → AI-Native)
- * with a cross-course progress indicator, a persona toggle, and a 6-stage
- * Kompetenzweg strip. Assertions target ROLES and stable test IDs, not copy, so
- * a wording refresh stays green while a real regression (missing track cards,
+ * four native German course-track cards with cross-course progress indicators
+ * and direct learning-goal recommendations. Assertions target roles and stable
+ * test IDs so a wording refresh stays green while a real regression (missing track cards,
  * dead "Kurs starten" CTA, broken progress dots, mobile overflow) fails.
  *
  * Complementary to courses.spec.ts, which already covers the imported
@@ -15,8 +14,7 @@ import { test, expect, type Page } from "@playwright/test";
 
 const ROUTE = "/kurse";
 
-// Console-error filter mirrors route-einstieg.spec.ts / qa-sweep.spec.ts: drop
-// framework noise and keep only errors that signal a genuine page fault.
+// Every captured console error and uncaught page error fails the check.
 function collectConsoleErrors(page: Page): string[] {
   const errors: string[] = [];
   page.on("console", (msg) => {
@@ -27,18 +25,13 @@ function collectConsoleErrors(page: Page): string[] {
 }
 
 function meaningfulErrors(errors: string[]): string[] {
-  return errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e),
-  );
+  return errors;
 }
 
 // Native course tracks (h3 card headings) - source of truth: lib/courses/catalog.ts.
 const NATIVE_TRACKS = [
   "KI-Führerschein",
+  "KI und Gesellschaft",
   "EU AI Act Kurs",
   "AI-Native Arbeitskurs",
 ] as const;
@@ -63,7 +56,7 @@ test.describe("/kurse hub", () => {
     );
   });
 
-  test("renders the native course-track cards, progress indicator, and Kompetenzweg strip", async ({
+  test("renders all four native course-track cards and their progress indicators", async ({
     page,
   }) => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
@@ -72,20 +65,19 @@ test.describe("/kurse hub", () => {
       await expect(page.getByRole("heading", { name: title })).toBeVisible();
     }
 
-    // The 6-stage learning-path strip is a stable landmark carrying its count
-    // in the accessible name, so a silently emptied strip is caught.
     await expect(
-      page.getByRole("navigation", { name: "KI-Kompetenzweg: 6 Stufen" }),
+      page.getByRole("heading", {
+        level: 2,
+        name: "Der Lernpfad",
+        exact: true,
+      }),
     ).toBeVisible();
 
-    // Each native card exposes an ARIA progressbar (dots) + percentage pill,
-    // rendered unconditionally (0% for a fresh visitor) - no auth/seed needed.
-    await expect(
-      page.getByRole("progressbar", { name: /Fortschritt.*KI-Führerschein/i }),
-    ).toBeVisible();
-    await expect(
-      page.getByTestId("progress-pct-ki-fuehrerschein"),
-    ).toBeVisible();
+    for (const title of NATIVE_TRACKS) {
+      await expect(
+        page.getByRole("progressbar", { name: `Fortschritt ${title}` }),
+      ).toBeVisible();
+    }
   });
 
   test("primary CTA links to the course track, which login-gates an anonymous visitor", async ({
@@ -112,7 +104,7 @@ test.describe("/kurse hub", () => {
       "/login",
     );
     expect(url.searchParams.get("next")).toBe("/ki-fuehrerschein/kurs");
-    expect(url.searchParams.get("reason")).toBe("kurs-login");
+    expect(url.searchParams.get("reason")).toBe("auth-not-configured");
   });
 
   test("learning-goal recommendations link directly to the matching courses", async ({
@@ -124,11 +116,21 @@ test.describe("/kurse hub", () => {
 
     const recommendations = [
       [
-        "Alltag und sicherer Einsatz: direkt zum KI-Führerschein",
+        "Alltag und sicherer Einsatz: direkt zum Kurs KI-Führerschein",
         "/ki-fuehrerschein",
       ],
-      ["Regeln und Einordnen: direkt zum EU AI Act Kurs", "/eu-ai-act-kurs"],
-      ["Aktiv mit KI arbeiten: direkt zum AI-Native Kurs", "/ai-native"],
+      [
+        "Gesellschaft und Ethik verstehen: direkt zum Kurs KI und Gesellschaft",
+        "/ki-und-gesellschaft",
+      ],
+      [
+        "Regeln und Einordnen: direkt zum Kurs EU AI Act Kurs",
+        "/eu-ai-act-kurs",
+      ],
+      [
+        "Aktiv mit KI arbeiten: direkt zum Kurs AI-Native Arbeitskurs",
+        "/ai-native",
+      ],
     ] as const;
 
     for (const [name, href] of recommendations) {

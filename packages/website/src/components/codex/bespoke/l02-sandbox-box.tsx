@@ -55,6 +55,10 @@ export function L02SandboxBox({ lessonId, cpId }: L02SandboxBoxProps): JSX.Eleme
     };
   }, []);
 
+  useEffect(() => {
+    if (toggledOnce.size === CAPABILITIES.length && !done) complete();
+  }, [complete, done, toggledOnce]);
+
   const toggle = (id: Capability["id"]) => {
     const next = !state[id];
     setState((prev) => ({ ...prev, [id]: next }));
@@ -62,7 +66,6 @@ export function L02SandboxBox({ lessonId, cpId }: L02SandboxBoxProps): JSX.Eleme
       if (prev.has(id)) return prev;
       const nextSet = new Set(prev);
       nextSet.add(id);
-      if (nextSet.size === CAPABILITIES.length) complete();
       return nextSet;
     });
 
@@ -106,7 +109,7 @@ export function L02SandboxBox({ lessonId, cpId }: L02SandboxBoxProps): JSX.Eleme
       <p
         className={cn(
           "mt-4 font-mono text-[12px]",
-          testsOn ? "text-[#22c55e]" : "text-brand-amber",
+          testsOn ? "text-risk-green" : "text-brand-amber",
         )}
       >
         {testsOn ? "codex can verify work" : "codex cannot verify work, flying blind"}
@@ -123,7 +126,7 @@ export function L02SandboxBox({ lessonId, cpId }: L02SandboxBoxProps): JSX.Eleme
       </p>
 
       {toggledOnce.size === CAPABILITIES.length && (
-        <p className="mt-3 font-mono text-[11px] text-[#22c55e]">
+        <p className="mt-3 font-mono text-[11px] text-risk-green">
           all five capabilities explored {done ? "✓" : ""}
         </p>
       )}

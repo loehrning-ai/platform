@@ -85,7 +85,7 @@ export function BlockPageShell({ courseSlug, blockId }: BlockPageShellProps) {
               Block {block.orderIndex + 1} / {blocks.length}
             </span>
             <span className="mx-2 text-border">|</span>
-            <span className="text-sm font-medium">{block.title}</span>
+            <h1 className="inline text-sm font-medium">{block.title}</h1>
           </div>
           <span className="inline-flex items-center gap-1 font-mono text-xs text-muted-foreground">
             <Clock className="h-3 w-3" />

@@ -1,11 +1,16 @@
 import "server-only";
 import {
   anthropicRetentionDays,
+  hasCompleteSupabaseRuntimeConfig,
+  isAccountAbuseProtectionReady,
   isAnthropicRuntimeReady,
+  isPastOrPresentIsoDate,
+  turnstileSiteKey,
 } from "@/lib/provider-readiness";
 
 export interface RuntimeFeatures {
   readonly account: boolean;
+  readonly turnstileSiteKey: string | null;
   readonly feedback: boolean;
   readonly supabase: boolean;
   readonly supabaseRegion: string | null;
@@ -30,21 +35,30 @@ export function getRuntimeFeatures(): RuntimeFeatures {
       (process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
   );
-  const serviceSupabase = Boolean(
-    process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY,
-  );
+  const serviceSupabase = hasCompleteSupabaseRuntimeConfig();
   const retention = Number(process.env.SENTRY_RETENTION_DAYS);
   const anthropicRetention = anthropicRetentionDays();
   const vercelHosting = process.env.VERCEL === "1";
+  const supabaseRegion = process.env.SUPABASE_REGION || null;
+  const supabaseComplianceReady =
+    Boolean(supabaseRegion && /^eu(?:-|$)/i.test(supabaseRegion)) &&
+    isPastOrPresentIsoDate(process.env.SUPABASE_DPA_CONFIRMED_AT);
+  const captchaSiteKey = turnstileSiteKey();
+  const accountProtectionReady = isAccountAbuseProtectionReady();
 
   return {
-    account: publicSupabase && serviceSupabase,
+    account:
+      publicSupabase &&
+      serviceSupabase &&
+      supabaseComplianceReady &&
+      accountProtectionReady,
+    turnstileSiteKey: accountProtectionReady ? captchaSiteKey : null,
     feedback:
       serviceSupabase &&
       process.env.FEEDBACK_ENABLED === "true" &&
       Boolean(process.env.FEEDBACK_RETENTION_CRON_CONFIRMED_AT),
     supabase: publicSupabase || serviceSupabase,
-    supabaseRegion: process.env.SUPABASE_REGION || null,
+    supabaseRegion,
     sentry: Boolean(process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN),
     sentryRetentionDays:
       Number.isInteger(retention) && retention > 0 ? retention : null,

@@ -126,10 +126,20 @@ describe("SoftwareArtifactGuide", () => {
     expect(screen.getByText("bun run report -- input.json")).toBeInTheDocument();
     expect(
       screen.getByLabelText("Befehl für Install dependencies"),
-    ).toHaveAttribute("tabindex", "0");
+    ).not.toHaveAttribute("tabindex");
     expect(
       screen.getByLabelText("Befehl für Generate the report"),
-    ).toHaveAttribute("tabindex", "0");
+    ).toHaveClass("whitespace-pre-wrap", "break-words");
+    expect(
+      screen.getByRole("button", {
+        name: "Befehl für Install dependencies kopieren",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: "Befehl für Generate the report kopieren",
+      }),
+    ).toBeInTheDocument();
     expect(screen.getByText("JSON")).toBeInTheDocument();
     expect(
       screen.getByRole("link", {

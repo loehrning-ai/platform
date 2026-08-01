@@ -39,14 +39,17 @@ export function Grundlagen() {
           <p>
             Eine Pflicht betrifft dich trotzdem indirekt:{" "}
             <strong>Artikel 4</strong> verpflichtet Anbieter und Betreiber
-            seit dem 2. Februar 2025, für ausreichende KI-Kompetenz ihres
-            Personals zu sorgen, angepasst an Vorwissen und Einsatzkontext.
-            Wenn dein Arbeitgeber KI einsetzt, muss er dich also so schulen,
-            dass du Funktionsweise, Risiken und Grenzen der Systeme
-            verstehst. Es gibt kein vorgeschriebenes Format, keine
-            Pflichtprüfung und kein Mindestzertifikat; eine interne
-            Aufzeichnung über die Schulungen genügt. (Quelle: Commission
-            Q&amp;A zu Art. 4, digital-strategy.ec.europa.eu, Mai 2025)
+            seit dem 2. Februar 2025, Maßnahmen zur Entwicklung der
+            KI-Kompetenz ihres Personals zu treffen, angepasst an Vorwissen,
+            Einsatzkontext und betroffene Personen. Seit der Änderung durch
+            die Verordnung (EU) 2026/1744 muss dabei kein bestimmtes
+            Kompetenzniveau einzelner Personen garantiert werden. Es gibt
+            kein vorgeschriebenes Format, keine Pflichtprüfung und kein
+            Mindestzertifikat. Die Organisation muss trotzdem belastbare,
+            kontextgerechte Maßnahmen treffen; eine bloße Aufzeichnung ohne
+            Maßnahme genügt nicht. (Quelle: Art. 4 in der Fassung der
+            Verordnung (EU) 2026/1744; Commission Q&amp;A zu Art. 4,
+            abgerufen 28. Juli 2026)
           </p>
         </div>
         <aside className="premise__stats">

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Demo } from "@/lib/demos";
+import { useMotionAllowed } from "@/lib/animation-policy";
 
 /**
  * Renders the meta table. Any value containing a number animates from 0 up
@@ -11,6 +12,7 @@ import type { Demo } from "@/lib/demos";
 export function AnimatedMetaTable({ meta }: { meta: Demo["meta"] }) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [active, setActive] = useState(false);
+  const motionAllowed = useMotionAllowed();
 
   useEffect(() => {
     const el = ref.current;
@@ -46,21 +48,33 @@ export function AnimatedMetaTable({ meta }: { meta: Demo["meta"] }) {
           <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
             {label}
           </span>
-          <AnimatedValue value={value} active={active} />
+          <AnimatedValue
+            value={value}
+            active={active}
+            motionAllowed={motionAllowed}
+          />
         </div>
       ))}
     </div>
   );
 }
 
-function AnimatedValue({ value, active }: { value: string; active: boolean }) {
+function AnimatedValue({
+  value,
+  active,
+  motionAllowed,
+}: {
+  value: string;
+  active: boolean;
+  motionAllowed: boolean;
+}) {
   const numMatch = useMemo(() => value.match(/[\d.,]+/), [value]);
   const targetNum = numMatch ? parseFloat(numMatch[0].replace(/\./g, "").replace(",", ".")) : null;
   const hasNumber = Number.isFinite(targetNum);
-  const [display, setDisplay] = useState<string>(hasNumber && active ? value : value);
+  const [display, setDisplay] = useState(value);
 
   useEffect(() => {
-    if (!active || !hasNumber || targetNum === null) {
+    if (!active || !hasNumber || targetNum === null || !motionAllowed) {
       setDisplay(value);
       return;
     }
@@ -78,7 +92,7 @@ function AnimatedValue({ value, active }: { value: string; active: boolean }) {
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [active, hasNumber, targetNum, value, numMatch]);
+  }, [active, hasNumber, motionAllowed, targetNum, value, numMatch]);
 
   return <span className="font-bold text-foreground">{display}</span>;
 }

@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import type { FC, ReactNode, HTMLAttributes } from "react";
 import { saveExerciseResult } from "@/lib/ai-native/progress";
+import { __resetLearningOwnerForTests } from "@/lib/progress/browser-learning-storage";
 import { FreeResponseExercise, type FreeResponseSpec } from "./free-response";
 
 /**
@@ -96,6 +97,7 @@ const storageKey = `ai-native-exercise-draft-${spec.lessonId}-${spec.exerciseId}
 beforeEach(() => {
   vi.clearAllMocks();
   sessionStorage.clear();
+  __resetLearningOwnerForTests("anonymous");
 });
 
 afterEach(() => {

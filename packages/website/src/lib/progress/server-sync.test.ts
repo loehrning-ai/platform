@@ -20,6 +20,7 @@
 import { describe, it, expect } from "vitest";
 import {
   META_ROW_COURSE_SLUG,
+  calculateEarnedXp,
   isUnifiedCourseSlice,
   isUnifiedMetaFields,
   isUnifiedProgress,
@@ -28,7 +29,7 @@ import {
   mergeUnifiedProgress,
 } from "./server-sync";
 import { COURSE_SLUGS } from "@/lib/course/types";
-import { MAX_EXERCISE_SUMMARY_BYTES } from "./types";
+import { MAX_EXERCISE_SUMMARY_BYTES, XP } from "./types";
 import type {
   UnifiedCourseSlice,
   UnifiedExerciseResult,
@@ -53,8 +54,8 @@ function exercise(over: Partial<UnifiedExerciseResult> = {}): UnifiedExerciseRes
 
 function lesson(over: Partial<UnifiedLessonProgress> = {}): UnifiedLessonProgress {
   return {
-    sectionsRead: ["s1"],
-    quizScore: 4,
+    sectionsRead: [],
+    quizScore: 0.8,
     quizTotal: 5,
     completed: true,
     exercisesCompleted: {},
@@ -86,6 +87,14 @@ function progress(over: Partial<UnifiedProgress> = {}): UnifiedProgress {
   };
 }
 
+const AI_NATIVE_LESSON = "modul_1_lesson_1";
+const AI_NATIVE_SECTION = "modul_1_lesson_1_section_1";
+const KF_LESSON = "block_1_lesson_1";
+const KF_SECTION = "block_1_lesson_1_section_1";
+const EU_LESSON = "block_1_lesson_1";
+const SOCIETY_LESSON = "arbeit-1-1";
+const SOCIETY_SECTION = "arbeit-1-1-s1";
+
 /** JSON round-trip clone (fixtures are JSON-safe: only primitives + null). */
 function clone<T>(value: T): T {
   return JSON.parse(JSON.stringify(value)) as T;
@@ -107,9 +116,12 @@ describe("isUnifiedProgress", () => {
       courses: {
         "ai-native": slice({
           lessons: {
-            l1: lesson({ exercisesCompleted: { exA: exercise() } }),
+            [AI_NATIVE_LESSON]: lesson({
+              sectionsRead: [AI_NATIVE_SECTION],
+              exercisesCompleted: { exA: exercise() },
+            }),
           },
-          workshopQuiz: { passed: true, score: 90, completedAt: "2026-05-02T00:00:00.000Z" },
+          workshopQuiz: { passed: true, score: 0.9, completedAt: "2026-05-02T00:00:00.000Z" },
           capstoneSubmitted: true,
         }),
       },
@@ -132,8 +144,12 @@ describe("isUnifiedProgress", () => {
         progress({
           courses: {
             "ki-und-gesellschaft": slice({
-              lessons: { l1: lesson() },
-              workshopQuiz: { passed: true, score: 80, completedAt: "2026-06-01T00:00:00.000Z" },
+              lessons: {
+                [SOCIETY_LESSON]: lesson({
+                  sectionsRead: [SOCIETY_SECTION],
+                }),
+              },
+              workshopQuiz: { passed: true, score: 0.8, completedAt: "2026-06-01T00:00:00.000Z" },
             }),
           },
         }),
@@ -142,9 +158,11 @@ describe("isUnifiedProgress", () => {
   });
 
   it("rejects a store containing an unknown course slug", () => {
-    expect(
-      isUnifiedProgress(progress({ courses: { "not-a-real-course": slice() } })),
-    ).toBe(false);
+    const invalidProgress: unknown = {
+      ...progress(),
+      courses: { "not-a-real-course": slice() },
+    };
+    expect(isUnifiedProgress(invalidProgress)).toBe(false);
   });
 
   it("rejects non-record roots", () => {
@@ -178,7 +196,14 @@ describe("isUnifiedProgress", () => {
   });
 
   it("requires every badge value to be a string timestamp", () => {
-    expect(isUnifiedProgress({ ...progress(), badges: { b: "2026-01-01" } })).toBe(true);
+    expect(
+      isUnifiedProgress({
+        ...progress(),
+        badges: { b: "2026-01-01T00:00:00.000Z" },
+      }),
+    ).toBe(true);
+    expect(isUnifiedProgress({ ...progress(), badges: { b: "2026-01-01" } })).toBe(false);
+    expect(isUnifiedProgress({ ...progress(), badges: { b: "not-a-date" } })).toBe(false);
     expect(isUnifiedProgress({ ...progress(), badges: { b: 1 } })).toBe(false);
   });
 
@@ -190,13 +215,111 @@ describe("isUnifiedProgress", () => {
     expect(isUnifiedProgress({ ...progress(), streak: { days: 2, last: 42 } })).toBe(false);
   });
 
-  it("requires lastActivity to be a string", () => {
+  it("requires lastActivity to be a full ISO timestamp", () => {
     expect(isUnifiedProgress({ ...progress(), lastActivity: 1717372800000 })).toBe(false);
     expect(isUnifiedProgress({ ...progress(), lastActivity: null })).toBe(false);
+    expect(isUnifiedProgress({ ...progress(), lastActivity: "2026-06-03" })).toBe(false);
+    expect(isUnifiedProgress({ ...progress(), lastActivity: "not-a-date" })).toBe(false);
+    expect(
+      isUnifiedProgress({
+        ...progress(),
+        lastActivity: "2026-02-30T00:00:00.000Z",
+      }),
+    ).toBe(false);
+  });
+
+  it("merges equivalent offset timestamps commutatively", () => {
+    const left = progress({
+      lastActivity: "2026-01-01T00:00:00.000Z",
+      badges: { first: "2026-01-01T00:00:00.000Z" },
+    });
+    const right = progress({
+      lastActivity: "2025-12-31T19:00:00.000-05:00",
+      badges: { first: "2025-12-31T19:00:00.000-05:00" },
+    });
+
+    expect(mergeUnifiedProgress(left, right)).toEqual(
+      mergeUnifiedProgress(right, left),
+    );
+  });
+
+  it("treats a reset epoch as a deletion barrier across stale devices", () => {
+    const stale = progress({
+      courses: {
+        "ai-native": slice({
+          lessons: { old: lesson({ completed: true }) },
+          lastActivity: "2999-01-01T00:00:00.000Z",
+        }),
+      },
+    });
+    const resetAt = "2026-07-28T00:00:00.000Z";
+    const reset = progress({
+      courses: {
+        "ai-native": slice({
+          lessons: {},
+          startedAt: resetAt,
+          lastActivity: resetAt,
+          resetAt,
+        }),
+      },
+    });
+
+    const merged = mergeUnifiedProgress(stale, reset);
+    expect(merged.courses["ai-native"]?.lessons).toEqual({});
+    expect(merged.courses["ai-native"]?.resetAt).toBe(resetAt);
+    expect(mergeUnifiedProgress(reset, stale)).toEqual(merged);
+
+    const newLearning = progress({
+      courses: {
+        "ai-native": slice({
+          lessons: { fresh: lesson({ completed: true }) },
+          startedAt: resetAt,
+          lastActivity: "2026-07-28T00:01:00.000Z",
+          resetAt,
+        }),
+      },
+    });
+    expect(
+      mergeUnifiedProgress(reset, newLearning).courses["ai-native"]?.lessons
+        .fresh,
+    ).toBeDefined();
   });
 
   it("rejects a course keyed by an unknown course slug", () => {
     expect(isUnifiedProgress({ ...progress(), courses: { "not-a-course": slice() } })).toBe(false);
+  });
+
+  it("rejects fabricated lesson IDs and noncanonical or duplicate section IDs", () => {
+    expect(
+      isUnifiedProgress(
+        progress({
+          courses: {
+            "ki-fuehrerschein": slice({
+              lessons: { "fabricated-lesson": lesson() },
+            }),
+          },
+        }),
+      ),
+    ).toBe(false);
+
+    for (const sectionsRead of [
+      [KF_SECTION, "fabricated-section"],
+      [KF_SECTION, KF_SECTION],
+    ]) {
+      expect(
+        isUnifiedProgress(
+          progress({
+            courses: {
+              "ki-fuehrerschein": slice({
+                lessons: {
+                  [KF_LESSON]: lesson({ sectionsRead }),
+                },
+              }),
+            },
+          }),
+        ),
+      ).toBe(false);
+    }
   });
 
   it("rejects a course slice with an invalid workshop quiz (null score)", () => {
@@ -204,16 +327,100 @@ describe("isUnifiedProgress", () => {
     expect(isUnifiedProgress({ ...progress(), courses: { "ai-native": bad } })).toBe(false);
   });
 
+  it("rejects a workshop score outside the canonical 0..1 contract", () => {
+    const bad = slice({
+      workshopQuiz: { passed: true, score: 90, completedAt: null },
+    });
+    expect(
+      isUnifiedProgress({
+        ...progress(),
+        courses: { "ai-native": bad },
+      }),
+    ).toBe(false);
+  });
+
   it("rejects a lesson with a negative quiz score", () => {
-    const bad = slice({ lessons: { l1: lesson({ quizScore: -3 }) } });
+    const bad = slice({
+      lessons: { [KF_LESSON]: lesson({ quizScore: -3 }) },
+    });
     expect(isUnifiedProgress({ ...progress(), courses: { "ki-fuehrerschein": bad } })).toBe(false);
+  });
+
+  it("rejects a lesson quiz score outside the normalized 0..1 contract", () => {
+    const bad = slice({
+      lessons: { [KF_LESSON]: lesson({ quizScore: 4 }) },
+    });
+    expect(
+      isUnifiedProgress({
+        ...progress(),
+        courses: { "ki-fuehrerschein": bad },
+      }),
+    ).toBe(false);
   });
 
   it("rejects an exercise with a non-integer attempts count", () => {
     const bad = slice({
-      lessons: { l1: lesson({ exercisesCompleted: { exA: exercise({ attempts: 1.5 }) } }) },
+      lessons: {
+        [EU_LESSON]: lesson({
+          exercisesCompleted: { exA: exercise({ attempts: 1.5 }) },
+        }),
+      },
     });
     expect(isUnifiedProgress({ ...progress(), courses: { "eu-ai-act-kurs": bad } })).toBe(false);
+  });
+
+  it("rejects malformed nested timestamps and exercise-key mismatches", () => {
+    const badCompletedAt = slice({
+      lessons: {
+        [AI_NATIVE_LESSON]: lesson({
+          exercisesCompleted: {
+            exA: exercise({ completedAt: "yesterday" }),
+          },
+        }),
+      },
+    });
+    expect(
+      isUnifiedProgress({
+        ...progress(),
+        courses: { "ai-native": badCompletedAt },
+      }),
+    ).toBe(false);
+
+    const mismatchedKey = slice({
+      lessons: {
+        [AI_NATIVE_LESSON]: lesson({
+          exercisesCompleted: {
+            exA: exercise({ exerciseId: "different-id" }),
+          },
+        }),
+      },
+    });
+    expect(
+      isUnifiedProgress({
+        ...progress(),
+        courses: { "ai-native": mismatchedKey },
+      }),
+    ).toBe(false);
+  });
+
+  it("rejects exercise summaries above the UTF-8 byte limit", () => {
+    const bad = slice({
+      lessons: {
+        [AI_NATIVE_LESSON]: lesson({
+          exercisesCompleted: {
+            exA: exercise({
+              summary: "ü".repeat(MAX_EXERCISE_SUMMARY_BYTES),
+            }),
+          },
+        }),
+      },
+    });
+    expect(
+      isUnifiedProgress({
+        ...progress(),
+        courses: { "ai-native": bad },
+      }),
+    ).toBe(false);
   });
 });
 
@@ -236,18 +443,20 @@ describe("mergeUnifiedProgress - top-level ledger", () => {
     expect(merged.lastActivity).toBe("2026-06-01T00:00:00.000Z");
   });
 
-  it("unions checkpoints with local winning on key conflict", () => {
+  it("unions checkpoints with completed state winning on key conflict", () => {
     const local = progress({ checkpoints: { "l1::c1": true, "l1::c2": false } });
     const remote = progress({ checkpoints: { "l1::c2": true, "l3::c1": true } });
-    // { ...remote, ...local } => local's "l1::c2": false wins over remote's true.
     expect(mergeUnifiedProgress(local, remote).checkpoints).toEqual({
       "l1::c1": true,
-      "l1::c2": false,
+      "l1::c2": true,
       "l3::c1": true,
     });
+    expect(mergeUnifiedProgress(remote, local).checkpoints).toEqual(
+      mergeUnifiedProgress(local, remote).checkpoints,
+    );
   });
 
-  it("unions badges with local's award timestamp winning on conflict", () => {
+  it("unions badges while retaining the earliest award timestamp", () => {
     const local = progress({ badges: { "first-light": "2026-01-01T00:00:00.000Z" } });
     const remote = progress({
       badges: {
@@ -259,18 +468,62 @@ describe("mergeUnifiedProgress - top-level ledger", () => {
       "first-light": "2026-01-01T00:00:00.000Z",
       apprentice: "2026-02-05T00:00:00.000Z",
     });
+    expect(mergeUnifiedProgress(remote, local).badges).toEqual(
+      mergeUnifiedProgress(local, remote).badges,
+    );
+  });
+
+  it("reconstructs additive XP from disjoint device achievements", () => {
+    const local = progress({
+      xp: XP.CHECKPOINT,
+      checkpoints: { "course-a::checkpoint": true },
+    });
+    const remote = progress({
+      xp: XP.CHECKPOINT,
+      checkpoints: { "course-b::checkpoint": true },
+    });
+    const merged = mergeUnifiedProgress(local, remote);
+    expect(merged.xp).toBe(XP.CHECKPOINT * 2);
+    expect(calculateEarnedXp(merged)).toBe(XP.CHECKPOINT * 2);
+  });
+
+  it("does not derive XP from fabricated lessons or section IDs", () => {
+    const state = progress({
+      courses: {
+        "ki-fuehrerschein": slice({
+          lessons: {
+            [KF_LESSON]: lesson({
+              completed: true,
+              sectionsRead: [KF_SECTION, "fabricated-section", KF_SECTION],
+            }),
+            "fabricated-lesson": lesson({
+              completed: true,
+              sectionsRead: ["s1", "s2", "s3"],
+            }),
+          },
+        }),
+      },
+    });
+
+    expect(calculateEarnedXp(state)).toBe(XP.LESSON + XP.SECTION);
   });
 });
 
 describe("mergeUnifiedProgress - streak", () => {
-  it("keeps the whole streak object from the side with more days", () => {
+  it("keeps the streak observed on the later calendar date", () => {
     const local = progress({ streak: { days: 3, last: "2026-01-03" } });
     const remote = progress({ streak: { days: 7, last: "2026-01-07" } });
     expect(mergeUnifiedProgress(local, remote).streak).toEqual({ days: 7, last: "2026-01-07" });
-    // reverse: local wins when it is the longer streak
-    const local2 = progress({ streak: { days: 9, last: "2026-01-09" } });
-    const remote2 = progress({ streak: { days: 2, last: "2026-01-02" } });
-    expect(mergeUnifiedProgress(local2, remote2).streak).toEqual({ days: 9, last: "2026-01-09" });
+    expect(mergeUnifiedProgress(remote, local).streak).toEqual({ days: 7, last: "2026-01-07" });
+  });
+
+  it("does not let a long stale streak override current activity", () => {
+    const stale = progress({ streak: { days: 100, last: "2024-01-01" } });
+    const current = progress({ streak: { days: 1, last: "2026-07-28" } });
+    expect(mergeUnifiedProgress(stale, current).streak).toEqual({
+      days: 1,
+      last: "2026-07-28",
+    });
   });
 
   it("on a tie in days keeps the days and the later last-visit date", () => {
@@ -319,7 +572,7 @@ describe("mergeUnifiedProgress - courses", () => {
     expect(s.lastActivity).toBe("2026-04-01T00:00:00.000Z");
   });
 
-  it("merges the workshop quiz: passed OR, score max, completedAt latest", () => {
+  it("normalizes legacy whole percentages before workshop max-merge", () => {
     const local = progress({
       courses: {
         "ai-native": slice({
@@ -335,7 +588,56 @@ describe("mergeUnifiedProgress - courses", () => {
       },
     });
     const wq = mergeUnifiedProgress(local, remote).courses["ai-native"]!.workshopQuiz;
-    expect(wq).toEqual({ passed: true, score: 85, completedAt: "2026-03-01T00:00:00.000Z" });
+    expect(wq).toEqual({ passed: true, score: 0.85, completedAt: "2026-03-01T00:00:00.000Z" });
+  });
+
+  it("does not let a legacy 90 preserve itself over a canonical 0.95", () => {
+    const local = progress({
+      courses: {
+        "ai-native": slice({
+          workshopQuiz: {
+            passed: true,
+            score: 90,
+            completedAt: "2026-01-01T00:00:00.000Z",
+          },
+        }),
+      },
+    });
+    const remote = progress({
+      courses: {
+        "ai-native": slice({
+          workshopQuiz: {
+            passed: true,
+            score: 0.95,
+            completedAt: "2026-03-01T00:00:00.000Z",
+          },
+        }),
+      },
+    });
+
+    expect(
+      mergeUnifiedProgress(local, remote).courses["ai-native"]?.workshopQuiz
+        .score,
+    ).toBe(0.95);
+  });
+
+  it("normalizes a legacy score when its course exists on only one side", () => {
+    const merged = mergeUnifiedProgress(
+      progress({
+        courses: {
+          "ai-native": slice({
+            workshopQuiz: {
+              passed: true,
+              score: 90,
+              completedAt: "2026-01-01T00:00:00.000Z",
+            },
+          }),
+        },
+      }),
+      progress(),
+    );
+
+    expect(merged.courses["ai-native"]?.workshopQuiz.score).toBe(0.9);
   });
 });
 
@@ -357,40 +659,38 @@ describe("mergeUnifiedProgress - lesson merge", () => {
   });
 
   it("keeps the quiz from the side with the higher score ratio", () => {
-    // remote 8/10 = 0.8 beats local 2/5 = 0.4
     const local = progress({
-      courses: { "ai-native": slice({ lessons: { l1: lesson({ quizScore: 2, quizTotal: 5 }) } }) },
+      courses: { "ai-native": slice({ lessons: { l1: lesson({ quizScore: 0.4, quizTotal: 5 }) } }) },
     });
     const remote = progress({
-      courses: { "ai-native": slice({ lessons: { l1: lesson({ quizScore: 8, quizTotal: 10 }) } }) },
+      courses: { "ai-native": slice({ lessons: { l1: lesson({ quizScore: 0.8, quizTotal: 10 }) } }) },
     });
     const l1 = mergeUnifiedProgress(local, remote).courses["ai-native"]!.lessons.l1;
-    expect(l1.quizScore).toBe(8);
+    expect(l1.quizScore).toBe(0.8);
     expect(l1.quizTotal).toBe(10);
   });
 
-  it("keeps the local quiz when local ratio is higher", () => {
+  it("compares the stored normalized scores without dividing twice", () => {
     const local = progress({
-      courses: { "ai-native": slice({ lessons: { l1: lesson({ quizScore: 9, quizTotal: 10 }) } }) },
+      courses: { "ai-native": slice({ lessons: { l1: lesson({ quizScore: 0.9, quizTotal: 20 }) } }) },
     });
     const remote = progress({
-      courses: { "ai-native": slice({ lessons: { l1: lesson({ quizScore: 1, quizTotal: 5 }) } }) },
+      courses: { "ai-native": slice({ lessons: { l1: lesson({ quizScore: 0.8, quizTotal: 5 }) } }) },
     });
     const l1 = mergeUnifiedProgress(local, remote).courses["ai-native"]!.lessons.l1;
-    expect(l1.quizScore).toBe(9);
-    expect(l1.quizTotal).toBe(10);
+    expect(l1.quizScore).toBe(0.9);
+    expect(l1.quizTotal).toBe(20);
   });
 
   it("keeps a real local quiz over a remote lesson that has no quiz yet", () => {
-    // local 3/5 = 0.6, remote null/null = -1 -> local kept
     const local = progress({
-      courses: { "ai-native": slice({ lessons: { l1: lesson({ quizScore: 3, quizTotal: 5 }) } }) },
+      courses: { "ai-native": slice({ lessons: { l1: lesson({ quizScore: 0.6, quizTotal: 5 }) } }) },
     });
     const remote = progress({
       courses: { "ai-native": slice({ lessons: { l1: lesson({ quizScore: null, quizTotal: null }) } }) },
     });
     const l1 = mergeUnifiedProgress(local, remote).courses["ai-native"]!.lessons.l1;
-    expect(l1.quizScore).toBe(3);
+    expect(l1.quizScore).toBe(0.6);
     expect(l1.quizTotal).toBe(5);
   });
 });
@@ -482,6 +782,33 @@ describe("mergeUnifiedProgress - exercise merge", () => {
     const ex = mergeUnifiedProgress(local, remote).courses["ai-native"]!.lessons.l1
       .exercisesCompleted;
     expect(Object.keys(ex).sort()).toEqual(["exA", "exB"]);
+  });
+
+  it("resolves conflicting exercise kinds independent of merge order", () => {
+    const withKind = (kind: string) =>
+      progress({
+        courses: {
+          "ai-native": slice({
+            lessons: {
+              l1: lesson({
+                exercisesCompleted: {
+                  exA: exercise({ kind }),
+                },
+              }),
+            },
+          }),
+        },
+      });
+    const quiz = withKind("quiz");
+    const reflection = withKind("reflection");
+
+    expect(mergeUnifiedProgress(quiz, reflection)).toEqual(
+      mergeUnifiedProgress(reflection, quiz),
+    );
+    expect(
+      mergeUnifiedProgress(quiz, reflection).courses["ai-native"]?.lessons.l1
+        .exercisesCompleted.exA.kind,
+    ).toBe("quiz");
   });
 });
 
@@ -585,6 +912,25 @@ describe("isUnifiedCourseSlice / isUnifiedMetaFields / META_ROW_COURSE_SLUG (row
     expect(isUnifiedCourseSlice(slice())).toBe(true);
     expect(isUnifiedCourseSlice({ ...slice(), lessons: null })).toBe(false);
     expect(isUnifiedCourseSlice(null)).toBe(false);
+  });
+
+  it("enforces canonical IDs when a course trust context is supplied", () => {
+    expect(
+      isUnifiedCourseSlice(
+        slice({
+          lessons: {
+            [KF_LESSON]: lesson({ sectionsRead: [KF_SECTION] }),
+          },
+        }),
+        "ki-fuehrerschein",
+      ),
+    ).toBe(true);
+    expect(
+      isUnifiedCourseSlice(
+        slice({ lessons: { "fabricated-lesson": lesson() } }),
+        "ki-fuehrerschein",
+      ),
+    ).toBe(false);
   });
 
   it("isUnifiedMetaFields accepts a valid meta payload and rejects a malformed one", () => {

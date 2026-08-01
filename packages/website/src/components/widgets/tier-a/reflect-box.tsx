@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, type JSX } from "react";
+import { useEffect, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
 import { useDraftValue } from "./use-draft-value";
 import { WidgetFrame } from "./_frame";
@@ -44,8 +44,13 @@ export function ReflectBoxWidget({
 }: ReflectBoxWidgetProps): JSX.Element {
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [value, setValue] = useDraftValue<string>(`reflect::${lessonId}::${cpId}`, "");
+  const [hydrated, setHydrated] = useState(false);
 
   const hasContent = value.trim().length > 0;
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
 
   useEffect(() => {
     if (hasContent) complete();
@@ -58,6 +63,8 @@ export function ReflectBoxWidget({
         placeholder={placeholder}
         value={value}
         onChange={(e) => setValue(e.target.value)}
+        readOnly={!hydrated}
+        aria-disabled={!hydrated}
         aria-label={title}
         className="w-full resize-y border-2 border-border bg-background p-3 text-[14px] leading-[1.5] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none"
       />

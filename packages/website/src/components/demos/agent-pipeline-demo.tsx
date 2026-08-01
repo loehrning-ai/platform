@@ -175,7 +175,7 @@ export default function AgentPipelineDemo() {
         >
           Multi-Agent Workflow
         </div>
-        <h3
+        <h2
           style={{
             fontSize: 22,
             fontWeight: 700,
@@ -185,7 +185,7 @@ export default function AgentPipelineDemo() {
           }}
         >
           Vier Agenten. <span style={{ color: "var(--color-brand-orange)" }}>Ein Memo.</span>
-        </h3>
+        </h2>
       </div>
 
       {/* Agent card grid — 2 cols on mobile, 4 cols >=640px */}
@@ -483,7 +483,7 @@ export default function AgentPipelineDemo() {
                   2,4k TOKENS · 18 QUELLEN
                 </span>
               </div>
-              <h4
+              <h3
                 style={{
                   fontSize: 14,
                   fontWeight: 700,
@@ -497,7 +497,7 @@ export default function AgentPipelineDemo() {
                 <span style={{ color: "var(--color-brand-orange)" }}>
                   KI-Einführung in 2 Phasen, Start Q3/2026.
                 </span>
-              </h4>
+              </h3>
               <div
                 style={{
                   fontSize: 11,

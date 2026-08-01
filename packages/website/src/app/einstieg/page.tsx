@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { TOTAL_QUESTIONS } from "@/lib/ki-check/questions";
 import { JsonLd, type JsonLdSingle, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 
 export const metadata: Metadata = {
@@ -235,17 +236,17 @@ export default function EinstiegPage() {
                 Empfohlen für diesen Einstieg
               </p>
               <h3 className="mb-2 text-[18px] font-bold text-foreground">
-                Wie KI wirklich funktioniert (ca. 40 min)
+                KI-Check (ca. 5 min)
               </h3>
               <p className="mb-5 text-[14px] leading-[1.6] text-muted-foreground">
-                Du willst verstehen, wie KI tatsächlich rechnet, warum sie manchmal falsch liegt
-                und was sie nicht kann.
+                {TOTAL_QUESTIONS} kurze Fragen ordnen deinen Stand ein und führen dich zum
+                passenden nächsten Kurs.
               </p>
               <Link
-                href="/wie-ki-funktioniert"
+                href="/ki-check"
                 className="inline-flex items-center gap-2 rounded-none bg-brand-orange px-5 py-3 font-mono text-[13px] font-bold text-white transition-colors hover:bg-brand-orange/90"
               >
-                Zu den Lektionen
+                KI-Check starten
                 <span aria-hidden="true">&#8594;</span>
               </Link>
             </div>
@@ -268,12 +269,13 @@ export default function EinstiegPage() {
             {/* Tertiary quiet link */}
             <div className="py-3">
               <p className="text-[14px] text-muted-foreground">
-                Nicht sicher, wo du stehst?{" "}
+                Erst das technische Grundmodell verstehen?{" "}
                 <Link
-                  href="/ki-check"
+                  href="/wie-ki-funktioniert"
                   className="text-foreground underline-offset-4 hover:underline"
                 >
-                  Fünf kurze Fragen zeigen dir den passenden Kurs.
+                  Die 40-minütige Einführung erklärt, wie KI rechnet und warum
+                  sie irrt.
                 </Link>
               </p>
             </div>

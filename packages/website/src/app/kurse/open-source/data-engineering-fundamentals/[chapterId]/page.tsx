@@ -45,8 +45,10 @@ export default async function DefChapterRoute({ params }: PageProps) {
 
   return (
     <div className="content">
-      <MarkChapterVisited chapterId={chapterId} />
       <ChapterComponent chapter={meta} />
+      <div style={{ marginTop: 32 }}>
+        <MarkChapterVisited chapterId={chapterId} />
+      </div>
       <nav className="tb" aria-label="Chapter pagination" style={{ marginTop: 48 }}>
         {prev ? (
           <Link className="btn" href={`/kurse/open-source/data-engineering-fundamentals/${prev.id}`}>

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { BuecherContent } from "./buecher-content";
 import { JsonLd, ORG_ID, PERSON_ID, SITE_URL } from "@/lib/seo/json-ld";
 import { books } from "@/lib/books";
-import { getAuthenticatedUser } from "@/lib/supabase/auth-server";
+import { getRuntimeFeatures } from "@/lib/runtime-features";
 
 export const metadata: Metadata = {
   title: "Bücher",
@@ -55,12 +55,12 @@ const BUECHER_GRAPH = {
   ],
 };
 
-export default async function BuecherPage() {
-  const { user } = await getAuthenticatedUser();
+export default function BuecherPage() {
+  const { account: accountEnabled } = getRuntimeFeatures();
   return (
     <>
       <JsonLd data={BUECHER_GRAPH} id="buecher-jsonld" />
-      <BuecherContent isLoggedIn={Boolean(user)} />
+      <BuecherContent accountEnabled={accountEnabled} />
     </>
   );
 }

@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { exposeAllAuditedContent } from "./fixtures/a11y-visibility";
 
 /**
  * Books reader accessibility (regression coverage). Axe + structural a11y for the
@@ -16,15 +17,14 @@ import AxeBuilder from "@axe-core/playwright";
  */
 
 const LIBRARY = "/buecher";
-const BOOK = "ki-arbeitsalltag";
+const BOOK = "ki-landschaft";
 const OVERVIEW = `/buecher/${BOOK}`;
-const CHAPTER = "02_persoenliches_profil"; // 5x h2 + 4x h3, unused by other specs
+const CHAPTER = "03_reifegrad_ueberblick";
 const CHAPTER_URL = `/buecher/${BOOK}/${CHAPTER}`;
-const CHAPTER_TITLE = "Dein persönliches KI-Profil aufbauen"; // manifest.json (stable)
+const CHAPTER_TITLE = "Evidenzbasierte Selbstprüfung"; // manifest.json (stable)
 
 /**
- * House severity filter, mirrored from a11y.spec.ts: only serious/critical
- * WCAG-tagged violations block. Callers poll this to a settled verdict so a
+ * Every WCAG-tagged violation blocks. Callers poll this to a settled verdict so a
  * transient hydration sample cannot flake. The reader routes carry no opacity
  * tweens (ResourceContextBanner is role="note", chapter-reader animates
  * nothing), so a short poll suffices without the heavy settleMotion helper.
@@ -42,21 +42,20 @@ async function blockingViolations(page: Page) {
     //  - scrollable-region-focusable: the wide-table wrapper is tabindex=0 with
     //    role="group" + an accessible name.
     .analyze();
-  return results.violations.filter(
-    (v) => v.impact === "serious" || v.impact === "critical",
-  );
+  return results.violations;
 }
 
 // Reader-depth routes a11y.spec.ts never scans (it covers /buecher only).
 const AXE_ROUTES = [OVERVIEW, CHAPTER_URL] as const;
 
 for (const route of AXE_ROUTES) {
-  test(`a11y-reader: ${route} has no serious or critical axe violations`, async ({
+  test(`a11y-reader: ${route} has no WCAG axe violations`, async ({
     page,
   }) => {
     test.setTimeout(45_000);
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto(route, { waitUntil: "load" });
+    await exposeAllAuditedContent(page);
 
     let blocking = await blockingViolations(page);
     const deadline = Date.now() + 10_000;
@@ -72,7 +71,7 @@ for (const route of AXE_ROUTES) {
     }
     expect(
       blocking,
-      `axe found ${blocking.length} serious/critical violations on ${route}`,
+      `axe found ${blocking.length} WCAG violations on ${route}`,
     ).toEqual([]);
   });
 }

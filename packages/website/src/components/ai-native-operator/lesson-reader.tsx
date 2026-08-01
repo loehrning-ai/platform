@@ -1,10 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, type JSX } from "react";
+import { useEffect, useMemo, useState, type JSX } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, GraduationCap } from "lucide-react";
 import { RenderWidget, resolveWidgetsForSlot } from "@/components/widgets/registry";
-import { markLessonCompleted } from "@/lib/progress";
+import {
+  isCheckpointDone,
+  isLessonCompleted,
+  markLessonCompleted,
+  subscribe,
+} from "@/lib/progress";
 import { MODULE_META } from "@/lib/ai-native-operator/types";
 import { courseHref } from "@/lib/ai-native-operator/routes";
 import { Callout } from "./callout";
@@ -40,19 +45,25 @@ export function AiNativeOperatorLessonReader({
   const meta = MODULE_META[lesson.moduleId];
   const widgets = useMemo(() => lesson.widgets ?? [], [lesson.widgets]);
   const endWidgets = useMemo(() => resolveWidgetsForSlot(widgets, "end"), [widgets]);
+  const [completed, setCompleted] = useState(false);
+  const [quizReady, setQuizReady] = useState(lesson.kind !== "quiz");
 
-  // Lesson-visit completion: mark done unconditionally on
-  // mount, matching the source's own `useEffect(() => markDone(...), [...])`
-  // in LessonView (course-app.js:82-84) — completion here tracks "visited",
-  // not "read every section" or "answered the quiz correctly". The
-  // '{moduleId}/{lessonNum}' key format matches lesson.id exactly (see
-  // lessonProgressKey in lib/ai-native-operator/types.ts).
-  useEffect(() => {
-    markLessonCompleted("ai-native-operator", lesson.id);
-  }, [lesson.id]);
+  useEffect(
+    () =>
+      subscribe(() => {
+        setCompleted(isLessonCompleted("ai-native-operator", lesson.id));
+        setQuizReady(
+          lesson.kind !== "quiz" ||
+            lesson.quiz.every((question) =>
+              isCheckpointDone(lesson.id, question.id),
+            ),
+        );
+      }),
+    [lesson],
+  );
 
   const nextIcon =
-    next.kind === "course-complete" ? (
+    next.kind === "final-assessment" ? (
       <GraduationCap className="h-4 w-4" aria-hidden="true" />
     ) : (
       <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -133,7 +144,25 @@ export function AiNativeOperatorLessonReader({
         </article>
       )}
 
-      <nav className="mt-10 flex items-center justify-between gap-4 border-t border-border pt-6">
+      <div className="mt-10 border-t border-border pt-6">
+        <button
+          type="button"
+          onClick={() =>
+            markLessonCompleted("ai-native-operator", lesson.id)
+          }
+          disabled={completed || !quizReady}
+          aria-pressed={completed}
+          className="inline-flex min-h-11 items-center border-2 border-foreground px-5 text-[12px] font-bold uppercase tracking-wide text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {completed
+            ? "Lesson completed"
+            : quizReady
+              ? "Complete lesson"
+              : "Answer every question correctly first"}
+        </button>
+      </div>
+
+      <nav className="mt-6 flex items-center justify-between gap-4">
         {prevHref ? (
           <Link
             href={prevHref}

@@ -7,6 +7,7 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { OPEN_SOURCE_ARTIFACTS } from "../../src/lib/open-source/artifacts";
+import { exposeAllAuditedContent } from "./fixtures/a11y-visibility";
 
 const OPEN_SOURCE_DETAIL_ROUTES = OPEN_SOURCE_ARTIFACTS.map(
   (artifact) => artifact.href,
@@ -20,8 +21,14 @@ const ROUTES = [
   "/open-source",
   "/feedback",
   "/demos",
+  "/demos/prompt-scanner",
   "/blog",
   "/blog/eu-ai-act-grundlagen",
+  "/wie-ki-funktioniert/lektion-1-vorhersage",
+  "/kurse/open-source/data-engineering-fundamentals",
+  "/workshops/geschaeftsberichte-mit-ki-lesen",
+  "/buecher/ki-landschaft",
+  "/buecher/ki-landschaft/02_methodik",
   "/ai-native",
   "/ki-fuehrerschein",
   "/eu-ai-act-kurs",
@@ -39,10 +46,10 @@ const ROUTES = [
  * false color-contrast violations. document.getAnimations() does NOT see
  * framer's rAF-driven tweens, and a single opacity snapshot races hydration
  * (everything still at the SSR'd opacity:0 looks "settled" right before the
- * tweens start). So: after `load`, require three consecutive samples (300ms
- * apart) that are identical and contain no fractional opacity. Elements that
- * stay at 0 (below the fold, whileInView not fired) are skipped by axe —
- * the same content a user cannot see either.
+ * tweens start). So: after a bounded `domcontentloaded` navigation and visible
+ * primary heading, require three consecutive identical samples (300ms apart).
+ * Legitimate static decoration uses fractional opacity and must not force the
+ * full timeout.
  */
 async function settleMotion(page: import("@playwright/test").Page) {
   const sample = () =>
@@ -60,15 +67,9 @@ async function settleMotion(page: import("@playwright/test").Page) {
   let stable = 0;
   while (Date.now() < deadline) {
     const cur = await sample();
-    const fractional = cur
-      .split("|")
-      .some((o) => {
-        const n = parseFloat(o);
-        return Number.isFinite(n) && n > 0 && n < 1;
-      });
-    if (!fractional && cur === prev) {
+    if (cur === prev) {
       stable += 1;
-      if (stable >= 2) return; // 3 identical fraction-free samples total
+      if (stable >= 2) return; // 3 identical samples total
     } else {
       stable = 0;
     }
@@ -83,14 +84,24 @@ async function settleMotion(page: import("@playwright/test").Page) {
 // ---------------------------------------------------------------------------
 
 for (const route of ROUTES) {
-  test(`a11y: ${route} has no serious or critical axe violations`, async ({ page }) => {
-    test.setTimeout(90_000); // settleMotion (25s worst) + polled axe scans (20s budget)
+  test(`a11y: ${route} has no WCAG axe violations`, async ({ page }) => {
+    // 30s navigation + 25s motion settle + 20s axe polling, with teardown room.
+    test.setTimeout(90_000);
     // Audit the reduced-motion variant: perpetual loops (e.g. the /ai-native
     // hero typewriter demo) render their static state, so every pixel axe
     // samples is a settled colour a real user reads. Transform entrances go
     // instant; the remaining opacity tweens are handled by settleMotion().
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto(route, { waitUntil: "load" });
+    const response = await page.goto(route, {
+      waitUntil: "domcontentloaded",
+      timeout: 30_000,
+    });
+    expect(response?.status(), `status for ${route}`).toBe(200);
+    await expect(
+      page.locator("h1").first(),
+      `${route} must render a visible primary heading before axe runs`,
+    ).toBeVisible({ timeout: 30_000 });
+    await exposeAllAuditedContent(page);
     await settleMotion(page);
 
     // Poll the scan to its SETTLED verdict: on slow CI runners axe can
@@ -105,9 +116,7 @@ for (const route of ROUTES) {
         // it is covered by the keyboard-tab traversal test below ().
         .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
         .analyze();
-      return results.violations.filter(
-        (v) => v.impact === "serious" || v.impact === "critical",
-      );
+      return results.violations;
     };
 
     let blocking = await scanOnce();
@@ -127,7 +136,7 @@ for (const route of ROUTES) {
       }
     }
 
-    expect(blocking, `axe found ${blocking.length} serious/critical violations on ${route}`).toEqual([]);
+    expect(blocking, `axe found ${blocking.length} WCAG violations on ${route}`).toEqual([]);
   });
 }
 
@@ -161,7 +170,11 @@ for (const route of KEYBOARD_ROUTES) {
   test(`a11y: ${route} focused elements not obscured by sticky nav (WCAG 2.4.11)`, async ({
     page,
   }) => {
-    test.setTimeout(30_000);
+    // This check intentionally samples 15 sequential focus transitions and
+    // waits for the browser's post-focus paint on each one. Keep its budget
+    // aligned with the mobile-WebKit project so slow native focus scrolling
+    // cannot turn a valid result into a teardown timeout.
+    test.setTimeout(60_000);
     await page.goto(route, { waitUntil: "load" });
 
     // Measure the sticky nav height
@@ -174,6 +187,11 @@ for (const route of KEYBOARD_ROUTES) {
     // below the nav bar. Skip elements that are off-screen (below fold).
     for (let i = 0; i < 15; i++) {
       await page.keyboard.press("Tab");
+      // WebKit applies the focus-triggered scroll asynchronously after the key
+      // event resolves. Sample only after two paint opportunities so the test
+      // measures the settled keyboard experience rather than the pre-scroll
+      // layout box.
+      await page.waitForTimeout(150);
       const focused = await page.evaluateHandle(() => document.activeElement);
       const focusedElement = focused.asElement();
       const bbox = await focusedElement?.boundingBox();

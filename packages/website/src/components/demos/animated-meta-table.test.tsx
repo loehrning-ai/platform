@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { AnimatedMetaTable } from "./animated-meta-table";
 
 /**
@@ -66,6 +66,52 @@ describe("<AnimatedMetaTable>", () => {
       globalThis.IntersectionObserver = savedIO;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).IntersectionObserver = savedIO;
+    }
+  });
+
+  it("keeps the truthful final value static under prefers-reduced-motion", async () => {
+    const savedIO = globalThis.IntersectionObserver;
+    const savedMatchMedia = window.matchMedia;
+    const raf = vi.spyOn(window, "requestAnimationFrame");
+    Object.defineProperty(window, "matchMedia", {
+      configurable: true,
+      value: vi.fn((query: string) => ({
+        matches: query.includes("prefers-reduced-motion"),
+        media: query,
+        onchange: null,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
+
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (globalThis as any).IntersectionObserver;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (window as any).IntersectionObserver;
+
+      render(
+        <AnimatedMetaTable
+          meta={[{ label: "Umsatz", value: "1.234,5" }]}
+        />,
+      );
+
+      await waitFor(() =>
+        expect(screen.getByText("1.234,5")).toBeInTheDocument(),
+      );
+      expect(raf).not.toHaveBeenCalled();
+    } finally {
+      raf.mockRestore();
+      globalThis.IntersectionObserver = savedIO;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).IntersectionObserver = savedIO;
+      Object.defineProperty(window, "matchMedia", {
+        configurable: true,
+        value: savedMatchMedia,
+      });
     }
   });
 });

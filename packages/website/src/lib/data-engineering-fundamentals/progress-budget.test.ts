@@ -1,8 +1,7 @@
 // ─── Progress-budget audit ───────────────────────
 //
-// This course has no quiz/capstone/checkpoint mechanism at all — the
-// chosen completion criterion is literally "all 12 chapters visited"
-// ('s MarkChapterVisited), so `exercisesCompleted`
+// This course has no quiz/capstone/checkpoint mechanism. The learner explicitly
+// marks all 12 chapters complete, so `exercisesCompleted`
 // stays permanently empty and there is no cross-course "_meta" row
 // contribution to measure (unlike data-infrastructure/claude/codex,
 // which award per-widget checkpoints). This test only needs to prove

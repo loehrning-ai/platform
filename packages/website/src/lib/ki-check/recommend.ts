@@ -1,4 +1,4 @@
-// KI-Check — map a result to the next Zertifikatskurs.
+// KI-Check — map a result to the next German core course.
 //
 // Deterministic, no side effects. Foundation first: if the basics are not yet
 // solid, the KI-Führerschein is the entry point regardless of the other axes.
@@ -13,7 +13,7 @@ import type { DimensionId, DimensionResult, KiCheckResult } from "./types";
 /** Below this composite/dimension score the basics count as "not yet solid". */
 export const FOUNDATION_THRESHOLD = 50;
 
-/** Which Zertifikatskurs each dimension points at. */
+/** Which German core course each dimension points at. */
 export const DIMENSION_COURSE: Record<DimensionId, CourseSlug> = {
   grundlagen: "ki-fuehrerschein",
   urteil: "ki-und-gesellschaft",
@@ -72,7 +72,7 @@ function build(
   const course = getCatalogCourse(slug);
   const meta = courseFacts(slug);
 
-  const title = course?.title ?? "Zertifikatskurs";
+  const title = course?.title ?? "Kernkurs";
   const template =
     kind === "foundation" ? FOUNDATION_REASONING : GAP_REASONING[focus.id];
 

@@ -71,7 +71,7 @@ export function ConnectorSwitcher() {
         </div>
         <div className="cs-tabs">
           {CONNECTORS.map((c) => (
-            <button key={c.id} className={`cs-tab cs-${c.color} ${cid === c.id ? "on" : ""}`} onClick={() => setCid(c.id)}>
+            <button type="button" key={c.id} className={`cs-tab cs-${c.color} ${cid === c.id ? "on" : ""}`} onClick={() => setCid(c.id)}>
               <span className="cs-tab-name">{c.name}</span>
               <span className="cs-tab-sub">{c.sub}</span>
               <span className="cs-tab-lat">{c.latency}</span>

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "KI im Alltag: Was du wissen solltest (kostenlos)",
     description:
-      "5 Blöcke, 18 Lektionen, ca. 1 Std. 40 Min. Keine Vorkenntnisse nötig. Lokale Teilnahmebestätigung. Kostenlos ohne Anmeldung. Auf Deutsch.",
+      "5 Blöcke, 18 Lektionen, ca. 1 Std. 40 Min. Keine Vorkenntnisse nötig. Lokale Teilnahmebestätigung. Kostenloses Lernkonto erforderlich. Auf Deutsch.",
     url: `${SITE_URL}/ki-fuehrerschein/kurs`,
     type: "website",
   },

@@ -29,27 +29,33 @@
     "test:e2e:authenticated-live:built": "bun run --cwd packages/website test:e2e:authenticated-live:built",
     "test:e2e:release": "bun run --cwd packages/website test:e2e:release",
     "test:e2e:release:built": "bun run --cwd packages/website test:e2e:release:built",
-    "test:scanner": "bun run --cwd packages/website test:scan-export",
+    "test:scanner": "bun run --cwd packages/website test:scan-export && node --test scripts/__tests__/scan-public-candidate.test.mjs",
     "test:asset-tool": "node --test scripts/__tests__/scaffold-asset.test.mjs",
     "test:artifact-assets": "bun test scripts/__tests__/verify-artifact-assets.test.ts",
     "test:lighthouse-contract": "bun test scripts/__tests__/verify-lighthouse-routes.test.ts",
     "test:workspace-contract": "node --test scripts/__tests__/verify-workspaces.test.mjs",
     "test:publication-clean": "node --test scripts/__tests__/verify-publication-clean.test.mjs",
     "test:dependency-licenses": "node --test scripts/__tests__/audit-dependency-licenses.test.mjs",
+    "test:dependency-snapshot": "bun test scripts/__tests__/submit-bun-dependency-snapshot.test.ts",
     "asset:record": "node scripts/scaffold-asset.mjs",
     "artifact-assets:check": "bun scripts/verify-artifact-assets.ts",
-    "lighthouse:local": "bunx @lhci/cli@0.15.1 autorun --config=lighthouserc.json",
+    "lighthouse:local": "node packages/website/scripts/run-provider-free.mjs bun run build && bun run lighthouse:local:built",
+    "lighthouse:local:built": "node packages/website/scripts/run-provider-free.mjs bun run lighthouse:local:built:internal",
+    "lighthouse:local:built:internal": "node packages/website/scripts/run-built-gate.mjs lhci autorun --config=lighthouserc.json",
+    "lighthouse:release:built": "node packages/website/scripts/run-provider-free.mjs node packages/website/scripts/run-built-gate.mjs lhci autorun --config=lighthouserc.json",
+    "lighthouse:ci:built": "node packages/website/scripts/run-provider-free.mjs node packages/website/scripts/run-built-gate.mjs lhci autorun --config=lighthouserc.json --collect.chromePath=\"$CHROME_PATH\" --collect.numberOfRuns=1 --collect.url=http://localhost:3000/ --collect.url=http://localhost:3000/ai-native --collect.url=http://localhost:3000/blog/eu-ai-act-grundlagen --collect.url=http://localhost:3000/buecher --collect.url=http://localhost:3000/kurse/open-source/data-science",
     "lighthouse:check": "bun scripts/verify-lighthouse-routes.ts",
     "audit": "bun audit",
     "license:audit": "node scripts/audit-dependency-licenses.mjs",
     "content:lint": "bun run --cwd packages/website content:lint",
-    "scan:public": "node packages/website/scripts/open-source/scan-export.mjs --profile platform --dest .",
+    "scan:public": "node scripts/scan-public-candidate.mjs",
     "publication:check": "node scripts/verify-publication-clean.mjs",
     "verify:workspace-contract": "node scripts/verify-workspaces.mjs --check-only",
     "verify:workspaces": "node scripts/verify-workspaces.mjs",
-    "verify": "bun run test:scanner && bun run scan:public && bun run test:lighthouse-contract && bun run lighthouse:check && bun run test:artifact-assets && bun run artifact-assets:check && bun run audit && bun run test:dependency-licenses && bun run license:audit && bun run content:lint && bun run test:workspace-contract && bun run test:publication-clean && bun run test:asset-tool && bun run verify:workspace-contract && bun run verify:workspaces",
+    "verify": "node packages/website/scripts/run-provider-free.mjs bun run verify:internal",
+    "verify:internal": "bun run test:scanner && bun run scan:public && bun run test:lighthouse-contract && bun run lighthouse:check && bun run test:artifact-assets && bun run artifact-assets:check && bun run audit && bun run test:dependency-licenses && bun run test:dependency-snapshot && bun run license:audit && bun run content:lint && bun run test:workspace-contract && bun run test:publication-clean && bun run test:asset-tool && bun run verify:workspace-contract && bun run verify:workspaces",
     "verify:public": "bun run verify && bun run test:e2e:public:built",
-    "verify:release": "RELEASE_VALIDATION=1 bun run verify && bun run test:e2e:public:built && bun run test:e2e:release:built"
+    "verify:release": "node scripts/verify-release.mjs"
   },
   "overrides": {
     "postcss": "^8.5.19",
@@ -61,6 +67,10 @@
     "vite": "^7.3.6",
     "sharp": "^0.35.0",
     "brace-expansion": ">=5.0.8",
-    "minimatch": "^10.2.5"
+    "minimatch": "^10.2.5",
+    "tmp": "0.2.7"
+  },
+  "devDependencies": {
+    "@lhci/cli": "0.15.1"
   }
 }

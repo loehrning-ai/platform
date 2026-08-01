@@ -5,7 +5,7 @@
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { render, screen, act, cleanup } from "@testing-library/react";
-import { ProgressToastProvider } from "./toast-provider";
+import { ProgressToastRuntime } from "./toast-provider-runtime";
 import {
   __resetCacheForTests,
   markSectionRead,
@@ -59,17 +59,21 @@ afterEach(() => {
 describe("ProgressToastProvider", () => {
   it("does not toast existing progress on first mount (baseline seed)", () => {
     // Pre-existing progress before the provider mounts.
-    markLessonCompleted("ki-fuehrerschein", "l1");
+    markLessonCompleted("ki-fuehrerschein", "block_1_lesson_1");
 
-    render(<ProgressToastProvider />);
+    render(<ProgressToastRuntime />);
     // The provider's first emission seeds the baseline; nothing should show.
     expect(screen.queryByText(/XP/)).toBeNull();
   });
 
   it("shows an XP toast when xp increases after mount", async () => {
-    render(<ProgressToastProvider />);
+    render(<ProgressToastRuntime />);
     act(() => {
-      markSectionRead("ki-fuehrerschein", "l1", "s1");
+      markSectionRead(
+        "ki-fuehrerschein",
+        "block_1_lesson_1",
+        "block_1_lesson_1_section_1",
+      );
     });
 
     // +2 XP for a section read (XP.SECTION).
@@ -77,10 +81,10 @@ describe("ProgressToastProvider", () => {
   });
 
   it("shows a badge toast when a new badge is awarded", async () => {
-    render(<ProgressToastProvider />);
+    render(<ProgressToastRuntime />);
     act(() => {
       // First lesson completion → "first-light" badge ("Erster Schritt").
-      markLessonCompleted("ki-fuehrerschein", "l1");
+      markLessonCompleted("ki-fuehrerschein", "block_1_lesson_1");
     });
 
     expect(await screen.findByText("Erster Schritt")).toBeInTheDocument();

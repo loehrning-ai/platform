@@ -228,7 +228,7 @@ describe("grade-exercise engine — pure helpers", () => {
         "answer",
       );
       const anonymous = await hashRequest(
-        `ai-native-grade:sha256:${"a".repeat(64)}`,
+        `ai-native-grade:ip-hmac-sha256-v1:${"a".repeat(64)}`,
         "k",
         "l",
         "e",

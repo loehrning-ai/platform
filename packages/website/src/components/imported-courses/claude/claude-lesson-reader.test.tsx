@@ -34,7 +34,7 @@ function installLocalStoragePolyfill(): void {
 }
 
 const LESSON: ClaudeLesson = {
-  id: "test-lesson",
+  id: "mental-model",
   number: 3,
   title: "Test Lesson Title",
   subtitle: "Test lesson subtitle.",
@@ -44,9 +44,14 @@ const LESSON: ClaudeLesson = {
   keyConcepts: ["Concept A", "Concept B"],
   quiz: [],
   sections: [
-    { id: "s1", title: "Section One", readTimeMinutes: 1, content: "Section one content." },
     {
-      id: "s2",
+      id: "what-it-is",
+      title: "Section One",
+      readTimeMinutes: 1,
+      content: "Section one content.",
+    },
+    {
+      id: "three-things",
       title: "Section Two",
       readTimeMinutes: 2,
       content: "Section two content.",
@@ -59,7 +64,7 @@ const LESSON: ClaudeLesson = {
       placement: "end",
       courseSlug: "claude",
       props: {
-        lessonId: "test-lesson",
+        lessonId: "mental-model",
         cpId: "q1",
         question: "A test question?",
         options: ["A", "B"],
@@ -102,7 +107,9 @@ describe("ClaudeLessonReader ", () => {
     );
     // RenderWidget lazy-loads the component, so the question text arrives
     // after the initial render.
-    expect(await screen.findByText("A test question?")).toBeInTheDocument();
+    expect(
+      await screen.findByText("A test question?", {}, { timeout: 5_000 }),
+    ).toBeInTheDocument();
   });
 
   it("gates the complete-lesson button until every section is marked read", () => {
@@ -128,7 +135,7 @@ describe("ClaudeLessonReader ", () => {
       fireEvent.click(button);
     }
     fireEvent.click(screen.getByRole("button", { name: /Complete lesson/i }));
-    expect(isLessonCompleted("claude", "test-lesson")).toBe(true);
+    expect(isLessonCompleted("claude", "mental-model")).toBe(true);
     expect(screen.getByText("Lesson complete")).toBeInTheDocument();
   });
 

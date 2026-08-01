@@ -8,19 +8,28 @@ import { resolve } from "node:path";
  * hoisted, so factories delegate to handles configured per test.
  */
 
-const mockConsume = vi.fn(async () => true);
-const mockInsert = vi.fn(
+const mockConsume = vi.fn<(...args: unknown[]) => Promise<boolean>>(
+  async () => true,
+);
+const mockInsert = vi.fn<(...args: unknown[]) => Promise<{
+  error: { message: string } | null;
+}>>(
   async () => ({ error: null as { message: string } | null }),
 );
-const mockPrune = vi.fn(
+const mockPrune = vi.fn<(...args: unknown[]) => Promise<{
+  error: { message: string } | null;
+}>>(
   async () => ({ error: null as { message: string } | null }),
 );
+const mockReportApiError = vi.fn<(...args: unknown[]) => void>();
 
 vi.mock("@/lib/security/rate-limit", () => ({
   consumeRateLimit: (...args: unknown[]) => mockConsume(...args),
   hashedClientRateLimitKey: vi.fn(async () =>
-    `feedback:sha256:${"a".repeat(64)}`,
+    `feedback:ip-hmac-sha256-v1:${"a".repeat(64)}`,
   ),
+  isRateLimitUnavailableError: (error: unknown) =>
+    (error as { code?: string })?.code === "RATE_LIMIT_UNAVAILABLE",
 }));
 
 const mockServiceClient = {
@@ -31,13 +40,25 @@ const mockServiceClient = {
 vi.mock("@/lib/supabase/server", () => ({
   tryCreateServiceClient: vi.fn(() => mockServiceClient),
 }));
+vi.mock("@/lib/observability/api-error", () => ({
+  reportApiError: (...args: unknown[]) => mockReportApiError(...args),
+}));
 
 import { POST } from "./route";
+import { hashedClientRateLimitKey } from "@/lib/security/rate-limit";
+import { tryCreateServiceClient } from "@/lib/supabase/server";
 
 const OK_BODY = {
   category: "inhalt",
   message: "Das ist ein ausreichend langer Hinweis zum Inhalt.",
 };
+const mockedClientKey = vi.mocked(hashedClientRateLimitKey);
+const mockedServiceClientFactory = vi.mocked(tryCreateServiceClient);
+const NON_JSON_MEDIA_TYPES = [
+  ["missing", undefined],
+  ["unsupported", "text/plain"],
+  ["JSON lookalike", "application/jsonp"],
+] as const;
 
 function makeReq(body: unknown): Request {
   return new Request("http://localhost/api/feedback", {
@@ -81,12 +102,42 @@ describe("POST /api/feedback negative paths", () => {
     mockInsert.mockResolvedValue({ error: null });
     mockPrune.mockReset();
     mockPrune.mockResolvedValue({ error: null });
+    mockReportApiError.mockReset();
+    mockedClientKey.mockClear();
+    mockedServiceClientFactory.mockClear();
   });
 
   afterEach(() => {
     delete process.env.FEEDBACK_ENABLED;
     delete process.env.FEEDBACK_RETENTION_CRON_CONFIRMED_AT;
   });
+
+  it.each(NON_JSON_MEDIA_TYPES)(
+    "415 unsupported_media_type for a %s media type before flags, storage, quotas, or writes",
+    async (_label, contentType) => {
+      const request = new Request("http://localhost/api/feedback", {
+        method: "POST",
+        headers: contentType
+          ? { "Content-Type": contentType }
+          : undefined,
+        body: contentType ? "{}" : new Uint8Array([123, 125]),
+      });
+      expect(request.headers.get("content-type")).toBe(contentType ?? null);
+      const res = await POST(request);
+
+      expect(res.status).toBe(415);
+      expect(await res.json()).toEqual({
+        error: "unsupported_media_type",
+      });
+      expect(res.headers.get("cache-control")).toBe("private, no-store");
+      expect(mockedServiceClientFactory).not.toHaveBeenCalled();
+      expect(mockedClientKey).not.toHaveBeenCalled();
+      expect(mockConsume).not.toHaveBeenCalled();
+      expect(mockPrune).not.toHaveBeenCalled();
+      expect(mockInsert).not.toHaveBeenCalled();
+      expect(mockReportApiError).not.toHaveBeenCalled();
+    },
+  );
 
   it("503 feedback_disabled unless the explicit retention gate is active", async () => {
     delete process.env.FEEDBACK_ENABLED;
@@ -125,6 +176,17 @@ describe("POST /api/feedback negative paths", () => {
     expect(((await res.json()) as { error: string }).error).toBe(
       "rate_limit_exceeded",
     );
+    expect(mockInsert).not.toHaveBeenCalled();
+  });
+
+  it("503 distinguishes a durable limiter outage from quota exhaustion", async () => {
+    mockConsume.mockRejectedValueOnce({
+      code: "RATE_LIMIT_UNAVAILABLE",
+    });
+    const res = await POST(makeReq(OK_BODY));
+    expect(res.status).toBe(503);
+    expect(await res.json()).toEqual({ error: "rate_limit_unavailable" });
+    expect(res.headers.get("cache-control")).toBe("private, no-store");
     expect(mockInsert).not.toHaveBeenCalled();
   });
 
@@ -215,6 +277,58 @@ describe("POST /api/feedback negative paths", () => {
     expect(mockInsert).not.toHaveBeenCalled();
   });
 
+  it("503 when the retention RPC rejects instead of returning an error", async () => {
+    const pruneError = new Error("retention transport rejected");
+    mockPrune.mockRejectedValueOnce(pruneError);
+
+    const res = await POST(makeReq(OK_BODY));
+
+    expect(res.status).toBe(503);
+    expect(await res.json()).toEqual({
+      error: "retention_policy_unavailable",
+    });
+    expect(mockInsert).not.toHaveBeenCalled();
+    expect(mockReportApiError).toHaveBeenCalledTimes(1);
+    expect(mockReportApiError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        route: "/api/feedback",
+        step: "retention-prune",
+        error: pruneError,
+      }),
+    );
+  });
+
+  it("500 when the insert rejects instead of returning an error", async () => {
+    const insertError = new Error("insert transport rejected");
+    mockInsert.mockRejectedValueOnce(insertError);
+
+    const res = await POST(makeReq(OK_BODY));
+
+    expect(res.status).toBe(500);
+    expect(await res.json()).toEqual({ error: "db_error" });
+    expect(mockReportApiError).toHaveBeenCalledTimes(1);
+    expect(mockReportApiError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        route: "/api/feedback",
+        step: "supabase-insert",
+        error: insertError,
+      }),
+    );
+  });
+
+  it("503 for an unexpected rate-limit rejection without escaping the handler", async () => {
+    const limitError = new Error("unexpected limiter transport rejection");
+    mockConsume.mockRejectedValueOnce(limitError);
+
+    const res = await POST(makeReq(OK_BODY));
+
+    expect(res.status).toBe(503);
+    expect(await res.json()).toEqual({ error: "rate_limit_unavailable" });
+    expect(mockPrune).not.toHaveBeenCalled();
+    expect(mockInsert).not.toHaveBeenCalled();
+    expect(mockReportApiError).toHaveBeenCalledTimes(1);
+  });
+
   it("200 ok persists a valid submission and reports it as stored", async () => {
     const res = await POST(makeReq({ ...OK_BODY, contextUrl: "/feedback" }));
     expect(res.status).toBe(200);
@@ -228,7 +342,7 @@ describe("POST /api/feedback negative paths", () => {
     );
     expect(mockConsume).toHaveBeenCalledWith(
       expect.objectContaining({
-        key: `feedback:sha256:${"a".repeat(64)}`,
+        key: `feedback:ip-hmac-sha256-v1:${"a".repeat(64)}`,
       }),
     );
   });

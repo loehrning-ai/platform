@@ -492,7 +492,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 4 Abs. 1 adressiert Anbieter und Betreiber als Organisationen. Diese müssen sicherstellen, dass ihr Personal und beauftragte Personen über ausreichende KI-Kompetenz verfügen. Vergleichbar mit Arbeitsschutz oder Art. 32 DSGVO.",
+    "explanation": "Art. 4 Abs. 1 adressiert Anbieter und Betreiber als Organisationen. Sie müssen kontextgerechte Maßnahmen zur Entwicklung der KI-Kompetenz ihres Personals und beauftragter Personen treffen. Seit Verordnung (EU) 2026/1744 müssen sie kein bestimmtes Kompetenzniveau einzelner Personen garantieren.",
     "version": 1,
     "active": true
   },
@@ -617,7 +617,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Das beschlossene KI-MIG sieht die Bundesnetzagentur als zentrale Anlaufstelle vor, soweit keine Fachbehörde zuständig ist. Am 14. Juli 2026 war das Gesetz noch nicht verkündet. Die vorgesehene Rolle und ein konkreter Beschwerdekanal dürfen daher nicht als bereits wirksam ausgegeben werden.",
+    "explanation": "Das beschlossene KI-MIG sieht die Bundesnetzagentur als zentrale Anlaufstelle vor, soweit keine Fachbehörde zuständig ist. Eine Verkündung war am 28. Juli 2026 nicht amtlich verifiziert. Die vorgesehene Rolle und ein konkreter Beschwerdekanal dürfen daher nicht als bereits wirksam ausgegeben werden.",
     "version": 1,
     "active": true
   },

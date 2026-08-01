@@ -92,8 +92,12 @@ export default async function KiFuehrerscheinLandingPage() {
         </p>
 
         <div className="mt-12 flex flex-wrap items-center gap-5">
-          <Link href="/ki-fuehrerschein/kurs" className={PRIMARY_CTA}>
-            Kurs starten
+          <Link
+            href="/ki-fuehrerschein/kurs"
+            prefetch={false}
+            className={PRIMARY_CTA}
+          >
+            Kostenlos mit Lernkonto starten
             <span aria-hidden="true">→</span>
           </Link>
           <Link href="/kurse" className={SECONDARY_CTA}>
@@ -180,8 +184,12 @@ export default async function KiFuehrerscheinLandingPage() {
 
         {/* Closing CTA row */}
         <div className="mt-16 flex flex-wrap items-center gap-5">
-          <Link href="/ki-fuehrerschein/kurs" className={PRIMARY_CTA}>
-            Kostenlosen Kurs starten
+          <Link
+            href="/ki-fuehrerschein/kurs"
+            prefetch={false}
+            className={PRIMARY_CTA}
+          >
+            Kostenlos mit Lernkonto starten
             <span aria-hidden="true">→</span>
           </Link>
           <Link href="/eu-ai-act-kurs" className={SECONDARY_CTA}>

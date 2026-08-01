@@ -2,11 +2,10 @@
 
 // Ported from data-infrastructure/js/data-widgets.js's InterviewMove (lines
 // 2477-2718): canvas progress track + a step-through move stage (
-// stage 9). The 12-entry `moves` array is trusted static content ported
-// verbatim into `lib/data-infrastructure/lessons/interview-playbook.ts`
-// (INTERVIEW_MOVES) — rendered here via dangerouslySetInnerHTML since the
-// source's real formatting (<b>/<code>/<pre>/<br>) is author-authored, not
-// user input.
+// stage 9). The 12-entry `moves` array is static content ported verbatim
+// into `lib/data-infrastructure/lessons/interview-playbook.ts`
+// (INTERVIEW_MOVES). SafeLessonMarkup preserves its formatting vocabulary
+// without an HTML-injection boundary.
 
 import { useCallback, useMemo, useRef, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
@@ -15,6 +14,7 @@ import { useCanvasRAF } from "../canvas/use-canvas-raf";
 import { useCanvasAutoSize } from "../canvas/use-canvas-size";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
+import { SafeLessonMarkup } from "@/components/safe-lesson-markup";
 
 interface InterviewMoveProps {
   readonly lessonId: string;
@@ -151,11 +151,9 @@ export function InterviewMove({ lessonId, cpId }: InterviewMoveProps): JSX.Eleme
           {current.tag}
         </span>
         <h3 className="mt-2 text-[15px] font-semibold text-foreground">{current.title}</h3>
-        <div
-          className="prose-sm mt-2 text-[13.5px] leading-relaxed text-foreground [&_code]:font-mono [&_code]:text-[12px] [&_pre]:overflow-x-auto [&_pre]:bg-card [&_pre]:p-2 [&_pre]:font-mono [&_pre]:text-[11px]"
-          // Trusted static content authored in lib/data-infrastructure/lessons/interview-playbook.ts, never user input.
-          dangerouslySetInnerHTML={{ __html: current.body }}
-        />
+        <div className="prose-sm mt-2 text-[13.5px] leading-relaxed text-foreground [&_code]:font-mono [&_code]:text-[12px] [&_pre]:overflow-x-auto [&_pre]:bg-card [&_pre]:p-2 [&_pre]:font-mono [&_pre]:text-[11px]">
+          <SafeLessonMarkup html={current.body} />
+        </div>
         <p className="mt-2 border-l-2 border-brand-orange/60 pl-3 text-[12px] italic text-muted-foreground">
           {current.note}
         </p>

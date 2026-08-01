@@ -12,12 +12,19 @@ The repository root defines the authoritative command contract. Continuous integ
 | Lighthouse route contract   | `bun run lighthouse:check`                                    | Proves that every static public-indexable page and one published representative per dynamic public pattern are present in `lighthouserc.json`; rejects duplicate, stale, non-indexable, and non-canonical URLs.                                                                                  |
 | Content validation          | `bun run content:lint`                                        | Validates registries, dates, links, and content invariants.                                                                                                                                                                                                                                      |
 | Environment contract        | `bun run --cwd packages/website test:env-contract` | Proves that partial, insecure, or unattested optional-provider configuration fails gated builds.                                                                                                                                                                                                 |
-| Type safety                 | `bun run typecheck`                                           | Compiles the application without emitting files.                                                                                                                                                                                                                                                 |
+| Type safety                 | `bun run typecheck` and `bun run --cwd packages/website typecheck:test` | Compiles production code and the separate strict test configuration without emitting files.                                                                                                                                                                                     |
 | Static analysis             | `bun run lint`                                                | Runs ESLint across the application.                                                                                                                                                                                                                                                              |
-| Unit tests                  | `bun run test`                                                | Runs the complete Vitest suite.                                                                                                                                                                                                                                                                  |
-| Production build            | `bun run build`                                               | Proves credential-free production compilation and static generation.                                                                                                                                                                                                                             |
+| Unit tests and coverage     | `bun run --cwd packages/website test:coverage`                | Runs the complete Vitest suite with blocking line, branch, function, and statement coverage floors.                                                                                                                                                                                             |
+| Production build            | `bun run verify`                                              | Runs production compilation and static generation inside the provider-free verification wrapper. A plain `bun run build` intentionally validates the current environment and is not provider-free release evidence.                                                                               |
+| Server-log privacy          | `bun run --cwd packages/website test:server-log-privacy`      | Builds and starts the production Next.js Node runtime, then proves synthetic uncaught-error and primitive-rejection canaries are replaced by the fixed redaction marker while validated structured API logging remains available.                                                               |
 
-The root workflow must install with `bun install --frozen-lockfile`. It has read-only repository permissions and no deployment step.
+The root workflow and Vercel must install with
+`bun install --frozen-lockfile --ignore-scripts`. Root `bunfig.toml` enforces
+the same lifecycle-script denial for ordinary Bun installs. Required Sharp,
+esbuild, Sentry CLI, and Playwright binaries resolve from packages pinned in
+`bun.lock`, including their relevant optional platform packages; no dependency
+install script is part of the build contract. CI has read-only repository
+permissions and no deployment step.
 
 ## Browser gates
 
@@ -26,6 +33,8 @@ before starting the local production server. This prevents a stale `.next`
 directory from being reported as current proof. Commands ending in `:built` are
 internal reuse commands: run
 them only after `bun run verify` has produced the build in the same workspace.
+Each long-running built gate verifies source, toolchain, and artifact integrity
+both before and after execution, preventing a mixed-revision success.
 CI and `verify:public` use these internal commands after the blocking verify
 gate, avoiding a redundant build without weakening freshness.
 
@@ -39,22 +48,28 @@ route contracts remain runnable without provider credentials.
 | Tier                   | Command                               | Credential/network contract                                                                                               | What it proves                                                                                                                               |
 | ---------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | Provider-free scaffold | `bun run test:e2e:auth-scaffold`      | No credentials and no Supabase request.                                                                                   | Mock storage-state wiring, browser auth affordance where public config exists, and fail-closed signed-out routes. It is not live-auth proof. |
-| Live authenticated     | `bun run test:e2e:authenticated-live` | Requires an intentionally configured, dedicated disposable Supabase test project and makes a live password-grant request. | Server-validated login, protected account pages, and authenticated client round-trips.                                                       |
+| Live session integration | `bun run test:e2e:authenticated-live` | Requires an intentionally configured, dedicated disposable Supabase test project, a public Turnstile test site key, and makes a live password-grant request. | Server-validated session handling, protected account pages, and authenticated client round-trips. It bypasses the magic-link/Turnstile/PKCE login journey. |
 
 CI runs `test:e2e:auth-scaffold:built`; its green state must never be described
 as successful live authentication. The live tier is fail-closed and is not part
-of credential-free pull-request CI. It requires all six variables below:
+of credential-free pull-request CI. It requires all nine variables below:
 
 ```text
 SIMPLIFIED_SUPABASE_TEST_URL
 SIMPLIFIED_SUPABASE_TEST_PUBLISHABLE_KEY
 SIMPLIFIED_SUPABASE_TEST_EMAIL
 SIMPLIFIED_SUPABASE_TEST_PASSWORD
+SIMPLIFIED_SUPABASE_PRODUCTION_URL
+SIMPLIFIED_SUPABASE_TEST_WRITE_PROJECT_REF
 NEXT_PUBLIC_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+NEXT_PUBLIC_TURNSTILE_SITE_KEY
 ```
 
-Both URLs must be the same HTTPS project origin and project reference. Both
+The test and browser URLs must be the same HTTPS project origin and project
+reference. The production URL must identify a different project, and the
+write-project-ref value must exactly repeat the disposable project ref as an
+explicit mutation acknowledgement. Both
 publishable-key variables must contain the same key. There is no anon-key alias,
 service-role-key path, default key, or mock fallback in the live tier. The test
 email must identify a confirmed user created only for this isolated project.
@@ -66,41 +81,63 @@ feedback, telemetry, canonical-origin, and deployment variables. This prevents
 a developer shell or local env file from activating an optional provider during
 the isolated live-auth proof.
 
-## Manual release gate: Lighthouse measurements
+The general environment gate treats standalone provider region, retention, and
+compliance-attestation variables as partial configuration. Credential-free
+local development remains warning-only, but invalid configuration containing a
+Sentry upload token, Supabase service-role key, or Anthropic API key fails even
+without CI or Vercel signals so a production build cannot perform external
+side effects after reporting a critical mismatch.
+
+This tier does not enter an email on `/login`, solve Turnstile, receive a magic
+link, or exchange a same-browser PKCE code. Those steps require a separate
+isolated hosted login-journey test; a green session-integration run must not be
+reported as proof of the production login flow.
+
+## Release gate: Lighthouse measurements
 
 `bun run lighthouse:check` is a fast blocking CI contract. It validates route
 coverage and catalog drift without launching a browser. It does not produce or
 claim performance results.
 
-Before a public release, run the actual Lighthouse measurement from the
-repository root after a successful production build:
+The complete release command runs the actual Lighthouse measurement from the
+repository root:
 
 ```bash
-bun run build
-bun run lighthouse:local
+bun run verify:release
 ```
 
-The manual release gate passes only when the command completes for every URL in
-`lighthouserc.json`, all error-level assertions pass, and every warning-level
-budget or score regression is reviewed. Reports are written to
+The command creates a fresh provider-free production build and a
+content-and-environment-bound receipt before measuring. Its internal
+`:built` variant rejects a missing or stale receipt. The release gate
+passes only when the command completes for every URL in `lighthouserc.json`,
+the perfect-score accessibility assertion passes, and every warning-level
+budget or score regression is reviewed. Reports are written only to
 `.lighthouseci/reports`; they are local release evidence and remain excluded
-from the public tree. The measurement remains outside CI because performance
-scores vary with runner load and Chromium conditions. Route coverage itself is
-deterministic and blocking in CI.
+from the public tree. The complete 35-route, three-run measurement remains
+outside ordinary CI because performance scores vary with runner load and
+Chromium conditions. Ordinary CI retains its five-route, one-run smoke; route
+coverage itself is deterministic and blocking there.
 
 ## Release validation
 
-`bun run verify:release` sets `RELEASE_VALIDATION=1` for the full verification
-and build, then reuses that exact release-mode build for the public and launch
-browser gates. This makes environment validation fail closed on a local
-machine just as it does in CI or a preview/production build. Configured
-providers require their non-secret DPA dates; Supabase additionally requires a
-matching HTTPS origin and explicit EU region, Sentry requires its actual
-retention period, Anthropic requires its contractually verified retention
-period, and Vercel telemetry requires a dated TDDDG assessment. Stored feedback
-requires its explicit flag plus a dated verification of the 180-day pruning
-Cron job; a service-role key alone does not activate the form. The provider-free
-configuration remains valid.
+`bun run verify:release` first runs an unwrapped strict preflight against the
+supplied provider environment. This prevents the provider-free verification
+wrapper from hiding partial or unattested production configuration. It then
+runs deterministic verification, the full Lighthouse gate, and browser gates
+against one provider-free build receipt, then finishes
+by compiling the supplied provider configuration with
+`RELEASE_VALIDATION=1`; it explicitly removes `SENTRY_AUTH_TOKEN`,
+`SENTRY_ORG`, and `SENTRY_PROJECT`, so this local proof cannot upload source
+maps. The browser gates do not attest live provider
+behavior or authenticated production journeys. Configured providers require their
+non-secret DPA dates; Supabase additionally requires a matching HTTPS origin,
+explicit EU region, Cloudflare Turnstile site key, verified hosted CAPTCHA
+enforcement, and dated Turnstile configuration review; Sentry requires its
+actual retention period, Anthropic requires its contractually verified
+retention period, and Vercel telemetry requires a dated TDDDG assessment.
+Stored feedback requires its explicit flag plus a dated verification of the
+180-day pruning Cron job; a service-role key alone does not activate the form.
+The provider-free configuration remains valid.
 
 ## Proof boundary
 

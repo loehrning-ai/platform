@@ -95,7 +95,9 @@ describe("DataInfraLessonReader ", () => {
 
   it("renders the embedded widget through the shared registry", async () => {
     render(<DataInfraLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />);
-    expect(await screen.findByText("A test question?")).toBeInTheDocument();
+    expect(
+      await screen.findByText("A test question?", {}, { timeout: 5_000 }),
+    ).toBeInTheDocument();
   });
 
   it("renders this lesson's bespoke simulator (StackFlow for mental-model)", () => {

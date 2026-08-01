@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
-import type { AuthError, SupabaseClient, User } from "@supabase/supabase-js";
+import type { SupabaseClient, User } from "@supabase/supabase-js";
 import { AUTH_COOKIE_OPTIONS, getSupabasePublicConfig } from "./config";
 
 export async function createAuthServerClient(): Promise<SupabaseClient | null> {
@@ -38,15 +38,26 @@ export async function getAuthenticatedUser(): Promise<{
    * "logged out": callers should answer 503 and report instead of treating
    * the caller as anonymous. Absent on the happy path and when unconfigured.
    */
-  readonly error?: AuthError;
+  readonly error?: unknown;
 }> {
-  const supabase = await createAuthServerClient();
+  let supabase: SupabaseClient | null;
+  try {
+    supabase = await createAuthServerClient();
+  } catch (error) {
+    return { configured: true, user: null, error };
+  }
   if (!supabase) return { configured: false, user: null };
 
+  let result;
+  try {
+    result = await supabase.auth.getUser();
+  } catch (error) {
+    return { configured: true, user: null, error };
+  }
   const {
     data: { user },
     error,
-  } = await supabase.auth.getUser();
+  } = result;
 
   // "Auth session missing!" is Supabase's expected response for an
   // anonymous visitor with no session cookie — not a backend failure. Treat
@@ -57,4 +68,3 @@ export async function getAuthenticatedUser(): Promise<{
   }
   return { configured: true, user };
 }
-

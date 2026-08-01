@@ -7,13 +7,13 @@ import { AiNativeQuizCertCta } from "@/components/ai-native/kurs/quiz-cert-cta";
 export const metadata: Metadata = {
   title: "AI-Native Arbeitskurs: Kurs",
   description:
-    "4 Module, 27 Lektionen. Komplett kostenlos ohne Anmeldung. Mit Workshop-Quiz, Teilnahmebestätigung und lokal gespeichertem Fortschritt.",
+    "4 Module, 27 Lektionen. Kostenloses Lernkonto erforderlich. Mit Workshop-Quiz, Teilnahmebestätigung und synchronisiertem Fortschritt.",
   robots: { index: false, follow: true },
   alternates: { canonical: "https://loehrning.ai/ai-native/kurs" },
   openGraph: {
     title: "AI-Native Arbeitskurs: Kursübersicht",
     description:
-      "4 Module, 27 Lektionen. Komplett kostenlos ohne Anmeldung. Mit Workshop-Quiz und Teilnahmebestätigung.",
+      "4 Module, 27 Lektionen. Kostenloses Lernkonto erforderlich. Mit Workshop-Quiz und lokaler Teilnahmebestätigung.",
     url: "https://loehrning.ai/ai-native/kurs",
     type: "website",
   },

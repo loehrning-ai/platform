@@ -1,15 +1,14 @@
-import type { Metadata } from "next";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { MarkdownRenderer } from "@/components/course/kurs/markdown-renderer";
+import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPublicPageMetadata({
   title: "Was ist neu",
   description:
     "Neuigkeiten und Inhaltsaktualisierungen auf der freien KI-Lernplattform von loehrning.ai.",
-  alternates: { canonical: "/neuigkeiten" },
-  robots: { index: true, follow: true },
-};
+  path: "/neuigkeiten",
+});
 
 export default function NeuigkeitenPage() {
   const changelog = readFileSync(

@@ -7,6 +7,8 @@ import { OPEN_SOURCE_ARTIFACTS } from "@/lib/open-source/artifacts";
 import { JsonLd, SITE_URL, WEBSITE_ID } from "@/lib/seo/json-ld";
 import { absoluteUrl, GITHUB_ORG } from "@/lib/seo/entity";
 
+const PLATFORM_REPOSITORY_URL = `${GITHUB_ORG.url}/platform`;
+
 export const metadata: Metadata = {
   title: "Open Source",
   description:
@@ -111,22 +113,26 @@ export default function OpenSourcePage() {
                 Offen auf GitHub.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-                Hier findest du jedes veröffentlichte Werk aus der
+                Hier findest du das kuratierte Artefaktverzeichnis der
                 GitHub-Organisation{" "}
                 <a
                   href={GITHUB_ORG.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-sm font-semibold text-foreground underline-offset-4 hover:underline"
+                  className="whitespace-nowrap rounded border border-border bg-background px-1.5 py-0.5 font-mono text-sm font-semibold text-foreground underline-offset-4 hover:underline"
                 >
                   {GITHUB_ORG.slug}
                   <span className="sr-only">
                     , öffnet in neuem Tab
                   </span>
                 </a>
-                : Werkzeuge, Projekte und Videos, alle in einem Verzeichnis.
-                Jeder Eintrag verweist auf den geprüften Quellstand, seine
-                Lizenz und die zugehörige Anleitung.
+                : Werkzeuge, Projekte und Videos, die den unten beschriebenen
+                Veröffentlichungsstandard vollständig erfüllen. Die
+                Organisation kann weitere Quell- und
+                Infrastruktur-Repositories enthalten, die nicht als
+                Artefaktkarte gelistet sind. Jeder Eintrag verweist auf den
+                geprüften Quellstand, seine Lizenz und die zugehörige
+                Anleitung.
               </p>
               <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted-foreground">
                 Die technischen Lernkurse findest du unter{" "}
@@ -204,10 +210,19 @@ export default function OpenSourcePage() {
               Code und redaktionelle Inhalte
             </h2>
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-              Der Plattform-Code steht unter MIT. Sichtbarer Quelltext bedeutet
-              nicht automatisch freie Wiederverwendung aller Lerntexte,
-              Marken- oder Medieninhalte. Die verbindliche Zuordnung steht in
-              der{" "}
+              Der{" "}
+              <a
+                href={PLATFORM_REPOSITORY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-foreground underline-offset-4 hover:underline"
+              >
+                Plattform-Code auf GitHub
+                <span className="sr-only">, öffnet in neuem Tab</span>
+              </a>{" "}
+              steht unter MIT. Sichtbarer Quelltext bedeutet nicht automatisch
+              freie Wiederverwendung aller Lerntexte, Marken- oder
+              Medieninhalte. Die verbindliche Zuordnung steht in der{" "}
               <Link
                 href="/open-source/lizenzrichtlinie"
                 className="font-semibold text-foreground underline-offset-4 hover:underline"

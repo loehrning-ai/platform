@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { useTicker } from "@/lib/data-science/hooks";
+import {
+  useElementVisibility,
+  useTicker,
+} from "@/lib/data-science/hooks";
+import { dsChapterHref } from "@/lib/data-science/routes";
 import type { DsNumberedChapterId } from "@/lib/data-science/types";
 
 // ─── FlowingPipeline ────────────────────────────────
@@ -168,13 +172,21 @@ interface Particle {
   readonly idx: number;
 }
 
-export interface FlowingPipelineProps {
-  readonly onStageClick?: (id: DsNumberedChapterId) => void;
-}
-
-export function FlowingPipeline({ onStageClick }: FlowingPipelineProps) {
-  const t = useTicker(true);
+export function FlowingPipeline() {
+  // Keep the server render and the first client render byte-identical. Starting
+  // the RAF immediately can update floating-point SVG attributes while React is
+  // still hydrating this large tree, producing an intermittent mismatch.
+  const [animationReady, setAnimationReady] = useState(false);
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setAnimationReady(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
+  const [containerRef, inView] = useElementVisibility<HTMLDivElement>({
+    rootMargin: "0px 0px -50% 0px",
+  });
+  const t = useTicker(animationReady && inView);
   const [hover, setHover] = useState<DsNumberedChapterId | null>(null);
+  const [focused, setFocused] = useState<DsNumberedChapterId | null>(null);
   const W = 760;
   const H = 540;
 
@@ -211,7 +223,7 @@ export function FlowingPipeline({ onStageClick }: FlowingPipelineProps) {
   }
 
   return (
-    <div className="ov-loop-wrap">
+    <div ref={containerRef} className="ov-loop-wrap">
       <svg viewBox={`0 0 ${W} ${H}`} className="ov-loop">
         <defs>
           <linearGradient id="loop-grad-l" x1="0" y1="0" x2="1" y2="1">
@@ -244,32 +256,35 @@ export function FlowingPipeline({ onStageClick }: FlowingPipelineProps) {
           <circle key={p.idx} cx={p.x} cy={p.y} r={p.size} fill={p.hue} opacity="0.85" filter="url(#soft-glow)" />
         ))}
         {STATIONS.map((s, i) => {
-          const h = hover === s.id;
+          const h = hover === s.id || focused === s.id;
           const pulseR = 34 + 1.5 * Math.sin(t * 1.4 + i);
           return (
-            <g
-              key={s.id}
-              className="ov-loop-node"
-              onMouseEnter={() => setHover(s.id)}
-              onMouseLeave={() => setHover(null)}
-              onClick={() => onStageClick?.(s.id)}
-              transform={`translate(${s.cx} ${s.cy})`}
-            >
-              <circle r={pulseR + 6} fill="none" stroke={s.hue} strokeWidth={h ? 1.6 : 0.8} opacity={h ? 0.6 : 0.22} />
-              <circle r={pulseR} fill="#FFFDF7" stroke={s.hue} strokeWidth={h ? 2.6 : 1.8} filter="url(#paper-shadow)" />
-              <StationGlyph kind={s.glyph} hue={s.hue} t={t} phase={i} />
-              <text
-                y={pulseR + 18}
-                textAnchor="middle"
-                fill={h ? s.hue : "#3A3540"}
-                fontFamily="'JetBrains Mono', monospace"
-                fontSize="10"
-                fontWeight="700"
-                letterSpacing="0.14em"
-                style={{ textTransform: "uppercase" } as CSSProperties}
+            <g key={s.id} transform={`translate(${s.cx} ${s.cy})`}>
+              <a
+                className="ov-loop-node"
+                href={dsChapterHref(s.id)}
+                aria-label={`${s.n} · ${s.lab} - Kapitel öffnen`}
+                onMouseEnter={() => setHover(s.id)}
+                onMouseLeave={() => setHover(null)}
+                onFocus={() => setFocused(s.id)}
+                onBlur={() => setFocused(null)}
               >
-                {s.n} · {s.lab}
-              </text>
+                <circle r={pulseR + 6} fill="none" stroke={s.hue} strokeWidth={h ? 1.6 : 0.8} opacity={h ? 0.6 : 0.22} />
+                <circle r={pulseR} fill="#FFFDF7" stroke={s.hue} strokeWidth={h ? 2.6 : 1.8} filter="url(#paper-shadow)" />
+                <StationGlyph kind={s.glyph} hue={s.hue} t={t} phase={i} />
+                <text
+                  y={pulseR + 18}
+                  textAnchor="middle"
+                  fill={h ? s.hue : "#3A3540"}
+                  fontFamily="'JetBrains Mono', monospace"
+                  fontSize="10"
+                  fontWeight="700"
+                  letterSpacing="0.14em"
+                  style={{ textTransform: "uppercase" } as CSSProperties}
+                >
+                  {s.n} · {s.lab}
+                </text>
+              </a>
             </g>
           );
         })}

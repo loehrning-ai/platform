@@ -40,7 +40,7 @@ export function DiffViewerWidget({
         <div className="flex items-center justify-between border-b border-border bg-card/60 px-3 py-2 font-mono text-[11px] text-muted-foreground">
           <span>{file}</span>
           <span className="flex gap-2">
-            <span className="text-[#22c55e]">+{plus}</span>
+            <span className="text-risk-green">+{plus}</span>
             <span className="text-destructive">&minus;{minus}</span>
           </span>
         </div>
@@ -53,7 +53,7 @@ export function DiffViewerWidget({
                 key={i}
                 className={cn(
                   "flex gap-3 px-3 py-0.5 font-mono text-[12.5px] leading-[1.6]",
-                  line.type === "add" && "bg-[#22c55e]/10",
+                  line.type === "add" && "bg-risk-green/10",
                   line.type === "remove" && "bg-destructive/10",
                 )}
               >
@@ -64,7 +64,7 @@ export function DiffViewerWidget({
                   aria-hidden="true"
                   className={cn(
                     "w-3 shrink-0 select-none",
-                    line.type === "add" && "text-[#22c55e]",
+                    line.type === "add" && "text-risk-green",
                     line.type === "remove" && "text-destructive",
                   )}
                 >

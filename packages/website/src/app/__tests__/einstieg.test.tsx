@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { TOTAL_QUESTIONS } from "@/lib/ki-check/questions";
 import EinstiegPage from "../einstieg/page";
 
 describe("/einstieg page", () => {
@@ -34,6 +35,16 @@ describe("/einstieg page", () => {
     const links = screen.getAllByRole("link");
     const hrefs = links.map((l) => l.getAttribute("href"));
     expect(hrefs).toContain("/ki-fuehrerschein");
+  });
+
+  it("derives the KI-Check question count from the canonical question bank", () => {
+    render(<EinstiegPage />);
+
+    expect(
+      screen.getByText(new RegExp(`${TOTAL_QUESTIONS} kurze Fragen`)),
+    ).toBeInTheDocument();
+    expect(TOTAL_QUESTIONS).toBe(10);
+    expect(screen.queryByText(/Fünf kurze Fragen/)).toBeNull();
   });
 
   it("does not contain banned commercial phrases", () => {

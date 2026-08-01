@@ -128,7 +128,7 @@ export function AgentLoopWidget({ lessonId, cpId }: AgentLoopWidgetProps): JSX.E
             className={cn(
               "grid grid-cols-[80px_1fr] gap-3 border p-3",
               step.type === "final"
-                ? "border-[#22c55e] bg-[#22c55e]/5"
+                ? "border-risk-green bg-risk-green/5"
                 : "border-border bg-card/40",
             )}
           >
@@ -138,7 +138,7 @@ export function AgentLoopWidget({ lessonId, cpId }: AgentLoopWidgetProps): JSX.E
                 step.type === "tool"
                   ? "text-brand-amber"
                   : step.type === "final"
-                    ? "text-[#22c55e]"
+                    ? "text-risk-green"
                     : "text-muted-foreground",
               )}
             >

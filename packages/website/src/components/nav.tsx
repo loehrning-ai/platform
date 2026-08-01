@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Inter } from "next/font/google";
 import { usePathname } from "next/navigation";
 import {
   useCallback,
@@ -39,12 +38,6 @@ import { cn } from "@/lib/utils";
 import { AuthStatus } from "@/components/auth/auth-status";
 import { TIM_ENTITY } from "@/lib/seo/entity";
 import { useFocusTrap } from "@/lib/a11y/use-focus-trap";
-import { EASE_OUT_EXPO as EASE } from "@/lib/animations";
-
-// The original nav wordmark ("LOEHRNING.AI") was set in Inter — restored
-// verbatim below, so it needs to actually load rather than rely on the
-// system having Inter installed.
-const inter = Inter({ subsets: ["latin"], weight: ["900"] });
 
 interface NavItem {
   readonly href: string;
@@ -93,6 +86,36 @@ const primaryLinks = [
 ] as const;
 
 type DropdownId = "akademie" | "ressourcen" | null;
+
+function NoScriptMobileGroup({
+  label,
+  items,
+}: {
+  readonly label: string;
+  readonly items: readonly AkademieItem[];
+}) {
+  return (
+    <div className="space-y-2">
+      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+        {label}
+      </p>
+      <div className="flex flex-col">
+        {items
+          .filter((item) => !item.disabled)
+          .map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              prefetch={false}
+              className="inline-flex min-h-11 items-center text-sm text-foreground"
+            >
+              {item.label}
+            </Link>
+          ))}
+      </div>
+    </div>
+  );
+}
 
 /* ─── Scroll-driven logo with icon mark ──────────────────────────────────── */
 
@@ -143,8 +166,8 @@ function LogoWordmark({ scrollY }: { scrollY: MotionValue<number> }) {
   return (
     <Link
       href="/"
+      prefetch={false}
       className="flex items-center"
-      aria-label="LOEHRNING.AI Startseite"
     >
       <m.div
         className="flex flex-shrink-0 items-center justify-center"
@@ -158,9 +181,6 @@ function LogoWordmark({ scrollY }: { scrollY: MotionValue<number> }) {
           boxShadow: iconShadow,
           backgroundColor: LOGO_ORIGINAL_ORANGE,
         }}
-        initial={{ opacity: 0, scale: 0.8, rotate: -12 }}
-        animate={{ opacity: 1, scale: 1, rotate: 0 }}
-        transition={{ duration: 0.4, ease: EASE }}
       >
         <m.span
           className="font-black leading-none text-background"
@@ -172,16 +192,13 @@ function LogoWordmark({ scrollY }: { scrollY: MotionValue<number> }) {
       </m.div>
 
       <m.span
-        className={`${inter.className} flex uppercase text-foreground`}
+        className="flex font-sans font-black uppercase text-foreground"
         style={{
           transformOrigin: "left center",
           fontSize: wordmarkSize,
           letterSpacing: useTransform(wordmarkTracking, (v) => `${v}em`),
           fontWeight: 900,
         }}
-        initial={{ opacity: 0, y: 4 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.1, ease: EASE }}
       >
         <m.span
           className="inline-block overflow-hidden"
@@ -194,6 +211,7 @@ function LogoWordmark({ scrollY }: { scrollY: MotionValue<number> }) {
           <span style={{ marginLeft: "0.06em", letterSpacing: "0.05em" }}>.AI</span>
         </span>
       </m.span>
+      <span className="sr-only"> - Startseite</span>
     </Link>
   );
 }
@@ -387,6 +405,7 @@ export function Nav() {
         onMouseLeave={closeMenu}
       >
         <button
+          type="button"
           ref={triggerRef}
           aria-controls={menuId}
           aria-expanded={openDropdown === id}
@@ -444,6 +463,7 @@ export function Nav() {
                   <Link
                     key={item.href}
                     href={item.href}
+                    prefetch={false}
                     data-nav-menu-item
                     onClick={() => setOpenDropdown(null)}
                     aria-current={isActivePath(item.href) ? "page" : undefined}
@@ -501,6 +521,7 @@ export function Nav() {
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={false}
                 onClick={() => setMobileOpen(false)}
                 aria-current={isActivePath(item.href) ? "page" : undefined}
                 className={cn(
@@ -525,7 +546,7 @@ export function Nav() {
     <nav
       aria-label="Hauptnavigation"
       className={cn(
-        "fixed top-0 z-50 w-full transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300",
+        "no-js-primary-nav fixed top-0 z-50 w-full transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300",
         scrolled
           ? "border-b border-border bg-background/98 text-foreground backdrop-blur-sm"
           : "border-b border-transparent bg-background/80 text-foreground backdrop-blur-sm",
@@ -537,8 +558,10 @@ export function Nav() {
       >
         <LogoWordmark scrollY={scrollY} />
 
-        {/* Desktop */}
-        <div className="hidden items-center gap-6 lg:flex xl:gap-7">
+        {/* Interactive desktop navigation. The no-script stylesheet hides
+            these dropdown triggers and exposes the complete static link list
+            below instead. */}
+        <div className="js-desktop-nav hidden items-center gap-6 lg:flex xl:gap-7">
           {renderDropdown(
             "akademie",
             "Kurse",
@@ -558,6 +581,7 @@ export function Nav() {
             <Link
               key={link.href}
               href={link.href}
+              prefetch={false}
               aria-current={isActivePath(link.href) ? "page" : undefined}
               className={cn(
                 "text-sm transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
@@ -585,16 +609,61 @@ export function Nav() {
 
         {/* Mobile toggle */}
         <button
+          type="button"
           ref={mobileToggleRef}
           onClick={() => setMobileOpen((open) => !open)}
-          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg p-2 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background lg:hidden"
-          aria-label={mobileOpen ? "Menü schließen" : "Menü öffnen"}
+          tabIndex={mobileOpen ? -1 : undefined}
+          aria-hidden={mobileOpen || undefined}
+          className={cn(
+            "js-mobile-nav-toggle inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg p-2 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background lg:hidden",
+            mobileOpen && "pointer-events-none invisible",
+          )}
+          aria-label="Menü öffnen"
           aria-expanded={mobileOpen}
           aria-controls="mobile-menu"
         >
-          {mobileOpen ? <X size={19} /> : <Menu size={19} />}
+          <Menu size={19} aria-hidden="true" />
         </button>
       </m.div>
+
+      {/* Complete server-rendered navigation for browsers without scripting.
+          It remains hidden during normal operation and replaces the
+          interactive desktop/mobile controls through the layout's
+          <noscript> stylesheet. */}
+      <div className="no-js-mobile-nav hidden border-b border-border bg-background px-6 py-6 lg:hidden">
+        <div className="grid gap-5 sm:grid-cols-2">
+          <NoScriptMobileGroup label="Kurse" items={akademieNavItems} />
+          <NoScriptMobileGroup label="Ressourcen" items={ressourcenNavItems} />
+        </div>
+        <div className="mt-4 flex flex-col border-t border-border pt-3">
+          {primaryLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              prefetch={false}
+              className="inline-flex min-h-11 items-center text-sm font-medium text-foreground"
+            >
+              {link.label}
+            </Link>
+          ))}
+          <a
+            href={TIM_ENTITY.personalGithubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-foreground"
+          >
+            <Github size={16} aria-hidden="true" />
+            GitHub
+          </a>
+          <Link
+            href="/login"
+            prefetch={false}
+            className="inline-flex min-h-11 items-center text-sm font-medium text-foreground"
+          >
+            Login
+          </Link>
+        </div>
+      </div>
 
       {/* Mobile menu */}
       <AnimatePresence
@@ -617,6 +686,14 @@ export function Nav() {
             className="overflow-hidden overscroll-contain border-b border-border bg-background lg:hidden"
           >
             <div className="flex max-h-[calc(100dvh-4rem)] flex-col gap-4 overflow-y-auto overscroll-contain px-6 py-6">
+              <button
+                type="button"
+                onClick={closeMobileMenu}
+                className="ml-auto inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                aria-label="Menü schließen"
+              >
+                <X size={19} aria-hidden="true" />
+              </button>
               {renderMobileGroup("Kurse", akademieNavItems)}
               {renderMobileGroup("Ressourcen", ressourcenNavItems)}
 
@@ -625,6 +702,7 @@ export function Nav() {
                   <Link
                     key={link.href}
                     href={link.href}
+                    prefetch={false}
                     onClick={() => setMobileOpen(false)}
                     aria-current={isActivePath(link.href) ? "page" : undefined}
                     className={cn(
@@ -645,7 +723,10 @@ export function Nav() {
                   <Github size={16} aria-hidden="true" />
                   GitHub
                 </a>
-                <AuthStatus mobile />
+                <AuthStatus
+                  mobile
+                  onNavigate={() => setMobileOpen(false)}
+                />
               </div>
             </div>
           </m.div>

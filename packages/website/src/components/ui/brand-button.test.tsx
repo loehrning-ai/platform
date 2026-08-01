@@ -20,10 +20,14 @@ vi.mock("next/link", async () => {
   return {
     __esModule: true,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    default: ({ href, children, ...rest }: any) =>
+    default: ({ href, children, prefetch, ...rest }: any) =>
       React.createElement(
         "a",
-        { href: typeof href === "string" ? href : "#", ...rest },
+        {
+          href: typeof href === "string" ? href : "#",
+          "data-prefetch": String(prefetch),
+          ...rest,
+        },
         children,
       ),
   };
@@ -45,6 +49,18 @@ describe("<BrandButton>", () => {
       const link = screen.getByRole("link", { name: "Kontakt" });
       expect(link.tagName).toBe("A");
       expect(link).toHaveAttribute("href", "/kontakt");
+    });
+
+    it("can suppress Next.js prefetch for a protected destination", () => {
+      render(
+        <BrandButton href="/konto" prefetch={false}>
+          Konto
+        </BrandButton>,
+      );
+      expect(screen.getByRole("link", { name: "Konto" })).toHaveAttribute(
+        "data-prefetch",
+        "false",
+      );
     });
   });
 

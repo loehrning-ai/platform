@@ -139,7 +139,7 @@ export default function ExcelDemo() {
             {isAuto ? "Auto-Play" : "Manuell"}
           </div>
         </div>
-        <h3
+        <h2
           style={{
             fontSize: "clamp(18px, 2.6vw, 22px)",
             fontWeight: 700,
@@ -152,7 +152,7 @@ export default function ExcelDemo() {
           <span style={{ color: "var(--color-brand-orange)" }}>
             ohne Microsoft-365-Verbindung.
           </span>
-        </h3>
+        </h2>
       </div>
 
       {/* Main split — stacks on mobile, 2-col from ~560px */}

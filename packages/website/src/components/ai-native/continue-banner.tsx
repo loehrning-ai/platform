@@ -7,6 +7,12 @@ import { ArrowRight, X } from "lucide-react";
 import { getAllProgress } from "@/lib/ai-native/progress";
 import { getModules } from "@/lib/ai-native/data";
 import { EASE_OUT_EXPO } from "@/lib/animations";
+import {
+  getLearningOwnerContext,
+  getOwnedSessionLearningItem,
+  setOwnedSessionLearningItem,
+  subscribeLearningOwner,
+} from "@/lib/progress/browser-learning-storage";
 
 /**
  * AiNativeContinueBanner — returning-user hook on the landing hero.
@@ -65,27 +71,33 @@ export function AiNativeContinueBanner(): JSX.Element | null {
   const [state, setState] = useState<ContinueState | null>(null);
   const [dismissed, setDismissed] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [ownerGeneration, setOwnerGeneration] = useState(
+    () => getLearningOwnerContext().generation,
+  );
 
   useEffect(() => {
     setMounted(true);
-    try {
-      if (sessionStorage.getItem(DISMISS_KEY) === "1") {
+    const loadOwnedState = () => {
+      setOwnerGeneration(getLearningOwnerContext().generation);
+      setDismissed(false);
+      setState(null);
+      try {
+        if (getOwnedSessionLearningItem(DISMISS_KEY) === "1") {
         setDismissed(true);
         return;
       }
-    } catch {
-      /* ignore */
-    }
-    setState(computeContinueState());
+      } catch {
+        /* ignore */
+      }
+      setState(computeContinueState());
+    };
+    loadOwnedState();
+    return subscribeLearningOwner(loadOwnedState);
   }, []);
 
   const dismiss = () => {
     setDismissed(true);
-    try {
-      sessionStorage.setItem(DISMISS_KEY, "1");
-    } catch {
-      /* ignore */
-    }
+    setOwnedSessionLearningItem(DISMISS_KEY, "1", ownerGeneration);
   };
 
   if (!mounted || dismissed || !state) return null;
@@ -99,7 +111,7 @@ export function AiNativeContinueBanner(): JSX.Element | null {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -12 }}
         transition={{ duration: 0.35, ease: EASE_OUT_EXPO }}
-        className="border-b border-border bg-background px-6 py-3 md:px-12"
+        className="absolute inset-x-0 top-16 z-40 border-b border-border bg-background/95 px-6 py-3 shadow-sm backdrop-blur-md md:px-12"
         aria-label="Zurück zum letzten Kursschritt"
       >
         <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-3">
@@ -117,6 +129,7 @@ export function AiNativeContinueBanner(): JSX.Element | null {
           <div className="flex items-center gap-2.5">
             <Link
               href={`/ai-native/kurs/${state.moduleId}`}
+              prefetch={false}
               className="inline-flex items-center gap-1.5 border border-brand-orange bg-brand-orange px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-white transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
             >
               Weiterlernen <ArrowRight size={13} />

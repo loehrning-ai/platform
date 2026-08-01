@@ -9,7 +9,12 @@ export type CrawlClass =
   | "protected"
   | "retired";
 
-export type AuthBehavior = "public" | "protected" | "gone" | "redirect";
+export type AuthBehavior =
+  | "public"
+  | "protected"
+  | "route-level"
+  | "gone"
+  | "redirect";
 export type RobotsBehavior = "allow" | "disallow";
 export type CachePolicy = "public-static" | "public-short" | "private-no-store";
 
@@ -38,20 +43,15 @@ const PUBLIC_INDEXABLE_PATHS = [
   "/wie-ki-funktioniert/:lektionId",
   "/ki-check",
   "/kurse",
-  // The 6 imported courses' own landing pages. Each is now a real static
-  // route (its own page.tsx), not a match of the generic dynamic
-  // "/kurse/open-source/:slug" pattern below — these must precede that
-  // wildcard so verify-lighthouse-routes.ts's dynamic-candidates check
-  // (built from IMPORTED_COURSE_CATALOG, which no longer lists any of
-  // these 6 since they all flipped to nativeStatus "live") is not asked to
-  // vouch for a URL that isn't a dynamic-route candidate anymore.
+  // The 6 formerly imported courses now own real static routes. The dormant
+  // generic import route was removed when the pending catalog became empty;
+  // a future import must add its route and crawl contract together.
   "/kurse/open-source/claude",
   "/kurse/open-source/codex",
   "/kurse/open-source/data-infrastructure",
   "/kurse/open-source/data-engineering-fundamentals",
   "/kurse/open-source/data-science",
   "/kurse/open-source/ai-native-operator",
-  "/kurse/open-source/:slug",
   "/ki-fuehrerschein",
   "/eu-ai-act-kurs",
   "/ai-native",
@@ -267,7 +267,6 @@ const PROTECTED_PATHS = [
   "/api/progress/:path*",
   "/api/ai-native/:path*",
   "/api/demos/:path*",
-  "/api/buecher/:slug/download.pdf",
   // The 4 native certified courses' lesson content requires login (unlike
   // every other course, which stays optional-account per policy D1 — see
   // src/lib/auth/routes.test.ts). Each course's "/kurs/:path*" wildcard also
@@ -285,6 +284,34 @@ const PROTECTED_PATHS = [
 ] as const;
 
 const RETIRED_ROUTES: readonly CrawlRoute[] = [
+  route("/api/scan", "retired", "Deleted commercial scan API returns 410.", {
+    auth: "gone",
+    robots: "disallow",
+    cache: "public-short",
+    status: 410,
+  }),
+  route(
+    "/api/journey/scan-insight",
+    "retired",
+    "Deleted commercial scan-insight API returns 410.",
+    {
+      auth: "gone",
+      robots: "disallow",
+      cache: "public-short",
+      status: 410,
+    },
+  ),
+  route(
+    "/api/journey/leads",
+    "retired",
+    "Deleted commercial lead-capture API returns 410.",
+    {
+      auth: "gone",
+      robots: "disallow",
+      cache: "public-short",
+      status: 410,
+    },
+  ),
   route("/downloads/:path*.pdf", "retired", "Retired PDF downloads return 410.", {
     auth: "gone",
     robots: "disallow",
@@ -445,8 +472,8 @@ function route(
     // Sitemap membership is explicit per pattern (public-content contract):
     // public-indexable patterns default to inclusion; ":"-patterns are
     // enumerated per known slug in src/app/sitemap.ts. Keeping a pattern out
-    // of the sitemap requires an explicit includeInSitemap: false override
-    // (e.g. /buecher/:slug/:chapter), never a silent ":"-filter.
+    // of the sitemap requires an explicit includeInSitemap: false override,
+    // never a silent ":"-filter.
     includeInSitemap: routeClass === "public-indexable",
     cache: protectedRoute ? "private-no-store" : routeClass === "public-assets" ? "public-static" : "public-short",
     xRobotsTag: noindex ? NOINDEX_HEADER : undefined,
@@ -471,11 +498,9 @@ export const CRAWL_CONTRACT: readonly CrawlRoute[] = [
       changeFrequency: path === "/" || path === "/kurse" || path === "/blog" ? "weekly" : "monthly",
     }),
   ),
-  // Book chapter readers carry index metadata (see src/app/buecher/[slug]/[chapter]/page.tsx)
-  // but stay out of the sitemap by deliberate per-pattern flag; public-content contract
-  // owns sitemap semantics for detail pages.
+  // Published book chapter readers carry index metadata and are enumerated
+  // from their manifests by src/app/sitemap.ts.
   route("/buecher/:slug/:chapter", "public-indexable", "Public book chapter reader for search and AI retrieval.", {
-    includeInSitemap: false,
     priority: 0.6,
     changeFrequency: "monthly",
   }),
@@ -495,6 +520,18 @@ export const CRAWL_CONTRACT: readonly CrawlRoute[] = [
     route(path, "public-assets", "Public static proof or platform asset.", {
       includeInSitemap: false,
     }),
+  ),
+  route(
+    "/api/buecher/:slug/download.pdf",
+    "protected",
+    "Private book PDF; the route validates publication and authenticates before delivery.",
+    {
+      // The route must validate the canonical public book before auth so an
+      // unpublished or unavailable slug returns a real 404. Middleware still
+      // applies the private crawl/cache boundary but leaves identity checks to
+      // the handler.
+      auth: "route-level",
+    },
   ),
   ...PROTECTED_PATHS.map((path) =>
     route(path, "protected", "Private account, state, or provider-backed API surface."),

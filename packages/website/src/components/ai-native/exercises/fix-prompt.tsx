@@ -12,6 +12,13 @@ import { gradeWithAI, type GradeWithAIResult } from "./_ai-grade";
 import type { AiRubricEntry, ModuleId } from "@/lib/ai-native/types";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import {
+  getLearningOwnerContext,
+  getOwnedSessionLearningItem,
+  removeOwnedSessionLearningItem,
+  setOwnedSessionLearningItem,
+  subscribeLearningOwner,
+} from "@/lib/progress/browser-learning-storage";
 
 /**
  * Fix-this-prompt — editable textarea + deterministic rubric check.
@@ -92,46 +99,60 @@ function FixPromptBody({
   const [submitted, setSubmitted] = useState(false);
   const [isGrading, setIsGrading] = useState(false);
   const [aiResult, setAiResult] = useState<GradeWithAIResult | null>(null);
+  const [ownerGeneration, setOwnerGeneration] = useState(
+    () => getLearningOwnerContext().generation,
+  );
   const savedDraftRef = useRef<string>(startingPrompt);
 
   // Load draft from sessionStorage on mount.
   useEffect(() => {
-    try {
-      const raw = sessionStorage.getItem(storageKey);
+    const loadOwnedDraft = () => {
+      setOwnerGeneration(getLearningOwnerContext().generation);
+      setDraft(startingPrompt);
+      savedDraftRef.current = startingPrompt;
+      setSubmitted(false);
+      setIsGrading(false);
+      setAiResult(null);
+      try {
+        const raw = getOwnedSessionLearningItem(storageKey);
       if (raw !== null) {
         setDraft(raw);
         savedDraftRef.current = raw;
       }
-    } catch {
-      /* ignore */
-    }
-  }, [storageKey]);
-
-  // Save on blur + beforeunload.
-  useEffect(() => {
-    const onBeforeUnload = () => {
-      try {
-        sessionStorage.setItem(storageKey, draft);
       } catch {
         /* ignore */
       }
     };
+    loadOwnedDraft();
+    return subscribeLearningOwner(loadOwnedDraft);
+  }, [startingPrompt, storageKey]);
+
+  // Save on blur + beforeunload.
+  useEffect(() => {
+    const onBeforeUnload = () => {
+      setOwnedSessionLearningItem(
+        storageKey,
+        draft,
+        ownerGeneration,
+      );
+    };
     window.addEventListener("beforeunload", onBeforeUnload);
     return () => window.removeEventListener("beforeunload", onBeforeUnload);
-  }, [draft, storageKey]);
+  }, [draft, ownerGeneration, storageKey]);
 
   const grading = useMemo(() => gradeFixPrompt(draft, criteria), [draft, criteria]);
   const passed = grading.score >= passThreshold;
 
   const saveDraft = () => {
-    try {
-      sessionStorage.setItem(storageKey, draft);
-    } catch {
-      /* ignore */
-    }
+    setOwnedSessionLearningItem(
+      storageKey,
+      draft,
+      ownerGeneration,
+    );
   };
 
   const handleSubmit = async () => {
+    const ownerGeneration = getLearningOwnerContext().generation;
     saveDraft();
     setIsGrading(true);
 
@@ -155,6 +176,7 @@ function FixPromptBody({
       fallbackSummary,
     });
 
+    if (getLearningOwnerContext().generation !== ownerGeneration) return;
     setAiResult(result);
     setSubmitted(true);
     setIsGrading(false);
@@ -174,11 +196,7 @@ function FixPromptBody({
     setSubmitted(false);
     setAiResult(null);
     setDraft(startingPrompt);
-    try {
-      sessionStorage.removeItem(storageKey);
-    } catch {
-      /* ignore */
-    }
+    removeOwnedSessionLearningItem(storageKey, ownerGeneration);
   };
 
   return (
@@ -211,7 +229,7 @@ function FixPromptBody({
             <span
               className={
                 aiResult.score >= passThreshold
-                  ? "text-[#22c55e]"
+                  ? "text-risk-green"
                   : "text-brand-amber"
               }
             >
@@ -243,7 +261,7 @@ function FixPromptBody({
               className={cn(
                 "border-l-[3px] px-4 py-3",
                 aiResult.score >= passThreshold
-                  ? "border-[#22c55e] bg-[#22c55e]/5"
+                  ? "border-risk-green bg-risk-green/5"
                   : "border-brand-amber bg-brand-amber/5",
               )}
             >
@@ -265,14 +283,14 @@ function FixPromptBody({
                     className={cn(
                       "flex items-start gap-2.5 border px-3 py-2 text-[13px]",
                       entry.passed
-                        ? "border-[#22c55e]/40 bg-[#22c55e]/5"
+                        ? "border-risk-green/40 bg-risk-green/5"
                         : "border-brand-amber/40 bg-brand-amber/5",
                     )}
                   >
                     {entry.passed ? (
                       <CheckCircle2
                         size={14}
-                        className="mt-0.5 shrink-0 text-[#22c55e]"
+                        className="mt-0.5 shrink-0 text-risk-green"
                       />
                     ) : (
                       <XCircle

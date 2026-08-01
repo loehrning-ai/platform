@@ -82,4 +82,18 @@ describe("MatrixGridWidget ", () => {
     render(<MatrixGridWidget lessonId="mindset/3" cpId="matrix" rows={[]} cols={cols} />);
     expect(isCheckpointDone("mindset/3", "matrix")).toBe(false);
   });
+
+  it("moves selection with horizontal Arrow/Home/End keys and one Tab stop", () => {
+    render(<MatrixGridWidget lessonId="mindset/3" cpId="matrix" rows={rows} cols={cols} />);
+    const group = screen.getAllByRole("radiogroup")[0];
+    const radios = Array.from(group.querySelectorAll<HTMLElement>('[role="radio"]'));
+
+    expect(radios.map((radio) => radio.tabIndex)).toEqual([0, -1, -1]);
+    radios[0].focus();
+    fireEvent.keyDown(radios[0], { key: "End" });
+
+    expect(radios[2]).toHaveFocus();
+    expect(radios[2]).toHaveAttribute("aria-checked", "true");
+    expect(radios.map((radio) => radio.tabIndex)).toEqual([-1, -1, 0]);
+  });
 });

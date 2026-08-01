@@ -1,12 +1,11 @@
 /**
  * demo-tile.test.tsx (regression coverage)
  *
- * DemoTile is the gallery card: a next/link to the detail page that fires the
- * gallery-origin analytics event on click and renders the demo metadata (number
- * padded against the total, level badge, category + lead industry, thumbnail).
+ * DemoTile is the gallery card: a next/link to the detail page that carries the
+ * gallery origin and renders the demo metadata (number padded against the
+ * total, level badge, category + lead industry, thumbnail).
  * We drive its real logic:
  *  - the deeplink href (`?source=gallery`) + accessible label + data attribute,
- *  - the click -> trackDemoOpen(slug, "gallery") wiring,
  *  - String(total).padStart(2, "0") vs the raw demo.n,
  *  - the `industries[0] ? " - x" : ""` footer conditional,
  *  - levelColorClass picking a dark-tile vs light-tile ink for the level badge,
@@ -17,28 +16,22 @@
  */
 
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
 import type { Demo } from "@/lib/demos";
 import { DemoTile } from "./demo-tile";
-import { trackDemoOpen } from "@/lib/analytics";
 import { getGalleryPreview } from "./demo-component-registry";
 
 vi.mock("next/link", () => ({
-  default: ({ children, ...props }: { children: ReactNode; [key: string]: unknown }) => (
-    <a {...props}>{children}</a>
+  default: ({ children, prefetch, ...props }: { children: ReactNode; prefetch?: boolean; [key: string]: unknown }) => (
+    <a {...props} data-prefetch={String(prefetch)}>{children}</a>
   ),
-}));
-
-vi.mock("@/lib/analytics", () => ({
-  trackDemoOpen: vi.fn(),
 }));
 
 vi.mock("./demo-component-registry", () => ({
   getGalleryPreview: vi.fn(() => undefined),
 }));
 
-const mockedTrackOpen = vi.mocked(trackDemoOpen);
 const mockedPreview = vi.mocked(getGalleryPreview);
 
 function makeDemo(overrides: Partial<Demo> = {}): Demo {
@@ -88,13 +81,8 @@ describe("<DemoTile>", () => {
     expect(link).toHaveAttribute("href", "/demos/word?source=gallery");
     expect(link).toHaveAttribute("aria-label", "Praxisbeispiel öffnen: Claude in Word. Verträge.");
     expect(link).toHaveAttribute("data-demo-tile", "word");
-  });
-
-  it("fires trackDemoOpen with the gallery origin on click", () => {
-    render(<DemoTile demo={makeDemo({ slug: "excel" })} total={12} />);
-    fireEvent.click(screen.getByRole("link"));
-    expect(mockedTrackOpen).toHaveBeenCalledTimes(1);
-    expect(mockedTrackOpen).toHaveBeenCalledWith("excel", "gallery");
+    expect(link).toHaveAttribute("data-prefetch", "false");
+    expect(link).toHaveClass("demo-gallery-tile");
   });
 
   it("shows the raw demo number and the zero-padded total", () => {

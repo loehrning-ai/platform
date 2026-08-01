@@ -36,15 +36,15 @@
           "id": "block_5_lesson_1_section_2",
           "title": "Deutschland: BNetzA als Default-Behörde",
           "readTimeMinutes": 1,
-          "content": "Art. 70 Abs. 2 verpflichtet jeden Mitgliedstaat, eine **zentrale Anlaufstelle** zu benennen. Das beschlossene KI-MIG sieht hierfür die **Bundesnetzagentur (BNetzA)** vor. Der Bundestag nahm das Gesetz am **11. Juni 2026** an; am **10. Juli 2026** passierte es den Bundesrat ohne Anrufung des Vermittlungsausschusses. Am 14. Juli 2026 war die Ausfertigung und Verkündung noch abzuwarten. Die EU-Verordnung selbst gilt unmittelbar, ihre einzelnen Vorschriften aber nach dem gestaffelten Zeitplan.\n\nNach Inkrafttreten des KI-MIG soll die BNetzA Marktüberwachungsbehörde für Bereiche ohne zugewiesene sektorale Aufsicht und zentrale Anlaufstelle werden. Das Gesetz sieht innerhalb der BNetzA ein **Koordinierungs- und Kompetenzzentrum (KoKIVO)** sowie eine unabhängige Marktüberwachungskammer für bestimmte Bereiche vor.\n\nEine bereits aktive BNetzA-Beschwerdestelle oder ein bestimmter Meldekanal folgt daraus am 14. Juli 2026 noch nicht. Für echte Fälle sind das verkündete Gesetz, Fachrecht und aktuelle Behördeninformationen maßgeblich.",
-          "keyTakeaway": "Das beschlossene KI-MIG sieht die BNetzA als zentrale Anlaufstelle vor. Am 14. Juli 2026 war das Gesetz noch nicht verkündet; aktive Zuständigkeiten und Meldewege dürfen nicht vorweggenommen werden."
+          "content": "Art. 70 Abs. 2 verpflichtet jeden Mitgliedstaat, eine **zentrale Anlaufstelle** zu benennen. Das beschlossene KI-MIG sieht hierfür die **Bundesnetzagentur (BNetzA)** vor. Der Bundestag nahm das Gesetz am **11. Juni 2026** an; am **10. Juli 2026** passierte es den Bundesrat ohne Anrufung des Vermittlungsausschusses. Eine Veröffentlichung im Bundesgesetzblatt war am 28. Juli 2026 nicht amtlich verifiziert. Die EU-Verordnung selbst gilt unmittelbar, ihre einzelnen Vorschriften aber nach dem gestaffelten Zeitplan.\n\nNach Inkrafttreten des KI-MIG soll die BNetzA Marktüberwachungsbehörde für Bereiche ohne zugewiesene sektorale Aufsicht und zentrale Anlaufstelle werden. Das Gesetz sieht innerhalb der BNetzA ein **Koordinierungs- und Kompetenzzentrum (KoKIVO)** sowie eine unabhängige Marktüberwachungskammer für bestimmte Bereiche vor.\n\nEine bereits aktive BNetzA-Beschwerdestelle oder ein bestimmter Meldekanal folgt aus dem parlamentarischen Beschluss allein nicht. Für echte Fälle sind das verkündete Gesetz, Fachrecht und aktuelle Behördeninformationen maßgeblich.",
+          "keyTakeaway": "Das beschlossene KI-MIG sieht die BNetzA als zentrale Anlaufstelle vor. Eine Verkündung war am 28. Juli 2026 nicht amtlich verifiziert; aktive Zuständigkeiten und Meldewege dürfen nicht vorweggenommen werden."
         },
         {
           "id": "block_5_lesson_1_section_3",
           "title": "Sektorale Aufsicht: Wer zusätzlich zuständig bleibt",
           "readTimeMinutes": 1,
           "content": "Art. 74 ordnet Marktüberwachung in mehreren Bereichen vorhandenen sektoralen Behörden zu. Zusätzlich bleiben Datenschutz- und anderes Fachrecht mit eigenen Zuständigkeiten relevant.\n\n- **Finanzinstitute:** Art. 74 Abs. 6 verweist grundsätzlich auf die nach Finanzdienstleistungsrecht zuständigen Behörden.\n- **Produkte unter Anhang I:** Die zuständige Marktüberwachung folgt grundsätzlich dem jeweiligen Produktsicherheitsrecht (Art. 74 Abs. 3).\n- **Organe in Art. 74 Abs. 8:** Dort bezeichnete Datenschutz- oder andere Behörden überwachen die dort genannten Anhang-III-Systeme.\n- **Übrige Bereiche in Deutschland:** Das beschlossene KI-MIG weist der BNetzA eine Auffangrolle zu; Verkündung und konkrete Zuständigkeitsnorm sind vor Nutzung zu prüfen.\n\n**Praxis:** Dokumentieren Sie pro System Zweck, Rolle, Sektor und mögliche Behörden. Behandeln Sie das Mapping bis zur Verkündung und Konsolidierung ausdrücklich als zu bestätigende Rechtsfrage.",
-          "keyTakeaway": "Sektorale Aufsicht und Fachrecht bleiben relevant. Die BNetzA-Auffangrolle folgt aus dem beschlossenen KI-MIG, war am 14. Juli 2026 aber noch nicht wirksam."
+          "keyTakeaway": "Sektorale Aufsicht und Fachrecht bleiben relevant. Die BNetzA-Auffangrolle folgt aus dem beschlossenen KI-MIG, dessen Verkündung am 28. Juli 2026 nicht amtlich verifiziert war."
         }
       ],
       "quiz": [
@@ -73,7 +73,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Das von Bundestag und Bundesrat beschlossene KI-MIG sieht die Bundesnetzagentur als zentrale Anlaufstelle vor. Am 14. Juli 2026 war das Gesetz noch nicht verkündet; die vorgesehene Rolle darf daher nicht als bereits wirksam ausgegeben werden."
+          "explanation": "Das von Bundestag und Bundesrat beschlossene KI-MIG sieht die Bundesnetzagentur als zentrale Anlaufstelle vor. Eine Verkündung war am 28. Juli 2026 nicht amtlich verifiziert; die vorgesehene Rolle darf daher nicht als bereits wirksam ausgegeben werden."
         },
         {
           "id": "block_5_lesson_1_q2",
@@ -271,8 +271,8 @@
           "id": "block_5_lesson_3_section_1",
           "title": "Was ein KI-Reallabor nach Art. 57 ist",
           "readTimeMinutes": 2,
-          "content": "Ein **KI-Reallabor** (auch: AI Regulatory Sandbox) ist laut Art. 3 Nr. 55 ein kontrollierter Rahmen, in dem eine zuständige Behörde ein innovatives KI-System entwickeln, trainieren, validieren und gegebenenfalls unter Realbedingungen testen lässt.\n\nDer ursprüngliche Art. 57 Abs. 1 nennt den **2. August 2026** als Frist für mindestens ein nationales KI-Reallabor. Parlament und Rat haben mit dem AI Omnibus eine Verschiebung auf den **2. August 2027** beschlossen. Am 14. Juli 2026 war die Änderungsverordnung noch nicht im Amtsblatt veröffentlicht. Der Originaltext war daher weiterhin die bindende Ausgangslage, während der beschlossene neue Termin noch nicht in Kraft war.\n\nArt. 57 sieht unter anderem Anleitung, Aufsicht und einen schriftlichen Abschlussbericht vor. Ob, wann und unter welchen Bedingungen ein konkretes deutsches Reallabor Anträge annimmt, ergibt sich nicht allein aus dem Stichtag. Dafür müssen das verkündete KI-MIG und aktuelle Informationen der zuständigen Stelle geprüft werden.",
-          "keyTakeaway": "Original-Art. 57 nennt den 2. August 2026; der beschlossene AI Omnibus verschiebt die Frist auf 2. August 2027. Am 14. Juli 2026 war die Änderung noch nicht veröffentlicht und ein aktives deutsches Angebot nicht belegt."
+          "content": "Ein **KI-Reallabor** (auch: AI Regulatory Sandbox) ist laut Art. 3 Nr. 55 ein kontrollierter Rahmen, in dem eine zuständige Behörde ein innovatives KI-System entwickeln, trainieren, validieren und gegebenenfalls unter Realbedingungen testen lässt.\n\nDie seit dem 27. Juli 2026 geltende Verordnung (EU) 2026/1744 setzt in Art. 57 Abs. 1 den **2. August 2027** als Frist für mindestens ein nationales KI-Reallabor.\n\nArt. 57 sieht unter anderem Anleitung, Aufsicht und einen schriftlichen Abschlussbericht vor. Ob, wann und unter welchen Bedingungen ein konkretes deutsches Reallabor Anträge annimmt, ergibt sich nicht allein aus dem Stichtag. Dafür müssen das verkündete KI-MIG und aktuelle Informationen der zuständigen Stelle geprüft werden.",
+          "keyTakeaway": "Die seit dem 27. Juli 2026 geltende Verordnung (EU) 2026/1744 verschiebt die Reallaborfrist auf den 2. August 2027. Ein aktives deutsches Angebot ist damit nicht automatisch belegt."
         },
         {
           "id": "block_5_lesson_3_section_2",
@@ -285,7 +285,7 @@
           "id": "block_5_lesson_3_section_3",
           "title": "Status Deutschland: BNetzA, BfDI und Hessen",
           "readTimeMinutes": 1,
-          "content": "Das deutsche Pilotprojekt 2025/2026 wurde von der **Bundesnetzagentur** gemeinsam mit dem **BfDI** und dem **Hessischen Digitalministerium** durchgeführt. Zwei Start-up-Anwendungsfälle wurden mit Schwerpunkt KI-VO und MDR simuliert. Ein Pilot belegt jedoch noch kein allgemein verfügbares Reallabor mit offenem Antragssystem.\n\nDas von Bundestag und Bundesrat beschlossene KI-MIG weist der BNetzA Aufgaben bei der Innovationsförderung zu. Am 14. Juli 2026 war das Gesetz noch nicht verkündet. Zugleich war die AI-Omnibus-Änderung mit der neuen Reallaborfrist noch nicht im EU-Amtsblatt veröffentlicht.\n\nOb die BNetzA bereits Anträge annimmt, prüfen Sie vor einem Antrag auf der aktuellen Behördenseite.",
+          "content": "Das deutsche Pilotprojekt 2025/2026 wurde von der **Bundesnetzagentur** gemeinsam mit dem **BfDI** und dem **Hessischen Digitalministerium** durchgeführt. Zwei Start-up-Anwendungsfälle wurden mit Schwerpunkt KI-VO und MDR simuliert. Ein Pilot belegt jedoch noch kein allgemein verfügbares Reallabor mit offenem Antragssystem.\n\nDas von Bundestag und Bundesrat beschlossene KI-MIG weist der BNetzA Aufgaben bei der Innovationsförderung zu. Eine Veröffentlichung im Bundesgesetzblatt war am 28. Juli 2026 nicht amtlich verifiziert. Die neue EU-Reallaborfrist 2. August 2027 ist dagegen seit dem 27. Juli 2026 geltendes Recht.\n\nOb die BNetzA bereits Anträge annimmt, prüfen Sie vor einem Antrag auf der aktuellen Behördenseite.",
           "keyTakeaway": "Das Pilotprojekt belegt Vorbereitung, nicht einen aktiven Regelbetrieb. Ein deutsches Reallabor und sein Antragsweg müssen anhand aktueller offizieller Informationen verifiziert werden."
         }
       ],
@@ -315,7 +315,7 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Der Originaltext von Art. 57 Abs. 1 nennt den 2. August 2026. Parlament und Rat haben mit dem AI Omnibus den 2. August 2027 beschlossen. Am 14. Juli 2026 war die Änderungsverordnung noch nicht im Amtsblatt veröffentlicht; beide Ebenen sind deshalb ausdrücklich zu unterscheiden."
+          "explanation": "Der Originaltext von Art. 57 Abs. 1 nannte den 2. August 2026. Die seit dem 27. Juli 2026 geltende Verordnung (EU) 2026/1744 verschiebt die Frist verbindlich auf den 2. August 2027."
         },
         {
           "id": "block_5_lesson_3_q2",
@@ -392,14 +392,14 @@
           "id": "block_5_lesson_4_section_1",
           "title": "Was Sie selbst melden müssen: Art. 72 und 73",
           "readTimeMinutes": 2,
-          "content": "Sobald die einschlägigen Hochrisiko-Regeln anwendbar sind, treffen Anbieter insbesondere Pflichten zur Beobachtung nach dem Inverkehrbringen und zur Meldung schwerwiegender Vorfälle. Am 14. Juli 2026 waren die beschlossenen neuen Hochrisiko-Termine noch nicht in Kraft; der Anwendungsbeginn muss vor einem realen Fall erneut geprüft werden.\n\n**Art. 72:** Das Beobachtungssystem erhebt systematisch Leistungsdaten über die Lebensdauer; der Plan ist Teil der technischen Dokumentation.\n\n**Art. 73:** Ein schwerwiegender Vorfall wird nach Eintritt der Anwendbarkeit der zuständigen Marktüberwachungsbehörde gemeldet. Die Verordnung nennt grundsätzlich 15 Tage, bei bestimmten Todesfällen zehn Tage und bei weitverbreiteten Verstößen oder kritischer Infrastruktur zwei Tage. Produkt- und Datenschutzrecht können unabhängig davon eigene, bereits geltende Meldewege und Fristen auslösen.\n\nDie Fristen sind keine Aussage dazu, welche deutsche Behörde oder welcher Kanal am 14. Juli 2026 bereits operativ verfügbar war.",
+          "content": "Sobald die einschlägigen Hochrisiko-Regeln anwendbar sind, treffen Anbieter insbesondere Pflichten zur Beobachtung nach dem Inverkehrbringen und zur Meldung schwerwiegender Vorfälle. Die Verordnung (EU) 2026/1744 setzt den Anwendungsbeginn für eigenständige Anhang-III-Systeme auf den 2. Dezember 2027 und für produktintegrierte Anhang-I-Systeme auf den 2. August 2028.\n\n**Art. 72:** Das Beobachtungssystem erhebt systematisch Leistungsdaten über die Lebensdauer; der Plan ist Teil der technischen Dokumentation.\n\n**Art. 73:** Ein schwerwiegender Vorfall wird nach Eintritt der Anwendbarkeit der zuständigen Marktüberwachungsbehörde gemeldet. Die Verordnung nennt grundsätzlich 15 Tage, bei bestimmten Todesfällen zehn Tage und bei weitverbreiteten Verstößen oder kritischer Infrastruktur zwei Tage. Produkt- und Datenschutzrecht können unabhängig davon eigene, bereits geltende Meldewege und Fristen auslösen.\n\nDie Fristen belegen nicht, welche deutsche Behörde oder welcher Kanal operativ verfügbar ist.",
           "keyTakeaway": "Art. 72 und 73 gehören zum Hochrisiko-Regime. Anwendungsdatum, zuständige Behörde und parallele Meldepflichten müssen vor einem realen Vorfall aktuell geprüft werden."
         },
         {
           "id": "block_5_lesson_4_section_2",
           "title": "Wer Sie meldet: Art. 85 Beschwerderecht",
           "readTimeMinutes": 1,
-          "content": "**Art. 85 KI-VO:** Jede natürliche oder juristische Person mit Grund zur Annahme eines Verstoßes kann bei der zuständigen Marktüberwachungsbehörde Beschwerde einreichen.\n\nDas beschlossene deutsche KI-MIG sieht die **BNetzA als zentrale Anlaufstelle** vor, soweit keine Fachbehörde zuständig ist. Am 14. Juli 2026 war das Gesetz noch nicht verkündet. Prüfen Sie vor einer Beschwerde das verkündete Gesetz, das jeweilige Fachrecht und die aktuelle Behördeninformation, um Zuständigkeit und aktiven Beschwerdekanal zu bestätigen.\n\n**Verwandt: Art. 86** sieht unter seinen Voraussetzungen ein Recht auf eine klare und aussagekräftige Erläuterung der Rolle eines in Anhang III genannten Hochrisiko-Systems im Entscheidungsprozess vor. Das ist kein allgemeiner Erläuterungsanspruch für jede KI-Ausgabe.",
+          "content": "**Art. 85 KI-VO:** Jede natürliche oder juristische Person mit Grund zur Annahme eines Verstoßes kann bei der zuständigen Marktüberwachungsbehörde Beschwerde einreichen.\n\nDas beschlossene deutsche KI-MIG sieht die **BNetzA als zentrale Anlaufstelle** vor, soweit keine Fachbehörde zuständig ist. Eine Veröffentlichung im Bundesgesetzblatt war am 28. Juli 2026 nicht amtlich verifiziert. Prüfen Sie vor einer Beschwerde das verkündete Gesetz, das jeweilige Fachrecht und die aktuelle Behördeninformation, um Zuständigkeit und aktiven Beschwerdekanal zu bestätigen.\n\n**Verwandt: Art. 86** sieht unter seinen Voraussetzungen ein Recht auf eine klare und aussagekräftige Erläuterung der Rolle eines in Anhang III genannten Hochrisiko-Systems im Entscheidungsprozess vor. Das ist kein allgemeiner Erläuterungsanspruch für jede KI-Ausgabe.",
           "keyTakeaway": "Art. 85 sieht Beschwerden bei der zuständigen Marktüberwachungsbehörde vor. Die konkrete deutsche Behörde und ihr aktiver Kanal müssen nach Verkündung des KI-MIG verifiziert werden."
         },
         {

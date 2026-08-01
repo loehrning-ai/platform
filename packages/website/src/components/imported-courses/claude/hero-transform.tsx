@@ -121,7 +121,7 @@ export function HeroTransform(): JSX.Element {
               <div
                 className={cn(
                   "h-full transition-[width] duration-500",
-                  active.quality > 80 ? "bg-[#22c55e]" : active.quality > 40 ? "bg-brand-amber" : "bg-destructive",
+                  active.quality > 80 ? "bg-risk-green" : active.quality > 40 ? "bg-brand-amber" : "bg-destructive",
                 )}
                 style={{ width: `${active.quality}%` }}
               />

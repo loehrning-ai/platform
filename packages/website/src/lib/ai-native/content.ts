@@ -87,7 +87,7 @@ export const AI_NATIVE_FAQ: readonly AiNativeFaqItem[] = [
   {
     question: "Was kostet der Arbeitskurs?",
     answer:
-      "Nichts. Alle vier Module, alle 27 Lektionen und die zugehörigen Lernvorlagen sind kostenlos und ohne Anmeldung verfügbar. Keine Kreditkarte, keine versteckten Stufen.",
+      "Nichts. Alle vier Module, alle 27 Lektionen und die zugehörigen Lernvorlagen sind kostenlos. Für den deutschen Kernkurs brauchst du ein kostenloses Lernkonto. Keine Kreditkarte, keine versteckten Stufen.",
   },
   {
     question: "Was ist der Unterschied zu Chef-Treff oder anderen AI-Kursen?",
@@ -97,7 +97,7 @@ export const AI_NATIVE_FAQ: readonly AiNativeFaqItem[] = [
   {
     question: "Ist der Kurs wirklich kostenlos?",
     answer:
-      "Ja. Der Kurs ist kostenlos und ohne Anmeldung nutzbar. Förderlogik, Bildungsgutscheine und Anbieterzertifizierung spielen für diese freie Lernversion keine Rolle.",
+      "Ja. Der Kurs ist kostenlos und mit einem kostenlosen Lernkonto nutzbar. Förderlogik, Bildungsgutscheine und Anbieterzertifizierung spielen für diese freie Lernversion keine Rolle.",
   },
   {
     question: "Was passiert, wenn ein gelehrtes Tool sich stark ändert?",

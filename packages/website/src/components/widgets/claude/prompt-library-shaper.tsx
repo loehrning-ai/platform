@@ -131,7 +131,7 @@ export function PromptLibraryShaperWidget({
       checks.length) *
       100,
   );
-  const scoreColor = score >= 80 ? "text-[#22c55e]" : score >= 50 ? "text-brand-amber" : "text-destructive";
+  const scoreColor = score >= 80 ? "text-risk-green" : score >= 50 ? "text-brand-amber" : "text-destructive";
 
   const askClaude = async () => {
     setLoading(true);
@@ -182,7 +182,7 @@ export function PromptLibraryShaperWidget({
               className={cn(
                 "grid grid-cols-[18px_1fr] gap-2 border p-2.5",
                 check.ok
-                  ? "border-[#22c55e] bg-[#22c55e]/5"
+                  ? "border-risk-green bg-risk-green/5"
                   : check.partial
                     ? "border-brand-amber bg-brand-amber/10"
                     : "border-border bg-card/40",
@@ -192,7 +192,7 @@ export function PromptLibraryShaperWidget({
                 aria-hidden="true"
                 className={cn(
                   "mt-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold text-white",
-                  check.ok ? "bg-[#22c55e]" : check.partial ? "bg-brand-amber" : "bg-border",
+                  check.ok ? "bg-risk-green" : check.partial ? "bg-brand-amber" : "bg-border",
                 )}
               >
                 {check.ok ? "✓" : check.partial ? "~" : ""}

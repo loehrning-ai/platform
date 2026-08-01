@@ -17,12 +17,7 @@ export function UeberMichContent() {
       <section className="relative border-b border-border/50 py-24">
         <div className="mx-auto max-w-4xl px-6">
           <div className="flex flex-col gap-12 md:flex-row md:items-center">
-            <m.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="order-first shrink-0 md:order-last"
-            >
+            <div className="order-first shrink-0 md:order-last">
               <Image
                 src="/ueber-mich/tim-loehr.jpg"
                 alt="Porträt von Tim Löhr vor der Golden Gate Bridge"
@@ -31,45 +26,25 @@ export function UeberMichContent() {
                 priority
                 className="h-48 w-48 rounded-full border-2 border-border object-cover shadow-[6px_6px_0_0_var(--color-brand-orange)] sm:h-64 sm:w-64 md:h-72 md:w-72"
               />
-            </m.div>
-            <m.div initial="hidden" animate="visible" className="min-w-0 flex-1">
-              <m.p
-                custom={0}
-                variants={fadeUp}
-                className="text-sm font-semibold uppercase tracking-wider text-brand-orange"
-              >
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-semibold uppercase tracking-wider text-brand-orange">
                 Über Tim Löhr
-              </m.p>
-              <m.h1
-                custom={1}
-                variants={fadeUp}
-                className="mt-4 text-3xl font-bold tracking-[-0.04em] sm:text-4xl md:text-5xl"
-              >
+              </p>
+              <h1 className="mt-4 text-3xl font-bold tracking-[-0.04em] sm:text-4xl md:text-5xl">
                 Ich bin Tim Löhr. loehrning.ai ist mein Hobbyprojekt.
-              </m.h1>
-              <m.p
-                custom={2}
-                variants={fadeUp}
-                className="mt-6 max-w-2xl text-lg text-muted-foreground"
-              >
+              </h1>
+              <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
                 Hauptberuflich war ich Data Scientist bei Apple und Red Bull
                 und zuletzt Data Engineer bei Meta. loehrning.ai baue ich aus
                 Spaß an der Sache, um das Wissen aus dieser Arbeit öffentlich
                 zu machen: als freies Lernarchiv, nicht hinter einer Paywall.
-              </m.p>
-              <m.p
-                custom={3}
-                variants={fadeUp}
-                className="mt-4 max-w-2xl text-lg text-muted-foreground"
-              >
+              </p>
+              <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
                 Du findest hier kostenlose Kurse, Bücher, Demos und
                 meine Arbeitsnotizen zu KI-nativer Arbeit.
-              </m.p>
-              <m.div
-                custom={4}
-                variants={fadeUp}
-                className="mt-8 flex flex-wrap gap-3"
-              >
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
                 <a
                   href={TIM_ENTITY.linkedInUrl}
                   target="_blank"
@@ -97,8 +72,8 @@ export function UeberMichContent() {
                   <Github size={16} className="text-brand-sand" />
                   Lern-Organisation auf GitHub
                 </a>
-              </m.div>
-            </m.div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -114,25 +89,26 @@ export function UeberMichContent() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
+            className="js-reveal"
           >
             <m.p
               custom={0}
               variants={fadeUp}
-              className="text-sm font-semibold uppercase tracking-wider text-brand-orange"
+              className="js-reveal text-sm font-semibold uppercase tracking-wider text-brand-orange"
             >
               Editorial
             </m.p>
             <m.h2
               custom={1}
               variants={fadeUp}
-              className="mt-4 text-3xl font-bold tracking-[-0.04em] sm:text-4xl"
+              className="js-reveal mt-4 text-3xl font-bold tracking-[-0.04em] sm:text-4xl"
             >
               Redaktionelle Richtlinien
             </m.h2>
             <m.div
               custom={2}
               variants={fadeUp}
-              className="mt-8 space-y-6 text-sm leading-relaxed text-muted-foreground"
+              className="js-reveal mt-8 space-y-6 text-sm leading-relaxed text-muted-foreground"
             >
               <p>
                 Alle Inhalte dieser Plattform unterliegen einem festgelegten
@@ -172,25 +148,26 @@ export function UeberMichContent() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
+            className="js-reveal"
           >
             <m.p
               custom={0}
               variants={fadeUp}
-              className="text-sm font-semibold uppercase tracking-wider text-brand-orange"
+              className="js-reveal text-sm font-semibold uppercase tracking-wider text-brand-orange"
             >
               Kontakt
             </m.p>
             <m.h2
               custom={1}
               variants={fadeUp}
-              className="mt-4 text-3xl font-bold tracking-[-0.04em] sm:text-4xl"
+              className="js-reveal mt-4 text-3xl font-bold tracking-[-0.04em] sm:text-4xl"
             >
               Du erreichst mich direkt.
             </m.h2>
             <m.p
               custom={2}
               variants={fadeUp}
-              className="mt-6 max-w-2xl text-muted-foreground"
+              className="js-reveal mt-6 max-w-2xl text-muted-foreground"
             >
               Für Fragen, Feedback und berufliche Anfragen: Schreib mir per
               E-Mail oder auf LinkedIn.
@@ -198,7 +175,7 @@ export function UeberMichContent() {
             <m.div
               custom={3}
               variants={fadeUp}
-              className="mt-8 flex flex-wrap gap-4"
+              className="js-reveal mt-8 flex flex-wrap gap-4"
             >
               <a
                 href={`mailto:${TIM_ENTITY.email}`}
@@ -229,7 +206,7 @@ export function UeberMichContent() {
             <m.p
               custom={4}
               variants={fadeUp}
-              className="mt-6 text-sm text-muted-foreground"
+              className="js-reveal mt-6 text-sm text-muted-foreground"
             >
               Korrekturen und Fehler in Inhalten meldest du am besten über{" "}
               <a
@@ -254,11 +231,12 @@ export function UeberMichContent() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
+            className="js-reveal"
           >
             <m.h2
               custom={0}
               variants={fadeUp}
-              className="text-3xl font-bold tracking-[-0.04em] sm:text-4xl"
+              className="js-reveal text-3xl font-bold tracking-[-0.04em] sm:text-4xl"
             >
               Weiter zu den{" "}
               <span className="text-gradient-static">Kursen</span>.
@@ -266,11 +244,11 @@ export function UeberMichContent() {
             <m.p
               custom={1}
               variants={fadeUp}
-              className="mt-4 text-lg text-muted-foreground"
+              className="js-reveal mt-4 text-lg text-muted-foreground"
             >
               Kurse, Bücher und Demos bleiben frei zugänglich.
             </m.p>
-            <m.div custom={2} variants={fadeUp} className="mt-8">
+            <m.div custom={2} variants={fadeUp} className="js-reveal mt-8">
               <BrandButton href="/kurse" variant="primary" surface="light">
                 Kurse ansehen <ArrowRight size={18} />
               </BrandButton>

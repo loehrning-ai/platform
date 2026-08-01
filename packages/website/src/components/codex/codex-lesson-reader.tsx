@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, type JSX } from "react";
 import Link from "next/link";
 import { CheckCircle2, Circle, Lightbulb, Tag } from "lucide-react";
+import { CompletionCertificateCta } from "@/components/course/kurs/completion-certificate-cta";
 import { RenderWidget, resolveWidgetsForSlot } from "@/components/widgets/registry";
 import {
   markSectionRead,
@@ -12,6 +13,7 @@ import {
 } from "@/lib/course/progress";
 import type { CodexLesson } from "@/lib/codex/types";
 import { cn } from "@/lib/utils";
+import { subscribe } from "@/lib/progress";
 import { CodexBlockView } from "./codex-blocks";
 import { CodexBespokeInteractive } from "./bespoke-registry";
 
@@ -42,8 +44,10 @@ export function CodexLessonReader({
   const [completed, setCompleted] = useState(false);
 
   useEffect(() => {
-    setReadIds(getReadSectionIds("codex", lesson.id));
-    setCompleted(isLessonCompleted("codex", lesson.id));
+    return subscribe(() => {
+      setReadIds(getReadSectionIds("codex", lesson.id));
+      setCompleted(isLessonCompleted("codex", lesson.id));
+    });
   }, [lesson.id]);
 
   const widgets = useMemo(() => lesson.widgets ?? [], [lesson.widgets]);
@@ -126,7 +130,7 @@ export function CodexLessonReader({
                 className="inline-flex items-center gap-2 text-[13px] font-medium transition-colors disabled:cursor-default"
               >
                 {readIds.has(section.id) ? (
-                  <span className="inline-flex items-center gap-2 text-[#22c55e]">
+                  <span className="inline-flex items-center gap-2 text-risk-green">
                     <CheckCircle2 className="h-4 w-4" />
                     Read
                   </span>
@@ -162,7 +166,7 @@ export function CodexLessonReader({
         <div className="border-t border-border pt-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             {completed ? (
-              <span className="inline-flex items-center gap-2 text-[14px] font-medium text-[#22c55e]">
+              <span className="inline-flex items-center gap-2 text-[14px] font-medium text-risk-green">
                 <CheckCircle2 className="h-4 w-4" />
                 Lesson complete
               </span>
@@ -198,6 +202,12 @@ export function CodexLessonReader({
             >
               ← Previous lesson
             </Link>
+          )}
+          {!nextHref && (
+            <CompletionCertificateCta
+              courseSlug="codex"
+              className="mt-6"
+            />
           )}
         </div>
       </div>

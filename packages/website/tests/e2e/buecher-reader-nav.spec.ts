@@ -26,8 +26,7 @@ const LAST_PREV = { slug: "09_ausblick" } as const;
 const chapterPath = (slug: string) => `/buecher/${SLUG}/${slug}`;
 const chapterUrl = (slug: string) => new RegExp(`/buecher/${SLUG}/${slug}$`);
 
-// Console-error filter mirrors route-einstieg.spec.ts: drop framework noise,
-// keep only errors that signal a genuine page fault.
+// Every captured console error and uncaught page error fails the check.
 function collectConsoleErrors(page: Page): string[] {
   const errors: string[] = [];
   page.on("console", (msg) => {
@@ -38,13 +37,7 @@ function collectConsoleErrors(page: Page): string[] {
 }
 
 function meaningfulErrors(errors: string[]): string[] {
-  return errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e),
-  );
+  return errors;
 }
 
 test.describe("book chapter reader navigation", () => {

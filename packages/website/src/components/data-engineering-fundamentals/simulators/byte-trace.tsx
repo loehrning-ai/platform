@@ -152,17 +152,17 @@ export function ByteTrace() {
 
       <div className="bt-ctrls">
         <div className="sc-tabs">
-          <button className={`sc-tab ${cache === "warm" ? "on" : ""}`} onClick={() => setCache("warm")}>
+          <button type="button" className={`sc-tab ${cache === "warm" ? "on" : ""}`} onClick={() => setCache("warm")}>
             Warm cache
             <span className="sc-tab-sub">metastore + blobs hot</span>
           </button>
-          <button className={`sc-tab ${cache === "cold" ? "on" : ""}`} onClick={() => setCache("cold")}>
+          <button type="button" className={`sc-tab ${cache === "cold" ? "on" : ""}`} onClick={() => setCache("cold")}>
             Cold cache
             <span className="sc-tab-sub">~100× slower lookups</span>
           </button>
         </div>
         <div className="sc-actions">
-          <button className="btn btn-primary" onClick={run} disabled={running}>
+          <button type="button" className="btn btn-primary" onClick={run} disabled={running}>
             ▶ Trace byte
           </button>
         </div>

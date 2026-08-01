@@ -179,7 +179,7 @@
           "id": "deepfake-2-3-s2",
           "title": "Was der EU AI Act ab August 2026 für dich bedeutet",
           "readTimeMinutes": 1,
-          "content": "Mit dem 2. August 2026 beginnt die allgemeine Anwendbarkeit weiterer Teile des EU AI Act, einschließlich Art. 50. An diesem Tag werden nicht alle Vorschriften gleichzeitig anwendbar.\n\nWas Art. 50 für Deepfakes bedeutet:\n- Anbieter erfasster generativer Systeme müssen Ausgaben maschinenlesbar markieren (Abs. 2).\n- Betreiber, die Deepfakes veröffentlichen, müssen grundsätzlich offenlegen, dass der Inhalt künstlich erzeugt oder manipuliert wurde (Abs. 4).\n- Ob eine fehlende Markierung oder Offenlegung einen Verstoß darstellt, hängt von Rolle, Inhalt und den gesetzlichen Ausnahmen ab.\n\nArt. 85 sieht Beschwerden bei der zuständigen Marktüberwachungsbehörde vor. Das beschlossene deutsche KI-MIG weist der Bundesnetzagentur eine zentrale Rolle zu, soweit keine Fachbehörde zuständig ist. Am 14. Juli 2026 war das Gesetz noch nicht verkündet; ein aktiver BNetzA-Beschwerdekanal wird hier deshalb nicht behauptet. Prüfe die aktuelle offizielle Behördeninformation.\n\n(Quelle: Verordnung (EU) 2024/1689, Art. 50 und 85; Bundestagsbeschluss zum KI-MIG vom 11. Juni 2026)",
+          "content": "Mit dem 2. August 2026 beginnt die allgemeine Anwendbarkeit weiterer Teile des EU AI Act, einschließlich Art. 50. An diesem Tag werden nicht alle Vorschriften gleichzeitig anwendbar.\n\nWas Art. 50 für Deepfakes bedeutet:\n- Anbieter erfasster generativer Systeme müssen Ausgaben maschinenlesbar markieren (Abs. 2).\n- Betreiber, die Deepfakes veröffentlichen, müssen grundsätzlich offenlegen, dass der Inhalt künstlich erzeugt oder manipuliert wurde (Abs. 4).\n- Ob eine fehlende Markierung oder Offenlegung einen Verstoß darstellt, hängt von Rolle, Inhalt und den gesetzlichen Ausnahmen ab.\n\nArt. 85 sieht Beschwerden bei der zuständigen Marktüberwachungsbehörde vor. Das beschlossene deutsche KI-MIG weist der Bundesnetzagentur eine zentrale Rolle zu, soweit keine Fachbehörde zuständig ist. Eine Veröffentlichung im Bundesgesetzblatt war am 28. Juli 2026 nicht amtlich verifiziert; ein aktiver BNetzA-Beschwerdekanal wird hier deshalb nicht behauptet. Prüfe die aktuelle offizielle Behördeninformation.\n\n(Quelle: Verordnung (EU) 2024/1689, Art. 50 und 85; Bundestagsbeschluss zum KI-MIG vom 11. Juni 2026)",
           "keyTakeaway": "Art. 50 gilt ab 2. August 2026. Markierung, Offenlegung und deutscher Beschwerdeweg sind getrennt zu prüfen; ein aktiver BNetzA-Kanal wird nicht vorausgesetzt."
         },
         {
@@ -204,14 +204,14 @@
         },
         {
           "id": "deepfake-2-3-q2",
-          "questionText": "Wie prüfst du am 14. Juli 2026 den deutschen Beschwerdeweg für einen möglichen Art.-50-Verstoß?",
+          "questionText": "Wie prüfst du am 28. Juli 2026 den deutschen Beschwerdeweg für einen möglichen Art.-50-Verstoß?",
           "answerOptions": [
             { "id": "a", "text": "Bundeskriminalamt (BKA)", "isCorrect": false },
             { "id": "b", "text": "Bundesanstalt für Finanzdienstleistungsaufsicht (BaFin)", "isCorrect": false },
             { "id": "c", "text": "Immer direkt an die Bundesnetzagentur schreiben, unabhängig von Sektor und veröffentlichter Zuständigkeit", "isCorrect": false },
             { "id": "d", "text": "Verkündetes KI-MIG, Fachrecht und den aktuell veröffentlichten Behördenkanal prüfen", "isCorrect": true }
           ],
-          "explanation": "Das beschlossene KI-MIG sieht die Bundesnetzagentur als zentrale Anlaufstelle vor, soweit keine Fachbehörde zuständig ist. Am 14. Juli 2026 war das Gesetz noch nicht verkündet. Deshalb dürfen weder Zuständigkeit noch ein aktiver Beschwerdekanal pauschal vorausgesetzt werden."
+          "explanation": "Das beschlossene KI-MIG sieht die Bundesnetzagentur als zentrale Anlaufstelle vor, soweit keine Fachbehörde zuständig ist. Eine Verkündung war am 28. Juli 2026 nicht amtlich verifiziert. Deshalb dürfen weder Zuständigkeit noch ein aktiver Beschwerdekanal pauschal vorausgesetzt werden."
         },
         {
           "id": "deepfake-2-3-q3",

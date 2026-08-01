@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, beforeAll } from "vitest";
+import { describe, it, expect, beforeEach, beforeAll, vi } from "vitest";
 
 /** In-memory localStorage polyfill (some jsdom combos expose a no-op). */
 function installLocalStoragePolyfill() {
@@ -50,6 +50,7 @@ import {
   saveExerciseResult,
   getExerciseResult,
   saveWorkshopQuizResult,
+  getWorkshopQuizResult,
   isWorkshopQuizPassed,
   markCapstoneSubmitted,
   isCapstoneSubmitted,
@@ -60,14 +61,28 @@ import {
   getStreak,
   getEarnedBadgeIds,
   getTotalCompletedLessons,
+  getOverallProgress,
   getUnifiedState,
   getCourseSlice,
+  localDateKey,
   rollStreak,
   resetCourse,
   resetAll,
+  clearAllLocalLearningData,
   subscribe,
+  activateAccountProgress,
+  activateAnonymousProgress,
+  activateUnknownProgress,
   __resetCacheForTests,
 } from "./store";
+import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
+import { prepareAccountLearningStorage } from "./browser-learning-storage";
+
+const KF_LESSON_1 = "block_1_lesson_1";
+const KF_LESSON_2 = "block_1_lesson_2";
+const KF_SECTION_1 = "block_1_lesson_1_section_1";
+const EU_LESSON_1 = "block_1_lesson_1";
+const AI_NATIVE_LESSON_1 = "modul_1_lesson_1";
 
 describe("unified progress store", () => {
   beforeAll(() => {
@@ -79,37 +94,102 @@ describe("unified progress store", () => {
     }
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     window.localStorage.clear();
+    Object.defineProperty(window.navigator, "locks", {
+      configurable: true,
+      value: {
+        request: vi.fn(
+          async (
+            name: string,
+            _options: LockOptions,
+            callback: (lock: Lock | null) => unknown,
+          ) =>
+            callback({
+              name,
+              mode: "exclusive",
+            } as Lock),
+        ),
+      },
+    });
     __resetCacheForTests();
+    expect(await prepareAccountLearningStorage()).toBe(true);
   });
 
   describe("core read/write across courses", () => {
+    it("discards progress interactions while identity is unknown", () => {
+      activateUnknownProgress();
+      markLessonCompleted("ki-fuehrerschein", KF_LESSON_1);
+
+      expect(
+        isLessonCompleted("ki-fuehrerschein", KF_LESSON_1),
+      ).toBe(false);
+      expect(window.localStorage.getItem(UNIFIED_STORAGE_KEY)).toBeNull();
+
+      activateAccountProgress("account-b");
+      expect(
+        isLessonCompleted("ki-fuehrerschein", KF_LESSON_1),
+      ).toBe(false);
+
+      activateAnonymousProgress();
+      expect(
+        isLessonCompleted("ki-fuehrerschein", KF_LESSON_1),
+      ).toBe(false);
+    });
+
+    it("never replays transition-time interactions into B or mutates A", () => {
+      activateAccountProgress("account-a");
+      markLessonCompleted("eu-ai-act-kurs", EU_LESSON_1);
+
+      activateUnknownProgress();
+      markLessonCompleted("ki-fuehrerschein", KF_LESSON_1);
+      activateAccountProgress("account-b");
+
+      expect(
+        isLessonCompleted("ki-fuehrerschein", KF_LESSON_1),
+      ).toBe(false);
+      expect(
+        isLessonCompleted("eu-ai-act-kurs", EU_LESSON_1),
+      ).toBe(false);
+
+      activateAccountProgress("account-a");
+      expect(
+        isLessonCompleted("eu-ai-act-kurs", EU_LESSON_1),
+      ).toBe(true);
+      expect(
+        isLessonCompleted("ki-fuehrerschein", KF_LESSON_1),
+      ).toBe(false);
+    });
+
     it("tracks sections + lessons per course slug independently", () => {
-      markSectionRead("ki-fuehrerschein", "l1", "s1");
-      markLessonCompleted("eu-ai-act-kurs", "l1");
-      expect(isSectionRead("ki-fuehrerschein", "l1", "s1")).toBe(true);
-      expect(isSectionRead("eu-ai-act-kurs", "l1", "s1")).toBe(false);
-      expect(isLessonCompleted("eu-ai-act-kurs", "l1")).toBe(true);
-      expect(isLessonCompleted("ki-fuehrerschein", "l1")).toBe(false);
+      markSectionRead("ki-fuehrerschein", KF_LESSON_1, KF_SECTION_1);
+      markLessonCompleted("eu-ai-act-kurs", EU_LESSON_1);
+      expect(
+        isSectionRead("ki-fuehrerschein", KF_LESSON_1, KF_SECTION_1),
+      ).toBe(true);
+      expect(
+        isSectionRead("eu-ai-act-kurs", EU_LESSON_1, KF_SECTION_1),
+      ).toBe(false);
+      expect(isLessonCompleted("eu-ai-act-kurs", EU_LESSON_1)).toBe(true);
+      expect(isLessonCompleted("ki-fuehrerschein", KF_LESSON_1)).toBe(false);
     });
 
     it("keeps lesson-quiz score monotonic (higher wins)", () => {
-      saveLessonQuizScore("ai-native", "l1", 2, 4); // 0.5
-      saveLessonQuizScore("ai-native", "l1", 1, 4); // 0.25 — ignored
-      expect(getLessonQuizScore("ai-native", "l1")).toEqual({
+      saveLessonQuizScore("ai-native", AI_NATIVE_LESSON_1, 2, 4); // 0.5
+      saveLessonQuizScore("ai-native", AI_NATIVE_LESSON_1, 1, 4); // 0.25 — ignored
+      expect(getLessonQuizScore("ai-native", AI_NATIVE_LESSON_1)).toEqual({
         score: 2,
         total: 4,
       });
-      saveLessonQuizScore("ai-native", "l1", 4, 4); // 1.0 — wins
-      expect(getLessonQuizScore("ai-native", "l1")).toEqual({
+      saveLessonQuizScore("ai-native", AI_NATIVE_LESSON_1, 4, 4); // 1.0 — wins
+      expect(getLessonQuizScore("ai-native", AI_NATIVE_LESSON_1)).toEqual({
         score: 4,
         total: 4,
       });
     });
 
     it("merges exercise results: higher score, sticky completion, attempts++", () => {
-      saveExerciseResult("ai-native", "l1", {
+      saveExerciseResult("ai-native", AI_NATIVE_LESSON_1, {
         exerciseId: "ex1",
         kind: "exercise-fix-prompt",
         completed: true,
@@ -118,7 +198,7 @@ describe("unified progress store", () => {
         completedAt: null,
         skipped: false,
       });
-      saveExerciseResult("ai-native", "l1", {
+      saveExerciseResult("ai-native", AI_NATIVE_LESSON_1, {
         exerciseId: "ex1",
         kind: "exercise-fix-prompt",
         completed: false,
@@ -127,17 +207,53 @@ describe("unified progress store", () => {
         completedAt: null,
         skipped: false,
       });
-      const r = getExerciseResult("ai-native", "l1", "ex1");
+      const r = getExerciseResult("ai-native", AI_NATIVE_LESSON_1, "ex1");
       expect(r?.score).toBe(0.5);
       expect(r?.completed).toBe(true);
       expect(r?.attempts).toBe(2);
+    });
+
+    it("preserves a higher validated cross-device attempt count", () => {
+      saveExerciseResult("ai-native", AI_NATIVE_LESSON_1, {
+        exerciseId: "imported-exercise",
+        kind: "exercise-fix-prompt",
+        completed: true,
+        score: 0.8,
+        attempts: 5,
+        completedAt: null,
+        skipped: false,
+      });
+      expect(
+        getExerciseResult(
+          "ai-native",
+          AI_NATIVE_LESSON_1,
+          "imported-exercise",
+        )?.attempts,
+      ).toBe(5);
+
+      saveExerciseResult("ai-native", AI_NATIVE_LESSON_1, {
+        exerciseId: "imported-exercise",
+        kind: "exercise-fix-prompt",
+        completed: true,
+        score: 0.8,
+        attempts: 1,
+        completedAt: null,
+        skipped: false,
+      });
+      expect(
+        getExerciseResult(
+          "ai-native",
+          AI_NATIVE_LESSON_1,
+          "imported-exercise",
+        )?.attempts,
+      ).toBe(6);
     });
 
     //: summaries are capped in UTF-8 bytes at write time so a
     // single oversized AI summary can never blow the per-course-row DB budget.
     it("truncates an oversized exercise summary at write time (byte-based cap)", () => {
       const longSummary = "Über KI-Kompetenz und Verantwortung. ".repeat(50);
-      saveExerciseResult("ai-native", "l1", {
+      saveExerciseResult("ai-native", AI_NATIVE_LESSON_1, {
         exerciseId: "ex2",
         kind: "exercise-fix-prompt",
         completed: true,
@@ -147,14 +263,14 @@ describe("unified progress store", () => {
         skipped: false,
         summary: longSummary,
       });
-      const r = getExerciseResult("ai-native", "l1", "ex2");
+      const r = getExerciseResult("ai-native", AI_NATIVE_LESSON_1, "ex2");
       expect(r?.summary).toBeDefined();
       expect(new TextEncoder().encode(r?.summary ?? "").length).toBeLessThanOrEqual(500);
       expect(r?.summary?.length).toBeLessThan(longSummary.length);
     });
 
     it("keeps a short exercise summary unchanged", () => {
-      saveExerciseResult("ai-native", "l1", {
+      saveExerciseResult("ai-native", AI_NATIVE_LESSON_1, {
         exerciseId: "ex3",
         kind: "exercise-fix-prompt",
         completed: true,
@@ -164,18 +280,18 @@ describe("unified progress store", () => {
         skipped: false,
         summary: "Gute Arbeit, weiter so.",
       });
-      const r = getExerciseResult("ai-native", "l1", "ex3");
+      const r = getExerciseResult("ai-native", AI_NATIVE_LESSON_1, "ex3");
       expect(r?.summary).toBe("Gute Arbeit, weiter so.");
     });
   });
 
   describe("xp / badges accrual", () => {
     it("awards XP for sections, lessons, quiz pass and checkpoints", () => {
-      markSectionRead("ki-fuehrerschein", "l1", "s1");
+      markSectionRead("ki-fuehrerschein", KF_LESSON_1, KF_SECTION_1);
       expect(getXp()).toBe(XP.SECTION);
-      markLessonCompleted("ki-fuehrerschein", "l1");
+      markLessonCompleted("ki-fuehrerschein", KF_LESSON_1);
       expect(getXp()).toBe(XP.SECTION + XP.LESSON);
-      completeCheckpoint("l1", "cp1");
+      completeCheckpoint(KF_LESSON_1, "cp1");
       expect(getXp()).toBe(XP.SECTION + XP.LESSON + XP.CHECKPOINT);
       saveWorkshopQuizResult("ki-fuehrerschein", 90, true);
       expect(getXp()).toBe(
@@ -190,14 +306,56 @@ describe("unified progress store", () => {
       expect(getXp()).toBe(after);
     });
 
+    it("preserves a passed quiz, its best score, and completion time after a worse retake", () => {
+      saveWorkshopQuizResult("ki-fuehrerschein", 90, true);
+      const earned = getWorkshopQuizResult("ki-fuehrerschein");
+      expect(earned.score).toBe(0.9);
+
+      saveWorkshopQuizResult("ki-fuehrerschein", 40, false);
+
+      expect(getWorkshopQuizResult("ki-fuehrerschein")).toEqual(earned);
+      expect(isWorkshopQuizPassed("ki-fuehrerschein")).toBe(true);
+    });
+
+    it("rejects impossible workshop scores without mutating valid progress", () => {
+      saveWorkshopQuizResult("ki-fuehrerschein", 0.8, false);
+      const before = getWorkshopQuizResult("ki-fuehrerschein");
+
+      for (const invalid of [-1, 101, Number.NaN, Number.POSITIVE_INFINITY]) {
+        saveWorkshopQuizResult("ki-fuehrerschein", invalid, true);
+      }
+
+      expect(getWorkshopQuizResult("ki-fuehrerschein")).toEqual(before);
+      expect(isWorkshopQuizPassed("ki-fuehrerschein")).toBe(false);
+    });
+
     it("earns the first-light badge after one lesson, counted cross-course", () => {
       expect(getEarnedBadgeIds()).not.toContain("first-light");
-      markLessonCompleted("ki-fuehrerschein", "l1");
+      markLessonCompleted("ki-fuehrerschein", KF_LESSON_1);
       expect(getEarnedBadgeIds()).toContain("first-light");
-      markLessonCompleted("eu-ai-act-kurs", "l1");
-      markLessonCompleted("ai-native", "l1");
+      markLessonCompleted("eu-ai-act-kurs", EU_LESSON_1);
+      markLessonCompleted("ai-native", AI_NATIVE_LESSON_1);
       expect(getTotalCompletedLessons()).toBe(3);
       expect(getEarnedBadgeIds()).toContain("apprentice");
+    });
+
+    it("does not award XP or badges for fabricated lesson and section IDs", () => {
+      markSectionRead("ki-fuehrerschein", KF_LESSON_1, "fabricated-section");
+      markSectionRead(
+        "ki-fuehrerschein",
+        "fabricated-lesson",
+        "fabricated-section",
+      );
+      markLessonCompleted("ki-fuehrerschein", "fabricated-lesson");
+
+      expect(getXp()).toBe(0);
+      expect(getTotalCompletedLessons()).toBe(0);
+      expect(getEarnedBadgeIds()).toEqual([]);
+
+      markLessonCompleted("ki-fuehrerschein", KF_LESSON_1);
+      expect(getXp()).toBe(XP.LESSON);
+      expect(getTotalCompletedLessons()).toBe(1);
+      expect(getEarnedBadgeIds()).toContain("first-light");
     });
 
     it("ignores unknown imported-course slices when counting lesson badges", () => {
@@ -248,10 +406,119 @@ describe("unified progress store", () => {
       expect(getTotalCompletedLessons()).toBe(0);
       expect(getEarnedBadgeIds()).toEqual([]);
 
-      markLessonCompleted("ki-fuehrerschein", "native-lesson");
+      markLessonCompleted("ki-fuehrerschein", KF_LESSON_1);
       expect(getTotalCompletedLessons()).toBe(1);
       expect(getEarnedBadgeIds()).toContain("first-light");
       expect(getEarnedBadgeIds()).not.toContain("apprentice");
+    });
+  });
+
+  describe("canonical aggregate integrity", () => {
+    it("repairs a unified whole-percent score before max-merging a retake", () => {
+      window.localStorage.setItem(
+        UNIFIED_STORAGE_KEY,
+        JSON.stringify({
+          schemaVersion: 3,
+          courses: {
+            "ki-fuehrerschein": {
+              lessons: {},
+              workshopQuiz: {
+                passed: true,
+                score: 90,
+                completedAt: "2026-07-20T00:00:00.000Z",
+              },
+              capstoneSubmitted: false,
+              startedAt: "2026-07-01T00:00:00.000Z",
+              lastActivity: "2026-07-20T00:00:00.000Z",
+            },
+          },
+          xp: 0,
+          checkpoints: {},
+          badges: {},
+          streak: { days: 0, last: null },
+          lastActivity: "2026-07-20T00:00:00.000Z",
+        }),
+      );
+      __resetCacheForTests();
+
+      expect(getWorkshopQuizResult("ki-fuehrerschein").score).toBe(0.9);
+      saveWorkshopQuizResult("ki-fuehrerschein", 0.95, true);
+      expect(getWorkshopQuizResult("ki-fuehrerschein").score).toBe(0.95);
+
+      const persisted = JSON.parse(
+        window.localStorage.getItem(UNIFIED_STORAGE_KEY) as string,
+      );
+      expect(
+        persisted.courses["ki-fuehrerschein"].workshopQuiz.score,
+      ).toBe(0.95);
+    });
+
+    it("normalizes stale keys on load and never reports progress above 100%", () => {
+      const complete = {
+        sectionsRead: [],
+        quizScore: null,
+        quizTotal: null,
+        completed: true,
+        exercisesCompleted: {},
+      };
+      window.localStorage.setItem(
+        UNIFIED_STORAGE_KEY,
+        JSON.stringify({
+          schemaVersion: 3,
+          courses: {
+            "ki-fuehrerschein": {
+              lessons: {
+                ...Object.fromEntries(
+                  CANONICAL_LESSON_IDS["ki-fuehrerschein"].map((lessonId) => [
+                    lessonId,
+                    complete,
+                  ]),
+                ),
+                "stale-one": complete,
+                "stale-two": complete,
+              },
+              workshopQuiz: { passed: false, score: 0, completedAt: null },
+              capstoneSubmitted: false,
+              startedAt: "2026-07-28T00:00:00.000Z",
+              lastActivity: "2026-07-28T00:00:00.000Z",
+            },
+          },
+          xp: 0,
+          checkpoints: {},
+          badges: {},
+          streak: { days: 0, last: null },
+          lastActivity: "2026-07-28T00:00:00.000Z",
+        }),
+      );
+      __resetCacheForTests();
+
+      expect(getCompletedLessonsCount("ki-fuehrerschein")).toBe(
+        CANONICAL_LESSON_IDS["ki-fuehrerschein"].length,
+      );
+      expect(
+        getOverallProgress(
+          "ki-fuehrerschein",
+          CANONICAL_LESSON_IDS["ki-fuehrerschein"].length,
+        ),
+      ).toBe(100);
+      expect(
+        Object.keys(getCourseSlice("ki-fuehrerschein").lessons),
+      ).not.toContain("stale-one");
+
+      const persisted = JSON.parse(
+        window.localStorage.getItem(UNIFIED_STORAGE_KEY) as string,
+      );
+      expect(
+        persisted.courses["ki-fuehrerschein"].lessons["stale-one"],
+      ).toBeUndefined();
+    });
+
+    it("clamps defensive aggregate calls with a smaller denominator", () => {
+      markLessonCompleted("ki-fuehrerschein", KF_LESSON_1);
+      markLessonCompleted("ki-fuehrerschein", KF_LESSON_2);
+      expect(getOverallProgress("ki-fuehrerschein", 1)).toBe(100);
+      expect(getOverallProgress("ki-fuehrerschein", 0)).toBe(0);
+      expect(getOverallProgress("ki-fuehrerschein", Number.NaN)).toBe(0);
     });
   });
 
@@ -261,21 +528,32 @@ describe("unified progress store", () => {
       expect(isCertificateEligible("ki-fuehrerschein")).toBe(false);
     });
 
-    it("becomes eligible after passing the workshop quiz", () => {
+    it("requires every lesson plus the passed workshop quiz", () => {
       saveWorkshopQuizResult("ki-fuehrerschein", 0.8, true);
       expect(isWorkshopQuizPassed("ki-fuehrerschein")).toBe(true);
+      expect(isCertificateEligible("ki-fuehrerschein")).toBe(false);
+      for (const lessonId of CANONICAL_LESSON_IDS["ki-fuehrerschein"]) {
+        markLessonCompleted("ki-fuehrerschein", lessonId);
+      }
       expect(isCertificateEligible("ki-fuehrerschein")).toBe(true);
     });
 
-    it("becomes eligible after submitting the capstone, even without passing the quiz", () => {
+    it("requires every AI-Native lesson plus the submitted capstone", () => {
       expect(isCapstoneSubmitted("ai-native")).toBe(false);
       markCapstoneSubmitted("ai-native");
       expect(isCapstoneSubmitted("ai-native")).toBe(true);
       expect(isWorkshopQuizPassed("ai-native")).toBe(false);
+      expect(isCertificateEligible("ai-native")).toBe(false);
+      for (const lessonId of CANONICAL_LESSON_IDS["ai-native"]) {
+        markLessonCompleted("ai-native", lessonId);
+      }
       expect(isCertificateEligible("ai-native")).toBe(true);
     });
 
     it("keeps eligibility per-course independent", () => {
+      for (const lessonId of CANONICAL_LESSON_IDS["ai-native"]) {
+        markLessonCompleted("ai-native", lessonId);
+      }
       markCapstoneSubmitted("ai-native");
       expect(isCertificateEligible("ai-native")).toBe(true);
       expect(isCertificateEligible("eu-ai-act-kurs")).toBe(false);
@@ -287,18 +565,17 @@ describe("unified progress store", () => {
       expect(isCapstoneSubmitted("ai-native")).toBe(true);
     });
 
-    // performance hardening: full course completion is a third path to the cert.
-    it("becomes eligible when every catalog lesson is completed (no quiz)", () => {
-      for (let i = 1; i <= 19; i += 1) {
-        markLessonCompleted("ki-fuehrerschein", `block-lesson-${i}`);
+    it("becomes eligible when every lesson of a no-assessment course is completed", () => {
+      for (const lessonId of CANONICAL_LESSON_IDS["data-science"]) {
+        markLessonCompleted("data-science", lessonId);
       }
-      expect(isWorkshopQuizPassed("ki-fuehrerschein")).toBe(false);
-      expect(isCertificateEligible("ki-fuehrerschein")).toBe(true);
+      expect(isWorkshopQuizPassed("data-science")).toBe(false);
+      expect(isCertificateEligible("data-science")).toBe(true);
     });
 
     it("stays ineligible below the full catalog lesson count", () => {
-      for (let i = 1; i <= 17; i += 1) {
-        markLessonCompleted("ki-fuehrerschein", `block-lesson-${i}`);
+      for (const lessonId of CANONICAL_LESSON_IDS["ki-fuehrerschein"].slice(0, -1)) {
+        markLessonCompleted("ki-fuehrerschein", lessonId);
       }
       expect(isCertificateEligible("ki-fuehrerschein")).toBe(false);
     });
@@ -308,16 +585,16 @@ describe("unified progress store", () => {
     // for any course outside the 4-course native spine. "codex" (12 lessons,
     // ALL_COURSE_CATALOG) exercises a slug outside that spine.
     it("resolves totalLessons from the unified catalog for a course outside the native spine", () => {
-      for (let i = 1; i <= 12; i += 1) {
-        markLessonCompleted("codex", `lesson-${i}`);
+      for (const lessonId of CANONICAL_LESSON_IDS.codex) {
+        markLessonCompleted("codex", lessonId);
       }
       expect(isWorkshopQuizPassed("codex")).toBe(false);
       expect(isCertificateEligible("codex")).toBe(true);
     });
 
     it("stays ineligible below the full lesson count for a non-native-spine course", () => {
-      for (let i = 1; i <= 11; i += 1) {
-        markLessonCompleted("codex", `lesson-${i}`);
+      for (const lessonId of CANONICAL_LESSON_IDS.codex.slice(0, -1)) {
+        markLessonCompleted("codex", lessonId);
       }
       expect(isCertificateEligible("codex")).toBe(false);
     });
@@ -328,34 +605,34 @@ describe("unified progress store", () => {
     // via ALL_COURSE_CATALOG regardless of which of the two arrays it lives
     // in, so this generic fallback path is exercisable ahead of that flip.
     it("resolves eligibility for data-infrastructure via the all-lessons-completed path", () => {
-      for (let i = 1; i <= 12; i += 1) {
-        markLessonCompleted("data-infrastructure", `lesson-${i}`);
+      for (const lessonId of CANONICAL_LESSON_IDS["data-infrastructure"]) {
+        markLessonCompleted("data-infrastructure", lessonId);
       }
       expect(isWorkshopQuizPassed("data-infrastructure")).toBe(false);
       expect(isCertificateEligible("data-infrastructure")).toBe(true);
     });
 
     it("stays ineligible below the full lesson count for data-infrastructure", () => {
-      for (let i = 1; i <= 11; i += 1) {
-        markLessonCompleted("data-infrastructure", `lesson-${i}`);
+      for (const lessonId of CANONICAL_LESSON_IDS["data-infrastructure"].slice(0, -1)) {
+        markLessonCompleted("data-infrastructure", lessonId);
       }
       expect(isCertificateEligible("data-infrastructure")).toBe(false);
     });
 
     //: data-engineering-fundamentals is now nativeStatus
     // "live" (COURSE_CATALOG), reconciled to its real 12 chapters — this is
-    // the "all 12 chapters visited" completion criterion the plan documents.
-    it("resolves eligibility for data-engineering-fundamentals via the all-chapters-visited path", () => {
-      for (let i = 1; i <= 12; i += 1) {
-        markLessonCompleted("data-engineering-fundamentals", `chapter-${i}`);
+    // the explicit "all 12 chapters completed" criterion.
+    it("resolves eligibility for data-engineering-fundamentals via the all-chapters-completed path", () => {
+      for (const lessonId of CANONICAL_LESSON_IDS["data-engineering-fundamentals"]) {
+        markLessonCompleted("data-engineering-fundamentals", lessonId);
       }
       expect(isWorkshopQuizPassed("data-engineering-fundamentals")).toBe(false);
       expect(isCertificateEligible("data-engineering-fundamentals")).toBe(true);
     });
 
     it("stays ineligible below the full chapter count for data-engineering-fundamentals", () => {
-      for (let i = 1; i <= 11; i += 1) {
-        markLessonCompleted("data-engineering-fundamentals", `chapter-${i}`);
+      for (const lessonId of CANONICAL_LESSON_IDS["data-engineering-fundamentals"].slice(0, -1)) {
+        markLessonCompleted("data-engineering-fundamentals", lessonId);
       }
       expect(isCertificateEligible("data-engineering-fundamentals")).toBe(false);
     });
@@ -382,6 +659,16 @@ describe("unified progress store", () => {
   });
 
   describe("streak roll-forward (pure)", () => {
+    it("formats the learner's local calendar day instead of the UTC day", () => {
+      const localMidnightAfterUtcDay = {
+        getFullYear: () => 2026,
+        getMonth: () => 6,
+        getDate: () => 29,
+        toISOString: () => "2026-07-28T22:30:00.000Z",
+      } as Date;
+      expect(localDateKey(localMidnightAfterUtcDay)).toBe("2026-07-29");
+    });
+
     it("increments on a consecutive day", () => {
       expect(rollStreak({ days: 2, last: "2026-06-02" }, "2026-06-03")).toEqual(
         { days: 3, last: "2026-06-03" },
@@ -404,12 +691,12 @@ describe("unified progress store", () => {
 
   describe("cross-tab sync via storage events", () => {
     it("drops the cache and re-reads when the unified key changes in another tab", () => {
-      markLessonCompleted("ki-fuehrerschein", "l1");
+      markLessonCompleted("ki-fuehrerschein", KF_LESSON_1);
       // Simulate another tab writing a payload with a different lesson done.
       const foreign = JSON.parse(
         window.localStorage.getItem(UNIFIED_STORAGE_KEY) as string,
       );
-      foreign.courses["ki-fuehrerschein"].lessons["l2"] = {
+      foreign.courses["ki-fuehrerschein"].lessons[KF_LESSON_2] = {
         sectionsRead: [],
         quizScore: null,
         quizTotal: null,
@@ -420,7 +707,7 @@ describe("unified progress store", () => {
       window.dispatchEvent(
         new StorageEvent("storage", { key: UNIFIED_STORAGE_KEY }),
       );
-      expect(isLessonCompleted("ki-fuehrerschein", "l2")).toBe(true);
+      expect(isLessonCompleted("ki-fuehrerschein", KF_LESSON_2)).toBe(true);
     });
 
     it("notifies subscribers on local writes", () => {
@@ -429,7 +716,7 @@ describe("unified progress store", () => {
         calls += 1;
       });
       const initial = calls; // immediate emit on subscribe
-      markLessonCompleted("ai-native", "l1");
+      markLessonCompleted("ai-native", AI_NATIVE_LESSON_1);
       expect(calls).toBeGreaterThan(initial);
       unsub();
     });
@@ -437,32 +724,63 @@ describe("unified progress store", () => {
 
   describe("reset", () => {
     it("resetCourse clears one slice but keeps gamification + other courses", () => {
-      markLessonCompleted("ki-fuehrerschein", "l1");
-      markLessonCompleted("eu-ai-act-kurs", "l1");
+      markLessonCompleted("ki-fuehrerschein", KF_LESSON_1);
+      markLessonCompleted("eu-ai-act-kurs", EU_LESSON_1);
       const xpBefore = getXp();
       resetCourse("ki-fuehrerschein");
-      expect(isLessonCompleted("ki-fuehrerschein", "l1")).toBe(false);
-      expect(isLessonCompleted("eu-ai-act-kurs", "l1")).toBe(true);
+      expect(isLessonCompleted("ki-fuehrerschein", KF_LESSON_1)).toBe(false);
+      expect(isLessonCompleted("eu-ai-act-kurs", EU_LESSON_1)).toBe(true);
       expect(getXp()).toBe(xpBefore); // xp ledger untouched
     });
 
     it("resetAll wipes everything", () => {
-      markLessonCompleted("ki-fuehrerschein", "l1");
-      completeCheckpoint("l1", "cp1");
+      markLessonCompleted("ki-fuehrerschein", KF_LESSON_1);
+      completeCheckpoint(KF_LESSON_1, "cp1");
       resetAll();
       expect(getXp()).toBe(0);
       expect(getEarnedBadgeIds()).toHaveLength(0);
+      expect(getCompletedLessonsCount("ki-fuehrerschein")).toBe(0);
+    });
+
+    it("clears unified, legacy, reader, draft, and session learning data", () => {
+      const ownedLocalKeys = [
+        UNIFIED_STORAGE_KEY,
+        `${LEGACY_COURSE_KEY_PREFIX}ki-fuehrerschein`,
+        LEGACY_AI_NATIVE_KEY,
+        LEGACY_KI_F_FLAT_KEY,
+        "reader:progress:book:chapter",
+        "reflect::mindset/1::reflection",
+        "slots::engineering/3::slots",
+        "selfrate::mindset/2::rating",
+        "matrix::mindset/3::matrix",
+        "plays::operations/1::moves",
+      ];
+      for (const key of ownedLocalKeys) window.localStorage.setItem(key, "private");
+      window.localStorage.setItem("theme", "dark");
+      window.sessionStorage.setItem("ai-native-exercise-draft-l1-e1", "private");
+      window.sessionStorage.setItem("ai-native-challenge-draft-1", "private");
+      window.sessionStorage.setItem("ai-native-continue-dismissed", "1");
+
+      clearAllLocalLearningData();
+
+      for (const key of ownedLocalKeys) {
+        expect(window.localStorage.getItem(key), key).toBeNull();
+      }
+      expect(window.localStorage.getItem("theme")).toBe("dark");
+      expect(window.sessionStorage.length).toBe(0);
       expect(getCompletedLessonsCount("ki-fuehrerschein")).toBe(0);
     });
   });
 
   describe("getUnifiedState shape", () => {
     it("exposes a v3 root with courses + gamification ledger", () => {
-      markLessonCompleted("ai-native", "l1");
+      markLessonCompleted("ai-native", AI_NATIVE_LESSON_1);
       const s = getUnifiedState();
       expect(s.schemaVersion).toBe(3);
       expect(s.courses["ai-native"]).toBeDefined();
-      expect(getCourseSlice("ai-native").lessons["l1"].completed).toBe(true);
+      expect(
+        getCourseSlice("ai-native").lessons[AI_NATIVE_LESSON_1].completed,
+      ).toBe(true);
     });
   });
 
@@ -476,7 +794,7 @@ describe("unified progress store", () => {
           courses: {
             "ai-native": {
               lessons: {
-                l1: {
+                [AI_NATIVE_LESSON_1]: {
                   sectionsRead: [],
                   quizScore: null,
                   quizTotal: null,
@@ -509,7 +827,11 @@ describe("unified progress store", () => {
         }),
       );
       __resetCacheForTests();
-      const r = getExerciseResult("ai-native", "l1", "ex1");
+      const r = getExerciseResult(
+        "ai-native",
+        AI_NATIVE_LESSON_1,
+        "ex1",
+      );
       expect(r?.summary).toBeDefined();
       expect(new TextEncoder().encode(r?.summary ?? "").length).toBeLessThanOrEqual(500);
       expect(getUnifiedState().schemaVersion).toBe(3);
@@ -595,11 +917,12 @@ describe("forward migration from legacy schemas (golden files)", () => {
     __resetCacheForTests();
     const slice = getCourseSlice("ki-fuehrerschein");
     expect(slice.lessons["block_1_lesson_1"].completed).toBe(true);
-    expect(slice.lessons["block_1_lesson_1"].sectionsRead).toEqual([
-      "sec_intro",
-      "sec_main",
-    ]);
+    // Retired section IDs are not current authored progress and are removed at
+    // the v3 trust boundary. The canonical lesson completion, score, and course
+    // timestamps remain intact.
+    expect(slice.lessons["block_1_lesson_1"].sectionsRead).toEqual([]);
     expect(isWorkshopQuizPassed("ki-fuehrerschein")).toBe(true);
+    expect(slice.workshopQuiz.score).toBe(0.92);
     // startedAt is carried forward, not reset to "now".
     expect(slice.startedAt).toBe("2026-03-10T08:00:00.000Z");
     // Legacy key NOT wiped.

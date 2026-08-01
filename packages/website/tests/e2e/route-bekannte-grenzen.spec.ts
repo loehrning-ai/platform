@@ -24,8 +24,7 @@ async function fireReveals(page: Page): Promise<void> {
 
 const ROUTE = "/bekannte-grenzen";
 
-// Mirrors the qa-sweep helper: fail on real console/page errors while
-// tolerating benign React/hydration/prefetch noise that is not a regression.
+// Fail on every captured console error and uncaught page error.
 async function gotoAndAssertOk(page: Page, url: string) {
   const errors: string[] = [];
   page.on("console", (msg) => {
@@ -37,14 +36,7 @@ async function gotoAndAssertOk(page: Page, url: string) {
   expect(response?.status(), `status for ${url}`).toBe(200);
   await expect(page.locator("text=Application error").first()).toHaveCount(0);
 
-  const meaningful = errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/Cannot update a component/i.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e),
-  );
+  const meaningful = errors;
   expect(
     meaningful,
     `console errors on ${url}\n${meaningful.join("\n")}`,

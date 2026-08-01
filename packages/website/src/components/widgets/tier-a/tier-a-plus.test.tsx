@@ -132,6 +132,10 @@ describe("FailureTaggerWidget", () => {
     expect(isCheckpointDone("l1", "ft1")).toBe(true);
     expect(getXp()).toBe(XP.CHECKPOINT);
     expect(screen.getByText("Bestanden")).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("Bestanden");
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Kein Bankzugriff, Zahl erfunden.",
+    );
   });
 
   it("does not award XP when the threshold is not met", () => {
@@ -180,13 +184,27 @@ describe("FailureTaggerWidget", () => {
     fireEvent.click(within(groups[0]).getByRole("radio", { name: "Halluzination" }));
     fireEvent.click(within(groups[1]).getByRole("radio", { name: "Formatdrift" }));
     fireEvent.click(screen.getByText("Auswerten"));
-    expect(screen.getByText(/Kein Bankzugriff/)).toBeInTheDocument();
+    expect(screen.getAllByText(/Kein Bankzugriff/).length).toBeGreaterThan(0);
   });
 
   it("ships the default 5 German Mittelstand cases", () => {
     render(<FailureTaggerWidget lessonId="l1" cpId="ft1" />);
     // 4 modes x 5 cases = 20 radios.
     expect(screen.getAllByRole("radio")).toHaveLength(20);
+  });
+
+  it("uses roving focus and Arrow keys within each failure-mode group", () => {
+    render(<FailureTaggerWidget lessonId="l1" cpId="ft1" cases={cases} />);
+    const group = screen.getAllByRole("radiogroup")[0];
+    const radios = within(group).getAllByRole("radio");
+
+    expect(radios.map((radio) => radio.tabIndex)).toEqual([0, -1, -1, -1]);
+    radios[0].focus();
+    fireEvent.keyDown(radios[0], { key: "ArrowRight" });
+
+    expect(radios[1]).toHaveFocus();
+    expect(radios[1]).toHaveAttribute("aria-checked", "true");
+    expect(radios.map((radio) => radio.tabIndex)).toEqual([-1, 0, -1, -1]);
   });
 });
 

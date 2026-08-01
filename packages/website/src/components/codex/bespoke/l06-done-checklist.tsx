@@ -127,7 +127,7 @@ export function L06DoneChecklist({ lessonId, cpId }: L06DoneChecklistProps): JSX
                   aria-hidden="true"
                   className={cn(
                     "h-4 w-4 shrink-0 rounded-full border-2 border-border",
-                    attempted && isCorrect && "border-[#22c55e] bg-[#22c55e]",
+                    attempted && isCorrect && "border-risk-green bg-risk-green",
                     attempted && !isCorrect && "border-brand-amber bg-brand-amber",
                   )}
                 />
@@ -139,7 +139,7 @@ export function L06DoneChecklist({ lessonId, cpId }: L06DoneChecklistProps): JSX
           <p
             className={cn(
               "mb-3 font-mono text-[12px] font-bold uppercase tracking-[0.08em]",
-              ready ? "text-[#22c55e]" : "text-muted-foreground",
+              ready ? "text-risk-green" : "text-muted-foreground",
             )}
           >
             {ready ? `READY${done ? " ✓" : ""}` : "DRAFT"}

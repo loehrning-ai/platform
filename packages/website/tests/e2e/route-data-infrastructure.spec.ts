@@ -18,6 +18,8 @@ import { test, expect, type Page } from "@playwright/test";
 const LANDING = "/kurse/open-source/data-infrastructure";
 const COURSE_PATH = "/kurse/open-source/data-infrastructure/kurs";
 const LESSON_ROUTE = "/kurse/open-source/data-infrastructure/kurs/mental-model";
+const FINAL_LESSON_ROUTE =
+  "/kurse/open-source/data-infrastructure/kurs/interview-playbook";
 const CERT_ROUTE = "/kurse/open-source/data-infrastructure/kurs/zertifikat";
 const VERIFY_ROUTE = "/kurse/open-source/data-infrastructure/verifizierung";
 
@@ -37,13 +39,21 @@ const DATA_INFRA_LESSON_IDS = [
   "interview-playbook",
 ] as const;
 
-/** A minimal unified-store payload with all 12 data-infrastructure lessons completed. */
-function allLessonsCompletedDataInfraState() {
+/** A minimal unified-store payload with the selected lessons completed. */
+function completedDataInfraState(
+  completedLessonIds: readonly string[] = DATA_INFRA_LESSON_IDS,
+) {
   const now = new Date().toISOString();
   const lessons = Object.fromEntries(
-    DATA_INFRA_LESSON_IDS.map((id) => [
+    completedLessonIds.map((id) => [
       id,
-      { sectionsRead: [], quizScore: null, quizTotal: null, completed: true, exercisesCompleted: {} },
+      {
+        sectionsRead: [],
+        quizScore: null,
+        quizTotal: null,
+        completed: true,
+        exercisesCompleted: {},
+      },
     ]),
   );
   return {
@@ -68,7 +78,12 @@ function allLessonsCompletedDataInfraState() {
 async function seedProgress(page: Page, value: object) {
   await page.addInitScript(
     ([key, json]) => {
-      window.localStorage.setItem(key, json);
+      // Init scripts run before every document navigation. Seed only the
+      // initially empty context so later full-page navigation verifies the
+      // progress written by the application instead of replacing it.
+      if (window.localStorage.getItem(key) === null) {
+        window.localStorage.setItem(key, json);
+      }
     },
     [UNIFIED_KEY, JSON.stringify(value)] as const,
   );
@@ -91,17 +106,23 @@ function encodeCertHash(payload: {
 }
 
 test.describe("Data Infrastructure golden path", () => {
-  test("home: landing renders and links into the course hub", async ({ page }) => {
+  test("home: landing renders and links into the course hub", async ({
+    page,
+  }) => {
     const res = await page.goto(LANDING, { waitUntil: "domcontentloaded" });
     expect(res?.status()).toBe(200);
     await expect(page).not.toHaveURL(/\/login/);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
-    const startCta = page.getByRole("link", { name: /start|lesson 01/i }).first();
+    const startCta = page
+      .getByRole("link", { name: /start|lesson 01/i })
+      .first();
     await expect(startCta).toBeVisible();
   });
 
-  test("lesson: the course hub links into the mental-model lesson reader", async ({ page }) => {
+  test("lesson: the course hub links into the mental-model lesson reader", async ({
+    page,
+  }) => {
     const res = await page.goto(COURSE_PATH, { waitUntil: "domcontentloaded" });
     expect(res?.status()).toBe(200);
     await expect(page).not.toHaveURL(/\/login/);
@@ -116,31 +137,60 @@ test.describe("Data Infrastructure golden path", () => {
   test("checkpoint: answering mental-model's first quiz widget correctly awards a checkpoint", async ({
     page,
   }) => {
-    const res = await page.goto(LESSON_ROUTE, { waitUntil: "domcontentloaded" });
+    const res = await page.goto(LESSON_ROUTE, {
+      waitUntil: "domcontentloaded",
+    });
     expect(res?.status()).toBe(200);
 
     // mental-model's "q1" quiz widget (lib/data-infrastructure/lessons/
     // mental-model.ts): option index 1 is correct, and
     // DATA_INFRA_QUIZ_COPY's correctLabel is "Correct."
-    await expect(
-      page.getByText("If we lost everything except one of the six layers", { exact: false }),
-    ).toBeVisible();
+    const correctAnswer = page.getByRole("radio", {
+      name: "B The log, it's the ordered record of everything that happened.",
+    });
+    await expect(correctAnswer).toBeVisible();
+    await correctAnswer.click();
 
-    await page
-      .getByText("The log — it's the ordered record of everything that happened.", { exact: false })
-      .click();
-
-    await expect(page.getByText("Correct.")).toBeVisible();
+    await expect(correctAnswer).toHaveAttribute("aria-checked", "true");
+    await expect(page.getByText("Correct.", { exact: true })).toBeVisible();
   });
 
-  test("certificate: all 12 lessons completed unlocks the public certificate surface", async ({
+  test("completion: finishing lesson 12 exposes both certificate pathways and reaches the guarded surface", async ({
     page,
   }) => {
-    await seedProgress(page, allLessonsCompletedDataInfraState());
-    const res = await page.goto(CERT_ROUTE, { waitUntil: "domcontentloaded" });
+    await seedProgress(
+      page,
+      completedDataInfraState(DATA_INFRA_LESSON_IDS.slice(0, -1)),
+    );
+    const res = await page.goto(FINAL_LESSON_ROUTE, {
+      waitUntil: "domcontentloaded",
+    });
     expect(res?.status()).toBe(200);
     await expect(page).not.toHaveURL(/\/login/);
+
+    const markAsRead = page.getByRole("button", { name: "Mark as read" });
+    const sectionCount = await markAsRead.count();
+    expect(sectionCount).toBeGreaterThan(0);
+    for (let index = 0; index < sectionCount; index += 1) {
+      await markAsRead.first().click();
+    }
+    await expect(markAsRead).toHaveCount(0);
+    await page.getByRole("button", { name: "Complete lesson" }).click();
+
+    const finalLessonCertificate = page.getByRole("link", {
+      name: "Open Certificate of Completion",
+    });
+    await expect(finalLessonCertificate).toHaveAttribute("href", CERT_ROUTE);
+    await finalLessonCertificate.click();
+    await expect(page).toHaveURL(new RegExp(`${CERT_ROUTE}$`));
     await expect(page.locator("h1").first()).toBeVisible();
+
+    await page.goto(COURSE_PATH, { waitUntil: "domcontentloaded" });
+    await expect(
+      page.getByRole("link", {
+        name: "Open Certificate of Completion",
+      }),
+    ).toHaveAttribute("href", CERT_ROUTE);
   });
 
   test("QR verify: a real completion-mode certificate payload round-trips through the verification page", async ({
@@ -154,12 +204,18 @@ test.describe("Data Infrastructure golden path", () => {
       c: "data-infrastructure",
       v: 1,
     });
-    await page.goto(`${VERIFY_ROUTE}#${hash}`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${VERIFY_ROUTE}#${hash}`, {
+      waitUntil: "domcontentloaded",
+    });
 
     await expect(page.getByText("QR data read", { exact: true })).toBeVisible();
     await expect(page.getByText("Ada Lovelace")).toBeVisible();
-    await expect(page.getByText("Completion path: all lessons finished")).toBeVisible();
-    await expect(page.getByRole("heading", { name: /Data Infrastructure/ })).toBeVisible();
+    await expect(
+      page.getByText("Completion path: all lessons finished"),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /Data Infrastructure/ }),
+    ).toBeVisible();
     await expect(page.getByText("Certificate code unreadable")).toHaveCount(0);
   });
 });

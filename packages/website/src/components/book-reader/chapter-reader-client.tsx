@@ -14,6 +14,12 @@ import {
   isInsideHorizontalScrollRegion,
   isInteractiveShortcutTarget,
 } from "@/lib/a11y/keyboard-shortcuts";
+import {
+  getLearningOwnerContext,
+  getOwnedLocalLearningItem,
+  setOwnedLocalLearningItem,
+  subscribeLearningOwner,
+} from "@/lib/progress/browser-learning-storage";
 
 interface ChapterReaderClientProps {
   readonly book: Book;
@@ -30,16 +36,21 @@ interface ChapterReaderClientProps {
 const PROGRESS_KEY = (slug: string, chapter: string) =>
   `reader:progress:${slug}:${chapter}`;
 
-function saveProgress(bookSlug: string, chapterSlug: string) {
+function saveProgress(
+  bookSlug: string,
+  chapterSlug: string,
+  ownerGeneration: number,
+) {
   try {
     const scrollPct =
       document.documentElement.scrollTop /
       (document.documentElement.scrollHeight -
         document.documentElement.clientHeight);
     if (Number.isFinite(scrollPct)) {
-      localStorage.setItem(
+      setOwnedLocalLearningItem(
         PROGRESS_KEY(bookSlug, chapterSlug),
-        JSON.stringify({ scrollPct, lastRead: Date.now() })
+        JSON.stringify({ scrollPct, lastRead: Date.now() }),
+        ownerGeneration,
       );
     }
   } catch {
@@ -49,8 +60,13 @@ function saveProgress(bookSlug: string, chapterSlug: string) {
 
 function restoreProgress(bookSlug: string, chapterSlug: string) {
   try {
-    const raw = localStorage.getItem(PROGRESS_KEY(bookSlug, chapterSlug));
-    if (!raw) return;
+    const raw = getOwnedLocalLearningItem(
+      PROGRESS_KEY(bookSlug, chapterSlug),
+    );
+    if (!raw) {
+      window.scrollTo({ top: 0, behavior: "instant" });
+      return;
+    }
     const { scrollPct } = JSON.parse(raw) as { scrollPct: number };
     if (scrollPct > 0.02) {
       const target =
@@ -61,6 +77,38 @@ function restoreProgress(bookSlug: string, chapterSlug: string) {
     }
   } catch {
     // ignore
+  }
+}
+
+/**
+ * Restore the current in-page fragment when it resolves to a real element.
+ *
+ * Fragment navigation takes precedence over stored reader progress not only
+ * during the initial mount, but also when the learning-data owner changes
+ * after authentication resolution. A malformed percent-encoded fragment must
+ * never abort the reader effect; it simply cannot be restored.
+ */
+function restoreResolvableFragment(): boolean {
+  const encodedFragment = window.location.hash.slice(1);
+  if (!encodedFragment) return false;
+
+  let fragment: string;
+  try {
+    fragment = decodeURIComponent(encodedFragment);
+  } catch {
+    return false;
+  }
+
+  const target = document.getElementById(fragment);
+  if (!target) return false;
+
+  target.scrollIntoView();
+  return true;
+}
+
+function restoreFragmentOrProgress(bookSlug: string, chapterSlug: string) {
+  if (!restoreResolvableFragment()) {
+    restoreProgress(bookSlug, chapterSlug);
   }
 }
 
@@ -105,6 +153,9 @@ export function ChapterReaderClient({
 }: ChapterReaderClientProps) {
   const router = useRouter();
   const scrollTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const ownerGenerationRef = useRef(
+    getLearningOwnerContext().generation,
+  );
   const activeHeading = useTocSpy(headings);
 
   // Restore scroll on mount. A fragment deep-link takes precedence over the
@@ -113,22 +164,25 @@ export function ChapterReaderClient({
   // (visible on WebKit/iOS, regression coverage mobile finding), so we re-scroll
   // to the anchor explicitly after mount.
   useEffect(() => {
-    const hash = window.location.hash.slice(1);
-    if (hash) {
-      const target = document.getElementById(decodeURIComponent(hash));
-      if (target) {
-        target.scrollIntoView();
-        return;
-      }
-    }
-    restoreProgress(book.id, chapterMeta.slug);
+    ownerGenerationRef.current =
+      getLearningOwnerContext().generation;
+    restoreFragmentOrProgress(book.id, chapterMeta.slug);
+    return subscribeLearningOwner((owner) => {
+      clearTimeout(scrollTimer.current);
+      ownerGenerationRef.current = owner.generation;
+      restoreFragmentOrProgress(book.id, chapterMeta.slug);
+    });
   }, [book.id, chapterMeta.slug]);
 
   // Save scroll position on scroll (debounced 500ms)
   const handleScroll = useCallback(() => {
     clearTimeout(scrollTimer.current);
     scrollTimer.current = setTimeout(() => {
-      saveProgress(book.id, chapterMeta.slug);
+      saveProgress(
+        book.id,
+        chapterMeta.slug,
+        ownerGenerationRef.current,
+      );
     }, 500);
   }, [book.id, chapterMeta.slug]);
 
@@ -306,7 +360,9 @@ export function ChapterReaderClient({
 
             <div className="mt-6 border-t border-border pt-4">
               <p className="text-[11px] leading-relaxed text-muted-foreground">
-                Kein PDF-Download. Der Reader ist die verlässliche Lesefassung.
+                {book.pdfPath
+                  ? "Der Reader ist die verlässliche Lesefassung. Angemeldete Nutzer finden den PDF-Download auf der Buchübersicht."
+                  : "Der Reader ist die verlässliche Lesefassung. Für dieses Buch gibt es derzeit keine PDF-Fassung."}
               </p>
               <Link
                 href={`/buecher/${book.id}`}

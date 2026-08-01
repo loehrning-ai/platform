@@ -542,7 +542,7 @@ export function WorkflowDemo(): JSX.Element {
                 <span
                   className={cn(
                     "ml-auto",
-                    stage >= 4 ? "text-[#22c55e]" : "text-muted-foreground",
+                    stage >= 4 ? "text-risk-green" : "text-muted-foreground",
                   )}
                 >
                   {stage >= 4

@@ -30,11 +30,13 @@ describe("GlobalVsLocal ", () => {
     expect(first).toBe(second);
   });
 
-  it("clicking a data point selects it and reveals local SHAP", () => {
-    const { container } = render(<GlobalVsLocal />);
-    const firstPoint = container.querySelector("svg g[style*='cursor: pointer']");
-    expect(firstPoint).not.toBeNull();
-    if (firstPoint) fireEvent.click(firstPoint);
+  it("keyboard-selecting a data point reveals local SHAP", () => {
+    render(<GlobalVsLocal />);
+    const firstPoint = screen.getByRole("button", {
+      name: /Select data point 0/,
+    });
+    fireEvent.keyDown(firstPoint, { key: "Enter" });
+    expect(firstPoint).toHaveAttribute("aria-pressed", "true");
     expect(screen.getAllByText(/point #0/).length).toBeGreaterThan(0);
   });
 });

@@ -184,10 +184,8 @@ export const CLAUDE_CONFIG: CourseConfig = {
   basePath: "/kurse/open-source/claude",
   coursePath: "/kurse/open-source/claude/kurs",
   blockIds: [],
-  // Bank size equals served count (matches every other course's convention:
-  // ki-fuehrerschein 20/20, eu-ai-act-kurs 27/27, ai-native 24/24,
-  // ki-und-gesellschaft 15/15). The 19-question bank (stage 11) reuses all
-  // 19 already-authored inline lesson Quiz questions verbatim.
+  // Bank size equals served count for this course. The 19-question bank
+  // reuses all 19 already-authored inline lesson quiz questions verbatim.
   workshopQuizQuestionCount: 19,
   workshopQuizTimeLimitMinutes: 25,
   workshopQuizPassThreshold: 0.7,

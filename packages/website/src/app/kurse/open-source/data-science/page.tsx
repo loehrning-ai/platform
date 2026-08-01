@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { DsReaderShell } from "@/components/data-science/reader-shell";
-import { getDsChapterComponent } from "@/lib/data-science/chapters";
-import { DS_CHAPTERS, getDsChapterMeta } from "@/lib/data-science/types";
+import ChOverview from "@/components/data-science/chapters/ch-overview";
+import { DS_CHAPTERS } from "@/lib/data-science/types";
 import { dsChapterHref } from "@/lib/data-science/routes";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 import type { JsonLdGraph } from "@/lib/seo/json-ld";
@@ -33,11 +32,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function DataScienceOverviewPage() {
-  const meta = getDsChapterMeta("home");
-  const ChapterComponent = await getDsChapterComponent("home");
-  if (!ChapterComponent) notFound();
-
+export default function DataScienceOverviewPage() {
   const next = DS_CHAPTERS[1];
 
   const courseJsonLd: JsonLdGraph = {
@@ -79,11 +74,15 @@ export default async function DataScienceOverviewPage() {
     <DsReaderShell activeId="home">
       <JsonLd data={courseJsonLd} id="data-science-course-jsonld" />
       <div className="content">
-        <ChapterComponent chapter={meta} />
+        <ChOverview />
         <nav className="tb" aria-label="Chapter pagination" style={{ marginTop: 48 }}>
           <span />
           {next && (
-            <Link className="btn btn-primary" href={dsChapterHref(next.id)}>
+            <Link
+              className="btn btn-primary"
+              href={dsChapterHref(next.id)}
+              prefetch={false}
+            >
               Next → <span className="kbd">→</span>
             </Link>
           )}

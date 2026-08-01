@@ -91,7 +91,7 @@ export function L12DailyLoop({ lessonId, cpId }: L12DailyLoopProps): JSX.Element
           {scheduled.length === BLOCKS.length && (
             <p
               className={cn(
-                "mt-3 border-2 border-[#22c55e] bg-[#22c55e]/10 px-2 py-2 text-center font-mono text-[13px] font-bold text-[#22c55e]",
+                "mt-3 border-2 border-risk-green bg-risk-green/10 px-2 py-2 text-center font-mono text-[13px] font-bold text-risk-green",
               )}
             >
               You are Codex-fluent. {done ? "✓" : ""}

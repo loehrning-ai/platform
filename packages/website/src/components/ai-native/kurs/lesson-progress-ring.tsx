@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type JSX } from "react";
 import { getReadSectionIds, isLessonCompleted } from "@/lib/ai-native/progress";
+import { subscribe } from "@/lib/progress";
 import { cn } from "@/lib/utils";
 
 /**
@@ -30,28 +31,13 @@ export function LessonProgressRing({
   const [completed, setCompleted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    const read = getReadSectionIds(lessonId);
-    setSectionsRead(read.size);
-    setCompleted(isLessonCompleted(lessonId));
-  }, [lessonId]);
-
-  useEffect(() => {
-    if (!mounted) return;
-    // Refresh ring when progress storage changes (cross-tab + same-tab writes
-    // emit a "storage" event; for same-tab we refresh on focus).
-    function refresh() {
+    return subscribe(() => {
+      setMounted(true);
       const read = getReadSectionIds(lessonId);
       setSectionsRead(read.size);
       setCompleted(isLessonCompleted(lessonId));
-    }
-    window.addEventListener("storage", refresh);
-    window.addEventListener("focus", refresh);
-    return () => {
-      window.removeEventListener("storage", refresh);
-      window.removeEventListener("focus", refresh);
-    };
-  }, [mounted, lessonId]);
+    });
+  }, [lessonId]);
 
   const stroke = 4;
   const r = size / 2 - stroke;
@@ -91,7 +77,7 @@ export function LessonProgressRing({
           cy={size / 2}
           r={r}
           fill="none"
-          stroke={isDone ? "#22c55e" : "var(--color-brand-orange)"}
+          stroke={isDone ? "var(--color-risk-green)" : "var(--color-brand-orange)"}
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={c}
@@ -105,7 +91,7 @@ export function LessonProgressRing({
       <span
         className={cn(
           "absolute font-mono text-[10px] font-bold tracking-[0.06em]",
-          isDone ? "text-[#22c55e]" : "text-foreground",
+          isDone ? "text-risk-green" : "text-foreground",
         )}
       >
         {mounted ? (

@@ -1,20 +1,37 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { createHmac } from "node:crypto";
 
-// The rate-limit module dynamically imports supabase/server. In tests we
-// want the in-memory fallback path, so mock tryCreateServiceClient to
-// always return null.
+const { mockTryCreateServiceClient } = vi.hoisted(() => ({
+  mockTryCreateServiceClient: vi.fn(),
+}));
+
 vi.mock("@/lib/supabase/server", () => ({
-  tryCreateServiceClient: () => null,
+  tryCreateServiceClient: mockTryCreateServiceClient,
 }));
 
 import {
   __resetInMemoryRateLimit,
   consumeRateLimit,
+  hashedAuthenticatedRateLimitKey,
   hashedClientRateLimitKey,
+  RateLimitUnavailableError,
   trustedClientIp,
 } from "../rate-limit";
 
-beforeEach(() => __resetInMemoryRateLimit());
+const VALID_LIMITER_SECRET = `rlh1_${"a".repeat(64)}`;
+const ROTATED_RATE_LIMIT_HMAC_SECRET = `rlh1_${"b".repeat(64)}`;
+
+beforeEach(() => {
+  __resetInMemoryRateLimit();
+  mockTryCreateServiceClient.mockReset();
+  mockTryCreateServiceClient.mockReturnValue(null);
+  vi.stubEnv("RATE_LIMIT_HMAC_SECRET", VALID_LIMITER_SECRET);
+});
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+  vi.restoreAllMocks();
+});
 
 describe("consumeRateLimit (in-memory fallback)", () => {
   it("returns true when under the cap", async () => {
@@ -51,12 +68,82 @@ describe("consumeRateLimit (in-memory fallback)", () => {
   });
 });
 
+describe("consumeRateLimit (production durable backend)", () => {
+  it.each([
+    ["missing client", null],
+    [
+      "RPC error",
+      {
+        rpc: vi.fn(async () => ({
+          data: null,
+          error: { code: "PGRST500", message: "private row data" },
+        })),
+      },
+    ],
+    [
+      "RPC throw",
+      {
+        rpc: vi.fn(async () => {
+          throw new Error("service_role=private");
+        }),
+      },
+    ],
+    [
+      "malformed RPC response",
+      { rpc: vi.fn(async () => ({ data: "true", error: null })) },
+    ],
+  ])("throws an unavailable error for %s", async (_label, client) => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    mockTryCreateServiceClient.mockReturnValue(client);
+
+    await expect(
+      consumeRateLimit({ key: "production", windowSeconds: 60, max: 2 }),
+    ).rejects.toBeInstanceOf(RateLimitUnavailableError);
+  });
+
+  it.each([
+    [true, true],
+    [false, false],
+  ])("preserves an authoritative RPC decision %s", async (decision, expected) => {
+    vi.stubEnv("NODE_ENV", "production");
+    mockTryCreateServiceClient.mockReturnValue({
+      rpc: vi.fn(async () => ({ data: decision, error: null })),
+    });
+
+    await expect(
+      consumeRateLimit({ key: "production", windowSeconds: 60, max: 2 }),
+    ).resolves.toBe(expected);
+  });
+
+  it("does not log an RPC error message containing private data", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    const warning = vi.spyOn(console, "warn").mockImplementation(() => {});
+    mockTryCreateServiceClient.mockReturnValue({
+      rpc: vi.fn(async () => ({
+        data: null,
+        error: {
+          code: "PGRST500",
+          message: "learner@example.com service_role=private",
+        },
+      })),
+    });
+
+    await expect(
+      consumeRateLimit({ key: "production", windowSeconds: 60, max: 2 }),
+    ).rejects.toBeInstanceOf(RateLimitUnavailableError);
+    expect(JSON.stringify(warning.mock.calls)).not.toContain("learner@example.com");
+    expect(JSON.stringify(warning.mock.calls)).not.toContain("service_role");
+  });
+});
+
 describe("trustedClientIp", () => {
   function req(headers: Record<string, string>): Request {
     return new Request("https://example.com/", { headers });
   }
 
   it("prefers x-vercel-forwarded-for over x-forwarded-for", () => {
+    vi.stubEnv("VERCEL", "1");
     expect(
       trustedClientIp(req({
         "x-forwarded-for": "1.1.1.1",              // spoofable
@@ -65,31 +152,50 @@ describe("trustedClientIp", () => {
     ).toBe("9.9.9.9");
   });
 
-  it("falls back to x-real-ip when x-vercel-* is absent", () => {
+  it("fails to the coarse bucket when the Vercel header is absent", () => {
+    vi.stubEnv("VERCEL", "1");
     expect(
       trustedClientIp(req({ "x-real-ip": "9.9.9.9", "x-forwarded-for": "1.1.1.1" })),
-    ).toBe("9.9.9.9");
+    ).toBe("unknown");
   });
 
-  it("falls back to cf-connecting-ip when both Vercel headers absent", () => {
+  it("does not trust proxy headers outside an attested Vercel runtime", () => {
     expect(
-      trustedClientIp(req({ "cf-connecting-ip": "9.9.9.9", "x-forwarded-for": "1.1.1.1" })),
-    ).toBe("9.9.9.9");
+      trustedClientIp(req({
+        "x-vercel-forwarded-for": "9.9.9.9",
+        "x-real-ip": "8.8.8.8",
+        "cf-connecting-ip": "7.7.7.7",
+        "x-forwarded-for": "1.1.1.1",
+      })),
+    ).toBe("unknown");
   });
 
-  it("returns 'unknown' when no trusted header present (ignores user-settable x-forwarded-for)", () => {
+  it("returns 'unknown' when no trusted header is present", () => {
+    vi.stubEnv("VERCEL", "1");
     expect(trustedClientIp(req({ "x-forwarded-for": "1.1.1.1" }))).toBe("unknown");
   });
 
   it("handles comma-separated x-vercel-forwarded-for (takes first)", () => {
+    vi.stubEnv("VERCEL", "1");
     expect(
       trustedClientIp(req({ "x-vercel-forwarded-for": "9.9.9.9, 2.2.2.2" })),
     ).toBe("9.9.9.9");
   });
+
+  it("rejects malformed or unbounded Vercel address values", () => {
+    vi.stubEnv("VERCEL", "1");
+    expect(
+      trustedClientIp(req({ "x-vercel-forwarded-for": "not-an-ip" })),
+    ).toBe("unknown");
+    expect(
+      trustedClientIp(req({ "x-vercel-forwarded-for": "1".repeat(65) })),
+    ).toBe("unknown");
+  });
 });
 
 describe("hashedClientRateLimitKey", () => {
-  it("is stable and never contains the raw trusted address", async () => {
+  it("is a stable keyed HMAC and never contains the raw trusted address", async () => {
+    vi.stubEnv("VERCEL", "1");
     const request = new Request("https://example.com/", {
       headers: { "x-vercel-forwarded-for": "203.0.113.42" },
     });
@@ -97,8 +203,25 @@ describe("hashedClientRateLimitKey", () => {
     const second = await hashedClientRateLimitKey("ai-native-grade", request);
 
     expect(first).toBe(second);
-    expect(first).toMatch(/^ai-native-grade:sha256:[0-9a-f]{64}$/);
+    expect(first).toMatch(
+      /^ai-native-grade:ip-hmac-sha256-v1:[0-9a-f]{64}$/,
+    );
     expect(first).not.toContain("203.0.113.42");
+
+    const expected = createHmac(
+      "sha256",
+      Buffer.from("a".repeat(64), "hex"),
+    )
+      .update(
+        JSON.stringify([
+          "hmac-sha256-v1",
+          "ip",
+          "ai-native-grade",
+          "203.0.113.42",
+        ]),
+      )
+      .digest("hex");
+    expect(first).toBe(`ai-native-grade:ip-hmac-sha256-v1:${expected}`);
   });
 
   it("separates namespaces and rejects unsafe ones", async () => {
@@ -111,5 +234,86 @@ describe("hashedClientRateLimitKey", () => {
     await expect(
       hashedClientRateLimitKey("../unsafe", request),
     ).rejects.toThrow("Invalid rate-limit namespace");
+  });
+
+  it("changes every derived key when the dedicated secret rotates", async () => {
+    vi.stubEnv("VERCEL", "1");
+    const request = new Request("https://example.com/", {
+      headers: { "x-vercel-forwarded-for": "203.0.113.42" },
+    });
+    const beforeRotation = await hashedClientRateLimitKey("feedback", request);
+    vi.stubEnv("RATE_LIMIT_HMAC_SECRET", ROTATED_RATE_LIMIT_HMAC_SECRET);
+    const afterRotation = await hashedClientRateLimitKey("feedback", request);
+
+    expect(afterRotation).not.toBe(beforeRotation);
+  });
+
+  it.each([
+    ["missing", ""],
+    ["short", "rlh1_deadbeef"],
+    ["uppercase", `rlh1_${"A".repeat(64)}`],
+    ["unversioned", "a".repeat(64)],
+  ])("fails closed for a %s HMAC secret", async (_label, secret) => {
+    vi.stubEnv("RATE_LIMIT_HMAC_SECRET", secret);
+    const request = new Request("https://example.com/");
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const error = await hashedClientRateLimitKey("feedback", request).catch(
+      (caught: unknown) => caught,
+    );
+    expect(error).toBeInstanceOf(RateLimitUnavailableError);
+    expect(error).toMatchObject({
+      code: "RATE_LIMIT_UNAVAILABLE",
+      message: "Durable rate-limit protection unavailable",
+    });
+    if (secret) expect((error as Error).message).not.toContain(secret);
+    expect(warn).not.toHaveBeenCalled();
+  });
+});
+
+describe("hashedAuthenticatedRateLimitKey", () => {
+  it("binds the digest to verified user identity without resetting by IP", async () => {
+    const firstIp = new Request("https://example.com/", {
+      headers: { "x-real-ip": "203.0.113.42" },
+    });
+    const secondIp = new Request("https://example.com/", {
+      headers: { "x-real-ip": "198.51.100.7" },
+    });
+    const userA = await hashedAuthenticatedRateLimitKey(
+      "book-pdf",
+      firstIp,
+      "user-a",
+    );
+    const userB = await hashedAuthenticatedRateLimitKey(
+      "book-pdf",
+      firstIp,
+      "user-b",
+    );
+    const userAAfterIpChange = await hashedAuthenticatedRateLimitKey(
+      "book-pdf",
+      secondIp,
+      "user-a",
+    );
+    expect(userA).toMatch(
+      /^book-pdf:user-hmac-sha256-v1:[0-9a-f]{64}$/,
+    );
+    expect(userA).not.toBe(userB);
+    expect(userAAfterIpChange).toBe(userA);
+    expect(userA).not.toContain("user-a");
+    expect(userA).not.toContain("203.0.113.42");
+  });
+
+  it("rejects empty or unbounded identities", async () => {
+    const request = new Request("https://example.com/");
+    await expect(
+      hashedAuthenticatedRateLimitKey("book-pdf", request, ""),
+    ).rejects.toThrow("Invalid authenticated rate-limit identity");
+    await expect(
+      hashedAuthenticatedRateLimitKey(
+        "book-pdf",
+        request,
+        "x".repeat(129),
+      ),
+    ).rejects.toThrow("Invalid authenticated rate-limit identity");
   });
 });

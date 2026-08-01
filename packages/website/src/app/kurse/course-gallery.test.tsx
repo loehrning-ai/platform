@@ -1,17 +1,41 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { cleanup, render, screen, within } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import {
   COURSE_CATALOG,
   IMPORTED_COURSE_CATALOG,
 } from "@/lib/courses/catalog";
+import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
+import type { UnifiedProgress } from "@/lib/progress/types";
 
 // Mock the unified store + course-progress facade so the gallery's
 // client-side progress dots are deterministic.
 const storeMock = vi.hoisted(() => ({
+  progressState: {
+    current: {
+      schemaVersion: 3,
+      courses: {},
+      xp: 0,
+      checkpoints: {},
+      badges: {},
+      streak: { days: 0, last: null },
+      lastActivity: "2026-07-29T12:00:00.000Z",
+    } as UnifiedProgress,
+  },
   getCompletedLessonsCount: vi.fn<(slug: string) => number>(() => 0),
   isCertificateEligible: vi.fn<(slug: string) => boolean>(() => false),
   getXp: vi.fn(() => 0),
   getStreak: vi.fn(() => ({ days: 0, last: null as string | null })),
+  subscribe: vi.fn((listener: (progress: UnifiedProgress) => void) => {
+    listener(storeMock.progressState.current);
+    return () => {};
+  }),
 }));
 
 vi.mock("@/lib/progress/store", () => storeMock);
@@ -28,6 +52,19 @@ afterEach(() => {
   storeMock.isCertificateEligible.mockReturnValue(false);
   storeMock.getXp.mockReturnValue(0);
   storeMock.getStreak.mockReturnValue({ days: 0, last: null });
+  storeMock.progressState.current = {
+    schemaVersion: 3,
+    courses: {},
+    xp: 0,
+    checkpoints: {},
+    badges: {},
+    streak: { days: 0, last: null },
+    lastActivity: "2026-07-29T12:00:00.000Z",
+  };
+  Object.defineProperty(navigator, "clipboard", {
+    configurable: true,
+    value: undefined,
+  });
 });
 
 describe("CourseGallery (learner-first: path + deeper shelf)", () => {
@@ -83,6 +120,10 @@ describe("CourseGallery (learner-first: path + deeper shelf)", () => {
     expect(within(lernpfad).getAllByText("Umfang")).toHaveLength(4);
     expect(within(lernpfad).getAllByText("Dauer")).toHaveLength(4);
     expect(within(lernpfad).getAllByText("Nachweis")).toHaveLength(4);
+    expect(
+      within(lernpfad).getAllByText("Teilnahmebestätigung"),
+    ).toHaveLength(3);
+    expect(within(lernpfad).getAllByText("Lernnachweis")).toHaveLength(1);
     expect(within(lernpfad).getAllByText("Kostenlos")).toHaveLength(4);
   });
 
@@ -200,6 +241,49 @@ describe("CourseGallery (learner-first: path + deeper shelf)", () => {
     expect(banner.textContent).toMatch(/3 Tage Serie/);
   });
 
+  it("links Weiterlernen to the first incomplete canonical lesson", () => {
+    const lessonIds = CANONICAL_LESSON_IDS["eu-ai-act-kurs"];
+    storeMock.progressState.current = {
+      ...storeMock.progressState.current,
+      courses: {
+        "eu-ai-act-kurs": {
+          lessons: Object.fromEntries(
+            lessonIds.slice(0, 5).map((lessonId) => [
+              lessonId,
+              {
+                sectionsRead: [],
+                quizScore: null,
+                quizTotal: null,
+                completed: true,
+                exercisesCompleted: {},
+              },
+            ]),
+          ),
+          workshopQuiz: { passed: false, score: 0, completedAt: null },
+          capstoneSubmitted: false,
+          startedAt: "2026-07-29T10:00:00.000Z",
+          lastActivity: "2026-07-29T12:00:00.000Z",
+        },
+      },
+    };
+    storeMock.getCompletedLessonsCount.mockImplementation((slug: string) =>
+      slug === "eu-ai-act-kurs" ? 5 : 0,
+    );
+
+    render(<CourseGallery />);
+
+    const card = screen.getByText("EU AI Act Kurs").closest("li");
+    expect(card).not.toBeNull();
+    expect(
+      within(card as HTMLElement).getByRole("link", {
+        name: "Weiterlernen: EU AI Act Kurs",
+      }),
+    ).toHaveAttribute(
+      "href",
+      "/eu-ai-act-kurs/kurs/block_2#lesson=block_2_lesson_2",
+    );
+  });
+
   it("marks a certified course and offers a share button only mid-course", () => {
     storeMock.getCompletedLessonsCount.mockImplementation((slug: string) =>
       slug === "ki-fuehrerschein" ? 19 : slug === "eu-ai-act-kurs" ? 5 : 0,
@@ -214,5 +298,30 @@ describe("CourseGallery (learner-first: path + deeper shelf)", () => {
     expect(screen.getByTestId("certified-ki-fuehrerschein")).toBeInTheDocument();
     // In-progress (started, not certified) course offers the share action.
     expect(screen.getByText("Fortschritt teilen")).toBeInTheDocument();
+  });
+
+  it("announces clipboard rejection instead of leaving the share action silent", async () => {
+    storeMock.getCompletedLessonsCount.mockImplementation((slug: string) =>
+      slug === "eu-ai-act-kurs" ? 5 : 0,
+    );
+    const writeText = vi.fn().mockRejectedValue(new Error("denied"));
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+
+    render(<CourseGallery />);
+    const status = screen.getByRole("status");
+    const shareButton = screen.getByRole("button", {
+      name: "EU AI Act Kurs: Fortschritt teilen",
+    });
+    expect(status).toBeEmptyDOMElement();
+    fireEvent.click(shareButton);
+
+    await waitFor(() =>
+      expect(status).toHaveTextContent("Kopieren fehlgeschlagen"),
+    );
+    expect(shareButton).toHaveTextContent("Kopieren fehlgeschlagen");
+    expect(writeText).toHaveBeenCalledTimes(1);
   });
 });

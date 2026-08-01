@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, type JSX } from "react";
 import Link from "next/link";
 import { CheckCircle2, Circle, Lightbulb, Tag } from "lucide-react";
+import { CompletionCertificateCta } from "@/components/course/kurs/completion-certificate-cta";
 import { MarkdownRenderer } from "@/components/course/kurs/markdown-renderer";
 import { RenderWidget, resolveWidgetsForSlot } from "@/components/widgets/registry";
 import {
@@ -12,6 +13,7 @@ import {
   isLessonCompleted,
 } from "@/lib/course/progress";
 import type { DataInfraLesson } from "@/lib/data-infrastructure/types";
+import { subscribe } from "@/lib/progress";
 import { cn } from "@/lib/utils";
 import { DataInfraBespokeInteractives } from "./bespoke-registry";
 
@@ -39,8 +41,10 @@ export function DataInfraLessonReader({
   const [completed, setCompleted] = useState(false);
 
   useEffect(() => {
-    setReadIds(getReadSectionIds("data-infrastructure", lesson.id));
-    setCompleted(isLessonCompleted("data-infrastructure", lesson.id));
+    return subscribe(() => {
+      setReadIds(getReadSectionIds("data-infrastructure", lesson.id));
+      setCompleted(isLessonCompleted("data-infrastructure", lesson.id));
+    });
   }, [lesson.id]);
 
   const widgets = useMemo(() => lesson.widgets ?? [], [lesson.widgets]);
@@ -115,7 +119,7 @@ export function DataInfraLessonReader({
                 className="inline-flex items-center gap-2 text-[13px] font-medium transition-colors disabled:cursor-default"
               >
                 {readIds.has(section.id) ? (
-                  <span className="inline-flex items-center gap-2 text-[#22c55e]">
+                  <span className="inline-flex items-center gap-2 text-risk-green">
                     <CheckCircle2 className="h-4 w-4" />
                     Read
                   </span>
@@ -149,7 +153,7 @@ export function DataInfraLessonReader({
         <div className="border-t border-border pt-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             {completed ? (
-              <span className="inline-flex items-center gap-2 text-[14px] font-medium text-[#22c55e]">
+              <span className="inline-flex items-center gap-2 text-[14px] font-medium text-risk-green">
                 <CheckCircle2 className="h-4 w-4" />
                 Lesson complete
               </span>
@@ -185,6 +189,12 @@ export function DataInfraLessonReader({
             >
               ← Previous lesson
             </Link>
+          )}
+          {!nextHref && (
+            <CompletionCertificateCta
+              courseSlug="data-infrastructure"
+              className="mt-6"
+            />
           )}
         </div>
       </div>

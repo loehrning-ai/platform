@@ -10,6 +10,21 @@ const ROUTES = [
   "/datenschutz",
 ] as const;
 
+const SOCIAL_METADATA_ROUTES = [
+  "/",
+  "/blog",
+  "/buecher/ki-landschaft",
+  "/buecher/ki-landschaft/02_methodik",
+  "/wie-ki-funktioniert/lektion-1-vorhersage",
+  "/open-source/lizenzrichtlinie",
+  "/ueber-die-plattform",
+  "/neuigkeiten",
+  "/hilfe",
+  "/bekannte-grenzen",
+  "/impressum",
+  "/datenschutz",
+] as const;
+
 for (const route of ROUTES) {
   test(`seo: ${route} has valid JSON-LD + canonical + title`, async ({ page }) => {
     await page.goto(route, { waitUntil: "domcontentloaded" });
@@ -25,6 +40,52 @@ for (const route of ROUTES) {
     for (const s of scripts) {
       expect(() => JSON.parse(s), `${route}: JSON-LD must parse`).not.toThrow();
     }
+  });
+}
+
+for (const route of SOCIAL_METADATA_ROUTES) {
+  test(`seo: ${route} keeps canonical and social route identity aligned`, async ({
+    page,
+  }) => {
+    await page.goto(route, { waitUntil: "domcontentloaded" });
+
+    const canonical = await page
+      .locator('link[rel="canonical"]')
+      .getAttribute("href");
+    const openGraphUrl = await page
+      .locator('meta[property="og:url"]')
+      .getAttribute("content");
+    const openGraphTitle = await page
+      .locator('meta[property="og:title"]')
+      .getAttribute("content");
+    const twitterTitle = await page
+      .locator('meta[name="twitter:title"]')
+      .getAttribute("content");
+
+    expect(canonical).not.toBeNull();
+    expect(openGraphUrl).not.toBeNull();
+    expect(new URL(openGraphUrl ?? "").href).toBe(
+      new URL(canonical ?? "").href,
+    );
+    expect(new URL(openGraphUrl ?? "").pathname).toBe(route);
+    expect(openGraphTitle?.trim().length).toBeGreaterThan(4);
+    expect(openGraphTitle).not.toBe("loehrning.ai");
+    expect(twitterTitle).toBe(openGraphTitle);
+  });
+}
+
+for (const route of ["/login", "/feedback"] as const) {
+  test(`seo: ${route} is noindex without inherited homepage identity`, async ({
+    page,
+  }) => {
+    await page.goto(route, { waitUntil: "domcontentloaded" });
+
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+      "content",
+      /noindex/,
+    );
+    await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+    await expect(page.locator('meta[property="og:url"]')).toHaveCount(0);
   });
 }
 

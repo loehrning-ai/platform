@@ -2,7 +2,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   anthropicRetentionDays,
   hasCompleteSupabaseRuntimeConfig,
+  isAccountAbuseProtectionReady,
   isAnthropicRuntimeReady,
+  turnstileSiteKey,
 } from "./provider-readiness";
 
 function configureCompleteRuntime(): void {
@@ -14,6 +16,7 @@ function configureCompleteRuntime(): void {
   vi.stubEnv("SUPABASE_URL", "https://fake-project.supabase.co");
   vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "fake-public-key");
   vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", "fake-service-key");
+  vi.stubEnv("RATE_LIMIT_HMAC_SECRET", `rlh1_${"a".repeat(64)}`);
 }
 
 describe("provider runtime readiness", () => {
@@ -29,6 +32,7 @@ describe("provider runtime readiness", () => {
       "ANTHROPIC_DPA_CONFIRMED_AT",
       "ANTHROPIC_RETENTION_DAYS",
       "SUPABASE_SERVICE_ROLE_KEY",
+      "RATE_LIMIT_HMAC_SECRET",
     ]) {
       vi.stubEnv(missing, "");
       expect(isAnthropicRuntimeReady(), missing).toBe(false);
@@ -46,5 +50,31 @@ describe("provider runtime readiness", () => {
       vi.stubEnv("ANTHROPIC_RETENTION_DAYS", retention);
       expect(isAnthropicRuntimeReady(), retention).toBe(false);
     }
+  });
+
+  it("activates account abuse protection only for a valid site key and both attestations", () => {
+    vi.stubEnv(
+      "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
+      "0x4AAAAAAAFakeProductionKey",
+    );
+    vi.stubEnv("SUPABASE_CAPTCHA_CONFIRMED_AT", "2026-07-01");
+    vi.stubEnv("TURNSTILE_CONFIGURATION_CONFIRMED_AT", "2026-07-01");
+    expect(turnstileSiteKey()).toBe("0x4AAAAAAAFakeProductionKey");
+    expect(isAccountAbuseProtectionReady()).toBe(true);
+
+    vi.stubEnv("SUPABASE_CAPTCHA_CONFIRMED_AT", "");
+    expect(isAccountAbuseProtectionReady()).toBe(false);
+    vi.stubEnv("SUPABASE_CAPTCHA_CONFIRMED_AT", "2026-07-01");
+    vi.stubEnv("TURNSTILE_CONFIGURATION_CONFIRMED_AT", "2999-01-01");
+    expect(isAccountAbuseProtectionReady()).toBe(false);
+  });
+
+  it("rejects Cloudflare test keys in a production runtime", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv(
+      "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
+      "1x00000000000000000000AA",
+    );
+    expect(turnstileSiteKey()).toBeNull();
   });
 });

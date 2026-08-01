@@ -4,8 +4,11 @@ Playwright suites live in `tests/e2e/` and are configured in
 `playwright.config.ts`. All commands run from this package
 (`packages/website`); the same commands exist at the repository root and
 delegate here. Commands ending in `:built` are internal reuse commands that
-expect a fresh `bun run build` from the same workspace — do not invoke them
-directly.
+are valid only after `bun run verify` has produced a receipt-bound,
+provider-free build in the same workspace. A plain `bun run build` uses the
+current environment and does not establish provider-free reuse. Built gates
+recheck the receipt after execution and fail if source, toolchain, or immutable
+build output changed while the gate was running.
 
 ## Tiers
 
@@ -22,7 +25,7 @@ directly.
   proof. Run with `bun run test:e2e:auth-scaffold`.
 - **Authenticated live (opt-in, fail-closed):** the `authenticated-live`
   project runs only when `E2E_AUTH_LIVE=1` and a dedicated Supabase test
-  project supplies the exact six-variable contract documented in
+  project supplies the exact nine-variable contract documented in
   [`docs/ci-contract.md`](../docs/ci-contract.md). Run with
   `bun run test:e2e:authenticated-live`; the command validates the environment
   before Playwright starts and has no mock-key fallback.
@@ -32,7 +35,23 @@ directly.
   (`RUN_LAUNCH_GATE=1`), after strict release-mode validation.
 
 An additional desktop WebKit project is available locally by setting
-`RUN_WEBKIT` after installing WebKit (`bunx playwright install webkit`).
+`RUN_WEBKIT` after installing the locked WebKit build
+(`bun run --cwd packages/website playwright install webkit` from the
+repository root).
+
+## Production server-log privacy probe
+
+`bun run test:server-log-privacy` creates a fresh production build, starts that
+build in a Node subprocess, and exercises the installed Next.js
+`uncaughtException` and `unhandledRejection` handlers with fixed synthetic
+canaries. The probe fails if either canary reaches stdout or stderr, if the
+fixed redaction marker is absent, or if the separately validated structured
+API log is lost.
+
+`bun run test:server-log-privacy:built` reuses `.next` and is valid only after
+`bun run verify` has produced a receipt-matching provider-free build from the
+same checkout. The preload is test-only, does not add or remove process
+listeners, and is activated only inside the probe subprocess.
 
 ## Test selectors
 

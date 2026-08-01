@@ -11,20 +11,45 @@
  * not read NEXT_PUBLIC_SITE_URL or NEXT_PUBLIC_APP_URL; if either legacy value
  * exists, it must match the canonical origin exactly.
  *
- * Errors fail CI and Vercel preview/production builds. Local development stays
- * lenient so a provider-free checkout remains buildable, but every error is
- * printed.
+ * Errors fail CI and Vercel preview/production builds. Local provider-free
+ * development stays lenient, but a planted credential that can authorize
+ * external side effects makes validation fail outside CI as well.
  */
+
+import nextEnv from "@next/env";
+import {
+  classifySupabaseKey,
+  isSafePublicSupabaseKey,
+  isServiceSupabaseKey,
+  SUPABASE_KEY_KIND,
+} from "../src/lib/supabase/key-classification.mjs";
+import { isValidRateLimitHmacSecret } from "../src/lib/security/rate-limit-secret.mjs";
+
+// Validate the same local environment files that `next build` will load.
+// Existing shell variables retain precedence, including explicit empty values
+// supplied by the provider-free test launcher.
+const { loadEnvConfig } = nextEnv;
+loadEnvConfig(process.cwd(), false);
 
 const WARN = (msg) => console.warn(`[validate-env] WARN: ${msg}`);
 const ERROR = (msg) => console.error(`[validate-env] ERROR: ${msg}`);
 const INFO = (msg) => console.log(`[validate-env] ${msg}`);
+const MAX_ORIGIN_LENGTH = 2048;
+const SIDE_EFFECT_CREDENTIALS = [
+  "ANTHROPIC_API_KEY",
+  "SENTRY_AUTH_TOKEN",
+  "SUPABASE_SERVICE_ROLE_KEY",
+];
 
 let hasError = false;
 
 function markError(message) {
   ERROR(message);
   hasError = true;
+}
+
+function hasNonEmptyEnvironmentValue(name) {
+  return Boolean(process.env[name]);
 }
 
 function isPastOrPresentIsoDate(value) {
@@ -47,17 +72,54 @@ function requireAttestation(name, provider) {
 
 const validationProfile = process.env.LOEHRNING_VALIDATION_PROFILE;
 const liveAuthE2EProfile = validationProfile === "live-auth-e2e";
+const TEST_ONLY_AUTH_VARIABLES = [
+  "SIMPLIFIED_SUPABASE_TEST_URL",
+  "SIMPLIFIED_SUPABASE_TEST_PUBLISHABLE_KEY",
+  "SIMPLIFIED_SUPABASE_TEST_EMAIL",
+  "SIMPLIFIED_SUPABASE_TEST_PASSWORD",
+  "SIMPLIFIED_SUPABASE_PRODUCTION_URL",
+  "SIMPLIFIED_SUPABASE_TEST_WRITE_PROJECT_REF",
+];
+const leakedTestOnlyAuthVariables = TEST_ONLY_AUTH_VARIABLES.filter(
+  (name) => Boolean(process.env[name]?.trim()),
+);
+if (leakedTestOnlyAuthVariables.length > 0) {
+  markError(
+    "Test-only live-auth variables are forbidden in application builds. " +
+      "Run the dedicated preflight, then remove: " +
+      leakedTestOnlyAuthVariables.join(", ") +
+      ".",
+  );
+}
 const LIVE_AUTH_E2E_ALLOWED_PUBLIC_VARIABLES = new Set([
   "NEXT_PUBLIC_SUPABASE_URL",
   "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+  "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
 ]);
+const localVerificationVariables = [
+  "LOEHRNING_LOCAL_PROVIDER_FREE_RUNTIME",
+  "LOEHRNING_LOCAL_VERIFICATION_ORIGIN",
+].filter((name) => Boolean(process.env[name]));
+
+if (localVerificationVariables.length > 0) {
+  markError(
+    "Local verification redirect authority is forbidden in validated builds. Remove: " +
+      localVerificationVariables.join(", ") +
+      ".",
+  );
+}
 
 function isForbiddenLiveAuthE2EVariable(name) {
   if (name.startsWith("NEXT_PUBLIC_SUPABASE_")) {
     return !LIVE_AUTH_E2E_ALLOWED_PUBLIC_VARIABLES.has(name);
   }
+  if (name.startsWith("NEXT_PUBLIC_TURNSTILE_")) {
+    return !LIVE_AUTH_E2E_ALLOWED_PUBLIC_VARIABLES.has(name);
+  }
   return (
     name.startsWith("SUPABASE_") ||
+    name === "RATE_LIMIT_HMAC_SECRET" ||
+    name.startsWith("TURNSTILE_") ||
     name.startsWith("SENTRY_") ||
     name.startsWith("NEXT_PUBLIC_SENTRY_") ||
     name.startsWith("ANTHROPIC_") ||
@@ -87,7 +149,7 @@ if (liveAuthE2EProfile) {
   const forbiddenVariables = Object.keys(process.env)
     .filter(
       (name) =>
-        process.env[name] !== undefined && isForbiddenLiveAuthE2EVariable(name),
+        process.env[name] !== "" && isForbiddenLiveAuthE2EVariable(name),
     )
     .sort();
   if (forbiddenVariables.length > 0) {
@@ -107,12 +169,128 @@ const publicSupabaseKey =
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const serviceSupabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const supabaseConfigured = Boolean(
-  publicUrl || serverUrl || publicSupabaseKey || serviceSupabaseKey,
+const rateLimitHmacSecret = process.env.RATE_LIMIT_HMAC_SECRET;
+const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
+const SUPABASE_PROVIDER_VARIABLES = [
+  "NEXT_PUBLIC_SUPABASE_URL",
+  "SUPABASE_URL",
+  "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+  "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+  "SUPABASE_SERVICE_ROLE_KEY",
+  "SUPABASE_REGION",
+  "SUPABASE_DPA_CONFIRMED_AT",
+  "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
+  "SUPABASE_CAPTCHA_CONFIRMED_AT",
+  "TURNSTILE_CONFIGURATION_CONFIRMED_AT",
+];
+const turnstileConfigured = Boolean(
+  turnstileSiteKey ||
+    process.env.SUPABASE_CAPTCHA_CONFIRMED_AT ||
+    process.env.TURNSTILE_CONFIGURATION_CONFIRMED_AT,
 );
+const configuredSupabaseVariables = SUPABASE_PROVIDER_VARIABLES.filter(
+  hasNonEmptyEnvironmentValue,
+);
+const supabaseConfigured = configuredSupabaseVariables.length > 0;
+const TURNSTILE_TEST_SITE_KEYS = new Set([
+  "1x00000000000000000000AA",
+  "2x00000000000000000000AB",
+  "1x00000000000000000000BB",
+  "2x00000000000000000000BB",
+  "3x00000000000000000000FF",
+]);
+
+if (
+  turnstileSiteKey &&
+  !/^[A-Za-z0-9_-]{20,32}$/.test(turnstileSiteKey)
+) {
+  markError(
+    "NEXT_PUBLIC_TURNSTILE_SITE_KEY must be a 20-32 character Cloudflare Turnstile site key.",
+  );
+}
+if (
+  process.env.VERCEL_ENV === "production" &&
+  turnstileSiteKey &&
+  TURNSTILE_TEST_SITE_KEYS.has(turnstileSiteKey)
+) {
+  markError(
+    "Cloudflare Turnstile test site keys are forbidden in production.",
+  );
+}
+if (turnstileConfigured && !supabaseConfigured) {
+  markError(
+    "Turnstile is configured without Supabase Auth. Disable every Turnstile variable or provide the complete protected account configuration.",
+  );
+}
+
+function validatePublicSupabaseKey(name, value) {
+  if (!value) return;
+  const keyKind = classifySupabaseKey(value);
+  if (keyKind === SUPABASE_KEY_KIND.SECRET) {
+    markError(
+      `${name} contains a server-only Supabase secret key and must never be exposed to the browser.`,
+    );
+    return;
+  }
+  if (keyKind === SUPABASE_KEY_KIND.LEGACY_SERVICE_ROLE) {
+    markError(
+      `${name} is a legacy JWT without the required anon role and is unsafe for browser use.`,
+    );
+    return;
+  }
+  if (!isSafePublicSupabaseKey(value)) {
+    markError(
+      `${name} must be an exact sb_publishable_<22-char-random>_<8-char-checksum> key or a canonical HS256 legacy JWT with role anon.`,
+    );
+  }
+}
+
+validatePublicSupabaseKey(
+  "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+);
+validatePublicSupabaseKey(
+  "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+);
+
+if (
+  publicSupabaseKey &&
+  serviceSupabaseKey &&
+  publicSupabaseKey === serviceSupabaseKey
+) {
+  markError(
+    "The public Supabase key equals SUPABASE_SERVICE_ROLE_KEY. Refusing to expose a privileged key in client JavaScript.",
+  );
+}
+
+if (serviceSupabaseKey) {
+  if (!isServiceSupabaseKey(serviceSupabaseKey)) {
+    markError(
+      "SUPABASE_SERVICE_ROLE_KEY must be an exact sb_secret_<22-char-random>_<8-char-checksum> key or a canonical HS256 legacy JWT with role service_role.",
+    );
+  }
+}
+if (
+  rateLimitHmacSecret &&
+  !isValidRateLimitHmacSecret(rateLimitHmacSecret)
+) {
+  markError(
+    "RATE_LIMIT_HMAC_SECRET must be an exact rlh1_ prefix followed by 64 lowercase hexadecimal characters generated from 32 random bytes.",
+  );
+}
 
 function validatedHttpsOrigin(name, value) {
   if (!value) return null;
+  if (
+    value.length > MAX_ORIGIN_LENGTH ||
+    value !== value.trim()
+  ) {
+    markError(
+      `${name} must be an exact, whitespace-free HTTPS origin no longer than ${MAX_ORIGIN_LENGTH} characters.`,
+    );
+    return null;
+  }
   try {
     const parsed = new URL(value);
     const originOnly =
@@ -132,11 +310,26 @@ function validatedHttpsOrigin(name, value) {
   }
 }
 
-const publicOrigin = validatedHttpsOrigin(
+function validatedSupabaseOrigin(name, value) {
+  const origin = validatedHttpsOrigin(name, value);
+  if (!origin) return null;
+
+  const hostname = new URL(origin).hostname;
+  const port = new URL(origin).port;
+  if (port || !/^[a-z0-9-]+\.supabase\.co$/i.test(hostname)) {
+    markError(
+      `${name} must use a Supabase project origin of the form https://<project-ref>.supabase.co with the default HTTPS port. Custom domains require an explicit code-reviewed allowlist.`,
+    );
+    return null;
+  }
+  return origin;
+}
+
+const publicOrigin = validatedSupabaseOrigin(
   "NEXT_PUBLIC_SUPABASE_URL",
   publicUrl,
 );
-const serverOrigin = validatedHttpsOrigin("SUPABASE_URL", serverUrl);
+const serverOrigin = validatedSupabaseOrigin("SUPABASE_URL", serverUrl);
 
 if (publicOrigin && serverOrigin && publicOrigin !== serverOrigin) {
   markError(
@@ -151,6 +344,7 @@ if (supabaseConfigured && liveAuthE2EProfile) {
       "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     ],
+    ["NEXT_PUBLIC_TURNSTILE_SITE_KEY", turnstileSiteKey],
   ]
     .filter(([, value]) => !value)
     .map(([name]) => name);
@@ -162,10 +356,12 @@ if (supabaseConfigured && liveAuthE2EProfile) {
     serviceSupabaseKey ||
     process.env.SUPABASE_REGION ||
     process.env.SUPABASE_DPA_CONFIRMED_AT ||
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    process.env.SUPABASE_CAPTCHA_CONFIRMED_AT ||
+    process.env.TURNSTILE_CONFIGURATION_CONFIRMED_AT
   ) {
     markError(
-      "The live-auth-e2e build accepts only the public URL and publishable key; privileged, deployment, region, DPA, and anon-alias variables must be absent.",
+      "The live-auth-e2e build accepts only the public URL, publishable key, and public Turnstile test site key; privileged, deployment, region, DPA, and anon-alias variables must be absent.",
     );
   }
   INFO(
@@ -180,13 +376,15 @@ if (supabaseConfigured && liveAuthE2EProfile) {
       publicSupabaseKey,
     ],
     ["SUPABASE_SERVICE_ROLE_KEY", serviceSupabaseKey],
+    ["RATE_LIMIT_HMAC_SECRET", rateLimitHmacSecret],
+    ["NEXT_PUBLIC_TURNSTILE_SITE_KEY", turnstileSiteKey],
   ]
     .filter(([, value]) => !value)
     .map(([name]) => name);
 
   if (missing.length > 0) {
     markError(
-      `Supabase is partially configured. Missing: ${missing.join(", ")}. ` +
+      `Supabase is partially configured through ${configuredSupabaseVariables.join(", ")}. Missing: ${missing.join(", ")}. ` +
         "Disable every Supabase variable or provide the complete account/feedback configuration.",
     );
   }
@@ -198,11 +396,24 @@ if (supabaseConfigured && liveAuthE2EProfile) {
     );
   }
   requireAttestation("SUPABASE_DPA_CONFIRMED_AT", "Supabase");
+  requireAttestation(
+    "SUPABASE_CAPTCHA_CONFIRMED_AT",
+    "Supabase Auth CAPTCHA protection",
+  );
+  requireAttestation(
+    "TURNSTILE_CONFIGURATION_CONFIRMED_AT",
+    "Cloudflare Turnstile hostname and privacy configuration",
+  );
 } else if (liveAuthE2EProfile) {
   markError(
-    "The live-auth-e2e build requires NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY.",
+    "The live-auth-e2e build requires NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, and NEXT_PUBLIC_TURNSTILE_SITE_KEY.",
   );
 } else {
+  if (rateLimitHmacSecret) {
+    markError(
+      "RATE_LIMIT_HMAC_SECRET is present while Supabase is disabled. Remove the orphaned limiter secret or configure the complete protected account backend.",
+    );
+  }
   WARN(
     "Supabase is disabled. Login, cross-device sync, account management, and stored feedback are unavailable; public learning content remains available.",
   );
@@ -212,6 +423,8 @@ if (supabaseConfigured && liveAuthE2EProfile) {
 // fixed 180-day pruning migration and its daily Cron job have been applied and
 // attested. A service-role key alone must never publish the free-text form.
 const feedbackEnabled = process.env.FEEDBACK_ENABLED;
+const feedbackRetentionAttestation =
+  process.env.FEEDBACK_RETENTION_CRON_CONFIRMED_AT;
 if (
   feedbackEnabled &&
   feedbackEnabled !== "true" &&
@@ -229,6 +442,10 @@ if (feedbackEnabled === "true") {
     "FEEDBACK_RETENTION_CRON_CONFIRMED_AT",
     "Feedback retention Cron",
   );
+} else if (feedbackRetentionAttestation) {
+  markError(
+    "FEEDBACK_RETENTION_CRON_CONFIRMED_AT is present while FEEDBACK_ENABLED is not true. Remove the orphaned attestation or enable and fully configure stored feedback.",
+  );
 }
 
 // Canonical origin guard.
@@ -245,12 +462,33 @@ for (const [name, value] of [
   }
 }
 
-// Sentry: reject malformed DSNs and unverified retention/disclosure state.
+// Sentry: runtime reporting and source-map upload are one coherent provider
+// boundary. A planted upload credential must not activate the build plugin
+// while bypassing the DPA, retention, and DSN checks.
+const serverSentryDsn = process.env.SENTRY_DSN;
+const publicSentryDsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
 const sentryDsns = [
-  ["SENTRY_DSN", process.env.SENTRY_DSN],
-  ["NEXT_PUBLIC_SENTRY_DSN", process.env.NEXT_PUBLIC_SENTRY_DSN],
+  ["SENTRY_DSN", serverSentryDsn],
+  ["NEXT_PUBLIC_SENTRY_DSN", publicSentryDsn],
 ].filter(([, value]) => Boolean(value));
-if (sentryDsns.length > 0) {
+const sentryUploadVariables = [
+  ["SENTRY_AUTH_TOKEN", process.env.SENTRY_AUTH_TOKEN],
+  ["SENTRY_ORG", process.env.SENTRY_ORG],
+  ["SENTRY_PROJECT", process.env.SENTRY_PROJECT],
+];
+const sentryConfigured = Boolean(
+  sentryDsns.length > 0 ||
+    sentryUploadVariables.some(([, value]) => Boolean(value)) ||
+    process.env.SENTRY_DPA_CONFIRMED_AT ||
+    process.env.SENTRY_RETENTION_DAYS,
+);
+
+if (sentryConfigured) {
+  if (sentryDsns.length === 0) {
+    markError(
+      "Sentry variables are present but neither SENTRY_DSN nor NEXT_PUBLIC_SENTRY_DSN is configured.",
+    );
+  }
   const dsnPattern =
     /^https:\/\/[a-f0-9]+@[a-z0-9.-]+(?:\.de)?\.sentry\.io\/\d+$/;
   for (const [name, value] of sentryDsns) {
@@ -260,6 +498,27 @@ if (sentryDsns.length > 0) {
       );
     }
   }
+  if (serverSentryDsn && publicSentryDsn && serverSentryDsn !== publicSentryDsn) {
+    markError(
+      "SENTRY_DSN and NEXT_PUBLIC_SENTRY_DSN must identify the same Sentry project.",
+    );
+  }
+
+  const configuredUploadVariables = sentryUploadVariables.filter(([, value]) =>
+    Boolean(value),
+  );
+  if (
+    configuredUploadVariables.length > 0 &&
+    configuredUploadVariables.length !== sentryUploadVariables.length
+  ) {
+    const missing = sentryUploadVariables
+      .filter(([, value]) => !value)
+      .map(([name]) => name);
+    markError(
+      `Sentry source-map upload is partially configured. Missing: ${missing.join(", ")}. Disable every upload variable or provide the complete token, organization, and project group.`,
+    );
+  }
+
   requireAttestation("SENTRY_DPA_CONFIRMED_AT", "Sentry");
   const retentionDays = Number(process.env.SENTRY_RETENTION_DAYS);
   if (
@@ -277,7 +536,20 @@ if (sentryDsns.length > 0) {
 // key still counts as configured and therefore needs a recorded DPA date.
 const aiEnabled = process.env.AI_NATIVE_PRACTICE_ENABLED;
 const anthropicKey = process.env.ANTHROPIC_API_KEY;
+const anthropicDpaAttestation = process.env.ANTHROPIC_DPA_CONFIRMED_AT;
+const anthropicRetention = process.env.ANTHROPIC_RETENTION_DAYS;
+const configuredAnthropicComplianceVariables = [
+  ["ANTHROPIC_DPA_CONFIRMED_AT", anthropicDpaAttestation],
+  ["ANTHROPIC_RETENTION_DAYS", anthropicRetention],
+]
+  .filter(([, value]) => Boolean(value))
+  .map(([name]) => name);
+const anthropicComplianceMetadataPresent =
+  configuredAnthropicComplianceVariables.length > 0;
 
+if (aiEnabled && aiEnabled !== "true" && aiEnabled !== "false") {
+  markError("AI_NATIVE_PRACTICE_ENABLED must be exactly true or false when set.");
+}
 if (aiEnabled === "true" && !anthropicKey) {
   markError(
     "AI_NATIVE_PRACTICE_ENABLED=true but ANTHROPIC_API_KEY is not set.",
@@ -288,9 +560,18 @@ if (aiEnabled === "true" && !supabaseConfigured) {
     "AI_NATIVE_PRACTICE_ENABLED=true requires the complete Supabase configuration because production AI quotas fail closed through the durable rate limiter.",
   );
 }
-if (anthropicKey || aiEnabled === "true") {
+if (
+  anthropicComplianceMetadataPresent &&
+  !anthropicKey &&
+  aiEnabled !== "true"
+) {
+  markError(
+    `Anthropic compliance metadata (${configuredAnthropicComplianceVariables.join(", ")}) is present without ANTHROPIC_API_KEY or AI_NATIVE_PRACTICE_ENABLED=true. Remove the orphaned attestations or fully configure the provider.`,
+  );
+}
+if (anthropicKey || aiEnabled === "true" || anthropicComplianceMetadataPresent) {
   requireAttestation("ANTHROPIC_DPA_CONFIRMED_AT", "Anthropic");
-  const rawRetention = process.env.ANTHROPIC_RETENTION_DAYS;
+  const rawRetention = anthropicRetention;
   const retentionDays = rawRetention?.trim()
     ? Number(rawRetention)
     : Number.NaN;
@@ -315,6 +596,29 @@ if (anthropicKey && aiEnabled !== "true") {
 // must never silently activate measurement.
 const vercelConfigured = process.env.VERCEL === "1";
 const vercelTelemetryEnabled = process.env.VERCEL_TELEMETRY_ENABLED === "true";
+const vercelDpaAttestation = process.env.VERCEL_DPA_CONFIRMED_AT;
+const vercelTelemetryAttestation =
+  process.env.VERCEL_TDDDG_ASSESSMENT_AT;
+
+if (
+  process.env.VERCEL_TELEMETRY_ENABLED &&
+  process.env.VERCEL_TELEMETRY_ENABLED !== "true" &&
+  process.env.VERCEL_TELEMETRY_ENABLED !== "false"
+) {
+  markError(
+    "VERCEL_TELEMETRY_ENABLED must be exactly true or false when set.",
+  );
+}
+if (vercelDpaAttestation && !vercelConfigured) {
+  markError(
+    "VERCEL_DPA_CONFIRMED_AT is present while VERCEL=1 is absent. Remove the orphaned attestation outside a verified Vercel runtime.",
+  );
+}
+if (vercelTelemetryAttestation && !vercelTelemetryEnabled) {
+  markError(
+    "VERCEL_TDDDG_ASSESSMENT_AT is present while VERCEL_TELEMETRY_ENABLED is not true. Remove the orphaned attestation or explicitly enable telemetry.",
+  );
+}
 
 if (vercelConfigured) {
   requireAttestation("VERCEL_DPA_CONFIRMED_AT", "Vercel");
@@ -339,9 +643,19 @@ const isGatedBuild =
   Boolean(process.env.CI) ||
   process.env.RELEASE_VALIDATION === "1" ||
   Boolean(validationProfile);
+const presentSideEffectCredentials = SIDE_EFFECT_CREDENTIALS.filter(
+  hasNonEmptyEnvironmentValue,
+);
+const isCredentialBearingBuild = presentSideEffectCredentials.length > 0;
 
 if (hasError && isGatedBuild) {
   ERROR("Environment validation failed. Failing the gated build.");
+} else if (hasError && isCredentialBearingBuild) {
+  ERROR(
+    "Environment validation failed. Failing the credential-bearing local build because these variables can authorize external side effects: " +
+      presentSideEffectCredentials.join(", ") +
+      ".",
+  );
 } else if (hasError) {
   ERROR(
     "Environment validation found critical mismatches. Build continues for local development only.",
@@ -350,4 +664,4 @@ if (hasError && isGatedBuild) {
   INFO("Environment validation passed.");
 }
 
-process.exit(hasError && isGatedBuild ? 1 : 0);
+process.exit(hasError && (isGatedBuild || isCredentialBearingBuild) ? 1 : 0);

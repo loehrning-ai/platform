@@ -14,9 +14,18 @@ describe("HeroSection learning-platform positioning", () => {
     });
   });
 
-  it("renders an in-flow primary CTA linking to the courses hub", () => {
+  it("renders an in-flow primary CTA linking to the diagnostic start", () => {
     render(<HeroSection />);
-    const cta = screen.getByRole("link", { name: /Lernpfad öffnen/i });
-    expect(cta).toHaveAttribute("href", "/kurse");
+    const cta = screen.getByRole("link", { name: /Start bestimmen/i });
+    expect(cta).toHaveAttribute("href", "/ki-check");
+  });
+
+  it("renders the above-fold introduction without a delayed clipping reveal", () => {
+    render(<HeroSection />);
+    const introduction = screen.getByText(/Kurse, Demos, Bücher und Arbeitsnotizen/);
+
+    expect(introduction.tagName).toBe("P");
+    expect(introduction).not.toHaveStyle({ opacity: "0" });
+    expect(introduction.style.clipPath).toBe("");
   });
 });

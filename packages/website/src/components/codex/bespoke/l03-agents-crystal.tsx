@@ -104,7 +104,7 @@ export function L03AgentsCrystal({ lessonId, cpId }: L03AgentsCrystalProps): JSX
                   className={cn(
                     "border-2 border-l-4 border-border bg-background px-3 py-2 text-left font-mono text-[12.5px] text-foreground transition-colors",
                     isAbsorbed
-                      ? "border-l-[#22c55e] text-muted-foreground line-through"
+                      ? "border-l-risk-green text-muted-foreground line-through"
                       : "border-l-brand-orange hover:border-brand-orange",
                   )}
                 >
@@ -126,7 +126,7 @@ export function L03AgentsCrystal({ lessonId, cpId }: L03AgentsCrystalProps): JSX
             {preview.lintLine && <p>* {preview.lintLine}</p>}
           </div>
           {absorbed.size === CONVENTIONS.length && (
-            <p className="mt-3 inline-block bg-[#22c55e] px-2 py-1 font-mono text-[11px] font-bold text-white">
+            <p className="mt-3 inline-block bg-risk-green px-2 py-1 font-mono text-[11px] font-bold text-white">
               STYLE CONFORMANT {done ? "✓" : ""}
             </p>
           )}

@@ -193,6 +193,34 @@ describe("<NodeBox> onInteract callbacks", () => {
     expect(onInteract).toHaveBeenCalledWith(false);
   });
 
+  it("exposes interactive nodes as keyboard-operable pressed buttons", () => {
+    const onInteract = vi.fn();
+    const { container } = render(
+      <NodeBox x={0} y={0} label="Q" active={false} onInteract={onInteract} immediate />,
+    );
+    const group = interactionGroup(container);
+    expect(group).toHaveAttribute("role", "button");
+    expect(group).toHaveAttribute("tabindex", "0");
+    expect(group).toHaveAttribute("aria-label", "Q");
+    expect(group).toHaveAttribute("aria-pressed", "false");
+
+    fireEvent.focus(group);
+    expect(onInteract).toHaveBeenLastCalledWith(true);
+    fireEvent.keyDown(group, { key: "Enter" });
+    expect(onInteract).toHaveBeenLastCalledWith(true);
+    fireEvent.keyDown(group, { key: " " });
+    expect(onInteract).toHaveBeenLastCalledWith(true);
+    fireEvent.blur(group);
+    expect(onInteract).toHaveBeenLastCalledWith(false);
+  });
+
+  it("does not add button semantics when the node is informational", () => {
+    const { container } = render(<NodeBox x={0} y={0} label="Q" immediate />);
+    const group = interactionGroup(container);
+    expect(group).not.toHaveAttribute("role");
+    expect(group).not.toHaveAttribute("tabindex");
+  });
+
   it("shows a pointer cursor only when onInteract is wired", () => {
     const withHandler = render(
       <NodeBox x={0} y={0} label="Q" onInteract={() => {}} immediate />,

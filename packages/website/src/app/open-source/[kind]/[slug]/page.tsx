@@ -175,10 +175,6 @@ export default async function OpenSourceArtifactDetailPage({ params }: PageProps
           </section>
         ) : null}
 
-        {artifact.kind === "tool" || artifact.kind === "project" ? (
-          <SoftwareArtifactGuide artifact={artifact} />
-        ) : null}
-
         <dl className="mt-10 grid gap-4 border-y border-border py-6 sm:grid-cols-3">
           <div>
             <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Sprache</dt>
@@ -191,9 +187,9 @@ export default async function OpenSourceArtifactDetailPage({ params }: PageProps
           <div>
             <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Lizenz</dt>
             <dd className="mt-2">
-              <Link href={artifact.license.href} className="font-semibold underline-offset-4 hover:underline">
+              <a href={artifact.license.href} className="font-semibold underline-offset-4 hover:underline">
                 Lizenztext
-              </Link>
+              </a>
             </dd>
           </div>
         </dl>
@@ -228,6 +224,10 @@ export default async function OpenSourceArtifactDetailPage({ params }: PageProps
             <ExternalLink size={14} aria-hidden="true" />
           </a>
         </div>
+
+        {artifact.kind === "tool" || artifact.kind === "project" ? (
+          <SoftwareArtifactGuide artifact={artifact} />
+        ) : null}
       </section>
     </>
   );

@@ -27,8 +27,27 @@ describe("<FeedbackForm>", () => {
     expect(technical).toHaveAttribute("aria-pressed", "true");
   });
 
-  it("submits only the page path, never query or fragment data", async () => {
+  it("gives the message field stable form semantics and an example placeholder", () => {
+    render(<FeedbackForm />);
+
+    const message = screen.getByRole("textbox", { name: /Nachricht/i });
+    expect(message).toHaveAttribute("name", "message");
+    expect(message).toHaveAttribute("autocomplete", "off");
+    expect(message).toHaveAttribute(
+      "placeholder",
+      "Zum Beispiel: Eine Quellenangabe ist unklar …",
+    );
+    expect(message).toHaveAttribute(
+      "aria-describedby",
+      "feedback-message-requirement feedback-message-count",
+    );
+  });
+
+  it("submits only a same-origin source pathname, never query or fragment data", async () => {
     window.history.pushState({}, "", "/feedback?token=private#draft");
+    vi.spyOn(document, "referrer", "get").mockReturnValue(
+      `${window.location.origin}/buecher/ki-landschaft?token=private#chapter`,
+    );
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
       .mockResolvedValue(new Response(JSON.stringify({ ok: true }), { status: 200 }));
@@ -42,11 +61,30 @@ describe("<FeedbackForm>", () => {
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
     const init = fetchMock.mock.calls[0]?.[1];
     expect(JSON.parse(String(init?.body))).toMatchObject({
-      contextUrl: "/feedback",
+      contextUrl: "/buecher/ki-landschaft",
     });
   });
 
-  it("enforces the message floor and cap while updating the live counter", () => {
+  it("omits diagnostic context for direct or cross-origin visits", async () => {
+    vi.spyOn(document, "referrer", "get").mockReturnValue(
+      "https://external.example/private?token=secret",
+    );
+    const fetchMock = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(new Response(JSON.stringify({ ok: true }), { status: 200 }));
+
+    render(<FeedbackForm />);
+    fireEvent.change(screen.getByLabelText(/Nachricht/), {
+      target: { value: "Ein ausreichend langer Hinweis." },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Rückmeldung senden" }));
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    const init = fetchMock.mock.calls[0]?.[1];
+    expect(JSON.parse(String(init?.body))).not.toHaveProperty("contextUrl");
+  });
+
+  it("keeps submit available, focuses and associates an inline error, then clears it after correction", () => {
     render(<FeedbackForm />);
 
     const message = screen.getByRole("textbox", { name: /Nachricht/i });
@@ -54,14 +92,25 @@ describe("<FeedbackForm>", () => {
     expect(message).toHaveAttribute("minlength", "10");
     expect(message).toHaveAttribute("maxlength", "2000");
     expect(message).toBeRequired();
-    expect(submit).toBeDisabled();
+    expect(submit).toBeEnabled();
 
     fireEvent.change(message, { target: { value: "          " } });
-    expect(submit).toBeDisabled();
-    fireEvent.change(message, { target: { value: "kurz" } });
-    expect(submit).toBeDisabled();
+    fireEvent.click(submit);
+
+    expect(message).toHaveFocus();
+    expect(message).toHaveAttribute("aria-invalid", "true");
+    expect(message).toHaveAttribute(
+      "aria-describedby",
+      "feedback-message-requirement feedback-message-error feedback-message-count",
+    );
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "Gib mindestens 10 Zeichen ein.",
+    );
+
     fireEvent.change(message, { target: { value: "x".repeat(42) } });
     expect(submit).toBeEnabled();
+    expect(message).toHaveAttribute("aria-invalid", "false");
+    expect(screen.queryByText("Gib mindestens 10 Zeichen ein.")).toBeNull();
     expect(screen.getByText("42 / 2000")).toBeVisible();
   });
 

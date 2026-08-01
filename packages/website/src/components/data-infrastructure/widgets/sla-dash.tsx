@@ -39,8 +39,6 @@ interface FeedEntry {
   readonly bad: boolean;
 }
 
-let feedSeq = 0;
-
 export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -55,6 +53,7 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
   const incidentRef = useRef(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const wakeRef = useRef<() => void>(() => {});
+  const feedSeqRef = useRef(0);
 
   useCanvasAutoSize(canvasRef, wrapRef, { minHeight: 420 });
 
@@ -182,16 +181,16 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
     setStatus(anyBreach ? "incident" : "healthy");
 
     if (incident && t === 22) {
-      feedSeq += 1;
-      setFeed((f) => [{ id: feedSeq, text: "[12:22] PAGE · freshness above SLO (10 min) · on-call paged", bad: true }, ...f]);
+      const id = ++feedSeqRef.current;
+      setFeed((f) => [{ id, text: "[12:22] PAGE · freshness above SLO (10 min) · on-call paged", bad: true }, ...f]);
     }
     if (incident && t === 26) {
-      feedSeq += 1;
-      setFeed((f) => [{ id: feedSeq, text: "[12:26] PAGE · null_rate(price) > 1% · upstream schema changed", bad: true }, ...f]);
+      const id = ++feedSeqRef.current;
+      setFeed((f) => [{ id, text: "[12:26] PAGE · null_rate(price) > 1% · upstream schema changed", bad: true }, ...f]);
     }
     if (incident && t === 34) {
-      feedSeq += 1;
-      setFeed((f) => [{ id: feedSeq, text: "[12:34] paused downstream consumers · investigating", bad: false }, ...f]);
+      const id = ++feedSeqRef.current;
+      setFeed((f) => [{ id, text: "[12:34] paused downstream consumers · investigating", bad: false }, ...f]);
     }
 
     wakeRef.current();
@@ -207,6 +206,7 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
     (withIncident: boolean) => {
       incidentRef.current = withIncident;
       tRef.current = 0;
+      feedSeqRef.current = 0;
       seriesRef.current = { fresh: [], vol: [], null: [], lag: [] };
       setFeed([]);
       if (timerRef.current) clearInterval(timerRef.current);
@@ -255,7 +255,7 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
         {feed.map((entry) => (
           <div
             key={entry.id}
-            className={cn("border-l-2 py-0.5 pl-2", entry.bad ? "border-destructive text-destructive" : "border-[#22c55e] text-[#22c55e]")}
+            className={cn("border-l-2 py-0.5 pl-2", entry.bad ? "border-destructive text-destructive" : "border-risk-green text-risk-green")}
           >
             {entry.text}
           </div>
@@ -286,7 +286,7 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
         </button>
         <span className="ml-auto font-mono text-[11px] text-muted-foreground">
           t = <b className="text-foreground">{clock}</b> · status{" "}
-          <b className={status === "incident" ? "text-destructive" : "text-[#22c55e]"}>{status}</b>
+          <b className={status === "incident" ? "text-destructive" : "text-risk-green"}>{status}</b>
         </span>
       </div>
     </div>

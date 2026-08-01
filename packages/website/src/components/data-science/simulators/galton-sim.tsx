@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
+import { useControllableAnimation } from "@/lib/animation-policy";
 import { clamp, mulberry32, round } from "@/lib/data-science/sim-kit";
 
 // ─── GaltonSim ──────────────────────────────────────
@@ -96,7 +97,7 @@ export function GaltonSim() {
   const [n, setN] = useState(25);
   const [rate, setRate] = useState(8);
   const [pop, setPop] = useState<Population>("bell");
-  const [running, setRunning] = useState(true);
+  const { running, toggle: toggleRunning } = useControllableAnimation();
   const [, setTick] = useState(0);
 
   const ballsRef = useRef<Ball[]>([]);
@@ -306,7 +307,7 @@ export function GaltonSim() {
             <button
               type="button"
               className={`btn btn-sm ${running ? "" : "btn-primary"}`}
-              onClick={() => setRunning((r) => !r)}
+              onClick={toggleRunning}
             >
               {running ? "Pause" : "Play"}
             </button>

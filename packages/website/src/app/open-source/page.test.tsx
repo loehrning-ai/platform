@@ -118,7 +118,10 @@ describe("OpenSourcePage", () => {
       }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/jedes veröffentlichte Werk/),
+      screen.getByText(/kuratierte Artefaktverzeichnis/),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/weitere Quell- und Infrastruktur-Repositories/),
     ).toBeInTheDocument();
     // The mocked published project renders on the shelf with its kind stamp.
     expect(
@@ -128,16 +131,25 @@ describe("OpenSourcePage", () => {
     expect(screen.queryByText(/in Vorbereitung/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/bleibt dieser Bereich leer/i)).not.toBeInTheDocument();
 
-    for (const link of screen.getAllByRole("link", {
+    const organisationLinks = screen.getAllByRole("link", {
       name: /loehrning-ai, öffnet in neuem Tab/,
-    })) {
+    });
+    for (const link of organisationLinks) {
       expect(link).toHaveAttribute("target", "_blank");
       expect(link).toHaveAttribute("rel", "noopener noreferrer");
     }
+    expect(
+      organisationLinks.find((link) => link.classList.contains("bg-background")),
+    ).toHaveClass("whitespace-nowrap");
     expect(container.querySelector("svg.lucide-github")).toHaveAttribute(
       "aria-hidden",
       "true",
     );
+    expect(
+      screen.getByRole("link", {
+        name: /Plattform-Code auf GitHub, öffnet in neuem Tab/,
+      }),
+    ).toHaveAttribute("href", "https://github.com/loehrning-ai/platform");
 
     const graph = JSON.parse(
       container.querySelector<HTMLScriptElement>(

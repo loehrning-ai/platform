@@ -1,7 +1,7 @@
 {
   "ci": {
     "collect": {
-      "startServerCommand": "cd packages/website && bun run start",
+      "startServerCommand": "cd packages/website && node scripts/run-provider-free.mjs bun run start",
       "startServerReadyPattern": "Ready in",
       "startServerReadyTimeout": 120000,
       "url": [
@@ -41,35 +41,13 @@
         "http://localhost:3000/impressum",
         "http://localhost:3000/datenschutz"
       ],
-      "numberOfRuns": 3,
-      "settings": {
-        "budgets": [
-          {
-            "path": "/*",
-            "resourceSizes": [
-              {
-                "resourceType": "script",
-                "budget": 400
-              },
-              {
-                "resourceType": "total",
-                "budget": 1600
-              }
-            ],
-            "resourceCounts": [
-              {
-                "resourceType": "third-party",
-                "budget": 12
-              }
-            ]
-          }
-        ]
-      }
+      "numberOfRuns": 3
     },
     "assert": {
+      "aggregationMethod": "pessimistic",
       "assertions": {
         "categories:performance": [
-          "warn",
+          "error",
           {
             "minScore": 0.8
           }
@@ -77,7 +55,7 @@
         "categories:accessibility": [
           "error",
           {
-            "minScore": 0.95
+            "minScore": 1
           }
         ],
         "categories:best-practices": [
@@ -93,27 +71,39 @@
           }
         ],
         "largest-contentful-paint": [
-          "warn",
+          "error",
           {
-            "maxNumericValue": 4000
+            "maxNumericValue": 4500
           }
         ],
         "cumulative-layout-shift": [
-          "warn",
+          "error",
           {
             "maxNumericValue": 0.1
           }
         ],
         "total-blocking-time": [
-          "warn",
+          "error",
           {
-            "maxNumericValue": 600
+            "maxNumericValue": 200
           }
         ],
         "resource-summary:script:size": [
-          "warn",
+          "error",
           {
-            "maxNumericValue": 400000
+            "maxNumericValue": 368640
+          }
+        ],
+        "resource-summary:total:size": [
+          "error",
+          {
+            "maxNumericValue": 1048576
+          }
+        ],
+        "resource-summary:third-party:count": [
+          "error",
+          {
+            "maxNumericValue": 8
           }
         ]
       }

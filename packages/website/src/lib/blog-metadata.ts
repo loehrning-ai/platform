@@ -37,7 +37,7 @@ export const BLOG_POSTS: readonly BlogPost[] = [
     summary:
       "Was der EU AI Act regelt, was schon gilt und was ab 2. August 2026 dazukommt. Mit dem Stand zum AI Omnibus (Juli 2026), deinen Rechten nach Art. 50, 85 und 86 und praktischen Schritten. Alle Angaben mit Primärquellen.",
     datePublished: "2026-07-16",
-    dateModified: "2026-07-16",
+    dateModified: "2026-07-28",
     tags: ["EU AI Act", "Rechtliche Grundlagen"],
     readingTimeMin: 11,
     postNumber: 1,

@@ -8,8 +8,12 @@ import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 
 interface Props {
   params: Promise<{ slug: string }>;
-  searchParams?: Promise<{ source?: string }>;
 }
+
+// The catalog is finite. Reject Dynamic APIs at build time and never render an
+// unknown slug on demand; metadata must be present in the initial static HTML.
+export const dynamic = "error";
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   return demos.map((d) => ({ slug: d.slug }));
@@ -43,11 +47,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function DemoDetailPage({ params, searchParams }: Props) {
+export default async function DemoDetailPage({ params }: Props) {
   const { slug } = await params;
   const demo = getDemoBySlug(slug);
   if (!demo) notFound();
-  const qs = searchParams ? await searchParams : undefined;
   const copy = getDemoCopy(slug);
 
   const jsonLd = {
@@ -82,7 +85,7 @@ export default async function DemoDetailPage({ params, searchParams }: Props) {
     <>
       <JsonLd data={jsonLd} id={`demo-${demo.slug}-jsonld`} />
       <ResourceContextBanner nodeId={`demo:${demo.slug}`} />
-      <DemoDetailLayout demo={demo} source={qs?.source} />
+      <DemoDetailLayout demo={demo} />
     </>
   );
 }

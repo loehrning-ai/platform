@@ -3,13 +3,26 @@ import sitemap from "../sitemap";
 import { WIE_KI_LEKTIONEN } from "@/lib/wie-ki-funktioniert";
 import { BLOG_POSTS } from "@/lib/blog-metadata";
 import { books } from "@/lib/books";
+import { getBookChapterList } from "@/lib/book-reader-content";
 import { demos } from "@/lib/demos";
-import { ALL_COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
+import { ALL_COURSE_CATALOG } from "@/lib/courses/catalog";
 import { OPEN_SOURCE_ARTIFACTS } from "@/lib/open-source/artifacts";
 import { getWorkshopSlugs } from "@/lib/workshops";
 import { CRAWL_CONTRACT } from "@/lib/crawl/contract";
 
 const result = await sitemap();
+const publishedBookChapters = (
+  await Promise.all(
+    books.map(async (book) => {
+      const chapters = await getBookChapterList(book.id);
+      return chapters.map((chapter) => ({
+        book,
+        chapter,
+        url: `https://loehrning.ai/buecher/${book.id}/${chapter.slug}`,
+      }));
+    }),
+  )
+).flat();
 
 describe("sitemap()", () => {
   it("includes the home page with priority 1.0", () => {
@@ -20,38 +33,26 @@ describe("sitemap()", () => {
 
   it("returns only public indexable routes", () => {
     // Sitemap composition (public-content contract):
-    //   23 static pages = the non-dynamic public-indexable contract entries
-    //     (home, einstieg, wie-ki-funktioniert, ki-check, glossar,
-    //     kurse, the four course landings, blog, buecher, demos,
-    //     workshops, open-source, open-source/lizenzrichtlinie, ueber-mich,
-    //     ueber-die-plattform, neuigkeiten, hilfe, bekannte-grenzen,
-    //     impressum, datenschutz)
+    //   every non-dynamic public-indexable contract entry
     //   + WIE_KI_LEKTIONEN.length individual lektion routes
-    //   + catalog detail pages (buecher + demos + workshops slugs)
-    //   + every course detail page under /kurse/open-source/:slug, both
-    // still-imported ones and any flipped to native (    //     claude keeps this URL shape after going native, so it is counted
-    //     by href prefix against the combined catalog, not
-    //     IMPORTED_COURSE_CATALOG alone)
+    //   + catalog detail pages (books, published book chapters, demos, workshops)
     //   + every published open-source artifact (tools, projects, and videos)
     //     from the canonical registry
     //   + BLOG_POSTS.length (manifest-driven)
     const wieKiLektionCount = WIE_KI_LEKTIONEN.length; // individual lektion routes
     const detailPageCount =
       books.length +
+      publishedBookChapters.length +
       demos.length +
       getWorkshopSlugs().length;
     const expectedStatic = CRAWL_CONTRACT.filter(
       (entry) => entry.includeInSitemap && !entry.pattern.includes(":"),
-    ).length;
-    const openSourceSlugCourseCount = ALL_COURSE_CATALOG.filter((course) =>
-      course.href.startsWith("/kurse/open-source/"),
     ).length;
     expect(result.length).toBe(
       expectedStatic +
         wieKiLektionCount +
         detailPageCount +
         BLOG_POSTS.length +
-        openSourceSlugCourseCount +
         OPEN_SOURCE_ARTIFACTS.length,
     );
     expect(result.some((e) => e.url.endsWith("/ueber-die-plattform"))).toBe(true);
@@ -95,6 +96,11 @@ describe("sitemap()", () => {
     const firstHome = first.find((e) => e.url === "https://loehrning.ai");
     const secondHome = second.find((e) => e.url === "https://loehrning.ai");
     expect(firstHome?.lastModified).toEqual(secondHome?.lastModified);
+  });
+
+  it("emits every canonical URL exactly once", () => {
+    const urls = result.map((entry) => entry.url);
+    expect(new Set(urls).size).toBe(urls.length);
   });
 
   it("includes all manifest blog posts (manifest is source of truth)", () => {
@@ -158,10 +164,12 @@ describe("sitemap()", () => {
     }
   });
 
-  it("includes every indexable imported course detail page", () => {
+  it("includes every native open-source course landing exactly once", () => {
     const urls = result.map((entry) => entry.url);
-    for (const course of IMPORTED_COURSE_CATALOG) {
-      expect(urls).toContain(`https://loehrning.ai${course.href}`);
+    for (const course of ALL_COURSE_CATALOG.filter((entry) =>
+      entry.href.startsWith("/kurse/open-source/"),
+    )) {
+      expect(urls.filter((url) => url === `https://loehrning.ai${course.href}`)).toHaveLength(1);
     }
   });
 
@@ -173,10 +181,12 @@ describe("sitemap()", () => {
     expect(urls).not.toContain("https://loehrning.ai/kurse/open-source/claude/kurs");
   });
 
-  it("does not include book chapter reader paths (explicit includeInSitemap: false)", () => {
+  it("includes every chapter of every published book exactly once", () => {
     const urls = result.map((e) => e.url);
-    for (const url of urls) {
-      expect(url).not.toMatch(/\/buecher\/[^/]+\/.+/);
+    for (const { book, url } of publishedBookChapters) {
+      expect(urls.filter((entry) => entry === url)).toHaveLength(1);
+      const sitemapEntry = result.find((entry) => entry.url === url);
+      expect(sitemapEntry?.lastModified).toEqual(new Date(book.lastReviewed));
     }
   });
 

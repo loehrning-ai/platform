@@ -6,7 +6,6 @@ import {
   useTransform,
   useMotionValue,
   useMotionValueEvent,
-  useReducedMotion,
 } from "framer-motion";
 import {
   ArrowRight,
@@ -17,7 +16,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import dynamic from "next/dynamic";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { STEPS } from "@/components/home/hero-network-steps";
 import { BrandButton } from "@/components/ui/brand-button";
 import { IconTile, type CardAccent } from "@/components/ui/card";
@@ -92,7 +91,7 @@ const trustSignals = [
   "von Tim Löhr",
   "kostenlos",
   "technische Labore",
-  "Fortschritt optional",
+  "Kostenloses Lernkonto",
 ] as const;
 
 // The three ways the platform is used, shown as warm icon cards under the hero.
@@ -208,7 +207,9 @@ function RegisterMark({ className }: { className: string }) {
 
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const prefersReduced = useReducedMotion();
+  const [networkMode, setNetworkMode] = useState<
+    "desktop" | "mobile" | null
+  >(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"],
@@ -234,6 +235,15 @@ export function HeroSection() {
   const latMV = useMotionValue(BERLIN_LAT);
   const lonMV = useMotionValue(BERLIN_LON);
   const stepIdxMV = useMotionValue(0);
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 1024px)");
+    const updateMode = () =>
+      setNetworkMode(media.matches ? "desktop" : "mobile");
+    updateMode();
+    media.addEventListener("change", updateMode);
+    return () => media.removeEventListener("change", updateMode);
+  }, []);
 
   const latRef = useRef<HTMLSpanElement>(null);
   const lonRef = useRef<HTMLSpanElement>(null);
@@ -444,37 +454,7 @@ export function HeroSection() {
       >
         <div className="grid grid-cols-1 items-start gap-0 lg:grid-cols-[1fr_minmax(0,440px)] xl:grid-cols-[1fr_520px]">
           <div className="relative z-10">
-            <m.div
-              className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3.5 py-1.5 shadow-card"
-              initial={prefersReduced ? false : { opacity: 0, y: 6 }}
-              animate={
-                prefersReduced
-                  ? { opacity: 1, y: 0 }
-                  : {
-                      opacity: 1,
-                      y: 0,
-                      borderColor: [
-                        "rgba(11,9,8,0.2)",
-                        "rgba(165,55,15,0.4)",
-                        "rgba(11,9,8,0.2)",
-                      ],
-                    }
-              }
-              transition={
-                prefersReduced
-                  ? { duration: 0 }
-                  : {
-                      opacity: { duration: 0.5, delay: 0.05, ease: EASE },
-                      y: { duration: 0.5, delay: 0.05, ease: EASE },
-                      borderColor: {
-                        duration: 3,
-                        delay: 1.5,
-                        repeat: 2,
-                        ease: "easeInOut",
-                      },
-                    }
-              }
-            >
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3.5 py-1.5 shadow-card">
               <span
                 className="h-2 w-2 rounded-full bg-brand-orange"
                 aria-hidden="true"
@@ -482,7 +462,7 @@ export function HeroSection() {
               <span className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-foreground/60">
                 Freie KI-Lernplattform
               </span>
-            </m.div>
+            </div>
 
             <h1
               className="font-bold leading-[0.88] text-foreground"
@@ -491,54 +471,23 @@ export function HeroSection() {
                 letterSpacing: "0",
               }}
             >
-              {headlineLines.map((line, i) => (
+              {headlineLines.map((line) => (
                 <span key={line.text} className="block pb-2">
-                  <m.span
-                    className={"block " + line.color}
-                    initial={
-                      prefersReduced
-                        ? false
-                        : { clipPath: "inset(0 0 100% 0)", y: 10 }
-                    }
-                    animate={{ clipPath: "inset(0 0 -0.3em 0)", y: 0 }}
-                    transition={{
-                      delay: 0.2 + i * 0.12,
-                      duration: 0.7,
-                      ease: EASE,
-                    }}
-                  >
+                  <span className={"block " + line.color}>
                     {line.text}
-                  </m.span>
+                  </span>
                 </span>
               ))}
             </h1>
 
-            <div className="mt-6 overflow-hidden">
-              <m.p
-                className="max-w-xl text-[1.125rem] leading-relaxed text-muted-foreground"
-                initial={
-                  prefersReduced ? false : { clipPath: "inset(0 100% 0 0)" }
-                }
-                animate={{ clipPath: "inset(0 0% 0 0)" }}
-                transition={{ delay: 0.78, duration: 0.7, ease: EASE }}
-              >
-                Kurse, Demos, Bücher und Arbeitsnotizen zu
-                KI-Kompetenz, EU AI Act, Dateninfrastruktur und Automatisierung.
-                Gebaut von Tim Löhr, mit öffentlichen Kursprojekten und
-                optionalem Konto für Fortschritt.
-              </m.p>
-            </div>
+            <p className="mt-6 max-w-xl text-[1.125rem] leading-relaxed text-muted-foreground">
+              Kurse, Demos, Bücher und Arbeitsnotizen zu
+              KI-Kompetenz, EU AI Act, Dateninfrastruktur und Automatisierung.
+              Gebaut von Tim Löhr, mit öffentlichen Kursprojekten und
+              kostenlosem Lernkonto für die vier deutschen Kernkurse.
+            </p>
 
-            <m.div
-              className="mt-5 flex max-w-2xl flex-wrap gap-2"
-              initial={prefersReduced ? false : { opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                delay: prefersReduced ? 0 : 0.9,
-                duration: 0.55,
-                ease: EASE,
-              }}
-            >
+            <div className="mt-5 flex max-w-2xl flex-wrap gap-2">
               {trustSignals.map((signal) => (
                 <span
                   key={signal}
@@ -553,20 +502,11 @@ export function HeroSection() {
                   {signal}
                 </span>
               ))}
-            </m.div>
+            </div>
 
-            <m.div
-              className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center"
-              initial={prefersReduced ? false : { opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                delay: prefersReduced ? 0 : 0.95,
-                duration: 0.6,
-                ease: EASE,
-              }}
-            >
-              <BrandButton href="/kurse" variant="primary" surface="light">
-                Lernpfad öffnen <ArrowRight size={15} />
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <BrandButton href="/ki-check" variant="primary" surface="light">
+                Start bestimmen <ArrowRight size={15} />
               </BrandButton>
               <BrandButton
                 href="/open-source"
@@ -575,56 +515,51 @@ export function HeroSection() {
               >
                 Open Source <ArrowRight size={15} />
               </BrandButton>
-            </m.div>
+            </div>
           </div>
 
           {/* Globe placeholder to keep grid layout */}
           <div className="hidden lg:block" />
         </div>
 
-        {/* Globe: position absolute, touching right + bottom edges */}
-        <m.div
-          className="home-hero-network-mask pointer-events-none absolute bottom-0 right-0 hidden lg:block"
-          style={{
-            width: "70vw",
-            height: "110%",
-            y: globeY,
-            opacity: globeOpacity,
-            overflow: "visible",
-          }}
-        >
-          <HeroNetwork
-            scrollProgress={scrollYProgress}
-            className="h-full w-full"
-            frozen={frozen}
-            latOut={latMV}
-            lonOut={lonMV}
-            stepIdxOut={stepIdxMV}
-          />
-        </m.div>
-
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center lg:hidden">
-          <HeroNetwork
-            scrollProgress={scrollYProgress}
-            mobile
-            className="h-[300px] w-[280px] opacity-40"
-          />
-        </div>
+        {/* Only one expensive projection tree mounts at a time. CSS-hidden
+            responsive duplicates still execute React and SVG work. */}
+        {networkMode === "desktop" ? (
+          <m.div
+            className="home-hero-network-mask pointer-events-none absolute bottom-0 right-0"
+            style={{
+              width: "70vw",
+              height: "110%",
+              y: globeY,
+              opacity: globeOpacity,
+              overflow: "visible",
+            }}
+          >
+            <HeroNetwork
+              scrollProgress={scrollYProgress}
+              className="h-full w-full"
+              frozen={frozen}
+              latOut={latMV}
+              lonOut={lonMV}
+              stepIdxOut={stepIdxMV}
+            />
+          </m.div>
+        ) : networkMode === "mobile" ? (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <HeroNetwork
+              scrollProgress={scrollYProgress}
+              mobile
+              className="h-[300px] w-[280px] opacity-40"
+            />
+          </div>
+        ) : null}
       </m.div>
 
-      <m.div
-        className="relative z-10 mx-auto mt-12 w-full max-w-6xl md:mt-16"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.05, duration: 0.6, ease: "easeOut" }}
-      >
+      <div className="relative z-10 mx-auto mt-12 w-full max-w-6xl md:mt-16">
         <div className="grid gap-4 sm:grid-cols-3">
           {heroPillars.map((pillar, i) => (
-            <m.div
+            <div
               key={pillar.title}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.1 + i * 0.08, duration: 0.45, ease: EASE }}
               className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5 shadow-card"
             >
               <div className="flex items-center justify-between">
@@ -639,10 +574,10 @@ export function HeroSection() {
               <p className="text-sm leading-relaxed text-muted-foreground">
                 {pillar.body}
               </p>
-            </m.div>
+            </div>
           ))}
         </div>
-      </m.div>
+      </div>
     </section>
   );
 }

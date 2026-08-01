@@ -10,13 +10,9 @@
  * for this slug (12 — the numbered chapters, set in ).
  *
  * Only the 12 numbered chapters are mappable through this facade — "home"
- * (the Overview) is deliberately excluded at the type level, matching the
- * plan's own scope. This also structurally avoids source App.js's `goTo`
- * stale-completion bug (which marked the chapter being LEFT, not the one
- * being ENTERED): `MarkChapterVisited` (a client component, mounted inside
- * each `[chapterSlug]/page.tsx`) calls `markChapterVisited` in a mount
- * effect, which is inherently mark-on-entry — there is no navigate-away
- * callback to get backwards in the first place.
+ * (the Overview) is deliberately excluded at the type level. The client
+ * completion control calls `markChapterVisited` only after an explicit learner
+ * action; route entry alone never changes certificate progress.
  */
 
 import type { DsNumberedChapterId } from "./types";

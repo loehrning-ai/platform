@@ -4,7 +4,6 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import type { Demo, DemoLevel } from "@/lib/demos";
 import { DEMO_LEVEL_LABELS } from "@/lib/demos";
-import { trackDemoOpen } from "@/lib/analytics";
 import { getGalleryPreview } from "./demo-component-registry";
 
 const SIZE_CLASS: Record<Demo["size"], string> = {
@@ -48,7 +47,7 @@ export function DemoTile({ demo, total }: { demo: Demo; total: number }) {
   const Preview = getGalleryPreview(demo.slug);
   const dark = demo.dark;
   const containerClass = [
-    "group relative flex flex-col overflow-hidden border transition-[background-color,border-color,color,opacity,transform,box-shadow]",
+    "demo-gallery-tile group relative flex flex-col overflow-hidden border transition-[background-color,border-color,color,opacity,transform,box-shadow]",
     "hover:-translate-x-[3px] hover:-translate-y-[3px]",
     dark
       ? "bg-foreground text-background border-foreground hover:shadow-[8px_8px_0_0_var(--color-brand-orange)]"
@@ -63,7 +62,7 @@ export function DemoTile({ demo, total }: { demo: Demo; total: number }) {
   return (
     <Link
       href={`/demos/${demo.slug}?source=gallery`}
-      onClick={() => trackDemoOpen(demo.slug, "gallery")}
+      prefetch={false}
       data-demo-tile={demo.slug}
       className={containerClass}
       aria-label={`Praxisbeispiel öffnen: ${demo.title} ${demo.titleKicker}`}

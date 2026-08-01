@@ -90,12 +90,16 @@ export function LayerCake() {
             const broken = failMode && faulty === L.key;
             const impact = affected(i) && !broken;
             return (
-              <div
+              <button
+                type="button"
                 key={L.key}
                 className={`lc-slab lc-${L.hue} ${isHover ? "on" : ""} ${pulsing ? "pulse " + pulse!.dir : ""} ${broken ? "broken" : ""} ${impact ? "impact" : ""} ${failMode ? "fm" : ""}`}
                 onMouseEnter={() => setHover(L.key)}
                 onMouseLeave={() => setHover(null)}
+                onFocus={() => setHover(L.key)}
+                onBlur={() => setHover(null)}
                 onClick={() => failMode && setFaulty((f) => (f === L.key ? null : L.key))}
+                aria-pressed={failMode ? broken : undefined}
                 style={{ zIndex: isHover ? 40 : 10 + (LAYERS.length - i) }}
               >
                 <div className="lc-slab-num">L{L.n}</div>
@@ -104,7 +108,7 @@ export function LayerCake() {
                 <div className="lc-slab-api">{L.api}</div>
                 {pulsing && <div className="lc-pulse-dot" />}
                 {broken && <div className="lc-x">✕</div>}
-              </div>
+              </button>
             );
           })}
         </div>
@@ -156,7 +160,7 @@ export function LayerCake() {
         </aside>
       </div>
       <div className="lc-ctrls">
-        <button className="btn btn-primary" onClick={trace} disabled={!!pulse}>
+        <button type="button" className="btn btn-primary" onClick={trace} disabled={!!pulse}>
           {pulse ? (pulse.dir === "down" ? "▾ descending…" : "▴ returning result…") : "▶ Trace a query"}
         </button>
         <label className="lc-fm">

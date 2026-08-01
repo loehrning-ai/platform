@@ -10,12 +10,9 @@ import { test, expect, type Page } from "@playwright/test";
  *     (src/app/kurse/open-source/data-engineering-fundamentals/page.tsx) IS
  * the chapter grid — there is no nested `/kurs` route at all (
  *     stage 10 Done Criteria, and stage 14's coursePath fix).
- *   - no checkpoint/quiz leg: grepping the pinned source's chapter files for
- *     a quiz component returns nothing (config.ts's own comment). This
- *     course's completion criterion is literally "all 12 chapters visited"
- * (MarkChapterVisited, ) — so the "checkpoint" leg
- *     below asserts that mounting a chapter route marks it completed in the
- *     unified progress store, not a quiz-answer interaction.
+ *   - no checkpoint/quiz leg: the learner explicitly marks each chapter
+ *     complete after reading it. The checkpoint leg verifies that action
+ *     writes the canonical completion record; route entry alone does not.
  *   - the certificate/QR-verify seeds "all 12 chapters completed" with
  *     m: "completion", s: null, exactly like codex/data-infrastructure's
  *     own no-quiz "completion" eligibility path.
@@ -111,29 +108,31 @@ test.describe("Data Engineering Fundamentals golden path", () => {
     await expect(page.locator("h1")).toHaveCount(1);
   });
 
-  test("chapter: visiting a chapter route marks it completed in the unified progress store", async ({
+  test("chapter: explicit confirmation marks it completed in the unified progress store", async ({
     page,
   }) => {
     const res = await page.goto(CHAPTER_ROUTE, { waitUntil: "domcontentloaded" });
     expect(res?.status()).toBe(200);
     await expect(page.locator("h1")).toHaveCount(1);
 
-    // MarkChapterVisited's mount effect — no quiz
-    // interaction exists for this course, the route visit itself is the
-    // completion signal.
+    await page
+      .getByRole("button", { name: "Mark chapter complete" })
+      .click();
     await expect
-      .poll(async () =>
-        page.evaluate((key) => {
-          const raw = window.localStorage.getItem(key);
-          if (!raw) return false;
-          const parsed = JSON.parse(raw) as {
-            courses?: Record<string, { lessons?: Record<string, { completed?: boolean }> }>;
-          };
-          return (
-            parsed.courses?.["data-engineering-fundamentals"]?.lessons?.["home"]?.completed ===
-            true
-          );
-        }, UNIFIED_KEY),
+      .poll(
+        () =>
+          page.evaluate((key) => {
+            const raw = window.localStorage.getItem(key);
+            if (!raw) return false;
+            const parsed = JSON.parse(raw) as {
+              courses?: Record<string, { lessons?: Record<string, { completed?: boolean }> }>;
+            };
+            return (
+              parsed.courses?.["data-engineering-fundamentals"]?.lessons?.["home"]?.completed ===
+              true
+            );
+          }, UNIFIED_KEY),
+        { timeout: 10_000 },
       )
       .toBe(true);
   });

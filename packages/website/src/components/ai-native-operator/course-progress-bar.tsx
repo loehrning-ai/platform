@@ -36,7 +36,7 @@ export function CourseProgressBar(): JSX.Element {
       <div
         className="mt-1.5 h-1.5 overflow-hidden bg-border"
         role="progressbar"
-        aria-label="Course progress"
+        aria-label="Lesson progress"
         aria-valuenow={mounted ? pct : 0}
         aria-valuemin={0}
         aria-valuemax={100}

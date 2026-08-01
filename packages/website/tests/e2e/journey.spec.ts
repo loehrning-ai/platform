@@ -1,4 +1,12 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type APIResponse } from "@playwright/test";
+
+async function expectGone(response: APIResponse, route: string) {
+  expect(response.status(), `${route} status`).toBe(410);
+  expect(await response.text(), `${route} body`).toBe("");
+  expect(response.headers()["x-robots-tag"], `${route} X-Robots-Tag`).toContain(
+    "noindex",
+  );
+}
 
 test.describe("deleted commercial journey APIs", () => {
   test("/ki-transformation-check redirects to KI-Check", async ({ page }) => {
@@ -6,22 +14,29 @@ test.describe("deleted commercial journey APIs", () => {
     await expect(page).toHaveURL(/\/ki-check$/);
   });
 
-  test("/api/scan is absent or noindexed", async ({ request }) => {
+  test("/api/scan is gone with an empty noindex response", async ({
+    request,
+  }) => {
     const res = await request.post("/api/scan", { data: { url: "" } });
-    expect([404, 410]).toContain(res.status());
+    await expectGone(res, "/api/scan");
   });
 
-  test("/api/journey/scan-insight is absent or noindexed", async ({ request }) => {
-    const res = await request.post("/api/journey/scan-insight", {
-      data: { url: "https://example.com" },
-    });
-    expect([404, 410]).toContain(res.status());
-  });
+  test(
+    "/api/journey/scan-insight is gone with an empty noindex response",
+    async ({ request }) => {
+      const res = await request.post("/api/journey/scan-insight", {
+        data: { url: "https://example.com" },
+      });
+      await expectGone(res, "/api/journey/scan-insight");
+    },
+  );
 
-  test("/api/journey/leads is absent", async ({ request }) => {
+  test("/api/journey/leads is gone with an empty noindex response", async ({
+    request,
+  }) => {
     const res = await request.post("/api/journey/leads", {
       data: { email: "not-an-email" },
     });
-    expect([400, 404, 410, 429]).toContain(res.status());
+    await expectGone(res, "/api/journey/leads");
   });
 });

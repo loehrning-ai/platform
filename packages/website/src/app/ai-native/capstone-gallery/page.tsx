@@ -193,7 +193,11 @@ export default function CapstoneGalleryPage() {
           </FadeBlock>
           <FadeBlock delay={2}>
             <div className="mt-8 flex flex-wrap gap-3.5">
-              <BrandButton href="/ai-native/kurs/modul_1" variant="primary">
+              <BrandButton
+                href="/ai-native/kurs/modul_1"
+                prefetch={false}
+                variant="primary"
+              >
                 Modul 1 starten <ArrowRight size={14} />
               </BrandButton>
               <BrandButton href="/ai-native#os-bundle" variant="outline">

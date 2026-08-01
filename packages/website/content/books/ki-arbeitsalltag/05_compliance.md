@@ -2,7 +2,7 @@
 
 Datenschutz ist längst nicht mehr reine IT-Sache. Sobald du KI nutzt, ist es auch dein Thema.
 
-Die gute Nachricht: Du musst kein Jurist werden. Bewusstsein reicht. Artikel 4 der EU-KI-Verordnung verlangt genau das, ein ausreichendes Maß an KI-Kompetenz, kein Jura-Examen. In Kraft seit 2. Februar 2025.
+Du musst kein Jurist werden. Artikel 4 der EU-KI-Verordnung verlangt seit dem 2. Februar 2025 kontextgerechte Maßnahmen zur Entwicklung von KI-Kompetenz. Seit dem 27. Juli 2026 muss die Organisation kein bestimmtes Kompetenzniveau einzelner Personen garantieren. Reines Bewusstsein ohne konkrete Maßnahme reicht trotzdem nicht.
 
 Hier die vier wichtigsten Regeln, vereinfacht.
 
@@ -72,15 +72,15 @@ Das ist Shadow AI, und es ist eines der größten Governance-Risiken aktuell. Et
 
 ## Regel 4: EU AI Act, Artikel 4
 
-Seit 2. Februar 2025 greift Artikel 4 der Verordnung (EU) 2024/1689. Anbieter und Betreiber von KI-Systemen, also auch dein Arbeitgeber, müssen ein ausreichendes Maß an KI-Kompetenz ihres Personals sicherstellen.
+Seit 2. Februar 2025 greift Artikel 4 der Verordnung (EU) 2024/1689. Anbieter und Betreiber von KI-Systemen müssen Maßnahmen ergreifen, die die Entwicklung der KI-Kompetenz ihres Personals und anderer in ihrem Auftrag handelnder Personen unterstützen. Die seit 27. Juli 2026 geltende Fassung verlangt nicht, dass ein bestimmtes individuelles Kompetenzniveau garantiert wird.
 
 Drei Punkte in Klartext:
 
 - **Wer ist betroffen?** Jeder, der KI im beruflichen Kontext nutzt, nicht nur KI-Entwickler.
-- **Was heißt „ausreichend"?** Bewusstsein für Chancen, Risiken und Grenzen. Kein Expertenwissen.
-- **Wie nachweisen?** Schulung, Dokumentation, Richtlinie. Der KI-Führerschein ist genau dafür da.
+- **Was ist zu berücksichtigen?** Vorwissen, Erfahrung, Ausbildung, Einsatzkontext sowie betroffene Personen oder Gruppen.
+- **Wie dokumentieren?** Bedarf, gewählte Maßnahmen und deren Einbettung in den tatsächlichen Einsatz. Ein Kurs kann ein Baustein sein, ist aber kein automatischer Erfüllungsnachweis.
 
-Ein eigener Bußgeldtatbestand nur für Art. 4 ist im EU-Sanktionskatalog nicht ausdrücklich ausgewiesen (Stand: 14. Juli 2026). Die Kommissions-FAQ nennt den 2. August 2026 für den Beginn der nationalen Aufsicht und Durchsetzung. Welche Maßnahme oder nationale Sanktion bei einem konkreten Art.-4-Verstoß greift, muss anhand des dann geltenden deutschen Rechts geprüft werden. Für andere, in Art. 99 ausdrücklich genannte Pflichtverletzungen gelten eigene Höchstbeträge.
+Ein eigener Bußgeldtatbestand nur für Art. 4 ist im EU-Sanktionskatalog nicht ausdrücklich ausgewiesen (Stand: 28. Juli 2026). Die Kommissions-FAQ nennt Anfang August 2026 für den Beginn der nationalen Aufsicht und Durchsetzung. Welche Maßnahme oder nationale Sanktion bei einem konkreten Art.-4-Verstoß greift, muss anhand des geltenden deutschen Rechts geprüft werden. Für andere, in Art. 99 ausdrücklich genannte Pflichtverletzungen gelten eigene Höchstbeträge.
 
 > **Rechtlicher Hinweis:** Wenn dein Unternehmen einen Betriebsrat hat, ist ein KI-Tool-Rollout oft zustimmungspflichtig, Grundlage ist §87 BetrVG (Verhalten im Betrieb, Kontrolleinrichtungen). Klärt das früh. Ein nachträgliches Einspruchsverfahren kostet Monate.
 

@@ -12,6 +12,7 @@ import {
   getReadSectionIds,
   getLessonQuizScore,
 } from "@/lib/course/progress";
+import { subscribe } from "@/lib/progress";
 import type { CourseSlug, Lesson } from "@/lib/course/types";
 import { FreshnessBadge } from "@/components/ui/freshness-badge";
 import type { BlockFreshness } from "@/lib/course/data";
@@ -34,27 +35,77 @@ export function LessonLayout({ courseSlug, lessons, freshnessMeta }: LessonLayou
     {},
   );
 
+  // Block-based course routes contain several lessons at one URL. Resume links
+  // use a bounded `#lesson=<id>` fragment so they can restore the first
+  // incomplete lesson without adding an unvalidated route segment.
+  useEffect(() => {
+    const syncLessonFragment = () => {
+      const match = /^#lesson=([^&]+)$/.exec(window.location.hash);
+      if (!match) return;
+      let lessonId: string;
+      try {
+        lessonId = decodeURIComponent(match[1]);
+      } catch {
+        return;
+      }
+      if (lessons.some((lesson) => lesson.id === lessonId)) {
+        setActiveLessonId(lessonId);
+      }
+    };
+
+    syncLessonFragment();
+    window.addEventListener("hashchange", syncLessonFragment);
+    return () => {
+      window.removeEventListener("hashchange", syncLessonFragment);
+    };
+  }, [lessons]);
+
   // Load from localStorage after mount
   useEffect(() => {
-    setCompletedIds(new Set(getCompletedLessonIds(courseSlug)));
-    setReadIds(new Set(getReadSectionIds(courseSlug, activeLessonId)));
-    const score = getLessonQuizScore(courseSlug, activeLessonId);
-    if (score) {
-      setQuizScores((prev) => ({ ...prev, [activeLessonId]: score }));
-    }
+    return subscribe(() => {
+      setCompletedIds(new Set(getCompletedLessonIds(courseSlug)));
+      setReadIds(new Set(getReadSectionIds(courseSlug, activeLessonId)));
+      const score = getLessonQuizScore(courseSlug, activeLessonId);
+      setQuizScores((prev) => {
+        const next = { ...prev };
+        if (score) next[activeLessonId] = score;
+        else delete next[activeLessonId];
+        return next;
+      });
+    });
   }, [courseSlug, activeLessonId]);
+
+  const activateLesson = useCallback(
+    (lessonId: string) => {
+      if (!lessons.some((lesson) => lesson.id === lessonId)) return;
+
+      const lessonFragment = `#lesson=${encodeURIComponent(lessonId)}`;
+      if (window.location.hash !== lessonFragment) {
+        window.history.replaceState(
+          window.history.state,
+          "",
+          `${window.location.pathname}${window.location.search}${lessonFragment}`,
+        );
+      }
+      setActiveLessonId(lessonId);
+    },
+    [lessons],
+  );
 
   const activeLesson = lessons.find((l) => l.id === activeLessonId);
   const activeLessonIndex = lessons.findIndex((l) => l.id === activeLessonId);
   const hasNextLesson = activeLessonIndex < lessons.length - 1;
 
-  const handleSelectLesson = useCallback((lessonId: string) => {
-    setActiveLessonId(lessonId);
-    // Closing hands focus back to the toggle button via LessonShell's
-    // useFocusTrap restore-on-close (it snapshots whatever had focus when the
-    // drawer opened, which is the toggle button itself).
-    setSidebarOpen(false);
-  }, []);
+  const handleSelectLesson = useCallback(
+    (lessonId: string) => {
+      activateLesson(lessonId);
+      // Closing hands focus back to the toggle button via LessonShell's
+      // useFocusTrap restore-on-close (it snapshots whatever had focus when the
+      // drawer opened, which is the toggle button itself).
+      setSidebarOpen(false);
+    },
+    [activateLesson],
+  );
 
   const handleMarkSectionRead = useCallback(
     (sectionId: string) => {
@@ -82,10 +133,10 @@ export function LessonLayout({ courseSlug, lessons, freshnessMeta }: LessonLayou
 
   const handleNextLesson = useCallback(() => {
     if (hasNextLesson) {
-      setActiveLessonId(lessons[activeLessonIndex + 1].id);
+      activateLesson(lessons[activeLessonIndex + 1].id);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [hasNextLesson, lessons, activeLessonIndex]);
+  }, [activateLesson, hasNextLesson, lessons, activeLessonIndex]);
 
   if (!activeLesson) return null;
 

@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import * as Sentry from "@sentry/nextjs";
 import Link from "next/link";
+import { reportClientBoundaryError } from "@/lib/observability/client-boundary-error";
 
 export default function Error({
   error,
@@ -12,9 +12,7 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Sentry capture replaces the old console.error of the full error object,
-    // which leaked stack details into production logs.
-    Sentry.captureException(error);
+    reportClientBoundaryError("demos-detail", error);
   }, [error]);
 
   return (

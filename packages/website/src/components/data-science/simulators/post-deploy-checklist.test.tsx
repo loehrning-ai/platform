@@ -35,9 +35,13 @@ describe("PostDeployChecklist ", () => {
     expect(screen.getByText(/ship it\./)).toBeInTheDocument();
   });
 
-  it("clicking an item's row expands its description", () => {
+  it("exposes an explicit keyboard-accessible details control", () => {
     render(<PostDeployChecklist />);
-    fireEvent.click(screen.getByText("Model card written"));
+    const details = screen.getByRole("button", {
+      name: "Show details for Model card written",
+    });
+    fireEvent.click(details);
+    expect(details).toHaveAttribute("aria-expanded", "true");
     expect(
       screen.getByText("Document intended use, limitations, training data, and known failure modes."),
     ).toBeInTheDocument();

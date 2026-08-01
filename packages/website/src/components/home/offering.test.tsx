@@ -41,7 +41,10 @@ describe("Offering section", () => {
 
   it("renders the Technikkurse imagery band with real screenshots", () => {
     render(<Offering />);
-    expect(screen.getByText("Technikkurse")).toBeInTheDocument();
+    expect(screen.getByText("Technikkurse")).toHaveClass("text-brand-orange");
+    expect(
+      screen.getByText(/mit selbst ausgestelltem Certificate/),
+    ).toBeInTheDocument();
     const previews = DEEPER.slice(0, 3);
     expect(previews).toHaveLength(3);
     for (const course of previews) {

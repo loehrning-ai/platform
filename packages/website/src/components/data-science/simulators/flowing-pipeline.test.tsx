@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { render, cleanup, screen, fireEvent } from "@testing-library/react";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { render, cleanup, screen } from "@testing-library/react";
 import { FlowingPipeline } from "./flowing-pipeline";
 
 afterEach(() => {
@@ -9,13 +11,13 @@ afterEach(() => {
 
 describe("FlowingPipeline ", () => {
   it("renders exclusively via SVG — no canvas element in the DOM", () => {
-    const { container } = render(<FlowingPipeline onStageClick={() => {}} />);
+    const { container } = render(<FlowingPipeline />);
     expect(container.querySelector("svg")).not.toBeNull();
     expect(container.querySelector("canvas")).toBeNull();
   });
 
   it("renders all 6 station labels from source", () => {
-    render(<FlowingPipeline onStageClick={() => {}} />);
+    render(<FlowingPipeline />);
     expect(screen.getByText(/Data/)).toBeInTheDocument();
     expect(screen.getByText(/Explore/)).toBeInTheDocument();
     expect(screen.getByText(/Clean/)).toBeInTheDocument();
@@ -24,16 +26,23 @@ describe("FlowingPipeline ", () => {
     expect(screen.getByText(/Evaluate/)).toBeInTheDocument();
   });
 
-  it("clicking a station invokes onStageClick with that station's chapter id", () => {
-    const onStageClick = vi.fn();
-    const { container } = render(<FlowingPipeline onStageClick={onStageClick} />);
-    const nodes = container.querySelectorAll(".ov-loop-node");
-    expect(nodes.length).toBe(6);
-    fireEvent.click(nodes[0]!);
-    expect(onStageClick).toHaveBeenCalledWith("fund");
+  it("renders every station as a real chapter link", () => {
+    render(<FlowingPipeline />);
+    const nodes = screen.getAllByRole("link");
+    expect(nodes).toHaveLength(6);
+    expect(nodes[0]).toHaveAccessibleName("01 · Data - Kapitel öffnen");
+    expect(nodes[0]).toHaveAttribute(
+      "href",
+      "/kurse/open-source/data-science/fund",
+    );
   });
 
   it("does not throw despite jsdom lacking SVGPathElement.getPointAtLength/getTotalLength", () => {
-    expect(() => render(<FlowingPipeline onStageClick={() => {}} />)).not.toThrow();
+    expect(() => render(<FlowingPipeline />)).not.toThrow();
+  });
+
+  it("does not start the continuous ticker during the initial mobile paint", () => {
+    const source = readFileSync(join(__dirname, "flowing-pipeline.tsx"), "utf8");
+    expect(source).toContain('rootMargin: "0px 0px -50% 0px"');
   });
 });

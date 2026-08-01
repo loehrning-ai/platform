@@ -6,7 +6,10 @@
 // Tailwind/font pipeline may be exactly what failed. Keep it minimal + branded.
 
 import { useEffect } from "react";
-import * as Sentry from "@sentry/nextjs";
+import {
+  reportClientBoundaryError,
+  validatedNextDigest,
+} from "@/lib/observability/client-boundary-error";
 
 export default function GlobalError({
   error,
@@ -15,10 +18,10 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const digest = validatedNextDigest(error);
+
   useEffect(() => {
-    Sentry.captureException(error);
-    if (process.env.NODE_ENV === "development")
-      console.error("Global error:", error.message);
+    reportClientBoundaryError("app-global", error);
   }, [error]);
 
   return (
@@ -61,12 +64,13 @@ export default function GlobalError({
         <p style={{ margin: 0, maxWidth: "28rem", color: "#a89070" }}>
           Ein unerwarteter Fehler ist aufgetreten. Bitte lade die Seite neu.
         </p>
-        {error.digest && (
-          <p style={{ margin: 0, fontSize: "0.75rem", color: "#6b5b49" }}>
-            Fehler-ID: {error.digest}
+        {digest && (
+          <p style={{ margin: 0, fontSize: "0.75rem", color: "#a89070" }}>
+            Fehler-ID: {digest}
           </p>
         )}
         <button
+          type="button"
           onClick={() => reset()}
           style={{
             border: "1px solid #f97316",

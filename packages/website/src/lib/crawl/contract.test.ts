@@ -3,6 +3,7 @@ import {
   CRAWL_CONTRACT,
   getCrawlRoute,
   isProtectedRoute,
+  isPublicRoute,
   matchesPattern,
   robotsAllowPaths,
   robotsDisallowPaths,
@@ -51,6 +52,24 @@ describe("crawl contract", () => {
       expect(entry.routeClass, path).toBe("protected");
       expect(entry.xRobotsTag, path).toContain("noindex");
     }
+  });
+
+  it("keeps the exact book PDF private while delegating auth to its route", () => {
+    const path = "/api/buecher/ki-landschaft/download.pdf";
+    const entry = getCrawlRoute(path);
+
+    expect(entry.pattern).toBe("/api/buecher/:slug/download.pdf");
+    expect(entry.routeClass).toBe("protected");
+    expect(entry.auth).toBe("route-level");
+    expect(entry.robots).toBe("disallow");
+    expect(entry.cache).toBe("private-no-store");
+    expect(entry.xRobotsTag).toContain("noindex");
+    expect(isPublicRoute(path)).toBe(false);
+    expect(isProtectedRoute(path)).toBe(false);
+
+    const nearMiss = getCrawlRoute(`${path}/extra`);
+    expect(nearMiss.routeClass).toBe("protected");
+    expect(nearMiss.auth).toBe("protected");
   });
 
   it("keeps public noindex routes crawlable", () => {
@@ -143,6 +162,22 @@ describe("crawl contract", () => {
     expect(entry.status).toBe(301);
   });
 
+  it.each([
+    "/api/scan",
+    "/api/journey/scan-insight",
+    "/api/journey/leads",
+  ])("returns an explicit retired 410 contract for %s", (path) => {
+    const entry = getCrawlRoute(path);
+    expect(entry.pattern).toBe(path);
+    expect(entry.routeClass).toBe("retired");
+    expect(entry.auth).toBe("gone");
+    expect(entry.status).toBe(410);
+    expect(entry.robots).toBe("disallow");
+    expect(entry.xRobotsTag).toContain("noindex");
+    expect(isPublicRoute(path)).toBe(false);
+    expect(isProtectedRoute(path)).toBe(false);
+  });
+
   it("classifies imported course details as indexable discovery pages", () => {
     const imported = getCrawlRoute("/kurse/open-source/codex");
     expect(imported.routeClass).toBe("public-indexable");
@@ -200,10 +235,23 @@ describe("crawl contract", () => {
     expect(allow).toContain("/book-covers/");
     expect(allow).toContain("/artifacts/");
     expect(allow).toContain("/api/knowledge-graph.json");
-    expect(allow).toContain("/kurse/open-source/");
+    for (const slug of [
+      "claude",
+      "codex",
+      "data-infrastructure",
+      "data-engineering-fundamentals",
+      "data-science",
+      "ai-native-operator",
+    ]) {
+      expect(allow).toContain(`/kurse/open-source/${slug}`);
+    }
     expect(allow).toContain("/open-source/");
     expect(disallow).toContain("/konto/");
     expect(disallow).toContain("/api/progress");
+    expect(disallow).toContain("/api/buecher/*/download.pdf");
+    expect(disallow).toContain("/api/scan");
+    expect(disallow).toContain("/api/journey/scan-insight");
+    expect(disallow).toContain("/api/journey/leads");
     expect(disallow).toContain("/downloads/");
   });
 

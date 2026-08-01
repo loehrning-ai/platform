@@ -13,6 +13,7 @@ import {
 } from "@/lib/course/progress";
 import type { ClaudeLesson } from "@/lib/claude-course/types";
 import { cn } from "@/lib/utils";
+import { subscribe } from "@/lib/progress";
 
 /**
  * ClaudeLessonReader, bespoke content renderer for the Claude Course
@@ -39,8 +40,10 @@ export function ClaudeLessonReader({
   const [completed, setCompleted] = useState(false);
 
   useEffect(() => {
-    setReadIds(getReadSectionIds("claude", lesson.id));
-    setCompleted(isLessonCompleted("claude", lesson.id));
+    return subscribe(() => {
+      setReadIds(getReadSectionIds("claude", lesson.id));
+      setCompleted(isLessonCompleted("claude", lesson.id));
+    });
   }, [lesson.id]);
 
   const widgets = useMemo(() => lesson.widgets ?? [], [lesson.widgets]);
@@ -119,7 +122,7 @@ export function ClaudeLessonReader({
                 className="inline-flex items-center gap-2 text-[13px] font-medium transition-colors disabled:cursor-default"
               >
                 {readIds.has(section.id) ? (
-                  <span className="inline-flex items-center gap-2 text-[#22c55e]">
+                  <span className="inline-flex items-center gap-2 text-risk-green">
                     <CheckCircle2 className="h-4 w-4" />
                     Read
                   </span>
@@ -145,7 +148,7 @@ export function ClaudeLessonReader({
         <div className="border-t border-border pt-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             {completed ? (
-              <span className="inline-flex items-center gap-2 text-[14px] font-medium text-[#22c55e]">
+              <span className="inline-flex items-center gap-2 text-[14px] font-medium text-risk-green">
                 <CheckCircle2 className="h-4 w-4" />
                 Lesson complete
               </span>

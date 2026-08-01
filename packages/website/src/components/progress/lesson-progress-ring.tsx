@@ -83,7 +83,7 @@ export function LessonProgressRing({
           cy={size / 2}
           r={r}
           fill="none"
-          stroke={isDone ? "#22c55e" : "var(--color-brand-orange)"}
+          stroke={isDone ? "var(--color-risk-green)" : "var(--color-brand-orange)"}
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={c}
@@ -103,7 +103,7 @@ export function LessonProgressRing({
         aria-hidden="true"
         className={cn(
           "absolute font-mono text-[10px] font-bold tracking-[0.06em]",
-          isDone ? "text-[#22c55e]" : "text-foreground",
+          isDone ? "text-risk-green" : "text-foreground",
         )}
       >
         {mounted ? (isDone ? "✓" : `${sectionsRead}/${totalSections}`) : `, /${totalSections}`}

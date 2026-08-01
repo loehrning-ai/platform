@@ -47,7 +47,7 @@ describe("<RechnungZuSapDemo>", () => {
     render(<RechnungZuSapDemo />);
 
     expect(screen.getByText("Rechnungs-Automatisierung")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "SAP-Importentwurf",
     );
 

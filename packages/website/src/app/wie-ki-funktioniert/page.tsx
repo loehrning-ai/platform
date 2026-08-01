@@ -48,7 +48,7 @@ export default function WieKiFunktioniertPage() {
           <ol className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
             <li>
               <Link href="/" className="hover:text-foreground">
-                Start
+                Startseite
               </Link>
             </li>
             <li aria-hidden="true">›</li>

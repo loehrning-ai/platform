@@ -148,11 +148,11 @@ export function SqlDecoderStage() {
       <div className="sd-top">
         <div className="sd-presets">
           {QUERIES.map((q) => (
-            <button key={q.id} className={`sd-preset ${qid === q.id ? "on" : ""}`} onClick={() => setQid(q.id)}>
+            <button type="button" key={q.id} className={`sd-preset ${qid === q.id ? "on" : ""}`} onClick={() => setQid(q.id)}>
               {q.label}
             </button>
           ))}
-          <button className="btn btn-primary sd-plan" onClick={plan} disabled={running}>
+          <button type="button" className="btn btn-primary sd-plan" onClick={plan} disabled={running}>
             {running ? "planning…" : "▶ Plan"}
           </button>
         </div>
@@ -236,6 +236,7 @@ export function SqlDecoderStage() {
           {Q.id === "hash" && (
             <div className="sd-bot-ctrls">
               <button
+                type="button"
                 className={`sv-btn ${skew ? "on" : ""}`}
                 onClick={() => {
                   setSkew((s) => !s);
@@ -244,7 +245,7 @@ export function SqlDecoderStage() {
               >
                 {skew ? "● skew on" : "inject skew"}
               </button>
-              <button className={`sv-btn ${salt ? "on" : ""}`} onClick={() => setSalt((s) => !s)} disabled={!skew}>
+              <button type="button" className={`sv-btn ${salt ? "on" : ""}`} onClick={() => setSalt((s) => !s)} disabled={!skew}>
                 {salt ? "● salted" : "salting fix"}
               </button>
             </div>

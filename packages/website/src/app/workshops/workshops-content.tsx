@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { m } from "framer-motion";
 import { ChevronRight, Presentation } from "lucide-react";
-import { fadeUp, staggerContainer, staggerItem } from "@/lib/animations";
+import { staggerContainer, staggerItem } from "@/lib/animations";
 import type { Workshop } from "@/lib/workshops";
 
 interface Props {
@@ -16,53 +16,26 @@ export function WorkshopsContent({ workshops }: Props) {
       {/* Hero */}
       <section className="border-b border-border/60 bg-card/20 py-20 sm:py-28">
         <div className="mx-auto max-w-5xl px-6">
-          <m.p
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            custom={0}
-            variants={fadeUp}
-            className="mb-4 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange"
-          >
-            Live-Workshops · Zum Nachbauen
-          </m.p>
-          <m.h1
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            custom={1}
-            variants={fadeUp}
-            className="mb-6 text-4xl font-bold tracking-[-0.04em] sm:text-5xl lg:text-6xl"
-          >
+          <p className="mb-4 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
+            Selbstlern-Workshops · Zum Nachbauen
+          </p>
+          <h1 className="mb-6 text-4xl font-bold tracking-[-0.04em] sm:text-5xl lg:text-6xl">
             Kein Vortrag.<br />
             Ein gebauter KI-Analyst.
-          </m.h1>
-          <m.p
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            custom={2}
-            variants={fadeUp}
-            className="mb-10 max-w-3xl text-lg leading-relaxed text-muted-foreground"
-          >
-            {workshops.length} Live-Workshop{workshops.length === 1 ? "" : "s"} aus der
-            kostenlosen KI-Lernplattform: Du baust in der Claude-App live mit, arbeitest
-            an einem realistischen Übungsfall und nimmst das komplette Material zum
+          </h1>
+          <p className="mb-10 max-w-3xl text-lg leading-relaxed text-muted-foreground">
+            {workshops.length} Selbstlern-Workshop{workshops.length === 1 ? "" : "s"} aus der
+            kostenlosen KI-Lernplattform: Du baust in der Claude-App Schritt für Schritt mit,
+            arbeitest an einem realistischen Übungsfall und nimmst das komplette Material zum
             Nachbauen mit deinen eigenen Zahlen mit.
-          </m.p>
+          </p>
 
           {/* Manifest */}
-          <m.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-            className="grid gap-4 sm:grid-cols-3"
-          >
+          <div className="grid gap-4 sm:grid-cols-3">
             {[
               {
-                label: "Live und geführt",
-                body: "Jeder Workshop läuft Schritt für Schritt mit, kein vorproduziertes Video, keine Theorie ohne Anwendung.",
+                label: "Geführt im Selbststudium",
+                body: "Jeder Workshop führt Schritt für Schritt durch den Aufbau. Es gibt derzeit keine Termine oder Buchung.",
               },
               {
                 label: "Synthetische Übungsfälle",
@@ -70,13 +43,11 @@ export function WorkshopsContent({ workshops }: Props) {
               },
               {
                 label: "Material zum Mitnehmen",
-                body: "Slides, Field Card und ein Übungs-Kit stehen kostenlos und ohne Anmeldung zum Download bereit.",
+                body: "Slides, Field Card und Übungs-Kit stehen kostenlos und ohne Anmeldung bereit. Die aktuelle Materialfassung ist Englisch.",
               },
             ].map((item, i) => (
-              <m.div
+              <div
                 key={item.label}
-                custom={i}
-                variants={staggerItem}
                 className="rounded-none border border-border bg-card/40 p-5"
               >
                 <p className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
@@ -85,9 +56,9 @@ export function WorkshopsContent({ workshops }: Props) {
                 <p className="text-sm leading-relaxed text-foreground/90">
                   {item.body}
                 </p>
-              </m.div>
+              </div>
             ))}
-          </m.div>
+          </div>
         </div>
       </section>
 
@@ -118,7 +89,7 @@ export function WorkshopsContent({ workshops }: Props) {
               Workshops im Lernpfad
             </p>
             <h2 className="mb-4 text-2xl font-bold tracking-[-0.03em] sm:text-3xl">
-              Erst Grundlagen verstehen, dann live mitbauen.
+              Erst Grundlagen verstehen, dann selbst nachbauen.
             </h2>
             <p className="mb-8 max-w-2xl text-base leading-relaxed text-muted-foreground">
               Die Workshops setzen keine Vorkenntnisse voraus, ergänzen sich aber gut mit

@@ -179,7 +179,7 @@ export function TaskSpecWidget({
                 className={cn(
                   "ml-auto font-mono text-[10.5px] font-bold uppercase tracking-[0.14em]",
                   tierLevel === "strong"
-                    ? "text-[#22c55e]"
+                    ? "text-risk-green"
                     : tierLevel === "meh"
                       ? "text-brand-amber"
                       : "text-muted-foreground",
@@ -193,7 +193,7 @@ export function TaskSpecWidget({
                 className={cn(
                   "h-full transition-[width,background-color] duration-300",
                   tierLevel === "strong"
-                    ? "bg-[#22c55e]"
+                    ? "bg-risk-green"
                     : tierLevel === "meh"
                       ? "bg-brand-amber"
                       : "bg-muted-foreground",

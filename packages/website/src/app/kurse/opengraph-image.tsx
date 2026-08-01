@@ -63,8 +63,8 @@ export default function Image() {
               maxWidth: 900,
             }}
           >
-            Vier deutsche Kernkurse mit Fortschritt und Zertifikat, dazu sechs
-            technische Kurse auf Englisch.
+            Vier deutsche Kernkurse mit Lernkonto und Abschlussnachweis, dazu
+            sechs öffentliche technische Kurse auf Englisch.
           </div>
         </div>
 

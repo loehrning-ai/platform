@@ -140,6 +140,7 @@ beforeEach(() => {
   } catch {
     /* no-op storage in some jsdom combos */
   }
+  window.history.replaceState({}, "", "/ki-fuehrerschein/kurs/block_1");
   scrollSpy = vi.fn();
   // jsdom does not implement scrollTo; install a spy so we can assert the call.
   Object.defineProperty(window, "scrollTo", {
@@ -182,6 +183,79 @@ describe("<LessonLayout>", () => {
     expect(screen.getByTestId("active-title")).toHaveTextContent(
       "Zweite Lektion",
     );
+    expect(window.location.hash).toBe("#lesson=l2");
+  });
+
+  it("replaces a stale resume fragment so reload restores the latest selection", () => {
+    window.history.replaceState(
+      {},
+      "",
+      "/ki-fuehrerschein/kurs/block_1?source=resume#lesson=l2",
+    );
+    const firstRender = renderLayout();
+    expect(screen.getByTestId("active-title")).toHaveTextContent(
+      "Zweite Lektion",
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Lektion 1: Erste Lektion" }),
+    );
+    expect(window.location.pathname).toBe(
+      "/ki-fuehrerschein/kurs/block_1",
+    );
+    expect(window.location.search).toBe("?source=resume");
+    expect(window.location.hash).toBe("#lesson=l1");
+
+    firstRender.unmount();
+    renderLayout();
+    expect(screen.getByTestId("active-title")).toHaveTextContent(
+      "Erste Lektion",
+    );
+  });
+
+  it("restores a validated lesson fragment and follows later hash changes", () => {
+    window.history.replaceState(
+      {},
+      "",
+      "/ki-fuehrerschein/kurs/block_1#lesson=l2",
+    );
+    renderLayout();
+
+    expect(screen.getByTestId("active-title")).toHaveTextContent(
+      "Zweite Lektion",
+    );
+
+    window.history.replaceState(
+      {},
+      "",
+      "/ki-fuehrerschein/kurs/block_1#lesson=l1",
+    );
+    fireEvent(window, new HashChangeEvent("hashchange"));
+    expect(screen.getByTestId("active-title")).toHaveTextContent(
+      "Erste Lektion",
+    );
+  });
+
+  it("ignores malformed and unknown lesson fragments", () => {
+    window.history.replaceState(
+      {},
+      "",
+      "/ki-fuehrerschein/kurs/block_1#lesson=%E0%A4%A",
+    );
+    renderLayout();
+    expect(screen.getByTestId("active-title")).toHaveTextContent(
+      "Erste Lektion",
+    );
+
+    window.history.replaceState(
+      {},
+      "",
+      "/ki-fuehrerschein/kurs/block_1#lesson=not-in-this-block",
+    );
+    fireEvent(window, new HashChangeEvent("hashchange"));
+    expect(screen.getByTestId("active-title")).toHaveTextContent(
+      "Erste Lektion",
+    );
   });
 
   it("advances to the next lesson and scrolls to the top smoothly", () => {
@@ -195,6 +269,7 @@ describe("<LessonLayout>", () => {
     expect(screen.getByTestId("active-title")).toHaveTextContent(
       "Zweite Lektion",
     );
+    expect(window.location.hash).toBe("#lesson=l2");
     expect(scrollSpy).toHaveBeenCalledWith({ top: 0, behavior: "smooth" });
     // On the last lesson there is no further next affordance.
     expect(screen.queryByRole("button", { name: "go-next" })).toBeNull();

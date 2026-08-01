@@ -116,9 +116,9 @@ export default function RechnungZuSapDemo() {
         >
           Rechnungs-Automatisierung
         </div>
-        <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", marginTop: 6 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", marginTop: 6 }}>
           Vom Scan zum <span style={{ color: "var(--color-brand-orange)" }}>SAP-Importentwurf</span>.
-        </h3>
+        </h2>
         <p style={{ fontSize: 12, color: DEMO.schiefer, marginTop: 4 }}>
           Beispiel-Laufzeit und Fehlerquote hängen von Belegqualität, Regeln und Review ab.
         </p>

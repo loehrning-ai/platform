@@ -1,5 +1,22 @@
-import { describe, expect, it } from "vitest";
+import type { AnchorHTMLAttributes, ReactNode } from "react";
+import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+
+vi.mock("next/link", () => ({
+  default: ({
+    prefetch,
+    children,
+    ...props
+  }: AnchorHTMLAttributes<HTMLAnchorElement> & {
+    readonly prefetch?: boolean;
+    readonly children?: ReactNode;
+  }) => (
+    <a {...props} data-prefetch={String(prefetch)}>
+      {children}
+    </a>
+  ),
+}));
+
 import { Footer } from "./footer";
 
 describe("Footer data pill", () => {
@@ -11,6 +28,19 @@ describe("Footer data pill", () => {
     expect(pill.textContent).toMatch(/Q3 2026/);
     expect(pill.textContent).toMatch(/Letzte Aktualisierung:/i);
     expect(pill.textContent).toMatch(/\d{4}-\d{2}-\d{2}/);
+  });
+
+  it("derives the copyright year from reviewed content instead of the wall clock", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2042-01-01T00:00:00.000Z"));
+    try {
+      render(<Footer />);
+      expect(
+        screen.getByText("© 2026 loehrning.ai · Tim Löhr"),
+      ).toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
 
@@ -55,5 +85,12 @@ describe("Footer learning links", () => {
     expect(
       screen.getByRole("link", { name: "Lizenzrichtlinie" }),
     ).toHaveAttribute("href", "/open-source/lizenzrichtlinie");
+  });
+
+  it("does not prefetch below-the-fold destinations during initial load", () => {
+    render(<Footer />);
+    for (const link of document.querySelectorAll("a[href^='/']")) {
+      expect(link).toHaveAttribute("data-prefetch", "false");
+    }
   });
 });

@@ -3,6 +3,7 @@ import createBundleAnalyzer from "@next/bundle-analyzer";
 import { withSentryConfig } from "@sentry/nextjs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { normalizeSupabaseOrigin } from "./src/lib/supabase/config";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,14 +20,9 @@ const CSP_SCRIPT_EVAL =
   process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : "";
 const SUPABASE_PUBLIC_URL =
   process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL;
-const SUPABASE_ORIGIN = (() => {
-  if (!SUPABASE_PUBLIC_URL) return null;
-  try {
-    return new URL(SUPABASE_PUBLIC_URL).origin;
-  } catch {
-    return null;
-  }
-})();
+const SUPABASE_ORIGIN = SUPABASE_PUBLIC_URL
+  ? normalizeSupabaseOrigin(SUPABASE_PUBLIC_URL)
+  : null;
 const SUPABASE_CONNECT_SRC = SUPABASE_ORIGIN
   ? ` ${SUPABASE_ORIGIN} ${SUPABASE_ORIGIN.replace("https://", "wss://")}`
   : "";
@@ -41,9 +37,16 @@ const SENTRY_ORIGIN = (() => {
 })();
 const VERCEL_TELEMETRY_ENABLED =
   process.env.VERCEL === "1" && process.env.VERCEL_TELEMETRY_ENABLED === "true";
-const OPTIONAL_SCRIPT_SRC = VERCEL_TELEMETRY_ENABLED
-  ? " https://va.vercel-scripts.com"
-  : "";
+const TURNSTILE_ENABLED = Boolean(
+  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim(),
+);
+const TURNSTILE_ORIGIN = "https://challenges.cloudflare.com";
+const OPTIONAL_SCRIPT_SRC = [
+  ...(VERCEL_TELEMETRY_ENABLED ? ["https://va.vercel-scripts.com"] : []),
+  ...(TURNSTILE_ENABLED ? [TURNSTILE_ORIGIN] : []),
+]
+  .map((origin) => ` ${origin}`)
+  .join("");
 const OPTIONAL_CONNECT_SRC = [
   SENTRY_ORIGIN,
   ...(VERCEL_TELEMETRY_ENABLED
@@ -61,7 +64,7 @@ const CSP_VALUE = [
   "img-src 'self' data:",
   "font-src 'self' data:",
   `connect-src 'self'${SUPABASE_CONNECT_SRC}${OPTIONAL_CONNECT_SRC}`,
-  "frame-src 'self'",
+  `frame-src 'self'${TURNSTILE_ENABLED ? ` ${TURNSTILE_ORIGIN}` : ""}`,
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

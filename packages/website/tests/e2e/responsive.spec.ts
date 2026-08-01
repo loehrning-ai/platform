@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
+import { devices, test, expect, type Page } from "@playwright/test";
 
 /**
  * Responsive / mobile matrix (regression coverage). Codifies responsive-layout hardening's manual
@@ -11,9 +11,9 @@ import { test, expect, type Page } from "@playwright/test";
  *      override in globals.css) while the desktop Kurse dropdown is hidden there,
  *      and the reverse on a desktop width.
  *   3. The hero section and its long German headline stay inside a 320px viewport.
- *   4. The wide book-reader GFM table scrolls inside its `overflow-x-auto` wrapper
- *      (chapter-reader.tsx table override) instead of clipping the page, and the
- *      in-chapter TOC stays hidden below `lg`.
+ *   4. Book-reader GFM tables stay inside `overflow-x-auto` wrappers
+ *      (chapter-reader.tsx table override) instead of clipping the page, and
+ *      the in-chapter TOC stays hidden below `lg`.
  *
  * Assertions target GEOMETRY, roles and structural anchors (data-section, the
  * hamburger's aria-label, the wrapper class, the TOC landmark), never prose, so a
@@ -47,87 +47,112 @@ const KEY_ROUTES = [
 const KURSE_TRIGGER = 'button[aria-controls="akademie-nav-menu"]';
 const HAMBURGER_NAME = /Menü öffnen/i;
 
-// Wide-table chapter: ki-arbeitsalltag/04_vier_stufen renders a single 4-column
-// GFM table with long German cells (e.g. "DSGVO-Verstoß, Wettbewerbsschaden,
-// Abmahnung"), wider than a 390px phone column. Title is the stable manifest
-// string also used by buecher-reader-mobile.spec.ts.
-const TABLE_URL = "/buecher/ki-arbeitsalltag/04_vier_stufen";
-const TABLE_TITLE = "Die vier Stufen der Datenklassifizierung im Detail";
+// Table chapter: the route and title are sourced from the public catalog rather
+// than an unpublished manuscript. Copy may wrap to fit; containment must remain
+// correct whether the current rows require horizontal scrolling or not.
+const TABLE_URL = "/buecher/ki-landschaft/08_fahrplan";
+const TABLE_TITLE = "Fahrplan für die nächsten Monate";
 
-// Console-error filter mirrors buecher-library.spec.ts / buecher-reader-*.spec.ts:
-// drop framework noise and keep only errors that signal a genuine page fault.
-function collectConsoleErrors(page: Page): string[] {
+// Every captured console error, uncaught page error, and failed request fails
+// the check. Each width gets a fresh page so navigation teardown cannot leak
+// speculative RSC/chunk cancellations into the next width's verdict.
+function collectBrowserErrors(page: Page): string[] {
   const errors: string[] = [];
   page.on("console", (msg) => {
     if (msg.type() === "error") errors.push(msg.text());
   });
   page.on("pageerror", (err) => errors.push(err.message));
+  page.on("requestfailed", (request) => {
+    const failure = request.failure()?.errorText ?? "unknown error";
+    let expectedLoginPrefetchAbort = false;
+    try {
+      const target = new URL(request.url());
+      const current = new URL(page.url());
+      expectedLoginPrefetchAbort =
+        failure === "net::ERR_ABORTED" &&
+        request.method() === "GET" &&
+        !request.isNavigationRequest() &&
+        target.origin === current.origin &&
+        target.pathname === "/login" &&
+        (target.searchParams.has("_rsc") ||
+          (target.searchParams.has("next") &&
+            target.searchParams.get("reason") === "auth-not-configured"));
+    } catch {
+      // Preserve malformed URLs as failures below.
+    }
+    if (expectedLoginPrefetchAbort) return;
+    errors.push(
+      `Request failed: ${request.method()} ${request.url()} (${failure})`,
+    );
+  });
   return errors;
-}
-
-function meaningfulErrors(errors: string[]): string[] {
-  return errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e) &&
-      // WebKit under heavy parallel load transiently fails Next.js RSC-payload
-      // prefetches and async chunk loads, then RECOVERS via full browser
-      // navigation (the message says so: "Falling back to browser navigation").
-      // The page still renders and every overflow assertion passes; these are
-      // transient network/prefetch noise, not a genuine page fault, so they are
-      // filtered like the other framework noise above (chromium never emits them).
-      !/Failed to fetch RSC payload|ChunkLoadError|Loading chunk \d+ failed|Load failed/i.test(
-        e,
-      ),
-  );
 }
 
 test.describe("responsive: no horizontal overflow across the width matrix", () => {
   for (const route of KEY_ROUTES) {
     test(`${route.label} stays within the viewport at every width`, async ({
-      page,
+      baseURL,
+      browser,
       browserName,
+      isMobile,
     }) => {
-      // Six fresh loads (dev-server compile + reader route) under one test.
+      // Six isolated loads under one route-level test. Reusing one page across
+      // widths makes WebKit cancel speculative RSC/chunk requests during the
+      // next navigation and misreports those cancellations as route defects.
       test.setTimeout(90_000);
-      // Freeze reveal animations so a mid-tween transform cannot register as a
-      // transient overflow while the page is measured (responsive-layout hardening method note).
-      await page.emulateMedia({ reducedMotion: "reduce" });
-      const errors = collectConsoleErrors(page);
+      const device = isMobile
+        ? devices["iPhone 13"]
+        : browserName === "webkit"
+          ? devices["Desktop Safari"]
+          : devices["Desktop Chrome"];
 
       for (const width of WIDTHS) {
-        // Set the viewport BEFORE navigating so the page renders at this width
-        // (the exemplar pattern; components that read size on mount stay honest).
-        await page.setViewportSize({ width, height: 900 });
-        const res = await page.goto(route.path, { waitUntil: "load" });
-        expect(res?.status(), `status for ${route.path} @${width}`).toBe(200);
+        const widthContext = await browser.newContext({
+          ...device,
+          baseURL,
+          viewport: { width, height: 900 },
+          reducedMotion: "reduce",
+        });
+        const widthPage = await widthContext.newPage();
+        const errors = collectBrowserErrors(widthPage);
 
-        const { scrollWidth, innerWidth } = await page.evaluate(() => ({
-          scrollWidth: document.documentElement.scrollWidth,
-          innerWidth: window.innerWidth,
-        }));
-        expect(
-          scrollWidth,
-          `horizontal overflow on ${route.path} @${width}px: scrollWidth ${scrollWidth} > innerWidth ${innerWidth}`,
-        ).toBeLessThanOrEqual(innerWidth + 1);
-      }
+        try {
+          const res = await widthPage.goto(route.path, { waitUntil: "load" });
+          expect(res?.status(), `status for ${route.path} @${width}`).toBe(200);
 
-      // The console-error guard runs on chromium only. This test's PURPOSE is
-      // overflow (asserted above on every project); the console check is a
-      // secondary net. WebKit, driving six rapid back-to-back navigations under
-      // heavy parallel machine load, transiently fails RSC-payload prefetches
-      // and async chunk loads and recovers via full browser navigation - real
-      // page faults do not hide behind that noise, and per-page console health
-      // is already covered by the route + buecher specs. Keeping this net on
-      // chromium avoids false failures without losing the signal.
-      if (browserName === "chromium") {
-        const noise = meaningfulErrors(errors);
-        expect(
-          noise,
-          `console errors on ${route.path}\n${noise.join("\n")}`,
-        ).toEqual([]);
+          // Measure the hydrated, font-settled layout. A server-rendered page
+          // can fit at first paint and overflow only after client islands or
+          // web fonts settle.
+          await widthPage.locator("h1").first().waitFor({ state: "visible" });
+          await widthPage
+            .locator('html[data-hydrated="true"]')
+            .waitFor({ state: "attached" });
+          await widthPage.evaluate(async () => {
+            await document.fonts.ready;
+            await new Promise<void>((resolve) =>
+              requestAnimationFrame(() =>
+                requestAnimationFrame(() => resolve()),
+              ),
+            );
+          });
+
+          const { scrollWidth, innerWidth } = await widthPage.evaluate(() => ({
+            scrollWidth: document.documentElement.scrollWidth,
+            innerWidth: window.innerWidth,
+          }));
+          expect(
+            scrollWidth,
+            `horizontal overflow on ${route.path} @${width}px: scrollWidth ${scrollWidth} > innerWidth ${innerWidth}`,
+          ).toBeLessThanOrEqual(innerWidth + 1);
+
+          // Error capture remains active through the full stabilization window.
+          expect(
+            errors,
+            `browser errors on ${route.path} @${width}px\n${errors.join("\n")}`,
+          ).toEqual([]);
+        } finally {
+          await widthContext.close();
+        }
       }
     });
   }
@@ -213,10 +238,17 @@ test.describe("responsive: hero on a narrow viewport", () => {
 test.describe("responsive: book reader wide-table containment", () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
-  test("the wide GFM table scrolls inside its overflow-x-auto wrapper without clipping the page", async ({
+  test("GFM tables stay inside overflow-x-auto wrappers without clipping the page", async ({
     page,
   }) => {
-    await page.goto(TABLE_URL, { waitUntil: "domcontentloaded" });
+    await page.goto(TABLE_URL, { waitUntil: "load" });
+    await page.locator('html[data-hydrated="true"]').waitFor();
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+      await new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      );
+    });
 
     const article = page.getByRole("article", { name: TABLE_TITLE });
     await expect(article).toBeVisible();
@@ -236,6 +268,7 @@ test.describe("responsive: book reader wide-table containment", () => {
         overflowX: string;
         scrollWidth: number;
         clientWidth: number;
+        left: number;
         right: number;
       }[] = [];
       root.querySelectorAll("table").forEach((t) => {
@@ -246,6 +279,7 @@ test.describe("responsive: book reader wide-table containment", () => {
           overflowX: getComputedStyle(w).overflowX,
           scrollWidth: w.scrollWidth,
           clientWidth: w.clientWidth,
+          left: rect.left,
           right: rect.right,
         });
       });
@@ -268,19 +302,18 @@ test.describe("responsive: book reader wide-table containment", () => {
       // ... and it stays inside the viewport, so the PAGE never scrolls
       // horizontally while the table scrolls in place.
       expect(
+        w.left,
+        `wrapper[${i}] left edge ${Math.round(w.left)}px outside the viewport`,
+      ).toBeGreaterThanOrEqual(-1);
+      expect(
         w.right,
         `wrapper[${i}] right edge ${Math.round(w.right)}px past 390px viewport`,
       ).toBeLessThanOrEqual(391);
     }
 
-    // The wide 4-column table genuinely overflows its wrapper, so the wrapper is
-    // actually scrollable (scrollWidth > clientWidth) rather than clipping.
-    const maxOverflow = Math.max(
-      ...wrappers.map((w) => w.scrollWidth - w.clientWidth),
-    );
     expect(
-      maxOverflow,
-      "the wide table's wrapper should be horizontally scrollable (scrollWidth > clientWidth)",
+      Math.max(...wrappers.map((w) => w.scrollWidth - w.clientWidth)),
+      "fixture must contain a genuinely overflowing table so the scroll-container assertion is meaningful",
     ).toBeGreaterThan(0);
 
     // The page itself has no horizontal overflow at 390px.

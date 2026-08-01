@@ -6,7 +6,7 @@ import {
   beforeEach,
   afterEach,
 } from "vitest";
-import { render, screen, cleanup, act } from "@testing-library/react";
+import { render, screen, cleanup, act, fireEvent } from "@testing-library/react";
 
 /**
  * auth-status.test.tsx (regression coverage)
@@ -26,12 +26,17 @@ import { render, screen, cleanup, act } from "@testing-library/react";
  * accessible name is the label text - exactly what the nav exposes.
  */
 
-const { mockCreateBrowserSupabaseClient } = vi.hoisted(() => ({
+const { mockCreateBrowserSupabaseClient, mockHasSupabasePublicConfig } = vi.hoisted(() => ({
   mockCreateBrowserSupabaseClient: vi.fn(),
+  mockHasSupabasePublicConfig: vi.fn(),
 }));
 
 vi.mock("@/lib/supabase/browser", () => ({
   createBrowserSupabaseClient: mockCreateBrowserSupabaseClient,
+}));
+
+vi.mock("@/lib/supabase/config", () => ({
+  hasSupabasePublicConfig: mockHasSupabasePublicConfig,
 }));
 
 vi.mock("next/link", async () => {
@@ -39,10 +44,17 @@ vi.mock("next/link", async () => {
   return {
     __esModule: true,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    default: ({ href, children, className }: any) =>
+    default: ({ href, children, className, onClick }: any) =>
       React.createElement(
         "a",
-        { href: typeof href === "string" ? href : "#", className },
+        {
+          href: typeof href === "string" ? href : "#",
+          className,
+          onClick: (event: React.MouseEvent<HTMLAnchorElement>) => {
+            event.preventDefault();
+            onClick?.(event);
+          },
+        },
         children,
       ),
   };
@@ -83,13 +95,31 @@ function makeSupabase(user: unknown) {
 
 beforeEach(() => {
   mockCreateBrowserSupabaseClient.mockReset();
+  mockHasSupabasePublicConfig.mockReset();
+  mockHasSupabasePublicConfig.mockReturnValue(true);
 });
 
 afterEach(() => {
   cleanup();
+  vi.restoreAllMocks();
 });
 
 describe("<AuthStatus>", () => {
+  it("does not load the provider client when public Supabase config is absent", async () => {
+    mockHasSupabasePublicConfig.mockReturnValue(false);
+
+    render(<AuthStatus />);
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(screen.getByRole("link", { name: /login/i })).toHaveAttribute(
+      "href",
+      "/login",
+    );
+    expect(mockCreateBrowserSupabaseClient).not.toHaveBeenCalled();
+  });
+
   it("renders the signed-out Login link when no Supabase client is configured", () => {
     mockCreateBrowserSupabaseClient.mockReturnValue(null);
     render(<AuthStatus />);
@@ -154,6 +184,16 @@ describe("<AuthStatus>", () => {
     expect(screen.getByRole("link").className).not.toContain("min-h-[44px]");
   });
 
+  it("notifies the mobile navigation shell before following its link", () => {
+    mockCreateBrowserSupabaseClient.mockReturnValue(null);
+    const onNavigate = vi.fn();
+
+    render(<AuthStatus mobile onNavigate={onNavigate} />);
+    fireEvent.click(screen.getByRole("link", { name: /login/i }));
+
+    expect(onNavigate).toHaveBeenCalledTimes(1);
+  });
+
   it("unsubscribes from the auth channel on unmount", async () => {
     const sb = makeSupabase(null);
     mockCreateBrowserSupabaseClient.mockReturnValue(sb.client);
@@ -164,5 +204,103 @@ describe("<AuthStatus>", () => {
 
     unmount();
     expect(sb.unsubscribe).toHaveBeenCalledTimes(1);
+  });
+
+  it("fails closed without logging a rejected getUser error", async () => {
+    const sb = makeSupabase(null);
+    sb.getUser.mockRejectedValue(
+      new Error("learner@example.com provider-secret"),
+    );
+    mockCreateBrowserSupabaseClient.mockReturnValue(sb.client);
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    render(<AuthStatus />);
+
+    expect(
+      await screen.findByRole("link", { name: /login/i }),
+    ).toHaveAttribute("href", "/login");
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(sb.getUser).toHaveBeenCalledTimes(1);
+    expect(consoleError).not.toHaveBeenCalled();
+  });
+
+  it("does not overwrite a newer sign-in event when the initial lookup later fails", async () => {
+    let rejectLookup!: (error: Error) => void;
+    const lookup = new Promise<never>((_resolve, reject) => {
+      rejectLookup = reject;
+    });
+    const sb = makeSupabase(null);
+    sb.getUser.mockReturnValue(lookup);
+    mockCreateBrowserSupabaseClient.mockReturnValue(sb.client);
+
+    render(<AuthStatus />);
+    await act(async () => {
+      await Promise.resolve();
+    });
+    act(() => sb.emit({ user: { id: "newer-session" } }));
+    expect(screen.getByRole("link", { name: /konto/i })).toHaveAttribute(
+      "href",
+      "/konto",
+    );
+
+    await act(async () => {
+      rejectLookup(new Error("stale initial lookup"));
+      await lookup.catch(() => undefined);
+    });
+    expect(screen.getByRole("link", { name: /konto/i })).toHaveAttribute(
+      "href",
+      "/konto",
+    );
+  });
+
+  it("does not overwrite a newer sign-in event when the initial lookup later resolves signed out", async () => {
+    let resolveLookup!: (result: { data: { user: null } }) => void;
+    const lookup = new Promise<{ data: { user: null } }>((resolve) => {
+      resolveLookup = resolve;
+    });
+    const sb = makeSupabase(null);
+    sb.getUser.mockReturnValue(lookup);
+    mockCreateBrowserSupabaseClient.mockReturnValue(sb.client);
+
+    render(<AuthStatus />);
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(sb.client.auth.onAuthStateChange).toHaveBeenCalledTimes(1);
+
+    act(() => sb.emit({ user: { id: "newer-session" } }));
+    expect(screen.getByRole("link", { name: /konto/i })).toHaveAttribute(
+      "href",
+      "/konto",
+    );
+
+    await act(async () => {
+      resolveLookup({ data: { user: null } });
+      await lookup;
+    });
+    expect(screen.getByRole("link", { name: /konto/i })).toHaveAttribute(
+      "href",
+      "/konto",
+    );
+  });
+
+  it("fails closed without logging a client-creation error", async () => {
+    mockCreateBrowserSupabaseClient.mockImplementation(() => {
+      throw new Error("provider-url-with-secret");
+    });
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    render(<AuthStatus />);
+
+    expect(
+      await screen.findByRole("link", { name: /login/i }),
+    ).toHaveAttribute("href", "/login");
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(mockCreateBrowserSupabaseClient).toHaveBeenCalledTimes(1);
+    expect(consoleError).not.toHaveBeenCalled();
   });
 });

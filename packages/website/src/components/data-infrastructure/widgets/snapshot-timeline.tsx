@@ -15,6 +15,10 @@
 
 import { useCallback, useRef, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
+import {
+  handleRovingFocusKeyDown,
+  rovingTabIndex,
+} from "@/lib/a11y/roving-focus";
 import { useCanvasRAF } from "../canvas/use-canvas-raf";
 import { useCanvasAutoSize } from "../canvas/use-canvas-size";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
@@ -203,14 +207,31 @@ export function SnapshotTimeline({ lessonId, cpId }: SnapshotTimelineProps): JSX
         <p className="mb-1.5 font-mono text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
           Jump to a snapshot (keyboard-accessible)
         </p>
-        <div role="listbox" aria-label="Snapshot picker" className="flex flex-wrap gap-1.5">
+        <div
+          role="listbox"
+          aria-label="Snapshot picker"
+          aria-orientation="horizontal"
+          data-roving-group
+          className="flex flex-wrap gap-1.5"
+        >
           {SNAPS.map((s, i) => (
             <button
               key={s.t}
               type="button"
               role="option"
               aria-selected={i === cur}
+              aria-posinset={i + 1}
+              aria-setsize={SNAPS.length}
+              data-roving-item
+              tabIndex={rovingTabIndex(cur, i)}
               onClick={() => select(i)}
+              onKeyDown={(event) =>
+                handleRovingFocusKeyDown(event, {
+                  currentIndex: i,
+                  itemCount: SNAPS.length,
+                  onMove: select,
+                })
+              }
               className={cn(
                 "border-2 px-2 py-1 font-mono text-[10.5px] font-semibold transition-colors",
                 i === cur

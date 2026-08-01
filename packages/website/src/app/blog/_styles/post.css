@@ -42,6 +42,7 @@
 .railbar__back:hover span { color:var(--kupfer-light); }
 .railbar__kicker { color:var(--schiefer); margin-right:14px; }
 .railbar__item {
+  display:inline-flex; align-items:center; text-decoration:none;
   color:var(--schiefer); padding:6px 10px; cursor:pointer; border:1px solid transparent;
   background:transparent;
   font-family:inherit; font-size:inherit; letter-spacing:inherit; text-transform:inherit;
@@ -97,18 +98,13 @@
   margin-bottom:32px; max-width:15ch;
 }
 .hero__title .em { font-style:italic; color:var(--kupfer); }
-/* Reveal via translateY only — opacity stays at 1 throughout so the heading
-   (incl. the kupfer .em words) always meets the 3:1 large-text threshold;
-   axe samples arbitrary animation frames, and an opacity fade transiently
-   dropped black/kupfer words below AA. The rise-up motion carries the reveal. */
-.hero__title .word { display:inline-block; transform:translateY(40px);
-  animation:wordUp .9s var(--ease-brand) forwards; }
-@keyframes wordUp { to { transform:translateY(0); } }
+/* Primary article copy paints in its settled position. Above-fold title motion
+   delayed visual completion and kept the LCP candidate moving for 1.78 s. */
+.hero__title .word { display:inline-block; }
 .hero__lede {
   font-family:var(--font-serif); font-style:italic;
   font-size:clamp(20px, 2vw, 28px); line-height:1.45;
   max-width:46ch; color:var(--schiefer);
-  opacity:0; animation:fadeIn 1.2s .8s forwards;
 }
 @keyframes fadeIn { to { opacity:1; } }
 .hero__scroll {
@@ -149,11 +145,16 @@
 }
 .heading .em { font-style:italic; color:var(--kupfer); }
 .heading .word-reveal {
-  display:inline-block; opacity:0; transform:translateY(20px);
+  display:inline-block; opacity:1; transform:none;
   transition:opacity .7s, transform .7s;
   transition-delay:calc(var(--i, 0) * .06s);
 }
-.heading.revealed .word-reveal { opacity:1; transform:translateY(0); }
+.blog-root[data-scroll-reveal="active"] .heading .word-reveal {
+  opacity:0; transform:translateY(20px);
+}
+.blog-root[data-scroll-reveal="active"] .heading.revealed .word-reveal {
+  opacity:1; transform:translateY(0);
+}
 
 .dek {
   font-family:var(--font-serif); font-style:italic;
@@ -283,11 +284,16 @@
   display:grid; grid-template-columns:80px 1fr auto; gap:28px;
   padding:26px 0; border-top:1px solid var(--leinen);
   align-items:start;
-  opacity:0; transform:translateX(-20px);
+  opacity:1; transform:none;
   transition:opacity .7s, transform .7s;
   transition-delay:calc(var(--i) * .1s);
 }
-.pipeline.revealed .pipeline__step { opacity:1; transform:translateX(0); }
+.blog-root[data-scroll-reveal="active"] .pipeline__step {
+  opacity:0; transform:translateX(-20px);
+}
+.blog-root[data-scroll-reveal="active"] .pipeline.revealed .pipeline__step {
+  opacity:1; transform:translateX(0);
+}
 .pipeline__step:last-child { border-bottom:1px solid var(--leinen); }
 .pipeline__num { font-family:var(--font-serif); font-style:italic; font-size:72px; line-height:0.85; color:var(--kupfer); }
 .pipeline__body h3 { font-family:var(--font-serif); font-size:32px; letter-spacing:-0.02em; margin-bottom:8px; line-height:1.1; font-weight:400; }
@@ -320,7 +326,7 @@
 .sim__axis-btn {
   flex:1; min-width:0; padding:8px 4px; background:transparent; border:none; cursor:pointer;
   font-family:var(--font-mono); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--schiefer);
-  transition:all .15s;
+  transition:background-color .15s, color .15s;
   text-align:center;
 }
 @media (max-width:500px){
@@ -341,6 +347,10 @@
 .sim__slider {
   -webkit-appearance:none; appearance:none; width:100%; height:2px;
   background:var(--leinen); outline:none; cursor:pointer;
+}
+.sim__slider:focus-visible {
+  outline:3px solid var(--druckertinte);
+  outline-offset:5px;
 }
 .sim__slider::-webkit-slider-thumb {
   -webkit-appearance:none; width:20px; height:20px; border-radius:50%;
@@ -395,11 +405,16 @@
   display:grid; grid-template-columns:60px 240px 1fr; gap:24px;
   padding:22px 26px; background:var(--kalkweiss); align-items:center;
   border-left:3px solid var(--axis-daten);
-  opacity:0; transform:translateX(-30px);
+  opacity:1; transform:none;
   transition:opacity .6s, transform .6s, background .2s;
   transition-delay:calc(var(--i) * .08s);
 }
-.ladder.revealed .ladder__step { opacity:1; transform:translateX(0); }
+.blog-root[data-scroll-reveal="active"] .ladder__step {
+  opacity:0; transform:translateX(-30px);
+}
+.blog-root[data-scroll-reveal="active"] .ladder.revealed .ladder__step {
+  opacity:1; transform:translateX(0);
+}
 .ladder__step:hover { background:var(--birke); }
 .ladder__step[data-stage="1"] { margin-left:0; }
 .ladder__step[data-stage="2"] { margin-left:40px; }

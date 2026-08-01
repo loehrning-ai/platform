@@ -1324,7 +1324,7 @@ const CV_ENGINE_TOOL_ARTIFACT = {
     ],
     installation: {
       summary:
-        "Drei Schritte, alle lokal. Es gibt keinen Account, keinen Server und keinen Schlüssel, den du vorher besorgen müsstest.",
+        "Der Checkout wird auf den geprüften Quellstand fixiert und in einer eigenen virtuellen Umgebung installiert. Es gibt keinen Account, keinen externen Server und keinen Schlüssel, den du vorher besorgen müsstest.",
       steps: [
         {
           title: "Systembibliotheken installieren",
@@ -1333,16 +1333,31 @@ const CV_ENGINE_TOOL_ARTIFACT = {
           command: "brew install pango",
         },
         {
+          title: "Geprüften Quellstand auschecken",
+          detail:
+            "Klone das öffentliche Repository und wechsle exakt auf den Quellstand, zu dem diese Anleitung, die Screenshots und die Prüfsummen gehören.",
+          command:
+            "(git clone https://github.com/loehrning-ai/cv-engine.git && cd cv-engine && git checkout f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e)",
+        },
+        {
+          title: "Virtuelle Python-Umgebung anlegen",
+          detail:
+            "Die Umgebung hält die Abhängigkeiten des Werkzeugs von deiner globalen Python-Installation getrennt. Alle folgenden Python-Befehle verwenden ihren Interpreter direkt.",
+          command: "(cd cv-engine && python3 -m venv .venv)",
+        },
+        {
           title: "Abhängigkeiten hash-gepinnt installieren",
           detail:
             "requirements.lock hinterlegt für jedes Paket den erwarteten Hash. Weicht ein Artefakt davon ab, bricht pip ab, statt es zu installieren.",
-          command: "python3 -m pip install --require-hashes -r requirements.lock",
+          command:
+            "(cd cv-engine && .venv/bin/python -m pip install --require-hashes -r requirements.lock)",
         },
         {
           title: "Installation gegen die Testsuite prüfen",
           detail:
             "Die Suite deckt Renderer, Schema, Importer und die Sicherheitsregeln ab und braucht keinen laufenden Server. Die End-to-End-Tests bleiben hier bewusst außen vor, weil sie einen gestarteten Editor erwarten.",
-          command: "python3 -m pytest tests/ --ignore=tests/e2e",
+          command:
+            "(cd cv-engine && .venv/bin/python -m pytest tests/ --ignore=tests/e2e)",
         },
       ],
     },
@@ -1354,25 +1369,28 @@ const CV_ENGINE_TOOL_ARTIFACT = {
           title: "Die eigene Datei anlegen und schreiben",
           detail:
             "content/cv.yaml ist der dauerhafte lokale Ort für deinen Lebenslauf, und die Datei ist im Repository bewusst von Git ausgenommen, damit deine Daten nicht versehentlich in einen Fork wandern. Du bearbeitest sie mit dem Editor, den du ohnehin benutzt.",
-          command: "cp content/cv.example.yaml content/cv.yaml",
+          command:
+            "(cd cv-engine && cp content/cv.example.yaml content/cv.yaml)",
         },
         {
           title: "Formular und Vorschau ausprobieren",
           detail:
             "Flask bindet auf 127.0.0.1:5567, also nur auf deinen eigenen Rechner: links das Formular oder wahlweise die Rohdatei als YAML, rechts dieselbe A4-Seite, die WeasyPrint später druckt. Die Plakette über der Vorschau zeigt die Seitenzahl, grün bei einer Seite und rot ab der zweiten. Wichtig: dieser Modus hält alles nur im Arbeitsspeicher des Servers. Er schreibt nicht in content/cv.yaml, und ein Neustart setzt ihn zurück. Lade das PDF aus der Oberfläche herunter, bevor du den Prozess beendest. Wer dauerhaft im Formular arbeiten will, betreibt die Supabase-Variante aus DEPLOY.md selbst.",
-          command: "ONEPAGER_DEMO_MODE=true python3 tools/editor/server.py",
+          command:
+            "(cd cv-engine && ONEPAGER_DEMO_MODE=true .venv/bin/python tools/editor/server.py)",
         },
         {
           title: "Layout wechseln, statt Inhalt zu streichen",
           detail:
             "Acht Vorlagen liegen bei: classic, modern, sidebar, executive, technical, ats-compact, consulting und minimal. Themes steuern Akzentfarbe, Schrift und Dichte, und die Dichte lässt sich pro Build übersteuern.",
-          command: "python3 engine/build.py --density tight",
+          command:
+            "(cd cv-engine && .venv/bin/python engine/build.py --density tight)",
         },
         {
           title: "Den Build entscheiden lassen",
           detail:
             "engine/build.py rendert das PDF und zählt die Seiten. Bei einer Seite endet der Befehl mit Exit-Code 0 und schreibt output/cv.pdf. Bei zwei Seiten schreibt er stattdessen die erste Überschrift der überzähligen Seite auf stderr, etwa First section on the overflow page: 'Projects', und endet mit Exit-Code 1. Ein zweiseitiges PDF entsteht dabei gar nicht erst.",
-          command: "python3 engine/build.py",
+          command: "(cd cv-engine && .venv/bin/python engine/build.py)",
         },
       ],
     },
@@ -1393,7 +1411,6 @@ const CV_ENGINE_TOOL_ARTIFACT = {
           title: "Den Lebenslauf versionieren",
           detail:
             "Eine Datei, ein Diff. Du siehst nach zwei Jahren, was du geändert hast, statt eine weitere Word-Datei anzulegen. Im Werkzeug-Repository ist content/cv.yaml absichtlich ignoriert, damit deine Daten dort nicht landen; versioniere sie in deinem eigenen privaten Repository.",
-          command: "git diff cv.yaml",
         },
         {
           title: "Vorhandene Dateien einlesen",
@@ -1404,7 +1421,8 @@ const CV_ENGINE_TOOL_ARTIFACT = {
           title: "Den Build in eine Pipeline hängen",
           detail:
             "Der Exit-Code ist die Schnittstelle: 0 nur dann, wenn genau eine Seite herauskommt. Damit taugt der Aufruf ohne weiteren Code als Gate in einer CI.",
-          command: "python3 engine/build.py --output dist/cv.pdf",
+          command:
+            "(cd cv-engine && .venv/bin/python engine/build.py --output dist/cv.pdf)",
         },
       ],
     },

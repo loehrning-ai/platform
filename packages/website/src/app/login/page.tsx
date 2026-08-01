@@ -3,14 +3,15 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAuthenticatedUser } from "@/lib/supabase/auth-server";
 import { sanitizeNextPath } from "@/lib/auth/routes";
+import { getRuntimeFeatures } from "@/lib/runtime-features";
+import { createNoindexPageMetadata } from "@/lib/seo/page-metadata";
 import { LoginForm } from "./login-form";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createNoindexPageMetadata({
   title: "Login | Freie Lernplattform",
   description:
-    "Optionales Lernkonto der kostenlosen KI-Lernplattform von loehrning.ai.",
-  robots: { index: false, follow: false },
-};
+    "Kostenloses Lernkonto für die vier deutschen Kernkurse von loehrning.ai.",
+});
 
 export default async function LoginPage({
   searchParams,
@@ -19,9 +20,11 @@ export default async function LoginPage({
 }) {
   const params = await searchParams;
   const next = sanitizeNextPath(params.next ?? "/konto");
-  const { configured, user } = await getAuthenticatedUser();
+  const { configured, user, error: authError } = await getAuthenticatedUser();
+  const runtime = getRuntimeFeatures();
 
-  if (configured && user) redirect(next);
+  if (configured && runtime.account && user && !authError) redirect(next);
+  const loginAvailable = configured && runtime.account && !authError;
 
   return (
     <section className="min-h-[calc(100svh-4rem)] py-20">
@@ -31,24 +34,42 @@ export default async function LoginPage({
           Freie Lernplattform · Login
         </p>
         <h1 className="mt-5 text-4xl font-bold leading-[0.95] tracking-[-0.04em] text-foreground sm:text-6xl">
-          {configured ? "Fortschritt sichern." : "Ohne Anmeldung lernen."}
+          {authError
+            ? "Login vorübergehend nicht verfügbar."
+            : loginAvailable
+              ? "Fortschritt sichern."
+              : "Ohne Anmeldung lernen."}
         </h1>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-          Die meisten Kurse, Bücher und Demos sind ohne Anmeldung zugänglich.
-          {configured
+          Bücher, Demos, KI-Check und technische Vertiefungskurse sind ohne Anmeldung zugänglich.
+          {authError
+            ? " Der Authentifizierungsdienst ist gerade nicht erreichbar. Öffentliche Inhalte bleiben verfügbar; versuche den Login später erneut."
+            : loginAvailable
             ? " Das aktivierte Lernkonto kann Fortschritt zwischen Geräten synchronisieren."
             : " Das optionale Lernkonto ist in dieser Version deaktiviert; Fortschritt bleibt lokal in deinem Browser."}
-          {" "}Teilnahmebestätigungen werden lokal erstellt.
+          {" "}Lernnachweise und Zertifikate werden aus dem erfassten
+          Abschlussstatus erstellt.
         </p>
         {params.reason && (
           <div
             role="alert"
             className="mt-6 max-w-xl border border-border bg-card p-4 text-sm leading-relaxed text-muted-foreground"
           >
-            {loginReasonMessage(params.reason, configured)}
+            {loginReasonMessage(params.reason, loginAvailable)}
           </div>
         )}
-        <LoginForm next={next} configured={configured} />
+        <LoginForm
+          next={next}
+          configured={loginAvailable}
+          turnstileSiteKey={runtime.turnstileSiteKey}
+          unavailableReason={
+            authError
+              ? "outage"
+              : configured && !runtime.account
+                ? "protection"
+                : "disabled"
+          }
+        />
       </div>
     </section>
   );
@@ -61,8 +82,9 @@ function loginReasonMessage(
   if (!configured) {
     return (
       <>
-        Das Lernkonto ist in dieser Version deaktiviert. Alle Kurse,
-        Bücher und Demos bleiben ohne Anmeldung verfügbar.{" "}
+        Das Lernkonto ist in dieser Version deaktiviert. Die vier deutschen
+        Kernkurse sind deshalb vorübergehend nicht erreichbar. Bücher, Demos,
+        KI-Check und technische Vertiefungen bleiben öffentlich.{" "}
         <Link href="/kurse" className="underline underline-offset-2 hover:text-foreground">
           Zum Kursangebot
         </Link>
@@ -75,7 +97,7 @@ function loginReasonMessage(
       return (
         <>
           Melde dich an, um deinen Lernfortschritt auf allen Geräten zu sichern.
-          Du kannst alle Kurse und Bücher auch ohne Anmeldung nutzen.{" "}
+          Bücher und technische Vertiefungskurse bleiben ohne Anmeldung nutzbar.{" "}
           <Link href="/kurse" className="underline underline-offset-2 hover:text-foreground">
             Zurück zum Kursangebot
           </Link>
@@ -84,9 +106,9 @@ function loginReasonMessage(
     case "kurs-login":
       return (
         <>
-          Dieser Kurs gehört zu unseren zertifizierten Lernpfaden und
-          erfordert ein Lernkonto. Alle anderen Kurse, Bücher und Demos
-          bleiben ohne Anmeldung nutzbar.{" "}
+          Dieser deutsche Kernkurs führt zu einem Lernnachweis oder Zertifikat
+          und erfordert ein Lernkonto. Technische Vertiefungskurse, Bücher und
+          Demos bleiben ohne Anmeldung nutzbar.{" "}
           <Link href="/kurse" className="underline underline-offset-2 hover:text-foreground">
             Zurück zum Kursangebot
           </Link>
@@ -102,8 +124,7 @@ function loginReasonMessage(
     case "abgelaufen":
       return (
         <>
-          Dieser Link ist abgelaufen (gültig 60 Minuten). Bitte fordere einen
-          neuen an.
+          Dieser Link ist abgelaufen. Bitte fordere einen neuen an.
         </>
       );
     case "ungueltig":
@@ -115,6 +136,8 @@ function loginReasonMessage(
       );
     case "auth-not-configured":
       return "Login ist in dieser Umgebung noch nicht konfiguriert.";
+    case "auth-unavailable":
+      return "Der Authentifizierungsdienst ist vorübergehend nicht erreichbar. Der Link wurde nicht als ungültig eingestuft.";
     case "missing-code":
       return "Der Login-Link ist unvollständig.";
     case "invalid-link":

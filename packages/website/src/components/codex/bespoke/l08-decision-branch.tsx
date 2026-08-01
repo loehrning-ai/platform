@@ -94,8 +94,8 @@ export function L08DecisionBranch({ lessonId, cpId }: L08DecisionBranchProps): J
         ◆ Bespoke · Decision branch
       </p>
       {allCleared ? (
-        <div className="border-2 border-[#22c55e] bg-[#22c55e]/10 p-4 text-center">
-          <p className="font-mono text-[14px] font-bold text-[#22c55e]">
+        <div className="border-2 border-risk-green bg-risk-green/10 p-4 text-center">
+          <p className="font-mono text-[14px] font-bold text-risk-green">
             Iteration compass aligned {done ? "✓" : ""}
           </p>
           <p className="mt-1 font-mono text-[12px] text-muted-foreground">
@@ -123,7 +123,7 @@ export function L08DecisionBranch({ lessonId, cpId }: L08DecisionBranchProps): J
             <p
               className={cn(
                 "mt-3 font-mono text-[12px]",
-                feedback.correct ? "text-[#22c55e]" : "text-destructive",
+                feedback.correct ? "text-risk-green" : "text-destructive",
               )}
             >
               {feedback.text}

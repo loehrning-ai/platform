@@ -20,6 +20,12 @@ import {
 } from "@/lib/ai-native/analytics";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import {
+  getLearningOwnerContext,
+  getOwnedSessionLearningItem,
+  setOwnedSessionLearningItem,
+  subscribeLearningOwner,
+} from "@/lib/progress/browser-learning-storage";
 
 /**
  * AiNativeChallengeOfTheWeek — landing-page section with a rotating
@@ -100,6 +106,9 @@ function ChallengeRunner({
   );
 
   const [draft, setDraft] = useState("");
+  const [ownerGeneration, setOwnerGeneration] = useState(
+    () => getLearningOwnerContext().generation,
+  );
   const [revealed, setRevealed] = useState<"none" | "model" | "rubric">("none");
   const [rubric, setRubric] = useState<ChallengeRubricState>({
     solved: new Array(challenge.rubric.length).fill(false),
@@ -107,21 +116,27 @@ function ChallengeRunner({
 
   // Load draft from sessionStorage on mount.
   useEffect(() => {
-    try {
-      const raw = sessionStorage.getItem(storageKey);
+    const loadOwnedDraft = () => {
+      setOwnerGeneration(getLearningOwnerContext().generation);
+      setDraft("");
+      setRevealed("none");
+      setRubric({
+        solved: new Array(challenge.rubric.length).fill(false),
+      });
+      const raw = getOwnedSessionLearningItem(storageKey);
       if (raw) setDraft(raw);
-    } catch {
-      /* ignore */
-    }
-  }, [storageKey]);
+    };
+    loadOwnedDraft();
+    return subscribeLearningOwner(loadOwnedDraft);
+  }, [challenge.rubric.length, storageKey]);
 
   // Save draft on blur.
   const onDraftBlur = () => {
-    try {
-      sessionStorage.setItem(storageKey, draft);
-    } catch {
-      /* ignore */
-    }
+    setOwnedSessionLearningItem(
+      storageKey,
+      draft,
+      ownerGeneration,
+    );
   };
 
   const reveal = (kind: "model" | "rubric") => {

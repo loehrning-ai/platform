@@ -11,6 +11,7 @@ import {
 } from "@/lib/book-reader-content";
 import { ChapterReader } from "@/components/book-reader/chapter-reader";
 import { ResourceContextBanner } from "@/components/learning/resource-context-banner";
+import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
 
 interface Params {
   readonly params: Promise<{
@@ -47,12 +48,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
   try {
     const loaded = await loadBookChapter(slug, chapter);
-    return {
+    return createPublicPageMetadata({
       title: `${loaded.meta.title} | ${book.title}`,
       description: loaded.meta.description ?? `${book.subtitle}.`,
-      robots: { index: true, follow: true },
-      alternates: { canonical: `/buecher/${slug}/${chapter}` },
-    };
+      path: `/buecher/${slug}/${chapter}`,
+    });
   } catch {
     return {};
   }

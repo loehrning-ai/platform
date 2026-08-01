@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
 import { formatServiceAddress, LEGAL_IDENTITY } from "@/lib/legal-identity";
+import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPublicPageMetadata({
   title: "Impressum",
   description: "Impressum von loehrning.ai | Tim Löhr",
-  alternates: { canonical: "/impressum" },
-};
+  path: "/impressum",
+});
 
 export default function ImpressumPage() {
   const address = LEGAL_IDENTITY.serviceAddress;

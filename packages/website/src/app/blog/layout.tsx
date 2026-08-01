@@ -13,7 +13,12 @@ const typing = localFont({
     { path: "../../fonts/typing/Typing-Bold.woff2", weight: "700", style: "normal" },
   ],
   variable: "--font-typing",
-  display: "swap",
+  display: "optional",
+  // The root layout already preloads the platform fonts. Let the blog face load
+  // only when CSS needs a specific weight instead of competing with LCP for
+  // another four high-priority font transfers on every blog request. Optional
+  // display also prevents a late editorial-face swap from moving article text.
+  preload: false,
 });
 
 export const metadata: Metadata = {

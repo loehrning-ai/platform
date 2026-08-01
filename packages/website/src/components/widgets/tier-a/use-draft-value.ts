@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  getLearningOwnerContext,
+  getOwnedLocalLearningItem,
+  setOwnedLocalLearningItem,
+  subscribeLearningOwner,
+} from "@/lib/progress/browser-learning-storage";
 
 /**
  * useDraftValue — tiny localStorage-backed state for the reflective Tier-A
@@ -18,26 +24,36 @@ export function useDraftValue<T>(
   initial: T,
 ): readonly [T, (next: T) => void] {
   const [value, setValue] = useState<T>(initial);
+  const [ownerGeneration, setOwnerGeneration] = useState(
+    () => getLearningOwnerContext().generation,
+  );
+  const initialRef = useRef(initial);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(key);
-      if (raw != null) setValue(JSON.parse(raw) as T);
-    } catch {
-      // unreadable / unavailable storage — keep the initial value
-    }
+    const loadOwnedDraft = () => {
+      setOwnerGeneration(getLearningOwnerContext().generation);
+      setValue(initialRef.current);
+      try {
+        const raw = getOwnedLocalLearningItem(key);
+        if (raw != null) setValue(JSON.parse(raw) as T);
+      } catch {
+        // unreadable / unavailable storage — keep the initial value
+      }
+    };
+    loadOwnedDraft();
+    return subscribeLearningOwner(loadOwnedDraft);
   }, [key]);
 
   const update = useCallback(
     (next: T) => {
       setValue(next);
-      try {
-        localStorage.setItem(key, JSON.stringify(next));
-      } catch {
-        // quota / unavailable — value still lives in memory this session
-      }
+      setOwnedLocalLearningItem(
+        key,
+        JSON.stringify(next),
+        ownerGeneration,
+      );
     },
-    [key],
+    [key, ownerGeneration],
   );
 
   return [value, update] as const;

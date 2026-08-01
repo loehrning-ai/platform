@@ -119,7 +119,9 @@ describe("CodexLessonReader ", () => {
 
   it("renders the embedded widget through the shared registry", async () => {
     render(<CodexLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />);
-    expect(await screen.findByText("A test question?")).toBeInTheDocument();
+    expect(
+      await screen.findByText("A test question?", {}, { timeout: 5_000 }),
+    ).toBeInTheDocument();
   });
 
   it("renders the bespoke interactive for the lesson id", () => {

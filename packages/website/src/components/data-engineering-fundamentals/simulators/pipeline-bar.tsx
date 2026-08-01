@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import Link from "next/link";
+import { useMotionAllowed } from "@/lib/animation-policy";
 
 // ─── PipelineBar / StageIcon ──────────────────────
 // Ported from `src/chapters/Ch_Overview.js`: the horizontal 10-stop
@@ -129,12 +131,11 @@ interface Token {
 }
 
 interface PipelineBarProps {
-  readonly goTo: (chapterId: string) => void;
   readonly activeId: string;
   readonly setActiveId: (id: string) => void;
 }
 
-export function PipelineBar({ goTo, activeId, setActiveId }: PipelineBarProps) {
+export function PipelineBar({ activeId, setActiveId }: PipelineBarProps) {
   const W = 1000;
   const H = 70;
   const PAD_L = 24;
@@ -153,8 +154,10 @@ export function PipelineBar({ goTo, activeId, setActiveId }: PipelineBarProps) {
   const rafRef = useRef<number | null>(null);
   const idSeq = useRef(0);
   const [, setTick] = useState(0);
+  const motionAllowed = useMotionAllowed();
 
   useEffect(() => {
+    if (!motionAllowed) return;
     let last = performance.now();
     let spawn = 0.2;
     const step = (now: number) => {
@@ -183,14 +186,15 @@ export function PipelineBar({ goTo, activeId, setActiveId }: PipelineBarProps) {
     return () => {
       if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
     };
-  }, [STAGE_HUES]);
+  }, [STAGE_HUES, motionAllowed]);
 
   useEffect(() => {
+    if (!motionAllowed) return;
     const iv = setInterval(() => {
       setTokens((prev) => prev.filter((tk) => tRef.current - tk.t0 < tk.dur));
     }, 1500);
     return () => clearInterval(iv);
-  }, []);
+  }, [motionAllowed]);
 
   const pulse: Record<string, number> = {};
   for (const tk of tokens) {
@@ -236,13 +240,13 @@ export function PipelineBar({ goTo, activeId, setActiveId }: PipelineBarProps) {
           const isActive = activeId === p.id;
           const pulseV = pulse[p.id] ?? 0;
           return (
-            <button
+            <Link
               key={p.id}
               className={`ov-stop ${isActive ? "on" : ""}`}
               style={{ "--hex": p.hex, "--ink": p.ink } as CSSProperties}
+              href={`/kurse/open-source/data-engineering-fundamentals/${p.chap}`}
               onMouseEnter={() => setActiveId(p.id)}
               onFocus={() => setActiveId(p.id)}
-              onClick={() => goTo(p.chap)}
               aria-label={`Chapter ${p.n} · ${p.title}`}
               aria-current={isActive ? "step" : undefined}
             >
@@ -259,7 +263,7 @@ export function PipelineBar({ goTo, activeId, setActiveId }: PipelineBarProps) {
               </div>
               <div className="ov-stop-title">{p.title}</div>
               <div className="ov-stop-tag">{p.tag}</div>
-            </button>
+            </Link>
           );
         })}
       </div>

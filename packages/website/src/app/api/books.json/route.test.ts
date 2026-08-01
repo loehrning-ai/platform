@@ -21,13 +21,16 @@ describe("GET /api/books.json", () => {
     expect(body.library_requires_login).toBe(false);
 
     for (const book of body.books) {
-      // PDF download is a real, shipped feature (gated to logged-in users at
-      // the route layer) — pdf/pdf_available now legitimately vary per book.
-      if (book.pdf_available) {
+      // Endpoint presence and runtime availability are independent: a
+      // provider-free build exposes the stable URL but honestly reports that
+      // account-gated downloads are unavailable.
+      if (book.pdf) {
         expect(book.pdf).toMatch(/^\/api\/buecher\/.+\/download\.pdf$/);
+        expect(book.pdf_requires_account).toBe(true);
       } else {
-        expect(book.pdf).toBeNull();
+        expect(book.pdf_requires_account).toBe(false);
       }
+      if (book.pdf_available) expect(book.pdf).not.toBeNull();
       expect(book.preview_pages).toEqual([]);
       expect(book.preview_note).toMatch(/no login required/i);
       expect(JSON.stringify(book)).not.toMatch(/\/book-covers\//);

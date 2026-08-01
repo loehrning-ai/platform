@@ -5,6 +5,13 @@ export type BoundedJsonResult =
       readonly error: "body_too_large" | "invalid_json";
     };
 
+export function hasJsonContentType(request: Request): boolean {
+  const contentType = request.headers.get("content-type");
+  if (!contentType) return false;
+  return contentType.split(";", 1)[0]?.trim().toLowerCase() ===
+    "application/json";
+}
+
 /**
  * Parse a JSON request without ever accumulating more than `maxBytes` in
  * application memory. Content-Length is only a fast rejection path; the

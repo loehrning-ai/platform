@@ -499,13 +499,13 @@ function CodeSurface() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="flex flex-col bg-[#0d0b09]"
+      className="dark-section flex flex-col bg-[#0d0b09]"
     >
       {/* Terminal header */}
       <div className="flex items-center gap-3 border-b border-[rgba(243,240,233,0.08)] bg-[#161310] px-4 py-2.5">
         <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#ef4444]" />
         <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#f59e0b]" />
-        <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#22c55e]" />
+        <span className="inline-block h-2.5 w-2.5 rounded-full bg-risk-green" />
         <span className="ml-4 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-dark-muted)]">
           ~/finance_audit
         </span>
@@ -553,10 +553,10 @@ function CodeSurface() {
                 initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay, duration: 0.25 }}
-                className="border-l-2 border-[#22c55e] pl-3"
+                className="border-l-2 border-risk-green pl-3"
               >
                 <div className="flex items-center gap-2">
-                  <span className="text-[#22c55e]">✓</span>
+                  <span className="text-risk-green">✓</span>
                   <span className="font-semibold text-[var(--color-dark-fg)]">
                     {block.name}
                   </span>
@@ -630,7 +630,7 @@ function WindowBar({ title }: { title: string }) {
     <div className="flex items-center gap-3 border-b border-border bg-background/60 px-4 py-2.5">
       <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#ef4444]" />
       <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#f59e0b]" />
-      <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#22c55e]" />
+      <span className="inline-block h-2.5 w-2.5 rounded-full bg-risk-green" />
       <span className="ml-4 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
         {title}
       </span>

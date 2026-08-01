@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { CompletionCertificateCta } from "@/components/course/kurs/completion-certificate-cta";
 import { getAllDataInfraLessons } from "@/lib/data-infrastructure/data";
 import { DATA_INFRA_TRACKS } from "@/lib/data-infrastructure/types";
 import { SITE_URL } from "@/lib/seo/json-ld";
@@ -63,6 +64,11 @@ export default async function DataInfrastructureKursIndexPage() {
           );
         })}
       </div>
+
+      <CompletionCertificateCta
+        courseSlug="data-infrastructure"
+        className="mt-12"
+      />
     </div>
   );
 }

@@ -1,28 +1,43 @@
 "use client";
 
-import { useEffect } from "react";
-import { markLessonCompleted } from "@/lib/course/progress";
+import { useEffect, useState } from "react";
+import {
+  isLessonCompleted,
+  markLessonCompleted,
+} from "@/lib/course/progress";
+import { subscribe } from "@/lib/progress/store";
 import type { DefChapterId } from "@/lib/data-engineering-fundamentals/types";
 
 // ─── MarkChapterVisited ──────────────────────────
-// This course has no quiz/capstone gate (grepped across all 14 source
-// chapter files — nothing) and no per-widget checkpoint ledger (its
-// chapter-visit tracking mirrors codex/data-infrastructure's own
-// no-quiz precedent). Certificate eligibility resolves via 
-// generic all-lessons-completed "completion" path, so the chosen
-// completion criterion for this course is literally "all 12 chapters
-// visited": mounting a chapter's route marks that one chapter complete,
-// nothing more (source's own App.js backfills every *preceding* chapter
-// too via a scroll-position side effect — not replicated here, since it
-// would silently mark chapters the learner never actually opened).
-// Renders nothing; exists purely for its mount-effect.
+// This course has no final quiz. A learner explicitly confirms each chapter
+// after reading it; merely opening a URL never earns certificate progress.
 
 export function MarkChapterVisited({ chapterId }: { readonly chapterId: DefChapterId }) {
+  const [completed, setCompleted] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+
   useEffect(() => {
-    markLessonCompleted("data-engineering-fundamentals", chapterId);
+    setHydrated(true);
+    return subscribe(() => {
+      setCompleted(
+        isLessonCompleted("data-engineering-fundamentals", chapterId),
+      );
+    });
   }, [chapterId]);
 
-  return null;
+  return (
+    <button
+      type="button"
+      onClick={() =>
+        markLessonCompleted("data-engineering-fundamentals", chapterId)
+      }
+      disabled={!hydrated || completed}
+      aria-pressed={completed}
+      className="btn btn-primary"
+    >
+      {completed ? "Chapter completed" : "Mark chapter complete"}
+    </button>
+  );
 }
 
 export default MarkChapterVisited;

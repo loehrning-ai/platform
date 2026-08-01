@@ -38,13 +38,15 @@ const ARCH_ARROWS: readonly { x1: number; y1: number; x2: number; y2: number }[]
 
 export function ModelServingArchitecture() {
   const [hovered, setHovered] = useState<string | null>(null);
-  const node = ARCH_NODES.find((n) => n.id === hovered);
+  const [selected, setSelected] = useState<string | null>(null);
+  const activeId = hovered ?? selected;
+  const node = ARCH_NODES.find((n) => n.id === activeId);
 
   return (
     <Panel
       eyebrow="DIAGRAM"
       title="Model serving architecture"
-      caption="Hover each component to see its role and common failure modes in production."
+      caption="Hover, focus, or select each component to see its role and common failure modes in production."
     >
       <div style={{ display: "flex", gap: 24, flexWrap: "wrap", alignItems: "flex-start" }}>
         <svg viewBox="0 0 560 240" style={{ flex: "1 1 320px", minWidth: 300, overflow: "visible" }}>
@@ -57,16 +59,34 @@ export function ModelServingArchitecture() {
             <line key={i} x1={a.x1} y1={a.y1} x2={a.x2} y2={a.y2} stroke="rgba(244,242,236,0.2)" strokeWidth="1.5" markerEnd="url(#arr)" />
           ))}
           {ARCH_NODES.map((n) => (
-            <g key={n.id} style={{ cursor: "pointer" }} onMouseEnter={() => setHovered(n.id)} onMouseLeave={() => setHovered(null)}>
+            <g
+              key={n.id}
+              role="button"
+              tabIndex={0}
+              aria-label={`Inspect ${n.label}`}
+              aria-pressed={selected === n.id}
+              style={{ cursor: "pointer", outline: "none" }}
+              onMouseEnter={() => setHovered(n.id)}
+              onMouseLeave={() => setHovered(null)}
+              onFocus={() => setHovered(n.id)}
+              onBlur={() => setHovered(null)}
+              onClick={() => setSelected((current) => current === n.id ? null : n.id)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  setSelected((current) => current === n.id ? null : n.id);
+                }
+              }}
+            >
               <rect
                 x={n.x}
                 y={n.y}
                 width={n.w}
                 height={n.h}
                 rx="6"
-                fill={hovered === n.id ? n.color : "rgba(244,242,236,0.06)"}
+                fill={activeId === n.id ? n.color : "rgba(244,242,236,0.06)"}
                 stroke={n.color}
-                strokeWidth={hovered === n.id ? 2 : 1}
+                strokeWidth={activeId === n.id ? 2 : 1}
                 style={{ transition: "fill 0.18s, stroke-width 0.18s" }}
               />
               <text
@@ -74,7 +94,7 @@ export function ModelServingArchitecture() {
                 y={n.y + n.h / 2 + 1}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                fill={hovered === n.id ? "#0D0D0C" : n.color}
+                fill={activeId === n.id ? "#0D0D0C" : n.color}
                 fontSize="9.5"
                 fontFamily="'JetBrains Mono',monospace"
                 fontWeight="600"
@@ -94,7 +114,7 @@ export function ModelServingArchitecture() {
             borderRadius: 8,
             background: "rgba(244,242,236,0.04)",
             border: "1px solid rgba(244,242,236,0.1)",
-            transition: "all 0.18s",
+            transition: "background-color 0.18s, border-color 0.18s",
           }}
         >
           {node ? (
@@ -130,7 +150,7 @@ export function ModelServingArchitecture() {
             </>
           ) : (
             <div style={{ fontSize: 12.5, color: "var(--ink-3)", fontStyle: "italic", paddingTop: 8 }}>
-              Hover a component to inspect it.
+              Hover, focus, or select a component to inspect it.
             </div>
           )}
         </div>

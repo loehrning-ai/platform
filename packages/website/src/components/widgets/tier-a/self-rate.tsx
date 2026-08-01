@@ -3,6 +3,10 @@
 import { useEffect, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
 import { useDraftValue } from "./use-draft-value";
+import {
+  handleRovingFocusKeyDown,
+  rovingTabIndex,
+} from "@/lib/a11y/roving-focus";
 import { cn } from "@/lib/utils";
 import { WidgetFrame } from "./_frame";
 
@@ -10,7 +14,7 @@ import { WidgetFrame } from "./_frame";
  * SelfRate — rate yourself along several axes, each a row of anchor pills.
  * Ported from `ai-native/course-app.js:146` (SelfRate). German copy.
  *
- *  - Each axis is a radiogroup of anchor buttons (keyboard via native button).
+ *  - Each axis is a radiogroup with one Tab stop and Arrow/Home/End navigation.
  *  - The chosen levels persist locally (private, not gamified) via useDraftValue.
  *  - Once every axis has a pick, awards the checkpoint once.
  *  - No motion to gate; selection is a CSS color change only.
@@ -72,17 +76,34 @@ export function SelfRateWidget({
             <div
               role="radiogroup"
               aria-label={ax.label}
+              data-roving-group
               className="flex flex-wrap gap-2"
             >
               {ax.anchors.map((anchor, i) => {
-                const active = ratings[ax.id] === i;
+                const storedIndex = ratings[ax.id];
+                const selectedIndex =
+                  storedIndex != null &&
+                  storedIndex >= 0 &&
+                  storedIndex < ax.anchors.length
+                    ? storedIndex
+                    : null;
+                const active = selectedIndex === i;
                 return (
                   <button
                     key={i}
                     type="button"
                     role="radio"
                     aria-checked={active}
+                    data-roving-item
+                    tabIndex={rovingTabIndex(selectedIndex, i)}
                     onClick={() => set(ax.id, i)}
+                    onKeyDown={(event) =>
+                      handleRovingFocusKeyDown(event, {
+                        currentIndex: i,
+                        itemCount: ax.anchors.length,
+                        onMove: (nextIndex) => set(ax.id, nextIndex),
+                      })
+                    }
                     className={cn(
                       "border-2 px-3 py-1.5 text-[13px] transition-colors",
                       active

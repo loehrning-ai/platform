@@ -14,6 +14,7 @@ import {
   saveExerciseResult,
   isExerciseCompleted,
 } from "@/lib/ai-native/progress";
+import { reportClientBoundaryError } from "@/lib/observability/client-boundary-error";
 import type {
   AiRubricEntry,
   ExerciseKind,
@@ -132,7 +133,7 @@ export function ExerciseShell({
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
-              className="inline-flex items-center gap-1.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-[#22c55e]"
+              className="inline-flex items-center gap-1.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-risk-green"
             >
               <CheckCircle2 size={12} />
               {prevScore != null
@@ -235,8 +236,7 @@ class ExerciseErrorBoundary extends Component<
   }
 
   override componentDidCatch(error: Error): void {
-     
-    console.error("[ai-native.ExerciseShell] exercise threw:", error);
+    reportClientBoundaryError("ai-native-exercise", error);
   }
 
   override render(): ReactNode {

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "KI und Gesellschaft: Arbeit, Deepfakes, Ethik (kostenlos)",
     description:
-      "3 Blöcke, 9 Lektionen, ca. 46 Min. Keine Vorkenntnisse nötig. Lokale Teilnahmebestätigung. Kostenlos ohne Anmeldung. Auf Deutsch.",
+      "3 Blöcke, 9 Lektionen, ca. 46 Min. Keine Vorkenntnisse nötig. Lokale Teilnahmebestätigung. Kostenloses Lernkonto erforderlich. Auf Deutsch.",
     url: `${SITE_URL}/ki-und-gesellschaft/kurs`,
     type: "website",
   },

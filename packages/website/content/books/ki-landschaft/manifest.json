@@ -2,10 +2,12 @@
   "bookSlug": "ki-landschaft",
   "title": "KI im deutschen Mittelstand",
   "owner": "editorial:books",
-  "lastReviewed": "2026-07-14",
-  "nextReview": "2026-10-14",
+  "lastReviewed": "2026-07-28",
+  "nextReview": "2026-10-28",
   "reviewCadence": "quarterly",
   "riskClass": "statistical",
+  "publicationStatus": "published",
+  "publicationReason": "Editorial review and public-release approval are recorded for the HTML reader and authenticated PDF.",
   "adaptationNote": "Die offene Ausgabe entfernt Beratungsmarkt-Preisgestaltung, private Unternehmensdaten, proprietäre Scores und daraus abgeleitete Rankings. Sie nutzt stattdessen nachvollziehbare Selbstprüfungen und verlinkte Primärquellen.",
   "chapters": [
     {

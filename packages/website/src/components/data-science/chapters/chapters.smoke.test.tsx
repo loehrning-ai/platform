@@ -1,6 +1,5 @@
 import { describe, it, expect, afterEach, vi } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
-import { getDsChapterMeta } from "@/lib/data-science/types";
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn() }),
@@ -27,7 +26,7 @@ afterEach(() => {
 
 describe("data-science chapter components render with real ported content, not placeholders ", () => {
   it("Ch01Fundamentals renders the real hero, DS-loop stages, and GaltonSim", () => {
-    render(<Ch01Fundamentals chapter={getDsChapterMeta("fund")} />);
+    render(<Ch01Fundamentals />);
     expect(screen.getByText("turns noise")).toBeInTheDocument();
     expect(screen.getByText("Galton Board · Sampling Distribution")).toBeInTheDocument();
     expect(screen.getByText("Data")).toBeInTheDocument();
@@ -36,7 +35,7 @@ describe("data-science chapter components render with real ported content, not p
   });
 
   it("Ch06Evaluate renders the real hero, confusion-matrix section, and ThresholdSim", () => {
-    render(<Ch06Evaluate chapter={getDsChapterMeta("eval")} />);
+    render(<Ch06Evaluate />);
     expect(screen.getByText(/pick the model/)).toBeInTheDocument();
     expect(screen.getByText("Threshold · confusion · ROC")).toBeInTheDocument();
     expect(screen.getByText(/PR-AUC/)).toBeInTheDocument();
@@ -45,16 +44,17 @@ describe("data-science chapter components render with real ported content, not p
 });
 
 describe("data-science chapter components render with real ported content, not placeholders ", () => {
-  it("ChOverview renders the real hero copy, all 12 curriculum cards, and the FlowingPipeline", () => {
-    render(<ChOverview chapter={getDsChapterMeta("home")} />);
+  it("ChOverview renders the real hero copy, all 12 curriculum cards, and reserves the FlowingPipeline", () => {
+    const { container } = render(<ChOverview />);
     expect(screen.getByText(/turns noise into decisions/)).toBeInTheDocument();
     expect(screen.getByText("Capstone")).toBeInTheDocument();
     expect(screen.getByText("Fundamentals")).toBeInTheDocument();
     expect(screen.getAllByText(/Data/).length).toBeGreaterThan(0);
+    expect(container.querySelector(".ov-loop-placeholder")).not.toBeNull();
   });
 
   it("Ch02Explore renders the real hero, all 3 simulators, and the takeaways", () => {
-    render(<Ch02Explore chapter={getDsChapterMeta("explore")} />);
+    render(<Ch02Explore />);
     expect(screen.getByText(/look before you leap/)).toBeInTheDocument();
     expect(screen.getByText("Distribution Explorer")).toBeInTheDocument();
     expect(screen.getByText("Outlier Detector")).toBeInTheDocument();
@@ -63,7 +63,7 @@ describe("data-science chapter components render with real ported content, not p
   });
 
   it("Ch03Clean renders the real hero, all 4 simulators, and the takeaways", () => {
-    render(<Ch03Clean chapter={getDsChapterMeta("clean")} />);
+    render(<Ch03Clean />);
     expect(screen.getByText(/actually/)).toBeInTheDocument();
     expect(screen.getByText("Missingness Patterns")).toBeInTheDocument();
     expect(screen.getByText("Imputation Race")).toBeInTheDocument();
@@ -75,7 +75,7 @@ describe("data-science chapter components render with real ported content, not p
 
 describe("data-science chapter components render with real ported content, not placeholders ", () => {
   it("Ch04Feature renders the real hero and all 4 simulators", () => {
-    render(<Ch04Feature chapter={getDsChapterMeta("feature")} />);
+    render(<Ch04Feature />);
     expect(screen.getByText(/fancier models/)).toBeInTheDocument();
     expect(screen.getAllByText("Categorical encoding methods").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Polynomial feature expansion").length).toBeGreaterThan(0);
@@ -85,7 +85,7 @@ describe("data-science chapter components render with real ported content, not p
   });
 
   it("Ch05Model renders the real hero and BiasVarianceSim", () => {
-    render(<Ch05Model chapter={getDsChapterMeta("model")} />);
+    render(<Ch05Model />);
     expect(screen.getAllByText(/dance/).length).toBeGreaterThan(0);
     expect(screen.getByLabelText("Model complexity (polynomial degree)")).toBeInTheDocument();
     expect(screen.getByText("Key takeaways")).toBeInTheDocument();
@@ -94,7 +94,7 @@ describe("data-science chapter components render with real ported content, not p
 
 describe("data-science chapter components render with real ported content, not placeholders ", () => {
   it("Ch07Interpret renders the real hero and all 4 simulators", () => {
-    render(<Ch07Interpret chapter={getDsChapterMeta("interp")} />);
+    render(<Ch07Interpret />);
     expect(screen.getByText(/is a/)).toBeInTheDocument();
     expect(screen.getAllByText("SHAP waterfall · loan approval").length).toBeGreaterThan(0);
     expect(screen.getAllByText("LIME · local linear explanation").length).toBeGreaterThan(0);
@@ -104,7 +104,7 @@ describe("data-science chapter components render with real ported content, not p
   });
 
   it("Ch08Experiment renders the real hero and ABSim", () => {
-    render(<Ch08Experiment chapter={getDsChapterMeta("exp")} />);
+    render(<Ch08Experiment />);
     expect(screen.getByText(/Power is how/)).toBeInTheDocument();
     expect(screen.getAllByText("Running experiment").length).toBeGreaterThan(0);
     expect(screen.getByLabelText("True lift")).toBeInTheDocument();
@@ -114,7 +114,7 @@ describe("data-science chapter components render with real ported content, not p
 
 describe("data-science chapter components render with real ported content, not placeholders ", () => {
   it("Ch09Causal renders the real hero and all 5 simulators", () => {
-    render(<Ch09Causal chapter={getDsChapterMeta("causal")} />);
+    render(<Ch09Causal />);
     expect(screen.getByText(/hypothesis/)).toBeInTheDocument();
     expect(screen.getAllByText("Confounding · the lurking variable").length).toBeGreaterThan(0);
     expect(screen.getAllByText("DAG patterns · should you adjust for Z?").length).toBeGreaterThan(0);
@@ -125,7 +125,7 @@ describe("data-science chapter components render with real ported content, not p
   });
 
   it("Ch10Peeking renders the real hero and all 4 simulators", () => {
-    render(<Ch10Peeking chapter={getDsChapterMeta("peek")} />);
+    render(<Ch10Peeking />);
     expect(screen.getAllByText(/lie/).length).toBeGreaterThan(0);
     expect(screen.getAllByText("Peeking False-Positive Inflator").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Multiple Testing & FWER").length).toBeGreaterThan(0);
@@ -137,7 +137,7 @@ describe("data-science chapter components render with real ported content, not p
 
 describe("data-science chapter components render with real ported content, not placeholders ", () => {
   it("Ch11Deploy renders the real hero and all 4 simulators", () => {
-    render(<Ch11Deploy chapter={getDsChapterMeta("deploy")} />);
+    render(<Ch11Deploy />);
     expect(screen.getByText(/chapter one/)).toBeInTheDocument();
     expect(screen.getAllByText("Model serving architecture").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Drift simulator").length).toBeGreaterThan(0);

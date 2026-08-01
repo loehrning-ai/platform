@@ -17,6 +17,12 @@ afterEach(() => cleanup());
 describe("HeroOrrery", () => {
   it("starts with role+context+task active (quality 68) and constraints/format off", () => {
     render(<HeroOrrery />);
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "Five parts. Toggle each.",
+      }),
+    ).toBeInTheDocument();
     expect(screen.getByText("68")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Constraints/i })).toHaveAttribute(
       "aria-pressed",

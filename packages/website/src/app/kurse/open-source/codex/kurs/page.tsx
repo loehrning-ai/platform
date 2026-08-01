@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { CompletionCertificateCta } from "@/components/course/kurs/completion-certificate-cta";
 import { getAllCodexLessons } from "@/lib/codex/data";
 import { CODEX_TRACKS } from "@/lib/codex/types";
 import { SITE_URL } from "@/lib/seo/json-ld";
@@ -75,6 +76,11 @@ export default async function CodexKursIndexPage() {
           );
         })}
       </div>
+
+      <CompletionCertificateCta
+        courseSlug="codex"
+        className="mt-12"
+      />
     </div>
   );
 }

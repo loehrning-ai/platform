@@ -10,11 +10,11 @@ import {
   getBadgeDefinition,
   computeNewlyEarnedBadges,
 } from "./badges";
-import type { UnifiedProgress } from "./types";
+import { UNIFIED_SCHEMA_VERSION, type UnifiedProgress } from "./types";
 
 function makeState(over: Partial<UnifiedProgress> = {}): UnifiedProgress {
   return {
-    schemaVersion: 2,
+    schemaVersion: UNIFIED_SCHEMA_VERSION,
     courses: {},
     xp: 0,
     checkpoints: {},

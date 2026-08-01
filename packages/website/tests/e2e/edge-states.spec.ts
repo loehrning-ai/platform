@@ -22,25 +22,68 @@ import { test, expect, type Page } from "@playwright/test";
  * chromium AND mobile (iPhone 13 / WebKit) projects.
  */
 
-// House console-error filter, mirrored from buecher-library.spec.ts. Applied
-// only where NO network failure is deliberately induced (an aborted fetch below
-// legitimately logs a browser network error, so those tests skip this check).
-function collectConsoleErrors(page: Page): string[] {
-  const errors: string[] = [];
+// Applied only where no network failure is deliberately induced. Tests that
+// intentionally abort a fetch do not install this strict console-error check.
+type CapturedBrowserError =
+  | {
+      readonly source: "console";
+      readonly text: string;
+      readonly location: {
+        readonly url: string;
+        readonly lineNumber: number;
+        readonly columnNumber: number;
+      };
+    }
+  | {
+      readonly source: "pageerror";
+      readonly text: string;
+    };
+
+function collectConsoleErrors(page: Page): CapturedBrowserError[] {
+  const errors: CapturedBrowserError[] = [];
   page.on("console", (msg) => {
-    if (msg.type() === "error") errors.push(msg.text());
+    if (msg.type() === "error") {
+      const location = msg.location();
+      errors.push({
+        source: "console",
+        text: msg.text(),
+        location: {
+          url: location.url,
+          lineNumber: location.lineNumber,
+          columnNumber: location.columnNumber,
+        },
+      });
+    }
   });
-  page.on("pageerror", (err) => errors.push(err.message));
+  page.on("pageerror", (err) => {
+    errors.push({ source: "pageerror", text: err.message });
+  });
   return errors;
 }
 
-function meaningfulErrors(errors: string[]): string[] {
+const CHROMIUM_DOCUMENT_404_ERROR =
+  "Failed to load resource: the server responded with a status of 404 (Not Found)";
+
+function meaningfulErrors(
+  errors: readonly CapturedBrowserError[],
+  {
+    browserName,
+    expectedDocumentUrl,
+  }: {
+    readonly browserName: string;
+    readonly expectedDocumentUrl: string;
+  },
+): CapturedBrowserError[] {
   return errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e),
+    (error) =>
+      !(
+        browserName === "chromium" &&
+        error.source === "console" &&
+        error.text === CHROMIUM_DOCUMENT_404_ERROR &&
+        error.location.url === expectedDocumentUrl &&
+        error.location.lineNumber === 0 &&
+        error.location.columnNumber === 0
+      ),
   );
 }
 
@@ -55,6 +98,7 @@ test.describe("edge: unknown route renders not-found.tsx", () => {
 
   test("navigating to an unknown path returns 404 and the not-found UI", async ({
     page,
+    browserName,
   }) => {
     const errors = collectConsoleErrors(page);
     const response = await page.goto(UNKNOWN, { waitUntil: "domcontentloaded" });
@@ -78,10 +122,14 @@ test.describe("edge: unknown route renders not-found.tsx", () => {
       page.getByRole("link", { name: "Zur Startseite" }),
     ).toHaveAttribute("href", "/");
 
-    const noise = meaningfulErrors(errors);
-    expect(noise, `console errors on ${UNKNOWN}\n${noise.join("\n")}`).toEqual(
-      [],
-    );
+    const noise = meaningfulErrors(errors, {
+      browserName,
+      expectedDocumentUrl: page.url(),
+    });
+    expect(
+      noise,
+      `browser errors on ${UNKNOWN}\n${JSON.stringify(noise, null, 2)}`,
+    ).toEqual([]);
   });
 
   test("an unknown path 404s at the HTTP level too", async ({ request }) => {

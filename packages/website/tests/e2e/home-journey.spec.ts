@@ -1,31 +1,47 @@
 import { test, expect } from "@playwright/test";
 
-// The simplified homepage uses the Workflow section to frame the platform as
-// learning material, not as a consulting funnel. It has no KI-Check CTA.
-test.describe("Home Page - Workflow", () => {
-  test("renders the learning workflow without a journey CTA", async ({ page }) => {
+// The homepage keeps one resource section after the course pathway. It routes
+// to learning material and open artifacts, not a consulting funnel.
+test.describe("Home Page - Resources", () => {
+  test("renders the supporting-resource pathway", async ({ page }) => {
     await page.goto("/");
-    const section = page.getByTestId("workflow-section");
+    const section = page.getByTestId("ressourcen-section");
     await section.scrollIntoViewIfNeeded();
     await expect(section).toBeVisible();
-    await expect(section.getByText(/Ein Lernpfad/)).toBeVisible();
-    await expect(section.getByRole("heading", { name: "Kurs wählen", exact: true })).toBeVisible();
-    await expect(section.getByRole("heading", { name: "Fortschritt speichern", exact: true })).toBeVisible();
-    await expect(section.getByRole("heading", { name: "Material anwenden", exact: true })).toBeVisible();
-    expect(
-      await section.locator('a[href="/ki-transformation-check"]').count(),
-    ).toBe(0);
+    await expect(
+      section.getByRole("heading", { name: "Material zum Anwenden." }),
+    ).toBeVisible();
+    for (const [name, href] of [
+      ["Blog", "/blog"],
+      ["Lernbücher", "/buecher"],
+      ["Praxisbeispiele", "/demos"],
+      ["Workshops", "/workshops"],
+      ["Open Source", "/open-source"],
+    ] as const) {
+      await expect(section.getByRole("link", { name: new RegExp(name) })).toHaveAttribute(
+        "href",
+        href,
+      );
+    }
+    await expect(section.getByRole("link", { name: /Zum Konto/ })).toHaveAttribute(
+      "href",
+      "/konto",
+    );
   });
 
   test.describe("Mobile", () => {
     test.use({ viewport: { width: 375, height: 812 } });
 
-    test("workflow section stacks and stays visible at 375px", async ({ page }) => {
+    test("resource section stacks and stays visible at 375px", async ({ page }) => {
       await page.goto("/");
-      const section = page.getByTestId("workflow-section");
+      const section = page.getByTestId("ressourcen-section");
       await section.scrollIntoViewIfNeeded();
       await expect(section).toBeVisible();
-      await expect(section.getByText(/Ein Lernpfad/)).toBeVisible();
+      await expect(
+        section.getByRole("heading", { name: "Material zum Anwenden." }),
+      ).toBeVisible();
+      const box = await section.boundingBox();
+      expect(box?.width).toBeLessThanOrEqual(375);
     });
   });
 });

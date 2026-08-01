@@ -26,6 +26,7 @@ export function DsChapterSidebar({ activeId, onNavigate }: DsChapterSidebarProps
           <Link
             key={c.id}
             href={dsChapterHref(c.id)}
+            prefetch={false}
             className={`sb-item ${active ? "active" : ""}`}
             onClick={onNavigate}
             aria-current={active ? "page" : undefined}

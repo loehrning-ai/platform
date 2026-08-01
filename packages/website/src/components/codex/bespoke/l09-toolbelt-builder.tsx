@@ -105,14 +105,14 @@ export function L09ToolbeltBuilder({ lessonId, cpId }: L09ToolbeltBuilderProps):
               disabled={isPlaced}
               className={cn(
                 "border-2 border-border bg-background px-3 py-2 text-left font-mono transition-colors",
-                isPlaced && "border-[#22c55e] bg-[#22c55e]/10",
+                isPlaced && "border-risk-green bg-risk-green/10",
                 isRejected && "border-brand-amber bg-brand-amber/10",
                 !isPlaced && "hover:border-brand-orange/60",
               )}
             >
               <span className="block text-[12.5px] font-bold text-foreground">{tool.id}</span>
               <span className="block text-[11px] text-muted-foreground">{tool.purpose}</span>
-              {isPlaced && <span className="text-[10px] text-[#22c55e]">✓ fit: 100%</span>}
+              {isPlaced && <span className="text-[10px] text-risk-green">✓ fit: 100%</span>}
               {isRejected && <span className="text-[10px] text-brand-amber">⚠ fit: overkill</span>}
             </button>
           );
@@ -126,7 +126,7 @@ export function L09ToolbeltBuilder({ lessonId, cpId }: L09ToolbeltBuilderProps):
           {log.map((line, i) => (
             <span key={i}>&gt; {line}</span>
           ))}
-          {ready && <span className="font-bold text-[#22c55e]">&gt; READY FOR CODEX {done ? "✓" : ""}</span>}
+          {ready && <span className="font-bold text-risk-green">&gt; READY FOR CODEX {done ? "✓" : ""}</span>}
         </div>
       </div>
     </div>

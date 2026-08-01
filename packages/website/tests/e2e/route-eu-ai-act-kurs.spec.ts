@@ -6,9 +6,9 @@ import { test, expect, type Page } from "@playwright/test";
  * (exception to policy D1 — see src/lib/crawl/contract.ts PROTECTED_PATHS).
  * An anonymous visitor following the funnel or a real block link
  * (EU_AI_ACT_KURS_CONFIG.blockIds = block_1..block_6) is redirected by
- * src/middleware.ts to /login?next=<path>&reason=kurs-login before reaching
- * the hub/reader — these tests assert that redirect, not the reader content
- * itself (which needs a live session; see
+ * src/middleware.ts to /login?next=<path>&reason=auth-not-configured in the
+ * provider-free suite before reaching the hub/reader. These tests assert that
+ * explicit fallback, not the reader content itself (which needs a live session; see
  * tests/e2e/authenticated-routes.authed.spec.ts).
  */
 
@@ -16,9 +16,7 @@ const LANDING = "/eu-ai-act-kurs";
 const HUB = "/eu-ai-act-kurs/kurs";
 const BLOCK = "/eu-ai-act-kurs/kurs/block_1"; // first real blockId, always prerendered
 
-// Console-error filter mirrors route-einstieg.spec.ts / qa-sweep.spec.ts: drop
-// framework noise (hydration, prefetch, chunk 404s, Vercel Analytics) and keep
-// only errors that signal a genuine page fault.
+// Every captured console error and uncaught page error fails the check.
 function collectConsoleErrors(page: Page): string[] {
   const errors: string[] = [];
   page.on("console", (msg) => {
@@ -29,13 +27,7 @@ function collectConsoleErrors(page: Page): string[] {
 }
 
 function meaningfulErrors(errors: string[]): string[] {
-  return errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e),
-  );
+  return errors;
 }
 
 test.describe("/eu-ai-act-kurs landing", () => {
@@ -70,7 +62,7 @@ test.describe("/eu-ai-act-kurs landing", () => {
 
     // Primary funnel CTA (rendered top + bottom); first must resolve to the hub.
     const startCta = page
-      .getByRole("link", { name: "Kostenlosen Kurs starten" })
+      .getByRole("link", { name: "Kostenlos mit Lernkonto starten" })
       .first();
     await expect(startCta).toBeVisible();
     await expect(startCta).toHaveAttribute("href", HUB);
@@ -84,7 +76,7 @@ test.describe("/eu-ai-act-kurs funnel (login-gated hub)", () => {
     await page.goto(LANDING, { waitUntil: "domcontentloaded" });
 
     await page
-      .getByRole("link", { name: "Kostenlosen Kurs starten" })
+      .getByRole("link", { name: "Kostenlos mit Lernkonto starten" })
       .first()
       .click();
 
@@ -94,7 +86,7 @@ test.describe("/eu-ai-act-kurs funnel (login-gated hub)", () => {
       "/login",
     );
     expect(url.searchParams.get("next")).toBe(HUB);
-    expect(url.searchParams.get("reason")).toBe("kurs-login");
+    expect(url.searchParams.get("reason")).toBe("auth-not-configured");
   });
 
   test("a /kurs/block_1 request gets a 307 to /login for anonymous readers", async ({
@@ -108,7 +100,7 @@ test.describe("/eu-ai-act-kurs funnel (login-gated hub)", () => {
     const redirectUrl = new URL(location ?? "", "http://localhost");
     expect(redirectUrl.pathname).toBe("/login");
     expect(redirectUrl.searchParams.get("next")).toBe(BLOCK);
-    expect(redirectUrl.searchParams.get("reason")).toBe("kurs-login");
+    expect(redirectUrl.searchParams.get("reason")).toBe("auth-not-configured");
   });
 });
 
@@ -121,7 +113,7 @@ test.describe("/eu-ai-act-kurs mobile", () => {
 
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Kostenlosen Kurs starten" }).first(),
+      page.getByRole("link", { name: "Kostenlos mit Lernkonto starten" }).first(),
     ).toBeVisible();
 
     const { scrollWidth, innerWidth } = await page.evaluate(() => ({

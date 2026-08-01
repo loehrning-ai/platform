@@ -1,6 +1,13 @@
 "use client";
 
-import { m, useInView, useMotionValue, useSpring, useTransform } from "framer-motion";
+import {
+  m,
+  useInView,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { useEffect, useRef, type ReactNode, type ElementType } from "react";
 import { cn } from "@/lib/utils";
 import { revealUp, fadeUp, drawLine, EASE_OUT_EXPO } from "@/lib/animations";
@@ -84,7 +91,7 @@ export function VoiceAnchor({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.6, ease: EASE_OUT_EXPO }}
-      className={cn("relative max-w-[720px] py-3 pl-8", className)}
+      className={cn("js-reveal relative max-w-[720px] py-3 pl-8", className)}
     >
       <p className="ai-voice-anchor text-foreground">{children}</p>
       {author && (
@@ -144,7 +151,7 @@ export function ClipHeading({
         viewport={{ once: true, margin: "-80px" }}
         custom={delay}
         variants={revealUp}
-        className={className}
+        className={cn("js-reveal", className)}
         style={style}
       >
         {children}
@@ -172,7 +179,7 @@ export function DrawRule({
       variants={drawLine}
       style={{ transformOrigin: "left" }}
       className={cn(
-        "h-px w-full",
+        "js-reveal h-px w-full",
         dark ? "bg-[var(--color-dark-border)]" : "bg-border",
         className,
       )}
@@ -194,13 +201,40 @@ export function CountUp({
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
-  const motionValue = useMotionValue(0);
+  const reducedMotion = useReducedMotion();
+  // Start from the authored value so server HTML and the pre-hydration frame
+  // remain truthful. Once hydrated and visible, motion-allowed clients replay
+  // the count from zero.
+  const motionValue = useMotionValue(value);
   const spring = useSpring(motionValue, { duration: duration * 1000, bounce: 0 });
   const display = useTransform(spring, (latest) => Math.round(latest).toString());
+  const animated = useRef(false);
 
   useEffect(() => {
-    if (inView) motionValue.set(value);
-  }, [inView, motionValue, value]);
+    if (!inView) return;
+
+    if (animated.current) {
+      if (reducedMotion) {
+        motionValue.jump(value);
+        spring.jump(value);
+      } else {
+        motionValue.set(value);
+      }
+      return;
+    }
+    animated.current = true;
+
+    if (reducedMotion) {
+      motionValue.jump(value);
+      spring.jump(value);
+      return;
+    }
+
+    motionValue.jump(0);
+    spring.jump(0);
+    const frame = requestAnimationFrame(() => motionValue.set(value));
+    return () => cancelAnimationFrame(frame);
+  }, [inView, motionValue, reducedMotion, spring, value]);
 
   return (
     <span
@@ -235,7 +269,7 @@ export function FadeBlock({
       viewport={{ once: true, margin: "-60px" }}
       custom={delay}
       variants={fadeUp}
-      className={className}
+      className={cn("js-reveal", className)}
     >
       {children}
     </m.div>

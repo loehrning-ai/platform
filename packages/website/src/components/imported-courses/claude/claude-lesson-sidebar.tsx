@@ -7,6 +7,7 @@ import { CheckCircle2 } from "lucide-react";
 import { getCompletedLessonIds } from "@/lib/course/progress";
 import { CLAUDE_TRACKS } from "@/lib/claude-course/types";
 import { cn } from "@/lib/utils";
+import { subscribe } from "@/lib/progress";
 
 export interface ClaudeLessonNavItem {
   readonly id: string;
@@ -28,7 +29,9 @@ export function ClaudeLessonSidebar({ lessons }: ClaudeLessonSidebarProps): JSX.
   const [completedIds, setCompletedIds] = useState<ReadonlySet<string>>(new Set());
 
   useEffect(() => {
-    setCompletedIds(getCompletedLessonIds("claude"));
+    return subscribe(() => {
+      setCompletedIds(getCompletedLessonIds("claude"));
+    });
   }, [pathname]);
 
   return (
@@ -58,7 +61,7 @@ export function ClaudeLessonSidebar({ lessons }: ClaudeLessonSidebarProps): JSX.
                       )}
                     >
                       {completedIds.has(lesson.id) ? (
-                        <CheckCircle2 size={13} className="shrink-0 text-[#22c55e]" aria-hidden="true" />
+                        <CheckCircle2 size={13} className="shrink-0 text-risk-green" aria-hidden="true" />
                       ) : (
                         <span className="w-[13px] shrink-0 text-center font-mono text-[10px] text-muted-foreground">
                           {lesson.number}

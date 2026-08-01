@@ -78,8 +78,8 @@ export function ExternalBenchmarkStrip({
             }}
             className={
               i < items.length - 1
-                ? "sm:border-r sm:border-border/40 sm:pr-6"
-                : undefined
+                ? "js-reveal sm:border-r sm:border-border/40 sm:pr-6"
+                : "js-reveal"
             }
           >
             <p className="font-mono text-2xl font-bold text-foreground">

@@ -6,8 +6,8 @@
 // honest by construction:
 //   • Competencies attach ONLY to the four certified courses that track real
 //     completion — never to the external GitHub labs or applied courses.
-//   • "Earned" uses the SAME bar as the certificate: the workshop quiz passed,
-//     or (AI-Native) the capstone submitted. No new claim, no faked credential.
+//   • "Earned" uses the SAME bar as the certificate: all canonical lessons plus
+//     the configured quiz, or the AI-Native capstone. No faked credential.
 //   • Everything derives from the `UnifiedProgress` object that already syncs
 //     to Supabase, so earned competencies are already cloud-saved per user.
 //
@@ -17,6 +17,7 @@
 import type { CourseSlug } from "@/lib/course/types";
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import type { UnifiedProgress } from "@/lib/progress/types";
+import { isCourseCompletionEarned } from "./completion";
 
 /** One named thing a learner can demonstrably do after a course. */
 export interface Competency {
@@ -227,16 +228,14 @@ const COURSE_TITLE: Record<string, string> = Object.fromEntries(
 
 /**
  * True when a course's record has been earned — the SAME bar as the
- * certificate: the workshop quiz passed, or the capstone submitted (AI-Native).
+ * certificate: all canonical lessons plus the configured final assessment.
  * Returns false for a missing slice or null progress.
  */
 export function isCourseRecordEarned(
   progress: UnifiedProgress | null,
   slug: CourseSlug,
 ): boolean {
-  const slice = progress?.courses[slug];
-  if (!slice) return false;
-  return slice.workshopQuiz.passed || slice.capstoneSubmitted;
+  return isCourseCompletionEarned(progress, slug);
 }
 
 /**

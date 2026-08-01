@@ -7,6 +7,9 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: true,
+    // A focused test accidentally committed with `.only` must never turn any
+    // local or CI verification command into partial-suite proof.
+    allowOnly: false,
     setupFiles: ["./src/test/setup.ts"],
     include: ["src/**/*.{test,spec}.{ts,tsx}"],
     // The complete jsdom suite runs nearly two thousand assertions. A small
@@ -38,10 +41,10 @@ export default defineConfig({
       // complete local measurement to absorb runtime variance without allowing
       // material coverage regression.
       thresholds: {
-        lines: 53,
-        functions: 52,
-        branches: 52,
-        statements: 52,
+        lines: 74,
+        functions: 70,
+        branches: 68,
+        statements: 72,
       },
     },
   },

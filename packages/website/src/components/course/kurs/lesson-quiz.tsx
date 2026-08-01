@@ -264,8 +264,16 @@ export function LessonQuiz({ questions, bestScore, onComplete }: LessonQuizProps
                 >
                   <span className="shrink-0 font-mono text-xs font-bold uppercase text-muted-foreground">{option.id}</span>
                   <span className="flex-1">{option.text}</span>
+                  {showExplanation && isCorrect && (
+                    <span className="sr-only">Richtige Antwort.</span>
+                  )}
                   {showExplanation && isCorrect && <CheckCircle2 className="h-4 w-4 shrink-0 text-brand-sand" aria-hidden="true" />}
-                  {showExplanation && isSelected && !isCorrect && <XCircle className="h-4 w-4 shrink-0 text-destructive" aria-hidden="true" />}
+                  {showExplanation && isSelected && !isCorrect && (
+                    <>
+                      <span className="sr-only">Ihre Auswahl ist falsch.</span>
+                      <XCircle className="h-4 w-4 shrink-0 text-destructive" aria-hidden="true" />
+                    </>
+                  )}
                 </div>
               );
             })}
