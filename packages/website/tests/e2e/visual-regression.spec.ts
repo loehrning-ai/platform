@@ -20,6 +20,70 @@ interface ScreenshotStats {
   readonly opaqueRatio: number;
 }
 
+const REVIEWED_FONT_WEIGHTS = [400, 500, 600, 700, 900] as const;
+const REQUIRED_REVIEWED_FONT_WEIGHTS = [400, 700] as const;
+
+async function prepareReviewedFont(page: Page) {
+  const warmedFontState = await page.evaluate(async (weights) => {
+    const property = "--font-loehrning-sans";
+    const configuredFamilies = getComputedStyle(
+      document.documentElement,
+    ).getPropertyValue(property);
+    const primaryFamily = configuredFamilies.split(",")[0]?.trim() ?? "";
+    if (!primaryFamily) {
+      return { primaryFamily, loadedCounts: [] };
+    }
+
+    const loadedCounts = await Promise.all(
+      weights.map(
+        async (weight) =>
+          (await document.fonts.load(`${weight} 64px ${primaryFamily}`)).length,
+      ),
+    );
+
+    // Production deliberately keeps the brand face optional to prevent a late
+    // LCP font swap. Warm it explicitly, then reload this same browser context
+    // so the face is available before first paint. Without the reload, a cold
+    // Linux runner retains its OS fallback after the optional no-swap window,
+    // making the supposedly portable baseline meaningless.
+    await document.fonts.ready;
+    return { primaryFamily, loadedCounts };
+  }, REVIEWED_FONT_WEIGHTS);
+
+  expect(warmedFontState.primaryFamily).not.toBe("");
+  expect(warmedFontState.loadedCounts).toHaveLength(
+    REVIEWED_FONT_WEIGHTS.length,
+  );
+  for (const loadedCount of warmedFontState.loadedCounts) {
+    expect(loadedCount).toBeGreaterThan(0);
+  }
+
+  const reloadResponse = await page.reload({ waitUntil: "load" });
+  expect(reloadResponse?.status()).toBe(200);
+  await page.locator('html[data-hydrated="true"]').waitFor();
+  await expect(page.locator("h1").first()).toBeVisible();
+
+  const appliedFontState = await page.evaluate(async (weights) => {
+    const configuredFamilies = getComputedStyle(
+      document.documentElement,
+    ).getPropertyValue("--font-loehrning-sans");
+    const primaryFamily = configuredFamilies.split(",")[0]?.trim() ?? "";
+    await document.fonts.ready;
+    const availableWeights = weights.map((weight) =>
+      document.fonts.check(`${weight} 64px ${primaryFamily}`),
+    );
+    await new Promise<void>((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+    );
+    return { primaryFamily, availableWeights };
+  }, REQUIRED_REVIEWED_FONT_WEIGHTS);
+
+  expect(appliedFontState.primaryFamily).toBe(warmedFontState.primaryFamily);
+  expect(appliedFontState.availableWeights).toEqual(
+    REQUIRED_REVIEWED_FONT_WEIGHTS.map(() => true),
+  );
+}
+
 async function screenshotStats(
   screenshot: Buffer,
 ): Promise<ScreenshotStats> {
@@ -232,12 +296,7 @@ test.describe("reviewed desktop pixel baselines", () => {
       expect(response?.status()).toBe(200);
       await page.locator('html[data-hydrated="true"]').waitFor();
       await expect(page.locator("h1").first()).toBeVisible();
-      await page.evaluate(async () => {
-        await document.fonts.ready;
-        await new Promise<void>((resolve) =>
-          requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-        );
-      });
+      await prepareReviewedFont(page);
 
       await expect(page).toHaveScreenshot(`${name}-desktop.png`, {
         animations: "disabled",
