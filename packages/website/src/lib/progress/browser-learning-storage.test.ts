@@ -196,6 +196,7 @@ beforeEach(async () => {
 
 afterEach(() => {
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
   Object.defineProperty(window, "localStorage", {
     configurable: true,
     value: originalLocalStorage,
@@ -207,6 +208,35 @@ afterEach(() => {
 });
 
 describe("browser learning storage ownership", () => {
+  it("uses secure random bytes when randomUUID is unavailable", async () => {
+    window.localStorage.removeItem(ACCOUNT_LEARNING_CUTOVER_KEY);
+    let nextByte = 0x11;
+    const getRandomValues = vi.fn((target: Uint8Array) => {
+      target.fill(nextByte);
+      nextByte += 1;
+      return target;
+    });
+    vi.stubGlobal("crypto", { getRandomValues } as unknown as Crypto);
+
+    expect(await prepareAccountLearningStorage()).toBe(true);
+    expect(readCutover()).toMatchObject({
+      epoch: "11".repeat(16),
+      lineage: "12".repeat(16),
+      phase: "ready",
+    });
+    expect(getRandomValues).toHaveBeenCalledTimes(2);
+  });
+
+  it("fails closed when secure randomness is unavailable", async () => {
+    window.localStorage.removeItem(ACCOUNT_LEARNING_CUTOVER_KEY);
+    vi.stubGlobal("crypto", {} as Crypto);
+
+    expect(await prepareAccountLearningStorage()).toBe(false);
+    expect(
+      window.localStorage.getItem(ACCOUNT_LEARNING_CUTOVER_KEY),
+    ).toBeNull();
+  });
+
   it("fails closed while identity is unknown", () => {
     window.localStorage.setItem(LOCAL_KEYS[0], "anonymous-local");
     window.sessionStorage.setItem(SESSION_KEYS[0], "anonymous-session");
@@ -400,7 +430,9 @@ describe("browser learning storage ownership", () => {
           );
         };
 
-        expect(setOwnedLocalLearningItem("progress", "stale-write")).toBe(false);
+        expect(setOwnedLocalLearningItem("progress", "stale-write")).toBe(
+          false,
+        );
         local.beforeGetItem = undefined;
 
         expect(local.rawGetItem(target)).toBe(
@@ -587,16 +619,18 @@ describe("browser learning storage ownership", () => {
     expect(setOwnedSessionLearningItem("draft", "private-session")).toBe(true);
     const nativeSetItem = window.localStorage.setItem.bind(window.localStorage);
     let deniedReady = false;
-    vi.spyOn(window.localStorage, "setItem").mockImplementation((key, value) => {
-      if (key === ACCOUNT_LEARNING_CUTOVER_KEY) {
-        const candidate = JSON.parse(value) as { phase?: unknown };
-        if (candidate.phase === "ready" && !deniedReady) {
-          deniedReady = true;
-          throw new DOMException("interrupted", "QuotaExceededError");
+    vi.spyOn(window.localStorage, "setItem").mockImplementation(
+      (key, value) => {
+        if (key === ACCOUNT_LEARNING_CUTOVER_KEY) {
+          const candidate = JSON.parse(value) as { phase?: unknown };
+          if (candidate.phase === "ready" && !deniedReady) {
+            deniedReady = true;
+            throw new DOMException("interrupted", "QuotaExceededError");
+          }
         }
-      }
-      nativeSetItem(key, value);
-    });
+        nativeSetItem(key, value);
+      },
+    );
 
     expect(await rotateUnderLock(ACCOUNT_A)).toBe(false);
     expect(readCutover().phase).toBe("recovery-in-progress");
@@ -626,9 +660,7 @@ describe("browser learning storage ownership", () => {
         epoch: "bounded-retirement-epoch",
         phase: "ready",
         retiredAccounts,
-        legacyCutovers: [
-          { generation: 1, epoch: "legacy-cutover-epoch" },
-        ],
+        legacyCutovers: [{ generation: 1, epoch: "legacy-cutover-epoch" }],
       }),
     );
     window.localStorage.setItem(
@@ -670,12 +702,8 @@ describe("browser learning storage ownership", () => {
         minimumGeneration: 1,
         epoch: "global-recovery-epoch",
         phase: "ready",
-        retiredAccounts: [
-          { accountId: ACCOUNT_A, minimumGeneration: 7 },
-        ],
-        legacyCutovers: [
-          { generation: 1, epoch: "legacy-cutover-epoch" },
-        ],
+        retiredAccounts: [{ accountId: ACCOUNT_A, minimumGeneration: 7 }],
+        legacyCutovers: [{ generation: 1, epoch: "legacy-cutover-epoch" }],
       }),
     );
     const recovery = await withAccountDeletionOriginLock(

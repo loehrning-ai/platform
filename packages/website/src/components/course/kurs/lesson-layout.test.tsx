@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, cleanup, fireEvent, within } from "@testing-library/react";
+import {
+  render,
+  screen,
+  cleanup,
+  fireEvent,
+  within,
+} from "@testing-library/react";
 
 /**
  * lesson-layout.test.tsx (regression coverage)
@@ -94,6 +100,13 @@ vi.mock("./lesson-content", async () => {
           { "data-testid": "active-title" },
           props.lesson.title,
         ),
+        React.createElement(
+          "p",
+          { "data-testid": "quiz-best-score" },
+          props.quizBestScore === null
+            ? "none"
+            : `${props.quizBestScore.score}/${props.quizBestScore.total}`,
+        ),
         props.hasNextLesson
           ? React.createElement(
               "button",
@@ -113,9 +126,7 @@ vi.mock("./lesson-content", async () => {
 import { LessonLayout } from "./lesson-layout";
 import type { Lesson } from "@/lib/course/types";
 
-function mkLesson(
-  over: Pick<Lesson, "id" | "number" | "title">,
-): Lesson {
+function mkLesson(over: Pick<Lesson, "id" | "number" | "title">): Lesson {
   return {
     subtitle: "",
     durationMinutes: 10,
@@ -200,9 +211,7 @@ describe("<LessonLayout>", () => {
     fireEvent.click(
       screen.getByRole("button", { name: "Lektion 1: Erste Lektion" }),
     );
-    expect(window.location.pathname).toBe(
-      "/ki-fuehrerschein/kurs/block_1",
-    );
+    expect(window.location.pathname).toBe("/ki-fuehrerschein/kurs/block_1");
     expect(window.location.search).toBe("?source=resume");
     expect(window.location.hash).toBe("#lesson=l1");
 
@@ -258,6 +267,17 @@ describe("<LessonLayout>", () => {
     );
   });
 
+  it("treats special-property lesson IDs as ordinary quiz-score keys", () => {
+    renderLayout([
+      mkLesson({ id: "__proto__", number: 1, title: "Sichere Lektion" }),
+    ]);
+
+    expect(screen.getByTestId("active-title")).toHaveTextContent(
+      "Sichere Lektion",
+    );
+    expect(screen.getByTestId("quiz-best-score")).toHaveTextContent("none");
+  });
+
   it("advances to the next lesson and scrolls to the top smoothly", () => {
     renderLayout();
     expect(screen.getByTestId("active-title")).toHaveTextContent(
@@ -290,9 +310,7 @@ describe("<LessonLayout>", () => {
       screen.getByRole("button", { name: "Navigation schließen" }),
     ).toBeInTheDocument();
     const dialog = screen.getByRole("dialog", { name: "Lektionsnavigation" });
-    expect(dialog).toHaveClass(
-      "overscroll-contain",
-    );
+    expect(dialog).toHaveClass("overscroll-contain");
     const lessonButtons = within(dialog).getAllByRole("button");
     expect(lessonButtons[0]).toHaveFocus();
     lessonButtons.at(-1)?.focus();

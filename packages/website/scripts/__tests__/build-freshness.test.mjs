@@ -2,9 +2,11 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import {
   existsSync,
+  linkSync,
   mkdtempSync,
   mkdirSync,
   readFileSync,
+  renameSync,
   rmSync,
   symlinkSync,
   writeFileSync,
@@ -21,6 +23,7 @@ import {
   computeBuildState,
   listBuildInputPaths,
   recordBuildReceipt,
+  readStableRegularFile,
   runBuildAndRecord,
   verifyBuildReceipt,
 } from "../build-freshness.mjs";
@@ -82,8 +85,7 @@ test("default scope resolution binds provider-free policy mutations", () => {
     recordBuildReceipt({ ...defaultScopeOptions, environment: {} });
     writeFileSync(wrapperPath, "export const providerFreePolicy = 2;\n");
     assert.throws(
-      () =>
-        verifyBuildReceipt({ ...defaultScopeOptions, environment: {} }),
+      () => verifyBuildReceipt({ ...defaultScopeOptions, environment: {} }),
       /Stale production build/,
     );
   } finally {
@@ -99,7 +101,10 @@ test("ignored files inside explicit source scopes remain receipt-bound", () => {
       "src",
       "generated.ignored-build",
     );
-    writeFileSync(join(current.repositoryRoot, ".gitignore"), "*.ignored-build\n");
+    writeFileSync(
+      join(current.repositoryRoot, ".gitignore"),
+      "*.ignored-build\n",
+    );
     writeFileSync(ignoredPath, "build input one\n");
     const initialized = spawnSync("git", ["init", "--quiet"], {
       cwd: current.repositoryRoot,
@@ -115,8 +120,7 @@ test("ignored files inside explicit source scopes remain receipt-bound", () => {
     recordBuildReceipt({ ...defaultScopeOptions, environment: {} });
     writeFileSync(ignoredPath, "build input two\n");
     assert.throws(
-      () =>
-        verifyBuildReceipt({ ...defaultScopeOptions, environment: {} }),
+      () => verifyBuildReceipt({ ...defaultScopeOptions, environment: {} }),
       /Stale production build/,
     );
   } finally {
@@ -140,10 +144,7 @@ test("records and verifies one exact source and environment state", () => {
       join(current.websiteRoot, "src", "page.ts"),
       "export const page = 2;\n",
     );
-    assert.throws(
-      () => verifyBuildReceipt(options),
-      /Stale production build/,
-    );
+    assert.throws(() => verifyBuildReceipt(options), /Stale production build/);
   } finally {
     rmSync(current.repositoryRoot, { recursive: true, force: true });
   }
@@ -284,10 +285,7 @@ test("receipt builds canonicalize launcher-mutated locale and telemetry controls
     "https://public-ref.supabase.co",
   );
   assert.equal(directEnvironment.ANALYZE, "");
-  assert.equal(
-    buildReceiptEnvironment({ ANALYZE: "true" }).ANALYZE,
-    "true",
-  );
+  assert.equal(buildReceiptEnvironment({ ANALYZE: "true" }).ANALYZE, "true");
 });
 
 test("the default composite build passes its canonical environment to the child", () => {
@@ -453,6 +451,118 @@ test("symbolic-link build inputs are rejected", () => {
   }
 });
 
+test("stable descriptor reads reject pathname replacement after open", () => {
+  const current = fixture();
+  try {
+    const relativePath = "packages/website/src/page.ts";
+    const sourcePath = join(current.repositoryRoot, ...relativePath.split("/"));
+    const displacedPath = join(current.repositoryRoot, "original-page.ts");
+    assert.throws(
+      () =>
+        readStableRegularFile(sourcePath, relativePath, "Build input", {
+          rootDirectory: current.repositoryRoot,
+          afterOpen() {
+            renameSync(sourcePath, displacedPath);
+            writeFileSync(sourcePath, "export const attacker = true;\n");
+          },
+        }),
+      /changed while it was being hashed/,
+    );
+  } finally {
+    rmSync(current.repositoryRoot, { recursive: true, force: true });
+  }
+});
+
+test("stable descriptor reads reject parent-directory replacement after open", () => {
+  const current = fixture();
+  const outsideDirectory = mkdtempSync(
+    join(tmpdir(), "loehrning-build-freshness-outside-"),
+  );
+  try {
+    const relativePath = "packages/website/src/page.ts";
+    const sourcePath = join(current.repositoryRoot, ...relativePath.split("/"));
+    const sourceDirectory = join(current.websiteRoot, "src");
+    const displacedDirectory = join(current.websiteRoot, "src-original");
+    writeFileSync(join(outsideDirectory, "page.ts"), "external source\n");
+
+    assert.throws(
+      () =>
+        readStableRegularFile(sourcePath, relativePath, "Build input", {
+          rootDirectory: current.repositoryRoot,
+          afterOpen() {
+            renameSync(sourceDirectory, displacedDirectory);
+            symlinkSync(outsideDirectory, sourceDirectory, "dir");
+          },
+        }),
+      /changed while it was being hashed/,
+    );
+  } finally {
+    rmSync(current.repositoryRoot, { recursive: true, force: true });
+    rmSync(outsideDirectory, { recursive: true, force: true });
+  }
+});
+
+test("stable descriptor reads reject real parent replacement with the same file inode", () => {
+  const current = fixture();
+  try {
+    const relativePath = "packages/website/src/page.ts";
+    const sourcePath = join(current.repositoryRoot, ...relativePath.split("/"));
+    const sourceDirectory = join(current.websiteRoot, "src");
+    const displacedDirectory = join(current.websiteRoot, "src-original");
+    const replacementDirectory = join(current.websiteRoot, "src-replacement");
+    mkdirSync(replacementDirectory);
+    linkSync(sourcePath, join(replacementDirectory, "page.ts"));
+
+    assert.throws(
+      () =>
+        readStableRegularFile(sourcePath, relativePath, "Build input", {
+          rootDirectory: current.repositoryRoot,
+          afterOpen() {
+            renameSync(sourceDirectory, displacedDirectory);
+            renameSync(replacementDirectory, sourceDirectory);
+          },
+        }),
+      /changed while it was being hashed/,
+    );
+  } finally {
+    rmSync(current.repositoryRoot, { recursive: true, force: true });
+  }
+});
+
+test("receipt and BUILD_ID reads reject symbolic links", () => {
+  const current = fixture();
+  try {
+    const options = { ...current, environment: {} };
+    const receiptPath = join(
+      current.websiteRoot,
+      ".next",
+      "loehrning-build-receipt.json",
+    );
+    const receiptCopy = join(current.repositoryRoot, "receipt-copy.json");
+    recordBuildReceipt(options);
+    writeFileSync(receiptCopy, readFileSync(receiptPath));
+    rmSync(receiptPath);
+    symlinkSync(receiptCopy, receiptPath);
+    assert.throws(
+      () => verifyBuildReceipt(options),
+      /Build receipt must be a bounded regular file/,
+    );
+
+    recordBuildReceipt(options);
+    const buildIdPath = join(current.websiteRoot, ".next", "BUILD_ID");
+    const buildIdCopy = join(current.repositoryRoot, "BUILD_ID-copy");
+    writeFileSync(buildIdCopy, readFileSync(buildIdPath));
+    rmSync(buildIdPath);
+    symlinkSync(buildIdCopy, buildIdPath);
+    assert.throws(
+      () => verifyBuildReceipt(options),
+      /Next BUILD_ID must be a bounded regular file/,
+    );
+  } finally {
+    rmSync(current.repositoryRoot, { recursive: true, force: true });
+  }
+});
+
 test("escaping and platform-ambiguous build-input paths are rejected", () => {
   const current = fixture();
   try {
@@ -525,10 +635,7 @@ test("the default composite build cannot load unrecorded dotenv inputs", () => {
       stdio: "pipe",
     });
 
-    assert.equal(
-      verifyBuildReceipt(current).buildId,
-      "build-dotenv-safe",
-    );
+    assert.equal(verifyBuildReceipt(current).buildId, "build-dotenv-safe");
   } finally {
     rmSync(current.repositoryRoot, { recursive: true, force: true });
   }
@@ -561,7 +668,10 @@ test("receipt, runtime trace, and cache mutations stay outside artifact integrit
     const cacheDirectory = join(current.websiteRoot, ".next", "cache");
     mkdirSync(cacheDirectory, { recursive: true });
     writeFileSync(join(cacheDirectory, "runtime-cache.bin"), "mutable\n");
-    writeFileSync(join(current.websiteRoot, ".next", "trace"), "runtime trace\n");
+    writeFileSync(
+      join(current.websiteRoot, ".next", "trace"),
+      "runtime trace\n",
+    );
     assert.equal(verifyBuildReceipt(options).buildId, "build-one");
   } finally {
     rmSync(current.repositoryRoot, { recursive: true, force: true });

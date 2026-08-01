@@ -4,14 +4,16 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import {
   mkdtempSync,
+  mkdirSync,
   readdirSync,
   readFileSync,
+  renameSync,
   rmSync,
-  statSync,
+  symlinkSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
+import { dirname, join, relative, sep } from "node:path";
 import { createRequire } from "node:module";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import {
@@ -22,6 +24,7 @@ import {
   SYSTEM_ENVIRONMENT_KEYS,
   VERIFICATION_ENVIRONMENT_KEYS,
 } from "../../../../scripts/environment-policy.mjs";
+import { readStableRegularFile } from "../build-freshness.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const websiteRoot = join(here, "..", "..");
@@ -58,38 +61,42 @@ const probe = [
   "process.stdout.write(JSON.stringify(Object.fromEntries(keys.map((key) => [key, process.env[key]]))));",
 ].join("");
 
-const result = spawnSync(process.execPath, [wrapper, process.execPath, "-e", probe], {
-  encoding: "utf8",
-  env: {
-    ...process.env,
-    ANTHROPIC_API_KEY: "sentinel-anthropic",
-    NEXT_PUBLIC_SENTRY_DSN: "sentinel-sentry",
-    SUPABASE_SERVICE_ROLE_KEY: "sentinel-supabase",
-    RATE_LIMIT_HMAC_SECRET: `rlh1_${"a".repeat(64)}`,
-    NEXT_PUBLIC_SUPABASE_URL: "https://sentinel.invalid",
-    NEXT_PUBLIC_TURNSTILE_SITE_KEY: "sentinel-turnstile",
-    TURNSTILE_CONFIGURATION_CONFIRMED_AT: "sentinel-turnstile-date",
-    TURBO_TOKEN: "sentinel-turbo",
-    VERCEL_OIDC_TOKEN: "sentinel-oidc",
-    E2E_AUTH_LIVE: "1",
-    LOEHRNING_LOCAL_PROVIDER_FREE_RUNTIME: "sentinel-legacy-runtime",
-    LOEHRNING_LOCAL_VERIFICATION_ORIGIN: "http://localhost:9999",
-    LOEHRNING_VALIDATION_PROFILE: "live-auth-e2e",
-    SIMPLIFIED_SUPABASE_TEST_EMAIL: "sentinel@example.test",
-    SIMPLIFIED_SUPABASE_TEST_PASSWORD: "sentinel-password",
-    SIMPLIFIED_SUPABASE_TEST_PUBLISHABLE_KEY: "sentinel-test-key",
-    SIMPLIFIED_SUPABASE_TEST_URL: "https://sentinel.supabase.co",
-    SIMPLIFIED_SUPABASE_PRODUCTION_URL:
-      "https://sentinel-production.supabase.co",
-    SIMPLIFIED_SUPABASE_TEST_WRITE_PROJECT_REF: "sentinel",
-    GEMINI_API_KEY: "sentinel-gemini",
-    DATABASE_URL: "postgres://sentinel.invalid/db",
-    STRIPE_SECRET_KEY: "sentinel-stripe",
-    SSH_AUTH_SOCK: "/tmp/sentinel-agent.sock",
-    PLAYWRIGHT_CAPTURE_VISUALS: "arbitrary-untrusted-value",
-    PROVIDER_FREE_BENIGN_MARKER: "preserved",
+const result = spawnSync(
+  process.execPath,
+  [wrapper, process.execPath, "-e", probe],
+  {
+    encoding: "utf8",
+    env: {
+      ...process.env,
+      ANTHROPIC_API_KEY: "sentinel-anthropic",
+      NEXT_PUBLIC_SENTRY_DSN: "sentinel-sentry",
+      SUPABASE_SERVICE_ROLE_KEY: "sentinel-supabase",
+      RATE_LIMIT_HMAC_SECRET: `rlh1_${"a".repeat(64)}`,
+      NEXT_PUBLIC_SUPABASE_URL: "https://sentinel.invalid",
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: "sentinel-turnstile",
+      TURNSTILE_CONFIGURATION_CONFIRMED_AT: "sentinel-turnstile-date",
+      TURBO_TOKEN: "sentinel-turbo",
+      VERCEL_OIDC_TOKEN: "sentinel-oidc",
+      E2E_AUTH_LIVE: "1",
+      LOEHRNING_LOCAL_PROVIDER_FREE_RUNTIME: "sentinel-legacy-runtime",
+      LOEHRNING_LOCAL_VERIFICATION_ORIGIN: "http://localhost:9999",
+      LOEHRNING_VALIDATION_PROFILE: "live-auth-e2e",
+      SIMPLIFIED_SUPABASE_TEST_EMAIL: "sentinel@example.test",
+      SIMPLIFIED_SUPABASE_TEST_PASSWORD: "sentinel-password",
+      SIMPLIFIED_SUPABASE_TEST_PUBLISHABLE_KEY: "sentinel-test-key",
+      SIMPLIFIED_SUPABASE_TEST_URL: "https://sentinel.supabase.co",
+      SIMPLIFIED_SUPABASE_PRODUCTION_URL:
+        "https://sentinel-production.supabase.co",
+      SIMPLIFIED_SUPABASE_TEST_WRITE_PROJECT_REF: "sentinel",
+      GEMINI_API_KEY: "sentinel-gemini",
+      DATABASE_URL: "postgres://sentinel.invalid/db",
+      STRIPE_SECRET_KEY: "sentinel-stripe",
+      SSH_AUTH_SOCK: "/tmp/sentinel-agent.sock",
+      PLAYWRIGHT_CAPTURE_VISUALS: "arbitrary-untrusted-value",
+      PROVIDER_FREE_BENIGN_MARKER: "preserved",
+    },
   },
-});
+);
 
 assert.equal(result.status, 0, result.stderr);
 const environment = JSON.parse(result.stdout);
@@ -110,7 +117,11 @@ for (const key of [
   "SIMPLIFIED_SUPABASE_PRODUCTION_URL",
   "SIMPLIFIED_SUPABASE_TEST_WRITE_PROJECT_REF",
 ]) {
-  assert.equal(environment[key], "", `${key} leaked through provider-free wrapper`);
+  assert.equal(
+    environment[key],
+    "",
+    `${key} leaked through provider-free wrapper`,
+  );
 }
 for (const key of [
   "TURBO_TOKEN",
@@ -247,15 +258,11 @@ const configProbeEnvironment = {
 };
 delete configProbeEnvironment.CI;
 delete configProbeEnvironment.GITHUB_ACTIONS;
-const configProbeResult = spawnSync(
-  "bun",
-  ["--eval", configProbeSource],
-  {
-    cwd: websiteRoot,
-    encoding: "utf8",
-    env: minimalVerificationEnvironment(configProbeEnvironment),
-  },
-);
+const configProbeResult = spawnSync("bun", ["--eval", configProbeSource], {
+  cwd: websiteRoot,
+  encoding: "utf8",
+  env: minimalVerificationEnvironment(configProbeEnvironment),
+});
 assert.equal(configProbeResult.status, 0, configProbeResult.stderr);
 const serverEnvironmentProbe = JSON.parse(configProbeResult.stdout);
 assert.match(serverEnvironmentProbe.bunOptions, /--no-env-file/);
@@ -266,10 +273,7 @@ assert.deepEqual(
   [],
   "the Playwright app server must explicitly blank every non-public provider variable",
 );
-assert.equal(
-  serverEnvironmentProbe.localOrigin,
-  "http://localhost:3399",
-);
+assert.equal(serverEnvironmentProbe.localOrigin, "http://localhost:3399");
 assert.equal(
   serverEnvironmentProbe.forbidOnly,
   true,
@@ -281,20 +285,16 @@ assert.equal(
   "every Playwright gate must reject tests that pass only on retry",
 );
 
-const ciConfigProbeResult = spawnSync(
-  "bun",
-  ["--eval", configProbeSource],
-  {
-    cwd: websiteRoot,
-    encoding: "utf8",
-    env: minimalVerificationEnvironment({
-      ...process.env,
-      CI: "1",
-      E2E_GLOBAL_TIMEOUT: "60000",
-      E2E_PORT: "3398",
-    }),
-  },
-);
+const ciConfigProbeResult = spawnSync("bun", ["--eval", configProbeSource], {
+  cwd: websiteRoot,
+  encoding: "utf8",
+  env: minimalVerificationEnvironment({
+    ...process.env,
+    CI: "1",
+    E2E_GLOBAL_TIMEOUT: "60000",
+    E2E_PORT: "3398",
+  }),
+});
 assert.equal(ciConfigProbeResult.status, 0, ciConfigProbeResult.stderr);
 assert.equal(
   JSON.parse(ciConfigProbeResult.stdout).globalTimeout,
@@ -552,10 +552,7 @@ assert.match(
   /PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report\/auth-scaffold/,
 );
 assert.match(ciWorkflow, /PLAYWRIGHT_OUTPUT_DIR: test-results\/public/);
-assert.match(
-  ciWorkflow,
-  /PLAYWRIGHT_OUTPUT_DIR: test-results\/auth-scaffold/,
-);
+assert.match(ciWorkflow, /PLAYWRIGHT_OUTPUT_DIR: test-results\/auth-scaffold/);
 const serverLogPrivacyRunner = readFileSync(
   join(here, "..", "verify-server-log-privacy.mjs"),
   "utf8",
@@ -581,6 +578,49 @@ function sourceFiles(directory) {
   });
 }
 
+function readStableSourceFile(file, options = {}) {
+  const rootDirectory = options.rootDirectory ?? websiteRoot;
+  const relativeFile = relative(rootDirectory, file).split(sep).join("/");
+  return readStableRegularFile(file, relativeFile, "Application source", {
+    rootDirectory,
+    afterOpen: options.afterOpen,
+    invalidMessage: `${file} must be a regular source file`,
+    changedMessage: `${file} changed while its environment references were inspected`,
+  }).toString("utf8");
+}
+
+const sourceInspectionRoot = mkdtempSync(
+  join(tmpdir(), "loehrning-provider-source-inspection-"),
+);
+const sourceInspectionOutside = mkdtempSync(
+  join(tmpdir(), "loehrning-provider-source-outside-"),
+);
+try {
+  const sourceDirectory = join(sourceInspectionRoot, "src");
+  const displacedDirectory = join(sourceInspectionRoot, "src-original");
+  const sourcePath = join(sourceDirectory, "source.ts");
+  mkdirSync(sourceDirectory);
+  writeFileSync(sourcePath, "export const source = true;\n");
+  writeFileSync(
+    join(sourceInspectionOutside, "source.ts"),
+    "export const replacement = true;\n",
+  );
+  assert.throws(
+    () =>
+      readStableSourceFile(sourcePath, {
+        rootDirectory: sourceInspectionRoot,
+        afterOpen() {
+          renameSync(sourceDirectory, displacedDirectory);
+          symlinkSync(sourceInspectionOutside, sourceDirectory, "dir");
+        },
+      }),
+    /changed while its environment references were inspected/,
+  );
+} finally {
+  rmSync(sourceInspectionRoot, { recursive: true, force: true });
+  rmSync(sourceInspectionOutside, { recursive: true, force: true });
+}
+
 const applicationEnvironmentNames = new Set();
 for (const file of [
   ...sourceFiles(join(websiteRoot, "src")),
@@ -588,8 +628,7 @@ for (const file of [
   join(websiteRoot, "sentry.edge.config.ts"),
   join(websiteRoot, "sentry.server.config.ts"),
 ]) {
-  assert.equal(statSync(file).isFile(), true);
-  const source = readFileSync(file, "utf8");
+  const source = readStableSourceFile(file);
   for (const match of source.matchAll(
     /process\.env(?:\.([A-Z][A-Z0-9_]*)|\[["']([A-Z][A-Z0-9_]*)["']\])/g,
   )) {

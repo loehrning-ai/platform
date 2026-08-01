@@ -4,10 +4,13 @@ import { spawnSync } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
 import {
   closeSync,
+  constants,
+  fstatSync,
   lstatSync,
   openSync,
   readFileSync,
   readdirSync,
+  realpathSync,
   renameSync,
   rmSync,
   writeFileSync,
@@ -113,8 +116,7 @@ function updateFramed(hash, label, value) {
 }
 
 function safeRelativePath(value) {
-  const segments =
-    typeof value === "string" ? value.split("/") : [];
+  const segments = typeof value === "string" ? value.split("/") : [];
   return (
     typeof value === "string" &&
     value.length > 0 &&
@@ -151,17 +153,239 @@ function metadataFingerprint(metadata) {
     .join(":");
 }
 
-function readStableRegularFile(absolutePath, relativePath, kind) {
-  const before = lstatSync(absolutePath, { bigint: true });
-  if (!before.isFile() || before.isSymbolicLink()) {
-    throw new Error(`${kind} must be a regular non-symlink file: ${relativePath}`);
+function sameFileIdentity(left, right) {
+  return (
+    left.dev === right.dev && left.ino === right.ino && left.mode === right.mode
+  );
+}
+
+function samePathComponentIdentity(left, right) {
+  return (
+    left.absolutePath === right.absolutePath &&
+    sameFileIdentity(left.metadata, right.metadata)
+  );
+}
+
+function relativePathInside(rootDirectory, candidatePath) {
+  const relativePath = path.relative(rootDirectory, candidatePath);
+  return {
+    relativePath,
+    contained:
+      relativePath !== "" &&
+      relativePath !== ".." &&
+      !relativePath.startsWith(`..${path.sep}`) &&
+      !path.isAbsolute(relativePath),
+  };
+}
+
+function capturePathState({
+  canonicalPath,
+  canonicalRoot,
+  message,
+  preserveMissing = false,
+}) {
+  try {
+    const relative = relativePathInside(canonicalRoot, canonicalPath);
+    if (!relative.contained) throw new Error(message);
+
+    const state = [];
+    const rootMetadata = lstatSync(canonicalRoot, { bigint: true });
+    if (!rootMetadata.isDirectory() || rootMetadata.isSymbolicLink()) {
+      throw new Error(message);
+    }
+    state.push({ absolutePath: canonicalRoot, metadata: rootMetadata });
+
+    const components = relative.relativePath.split(path.sep);
+    let currentPath = canonicalRoot;
+    for (let index = 0; index < components.length; index += 1) {
+      currentPath = join(currentPath, components[index]);
+      const metadata = lstatSync(currentPath, { bigint: true });
+      const finalComponent = index === components.length - 1;
+      if (
+        metadata.isSymbolicLink() ||
+        (!finalComponent && !metadata.isDirectory()) ||
+        (finalComponent && !metadata.isFile())
+      ) {
+        throw new Error(message);
+      }
+      state.push({ absolutePath: currentPath, metadata });
+    }
+
+    const resolvedPath = realpathSync(canonicalPath);
+    if (!relativePathInside(canonicalRoot, resolvedPath).contained) {
+      throw new Error(message);
+    }
+    const finalMetadata = state.at(-1)?.metadata;
+    const confirmedMetadata = lstatSync(canonicalPath, { bigint: true });
+    if (
+      !finalMetadata ||
+      confirmedMetadata.isSymbolicLink() ||
+      !confirmedMetadata.isFile() ||
+      metadataFingerprint(finalMetadata) !==
+        metadataFingerprint(confirmedMetadata)
+    ) {
+      throw new Error(message);
+    }
+    return state;
+  } catch (error) {
+    if (
+      preserveMissing &&
+      error &&
+      typeof error === "object" &&
+      "code" in error &&
+      error.code === "ENOENT"
+    ) {
+      throw error;
+    }
+    if (error instanceof Error && error.message === message) throw error;
+    throw new Error(message, { cause: error });
   }
-  const contents = readFileSync(absolutePath);
-  const after = lstatSync(absolutePath, { bigint: true });
-  if (metadataFingerprint(before) !== metadataFingerprint(after)) {
-    throw new Error(`${kind} changed while it was being hashed: ${relativePath}`);
+}
+
+function resolveStableReadPath(rootDirectory, absolutePath, invalidMessage) {
+  const requestedRoot = resolve(rootDirectory);
+  const requestedPath = resolve(absolutePath);
+  const requested = relativePathInside(requestedRoot, requestedPath);
+  if (!requested.contained) throw new Error(invalidMessage);
+
+  let rootMetadata;
+  let canonicalRoot;
+  try {
+    rootMetadata = lstatSync(requestedRoot, { bigint: true });
+    canonicalRoot = realpathSync(requestedRoot);
+  } catch (error) {
+    throw new Error(invalidMessage, { cause: error });
   }
-  return contents;
+  if (!rootMetadata.isDirectory() || rootMetadata.isSymbolicLink()) {
+    throw new Error(invalidMessage);
+  }
+
+  const canonicalPath = resolve(canonicalRoot, requested.relativePath);
+  if (!relativePathInside(canonicalRoot, canonicalPath).contained) {
+    throw new Error(invalidMessage);
+  }
+  const pathState = capturePathState({
+    canonicalPath,
+    canonicalRoot,
+    message: invalidMessage,
+    preserveMissing: true,
+  });
+  if (!sameFileIdentity(rootMetadata, pathState[0].metadata)) {
+    throw new Error(invalidMessage);
+  }
+  return { canonicalPath, canonicalRoot, pathState };
+}
+
+function assertOpenedPathIdentity({
+  canonicalPath,
+  canonicalRoot,
+  expectedPathState,
+  openedMetadata,
+  changedMessage,
+}) {
+  const currentPathState = capturePathState({
+    canonicalPath,
+    canonicalRoot,
+    message: changedMessage,
+  });
+  if (
+    currentPathState.length !== expectedPathState.length ||
+    expectedPathState.some(
+      (component, index) =>
+        !samePathComponentIdentity(component, currentPathState[index]),
+    )
+  ) {
+    throw new Error(changedMessage);
+  }
+  const finalMetadata = currentPathState.at(-1)?.metadata;
+  if (
+    !finalMetadata ||
+    metadataFingerprint(openedMetadata) !== metadataFingerprint(finalMetadata)
+  ) {
+    throw new Error(changedMessage);
+  }
+}
+
+export function readStableRegularFile(
+  absolutePath,
+  relativePath,
+  kind,
+  options = {},
+) {
+  const invalidMessage =
+    options.invalidMessage ??
+    `${kind} must be a regular non-symlink file: ${relativePath}`;
+  const changedMessage =
+    options.changedMessage ??
+    `${kind} changed while it was being hashed: ${relativePath}`;
+  const { canonicalPath, canonicalRoot, pathState } = resolveStableReadPath(
+    options.rootDirectory ?? dirname(absolutePath),
+    absolutePath,
+    invalidMessage,
+  );
+  let descriptor;
+  try {
+    descriptor = openSync(
+      canonicalPath,
+      constants.O_RDONLY | constants.O_NOFOLLOW,
+    );
+  } catch (error) {
+    if (
+      error &&
+      typeof error === "object" &&
+      "code" in error &&
+      error.code === "ELOOP"
+    ) {
+      throw new Error(invalidMessage, { cause: error });
+    }
+    throw error;
+  }
+
+  try {
+    const before = fstatSync(descriptor, { bigint: true });
+    const minimumBytes =
+      options.minimumBytes === undefined
+        ? undefined
+        : BigInt(options.minimumBytes);
+    const maximumBytes =
+      options.maximumBytes === undefined
+        ? undefined
+        : BigInt(options.maximumBytes);
+    if (
+      !before.isFile() ||
+      (minimumBytes !== undefined && before.size < minimumBytes) ||
+      (maximumBytes !== undefined && before.size > maximumBytes)
+    ) {
+      throw new Error(invalidMessage);
+    }
+
+    options.afterOpen?.({ absolutePath: canonicalPath, metadata: before });
+    assertOpenedPathIdentity({
+      canonicalPath,
+      canonicalRoot,
+      expectedPathState: pathState,
+      openedMetadata: before,
+      changedMessage,
+    });
+    const contents = readFileSync(descriptor);
+    const after = fstatSync(descriptor, { bigint: true });
+    if (
+      BigInt(contents.byteLength) !== before.size ||
+      metadataFingerprint(before) !== metadataFingerprint(after)
+    ) {
+      throw new Error(changedMessage);
+    }
+    assertOpenedPathIdentity({
+      canonicalPath,
+      canonicalRoot,
+      expectedPathState: pathState,
+      openedMetadata: after,
+      changedMessage,
+    });
+    return contents;
+  } finally {
+    closeSync(descriptor);
+  }
 }
 
 function walkFiles(repositoryRoot, relativePath, files) {
@@ -300,13 +524,12 @@ export function listBuildInputPaths(repositoryRoot = REPOSITORY_ROOT) {
   if (result.status !== 0) {
     return [...files].sort();
   }
-  const gitFiles = result.stdout
-    .toString("utf8")
-    .split("\0")
-    .filter(Boolean);
+  const gitFiles = result.stdout.toString("utf8").split("\0").filter(Boolean);
   for (const file of gitFiles) {
     if (!safeRelativePath(file)) {
-      throw new Error(`Unsafe path in build input set: ${JSON.stringify(file)}`);
+      throw new Error(
+        `Unsafe path in build input set: ${JSON.stringify(file)}`,
+      );
     }
     files.add(file);
   }
@@ -358,8 +581,14 @@ export function computeBuildState(options = {}) {
       );
     }
     const absolutePath = join(repositoryRoot, relativePath);
+    let contents;
     try {
-      lstatSync(absolutePath);
+      contents = readStableRegularFile(
+        absolutePath,
+        relativePath,
+        "Build input",
+        { rootDirectory: repositoryRoot },
+      );
     } catch (error) {
       if (
         error &&
@@ -372,15 +601,7 @@ export function computeBuildState(options = {}) {
       }
       throw error;
     }
-    updateFramed(
-      inputHash,
-      `file:${relativePath}`,
-      readStableRegularFile(
-        absolutePath,
-        relativePath,
-        "Build input",
-      ),
-    );
+    updateFramed(inputHash, `file:${relativePath}`, contents);
   }
 
   const environmentHash = createHash("sha256");
@@ -440,10 +661,7 @@ function captureToolchain(options = {}) {
   });
   if (result.error) throw result.error;
   const bunRevision = result.stdout?.trim() ?? "";
-  if (
-    result.status !== 0 ||
-    !/^[0-9A-Za-z.+_-]{1,128}$/.test(bunRevision)
-  ) {
+  if (result.status !== 0 || !/^[0-9A-Za-z.+_-]{1,128}$/.test(bunRevision)) {
     throw new Error("Unable to identify the Bun toolchain revision.");
   }
   return {
@@ -478,11 +696,7 @@ function excludedArtifactPath(relativePath) {
   );
 }
 
-function collectArtifactFiles(
-  nextDirectory,
-  relativePath,
-  files,
-) {
+function collectArtifactFiles(nextDirectory, relativePath, files) {
   if (relativePath && excludedArtifactPath(relativePath)) return;
   const absolutePath = relativePath
     ? join(nextDirectory, ...relativePath.split("/"))
@@ -528,6 +742,7 @@ function computeArtifactState(options = {}) {
         join(nextDirectory, ...relativePath.split("/")),
         `.next/${relativePath}`,
         "Build artifact",
+        { rootDirectory: websiteRoot },
       ),
     );
   }
@@ -537,12 +752,23 @@ function computeArtifactState(options = {}) {
   };
 }
 
-function readBuildId(buildIdPath = BUILD_ID_PATH) {
-  const stat = lstatSync(buildIdPath);
-  if (!stat.isFile() || stat.isSymbolicLink() || stat.size > 512) {
-    throw new Error("Next BUILD_ID must be a bounded regular file.");
-  }
-  const buildId = readFileSync(buildIdPath, "utf8").trim();
+function readBuildId(
+  buildIdPath = BUILD_ID_PATH,
+  rootDirectory = WEBSITE_ROOT,
+) {
+  const buildId = readStableRegularFile(
+    buildIdPath,
+    ".next/BUILD_ID",
+    "Next BUILD_ID",
+    {
+      rootDirectory,
+      maximumBytes: 512,
+      invalidMessage: "Next BUILD_ID must be a bounded regular file.",
+      changedMessage: "Next BUILD_ID changed while it was being read.",
+    },
+  )
+    .toString("utf8")
+    .trim();
   if (!/^[A-Za-z0-9_-]{1,128}$/.test(buildId)) {
     throw new Error("Next BUILD_ID has an invalid format.");
   }
@@ -596,15 +822,14 @@ export function recordBuildReceipt(options = {}) {
     receiptOptions.buildIdPath ?? join(websiteRoot, ".next", "BUILD_ID");
   const nextDirectory = dirname(receiptPath);
   assertNextDirectory(nextDirectory);
-  const state =
-    receiptOptions.state ?? computeBuildState(receiptOptions);
+  const state = receiptOptions.state ?? computeBuildState(receiptOptions);
   const toolchain = captureToolchain(receiptOptions);
   const artifact =
     receiptOptions.artifact ?? computeArtifactState(receiptOptions);
   const receipt = {
     version: RECEIPT_VERSION,
     algorithm: "sha256",
-    buildId: readBuildId(buildIdPath),
+    buildId: readBuildId(buildIdPath, websiteRoot),
     ...state,
     ...artifact,
     toolchain,
@@ -686,10 +911,21 @@ export function runBuildAndRecord(options = {}) {
   });
 }
 
-function readReceipt(receiptPath) {
-  let stat;
+function readReceipt(receiptPath, rootDirectory) {
+  let contents;
   try {
-    stat = lstatSync(receiptPath);
+    contents = readStableRegularFile(
+      receiptPath,
+      RECEIPT_FILE_NAME,
+      "Build receipt",
+      {
+        rootDirectory,
+        minimumBytes: 2,
+        maximumBytes: MAX_RECEIPT_BYTES,
+        invalidMessage: "Build receipt must be a bounded regular file.",
+        changedMessage: "Build receipt changed while it was being read.",
+      },
+    );
   } catch (error) {
     if (
       error &&
@@ -704,17 +940,9 @@ function readReceipt(receiptPath) {
     }
     throw error;
   }
-  if (
-    !stat.isFile() ||
-    stat.isSymbolicLink() ||
-    stat.size < 2 ||
-    stat.size > MAX_RECEIPT_BYTES
-  ) {
-    throw new Error("Build receipt must be a bounded regular file.");
-  }
   let receipt;
   try {
-    receipt = JSON.parse(readFileSync(receiptPath, "utf8"));
+    receipt = JSON.parse(contents.toString("utf8"));
   } catch {
     throw new Error("Build receipt is not valid JSON.");
   }
@@ -748,10 +976,10 @@ export function verifyBuildReceipt(options = {}) {
   const buildIdPath =
     receiptOptions.buildIdPath ?? join(websiteRoot, ".next", "BUILD_ID");
   assertNextDirectory(dirname(receiptPath));
-  const receipt = readReceipt(receiptPath);
+  const receipt = readReceipt(receiptPath, websiteRoot);
   const current = computeBuildState(receiptOptions);
   const currentToolchain = captureToolchain(receiptOptions);
-  const buildId = readBuildId(buildIdPath);
+  const buildId = readBuildId(buildIdPath, websiteRoot);
   if (
     receipt.buildId !== buildId ||
     receipt.fileCount !== current.fileCount ||

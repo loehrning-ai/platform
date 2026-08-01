@@ -24,16 +24,20 @@ interface LessonLayoutProps {
   readonly freshnessMeta?: BlockFreshness | null;
 }
 
-export function LessonLayout({ courseSlug, lessons, freshnessMeta }: LessonLayoutProps) {
+export function LessonLayout({
+  courseSlug,
+  lessons,
+  freshnessMeta,
+}: LessonLayoutProps) {
   const [activeLessonId, setActiveLessonId] = useState(lessons[0]?.id ?? "");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Hydrate progress from localStorage (client-side only)
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
-  const [quizScores, setQuizScores] = useState<Record<string, { score: number; total: number }>>(
-    {},
-  );
+  const [quizScores, setQuizScores] = useState<
+    ReadonlyMap<string, { score: number; total: number }>
+  >(() => new Map());
 
   // Block-based course routes contain several lessons at one URL. Resume links
   // use a bounded `#lesson=<id>` fragment so they can restore the first
@@ -67,9 +71,9 @@ export function LessonLayout({ courseSlug, lessons, freshnessMeta }: LessonLayou
       setReadIds(new Set(getReadSectionIds(courseSlug, activeLessonId)));
       const score = getLessonQuizScore(courseSlug, activeLessonId);
       setQuizScores((prev) => {
-        const next = { ...prev };
-        if (score) next[activeLessonId] = score;
-        else delete next[activeLessonId];
+        const next = new Map(prev);
+        if (score) next.set(activeLessonId, score);
+        else next.delete(activeLessonId);
         return next;
       });
     });
@@ -125,7 +129,7 @@ export function LessonLayout({ courseSlug, lessons, freshnessMeta }: LessonLayou
       saveLessonQuizScore(courseSlug, activeLessonId, score, total);
       const best = getLessonQuizScore(courseSlug, activeLessonId);
       if (best) {
-        setQuizScores((prev) => ({ ...prev, [activeLessonId]: best }));
+        setQuizScores((prev) => new Map(prev).set(activeLessonId, best));
       }
     },
     [courseSlug, activeLessonId],
@@ -171,7 +175,7 @@ export function LessonLayout({ courseSlug, lessons, freshnessMeta }: LessonLayou
         totalLessons={lessons.length}
         readSectionIds={readIds}
         isCompleted={completedIds.has(activeLessonId)}
-        quizBestScore={quizScores[activeLessonId] ?? null}
+        quizBestScore={quizScores.get(activeLessonId) ?? null}
         hasNextLesson={hasNextLesson}
         onMarkSectionRead={handleMarkSectionRead}
         onMarkLessonComplete={handleMarkLessonComplete}

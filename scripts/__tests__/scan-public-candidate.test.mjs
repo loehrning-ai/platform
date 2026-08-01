@@ -1,8 +1,11 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import {
+  existsSync,
   mkdtempSync,
   mkdirSync,
+  realpathSync,
+  renameSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
@@ -10,7 +13,10 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
-import { parseCandidatePaths } from "../scan-public-candidate.mjs";
+import {
+  copyStableCandidate,
+  parseCandidatePaths,
+} from "../scan-public-candidate.mjs";
 
 const repositoryRoot = fileURLToPath(new URL("../../", import.meta.url));
 const runner = path.join(repositoryRoot, "scripts/scan-public-candidate.mjs");
@@ -34,10 +40,10 @@ function run(root) {
 }
 
 test("candidate path parser rejects ambiguity and traversal", () => {
-  assert.deepEqual(
-    parseCandidatePaths(Buffer.from("b.txt\0a.txt\0")),
-    ["a.txt", "b.txt"],
-  );
+  assert.deepEqual(parseCandidatePaths(Buffer.from("b.txt\0a.txt\0")), [
+    "a.txt",
+    "b.txt",
+  ]);
   for (const invalid of [
     "../secret\0",
     "./file\0",
@@ -50,6 +56,34 @@ test("candidate path parser rejects ambiguity and traversal", () => {
     "Case.txt\0case.txt\0",
   ]) {
     assert.throws(() => parseCandidatePaths(Buffer.from(invalid)));
+  }
+});
+
+test("candidate copy rejects pathname replacement after opening the source", () => {
+  const sourceRoot = realpathSync(
+    mkdtempSync(path.join(tmpdir(), "loehrning-public-candidate-source-")),
+  );
+  const destinationRoot = mkdtempSync(
+    path.join(tmpdir(), "loehrning-public-candidate-destination-"),
+  );
+  const sourcePath = path.join(sourceRoot, "source.txt");
+  const displacedPath = path.join(sourceRoot, "original-source.txt");
+  try {
+    writeFileSync(sourcePath, "original publication content\n");
+    assert.throws(
+      () =>
+        copyStableCandidate(sourceRoot, destinationRoot, "source.txt", {
+          afterOpen() {
+            renameSync(sourcePath, displacedPath);
+            writeFileSync(sourcePath, "replacement publication content\n");
+          },
+        }),
+      /changed before it could be copied/,
+    );
+    assert.equal(existsSync(path.join(destinationRoot, "source.txt")), false);
+  } finally {
+    rmSync(sourceRoot, { recursive: true, force: true });
+    rmSync(destinationRoot, { recursive: true, force: true });
   }
 });
 
@@ -81,13 +115,7 @@ test("scanner verifies only tracked and non-ignored untracked candidates", () =>
       path.join(fixture, "node_modules/private/leak.js"),
       "const secret = 'ignored';\n",
     );
-    git(
-      fixture,
-      "add",
-      ".gitignore",
-      "ASSET_MANIFEST.json",
-      "README.md",
-    );
+    git(fixture, "add", ".gitignore", "ASSET_MANIFEST.json", "README.md");
     git(fixture, "commit", "--quiet", "-m", "fixture");
 
     const clean = run(fixture);

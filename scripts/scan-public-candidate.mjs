@@ -175,43 +175,61 @@ function assertRealPathComponents(root, relativePath) {
   }
 }
 
-function copyStableCandidate(root, destinationRoot, relativePath) {
-  assertRealPathComponents(root, relativePath);
+export function copyStableCandidate(
+  root,
+  destinationRoot,
+  relativePath,
+  options = {},
+) {
   const source = path.join(root, ...relativePath.split("/"));
-  const canonicalSource = realpathSync(source);
-  const rootPrefix = `${root}${path.sep}`;
-  if (!canonicalSource.startsWith(rootPrefix)) {
-    fail(`${relativePath} escapes the Git worktree.`);
+  let sourceDescriptor;
+  try {
+    sourceDescriptor = openSync(
+      source,
+      constants.O_RDONLY | constants.O_NOFOLLOW,
+    );
+  } catch (error) {
+    if (
+      error &&
+      typeof error === "object" &&
+      "code" in error &&
+      error.code === "ELOOP"
+    ) {
+      fail(`${relativePath} is not a stable regular file.`);
+    }
+    throw error;
   }
-  const pathMetadata = lstatSync(source, { bigint: true });
-  if (!pathMetadata.isFile() || pathMetadata.isSymbolicLink()) {
-    fail(`${relativePath} is not a stable regular file.`);
-  }
-  if (pathMetadata.nlink !== 1n) {
-    fail(`${relativePath} has multiple hard links.`);
-  }
-  if (pathMetadata.size > BigInt(MAX_CANDIDATE_FILE_BYTES)) {
-    fail(`${relativePath} exceeds the publication file-size ceiling.`);
-  }
-
-  const destination = path.join(
-    destinationRoot,
-    ...relativePath.split("/"),
-  );
-  mkdirSync(path.dirname(destination), { recursive: true, mode: 0o700 });
-  const sourceDescriptor = openSync(
-    source,
-    constants.O_RDONLY | constants.O_NOFOLLOW,
-  );
   let destinationDescriptor;
   try {
     const openedMetadata = fstatSync(sourceDescriptor, { bigint: true });
+    if (!openedMetadata.isFile()) {
+      fail(`${relativePath} is not a stable regular file.`);
+    }
+    if (openedMetadata.nlink !== 1n) {
+      fail(`${relativePath} has multiple hard links.`);
+    }
+    if (openedMetadata.size > BigInt(MAX_CANDIDATE_FILE_BYTES)) {
+      fail(`${relativePath} exceeds the publication file-size ceiling.`);
+    }
+
+    options.afterOpen?.({ metadata: openedMetadata });
+    assertRealPathComponents(root, relativePath);
+    const canonicalSource = realpathSync(source);
+    const rootPrefix = `${root}${path.sep}`;
+    if (!canonicalSource.startsWith(rootPrefix)) {
+      fail(`${relativePath} escapes the Git worktree.`);
+    }
+    const pathMetadata = lstatSync(source, { bigint: true });
     if (
-      !openedMetadata.isFile() ||
-      !sameStableState(pathMetadata, openedMetadata)
+      !pathMetadata.isFile() ||
+      pathMetadata.isSymbolicLink() ||
+      !sameStableState(openedMetadata, pathMetadata)
     ) {
       fail(`${relativePath} changed before it could be copied.`);
     }
+
+    const destination = path.join(destinationRoot, ...relativePath.split("/"));
+    mkdirSync(path.dirname(destination), { recursive: true, mode: 0o700 });
     destinationDescriptor = openSync(
       destination,
       constants.O_CREAT |
@@ -249,19 +267,19 @@ function copyStableCandidate(root, destinationRoot, relativePath) {
     const finalOpenedMetadata = fstatSync(sourceDescriptor, { bigint: true });
     const finalPathMetadata = lstatSync(source, { bigint: true });
     if (
-      copied !== pathMetadata.size ||
-      !sameStableState(pathMetadata, finalOpenedMetadata) ||
-      !sameStableState(pathMetadata, finalPathMetadata)
+      copied !== openedMetadata.size ||
+      !sameStableState(openedMetadata, finalOpenedMetadata) ||
+      !sameStableState(openedMetadata, finalPathMetadata)
     ) {
       fail(`${relativePath} changed while it was copied.`);
     }
+    return openedMetadata;
   } finally {
     if (destinationDescriptor !== undefined) {
       closeSync(destinationDescriptor);
     }
     closeSync(sourceDescriptor);
   }
-  return pathMetadata;
 }
 
 function revalidateSources(root, sourceStates) {
@@ -318,11 +336,7 @@ export function main(argv = process.argv.slice(2)) {
   let scanStatus = 1;
   try {
     for (const relativePath of initialInventory.paths) {
-      const state = copyStableCandidate(
-        root,
-        candidateRoot,
-        relativePath,
-      );
+      const state = copyStableCandidate(root, candidateRoot, relativePath);
       totalBytes += state.size;
       if (totalBytes > BigInt(MAX_CANDIDATE_TOTAL_BYTES)) {
         fail("candidate exceeds the total publication-size ceiling.");

@@ -11,6 +11,13 @@ const playwrightCli = require.resolve("@playwright/test/cli");
 const packageRoot = fileURLToPath(new URL("../..", import.meta.url));
 
 function listWith(environment) {
+  const childEnvironment = minimalVerificationEnvironment(process.env);
+  // These tests define their own execution tier. Do not let an outer CI runner
+  // silently turn the explicit development case into a production-strict run.
+  // CI semantics remain covered by passing the marker as part of the scenario.
+  delete childEnvironment.CI;
+  delete childEnvironment.GITHUB_ACTIONS;
+
   return spawnSync(
     process.execPath,
     [playwrightCli, "test", "--list", "--project=chromium"],
@@ -18,7 +25,7 @@ function listWith(environment) {
       cwd: packageRoot,
       encoding: "utf8",
       env: {
-        ...minimalVerificationEnvironment(process.env),
+        ...childEnvironment,
         ...environment,
       },
       maxBuffer: 32 * 1024 * 1024,
@@ -44,6 +51,19 @@ test("explicit development runs may reuse their deliberately started server", ()
     E2E_SERVER_MODE: "development",
   });
   assert.equal(result.status, 0, result.stderr);
+});
+
+test("CI remains production-strict even when development mode is requested", () => {
+  const result = listWith({
+    CI: "true",
+    E2E_REUSE_EXISTING_SERVER: "1",
+    E2E_SERVER_MODE: "development",
+  });
+  assert.notEqual(result.status, 0);
+  assert.match(
+    `${result.stdout}\n${result.stderr}`,
+    /Production and release Playwright runs may not reuse an existing server/,
+  );
 });
 
 test("CI gives public and auth browser gates independent bounded budgets", () => {

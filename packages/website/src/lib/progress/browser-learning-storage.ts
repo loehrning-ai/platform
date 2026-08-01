@@ -127,13 +127,16 @@ function accountIdFromStorageKey(key: string): string | null {
 }
 
 function newCutoverEpoch(): string {
-  if (
-    typeof globalThis.crypto !== "undefined" &&
-    typeof globalThis.crypto.randomUUID === "function"
-  ) {
-    return globalThis.crypto.randomUUID();
+  const cryptoApi = globalThis.crypto;
+  if (typeof cryptoApi?.randomUUID === "function") {
+    return cryptoApi.randomUUID();
   }
-  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  if (typeof cryptoApi?.getRandomValues === "function") {
+    const entropy = new Uint8Array(16);
+    cryptoApi.getRandomValues(entropy);
+    return bytesToHex(entropy);
+  }
+  throw new Error("Secure randomness is unavailable for learning-data cutover");
 }
 
 function parseAccountLearningCutover(
@@ -1050,9 +1053,7 @@ function retireAccountAtGeneration(
   return [...retained, { accountHash, minimumGeneration: generation }];
 }
 
-function cutoverStillMatches(
-  expected: AccountLearningCutover,
-): boolean {
+function cutoverStillMatches(expected: AccountLearningCutover): boolean {
   const current = readAccountLearningCutover();
   return (
     current !== null &&
@@ -1069,8 +1070,7 @@ function finalizeDeletionCutover(
   accountId: string,
   lease: AccountDeletionLockLease,
 ): boolean {
-  const globalRecovery =
-    marker.minimumGeneration === marker.generation;
+  const globalRecovery = marker.minimumGeneration === marker.generation;
   const accountHash = accountRetirementHash(accountId);
   const accountRetired = marker.retiredAccounts.some(
     (entry) =>
@@ -1117,11 +1117,7 @@ export function rotateAccountLearningCutoverForDeletion(
   const normalizedAccountHash = accountRetirementHash(normalizedAccountId);
   const interrupted = readAccountLearningCutover();
   if (interrupted?.phase === "recovery-in-progress") {
-    return finalizeDeletionCutover(
-      interrupted,
-      normalizedAccountId,
-      lease,
-    );
+    return finalizeDeletionCutover(interrupted, normalizedAccountId, lease);
   }
   const prior = ensureReadyAccountLearningCutover(lease);
   if (!prior || prior.generation >= Number.MAX_SAFE_INTEGER) {
@@ -1154,9 +1150,7 @@ export function rotateAccountLearningCutoverForDeletion(
     version: 3,
     lineage: prior.lineage,
     generation,
-    minimumGeneration: globalFallback
-      ? generation
-      : prior.minimumGeneration,
+    minimumGeneration: globalFallback ? generation : prior.minimumGeneration,
     epoch,
     phase: "recovery-in-progress",
     // Retain only the deletion that caused a global fallback. The global floor
