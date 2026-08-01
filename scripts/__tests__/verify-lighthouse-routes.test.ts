@@ -10,6 +10,7 @@ type Config = {
   ci: {
     collect: {
       startServerCommand: string;
+      settings?: { chromeFlags?: string };
       url: string[];
     };
     assert: {
@@ -50,7 +51,16 @@ describe("Lighthouse route contract", () => {
       "--collect.numberOfRuns=1",
     );
     expect(packageJson.scripts?.["lighthouse:ci:built"]).toContain(
+      "--collect.settings.chromeFlags=--no-sandbox",
+    );
+    expect(packageJson.scripts?.["lighthouse:ci:built"]).toContain(
       "--collect.url=http://localhost:3000/kurse/open-source/data-science",
+    );
+    expect(
+      packageJson.scripts?.["lighthouse:local:built:internal"],
+    ).not.toContain("--no-sandbox");
+    expect(packageJson.scripts?.["lighthouse:release:built"]).not.toContain(
+      "--no-sandbox",
     );
 
     const { config } = await fixture();
@@ -58,6 +68,7 @@ describe("Lighthouse route contract", () => {
       "cd packages/website && node scripts/run-provider-free.mjs bun run start",
     );
     expect(config.ci.assert.aggregationMethod).toBe("pessimistic");
+    expect(config.ci.collect.settings?.chromeFlags).toBeUndefined();
   });
 
   it("makes stable performance guardrails blocking", async () => {

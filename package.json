@@ -43,7 +43,7 @@
     "lighthouse:local:built": "node packages/website/scripts/run-provider-free.mjs bun run lighthouse:local:built:internal",
     "lighthouse:local:built:internal": "node packages/website/scripts/run-built-gate.mjs lhci autorun --config=lighthouserc.json",
     "lighthouse:release:built": "node packages/website/scripts/run-provider-free.mjs node packages/website/scripts/run-built-gate.mjs lhci autorun --config=lighthouserc.json",
-    "lighthouse:ci:built": "node packages/website/scripts/run-provider-free.mjs node packages/website/scripts/run-built-gate.mjs lhci autorun --config=lighthouserc.json --collect.chromePath=\"$CHROME_PATH\" --collect.numberOfRuns=1 --collect.url=http://localhost:3000/ --collect.url=http://localhost:3000/ai-native --collect.url=http://localhost:3000/blog/eu-ai-act-grundlagen --collect.url=http://localhost:3000/buecher --collect.url=http://localhost:3000/kurse/open-source/data-science",
+    "lighthouse:ci:built": "node packages/website/scripts/run-provider-free.mjs node packages/website/scripts/run-built-gate.mjs lhci autorun --config=lighthouserc.json --collect.chromePath=\"$CHROME_PATH\" --collect.settings.chromeFlags=--no-sandbox --collect.numberOfRuns=1 --collect.url=http://localhost:3000/ --collect.url=http://localhost:3000/ai-native --collect.url=http://localhost:3000/blog/eu-ai-act-grundlagen --collect.url=http://localhost:3000/buecher --collect.url=http://localhost:3000/kurse/open-source/data-science",
     "lighthouse:check": "bun scripts/verify-lighthouse-routes.ts",
     "audit": "bun audit",
     "license:audit": "node scripts/audit-dependency-licenses.mjs",
