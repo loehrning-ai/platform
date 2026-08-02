@@ -320,11 +320,11 @@ export function ExcelDemo(): JSX.Element {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -12 }}
             transition={{ duration: 0.28, ease: EASE_OUT_EXPO }}
-            className="border-t-[3px] border-brand-orange bg-[var(--color-dark-bg)] p-4 text-[var(--color-dark-fg)]"
+            className="dark-section border-t-[3px] border-brand-orange bg-[var(--color-dark-bg)] p-4 text-[var(--color-dark-fg)]"
           >
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
               <DemoOverline>◆ Formel · Zelle {output.cell}</DemoOverline>
-              <span className="inline-flex items-center gap-1 bg-brand-orange px-2 py-0.5 font-mono text-[10px] font-bold tracking-[0.12em] text-white">
+              <span className="inline-flex items-center gap-1 bg-brand-orange px-2 py-0.5 font-mono text-[10px] font-bold tracking-[0.12em] text-[var(--color-dark-bg)]">
                 Formel kopieren
               </span>
             </div>
@@ -352,7 +352,7 @@ export function ExcelDemo(): JSX.Element {
                     <div
                       className={cn(
                         "mt-0.5 font-bold",
-                        negative ? "text-destructive" : "text-[#22c55e]",
+                        negative ? "text-destructive" : "text-risk-green",
                       )}
                     >
                       {r.wachstum}

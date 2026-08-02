@@ -19,8 +19,22 @@ const { createClientMock } = vi.hoisted(() => ({ createClientMock: vi.fn() }));
 
 vi.mock("@supabase/supabase-js", () => ({ createClient: createClientMock }));
 
-const KEYS = ["SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"] as const;
+const KEYS = [
+  "NEXT_PUBLIC_SUPABASE_URL",
+  "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+  "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+  "SUPABASE_URL",
+  "SUPABASE_SERVICE_ROLE_KEY",
+] as const;
 const original: Record<string, string | undefined> = {};
+const PUBLIC_KEY_FIXTURE =
+  "sb_publishable_abcdefghijklmnopqrstuv_12345678";
+const PRIVILEGED_KEY_FIXTURE = [
+  "sb",
+  "secret",
+  "abcdefghijklmnopqrstuv",
+  "12345678",
+].join("_");
 
 beforeEach(() => {
   vi.resetModules();
@@ -42,12 +56,12 @@ afterEach(() => {
 
 function configure(): void {
   process.env.SUPABASE_URL = "https://proj.supabase.co";
-  vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", "service-role-key");
+  vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", PRIVILEGED_KEY_FIXTURE);
 }
 
 describe("createServiceClient", () => {
   it("throws when SUPABASE_URL is missing", async () => {
-    vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", "service-role-key");
+    vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", PRIVILEGED_KEY_FIXTURE);
     const { createServiceClient } = await import("./server");
     expect(() => createServiceClient()).toThrow(/Missing SUPABASE_URL/);
     expect(createClientMock).not.toHaveBeenCalled();
@@ -68,7 +82,7 @@ describe("createServiceClient", () => {
     expect(client).toEqual({ id: "service-client" });
     expect(createClientMock).toHaveBeenCalledWith(
       "https://proj.supabase.co",
-      "service-role-key",
+      PRIVILEGED_KEY_FIXTURE,
       { auth: { persistSession: false }, db: { schema: "public" } },
     );
   });
@@ -81,6 +95,62 @@ describe("createServiceClient", () => {
 
     expect(second).toBe(first);
     expect(createClientMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("rejects an unapproved credential destination and a non-service key", async () => {
+    vi.stubEnv("SUPABASE_URL", "https://attacker.example");
+    vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", PRIVILEGED_KEY_FIXTURE);
+    const { createServiceClient } = await import("./server");
+    expect(() => createServiceClient()).toThrow(/Invalid SUPABASE_URL/);
+    expect(createClientMock).not.toHaveBeenCalled();
+
+    vi.resetModules();
+    vi.stubEnv("SUPABASE_URL", "https://proj.supabase.co");
+    vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", PUBLIC_KEY_FIXTURE);
+    const reloaded = await import("./server");
+    expect(() => reloaded.createServiceClient()).toThrow(
+      /not a recognized server-only service-role key/,
+    );
+    expect(createClientMock).not.toHaveBeenCalled();
+
+    for (const unsafeKey of [
+      "opaque-service-key",
+      ` ${PRIVILEGED_KEY_FIXTURE}`,
+      `${PRIVILEGED_KEY_FIXTURE}\n`,
+    ]) {
+      vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", unsafeKey);
+      expect(() => reloaded.createServiceClient()).toThrow(
+        /not a recognized server-only service-role key/,
+      );
+    }
+  });
+
+  it("rejects split projects and a service key exposed in a public slot", async () => {
+    vi.stubEnv("SUPABASE_URL", "https://server-project.supabase.co");
+    vi.stubEnv(
+      "NEXT_PUBLIC_SUPABASE_URL",
+      "https://public-project.supabase.co",
+    );
+    vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", PRIVILEGED_KEY_FIXTURE);
+    const { createServiceClient } = await import("./server");
+    expect(() => createServiceClient()).toThrow(/same approved project origin/);
+    expect(createClientMock).not.toHaveBeenCalled();
+
+    vi.resetModules();
+    vi.stubEnv("SUPABASE_URL", "https://server-project.supabase.co");
+    vi.stubEnv(
+      "NEXT_PUBLIC_SUPABASE_URL",
+      "https://server-project.supabase.co",
+    );
+    vi.stubEnv(
+      "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+      PRIVILEGED_KEY_FIXTURE,
+    );
+    const reloaded = await import("./server");
+    expect(() => reloaded.createServiceClient()).toThrow(
+      /must not equal a browser-exposed/,
+    );
+    expect(createClientMock).not.toHaveBeenCalled();
   });
 });
 

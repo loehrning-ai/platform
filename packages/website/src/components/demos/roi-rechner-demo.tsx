@@ -142,9 +142,9 @@ export default function RoiRechnerDemo() {
         >
           Annahmen-Rechner · Transparente Formel
         </div>
-        <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", marginTop: 6 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", marginTop: 6 }}>
           Zahlen statt <span style={{ color: "var(--color-brand-orange)" }}>Bauchgefühl.</span>
-        </h3>
+        </h2>
       </div>
 
       <div

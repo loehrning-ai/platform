@@ -1,6 +1,3 @@
-"use client";
-
-import { m, useReducedMotion } from "framer-motion";
 import {
   FileSearch,
   Gift,
@@ -8,7 +5,6 @@ import {
   UserCheck,
   type LucideIcon,
 } from "lucide-react";
-import { EASE_OUT_EXPO as EASE } from "@/lib/animations";
 import { Card, IconTile, type CardAccent } from "@/components/ui/card";
 
 const principles: ReadonlyArray<{
@@ -21,7 +17,7 @@ const principles: ReadonlyArray<{
   {
     label: "Gratis",
     title: "Wirklich kostenlos",
-    body: "Kein Abo, keine Paywall, kein verstecktes Verkaufsgespräch. Ein Konto brauchst du nur, wenn dein Fortschritt erhalten bleiben soll.",
+    body: "Kein Abo, keine Paywall, kein verstecktes Verkaufsgespräch. Die vier deutschen Lernpfad-Kurse brauchen ein kostenloses Konto.",
     icon: Gift,
     accent: "kupfer",
   },
@@ -49,8 +45,6 @@ const principles: ReadonlyArray<{
 ];
 
 export function CredibilityStrip() {
-  const prefersReducedMotion = useReducedMotion();
-
   return (
     <section
       className="scroll-mt-24 border-t border-border py-16"
@@ -60,13 +54,9 @@ export function CredibilityStrip() {
         <h2 className="overline mb-8">Was dich hier erwartet</h2>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {principles.map((item, i) => (
-            <m.div
+          {principles.map((item) => (
+            <div
               key={item.label}
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.5, delay: i * 0.08, ease: EASE }}
               className="h-full"
             >
               <Card accent={item.accent} className="h-full gap-4">
@@ -85,29 +75,16 @@ export function CredibilityStrip() {
                   </div>
                 </div>
               </Card>
-            </m.div>
+            </div>
           ))}
         </div>
 
-        <m.div
-          className="mx-auto mt-12 h-[2px] w-10 bg-brand-orange"
-          initial={prefersReducedMotion ? false : { scaleX: 0 }}
-          whileInView={{ scaleX: 1 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.6, delay: 0.3, ease: EASE }}
-          style={{ transformOrigin: "left" }}
-        />
+        <div className="mx-auto mt-12 h-[2px] w-10 bg-brand-orange" />
 
-        <m.p
-          initial={prefersReducedMotion ? false : { opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.5, delay: 0.45, ease: "easeOut" }}
-          className="mx-auto mt-4 max-w-xl text-center text-sm leading-relaxed text-muted-foreground"
-        >
-          Alles zum Lernen ist offen zugänglich. Ein Login schützt nur deinen
-          persönlichen Bereich: dein Konto und deinen Fortschritt.
-        </m.p>
+        <p className="mx-auto mt-4 max-w-xl text-center text-sm leading-relaxed text-muted-foreground">
+          Bücher, Demos, KI-Check und technische Vertiefungen sind öffentlich.
+          Für die vier deutschen Lernpfad-Kurse brauchst du ein kostenloses Konto.
+        </p>
       </div>
     </section>
   );

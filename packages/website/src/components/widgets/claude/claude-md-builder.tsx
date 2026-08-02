@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type JSX } from "react";
+import { useEffect, useRef, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
 import { cn } from "@/lib/utils";
 import { WidgetFrame } from "../tier-a/_frame";
@@ -69,22 +69,53 @@ export function ClaudeMdBuilderWidget({
   });
   const [output, setOutput] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "error">(
+    "idle",
+  );
+  const copyResetTimer = useRef<number | null>(null);
+
+  useEffect(
+    () => () => {
+      if (copyResetTimer.current !== null) {
+        window.clearTimeout(copyResetTimer.current);
+      }
+    },
+    [],
+  );
 
   const build = async () => {
     setLoading(true);
     setOutput(null);
+    setCopyState("idle");
     await new Promise((resolve) => setTimeout(resolve, simulatedDelayMs(fields.project)));
     setOutput(buildClaudeMd(fields));
     setLoading(false);
     complete();
   };
 
-  const copy = () => {
+  const copy = async () => {
     if (!output) return;
-    void navigator.clipboard?.writeText(output);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1400);
+    if (copyResetTimer.current !== null) {
+      window.clearTimeout(copyResetTimer.current);
+      copyResetTimer.current = null;
+    }
+    setCopyState("idle");
+    try {
+      if (typeof navigator.clipboard?.writeText !== "function") {
+        setCopyState("error");
+        return;
+      }
+      await navigator.clipboard.writeText(output);
+      setCopyState("copied");
+      copyResetTimer.current = window.setTimeout(() => {
+        copyResetTimer.current = null;
+        setCopyState("idle");
+      }, 1400);
+    } catch {
+      // The generated document can contain private project details. Never log
+      // either the clipboard error or the generated output.
+      setCopyState("error");
+    }
   };
 
   const canBuild = fields.project.trim().length > 0 && fields.stack.trim().length > 0;
@@ -140,10 +171,22 @@ export function ClaudeMdBuilderWidget({
             <button
               type="button"
               onClick={copy}
+              aria-describedby={
+                copyState === "error" ? "claude-md-copy-error" : undefined
+              }
               className="absolute right-2 top-8 border-2 border-foreground bg-background px-2 py-1 font-mono text-[10px] font-bold uppercase text-foreground shadow-[2px_2px_0_0_var(--color-foreground)]"
             >
-              {copied ? "Copied" : "Copy"}
+              {copyState === "copied" ? "Copied" : "Copy"}
             </button>
+          )}
+          {copyState === "error" && (
+            <p
+              id="claude-md-copy-error"
+              role="alert"
+              className="mt-2 text-xs text-destructive"
+            >
+              Copy failed. Check clipboard permission and try again.
+            </p>
           )}
         </div>
       </div>

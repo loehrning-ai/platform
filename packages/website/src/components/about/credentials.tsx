@@ -38,11 +38,12 @@ export function Credentials() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
+          className="js-reveal"
         >
           <m.h2
             custom={0}
             variants={fadeUp}
-            className="text-2xl font-bold tracking-[-0.04em]"
+            className="js-reveal text-2xl font-bold tracking-[-0.04em]"
           >
             Akademischer Hintergrund
           </m.h2>
@@ -55,7 +56,7 @@ export function Credentials() {
                   key={c.title}
                   custom={i + 1}
                   variants={fadeUp}
-                  className="rounded-none border border-border/30 bg-card/30 p-6"
+                  className="js-reveal rounded-none border border-border/30 bg-card/30 p-6"
                 >
                   <Icon size={20} className="text-brand-sand" />
                   <h3 className="mt-3 font-semibold text-foreground">

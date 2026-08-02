@@ -1,7 +1,7 @@
 "use client";
 
 import { LazyMotion, MotionConfig, domAnimation } from "framer-motion";
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 
 /**
  * Client boundary that makes every Framer Motion animation respect the user's
@@ -20,6 +20,13 @@ import type { ReactNode } from "react";
  * the hero clip-path entrance (hero.tsx).
  */
 export function MotionProvider({ children }: { children: ReactNode }) {
+  useEffect(() => {
+    document.documentElement.dataset.hydrated = "true";
+    return () => {
+      delete document.documentElement.dataset.hydrated;
+    };
+  }, []);
+
   return (
     <LazyMotion features={domAnimation} strict>
       <MotionConfig reducedMotion="user">{children}</MotionConfig>

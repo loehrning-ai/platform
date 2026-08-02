@@ -27,6 +27,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const { CRAWL_CONTRACT, SITE_ORIGIN } = await import(join(ROOT, "src/lib/crawl/contract.ts"));
 const { SITE_CONTENT_DATE } = await import(join(ROOT, "src/lib/content-freshness.ts"));
 const { books } = await import(join(ROOT, "src/lib/books.ts"));
+const { getBookChapterList } = await import(join(ROOT, "src/lib/book-reader-content.ts"));
 const { demos } = await import(join(ROOT, "src/lib/demos.ts"));
 const { BLOG_POSTS } = await import(join(ROOT, "src/lib/blog-metadata.ts"));
 const { WIE_KI_LEKTIONEN } = await import(join(ROOT, "src/lib/wie-ki-funktioniert.ts"));
@@ -138,6 +139,24 @@ const bookRows = books.map((book) =>
   ]),
 );
 
+const bookChapterRows = (
+  await Promise.all(
+    books.map(async (book) => {
+      const chapters = await getBookChapterList(book.id);
+      return chapters.map((chapter) =>
+        row([
+          `${SITE_ORIGIN}/buecher/${book.id}/${chapter.slug}`,
+          chapter.title,
+          chapter.description ?? book.description,
+          `content/books/${book.id}/${chapter.sourceFile}`,
+          `catalog lastReviewed ${book.lastReviewed}`,
+          OWNER,
+        ]),
+      );
+    }),
+  )
+).flat();
+
 const demoRows = demos.map((demo) =>
   row([
     `${SITE_ORIGIN}/demos/${demo.slug}`,
@@ -185,6 +204,8 @@ function classTable(routeClass) {
 const indexableExcluded = CRAWL_CONTRACT.filter(
   (entry) => entry.routeClass === "public-indexable" && !entry.includeInSitemap,
 ).map((entry) => `- \`${entry.pattern}\`: ${entry.explanation}`);
+const indexableExcludedSummary =
+  indexableExcluded.length > 0 ? indexableExcluded.join("\n") : "_None._";
 
 // ---------------------------------------------------------------------------
 // Document assembly
@@ -199,7 +220,8 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 \`\`\`
 
 - Source of truth: \`src/lib/crawl/contract.ts\` (crawl contract) plus the
-  content catalogs (\`src/lib/books.ts\`, \`src/lib/demos.ts\`,
+  content catalogs (\`src/lib/books.ts\`, book chapter manifests,
+  \`src/lib/demos.ts\`,
   \`src/lib/blog-metadata.ts\`,
   \`src/lib/wie-ki-funktioniert.ts\`, \`src/lib/courses/catalog.ts\`,
   \`src/lib/open-source/artifacts.ts\`).
@@ -227,6 +249,10 @@ ${table(CONTENT_HEADERS, blogRows)}
 
 ${table(CONTENT_HEADERS, bookRows)}
 
+### Buchkapitel (${bookChapterRows.length})
+
+${table(CONTENT_HEADERS, bookChapterRows)}
+
 ### Demo-Detailseiten (${demoRows.length})
 
 ${table(CONTENT_HEADERS, demoRows)}
@@ -241,7 +267,7 @@ ${table(CONTENT_HEADERS, openSourceArtifactRows)}
 
 ### Indexable patterns deliberately excluded from the sitemap
 
-${indexableExcluded.join("\n")}
+${indexableExcludedSummary}
 
 ## Public-access patterns (crawlable, not in sitemap)
 

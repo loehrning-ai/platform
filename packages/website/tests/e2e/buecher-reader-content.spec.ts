@@ -15,8 +15,7 @@ const CHAPTER = "03_reifegrad_ueberblick";
 const CHAPTER_URL = `/buecher/${BOOK}/${CHAPTER}`;
 const CHAPTER_TITLE = "Evidenzbasierte Selbstprüfung"; // manifest.json title
 
-// Console-error filter mirrors route-einstieg.spec.ts / qa-sweep.spec.ts: drop
-// framework noise and keep only errors that signal a genuine page fault.
+// Every captured console error and uncaught page error fails the check.
 function collectConsoleErrors(page: Page): string[] {
   const errors: string[] = [];
   page.on("console", (msg) => {
@@ -27,13 +26,7 @@ function collectConsoleErrors(page: Page): string[] {
 }
 
 function meaningfulErrors(errors: string[]): string[] {
-  return errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e),
-  );
+  return errors;
 }
 
 test.describe("book chapter reader content fidelity", () => {
@@ -59,7 +52,11 @@ test.describe("book chapter reader content fidelity", () => {
   });
 
   test("renders GFM tables as real, non-clipped <table> elements", async ({ page }) => {
-    await page.goto(CHAPTER_URL, { waitUntil: "domcontentloaded" });
+    // The ArrowRight ownership check below exercises a client key handler.
+    // Wait for the production client island instead of focusing server HTML
+    // that hydration may replace between focus and keyup.
+    await page.goto(CHAPTER_URL, { waitUntil: "load" });
+    await page.locator('html[data-hydrated="true"]').waitFor();
 
     // remark-gfm must produce a real <table> with <th> column headers, not a
     // plaintext pipe blob.
@@ -69,16 +66,9 @@ test.describe("book chapter reader content fidelity", () => {
       "GFM table should expose <th> column headers",
     ).toBeGreaterThanOrEqual(2);
 
-    const tableRegion = page.getByRole("group", {
-      name: "Tabelle, horizontal scrollbar",
-    }).first();
-    await tableRegion.focus();
-    await page.keyboard.press("ArrowRight");
-    await expect(page).toHaveURL(CHAPTER_URL);
-
     // Not clipped: at desktop the table must fit its container (the 70ch prose
     // article) or live in a scrollable ancestor. Desktop-only because the mobile
-    // project can legitimately reflow and the reader ships no overflow-x wrapper.
+    // project can legitimately use the explicit overflow-x wrapper.
     const vw = page.viewportSize()?.width ?? 0;
     if (vw >= 1024) {
       const fit = await page.evaluate(() => {
@@ -104,6 +94,24 @@ test.describe("book chapter reader content fidelity", () => {
         `table clipped: scrollWidth ${fit?.tableScroll} > container ${fit?.containerWidth} with no scroll wrapper`,
       ).toBe(true);
     }
+
+    const tableRegion = page.getByRole("group", {
+      name: "Tabelle, horizontal scrollbar",
+    }).first();
+    await tableRegion.focus();
+    await expect(tableRegion).toBeFocused();
+    const unexpectedNavigation = page
+      .waitForURL((url) => url.pathname !== CHAPTER_URL, {
+        waitUntil: "commit",
+        timeout: 750,
+      })
+      .then(() => new URL(page.url()).pathname)
+      .catch(() => null);
+    await tableRegion.press("ArrowRight");
+    expect(
+      await unexpectedNavigation,
+      "ArrowRight inside the table scroller must not trigger chapter navigation",
+    ).toBeNull();
   });
 
   test("shows the lib-computed reading time on the chapter", async ({ page }) => {

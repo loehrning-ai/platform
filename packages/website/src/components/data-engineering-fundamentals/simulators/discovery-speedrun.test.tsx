@@ -19,6 +19,10 @@ describe("DiscoverySpeedrun ", () => {
     render(<DiscoverySpeedrun />);
     fireEvent.click(screen.getByRole("button", { name: /Start speedrun/ }));
     expect(screen.getByText("question 1 of 5")).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: "Shortcut answer" })).toHaveAttribute(
+      "name",
+      "shortcut",
+    );
   });
 
   it("submitting the correct shortcut advances to question 2 and shows the result", () => {

@@ -1,18 +1,9 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, cleanup, screen, fireEvent } from "@testing-library/react";
-
-const push = vi.fn();
-vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push }),
-}));
+import { describe, it, expect, afterEach } from "vitest";
+import { render, cleanup, screen } from "@testing-library/react";
 
 import Ch12Capstone from "./ch12-capstone";
 
 describe("Ch12Capstone ", () => {
-  beforeEach(() => {
-    push.mockClear();
-  });
-
   afterEach(() => {
     cleanup();
   });
@@ -26,10 +17,12 @@ describe("Ch12Capstone ", () => {
     expect(screen.getByText("Production readiness checklist")).toBeInTheDocument();
   });
 
-  it("renders the final CTA and navigates to the course root (home) on click", () => {
+  it("renders the final CTA as a real link to the course root", () => {
     render(<Ch12Capstone />);
     expect(screen.getByText("You've reached the end.")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: /Back to the overview/ }));
-    expect(push).toHaveBeenCalledWith("/kurse/open-source/data-science");
+    expect(screen.getByRole("link", { name: /Back to the overview/ })).toHaveAttribute(
+      "href",
+      "/kurse/open-source/data-science",
+    );
   });
 });

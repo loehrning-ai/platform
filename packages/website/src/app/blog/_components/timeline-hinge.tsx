@@ -66,8 +66,8 @@ export function TimelineHinge() {
         Ab <b>2. August 2026</b> greifen Art. 50-Transparenzpflichten.
         Parlament und Rat beschlossen für eigenständige Anhang-III-Systeme den{" "}
         <b>2. Dezember 2027</b> und für produktintegrierte Hochrisiko-Systeme
-        den <b>2. August 2028</b>. Die Änderungsverordnung war am 14. Juli 2026
-        noch nicht im Amtsblatt veröffentlicht. Bußgeldrahmen für die meisten
+        den <b>2. August 2028</b>. Die Verordnung (EU) 2026/1744 trat am 27. Juli
+        2026 in Kraft. Bußgeldrahmen für die meisten
         Pflichten: bis <b>15 Mio. EUR</b> oder <b>3%</b> des weltweiten
         Jahresumsatzes.
       </div>

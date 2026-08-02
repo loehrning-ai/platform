@@ -17,6 +17,14 @@ describe("robots()", () => {
     const disallow = Array.isArray(wildcard?.disallow) ? wildcard?.disallow : [wildcard?.disallow];
     expect(allow).toContain("/api/books.json");
     expect(disallow).toContain("/api/progress");
+    expect(disallow).toContain("/api/buecher/*/download.pdf");
+    expect(disallow).toContain("/api/scan");
+    expect(disallow).toContain("/api/journey/scan-insight");
+    expect(disallow).toContain("/api/journey/leads");
+    expect(allow).not.toContain("/api/buecher/*/download.pdf");
+    expect(allow).not.toContain("/api/scan");
+    expect(allow).not.toContain("/api/journey/scan-insight");
+    expect(allow).not.toContain("/api/journey/leads");
     expect(allow).toContain("/buecher");
     expect(allow).toContain("/book-covers/");
   });

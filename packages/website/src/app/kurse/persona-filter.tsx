@@ -2,7 +2,7 @@ import Link from "next/link";
 
 /**
  * Direct course recommendations by learning goal. Lists all four native
- * Zertifikatskurse with their exact catalog titles so a learner can jump
+ * German core courses with their exact catalog titles so a learner can jump
  * straight to the course that matches what they want to do.
  */
 const PERSONAS = [

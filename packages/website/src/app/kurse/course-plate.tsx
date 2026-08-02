@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
  */
 
 const RECORD_PLATE_LABEL: Record<RecordKind, string | null> = {
-  zertifikat: "Zertifikat",
+  teilnahmebestaetigung: "Teilnahmebestätigung",
   lernnachweis: "Lernnachweis",
   certificate: "Certificate",
   none: null,

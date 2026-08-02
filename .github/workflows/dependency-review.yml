@@ -6,6 +6,12 @@ on:
 permissions:
   contents: read
 
+# GitHub does not parse bun.lock for pull-request dependency snapshots, and a
+# privileged pull_request_target submission would still lose write permission
+# on Dependabot PRs while expanding the attack surface for fork data. Keep this
+# workflow unprivileged. The frozen install plus Bun's full-lock audit is the
+# blocking transitive vulnerability gate; GitHub Dependency Review supplements
+# it with the dependency-graph diff GitHub can recognize.
 concurrency:
   group: dependency-review-${{ github.ref }}
   cancel-in-progress: true
@@ -18,6 +24,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - name: Install checksum-verified Bun
+        run: bash .github/scripts/install-verified-bun.sh
+      - name: Validate and audit the complete Bun dependency tree
+        run: |
+          bun install --frozen-lockfile --ignore-scripts
+          bun audit
       - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
         with:
           fail-on-severity: moderate

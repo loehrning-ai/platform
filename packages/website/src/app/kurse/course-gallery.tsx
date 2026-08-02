@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { m } from "framer-motion";
@@ -40,8 +40,13 @@ import {
   getXp,
   getStreak,
   isCertificateEligible,
+  subscribe,
 } from "@/lib/progress/store";
-import { UNIFIED_STORAGE_KEY } from "@/lib/progress/types";
+import {
+  hasCourseStarted,
+  resolveCourseResumeHref,
+} from "@/lib/courses/resume";
+import type { UnifiedProgress } from "@/lib/progress/types";
 import { cn } from "@/lib/utils";
 
 // ─── One consistent card system ──────────────────────────────────────────
@@ -86,12 +91,22 @@ function BadgeRow({
 interface CourseStat {
   readonly completed: number;
   readonly certified: boolean;
+  readonly started: boolean;
+  readonly resumeHref: string;
 }
 
-function readStat(course: CatalogCourse): CourseStat {
+function readStat(
+  course: CatalogCourse,
+  progress?: UnifiedProgress,
+): CourseStat {
+  const completed = getCompletedLessonsCount(course.slug);
   return {
-    completed: getCompletedLessonsCount(course.slug),
+    completed,
     certified: isCertificateEligible(course.slug),
+    started:
+      completed > 0 ||
+      hasCourseStarted(progress, course.slug),
+    resumeHref: resolveCourseResumeHref(progress, course.slug),
   };
 }
 
@@ -170,47 +185,72 @@ export function CourseGallery() {
   const [streakDays, setStreakDays] = useState(0);
   const [hydrated, setHydrated] = useState(false);
   const [shareState, setShareState] = useState<{
-    slug: string | null;
-    copied: boolean;
-  }>({ slug: null, copied: false });
+    slug: string;
+    status: "copied" | "error";
+  } | null>(null);
+  const shareResetTimer = useRef<number | null>(null);
 
   useEffect(() => {
-    function refresh() {
+    function refresh(progress: UnifiedProgress) {
       const next: Record<string, CourseStat> = {};
-      for (const course of LIVE_COURSES) next[course.slug] = readStat(course);
+      for (const course of LIVE_COURSES) {
+        next[course.slug] = readStat(course, progress);
+      }
       setStats(next);
       setXp(getXp());
       setStreakDays(getStreak().days);
       setHydrated(true);
     }
-    refresh();
-    function onStorage(e: StorageEvent) {
-      if (e.key === UNIFIED_STORAGE_KEY) refresh();
-    }
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
+    const unsubscribeProgress = subscribe(refresh);
+    return () => {
+      unsubscribeProgress();
+      if (shareResetTimer.current !== null) {
+        window.clearTimeout(shareResetTimer.current);
+      }
+    };
   }, []);
 
   async function shareProgress(course: CatalogCourse) {
     const encoded = serializeProgress(course.slug);
     if (!encoded) return;
     const url = `${window.location.origin}${course.startHref}#progress=${encoded}`;
+    if (shareResetTimer.current !== null) {
+      window.clearTimeout(shareResetTimer.current);
+      shareResetTimer.current = null;
+    }
     try {
       await navigator.clipboard.writeText(url);
-      setShareState({ slug: course.slug, copied: true });
-      window.setTimeout(
-        () => setShareState({ slug: null, copied: false }),
-        2500,
-      );
+      setShareState({ slug: course.slug, status: "copied" });
+      shareResetTimer.current = window.setTimeout(() => {
+        setShareState(null);
+        shareResetTimer.current = null;
+      }, 2500);
     } catch {
-      // Clipboard blocked (insecure context / permissions): no-op.
+      setShareState({ slug: course.slug, status: "error" });
+      shareResetTimer.current = window.setTimeout(() => {
+        setShareState(null);
+        shareResetTimer.current = null;
+      }, 4000);
     }
   }
 
-  const startedAny = Object.values(stats).some((s) => s.completed > 0);
+  const startedAny = Object.values(stats).some((s) => s.started);
 
   return (
     <div className="space-y-16">
+      <p
+        className="sr-only"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {shareState?.status === "copied"
+          ? "Link kopiert"
+          : shareState?.status === "error"
+            ? "Kopieren fehlgeschlagen"
+            : ""}
+      </p>
+
       {/* Gamification banner: only once the learner has any progress */}
       {hydrated && startedAny && (
         <div
@@ -246,16 +286,27 @@ export function CourseGallery() {
           viewport={{ once: true, margin: "-40px" }}
         >
           {SPINE_COURSES.map((course) => {
-            const stat = stats[course.slug] ?? { completed: 0, certified: false };
+            const stat = stats[course.slug] ?? {
+              completed: 0,
+              certified: false,
+              started: false,
+              resumeHref: course.startHref,
+            };
             const dots = dotCount(course);
             const filled = filledDots(stat, course);
             const pct =
               course.totalLessons === 0
                 ? 0
                 : Math.round((stat.completed / course.totalLessons) * 100);
-            const inProgress = stat.completed > 0 && !stat.certified;
-            const startLabel = stat.completed > 0 ? "Weiterlernen" : "Kurs starten";
-            const startHref = stat.completed > 0 ? course.continueHref : course.startHref;
+            const inProgress = stat.started && !stat.certified;
+            const startLabel = stat.certified
+              ? "Nachweis ansehen"
+              : stat.started
+                ? "Weiterlernen"
+                : "Kurs starten";
+            const startHref = stat.started
+              ? stat.resumeHref
+              : course.startHref;
 
             return (
               <m.li key={course.slug} variants={staggerItem} className="js-reveal">
@@ -271,7 +322,10 @@ export function CourseGallery() {
                       duration={course.duration}
                       // Safe access, not courseFacts(): the flip-test fixture
                       // renders unknown slugs through this branch.
-                      record={COURSE_FACTS[course.slug]?.record ?? "zertifikat"}
+                      record={
+                        COURSE_FACTS[course.slug]?.record ??
+                        "teilnahmebestaetigung"
+                      }
                       certified={hydrated && stat.certified}
                       certifiedTestId={`certified-${course.slug}`}
                     />
@@ -343,7 +397,12 @@ export function CourseGallery() {
 
                   {/* Actions */}
                   <div className="mt-7 flex flex-wrap items-center gap-3">
-                    <BrandButton href={startHref} variant="primary" size="sm">
+                    <BrandButton
+                      href={startHref}
+                      prefetch={false}
+                      variant="primary"
+                      size="sm"
+                    >
                       {startLabel}
                       <span className="sr-only">: {course.title}</span>
                       <ArrowRight size={15} aria-hidden="true" />
@@ -359,14 +418,18 @@ export function CourseGallery() {
                         aria-label={`${course.title}: Fortschritt teilen`}
                         className="inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground transition-colors hover:text-foreground"
                       >
-                        {shareState.slug === course.slug && shareState.copied ? (
+                        {shareState?.slug === course.slug &&
+                        shareState.status === "copied" ? (
                           <span
                             className="stamp-in inline-flex items-center gap-1.5"
-                            role="status"
-                            aria-live="polite"
                           >
                             <Check size={13} aria-hidden="true" />
                             Link kopiert
+                          </span>
+                        ) : shareState?.slug === course.slug &&
+                          shareState.status === "error" ? (
+                          <span className="inline-flex items-center gap-1.5 text-destructive">
+                            Kopieren fehlgeschlagen
                           </span>
                         ) : (
                           <>
@@ -408,15 +471,26 @@ export function CourseGallery() {
             viewport={{ once: true, margin: "-40px" }}
           >
             {DEEPER_NATIVE_COURSES.map((course) => {
-              const stat = stats[course.slug] ?? { completed: 0, certified: false };
+              const stat = stats[course.slug] ?? {
+                completed: 0,
+                certified: false,
+                started: false,
+                resumeHref: course.startHref,
+              };
               const dots = dotCount(course);
               const filled = filledDots(stat, course);
               const pct =
                 course.totalLessons === 0
                   ? 0
                   : Math.round((stat.completed / course.totalLessons) * 100);
-              const startLabel = stat.completed > 0 ? "Weiterlernen" : "Kurs starten";
-              const startHref = stat.completed > 0 ? course.continueHref : course.startHref;
+              const startLabel = stat.certified
+                ? "Nachweis ansehen"
+                : stat.started
+                  ? "Weiterlernen"
+                  : "Kurs starten";
+              const startHref = stat.started
+                ? stat.resumeHref
+                : course.startHref;
               // The six ported courses all carry provenance; the fields are
               // optional on the type only for German spine entries, which
               // never reach this branch.
@@ -677,10 +751,11 @@ export function CourseGallery() {
           </m.ul>
 
           <p className="mt-8 text-sm leading-relaxed text-muted-foreground">
-            Angewandte Kurse aus echten Workshops findest du unter{" "}
+            Angewandte Selbstlernmaterialien auf Basis von Workshop-Inhalten
+            findest du unter{" "}
             <Link
               href="/workshops"
-              className="font-semibold text-foreground underline-offset-4 hover:underline"
+              className="font-semibold text-foreground underline underline-offset-4"
             >
               /workshops
             </Link>

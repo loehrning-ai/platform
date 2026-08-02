@@ -166,7 +166,7 @@ export default function N8nSupplyChainDemo() {
         >
           n8n · Supply-Chain Automation
         </div>
-        <h3
+        <h2
           style={{
             fontSize: 22,
             fontWeight: 700,
@@ -179,7 +179,7 @@ export default function N8nSupplyChainDemo() {
           <span style={{ color: "var(--color-brand-orange)" }}>
             Kundenentwurf vorbereitet. Laufzeit simuliert.
           </span>
-        </h3>
+        </h2>
       </div>
 
       <SimulationDisclosure>

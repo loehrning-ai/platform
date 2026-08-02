@@ -41,6 +41,7 @@ import type {
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 import { isInteractiveShortcutTarget } from "@/lib/a11y/keyboard-shortcuts";
+import { subscribe } from "@/lib/progress/store";
 
 /**
  * AiNativeLessonReader — progressive-disclosure lesson reader.
@@ -56,11 +57,9 @@ import { isInteractiveShortcutTarget } from "@/lib/a11y/keyboard-shortcuts";
  *   - On completion of the last section, we mark the lesson complete +
  *     trigger module-completion detection.
  *
- * Hydration strategy: server renders everything with data-reveal-index=0
- * (section 1 visible). Client hydration reads localStorage and updates
- * the index. This means returning users see a brief flash of section 1
- * before the reveal-index jumps — acceptable for v1 (AI-native lesson system's
- * full CSP-nonce pre-hydration script is a follow-up).
+ * Hydration strategy: server renders everything with data-reveal-index=0.
+ * Client state changes only after the browser learning owner is verified;
+ * pre-hydration storage reads would expose another account on shared devices.
  *
  * See AI-native lesson system.
  */
@@ -72,39 +71,6 @@ interface Props {
   readonly nextLesson: AiNativeLesson | null;
   readonly allModuleLessonIds: readonly string[];
 }
-
-// No-flash reveal-index restore. Reads the UNIFIED store first
-// (loehrning-progress-v2, shared course architecture), falling back to the legacy
-// ai-native-progress-v1 payload READ-ONLY (never removes it — R1).
-const HYDRATION_SCRIPT = `(() => {
-  try {
-    var el = document.currentScript && document.currentScript.dataset;
-    if (!el) return;
-    var lid = el.lessonId;
-    var total = Number(el.sectionCount || 0);
-    var lesson = null;
-    var unifiedRaw = localStorage.getItem('loehrning-progress-v2');
-    if (unifiedRaw) {
-      var u = JSON.parse(unifiedRaw);
-      var slice = u && u.courses && u.courses['ai-native'];
-      lesson = slice && slice.lessons && slice.lessons[lid];
-    }
-    if (!lesson) {
-      var legacyRaw = localStorage.getItem('ai-native-progress-v1');
-      if (legacyRaw) {
-        var p = JSON.parse(legacyRaw);
-        lesson = p && p.lessons && p.lessons[lid];
-      }
-    }
-    if (!lesson || !lesson.sectionsRead) return;
-    // Index = first unread section; if all read, stay at last index.
-    var idx = lesson.sectionsRead.length;
-    if (idx >= total) idx = total - 1;
-    document.documentElement.dataset.aiNativeRevealIndex = String(idx);
-  } catch (e) {
-    /* silent fallback — server render shows section 1 */
-  }
-})();`;
 
 export function AiNativeLessonReader({
   module,
@@ -149,14 +115,19 @@ export function AiNativeLessonReader({
 
   // Hydrate from localStorage on mount.
   useEffect(() => {
-    setMounted(true);
-    const read = getReadSectionIds(lesson.id);
-    setReadSet(read);
-    const firstUnread = sections.findIndex((s) => !read.has(s.id));
-    setCurrentIndex(firstUnread === -1 ? sections.length - 1 : firstUnread);
-    setCompleted(isLessonCompleted(lesson.id));
-    setQuizBestScore(getLessonQuizScore("ai-native", lesson.id));
-    setCapstoneSubmitted(isCapstoneSubmitted("ai-native"));
+    const loadOwnedProgress = () => {
+      setMounted(true);
+      const read = getReadSectionIds(lesson.id);
+      setReadSet(read);
+      const firstUnread = sections.findIndex((s) => !read.has(s.id));
+      setCurrentIndex(firstUnread === -1 ? sections.length - 1 : firstUnread);
+      setCompleted(isLessonCompleted(lesson.id));
+      setQuizBestScore(getLessonQuizScore("ai-native", lesson.id));
+      setCapstoneSubmitted(isCapstoneSubmitted("ai-native"));
+      setShowModuleBanner(false);
+    };
+    loadOwnedProgress();
+    return subscribe(loadOwnedProgress);
   }, [lesson.id, sections]);
 
   function markRead(sectionId: string, sectionIndex: number) {
@@ -270,15 +241,6 @@ export function AiNativeLessonReader({
 
   return (
     <>
-      {/* Pre-hydration inline script — updates documentElement dataset
-          BEFORE React hydrates so returning users don't see section 1
-          flash. Scoped to this lesson (via data-lesson-id attribute). */}
-      <script
-        data-lesson-id={lesson.id}
-        data-section-count={sections.length}
-        dangerouslySetInnerHTML={{ __html: HYDRATION_SCRIPT }}
-      />
-
       {/* Keyboard shortcut hint — desktop only, visually subtle. */}
       <div
         aria-hidden="true"
@@ -427,7 +389,7 @@ export function AiNativeLessonReader({
                         className={cn(
                           "inline-flex items-center gap-2 border-2 border-foreground px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
                           isRead
-                            ? "bg-[#22c55e] text-white shadow-[3px_3px_0_0_var(--color-foreground)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
+                            ? "bg-risk-green text-white shadow-[3px_3px_0_0_var(--color-foreground)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
                             : "cursor-not-allowed bg-card text-muted-foreground opacity-50",
                         )}
                       >

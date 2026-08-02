@@ -1,27 +1,28 @@
-import { test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 /**
- * Visual QA — scroll through the homepage section-by-section so Framer
- * Motion's whileInView animations fire before we screenshot. The regular
- * qa-sweep.spec does fullPage captures which show animations in their
- * pre-animate state (opacity:0). This spec solves that.
+ * Opt-in visual QA: scroll through the homepage section-by-section so Framer
+ * Motion's whileInView animations settle before each reviewed capture.
+ * Screenshots are Playwright attachments, not shared filesystem output.
  */
-
-test.describe.configure({ mode: "serial" });
 
 test.describe("QA visuals — homepage scroll capture", () => {
   test.use({ viewport: { width: 1440, height: 900 } });
+  test.skip(
+    ({ browserName, isMobile }) => browserName !== "chromium" || isMobile,
+    "manual visual review runs once in desktop Chromium",
+  );
 
-  test("capture sections while scrolling", async ({ page }) => {
-    // This visual-capture aid writes /tmp/qa-section-*.png for human review.
-    // It has no functional assertions, so it is opt-in to keep the regression
-    // suite deterministic.
+  test("capture sections while scrolling", async ({ page }, testInfo) => {
     test.skip(
       process.env.PLAYWRIGHT_CAPTURE_VISUALS !== "1",
       "visual-capture aid; set PLAYWRIGHT_CAPTURE_VISUALS=1 for manual review",
     );
-    await page.goto("/", { waitUntil: "networkidle" });
-    await page.waitForTimeout(500);
+    const response = await page.goto("/", { waitUntil: "domcontentloaded" });
+    expect(response?.status()).toBe(200);
+    await expect(page).toHaveURL("/");
+    await expect(page.locator('html[data-hydrated="true"]')).toBeAttached();
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
     // Section list matches the current homepage composition (hero → urgency
     // incl. iceberg reveals → workflow → proof → offering). The old
@@ -38,10 +39,23 @@ test.describe("QA visuals — homepage scroll capture", () => {
 
     for (const [name, selector] of sections) {
       const el = page.locator(selector).first();
+      await expect(el, `${name} section exists`).toBeAttached();
       await el.scrollIntoViewIfNeeded();
-      // Wait for in-view animations to complete
+      await expect(el, `${name} section is visible`).toBeVisible();
+      // This is a human-review aid; wait for in-view motion to reach its
+      // authored resting state before capturing the bounded section.
       await page.waitForTimeout(1200);
-      await el.screenshot({ path: `/tmp/qa-section-${name}.png` });
+      const screenshot = await el.screenshot({
+        animations: "disabled",
+        caret: "hide",
+      });
+      await testInfo.attach(
+        `homepage-${testInfo.project.name}-${name}.png`,
+        {
+          body: screenshot,
+          contentType: "image/png",
+        },
+      );
     }
   });
 });

@@ -118,6 +118,21 @@ describe("platform route access model", () => {
     }
   });
 
+  it("delegates only the exact private book PDF route to route-level auth", () => {
+    const path = "/api/buecher/ki-landschaft/download.pdf";
+    expect(isPublicPlatformPath(path)).toBe(false);
+    expect(isProtectedPlatformPath(path)).toBe(false);
+
+    for (const nearMiss of [
+      "/api/buecher/ki-landschaft/download.pdf/extra",
+      "/api/buecher/ki-landschaft/other.pdf",
+      "/api/buecher",
+    ]) {
+      expect(isPublicPlatformPath(nearMiss), nearMiss).toBe(false);
+      expect(isProtectedPlatformPath(nearMiss), nearMiss).toBe(true);
+    }
+  });
+
   it("keeps public learning downloads available without login", () => {
     for (const path of [
       "/api/demos/excel/briefing.pdf",
@@ -129,11 +144,29 @@ describe("platform route access model", () => {
 
   it("does not protect deleted commercial routes (they redirect or return 410)", () => {
     // These routes are handled by redirect stubs or middleware 410, not auth
-    expect(isProtectedPlatformPath("/ki-transformation-check")).toBe(false);
-    expect(isProtectedPlatformPath("/arbeitsweise")).toBe(false);
-    expect(isProtectedPlatformPath("/leistungen")).toBe(false);
-    expect(isProtectedPlatformPath("/foerdermittel")).toBe(false);
-    expect(isProtectedPlatformPath("/kontakt")).toBe(false);
+    for (const path of [
+      "/ki-transformation-check",
+      "/arbeitsweise",
+      "/leistungen",
+      "/foerdermittel",
+      "/kontakt",
+      "/api/scan",
+      "/api/journey/scan-insight",
+      "/api/journey/leads",
+    ]) {
+      expect(isPublicPlatformPath(path), path).toBe(false);
+      expect(isProtectedPlatformPath(path), path).toBe(false);
+    }
+
+    // Only the three exact deleted APIs are retired. Unknown descendants keep
+    // the default protected API boundary.
+    for (const path of [
+      "/api/scan/extra",
+      "/api/journey/scan-insight/extra",
+      "/api/journey/leads/extra",
+    ]) {
+      expect(isProtectedPlatformPath(path), path).toBe(true);
+    }
   });
 
   it("sanitizes next paths to internal non-auth targets", () => {
@@ -143,12 +176,18 @@ describe("platform route access model", () => {
     expect(sanitizeNextPath("/%5cevil.example")).toBe("/konto");
     expect(sanitizeNextPath("/%2fevil.example")).toBe("/konto");
     expect(sanitizeNextPath("/%255cevil.example")).toBe("/konto");
+    expect(sanitizeNextPath("/%2e%2e//evil.example")).toBe("/konto");
+    expect(sanitizeNextPath("/safe/%2e%2e//evil.example")).toBe("/konto");
     expect(sanitizeNextPath("/safe\npath")).toBe("/konto");
+    expect(sanitizeNextPath(`/${"a".repeat(2_048)}`)).toBe("/konto");
     expect(sanitizeNextPath("https://evil.example")).toBe("/konto");
     expect(sanitizeNextPath("/login")).toBe("/konto");
     expect(sanitizeNextPath("/safe/%2e%2e/login")).toBe("/konto");
     expect(sanitizeNextPath("/auth/callback")).toBe("/konto");
     expect(sanitizeNextPath("/ki-fuehrerschein/kurs")).toBe("/ki-fuehrerschein/kurs");
+    expect(
+      sanitizeNextPath("/api/buecher/ki-landschaft/download.pdf"),
+    ).toBe("/api/buecher/ki-landschaft/download.pdf");
     expect(sanitizeNextPath("/kurse?persona=einsteiger#start")).toBe(
       "/kurse?persona=einsteiger#start",
     );

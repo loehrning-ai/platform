@@ -109,7 +109,7 @@ Eine API kann bei planbarem Volumen günstiger oder teurer als ein Abo sein. Ver
 
 ### Modellvergleich: so bleibt er belastbar
 
-> **Redaktionell geprüft: 14. Juli 2026.** Modelle und Tarife ändern sich schnell. Die Tabelle vermeidet deshalb Versions- und Preisversprechen. Prüfe aktuelle Funktionen, Preise und Vertragsbedingungen direkt beim Anbieter.
+> **Redaktionell geprüft: 28. Juli 2026.** Modelle und Tarife ändern sich schnell. Die Tabelle vermeidet deshalb Versions- und Preisversprechen. Prüfe aktuelle Funktionen, Preise und Vertragsbedingungen direkt beim Anbieter.
 
 | | ChatGPT (OpenAI) | Claude (Anthropic) | Gemini (Google) | DeepSeek |
 |---|---|---|---|---|

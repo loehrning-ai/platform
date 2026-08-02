@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, m } from "framer-motion";
 import {
@@ -56,6 +56,7 @@ const slideVariants = {
 };
 
 export function KiCheckClient() {
+  const [hydrated, setHydrated] = useState(false);
   const [index, setIndex] = useState(0);
   // questionId -> chosen option index. Single source of truth for the whole run.
   const [choices, setChoices] = useState<Record<string, number>>({});
@@ -65,6 +66,11 @@ export function KiCheckClient() {
   // AnimatePresence exit->enter swap: the new heading focuses the moment it
   // actually mounts, whether that is instant (tests) or after the exit (app).
   const pendingFocus = useRef(false);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
   const focusHeading = useCallback((node: HTMLHeadingElement | null) => {
     if (node && pendingFocus.current) {
       pendingFocus.current = false;
@@ -259,7 +265,11 @@ export function KiCheckClient() {
                   {recommendation.reasoning}
                 </p>
                 <div className="mt-6 flex flex-wrap items-center gap-4">
-                  <BrandButton href={recommendation.startHref} size="md">
+                  <BrandButton
+                    href={recommendation.startHref}
+                    prefetch={false}
+                    size="md"
+                  >
                     Kurs starten
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </BrandButton>
@@ -414,6 +424,7 @@ export function KiCheckClient() {
                       key={option.text}
                       type="button"
                       aria-pressed={isPicked}
+                      disabled={!hydrated}
                       onClick={() => pick(i)}
                       className={
                         isPicked
@@ -442,11 +453,10 @@ export function KiCheckClient() {
                 {chosenOption && (
                   <m.div
                     key={`reveal-${selected}`}
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
                     transition={{ duration: 0.25 }}
-                    className="overflow-hidden"
                   >
                     <div className="mt-5 flex items-start gap-3 rounded-lg bg-brand-sand/10 px-5 py-4">
                       <Compass
@@ -466,16 +476,29 @@ export function KiCheckClient() {
 
         {/* Navigation */}
         <div className="mt-6 flex items-center justify-between gap-4">
-          <button
-            type="button"
-            onClick={goBack}
-            disabled={index === 0}
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline disabled:pointer-events-none disabled:opacity-0"
+          {hydrated && index > 0 ? (
+            <button
+              type="button"
+              onClick={goBack}
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
+            >
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              Zurück
+            </button>
+          ) : (
+            <span
+              aria-hidden="true"
+              className="invisible inline-flex items-center gap-1.5 text-sm font-semibold"
+            >
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              Zurück
+            </span>
+          )}
+          <BrandButton
+            onClick={goNext}
+            disabled={!hydrated || selected === null}
+            size="md"
           >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            Zurück
-          </button>
-          <BrandButton onClick={goNext} disabled={selected === null} size="md">
             {isLast ? "Zum Ergebnis" : "Weiter"}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </BrandButton>

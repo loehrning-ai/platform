@@ -194,13 +194,13 @@ export function OpenSourceArtifactCard({
                 <ArrowRight size={12} aria-hidden="true" />
               </Link>
             ) : null}
-            <Link
+            <a
               href={artifact.license.href}
               aria-labelledby={`${licenseActionId} ${titleId}`}
               className="inline-flex items-center gap-1 py-1 text-xs font-semibold text-foreground transition-colors hover:text-brand-orange"
             >
               <span id={licenseActionId}>Lizenz</span>
-            </Link>
+            </a>
             {/* The signature line: GitHub named by repo path, framed for
                 weight. Accessible name stays the composed
                 "Quelle {owner/repo} {Titel}" pattern; the visible path is

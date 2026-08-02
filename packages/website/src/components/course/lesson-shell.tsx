@@ -80,13 +80,17 @@ export function LessonShell({
       <button
         ref={toggleButtonRef}
         type="button"
-        onClick={() => onNavOpenChange(!navOpen)}
+        onClick={() => onNavOpenChange(true)}
+        tabIndex={navOpen ? -1 : undefined}
+        aria-hidden={navOpen || undefined}
         aria-expanded={navOpen}
         aria-controls={navId}
-        aria-label={navOpen ? "Navigation schließen" : "Navigation öffnen"}
-        className="fixed bottom-6 left-6 z-40 flex h-12 w-12 items-center justify-center border-2 border-foreground bg-brand-orange text-white shadow-[4px_4px_0_0_var(--color-foreground)] md:hidden"
+        aria-label="Navigation öffnen"
+        className={`fixed bottom-6 left-6 z-40 flex h-12 w-12 items-center justify-center border-2 border-foreground bg-brand-orange text-white shadow-[4px_4px_0_0_var(--color-foreground)] md:hidden ${
+          navOpen ? "pointer-events-none invisible" : ""
+        }`}
       >
-        {navOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        <Menu className="h-5 w-5" aria-hidden="true" />
       </button>
 
       {/* Mobile overlay */}
@@ -110,8 +114,20 @@ export function LessonShell({
             initial={{ x: -280 }}
             animate={{ x: 0 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-y-0 left-0 z-30 w-72 overflow-y-auto overscroll-contain border-r border-border bg-background p-4 pt-20 md:hidden"
+            className="fixed inset-y-0 left-0 z-30 w-72 overflow-y-auto overscroll-contain border-r border-border bg-background p-4 md:hidden"
           >
+            <div className="mb-4 flex justify-end">
+              <button
+                type="button"
+                onClick={closeNav}
+                aria-expanded="true"
+                aria-controls={navId}
+                aria-label="Navigation schließen"
+                className="inline-flex h-11 w-11 items-center justify-center border-2 border-border bg-background text-foreground outline-none transition-colors hover:border-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                <X className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </div>
             {sidebar}
           </m.aside>
         </>

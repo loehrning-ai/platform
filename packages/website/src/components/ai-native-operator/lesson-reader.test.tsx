@@ -1,7 +1,18 @@
 import { describe, it, expect, beforeAll, beforeEach, afterEach } from "vitest";
-import { render, screen, cleanup } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  cleanup,
+} from "@testing-library/react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { AiNativeOperatorLessonReader } from "./lesson-reader";
-import { __resetCacheForTests, isLessonCompleted } from "@/lib/progress";
+import {
+  __resetCacheForTests,
+  completeCheckpoint,
+  isLessonCompleted,
+} from "@/lib/progress";
 import type { AiNativeOperatorLesson } from "@/lib/ai-native-operator/types";
 import type { NextTarget } from "./lesson-page";
 
@@ -108,6 +119,26 @@ beforeEach(() => {
 afterEach(() => cleanup());
 
 describe("AiNativeOperatorLessonReader ", () => {
+  it("keeps the server-rendered completion control disabled until progress is ready", () => {
+    const markup = renderToStaticMarkup(
+      <AiNativeOperatorLessonReader
+        lesson={{ ...READING_LESSON, widgets: [] }}
+        prevHref={null}
+        prevTitle={null}
+        next={NEXT_LESSON}
+      />,
+    );
+    const host = document.createElement("div");
+    host.innerHTML = markup;
+    const completion = Array.from(host.querySelectorAll("button")).find(
+      (button) => button.textContent?.includes("Loading progress"),
+    );
+
+    expect(completion).toBeDefined();
+    expect(completion?.disabled).toBe(true);
+    expect(completion).toHaveAttribute("aria-busy", "true");
+  });
+
   it("renders the header, objective, sections, and callout for a reading lesson", () => {
     render(<AiNativeOperatorLessonReader lesson={READING_LESSON} prevHref={null} prevTitle={null} next={NEXT_LESSON} />);
     expect(screen.getByText("Test reading lesson")).toBeInTheDocument();
@@ -119,12 +150,16 @@ describe("AiNativeOperatorLessonReader ", () => {
 
   it("renders the exercise widget through the shared registry", async () => {
     render(<AiNativeOperatorLessonReader lesson={READING_LESSON} prevHref={null} prevTitle={null} next={NEXT_LESSON} />);
-    expect(await screen.findByText("Reflect on it.")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Reflect on it.", {}, { timeout: 5_000 }),
+    ).toBeInTheDocument();
   });
 
   it("renders a quiz-kind lesson's questions as stacked quiz widgets", async () => {
     render(<AiNativeOperatorLessonReader lesson={QUIZ_LESSON} prevHref={null} prevTitle={null} next={NEXT_LESSON} />);
-    expect(await screen.findByText("A test question?")).toBeInTheDocument();
+    expect(
+      await screen.findByText("A test question?", {}, { timeout: 5_000 }),
+    ).toBeInTheDocument();
     expect(screen.getByText("Wrong")).toBeInTheDocument();
     expect(screen.getByText("Right")).toBeInTheDocument();
   });
@@ -141,31 +176,47 @@ describe("AiNativeOperatorLessonReader ", () => {
     expect(screen.getByText("Previous lesson title")).toBeInTheDocument();
   });
 
-  it("renders the course-complete terminal label", () => {
+  it("renders the final-assessment terminal link", () => {
     render(
       <AiNativeOperatorLessonReader
         lesson={READING_LESSON}
         prevHref={null}
         prevTitle={null}
         next={{
-          href: "/kurse/open-source/ai-native-operator",
-          label: "Course complete — return to overview",
-          kind: "course-complete",
+          href: "/kurse/open-source/ai-native-operator#final-assessment",
+          label: "Continue to final assessment",
+          kind: "final-assessment",
         }}
       />,
     );
-    expect(screen.getByText("Course complete — return to overview")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Continue to final assessment" }),
+    ).toHaveAttribute(
+      "href",
+      "/kurse/open-source/ai-native-operator#final-assessment",
+    );
   });
 
-  it("marks the lesson completed on mount, matching the source's own visit-based scheme ", () => {
+  it("requires explicit confirmation for a reading lesson", () => {
     expect(isLessonCompleted("ai-native-operator", "mindset/1")).toBe(false);
     render(<AiNativeOperatorLessonReader lesson={READING_LESSON} prevHref={null} prevTitle={null} next={NEXT_LESSON} />);
+    expect(isLessonCompleted("ai-native-operator", "mindset/1")).toBe(false);
+    fireEvent.click(screen.getByRole("button", { name: "Complete lesson" }));
     expect(isLessonCompleted("ai-native-operator", "mindset/1")).toBe(true);
   });
 
-  it("marks a quiz-kind lesson completed on mount too, without requiring a correct answer", () => {
+  it("requires every quiz checkpoint before a quiz lesson can be completed", () => {
     expect(isLessonCompleted("ai-native-operator", "mindset/5")).toBe(false);
     render(<AiNativeOperatorLessonReader lesson={QUIZ_LESSON} prevHref={null} prevTitle={null} next={NEXT_LESSON} />);
+    expect(
+      screen.getByRole("button", {
+        name: "Answer every question correctly first",
+      }),
+    ).toBeDisabled();
+    act(() => {
+      completeCheckpoint("mindset/5", "ano-mindset-q1");
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Complete lesson" }));
     expect(isLessonCompleted("ai-native-operator", "mindset/5")).toBe(true);
   });
 

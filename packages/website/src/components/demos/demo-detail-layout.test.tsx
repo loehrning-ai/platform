@@ -3,6 +3,24 @@ import { render, screen } from "@testing-library/react";
 import { DemoDetailLayout } from "./demo-detail-layout";
 import { demos } from "@/lib/demos";
 
+vi.mock("next/link", async () => {
+  const React = await import("react");
+  return {
+    __esModule: true,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    default: ({ href, children, prefetch, ...rest }: any) =>
+      React.createElement(
+        "a",
+        {
+          href: typeof href === "string" ? href : "#",
+          "data-prefetch": String(prefetch),
+          ...rest,
+        },
+        children,
+      ),
+  };
+});
+
 /**
  * demo-detail-layout.test.tsx (regression coverage)
  *
@@ -58,6 +76,10 @@ describe("<DemoDetailLayout>", () => {
       "href",
       "/ai-native/kurs/modul_2/modul_2_lesson_2",
     );
+    expect(screen.getByRole("link", { name: "Zur Lektion" })).toHaveAttribute(
+      "data-prefetch",
+      "false",
+    );
   });
 
   it("derives a block lesson label + deep link for a block_n lessonId", () => {
@@ -66,6 +88,10 @@ describe("<DemoDetailLayout>", () => {
     expect(screen.getByRole("link", { name: "Zur Lektion" })).toHaveAttribute(
       "href",
       "/eu-ai-act-kurs/kurs/block_2",
+    );
+    expect(screen.getByRole("link", { name: "Zur Lektion" })).toHaveAttribute(
+      "data-prefetch",
+      "false",
     );
   });
 
@@ -88,7 +114,7 @@ describe("<DemoDetailLayout>", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Weiter" })).toHaveAttribute(
       "href",
-      "/demos/word?source=gallery",
+      "/demos/word?source=next-demo",
     );
   });
 

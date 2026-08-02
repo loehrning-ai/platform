@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { CourseAssessmentCta } from "@/components/course/kurs/course-assessment-cta";
 import { getAllClaudeLessons } from "@/lib/claude-course/data";
 import { CLAUDE_TRACKS } from "@/lib/claude-course/types";
 import { SITE_URL } from "@/lib/seo/json-ld";
@@ -75,6 +76,8 @@ export default async function ClaudeKursIndexPage() {
           );
         })}
       </div>
+
+      <CourseAssessmentCta courseSlug="claude" />
     </div>
   );
 }

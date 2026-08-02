@@ -13,6 +13,7 @@ import {
 } from "@/lib/course/progress";
 import type { ClaudeLesson } from "@/lib/claude-course/types";
 import { cn } from "@/lib/utils";
+import { subscribe } from "@/lib/progress";
 
 /**
  * ClaudeLessonReader, bespoke content renderer for the Claude Course
@@ -37,11 +38,17 @@ export function ClaudeLessonReader({
 }: ClaudeLessonReaderProps): JSX.Element {
   const [readIds, setReadIds] = useState<ReadonlySet<string>>(new Set());
   const [completed, setCompleted] = useState(false);
+  const [readyLessonId, setReadyLessonId] = useState<string | null>(null);
 
   useEffect(() => {
-    setReadIds(getReadSectionIds("claude", lesson.id));
-    setCompleted(isLessonCompleted("claude", lesson.id));
+    return subscribe(() => {
+      setReadIds(getReadSectionIds("claude", lesson.id));
+      setCompleted(isLessonCompleted("claude", lesson.id));
+      setReadyLessonId(lesson.id);
+    });
   }, [lesson.id]);
+
+  const progressReady = readyLessonId === lesson.id;
 
   const widgets = useMemo(() => lesson.widgets ?? [], [lesson.widgets]);
   const afterIntroWidgets = useMemo(() => resolveWidgetsForSlot(widgets, "after-intro"), [widgets]);
@@ -54,6 +61,8 @@ export function ClaudeLessonReader({
   };
 
   const allSectionsRead = lesson.sections.every((s) => readIds.has(s.id));
+  const canCompleteLesson = progressReady && allSectionsRead;
+  const lessonCompleted = progressReady && completed;
 
   const completeLesson = () => {
     markLessonCompleted("claude", lesson.id);
@@ -115,11 +124,11 @@ export function ClaudeLessonReader({
               <button
                 type="button"
                 onClick={() => markRead(section.id)}
-                disabled={readIds.has(section.id)}
+                disabled={!progressReady || readIds.has(section.id)}
                 className="inline-flex items-center gap-2 text-[13px] font-medium transition-colors disabled:cursor-default"
               >
                 {readIds.has(section.id) ? (
-                  <span className="inline-flex items-center gap-2 text-[#22c55e]">
+                  <span className="inline-flex items-center gap-2 text-risk-green">
                     <CheckCircle2 className="h-4 w-4" />
                     Read
                   </span>
@@ -144,8 +153,8 @@ export function ClaudeLessonReader({
 
         <div className="border-t border-border pt-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            {completed ? (
-              <span className="inline-flex items-center gap-2 text-[14px] font-medium text-[#22c55e]">
+            {lessonCompleted ? (
+              <span className="inline-flex items-center gap-2 text-[14px] font-medium text-risk-green">
                 <CheckCircle2 className="h-4 w-4" />
                 Lesson complete
               </span>
@@ -153,10 +162,10 @@ export function ClaudeLessonReader({
               <button
                 type="button"
                 onClick={completeLesson}
-                disabled={!allSectionsRead}
+                disabled={!canCompleteLesson}
                 className={cn(
                   "inline-flex items-center gap-2 border-2 border-foreground px-5 py-2.5 text-[12px] font-bold uppercase tracking-wide shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
-                  allSectionsRead
+                  canCompleteLesson
                     ? "bg-brand-orange text-white hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
                     : "cursor-not-allowed bg-border text-muted-foreground shadow-none",
                 )}

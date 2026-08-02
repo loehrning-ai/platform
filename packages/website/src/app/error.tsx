@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-import * as Sentry from "@sentry/nextjs";
 import { BrandButton } from "@/components/ui/brand-button";
+import {
+  reportClientBoundaryError,
+  validatedNextDigest,
+} from "@/lib/observability/client-boundary-error";
 
 export default function Error({
   error,
@@ -11,9 +14,10 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const digest = validatedNextDigest(error);
+
   useEffect(() => {
-    Sentry.captureException(error);
-    if (process.env.NODE_ENV === "development") console.error("Page error:", error.message);
+    reportClientBoundaryError("app-root", error);
   }, [error]);
 
   return (
@@ -25,9 +29,9 @@ export default function Error({
       <p className="mt-4 max-w-md text-muted-foreground">
         Ein unerwarteter Fehler ist aufgetreten. Bitte versuch es noch einmal.
       </p>
-      {error.digest && (
+      {digest && (
         <p className="mt-2 text-xs text-muted-foreground/70">
-          Fehler-ID: {error.digest}
+          Fehler-ID: {digest}
         </p>
       )}
       <div className="mt-8 flex flex-wrap justify-center gap-4">

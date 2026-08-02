@@ -1,9 +1,4 @@
-/**
- * AUDIT (accessibility hardening): The first test checks /ki-transformation-check,
- * which is deleted by public-content transition. The skip-to-content and mobile-nav tests are
- * KEEP — they test universal a11y behaviors on /.
- * DECISION: After public-content transition ships, remove the first test only. Keep the other two.
- */
+/** Public redirect and universal keyboard-navigation accessibility contracts. */
 import { test, expect } from "@playwright/test";
 
 test("a11y: retired journey redirects to an accessible public page", async ({ page }) => {
@@ -26,12 +21,13 @@ test("a11y: skip-to-content link receives focus on Tab", async ({ page, browserN
   expect(focused?.text).toMatch(/Zum Inhalt springen/);
 });
 
-test("a11y: mobile nav opens, traps focus, closes on Escape", async ({ page, browserName }) => {
-  test.skip(browserName !== "chromium", "viewport setup is chromium-only");
+test("a11y: mobile nav opens, traps focus, closes on Escape", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 667 });
   await page.goto("/");
 
-  const toggle = page.locator('button[aria-label*="Menü"]');
+  // The dialog also contains "Menü schließen"; target the unique disclosure
+  // control instead of a substring that becomes ambiguous once the menu opens.
+  const toggle = page.locator('button[aria-controls="mobile-menu"]');
   await toggle.click();
 
   const dialog = page.locator('[role="dialog"][aria-modal="true"]');

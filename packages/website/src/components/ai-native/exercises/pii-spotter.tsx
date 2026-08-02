@@ -166,7 +166,7 @@ function PiiSpotterBody({
               className={cn(
                 "inline-block cursor-pointer rounded-none px-0.5 transition-colors",
                 submitted ? "cursor-default" : "hover:bg-brand-orange/10",
-                showFeedback && correct && "bg-[#22c55e]/20 ring-1 ring-[#22c55e]",
+                showFeedback && correct && "bg-risk-green/20 ring-1 ring-risk-green",
                 showFeedback && missed && "bg-destructive/20 ring-1 ring-destructive",
                 showFeedback && falsePositive && "bg-brand-amber/20 ring-1 ring-brand-amber",
                 !showFeedback && isSelected && "bg-brand-orange/20 ring-1 ring-brand-orange",
@@ -188,20 +188,20 @@ function PiiSpotterBody({
             transition={{ duration: 0.28, ease: EASE_OUT_EXPO }}
             className={cn(
               "mt-4 border-l-[3px] p-4",
-              passed ? "border-[#22c55e] bg-[#22c55e]/5" : "border-brand-amber bg-brand-amber/5",
+              passed ? "border-risk-green bg-risk-green/5" : "border-brand-amber bg-brand-amber/5",
             )}
           >
             <div className="flex flex-wrap items-center gap-4">
               <div className="flex items-center gap-2">
                 {passed ? (
-                  <CheckCircle2 size={16} className="text-[#22c55e]" />
+                  <CheckCircle2 size={16} className="text-risk-green" />
                 ) : (
                   <XCircle size={16} className="text-brand-amber" />
                 )}
                 <span
                   className={cn(
                     "font-mono text-[11px] font-bold uppercase tracking-[0.14em]",
-                    passed ? "text-[#22c55e]" : "text-brand-amber",
+                    passed ? "text-risk-green" : "text-brand-amber",
                   )}
                 >
                   F1 {Math.round(f1 * 100)}% · {passed ? "Passed" : "Review"}

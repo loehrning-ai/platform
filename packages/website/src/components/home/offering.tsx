@@ -1,10 +1,6 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
-import { m, useReducedMotion } from "framer-motion";
 import { ArrowRight, Github } from "lucide-react";
-import { EASE_OUT_EXPO } from "@/lib/animations";
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { PersonaCourseLinks } from "@/app/kurse/persona-filter";
 import { Card, IconTile } from "@/components/ui/card";
@@ -41,8 +37,9 @@ const META_LINE =
 const BADGE_CHIP =
   "inline-flex w-fit items-center rounded-none bg-card-hover px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground";
 
-// Honest per-course badges (Deutsch · mit Zertifikat / mit Lernnachweis), driven
-// by COURSE_FACTS so the homepage matches /kurse instead of a hardcoded label.
+// Honest per-course badges (Deutsch · mit Teilnahmebestätigung / mit
+// Lernnachweis), driven by COURSE_FACTS so the homepage matches /kurse instead
+// of a hardcoded label.
 function CourseBadges({ slug }: { readonly slug: string }) {
   return (
     <span className="flex flex-wrap gap-1.5">
@@ -56,14 +53,6 @@ function CourseBadges({ slug }: { readonly slug: string }) {
 }
 
 export function Offering() {
-  const prefersReducedMotion = useReducedMotion();
-  const reveal = (delay = 0) => ({
-    initial: prefersReducedMotion ? false : { opacity: 0, y: 12 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-40px" },
-    transition: { duration: 0.5, delay, ease: EASE_OUT_EXPO },
-  });
-
   const [featured, ...restCourses] = SPINE_HOME_COURSES;
   const featuredMeta = courseFacts(featured.slug);
   const FeaturedIcon = iconByName(featuredMeta.iconName);
@@ -75,56 +64,36 @@ export function Offering() {
       data-testid="kurse-section"
     >
       <div className="mx-auto max-w-5xl px-6">
-        <m.div
+        <div
           className="mb-12 h-px w-full bg-border"
-          initial={prefersReducedMotion ? false : { scaleX: 0 }}
-          whileInView={{ scaleX: 1 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.8, ease: EASE_OUT_EXPO }}
-          style={{ transformOrigin: "left" }}
         />
 
-        <m.p
-          className="overline mb-4"
-          initial={prefersReducedMotion ? false : { opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.5 }}
-        >
+        <p className="overline mb-4">
           Die Kurse
-        </m.p>
+        </p>
 
-        <m.h2
+        <h2
           className="font-bold leading-[0.95] tracking-[-0.04em] text-foreground"
           style={{ fontSize: "clamp(2rem, 4.5vw, 3.5rem)" }}
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.6, ease: EASE_OUT_EXPO }}
         >
           Vier Kurse.
           <br />
           <span className="text-muted-foreground">
             Vom ersten Prompt bis zum EU-Gesetz.
           </span>
-        </m.h2>
+        </h2>
 
-        <m.p
-          className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground"
-          initial={prefersReducedMotion ? false : { opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ delay: 0.1, duration: 0.5 }}
-        >
-          Fang beim KI-Führerschein an und arbeite dich vor. Jeder Kurs ist
-          kostenlos, ohne Konto nutzbar und komplett auf Deutsch.
-        </m.p>
+        <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
+          Der KI-Check bestimmt deinen Einstieg; bei null startest du mit dem
+          KI-Führerschein. Alle vier Kurse sind kostenlos, komplett auf Deutsch
+          und erfordern ein Lernkonto.
+        </p>
 
         <PersonaCourseLinks />
 
         {/* Featured lead course: larger card, warm kupfer-mist fill, so the
             recommended starting point does not read as one of five equal boxes. */}
-        <m.div {...reveal()} className="mt-12">
+        <div className="mt-12">
           <Card
             href={featured.href}
             accent={featuredMeta.accent}
@@ -139,7 +108,7 @@ export function Offering() {
                     size="lg"
                   />
                   <span className="inline-flex items-center rounded-none bg-brand-orange/10 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-brand-orange">
-                    Empfohlener Start
+                    Start bei null
                   </span>
                 </div>
                 <span className="mt-4 block font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
@@ -198,15 +167,15 @@ export function Offering() {
               </div>
             </div>
           </Card>
-        </m.div>
+        </div>
 
         {/* The remaining three courses: equal warm cards, each with its track
             icon tile and certificate badge. */}
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {restCourses.map((course, i) => {
+          {restCourses.map((course) => {
             const meta = courseFacts(course.slug);
             return (
-              <m.div key={course.slug} {...reveal(i * 0.06)} className="h-full">
+              <div key={course.slug} className="h-full">
                 <Card href={course.href} accent={meta.accent} className="h-full">
                   <div className="flex items-start gap-4">
                     <span
@@ -240,18 +209,12 @@ export function Offering() {
                     </span>
                   </div>
                 </Card>
-              </m.div>
+              </div>
             );
           })}
         </div>
 
-        <m.p
-          className="mt-5 text-sm leading-relaxed text-muted-foreground"
-          initial={prefersReducedMotion ? false : { opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.5 }}
-        >
+        <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
           Dazu {DEEPER_HOME_COURSES.length} technische Kurse auf Englisch, von
           Data Engineering bis System Design.{" "}
           <Link
@@ -260,24 +223,21 @@ export function Offering() {
           >
             Alle Kurse ansehen &#8594;
           </Link>
-        </m.p>
+        </p>
 
         {/* Real-imagery band: GitHub-Labs previews. Sand tint to match the
             open-source track colour and break the cream monotony. */}
-        <m.div
-          {...reveal()}
-          className="mt-8 rounded-xl border border-border bg-brand-sand/10 p-6 sm:p-8"
-        >
+        <div className="mt-8 rounded-xl border border-border bg-brand-sand/10 p-6 sm:p-8">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <IconTile icon={Github} accent="sand" />
               <div>
-                <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-sand">
+                <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
                   Technikkurse
                 </p>
                 <p className="text-sm text-muted-foreground">
                   Portiert aus offenen GitHub-Repositories. Auf Englisch, mit
-                  Certificate.
+                  selbst ausgestelltem Certificate.
                 </p>
               </div>
             </div>
@@ -336,7 +296,7 @@ export function Offering() {
               </div>
             ))}
           </div>
-        </m.div>
+        </div>
       </div>
     </section>
   );

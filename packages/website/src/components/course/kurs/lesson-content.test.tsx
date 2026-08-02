@@ -146,6 +146,7 @@ function baseProps(): Props {
     courseSlug: "ki-fuehrerschein",
     lesson: mkLesson(),
     totalLessons: 5,
+    progressReady: true,
     readSectionIds: new Set<string>(),
     isCompleted: false,
     quizBestScore: null,
@@ -229,6 +230,25 @@ describe("<LessonContent>", () => {
 
   it("disables the completion button until every section is read", () => {
     renderContent({ readSectionIds: new Set(["a"]) });
+    expect(
+      screen.getByRole("button", { name: /Lektion abschließen/ }),
+    ).toBeDisabled();
+  });
+
+  it("keeps progress write controls disabled until progress is ready", () => {
+    const unread = renderContent({ progressReady: false });
+    const markAsRead = screen.getAllByRole("button", {
+      name: /Als gelesen markieren/,
+    });
+    expect(markAsRead.every((button) => button.hasAttribute("disabled"))).toBe(
+      true,
+    );
+    unread.unmount();
+
+    renderContent({
+      progressReady: false,
+      readSectionIds: new Set(["a", "b"]),
+    });
     expect(
       screen.getByRole("button", { name: /Lektion abschließen/ }),
     ).toBeDisabled();

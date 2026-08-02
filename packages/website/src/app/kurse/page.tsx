@@ -10,7 +10,7 @@ import { PersonaCourseLinks } from "./persona-filter";
 
 const KURSE_SOCIAL_TITLE = "Kurse: kostenlose KI-Lernplattform auf Deutsch";
 const KURSE_SOCIAL_DESCRIPTION =
-  "Vier deutsche Kernkurse mit Login-Fortschritt und Zertifikat, dazu sechs technische Kurse auf Englisch und angewandte Workshops.";
+  "Vier deutsche Kernkurse mit Lernkonto und selbst ausgestellten Teilnahmebestätigungen oder Lernnachweisen, dazu sechs öffentliche technische Kurse auf Englisch.";
 const KURSE_SOCIAL_IMAGE = {
   url: `${SITE_URL}/kurse/opengraph-image`,
   width: 1200,
@@ -46,13 +46,13 @@ const TRACK_DIFF = [
     icon: GraduationCap,
     accent: "kupfer" as const,
     label: "Der Lernpfad",
-    text: "vier deutsche Kurse mit gespeichertem Fortschritt und Nachweis. Fang bei Schritt 1 an.",
+    text: "vier deutsche Kurse mit gespeichertem Fortschritt und Nachweis. Der KI-Check bestimmt deinen Einstieg.",
   },
   {
     icon: Github,
     accent: "sand" as const,
     label: "Tiefer gehen",
-    text: "sechs technische Kurse auf Englisch, portiert von GitHub, mit Fortschritt und Certificate. Dazu angewandte Kurse aus Workshops.",
+    text: "sechs technische Kurse auf Englisch, portiert von GitHub, mit Fortschritt und selbst ausgestelltem Certificate. Dazu angewandte Kurse aus Workshops.",
   },
 ];
 
@@ -78,28 +78,21 @@ export default function KursePage() {
           die gesellschaftliche Einordnung und den EU AI Act bis zum AI-nativen
           Arbeiten. Danach vertiefst du dein Wissen: sechs technische Kurse auf
           Englisch, portiert aus offenen GitHub-Repositories, plus angewandte
-          Kurse aus echten Workshops.
+          Selbstlernkurse aus Workshop-Material.
         </p>
 
         {/* Beginner entry point */}
         <div className="mt-8 rounded-lg border border-border bg-card px-5 py-3 shadow-tile">
           <p className="text-[14px] text-muted-foreground">
-            <span className="font-bold text-foreground">Neu bei KI?</span>{" "}
-            Starte hier:{" "}
+            <span className="font-bold text-foreground">Dein erster Schritt:</span>{" "}
             <Link
-              href="/einstieg"
-              className="text-brand-orange underline-offset-4 hover:underline"
+              href="/ki-check"
+              className="text-brand-orange underline underline-offset-4"
             >
-              Einstieg: Was ist KI?
+              Der fünfminütige KI-Check
             </Link>
-            {" "}Oder versteh zuerst,{" "}
-            <Link
-              href="/wie-ki-funktioniert"
-              className="text-brand-orange underline-offset-4 hover:underline"
-            >
-              wie KI wirklich funktioniert (4 Lektionen, ca. 40 min)
-            </Link>
-            .
+            {" "}ordnet deinen Stand ein und nennt den passenden Einstieg. Wenn du
+            bei null beginnst, ist das Ergebnis der KI-Führerschein.
           </p>
         </div>
 

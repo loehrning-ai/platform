@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type JSX } from "react";
+import { useEffect, useMemo, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
 import { cn } from "@/lib/utils";
 
@@ -67,13 +67,16 @@ export function L01ThreeBodyContract({
     return Math.round(raw * 95);
   }, [values]);
 
+  useEffect(() => {
+    if (weakened.size === LEVERS.length && !done) complete();
+  }, [complete, done, weakened]);
+
   const weaken = (lever: Lever) => {
     setValues((prev) => ({ ...prev, [lever]: WEAK_VALUE[lever] }));
     setWeakened((prev) => {
       if (prev.has(lever)) return prev;
       const next = new Set(prev);
       next.add(lever);
-      if (next.size === LEVERS.length) complete();
       return next;
     });
   };
@@ -131,7 +134,7 @@ export function L01ThreeBodyContract({
             <div
               className={cn(
                 "absolute bottom-0 left-0 right-0 transition-[height,background-color] duration-500",
-                tone === "bad" ? "bg-destructive" : tone === "warn" ? "bg-brand-amber" : "bg-[#22c55e]",
+                tone === "bad" ? "bg-destructive" : tone === "warn" ? "bg-brand-amber" : "bg-risk-green",
               )}
               style={{ height: `${quality}%` }}
             />
@@ -143,7 +146,7 @@ export function L01ThreeBodyContract({
         </div>
       </div>
       {weakened.size === LEVERS.length && (
-        <p className="mt-4 font-mono text-[11px] text-[#22c55e]" data-testid="l01-completion-message">
+        <p className="mt-4 font-mono text-[11px] text-risk-green" data-testid="l01-completion-message">
           $ contract-invariant confirmed {done ? "✓" : ""}
         </p>
       )}

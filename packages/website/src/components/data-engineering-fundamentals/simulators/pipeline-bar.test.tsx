@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from "vitest";
-import { render, screen, cleanup, fireEvent } from "@testing-library/react";
+import { render, screen, cleanup } from "@testing-library/react";
 import { PipelineBar, StageIcon, OV_STAGES } from "./pipeline-bar";
 
 afterEach(() => {
@@ -9,22 +9,23 @@ afterEach(() => {
 
 describe("PipelineBar ", () => {
   it("renders all 10 stage stops with real titles", () => {
-    render(<PipelineBar goTo={() => {}} activeId="ingest" setActiveId={() => {}} />);
+    render(<PipelineBar activeId="ingest" setActiveId={() => {}} />);
     expect(screen.getByText("Ingest")).toBeInTheDocument();
     expect(screen.getByText("Capstone")).toBeInTheDocument();
     expect(OV_STAGES).toHaveLength(10);
   });
 
-  it("calls goTo with the stage's chapter id when a stop is clicked", () => {
-    const goTo = vi.fn();
-    render(<PipelineBar goTo={goTo} activeId="ingest" setActiveId={() => {}} />);
-    fireEvent.click(screen.getByRole("button", { name: /Chapter 03 · Store/ }));
-    expect(goTo).toHaveBeenCalledWith("store");
+  it("renders each chapter stop as a real link", () => {
+    render(<PipelineBar activeId="ingest" setActiveId={() => {}} />);
+    expect(screen.getByRole("link", { name: /Chapter 03 · Store/ })).toHaveAttribute(
+      "href",
+      "/kurse/open-source/data-engineering-fundamentals/store",
+    );
   });
 
   it("marks the active stage with aria-current", () => {
-    render(<PipelineBar goTo={() => {}} activeId="orch" setActiveId={() => {}} />);
-    expect(screen.getByRole("button", { name: /Chapter 05 · Orchestrate/ })).toHaveAttribute("aria-current", "step");
+    render(<PipelineBar activeId="orch" setActiveId={() => {}} />);
+    expect(screen.getByRole("link", { name: /Chapter 05 · Orchestrate/ })).toHaveAttribute("aria-current", "step");
   });
 });
 

@@ -96,8 +96,8 @@ export function HeroOrrery(): JSX.Element {
     setLoading(false);
   };
 
-  const qColor = quality >= 80 ? "text-[#22c55e]" : quality >= 40 ? "text-brand-amber" : "text-destructive";
-  const qBar = quality >= 80 ? "bg-[#22c55e]" : quality >= 40 ? "bg-brand-amber" : "bg-destructive";
+  const qColor = quality >= 80 ? "text-risk-green" : quality >= 40 ? "text-brand-amber" : "text-destructive";
+  const qBar = quality >= 80 ? "bg-risk-green" : quality >= 40 ? "bg-brand-amber" : "bg-destructive";
 
   return (
     <div className="border-2 border-foreground bg-card p-6 shadow-[6px_6px_0_var(--color-foreground)] md:p-8">
@@ -106,9 +106,9 @@ export function HeroOrrery(): JSX.Element {
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
             prompt foundry
           </p>
-          <h3 className="mt-2 text-[22px] font-bold tracking-[-0.02em] text-foreground">
+          <h2 className="mt-2 text-[22px] font-bold tracking-[-0.02em] text-foreground">
             Five parts. Toggle each.
-          </h3>
+          </h2>
           <p className="mt-1 max-w-[380px] text-[14px] leading-[1.5] text-muted-foreground">
             Click a card to include or remove it. The quality score responds live.
           </p>

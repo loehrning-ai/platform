@@ -25,7 +25,7 @@ export function Hero() {
             von <span className="byline__author">Tim Löhr</span>
           </span>
           <span className="dot">·</span>
-          <span>16. Juli 2026</span>
+          <span>28. Juli 2026</span>
           <span className="dot">·</span>
           <span>11 Min.</span>
         </div>
@@ -33,41 +33,41 @@ export function Hero() {
           className="hero__title"
           aria-label="Der EU AI Act: was er bedeutet, wenn du keine Juristin bist."
         >
-          <span className="word" style={{ animationDelay: "0s" }}>
+          <span className="word">
             Der
           </span>{" "}
-          <span className="word" style={{ animationDelay: ".08s" }}>
+          <span className="word">
             EU
           </span>{" "}
-          <span className="word" style={{ animationDelay: ".16s" }}>
+          <span className="word">
             AI
           </span>{" "}
-          <span className="word" style={{ animationDelay: ".24s" }}>
+          <span className="word">
             Act:
           </span>
           <br />
-          <span className="word" style={{ animationDelay: ".32s" }}>
+          <span className="word">
             was
           </span>{" "}
-          <span className="word" style={{ animationDelay: ".4s" }}>
+          <span className="word">
             er
           </span>{" "}
-          <span className="word" style={{ animationDelay: ".48s" }}>
+          <span className="word">
             bedeutet,
           </span>{" "}
-          <span className="word" style={{ animationDelay: ".56s" }}>
+          <span className="word">
             wenn
           </span>{" "}
-          <span className="word" style={{ animationDelay: ".64s" }}>
+          <span className="word">
             du
           </span>{" "}
-          <span className="word em" style={{ animationDelay: ".72s" }}>
+          <span className="word em">
             <i>keine</i>
           </span>{" "}
-          <span className="word em" style={{ animationDelay: ".8s" }}>
+          <span className="word em">
             <i>Juristin</i>
           </span>{" "}
-          <span className="word" style={{ animationDelay: ".88s" }}>
+          <span className="word">
             bist.
           </span>
         </h1>
@@ -75,15 +75,15 @@ export function Hero() {
           Das erste umfassende KI-Gesetz der Welt gilt in Stufen: Teile sind
           seit Februar 2025 anwendbar, weitere folgen am 2. August 2026, die
           Hochrisiko-Regeln später. Dieser Text erklärt ohne Fachjargon, was
-          schon gilt, was beschlossen ist und welche Rechte du bekommst.
-          Stand: 16. Juli 2026, jede Angabe mit Primärquelle.
+          schon gilt, was inzwischen in Kraft ist und welche Rechte du bekommst.
+          Stand: 28. Juli 2026, jede Angabe mit Primärquelle.
         </p>
         <div className="hero__scroll">Weiterlesen</div>
       </section>
 
       <section className="scene" id="einstieg">
         <div className="scene__dateline">
-          EU AI Act · Verordnung (EU) 2024/1689 · Stand: 16. Juli 2026
+          EU AI Act · Verordnung (EU) 2024/1689, geändert durch 2026/1744 · Stand: 28. Juli 2026
         </div>
         <div className="scene__body">
           <p>
@@ -99,8 +99,8 @@ export function Hero() {
             sogenannte Hochrisiko-Systeme zu verschieben. Seitdem kursieren
             zwei Erzählungen: <em>alles gilt ab August</em> und{" "}
             <em>alles ist verschoben</em>. Beide sind falsch. Dieser Text
-            trennt sauber, was heute geltendes Recht ist und was zwar
-            beschlossen, aber noch nicht in Kraft ist.
+            trennt die verschiedenen Anwendungsdaten im heute geltenden
+            Recht.
           </p>
         </div>
       </section>

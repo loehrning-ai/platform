@@ -28,7 +28,7 @@ export function WindowBar({
     >
       <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#ef4444]" />
       <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#f59e0b]" />
-      <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#22c55e]" />
+      <span className="inline-block h-2.5 w-2.5 rounded-full bg-risk-green" />
       <span
         className={cn(
           "ml-4 font-mono text-[11px] uppercase tracking-[0.14em]",

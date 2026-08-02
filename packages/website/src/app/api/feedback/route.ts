@@ -4,12 +4,16 @@ import {
   consumeRateLimit,
   hashedClientRateLimitKey,
 } from "@/lib/security/rate-limit";
-import { readBoundedJson } from "@/lib/http/read-json-body";
+import {
+  hasJsonContentType,
+  readBoundedJson,
+} from "@/lib/http/read-json-body";
+import { reportApiError } from "@/lib/observability/api-error";
 import { tryCreateServiceClient } from "@/lib/supabase/server";
 
 // Rate limit: 5 submissions per client per 24h. Uses the durable, cross-region
-// limiter (Supabase RPC with in-memory fallback) keyed on a SHA-256 digest of
-// the Vercel-trusted client IP — not the forgeable raw x-forwarded-for header.
+// limiter (Supabase RPC with in-memory fallback) keyed on an HMAC of the
+// Vercel-trusted client IP — not the forgeable raw x-forwarded-for header.
 const RATE_LIMIT_WINDOW_SECONDS = 24 * 60 * 60;
 const RATE_LIMIT_MAX = 5;
 const MAX_FEEDBACK_PAYLOAD_BYTES = 16 * 1024;
@@ -46,10 +50,22 @@ const feedbackSchema = z.object({
 });
 
 function jsonError(message: string, status: number): NextResponse {
-  return NextResponse.json({ error: message }, { status });
+  return NextResponse.json(
+    { error: message },
+    {
+      status,
+      headers: {
+        "Cache-Control": "private, no-store",
+        "X-Robots-Tag": "noindex, nofollow, noarchive",
+      },
+    },
+  );
 }
 
 export async function POST(request: Request): Promise<NextResponse> {
+  if (!hasJsonContentType(request)) {
+    return jsonError("unsupported_media_type", 415);
+  }
   if (
     process.env.FEEDBACK_ENABLED !== "true" ||
     !process.env.FEEDBACK_RETENTION_CRON_CONFIRMED_AT
@@ -84,11 +100,22 @@ export async function POST(request: Request): Promise<NextResponse> {
   }
 
   // Durable, forgery-resistant rate limit keyed on the hashed trusted client IP.
-  const allowed = await consumeRateLimit({
-    key: await hashedClientRateLimitKey("feedback", request),
-    windowSeconds: RATE_LIMIT_WINDOW_SECONDS,
-    max: RATE_LIMIT_MAX,
-  });
+  let allowed: boolean;
+  try {
+    allowed = await consumeRateLimit({
+      key: await hashedClientRateLimitKey("feedback", request),
+      windowSeconds: RATE_LIMIT_WINDOW_SECONDS,
+      max: RATE_LIMIT_MAX,
+    });
+  } catch (rateLimitError) {
+    reportApiError({
+      route: "/api/feedback",
+      step: "rate-limit",
+      error: rateLimitError,
+      request,
+    });
+    return jsonError("rate_limit_unavailable", 503);
+  }
   if (!allowed) {
     return jsonError("rate_limit_exceeded", 429);
   }
@@ -113,25 +140,54 @@ export async function POST(request: Request): Promise<NextResponse> {
   // Fail closed until the fixed-retention migration is present. The live Cron
   // job remains the hard maximum-retention mechanism; this call also prunes
   // opportunistically before every accepted write.
-  const { error: retentionError } = await supabase.rpc("prune_beta_feedback");
+  let retentionError: unknown;
+  try {
+    ({ error: retentionError } = await supabase.rpc("prune_beta_feedback"));
+  } catch (error) {
+    reportApiError({
+      route: "/api/feedback",
+      step: "retention-prune",
+      error,
+      request,
+    });
+    return jsonError("retention_policy_unavailable", 503);
+  }
   if (retentionError) {
-    console.error(
-      "[api/feedback] retention policy unavailable:",
-      retentionError.message,
-    );
+    reportApiError({
+      route: "/api/feedback",
+      step: "retention-prune",
+      error: retentionError,
+      request,
+    });
     return jsonError("retention_policy_unavailable", 503);
   }
 
   // The browser-facing Supabase key has no table access. All writes pass
   // through this route and its validation/rate-limit boundary.
-  const { error } = await supabase.from("beta_feedback").insert({
-    category,
-    message,
-    context_url: contextUrl ?? null,
-  });
+  let error: unknown;
+  try {
+    ({ error } = await supabase.from("beta_feedback").insert({
+      category,
+      message,
+      context_url: contextUrl ?? null,
+    }));
+  } catch (insertError) {
+    reportApiError({
+      route: "/api/feedback",
+      step: "supabase-insert",
+      error: insertError,
+      request,
+    });
+    return jsonError("db_error", 500);
+  }
 
   if (error) {
-    console.error("[api/feedback] insert error:", error.message);
+    reportApiError({
+      route: "/api/feedback",
+      step: "supabase-insert",
+      error,
+      request,
+    });
     return jsonError("db_error", 500);
   }
 

@@ -6,8 +6,9 @@ import { test, expect } from "@playwright/test";
  * The reader — /kurs overview and every /kurs/[blockId] lesson page — now
  * requires login (exception to policy D1 — see src/lib/crawl/contract.ts
  * PROTECTED_PATHS). An anonymous visitor is redirected by src/middleware.ts
- * to /login?next=<path>&reason=kurs-login before ever reaching the reader
- * shell, so these tests assert that redirect. The reader-content and
+ * to /login?next=<path>&reason=auth-not-configured in the provider-free
+ * suite before ever reaching the reader shell, so these tests assert that
+ * explicit fallback. The reader-content and
  * mobile-overflow coverage this file used to carry only applies to a logged-in
  * session; see tests/e2e/authenticated-routes.authed.spec.ts for the
  * authenticated-session test tier.
@@ -24,7 +25,7 @@ test.describe("/ki-und-gesellschaft/kurs reader (login-gated)", () => {
     const url = new URL(page.url());
     expect(url.pathname, `${KURS} must redirect to /login`).toBe("/login");
     expect(url.searchParams.get("next")).toBe(KURS);
-    expect(url.searchParams.get("reason")).toBe("kurs-login");
+    expect(url.searchParams.get("reason")).toBe("auth-not-configured");
   });
 
   test("anonymous request to a block route gets a 307 to /login", async ({
@@ -38,6 +39,6 @@ test.describe("/ki-und-gesellschaft/kurs reader (login-gated)", () => {
     const redirectUrl = new URL(location ?? "", "http://localhost");
     expect(redirectUrl.pathname).toBe("/login");
     expect(redirectUrl.searchParams.get("next")).toBe(BLOCK);
-    expect(redirectUrl.searchParams.get("reason")).toBe("kurs-login");
+    expect(redirectUrl.searchParams.get("reason")).toBe("auth-not-configured");
   });
 });

@@ -1,15 +1,14 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { books } from "@/lib/books";
 import { getRuntimeFeatures } from "@/lib/runtime-features";
+import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPublicPageMetadata({
   title: "Bekannte Grenzen",
   description:
     "Offene Dokumentation der bekannten Einschränkungen dieser Lernplattform: Zertifikate, Praxisbeispiele, Inhaltsaktualität und lokale Datenspeicherung.",
-  alternates: { canonical: "/bekannte-grenzen" },
-  robots: { index: true, follow: true },
-};
+  path: "/bekannte-grenzen",
+});
 
 type Limitation = {
   readonly id: string;
@@ -127,7 +126,16 @@ export default function BekanntGrenzenPage() {
                 .
               </>
             ) : (
-              <>Bitte melde sie per E-Mail an tim@loehrning.ai.</>
+              <>
+                Bitte melde sie per E-Mail an{" "}
+                <a
+                  href="mailto:tim@loehrning.ai"
+                  className="underline underline-offset-2 hover:text-foreground"
+                >
+                  tim@loehrning.ai
+                </a>
+                .
+              </>
             )}{" "}
             Geprüfte Einschränkungen werden auf dieser Seite dokumentiert.
           </p>

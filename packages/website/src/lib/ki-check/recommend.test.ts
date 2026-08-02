@@ -73,7 +73,7 @@ describe("recommend", () => {
     expect(rec.focusDimensionId).not.toBe("grundlagen");
   });
 
-  it("carries a badge, an icon name and a kupfer accent for the Zertifikatskurs", () => {
+  it("carries a badge, an icon name and a kupfer accent for the core course", () => {
     const rec = recommendFor({}, 1);
     expect(rec.badge.length).toBeGreaterThan(0);
     expect(rec.iconName.length).toBeGreaterThan(0);

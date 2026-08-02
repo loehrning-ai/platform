@@ -2,9 +2,13 @@ import { NextResponse } from "next/server";
 
 import { tryGetAnthropicClient } from "@/lib/anthropic";
 import { reportApiError } from "@/lib/observability/api-error";
-import { readBoundedJson } from "@/lib/http/read-json-body";
+import {
+  hasJsonContentType,
+  readBoundedJson,
+} from "@/lib/http/read-json-body";
 import {
   consumeRateLimit,
+  hashedAuthenticatedRateLimitKey,
   hashedClientRateLimitKey,
 } from "@/lib/security/rate-limit";
 import { getAuthenticatedUser } from "@/lib/supabase/auth-server";
@@ -38,6 +42,13 @@ function jsonResponse(body: GradeResponse | GradeError, status = 200): NextRespo
 export async function POST(req: Request): Promise<Response> {
   const start = Date.now();
 
+  if (!hasJsonContentType(req)) {
+    return jsonResponse(
+      { error: "Nicht unterstützter Medientyp." } satisfies GradeError,
+      415,
+    );
+  }
+
   // The shared validated Anthropic feature flag is off by default. Return a
   // rule-based fallback without sending learner text to a provider.
   if (!isGradeEnabled()) {
@@ -51,22 +62,57 @@ export async function POST(req: Request): Promise<Response> {
   // This keeps the educational open-access intent while closing unmetered burn.
   // Grading does not require auth, so a Supabase Auth outage must not block
   // anonymous learners: report it and fall back to the stricter tier.
-  const { user, error: authError } = await getAuthenticatedUser();
+  let auth;
+  try {
+    auth = await getAuthenticatedUser();
+  } catch (error) {
+    auth = { configured: true, user: null, error };
+  }
+  const { user, error: authError } = auth;
   if (authError) {
     reportApiError({ request: req, step: "auth-get-user", error: authError });
   }
   const isAuthenticated = Boolean(user) && !authError;
-  const trustedIpScope = await hashedClientRateLimitKey(
-    "ai-native-grade",
-    req,
-  );
 
-  const withinLimit = await consumeRateLimit({
-    key: trustedIpScope,
-    windowSeconds: 3600,
-    max: isAuthenticated ? 20 : 5,
-  });
-  if (!withinLimit) {
+  let trustedIpScope: string;
+  let withinUserLimit: boolean;
+  let withinIpLimit: boolean;
+  try {
+    trustedIpScope = await hashedClientRateLimitKey(
+      "ai-native-grade",
+      req,
+    );
+    withinUserLimit =
+      isAuthenticated && user
+        ? await consumeRateLimit({
+            key: await hashedAuthenticatedRateLimitKey(
+              "ai-native-grade",
+              req,
+              user.id,
+            ),
+            windowSeconds: 3600,
+            max: 20,
+          })
+        : true;
+    withinIpLimit = withinUserLimit
+      ? await consumeRateLimit({
+          key: trustedIpScope,
+          windowSeconds: 3600,
+          max: isAuthenticated ? 100 : 5,
+        })
+      : false;
+  } catch (rateLimitError) {
+    reportApiError({
+      request: req,
+      step: "rate-limit",
+      error: rateLimitError,
+    });
+    return jsonResponse(
+      { error: "Anfragelimit ist vorübergehend nicht verfügbar." } satisfies GradeError,
+      503,
+    );
+  }
+  if (!withinUserLimit || !withinIpLimit) {
     return jsonResponse(
       {
         error: "Zu viele Anfragen. Versuch's in einer Stunde erneut.",
@@ -75,7 +121,20 @@ export async function POST(req: Request): Promise<Response> {
     );
   }
 
-  const body = await readBoundedJson(req, MAX_BODY_BYTES);
+  let body;
+  try {
+    body = await readBoundedJson(req, MAX_BODY_BYTES);
+  } catch (error) {
+    reportApiError({
+      request: req,
+      step: "unhandled",
+      error,
+    });
+    return jsonResponse(
+      { error: "AI-Bewertung fehlgeschlagen." } satisfies GradeError,
+      500,
+    );
+  }
   if (!body.ok && body.error === "body_too_large") {
     return jsonResponse(
       { error: "Anfrage zu groß." } satisfies GradeError,
@@ -98,11 +157,25 @@ export async function POST(req: Request): Promise<Response> {
   }
   const { kind, lessonId, exerciseId, userInput } = parsed.data;
 
-  const canonical = await resolveCanonicalExercise(
-    kind as "exercise-fix-prompt" | "exercise-rctfc-checklist" | "exercise-free-response",
-    lessonId,
-    exerciseId,
-  );
+  let canonical;
+  try {
+    canonical = await resolveCanonicalExercise(
+      kind as "exercise-fix-prompt" | "exercise-rctfc-checklist" | "exercise-free-response",
+      lessonId,
+      exerciseId,
+    );
+  } catch (error) {
+    reportApiError({
+      request: req,
+      step: "unhandled",
+      error,
+      extra: { kind },
+    });
+    return jsonResponse(
+      { error: "AI-Bewertung fehlgeschlagen." } satisfies GradeError,
+      500,
+    );
+  }
   if (!canonical) {
     return jsonResponse(
       { error: "Unbekannte Aufgabe." } satisfies GradeError,
@@ -111,18 +184,32 @@ export async function POST(req: Request): Promise<Response> {
   }
   const { scenario, rubric, rubricIds } = canonical;
 
-  const cacheKey = await hashRequest(
-    isAuthenticated && user ? `user:${user.id}` : trustedIpScope,
-    kind,
-    lessonId,
-    exerciseId,
-    scenario,
-    rubric,
-    userInput,
-  );
+  let cacheKey: string;
+  try {
+    cacheKey = await hashRequest(
+      isAuthenticated && user ? `user:${user.id}` : trustedIpScope,
+      kind,
+      lessonId,
+      exerciseId,
+      scenario,
+      rubric,
+      userInput,
+    );
+  } catch (error) {
+    reportApiError({
+      request: req,
+      step: "unhandled",
+      error,
+      extra: { kind },
+    });
+    return jsonResponse(
+      { error: "AI-Bewertung fehlgeschlagen." } satisfies GradeError,
+      500,
+    );
+  }
   const cached = readCache(cacheKey);
   if (cached) {
-    return jsonResponse({ ...cached, cached: false });
+    return jsonResponse({ ...cached, cached: true });
   }
 
   const anthropic = tryGetAnthropicClient();
@@ -133,9 +220,9 @@ export async function POST(req: Request): Promise<Response> {
     );
   }
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15_000);
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15_000);
 
     const { grade, usage } = await callHaiku({
       anthropic,
@@ -146,8 +233,6 @@ export async function POST(req: Request): Promise<Response> {
       userInput,
       signal: controller.signal,
     });
-
-    clearTimeout(timeout);
 
     const result: GradeResponse = { ...grade, cached: false };
     writeCache(cacheKey, result);
@@ -181,5 +266,7 @@ export async function POST(req: Request): Promise<Response> {
       { error: "AI-Bewertung fehlgeschlagen." } satisfies GradeError,
       500,
     );
+  } finally {
+    clearTimeout(timeout);
   }
 }

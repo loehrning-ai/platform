@@ -10,15 +10,23 @@ const mockGetAuthenticatedUser = vi.fn<
   configured: true,
   user: { id: "user-1" },
 }));
-const mockHashedClientRateLimitKey = vi.fn(async () =>
-  `ai-native-grade:sha256:${"a".repeat(64)}`,
-);
-const mockConsumeRateLimit = vi.fn(async () => true);
+const mockHashedClientRateLimitKey = vi.fn<
+  (namespace: string, request: Request) => Promise<string>
+>(async () => `ai-native-grade:ip-hmac-sha256-v1:${"a".repeat(64)}`);
+const mockHashedAuthenticatedRateLimitKey = vi.fn<
+  (namespace: string, request: Request, userId: string) => Promise<string>
+>(async () => `ai-native-grade:user-hmac-sha256-v1:${"c".repeat(64)}`);
+const mockConsumeRateLimit = vi.fn<
+  (args: unknown) => Promise<boolean>
+>(async () => true);
+const mockReportApiError = vi.fn<(...args: unknown[]) => void>();
+const mockResolveCanonicalExercise = vi.fn();
+const mockTryGetAnthropicClient = vi.fn(() => ({
+  messages: { create: mockCreate },
+}));
 
 vi.mock("@/lib/anthropic", () => ({
-  tryGetAnthropicClient: () => ({
-    messages: { create: mockCreate },
-  }),
+  tryGetAnthropicClient: () => mockTryGetAnthropicClient(),
 }));
 
 vi.mock("@/lib/supabase/auth-server", () => ({
@@ -29,17 +37,21 @@ vi.mock("@/lib/security/rate-limit", () => ({
   consumeRateLimit: (args: unknown) => mockConsumeRateLimit(args),
   hashedClientRateLimitKey: (namespace: string, req: Request) =>
     mockHashedClientRateLimitKey(namespace, req),
+  hashedAuthenticatedRateLimitKey: (
+    namespace: string,
+    req: Request,
+    userId: string,
+  ) => mockHashedAuthenticatedRateLimitKey(namespace, req, userId),
+  isRateLimitUnavailableError: (error: unknown) =>
+    (error as { code?: string })?.code === "RATE_LIMIT_UNAVAILABLE",
+}));
+vi.mock("@/lib/observability/api-error", () => ({
+  reportApiError: (...args: unknown[]) => mockReportApiError(...args),
 }));
 
 vi.mock("./canonical-exercise", () => ({
-  resolveCanonicalExercise: vi.fn(async () => ({
-    kind: "exercise-fix-prompt",
-    lessonId: "modul_1_lesson_1",
-    exerciseId: "modul_1_lesson_1_ex_1",
-    scenario: "Verbessere den Prompt.",
-    rubric: [{ id: "criterion", label: "Kriterium", pattern: "Kriterium" }],
-    rubricIds: ["criterion"],
-  })),
+  resolveCanonicalExercise: (...args: unknown[]) =>
+    mockResolveCanonicalExercise(...args),
 }));
 
 import { __resetEngineState } from "./engine";
@@ -51,6 +63,11 @@ const VALID_REQUEST = {
   exerciseId: "modul_1_lesson_1_ex_1",
   userInput: "Mein verbesserter Prompt.",
 };
+const NON_JSON_MEDIA_TYPES = [
+  ["missing", undefined],
+  ["unsupported", "text/plain"],
+  ["JSON lookalike", "application/jsonp"],
+] as const;
 
 function makeReq(): Request {
   return new Request("http://localhost/api/ai-native/grade-exercise", {
@@ -98,6 +115,7 @@ describe("POST /api/ai-native/grade-exercise cache isolation", () => {
   beforeEach(() => {
     __resetEngineState();
     mockCreate.mockReset();
+    mockTryGetAnthropicClient.mockClear();
     mockGetAuthenticatedUser.mockReset();
     mockGetAuthenticatedUser.mockResolvedValue({
       configured: true,
@@ -105,10 +123,21 @@ describe("POST /api/ai-native/grade-exercise cache isolation", () => {
     });
     mockHashedClientRateLimitKey.mockReset();
     mockHashedClientRateLimitKey.mockResolvedValue(
-      `ai-native-grade:sha256:${"a".repeat(64)}`,
+      `ai-native-grade:ip-hmac-sha256-v1:${"a".repeat(64)}`,
     );
+    mockHashedAuthenticatedRateLimitKey.mockClear();
     mockConsumeRateLimit.mockReset();
     mockConsumeRateLimit.mockResolvedValue(true);
+    mockReportApiError.mockReset();
+    mockResolveCanonicalExercise.mockReset();
+    mockResolveCanonicalExercise.mockResolvedValue({
+      kind: "exercise-fix-prompt",
+      lessonId: "modul_1_lesson_1",
+      exerciseId: "modul_1_lesson_1_ex_1",
+      scenario: "Verbessere den Prompt.",
+      rubric: [{ id: "criterion", label: "Kriterium", pattern: "Kriterium" }],
+      rubricIds: ["criterion"],
+    });
     vi.stubEnv("AI_NATIVE_PRACTICE_ENABLED", "true");
     vi.stubEnv("ANTHROPIC_API_KEY", "obviously-fake-test-key");
     vi.stubEnv("ANTHROPIC_DPA_CONFIRMED_AT", "2026-07-01");
@@ -117,13 +146,47 @@ describe("POST /api/ai-native/grade-exercise cache isolation", () => {
     vi.stubEnv("SUPABASE_URL", "https://fake-project.supabase.co");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "fake-public-key");
     vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", "fake-service-key");
+    vi.stubEnv("RATE_LIMIT_HMAC_SECRET", `rlh1_${"a".repeat(64)}`);
   });
 
   afterEach(() => {
+    vi.restoreAllMocks();
     vi.unstubAllEnvs();
   });
 
-  it("scopes authenticated cache entries by user ID without disclosing hits", async () => {
+  it.each(NON_JSON_MEDIA_TYPES)(
+    "returns 415 for a %s media type before auth, quotas, canonical content, or Anthropic",
+    async (_label, contentType) => {
+      const request = new Request(
+        "http://localhost/api/ai-native/grade-exercise",
+        {
+          method: "POST",
+          headers: contentType
+            ? { "Content-Type": contentType }
+            : undefined,
+          body: contentType ? "{}" : new Uint8Array([123, 125]),
+        },
+      );
+      expect(request.headers.get("content-type")).toBe(contentType ?? null);
+      const res = await POST(request);
+
+      expect(res.status).toBe(415);
+      expect(await res.json()).toEqual({
+        error: "Nicht unterstützter Medientyp.",
+      });
+      expectPrivateNoStore(res);
+      expect(mockGetAuthenticatedUser).not.toHaveBeenCalled();
+      expect(mockHashedAuthenticatedRateLimitKey).not.toHaveBeenCalled();
+      expect(mockHashedClientRateLimitKey).not.toHaveBeenCalled();
+      expect(mockConsumeRateLimit).not.toHaveBeenCalled();
+      expect(mockResolveCanonicalExercise).not.toHaveBeenCalled();
+      expect(mockTryGetAnthropicClient).not.toHaveBeenCalled();
+      expect(mockCreate).not.toHaveBeenCalled();
+      expect(mockReportApiError).not.toHaveBeenCalled();
+    },
+  );
+
+  it("scopes authenticated cache entries by user ID and reports hits truthfully", async () => {
     mockCreate
       .mockResolvedValueOnce(gradeBlock("Antwort für Nutzer eins."))
       .mockResolvedValueOnce(gradeBlock("Antwort für Nutzer zwei."));
@@ -155,19 +218,19 @@ describe("POST /api/ai-native/grade-exercise cache isolation", () => {
     expect(await responseBody(third)).toEqual(
       expect.objectContaining({
         summary: "Antwort für Nutzer eins.",
-        cached: false,
+        cached: true,
       }),
     );
     expect(mockCreate).toHaveBeenCalledTimes(2);
   });
 
-  it("scopes anonymous cache entries by trusted-IP digest without disclosing hits", async () => {
+  it("scopes anonymous cache entries by trusted-IP digest and reports hits truthfully", async () => {
     mockGetAuthenticatedUser.mockResolvedValue({
       configured: true,
       user: null,
     });
-    const ipOne = `ai-native-grade:sha256:${"a".repeat(64)}`;
-    const ipTwo = `ai-native-grade:sha256:${"b".repeat(64)}`;
+    const ipOne = `ai-native-grade:ip-hmac-sha256-v1:${"a".repeat(64)}`;
+    const ipTwo = `ai-native-grade:ip-hmac-sha256-v1:${"b".repeat(64)}`;
     mockHashedClientRateLimitKey
       .mockResolvedValueOnce(ipOne)
       .mockResolvedValueOnce(ipTwo)
@@ -196,7 +259,7 @@ describe("POST /api/ai-native/grade-exercise cache isolation", () => {
     expect(await responseBody(third)).toEqual(
       expect.objectContaining({
         summary: "Antwort für IP eins.",
-        cached: false,
+        cached: true,
       }),
     );
     expect(mockCreate).toHaveBeenCalledTimes(2);
@@ -212,5 +275,88 @@ describe("POST /api/ai-native/grade-exercise cache isolation", () => {
       expect.objectContaining({ cached: false }),
     );
     expect(mockCreate).not.toHaveBeenCalled();
+  });
+
+  it("returns 503 when the durable limiter is unavailable", async () => {
+    mockConsumeRateLimit.mockRejectedValueOnce({
+      code: "RATE_LIMIT_UNAVAILABLE",
+    });
+    const res = await POST(makeReq());
+
+    expect(res.status).toBe(503);
+    expectPrivateNoStore(res);
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
+
+  it("falls back to the anonymous tier when the auth helper rejects", async () => {
+    const authError = new Error("auth helper rejected");
+    mockGetAuthenticatedUser.mockRejectedValueOnce(authError);
+    mockCreate.mockResolvedValueOnce(gradeBlock("Anonyme Antwort."));
+
+    const res = await POST(makeReq());
+
+    expect(res.status).toBe(200);
+    expect((await responseBody(res)).summary).toBe("Anonyme Antwort.");
+    expect(mockReportApiError).toHaveBeenCalledTimes(1);
+    expect(mockReportApiError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        step: "auth-get-user",
+        error: authError,
+      }),
+    );
+  });
+
+  it("returns a reported 503 when trusted-client hashing rejects", async () => {
+    const hashError = new Error("trusted-client hash rejected");
+    mockHashedClientRateLimitKey.mockRejectedValueOnce(hashError);
+
+    const res = await POST(makeReq());
+
+    expect(res.status).toBe(503);
+    expect(mockCreate).not.toHaveBeenCalled();
+    expect(mockReportApiError).toHaveBeenCalledTimes(1);
+    expect(mockReportApiError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        step: "rate-limit",
+        error: hashError,
+      }),
+    );
+  });
+
+  it("returns a reported 500 when canonical content loading rejects", async () => {
+    const contentError = new Error("canonical content import rejected");
+    mockResolveCanonicalExercise.mockRejectedValueOnce(contentError);
+
+    const res = await POST(makeReq());
+
+    expect(res.status).toBe(500);
+    expect(mockCreate).not.toHaveBeenCalled();
+    expect(mockReportApiError).toHaveBeenCalledTimes(1);
+    expect(mockReportApiError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        step: "unhandled",
+        error: contentError,
+      }),
+    );
+  });
+
+  it("returns a reported 500 when request hashing rejects", async () => {
+    const hashError = new Error("request hash rejected");
+    const digest = vi
+      .spyOn(globalThis.crypto.subtle, "digest")
+      .mockRejectedValueOnce(hashError);
+
+    const res = await POST(makeReq());
+
+    expect(res.status).toBe(500);
+    expect(mockCreate).not.toHaveBeenCalled();
+    expect(mockReportApiError).toHaveBeenCalledTimes(1);
+    expect(mockReportApiError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        step: "unhandled",
+        error: hashError,
+      }),
+    );
+    digest.mockRestore();
   });
 });

@@ -6,6 +6,7 @@ import type {
   SoftwareArtifactProcedure,
   ToolArtifact,
 } from "@/lib/open-source/artifacts";
+import { CommandCopyButton } from "./command-copy-button";
 import { STATUS_LABELS } from "./status-labels";
 
 function Procedure({
@@ -40,13 +41,20 @@ function Procedure({
                 {step.detail}
               </p>
               {step.command ? (
-                <pre
-                  tabIndex={0}
-                  aria-label={`Befehl für ${step.title}`}
-                  className="mt-3 overflow-x-auto border border-border bg-card p-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
-                >
-                  <code>{step.command}</code>
-                </pre>
+                <div className="mt-3 border border-border bg-card">
+                  <div className="flex justify-end border-b border-border p-1.5">
+                    <CommandCopyButton
+                      command={step.command}
+                      label={`Befehl für ${step.title}`}
+                    />
+                  </div>
+                  <pre
+                    aria-label={`Befehl für ${step.title}`}
+                    className="whitespace-pre-wrap break-words p-3 text-sm"
+                  >
+                    <code>{step.command}</code>
+                  </pre>
+                </div>
               ) : null}
             </div>
           </li>
@@ -272,13 +280,20 @@ export function SoftwareArtifactGuide({
                 {step.detail}
               </p>
               {step.command ? (
-                <pre
-                  tabIndex={0}
-                  aria-label={`Befehl für ${step.title}`}
-                  className="mt-3 overflow-x-auto border border-border bg-card p-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
-                >
-                  <code>{step.command}</code>
-                </pre>
+                <div className="mt-3 border border-border bg-card">
+                  <div className="flex justify-end border-b border-border p-1.5">
+                    <CommandCopyButton
+                      command={step.command}
+                      label={`Befehl für ${step.title}`}
+                    />
+                  </div>
+                  <pre
+                    aria-label={`Befehl für ${step.title}`}
+                    className="whitespace-pre-wrap break-words p-3 text-sm"
+                  >
+                    <code>{step.command}</code>
+                  </pre>
+                </div>
               ) : null}
             </li>
           ))}

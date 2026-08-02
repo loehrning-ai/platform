@@ -1,67 +1,59 @@
-import { describe, it, expect } from "vitest";
-import { dsInter, dsInstrumentSerif, dsJetBrainsMono, DS_FONT_VARIABLES } from "./fonts";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import postcss from "postcss";
+import { describe, expect, it } from "vitest";
+import { DS_FONT_VARIABLES } from "./fonts";
 
-// ─── Self-hosted font matrix ───────────────────────
-// The source loads:
-//   family=Inter:wght@400;500;600;700;800;900
-//   &family=Instrument+Serif:ital@0;1
-//   &family=JetBrains+Mono:wght@400;500;600;700
-// from https://fonts.googleapis.com — this course self-hosts the identical
-// weight/style matrix via next/font/google instead, with zero runtime
-// requests to fonts.googleapis.com/fonts.gstatic.com. next/font/google is
-// aliased to src/test/next-font-google.ts in vitest.config.ts, which echoes
-// back the raw options object so we can assert the exact matrix requested.
+const stylesheet = postcss.parse(
+  readFileSync(join(__dirname, "../../components/data-science/ds-v8-scope.css"), "utf8"),
+);
 
-interface MockFontResult {
-  readonly variable: string;
-  readonly className: string;
-  readonly __mockOptions: {
-    readonly weight?: string | readonly string[];
-    readonly style?: string | readonly string[];
-    readonly subsets?: readonly string[];
-  };
-}
+describe("data-science local fonts", () => {
+  it("uses the local font marker without importing a network font loader", () => {
+    expect(DS_FONT_VARIABLES).toBe("ds-fonts-local");
+  });
 
-describe("data-science self-hosted fonts ", () => {
-  it("requests Inter with the exact source weight matrix (400-900)", () => {
-    const font = dsInter as unknown as MockFontResult;
-    expect(font.__mockOptions.weight).toEqual([
-      "400",
-      "500",
-      "600",
-      "700",
-      "800",
-      "900",
+  it("keeps the four-weight Loehrning Sans family out of the mobile critical path", () => {
+    const mobileFontRules: string[] = [];
+
+    stylesheet.walkAtRules("media", (rule) => {
+      if (rule.params !== "(max-width: 900px)") return;
+      rule.walkRules(".ds-v8-scope", (nestedRule) => {
+        nestedRule.walkDecls("--font-sans", (declaration) => {
+          mobileFontRules.push(declaration.value);
+        });
+      });
+    });
+
+    expect(mobileFontRules).toEqual([
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
     ]);
-    expect(font.__mockOptions.subsets).toEqual(["latin"]);
+    expect(mobileFontRules[0]).not.toContain("var(--font-loehrning)");
   });
 
-  it("requests Instrument Serif with both italic (1) and normal (0) styles", () => {
-    const font = dsInstrumentSerif as unknown as MockFontResult;
-    const style = font.__mockOptions.style;
-    expect(style).toContain("italic");
-    expect(style).toContain("normal");
-  });
+  it("keeps the mobile LCP headline gradient static", () => {
+    const mobileAnimations: string[] = [];
+    let baseRuleIndex = -1;
+    let mobileRuleIndex = -1;
 
-  it("requests JetBrains Mono with the exact source weight matrix (400-700)", () => {
-    const font = dsJetBrainsMono as unknown as MockFontResult;
-    expect(font.__mockOptions.weight).toEqual(["400", "500", "600", "700"]);
-    expect(font.__mockOptions.subsets).toEqual(["latin"]);
-  });
+    stylesheet.nodes.forEach((node, index) => {
+      if (node.type === "rule" && node.selector === ".ds-v8-scope .ov-hero-title .accent") {
+        node.walkDecls("animation", (declaration) => {
+          if (declaration.value.includes("shimmer")) baseRuleIndex = index;
+        });
+      }
+      if (node.type !== "atrule" || node.name !== "media") return;
+      const rule = node;
+      if (rule.params !== "(max-width: 900px)") return;
+      rule.walkRules(".ds-v8-scope .ov-hero-title .accent", (nestedRule) => {
+        nestedRule.walkDecls("animation", (declaration) => {
+          mobileAnimations.push(declaration.value);
+          mobileRuleIndex = index;
+        });
+      });
+    });
 
-  it("every font exposes a CSS variable name for the scoped stylesheet to consume", () => {
-    expect(dsInter.variable).toBeTruthy();
-    expect(dsInstrumentSerif.variable).toBeTruthy();
-    expect(dsJetBrainsMono.variable).toBeTruthy();
-    // Each variable is distinct — no two families collapse onto the same
-    // custom property.
-    const variables = [dsInter.variable, dsInstrumentSerif.variable, dsJetBrainsMono.variable];
-    expect(new Set(variables).size).toBe(3);
-  });
-
-  it("DS_FONT_VARIABLES combines all three variable class names for a single className prop", () => {
-    expect(DS_FONT_VARIABLES).toContain(dsInter.variable);
-    expect(DS_FONT_VARIABLES).toContain(dsInstrumentSerif.variable);
-    expect(DS_FONT_VARIABLES).toContain(dsJetBrainsMono.variable);
+    expect(mobileAnimations).toEqual(["none"]);
+    expect(mobileRuleIndex).toBeGreaterThan(baseRuleIndex);
   });
 });

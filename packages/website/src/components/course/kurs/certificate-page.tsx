@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { m } from "framer-motion";
@@ -10,6 +10,11 @@ import {
   isCapstoneSubmitted,
   getWorkshopQuizResult,
 } from "@/lib/course/progress";
+import { getCourseSlice, subscribe } from "@/lib/progress/store";
+import {
+  getLearningOwnerContext,
+  subscribeLearningOwner,
+} from "@/lib/progress/browser-learning-storage";
 // JSON-free config module (performance hardening): importing from ./data here
 // would pull the full lesson/quiz JSON graph into this client bundle.
 import { getCourseConfig } from "@/lib/course/config";
@@ -28,18 +33,6 @@ interface CertificatePageProps {
 }
 
 type NonQuizMode = Exclude<CertificateCompletionMode, "quiz">;
-
-/** Downloaded-file completion line for the two non-quiz eligibility paths. */
-const TEXT_FALLBACK_COMPLETION_LABEL: Record<"de" | "en", Record<NonQuizMode, string>> = {
-  de: {
-    capstone: "Abschluss: Capstone-Rubrik vollständig",
-    completion: "Abschluss: Alle Lektionen abgeschlossen",
-  },
-  en: {
-    capstone: "Completion: capstone rubric fulfilled",
-    completion: "Completion: all lessons finished",
-  },
-};
 
 /** On-screen preview completion line for the two non-quiz eligibility paths. */
 const PREVIEW_COMPLETION_LABEL: Record<"de" | "en", Record<NonQuizMode, string>> = {
@@ -61,44 +54,97 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
   const [downloaded, setDownloaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const downloadAttemptRef = useRef(0);
   // Derived from localStorage / the client clock — must not run during render
   // (hydration hazard), so it lives in state populated by the effect below.
   const [completion, setCompletion] = useState<{
     quizResult: { passed: boolean; score: number; completedAt: string | null };
     completionMode: CertificateCompletionMode;
     completionDate: string;
+    completedAt: string;
   } | null>(null);
 
   useEffect(() => {
-    // Eligible via one of three paths: workshop quiz passed, (AI-Native) the
-    // capstone rubric submitted, or every catalog lesson completed (
-    // stage 4's generic "completion" fallback).
-    const ok = isCertificateEligible(courseSlug);
-    setEligible(ok);
-    if (!ok) {
-      router.push(config.coursePath);
-      return;
-    }
+    return subscribe(() => {
+      if (getLearningOwnerContext().kind === "unknown") {
+        downloadAttemptRef.current += 1;
+        setEligible(false);
+        setCompletion(null);
+        setLoading(false);
+        return;
+      }
+      // Eligibility is canonical across account, companion and certificate:
+      // every lesson, plus the configured quiz or AI-Native capstone when one
+      // exists.
+      const ok = isCertificateEligible(courseSlug);
+      setEligible(ok);
+      if (!ok) {
+        downloadAttemptRef.current += 1;
+        setCompletion(null);
+        setLoading(false);
+        router.push(config.coursePath);
+        return;
+      }
 
-    const quizResult = getWorkshopQuizResult(courseSlug);
-    const completionMode: CertificateCompletionMode = quizResult.passed
-      ? "quiz"
-      : isCapstoneSubmitted(courseSlug)
-        ? "capstone"
-        : "completion";
-    const completionDate = new Date(
-      quizResult.completedAt ?? Date.now(),
-    ).toLocaleDateString(config.language === "en" ? "en-US" : "de-DE", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
+      const quizResult = getWorkshopQuizResult(courseSlug);
+      const completionMode: CertificateCompletionMode = quizResult.passed
+        ? "quiz"
+        : isCapstoneSubmitted(courseSlug)
+          ? "capstone"
+          : "completion";
+      const completedAt =
+        quizResult.completedAt ?? getCourseSlice(courseSlug).lastActivity;
+      const completionDate = new Date(completedAt).toLocaleDateString(
+        config.language === "en" ? "en-US" : "de-DE",
+        {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        },
+      );
+      setCompletion({
+        quizResult,
+        completionMode,
+        completionDate,
+        completedAt,
+      });
     });
-    setCompletion({ quizResult, completionMode, completionDate });
   }, [router, courseSlug, config.coursePath, config.language]);
 
-  const handleDownload = async () => {
-    if (!completion) return;
-    const { quizResult, completionMode, completionDate } = completion;
+  useEffect(() => {
+    const unsubscribe = subscribeLearningOwner(() => {
+      downloadAttemptRef.current += 1;
+      setCompletion(null);
+      setEligible(false);
+      setName("");
+      setDownloaded(false);
+      setLoading(false);
+      setErrors({});
+    });
+    return () => {
+      downloadAttemptRef.current += 1;
+      unsubscribe();
+    };
+  }, []);
+
+  const handleDownload = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const ownerAtStart = getLearningOwnerContext();
+    if (!completion || ownerAtStart.kind === "unknown") return;
+    const ownerGeneration = ownerAtStart.generation;
+    const attempt = downloadAttemptRef.current + 1;
+    downloadAttemptRef.current = attempt;
+    const attemptIsCurrent = () => {
+      const owner = getLearningOwnerContext();
+      return (
+        downloadAttemptRef.current === attempt &&
+        owner.kind !== "unknown" &&
+        owner.generation === ownerGeneration
+      );
+    };
+    const { quizResult, completionMode, completionDate, completedAt } =
+      completion;
     // Validate with Zod
     const result = certificateFormSchema.safeParse({ name });
     if (!result.success) {
@@ -110,6 +156,7 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
         }
       }
       setErrors(fieldErrors);
+      nameInputRef.current?.focus();
       return;
     }
     setErrors({});
@@ -120,16 +167,18 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
     try {
       // Dynamic import to keep jsPDF out of the main bundle
       const { generateCertificatePdf } = await import("@/lib/pdf/certificate-pdf");
+      if (!attemptIsCurrent()) return;
       const blob = await generateCertificatePdf(
         {
           name: name.trim(),
           score: completionMode === "quiz" ? quizResult.score : null,
           completionMode,
           completionDate,
-          completedAt: quizResult.completedAt ?? new Date().toISOString(),
+          completedAt,
         },
         config,
       );
+      if (!attemptIsCurrent()) return;
 
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -141,32 +190,15 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
       window.setTimeout(() => URL.revokeObjectURL(url), 1000);
       setDownloaded(true);
     } catch {
-      // Fallback to text certificate if PDF generation fails
-      const certText = [
-        `${config.certificateTitle.toUpperCase()}: ${config.certificateSubtitle}`,
-        "",
-        `Name: ${name.trim()}`,
-        `${config.language === "en" ? "Date" : "Datum"}: ${completionDate}`,
-        completionMode === "quiz"
-          ? config.language === "en"
-            ? `Score: ${Math.round(quizResult.score * 100)}% (passed)`
-            : `Ergebnis: ${Math.round(quizResult.score * 100)}% (bestanden)`
-          : TEXT_FALLBACK_COMPLETION_LABEL[config.language][completionMode],
-        "",
-        "loehrning.ai | Tim Löhr",
-      ].join("\n");
-      const blob = new Blob([certText], { type: "text/plain;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${fileBase}.txt`;
-      a.click();
-      // Defer revocation: revoking synchronously after click() can race the
-      // download in Firefox and cancel it.
-      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-      setDownloaded(true);
+      if (!attemptIsCurrent()) return;
+      setErrors({
+        download:
+          config.language === "en"
+            ? "The PDF could not be generated. No certificate was downloaded. Retry in a current browser."
+            : "Die PDF konnte nicht erzeugt werden. Es wurde keine Bescheinigung heruntergeladen. Versuche es erneut in einem aktuellen Browser.",
+      });
     } finally {
-      setLoading(false);
+      if (downloadAttemptRef.current === attempt) setLoading(false);
     }
   };
 
@@ -227,12 +259,15 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
                 : "Trag deinen Namen ein. Die PDF wird lokal in deinem Browser aus deinem Lernstand erstellt, sie wird nicht serverseitig ausgestellt."}
             </p>
 
-            <div className="space-y-3">
+            <form className="space-y-3" onSubmit={handleDownload}>
               <div>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <User aria-hidden="true" className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <input
+                    ref={nameInputRef}
                     type="text"
+                    name="name"
+                    autoComplete="name"
                     aria-label={config.language === "en" ? "Full name" : "Vor- und Nachname"}
                     placeholder={config.language === "en" ? "Full name" : "Vor- und Nachname"}
                     value={name}
@@ -242,28 +277,41 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
                     className={`w-full border bg-card py-3 pl-10 pr-4 text-sm text-foreground placeholder:text-muted focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange ${errors.name ? "border-destructive" : "border-border"}`}
                   />
                 </div>
-                {errors.name && <p id="error-name" className="mt-1 text-xs text-destructive">{errors.name}</p>}
+                {errors.name && (
+                  <p
+                    id="error-name"
+                    role="alert"
+                    className="mt-1 text-xs text-destructive"
+                  >
+                    {errors.name}
+                  </p>
+                )}
               </div>
-            </div>
 
-            <button
-              type="button"
-              onClick={handleDownload}
-              disabled={loading}
-              aria-busy={loading}
-              className={`inline-flex items-center gap-2 border-2 border-foreground px-7 py-3.5 text-sm font-bold uppercase tracking-wide shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] ${
-                !loading
-                  ? "bg-brand-orange text-white hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
-                  : "cursor-not-allowed bg-border text-muted-foreground shadow-none"
-              }`}
-            >
-              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-              {loading
-                ? config.language === "en" ? "Generating…" : "Wird generiert…"
-                : config.language === "en"
-                  ? `Download ${config.recordNoun.label}`
-                  : `${config.recordNoun.label} herunterladen`}
-            </button>
+              <button
+                type="submit"
+                disabled={loading}
+                aria-busy={loading}
+                className={`inline-flex items-center gap-2 border-2 border-foreground px-7 py-3.5 text-sm font-bold uppercase tracking-wide shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] ${
+                  !loading
+                    ? "bg-brand-orange text-white hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
+                    : "cursor-not-allowed bg-border text-muted-foreground shadow-none"
+                }`}
+              >
+                {loading ? <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" /> : <Download aria-hidden="true" className="h-4 w-4" />}
+                {loading
+                  ? config.language === "en" ? "Generating…" : "Wird generiert…"
+                  : config.language === "en"
+                    ? `Download ${config.recordNoun.label}`
+                    : `${config.recordNoun.label} herunterladen`}
+              </button>
+            </form>
+
+            {errors.download && (
+              <p role="alert" className="text-sm text-destructive">
+                {errors.download}
+              </p>
+            )}
 
             {downloaded && (
               <m.p

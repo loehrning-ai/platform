@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { getRuntimeFeatures } from "@/lib/runtime-features";
 import { JsonLd, ORG_ID, SITE_URL, WEBSITE_ID } from "@/lib/seo/json-ld";
+import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPublicPageMetadata({
   title: "Über die Plattform",
   description:
-    "Betriebsmodell von loehrning.ai: kostenlose Lerninhalte, öffentlicher Crawl-Bereich, private Kontostände, Quellenpolitik, Grenzen und Feedback.",
-  alternates: { canonical: "/ueber-die-plattform" },
-  robots: { index: true, follow: true },
-};
+    "Betriebsmodell von loehrning.ai: öffentliche Ressourcen und technische Kursreader, kontogeschützter deutscher Lernpfad, Quellenpolitik, Grenzen und Feedback.",
+  path: "/ueber-die-plattform",
+});
 
 const PLATFORM_GRAPH = {
   "@context": "https://schema.org" as const,
@@ -36,34 +36,39 @@ const PLATFORM_GRAPH = {
   ],
 };
 
-const sections = [
-  {
-    title: "Warum kostenlos",
-    body: "KI-Kompetenz wird zur Grundfähigkeit. Die Plattform soll diese Grundfähigkeit öffentlich erklären: ohne Paywall, ohne Buchungsfunnel, ohne versteckte Premiumstufe.",
-  },
-  {
-    title: "Was öffentlich ist",
-    body: "Kurse, Kursreader, Bücher, Demos, Blog, bekannte Grenzen, Open-Source-Hub und maschinenlesbare Metadaten sind öffentlich zugänglich. Manche Utility-Seiten sind crawlbar, aber bewusst noindex.",
-  },
-  {
-    title: "Was ein Konto speichert",
-    body: "Ein Konto ist optional. Es speichert Fortschritt, Quizstatus, Zertifikatsstatus und Datenschutzaktionen. Es ist kein Zugangstor für Grundinhalte.",
-  },
-  {
-    title: "Quellen und Aktualisierung",
-    body: "Rechtliche und faktische Inhalte werden mit Quellen, Prüfdatum und Grenzen geführt. Aktualisierungen erscheinen im Changelog und wesentliche Fehler werden sichtbar korrigiert.",
-  },
-  {
-    title: "Feedback",
-    body: "Rückmeldungen werden ohne Name oder E-Mail gespeichert. Die optionale Kontext-URL hilft bei der Einordnung. IP-Adressen werden nur indirekt als Rate-Limit-Schlüssel genutzt.",
-  },
-  {
-    title: "Zertifikate",
-    body: "Teilnahmebestätigungen sind selbst ausgestellte, lokale Lernnachweise. Sie sind nicht amtlich, nicht akkreditiert und kein rechtlicher Compliance-Nachweis.",
-  },
-] as const;
-
 export default function UeberDiePlattformPage() {
+  const { account, feedback } = getRuntimeFeatures();
+  const sections = [
+    {
+      title: "Warum kostenlos",
+      body: "KI-Kompetenz wird zur Grundfähigkeit. Die Plattform soll diese Grundfähigkeit ohne Paywall, Buchungsfunnel oder versteckte Premiumstufe erklären.",
+    },
+    {
+      title: "Was öffentlich ist",
+      body: "Öffentlich und ohne Konto erreichbar sind die Start- und Kurs-Landingpages, KI-Check, Bücher, Demos, Blog, Workshops, Open-Source-Hub, bekannte Grenzen, maschinenlesbare Metadaten und die sechs technischen Kursreader auf Englisch.",
+    },
+    {
+      title: "Wo ein Konto erforderlich ist",
+      body: account
+        ? "Die Reader der vier deutschen Kernkurse KI-Führerschein, KI und Gesellschaft, EU AI Act Kurs und AI-Native Arbeitskurs erfordern ein kostenloses Lernkonto. Es synchronisiert Fortschritt, Quizstatus und Datenschutzaktionen."
+        : "Die Reader der vier deutschen Kernkurse KI-Führerschein, KI und Gesellschaft, EU AI Act Kurs und AI-Native Arbeitskurs erfordern ein kostenloses Lernkonto. Diese Kontofunktion ist in dieser Version deaktiviert; die öffentlichen Landingpages, Ressourcen und technischen Kursreader bleiben erreichbar.",
+    },
+    {
+      title: "Quellen und Aktualisierung",
+      body: "Rechtliche und faktische Inhalte werden mit Quellen, Prüfdatum und Grenzen geführt. Aktualisierungen erscheinen im Changelog und wesentliche Fehler werden sichtbar korrigiert.",
+    },
+    {
+      title: "Feedback",
+      body: feedback
+        ? "Das Feedback-Formular fragt weder Name noch E-Mail-Adresse als eigene Felder ab. Die optionale Kontext-URL hilft bei der Einordnung; IP-Adressen werden nur indirekt als Rate-Limit-Schlüssel genutzt."
+        : "Das serverseitige Feedback-Formular ist in dieser Version deaktiviert. Korrekturen und Rückmeldungen sind weiterhin per E-Mail möglich.",
+    },
+    {
+      title: "Teilnahmebestätigungen und Lernnachweise",
+      body: "Teilnahmebestätigungen, Lernnachweise und die englisch bezeichneten Certificates sind selbst ausgestellte, lokale Abschlussdokumente. Sie sind nicht amtlich, nicht akkreditiert und kein rechtlicher Compliance-Nachweis.",
+    },
+  ] as const;
+
   return (
     <>
       <JsonLd data={PLATFORM_GRAPH} id="plattform-jsonld" />
@@ -102,9 +107,24 @@ export default function UeberDiePlattformPage() {
             <Link href="/open-source" className="group text-sm font-semibold text-foreground">
               Open-Source-Hub <span className="text-brand-orange group-hover:underline">öffnen</span>
             </Link>
-            <Link href="/feedback" className="group text-sm font-semibold text-foreground">
-              Korrektur melden <span className="text-brand-orange group-hover:underline">per Feedback</span>
-            </Link>
+            {feedback ? (
+              <Link href="/feedback" className="group text-sm font-semibold text-foreground">
+                Korrektur melden{" "}
+                <span className="text-brand-orange group-hover:underline">
+                  per Feedback
+                </span>
+              </Link>
+            ) : (
+              <a
+                href="mailto:tim@loehrning.ai"
+                className="group text-sm font-semibold text-foreground"
+              >
+                Korrektur melden{" "}
+                <span className="text-brand-orange group-hover:underline">
+                  per E-Mail
+                </span>
+              </a>
+            )}
           </div>
         </div>
       </section>

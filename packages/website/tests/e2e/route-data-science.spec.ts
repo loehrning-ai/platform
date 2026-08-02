@@ -8,19 +8,14 @@ import { test, expect, type Page } from "@playwright/test";
  *   - the landing route (src/app/kurse/open-source/data-science/page.tsx)
  *     IS the ported Overview chapter itself (Hero + FlowingPipeline +
  *     curriculum grid), not a from-scratch marketing splash and not a
- *     grid of real chapter routes' <a href> links — the Overview's
- *     curriculum cards and "Begin" CTA are <button onClick> elements that
- * call router.push client-side ('s ported
- *     `goTo`-replacement pattern), so this spec drives navigation via a
- *     role-based button click, not an `a[href]` locator.
+ *     grid of real chapter routes' links. The ported curriculum controls
+ *     and "Begin" CTA use semantic anchors for real course routes, so this
+ *     spec verifies navigation through the public link contract.
  *   - "home" is never a [chapterSlug] route entry (Done Criteria: no home
  *     route collision) — the first real chapter route is "/fund".
- *   - no checkpoint/quiz leg: grepping the pinned source's chapter files
- *     for a quiz component returns nothing. This course's completion
- *     criterion is literally "all 12 numbered chapters visited"
- * (MarkChapterVisited, ) — so the "chapter" leg below
- *     asserts that mounting a chapter route marks it completed in the
- *     unified progress store, not a quiz-answer interaction.
+ *   - no checkpoint/quiz leg: the learner explicitly marks each numbered
+ *     chapter complete after reading it. The chapter leg verifies that action
+ *     writes the canonical completion record; route entry alone does not.
  *   - the certificate/QR-verify seeds "all 12 numbered chapters completed"
  *     with m: "completion", s: null, exactly like codex/data-infrastructure/
  *     data-engineering-fundamentals's own no-quiz "completion" eligibility
@@ -110,23 +105,23 @@ test.describe("Data Science Fundamentals golden path", () => {
     await expect(page).not.toHaveURL(/\/login/);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
-    const beginButton = page.getByRole("button", { name: /Begin/ }).first();
-    await expect(beginButton).toBeVisible();
-    await beginButton.click();
+    const beginLink = page.getByRole("link", { name: /Begin/ }).first();
+    await expect(beginLink).toBeVisible();
+    await beginLink.click();
     await expect(page).toHaveURL(new RegExp(`${CHAPTER_ROUTE}$`));
     await expect(page.locator("h1")).toHaveCount(1);
   });
 
-  test("chapter: visiting a chapter route marks it completed in the unified progress store", async ({
+  test("chapter: explicit confirmation marks it completed in the unified progress store", async ({
     page,
   }) => {
     const res = await page.goto(CHAPTER_ROUTE, { waitUntil: "domcontentloaded" });
     expect(res?.status()).toBe(200);
     await expect(page.locator("h1")).toHaveCount(1);
 
-    // MarkChapterVisited's mount effect — no quiz
-    // interaction exists for this course, the route visit itself is the
-    // completion signal.
+    await page
+      .getByRole("button", { name: "Mark chapter complete" })
+      .click();
     await expect
       .poll(async () =>
         page.evaluate((key) => {
@@ -151,6 +146,17 @@ test.describe("Data Science Fundamentals golden path", () => {
     expect(res?.status()).toBe(200);
     await expect(page).not.toHaveURL(/\/login/);
     await expect(page.locator("h1").first()).toBeVisible();
+
+    const name = page.getByRole("textbox", { name: "Full name" });
+    await page
+      .getByRole("button", { name: "Download Certificate of Completion" })
+      .click();
+    await expect(name).toBeFocused();
+    await expect(name).toHaveAttribute("aria-invalid", "true");
+    await expect(name).toHaveAttribute("aria-describedby", "error-name");
+    const nameError = page.locator("#error-name");
+    await expect(nameError).toBeVisible();
+    await expect(nameError).toHaveAttribute("role", "alert");
   });
 
   test("QR verify: a real completion-mode certificate payload round-trips through the verification page", async ({

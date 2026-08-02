@@ -1,48 +1,25 @@
 # Performance Budgets
 
-`lighthouserc.json` at the repository root is the repeatable local Lighthouse
-budget configuration for this package. It is not part of the blocking GitHub
-Actions workflow yet; browser E2E and structural accessibility checks remain
-the automated browser gates.
+`lighthouserc.json` at the repository root is the repeatable Lighthouse budget
+configuration for this package. GitHub Actions runs a five-route, one-run smoke
+against the already verified production build. `bun run verify:release`
+enforces the full 35-route, three-run measurement against that release build.
 
 ## Routes audited (`collect.url`)
 
-`numberOfRuns: 3` (LHCI takes the median of 3 runs per URL). The server starts
-via `next start`, matched on `startServerReadyPattern: "Ready in"` (Next 15's
-actual ready line - the prior `"Ready on"` pattern never matched, so every run
-silently ate the 120s `startServerReadyTimeout`).
+`numberOfRuns: 3` with `aggregationMethod: "pessimistic"` (LHCI evaluates the
+least favorable result of the three runs per URL). The server starts through
+the provider-free wrapper and `next start`, matched on
+`startServerReadyPattern: "Ready in"`.
 
-| Route | Represents |
-|---|---|
-| `/` | Homepage |
-| `/einstieg` | Learning entry point |
-| `/wie-ki-funktioniert` | Public foundational explainer |
-| `/ki-check` | Public self-assessment |
-| `/kurse` | Course hub |
-| `/ki-fuehrerschein` | Free course landing page |
-| `/ki-und-gesellschaft` | Society course landing page |
-| `/eu-ai-act-kurs` | Free course landing page |
-| `/ai-native` | Free course landing page |
-| `/kurse/open-source/data-engineering-fundamentals` | Imported course detail |
-| `/buecher` | Book library |
-| `/buecher/ki-arbeitsalltag/02_persoenliches_profil` | Book chapter reader (representative reading page) |
-| `/demos` | Demo catalog |
-| `/demos/prompt-scanner` | Interactive demo detail |
-| `/vorlagen` | Template catalog |
-| `/blog` | Editorial catalog |
-| `/open-source` | Open-source artifact hub |
-| `/impressum` | Legal page, minimal-JS floor |
-
-## Budgets (`collect.settings.budgets`, path `/*`)
-
-Standard Lighthouse `budget.json` shape, embedded directly in the config
-instead of a separate file (LHCI accepts both forms):
-
-| Resource | Budget |
-|---|---|
-| Script transfer | 400 kB |
-| Total transfer | 1600 kB |
-| Third-party requests | 12 |
+The `collect.url` array in the root `lighthouserc.json` is the only route
+inventory. It covers every static, public, indexable page plus at least one
+published representative for every dynamic public route pattern. This includes
+the homepage and learning entry points, course and book readers, editorial and
+open-source pages, interactive demos, informational pages, and legal pages.
+`bun run lighthouse:check` fails on missing, duplicate, stale, non-canonical,
+or non-indexable entries. The documentation deliberately does not copy the
+route list, preventing a second inventory from drifting.
 
 ## Assertions (`assert.assertions`)
 
@@ -50,34 +27,43 @@ What `lhci assert` passes or fails when the local Lighthouse command runs:
 
 | Assertion | Threshold | Severity |
 |---|---|---|
-| `categories:accessibility` | >= 0.95 | **error, blocks** |
-| `categories:performance` | >= 0.8 | warn |
+| `categories:accessibility` | 1.00 | **error, blocks** |
+| `categories:performance` | >= 0.80 | **error, blocks** |
 | `categories:best-practices` | >= 0.9 | warn |
 | `categories:seo` | >= 0.9 | warn |
-| `largest-contentful-paint` | <= 4000 ms | warn |
-| `cumulative-layout-shift` | <= 0.1 | warn |
-| `total-blocking-time` | <= 600 ms | warn |
-| `resource-summary:script:size` | 400 kB | warn |
+| `largest-contentful-paint` | <= 4500 ms | **error, blocks** |
+| `cumulative-layout-shift` | <= 0.1 | **error, blocks** |
+| `total-blocking-time` | <= 200 ms | **error, blocks** |
+| `resource-summary:script:size` | <= 360 KiB | **error, blocks** |
+| `resource-summary:total:size` | <= 1024 KiB | **error, blocks** |
+| `resource-summary:third-party:count` | <= 8 | **error, blocks** |
 
-Accessibility is the only hard assertion in this optional measurement: a run
-scoring below 0.95 exits unsuccessfully. Everything else warns.
-`resource-summary:script:size` is the only budget-table entry
-with a matching assertion (its raw config value is `400000`, i.e. bytes, same
-400 kB threshold as the script row above); total transfer and third-party
-count still render in every report's Budgets section but have no `assert`
-entry, so they cannot fail a run by themselves today. Reports upload to
-`temporary-public-storage` (no persistent LHCI server).
+Accessibility and every performance budget are hard assertions. Best practices
+and SEO remain diagnostic warnings because their category scores can change
+with browser-version audits that do not represent a runtime regression. The
+0.80 performance and 4.5-second LCP limits are blocking regression guardrails,
+not claims about production field performance. CLS, blocking time, transfer,
+and request limits remain independently blocking. Reports are written only to
+`.lighthouseci/reports`; no report is uploaded.
 
 ## How to run it
 
 ```bash
-bun run build
 bun run lighthouse:local
 ```
 
-`startServerCommand` in the config does its own
-`cd packages/website && bun run start`, which only resolves
-correctly when lhci itself is invoked from the repo root.
+The command performs a fresh provider-free production build, writes a
+content-and-environment-bound build receipt, verifies that receipt, then starts
+the provider-free production server and runs LHCI from the repository root.
+The `lighthouse:local:built` variant is internal reuse only and rejects a
+missing or stale receipt.
+
+Ordinary CI reuses that verified receipt and measures `/`, `/ai-native`, the published
+blog article, `/buecher`, and the data-science course overview once each. This
+keeps pull-request latency bounded while spanning the main rendering modes. The
+release runner uses `lighthouse:release:built` after deterministic verification;
+it rejects a changed build receipt and covers every configured route three
+times pessimistically before the browser journey gates.
 
 Run it locally before shipping a change that could move bundle size, Core Web
 Vitals, or the accessibility score. Treat it as environment-sensitive evidence,
@@ -87,8 +73,7 @@ To inspect webpack bundle composition (a different, complementary signal from
 the transfer budgets above):
 
 ```bash
-bun run build      # route table ("First Load JS" column) printed at the end
-bun run analyze    # same build + interactive treemaps in .next/analyze/{client,nodejs,edge}.html
+node packages/website/scripts/run-provider-free.mjs bun run --cwd packages/website analyze
 ```
 
 ## Rules of the road (what keeps script weight down)

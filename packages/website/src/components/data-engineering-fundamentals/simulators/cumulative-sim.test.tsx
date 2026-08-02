@@ -14,7 +14,10 @@ describe("CumulativeSim ", () => {
 
   it("shows CLEAN on Day 1 before the bug window starts", () => {
     render(<CumulativeSim />);
-    fireEvent.click(screen.getByText("DAY 1"));
+    const dayOne = screen.getByRole("button", { name: /DAY 1/ });
+    expect(dayOne).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(dayOne);
+    expect(dayOne).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByText("CLEAN")).toBeInTheDocument();
     expect(screen.getByText("- no prior state on Day 1 -")).toBeInTheDocument();
   });

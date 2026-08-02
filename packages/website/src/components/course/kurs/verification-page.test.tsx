@@ -6,9 +6,12 @@
 // regardless of the checking / valid / invalid state. These tests lock that
 // in plus the base64url decode happy + error paths.
 
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, screen, cleanup, waitFor } from "@testing-library/react";
-import { VerificationPage } from "./verification-page";
+import {
+  MAX_CERTIFICATE_HASH_CHARS,
+  VerificationPage,
+} from "./verification-page";
 
 /** Encode a verification payload the same way the certificate PDF QR does. */
 function encodeHash(payload: object): string {
@@ -78,6 +81,28 @@ describe("VerificationPage", () => {
     expect(screen.queryByText(/ist kryptografisch signiert/i)).toBeNull();
     // The certificate title is an h2; the page h1 stays unique.
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+  });
+
+  it("rejects the historical 9000% payload produced from an unnormalized score", async () => {
+    setHash(
+      "#" +
+        encodeHash({
+          n: "Tim Löhr",
+          s: 9000,
+          m: "quiz",
+          d: "2026-06-03T10:00:00.000Z",
+          c: "ai-native",
+          v: 1,
+        }),
+    );
+    render(<VerificationPage courseSlug="ai-native" />);
+
+    await waitFor(() =>
+      expect(
+        screen.getByText("Zertifikatcode nicht lesbar"),
+      ).toBeInTheDocument(),
+    );
+    expect(screen.queryByText("QR-Daten gelesen")).toBeNull();
   });
 
   it("rejects readable QR data for a different course route", async () => {
@@ -203,5 +228,18 @@ describe("VerificationPage", () => {
       expect(screen.getByText("Zertifikatcode nicht lesbar")).toBeInTheDocument(),
     );
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+  });
+
+  it("rejects oversized fragments before base64 decoding", async () => {
+    const atobSpy = vi.spyOn(globalThis, "atob");
+    setHash("#" + "A".repeat(MAX_CERTIFICATE_HASH_CHARS + 1));
+
+    render(<VerificationPage courseSlug="ki-fuehrerschein" />);
+
+    await waitFor(() =>
+      expect(screen.getByText("Zertifikatcode nicht lesbar")).toBeInTheDocument(),
+    );
+    expect(atobSpy).not.toHaveBeenCalled();
+    atobSpy.mockRestore();
   });
 });

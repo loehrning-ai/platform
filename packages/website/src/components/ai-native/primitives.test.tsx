@@ -1,11 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { renderToStaticMarkup } from "react-dom/server";
 import {
   SectionShell,
   Marginalia,
   TierChip,
   ModNumber,
   Eyebrow,
+  VoiceAnchor,
+  ClipHeading,
+  DrawRule,
+  CountUp,
+  FadeBlock,
 } from "./primitives";
 
 /**
@@ -123,5 +129,29 @@ describe("<Eyebrow>", () => {
     const el = screen.getByText("Wie alles zusammenhängt");
     expect(el.className).toContain("text-brand-sand");
     expect(el.className).toContain("font-mono");
+  });
+});
+
+describe("no-script motion fallbacks", () => {
+  it("marks every motion primitive that can serialize hidden", () => {
+    const { container } = render(
+      <>
+        <VoiceAnchor>Stimme</VoiceAnchor>
+        <ClipHeading>Überschrift</ClipHeading>
+        <DrawRule />
+        <FadeBlock>Inhalt</FadeBlock>
+      </>,
+    );
+
+    expect(screen.getByText("Stimme").parentElement).toHaveClass("js-reveal");
+    expect(screen.getByText("Überschrift")).toHaveClass("js-reveal");
+    expect(screen.getByText("Inhalt")).toHaveClass("js-reveal");
+    expect(container.querySelector(".h-px")).toHaveClass("js-reveal");
+  });
+
+  it("server-renders CountUp with the truthful authored value", () => {
+    const markup = renderToStaticMarkup(<CountUp value={27} suffix="h" />);
+    expect(markup).toContain(">27<");
+    expect(markup).not.toContain(">0<");
   });
 });

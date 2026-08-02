@@ -33,7 +33,7 @@
   },
   {
     "term": "Hochrisiko-System",
-    "definition": "KI-System mit erheblichem Risiko für Gesundheit, Sicherheit oder Grundrechte, eingeordnet über Art. 6 mit Anhang I oder Anhang III. Parlament und Rat haben den 2. Dezember 2027 für eigenständige Anhang-III-Systeme und den 2. August 2028 für produktintegrierte Systeme beschlossen. Am 14. Juli 2026 war die Änderungsverordnung noch nicht im Amtsblatt veröffentlicht und noch nicht in Kraft.",
+    "definition": "KI-System mit erheblichem Risiko für Gesundheit, Sicherheit oder Grundrechte, eingeordnet über Art. 6 mit Anhang I oder Anhang III. Die seit 27. Juli 2026 geltende Verordnung (EU) 2026/1744 setzt den 2. Dezember 2027 für eigenständige Anhang-III-Systeme und den 2. August 2028 für produktintegrierte Systeme.",
     "english": "High-Risk System",
     "category": "regulatorik",
     "relatedTerms": ["Anhang III", "Konformitätsbewertung"],
@@ -105,7 +105,7 @@
   },
   {
     "term": "KI-Kompetenz",
-    "definition": "Organisationspflicht nach Art. 4 der Verordnung (EU) 2024/1689: Anbieter und Betreiber müssen für ein ausreichendes Maß an KI-Kompetenz ihres Personals sorgen. Anwendbar seit dem 2. Februar 2025.",
+    "definition": "Organisationspflicht nach Art. 4 der Verordnung (EU) 2024/1689 in der Fassung von Verordnung (EU) 2026/1744: Anbieter und Betreiber müssen kontextgerechte Maßnahmen zur Entwicklung der KI-Kompetenz ihres Personals und beauftragter Personen treffen. Ein bestimmtes Kompetenzniveau einzelner Personen muss nicht garantiert werden. Anwendbar seit dem 2. Februar 2025.",
     "english": "AI Literacy",
     "category": "regulatorik",
     "relatedTerms": ["Betreiber", "Anbieter"],

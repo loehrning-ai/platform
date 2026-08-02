@@ -284,6 +284,11 @@ async function expectSoftwareGuide(
         await expect(
           page.getByText(step.command, { exact: true }).first(),
         ).toBeVisible();
+        await expect(
+          page.getByRole("button", {
+            name: `Befehl für ${step.title} kopieren`,
+          }),
+        ).toBeVisible();
       }
     }
   }
@@ -400,8 +405,11 @@ test.describe("/open-source hub", () => {
       page.getByRole("heading", { name: "Code und redaktionelle Inhalte" }),
     ).toBeVisible();
     await expect(
-      page.getByText(/Plattform-Code steht unter MIT/i),
+      page.getByText(/Plattform-Code auf GitHub.*steht unter MIT/i),
     ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /Plattform-Code auf GitHub/i }),
+    ).toHaveAttribute("href", "https://github.com/loehrning-ai/platform");
     const policyLink = page
       .locator("#lizenzmodell")
       .getByRole("link", { name: "Lizenzrichtlinie" });

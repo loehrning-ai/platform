@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
+import { SafeLessonMarkup } from "@/components/safe-lesson-markup";
 
 // ─── EncodingComparison ─────────────────────────────
 //
@@ -99,11 +100,9 @@ export function EncodingComparison() {
               ))}
             </div>
           </div>
-          <p
-            className="prose"
-            style={{ fontSize: 12.5, margin: 0 }}
-            dangerouslySetInnerHTML={{ __html: DESCRIPTIONS[mode] }}
-          />
+          <p className="prose" style={{ fontSize: 12.5, margin: 0 }}>
+            <SafeLessonMarkup html={DESCRIPTIONS[mode]} />
+          </p>
         </div>
       </div>
       <div style={{ overflowX: "auto", marginTop: 16 }}>

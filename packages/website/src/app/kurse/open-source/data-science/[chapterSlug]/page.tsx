@@ -51,8 +51,10 @@ export default async function DsChapterRoute({ params }: PageProps) {
 
   return (
     <div className="content">
-      <MarkChapterVisited chapterId={chapterSlug} />
       <ChapterComponent chapter={meta} />
+      <div style={{ marginTop: 32 }}>
+        <MarkChapterVisited chapterId={chapterSlug} />
+      </div>
       <nav className="tb" aria-label="Chapter pagination" style={{ marginTop: 48 }}>
         {prev ? (
           <Link className="btn" href={dsChapterHref(prev.id)}>

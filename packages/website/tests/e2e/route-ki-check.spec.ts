@@ -1,4 +1,4 @@
-import { test, expect, type Page, type Locator } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import { QUESTIONS } from "../../src/lib/ki-check/questions";
 import { computeResult } from "../../src/lib/ki-check/scoring";
 import { recommend } from "../../src/lib/ki-check/recommend";
@@ -33,32 +33,7 @@ function collectConsoleErrors(page: Page): string[] {
 }
 
 function meaningfulErrors(errors: string[]): string[] {
-  return errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/Cannot update a component/i.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e),
-  );
-}
-
-/**
- * Pick the first option, then advance. Wrapped in a retry: an SSR control is
- * actionable before React attaches its handlers (wide hydration window under
- * load), so a first click can be a no-op. Re-selecting the same option is
- * idempotent and the loop stops as soon as the current question leaves.
- */
-async function answerAndAdvance(
-  option: Locator,
-  advance: Locator,
-  confirm: () => Promise<unknown>,
-): Promise<void> {
-  await expect(async () => {
-    await option.click();
-    await advance.click();
-    await confirm();
-  }).toPass({ timeout: 30_000 });
+  return errors;
 }
 
 test.describe("/ki-check", () => {
@@ -85,6 +60,9 @@ test.describe("/ki-check", () => {
   test("interaction: answering every question reveals the recommended course", async ({
     page,
   }) => {
+    // Ten animated question transitions can exceed Playwright's 30s default
+    // under a fully loaded mobile WebKit run while still progressing normally.
+    test.setTimeout(90_000);
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     // Walk the wizard; assert it advances exactly one question per answer.
@@ -105,10 +83,24 @@ test.describe("/ki-check", () => {
         name: isLast ? "Zum Ergebnis" : "Weiter",
         exact: true,
       });
-      // Confirm the answer landed by waiting for THIS question to leave.
-      await answerAndAdvance(option, advance, () =>
-        expect(heading).toBeHidden({ timeout: 3_000 }),
+      await option.click();
+      await expect(option).toHaveAttribute("aria-pressed", "true");
+      await expect(advance).toBeEnabled();
+      await advance.evaluate((node) =>
+        node.scrollIntoView({
+          block: "center",
+          inline: "nearest",
+          behavior: "auto",
+        }),
       );
+      await expect(advance).toBeInViewport({ ratio: 1 });
+      await advance.click();
+
+      if (!isLast) {
+        await expect(
+          page.getByRole("heading", { name: QUESTIONS[i + 1].text }),
+        ).toBeVisible();
+      }
     }
 
     // Result screen carries the course the pure recommender picks for ANSWERS.

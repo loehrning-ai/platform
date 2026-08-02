@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useControllableAnimation } from "@/lib/animation-policy";
 
 // ─── LivingPipeline ───────────────────────────────
 // Ported from `src/chapters/Ch9_Capstone.js`: real user rows stream through
@@ -161,7 +162,11 @@ function tToX(t: number) {
 
 export function LivingPipeline() {
   const [brk, setBrk] = useState<Record<BreakKey, boolean>>(EMPTY_BRK);
-  const [running, setRunning] = useState(true);
+  const {
+    running,
+    play: playAnimation,
+    toggle: toggleRunning,
+  } = useControllableAnimation();
   const [tutorialStep, setTutorialStep] = useState(-1);
   const tutorial = tutorialStep >= 0 ? TUTORIAL[tutorialStep] : null;
   const [stats, setStats] = useState<Stats>(EMPTY_STATS);
@@ -181,7 +186,7 @@ export function LivingPipeline() {
 
   const startTutorial = () => {
     setBrk({ ...EMPTY_BRK });
-    setRunning(true);
+    playAnimation();
     setTutorialStep(0);
   };
   const stopTutorial = () => {
@@ -428,10 +433,10 @@ export function LivingPipeline() {
   const pipelineGreen = !brk.merge && !brk.write && !brk.watermark && !brk.dq && !brk.govern && !brk.semantic;
 
   useEffect(() => {
-    if (!pipelineGreen) return;
+    if (!pipelineGreen || !running) return;
     const id = setInterval(() => setSignalPulse((p) => p + 1), 3000);
     return () => clearInterval(id);
-  }, [pipelineGreen]);
+  }, [pipelineGreen, running]);
 
   const consumerView = (() => {
     if (brk.semantic) return { kind: "err" as const, v: "ERROR", caption: "metric unbound · downstream query references a column that no longer exists" };
@@ -456,7 +461,7 @@ export function LivingPipeline() {
               <div className="lp-tutorial-title">{tutorial.title}</div>
               <div className="lp-tutorial-caption">{tutorial.caption}</div>
             </div>
-            <button className="lp-tutorial-exit" onClick={stopTutorial} aria-label="Exit tutorial">
+            <button type="button" className="lp-tutorial-exit" onClick={stopTutorial} aria-label="Exit tutorial">
               ✕ exit
             </button>
             <div className="lp-tutorial-progress" aria-hidden="true">
@@ -582,16 +587,16 @@ export function LivingPipeline() {
             <div className="lp-console-title">Six contracts. Every one is load-bearing.</div>
           </div>
           <div className="lp-console-actions">
-            <button className="btn btn-primary" onClick={tutorial ? stopTutorial : startTutorial}>
+            <button type="button" className="btn btn-primary" onClick={tutorial ? stopTutorial : startTutorial}>
               {tutorial ? "✕ stop tutorial" : "▶ guided tutorial"}
             </button>
-            <button className="btn" onClick={() => setRunning((r) => !r)} disabled={!!tutorial}>
+            <button type="button" className="btn" onClick={toggleRunning} disabled={!!tutorial}>
               {running ? "⏸ pause" : "▶ resume"}
             </button>
-            <button className="btn" onClick={reset} disabled={!!tutorial}>
+            <button type="button" className="btn" onClick={reset} disabled={!!tutorial}>
               ↻ reset counters
             </button>
-            <button className="btn" onClick={resetAll} disabled={pipelineGreen || !!tutorial}>
+            <button type="button" className="btn" onClick={resetAll} disabled={pipelineGreen || !!tutorial}>
               fix all
             </button>
           </div>
@@ -601,6 +606,7 @@ export function LivingPipeline() {
             const contracts = BREAKAGE_COPY[s.k];
             return (
               <button
+                type="button"
                 key={s.k}
                 className={`lp-break ${brk[s.k] ? "on" : ""} ${tutorial ? "is-locked" : ""}`}
                 style={{ "--c": s.color, "--ink": s.ink } as CSSProperties}

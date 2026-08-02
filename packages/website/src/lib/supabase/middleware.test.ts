@@ -17,9 +17,32 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest, NextResponse } from "next/server";
 
+type MiddlewareCookieAdapter = {
+  readonly getAll: () => { readonly name: string; readonly value: string }[];
+  readonly setAll: (
+    cookies: {
+      readonly name: string;
+      readonly value: string;
+      readonly options?: unknown;
+    }[],
+    headers: Record<string, string>,
+  ) => void;
+};
+
 const { createServerClientMock, getUserMock } = vi.hoisted(() => {
-  const getUserMock = vi.fn(async () => ({ data: { user: null } }));
-  const createServerClientMock = vi.fn(() => ({
+  const getUserMock = vi.fn<
+    () => Promise<{
+      data: { user: { id: string } | null };
+      error?: Error;
+    }>
+  >(async () => ({ data: { user: null } }));
+  const createServerClientMock = vi.fn<
+    (
+      url: string,
+      key: string,
+      options: { readonly cookies: MiddlewareCookieAdapter },
+    ) => { auth: { getUser: typeof getUserMock } }
+  >(() => ({
     auth: { getUser: getUserMock },
   }));
   return { createServerClientMock, getUserMock };
@@ -28,6 +51,9 @@ const { createServerClientMock, getUserMock } = vi.hoisted(() => {
 vi.mock("@supabase/ssr", () => ({ createServerClient: createServerClientMock }));
 
 import { refreshAuthSession } from "./middleware";
+
+const PUBLIC_KEY_FIXTURE =
+  "sb_publishable_abcdefghijklmnopqrstuv_12345678";
 
 const KEYS = [
   "NEXT_PUBLIC_SUPABASE_URL",
@@ -54,7 +80,8 @@ afterEach(() => {
 
 function configure(): void {
   process.env.NEXT_PUBLIC_SUPABASE_URL = "https://proj.supabase.co";
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = "publishable-abc";
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY =
+    PUBLIC_KEY_FIXTURE;
 }
 
 function makeRequest(cookie?: string): NextRequest {
@@ -66,17 +93,10 @@ function makeRequest(cookie?: string): NextRequest {
 /** Pull the cookie adapter this module handed to createServerClient. */
 function capturedCookieAdapter() {
   const call = createServerClientMock.mock.calls[0];
-  return (
-    call[2] as {
-      cookies: {
-        getAll: () => { name: string; value: string }[];
-        setAll: (
-          cookies: { name: string; value: string; options?: unknown }[],
-          headers: Record<string, string>,
-        ) => void;
-      };
-    }
-  ).cookies;
+  if (!call) {
+    throw new Error("expected createServerClient to be called");
+  }
+  return call[2].cookies;
 }
 
 describe("refreshAuthSession", () => {
@@ -86,6 +106,7 @@ describe("refreshAuthSession", () => {
 
     expect(result.configured).toBe(false);
     expect(result.user).toBeNull();
+    expect(result.error).toBeNull();
     expect(result.response).toBeInstanceOf(NextResponse);
     expect(createServerClientMock).not.toHaveBeenCalled();
   });
@@ -101,7 +122,9 @@ describe("refreshAuthSession", () => {
     expect(createServerClientMock.mock.calls[0][0]).toBe(
       "https://proj.supabase.co",
     );
-    expect(createServerClientMock.mock.calls[0][1]).toBe("publishable-abc");
+    expect(createServerClientMock.mock.calls[0][1]).toBe(
+      PUBLIC_KEY_FIXTURE,
+    );
   });
 
   it("passes the user returned by supabase.auth.getUser() through", async () => {
@@ -110,6 +133,60 @@ describe("refreshAuthSession", () => {
 
     const result = await refreshAuthSession(makeRequest(), new Headers());
     expect(result.user).toEqual({ id: "user-7" });
+  });
+
+  it("passes an auth backend error through instead of collapsing it to logout", async () => {
+    configure();
+    const authError = new Error("auth backend unavailable");
+    getUserMock.mockResolvedValueOnce({
+      data: { user: null },
+      error: authError,
+    });
+
+    const result = await refreshAuthSession(makeRequest(), new Headers());
+    expect(result.user).toBeNull();
+    expect(result.error).toBe(authError);
+  });
+
+  it("treats a missing session as an ordinary anonymous request", async () => {
+    configure();
+    const missingSession = Object.assign(new Error("Auth session missing!"), {
+      name: "AuthSessionMissingError",
+    });
+    getUserMock.mockResolvedValueOnce({
+      data: { user: null },
+      error: missingSession,
+    });
+
+    const result = await refreshAuthSession(makeRequest(), new Headers());
+    expect(result.user).toBeNull();
+    expect(result.error).toBeNull();
+  });
+
+  it("normalizes a rejected auth request into the typed error result", async () => {
+    configure();
+    const backendError = new Error("network rejected");
+    getUserMock.mockRejectedValueOnce(backendError);
+
+    const result = await refreshAuthSession(makeRequest(), new Headers());
+    expect(result.user).toBeNull();
+    expect(result.error).toBe(backendError);
+  });
+
+  it("normalizes a synchronous provider-client construction failure", async () => {
+    configure();
+    const constructionError = new Error("client construction rejected");
+    createServerClientMock.mockImplementationOnce(() => {
+      throw constructionError;
+    });
+
+    const result = await refreshAuthSession(makeRequest(), new Headers());
+
+    expect(result.configured).toBe(true);
+    expect(result.user).toBeNull();
+    expect(result.error).toBe(constructionError);
+    expect(result.response).toBeInstanceOf(NextResponse);
+    expect(getUserMock).not.toHaveBeenCalled();
   });
 
   it("exposes a getAll adapter that reads the incoming request cookies", async () => {

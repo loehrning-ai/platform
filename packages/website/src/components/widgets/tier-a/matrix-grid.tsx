@@ -3,6 +3,10 @@
 import { useEffect, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
 import { useDraftValue } from "./use-draft-value";
+import {
+  handleRovingFocusKeyDown,
+  rovingTabIndex,
+} from "@/lib/a11y/roving-focus";
 import { cn } from "@/lib/utils";
 import { WidgetFrame } from "./_frame";
 
@@ -70,10 +74,22 @@ export function MatrixGridWidget({
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr key={row} role="radiogroup" aria-label={row}>
+              <tr
+                key={row}
+                role="radiogroup"
+                aria-label={row}
+                data-roving-group
+              >
                 <td className="p-2 pr-4 text-[13px] font-medium text-foreground">{row}</td>
                 {cols.map((col, colIndex) => {
                   const active = picks[row] === colIndex;
+                  const storedIndex = picks[row];
+                  const selectedIndex =
+                    storedIndex != null &&
+                    storedIndex >= 0 &&
+                    storedIndex < cols.length
+                      ? storedIndex
+                      : null;
                   return (
                     <td key={col} className="p-2 text-center">
                       <button
@@ -81,7 +97,17 @@ export function MatrixGridWidget({
                         role="radio"
                         aria-checked={active}
                         aria-label={`${row}, ${col}`}
+                        data-roving-item
+                        tabIndex={rovingTabIndex(selectedIndex, colIndex)}
                         onClick={() => pick(row, colIndex)}
+                        onKeyDown={(event) =>
+                          handleRovingFocusKeyDown(event, {
+                            currentIndex: colIndex,
+                            itemCount: cols.length,
+                            orientation: "horizontal",
+                            onMove: (nextIndex) => pick(row, nextIndex),
+                          })
+                        }
                         className={cn(
                           "inline-flex h-7 w-7 items-center justify-center rounded-full border-2 transition-colors",
                           active

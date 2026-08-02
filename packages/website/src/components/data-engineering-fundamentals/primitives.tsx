@@ -1,14 +1,14 @@
 import type { CSSProperties, ReactNode } from "react";
+import { SafeLessonMarkup } from "@/components/safe-lesson-markup";
 
 // ─── Data Engineering Fundamentals shared primitives ─
 //
 // Typed port of `src/chapters/shared.js`'s presentational primitives,
 // replacing the source's `window.X` global-export pattern (a plain-script,
 // no-bundler convention) with named exports/imports. `title`/`hook`/list
-// items carry inline markup in source (e.g. `<b>`/`<code>` emphasis), so
-// `dangerouslySetInnerHTML` is kept here exactly as source used it — every
-// caller is this course's own statically-authored, source-controlled
-// content (ported in later stages), never user input.
+// items carry inline markup in source (e.g. `<b>`/`<code>` emphasis).
+// SafeLessonMarkup preserves that small formatting vocabulary without an
+// HTML-injection boundary.
 //
 // `Term` drops source's `internalMode` branch (`shared.js`'s `MM_MAP`
 // vendor-name-swap easter egg): `App.js` never exposes a UI control to
@@ -38,14 +38,20 @@ export function Hero({ eyebrow, title, hook, meta, accent }: HeroProps) {
   return (
     <header className="hero" style={style}>
       <div className="hero-eyebrow">{eyebrow}</div>
-      <h1 className="hero-title" dangerouslySetInnerHTML={{ __html: title }} />
-      <p className="hero-hook" dangerouslySetInnerHTML={{ __html: hook }} />
+      <h1 className="hero-title">
+        <SafeLessonMarkup html={title} />
+      </h1>
+      <p className="hero-hook">
+        <SafeLessonMarkup html={hook} />
+      </p>
       {meta && (
         <div className="hero-meta">
           {meta.map((m) => (
             <div className="m" key={m.k}>
               <div className="k">{m.k}</div>
-              <div className="v" dangerouslySetInnerHTML={{ __html: m.v }} />
+              <div className="v">
+                <SafeLessonMarkup html={m.v} />
+              </div>
             </div>
           ))}
         </div>
@@ -107,7 +113,9 @@ function CalloutList({ items, title, className }: CalloutListProps) {
         {items.map((item, i) => (
           <div className="callout-item" key={i}>
             <span className="n">{String(i + 1).padStart(2, "0")}</span>
-            <span dangerouslySetInnerHTML={{ __html: item }} />
+            <span>
+              <SafeLessonMarkup html={item} />
+            </span>
           </div>
         ))}
       </div>
@@ -138,7 +146,9 @@ export function Takeaway({ items }: TakeawayProps) {
       <div className="takeaway-head">Key takeaways</div>
       <div className="takeaway-list">
         {items.map((item, i) => (
-          <div className="takeaway-item" key={i} dangerouslySetInnerHTML={{ __html: item }} />
+          <div className="takeaway-item" key={i}>
+            <SafeLessonMarkup html={item} />
+          </div>
         ))}
       </div>
     </div>
@@ -173,7 +183,9 @@ export function CodeBlock({ title, lang, html }: CodeBlockProps) {
         <span>{title}</span>
         <span className="lang">{lang}</span>
       </div>
-      <div className="code-body" dangerouslySetInnerHTML={{ __html: html }} />
+      <div className="code-body">
+        <SafeLessonMarkup html={html} />
+      </div>
     </div>
   );
 }

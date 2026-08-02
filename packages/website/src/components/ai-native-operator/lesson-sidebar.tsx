@@ -8,6 +8,7 @@ import { getCompletedLessonIds } from "@/lib/course/progress";
 import { MODULE_IDS, MODULE_META, lessonProgressKey, type ModuleId } from "@/lib/ai-native-operator/types";
 import { lessonHref } from "@/lib/ai-native-operator/routes";
 import { cn } from "@/lib/utils";
+import { subscribe } from "@/lib/progress";
 
 export interface AiNativeOperatorLessonNavItem {
   readonly moduleId: ModuleId;
@@ -29,7 +30,9 @@ export function AiNativeOperatorLessonSidebar({ lessons }: LessonSidebarProps): 
   const [completedIds, setCompletedIds] = useState<ReadonlySet<string>>(new Set());
 
   useEffect(() => {
-    setCompletedIds(getCompletedLessonIds("ai-native-operator"));
+    return subscribe(() => {
+      setCompletedIds(getCompletedLessonIds("ai-native-operator"));
+    });
   }, [pathname]);
 
   return (
@@ -61,7 +64,7 @@ export function AiNativeOperatorLessonSidebar({ lessons }: LessonSidebarProps): 
                       )}
                     >
                       {done ? (
-                        <CheckCircle2 size={13} className="shrink-0 text-[#22c55e]" aria-hidden="true" />
+                        <CheckCircle2 size={13} className="shrink-0 text-risk-green" aria-hidden="true" />
                       ) : (
                         <span className="w-[13px] shrink-0 text-center font-mono text-[10px] text-muted-foreground">
                           {lesson.lessonNumber}

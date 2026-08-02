@@ -39,16 +39,16 @@ afterEach(() => {
 });
 
 describe("SnapshotTimeline", () => {
-  it("renders the canvas timeline, the detail panel, and a real Tab-focusable snapshot picker", () => {
+  it("renders the canvas timeline, detail panel, and one-Tab-stop snapshot picker", () => {
     render(<SnapshotTimeline lessonId="di-lakehouse" cpId="snap" />);
     expect(screen.getByRole("img", { name: /Lakehouse snapshot timeline/ })).toBeInTheDocument();
     const listbox = screen.getByRole("listbox", { name: "Snapshot picker" });
     const options = screen.getAllByRole("option");
     expect(options).toHaveLength(7);
-    for (const opt of options) {
-      expect(opt.tagName).toBe("BUTTON");
-      expect(opt).not.toHaveAttribute("disabled");
-    }
+    expect(options.every((option) => option.tagName === "BUTTON")).toBe(true);
+    expect(options.map((option) => option.tabIndex)).toEqual([
+      0, -1, -1, -1, -1, -1, -1,
+    ]);
     expect(listbox).toBeInTheDocument();
   });
 
@@ -99,5 +99,24 @@ describe("SnapshotTimeline", () => {
     expect(screen.getByText("snapshot @ 10:00")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /rollback to 12:33/ }));
     expect(screen.getByText("snapshot @ 12:33")).toBeInTheDocument();
+  });
+
+  it("supports Arrow/Home/End listbox navigation and updates selection", () => {
+    render(<SnapshotTimeline lessonId="di-lakehouse" cpId="snap" />);
+    const options = screen.getAllByRole("option");
+
+    options[0].focus();
+    fireEvent.keyDown(options[0], { key: "End" });
+
+    expect(options[6]).toHaveFocus();
+    expect(options[6]).toHaveAttribute("aria-selected", "true");
+    expect(options.map((option) => option.tabIndex)).toEqual([
+      -1, -1, -1, -1, -1, -1, 0,
+    ]);
+    expect(screen.getByText("snapshot @ 13:08")).toBeInTheDocument();
+
+    fireEvent.keyDown(options[6], { key: "Home" });
+    expect(options[0]).toHaveFocus();
+    expect(options[0]).toHaveAttribute("aria-selected", "true");
   });
 });

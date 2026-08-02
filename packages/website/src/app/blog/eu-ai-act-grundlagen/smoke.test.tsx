@@ -20,9 +20,10 @@ describe("EuAiActGrundlagenPage smoke", () => {
       expect(document.getElementById(id), `section #${id}`).not.toBeNull();
     }
     const text = document.body.textContent ?? "";
-    expect(text).toContain("noch nicht in Kraft");
+    expect(text).toContain("veröffentlicht und in Kraft");
+    expect(text).toContain("27. Juli 2026");
     expect(text).toContain("2. August 2026");
     expect(text).toContain("2. Dezember 2027");
-    expect(text).toContain("16. Juli 2026");
+    expect(text).toContain("28. Juli 2026");
   });
 });

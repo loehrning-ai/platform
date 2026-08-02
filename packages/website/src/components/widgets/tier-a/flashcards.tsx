@@ -174,7 +174,7 @@ export function FlashcardsWidget({
                 reduced && !flipped && "invisible",
               )}
             >
-              <span className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-[#22c55e]">
+              <span className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-risk-green">
                 {c.backLabel}
               </span>
               <span className="text-[15px] leading-[1.5] text-foreground">

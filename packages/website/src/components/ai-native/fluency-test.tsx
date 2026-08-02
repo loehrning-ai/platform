@@ -353,7 +353,12 @@ export function FluencyTest() {
 
         <FadeBlock delay={8}>
           <div className="mt-10 flex flex-wrap items-center gap-3.5">
-            <BrandButton href="/ai-native/kurs/modul_1" variant="primary" surface="light">
+            <BrandButton
+              href="/ai-native/kurs/modul_1"
+              prefetch={false}
+              variant="primary"
+              surface="light"
+            >
               Kurs starten <ArrowRight size={14} />
             </BrandButton>
             <BrandButton href="/ai-native" variant="outline" surface="light">

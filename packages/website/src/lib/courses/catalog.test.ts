@@ -8,6 +8,7 @@ import {
   COURSE_CATALOG,
   IMPORTED_COURSE_CATALOG,
   IMPORTED_COURSE_SOURCE_COMMIT,
+  PORTED_COURSE_CATALOG,
   getCatalogCourse,
   getImportedCourse,
 } from "./catalog";
@@ -25,6 +26,7 @@ import { COURSE_SLUGS } from "@/lib/course/types";
 import { getRegisteredCourseSlugs } from "@/lib/course/config";
 import { DEF_CHAPTER_IDS } from "@/lib/data-engineering-fundamentals/types";
 import { DS_NUMBERED_CHAPTER_IDS } from "@/lib/data-science/types";
+import { courseGroupFor } from "./tracks";
 
 function sha256(path: string): string {
   return createHash("sha256").update(readFileSync(path)).digest("hex");
@@ -91,7 +93,8 @@ describe("course catalog (shared course architecture)", () => {
       "www.timloehr.me",
       "timloehr.me",
     ];
-    for (const c of IMPORTED_COURSE_CATALOG) {
+    expect(PORTED_COURSE_CATALOG).toHaveLength(6);
+    for (const c of PORTED_COURSE_CATALOG) {
       const host = new URL(c.launchHref).host;
       expect(
         LAUNCH_HREF_HOST_ALLOWLIST,
@@ -136,7 +139,7 @@ describe("course catalog (shared course architecture)", () => {
     expect(liveSlugs.length + pendingSlugs.length).toBe(ALL_COURSE_CATALOG.length);
   });
 
-  it("carries nativeStatus: the 6 native courses are 'live', the 4 imported courses are 'pending' ", () => {
+  it("carries nativeStatus: all ten shipped courses are live and no pending import is exposed", () => {
     for (const c of COURSE_CATALOG) {
       expect(c.nativeStatus, c.slug).toBe("live");
     }
@@ -154,6 +157,26 @@ describe("course catalog (shared course architecture)", () => {
     for (const c of COURSE_CATALOG) {
       expect(c.totalLessons).toBeGreaterThan(0);
       expect(c.unitCount).toBeGreaterThan(0);
+    }
+  });
+
+  it("describes German records accurately while retaining explicit English Certificate labels", () => {
+    const germanCoreCourses = COURSE_CATALOG.filter(
+      (course) => courseGroupFor(course.slug) === "spine",
+    );
+    const technicalCourses = COURSE_CATALOG.filter(
+      (course) => courseGroupFor(course.slug) === "deeper",
+    );
+
+    expect(germanCoreCourses).toHaveLength(4);
+    expect(
+      germanCoreCourses.some((course) => /\bZertifikat\b/i.test(course.description)),
+    ).toBe(false);
+    expect(technicalCourses).toHaveLength(6);
+    for (const course of technicalCourses) {
+      expect(course.description, course.slug).toContain(
+        "selbst ausgestelltem Certificate",
+      );
     }
   });
 
@@ -267,13 +290,14 @@ describe("course catalog (shared course architecture)", () => {
     expect(sha256(licensePath)).toBe(codex!.licenseSha256);
   });
 
-  it("has local screenshot and license files for imported courses", () => {
-    for (const c of IMPORTED_COURSE_CATALOG) {
+  it("has local, hash-pinned screenshot and license files for all six ported courses", () => {
+    expect(PORTED_COURSE_CATALOG).toHaveLength(6);
+    for (const c of PORTED_COURSE_CATALOG) {
       expect(c.totalLessons).toBeGreaterThan(0);
       expect(c.unitCount).toBeGreaterThan(0);
       expect(c.imageSrc).toMatch(/^\/imported-courses\/screenshots\/.+\.jpg$/);
       expect(c.lessonCountLabel).toContain(String(c.totalLessons));
-      expect(c.sourceFacts.length).toBeGreaterThanOrEqual(4);
+      expect(c.sourceFacts.length).toBeGreaterThanOrEqual(3);
       expect(c.sourceCommit).toBe(IMPORTED_COURSE_SOURCE_COMMIT);
       expect(c.sourceImagePath).toMatch(/^docs\/screenshots\/.+\.jpg$/);
       expect(c.sourceLicensePath).toMatch(/(^LICENSE$|LICENSE\.txt$|\/LICENSE$)/);

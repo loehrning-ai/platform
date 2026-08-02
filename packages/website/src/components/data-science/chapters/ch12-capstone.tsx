@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Hero, SectionLabel, AntiPatterns, BestPractices, Takeaway } from "@/components/data-science/shared/primitives";
 import { DatasetExplorer } from "@/components/data-science/simulators/dataset-explorer";
 import { PipelineProgress } from "@/components/data-science/simulators/pipeline-progress";
@@ -16,8 +16,6 @@ import { dsChapterHref } from "@/lib/data-science/routes";
 // navigation-replacement pattern ch-overview.tsx established in stage 7.
 
 export default function Ch12Capstone() {
-  const router = useRouter();
-
   return (
     <>
       <Hero
@@ -127,13 +125,12 @@ export default function Ch12Capstone() {
           data science is to <em>do</em> it on a problem you care about.
         </div>
         <div className="ov-cta-row">
-          <button
-            type="button"
+          <Link
             className="btn btn-primary ov-cta-btn"
-            onClick={() => router.push(dsChapterHref("home"))}
+            href={dsChapterHref("home")}
           >
             Back to the overview &nbsp;↺
-          </button>
+          </Link>
         </div>
       </div>
     </>

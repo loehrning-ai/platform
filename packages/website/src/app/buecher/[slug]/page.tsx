@@ -5,9 +5,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { books, getBookById } from "@/lib/books";
 import { getBookChapterList, loadBookManifest } from "@/lib/book-reader-content";
-import { getAuthenticatedUser } from "@/lib/supabase/auth-server";
+import { getRuntimeFeatures } from "@/lib/runtime-features";
+import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
 import { ResourceContextBanner } from "@/components/learning/resource-context-banner";
-import { BookOpen, Clock, ChevronRight, Download, Lock } from "lucide-react";
+import { BookOpen, Clock, ChevronRight, Lock } from "lucide-react";
 
 interface Params {
   readonly params: Promise<{ readonly slug: string }>;
@@ -27,12 +28,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const book = getBookById(slug);
   if (!book) return {};
-  return {
+  return createPublicPageMetadata({
     title: `${book.title} | Lernbuch`,
     description: `${book.subtitle}. Kostenlos online lesen, kein Login nötig.`,
-    robots: { index: true, follow: true },
-    alternates: { canonical: book.readerHref },
-  };
+    path: book.readerHref,
+  });
 }
 
 export default async function BookOverviewPage({ params }: Params) {
@@ -54,8 +54,7 @@ export default async function BookOverviewPage({ params }: Params) {
     manifest = null;
   }
 
-  const { user } = await getAuthenticatedUser();
-  const isLoggedIn = Boolean(user);
+  const { account: accountEnabled } = getRuntimeFeatures();
 
   return (
     <>
@@ -98,25 +97,23 @@ export default async function BookOverviewPage({ params }: Params) {
             </div>
           </dl>
 
-          {/* PDF download — gated to logged-in users */}
+          {/* Resolve authorization only after the user chooses the PDF. This
+              keeps the public overview provider-independent and cacheable; an
+              existing session passes through /login to the protected route. */}
           {book.pdfPath &&
-            (isLoggedIn ? (
-              <a
-                href={book.pdfPath}
-                download
-                className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-card px-4 text-sm font-semibold text-foreground shadow-tile transition-colors hover:border-brand-orange hover:text-brand-orange"
-              >
-                <Download size={15} aria-hidden="true" />
-                Als PDF herunterladen
-              </a>
-            ) : (
+            (accountEnabled ? (
               <Link
-                href={`/login?next=${encodeURIComponent(`/buecher/${slug}`)}`}
+                href={`/login?next=${encodeURIComponent(book.pdfPath)}`}
                 className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-card/40 px-4 text-sm text-muted-foreground transition-colors hover:border-brand-orange hover:text-brand-orange"
               >
                 <Lock size={14} aria-hidden="true" />
                 Anmelden, um als PDF herunterzuladen
               </Link>
+            ) : (
+              <span className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-card/40 px-4 text-sm text-muted-foreground">
+                <Lock size={14} aria-hidden="true" />
+                PDF-Download in dieser Version nicht verfügbar
+              </span>
             ))}
           <p className="mt-3 text-xs text-muted-foreground">
             Kostenlos online lesen, in der jeweils aktuellen Fassung.

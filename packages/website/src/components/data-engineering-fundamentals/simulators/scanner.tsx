@@ -187,11 +187,11 @@ export function Scanner() {
 
       <div className="sc-ctrls">
         <div className="sc-tabs">
-          <button className={`sc-tab ${mode === "row" ? "on" : ""}`} onClick={() => setMode("row")}>
+          <button type="button" className={`sc-tab ${mode === "row" ? "on" : ""}`} onClick={() => setMode("row")}>
             Row-oriented
             <span className="sc-tab-sub">CSV · JSON · Postgres</span>
           </button>
-          <button className={`sc-tab ${mode === "col" ? "on" : ""}`} onClick={() => setMode("col")}>
+          <button type="button" className={`sc-tab ${mode === "col" ? "on" : ""}`} onClick={() => setMode("col")}>
             Columnar
             <span className="sc-tab-sub">Parquet · ORC</span>
           </button>
@@ -202,10 +202,10 @@ export function Scanner() {
           <span className="sc-check-sub">shrinks column stripe ~3.5×</span>
         </label>
         <div className="sc-actions">
-          <button className="btn" onClick={reset} disabled={running}>
+          <button type="button" className="btn" onClick={reset} disabled={running}>
             Reset
           </button>
-          <button className="btn btn-primary" onClick={run} disabled={running}>
+          <button type="button" className="btn btn-primary" onClick={run} disabled={running}>
             ▶ Run scan
           </button>
         </div>

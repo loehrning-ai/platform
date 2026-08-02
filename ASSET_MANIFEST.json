@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-07-20",
+  "generated": "2026-07-29",
   "hashAlgorithm": "sha256",
   "assets": [
     {
@@ -361,8 +361,8 @@
     },
     {
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/norda-analyst-kit.zip",
-      "sizeBytes": 41470,
-      "sha256": "59f5f2ff62fe0e744c9de5e6dc0870b8b0f1c5fbfc9644b01d9856f57729d973",
+      "sizeBytes": 41036,
+      "sha256": "af6d0c71f21a46c80b22d43513f4f44465239c6eeb7ac0be0391d558492408ab",
       "owner": "Tim Löhr",
       "source": "Eigenes Workshop-Material, loehrning.ai",
       "license": "LicenseRef-Loehrning-Brand",
@@ -511,6 +511,42 @@
       "source": "https://github.com/rsms/inter",
       "license": "OFL-1.1",
       "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/books-desktop.png",
+      "sizeBytes": 119995,
+      "sha256": "219c224b90dee2ed1fb5b338f62df3859ccc096b9e12c3c18b7a554717c97bb4",
+      "owner": "Tim Löhr",
+      "source": "Playwright-generated visual regression baseline from this repository",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
+    },
+    {
+      "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/courses-desktop.png",
+      "sizeBytes": 123497,
+      "sha256": "3dbbf00af5ff6a2d3c1ccd54752628ca5fe181808d8dfb1ee09b2a628733266b",
+      "owner": "Tim Löhr",
+      "source": "Playwright-generated visual regression baseline from this repository",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
+    },
+    {
+      "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/legal-desktop.png",
+      "sizeBytes": 99311,
+      "sha256": "7518de267760ac5521663d30c1dc1117c026b4afde632ad907b7f78f6d31420d",
+      "owner": "Tim Löhr",
+      "source": "Playwright-generated visual regression baseline from this repository",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
+    },
+    {
+      "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/open-source-desktop.png",
+      "sizeBytes": 157378,
+      "sha256": "d54b13586387d7fbc3424d338f43e8cca2089473830211cb4208fb00cf399184",
+      "owner": "Tim Löhr",
+      "source": "Playwright-generated visual regression baseline from this repository",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
     }
   ]
 }

@@ -7,7 +7,7 @@ import { Check, CheckCircle2, Clock } from "lucide-react";
 import { SectionHeader } from "@/components/ui/section-header";
 import { getModules } from "@/lib/ai-native/data";
 import { getCompletedLessonIds } from "@/lib/ai-native/progress";
-import { UNIFIED_STORAGE_KEY } from "@/lib/progress/types";
+import { subscribe } from "@/lib/progress/store";
 import { fadeUp } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 
@@ -18,15 +18,9 @@ export function AiNativeModulesOverview() {
   );
 
   useEffect(() => {
-    setCompletedLessonIds(getCompletedLessonIds());
-    const onStorage = (e: StorageEvent) => {
-      // Cross-tab sync now keys on the unified store (shared course architecture).
-      if (e.key === UNIFIED_STORAGE_KEY) {
-        setCompletedLessonIds(getCompletedLessonIds());
-      }
-    };
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
+    return subscribe(() => {
+      setCompletedLessonIds(getCompletedLessonIds());
+    });
   }, []);
 
   return (
@@ -42,7 +36,7 @@ export function AiNativeModulesOverview() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid gap-6 sm:grid-cols-2"
+          className="js-reveal grid gap-6 sm:grid-cols-2"
         >
           {modules.map((mod, i) => {
             // Count via the lightweight module index + completed-ID prefix
@@ -58,12 +52,17 @@ export function AiNativeModulesOverview() {
                 : Math.round((completedCount / totalLessons) * 100);
             const fullyComplete = totalLessons > 0 && completedCount === totalLessons;
             return (
-              <Link key={mod.id} href={`/ai-native/kurs/${mod.id}`} className="group">
+              <Link
+                key={mod.id}
+                href={`/ai-native/kurs/${mod.id}`}
+                prefetch={false}
+                className="group"
+              >
                 <m.div
                   custom={i}
                   variants={fadeUp}
                   className={cn(
-                    "h-full rounded-none border p-6 transition-colors",
+                    "js-reveal h-full rounded-none border p-6 transition-colors",
                     fullyComplete
                       ? "border-brand-orange/70 bg-brand-orange/5 group-hover:border-brand-orange"
                       : "border-border/50 bg-card/30 group-hover:border-brand-orange/40",
@@ -73,7 +72,7 @@ export function AiNativeModulesOverview() {
                     <div
                       className={cn(
                         "flex h-12 w-12 shrink-0 items-center justify-center rounded-none font-mono text-lg font-bold text-white",
-                        fullyComplete ? "bg-[#22c55e]" : "bg-brand-orange",
+                        fullyComplete ? "bg-risk-green" : "bg-brand-orange",
                       )}
                     >
                       {fullyComplete ? (
@@ -106,7 +105,7 @@ export function AiNativeModulesOverview() {
                     <div className="mt-4">
                       <div className="mb-1 flex items-baseline justify-between font-mono text-[10px] uppercase tracking-[0.12em]">
                         <span className="text-muted-foreground">Fortschritt</span>
-                        <span className={cn(fullyComplete ? "text-[#22c55e]" : "text-brand-orange")}>
+                        <span className={cn(fullyComplete ? "text-risk-green" : "text-brand-orange")}>
                           {completedCount}/{totalLessons} · {pct}%
                         </span>
                       </div>
@@ -117,7 +116,7 @@ export function AiNativeModulesOverview() {
                           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                           className={cn(
                             "h-full",
-                            fullyComplete ? "bg-[#22c55e]" : "bg-brand-orange",
+                            fullyComplete ? "bg-risk-green" : "bg-brand-orange",
                           )}
                         />
                       </div>

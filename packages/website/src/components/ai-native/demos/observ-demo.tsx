@@ -257,7 +257,7 @@ export function ObservDemo(): JSX.Element {
                 Latenz · letzte 60 Min · tick {tick}
               </div>
             </div>
-            <span className="inline-flex items-center gap-1 self-start bg-brand-orange px-2 py-0.5 font-mono text-[10px] font-bold tracking-[0.14em] text-white">
+            <span className="inline-flex items-center gap-1 self-start bg-brand-orange px-2 py-0.5 font-mono text-[10px] font-bold tracking-[0.14em] text-[var(--color-dark-bg)]">
               SIM
             </span>
           </div>
@@ -329,10 +329,10 @@ export function ObservDemo(): JSX.Element {
         <div className="mb-2">
           <DemoOverline>Log-Stream</DemoOverline>
         </div>
-        <div className="max-h-[150px] overflow-y-auto bg-[var(--color-dark-bg)] px-3.5 py-3 font-mono text-[11px] leading-[1.7] text-[var(--color-dark-fg)]">
+        <div className="dark-section max-h-[150px] overflow-y-auto bg-[var(--color-dark-bg)] px-3.5 py-3 font-mono text-[11px] leading-[1.7] text-[var(--color-dark-fg)]">
           {logLines.map(([t, lvl, tag, msg], i) => (
             <div key={i}>
-              <span className="text-[var(--color-dark-muted)]/60">
+              <span className="text-muted-foreground">
                 {t.padStart(4)}{" "}
               </span>
               <span className={cn("tracking-[0.1em]", lvlColor[lvl])}>

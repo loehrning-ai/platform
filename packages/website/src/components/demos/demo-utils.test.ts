@@ -65,7 +65,7 @@ describe("usePrefersReducedMotion", () => {
 
 describe("useVisibleAutoplay", () => {
   afterEach(() => {
-    setVisibility("visible");
+    act(() => setVisibility("visible"));
   });
 
   it("returns a ref and becomes visible when the tab is shown", () => {

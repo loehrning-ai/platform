@@ -297,11 +297,12 @@ export function TrustMeterSim() {
       <div className="ctl-row">
         <div className="tm-corr-picker">
           <span className="tm-corr-lab">Inject at day {CORRUPT_DAY + 1}:</span>
-          <button className={`tm-corr ${!corrupt ? "on" : ""}`} onClick={() => setCorrupt(null)}>
+          <button type="button" className={`tm-corr ${!corrupt ? "on" : ""}`} onClick={() => setCorrupt(null)}>
             none
           </button>
           {(Object.entries(CORRUPTIONS) as [CorruptionId, (typeof CORRUPTIONS)[CorruptionId]][]).map(([id, c]) => (
             <button
+              type="button"
               key={id}
               className={`tm-corr ${corrupt === id ? "on" : ""}`}
               onClick={() => setCorrupt(id)}
@@ -311,10 +312,10 @@ export function TrustMeterSim() {
             </button>
           ))}
         </div>
-        <button className="btn btn-primary" onClick={run}>
+        <button type="button" className="btn btn-primary" onClick={run}>
           ▶ Run 30 days
         </button>
-        <button className="btn" onClick={reset}>
+        <button type="button" className="btn" onClick={reset}>
           Reset
         </button>
         <div style={{ marginLeft: "auto", fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--fg-2)" }}>

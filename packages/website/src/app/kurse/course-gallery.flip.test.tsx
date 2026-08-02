@@ -39,7 +39,10 @@ const { FLIPPED_COURSE } = vi.hoisted(() => ({
     launchHref: "https://www.timloehr.me/interactive-courses/flip-fixture/",
     sourceHref:
       "https://github.com/Mavengence/interactive-courses/tree/abc/flip-fixture",
-  } satisfies CatalogCourse & { readonly launchHref: string; readonly sourceHref: string },
+  } satisfies CatalogCourse & {
+    readonly launchHref: string;
+    readonly sourceHref: string;
+  },
 }));
 
 const storeMock = vi.hoisted(() => ({
@@ -47,16 +50,35 @@ const storeMock = vi.hoisted(() => ({
   isCertificateEligible: vi.fn<(slug: string) => boolean>(() => false),
   getXp: vi.fn(() => 0),
   getStreak: vi.fn(() => ({ days: 0, last: null as string | null })),
+  subscribe: vi.fn((listener: () => void) => {
+    listener();
+    return () => {};
+  }),
 }));
 
 vi.mock("@/lib/progress/store", () => storeMock);
 vi.mock("@/lib/course/progress", () => ({
   serializeProgress: vi.fn(() => "ENCODED"),
 }));
+vi.mock("@/lib/courses/resume", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/courses/resume")>();
+  return {
+    ...actual,
+    hasCourseStarted: vi.fn((progress, slug) =>
+      String(slug) === "flip-fixture-course"
+        ? false
+        : actual.hasCourseStarted(progress, slug),
+    ),
+    resolveCourseResumeHref: vi.fn((progress, slug) =>
+      String(slug) === "flip-fixture-course"
+        ? "/flip-fixture-course/kurs"
+        : actual.resolveCourseResumeHref(progress, slug),
+    ),
+  };
+});
 
 vi.mock("@/lib/courses/catalog", async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import("@/lib/courses/catalog")>();
+  const actual = await importOriginal<typeof import("@/lib/courses/catalog")>();
   return {
     ...actual,
     ALL_COURSE_CATALOG: [...actual.ALL_COURSE_CATALOG, FLIPPED_COURSE],
@@ -87,8 +109,6 @@ describe("CourseGallery — nativeStatus-driven flip", () => {
     expect(
       screen.getByTestId(`progress-dots-${FLIPPED_SLUG}`),
     ).toBeInTheDocument();
-    expect(
-      screen.getByTestId(`certified-${FLIPPED_SLUG}`),
-    ).toBeInTheDocument();
+    expect(screen.getByTestId(`certified-${FLIPPED_SLUG}`)).toBeInTheDocument();
   });
 });

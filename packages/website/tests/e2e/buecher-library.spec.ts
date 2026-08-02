@@ -37,7 +37,7 @@ const BOOKS = [
 const HERO_HEADLINE =
   BOOKS.length === 1 ? "1 Lesefassung." : `${BOOKS.length} Lesefassungen.`;
 
-// Console-error filter mirrors route-einstieg.spec.ts / qa-sweep.spec.ts.
+// Every captured console error and uncaught page error fails the check.
 function collectConsoleErrors(page: Page): string[] {
   const errors: string[] = [];
   page.on("console", (msg) => {
@@ -48,13 +48,7 @@ function collectConsoleErrors(page: Page): string[] {
 }
 
 function meaningfulErrors(errors: string[]): string[] {
-  return errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e),
-  );
+  return errors;
 }
 
 // Scope to one card via its testid + the unique book heading it contains.

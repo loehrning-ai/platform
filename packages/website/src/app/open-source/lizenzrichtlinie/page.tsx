@@ -1,15 +1,14 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { readRootLicensePolicy } from "@/lib/open-source/license-policy.server";
+import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPublicPageMetadata({
   title: "Lizenzrichtlinie",
   description:
     "Verbindliche Lizenzzuordnung für Code, Lerninhalte, Medien, Schriften und Marken der loehrning.ai Lernplattform.",
-  alternates: { canonical: "/open-source/lizenzrichtlinie" },
-  robots: { index: true, follow: true },
-};
+  path: "/open-source/lizenzrichtlinie",
+});
 
 export const dynamic = "force-static";
 

@@ -6,7 +6,7 @@
    system fonts plus the root Geist Mono variable; builds make no font request.
    ========================================================================== */
 
-:root {
+.blog-root {
   /* brand tokens
      WCAG AA: --kupfer is accent TEXT on light surfaces across all blog pages
      (.hash, row CTAs, overlines). #C4431A was 4.43:1 on Kalkweiß and 3.94:1
@@ -32,6 +32,16 @@
   /* motion */
   --ease-out:cubic-bezier(0.16,1,0.3,1);
   --ease-brand:cubic-bezier(0.2,0.9,0.3,1);
+}
+
+/* The four static Typing faces add roughly 240 KiB before compression. Keep
+   the editorial face on wider canvases, but use the deterministic system
+   stack on constrained mobile viewports where the article's serif copy is the
+   visual anchor and those extra sans transfers compete with text LCP. */
+@media (max-width:900px) {
+  .blog-root {
+    --font-sans:-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
 }
 
 /* Blog-scoped reset — limited to .blog-root so it doesn't affect the dark shell */
@@ -131,7 +141,7 @@
   padding:5px 10px;
   border:1px solid var(--leinen);
   font-family:var(--font-mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--schiefer);
-  background:transparent; cursor:pointer; transition:all .15s;
+  background:transparent; cursor:pointer; transition:background-color .15s, border-color .15s, color .15s;
 }
 .blog-root .chip:hover { border-color:var(--druckertinte); color:var(--druckertinte); }
 .blog-root .chip--active { background:var(--druckertinte); color:var(--kalkweiss); border-color:var(--druckertinte); }
@@ -146,6 +156,7 @@
 .blog-root .top-rule { width:154px; height:3px; background:var(--kupfer); }
 .blog-root .hairline { width:100%; height:1px; background:var(--leinen); }
 
-.blog-root .reveal { opacity:0; transform:translateY(16px);
+.blog-root .reveal { opacity:1; transform:none;
   transition:opacity .9s var(--ease-brand), transform .9s var(--ease-brand); }
-.blog-root .reveal.revealed { opacity:1; transform:translateY(0); }
+.blog-root[data-scroll-reveal="active"] .reveal { opacity:0; transform:translateY(16px); }
+.blog-root[data-scroll-reveal="active"] .reveal.revealed { opacity:1; transform:translateY(0); }

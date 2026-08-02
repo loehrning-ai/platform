@@ -45,6 +45,12 @@ describe("/wie-ki-funktioniert landing page", () => {
     expect(hrefs).toContain("/ki-fuehrerschein");
     expect(hrefs).toContain("/einstieg");
   });
+
+  it("uses descriptive breadcrumb link text for the homepage", () => {
+    render(<WieKiFunktioniertPage />);
+    expect(screen.getByRole("link", { name: "Startseite" })).toHaveAttribute("href", "/");
+    expect(screen.queryByRole("link", { name: "Start" })).not.toBeInTheDocument();
+  });
 });
 
 describe("getLektionById helper", () => {

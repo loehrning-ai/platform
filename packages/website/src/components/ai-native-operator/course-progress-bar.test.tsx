@@ -32,7 +32,9 @@ describe("CourseProgressBar ", () => {
   it("shows 0 / 39 lessons with no progress", async () => {
     render(<CourseProgressBar />);
     expect(await screen.findByText("0 / 39 lessons")).toBeInTheDocument();
-    expect(screen.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "0");
+    expect(
+      screen.getByRole("progressbar", { name: "Lesson progress" }),
+    ).toHaveAttribute("aria-valuenow", "0");
   });
 
   it("reflects completed lessons from the unified store via subscribe", async () => {

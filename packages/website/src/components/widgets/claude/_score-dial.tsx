@@ -12,7 +12,11 @@ export function ScoreDial({ score }: { readonly score: number }): JSX.Element {
   const pct = Math.max(0, Math.min(100, Math.round(score)));
   const dash = (pct / 100) * c;
   const color =
-    pct >= 80 ? "#22c55e" : pct >= 50 ? "var(--color-brand-amber)" : "var(--color-destructive)";
+    pct >= 80
+      ? "var(--color-risk-green)"
+      : pct >= 50
+        ? "var(--color-brand-amber)"
+        : "var(--color-destructive)";
 
   return (
     <svg

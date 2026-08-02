@@ -39,9 +39,9 @@ Was du tust:
 
 ## EU AI Act: Was dich direkt betrifft
 
-Verordnung (EU) 2024/1689, die EU-KI-Verordnung, ist seit 1. August 2024 in Kraft. Artikel 4 (KI-Kompetenz) gilt seit 2. Februar 2025. Er verlangt, dass jedes Unternehmen, das KI einsetzt, die KI-Kompetenz seiner Mitarbeiter sicherstellt. Unabhängig von Größe, Branche oder Risikoklasse. Die Pflicht trifft Anbieter und Betreiber gleichermaßen, wer ChatGPT oder Copilot nutzt, ist Betreiber.
+Verordnung (EU) 2024/1689, die EU-KI-Verordnung, ist seit 1. August 2024 in Kraft. Artikel 4 (KI-Kompetenz) gilt seit 2. Februar 2025. In der seit 27. Juli 2026 geltenden Fassung müssen Anbieter und Betreiber Maßnahmen ergreifen, die die Entwicklung der KI-Kompetenz ihres Personals und anderer in ihrem Auftrag handelnder Personen unterstützen. Vorwissen, Erfahrung, Ausbildung, Einsatzkontext und betroffene Personen sind zu berücksichtigen; ein bestimmtes individuelles Kompetenzniveau muss nicht garantiert werden.
 
-Seit 2. August 2025 ist der Sanktionsrahmen des Art. 99 grundsätzlich anwendbar. Ob eine Sanktion in Betracht kommt, hängt davon ab, ob die jeweilige Pflicht bereits gilt und wer zuständig ist. Art. 4 und Art. 5 gelten seit Februar 2025, die GPAI-Anbieterpflichten seit August 2025 und Art. 50 ab 2. August 2026. Die Kommission kann GPAI-Pflichten ab diesem Datum mit Bußgeldern durchsetzen. Parlament und Rat beschlossen für eigenständige Anhang-III-Hochrisiko-Systeme den 2. Dezember 2027 und für produktintegrierte Systeme den 2. August 2028; am 14. Juli 2026 war diese Änderungsverordnung noch nicht im Amtsblatt veröffentlicht.
+Seit 2. August 2025 ist der Sanktionsrahmen des Art. 99 grundsätzlich anwendbar. Ob eine Sanktion in Betracht kommt, hängt davon ab, ob die jeweilige Pflicht bereits gilt und wer zuständig ist. Art. 4 und große Teile des Art. 5 gelten seit Februar 2025, die GPAI-Anbieterpflichten seit August 2025 und Art. 50 ab 2. August 2026. Die Verordnung (EU) 2026/1744 ist am 27. Juli 2026 in Kraft getreten. Sie verschiebt die Hochrisiko-Regeln für eigenständige Anhang-III-Systeme auf den 2. Dezember 2027 und für produktintegrierte Anhang-I-Systeme auf den 2. August 2028.
 
 Dieses Buch oder ein Kurszertifikat kann eine Kompetenzmaßnahme dokumentieren, erfüllt Art. 4 aber nicht automatisch. Die Organisation muss Bedarf, Rolle, Einsatzkontext, Maßnahme und Wirksamkeitsprüfung nachvollziehbar dokumentieren. Eine Richtlinie ist ein Baustein davon.
 
@@ -55,7 +55,7 @@ Version 1.0 · Gültig ab [Datum]
 
 1. Zweck
    Diese Richtlinie regelt den Einsatz von KI-Systemen am Arbeitsplatz
-   und erfüllt die KI-Kompetenz-Pflicht nach Art. 4 der EU-KI-Verordnung
+   und unterstützt die KI-Kompetenzmaßnahmen nach Art. 4 der EU-KI-Verordnung
    (Verordnung (EU) 2024/1689).
 
 2. Geltungsbereich

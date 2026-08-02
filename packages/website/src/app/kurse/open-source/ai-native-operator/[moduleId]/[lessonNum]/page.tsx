@@ -75,7 +75,11 @@ export default async function AiNativeOperatorLessonRoute({ params }: PageProps)
       kind: "module",
     };
   } else {
-    next = { href: courseHref(), label: "Course complete, return to overview", kind: "course-complete" };
+    next = {
+      href: `${courseHref()}#final-assessment`,
+      label: "Continue to final assessment",
+      kind: "final-assessment",
+    };
   }
 
   const allLessons = await getAllLessons();

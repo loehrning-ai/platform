@@ -16,8 +16,15 @@ import {
   isCourseRecordEarned,
 } from "@/lib/courses/competencies";
 import { createAuthServerClient, getAuthenticatedUser } from "@/lib/supabase/auth-server";
+import { reportApiError } from "@/lib/observability/api-error";
 import { fetchUnifiedProgressForUser } from "@/lib/progress/server-store";
 import type { UnifiedProgress } from "@/lib/progress/types";
+import { completedCanonicalLessonCount } from "@/lib/courses/completion";
+import {
+  hasCourseStarted,
+  resolveCourseResumeHref,
+} from "@/lib/courses/resume";
+import type { CourseSlug } from "@/lib/course/types";
 import { Card, IconTile } from "@/components/ui/card";
 import { BrandButton } from "@/components/ui/brand-button";
 
@@ -29,10 +36,8 @@ export const metadata: Metadata = {
   alternates: { canonical: null },
 };
 
-function completedLessons(progress: UnifiedProgress | null, slug: string): number {
-  const slice = progress?.courses[slug as keyof UnifiedProgress["courses"]];
-  if (!slice) return 0;
-  return Object.values(slice.lessons).filter((lesson) => lesson.completed).length;
+function completedLessons(progress: UnifiedProgress | null, slug: CourseSlug): number {
+  return completedCanonicalLessonCount(progress, slug);
 }
 
 const SUPPORT_TILES = [
@@ -58,25 +63,47 @@ export default async function KontoPage() {
 
   let progress: UnifiedProgress | null = null;
   let updatedAt: string | null = null;
-  const supabase = await createAuthServerClient();
+  let progressUnavailable = false;
+  let supabase;
+  try {
+    supabase = await createAuthServerClient();
+  } catch (error) {
+    reportApiError({
+      route: "/konto",
+      step: "auth-create-client",
+      error,
+    });
+    supabase = null;
+    progressUnavailable = true;
+  }
+  if (user && !supabase) progressUnavailable = true;
   if (supabase && user) {
     const fetched = await fetchUnifiedProgressForUser(supabase, user.id);
     if (fetched.ok) {
       progress = fetched.result.progress;
       updatedAt = fetched.result.updatedAt;
+    } else {
+      progressUnavailable = true;
     }
   }
 
   // Course-level rollups.
   const courseState = COURSE_CATALOG.map((course) => {
     const done = completedLessons(progress, course.slug);
-    const pct =
-      course.totalLessons > 0 ? Math.round((done / course.totalLessons) * 100) : 0;
+    const pct = course.totalLessons > 0
+      ? Math.min(100, Math.round((done / course.totalLessons) * 100))
+      : 0;
     return {
       course,
       done,
       pct,
       recordEarned: isCourseRecordEarned(progress, course.slug),
+      started:
+        done > 0 ||
+        hasCourseStarted(progress, course.slug),
+      resumeHref: resolveCourseResumeHref(progress, course.slug),
+      lastActivity:
+        progress?.courses[course.slug]?.lastActivity ?? null,
     };
   });
 
@@ -84,7 +111,13 @@ export default async function KontoPage() {
   // "Next" and the "all done" banner use the SAME definition as the count
   // (record earned), so the celebration can never contradict the "X/4" tally.
   const nextCourse =
-    courseState.find((c) => !c.recordEarned)?.course ?? null;
+    courseState
+      .filter((c) => !c.recordEarned)
+      .sort((left, right) => {
+        const leftAt = left.lastActivity ? Date.parse(left.lastActivity) : 0;
+        const rightAt = right.lastActivity ? Date.parse(right.lastActivity) : 0;
+        return rightAt - leftAt;
+      })[0] ?? null;
   const { earned: earnedCount, total: totalCompetencies } =
     competencyProgress(progress);
   const earned = earnedCompetencies(progress);
@@ -124,6 +157,21 @@ export default async function KontoPage() {
           </form>
         </div>
 
+        {progressUnavailable ? (
+          <div
+            role="alert"
+            className="mt-8 border border-brand-orange bg-kupfer-mist p-5"
+          >
+            <p className="font-semibold text-foreground">
+              Dein Lernstand ist gerade nicht erreichbar.
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              Es wird kein leerer Fortschritt angenommen. Lade die Seite später
+              neu; dein lokaler Lernstand bleibt im Browser erhalten.
+            </p>
+          </div>
+        ) : (
+          <>
         {/* Overview: three honest rollups */}
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
           <Card className="gap-1">
@@ -163,12 +211,23 @@ export default async function KontoPage() {
               Weiter lernen
             </p>
             <p className="mt-2 text-[20px] font-bold tracking-[-0.02em] text-foreground">
-              {nextCourse.title}
+              {nextCourse.course.title}
             </p>
-            <p className="mt-1 text-sm text-muted-foreground">{nextCourse.tagline}</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {nextCourse.course.tagline}
+            </p>
             <div className="mt-5">
-              <BrandButton href={nextCourse.continueHref} variant="primary" size="sm">
-                Weiterlernen <ArrowRight size={15} aria-hidden="true" />
+              <BrandButton
+                href={
+                  nextCourse.started
+                    ? nextCourse.resumeHref
+                    : nextCourse.course.startHref
+                }
+                variant="primary"
+                size="sm"
+              >
+                {nextCourse.started ? "Weiterlernen" : "Starten"}{" "}
+                <ArrowRight size={15} aria-hidden="true" />
               </BrandButton>
             </div>
           </Card>
@@ -193,7 +252,14 @@ export default async function KontoPage() {
           Deine Kurse
         </h2>
         <div className="mt-6 grid gap-5 sm:grid-cols-2">
-          {courseState.map(({ course, done, pct, recordEarned }) => (
+          {courseState.map(({
+            course,
+            done,
+            pct,
+            recordEarned,
+            started,
+            resumeHref,
+          }) => (
             <Card key={course.slug} accent="kupfer" className="h-full">
               <div className="flex items-start justify-between gap-3">
                 <IconTile icon={GraduationCap} accent="kupfer" />
@@ -226,10 +292,15 @@ export default async function KontoPage() {
               </div>
               <div className="mt-5">
                 <Link
-                  href={done > 0 ? course.continueHref : course.startHref}
+                  href={started ? resumeHref : course.startHref}
                   className="inline-flex font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-brand-orange underline-offset-4 hover:underline"
                 >
-                  {done > 0 ? "Weiterlernen" : "Starten"} →
+                  {recordEarned
+                    ? "Nachweis ansehen"
+                    : started
+                      ? "Weiterlernen"
+                      : "Starten"}{" "}
+                  →
                 </Link>
               </div>
             </Card>
@@ -291,6 +362,8 @@ export default async function KontoPage() {
             ein ehrlicher Nachweis deines Lernwegs, kein akkreditiertes Zertifikat.
           </p>
         </section>
+          </>
+        )}
 
         {/* Supporting resources */}
         <h2 className="mt-16 text-2xl font-bold tracking-[-0.03em] text-foreground">
@@ -318,8 +391,11 @@ export default async function KontoPage() {
             XP, Abzeichen &amp; Lernserien
           </p>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Punkte und Abzeichen werden lokal auf deinem Gerät gespeichert und sind
-            ein spielerisches Hilfsmittel ohne offiziellen Nachweiswert.
+            Ohne Login bleiben Kursfortschritt, XP, Abzeichen, Lernserien und
+            absolvierte Checkpoints lokal in diesem Browser. Mit Lernkonto
+            werden diese Daten geräteübergreifend mit deinem Konto
+            synchronisiert. Sie sind ein spielerisches Hilfsmittel ohne
+            offiziellen Nachweiswert.
           </p>
         </aside>
 
@@ -327,7 +403,7 @@ export default async function KontoPage() {
           <p className="text-sm text-muted-foreground">
             <Link
               href="/konto/datenschutz"
-              className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-brand-orange underline-offset-4 hover:underline"
+              className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-brand-orange underline underline-offset-4"
             >
               Datenschutz &amp; Datenverwaltung
             </Link>

@@ -5,12 +5,13 @@
  * more); this file fills the gap: /einstieg, /wie-ki-funktioniert,
  * /ki-check, /bekannte-grenzen, /neuigkeiten, /hilfe,
  * /login. Pattern is intentionally identical to a11y.spec.ts (same AxeBuilder
- * tags, serious/critical filter, reduced-motion + settle + polled scan). One
+ * tags, unfiltered WCAG violations, reduced-motion + settle + polled scan). One
  * axe test per small route-group; failures name the offending route(s).
  */
 
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { exposeAllAuditedContent } from "./fixtures/a11y-visibility";
 
 // Small route-groups over the newly-covered routes (all confirmed to exist as
 // server pages; /login renders its form for the unauthenticated e2e context and
@@ -28,7 +29,8 @@ type AxeViolation = Awaited<
 // Copied intent from a11y.spec.ts settleMotion(): framer-motion opacity tweens
 // are invisible to document.getAnimations(), so a mid-fade axe sample blends
 // token colours toward the backdrop and reports false contrast violations.
-// Require three identical, fraction-free opacity samples (300ms apart) first.
+// Require three identical opacity samples (300ms apart). Static decorative
+// opacity values are valid and must not force the full deadline.
 async function settleMotion(page: Page): Promise<void> {
   const sample = () =>
     page.evaluate(() =>
@@ -41,11 +43,7 @@ async function settleMotion(page: Page): Promise<void> {
   let stable = 0;
   while (Date.now() < deadline) {
     const cur = await sample();
-    const fractional = cur.split("|").some((o) => {
-      const n = parseFloat(o);
-      return Number.isFinite(n) && n > 0 && n < 1;
-    });
-    if (!fractional && cur === prev) {
+    if (cur === prev) {
       if ((stable += 1) >= 2) return;
     } else {
       stable = 0;
@@ -55,11 +53,12 @@ async function settleMotion(page: Page): Promise<void> {
   }
 }
 
-// Same builder options/tags and serious|critical filter as a11y.spec.ts, polled
+// Same builder options/tags as a11y.spec.ts, polled
 // to the settled verdict so a fade flake (which clears) is distinguished from a
 // real contrast bug (which persists at final state and fails every retry).
 async function scanRoute(page: Page, route: string): Promise<AxeViolation[]> {
   await page.goto(route, { waitUntil: "load" });
+  await exposeAllAuditedContent(page);
   await settleMotion(page);
 
   const scanOnce = async () =>
@@ -67,9 +66,7 @@ async function scanRoute(page: Page, route: string): Promise<AxeViolation[]> {
       await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
         .analyze()
-    ).violations.filter(
-      (v) => v.impact === "serious" || v.impact === "critical",
-    );
+    ).violations;
 
   let blocking = await scanOnce();
   const deadline = Date.now() + 20_000;
@@ -91,7 +88,7 @@ async function scanRoute(page: Page, route: string): Promise<AxeViolation[]> {
 }
 
 for (const [group, routes] of Object.entries(GROUPS)) {
-  test(`a11y: "${group}" routes have no serious or critical axe violations`, async ({
+  test(`a11y: "${group}" routes have no WCAG axe violations`, async ({
     page,
   }) => {
     // Worst case per route: settleMotion (20s) + polled axe (20s); a 3-route
@@ -111,11 +108,11 @@ for (const [group, routes] of Object.entries(GROUPS)) {
 
     expect(
       offenders,
-      `axe found serious/critical violations on: ${offenders.join(" | ")}`,
+      `axe found WCAG violations on: ${offenders.join(" | ")}`,
     ).toEqual([]);
   });
 }
 
 // Note: single-h1 / landmark structure for these same routes is owned by the
-// sibling a11y-structure.spec.ts (moderate-impact rules the serious/critical
-// filter above drops), so this file stays strictly the axe-sweep half.
+// sibling a11y-structure.spec.ts, so this file stays strictly the axe-sweep
+// half.

@@ -62,7 +62,7 @@ const SEGMENT_TONE_CLASS: Record<TerminalReplaySegmentTone, string> = {
   prompt: "text-brand-orange",
   comment: "text-muted-foreground",
   error: "text-destructive",
-  output: "text-[#22c55e]",
+  output: "text-risk-green",
   plain: "text-foreground",
 };
 
@@ -199,7 +199,7 @@ export function TerminalReplayWidget({
     status === "running"
       ? "bg-brand-orange"
       : status === "done"
-        ? "bg-[#22c55e]"
+        ? "bg-risk-green"
         : "bg-muted-foreground";
 
   return (

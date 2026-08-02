@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 
 /**
  * Attaches an IntersectionObserver that toggles `.revealed` on any element
@@ -20,11 +20,29 @@ export function ScrollReveal({
   once?: boolean;
   wrapHeadings?: boolean;
 }) {
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (typeof window === "undefined") return;
     const query = selectors.join(", ");
     const nodes = Array.from(document.querySelectorAll<HTMLElement>(query));
     if (!nodes.length) return;
+    if (!("IntersectionObserver" in window)) return;
+
+    const scope =
+      nodes[0]?.closest<HTMLElement>(".blog-root") ??
+      document.querySelector<HTMLElement>(".blog-root");
+    if (!scope) return;
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("revealed");
+            if (once) obs.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold },
+    );
 
     if (wrapHeadings) {
       for (const el of nodes) {
@@ -67,19 +85,12 @@ export function ScrollReveal({
       }
     }
 
-    const obs = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("revealed");
-            if (once) obs.unobserve(entry.target);
-          }
-        }
-      },
-      { threshold },
-    );
     for (const n of nodes) obs.observe(n);
-    return () => obs.disconnect();
+    scope.dataset.scrollReveal = "active";
+    return () => {
+      obs.disconnect();
+      delete scope.dataset.scrollReveal;
+    };
   }, [selectors, threshold, once, wrapHeadings]);
 
   return null;

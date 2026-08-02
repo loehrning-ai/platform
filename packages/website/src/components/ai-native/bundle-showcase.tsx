@@ -110,6 +110,7 @@ export function AiNativeBundleShowcase() {
               <div className="mt-5">
                 <BrandButton
                   href="/ai-native/kurs/modul_1"
+                  prefetch={false}
                   variant="primary"
                   size="sm"
                 >

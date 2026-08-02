@@ -34,10 +34,14 @@ vi.mock("next/link", async () => {
   const React = await import("react");
   return {
     __esModule: true,
-    default: ({ href, children, ...rest }: any) =>
+    default: ({ href, children, prefetch, ...rest }: any) =>
       React.createElement(
         "a",
-        { href: typeof href === "string" ? href : "#", ...rest },
+        {
+          href: typeof href === "string" ? href : "#",
+          "data-prefetch": String(prefetch),
+          ...rest,
+        },
         children,
       ),
   };
@@ -198,6 +202,7 @@ describe("<AiNativeContinueBanner> resume state (real store + modules.json)", ()
     render(<AiNativeContinueBanner />);
 
     const banner = await screen.findByLabelText(BANNER_LABEL);
+    expect(banner).toHaveClass("absolute", "top-16");
     expect(banner).toHaveTextContent("Modul 1:");
     expect(banner).toHaveTextContent(/2 \/ 5 Lektionen/);
     // 2 / 5 = 40% exactly.
@@ -205,6 +210,7 @@ describe("<AiNativeContinueBanner> resume state (real store + modules.json)", ()
 
     const cta = screen.getByRole("link", { name: /Weiterlernen/ });
     expect(cta).toHaveAttribute("href", "/ai-native/kurs/modul_1");
+    expect(cta).toHaveAttribute("data-prefetch", "false");
   });
 
   it("skips a fully-completed module and rounds the next module's percent", async () => {

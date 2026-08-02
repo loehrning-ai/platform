@@ -136,20 +136,24 @@ export function PermissionGateSim() {
         <div className="pg-chip-rail">
           <div className="pg-rail-lab">Drag an actor</div>
           {CHIPS.map((c) => (
-            <div
+            <button
+              type="button"
               key={c.id}
               className={`pg-chip ${dragging === c.id ? "dragging" : ""}`}
               draggable
               onDragStart={() => setDragging(c.id)}
               onDragEnd={() => setDragging(null)}
               onClick={() => setDragging((d) => (d === c.id ? null : c.id))}
+              aria-pressed={dragging === c.id}
               style={{ "--sw": c.swatch } as CSSProperties}
             >
               <span className="dot" />
               <code>{chipLabel(c.id)}</code>
-            </div>
+            </button>
           ))}
-          <div className="pg-rail-hint">Click a chip, then click a column, or drag.</div>
+          <div className="pg-rail-hint">
+            Select a chip, then use a column&apos;s assign button, or drag.
+          </div>
           <label className="pg-zone-toggle">
             <input type="checkbox" checked={zoneRequired} onChange={(e) => setZoneRequired(e.target.checked)} />
             <span>
@@ -217,7 +221,6 @@ export function PermissionGateSim() {
                   className={`pg-col-row ${bad ? "bad" : ""} ${ok && c.required ? "ok" : ""} ${dragging ? "drop" : ""}`}
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={() => assignTo(c.id)}
-                  onClick={() => dragging && assignTo(c.id)}
                 >
                   <span className="ln">{(zone ? 6 : 5) + i}</span>
                   <span className="pg-col-inner">
@@ -227,15 +230,23 @@ export function PermissionGateSim() {
                     {c.pii && <span className="pii">PII</span>}
                     <span className="actor">
                       {assigned ? (
-                        <span
+                        <button
+                          type="button"
                           className="pill-actor"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            clearCol(c.id);
-                          }}
+                          onClick={() => clearCol(c.id)}
+                          aria-label={`Remove ${chipLabel(assigned)} from ${c.id}`}
                         >
                           actors: [<code>{chipLabel(assigned)}</code>]<i>×</i>
-                        </span>
+                        </button>
+                      ) : dragging ? (
+                        <button
+                          type="button"
+                          className="pill-assign"
+                          onClick={() => assignTo(c.id)}
+                          aria-label={`Assign ${chipLabel(dragging)} to ${c.id}`}
+                        >
+                          Assign <code>{chipLabel(dragging)}</code>
+                        </button>
                       ) : c.required ? (
                         <span className="pill-need">
                           needs <code>{ACTOR_LABEL[c.required]}</code>
@@ -276,13 +287,13 @@ export function PermissionGateSim() {
       </div>
 
       <div className="ctl-row">
-        <button className="btn btn-primary" onClick={ship} disabled={shipState === "deploying"}>
+        <button type="button" className="btn btn-primary" onClick={ship} disabled={shipState === "deploying"}>
           {shipState === "deploying" ? "● Deploying…" : "🚢 Ship dbt"}
         </button>
-        <button className="btn" onClick={autofix}>
+        <button type="button" className="btn" onClick={autofix}>
           Autofix · assign PII actors
         </button>
-        <button className="btn" onClick={reset}>
+        <button type="button" className="btn" onClick={reset}>
           Reset
         </button>
         {shipState === "shipped" && (

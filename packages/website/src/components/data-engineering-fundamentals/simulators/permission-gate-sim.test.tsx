@@ -35,4 +35,22 @@ describe("PermissionGateSim ", () => {
     fireEvent.click(screen.getByRole("button", { name: "Reset" }));
     expect(screen.getAllByText(/needs/).length).toBe(3);
   });
+
+  it("supports keyboard-first actor selection and explicit assignment", () => {
+    render(<PermissionGateSim />);
+    const actor = screen.getByRole("button", { name: "PII_Person" });
+    fireEvent.click(actor);
+    expect(actor).toHaveAttribute("aria-pressed", "true");
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Assign PII_Person to employee_email",
+      }),
+    );
+    expect(
+      screen.getByRole("button", {
+        name: "Remove PII_Person from employee_email",
+      }),
+    ).toBeInTheDocument();
+  });
 });

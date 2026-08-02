@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type CSSProperties } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { PipelineBar, OV_STAGES } from "../simulators/pipeline-bar";
 import type { DefChapterId } from "@/lib/data-engineering-fundamentals/types";
 
@@ -22,10 +22,8 @@ function chapterHref(id: DefChapterId | string): string {
 }
 
 export function ChOverview() {
-  const router = useRouter();
   const [activeId, setActiveId] = useState("ingest");
   const active = OV_STAGES.find((s) => s.id === activeId) ?? OV_STAGES[0];
-  const goTo = (id: DefChapterId | string) => router.push(chapterHref(id));
 
   return (
     <>
@@ -43,12 +41,12 @@ export function ChOverview() {
           you&apos;ll know where a pipeline fails before it does.
         </p>
         <div className="ov2-cta">
-          <button className="btn btn-primary ov2-btn-primary" onClick={() => goTo("fund")}>
+          <Link className="btn btn-primary ov2-btn-primary" href={chapterHref("fund")}>
             Begin with Chapter 00 →
-          </button>
-          <button className="ov2-btn-ghost" onClick={() => goTo("cap")}>
+          </Link>
+          <Link className="ov2-btn-ghost" href={chapterHref("cap")}>
             Peek at the capstone
-          </button>
+          </Link>
           <span className="ov2-meta">
             <span className="ov2-meta-dot" /> ~90 min · no signup · runs in your browser
           </span>
@@ -61,7 +59,7 @@ export function ChOverview() {
           <h2 className="ov2-h2">One pipeline. Ten chapters. Every dot is a real row.</h2>
           <p className="ov2-lede">Hover a stop to preview. Click to open. Each stands alone; the capstone stitches all ten together.</p>
         </div>
-        <PipelineBar goTo={goTo} activeId={activeId} setActiveId={setActiveId} />
+        <PipelineBar activeId={activeId} setActiveId={setActiveId} />
         <div className="ov2-detail" style={{ "--hex": active.hex, "--ink": active.ink } as CSSProperties}>
           <div className="ov2-detail-n">{active.n}</div>
           <div className="ov2-detail-main">
@@ -71,9 +69,9 @@ export function ChOverview() {
             </div>
             <div className="ov2-detail-body">{active.body}</div>
           </div>
-          <button className="btn btn-primary ov2-detail-btn" onClick={() => goTo(active.chap)}>
+          <Link className="btn btn-primary ov2-detail-btn" href={chapterHref(active.chap)}>
             Open chapter →
-          </button>
+          </Link>
         </div>
       </section>
 

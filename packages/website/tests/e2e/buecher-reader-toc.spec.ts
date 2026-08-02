@@ -30,13 +30,7 @@ function collectConsoleErrors(page: Page): string[] {
 }
 
 function meaningfulErrors(errors: string[]): string[] {
-  return errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e),
-  );
+  return errors;
 }
 
 /** Heading ids the reader actually rendered (rehype-slug/github-slugger). */
@@ -115,16 +109,23 @@ test.describe("book reader TOC + heading anchors", () => {
 
     const ids = await renderedHeadingIds(page);
     const toc = page.getByRole("navigation", { name: "Kapitelinhalt" });
-    const hrefs = await toc
-      .getByRole("link")
+    const links = toc.getByRole("link");
+    // Next can finish the window load event while the streamed page tree is
+    // still parked in a hidden container. Wait for the interactive copy before
+    // reading role-filtered links; evaluateAll does not auto-wait.
+    await expect(links.first()).toBeVisible();
+    const hrefs = await links
       .evaluateAll((els) => els.map((e) => e.getAttribute("href") ?? ""));
 
     // Pick the LAST TOC link whose slug resolves to a rendered heading id, so
     // the click must scroll a meaningful distance. (Since the slug fix landed,
     // sidebar slugs keep umlauts and match the DOM ids one-to-one.)
     const resolvable = hrefs.filter((h) => h.startsWith("#") && ids.includes(h.slice(1)));
-    test.skip(resolvable.length === 0, "no TOC link resolves to a rendered heading id");
-    const targetHref = resolvable[resolvable.length - 1];
+    expect(
+      resolvable.length,
+      "at least one TOC link must resolve to a rendered heading id",
+    ).toBeGreaterThan(0);
+    const targetHref = resolvable[resolvable.length - 1]!;
     const targetId = targetHref.slice(1);
 
     await toc.locator(`a[href="${targetHref}"]`).first().click();
@@ -140,18 +141,21 @@ test.describe("book reader TOC + heading anchors", () => {
     const ascii = ids.filter((id) => /^[a-z0-9-]+$/.test(id));
     const pool = ascii.length > 0 ? ascii : ids;
     const targetId = pool[pool.length - 1];
-    test.skip(!targetId, "chapter rendered no heading ids");
+    expect(targetId, "chapter must render a heading id for deep-link proof").toBeDefined();
 
     // A late heading also proves the page scrolled down from the top.
-    await deepLinkLandsOn(page, targetId as string, { requireScroll: true });
+    await deepLinkLandsOn(page, targetId!, { requireScroll: true });
   });
 
   test("deep-linking to a heading anchor with umlauts lands on it", async ({ page }) => {
     await page.goto(READER_PATH, { waitUntil: "domcontentloaded" });
     const umlautId = (await renderedHeadingIds(page)).find((id) => /[äöüß]/.test(id));
-    test.skip(!umlautId, "no rendered heading id contains an umlaut in this chapter");
+    expect(
+      umlautId,
+      "fixture chapter must keep an umlaut heading id for unicode deep-link proof",
+    ).toBeDefined();
 
     // Proves the percent-encoded umlaut fragment resolves to the umlaut heading.
-    await deepLinkLandsOn(page, umlautId as string, { requireScroll: false });
+    await deepLinkLandsOn(page, umlautId!, { requireScroll: false });
   });
 });

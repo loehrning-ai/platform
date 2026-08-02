@@ -1,12 +1,16 @@
 import { test, expect } from "@playwright/test";
 
-test("homepage primary CTA leads to /kurse", async ({ page }) => {
+test("homepage primary CTA uses the KI-Check to determine the learner's start", async ({
+  page,
+}) => {
   await page.goto("/");
-  const courseLink = page.getByRole("link", { name: /Lernpfad öffnen/i }).first();
-  await expect(courseLink).toBeVisible();
-  await courseLink.click();
-  await expect(page).toHaveURL(/\/kurse$/);
-  await expect(page.getByRole("heading", { name: /KI lernen/i })).toBeVisible();
+  const startLink = page
+    .getByRole("link", { name: "Start bestimmen" })
+    .first();
+  await expect(startLink).toHaveAttribute("href", "/ki-check");
+  await startLink.click();
+  await expect(page).toHaveURL(/\/ki-check$/);
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 });
 
 test("navigation remains resource-first on both viewports", async ({ page }) => {
@@ -14,16 +18,26 @@ test("navigation remains resource-first on both viewports", async ({ page }) => 
   await page.goto("/");
   const desktopCourses = page.getByRole("button", { name: /Kurse/ }).first();
   if (await desktopCourses.isVisible()) {
-    const nav = page.getByRole("navigation");
-    await expect(nav.getByRole("link", { name: "Open Source", exact: true }).first()).toBeVisible();
-    await expect(nav.getByRole("link", { name: "Blog", exact: true })).toBeVisible();
-    await expect(nav.locator('a:has-text("KI-CHECK")')).toHaveCount(0);
+    const nav = page.getByRole("navigation", { name: "Hauptnavigation" });
+    await expect(
+      nav.getByRole("link", { name: "Open Source", exact: true }),
+    ).toBeVisible();
     await desktopCourses.click();
     await expect(
       page.locator("#akademie-nav-menu").getByRole("link", {
-        name: "Open Source",
+        name: "Alle Kurse",
       }),
-    ).toHaveAttribute("href", "/open-source");
+    ).toHaveAttribute("href", "/kurse");
+
+    const resources = nav.getByRole("button", { name: "Ressourcen" });
+    await resources.click();
+    const resourcesMenu = page.locator("#ressourcen-nav-menu");
+    await expect(
+      resourcesMenu.getByRole("link", { name: "KI-Check" }),
+    ).toHaveAttribute("href", "/ki-check");
+    await expect(
+      resourcesMenu.getByRole("link", { name: "Blog", exact: true }),
+    ).toHaveAttribute("href", "/blog");
   } else {
     await expect(async () => {
       await page.getByRole("button", { name: "Menü öffnen" }).click();
@@ -33,12 +47,20 @@ test("navigation remains resource-first on both viewports", async ({ page }) => 
     }).toPass({ timeout: 30_000 });
     const menu = page.locator("#mobile-menu");
     await expect(menu.getByRole("link", { name: /Alle Kurse/ })).toBeVisible();
-    await expect(menu.getByRole("link", { name: /Open Source/ }).first()).toHaveAttribute(
+    await expect(
+      menu.getByRole("link", { name: /Open Source/ }).first(),
+    ).toHaveAttribute("href", "/open-source");
+    await expect(
+      menu.getByRole("link", { name: "KI-Check" }),
+    ).toHaveAttribute("href", "/ki-check");
+    await expect(
+      menu.getByRole("link", { name: "Blog", exact: true }),
+    ).toHaveAttribute("href", "/blog");
+    await expect(
+      menu.getByRole("link", { name: "Workshops", exact: true }),
+    ).toHaveAttribute(
       "href",
-      "/open-source",
+      "/workshops",
     );
-    await expect(menu.getByRole("link", { name: "Blog", exact: true })).toBeVisible();
-    await expect(menu.getByText("Projekt")).toHaveCount(0);
-    await expect(menu.getByRole("link", { name: /KI-Check starten/ })).toHaveCount(0);
   }
 });

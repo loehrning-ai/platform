@@ -15,9 +15,7 @@ const HUB = "/wie-ki-funktioniert";
 // Used only as a stable deep-route probe.
 const FIRST_LESSON = "lektion-1-vorhersage";
 
-// House console-error gate (mirrors qa-sweep.spec.ts): assert 200, no
-// "Application error" boundary, and no meaningful console/page errors after
-// filtering framework noise.
+// Assert 200, no "Application error" boundary, and no console/page errors.
 async function gotoClean(page: Page, url: string) {
   const errors: string[] = [];
   page.on("console", (msg) => {
@@ -29,14 +27,7 @@ async function gotoClean(page: Page, url: string) {
   expect(response?.status(), `status for ${url}`).toBe(200);
   await expect(page.locator("text=Application error").first()).toHaveCount(0);
 
-  const meaningful = errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/Cannot update a component/i.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e),
-  );
+  const meaningful = errors;
   expect(
     meaningful,
     `console errors on ${url}\n${meaningful.join("\n")}`,

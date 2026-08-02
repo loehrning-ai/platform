@@ -35,6 +35,7 @@ vi.mock("@/lib/ai-native/analytics", () => ({
 
 import { AiNativeDebugPanel } from "./debug-panel";
 import { getRecentEvents } from "@/lib/ai-native/analytics";
+import { activateAnonymousLearningOwner } from "@/lib/progress/browser-learning-storage";
 import { UNIFIED_STORAGE_KEY } from "@/lib/progress/types";
 
 const mockedGetRecentEvents = vi.mocked(getRecentEvents);
@@ -171,6 +172,7 @@ describe("<AiNativeDebugPanel> open / close (development)", () => {
 describe("<AiNativeDebugPanel> panel content (development)", () => {
   beforeEach(() => {
     vi.stubEnv("NODE_ENV", "development");
+    activateAnonymousLearningOwner();
   });
 
   function labelValue(label: string): Element | null {

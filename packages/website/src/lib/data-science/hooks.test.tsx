@@ -1,10 +1,16 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import { useInView, useInterval, useTicker } from "./hooks";
+import {
+  useElementVisibility,
+  useInView,
+  useInterval,
+  useTicker,
+} from "./hooks";
 
 describe("data-science shared hooks ", () => {
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
     vi.useRealTimers();
   });
 
@@ -47,6 +53,20 @@ describe("data-science shared hooks ", () => {
         vi.advanceTimersByTime(5000);
       });
       expect(cb).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("useElementVisibility", () => {
+    it("falls back to visible when IntersectionObserver is unavailable", () => {
+      vi.stubGlobal("IntersectionObserver", undefined);
+      const element = document.createElement("div");
+      const { result } = renderHook(() => {
+        const state = useElementVisibility<HTMLDivElement>();
+        state[0].current = element;
+        return state;
+      });
+
+      expect(result.current[1]).toBe(true);
     });
   });
 

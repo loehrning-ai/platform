@@ -236,11 +236,11 @@ export function BackfillSim() {
         <div className="ctl-group" style={{ flex: 1.2 }}>
           <div className="ctl-lab">Write mode</div>
           <div className="pill-row">
-            <button className={`pill ${mode === "overwrite" ? "on" : ""}`} onClick={() => setMode("overwrite")}>
+            <button type="button" className={`pill ${mode === "overwrite" ? "on" : ""}`} onClick={() => setMode("overwrite")}>
               OVERWRITE
               <span className="ps">idempotent</span>
             </button>
-            <button className={`pill ${mode === "insert" ? "on" : ""}`} onClick={() => setMode("insert")}>
+            <button type="button" className={`pill ${mode === "insert" ? "on" : ""}`} onClick={() => setMode("insert")}>
               INSERT
               <span className="ps">appends</span>
             </button>
@@ -248,24 +248,24 @@ export function BackfillSim() {
         </div>
         <div className="ctl-slider" style={{ flex: 1 }}>
           <div className="row">
-            <span className="lab">Concurrency</span>
+            <label className="lab" htmlFor="backfill-concurrency">Concurrency</label>
             <span className="val">{concurrency}</span>
           </div>
-          <input type="range" min={1} max={7} value={concurrency} onChange={(e) => setConcurrency(+e.target.value)} />
+          <input id="backfill-concurrency" type="range" min={1} max={7} value={concurrency} onChange={(e) => setConcurrency(+e.target.value)} />
           <span className="hint">parallel workers</span>
         </div>
         <div className="ctl-slider warn" style={{ flex: 1 }}>
           <div className="row">
-            <span className="lab">Failure rate</span>
+            <label className="lab" htmlFor="backfill-failure-rate">Failure rate</label>
             <span className="val">{failureRate}%</span>
           </div>
-          <input type="range" min={0} max={60} step={5} value={failureRate} onChange={(e) => setFailureRate(+e.target.value)} />
+          <input id="backfill-failure-rate" type="range" min={0} max={60} step={5} value={failureRate} onChange={(e) => setFailureRate(+e.target.value)} />
           <span className="hint">simulated transient errors</span>
         </div>
-        <button className="btn btn-primary" disabled={running} onClick={runBackfill}>
+        <button type="button" className="btn btn-primary" disabled={running} onClick={runBackfill}>
           ▶ Run backfill
         </button>
-        <button className="btn" disabled={running} onClick={reset}>
+        <button type="button" className="btn" disabled={running} onClick={reset}>
           Reset
         </button>
       </div>

@@ -72,8 +72,29 @@ export interface UnifiedLessonProgress {
 /** Workshop-quiz pass state (parity across all three courses). */
 export interface UnifiedWorkshopQuiz {
   readonly passed: boolean;
+  /** Best result as a normalized ratio in the inclusive 0..1 range. */
   readonly score: number;
   readonly completedAt: string | null;
+}
+
+/**
+ * Normalize the historical workshop-quiz score formats at trust boundaries.
+ *
+ * Current code stores a ratio in 0..1. Older course payloads and callers stored
+ * a whole percentage in (1, 100]. Values outside either representation are
+ * impossible scores and return null so callers can reject the write or replace
+ * corrupt persisted data with a non-inflating zero.
+ */
+export function normalizeWorkshopQuizScore(value: unknown): number | null {
+  if (
+    typeof value !== "number" ||
+    !Number.isFinite(value) ||
+    value < 0 ||
+    value > 100
+  ) {
+    return null;
+  }
+  return value <= 1 ? value : value / 100;
 }
 
 /** Daily-visit streak. `last` is an ISO yyyy-mm-dd date string. */
@@ -90,6 +111,11 @@ export interface UnifiedCourseSlice {
   readonly capstoneSubmitted: boolean;
   readonly startedAt: string;
   readonly lastActivity: string;
+  /**
+   * Server-issued reset epoch. A slice without the same epoch is older than
+   * the reset and must not be merged back in by another tab or offline device.
+   */
+  readonly resetAt?: string;
 }
 
 /**

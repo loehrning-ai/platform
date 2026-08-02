@@ -45,7 +45,7 @@ describe("<AgentPipelineDemo>", () => {
     render(<AgentPipelineDemo />);
 
     expect(screen.getByText("Multi-Agent Workflow")).toBeInTheDocument();
-    const heading = screen.getByRole("heading", { level: 3 });
+    const heading = screen.getByRole("heading", { level: 2 });
     expect(heading).toHaveTextContent("Vier Agenten.");
     expect(heading).toHaveTextContent("Ein Memo.");
 

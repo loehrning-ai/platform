@@ -18,18 +18,22 @@
  *
  * Trusted client IP
  * -----------------
- * `trustedClientIp()` reads Vercel's `x-vercel-forwarded-for` or `x-real-ip`
- * headers rather than the user-controlled `x-forwarded-for`. Those headers
- * are stripped/rewritten by Vercel before the request hits us, so an
- * attacker cannot forge them from outside the network boundary.
+ * `trustedClientIp()` reads Vercel's `x-vercel-forwarded-for` only when the
+ * process is an attested Vercel runtime. Vercel documents this as its stable
+ * copy of the client address even when another proxy overwrites
+ * `x-forwarded-for`. No proxy-specific header is trusted off-platform.
  *
  * Persistence boundary
  * --------------------
  * Routes must pass `hashedClientRateLimitKey()` to the durable limiter. It
- * binds a trusted client IP to a route namespace and stores only a SHA-256
- * pseudonymous identifier, never the raw address. The hash remains personal
- * data for privacy purposes and is handled as such in the public notice.
+ * binds a trusted client IP to a route namespace and stores only a keyed,
+ * versioned HMAC-SHA-256 pseudonymous identifier, never the raw address. The
+ * identifier remains personal data for privacy purposes and is handled as such
+ * in the public notice.
  */
+import "server-only";
+
+import { decodeRateLimitHmacSecret } from "@/lib/security/rate-limit-secret.mjs";
 import { tryCreateServiceClient } from "@/lib/supabase/server";
 
 type RateLimitArgs = {
@@ -40,8 +44,62 @@ type RateLimitArgs = {
 
 const inMemory = new Map<string, { count: number; reset: number }>();
 
+export class RateLimitUnavailableError extends Error {
+  readonly code = "RATE_LIMIT_UNAVAILABLE";
+
+  constructor() {
+    super("Durable rate-limit protection unavailable");
+    this.name = "RateLimitUnavailableError";
+  }
+}
+
+export function isRateLimitUnavailableError(
+  error: unknown,
+): error is RateLimitUnavailableError {
+  try {
+    return (
+      error instanceof RateLimitUnavailableError ||
+      (
+        typeof error === "object" &&
+        error !== null &&
+        Reflect.get(error, "code") === "RATE_LIMIT_UNAVAILABLE"
+      )
+    );
+  } catch {
+    return false;
+  }
+}
+
+function safeProviderCode(code: unknown): string | undefined {
+  return typeof code === "string" && /^PGRST[0-9]{3}$/.test(code)
+    ? code
+    : undefined;
+}
+
+function productionUnavailable(
+  reason: "missing-client" | "rpc-error" | "rpc-throw" | "invalid-response",
+  code?: unknown,
+): never {
+  console.warn("[rate-limit] durable backend unavailable", {
+    reason,
+    ...(safeProviderCode(code) ? { code: safeProviderCode(code) } : {}),
+  });
+  throw new RateLimitUnavailableError();
+}
+
 export async function consumeRateLimit(args: RateLimitArgs): Promise<boolean> {
-  const supabase = tryCreateServiceClient();
+  let supabase: ReturnType<typeof tryCreateServiceClient>;
+  try {
+    supabase = tryCreateServiceClient();
+  } catch {
+    if (process.env.NODE_ENV === "production") {
+      productionUnavailable("missing-client");
+    }
+    console.warn("[rate-limit] client creation failed; using development fallback", {
+      reason: "missing-client",
+    });
+    return consumeInMemory(args);
+  }
   if (supabase) {
     try {
       const { data, error } = await supabase.rpc("rate_limit_consume", {
@@ -51,19 +109,35 @@ export async function consumeRateLimit(args: RateLimitArgs): Promise<boolean> {
       });
       if (!error && typeof data === "boolean") return data;
       if (error) {
-        console.warn("[rate-limit] RPC failed, using in-memory fallback", {
-          code: error.code, message: error.message,
+        if (process.env.NODE_ENV === "production") {
+          productionUnavailable("rpc-error", error.code);
+        }
+        console.warn("[rate-limit] RPC failed; using development fallback", {
+          reason: "rpc-error",
+          ...(safeProviderCode(error.code)
+            ? { code: safeProviderCode(error.code) }
+            : {}),
         });
-        if (process.env.NODE_ENV === "production") return false;
+      } else if (process.env.NODE_ENV === "production") {
+        productionUnavailable("invalid-response");
+      } else {
+        console.warn("[rate-limit] invalid RPC response; using development fallback", {
+          reason: "invalid-response",
+        });
       }
-    } catch (err) {
-      console.warn("[rate-limit] Supabase unreachable, using in-memory fallback", {
-        message: err instanceof Error ? err.message : String(err),
+    } catch (error) {
+      if (isRateLimitUnavailableError(error)) throw error;
+      if (process.env.NODE_ENV === "production") {
+        productionUnavailable("rpc-throw");
+      }
+      console.warn("[rate-limit] Supabase unreachable; using development fallback", {
+        reason: "rpc-throw",
       });
-      if (process.env.NODE_ENV === "production") return false;
     }
   }
-  if (process.env.NODE_ENV === "production") return false;
+  if (process.env.NODE_ENV === "production") {
+    productionUnavailable("missing-client");
+  }
   return consumeInMemory(args);
 }
 
@@ -80,27 +154,63 @@ function consumeInMemory({ key, windowSeconds, max }: RateLimitArgs): boolean {
 }
 
 /**
- * Resolve the client IP from a Vercel-trusted header chain. Falls back
- * to `unknown` (so rate limits still apply but in a coarse bucket) if none
- * of the trusted headers are present — never trusts `x-forwarded-for`
- * without additional context because clients can set it freely.
+ * Resolve the client IP from Vercel's protected header. Falls back to
+ * `unknown` (so rate limits still apply in one coarse bucket) outside an
+ * attested Vercel runtime or when the header is malformed.
+ *
+ * https://vercel.com/docs/headers/request-headers#x-vercel-forwarded-for
  */
 export function trustedClientIp(req: Request): string {
-  // Vercel's own client-IP headers take precedence. They're set by the
-  // edge and stripped from incoming requests so they can't be spoofed.
+  if (process.env.VERCEL !== "1") return "unknown";
   const vercelFor = req.headers.get("x-vercel-forwarded-for");
-  if (vercelFor) return vercelFor.split(",")[0]?.trim() || "unknown";
-  const realIp = req.headers.get("x-real-ip");
-  if (realIp) return realIp.trim();
-  // Cloudflare (if ever used in front of Vercel).
-  const cf = req.headers.get("cf-connecting-ip");
-  if (cf) return cf.trim();
-  return "unknown";
+  const candidate = vercelFor?.split(",")[0]?.trim();
+  return candidate &&
+    candidate.length <= 64 &&
+    /^[0-9a-f:.]+$/i.test(candidate)
+    ? candidate
+    : "unknown";
+}
+
+type RateLimitIdentityKind = "ip" | "user";
+
+const RATE_LIMIT_KEY_FORMAT_VERSION = "hmac-sha256-v1";
+
+async function keyedRateLimitDigest(
+  kind: RateLimitIdentityKind,
+  namespace: string,
+  identity: string,
+): Promise<string> {
+  const secret = decodeRateLimitHmacSecret(
+    process.env.RATE_LIMIT_HMAC_SECRET,
+  );
+  if (!secret) throw new RateLimitUnavailableError();
+
+  try {
+    const key = await crypto.subtle.importKey(
+      "raw",
+      secret,
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"],
+    );
+    const payload = new TextEncoder().encode(
+      JSON.stringify([RATE_LIMIT_KEY_FORMAT_VERSION, kind, namespace, identity]),
+    );
+    const digest = await crypto.subtle.sign("HMAC", key, payload);
+    return Array.from(new Uint8Array(digest), (byte) =>
+      byte.toString(16).padStart(2, "0"),
+    ).join("");
+  } catch {
+    throw new RateLimitUnavailableError();
+  } finally {
+    secret.fill(0);
+  }
 }
 
 /**
  * Build a stable, route-scoped pseudonymous key without persisting a raw IP.
- * Web Crypto keeps this helper compatible with both Edge and Node runtimes.
+ * A dedicated server-only HMAC secret prevents offline enumeration of the
+ * low-entropy IPv4 address space after a rate-limit table disclosure.
  */
 export async function hashedClientRateLimitKey(
   namespace: string,
@@ -109,14 +219,33 @@ export async function hashedClientRateLimitKey(
   if (!/^[a-z0-9-]{1,64}$/.test(namespace)) {
     throw new Error("Invalid rate-limit namespace");
   }
-  const payload = new TextEncoder().encode(
-    `${namespace}:${trustedClientIp(req)}`,
+  const digest = await keyedRateLimitDigest(
+    "ip",
+    namespace,
+    trustedClientIp(req),
   );
-  const digest = await crypto.subtle.digest("SHA-256", payload);
-  const hex = Array.from(new Uint8Array(digest), (byte) =>
-    byte.toString(16).padStart(2, "0"),
-  ).join("");
-  return `${namespace}:sha256:${hex}`;
+  return `${namespace}:ip-${RATE_LIMIT_KEY_FORMAT_VERSION}:${digest}`;
+}
+
+/**
+ * User-bound quota key for authenticated work. The verified user ID is the
+ * entire identity, so changing IP addresses cannot reset the account budget.
+ * Routes should pair this with an independent IP-only ceiling when account
+ * creation is inexpensive.
+ */
+export async function hashedAuthenticatedRateLimitKey(
+  namespace: string,
+  _req: Request,
+  userId: string,
+): Promise<string> {
+  if (!/^[a-z0-9-]{1,64}$/.test(namespace)) {
+    throw new Error("Invalid rate-limit namespace");
+  }
+  if (userId.length < 1 || userId.length > 128) {
+    throw new Error("Invalid authenticated rate-limit identity");
+  }
+  const digest = await keyedRateLimitDigest("user", namespace, userId);
+  return `${namespace}:user-${RATE_LIMIT_KEY_FORMAT_VERSION}:${digest}`;
 }
 
 // Exposed for tests only.

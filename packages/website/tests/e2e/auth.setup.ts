@@ -1,7 +1,7 @@
 /**
  * Auth setup project (regression coverage): seed an AUTHENTICATED storageState.
  *
- * This is the login-once step of Playwright's project-dependency pattern: the
+ * This is the session-seeding step of Playwright's project-dependency pattern:
  * an auth setup project (see playwright.config.ts) runs this file before its
  * matching auth project and writes the storageState that authed specs load.
  *
@@ -21,8 +21,9 @@
  * LIVE VARIANT: only `auth-live-setup` may request a real password-grant token.
  * It requires SIMPLIFIED_SUPABASE_TEST_URL, _PUBLISHABLE_KEY, _EMAIL and
  * _PASSWORD plus matching NEXT_PUBLIC_SUPABASE_URL and
- * NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY. Missing or mismatched values fail; the
- * live path never falls back to the mock.
+ * NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY and a public Turnstile site key.
+ * Missing or mismatched values fail; the live path never falls back to the
+ * mock.
  *
  * SCOPE LIMIT (see fixtures/session-mock.ts header): the middleware/RSC gate
  * revalidates via a SERVER-side supabase.auth.getUser() that browser page.route
@@ -33,8 +34,15 @@
  * (/konto, /api/account/*) go green once that server piece lands.
  */
 
-import { test as setup } from "@playwright/test";
-import { mkdirSync } from "node:fs";
+import { test as setup, type BrowserContext } from "@playwright/test";
+import {
+  chmod,
+  mkdir,
+  open,
+  rename,
+  rm,
+} from "node:fs/promises";
+import { randomUUID } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -44,17 +52,50 @@ import {
   resolveSeedSupabaseUrl,
   signInWithRealTestSupabase,
 } from "./fixtures/session-mock";
+import { validateLiveAuthStorageStatePath } from "./fixtures/live-auth-artifacts";
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 
 // Must resolve to the same location as STORAGE_STATE in playwright.config.ts
 // (tests/e2e/.auth/user.json, relative to the package root). Gitignored.
-const STORAGE_STATE = path.join(currentDirectory, ".auth", "user.json");
+const STATIC_STORAGE_STATE = path.join(
+  currentDirectory,
+  ".auth",
+  "user.json",
+);
+
+async function writeStorageStateSecurely(
+  storageStatePath: string,
+  state: Awaited<ReturnType<BrowserContext["storageState"]>>,
+): Promise<void> {
+  const directory = path.dirname(storageStatePath);
+  await mkdir(directory, { recursive: true, mode: 0o700 });
+  await chmod(directory, 0o700);
+  const temporaryPath = `${storageStatePath}.${randomUUID()}.tmp`;
+  let handle;
+  try {
+    handle = await open(temporaryPath, "wx", 0o600);
+    await handle.writeFile(`${JSON.stringify(state)}\n`, "utf8");
+    await handle.sync();
+    await handle.close();
+    handle = undefined;
+    await rename(temporaryPath, storageStatePath);
+    await chmod(storageStatePath, 0o600);
+  } finally {
+    await handle?.close().catch(() => {});
+    await rm(temporaryPath, { force: true }).catch(() => {});
+  }
+}
 
 setup("seed auth storageState", async ({ page, baseURL }, testInfo) => {
   const origin = baseURL ?? `http://localhost:${process.env.E2E_PORT ?? 3000}`;
   const supabaseUrl = resolveSeedSupabaseUrl();
   const live = testInfo.project.name === "auth-live-setup";
+  const storageStatePath = live
+    ? validateLiveAuthStorageStatePath(
+        process.env.E2E_AUTH_STORAGE_STATE,
+      )
+    : STATIC_STORAGE_STATE;
 
   // Live setup is strict. Scaffold setup is always deterministic and offline.
   const session = live
@@ -64,9 +105,7 @@ setup("seed auth storageState", async ({ page, baseURL }, testInfo) => {
   const context = page.context();
   await context.addCookies([buildAuthCookie(origin, session, supabaseUrl)]);
 
-  mkdirSync(path.dirname(STORAGE_STATE), { recursive: true });
-  // storageState({ path }) both writes the file and returns the captured state.
-  const state = await context.storageState({ path: STORAGE_STATE });
+  const state = await context.storageState();
 
   // Fail loudly if the cookie did not persist into the storageState - a silent
   // anonymous placeholder would make every authed spec meaningless.
@@ -76,4 +115,5 @@ setup("seed auth storageState", async ({ page, baseURL }, testInfo) => {
       `auth.setup: expected the Supabase auth cookie in storageState but it was absent`,
     );
   }
+  await writeStorageStateSecurely(storageStatePath, state);
 });

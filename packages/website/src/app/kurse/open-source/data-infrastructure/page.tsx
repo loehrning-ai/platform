@@ -99,6 +99,7 @@ export default async function DataInfrastructureLandingPage() {
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
             href="/kurse/open-source/data-infrastructure/kurs/mental-model"
+            prefetch={false}
             className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-6 py-4 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)]"
           >
             $ start lesson 01
@@ -130,7 +131,7 @@ export default async function DataInfrastructureLandingPage() {
               <span className="h-2 w-2 rounded-full bg-[#e0c356]" />
               <span className="h-2 w-2 rounded-full bg-[#63b380]" />
             </span>
-            <span>the data stack · top → bottom</span>
+            <h2>the data stack · top → bottom</h2>
             <span className="ml-auto opacity-70">stack.svg</span>
           </div>
           <div className="grid gap-3 p-4">
@@ -143,7 +144,7 @@ export default async function DataInfrastructureLandingPage() {
                   </span>
                 </div>
                 <div>
-                  <h4 className="font-mono text-[14px] font-semibold text-foreground">{row.head}</h4>
+                  <h3 className="font-mono text-[14px] font-semibold text-foreground">{row.head}</h3>
                   <p className="mt-0.5 text-[13px] text-muted-foreground">{row.body}</p>
                 </div>
                 <div className="flex flex-wrap content-start items-start gap-1.5 sm:justify-end">
@@ -194,6 +195,7 @@ export default async function DataInfrastructureLandingPage() {
                       <li key={lesson.id}>
                         <Link
                           href={`/kurse/open-source/data-infrastructure/kurs/${lesson.id}`}
+                          prefetch={false}
                           className="block h-full border-2 border-border bg-card p-4 transition-colors hover:border-brand-orange"
                         >
                           <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-brand-orange">
@@ -229,6 +231,7 @@ export default async function DataInfrastructureLandingPage() {
           </p>
           <Link
             href="/kurse/open-source/data-infrastructure/kurs/mental-model"
+            prefetch={false}
             className="mt-6 inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-6 py-4 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)]"
           >
             $ start

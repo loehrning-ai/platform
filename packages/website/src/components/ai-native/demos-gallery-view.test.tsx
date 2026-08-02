@@ -21,10 +21,14 @@ vi.mock("next/link", async () => {
   const React = await import("react");
   return {
     __esModule: true,
-    default: ({ href, children, ...rest }: any) =>
+    default: ({ href, children, prefetch, ...rest }: any) =>
       React.createElement(
         "a",
-        { href: typeof href === "string" ? href : "#", ...rest },
+        {
+          href: typeof href === "string" ? href : "#",
+          "data-prefetch": String(prefetch),
+          ...rest,
+        },
         children,
       ),
   };

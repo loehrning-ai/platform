@@ -26,6 +26,7 @@ const BAR_MAX = 120;
 
 export function GlobalVsLocal() {
   const [selected, setSelected] = useState<number | null>(null);
+  const [focused, setFocused] = useState<number | null>(null);
 
   const points = useMemo<readonly DataPoint[]>(() => {
     const rng = mulberry32(999);
@@ -79,9 +80,37 @@ export function GlobalVsLocal() {
               const cx = pt.x * SW;
               const cy = (1 - pt.y) * SH;
               const isSel = selected === pt.id;
+              const isFocused = focused === pt.id;
               const color = pt.score >= 0.5 ? "#1FAF7E" : "#D83A3A";
               return (
-                <g key={pt.id} onClick={() => setSelected(pt.id)} style={{ cursor: "pointer" }}>
+                <g
+                  key={pt.id}
+                  className="gvl-point"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Select data point ${pt.id}, score ${round(pt.score, 3)}`}
+                  aria-pressed={isSel}
+                  onClick={() => setSelected(pt.id)}
+                  onFocus={() => setFocused(pt.id)}
+                  onBlur={() => setFocused(null)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      setSelected(pt.id);
+                    }
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  {isFocused && !isSel && (
+                    <circle
+                      cx={cx}
+                      cy={cy}
+                      r="11"
+                      fill="none"
+                      stroke="#5B3EE8"
+                      strokeWidth="2"
+                    />
+                  )}
                   {isSel && <circle cx={cx} cy={cy} r="13" fill="none" stroke="#E8A031" strokeWidth="2" opacity="0.7" />}
                   <circle
                     cx={cx}
@@ -163,7 +192,10 @@ export function GlobalVsLocal() {
                         fill={color}
                         rx="2"
                         opacity="0.85"
-                        style={{ transition: "all 300ms ease" }}
+                        style={{
+                          transition:
+                            "x 300ms ease, width 300ms ease, fill 300ms ease",
+                        }}
                       />
                       <text
                         x={pos ? BAR_MAX + barW + 4 : BAR_MAX - barW - 4}

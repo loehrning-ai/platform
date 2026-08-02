@@ -2,17 +2,16 @@ import { test, expect, type Page } from "@playwright/test";
 
 /**
  * /einstieg smoke + interaction (regression coverage). The zero-prerequisite,
- * login-free front-door: three daily-life KI examples and a primary CTA into
- * the "Wie KI funktioniert" lessons. Assertions target ROLES and stable test
- * IDs, not exact copy, so a wording refresh stays green while a real
- * regression (missing examples, dead CTA, mobile overflow) fails.
+ * login-free front-door: three daily-life KI examples, a primary CTA into
+ * the KI check, and a quieter link into the "Wie KI funktioniert" lessons.
+ * Assertions target roles and stable test IDs so a wording refresh stays
+ * green while a real regression (missing examples, dead CTA, mobile
+ * overflow) fails.
  */
 
 const ROUTE = "/einstieg";
 
-// Console-error filter mirrors qa-sweep.spec.ts: drop framework noise
-// (hydration, prefetch, chunk 404s, Vercel Analytics) and keep only errors
-// that signal a genuine page fault.
+// Every captured console error and uncaught page error fails the check.
 function collectConsoleErrors(page: Page): string[] {
   const errors: string[] = [];
   page.on("console", (msg) => {
@@ -23,13 +22,7 @@ function collectConsoleErrors(page: Page): string[] {
 }
 
 function meaningfulErrors(errors: string[]): string[] {
-  return errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e),
-  );
+  return errors;
 }
 
 test.describe("/einstieg front-door", () => {
@@ -64,15 +57,22 @@ test.describe("/einstieg front-door", () => {
     ).toBeVisible();
   });
 
-  test("primary CTA leads into the Lektionen", async ({ page }) => {
+  test("primary CTA leads into the KI check and the technical primer remains reachable", async ({
+    page,
+  }) => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
-    const primaryCta = page.getByRole("link", { name: /Lektionen/i });
+    const primaryCta = page.getByRole("link", { name: "KI-Check starten" });
     await expect(primaryCta).toBeVisible();
-    await expect(primaryCta).toHaveAttribute("href", "/wie-ki-funktioniert");
+    await expect(primaryCta).toHaveAttribute("href", "/ki-check");
+
+    const primerLink = page.getByRole("link", {
+      name: /40-minütige Einführung/,
+    });
+    await expect(primerLink).toHaveAttribute("href", "/wie-ki-funktioniert");
 
     await primaryCta.click();
-    await expect(page).toHaveURL(/\/wie-ki-funktioniert$/);
+    await expect(page).toHaveURL(/\/ki-check$/);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 });

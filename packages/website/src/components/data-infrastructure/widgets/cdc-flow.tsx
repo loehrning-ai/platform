@@ -4,8 +4,12 @@
 // Real JSX <svg> rendering, not the source's innerHTML string-building
 //. Not canvas: no RAF loop, no getContext null-check.
 
-import { useState, type JSX } from "react";
+import { useId, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
+import {
+  handleRovingFocusKeyDown,
+  rovingTabIndex,
+} from "@/lib/a11y/roving-focus";
 import { cn } from "@/lib/utils";
 
 interface CdcFlowProps {
@@ -14,6 +18,7 @@ interface CdcFlowProps {
 }
 
 type CdcMode = "kappa" | "lambda";
+const CDC_MODES: readonly CdcMode[] = ["kappa", "lambda"];
 
 const KAPPA_STAGES = [
   "Postgres (OLTP)",
@@ -48,6 +53,7 @@ export function CdcFlow({ lessonId, cpId }: CdcFlowProps): JSX.Element {
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [mode, setMode] = useState<CdcMode>("kappa");
   const [claimed, setClaimed] = useState(false);
+  const tabsId = useId();
 
   const claim = () => {
     if (claimed || done) return;
@@ -60,14 +66,38 @@ export function CdcFlow({ lessonId, cpId }: CdcFlowProps): JSX.Element {
       <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
         Diagram · CDC pipeline · Kappa vs. Lambda
       </p>
-      <div className="mb-4 flex flex-wrap gap-2" role="tablist" aria-label="CDC architecture">
-        {(["kappa", "lambda"] as const).map((m) => (
+      <div
+        className="mb-4 flex flex-wrap gap-2"
+        role="tablist"
+        aria-label="CDC architecture"
+        aria-orientation="horizontal"
+        data-roving-group
+      >
+        {CDC_MODES.map((m, index) => (
           <button
             key={m}
+            id={`${tabsId}-${m}-tab`}
             type="button"
             role="tab"
             aria-selected={mode === m}
+            aria-controls={`${tabsId}-${m}-panel`}
+            data-roving-item
+            tabIndex={rovingTabIndex(
+              CDC_MODES.indexOf(mode),
+              index,
+            )}
             onClick={() => setMode(m)}
+            onKeyDown={(event) =>
+              handleRovingFocusKeyDown(event, {
+                currentIndex: index,
+                itemCount: CDC_MODES.length,
+                orientation: "horizontal",
+                onMove: (nextIndex) => {
+                  const nextMode = CDC_MODES[nextIndex];
+                  if (nextMode) setMode(nextMode);
+                },
+              })
+            }
             className={cn(
               "border-2 px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide transition-colors",
               mode === m
@@ -80,11 +110,24 @@ export function CdcFlow({ lessonId, cpId }: CdcFlowProps): JSX.Element {
         ))}
       </div>
 
-      <div className="overflow-x-auto">{mode === "kappa" ? <KappaDiagram /> : <LambdaDiagram />}</div>
-
-      <p className="mt-4 text-[13px] leading-relaxed text-muted-foreground">
-        {mode === "kappa" ? KAPPA_NOTE : LAMBDA_NOTE}
-      </p>
+      {CDC_MODES.map((panelMode) => (
+        <div
+          key={panelMode}
+          id={`${tabsId}-${panelMode}-panel`}
+          role="tabpanel"
+          aria-labelledby={`${tabsId}-${panelMode}-tab`}
+          hidden={mode !== panelMode}
+          tabIndex={0}
+          className="outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        >
+          <div className="overflow-x-auto">
+            {panelMode === "kappa" ? <KappaDiagram /> : <LambdaDiagram />}
+          </div>
+          <p className="mt-4 text-[13px] leading-relaxed text-muted-foreground">
+            {panelMode === "kappa" ? KAPPA_NOTE : LAMBDA_NOTE}
+          </p>
+        </div>
+      ))}
 
       <button
         type="button"

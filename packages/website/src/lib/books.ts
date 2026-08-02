@@ -44,10 +44,12 @@ export interface Book {
   readonly nextReview: string;
   readonly sourceInputs: readonly string[];
   readonly licensePolicy: string;
+  readonly publicationStatus: "published" | "hold";
+  readonly publicationReason: string;
 }
 
-/** All books, including ones pending re-review (see `books` below). */
-const ALL_BOOKS: readonly Book[] = [
+/** All books, including titles held from public routing. */
+export const allBooks: readonly Book[] = [
   {
     id: "ki-landschaft",
     title: "KI im deutschen Mittelstand",
@@ -80,8 +82,8 @@ const ALL_BOOKS: readonly Book[] = [
       "/book-covers/ki-landschaft-2026-3.png",
     ],
     sourceOwner: "editorial:books",
-    lastReviewed: "2026-07-14",
-    nextReview: "2026-10-14",
+    lastReviewed: "2026-07-28",
+    nextReview: "2026-10-28",
     sourceInputs: [
       "Public primary sources cited in the book",
       "Qualitative AI-readiness frameworks",
@@ -89,6 +91,9 @@ const ALL_BOOKS: readonly Book[] = [
     ],
     licensePolicy:
       "Kostenlos online lesbar; PDF-Download nach Login verfügbar.",
+    publicationStatus: "published",
+    publicationReason:
+      "Editorial review and public-release approval are recorded for the HTML reader and authenticated PDF.",
   },
   {
     id: "ki-arbeitsalltag",
@@ -122,8 +127,8 @@ const ALL_BOOKS: readonly Book[] = [
       "/book-covers/ki-arbeitsalltag-2026-3.png",
     ],
     sourceOwner: "editorial:books",
-    lastReviewed: "2026-07-14",
-    nextReview: "2026-10-14",
+    lastReviewed: "2026-07-28",
+    nextReview: "2026-10-28",
     sourceInputs: [
       "KI-Führerschein lesson content",
       "European Commission AI literacy guidance",
@@ -131,6 +136,9 @@ const ALL_BOOKS: readonly Book[] = [
     ],
     licensePolicy:
       "Kostenlos online lesbar; keine öffentliche PDF-Distribution in dieser Version.",
+    publicationStatus: "hold",
+    publicationReason:
+      "Editorial review is current; final public-release approval and legal sign-off are not recorded.",
   },
   {
     id: "ki-tools-selbststaendige",
@@ -164,8 +172,8 @@ const ALL_BOOKS: readonly Book[] = [
       "/book-covers/ki-tools-selbststaendige-2026-3.png",
     ],
     sourceOwner: "editorial:books",
-    lastReviewed: "2026-07-14",
-    nextReview: "2026-10-14",
+    lastReviewed: "2026-07-28",
+    nextReview: "2026-10-28",
     sourceInputs: [
       "AI-Native course content",
       "Tool-selection editorial notes",
@@ -173,16 +181,19 @@ const ALL_BOOKS: readonly Book[] = [
     ],
     licensePolicy:
       "Kostenlos online lesbar; keine öffentliche PDF-Distribution in dieser Version.",
+    publicationStatus: "hold",
+    publicationReason:
+      "Editorial review is current; final public-release approval and vendor-claim sign-off are not recorded.",
   },
 ];
 
 /**
- * Publicly listed books. "ki-arbeitsalltag" and "ki-tools-selbststaendige"
- * haven't been reviewed recently and stay out of the public catalog until
- * that review happens — their data lives on in `ALL_BOOKS`, unpublished.
+ * Publicly listed books. Review freshness and publication approval are
+ * separate gates: a recently reviewed title remains unroutable while its
+ * explicit lifecycle status is `hold`.
  */
-export const books: readonly Book[] = ALL_BOOKS.filter(
-  (book) => book.id === "ki-landschaft",
+export const books: readonly Book[] = allBooks.filter(
+  (book) => book.publicationStatus === "published",
 );
 
 export function getBookById(id: string): Book | undefined {

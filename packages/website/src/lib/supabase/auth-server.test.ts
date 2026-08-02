@@ -17,6 +17,17 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+type AuthCookieAdapter = {
+  readonly getAll: () => unknown;
+  readonly setAll: (
+    cookies: {
+      readonly name: string;
+      readonly value: string;
+      readonly options?: unknown;
+    }[],
+  ) => void;
+};
+
 const { cookiesMock, store, createServerClientMock, getUserMock } = vi.hoisted(
   () => {
     const getUserMock = vi.fn(
@@ -29,7 +40,13 @@ const { cookiesMock, store, createServerClientMock, getUserMock } = vi.hoisted(
       set: vi.fn(),
     };
     const cookiesMock = vi.fn(async () => store);
-    const createServerClientMock = vi.fn(() => ({
+    const createServerClientMock = vi.fn<
+      (
+        url: string,
+        key: string,
+        options: { readonly cookies: AuthCookieAdapter },
+      ) => { auth: { getUser: typeof getUserMock } }
+    >(() => ({
       auth: { getUser: getUserMock },
     }));
     return { cookiesMock, store, createServerClientMock, getUserMock };
@@ -40,6 +57,9 @@ vi.mock("next/headers", () => ({ cookies: cookiesMock }));
 vi.mock("@supabase/ssr", () => ({ createServerClient: createServerClientMock }));
 
 import { createAuthServerClient, getAuthenticatedUser } from "./auth-server";
+
+const PUBLIC_KEY_FIXTURE =
+  "sb_publishable_abcdefghijklmnopqrstuv_12345678";
 
 const KEYS = [
   "NEXT_PUBLIC_SUPABASE_URL",
@@ -66,18 +86,17 @@ afterEach(() => {
 
 function configure(): void {
   process.env.NEXT_PUBLIC_SUPABASE_URL = "https://proj.supabase.co";
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = "publishable-abc";
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY =
+    PUBLIC_KEY_FIXTURE;
 }
 
 /** Pull the cookie adapter options this module handed to createServerClient. */
 function capturedCookieAdapter() {
   const call = createServerClientMock.mock.calls[0];
-  return (call[2] as { cookies: {
-    getAll: () => unknown;
-    setAll: (
-      cookies: { name: string; value: string; options?: unknown }[],
-    ) => void;
-  } }).cookies;
+  if (!call) {
+    throw new Error("expected createServerClient to be called");
+  }
+  return call[2].cookies;
 }
 
 describe("createAuthServerClient", () => {
@@ -97,7 +116,9 @@ describe("createAuthServerClient", () => {
     expect(createServerClientMock.mock.calls[0][0]).toBe(
       "https://proj.supabase.co",
     );
-    expect(createServerClientMock.mock.calls[0][1]).toBe("publishable-abc");
+    expect(createServerClientMock.mock.calls[0][1]).toBe(
+      PUBLIC_KEY_FIXTURE,
+    );
   });
 
   it("exposes a getAll cookie adapter that delegates to the Next cookie store", async () => {
@@ -176,6 +197,19 @@ describe("getAuthenticatedUser", () => {
     expect(result.configured).toBe(true);
     expect(result.user).toBeNull();
     expect(result.error).toBe(outage);
+  });
+
+  it("surfaces a rejected getUser promise instead of throwing an unclassified 500", async () => {
+    configure();
+    const outage = new Error("network rejected");
+    getUserMock.mockRejectedValueOnce(outage);
+
+    const result = await getAuthenticatedUser();
+    expect(result).toEqual({
+      configured: true,
+      user: null,
+      error: outage,
+    });
   });
 
   it("treats AuthSessionMissingError as logged-out, not an outage", async () => {

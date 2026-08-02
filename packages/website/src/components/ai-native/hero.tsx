@@ -1,14 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { m } from "framer-motion";
 import { ArrowRight, Zap } from "lucide-react";
 import { BrandButton } from "@/components/ui/brand-button";
 import { AI_NATIVE_TRUST_SIGNALS } from "@/lib/ai-native/content";
-import {
-  ClipHeading,
-  FadeBlock,
-} from "@/components/ai-native/primitives";
+import { useMotionAllowed } from "@/lib/animation-policy";
 
 /* Cycling demo prompts — design-only content, lives inline with hero */
 const DEMO_PROMPTS = [
@@ -48,8 +45,28 @@ function usePrefersReducedMotion() {
   return reduced;
 }
 
+function usePaletteInView(): readonly [RefObject<HTMLDivElement | null>, boolean] {
+  const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(true);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry?.isIntersecting ?? false),
+      { rootMargin: "120px 0px" },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  return [ref, inView] as const;
+}
+
 function CommandPalette() {
   const reducedMotion = usePrefersReducedMotion();
+  const motionAllowed = useMotionAllowed();
+  const [paletteRef, paletteInView] = usePaletteInView();
   const [idx, setIdx] = useState(0);
   const [typed, setTyped] = useState("");
   const [phase, setPhase] = useState<Phase>("typing");
@@ -62,6 +79,9 @@ function CommandPalette() {
       setPhase("hold");
       return;
     }
+    // Preserve the current frame while the terminal is offscreen or the tab is
+    // hidden. Resume the same prompt when it becomes observable again.
+    if (!motionAllowed || !paletteInView) return;
     let timer: ReturnType<typeof setTimeout>;
     if (phase === "typing") {
       if (typed.length < cur.cmd.length) {
@@ -84,12 +104,19 @@ function CommandPalette() {
       }, 500);
     }
     return () => clearTimeout(timer);
-  }, [typed, phase, cur.cmd, reducedMotion]);
+  }, [
+    typed,
+    phase,
+    cur.cmd,
+    reducedMotion,
+    motionAllowed,
+    paletteInView,
+  ]);
 
   const showOutput = phase === "output" || phase === "hold" || phase === "fadeout";
 
   return (
-    <FadeBlock delay={4} className="relative">
+    <div ref={paletteRef} className="relative">
       {/* Self-contained dark "terminal window" on the now-light hero. The
           `dark-section` class scopes the dark token overrides (incl. the
           AA-on-dark Kupfer accent #e07050) and paints the solid dark
@@ -115,7 +142,7 @@ function CommandPalette() {
           <p className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-brand-amber">
             {cur.tag}
           </p>
-          <div className="mt-3 flex items-start gap-2 font-mono text-[13.5px] leading-[1.55] text-[var(--color-dark-fg)]">
+          <div className="mt-3 flex min-h-[64px] items-start gap-2 font-mono text-[13.5px] leading-[1.55] text-[var(--color-dark-fg)]">
             <span className="shrink-0 text-brand-orange">▸</span>
             <span className="min-w-0 break-words">
               {typed}
@@ -124,42 +151,43 @@ function CommandPalette() {
               )}
             </span>
           </div>
-          {showOutput && (
-            <m.div
-              key={`${idx}-out`}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{
-                opacity: phase === "fadeout" ? 0 : 1,
-                y: 0,
-              }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-5 border-l-2 border-brand-orange/60 pl-3 text-[13px] leading-[1.6] text-[var(--color-dark-muted)]"
-            >
-              {cur.out}
-            </m.div>
-          )}
+          <div className="mt-5 min-h-[104px]">
+            {showOutput && (
+              <m.div
+                key={`${idx}-out`}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{
+                  opacity: phase === "fadeout" ? 0 : 1,
+                  y: 0,
+                }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="border-l-2 border-brand-orange/60 pl-3 text-[13px] leading-[1.6] text-[var(--color-dark-muted)]"
+              >
+                {cur.out}
+              </m.div>
+            )}
+          </div>
         </div>
       </div>
-    </FadeBlock>
+    </div>
   );
 }
 
 export function AiNativeHero() {
   return (
-    <section className="relative flex min-h-[100dvh] items-center bg-background px-6 pb-12 pt-24 md:pt-28 lg:px-12 lg:pb-14">
+    <section className="relative flex min-h-[100dvh] items-start bg-background px-6 pb-12 pt-24 md:pt-28 lg:items-center lg:px-12 lg:pb-14">
       <div className="mx-auto w-full max-w-[1280px]">
         <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
           {/* LEFT — copy + CTAs */}
           <div>
-            <FadeBlock delay={0}>
+            <div>
               <span className="inline-flex items-center gap-2 border border-brand-orange/35 bg-brand-orange/10 px-3.5 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-orange">
                 <Zap size={12} />
                 AI-Native Arbeitskurs · alle Module kostenlos
               </span>
-            </FadeBlock>
+            </div>
 
-            <ClipHeading
-              as="h1"
+            <h1
               /* bg-background is visually a no-op here (light text box on the
                  identical light section background) but gives axe an opaque
                  background to resolve against. The revealUp clipPath on the h1
@@ -172,25 +200,24 @@ export function AiNativeHero() {
               Kontext geben.
               <br />
               <span className="text-brand-orange">Output prüfen.</span>
-            </ClipHeading>
+            </h1>
 
-            <FadeBlock delay={3}>
-              <p className="mt-5 max-w-[520px] text-[17px] leading-[1.55] text-muted-foreground">
-                AI-native arbeiten heißt:{" "}
-                <strong className="text-foreground">
-                  Intent formulieren, Kontext geben, Output verifizieren.
-                </strong>{" "}
-                In vier Modulen, 27 Lektionen, auf Deutsch, mit Claude als
-                Standard-Werkzeug.
-              </p>
-            </FadeBlock>
+            <p className="mt-5 max-w-[520px] text-[17px] leading-[1.55] text-muted-foreground">
+              AI-native arbeiten heißt:{" "}
+              <strong className="text-foreground">
+                Intent formulieren, Kontext geben, Output verifizieren.
+              </strong>{" "}
+              In vier Modulen, 27 Lektionen, auf Deutsch, mit Claude als
+              Standard-Werkzeug.
+            </p>
 
-            <FadeBlock delay={5} className="mt-6 flex flex-wrap gap-3">
+            <div className="mt-6 flex flex-wrap gap-3">
               <BrandButton
                 href="/ai-native/kurs/modul_1"
+                prefetch={false}
                 variant="primary"
               >
-                Kurs starten <ArrowRight size={15} />
+                Kostenlos mit Lernkonto starten <ArrowRight size={15} />
               </BrandButton>
               <BrandButton
                 href="/ai-native/fluency-test"
@@ -198,12 +225,9 @@ export function AiNativeHero() {
               >
                 Fluency-Test · 5 Min
               </BrandButton>
-            </FadeBlock>
+            </div>
 
-            <FadeBlock
-              delay={7}
-              className="mt-6 flex flex-wrap gap-x-5 gap-y-1.5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-muted-foreground"
-            >
+            <div className="mt-6 flex flex-wrap gap-x-5 gap-y-1.5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-muted-foreground">
               <span>
                 <span className="text-brand-orange">▸</span> 27 Lektionen
               </span>
@@ -216,10 +240,10 @@ export function AiNativeHero() {
               <span>
                 <span className="text-brand-orange">▸</span> Claude-first · deutsch
               </span>
-            </FadeBlock>
+            </div>
 
             {/* Trust signals — hidden on short viewports to keep hero in one screen */}
-            <FadeBlock delay={8}>
+            <div>
               <ul className="mt-6 hidden space-y-1.5 text-[13px] text-muted-foreground md:block">
                 {AI_NATIVE_TRUST_SIGNALS.map((signal, i) => (
                   <li key={i} className="flex items-start gap-3">
@@ -228,37 +252,35 @@ export function AiNativeHero() {
                   </li>
                 ))}
               </ul>
-            </FadeBlock>
+            </div>
 
             {/* Quick-nav footer — preserves AI-native navigation links; hidden on shorter screens */}
-            <FadeBlock delay={9}>
-              <div className="mt-6 hidden flex-wrap gap-x-6 gap-y-2 text-xs text-muted-foreground lg:flex">
-                <a
-                  href="/ai-native/demos"
-                  className="transition-colors hover:text-brand-orange"
-                >
-                  → 12 Demos ausprobieren
-                </a>
-                <a
-                  href="/ai-native/glossar"
-                  className="transition-colors hover:text-brand-orange"
-                >
-                  → Glossar ({">"}70 Begriffe)
-                </a>
-                <a
-                  href="/ai-native/capstone-gallery"
-                  className="transition-colors hover:text-brand-orange"
-                >
-                  → Capstone Gallery
-                </a>
-                <a
-                  href="/ki-fuehrerschein"
-                  className="transition-colors hover:text-brand-orange"
-                >
-                  → KI-Führerschein
-                </a>
-              </div>
-            </FadeBlock>
+            <div className="mt-6 hidden flex-wrap gap-x-6 gap-y-2 text-xs text-muted-foreground lg:flex">
+              <a
+                href="/ai-native/demos"
+                className="transition-colors hover:text-brand-orange"
+              >
+                → 12 Demos ausprobieren
+              </a>
+              <a
+                href="/ai-native/glossar"
+                className="transition-colors hover:text-brand-orange"
+              >
+                → Glossar ({">"}70 Begriffe)
+              </a>
+              <a
+                href="/ai-native/capstone-gallery"
+                className="transition-colors hover:text-brand-orange"
+              >
+                → Capstone Gallery
+              </a>
+              <a
+                href="/ki-fuehrerschein"
+                className="transition-colors hover:text-brand-orange"
+              >
+                → KI-Führerschein
+              </a>
+            </div>
           </div>
 
           {/* RIGHT — live command palette */}

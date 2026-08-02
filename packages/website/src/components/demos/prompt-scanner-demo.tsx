@@ -155,7 +155,7 @@ export default function PromptScannerDemo() {
             style={{
               fontFamily: DEMO.font.mono,
               fontSize: 8,
-              color: c,
+              color: DEMO.kalk,
               marginLeft: 2,
               fontWeight: 700,
             }}
@@ -207,10 +207,10 @@ export default function PromptScannerDemo() {
         >
           Compliance-Sandbox
         </div>
-        <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", marginTop: 6 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", marginTop: 6 }}>
           Prompt-Scanner{" "}
           <span style={{ color: "var(--color-brand-orange)" }}>für DSGVO & IP.</span>
-        </h3>
+        </h2>
         <p style={{ fontSize: 12, color: "rgba(243,240,233,0.65)", marginTop: 4 }}>
           Regelprüfung mit Beispiel-Laufzeit. PII-Treffer würden vor Weitergabe markiert und geprüft.
         </p>
@@ -439,7 +439,7 @@ export default function PromptScannerDemo() {
                   fontFamily: DEMO.font.mono,
                   fontSize: 20,
                   fontWeight: 700,
-                  color: n > 0 ? c : "rgba(243,240,233,0.3)",
+                  color: n > 0 ? c : "rgba(243,240,233,0.55)",
                   lineHeight: 1,
                 }}
               >
@@ -480,7 +480,7 @@ export default function PromptScannerDemo() {
             letterSpacing: "0.12em",
             textTransform: "uppercase",
             fontWeight: 700,
-            color: "rgba(220,38,38,0.8)",
+            color: "#f87171",
             marginBottom: 6,
           }}
         >
@@ -492,8 +492,8 @@ export default function PromptScannerDemo() {
           aria-expanded={showMissedInjection}
           style={{
             background: "transparent",
-            border: "1px solid rgba(220,38,38,0.4)",
-            color: "rgba(220,38,38,0.9)",
+            border: "1px solid #f87171",
+            color: "#f87171",
             padding: "5px 12px",
             fontFamily: DEMO.font.mono,
             fontSize: 10,
@@ -532,7 +532,7 @@ export default function PromptScannerDemo() {
                 color: "rgba(243,240,233,0.85)",
               }}
             >
-              Scan-Ergebnis: 0 Treffer, <strong style={{ color: "rgba(220,38,38,0.9)" }}>dieser Angriff wurde nicht erkannt.</strong> Kein regelbasierter Scanner ist vollständig. Semantische Prompt-Injections umgehen Regex-Regeln. Zusätzliche Schutzmaßnahmen sind notwendig.
+              Scan-Ergebnis: 0 Treffer, <strong style={{ color: "#f87171" }}>dieser Angriff wurde nicht erkannt.</strong> Kein regelbasierter Scanner ist vollständig. Semantische Prompt-Injections umgehen Regex-Regeln. Zusätzliche Schutzmaßnahmen sind notwendig.
             </div>
           </div>
         )}

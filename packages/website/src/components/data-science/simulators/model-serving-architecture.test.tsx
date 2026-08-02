@@ -21,7 +21,7 @@ describe("ModelServingArchitecture ", () => {
     expect(screen.getByText("Feature Store")).toBeInTheDocument();
     expect(screen.getByText("Model Registry")).toBeInTheDocument();
     expect(screen.getByText("Monitoring")).toBeInTheDocument();
-    expect(screen.getByText("Hover a component to inspect it.")).toBeInTheDocument();
+    expect(screen.getByText("Hover, focus, or select a component to inspect it.")).toBeInTheDocument();
   });
 
   it("shows a node's description and failure mode on hover", () => {
@@ -31,6 +31,21 @@ describe("ModelServingArchitecture ", () => {
     expect(screen.getByText(/Captures prediction logs/)).toBeInTheDocument();
     expect(screen.getByText(/Alert fatigue/)).toBeInTheDocument();
     fireEvent.mouseLeave(monitoring.closest("g")!);
-    expect(screen.getByText("Hover a component to inspect it.")).toBeInTheDocument();
+    expect(screen.getByText("Hover, focus, or select a component to inspect it.")).toBeInTheDocument();
+  });
+
+  it("supports focus and keyboard selection for every architecture node", () => {
+    render(<ModelServingArchitecture />);
+    const monitoring = screen.getByRole("button", { name: "Inspect Monitoring" });
+
+    fireEvent.focus(monitoring);
+    expect(screen.getByText(/Captures prediction logs/)).toBeInTheDocument();
+    fireEvent.keyDown(monitoring, { key: "Enter" });
+    expect(monitoring).toHaveAttribute("aria-pressed", "true");
+    fireEvent.blur(monitoring);
+    expect(screen.getByText(/Captures prediction logs/)).toBeInTheDocument();
+
+    fireEvent.keyDown(monitoring, { key: " " });
+    expect(monitoring).toHaveAttribute("aria-pressed", "false");
   });
 });

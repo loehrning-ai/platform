@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Panel } from "../primitives";
+import { useControllableAnimation } from "@/lib/animation-policy";
 
 // ─── WatermarkSim ─────────────────────────────────
 // Ported from `src/chapters/Ch1_Ingest.js`: drag the watermark line to see
@@ -17,7 +18,7 @@ interface SimEvent {
 
 export function WatermarkSim() {
   const [watermark, setWatermark] = useState(720);
-  const [running, setRunning] = useState(true);
+  const { running, toggle: toggleRunning } = useControllableAnimation();
   const [events, setEvents] = useState<readonly SimEvent[]>([]);
   const [lateness, setLateness] = useState(20);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -152,21 +153,21 @@ export function WatermarkSim() {
       <div className="ctl-row">
         <div className="ctl-slider" style={{ flex: 1.5 }}>
           <div className="row">
-            <span className="lab">Watermark position</span>
+            <label className="lab" htmlFor="watermark-position">Watermark position</label>
             <span className="val">t−{((1000 - watermark) / 100).toFixed(1)}m</span>
           </div>
-          <input type="range" min={150} max={920} step={5} value={watermark} onChange={(e) => setWatermark(+e.target.value)} />
+          <input id="watermark-position" type="range" min={150} max={920} step={5} value={watermark} onChange={(e) => setWatermark(+e.target.value)} />
           <span className="hint">drag the slider or the blue line above</span>
         </div>
         <div className="ctl-slider warn" style={{ flex: 1 }}>
           <div className="row">
-            <span className="lab">Network lateness</span>
+            <label className="lab" htmlFor="watermark-network-lateness">Network lateness</label>
             <span className="val">{lateness}%</span>
           </div>
-          <input type="range" min={0} max={60} step={5} value={lateness} onChange={(e) => setLateness(+e.target.value)} />
+          <input id="watermark-network-lateness" type="range" min={0} max={60} step={5} value={lateness} onChange={(e) => setLateness(+e.target.value)} />
           <span className="hint">% of events arriving late</span>
         </div>
-        <button className="btn" onClick={() => setRunning((r) => !r)}>
+        <button type="button" className="btn" onClick={toggleRunning}>
           {running ? "⏸ Pause stream" : "▶ Resume"}
         </button>
       </div>

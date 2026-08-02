@@ -368,7 +368,7 @@ export default function RagVertragsassistentDemo() {
             >
               Keyword-Suche · Regelbasiert
             </div>
-            <h3
+            <h2
               style={{
                 fontSize: 22,
                 fontWeight: 700,
@@ -380,7 +380,7 @@ export default function RagVertragsassistentDemo() {
             >
               Fragen Sie das Beispielarchiv.{" "}
               <span style={{ color: "var(--color-brand-orange)" }}>Antworten mit Quelle.</span>
-            </h3>
+            </h2>
             <p
               style={{
                 fontSize: 13,

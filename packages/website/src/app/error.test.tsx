@@ -4,7 +4,21 @@ import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import * as Sentry from "@sentry/nextjs";
 import RootError from "./error";
 
-vi.mock("@sentry/nextjs", () => ({ captureException: vi.fn() }));
+vi.mock("@sentry/nextjs", () => ({
+  captureMessage: vi.fn(),
+  withScope: (
+    callback: (scope: {
+      clear: () => void;
+      setLevel: (level: string) => void;
+      setTag: (key: string, value: string) => void;
+    }) => void,
+  ) =>
+    callback({
+      clear: vi.fn(),
+      setLevel: vi.fn(),
+      setTag: vi.fn(),
+    }),
+}));
 
 /**
  * Root error boundary (src/app/error.tsx). Guards the two things Next.js relies
@@ -45,11 +59,13 @@ describe("src/app/error.tsx", () => {
   });
 
   it("reports the error to Sentry and shows the digest as a correlation ID", () => {
-    const error = Object.assign(new Error("boom"), { digest: "digest-abc123" });
+    const error = Object.assign(new Error("boom"), { digest: "1234567890" });
     render(<RootError error={error} reset={vi.fn()} />);
 
-    expect(Sentry.captureException).toHaveBeenCalledWith(error);
-    expect(screen.getByText("Fehler-ID: digest-abc123")).toBeInTheDocument();
+    expect(Sentry.captureMessage).toHaveBeenCalledWith(
+      "client-boundary-failure",
+    );
+    expect(screen.getByText("Fehler-ID: 1234567890")).toBeInTheDocument();
   });
 
   it("recovers a thrown child once reset() lets it stop throwing", () => {

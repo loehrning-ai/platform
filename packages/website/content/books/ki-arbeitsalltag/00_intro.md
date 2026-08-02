@@ -12,7 +12,7 @@ Du hast den KI-Führerschein gemacht. Vielleicht alle fünf Blöcke. Vielleicht 
 
 Das Buch ist **nicht dafür gedacht, von vorne bis hinten gelesen zu werden**. Du schlägst nach, was du brauchst. Den Rest lässt du liegen.
 
-> **Rechtlicher Hinweis:** Artikel 4 der Verordnung (EU) 2024/1689 verpflichtet Anbieter und Betreiber von KI-Systemen seit 2. Februar 2025, ein ausreichendes Maß an KI-Kompetenz ihres Personals sicherzustellen. Gemeint ist Bewusstsein, nicht Expertenwissen. Der KI-Führerschein und dieses Buch erfüllen diese Anforderung.
+> **Rechtlicher Hinweis (Stand: 28. Juli 2026):** Artikel 4 der Verordnung (EU) 2024/1689 verpflichtet Anbieter und Betreiber von KI-Systemen, Maßnahmen zu ergreifen, die die Entwicklung der KI-Kompetenz ihres Personals und anderer in ihrem Auftrag handelnder Personen unterstützen. Seit dem Inkrafttreten der Verordnung (EU) 2026/1744 am 27. Juli 2026 muss kein bestimmtes individuelles Kompetenzniveau garantiert werden. Der KI-Führerschein und dieses Buch können Bausteine einer kontextgerechten Maßnahme sein, erfüllen Artikel 4 aber nicht automatisch.
 
 ## Das Zusammenspiel: Kurs + Buch
 

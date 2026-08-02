@@ -30,6 +30,7 @@ interface BrandButtonProps {
   disabled?: boolean;
   className?: string;
   external?: boolean;
+  prefetch?: boolean;
 }
 
 const sizeMap = {
@@ -48,6 +49,7 @@ export function BrandButton({
   disabled = false,
   className,
   external,
+  prefetch,
 }: BrandButtonProps) {
   const base = cn(
     // Layout
@@ -114,6 +116,7 @@ export function BrandButton({
         className={classes}
         target={external ? "_blank" : undefined}
         rel={external ? "noopener noreferrer" : undefined}
+        prefetch={prefetch}
         aria-disabled={disabled}
         // A disabled link must leave the tab order and swallow activation:
         // aria-disabled alone keeps it focusable and Enter still navigates.

@@ -2,10 +2,12 @@
   "bookSlug": "ki-tools-selbststaendige",
   "title": "KI-Tools für Selbstständige",
   "owner": "editorial:books",
-  "lastReviewed": "2026-07-14",
-  "nextReview": "2026-10-14",
+  "lastReviewed": "2026-07-28",
+  "nextReview": "2026-10-28",
   "reviewCadence": "quarterly",
   "riskClass": "vendor",
+  "publicationStatus": "hold",
+  "publicationReason": "Editorial review is current; final public-release approval and vendor-claim sign-off are not recorded.",
   "adaptationNote": "Nachwort-Kapitel (Autor-/Sales-Block) nicht importiert. Kommerzieller Self-Promo-Text entfernt.",
   "chapters": [
     {

@@ -23,7 +23,8 @@ import type { CourseSlug } from "@/lib/course/types";
  *
  * The model in tracks.ts hand-classifies every course into a group + honest
  * facts. These tests make "add a course but forget to classify it" and
- * "badge says Zertifikat but the engine issues a Lernnachweis" both fail CI.
+ * "badge says Teilnahmebestätigung but the engine issues a Lernnachweis" both
+ * fail CI.
  */
 
 const ALL_SLUGS = [
@@ -43,7 +44,7 @@ describe("learner-first course model", () => {
     }
   });
 
-  it("keeps the spine to exactly the 4 native German certified courses, everything else deeper", () => {
+  it("keeps the spine to exactly the 4 native German record courses, everything else deeper", () => {
     // group is independent of nativeStatus/catalog membership (
     // stage 6 unified CatalogCourse/ImportedCourse behind nativeStatus,
     // which is orthogonal to which learner-facing shelf a course sits in).
@@ -72,7 +73,7 @@ describe("learner-first course model", () => {
     // The native courses' record kind must match what the engine actually
     // issues: a "Lernnachweis"-titled record is a Lernnachweis, an English
     // config (claude) issues a "certificate", otherwise a
-    // Teilnahmebestätigung (Zertifikat).
+    // Self-issued Teilnahmebestätigung.
     for (const course of COURSE_CATALOG) {
       const config = getCourseConfig(course.slug as CourseSlug);
       const expected =
@@ -80,7 +81,7 @@ describe("learner-first course model", () => {
           ? "certificate"
           : /lernnachweis/i.test(config.certificateTitle)
             ? "lernnachweis"
-            : "zertifikat";
+            : "teilnahmebestaetigung";
       expect(COURSE_FACTS[course.slug].record, course.slug).toBe(expected);
     }
   });
@@ -99,7 +100,7 @@ describe("learner-first course model", () => {
     const fuehrerschein = courseBadges("ki-fuehrerschein");
     expect(fuehrerschein).toEqual([
       { label: "Deutsch", tone: "language" },
-      { label: "mit Zertifikat", tone: "record" },
+      { label: "mit Teilnahmebestätigung", tone: "record" },
     ]);
 
     const gesellschaft = courseBadges("ki-und-gesellschaft");
@@ -141,6 +142,12 @@ describe("learner-first course model", () => {
   it("exposes both learner-facing sections", () => {
     expect(COURSE_SECTIONS.spine.title).toBe("Der Lernpfad");
     expect(COURSE_SECTIONS.deeper.title).toBe("Tiefer gehen");
+    expect(COURSE_SECTIONS.spine.blurb).toContain(
+      "selbst ausgestellte Teilnahmebestätigung",
+    );
+    expect(COURSE_SECTIONS.deeper.blurb).toContain(
+      "selbst ausgestelltes Certificate",
+    );
   });
 
   it("carries an accent + badge for every course (migrated from TRACK_META)", () => {
@@ -150,7 +157,12 @@ describe("learner-first course model", () => {
       expect(facts.badge.length, slug).toBeGreaterThan(0);
     }
     expect(COURSE_FACTS["ki-fuehrerschein"].accent).toBe("kupfer");
-    expect(COURSE_FACTS["ki-fuehrerschein"].badge).toBe("Zertifikat · Deutsch");
+    expect(COURSE_FACTS["ki-fuehrerschein"].badge).toBe(
+      "Teilnahmebestätigung · Deutsch",
+    );
+    expect(COURSE_FACTS["ki-und-gesellschaft"].badge).toBe(
+      "Lernnachweis · Deutsch",
+    );
     expect(COURSE_FACTS["data-engineering-fundamentals"].accent).toBe("sand");
     expect(COURSE_FACTS["data-engineering-fundamentals"].badge).toBe(
       "Certificate · Englisch",
@@ -168,7 +180,7 @@ describe("learner-first course model", () => {
 
   it("RECORD_LABEL is a closed set of exactly the 3 non-'none' RecordKind values ", () => {
     expect(Object.keys(RECORD_LABEL).sort()).toEqual(
-      ["certificate", "lernnachweis", "zertifikat"].sort(),
+      ["certificate", "lernnachweis", "teilnahmebestaetigung"].sort(),
     );
   });
 });

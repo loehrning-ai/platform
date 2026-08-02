@@ -8,6 +8,7 @@ import { getDemoCopy } from "@/lib/demos-copy";
 import { DemoShell } from "./demo-shell";
 import { AnimatedMetaTable } from "./animated-meta-table";
 import { EvidenceBadge } from "./evidence-badge";
+import { DemoCta } from "./demo-cta";
 
 // ─── KI-Kompetenzweg Stufe mapping ─────────────────────────────────────────
 const STUFE_LABELS: Readonly<Record<DemoLevel, string>> = {
@@ -42,13 +43,7 @@ function lessonHref(courseSlug: string, basePath: string, lessonId: string): str
   return `${basePath}/kurs/${lessonId}`;
 }
 
-export function DemoDetailLayout({
-  demo,
-  source,
-}: {
-  demo: Demo;
-  source?: string;
-}) {
+export function DemoDetailLayout({ demo }: { demo: Demo }) {
   const copy = getDemoCopy(demo.slug);
   const next = getNextDemo(demo);
   const course = COURSE_CATALOG.find((item) => item.slug === demo.courseSlug);
@@ -108,6 +103,7 @@ export function DemoDetailLayout({
           <div className="flex items-center gap-4">
             <Link
               href={lessonLink}
+              prefetch={false}
               className="inline-flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-brand-orange hover:underline"
             >
               Zur Lektion
@@ -163,7 +159,7 @@ export function DemoDetailLayout({
             evidenceMode={demo.evidenceMode}
             externalActionMode={demo.externalActionMode}
           />
-          <DemoShell demo={demo} source={source} />
+          <DemoShell demo={demo} />
         </div>
       </section>
 
@@ -176,6 +172,7 @@ export function DemoDetailLayout({
           <div className="flex flex-wrap gap-3">
             <Link
               href={course?.startHref ?? "/kurse"}
+              prefetch={false}
               className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
             >
               {course ? `${course.title} öffnen` : "Passenden Kurs öffnen"}
@@ -289,7 +286,7 @@ export function DemoDetailLayout({
                     >
                       <span>{book.title}</span>
                       <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
-                        Lernkonto
+                        Öffentlich
                       </span>
                     </Link>
                   ))}
@@ -311,13 +308,13 @@ export function DemoDetailLayout({
               {next.title} <span className="text-brand-orange">{next.titleKicker}</span>
             </div>
           </div>
-          <Link
-            href={`/demos/${next.slug}?source=gallery`}
-            className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
+          <DemoCta
+            slug={demo.slug}
+            target="next-demo"
+            href={`/demos/${next.slug}?source=next-demo`}
           >
             Weiter
-            <ArrowUpRight size={14} strokeWidth={2.5} />
-          </Link>
+          </DemoCta>
         </div>
       </section>
     </article>

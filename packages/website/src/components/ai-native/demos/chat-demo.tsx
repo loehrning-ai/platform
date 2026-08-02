@@ -258,9 +258,9 @@ export function ChatDemo(): JSX.Element {
             </div>
           </div>
         </div>
-        <span className="inline-flex items-center gap-1.5 border border-[#22c55e]/40 bg-[#22c55e]/10 px-2 py-0.5 text-[11px] text-[#22c55e]">
+        <span className="inline-flex items-center gap-1.5 border border-risk-green/40 bg-risk-green/10 px-2 py-0.5 text-[11px] text-risk-green">
           <span
-            className="h-1.5 w-1.5 rounded-full bg-[#22c55e]"
+            className="h-1.5 w-1.5 rounded-full bg-risk-green"
             aria-hidden="true"
           />
           Online
@@ -405,7 +405,7 @@ export function ChatDemo(): JSX.Element {
                       className={cn(
                         "inline-block h-2.5 w-2.5 transition-colors",
                         done
-                          ? "bg-[#22c55e]"
+                          ? "bg-risk-green"
                           : active
                             ? "animate-pulse bg-brand-orange"
                             : "bg-border",

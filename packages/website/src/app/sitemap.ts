@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { WIE_KI_LEKTIONEN } from "@/lib/wie-ki-funktioniert";
 import { BLOG_POSTS } from "@/lib/blog-metadata";
 import { books } from "@/lib/books";
-import { ALL_COURSE_CATALOG } from "@/lib/courses/catalog";
+import { getBookChapterList } from "@/lib/book-reader-content";
 import { demos } from "@/lib/demos";
 import { getWorkshopSlugs } from "@/lib/workshops";
 import { CRAWL_CONTRACT, getCrawlRoute, SITE_ORIGIN } from "@/lib/crawl/contract";
@@ -40,7 +40,7 @@ function makeEntry(path: string, priority: number, changeFrequency: Frequency, l
 // Dynamic ":"-patterns are included by explicit contract flag (public-content governance
 // stage 3): each enumeration below only emits URLs when its pattern carries
 // includeInSitemap: true, so exclusion stays a deliberate contract decision
-// (e.g. /buecher/:slug/:chapter is flagged out) instead of a silent filter.
+// instead of a silent filter.
 function contractIncludesPattern(pattern: string): boolean {
   return CRAWL_CONTRACT.some((entry) => entry.pattern === pattern && entry.includeInSitemap);
 }
@@ -80,7 +80,7 @@ function discoverBlogPosts(): { slug: string; date: string }[] {
   return manifestPosts;
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const wieKiLektionEntries: Entry[] = contractIncludesPattern("/wie-ki-funktioniert/:lektionId")
     ? WIE_KI_LEKTIONEN.map((l) => makeEntry(`/wie-ki-funktioniert/${l.id}`, 0.7, "yearly"))
     : [];
@@ -95,11 +95,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
       ),
     );
 
-  // Catalog detail pages (public-content contract decision): public-indexable with
-  // page-level index metadata, so their known slugs belong in the sitemap.
-  // Chapter reader paths (/buecher/:slug/:chapter) stay out by contract flag.
+  // Catalog detail pages and published book chapters are public-indexable with
+  // page-level metadata, so every known canonical slug belongs in the sitemap.
   const bookEntries: Entry[] = contractIncludesPattern("/buecher/:slug")
     ? books.map((book) => makeEntry(`/buecher/${book.id}`, 0.65, "monthly"))
+    : [];
+
+  const bookChapterEntries: Entry[] = contractIncludesPattern(
+    "/buecher/:slug/:chapter",
+  )
+    ? (
+        await Promise.all(
+          books.map(async (book) => {
+            const chapters = await getBookChapterList(book.id);
+            return chapters.map((chapter) =>
+              makeEntry(
+                `/buecher/${book.id}/${chapter.slug}`,
+                0.6,
+                "monthly",
+                new Date(book.lastReviewed),
+              ),
+            );
+          }),
+        )
+      ).flat()
     : [];
 
   const demoEntries: Entry[] = contractIncludesPattern("/demos/:slug")
@@ -119,19 +138,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       }))
     : [];
 
-  // Course detail pages living under /kurse/open-source/:slug; they are
-  // catalog content, not open-source artifacts (the registry below covers
-  // only tools, projects, and videos published under the GitHub
-  // organization). Filtered by href prefix rather than IMPORTED_COURSE_CATALOG
-  // alone: a course can flip to nativeStatus "live" (moving into
-  // COURSE_CATALOG, ) while keeping this same URL
-  // structure, and its sitemap entry must not silently disappear.
-  const importedCourseEntries: Entry[] = contractIncludesPattern("/kurse/open-source/:slug")
-    ? ALL_COURSE_CATALOG.filter((course) => course.href.startsWith("/kurse/open-source/")).map(
-        (course) => makeEntry(course.href, 0.6, "monthly"),
-      )
-    : [];
-
   const openSourceArtifactEntries: Entry[] = OPEN_SOURCE_ARTIFACTS
     .filter((artifact) => getCrawlRoute(artifact.href).includeInSitemap)
     .map((artifact) => makeEntry(artifact.href, 0.6, "monthly"));
@@ -140,10 +146,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...publicPages,
     ...wieKiLektionEntries,
     ...bookEntries,
+    ...bookChapterEntries,
     ...demoEntries,
     ...workshopEntries,
     ...blogPosts,
-    ...importedCourseEntries,
     ...openSourceArtifactEntries,
   ];
 }

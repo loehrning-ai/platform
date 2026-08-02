@@ -4,9 +4,12 @@
 @theme {
   /* Brand CI — Berliner Werkzeug v3.0 (April 2026) */
   --color-brand-orange: #a5370f; /* Kupfer — oxidized copper, Berlin Altbau. Darkened from #C4431A (4.43:1, sub-AA) to #A5370F (5.85:1) so accent TEXT on Kalkweiß meets WCAG AA; dark sections override to the lighter #E07050 below. */
-  --color-brand-sand: #a89070;
-  --color-brand-amber: #e07050; /* Kupfer Light — text links, subtle accents */
-  --color-destructive: #ef4444;
+  /* Foreground-safe status/accent tones for light surfaces. These values also
+     remain AA when the same tone is used over its own 20% tint on Birke cards.
+     Dark sections restore the lighter display tones below. */
+  --color-brand-sand: #604b36;
+  --color-brand-amber: #78350f;
+  --color-destructive: #991b1b;
 
   /* Light background system — Kalkweiß */
   --color-background: #f3f0e9; /* Kalkweiß — chalk-lime white */
@@ -33,13 +36,13 @@
   --color-dark-border: rgba(243, 240, 233, 0.12);
 
   /* Functional */
-  --color-risk-green: #22c55e;
-  --color-risk-yellow: #eab308;
+  --color-risk-green: #14532d;
+  --color-risk-yellow: #713f12;
   /* #ef4444 (red-500) is only 3.19:1 as TEXT on warm light surfaces (sub-AA).
      #b91c1c (red-700) reaches ≥5.0:1 as text on Kalkweiß/Birke and keeps
      white-on-red badge fills well above AA. Used via text-/border-/bg-risk-red
      utilities; no solid bg-risk-red+text pairing exists in the codebase. */
-  --color-risk-red: #b91c1c;
+  --color-risk-red: #991b1b;
 
   /* Elevation — warm, soft card shadows (v3.1: replaces the brutalist offset
      shadow). Tinted with Druckertinte so they read warm on Kalkweiß, not grey. */
@@ -102,6 +105,22 @@
 
   :focus:not(:focus-visible) {
     outline: none;
+  }
+
+  :where(h1, h2, h3) {
+    text-wrap: balance;
+  }
+
+  :where(
+    a[href],
+    button,
+    [role="button"],
+    input[type="button"],
+    input[type="submit"],
+    input[type="reset"]
+  ) {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(183, 58, 21, 0.18);
   }
 }
 
@@ -180,7 +199,12 @@
     /* Kupfer accent flips to the lighter copper on dark so accent text stays AA
        (#A5370F would be ~2.4:1 on near-black; #E07050 is ~5.5:1). */
     --color-brand-orange: #e07050;
+    --color-brand-sand: #a89070;
+    --color-brand-amber: #f59e0b;
     --color-kupfer: #e07050;
+    --color-destructive: #ef4444;
+    --color-risk-green: #4ade80;
+    --color-risk-yellow: #facc15;
     /* On dark, the darker red-700 (#b91c1c → 3.04:1) would be sub-AA, so revert
        risk-red to red-500 (#ef4444 → 5.22:1) for AA on the near-black ground. */
     --color-risk-red: #ef4444;
@@ -439,6 +463,10 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
+}
+.demo-gallery-tile {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 420px;
 }
 @media (min-width: 768px) {
   .demo-gallery-grid {

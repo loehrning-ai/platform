@@ -20,7 +20,20 @@ vi.mock("@supabase/supabase-js", () => ({ createClient: createClientMock }));
 
 import { createAdminClient } from "./admin";
 
-const KEYS = ["NEXT_PUBLIC_SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"] as const;
+const PRIVILEGED_KEY_FIXTURE = [
+  "sb",
+  "secret",
+  "abcdefghijklmnopqrstuv",
+  "12345678",
+].join("_");
+
+const KEYS = [
+  "NEXT_PUBLIC_SUPABASE_URL",
+  "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+  "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+  "SUPABASE_URL",
+  "SUPABASE_SERVICE_ROLE_KEY",
+] as const;
 const original: Record<string, string | undefined> = {};
 
 beforeEach(() => {
@@ -42,7 +55,7 @@ afterEach(() => {
 
 describe("createAdminClient", () => {
   it("throws when NEXT_PUBLIC_SUPABASE_URL is missing", () => {
-    vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", "service-role-key");
+    vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", PRIVILEGED_KEY_FIXTURE);
     expect(() => createAdminClient()).toThrow(/Missing NEXT_PUBLIC_SUPABASE_URL/);
     expect(createClientMock).not.toHaveBeenCalled();
   });
@@ -61,25 +74,57 @@ describe("createAdminClient", () => {
 
   it("builds the client with the url, service-role key, and no-refresh auth options", () => {
     process.env.NEXT_PUBLIC_SUPABASE_URL = "https://proj.supabase.co";
-    vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", "service-role-key");
+    vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", PRIVILEGED_KEY_FIXTURE);
 
     const client = createAdminClient();
 
     expect(client).toEqual({ id: "admin-client" });
     expect(createClientMock).toHaveBeenCalledWith(
       "https://proj.supabase.co",
-      "service-role-key",
+      PRIVILEGED_KEY_FIXTURE,
       { auth: { autoRefreshToken: false, persistSession: false } },
     );
   });
 
   it("builds a fresh client on every call (no memoization)", () => {
     process.env.NEXT_PUBLIC_SUPABASE_URL = "https://proj.supabase.co";
-    vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", "service-role-key");
+    vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", PRIVILEGED_KEY_FIXTURE);
 
     createAdminClient();
     createAdminClient();
 
     expect(createClientMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("prefers the server URL and rejects an arbitrary credential destination", () => {
+    process.env.SUPABASE_URL = "https://server-project.supabase.co";
+    process.env.NEXT_PUBLIC_SUPABASE_URL =
+      "https://server-project.supabase.co";
+    vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", PRIVILEGED_KEY_FIXTURE);
+
+    createAdminClient();
+    expect(createClientMock).toHaveBeenCalledWith(
+      "https://server-project.supabase.co",
+      PRIVILEGED_KEY_FIXTURE,
+      { auth: { autoRefreshToken: false, persistSession: false } },
+    );
+
+    createClientMock.mockClear();
+    delete process.env.SUPABASE_URL;
+    process.env.NEXT_PUBLIC_SUPABASE_URL = "https://attacker.example";
+    expect(() => createAdminClient()).toThrow(
+      /Invalid NEXT_PUBLIC_SUPABASE_URL/,
+    );
+    expect(createClientMock).not.toHaveBeenCalled();
+  });
+
+  it("rejects split public and server projects", () => {
+    process.env.SUPABASE_URL = "https://server-project.supabase.co";
+    process.env.NEXT_PUBLIC_SUPABASE_URL =
+      "https://public-project.supabase.co";
+    vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", PRIVILEGED_KEY_FIXTURE);
+
+    expect(() => createAdminClient()).toThrow(/same approved project origin/);
+    expect(createClientMock).not.toHaveBeenCalled();
   });
 });

@@ -11,6 +11,13 @@ import {
 import type { ModuleId } from "@/lib/ai-native/types";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import {
+  getLearningOwnerContext,
+  getOwnedSessionLearningItem,
+  removeOwnedSessionLearningItem,
+  setOwnedSessionLearningItem,
+  subscribeLearningOwner,
+} from "@/lib/progress/browser-learning-storage";
 
 /**
  * Free-response exercise — single long-form textarea graded entirely by
@@ -81,38 +88,50 @@ function FreeResponseBody({
   const [grading, setGrading] = useState(false);
   const [result, setResult] = useState<ApiResponse | null>(null);
   const [unavailable, setUnavailable] = useState(false);
+  const [ownerGeneration, setOwnerGeneration] = useState(
+    () => getLearningOwnerContext().generation,
+  );
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    try {
-      const raw = sessionStorage.getItem(storageKey);
+    const loadOwnedDraft = () => {
+      setOwnerGeneration(getLearningOwnerContext().generation);
+      abortRef.current?.abort();
+      abortRef.current = null;
+      setDraft("");
+      setSubmitted(false);
+      setGrading(false);
+      setResult(null);
+      setUnavailable(false);
+      const raw = getOwnedSessionLearningItem(storageKey);
       if (raw !== null) setDraft(raw);
-    } catch {
-      /* ignore */
-    }
+    };
+    loadOwnedDraft();
+    return subscribeLearningOwner(loadOwnedDraft);
   }, [storageKey]);
 
   useEffect(() => {
     const onBeforeUnload = () => {
-      try {
-        sessionStorage.setItem(storageKey, draft);
-      } catch {
-        /* ignore */
-      }
+      setOwnedSessionLearningItem(
+        storageKey,
+        draft,
+        ownerGeneration,
+      );
     };
     window.addEventListener("beforeunload", onBeforeUnload);
     return () => window.removeEventListener("beforeunload", onBeforeUnload);
-  }, [draft, storageKey]);
+  }, [draft, ownerGeneration, storageKey]);
 
   const saveDraft = () => {
-    try {
-      sessionStorage.setItem(storageKey, draft);
-    } catch {
-      /* ignore */
-    }
+    setOwnedSessionLearningItem(
+      storageKey,
+      draft,
+      ownerGeneration,
+    );
   };
 
   const handleSubmit = async () => {
+    const ownerGeneration = getLearningOwnerContext().generation;
     saveDraft();
     setGrading(true);
     setUnavailable(false);
@@ -134,6 +153,7 @@ function FreeResponseBody({
       });
       if (!res.ok) throw new Error(`status ${res.status}`);
       const data = (await res.json()) as ApiResponse;
+      if (getLearningOwnerContext().generation !== ownerGeneration) return;
       setResult(data);
       setSubmitted(true);
       submitExercise({
@@ -148,6 +168,7 @@ function FreeResponseBody({
       });
     } catch (err) {
       if ((err as Error).name === "AbortError") return;
+      if (getLearningOwnerContext().generation !== ownerGeneration) return;
       // No fallback grader for free-response; mark completed with null score.
       setUnavailable(true);
       setSubmitted(true);
@@ -170,11 +191,7 @@ function FreeResponseBody({
     setResult(null);
     setUnavailable(false);
     setDraft("");
-    try {
-      sessionStorage.removeItem(storageKey);
-    } catch {
-      /* ignore */
-    }
+    removeOwnedSessionLearningItem(storageKey, ownerGeneration);
   };
 
   const passed = result != null && result.score >= passThreshold;
@@ -208,7 +225,7 @@ function FreeResponseBody({
           {draft.length} / {maxLength}
         </span>
         {submitted && result != null && (
-          <span className={passed ? "text-[#22c55e]" : "text-brand-amber"}>
+          <span className={passed ? "text-risk-green" : "text-brand-amber"}>
             Score {Math.round(result.score * 100)}% ·{" "}
             {passed ? "Passed" : "Review"}
           </span>
@@ -228,7 +245,7 @@ function FreeResponseBody({
               className={cn(
                 "border-l-[3px] px-4 py-3",
                 passed
-                  ? "border-[#22c55e] bg-[#22c55e]/5"
+                  ? "border-risk-green bg-risk-green/5"
                   : "border-brand-amber bg-brand-amber/5",
               )}
             >
@@ -248,14 +265,14 @@ function FreeResponseBody({
                     className={cn(
                       "flex items-start gap-2.5 border px-3 py-2 text-[13px]",
                       entry.passed
-                        ? "border-[#22c55e]/40 bg-[#22c55e]/5"
+                        ? "border-risk-green/40 bg-risk-green/5"
                         : "border-brand-amber/40 bg-brand-amber/5",
                     )}
                   >
                     {entry.passed ? (
                       <CheckCircle2
                         size={14}
-                        className="mt-0.5 shrink-0 text-[#22c55e]"
+                        className="mt-0.5 shrink-0 text-risk-green"
                       />
                     ) : (
                       <XCircle

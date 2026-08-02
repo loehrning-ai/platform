@@ -107,7 +107,10 @@ test.describe("keyboard: mobile hamburger", () => {
     await page.setViewportSize(MOBILE);
     await page.goto("/", { waitUntil: "domcontentloaded" });
 
-    const openToggle = page.getByRole("button", { name: /Menü öffnen/i });
+    // Keep a stable reference after opening: the control becomes aria-hidden
+    // while focus lives in the modal, so a role locator would stop resolving.
+    const openToggle = page.locator('button[aria-controls="mobile-menu"]');
+    await expect(openToggle).toHaveAccessibleName(/Menü öffnen/i);
     // The real accessibility contract: it is a native <button> (Enter/Space
     // activate it by the HTML spec, focusable in the tab order), not a
     // div-with-onClick. We drive activation via .click() (which Playwright
@@ -131,9 +134,9 @@ test.describe("keyboard: mobile hamburger", () => {
       if (!(await dialog.isVisible())) await openToggle.click();
       await expect(dialog).toBeVisible({ timeout: 1_000 });
     }).toPass({ timeout: 15_000 });
-    await expect(
-      page.getByRole("button", { name: /Menü schließen/i }),
-    ).toHaveAttribute("aria-expanded", "true");
+    // aria-expanded belongs to the disclosure control, not the close button
+    // inside the disclosed dialog.
+    await expect(openToggle).toHaveAttribute("aria-expanded", "true");
 
     // accessibility and quality hardening: focus is moved into the dialog panel on open.
     const focusInDialog = await page.evaluate(() => {

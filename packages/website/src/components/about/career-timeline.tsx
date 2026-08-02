@@ -51,11 +51,12 @@ export function CareerTimeline() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
+          className="js-reveal"
         >
           <m.h2
             custom={0}
             variants={fadeUp}
-            className="text-2xl font-bold tracking-[-0.04em]"
+            className="js-reveal text-2xl font-bold tracking-[-0.04em]"
           >
             Karriere
           </m.h2>
@@ -76,7 +77,7 @@ export function CareerTimeline() {
                     key={mil.period}
                     custom={i + 1}
                     variants={fadeUp}
-                    className="relative pt-10"
+                    className="js-reveal relative pt-10"
                   >
                     {/* Dot */}
                     <div className={`absolute top-2 left-0 h-4 w-4 rounded-full border-2 border-background ${
@@ -106,7 +107,7 @@ export function CareerTimeline() {
                 key={mil.period}
                 custom={i + 1}
                 variants={fadeUp}
-                className="flex gap-4"
+                className="js-reveal flex gap-4"
               >
                 <div className="flex flex-col items-center">
                   <div className={`h-3 w-3 rounded-full ${

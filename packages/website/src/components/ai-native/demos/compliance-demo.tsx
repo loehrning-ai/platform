@@ -2,6 +2,10 @@
 
 import { useMemo, useState, type JSX, type ReactNode } from "react";
 import { DemoOverline } from "./_shared";
+import {
+  handleRovingFocusKeyDown,
+  rovingTabIndex,
+} from "@/lib/a11y/roving-focus";
 import { cn } from "@/lib/utils";
 
 /**
@@ -131,10 +135,10 @@ function verdictFor(detections: readonly Detection[]): {
     };
   }
   return {
-    color: "text-[#22c55e]",
+    color: "text-risk-green",
     tag: "FREIGEGEBEN",
     sub: "Keine Treffer",
-    borderColor: "border-l-[#22c55e]",
+    borderColor: "border-l-risk-green",
   };
 }
 
@@ -279,15 +283,27 @@ export function ComplianceDemo(): JSX.Element {
         <div
           role="radiogroup"
           aria-label="Ansichtsmodus"
+          data-roving-group
           className="inline-flex border border-border"
         >
-          {(["detect", "mask"] as const).map((m) => (
+          {(["detect", "mask"] as const).map((m, index) => (
             <button
               key={m}
               type="button"
               role="radio"
               aria-checked={mode === m}
+              data-roving-item
+              tabIndex={rovingTabIndex(mode === "detect" ? 0 : 1, index)}
               onClick={() => setMode(m)}
+              onKeyDown={(event) =>
+                handleRovingFocusKeyDown(event, {
+                  currentIndex: index,
+                  itemCount: 2,
+                  orientation: "horizontal",
+                  onMove: (nextIndex) =>
+                    setMode(nextIndex === 0 ? "detect" : "mask"),
+                })
+              }
               className={cn(
                 "px-3.5 py-1.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] transition-colors",
                 mode === m

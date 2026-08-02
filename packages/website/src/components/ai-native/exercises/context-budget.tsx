@@ -181,7 +181,7 @@ function ContextBudgetBody({
         <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
           {coarse
             ? "Tippe einen Block, tippe dann den Ziel-Bereich"
-            : "Ziehe Blöcke in das Context-Window"}
+            : "Ziehe Blöcke in das Context-Window oder wähle sie per Tastatur"}
         </p>
         <p className="font-mono text-[10.5px] tracking-[0.12em]">
           <span
@@ -229,11 +229,10 @@ function ContextBudgetBody({
                 key={b.id}
                 block={b}
                 inContext={false}
-                onClick={() => coarse && toggle(b.id)}
+                onClick={() => toggle(b.id)}
                 onDragStart={onDragStart(b.id)}
                 draggable={!coarse && !submitted}
                 submitted={submitted}
-                coarse={coarse}
               />
             ))}
         </div>
@@ -259,11 +258,10 @@ function ContextBudgetBody({
                 key={b.id}
                 block={b}
                 inContext
-                onClick={() => coarse && toggle(b.id)}
+                onClick={() => toggle(b.id)}
                 onDragStart={onDragStart(b.id)}
                 draggable={!coarse && !submitted}
                 submitted={submitted}
-                coarse={coarse}
               />
             ))}
           {inContext.size === 0 && (
@@ -271,7 +269,7 @@ function ContextBudgetBody({
               Leer.{" "}
               {coarse
                 ? "Tippe links einen Block zur Aufnahme."
-                : "Blöcke hierher ziehen."}
+                : "Blöcke hierher ziehen oder auswählen."}
             </p>
           )}
         </div>
@@ -289,7 +287,7 @@ function ContextBudgetBody({
               grading.overBudget
                 ? "border-destructive bg-destructive/5"
                 : grading.score >= 0.8
-                  ? "border-[#22c55e] bg-[#22c55e]/5"
+                  ? "border-risk-green bg-risk-green/5"
                   : "border-brand-amber bg-brand-amber/5",
             )}
           >
@@ -297,7 +295,7 @@ function ContextBudgetBody({
               {grading.overBudget ? (
                 <XCircle size={16} className="text-destructive" />
               ) : grading.score >= 0.8 ? (
-                <CheckCircle2 size={16} className="text-[#22c55e]" />
+                <CheckCircle2 size={16} className="text-risk-green" />
               ) : (
                 <XCircle size={16} className="text-brand-amber" />
               )}
@@ -335,7 +333,6 @@ function BlockCard({
   onDragStart,
   draggable,
   submitted,
-  coarse,
 }: {
   readonly block: ContextBlock;
   readonly inContext: boolean;
@@ -343,7 +340,6 @@ function BlockCard({
   readonly onDragStart?: (e: React.DragEvent) => void;
   readonly draggable: boolean;
   readonly submitted: boolean;
-  readonly coarse: boolean;
 }): JSX.Element {
   const shownAsMust = submitted && block.mustHave && !inContext;
   return (
@@ -351,10 +347,14 @@ function BlockCard({
       draggable={draggable}
       onDragStart={onDragStart}
       onClick={onClick}
-      role={coarse && !submitted ? "button" : undefined}
-      tabIndex={coarse && !submitted ? 0 : -1}
+      role={!submitted ? "button" : undefined}
+      tabIndex={!submitted ? 0 : -1}
+      aria-pressed={!submitted ? inContext : undefined}
+      aria-label={!submitted
+        ? `${block.label}: ${inContext ? "aus Context-Window entfernen" : "zum Context-Window hinzufügen"}`
+        : undefined}
       onKeyDown={(e) => {
-        if (coarse && (e.key === "Enter" || e.key === " ") && onClick) {
+        if (!submitted && (e.key === "Enter" || e.key === " ") && onClick) {
           e.preventDefault();
           onClick();
         }
@@ -362,7 +362,7 @@ function BlockCard({
       className={cn(
         "flex items-start gap-2 border px-2.5 py-1.5 text-[12px] transition-colors",
         draggable && "cursor-move",
-        coarse && !submitted && "cursor-pointer hover:border-brand-orange",
+        !submitted && "cursor-pointer hover:border-brand-orange",
         block.mustHave
           ? "border-brand-orange/60 bg-brand-orange/5"
           : "border-border bg-background",

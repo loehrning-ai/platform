@@ -3,6 +3,7 @@
 import { useEffect, useState, type JSX } from "react";
 import { getCompletedLessonIds } from "@/lib/course/progress";
 import { DATA_INFRA_TRACKS, type DataInfraLessonId } from "@/lib/data-infrastructure/types";
+import { subscribe } from "@/lib/progress";
 
 interface DataInfraProgressBandProps {
   readonly lessons: readonly { readonly id: DataInfraLessonId; readonly trackId: string }[];
@@ -19,7 +20,9 @@ export function DataInfraProgressBand({ lessons }: DataInfraProgressBandProps): 
   const [completed, setCompleted] = useState<ReadonlySet<string>>(new Set());
 
   useEffect(() => {
-    setCompleted(getCompletedLessonIds("data-infrastructure"));
+    return subscribe(() => {
+      setCompleted(getCompletedLessonIds("data-infrastructure"));
+    });
   }, []);
 
   const totalDone = lessons.filter((l) => completed.has(l.id)).length;

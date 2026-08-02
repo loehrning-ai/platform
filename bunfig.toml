@@ -1,0 +1,5 @@
+[install]
+# Dependency lifecycle scripts are an arbitrary-code execution boundary.
+# Required native tools resolve through pinned optional packages in bun.lock,
+# so installs stay functional without running package scripts.
+ignoreScripts = true

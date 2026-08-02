@@ -35,6 +35,6 @@ describe("FeedbackPage provider boundary", () => {
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
     expect(screen.getByRole("group", { name: /Art der Rückmeldung/i })).toBeVisible();
     expect(screen.getByRole("textbox", { name: /Nachricht/i })).toBeVisible();
-    expect(screen.getByRole("button", { name: /Rückmeldung senden/i })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /Rückmeldung senden/i })).toBeEnabled();
   });
 });

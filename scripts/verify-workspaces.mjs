@@ -10,6 +10,7 @@ import {
 } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { minimalVerificationEnvironment } from "./environment-policy.mjs";
 
 const SCRIPT_PATH = fileURLToPath(import.meta.url);
 const REPOSITORY_ROOT = path.resolve(path.dirname(SCRIPT_PATH), "..");
@@ -232,7 +233,11 @@ export function verifyWorkspaces({
       ["run", "--cwd", workspace.path, "verify"],
       {
         cwd: realpathSync(repositoryRoot),
-        env: process.env,
+        env: {
+          ...minimalVerificationEnvironment(process.env),
+          NEXT_TELEMETRY_DISABLED: "1",
+          RELEASE_VALIDATION: process.env.RELEASE_VALIDATION ?? "",
+        },
         stdio: "inherit",
       },
     );

@@ -3,7 +3,21 @@ import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import * as Sentry from "@sentry/nextjs";
 import GlobalError from "./global-error";
 
-vi.mock("@sentry/nextjs", () => ({ captureException: vi.fn() }));
+vi.mock("@sentry/nextjs", () => ({
+  captureMessage: vi.fn(),
+  withScope: (
+    callback: (scope: {
+      clear: () => void;
+      setLevel: (level: string) => void;
+      setTag: (key: string, value: string) => void;
+    }) => void,
+  ) =>
+    callback({
+      clear: vi.fn(),
+      setLevel: vi.fn(),
+      setTag: vi.fn(),
+    }),
+}));
 
 /**
  * Global error boundary (src/app/global-error.tsx). This is the last-resort
@@ -51,13 +65,17 @@ describe("src/app/global-error.tsx", () => {
       .spyOn(console, "error")
       .mockImplementation(() => {});
     const error = Object.assign(new Error("layout boom"), {
-      digest: "digest-xyz789",
+      digest: "3123456789",
     });
 
     render(<GlobalError error={error} reset={vi.fn()} />);
 
-    expect(Sentry.captureException).toHaveBeenCalledWith(error);
-    expect(screen.getByText("Fehler-ID: digest-xyz789")).toBeInTheDocument();
+    expect(Sentry.captureMessage).toHaveBeenCalledWith(
+      "client-boundary-failure",
+    );
+    expect(screen.getByText("Fehler-ID: 3123456789")).toHaveStyle({
+      color: "#a89070",
+    });
 
     consoleError.mockRestore();
   });

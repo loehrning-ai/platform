@@ -67,13 +67,20 @@ export function L10GitGraphOrchestrator({
     };
   }, []);
 
-  const checkAllDone = (nextStatus: Record<TaskDef["id"], TaskStatus>, resolved: boolean) => {
-    const allDone = TASKS.every((t) => nextStatus[t.id] === "done");
-    if (allDone && resolved) {
-      setStatusLine("All tasks completed! 3 agents, 17 commits, 1 conflict resolved.");
-      complete();
+  const allDone = TASKS.every((task) => status[task.id] === "done");
+
+  useEffect(() => {
+    if (status.t2 === "done" && status.t3 === "done" && !conflictResolved) {
+      setConflictVisible(true);
     }
-  };
+  }, [conflictResolved, status.t2, status.t3]);
+
+  useEffect(() => {
+    if (allDone && conflictResolved) {
+      setStatusLine("All tasks completed! 3 agents, 17 commits, 1 conflict resolved.");
+      if (!done) complete();
+    }
+  }, [allDone, complete, conflictResolved, done]);
 
   const launch = (task: TaskDef) => {
     setStatus((prev) => ({ ...prev, [task.id]: "inprogress" }));
@@ -86,15 +93,8 @@ export function L10GitGraphOrchestrator({
       if (count >= task.commits) {
         clearInterval(interval);
         intervalsRef.current.delete(task.id);
-        setStatus((prev) => {
-          const next = { ...prev, [task.id]: "done" as TaskStatus };
-          setStatusLine(`${task.id.toUpperCase()}: completed.`);
-          if (next.t2 === "done" && next.t3 === "done" && !conflictResolved) {
-            setConflictVisible(true);
-          }
-          checkAllDone(next, conflictResolved);
-          return next;
-        });
+        setStatusLine(`${task.id.toUpperCase()}: completed.`);
+        setStatus((prev) => ({ ...prev, [task.id]: "done" as TaskStatus }));
       }
     }, task.durationMs / task.commits);
     intervalsRef.current.set(task.id, interval);
@@ -104,10 +104,6 @@ export function L10GitGraphOrchestrator({
     setConflictResolved(true);
     setConflictVisible(false);
     setStatusLine(message);
-    setStatus((prev) => {
-      checkAllDone(prev, true);
-      return prev;
-    });
   };
 
   return (
@@ -164,7 +160,7 @@ export function L10GitGraphOrchestrator({
       <p
         className={cn(
           "mt-4 border-t border-border pt-3 text-center font-mono text-[12px]",
-          statusLine.startsWith("All tasks completed") ? "font-bold text-[#22c55e]" : "text-muted-foreground",
+          statusLine.startsWith("All tasks completed") ? "font-bold text-risk-green" : "text-muted-foreground",
         )}
       >
         {statusLine} {statusLine.startsWith("All tasks completed") && done ? "✓" : ""}

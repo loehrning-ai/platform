@@ -39,13 +39,14 @@ export function trackExternalBenchmarkVisible(benchmarkId: string): void {
 /* Demos gallery (demo analytics)                                                   */
 /* ────────────────────────────────────────────────────────────────────────── */
 
-export type DemoOpenSource =
-  | "gallery"
-  | "deeplink"
-  | "product-page"
-  | "homepage"
-  | "share"
-  | "nav";
+export const DEMO_OPEN_SOURCES = [
+  "gallery",
+  "deeplink",
+  "share",
+  "next-demo",
+] as const;
+
+export type DemoOpenSource = (typeof DEMO_OPEN_SOURCES)[number];
 
 export type DemoCtaTarget =
   | "kurs"

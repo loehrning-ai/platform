@@ -173,6 +173,16 @@ describe("Supabase PKCE callback session verification", () => {
     expect(location(response).href).toBe("https://loehrning.ai/konto");
   });
 
+  it("uses the safe fallback when dot normalization creates a scheme-relative URL", async () => {
+    const response = await GET(
+      callbackRequest(
+        `https://loehrning.ai/auth/callback?code=${VALID_CODE}&next=/%252e%252e//evil.example`,
+      ),
+    );
+
+    expect(location(response).href).toBe("https://loehrning.ai/konto");
+  });
+
   it("fails closed when exchange returns no error but no session", async () => {
     exchangeCodeForSessionMock.mockResolvedValueOnce({
       data: { session: null, user: null },
@@ -200,7 +210,9 @@ describe("Supabase PKCE callback session verification", () => {
       ),
     );
 
-    expect(location(response).searchParams.get("reason")).toBe("invalid-link");
+    expect(location(response).searchParams.get("reason")).toBe(
+      "auth-unavailable",
+    );
     expect(getUserMock).not.toHaveBeenCalled();
   });
 
@@ -229,8 +241,27 @@ describe("Supabase PKCE callback session verification", () => {
       ),
     );
 
-    expect(location(response).searchParams.get("reason")).toBe("invalid-link");
+    expect(location(response).searchParams.get("reason")).toBe(
+      "auth-unavailable",
+    );
     expect(signOutMock).toHaveBeenCalledWith({ scope: "local" });
+  });
+
+  it("distinguishes auth-client creation outage from an invalid link", async () => {
+    createAuthServerClientMock.mockRejectedValueOnce(
+      new Error("Auth configuration backend unavailable"),
+    );
+
+    const response = await GET(
+      callbackRequest(
+        `https://loehrning.ai/auth/callback?code=${VALID_CODE}`,
+      ),
+    );
+
+    expect(location(response).searchParams.get("reason")).toBe(
+      "auth-unavailable",
+    );
+    expect(exchangeCodeForSessionMock).not.toHaveBeenCalled();
   });
 
   it("rejects a missing or mismatched verified user", async () => {
@@ -283,14 +314,17 @@ describe("callback redirect-origin policy", () => {
     expect(exchangeCodeForSessionMock).not.toHaveBeenCalled();
   });
 
-  it("canonicalizes the trusted www production host", async () => {
+  it("canonicalizes the trusted www production host before consuming the one-time code", async () => {
     const response = await GET(
       callbackRequest(
         `https://www.loehrning.ai/auth/callback?code=${VALID_CODE}&next=/konto`,
       ),
     );
 
-    expect(location(response).href).toBe("https://loehrning.ai/konto");
+    expect(location(response).href).toBe(
+      `https://loehrning.ai/auth/callback?code=${VALID_CODE}&next=/konto`,
+    );
+    expect(exchangeCodeForSessionMock).not.toHaveBeenCalled();
   });
 
   it("preserves an exact loopback origin outside production", async () => {

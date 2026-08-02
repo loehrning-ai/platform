@@ -96,6 +96,9 @@ function renderView() {
 describe("<GlossaryView> search", () => {
   it("shows the grouped browse view (all terms + category headings) with no query", () => {
     renderView();
+    expect(screen.getByLabelText("Glossar durchsuchen")).not.toHaveAttribute(
+      "readonly",
+    );
     // Both category headings render (the h2 appends a period).
     expect(screen.getByText("Claude.")).toBeInTheDocument();
     expect(screen.getByText("Regulatorik.")).toBeInTheDocument();

@@ -55,6 +55,8 @@ const PUBLIC_ROUTES = [
   "/blog",
   "/open-source",
   "/open-source/lizenzrichtlinie",
+  "/workshops",
+  "/workshops/geschaeftsberichte-mit-ki-lesen",
   "/buecher",
   "/demos",
   "/neuigkeiten",
@@ -148,12 +150,12 @@ test.describe("gated routes redirect anonymous users", () => {
 });
 
 // ---------------------------------------------------------------------------
-// API auth gates: 401 for anonymous requests
+// API auth gates: provider-free runtime is unavailable before authentication
 // ---------------------------------------------------------------------------
 
-test("GET /api/progress returns 401 for anonymous user", async ({ request }) => {
+test("GET /api/progress returns 503 when the account backend is disabled", async ({ request }) => {
   const response = await request.get("/api/progress");
-  expect([401, 503]).toContain(response.status());
+  expect(response.status()).toBe(503);
 });
 
 test("GET /api/books.json returns 200 (public)", async ({ request }) => {
@@ -183,18 +185,17 @@ test.describe("sitemap lists only contract-included paths", () => {
     expect(body, "sitemap must not expose /konto").not.toContain("/konto");
   });
 
-  test("sitemap.xml lists /buecher/<slug> detail pages but not chapter reader paths", async ({
+  test("sitemap.xml lists published book detail and chapter reader paths", async ({
     request,
   }) => {
     const response = await request.get("/sitemap.xml");
     const body = await response.text();
-    // public-content contract decision: /buecher/<slug> detail pages are public,
-    // indexable, and listed in the sitemap; /buecher/<slug>/<chapter> reader
-    // paths stay out by explicit contract flag (includeInSitemap: false).
+    // Published book detail and chapter readers are public, indexable, and
+    // enumerated from the canonical book manifest.
     expect(body, "sitemap must list book detail pages").toMatch(
       /\/buecher\/[a-z0-9-]+</,
     );
-    expect(body, "sitemap must not list chapter reader paths").not.toMatch(
+    expect(body, "sitemap must list published chapter reader paths").toMatch(
       /\/buecher\/[a-z0-9-]+\/[^<]/,
     );
   });
@@ -254,8 +255,7 @@ test.describe("sitemap lists only contract-included paths", () => {
   //: data-engineering-fundamentals's chapter tree has no
   // "/kurs" segment (unlike claude/codex/data-infrastructure above) — the
   // no-leak check instead confirms a real chapter path never appears,
-  // while the bare course root DOES appear (public-indexable via the
-  // generic "/kurse/open-source/:slug" pattern).
+  // while the bare course root DOES appear as its own public-indexable route.
   test("sitemap.xml lists the data-engineering-fundamentals landing but not its chapter routes", async ({
     request,
   }) => {

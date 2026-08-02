@@ -5,6 +5,7 @@ import {
   beforeAll,
   beforeEach,
   afterEach,
+  vi,
 } from "vitest";
 import { render, screen, fireEvent, cleanup, waitFor } from "@testing-library/react";
 import { isCheckpointDone, __resetCacheForTests } from "@/lib/progress";
@@ -88,6 +89,7 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup();
+  vi.restoreAllMocks();
 });
 
 // ─── PromptSandbox ───────────────────────────────────────────────
@@ -315,7 +317,7 @@ describe("PromptDiffWidget", () => {
     const { container } = render(
       <PromptDiffWidget weak="hello world" strong="hello there world" />,
     );
-    const added = container.querySelector(".bg-\\[\\#22c55e\\]\\/20");
+    const added = container.querySelector(".bg-risk-green\\/20");
     expect(added?.textContent).toBe("there");
   });
 });
@@ -401,6 +403,18 @@ describe("TokenizerWidget", () => {
 // ─── ClaudeMdBuilder ─────────────────────────────────────────────
 
 describe("ClaudeMdBuilderWidget", () => {
+  async function renderGeneratedBuilder(): Promise<void> {
+    render(<ClaudeMdBuilderWidget lessonId="l1" cpId="builder1" />);
+    fireEvent.change(screen.getByPlaceholderText(/Reporting dashboard/i), {
+      target: { value: "Private reporting project" },
+    });
+    fireEvent.change(screen.getByPlaceholderText(/TypeScript, React 18/i), {
+      target: { value: "TypeScript" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Generate CLAUDE.md/i }));
+    await screen.findByRole("button", { name: "Copy" });
+  }
+
   it("keeps generate disabled until project and stack are filled", () => {
     render(<ClaudeMdBuilderWidget lessonId="l1" cpId="builder1" />);
     expect(screen.getByRole("button", { name: /Generate CLAUDE.md/i })).toBeDisabled();
@@ -423,6 +437,49 @@ describe("ClaudeMdBuilderWidget", () => {
     setReducedMotion(true);
     render(<ClaudeMdBuilderWidget lessonId="l1" cpId="builder1" />);
     expect(screen.getByRole("button", { name: /Generate CLAUDE.md/i })).toBeInTheDocument();
+  });
+
+  it("shows copied only after the generated document reaches the clipboard", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+    await renderGeneratedBuilder();
+
+    fireEvent.click(screen.getByRole("button", { name: "Copy" }));
+
+    expect(
+      await screen.findByRole("button", { name: "Copied" }),
+    ).toBeInTheDocument();
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringContaining("Private reporting project"),
+    );
+    expect(screen.queryByRole("alert")).toBeNull();
+  });
+
+  it("keeps generated content out of console when clipboard access fails", async () => {
+    const writeText = vi
+      .fn()
+      .mockRejectedValue(
+        new Error("Private reporting project clipboard-provider-secret"),
+      );
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+    await renderGeneratedBuilder();
+
+    fireEvent.click(screen.getByRole("button", { name: "Copy" }));
+
+    expect(
+      await screen.findByText(
+        "Copy failed. Check clipboard permission and try again.",
+      ),
+    ).toHaveAttribute("role", "alert");
+    expect(screen.getByRole("button", { name: "Copy" })).toBeVisible();
+    expect(consoleError).not.toHaveBeenCalled();
   });
 });
 

@@ -1,7 +1,16 @@
-import { Suspense } from "react";
 import type { Metadata } from "next";
-import { DemoGrid } from "@/components/demos/demo-grid";
-import { demos } from "@/lib/demos";
+import {
+  DemoGrid,
+  type DemoGridInitialFilters,
+} from "@/components/demos/demo-grid";
+import {
+  DEMO_CATEGORIES,
+  DEMO_LEVELS,
+  demos,
+  getAllIndustries,
+  type DemoCategory,
+  type DemoLevel,
+} from "@/lib/demos";
 
 export const metadata: Metadata = {
   title: "Praxisbeispiele",
@@ -18,7 +27,61 @@ export const metadata: Metadata = {
   },
 };
 
-export default function DemosPage() {
+type DemoSearchParams = Readonly<
+  Record<string, string | readonly string[] | undefined>
+>;
+
+interface DemosPageProps {
+  readonly searchParams: Promise<DemoSearchParams>;
+}
+
+const DEMO_INDUSTRIES = new Set(getAllIndustries());
+
+function isDemoLevel(value: unknown): value is DemoLevel {
+  return (
+    typeof value === "string" &&
+    DEMO_LEVELS.some((candidate) => candidate === value)
+  );
+}
+
+function isDemoCategory(value: unknown): value is DemoCategory {
+  return (
+    typeof value === "string" &&
+    DEMO_CATEGORIES.some((candidate) => candidate === value)
+  );
+}
+
+function singleValue(
+  value: string | readonly string[] | undefined,
+): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
+
+function sanitizeDemoFilters(
+  params: DemoSearchParams,
+): DemoGridInitialFilters {
+  const level = singleValue(params.level);
+  const category = singleValue(params.cat);
+  const industry = singleValue(params.industry);
+
+  return {
+    level: isDemoLevel(level) ? level : "alle",
+    category: isDemoCategory(category) ? category : "Alle",
+    industry:
+      typeof industry === "string" && DEMO_INDUSTRIES.has(industry)
+        ? industry
+        : "",
+  };
+}
+
+export default async function DemosPage({ searchParams }: DemosPageProps) {
+  const initialFilters = sanitizeDemoFilters(await searchParams);
+  const filterKey = [
+    initialFilters.level,
+    initialFilters.category,
+    initialFilters.industry,
+  ].join(":");
+
   return (
     <div className="min-h-[100svh]">
       {/* Hero */}
@@ -43,19 +106,7 @@ export default function DemosPage() {
       {/* Grid */}
       <section className="px-4 pb-20 pt-8 md:px-10">
         <div className="mx-auto max-w-6xl">
-          <Suspense
-            fallback={
-              <div
-                role="status"
-                aria-live="polite"
-                className="py-20 text-center font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground"
-              >
-                ◆ Praxisbeispiele werden geladen…
-              </div>
-            }
-          >
-            <DemoGrid />
-          </Suspense>
+          <DemoGrid key={filterKey} initialFilters={initialFilters} />
         </div>
       </section>
     </div>

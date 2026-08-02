@@ -1,13 +1,12 @@
-import type { Metadata } from "next";
 import { getRuntimeFeatures } from "@/lib/runtime-features";
+import { createNoindexPageMetadata } from "@/lib/seo/page-metadata";
 import { FeedbackForm } from "./feedback-form";
 
-export const metadata: Metadata = {
+export const metadata = createNoindexPageMetadata({
   title: "Rückmeldung",
   description:
     "Rückmeldung und Kontakt zur freien KI-Lernplattform von loehrning.ai.",
-  robots: { index: false, follow: false },
-};
+});
 
 export default function FeedbackPage() {
   const { feedback } = getRuntimeFeatures();

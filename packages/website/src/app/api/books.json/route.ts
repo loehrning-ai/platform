@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { books } from "@/lib/books";
 import { STAND_DATE, LAST_UPDATED } from "@/lib/content-meta";
+import { getRuntimeFeatures } from "@/lib/runtime-features";
 
 /**
  * GET /api/books.json
@@ -11,6 +12,7 @@ import { STAND_DATE, LAST_UPDATED } from "@/lib/content-meta";
  * free book metadata. All three readers are open — no login required.
  */
 export async function GET() {
+  const { account: accountEnabled } = getRuntimeFeatures();
   const payload = {
     schema: "https://loehrning.ai/schema/books/v1",
     stand: STAND_DATE,
@@ -37,7 +39,8 @@ export async function GET() {
       description: b.description,
       highlights: b.highlights,
       pdf: b.pdfPath,
-      pdf_available: Boolean(b.pdfPath),
+      pdf_available: Boolean(b.pdfPath && accountEnabled),
+      pdf_requires_account: Boolean(b.pdfPath),
       preview_pages: [],
       preview_note:
         "Readers are open to the public — no login required. This API exposes metadata; the reader itself is at reader_url.",
