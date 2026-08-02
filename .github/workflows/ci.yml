@@ -65,3 +65,16 @@ jobs:
             packages/website/blob-report/
           if-no-files-found: ignore
           retention-days: 7
+      # lighthouserc.json writes reports to .lighthouseci/reports, but nothing
+      # collected them, so a Lighthouse assertion failure could only be read
+      # back as the single summary line in the job log. The per-run values are
+      # what distinguish a real regression from runner noise on a metric like
+      # total-blocking-time, so keep them.
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/
+          if-no-files-found: ignore
+          retention-days: 7
