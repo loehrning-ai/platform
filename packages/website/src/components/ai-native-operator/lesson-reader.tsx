@@ -24,27 +24,26 @@ interface AiNativeOperatorLessonReaderProps {
 }
 
 /**
- * AiNativeOperatorLessonReader — bespoke content renderer for the
- * AI-Native Operator course, mirroring
- * ClaudeLessonReader/CodexLessonReader's precedent of a course-owned
- * reader rather than reusing `LessonContent` (German-hardcoded chrome).
- * Widgets render through the shared, kind-agnostic registry.
+ * LessonCompletionButton — owns the reader's progress-readiness state.
  *
- * `kind: "quiz"` lessons (the 9 module knowledge-checks) render their
- * questions as stacked "quiz" TIER_A widgets built from `lesson.quiz`
- * directly, mirroring claude's own convention of representing every
- * knowledge-check question as an individual quiz-widget instance — the
- * same reused kind, never a bespoke multi-question renderer.
+ * This is deliberately a separate component. The store subscription flips
+ * `readyLessonId` from null to the current lesson right after hydration, and
+ * that is a real state change rather than a no-op bail-out. Keeping it in the
+ * reader would re-render the reader's `<article>`, whose widgets render inside
+ * a `React.lazy` Suspense boundary; re-rendering a boundary that has not
+ * finished hydrating leaves the server markup in place and mounts a second
+ * client copy, so the lesson's exercise prompt appears twice (reproduced on
+ * Chromium). Scoping the state here keeps that re-render to the button alone.
+ *
+ * The server and first client render both take the "not ready" branch, so the
+ * control is disabled and `aria-busy` in the server markup and hydrates
+ * without a mismatch.
  */
-export function AiNativeOperatorLessonReader({
+function LessonCompletionButton({
   lesson,
-  prevHref,
-  prevTitle,
-  next,
-}: AiNativeOperatorLessonReaderProps): JSX.Element {
-  const meta = MODULE_META[lesson.moduleId];
-  const widgets = useMemo(() => lesson.widgets ?? [], [lesson.widgets]);
-  const endWidgets = useMemo(() => resolveWidgetsForSlot(widgets, "end"), [widgets]);
+}: {
+  readonly lesson: AiNativeOperatorLesson;
+}): JSX.Element {
   const [completed, setCompleted] = useState(false);
   const [quizReady, setQuizReady] = useState(lesson.kind !== "quiz");
   const [readyLessonId, setReadyLessonId] = useState<string | null>(null);
@@ -67,6 +66,49 @@ export function AiNativeOperatorLessonReader({
   const progressReady = readyLessonId === lesson.id;
   const lessonCompleted = progressReady && completed;
   const canCompleteLesson = progressReady && quizReady;
+
+  return (
+    <button
+      type="button"
+      onClick={() => markLessonCompleted("ai-native-operator", lesson.id)}
+      disabled={lessonCompleted || !canCompleteLesson}
+      aria-busy={!progressReady || undefined}
+      aria-pressed={lessonCompleted}
+      className="inline-flex min-h-11 items-center border-2 border-foreground px-5 text-[12px] font-bold uppercase tracking-wide text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      {!progressReady
+        ? "Loading progress"
+        : lessonCompleted
+          ? "Lesson completed"
+          : canCompleteLesson
+            ? "Complete lesson"
+            : "Answer every question correctly first"}
+    </button>
+  );
+}
+
+/**
+ * AiNativeOperatorLessonReader — bespoke content renderer for the
+ * AI-Native Operator course, mirroring
+ * ClaudeLessonReader/CodexLessonReader's precedent of a course-owned
+ * reader rather than reusing `LessonContent` (German-hardcoded chrome).
+ * Widgets render through the shared, kind-agnostic registry.
+ *
+ * `kind: "quiz"` lessons (the 9 module knowledge-checks) render their
+ * questions as stacked "quiz" TIER_A widgets built from `lesson.quiz`
+ * directly, mirroring claude's own convention of representing every
+ * knowledge-check question as an individual quiz-widget instance — the
+ * same reused kind, never a bespoke multi-question renderer.
+ */
+export function AiNativeOperatorLessonReader({
+  lesson,
+  prevHref,
+  prevTitle,
+  next,
+}: AiNativeOperatorLessonReaderProps): JSX.Element {
+  const meta = MODULE_META[lesson.moduleId];
+  const widgets = useMemo(() => lesson.widgets ?? [], [lesson.widgets]);
+  const endWidgets = useMemo(() => resolveWidgetsForSlot(widgets, "end"), [widgets]);
 
   const nextIcon =
     next.kind === "final-assessment" ? (
@@ -151,24 +193,7 @@ export function AiNativeOperatorLessonReader({
       )}
 
       <div className="mt-10 border-t border-border pt-6">
-        <button
-          type="button"
-          onClick={() =>
-            markLessonCompleted("ai-native-operator", lesson.id)
-          }
-          disabled={lessonCompleted || !canCompleteLesson}
-          aria-busy={!progressReady || undefined}
-          aria-pressed={lessonCompleted}
-          className="inline-flex min-h-11 items-center border-2 border-foreground px-5 text-[12px] font-bold uppercase tracking-wide text-foreground disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {!progressReady
-            ? "Loading progress"
-            : lessonCompleted
-            ? "Lesson completed"
-            : canCompleteLesson
-              ? "Complete lesson"
-              : "Answer every question correctly first"}
-        </button>
+        <LessonCompletionButton lesson={lesson} />
       </div>
 
       <nav className="mt-6 flex items-center justify-between gap-4">

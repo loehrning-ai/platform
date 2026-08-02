@@ -139,6 +139,7 @@ test.describe("AI-Native Operator Course golden path", () => {
     await page.goto(FINAL_LESSON_ROUTE, {
       waitUntil: "domcontentloaded",
     });
+    await page.locator('html[data-hydrated="true"]').waitFor();
 
     await page
       .getByRole("link", { name: "Continue to final assessment" })
@@ -163,6 +164,7 @@ test.describe("AI-Native Operator Course golden path", () => {
     await page.goto(FINAL_LESSON_ROUTE, {
       waitUntil: "domcontentloaded",
     });
+    await page.locator('html[data-hydrated="true"]').waitFor();
 
     const continueToAssessment = page.getByRole("link", {
       name: "Continue to final assessment",
@@ -195,6 +197,7 @@ test.describe("AI-Native Operator Course golden path", () => {
   }) => {
     await seedProgress(page, passedAiNativeOperatorState());
     await page.goto(LANDING, { waitUntil: "domcontentloaded" });
+    await page.locator('html[data-hydrated="true"]').waitFor();
 
     const assessment = page.locator("#final-assessment");
     await expect(assessment).toHaveAttribute(
@@ -217,6 +220,7 @@ test.describe("AI-Native Operator Course golden path", () => {
     const res = await page.goto(MODULE_ROUTE, { waitUntil: "domcontentloaded" });
     expect(res?.status()).toBe(200);
     await expect(page).not.toHaveURL(/\/login/);
+    await page.locator('html[data-hydrated="true"]').waitFor();
 
     const lessonLink = page.locator(`a[href="${LESSON_ROUTE}"]`).first();
     await expect(lessonLink).toBeVisible();
@@ -230,6 +234,7 @@ test.describe("AI-Native Operator Course golden path", () => {
   }) => {
     const res = await page.goto(LESSON_ROUTE, { waitUntil: "domcontentloaded" });
     expect(res?.status()).toBe(200);
+    await page.locator('html[data-hydrated="true"]').waitFor();
 
     // mindset/1's exercise (modules/m01-mindset.ts): a reflect-box widget
     // with the source's own prompt text.
@@ -237,9 +242,18 @@ test.describe("AI-Native Operator Course golden path", () => {
       page.getByText("List three tasks you did this week", { exact: false }),
     ).toBeVisible();
 
-    await page
-      .getByRole("textbox", { name: "Reflect" })
-      .fill("Drafted the weekly status update by hand.");
+    // The draft only persists once Auth identity resolves: until then the
+    // owner namespace is "unknown" and writes are discarded by design, which
+    // also resets the textarea. Retry the entry until it sticks so the
+    // checkpoint assertion below measures the widget, not that race.
+    const reflectBox = page.getByRole("textbox", { name: "Reflect" });
+    await expect(async () => {
+      await reflectBox.fill("Drafted the weekly status update by hand.");
+      await expect(reflectBox).toHaveValue(
+        "Drafted the weekly status update by hand.",
+        { timeout: 2_000 },
+      );
+    }).toPass({ timeout: 15_000 });
 
     const widgetFrame = page.locator(
       '[data-widget-kind="reflect-box"] [data-widget-frame]',
