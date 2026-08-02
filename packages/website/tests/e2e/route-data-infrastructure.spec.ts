@@ -167,15 +167,23 @@ test.describe("Data Infrastructure golden path", () => {
     });
     expect(res?.status()).toBe(200);
     await expect(page).not.toHaveURL(/\/login/);
+    await page.locator('html[data-hydrated="true"]').waitFor();
 
-    const markAsRead = page.getByRole("button", { name: "Mark as read" });
+    const markAsRead = page.getByRole("button", {
+      name: "Mark as read",
+      exact: true,
+    });
     const sectionCount = await markAsRead.count();
     expect(sectionCount).toBeGreaterThan(0);
-    for (let index = 0; index < sectionCount; index += 1) {
+    for (let remaining = sectionCount; remaining > 0; remaining -= 1) {
       await markAsRead.first().click();
+      await expect(markAsRead).toHaveCount(remaining - 1);
     }
-    await expect(markAsRead).toHaveCount(0);
-    await page.getByRole("button", { name: "Complete lesson" }).click();
+    const completeLesson = page.getByRole("button", {
+      name: "Complete lesson",
+    });
+    await expect(completeLesson).toBeEnabled();
+    await completeLesson.click();
 
     const finalLessonCertificate = page.getByRole("link", {
       name: "Open Certificate of Completion",

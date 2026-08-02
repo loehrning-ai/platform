@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeAll, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { ClaudeLessonReader } from "./claude-lesson-reader";
 import { isLessonCompleted, __resetCacheForTests } from "@/lib/progress";
 import type { ClaudeLesson } from "@/lib/claude-course/types";
@@ -92,6 +93,27 @@ beforeEach(() => {
 afterEach(() => cleanup());
 
 describe("ClaudeLessonReader ", () => {
+  it("keeps server-rendered progress controls disabled until progress is ready", () => {
+    const markup = renderToStaticMarkup(
+      <ClaudeLessonReader
+        lesson={{ ...LESSON, widgets: [] }}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+      />,
+    );
+    const host = document.createElement("div");
+    host.innerHTML = markup;
+    const buttons = Array.from(host.querySelectorAll("button"));
+    const markAsRead = buttons.filter((button) => button.textContent?.includes("Mark as read"));
+    const completeLesson = buttons.find((button) => button.textContent?.includes("Complete lesson"));
+
+    expect(markAsRead).toHaveLength(LESSON.sections.length);
+    expect(markAsRead.every((button) => button.disabled)).toBe(true);
+    expect(completeLesson).toBeDefined();
+    expect(completeLesson?.disabled).toBe(true);
+  });
+
   it("renders the lesson header, sections, and key takeaway", () => {
     render(
       <ClaudeLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />,

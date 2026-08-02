@@ -24,6 +24,7 @@ interface LessonContentProps {
   readonly courseSlug: CourseSlug;
   readonly lesson: Lesson;
   readonly totalLessons: number;
+  readonly progressReady: boolean;
   readonly readSectionIds: ReadonlySet<string>;
   readonly isCompleted: boolean;
   readonly quizBestScore: { score: number; total: number } | null;
@@ -38,6 +39,7 @@ export function LessonContent({
   courseSlug,
   lesson,
   totalLessons,
+  progressReady,
   readSectionIds,
   isCompleted,
   quizBestScore,
@@ -50,6 +52,7 @@ export function LessonContent({
   const [activeTab, setActiveTab] = useState<Tab>("lernen");
   const tabRefs = useRef<Partial<Record<Tab, HTMLButtonElement | null>>>({});
   const allSectionsRead = lesson.sections.every((s) => readSectionIds.has(s.id));
+  const canCompleteLesson = progressReady && allSectionsRead;
   const hasQuiz = lesson.quiz.length > 0;
 
   // Interactive widgets (shared course architecture). The widget registry is shared
@@ -197,7 +200,12 @@ export function LessonContent({
             {lesson.sections.map((section, i) => (
               <div key={section.id}>
                 {i > 0 && <div className="mb-8 h-px bg-border" />}
-                <SectionReader section={section} isRead={readSectionIds.has(section.id)} onMarkRead={onMarkSectionRead} />
+                <SectionReader
+                  section={section}
+                  isRead={readSectionIds.has(section.id)}
+                  interactionReady={progressReady}
+                  onMarkRead={onMarkSectionRead}
+                />
                 {/* after-intro widgets render below the first section */}
                 {i === 0 &&
                   afterIntroWidgets.map((widget, w) => (
@@ -223,10 +231,10 @@ export function LessonContent({
                   <button
                     type="button"
                     onClick={onMarkLessonComplete}
-                    disabled={!allSectionsRead}
+                    disabled={!canCompleteLesson}
                     className={cn(
                       "inline-flex items-center gap-2 border-2 border-foreground px-5 py-2.5 text-xs font-bold uppercase tracking-wide shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
-                      allSectionsRead
+                      canCompleteLesson
                         ? "bg-brand-orange text-white hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
                         : "cursor-not-allowed bg-border text-muted-foreground shadow-none",
                     )}

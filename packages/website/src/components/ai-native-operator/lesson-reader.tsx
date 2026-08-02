@@ -47,6 +47,7 @@ export function AiNativeOperatorLessonReader({
   const endWidgets = useMemo(() => resolveWidgetsForSlot(widgets, "end"), [widgets]);
   const [completed, setCompleted] = useState(false);
   const [quizReady, setQuizReady] = useState(lesson.kind !== "quiz");
+  const [readyLessonId, setReadyLessonId] = useState<string | null>(null);
 
   useEffect(
     () =>
@@ -58,9 +59,14 @@ export function AiNativeOperatorLessonReader({
               isCheckpointDone(lesson.id, question.id),
             ),
         );
+        setReadyLessonId(lesson.id);
       }),
     [lesson],
   );
+
+  const progressReady = readyLessonId === lesson.id;
+  const lessonCompleted = progressReady && completed;
+  const canCompleteLesson = progressReady && quizReady;
 
   const nextIcon =
     next.kind === "final-assessment" ? (
@@ -150,13 +156,16 @@ export function AiNativeOperatorLessonReader({
           onClick={() =>
             markLessonCompleted("ai-native-operator", lesson.id)
           }
-          disabled={completed || !quizReady}
-          aria-pressed={completed}
+          disabled={lessonCompleted || !canCompleteLesson}
+          aria-busy={!progressReady || undefined}
+          aria-pressed={lessonCompleted}
           className="inline-flex min-h-11 items-center border-2 border-foreground px-5 text-[12px] font-bold uppercase tracking-wide text-foreground disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {completed
+          {!progressReady
+            ? "Loading progress"
+            : lessonCompleted
             ? "Lesson completed"
-            : quizReady
+            : canCompleteLesson
               ? "Complete lesson"
               : "Answer every question correctly first"}
         </button>

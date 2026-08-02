@@ -38,6 +38,7 @@ export function LessonLayout({
   const [quizScores, setQuizScores] = useState<
     ReadonlyMap<string, { score: number; total: number }>
   >(() => new Map());
+  const [readyProgressKey, setReadyProgressKey] = useState<string | null>(null);
 
   // Block-based course routes contain several lessons at one URL. Resume links
   // use a bounded `#lesson=<id>` fragment so they can restore the first
@@ -76,6 +77,7 @@ export function LessonLayout({
         else next.delete(activeLessonId);
         return next;
       });
+      setReadyProgressKey(`${courseSlug}:${activeLessonId}`);
     });
   }, [courseSlug, activeLessonId]);
 
@@ -99,6 +101,8 @@ export function LessonLayout({
   const activeLesson = lessons.find((l) => l.id === activeLessonId);
   const activeLessonIndex = lessons.findIndex((l) => l.id === activeLessonId);
   const hasNextLesson = activeLessonIndex < lessons.length - 1;
+  const progressReady =
+    readyProgressKey === `${courseSlug}:${activeLessonId}`;
 
   const handleSelectLesson = useCallback(
     (lessonId: string) => {
@@ -173,6 +177,7 @@ export function LessonLayout({
         courseSlug={courseSlug}
         lesson={activeLesson}
         totalLessons={lessons.length}
+        progressReady={progressReady}
         readSectionIds={readIds}
         isCompleted={completedIds.has(activeLessonId)}
         quizBestScore={quizScores.get(activeLessonId) ?? null}

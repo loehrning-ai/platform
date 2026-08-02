@@ -6,6 +6,7 @@ import {
   screen,
   cleanup,
 } from "@testing-library/react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { AiNativeOperatorLessonReader } from "./lesson-reader";
 import {
   __resetCacheForTests,
@@ -118,6 +119,26 @@ beforeEach(() => {
 afterEach(() => cleanup());
 
 describe("AiNativeOperatorLessonReader ", () => {
+  it("keeps the server-rendered completion control disabled until progress is ready", () => {
+    const markup = renderToStaticMarkup(
+      <AiNativeOperatorLessonReader
+        lesson={{ ...READING_LESSON, widgets: [] }}
+        prevHref={null}
+        prevTitle={null}
+        next={NEXT_LESSON}
+      />,
+    );
+    const host = document.createElement("div");
+    host.innerHTML = markup;
+    const completion = Array.from(host.querySelectorAll("button")).find(
+      (button) => button.textContent?.includes("Loading progress"),
+    );
+
+    expect(completion).toBeDefined();
+    expect(completion?.disabled).toBe(true);
+    expect(completion).toHaveAttribute("aria-busy", "true");
+  });
+
   it("renders the header, objective, sections, and callout for a reading lesson", () => {
     render(<AiNativeOperatorLessonReader lesson={READING_LESSON} prevHref={null} prevTitle={null} next={NEXT_LESSON} />);
     expect(screen.getByText("Test reading lesson")).toBeInTheDocument();

@@ -18,10 +18,16 @@ const checkSpring = {
 interface SectionReaderProps {
   readonly section: LessonSection;
   readonly isRead: boolean;
+  readonly interactionReady?: boolean;
   readonly onMarkRead: (sectionId: string) => void;
 }
 
-export function SectionReader({ section, isRead, onMarkRead }: SectionReaderProps) {
+export function SectionReader({
+  section,
+  isRead,
+  interactionReady = true,
+  onMarkRead,
+}: SectionReaderProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-4">
@@ -67,7 +73,7 @@ export function SectionReader({ section, isRead, onMarkRead }: SectionReaderProp
       <button
         type="button"
         onClick={() => onMarkRead(section.id)}
-        disabled={isRead}
+        disabled={!interactionReady || isRead}
         className="inline-flex items-center gap-2 text-sm font-medium transition-colors disabled:cursor-default"
       >
         {isRead ? (
