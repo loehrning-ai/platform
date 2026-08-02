@@ -506,9 +506,24 @@ export const LEGAL_CLAIMS: readonly LegalClaim[] = [
     displayDateDE: "28. Juli 2026",
     sourceUrl: "https://www.recht.bund.de/de/home/home_node.html",
     sourceKind: "primary",
-    lastVerified: "2026-07-28",
+    lastVerified: "2026-08-02",
     summary:
-      "No KI-MIG publication was verified in the official Bundesgesetzblatt repository on 28 July 2026. This negative check does not replace later re-verification.",
+      "Historical checkpoint: no KI-MIG publication was verified in the official Bundesgesetzblatt repository on 28 July 2026. The re-verification has since resolved it: the KI-MIG entered into force on 29 July 2026.",
+  },
+  {
+    claimId: "de-ki-mig-in-force-2026-07-29",
+    instrument: "other",
+    jurisdiction: "DE",
+    status: "binding",
+    effectiveDate: "2026-07-29",
+    displayDateDE: "29. Juli 2026",
+    sourceUrl:
+      "https://bmds.bund.de/aktuelles/pressemitteilungen/detail/neues-ki-gesetz-tritt-in-kraft",
+    sourceKind: "official-guidance",
+    lastVerified: "2026-08-02",
+    summary:
+      "The KI-MIG entered into force on 29 July 2026. It makes the Bundesnetzagentur the market surveillance authority, contact point, and complaint body for the AI Regulation where no sector-specific authority is competent.",
+    supersedes: ["de-ki-mig-publication-check-2026-07-28"],
   },
   {
     claimId: "openai-gpt-5-5-release-2026-04-23",

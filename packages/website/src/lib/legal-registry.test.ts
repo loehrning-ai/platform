@@ -9,8 +9,15 @@ describe("legal registry", () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it("contains the complete set of 41 sourced claims", () => {
-    expect(LEGAL_CLAIMS.length).toBe(41);
+  it("contains the complete set of 42 sourced claims", () => {
+    expect(LEGAL_CLAIMS.length).toBe(42);
+  });
+
+  it("records the KI-MIG as in force and supersedes the negative publication check", () => {
+    const inForce = getLegalClaim("de-ki-mig-in-force-2026-07-29");
+    expect(inForce?.status).toBe("binding");
+    expect(inForce?.effectiveDate).toBe("2026-07-29");
+    expect(inForce?.supersedes).toContain("de-ki-mig-publication-check-2026-07-28");
   });
 
   it("contains the launch-critical AI Act dates", () => {
