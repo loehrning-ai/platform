@@ -26,4 +26,4 @@
  * Keep this module dependency-light: no imports. llms.txt is entity-driven
  * and must not gain a dependency on the crawl contract through this file.
  */
-export const SITE_CONTENT_DATE = "2026-08-02";
+export const SITE_CONTENT_DATE = "2026-08-05";
