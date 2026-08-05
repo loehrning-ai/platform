@@ -1433,6 +1433,9 @@ async function walk(dir, { candidateOnly = false } = {}) {
   }
   entries.sort((a, b) => a.name.localeCompare(b.name));
   for (const entry of entries) {
+    // A normal checkout exposes .git as a directory; a linked worktree exposes
+    // it as a pointer file. Both are VCS metadata and outside the public tree.
+    if (entry.name === ".git") continue;
     const full = join(dir, entry.name);
     const rel = toPosixPath(relative(root, full));
     const exactGitCandidate = gitCandidatePaths?.has(rel) ?? false;

@@ -254,6 +254,7 @@ async function main() {
         "# Public platform fixture\n\n" +
         "Source: https://example.com/media/20240506_DSK_Orientation_Example_Document.pdf\n" +
         "The risk-area identifier is ordinary prose, not an API credential.\n",
+      ".git": "gitdir: /Users/example-user/Projects/platform/.git/worktrees/public\n",
       "package.json": '{"name":"public-platform","private":true}\n',
       "bun.lock": '{"lockfileVersion":1}\n',
       ".env.example":
