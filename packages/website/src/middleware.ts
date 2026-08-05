@@ -1,19 +1,37 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { cacheHeaderFor, getCrawlRoute, NOINDEX_HEADER } from "@/lib/crawl/contract";
+import { redirectOriginForRequest } from "@/lib/auth/origin";
 import { isGatedCoursePath, isProtectedPlatformPath } from "@/lib/auth/routes";
+import { reportApiError } from "@/lib/observability/api-error";
 import { refreshAuthSession } from "@/lib/supabase/middleware";
 
 function preserveAuthHeaders(source: NextResponse, target: NextResponse): NextResponse {
-  source.headers.forEach((value, key) => {
-    const normalized = key.toLowerCase();
-    if (normalized === "content-type") return;
-    if (normalized === "set-cookie") {
-      target.headers.append(key, value);
-      return;
-    }
-    if (!target.headers.has(key)) target.headers.set(key, value);
-  });
+  // Supabase may refresh more than one cookie while the middleware decides to
+  // replace NextResponse.next() with a redirect or terminal error. Copy only
+  // that auth state and explicit cache-safety headers. Internal Next router
+  // controls such as x-middleware-next must never reach a terminal response.
+  for (const cookie of source.cookies.getAll()) {
+    target.cookies.set(cookie);
+  }
+  for (const key of ["cache-control", "expires", "pragma"]) {
+    const value = source.headers.get(key);
+    if (value && !target.headers.has(key)) target.headers.set(key, value);
+  }
   return target;
+}
+
+function mergeVaryHeader(headers: Headers, value: string): void {
+  const existing = (headers.get("Vary") ?? "")
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+  if (
+    existing.includes("*") ||
+    existing.some((entry) => entry.toLowerCase() === value.toLowerCase())
+  ) {
+    return;
+  }
+  headers.set("Vary", [...existing, value].join(", "));
 }
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
@@ -26,9 +44,10 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
       "Cache-Control": cacheHeaderFor(route),
     };
     if (route.auth === "redirect" && route.redirectTo) {
-      const url = request.nextUrl.clone();
-      url.pathname = route.redirectTo;
-      url.search = "";
+      const url = new URL(
+        route.redirectTo,
+        redirectOriginForRequest(request.nextUrl),
+      );
       const redirect = NextResponse.redirect(url, route.status ?? 301);
       for (const [key, value] of Object.entries(headers)) redirect.headers.set(key, value);
       return redirect;
@@ -42,6 +61,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   const requestHeaders = new Headers(request.headers);
 
   const protectedPath = isProtectedPlatformPath(pathname);
+  const routeLevelAuth = route.auth === "route-level";
   const authAwarePublicPath = pathname === "/login" || pathname.startsWith("/auth/");
   if (!protectedPath && !authAwarePublicPath) {
     const response = NextResponse.next({
@@ -50,14 +70,59 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
       },
     });
     if (route.xRobotsTag) response.headers.set("X-Robots-Tag", route.xRobotsTag);
+    if (routeLevelAuth) {
+      response.headers.set("Cache-Control", cacheHeaderFor(route));
+      mergeVaryHeader(response.headers, "Cookie");
+    }
     return response;
   }
 
-  const { configured, response, user } = await refreshAuthSession(request, requestHeaders);
+  let authState;
+  try {
+    authState = await refreshAuthSession(request, requestHeaders);
+  } catch (error) {
+    authState = {
+      configured: true,
+      response: NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      }),
+      user: null,
+      error,
+    };
+  }
+  const { configured, response, user, error: authError } = authState;
+
+  if (authError) {
+    reportApiError({
+      request,
+      step: "auth-get-user",
+      error: authError,
+    });
+  }
 
   if (!protectedPath) {
     response.headers.set("X-Robots-Tag", NOINDEX_HEADER);
     return response;
+  }
+
+  if (authError) {
+    const headers = {
+      "Cache-Control": "private, no-store",
+      "X-Robots-Tag": NOINDEX_HEADER,
+      "Retry-After": "30",
+    };
+    const unavailable = pathname.startsWith("/api/")
+      ? NextResponse.json(
+          { error: "auth_unavailable" },
+          { status: 503, headers },
+        )
+      : new NextResponse(
+          "Authentifizierung vorübergehend nicht verfügbar.",
+          { status: 503, headers },
+        );
+    return preserveAuthHeaders(response, unavailable);
   }
 
   if (!user) {
@@ -73,9 +138,10 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
         },
       ));
     }
-    const loginUrl = request.nextUrl.clone();
-    loginUrl.pathname = "/login";
-    loginUrl.search = "";
+    const loginUrl = new URL(
+      "/login",
+      redirectOriginForRequest(request.nextUrl),
+    );
     loginUrl.searchParams.set(
       "next",
       `${pathname}${request.nextUrl.search}`,
@@ -96,7 +162,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
   response.headers.set("X-Robots-Tag", NOINDEX_HEADER);
   response.headers.set("Cache-Control", "private, no-store");
-  response.headers.set("Vary", "Cookie");
+  mergeVaryHeader(response.headers, "Cookie");
 
   return response;
 }

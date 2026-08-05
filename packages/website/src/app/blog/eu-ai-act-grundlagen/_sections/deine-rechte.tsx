@@ -68,11 +68,11 @@ const RECHTE: readonly Recht[] = [
     antwort: (
       <>
         Bei der zuständigen Marktüberwachungsbehörde deines Landes, wenn du
-        einen Verstoß gegen die Verordnung vermutest. In Deutschland sieht
-        das beschlossene KI-MIG die Bundesnetzagentur als zentrale
-        Anlaufstelle vor, soweit keine Fachbehörde zuständig ist; nutze nach
-        der Verkündung den offiziell veröffentlichten Weg. Unabhängig davon
-        helfen Verbraucherzentralen bei rechtlicher Erstberatung.
+        einen Verstoß gegen die Verordnung vermutest. In Deutschland macht
+        das seit dem 29. Juli 2026 geltende KI-MIG die Bundesnetzagentur zur
+        zentralen Anlaufstelle und Beschwerdestelle, soweit keine Fachbehörde
+        zuständig ist; nutze den offiziell veröffentlichten Weg. Unabhängig
+        davon helfen Verbraucherzentralen bei rechtlicher Erstberatung.
       </>
     ),
   },

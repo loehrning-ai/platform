@@ -17,11 +17,11 @@ const QUELLEN: readonly Quelle[] = [
     example: "EUR-Lex · Amtsblatt 12. Juli 2024",
   },
   {
-    title: "AI Omnibus, Verfahrensakte",
-    desc: "Der Stand des Änderungsverfahrens 2025/0359(COD): Vorschlag, Abstimmungen, Unterzeichnung, Amtsblatt.",
-    href: "https://oeil.europarl.europa.eu/oeil/en/procedure-file?reference=2025/0359(COD)",
+    title: "Verordnung (EU) 2026/1744",
+    desc: "Der veröffentlichte AI Omnibus mit dem geänderten Artikel 4, den neuen Hochrisiko-Terminen und Übergangsregeln.",
+    href: "https://eur-lex.europa.eu/eli/reg/2026/1744/oj",
     badge: "Primärquelle",
-    example: "OEIL · unterzeichnet 8. Juli 2026",
+    example: "EUR-Lex · in Kraft seit 27. Juli 2026",
   },
   {
     title: "Rat der EU: Billigung des Omnibus",
@@ -35,7 +35,7 @@ const QUELLEN: readonly Quelle[] = [
     desc: "Die Antworten der Kommission: kein Zertifikat, kein Pflichtformat, kontextbezogene Schulung.",
     href: "https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers",
     badge: "Kommission",
-    example: "digital-strategy.ec.europa.eu · Mai 2025",
+    example: "digital-strategy.ec.europa.eu · abgerufen 28. Juli 2026",
   },
   {
     title: "Zeitplan und Umsetzungshilfen",
@@ -84,7 +84,7 @@ export function Quellen() {
         </h2>
         <p className="dek">
           Jede Aussage in diesem Text lässt sich hier nachprüfen. Alle
-          Quellen zuletzt geprüft am 16. Juli 2026.
+          Quellen zuletzt geprüft am 28. Juli 2026.
         </p>
 
         <div className="sources">
@@ -119,19 +119,20 @@ export function Quellen() {
           Der EU AI Act ist kein Grund zur Panik und kein Papiertiger. Er
           ist ein gestaffeltes Gesetz, dessen wichtigste Bürgerrechte am
           2. August 2026 anwendbar werden, während die schwersten
-          Unternehmenspflichten gerade per Beschluss auf Ende 2027 und 2028
-          rutschen. Wer beides auseinanderhält, versteht neunzig Prozent der
+          Unternehmenspflichten nun verbindlich auf Ende 2027 und 2028
+          verschoben sind. Wer beides auseinanderhält, versteht neunzig Prozent der
           Debatte.
         </p>
         <p>
-          Dieser Artikel wird bei relevanten Änderungen aktualisiert,
-          als Nächstes, sobald der AI Omnibus im Amtsblatt steht.
+          Dieser Artikel wird bei relevanten Änderungen aktualisiert. Der
+          deutsche Behördenweg bleibt bis zur amtlich verifizierten
+          Verkündung des KI-MIG ausdrücklich vorläufig.
         </p>
         <div className="essay-close__signoff">
           <span>
             Geschrieben von <b>Tim Löhr</b>
           </span>
-          <span>Stand: 16. Juli 2026</span>
+          <span>Stand: 28. Juli 2026</span>
         </div>
       </section>
 

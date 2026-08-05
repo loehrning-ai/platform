@@ -174,7 +174,13 @@ function DemoPlaceholderFrame(): JSX.Element {
 }
 
 export function DemosGalleryView(): JSX.Element {
+  const [hydrated, setHydrated] = useState(false);
   const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
   const q = query.trim().toLowerCase();
   const matches = (d: DemoEntry): boolean => {
     if (!q) return true;
@@ -244,6 +250,7 @@ export function DemosGalleryView(): JSX.Element {
           <FadeBlock delay={3} className="mt-8 flex flex-wrap gap-3">
             <BrandButton
               href="/ai-native/kurs/modul_1"
+              prefetch={false}
               variant="primary"
               surface="dark"
             >
@@ -268,6 +275,8 @@ export function DemosGalleryView(): JSX.Element {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                readOnly={!hydrated}
+                aria-disabled={!hydrated}
                 placeholder="Suche: RAG, DSGVO, Excel, Workflow …"
                 className="flex-1 bg-transparent py-3 text-[16px] text-[var(--color-dark-fg)] outline-none placeholder:text-[var(--color-dark-muted)] focus-visible:ring-2 focus-visible:ring-brand-orange"
                 aria-label="Praxisbeispiele durchsuchen"
@@ -386,6 +395,7 @@ export function DemosGalleryView(): JSX.Element {
             <div className="mt-8 flex flex-wrap justify-center gap-3.5">
               <BrandButton
                 href="/ai-native/kurs/modul_1"
+                prefetch={false}
                 variant="primary"
                 surface="dark"
               >

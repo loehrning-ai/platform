@@ -14,8 +14,7 @@ import { test, expect, type Page } from "@playwright/test";
  * other two books are pending re-review and their /buecher/<slug> routes 404.
  */
 
-// Console-error filter mirrors route-einstieg.spec.ts: drop framework noise and
-// keep only errors that signal a genuine page fault.
+// Every captured console error and uncaught page error fails the check.
 function collectConsoleErrors(page: Page): string[] {
   const errors: string[] = [];
   page.on("console", (msg) => {
@@ -26,13 +25,7 @@ function collectConsoleErrors(page: Page): string[] {
 }
 
 function meaningfulErrors(errors: string[]): string[] {
-  return errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e),
-  );
+  return errors;
 }
 
 // Real data read from src/lib/books.ts + content/books/<slug>/manifest.json.
@@ -71,12 +64,15 @@ test.describe("/buecher/[slug] book overview", () => {
         await expect(toc.getByRole("listitem")).toHaveCount(book.chapterCount);
         await expect(page.getByText(`${book.chapterCount} Kapitel`)).toBeVisible();
 
-        // adaptationNote + the anonymous-visitor PDF login prompt (this test
-        // runs unauthenticated, so the locked-state link is what renders).
+        // adaptationNote + provider-free PDF truth. This build deliberately
+        // has no account backend, so it must not advertise an impossible login.
         await expect(page.getByText("Hinweis:", { exact: true })).toBeVisible();
         await expect(
+          page.getByText(/PDF-Download in dieser Version nicht verfügbar/i),
+        ).toBeVisible();
+        await expect(
           page.getByRole("link", { name: /Anmelden, um als PDF herunterzuladen/i }),
-        ).toHaveAttribute("href", new RegExp(`^/login\\?next=`));
+        ).toHaveCount(0);
 
         // Back-to-library affordance.
         await expect(

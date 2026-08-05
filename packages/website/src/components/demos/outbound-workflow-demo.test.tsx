@@ -49,7 +49,7 @@ describe("<OutboundWorkflowDemo>", () => {
 
     // Header + section heading.
     expect(screen.getByText("Signalbasierte Nachricht · Pipeline")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "Öffentliche Signale.",
     );
 

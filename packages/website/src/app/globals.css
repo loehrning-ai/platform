@@ -4,9 +4,12 @@
 @theme {
   /* Brand CI — Berliner Werkzeug v3.0 (April 2026) */
   --color-brand-orange: #a5370f; /* Kupfer — oxidized copper, Berlin Altbau. Darkened from #C4431A (4.43:1, sub-AA) to #A5370F (5.85:1) so accent TEXT on Kalkweiß meets WCAG AA; dark sections override to the lighter #E07050 below. */
-  --color-brand-sand: #a89070;
-  --color-brand-amber: #e07050; /* Kupfer Light — text links, subtle accents */
-  --color-destructive: #ef4444;
+  /* Foreground-safe status/accent tones for light surfaces. These values also
+     remain AA when the same tone is used over its own 20% tint on Birke cards.
+     Dark sections restore the lighter display tones below. */
+  --color-brand-sand: #604b36;
+  --color-brand-amber: #78350f;
+  --color-destructive: #991b1b;
 
   /* Light background system — Kalkweiß */
   --color-background: #f3f0e9; /* Kalkweiß — chalk-lime white */
@@ -33,13 +36,13 @@
   --color-dark-border: rgba(243, 240, 233, 0.12);
 
   /* Functional */
-  --color-risk-green: #22c55e;
-  --color-risk-yellow: #eab308;
+  --color-risk-green: #14532d;
+  --color-risk-yellow: #713f12;
   /* #ef4444 (red-500) is only 3.19:1 as TEXT on warm light surfaces (sub-AA).
      #b91c1c (red-700) reaches ≥5.0:1 as text on Kalkweiß/Birke and keeps
      white-on-red badge fills well above AA. Used via text-/border-/bg-risk-red
      utilities; no solid bg-risk-red+text pairing exists in the codebase. */
-  --color-risk-red: #b91c1c;
+  --color-risk-red: #991b1b;
 
   /* Elevation — warm, soft card shadows (v3.1: replaces the brutalist offset
      shadow). Tinted with Druckertinte so they read warm on Kalkweiß, not grey. */
@@ -102,6 +105,22 @@
 
   :focus:not(:focus-visible) {
     outline: none;
+  }
+
+  :where(h1, h2, h3) {
+    text-wrap: balance;
+  }
+
+  :where(
+    a[href],
+    button,
+    [role="button"],
+    input[type="button"],
+    input[type="submit"],
+    input[type="reset"]
+  ) {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(183, 58, 21, 0.18);
   }
 }
 
@@ -180,7 +199,12 @@
     /* Kupfer accent flips to the lighter copper on dark so accent text stays AA
        (#A5370F would be ~2.4:1 on near-black; #E07050 is ~5.5:1). */
     --color-brand-orange: #e07050;
+    --color-brand-sand: #a89070;
+    --color-brand-amber: #f59e0b;
     --color-kupfer: #e07050;
+    --color-destructive: #ef4444;
+    --color-risk-green: #4ade80;
+    --color-risk-yellow: #facc15;
     /* On dark, the darker red-700 (#b91c1c → 3.04:1) would be sub-AA, so revert
        risk-red to red-500 (#ef4444 → 5.22:1) for AA on the near-black ground. */
     --color-risk-red: #ef4444;
@@ -326,6 +350,75 @@
   }
 }
 
+/* ── Typenschild assembly ─────────────────────────────────────────────────
+   The course data plates "assemble" exactly once when they scroll into view:
+   the rule draws, the fact rows stamp in left-to-right, the numeral settles.
+   Gated by [data-assembled] (set by PlateReveal); without JS the plate
+   renders settled and fully visible. `backwards` fill keeps the pre-state
+   only while the animation is armed; every animation is finite and ends at
+   full opacity, and the global reduced-motion kill-switch below collapses
+   all of it to 0.01ms. */
+@keyframes plate-rule-in {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes plate-row-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes plate-numeral-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+[data-assembled] .plate-rule {
+  animation: plate-rule-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+[data-assembled] .plate-row {
+  animation: plate-row-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(var(--row-i, 0) * 60ms);
+}
+
+[data-assembled] .plate-numeral {
+  animation: plate-numeral-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) 120ms backwards;
+}
+
+/* One-shot stamp landing for status chips ("erreicht", "Link kopiert"):
+   the rectangular stamp presses onto the paper. Finite, settles at scale 1. */
+@keyframes stamp-in {
+  0% {
+    opacity: 0;
+    transform: scale(1.12);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.stamp-in {
+  animation: stamp-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -335,8 +428,10 @@
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
     scroll-behavior: auto !important;
   }
 
@@ -368,6 +463,10 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
+}
+.demo-gallery-tile {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 420px;
 }
 @media (min-width: 768px) {
   .demo-gallery-grid {

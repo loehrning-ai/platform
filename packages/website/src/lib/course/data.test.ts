@@ -179,6 +179,9 @@ describe("KI-Führerschein in-lesson interactivity (shared course architecture)"
     expect(cards.map((c) => c.q)).toContain("Halluzination");
     // Unique checkpoint id per block.
     expect(deck?.props?.cpId).toBe("glossar-block_4");
+    expect(deck?.props?.lessonId).toBe(
+      "ki-fuehrerschein:block_4_lesson_4",
+    );
   });
 
   it("only the last lesson of a block carries the glossary deck", () => {
@@ -389,6 +392,9 @@ describe("EU-AI-Act-Kurs in-lesson interactivity (shared course architecture)", 
     );
     expect(deck).toBeDefined();
     expect(deck?.props?.cpId).toBe("glossar-block_2");
+    expect(deck?.props?.lessonId).toBe(
+      "eu-ai-act-kurs:block_2_lesson_4",
+    );
     const cards = deck?.props?.cards as ReadonlyArray<{ q: string; a: string }>;
     expect(cards.length).toBeGreaterThan(0);
     expect(cards.map((c) => c.q)).toContain("Verbotene Praktiken");
@@ -417,5 +423,40 @@ describe("EU-AI-Act-Kurs in-lesson interactivity (shared course architecture)", 
     const scenario = String(tagger?.props?.scenario ?? "");
     expect(scenario).not.toMatch(/[—–]/);
     expect(scenario).toMatch(/[äöüß]/);
+  });
+});
+
+describe("shared widget checkpoint identity", () => {
+  it("keeps every effective shared-course checkpoint globally unique", () => {
+    const courseSlugs = [
+      "ki-fuehrerschein",
+      "eu-ai-act-kurs",
+      "ai-native",
+      "ki-und-gesellschaft",
+    ] as const;
+    const owners = new Map<string, string>();
+
+    for (const courseSlug of courseSlugs) {
+      for (const block of getBlocks(courseSlug)) {
+        for (const lesson of block.lessons) {
+          for (const widget of lesson.widgets ?? []) {
+            const lessonId = widget.props?.lessonId;
+            const cpId = widget.props?.cpId;
+            if (typeof lessonId !== "string" || typeof cpId !== "string") {
+              continue;
+            }
+            const key = `${lessonId}::${cpId}`;
+            const owner = `${courseSlug}/${block.id}/${lesson.id}/${widget.kind}`;
+            expect(
+              owners.get(key),
+              `checkpoint "${key}" is shared by ${owners.get(key)} and ${owner}`,
+            ).toBeUndefined();
+            owners.set(key, owner);
+          }
+        }
+      }
+    }
+
+    expect(owners.size).toBeGreaterThan(0);
   });
 });

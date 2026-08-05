@@ -59,7 +59,7 @@ describe("<RagVertragsassistentDemo>", () => {
     ).toHaveTextContent(/keine Vektordatenbank/);
 
     // Empty-state prompt heading.
-    expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "Fragen Sie das Beispielarchiv.",
     );
 

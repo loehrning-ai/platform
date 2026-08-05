@@ -1,7 +1,7 @@
 /**
  * Workshops catalog — single in-repo source of truth.
  *
- * Live-Workshop-Termine mit Download-Material: eine Slide-Deck-Anleitung, eine
+ * Selbstlern-Workshops mit Download-Material: eine Slide-Deck-Anleitung, eine
  * einseitige Field Card und ein Übungs-Kit als ZIP. Die statischen Dateien
  * liegen unter public/workshops/<slug>/ und werden vom Next.js-Server ab
  * Site-Root ausgeliefert (siehe public/book-covers/ für dasselbe Muster).
@@ -64,10 +64,10 @@ export const WORKSHOPS: readonly Workshop[] = [
   {
     slug: "geschaeftsberichte-mit-ki-lesen",
     title: "Geschäftsberichte mit KI lesen",
-    eyebrow: "Live-Workshop · Business Reports",
+    eyebrow: "Selbstlern-Workshop · Business Reports",
     description:
-      "In einem geführten Workshop baust du in der Claude-App einen kleinen KI-Analysten für einen echten Monatsbericht: Rohdaten einlesen, Kennzahlen sauber definieren, ein Dashboard befüllen und am Ende eine begründete Entscheidung treffen. Ohne Programmierung, ohne API-Key, alles läuft über ein reguläres Claude-Abo.",
-    format: "Live-Workshop",
+      "Mit einer geführten Selbstlern-Anleitung baust du in der Claude-App einen kleinen KI-Analysten für einen realistisch aufgebauten synthetischen Monatsbericht: Rohdaten einlesen, Kennzahlen sauber definieren, ein Dashboard befüllen und am Ende eine begründete Entscheidung treffen. Ohne Programmierung und API-Key; für die Schritte in Claude brauchst du einen passenden Claude-Zugang.",
+    format: "Selbstlern-Kit",
     duration: "~75 Minuten",
     audience: [
       "Mitarbeitende, die Monats- oder Quartalsberichte lesen oder erstellen",
@@ -107,14 +107,14 @@ export const WORKSHOPS: readonly Workshop[] = [
         n: "05",
         title: "Verbinden statt kopieren",
         description:
-          "Über Connectors holt Claude die reale Datei direkt aus Google Drive oder E-Mail, weiterhin über das eigene Abo, weiterhin ohne API-Key. Der nächste Monat wird so zu einer einzigen Nachricht statt zu einem erneuten Datei-Upload.",
+          "Über einen unterstützten und freigegebenen Connector kannst du zugängliche Dateien aus Google Drive oder E-Mail einbinden. Verfügbarkeit und Dateizugriff hängen vom jeweiligen Connector und Claude-Zugang ab; ein API-Key ist nicht nötig.",
         tool: "Connectors",
       },
       {
         n: "06",
         title: "Das Dashboard befüllen",
         description:
-          "Claude Code schreibt die berechneten Zahlen in die Dashboard-Vorlage und öffnet sie, ohne Installation, ohne Key. Am Ende steht ein teilbares Ein-Seiten-Dashboard mit Umsatz und Fehlerquote je Linie, Marketingzahlen und der offenen Entscheidung.",
+          "Claude Code schreibt die berechneten Zahlen in die Dashboard-Vorlage und öffnet sie. Dafür brauchst du die Claude-Desktop-App mit Claude-Code-Oberfläche oder die installierte Claude-Code-CLI sowie einen unterstützten Claude-Zugang. Ein API-Key ist nicht nötig. Am Ende steht ein teilbares Ein-Seiten-Dashboard mit Umsatz und Fehlerquote je Linie, Marketingzahlen und der offenen Entscheidung.",
         tool: "Dashboard",
       },
       {
@@ -149,25 +149,25 @@ export const WORKSHOPS: readonly Workshop[] = [
     },
     materials: [
       {
-        label: "Workshop-Walkthrough (Slides)",
+        label: "Workshop-Walkthrough (Englisch)",
         href: `${WORKSHOP_BASE_PATH}/slides.html`,
         kind: "html",
         description:
-          "Die geführte Anleitung durch alle sieben Schritte, inklusive der vier Prompts zum Mitgeben.",
+          "Englische Anleitung durch alle sieben Schritte, inklusive der vier Prompts zum Mitgeben.",
       },
       {
-        label: "Field Card (1 Seite)",
+        label: "Field Card (Englisch, 1 Seite)",
         href: `${WORKSHOP_BASE_PATH}/field-card.html`,
         kind: "html",
         description:
-          "Eine druckbare Übersichtsseite mit den vier Prompts, den Kennzahlendefinitionen und dem, was die Daten nicht beantworten können.",
+          "Englische druckbare Übersichtsseite mit vier Prompts, Kennzahlendefinitionen und den Grenzen der Daten.",
       },
       {
-        label: "NORDA Analyst Kit (.zip)",
+        label: "NORDA Analyst Kit (Englisch, .zip)",
         href: `${WORKSHOP_BASE_PATH}/norda-analyst-kit.zip`,
         kind: "zip",
         description:
-          "Die vollständigen Übungsdaten: CSV-Dateien, Berichte, Kennzahlen-Skill und Dashboard-Vorlage zum Nachbauen mit eigenen Zahlen.",
+          "Englisches Kit mit Übungsdaten: CSV-Dateien, Berichte, Kennzahlen-Skill und Dashboard-Vorlage zum Nachbauen mit eigenen Zahlen.",
       },
     ],
   },

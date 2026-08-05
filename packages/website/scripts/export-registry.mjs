@@ -8,13 +8,14 @@
  * The content-lint.mjs script reads this JSON file at runtime so it can
  * check for hardcoded date strings in content files without parsing TypeScript.
  *
- * Run automatically as a prebuild and precontent:lint step:
+ * `--check` is non-mutating and is used by build/content gates. Maintainers
+ * regenerate deliberately with:
  *   bun run registry:export
  *
  * Ownership: legal-source governance
  */
 
-import { writeFileSync, mkdirSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -56,7 +57,31 @@ for (const claim of LEGAL_CLAIMS) {
 
 const sortedDates = [...approvedDates].sort();
 const outputPath = join(ROOT, "src", "lib", "legal-registry.json");
+const expectedOutput = JSON.stringify(sortedDates, null, 2) + "\n";
+const checkOnly = process.argv.includes("--check");
+const unexpectedArgs = process.argv.slice(2).filter((arg) => arg !== "--check");
 
-writeFileSync(outputPath, JSON.stringify(sortedDates, null, 2) + "\n", "utf-8");
+if (unexpectedArgs.length > 0) {
+  console.error(`Unknown argument(s): ${unexpectedArgs.join(", ")}`);
+  process.exit(2);
+}
+
+if (checkOnly) {
+  const currentOutput = existsSync(outputPath)
+    ? readFileSync(outputPath, "utf-8")
+    : null;
+  if (currentOutput !== expectedOutput) {
+    console.error(
+      "src/lib/legal-registry.json is stale. Run `bun run registry:export` and review the generated diff.",
+    );
+    process.exit(1);
+  }
+  console.log(
+    `Verified ${sortedDates.length} approved date strings in src/lib/legal-registry.json.`,
+  );
+  process.exit(0);
+}
+
+writeFileSync(outputPath, expectedOutput, "utf-8");
 console.log(`Exported ${sortedDates.length} approved date strings to src/lib/legal-registry.json`);
 console.log("Dates:", sortedDates.join(", "));

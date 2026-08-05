@@ -1,6 +1,8 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { IMPORTED_COURSE_CATALOG } from "../../src/lib/courses/catalog";
+import { PORTED_COURSE_CATALOG } from "../../src/lib/courses/catalog";
+import { CANONICAL_LESSON_IDS } from "../../src/lib/courses/completion";
+import { exposeAllAuditedContent } from "./fixtures/a11y-visibility";
 
 /**
  * shared course architecture — E2E coverage for the new course
@@ -38,13 +40,12 @@ async function assertNoBlockingAxe(page: Page, label: string) {
     /* no Web Animations in flight (or unsupported) — proceed */
   });
   await page.waitForTimeout(150);
+  await exposeAllAuditedContent(page);
 
   const results = await new AxeBuilder({ page })
-    .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+    .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
     .analyze();
-  const blocking = results.violations.filter(
-    (v) => v.impact === "serious" || v.impact === "critical",
-  );
+  const blocking = results.violations;
   if (blocking.length > 0) {
     for (const v of blocking) {
       console.log(`  - [${v.impact}] ${v.id}: ${v.description}`);
@@ -52,12 +53,16 @@ async function assertNoBlockingAxe(page: Page, label: string) {
   }
   expect(
     blocking,
-    `axe found ${blocking.length} serious/critical violations on ${label}`,
+    `axe found ${blocking.length} WCAG violations on ${label}`,
   ).toEqual([]);
 }
 
 test.describe("/kurse unified hub", () => {
-  test("renders the native progression and imported open-source lane (no 404)", async ({ page }) => {
+  test("the ported-course matrix is explicit and non-empty", () => {
+    expect(PORTED_COURSE_CATALOG).toHaveLength(6);
+  });
+
+  test("renders the native progression and ported open-source lane (no 404)", async ({ page }) => {
     const res = await page.goto("/kurse", { waitUntil: "domcontentloaded" });
     expect(res?.status(), "/kurse should not 404").toBeLessThan(400);
 
@@ -67,10 +72,9 @@ test.describe("/kurse unified hub", () => {
     await expect(page.locator("body")).toContainText("EU AI Act Kurs");
     await expect(page.locator("body")).toContainText("AI-Native Arbeitskurs");
 
-    await expect(page.locator("body")).toContainText(
-      "Optionale technische Vertiefung aus dem GitHub-Kursrepo",
-    );
-    for (const course of IMPORTED_COURSE_CATALOG) {
+    await expect(page.locator("body")).toContainText("Tiefer gehen");
+    await expect(page.locator("body")).toContainText("Technikkurse");
+    for (const course of PORTED_COURSE_CATALOG) {
       await expect(
         page.locator("body"),
       ).toContainText(course.title);
@@ -79,9 +83,10 @@ test.describe("/kurse unified hub", () => {
 
   test("links to each native and imported course", async ({ page }) => {
     await page.goto("/kurse", { waitUntil: "domcontentloaded" });
+    const main = page.getByRole("main");
     for (const href of ["/ki-fuehrerschein", "/eu-ai-act-kurs", "/ai-native"]) {
       await expect(
-        page.locator(`a[href^="${href}"]`).first(),
+        main.locator(`a[href^="${href}"]`).first(),
       ).toBeVisible();
     }
     for (const href of [
@@ -92,43 +97,26 @@ test.describe("/kurse unified hub", () => {
       "/kurse/open-source/claude",
       "/kurse/open-source/ai-native-operator",
     ]) {
-      await expect(page.locator(`a[href="${href}"]`).first()).toBeVisible();
+      await expect(main.locator(`a[href="${href}"]`).first()).toBeVisible();
     }
   });
 
-  for (const course of IMPORTED_COURSE_CATALOG) {
-    test(`renders imported detail page: ${course.slug}`, async ({ page }) => {
+  for (const course of PORTED_COURSE_CATALOG) {
+    test(`renders native ported detail page: ${course.slug}`, async ({ page }) => {
       const res = await page.goto(course.href, { waitUntil: "domcontentloaded" });
       expect(res?.status()).toBeLessThan(400);
 
-      await expect(page.getByRole("heading", { name: course.title })).toBeVisible();
-      await expect(page.getByAltText(course.imageAlt)).toBeVisible();
-      await expect(page.locator("body")).toContainText(course.lessonCountLabel);
-      await expect(page.getByText(course.integrationNote)).toBeVisible();
-
-      for (const fact of course.sourceFacts) {
-        await expect(page.getByText(fact).first()).toBeVisible();
-      }
-
-      await expect(page.getByRole("link", { name: /Extern öffnen/ })).toHaveAttribute(
-        "href",
-        course.launchHref,
-      );
-      await expect(page.getByRole("link", { name: /GitHub-Quelle/ })).toHaveAttribute(
-        "href",
-        course.sourceCommitHref,
-      );
-      await expect(page.getByRole("link", { name: /MIT-Lizenz/ })).toHaveAttribute(
-        "href",
-        course.licenseHref,
-      );
-      await expect(page.getByText(/eigener Browser-Speicherung/)).toBeVisible();
-      await expect(page.getByText(/Warum nicht direkt eingebettet/)).toBeVisible();
+      await expect(page.locator("h1")).toHaveCount(1);
+      await expect(page.locator("h1")).toBeVisible();
+      await expect(
+        page.locator(`a[href^="${course.href}"]:visible`).first(),
+      ).toBeVisible();
     });
   }
 
-  test("serves every imported screenshot and license asset", async ({ request }) => {
-    for (const course of IMPORTED_COURSE_CATALOG) {
+  test("serves every ported screenshot and license asset", async ({ request }) => {
+    expect(PORTED_COURSE_CATALOG).toHaveLength(6);
+    for (const course of PORTED_COURSE_CATALOG) {
       const image = await request.get(course.imageSrc);
       expect(image.status(), `${course.slug} screenshot`).toBe(200);
       expect(image.headers()["content-type"]).toMatch(/image\/jpeg/);
@@ -146,21 +134,39 @@ test.describe("/kurse unified hub", () => {
     expect(res?.status()).toBe(404);
   });
 
-  test("imported-course progress-like storage never activates native progress UI", async ({
+  test("ported-course progress feeds the native progress UI", async ({
     page,
   }) => {
     await seedProgress(page, {
-      schemaVersion: 2,
+      schemaVersion: 3,
       courses: {
         claude: {
-          lessons: { "01": { completed: true } },
-          workshopQuiz: { passed: true, score: 100, completedAt: "2026-06-18T00:00:00.000Z" },
+          lessons: {
+            [CANONICAL_LESSON_IDS.claude[0]]: {
+              sectionsRead: [],
+              quizScore: null,
+              quizTotal: null,
+              completed: true,
+              exercisesCompleted: {},
+            },
+          },
+          workshopQuiz: { passed: false, score: 0, completedAt: null },
+          capstoneSubmitted: false,
           startedAt: "2026-06-18T00:00:00.000Z",
           lastActivity: "2026-06-18T00:00:00.000Z",
         },
         "data-science": {
-          lessons: { "01": { completed: true } },
-          workshopQuiz: { passed: true, score: 100, completedAt: "2026-06-18T00:00:00.000Z" },
+          lessons: {
+            [CANONICAL_LESSON_IDS["data-science"][0]]: {
+              sectionsRead: [],
+              quizScore: null,
+              quizTotal: null,
+              completed: true,
+              exercisesCompleted: {},
+            },
+          },
+          workshopQuiz: { passed: false, score: 0, completedAt: null },
+          capstoneSubmitted: false,
           startedAt: "2026-06-18T00:00:00.000Z",
           lastActivity: "2026-06-18T00:00:00.000Z",
         },
@@ -173,15 +179,12 @@ test.describe("/kurse unified hub", () => {
     });
 
     await page.goto("/kurse", { waitUntil: "domcontentloaded" });
-    await expect(page.getByTestId("kurse-gamification")).toHaveCount(0);
-    await expect(page.getByTestId("progress-dots-claude")).toHaveCount(0);
-    await expect(page.getByTestId("progress-dots-data-science")).toHaveCount(0);
-    await expect(page.getByText("Fortschritt teilen")).toHaveCount(0);
-
-    await page.goto("/kurse/open-source/claude", { waitUntil: "domcontentloaded" });
-    await expect(page.getByText("Weiterlernen")).toHaveCount(0);
-    await expect(page.getByText("Fortschritt teilen")).toHaveCount(0);
-    await expect(page.locator('[data-testid^="progress-dots-"]')).toHaveCount(0);
+    // The six ported courses are native since the interactive-courses
+    // migration: stored progress hydrates their dots and the shared
+    // gamification banner exactly like the German spine courses.
+    await expect(page.getByTestId("kurse-gamification")).toBeVisible();
+    await expect(page.getByTestId("progress-dots-claude")).toHaveCount(1);
+    await expect(page.getByTestId("progress-dots-data-science")).toHaveCount(1);
   });
 
   test("is axe-clean", async ({ page }) => {
@@ -207,14 +210,19 @@ test.describe("AI-Native public preview and login-gated course app (: /ai-native
     "/ai-native/kurs/zertifikat",
     "/ai-native/kurs/quiz",
   ]) {
-    test(`${path} redirects an anonymous visitor to /login`, async ({
+    test(`${path} reports that login is unavailable in a provider-free runtime`, async ({
       page,
     }) => {
       await page.goto(path, { waitUntil: "domcontentloaded" });
       const url = new URL(page.url());
       expect(url.pathname, `${path} must redirect to /login`).toBe("/login");
       expect(url.searchParams.get("next")).toBe(path);
-      expect(url.searchParams.get("reason")).toBe("kurs-login");
+      expect(url.searchParams.get("reason")).toBe("auth-not-configured");
+      await expect(
+        page.getByText(
+          "Das Lernkonto ist in dieser Version deaktiviert. Die vier deutschen Kernkurse sind deshalb vorübergehend nicht erreichbar.",
+        ),
+      ).toBeVisible();
     });
   }
 });

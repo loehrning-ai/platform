@@ -28,11 +28,13 @@ interface Props {
 }
 
 export function GlossaryView({ groups, totalTerms, version, lastUpdated }: Props) {
+  const [hydrated, setHydrated] = useState(false);
   const [query, setQuery] = useState("");
   const [activeCat, setActiveCat] = useState<string>(groups[0]?.key ?? "");
 
   /* Scroll-spy to sync sidebar */
   useEffect(() => {
+    setHydrated(true);
     const onScroll = () => {
       let current = groups[0]?.key ?? "";
       for (const g of groups) {
@@ -103,6 +105,8 @@ export function GlossaryView({ groups, totalTerms, version, lastUpdated }: Props
               <input
                 type="text"
                 value={query}
+                readOnly={!hydrated}
+                aria-disabled={!hydrated}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Suche: DSGVO, MCP, PARA …"
                 className="flex-1 bg-transparent py-3 text-[16px] text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-brand-orange"

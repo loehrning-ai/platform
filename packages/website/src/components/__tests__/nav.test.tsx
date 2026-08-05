@@ -27,7 +27,13 @@ describe("<Nav />", () => {
 
   it("renders the brand link", () => {
     render(<Nav />);
-    expect(screen.getAllByRole("link").length).toBeGreaterThan(0);
+    const brand = screen.getByRole("link", { name: /Startseite/ });
+    expect(brand).toHaveAttribute("href", "/");
+    expect(
+      [...brand.querySelectorAll<HTMLElement>("[style]")].some(
+        (element) => element.style.opacity === "0",
+      ),
+    ).toBe(false);
   });
 
   it("exposes exactly two dropdowns (Kurse, Ressourcen) plus Open Source and Über mich", () => {
@@ -46,6 +52,35 @@ describe("<Nav />", () => {
       .getAllByRole("link", { name: /Über mich/ })
       .find((l) => l.getAttribute("href") === "/ueber-mich");
     expect(ueber).toBeDefined();
+  });
+
+  it("server-renders a complete small-screen fallback for no-JavaScript users", () => {
+    const { container } = render(<Nav />);
+    const fallback = container.querySelector(".no-js-mobile-nav");
+    expect(fallback).not.toBeNull();
+    const hrefs = Array.from(fallback!.querySelectorAll("a")).map((link) =>
+      link.getAttribute("href"),
+    );
+    expect(hrefs).toEqual(
+      expect.arrayContaining([
+        "/kurse",
+        "/ki-fuehrerschein",
+        "/ki-und-gesellschaft",
+        "/eu-ai-act-kurs",
+        "/ai-native",
+        "/ki-check",
+        "/blog",
+        "/buecher",
+        "/demos",
+        "/workshops",
+        "/open-source",
+        "/ueber-mich",
+        "/login",
+      ]),
+    );
+    expect(fallback).toHaveClass("hidden");
+    expect(container.querySelector(".js-desktop-nav")).not.toBeNull();
+    expect(container.querySelector(".no-js-primary-nav")).not.toBeNull();
   });
 
   it("keeps dropdown-only resource areas out of the top level", () => {
@@ -116,13 +151,33 @@ describe("<Nav />", () => {
     fireEvent.click(toggle);
     const dialog = screen.getByRole("dialog", { name: "Hauptnavigation" });
     expect(dialog).toHaveClass("overscroll-contain");
+    const close = within(dialog).getByRole("button", {
+      name: "Menü schließen",
+    });
+    expect(close).toHaveFocus();
     const links = within(dialog).getAllByRole("link");
-    expect(links[0]).toHaveFocus();
     links.at(-1)?.focus();
     fireEvent.keyDown(links.at(-1)!, { key: "Tab" });
-    expect(links[0]).toHaveFocus();
-    fireEvent.keyDown(links[0], { key: "Escape" });
+    expect(close).toHaveFocus();
+    fireEvent.keyDown(close, { key: "Escape" });
     expect(toggle).toHaveFocus();
+  });
+
+  it("closes the mobile dialog when Login navigation starts", () => {
+    render(<Nav />);
+    fireEvent.click(screen.getByRole("button", { name: "Menü öffnen" }));
+    const dialog = screen.getByRole("dialog", { name: "Hauptnavigation" });
+    const login = within(dialog).getByRole("link", { name: /login/i });
+
+    fireEvent.click(login);
+
+    expect(
+      screen.queryByRole("dialog", { name: "Hauptnavigation" }),
+    ).not.toBeInTheDocument();
+    expect(document.body.style.overflow).toBe("");
+    expect(
+      screen.getByRole("button", { name: "Menü öffnen" }),
+    ).toHaveAttribute("aria-expanded", "false");
   });
 
   it("marks the current top-level route for assistive navigation", () => {

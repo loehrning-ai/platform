@@ -23,13 +23,13 @@ export function SectionHeader({
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true }}
-      className={`mb-16 ${centered ? "text-center" : ""}`}
+      className={`js-reveal mb-16 ${centered ? "text-center" : ""}`}
     >
       {eyebrow && (
         <m.p
           custom={0}
           variants={fadeUp}
-          className={`text-sm font-semibold uppercase tracking-wider ${eyebrowColor}`}
+          className={`js-reveal text-sm font-semibold uppercase tracking-wider ${eyebrowColor}`}
         >
           {eyebrow}
         </m.p>
@@ -37,7 +37,7 @@ export function SectionHeader({
       <m.h2
         custom={eyebrow ? 1 : 0}
         variants={fadeUp}
-        className="mt-3 text-[clamp(1.75rem,1.2rem+2.4vw,2.5rem)] font-bold tracking-[-0.04em] text-balance"
+        className="js-reveal mt-3 text-[clamp(1.75rem,1.2rem+2.4vw,2.5rem)] font-bold tracking-[-0.04em] text-balance"
       >
         {heading}
       </m.h2>
@@ -45,7 +45,7 @@ export function SectionHeader({
         <m.p
           custom={eyebrow ? 2 : 1}
           variants={fadeUp}
-          className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground"
+          className="js-reveal mx-auto mt-4 max-w-2xl text-lg text-muted-foreground"
         >
           {description}
         </m.p>

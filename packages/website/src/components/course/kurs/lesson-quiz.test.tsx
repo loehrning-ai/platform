@@ -172,6 +172,8 @@ describe("<LessonQuiz> selection + explanation", () => {
     fireEvent.click(radios[0]);
     expect(screen.getByText("Falsch")).toBeInTheDocument();
     expect(radios[0]).toHaveAttribute("aria-checked", "true");
+    expect(radios[CORRECT_INDEX[0]]).toHaveAccessibleName(/Richtige Antwort/);
+    expect(radios[0]).toHaveAccessibleName(/Ihre Auswahl ist falsch/);
   });
 });
 

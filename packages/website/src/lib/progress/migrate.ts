@@ -14,6 +14,7 @@ import { COURSE_SLUGS } from "@/lib/course/types";
 import {
   MAX_EXERCISE_SUMMARY_BYTES,
   UNIFIED_SCHEMA_VERSION,
+  normalizeWorkshopQuizScore,
   truncateToByteLength,
   type UnifiedCourseSlice,
   type UnifiedExerciseResult,
@@ -98,12 +99,13 @@ function coerceSlice(raw: unknown): UnifiedCourseSlice | null {
     typeof r.workshopQuiz === "object" && r.workshopQuiz !== null
       ? (r.workshopQuiz as Record<string, unknown>)
       : {};
+  const workshopQuizScore = normalizeWorkshopQuizScore(wqRaw.score);
 
   return {
     lessons,
     workshopQuiz: {
       passed: wqRaw.passed === true,
-      score: typeof wqRaw.score === "number" ? wqRaw.score : 0,
+      score: workshopQuizScore ?? 0,
       completedAt:
         typeof wqRaw.completedAt === "string" ? wqRaw.completedAt : null,
     },
@@ -214,6 +216,43 @@ export function truncateExerciseSummaries(progress: UnifiedProgress): UnifiedPro
     UnifiedCourseSlice,
   ][]) {
     const next = truncateSliceSummaries(slice);
+    courses[slug] = next;
+    if (next !== slice) changed = true;
+  }
+  return changed ? { ...progress, courses } : progress;
+}
+
+function normalizeSliceWorkshopQuizScore(
+  slice: UnifiedCourseSlice,
+): UnifiedCourseSlice {
+  const normalized = normalizeWorkshopQuizScore(slice.workshopQuiz.score) ?? 0;
+  return normalized === slice.workshopQuiz.score
+    ? slice
+    : {
+        ...slice,
+        workshopQuiz: {
+          ...slice.workshopQuiz,
+          score: normalized,
+        },
+      };
+}
+
+/**
+ * Re-normalize workshop scores already stored in the unified browser/server
+ * shape. This repairs v2/v3 payloads written while whole percentages were still
+ * accepted and replaces impossible scores with zero so they cannot inflate a
+ * future max-merge or certificate.
+ */
+export function normalizeWorkshopQuizScores(
+  progress: UnifiedProgress,
+): UnifiedProgress {
+  let changed = false;
+  const courses: Partial<Record<CourseSlug, UnifiedCourseSlice>> = {};
+  for (const [slug, slice] of Object.entries(progress.courses) as [
+    CourseSlug,
+    UnifiedCourseSlice,
+  ][]) {
+    const next = normalizeSliceWorkshopQuizScore(slice);
     courses[slug] = next;
     if (next !== slice) changed = true;
   }

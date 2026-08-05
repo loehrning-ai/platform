@@ -20,7 +20,7 @@ describe("PersonaCourseLinks", () => {
     for (const [name, href] of expected) {
       expect(screen.getByRole("link", { name })).toHaveAttribute("href", href);
     }
-    // All four native Zertifikatskurse are represented.
+    // All four native German core courses are represented.
     expect(screen.getAllByRole("link")).toHaveLength(expected.length);
     expect(screen.queryAllByRole("button")).toHaveLength(0);
   });

@@ -18,7 +18,7 @@ describe("LivingPipeline ", () => {
 
   it("breaking the merge contract marks it broken and updates the consumer view", () => {
     render(<LivingPipeline />);
-    fireEvent.click(screen.getByRole("button", { name: /01.*Cumulative merge/s }));
+    fireEvent.click(screen.getByRole("button", { name: /01[\s\S]*Cumulative merge/ }));
     expect(screen.getAllByText("broken").length).toBeGreaterThan(0);
     expect(screen.getByText("97.8%")).toBeInTheDocument();
   });
@@ -33,7 +33,7 @@ describe("LivingPipeline ", () => {
 
   it("fix all clears every broken contract", () => {
     render(<LivingPipeline />);
-    fireEvent.click(screen.getByRole("button", { name: /01.*Cumulative merge/s }));
+    fireEvent.click(screen.getByRole("button", { name: /01[\s\S]*Cumulative merge/ }));
     fireEvent.click(screen.getByRole("button", { name: /fix all/ }));
     expect(screen.getAllByText("healthy")).toHaveLength(6);
     expect(screen.getByText("94.2%")).toBeInTheDocument();

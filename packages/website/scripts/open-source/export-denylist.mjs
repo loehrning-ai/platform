@@ -250,8 +250,9 @@ export function matchedPrivateRules(relPath, profile = "interactive-courses") {
  * Secret value patterns (FAIL class).
  * The original sk- / SUPABASE_SERVICE_ROLE_KEY / ANTHROPIC_API_KEY /
  * SENTRY_AUTH_TOKEN / PEM patterns are preserved; GitHub tokens, AWS keys,
- * Slack tokens, JWT (Supabase) keys, Google keys, Resend, Firecrawl, and the
- * named env-assignment secrets are added. A match on any line is blocking.
+ * Slack tokens, JWT (Supabase) keys, Google keys, Resend, Firecrawl, the
+ * rate-limit HMAC key, and the named env-assignment secrets are added. A match
+ * on any line is blocking.
  */
 function envAssignmentPattern(name) {
   const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -292,6 +293,11 @@ export const SECRET_VALUE_RULES = [
     re: /eyJhbGciOi[A-Za-z0-9_-]{5,}/,
   },
   {
+    id: "supabase-secret-key",
+    label: "Supabase secret key (sb_secret_)",
+    re: /\bsb_secret_[A-Za-z0-9_-]{22}_[A-Za-z0-9_-]{8}\b/,
+  },
+  {
     id: "google-api-key",
     label: "Google API key (AIza)",
     re: /AIza[0-9A-Za-z_-]{16,}/,
@@ -307,10 +313,21 @@ export const SECRET_VALUE_RULES = [
     re: /\bfc-[A-Za-z0-9]{16,}/,
   },
   {
+    id: "rate-limit-hmac-key-value",
+    label: "rate-limit HMAC key (rlh1_)",
+    re: /\brlh1_[0-9a-f]{64}\b/,
+  },
+  {
     id: "supabase-service-role",
     label: "SUPABASE_SERVICE_ROLE_KEY assignment",
     kind: "assignment-name",
     re: envAssignmentPattern("SUPABASE_SERVICE_ROLE_KEY"),
+  },
+  {
+    id: "rate-limit-hmac-secret",
+    label: "RATE_LIMIT_HMAC_SECRET assignment",
+    kind: "assignment-name",
+    re: envAssignmentPattern("RATE_LIMIT_HMAC_SECRET"),
   },
   {
     id: "anthropic-key",

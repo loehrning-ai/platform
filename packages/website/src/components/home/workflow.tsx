@@ -79,7 +79,7 @@ export function Workflow() {
         </h2>
         <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
           Neben den Kursen: zum Nachlesen, Ausprobieren und Übertragen ins eigene
-          Team. Alles offen zugänglich, ohne Konto.
+          Team. Die Vorschau ist offen; der deutsche Lernpfad nutzt ein kostenloses Konto.
         </p>
 
         <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -111,11 +111,13 @@ export function Workflow() {
             <IconTile icon={GraduationCap} accent="kupfer" />
             <p className="text-sm leading-relaxed text-foreground">
               Mit einem kostenlosen Konto bleiben dein Fortschritt, deine
-              Zertifikate und deine Kompetenzen erhalten, auch geräteübergreifend.
+              Abschlussnachweise und deine Kompetenzen erhalten, auch
+              geräteübergreifend.
             </p>
           </div>
           <Link
             href="/konto"
+            prefetch={false}
             className="shrink-0 font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-brand-orange underline-offset-4 hover:underline"
           >
             Zum Konto &#8594;

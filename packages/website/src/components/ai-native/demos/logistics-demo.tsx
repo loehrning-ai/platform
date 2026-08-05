@@ -142,7 +142,7 @@ const EVENTS: readonly LogEvent[] = [
 const LEVEL_COLOR: Record<LogEvent["level"], string> = {
   warn: "text-brand-amber",
   info: "text-[var(--color-kupfer-light)]",
-  ok: "text-[#22c55e]",
+  ok: "text-risk-green",
 };
 
 export function LogisticsDemo(): JSX.Element {
@@ -330,13 +330,13 @@ export function LogisticsDemo(): JSX.Element {
       </div>
 
       {/* Simulated log */}
-      <div className="min-h-[170px] border-l-[3px] border-brand-orange bg-[var(--color-dark-bg)] px-4 py-3.5 font-mono text-[11px] leading-[1.7] text-[var(--color-dark-fg)]">
+      <div className="dark-section min-h-[170px] border-l-[3px] border-brand-orange bg-[var(--color-dark-bg)] px-4 py-3.5 font-mono text-[11px] leading-[1.7] text-[var(--color-dark-fg)]">
         <div className="mb-2 flex items-center justify-between font-mono text-[9px] tracking-[0.14em] text-[var(--color-dark-muted)]">
           <span>› BEISPIEL-LOG · WORKFLOW SC-042</span>
           <span>{events.length}/6 Ereignisse</span>
         </div>
         {events.length === 0 && (
-          <div className="text-[var(--color-dark-muted)]/80">
+          <div className="text-muted-foreground">
             // warte auf Beispiel-Event…
           </div>
         )}
@@ -347,7 +347,7 @@ export function LogisticsDemo(): JSX.Element {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.2, ease: EASE_OUT_EXPO }}
           >
-            <span className="text-[var(--color-dark-muted)]/50">{e.t} </span>
+            <span className="text-muted-foreground">{e.t} </span>
             <span className={cn("tracking-[0.08em]", LEVEL_COLOR[e.level])}>
               [{e.level.toUpperCase().padEnd(4)}]
             </span>

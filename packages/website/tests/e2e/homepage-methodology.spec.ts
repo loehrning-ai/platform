@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { SITE_CONTENT_DATE } from "../../src/lib/content-freshness";
 
 test.describe("Homepage learning-platform transparency", () => {
   test("homepage surfaces the courses and the public resource map", async ({ page }) => {
@@ -18,7 +19,7 @@ test.describe("Homepage learning-platform transparency", () => {
     await expect(ressourcen).toContainText("Blog");
   });
 
-  test("homepage explains the simplified public/private boundary", async ({ page }) => {
+  test("homepage explains the public/account boundary", async ({ page }) => {
     await page.goto("/");
     const section = page.getByTestId("platform-principles");
     await section.scrollIntoViewIfNeeded();
@@ -26,7 +27,12 @@ test.describe("Homepage learning-platform transparency", () => {
     await expect(section).toContainText("Deutsch");
     await expect(section).toContainText("Belegt");
     await expect(section).toContainText("Ehrlich");
-    await expect(section).toContainText("Alles zum Lernen ist offen zugänglich");
+    await expect(section).toContainText(
+      "Bücher, Demos, KI-Check und technische Vertiefungen sind öffentlich",
+    );
+    await expect(section).toContainText(
+      "Für die vier deutschen Lernpfad-Kurse brauchst du ein kostenloses Konto",
+    );
   });
 
   test("footer data pill is visible with the dated sample stamp", async ({ page }) => {
@@ -34,7 +40,9 @@ test.describe("Homepage learning-platform transparency", () => {
     const pill = page.getByTestId("footer-data-pill");
     await expect(pill).toBeVisible();
     await expect(pill).toContainText("Datenstand: Q3 2026");
-    await expect(pill).toContainText("Letzte Aktualisierung: 2026-07-14");
+    await expect(pill).toContainText(
+      `Letzte Aktualisierung: ${SITE_CONTENT_DATE}`,
+    );
   });
 
   test("book PDF paths are disabled in the simplified build", async ({
@@ -49,12 +57,11 @@ test.describe("Homepage learning-platform transparency", () => {
     page,
   }) => {
     // Smoke test: page with reduced motion loads and core content is present.
-    // The in-flow hero CTA (guarded for reduced motion) and the footer data pill
-    // must both render.
+    // The in-flow hero CTA and the footer data pill must both render.
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
     await expect(
-      page.getByRole("link", { name: /Lernpfad öffnen/i }).first(),
+      page.getByRole("link", { name: "Start bestimmen" }).first(),
     ).toBeVisible();
     await expect(page.getByTestId("footer-data-pill")).toBeVisible();
   });

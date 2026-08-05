@@ -12,7 +12,11 @@ describe("LineageCamera ", () => {
 
   it("re-focuses the camera when a different node is clicked", () => {
     render(<LineageCamera />);
-    fireEvent.click(screen.getByText("dim_users"));
+    const node = screen.getByRole("button", {
+      name: "Focus lineage on dim_users",
+    });
+    fireEvent.keyDown(node, { key: "Enter" });
+    expect(node).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByText("Lineage of dim_users")).toBeInTheDocument();
   });
 

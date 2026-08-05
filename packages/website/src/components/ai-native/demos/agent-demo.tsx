@@ -294,14 +294,14 @@ export function AgentDemo(): JSX.Element {
         {/* Live log */}
         <div
           ref={logRef}
-          className="min-h-[220px] overflow-y-auto border-l-[3px] border-brand-orange bg-[var(--color-dark-bg)] p-4 font-mono text-[12px] text-[var(--color-dark-fg)]"
+          className="dark-section min-h-[220px] overflow-y-auto border-l-[3px] border-brand-orange bg-[var(--color-dark-bg)] p-4 font-mono text-[12px] text-[var(--color-dark-fg)]"
         >
           <div className="sticky top-0 mb-2 flex items-center justify-between border-b border-[var(--color-dark-border)] bg-[var(--color-dark-bg)] pb-2 font-mono text-[10px] tracking-[0.14em] text-[var(--color-dark-muted)]">
             <span>› AGENT.LOG</span>
             <span>{logs.length} ereignisse</span>
           </div>
           {logs.length === 0 && (
-            <div className="text-[var(--color-dark-muted)]/80">
+            <div className="text-muted-foreground">
               // warten auf pipeline start…
             </div>
           )}

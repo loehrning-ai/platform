@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import {
   DEMO_CATEGORIES,
   DEMO_LEVEL_LABELS,
@@ -9,22 +8,33 @@ import {
   demos,
   filterDemos,
   type Demo,
+  type DemoCategory,
+  type DemoLevel,
 } from "@/lib/demos";
 import { trackDemoFilter } from "@/lib/analytics";
 import { DemoTile } from "./demo-tile";
 
-export function DemoGrid() {
-  const params = useSearchParams();
+export interface DemoGridInitialFilters {
+  readonly level: DemoLevel | "alle";
+  readonly category: DemoCategory | "Alle";
+  readonly industry: string;
+}
+
+interface DemoGridProps {
+  readonly initialFilters: DemoGridInitialFilters;
+}
+
+export function DemoGrid({ initialFilters }: DemoGridProps) {
   const gridRef = useRef<HTMLDivElement | null>(null);
 
-  // Filter state lives in React, seeded once from the URL so deep links like
-  // /demos?cat=RAG still render filtered. Chip clicks update this state and
-  // sync the URL via the History API — NOT router.replace, which on the
-  // mobile/WebKit profile scrolls the page to the top even with scroll:false
-  // (a measured 405px jump; performance and release hardening E2E follow-up).
-  const [level, setLevel] = useState<string>(params.get("level") ?? "alle");
-  const [cat, setCat] = useState<string>(params.get("cat") ?? "Alle");
-  const [industry, setIndustry] = useState<string>(params.get("industry") ?? "");
+  // The server resolves and validates URL filters before rendering so the
+  // complete filtered gallery exists without JavaScript. Chip clicks remain
+  // local React state and sync through the History API — NOT router.replace,
+  // which on the mobile/WebKit profile scrolls the page to the top even with
+  // scroll:false (a measured 405px jump).
+  const [level, setLevel] = useState<string>(initialFilters.level);
+  const [cat, setCat] = useState<string>(initialFilters.category);
+  const [industry, setIndustry] = useState<string>(initialFilters.industry);
 
   const filtered = useMemo<readonly Demo[]>(
     () => filterDemos({ level, category: cat, industry }),
@@ -32,7 +42,7 @@ export function DemoGrid() {
   );
 
   useEffect(() => {
-    trackDemoFilter(cat, level, industry || ", ");
+    trackDemoFilter(cat, level, industry || "alle");
   }, [cat, level, industry]);
 
   const syncUrl = useCallback((nextLevel: string, nextCat: string, nextIndustry: string) => {

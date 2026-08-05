@@ -74,20 +74,20 @@ function CompareColumn({
     <div
       className={cn(
         "border-2 bg-background p-4 transition-transform hover:-translate-y-0.5",
-        good ? "border-[#22c55e]" : "border-destructive",
+        good ? "border-risk-green" : "border-destructive",
       )}
     >
       <div className="mb-2 flex items-center justify-between">
         <span
           className={cn(
             "font-mono text-[10.5px] font-bold uppercase tracking-[0.14em]",
-            good ? "text-[#22c55e]" : "text-destructive",
+            good ? "text-risk-green" : "text-destructive",
           )}
         >
           {label}
         </span>
         {good ? (
-          <ThumbsUp size={14} className="text-[#22c55e]" aria-hidden="true" />
+          <ThumbsUp size={14} className="text-risk-green" aria-hidden="true" />
         ) : (
           <ThumbsDown size={14} className="text-destructive" aria-hidden="true" />
         )}

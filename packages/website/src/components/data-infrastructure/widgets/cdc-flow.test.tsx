@@ -52,6 +52,29 @@ describe("CdcFlow", () => {
     expect(screen.getByText(/Two pipelines computing the same logic/)).toBeInTheDocument();
   });
 
+  it("wires tabs to panels and supports roving horizontal keyboard navigation", () => {
+    render(<CdcFlow lessonId="di-cdc-lambda-kappa" cpId="cdc" />);
+    const tabs = screen.getAllByRole("tab");
+    const initialPanel = screen.getByRole("tabpanel");
+
+    expect(tabs.map((tab) => tab.tabIndex)).toEqual([0, -1]);
+    expect(tabs[0]).toHaveAttribute("aria-controls", initialPanel.id);
+    expect(initialPanel).toHaveAttribute("aria-labelledby", tabs[0].id);
+
+    tabs[0].focus();
+    fireEvent.keyDown(tabs[0], { key: "ArrowRight" });
+
+    expect(tabs[1]).toHaveFocus();
+    expect(tabs[1]).toHaveAttribute("aria-selected", "true");
+    expect(tabs.map((tab) => tab.tabIndex)).toEqual([-1, 0]);
+    const activePanel = screen.getByRole("tabpanel");
+    expect(tabs[1]).toHaveAttribute("aria-controls", activePanel.id);
+    expect(activePanel).toHaveAttribute("aria-labelledby", tabs[1].id);
+    expect(
+      screen.getByRole("img", { name: /Lambda architecture/ }),
+    ).toBeInTheDocument();
+  });
+
   it("awards the checkpoint once on claiming XP, idempotently", () => {
     render(<CdcFlow lessonId="di-cdc-lambda-kappa" cpId="cdc" />);
     const btn = screen.getByRole("button", { name: /Got it/ });

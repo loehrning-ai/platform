@@ -1,48 +1,62 @@
-import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { books } from "@/lib/books";
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { getRuntimeFeatures } from "@/lib/runtime-features";
+import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPublicPageMetadata({
   title: "Hilfe & häufige Fragen",
   description:
-    "Häufige Fragen zur freien KI-Lernplattform von loehrning.ai: Lernfortschritt, Zertifikate, Konto, Praxisbeispiele und mehr.",
-  alternates: { canonical: "/hilfe" },
-  robots: { index: true, follow: true },
-};
+    "Häufige Fragen zur freien KI-Lernplattform von loehrning.ai: Lernfortschritt, Teilnahmebestätigungen, Lernnachweise, Konto und Praxisbeispiele.",
+  path: "/hilfe",
+});
 
 function getFaqItems(accountEnabled: boolean, feedbackEnabled: boolean): readonly {
   readonly question: string;
   readonly id: string;
-  readonly answer: string;
+  readonly answer: ReactNode;
 }[] {
   return [
   {
     id: "anfang",
     question: "Wo fange ich an?",
-    answer:
-      `Am besten mit dem KI-Check (/ki-check): Das dauert ca. 5 Minuten und zeigt dir, welcher Kurs als nächstes zu dir passt. Oder wähle direkt auf der Kursübersicht (/kurse) einen der ${COURSE_CATALOG.length} Kurse auf dem KI-Kompetenzweg.`,
+    answer: (
+      <>
+        Am besten mit dem <Link href="/ki-check">KI-Check</Link>: Das dauert
+        etwa fünf Minuten und zeigt dir den passenden Einstieg. Danach findest
+        du alle {COURSE_CATALOG.length} Kurse auf der{" "}
+        <Link href="/kurse">Kursübersicht</Link>.
+      </>
+    ),
   },
   {
     id: "konto",
     question: "Warum brauche ich ein Konto?",
     answer: accountEnabled
-      ? "Für die meisten Kurse, Bücher und Demos brauchst du kein Konto. Die vier zertifizierten Kurse (KI-Führerschein, EU AI Act Kurs, AI-Native Arbeitskurs, KI und Gesellschaft) erfordern ein kostenloses Lernkonto, damit dein Fortschritt zur Zertifikatsausstellung nachvollziehbar bleibt. Das Lernkonto synchronisiert Fortschritt über mehrere Geräte und verwendet einen Einmal-Link per E-Mail. Die Daten liegen auf Servern in der EU."
-      : "Für die meisten Kurse, Bücher, Demos und Downloads brauchst du kein Konto. Das optionale Lernkonto und die geräteübergreifende Synchronisierung sind in dieser Version deaktiviert; Fortschritt bleibt lokal in diesem Browser. Die vier zertifizierten Kurse (KI-Führerschein, EU AI Act Kurs, AI-Native Arbeitskurs, KI und Gesellschaft) erfordern normalerweise ein Lernkonto und sind in dieser Version vorübergehend nicht erreichbar.",
+      ? "Für Bücher, Demos, KI-Check und die sechs technischen Kursreader brauchst du kein Konto. Die vier deutschen Kernkurse (KI-Führerschein, KI und Gesellschaft, EU AI Act Kurs, AI-Native Arbeitskurs) erfordern ein kostenloses Lernkonto. Es synchronisiert deinen Fortschritt über mehrere Geräte und verwendet einen Einmal-Link per E-Mail. Teilnahmebestätigung oder Lernnachweis werden trotzdem lokal erstellt, sind selbst ausgestellt und nicht servergeprüft."
+      : "Bücher, Demos, KI-Check und die sechs technischen Kursreader sind ohne Konto erreichbar. Die vier deutschen Kernkurse (KI-Führerschein, KI und Gesellschaft, EU AI Act Kurs, AI-Native Arbeitskurs) erfordern ein kostenloses Lernkonto. Diese Kontofunktion ist in dieser Version deaktiviert; die vier Kursreader sind deshalb vorübergehend nicht erreichbar.",
   },
   {
     id: "fortschritt-weg",
     question: "Mein Lernfortschritt ist weg.",
     answer: accountEnabled
-      ? "Ohne Konto speichert die Plattform deinen Fortschritt im Browser-Speicher (localStorage). Browserdaten löschen, private Tabs oder ein anderes Gerät können ihn entfernen. Bei einem aktiven Lernkonto ist serverseitige Synchronisierung verfügbar."
+      ? "Die Plattform speichert Fortschritt zunächst im Browser-Speicher (localStorage). Browserdaten löschen oder private Tabs können ihn entfernen. Im Lernkonto wird der Fortschritt zusätzlich serverseitig synchronisiert."
       : "Die Plattform speichert Fortschritt im Browser-Speicher (localStorage). Browserdaten löschen, private Tabs oder ein anderes Gerät können ihn entfernen. Serverseitige Synchronisierung ist in dieser Version nicht aktiv.",
   },
   {
     id: "magic-link",
     question: "Der Magic-Link hat nicht funktioniert.",
     answer: accountEnabled
-      ? "Magic-Links sind 60 Minuten gültig und können nur einmal verwendet werden. Fordere auf /login einen neuen Link an und prüfe den Spam-Ordner. Öffne den Link in dem Browser, in dem du lernen willst."
+      ? (
+          <>
+            Magic-Links laufen nach der konfigurierten Frist ab und können nur
+            einmal verwendet werden. Fordere auf der{" "}
+            <Link href="/login">Login-Seite</Link> einen neuen Link an und
+            prüfe den Spam-Ordner. Öffne den Link in dem Browser, in dem du
+            lernen willst.
+          </>
+        )
       : "Magic-Link-Anmeldung ist in dieser Version deaktiviert. Alle öffentlichen Lerninhalte bleiben ohne Anmeldung verfügbar.",
   },
   {
@@ -56,13 +70,24 @@ function getFaqItems(accountEnabled: boolean, feedbackEnabled: boolean): readonl
     id: "quiz",
     question: "Wie funktionieren Quiz und Neuversuche?",
     answer:
-      "Jedes Quiz kann beliebig oft wiederholt werden. Es gibt keinen Zeitdruck und keine Strafe für falsche Antworten. Nach dem Absenden siehst du, welche Antworten richtig und welche falsch waren, und bekommst eine kurze Erklärung. Bestandene Quizze werden in deinem Profil markiert.",
+      "Quizze können beliebig oft wiederholt werden. Es gibt keinen Zeitdruck und keine Strafe für falsche Antworten. Nach dem Absenden siehst du, welche Antworten richtig und welche falsch waren, und bekommst eine kurze Erklärung. Je nach Kurs zählen ein bestandenes Abschlussquiz, eine eingereichte Abschlussaufgabe oder alle abgeschlossenen Lektionen als Teilnahme.",
   },
   {
     id: "zertifikat",
-    question: "Was bedeutet das Teilnahme-Zertifikat?",
-    answer:
-      "Das Zertifikat bestätigt deine Teilnahme und das bestandene Quiz. Es ist kein offizieller Nachweis im Sinne des Artikels 4 der EU-KI-Verordnung. Die Europäische Kommission hat klargestellt, dass kein bestimmtes Zertifikat gesetzlich vorgeschrieben ist. Interne Aufzeichnungen können ausreichen. Bitte prüfe das mit deinem Arbeitgeber oder Rechtsbeistand. Das Zertifikat wird lokal in deinem Browser erstellt und ist nicht servergeprüft. Mehr dazu: /bekannte-grenzen.",
+    question: "Was bedeuten Teilnahmebestätigung und Lernnachweis?",
+    answer: (
+      <>
+        Diese selbst ausgestellten Abschlussdokumente bestätigen deine
+        Teilnahme. Je nach Kurs beruhen sie auf einem bestandenen
+        Abschlussquiz, einer eingereichten Abschlussaufgabe oder allen
+        abgeschlossenen Lektionen. Sie sind kein offizieller Nachweis im Sinne
+        des Artikels 4 der EU-KI-Verordnung. Die Europäische Kommission hat
+        klargestellt, dass kein bestimmtes Zertifikatsformat vorgeschrieben
+        ist. Teilnahmebestätigung und Lernnachweis werden lokal in deinem
+        Browser erstellt und sind nicht servergeprüft. Mehr dazu unter{" "}
+        <Link href="/bekannte-grenzen">Bekannte Grenzen</Link>.
+      </>
+    ),
   },
   {
     id: "praxisbeispiel",
@@ -75,28 +100,63 @@ function getFaqItems(accountEnabled: boolean, feedbackEnabled: boolean): readonl
     question: "Bücher: Was kann ich lesen, was kann ich herunterladen?",
     answer:
       books.length === 1
-        ? "Das Buch ist kostenlos im Browser lesbar. Ein PDF-Download steht angemeldeten Nutzern zur Verfügung. Das Buch ist eine adaptierte Lernversion des Originalmanuskripts; es ist Lernmaterial, keine zitierfähige Rechtsquelle."
+        ? accountEnabled
+          ? "Das Buch ist kostenlos im Browser lesbar. Ein PDF-Download steht angemeldeten Nutzern zur Verfügung. Das Buch ist eine adaptierte Lernversion des Originalmanuskripts; es ist Lernmaterial, keine zitierfähige Rechtsquelle."
+          : "Das Buch ist kostenlos im Browser lesbar. Der PDF-Download ist in dieser Version deaktiviert. Das Buch ist eine adaptierte Lernversion des Originalmanuskripts; es ist Lernmaterial, keine zitierfähige Rechtsquelle."
         : `Alle ${books.length} Bücher sind kostenlos im Browser lesbar. Die Bücher sind adaptierte Lernversionen der Originalmanuskripte; sie sind Lernmaterial, keine zitierfähigen Rechtsquellen.`,
   },
   {
     id: "konto-loeschen",
     question: "Wie lösche ich mein Konto oder exportiere meine Daten?",
     answer: accountEnabled
-      ? "Für ein aktives Lernkonto kannst du Löschung oder Datenexport unter /konto/datenschutz anfordern. Datenschutzanfragen sind zusätzlich per E-Mail an tim@loehrning.ai möglich."
-      : "In dieser Version gibt es kein serverseitiges Lernkonto. Lokalen Fortschritt entfernst du durch Löschen der Website-Daten im Browser. Datenschutzanfragen gehen an tim@loehrning.ai.",
+      ? (
+          <>
+            Löschung und Datenexport findest du unter{" "}
+            <Link href="/konto/datenschutz" prefetch={false}>
+              Datenschutz und Datenverwaltung
+            </Link>.
+            Datenschutzanfragen sind zusätzlich per E-Mail an{" "}
+            <a href="mailto:tim@loehrning.ai">tim@loehrning.ai</a> möglich.
+          </>
+        )
+      : (
+          <>
+            In dieser Version gibt es kein serverseitiges Lernkonto. Lokalen
+            Fortschritt entfernst du durch Löschen der Website-Daten im
+            Browser. Datenschutzanfragen gehen an{" "}
+            <a href="mailto:tim@loehrning.ai">tim@loehrning.ai</a>.
+          </>
+        ),
   },
   {
     id: "rueckmeldung",
     question: "Wo melde ich einen Fehler oder gebe Rückmeldung?",
     answer: feedbackEnabled
-      ? "Über das Feedback-Formular (/feedback). Kein Konto erforderlich. Das Formular fragt keine E-Mail-Adresse ab; gespeichert werden Nachricht, Kategorie und optional nur der Seitenpfad ohne Query-String oder Fragment."
-      : "Das serverseitige Feedback-Formular ist in dieser Version deaktiviert. Fehler und Rückmeldungen können per E-Mail an tim@loehrning.ai gesendet werden.",
+      ? (
+          <>
+            Über das <Link href="/feedback">Feedback-Formular</Link>. Kein Konto
+            erforderlich. Das Formular fragt keine E-Mail-Adresse ab.
+          </>
+        )
+      : (
+          <>
+            Das serverseitige Feedback-Formular ist deaktiviert. Fehler und
+            Rückmeldungen gehen per E-Mail an{" "}
+            <a href="mailto:tim@loehrning.ai">tim@loehrning.ai</a>.
+          </>
+        ),
   },
   {
     id: "grenzen",
     question: "Was sind bekannte Einschränkungen?",
-    answer:
-      "Wir dokumentieren bekannte Einschränkungen offen auf der Seite /bekannte-grenzen. Dazu gehören u.a. das selbst-bestätigende Zertifikat, die simulierten Praxisbeispiele und die lokale Speicherung des Fortschritts ohne Konto.",
+    answer: (
+      <>
+        Die Seite <Link href="/bekannte-grenzen">Bekannte Grenzen</Link>{" "}
+        dokumentiert die selbst ausgestellten Teilnahmebestätigungen und
+        Lernnachweise, simulierte Praxisbeispiele und die lokale Speicherung
+        des Fortschritts.
+      </>
+    ),
   },
   ];
 }
@@ -134,7 +194,7 @@ export default function HilfePage() {
                   +
                 </span>
               </summary>
-              <div className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              <div className="mt-4 text-sm leading-relaxed text-muted-foreground [&_a]:underline [&_a]:underline-offset-2 [&_a]:hover:text-foreground">
                 <p>{item.answer}</p>
               </div>
             </details>
@@ -159,7 +219,16 @@ export default function HilfePage() {
                   .
                 </>
               ) : (
-                <>Schreib an tim@loehrning.ai.</>
+                <>
+                  Schreib an{" "}
+                  <a
+                    href="mailto:tim@loehrning.ai"
+                    className="underline underline-offset-2 hover:text-foreground"
+                  >
+                    tim@loehrning.ai
+                  </a>
+                  .
+                </>
               )}
             </p>
           </div>

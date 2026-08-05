@@ -16,8 +16,9 @@ Candidate records are always complete and validated; their
 creates discovery data, a sitemap entry, a page-inventory row, and, for tools,
 projects, and videos, a static detail route. Do not add a partial record.
 
-No tool, project, or video is published in the current registry. The empty
-arrays are deliberate release state, not placeholders.
+The registry currently publishes one tool: `tool:cv-engine`, pinned to the
+single root commit of `github.com/loehrning-ai/cv-engine`. The project and
+video lanes are deliberately empty release state, not placeholders.
 
 ## Canonical files
 
@@ -97,8 +98,17 @@ Self-referential source publication requires two changes:
 
 1. Commit A adds and verifies the artifact source, documentation, license, and
    reviewed assets while its public artifact array remains unchanged. Publish
-   Commit A to the intended public GitHub repository and record its full
-   40-character SHA.
+   Commit A to the intended public GitHub repository. **Before recording its
+   SHA, harden the new repository**: apply a `Protect main` branch ruleset
+   (deletion, non_fast_forward, required_linear_history, pull_request,
+   required_status_checks with the repository's real check names, and an
+   empty `bypass_actors` so no role, including admins, bypasses), and enable
+   secret scanning, push protection, Dependabot security updates, and private
+   vulnerability reporting. The pin recorded in Commit B is an immutability
+   claim about Commit A; without force-push and deletion protection in place
+   first, the pinned commit could be rewritten after Commit B cites it, which
+   is exactly the provenance failure this sequence exists to prevent. Only
+   then record the full 40-character SHA.
 2. Commit B adds the complete candidate entry. Set `source.revision` to Commit
    A, set `source.href` to the public GitHub source location, and set
    `source.revisionHref` to a GitHub `/tree/<commit>/<path>` or
@@ -231,7 +241,7 @@ Add a complete object to `OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES`:
   publicationLifecycle: "draft", // or "published" / "withdrawn"
   slug, title, eyebrow, description,
   href: `/open-source/tools/${slug}`,
-  language,
+  language, languageTag: canonicalBcp47LanguageTag,
   source: {
     href: githubRepositoryOrSourcePath,
     revision: fullFortyCharacterCommitSha,
@@ -250,6 +260,7 @@ Add a complete object to `OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES`:
   delivery: "source-only",
   guide: {
     status, statusNote,
+    dataFlow: explicitLocalAndRemoteDataResidencyDisclosure,
     prerequisites: [{ label, detail, href }],
     installation: { summary, steps: [{ title, detail, command }] },
     usage: { summary, steps: [{ title, detail, command }] },
@@ -261,6 +272,7 @@ Add a complete object to `OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES`:
     documentation: { label, href },
     screenshot: {
       src: `/artifacts/tools/${slug}/screenshot.webp`,
+      sourcePath: exactUpstreamScreenshotPath,
       alt, sha256: screenshotSha256, sizeBytes, width, height,
     },
     relatedLearning: [{ title, description, href: internalLearningRoute }],
@@ -280,6 +292,7 @@ namespace:
   kind: "project",
   publicationLifecycle: "draft", // or "published" / "withdrawn"
   href: `/open-source/projects/${slug}`,
+  languageTag: canonicalBcp47LanguageTag,
   source: { href, revision, revisionHref },
   license: {
     href: `/artifacts/projects/${slug}/LICENSE.txt`,
@@ -291,10 +304,13 @@ namespace:
   // { delivery: "external-service", launchHref: "https://..." }
   delivery: "source-only",
   guide: {
-    status, statusNote, prerequisites,
+    status, statusNote,
+    dataFlow: explicitLocalAndRemoteDataResidencyDisclosure,
+    prerequisites,
     installation, usage, integration, documentation,
     screenshot: {
       src: `/artifacts/projects/${slug}/screenshot.webp`,
+      sourcePath: exactUpstreamScreenshotPath,
       alt, sha256, sizeBytes, width, height,
     },
     relatedLearning,
@@ -320,7 +336,7 @@ media files must be repository-local and independently recorded in
   publicationLifecycle: "draft", // or "published" / "withdrawn"
   slug, title, eyebrow, description,
   href: `/open-source/videos/${slug}`,
-  language,
+  language, languageTag: canonicalBcp47LanguageTag,
   source: { href, revision, revisionHref },
   license: {
     href: `/media/${slug}/LICENSE.txt`,
@@ -343,18 +359,22 @@ media files must be repository-local and independently recorded in
   mediaFiles: {
     video: {
       path: `packages/website/public/media/${slug}/video.webm`,
+      sourcePath: exactUpstreamVideoPath,
       sha256, sizeBytes, mimeType: "video/webm",
     },
     captions: {
       path: `packages/website/public/media/${slug}/captions.vtt`,
+      sourcePath: exactUpstreamCaptionsPath,
       sha256, sizeBytes, mimeType: "text/vtt",
     },
     transcript: {
       path: `packages/website/public/media/${slug}/transcript.md`,
+      sourcePath: exactUpstreamTranscriptPath,
       sha256, sizeBytes, mimeType: "text/markdown",
     },
     poster: {
       path: `packages/website/public/media/${slug}/poster.webp`,
+      sourcePath: exactUpstreamPosterPath,
       sha256, sizeBytes, mimeType: "image/webp",
     },
   },
@@ -376,6 +396,13 @@ upstream expectation. `bun run artifact-assets:check` verifies the artifact
 registry lanes; imported-course license and screenshot bytes are verified by
 `packages/website/src/lib/courses/catalog.test.ts` against the
 catalog hashes.
+
+Each artifact-manifest row must identify the exact immutable upstream file at
+the artifact's pinned repository and commit. A redistributed screenshot or
+media row must also set `redistributionLicenseHref` to that artifact's locally
+served license path. The verifier rejects mutable source URLs, mismatched
+owners, repositories, revisions, or paths, local role aliases, and unlicensed
+redistribution claims.
 
 Generate each candidate record without writing the manifest:
 

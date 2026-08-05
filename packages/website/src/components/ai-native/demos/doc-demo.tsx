@@ -268,7 +268,7 @@ export function DocDemo(): JSX.Element {
                     className={cn(
                       "pointer-events-none absolute z-[3] border",
                       validated
-                        ? "border-[#22c55e] bg-[#22c55e]/10"
+                        ? "border-risk-green bg-risk-green/10"
                         : "border-brand-orange bg-brand-orange/12",
                     )}
                     style={{
@@ -287,7 +287,7 @@ export function DocDemo(): JSX.Element {
                           stiffness: 400,
                           damping: 15,
                         }}
-                        className="absolute -right-1.5 -top-1.5 flex h-3.5 w-3.5 items-center justify-center bg-[#22c55e] font-mono text-[9px] font-bold text-white"
+                        className="absolute -right-1.5 -top-1.5 flex h-3.5 w-3.5 items-center justify-center bg-risk-green font-mono text-[9px] font-bold text-white"
                       >
                         ✓
                       </m.div>
@@ -303,7 +303,7 @@ export function DocDemo(): JSX.Element {
                 initial={{ opacity: 1 }}
                 animate={{ opacity: 0.3 }}
                 transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
-                className="pointer-events-none absolute inset-0 z-[5] border-2 border-[#22c55e] bg-[#22c55e]/6"
+                className="pointer-events-none absolute inset-0 z-[5] border-2 border-risk-green bg-risk-green/6"
               />
             )}
           </div>
@@ -316,7 +316,7 @@ export function DocDemo(): JSX.Element {
               running
                 ? "cursor-wait bg-muted-foreground opacity-75"
                 : stage === 4
-                  ? "bg-[#22c55e] shadow-[4px_4px_0_0_var(--color-foreground)]"
+                  ? "bg-risk-green shadow-[4px_4px_0_0_var(--color-foreground)]"
                   : "bg-foreground shadow-[4px_4px_0_0_var(--color-foreground)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]",
             )}
           >
@@ -351,7 +351,7 @@ export function DocDemo(): JSX.Element {
                     className={cn(
                       "flex h-5 w-5 items-center justify-center font-mono text-[10px] font-bold text-white",
                       done
-                        ? "bg-[#22c55e]"
+                        ? "bg-risk-green"
                         : active
                           ? "animate-pulse bg-brand-orange"
                           : "bg-border text-muted-foreground",
@@ -382,8 +382,8 @@ export function DocDemo(): JSX.Element {
               >
                 <div className="mb-2.5 flex items-center justify-between">
                   <DemoOverline>Extrahierte Daten</DemoOverline>
-                  <span className="inline-flex items-center gap-1 border border-[#22c55e]/40 bg-[#22c55e]/10 px-2 py-0.5 font-mono text-[10px] text-[#22c55e]">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e]" />
+                  <span className="inline-flex items-center gap-1 border border-risk-green/40 bg-risk-green/10 px-2 py-0.5 font-mono text-[10px] text-risk-green">
+                    <span className="h-1.5 w-1.5 rounded-full bg-risk-green" />
                     {Math.round(extracted.confidence * 100)}% confidence
                   </span>
                 </div>

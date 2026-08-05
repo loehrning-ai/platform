@@ -5,8 +5,9 @@
  * 1. AI-Native quiz JSON has correct answers distributed across positions a/b/c/d.
  *    Max correct at any single position: ≤ 8 of 24 (≤ 33%).
  * 2. shuffleArray produces different orderings with different seeds.
- * 3. Cross-course distribution check for KI-Führerschein and EU AI Act
- *    (report only — do NOT fail; KI-Fuehrerschein course review/028 own those fixes).
+ * 3. Shared-course quiz files parse and contain exactly one correct option
+ *    per question. Source answer positions may be uneven because the UI
+ *    deterministically shuffles options for each attempt.
  */
 
 import { describe, it, expect } from "vitest";
@@ -142,38 +143,21 @@ describe("shuffleArray with seeds", () => {
   });
 });
 
-// ─── Cross-course distribution (report only — do NOT fail) ───────────────────
+// ─── Shared-course source integrity ──────────────────────────────────────────
 
-describe("Cross-course distribution check (informational)", () => {
-  it("KI-Führerschein quiz correct-answer distribution (report only)", () => {
-    try {
-      const questions = loadQuiz("content/ki-fuehrerschein/quiz/questions.json");
-      const counts = getCorrectPositionCounts(questions);
-      const max = Math.max(...counts);
-      const total = questions.length;
-      // Log for visibility — KI-Fuehrerschein course review must clear this
-      console.info(
-        `[KI-Führerschein] ${total} questions, distribution: ${counts.join("/")} (a/b/c/d), max=${max}`,
-      );
-      // Soft assert: just check it parses correctly
-      expect(total).toBeGreaterThan(0);
-    } catch {
-      console.warn("[KI-Führerschein] quiz not found or failed to parse");
-    }
-  });
+describe("Shared-course quiz source integrity", () => {
+  it.each([
+    ["KI-Führerschein", "content/ki-fuehrerschein/quiz/questions.json"],
+    ["EU AI Act", "content/eu-ai-act-kurs/quiz/questions.json"],
+  ])("%s quiz parses with one correct option per question", (_course, path) => {
+    const questions = loadQuiz(path);
 
-  it("EU-AI-Act quiz correct-answer distribution (report only)", () => {
-    try {
-      const questions = loadQuiz("content/eu-ai-act/quiz/questions.json");
-      const counts = getCorrectPositionCounts(questions);
-      const max = Math.max(...counts);
-      const total = questions.length;
-      console.info(
-        `[EU-AI-Act] ${total} questions, distribution: ${counts.join("/")} (a/b/c/d), max=${max}`,
-      );
-      expect(total).toBeGreaterThan(0);
-    } catch {
-      console.warn("[EU-AI-Act] quiz not found or failed to parse");
+    expect(questions.length).toBeGreaterThan(0);
+    for (const question of questions) {
+      expect(question.answerOptions).toHaveLength(4);
+      expect(
+        question.answerOptions.filter((option) => option.isCorrect),
+      ).toHaveLength(1);
     }
   });
 });

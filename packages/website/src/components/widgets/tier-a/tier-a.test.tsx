@@ -133,6 +133,21 @@ describe("QuizWidget", () => {
     expect(isCheckpointDone("l1", "quiz1")).toBe(true);
   });
 
+  it("uses one Tab stop and Arrow keys to operate the radio group", () => {
+    render(<QuizWidget {...base} />);
+    const radios = screen.getAllByRole("radio");
+    expect(radios[0]).toHaveAttribute("tabindex", "0");
+    expect(radios[1]).toHaveAttribute("tabindex", "-1");
+
+    fireEvent.keyDown(radios[0], { key: "ArrowDown" });
+
+    expect(radios[1]).toHaveAttribute("aria-checked", "true");
+    expect(screen.getByRole("status")).toHaveTextContent(/Richtig\./);
+    expect(screen.getByRole("status")).toHaveTextContent(
+      /Akzeptanzkriterien machen den Auftrag prüfbar\./,
+    );
+  });
+
   it("renders with reduced motion enabled", () => {
     setReducedMotion(true);
     render(<QuizWidget {...base} />);
@@ -353,6 +368,20 @@ describe("SelfRateWidget", () => {
   it("handles empty axes without awarding", () => {
     render(<SelfRateWidget lessonId="l1" cpId="sr1" axes={[]} />);
     expect(isCheckpointDone("l1", "sr1")).toBe(false);
+  });
+
+  it("moves and selects with Arrow/Home/End while keeping one Tab stop", () => {
+    render(<SelfRateWidget lessonId="l1" cpId="sr1" axes={axes} />);
+    const firstGroup = screen.getAllByRole("radiogroup")[0];
+    const radios = Array.from(firstGroup.querySelectorAll<HTMLElement>('[role="radio"]'));
+
+    expect(radios.map((radio) => radio.tabIndex)).toEqual([0, -1, -1]);
+    radios[0].focus();
+    fireEvent.keyDown(radios[0], { key: "End" });
+
+    expect(radios[2]).toHaveFocus();
+    expect(radios[2]).toHaveAttribute("aria-checked", "true");
+    expect(radios.map((radio) => radio.tabIndex)).toEqual([-1, -1, 0]);
   });
 });
 

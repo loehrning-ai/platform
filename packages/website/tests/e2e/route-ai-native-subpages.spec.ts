@@ -11,9 +11,7 @@ import { test, expect, type Locator, type Page } from "@playwright/test";
  * (dead page, unwired search, broken funnel link, mobile overflow) fails.
  */
 
-// Console-error filter mirrors route-einstieg.spec.ts: drop framework noise
-// (hydration, prefetch, chunk 404s, Vercel Analytics) and keep only errors that
-// signal a genuine page fault.
+// Every captured console error and uncaught page error fails the check.
 function collectConsoleErrors(page: Page): string[] {
   const errors: string[] = [];
   page.on("console", (msg) => {
@@ -24,13 +22,7 @@ function collectConsoleErrors(page: Page): string[] {
 }
 
 function meaningfulErrors(errors: string[]): string[] {
-  return errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e),
-  );
+  return errors;
 }
 
 // Each leaf ships a distinct, stable, above-the-fold anchor beyond its <h1>.
@@ -111,6 +103,7 @@ test.describe("ai-native sub-page interactions", () => {
     // "load" so the client island hydrates before the search input reacts to fill().
     await page.goto("/ai-native/glossar", { waitUntil: "load" });
     const search = page.getByRole("textbox", { name: "Glossar durchsuchen" });
+    await expect(search).not.toHaveAttribute("readonly", "");
 
     await search.fill("qxzkwvzznope");
     // A no-match query drives the term list to the explicit empty message.

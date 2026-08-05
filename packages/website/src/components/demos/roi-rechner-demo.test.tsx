@@ -57,7 +57,7 @@ describe("<RoiRechnerDemo>", () => {
     expect(
       screen.getByText("Annahmen-Rechner · Transparente Formel"),
     ).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "Bauchgefühl.",
     );
 

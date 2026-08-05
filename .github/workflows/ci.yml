@@ -15,7 +15,11 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # Public browsers own at most 70 minutes and the auth scaffold owns at
+    # most 10. The remaining 30 minutes cover install, full verification,
+    # artifact upload, and teardown without letting one phase borrow another's
+    # deadline.
+    timeout-minutes: 110
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -23,21 +27,33 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24.17.0
-      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
-        with:
-          bun-version: 1.3.10
-      - run: bun install --frozen-lockfile
+      - name: Install checksum-verified Bun
+        run: bash .github/scripts/install-verified-bun.sh
+      - run: bun install --frozen-lockfile --ignore-scripts
       # Root verify ends with verify:workspaces, which runs the workspace
       # verify (typecheck, lint, unit tests, production build). The built
       # e2e gates below reuse that build via next start.
       - run: bun run verify
-      # Pin to the @playwright/test version resolved in bun.lock so the
-      # browser binaries match the test runner.
-      - run: bunx playwright@1.61.1 install --with-deps chromium webkit
+      - name: Reject generated tracked-file drift
+        run: git diff --exit-code --
+      # Resolve only the Playwright binary already installed from bun.lock.
+      - run: bun run --cwd packages/website playwright install --with-deps chromium webkit
+      - name: Blocking Lighthouse performance smoke (uses verified build)
+        run: |
+          export CHROME_PATH="$(bun --cwd packages/website -e 'import { chromium } from "@playwright/test"; console.log(chromium.executablePath())')"
+          bun run lighthouse:ci:built
       - name: Public browser gate (uses verified build)
         run: bun run test:e2e:public:built
+        env:
+          E2E_GLOBAL_TIMEOUT: 4200000
+          PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report/public
+          PLAYWRIGHT_OUTPUT_DIR: test-results/public
       - name: Provider-free auth scaffold gate (uses verified build)
         run: bun run test:e2e:auth-scaffold:built
+        env:
+          E2E_GLOBAL_TIMEOUT: 600000
+          PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report/auth-scaffold
+          PLAYWRIGHT_OUTPUT_DIR: test-results/auth-scaffold
       - name: Upload browser failure artifacts
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -47,5 +63,18 @@ jobs:
             packages/website/playwright-report/
             packages/website/test-results/
             packages/website/blob-report/
+          if-no-files-found: ignore
+          retention-days: 7
+      # lighthouserc.json writes reports to .lighthouseci/reports, but nothing
+      # collected them, so a Lighthouse assertion failure could only be read
+      # back as the single summary line in the job log. The per-run values are
+      # what distinguish a real regression from runner noise on a metric like
+      # total-blocking-time, so keep them.
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/
           if-no-files-found: ignore
           retention-days: 7

@@ -119,6 +119,7 @@ describe("<LessonShell>", () => {
     expect(dialog).toHaveAttribute("aria-modal", "true");
 
     const items = within(dialog).getAllByRole("button");
+    expect(items[0]).toHaveAccessibleName("Navigation schließen");
     expect(items[0]).toHaveFocus();
     items.at(-1)?.focus();
     fireEvent.keyDown(items.at(-1)!, { key: "Tab" });

@@ -13,6 +13,7 @@ import {
   fireEvent,
   cleanup,
 } from "@testing-library/react";
+import { __resetLearningOwnerForTests } from "@/lib/progress/browser-learning-storage";
 
 /**
  * challenge-of-the-week.test.tsx (regression coverage)
@@ -140,6 +141,7 @@ function revealModel(): HTMLElement {
 beforeEach(() => {
   vi.clearAllMocks();
   sessionStorage.clear();
+  __resetLearningOwnerForTests("anonymous");
 });
 
 afterEach(() => {

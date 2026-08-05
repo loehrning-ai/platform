@@ -16,7 +16,7 @@ import { Quellen } from "./_sections/quellen";
 // Pull dates from the canonical manifest so they never drift
 const POST_META = BLOG_POSTS.find((p) => p.slug === "eu-ai-act-grundlagen");
 const DATE_PUBLISHED = POST_META?.datePublished ?? "2026-07-16";
-const DATE_MODIFIED = POST_META?.dateModified ?? "2026-07-16";
+const DATE_MODIFIED = POST_META?.dateModified ?? "2026-07-28";
 
 export const metadata: Metadata = {
   title: "Der EU AI Act: was er bedeutet, wenn du keine Juristin bist",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Der EU AI Act: was er bedeutet, wenn du keine Juristin bist",
     description:
-      "Risikoklassen, Zeitplan, AI Omnibus und deine Rechte nach Art. 50, 85 und 86. Erklärung ohne Fachjargon, Stand 16. Juli 2026.",
+      "Risikoklassen, Zeitplan, AI Omnibus und deine Rechte nach Art. 50, 85 und 86. Erklärung ohne Fachjargon, Stand 28. Juli 2026.",
     url: `${SITE_URL}/blog/eu-ai-act-grundlagen`,
     type: "article",
     publishedTime: DATE_PUBLISHED,

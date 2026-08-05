@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type JSX } from "react";
+import { useEffect, useMemo, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
 import { cn } from "@/lib/utils";
 
@@ -79,12 +79,15 @@ export function L04SpecSurgeon({ lessonId, cpId }: L04SpecSurgeonProps): JSX.Ele
   const status = statusFor(score);
   const pct = (score / SECTIONS.length) * 100;
 
+  useEffect(() => {
+    if (score === SECTIONS.length && !done) complete();
+  }, [complete, done, score]);
+
   const toggle = (id: SpecSection["id"]) => {
     if (score === SECTIONS.length) return;
     setOn((prev) => {
       const next = new Set(prev);
       next.add(id);
-      if (next.size === SECTIONS.length) complete();
       return next;
     });
   };
@@ -106,7 +109,7 @@ export function L04SpecSurgeon({ lessonId, cpId }: L04SpecSurgeonProps): JSX.Ele
         <div
           className={cn(
             "border-2 bg-background p-3 transition-colors",
-            score === SECTIONS.length ? "border-[#22c55e]" : "border-border",
+            score === SECTIONS.length ? "border-risk-green" : "border-border",
           )}
         >
           <div className="mb-2 flex items-center gap-2">
@@ -115,7 +118,7 @@ export function L04SpecSurgeon({ lessonId, cpId }: L04SpecSurgeonProps): JSX.Ele
                 className={cn(
                   "h-full transition-[width,background-color] duration-500",
                   score >= 4
-                    ? "bg-[#22c55e]"
+                    ? "bg-risk-green"
                     : score >= 2
                       ? "bg-brand-amber"
                       : "bg-destructive",
@@ -136,7 +139,7 @@ export function L04SpecSurgeon({ lessonId, cpId }: L04SpecSurgeonProps): JSX.Ele
             ))}
           </div>
           {score === SECTIONS.length && (
-            <p className="mt-2 font-mono text-[11px] font-bold text-[#22c55e]">
+            <p className="mt-2 font-mono text-[11px] font-bold text-risk-green">
               surgery complete {done ? "✓" : ""}
             </p>
           )}

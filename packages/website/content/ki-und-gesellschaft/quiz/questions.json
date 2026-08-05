@@ -220,7 +220,7 @@
       { "id": "c", "text": "Art. 50 trennt technische Anbieter-Markierung und sichtbare Betreiber-Offenlegung; der zuständige Beschwerdeweg muss aktuell geprüft werden", "isCorrect": true },
       { "id": "d", "text": "Deepfakes sind nur für Anbieter relevant, nicht für Einzelpersonen", "isCorrect": false }
     ],
-    "explanation": "Art. 50 verbietet Deepfakes nicht pauschal. Anbieter erfasster generativer Systeme müssen Ausgaben technisch markieren; Betreiber müssen Deepfakes grundsätzlich sichtbar offenlegen. Art. 85 sieht Beschwerden bei der zuständigen Marktüberwachungsbehörde vor. Das beschlossene deutsche KI-MIG war am 14. Juli 2026 noch nicht verkündet, daher ist der aktuelle Behördenkanal zu prüfen.",
+    "explanation": "Art. 50 verbietet Deepfakes nicht pauschal. Anbieter erfasster generativer Systeme müssen Ausgaben technisch markieren; Betreiber müssen Deepfakes grundsätzlich sichtbar offenlegen. Art. 85 sieht Beschwerden bei der zuständigen Marktüberwachungsbehörde vor. Das deutsche KI-MIG ist am 29. Juli 2026 in Kraft getreten und macht die Bundesnetzagentur zur Anlaufstelle und Beschwerdestelle, soweit keine Fachbehörde zuständig ist; der konkrete Behördenkanal ist weiterhin zu prüfen.",
     "version": 1,
     "active": true
   }

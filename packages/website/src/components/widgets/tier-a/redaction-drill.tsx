@@ -326,7 +326,7 @@ export function RedactionDrillWidget({
               )}
             >
               {sDone && (
-                <CheckCircle2 size={12} className="text-[#22c55e]" />
+                <CheckCircle2 size={12} className="text-risk-green" />
               )}
               {chrome.scenarioWord} {i + 1}
             </button>
@@ -343,7 +343,7 @@ export function RedactionDrillWidget({
         data-state={submitted ? (allClean ? "clean" : "leaky") : "editing"}
         className={cn(
           "whitespace-pre-wrap [overflow-wrap:anywhere] break-words border-2 p-4 font-mono text-[13px] leading-[1.9] transition-colors",
-          submitted && allClean && "border-[#22c55e] bg-[#22c55e]/5",
+          submitted && allClean && "border-risk-green bg-risk-green/5",
           submitted && !allClean && "border-destructive bg-destructive/5",
           !submitted && "border-border bg-background",
         )}
@@ -376,7 +376,7 @@ export function RedactionDrillWidget({
                   isMistake
                     ? "bg-brand-amber"
                     : submitted
-                      ? "bg-[#22c55e]"
+                      ? "bg-risk-green"
                       : "bg-foreground",
                 )}
               >
@@ -445,13 +445,13 @@ export function RedactionDrillWidget({
             className={cn(
               "mt-4 border-l-[3px] p-4 text-[13.5px] leading-[1.55]",
               allClean
-                ? "border-[#22c55e] bg-[#22c55e]/5"
+                ? "border-risk-green bg-risk-green/5"
                 : "border-destructive bg-destructive/5",
             )}
           >
             {allClean ? (
               <p>
-                <span className="font-semibold text-[#22c55e]">
+                <span className="font-semibold text-risk-green">
                   {chrome.safeHeadline}
                 </span>{" "}
                 {fillCount(chrome.safeBodyTemplate, totalSensitive)}
@@ -507,7 +507,7 @@ export function RedactionDrillWidget({
             <span
               className={cn(
                 "inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em]",
-                allClean ? "text-[#22c55e]" : "text-destructive",
+                allClean ? "text-risk-green" : "text-destructive",
               )}
             >
               {allClean ? <CheckCircle2 size={14} /> : <XCircle size={14} />}

@@ -39,4 +39,4 @@ Nicht verwendet werden außerdem Marktprognosen oder Produktrankings aus kommerz
 4. Produktfunktionen, Preise, Verträge, Datenflüsse und Rechtsstand ändern sich. Volatile Angaben brauchen Prüfdatum und Primärquelle.
 5. Ein Lernmaterial ersetzt keine Rechts-, Datenschutz-, Sicherheits- oder Fachprüfung des konkreten Einsatzes.
 
-**Letzte redaktionelle Prüfung:** 14. Juli 2026.
+**Letzte redaktionelle Prüfung:** 28. Juli 2026.

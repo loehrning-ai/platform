@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getRecentEvents } from "@/lib/ai-native/analytics";
-import { UNIFIED_STORAGE_KEY } from "@/lib/progress/types";
+import { getActiveProgressStorageKey } from "@/lib/progress/store";
 
 /**
  * AiNativeDebugPanel — dev-only overlay (cmd+shift+D) showing:
@@ -50,7 +50,10 @@ export function AiNativeDebugPanel() {
     if (!open) return;
     const refresh = () => {
       try {
-        setProgressRaw(localStorage.getItem(UNIFIED_STORAGE_KEY));
+        const storageKey = getActiveProgressStorageKey();
+        setProgressRaw(
+          storageKey ? localStorage.getItem(storageKey) : "(owner unknown)",
+        );
       } catch {
         setProgressRaw("(localStorage unavailable)");
       }
@@ -73,7 +76,7 @@ export function AiNativeDebugPanel() {
     <div
       role="dialog"
       aria-label="AI-Native debug panel"
-      className="fixed right-4 bottom-4 z-[9999] max-h-[70vh] w-[380px] overflow-auto overscroll-contain border-2 border-brand-orange bg-[var(--color-dark-bg)] p-3 font-mono text-[11px] text-[var(--color-dark-fg)] shadow-[6px_6px_0_0_#000]"
+      className="dark-section fixed right-4 bottom-4 z-[9999] max-h-[70vh] w-[380px] overflow-auto overscroll-contain border-2 border-brand-orange bg-[var(--color-dark-bg)] p-3 font-mono text-[11px] text-[var(--color-dark-fg)] shadow-[6px_6px_0_0_#000]"
     >
       <div className="mb-2 flex items-center justify-between">
         <span className="font-bold uppercase tracking-[0.14em] text-brand-orange">

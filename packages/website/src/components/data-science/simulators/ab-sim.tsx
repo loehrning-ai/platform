@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
+import { useControllableAnimation } from "@/lib/animation-policy";
 import { mulberry32, normCdf } from "@/lib/data-science/sim-kit";
 
 // ─── ABSim ──────────────────────────────────────────
@@ -67,7 +68,7 @@ export function ABSim() {
   const [baseline, setBaseline] = useState(0.12);
   const [dailyN, setDailyN] = useState(2000);
   const [speed, setSpeed] = useState(1);
-  const [running, setRunning] = useState(true);
+  const { running, toggle: toggleRunning } = useControllableAnimation();
   const [tick, setTick] = useState(0);
   const stateRef = useRef<ABState | null>(null);
   if (!stateRef.current) stateRef.current = fresh();
@@ -234,7 +235,7 @@ export function ABSim() {
             />
           </div>
           <div className="sim-ctrl-row">
-            <button type="button" className={`btn btn-sm ${running ? "btn-primary" : ""}`} onClick={() => setRunning((r) => !r)}>
+            <button type="button" className={`btn btn-sm ${running ? "btn-primary" : ""}`} onClick={toggleRunning}>
               {running ? "❚❚ Pause" : "▶ Play"}
             </button>
             <button type="button" className="btn btn-sm" onClick={reset}>

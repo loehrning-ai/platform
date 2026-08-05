@@ -1,21 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Github } from "lucide-react";
-import { OpenSourceArtifactSections } from "@/components/open-source/artifact-sections";
+import { OpenSourceArtifactShelf } from "@/components/open-source/artifact-shelf";
+import { DrawRule } from "@/components/motion/draw-rule";
 import { OPEN_SOURCE_ARTIFACTS } from "@/lib/open-source/artifacts";
 import { JsonLd, SITE_URL, WEBSITE_ID } from "@/lib/seo/json-ld";
 import { absoluteUrl, GITHUB_ORG } from "@/lib/seo/entity";
 
+const PLATFORM_REPOSITORY_URL = `${GITHUB_ORG.url}/platform`;
+
 export const metadata: Metadata = {
   title: "Open Source",
   description:
-    "Werkzeuge und Projekte von loehrning.ai, veröffentlicht unter github.com/loehrning-ai: Veröffentlichungsstandard, Lizenzrichtlinie und aktueller Stand.",
+    "Das Werkverzeichnis von loehrning.ai auf github.com/loehrning-ai: Werkzeuge, Projekte und Videos mit geprüftem Quellstand, Lizenz und Anleitung.",
   alternates: { canonical: "/open-source" },
   robots: { index: true, follow: true },
   openGraph: {
     title: "Open Source | loehrning.ai",
     description:
-      "Veröffentlichungsstandard für Werkzeuge und Projekte der GitHub-Organisation loehrning-ai: öffentliches Repository, Commit-Pin, Lizenz, Anleitung.",
+      "Werkverzeichnis der GitHub-Organisation loehrning-ai: öffentliches Repository, Commit-Pin, Lizenz und Anleitung für jeden Eintrag.",
     url: `${SITE_URL}/open-source`,
     type: "website",
   },
@@ -47,7 +50,7 @@ const OPEN_SOURCE_GRAPH = {
         name: artifact.title,
         url: absoluteUrl(artifact.href),
         isAccessibleForFree: true,
-        inLanguage: artifact.language === "Englisch" ? "en" : "de",
+        inLanguage: artifact.languageTag,
         license: absoluteUrl(artifact.license.href),
         codeRepository: artifact.source.href,
         version: artifact.source.revision,
@@ -95,29 +98,41 @@ export default function OpenSourcePage() {
       <JsonLd data={OPEN_SOURCE_GRAPH} id="open-source-jsonld" />
       <section className="py-20">
         <div className="mx-auto max-w-6xl px-6">
-          <div className="h-[3px] w-28 bg-brand-orange" />
+          <DrawRule className="h-[3px] w-28 bg-brand-orange" />
           <p className="mt-8 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
             Open Source
           </p>
           <div className="mt-5 grid gap-8 lg:grid-cols-[1fr_320px] lg:items-start">
             <div>
               <h1 className="max-w-4xl text-4xl font-bold leading-[0.95] tracking-[-0.04em] sm:text-6xl">
-                Werkzeuge und Projekte auf GitHub.
+                {/* The trailing space is load-bearing: without it the line
+                    break joins the sentences in the accessible name, and a
+                    screen reader announces "Werkverzeichnis.Offen". */}
+                Das Werkverzeichnis.{" "}
+                <br />
+                Offen auf GitHub.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-                Hier erscheinen Werkzeuge und Projekte, die unter der
+                Hier findest du das kuratierte Artefaktverzeichnis der
                 GitHub-Organisation{" "}
                 <a
                   href={GITHUB_ORG.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-sm font-semibold text-foreground underline-offset-4 hover:underline"
+                  className="whitespace-nowrap rounded border border-border bg-background px-1.5 py-0.5 font-mono text-sm font-semibold text-foreground underline-offset-4 hover:underline"
                 >
                   {GITHUB_ORG.slug}
-                </a>{" "}
-                veröffentlicht werden. Die ersten Werkzeuge sind in
-                Vorbereitung; bis ein Repository den Veröffentlichungsstandard
-                erfüllt, bleibt dieser Bereich leer.
+                  <span className="sr-only">
+                    , öffnet in neuem Tab
+                  </span>
+                </a>
+                : Werkzeuge, Projekte und Videos, die den unten beschriebenen
+                Veröffentlichungsstandard vollständig erfüllen. Die
+                Organisation kann weitere Quell- und
+                Infrastruktur-Repositories enthalten, die nicht als
+                Artefaktkarte gelistet sind. Jeder Eintrag verweist auf den
+                geprüften Quellstand, seine Lizenz und die zugehörige
+                Anleitung.
               </p>
               <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted-foreground">
                 Die technischen Lernkurse findest du unter{" "}
@@ -133,7 +148,7 @@ export default function OpenSourcePage() {
 
             <aside className="border border-border bg-card/35 p-5">
               <div className="flex items-center gap-2 text-sm font-bold text-foreground">
-                <Github size={16} />
+                <Github size={16} aria-hidden="true" />
                 Quellenprinzip
               </div>
               <dl className="mt-4 space-y-3 text-sm">
@@ -149,6 +164,9 @@ export default function OpenSourcePage() {
                       className="text-foreground underline-offset-4 hover:underline"
                     >
                       GitHub · {GITHUB_ORG.slug}
+                      <span className="sr-only">
+                        , öffnet in neuem Tab
+                      </span>
                     </a>
                   </dd>
                 </div>
@@ -164,7 +182,7 @@ export default function OpenSourcePage() {
             </aside>
           </div>
 
-          <OpenSourceArtifactSections />
+          <OpenSourceArtifactShelf />
 
           {OPEN_SOURCE_ARTIFACTS.length > 0 ? (
             <p className="mt-10 border-t border-border pt-4 font-mono text-xs text-muted-foreground">
@@ -192,10 +210,19 @@ export default function OpenSourcePage() {
               Code und redaktionelle Inhalte
             </h2>
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-              Der Plattform-Code steht unter MIT. Sichtbarer Quelltext bedeutet
-              nicht automatisch freie Wiederverwendung aller Lerntexte,
-              Marken- oder Medieninhalte. Die verbindliche Zuordnung steht in
-              der{" "}
+              Der{" "}
+              <a
+                href={PLATFORM_REPOSITORY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-foreground underline-offset-4 hover:underline"
+              >
+                Plattform-Code auf GitHub
+                <span className="sr-only">, öffnet in neuem Tab</span>
+              </a>{" "}
+              steht unter MIT. Sichtbarer Quelltext bedeutet nicht automatisch
+              freie Wiederverwendung aller Lerntexte, Marken- oder
+              Medieninhalte. Die verbindliche Zuordnung steht in der{" "}
               <Link
                 href="/open-source/lizenzrichtlinie"
                 className="font-semibold text-foreground underline-offset-4 hover:underline"

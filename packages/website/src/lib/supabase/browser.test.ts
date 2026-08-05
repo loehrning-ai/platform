@@ -23,6 +23,9 @@ vi.mock("@supabase/ssr", () => ({
   createBrowserClient: createBrowserClientMock,
 }));
 
+const PUBLIC_KEY_FIXTURE =
+  "sb_publishable_abcdefghijklmnopqrstuv_12345678";
+
 const KEYS = [
   "NEXT_PUBLIC_SUPABASE_URL",
   "SUPABASE_URL",
@@ -50,7 +53,8 @@ afterEach(() => {
 
 function configure(): void {
   process.env.NEXT_PUBLIC_SUPABASE_URL = "https://proj.supabase.co";
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = "publishable-abc";
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY =
+    PUBLIC_KEY_FIXTURE;
 }
 
 describe("createBrowserSupabaseClient", () => {
@@ -71,7 +75,7 @@ describe("createBrowserSupabaseClient", () => {
     expect(client).toBe(sentinel);
     expect(createBrowserClientMock).toHaveBeenCalledWith(
       "https://proj.supabase.co",
-      "publishable-abc",
+      PUBLIC_KEY_FIXTURE,
       // Auth cookie hardening: Secure (prod-gated) + SameSite=Lax are passed
       // through so the browser client sets the same flags as the server clients.
       expect.objectContaining({

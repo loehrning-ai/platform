@@ -62,13 +62,13 @@ export function PromptDiffWidget({
           </div>
         </div>
         <div>
-          <p className="mb-1.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.1em] text-[#22c55e]">
+          <p className="mb-1.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.1em] text-risk-green">
             after
           </p>
-          <div className="border border-[#22c55e]/30 bg-[#22c55e]/5 p-3 text-[13px] leading-[1.7] text-foreground">
+          <div className="border border-risk-green/30 bg-risk-green/5 p-3 text-[13px] leading-[1.7] text-foreground">
             {strongTokens.map((token, i) =>
               token.changed ? (
-                <span key={i} className="bg-[#22c55e]/20 font-semibold">
+                <span key={i} className="bg-risk-green/20 font-semibold">
                   {token.text}
                 </span>
               ) : (

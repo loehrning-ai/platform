@@ -11,6 +11,7 @@ afterEach(() => {
 class MockIntersectionObserver implements IntersectionObserver {
   readonly root: Element | null = null;
   readonly rootMargin = "";
+  readonly scrollMargin = "";
   readonly thresholds: readonly number[] = [];
   static instances: MockIntersectionObserver[] = [];
   callback: IntersectionObserverCallback;

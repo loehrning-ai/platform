@@ -1,5 +1,6 @@
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { renderHook, act } from "@testing-library/react";
+import { __resetLearningOwnerForTests } from "@/lib/progress/browser-learning-storage";
 import { useDraftValue } from "./use-draft-value";
 
 /**
@@ -52,6 +53,7 @@ beforeAll(() => {
 
 beforeEach(() => {
   window.localStorage.clear();
+  __resetLearningOwnerForTests("anonymous");
 });
 
 describe("useDraftValue", () => {

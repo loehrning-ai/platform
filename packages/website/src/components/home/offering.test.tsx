@@ -2,27 +2,28 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { Offering } from "./offering";
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
-import { courseFacts } from "@/lib/courses/tracks";
+import { courseGroupFor } from "@/lib/courses/tracks";
 
-const SPINE_COURSES = COURSE_CATALOG.filter(
-  (course) => courseFacts(course.slug).group === "spine",
+const SPINE = COURSE_CATALOG.filter(
+  (course) => courseGroupFor(course.slug) !== "deeper",
 );
-const DEEPER_COURSES = COURSE_CATALOG.filter(
-  (course) => courseFacts(course.slug).group === "deeper",
+const DEEPER = COURSE_CATALOG.filter(
+  (course) => courseGroupFor(course.slug) === "deeper",
 );
 
 describe("Offering section", () => {
   it("renders the course-led headline", () => {
     render(<Offering />);
-    expect(screen.getByText(`${SPINE_COURSES.length} Kurse.`)).toBeInTheDocument();
+    expect(screen.getByText(/Vier Kurse\./)).toBeInTheDocument();
     expect(
-      screen.getByText(`${DEEPER_COURSES.length} technische Vertiefungen.`),
+      screen.getByText(/Vom ersten Prompt bis zum EU-Gesetz/),
     ).toBeInTheDocument();
   });
 
-  it("renders each German spine course as a linked card", () => {
+  it("renders exactly the four spine courses as linked cards", () => {
     render(<Offering />);
-    for (const course of SPINE_COURSES) {
+    expect(SPINE).toHaveLength(4);
+    for (const course of SPINE) {
       const link = screen.getByText(course.title).closest("a");
       expect(link).toHaveAttribute("href", course.href);
     }
@@ -38,21 +39,28 @@ describe("Offering section", () => {
     expect(screen.getByTestId("persona-filter")).toBeInTheDocument();
   });
 
-  it("renders native English technical-course previews with real screenshots", () => {
+  it("renders the Technikkurse imagery band with real screenshots", () => {
     render(<Offering />);
-    expect(screen.getByText("Englische Vertiefung")).toBeInTheDocument();
-    for (const course of DEEPER_COURSES.slice(0, 3)) {
-      expect(screen.getByAltText(course.coverImageAlt)).toBeInTheDocument();
+    expect(screen.getByText("Technikkurse")).toHaveClass("text-brand-orange");
+    expect(
+      screen.getByText(/mit selbst ausgestelltem Certificate/),
+    ).toBeInTheDocument();
+    const previews = DEEPER.slice(0, 3);
+    expect(previews).toHaveLength(3);
+    for (const course of previews) {
+      expect(screen.getByAltText(course.imageAlt ?? "")).toBeInTheDocument();
     }
   });
 
-  it("links each technical preview to its native course details", () => {
+  it("gives each Technikkurse preview an external source-code link", () => {
     render(<Offering />);
-    for (const course of DEEPER_COURSES.slice(0, 3)) {
-      expect(
-        screen.getByAltText(course.coverImageAlt).closest("a"),
-      ).toHaveAttribute("href", course.href);
+    for (const course of DEEPER.slice(0, 3)) {
+      const sourceLink = screen.getByRole("link", {
+        name: `Quellcode auf GitHub: ${course.title}`,
+      });
+      expect(sourceLink).toHaveAttribute("href", course.sourceHref);
+      expect(sourceLink).toHaveAttribute("target", "_blank");
+      expect(sourceLink).toHaveAttribute("rel", expect.stringContaining("noopener"));
     }
-    expect(screen.queryByRole("link", { name: /Quellcode auf GitHub/ })).toBeNull();
   });
 });

@@ -68,31 +68,56 @@ export function PostDeployChecklist() {
                 transition: "border-color 0.2s, background 0.2s",
               }}
             >
-              <div
-                style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 14px", cursor: "pointer" }}
-                onClick={() => setExpanded(open ? null : item.id)}
-              >
-                <input
-                  type="checkbox"
-                  checked={done}
-                  onChange={() => toggle(item.id)}
-                  onClick={(e) => e.stopPropagation()}
-                  style={{ width: 16, height: 16, cursor: "pointer", accentColor: "var(--mint)" }}
-                />
-                <span
+              <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 14px" }}>
+                <label
+                  htmlFor={`post-deploy-${item.id}`}
+                  style={{ display: "flex", flex: 1, alignItems: "center", gap: 12, cursor: "pointer" }}
+                >
+                  <input
+                    id={`post-deploy-${item.id}`}
+                    type="checkbox"
+                    checked={done}
+                    onChange={() => toggle(item.id)}
+                    style={{ width: 16, height: 16, cursor: "pointer", accentColor: "var(--mint)" }}
+                  />
+                  <span
+                    style={{
+                      flex: 1,
+                      fontSize: 13.5,
+                      color: done ? "var(--mint-ink)" : "var(--ink-1)",
+                      textDecoration: done ? "line-through" : "none",
+                      transition: "color 0.2s",
+                    }}
+                  >
+                    {item.label}
+                  </span>
+                </label>
+                <button
+                  type="button"
+                  aria-expanded={open}
+                  aria-controls={`post-deploy-details-${item.id}`}
+                  aria-label={`${open ? "Hide" : "Show"} details for ${item.label}`}
+                  onClick={() => setExpanded(open ? null : item.id)}
                   style={{
-                    flex: 1,
-                    fontSize: 13.5,
-                    color: done ? "var(--mint-ink)" : "var(--ink-1)",
-                    textDecoration: done ? "line-through" : "none",
-                    transition: "color 0.2s",
+                    border: 0,
+                    background: "transparent",
+                    color: "var(--ink-4)",
+                    cursor: "pointer",
+                    fontSize: 12,
+                    padding: 8,
                   }}
                 >
-                  {item.label}
-                </span>
-                <span style={{ color: "var(--ink-4)", fontSize: 12 }}>{open ? "▲" : "▼"}</span>
+                  {open ? "▲" : "▼"}
+                </button>
               </div>
-              {open && <div style={{ padding: "0 14px 12px 42px", fontSize: 12.5, color: "var(--ink-3)", lineHeight: 1.6 }}>{item.desc}</div>}
+              {open && (
+                <div
+                  id={`post-deploy-details-${item.id}`}
+                  style={{ padding: "0 14px 12px 42px", fontSize: 12.5, color: "var(--ink-3)", lineHeight: 1.6 }}
+                >
+                  {item.desc}
+                </div>
+              )}
             </div>
           );
         })}

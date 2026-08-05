@@ -97,13 +97,7 @@ for (const ch of CHAPTERS) {
         `horizontal overflow: scrollWidth ${scrollWidth} > innerWidth ${innerWidth}`,
       ).toBeLessThanOrEqual(innerWidth + 1);
 
-      const noise = errors.filter(
-        (e) =>
-          !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-          !/Minified React error #(418|423|425)/.test(e) &&
-          !/404/.test(e) &&
-          !/_vercel\//.test(e),
-      );
+      const noise = errors;
       expect(noise, `console errors on ${url}\n${noise.join("\n")}`).toEqual([]);
     });
 

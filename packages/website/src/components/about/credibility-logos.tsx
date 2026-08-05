@@ -24,18 +24,23 @@ export function CredibilityLogos() {
   return (
     <section className="border-t border-border/50 py-12" aria-label="Frühere Stationen">
       <div className="mx-auto max-w-4xl px-6">
-        <m.div initial="hidden" whileInView="visible" viewport={{ once: true }}>
+        <m.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="js-reveal"
+        >
           <m.p
             custom={0}
             variants={fadeUp}
-            className="text-center text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground"
+            className="js-reveal text-center text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground"
           >
             Kuratiert von jemandem, der hier gearbeitet hat
           </m.p>
           <m.ul
             custom={1}
             variants={fadeUp}
-            className="mt-7 flex flex-wrap items-center justify-center gap-x-10 gap-y-6 sm:gap-x-16"
+            className="js-reveal mt-7 flex flex-wrap items-center justify-center gap-x-10 gap-y-6 sm:gap-x-16"
           >
             {STATIONS.map((s) => (
               <li key={s.name} className="flex h-8 items-center sm:h-[52px]">
@@ -55,7 +60,7 @@ export function CredibilityLogos() {
           <m.p
             custom={2}
             variants={fadeUp}
-            className="mx-auto mt-7 max-w-xl text-center text-xs leading-relaxed text-muted-foreground"
+            className="js-reveal mx-auto mt-7 max-w-xl text-center text-xs leading-relaxed text-muted-foreground"
           >
             {TIM_ENTITY.noEndorsementNotice}
           </m.p>

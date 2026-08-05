@@ -254,10 +254,10 @@ export default function FineTunePlaygroundDemo() {
         >
           Fine-Tuning Playground
         </div>
-        <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", marginTop: 6 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", marginTop: 6 }}>
           Generisch vs.{" "}
           <span style={{ color: "var(--color-brand-orange)" }}>Domänenbeispiel.</span>
-        </h3>
+        </h2>
       </div>
 
       <div

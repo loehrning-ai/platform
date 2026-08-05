@@ -1,18 +1,19 @@
-import type { Metadata } from "next";
 import { HeroSection } from "@/components/home/hero";
 import { CredibilityStrip } from "@/components/home/credibility-strip";
 import { Offering } from "@/components/home/offering";
 import { Workflow } from "@/components/home/workflow";
 import { FinalCta } from "@/components/home/final-cta";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
+import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
 
 // The root layout template ("%s | loehrning.ai") appends the site name, so the
 // title itself stays descriptive and suffix-free (no "loehrning.ai | loehrning.ai").
-export const metadata: Metadata = {
+export const metadata = createPublicPageMetadata({
   title: "Kostenlose deutsche KI-Lernplattform von Tim Löhr",
   description:
-    "Kostenlose KI-Kurse, Bücher und Demos auf Deutsch, ohne Konto und ohne Paywall. Betrieben von Tim Löhr, Data Engineer.",
-};
+    "Kostenlose KI-Kurse, Bücher und Demos ohne Paywall. Ressourcen und technische Kursreader sind ohne Konto nutzbar; vier deutsche Kernkurse nutzen ein kostenloses Lernkonto.",
+  path: "/",
+});
 
 export default function HomePage() {
   return (

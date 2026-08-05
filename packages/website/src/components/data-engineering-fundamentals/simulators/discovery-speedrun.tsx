@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Panel } from "../primitives";
+import { SafeLessonMarkup } from "@/components/safe-lesson-markup";
 
 // ─── DiscoverySpeedrun ────────────────────────────
 // Ported from `src/chapters/Ch6_Discover.js`: a timed practice round of six
@@ -242,7 +243,7 @@ export function DiscoverySpeedrun() {
             ))}
           </div>
           <div style={{ textAlign: "center", marginTop: 20 }}>
-            <button className="btn btn-primary btn-lg" onClick={start}>
+            <button type="button" className="btn btn-primary btn-lg" onClick={start}>
               ▶ Start speedrun
             </button>
           </div>
@@ -273,7 +274,7 @@ export function DiscoverySpeedrun() {
           ))}
         </div>
         <div style={{ textAlign: "center", marginTop: 18 }}>
-          <button className="btn btn-primary" onClick={start}>
+          <button type="button" className="btn btn-primary" onClick={start}>
             ↻ Replay
           </button>
         </div>
@@ -303,13 +304,17 @@ export function DiscoverySpeedrun() {
         <div className="ds-term-body">
           <div className="ds-q">
             <span className="q-lab">Q:</span>
-            <span className="q-t" dangerouslySetInnerHTML={{ __html: q.q }} />
+            <span className="q-t">
+              <SafeLessonMarkup html={q.q} />
+            </span>
           </div>
           <div className="ds-hint">▹ {q.hint}</div>
           <form className="ds-prompt" onSubmit={submit}>
             <span className="p">$</span>
             <input
               ref={inputRef}
+              name="shortcut"
+              aria-label="Shortcut answer"
               value={inputVal}
               onChange={(e) => setInputVal(e.target.value)}
               placeholder="type a shortcut…"
@@ -328,14 +333,21 @@ export function DiscoverySpeedrun() {
           </div>
           {tipShown && (
             <div className="ds-tip-banner">
-              <strong>Tip:</strong> <span dangerouslySetInnerHTML={{ __html: q.tip }} />
+              <strong>Tip:</strong>{" "}
+              <span>
+                <SafeLessonMarkup html={q.tip} />
+              </span>
             </div>
           )}
           {solutionShown && (
             <div className="ds-solution-banner">
               <span className="lab">Solution</span>
               <code>{q.shortcut}</code>
-              {q.why && <span className="why" dangerouslySetInnerHTML={{ __html: q.why }} />}
+              {q.why && (
+                <span className="why">
+                  <SafeLessonMarkup html={q.why} />
+                </span>
+              )}
               <div className="ds-solution-actions">
                 <button type="button" className="ds-help-btn" onClick={fillSolution}>
                   ↳ Fill input

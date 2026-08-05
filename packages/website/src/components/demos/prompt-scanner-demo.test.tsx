@@ -31,7 +31,7 @@ describe("<PromptScannerDemo>", () => {
     render(<PromptScannerDemo />);
 
     expect(screen.getByText("Compliance-Sandbox")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "Prompt-Scanner",
     );
     expect(

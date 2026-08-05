@@ -8,7 +8,7 @@ Das Risiko für die meisten Selbstständigen ist überschaubar. "Überschaubar" 
 
 Dieses Kapitel zeigt die Prüffelder. Es ersetzt weder den aktuellen Gesetzestext noch eine Einzelfallprüfung.
 
-> **Rechtlicher Hinweis:** Dieses Kapitel gibt allgemeine Orientierung, keine Rechtsberatung im Sinne des Rechtsdienstleistungsgesetzes (RDG). Für deine individuelle Situation konsultiere einen Fachanwalt oder Datenschutzbeauftragten. Rechtsstand der überprüften AI-Act-Angaben: 14. Juli 2026.
+> **Rechtlicher Hinweis:** Dieses Kapitel gibt allgemeine Orientierung, keine Rechtsberatung im Sinne des Rechtsdienstleistungsgesetzes (RDG). Für deine individuelle Situation konsultiere einen Fachanwalt oder Datenschutzbeauftragten. Rechtsstand der überprüften AI-Act-Angaben: 28. Juli 2026.
 
 > **Wissens-Vertiefung: KI-Führerschein**
 >
@@ -95,22 +95,22 @@ Die Verordnung (EU) 2024/1689, der AI Act, ist seit 1. August 2024 in Kraft. Art
 
 Kurze Antwort: Mehr als du denkst. Weniger als du befürchtest.
 
-> **Rechtlicher Hinweis:** Art. 4 AI Act verlangt von Anbietern und Betreibern angemessene Maßnahmen für ausreichende KI-Kompetenz ihres Personals und anderer Personen, die in ihrem Auftrag mit den Systemen arbeiten. Maßstab sind Wissen, Erfahrung, Einsatzkontext und betroffene Personen. Die EU-Kommission stellt klar: Es gibt weder ein vorgeschriebenes Einheitsformat noch ein erforderliches Zertifikat. Solo-Selbstständige sollten ihre eigene Nutzung und angemessene Lern- und Kontrollmaßnahmen dokumentieren, statt einen Kursnachweis als automatische Erfüllung auszugeben.
+> **Rechtlicher Hinweis:** Art. 4 AI Act verlangt von Anbietern und Betreibern Maßnahmen, die die Entwicklung der KI-Kompetenz ihres Personals und anderer in ihrem Auftrag handelnder Personen unterstützen. Maßstab sind Wissen, Erfahrung, Ausbildung, Einsatzkontext und betroffene Personen oder Gruppen. Seit 27. Juli 2026 muss kein bestimmtes individuelles Kompetenzniveau garantiert werden. Es gibt weder ein vorgeschriebenes Einheitsformat noch ein erforderliches Zertifikat. Solo-Selbstständige sollten ihre Nutzung und angemessene Lern- und Kontrollmaßnahmen dokumentieren, statt einen Kursnachweis als automatische Erfüllung auszugeben.
 
 ### Wo steht Deutschland? Die Aufsichtsbehörden
 
-Der Bundestag beschloss das KI-Marktüberwachungs- und Innovationsförderungsgesetz am 11. Juni 2026. Nach dem Bundesratsdurchgang am 10. Juli kann es ausgefertigt und verkündet werden. Am 14. Juli 2026 war die Verkündung noch abzuwarten. Das beschlossene Gesetz weist der Bundesnetzagentur eine zentrale Rolle zu, soweit keine Fachbehörde zuständig ist. Für einen konkreten Fall muss deshalb die Zuständigkeit nach dem verkündeten Gesetz und dem jeweiligen Fachrecht geprüft werden.
+Der Bundestag beschloss das KI-Marktüberwachungs- und Innovationsförderungsgesetz am 11. Juni 2026; am 10. Juli passierte es den Bundesrat. Das Gesetz ist am 29. Juli 2026 in Kraft getreten. Es weist der Bundesnetzagentur eine zentrale Rolle zu, soweit keine Fachbehörde zuständig ist. Für einen konkreten Fall müssen deshalb das jeweilige Fachrecht und der aktuell veröffentlichte Behördenweg geprüft werden.
 
 | Behörde | Zuständigkeit |
 |---------|---------------|
-| **Bundesnetzagentur (BNetzA)** | nach dem beschlossenen KI-MIG zentrale Anlaufstelle und Marktüberwachung, soweit keine Fachbehörde zuständig ist; Verkündung und Wirksamkeit prüfen |
+| **Bundesnetzagentur (BNetzA)** | nach dem seit 29. Juli 2026 geltenden KI-MIG zentrale Anlaufstelle und Marktüberwachung, soweit keine Fachbehörde zuständig ist; sektorale Zuständigkeit prüfen |
 | **Sektorale Marktüberwachung** | Zuständigkeit kann insbesondere aus Finanz-, Medizinprodukt-, Datenschutz- oder anderem Fachrecht folgen; die konkrete Behörde fallbezogen prüfen |
 
 Für dich heißt das: Einzelne AI-Act-Pflichten gelten bereits, weitere greifen nach dem gesetzlichen Zeitplan. Prüfe für Beschwerden und Meldungen die aktuell veröffentlichte Zuständigkeit; die BNetzA ist nicht automatisch für jeden Sektor und jeden Vorgang die alleinige Stelle.
 
 ### August 2026: Die nächste Deadline
 
-Am **2. August 2026** greifen weitere allgemeine Anwendungspunkte des AI Act, darunter Art. 50. Die Transparenzpflichten unterscheiden zwischen Anbieterpflichten zur maschinenlesbaren Markierung und Betreiberpflichten, etwa bei direkter Interaktion, Deepfakes oder bestimmten Texten zu Angelegenheiten von öffentlichem Interesse. Sie sind keine pauschale Kennzeichnungspflicht für jedes KI-unterstützte Werk. Parlament und Rat beschlossen mit dem AI Omnibus den **2. Dezember 2027** für eigenständige Anhang-III-Systeme und den **2. August 2028** für produktintegrierte Anhang-I-Systeme. Am 14. Juli 2026 war die Änderungsverordnung noch nicht im Amtsblatt veröffentlicht; bis zu ihrem Inkrafttreten muss der ursprüngliche Verordnungstext von dem beschlossenen neuen Zeitplan getrennt betrachtet werden.
+Am **2. August 2026** greifen weitere allgemeine Anwendungspunkte des AI Act, darunter Art. 50. Die Transparenzpflichten unterscheiden zwischen Anbieterpflichten zur maschinenlesbaren Markierung und Betreiberpflichten, etwa bei direkter Interaktion, Deepfakes oder bestimmten Texten zu Angelegenheiten von öffentlichem Interesse. Sie sind keine pauschale Kennzeichnungspflicht für jedes KI-unterstützte Werk. Die am 27. Juli 2026 in Kraft getretene Verordnung (EU) 2026/1744 verschiebt die Hochrisiko-Regeln auf den **2. Dezember 2027** für eigenständige Anhang-III-Systeme und den **2. August 2028** für produktintegrierte Anhang-I-Systeme.
 
 Die Bußgelder sind kein Spaß:
 

@@ -117,7 +117,7 @@ function PromptDiffBody({
                 "flex h-full flex-col border p-4 text-left transition-[background-color,border-color,opacity,transform,box-shadow]",
                 submitted
                   ? isCorrect
-                    ? "border-[#22c55e] border-t-[3px] border-t-[#22c55e] bg-[#22c55e]/5"
+                    ? "border-risk-green border-t-[3px] border-t-risk-green bg-risk-green/5"
                     : isWrongPick
                       ? "border-destructive border-t-[3px] border-t-destructive bg-destructive/5"
                       : "border-border bg-card/40 opacity-60"
@@ -177,19 +177,19 @@ function PromptDiffBody({
             transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
             className={cn(
               "mt-4 border-l-[3px] px-4 py-3",
-              correct ? "border-[#22c55e] bg-[#22c55e]/5" : "border-brand-amber bg-brand-amber/5",
+              correct ? "border-risk-green bg-risk-green/5" : "border-brand-amber bg-brand-amber/5",
             )}
           >
             <div className="flex items-center gap-2">
               {correct ? (
-                <CheckCircle2 size={16} className="text-[#22c55e]" />
+                <CheckCircle2 size={16} className="text-risk-green" />
               ) : (
                 <XCircle size={16} className="text-brand-amber" />
               )}
               <p
                 className={cn(
                   "font-mono text-[11px] font-bold uppercase tracking-[0.14em]",
-                  correct ? "text-[#22c55e]" : "text-brand-amber",
+                  correct ? "text-risk-green" : "text-brand-amber",
                 )}
               >
                 {correct

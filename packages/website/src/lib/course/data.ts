@@ -254,7 +254,10 @@ function course(courseSlug: CourseSlug): CourseData {
 // the block JSON (drift risk), we derive a `flashcards` widget for each block
 // from `getGlossaryTerms(slug, blockId)` and attach it to the LAST lesson of
 // the block (placement "end"), so the learner reviews that block's vocabulary
-// once they have worked through it. The checkpoint id is unique per block.
+// once they have worked through it. Checkpoint storage is global, so both the
+// course and lesson must participate in the key. Several courses intentionally
+// reuse block/lesson ids; leaving the course out would complete another
+// course's glossary checkpoint.
 
 function glossaryFlashcardsWidget(
   courseSlug: CourseSlug,
@@ -268,7 +271,7 @@ function glossaryFlashcardsWidget(
     placement: "end",
     courseSlug: courseSlug as Widget["courseSlug"],
     props: {
-      lessonId,
+      lessonId: `${courseSlug}:${lessonId}`,
       cpId: `glossar-${blockId}`,
       title: "Glossar-Karten zu diesem Block",
       cards: terms.map((t) => ({

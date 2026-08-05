@@ -1,5 +1,22 @@
-import { describe, expect, it } from "vitest";
+import type { AnchorHTMLAttributes, ReactNode } from "react";
+import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+
+vi.mock("next/link", () => ({
+  default: ({
+    prefetch,
+    children,
+    ...props
+  }: AnchorHTMLAttributes<HTMLAnchorElement> & {
+    readonly prefetch?: boolean;
+    readonly children?: ReactNode;
+  }) => (
+    <a {...props} data-prefetch={String(prefetch)}>
+      {children}
+    </a>
+  ),
+}));
+
 import { Workflow } from "./workflow";
 
 describe("Ressourcen section (Workflow)", () => {
@@ -25,14 +42,16 @@ describe("Ressourcen section (Workflow)", () => {
     }
   });
 
-  it("showcases the account feature once, linking to /konto", () => {
+  it("showcases the account feature without prefetching the protected route", () => {
     render(<Workflow />);
     expect(
-      screen.getByText(/dein Fortschritt, deine Zertifikate und deine Kompetenzen/),
+      screen.getByText(
+        /dein Fortschritt, deine Abschlussnachweise und deine Kompetenzen/,
+      ),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Zum Konto/ })).toHaveAttribute(
-      "href",
-      "/konto",
-    );
+    expect(screen.getByRole("link", { name: /Zum Konto/ })).toMatchObject({
+      href: expect.stringMatching(/\/konto$/),
+      dataset: expect.objectContaining({ prefetch: "false" }),
+    });
   });
 });

@@ -40,7 +40,7 @@ describe("LessonProgressRing (shared)", () => {
     render(
       <LessonProgressRing
         courseSlug="eu-ai-act-kurs"
-        lessonId="l1"
+        lessonId="block_2_lesson_3"
         totalSections={4}
       />,
     );
@@ -49,20 +49,28 @@ describe("LessonProgressRing (shared)", () => {
     expect(await screen.findByText("0/4")).toBeInTheDocument();
 
     act(() => {
-      markSectionRead("eu-ai-act-kurs", "l1", "s1");
-      markSectionRead("eu-ai-act-kurs", "l1", "s2");
+      markSectionRead(
+        "eu-ai-act-kurs",
+        "block_2_lesson_3",
+        "block_2_lesson_3_section_1",
+      );
+      markSectionRead(
+        "eu-ai-act-kurs",
+        "block_2_lesson_3",
+        "block_2_lesson_3_section_2",
+      );
     });
 
     expect(await screen.findByText("2/4")).toBeInTheDocument();
   });
 
   it("shows the done checkmark when the lesson is completed", async () => {
-    markLessonCompleted("eu-ai-act-kurs", "done-lesson");
+    markLessonCompleted("eu-ai-act-kurs", "block_1_lesson_2");
 
     render(
       <LessonProgressRing
         courseSlug="eu-ai-act-kurs"
-        lessonId="done-lesson"
+        lessonId="block_1_lesson_2"
         totalSections={3}
       />,
     );

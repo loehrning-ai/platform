@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeAll, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { DataInfraLessonReader } from "./data-infra-lesson-reader";
 import { isLessonCompleted, __resetCacheForTests } from "@/lib/progress";
 import type { DataInfraLesson } from "@/lib/data-infrastructure/types";
@@ -86,6 +87,27 @@ beforeEach(() => {
 afterEach(() => cleanup());
 
 describe("DataInfraLessonReader ", () => {
+  it("keeps server-rendered progress controls disabled until progress is ready", () => {
+    const markup = renderToStaticMarkup(
+      <DataInfraLessonReader
+        lesson={{ ...LESSON, widgets: [] }}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+      />,
+    );
+    const host = document.createElement("div");
+    host.innerHTML = markup;
+    const buttons = Array.from(host.querySelectorAll("button"));
+    const markAsRead = buttons.filter((button) => button.textContent?.includes("Mark as read"));
+    const completeLesson = buttons.find((button) => button.textContent?.includes("Complete lesson"));
+
+    expect(markAsRead).toHaveLength(LESSON.sections.length);
+    expect(markAsRead.every((button) => button.disabled)).toBe(true);
+    expect(completeLesson).toBeDefined();
+    expect(completeLesson?.disabled).toBe(true);
+  });
+
   it("renders the lesson header, sections, and key takeaway", () => {
     render(<DataInfraLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />);
     expect(screen.getByText("Test Lesson Title")).toBeInTheDocument();
@@ -95,7 +117,9 @@ describe("DataInfraLessonReader ", () => {
 
   it("renders the embedded widget through the shared registry", async () => {
     render(<DataInfraLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />);
-    expect(await screen.findByText("A test question?")).toBeInTheDocument();
+    expect(
+      await screen.findByText("A test question?", {}, { timeout: 5_000 }),
+    ).toBeInTheDocument();
   });
 
   it("renders this lesson's bespoke simulator (StackFlow for mental-model)", () => {

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
-import { books } from "./books";
+import { allBooks, books } from "./books";
 
 interface BookManifest {
   readonly bookSlug: string;
@@ -10,6 +10,8 @@ interface BookManifest {
   readonly nextReview: string;
   readonly reviewCadence: string;
   readonly riskClass: string;
+  readonly publicationStatus: "published" | "hold";
+  readonly publicationReason: string;
   readonly chapters: ReadonlyArray<{
     readonly slug: string;
     readonly sourceFile: string;
@@ -17,7 +19,7 @@ interface BookManifest {
 }
 
 describe("book publication manifests", () => {
-  it.each(books)("keeps $id catalog, freshness, and chapter files aligned", (book) => {
+  it.each(allBooks)("keeps $id catalog, lifecycle, freshness, and chapter files aligned", (book) => {
     const directory = resolve(process.cwd(), "content", "books", book.id);
     const manifestPath = resolve(directory, "manifest.json");
     expect(existsSync(manifestPath)).toBe(true);
@@ -31,6 +33,9 @@ describe("book publication manifests", () => {
     expect(manifest.nextReview).toBe(book.nextReview);
     expect(manifest.reviewCadence.trim()).not.toBe("");
     expect(manifest.riskClass.trim()).not.toBe("");
+    expect(manifest.publicationStatus).toBe(book.publicationStatus);
+    expect(manifest.publicationReason).toBe(book.publicationReason);
+    expect(manifest.publicationReason.trim()).not.toBe("");
     expect(manifest.chapters).toHaveLength(book.chapters);
 
     const sourceFiles = manifest.chapters.map((chapter) => chapter.sourceFile);
@@ -38,7 +43,19 @@ describe("book publication manifests", () => {
     expect(
       readdirSync(directory)
         .filter((file) => file.endsWith(".md"))
-        .sort(),
+      .sort(),
     ).toEqual([...sourceFiles].sort());
+  });
+
+  it("routes only explicitly approved books and keeps every held title out", () => {
+    expect(books).not.toHaveLength(0);
+    expect(books.every((book) => book.publicationStatus === "published")).toBe(
+      true,
+    );
+    expect(
+      allBooks
+        .filter((book) => book.publicationStatus === "hold")
+        .every((book) => !books.some((published) => published.id === book.id)),
+    ).toBe(true);
   });
 });

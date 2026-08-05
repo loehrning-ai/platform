@@ -79,7 +79,7 @@ const fileName = useMemo(
       }}
     >
       <Overline>Word-Lab mit KI-Assistent</Overline>
-      <h3
+      <h2
         style={{
           fontSize: "clamp(18px, 3.5vw, 22px)",
           fontWeight: 700,
@@ -90,7 +90,7 @@ const fileName = useMemo(
       >
         Projektbriefe, die{" "}
         <span style={{ color: "var(--color-brand-orange)" }}>prüfbar bleiben.</span>
-      </h3>
+      </h2>
 
       <div
         style={{
@@ -424,9 +424,9 @@ const fileName = useMemo(
                 <div style={{ fontSize: 10, color: "#777", textAlign: "right" }}>
                   Berlin, {new Date().toLocaleDateString("de-DE")}
                 </div>
-                <h4 style={{ fontSize: 14, fontWeight: 700, marginTop: 16, marginBottom: 10 }}>
+                <h3 style={{ fontSize: 14, fontWeight: 700, marginTop: 16, marginBottom: 10 }}>
                   Projektbrief: {form.projekt}
-                </h4>
+                </h3>
                 <p style={{ marginBottom: 10 }}>Sehr geehrte Damen und Herren,</p>
                 <p style={{ marginBottom: 10 }}>
                   anbei der neutrale Prüfstand zur <strong>{form.projekt}</strong>, konzipiert für den

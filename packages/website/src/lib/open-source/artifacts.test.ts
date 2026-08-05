@@ -2,6 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   OPEN_SOURCE_ARTIFACT_CANDIDATES,
   OPEN_SOURCE_ARTIFACT_CANDIDATE_REGISTRY,
+  OPEN_SOURCE_ARTIFACT_IMAGE_MAX_BYTES,
+  OPEN_SOURCE_ARTIFACT_LICENSE_MAX_BYTES,
+  OPEN_SOURCE_ARTIFACT_MEDIA_MAX_BYTES,
   OPEN_SOURCE_ARTIFACT_REGISTRY,
   OPEN_SOURCE_ARTIFACTS,
   OPEN_SOURCE_PROJECT_ARTIFACT_CANDIDATES,
@@ -24,6 +27,8 @@ import {
 const GUIDE = {
   status: "experimental",
   statusNote: "The interface is usable, but compatibility may change.",
+  dataFlow:
+    "Runs locally and does not send artifact data to an external service.",
   prerequisites: [
     {
       label: "Bun 1.3",
@@ -66,7 +71,8 @@ const GUIDE = {
     href: "https://docs.example.com/example-tool",
   },
   screenshot: {
-    src: "/imported-courses/screenshots/codex.jpg",
+    src: "/artifacts/tools/example-tool/screenshot.jpg",
+    sourcePath: "docs/screenshot.jpg",
     alt: "The example tool showing its generated report.",
     sha256: "c".repeat(64),
     sizeBytes: 123,
@@ -91,14 +97,15 @@ const TOOL = {
   eyebrow: "Tool",
   description: "A complete future tool record.",
   href: "/open-source/tools/example-tool",
-  language: "de",
+  language: "Deutsch",
+  languageTag: "de",
   source: {
     href: "https://github.com/loehrning-ai/example-tool",
     revision: "a".repeat(40),
     revisionHref: `https://github.com/loehrning-ai/example-tool/commit/${"a".repeat(40)}`,
   },
   license: {
-    href: "/licenses/example-license.txt",
+    href: "/artifacts/tools/example-tool/LICENSE.txt",
     sourcePath: "LICENSE",
     sha256: "b".repeat(64),
     sizeBytes: 1,
@@ -127,6 +134,22 @@ describe("open-source artifact registry", () => {
       publicationLifecycle: "draft",
       slug: "draft-tool",
       href: "/open-source/tools/draft-tool",
+      source: {
+        href: "https://github.com/loehrning-ai/draft-tool",
+        revision: TOOL.source.revision,
+        revisionHref: `https://github.com/loehrning-ai/draft-tool/commit/${TOOL.source.revision}`,
+      },
+      license: {
+        ...TOOL.license,
+        href: "/artifacts/tools/draft-tool/LICENSE.txt",
+      },
+      guide: {
+        ...GUIDE,
+        screenshot: {
+          ...GUIDE.screenshot,
+          src: "/artifacts/tools/draft-tool/screenshot.jpg",
+        },
+      },
     } as const satisfies OpenSourceArtifact;
     const withdrawn = {
       ...TOOL,
@@ -134,6 +157,22 @@ describe("open-source artifact registry", () => {
       publicationLifecycle: "withdrawn",
       slug: "withdrawn-tool",
       href: "/open-source/tools/withdrawn-tool",
+      source: {
+        href: "https://github.com/loehrning-ai/withdrawn-tool",
+        revision: TOOL.source.revision,
+        revisionHref: `https://github.com/loehrning-ai/withdrawn-tool/commit/${TOOL.source.revision}`,
+      },
+      license: {
+        ...TOOL.license,
+        href: "/artifacts/tools/withdrawn-tool/LICENSE.txt",
+      },
+      guide: {
+        ...GUIDE,
+        screenshot: {
+          ...GUIDE.screenshot,
+          src: "/artifacts/tools/withdrawn-tool/screenshot.jpg",
+        },
+      },
     } as const satisfies OpenSourceArtifact;
 
     expect(
@@ -215,7 +254,7 @@ describe("open-source artifact registry", () => {
     ).toThrow(/license\.licenseId/);
   });
 
-  it("accepts the optional data-flow disclosure and rejects an empty one", () => {
+  it("requires a non-empty data-flow disclosure", () => {
     expect(() =>
       assertOpenSourceArtifacts([
         {
@@ -232,10 +271,337 @@ describe("open-source artifact registry", () => {
       assertOpenSourceArtifacts([
         {
           ...TOOL,
+          guide: { ...GUIDE, dataFlow: undefined },
+        } as unknown as OpenSourceArtifact,
+      ]),
+    ).toThrow(/guide\.dataFlow/);
+    expect(() =>
+      assertOpenSourceArtifacts([
+        {
+          ...TOOL,
           guide: { ...GUIDE, dataFlow: "   " },
         },
       ]),
     ).toThrow(/guide\.dataFlow/);
+  });
+
+  it("keeps the display label separate from a canonical BCP 47 tag", () => {
+    expect(() =>
+      assertOpenSourceArtifacts([
+        {
+          ...TOOL,
+          language: "English (United Kingdom)",
+          languageTag: "en-GB",
+        },
+      ]),
+    ).not.toThrow();
+
+    for (const languageTag of ["Englisch", "en_gb", "EN", "en-gb", ""]) {
+      expect(
+        () =>
+          assertOpenSourceArtifacts([
+            {
+              ...TOOL,
+              languageTag,
+            },
+          ]),
+        `${languageTag || "<empty>"} must not pass as canonical BCP 47`,
+      ).toThrow(/languageTag/);
+    }
+
+    expect(() =>
+      assertOpenSourceArtifacts([
+        {
+          ...TOOL,
+          languageTag: undefined,
+        } as unknown as OpenSourceArtifact,
+      ]),
+    ).toThrow(/languageTag/);
+
+    expect(() =>
+      assertOpenSourceArtifacts([
+        {
+          ...TOOL,
+          publicationLifecycle: "draft",
+          languageTag: undefined,
+        } as unknown as OpenSourceArtifact,
+      ]),
+    ).not.toThrow();
+  });
+
+  it("requires the exact loehrning-ai owner and unique normalized repositories", () => {
+    for (const href of [
+      "https://github.com/other-owner/example-tool",
+      "https://github.com/Loehrning-AI/example-tool",
+    ]) {
+      expect(() =>
+        assertOpenSourceArtifacts([
+          {
+            ...TOOL,
+            source: {
+              ...TOOL.source,
+              href,
+              revisionHref: `${href}/commit/${TOOL.source.revision}`,
+            },
+          },
+        ]),
+      ).toThrow(/source\.href/);
+    }
+
+    const duplicateProject = {
+      ...TOOL,
+      id: "project:duplicate-project",
+      kind: "project",
+      slug: "duplicate-project",
+      href: "/open-source/projects/duplicate-project",
+      source: {
+        href: "https://github.com/loehrning-ai/EXAMPLE-TOOL.git",
+        revision: TOOL.source.revision,
+        revisionHref: `https://github.com/loehrning-ai/EXAMPLE-TOOL.git/commit/${TOOL.source.revision}`,
+      },
+      license: {
+        ...TOOL.license,
+        href: "/artifacts/projects/duplicate-project/LICENSE.txt",
+      },
+      guide: {
+        ...GUIDE,
+        screenshot: {
+          ...GUIDE.screenshot,
+          src: "/artifacts/projects/duplicate-project/screenshot.jpg",
+        },
+      },
+    } as const satisfies ProjectArtifact;
+
+    expect(() => assertOpenSourceArtifacts([TOOL, duplicateProject])).toThrow(
+      /must not reuse repository/,
+    );
+  });
+
+  it("enforces social-card title and description budgets", () => {
+    expect(() =>
+      assertOpenSourceArtifacts([
+        {
+          ...TOOL,
+          title: "T".repeat(60),
+          description: "D".repeat(160),
+        },
+      ]),
+    ).not.toThrow();
+    expect(() =>
+      assertOpenSourceArtifacts([{ ...TOOL, title: "T".repeat(61) }]),
+    ).toThrow(/title.*60 Unicode code points/);
+    expect(() =>
+      assertOpenSourceArtifacts([{ ...TOOL, description: "D".repeat(161) }]),
+    ).toThrow(/description.*160 Unicode code points/);
+  });
+
+  it("keeps software license and screenshot files inside the artifact directory", () => {
+    for (const licenseHref of [
+      "/licenses/example-license.txt",
+      "/artifacts/projects/example-tool/LICENSE.txt",
+      "/artifacts/tools/example-tool",
+      "/artifacts/tools/example-tool/LICENSE.txt?download=1",
+    ]) {
+      expect(() =>
+        assertOpenSourceArtifacts([
+          {
+            ...TOOL,
+            license: { ...TOOL.license, href: licenseHref },
+          },
+        ]),
+      ).toThrow(/license\.href/);
+    }
+
+    for (const screenshotSrc of [
+      "/media/example-tool.jpg",
+      "/artifacts/projects/example-tool/screenshot.jpg",
+      "/artifacts/tools/example-tool/screenshot.jpg#preview",
+    ]) {
+      expect(() =>
+        assertOpenSourceArtifacts([
+          {
+            ...TOOL,
+            guide: {
+              ...GUIDE,
+              screenshot: { ...GUIDE.screenshot, src: screenshotSrc },
+            },
+          },
+        ]),
+      ).toThrow(/guide\.screenshot\.src/);
+    }
+  });
+
+  it("keeps upstream software license and screenshot roles distinct", () => {
+    expect(() =>
+      assertOpenSourceArtifacts([
+        {
+          ...TOOL,
+          license: {
+            ...TOOL.license,
+            sourcePath: "docs/LICENSE.png",
+          },
+          guide: {
+            ...GUIDE,
+            screenshot: {
+              ...GUIDE.screenshot,
+              sourcePath: "docs/LICENSE.png",
+            },
+          },
+        },
+      ]),
+    ).toThrow(/upstream license source path/);
+  });
+
+  it("requires normalized exact upstream screenshot paths", () => {
+    for (const sourcePath of [
+      "",
+      "/docs/screenshot.jpg",
+      "../screenshot.jpg",
+      "docs/./screenshot.jpg",
+      "docs/screenshot.jpg?raw=1",
+      "docs/screenshot.svg",
+    ]) {
+      expect(() =>
+        assertOpenSourceArtifacts([
+          {
+            ...TOOL,
+            guide: {
+              ...GUIDE,
+              screenshot: { ...GUIDE.screenshot, sourcePath },
+            },
+          } as OpenSourceArtifact,
+        ]),
+      ).toThrow(/guide\.screenshot\.sourcePath/);
+    }
+  });
+
+  it("requires a plain text license path and bounds its declared size", () => {
+    for (const href of [
+      "/artifacts/tools/example-tool/LICENSE.pdf",
+      "/artifacts/tools/example-tool/LICENSE.txt?raw=1",
+      "/artifacts/tools/example-tool/LICENSE.txt#notice",
+    ]) {
+      expect(() =>
+        assertOpenSourceArtifacts([
+          {
+            ...TOOL,
+            license: {
+              ...TOOL.license,
+              href,
+            },
+          },
+        ]),
+      ).toThrow(/license\.href/);
+    }
+    expect(() =>
+      assertOpenSourceArtifacts([
+        {
+          ...TOOL,
+          license: {
+            ...TOOL.license,
+            sizeBytes: OPEN_SOURCE_ARTIFACT_LICENSE_MAX_BYTES + 1,
+          },
+        },
+      ]),
+    ).toThrow(/license\.sizeBytes/);
+  });
+
+  it("bounds declared screenshot and media sizes before publication", () => {
+    expect(() =>
+      assertOpenSourceArtifacts([
+        {
+          ...TOOL,
+          guide: {
+            ...GUIDE,
+            screenshot: {
+              ...GUIDE.screenshot,
+              sizeBytes: OPEN_SOURCE_ARTIFACT_IMAGE_MAX_BYTES + 1,
+            },
+          },
+        },
+      ]),
+    ).toThrow(/guide\.screenshot\.sizeBytes/);
+
+    const video = {
+      id: "video:bounded-video",
+      kind: "video",
+      publicationLifecycle: "published",
+      slug: "bounded-video",
+      title: "Bounded video",
+      eyebrow: "Video",
+      description: "A complete bounded video record.",
+      href: "/open-source/videos/bounded-video",
+      language: "Deutsch",
+      languageTag: "de",
+      source: {
+        href: "https://github.com/loehrning-ai/bounded-video",
+        revision: "a".repeat(40),
+        revisionHref: `https://github.com/loehrning-ai/bounded-video/commit/${"a".repeat(40)}`,
+      },
+      license: {
+        href: "/licenses/bounded-video.txt",
+        sourcePath: "LICENSE",
+        sha256: "b".repeat(64),
+        sizeBytes: 1,
+      },
+      watchHref: "/media/bounded-video.mp4",
+      captionsHref: "/media/bounded-video.vtt",
+      transcriptHref: "/media/bounded-video.txt",
+      posterSrc: "/media/bounded-video.webp",
+      posterAlt: "Vorschaubild des Videos",
+      publication: {
+        owner: "loehrning.ai",
+        maintainer: "loehrning.ai",
+        creationMethod: "Recorded from repository source.",
+        modificationHistory: "Initial cut.",
+        licenseId: "MIT",
+        attribution: "Copyright loehrning.ai.",
+        redistribution: "Permitted under MIT.",
+        storageLocation: "Repository media directory.",
+        retentionOwner: "loehrning.ai",
+        replacementProcedure: "Replace and update every digest.",
+        availabilityExpectations: "Best-effort public delivery.",
+        captionLanguage: "de",
+        transcriptLanguage: "de",
+        accessibilityReviewDate: "2026-07-14",
+      },
+      mediaFiles: {
+        video: {
+          path: "packages/website/public/media/bounded-video.mp4",
+          sourcePath: "media/bounded-video.mp4",
+          sha256: "c".repeat(64),
+          sizeBytes: OPEN_SOURCE_ARTIFACT_MEDIA_MAX_BYTES.video + 1,
+          mimeType: "video/mp4",
+        },
+        captions: {
+          path: "packages/website/public/media/bounded-video.vtt",
+          sourcePath: "media/bounded-video.vtt",
+          sha256: "d".repeat(64),
+          sizeBytes: 10,
+          mimeType: "text/vtt",
+        },
+        transcript: {
+          path: "packages/website/public/media/bounded-video.txt",
+          sourcePath: "media/bounded-video.txt",
+          sha256: "e".repeat(64),
+          sizeBytes: 10,
+          mimeType: "text/plain",
+        },
+        poster: {
+          path: "packages/website/public/media/bounded-video.webp",
+          sourcePath: "media/bounded-video.webp",
+          sha256: "f".repeat(64),
+          sizeBytes: 10,
+          mimeType: "image/webp",
+        },
+      },
+      duration: "PT1M",
+      datePublished: "2026-07-14",
+    } as const satisfies OpenSourceArtifact;
+
+    expect(() => assertOpenSourceArtifacts([video])).toThrow(
+      /mediaFiles\.video\.sizeBytes/,
+    );
   });
 
   it("requires revision URLs to stay on the exact source ancestry", () => {
@@ -324,7 +690,8 @@ describe("open-source artifact registry", () => {
       eyebrow: "Video",
       description: "A complete future video record.",
       href: "/open-source/videos/safe-video",
-      language: "de",
+      language: "Deutsch",
+      languageTag: "de",
       source: {
         href: "https://github.com/loehrning-ai/example",
         revision: "a".repeat(40),
@@ -364,24 +731,28 @@ describe("open-source artifact registry", () => {
       mediaFiles: {
         video: {
           path: "packages/website/public/media/safe-video.mp4",
+          sourcePath: "media/safe-video.mp4",
           sha256: "c".repeat(64),
           sizeBytes: 12_000,
           mimeType: "video/mp4",
         },
         captions: {
           path: "packages/website/public/media/safe-video.de.vtt",
+          sourcePath: "media/safe-video.de.vtt",
           sha256: "d".repeat(64),
           sizeBytes: 800,
           mimeType: "text/vtt",
         },
         transcript: {
           path: "packages/website/public/media/safe-video-transcript.txt",
+          sourcePath: "media/safe-video-transcript.txt",
           sha256: "e".repeat(64),
           sizeBytes: 2_400,
           mimeType: "text/plain",
         },
         poster: {
           path: "packages/website/public/media/safe-video.jpg",
+          sourcePath: "media/safe-video.jpg",
           sha256: "f".repeat(64),
           sizeBytes: 24_000,
           mimeType: "image/jpeg",
@@ -453,6 +824,43 @@ describe("open-source artifact registry", () => {
         },
       ]),
     ).toThrow(/mediaFiles\.video\.mimeType/);
+    expect(() =>
+      assertOpenSourceArtifacts([
+        {
+          ...validBase,
+          mediaFiles: {
+            ...validBase.mediaFiles,
+            video: {
+              ...validBase.mediaFiles.video,
+              sourcePath: "media/another.mp4",
+            },
+          },
+        },
+      ]),
+    ).not.toThrow();
+    for (const sourcePath of [
+      "",
+      "/media/safe-video.mp4",
+      "../safe-video.mp4",
+      "media/./safe-video.mp4",
+      "media/safe-video.mp4?raw=1",
+      "media/safe-video.webm",
+    ]) {
+      expect(() =>
+        assertOpenSourceArtifacts([
+          {
+            ...validBase,
+            mediaFiles: {
+              ...validBase.mediaFiles,
+              video: {
+                ...validBase.mediaFiles.video,
+                sourcePath,
+              },
+            },
+          } as OpenSourceArtifact,
+        ]),
+      ).toThrow(/mediaFiles\.video\.sourcePath/);
+    }
     for (const role of Object.keys(validBase.mediaFiles) as Array<
       keyof typeof validBase.mediaFiles
     >) {
@@ -491,7 +899,7 @@ describe("open-source artifact registry", () => {
       assertOpenSourceArtifacts([
         {
           ...validBase,
-          publication: { ...validBase.publication, captionLanguage: "german" },
+          publication: { ...validBase.publication, captionLanguage: "de_DE" },
         },
       ]),
     ).toThrow(/publication\.captionLanguage/);
@@ -539,7 +947,12 @@ describe("open-source artifact registry", () => {
             watchHref: `/media/safe-video.${extension}`,
             mediaFiles: {
               ...validBase.mediaFiles,
-              video: { ...validBase.mediaFiles.video, path, mimeType },
+              video: {
+                ...validBase.mediaFiles.video,
+                path,
+                sourcePath: `media/safe-video.${extension}`,
+                mimeType,
+              },
             },
           },
         ]),
@@ -556,6 +969,7 @@ describe("open-source artifact registry", () => {
             transcript: {
               ...validBase.mediaFiles.transcript,
               path: "packages/website/public/media/safe-video-transcript.md",
+              sourcePath: "media/safe-video-transcript.md",
               mimeType: "text/markdown",
             },
           },
@@ -569,11 +983,7 @@ describe("open-source artifact registry", () => {
         "packages/website/public/media/safe-video.mov",
         "video/quicktime",
       ],
-      [
-        "video",
-        "packages/website/public/media/safe-video.m4v",
-        "video/x-m4v",
-      ],
+      ["video", "packages/website/public/media/safe-video.m4v", "video/x-m4v"],
       [
         "captions",
         "packages/website/public/media/safe-video.de.srt",
@@ -584,11 +994,7 @@ describe("open-source artifact registry", () => {
         "packages/website/public/media/safe-video-transcript.html",
         "text/html",
       ],
-      [
-        "poster",
-        "packages/website/public/media/safe-video.gif",
-        "image/gif",
-      ],
+      ["poster", "packages/website/public/media/safe-video.gif", "image/gif"],
     ] as const) {
       expect(
         () =>
@@ -608,6 +1014,18 @@ describe("open-source artifact registry", () => {
         `${role} must reject ${path}`,
       ).toThrow(new RegExp(`mediaFiles\\.${role}\\.mimeType`));
     }
+
+    expect(() =>
+      assertOpenSourceArtifacts([
+        {
+          ...validBase,
+          license: {
+            ...validBase.license,
+            href: "/media/safe-video-transcript.txt",
+          },
+        },
+      ]),
+    ).toThrow(/must not reuse the license file path/);
   });
 
   it("requires a complete operating guide before a tool or project can publish", () => {
@@ -620,6 +1038,22 @@ describe("open-source artifact registry", () => {
       slug: "example-project",
       title: "Example project",
       href: "/open-source/projects/example-project",
+      source: {
+        href: "https://github.com/loehrning-ai/example-project",
+        revision: tool.source.revision,
+        revisionHref: `https://github.com/loehrning-ai/example-project/commit/${tool.source.revision}`,
+      },
+      license: {
+        ...tool.license,
+        href: "/artifacts/projects/example-project/LICENSE.txt",
+      },
+      guide: {
+        ...guide,
+        screenshot: {
+          ...guide.screenshot,
+          src: "/artifacts/projects/example-project/screenshot.jpg",
+        },
+      },
     } as const satisfies ProjectArtifact;
 
     expect(() => assertOpenSourceArtifacts([tool, project])).not.toThrow();
@@ -756,20 +1190,99 @@ describe("open-source artifact registry", () => {
     ).toThrow(/guide/);
   });
 
-  it("keeps every publication lane empty until a loehrning-ai repository exists", () => {
-    expect(OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES).toEqual([]);
+  it("verifies every demo frame with the lead screenshot's contract", () => {
+    const [cvEngine] = OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES;
+    const demo = cvEngine.guide.demo ?? [];
+    expect(demo).toHaveLength(4);
+    for (const step of demo) {
+      expect(step.sha256).toMatch(/^[a-f0-9]{64}$/);
+      expect(step.sourcePath).toMatch(/^docs\/screenshots\/.+\.png$/);
+      expect(step.src.startsWith("/artifacts/tools/cv-engine/demo/")).toBe(true);
+      expect(step.caption.length).toBeGreaterThan(0);
+      expect(step.alt.length).toBeGreaterThan(0);
+    }
+
+    const base = { ...cvEngine };
+    const withUnhashedFrame = {
+      ...base,
+      guide: {
+        ...base.guide,
+        demo: [{ ...demo[0], sha256: "not-a-digest" }],
+      },
+    };
+    expect(() =>
+      assertOpenSourceArtifacts([withUnhashedFrame as typeof cvEngine]),
+    ).toThrow(/guide\.demo\[0\]\.sha256/);
+
+    const withForeignFrame = {
+      ...base,
+      guide: {
+        ...base.guide,
+        demo: [{ ...demo[0], src: "https://cdn.example.com/frame.png" }],
+      },
+    };
+    expect(() =>
+      assertOpenSourceArtifacts([withForeignFrame as typeof cvEngine]),
+    ).toThrow(/guide\.demo\[0\]\.src/);
+
+    const withRepeatedLeadShot = {
+      ...base,
+      guide: {
+        ...base.guide,
+        demo: [{ ...demo[0], src: base.guide.screenshot.src }],
+      },
+    };
+    expect(() =>
+      assertOpenSourceArtifacts([withRepeatedLeadShot as typeof cvEngine]),
+    ).toThrow(/must not repeat the lead screenshot/);
+
+    const withCaptionlessFrame = {
+      ...base,
+      guide: { ...base.guide, demo: [{ ...demo[0], caption: "   " }] },
+    };
+    expect(() =>
+      assertOpenSourceArtifacts([withCaptionlessFrame as typeof cvEngine]),
+    ).toThrow(/guide\.demo\[0\]\.caption/);
+  });
+
+  it("admits exactly the pinned cv-engine tool and keeps the other lanes empty", () => {
+    // The tool lane carries its first admitted record. Every claim here is a
+    // tripwire: an accidental second entry, a slug drift, or a silently
+    // changed pin fails loudly instead of shipping.
+    expect(OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES).toHaveLength(1);
+    const [cvEngine] = OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES;
+    expect(cvEngine.id).toBe("tool:cv-engine");
+    expect(cvEngine.slug).toBe("cv-engine");
+    expect(cvEngine.href).toBe("/open-source/tools/cv-engine");
+    expect(cvEngine.source.href).toBe(
+      "https://github.com/loehrning-ai/cv-engine",
+    );
+    expect(cvEngine.source.revision).toBe(
+      "f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e",
+    );
+    expect(cvEngine.source.revisionHref).toBe(
+      "https://github.com/loehrning-ai/cv-engine/commit/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e",
+    );
+    expect(OPEN_SOURCE_ARTIFACT_CANDIDATE_REGISTRY.tool).toHaveLength(1);
+    expect(OPEN_SOURCE_ARTIFACT_CANDIDATES).toHaveLength(1);
+
+    // The record is published: it is the one entry every published view,
+    // discovery surface, and static detail route derives from.
+    expect(cvEngine.publicationLifecycle).toBe("published");
+    expect(OPEN_SOURCE_TOOL_ARTIFACTS).toHaveLength(1);
+    expect(OPEN_SOURCE_TOOL_ARTIFACTS[0]?.id).toBe("tool:cv-engine");
+    expect(OPEN_SOURCE_ARTIFACT_REGISTRY.tool).toHaveLength(1);
+    expect(OPEN_SOURCE_ARTIFACTS).toHaveLength(1);
+
+    // The project and video lanes remain deliberately empty until a
+    // loehrning-ai repository of that kind is published.
     expect(OPEN_SOURCE_PROJECT_ARTIFACT_CANDIDATES).toEqual([]);
     expect(OPEN_SOURCE_VIDEO_ARTIFACT_CANDIDATES).toEqual([]);
-    expect(OPEN_SOURCE_TOOL_ARTIFACTS).toEqual([]);
     expect(OPEN_SOURCE_PROJECT_ARTIFACTS).toEqual([]);
     expect(OPEN_SOURCE_VIDEO_ARTIFACTS).toEqual([]);
-    expect(OPEN_SOURCE_ARTIFACT_CANDIDATE_REGISTRY.tool).toHaveLength(0);
     expect(OPEN_SOURCE_ARTIFACT_CANDIDATE_REGISTRY.project).toHaveLength(0);
     expect(OPEN_SOURCE_ARTIFACT_CANDIDATE_REGISTRY.video).toHaveLength(0);
-    expect(OPEN_SOURCE_ARTIFACT_CANDIDATES).toEqual([]);
-    expect(OPEN_SOURCE_ARTIFACT_REGISTRY.tool).toHaveLength(0);
     expect(OPEN_SOURCE_ARTIFACT_REGISTRY.project).toHaveLength(0);
     expect(OPEN_SOURCE_ARTIFACT_REGISTRY.video).toHaveLength(0);
-    expect(OPEN_SOURCE_ARTIFACTS).toEqual([]);
   });
 });

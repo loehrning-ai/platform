@@ -14,14 +14,15 @@ Contributions that improve correctness, accessibility, teaching quality, tests, 
 Install with the locked toolchain and run the repository gate:
 
 ```bash
-bun install --frozen-lockfile
-bunx playwright install chromium webkit
+bun install --frozen-lockfile --ignore-scripts
+bun run --cwd packages/website playwright install chromium webkit
 bun run verify:workspace-contract
 bun run verify
 ```
 
 On a minimal Linux or CI image, install browser system dependencies with
-`bunx playwright install --with-deps chromium webkit` instead.
+`bun run --cwd packages/website playwright install --with-deps chromium webkit`
+instead.
 
 The root workspace list is an explicit security and ownership boundary. Do not replace it with `packages/*`. Every listed package must provide a non-empty `scripts.verify` command that runs without production credentials. The root runner validates all paths before executing any workspace command.
 

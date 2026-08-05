@@ -16,7 +16,7 @@ const EVIDENCE_CONFIG: Record<
 > = {
   synthetic: {
     label: "Synthetisch",
-    color: "#ea580c",
+    color: "#9a3412",
     bg: "rgba(249,115,22,0.08)",
     border: "rgba(249,115,22,0.4)",
     icon: "◆",
@@ -25,7 +25,7 @@ const EVIDENCE_CONFIG: Record<
   },
   rule_based: {
     label: "Regelbasiert",
-    color: "#2563eb",
+    color: "#1d4ed8",
     bg: "rgba(37,99,235,0.08)",
     border: "rgba(37,99,235,0.4)",
     icon: "◎",
@@ -34,7 +34,7 @@ const EVIDENCE_CONFIG: Record<
   },
   recorded_trace: {
     label: "Aufgezeichnete Spur",
-    color: "#6b7280",
+    color: "#4b5563",
     bg: "rgba(107,114,128,0.08)",
     border: "rgba(107,114,128,0.4)",
     icon: "▶",
@@ -43,7 +43,7 @@ const EVIDENCE_CONFIG: Record<
   },
   live_api: {
     label: "Live-API",
-    color: "#16a34a",
+    color: "#166534",
     bg: "rgba(22,163,74,0.08)",
     border: "rgba(22,163,74,0.4)",
     icon: "●",
@@ -119,7 +119,7 @@ export function EvidenceBadge({
               fontWeight: 700,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
-              color: "#6b7280",
+              color: "#4b5563",
               background: "rgba(107,114,128,0.08)",
               border: "1px solid rgba(107,114,128,0.3)",
             }}
@@ -153,8 +153,8 @@ export function EvidenceBadge({
             padding: "10px 12px",
             fontSize: 11,
             lineHeight: 1.6,
-            color: "#d1d5db",
-            background: "rgba(0,0,0,0.25)",
+            color: "#f3f0e9",
+            background: "#0b0908",
             border: `1px solid ${cfg.border}`,
             maxWidth: 480,
           }}

@@ -8,16 +8,15 @@
 
 import { NextResponse } from "next/server";
 
-export const dynamic = "force-static";
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export function GET() {
   return NextResponse.json(
     { status: "ok" },
     {
       headers: {
-        "Cache-Control":
-          "public, max-age=0, s-maxage=60, stale-while-revalidate=300",
+        "Cache-Control": "no-store, max-age=0",
         "X-Robots-Tag": "noindex, nofollow, noarchive",
       },
     },

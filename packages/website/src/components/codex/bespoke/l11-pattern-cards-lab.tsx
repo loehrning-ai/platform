@@ -91,7 +91,7 @@ export function L11PatternCardsLab({ lessonId, cpId }: L11PatternCardsLabProps):
                     <button
                       type="button"
                       onClick={() => sortInto(card, "proven")}
-                      className="flex-1 border border-[#22c55e] bg-[#22c55e]/10 px-1.5 py-1 font-mono text-[9.5px] font-bold uppercase text-[#22c55e]"
+                      className="flex-1 border border-risk-green bg-risk-green/10 px-1.5 py-1 font-mono text-[9.5px] font-bold uppercase text-risk-green"
                     >
                       Proven
                     </button>
@@ -119,7 +119,7 @@ export function L11PatternCardsLab({ lessonId, cpId }: L11PatternCardsLabProps):
         })}
       </div>
       {sorted.size === CARDS.length && (
-        <p className={cn("mt-4 text-center font-mono text-[13px] font-bold text-[#22c55e]")}>
+        <p className={cn("mt-4 text-center font-mono text-[13px] font-bold text-risk-green")}>
           Pattern library locked in {done ? "✓" : ""}
         </p>
       )}

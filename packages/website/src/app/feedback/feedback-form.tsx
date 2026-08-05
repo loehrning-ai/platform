@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 type Category = "inhalt" | "technik" | "lernweg" | "sonstiges";
 
 const CATEGORIES: readonly { value: Category; label: string }[] = [
@@ -12,23 +12,51 @@ const CATEGORIES: readonly { value: Category; label: string }[] = [
 
 type Status = "idle" | "sending" | "success" | "error";
 
+function feedbackContextPath(): string | undefined {
+  if (typeof window === "undefined" || typeof document === "undefined") {
+    return undefined;
+  }
+  try {
+    const referrer = new URL(document.referrer);
+    if (
+      referrer.origin === window.location.origin &&
+      referrer.pathname !== "/feedback"
+    ) {
+      return referrer.pathname;
+    }
+  } catch {
+    // Direct visits and privacy-restricted referrers intentionally have no
+    // inferred content context.
+  }
+  return undefined;
+}
+
 export function FeedbackForm() {
   const [category, setCategory] = useState<Category>("inhalt");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<Status>("idle");
+  const [validationError, setValidationError] = useState<string | null>(null);
+  const messageRef = useRef<HTMLTextAreaElement>(null);
 
   const isValid = message.trim().length >= 10;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!isValid || status === "sending") return;
+    if (status === "sending") return;
+    if (!isValid) {
+      setValidationError("Gib mindestens 10 Zeichen ein.");
+      messageRef.current?.focus();
+      return;
+    }
 
+    setValidationError(null);
     setStatus("sending");
 
-    // Submit only the path. Query strings and fragments can contain search
-    // terms, magic-link material, or other data that feedback does not need.
-    const contextUrl =
-      typeof window !== "undefined" ? window.location.pathname : undefined;
+    // The form itself always lives at /feedback. Derive the reported page only
+    // from a same-origin referrer and retain its pathname; query strings and
+    // fragments can contain search terms, magic-link material, or other data
+    // that feedback does not need.
+    const contextUrl = feedbackContextPath();
 
     try {
       const res = await fetch("/api/feedback", {
@@ -102,29 +130,59 @@ export function FeedbackForm() {
           className="mb-2 block text-sm font-semibold text-foreground"
         >
           Nachricht
-          <span className="ml-1 font-normal text-muted-foreground">
+          <span
+            id="feedback-message-requirement"
+            className="ml-1 font-normal text-muted-foreground"
+          >
             (mind. 10 Zeichen)
           </span>
         </label>
         <textarea
+          ref={messageRef}
           id="feedback-message"
+          name="message"
+          autoComplete="off"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => {
+            const nextMessage = e.target.value;
+            setMessage(nextMessage);
+            if (validationError && nextMessage.trim().length >= 10) {
+              setValidationError(null);
+            }
+          }}
           rows={6}
           maxLength={2000}
           required
           minLength={10}
-          placeholder="Was hast du bemerkt? Was könnte besser sein?"
+          aria-invalid={Boolean(validationError)}
+          aria-describedby={
+            validationError
+              ? "feedback-message-requirement feedback-message-error feedback-message-count"
+              : "feedback-message-requirement feedback-message-count"
+          }
+          placeholder="Zum Beispiel: Eine Quellenangabe ist unklar …"
           className="w-full resize-y rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         />
-        <p className="mt-1 text-right text-xs text-muted-foreground">
+        {validationError && (
+          <p
+            id="feedback-message-error"
+            role="alert"
+            className="mt-2 text-sm text-destructive"
+          >
+            {validationError}
+          </p>
+        )}
+        <p
+          id="feedback-message-count"
+          className="mt-1 text-right text-xs text-muted-foreground"
+        >
           {message.length} / 2000
         </p>
       </div>
 
       {/* Error state */}
       {status === "error" && (
-        <p role="alert" className="text-sm text-red-500">
+        <p role="alert" className="text-sm text-destructive">
           Die Rückmeldung konnte nicht gesendet werden. Bitte versuche es
           später erneut oder schreib an tim@loehrning.ai.
         </p>
@@ -133,7 +191,7 @@ export function FeedbackForm() {
       {/* Submit */}
       <button
         type="submit"
-        disabled={!isValid || status === "sending"}
+        disabled={status === "sending"}
         className={[
           "inline-flex select-none items-center justify-center rounded-lg",
           "bg-brand-orange px-7 py-3.5",

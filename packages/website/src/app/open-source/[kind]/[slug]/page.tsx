@@ -10,7 +10,14 @@ import {
   getOpenSourceArtifactByRoute,
 } from "@/lib/open-source/artifacts";
 import { absoluteUrl } from "@/lib/seo/entity";
-import { JsonLd, WEBSITE_ID } from "@/lib/seo/json-ld";
+import {
+  JsonLd,
+  ORG_ID,
+  PERSON_ID,
+  SITE_URL,
+  WEBSITE_ID,
+} from "@/lib/seo/json-ld";
+import type { JsonLdGraph } from "@/lib/seo/json-ld";
 
 type PageProps = {
   params: Promise<{ kind: string; slug: string }>;
@@ -35,6 +42,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { kind, slug } = await params;
   const artifact = getOpenSourceArtifactByRoute(kind, slug);
   if (!artifact) return {};
+
   return {
     title: artifact.title,
     description: artifact.description,
@@ -44,10 +52,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: artifact.title,
       description: artifact.description,
       url: absoluteUrl(artifact.href),
+      siteName: "loehrning.ai",
+      locale: "de_DE",
       type: artifact.kind === "video" ? "video.other" : "website",
-      ...(artifact.kind === "video"
-        ? { images: [{ url: absoluteUrl(artifact.posterSrc), alt: artifact.posterAlt }] }
-        : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: artifact.title,
+      description: artifact.description,
     },
   };
 }
@@ -59,31 +71,58 @@ export default async function OpenSourceArtifactDetailPage({ params }: PageProps
 
   const launchHref =
     artifact.kind === "video" ? artifact.watchHref : artifact.launchHref;
-  const jsonLd = {
-    "@context": "https://schema.org" as const,
-    "@type":
-      artifact.kind === "tool"
-        ? "SoftwareApplication"
-        : artifact.kind === "project"
-          ? "SoftwareSourceCode"
-          : "VideoObject",
-    name: artifact.title,
-    description: artifact.description,
-    url: absoluteUrl(artifact.href),
-    isPartOf: { "@id": WEBSITE_ID },
-    inLanguage: artifact.language === "Englisch" ? "en" : "de",
-    license: absoluteUrl(artifact.license.href),
-    codeRepository: artifact.source.href,
-    version: artifact.source.revision,
-    ...(artifact.kind === "video"
-      ? {
-          contentUrl: absoluteUrl(artifact.watchHref),
-          thumbnailUrl: absoluteUrl(artifact.posterSrc),
-          duration: artifact.duration,
-          uploadDate: artifact.datePublished,
-          transcript: absoluteUrl(artifact.transcriptHref),
-        }
-      : {}),
+  const artifactUrl = absoluteUrl(artifact.href);
+  const jsonLd: JsonLdGraph = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Start", item: SITE_URL },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Open Source",
+            item: `${SITE_URL}/open-source`,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: artifact.title,
+            item: artifactUrl,
+          },
+        ],
+      },
+      {
+        "@type":
+          artifact.kind === "tool"
+            ? "SoftwareApplication"
+            : artifact.kind === "project"
+              ? "SoftwareSourceCode"
+              : "VideoObject",
+        "@id": `${artifactUrl}#artifact`,
+        name: artifact.title,
+        description: artifact.description,
+        url: artifactUrl,
+        isPartOf: { "@id": WEBSITE_ID },
+        publisher: { "@id": ORG_ID },
+        creator: { "@id": PERSON_ID },
+        isAccessibleForFree: true,
+        inLanguage: artifact.languageTag,
+        license: absoluteUrl(artifact.license.href),
+        codeRepository: artifact.source.href,
+        version: artifact.source.revision,
+        ...(artifact.kind === "video"
+          ? {
+              contentUrl: absoluteUrl(artifact.watchHref),
+              thumbnailUrl: absoluteUrl(artifact.posterSrc),
+              duration: artifact.duration,
+              uploadDate: artifact.datePublished,
+              transcript: absoluteUrl(artifact.transcriptHref),
+            }
+          : {}),
+      },
+    ],
   };
 
   return (
@@ -136,10 +175,6 @@ export default async function OpenSourceArtifactDetailPage({ params }: PageProps
           </section>
         ) : null}
 
-        {artifact.kind === "tool" || artifact.kind === "project" ? (
-          <SoftwareArtifactGuide artifact={artifact} />
-        ) : null}
-
         <dl className="mt-10 grid gap-4 border-y border-border py-6 sm:grid-cols-3">
           <div>
             <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Sprache</dt>
@@ -152,9 +187,9 @@ export default async function OpenSourceArtifactDetailPage({ params }: PageProps
           <div>
             <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Lizenz</dt>
             <dd className="mt-2">
-              <Link href={artifact.license.href} className="font-semibold underline-offset-4 hover:underline">
+              <a href={artifact.license.href} className="font-semibold underline-offset-4 hover:underline">
                 Lizenztext
-              </Link>
+              </a>
             </dd>
           </div>
         </dl>
@@ -168,7 +203,9 @@ export default async function OpenSourceArtifactDetailPage({ params }: PageProps
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 border border-foreground px-4 py-2 text-sm font-semibold"
               >
-                Öffnen <ExternalLink size={14} aria-hidden="true" />
+                Öffnen
+                <span className="sr-only">, öffnet in neuem Tab</span>
+                <ExternalLink size={14} aria-hidden="true" />
               </a>
             ) : (
               <Link href={launchHref} className="border border-foreground px-4 py-2 text-sm font-semibold">
@@ -182,9 +219,15 @@ export default async function OpenSourceArtifactDetailPage({ params }: PageProps
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 border border-border px-4 py-2 text-sm font-semibold hover:border-brand-orange"
           >
-            Quellstand <ExternalLink size={14} aria-hidden="true" />
+            Quellstand
+            <span className="sr-only">, öffnet in neuem Tab</span>
+            <ExternalLink size={14} aria-hidden="true" />
           </a>
         </div>
+
+        {artifact.kind === "tool" || artifact.kind === "project" ? (
+          <SoftwareArtifactGuide artifact={artifact} />
+        ) : null}
       </section>
     </>
   );

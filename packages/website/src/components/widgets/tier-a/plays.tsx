@@ -95,7 +95,7 @@ export function PlaysWidget({
       <p
         className={cn(
           "mt-4 font-mono text-[11px] tracking-[0.08em]",
-          locked ? "text-[#22c55e]" : "text-muted-foreground",
+          locked ? "text-risk-green" : "text-muted-foreground",
         )}
       >
         {picked.length} / {minPick} gewählt

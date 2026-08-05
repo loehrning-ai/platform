@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import * as Sentry from "@sentry/nextjs";
 import { BrandButton } from "@/components/ui/brand-button";
+import { reportClientBoundaryError } from "@/lib/observability/client-boundary-error";
 
 export default function Error({
   error,
@@ -12,8 +12,7 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    Sentry.captureException(error);
-    if (process.env.NODE_ENV === "development") console.error("Page error:", error.message);
+    reportClientBoundaryError("app-blog", error);
   }, [error]);
 
   return (
@@ -27,6 +26,7 @@ export default function Error({
       </p>
       <div className="mt-8 flex gap-4">
         <button
+          type="button"
           onClick={() => reset()}
           className="border-2 border-border px-6 py-2.5 text-sm font-medium text-foreground transition-colors hover:border-brand-orange"
         >

@@ -87,8 +87,12 @@ export default async function KiUndGesellschaftLandingPage() {
         </p>
 
         <div className="mt-12 flex flex-wrap items-center gap-5">
-          <Link href="/ki-und-gesellschaft/kurs" className={PRIMARY_CTA}>
-            Kurs starten
+          <Link
+            href="/ki-und-gesellschaft/kurs"
+            prefetch={false}
+            className={PRIMARY_CTA}
+          >
+            Kostenlos mit Lernkonto starten
             <span aria-hidden="true">→</span>
           </Link>
           <Link href="/kurse" className={SECONDARY_CTA}>
@@ -172,8 +176,12 @@ export default async function KiUndGesellschaftLandingPage() {
         </section>
 
         <div className="mt-16 flex flex-wrap items-center gap-5">
-          <Link href="/ki-und-gesellschaft/kurs" className={PRIMARY_CTA}>
-            Kostenlosen Kurs starten
+          <Link
+            href="/ki-und-gesellschaft/kurs"
+            prefetch={false}
+            className={PRIMARY_CTA}
+          >
+            Kostenlos mit Lernkonto starten
             <span aria-hidden="true">→</span>
           </Link>
           <Link href="/ki-fuehrerschein" className={SECONDARY_CTA}>

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Panel } from "../primitives";
+import { useControllableAnimation } from "@/lib/animation-policy";
 
 // ─── ConveyorSim ──────────────────────────────────
 // Ported from `src/chapters/Ch1_5_Streaming.js`: events fall onto a
@@ -57,7 +58,7 @@ export function ConveyorSim() {
   const [dedupOn, setDedupOn] = useState(true);
   const [lateGateOn, setLateGateOn] = useState(true);
   const [beginner, setBeginner] = useState(true);
-  const [running, setRunning] = useState(true);
+  const { running, toggle: toggleRunning } = useControllableAnimation();
   const [ledger, setLedger] = useState<readonly string[]>([]);
   const [lateDrawer, setLateDrawer] = useState<readonly LateEntry[]>([]);
   const [rtCount, setRtCount] = useState(0);
@@ -446,33 +447,33 @@ export function ConveyorSim() {
         <div className="cv-sliders">
           <div className="cv-slider">
             <div className="row">
-              <span className="lab">Event rate</span>
+              <label className="lab" htmlFor="conveyor-event-rate">Event rate</label>
               <span className="val">{rate}/s</span>
             </div>
-            <input type="range" min={3} max={60} value={rate} onChange={(e) => setRate(+e.target.value)} />
+            <input id="conveyor-event-rate" type="range" min={3} max={60} value={rate} onChange={(e) => setRate(+e.target.value)} />
           </div>
           <div className="cv-slider warn">
             <div className="row">
-              <span className="lab">Duplicate %</span>
+              <label className="lab" htmlFor="conveyor-duplicate-rate">Duplicate %</label>
               <span className="val">{dupPct}%</span>
             </div>
-            <input type="range" min={0} max={45} value={dupPct} onChange={(e) => setDupPct(+e.target.value)} />
+            <input id="conveyor-duplicate-rate" type="range" min={0} max={45} value={dupPct} onChange={(e) => setDupPct(+e.target.value)} />
           </div>
           {!beginner && (
             <div className="cv-slider warn">
               <div className="row">
-                <span className="lab">Late %</span>
+                <label className="lab" htmlFor="conveyor-late-rate">Late %</label>
                 <span className="val">{latePct}%</span>
               </div>
-              <input type="range" min={0} max={35} value={latePct} onChange={(e) => setLatePct(+e.target.value)} />
+              <input id="conveyor-late-rate" type="range" min={0} max={35} value={latePct} onChange={(e) => setLatePct(+e.target.value)} />
             </div>
           )}
         </div>
         <div className="cv-btns">
-          <button className="btn btn-primary" onClick={() => setRunning((r) => !r)}>
+          <button type="button" className="btn btn-primary" onClick={toggleRunning}>
             {running ? "⏸ Pause" : "▶ Resume"}
           </button>
-          <button className="btn" onClick={reset}>
+          <button type="button" className="btn" onClick={reset}>
             ↻ Reset
           </button>
         </div>

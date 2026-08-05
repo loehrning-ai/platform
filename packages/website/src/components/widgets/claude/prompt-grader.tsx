@@ -94,7 +94,7 @@ export function PromptGraderWidget({
             <div className="text-[13px] leading-[1.5]">
               {result.strengths.length > 0 && (
                 <div className="mb-2">
-                  <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.1em] text-[#22c55e]">
+                  <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.1em] text-risk-green">
                     strengths
                   </p>
                   <ul className="mt-1 list-disc pl-4">

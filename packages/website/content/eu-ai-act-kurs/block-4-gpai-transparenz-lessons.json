@@ -270,7 +270,7 @@
       "keyConcepts": [
         "Organisationspflicht (keine Individualpflicht)",
         "Anbieter und Betreiber als Adressaten",
-        "Ausreichendes Maß an KI-Kompetenz",
+        "Kontextgerechte KI-Kompetenzmaßnahmen",
         "Dokumentations- und Nachweislast",
         "Schulungsprogramm mit Rollendifferenzierung",
         "Lieferanten-Compliance"
@@ -280,8 +280,8 @@
           "id": "block_4_lesson_3_section_1",
           "title": "Wortlaut und Reichweite von Art. 4",
           "readTimeMinutes": 2,
-          "content": "Art. 4 Abs. 1 KI-VO verpflichtet **Anbieter und Betreiber** von KI-Systemen, Maßnahmen zu ergreifen, damit ihr Personal und andere beauftragte Personen über ein **ausreichendes Maß an KI-Kompetenz** verfügen. Dabei zu berücksichtigen sind technische Kenntnisse, Erfahrung, Ausbildung sowie der Einsatzkontext.\n\n**Adressat ist die Organisation, nicht der einzelne Mitarbeiter.** Das ist eine Organisationspflicht, vergleichbar mit Arbeitsschutz oder Art. 32 DSGVO.\n\n**Erwägungsgrund 20** erläutert den Zweck: KI-Kompetenz soll Anbieter, Betreiber und Betroffene befähigen, fundierte Entscheidungen über KI-Systeme entlang der gesamten KI-Wertschöpfungskette zu treffen.\n\nDie Legaldefinition in **Art. 3 Nr. 56** beschreibt KI-Kompetenz als Fähigkeiten, Kenntnisse und Verständnis, die es ermöglichen, KI-Systeme sachkundig einzusetzen sowie sich der Chancen und Risiken bewusst zu werden.\n\n**Anwendbar seit 2. Februar 2025** (Art. 113 Buchst. a). Die KI-VO nennt keinen starren Zertifikatsstandard für Art. 4. Organisationen sollten deshalb nachvollziehbar dokumentieren, welche rollen- und risikogerechten Maßnahmen sie gewählt haben.\n\nIn der Praxis empfehlen Praktiker:innen, KI-Kompetenz als Daueraufgabe zu verstehen, nicht als einmaliges Schulungsprojekt.",
-          "keyTakeaway": "Art. 4 ist Organisationspflicht, nicht Individualpflicht. Adressat: Anbieter und Betreiber. Seit 2. Februar 2025 anwendbar; die konkrete Umsetzung muss rollen- und kontextgerecht dokumentiert werden."
+          "content": "Art. 4 Abs. 1 KI-VO verpflichtet **Anbieter und Betreiber** von KI-Systemen, Maßnahmen zu ergreifen, die die Entwicklung der KI-Kompetenz ihres Personals und anderer in ihrem Auftrag handelnder Personen unterstützen. Zu berücksichtigen sind technische Kenntnisse, Erfahrung, Ausbildung, Einsatzkontext sowie die Personen oder Gruppen, bei denen die Systeme eingesetzt werden.\n\nDie am **27. Juli 2026** in Kraft getretene Verordnung (EU) 2026/1744 stellt ausdrücklich klar: Anbieter und Betreiber müssen **kein bestimmtes individuelles Kompetenzniveau garantieren**. Die Pflicht zu unterstützenden, kontextgerechten Maßnahmen bleibt bestehen.\n\n**Adressat ist die Organisation, nicht der einzelne Mitarbeiter.** Die Legaldefinition in **Art. 3 Nr. 56** beschreibt KI-Kompetenz als Fähigkeiten, Kenntnisse und Verständnis, die es ermöglichen, KI-Systeme sachkundig einzusetzen sowie sich der Chancen und Risiken bewusst zu werden.\n\n**Anwendbar seit 2. Februar 2025.** Die KI-VO nennt keinen Zertifikatsstandard für Art. 4. Organisationen sollten nachvollziehbar dokumentieren, welche rollen- und risikogerechten Maßnahmen sie gewählt haben. Ein einzelner Kurs erfüllt die Pflicht nicht automatisch.",
+          "keyTakeaway": "Art. 4 verpflichtet Anbieter und Betreiber zu kontextgerechten Maßnahmen, die KI-Kompetenz entwickeln. Seit 27. Juli 2026 ist klargestellt, dass kein bestimmtes individuelles Niveau garantiert werden muss."
         },
         {
           "id": "block_4_lesson_3_section_2",
@@ -351,7 +351,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Eine Einheits-Schulung ohne Bedarfsanalyse, Rollendifferenzierung und Dokumentation entspricht nicht dem ausreichenden Maß im Sinne von Art. 4 in Verbindung mit Erwägungsgrund 20. Art. 4 verlangt eine organisationale Antwort, nicht einen isolierten Kurs."
+          "explanation": "Eine Einheits-Schulung ohne Bedarfsanalyse, Rollendifferenzierung und Dokumentation bildet den Einsatzkontext nicht ab. Art. 4 verlangt unterstützende Maßnahmen auf Organisationsebene, nicht einen isolierten Kurs oder ein garantiertes individuelles Kompetenzniveau."
         },
         {
           "id": "block_4_lesson_3_q3",
@@ -364,7 +364,7 @@
             },
             {
               "id": "b",
-              "text": "Art. 4 gilt seit 2. Februar 2025; die nationale Aufsicht beginnt nach der Kommissions-FAQ am 2. August 2026",
+              "text": "Art. 4 gilt seit 2. Februar 2025; die nationale Aufsicht und Durchsetzung beginnen nach der Kommissions-FAQ Anfang August 2026",
               "isCorrect": true
             },
             {
@@ -378,7 +378,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 4 ist nach Art. 113 Buchst. a seit 2. Februar 2025 anwendbar. Die Kommissions-FAQ nennt den 2. August 2026 für den Beginn der nationalen Aufsicht und Durchsetzung. Diese Aussage ist enger als die Behauptung, Art. 99 verhänge für jeden Art.-4-Verstoß automatisch 15 Mio. EUR oder 3 Prozent."
+          "explanation": "Art. 4 ist seit 2. Februar 2025 anwendbar und wurde durch Verordnung (EU) 2026/1744 mit Wirkung zum 27. Juli 2026 geändert. Die Kommissions-FAQ nennt Anfang August 2026 für den Beginn der nationalen Aufsicht und Durchsetzung. Art. 99 verhängt nicht automatisch für jeden Art.-4-Verstoß 15 Mio. EUR oder 3 Prozent."
         }
       ]
     },

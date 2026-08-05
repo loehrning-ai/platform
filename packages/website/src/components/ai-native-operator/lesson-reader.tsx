@@ -1,10 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, type JSX } from "react";
+import { useEffect, useMemo, useState, type JSX } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, GraduationCap } from "lucide-react";
 import { RenderWidget, resolveWidgetsForSlot } from "@/components/widgets/registry";
-import { markLessonCompleted } from "@/lib/progress";
+import {
+  isCheckpointDone,
+  isLessonCompleted,
+  markLessonCompleted,
+  subscribe,
+} from "@/lib/progress";
 import { MODULE_META } from "@/lib/ai-native-operator/types";
 import { courseHref } from "@/lib/ai-native-operator/routes";
 import { Callout } from "./callout";
@@ -16,6 +21,70 @@ interface AiNativeOperatorLessonReaderProps {
   readonly prevHref: string | null;
   readonly prevTitle: string | null;
   readonly next: NextTarget;
+}
+
+/**
+ * LessonCompletionButton — owns the reader's progress-readiness state.
+ *
+ * This is deliberately a separate component. The store subscription flips
+ * `readyLessonId` from null to the current lesson right after hydration, and
+ * that is a real state change rather than a no-op bail-out. Keeping it in the
+ * reader would re-render the reader's `<article>`, whose widgets render inside
+ * a `React.lazy` Suspense boundary; re-rendering a boundary that has not
+ * finished hydrating leaves the server markup in place and mounts a second
+ * client copy, so the lesson's exercise prompt appears twice (reproduced on
+ * Chromium). Scoping the state here keeps that re-render to the button alone.
+ *
+ * The server and first client render both take the "not ready" branch, so the
+ * control is disabled and `aria-busy` in the server markup and hydrates
+ * without a mismatch.
+ */
+function LessonCompletionButton({
+  lesson,
+}: {
+  readonly lesson: AiNativeOperatorLesson;
+}): JSX.Element {
+  const [completed, setCompleted] = useState(false);
+  const [quizReady, setQuizReady] = useState(lesson.kind !== "quiz");
+  const [readyLessonId, setReadyLessonId] = useState<string | null>(null);
+
+  useEffect(
+    () =>
+      subscribe(() => {
+        setCompleted(isLessonCompleted("ai-native-operator", lesson.id));
+        setQuizReady(
+          lesson.kind !== "quiz" ||
+            lesson.quiz.every((question) =>
+              isCheckpointDone(lesson.id, question.id),
+            ),
+        );
+        setReadyLessonId(lesson.id);
+      }),
+    [lesson],
+  );
+
+  const progressReady = readyLessonId === lesson.id;
+  const lessonCompleted = progressReady && completed;
+  const canCompleteLesson = progressReady && quizReady;
+
+  return (
+    <button
+      type="button"
+      onClick={() => markLessonCompleted("ai-native-operator", lesson.id)}
+      disabled={lessonCompleted || !canCompleteLesson}
+      aria-busy={!progressReady || undefined}
+      aria-pressed={lessonCompleted}
+      className="inline-flex min-h-11 items-center border-2 border-foreground px-5 text-[12px] font-bold uppercase tracking-wide text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      {!progressReady
+        ? "Loading progress"
+        : lessonCompleted
+          ? "Lesson completed"
+          : canCompleteLesson
+            ? "Complete lesson"
+            : "Answer every question correctly first"}
+    </button>
+  );
 }
 
 /**
@@ -41,18 +110,8 @@ export function AiNativeOperatorLessonReader({
   const widgets = useMemo(() => lesson.widgets ?? [], [lesson.widgets]);
   const endWidgets = useMemo(() => resolveWidgetsForSlot(widgets, "end"), [widgets]);
 
-  // Lesson-visit completion: mark done unconditionally on
-  // mount, matching the source's own `useEffect(() => markDone(...), [...])`
-  // in LessonView (course-app.js:82-84) — completion here tracks "visited",
-  // not "read every section" or "answered the quiz correctly". The
-  // '{moduleId}/{lessonNum}' key format matches lesson.id exactly (see
-  // lessonProgressKey in lib/ai-native-operator/types.ts).
-  useEffect(() => {
-    markLessonCompleted("ai-native-operator", lesson.id);
-  }, [lesson.id]);
-
   const nextIcon =
-    next.kind === "course-complete" ? (
+    next.kind === "final-assessment" ? (
       <GraduationCap className="h-4 w-4" aria-hidden="true" />
     ) : (
       <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -133,7 +192,11 @@ export function AiNativeOperatorLessonReader({
         </article>
       )}
 
-      <nav className="mt-10 flex items-center justify-between gap-4 border-t border-border pt-6">
+      <div className="mt-10 border-t border-border pt-6">
+        <LessonCompletionButton lesson={lesson} />
+      </div>
+
+      <nav className="mt-6 flex items-center justify-between gap-4">
         {prevHref ? (
           <Link
             href={prevHref}

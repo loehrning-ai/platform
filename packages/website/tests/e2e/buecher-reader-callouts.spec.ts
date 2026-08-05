@@ -40,13 +40,7 @@ function collectConsoleErrors(page: Page): string[] {
 }
 
 function meaningfulErrors(errors: string[]): string[] {
-  return errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e),
-  );
+  return errors;
 }
 
 test.describe("book reader callouts", () => {

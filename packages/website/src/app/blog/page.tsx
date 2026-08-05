@@ -1,16 +1,20 @@
 import Link from "next/link";
-import type { Metadata } from "next";
 
 import { Dateline } from "./_components/dateline";
 import { Runline } from "./_components/runline";
 import { BLOG_POSTS, BLOG_LAST_MODIFIED } from "@/lib/blog-metadata";
+import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
 
-export const metadata: Metadata = {
-  title: { absolute: "Blog | loehrning.ai" },
-  description:
-    "Lange, nachprüfbare Texte über KI im Alltag, EU AI Act und KI in der Gesellschaft, für die breite deutschsprachige Öffentlichkeit.",
-  alternates: { canonical: "/blog" },
-};
+const BLOG_TITLE = "Blog | loehrning.ai";
+const BLOG_DESCRIPTION =
+  "Lange, nachprüfbare Texte über KI im Alltag, EU AI Act und KI in der Gesellschaft, für die breite deutschsprachige Öffentlichkeit.";
+
+export const metadata = createPublicPageMetadata({
+  title: BLOG_TITLE,
+  documentTitle: { absolute: BLOG_TITLE },
+  description: BLOG_DESCRIPTION,
+  path: "/blog",
+});
 
 // Runline items from the manifest — no hardcoded post titles
 const runItems = [

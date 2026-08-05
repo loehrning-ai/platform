@@ -23,6 +23,12 @@ vi.mock("./demo-component-registry", () => ({
 }));
 
 vi.mock("@/lib/analytics", () => ({
+  DEMO_OPEN_SOURCES: [
+    "gallery",
+    "deeplink",
+    "share",
+    "next-demo",
+  ],
   trackDemoOpen: vi.fn(),
 }));
 
@@ -40,6 +46,7 @@ const mockedGetComponent = vi.mocked(getDemoComponent);
 describe("<DemoShell>", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    window.history.replaceState(null, "", "/demos/excel");
     mockedGetComponent.mockReturnValue(() => <div>DEMO BODY</div>);
   });
 
@@ -53,9 +60,32 @@ describe("<DemoShell>", () => {
     expect(trackDemoOpen).toHaveBeenCalledWith("excel", "deeplink");
   });
 
-  it("passes an explicit source through as the analytics origin", () => {
-    render(<DemoShell demo={excel} source="gallery" />);
+  it("reads the gallery origin from the browser query", () => {
+    window.history.replaceState(null, "", "/demos/excel?source=gallery");
+    render(<DemoShell demo={excel} />);
     expect(trackDemoOpen).toHaveBeenCalledWith("excel", "gallery");
+  });
+
+  it("reads a valid source from the browser query without making the page dynamic", () => {
+    window.history.replaceState(null, "", "/demos/excel?source=share");
+    render(<DemoShell demo={excel} />);
+    expect(trackDemoOpen).toHaveBeenCalledWith("excel", "share");
+  });
+
+  it("attributes navigation from another demo without calling it gallery traffic", () => {
+    window.history.replaceState(null, "", "/demos/excel?source=next-demo");
+    render(<DemoShell demo={excel} />);
+    expect(trackDemoOpen).toHaveBeenCalledWith("excel", "next-demo");
+  });
+
+  it("rejects an unrecognized query source and uses deeplink", () => {
+    window.history.replaceState(
+      null,
+      "",
+      "/demos/excel?source=untrusted-value",
+    );
+    render(<DemoShell demo={excel} />);
+    expect(trackDemoOpen).toHaveBeenCalledWith("excel", "deeplink");
   });
 
   it("renders the component resolved from the registry", () => {
@@ -77,13 +107,15 @@ describe("<DemoShell>", () => {
     const { container } = render(<DemoShell demo={excel} />);
     const shell = container.firstChild as HTMLElement;
     expect(shell.className).toContain("bg-background");
-    expect(shell.className).not.toContain("bg-foreground");
+    expect(shell.className).not.toContain("dark-section");
   });
 
-  it("applies the dark surface classes for a dark demo", () => {
+  it("scopes accessible colour tokens for a dark demo", () => {
     const { container } = render(<DemoShell demo={agent} />);
     const shell = container.firstChild as HTMLElement;
-    expect(shell.className).toContain("bg-foreground");
+    expect(shell.className).toContain("dark-section");
+    expect(shell.className).toContain("border-border");
+    expect(shell.className).not.toContain("bg-foreground");
     expect(shell.className).not.toContain("bg-background");
   });
 

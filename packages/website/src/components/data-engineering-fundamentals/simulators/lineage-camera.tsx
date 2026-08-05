@@ -92,8 +92,23 @@ export function LineageCamera() {
                     ? "var(--theme-blue)"
                     : "var(--theme-gray-300)";
             return (
-              <g key={id} style={{ cursor: "pointer", opacity: on ? 1 : 0.4, transition: "opacity 280ms cubic-bezier(0.32,0.72,0,1)" }} onClick={() => setFocus(id)}>
-                <rect x={n.x - 62} y={n.y - 22} width={124} height={46} rx={9} fill={fill} stroke={stroke} strokeWidth={isFocus ? 2.5 : 1.5} />
+              <g
+                key={id}
+                className="lineage-node"
+                role="button"
+                tabIndex={0}
+                aria-label={`Focus lineage on ${n.label}`}
+                aria-pressed={isFocus}
+                style={{ cursor: "pointer", opacity: on ? 1 : 0.4, transition: "opacity 280ms cubic-bezier(0.32,0.72,0,1)" }}
+                onClick={() => setFocus(id)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    setFocus(id);
+                  }
+                }}
+              >
+                <rect className="lineage-node-shape" x={n.x - 62} y={n.y - 22} width={124} height={46} rx={9} fill={fill} stroke={stroke} strokeWidth={isFocus ? 2.5 : 1.5} />
                 <text x={n.x} y={n.y - 2} textAnchor="middle" style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 700, fill: "var(--fg-1)" }}>
                   {n.label}
                 </text>

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Panel } from "../primitives";
+import { useControllableAnimation } from "@/lib/animation-policy";
 
 // ─── ShuffleSim ───────────────────────────────────
 // Ported from `src/chapters/Ch3_Compute.js`: hash vs broadcast join, key
@@ -20,7 +21,7 @@ export function ShuffleSim() {
   const [skew, setSkew] = useState(20);
   const [workers, setWorkers] = useState(6);
   const [strategy, setStrategy] = useState<Strategy>("hash");
-  const [running, setRunning] = useState(true);
+  const { running, toggle: toggleRunning } = useControllableAnimation();
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
@@ -190,32 +191,32 @@ export function ShuffleSim() {
       <div className="ctl-row">
         <div className="ctl-slider" style={{ flex: 1.2 }}>
           <div className="row">
-            <span className="lab">Key skew</span>
+            <label className="lab" htmlFor="shuffle-key-skew">Key skew</label>
             <span className="val">{skew}%</span>
           </div>
-          <input type="range" min={0} max={90} step={1} value={skew} onChange={(e) => setSkew(+e.target.value)} />
+          <input id="shuffle-key-skew" type="range" min={0} max={90} step={1} value={skew} onChange={(e) => setSkew(+e.target.value)} />
           <span className="hint">% of rows landing on the hot key</span>
         </div>
         <div className="ctl-slider" style={{ flex: 1 }}>
           <div className="row">
-            <span className="lab">Workers</span>
+            <label className="lab" htmlFor="shuffle-workers">Workers</label>
             <span className="val">{workers}</span>
           </div>
-          <input type="range" min={2} max={12} step={1} value={workers} onChange={(e) => setWorkers(+e.target.value)} />
+          <input id="shuffle-workers" type="range" min={2} max={12} step={1} value={workers} onChange={(e) => setWorkers(+e.target.value)} />
           <span className="hint">parallelism</span>
         </div>
         <div className="ctl-group">
           <div className="ctl-lab">Join strategy</div>
           <div className="pill-row">
-            <button className={`pill ${strategy === "hash" ? "on" : ""}`} onClick={() => setStrategy("hash")}>
+            <button type="button" className={`pill ${strategy === "hash" ? "on" : ""}`} onClick={() => setStrategy("hash")}>
               Hash
             </button>
-            <button className={`pill ${strategy === "broadcast" ? "on" : ""}`} onClick={() => setStrategy("broadcast")}>
+            <button type="button" className={`pill ${strategy === "broadcast" ? "on" : ""}`} onClick={() => setStrategy("broadcast")}>
               Broadcast
             </button>
           </div>
         </div>
-        <button className="btn" onClick={() => setRunning((r) => !r)}>
+        <button type="button" className="btn" onClick={toggleRunning}>
           {running ? "⏸ Pause" : "▶ Run"}
         </button>
       </div>

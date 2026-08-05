@@ -88,11 +88,11 @@ describe("crawl contract completeness (fail closed)", () => {
     ).toEqual([]);
   });
 
-  it("classifies book chapter readers as indexable but deliberately out of the sitemap", () => {
+  it("classifies book chapter readers as indexable sitemap entries", () => {
     const entry = getCrawlRoute("/buecher/ki-landschaft/01-einleitung");
     expect(entry.pattern).toBe("/buecher/:slug/:chapter");
     expect(entry.routeClass).toBe("public-indexable");
-    expect(entry.includeInSitemap).toBe(false);
+    expect(entry.includeInSitemap).toBe(true);
     expect(entry.robots).toBe("allow");
     expect(entry.xRobotsTag).toBeUndefined();
   });

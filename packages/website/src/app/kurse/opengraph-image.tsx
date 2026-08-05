@@ -1,25 +1,16 @@
 import { ImageResponse } from "next/og";
-import { COURSE_CATALOG } from "@/lib/courses/catalog";
-import { courseFacts } from "@/lib/courses/tracks";
-
-const SPINE_COURSE_COUNT = COURSE_CATALOG.filter(
-  (course) => courseFacts(course.slug).group === "spine",
-).length;
-const DEEPER_COURSE_COUNT = COURSE_CATALOG.filter(
-  (course) => courseFacts(course.slug).group === "deeper",
-).length;
 
 export const runtime = "edge";
 export const alt =
-  `loehrning.ai Kurse: ${SPINE_COURSE_COUNT} deutsche Lernpfad-Kurse und ${DEEPER_COURSE_COUNT} englische technische Vertiefungen`;
+  "loehrning.ai Kurse: vier deutsche Kernkurse und sechs Technikkurse auf Englisch";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 const labels = [
-  `${SPINE_COURSE_COUNT} deutsche Kurse`,
-  `${DEEPER_COURSE_COUNT} englische Kurse`,
-  "Fortschritt",
-  "Abschlussnachweise",
+  "KI-Führerschein",
+  "KI und Gesellschaft",
+  "EU AI Act Kurs",
+  "AI-Native Arbeitskurs",
 ];
 
 export default function Image() {
@@ -72,8 +63,8 @@ export default function Image() {
               maxWidth: 900,
             }}
           >
-            {SPINE_COURSE_COUNT} deutsche Lernpfad-Kurse plus{" "}
-            {DEEPER_COURSE_COUNT} native technische Vertiefungen auf Englisch.
+            Vier deutsche Kernkurse mit Lernkonto und Abschlussnachweis, dazu
+            sechs öffentliche technische Kurse auf Englisch.
           </div>
         </div>
 

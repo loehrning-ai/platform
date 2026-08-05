@@ -6,6 +6,7 @@ import type {
   SoftwareArtifactProcedure,
   ToolArtifact,
 } from "@/lib/open-source/artifacts";
+import { CommandCopyButton } from "./command-copy-button";
 import { STATUS_LABELS } from "./status-labels";
 
 function Procedure({
@@ -40,9 +41,20 @@ function Procedure({
                 {step.detail}
               </p>
               {step.command ? (
-                <pre className="mt-3 overflow-x-auto border border-border bg-card p-3 text-sm">
-                  <code>{step.command}</code>
-                </pre>
+                <div className="mt-3 border border-border bg-card">
+                  <div className="flex justify-end border-b border-border p-1.5">
+                    <CommandCopyButton
+                      command={step.command}
+                      label={`Befehl für ${step.title}`}
+                    />
+                  </div>
+                  <pre
+                    aria-label={`Befehl für ${step.title}`}
+                    className="whitespace-pre-wrap break-words p-3 text-sm"
+                  >
+                    <code>{step.command}</code>
+                  </pre>
+                </div>
               ) : null}
             </div>
           </li>
@@ -82,19 +94,94 @@ export function SoftwareArtifactGuide({
         </p>
       </section>
 
-      <figure>
+      <section
+        className="border-b border-border pb-8"
+        aria-labelledby={`${idPrefix}-data-flow`}
+      >
+        <h2
+          id={`${idPrefix}-data-flow`}
+          className="text-2xl font-bold tracking-[-0.03em]"
+        >
+          Datenfluss
+        </h2>
+        <p className="mt-3 leading-relaxed text-muted-foreground">
+          {guide.dataFlow}
+        </p>
+      </section>
+
+      <figure aria-labelledby={`${idPrefix}-screenshot-caption`}>
         <Image
           src={guide.screenshot.src}
-          alt={guide.screenshot.alt}
+          alt=""
           width={guide.screenshot.width}
           height={guide.screenshot.height}
           sizes="(min-width: 896px) 848px, calc(100vw - 48px)"
           className="h-auto w-full border border-border bg-card object-contain"
         />
-        <figcaption className="mt-2 text-sm text-muted-foreground">
+        <figcaption
+          id={`${idPrefix}-screenshot-caption`}
+          className="mt-2 text-sm text-muted-foreground"
+        >
           {guide.screenshot.alt}
         </figcaption>
       </figure>
+
+      {guide.demo && guide.demo.length > 0 ? (
+        <section
+          className="border-t border-border pt-8"
+          aria-labelledby={`${idPrefix}-demo`}
+        >
+          <h2
+            id={`${idPrefix}-demo`}
+            className="text-2xl font-bold tracking-[-0.03em]"
+          >
+            Kurzdemo
+          </h2>
+          <p className="mt-3 leading-relaxed text-muted-foreground">
+            Vier Aufnahmen aus dem Werkzeug, in der Reihenfolge, in der du es
+            benutzt. Alle stammen aus dem gepinnten Quellstand.
+          </p>
+          <ol className="mt-6 space-y-8">
+            {guide.demo.map((step, index) => (
+              <li key={step.src}>
+                <figure aria-labelledby={`${idPrefix}-demo-${index}-caption`}>
+                  {/* The figcaption is a direct child of its figure, as the
+                      HTML content model requires: a nested one would not be
+                      the figure's caption at all. The frame number lives
+                      inside it and is aria-hidden, so it is skipped when the
+                      accessible name is computed from this element. */}
+                  <figcaption
+                    id={`${idPrefix}-demo-${index}-caption`}
+                    className="flex items-baseline gap-3 text-[15px] font-semibold leading-snug text-foreground"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="font-mono text-[11px] font-bold text-brand-orange"
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span>{step.caption}</span>
+                  </figcaption>
+                  {/* Empty alt: the caption above already labels the figure,
+                      and the descriptive alt text is rendered below it, so a
+                      screen reader hears each frame described exactly once. */}
+                  <Image
+                    src={step.src}
+                    alt=""
+                    width={step.width}
+                    height={step.height}
+                    sizes="(min-width: 896px) 848px, calc(100vw - 48px)"
+                    className="mt-3 h-auto w-full border border-border bg-card object-contain"
+                  />
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {step.alt}
+                  </p>
+                </figure>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ) : null}
 
       <section
         className="border-t border-border pt-8"
@@ -119,6 +206,9 @@ export function SoftwareArtifactGuide({
                       className="inline-flex items-center gap-1 underline-offset-4 hover:underline"
                     >
                       {prerequisite.label}
+                      <span className="sr-only">
+                        , öffnet in neuem Tab
+                      </span>
                       <ExternalLink size={13} aria-hidden="true" />
                     </a>
                   ) : (
@@ -190,9 +280,20 @@ export function SoftwareArtifactGuide({
                 {step.detail}
               </p>
               {step.command ? (
-                <pre className="mt-3 overflow-x-auto border border-border bg-card p-3 text-sm">
-                  <code>{step.command}</code>
-                </pre>
+                <div className="mt-3 border border-border bg-card">
+                  <div className="flex justify-end border-b border-border p-1.5">
+                    <CommandCopyButton
+                      command={step.command}
+                      label={`Befehl für ${step.title}`}
+                    />
+                  </div>
+                  <pre
+                    aria-label={`Befehl für ${step.title}`}
+                    className="whitespace-pre-wrap break-words p-3 text-sm"
+                  >
+                    <code>{step.command}</code>
+                  </pre>
+                </div>
               ) : null}
             </li>
           ))}
@@ -218,6 +319,7 @@ export function SoftwareArtifactGuide({
               className="mt-4 inline-flex items-center gap-1 font-semibold underline-offset-4 hover:underline"
             >
               {guide.documentation.label}
+              <span className="sr-only">, öffnet in neuem Tab</span>
               <ExternalLink size={14} aria-hidden="true" />
             </a>
           ) : (

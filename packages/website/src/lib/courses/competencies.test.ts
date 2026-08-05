@@ -13,6 +13,7 @@ import type {
   UnifiedProgress,
 } from "@/lib/progress/types";
 import type { CourseSlug } from "@/lib/course/types";
+import { CANONICAL_LESSON_IDS } from "./completion";
 
 /**
  * competencies.test.ts — pins the honest "earned skills" contract:
@@ -46,11 +47,34 @@ function progressWith(
   };
 }
 
+function completedLessons(slug: CourseSlug): UnifiedCourseSlice["lessons"] {
+  return Object.fromEntries(
+    CANONICAL_LESSON_IDS[slug].map((lessonId) => [
+      lessonId,
+      {
+        sectionsRead: [],
+        quizScore: null,
+        quizTotal: null,
+        completed: true,
+        exercisesCompleted: {},
+      },
+    ]),
+  );
+}
+
+function competenciesFor(slug: CourseSlug) {
+  const competencies = COURSE_COMPETENCIES[slug];
+  if (!competencies) {
+    throw new Error(`missing competencies for ${slug}`);
+  }
+  return competencies;
+}
+
 describe("earned competencies", () => {
   it("grants competencies to every certified course, and only those", () => {
     for (const course of COURSE_CATALOG) {
       expect(
-        COURSE_COMPETENCIES[course.slug].length,
+        competenciesFor(course.slug).length,
         `no competencies for ${course.slug}`,
       ).toBeGreaterThan(0);
     }
@@ -88,42 +112,78 @@ describe("earned competencies", () => {
     expect(earnedCompetencies(started)).toEqual([]);
   });
 
-  it("grants a course's competencies once its workshop quiz passes", () => {
+  it("grants records and competencies through complete canonical lesson paths", () => {
+    for (const slug of [
+      "data-engineering-fundamentals",
+      "data-science",
+    ] as const) {
+      const completed = progressWith({
+        [slug]: slice({
+          lessons: Object.fromEntries(
+            CANONICAL_LESSON_IDS[slug].map((lessonId) => [
+              lessonId,
+              {
+                sectionsRead: [],
+                quizScore: null,
+                quizTotal: null,
+                completed: true,
+                exercisesCompleted: {},
+              },
+            ]),
+          ),
+        }),
+      });
+      expect(isCourseRecordEarned(completed, slug)).toBe(true);
+      expect(earnedCompetencies(completed)).toHaveLength(
+        competenciesFor(slug).length,
+      );
+    }
+  });
+
+  it("grants a course's competencies after all lessons and its workshop quiz", () => {
     const passed = progressWith({
       "eu-ai-act-kurs": slice({
+        lessons: completedLessons("eu-ai-act-kurs"),
         workshopQuiz: { passed: true, score: 0.9, completedAt: "2026-01-02T00:00:00.000Z" },
       }),
     });
     expect(isCourseRecordEarned(passed, "eu-ai-act-kurs")).toBe(true);
     const earned = earnedCompetencies(passed);
     expect(earned.map((c) => c.id)).toEqual(
-      COURSE_COMPETENCIES["eu-ai-act-kurs"].map((c) => c.id),
+      competenciesFor("eu-ai-act-kurs").map((c) => c.id),
     );
     expect(earned.every((c) => c.courseSlug === "eu-ai-act-kurs")).toBe(true);
     expect(earned[0].courseTitle).toBe("EU AI Act Kurs");
   });
 
-  it("grants AI-Native competencies via the capstone path", () => {
+  it("grants AI-Native competencies after all lessons via the capstone path", () => {
     const capstone = progressWith({
-      "ai-native": slice({ capstoneSubmitted: true }),
+      "ai-native": slice({
+        lessons: completedLessons("ai-native"),
+        capstoneSubmitted: true,
+      }),
     });
     expect(isCourseRecordEarned(capstone, "ai-native")).toBe(true);
     expect(earnedCompetencies(capstone)).toHaveLength(
-      COURSE_COMPETENCIES["ai-native"].length,
+      competenciesFor("ai-native").length,
     );
   });
 
   it("accumulates competencies across multiple completed courses, in course order", () => {
     const both = progressWith({
       "ki-fuehrerschein": slice({
+        lessons: completedLessons("ki-fuehrerschein"),
         workshopQuiz: { passed: true, score: 0.8, completedAt: "x" },
       }),
-      "ai-native": slice({ capstoneSubmitted: true }),
+      "ai-native": slice({
+        lessons: completedLessons("ai-native"),
+        capstoneSubmitted: true,
+      }),
     });
     const earned = earnedCompetencies(both);
     const expected =
-      COURSE_COMPETENCIES["ki-fuehrerschein"].length +
-      COURSE_COMPETENCIES["ai-native"].length;
+      competenciesFor("ki-fuehrerschein").length +
+      competenciesFor("ai-native").length;
     expect(earned).toHaveLength(expected);
     // ki-fuehrerschein (catalog step 1) comes before ai-native (step 4)
     expect(earned[0].courseSlug).toBe("ki-fuehrerschein");

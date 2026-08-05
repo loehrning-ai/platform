@@ -25,14 +25,14 @@ export type RunConsoleTone = "default" | "bad" | "ok" | "amber";
 const TONE_BORDER: Record<RunConsoleTone, string> = {
   default: "border-border",
   bad: "border-destructive",
-  ok: "border-[#22c55e]",
+  ok: "border-risk-green",
   amber: "border-brand-amber",
 };
 
 const TONE_DOT: Record<RunConsoleTone, string> = {
   default: "bg-border",
   bad: "bg-destructive",
-  ok: "bg-[#22c55e]",
+  ok: "bg-risk-green",
   amber: "bg-brand-amber",
 };
 

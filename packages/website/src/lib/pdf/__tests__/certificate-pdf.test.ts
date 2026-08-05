@@ -13,7 +13,9 @@ import { AI_NATIVE_CONFIG, CLAUDE_CONFIG, KI_FUEHRERSCHEIN_CONFIG } from "@/lib/
 import { generateCertificatePdf, type CertificateData } from "../certificate-pdf";
 
 const { qrToDataUrlMock } = vi.hoisted(() => ({
-  qrToDataUrlMock: vi.fn(async () => "data:image/png;base64,QUFB"),
+  qrToDataUrlMock: vi.fn<
+    (text: string, options?: unknown) => Promise<string>
+  >(async () => "data:image/png;base64,QUFB"),
 }));
 
 vi.mock("jspdf", () => {
@@ -22,6 +24,9 @@ vi.mock("jspdf", () => {
     rect(): void {}
     setFont(): void {}
     setFontSize(): void {}
+    splitTextToSize(text: string): string[] {
+      return [text];
+    }
     setTextColor(): void {}
     setDrawColor(): void {}
     setLineWidth(): void {}
@@ -54,9 +59,11 @@ function makeData(overrides: Partial<CertificateData> = {}): CertificateData {
 
 /** URL handed to the QR encoder on the last generate call. */
 function lastQrUrl(): string {
-  const url = qrToDataUrlMock.mock.calls.at(-1)?.[0];
-  expect(typeof url).toBe("string");
-  return url as unknown as string;
+  const call = qrToDataUrlMock.mock.calls.at(-1);
+  if (!call) {
+    throw new Error("expected the QR encoder to be called");
+  }
+  return call[0];
 }
 
 /** Mirror of VerificationPage's decodeHash (base64url → UTF-8 JSON). */
@@ -145,6 +152,21 @@ describe("certificate verification-URL encoding", () => {
     await generateCertificatePdf(makeData({ score: 0.875 }), AI_NATIVE_CONFIG);
     expect(decodeFragment(lastQrUrl()).s).toBe(88);
   });
+
+  it("normalizes a legacy whole-percent score before verification encoding", async () => {
+    await generateCertificatePdf(makeData({ score: 90 }), AI_NATIVE_CONFIG);
+    expect(decodeFragment(lastQrUrl()).s).toBe(90);
+  });
+
+  it.each([-1, 101, Number.NaN, Number.POSITIVE_INFINITY])(
+    "rejects impossible quiz score %s before generating a QR payload",
+    async (score) => {
+      await expect(
+        generateCertificatePdf(makeData({ score }), AI_NATIVE_CONFIG),
+      ).rejects.toThrow("Certificate quiz score is invalid.");
+      expect(qrToDataUrlMock).not.toHaveBeenCalled();
+    },
+  );
 
   it("encodes capstone completion without a fake quiz score", async () => {
     await generateCertificatePdf(

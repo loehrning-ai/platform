@@ -11,14 +11,7 @@ async function gotoAndAssertOk(page: Page, url: string) {
   expect(response?.status(), `status for ${url}`).toBe(200);
   await expect(page.locator("text=Application error").first()).toHaveCount(0);
 
-  const meaningful = errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/Cannot update a component/i.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e),
-  );
+  const meaningful = errors;
   expect(meaningful, `console errors on ${url}\n${meaningful.join("\n")}`).toEqual([]);
 }
 
@@ -47,8 +40,9 @@ test.describe("QA sweep - public reputation routes", () => {
 
   test("homepage links to public reputation resources", async ({ page }) => {
     await gotoAndAssertOk(page, "/");
+    const main = page.getByRole("main");
     for (const href of ["/kurse", "/buecher", "/demos", "/open-source"] as const) {
-      await expect(page.locator(`a[href="${href}"]`).first()).toBeVisible();
+      await expect(main.locator(`a[href="${href}"]`).first()).toBeVisible();
     }
   });
 });

@@ -9,6 +9,40 @@ expect.extend(matchers);
 /* ------------------------------------------------------------------ */
 
 if (typeof window !== "undefined") {
+  // jsdom can expose localStorage as missing or unusable when a worker is
+  // created without a stable origin. Progress tests share one deterministic
+  // Storage implementation instead of installing file-local variants that can
+  // leak different backing maps across imported modules.
+  let hasUsableLocalStorage = false;
+  try {
+    hasUsableLocalStorage =
+      typeof window.localStorage?.getItem === "function" &&
+      typeof window.localStorage?.setItem === "function";
+  } catch {
+    hasUsableLocalStorage = false;
+  }
+  if (!hasUsableLocalStorage) {
+    const values = new Map<string, string>();
+    const storage: Storage = {
+      get length() {
+        return values.size;
+      },
+      clear: () => values.clear(),
+      getItem: (key) => values.get(key) ?? null,
+      key: (index) => Array.from(values.keys())[index] ?? null,
+      removeItem: (key) => {
+        values.delete(key);
+      },
+      setItem: (key, value) => {
+        values.set(key, String(value));
+      },
+    };
+    Object.defineProperty(window, "localStorage", {
+      configurable: true,
+      value: storage,
+    });
+  }
+
   if (!("IntersectionObserver" in window)) {
     class MockIntersectionObserver {
       observe(): void {}
@@ -55,10 +89,8 @@ if (typeof window !== "undefined") {
   /* is a plain writable value (fillStyle, lineWidth, font, ...).          */
   /* ------------------------------------------------------------------ */
   if (typeof HTMLCanvasElement !== "undefined") {
-    const probe = document.createElement("canvas").getContext("2d");
-    if (!probe) {
-      const gradientStub = { addColorStop: () => {} };
-      const createMockContext2D = (): CanvasRenderingContext2D => {
+    const gradientStub = { addColorStop: () => {} };
+    const createMockContext2D = (): CanvasRenderingContext2D => {
         const store: Record<string, unknown> = {};
         const handler: ProxyHandler<Record<string, unknown>> = {
           get(target, prop) {
@@ -87,14 +119,15 @@ if (typeof window !== "undefined") {
         };
         return new Proxy(store, handler) as unknown as CanvasRenderingContext2D;
       };
-      HTMLCanvasElement.prototype.getContext = function (
-        this: HTMLCanvasElement,
-        contextId: string,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ): any {
-        if (contextId === "2d") return createMockContext2D();
-        return null;
-      } as typeof HTMLCanvasElement.prototype.getContext;
-    }
+    HTMLCanvasElement.prototype.getContext = function (
+      this: HTMLCanvasElement,
+      contextId: string,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ): any {
+      if (contextId === "2d") return createMockContext2D();
+      return null;
+    } as typeof HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.toDataURL = () =>
+      "data:image/png;base64,VEVTVA==";
   }
 }

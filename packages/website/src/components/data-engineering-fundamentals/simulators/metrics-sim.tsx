@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Panel } from "../primitives";
+import { SafeLessonMarkup } from "@/components/safe-lesson-markup";
 
 // ─── MetricsSim ───────────────────────────────────
 // Ported from `src/chapters/Ch7_Serve.js`: the same question, resolved
@@ -163,7 +164,7 @@ export function MetricsSim() {
       caption="Toggle the ungoverned switch. Same question, same warehouse. The difference is whether the consumer can find the right table by name or has to guess."
     >
       <div className="aa-question-row">
-        <input className="aa-q-input" value={question} onChange={(e) => setQuestion(e.target.value)} list="aa-qs" placeholder="Ask about a metric…" />
+        <input aria-label="Metric question" className="aa-q-input" value={question} onChange={(e) => setQuestion(e.target.value)} list="aa-qs" placeholder="Ask about a metric…" />
         <datalist id="aa-qs">
           {QUESTIONS.map((x) => (
             <option key={x.q} value={x.q} />
@@ -173,7 +174,7 @@ export function MetricsSim() {
           <input type="checkbox" checked={!governed} onChange={(e) => setGoverned(!e.target.checked)} />
           Disable metrics layer
         </label>
-        <button className="btn btn-primary" onClick={runQuery} disabled={run.status === "running"}>
+        <button type="button" className="btn btn-primary" onClick={runQuery} disabled={run.status === "running"}>
           {run.status === "running" ? "…running" : "▶ Run query"}
         </button>
       </div>
@@ -210,7 +211,9 @@ export function MetricsSim() {
             <span>{governed ? "generated · composed from registry" : "ad-hoc · written by a hurried analyst"}</span>
             <span>SQL</span>
           </div>
-          <pre className="aa-yaml" dangerouslySetInnerHTML={{ __html: renderSQL(q, governed) }} />
+          <pre className="aa-yaml">
+            <SafeLessonMarkup html={renderSQL(q, governed)} />
+          </pre>
         </div>
       </div>
 

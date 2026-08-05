@@ -62,7 +62,7 @@ export function WidgetFrame({
                 ? { duration: 0 }
                 : { type: "spring", stiffness: 400, damping: 15 }
             }
-            className="inline-flex items-center gap-1.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-[#22c55e]"
+            className="inline-flex items-center gap-1.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-risk-green"
           >
             <CheckCircle2 size={12} />
             {xpLabel ? `${xpLabel} ✓` : "Erledigt"}

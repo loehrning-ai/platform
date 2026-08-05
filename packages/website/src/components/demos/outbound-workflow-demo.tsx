@@ -142,12 +142,12 @@ export default function OutboundWorkflowDemo() {
         >
           Signalbasierte Nachricht · Pipeline
         </div>
-        <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", marginTop: 6 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", marginTop: 6 }}>
           Öffentliche Signale.{" "}
           <span style={{ color: "var(--color-brand-orange)" }}>
             Begründet schreiben. Vor Versand prüfen.
           </span>
-        </h3>
+        </h2>
       </div>
 
       {/* Pipeline stages */}

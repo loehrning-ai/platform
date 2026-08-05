@@ -2,11 +2,7 @@
 // publication) under the GitHub organization `loehrning-ai`: tools, projects,
 // and videos. Imported interactive courses are catalog content of /kurse
 // (src/lib/courses/catalog.ts) and are deliberately not part of this registry.
-export const OPEN_SOURCE_ARTIFACT_KINDS = [
-  "tool",
-  "project",
-  "video",
-] as const;
+export const OPEN_SOURCE_ARTIFACT_KINDS = ["tool", "project", "video"] as const;
 
 export type OpenSourceArtifactKind =
   (typeof OPEN_SOURCE_ARTIFACT_KINDS)[number];
@@ -19,6 +15,34 @@ export const OPEN_SOURCE_ARTIFACT_PUBLICATION_LIFECYCLES = [
 
 export type OpenSourceArtifactPublicationLifecycle =
   (typeof OPEN_SOURCE_ARTIFACT_PUBLICATION_LIFECYCLES)[number];
+
+/**
+ * Conservative metadata budgets for cards and social previews. Sixty Unicode
+ * code points keeps titles inside common one-line preview limits; 160 keeps
+ * descriptions inside the conventional search/social summary budget.
+ */
+export const OPEN_SOURCE_ARTIFACT_TEXT_LIMITS = {
+  title: 60,
+  description: 160,
+} as const;
+
+/** A license must remain small enough to inspect and serve as plain text. */
+export const OPEN_SOURCE_ARTIFACT_LICENSE_MAX_BYTES = 256 * 1024;
+
+/** Browser screenshots/posters stay bounded for build-time verification. */
+export const OPEN_SOURCE_ARTIFACT_IMAGE_MAX_BYTES = 20 * 1024 * 1024;
+
+/**
+ * Media verification reads from a stable descriptor into memory. Per-role
+ * limits prevent a malformed candidate from exhausting CI memory while
+ * retaining enough headroom for repository-hosted publication assets.
+ */
+export const OPEN_SOURCE_ARTIFACT_MEDIA_MAX_BYTES = {
+  video: 100 * 1024 * 1024,
+  captions: 5 * 1024 * 1024,
+  transcript: 5 * 1024 * 1024,
+  poster: OPEN_SOURCE_ARTIFACT_IMAGE_MAX_BYTES,
+} as const;
 
 export interface OpenSourceArtifactSource {
   /** Commit-pinned repository or source-tree URL. */
@@ -45,21 +69,37 @@ export interface OpenSourceArtifactLicense {
   readonly licenseId?: string;
 }
 
-interface OpenSourceArtifactBase<Kind extends OpenSourceArtifactKind> {
+interface OpenSourceArtifactBaseFields<Kind extends OpenSourceArtifactKind> {
   readonly id: `${Kind}:${string}`;
   readonly kind: Kind;
-  /** Controls public discovery only; every lifecycle state is validated. */
-  readonly publicationLifecycle: OpenSourceArtifactPublicationLifecycle;
   readonly slug: string;
   readonly title: string;
   readonly eyebrow: string;
   readonly description: string;
   /** Stable internal detail route. */
   readonly href: string;
+  /** Human-readable label rendered in cards and data plates. */
   readonly language: string;
   readonly source: OpenSourceArtifactSource;
   readonly license: OpenSourceArtifactLicense;
 }
+
+type OpenSourceArtifactBase<Kind extends OpenSourceArtifactKind> =
+  OpenSourceArtifactBaseFields<Kind> &
+    (
+      | {
+          /** Controls public discovery; drafts remain outside public output. */
+          readonly publicationLifecycle: "draft";
+          /** Optional only while the record remains a non-public draft. */
+          readonly languageTag?: string;
+        }
+      | {
+          /** Published and withdrawn records retain complete discovery data. */
+          readonly publicationLifecycle: "published" | "withdrawn";
+          /** Canonical BCP 47 tag used directly in machine-readable metadata. */
+          readonly languageTag: string;
+        }
+    );
 
 export const SOFTWARE_ARTIFACT_STATUSES = [
   "experimental",
@@ -101,6 +141,8 @@ export interface SoftwareArtifactDocumentation {
 
 export interface SoftwareArtifactScreenshot {
   readonly src: string;
+  /** Exact image path in the pinned upstream source tree. */
+  readonly sourcePath: string;
   readonly alt: string;
   /** SHA-256 of the exact stored image. */
   readonly sha256: string;
@@ -108,6 +150,17 @@ export interface SoftwareArtifactScreenshot {
   readonly sizeBytes: number;
   readonly width: number;
   readonly height: number;
+}
+
+/**
+ * One frame of the optional short demo. It carries the exact same provenance
+ * contract as the lead screenshot (pinned upstream path, digest, byte size,
+ * dimensions) plus the caption that makes the sequence readable as a story.
+ * Demo frames are real captures from the pinned revision, never mock-ups.
+ */
+export interface SoftwareArtifactDemoStep extends SoftwareArtifactScreenshot {
+  /** One sentence naming what this frame demonstrates. */
+  readonly caption: string;
 }
 
 export interface SoftwareArtifactRelatedLearning {
@@ -127,18 +180,23 @@ export interface SoftwareArtifactGuide {
   readonly status: SoftwareArtifactStatus;
   readonly statusNote: string;
   /**
-   * Optional data-residency disclosure: where the artifact sends data and what
-   * stays local. The honesty guardrail requires this disclosure for any tool
-   * that can call a cloud LLM, and a fixed structured slot is auditable in a
-   * way that free prose inside `statusNote` is not.
+   * Mandatory data-residency disclosure: where the artifact sends data and
+   * what stays local. A fixed structured slot is auditable in a way that free
+   * prose inside `statusNote` is not.
    */
-  readonly dataFlow?: string;
+  readonly dataFlow: string;
   readonly prerequisites: readonly SoftwareArtifactPrerequisite[];
   readonly installation: SoftwareArtifactProcedure;
   readonly usage: SoftwareArtifactProcedure;
   readonly integration: SoftwareArtifactIntegration;
   readonly documentation: SoftwareArtifactDocumentation;
   readonly screenshot: SoftwareArtifactScreenshot;
+  /**
+   * Optional ordered walkthrough shown on the detail page. Every frame is
+   * verified exactly like the lead screenshot, so a demo can never introduce
+   * an unpinned or unhashed image.
+   */
+  readonly demo?: readonly SoftwareArtifactDemoStep[];
   readonly relatedLearning: readonly SoftwareArtifactRelatedLearning[];
 }
 
@@ -165,11 +223,10 @@ export type SoftwareArtifactDelivery =
       readonly launchHref: string;
     };
 
-interface SoftwareArtifactBase<
-  Kind extends "tool" | "project",
-> extends OpenSourceArtifactBase<Kind> {
-  readonly guide: SoftwareArtifactGuide;
-}
+type SoftwareArtifactBase<Kind extends "tool" | "project"> =
+  OpenSourceArtifactBase<Kind> & {
+    readonly guide: SoftwareArtifactGuide;
+  };
 
 export type ToolArtifact = SoftwareArtifactBase<"tool"> &
   SoftwareArtifactDelivery;
@@ -180,6 +237,8 @@ export type ProjectArtifact = SoftwareArtifactBase<"project"> &
 export interface OpenSourceMediaFile {
   /** Normalized path from the repository root. */
   readonly path: string;
+  /** Exact media path in the pinned upstream source tree. */
+  readonly sourcePath: string;
   /** Lowercase SHA-256 of the exact stored file. */
   readonly sha256: string;
   /** Exact size of the stored file. */
@@ -208,7 +267,7 @@ export interface VideoPublicationMetadata {
   readonly accessibilityReviewDate: `${number}-${number}-${number}`;
 }
 
-export interface VideoArtifact extends OpenSourceArtifactBase<"video"> {
+export type VideoArtifact = OpenSourceArtifactBase<"video"> & {
   readonly watchHref: string;
   readonly captionsHref: string;
   readonly transcriptHref: string;
@@ -225,7 +284,7 @@ export interface VideoArtifact extends OpenSourceArtifactBase<"video"> {
   readonly duration: `PT${string}`;
   /** ISO calendar date. */
   readonly datePublished: `${number}-${number}-${number}`;
-}
+};
 
 export type OpenSourceArtifact = ToolArtifact | ProjectArtifact | VideoArtifact;
 
@@ -240,6 +299,23 @@ function assertText(
 ): asserts value is string {
   if (typeof value !== "string" || value.trim().length === 0) {
     artifactError(id, field, "must be a non-empty string");
+  }
+}
+
+function assertBcp47LanguageTag(
+  id: string,
+  field: string,
+  value: unknown,
+): asserts value is string {
+  assertText(id, field, value);
+  let canonical: string[];
+  try {
+    canonical = Intl.getCanonicalLocales(value);
+  } catch {
+    artifactError(id, field, "must be a valid canonical BCP 47 language tag");
+  }
+  if (canonical.length !== 1 || canonical[0] !== value) {
+    artifactError(id, field, "must be a valid canonical BCP 47 language tag");
   }
 }
 
@@ -290,7 +366,7 @@ function assertPublicHref(id: string, field: string, value: unknown): void {
 function assertRevisionHrefAncestry(
   id: string,
   source: OpenSourceArtifactSource | undefined,
-): void {
+): string {
   const sourceHref = assertHttpsHref(id, "source.href", source?.href);
   assertText(id, "source.revision", source?.revision);
   if (!/^[a-f0-9]{40}$/.test(source.revision)) {
@@ -336,6 +412,22 @@ function assertRevisionHrefAncestry(
   if (sourceSegments.length < 2) {
     artifactError(id, "source.href", "must include an owner and repository");
   }
+  if (sourceSegments[0] !== "loehrning-ai") {
+    artifactError(
+      id,
+      "source.href",
+      "must be owned by github.com/loehrning-ai",
+    );
+  }
+  if (!/^[A-Za-z0-9._-]+(?:\.git)?$/.test(sourceSegments[1])) {
+    artifactError(id, "source.href", "must include a clean repository name");
+  }
+  const normalizedRepositoryName = sourceSegments[1]
+    .replace(/\.git$/i, "")
+    .toLocaleLowerCase("en");
+  if (normalizedRepositoryName.length === 0) {
+    artifactError(id, "source.href", "must include a repository name");
+  }
   const repositorySegments = sourceSegments.slice(0, 2);
   const sourceIsRepositoryRoot = sourceSegments.length === 2;
   const sourceIsPinnedTree =
@@ -379,6 +471,33 @@ function assertRevisionHrefAncestry(
       id,
       "source.revisionHref",
       "must stay below the source origin and repository path",
+    );
+  }
+  return `https://github.com/loehrning-ai/${normalizedRepositoryName}`;
+}
+
+function assertSoftwareArtifactAssetHref(
+  id: string,
+  field: string,
+  value: unknown,
+  kind: "tool" | "project",
+  slug: string,
+): void {
+  assertInternalHref(id, field, value);
+  const href = value as string;
+  const parsed = new URL(href, "https://artifact.invalid");
+  const expectedPrefix = `/artifacts/${kind}s/${slug}/`;
+  if (
+    parsed.search ||
+    parsed.hash ||
+    parsed.pathname !== href ||
+    !parsed.pathname.startsWith(expectedPrefix) ||
+    parsed.pathname.length === expectedPrefix.length
+  ) {
+    artifactError(
+      id,
+      field,
+      `must be a plain asset path below ${expectedPrefix}`,
     );
   }
 }
@@ -449,6 +568,22 @@ const VIDEO_MEDIA_MIME_TYPES = {
 
 type VideoMediaRole = keyof typeof VIDEO_MEDIA_MIME_TYPES;
 
+function assertUpstreamSourcePath(
+  id: string,
+  field: string,
+  value: unknown,
+): asserts value is string {
+  assertText(id, field, value);
+  if (
+    pathIsUnsafe(value) ||
+    value.includes("?") ||
+    value.includes("#") ||
+    value.split("/").some((segment) => segment === ".")
+  ) {
+    artifactError(id, field, "must be a normalized safe upstream source path");
+  }
+}
+
 function assertMediaFile(
   id: string,
   field: string,
@@ -466,12 +601,22 @@ function assertMediaFile(
       `must be a safe repository path below ${PUBLIC_MEDIA_PREFIX}`,
     );
   }
+  assertUpstreamSourcePath(id, `${field}.sourcePath`, value.sourcePath);
   assertText(id, `${field}.sha256`, value.sha256);
   if (!/^[a-f0-9]{64}$/.test(value.sha256)) {
     artifactError(id, `${field}.sha256`, "must be a lowercase SHA-256 digest");
   }
-  if (!Number.isSafeInteger(value.sizeBytes) || value.sizeBytes <= 0) {
-    artifactError(id, `${field}.sizeBytes`, "must be a positive safe integer");
+  const maximumSizeBytes = OPEN_SOURCE_ARTIFACT_MEDIA_MAX_BYTES[role];
+  if (
+    !Number.isSafeInteger(value.sizeBytes) ||
+    value.sizeBytes <= 0 ||
+    value.sizeBytes > maximumSizeBytes
+  ) {
+    artifactError(
+      id,
+      `${field}.sizeBytes`,
+      `must be between 1 and ${String(maximumSizeBytes)} bytes`,
+    );
   }
   assertText(id, `${field}.mimeType`, value.mimeType);
   const extension = value.path.split(".").at(-1)?.toLowerCase() ?? "";
@@ -481,6 +626,15 @@ function assertMediaFile(
       id,
       `${field}.mimeType`,
       `must match the stored file extension (${expectedMimeType ?? "unsupported"})`,
+    );
+  }
+  const sourceExtension =
+    value.sourcePath.split(".").at(-1)?.toLowerCase() ?? "";
+  if (VIDEO_MEDIA_MIME_TYPES[role].get(sourceExtension) !== value.mimeType) {
+    artifactError(
+      id,
+      `${field}.sourcePath`,
+      "must identify the same supported media type as the stored file",
     );
   }
 }
@@ -544,6 +698,63 @@ function assertProcedure(
   assertUniqueTextValues(id, `${field}.steps`, titles);
 }
 
+/**
+ * The provenance contract shared by the lead screenshot and every demo frame:
+ * a locally stored browser-safe image, an exact path in the pinned upstream
+ * tree, published alt text, and a byte-exact digest, size, and geometry.
+ */
+function assertSoftwareArtifactImage(
+  id: string,
+  field: string,
+  image: SoftwareArtifactScreenshot,
+): void {
+  if (!image || typeof image !== "object") {
+    artifactError(id, field, "must define an accessible image");
+  }
+  assertInternalHref(id, `${field}.src`, image.src);
+  assertUpstreamSourcePath(id, `${field}.sourcePath`, image.sourcePath);
+  const storedPath = new URL(image.src, "https://artifact.invalid").pathname;
+  if (!/\.(?:jpe?g|png|webp)$/i.test(storedPath)) {
+    artifactError(
+      id,
+      `${field}.src`,
+      "must reference a browser-safe JPEG, PNG, or WebP image",
+    );
+  }
+  if (!/\.(?:jpe?g|png|webp)$/i.test(image.sourcePath)) {
+    artifactError(
+      id,
+      `${field}.sourcePath`,
+      "must identify a browser-safe JPEG, PNG, or WebP image",
+    );
+  }
+  assertText(id, `${field}.alt`, image.alt);
+  assertText(id, `${field}.sha256`, image.sha256);
+  if (!/^[a-f0-9]{64}$/.test(image.sha256)) {
+    artifactError(id, `${field}.sha256`, "must be a lowercase SHA-256 digest");
+  }
+  if (
+    !Number.isSafeInteger(image.sizeBytes) ||
+    image.sizeBytes <= 0 ||
+    image.sizeBytes > OPEN_SOURCE_ARTIFACT_IMAGE_MAX_BYTES
+  ) {
+    artifactError(
+      id,
+      `${field}.sizeBytes`,
+      `must be between 1 and ${String(OPEN_SOURCE_ARTIFACT_IMAGE_MAX_BYTES)} bytes`,
+    );
+  }
+  for (const dimension of ["width", "height"] as const) {
+    if (!Number.isSafeInteger(image[dimension]) || image[dimension] <= 0) {
+      artifactError(
+        id,
+        `${field}.${dimension}`,
+        "must be a positive safe integer",
+      );
+    }
+  }
+}
+
 function assertSoftwareArtifactGuide(
   id: string,
   value: SoftwareArtifactGuide | undefined,
@@ -555,9 +766,7 @@ function assertSoftwareArtifactGuide(
     artifactError(id, "guide.status", "must be a supported publication status");
   }
   assertText(id, "guide.statusNote", value.statusNote);
-  if (value.dataFlow !== undefined) {
-    assertText(id, "guide.dataFlow", value.dataFlow);
-  }
+  assertText(id, "guide.dataFlow", value.dataFlow);
 
   assertNonEmptyArray(id, "guide.prerequisites", value.prerequisites);
   const prerequisiteLabels: string[] = [];
@@ -607,55 +816,31 @@ function assertSoftwareArtifactGuide(
   assertText(id, "guide.documentation.label", value.documentation.label);
   assertPublicHref(id, "guide.documentation.href", value.documentation.href);
 
-  if (!value.screenshot || typeof value.screenshot !== "object") {
-    artifactError(
-      id,
-      "guide.screenshot",
-      "must define an accessible screenshot",
-    );
-  }
-  assertInternalHref(id, "guide.screenshot.src", value.screenshot.src);
-  const screenshotPath = new URL(
-    value.screenshot.src,
-    "https://artifact.invalid",
-  ).pathname;
-  if (!/\.(?:jpe?g|png|webp)$/i.test(screenshotPath)) {
-    artifactError(
-      id,
-      "guide.screenshot.src",
-      "must reference a browser-safe JPEG, PNG, or WebP image",
-    );
-  }
-  assertText(id, "guide.screenshot.alt", value.screenshot.alt);
-  assertText(id, "guide.screenshot.sha256", value.screenshot.sha256);
-  if (!/^[a-f0-9]{64}$/.test(value.screenshot.sha256)) {
-    artifactError(
-      id,
-      "guide.screenshot.sha256",
-      "must be a lowercase SHA-256 digest",
-    );
-  }
-  if (
-    !Number.isSafeInteger(value.screenshot.sizeBytes) ||
-    value.screenshot.sizeBytes <= 0
-  ) {
-    artifactError(
-      id,
-      "guide.screenshot.sizeBytes",
-      "must be a positive safe integer",
-    );
-  }
-  for (const dimension of ["width", "height"] as const) {
-    if (
-      !Number.isSafeInteger(value.screenshot[dimension]) ||
-      value.screenshot[dimension] <= 0
-    ) {
-      artifactError(
-        id,
-        `guide.screenshot.${dimension}`,
-        "must be a positive safe integer",
-      );
+  assertSoftwareArtifactImage(id, "guide.screenshot", value.screenshot);
+
+  // The optional demo is verified frame by frame with the SAME contract as
+  // the lead screenshot: a walkthrough can never smuggle in an unpinned,
+  // unhashed, or foreign image, and its captions must be real prose.
+  if (value.demo !== undefined) {
+    assertNonEmptyArray(id, "guide.demo", value.demo);
+    const demoSources: string[] = [];
+    for (const [index, step] of value.demo.entries()) {
+      const field = `guide.demo[${index}]`;
+      if (!step || typeof step !== "object") {
+        artifactError(id, field, "must define a structured demo step");
+      }
+      assertSoftwareArtifactImage(id, field, step);
+      assertText(id, `${field}.caption`, step.caption);
+      if (step.src === value.screenshot.src) {
+        artifactError(
+          id,
+          `${field}.src`,
+          "must not repeat the lead screenshot",
+        );
+      }
+      demoSources.push(step.src);
     }
+    assertUniqueTextValues(id, "guide.demo", demoSources);
   }
 
   assertNonEmptyArray(id, "guide.relatedLearning", value.relatedLearning);
@@ -700,6 +885,7 @@ export function assertOpenSourceArtifacts(
 ): void {
   const ids = new Set<string>();
   const slugsByKind = new Set<string>();
+  const artifactByRepository = new Map<string, string>();
 
   for (const artifact of artifacts) {
     const id = typeof artifact?.id === "string" ? artifact.id : "<unknown>";
@@ -739,16 +925,77 @@ export function assertOpenSourceArtifacts(
     ] as const) {
       assertText(id, field, value);
     }
+    if (artifact.languageTag === undefined) {
+      if (artifact.publicationLifecycle !== "draft") {
+        artifactError(
+          id,
+          "languageTag",
+          "must be present before an artifact can be published",
+        );
+      }
+    } else {
+      assertBcp47LanguageTag(id, "languageTag", artifact.languageTag);
+    }
+    for (const [field, value, limit] of [
+      ["title", artifact.title, OPEN_SOURCE_ARTIFACT_TEXT_LIMITS.title],
+      [
+        "description",
+        artifact.description,
+        OPEN_SOURCE_ARTIFACT_TEXT_LIMITS.description,
+      ],
+    ] as const) {
+      if (Array.from(value).length > limit) {
+        artifactError(
+          id,
+          field,
+          `must not exceed ${String(limit)} Unicode code points`,
+        );
+      }
+    }
     assertInternalHref(id, "href", artifact.href);
     const expectedHref = `/open-source/${artifact.kind}s/${artifact.slug}`;
     if (artifact.href !== expectedHref) {
       artifactError(id, "href", `must equal ${expectedHref}`);
     }
 
-    assertRevisionHrefAncestry(id, artifact.source);
+    const normalizedRepositorySource = assertRevisionHrefAncestry(
+      id,
+      artifact.source,
+    );
+    const existingArtifactId = artifactByRepository.get(
+      normalizedRepositorySource,
+    );
+    if (existingArtifactId !== undefined) {
+      artifactError(
+        id,
+        "source.href",
+        `must not reuse repository ${normalizedRepositorySource} already registered by ${existingArtifactId}`,
+      );
+    }
+    artifactByRepository.set(normalizedRepositorySource, id);
 
     assertInternalHref(id, "license.href", artifact.license?.href);
-    assertText(id, "license.sourcePath", artifact.license?.sourcePath);
+    const licenseHref = new URL(
+      artifact.license.href,
+      "https://artifact.invalid",
+    );
+    if (
+      licenseHref.search ||
+      licenseHref.hash ||
+      licenseHref.pathname !== artifact.license.href ||
+      !licenseHref.pathname.toLowerCase().endsWith(".txt")
+    ) {
+      artifactError(
+        id,
+        "license.href",
+        "must be a plain internal path to a .txt license file",
+      );
+    }
+    assertUpstreamSourcePath(
+      id,
+      "license.sourcePath",
+      artifact.license?.sourcePath,
+    );
     if (
       pathIsUnsafe(artifact.license.sourcePath) ||
       !/(?:license|copying)/i.test(artifact.license.sourcePath)
@@ -765,9 +1012,14 @@ export function assertOpenSourceArtifacts(
     }
     if (
       !Number.isSafeInteger(artifact.license?.sizeBytes) ||
-      artifact.license.sizeBytes <= 0
+      artifact.license.sizeBytes <= 0 ||
+      artifact.license.sizeBytes > OPEN_SOURCE_ARTIFACT_LICENSE_MAX_BYTES
     ) {
-      artifactError(id, "license.sizeBytes", "must be a positive safe integer");
+      artifactError(
+        id,
+        "license.sizeBytes",
+        `must be between 1 and ${String(OPEN_SOURCE_ARTIFACT_LICENSE_MAX_BYTES)} bytes`,
+      );
     }
     if (artifact.license.licenseId !== undefined) {
       assertText(id, "license.licenseId", artifact.license.licenseId);
@@ -783,6 +1035,36 @@ export function assertOpenSourceArtifacts(
     if (artifact.kind === "tool" || artifact.kind === "project") {
       assertSoftwareArtifactDelivery(id, artifact);
       assertSoftwareArtifactGuide(id, artifact.guide);
+      assertSoftwareArtifactAssetHref(
+        id,
+        "license.href",
+        artifact.license.href,
+        artifact.kind,
+        artifact.slug,
+      );
+      if (artifact.license.href === artifact.guide.screenshot.src) {
+        artifactError(
+          id,
+          "guide.screenshot.src",
+          "must not reuse the license file path",
+        );
+      }
+      if (
+        artifact.license.sourcePath === artifact.guide.screenshot.sourcePath
+      ) {
+        artifactError(
+          id,
+          "guide.screenshot.sourcePath",
+          "must not reuse the upstream license source path",
+        );
+      }
+      assertSoftwareArtifactAssetHref(
+        id,
+        "guide.screenshot.src",
+        artifact.guide.screenshot.src,
+        artifact.kind,
+        artifact.slug,
+      );
     }
 
     if (artifact.kind === "video") {
@@ -829,13 +1111,11 @@ export function assertOpenSourceArtifacts(
         );
       }
       for (const field of ["captionLanguage", "transcriptLanguage"] as const) {
-        if (!/^[a-z]{2,3}(?:-[A-Z]{2})?$/.test(artifact.publication[field])) {
-          artifactError(
-            id,
-            `publication.${field}`,
-            "must be a BCP 47 language tag",
-          );
-        }
+        assertBcp47LanguageTag(
+          id,
+          `publication.${field}`,
+          artifact.publication[field],
+        );
       }
       if (!isRealIsoDate(artifact.publication.accessibilityReviewDate)) {
         artifactError(
@@ -880,6 +1160,36 @@ export function assertOpenSourceArtifacts(
       if (new Set(mediaPaths).size !== mediaPaths.length) {
         artifactError(id, "mediaFiles", "must not reuse the same file path");
       }
+      const mediaSourcePaths = mediaEntries.map(([, file]) => file.sourcePath);
+      if (new Set(mediaSourcePaths).size !== mediaSourcePaths.length) {
+        artifactError(
+          id,
+          "mediaFiles",
+          "must not reuse the same upstream source path",
+        );
+      }
+      if (
+        mediaEntries.some(
+          ([, file]) => publicHrefForMediaFile(file) === artifact.license.href,
+        )
+      ) {
+        artifactError(
+          id,
+          "mediaFiles",
+          "must not reuse the license file path for a media role",
+        );
+      }
+      if (
+        mediaEntries.some(
+          ([, file]) => file.sourcePath === artifact.license.sourcePath,
+        )
+      ) {
+        artifactError(
+          id,
+          "mediaFiles",
+          "must not reuse the upstream license source path for a media role",
+        );
+      }
       for (const [hrefField, fileKey] of [
         ["watchHref", "video"],
         ["captionsHref", "captions"],
@@ -912,7 +1222,10 @@ function pathIsUnsafe(value: string): boolean {
 
 export type PublishedOpenSourceArtifact<
   Artifact extends OpenSourceArtifact = OpenSourceArtifact,
-> = Artifact & { readonly publicationLifecycle: "published" };
+> = Artifact & {
+  readonly publicationLifecycle: "published";
+  readonly languageTag: string;
+};
 
 /**
  * Validates every candidate before hiding non-public lifecycle states. Draft
@@ -930,11 +1243,288 @@ export function selectPublishedOpenSourceArtifacts<
   );
 }
 
-// Reserved publication lanes for the loehrning-ai GitHub organization. They
-// stay empty until a real repository is published there; publication requires
-// complete source, license, operating-guide, and media metadata before an
-// entry can satisfy its typed artifact contract.
-export const OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES: readonly ToolArtifact[] = [];
+/**
+ * The slug matches the public repository name exactly. Everything derived from
+ * it is built with template literals so id, route, and both asset paths cannot
+ * drift apart. A rename after publication is a full re-admission, not an edit.
+ */
+const CV_ENGINE_SLUG = "cv-engine";
+
+/**
+ * Commit A of the two-commit pinning sequence: the single parentless root
+ * commit of the public repository, produced from the leak-scanned clean
+ * export (Gitleaks, TruffleHog, and detect-secrets over the tree, then again
+ * over the one-commit history). Verified before admission, from a logged-out
+ * session:
+ *
+ * - `/commit/<sha>` returns HTTP 200 without authentication;
+ * - `git show <sha>:LICENSE | shasum -a 256` equals `license.sha256` below;
+ * - `<sha>:docs/screenshots/preview-card.webp` hashes to `screenshot.sha256`.
+ *
+ * A source change after this commit requires a new pin and a new registry
+ * review — never rewrite this reference in place.
+ */
+const CV_ENGINE_REVISION = "f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e";
+
+const CV_ENGINE_TOOL_ARTIFACT = {
+  id: `tool:${CV_ENGINE_SLUG}`,
+  kind: "tool",
+  publicationLifecycle: "published",
+  slug: CV_ENGINE_SLUG,
+  title: "CV Engine",
+  eyebrow: "Werkzeug · Lebenslauf-Rendering",
+  description:
+    "Lokaler YAML-zu-PDF-Build für einseitige Lebensläufe, mit Browser-Editor, A4-Vorschau und optionaler KI. Überläufe blockiert der Build, statt sie zu drucken.",
+  href: `/open-source/tools/${CV_ENGINE_SLUG}`,
+  // Exact string, not a near miss: the detail route maps `"Englisch"` to
+  // `inLanguage: "en"` in its JSON-LD and silently falls back to `"de"` for
+  // every other value. The repository, its README and its commits are English.
+  language: "Englisch",
+  languageTag: "en",
+  source: {
+    href: `https://github.com/loehrning-ai/${CV_ENGINE_SLUG}`,
+    revision: CV_ENGINE_REVISION,
+    revisionHref: `https://github.com/loehrning-ai/${CV_ENGINE_SLUG}/commit/${CV_ENGINE_REVISION}`,
+  },
+  license: {
+    href: `/artifacts/tools/${CV_ENGINE_SLUG}/LICENSE.txt`,
+    sourcePath: "LICENSE",
+    sha256: "36beaa24d27fc788e411a7fd7cc93d752878e6c51240a8abcc1156ff1451c5bd",
+    sizeBytes: 1066,
+    licenseId: "MIT",
+  },
+  // Source only: there is no hosted instance and none is planned. A hosted
+  // editor would receive the CV of whoever opened it, which the delivery
+  // contract and the honesty guardrail both rule out.
+  delivery: "source-only",
+  guide: {
+    status: "experimental",
+    statusNote:
+      "Experimentell: das Schema in cv.yaml und die Vorlagen können sich noch ändern, es gibt keine gehostete Instanz, und Issues werden nicht garantiert beantwortet. Du betreibst das Werkzeug selbst, auf deinem eigenen Rechner. Bevor du etwas konfigurierst, lies docs/data-flow.md im Repository: dort steht als Diagramm, welcher Weg deiner Daten lokal bleibt und welcher nicht.",
+    dataFlow:
+      "Der Kern rendert vollständig lokal. cv.yaml, Schriften und CSS liegen im Checkout, der PDF-Build öffnet keinen Socket und braucht keinen API-Schlüssel. Der Browser-Editor ohne Konfiguration spricht nur mit 127.0.0.1 und hält seine Dokumente im Arbeitsspeicher des Servers; erst wenn du die Supabase-Variante selbst betreibst, liegen sie dauerhaft in deinem eigenen Projekt. Nach außen gehen allein die optionalen KI-Funktionen für Import und Textgenerierung, und zwar mit deinem eigenen Schlüssel; zeigst du sie auf ein lokales Ollama, endet auch dieser Aufruf auf deinem Rechner, denn du wählst, wo die KI läuft. Das vollständige Diagramm liegt als docs/data-flow.md im Repository.",
+    prerequisites: [
+      {
+        label: "Python 3.13",
+        detail:
+          "Engine und Editor laufen auf CPython 3.13. Ältere Versionen sind nicht getestet.",
+        href: "https://www.python.org/downloads/",
+      },
+      {
+        label: "Pango und Cairo",
+        detail:
+          "WeasyPrint setzt das PDF über diese beiden Systembibliotheken. Fehlen sie, scheitert schon der erste Build, und zwar mit einem Fehler aus der Bibliothek statt aus dem Werkzeug.",
+        href: "https://doc.courtbouillon.org/weasyprint/stable/first_steps.html",
+      },
+      {
+        label: "Ein eigener API-Schlüssel, optional",
+        detail:
+          "Nur für den Import aus PDF oder DOCX und für generierte Textbausteine. Ohne Schlüssel funktionieren Formular, Vorschau und PDF-Build unverändert.",
+      },
+    ],
+    installation: {
+      summary:
+        "Der Checkout wird auf den geprüften Quellstand fixiert und in einer eigenen virtuellen Umgebung installiert. Es gibt keinen Account, keinen externen Server und keinen Schlüssel, den du vorher besorgen müsstest.",
+      steps: [
+        {
+          title: "Systembibliotheken installieren",
+          detail:
+            "Unter macOS genügt der Befehl unten. Unter Debian oder Ubuntu heißt er sudo apt install libpango-1.0-0 libpangoft2-1.0-0 libcairo2.",
+          command: "brew install pango",
+        },
+        {
+          title: "Geprüften Quellstand auschecken",
+          detail:
+            "Klone das öffentliche Repository und wechsle exakt auf den Quellstand, zu dem diese Anleitung, die Screenshots und die Prüfsummen gehören.",
+          command:
+            "(git clone https://github.com/loehrning-ai/cv-engine.git && cd cv-engine && git checkout f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e)",
+        },
+        {
+          title: "Virtuelle Python-Umgebung anlegen",
+          detail:
+            "Die Umgebung hält die Abhängigkeiten des Werkzeugs von deiner globalen Python-Installation getrennt. Alle folgenden Python-Befehle verwenden ihren Interpreter direkt.",
+          command: "(cd cv-engine && python3 -m venv .venv)",
+        },
+        {
+          title: "Abhängigkeiten hash-gepinnt installieren",
+          detail:
+            "requirements.lock hinterlegt für jedes Paket den erwarteten Hash. Weicht ein Artefakt davon ab, bricht pip ab, statt es zu installieren.",
+          command:
+            "(cd cv-engine && .venv/bin/python -m pip install --require-hashes -r requirements.lock)",
+        },
+        {
+          title: "Installation gegen die Testsuite prüfen",
+          detail:
+            "Die Suite deckt Renderer, Schema, Importer und die Sicherheitsregeln ab und braucht keinen laufenden Server. Die End-to-End-Tests bleiben hier bewusst außen vor, weil sie einen gestarteten Editor erwarten.",
+          command:
+            "(cd cv-engine && .venv/bin/python -m pytest tests/ --ignore=tests/e2e)",
+        },
+      ],
+    },
+    usage: {
+      summary:
+        "Deine YAML-Datei ist der dauerhafte Weg, der Browser-Editor ist die Probierfläche, und der Build lässt die zweite Seite nicht durch.",
+      steps: [
+        {
+          title: "Die eigene Datei anlegen und schreiben",
+          detail:
+            "content/cv.yaml ist der dauerhafte lokale Ort für deinen Lebenslauf, und die Datei ist im Repository bewusst von Git ausgenommen, damit deine Daten nicht versehentlich in einen Fork wandern. Du bearbeitest sie mit dem Editor, den du ohnehin benutzt.",
+          command:
+            "(cd cv-engine && cp content/cv.example.yaml content/cv.yaml)",
+        },
+        {
+          title: "Formular und Vorschau ausprobieren",
+          detail:
+            "Flask bindet auf 127.0.0.1:5567, also nur auf deinen eigenen Rechner: links das Formular oder wahlweise die Rohdatei als YAML, rechts dieselbe A4-Seite, die WeasyPrint später druckt. Die Plakette über der Vorschau zeigt die Seitenzahl, grün bei einer Seite und rot ab der zweiten. Wichtig: dieser Modus hält alles nur im Arbeitsspeicher des Servers. Er schreibt nicht in content/cv.yaml, und ein Neustart setzt ihn zurück. Lade das PDF aus der Oberfläche herunter, bevor du den Prozess beendest. Wer dauerhaft im Formular arbeiten will, betreibt die Supabase-Variante aus DEPLOY.md selbst.",
+          command:
+            "(cd cv-engine && ONEPAGER_DEMO_MODE=true .venv/bin/python tools/editor/server.py)",
+        },
+        {
+          title: "Layout wechseln, statt Inhalt zu streichen",
+          detail:
+            "Acht Vorlagen liegen bei: classic, modern, sidebar, executive, technical, ats-compact, consulting und minimal. Themes steuern Akzentfarbe, Schrift und Dichte, und die Dichte lässt sich pro Build übersteuern.",
+          command:
+            "(cd cv-engine && .venv/bin/python engine/build.py --density tight)",
+        },
+        {
+          title: "Den Build entscheiden lassen",
+          detail:
+            "engine/build.py rendert das PDF und zählt die Seiten. Bei einer Seite endet der Befehl mit Exit-Code 0 und schreibt output/cv.pdf. Bei zwei Seiten schreibt er stattdessen die erste Überschrift der überzähligen Seite auf stderr, etwa First section on the overflow page: 'Projects', und endet mit Exit-Code 1. Ein zweiseitiges PDF entsteht dabei gar nicht erst.",
+          command: "(cd cv-engine && .venv/bin/python engine/build.py)",
+        },
+      ],
+    },
+    integration: {
+      summary:
+        "content/cv.yaml ist eine gewöhnliche Textdatei. Alles Weitere hängt daran: Versionierung, Import aus vorhandenen Dateien und der Aufruf aus einer Pipeline.",
+      targets: [
+        "YAML",
+        "PDF",
+        "DOCX",
+        "rendercv",
+        "Git",
+        "Ollama",
+        "OpenAI-kompatible APIs",
+      ],
+      steps: [
+        {
+          title: "Den Lebenslauf versionieren",
+          detail:
+            "Eine Datei, ein Diff. Du siehst nach zwei Jahren, was du geändert hast, statt eine weitere Word-Datei anzulegen. Im Werkzeug-Repository ist content/cv.yaml absichtlich ignoriert, damit deine Daten dort nicht landen; versioniere sie in deinem eigenen privaten Repository.",
+        },
+        {
+          title: "Vorhandene Dateien einlesen",
+          detail:
+            "rendercv-YAML und Klartext konvertiert der Importer deterministisch, ohne Anbieter und ohne Netz. PDF und DOCX laufen über den gewählten KI-Anbieter mit deinem Schlüssel; ohne Schlüssel scheitert dieser Pfad sauber, statt still etwas zu raten.",
+        },
+        {
+          title: "Den Build in eine Pipeline hängen",
+          detail:
+            "Der Exit-Code ist die Schnittstelle: 0 nur dann, wenn genau eine Seite herauskommt. Damit taugt der Aufruf ohne weiteren Code als Gate in einer CI.",
+          command:
+            "(cd cv-engine && .venv/bin/python engine/build.py --output dist/cv.pdf)",
+        },
+      ],
+    },
+    // Pinned to the admitted revision, not a floating branch: the guide on
+    // this page describes the repository as reviewed, and the README link
+    // must keep describing exactly that state. A newer README arrives only
+    // with a new pin through the full admission path.
+    documentation: {
+      label: "README im Repository",
+      href: `https://github.com/loehrning-ai/${CV_ENGINE_SLUG}/blob/${CV_ENGINE_REVISION}/README.md`,
+    },
+    screenshot: {
+      src: `/artifacts/tools/${CV_ENGINE_SLUG}/screenshot.webp`,
+      sourcePath: "docs/screenshots/preview-card.webp",
+      // Rendered once and visibly: as the figure caption, which also labels
+      // the figure (the img itself carries an empty alt so screen readers
+      // hear the prose exactly once). Written as publishable prose.
+      alt: "Der Editor in zwei Spalten: links die YAML-Ansicht des gespeicherten Lebenslaufs, deren erste Kommentarzeilen die Einseitenregel festhalten, rechts die A4-Vorschau in Seitenansicht mit der grünen Plakette 1 page in der Kopfzeile.",
+      sha256: "8c402e73a3ac46498d5fbfe6f39e03eebf532e62fe4b5ae69941211e96492aff",
+      sizeBytes: 132292,
+      width: 1696,
+      height: 1060,
+    },
+    demo: [
+      {
+        src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/form-experience.png`,
+        sourcePath: "docs/screenshots/form-experience.png",
+        alt: "Das Formular des Editors, aufgeklappt bei Experience: pro Eintrag eine Karte mit beschrifteten Feldern für Rolle, Firma, Zeitraum und Stichpunkte, daneben Pfeile zum Umsortieren.",
+        caption:
+          "Jedes Feld ist ein beschriftetes Eingabefeld. Listen lassen sich umsortieren und kürzen, ohne YAML anzufassen.",
+        sha256:
+          "e9491465d35749032cb6a3c73939e63cbe22c8638a15e6f5cb3ea92d089867f3",
+        sizeBytes: 581785,
+        width: 2880,
+        height: 1800,
+      },
+      {
+        src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/yaml-view.png`,
+        sourcePath: "docs/screenshots/yaml-view.png",
+        alt: "Dieselbe Ansicht mit aktivem YAML-Tab: links der Rohtext des Lebenslaufs mit Syntaxhervorhebung, rechts unverändert die A4-Vorschau.",
+        caption:
+          "Wer lieber Text schreibt, wechselt auf den YAML-Tab. Formular und Datei sind dieselbe Quelle, sie laufen nicht auseinander.",
+        sha256:
+          "77532bbde5e16deee660c4632934dc7f4748fed190d24d2e8326f3ab666c4688",
+        sizeBytes: 690749,
+        width: 2880,
+        height: 1800,
+      },
+      {
+        src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/theme-picker.png`,
+        sourcePath: "docs/screenshots/theme-picker.png",
+        // "Darstellung", not "Vorlage": the panel in this frame sets accent,
+        // font, density and paper tone. The eight Vorlagen named in the
+        // Verwendung section (classic, modern, sidebar und so weiter) are a
+        // different setting and are not shown here.
+        alt: "Das geöffnete Feld für die Darstellung über dem Formular: Regler für Akzentfarbe, Schrift, Dichte und Papierton, darunter benannte Voreinstellungen wie Default, Forest oder Harvard Crimson.",
+        caption:
+          "Passt der Text nicht auf eine Seite, änderst du Akzent, Schrift oder Dichte, statt Inhalt zu streichen.",
+        sha256:
+          "ea72ade6eb5739df78ca4e80c3fb6f9c700a413a9a730fd5a0b81d92c9c370a5",
+        sizeBytes: 644467,
+        width: 2880,
+        height: 1800,
+      },
+      {
+        src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/cv.png`,
+        sourcePath: "docs/screenshots/cv.png",
+        alt: "Das fertige PDF als einzelne A4-Seite, aus der PDF-Datei gerastert: Kopfzeile, Erfahrung, Ausbildung, Fähigkeiten und Projekte auf einer Seite.",
+        caption:
+          "Der Build rendert genau eine Seite. Läuft der Lebenslauf über, endet der Befehl mit Fehler und nennt die Überschrift, die nicht mehr passt.",
+        sha256:
+          "179d73376d5c629723ec3bf6e041e2ab904ad5c984b57f8701b179cffa14e150",
+        sizeBytes: 344513,
+        width: 1241,
+        height: 1754,
+      },
+    ],
+    relatedLearning: [
+      {
+        title: "AI-Native Arbeitskurs",
+        description:
+          "Die Arbeitsweise hinter dem Werkzeug: Intent formulieren, Kontext geben, Output prüfen. Genau die drei Schritte, die ein Import aus deinem alten PDF von dir verlangt.",
+        href: "/ai-native",
+      },
+      {
+        title: "Claude Course",
+        description:
+          "Englischer Open-Source-Kurs zu Prompting, Kontext und Evals. Nützlich, wenn du die optionalen KI-Funktionen nicht nur anklicken, sondern beurteilen willst.",
+        href: "/kurse/open-source/claude",
+      },
+    ],
+  },
+} as const satisfies ToolArtifact;
+
+// Publication lanes for the loehrning-ai GitHub organization. An entry is
+// admitted only through the two-commit pinning sequence in
+// ARTIFACT_PUBLICATION.md — complete source, license, operating-guide, and
+// media metadata, pinned to a reachable public revision. The project and
+// video lanes stay empty until a repository of that kind is published there.
+export const OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES: readonly ToolArtifact[] = [
+  CV_ENGINE_TOOL_ARTIFACT,
+];
 export const OPEN_SOURCE_PROJECT_ARTIFACT_CANDIDATES: readonly ProjectArtifact[] =
   [];
 export const OPEN_SOURCE_VIDEO_ARTIFACT_CANDIDATES: readonly VideoArtifact[] =

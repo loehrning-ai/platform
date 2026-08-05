@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { m } from "framer-motion";
-import { BookOpen, Download, Lock, X } from "lucide-react";
+import { BookOpen, Lock, X } from "lucide-react";
 import { fadeUp, EASE_OUT_EXPO } from "@/lib/animations";
 import { useFocusTrap } from "@/lib/a11y/use-focus-trap";
 import { BrandButton } from "@/components/ui/brand-button";
@@ -107,7 +107,11 @@ function BookTeaser({ book, onClose }: { book: Book; onClose: () => void }) {
   );
 }
 
-export function BuecherContent({ isLoggedIn }: { readonly isLoggedIn: boolean }) {
+export function BuecherContent({
+  accountEnabled,
+}: {
+  readonly accountEnabled: boolean;
+}) {
   const [active, setActive] = useState<Book | null>(null);
   // Stable identity so the teaser's focus-trap effect never re-runs (and
   // never yanks focus) on a parent re-render.
@@ -119,26 +123,26 @@ export function BuecherContent({ isLoggedIn }: { readonly isLoggedIn: boolean })
       <section className="border-b border-border/50 py-24 md:py-32">
         <div className="mx-auto max-w-4xl px-6 text-center">
           <m.p
-            initial={{ opacity: 0 }}
+            initial={false}
             animate={{ opacity: 1 }}
-            className="overline mb-6"
+            className="js-reveal overline mb-6"
           >
             Bücher
           </m.p>
           <m.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl font-bold tracking-[-0.04em] sm:text-5xl"
+            className="js-reveal text-4xl font-bold tracking-[-0.04em] sm:text-5xl"
           >
             {books.length === 1 ? "1 Lesefassung." : `${books.length} Lesefassungen.`}
             <br />
             <span className="text-brand-orange">Kostenlos nutzbar.</span>
           </m.h1>
           <m.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="mt-6 text-lg text-muted-foreground"
+            className="js-reveal mt-6 text-lg text-muted-foreground"
           >
             {books.length === 1
               ? "1 Lernbuch zu KI. Kostenlos online lesbar, keine Registrierung nötig."
@@ -156,13 +160,17 @@ export function BuecherContent({ isLoggedIn }: { readonly isLoggedIn: boolean })
               <m.div
                 key={book.id}
                 data-testid="book-card"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
+                {...(i === 0
+                  ? { initial: false }
+                  : {
+                      initial: { opacity: 0, y: 20 },
+                      whileInView: { opacity: 1, y: 0 },
+                      viewport: { once: true, margin: "-40px" },
+                      transition: { delay: i * 0.1, duration: 0.5 },
+                    })}
                 id={book.id}
                 className={[
-                  "rounded-xl border border-border bg-card p-6 shadow-card sm:p-8",
+                  "js-reveal rounded-xl border border-border bg-card p-6 shadow-card sm:p-8",
                   i === 0 && "border-t-[3px] border-t-brand-orange",
                 ]
                   .filter(Boolean)
@@ -176,16 +184,19 @@ export function BuecherContent({ isLoggedIn }: { readonly isLoggedIn: boolean })
                     className="group/cover block shrink-0"
                     aria-label={`Vorschau von „${book.title}" ansehen`}
                   >
-                    {/* First cover is the above-the-fold LCP candidate on
-                        /buecher, preload it; the rest lazy-load on scroll
-                        (performance hardening). */}
+                    {/* The first cover is the above-the-fold LCP candidate on
+                        /buecher. Render and request it immediately; later
+                        covers keep their lazy-loading behavior. */}
                     <Image
                       src={getBookCover(book)}
                       alt={`Titelseite: ${book.title}`}
                       width={778}
                       height={1100}
                       {...(i === 0
-                        ? { priority: true }
+                        ? {
+                            loading: "eager" as const,
+                            fetchPriority: "high" as const,
+                          }
                         : { loading: "lazy" as const })}
                       sizes="(max-width: 640px) 160px, (max-width: 1024px) 176px, 192px"
                       className="mx-auto h-auto w-40 rounded-lg border border-border bg-card shadow-card transition-[background-color,border-color,color,opacity,transform,box-shadow] duration-200 group-hover/cover:-translate-y-1 group-hover/cover:shadow-card-hover sm:w-44 lg:w-48"
@@ -242,23 +253,19 @@ export function BuecherContent({ isLoggedIn }: { readonly isLoggedIn: boolean })
                         Vorschau öffnen
                       </BrandButton>
                       {book.pdfPath &&
-                        (isLoggedIn ? (
-                          <a
-                            href={book.pdfPath}
-                            download
-                            className="inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground transition-colors hover:text-brand-orange"
-                          >
-                            <Download size={13} aria-hidden="true" />
-                            PDF herunterladen
-                          </a>
-                        ) : (
+                        (accountEnabled ? (
                           <Link
-                            href={`/login?next=${encodeURIComponent("/buecher")}`}
+                            href={`/login?next=${encodeURIComponent(book.pdfPath)}`}
                             className="inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground transition-colors hover:text-brand-orange"
                           >
                             <Lock size={12} aria-hidden="true" />
                             PDF nach Login
                           </Link>
+                        ) : (
+                          <span className="inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                            <Lock size={12} aria-hidden="true" />
+                            PDF-Download nicht verfügbar
+                          </span>
                         ))}
                       <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
                         {book.statusLabel}
@@ -280,11 +287,14 @@ export function BuecherContent({ isLoggedIn }: { readonly isLoggedIn: boolean })
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="mt-8 text-xs text-muted"
+            className="js-reveal mt-8 text-xs text-muted"
           >
             Die Lesefassungen nutzen Original-Recherche von Tim Löhr
-            (2025-2026) als Hintergrundmaterial. PDF-Downloads stehen
-            angemeldeten Nutzern zur Verfügung. Stand: Q3 2026.
+            (2025-2026) als Hintergrundmaterial.{" "}
+            {accountEnabled
+              ? "PDF-Downloads stehen angemeldeten Nutzern zur Verfügung."
+              : "PDF-Downloads sind in dieser Version deaktiviert."}{" "}
+            Stand: Q3 2026.
           </m.p>
         </div>
       </section>
@@ -292,22 +302,37 @@ export function BuecherContent({ isLoggedIn }: { readonly isLoggedIn: boolean })
       {/* Learning bridge */}
       <section className="relative bg-card/20 py-32">
         <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-          <div className="h-[400px] w-[600px] rounded-full bg-brand-orange/8 blur-[120px]" />
+          <div
+            className="h-[400px] w-[600px] rounded-full"
+            style={{
+              backgroundImage:
+                "radial-gradient(ellipse at center, color-mix(in srgb, var(--color-brand-orange) 8%, transparent) 0%, transparent 70%)",
+            }}
+          />
         </div>
         <div className="relative mx-auto max-w-3xl px-6 text-center">
-          <m.div initial="hidden" whileInView="visible" viewport={{ once: true }}>
+          <m.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="js-reveal"
+          >
             <m.h2
               custom={0}
               variants={fadeUp}
-              className="text-3xl font-bold tracking-[-0.04em] sm:text-4xl"
+              className="js-reveal text-3xl font-bold tracking-[-0.04em] sm:text-4xl"
             >
               Vom Lesen ins Üben.
             </m.h2>
-            <m.p custom={1} variants={fadeUp} className="mt-4 text-lg text-muted-foreground">
+            <m.p
+              custom={1}
+              variants={fadeUp}
+              className="js-reveal mt-4 text-lg text-muted-foreground"
+            >
               Die Kurse übersetzen die Themen in Lektionen, Quizfragen,
               Übungen und lokale Fortschrittsstände.
             </m.p>
-            <m.div custom={2} variants={fadeUp} className="mt-8">
+            <m.div custom={2} variants={fadeUp} className="js-reveal mt-8">
               <BrandButton href="/kurse" size="lg">
                 Kurse ansehen
               </BrandButton>

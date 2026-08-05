@@ -56,7 +56,7 @@ async function packageDirectories(nodeModulesRoot) {
     locators = await readdir(store, { withFileTypes: true });
   } catch (error) {
     throw new Error(
-      `Dependency license audit requires Bun's installed package store at ${store}. Run bun install --frozen-lockfile first.`,
+      `Dependency license audit requires Bun's installed package store at ${store}. Run bun install --frozen-lockfile --ignore-scripts first.`,
       { cause: error },
     );
   }

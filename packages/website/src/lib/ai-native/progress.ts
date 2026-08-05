@@ -35,13 +35,19 @@ import {
   isLessonCompleted as uIsLessonCompleted,
   getCompletedLessonIds as uGetCompletedLessonIds,
   getCompletedLessonsCount as uGetCompletedLessonsCount,
+  saveLessonQuizScore as uSaveLessonQuizScore,
   saveExerciseResult as uSaveExerciseResult,
   getExerciseResult as uGetExerciseResult,
   isExerciseCompleted as uIsExerciseCompleted,
+  markCapstoneSubmitted as uMarkCapstoneSubmitted,
   getOverallProgress as uGetOverallProgress,
   resetCourse,
   __resetCacheForTests as uResetCacheForTests,
 } from "@/lib/progress/store";
+import {
+  isCanonicalLessonId,
+  isCanonicalSectionId,
+} from "@/lib/courses/completion";
 
 const SLUG = "ai-native" as const;
 
@@ -49,6 +55,11 @@ const SLUG = "ai-native" as const;
 const MAX_IMPORT_BYTES = 200 * 1024; // 200 KB
 const MAX_IMPORT_LESSONS = 500;
 const MAX_IMPORT_EXERCISES_PER_LESSON = 100;
+const MAX_IMPORT_EXERCISE_ID_LENGTH = 200;
+const MAX_IMPORT_ATTEMPTS = 1_000_000;
+const MAX_IMPORT_QUIZ_TOTAL = 100;
+const MIN_PROGRESS_TIMESTAMP = Date.UTC(2020, 0, 1);
+const MAX_PROGRESS_TIMESTAMP = Date.UTC(2100, 0, 1);
 
 // ─── Section Progress ──────────────────────────────────────────
 
@@ -238,6 +249,103 @@ interface SerializedProgress {
   readonly lastActivity: string;
 }
 
+function isPlainRecord(value: unknown): value is Record<string, unknown> {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    !Array.isArray(value) &&
+    (Object.getPrototypeOf(value) === Object.prototype ||
+      Object.getPrototypeOf(value) === null)
+  );
+}
+
+function hasExactKeys(
+  value: Record<string, unknown>,
+  expected: readonly string[],
+): boolean {
+  const keys = Reflect.ownKeys(value);
+  if (
+    keys.length !== expected.length ||
+    keys.some((key) => typeof key !== "string")
+  ) {
+    return false;
+  }
+  const expectedKeys = new Set(expected);
+  return keys.every((key) => expectedKeys.has(key as string));
+}
+
+function isCanonicalIsoTimestamp(value: unknown): value is string {
+  if (
+    typeof value !== "string" ||
+    value.length !== 24 ||
+    !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/u.test(value)
+  ) {
+    return false;
+  }
+  const timestamp = Date.parse(value);
+  return (
+    Number.isFinite(timestamp) &&
+    timestamp >= MIN_PROGRESS_TIMESTAMP &&
+    timestamp < MAX_PROGRESS_TIMESTAMP &&
+    new Date(timestamp).toISOString() === value
+  );
+}
+
+function bytesToBase64Url(bytes: Uint8Array): string {
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary)
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+}
+
+function isValidExerciseId(value: string): boolean {
+  return (
+    value.length > 0 &&
+    value.length <= MAX_IMPORT_EXERCISE_ID_LENGTH &&
+    /^[A-Za-z0-9][A-Za-z0-9_.:/-]*$/u.test(value)
+  );
+}
+
+function validateExerciseResult(
+  value: unknown,
+): SanitizedExerciseResult | null {
+  if (
+    !isPlainRecord(value) ||
+    !hasExactKeys(value, [
+      "kind",
+      "completed",
+      "score",
+      "attempts",
+      "skipped",
+    ]) ||
+    !isExerciseKind(value.kind) ||
+    typeof value.completed !== "boolean" ||
+    !(
+      value.score === null ||
+      (typeof value.score === "number" &&
+        Number.isFinite(value.score) &&
+        value.score >= 0 &&
+        value.score <= 1)
+    ) ||
+    typeof value.attempts !== "number" ||
+    !Number.isSafeInteger(value.attempts) ||
+    value.attempts < 0 ||
+    value.attempts > MAX_IMPORT_ATTEMPTS ||
+    typeof value.skipped !== "boolean"
+  ) {
+    return null;
+  }
+  return {
+    kind: value.kind,
+    completed: value.completed,
+    score: value.score,
+    attempts: value.attempts,
+    skipped: value.skipped,
+  };
+}
+
 function sanitizeForExport(state: AiNativeCourseProgress): SerializedProgress {
   return {
     schemaVersion: state.schemaVersion,
@@ -292,47 +400,136 @@ export function serializeProgress(): string | null {
 
 /** Validate imported payload. Returns parsed object or null on any rejection. */
 function deserializeAndValidate(encoded: string): SerializedProgress | null {
-  if (encoded.length * 0.75 > MAX_IMPORT_BYTES) return null;
   try {
+    if (
+      typeof encoded !== "string" ||
+      encoded.length === 0 ||
+      encoded.length * 0.75 > MAX_IMPORT_BYTES ||
+      encoded.length % 4 === 1 ||
+      !/^[A-Za-z0-9_-]+$/u.test(encoded)
+    ) {
+      return null;
+    }
     let base64 = encoded.replace(/-/g, "+").replace(/_/g, "/");
     while (base64.length % 4) base64 += "=";
-    const decoded = atob(base64);
-    const json = decodeURIComponent(
-      decoded
-        .split("")
-        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-        .join(""),
-    );
-    if (json.length > MAX_IMPORT_BYTES) return null;
-    const parsed = JSON.parse(json);
-
-    if (typeof parsed !== "object" || parsed === null) return null;
-    if (parsed.schemaVersion !== AI_NATIVE_SCHEMA_VERSION) return null;
-    if (typeof parsed.lessons !== "object" || parsed.lessons === null)
-      return null;
-    const lessonEntries = Object.entries(parsed.lessons);
-    if (lessonEntries.length > MAX_IMPORT_LESSONS) return null;
-    for (const [, lesson] of lessonEntries) {
-      if (typeof lesson !== "object" || lesson === null) return null;
-      const l = lesson as {
-        sectionsRead?: unknown;
-        exercisesCompleted?: unknown;
-      };
-      if (!Array.isArray(l.sectionsRead)) return null;
-      if (
-        typeof l.exercisesCompleted !== "object" ||
-        l.exercisesCompleted === null
-      )
-        return null;
-      const exEntries = Object.entries(l.exercisesCompleted);
-      if (exEntries.length > MAX_IMPORT_EXERCISES_PER_LESSON) return null;
-      for (const [, result] of exEntries) {
-        if (typeof result !== "object" || result === null) return null;
-        const r = result as { kind?: unknown };
-        if (!isExerciseKind(r.kind)) return null;
-      }
+    const binary = atob(base64);
+    if (binary.length > MAX_IMPORT_BYTES) return null;
+    const bytes = new Uint8Array(binary.length);
+    for (let index = 0; index < binary.length; index += 1) {
+      bytes[index] = binary.charCodeAt(index);
     }
-    return parsed as SerializedProgress;
+    if (bytesToBase64Url(bytes) !== encoded) return null;
+    const json = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+    const parsed: unknown = JSON.parse(json);
+
+    if (
+      !isPlainRecord(parsed) ||
+      !hasExactKeys(parsed, [
+        "schemaVersion",
+        "lessons",
+        "capstoneSubmitted",
+        "startedAt",
+        "lastActivity",
+      ]) ||
+      parsed.schemaVersion !== AI_NATIVE_SCHEMA_VERSION ||
+      !isPlainRecord(parsed.lessons) ||
+      typeof parsed.capstoneSubmitted !== "boolean" ||
+      !isCanonicalIsoTimestamp(parsed.startedAt) ||
+      !isCanonicalIsoTimestamp(parsed.lastActivity)
+    ) {
+      return null;
+    }
+
+    const lessonEntries = Object.entries(parsed.lessons);
+    if (
+      lessonEntries.length > MAX_IMPORT_LESSONS ||
+      (lessonEntries.length === 0 && !parsed.capstoneSubmitted)
+    ) {
+      return null;
+    }
+
+    const lessons: SerializedProgress["lessons"] = {};
+    let hasMeaningfulProgress = parsed.capstoneSubmitted;
+    for (const [lessonId, lesson] of lessonEntries) {
+      if (!isCanonicalLessonId(SLUG, lessonId)) return null;
+      if (
+        !isPlainRecord(lesson) ||
+        !hasExactKeys(lesson, [
+          "sectionsRead",
+          "quizScore",
+          "quizTotal",
+          "completed",
+          "exercisesCompleted",
+        ]) ||
+        !Array.isArray(lesson.sectionsRead) ||
+        typeof lesson.completed !== "boolean" ||
+        !isPlainRecord(lesson.exercisesCompleted)
+      ) {
+        return null;
+      }
+
+      const sectionIds = lesson.sectionsRead;
+      if (
+        sectionIds.some(
+          (sectionId) =>
+            typeof sectionId !== "string" ||
+            !isCanonicalSectionId(SLUG, lessonId, sectionId),
+        ) ||
+        new Set(sectionIds).size !== sectionIds.length
+      ) {
+        return null;
+      }
+
+      const bothQuizValuesAreNull =
+        lesson.quizScore === null && lesson.quizTotal === null;
+      const bothQuizValuesAreValid =
+        typeof lesson.quizScore === "number" &&
+        Number.isFinite(lesson.quizScore) &&
+        lesson.quizScore >= 0 &&
+        lesson.quizScore <= 1 &&
+        typeof lesson.quizTotal === "number" &&
+        Number.isSafeInteger(lesson.quizTotal) &&
+        lesson.quizTotal >= 1 &&
+        lesson.quizTotal <= MAX_IMPORT_QUIZ_TOTAL &&
+        Math.abs(
+          lesson.quizScore * lesson.quizTotal -
+            Math.round(lesson.quizScore * lesson.quizTotal),
+        ) <= 1e-9;
+      if (!bothQuizValuesAreNull && !bothQuizValuesAreValid) return null;
+
+      const exEntries = Object.entries(lesson.exercisesCompleted);
+      if (exEntries.length > MAX_IMPORT_EXERCISES_PER_LESSON) return null;
+      const exercisesCompleted: Record<string, SanitizedExerciseResult> = {};
+      for (const [exerciseId, result] of exEntries) {
+        if (!isValidExerciseId(exerciseId)) return null;
+        const validated = validateExerciseResult(result);
+        if (!validated) return null;
+        exercisesCompleted[exerciseId] = validated;
+      }
+
+      lessons[lessonId] = {
+        sectionsRead: sectionIds as string[],
+        quizScore: lesson.quizScore as number | null,
+        quizTotal: lesson.quizTotal as number | null,
+        completed: lesson.completed,
+        exercisesCompleted,
+      };
+      hasMeaningfulProgress ||= Boolean(
+        sectionIds.length > 0 ||
+          lesson.quizScore !== null ||
+          lesson.completed ||
+          exEntries.length > 0,
+      );
+    }
+    if (!hasMeaningfulProgress) return null;
+
+    return {
+      schemaVersion: AI_NATIVE_SCHEMA_VERSION,
+      lessons,
+      capstoneSubmitted: parsed.capstoneSubmitted,
+      startedAt: parsed.startedAt,
+      lastActivity: parsed.lastActivity,
+    };
   } catch {
     return null;
   }
@@ -405,8 +602,17 @@ export function importProgress(encoded: string): boolean {
     for (const [exId, ex] of Object.entries(incoming.exercisesCompleted)) {
       uSaveExerciseResult(SLUG, lessonId, { ...ex, exerciseId: exId });
     }
+    if (incoming.quizScore != null && incoming.quizTotal != null) {
+      uSaveLessonQuizScore(
+        SLUG,
+        lessonId,
+        Math.round(incoming.quizScore * incoming.quizTotal),
+        incoming.quizTotal,
+      );
+    }
     if (incoming.completed) uMarkLessonCompleted(SLUG, lessonId);
   }
+  if (imported.capstoneSubmitted) uMarkCapstoneSubmitted(SLUG);
 
   const evt: {
     name: "ai_native_urlhash_import_success";

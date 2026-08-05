@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const MIGRATIONS_DIR = resolve(process.cwd(), "supabase/migrations");
+const REPOSITORY_ROOT = resolve(process.cwd(), "../..");
 
 function migration(name: string): string {
   return readFileSync(resolve(MIGRATIONS_DIR, name), "utf8").toLowerCase();
@@ -17,14 +18,18 @@ describe("production database migration contract", () => {
       "20260716160837_003_rate_limits.sql",
       "20260716160839_005_drop_scan_insight_cache.sql",
       "20260716160842_008_feedback.sql",
-      "20260723150000_009_user_course_progress_per_course.sql",
-      "20260723150137_harden_data_api_boundaries.sql",
+      "20260723163401_009_user_course_progress_per_course.sql",
+      "20260723163429_harden_data_api_boundaries.sql",
+      "20260723164006_optimize_rls_and_foreign_keys.sql",
+      "20260728190500_drop_dormant_assessment_browser_policies.sql",
+      "20260728235900_close_retention_and_legacy_data_gaps.sql",
+      "20260730010000_retire_unkeyed_rate_limit_identifiers.sql",
     ]);
   });
 
   it("never drops the live progress table during the per-course transition", () => {
     const sql = migration(
-      "20260723150000_009_user_course_progress_per_course.sql",
+      "20260723163401_009_user_course_progress_per_course.sql",
     );
     expect(sql).not.toMatch(/\bdrop\s+table\b/);
     expect(sql).toContain("user_course_progress_v4_legacy");
@@ -36,7 +41,7 @@ describe("production database migration contract", () => {
   });
 
   it("revokes direct mutation and worker-function access from browser roles", () => {
-    const sql = migration("20260723150137_harden_data_api_boundaries.sql");
+    const sql = migration("20260723163429_harden_data_api_boundaries.sql");
     expect(sql).toContain(
       "revoke insert, update, delete on table public.user_course_progress",
     );
@@ -72,5 +77,166 @@ describe("production database migration contract", () => {
     expect(sql).not.toContain(
       "alter default privileges for role supabase_admin",
     );
+  });
+
+  it("optimizes RLS evaluation without widening who can read a row", () => {
+    const sql = migration("20260723164006_optimize_rls_and_foreign_keys.sql");
+
+    // The whole point of the rewrite: `auth.uid()` called bare is re-evaluated
+    // once per row, while `(select auth.uid())` is evaluated once per
+    // statement. Every occurrence must be wrapped or the migration bought
+    // nothing.
+    const calls = sql.match(/auth\.uid\(\)/g) ?? [];
+    const wrapped = sql.match(/\(select auth\.uid\(\)\)/g) ?? [];
+    expect(calls).not.toHaveLength(0);
+    expect(wrapped).toHaveLength(calls.length);
+
+    // Owner-scoped policies stay owner-scoped: a rewrite that dropped the
+    // predicate would still parse, still be fast, and expose every row.
+    const ownerScoped = [
+      ...sql.matchAll(/to (\w+)\s+using \(\(select auth\.uid\(\)\)/g),
+    ].map(([, role]) => role);
+    expect(ownerScoped).not.toHaveLength(0);
+    expect(new Set(ownerScoped)).toEqual(new Set(["authenticated"]));
+
+    // `using (true)` is legitimate for service_role only — that key already
+    // bypasses RLS and never reaches a browser. Note the clause order:
+    // PostgreSQL writes `to <role>` before `using`, so an assertion written
+    // the other way round matches nothing and passes vacuously.
+    const unrestricted = [...sql.matchAll(/to (\w+)\s+using \(true\)/g)].map(
+      ([, role]) => role,
+    );
+    expect(unrestricted).not.toHaveLength(0);
+    expect(new Set(unrestricted)).toEqual(new Set(["service_role"]));
+
+    // Recreating a policy must not become a privilege grant.
+    expect(sql).not.toMatch(/^\s*grant\b/m);
+    expect(sql).toContain("to_regclass('public.journey_leads')");
+    expect(sql).toContain("to_regclass('public.journey_consultations')");
+    expect(sql).toContain("to_regclass('public.daily_usage')");
+    expect(sql).toContain("to_regclass('public.deep_analysis_jobs')");
+    expect(sql).not.toContain(
+      'create policy "users can insert own assessment_runs"',
+    );
+
+    // The foreign keys this migration exists to cover.
+    expect(sql).toContain("assessment_answers_run_id_idx");
+    expect(sql).toContain("assessment_answers_user_id_idx");
+    expect(sql).toContain("assessment_runs_user_id_idx");
+  });
+
+  it("removes dormant assessment browser policies from already-migrated projects", () => {
+    const sql = migration(
+      "20260728190500_drop_dormant_assessment_browser_policies.sql",
+    );
+    expect(sql.match(/drop policy if exists/g)).toHaveLength(4);
+    expect(sql).not.toContain("create policy");
+    expect(sql).not.toMatch(/^\s*grant\b/m);
+  });
+
+  it("schedules feedback retention and drops legacy progress only after conversion proof", () => {
+    const sql = migration(
+      "20260728235900_close_retention_and_legacy_data_gaps.sql",
+    );
+    const readme = readFileSync(resolve(REPOSITORY_ROOT, "README.md"), "utf8");
+    const environmentExample = readFileSync(
+      resolve(process.cwd(), ".env.example"),
+      "utf8",
+    );
+    expect(sql).toContain("'beta-feedback-retention-daily'");
+    expect(sql).toContain("'29 3 * * *'");
+    expect(sql).toContain("select public.prune_beta_feedback()");
+    expect(readme).toContain("`beta-feedback-retention-daily`");
+    expect(readme).toContain("`29 3 * * *`");
+    expect(readme).not.toContain("prune-beta-feedback-daily");
+    expect(environmentExample).toContain(
+      "migration-created beta-feedback-retention-daily job",
+    );
+    expect(environmentExample).toContain(
+      "Do not create a second job manually",
+    );
+    expect(sql).toContain(
+      "to_regclass('private.user_course_progress_v4_legacy')",
+    );
+    expect(sql).toContain("current_progress.course_slug = '_meta'");
+    expect(sql).toContain("jsonb_object_keys");
+    expect(sql).not.toContain(
+      "current_progress.updated_at > legacy.updated_at",
+    );
+    expect(
+      sql.match(/current_progress\.created_at = legacy\.created_at/g),
+    ).toHaveLength(2);
+    expect(
+      sql.match(/current_progress\.updated_at = legacy\.updated_at/g),
+    ).toHaveLength(2);
+    expect(sql).toMatch(
+      /current_progress\.progress = jsonb_build_object\(\s*'schemaversion', 3,\s*'xp'/,
+    );
+    expect(sql).toMatch(
+      /'slice',\s*legacy\.progress -> 'courses' -> source_course\.course_slug/,
+    );
+    expect(sql).not.toContain("coalesce(legacy.progress");
+    expect(sql).toContain(
+      "drop table private.user_course_progress_v4_legacy",
+    );
+    expect(sql).not.toMatch(/\bdrop\s+table\b[^;]*\bcascade\b/);
+  });
+
+  it("fails closed before destructive legacy cleanup when any source shape or byte is unproved", () => {
+    const sql = migration(
+      "20260728235900_close_retention_and_legacy_data_gaps.sql",
+    );
+    const dropIndex = sql.indexOf(
+      "drop table private.user_course_progress_v4_legacy",
+    );
+    const requiredPreDropGuards = [
+      "lock table private.user_course_progress_v4_legacy",
+      "lock table public.user_course_progress in share mode",
+      "unexpected source table columns",
+      "missing or unexpected top-level keys",
+      "legacy_row.progress -> 'schemaversion' is distinct from '2'::jsonb",
+      "malformed root shape",
+      "malformed checkpoints",
+      "malformed badges",
+      "malformed streak",
+      "unknown course slug",
+      "malformed course",
+      "malformed workshop quiz",
+      "malformed lesson",
+      "malformed section list",
+      "malformed exercise",
+      "metadata conversion is not exact",
+      "course conversion is not exact",
+    ];
+
+    expect(dropIndex).toBeGreaterThan(-1);
+    for (const guard of requiredPreDropGuards) {
+      const guardIndex = sql.indexOf(guard);
+      expect(guardIndex, `missing guard: ${guard}`).toBeGreaterThan(-1);
+      expect(guardIndex, `guard after DROP: ${guard}`).toBeLessThan(dropIndex);
+    }
+
+    expect(sql).toContain(
+      "legacy_row.progress ?& array[\n        'schemaversion',\n        'courses',\n        'xp',\n        'checkpoints',\n        'badges',\n        'streak',\n        'lastactivity'",
+    );
+    expect(sql).toContain(
+      "from jsonb_object_keys(legacy_row.progress) as root_key(key)",
+    );
+    expect(sql).toContain(
+      "column_name::text || ':' || udt_name::text || ':' || is_nullable::text",
+    );
+  });
+
+  it("retires only the obsolete deterministic rate-limit key formats", () => {
+    const sql = migration(
+      "20260730010000_retire_unkeyed_rate_limit_identifiers.sql",
+    );
+    expect(sql).toContain("delete from public.rate_limits");
+    expect(sql).toContain(
+      "^[a-z0-9-]{1,64}:(sha256|user-sha256):[0-9a-f]{64}$",
+    );
+    expect(sql).not.toContain("truncate");
+    expect(sql).not.toContain("drop table");
+    expect(sql).not.toContain("hmac-sha256-v1");
   });
 });

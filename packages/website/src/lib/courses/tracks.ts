@@ -6,8 +6,8 @@
  *
  * Three tracks, folded into `CourseFacts.accent`/`.badge` below (
  * stage 3 — the former standalone `TRACK_META` table is gone):
- *   zertifikat  — the 4 native German certified courses (Kupfer)
- *   technical   — the 6 native English technical courses (Sand)
+ *   lernpfad    — the 4 native German courses with a self-issued record (Kupfer)
+ *   github-lab  — the 6 English MIT technical courses, external (Sand)
  *   brainster   — applied client workshops turned courses (Amber)
  */
 
@@ -59,9 +59,9 @@ export const BRAINSTER_COURSE_CATALOG: readonly BrainsterCourse[] = [
 // This is the model the redesigned surfaces (homepage, /kurse) consume. It
 // replaces the three colour "tracks" above with what a person actually needs
 // to see:
-//   1. ONE ordered starting path — "der Lernpfad" — the certified German
+//   1. ONE ordered starting path — "der Lernpfad" — the German
 //      courses that share the progress + record engine.
-//   2. A "Tiefer gehen" shelf — native technical courses (English) + applied
+//   2. A "Tiefer gehen" shelf — external GitHub labs (English) + applied
 //      workshop courses.
 // Instead of a colour code, each course carries honest badges derived from
 // real facts: its language, whether it issues a record (and which kind), and
@@ -83,7 +83,11 @@ export type CourseAccent = "kupfer" | "sand" | "amber";
  * each imported course's own plan flips its single `COURSE_FACTS` entry once
  * it ships real native routes + certificate wiring.
  */
-export type RecordKind = "zertifikat" | "lernnachweis" | "certificate" | "none";
+export type RecordKind =
+  | "teilnahmebestaetigung"
+  | "lernnachweis"
+  | "certificate"
+  | "none";
 
 /** Semantic tone of a badge chip; the UI maps each tone to a warm colour. */
 export type BadgeTone = "record" | "language" | "external";
@@ -115,16 +119,16 @@ export interface CourseFacts {
  * so adding a course without classifying it fails CI.
  */
 export const COURSE_FACTS: Record<string, CourseFacts> = {
-  // Spine — the 4 native, certified German courses (shown in step order).
+  // Spine — the 4 native German courses with a self-issued record.
   // group is independent of nativeStatus/catalog membership: a course can be
   // native (COURSE_CATALOG, nativeStatus "live") and still belong to the
   // "deeper" shelf, as every English-track ported course below does. Only
   // these 4 slugs are ever "spine" — do not add a course here just because
   // it joined COURSE_CATALOG.
-  "ki-fuehrerschein": { group: "spine", iconName: "GraduationCap", language: "Deutsch", record: "zertifikat", external: false, accent: "kupfer", badge: "Zertifikat · Deutsch" },
-  "ki-und-gesellschaft": { group: "spine", iconName: "Users", language: "Deutsch", record: "lernnachweis", external: false, accent: "kupfer", badge: "Zertifikat · Deutsch" },
-  "eu-ai-act-kurs": { group: "spine", iconName: "Scale", language: "Deutsch", record: "zertifikat", external: false, accent: "kupfer", badge: "Zertifikat · Deutsch" },
-  "ai-native": { group: "spine", iconName: "Bot", language: "Deutsch", record: "zertifikat", external: false, accent: "kupfer", badge: "Zertifikat · Deutsch" },
+  "ki-fuehrerschein": { group: "spine", iconName: "GraduationCap", language: "Deutsch", record: "teilnahmebestaetigung", external: false, accent: "kupfer", badge: "Teilnahmebestätigung · Deutsch" },
+  "ki-und-gesellschaft": { group: "spine", iconName: "Users", language: "Deutsch", record: "lernnachweis", external: false, accent: "kupfer", badge: "Lernnachweis · Deutsch" },
+  "eu-ai-act-kurs": { group: "spine", iconName: "Scale", language: "Deutsch", record: "teilnahmebestaetigung", external: false, accent: "kupfer", badge: "Teilnahmebestätigung · Deutsch" },
+  "ai-native": { group: "spine", iconName: "Bot", language: "Deutsch", record: "teilnahmebestaetigung", external: false, accent: "kupfer", badge: "Teilnahmebestätigung · Deutsch" },
 
   // Deeper — the 6 ported/imported English-track courses. "claude" (plan
   // 008), "codex", "data-infrastructure",
@@ -179,7 +183,7 @@ export function courseIconName(slug: string): string {
 }
 
 export const RECORD_LABEL: Record<Exclude<RecordKind, "none">, string> = {
-  zertifikat: "mit Zertifikat",
+  teilnahmebestaetigung: "mit Teilnahmebestätigung",
   lernnachweis: "mit Lernnachweis",
   certificate: "mit Certificate",
 };
@@ -209,12 +213,12 @@ export const COURSE_SECTIONS: Readonly<
     title: "Der Lernpfad",
     eyebrow: "Deutsch · Schritt für Schritt · mit Nachweis",
     blurb:
-      "Vier aufeinander aufbauende Kurse auf Deutsch. Dein Fortschritt wird gespeichert, am Ende steht eine Teilnahmebestätigung. Fang oben an und arbeite dich vor.",
+      "Vier aufeinander aufbauende Kurse auf Deutsch. Dein Fortschritt wird gespeichert; je nach Kurs erhältst du eine selbst ausgestellte Teilnahmebestätigung oder einen Lernnachweis.",
   },
   deeper: {
     title: "Tiefer gehen",
-    eyebrow: "Englisch · technisch · mit Nachweis",
+    eyebrow: "Englisch · portiert von GitHub · mit Certificate",
     blurb:
-      "Native technische Kurse auf Englisch. Fortschritt und Abschlussnachweis funktionieren direkt auf loehrning.ai; die ursprüngliche Open-Source-Provenienz bleibt dokumentiert.",
+      "Sechs technische Kurse auf Englisch, portiert aus offenen GitHub-Repositories und hier nativ nutzbar. Dein Fortschritt wird gespeichert; jeder Kurs bietet ein selbst ausgestelltes Certificate und nennt seinen geprüften Quellstand.",
   },
 };

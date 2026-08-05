@@ -284,12 +284,12 @@ function WorkflowBuilderBody({
             transition={{ duration: 0.28, ease: EASE_OUT_EXPO }}
             className={cn(
               "mt-4 border-l-[3px] px-4 py-3",
-              passed ? "border-[#22c55e] bg-[#22c55e]/5" : "border-brand-amber bg-brand-amber/5",
+              passed ? "border-risk-green bg-risk-green/5" : "border-brand-amber bg-brand-amber/5",
             )}
           >
             <div className="flex items-center gap-2">
               {passed ? (
-                <CheckCircle2 size={16} className="text-[#22c55e]" />
+                <CheckCircle2 size={16} className="text-risk-green" />
               ) : (
                 <XCircle size={16} className="text-brand-amber" />
               )}

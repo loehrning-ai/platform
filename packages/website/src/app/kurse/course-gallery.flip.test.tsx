@@ -1,15 +1,20 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import type { CatalogCourse } from "@/lib/courses/catalog";
 
 /**
- * Proves that becoming native does not put a technical course into the German
- * spine. Catalog membership controls whether the native card renders;
- * COURSE_FACTS.group controls which learner-facing section owns it.
+ *: proves the gallery's card treatment is driven purely by
+ * nativeStatus, not by which array/shape a course object came from. A course
+ * plan flip never happens mid-test in real code, so this drives it with a
+ * mocked fixture: an object carrying BOTH the CatalogCourse fields the spine
+ * section needs to render AND some ImportedCourse-only provenance fields
+ * (launchHref, sourceHref) it would plausibly retain from before the flip —
+ * proving the renderer only cares about nativeStatus, ignoring the rest.
  */
 
-const { FLIPPED_SLUG, FLIPPED_COURSE } = vi.hoisted(() => ({
-  FLIPPED_SLUG: "flip-fixture-course",
+const FLIPPED_SLUG = "flip-fixture-course";
+
+const { FLIPPED_COURSE } = vi.hoisted(() => ({
   FLIPPED_COURSE: {
     // Cast: this slug is a test-only fixture, deliberately not a real
     // CourseSlug, to prove the renderer never assumes a specific slug.
@@ -30,7 +35,14 @@ const { FLIPPED_SLUG, FLIPPED_COURSE } = vi.hoisted(() => ({
     coverImage: "/course-covers/ki-fuehrerschein.png",
     coverImageAlt: "Fixture cover",
     nativeStatus: "live" as const,
-  } satisfies CatalogCourse,
+    // Retained ImportedCourse-only provenance, harmless to the spine renderer.
+    launchHref: "https://www.timloehr.me/interactive-courses/flip-fixture/",
+    sourceHref:
+      "https://github.com/Mavengence/interactive-courses/tree/abc/flip-fixture",
+  } satisfies CatalogCourse & {
+    readonly launchHref: string;
+    readonly sourceHref: string;
+  },
 }));
 
 const storeMock = vi.hoisted(() => ({
@@ -38,45 +50,38 @@ const storeMock = vi.hoisted(() => ({
   isCertificateEligible: vi.fn<(slug: string) => boolean>(() => false),
   getXp: vi.fn(() => 0),
   getStreak: vi.fn(() => ({ days: 0, last: null as string | null })),
+  subscribe: vi.fn((listener: () => void) => {
+    listener();
+    return () => {};
+  }),
 }));
 
 vi.mock("@/lib/progress/store", () => storeMock);
 vi.mock("@/lib/course/progress", () => ({
   serializeProgress: vi.fn(() => "ENCODED"),
 }));
-
-vi.mock("@/lib/courses/catalog", async (importOriginal) => {
-  const actual =
-    await importOriginal<typeof import("@/lib/courses/catalog")>();
+vi.mock("@/lib/courses/resume", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/courses/resume")>();
   return {
     ...actual,
-    COURSE_CATALOG: [...actual.COURSE_CATALOG, FLIPPED_COURSE],
+    hasCourseStarted: vi.fn((progress, slug) =>
+      String(slug) === "flip-fixture-course"
+        ? false
+        : actual.hasCourseStarted(progress, slug),
+    ),
+    resolveCourseResumeHref: vi.fn((progress, slug) =>
+      String(slug) === "flip-fixture-course"
+        ? "/flip-fixture-course/kurs"
+        : actual.resolveCourseResumeHref(progress, slug),
+    ),
   };
 });
 
-vi.mock("@/lib/courses/tracks", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/lib/courses/tracks")>();
+vi.mock("@/lib/courses/catalog", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/courses/catalog")>();
   return {
     ...actual,
-    courseFacts: (slug: string) =>
-      slug === FLIPPED_SLUG
-        ? {
-            group: "deeper" as const,
-            iconName: "TerminalSquare",
-            language: "Englisch" as const,
-            record: "certificate" as const,
-            external: false,
-            accent: "sand" as const,
-            badge: "Certificate · Englisch",
-          }
-        : actual.courseFacts(slug),
-    courseBadges: (slug: string) =>
-      slug === FLIPPED_SLUG
-        ? [
-            { label: "Englisch", tone: "language" as const },
-            { label: "mit Certificate", tone: "record" as const },
-          ]
-        : actual.courseBadges(slug),
+    ALL_COURSE_CATALOG: [...actual.ALL_COURSE_CATALOG, FLIPPED_COURSE],
   };
 });
 
@@ -89,8 +94,8 @@ afterEach(() => {
   storeMock.isCertificateEligible.mockReturnValue(false);
 });
 
-describe("CourseGallery — group-driven native-course placement", () => {
-  it("keeps a newly native technical course in the deeper section with native progress behavior", () => {
+describe("CourseGallery — nativeStatus-driven flip", () => {
+  it("renders progress dots + certified badge for a nativeStatus: 'live' fixture, even though it also carries imported-only provenance fields", () => {
     storeMock.getCompletedLessonsCount.mockImplementation((slug) =>
       slug === FLIPPED_SLUG ? 10 : 0,
     );
@@ -100,21 +105,10 @@ describe("CourseGallery — group-driven native-course placement", () => {
 
     render(<CourseGallery />);
 
-    const spineSection = screen.getByText("Der Lernpfad").closest("section");
-    const deeperSection = screen.getByText("Tiefer gehen").closest("section");
-    expect(spineSection).not.toBeNull();
-    expect(deeperSection).not.toBeNull();
-    expect(
-      within(deeperSection as HTMLElement).getByText("Flipped Fixture Course"),
-    ).toBeInTheDocument();
-    expect(
-      within(spineSection as HTMLElement).queryByText("Flipped Fixture Course"),
-    ).toBeNull();
+    expect(screen.getByText("Flipped Fixture Course")).toBeInTheDocument();
     expect(
       screen.getByTestId(`progress-dots-${FLIPPED_SLUG}`),
     ).toBeInTheDocument();
-    expect(
-      screen.getByTestId(`certified-${FLIPPED_SLUG}`),
-    ).toBeInTheDocument();
+    expect(screen.getByTestId(`certified-${FLIPPED_SLUG}`)).toBeInTheDocument();
   });
 });

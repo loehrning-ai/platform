@@ -31,6 +31,7 @@ describe("practice engine — pure helpers", () => {
       vi.stubEnv("SUPABASE_URL", "https://fake-project.supabase.co");
       vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "fake-public-key");
       vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", "fake-service-key");
+      vi.stubEnv("RATE_LIMIT_HMAC_SECRET", `rlh1_${"a".repeat(64)}`);
     }
 
     it("is OFF when the env var is unset", () => {

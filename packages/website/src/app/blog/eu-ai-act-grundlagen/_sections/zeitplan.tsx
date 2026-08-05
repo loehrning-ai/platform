@@ -39,9 +39,9 @@ const STEPS: readonly TimelineStep[] = [
   {
     num: "05",
     date: "Dez 2027 / Aug 2028",
-    title: "Hochrisiko, per Beschluss verschoben",
+    title: "Hochrisiko, verbindlich verschoben",
     body:
-      "Parlament und Rat haben die Hochrisiko-Termine neu gesetzt: 2. Dezember 2027 für eigenständige Anhang-III-Systeme, 2. August 2028 für produktintegrierte Systeme. Die Änderungsverordnung war am 16. Juli 2026 noch nicht im Amtsblatt veröffentlicht und damit noch nicht in Kraft. (Quelle: Rat der EU, 29. Juni 2026; OEIL 2025/0359(COD))",
+      "Die Verordnung (EU) 2026/1744 setzt die Hochrisiko-Termine neu: 2. Dezember 2027 für eigenständige Anhang-III-Systeme, 2. August 2028 für produktintegrierte Systeme. Sie wurde am 24. Juli 2026 veröffentlicht und trat am 27. Juli 2026 in Kraft. (Quelle: ABl. L, 2026/1744)",
   },
 ];
 

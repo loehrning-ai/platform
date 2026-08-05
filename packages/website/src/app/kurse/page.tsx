@@ -1,30 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { GraduationCap, TerminalSquare } from "lucide-react";
+import { GraduationCap, Github } from "lucide-react";
 import { JsonLd, SITE_URL } from "@/lib/seo/json-ld";
-import { COURSE_CATALOG } from "@/lib/courses/catalog";
-import { courseFacts } from "@/lib/courses/tracks";
 import { COURSES_GRAPH } from "@/lib/seo/course-discovery";
 import { Card, IconTile } from "@/components/ui/card";
 import { BrandButton } from "@/components/ui/brand-button";
 import { CourseGallery } from "./course-gallery";
 import { PersonaCourseLinks } from "./persona-filter";
 
-const SPINE_COURSES = COURSE_CATALOG.filter(
-  (course) => courseFacts(course.slug).group === "spine",
-);
-const DEEPER_COURSES = COURSE_CATALOG.filter(
-  (course) => courseFacts(course.slug).group === "deeper",
-);
-
-const KURSE_SOCIAL_TITLE = "Kurse: deutscher KI-Lernpfad plus technische Vertiefung";
+const KURSE_SOCIAL_TITLE = "Kurse: kostenlose KI-Lernplattform auf Deutsch";
 const KURSE_SOCIAL_DESCRIPTION =
-  `${SPINE_COURSES.length} deutsche Lernpfad-Kurse und ${DEEPER_COURSES.length} native englische Vertiefungskurse mit lokalem Fortschritt und Nachweisen.`;
+  "Vier deutsche Kernkurse mit Lernkonto und selbst ausgestellten Teilnahmebestätigungen oder Lernnachweisen, dazu sechs öffentliche technische Kurse auf Englisch.";
 const KURSE_SOCIAL_IMAGE = {
   url: `${SITE_URL}/kurse/opengraph-image`,
   width: 1200,
   height: 630,
-  alt: "loehrning.ai Kurse: vier deutsche Lernpfad-Kurse und sechs englische technische Vertiefungen",
+  alt: "loehrning.ai Kurse: vier deutsche Kernkurse und sechs Technikkurse auf Englisch",
 };
 
 export const metadata: Metadata = {
@@ -55,13 +46,13 @@ const TRACK_DIFF = [
     icon: GraduationCap,
     accent: "kupfer" as const,
     label: "Der Lernpfad",
-    text: `${SPINE_COURSES.length} deutsche Kurse mit gespeichertem Fortschritt und Nachweis. Fang bei Schritt 1 an.`,
+    text: "vier deutsche Kurse mit gespeichertem Fortschritt und Nachweis. Der KI-Check bestimmt deinen Einstieg.",
   },
   {
-    icon: TerminalSquare,
+    icon: Github,
     accent: "sand" as const,
     label: "Tiefer gehen",
-    text: `${DEEPER_COURSES.length} native technische Kurse auf Englisch, ebenfalls mit Fortschritt und Abschlussnachweis.`,
+    text: "sechs technische Kurse auf Englisch, portiert von GitHub, mit Fortschritt und selbst ausgestelltem Certificate. Dazu angewandte Kurse aus Workshops.",
   },
 ];
 
@@ -71,7 +62,7 @@ export default function KursePage() {
       <JsonLd data={COURSES_GRAPH} id="kurse-hub-jsonld" />
       <div className="mx-auto max-w-[1180px] px-6 pb-32 pt-20">
         {/* Top rule: brand signature */}
-        <div className="mb-9 h-[3px] w-[154px] rounded-full bg-brand-orange" />
+        <div className="mb-9 h-[3px] w-[154px] bg-brand-orange" />
 
         <div className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
           § Freie KI-Lernplattform · ein Lernpfad, plus Vertiefung
@@ -83,32 +74,25 @@ export default function KursePage() {
         </h1>
 
         <p className="mt-9 max-w-[720px] text-[18px] leading-[1.5] text-muted-foreground sm:text-[21px]">
-          {SPINE_COURSES.length} deutsche Kurse bilden den Lernpfad: von der
-          KI-Kompetenz über die gesellschaftliche Einordnung und den EU AI Act bis
-          zum AI-nativen Arbeiten. Wer tiefer will, findet{" "}
-          {DEEPER_COURSES.length} native technische Kurse auf Englisch, von Claude
-          und Codex bis Data Engineering und System Design.
+          Vier deutsche Kurse bilden den Lernpfad: von der KI-Kompetenz über
+          die gesellschaftliche Einordnung und den EU AI Act bis zum AI-nativen
+          Arbeiten. Danach vertiefst du dein Wissen: sechs technische Kurse auf
+          Englisch, portiert aus offenen GitHub-Repositories, plus angewandte
+          Selbstlernkurse aus Workshop-Material.
         </p>
 
         {/* Beginner entry point */}
         <div className="mt-8 rounded-lg border border-border bg-card px-5 py-3 shadow-tile">
           <p className="text-[14px] text-muted-foreground">
-            <span className="font-bold text-foreground">Neu bei KI?</span>{" "}
-            Starte hier:{" "}
+            <span className="font-bold text-foreground">Dein erster Schritt:</span>{" "}
             <Link
-              href="/einstieg"
-              className="text-brand-orange underline-offset-4 hover:underline"
+              href="/ki-check"
+              className="text-brand-orange underline underline-offset-4"
             >
-              Einstieg: Was ist KI?
+              Der fünfminütige KI-Check
             </Link>
-            {" "}Oder versteh zuerst,{" "}
-            <Link
-              href="/wie-ki-funktioniert"
-              className="text-brand-orange underline-offset-4 hover:underline"
-            >
-              wie KI wirklich funktioniert (4 Lektionen, ca. 40 min)
-            </Link>
-            .
+            {" "}ordnet deinen Stand ein und nennt den passenden Einstieg. Wenn du
+            bei null beginnst, ist das Ergebnis der KI-Führerschein.
           </p>
         </div>
 

@@ -17,10 +17,14 @@
 import { NextResponse } from "next/server";
 
 import { tryGetAnthropicClient } from "@/lib/anthropic";
-import { readBoundedJson } from "@/lib/http/read-json-body";
+import {
+  hasJsonContentType,
+  readBoundedJson,
+} from "@/lib/http/read-json-body";
 import { reportApiError } from "@/lib/observability/api-error";
 import {
   consumeRateLimit,
+  hashedAuthenticatedRateLimitKey,
   hashedClientRateLimitKey,
 } from "@/lib/security/rate-limit";
 import { getAuthenticatedUser } from "@/lib/supabase/auth-server";
@@ -55,7 +59,28 @@ function jsonResponse(
 export async function POST(req: Request): Promise<Response> {
   const start = Date.now();
 
-  const { configured, user, error: authError } = await getAuthenticatedUser();
+  if (!hasJsonContentType(req)) {
+    return jsonResponse(
+      { error: "unsupported_media_type" } satisfies PracticeError,
+      415,
+    );
+  }
+
+  let auth;
+  try {
+    auth = await getAuthenticatedUser();
+  } catch (error) {
+    reportApiError({
+      request: req,
+      step: "auth-get-user",
+      error,
+    });
+    return jsonResponse(
+      { error: "auth_unavailable" } satisfies PracticeError,
+      503,
+    );
+  }
+  const { configured, user, error: authError } = auth;
   if (configured && authError) {
     // Supabase Auth unreachable: not the same as "logged out". Report and
     // answer 503 so an outage does not masquerade as an auth failure.
@@ -81,12 +106,37 @@ export async function POST(req: Request): Promise<Response> {
     );
   }
 
-  const withinLimit = await consumeRateLimit({
-    key: await hashedClientRateLimitKey("ai-native-practice", req),
-    windowSeconds: 3600,
-    max: 20,
-  });
-  if (!withinLimit) {
+  let withinUserLimit: boolean;
+  let withinIpLimit: boolean;
+  try {
+    withinUserLimit = await consumeRateLimit({
+      key: await hashedAuthenticatedRateLimitKey(
+        "ai-native-practice",
+        req,
+        user.id,
+      ),
+      windowSeconds: 3600,
+      max: 20,
+    });
+    withinIpLimit = withinUserLimit
+      ? await consumeRateLimit({
+          key: await hashedClientRateLimitKey("ai-native-practice", req),
+          windowSeconds: 3600,
+          max: 100,
+        })
+      : false;
+  } catch (rateLimitError) {
+    reportApiError({
+      request: req,
+      step: "rate-limit",
+      error: rateLimitError,
+    });
+    return jsonResponse(
+      { error: "Anfragelimit ist vorübergehend nicht verfügbar." } satisfies PracticeError,
+      503,
+    );
+  }
+  if (!withinUserLimit || !withinIpLimit) {
     return jsonResponse(
       {
         error: "Zu viele Anfragen. Versuch's in einer Stunde erneut.",
@@ -95,7 +145,20 @@ export async function POST(req: Request): Promise<Response> {
     );
   }
 
-  const body = await readBoundedJson(req, MAX_BODY_BYTES);
+  let body;
+  try {
+    body = await readBoundedJson(req, MAX_BODY_BYTES);
+  } catch (error) {
+    reportApiError({
+      request: req,
+      step: "unhandled",
+      error,
+    });
+    return jsonResponse(
+      { error: "Live-Modus fehlgeschlagen." } satisfies PracticeError,
+      500,
+    );
+  }
   if (!body.ok && body.error === "body_too_large") {
     return jsonResponse(
       { error: "Anfrage zu groß." } satisfies PracticeError,
@@ -118,10 +181,24 @@ export async function POST(req: Request): Promise<Response> {
   }
   const request = parsed.data;
 
-  const cacheKey = await hashRequest(user.id, request);
+  let cacheKey: string;
+  try {
+    cacheKey = await hashRequest(user.id, request);
+  } catch (error) {
+    reportApiError({
+      request: req,
+      step: "unhandled",
+      error,
+      extra: { mode: request.mode },
+    });
+    return jsonResponse(
+      { error: "Live-Modus fehlgeschlagen." } satisfies PracticeError,
+      500,
+    );
+  }
   const cached = readCache(cacheKey);
   if (cached) {
-    return jsonResponse({ ...cached, cached: false });
+    return jsonResponse({ ...cached, cached: true });
   }
 
   const anthropic = tryGetAnthropicClient();
@@ -132,17 +209,15 @@ export async function POST(req: Request): Promise<Response> {
     );
   }
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15_000);
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15_000);
 
     const { response, usage } = await callClaude({
       anthropic,
       req: request,
       signal: controller.signal,
     });
-
-    clearTimeout(timeout);
 
     const result: PracticeResponse = { ...response, cached: false };
     writeCache(cacheKey, result);
@@ -175,5 +250,7 @@ export async function POST(req: Request): Promise<Response> {
       { error: "Live-Modus fehlgeschlagen." } satisfies PracticeError,
       500,
     );
+  } finally {
+    clearTimeout(timeout);
   }
 }

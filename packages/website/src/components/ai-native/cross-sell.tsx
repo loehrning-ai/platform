@@ -31,11 +31,11 @@ const CARDS: readonly Card[] = [
     cta: "Glossar öffnen",
   },
   {
-    label: "Praxis · Interaktive Demos",
-    title: "Demo-Galerie",
+    label: "Praxis · Interaktive Praxisbeispiele",
+    title: "Praxisbeispiel-Galerie",
     desc: "RAG-Assistent, PII-Scanner, ROI-Rechner, Invoice-OCR, n8n-Flow und Agents: alles ohne Anmeldung ausprobierbar. Simuliert, mit lokalem Kontext.",
     href: "/ai-native/demos",
-    cta: "Demos öffnen",
+    cta: "Praxisbeispiele öffnen",
   },
 ];
 

@@ -1,12 +1,12 @@
 import { test, expect, type Page } from "@playwright/test";
+import { OPEN_SOURCE_ARTIFACTS } from "../../src/lib/open-source/artifacts";
 
 /**
  * Landmark / document-structure sweep (regression coverage).
  *
- * Complements a11y.spec.ts, which runs axe but FILTERS to serious/critical and
- * so drops the moderate-impact structural rules (landmark-one-main,
- * landmark-unique, region, page-has-heading-one). This spec asserts that
- * cross-page skeleton contract directly with role locators, so a regression
+ * Complements a11y.spec.ts, which runs axe across WCAG-tagged rules but cannot
+ * fully prove application-specific landmark and heading invariants. This spec
+ * asserts that cross-page skeleton contract directly with role locators, so a regression
  * that strips a landmark, doubles the <main>, or drops the h1 fails loudly.
  *
  * Assertions target ROLES and the html lang attribute, never copy, so a
@@ -21,6 +21,16 @@ const ROUTES = [
   "/hilfe",
   "/ueber-mich",
   "/einstieg",
+  ...OPEN_SOURCE_ARTIFACTS.map((artifact) => artifact.href),
+] as const;
+
+const ENGLISH_COURSE_ROUTES = [
+  "/kurse/open-source/claude",
+  "/kurse/open-source/codex",
+  "/kurse/open-source/data-infrastructure",
+  "/kurse/open-source/data-engineering-fundamentals",
+  "/kurse/open-source/data-science",
+  "/kurse/open-source/ai-native-operator",
 ] as const;
 
 /**
@@ -89,6 +99,19 @@ test.describe("landmark + structure sweep", () => {
         positiveTabindex,
         `${route}: positive tabindex breaks tab order -> ${positiveTabindex.join(", ")}`,
       ).toEqual([]);
+    });
+  }
+
+  for (const route of ENGLISH_COURSE_ROUTES) {
+    test(`${route} marks its English course content`, async ({ page }) => {
+      await page.goto(route, { waitUntil: "domcontentloaded" });
+
+      const heading = page.getByRole("heading", { level: 1 });
+      await expect(heading).toBeVisible();
+      await expect(heading.locator("xpath=ancestor-or-self::*[@lang][1]")).toHaveAttribute(
+        "lang",
+        "en",
+      );
     });
   }
 });

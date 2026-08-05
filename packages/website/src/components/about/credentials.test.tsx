@@ -59,12 +59,12 @@ import { Credentials } from "./credentials";
 describe("<Credentials>", () => {
   it("renders the section heading and all three credential titles", () => {
     render(<Credentials />);
-    expect(
-      screen.getByRole("heading", {
-        name: "Akademischer Hintergrund",
-        level: 2,
-      }),
-    ).toBeInTheDocument();
+    const sectionHeading = screen.getByRole("heading", {
+      name: "Akademischer Hintergrund",
+      level: 2,
+    });
+    expect(sectionHeading).toBeInTheDocument();
+    expect(sectionHeading).toHaveClass("js-reveal");
     for (const title of [
       "M.Sc. Informatik",
       "Internationale Ausbildung",

@@ -492,7 +492,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 4 Abs. 1 adressiert Anbieter und Betreiber als Organisationen. Diese müssen sicherstellen, dass ihr Personal und beauftragte Personen über ausreichende KI-Kompetenz verfügen. Vergleichbar mit Arbeitsschutz oder Art. 32 DSGVO.",
+    "explanation": "Art. 4 Abs. 1 adressiert Anbieter und Betreiber als Organisationen. Sie müssen kontextgerechte Maßnahmen zur Entwicklung der KI-Kompetenz ihres Personals und beauftragter Personen treffen. Seit Verordnung (EU) 2026/1744 müssen sie kein bestimmtes Kompetenzniveau einzelner Personen garantieren.",
     "version": 1,
     "active": true
   },
@@ -594,7 +594,7 @@
     "id": "q_w20",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Welche Behörde sieht das von Bundestag und Bundesrat beschlossene KI-MIG als zentrale Anlaufstelle vor?",
+    "questionText": "Welche Behörde benennt das seit dem 29. Juli 2026 geltende KI-MIG als zentrale Anlaufstelle?",
     "answerOptions": [
       {
         "id": "a",
@@ -617,7 +617,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Das beschlossene KI-MIG sieht die Bundesnetzagentur als zentrale Anlaufstelle vor, soweit keine Fachbehörde zuständig ist. Am 14. Juli 2026 war das Gesetz noch nicht verkündet. Die vorgesehene Rolle und ein konkreter Beschwerdekanal dürfen daher nicht als bereits wirksam ausgegeben werden.",
+    "explanation": "Das KI-MIG ist am 29. Juli 2026 in Kraft getreten. Es macht die Bundesnetzagentur zur Marktüberwachungsbehörde, Anlaufstelle und Beschwerdestelle für die KI-Verordnung, soweit keine Fachbehörde zuständig ist. Den konkreten Beschwerdeweg prüfen Sie auf der offiziellen Seite der Bundesnetzagentur.",
     "version": 1,
     "active": true
   },

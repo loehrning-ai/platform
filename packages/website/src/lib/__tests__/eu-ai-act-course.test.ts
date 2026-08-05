@@ -6,6 +6,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { getLegalClaim } from "../legal-registry";
 
 const CONTENT_DIR = join(
   process.cwd(),
@@ -40,13 +41,14 @@ describe("block-1 sanctions date", () => {
     expect(s3?.title).toBe("Wann greift die Durchsetzung?");
   });
 
-  it("block-1 L4 s3 keyTakeaway contains 2. Februar 2025 and 2. August 2026", () => {
+  it("block-1 L4 s3 keyTakeaway reflects the amended Article 4 timeline", () => {
     const data = readJson("block-1-grundlagen-lessons.json") as {
       lessons: { sections: { keyTakeaway?: string }[] }[]
     };
     const s3 = data.lessons[3]?.sections[2];
-    expect(s3?.keyTakeaway).toContain("2. Februar 2025");
-    expect(s3?.keyTakeaway).toContain("2. August 2026");
+    expect(s3?.keyTakeaway).toContain("Februar 2025");
+    expect(s3?.keyTakeaway).toContain("27. Juli 2026");
+    expect(s3?.keyTakeaway).toContain("Anfang August 2026");
   });
 
   it("Dec 2027 and Aug 2028 dates in block-1 carry pending qualifier", () => {
@@ -197,7 +199,13 @@ describe("Art. 50 consumer rights section", () => {
     const s4 = data.lessons[2]?.sections[3];
     expect(s4?.content).toContain("10. Juni 2026");
     expect(s4?.content).toContain("Bundesnetzagentur");
-    expect(s4?.content).toContain("nicht verkündet");
+    // Track the legal registry rather than a snapshot of the prose. This
+    // assertion used to pin "nicht amtlich verifiziert", which locked in the
+    // pre-29-July-2026 status and made correcting the content fail the suite.
+    const kiMig = getLegalClaim("de-ki-mig-in-force-2026-07-29");
+    expect(kiMig?.status).toBe("binding");
+    expect(s4?.content).toContain(kiMig?.displayDateDE ?? "29. Juli 2026");
+    expect(s4?.content).not.toContain("nicht amtlich verifiziert");
   });
 });
 
@@ -227,7 +235,9 @@ describe("quiz count consistency", () => {
     // Read config file directly to check value
     const configRaw = readFile("lib/course/config.ts");
     // Extract workshopQuizQuestionCount from EU AI Act config section
-    const match = configRaw.match(/EU_AI_ACT_KURS_CONFIG.*?workshopQuizQuestionCount:\s*(\d+)/s);
+    const match = configRaw.match(
+      /EU_AI_ACT_KURS_CONFIG[\s\S]*?workshopQuizQuestionCount:\s*(\d+)/,
+    );
     const configCount = match ? parseInt(match[1], 10) : null;
     const questions = readJson("quiz/questions.json") as unknown[];
     expect(configCount).toBe(questions.length);

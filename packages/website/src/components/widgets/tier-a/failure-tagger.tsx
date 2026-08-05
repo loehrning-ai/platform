@@ -5,6 +5,10 @@ import { m, AnimatePresence, useReducedMotion } from "framer-motion";
 import { CheckCircle2, XCircle } from "lucide-react";
 import { useCheckpoint } from "@/lib/progress";
 import { EASE_OUT_EXPO } from "@/lib/animations";
+import {
+  handleRovingFocusKeyDown,
+  rovingTabIndex,
+} from "@/lib/a11y/roving-focus";
 import { cn } from "@/lib/utils";
 import { WidgetFrame } from "./_frame";
 
@@ -14,8 +18,8 @@ import { WidgetFrame } from "./_frame";
  * you can name it. Ported from `claude/js/widgets.js:1110` (FailureTagger),
  * rewritten with German Mittelstand scenarios.
  *
- *  - Each case is a radiogroup of failure-mode pills (native buttons → keyboard
- *    + a11y for free).
+ *  - Each case is a radiogroup of failure-mode pills with one Tab stop and
+ *    Arrow/Home/End navigation.
  *  - Fully deterministic: the score is a pure comparison against the authored
  *    `correct` mode. No Date.now / Math.random.
  *  - Awards the checkpoint once on submit if `passThreshold` cases are right.
@@ -195,6 +199,19 @@ export function FailureTaggerWidget({
   const allPicked = cases.length > 0 && cases.every((c) => picks[c.id]);
   const correctCount = cases.filter((c) => picks[c.id] === c.correct).length;
   const passed = correctCount >= threshold;
+  const resultAnnouncement = submitted
+    ? [
+        passed ? chrome.passedLabel : chrome.retryPromptLabel,
+        `${correctCount} / ${cases.length} ${chrome.correctSuffix}.`,
+        ...cases.map((item) =>
+          `${item.prompt}: ${
+            picks[item.id] === item.correct
+              ? chrome.perCaseCorrectLabel
+              : chrome.perCaseWrongLabel
+          } ${item.why}`,
+        ),
+      ].join(" ")
+    : "";
 
   const pick = (caseId: string, modeId: FailureModeId) => {
     if (submitted) return;
@@ -244,6 +261,7 @@ export function FailureTaggerWidget({
       <div className="flex flex-col gap-3">
         {cases.map((c) => {
           const picked = picks[c.id];
+          const pickedIndex = modes.findIndex((mode) => mode.id === picked);
           const isCorrect = submitted && picked === c.correct;
           const isWrong = submitted && picked != null && picked !== c.correct;
           return (
@@ -254,7 +272,7 @@ export function FailureTaggerWidget({
               }
               className={cn(
                 "border-2 bg-background p-4 transition-colors",
-                isCorrect && "border-[#22c55e]",
+                isCorrect && "border-risk-green",
                 isWrong && "border-destructive",
                 !submitted && "border-border",
                 submitted && !picked && "border-border",
@@ -276,9 +294,10 @@ export function FailureTaggerWidget({
               <div
                 role="radiogroup"
                 aria-label={`${chrome.tagAriaLabelPrefix} ${c.prompt}`}
+                data-roving-group
                 className="mt-3 flex flex-wrap gap-2"
               >
-                {modes.map((m) => {
+                {modes.map((m, modeIndex) => {
                   const active = picked === m.id;
                   const markRight = submitted && m.id === c.correct;
                   const markWrong = submitted && active && m.id !== c.correct;
@@ -288,12 +307,27 @@ export function FailureTaggerWidget({
                       type="button"
                       role="radio"
                       aria-checked={active}
+                      data-roving-item
+                      tabIndex={rovingTabIndex(
+                        pickedIndex >= 0 ? pickedIndex : null,
+                        modeIndex,
+                      )}
                       disabled={submitted}
                       onClick={() => pick(c.id, m.id)}
+                      onKeyDown={(event) =>
+                        handleRovingFocusKeyDown(event, {
+                          currentIndex: modeIndex,
+                          itemCount: modes.length,
+                          onMove: (nextIndex) => {
+                            const nextMode = modes[nextIndex];
+                            if (nextMode) pick(c.id, nextMode.id);
+                          },
+                        })
+                      }
                       className={cn(
                         "border-2 px-3 py-1.5 text-[12.5px] font-medium transition-colors",
                         markRight &&
-                          "border-[#22c55e] bg-[#22c55e]/10 text-foreground",
+                          "border-risk-green bg-risk-green/10 text-foreground",
                         markWrong &&
                           "border-destructive bg-destructive/10 text-foreground",
                         !submitted &&
@@ -329,7 +363,7 @@ export function FailureTaggerWidget({
                     <span
                       className={cn(
                         "font-semibold",
-                        isCorrect ? "text-[#22c55e]" : "text-destructive",
+                        isCorrect ? "text-risk-green" : "text-destructive",
                       )}
                     >
                       {isCorrect ? chrome.perCaseCorrectLabel : chrome.perCaseWrongLabel}
@@ -342,6 +376,15 @@ export function FailureTaggerWidget({
           );
         })}
       </div>
+
+      <p
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+      >
+        {resultAnnouncement}
+      </p>
 
       {/* Actions + score */}
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
@@ -369,7 +412,7 @@ export function FailureTaggerWidget({
             <span
               className={cn(
                 "inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em]",
-                passed ? "text-[#22c55e]" : "text-brand-amber",
+                passed ? "text-risk-green" : "text-brand-amber",
               )}
             >
               {passed ? (

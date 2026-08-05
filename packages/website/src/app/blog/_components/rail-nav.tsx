@@ -51,7 +51,7 @@ export function RailNav({
     };
   }, [items]);
 
-  const handleClick = (id: string) => (e: React.MouseEvent | React.KeyboardEvent) => {
+  const handleClick = (id: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const t = document.getElementById(id);
     if (!t) return;
@@ -59,6 +59,7 @@ export function RailNav({
     const offset = 120;
     const targetTop = t.getBoundingClientRect().top + window.scrollY - offset;
     window.scrollTo({ top: targetTop, behavior: "smooth" });
+    window.history.replaceState(null, "", `#${id}`);
   };
 
   return (
@@ -69,16 +70,16 @@ export function RailNav({
         </Link>
         <span className="railbar__kicker">{kicker}</span>
         {items.map((i) => (
-          <button
+          <a
             key={i.id}
-            type="button"
+            href={`#${i.id}`}
             className={`railbar__item${active === i.id ? " railbar__item--active" : ""}`}
             data-target={i.id}
             onClick={handleClick(i.id)}
           >
             <span className="railbar__num">{i.num}</span>
             {i.label}
-          </button>
+          </a>
         ))}
       </div>
     </nav>

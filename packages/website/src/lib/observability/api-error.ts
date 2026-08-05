@@ -8,6 +8,7 @@
  * logging can never break a response path.
  */
 import * as Sentry from "@sentry/nextjs";
+import { writeSafeApiErrorLog } from "./server-log-privacy";
 
 export interface ApiErrorReport {
   /** Route path; derived from `request` URL pathname when omitted. */
@@ -17,38 +18,187 @@ export interface ApiErrorReport {
   step: string;
   error: unknown;
   request?: Request;
-  /** Extra structured context (durationMs, status, ...). NEVER include
-   * PII — no emails, names, or free-text user input. A `requestId` here
-   * overrides the derived one (proxy correlation). */
+  /** Extra structured context (durationMs, status, ...). Unknown keys and
+   * values outside the stable enums below are discarded. */
   extra?: Record<string, unknown>;
 }
 
-/** x-request-id from the incoming request, else a fresh UUID. Exported so
- * proxy routes can forward the same id upstream for request correlation
- * and report it via `extra.requestId`. */
-export function requestIdFrom(request?: Request): string {
+const SAFE_EXTRA_KEYS = new Set([
+  "durationMs",
+  "status",
+  "upstreamStatus",
+  "code",
+  "mode",
+  "kind",
+]);
+const SAFE_ROUTES = new Set([
+  "unknown",
+  "/api/account/delete",
+  "/api/account/export",
+  "/api/account/reset-progress",
+  "/api/ai-native/grade-exercise",
+  "/api/ai-native/practice",
+  "/api/buecher/[slug]/download.pdf",
+  "/api/feedback",
+  "/api/progress",
+  "/auth/logout",
+  "/konto",
+]);
+const SAFE_STEPS = new Set([
+  "unknown",
+  "account-delete",
+  "assessment-read",
+  "auth-clear-session",
+  "auth-create-client",
+  "auth-get-session",
+  "auth-get-user",
+  "auth-revoke-sessions",
+  "auth-sign-out",
+  "auth-verify-session",
+  "llm-call",
+  "pdf-generate",
+  "rate-limit",
+  "resend-send",
+  "retention-prune",
+  "supabase-delete",
+  "supabase-insert",
+  "supabase-read",
+  "supabase-write",
+  "unhandled",
+  "upstream-proxy",
+]);
+const SAFE_ERROR_NAMES = new Set([
+  "AbortError",
+  "AggregateError",
+  "AuthApiError",
+  "AuthSessionMissingError",
+  "DOMException",
+  "Error",
+  "EvalError",
+  "PostgrestError",
+  "RangeError",
+  "RateLimitUnavailableError",
+  "ReferenceError",
+  "SyntaxError",
+  "TypeError",
+  "URIError",
+  "UnknownError",
+]);
+const SAFE_MODES = new Set(["complete", "place-word"]);
+const SAFE_KINDS = new Set([
+  "exercise-fix-prompt",
+  "exercise-rctfc-checklist",
+  "exercise-free-response",
+]);
+
+/** Generate a server-owned correlation ID. Incoming request headers are
+ * attacker-controlled and must not be promoted into logs. */
+export function requestIdFrom(_request?: Request): string {
   try {
-    return request?.headers.get("x-request-id") ?? crypto.randomUUID();
+    return crypto.randomUUID();
   } catch {
     return "unknown";
   }
 }
 
-/** Human-readable message without serializing whole error objects
- * (Supabase PostgrestError etc. expose `.message` but are not Errors). */
-function errorMessage(error: unknown): string {
-  if (error instanceof Error) return error.message;
-  if (
-    typeof error === "object" && error !== null && "message" in error
-    && typeof (error as { message: unknown }).message === "string"
-  ) {
-    return (error as { message: string }).message;
-  }
+function safeRoute(value: unknown): string {
+  return typeof value === "string" && SAFE_ROUTES.has(value)
+    ? value
+    : "unknown";
+}
+
+function validatedStep(value: unknown): string {
+  return typeof value === "string" && SAFE_STEPS.has(value)
+    ? value
+    : "unknown";
+}
+
+function safeErrorName(value: unknown): string {
+  return typeof value === "string" && SAFE_ERROR_NAMES.has(value)
+    ? value
+    : "UnknownError";
+}
+
+function safeErrorCode(value: unknown): string {
+  if (value === "RATE_LIMIT_UNAVAILABLE") return value;
+  return typeof value === "string" && /^PGRST[0-9]{3}$/.test(value)
+    ? value
+    : "unknown";
+}
+
+function readSafeErrorField(error: unknown, field: string): unknown {
+  if (typeof error !== "object" || error === null) return undefined;
   try {
-    return String(error);
+    return Reflect.get(error, field);
   } catch {
-    return "unknown";
+    return undefined;
   }
+}
+
+function safeErrorMetadata(error: unknown): {
+  errorName: string;
+  errorCode: string;
+  errorStatus?: number;
+} {
+  try {
+    const name = readSafeErrorField(error, "name");
+    const code = readSafeErrorField(error, "code");
+    const status = readSafeErrorField(error, "status");
+    return {
+      errorName: safeErrorName(name),
+      errorCode: safeErrorCode(code),
+      ...(typeof status === "number" && Number.isInteger(status) && status >= 100
+        && status <= 599
+        ? { errorStatus: status }
+        : {}),
+    };
+  } catch {
+    return { errorName: "UnknownError", errorCode: "unknown" };
+  }
+}
+
+function safeExtra(extra?: Record<string, unknown>): Record<string, string | number> {
+  const result: Record<string, string | number> = {};
+  if (!extra) return result;
+  try {
+    for (const [key, value] of Object.entries(extra)) {
+      if (!SAFE_EXTRA_KEYS.has(key)) continue;
+      if (
+        key === "durationMs" &&
+        typeof value === "number" &&
+        Number.isFinite(value) &&
+        value >= 0
+      ) {
+        result[key] = value;
+      } else if (
+        (key === "status" || key === "upstreamStatus") &&
+        typeof value === "number" &&
+        Number.isInteger(value) &&
+        value >= 100 &&
+        value <= 599
+      ) {
+        result[key] = value;
+      } else if (key === "code") {
+        const code = safeErrorCode(value);
+        if (code !== "unknown") result[key] = code;
+      } else if (
+        key === "mode" &&
+        typeof value === "string" &&
+        SAFE_MODES.has(value)
+      ) {
+        result[key] = value;
+      } else if (
+        key === "kind" &&
+        typeof value === "string" &&
+        SAFE_KINDS.has(value)
+      ) {
+        result[key] = value;
+      }
+    }
+  } catch {
+    return {};
+  }
+  return result;
 }
 
 export function reportApiError(opts: ApiErrorReport): void {
@@ -61,17 +211,39 @@ export function reportApiError(opts: ApiErrorReport): void {
       route = "unknown";
     }
   }
+  route = safeRoute(route);
+  const safeStep = validatedStep(step);
   const requestId = requestIdFrom(request);
+  const metadata = safeErrorMetadata(error);
+  const context = safeExtra(extra);
+  const event = {
+    route,
+    step: safeStep,
+    requestId,
+    ...metadata,
+    ...context,
+  };
   try {
-    // Spread last so callers can override requestId (proxy correlation).
-    console.error(
-      JSON.stringify({ route, step, requestId, error: errorMessage(error), ...extra }),
-    );
+    writeSafeApiErrorLog(event);
   } catch {
-    // Circular extras must never crash a handler.
+    // Logging must never break a response path.
   }
   try {
-    Sentry.captureException(error, { tags: { route, step }, extra: { requestId, ...extra } });
+    // Never forward the original object, message, or stack: provider and
+    // database errors can contain learner text, emails, tokens, or row data.
+    const sanitizedError = new Error(
+      `API failure:${safeStep}:${metadata.errorCode}`,
+    );
+    sanitizedError.name = metadata.errorName;
+    Sentry.captureException(sanitizedError, {
+      tags: {
+        route,
+        step: safeStep,
+        errorCode: metadata.errorCode,
+        errorName: metadata.errorName,
+      },
+      extra: event,
+    });
   } catch {
     // Sentry no-op/unset/edge quirks must never break the response path.
   }

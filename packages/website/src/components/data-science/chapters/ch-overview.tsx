@@ -1,17 +1,14 @@
-"use client";
-
 import type { CSSProperties } from "react";
-import { useRouter } from "next/navigation";
-import { FlowingPipeline } from "@/components/data-science/simulators/flowing-pipeline";
+import Link from "next/link";
+import { LazyFlowingPipeline } from "@/components/data-science/lazy-flowing-pipeline";
 import { dsChapterHref } from "@/lib/data-science/routes";
 import type { DsChapterId } from "@/lib/data-science/types";
 
 // ─── Ch_Overview ────────────────────────────────────
 //
 // Typed port of Ch_Overview.js. Source's `goTo(id)` callback (passed down
-// from App.js's own state) is replaced with real navigation via
-// `useRouter().push`, since this course has real routes (stage 5)
-// instead of source's `current` state.
+// from App.js's own state) is replaced with semantic links to the real
+// course routes (stage 5) instead of source's `current` state.
 
 interface StageCard {
   readonly id: DsChapterId;
@@ -75,9 +72,6 @@ const TOOLS = [
 ] as const;
 
 export default function ChOverview() {
-  const router = useRouter();
-  const goTo = (id: DsChapterId) => router.push(dsChapterHref(id));
-
   return (
     <>
       <section className="ov-hero">
@@ -94,12 +88,20 @@ export default function ChOverview() {
             <strong> simulation you can break</strong>, not a wall of text.
           </p>
           <div className="ov-hero-cta">
-            <button type="button" className="btn btn-primary ov-cta-btn" onClick={() => goTo("fund")}>
+            <Link
+              className="btn btn-primary ov-cta-btn"
+              href={dsChapterHref("fund")}
+              prefetch={false}
+            >
               Begin &nbsp;→
-            </button>
-            <button type="button" className="ov-cta-ghost" onClick={() => goTo("cap")}>
+            </Link>
+            <Link
+              className="ov-cta-ghost"
+              href={dsChapterHref("cap")}
+              prefetch={false}
+            >
               Or skip to the capstone
-            </button>
+            </Link>
           </div>
           <div className="ov-hero-stats">
             <div className="ov-stat">
@@ -117,7 +119,7 @@ export default function ChOverview() {
           </div>
         </div>
         <div className="ov-hero-sim">
-          <FlowingPipeline onStageClick={(id) => goTo(id)} />
+          <LazyFlowingPipeline />
         </div>
       </section>
 
@@ -156,12 +158,12 @@ export default function ChOverview() {
         </div>
         <div className="ov-curriculum">
           {STAGES.map((s) => (
-            <button
+            <Link
               key={s.id}
-              type="button"
               className="ov-course"
               style={{ "--hue": s.hue, "--hue-ink": HUE_INK[s.hue] || s.hue } as CSSProperties}
-              onClick={() => goTo(s.id)}
+              href={dsChapterHref(s.id)}
+              prefetch={false}
             >
               <div className="ov-course-top">
                 <span className="ov-course-n">{s.n}</span>
@@ -171,7 +173,7 @@ export default function ChOverview() {
               <div className="ov-course-tag">{s.tag}</div>
               <div className="ov-course-blurb">{s.blurb}</div>
               <div className="ov-course-cta">Open chapter &nbsp;→</div>
-            </button>
+            </Link>
           ))}
         </div>
       </section>
@@ -207,12 +209,20 @@ export default function ChOverview() {
           theorem emerge from chaos. <em>Seven minutes.</em> Then you&apos;re in.
         </div>
         <div className="ov-cta-row">
-          <button type="button" className="btn btn-primary ov-cta-btn" onClick={() => goTo("fund")}>
+          <Link
+            className="btn btn-primary ov-cta-btn"
+            href={dsChapterHref("fund")}
+            prefetch={false}
+          >
             Begin with Chapter 01 &nbsp;→
-          </button>
-          <button type="button" className="ov-cta-ghost" onClick={() => goTo("exp")}>
+          </Link>
+          <Link
+            className="ov-cta-ghost"
+            href={dsChapterHref("exp")}
+            prefetch={false}
+          >
             Or jump to Experimentation →
-          </button>
+          </Link>
         </div>
       </section>
     </>

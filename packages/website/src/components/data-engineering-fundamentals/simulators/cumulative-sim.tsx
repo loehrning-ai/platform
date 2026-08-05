@@ -88,15 +88,17 @@ export function CumulativeSim() {
     >
       <div className="cm-days">
         {[0, 1, 2, 3, 4].map((d) => (
-          <div
+          <button
+            type="button"
             key={d}
             className={`cm-day ${day === d ? "active" : ""} ${!patched && d >= BUG_DAY ? "bug" : ""} ${patched && bfKey && d >= BUG_DAY ? "backfill" : ""}`}
             onClick={() => setDay(d)}
+            aria-pressed={day === d}
           >
             <div className="num">DAY {d + 1}</div>
             <div className="date">2026-04-{String(15 + d).padStart(2, "0")}</div>
             <div className="rc">{genDay(d, patched ? null : BUG_DAY).length} rows</div>
-          </div>
+          </button>
         ))}
       </div>
 
@@ -245,13 +247,13 @@ export function CumulativeSim() {
       <div className="ctl-row">
         <div className="ctl-slider" style={{ flex: 2 }}>
           <div className="row">
-            <span className="lab">Scrub day</span>
+            <label className="lab" htmlFor="cumulative-scrub-day">Scrub day</label>
             <span className="val">Day {day + 1}</span>
           </div>
-          <input type="range" min={0} max={4} step={1} value={day} onChange={(e) => setDay(+e.target.value)} />
+          <input id="cumulative-scrub-day" type="range" min={0} max={4} step={1} value={day} onChange={(e) => setDay(+e.target.value)} />
           <span className="hint">click a day card above, or drag here</span>
         </div>
-        <button className="btn btn-primary" disabled={patched} onClick={startBackfill}>
+        <button type="button" className="btn btn-primary" disabled={patched} onClick={startBackfill}>
           {patched ? `✓ Backfilled from Day ${BUG_DAY + 1}` : `Patch & backfill from Day ${BUG_DAY + 1}`}
         </button>
       </div>

@@ -4,9 +4,9 @@ import { STAND_DATE, LAST_UPDATED } from "@/lib/content-meta";
 import { GITHUB_ORG, TIM_ENTITY } from "@/lib/seo/entity";
 
 export function Footer() {
-  // Server Component: the year is computed server-side. suppressHydrationWarning
-  // covers the rare case where the client hydrates across a year boundary.
-  const year = new Date().getFullYear();
+  // Keep static output reproducible. The public content date is the explicit
+  // update signal and advances through reviewed source changes.
+  const year = LAST_UPDATED.slice(0, 4);
 
   return (
     <footer className="border-t border-border bg-background">
@@ -30,30 +30,35 @@ export function Footer() {
               <div className="flex flex-col gap-2">
                 <Link
                   href="/kurse"
+                  prefetch={false}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Alle Kurse
                 </Link>
                 <Link
                   href="/ki-fuehrerschein"
+                  prefetch={false}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   KI-Führerschein
                 </Link>
                 <Link
                   href="/ki-und-gesellschaft"
+                  prefetch={false}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   KI und Gesellschaft
                 </Link>
                 <Link
                   href="/eu-ai-act-kurs"
+                  prefetch={false}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   EU AI Act Kurs
                 </Link>
                 <Link
                   href="/ai-native"
+                  prefetch={false}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   AI-Native Arbeitskurs
@@ -65,30 +70,35 @@ export function Footer() {
               <div className="flex flex-col gap-2">
                 <Link
                   href="/blog"
+                  prefetch={false}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Blog
                 </Link>
                 <Link
                   href="/buecher"
+                  prefetch={false}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Lernbücher
                 </Link>
                 <Link
                   href="/demos"
+                  prefetch={false}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Praxisbeispiele
                 </Link>
                 <Link
                   href="/workshops"
+                  prefetch={false}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Workshops
                 </Link>
                 <Link
                   href="/open-source"
+                  prefetch={false}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Open Source
@@ -105,54 +115,63 @@ export function Footer() {
             <div className="flex flex-col gap-2">
               <Link
                 href="/ueber-mich"
+                prefetch={false}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Über Tim
               </Link>
               <Link
                 href="/neuigkeiten"
+                prefetch={false}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Neuigkeiten
               </Link>
               <Link
                 href="/hilfe"
+                prefetch={false}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Hilfe
               </Link>
               <Link
                 href="/bekannte-grenzen"
+                prefetch={false}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Bekannte Grenzen
               </Link>
               <Link
                 href="/feedback"
+                prefetch={false}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Rückmeldung
               </Link>
               <Link
                 href="/impressum"
+                prefetch={false}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Impressum
               </Link>
               <Link
                 href="/datenschutz"
+                prefetch={false}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Datenschutz
               </Link>
               <Link
                 href="/open-source/lizenzrichtlinie"
+                prefetch={false}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Lizenzrichtlinie
               </Link>
               <Link
                 href="/ueber-die-plattform"
+                prefetch={false}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Über die Plattform
@@ -190,7 +209,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col items-center gap-2 border-t border-border pt-8 text-center text-sm text-muted-foreground">
-          <span suppressHydrationWarning>
+          <span>
             &copy; {year} loehrning.ai · Tim Löhr
           </span>
           <span

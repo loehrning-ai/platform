@@ -191,9 +191,9 @@ function RoleScenarioBody({
                             "flex cursor-pointer items-start gap-2.5 border px-3 py-2 text-[13px] transition-colors",
                             submitted && "cursor-default",
                             isPicked && !submitted && "border-brand-orange bg-brand-orange/5",
-                            showFeedback && opt.correct && "border-[#22c55e] bg-[#22c55e]/5",
+                            showFeedback && opt.correct && "border-risk-green bg-risk-green/5",
                             showFeedback && !opt.correct && "border-destructive bg-destructive/5",
-                            showCorrect && "border-[#22c55e]/40 bg-[#22c55e]/5",
+                            showCorrect && "border-risk-green/40 bg-risk-green/5",
                             !isPicked && !submitted && "border-border hover:border-foreground",
                           )}
                         >
@@ -215,7 +215,7 @@ function RoleScenarioBody({
                           {submitted && isPicked && (
                             <span>
                               {opt.correct ? (
-                                <CheckCircle2 size={14} className="text-[#22c55e]" />
+                                <CheckCircle2 size={14} className="text-risk-green" />
                               ) : (
                                 <XCircle size={14} className="text-destructive" />
                               )}
@@ -248,7 +248,7 @@ function RoleScenarioBody({
                 transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
                 className={cn(
                   "mt-4 border-l-[3px] px-4 py-3",
-                  scorePct >= 66 ? "border-[#22c55e] bg-[#22c55e]/5" : "border-brand-amber bg-brand-amber/5",
+                  scorePct >= 66 ? "border-risk-green bg-risk-green/5" : "border-brand-amber bg-brand-amber/5",
                 )}
               >
                 <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-foreground">

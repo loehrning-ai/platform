@@ -109,7 +109,7 @@ export function PromptTransformWidget({
 
   const qBar =
     active.quality >= 80
-      ? "bg-[#22c55e]"
+      ? "bg-risk-green"
       : active.quality >= 40
         ? "bg-brand-amber"
         : "bg-destructive";

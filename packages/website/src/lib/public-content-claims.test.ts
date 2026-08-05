@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 
 const root = join(process.cwd(), "content");
 const sourceRoot = join(process.cwd(), "src");
+const repositoryRoot = join(process.cwd(), "../..");
 
 function read(relativePath: string): string {
   return readFileSync(join(root, relativePath), "utf8");
@@ -56,6 +57,28 @@ describe("public learning content claim hygiene", () => {
     "books/ki-tools-selbststaendige/10_automatisierung.md",
     "books/ki-tools-selbststaendige/13_prompt_bibliothek.md",
   ];
+
+  it("documents the account boundary for the four native core curricula", () => {
+    const readme = readFileSync(join(repositoryRoot, "README.md"), "utf8");
+    const environmentExample = readFileSync(
+      join(process.cwd(), ".env.example"),
+      "utf8",
+    );
+    const documentation = `${readme}\n${environmentExample}`;
+
+    expect(documentation).toContain(
+      "four native core curricula require a configured Supabase learning account",
+    );
+    expect(documentation).toContain(
+      "four native core-course readers, quizzes",
+    );
+    expect(documentation).not.toContain(
+      "No credentials are required for courses",
+    );
+    expect(documentation).not.toContain(
+      "Anonymous learners can read all courses",
+    );
+  });
 
   it("does not expose the private company scoring dataset", () => {
     const corpus = reviewedFiles.map(read).join("\n");

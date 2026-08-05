@@ -3,24 +3,24 @@ import { test, expect, type Page } from "@playwright/test";
 /**
  * prefers-reduced-motion content-visibility guard (regression coverage).
  *
- * motion-provider.tsx runs `MotionConfig reducedMotion="user"`: it drops
- * transform/layout tweens but KEEPS opacity tweens and still fires whileInView
- * reveals on scroll. The performance and release hardening/021 regression is a reveal stuck at its
- * initial `opacity: 0` -> content invisible forever. These tests assert that
+ * The homepage renders every below-fold reveal in its final visual state on
+ * the server, so content visibility never depends on IntersectionObserver.
+ * Other routes may still use whileInView. These tests assert the user-visible
  * outcome, not axe rules (a11y.spec.ts already scans /, /buecher): the h1 is
- * visible immediately and, after scrolling, every opacity-animated block
- * settles to full effective opacity (read via evaluate, the only way to see
- * framer's rAF values). Excluded from the scan: the hero ([data-section="hero"],
- * scroll-linked parallax) and SVG / aria-hidden decoration (infinite loops).
+ * visible immediately, homepage content is visible before any scroll, and
+ * nothing remains transparent after a full-page sweep. Excluded from the scan:
+ * the hero ([data-section="hero"], scroll-linked parallax) and SVG /
+ * aria-hidden decoration (infinite loops).
  */
 
 test.use({ contextOptions: { reducedMotion: "reduce" } });
 test.describe.configure({ timeout: 60_000 });
 
 const CHAPTER = "/buecher/ki-landschaft/03_reifegrad_ueberblick";
+const HOMEPAGE_STATIC_REVEAL_ROOTS =
+  '[data-testid="kurse-section"], [data-testid="platform-principles"], [data-testid="final-cta"]';
 
-// Console filter mirrors route-einstieg.spec.ts: drop framework noise, keep
-// only errors that signal a genuine page fault.
+// Every captured console error and uncaught page error fails the check.
 function collectConsoleErrors(page: Page): string[] {
   const errors: string[] = [];
   page.on("console", (msg) => {
@@ -31,13 +31,7 @@ function collectConsoleErrors(page: Page): string[] {
 }
 
 function meaningfulErrors(errors: string[]): string[] {
-  return errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e),
-  );
+  return errors;
 }
 
 /** Effective opacity of the first `h1`: product of its own + ancestor opacity. */
@@ -56,8 +50,8 @@ function firstH1Opacity(page: Page): Promise<number> {
 }
 
 /** Rendered, non-hero, non-decorative opacity elements stuck near-invisible. */
-function stuckReveals(page: Page): Promise<string[]> {
-  return page.evaluate(() => {
+function stuckReveals(page: Page, rootSelector?: string): Promise<string[]> {
+  return page.evaluate((selector) => {
     const eff = (node: Element | null): number => {
       let o = 1;
       while (node) {
@@ -67,7 +61,18 @@ function stuckReveals(page: Page): Promise<string[]> {
       }
       return o;
     };
-    return Array.from(document.querySelectorAll<HTMLElement>('[style*="opacity"]'))
+    const roots = selector
+      ? Array.from(document.querySelectorAll<HTMLElement>(selector))
+      : [];
+    const candidates = selector
+      ? roots.flatMap((root) => [
+          root,
+          ...Array.from(root.querySelectorAll<HTMLElement>("*")),
+        ])
+      : Array.from(
+          document.querySelectorAll<HTMLElement>('[style*="opacity"]'),
+        );
+    return candidates
       .filter((el) => {
         if (el.closest('[data-section="hero"]')) return false; // scroll-linked
         if (el.closest("svg") || el.closest('[aria-hidden="true"]')) return false;
@@ -75,7 +80,7 @@ function stuckReveals(page: Page): Promise<string[]> {
         return r.width >= 2 && r.height >= 2 && eff(el) < 0.05;
       })
       .map((el) => (el.textContent || el.tagName).trim().slice(0, 60));
-  });
+  }, rootSelector);
 }
 
 /** Step the page top->bottom so every whileInView IntersectionObserver fires. */
@@ -99,6 +104,7 @@ async function expectReducedMotionHonored(
   page: Page,
   route: string,
   headingText?: RegExp,
+  expectVisibleBeforeScroll = false,
 ): Promise<void> {
   const errors = collectConsoleErrors(page);
   await page.goto(route, { waitUntil: "domcontentloaded" });
@@ -108,6 +114,105 @@ async function expectReducedMotionHonored(
     await page.evaluate(() => matchMedia("(prefers-reduced-motion: reduce)").matches),
     "context should honor prefers-reduced-motion: reduce",
   ).toBe(true);
+
+  if (expectVisibleBeforeScroll) {
+    const staticRoots = page.locator(HOMEPAGE_STATIC_REVEAL_ROOTS);
+    expect(
+      await staticRoots.count(),
+      `${route}: expected all static homepage reveal sections`,
+    ).toBe(3);
+    for (let index = 0; index < 3; index += 1) {
+      const root = staticRoots.nth(index);
+      await expect(
+        root,
+        `${route}: static homepage section ${index} must occupy visible layout`,
+      ).toBeVisible();
+      await expect(
+        root.getByRole("heading").first(),
+        `${route}: static homepage section ${index} heading must be visible`,
+      ).toBeVisible();
+      const visibilityBlockers = await root.evaluate((element) => {
+        const blockers: string[] = [];
+        const candidates = [
+          element,
+          ...Array.from(
+            element.querySelectorAll<HTMLElement>(
+              "h1, h2, h3, h4, p, a, button, li",
+            ),
+          ).filter((candidate) => candidate.textContent?.trim()),
+        ];
+
+        for (const candidate of candidates) {
+          if (
+            candidate.closest("svg") ||
+            candidate.closest('[aria-hidden="true"]')
+          ) {
+            continue;
+          }
+
+          const rect = candidate.getBoundingClientRect();
+          if (
+            candidate.getClientRects().length === 0 ||
+            rect.width < 2 ||
+            rect.height < 2
+          ) {
+            blockers.push(`${candidate.tagName}: no visible geometry`);
+          }
+
+          let node: Element | null = candidate;
+          while (node) {
+            const style = getComputedStyle(node);
+            if (style.display === "none") {
+              blockers.push(`${candidate.tagName}: display=none`);
+            }
+            if (
+              style.visibility === "hidden" ||
+              style.visibility === "collapse"
+            ) {
+              blockers.push(
+                `${candidate.tagName}: visibility=${style.visibility}`,
+              );
+            }
+            if (style.contentVisibility === "hidden") {
+              blockers.push(
+                `${candidate.tagName}: content-visibility=hidden`,
+              );
+            }
+            if (
+              style.clipPath !== "none" &&
+              style.clipPath !== "inset(0px)"
+            ) {
+              blockers.push(
+                `${candidate.tagName}: clip-path=${style.clipPath}`,
+              );
+            }
+            for (const match of style.filter.matchAll(
+              /opacity\(\s*([\d.]+)\s*(%)?\s*\)/g,
+            )) {
+              const value = Number(match[1]) / (match[2] ? 100 : 1);
+              if (Number.isFinite(value) && value < 0.05) {
+                blockers.push(
+                  `${candidate.tagName}: filter-opacity=${value}`,
+                );
+              }
+            }
+            if (node === document.body) break;
+            node = node.parentElement;
+          }
+        }
+
+        return [...new Set(blockers)];
+      });
+      expect(
+        visibilityBlockers,
+        `${route}: static homepage section ${index} content must be visibly rendered`,
+      ).toEqual([]);
+    }
+    expect(
+      await stuckReveals(page, HOMEPAGE_STATIC_REVEAL_ROOTS),
+      `${route}: static homepage content hidden before any scroll`,
+    ).toEqual([]);
+  }
 
   // Content visible immediately: the h1 settles to full opacity. Framer keeps
   // opacity tweens under reducedMotion="user", so this converges within the
@@ -135,7 +240,7 @@ async function expectReducedMotionHonored(
 
 test.describe("reduced-motion content visibility", () => {
   test("homepage reveals all resolve to visible", async ({ page }) => {
-    await expectReducedMotionHonored(page, "/", /KI/);
+    await expectReducedMotionHonored(page, "/", /KI/, true);
   });
 
   test("/buecher library reveals all resolve to visible", async ({ page }) => {

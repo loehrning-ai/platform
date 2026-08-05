@@ -1,22 +1,20 @@
 import "server-only";
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { requireSupabaseServiceConfig } from "./service-config";
 
 let client: SupabaseClient | null = null;
 
 export function createServiceClient(): SupabaseClient {
   if (client) return client;
 
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const { url, serviceRoleKey } = requireSupabaseServiceConfig(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    "SUPABASE_URL",
+  );
 
-  if (!url || !key) {
-    throw new Error(
-      "Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY environment variable",
-    );
-  }
-
-  client = createClient(url, key, {
+  client = createClient(url, serviceRoleKey, {
     auth: { persistSession: false },
     db: { schema: "public" },
   });

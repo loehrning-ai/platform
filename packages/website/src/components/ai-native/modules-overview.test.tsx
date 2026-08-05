@@ -58,11 +58,18 @@ vi.mock("next/link", async () => {
       children,
       href,
       className,
+      prefetch,
     }: {
       children: unknown;
       href: string;
       className?: string;
-    }) => createElement("a", { href, className }, children as never),
+      prefetch?: boolean;
+    }) =>
+      createElement(
+        "a",
+        { href, className, "data-prefetch": String(prefetch) },
+        children as never,
+      ),
   };
 });
 
@@ -102,6 +109,7 @@ vi.mock("@/lib/ai-native/progress", () => ({
 import { AiNativeModulesOverview } from "./modules-overview";
 import { getModules } from "@/lib/ai-native/data";
 import { getCompletedLessonIds } from "@/lib/ai-native/progress";
+import { __resetCacheForTests } from "@/lib/progress/store";
 import { UNIFIED_STORAGE_KEY } from "@/lib/progress/types";
 
 const MODULES = [
@@ -135,6 +143,7 @@ const MODULES = [
 ];
 
 beforeEach(() => {
+  __resetCacheForTests();
   vi.mocked(getModules).mockReturnValue(MODULES as never);
   vi.mocked(getCompletedLessonIds).mockReturnValue(
     new Set(["modul_1_lesson_1", "modul_1_lesson_2", "modul_3_lesson_1"]),
@@ -180,6 +189,10 @@ describe("<AiNativeModulesOverview>", () => {
     const links = screen.getAllByRole("link");
     expect(links).toHaveLength(3);
     expect(links[0]).toHaveAttribute("href", "/ai-native/kurs/modul_1");
+    for (const link of links) {
+      expect(link).toHaveAttribute("data-prefetch", "false");
+      expect(link.firstElementChild).toHaveClass("js-reveal");
+    }
   });
 
   it("re-reads completions on a cross-tab storage event keyed to the unified store", () => {

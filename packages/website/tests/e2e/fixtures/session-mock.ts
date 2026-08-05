@@ -32,6 +32,7 @@
  */
 
 import type { BrowserContext, Page } from "@playwright/test";
+import { isSafePublicSupabaseKey } from "../../../src/lib/supabase/key-classification.mjs";
 
 // `Cookie` (the return type of context.cookies()) is not exported from
 // @playwright/test; the element type accepted by addCookies() is, via the
@@ -44,6 +45,7 @@ const MOCK_USER_ID = "00000000-0000-4000-8000-000000000000";
 // ssr/utils/chunker.js MAX_CHUNK_SIZE. A mock session must stay a single cookie.
 const MAX_CHUNK_SIZE = 3180;
 const BASE64_PREFIX = "base64-";
+const MAX_SUPABASE_ORIGIN_LENGTH = 2048;
 
 export interface MockSession {
   readonly access_token: string;
@@ -78,9 +80,12 @@ export function resolveSeedSupabaseUrl(): string {
 
 /** True when the browser Supabase client can initialise (build-time inlined). */
 export function hasPublicSupabaseConfig(): boolean {
+  const publishableKey =
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   return Boolean(
     process.env.NEXT_PUBLIC_SUPABASE_URL &&
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+    publishableKey &&
+    isSafePublicSupabaseKey(publishableKey),
   );
 }
 
@@ -89,8 +94,11 @@ const LIVE_AUTH_ENV_NAMES = [
   "SIMPLIFIED_SUPABASE_TEST_PUBLISHABLE_KEY",
   "SIMPLIFIED_SUPABASE_TEST_EMAIL",
   "SIMPLIFIED_SUPABASE_TEST_PASSWORD",
+  "SIMPLIFIED_SUPABASE_PRODUCTION_URL",
+  "SIMPLIFIED_SUPABASE_TEST_WRITE_PROJECT_REF",
   "NEXT_PUBLIC_SUPABASE_URL",
   "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+  "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
 ] as const;
 
 function requireLiveAuthEnv(
@@ -113,22 +121,49 @@ export function assertLiveSupabaseTestConfig(): {
   readonly publishableKey: string;
   readonly email: string;
   readonly password: string;
+  readonly turnstileSiteKey: string;
 } {
   const values = Object.fromEntries(
     LIVE_AUTH_ENV_NAMES.map((name) => [name, requireLiveAuthEnv(name)]),
   ) as Record<(typeof LIVE_AUTH_ENV_NAMES)[number], string>;
 
+  for (const name of [
+    "SIMPLIFIED_SUPABASE_TEST_URL",
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "SIMPLIFIED_SUPABASE_PRODUCTION_URL",
+  ] as const) {
+    const value = values[name];
+    if (
+      value.length > MAX_SUPABASE_ORIGIN_LENGTH ||
+      value !== value.trim()
+    ) {
+      throw new Error(
+        `session-mock: ${name} must be an exact, whitespace-free Supabase origin no longer than ${MAX_SUPABASE_ORIGIN_LENGTH} characters.`,
+      );
+    }
+  }
+
   const testUrl = new URL(values.SIMPLIFIED_SUPABASE_TEST_URL);
   const publicUrl = new URL(values.NEXT_PUBLIC_SUPABASE_URL);
+  const productionUrl = new URL(values.SIMPLIFIED_SUPABASE_PRODUCTION_URL);
   const testHost = testUrl.hostname.match(/^([a-z0-9-]+)\.supabase\.co$/i);
   const publicHost = publicUrl.hostname.match(/^([a-z0-9-]+)\.supabase\.co$/i);
+  const productionHost = productionUrl.hostname.match(
+    /^([a-z0-9-]+)\.supabase\.co$/i,
+  );
   const testRef = testHost?.[1];
   const publicRef = publicHost?.[1];
+  const productionRef = productionHost?.[1];
   if (
     testUrl.protocol !== "https:" ||
     publicUrl.protocol !== "https:" ||
+    productionUrl.protocol !== "https:" ||
     testUrl.pathname !== "/" ||
     publicUrl.pathname !== "/" ||
+    productionUrl.pathname !== "/" ||
+    testUrl.port ||
+    publicUrl.port ||
+    productionUrl.port ||
     testUrl.username ||
     testUrl.password ||
     testUrl.search ||
@@ -137,13 +172,40 @@ export function assertLiveSupabaseTestConfig(): {
     publicUrl.password ||
     publicUrl.search ||
     publicUrl.hash ||
+    productionUrl.username ||
+    productionUrl.password ||
+    productionUrl.search ||
+    productionUrl.hash ||
     !testRef ||
     !publicRef ||
+    !productionRef ||
     testRef !== publicRef ||
     testUrl.origin !== publicUrl.origin
   ) {
     throw new Error(
       "session-mock: SIMPLIFIED_SUPABASE_TEST_URL and NEXT_PUBLIC_SUPABASE_URL must identify the same HTTPS project origin.",
+    );
+  }
+  if (testRef === productionRef) {
+    throw new Error(
+      "session-mock: live auth refuses the configured production Supabase project.",
+    );
+  }
+  if (values.SIMPLIFIED_SUPABASE_TEST_WRITE_PROJECT_REF !== testRef) {
+    throw new Error(
+      "session-mock: SIMPLIFIED_SUPABASE_TEST_WRITE_PROJECT_REF must exactly acknowledge the disposable project that the live suite may mutate.",
+    );
+  }
+  if (
+    !isSafePublicSupabaseKey(
+      values.SIMPLIFIED_SUPABASE_TEST_PUBLISHABLE_KEY,
+    ) ||
+    !isSafePublicSupabaseKey(
+      values.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+    )
+  ) {
+    throw new Error(
+      "session-mock: live auth requires exact sb_publishable keys or canonical HS256 legacy JWT keys with role anon.",
     );
   }
   if (
@@ -160,6 +222,7 @@ export function assertLiveSupabaseTestConfig(): {
     publishableKey: values.SIMPLIFIED_SUPABASE_TEST_PUBLISHABLE_KEY,
     email: values.SIMPLIFIED_SUPABASE_TEST_EMAIL,
     password: values.SIMPLIFIED_SUPABASE_TEST_PASSWORD,
+    turnstileSiteKey: values.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
   };
 }
 

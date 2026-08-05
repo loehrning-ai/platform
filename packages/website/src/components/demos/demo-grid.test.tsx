@@ -1,6 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
-import { DemoGrid } from "./demo-grid";
+import { renderToStaticMarkup } from "react-dom/server";
+import {
+  DemoGrid,
+  type DemoGridInitialFilters,
+} from "./demo-grid";
 import { trackDemoFilter } from "@/lib/analytics";
 
 /**
@@ -11,18 +15,10 @@ import { trackDemoFilter } from "@/lib/analytics";
  * Next navigation, to avoid the mobile/WebKit scroll-to-top jump), and renders
  * a tile per match or an empty state. We keep the real demos + filterDemos so
  * the counts are the genuine catalog counts (12 total; einstieg=3; RAG=1;
- * Outbound=1), mock next/navigation's useSearchParams (seedable per test), mock
- * the analytics spy, and stub DemoTile down to a slug marker so matches can be
- * counted / identified without pulling in every preview component.
+ * Outbound=1), mock the analytics spy, and stub DemoTile down to a slug marker
+ * so matches can be counted / identified without pulling in every preview
+ * component.
  */
-
-const nav = vi.hoisted(() => ({ params: new Map<string, string>() }));
-
-vi.mock("next/navigation", () => ({
-  useSearchParams: () => ({
-    get: (key: string) => nav.params.get(key) ?? null,
-  }),
-}));
 
 vi.mock("@/lib/analytics", () => ({
   trackDemoFilter: vi.fn(),
@@ -40,9 +36,14 @@ function tileSlugs(): string[] {
     .map((el) => el.getAttribute("data-slug") ?? "");
 }
 
+const DEFAULT_FILTERS: DemoGridInitialFilters = {
+  level: "alle",
+  category: "Alle",
+  industry: "",
+};
+
 describe("<DemoGrid>", () => {
   beforeEach(() => {
-    nav.params = new Map();
     vi.clearAllMocks();
   });
 
@@ -52,35 +53,37 @@ describe("<DemoGrid>", () => {
   });
 
   it("renders every demo when no filter is seeded and reports the total count", () => {
-    render(<DemoGrid />);
+    render(<DemoGrid initialFilters={DEFAULT_FILTERS} />);
     expect(screen.queryAllByTestId("demo-tile")).toHaveLength(12);
     expect(screen.getByText(/12 Praxisbeispiele/)).toBeInTheDocument();
-    // The mount effect reports the (unfiltered) filter state once; the empty
-    // industry is passed through as the placeholder ", ".
-    expect(trackDemoFilter).toHaveBeenCalledWith("Alle", "alle", ", ");
+    // The mount effect reports the complete unfiltered state explicitly.
+    expect(trackDemoFilter).toHaveBeenCalledWith("Alle", "alle", "alle");
   });
 
-  it("seeds filter state from the URL search params", () => {
-    nav.params = new Map([["level", "einstieg"]]);
-    render(<DemoGrid />);
+  it("seeds filter state from the server-provided filters", () => {
+    render(
+      <DemoGrid
+        initialFilters={{ ...DEFAULT_FILTERS, level: "einstieg" }}
+      />,
+    );
     // Deep link /demos?level=einstieg renders pre-filtered without any click.
     expect(tileSlugs().sort()).toEqual(["excel", "roi-rechner", "word"]);
   });
 
   it("filters to the matching level and mirrors it into the URL on chip click", () => {
-    render(<DemoGrid />);
+    render(<DemoGrid initialFilters={DEFAULT_FILTERS} />);
     const chip = screen.getByRole("button", { name: /Einstieg \(3\)/ });
     expect(chip).toHaveAttribute("aria-pressed", "false");
     fireEvent.click(chip);
     expect(chip).toHaveAttribute("aria-pressed", "true");
     expect(tileSlugs().sort()).toEqual(["excel", "roi-rechner", "word"]);
-    expect(trackDemoFilter).toHaveBeenCalledWith("Alle", "einstieg", ", ");
+    expect(trackDemoFilter).toHaveBeenCalledWith("Alle", "einstieg", "alle");
     expect(window.location.search).toBe("?level=einstieg");
     expect(window.location.pathname).toBe("/demos");
   });
 
   it("filters to a single category match", () => {
-    render(<DemoGrid />);
+    render(<DemoGrid initialFilters={DEFAULT_FILTERS} />);
     // RAG has exactly one demo in the catalog.
     fireEvent.click(screen.getByRole("button", { name: /RAG \(1\)/ }));
     expect(tileSlugs()).toEqual(["rag-vertragsassistent"]);
@@ -89,11 +92,15 @@ describe("<DemoGrid>", () => {
 
   it("shows the empty state (no tiles) for a zero-match seeded combination", () => {
     // Outbound's only demo is 'mittel', so Outbound + fortg yields nothing.
-    nav.params = new Map([
-      ["cat", "Outbound"],
-      ["level", "fortg"],
-    ]);
-    render(<DemoGrid />);
+    render(
+      <DemoGrid
+        initialFilters={{
+          ...DEFAULT_FILTERS,
+          category: "Outbound",
+          level: "fortg",
+        }}
+      />,
+    );
     expect(screen.queryAllByTestId("demo-tile")).toHaveLength(0);
     expect(screen.getByText("Keine Treffer.")).toBeInTheDocument();
 
@@ -105,7 +112,7 @@ describe("<DemoGrid>", () => {
   });
 
   it("clears all filters when Escape is pressed while the grid is present", () => {
-    render(<DemoGrid />);
+    render(<DemoGrid initialFilters={DEFAULT_FILTERS} />);
     fireEvent.click(screen.getByRole("button", { name: /Einstieg \(3\)/ }));
     expect(screen.queryAllByTestId("demo-tile")).toHaveLength(3);
 
@@ -113,5 +120,19 @@ describe("<DemoGrid>", () => {
       window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
     });
     expect(screen.queryAllByTestId("demo-tile")).toHaveLength(12);
+  });
+
+  it("server-renders the filtered gallery without a Next navigation context", () => {
+    const markup = renderToStaticMarkup(
+      <DemoGrid
+        initialFilters={{ ...DEFAULT_FILTERS, level: "einstieg" }}
+      />,
+    );
+
+    expect(markup.match(/data-testid="demo-tile"/g)).toHaveLength(3);
+    expect(markup).toContain('data-slug="excel"');
+    expect(markup).toContain('data-slug="roi-rechner"');
+    expect(markup).toContain('data-slug="word"');
+    expect(markup).not.toContain("Praxisbeispiele werden geladen");
   });
 });

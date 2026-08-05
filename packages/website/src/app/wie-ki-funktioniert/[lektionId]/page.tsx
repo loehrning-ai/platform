@@ -10,6 +10,7 @@ import {
   formatGermanDate,
 } from "@/lib/wie-ki-funktioniert";
 import { ComprehensionCheck } from "@/components/wie-ki-funktioniert/ComprehensionCheck";
+import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
 
 // Comprehension check content per lektion
 const COMPREHENSION_CHECKS: Record<string, { question: string; answer: string }> = {
@@ -43,6 +44,8 @@ interface PageParams {
   lektionId: string;
 }
 
+export const dynamicParams = false;
+
 export async function generateStaticParams(): Promise<PageParams[]> {
   return WIE_KI_LEKTIONEN.map((l) => ({ lektionId: l.id }));
 }
@@ -55,12 +58,11 @@ export async function generateMetadata({
   const { lektionId } = await params;
   const lektion = getLektionById(lektionId);
   if (!lektion) return {};
-  return {
+  return createPublicPageMetadata({
     title: `${lektion.title} | Wie KI wirklich funktioniert`,
     description: lektion.subtitle,
-    robots: { index: true, follow: true },
-    alternates: { canonical: `/wie-ki-funktioniert/${lektionId}` },
-  };
+    path: `/wie-ki-funktioniert/${lektionId}`,
+  });
 }
 
 export default async function LektionPage({ params }: { params: Promise<PageParams> }) {
@@ -81,7 +83,7 @@ export default async function LektionPage({ params }: { params: Promise<PagePara
         <ol className="flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
           <li>
             <Link href="/" className="hover:text-foreground">
-              Start
+              Startseite
             </Link>
           </li>
           <li aria-hidden="true">›</li>

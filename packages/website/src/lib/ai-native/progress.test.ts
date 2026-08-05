@@ -50,10 +50,21 @@ import {
   serializeProgress,
   deserializeProgress,
   importProgress,
+  getAllProgress,
   resetProgress,
   buildProgressUrl,
   __resetCacheForTests,
 } from "./progress";
+
+const CANONICAL_LESSON_ID = "modul_1_lesson_1";
+const CANONICAL_SECTION_ID = "modul_1_lesson_1_section_1";
+
+function encodeImportPayload(payload: unknown): string {
+  return btoa(JSON.stringify(payload))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+}
 
 describe("ai-native progress", () => {
   beforeAll(() => {
@@ -72,21 +83,40 @@ describe("ai-native progress", () => {
 
   describe("section progress", () => {
     it("marks and queries section-read state", () => {
-      expect(isSectionRead("modul_1_lesson_1", "sec_1")).toBe(false);
-      markSectionRead("modul_1", "modul_1_lesson_1", "sec_1", 0);
-      expect(isSectionRead("modul_1_lesson_1", "sec_1")).toBe(true);
+      expect(isSectionRead(CANONICAL_LESSON_ID, CANONICAL_SECTION_ID)).toBe(
+        false,
+      );
+      markSectionRead(
+        "modul_1",
+        CANONICAL_LESSON_ID,
+        CANONICAL_SECTION_ID,
+        0,
+      );
+      expect(isSectionRead(CANONICAL_LESSON_ID, CANONICAL_SECTION_ID)).toBe(
+        true,
+      );
     });
 
     it("is idempotent on repeated marks", () => {
-      markSectionRead("modul_1", "modul_1_lesson_1", "sec_1", 0);
-      markSectionRead("modul_1", "modul_1_lesson_1", "sec_1", 0);
+      markSectionRead(
+        "modul_1",
+        CANONICAL_LESSON_ID,
+        CANONICAL_SECTION_ID,
+        0,
+      );
+      markSectionRead(
+        "modul_1",
+        CANONICAL_LESSON_ID,
+        CANONICAL_SECTION_ID,
+        0,
+      );
       // Writes now flow into the unified store under the "ai-native" slug.
       const raw = JSON.parse(
         window.localStorage.getItem(UNIFIED_STORAGE_KEY) as string,
       );
       expect(
-        raw.courses["ai-native"].lessons["modul_1_lesson_1"].sectionsRead,
-      ).toEqual(["sec_1"]);
+        raw.courses["ai-native"].lessons[CANONICAL_LESSON_ID].sectionsRead,
+      ).toEqual([CANONICAL_SECTION_ID]);
     });
   });
 
@@ -236,10 +266,10 @@ describe("ai-native progress", () => {
     });
 
     it("rejects unknown exercise kinds", () => {
-      const raw = JSON.stringify({
+      const encoded = encodeImportPayload({
         schemaVersion: AI_NATIVE_SCHEMA_VERSION,
         lessons: {
-          l1: {
+          [CANONICAL_LESSON_ID]: {
             sectionsRead: [],
             quizScore: null,
             quizTotal: null,
@@ -259,11 +289,180 @@ describe("ai-native progress", () => {
         startedAt: new Date().toISOString(),
         lastActivity: new Date().toISOString(),
       });
-      const encoded = btoa(raw)
-        .replace(/\+/g, "-")
-        .replace(/\//g, "_")
-        .replace(/=+$/, "");
       expect(deserializeProgress(encoded)).toBe(null);
+    });
+
+    it("rejects fabricated lesson IDs instead of reporting a no-op import", () => {
+      const encoded = encodeImportPayload({
+        schemaVersion: AI_NATIVE_SCHEMA_VERSION,
+        lessons: {
+          "fabricated-lesson": {
+            sectionsRead: [],
+            quizScore: null,
+            quizTotal: null,
+            completed: true,
+            exercisesCompleted: {},
+          },
+        },
+        capstoneSubmitted: false,
+        startedAt: new Date().toISOString(),
+        lastActivity: new Date().toISOString(),
+      });
+
+      expect(deserializeProgress(encoded)).toBe(null);
+      expect(importProgress(encoded)).toBe(false);
+      expect(isLessonCompleted("fabricated-lesson")).toBe(false);
+    });
+
+    it.each([
+      ["fabricated", ["fabricated-section"]],
+      ["duplicate", [CANONICAL_SECTION_ID, CANONICAL_SECTION_ID]],
+    ])(
+      "rejects %s section IDs instead of silently dropping them",
+      (_, sectionsRead) => {
+        const encoded = encodeImportPayload({
+          schemaVersion: AI_NATIVE_SCHEMA_VERSION,
+          lessons: {
+            [CANONICAL_LESSON_ID]: {
+              sectionsRead,
+              quizScore: null,
+              quizTotal: null,
+              completed: false,
+              exercisesCompleted: {},
+            },
+          },
+          capstoneSubmitted: false,
+          startedAt: new Date().toISOString(),
+          lastActivity: new Date().toISOString(),
+        });
+
+        expect(deserializeProgress(encoded)).toBe(null);
+        expect(importProgress(encoded)).toBe(false);
+        expect(
+          isSectionRead(CANONICAL_LESSON_ID, CANONICAL_SECTION_ID),
+        ).toBe(false);
+      },
+    );
+
+    it.each([
+      [
+        "non-boolean lesson completion",
+        {
+          sectionsRead: [CANONICAL_SECTION_ID],
+          quizScore: null,
+          quizTotal: null,
+          completed: "yes",
+          exercisesCompleted: {},
+        },
+      ],
+      [
+        "out-of-range quiz score",
+        {
+          sectionsRead: [CANONICAL_SECTION_ID],
+          quizScore: 2,
+          quizTotal: 2,
+          completed: false,
+          exercisesCompleted: {},
+        },
+      ],
+      [
+        "wrong-typed exercise score",
+        {
+          sectionsRead: [],
+          quizScore: null,
+          quizTotal: null,
+          completed: false,
+          exercisesCompleted: {
+            ex_1: {
+              kind: "exercise-fix-prompt",
+              completed: true,
+              score: "1",
+              attempts: 1,
+              skipped: false,
+            },
+          },
+        },
+      ],
+      [
+        "unexpected lesson field",
+        {
+          sectionsRead: [CANONICAL_SECTION_ID],
+          quizScore: null,
+          quizTotal: null,
+          completed: false,
+          exercisesCompleted: {},
+          privateText: "must not be accepted",
+        },
+      ],
+    ])("rejects %s in an imported lesson", (_, lesson) => {
+      const encoded = encodeImportPayload({
+        schemaVersion: AI_NATIVE_SCHEMA_VERSION,
+        lessons: { [CANONICAL_LESSON_ID]: lesson },
+        capstoneSubmitted: false,
+        startedAt: "2026-07-29T08:00:00.000Z",
+        lastActivity: "2026-07-29T08:00:00.000Z",
+      });
+
+      expect(deserializeProgress(encoded)).toBe(null);
+      expect(importProgress(encoded)).toBe(false);
+    });
+
+    it("rejects empty no-op progress and invalid timestamps", () => {
+      const base = {
+        schemaVersion: AI_NATIVE_SCHEMA_VERSION,
+        lessons: {},
+        capstoneSubmitted: false,
+        startedAt: "2026-07-29T08:00:00.000Z",
+        lastActivity: "2026-07-29T08:00:00.000Z",
+      };
+      expect(deserializeProgress(encodeImportPayload(base))).toBe(null);
+      expect(
+        deserializeProgress(
+          encodeImportPayload({
+            ...base,
+            capstoneSubmitted: true,
+            startedAt: "not-a-timestamp",
+          }),
+        ),
+      ).toBe(null);
+    });
+
+    it("imports validated quiz, exercise-attempt, and capstone progress", () => {
+      const encoded = encodeImportPayload({
+        schemaVersion: AI_NATIVE_SCHEMA_VERSION,
+        lessons: {
+          [CANONICAL_LESSON_ID]: {
+            sectionsRead: [CANONICAL_SECTION_ID],
+            quizScore: 0.5,
+            quizTotal: 4,
+            completed: false,
+            exercisesCompleted: {
+              ex_1: {
+                kind: "exercise-fix-prompt",
+                completed: true,
+                score: 0.75,
+                attempts: 5,
+                skipped: false,
+              },
+            },
+          },
+        },
+        capstoneSubmitted: true,
+        startedAt: "2026-07-29T08:00:00.000Z",
+        lastActivity: "2026-07-29T08:30:00.000Z",
+      });
+
+      expect(importProgress(encoded)).toBe(true);
+      const progress = getAllProgress();
+      expect(progress.lessons[CANONICAL_LESSON_ID]).toMatchObject({
+        quizScore: 0.5,
+        quizTotal: 4,
+      });
+      expect(
+        progress.lessons[CANONICAL_LESSON_ID].exercisesCompleted.ex_1
+          .attempts,
+      ).toBe(5);
+      expect(progress.capstoneSubmitted).toBe(true);
     });
 
     it("returns null when no progress exists", () => {
@@ -315,7 +514,7 @@ describe("ai-native progress", () => {
           schemaVersion: AI_NATIVE_SCHEMA_VERSION,
           lessons: {
             modul_1_lesson_1: {
-              sectionsRead: ["sec_1"],
+              sectionsRead: [CANONICAL_SECTION_ID],
               quizScore: null,
               quizTotal: null,
               completed: true,
@@ -331,7 +530,9 @@ describe("ai-native progress", () => {
       __resetCacheForTests();
       // First read migrates the legacy payload forward.
       expect(isLessonCompleted("modul_1_lesson_1")).toBe(true);
-      expect(isSectionRead("modul_1_lesson_1", "sec_1")).toBe(true);
+      expect(
+        isSectionRead(CANONICAL_LESSON_ID, CANONICAL_SECTION_ID),
+      ).toBe(true);
       // The legacy key is NOT wiped (recoverable).
       expect(window.localStorage.getItem(AI_NATIVE_STORAGE_KEY)).not.toBe(null);
     });

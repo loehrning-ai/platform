@@ -59,10 +59,22 @@ export function NodeBox({
 
   const content = (
     <g
+      role={onInteract ? "button" : undefined}
+      tabIndex={onInteract ? 0 : undefined}
+      aria-label={onInteract ? label : undefined}
+      aria-pressed={onInteract ? active : undefined}
       onMouseEnter={onInteract ? () => onInteract(true) : undefined}
       onMouseLeave={onInteract ? () => onInteract(false) : undefined}
+      onFocus={onInteract ? () => onInteract(true) : undefined}
+      onBlur={onInteract ? () => onInteract(false) : undefined}
       onClick={onInteract ? () => onInteract(!active) : undefined}
-      style={{ cursor: onInteract ? "pointer" : undefined }}
+      onKeyDown={onInteract ? (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onInteract(!active);
+        }
+      } : undefined}
+      style={{ cursor: onInteract ? "pointer" : undefined, outline: "none" }}
     >
       <rect
         x={x}

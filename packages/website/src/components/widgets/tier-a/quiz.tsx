@@ -4,6 +4,10 @@ import { useCallback, useEffect, useRef, useState, type JSX } from "react";
 import { m, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useCheckpoint } from "@/lib/progress";
 import { EASE_OUT_EXPO } from "@/lib/animations";
+import {
+  handleRovingFocusKeyDown,
+  rovingTabIndex,
+} from "@/lib/a11y/roving-focus";
 import { cn } from "@/lib/utils";
 import { WidgetFrame } from "./_frame";
 
@@ -67,11 +71,16 @@ export function QuizWidget({
   const c = { ...DEFAULT_COPY, ...copy };
   const reduced = useReducedMotion();
   const { done, complete } = useCheckpoint(lessonId, cpId);
+  const [hydrated, setHydrated] = useState(false);
   const [picked, setPicked] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const answered = picked !== null;
   const isCorrect = picked === correct;
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
 
   const answer = useCallback(
     (i: number) => {
@@ -113,6 +122,7 @@ export function QuizWidget({
         <div
           role="radiogroup"
           aria-label={c.optionsAriaLabel}
+          data-roving-group
           className="flex flex-col gap-2"
         >
           {options.map((option, i) => {
@@ -125,12 +135,22 @@ export function QuizWidget({
                 type="button"
                 role="radio"
                 aria-checked={isPickedOpt}
-                disabled={answered}
+                data-roving-item
+                tabIndex={rovingTabIndex(picked, i)}
+                disabled={!hydrated || answered}
                 onClick={() => answer(i)}
+                onKeyDown={(event) =>
+                  handleRovingFocusKeyDown(event, {
+                    currentIndex: i,
+                    itemCount: options.length,
+                    orientation: "vertical",
+                    onMove: answer,
+                  })
+                }
                 className={cn(
                   "flex items-center gap-3 border-2 border-border bg-background px-3 py-2.5 text-left text-[14px] text-foreground transition-colors",
                   !answered && "hover:border-brand-orange",
-                  showCorrect && "border-[#22c55e] bg-[#22c55e]/10",
+                  showCorrect && "border-risk-green bg-risk-green/10",
                   showWrong && "border-destructive bg-destructive/10",
                   answered && "cursor-default",
                 )}
@@ -147,6 +167,9 @@ export function QuizWidget({
         <AnimatePresence>
           {answered && (
             <m.div
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
               initial={reduced ? false : { opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={
@@ -155,7 +178,7 @@ export function QuizWidget({
               className={cn(
                 "mt-4 border-l-[3px] p-4 text-[13.5px] leading-[1.55] text-foreground",
                 isCorrect
-                  ? "border-[#22c55e] bg-[#22c55e]/5"
+                  ? "border-risk-green bg-risk-green/5"
                   : "border-brand-amber bg-brand-amber/5",
               )}
             >

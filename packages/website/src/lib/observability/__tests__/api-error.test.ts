@@ -1,19 +1,22 @@
-/**
- * Tests for the structured API error reporter (performance hardening).
- *
- * Uses the REAL @sentry/nextjs module on purpose: with no SENTRY_DSN the
- * SDK is an uninitialized no-op, and the helper's contract is that
- * captureException can never throw or break a response path.
- */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+
+const { captureException } = vi.hoisted(() => ({
+  captureException: vi.fn(),
+}));
+
+vi.mock("@sentry/nextjs", () => ({ captureException }));
+
 import { reportApiError, requestIdFrom } from "../api-error";
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const JWT_HEADER_CANARY = ["eyJ", "hbGci", "OiJIUzI1NiJ9"].join("");
+const JWT_CANARY = `${JWT_HEADER_CANARY}.payload.sig`;
 
 let errorSpy: ReturnType<typeof vi.spyOn>;
 
 beforeEach(() => {
+  captureException.mockReset();
   errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 });
 
@@ -46,38 +49,41 @@ describe("reportApiError — never throws", () => {
     }
   });
 
-  it("does not throw when extra contains a circular reference (and skips the console line)", () => {
+  it("drops unknown circular extras without breaking logging", () => {
     const circular: Record<string, unknown> = {};
     circular.self = circular;
     expect(() =>
       reportApiError({ step: "llm-call", error: new Error("x"), extra: circular }),
     ).not.toThrow();
-    // JSON.stringify throws before console.error runs — line is skipped.
-    expect(errorSpy).not.toHaveBeenCalled();
+    expect(errorSpy).toHaveBeenCalledTimes(1);
+    expect(lastLogLine()).not.toHaveProperty("self");
   });
 });
 
 describe("reportApiError — console JSON line", () => {
-  it("emits one parseable JSON line with {route, step, requestId, error}", () => {
+  it("emits one parseable JSON line with stable metadata, never the message", () => {
     reportApiError({
-      route: "/api/example/report",
+      route: "/api/progress",
       step: "llm-call",
       error: new Error("model timeout"),
     });
     expect(errorSpy).toHaveBeenCalledTimes(1);
     const line = lastLogLine();
-    expect(line.route).toBe("/api/example/report");
+    expect(line.route).toBe("/api/progress");
     expect(line.step).toBe("llm-call");
-    expect(line.error).toBe("model timeout");
+    expect(line.errorName).toBe("Error");
+    expect(line.errorCode).toBe("unknown");
+    expect(line).not.toHaveProperty("error");
+    expect(JSON.stringify(line)).not.toContain("model timeout");
     expect(String(line.requestId)).toMatch(UUID_RE);
   });
 
   it("derives the route from the request URL pathname when route is omitted", () => {
-    const request = new Request("http://localhost/api/example/action?x=1", {
+    const request = new Request("http://localhost/api/ai-native/practice?x=1", {
       method: "POST",
     });
     reportApiError({ step: "rate-limit", error: "limited", request });
-    expect(lastLogLine().route).toBe("/api/example/action");
+    expect(lastLogLine().route).toBe("/api/ai-native/practice");
   });
 
   it("falls back to route 'unknown' without route and request", () => {
@@ -86,9 +92,14 @@ describe("reportApiError — console JSON line", () => {
   });
 
   it("prefers an explicit route over the request-derived one", () => {
-    const request = new Request("http://localhost/api/actual-path");
-    reportApiError({ route: "/api/explicit", step: "s", error: "e", request });
-    expect(lastLogLine().route).toBe("/api/explicit");
+    const request = new Request("http://localhost/api/progress");
+    reportApiError({
+      route: "/api/feedback",
+      step: "unhandled",
+      error: "e",
+      request,
+    });
+    expect(lastLogLine().route).toBe("/api/feedback");
   });
 
   it("merges extra fields into the log line", () => {
@@ -102,33 +113,128 @@ describe("reportApiError — console JSON line", () => {
     expect(line.durationMs).toBe(1234);
   });
 
-  it("extracts .message from non-Error objects (PostgrestError shape)", () => {
-    reportApiError({ step: "supabase-delete", error: { message: "pg down" } });
-    expect(lastLogLine().error).toBe("pg down");
+  it("extracts allowlisted stable PostgREST metadata without its message", () => {
+    reportApiError({
+      step: "supabase-delete",
+      error: {
+        message: "row contains learner@example.com",
+        code: "PGRST301",
+        status: 503,
+      },
+    });
+    expect(lastLogLine()).toMatchObject({
+      errorName: "UnknownError",
+      errorCode: "PGRST301",
+      errorStatus: 503,
+    });
+    expect(JSON.stringify(lastLogLine())).not.toContain("learner@example.com");
   });
 
-  it("stringifies messageless error values", () => {
-    reportApiError({ step: "s", error: 42 });
-    expect(lastLogLine().error).toBe("42");
+  it("uses generic metadata for primitive values", () => {
+    reportApiError({ step: "unhandled", error: 42 });
+    expect(lastLogLine()).toMatchObject({
+      errorName: "UnknownError",
+      errorCode: "unknown",
+    });
+  });
+
+  it("drops unknown or unsafe extra fields", () => {
+    reportApiError({
+      step: "llm-call",
+      error: new Error("secret"),
+      extra: {
+        durationMs: 12,
+        prompt: "private learner text",
+        email: "learner@example.com",
+        code: "SAFE_CODE",
+        lessonId: "lesson-1",
+        kind: "exercise-fix-prompt",
+        mode: "complete",
+        status: 42,
+        upstreamStatus: 999,
+        unsafeCode: "sk-ant-secret",
+      },
+    });
+    expect(lastLogLine()).toMatchObject({
+      durationMs: 12,
+      kind: "exercise-fix-prompt",
+      mode: "complete",
+    });
+    expect(lastLogLine()).not.toHaveProperty("code");
+    expect(lastLogLine()).not.toHaveProperty("lessonId");
+    expect(lastLogLine()).not.toHaveProperty("status");
+    expect(lastLogLine()).not.toHaveProperty("upstreamStatus");
+    const serialized = JSON.stringify(lastLogLine());
+    expect(serialized).not.toContain("private learner text");
+    expect(serialized).not.toContain("learner@example.com");
+    expect(serialized).not.toContain("sk-ant-secret");
+  });
+
+  it("rejects identifier-shaped secrets in routes, steps, names, and codes", () => {
+    const secret = JWT_CANARY;
+    reportApiError({
+      route: `/api/${secret}`,
+      step: secret,
+      error: { name: "sk-ant-api03-secret", code: "ALICE" },
+      extra: { code: "TOKEN" },
+    });
+    const line = lastLogLine();
+    expect(line).toMatchObject({
+      route: "unknown",
+      step: "unknown",
+      errorName: "UnknownError",
+      errorCode: "unknown",
+    });
+    expect(JSON.stringify(line)).not.toContain("eyJhbGci");
+    expect(JSON.stringify(line)).not.toContain("sk-ant");
+    expect(JSON.stringify(line)).not.toContain("ALICE");
+    expect(JSON.stringify(line)).not.toContain("TOKEN");
+  });
+
+  it("never forwards raw secrets, free text, or provider stacks to Sentry", () => {
+    const leaked = new Error(
+      `learner@example.com prompt=confidential jwt=${JWT_HEADER_CANARY}`,
+    );
+    leaked.stack = "service_role=super-secret";
+    reportApiError({
+      route: "/api/private",
+      step: "llm-call",
+      error: leaked,
+      extra: { prompt: "confidential answer", durationMs: 20 },
+    });
+
+    expect(captureException).toHaveBeenCalledTimes(1);
+    const [captured, context] = captureException.mock.calls[0] ?? [];
+    expect(captured).toBeInstanceOf(Error);
+    const serialized = JSON.stringify({
+      name: (captured as Error).name,
+      message: (captured as Error).message,
+      context,
+    });
+    expect(serialized).not.toContain("learner@example.com");
+    expect(serialized).not.toContain("confidential");
+    expect(serialized).not.toContain("eyJhbGci");
+    expect(serialized).not.toContain("super-secret");
   });
 });
 
-describe("reportApiError — request id correlation", () => {
-  it("uses the incoming x-request-id header when present", () => {
+describe("reportApiError — server-owned request id", () => {
+  it("ignores an incoming x-request-id header", () => {
     const request = new Request("http://localhost/api/example/action", {
       headers: { "x-request-id": "upstream-req-7" },
     });
     reportApiError({ step: "supabase-insert", error: "e", request });
-    expect(lastLogLine().requestId).toBe("upstream-req-7");
+    expect(lastLogLine().requestId).not.toBe("upstream-req-7");
+    expect(String(lastLogLine().requestId)).toMatch(UUID_RE);
   });
 
   it("falls back to a fresh UUID without the header", () => {
     const request = new Request("http://localhost/api/example/action");
-    reportApiError({ step: "s", error: "e", request });
+    reportApiError({ step: "unhandled", error: "e", request });
     expect(String(lastLogLine().requestId)).toMatch(UUID_RE);
   });
 
-  it("lets extra.requestId override the derived id (proxy correlation)", () => {
+  it("ignores an extra requestId override", () => {
     const request = new Request("http://localhost/api/scan", {
       headers: { "x-request-id": "derived-id" },
     });
@@ -138,24 +244,36 @@ describe("reportApiError — request id correlation", () => {
       request,
       extra: { requestId: "forwarded-id" },
     });
-    // Extra is spread LAST in the JSON line, so the override wins.
-    expect(lastLogLine().requestId).toBe("forwarded-id");
+    expect(lastLogLine().requestId).not.toBe("forwarded-id");
+    expect(String(lastLogLine().requestId)).toMatch(UUID_RE);
   });
 });
 
 describe("requestIdFrom", () => {
-  it("returns the header value when present", () => {
+  it("never returns an attacker-controlled header value", () => {
     const request = new Request("http://localhost/x", {
       headers: { "x-request-id": "abc-123" },
     });
-    expect(requestIdFrom(request)).toBe("abc-123");
+    expect(requestIdFrom(request)).not.toBe("abc-123");
+    expect(requestIdFrom(request)).toMatch(UUID_RE);
   });
 
   it("returns a UUID when no request is given", () => {
     expect(requestIdFrom()).toMatch(UUID_RE);
   });
 
-  it("returns 'unknown' when reading headers throws", () => {
+  it("rejects oversized or control-character request IDs", () => {
+    const oversized = new Request("http://localhost/x", {
+      headers: { "x-request-id": "x".repeat(129) },
+    });
+    const unsafe = new Request("http://localhost/x", {
+      headers: { "x-request-id": "request id with spaces" },
+    });
+    expect(requestIdFrom(oversized)).toMatch(UUID_RE);
+    expect(requestIdFrom(unsafe)).toMatch(UUID_RE);
+  });
+
+  it("does not inspect hostile request headers", () => {
     const evil = {
       headers: {
         get() {
@@ -163,6 +281,6 @@ describe("requestIdFrom", () => {
         },
       },
     } as unknown as Request;
-    expect(requestIdFrom(evil)).toBe("unknown");
+    expect(requestIdFrom(evil)).toMatch(UUID_RE);
   });
 });

@@ -23,7 +23,10 @@ describe("LayerCake ", () => {
 
   it("shows a layer's detail card (stores/API/above/below) on hover", () => {
     const { container } = render(<LayerCake />);
-    fireEvent.mouseEnter(screen.getByText("Catalog / Metastore"));
+    const catalog = screen.getByRole("button", {
+      name: /Catalog \/ Metastore/,
+    });
+    fireEvent.focus(catalog);
     const detail = container.querySelector(".lc-detail-card") as HTMLElement;
     expect(detail).toBeInTheDocument();
     expect(within(detail).getByText("Thrift: getPartitions · getTableSchema")).toBeInTheDocument();
@@ -34,9 +37,11 @@ describe("LayerCake ", () => {
   it("marks a layer broken in failure mode and shows the failure explanation", () => {
     render(<LayerCake />);
     fireEvent.click(screen.getByLabelText(/Failure mode/));
-    fireEvent.click(screen.getByText("Blob layer"));
+    const blob = screen.getByRole("button", { name: /Blob layer/ });
+    fireEvent.click(blob);
+    expect(blob).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByText("✕")).toBeInTheDocument();
-    fireEvent.mouseEnter(screen.getByText("Blob layer"));
+    fireEvent.focus(blob);
     expect(screen.getByText("If this layer is down")).toBeInTheDocument();
     expect(screen.getByText("Reads slow, retries kick in, timeouts cascade up to engine.")).toBeInTheDocument();
   });

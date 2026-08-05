@@ -123,7 +123,7 @@
   },
   {
     "term": "Hochrisiko-KI-System",
-    "definition": "KI-System, das nach Art. 6 in Verbindung mit Anhang I oder III als hochriskant eingestuft wird. Anbieter- und Betreiberpflichten unterscheiden sich. Parlament und Rat haben den 2. Dezember 2027 für eigenständige Anhang-III-Systeme und den 2. August 2028 für produktintegrierte Systeme beschlossen; am 14. Juli 2026 war die Änderungsverordnung noch nicht im Amtsblatt veröffentlicht.",
+    "definition": "KI-System, das nach Art. 6 in Verbindung mit Anhang I oder III als hochriskant eingestuft wird. Anbieter- und Betreiberpflichten unterscheiden sich. Die seit 27. Juli 2026 geltende Verordnung (EU) 2026/1744 setzt den 2. Dezember 2027 für eigenständige Anhang-III-Systeme und den 2. August 2028 für produktintegrierte Systeme.",
     "english": "High-Risk AI System",
     "category": "regulatorik",
     "relatedTerms": ["Konformitätsbewertung", "Human-in-the-Loop"]

@@ -18,8 +18,8 @@
       "subtitle": "Citizen-Selbstverteidigung gegen synthetische Medien",
       "durationMinutes": 4,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-06-22",
-      "nextReview": "2026-08-01",
+      "lastReviewed": "2026-08-02",
+      "nextReview": "2026-09-13",
       "reviewCadence": "6-weekly",
       "riskClass": "vendor",
       "keyConcepts": ["Deepfake", "Synthetische Medien", "EU AI Act Art. 50", "Desinformation"],
@@ -42,8 +42,8 @@
           "id": "deepfake-2-1-s3",
           "title": "Warum dich das als Bürgerin oder Bürger betrifft",
           "readTimeMinutes": 1,
-          "content": "Du bist nicht nur Zuschauer. Du bist Zielperson, Verteiler und potenzielles Opfer.\n\nAls Zielperson: Deepfakes können eingesetzt werden, um Wahlen zu beeinflussen, Fehlinformationen über Personen des öffentlichen Lebens zu verbreiten oder dich mit gefälschten Angeboten zu betrügen.\n\nAls Verteiler: Wenn du ein manipuliertes Video teilst, ohne es zu prüfen, verstärkst du seinen Effekt. Die Verbreitung passiert schneller als die Richtigstellung.\n\nAls mögliches Opfer: Dein Gesicht kann in Deepfake-Materialien erscheinen, wenn jemand Fotos von dir verwendet. Das betrifft Privatpersonen genauso wie öffentliche Personen.\n\nAb dem **2. August 2026** gelten die Transparenzpflichten aus Art. 50. Anbieter erfasster generativer Systeme müssen Ausgaben maschinenlesbar markieren; Betreiber, die Deepfakes veröffentlichen, müssen die künstliche Erzeugung oder Manipulation grundsätzlich sichtbar offenlegen. Das sind unterschiedliche Pflichten mit Ausnahmen, keine pauschale Kennzeichnung jedes KI-Inhalts. (Quelle: Verordnung (EU) 2024/1689, Art. 50)\n\nDiese Lektion behandelt die Bürgerperspektive: wie du Inhalte prüfst und dich schützt.",
-          "keyTakeaway": "Deepfakes betreffen dich als Zielperson, Verteiler und mögliches Opfer. Art. 50 schafft ab 2. August 2026 rollenbezogene Markierungs- und Offenlegungspflichten."
+          "content": "Du bist nicht nur Zuschauer. Du bist Zielperson, Verteiler und potenzielles Opfer.\n\nAls Zielperson: Deepfakes können eingesetzt werden, um Wahlen zu beeinflussen, Fehlinformationen über Personen des öffentlichen Lebens zu verbreiten oder dich mit gefälschten Angeboten zu betrügen.\n\nAls Verteiler: Wenn du ein manipuliertes Video teilst, ohne es zu prüfen, verstärkst du seinen Effekt. Die Verbreitung passiert schneller als die Richtigstellung.\n\nAls mögliches Opfer: Dein Gesicht kann in Deepfake-Materialien erscheinen, wenn jemand Fotos von dir verwendet. Das betrifft Privatpersonen genauso wie öffentliche Personen.\n\nSeit dem **2. August 2026** gelten die Transparenzpflichten aus Art. 50. Anbieter erfasster generativer Systeme müssen Ausgaben maschinenlesbar markieren; Betreiber, die Deepfakes veröffentlichen, müssen die künstliche Erzeugung oder Manipulation grundsätzlich sichtbar offenlegen. Das sind unterschiedliche Pflichten mit Ausnahmen, keine pauschale Kennzeichnung jedes KI-Inhalts. Wichtig für dich: Für generative Systeme, die schon vor dem 2. August 2026 auf dem Markt waren, greift die maschinenlesbare Markierung erst ab dem 2. Dezember 2026. Eine fehlende Markierung ist deshalb vorerst normal und kein Beweis dafür, dass ein Inhalt echt ist. (Quelle: Verordnung (EU) 2024/1689, Art. 50; Verordnung (EU) 2026/1744)\n\nDiese Lektion behandelt die Bürgerperspektive: wie du Inhalte prüfst und dich schützt.",
+          "keyTakeaway": "Deepfakes betreffen dich als Zielperson, Verteiler und mögliches Opfer. Art. 50 schafft seit dem 2. August 2026 rollenbezogene Markierungs- und Offenlegungspflichten."
         }
       ],
       "quiz": [
@@ -90,8 +90,8 @@
       "subtitle": "Kostenlose Werkzeuge und visuelle Checkliste",
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-06-22",
-      "nextReview": "2026-08-01",
+      "lastReviewed": "2026-08-02",
+      "nextReview": "2026-09-13",
       "reviewCadence": "6-weekly",
       "riskClass": "vendor",
       "keyConcepts": ["Rückwärtsbildersuche", "InVID WeVerify", "Hive Moderation", "Visuelle Prüfung"],
@@ -162,8 +162,8 @@
       "subtitle": "Vier Handlungsschritte und deine Rechte",
       "durationMinutes": 4,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-06-22",
-      "nextReview": "2026-08-01",
+      "lastReviewed": "2026-08-02",
+      "nextReview": "2026-09-13",
       "reviewCadence": "6-weekly",
       "riskClass": "vendor",
       "keyConcepts": ["Meldepflicht", "Plattformmeldung", "BKA Onlinewache", "KUG", "Recht am eigenen Bild"],
@@ -177,10 +177,10 @@
         },
         {
           "id": "deepfake-2-3-s2",
-          "title": "Was der EU AI Act ab August 2026 für dich bedeutet",
+          "title": "Was der EU AI Act seit August 2026 für dich bedeutet",
           "readTimeMinutes": 1,
-          "content": "Mit dem 2. August 2026 beginnt die allgemeine Anwendbarkeit weiterer Teile des EU AI Act, einschließlich Art. 50. An diesem Tag werden nicht alle Vorschriften gleichzeitig anwendbar.\n\nWas Art. 50 für Deepfakes bedeutet:\n- Anbieter erfasster generativer Systeme müssen Ausgaben maschinenlesbar markieren (Abs. 2).\n- Betreiber, die Deepfakes veröffentlichen, müssen grundsätzlich offenlegen, dass der Inhalt künstlich erzeugt oder manipuliert wurde (Abs. 4).\n- Ob eine fehlende Markierung oder Offenlegung einen Verstoß darstellt, hängt von Rolle, Inhalt und den gesetzlichen Ausnahmen ab.\n\nArt. 85 sieht Beschwerden bei der zuständigen Marktüberwachungsbehörde vor. Das beschlossene deutsche KI-MIG weist der Bundesnetzagentur eine zentrale Rolle zu, soweit keine Fachbehörde zuständig ist. Am 14. Juli 2026 war das Gesetz noch nicht verkündet; ein aktiver BNetzA-Beschwerdekanal wird hier deshalb nicht behauptet. Prüfe die aktuelle offizielle Behördeninformation.\n\n(Quelle: Verordnung (EU) 2024/1689, Art. 50 und 85; Bundestagsbeschluss zum KI-MIG vom 11. Juni 2026)",
-          "keyTakeaway": "Art. 50 gilt ab 2. August 2026. Markierung, Offenlegung und deutscher Beschwerdeweg sind getrennt zu prüfen; ein aktiver BNetzA-Kanal wird nicht vorausgesetzt."
+          "content": "Seit dem 2. August 2026 sind weitere Teile des EU AI Act allgemein anwendbar, einschließlich Art. 50. Nicht alle Vorschriften wurden gleichzeitig anwendbar: Der Digital Omnibus (Verordnung (EU) 2026/1744, in Kraft seit 27. Juli 2026) hat die Pflichten für Hochrisiko-Systeme nach hinten verschoben. Die Transparenzpflichten aus Art. 50 wurden nicht verschoben.\n\nWas Art. 50 für Deepfakes bedeutet:\n- Anbieter erfasster generativer Systeme müssen Ausgaben maschinenlesbar markieren (Abs. 2). Für Systeme, die vor dem 2. August 2026 auf dem Markt waren, greift diese Pflicht erst ab dem 2. Dezember 2026.\n- Betreiber, die Deepfakes veröffentlichen, müssen grundsätzlich offenlegen, dass der Inhalt künstlich erzeugt oder manipuliert wurde (Abs. 4).\n- Ob eine fehlende Markierung oder Offenlegung einen Verstoß darstellt, hängt von Rolle, Inhalt und den gesetzlichen Ausnahmen ab.\n\nArt. 85 sieht Beschwerden bei der zuständigen Marktüberwachungsbehörde vor. Das deutsche KI-MIG ist am 29. Juli 2026 in Kraft getreten. Es macht die Bundesnetzagentur zur Marktüberwachungsbehörde, Anlaufstelle und Beschwerdestelle für die KI-Verordnung, soweit keine Fachbehörde zuständig ist. Den konkreten Beschwerdeweg prüfst du auf der offiziellen Seite der Bundesnetzagentur.\n\n(Quelle: Verordnung (EU) 2024/1689, Art. 50 und 85; Verordnung (EU) 2026/1744; KI-MIG, in Kraft seit 29. Juli 2026)",
+          "keyTakeaway": "Art. 50 gilt seit dem 2. August 2026. Markierung, Offenlegung und Beschwerdeweg sind getrennt zu prüfen; die maschinenlesbare Markierung älterer Systeme greift erst ab dem 2. Dezember 2026."
         },
         {
           "id": "deepfake-2-3-s3",
@@ -204,14 +204,14 @@
         },
         {
           "id": "deepfake-2-3-q2",
-          "questionText": "Wie prüfst du am 14. Juli 2026 den deutschen Beschwerdeweg für einen möglichen Art.-50-Verstoß?",
+          "questionText": "Wie prüfst du am 28. Juli 2026 den deutschen Beschwerdeweg für einen möglichen Art.-50-Verstoß?",
           "answerOptions": [
             { "id": "a", "text": "Bundeskriminalamt (BKA)", "isCorrect": false },
             { "id": "b", "text": "Bundesanstalt für Finanzdienstleistungsaufsicht (BaFin)", "isCorrect": false },
             { "id": "c", "text": "Immer direkt an die Bundesnetzagentur schreiben, unabhängig von Sektor und veröffentlichter Zuständigkeit", "isCorrect": false },
             { "id": "d", "text": "Verkündetes KI-MIG, Fachrecht und den aktuell veröffentlichten Behördenkanal prüfen", "isCorrect": true }
           ],
-          "explanation": "Das beschlossene KI-MIG sieht die Bundesnetzagentur als zentrale Anlaufstelle vor, soweit keine Fachbehörde zuständig ist. Am 14. Juli 2026 war das Gesetz noch nicht verkündet. Deshalb dürfen weder Zuständigkeit noch ein aktiver Beschwerdekanal pauschal vorausgesetzt werden."
+          "explanation": "Das KI-MIG ist am 29. Juli 2026 in Kraft getreten und macht die Bundesnetzagentur zur Marktüberwachungsbehörde, Anlaufstelle und Beschwerdestelle, soweit keine Fachbehörde zuständig ist. Welche Stelle im Einzelfall zuständig ist, hängt weiterhin vom Sektor ab. Prüfe deshalb den aktuell veröffentlichten Behördenkanal."
         },
         {
           "id": "deepfake-2-3-q3",

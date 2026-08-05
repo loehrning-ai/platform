@@ -32,20 +32,23 @@ describe("CredibilityStrip", () => {
     }
   });
 
-  it("keeps the anti-selling positioning: an account is only for progress", () => {
+  it("keeps the anti-selling positioning while stating the account boundary", () => {
     render(<CredibilityStrip />);
     expect(
-      screen.getByText(/Ein Konto brauchst du nur, wenn dein Fortschritt/),
+      screen.getByText(/kein verstecktes Verkaufsgespräch/),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/vier deutschen Lernpfad-Kurse brauchen ein kostenloses Konto/),
     ).toBeInTheDocument();
   });
 
-  it("states that learning is public and only the account area is protected", () => {
+  it("distinguishes public resources from the account-gated German path", () => {
     render(<CredibilityStrip />);
     expect(
-      screen.getByText(/Alles zum Lernen ist offen zugänglich/),
+      screen.getByText(/Bücher, Demos, KI-Check und technische Vertiefungen sind öffentlich/),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Ein Login schützt nur deinen/),
+      screen.getByText(/vier deutschen Lernpfad-Kurse brauchst du ein kostenloses Konto/),
     ).toBeInTheDocument();
   });
 });

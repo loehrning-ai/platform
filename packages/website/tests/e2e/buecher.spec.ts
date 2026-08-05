@@ -4,7 +4,7 @@ const FORBIDDEN_RESOURCE_COPY =
   /(Jetzt kaufen|Jetzt sichern|Premium|Termin buchen|Kostenloses Erstgespräch|Preisliste|Buchungsprozess|PDF-Neufassung in Prüfung|PDF-Bücher)/i;
 
 test.describe("/buecher public book library", () => {
-  test("anonymous readers can access the public library, PDF stays locked", async ({
+  test("provider-free readers can access the library without an impossible login CTA", async ({
     page,
   }) => {
     await page.goto("/buecher", { waitUntil: "domcontentloaded" });
@@ -12,22 +12,21 @@ test.describe("/buecher public book library", () => {
     await expect(page.locator("h1")).toBeVisible();
     await expect(page).not.toHaveURL(/\/login/);
 
-    // Anonymous visitor sees the locked-state prompt, never a working
-    // download link (that only renders when isLoggedIn is true).
     await expect(
-      page.getByRole("link", { name: /PDF nach Login/i }),
+      page.getByText(/PDF-Download nicht verfügbar/i),
     ).toBeVisible();
+    await expect(page.getByRole("link", { name: /PDF nach Login/i })).toHaveCount(0);
     await expect(page.locator('a[download][href*="download.pdf"]')).toHaveCount(0);
 
     const text = await page.locator("body").innerText();
     expect(text).not.toMatch(FORBIDDEN_RESOURCE_COPY);
   });
 
-  test("PDF download route requires auth: 401 for the published book", async ({
+  test("PDF download route reports unavailable without the account backend", async ({
     request,
   }) => {
     const res = await request.get("/api/buecher/ki-landschaft/download.pdf");
-    expect(res.status()).toBe(401);
+    expect(res.status()).toBe(503);
   });
 
   test("PDF download route 404s for a hidden/unpublished book", async ({
@@ -57,6 +56,7 @@ test.describe("/buecher public book library", () => {
     // The auth-gated download route URL is fine to expose publicly here —
     // the route itself enforces the login check, not the URL's secrecy.
     expect(body.books[0].pdf).toBe("/api/buecher/ki-landschaft/download.pdf");
-    expect(body.books[0].pdf_available).toBe(true);
+    expect(body.books[0].pdf_available).toBe(false);
+    expect(body.books[0].pdf_requires_account).toBe(true);
   });
 });

@@ -132,15 +132,23 @@ async function expectSharedDetailContract(
     `${SITE_ORIGIN}${artifact.href}`,
   );
 
+  // The page emits one @graph holding the breadcrumb trail plus exactly one
+  // artifact node (see [kind]/[slug]/page.tsx and its unit spec, which pin
+  // the same shape). The publication contract lives on that artifact node.
   const jsonLd = JSON.parse(
     (await page
       .locator(`#open-source-${artifact.kind}-${artifact.slug}-jsonld`)
       .textContent()) ?? "{}",
-  ) as Record<string, unknown>;
-  expect(jsonLd.name).toBe(artifact.title);
-  expect(jsonLd.codeRepository).toBe(artifact.source.href);
-  expect(jsonLd.version).toBe(artifact.source.revision);
-  expect(jsonLd.license).toBe(`${SITE_ORIGIN}${artifact.license.href}`);
+  ) as { "@graph"?: readonly Record<string, unknown>[] };
+  const artifactNodes = (jsonLd["@graph"] ?? []).filter(
+    (node) => node["@id"] === `${SITE_ORIGIN}${artifact.href}#artifact`,
+  );
+  expect(artifactNodes, "exactly one JSON-LD artifact node").toHaveLength(1);
+  const [artifactNode] = artifactNodes;
+  expect(artifactNode.name).toBe(artifact.title);
+  expect(artifactNode.codeRepository).toBe(artifact.source.href);
+  expect(artifactNode.version).toBe(artifact.source.revision);
+  expect(artifactNode.license).toBe(`${SITE_ORIGIN}${artifact.license.href}`);
 
   await expect(
     page.getByText(artifact.source.revision.slice(0, 12), { exact: true }),
@@ -184,8 +192,16 @@ async function expectSoftwareGuide(
     page.getByText(STATUS_LABELS[guide.status], { exact: true }),
   ).toBeVisible();
   await expect(page.getByText(guide.statusNote, { exact: true })).toBeVisible();
+  // The guide gives the <img> an empty alt and carries the prose once, as
+  // the visible <figcaption> that also labels the <figure> — so a screen
+  // reader hears it exactly once. The unit spec pins the same contract
+  // (software-artifact-guide.test.tsx); assert the figure's accessible
+  // name, not an img role the empty alt intentionally removes.
   await expect(
-    page.getByRole("img", { name: guide.screenshot.alt }),
+    page.getByRole("figure", { name: guide.screenshot.alt }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(guide.screenshot.alt, { exact: true }),
   ).toBeVisible();
   await expectStoredAsset(request, guide.screenshot.src);
 
@@ -196,12 +212,40 @@ async function expectSoftwareGuide(
     "Integration",
     "Dokumentation und Vertiefung",
   ]) {
-    await expect(page.getByRole("heading", { name: heading })).toBeVisible();
+    // Exact level-2 match: the guide renders every section as an <h2>, and a
+    // record's own step titles may legitimately contain a section word (the
+    // cv-engine step "Installation gegen die Testsuite prüfen" is an <h3>),
+    // which a substring locator would collide with under strict mode.
+    await expect(
+      page.getByRole("heading", { level: 2, name: heading, exact: true }),
+    ).toBeVisible();
   }
   for (const prerequisite of guide.prerequisites) {
-    await expect(
-      page.getByText(prerequisite.label, { exact: true }).first(),
-    ).toBeVisible();
+    if (prerequisite.href?.startsWith("https://")) {
+      // An external prerequisite renders its label as a link whose
+      // accessible name deliberately appends the screen-reader-only
+      // ", öffnet in neuem Tab" suffix, so the element's text is never
+      // exactly the label. Assert the announced contract instead. The name
+      // computation joins the label node and the suffix span with a space,
+      // so match the boundary with flexible whitespace.
+      const escapedLabel = prerequisite.label.replace(
+        /[.*+?^${}()|[\]\\]/g,
+        "\\$&",
+      );
+      await expect(
+        page.getByRole("link", {
+          name: new RegExp(`^${escapedLabel}\\s*, öffnet in neuem Tab$`),
+        }),
+      ).toBeVisible();
+    } else if (prerequisite.href) {
+      await expect(
+        page.getByRole("link", { name: prerequisite.label, exact: true }),
+      ).toBeVisible();
+    } else {
+      await expect(
+        page.getByText(prerequisite.label, { exact: true }).first(),
+      ).toBeVisible();
+    }
     await expect(
       page.getByText(prerequisite.detail, { exact: true }).first(),
     ).toBeVisible();
@@ -220,8 +264,18 @@ async function expectSoftwareGuide(
       page.getByText(procedure.summary, { exact: true }).first(),
     ).toBeVisible();
     for (const step of procedure.steps) {
+      // Step titles are level-3 headings. Integration prefixes them with a
+      // visible ordinal ("1. …") while installation/usage render a styled
+      // counter outside the heading text, so match the title as a suffix of
+      // the heading's accessible name rather than as exact page text.
+      const escapedTitle = step.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       await expect(
-        page.getByText(step.title, { exact: true }).first(),
+        page
+          .getByRole("heading", {
+            level: 3,
+            name: new RegExp(`^(?:\\d+\\.\\s*)?${escapedTitle}$`),
+          })
+          .first(),
       ).toBeVisible();
       await expect(
         page.getByText(step.detail, { exact: true }).first(),
@@ -229,6 +283,11 @@ async function expectSoftwareGuide(
       if (step.command) {
         await expect(
           page.getByText(step.command, { exact: true }).first(),
+        ).toBeVisible();
+        await expect(
+          page.getByRole("button", {
+            name: `Befehl für ${step.title} kopieren`,
+          }),
         ).toBeVisible();
       }
     }
@@ -245,11 +304,14 @@ async function expectSoftwareGuide(
     "internal documentation target",
   );
   for (const related of guide.relatedLearning) {
+    // Scoped to the main landmark: the global footer legitimately links the
+    // same learning routes, which a page-wide locator collides with under
+    // strict mode.
     await expect(
-      page.getByRole("link", { name: related.title }),
+      page.getByRole("main").getByRole("link", { name: related.title }),
     ).toHaveAttribute("href", related.href);
     await expect(
-      page.getByText(related.description, { exact: true }),
+      page.getByRole("main").getByText(related.description, { exact: true }),
     ).toBeVisible();
     await expectResolvableInternalHref(
       request,
@@ -271,7 +333,20 @@ test.describe("/open-source hub", () => {
 
     const h1 = page.getByRole("heading", { level: 1 });
     await expect(h1).toBeVisible();
-    await expect(h1).toContainText(/Werkzeuge und Projekte/i);
+    await expect(h1).toContainText(/Werkverzeichnis/i);
+
+    // The shelf: one unified grid, the kind as a stamp on the card (never a
+    // heading), and the GitHub action naming the repo path.
+    await expect(
+      page.getByRole("heading", { level: 2, name: "Alle Werke" }),
+    ).toBeVisible();
+    await expect(page.getByText("Werkzeug", { exact: true })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Werkzeuge", exact: true }),
+    ).toHaveCount(0);
+    await expect(
+      page.getByRole("link", { name: /Quelle loehrning-ai\/cv-engine/ }),
+    ).toHaveAttribute("href", "https://github.com/loehrning-ai/cv-engine");
 
     // Structural heading at the foot of the page proves it rendered fully.
     await expect(
@@ -330,8 +405,11 @@ test.describe("/open-source hub", () => {
       page.getByRole("heading", { name: "Code und redaktionelle Inhalte" }),
     ).toBeVisible();
     await expect(
-      page.getByText(/Plattform-Code steht unter MIT/i),
+      page.getByText(/Plattform-Code auf GitHub.*steht unter MIT/i),
     ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /Plattform-Code auf GitHub/i }),
+    ).toHaveAttribute("href", "https://github.com/loehrning-ai/platform");
     const policyLink = page
       .locator("#lizenzmodell")
       .getByRole("link", { name: "Lizenzrichtlinie" });
@@ -450,6 +528,25 @@ for (const artifact of DETAIL_ARTIFACTS) {
         artifact.posterSrc,
         artifact.mediaFiles.poster.mimeType,
       );
+    });
+
+    test("has no horizontal overflow at the mobile audit viewport", async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto(artifact.href, { waitUntil: "domcontentloaded" });
+      await expect(
+        page.getByRole("heading", { level: 1, name: artifact.title }),
+      ).toBeVisible();
+
+      const { scrollWidth, innerWidth } = await page.evaluate(() => ({
+        scrollWidth: document.scrollingElement?.scrollWidth ?? 0,
+        innerWidth: window.innerWidth,
+      }));
+      expect(
+        scrollWidth,
+        `${artifact.id}: horizontal overflow at 390px (${scrollWidth} > ${innerWidth})`,
+      ).toBeLessThanOrEqual(innerWidth + 1);
     });
   });
 }

@@ -7,9 +7,9 @@ import { test, expect, type Page } from "@playwright/test";
  * Real block ids come from KI_FUEHRERSCHEIN_CONFIG.blockIds
  * (src/lib/course/config.ts): block_1..block_5. The reader is `protected` in
  * the crawl contract, so an anonymous visitor is redirected by
- * src/middleware.ts to /login?next=<path>&reason=kurs-login before ever
- * reaching the reader shell — these tests assert that redirect, not the
- * reader content itself (which needs a live session; see
+ * src/middleware.ts to /login?next=<path>&reason=auth-not-configured in the
+ * provider-free suite before ever reaching the reader shell. These tests
+ * assert that explicit fallback, not the reader content itself (which needs a live session; see
  * tests/e2e/authenticated-routes.authed.spec.ts).
  */
 
@@ -17,8 +17,7 @@ const ROUTE = "/ki-fuehrerschein";
 const COURSE_PATH = "/ki-fuehrerschein/kurs";
 const BLOCK_ROUTE = "/ki-fuehrerschein/kurs/block_1";
 
-// Console-error filter mirrors route-einstieg.spec.ts: drop framework noise,
-// keep only errors that signal a genuine page fault.
+// Every captured console error and uncaught page error fails the check.
 function collectConsoleErrors(page: Page): string[] {
   const errors: string[] = [];
   page.on("console", (msg) => {
@@ -29,13 +28,7 @@ function collectConsoleErrors(page: Page): string[] {
 }
 
 function meaningfulErrors(errors: string[]): string[] {
-  return errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e),
-  );
+  return errors;
 }
 
 test.describe("/ki-fuehrerschein landing", () => {
@@ -69,7 +62,7 @@ test.describe("/ki-fuehrerschein landing", () => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     const startCta = page
-      .getByRole("link", { name: /Kurs starten/i })
+      .getByRole("link", { name: "Kostenlos mit Lernkonto starten" })
       .first();
     await expect(startCta).toBeVisible();
     await expect(startCta).toHaveAttribute("href", COURSE_PATH);
@@ -83,7 +76,7 @@ test.describe("/ki-fuehrerschein landing", () => {
       "/login",
     );
     expect(url.searchParams.get("next")).toBe(COURSE_PATH);
-    expect(url.searchParams.get("reason")).toBe("kurs-login");
+    expect(url.searchParams.get("reason")).toBe("auth-not-configured");
   });
 });
 
@@ -97,7 +90,7 @@ test.describe("/ki-fuehrerschein course reader (login-gated)", () => {
       "/login",
     );
     expect(url.searchParams.get("next")).toBe(COURSE_PATH);
-    expect(url.searchParams.get("reason")).toBe("kurs-login");
+    expect(url.searchParams.get("reason")).toBe("auth-not-configured");
   });
 
   test("anonymous request to a block reader gets a 307 to /login", async ({
@@ -111,7 +104,7 @@ test.describe("/ki-fuehrerschein course reader (login-gated)", () => {
     const redirectUrl = new URL(location ?? "", "http://localhost");
     expect(redirectUrl.pathname).toBe("/login");
     expect(redirectUrl.searchParams.get("next")).toBe(BLOCK_ROUTE);
-    expect(redirectUrl.searchParams.get("reason")).toBe("kurs-login");
+    expect(redirectUrl.searchParams.get("reason")).toBe("auth-not-configured");
   });
 });
 
@@ -124,7 +117,7 @@ test.describe("/ki-fuehrerschein mobile", () => {
 
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await expect(
-      page.getByRole("link", { name: /Kurs starten/i }).first(),
+      page.getByRole("link", { name: "Kostenlos mit Lernkonto starten" }).first(),
     ).toBeVisible();
 
     const { scrollWidth, innerWidth } = await page.evaluate(() => ({

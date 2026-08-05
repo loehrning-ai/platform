@@ -30,7 +30,7 @@ describe("<WordDemo>", () => {
     render(<WordDemo />);
 
     expect(screen.getByText("Word-Lab mit KI-Assistent")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
+    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "prüfbar bleiben.",
     );
 

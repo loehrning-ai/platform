@@ -28,10 +28,8 @@ export const AI_NATIVE_OPERATOR_CONFIG: CourseConfig = {
   // workshop-quiz-page.tsx's `${config.coursePath}/zertifikat` link resolves.
   coursePath: "/kurse/open-source/ai-native-operator",
   blockIds: [],
-  // Bank size equals served count (matches every other course's convention:
-  // ki-fuehrerschein 20/20, eu-ai-act-kurs 27/27, ai-native 24/24,
-  // ki-und-gesellschaft 15/15, claude 19/19). The 22-question bank pools
-  // all 9 module knowledge-checks' questions verbatim.
+  // Bank size equals served count. The 22-question bank pools all 9 module
+  // knowledge-checks' questions verbatim.
   workshopQuizQuestionCount: 22,
   workshopQuizTimeLimitMinutes: 28,
   workshopQuizPassThreshold: 0.7,

@@ -1,9 +1,10 @@
 // ─── Unified course catalog (shared course architecture) ─────────────────
 //
-// One source of truth for the `/kurse` hub. Native platform courses stay in
-// COURSE_CATALOG because they share the progress/certificate engine. Imported
-// open-source courses stay in IMPORTED_COURSE_CATALOG because they are linked
-// as standalone browser courses and must not receive fake local progress.
+// One source of truth for the `/kurse` hub. Courses enter COURSE_CATALOG once
+// they use the platform progress/certificate engine. Pending external imports
+// stay in IMPORTED_COURSE_CATALOG until their native route and progress wiring
+// ship. Ported courses retain their source, license, and screenshot metadata
+// after that transition.
 
 import type { CourseSlug } from "@/lib/course/types";
 
@@ -24,7 +25,11 @@ export interface CatalogCourse {
   readonly href: string;
   /** Where "Kurs starten" goes (course reader entry). */
   readonly startHref: string;
-  /** Deep-link used when a learner has progress (continue where they were). */
+  /**
+   * Static course-level fallback retained for catalog/discovery consumers.
+   * Interactive "Weiterlernen" links use the canonical first-incomplete
+   * resolver in `lib/courses/resume.ts`.
+   */
   readonly continueHref: string;
   /** Human duration label (e.g. "ca. 2 Std."). */
   readonly duration: string;
@@ -36,9 +41,13 @@ export interface CatalogCourse {
   readonly unitCount: number;
   /** Audience line. */
   readonly audience: string;
-  /** Course landing-page screenshot shown on the Lernpfad card banner. */
-  readonly coverImage: string;
-  readonly coverImageAlt: string;
+  /**
+   * Card banner image. The four German spine courses render a programmatic
+   * Typenschild instead (src/app/kurse/course-plate.tsx) and carry no cover
+   * asset; the six ported courses keep their provenance-pinned screenshots.
+   */
+  readonly coverImage?: string;
+  readonly coverImageAlt?: string;
   /**
    * Every entry in COURSE_CATALOG is "live" by construction (a course only
    * ever enters this array once it is fully native). The single field the
@@ -134,8 +143,6 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     unitLabel: "Blöcke",
     unitCount: 5,
     audience: "Alle Mitarbeiter, die KI nutzen",
-    coverImage: "/course-covers/ki-fuehrerschein.png",
-    coverImageAlt: "Startseite des KI-Führerschein-Kurses",
     nativeStatus: "live",
   },
   {
@@ -154,8 +161,6 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     unitLabel: "Blöcke",
     unitCount: 3,
     audience: "Alle ohne Vorkenntnisse",
-    coverImage: "/course-covers/ki-und-gesellschaft.png",
-    coverImageAlt: "Startseite des Kurses KI und Gesellschaft",
     nativeStatus: "live",
   },
   {
@@ -174,8 +179,6 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     unitLabel: "Blöcke",
     unitCount: 6,
     audience: "Compliance, IT-Leitung, Geschäftsführung",
-    coverImage: "/course-covers/eu-ai-act-kurs.png",
-    coverImageAlt: "Startseite des EU AI Act Kurses",
     nativeStatus: "live",
   },
   {
@@ -185,7 +188,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     eyebrow: "Schritt 04 · Arbeitsweise",
     tagline: "Intent formulieren, Kontext geben, Output prüfen.",
     description:
-      "Vom Compliance-Wissen zur täglichen Praxis mit Claude, Obsidian und n8n. Mit Demos, Übungen, Zertifikat und synchronisiertem Lernstand.",
+      "Vom Compliance-Wissen zur täglichen Praxis mit Claude, Obsidian und n8n. Mit Demos, Übungen, selbst ausgestellter Teilnahmebestätigung und synchronisiertem Lernstand.",
     href: "/ai-native",
     startHref: "/ai-native/kurs/modul_1",
     continueHref: "/ai-native/kurs/modul_1/modul_1_lesson_1",
@@ -194,8 +197,6 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     unitLabel: "Module",
     unitCount: 4,
     audience: "Mitarbeiter, Selbstständige und Studierende",
-    coverImage: "/course-covers/ai-native.png",
-    coverImageAlt: "Startseite des AI-Native Arbeitskurses",
     nativeStatus: "live",
   },
   // Claude Course: first imported course flipped from
@@ -214,7 +215,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     eyebrow: "Schritt 05 · Prompting",
     tagline: "Prompting, Kontext, Claude Code, Agents, Grounding und Evals.",
     description:
-      "Prompt like you mean it: Zwölf hands-on Lektionen zu Prompt-Anatomie, Context Engineering, CLAUDE.md, Iteration, Google Docs, Agents & Tool Use, Reviews, Grounding, Prompt Debugging & Evals, Team Workflows und Safety. Auf Englisch, jetzt nativ auf loehrning.ai mit Fortschritt und Zertifikat.",
+      "Prompt like you mean it: Zwölf hands-on Lektionen zu Prompt-Anatomie, Context Engineering, CLAUDE.md, Iteration, Google Docs, Agents & Tool Use, Reviews, Grounding, Prompt Debugging & Evals, Team Workflows und Safety. Auf Englisch, jetzt nativ auf loehrning.ai mit Fortschritt und selbst ausgestelltem Certificate.",
     href: "/kurse/open-source/claude",
     startHref: "/kurse/open-source/claude/kurs/mental-model",
     continueHref: "/kurse/open-source/claude/kurs",
@@ -248,7 +249,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     topics: ["Claude", "Claude Code", "MCP", "Prompting", "Evals"],
     sourceFacts: ["4 Tracks", "12 Lektionen", "Hands-on Widgets", "Jetzt nativ"],
     integrationNote:
-      "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
+      "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Abschlussmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
   },
   // Codex Course: second imported course flipped from
   // "pending" to "live" now that it has real native routes, per-lesson
@@ -266,7 +267,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     eyebrow: "Schritt 06 · Coding Agents",
     tagline: "Terminal-first Playbook für Codex, Tasks, Tools und Parallelisierung.",
     description:
-      "Zwölf Lektionen mit Capstone zu Mental Model, Sandbox, AGENTS.md, Task Specs, Scoping, Acceptance Criteria, Code Review, Iteration, Tool Use, Parallelisierung und Patterns. Auf Englisch, jetzt nativ auf loehrning.ai mit Fortschritt und Zertifikat.",
+      "Zwölf Lektionen mit Capstone zu Mental Model, Sandbox, AGENTS.md, Task Specs, Scoping, Acceptance Criteria, Code Review, Iteration, Tool Use, Parallelisierung und Patterns. Auf Englisch, jetzt nativ auf loehrning.ai mit Fortschritt und selbst ausgestelltem Certificate.",
     href: "/kurse/open-source/codex",
     startHref: "/kurse/open-source/codex/kurs/L01",
     continueHref: "/kurse/open-source/codex/kurs",
@@ -297,7 +298,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     topics: ["Codex", "OpenAI", "AGENTS.md", "Sandboxing", "Pull Requests"],
     sourceFacts: ["12 Lektionen", "Capstone", "Parallel Workflows", "Jetzt nativ"],
     integrationNote:
-      "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
+      "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Abschlussmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
   },
   // Data Infrastructure: third imported course flipped
   // from "pending" to "live" now that it has real native routes, per-lesson
@@ -318,7 +319,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     eyebrow: "Schritt 07 · System Design",
     tagline: "Der Data Stack auf Staff-Engineer-System-Design-Tiefe.",
     description:
-      "12 Lektionen zu Storage-Internals, CAP/PACELC, Modeling, Parquet/ORC/Avro, Lakehouse-Formaten, Streaming/Watermarks, CDC/Lambda/Kappa, Idempotenz und Daten-SLAs. Mit interaktiven Simulationen und IC5-Interview-Replay. Auf Englisch, jetzt nativ auf loehrning.ai mit Fortschritt und Zertifikat.",
+      "12 Lektionen zu Storage-Internals, CAP/PACELC, Modeling, Parquet/ORC/Avro, Lakehouse-Formaten, Streaming/Watermarks, CDC/Lambda/Kappa, Idempotenz und Daten-SLAs. Mit interaktiven Simulationen und IC5-Interview-Replay. Auf Englisch, jetzt nativ auf loehrning.ai mit Fortschritt und selbst ausgestelltem Certificate.",
     href: "/kurse/open-source/data-infrastructure",
     startHref: "/kurse/open-source/data-infrastructure/kurs/mental-model",
     continueHref: "/kurse/open-source/data-infrastructure/kurs",
@@ -349,7 +350,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     topics: ["Snowflake", "BigQuery", "Kafka", "Iceberg", "Spark"],
     sourceFacts: ["4 Tracks", "12 Lektionen", "Live-Simulationen", "Jetzt nativ"],
     integrationNote:
-      "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
+      "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Abschlussmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
   },
   // Data Engineering Fundamentals: fourth imported
   // course flipped from "pending" to "live". totalLessons/unitCount
@@ -367,7 +368,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     eyebrow: "Schritt 08 · Data Engineering",
     tagline: "Produktionsreife Datenpipelines, von der Quelle bis zum Serving.",
     description:
-      "12 Kapitel zu Storage & Formaten, Ingest, Streaming, Storage-Mustern, Compute, Orchestrierung, Data Quality, Discovery, Serving und Governance. Mit 17 interaktiven Simulationen und einem sabotierbaren Capstone. Auf Englisch, jetzt nativ auf loehrning.ai mit Fortschritt und Zertifikat.",
+      "12 Kapitel zu Storage & Formaten, Ingest, Streaming, Storage-Mustern, Compute, Orchestrierung, Data Quality, Discovery, Serving und Governance. Mit 17 interaktiven Simulationen und einem sabotierbaren Capstone. Auf Englisch, jetzt nativ auf loehrning.ai mit Fortschritt und selbst ausgestelltem Certificate.",
     href: "/kurse/open-source/data-engineering-fundamentals",
     startHref: "/kurse/open-source/data-engineering-fundamentals/home",
     continueHref: "/kurse/open-source/data-engineering-fundamentals",
@@ -398,7 +399,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     topics: ["Python", "SQL", "Airflow", "dbt", "Spark", "Kafka"],
     sourceFacts: ["12 Kapitel", "17 Live-Simulationen", "Jetzt nativ"],
     integrationNote:
-      "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
+      "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Abschlussmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
   },
   // Data Science: fifth imported course flipped from
   // "pending" to "live". Like data-engineering-fundamentals, chapters live
@@ -414,7 +415,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     eyebrow: "Schritt 09 · Data Science",
     tagline: "Von Verteilungen bis Deployment, mit einer Live-Simulation pro Kapitel.",
     description:
-      "12 Kapitel durch den kompletten Data-Science-Loop: Sampling & Zentraler Grenzwertsatz, explorative Datenanalyse, Feature Engineering, Bias/Variance, ROC/PR-Evaluation, SHAP/LIME-Interpretierbarkeit, A/B-Test-Power, Causal DAGs, Peeking-Fallstricke und Production-Drift-Monitoring. Mit 22 interaktiven Simulationen und einem Fraud-Detection-Capstone. Auf Englisch, jetzt nativ auf loehrning.ai mit Fortschritt und Zertifikat.",
+      "12 Kapitel durch den kompletten Data-Science-Loop: Sampling & Zentraler Grenzwertsatz, explorative Datenanalyse, Feature Engineering, Bias/Variance, ROC/PR-Evaluation, SHAP/LIME-Interpretierbarkeit, A/B-Test-Power, Causal DAGs, Peeking-Fallstricke und Production-Drift-Monitoring. Mit 22 interaktiven Simulationen und einem Fraud-Detection-Capstone. Auf Englisch, jetzt nativ auf loehrning.ai mit Fortschritt und selbst ausgestelltem Certificate.",
     href: "/kurse/open-source/data-science",
     startHref: "/kurse/open-source/data-science",
     continueHref: "/kurse/open-source/data-science",
@@ -445,7 +446,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     topics: ["Python", "pandas", "scikit-learn", "PyTorch", "MLflow"],
     sourceFacts: ["12 Kapitel", "22 Live-Simulationen", "Jetzt nativ"],
     integrationNote:
-      "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
+      "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Abschlussmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
   },
   // AI-Native Operator: sixth and last imported course
   // flipped from "pending" to "live". Its URL structure stays under
@@ -466,7 +467,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     eyebrow: "Schritt 10 · AI Operating Model",
     tagline: "Arbeitsweise, Engineering-Praxis und Organisationsdesign für AI-natives Arbeiten.",
     description:
-      "Neununddreißig praktische Lektionen in neun Modulen zu Mindset, Engineering-Praxis, Product Building, Operations, Talent, Org-Design, Data-Infrastruktur, Governance und Measurement für das Arbeiten mit KI-Agenten. Mit 30 interaktiven Übungen und einem 22-Fragen-Workshop-Quiz. Auf Englisch, jetzt nativ auf loehrning.ai mit Fortschritt und Zertifikat.",
+      "Neununddreißig praktische Lektionen in neun Modulen zu Mindset, Engineering-Praxis, Product Building, Operations, Talent, Org-Design, Data-Infrastruktur, Governance und Measurement für das Arbeiten mit KI-Agenten. Mit 30 interaktiven Übungen und einem 22-Fragen-Workshop-Quiz. Auf Englisch, jetzt nativ auf loehrning.ai mit Fortschritt und selbst ausgestelltem Certificate.",
     href: "/kurse/open-source/ai-native-operator",
     startHref: "/kurse/open-source/ai-native-operator/mindset/1",
     continueHref: "/kurse/open-source/ai-native-operator",
@@ -497,9 +498,49 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     topics: ["Agents", "Workflows", "Orchestration", "Evals", "Org Design"],
     sourceFacts: ["9 Module", "39 Lektionen", "30 Übungen", "Jetzt nativ"],
     integrationNote:
-      "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Zertifikatsmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
+      "Jetzt nativ auf loehrning.ai gehostet und in den Fortschritts- und Abschlussmotor eingebunden; ursprünglich als Open-Source-Kurs importiert.",
   },
 ] as const;
+
+const PORTED_COURSE_METADATA_KEYS = [
+  "imageSrc",
+  "imageAlt",
+  "launchHref",
+  "sourceHref",
+  "sourceCommitHref",
+  "licenseHref",
+  "sourceImagePath",
+  "sourceLicensePath",
+  "imageSha256",
+  "licenseSha256",
+  "licenseSizeBytes",
+  "sourceCommit",
+  "lessonCountLabel",
+  "language",
+  "topics",
+  "sourceFacts",
+  "integrationNote",
+] as const satisfies readonly (keyof CatalogCourse)[];
+
+export type PortedCourse = CatalogCourse &
+  Required<
+    Pick<CatalogCourse, (typeof PORTED_COURSE_METADATA_KEYS)[number]>
+  >;
+
+function isPortedCourse(course: CatalogCourse): course is PortedCourse {
+  return (
+    course.href.startsWith("/kurse/open-source/") &&
+    PORTED_COURSE_METADATA_KEYS.every((key) => course[key] !== undefined)
+  );
+}
+
+/**
+ * Native courses originally imported from the commit-pinned open-source
+ * collection. This explicit, non-empty subset keeps provenance and browser
+ * coverage from silently disappearing when the pending-import array is empty.
+ */
+export const PORTED_COURSE_CATALOG: readonly PortedCourse[] =
+  COURSE_CATALOG.filter(isPortedCourse);
 
 export const IMPORTED_COURSE_SOURCE_COMMIT =
   "0e5dfd327ce44663696b52eb6643bab147947101";

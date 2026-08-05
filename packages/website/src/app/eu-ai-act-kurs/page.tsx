@@ -88,8 +88,12 @@ export default async function EuAiActKursLandingPage() {
         </p>
 
         <div className="mt-12 flex flex-wrap items-center gap-5">
-          <Link href="/eu-ai-act-kurs/kurs" className={PRIMARY_CTA}>
-            Kostenlosen Kurs starten
+          <Link
+            href="/eu-ai-act-kurs/kurs"
+            prefetch={false}
+            className={PRIMARY_CTA}
+          >
+            Kostenlos mit Lernkonto starten
             <span aria-hidden="true">→</span>
           </Link>
           <Link href="/ki-fuehrerschein" className={SECONDARY_CTA}>
@@ -112,8 +116,8 @@ export default async function EuAiActKursLandingPage() {
             Nach diesem Kurs kannst du erklären, was die KI-Verordnung regelt, welche Praktiken
             verboten sind und was du als Nutzerin bzw. als verantwortliche Person im Beruf
             wissen musst. Du verstehst, was ab dem 2. August 2026 gilt, und warum die
-            beschlossenen Hochrisiko-Termine 2. Dezember 2027 und 2. August 2028 am
-            Inhaltsstand 14. Juli 2026 noch nicht in Kraft waren.
+            Hochrisiko-Termine 2. Dezember 2027 und 2. August 2028 seit dem
+            27. Juli 2026 geltendes Recht sind.
           </p>
         </section>
 
@@ -219,8 +223,12 @@ export default async function EuAiActKursLandingPage() {
         </section>
 
         <div className="mt-16 flex flex-wrap items-center gap-5">
-          <Link href="/eu-ai-act-kurs/kurs" className={PRIMARY_CTA}>
-            Kostenlosen Kurs starten
+          <Link
+            href="/eu-ai-act-kurs/kurs"
+            prefetch={false}
+            className={PRIMARY_CTA}
+          >
+            Kostenlos mit Lernkonto starten
             <span aria-hidden="true">→</span>
           </Link>
           <Link href="/ai-native" className={SECONDARY_CTA}>

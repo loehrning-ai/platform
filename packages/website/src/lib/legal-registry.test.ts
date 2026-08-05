@@ -9,8 +9,15 @@ describe("legal registry", () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it("contains the complete set of 37 sourced claims", () => {
-    expect(LEGAL_CLAIMS.length).toBe(37);
+  it("contains the complete set of 42 sourced claims", () => {
+    expect(LEGAL_CLAIMS.length).toBe(42);
+  });
+
+  it("records the KI-MIG as in force and supersedes the negative publication check", () => {
+    const inForce = getLegalClaim("de-ki-mig-in-force-2026-07-29");
+    expect(inForce?.status).toBe("binding");
+    expect(inForce?.effectiveDate).toBe("2026-07-29");
+    expect(inForce?.supersedes).toContain("de-ki-mig-publication-check-2026-07-28");
   });
 
   it("contains the launch-critical AI Act dates", () => {
@@ -20,17 +27,17 @@ describe("legal registry", () => {
     expect(getLegalClaim("ai-act-gpai-application-2025-08-02")?.effectiveDate).toBe("2025-08-02");
   });
 
-  it("distinguishes the binding original timeline from adopted unpublished amendments", () => {
+  it("records the now-binding amended high-risk timeline", () => {
     expect(getLegalClaim("ai-act-general-application-2026-08-02")?.status).toBe("binding");
     expect(
       getLegalClaim("ai-act-high-risk-areas-adopted-2027-12-02")?.status,
-    ).toBe("adopted-pending-publication");
+    ).toBe("binding");
     expect(
       getLegalClaim("ai-act-product-embedded-high-risk-2028-08-02")?.status,
-    ).toBe("adopted-pending-publication");
+    ).toBe("binding");
     expect(
       getLegalClaim("ai-act-regulatory-sandbox-adopted-2027-08-02")?.status,
-    ).toBe("adopted-pending-publication");
+    ).toBe("binding");
     expect(
       getLegalClaim("ai-act-regulatory-sandbox-adopted-2027-08-02")?.effectiveDate,
     ).toBe("2027-08-02");
@@ -45,7 +52,7 @@ describe("legal registry", () => {
     );
     expect(
       getLegalClaim("ai-act-high-risk-areas-adopted-2027-12-02")?.summary,
-    ).toMatch(/signed on 8 July 2026 and was still awaiting Official Journal publication/i);
+    ).toMatch(/Regulation \(EU\) 2026\/1744/i);
   });
 
   it("records the AI Omnibus procedure milestones with primary provenance", () => {
@@ -54,14 +61,17 @@ describe("legal registry", () => {
       "adopted-pending-publication",
     );
     expect(getLegalClaim("ai-omnibus-signature-2026-07-08")?.summary).toMatch(
-      /signed on 8 July 2026/i,
+      /entered into force on 27 July 2026/i,
     );
     expect(getLegalClaim("ai-omnibus-signature-2026-07-08")?.sourceUrl).toContain(
-      "oeil.europarl.europa.eu",
+      "eur-lex.europa.eu",
     );
     expect(
       getLegalClaim("ai-omnibus-intimate-image-prohibition-2026-12-02")?.effectiveDate,
     ).toBe("2026-12-02");
+    expect(
+      getLegalClaim("ai-omnibus-entry-into-force-2026-07-27")?.effectiveDate,
+    ).toBe("2026-07-27");
   });
 
   it("records the reader-rights articles as binding from 2 August 2026", () => {

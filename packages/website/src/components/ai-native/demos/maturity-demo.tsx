@@ -123,8 +123,8 @@ const BANDS: readonly MaturityBand[] = [
     label: "Leader",
     description:
       "Top 8 % des deutschen Mittelstands. Thema: Talent halten, Lead nicht verlieren.",
-    accentClass: "text-[#22c55e]",
-    fillClass: "bg-[#22c55e]",
+    accentClass: "text-risk-green",
+    fillClass: "bg-risk-green",
   },
 ];
 
@@ -238,7 +238,7 @@ export function MaturityDemo(): JSX.Element {
                     ? "var(--color-brand-orange)"
                     : band.label === "Operator"
                       ? "var(--color-kupfer-light)"
-                      : "#22c55e",
+                      : "var(--color-risk-green)",
             }}
           >
             <div
@@ -314,6 +314,7 @@ export function MaturityDemo(): JSX.Element {
             </button>
             <Link
               href="/ai-native/kurs/modul_1"
+              prefetch={false}
               className="inline-flex flex-1 items-center justify-center border-2 border-foreground bg-brand-orange px-4 py-3 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
             >
               Weiterlernen →

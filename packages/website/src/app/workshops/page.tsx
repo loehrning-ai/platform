@@ -6,13 +6,13 @@ import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 export const metadata: Metadata = {
   title: "Workshops für KI im Mittelstand",
   description:
-    `${WORKSHOPS.length} Live-Workshop aus der kostenlosen KI-Lernplattform: gemeinsam einen KI-Analysten für einen echten Monatsbericht bauen, in der Claude-App, ohne Code.`,
+    `${WORKSHOPS.length} kostenloses Selbstlern-Workshop-Kit: einen KI-Analysten für einen synthetischen Monatsbericht bauen, in der Claude-App, ohne Code.`,
   robots: { index: true, follow: true },
   alternates: { canonical: "/workshops" },
   openGraph: {
     title: "Workshops für KI im Mittelstand",
     description:
-      "Live-Workshops mit Download-Material: Slides, Field Card und Übungs-Kit, kostenlos und ohne Anmeldung.",
+      "Selbstlern-Workshops mit Download-Material: Slides, Field Card und Übungs-Kit, kostenlos und ohne Anmeldung.",
     url: "https://loehrning.ai/workshops",
     type: "website",
   },
@@ -26,18 +26,19 @@ export default function WorkshopsPage() {
         "@type": "CollectionPage",
         name: "Workshops",
         description:
-          "Live-Workshops für KI im Mittelstand mit Download-Material zum Nachbauen.",
+          "Selbstlern-Workshops für KI im Mittelstand mit Download-Material zum Nachbauen.",
         inLanguage: "de-DE",
         url: `${SITE_URL}/workshops`,
         publisher: { "@id": ORG_ID },
         hasPart: WORKSHOPS.map((workshop) => ({
-          "@type": "Event",
+          "@type": "LearningResource",
           name: workshop.title,
           description: workshop.description,
           url: `${SITE_URL}/workshops/${workshop.slug}`,
           inLanguage: "de-DE",
-          eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
           isAccessibleForFree: true,
+          learningResourceType: "Workshop",
+          educationalUse: "self-study",
         })),
       },
     ],

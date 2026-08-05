@@ -15,9 +15,7 @@ import { test, expect, type Page } from "@playwright/test";
 
 const ROUTE = "/ueber-mich";
 
-// Console-error filter mirrors route-einstieg.spec.ts: drop framework noise
-// (hydration, prefetch, chunk 404s, Vercel Analytics) and keep only errors that
-// signal a genuine page fault.
+// Every captured console error and uncaught page error fails the check.
 function collectConsoleErrors(page: Page): string[] {
   const errors: string[] = [];
   page.on("console", (msg) => {
@@ -28,13 +26,7 @@ function collectConsoleErrors(page: Page): string[] {
 }
 
 function meaningfulErrors(errors: string[]): string[] {
-  return errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e),
-  );
+  return errors;
 }
 
 test.describe("/ueber-mich profile page", () => {

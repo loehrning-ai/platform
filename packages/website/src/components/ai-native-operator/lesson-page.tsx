@@ -12,7 +12,7 @@ import type { AiNativeOperatorLesson } from "@/lib/ai-native-operator/types";
 export interface NextTarget {
   readonly href: string;
   readonly label: string;
-  readonly kind: "lesson" | "module" | "course-complete";
+  readonly kind: "lesson" | "module" | "final-assessment";
 }
 
 interface AiNativeOperatorLessonPageProps {

@@ -5,7 +5,6 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { BLOG_POSTS } from "../packages/website/src/lib/blog-metadata";
 import { books } from "../packages/website/src/lib/books";
-import { IMPORTED_COURSE_CATALOG } from "../packages/website/src/lib/courses/catalog";
 import {
   CRAWL_CONTRACT,
   matchesPattern,
@@ -131,7 +130,11 @@ export function verifyLighthouseRouteConfig({
     for (const candidate of invalidCandidates) {
       problems.push(`published candidate ${candidate} does not match ${entry.pattern}`);
     }
-    if (candidates.length > 0 && !candidates.some((candidate) => configured.has(candidate))) {
+    if (candidates.length === 0) {
+      problems.push(`dynamic public-indexable pattern has an empty candidate source: ${entry.pattern}`);
+      continue;
+    }
+    if (!candidates.some((candidate) => configured.has(candidate))) {
       problems.push(`missing published representative for dynamic pattern: ${entry.pattern}`);
     }
   }
@@ -202,10 +205,6 @@ export async function buildPublishedDynamicCandidates(): Promise<
     [
       "/wie-ki-funktioniert/:lektionId",
       WIE_KI_LEKTIONEN.map((lektion) => `/wie-ki-funktioniert/${lektion.id}`),
-    ],
-    [
-      "/kurse/open-source/:slug",
-      IMPORTED_COURSE_CATALOG.map((course) => course.href),
     ],
     ["/blog/:slug", BLOG_POSTS.map((post) => `/blog/${post.slug}`)],
     [

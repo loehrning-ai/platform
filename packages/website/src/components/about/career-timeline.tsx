@@ -7,21 +7,28 @@ import { fadeUp } from "@/lib/animations";
 // übernimmt TIM_ENTITY.noEndorsementNotice auf der /ueber-mich-Seite.
 const milestones = [
   {
-    period: "2019-2022",
+    period: "2021",
+    role: "Werkstudent",
+    company: "Amazon",
+    description: "Erste Datenrolle neben dem Studium",
+    color: "text-muted-foreground",
+  },
+  {
+    period: "2022-2024",
     role: "Data Scientist",
     company: "Apple",
     description: "Analytics, Datenmodelle und operative Auswertung",
     color: "text-muted-foreground",
   },
   {
-    period: "2022-2024",
+    period: "2024-2025",
     role: "Data Scientist",
     company: "Red Bull",
     description: "KI-Tools für Fachbereiche, MLOps und Supply-Chain-Analytics",
     color: "text-muted-foreground",
   },
   {
-    period: "2024-2026",
+    period: "2025-2026",
     role: "Data Engineer",
     company: "Meta",
     description: "Datenqualität, Pipelines und Analytics-Systeme",
@@ -44,29 +51,33 @@ export function CareerTimeline() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
+          className="js-reveal"
         >
           <m.h2
             custom={0}
             variants={fadeUp}
-            className="text-2xl font-bold tracking-[-0.04em]"
+            className="js-reveal text-2xl font-bold tracking-[-0.04em]"
           >
             Karriere
           </m.h2>
 
-          {/* Desktop: horizontal 5-col — only at lg+ where 5 columns have room;
-              tablet keeps the legible vertical list below (was cramped at md) */}
+          {/* Desktop: horizontal strip — only at lg+ where the columns have
+              room; tablet keeps the legible vertical list below (was cramped
+              at md). The column count is a literal because Tailwind cannot
+              generate a class from a runtime value: it must stay equal to
+              `milestones.length`, which career-timeline.test.tsx asserts. */}
           <div className="mt-10 hidden lg:block">
             <div className="relative">
               {/* Line */}
               <div className="absolute left-0 right-0 top-4 h-px bg-border/50" />
 
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-5 gap-4">
                 {milestones.map((mil, i) => (
                   <m.div
                     key={mil.period}
                     custom={i + 1}
                     variants={fadeUp}
-                    className="relative pt-10"
+                    className="js-reveal relative pt-10"
                   >
                     {/* Dot */}
                     <div className={`absolute top-2 left-0 h-4 w-4 rounded-full border-2 border-background ${
@@ -96,7 +107,7 @@ export function CareerTimeline() {
                 key={mil.period}
                 custom={i + 1}
                 variants={fadeUp}
-                className="flex gap-4"
+                className="js-reveal flex gap-4"
               >
                 <div className="flex flex-col items-center">
                   <div className={`h-3 w-3 rounded-full ${

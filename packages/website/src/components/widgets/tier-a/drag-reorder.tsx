@@ -245,7 +245,7 @@ export function DragReorderWidget({
               data-id={b.id}
               className={cn(
                 "grid grid-cols-[28px_1fr_auto] items-center gap-3 border-2 bg-background p-3 transition-[background-color,border-color,color,opacity,transform,box-shadow]",
-                isCorrect && "border-[#22c55e] bg-[#22c55e]/5",
+                isCorrect && "border-risk-green bg-risk-green/5",
                 isWrong && "border-destructive bg-destructive/5",
                 isOver && "border-brand-amber bg-brand-amber/10",
                 !checked && !isOver && "border-border",
@@ -256,7 +256,7 @@ export function DragReorderWidget({
                 aria-hidden="true"
                 className={cn(
                   "inline-flex h-6 w-6 items-center justify-center border-2 font-mono text-[12px] font-bold",
-                  isCorrect && "border-[#22c55e] bg-[#22c55e] text-white",
+                  isCorrect && "border-risk-green bg-risk-green text-white",
                   isWrong && "border-destructive bg-destructive text-white",
                   !checked && "border-border text-muted-foreground",
                 )}
@@ -314,7 +314,7 @@ export function DragReorderWidget({
             "text-[13px] font-medium",
             checked
               ? ok
-                ? "text-[#22c55e]"
+                ? "text-risk-green"
                 : "text-destructive"
               : "text-muted-foreground",
           )}

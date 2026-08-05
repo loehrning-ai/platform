@@ -47,6 +47,14 @@ type DecodeResult =
   | { readonly ok: false; readonly reason: "malformed" | "course-mismatch" };
 type DecodeFailureReason = Extract<DecodeResult, { ok: false }>["reason"];
 
+// URL fragments are attacker-controlled and are processed on the main thread.
+// A normal certificate payload is below 512 characters; this ceiling leaves
+// ample compatibility room while bounding base64 decode, UTF-8 decode, and
+// JSON parsing work.
+export const MAX_CERTIFICATE_HASH_CHARS = 2_048;
+const MAX_CERTIFICATE_JSON_BYTES = 1_536;
+const BASE64URL_PATTERN = /^[A-Za-z0-9_-]+$/;
+
 // Derived from the canonical COURSE_SLUGS union — every
 // course's QR certificate decodes correctly, not just the original 4.
 function isCourseSlug(value: unknown): value is CourseSlug {
@@ -59,15 +67,32 @@ function isCourseSlug(value: unknown): value is CourseSlug {
 function decodeHash(hash: string, courseSlug: CourseSlug): DecodeResult {
   try {
     const encoded = hash.startsWith("#") ? hash.slice(1) : hash;
+    if (
+      encoded.length === 0 ||
+      encoded.length > MAX_CERTIFICATE_HASH_CHARS ||
+      encoded.length % 4 === 1 ||
+      !BASE64URL_PATTERN.test(encoded)
+    ) {
+      return { ok: false, reason: "malformed" };
+    }
+
     let base64 = encoded.replace(/-/g, "+").replace(/_/g, "/");
     while (base64.length % 4) base64 += "=";
 
-    const json = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-        .join(""),
+    const binary = atob(base64);
+    if (
+      binary.length > MAX_CERTIFICATE_JSON_BYTES ||
+      btoa(binary)
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=+$/, "") !== encoded
+    ) {
+      return { ok: false, reason: "malformed" };
+    }
+    const bytes = Uint8Array.from(binary, (character) =>
+      character.charCodeAt(0),
     );
+    const json = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
     const parsed = JSON.parse(json);
     if (
       typeof parsed !== "object" ||

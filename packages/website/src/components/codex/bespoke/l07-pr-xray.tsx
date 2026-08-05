@@ -100,7 +100,7 @@ export function L07PrXray({ lessonId, cpId }: L07PrXrayProps): JSX.Element {
                 aria-label={`Line ${lineNumber}${isFound ? " (bug caught)" : ""}`}
                 className={cn(
                   "flex w-full items-start gap-3 px-1.5 py-0.5 text-left font-mono text-[12.5px] transition-colors",
-                  isFound && "border border-[#22c55e] bg-[#22c55e]/10",
+                  isFound && "border border-risk-green bg-risk-green/10",
                   flashLine === lineNumber && "bg-destructive/20",
                   !isFound && "hover:bg-card",
                 )}
@@ -129,7 +129,7 @@ export function L07PrXray({ lessonId, cpId }: L07PrXrayProps): JSX.Element {
             {found.size === 0 && <span className="text-muted-foreground/70">None yet.</span>}
           </div>
           {found.size === TOTAL_BUGS && (
-            <p className="mt-3 border-2 border-[#22c55e] bg-[#22c55e]/10 px-2 py-1 font-mono text-[11px] font-bold text-[#22c55e]">
+            <p className="mt-3 border-2 border-risk-green bg-risk-green/10 px-2 py-1 font-mono text-[11px] font-bold text-risk-green">
               🏅 REVIEWER {done ? "✓" : ""}
             </p>
           )}

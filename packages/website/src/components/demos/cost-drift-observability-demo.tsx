@@ -132,10 +132,10 @@ export default function CostDriftObservabilityDemo() {
         >
           Observability & Kosten
         </div>
-        <h3 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", marginTop: 6 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", marginTop: 6 }}>
           LLM-Kosten und Drift:{" "}
           <span style={{ color: "var(--color-brand-orange)" }}>ein Beispiel-Szenario.</span>
-        </h3>
+        </h2>
       </div>
       <SimulationDisclosure>
         Alle Werte sind festgelegte Beispiel-Szenarien, keine Live-Messwerte. Das Diagramm zeigt eine kontinuierlich fortgeschriebene Beispielkurve, um Drift-Erkennung zu illustrieren.

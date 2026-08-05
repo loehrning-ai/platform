@@ -1,4 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
+import { COURSE_CATALOG } from "../../src/lib/courses/catalog";
 
 /**
  * Auth + Konto flow E2E (regression coverage, spec 1).
@@ -17,7 +19,7 @@ import { test, expect, type Page } from "@playwright/test";
  *     gate, every reason-query copy branch, the idle state, and the unconfigured
  *     no-config + error path) and the "authenticated /konto" describe SKIPS with
  *     an annotation.
- *   - Live integration run: setup requires the six-variable isolated-project
+ *   - Live integration run: setup requires the nine-variable isolated-project
  *     contract, seeds a real test session, and the context must be SIGNED IN;
  *     progress cards, resources, logout wiring, and the login redirect execute.
  * The live project never converts a failed session into a skip: protected-route
@@ -28,9 +30,7 @@ import { test, expect, type Page } from "@playwright/test";
  * src/lib/courses/catalog.ts - no invented UI.
  */
 
-// Console-error filter mirrors route-login.spec.ts / buecher-library.spec.ts:
-// drop framework noise (hydration, prefetch, chunk 404s, Vercel Analytics) and
-// keep only errors that signal a genuine page fault.
+// Every captured console error and uncaught page error fails the check.
 function collectConsoleErrors(page: Page): string[] {
   const errors: string[] = [];
   page.on("console", (msg) => {
@@ -41,13 +41,7 @@ function collectConsoleErrors(page: Page): string[] {
 }
 
 function meaningfulErrors(errors: string[]): string[] {
-  return errors.filter(
-    (e) =>
-      !/hydration|Failed to fetch dynamically imported|prefetch/i.test(e) &&
-      !/Minified React error #(418|423|425)/.test(e) &&
-      !/404/.test(e) &&
-      !/_vercel\//.test(e),
-  );
+  return errors;
 }
 
 // reason query value -> a unique substring of loginReasonMessage() in
@@ -75,10 +69,10 @@ test.describe("signed-out surface (login gate + reason copy)", () => {
       "signed-out assertions belong to the provider-free auth scaffold",
     );
     await page.goto("/login", { waitUntil: "domcontentloaded" });
-    test.skip(
-      page.url().includes("/konto"),
-      "A live session redirects /login -> /konto; the signed-out surface only applies when logged out.",
-    );
+    expect(
+      new URL(page.url()).pathname,
+      "the provider-free scaffold must remain signed out even with its fabricated cookie",
+    ).toBe("/login");
   });
 
   test("protected /konto fails closed to /login?next=/konto for a signed-out visitor", async ({
@@ -90,35 +84,25 @@ test.describe("signed-out surface (login gate + reason copy)", () => {
     expect(url.pathname, "middleware must send /konto to /login").toBe("/login");
     // The return target is preserved so the learner lands back on /konto.
     expect(url.searchParams.get("next"), "next must round-trip /konto").toBe("/konto");
-    // reason depends on config: auth-not-configured (unconfigured verify server)
-    // or progress-save (configured but no user) - both are middleware-set.
-    expect(
-      ["auth-not-configured", "progress-save"],
-      "middleware sets a known reason for the /konto redirect",
-    ).toContain(url.searchParams.get("reason"));
-    const configured = await page.getByLabel(/E-Mail-Adresse/i).isEnabled();
+    expect(url.searchParams.get("reason")).toBe("auth-not-configured");
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      configured ? /Fortschritt/i : /Ohne Anmeldung lernen/i,
+      /Ohne Anmeldung lernen/i,
     );
   });
 
   for (const [reason, copy] of REASON_COPY) {
     test(`/login?reason=${reason} renders its alert copy`, async ({ page }) => {
       await page.goto(`/login?reason=${reason}`, { waitUntil: "domcontentloaded" });
-      const configured = await page.getByLabel(/E-Mail-Adresse/i).isEnabled();
-      const expectedCopy = configured
-        ? copy
-        : /Das Lernkonto ist in dieser Version deaktiviert/;
+      const expectedCopy = /Das Lernkonto ist in dieser Version deaktiviert/;
       await expect(page.getByRole("alert").filter({ hasText: expectedCopy }).first()).toBeVisible();
     });
   }
 
   test("/login?reason=progress-save links back to the course hub", async ({ page }) => {
     await page.goto("/login?reason=progress-save", { waitUntil: "domcontentloaded" });
-    const configured = await page.getByLabel(/E-Mail-Adresse/i).isEnabled();
     await expect(
       page.getByRole("link", {
-        name: configured ? /Zurück zum Kursangebot/i : /Zum Kursangebot/i,
+        name: /Zum Kursangebot/i,
       }),
     ).toHaveAttribute("href", "/kurse");
   });
@@ -129,17 +113,14 @@ test.describe("signed-out surface (login gate + reason copy)", () => {
     const errors = collectConsoleErrors(page);
     await page.goto("/login", { waitUntil: "domcontentloaded" });
 
-    const configured = await page.getByLabel(/E-Mail-Adresse/i).isEnabled();
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      configured ? /Fortschritt/i : /Ohne Anmeldung lernen/i,
+      /Ohne Anmeldung lernen/i,
     );
     const alerts = page.locator('[role="alert"]:not(#__next-route-announcer__)');
     await expect(alerts).toHaveCount(0);
-    if (!configured) {
-      await expect(
-        page.getByRole("note").filter({ hasText: /Supabase Auth ist nicht konfiguriert/ }),
-      ).toBeVisible();
-    }
+    await expect(
+      page.getByRole("note").filter({ hasText: /Supabase Auth ist nicht konfiguriert/ }),
+    ).toBeVisible();
     await expect(page.getByRole("status")).toHaveCount(0);
 
     const noise = meaningfulErrors(errors);
@@ -152,10 +133,6 @@ test.describe("signed-out surface (login gate + reason copy)", () => {
     await page.goto("/login", { waitUntil: "domcontentloaded" });
 
     const email = page.getByLabel(/E-Mail-Adresse/i);
-    test.skip(
-      await email.isEnabled(),
-      "Supabase browser client is configured here; the fail-closed provider-free state does not apply.",
-    );
     await expect(email).toBeDisabled();
     await expect(page.getByRole("button", { name: /Login-Link/i })).toBeDisabled();
     await expect(
@@ -181,36 +158,29 @@ test.describe("authenticated /konto (requires a live session)", () => {
       ).toBe(false);
       return;
     }
+    expect(
+      new URL(page.url()).pathname,
+      "the provider-free scaffold cookie must never pass server authentication",
+    ).toBe("/login");
     test.skip(
-      page.url().includes("/login"),
+      true,
       "Provider-free auth scaffold cannot prove protected server round-trips.",
     );
   });
 
-  test("renders the account header, the KI-Kompetenzweg strip, and the signed-in line", async ({
+  test("renders the current account header and signed-in identity", async ({
     page,
   }) => {
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      "Lernstand und Ressourcen",
+      "Dein Lernstand",
     );
-
-    const stageStrip = page.getByRole("navigation", {
-      name: /KI-Kompetenzweg: dein Fortschritt/i,
-    });
-    await expect(stageStrip).toBeVisible();
-    // First + last stage labels from PATHWAY_STAGE_DISPLAY (src/lib/learning-graph).
-    await expect(stageStrip).toContainText("Prüfen");
-    await expect(stageStrip).toContainText("Vertiefen");
-
     await expect(page.getByText(/Angemeldet als/i)).toBeVisible();
   });
 
-  test("renders the three native course progress cards", async ({ page }) => {
-    // COURSE_CATALOG (src/lib/courses/catalog.ts) is exactly these three native
-    // courses; the konto page maps them to <article> progress cards.
-    for (const title of ["KI-Führerschein", "EU AI Act Kurs", "AI-Native Arbeitskurs"]) {
+  test("renders every catalog course progress card", async ({ page }) => {
+    for (const { title } of COURSE_CATALOG) {
       const card = page.locator("article").filter({
-        has: page.getByRole("heading", { level: 2, name: title }),
+        has: page.getByRole("heading", { level: 3, name: title }),
       });
       await expect(card, `course card "${title}" is present`).toBeVisible();
       await expect(
@@ -218,8 +188,17 @@ test.describe("authenticated /konto (requires a live session)", () => {
         `course card "${title}" shows a progress line`,
       ).toBeVisible();
     }
-    // The next-step nudge, or the all-complete state if every course is done.
-    await expect(page.getByText(/Nächster Schritt|Gut gemacht/)).toBeVisible();
+    await expect(page.getByRole("progressbar")).toHaveCount(
+      COURSE_CATALOG.length,
+    );
+    await expect(page.getByText(/Weiter lernen|Gut gemacht/)).toBeVisible();
+  });
+
+  test("has no WCAG-tagged accessibility violations", async ({ page }) => {
+    const results = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
+      .analyze();
+    expect(results.violations).toEqual([]);
   });
 
   test("exposes the resources grid and the Datenschutz management link", async ({

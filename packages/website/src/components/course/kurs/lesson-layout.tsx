@@ -12,6 +12,7 @@ import {
   getReadSectionIds,
   getLessonQuizScore,
 } from "@/lib/course/progress";
+import { subscribe } from "@/lib/progress";
 import type { CourseSlug, Lesson } from "@/lib/course/types";
 import { FreshnessBadge } from "@/components/ui/freshness-badge";
 import type { BlockFreshness } from "@/lib/course/data";
@@ -23,38 +24,96 @@ interface LessonLayoutProps {
   readonly freshnessMeta?: BlockFreshness | null;
 }
 
-export function LessonLayout({ courseSlug, lessons, freshnessMeta }: LessonLayoutProps) {
+export function LessonLayout({
+  courseSlug,
+  lessons,
+  freshnessMeta,
+}: LessonLayoutProps) {
   const [activeLessonId, setActiveLessonId] = useState(lessons[0]?.id ?? "");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Hydrate progress from localStorage (client-side only)
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
   const [readIds, setReadIds] = useState<Set<string>>(new Set());
-  const [quizScores, setQuizScores] = useState<Record<string, { score: number; total: number }>>(
-    {},
-  );
+  const [quizScores, setQuizScores] = useState<
+    ReadonlyMap<string, { score: number; total: number }>
+  >(() => new Map());
+  const [readyProgressKey, setReadyProgressKey] = useState<string | null>(null);
+
+  // Block-based course routes contain several lessons at one URL. Resume links
+  // use a bounded `#lesson=<id>` fragment so they can restore the first
+  // incomplete lesson without adding an unvalidated route segment.
+  useEffect(() => {
+    const syncLessonFragment = () => {
+      const match = /^#lesson=([^&]+)$/.exec(window.location.hash);
+      if (!match) return;
+      let lessonId: string;
+      try {
+        lessonId = decodeURIComponent(match[1]);
+      } catch {
+        return;
+      }
+      if (lessons.some((lesson) => lesson.id === lessonId)) {
+        setActiveLessonId(lessonId);
+      }
+    };
+
+    syncLessonFragment();
+    window.addEventListener("hashchange", syncLessonFragment);
+    return () => {
+      window.removeEventListener("hashchange", syncLessonFragment);
+    };
+  }, [lessons]);
 
   // Load from localStorage after mount
   useEffect(() => {
-    setCompletedIds(new Set(getCompletedLessonIds(courseSlug)));
-    setReadIds(new Set(getReadSectionIds(courseSlug, activeLessonId)));
-    const score = getLessonQuizScore(courseSlug, activeLessonId);
-    if (score) {
-      setQuizScores((prev) => ({ ...prev, [activeLessonId]: score }));
-    }
+    return subscribe(() => {
+      setCompletedIds(new Set(getCompletedLessonIds(courseSlug)));
+      setReadIds(new Set(getReadSectionIds(courseSlug, activeLessonId)));
+      const score = getLessonQuizScore(courseSlug, activeLessonId);
+      setQuizScores((prev) => {
+        const next = new Map(prev);
+        if (score) next.set(activeLessonId, score);
+        else next.delete(activeLessonId);
+        return next;
+      });
+      setReadyProgressKey(`${courseSlug}:${activeLessonId}`);
+    });
   }, [courseSlug, activeLessonId]);
+
+  const activateLesson = useCallback(
+    (lessonId: string) => {
+      if (!lessons.some((lesson) => lesson.id === lessonId)) return;
+
+      const lessonFragment = `#lesson=${encodeURIComponent(lessonId)}`;
+      if (window.location.hash !== lessonFragment) {
+        window.history.replaceState(
+          window.history.state,
+          "",
+          `${window.location.pathname}${window.location.search}${lessonFragment}`,
+        );
+      }
+      setActiveLessonId(lessonId);
+    },
+    [lessons],
+  );
 
   const activeLesson = lessons.find((l) => l.id === activeLessonId);
   const activeLessonIndex = lessons.findIndex((l) => l.id === activeLessonId);
   const hasNextLesson = activeLessonIndex < lessons.length - 1;
+  const progressReady =
+    readyProgressKey === `${courseSlug}:${activeLessonId}`;
 
-  const handleSelectLesson = useCallback((lessonId: string) => {
-    setActiveLessonId(lessonId);
-    // Closing hands focus back to the toggle button via LessonShell's
-    // useFocusTrap restore-on-close (it snapshots whatever had focus when the
-    // drawer opened, which is the toggle button itself).
-    setSidebarOpen(false);
-  }, []);
+  const handleSelectLesson = useCallback(
+    (lessonId: string) => {
+      activateLesson(lessonId);
+      // Closing hands focus back to the toggle button via LessonShell's
+      // useFocusTrap restore-on-close (it snapshots whatever had focus when the
+      // drawer opened, which is the toggle button itself).
+      setSidebarOpen(false);
+    },
+    [activateLesson],
+  );
 
   const handleMarkSectionRead = useCallback(
     (sectionId: string) => {
@@ -74,7 +133,7 @@ export function LessonLayout({ courseSlug, lessons, freshnessMeta }: LessonLayou
       saveLessonQuizScore(courseSlug, activeLessonId, score, total);
       const best = getLessonQuizScore(courseSlug, activeLessonId);
       if (best) {
-        setQuizScores((prev) => ({ ...prev, [activeLessonId]: best }));
+        setQuizScores((prev) => new Map(prev).set(activeLessonId, best));
       }
     },
     [courseSlug, activeLessonId],
@@ -82,10 +141,10 @@ export function LessonLayout({ courseSlug, lessons, freshnessMeta }: LessonLayou
 
   const handleNextLesson = useCallback(() => {
     if (hasNextLesson) {
-      setActiveLessonId(lessons[activeLessonIndex + 1].id);
+      activateLesson(lessons[activeLessonIndex + 1].id);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [hasNextLesson, lessons, activeLessonIndex]);
+  }, [activateLesson, hasNextLesson, lessons, activeLessonIndex]);
 
   if (!activeLesson) return null;
 
@@ -118,9 +177,10 @@ export function LessonLayout({ courseSlug, lessons, freshnessMeta }: LessonLayou
         courseSlug={courseSlug}
         lesson={activeLesson}
         totalLessons={lessons.length}
+        progressReady={progressReady}
         readSectionIds={readIds}
         isCompleted={completedIds.has(activeLessonId)}
-        quizBestScore={quizScores[activeLessonId] ?? null}
+        quizBestScore={quizScores.get(activeLessonId) ?? null}
         hasNextLesson={hasNextLesson}
         onMarkSectionRead={handleMarkSectionRead}
         onMarkLessonComplete={handleMarkLessonComplete}

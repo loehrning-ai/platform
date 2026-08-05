@@ -12,6 +12,13 @@ import { gradeWithAI, type GradeWithAIResult } from "./_ai-grade";
 import type { AiRubricEntry, ModuleId } from "@/lib/ai-native/types";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import {
+  getLearningOwnerContext,
+  getOwnedSessionLearningItem,
+  removeOwnedSessionLearningItem,
+  setOwnedSessionLearningItem,
+  subscribeLearningOwner,
+} from "@/lib/progress/browser-learning-storage";
 
 /**
  * RCTFC Checklist — fill in Role/Context/Task/Format/Constraints for a
@@ -25,6 +32,16 @@ import { cn } from "@/lib/utils";
  */
 
 type FieldKey = "role" | "context" | "task" | "format" | "constraints";
+
+function emptyValues(): Record<FieldKey, string> {
+  return {
+    role: "",
+    context: "",
+    task: "",
+    format: "",
+    constraints: "",
+  };
+}
 
 export interface RctfcFieldCriteria {
   readonly minChars: number;
@@ -100,37 +117,45 @@ function RctfcBody({
   moduleId,
   criteria,
 }: RctfcSpec): JSX.Element {
-  const [values, setValues] = useState<Record<FieldKey, string>>({
-    role: "",
-    context: "",
-    task: "",
-    format: "",
-    constraints: "",
-  });
+  const [values, setValues] =
+    useState<Record<FieldKey, string>>(emptyValues);
   const [submitted, setSubmitted] = useState(false);
   const [isGrading, setIsGrading] = useState(false);
   const [aiResult, setAiResult] = useState<GradeWithAIResult | null>(null);
+  const [ownerGeneration, setOwnerGeneration] = useState(
+    () => getLearningOwnerContext().generation,
+  );
   const storageKey = `ai-native-exercise-draft-${lessonId}-${exerciseId}`;
 
   // Load draft on mount
   useEffect(() => {
-    try {
-      const raw = sessionStorage.getItem(storageKey);
-      if (raw) setValues(JSON.parse(raw));
-    } catch {
-      /* ignore */
-    }
+    const loadOwnedDraft = () => {
+      setOwnerGeneration(getLearningOwnerContext().generation);
+      setValues(emptyValues());
+      setSubmitted(false);
+      setIsGrading(false);
+      setAiResult(null);
+      try {
+        const raw = getOwnedSessionLearningItem(storageKey);
+        if (raw) setValues(JSON.parse(raw));
+      } catch {
+        /* ignore */
+      }
+    };
+    loadOwnedDraft();
+    return subscribeLearningOwner(loadOwnedDraft);
   }, [storageKey]);
 
   const saveDraft = () => {
-    try {
-      sessionStorage.setItem(storageKey, JSON.stringify(values));
-    } catch {
-      /* ignore */
-    }
+    setOwnedSessionLearningItem(
+      storageKey,
+      JSON.stringify(values),
+      ownerGeneration,
+    );
   };
 
   const handleSubmit = async () => {
+    const ownerGeneration = getLearningOwnerContext().generation;
     saveDraft();
     setIsGrading(true);
 
@@ -157,6 +182,7 @@ function RctfcBody({
       fallbackSummary,
     });
 
+    if (getLearningOwnerContext().generation !== ownerGeneration) return;
     setAiResult(result);
     setSubmitted(true);
     setIsGrading(false);
@@ -175,18 +201,8 @@ function RctfcBody({
   const handleReset = () => {
     setSubmitted(false);
     setAiResult(null);
-    setValues({
-      role: "",
-      context: "",
-      task: "",
-      format: "",
-      constraints: "",
-    });
-    try {
-      sessionStorage.removeItem(storageKey);
-    } catch {
-      /* ignore */
-    }
+    setValues(emptyValues());
+    removeOwnedSessionLearningItem(storageKey, ownerGeneration);
   };
 
   // Display either AI rubric entries or the rule-based grades.
@@ -224,7 +240,7 @@ function RctfcBody({
                   <span
                     className={cn(
                       "inline-flex items-center gap-1 font-mono text-[10px]",
-                      grade.passed ? "text-[#22c55e]" : "text-brand-amber",
+                      grade.passed ? "text-risk-green" : "text-brand-amber",
                     )}
                   >
                     {grade.passed ? (
@@ -251,7 +267,7 @@ function RctfcBody({
                     ? "cursor-not-allowed opacity-80"
                     : "focus-visible:border-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange",
                   grade?.passed === false && "border-brand-amber/60",
-                  grade?.passed === true && "border-[#22c55e]/60",
+                  grade?.passed === true && "border-risk-green/60",
                 )}
               />
             </div>
@@ -268,7 +284,7 @@ function RctfcBody({
             className={cn(
               "mt-4 border-l-[3px] px-4 py-3",
               passed
-                ? "border-[#22c55e] bg-[#22c55e]/5"
+                ? "border-risk-green bg-risk-green/5"
                 : "border-brand-amber bg-brand-amber/5",
             )}
           >
@@ -276,7 +292,7 @@ function RctfcBody({
               <p
                 className={cn(
                   "font-mono text-[11px] font-bold uppercase tracking-[0.14em]",
-                  passed ? "text-[#22c55e]" : "text-brand-amber",
+                  passed ? "text-risk-green" : "text-brand-amber",
                 )}
               >
                 Score {Math.round(score * 100)}%

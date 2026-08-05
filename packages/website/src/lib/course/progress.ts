@@ -7,6 +7,8 @@
 // `course-progress::<slug>` payloads forward — never wiped, R1).
 
 import type { CourseProgress, CourseSlug } from "./types";
+import { getWorkshopPassThreshold } from "./config";
+import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
 import {
   getCourseSlice,
   markSectionRead as uMarkSectionRead,
@@ -122,9 +124,9 @@ export function isCapstoneSubmitted(courseSlug: CourseSlug): boolean {
 }
 
 /**
- * Certificate gate (shared course architecture): quiz passed OR capstone
- * submitted. Identical to `isWorkshopQuizPassed` for the two free courses
- * (capstone is always false there); AI-Native adds the capstone path.
+ * Certificate gate (shared course architecture): all canonical lessons plus
+ * the configured final assessment. AI-Native accepts either its quiz or its
+ * submitted capstone; courses without an assessment require lessons only.
  */
 export function isCertificateEligible(courseSlug: CourseSlug): boolean {
   return uIsCertificateEligible(courseSlug);
@@ -184,89 +186,417 @@ export function resetProgress(courseSlug: CourseSlug): void {
 
 // ─── Cross-Device Progress Sharing (URL-based) ─────────────────
 
-/**
- * Serialize current progress to a base64url string for sharing.
- * Returns null if no progress exists.
- */
-export function serializeProgress(courseSlug: CourseSlug): string | null {
-  const state = getAllProgress(courseSlug);
-  const hasProgress =
-    Object.keys(state.lessons).length > 0 || state.workshopQuiz.passed;
-  if (!hasProgress) return null;
+const SHARE_FORMAT_VERSION = 1 as const;
+const MAX_SHARE_ENCODED_CHARS = 16_384;
+const MAX_SHARE_DECODED_BYTES = 8_192;
+const MAX_LESSON_QUIZ_TOTAL = 100;
+const MIN_PROGRESS_TIMESTAMP = Date.UTC(2020, 0, 1);
+const MAX_PROGRESS_TIMESTAMP = Date.UTC(2100, 0, 1);
 
-  const json = JSON.stringify(state);
-  const encoded = btoa(
-    encodeURIComponent(json).replace(/%([0-9A-F]{2})/g, (_, p1) =>
-      String.fromCharCode(parseInt(p1, 16)),
-    ),
+const HASH_SHARING_COURSE_SLUGS = [
+  "ki-fuehrerschein",
+  "eu-ai-act-kurs",
+  "ki-und-gesellschaft",
+] as const satisfies readonly CourseSlug[];
+
+type HashSharingCourseSlug = (typeof HASH_SHARING_COURSE_SLUGS)[number];
+
+interface ProgressShareEnvelope {
+  readonly version: typeof SHARE_FORMAT_VERSION;
+  readonly courseSlug: HashSharingCourseSlug;
+  readonly progress: CourseProgress;
+}
+
+const CANONICAL_LESSON_ID_SETS: Readonly<
+  Record<HashSharingCourseSlug, ReadonlySet<string>>
+> = {
+  "ki-fuehrerschein": new Set(
+    CANONICAL_LESSON_IDS["ki-fuehrerschein"],
+  ),
+  "eu-ai-act-kurs": new Set(CANONICAL_LESSON_IDS["eu-ai-act-kurs"]),
+  "ki-und-gesellschaft": new Set(
+    CANONICAL_LESSON_IDS["ki-und-gesellschaft"],
+  ),
+};
+
+function isHashSharingCourseSlug(
+  value: unknown,
+): value is HashSharingCourseSlug {
+  return (
+    typeof value === "string" &&
+    (HASH_SHARING_COURSE_SLUGS as readonly string[]).includes(value)
   );
-  return encoded.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function isPlainRecord(value: unknown): value is Record<string, unknown> {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    return false;
+  }
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
 }
 
 /**
- * Deserialize a base64url string back to CourseProgress.
+ * JSON objects are enumerable data records. Reject accessors, symbols, and
+ * non-enumerable properties as well as exotic prototypes so serialization
+ * cannot smuggle values past the exact-key checks.
  */
-export function deserializeProgress(encoded: string): CourseProgress | null {
-  try {
-    let base64 = encoded.replace(/-/g, "+").replace(/_/g, "/");
-    while (base64.length % 4) base64 += "=";
+function safeOwnKeys(value: Record<string, unknown>): readonly string[] | null {
+  const keys = Reflect.ownKeys(value);
+  const safeKeys: string[] = [];
+  for (const key of keys) {
+    if (typeof key !== "string") return null;
+    const descriptor = Object.getOwnPropertyDescriptor(value, key);
+    if (!descriptor?.enumerable || !("value" in descriptor)) return null;
+    safeKeys.push(key);
+  }
+  return safeKeys;
+}
 
-    const json = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-        .join(""),
+function hasExactKeys(
+  value: Record<string, unknown>,
+  expected: readonly string[],
+): boolean {
+  const keys = safeOwnKeys(value);
+  if (!keys || keys.length !== expected.length) return false;
+  const expectedKeys = new Set(expected);
+  return keys.every((key) => expectedKeys.has(key));
+}
+
+function isCanonicalIsoTimestamp(value: unknown): value is string {
+  if (
+    typeof value !== "string" ||
+    value.length !== 24 ||
+    !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)
+  ) {
+    return false;
+  }
+  const timestamp = Date.parse(value);
+  return (
+    Number.isFinite(timestamp) &&
+    timestamp >= MIN_PROGRESS_TIMESTAMP &&
+    timestamp < MAX_PROGRESS_TIMESTAMP &&
+    new Date(timestamp).toISOString() === value
+  );
+}
+
+/**
+ * These IDs are a compact contract derived from the authored course content:
+ * KI-Führerschein has two numbered sections per lesson, EU AI Act has three
+ * except block 2 lesson 3 (four), and KI und Gesellschaft has three. Keeping
+ * this derivation here avoids importing the full lesson JSON graph into every
+ * client that displays or consumes a progress link.
+ */
+function canonicalSectionIds(
+  courseSlug: HashSharingCourseSlug,
+  lessonId: string,
+): readonly string[] {
+  if (courseSlug === "ki-fuehrerschein") {
+    return [`${lessonId}_section_1`, `${lessonId}_section_2`];
+  }
+  if (courseSlug === "eu-ai-act-kurs") {
+    const count = lessonId === "block_2_lesson_3" ? 4 : 3;
+    return Array.from(
+      { length: count },
+      (_, index) => `${lessonId}_section_${index + 1}`,
     );
-    const parsed = JSON.parse(json);
+  }
+  return Array.from(
+    { length: 3 },
+    (_, index) => `${lessonId}-s${index + 1}`,
+  );
+}
 
+function validateLessonProgress(
+  raw: unknown,
+  courseSlug: HashSharingCourseSlug,
+  lessonId: string,
+): CourseProgress["lessons"][string] | null {
+  if (
+    !isPlainRecord(raw) ||
+    !hasExactKeys(raw, [
+      "sectionsRead",
+      "quizScore",
+      "quizTotal",
+      "completed",
+    ]) ||
+    !Array.isArray(raw.sectionsRead) ||
+    typeof raw.completed !== "boolean"
+  ) {
+    return null;
+  }
+
+  const allowedSectionIds = new Set(
+    canonicalSectionIds(courseSlug, lessonId),
+  );
+  if (raw.sectionsRead.length > allowedSectionIds.size) return null;
+
+  const sectionIds: string[] = [];
+  const seenSectionIds = new Set<string>();
+  for (const sectionId of raw.sectionsRead) {
     if (
-      typeof parsed !== "object" ||
-      parsed === null ||
-      typeof parsed.lessons !== "object" ||
-      typeof parsed.workshopQuiz !== "object"
+      typeof sectionId !== "string" ||
+      !allowedSectionIds.has(sectionId) ||
+      seenSectionIds.has(sectionId)
+    ) {
+      return null;
+    }
+    seenSectionIds.add(sectionId);
+    sectionIds.push(sectionId);
+  }
+
+  const bothQuizValuesAreNull =
+    raw.quizScore === null && raw.quizTotal === null;
+  const bothQuizValuesAreValid =
+    typeof raw.quizScore === "number" &&
+    Number.isFinite(raw.quizScore) &&
+    raw.quizScore >= 0 &&
+    raw.quizScore <= 1 &&
+    typeof raw.quizTotal === "number" &&
+    Number.isInteger(raw.quizTotal) &&
+    raw.quizTotal >= 1 &&
+    raw.quizTotal <= MAX_LESSON_QUIZ_TOTAL &&
+    Math.abs(
+      raw.quizScore * raw.quizTotal -
+        Math.round(raw.quizScore * raw.quizTotal),
+    ) <= 1e-9;
+
+  if (!bothQuizValuesAreNull && !bothQuizValuesAreValid) return null;
+
+  return {
+    sectionsRead: sectionIds,
+    quizScore: raw.quizScore as number | null,
+    quizTotal: raw.quizTotal as number | null,
+    completed: raw.completed,
+  };
+}
+
+function validateCourseProgress(
+  raw: unknown,
+  courseSlug: HashSharingCourseSlug,
+): CourseProgress | null {
+  if (
+    !isPlainRecord(raw) ||
+    !hasExactKeys(raw, [
+      "lessons",
+      "workshopQuiz",
+      "startedAt",
+      "lastActivity",
+    ]) ||
+    !isPlainRecord(raw.lessons) ||
+    !isPlainRecord(raw.workshopQuiz) ||
+    !isCanonicalIsoTimestamp(raw.startedAt) ||
+    !isCanonicalIsoTimestamp(raw.lastActivity)
+  ) {
+    return null;
+  }
+
+  const lessonIds = safeOwnKeys(raw.lessons);
+  const canonicalLessonIds = CANONICAL_LESSON_ID_SETS[courseSlug];
+  if (!lessonIds || lessonIds.length > canonicalLessonIds.size) return null;
+
+  const lessons: Record<string, CourseProgress["lessons"][string]> = {};
+  let hasMeaningfulLessonProgress = false;
+  for (const lessonId of lessonIds) {
+    if (!canonicalLessonIds.has(lessonId)) return null;
+    const lesson = validateLessonProgress(
+      raw.lessons[lessonId],
+      courseSlug,
+      lessonId,
+    );
+    if (!lesson) return null;
+    lessons[lessonId] = lesson;
+    hasMeaningfulLessonProgress ||= Boolean(
+      lesson.completed ||
+        lesson.sectionsRead.length > 0 ||
+        lesson.quizScore !== null,
+    );
+  }
+
+  if (
+    !hasExactKeys(raw.workshopQuiz, [
+      "passed",
+      "score",
+      "completedAt",
+    ]) ||
+    typeof raw.workshopQuiz.passed !== "boolean" ||
+    typeof raw.workshopQuiz.score !== "number" ||
+    !Number.isFinite(raw.workshopQuiz.score) ||
+    raw.workshopQuiz.score < 0 ||
+    raw.workshopQuiz.score > 1 ||
+    (raw.workshopQuiz.completedAt !== null &&
+      !isCanonicalIsoTimestamp(raw.workshopQuiz.completedAt))
+  ) {
+    return null;
+  }
+
+  const workshopWasAttempted = raw.workshopQuiz.completedAt !== null;
+  const passThreshold = getWorkshopPassThreshold(courseSlug);
+  if (
+    (!workshopWasAttempted &&
+      (raw.workshopQuiz.passed || raw.workshopQuiz.score !== 0)) ||
+    raw.workshopQuiz.passed !==
+      (workshopWasAttempted &&
+        raw.workshopQuiz.score >= passThreshold)
+  ) {
+    return null;
+  }
+
+  if (!hasMeaningfulLessonProgress && !workshopWasAttempted) return null;
+
+  return {
+    lessons,
+    workshopQuiz: {
+      passed: raw.workshopQuiz.passed,
+      score: raw.workshopQuiz.score,
+      completedAt: raw.workshopQuiz.completedAt,
+    },
+    startedAt: raw.startedAt,
+    lastActivity: raw.lastActivity,
+  };
+}
+
+function bytesToBase64Url(bytes: Uint8Array): string {
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary)
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+}
+
+function encodeEnvelope(envelope: ProgressShareEnvelope): string | null {
+  const bytes = new TextEncoder().encode(JSON.stringify(envelope));
+  if (bytes.length > MAX_SHARE_DECODED_BYTES) return null;
+  const encoded = bytesToBase64Url(bytes);
+  return encoded.length <= MAX_SHARE_ENCODED_CHARS ? encoded : null;
+}
+
+function decodeEnvelope(encoded: string): ProgressShareEnvelope | null {
+  try {
+    if (
+      typeof encoded !== "string" ||
+      encoded.length === 0 ||
+      encoded.length > MAX_SHARE_ENCODED_CHARS ||
+      encoded.length % 4 === 1 ||
+      !/^[A-Za-z0-9_-]+$/.test(encoded)
     ) {
       return null;
     }
 
-    return parsed as CourseProgress;
+    let base64 = encoded.replace(/-/g, "+").replace(/_/g, "/");
+    while (base64.length % 4) base64 += "=";
+    const binary = atob(base64);
+    if (binary.length > MAX_SHARE_DECODED_BYTES) return null;
+
+    const bytes = new Uint8Array(binary.length);
+    for (let index = 0; index < binary.length; index += 1) {
+      bytes[index] = binary.charCodeAt(index);
+    }
+    // Reject alternate/non-canonical base64 representations before parsing.
+    if (bytesToBase64Url(bytes) !== encoded) return null;
+
+    const json = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+    const parsed: unknown = JSON.parse(json);
+    if (
+      !isPlainRecord(parsed) ||
+      !hasExactKeys(parsed, ["version", "courseSlug", "progress"]) ||
+      parsed.version !== SHARE_FORMAT_VERSION ||
+      !isHashSharingCourseSlug(parsed.courseSlug)
+    ) {
+      return null;
+    }
+
+    const progress = validateCourseProgress(
+      parsed.progress,
+      parsed.courseSlug,
+    );
+    if (!progress) return null;
+    return {
+      version: SHARE_FORMAT_VERSION,
+      courseSlug: parsed.courseSlug,
+      progress,
+    };
   } catch {
     return null;
   }
 }
 
 /**
+ * Serialize current progress in a versioned, course-bound base64url envelope.
+ * Returns null for unsupported courses, empty progress, corrupt local state,
+ * or a payload beyond the URL-sharing byte budget.
+ */
+export function serializeProgress(courseSlug: CourseSlug): string | null {
+  try {
+    if (!isHashSharingCourseSlug(courseSlug)) return null;
+    const progress = validateCourseProgress(
+      getAllProgress(courseSlug),
+      courseSlug,
+    );
+    if (!progress) return null;
+    return encodeEnvelope({
+      version: SHARE_FORMAT_VERSION,
+      courseSlug,
+      progress,
+    });
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Deserialize a course-bound base64url envelope back to CourseProgress.
+ */
+export function deserializeProgress(encoded: string): CourseProgress | null {
+  return decodeEnvelope(encoded)?.progress ?? null;
+}
+
+/**
  * Import progress from a serialized string, merging with existing progress.
- * Merges directly into the unified store (higher quiz score wins, sections
- * union, completion sticky) without ever wiping existing progress.
+ * Merges directly into the unified store (higher lesson/workshop score wins,
+ * sections union, completion sticky) without ever wiping existing progress.
  */
 export function importProgress(
   courseSlug: CourseSlug,
   encoded: string,
 ): boolean {
-  const imported = deserializeProgress(encoded);
-  if (!imported) return false;
+  try {
+    if (!isHashSharingCourseSlug(courseSlug)) return false;
+    const envelope = decodeEnvelope(encoded);
+    if (!envelope || envelope.courseSlug !== courseSlug) return false;
+    const imported = envelope.progress;
 
-  // Merge into the unified store via the public write API.
-  if (imported.workshopQuiz.passed && !uIsWorkshopQuizPassed(courseSlug)) {
-    uSaveWorkshopQuizResult(courseSlug, imported.workshopQuiz.score, true);
-  }
-  for (const [lessonId, lesson] of Object.entries(imported.lessons)) {
-    for (const sectionId of lesson.sectionsRead) {
-      uMarkSectionRead(courseSlug, lessonId, sectionId);
-    }
-    if (lesson.quizScore != null && lesson.quizTotal != null) {
-      uSaveLessonQuizScore(
+    // Every attacker-controlled value has passed complete validation before
+    // the first store mutation. The public APIs retain their sticky/maximum
+    // merge semantics and award progress through the normal path.
+    if (imported.workshopQuiz.completedAt !== null) {
+      uSaveWorkshopQuizResult(
         courseSlug,
-        lessonId,
-        Math.round(lesson.quizScore * lesson.quizTotal),
-        lesson.quizTotal,
+        imported.workshopQuiz.score,
+        imported.workshopQuiz.passed,
       );
     }
-    if (lesson.completed) {
-      uMarkLessonCompleted(courseSlug, lessonId);
+    for (const [lessonId, lesson] of Object.entries(imported.lessons)) {
+      for (const sectionId of lesson.sectionsRead) {
+        uMarkSectionRead(courseSlug, lessonId, sectionId);
+      }
+      if (lesson.quizScore != null && lesson.quizTotal != null) {
+        uSaveLessonQuizScore(
+          courseSlug,
+          lessonId,
+          Math.round(lesson.quizScore * lesson.quizTotal),
+          lesson.quizTotal,
+        );
+      }
+      if (lesson.completed) {
+        uMarkLessonCompleted(courseSlug, lessonId);
+      }
     }
+    return true;
+  } catch {
+    return false;
   }
-  return true;
 }
 
 /**

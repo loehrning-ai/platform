@@ -42,9 +42,10 @@ export function AiNativeFinalCta() {
           <div className="mt-10 flex flex-wrap justify-center gap-3.5">
             <BrandButton
               href="/ai-native/kurs/modul_1"
+              prefetch={false}
               variant="primary"
             >
-              Kurs starten <ArrowRight size={14} />
+              Kostenlos mit Lernkonto starten <ArrowRight size={14} />
             </BrandButton>
             <BrandButton
               href="/ai-native/fluency-test"

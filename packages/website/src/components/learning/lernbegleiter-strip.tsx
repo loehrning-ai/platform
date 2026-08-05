@@ -1,120 +1,129 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChevronRight } from "lucide-react";
-import { PATHWAY_STAGE_DISPLAY } from "@/lib/learning-graph";
-import type { LearningStage } from "@/lib/learning-graph/types";
+import { COURSE_CATALOG } from "@/lib/courses/catalog";
+import { courseGroupFor } from "@/lib/courses/tracks";
+import { subscribe } from "@/lib/progress/store";
+import type { UnifiedProgress } from "@/lib/progress/types";
+import {
+  completedCanonicalLessonCount,
+  isCourseCompletionEarned,
+} from "@/lib/courses/completion";
+import {
+  hasCourseStarted,
+  resolveCourseResumeHref,
+} from "@/lib/courses/resume";
+import type { CourseSlug } from "@/lib/course/types";
 
-const STAGE_ORDER: readonly LearningStage[] = [
-  "pruefen",
-  "grundlagen",
-  "regeln",
-  "anwenden",
-  "dokumentieren",
-  "vertiefen",
-];
+const SPINE_COURSES = COURSE_CATALOG.filter(
+  (course) => courseGroupFor(course.slug) === "spine",
+);
 
-const COURSE_STAGE: Readonly<Record<string, { stage: LearningStage; path: string; title: string; firstLesson: string }>> = {
-  "ki-fuehrerschein": {
-    stage: "grundlagen",
-    path: "/ki-fuehrerschein/kurs/block_1",
-    title: "KI-Führerschein",
-    firstLesson: "Block 1: KI-Systeme erkennen",
-  },
-  "eu-ai-act-kurs": {
-    stage: "regeln",
-    path: "/eu-ai-act-kurs/kurs/block_1",
-    title: "EU AI Act Kurs",
-    firstLesson: "Block 1: EU AI Act im Überblick",
-  },
-  "ai-native": {
-    stage: "anwenden",
-    path: "/ai-native/kurs",
-    title: "AI-Native Arbeitskurs",
-    firstLesson: "Modul 1: Grundlagen der KI-Nutzung",
-  },
-} as const;
-
-const PROGRESS_KEY = "loehrning-progress-v2";
-const LAST_VISITED_KEY = "loehrning-last-visited";
-
-interface StripState {
-  currentStageIndex: number;
-  nextLabel: string;
-  nextHref: string;
+export interface LernbegleiterState {
+  readonly currentCourseIndex: number;
+  readonly completedCourseCount: number;
+  readonly completedCourseSlugs: readonly CourseSlug[];
+  readonly nextLabel: string;
+  readonly nextHref: string;
+  readonly allComplete: boolean;
 }
 
-function computeStripState(): StripState {
-  const defaultState: StripState = {
-    currentStageIndex: 0,
-    nextLabel: "Starte mit Lektion 1: Block 1, KI-Systeme erkennen",
-    nextHref: "/ki-fuehrerschein/kurs/block_1",
-  };
-
-  try {
-    const lastVisited = localStorage.getItem(LAST_VISITED_KEY);
-    if (lastVisited) {
-      defaultState.nextLabel = `Weiter: ${lastVisited}`;
-    }
-
-    const raw = localStorage.getItem(PROGRESS_KEY);
-    if (!raw) return defaultState;
-
-    const parsed = JSON.parse(raw) as { courses?: Record<string, { lessons?: Record<string, { completed?: boolean }> }> };
-    if (!parsed?.courses) return defaultState;
-
-    const completedCourses: string[] = [];
-    for (const [slug, slice] of Object.entries(parsed.courses)) {
-      const lessons = slice?.lessons ?? {};
-      const completedCount = Object.values(lessons).filter((l) => l?.completed).length;
-      if (completedCount > 0) {
-        completedCourses.push(slug);
-      }
-    }
-
-    if (completedCourses.length === 0) return defaultState;
-
-    let highestStageIdx = 0;
-    let bestNextHref = defaultState.nextHref;
-    let bestNextLabel = defaultState.nextLabel;
-
-    for (const slug of completedCourses) {
-      const info = COURSE_STAGE[slug];
-      if (!info) continue;
-      const idx = STAGE_ORDER.indexOf(info.stage);
-      if (idx > highestStageIdx) {
-        highestStageIdx = idx;
-        const nextSlugEntry = Object.entries(COURSE_STAGE).find(([, v]) =>
-          STAGE_ORDER.indexOf(v.stage) === idx + 1
-        );
-        if (nextSlugEntry) {
-          bestNextHref = nextSlugEntry[1].path;
-          bestNextLabel = `Weiter: ${nextSlugEntry[1].firstLesson}`;
-        }
-      }
-    }
-
+/**
+ * Resolve the next step from canonical catalog metadata and the unified
+ * progress state. Every course requires its canonical lessons; courses with a
+ * final assessment additionally require a passed quiz or the AI-Native
+ * capstone. The strip uses the same completion bar as certificates/account.
+ */
+export function computeStripState(
+  progress: UnifiedProgress,
+  pathname?: string,
+): LernbegleiterState {
+  const completion = SPINE_COURSES.map((course) => {
+    const completedLessons = completedCanonicalLessonCount(
+      progress,
+      course.slug,
+    );
     return {
-      currentStageIndex: highestStageIdx,
-      nextLabel: bestNextLabel,
-      nextHref: bestNextHref,
+      course,
+      completedLessons,
+      complete: isCourseCompletionEarned(progress, course.slug),
+      started: hasCourseStarted(progress, course.slug),
+      lastActivity: progress.courses[course.slug]?.lastActivity ?? null,
     };
-  } catch {
-    return defaultState;
+  });
+
+  const completedCourseSlugs = completion
+    .filter((entry) => entry.complete)
+    .map((entry) => entry.course.slug);
+  const completedCourseCount = completedCourseSlugs.length;
+  const routeCourseIndex = pathname
+    ? completion.findIndex(
+        (entry) =>
+          !entry.complete &&
+          (pathname === entry.course.href ||
+            pathname.startsWith(`${entry.course.href}/`)),
+      )
+    : -1;
+  const mostRecentlyActive = completion
+    .map((entry, index) => ({ entry, index }))
+    .filter(({ entry }) => !entry.complete && entry.started)
+    .sort((left, right) => {
+      const leftAt = left.entry.lastActivity
+        ? Date.parse(left.entry.lastActivity)
+        : 0;
+      const rightAt = right.entry.lastActivity
+        ? Date.parse(right.entry.lastActivity)
+        : 0;
+      return rightAt - leftAt;
+    })[0]?.index;
+  const currentCourseIndex =
+    routeCourseIndex >= 0
+      ? routeCourseIndex
+      : (mostRecentlyActive ??
+        completion.findIndex((entry) => !entry.complete));
+
+  if (currentCourseIndex === -1) {
+    return {
+      currentCourseIndex: SPINE_COURSES.length - 1,
+      completedCourseCount,
+      completedCourseSlugs,
+      nextLabel: "Lernpfad abgeschlossen · tiefer gehen",
+      nextHref: "/kurse#tiefer-gehen",
+      allComplete: true,
+    };
   }
+
+  const current = completion[currentCourseIndex];
+  const hasStarted = current.completedLessons > 0 || current.started;
+
+  return {
+    currentCourseIndex,
+    completedCourseCount,
+    completedCourseSlugs,
+    nextLabel: `${hasStarted ? "Weiterlernen" : "Starten"}: ${current.course.title}`,
+    nextHref: hasStarted
+      ? resolveCourseResumeHref(progress, current.course.slug)
+      : current.course.startHref,
+    allComplete: false,
+  };
 }
 
 export function LernbegleiterStrip() {
-  const [state, setState] = useState<StripState | null>(null);
+  const [state, setState] = useState<LernbegleiterState | null>(null);
+  const pathname = usePathname();
 
-  useEffect(() => {
-    setState(computeStripState());
-  }, []);
+  useEffect(
+    () =>
+      subscribe((progress) => {
+        setState(computeStripState(progress, pathname));
+      }),
+    [pathname],
+  );
 
-  if (!state) return null;
-
-  const stageCount = STAGE_ORDER.length;
+  if (!state || SPINE_COURSES.length === 0) return null;
 
   return (
     <div
@@ -124,14 +133,16 @@ export function LernbegleiterStrip() {
     >
       <div className="mx-auto flex max-w-5xl items-center gap-4 px-6 py-3">
         <div className="hidden shrink-0 gap-1 sm:flex" aria-hidden="true">
-          {STAGE_ORDER.map((stage, i) => {
-            const display = PATHWAY_STAGE_DISPLAY[stage];
-            const isDone = i < state.currentStageIndex;
-            const isCurrent = i === state.currentStageIndex;
+          {SPINE_COURSES.map((course, index) => {
+            const isDone =
+              state.allComplete ||
+              state.completedCourseSlugs.includes(course.slug);
+            const isCurrent =
+              !state.allComplete && index === state.currentCourseIndex;
             return (
               <div
-                key={stage}
-                title={display.displayLabel}
+                key={course.slug}
+                title={course.title}
                 className={`h-1.5 w-6 rounded-full transition-colors ${
                   isDone
                     ? "bg-brand-orange"
@@ -144,8 +155,12 @@ export function LernbegleiterStrip() {
           })}
         </div>
 
-        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground hidden sm:block shrink-0">
-          Stufe {state.currentStageIndex + 1}/{stageCount}
+        <span className="hidden shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground sm:block">
+          Lernpfad{" "}
+          {state.allComplete
+            ? SPINE_COURSES.length
+            : state.currentCourseIndex + 1}
+          /{SPINE_COURSES.length}
         </span>
 
         <Link
@@ -154,6 +169,7 @@ export function LernbegleiterStrip() {
         >
           <span className="truncate">{state.nextLabel}</span>
           <ChevronRight
+            aria-hidden="true"
             size={14}
             className="shrink-0 transition-transform group-hover:translate-x-0.5"
           />

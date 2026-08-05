@@ -6,9 +6,11 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ScrollToTop } from "@/components/scroll-to-top";
 import { MotionProvider } from "@/components/motion-provider";
 import { ProgressToastProvider } from "@/components/progress/toast-provider";
+import { LearningOwnerBoundary } from "@/components/progress/learning-owner-boundary";
 import { UserProgressSync } from "@/components/auth/user-progress-sync";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
+import { NO_SCRIPT_FALLBACK_CSS } from "@/lib/a11y/no-script";
 import { JsonLd } from "@/lib/seo/json-ld";
 import { SITE_ENTITY } from "@/lib/seo/entity";
 import { SITE_GRAPH } from "@/lib/seo/site-graph";
@@ -22,7 +24,11 @@ const loehrningSans = localFont({
     { path: "../fonts/LoehrningSans-Bold.woff2", weight: "700", style: "normal" },
   ],
   variable: "--font-loehrning-sans",
-  display: "swap",
+  // Four weight-specific files must not compete with content on every route.
+  // They load on demand; `optional` prevents a late swap from resetting text
+  // LCP after content is ready. Geist Mono remains the single global preload.
+  display: "optional",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -43,9 +49,6 @@ export const metadata: Metadata = {
   },
   manifest: "/site.webmanifest",
   openGraph: {
-    title: "loehrning.ai",
-    description: SITE_ENTITY.description,
-    url: "https://loehrning.ai",
     siteName: "loehrning.ai",
     locale: "de_DE",
     type: "website",
@@ -54,11 +57,6 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "loehrning.ai",
-    description: SITE_ENTITY.description,
-  },
-  alternates: {
-    canonical: "/",
   },
 };
 
@@ -92,10 +90,19 @@ export default function RootLayout({
           Zum Inhalt springen
         </a>
         <ScrollToTop />
+        {/* Framer entrance wrappers serialize their hidden state into the
+            server HTML. With scripting unavailable, opted-in .js-reveal
+            elements render settled and the static mobile navigation becomes
+            available. The style is inert when scripting is enabled. */}
+        <noscript>
+          <style>{NO_SCRIPT_FALLBACK_CSS}</style>
+        </noscript>
         <div className="pointer-events-none fixed inset-0 z-0 bg-grid opacity-[0.3]" />
         <MotionProvider>
           <Nav />
-          <main id="main-content" className="relative z-0 pt-16">{children}</main>
+          <main id="main-content" className="relative z-0 pt-16">
+            <LearningOwnerBoundary>{children}</LearningOwnerBoundary>
+          </main>
           <Footer />
           <UserProgressSync />
           {/* Cross-course gamification toasts (shared course architecture). Mounted

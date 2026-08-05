@@ -89,7 +89,7 @@ export function WorkshopDetailContent({ workshop }: Props) {
             ))}
           </div>
           <p className="mt-3 text-xs text-muted-foreground">
-            Kostenlos und ohne Anmeldung abrufbar.
+            Kostenlos und ohne Anmeldung abrufbar. Die aktuelle Materialfassung ist Englisch.
           </p>
         </div>
       </header>
@@ -221,7 +221,7 @@ export function WorkshopDetailContent({ workshop }: Props) {
             Die sieben Schritte
           </h2>
           <p className="mb-8 max-w-2xl text-sm text-muted-foreground">
-            Der Ablauf, den du live in der Claude-App mitbaust, von der ersten
+            Der Ablauf, den du Schritt für Schritt in der Claude-App nachbaust, von der ersten
             Rohdaten-Datei bis zur begründeten Entscheidung.
           </p>
           <ol className="space-y-4">
@@ -257,20 +257,22 @@ export function WorkshopDetailContent({ workshop }: Props) {
         <div className="mx-auto max-w-5xl px-6 py-16">
           <div className="rounded-none border border-border border-t-[3px] border-t-brand-orange bg-background p-8 sm:p-12">
             <p className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-              Fragen zum Workshop
+              Einordnung
             </p>
             <h2 className="mb-4 text-2xl font-bold tracking-[-0.03em] sm:text-3xl">
-              Termin, Inhalt oder eigenes Fallbeispiel besprechen?
+              Selbstlern-Material, kein buchbarer Live-Termin.
             </h2>
             <p className="mb-8 max-w-2xl text-base leading-relaxed text-muted-foreground">
-              Schreib mir über das{" "}
-              <Link
-                href="/feedback"
+              Diese Seite enthält eine geführte Übung und Downloads. Es gibt
+              derzeit keinen Terminplan und keine Buchungsfunktion. Sachliche
+              Fehler kannst du per E-Mail an{" "}
+              <a
+                href="mailto:tim@loehrning.ai"
                 className="underline underline-offset-2 hover:text-foreground"
               >
-                Feedback-Formular
-              </Link>{" "}
-              oder direkt an tim@loehrning.ai.
+                tim@loehrning.ai
+              </a>{" "}
+              melden.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link
