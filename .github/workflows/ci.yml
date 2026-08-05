@@ -70,11 +70,17 @@ jobs:
       # back as the single summary line in the job log. The per-run values are
       # what distinguish a real regression from runner noise on a metric like
       # total-blocking-time, so keep them.
+      # `.lighthouseci` is a dotfile directory, and upload-artifact skips hidden
+      # paths unless include-hidden-files is set. Without it the step reports
+      # success while uploading nothing, which is how the first attempt at this
+      # silently produced no reports. `warn` rather than `ignore` so a future
+      # empty match is visible in the log instead of passing quietly.
       - name: Upload Lighthouse reports
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: lighthouse-reports
           path: .lighthouseci/
-          if-no-files-found: ignore
+          include-hidden-files: true
+          if-no-files-found: warn
           retention-days: 7
