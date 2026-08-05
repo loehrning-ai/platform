@@ -3,6 +3,7 @@ import { BLOG_POSTS } from "@/lib/blog-metadata";
 import { SITE_CONTENT_DATE } from "@/lib/content-freshness";
 import { STAND_DATE } from "@/lib/content-meta";
 import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
+import { courseFacts } from "@/lib/courses/tracks";
 import { OPEN_SOURCE_ARTIFACT_SECTIONS } from "@/lib/open-source/artifacts";
 import { SITE_ENTITY, SITE_ORIGIN, TIM_ENTITY } from "@/lib/seo/entity";
 
@@ -12,13 +13,27 @@ function renderBody(): string {
   const blogLines = BLOG_POSTS.map(
     (post) => `- ${post.titleDe}: ${SITE_ORIGIN}/blog/${post.slug}`,
   ).join("\n");
-  const nativeCourseLines = COURSE_CATALOG.map(
+  const spineCourseLines = COURSE_CATALOG.filter(
+    (course) => courseFacts(course.slug).group === "spine",
+  ).map(
+    (course) => `- ${course.title}: ${SITE_ORIGIN}${course.href}`,
+  ).join("\n");
+  const deeperCourseLines = COURSE_CATALOG.filter(
+    (course) => courseFacts(course.slug).group === "deeper",
+  ).map(
     (course) => `- ${course.title}: ${SITE_ORIGIN}${course.href}`,
   ).join("\n");
   const importedCourseLines = IMPORTED_COURSE_CATALOG.map(
     (course) => `- ${course.title}: ${SITE_ORIGIN}${course.href}`,
   ).join("\n");
-  const labsSection = `## Technische Labore\n\n${importedCourseLines}`;
+  const learningSections = [
+    `## Deutscher Lernpfad\n\n${spineCourseLines}`,
+    `## Englische technische Vertiefung\n\n${deeperCourseLines}`,
+  ];
+  const labsSection =
+    importedCourseLines.length > 0
+      ? `## Externe technische Labore\n\n${importedCourseLines}`
+      : "";
   const openSourceSections = OPEN_SOURCE_ARTIFACT_SECTIONS
     .filter((section) => section.artifacts.length > 0)
     .map((section) => {
@@ -31,7 +46,7 @@ function renderBody(): string {
       return `## Open Source: ${section.heading}\n\n${lines}`;
     })
     .join("\n\n");
-  const catalogSections = [labsSection, openSourceSections]
+  const catalogSections = [...learningSections, labsSection, openSourceSections]
     .filter((section) => section.length > 0)
     .join("\n\n");
 
@@ -51,7 +66,6 @@ Wenn die optionale Kontofunktion vollständig konfiguriert ist, kann sie Fortsch
 
 - Startseite: ${SITE_ORIGIN}/
 - Kursübersicht: ${SITE_ORIGIN}/kurse
-${nativeCourseLines}
 - Einstieg: ${SITE_ORIGIN}/einstieg
 - Wie KI funktioniert: ${SITE_ORIGIN}/wie-ki-funktioniert
 - Bücher: ${SITE_ORIGIN}/buecher

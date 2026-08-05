@@ -2,7 +2,7 @@
 
 Open-source application code for [loehrning.ai](https://loehrning.ai), a free German-language platform for practical AI literacy and EU AI Act learning.
 
-The application includes four native learning paths, six linked open-source technical labs, three browser-readable books, governance templates, interactive demonstrations, and public learning APIs. The public learning surface works without an account. Optional account, analytics, observability, and AI-assisted features remain disabled when their environment variables are absent. Anthropic-backed exercises additionally require the complete Supabase quota backend; production rate limiting fails closed without it.
+The application includes four native German learning-path courses, six native English technical courses, three browser-readable books, governance templates, interactive demonstrations, and public learning APIs. All ten courses run on loehrning.ai with local progress and completion records. The public learning surface works without an account. Optional account, analytics, observability, and AI-assisted features remain disabled when their environment variables are absent. Anthropic-backed exercises additionally require the complete Supabase quota backend; production rate limiting fails closed without it.
 
 "Open source" applies to the application code and the files explicitly assigned an open license. It does not automatically apply to every course, book, brand asset, or other source-visible editorial file. Those materials remain reviewable and buildable in this repository, but reuse is governed file-by-file by [LICENSE_POLICY.md](LICENSE_POLICY.md). This is not a repository-wide open-content license.
 

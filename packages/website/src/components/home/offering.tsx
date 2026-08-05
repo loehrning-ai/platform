@@ -3,18 +3,21 @@
 import Link from "next/link";
 import Image from "next/image";
 import { m, useReducedMotion } from "framer-motion";
-import { ArrowRight, Github } from "lucide-react";
+import { ArrowRight, TerminalSquare } from "lucide-react";
 import { EASE_OUT_EXPO } from "@/lib/animations";
-import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
+import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { PersonaCourseLinks } from "@/app/kurse/persona-filter";
 import { Card, IconTile } from "@/components/ui/card";
 import { courseBadges, courseFacts } from "@/lib/courses/tracks";
 import { iconByName } from "@/lib/courses/track-icon";
 
-// The three GitHub-Labs previews shown in the imagery band. Real screenshots
-// from public/imported-courses/screenshots, linking through to each lab's
-// detail route on the /kurse hub.
-const LAB_PREVIEWS = IMPORTED_COURSE_CATALOG.slice(0, 3);
+const SPINE_COURSES = COURSE_CATALOG.filter(
+  (course) => courseFacts(course.slug).group === "spine",
+);
+const DEEPER_COURSES = COURSE_CATALOG.filter(
+  (course) => courseFacts(course.slug).group === "deeper",
+);
+const DEEPER_PREVIEWS = DEEPER_COURSES.slice(0, 3);
 
 const META_LINE =
   "font-mono text-[10.5px] uppercase tracking-[0.1em] text-muted-foreground";
@@ -44,7 +47,7 @@ export function Offering() {
     transition: { duration: 0.5, delay, ease: EASE_OUT_EXPO },
   });
 
-  const [featured, ...restCourses] = COURSE_CATALOG;
+  const [featured, ...restCourses] = SPINE_COURSES;
   const featuredMeta = courseFacts(featured.slug);
   const FeaturedIcon = iconByName(featuredMeta.iconName);
 
@@ -82,10 +85,10 @@ export function Offering() {
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.6, ease: EASE_OUT_EXPO }}
         >
-          Vier Kurse.
+          {SPINE_COURSES.length} Kurse.
           <br />
           <span className="text-muted-foreground">
-            Vom ersten Prompt bis zum EU-Gesetz.
+            {DEEPER_COURSES.length} technische Vertiefungen.
           </span>
         </m.h2>
 
@@ -96,8 +99,9 @@ export function Offering() {
           viewport={{ once: true, margin: "-60px" }}
           transition={{ delay: 0.1, duration: 0.5 }}
         >
-          Fang beim KI-Führerschein an und arbeite dich vor. Jeder Kurs ist
-          kostenlos, ohne Konto nutzbar und komplett auf Deutsch.
+          Fang beim KI-Führerschein an und arbeite dich vor. Diese{" "}
+          {SPINE_COURSES.length} Kurse sind kostenlos, ohne Konto nutzbar und
+          komplett auf Deutsch.
         </m.p>
 
         <PersonaCourseLinks />
@@ -215,8 +219,8 @@ export function Offering() {
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.5 }}
         >
-          Dazu {IMPORTED_COURSE_CATALOG.length} technische Labore auf Englisch,
-          von Data Engineering bis System Design.{" "}
+          Dazu {DEEPER_COURSES.length} native technische Kurse auf Englisch,
+          von Claude und Codex bis Data Engineering und System Design.{" "}
           <Link
             href="/kurse"
             className="font-bold text-brand-orange underline-offset-4 hover:underline"
@@ -225,21 +229,20 @@ export function Offering() {
           </Link>
         </m.p>
 
-        {/* Real-imagery band: GitHub-Labs previews. Sand tint to match the
-            open-source track colour and break the cream monotony. */}
+        {/* Real-imagery band: native English technical-course previews. */}
         <m.div
           {...reveal()}
           className="mt-8 rounded-xl border border-border bg-brand-sand/10 p-6 sm:p-8"
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <IconTile icon={Github} accent="sand" />
+              <IconTile icon={TerminalSquare} accent="sand" />
               <div>
                 <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-sand">
-                  GitHub-Labs
+                  Englische Vertiefung
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Technische Browserkurse, quelloffen auf GitHub.
+                  Technische Kurse, nativ auf loehrning.ai.
                 </p>
               </div>
             </div>
@@ -247,12 +250,12 @@ export function Offering() {
               href="/kurse"
               className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-foreground underline-offset-4 hover:underline"
             >
-              Alle Labs ansehen &#8594;
+              Alle Vertiefungen ansehen &#8594;
             </Link>
           </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {LAB_PREVIEWS.map((course) => (
+            {DEEPER_PREVIEWS.map((course) => (
               <div
                 key={course.slug}
                 className="group/lab overflow-hidden rounded-xl border border-border bg-card shadow-card transition-shadow hover:shadow-card-hover"
@@ -264,8 +267,8 @@ export function Offering() {
                 >
                   <span className="relative block aspect-[16/10] overflow-hidden bg-card-hover">
                     <Image
-                      src={course.imageSrc}
-                      alt={course.imageAlt}
+                      src={course.coverImage}
+                      alt={course.coverImageAlt}
                       width={640}
                       height={400}
                       sizes="(min-width: 1024px) 300px, (min-width: 640px) 45vw, 90vw"
@@ -282,18 +285,9 @@ export function Offering() {
                       {course.title}
                     </Link>
                     <span className="mt-1 block font-mono text-[9.5px] uppercase tracking-[0.08em] text-muted-foreground">
-                      GitHub · MIT · Englisch · extern
+                      Englisch · nativ · mit Fortschritt
                     </span>
                   </div>
-                  <a
-                    href={course.sourceHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`Quellcode auf GitHub: ${course.title}`}
-                    className="shrink-0 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-card-hover hover:text-foreground"
-                  >
-                    <Github size={17} strokeWidth={1.75} aria-hidden="true" />
-                  </a>
                 </div>
               </div>
             ))}

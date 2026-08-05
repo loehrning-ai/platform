@@ -23,7 +23,7 @@ describe("homepage reduced-motion reveals", () => {
       opacity: "0",
     });
     expect(
-      screen.getByRole("heading", { name: /Vier Kurse/ }),
+      screen.getByRole("heading", { name: /4 Kurse/ }),
     ).not.toHaveStyle({ opacity: "0" });
     expect(screen.getByText(/arbeite dich vor/)).not.toHaveStyle({
       opacity: "0",

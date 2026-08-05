@@ -7,7 +7,7 @@
  * Three tracks, folded into `CourseFacts.accent`/`.badge` below (
  * stage 3 — the former standalone `TRACK_META` table is gone):
  *   zertifikat  — the 4 native German certified courses (Kupfer)
- *   github-lab  — the 6 English MIT technical courses, external (Sand)
+ *   technical   — the 6 native English technical courses (Sand)
  *   brainster   — applied client workshops turned courses (Amber)
  */
 
@@ -61,7 +61,7 @@ export const BRAINSTER_COURSE_CATALOG: readonly BrainsterCourse[] = [
 // to see:
 //   1. ONE ordered starting path — "der Lernpfad" — the certified German
 //      courses that share the progress + record engine.
-//   2. A "Tiefer gehen" shelf — external GitHub labs (English) + applied
+//   2. A "Tiefer gehen" shelf — native technical courses (English) + applied
 //      workshop courses.
 // Instead of a colour code, each course carries honest badges derived from
 // real facts: its language, whether it issues a record (and which kind), and
@@ -213,8 +213,8 @@ export const COURSE_SECTIONS: Readonly<
   },
   deeper: {
     title: "Tiefer gehen",
-    eyebrow: "Praxis · Labs · extern",
+    eyebrow: "Englisch · technisch · mit Nachweis",
     blurb:
-      "Technische Open-Source-Labs auf Englisch und angewandte Kurse aus echten Workshops. Ohne Konto, direkt im Browser oder auf GitHub.",
+      "Native technische Kurse auf Englisch. Fortschritt und Abschlussnachweis funktionieren direkt auf loehrning.ai; die ursprüngliche Open-Source-Provenienz bleibt dokumentiert.",
   },
 };

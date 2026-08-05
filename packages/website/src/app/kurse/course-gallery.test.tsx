@@ -1,9 +1,14 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, screen, within } from "@testing-library/react";
-import {
-  COURSE_CATALOG,
-  IMPORTED_COURSE_CATALOG,
-} from "@/lib/courses/catalog";
+import { COURSE_CATALOG } from "@/lib/courses/catalog";
+import { courseFacts } from "@/lib/courses/tracks";
+
+const SPINE_COURSES = COURSE_CATALOG.filter(
+  (course) => courseFacts(course.slug).group === "spine",
+);
+const DEEPER_COURSES = COURSE_CATALOG.filter(
+  (course) => courseFacts(course.slug).group === "deeper",
+);
 
 // Mock the unified store + course-progress facade so the gallery's
 // client-side progress dots are deterministic.
@@ -31,81 +36,66 @@ afterEach(() => {
 });
 
 describe("CourseGallery (learner-first: path + deeper shelf)", () => {
-  //: both sections branch on nativeStatus, not which array a
-  // course came from. Today COURSE_CATALOG is 100% "live" and
-  // IMPORTED_COURSE_CATALOG is 100% "pending", so this pins the same visible
-  // split as the array-membership tests below, just asserted via the field
-  // the gallery now actually reads.
-  it("renders exactly the nativeStatus === 'live' courses in Der Lernpfad and 'pending' ones in Tiefer gehen", () => {
+  it("renders four spine courses in Der Lernpfad and six native deeper courses in Tiefer gehen", () => {
     render(<CourseGallery />);
-    for (const course of COURSE_CATALOG) {
-      expect(course.nativeStatus).toBe("live");
-      expect(screen.getByTestId(`progress-dots-${course.slug}`)).toBeInTheDocument();
+    const spineSection = screen.getByText("Der Lernpfad").closest("section");
+    const deeperSection = screen.getByText("Tiefer gehen").closest("section");
+    expect(spineSection).not.toBeNull();
+    expect(deeperSection).not.toBeNull();
+
+    expect(SPINE_COURSES).toHaveLength(4);
+    expect(DEEPER_COURSES).toHaveLength(6);
+
+    for (const course of SPINE_COURSES) {
+      expect(within(spineSection as HTMLElement).getByText(course.title)).toBeInTheDocument();
+      expect(
+        within(spineSection as HTMLElement).getByTestId(`progress-dots-${course.slug}`),
+      ).toBeInTheDocument();
     }
-    for (const course of IMPORTED_COURSE_CATALOG) {
-      expect(course.nativeStatus).toBe("pending");
-      expect(screen.queryByTestId(`progress-dots-${course.slug}`)).toBeNull();
+    for (const course of DEEPER_COURSES) {
+      expect(within(deeperSection as HTMLElement).getByText(course.title)).toBeInTheDocument();
+      expect(
+        within(deeperSection as HTMLElement).getByTestId(`progress-dots-${course.slug}`),
+      ).toBeInTheDocument();
     }
   });
 
-  it("renders one card per native course with a free price + progress dots", () => {
+  it("renders one card per native course with progress dots", () => {
     render(<CourseGallery />);
-    expect(screen.getByText("KI-Führerschein")).toBeInTheDocument();
-    expect(screen.getByText("KI und Gesellschaft")).toBeInTheDocument();
-    expect(screen.getByText("EU AI Act Kurs")).toBeInTheDocument();
-    expect(screen.getByText("AI-Native Arbeitskurs")).toBeInTheDocument();
-
-    expect(screen.getByTestId("progress-dots-ki-fuehrerschein")).toBeInTheDocument();
-    expect(screen.getByTestId("progress-dots-ki-und-gesellschaft")).toBeInTheDocument();
-    expect(screen.getByTestId("progress-dots-eu-ai-act-kurs")).toBeInTheDocument();
-    expect(screen.getByTestId("progress-dots-ai-native")).toBeInTheDocument();
+    for (const course of COURSE_CATALOG) {
+      expect(screen.getByText(course.title)).toBeInTheDocument();
+      expect(screen.getByTestId(`progress-dots-${course.slug}`)).toBeInTheDocument();
+    }
   });
 
   it("labels the path and the deeper shelf so their difference is legible", () => {
     render(<CourseGallery />);
     expect(screen.getByText("Der Lernpfad")).toBeInTheDocument();
     expect(screen.getByText("Tiefer gehen")).toBeInTheDocument();
-    expect(screen.getByText("GitHub-Labs")).toBeInTheDocument();
+    expect(screen.getByText("Native technische Kurse")).toBeInTheDocument();
   });
 
-  it("renders GitHub-Labs with source identity and no fake progress widgets", () => {
+  it("renders the English deeper courses as native courses with progress and internal actions", () => {
     render(<CourseGallery />);
-    for (const course of IMPORTED_COURSE_CATALOG) {
-      const card = screen.getByText(course.title).closest("li");
+    const deeperSection = screen.getByText("Tiefer gehen").closest("section");
+    expect(deeperSection).not.toBeNull();
+
+    for (const course of DEEPER_COURSES) {
+      const card = within(deeperSection as HTMLElement).getByText(course.title).closest("li");
       expect(card).not.toBeNull();
       const scoped = within(card as HTMLElement);
-      expect(scoped.getByText(course.title)).toBeInTheDocument();
-      expect(card).toHaveTextContent(course.lessonCountLabel);
-      for (const fact of course.sourceFacts.slice(0, 4)) {
-        expect(scoped.getByText(fact)).toBeInTheDocument();
-      }
-
-      // GitHub identity: stroke-only icon link, honest badge chips, commit pin.
-      expect(scoped.getByRole("link", { name: "Quellcode auf GitHub" })).toHaveAttribute(
-        "href",
-        course.sourceHref,
-      );
       expect(scoped.getByText("Englisch")).toBeInTheDocument();
-      expect(scoped.getByText("extern · GitHub")).toBeInTheDocument();
-      expect(scoped.getByText("MIT")).toBeInTheDocument();
-      expect(
-        scoped.getByRole("link", { name: new RegExp(`Quell-Commit ${course.sourceCommit.slice(0, 7)}`) }),
-      ).toHaveAttribute("href", course.sourceCommitHref);
-
-      // Primary CTA opens the external live course; Details keeps the native detail route.
-      expect(scoped.getByRole("link", { name: /Kurs öffnen/ })).toHaveAttribute(
+      expect(scoped.getByText("mit Certificate")).toBeInTheDocument();
+      expect(scoped.getByTestId(`progress-dots-${course.slug}`)).toBeInTheDocument();
+      expect(scoped.getByRole("link", { name: /Kurs starten/ })).toHaveAttribute(
         "href",
-        course.launchHref,
+        course.startHref,
       );
       expect(scoped.getByRole("link", { name: /Details/ })).toHaveAttribute(
         "href",
         course.href,
       );
-
-      expect(scoped.getByAltText(course.imageAlt)).toBeInTheDocument();
-      expect(screen.queryByTestId(`progress-dots-${course.slug}`)).toBeNull();
     }
-    expect(screen.getByText("GitHub-Labs")).toBeInTheDocument();
     expect(storeMock.getCompletedLessonsCount.mock.calls.map(([slug]) => slug)).toEqual(
       COURSE_CATALOG.map((course) => course.slug),
     );

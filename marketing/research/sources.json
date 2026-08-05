@@ -1,0 +1,407 @@
+{
+  "version": 1,
+  "accessDate": "2026-07-26",
+  "selectionPolicy": "Primary and authoritative provider, public-institution, platform-documentation, and original study sources only.",
+  "sources": [
+    {
+      "id": "landscape-ki-campus-faq",
+      "title": "Frequently Asked Questions",
+      "publisher": "KI-Campus / Stifterverband",
+      "url": "https://ki-campus.org/faq?language=de",
+      "publicationDate": null,
+      "sourceType": "official-provider",
+      "usedFor": [
+        "platform scope",
+        "audiences",
+        "free access",
+        "open licensing"
+      ]
+    },
+    {
+      "id": "landscape-ki-campus-home",
+      "title": "KI-Campus",
+      "publisher": "KI-Campus / Stifterverband",
+      "url": "https://ki-campus.org/",
+      "publicationDate": null,
+      "sourceType": "official-provider",
+      "usedFor": [
+        "current learning formats",
+        "current topic coverage"
+      ]
+    },
+    {
+      "id": "landscape-elements-of-ai",
+      "title": "Elements of AI, German course",
+      "publisher": "University of Helsinki and MinnaLearn",
+      "url": "https://course.elementsofai.com/de/",
+      "publicationDate": null,
+      "sourceType": "official-provider",
+      "usedFor": [
+        "course structure",
+        "free access",
+        "curriculum scope"
+      ]
+    },
+    {
+      "id": "landscape-openhpi",
+      "title": "ChatGPT: Was bedeutet generative KI für unsere Gesellschaft?",
+      "publisher": "openHPI / Hasso-Plattner-Institut",
+      "url": "https://open.hpi.de/courses/kizukunft2023",
+      "publicationDate": "2023-07-12",
+      "sourceType": "official-provider",
+      "usedFor": [
+        "target audience",
+        "self-study availability",
+        "course scope"
+      ]
+    },
+    {
+      "id": "landscape-appliedai",
+      "title": "AI Essentials: Einführung in die KI",
+      "publisher": "appliedAI Institute for Europe",
+      "url": "https://www.appliedai-institute.de/kostenfreie-online-kurse/ai-essentials",
+      "publicationDate": null,
+      "sourceType": "official-provider",
+      "usedFor": [
+        "course duration",
+        "target audience",
+        "curriculum",
+        "CC BY 4.0 reuse assets"
+      ]
+    },
+    {
+      "id": "landscape-ki-and-me",
+      "title": "KI & Me",
+      "publisher": "Hochschule Magdeburg-Stendal",
+      "url": "https://kiandme.h2.de/",
+      "publicationDate": null,
+      "sourceType": "official-provider",
+      "usedFor": [
+        "higher-education learning formats",
+        "free access"
+      ]
+    },
+    {
+      "id": "landscape-ki-studios",
+      "title": "KI-Studios",
+      "publisher": "Fraunhofer IAO and University of Stuttgart",
+      "url": "https://www.ki-studios.ai/",
+      "publicationDate": null,
+      "sourceType": "official-provider",
+      "usedFor": [
+        "worker and employee-representative audiences",
+        "participatory workshops",
+        "mobile demonstrations"
+      ]
+    },
+    {
+      "id": "landscape-mittelstand-network",
+      "title": "Was ist Mittelstand-Digital?",
+      "publisher": "Mittelstand-Digital",
+      "url": "https://www.mittelstand-digital.de/MD/Navigation/DE/Ueber-uns/was-ist-mittelstand-digital/was-ist-md.html",
+      "publicationDate": null,
+      "sourceType": "official-public-program",
+      "usedFor": [
+        "network scope",
+        "free and vendor-neutral support",
+        "SME audiences"
+      ]
+    },
+    {
+      "id": "landscape-mittelstand-self-study",
+      "title": "In 45 Minuten zu mehr KI-Kompetenz",
+      "publisher": "Mittelstand-Digital",
+      "url": "https://www.mittelstand-digital.de/MD/Redaktion/DE/Artikel/Blog/blog-beitrag-63_selbstlernangebot_ki-kompetenz.html",
+      "publicationDate": "2026-04-28",
+      "sourceType": "official-public-program",
+      "usedFor": [
+        "short self-study format",
+        "AI-literacy topics for SMEs"
+      ]
+    },
+    {
+      "id": "landscape-wirlernenonline",
+      "title": "WirLernenOnline FAQ",
+      "publisher": "WirLernenOnline / edu-sharing.net e.V.",
+      "url": "https://www.wirlernenonline.de/faq/",
+      "publicationDate": null,
+      "sourceType": "official-provider",
+      "usedFor": [
+        "OER search",
+        "community contribution",
+        "school discovery infrastructure"
+      ]
+    },
+    {
+      "id": "landscape-oersi",
+      "title": "About OERSI",
+      "publisher": "hbz and TIB",
+      "url": "https://oersi.org/pages/en/about/",
+      "publicationDate": null,
+      "sourceType": "official-provider",
+      "usedFor": [
+        "higher-education OER discovery",
+        "metadata aggregation",
+        "open API"
+      ]
+    },
+    {
+      "id": "policy-eu-ai-literacy",
+      "title": "AI talent, skills and literacy",
+      "publisher": "European Commission",
+      "url": "https://digital-strategy.ec.europa.eu/en/policies/ai-talent-skills-and-literacy",
+      "publicationDate": null,
+      "sourceType": "official-policy",
+      "usedFor": [
+        "AI Act Article 4 application",
+        "AI-literacy practice repository"
+      ]
+    },
+    {
+      "id": "policy-eu-ai-literacy-qa",
+      "title": "AI Literacy - Questions & Answers",
+      "publisher": "European Commission",
+      "url": "https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers",
+      "publicationDate": null,
+      "sourceType": "official-policy",
+      "usedFor": [
+        "Article 4 interpretation",
+        "training and documentation expectations",
+        "enforcement timing",
+        "limits of practice-repository examples"
+      ]
+    },
+    {
+      "id": "policy-eu-oecd-framework",
+      "title": "New AI Literacy Framework helps schools prepare learners for the age of artificial intelligence",
+      "publisher": "European Commission and OECD",
+      "url": "https://education.ec.europa.eu/whats-new/news/new-ai-literacy-framework-helps-schools-prepare-learners-for-the-age-of-artificial-intelligence",
+      "publicationDate": "2026-06-18",
+      "sourceType": "official-policy",
+      "usedFor": [
+        "four AI-literacy dimensions",
+        "19 competences",
+        "school audiences"
+      ]
+    },
+    {
+      "id": "policy-germany-ai-act-implementation",
+      "title": "Innovationen durch KI fördern",
+      "publisher": "Bundesregierung",
+      "url": "https://www.bundesregierung.de/breg-de/bundesregierung/bundeskanzleramt/umsetzung-ki-verordnung-2406638",
+      "publicationDate": "2026-07-10",
+      "sourceType": "official-policy",
+      "usedFor": [
+        "German AI Act implementation status",
+        "Bundesnetzagentur role"
+      ]
+    },
+    {
+      "id": "evidence-bitkom-population-ai",
+      "title": "KI macht Spaß – aber nicht allen",
+      "publisher": "Bitkom",
+      "url": "https://www.bitkom.org/Presse/Presseinformation/KI-macht-Spass-aber-nicht-allen",
+      "publicationDate": "2026-05-26",
+      "sourceType": "primary-survey",
+      "methodNote": "Representative telephone survey of 1,003 people in Germany aged 16 and older, conducted by Bitkom Research.",
+      "usedFor": [
+        "AI use",
+        "overwhelm",
+        "feeling left behind",
+        "skepticism"
+      ]
+    },
+    {
+      "id": "evidence-bitkom-digital-skills",
+      "title": "Digitaltag-Studie: Nachholbedarf bei Digitalkompetenzen",
+      "publisher": "Bitkom / Digital für alle",
+      "url": "https://www.bitkom.org/Presse/Presseinformation/Digitaltag-Studie-Nachholbedarf-Digitalkompetenzen",
+      "publicationDate": "2026-06-24",
+      "sourceType": "primary-survey",
+      "methodNote": "Representative population survey of 1,005 people in Germany aged 16 and older.",
+      "usedFor": [
+        "digital-skills pressure",
+        "self-directed learning",
+        "video learning",
+        "AI-assisted learning"
+      ]
+    },
+    {
+      "id": "evidence-bitkom-business-ai",
+      "title": "Digitalisierung der Wirtschaft: Fast jedes Unternehmen beschäftigt sich mit KI",
+      "publisher": "Bitkom",
+      "url": "https://www.bitkom.org/Presse/Presseinformation/Digitalisierung-der-Wirtschaft-Unternehmen-beschaeftigen-sich-mit-KI",
+      "publicationDate": "2026-03-11",
+      "sourceType": "primary-survey",
+      "methodNote": "Representative survey of 604 companies in Germany with at least 20 employees.",
+      "usedFor": [
+        "company AI adoption",
+        "company AI discussion and planning"
+      ]
+    },
+    {
+      "id": "evidence-tuev-training",
+      "title": "KI-Schulungen in Unternehmen innerhalb von zwei Jahren verdoppelt",
+      "publisher": "TÜV-Verband",
+      "url": "https://www.tuev-verband.de/pressemitteilungen/ki-schulungen-in-unternehmen-innerhalb-von-zwei-jahren-verdoppelt",
+      "publicationDate": "2026-04-28",
+      "sourceType": "primary-survey",
+      "methodNote": "Forsa survey for TÜV-Verband of 500 companies in Germany with at least 20 employees, conducted January to March 2026.",
+      "usedFor": [
+        "company AI training",
+        "planned training",
+        "training demand assessment"
+      ]
+    },
+    {
+      "id": "evidence-bitkom-cloud",
+      "title": "Deutsche Cloud: 4 von 10 Unternehmen würden Abstriche in Kauf nehmen",
+      "publisher": "Bitkom",
+      "url": "https://www.bitkom.org/Presse/Presseinformation/Deutsche-Cloud-4-von-10-Unternehmen-wuerden-Abstriche-in-Kauf-nehmen",
+      "publicationDate": "2026-06-17",
+      "sourceType": "primary-survey",
+      "usedFor": [
+        "perceived US-cloud dependence",
+        "demand for German or European providers"
+      ]
+    },
+    {
+      "id": "linkedin-content-recommendations",
+      "title": "LinkedIn Content Recommendations: What to Avoid",
+      "publisher": "LinkedIn",
+      "url": "https://www.linkedin.com/blog/content-recommendations-avoid",
+      "publicationDate": null,
+      "sourceType": "official-platform-guidance",
+      "usedFor": [
+        "professional content",
+        "promotion",
+        "engagement bait",
+        "unoriginal content",
+        "engagement pods"
+      ]
+    },
+    {
+      "id": "linkedin-thought-leadership-plan",
+      "title": "How to Create Impactful Thought Leadership Content",
+      "publisher": "LinkedIn",
+      "url": "https://www.linkedin.com/business/marketing/blog/content-marketing/creating-a-thought-leadership-marketing-plan",
+      "publicationDate": "2025-05-22",
+      "sourceType": "official-platform-guidance",
+      "usedFor": [
+        "thought-leadership qualities",
+        "subject-matter voices",
+        "research and actionability"
+      ]
+    },
+    {
+      "id": "linkedin-thought-leadership-quality",
+      "title": "The Importance of B2B Thought Leadership Content and How to Get It Right",
+      "publisher": "LinkedIn",
+      "url": "https://www.linkedin.com/business/marketing/blog/content-marketing/the-importance-of-b2b-thought-leadership-content-and-how-to-get-it-right",
+      "publicationDate": "2025-02-26",
+      "sourceType": "official-platform-guidance",
+      "usedFor": [
+        "research-backed content",
+        "concrete guidance",
+        "case examples",
+        "quality caveat"
+      ]
+    },
+    {
+      "id": "linkedin-sharing-guide",
+      "title": "Best Practices for Posting on LinkedIn",
+      "publisher": "LinkedIn",
+      "url": "https://content.linkedin.com/content/dam/help/linkedin/en-us/LinkedIn-Sharing-Guide.pdf",
+      "publicationDate": null,
+      "sourceType": "official-platform-guidance",
+      "usedFor": [
+        "conversation",
+        "response",
+        "consistency",
+        "media",
+        "video format"
+      ]
+    },
+    {
+      "id": "linkedin-articles-2026",
+      "title": "How to Increase Visibility and Engagement with LinkedIn Articles",
+      "publisher": "LinkedIn",
+      "url": "https://www.linkedin.com/business/marketing/blog/content-marketing/linkedin-articles",
+      "publicationDate": "2026-03-30",
+      "sourceType": "official-platform-guidance",
+      "usedFor": [
+        "Article features",
+        "analytics",
+        "topical consistency",
+        "readability"
+      ]
+    },
+    {
+      "id": "linkedin-newsletter-faq",
+      "title": "Newsletters on LinkedIn FAQ",
+      "publisher": "LinkedIn",
+      "url": "https://www.linkedin.com/help/linkedin/answer/a517914/newsletters-on-linkedin-faq",
+      "publicationDate": null,
+      "sourceType": "official-platform-documentation",
+      "usedFor": [
+        "newsletter access",
+        "subscriber notifications",
+        "newsletter mechanics"
+      ]
+    },
+    {
+      "id": "linkedin-newsletter-best-practices",
+      "title": "LinkedIn Newsletters best practices",
+      "publisher": "LinkedIn",
+      "url": "https://www.linkedin.com/help/linkedin/answer/a517940/linkedin-newsletters-best-practices",
+      "publicationDate": null,
+      "sourceType": "official-platform-guidance",
+      "usedFor": [
+        "newsletter theme",
+        "headlines",
+        "cover images",
+        "SEO metadata",
+        "cadence"
+      ]
+    },
+    {
+      "id": "linkedin-pages-guide",
+      "title": "LinkedIn Pages Best Practices",
+      "publisher": "LinkedIn",
+      "url": "https://business.linkedin.com/content/dam/lem/business/en/advertise/linkedin-pages/lms-linkedin-page-posting-best-practices-one-pager.pdf",
+      "publicationDate": null,
+      "sourceType": "official-platform-guidance",
+      "usedFor": [
+        "Page engagement",
+        "format mix",
+        "publishing frequency levels",
+        "actionable content"
+      ]
+    },
+    {
+      "id": "linkedin-creator-analytics",
+      "title": "Creator analytics FAQ",
+      "publisher": "LinkedIn",
+      "url": "https://www.linkedin.com/help/linkedin/answer/a597877",
+      "publicationDate": null,
+      "sourceType": "official-platform-documentation",
+      "usedFor": [
+        "post analytics",
+        "audience analytics"
+      ]
+    },
+    {
+      "id": "linkedin-newsletter-analytics",
+      "title": "Newsletter analytics",
+      "publisher": "LinkedIn",
+      "url": "https://www.linkedin.com/help/linkedin/answer/a1658525",
+      "publicationDate": null,
+      "sourceType": "official-platform-documentation",
+      "usedFor": [
+        "article views",
+        "new subscribers",
+        "newsletter performance"
+      ]
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
+import { courseFacts } from "@/lib/courses/tracks";
 import { ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 
 const COURSE_ITEMS = [
@@ -6,9 +7,9 @@ const COURSE_ITEMS = [
     title: course.title,
     description: course.description,
     href: course.href,
-    language: "de",
+    language: courseFacts(course.slug).language === "Englisch" ? "en" : "de",
     launchHref: course.startHref,
-    licenseHref: undefined,
+    licenseHref: course.licenseHref,
   })),
   ...IMPORTED_COURSE_CATALOG.map((course) => ({
     title: course.title,

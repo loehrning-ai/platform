@@ -6,7 +6,8 @@ This repository is multi-licensed. The application code is open source; the repo
 
 The following original project material is licensed under [LICENSES/MIT.txt](LICENSES/MIT.txt):
 
-- root configuration and public documentation, excluding `CODE_OF_CONDUCT.md` and brand artwork;
+- root configuration and public documentation, excluding `CODE_OF_CONDUCT.md`,
+  `marketing/**`, and brand artwork;
 - `scripts/**`, including root verification tools and their tests;
 - `packages/website/src/**`, excluding the exact reserved paths `src/fonts/**`, `src/app/blog/**`, `src/lib/blog-metadata.ts`, and the ISC-licensed generated file `src/lib/country-polylines-3d.ts`;
 - `packages/website/scripts/**`;
@@ -33,6 +34,23 @@ Attribution: `loehrning.ai, Tim Löhr, https://loehrning.ai/vorlagen`.
 
 The project-specific adaptation in `CODE_OF_CONDUCT.md` is also licensed under CC BY 4.0. Its upstream Contributor Covenant attribution and modification notice are retained in that file.
 
+The public editorial operating system is licensed under CC BY 4.0 at these
+paths:
+
+- `marketing/README.md`;
+- `marketing/manifest.json`;
+- `marketing/calendar/**`;
+- `marketing/measurement/**`;
+- `marketing/research/**`;
+- `marketing/strategy/**`;
+- `marketing/templates/**`.
+
+Attribution: `loehrning.ai, Tim Löhr, https://loehrning.ai`.
+
+This grant covers original project text in those paths. It does not relicense
+third-party quotations, names, trademarks, linked material, or data. Those
+items retain their original rights.
+
 ## SIL Open Font License 1.1
 
 Fonts under `packages/website/src/fonts/**` are modified and renamed derivatives of Inter. They remain licensed under [LICENSES/OFL-1.1.txt](LICENSES/OFL-1.1.txt). The original Inter copyright belongs to The Inter Project Authors. The modified family names are `Loehrning Sans` and `Typing`; the modifications are not endorsed by the Inter authors.
@@ -48,6 +66,7 @@ Unless a file contains a more permissive notice, the following material is copyr
 - `packages/website/content/books/**`;
 - original course prose and quiz content under `packages/website/content/**` outside `content/vorlagen/**`;
 - the blog editorial bundle under `packages/website/src/app/blog/**` and its catalog metadata in `packages/website/src/lib/blog-metadata.ts`;
+- authored website and LinkedIn drafts under `marketing/drafts/**`;
 - methodology material under `packages/website/public/methodology/**`;
 - book-cover images under `packages/website/public/book-covers/**`.
 
@@ -61,4 +80,4 @@ Brand files are listed in [ASSET_MANIFEST.json](ASSET_MANIFEST.json). They may r
 
 ## Contributions
 
-By contributing code or repository documentation, a contributor agrees to license that contribution under MIT. Contributions to `CODE_OF_CONDUCT.md` and `content/vorlagen/**` are accepted under CC BY 4.0. Other content and assets require an explicit license statement and proof of the contributor's rights.
+By contributing code or repository documentation, a contributor agrees to license that contribution under MIT. Contributions to `CODE_OF_CONDUCT.md`, `content/vorlagen/**`, and the CC BY 4.0 marketing paths listed above are accepted under CC BY 4.0. Contributions to `marketing/drafts/**` and other content or assets require an explicit license statement and proof of the contributor's rights.

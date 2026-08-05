@@ -1,22 +1,30 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { GraduationCap, Github } from "lucide-react";
+import { GraduationCap, TerminalSquare } from "lucide-react";
 import { JsonLd, SITE_URL } from "@/lib/seo/json-ld";
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
+import { courseFacts } from "@/lib/courses/tracks";
 import { COURSES_GRAPH } from "@/lib/seo/course-discovery";
 import { Card, IconTile } from "@/components/ui/card";
 import { BrandButton } from "@/components/ui/brand-button";
 import { CourseGallery } from "./course-gallery";
 import { PersonaCourseLinks } from "./persona-filter";
 
-const KURSE_SOCIAL_TITLE = "Kurse: kostenlose KI-Lernplattform auf Deutsch";
+const SPINE_COURSES = COURSE_CATALOG.filter(
+  (course) => courseFacts(course.slug).group === "spine",
+);
+const DEEPER_COURSES = COURSE_CATALOG.filter(
+  (course) => courseFacts(course.slug).group === "deeper",
+);
+
+const KURSE_SOCIAL_TITLE = "Kurse: deutscher KI-Lernpfad plus technische Vertiefung";
 const KURSE_SOCIAL_DESCRIPTION =
-  `${COURSE_CATALOG.length} deutsche Kernkurse mit Login-Fortschritt, Zertifikaten und optionalen technischen Laboren.`;
+  `${SPINE_COURSES.length} deutsche Lernpfad-Kurse und ${DEEPER_COURSES.length} native englische Vertiefungskurse mit lokalem Fortschritt und Nachweisen.`;
 const KURSE_SOCIAL_IMAGE = {
   url: `${SITE_URL}/kurse/opengraph-image`,
   width: 1200,
   height: 630,
-  alt: "loehrning.ai Kurse: KI, EU AI Act, Daten und Open-Source-Interaktivkurse",
+  alt: "loehrning.ai Kurse: vier deutsche Lernpfad-Kurse und sechs englische technische Vertiefungen",
 };
 
 export const metadata: Metadata = {
@@ -47,13 +55,13 @@ const TRACK_DIFF = [
     icon: GraduationCap,
     accent: "kupfer" as const,
     label: "Der Lernpfad",
-    text: "vier deutsche Kurse mit gespeichertem Fortschritt und Nachweis. Fang bei Schritt 1 an.",
+    text: `${SPINE_COURSES.length} deutsche Kurse mit gespeichertem Fortschritt und Nachweis. Fang bei Schritt 1 an.`,
   },
   {
-    icon: Github,
+    icon: TerminalSquare,
     accent: "sand" as const,
     label: "Tiefer gehen",
-    text: "technische Open-Source-Labs auf Englisch und angewandte Kurse aus Workshops. Ohne Konto.",
+    text: `${DEEPER_COURSES.length} native technische Kurse auf Englisch, ebenfalls mit Fortschritt und Abschlussnachweis.`,
   },
 ];
 
@@ -75,10 +83,11 @@ export default function KursePage() {
         </h1>
 
         <p className="mt-9 max-w-[720px] text-[18px] leading-[1.5] text-muted-foreground sm:text-[21px]">
-          {COURSE_CATALOG.length} deutsche Kurse bilden den Lernpfad: von der
+          {SPINE_COURSES.length} deutsche Kurse bilden den Lernpfad: von der
           KI-Kompetenz über die gesellschaftliche Einordnung und den EU AI Act bis
-          zum AI-nativen Arbeiten. Wer tiefer will, findet technische Labs auf
-          GitHub und angewandte Kurse aus echten Workshops.
+          zum AI-nativen Arbeiten. Wer tiefer will, findet{" "}
+          {DEEPER_COURSES.length} native technische Kurse auf Englisch, von Claude
+          und Codex bis Data Engineering und System Design.
         </p>
 
         {/* Beginner entry point */}
