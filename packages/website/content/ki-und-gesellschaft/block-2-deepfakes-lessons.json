@@ -211,7 +211,7 @@
             { "id": "c", "text": "Immer direkt an die Bundesnetzagentur schreiben, unabhängig von Sektor und veröffentlichter Zuständigkeit", "isCorrect": false },
             { "id": "d", "text": "Verkündetes KI-MIG, Fachrecht und den aktuell veröffentlichten Behördenkanal prüfen", "isCorrect": true }
           ],
-          "explanation": "Das beschlossene KI-MIG sieht die Bundesnetzagentur als zentrale Anlaufstelle vor, soweit keine Fachbehörde zuständig ist. Eine Verkündung war am 28. Juli 2026 nicht amtlich verifiziert. Deshalb dürfen weder Zuständigkeit noch ein aktiver Beschwerdekanal pauschal vorausgesetzt werden."
+          "explanation": "Das KI-MIG ist am 29. Juli 2026 in Kraft getreten und macht die Bundesnetzagentur zur Marktüberwachungsbehörde, Anlaufstelle und Beschwerdestelle, soweit keine Fachbehörde zuständig ist. Welche Stelle im Einzelfall zuständig ist, hängt weiterhin vom Sektor ab. Prüfe deshalb den aktuell veröffentlichten Behördenkanal."
         },
         {
           "id": "deepfake-2-3-q3",

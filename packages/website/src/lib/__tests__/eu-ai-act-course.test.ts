@@ -6,6 +6,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { getLegalClaim } from "../legal-registry";
 
 const CONTENT_DIR = join(
   process.cwd(),
@@ -198,7 +199,13 @@ describe("Art. 50 consumer rights section", () => {
     const s4 = data.lessons[2]?.sections[3];
     expect(s4?.content).toContain("10. Juni 2026");
     expect(s4?.content).toContain("Bundesnetzagentur");
-    expect(s4?.content).toContain("nicht amtlich verifiziert");
+    // Track the legal registry rather than a snapshot of the prose. This
+    // assertion used to pin "nicht amtlich verifiziert", which locked in the
+    // pre-29-July-2026 status and made correcting the content fail the suite.
+    const kiMig = getLegalClaim("de-ki-mig-in-force-2026-07-29");
+    expect(kiMig?.status).toBe("binding");
+    expect(s4?.content).toContain(kiMig?.displayDateDE ?? "29. Juli 2026");
+    expect(s4?.content).not.toContain("nicht amtlich verifiziert");
   });
 });
 

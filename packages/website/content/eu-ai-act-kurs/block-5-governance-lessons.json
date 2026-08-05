@@ -36,21 +36,21 @@
           "id": "block_5_lesson_1_section_2",
           "title": "Deutschland: BNetzA als Default-Behörde",
           "readTimeMinutes": 1,
-          "content": "Art. 70 Abs. 2 verpflichtet jeden Mitgliedstaat, eine **zentrale Anlaufstelle** zu benennen. Das beschlossene KI-MIG sieht hierfür die **Bundesnetzagentur (BNetzA)** vor. Der Bundestag nahm das Gesetz am **11. Juni 2026** an; am **10. Juli 2026** passierte es den Bundesrat ohne Anrufung des Vermittlungsausschusses. Eine Veröffentlichung im Bundesgesetzblatt war am 28. Juli 2026 nicht amtlich verifiziert. Die EU-Verordnung selbst gilt unmittelbar, ihre einzelnen Vorschriften aber nach dem gestaffelten Zeitplan.\n\nNach Inkrafttreten des KI-MIG soll die BNetzA Marktüberwachungsbehörde für Bereiche ohne zugewiesene sektorale Aufsicht und zentrale Anlaufstelle werden. Das Gesetz sieht innerhalb der BNetzA ein **Koordinierungs- und Kompetenzzentrum (KoKIVO)** sowie eine unabhängige Marktüberwachungskammer für bestimmte Bereiche vor.\n\nEine bereits aktive BNetzA-Beschwerdestelle oder ein bestimmter Meldekanal folgt aus dem parlamentarischen Beschluss allein nicht. Für echte Fälle sind das verkündete Gesetz, Fachrecht und aktuelle Behördeninformationen maßgeblich.",
-          "keyTakeaway": "Das beschlossene KI-MIG sieht die BNetzA als zentrale Anlaufstelle vor. Eine Verkündung war am 28. Juli 2026 nicht amtlich verifiziert; aktive Zuständigkeiten und Meldewege dürfen nicht vorweggenommen werden."
+          "content": "Art. 70 Abs. 2 verpflichtet jeden Mitgliedstaat, eine **zentrale Anlaufstelle** zu benennen. Das KI-MIG benennt hierfür die **Bundesnetzagentur (BNetzA)**. Der Bundestag nahm das Gesetz am **11. Juni 2026** an; am **10. Juli 2026** passierte es den Bundesrat ohne Anrufung des Vermittlungsausschusses. Das Gesetz ist am **29. Juli 2026 in Kraft getreten**. Die EU-Verordnung selbst gilt unmittelbar, ihre einzelnen Vorschriften aber nach dem gestaffelten Zeitplan.\n\nSeitdem ist die BNetzA Marktüberwachungsbehörde für Bereiche ohne zugewiesene sektorale Aufsicht sowie zentrale Anlaufstelle und Beschwerdestelle. Das Gesetz sieht innerhalb der BNetzA ein **Koordinierungs- und Kompetenzzentrum (KoKIVO)** sowie eine unabhängige Marktüberwachungskammer für bestimmte Bereiche vor.\n\nWelcher Meldekanal im Einzelfall der richtige ist, ergibt sich weiterhin aus Fachrecht und Sektor. Für echte Fälle sind das Gesetz, das jeweilige Fachrecht und die aktuellen Behördeninformationen maßgeblich.",
+          "keyTakeaway": "Das KI-MIG ist seit dem 29. Juli 2026 in Kraft und macht die BNetzA zur zentralen Anlaufstelle und Beschwerdestelle, soweit keine Fachbehörde zuständig ist. Der konkrete Meldeweg richtet sich weiterhin nach Sektor und Fachrecht."
         },
         {
           "id": "block_5_lesson_1_section_3",
           "title": "Sektorale Aufsicht: Wer zusätzlich zuständig bleibt",
           "readTimeMinutes": 1,
-          "content": "Art. 74 ordnet Marktüberwachung in mehreren Bereichen vorhandenen sektoralen Behörden zu. Zusätzlich bleiben Datenschutz- und anderes Fachrecht mit eigenen Zuständigkeiten relevant.\n\n- **Finanzinstitute:** Art. 74 Abs. 6 verweist grundsätzlich auf die nach Finanzdienstleistungsrecht zuständigen Behörden.\n- **Produkte unter Anhang I:** Die zuständige Marktüberwachung folgt grundsätzlich dem jeweiligen Produktsicherheitsrecht (Art. 74 Abs. 3).\n- **Organe in Art. 74 Abs. 8:** Dort bezeichnete Datenschutz- oder andere Behörden überwachen die dort genannten Anhang-III-Systeme.\n- **Übrige Bereiche in Deutschland:** Das beschlossene KI-MIG weist der BNetzA eine Auffangrolle zu; Verkündung und konkrete Zuständigkeitsnorm sind vor Nutzung zu prüfen.\n\n**Praxis:** Dokumentieren Sie pro System Zweck, Rolle, Sektor und mögliche Behörden. Behandeln Sie das Mapping bis zur Verkündung und Konsolidierung ausdrücklich als zu bestätigende Rechtsfrage.",
-          "keyTakeaway": "Sektorale Aufsicht und Fachrecht bleiben relevant. Die BNetzA-Auffangrolle folgt aus dem beschlossenen KI-MIG, dessen Verkündung am 28. Juli 2026 nicht amtlich verifiziert war."
+          "content": "Art. 74 ordnet Marktüberwachung in mehreren Bereichen vorhandenen sektoralen Behörden zu. Zusätzlich bleiben Datenschutz- und anderes Fachrecht mit eigenen Zuständigkeiten relevant.\n\n- **Finanzinstitute:** Art. 74 Abs. 6 verweist grundsätzlich auf die nach Finanzdienstleistungsrecht zuständigen Behörden.\n- **Produkte unter Anhang I:** Die zuständige Marktüberwachung folgt grundsätzlich dem jeweiligen Produktsicherheitsrecht (Art. 74 Abs. 3).\n- **Organe in Art. 74 Abs. 8:** Dort bezeichnete Datenschutz- oder andere Behörden überwachen die dort genannten Anhang-III-Systeme.\n- **Übrige Bereiche in Deutschland:** Das seit dem 29. Juli 2026 geltende KI-MIG weist der BNetzA die Auffangrolle zu; die konkrete Zuständigkeitsnorm ist vor Nutzung zu prüfen.\n\n**Praxis:** Dokumentieren Sie pro System Zweck, Rolle, Sektor und mögliche Behörden. Behandeln Sie das Mapping bis zur behördlichen Konsolidierung ausdrücklich als zu bestätigende Rechtsfrage.",
+          "keyTakeaway": "Sektorale Aufsicht und Fachrecht bleiben relevant. Die BNetzA-Auffangrolle folgt aus dem KI-MIG, das seit dem 29. Juli 2026 in Kraft ist."
         }
       ],
       "quiz": [
         {
           "id": "block_5_lesson_1_q1",
-          "questionText": "Welche Behörde sieht das im Juni 2026 vom Bundestag beschlossene KI-MIG als zentrale Anlaufstelle nach Art. 70 Abs. 2 vor?",
+          "questionText": "Welche Behörde benennt das seit dem 29. Juli 2026 geltende KI-MIG als zentrale Anlaufstelle nach Art. 70 Abs. 2?",
           "answerOptions": [
             {
               "id": "a",
@@ -73,7 +73,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Das von Bundestag und Bundesrat beschlossene KI-MIG sieht die Bundesnetzagentur als zentrale Anlaufstelle vor. Eine Verkündung war am 28. Juli 2026 nicht amtlich verifiziert; die vorgesehene Rolle darf daher nicht als bereits wirksam ausgegeben werden."
+          "explanation": "Das KI-MIG ist am 29. Juli 2026 in Kraft getreten und benennt die Bundesnetzagentur als zentrale Anlaufstelle. Welche Behörde im Einzelfall zuständig ist, richtet sich weiterhin nach Sektor und Fachrecht."
         },
         {
           "id": "block_5_lesson_1_q2",
@@ -285,7 +285,7 @@
           "id": "block_5_lesson_3_section_3",
           "title": "Status Deutschland: BNetzA, BfDI und Hessen",
           "readTimeMinutes": 1,
-          "content": "Das deutsche Pilotprojekt 2025/2026 wurde von der **Bundesnetzagentur** gemeinsam mit dem **BfDI** und dem **Hessischen Digitalministerium** durchgeführt. Zwei Start-up-Anwendungsfälle wurden mit Schwerpunkt KI-VO und MDR simuliert. Ein Pilot belegt jedoch noch kein allgemein verfügbares Reallabor mit offenem Antragssystem.\n\nDas von Bundestag und Bundesrat beschlossene KI-MIG weist der BNetzA Aufgaben bei der Innovationsförderung zu. Eine Veröffentlichung im Bundesgesetzblatt war am 28. Juli 2026 nicht amtlich verifiziert. Die neue EU-Reallaborfrist 2. August 2027 ist dagegen seit dem 27. Juli 2026 geltendes Recht.\n\nOb die BNetzA bereits Anträge annimmt, prüfen Sie vor einem Antrag auf der aktuellen Behördenseite.",
+          "content": "Das deutsche Pilotprojekt 2025/2026 wurde von der **Bundesnetzagentur** gemeinsam mit dem **BfDI** und dem **Hessischen Digitalministerium** durchgeführt. Zwei Start-up-Anwendungsfälle wurden mit Schwerpunkt KI-VO und MDR simuliert. Ein Pilot belegt jedoch noch kein allgemein verfügbares Reallabor mit offenem Antragssystem.\n\nDas seit dem 29. Juli 2026 geltende KI-MIG weist der BNetzA Aufgaben bei der Innovationsförderung zu. Die neue EU-Reallaborfrist 2. August 2027 ist dagegen seit dem 27. Juli 2026 geltendes Recht.\n\nOb die BNetzA bereits Anträge annimmt, prüfen Sie vor einem Antrag auf der aktuellen Behördenseite.",
           "keyTakeaway": "Das Pilotprojekt belegt Vorbereitung, nicht einen aktiven Regelbetrieb. Ein deutsches Reallabor und sein Antragsweg müssen anhand aktueller offizieller Informationen verifiziert werden."
         }
       ],
@@ -399,7 +399,7 @@
           "id": "block_5_lesson_4_section_2",
           "title": "Wer Sie meldet: Art. 85 Beschwerderecht",
           "readTimeMinutes": 1,
-          "content": "**Art. 85 KI-VO:** Jede natürliche oder juristische Person mit Grund zur Annahme eines Verstoßes kann bei der zuständigen Marktüberwachungsbehörde Beschwerde einreichen.\n\nDas beschlossene deutsche KI-MIG sieht die **BNetzA als zentrale Anlaufstelle** vor, soweit keine Fachbehörde zuständig ist. Eine Veröffentlichung im Bundesgesetzblatt war am 28. Juli 2026 nicht amtlich verifiziert. Prüfen Sie vor einer Beschwerde das verkündete Gesetz, das jeweilige Fachrecht und die aktuelle Behördeninformation, um Zuständigkeit und aktiven Beschwerdekanal zu bestätigen.\n\n**Verwandt: Art. 86** sieht unter seinen Voraussetzungen ein Recht auf eine klare und aussagekräftige Erläuterung der Rolle eines in Anhang III genannten Hochrisiko-Systems im Entscheidungsprozess vor. Das ist kein allgemeiner Erläuterungsanspruch für jede KI-Ausgabe.",
+          "content": "**Art. 85 KI-VO:** Jede natürliche oder juristische Person mit Grund zur Annahme eines Verstoßes kann bei der zuständigen Marktüberwachungsbehörde Beschwerde einreichen.\n\nDas deutsche KI-MIG ist am 29. Juli 2026 in Kraft getreten und macht die **BNetzA zur zentralen Anlaufstelle und Beschwerdestelle**, soweit keine Fachbehörde zuständig ist. Prüfen Sie vor einer Beschwerde zusätzlich das jeweilige Fachrecht und die aktuelle Behördeninformation, um Zuständigkeit und Beschwerdekanal zu bestätigen.\n\n**Verwandt: Art. 86** sieht unter seinen Voraussetzungen ein Recht auf eine klare und aussagekräftige Erläuterung der Rolle eines in Anhang III genannten Hochrisiko-Systems im Entscheidungsprozess vor. Das ist kein allgemeiner Erläuterungsanspruch für jede KI-Ausgabe.",
           "keyTakeaway": "Art. 85 sieht Beschwerden bei der zuständigen Marktüberwachungsbehörde vor. Die konkrete deutsche Behörde und ihr aktiver Kanal müssen nach Verkündung des KI-MIG verifiziert werden."
         },
         {

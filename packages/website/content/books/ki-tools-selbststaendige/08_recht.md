@@ -99,11 +99,11 @@ Kurze Antwort: Mehr als du denkst. Weniger als du befürchtest.
 
 ### Wo steht Deutschland? Die Aufsichtsbehörden
 
-Der Bundestag beschloss das KI-Marktüberwachungs- und Innovationsförderungsgesetz am 11. Juni 2026; am 10. Juli passierte es den Bundesrat. Eine Veröffentlichung im Bundesgesetzblatt war am 28. Juli 2026 nicht verifiziert. Das beschlossene Gesetz weist der Bundesnetzagentur eine zentrale Rolle zu, soweit keine Fachbehörde zuständig ist. Für einen konkreten Fall müssen deshalb das verkündete Gesetz, das jeweilige Fachrecht und der aktuell veröffentlichte Behördenweg geprüft werden.
+Der Bundestag beschloss das KI-Marktüberwachungs- und Innovationsförderungsgesetz am 11. Juni 2026; am 10. Juli passierte es den Bundesrat. Das Gesetz ist am 29. Juli 2026 in Kraft getreten. Es weist der Bundesnetzagentur eine zentrale Rolle zu, soweit keine Fachbehörde zuständig ist. Für einen konkreten Fall müssen deshalb das jeweilige Fachrecht und der aktuell veröffentlichte Behördenweg geprüft werden.
 
 | Behörde | Zuständigkeit |
 |---------|---------------|
-| **Bundesnetzagentur (BNetzA)** | nach dem beschlossenen KI-MIG zentrale Anlaufstelle und Marktüberwachung, soweit keine Fachbehörde zuständig ist; Verkündung und Wirksamkeit prüfen |
+| **Bundesnetzagentur (BNetzA)** | nach dem seit 29. Juli 2026 geltenden KI-MIG zentrale Anlaufstelle und Marktüberwachung, soweit keine Fachbehörde zuständig ist; sektorale Zuständigkeit prüfen |
 | **Sektorale Marktüberwachung** | Zuständigkeit kann insbesondere aus Finanz-, Medizinprodukt-, Datenschutz- oder anderem Fachrecht folgen; die konkrete Behörde fallbezogen prüfen |
 
 Für dich heißt das: Einzelne AI-Act-Pflichten gelten bereits, weitere greifen nach dem gesetzlichen Zeitplan. Prüfe für Beschwerden und Meldungen die aktuell veröffentlichte Zuständigkeit; die BNetzA ist nicht automatisch für jeden Sektor und jeden Vorgang die alleinige Stelle.

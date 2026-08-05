@@ -594,7 +594,7 @@
     "id": "q_w20",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Welche Behörde sieht das von Bundestag und Bundesrat beschlossene KI-MIG als zentrale Anlaufstelle vor?",
+    "questionText": "Welche Behörde benennt das seit dem 29. Juli 2026 geltende KI-MIG als zentrale Anlaufstelle?",
     "answerOptions": [
       {
         "id": "a",
@@ -617,7 +617,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Das beschlossene KI-MIG sieht die Bundesnetzagentur als zentrale Anlaufstelle vor, soweit keine Fachbehörde zuständig ist. Eine Verkündung war am 28. Juli 2026 nicht amtlich verifiziert. Die vorgesehene Rolle und ein konkreter Beschwerdekanal dürfen daher nicht als bereits wirksam ausgegeben werden.",
+    "explanation": "Das KI-MIG ist am 29. Juli 2026 in Kraft getreten. Es macht die Bundesnetzagentur zur Marktüberwachungsbehörde, Anlaufstelle und Beschwerdestelle für die KI-Verordnung, soweit keine Fachbehörde zuständig ist. Den konkreten Beschwerdeweg prüfen Sie auf der offiziellen Seite der Bundesnetzagentur.",
     "version": 1,
     "active": true
   },
