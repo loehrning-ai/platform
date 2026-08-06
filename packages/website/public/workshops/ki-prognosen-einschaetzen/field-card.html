@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Forecaster's Field Card</title>
+<meta name="description" content="Take-home one-page cheat sheet: the five demand pillars, the newsvendor rule, safety stock, reading a forecast, and what AI cannot predict." />
+<link rel="icon" href="data:," />
+<style>
+  :root{
+    --paper:#F5F2EA; --card:#FFFFFF; --ink:#12100B; --ink-soft:#4A443B; --faint:#6E6A60;
+    --line:#E1DCCF; --line-strong:#CBC4B4;
+    --rust:#C2410C; --rust-dk:#9A3412; --blue:#0866FF; --ok:#0A7E8C; --red:#C01B1B;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark){:root:not([data-theme=light]){
+    --paper:#14110C; --card:#1C1811; --ink:#F0EBE1; --ink-soft:#C3BBAB; --faint:#8B8474;
+    --line:#2A251B; --line-strong:#3A3325; --rust:#E8823C; --rust-dk:#F0996A; --blue:#5AA0FF;
+  }}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(circle at 1px 1px, rgba(18,16,11,.045) 1px, transparent 0);background-size:20px 20px}
+  .wrap{max-width:1080px;margin:0 auto;padding:clamp(18px,3vw,34px) clamp(16px,3vw,32px) 60px}
+  .mono{font-family:var(--mono);text-transform:uppercase;letter-spacing:.13em;font-size:10.5px;color:var(--faint)}
+  code,.k{font-family:var(--mono);font-size:.92em;background:color-mix(in srgb,var(--rust) 8%, transparent);border:1px solid var(--line);border-radius:3px;padding:.5px 5px;color:var(--rust-dk)}
+  :focus-visible{outline:2.5px solid var(--rust);outline-offset:2px}
+
+  header.mast{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;border-bottom:3px solid var(--rust);padding-bottom:14px}
+  header .mono.no{color:var(--rust);font-weight:700}
+  h1{font-size:clamp(26px,4.4vw,42px);font-weight:850;letter-spacing:0;margin:6px 0 0;line-height:1}
+  .epi{font-size:14.5px;color:var(--ink-soft);max-width:52ch;margin-top:8px}
+  .epi b{color:var(--rust-dk)}
+
+  .grid{columns:2;column-gap:22px;margin-top:20px}
+  @media (max-width:720px){.grid{columns:1}}
+  .sec{break-inside:avoid;background:var(--card);border:1.5px solid var(--line);border-radius:7px;padding:14px 16px;margin:0 0 16px;display:inline-block;width:100%}
+  .sec h2{font-size:15px;font-weight:800;letter-spacing:0;margin:0 0 9px;display:flex;align-items:baseline;gap:8px}
+  .sec h2 .n{font-family:var(--mono);font-size:12px;color:#fff;background:var(--rust);width:20px;height:20px;display:inline-grid;place-items:center;border-radius:3px;flex:none}
+  .sec p{font-size:12.7px;line-height:1.5;margin:0 0 8px;color:var(--ink)}
+  .sec p:last-child{margin-bottom:0}
+  .sec .lede{color:var(--ink-soft)}
+
+  table{width:100%;border-collapse:collapse;font-size:11.8px;margin:2px 0 6px}
+  th,td{text-align:left;padding:5px 7px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  td .p{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--rust-dk);font-weight:700}
+  .ztab{width:auto} .ztab td{font-family:var(--mono);font-size:11.5px} .ztab td:last-child{color:var(--rust-dk);font-weight:700}
+
+  .formula{font-family:var(--mono);font-size:14px;text-align:center;background:color-mix(in srgb,var(--rust) 6%, transparent);border:1.5px dashed var(--line-strong);border-radius:5px;padding:10px;margin:6px 0;color:var(--ink)}
+  .rule{background:color-mix(in srgb,var(--rust) 9%, transparent);border-left:3px solid var(--rust);padding:8px 11px;border-radius:0 4px 4px 0;font-size:12.5px;margin:8px 0}
+  .rule b{color:var(--rust-dk)}
+  .lean{display:grid;grid-template-columns:1fr;gap:8px}
+  .lean div{font-size:12.3px} .lean .up b{color:var(--ok)} .lean .down b{color:var(--rust-dk)}
+  ol.mind{margin:0;padding-left:0;list-style:none;counter-reset:m}
+  ol.mind li{counter-increment:m;font-size:12.3px;padding:4px 0 4px 26px;position:relative}
+  ol.mind li::before{content:counter(m);position:absolute;left:0;top:3px;font-family:var(--mono);font-size:11px;font-weight:700;color:#fff;background:var(--ink);width:18px;height:18px;display:grid;place-items:center;border-radius:3px}
+  .corpse{font-size:11.7px;color:var(--ink-soft);border-top:1px solid var(--line);margin-top:8px;padding-top:8px}
+  .corpse b{color:var(--red)}
+  footer{margin-top:8px;font-size:10.5px;color:var(--faint);line-height:1.5;border-top:2px solid var(--line-strong);padding-top:12px}
+
+  @media print{
+    body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-size:11px}
+    .wrap{padding:0}
+    .grid{columns:2}
+    .sec{box-shadow:none;border-color:#ddd}
+    @page{margin:11mm}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <div>
+      <div class="mono no">Field Card · № 01</div>
+      <h1>The Forecaster's Field Card</h1>
+      <p class="epi">A forecast is a <b>range, not a line</b>, and it earns its keep only through the decision it drives. Take-home recap of the 90-minute session.</p>
+    </div>
+    <div style="text-align:right;flex:none">
+      <svg width="128" height="32" viewBox="0 0 128 32" aria-hidden="true" style="display:block;margin-left:auto">
+        <path d="M2,24 L42,18 L68,20 L90,12" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M90,12 L110,18 L126,8" fill="none" stroke="var(--rust)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6 5"/>
+        <circle cx="90" cy="12" r="3.5" fill="var(--rust)"/>
+      </svg>
+      <div class="mono" style="margin-top:5px">loehrning.ai · Forecasting Decisions</div>
+    </div>
+  </header>
+
+  <div class="grid">
+
+    <section class="sec">
+      <h2><span class="n">1</span> The five pillars</h2>
+      <table>
+        <thead><tr><th>Pillar</th><th>Costs you when wrong</th></tr></thead>
+        <tbody>
+          <tr><td><span class="p">Overpredict</span></td><td>Waste, markdowns, spoilage, cash frozen. <span style="white-space:nowrap">Overage cost <code>Co</code></span></td></tr>
+          <tr><td><span class="p">Underpredict</span></td><td>Stockouts, lost sales, lost trust &amp; ranking. <span style="white-space:nowrap">Underage cost <code>Cu</code></span></td></tr>
+          <tr><td><span class="p">Safety stock</span></td><td>A deliberate buffer, sized by variability × lead time × service level</td></tr>
+          <tr><td><span class="p">Many factors</span></td><td>SKUs, regions, suppliers each hold a buffer. Buffers <b>stack</b> into the bullwhip</td></tr>
+          <tr><td><span class="p">Supply and demand</span></td><td>One forecast = the signal factories, channel, logistics &amp; stores all plan on</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="sec">
+      <h2><span class="n">2</span> The newsvendor rule</h2>
+      <p class="lede">Every stocking call weighs two costs:</p>
+      <p><code>Cu</code> = cost of being <b>short</b> one unit = lost margin (+ goodwill).<br>
+      <code>Co</code> = cost of <b>one leftover</b> = unit cost - salvage.</p>
+      <div class="formula">service level = Cu / (Cu + Co)</div>
+      <div class="rule">When stockouts cost more than overstock (<b>Cu &gt; Co</b>), the ratio clears 50%. <b>Deliberately over-order.</b></div>
+      <p class="lede">Bakery sim: <code>Cu≈4.1</code>, <code>Co≈1.3</code>, <code>CR≈0.76</code>. Croissants spoil overnight, yet a lost sale stings ~3× a leftover. Bake <b>past the average</b>, to ~76% service.</p>
+    </section>
+
+    <section class="sec">
+      <h2><span class="n">3</span> Safety stock, in one line</h2>
+      <div class="formula">safety stock = z · σ · √(lead&nbsp;time)</div>
+      <p>Bigger <code>σ</code> (jumpier demand) means bigger cushion. Longer lead time means more can go wrong (grows with the <b>root</b>). <code>z</code> = the service level you demand.</p>
+      <p class="lede"><b>Risk pooling:</b> combine independent demands and σ grows only as <code>√(σ₁²+σ₂²)</code>. One shared buffer beats many separate ones (a central warehouse &lt; many local ones; iPhone + AirPods together are steadier than apart).</p>
+      <table class="ztab">
+        <thead><tr><th>Service</th><th>z</th></tr></thead>
+        <tbody>
+          <tr><td>50%</td><td>0.00</td></tr>
+          <tr><td>76% (bakery)</td><td>0.70</td></tr>
+          <tr><td>90%</td><td>1.28</td></tr>
+          <tr><td>95%</td><td>1.65</td></tr>
+          <tr><td>99%</td><td>2.33</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="sec">
+      <h2><span class="n">4</span> Over- vs under-predict</h2>
+      <p class="lede">Let the cost ratio decide, not your gut.</p>
+      <div class="lean">
+        <div class="up"><b>Lean UP (over-order)</b>: fat margins · costly stockout · goods keep/resell · slow or unreliable resupply.</div>
+        <div class="down"><b>Lean DOWN (under-order)</b>: thin margins · high spoilage/obsolescence · cheap fast restock · costly storage.</div>
+      </div>
+      <p class="corpse">Sim anchors: gadgets <code>CR≈0.84</code>, bakery <code>CR≈0.76</code>. Both over-order. An empty shelf runs <b>~2× the cost of overstock</b>, which is why the ratio usually points up.</p>
+    </section>
+
+    <section class="sec">
+      <h2><span class="n">5</span> Reading a forecast</h2>
+      <p><b>MAE</b>: <i>are you wrong?</i> Average miss size.<br>
+      <b>Bias</b>: <i>wrong in one direction?</i> Average <b>signed</b> error. Near-zero bias + big MAE = misses cancel but every order is still off.<br>
+      <b>RMSE</b>: squares errors; a few big misses dominate.<br>
+      <b>MAPE</b>: explodes near zero demand, punishes over/under unevenly. No universal "good" number. Beat your own <b>naive baseline</b> (Forecast Value Added).</p>
+      <div class="rule">A 90% band should hold ~90% of real points, and it <b>widens with the horizon</b>. One number pretends the future is certain; the band is where the decision lives.</div>
+    </section>
+
+    <section class="sec">
+      <h2><span class="n">6</span> What AI cannot predict</h2>
+      <p>More data sharpens the <b>probable</b>, never the genuinely new:</p>
+      <p><b>1 · Novelty</b>: no precedent, nothing to extrapolate.<br>
+      <b>2 · Regime change</b>: the rules that made the data shift; history expires.<br>
+      <b>3 · Reflexivity</b>: acting on the forecast changes what's forecast.<br>
+      <b>4 · Singular choice</b>: a one-off has no distribution to average.</p>
+      <p class="corpse">A connected-fitness firm extrapolated lockdown demand, then cut guidance by <b>~$1B</b> in 70 days and ended with a ~$2.8B yearly loss. Google Flu Trends missed high <b>100 of 108 weeks.</b> Even weather hits a <b>~10-day</b> wall: chaos, not compute.</p>
+    </section>
+
+    <section class="sec" style="border-color:var(--rust)">
+      <h2><span class="n" style="background:var(--ink)">★</span> The mindset that outlives every model</h2>
+      <ol class="mind">
+        <li>Start with a baseline. Can't beat "same as last week"? You don't understand it yet.</li>
+        <li>Let the data pick the model; complexity earns its keep on a <b>backtest</b>, not a slide.</li>
+        <li>Predict ranges, not points.</li>
+        <li>Backtest honestly: score on unseen data, across many origins.</li>
+        <li>Respect the edge: forecast the probable, name the unforecastable out loud.</li>
+      </ol>
+      <p class="corpse">Benchmark check: on public retail demand data, 5,507 teams competed; only <b>7.5%</b> beat plain exponential smoothing. The winner (<b>+22.4%</b>) stacked 220 gradient-boosted-tree models; no deep learning. Aggregate demand is predictable; a single item in a single store is mostly noise.</p>
+    </section>
+
+  </div>
+
+  <footer>
+    Figures from public competition results, SEC filings and earnings calls (a hardware giant: component commitments up to ~150 days out, ~$56B of manufacturing purchase obligations, a 5-7-week channel-inventory target); newsvendor economics from the workshop's bakery simulator. Offline-ready · print me double-sided.
+  </footer>
+</div>
+<a href="/workshops/ki-prognosen-einschaetzen" style="position:fixed;left:16px;bottom:16px;z-index:9999;display:inline-flex;gap:7px;align-items:center;padding:8px 13px;background:#141210;color:#F3F0E9;text-decoration:none;font:600 12px/1 system-ui,-apple-system,sans-serif;letter-spacing:.02em;border:1px solid rgba(243,240,233,.25)">&#8592; Workshop-Seite</a></body>
+</html>

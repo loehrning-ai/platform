@@ -20,8 +20,14 @@ const MATERIAL_ICONS: Record<Workshop["materials"][number]["kind"], typeof FileT
   zip: Download,
 };
 
+/** German ordinal words for the step-count heading; falls back to the digit beyond seven. */
+const STEP_WORDS: Record<number, string> = {
+  4: "vier", 5: "fünf", 6: "sechs", 7: "sieben", 8: "acht", 9: "neun",
+};
+
 export function WorkshopDetailContent({ workshop }: Props) {
-  const { caseStudy } = workshop;
+  const { caseStudy, realWorldCase } = workshop;
+  const stepWord = STEP_WORDS[workshop.steps.length] ?? String(workshop.steps.length);
 
   return (
     <article className="bg-background pb-24">
@@ -53,7 +59,7 @@ export function WorkshopDetailContent({ workshop }: Props) {
             {workshop.title}
           </h1>
 
-          <p className="mb-8 max-w-3xl text-lg leading-relaxed text-muted-foreground">
+          <p className="mb-8 max-w-[62ch] text-lg leading-relaxed text-muted-foreground">
             {workshop.description}
           </p>
 
@@ -119,7 +125,7 @@ export function WorkshopDetailContent({ workshop }: Props) {
           <h2 className="mb-6 text-2xl font-bold tracking-[-0.03em]">
             Material zum Mitnehmen
           </h2>
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {workshop.materials.map((material) => {
               const Icon = MATERIAL_ICONS[material.kind];
               return (
@@ -151,23 +157,36 @@ export function WorkshopDetailContent({ workshop }: Props) {
       </section>
 
       {/* Case study */}
-      <section className="border-b border-border/60 bg-card/30">
+      <section className="border-b border-border/60 bg-card">
         <div className="mx-auto max-w-5xl px-6 py-12">
           <div className="mb-6 flex flex-wrap items-center gap-3">
             <h2 className="text-2xl font-bold tracking-[-0.03em]">
               Der Übungsfall
             </h2>
             <span className="inline-flex items-center gap-1.5 rounded-none border border-brand-orange/40 bg-brand-orange/5 px-2.5 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-brand-orange">
-              Synthetisches Fallbeispiel
+              {caseStudy.isFictional ? "Synthetisches Fallbeispiel" : "Echte Unternehmensdaten"}
             </span>
           </div>
           <p className="mb-6 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-            <span className="font-medium text-foreground">
-              {caseStudy.companyName} ist frei erfunden:
-            </span>{" "}
-            kein echtes Unternehmen, keine echten Geschäftszahlen. Die Werte sind
-            realistisch gewählt, damit sich Berichte, Kennzahlen und die Entscheidung
-            im Workshop wie ein echter Analysefall anfühlen.
+            {caseStudy.isFictional ? (
+              <>
+                <span className="font-medium text-foreground">
+                  {caseStudy.companyName} ist frei erfunden:
+                </span>{" "}
+                kein echtes Unternehmen, keine echten Geschäftszahlen. Die Werte sind
+                realistisch gewählt, damit sich Berichte, Kennzahlen und die Entscheidung
+                im Workshop wie ein echter Analysefall anfühlen.
+              </>
+            ) : (
+              <>
+                <span className="font-medium text-foreground">
+                  {caseStudy.companyName}, {caseStudy.period}:
+                </span>{" "}
+                echte, öffentlich zugängliche Zahlen — kein nachgestellter Fall. Du arbeitest
+                mit dem, was das Unternehmen selbst veröffentlicht hat, samt der Grenzen, die
+                solche Berichte mitbringen.
+              </>
+            )}
           </p>
 
           <p className="mb-8 max-w-3xl text-sm leading-relaxed text-foreground/90">
@@ -180,8 +199,10 @@ export function WorkshopDetailContent({ workshop }: Props) {
                 key={metric.label}
                 className="rounded-none border border-border bg-card/40 p-4 text-center"
               >
-                <p className="font-mono text-2xl font-bold">{metric.value}</p>
-                <p className="mt-1 text-xs text-muted-foreground">{metric.label}</p>
+                <p className="font-mono text-xl font-bold tabular-nums whitespace-nowrap sm:text-2xl">
+                  {metric.value}
+                </p>
+                <p className="mt-1 text-xs leading-snug text-muted-foreground">{metric.label}</p>
               </div>
             ))}
           </div>
@@ -214,15 +235,65 @@ export function WorkshopDetailContent({ workshop }: Props) {
         </div>
       </section>
 
+      {/* Real-world second case — only when the workshop has one */}
+      {realWorldCase && (
+        <section className="dark-section border-b border-border/60">
+          <div className="mx-auto max-w-5xl px-6 py-12">
+            <div className="mb-6 flex flex-wrap items-center gap-3">
+              <h2 className="text-2xl font-bold tracking-[-0.03em]">
+                Und dann in echt
+              </h2>
+              <span className="inline-flex items-center gap-1.5 rounded-none border border-foreground/30 bg-foreground/5 px-2.5 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-foreground">
+                {realWorldCase.companyName}
+              </span>
+            </div>
+
+            <p className="mb-6 max-w-3xl text-sm leading-relaxed text-foreground/90">
+              {realWorldCase.narrative}
+            </p>
+
+            <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+              {realWorldCase.metrics.map((metric) => (
+                <div
+                  key={metric.label}
+                  className="rounded-none border border-border bg-background p-4 text-center"
+                >
+                  <p className="font-mono text-xl font-bold tabular-nums whitespace-nowrap sm:text-2xl">
+                    {metric.value}
+                  </p>
+                  <p className="mt-1 text-xs leading-snug text-muted-foreground">
+                    {metric.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mb-6 rounded-none border border-border border-l-[3px] border-l-brand-orange bg-card/30 p-5">
+              <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.16em] text-brand-orange">
+                Die offene Entscheidung
+              </p>
+              <p className="text-sm leading-relaxed text-foreground/90">
+                {realWorldCase.decisionQuestion}
+              </p>
+            </div>
+
+            <p className="max-w-3xl text-xs leading-relaxed text-muted-foreground">
+              <span className="font-medium text-foreground">Quelle:</span>{" "}
+              {realWorldCase.source}
+            </p>
+          </div>
+        </section>
+      )}
+
       {/* Steps */}
       <section className="border-b border-border/60">
         <div className="mx-auto max-w-5xl px-6 py-12">
           <h2 className="mb-2 text-2xl font-bold tracking-[-0.03em]">
-            Die sieben Schritte
+            Die {stepWord} Schritte
           </h2>
           <p className="mb-8 max-w-2xl text-sm text-muted-foreground">
-            Der Ablauf, den du Schritt für Schritt in der Claude-App nachbaust, von der ersten
-            Rohdaten-Datei bis zur begründeten Entscheidung.
+            Der Ablauf, den du Schritt für Schritt selbst nachbaust — vom ersten Blick in die
+            Rohdaten bis zur begründeten Entscheidung.
           </p>
           <ol className="space-y-4">
             {workshop.steps.map((step) => (
@@ -242,7 +313,7 @@ export function WorkshopDetailContent({ workshop }: Props) {
                       {step.tool}
                     </span>
                   </div>
-                  <p className="text-sm leading-relaxed text-muted-foreground">
+                  <p className="max-w-[68ch] text-sm leading-relaxed text-muted-foreground">
                     {step.description}
                   </p>
                 </div>

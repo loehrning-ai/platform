@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Take-home · Predict the Future (for real)</title>
+<meta name="description" content="Post-workshop homework in three tiers: play the simulator, make your first real forecast, then apply the newsvendor lens to your own domain." />
+<link rel="icon" href="data:," />
+<style>
+  :root{
+    --paper:#F5F2EA; --card:#FFFFFF; --paper-2:#EFEADE; --ink:#12100B; --ink-soft:#4A443B; --faint:#6E6A60;
+    --line:#E1DCCF; --line-strong:#CBC4B4;
+    --rust:#C2410C; --rust-dk:#9A3412; --blue:#0866FF; --ok:#096B78; --amber:#8A6508;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+    --ease: cubic-bezier(.23,1,.32,1);
+  }
+  @media (prefers-color-scheme: dark){:root:not([data-theme=light]){
+    --paper:#14110C; --card:#1C1811; --paper-2:#191510; --ink:#F0EBE1; --ink-soft:#C3BBAB; --faint:#8B8474;
+    --line:#2A251B; --line-strong:#3A3325; --rust:#E8823C; --rust-dk:#F0996A; --blue:#5AA0FF; --ok:#3BA9B8; --amber:#D9A93A;
+  }}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(circle at 1px 1px, rgba(18,16,11,.045) 1px, transparent 0);background-size:20px 20px}
+  .wrap{max-width:780px;margin:0 auto;padding:clamp(20px,4vw,40px) clamp(18px,4vw,32px) 80px}
+  .mono{font-family:var(--mono);text-transform:uppercase;letter-spacing:.13em;font-size:11px;color:var(--faint)}
+  code{font-family:var(--mono);font-size:.9em;background:color-mix(in srgb,var(--rust) 8%, transparent);border:1px solid var(--line);border-radius:3px;padding:.5px 5px;color:var(--rust-dk)}
+  a{color:var(--rust-dk);text-underline-offset:2px}
+  :focus-visible{outline:2.5px solid var(--rust);outline-offset:2px;border-radius:2px}
+
+  header.mast{border-bottom:3px solid var(--rust);padding-bottom:16px}
+  .mono.kick{color:var(--rust);font-weight:700}
+  h1{font-size:clamp(30px,5.2vw,50px);font-weight:850;letter-spacing:0;line-height:1.02;margin:8px 0 0}
+  .intro{font-size:16px;color:var(--ink-soft);margin:16px 0 0}
+  .intro b{color:var(--ink)}
+
+  .kit{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 6px}
+  .kit a{display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:5px;padding:8px 12px;font-size:13px;transition:.15s var(--ease)}
+  .kit a:hover{border-color:var(--rust)}
+  .kit a .m{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+
+  h2.sec{font-size:13px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--ink-soft);margin:36px 0 12px;padding-bottom:6px;border-bottom:1.5px solid var(--line)}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:4px 0}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  td b{color:var(--rust-dk)}
+
+  .tier{background:var(--card);border:1.5px solid var(--line);border-top:3px solid var(--rust);border-radius:8px;padding:20px 22px;margin:16px 0;box-shadow:0 14px 34px -28px rgba(60,30,10,.5)}
+  .tier .th{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+  .tier h3{font-size:22px;font-weight:850;letter-spacing:0;margin:0}
+  .tier h3 .badge{font-family:var(--mono);font-size:11px;font-weight:700;color:#fff;background:var(--rust);padding:3px 8px;border-radius:3px;vertical-align:middle;margin-right:10px;letter-spacing:.06em}
+  .tier .time{font-family:var(--mono);font-size:12px;color:var(--faint);letter-spacing:.06em}
+  .tier ol,.tier ul{margin:10px 0;padding-left:20px}
+  .tier li{margin:6px 0;font-size:14.5px}
+  .aha{background:color-mix(in srgb,var(--rust) 9%, transparent);border-left:3px solid var(--rust);border-radius:0 5px 5px 0;padding:10px 14px;font-size:14px;margin:12px 0}
+  .aha b{color:var(--rust-dk)}
+  .trains{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--faint);margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+  .trains b{color:var(--rust-dk)}
+  .dataset{border:1.5px dashed var(--line-strong);border-radius:6px;padding:11px 14px;background:var(--paper-2);font-size:13.5px;margin:10px 0}
+  .dataset .m{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--rust-dk)}
+
+  .check td.g{color:var(--ok)} .check td.a{color:var(--amber)}
+  .pointers{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:16px 20px;font-size:14px}
+  .pointers li{margin:6px 0}
+  footer{margin-top:30px;font-size:12px;color:var(--faint);border-top:2px solid var(--line-strong);padding-top:14px;font-family:var(--mono);letter-spacing:.03em}
+
+  @media print{body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}.tier{break-inside:avoid;box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <div class="mono kick">Take-home · Homework</div>
+      <svg width="120" height="30" viewBox="0 0 120 30" aria-hidden="true" style="flex:none">
+        <path d="M2,23 L40,17 L62,19 L84,11" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M84,11 L104,17 L118,8" fill="none" stroke="var(--rust)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6 5"/>
+        <circle cx="84" cy="11" r="3.5" fill="var(--rust)"/>
+      </svg>
+    </div>
+    <h1>Forecasting decision practice</h1>
+    <p class="intro">You just spent 90 minutes watching forecasts get tuned, stressed, and broken. For one block, you ran a business against an AI. This turns that hour into a skill you keep. Do as much as fits your appetite: <b>15 minutes gets the intuition; 45 minutes gets the math; the open challenge makes it yours.</b></p>
+    <div class="kit">
+      <a href="#app-access"><span class="m">App</span> The 16-week simulator</a>
+      <a href="./hands-on.html"><span class="m">Replay</span> The 3-act story</a>
+      <a href="./field-card.html"><span class="m">Recap</span> The field card</a>
+    </div>
+    <p id="app-access" class="mono" style="margin-top:2px">No login · works offline · course link shared after the session</p>
+  </header>
+
+  <h2 class="sec">Why you're doing this: the 5 pillars</h2>
+  <table>
+    <thead><tr><th>Pillar</th><th>The question</th><th>Where it hurts</th></tr></thead>
+    <tbody>
+      <tr><td><b>1 · Over-forecast</b></td><td>What does <i>too much</i> cost?</td><td>Cash frozen, spoilage, markdowns</td></tr>
+      <tr><td><b>2 · Under-forecast</b></td><td>What does <i>too little</i> cost?</td><td>Stockouts, walked-away customers</td></tr>
+      <tr><td><b>3 · Buffer</b></td><td>How much cushion, given 1 vs 2?</td><td>The number that balances both costs</td></tr>
+      <tr><td><b>4 · Integration</b></td><td>What signals combine into demand?</td><td>Trend + season + noise + events</td></tr>
+      <tr><td><b>5 · Logistics</b></td><td>Why forecast <i>ahead</i> at all?</td><td>Lead times: commit before you know</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sec">Your three tiers</h2>
+
+  <div class="tier">
+    <div class="th"><h3><span class="badge">DO</span>Play the simulator</h3><span class="time">15 min</span></div>
+    <p>Open the course app and play the <b>16-week simulator</b> ("You are the demand planner"). Start with the <b>Corner Bakery</b>, where leftovers spoil overnight. Each week you forecast demand, then order <i>above</i> it; that gap is your <b>safety stock</b>.</p>
+    <ol>
+      <li><b>Hit a high service level.</b> Finish a run at <b>≥ 90% service</b>. Feel what it takes to almost never stock out, and watch the leftovers pile up.</li>
+      <li><b>Beat the AI autopilot once.</b> Finish with more cash than the autopilot, which orders the newsvendor-optimal quantity: usually a <b>smaller, smarter buffer</b>, not a bigger one.</li>
+      <li><b>Write down the buffer that worked.</b> Record roughly what % above forecast you ordered, then reason about which business deserves the <i>bigger</i> buffer: the Bakery (leftovers resell cheap, so covering is cheap) or the Microgrid (wasted power can't be resold). The critical ratio decides, and the answer may surprise you.</li>
+    </ol>
+    <div class="aha"><b>Business lesson:</b> chasing 100% service level <i>loses money</i>. The best buffer is set by the cost of over- vs under-forecasting: Pillars 1, 2, 3 in one decision.</div>
+    <div class="trains"><b>Trains:</b> over · under · buffer. App <b>Ch 8</b> (service level) &amp; <b>Ch 10</b> (newsvendor)</div>
+  </div>
+
+  <div class="tier">
+    <div class="th"><h3><span class="badge">STRETCH</span>Your first real forecast</h3><span class="time">45 min</span></div>
+    <p>Make two honest forecasts on real data and score them. <b>No coding required; a spreadsheet is enough.</b> Coders: your Ch 2 / 3 / 7 code labs are ready-made starters.</p>
+    <div class="dataset"><span class="m">Dataset</span> &nbsp;<a href="./data/demand-weekly.csv" download><code>demand-weekly.csv</code></a>: 104 weeks of a product's demand (<code>week_start, units</code>).<br><span style="color:var(--faint)">Two years, weekly, with trend + a Q4 bump. Hide the last 14 rows as your test set, or bring your own series.</span></div>
+    <ol>
+      <li><b>Split.</b> Hide the <b>last ~14 rows</b> (your test period). Never let the model see the answers first. This is <i>backtesting</i>.</li>
+      <li><b>Baseline: naive.</b> Forecast each test day as <b>yesterday's actual</b> (or last week's same day if there's a weekly rhythm). This is the bar to beat.</li>
+      <li><b>Smoothed: pick one.</b> Use a spreadsheet moving average (mean of last 3), or exponential smoothing <code>F = 0.3·actual + 0.7·F_prev</code>; notebook: <code>SimpleExpSmoothing</code>/<code>Holt</code>.</li>
+      <li><b>Score both</b> over 14 days: <b>MAE</b> = <code>AVG(ABS(actual - forecast))</code>; <b>Bias</b> = <code>AVG(forecast - actual)</code> (positive = over-forecast, negative = under).</li>
+      <li><b>Report</b> four numbers (MAE + Bias for naive and smoothed) and one sentence: did smoothing earn its keep?</li>
+    </ol>
+    <div class="trains"><b>Trains:</b> integration + honest scoring. App <b>Ch 2</b> (baselines), <b>Ch 3</b> (smoothing), <b>Ch 7</b> (MAE, bias, backtesting)</div>
+  </div>
+
+  <div class="tier">
+    <div class="th"><h3><span class="badge">CHALLENGE</span>Your own domain</h3><span class="time">open</span></div>
+    <p>You know a business, team, or system where something runs out or piles up. Apply the <b>S&amp;OP / newsvendor</b> lens in exactly <b>5 sentences</b>:</p>
+    <ol>
+      <li>Name your domain and the one thing whose demand you'd forecast (staff hours? inventory? server capacity? ER beds? ad budget?).</li>
+      <li>Where does <b>over-forecasting</b> cost you most?</li>
+      <li>Where does <b>under-forecasting</b> cost you most?</li>
+      <li>Which is worse, and is your critical ratio closer to a high or low service level?</li>
+      <li>What <b>buffer</b> would you set, and what signal (a season, a lead time, a promo) would make you change it?</li>
+    </ol>
+    <div class="trains"><b>Trains:</b> all 5 pillars, integrated. App <b>Ch 10</b> (S&amp;OP, newsvendor) + the field card</div>
+  </div>
+
+  <h2 class="sec">How to self-check</h2>
+  <table class="check">
+    <thead><tr><th>Tier</th><th>Green: nailed it</th><th>Amber: revisit</th></tr></thead>
+    <tbody>
+      <tr><td><b>Do</b></td><td class="g">≥ 90% service in one run <b>and</b> beat the autopilot in another; can state the buffer % that worked</td><td class="a">Went broke, or beat the AI by luck and can't say what buffer did it</td></tr>
+      <tr><td><b>Stretch</b></td><td class="g">4 numbers reported; smoothed MAE ≤ naive MAE; |Bias| under ~20% of average demand</td><td class="a">Forgot the holdout (peeked), or reported MAE without bias</td></tr>
+      <tr><td><b>Challenge</b></td><td class="g">5 sentences; over- <b>and</b> under-cost both named; buffer justified by which is worse</td><td class="a">Only described the domain; didn't commit to a buffer or say why</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sec">Pointers back to your kit</h2>
+  <ul class="pointers">
+    <li><b>Buffer / service-level math:</b> app Ch 8 (Living with uncertainty) + Ch 10 (newsvendor &amp; critical ratio).</li>
+    <li><b>Baselines &amp; smoothing you'll code in Stretch:</b> Ch 2 (baselines) + Ch 3 (exponential smoothing).</li>
+    <li><b>MAE, bias &amp; backtesting:</b> Ch 7 (How good is it?).</li>
+    <li><b>The one-page recap:</b> the <a href="./field-card.html">field card</a>, with 5 pillars front and back.</li>
+    <li><b>Stuck on intuition?</b> Replay the <a href="./hands-on.html">3-act hands-on story</a>: current process, buffer policy, production trust loop.</li>
+  </ul>
+
+  <footer>Everything here runs with Wi-Fi off. No account, no personal data, no purchase. Just you, the app, and one real dataset.</footer>
+</div>
+<a href="/workshops/ki-prognosen-einschaetzen" style="position:fixed;left:16px;bottom:16px;z-index:9999;display:inline-flex;gap:7px;align-items:center;padding:8px 13px;background:#141210;color:#F3F0E9;text-decoration:none;font:600 12px/1 system-ui,-apple-system,sans-serif;letter-spacing:.02em;border:1px solid rgba(243,240,233,.25)">&#8592; Workshop-Seite</a></body>
+</html>

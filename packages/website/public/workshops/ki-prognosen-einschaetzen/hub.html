@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>loehrning.ai · Can AI Predict the Future?</title>
+<meta name="description" content="Agenda hub — opening title screen for the loehrning.ai AI forecasting workshop: deck, hands-on lab, and take-home." />
+<meta name="theme-color" content="#F5F2EA" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#14110C" media="(prefers-color-scheme: dark)" />
+<link rel="icon" href="data:," />
+<style>
+  :root{
+    --paper:#F5F2EA; --card:#FFFFFF; --paper-2:#EFEADE; --ink:#12100B; --ink-soft:#4A443B; --faint:#6E6A60;
+    --line:#E1DCCF; --line-strong:#CBC4B4;
+    --rust:#C2410C; --rust-dk:#9A3412; --blue:#0866FF; --ok:#096B78; --amber:#8A6508;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+    --ease: cubic-bezier(.23,1,.32,1);
+  }
+  @media (prefers-color-scheme: dark){:root:not([data-theme=light]){
+    --paper:#14110C; --card:#1C1811; --paper-2:#191510; --ink:#F0EBE1; --ink-soft:#C3BBAB; --faint:#8B8474;
+    --line:#2A251B; --line-strong:#3A3325; --rust:#E8823C; --rust-dk:#F0996A; --blue:#5AA0FF; --ok:#3BA9B8; --amber:#D9A93A;
+  }}
+  html,body{margin:0}
+  *{box-sizing:border-box}
+  :focus-visible{outline:2.5px solid var(--rust);outline-offset:3px;border-radius:2px}
+
+  .stage{
+    position:relative;height:100vh;height:100dvh;width:100vw;overflow:hidden;
+    background:var(--paper);color:var(--ink);font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(circle at 1px 1px, rgba(18,16,11,.045) 1px, transparent 0);background-size:20px 20px;
+    display:flex;flex-direction:column;justify-content:space-between;
+    padding:clamp(26px,3.4vh,46px) clamp(38px,3.6vw,66px);isolation:isolate
+  }
+
+  /* still, quiet editorial forecast chart — same motif as the field card sparkline */
+  .bgfx{position:absolute;right:clamp(-20px,-1vw,0px);bottom:clamp(46px,10vh,96px);width:min(56vw,720px);z-index:0;pointer-events:none;opacity:.9}
+  .bgfx svg{width:100%;height:auto;display:block}
+
+  /* ---- masthead ---- */
+  .hdr{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:20px}
+  .brand{display:flex;align-items:center;gap:14px;min-width:0}
+  .mark{flex:0 0 auto;width:clamp(150px,12.5vw,190px);height:clamp(42px,3.6vw,52px);display:grid;place-items:center;overflow:visible}
+  .mark img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
+  /* logo is transparent (no plate); flip the dark mark to light in dark mode so it stays visible */
+  @media (prefers-color-scheme: dark){:root:not([data-theme=light]) .mark img{filter:brightness(0) invert(1)}}
+  :root[data-theme=dark] .mark img{filter:brightness(0) invert(1)}
+  .brand .lock b{display:block;font-size:clamp(15px,1.15vw,18px);font-weight:850;line-height:1;letter-spacing:0}
+  .brand .lock span{display:block;margin-top:5px;color:var(--faint);font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .meta{text-align:right;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);line-height:1.7;white-space:nowrap}
+  .meta b{color:var(--ink);font-weight:700}
+
+  /* ---- body ---- */
+  .body{position:relative;z-index:2;display:grid;grid-template-columns:1.12fr .88fr;gap:clamp(38px,5vw,88px);align-items:center;min-height:0;flex:1}
+  .kick{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-weight:700;font-size:clamp(11px,.85vw,13px);letter-spacing:.13em;text-transform:uppercase;color:var(--rust);margin-bottom:clamp(16px,2.4vh,26px)}
+  .kick::before{content:'';width:26px;height:2px;background:var(--rust)}
+  .h1{font-weight:850;font-size:clamp(40px,4.9vw,74px);line-height:.98;letter-spacing:-.015em;margin:0}
+  .h1 .em{color:var(--rust)}
+  .lede{margin:clamp(20px,3vh,30px) 0 0;font-size:clamp(15px,1.15vw,19px);line-height:1.55;max-width:46ch;color:var(--ink-soft)}
+  .lede b{color:var(--ink)}
+
+  .ctas{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:clamp(24px,3.4vh,40px)}
+  .cta{flex:1;display:flex;flex-direction:column;gap:9px;text-decoration:none;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:7px;padding:clamp(14px,1.7vh,20px) clamp(15px,1.2vw,20px);transition:transform .18s var(--ease),border-color .18s var(--ease);position:relative;overflow:hidden}
+  .cta::after{content:'';position:absolute;left:0;bottom:0;height:2.5px;width:0;background:var(--rust);transition:width .28s var(--ease)}
+  .cta:hover,.cta:focus-visible{transform:translateY(-4px);border-color:var(--rust)}
+  .cta:hover::after,.cta:focus-visible::after{width:100%}
+  .cta .cn{font-family:var(--mono);font-weight:700;font-size:11px;letter-spacing:.1em;color:var(--rust)}
+  .cta .cl{display:flex;align-items:center;justify-content:space-between;font-weight:800;font-size:clamp(14px,1.05vw,17px);letter-spacing:0;white-space:nowrap}
+  .cta .cd{font-size:11.5px;font-weight:600;color:var(--faint);letter-spacing:.01em}
+  .cta .cl .ar{color:var(--line-strong);transition:transform .2s var(--ease),color .2s var(--ease)}
+  .cta:hover .cl .ar,.cta:focus-visible .cl .ar{color:var(--rust);transform:translate(3px,-3px)}
+
+  /* ---- what you'll learn ---- */
+  .panel{border-left:1.5px solid var(--line);padding-left:clamp(26px,2.4vw,42px);display:flex;flex-direction:column}
+  .plabel{font-family:var(--mono);font-weight:600;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:clamp(6px,1.2vh,12px);padding-bottom:8px;border-bottom:1.5px solid var(--line)}
+  .learn{display:flex;gap:14px;align-items:flex-start;padding:clamp(10px,1.6vh,15px) 0;border-top:1px solid var(--line)}
+  .learn:first-of-type{border-top:none}
+  .learn .ln{font-family:var(--mono);font-weight:700;font-size:12px;color:var(--rust);flex-shrink:0;width:22px;line-height:1.5}
+  .learn .lt{font-size:clamp(14px,1.02vw,17px);line-height:1.42;color:var(--ink)}
+
+  /* ---- footer ---- */
+  .foot{position:relative;z-index:2;display:flex;align-items:center;gap:clamp(20px,2.4vw,40px)}
+  .tk-lab{font-family:var(--mono);font-weight:700;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);line-height:1.5;white-space:nowrap}
+  .story-row{display:flex;align-items:center;gap:clamp(22px,3.4vw,58px);flex:1}
+  .story{display:flex;align-items:center;gap:13px}
+  .slg{width:clamp(24px,2vw,30px);height:clamp(24px,2vw,30px);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--faint)}
+  .slg svg{width:100%;height:100%}
+  .sco{font-weight:800;font-size:clamp(15px,1.1vw,18px);letter-spacing:0;color:var(--ink)}
+  .sctag{font-family:var(--mono);font-weight:500;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-top:3px}
+
+  @media (prefers-reduced-motion:reduce){
+    .cta,.cta::after,.cta .cl .ar{transition:none!important}
+  }
+  @media (max-width:900px){
+    .stage{overflow-y:auto;height:auto;min-height:100vh;min-height:100dvh}
+    .bgfx{position:static;width:100%;margin-top:26px;opacity:.85}
+    .body{grid-template-columns:1fr;gap:28px}
+    .panel{border-left:none;padding-left:0;border-top:1.5px solid var(--line);padding-top:20px}
+    .ctas{grid-template-columns:1fr}
+    .story-row{flex-wrap:wrap;row-gap:14px}
+    .meta{white-space:normal}
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="bgfx" aria-hidden="true">
+    <svg viewBox="0 0 1200 420" preserveAspectRatio="xMidYMax meet">
+      <!-- faint forecast cone -->
+      <path d="M840,214 L1168,96 L1168,322 Z" fill="var(--rust)" fill-opacity=".07"/>
+      <!-- now divider -->
+      <line x1="840" y1="70" x2="840" y2="360" stroke="var(--line-strong)" stroke-width="1.4" stroke-dasharray="3 7"/>
+      <!-- history line -->
+      <path d="M40,330 L150,296 L250,312 L350,262 L450,286 L560,232 L660,264 L750,220 L840,214"
+            fill="none" stroke="var(--line-strong)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+      <!-- central forecast, dashed -->
+      <path d="M840,214 L1000,196 L1168,168" fill="none" stroke="var(--rust)" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="10 8" opacity=".85"/>
+      <!-- markers -->
+      <circle cx="840" cy="214" r="5" fill="var(--rust)"/>
+      <circle cx="1168" cy="168" r="4.5" fill="var(--rust)"/>
+    </svg>
+  </div>
+
+  <header class="hdr">
+    <div class="brand">
+      <div class="mark" style="justify-items:start"><span style="font:700 19px/1 system-ui,-apple-system,sans-serif;letter-spacing:-.02em">loehrning<span style="color:#c2410c">.ai</span></span></div>
+      <div class="lock"><b>Forecasting Workshop</b><span>Turning forecasts into decisions</span></div>
+    </div>
+    <div class="meta">Predictive AI &middot; Workshop<br><b>90 minutes</b> &middot; Offline-ready</div>
+  </header>
+
+  <main class="body" aria-label="Workshop overview">
+    <div>
+      <div class="kick">AI forecasting &middot; 90-minute workshop</div>
+      <h1 class="h1">Turn a forecast<br>into a <span class="em">decision.</span></h1>
+      <p class="lede">A forecast only earns its keep when it changes a decision. In 90 minutes we price the cost of being wrong, size the buffer that balances it, and leave you with a <b>go/no-go policy the room chose itself</b> &mdash; across three real operating cases and a live demand simulator.</p>
+      <nav class="ctas" aria-label="Open workshop surfaces"><a class="cta" href="./hands-on.html"><span class="cn">01</span><span class="cl">Hands&#8209;on<span class="ar">&#8599;</span></span><span class="cd">Three decision labs</span></a><a class="cta" href="./case-study/index.html"><span class="cn">02</span><span class="cl">Business Case<span class="ar">&#8599;</span></span><span class="cd">One launch, three numbers</span></a><a class="cta" href="./field-card.html"><span class="cn">03</span><span class="cl">Field Card<span class="ar">&#8599;</span></span><span class="cd">The one-page checklist</span></a><a class="cta" href="./homework.html"><span class="cn">04</span><span class="cl">Take&#8209;home<span class="ar">&#8599;</span></span><span class="cd">Two forecasts, four numbers</span></a></nav>
+    </div>
+    <div class="panel">
+      <div class="plabel">What you'll learn</div>
+      <div class="learn"><span class="ln">01</span><span class="lt">Make a model earn its workflow: beat the process you already trust, in dollars</span></div>
+      <div class="learn"><span class="ln">02</span><span class="lt">Price the buffer: service level is a cost decision, not a gut feeling</span></div>
+      <div class="learn"><span class="ln">03</span><span class="lt">Run the production loop: deploy cheap, watch leading signals, retrain through a gate</span></div>
+      <div class="learn"><span class="ln">04</span><span class="lt">Leave with a go/no-go policy the room chose itself</span></div>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <div class="tk-lab">Stories<br>from the field</div>
+    <div class="story-row">
+      <div class="story"><div class="slg"></div><div><div class="sco">Amazon</div><div class="sctag">Operations at scale</div></div></div>
+      <div class="story"><div class="slg"></div><div><div class="sco">Apple</div><div class="sctag">Planning &amp; precision</div></div></div>
+      <div class="story"><div class="slg"></div><div><div class="sco">Meta</div><div class="sctag">Signals &amp; growth</div></div></div>
+    </div>
+  </footer>
+</div>
+<a href="/workshops/ki-prognosen-einschaetzen" style="position:fixed;left:16px;bottom:16px;z-index:9999;display:inline-flex;gap:7px;align-items:center;padding:8px 13px;background:#141210;color:#F3F0E9;text-decoration:none;font:600 12px/1 system-ui,-apple-system,sans-serif;letter-spacing:.02em;border:1px solid rgba(243,240,233,.25)">&#8592; Workshop-Seite</a></body>
+</html>
