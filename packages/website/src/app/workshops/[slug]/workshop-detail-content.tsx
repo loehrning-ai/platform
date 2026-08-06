@@ -182,7 +182,7 @@ export function WorkshopDetailContent({ workshop }: Props) {
                 <span className="font-medium text-foreground">
                   {caseStudy.companyName}, {caseStudy.period}:
                 </span>{" "}
-                echte, öffentlich zugängliche Zahlen — kein nachgestellter Fall. Du arbeitest
+                echte, öffentlich zugängliche Zahlen: kein nachgestellter Fall. Du arbeitest
                 mit dem, was das Unternehmen selbst veröffentlicht hat, samt der Grenzen, die
                 solche Berichte mitbringen.
               </>
@@ -292,7 +292,7 @@ export function WorkshopDetailContent({ workshop }: Props) {
             Die {stepWord} Schritte
           </h2>
           <p className="mb-8 max-w-2xl text-sm text-muted-foreground">
-            Der Ablauf, den du Schritt für Schritt selbst nachbaust — vom ersten Blick in die
+            Der Ablauf, den du Schritt für Schritt selbst nachbaust: vom ersten Blick in die
             Rohdaten bis zur begründeten Entscheidung.
           </p>
           <ol className="space-y-4">
