@@ -48,7 +48,7 @@
 /* rank / tension chart */
 .viz-rank { width: 100%; }
 .viz-rank .vr-row {
-  display: grid; grid-template-columns: 128px 1fr 132px;
+  display: grid; grid-template-columns: 128px 1fr 152px;
   align-items: center; gap: 20px; padding: 9px 0;
   border-bottom: 1px solid var(--line);
 }

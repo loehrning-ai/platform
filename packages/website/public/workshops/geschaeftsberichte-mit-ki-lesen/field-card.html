@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -11,13 +11,13 @@
   body{padding:clamp(20px,4vw,44px)}
   .sheet{max-width:1000px;margin:0 auto;background:var(--card);border:1.5px solid var(--line);border-top:3px solid var(--kupfer);padding:clamp(20px,3vw,38px)}
   .hd{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;border-bottom:2px solid var(--kupfer);padding-bottom:14px;margin-bottom:20px;flex-wrap:wrap}
-  .hd .t b{display:block;font-size:clamp(22px,2.6vw,32px);font-weight:700;letter-spacing:-.03em;line-height:1}
+  .hd .t h1{display:block;margin:0;font-size:clamp(22px,2.6vw,32px);font-weight:700;letter-spacing:-.03em;line-height:1}
   .hd .t span{display:block;margin-top:6px;color:var(--muted);font-size:14px}
   .hd .bm{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:right}
   .cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,2.4vw,30px)}
   h3{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--kupfer);margin:0 0 12px;padding-bottom:6px;border-bottom:1.5px solid var(--line)}
-  .p{background:var(--mist);border:1.5px solid var(--line);border-left:3px solid var(--kupfer);padding:9px 12px;margin:0 0 9px;font-family:var(--mono);font-size:11px;line-height:1.5;color:var(--ink)}
-  .p b{display:block;font-family:var(--sans);font-weight:600;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--kupfer);margin-bottom:5px}
+  .p{background:var(--mist);border:1.5px solid var(--line);border-left:3px solid var(--kupfer);padding:9px 12px;margin:0 0 7px;font-family:var(--mono);font-size:11px;line-height:1.5;color:var(--ink)}
+  .p b{display:block;font-family:var(--sans);font-weight:600;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--mennige-tief,#97300F);margin-bottom:5px}
   table{width:100%;border-collapse:collapse;font-size:12.5px}
   th,td{text-align:left;padding:6px 8px;border-top:1px solid var(--line);vertical-align:top}
   th{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-top:none}
@@ -27,13 +27,13 @@
   ul.check li:first-child{border-top:none}
   ul.check li::before{content:'';flex:0 0 auto;width:14px;height:14px;border:1.5px solid var(--kupfer);margin-top:2px}
   .ft{margin-top:18px;border-top:1px solid var(--line);padding-top:12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-  @media (max-width:760px){.cols{grid-template-columns:1fr}}
+  @media screen and (max-width:760px){.cols{grid-template-columns:1fr}}
   @media print{:root{--paper:#fff;--card:#fff;--mist:#F2C6B6;--ink:#111;--muted:#333;--line:#ccc;--kupfer:#B73A15;--mennige:#B73A15}body{padding:0}.sheet{border:none;padding:0}}
 </style>
 </head>
 <body>
-<div class="sheet">
-  <div class="hd"><div class="t"><b>Build an AI analyst.</b><span>Author a Skill → run it on the report → decide. In the Claude app. No API key.</span></div>
+<main class="sheet">
+  <div class="hd"><div class="t"><h1>Build an AI analyst.</h1><span>Author a Skill → run it on the report → decide. In the Claude app. No API key.</span></div>
     <div class="bm">loehrning.ai &middot; Field Card<br>The AI Analyst &middot; business reports</div></div>
   <div class="cols">
     <div>
@@ -53,7 +53,7 @@
       <div class="p"><b>1 · Ground it</b>Read the backstory + this month's report. Who is NORDA, what decision is building?</div>
       <div class="p"><b>2 · Author the Skill</b>Open worksheet.md; answer the blanks in plain English; Claude writes them into the Skill.</div>
       <div class="p"><b>3 · Run your Skill</b>Extract this month's numbers from the report; verify one against the source CSV.</div>
-      <div class="p"><b>4 · Build the dashboard</b>"Build the dashboard and open it." (If it doesn't open, double-click dashboard/index.html.)</div>
+      <div class="p"><b>4 · Build the dashboard</b>"Build the dashboard from this month's metrics and open it." (If it doesn't open, double-click dashboard/index.html.)</div>
       <div class="p"><b>5 · Make the call</b>Disagree with the VP of Sales using the numbers: rework CRAFT first, or put more Q3 marketing behind it? Cost of being wrong + limits.</div>
       <h3 style="margin-top:16px">Worked example — NORDA</h3>
       <table>
@@ -66,6 +66,6 @@
     </div>
   </div>
   <div class="ft"><span>loehrning.ai × brainster</span><span>You wrote the rule — now it repeats</span></div>
-</div>
+</main>
 </body>
 </html>

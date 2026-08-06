@@ -22,11 +22,11 @@
       "redistribution": "Redistribution of this license notice is required with the corresponding MIT-licensed work"
     },
     {
-      "path": "packages/website/public/artifacts/tools/cv-engine/screenshot.webp",
-      "sizeBytes": 132292,
-      "sha256": "8c402e73a3ac46498d5fbfe6f39e03eebf532e62fe4b5ae69941211e96492aff",
+      "path": "packages/website/public/artifacts/tools/cv-engine/demo/cv.png",
+      "sizeBytes": 344513,
+      "sha256": "179d73376d5c629723ec3bf6e041e2ab904ad5c984b57f8701b179cffa14e150",
       "owner": "Tim Löhr",
-      "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/preview-card.webp",
+      "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/cv.png",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
       "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
@@ -42,16 +42,6 @@
       "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
     },
     {
-      "path": "packages/website/public/artifacts/tools/cv-engine/demo/yaml-view.png",
-      "sizeBytes": 690749,
-      "sha256": "77532bbde5e16deee660c4632934dc7f4748fed190d24d2e8326f3ab666c4688",
-      "owner": "Tim Löhr",
-      "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/yaml-view.png",
-      "license": "MIT",
-      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
-      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
-    },
-    {
       "path": "packages/website/public/artifacts/tools/cv-engine/demo/theme-picker.png",
       "sizeBytes": 644467,
       "sha256": "ea72ade6eb5739df78ca4e80c3fb6f9c700a413a9a730fd5a0b81d92c9c370a5",
@@ -62,11 +52,21 @@
       "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
     },
     {
-      "path": "packages/website/public/artifacts/tools/cv-engine/demo/cv.png",
-      "sizeBytes": 344513,
-      "sha256": "179d73376d5c629723ec3bf6e041e2ab904ad5c984b57f8701b179cffa14e150",
+      "path": "packages/website/public/artifacts/tools/cv-engine/demo/yaml-view.png",
+      "sizeBytes": 690749,
+      "sha256": "77532bbde5e16deee660c4632934dc7f4748fed190d24d2e8326f3ab666c4688",
       "owner": "Tim Löhr",
-      "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/cv.png",
+      "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/yaml-view.png",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/screenshot.webp",
+      "sizeBytes": 132292,
+      "sha256": "8c402e73a3ac46498d5fbfe6f39e03eebf532e62fe4b5ae69941211e96492aff",
+      "owner": "Tim Löhr",
+      "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/preview-card.webp",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
       "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
@@ -360,11 +360,142 @@
       "redistribution": "Included for repository operation; no standalone reuse rights granted"
     },
     {
-      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/norda-analyst-kit.zip",
-      "sizeBytes": 41036,
-      "sha256": "af6d0c71f21a46c80b22d43513f4f44465239c6eeb7ac0be0391d558492408ab",
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/favicon.svg",
+      "sizeBytes": 375,
+      "sha256": "93307b8d9a43e69099e6f407ba120ed6ee5a586921be96b0613271cc269441ac",
       "owner": "Tim Löhr",
-      "source": "Eigenes Workshop-Material, loehrning.ai",
+      "source": "loehrning.ai brand asset",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/fonts/JetBrainsMono-var.woff2",
+      "sizeBytes": 31340,
+      "sha256": "2c32b9b3ee358c119e210f6f5195f9bd34894d78a785ff2e95d60e718e400af4",
+      "owner": "The JetBrains Mono Project Authors (https://github.com/JetBrains/JetBrainsMono)",
+      "source": "JetBrains Mono variable font",
+      "license": "OFL-1.1",
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1-JetBrainsMono.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1-JetBrainsMono.txt"
+    },
+    {
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/fonts/Typing-Bold.ttf",
+      "sizeBytes": 879720,
+      "sha256": "0b68b5f13390656f1e283a51c702b266d8c4e46a17d0be2f67b7f6fcc3a32ded",
+      "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
+      "license": "OFL-1.1",
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/fonts/Typing-Medium.ttf",
+      "sizeBytes": 879740,
+      "sha256": "70bde4ea7e363336467a125e9d3d631bde090ebe24a569b2d6c39f90c2df3e97",
+      "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
+      "license": "OFL-1.1",
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/fonts/Typing-Regular.ttf",
+      "sizeBytes": 879708,
+      "sha256": "f21310e3ef46427a43f91a7c8d1ceb6836bbc3707965eee636206a6ee0b1c6e8",
+      "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
+      "license": "OFL-1.1",
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/fonts/Typing-SemiBold.ttf",
+      "sizeBytes": 879756,
+      "sha256": "19f9c2cae411db1ab3e334a0ad269357a7dfc65232364601fad02329ab69ae98",
+      "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
+      "license": "OFL-1.1",
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/norda-p01.png",
+      "sizeBytes": 599756,
+      "sha256": "1fc37f3587863f41bae75c955d92bd0ee1ebc8215ef284c29d1ca81639ac2de9",
+      "owner": "Tim Löhr",
+      "source": "Eigenes Workshop-Material, loehrning.ai — gerendeter NORDA-Beispielbericht (synthetische Daten)",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/norda-p02.png",
+      "sizeBytes": 88509,
+      "sha256": "ea9c01ba0182451f474c6068f8c49e04ce353e9d02674248da616df7b70398fa",
+      "owner": "Tim Löhr",
+      "source": "Eigenes Workshop-Material, loehrning.ai — gerendeter NORDA-Beispielbericht (synthetische Daten)",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/norda-p03.png",
+      "sizeBytes": 173175,
+      "sha256": "f62536e1bab51a89634d78c99dd8872a7e7a0f9ef349c6afd3327f30ff89868c",
+      "owner": "Tim Löhr",
+      "source": "Eigenes Workshop-Material, loehrning.ai — gerendeter NORDA-Beispielbericht (synthetische Daten)",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/norda-p04.png",
+      "sizeBytes": 137707,
+      "sha256": "be56a3a460b1928ba9e64fc73adebb82576ba50b13b88251b4f067ae16c92f73",
+      "owner": "Tim Löhr",
+      "source": "Eigenes Workshop-Material, loehrning.ai — gerendeter NORDA-Beispielbericht (synthetische Daten)",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/norda-p05.png",
+      "sizeBytes": 207827,
+      "sha256": "6ab3592c15dfaefd7077602f376cb6e48cdbe0abf0b08910425b2a63c93b3cd0",
+      "owner": "Tim Löhr",
+      "source": "Eigenes Workshop-Material, loehrning.ai — gerendeter NORDA-Beispielbericht (synthetische Daten)",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/norda-p06.png",
+      "sizeBytes": 107443,
+      "sha256": "ae5472d12f2c29334627ac98c5a0e9b05de625f3638be34da6558b370a7a6e8d",
+      "owner": "Tim Löhr",
+      "source": "Eigenes Workshop-Material, loehrning.ai — gerendeter NORDA-Beispielbericht (synthetische Daten)",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/norda-p07.png",
+      "sizeBytes": 168398,
+      "sha256": "e0913df475ca35e1a80929b9ebbcbbf57c7605ab82b07ae683be0f45b385f843",
+      "owner": "Tim Löhr",
+      "source": "Eigenes Workshop-Material, loehrning.ai — gerendeter NORDA-Beispielbericht (synthetische Daten)",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/norda-p08.png",
+      "sizeBytes": 310240,
+      "sha256": "8191eb13760b5d122678463d2337fcf2191f23e652d7f2d4a5e46dc054773826",
+      "owner": "Tim Löhr",
+      "source": "Eigenes Workshop-Material, loehrning.ai — gerendeter NORDA-Beispielbericht (synthetische Daten)",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/norda-analyst-kit.zip",
+      "sizeBytes": 51375,
+      "sha256": "d5095332879575146e65b000ef5a614375aaf407fa5467144ef7411f016e06b2",
+      "owner": "Tim Löhr",
+      "source": "Eigenes Workshop-Material, loehrning.ai — Text-only Teilnehmer-Kit (CSV-Übungsdaten, Berichte in Markdown, Skill, Dashboard-Vorlage)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Frei herunterladbar für Workshop-Teilnehmende und Website-Besucher"
     },
@@ -372,69 +503,6 @@
       "path": "packages/website/src/fonts/LoehrningSans-Bold.ttf",
       "sizeBytes": 417076,
       "sha256": "96d7568b98e9dbc086e8bfc28e965f667c226721076f019cf12f8f6f10efbff0",
-      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
-      "source": "https://github.com/rsms/inter",
-      "license": "OFL-1.1",
-      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
-    },
-    {
-      "path": "packages/website/src/fonts/LoehrningSans-Medium.ttf",
-      "sizeBytes": 414040,
-      "sha256": "3f6d8a71b8fdbcab081a29c95abfa917ba0f622aca81ad026436628531fc3664",
-      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
-      "source": "https://github.com/rsms/inter",
-      "license": "OFL-1.1",
-      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
-    },
-    {
-      "path": "packages/website/src/fonts/LoehrningSans-Regular.ttf",
-      "sizeBytes": 408424,
-      "sha256": "fa1520b484cec6ba46c870e2f0b0802720fc95fd9810ea245bb96559d2ae342a",
-      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
-      "source": "https://github.com/rsms/inter",
-      "license": "OFL-1.1",
-      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
-    },
-    {
-      "path": "packages/website/src/fonts/LoehrningSans-SemiBold.ttf",
-      "sizeBytes": 415960,
-      "sha256": "0888713110a628683cccf1c0c51614dc2e2f82924bb0133acceec48d742d4c24",
-      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
-      "source": "https://github.com/rsms/inter",
-      "license": "OFL-1.1",
-      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
-    },
-    {
-      "path": "packages/website/src/fonts/typing/Typing-Bold.ttf",
-      "sizeBytes": 879720,
-      "sha256": "0b68b5f13390656f1e283a51c702b266d8c4e46a17d0be2f67b7f6fcc3a32ded",
-      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
-      "source": "https://github.com/rsms/inter",
-      "license": "OFL-1.1",
-      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
-    },
-    {
-      "path": "packages/website/src/fonts/typing/Typing-Medium.ttf",
-      "sizeBytes": 879740,
-      "sha256": "70bde4ea7e363336467a125e9d3d631bde090ebe24a569b2d6c39f90c2df3e97",
-      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
-      "source": "https://github.com/rsms/inter",
-      "license": "OFL-1.1",
-      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
-    },
-    {
-      "path": "packages/website/src/fonts/typing/Typing-Regular.ttf",
-      "sizeBytes": 879708,
-      "sha256": "f21310e3ef46427a43f91a7c8d1ceb6836bbc3707965eee636206a6ee0b1c6e8",
-      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
-      "source": "https://github.com/rsms/inter",
-      "license": "OFL-1.1",
-      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
-    },
-    {
-      "path": "packages/website/src/fonts/typing/Typing-SemiBold.ttf",
-      "sizeBytes": 879756,
-      "sha256": "19f9c2cae411db1ab3e334a0ad269357a7dfc65232364601fad02329ab69ae98",
       "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
       "source": "https://github.com/rsms/inter",
       "license": "OFL-1.1",
@@ -450,9 +518,27 @@
       "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
     },
     {
+      "path": "packages/website/src/fonts/LoehrningSans-Medium.ttf",
+      "sizeBytes": 414040,
+      "sha256": "3f6d8a71b8fdbcab081a29c95abfa917ba0f622aca81ad026436628531fc3664",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "https://github.com/rsms/inter",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
+    },
+    {
       "path": "packages/website/src/fonts/LoehrningSans-Medium.woff2",
       "sizeBytes": 23924,
       "sha256": "a38caa38466b1a94ffc8d80ea4b389965d7d951d98cb97811bd6a2acca9c71ba",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "https://github.com/rsms/inter",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/src/fonts/LoehrningSans-Regular.ttf",
+      "sizeBytes": 408424,
+      "sha256": "fa1520b484cec6ba46c870e2f0b0802720fc95fd9810ea245bb96559d2ae342a",
       "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
       "source": "https://github.com/rsms/inter",
       "license": "OFL-1.1",
@@ -468,9 +554,27 @@
       "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
     },
     {
+      "path": "packages/website/src/fonts/LoehrningSans-SemiBold.ttf",
+      "sizeBytes": 415960,
+      "sha256": "0888713110a628683cccf1c0c51614dc2e2f82924bb0133acceec48d742d4c24",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "https://github.com/rsms/inter",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
+    },
+    {
       "path": "packages/website/src/fonts/LoehrningSans-SemiBold.woff2",
       "sizeBytes": 24096,
       "sha256": "0e878e65a550506ae4295fd9adbd1779fd7bb2abae423d81258344aec2edde01",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "https://github.com/rsms/inter",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/src/fonts/typing/Typing-Bold.ttf",
+      "sizeBytes": 879720,
+      "sha256": "0b68b5f13390656f1e283a51c702b266d8c4e46a17d0be2f67b7f6fcc3a32ded",
       "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
       "source": "https://github.com/rsms/inter",
       "license": "OFL-1.1",
@@ -486,6 +590,15 @@
       "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
     },
     {
+      "path": "packages/website/src/fonts/typing/Typing-Medium.ttf",
+      "sizeBytes": 879740,
+      "sha256": "70bde4ea7e363336467a125e9d3d631bde090ebe24a569b2d6c39f90c2df3e97",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "https://github.com/rsms/inter",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
+    },
+    {
       "path": "packages/website/src/fonts/typing/Typing-Medium.woff2",
       "sizeBytes": 60948,
       "sha256": "c67df698a4065d33f11a931c37b424d9653da9ad62217ec8de3b5a3cac01d2f3",
@@ -495,9 +608,27 @@
       "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
     },
     {
+      "path": "packages/website/src/fonts/typing/Typing-Regular.ttf",
+      "sizeBytes": 879708,
+      "sha256": "f21310e3ef46427a43f91a7c8d1ceb6836bbc3707965eee636206a6ee0b1c6e8",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "https://github.com/rsms/inter",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
+    },
+    {
       "path": "packages/website/src/fonts/typing/Typing-Regular.woff2",
       "sizeBytes": 61064,
       "sha256": "53682db1ecfdd18db0af16fcb234a01e4b834ba6914d85806747bb011a59533c",
+      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "https://github.com/rsms/inter",
+      "license": "OFL-1.1",
+      "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/src/fonts/typing/Typing-SemiBold.ttf",
+      "sizeBytes": 879756,
+      "sha256": "19f9c2cae411db1ab3e334a0ad269357a7dfc65232364601fad02329ab69ae98",
       "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
       "source": "https://github.com/rsms/inter",
       "license": "OFL-1.1",

@@ -38,8 +38,8 @@ export function WorkshopsContent({ workshops }: Props) {
                 body: "Jeder Workshop führt Schritt für Schritt durch den Aufbau. Es gibt derzeit keine Termine oder Buchung.",
               },
               {
-                label: "Synthetische Übungsfälle",
-                body: "Alle Fallbeispiele sind offen als erfunden gekennzeichnet: realistische Zahlen, kein echtes Unternehmen.",
+                label: "Synthetischer Hauptfall, echter Zweitfall",
+                body: "Der Hauptfall ist offen als erfunden gekennzeichnet: realistische Zahlen, kein echtes Unternehmen. Fall 2 wendet dieselbe Methode auf die öffentlich eingereichten Quartalszahlen eines echten Unternehmens an.",
               },
               {
                 label: "Material zum Mitnehmen",

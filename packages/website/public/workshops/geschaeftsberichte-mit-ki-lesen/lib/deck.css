@@ -307,6 +307,7 @@ html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
 
 /* ── Reduced motion ────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
+  .msg.dotsline { display: none !important; }
   [data-rise] { opacity: 1 !important; }
   .slide[data-deck-active] [data-rise] { animation: none; }
   .msg, .reveal { opacity: 1 !important; transform: none !important; transition: none; }

@@ -121,7 +121,7 @@ export const WORKSHOPS: readonly Workshop[] = [
         n: "07",
         title: "Wiederholen — dein Unternehmen, dein Analyst",
         description:
-          "Weil die Lesart aufgeschrieben ist, wiederholt sie sich: Nächster Monat, neuer Bericht, derselbe Skill. Das Kit enthält beide Fälle, das Arbeitsblatt, die Field Card und eine leere Vorlage, mit der du den Analysten für die Berichte deines eigenen Unternehmens nachbaust.",
+          "Weil die Lesart aufgeschrieben ist, wiederholt sie sich: Nächster Monat, neuer Bericht, derselbe Skill. Das Kit enthält beide Fälle, das Arbeitsblatt und eine leere Vorlage, mit der du den Analysten für die Berichte deines eigenen Unternehmens nachbaust.",
         tool: "Wiederholung",
       },
     ],
@@ -132,7 +132,7 @@ export const WORKSHOPS: readonly Workshop[] = [
       sector: "Elektronikfertigung",
       period: "September 2023",
       narrative:
-        "NORDA Werke ist ein frei erfundenes Übungsunternehmen für diesen Workshop: ein Elektronikfertiger aus Augsburg, Monatsabschluss September 2023. Die Zahlen des Monats passen nicht auf den ersten Blick zusammen. Die Produktlinie CRAFT (Premium-Küchengeräte) erzielt bei den höchsten Stückpreisen den zweithöchsten Umsatz bei gleichzeitig geringstem Absatzvolumen, trägt aber auch die meisten Qualitätsmängel im Sortiment. Die offene Frage: Linie nacharbeiten oder ihr Marketingbudget für das dritte Quartal umschichten?",
+        "NORDA Werke ist ein frei erfundenes Übungsunternehmen für diesen Workshop: ein Elektronikfertiger aus Augsburg, Monatsabschluss September 2023. Die Zahlen des Monats passen nicht auf den ersten Blick zusammen. Die Produktlinie CRAFT (Premium-Küchengeräte) erzielt bei den höchsten Stückpreisen den zweithöchsten Umsatz auf einem der geringsten Absatzvolumen (Rang 6 von 7 Linien), trägt aber auch die meisten Qualitätsmängel im Sortiment — den zweiten Monat in Folge. Die offene Frage: Linie nacharbeiten oder mehr Q3-Marketingbudget dahinterstellen?",
       metrics: [
         { label: "Umsatz gesamt", value: "21,69 Mio. €" },
         { label: "Einheiten gesamt", value: "139.056" },
@@ -140,7 +140,7 @@ export const WORKSHOPS: readonly Workshop[] = [
         { label: "CRAFT-Einheiten", value: "9.162" },
       ],
       decisionQuestion:
-        "Soll NORDA die Produktlinie CRAFT technisch nacharbeiten oder ihr Marketingbudget für Q3 auf eine gesündere Linie umschichten?",
+        "Soll NORDA die Produktlinie CRAFT technisch nacharbeiten — oder, wie der Vertriebsleiter fordert, mehr Q3-Marketingbudget hinter CRAFT stellen?",
       dataLimitations: [
         "Keine echte Bruttomarge je Linie: Es liegen keine Stückkosten pro Produkt vor.",
         "Keine Kundenretouren je Linie: Bestellungen sind nicht mit Produktlinien verknüpft.",
@@ -167,7 +167,7 @@ export const WORKSHOPS: readonly Workshop[] = [
         href: `${WORKSHOP_BASE_PATH}/norda-analyst-kit.zip`,
         kind: "zip",
         description:
-          "Englisches Kit mit beiden Fällen: CSV-Rohdaten, Monatsberichte (Markdown + PDF), der halb fertige Kennzahlen-Skill, die Dashboard-Vorlage, das Arbeitsblatt, die Meta-Aufgabe (Fall 2) und eine leere Vorlage für das eigene Unternehmen.",
+          "Englisches Kit mit beiden Fällen: CSV-Rohdaten, beide Monatsberichte als Markdown, der halb fertige Kennzahlen-Skill, die Dashboard-Vorlage, das Arbeitsblatt, die Meta-Aufgabe (Fall 2) und eine leere Vorlage für das eigene Unternehmen. Reines Textarchiv — den gestalteten Bericht siehst du im Walkthrough.",
       },
     ],
   },
