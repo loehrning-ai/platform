@@ -1,0 +1,79 @@
+/* ==========================================================================
+   loehrning.ai — Deck data-viz layer (Das Ö)
+   Report-page imagery + slots for the animated data visuals (lib/deck-viz.js).
+   Flat, square-cut, hard 1px frames — no radius, no shadow.
+   ========================================================================== */
+
+/* ── Report page shots (real PDF rasters) ──────────────────────────────── */
+.report-stack {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 720px;
+}
+.report-shot {
+  display: block;
+  max-height: 760px; width: auto; max-width: 100%;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+/* layered "stack of pages" — lead in front, a second page peeking behind */
+.report-stack .report-shot.lead {
+  position: relative; z-index: 2;
+}
+.report-stack .report-shot.back {
+  position: absolute; z-index: 1;
+  max-height: 700px;
+  top: 50%; left: 50%;
+  transform: translate(-38%, -54%) rotate(-2deg);
+  opacity: .55;
+  filter: saturate(.85);
+}
+.report-stack.answered { min-height: 760px; }
+.report-stack.answered .report-shot.lead { max-height: 800px; }
+.slide.ink .report-shot { border-color: rgba(243,239,233,.22); }
+
+/* subtle intro motion (respects reduced-motion via the global rule) */
+.report-stack .report-shot {
+  transition: transform .6s var(--ease), opacity .6s var(--ease);
+}
+.slide:not(.on) .report-stack .report-shot { }
+
+/* ── Data-viz slots (filled by lib/deck-viz.js at Stage 5) ──────────────── */
+.viz-slot {
+  display: flex; flex-direction: column; justify-content: center;
+  min-height: 360px; width: 100%;
+}
+.viz-slot.dark { min-height: 200px; }
+
+/* rank / tension chart */
+.viz-rank { width: 100%; }
+.viz-rank .vr-row {
+  display: grid; grid-template-columns: 128px 1fr 132px;
+  align-items: center; gap: 20px; padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+}
+.viz-rank .vr-name { font-weight: 600; font-size: 20px; letter-spacing: -.01em; }
+.viz-rank .vr-track { position: relative; height: 26px; background: transparent; }
+.viz-rank .vr-fill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 0;
+  background: var(--card-hover);
+  transition: width .9s var(--ease);
+}
+.viz-rank .vr-row.hot .vr-fill { background: var(--mennige); }
+.viz-rank .vr-val {
+  text-align: right; font-family: var(--mono); font-size: 17px;
+  font-feature-settings: "tnum" 1; color: var(--muted);
+}
+.viz-rank .vr-row.hot .vr-name,
+.viz-rank .vr-row.hot .vr-val { color: var(--mennige); }
+
+/* two-months NCR motif (on dark) */
+.viz-ncr { display: flex; align-items: flex-end; gap: 28px; }
+.viz-ncr .nc-col { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.viz-ncr .nc-bar {
+  width: 74px; height: 0; background: var(--mennige);
+  transition: height .8s var(--ease);
+}
+.viz-ncr .nc-bar.ghost { background: rgba(183,58,21,.32); }
+.viz-ncr .nc-cap { font-family: var(--mono); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; opacity: .8; }
+.viz-ncr .nc-val { font-family: var(--mono); font-size: 24px; font-weight: 700; }

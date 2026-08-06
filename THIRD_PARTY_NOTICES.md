@@ -6,6 +6,10 @@ This file records third-party material distributed or transformed by the reposit
 
 `Loehrning Sans` and `Typing` are modified, renamed derivatives of Inter by Rasmus Andersson and The Inter Project Authors. They are redistributed under SIL Open Font License 1.1. See `LICENSES/OFL-1.1.txt` and `ASSET_MANIFEST.json`.
 
+## JetBrains Mono
+
+`packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/fonts/JetBrainsMono-var.woff2` is JetBrains Mono by JetBrains s.r.o., redistributed under SIL Open Font License 1.1. See `LICENSES/OFL-1.1.txt`.
+
 ## Geist
 
 The application uses the `geist` package, distributed under the SIL Open Font License. It is installed from the package lock and is not checked into this repository.

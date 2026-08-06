@@ -66,9 +66,9 @@ export const WORKSHOPS: readonly Workshop[] = [
     title: "Geschäftsberichte mit KI lesen",
     eyebrow: "Selbstlern-Workshop · Business Reports",
     description:
-      "Mit einer geführten Selbstlern-Anleitung baust du in der Claude-App einen kleinen KI-Analysten für einen realistisch aufgebauten synthetischen Monatsbericht: Rohdaten einlesen, Kennzahlen sauber definieren, ein Dashboard befüllen und am Ende eine begründete Entscheidung treffen. Ohne Programmierung und API-Key; für die Schritte in Claude brauchst du einen passenden Claude-Zugang.",
+      "Mit einer geführten Selbstlern-Anleitung baust du in der Claude-App einen kleinen KI-Analysten entlang eines roten Fadens: Du arbeitest für ein realistisch aufgebautes synthetisches Unternehmen, bekommst dessen Monatsbericht samt der Rohdaten, aus denen er geschrieben wurde, definierst in fünf Prompts eigene Kennzahlen-Regeln als wiederverwendbaren Skill, befüllst ein Dashboard und triffst eine begründete Entscheidung. In Fall 2 verlässt du die Sandbox: Dieselbe Methode läuft auf einem echten Unternehmen — Metas öffentlich bei der SEC eingereichte Quartalsmitteilung, live abgerufen (im Kit wird nichts davon weiterverteilt). Ohne Programmierung und API-Key; für die Schritte in Claude brauchst du einen passenden Claude-Zugang.",
     format: "Selbstlern-Kit",
-    duration: "~75 Minuten",
+    duration: "~90 Minuten",
     audience: [
       "Mitarbeitende, die Monats- oder Quartalsberichte lesen oder erstellen",
       "Controlling- und Finance-Teams im Mittelstand",
@@ -77,52 +77,52 @@ export const WORKSHOPS: readonly Workshop[] = [
     steps: [
       {
         n: "01",
-        title: "Die Daten laden",
+        title: "Verankern — Claude lernt das Unternehmen",
         description:
-          "Du öffnest den Kit-Ordner: fünf einfache CSV-Dateien (auch in Excel nutzbar) und ein einseitiger Unternehmenssteckbrief. Claude liest Steckbrief und Berichte und fasst in zwei Sätzen zusammen, wer das Unternehmen ist und welche Entscheidung der Monatsbericht vorbereitet, das \"Unternehmensgedächtnis\" im Kleinen.",
+          "Du öffnest den Kit-Ordner in der Claude-App: der Monatsbericht (8 Seiten), fünf CSV-Rohdaten-Dateien (auch in Excel nutzbar) und ein Unternehmenssteckbrief. Ein Satz genügt: Claude liest Steckbrief und Bericht und benennt, wer das Unternehmen ist und welche Entscheidung der Monat vorbereitet. Der Ordner ist der Kontext — nichts wird hochgeladen oder konfiguriert.",
         tool: "Dateien",
       },
       {
         n: "02",
-        title: "Die Berichte lesen",
+        title: "Beibringen — den Kennzahlen-Skill selbst schreiben",
         description:
-          "Das Kit enthält zwei Monatsberichte in einem wiederverwendbaren Format. Claude liest sie für die Geschichte hinter den Zahlen, und du siehst, wie ein Bericht jeden Monat in dieselbe Vorlage eingetragen wird.",
-        tool: "Berichte",
-      },
-      {
-        n: "03",
-        title: "Den Kennzahlen-Skill nutzen",
-        description:
-          "Ein Claude-Skill legt fest, was die Zahlen hier bedeuten und wie sie jedes Mal gleich berechnet werden. Claude führt das Skill-Skript aus und zeigt Umsatz und Einheiten insgesamt sowie Umsatz und Fehlerquote je Produktlinie. Die Arithmetik ist exakt: Das Modell schätzt keine Zahl, die sich berechnen lässt.",
+          "Das Herzstück: Der Kennzahlen-Skill liegt halb fertig im Kit. Claude fragt dich die Lücken einzeln ab — was bedeuten Umsatz, Mängel, Marketing HIER? — und schreibt deine Antworten in Klartext in die Skill-Datei. Ab jetzt liest Claude in diesem Ordner immer zuerst deine Regeln. Keine Zeile Code.",
         tool: "Skill",
       },
       {
+        n: "03",
+        title: "Anwenden — extrahieren und an der Quelle prüfen",
+        description:
+          "Dein Skill liest den Bericht mit deinen Regeln, extrahiert den Monat in strukturierte Kennzahlen und prüft eine Zahl gegen die Rohdaten-CSV — jede Zahl bleibt auf Datei und Spalte rückführbar. Vorher einmal ohne Skill fragen lohnt sich: Die generische Antwort fällt bei jedem anders aus; mit Skill greifen dieselben Regeln jedes Mal.",
+        tool: "Claude Code",
+      },
+      {
         n: "04",
-        title: "Das Unternehmensgedächtnis",
+        title: "Sehen — das Dashboard füllt sich",
         description:
-          "Steckbrief, Kennzahlendefinitionen und Bericht landen gemeinsam in einem Claude-Projekt, sodass jede weitere Frage im Kontext des Unternehmens beantwortet wird, nicht allgemein. Kontext schlägt Promptkunst: Dieselbe Frage wird präziser, sobald Claude das Unternehmen kennt.",
-        tool: "Projekt",
-      },
-      {
-        n: "05",
-        title: "Verbinden statt kopieren",
-        description:
-          "Über einen unterstützten und freigegebenen Connector kannst du zugängliche Dateien aus Google Drive oder E-Mail einbinden. Verfügbarkeit und Dateizugriff hängen vom jeweiligen Connector und Claude-Zugang ab; ein API-Key ist nicht nötig.",
-        tool: "Connectors",
-      },
-      {
-        n: "06",
-        title: "Das Dashboard befüllen",
-        description:
-          "Claude Code schreibt die berechneten Zahlen in die Dashboard-Vorlage und öffnet sie. Dafür brauchst du die Claude-Desktop-App mit Claude-Code-Oberfläche oder die installierte Claude-Code-CLI sowie einen unterstützten Claude-Zugang. Ein API-Key ist nicht nötig. Am Ende steht ein teilbares Ein-Seiten-Dashboard mit Umsatz und Fehlerquote je Linie, Marketingzahlen und der offenen Entscheidung.",
+          "Das Dashboard liegt als bewusst leere Vorlage im Kit. Ein Prompt, und Claude schreibt die extrahierten Kennzahlen hinein und öffnet die Seite: Umsatz je Linie mit markierter Problemlinie, Qualitätsmängel, Marketing, offene Eskalationen und die anstehende Entscheidung — der 8-Seiten-Bericht für den Analysten, die eine Seite für den Raum.",
         tool: "Dashboard",
       },
       {
-        n: "07",
-        title: "Die Entscheidung treffen",
+        n: "05",
+        title: "Entscheiden — gegen den Vertriebsleiter argumentieren",
         description:
-          "Am Ende steht keine Zusammenfassung, sondern eine Entscheidung: Linie nacharbeiten oder Marketingbudget umschichten, mit der Zahl, die sie stützt, den Kosten eines Irrtums und einer ehrlichen Aussage darüber, was die Daten nicht beantworten können.",
+          "Am Ende steht keine Zusammenfassung, sondern eine Entscheidung: Premium-Linie nacharbeiten oder ihr Q3-Marketingbudget erhöhen? Mit der Zahl, die sie stützt, den Kosten eines Irrtums, einer ehrlichen Aussage darüber, was die Daten nicht beantworten können — und der Gegenposition, so überzeugend wie möglich argumentiert.",
         tool: "Entscheidung",
+      },
+      {
+        n: "06",
+        title: "Fall 2 — ein echtes Unternehmen: Metas Quartal",
+        description:
+          "Dieselbe Methode verlässt die Sandbox: Claude ruft Metas öffentlich bei der SEC eingereichte Quartalsmitteilung (Q2 2026) live ab — im Kit wird nichts davon weiterverteilt. Du definierst sechs Kennzahlen in Klartext, extrahierst das Quartal (+28 % Umsatz, −8 % operatives Ergebnis) und lässt Claude diesmal ein Dashboard ohne Vorlage selbst entwerfen. Die Frage auf dem Tisch: 31 Mrd. $ Capex in einem Quartal — Investment oder Leck?",
+        tool: "SEC-Filing · live",
+      },
+      {
+        n: "07",
+        title: "Wiederholen — dein Unternehmen, dein Analyst",
+        description:
+          "Weil die Lesart aufgeschrieben ist, wiederholt sie sich: Nächster Monat, neuer Bericht, derselbe Skill. Das Kit enthält beide Fälle, das Arbeitsblatt, die Field Card und eine leere Vorlage, mit der du den Analysten für die Berichte deines eigenen Unternehmens nachbaust.",
+        tool: "Wiederholung",
       },
     ],
     caseStudy: {
@@ -134,9 +134,9 @@ export const WORKSHOPS: readonly Workshop[] = [
       narrative:
         "NORDA Werke ist ein frei erfundenes Übungsunternehmen für diesen Workshop: ein Elektronikfertiger aus Augsburg, Monatsabschluss September 2023. Die Zahlen des Monats passen nicht auf den ersten Blick zusammen. Die Produktlinie CRAFT (Premium-Küchengeräte) erzielt bei den höchsten Stückpreisen den zweithöchsten Umsatz bei gleichzeitig geringstem Absatzvolumen, trägt aber auch die meisten Qualitätsmängel im Sortiment. Die offene Frage: Linie nacharbeiten oder ihr Marketingbudget für das dritte Quartal umschichten?",
       metrics: [
-        { label: "Umsatz gesamt", value: "21,7 Mio. €" },
+        { label: "Umsatz gesamt", value: "21,69 Mio. €" },
         { label: "Einheiten gesamt", value: "139.056" },
-        { label: "CRAFT-Umsatz", value: "4,1 Mio. €" },
+        { label: "CRAFT-Umsatz", value: "4,12 Mio. €" },
         { label: "CRAFT-Einheiten", value: "9.162" },
       ],
       decisionQuestion:
@@ -149,25 +149,25 @@ export const WORKSHOPS: readonly Workshop[] = [
     },
     materials: [
       {
-        label: "Workshop-Walkthrough (Englisch)",
+        label: "Workshop-Walkthrough (Englisch, 17 Slides)",
         href: `${WORKSHOP_BASE_PATH}/slides.html`,
         kind: "html",
         description:
-          "Englische Anleitung durch alle sieben Schritte, inklusive der vier Prompts zum Mitgeben.",
+          "Englisches Slide-Deck entlang des roten Fadens: das Unternehmen, der Ordner, die fünf Prompts mit ihren Artefakten, Fall 2 (Meta) — inklusive aller Prompts zum Kopieren. Mit Pfeiltasten blättern.",
       },
       {
         label: "Field Card (Englisch, 1 Seite)",
         href: `${WORKSHOP_BASE_PATH}/field-card.html`,
         kind: "html",
         description:
-          "Englische druckbare Übersichtsseite mit vier Prompts, Kennzahlendefinitionen und den Grenzen der Daten.",
+          "Englische druckbare Übersichtsseite: die fünf Fragen jeder Kennzahlen-Definition, die fünf Prompts und die zwei Vertrauens-Prompts — plus die Grenzen der Daten.",
       },
       {
         label: "NORDA Analyst Kit (Englisch, .zip)",
         href: `${WORKSHOP_BASE_PATH}/norda-analyst-kit.zip`,
         kind: "zip",
         description:
-          "Englisches Kit mit Übungsdaten: CSV-Dateien, Berichte, Kennzahlen-Skill und Dashboard-Vorlage zum Nachbauen mit eigenen Zahlen.",
+          "Englisches Kit mit beiden Fällen: CSV-Rohdaten, Monatsberichte (Markdown + PDF), der halb fertige Kennzahlen-Skill, die Dashboard-Vorlage, das Arbeitsblatt, die Meta-Aufgabe (Fall 2) und eine leere Vorlage für das eigene Unternehmen.",
       },
     ],
   },
