@@ -1,4 +1,4 @@
-/* loehrning.ai — "Das Ö" (CI v5.2) design tokens — shared by every  surface.
+/* loehrning.ai — "Das Ö" (CI v5.2) design tokens — shared by every 02-ai-analyst surface.
    Light-first, flat Bauhaus (radius 0), one Mennige accent, Typing brand face + mono numbers.
    Source of truth: marketing/brand/logo/SPEC.html. Fonts vendored in ../assets/fonts/.
    Legacy `--kupfer*` names are kept as ALIASES so existing deck.css/HTML hooks (var(--kupfer-full),

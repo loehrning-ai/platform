@@ -492,8 +492,8 @@
     },
     {
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/norda-analyst-kit.zip",
-      "sizeBytes": 51375,
-      "sha256": "d5095332879575146e65b000ef5a614375aaf407fa5467144ef7411f016e06b2",
+      "sizeBytes": 51351,
+      "sha256": "d9d83446004408d11d83dd7c7b0471524dca5b7a76fe914ab818e3912049bf4d",
       "owner": "Tim Löhr",
       "source": "Eigenes Workshop-Material, loehrning.ai — Text-only Teilnehmer-Kit (CSV-Übungsdaten, Berichte in Markdown, Skill, Dashboard-Vorlage)",
       "license": "LicenseRef-Loehrning-Brand",
