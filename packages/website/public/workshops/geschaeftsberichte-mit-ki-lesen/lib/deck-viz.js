@@ -5,7 +5,7 @@
    Exposes window.DeckViz = { play(slide, {reduce}), reset(slide) }.
    ========================================================================== */
 (function(){
-  // revenue €M + September NCR count per line (0 = no NCRs recorded, shown "—")
+  // revenue €M + September NCR count per line (0 = no NCRs recorded, shown as a dash)
   var LINES = [
     { n:'AURA',  rev:7.96, ncr:18 },
     { n:'CRAFT', rev:4.12, ncr:23, hot:true },
@@ -33,7 +33,7 @@
       track.appendChild(fill); row.appendChild(track);
       var val = el('span','vr-val');
       val.appendChild(document.createTextNode('€'+L.rev.toFixed(2)+'M'));
-      var chip = el('span', null, (L.ncr>0 ? L.ncr+' NCR' : '— NCR'));
+      var chip = el('span', null, (L.ncr>0 ? L.ncr+' NCR' : 'not logged'));
       chip.style.cssText = 'margin-left:16px;font-weight:'+(L.ncr>0?'700':'400')+
         ';color:'+(L.hot?'var(--mennige)':(L.ncr>0?'var(--ink)':'var(--muted)'))+
         (L.ncr>0?'':';opacity:.45');
@@ -41,7 +41,7 @@
       row.appendChild(val);
       wrap.appendChild(row);
     });
-    var cap = el('div', null, 'Revenue by line, September · CRAFT — #2 revenue, #6 volume, most defects');
+    var cap = el('div', null, 'Revenue by line, September · CRAFT is #2 in revenue, #6 in volume, and worst on defects');
     cap.style.cssText = 'font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:20px';
     slot.appendChild(wrap); slot.appendChild(cap);
   }
@@ -66,7 +66,7 @@
       c2.appendChild(v2);
       var b2 = el('span','nc-bar ghost'); b2.dataset.h = (G.field/MAXN*150).toFixed(0)+'px';
       c2.appendChild(b2);
-      var cp = el('span','nc-cap','NEST — next worst'); cp.style.opacity='.5';
+      var cp = el('span','nc-cap','NEST, next worst'); cp.style.opacity='.5';
       c2.appendChild(cp);
       wrap.appendChild(c2);
     });

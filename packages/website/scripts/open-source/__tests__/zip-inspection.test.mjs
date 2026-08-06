@@ -24,7 +24,7 @@ const scanScript = resolve(here, "..", "scan-export.mjs");
 const repositoryRoot = resolve(here, "../../../../..");
 const actualKitPath = join(
   repositoryRoot,
-  "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/norda-analyst-kit.zip",
+  "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
 );
 const FIXED_DOS_TIME = 0;
 const FIXED_DOS_DATE = 0x5821;
@@ -495,16 +495,18 @@ test("platform profile rejects opaque archive formats after manifest verificatio
   }
 });
 
-test("the published NORDA kit is structurally valid and fully inspectable", async () => {
+test("the published NORTHWIND kit is structurally valid and fully inspectable", async () => {
   const archive = await readFile(actualKitPath);
-  const entries = inspectZipArchive(archive, { label: "norda-analyst-kit.zip" });
-  assert.equal(entries.length, 26);
-  assert.equal(entries.filter((entry) => entry.kind === "file").length, 18);
+  const entries = inspectZipArchive(archive, { label: "northwind-analyst-kit.zip" });
+  // 30 entries (21 files + 9 directories) after the NORTHWIND rename.
+  // Re-derive these two numbers whenever the kit gains or loses a file.
+  assert.equal(entries.length, 30);
+  assert.equal(entries.filter((entry) => entry.kind === "file").length, 21);
   assert.ok(
     entries.some(
       (entry) =>
-        entry.path === "norda-analyst-kit/dashboard/index.html" &&
-        entry.text?.includes("NORDA Werke"),
+        entry.path === "northwind-analyst-kit/dashboard/index.html" &&
+        entry.text?.includes("NORTHWIND"),
     ),
   );
 });

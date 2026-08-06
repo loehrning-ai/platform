@@ -144,18 +144,51 @@ html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
 .chip .dot { width: 8px; height: 8px; background: var(--kupfer-full); }
 .slide.dark .chip, .slide.ink .chip { border-color: #f5efe8; }
 
-/* prompt card — the thing participants will paste */
+/* prompt card — the block participants copy into the Claude app.
+   Light by design: it has to read as a quotable snippet on paper, not a terminal. */
 .prompt-card {
-  background: var(--ink); color: #f5efe8;
+  background: var(--paper);
+  border: 1.5px solid var(--line);
   border-top: 3px solid var(--kupfer-full);
-  padding: 28px 32px;
-  font-family: var(--mono); font-size: 15.5px; line-height: 1.6;
+  font-family: var(--mono);
+  display: flex; flex-direction: column;
+}
+.prompt-card .pc-head {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 16px 10px;
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+}
+.prompt-card .pc-mark { width: 21px; height: 21px; color: var(--kupfer-full); flex: 0 0 auto; display: block; }
+.prompt-card .pc-tag {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--muted);
+}
+.prompt-card .pc-copy {
+  margin-left: auto; font-family: var(--mono);
+  font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--kupfer-full); background: transparent;
+  border: 1.5px solid var(--kupfer-full); padding: 6px 12px 5px;
+  cursor: pointer; transition: background 0.16s var(--ease), color 0.16s var(--ease);
+}
+.prompt-card .pc-copy:hover,
+.prompt-card .pc-copy.done { background: var(--kupfer-full); color: var(--paper); }
+.prompt-card .pc-body {
+  margin: 0; padding: 19px 22px 21px;
+  font-size: 15.5px; line-height: 1.62; color: var(--ink);
   white-space: pre-wrap;
 }
-.prompt-card .ptag {
-  display: block; font-size: 11px; letter-spacing: 0.24em;
-  text-transform: uppercase; color: var(--kupfer-light); margin-bottom: 14px;
+.prompt-card.compact .pc-body { font-size: 14px; line-height: 1.55; padding: 15px 18px 16px; }
+
+/* on inverted slides the card keeps its shape but drops onto the dark ground */
+.slide.dark .prompt-card, .slide.ink .prompt-card {
+  background: #1b1917; border-color: rgba(245, 239, 232, 0.16);
 }
+.slide.dark .prompt-card .pc-head, .slide.ink .prompt-card .pc-head {
+  background: #232020; border-bottom-color: rgba(245, 239, 232, 0.14);
+}
+.slide.dark .prompt-card .pc-tag, .slide.ink .prompt-card .pc-tag { color: #c5b9af; }
+.slide.dark .prompt-card .pc-body, .slide.ink .prompt-card .pc-body { color: #f5efe8; }
 
 /* process steps */
 .steps { display: flex; flex-direction: column; }
@@ -327,4 +360,5 @@ html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
   .cycling .word { position: relative !important; opacity: 1 !important; transform: none !important; }
   .cycling .word + .word { display: none !important; }
   .cycling-sizer { display: none !important; }
+  .prompt-card .pc-copy { display: none !important; }
 }

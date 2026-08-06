@@ -268,13 +268,13 @@ export const WORKSHOPS: readonly Workshop[] = [
       },
     ],
     caseStudy: {
-      companyName: "NORDA Werke GmbH",
+      companyName: "NORTHWIND GmbH",
       isFictional: true,
-      location: "Augsburg",
+      location: "Berlin",
       sector: "Elektronikfertigung",
       period: "September 2023",
       narrative:
-        "NORDA Werke ist ein frei erfundenes Übungsunternehmen für diesen Workshop: ein Elektronikfertiger aus Augsburg, Monatsabschluss September 2023. Die Zahlen des Monats passen nicht auf den ersten Blick zusammen. Die Produktlinie CRAFT (Premium-Küchengeräte) erzielt bei den höchsten Stückpreisen den zweithöchsten Umsatz auf einem der geringsten Absatzvolumen (Rang 6 von 7 Linien), trägt aber auch die meisten Qualitätsmängel im Sortiment — den zweiten Monat in Folge. Die offene Frage: Linie nacharbeiten oder mehr Q3-Marketingbudget dahinterstellen?",
+        "NORTHWIND ist ein frei erfundenes Übungsunternehmen für diesen Workshop: ein familiengeführter Elektronikhersteller aus Berlin mit rund 850 Beschäftigten und acht Produktlinien, Monatsabschluss September 2023. Die Zahlen des Monats passen nicht auf den ersten Blick zusammen. CRAFT ist die Kaffee-Linie des Hauses: zwei Espressomaschinen und eine Mühle zwischen 199 € und 699 €, die neueste und teuerste Linie im Sortiment. Sie erzielt bei den höchsten Stückpreisen den zweithöchsten Umsatz auf einem der geringsten Absatzvolumen (Rang 6 von 7 Linien), trägt aber auch die meisten Qualitätsmängel im Sortiment, den zweiten Monat in Folge. Die offene Frage: Linie nacharbeiten oder mehr Q3-Marketingbudget dahinterstellen?",
       metrics: [
         { label: "Umsatz gesamt", value: "21,69 Mio. €" },
         { label: "Einheiten gesamt", value: "139.056" },
@@ -282,7 +282,7 @@ export const WORKSHOPS: readonly Workshop[] = [
         { label: "CRAFT-Einheiten", value: "9.162" },
       ],
       decisionQuestion:
-        "Soll NORDA die Produktlinie CRAFT technisch nacharbeiten — oder, wie der Vertriebsleiter fordert, mehr Q3-Marketingbudget hinter CRAFT stellen?",
+        "Soll NORTHWIND die Produktlinie CRAFT technisch nacharbeiten — oder, wie der Vertriebsleiter fordert, mehr Q3-Marketingbudget hinter CRAFT stellen?",
       dataLimitations: [
         "Keine echte Bruttomarge je Linie: Es liegen keine Stückkosten pro Produkt vor.",
         "Keine Kundenretouren je Linie: Bestellungen sind nicht mit Produktlinien verknüpft.",
@@ -306,22 +306,15 @@ export const WORKSHOPS: readonly Workshop[] = [
     },
     materials: [
       {
-        label: "Workshop-Walkthrough (Englisch, 17 Slides)",
+        label: "Workshop-Walkthrough (Englisch, 21 Slides)",
         href: `${WORKSHOP_BASE_PATH}/slides.html`,
         kind: "html",
         description:
-          "Englisches Slide-Deck entlang des roten Fadens: das Unternehmen, der Ordner, die fünf Prompts mit ihren Artefakten, Fall 2 (Meta) — inklusive aller Prompts zum Kopieren. Mit Pfeiltasten blättern.",
+          "Englisches Slide-Deck entlang des roten Fadens: das Unternehmen, das Zip-Verzeichnis, die fünf Prompts mit ihren Artefakten, drei anspruchsvollere Zusatz-Prompts und Fall 2 (Meta). Jeder Prompt steht mit Kopier-Knopf auf der Folie. Mit Pfeiltasten blättern.",
       },
       {
-        label: "Field Card (Englisch, 1 Seite)",
-        href: `${WORKSHOP_BASE_PATH}/field-card.html`,
-        kind: "html",
-        description:
-          "Englische druckbare Übersichtsseite: die fünf Fragen jeder Kennzahlen-Definition, die fünf Prompts und die zwei Vertrauens-Prompts — plus die Grenzen der Daten.",
-      },
-      {
-        label: "NORDA Analyst Kit (Englisch, .zip)",
-        href: `${WORKSHOP_BASE_PATH}/norda-analyst-kit.zip`,
+        label: "NORTHWIND Analyst Kit (Englisch, .zip)",
+        href: `${WORKSHOP_BASE_PATH}/northwind-analyst-kit.zip`,
         kind: "zip",
         description:
           "Englisches Kit mit beiden Fällen: CSV-Rohdaten, beide Monatsberichte als Markdown, der halb fertige Kennzahlen-Skill, die Dashboard-Vorlage, das Arbeitsblatt, die Meta-Aufgabe (Fall 2) und eine leere Vorlage für das eigene Unternehmen. Reines Textarchiv — den gestalteten Bericht siehst du im Walkthrough.",

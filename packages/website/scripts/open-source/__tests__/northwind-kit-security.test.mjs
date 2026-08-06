@@ -10,14 +10,14 @@ const here = dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = resolve(here, "../../../../..");
 const kitPath = join(
   repositoryRoot,
-  "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/norda-analyst-kit.zip",
+  "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
 );
-const dashboardPath = "norda-analyst-kit/dashboard/index.html";
+const dashboardPath = "northwind-analyst-kit/dashboard/index.html";
 
 async function readDashboard() {
   const archive = await readFile(kitPath);
   const entries = inspectZipArchive(archive, {
-    label: "norda-analyst-kit.zip",
+    label: "northwind-analyst-kit.zip",
   });
   const dashboard = entries.find((entry) => entry.path === dashboardPath);
   assert.ok(dashboard?.text, `${dashboardPath} must be inspectable UTF-8 text`);
@@ -68,7 +68,7 @@ test("attacker-shaped generated metrics render only as text", async () => {
   );
 
   const payload =
-    '</span><img src=x onerror="globalThis.__nordaXssExecuted=true">';
+    '</span><img src=x onerror="globalThis.__northwindXssExecuted=true">';
   const dom = new JSDOM(
     '<!doctype html><html><body><div id="app"></div></body></html>',
     {
@@ -76,7 +76,15 @@ test("attacker-shaped generated metrics render only as text", async () => {
       url: "https://local.invalid/dashboard/index.html",
     },
   );
-  dom.window.NORDA_DATA = {
+  // jsdom does not implement requestAnimationFrame. The dashboard's KPI
+  // count-up and scroll-reveal animations call it unconditionally once
+  // rendering succeeds, so without a stub the ReferenceError is caught by
+  // the dashboard's own top-level try/catch and silently swaps the just-
+  // rendered (safely escaped) markup for the generic error state — masking
+  // the very assertions this test exists to make, not exercising them.
+  dom.window.requestAnimationFrame = (cb) => setTimeout(() => cb(Date.now()), 0);
+  dom.window.cancelAnimationFrame = (id) => clearTimeout(id);
+  dom.window.NORTHWIND_DATA = {
     month: payload,
     prior_month: payload,
     totals: { revenue_eur: 100, units: 1 },
@@ -115,6 +123,6 @@ test("attacker-shaped generated metrics render only as text", async () => {
   assert.ok(app);
   assert.ok(app.textContent?.includes(payload));
   assert.equal(app.querySelector("img,script,iframe,object,embed"), null);
-  assert.equal(dom.window.__nordaXssExecuted, undefined);
+  assert.equal(dom.window.__northwindXssExecuted, undefined);
   dom.window.close();
 });
