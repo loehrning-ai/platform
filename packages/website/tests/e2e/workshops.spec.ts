@@ -21,7 +21,7 @@ test.describe("workshop self-study journey", () => {
 
   test("serves the complete analyst kit as a ZIP", async ({ request }) => {
     const response = await request.get(
-      "/workshops/geschaeftsberichte-mit-ki-lesen/norda-analyst-kit.zip",
+      "/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
     );
     expect(response.status()).toBe(200);
     expect(response.headers()["content-type"]).toMatch(

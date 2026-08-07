@@ -22,6 +22,10 @@ The AI-native demo implementations under
 project source by Tim Löhr and fall under the MIT grant above. Historical local
 working archives are not dependencies and are not part of the public tree.
 
+## Workshop bundles
+
+`packages/website/public/workshops/**` is copyright Tim Löhr, all rights reserved, except vendored fonts under `public/workshops/**/assets/fonts/**`, which are SIL Open Font License 1.1 (see `LICENSES/OFL-1.1.txt` and `LICENSES/OFL-1.1-JetBrainsMono.txt`).
+
 ## ISC geographic data
 
 `packages/website/src/lib/country-polylines-3d.ts` contains transformed geographic outline data from `world-atlas`, processed with `topojson-client`. It is distributed under the upstream ISC licenses reproduced in `LICENSES/world-atlas-ISC.txt` and `LICENSES/topojson-client-ISC.txt`. The generated file retains source and transformation attribution and is not included in this project's MIT grant.

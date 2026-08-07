@@ -1,0 +1,364 @@
+/* ==========================================================================
+   loehrning.ai — Workshop Deck Theme (Das Ö / CI v5.2)
+   Slide chrome + type + motion for click-through workshop decks.
+   Reusable across all future workshops: import AFTER lib/tokens.css,
+   wrap slides in <deck-stage width="1920" height="1080"> (lib/deck-stage.js).
+   Design canvas: 1920×1080, auto-scaled. One accent: Mennige.
+   ========================================================================== */
+
+html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
+
+/* ── Slide shell ───────────────────────────────────────────────────────── */
+.slide {
+  width: 1920px; height: 1080px;
+  position: relative;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  overflow: hidden;
+}
+.slide.dark   { background: var(--dark);  color: #f5efe8; }
+.slide.ink    { background: var(--ink);   color: var(--paper); }
+.slide.kupfer { background: var(--kupfer-full); color: var(--paper); }
+.slide.cream  { background: var(--card);  color: var(--ink); }
+
+/* ── Ghost numeral ─────────────────────────────────────────────────────── */
+.ghost-num {
+  position: absolute; right: -24px; bottom: -160px;
+  font-size: 780px; line-height: 0.8; font-weight: 700; letter-spacing: -0.08em;
+  color: var(--ink); opacity: 0.035;
+  pointer-events: none; user-select: none; z-index: 1;
+}
+.slide.dark .ghost-num,
+.slide.ink .ghost-num { color: #f5efe8; opacity: 0.045; }
+.slide.kupfer .ghost-num { color: var(--paper); opacity: 0.10; }
+
+/* ── Chrome rail ───────────────────────────────────────────────────────── */
+.chrome { position: absolute; inset: 0; pointer-events: none; z-index: 10; }
+
+.chrome__topline {
+  position: absolute; top: 68px; left: 96px; right: 96px; height: 1px;
+  background: var(--ink); opacity: 0.10;
+}
+.slide.dark .chrome__topline,
+.slide.ink .chrome__topline { background: #f5efe8; opacity: 0.12; }
+.slide.kupfer .chrome__topline { background: var(--paper); opacity: 0.22; }
+
+.chrome__topbar {
+  position: absolute; top: 44px; left: 96px; right: 96px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted);
+}
+.slide.dark .chrome__topbar,
+.slide.ink .chrome__topbar { color: #c5b9af; }
+.slide.kupfer .chrome__topbar { color: var(--paper); opacity: 0.82; }
+
+.chrome__topbar .brand { display: flex; align-items: center; gap: 10px; }
+.chrome__topbar .brand .markdot { width: 9px; height: 9px; background: var(--kupfer-full); }
+.slide.kupfer .chrome__topbar .brand .markdot { background: var(--paper); }
+
+.chrome__footer {
+  position: absolute; bottom: 44px; left: 96px; right: 96px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted);
+}
+.slide.dark .chrome__footer,
+.slide.ink .chrome__footer { color: #c5b9af; }
+.slide.kupfer .chrome__footer { color: var(--paper); opacity: 0.82; }
+.chrome__footer .page { font-variant-numeric: tabular-nums; letter-spacing: 0.16em; }
+.chrome__footer .mini-rule { width: 36px; height: 2px; background: var(--kupfer-full); }
+.slide.kupfer .chrome__footer .mini-rule { background: var(--paper); }
+.chrome__footer .fleft { display: flex; align-items: center; gap: 14px; }
+
+/* ── Slide body ────────────────────────────────────────────────────────── */
+.body {
+  position: absolute; inset: 128px 96px 104px 96px;
+  display: flex; flex-direction: column; z-index: 2;
+}
+.body.center { justify-content: center; }
+
+/* ── Type utilities ────────────────────────────────────────────────────── */
+.display { font-size: 200px; line-height: 0.92; letter-spacing: -0.055em; font-weight: 700; }
+.hero    { font-size: 144px; line-height: 0.94; letter-spacing: -0.05em;  font-weight: 700; }
+.h1      { font-size: 104px; line-height: 0.96; letter-spacing: -0.045em; font-weight: 700; }
+.h2      { font-size: 72px;  line-height: 1.0;  letter-spacing: -0.04em;  font-weight: 700; }
+.h3      { font-size: 36px;  line-height: 1.15; letter-spacing: -0.025em; font-weight: 700; }
+
+.body-lg { font-size: 24px; line-height: 1.5; letter-spacing: -0.01em; color: var(--muted); }
+.body-md { font-size: 18px; line-height: 1.55; color: var(--muted); }
+.body-sm { font-size: 15px; line-height: 1.5;  color: var(--muted); }
+.slide.dark .body-lg, .slide.ink .body-lg,
+.slide.dark .body-md, .slide.ink .body-md,
+.slide.dark .body-sm, .slide.ink .body-sm { color: #c5b9af; }
+.slide.kupfer .body-lg, .slide.kupfer .body-md { color: var(--paper); opacity: 0.94; }
+
+.overline {
+  font-family: var(--mono); font-size: 13px; font-weight: 600;
+  letter-spacing: 0.3em; text-transform: uppercase; color: var(--kupfer-full);
+}
+.slide.kupfer .overline { color: var(--paper); }
+.slide.dark .overline, .slide.ink .overline { color: var(--kupfer-light); }
+
+.label-mono {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.24em;
+  text-transform: uppercase; color: var(--muted); font-weight: 500;
+}
+.slide.dark .label-mono, .slide.ink .label-mono { color: #c5b9af; }
+
+.kupfer-text { color: var(--kupfer-full); }
+.slide.dark .kupfer-text, .slide.ink .kupfer-text { color: var(--kupfer-light); }
+.mono { font-family: var(--mono); }
+.tnum { font-variant-numeric: tabular-nums; }
+
+/* ── Cards & primitives ────────────────────────────────────────────────── */
+.d-card {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--kupfer-full);
+  padding: 40px;
+  display: flex; flex-direction: column;
+}
+.d-card.plain { border-top-color: var(--line); }
+.d-card.ink {
+  background: var(--ink); color: #f5efe8;
+  border: none; border-top: 3px solid var(--kupfer-full);
+}
+.d-card h3 { margin: 0 0 14px; font-size: 30px; letter-spacing: -0.02em; line-height: 1.1; }
+.d-card p  { margin: 0; font-size: 17px; line-height: 1.5; color: var(--muted); }
+.d-card.ink p { color: #c5b9af; }
+
+.rule-copper { height: 3px; background: var(--kupfer-full); }
+.rule-ink    { height: 2px; background: var(--ink); }
+
+/* keyword chips — outline rects, never pills */
+.chips { display: flex; flex-wrap: wrap; gap: 14px; }
+.chip {
+  font-family: var(--mono); font-size: 13px; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  border: 1.5px solid var(--ink); padding: 12px 20px;
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.chip .dot { width: 8px; height: 8px; background: var(--kupfer-full); }
+.slide.dark .chip, .slide.ink .chip { border-color: #f5efe8; }
+
+/* prompt card — the block participants copy into the Claude app.
+   Light by design: it has to read as a quotable snippet on paper, not a terminal. */
+.prompt-card {
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-top: 3px solid var(--kupfer-full);
+  font-family: var(--mono);
+  display: flex; flex-direction: column;
+}
+.prompt-card .pc-head {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 16px 10px;
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+}
+.prompt-card .pc-mark { width: 21px; height: 21px; color: var(--kupfer-full); flex: 0 0 auto; display: block; }
+.prompt-card .pc-tag {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--muted);
+}
+.prompt-card .pc-copy {
+  margin-left: auto; font-family: var(--mono);
+  font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--kupfer-full); background: transparent;
+  border: 1.5px solid var(--kupfer-full); padding: 6px 12px 5px;
+  cursor: pointer; transition: background 0.16s var(--ease), color 0.16s var(--ease);
+}
+.prompt-card .pc-copy:hover,
+.prompt-card .pc-copy.done { background: var(--kupfer-full); color: var(--paper); }
+.prompt-card .pc-body {
+  margin: 0; padding: 19px 22px 21px;
+  font-size: 15.5px; line-height: 1.62; color: var(--ink);
+  white-space: pre-wrap;
+}
+.prompt-card.compact .pc-body { font-size: 14px; line-height: 1.55; padding: 15px 18px 16px; }
+
+/* on inverted slides the card keeps its shape but drops onto the dark ground */
+.slide.dark .prompt-card, .slide.ink .prompt-card {
+  background: #1b1917; border-color: rgba(245, 239, 232, 0.16);
+}
+.slide.dark .prompt-card .pc-head, .slide.ink .prompt-card .pc-head {
+  background: #232020; border-bottom-color: rgba(245, 239, 232, 0.14);
+}
+.slide.dark .prompt-card .pc-tag, .slide.ink .prompt-card .pc-tag { color: #c5b9af; }
+.slide.dark .prompt-card .pc-body, .slide.ink .prompt-card .pc-body { color: #f5efe8; }
+
+/* process steps */
+.steps { display: flex; flex-direction: column; }
+.step {
+  display: grid; grid-template-columns: 120px 1fr 1.2fr; align-items: baseline;
+  gap: 32px; padding: 26px 0; border-top: 2px solid var(--ink);
+}
+.step:last-child { border-bottom: 2px solid var(--ink); }
+.step .num { font-family: var(--mono); font-size: 48px; font-weight: 500; color: var(--kupfer-full); letter-spacing: -0.03em; }
+.step .title { font-size: 32px; font-weight: 700; letter-spacing: -0.025em; }
+.step .desc { font-size: 17px; line-height: 1.45; color: var(--muted); }
+
+/* KPI row */
+.kpis { display: flex; gap: 72px; flex-wrap: wrap; }
+.kpi .v {
+  font-family: var(--mono); font-weight: 500;
+  font-size: 84px; letter-spacing: -0.04em; line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.kpi .v .u { color: var(--kupfer-full); }
+.kpi .l {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--muted); margin-top: 12px;
+}
+
+/* icon + word list (brand glyphs, one kupfer per view) */
+.iconlist { display: flex; flex-direction: column; gap: 22px; }
+.iconlist .row { display: flex; align-items: center; gap: 18px; }
+.iconlist img, .iconlist svg { width: 34px; height: 34px; color: var(--ink); flex: 0 0 auto; }
+.d-card.ink .iconlist img, .d-card.ink .iconlist svg { color: #f5efe8; }
+.d-card.ink .iconlist .row:first-child img, .d-card.ink .iconlist .row:first-child svg { color: var(--kupfer-light); }
+.d-card.ink .iconlist .s { color: #c5b9af; }
+.iconlist .t { font-size: 22px; font-weight: 600; letter-spacing: -0.015em; }
+.iconlist .s { font-size: 16px; color: var(--muted); }
+
+/* ── Motion: entrance rise, staggered ──────────────────────────────────── */
+[data-rise] { opacity: 0; }
+.slide[data-deck-active] [data-rise] {
+  animation: d-rise 640ms var(--ease) both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes d-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ── Claude app mock (live preview) ────────────────────────────────────── */
+.mock {
+  background: #f8f5f0;
+  border: 1px solid var(--line);
+  box-shadow: 10px 10px 0 0 rgba(11,9,8,0.9);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.mock__bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 14px 18px; border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+.mock__bar .b { width: 10px; height: 10px; border: 1.5px solid var(--muted); }
+.mock__bar .t {
+  margin-left: 10px; font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+}
+.mock__body { padding: 26px 28px; display: flex; flex-direction: column; gap: 18px; flex: 1; }
+
+.msg { max-width: 92%; opacity: 0; transform: translateY(10px); transition: opacity 420ms var(--ease), transform 420ms var(--ease); }
+.msg.on { opacity: 1; transform: none; }
+.msg.user {
+  align-self: flex-end;
+  background: var(--card); border: 1px solid var(--line);
+  padding: 14px 18px; font-size: 15px; line-height: 1.5;
+}
+.msg.user .who, .msg.claude .who {
+  display: block; font-family: var(--mono); font-size: 10px;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
+}
+.msg.claude { align-self: flex-start; max-width: 100%; width: 100%; }
+.msg.claude .who { color: var(--kupfer-full); }
+.type-caret::after {
+  content: '▍'; color: var(--kupfer-full);
+  animation: d-blink 900ms steps(1) infinite;
+}
+@keyframes d-blink { 50% { opacity: 0; } }
+
+/* typing dots */
+.dots { display: inline-flex; gap: 5px; padding: 6px 0; }
+.dots i { width: 7px; height: 7px; background: var(--muted); animation: d-dot 1s var(--ease) infinite; }
+.dots i:nth-child(2) { animation-delay: 150ms; }
+.dots i:nth-child(3) { animation-delay: 300ms; }
+@keyframes d-dot { 0%,100% { opacity: 0.25; } 50% { opacity: 1; } }
+
+/* reveal groups inside mock */
+.reveal { opacity: 0; transform: translateY(10px); transition: opacity 480ms var(--ease), transform 480ms var(--ease); }
+.reveal.on { opacity: 1; transform: none; }
+
+/* mini skill lines */
+.skill-line {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--mono); font-size: 14px; line-height: 1.4;
+  padding: 9px 0; border-bottom: 1px solid var(--line);
+}
+.skill-line .ok {
+  width: 16px; height: 16px; flex: 0 0 auto; background: var(--kupfer-full);
+  color: #fff; font-size: 11px; display: flex; align-items: center; justify-content: center;
+}
+.skill-line .k { color: var(--muted); min-width: 130px; }
+
+/* mini metrics table */
+.mtable { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 14px; }
+.mtable th {
+  text-align: left; font-weight: 500; font-size: 10.5px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--muted); padding: 6px 10px 10px 0;
+  border-bottom: 1.5px solid var(--ink);
+}
+.mtable td { padding: 9px 10px 9px 0; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.mtable tr.flag td { color: var(--kupfer-full); font-weight: 600; }
+.mtable .r { text-align: right; }
+
+/* mini dashboard bars */
+.bars { display: flex; flex-direction: column; gap: 12px; }
+.bar-row { display: grid; grid-template-columns: 74px 1fr 84px; align-items: center; gap: 12px; }
+.bar-row .n { font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; }
+.bar-row .v { font-family: var(--mono); font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }
+.bar { height: 22px; background: var(--card); position: relative; }
+.bar i {
+  position: absolute; inset: 0 auto 0 0; width: 0;
+  background: var(--ink); transition: width 700ms var(--ease);
+}
+.bar-row.hot .n, .bar-row.hot .v { color: var(--kupfer-full); font-weight: 600; }
+.bar-row.hot .bar i { background: var(--kupfer-full); }
+
+/* verdict card inside mock */
+.verdict { border: 1.5px solid var(--ink); border-left: 6px solid var(--kupfer-full); padding: 16px 20px; background: var(--paper); }
+.verdict .h { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--kupfer-full); margin-bottom: 8px; }
+.verdict .t { font-size: 16.5px; font-weight: 600; line-height: 1.4; letter-spacing: -0.01em; }
+.verdict .s { font-size: 13.5px; color: var(--muted); margin-top: 6px; line-height: 1.45; }
+
+/* ── Cover cycling word ────────────────────────────────────────────────── */
+.cycling { display: inline-block; position: relative; vertical-align: bottom; }
+.cycling-sizer { visibility: hidden; white-space: nowrap; }
+.cycling .word {
+  position: absolute; left: 0; top: 0; opacity: 0; transform: translateY(24%);
+  transition: opacity 650ms var(--ease), transform 650ms var(--ease);
+  color: var(--kupfer-full);
+  white-space: nowrap;
+}
+.cycling .word.lit { opacity: 1; transform: none; }
+
+/* ── Reduced motion ────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .msg.dotsline { display: none !important; }
+  [data-rise] { opacity: 1 !important; }
+  .slide[data-deck-active] [data-rise] { animation: none; }
+  .msg, .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+  .bar i { transition: none; }
+  .cycling .word { transition: none; }
+}
+
+/* ── Print: every slide fully rendered, animations resolved ────────────── */
+@media print {
+  [data-rise] { opacity: 1 !important; transform: none !important; animation: none !important; }
+  .msg, .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .msg.dotsline { display: none !important; }
+  [data-type] { font-size: 13px; }
+  [data-type]::before { content: attr(data-type); }
+  [data-type]::after { content: none !important; }
+  .bar i { width: var(--w, 0) !important; transition: none !important; }
+  .cycling .word { position: relative !important; opacity: 1 !important; transform: none !important; }
+  .cycling .word + .word { display: none !important; }
+  .cycling-sizer { display: none !important; }
+  .prompt-card .pc-copy { display: none !important; }
+}

@@ -6,6 +6,10 @@ This file records third-party material distributed or transformed by the reposit
 
 `Loehrning Sans` and `Typing` are modified, renamed derivatives of Inter by Rasmus Andersson and The Inter Project Authors. They are redistributed under SIL Open Font License 1.1. See `LICENSES/OFL-1.1.txt` and `ASSET_MANIFEST.json`.
 
+## JetBrains Mono
+
+`packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/fonts/JetBrainsMono-var.woff2` is JetBrains Mono, copyright 2020 The JetBrains Mono Project Authors, redistributed under SIL Open Font License 1.1 with its own copyright notice in `LICENSES/OFL-1.1-JetBrainsMono.txt`.
+
 ## Geist
 
 The application uses the `geist` package, distributed under the SIL Open Font License. It is installed from the package lock and is not checked into this repository.
@@ -13,6 +17,10 @@ The application uses the `geist` package, distributed under the SIL Open Font Li
 ## Geographic outline data
 
 `packages/website/src/lib/country-polylines-3d.ts` contains transformed geographic outline data from `world-atlas`'s `countries-50m.json`, processed with `topojson-client`. Both packages are distributed under the ISC License. The generated file retains source and transformation attribution. The complete upstream notices, including their distinct copyright years, are reproduced in `LICENSES/world-atlas-ISC.txt` and `LICENSES/topojson-client-ISC.txt`.
+
+## Workshop bundles
+
+`packages/website/public/workshops/**` holds self-study workshop material authored by Tim Löhr — decks, field cards, and participant kits. The `NORTHWIND` case data is fully synthetic. The `Case 2` exercise fetches a public company earnings release live at run time; no third-party financial material is redistributed in this repository — the presented deck shows a page of that filing, and the published copy deliberately omits it. One third-party mark is reproduced: the Meta Platforms wordmark (`assets/meta-platforms-logo.svg`, Wikimedia Commons, below the threshold of originality) appears at small scale on the speaker slide as an employer identifier only; Meta's trademark rights are unaffected and no co-branding is implied. Vendored fonts under `public/workshops/**/assets/fonts/` are OFL-1.1 (see above).
 
 ## Imported interactive-course assets
 

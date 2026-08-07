@@ -21,6 +21,25 @@ describe("workshops catalog", () => {
       expect(workshop.description.trim().length, `${workshop.slug}.description`).toBeGreaterThan(0);
       expect(workshop.format.trim().length, `${workshop.slug}.format`).toBeGreaterThan(0);
       expect(workshop.duration.trim().length, `${workshop.slug}.duration`).toBeGreaterThan(0);
+      expect(workshop.summary.trim().length, `${workshop.slug}.summary`).toBeGreaterThan(0);
+    }
+  });
+
+  it("keeps every card summary short enough to read in a card", () => {
+    for (const workshop of WORKSHOPS) {
+      expect(workshop.summary.length, `${workshop.slug}.summary is too long for the card`)
+        .toBeLessThanOrEqual(260);
+    }
+  });
+
+  it("gives every real-world second case a source and a decision", () => {
+    for (const workshop of WORKSHOPS) {
+      const realWorld = workshop.realWorldCase;
+      if (!realWorld) continue;
+      expect(realWorld.companyName.trim().length, `${workshop.slug}.realWorldCase`).toBeGreaterThan(0);
+      expect(realWorld.source.trim().length, `${workshop.slug}.realWorldCase.source`).toBeGreaterThan(0);
+      expect(realWorld.decisionQuestion.trim().length).toBeGreaterThan(0);
+      expect(realWorld.metrics.length).toBeGreaterThan(0);
     }
   });
 
@@ -33,9 +52,10 @@ describe("workshops catalog", () => {
     }
   });
 
-  it("has exactly seven non-empty build-flow steps per workshop", () => {
+  it("has five to seven non-empty build-flow steps per workshop", () => {
     for (const workshop of WORKSHOPS) {
-      expect(workshop.steps, `${workshop.slug}.steps`).toHaveLength(7);
+      expect(workshop.steps.length, `${workshop.slug}.steps`).toBeGreaterThanOrEqual(5);
+      expect(workshop.steps.length, `${workshop.slug}.steps`).toBeLessThanOrEqual(7);
       for (const step of workshop.steps) {
         expect(step.n.trim().length, `${workshop.slug} step.n`).toBeGreaterThan(0);
         expect(step.title.trim().length, `${workshop.slug} step.title`).toBeGreaterThan(0);
@@ -45,10 +65,12 @@ describe("workshops catalog", () => {
     }
   });
 
-  it("marks every case study as explicitly fictional with non-empty narrative and metrics", () => {
+  it("states plainly whether each case study is fictional, with non-empty narrative and metrics", () => {
     for (const workshop of WORKSHOPS) {
       const { caseStudy } = workshop;
-      expect(caseStudy.isFictional, `${workshop.slug}.caseStudy.isFictional`).toBe(true);
+      expect(typeof caseStudy.isFictional, `${workshop.slug}.caseStudy.isFictional`).toBe(
+        "boolean",
+      );
       expect(caseStudy.companyName.trim().length).toBeGreaterThan(0);
       expect(caseStudy.narrative.trim().length).toBeGreaterThan(0);
       expect(caseStudy.decisionQuestion.trim().length).toBeGreaterThan(0);

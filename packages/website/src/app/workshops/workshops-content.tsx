@@ -38,8 +38,8 @@ export function WorkshopsContent({ workshops }: Props) {
                 body: "Jeder Workshop führt Schritt für Schritt durch den Aufbau. Es gibt derzeit keine Termine oder Buchung.",
               },
               {
-                label: "Synthetische Übungsfälle",
-                body: "Alle Fallbeispiele sind offen als erfunden gekennzeichnet: realistische Zahlen, kein echtes Unternehmen.",
+                label: "Synthetischer Hauptfall, echter Zweitfall",
+                body: "Der Hauptfall ist offen als erfunden gekennzeichnet: realistische Zahlen, kein echtes Unternehmen. Fall 2 wendet dieselbe Methode auf die öffentlich eingereichten Quartalszahlen eines echten Unternehmens an.",
               },
               {
                 label: "Material zum Mitnehmen",
@@ -64,9 +64,24 @@ export function WorkshopsContent({ workshops }: Props) {
 
       {/* Workshop list */}
       <section className="py-16 sm:py-24">
-        <div className="mx-auto max-w-6xl px-6">
+        <div className="mx-auto max-w-5xl px-6">
+          <div className="mb-8 border-b border-border pb-4">
+            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+              Verfügbare Workshops
+            </p>
+            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+              Jeder Workshop ist ein in sich geschlossenes Selbstlern-Paket: Material im Browser,
+              nichts zu installieren, nichts anzumelden.
+            </p>
+          </div>
           <m.div
-            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            className={
+              workshops.length === 1
+                ? "grid max-w-md gap-4"
+                : workshops.length === 2
+                  ? "grid gap-4 sm:grid-cols-2"
+                  : "grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            }
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
@@ -179,7 +194,7 @@ function WorkshopCard({ workshop }: { readonly workshop: Workshop }) {
       </div>
 
       <div className="flex flex-1 flex-col p-6">
-        <h2 className="mb-2 text-lg font-semibold leading-snug tracking-[-0.02em] group-hover:text-brand-orange">
+        <h2 className="mb-2 text-xl font-semibold leading-snug tracking-[-0.02em] group-hover:text-brand-orange">
           {/* Stretched link: names the card by its title alone and keeps the
               whole card clickable without pouring the plate into the link's
               accessible name. */}
@@ -195,8 +210,8 @@ function WorkshopCard({ workshop }: { readonly workshop: Workshop }) {
           Schritte. {workshop.audience.length} Zielgruppen.{" "}
           {workshop.materials.length} Downloads.
         </p>
-        <p className="mb-5 flex-1 text-sm leading-relaxed text-muted-foreground">
-          {workshop.description}
+        <p className="mb-5 line-clamp-4 flex-1 text-sm leading-relaxed text-muted-foreground">
+          {workshop.summary}
         </p>
         <div className="flex items-center justify-between border-t border-border pt-3">
           <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
