@@ -509,6 +509,15 @@
       "redistribution": "Personenbezogenes Bild; keine Weiterverwendung ausserhalb dieses Repositories"
     },
     {
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/card-preview.webp",
+      "sizeBytes": 21642,
+      "sha256": "f17ba49a97ac700fd7bcf0768bbcc6bca0b0f8fcdca4bb7be58e2f271eeb8752",
+      "owner": "Tim Löhr",
+      "source": "Eigenes Workshop-Material, loehrning.ai; Bildschirmaufnahme des eigenen Workshop-Decks (slides.html)",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
+    },
+    {
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
       "sizeBytes": 52258,
       "sha256": "5f788345ac1506763aac5103b91303f0b26380cec954f20e2504cbe64fdcda8b",
@@ -516,6 +525,15 @@
       "source": "Eigenes Workshop-Material, loehrning.ai — Text-only Teilnehmer-Kit (CSV-Übungsdaten, Berichte in Markdown, Skill, Dashboard-Vorlage)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Frei herunterladbar für Workshop-Teilnehmende und Website-Besucher"
+    },
+    {
+      "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/card-preview.webp",
+      "sizeBytes": 30258,
+      "sha256": "c2df35d9f5845163203b3f47f6d60c29f1da11e0968dd6139765f6aa99295ac0",
+      "owner": "Tim Löhr",
+      "source": "Eigenes Workshop-Material, loehrning.ai; Bildschirmaufnahme des eigenen Workshop-Hubs (hub.html)",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
       "path": "packages/website/src/fonts/LoehrningSans-Bold.ttf",
