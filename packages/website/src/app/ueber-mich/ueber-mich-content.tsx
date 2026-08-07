@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { m } from "framer-motion";
-import { ArrowRight, Github, Linkedin, Mail } from "lucide-react";
+import { ArrowRight, Mail } from "lucide-react";
+import { Github, Linkedin } from "@/components/icons/brand";
 import { BrandButton } from "@/components/ui/brand-button";
 import { fadeUp } from "@/lib/animations";
 import { CareerTimeline } from "@/components/about/career-timeline";

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Github, Linkedin } from "lucide-react";
+import { Github, Linkedin } from "@/components/icons/brand";
 import { STAND_DATE, LAST_UPDATED } from "@/lib/content-meta";
 import { GITHUB_ORG, TIM_ENTITY } from "@/lib/seo/entity";
 

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ExternalLink, Github } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
+import { Github } from "@/components/icons/brand";
 import type { OpenSourceArtifact } from "@/lib/open-source/artifacts";
 import { KIND_LABELS } from "./kind-labels";
 import { STATUS_LABELS } from "./status-labels";
