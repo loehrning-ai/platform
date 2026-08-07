@@ -47,8 +47,12 @@ describe("Lighthouse route contract", () => {
     expect(packageJson.scripts?.["lighthouse:release:built"]).toBe(
       "node packages/website/scripts/run-provider-free.mjs node packages/website/scripts/run-built-gate.mjs lhci autorun --config=lighthouserc.json",
     );
+    // Three samples, not one. A single sample on a shared runner is a coin
+    // flip: the homepage measures ~87 ms of total blocking time, but a
+    // contended runner occasionally reports 200-240 ms, which tripped the
+    // 200 ms gate on pull requests that could not touch the bundle at all.
     expect(packageJson.scripts?.["lighthouse:ci:built"]).toContain(
-      "--collect.numberOfRuns=1",
+      "--collect.numberOfRuns=3",
     );
     expect(packageJson.scripts?.["lighthouse:ci:built"]).toContain(
       "--collect.settings.chromeFlags=--no-sandbox",
@@ -67,7 +71,11 @@ describe("Lighthouse route contract", () => {
     expect(config.ci.collect.startServerCommand).toBe(
       "cd packages/website && node scripts/run-provider-free.mjs bun run start",
     );
-    expect(config.ci.assert.aggregationMethod).toBe("pessimistic");
+    // Median of those samples. "pessimistic" takes the worst run, so more
+    // samples would make outlier noise strictly more likely to fail the
+    // gate, not less. Thresholds themselves are unchanged, and a real
+    // regression moves every run, not one.
+    expect(config.ci.assert.aggregationMethod).toBe("median");
     expect(config.ci.collect.settings?.chromeFlags).toBeUndefined();
   });
 
