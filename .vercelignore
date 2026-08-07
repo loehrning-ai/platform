@@ -1,0 +1,14 @@
+# Vercel installs dependencies and runs the build remotely, so neither the
+# local dependency tree nor a local build output belongs in the upload. Without
+# this file the CLI uploads ~782 MB (2.0 GB node_modules + 1.7 GB .next before
+# compression) on every deploy, which is slow enough to time out.
+node_modules
+.next
+packages/website/.next
+
+# Local-only verification and test output.
+.lighthouseci
+coverage
+packages/website/playwright-report
+packages/website/test-results
+packages/website/blob-report
