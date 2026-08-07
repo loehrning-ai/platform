@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { m } from "framer-motion";
 import { ChevronRight, Presentation } from "lucide-react";
@@ -23,27 +24,26 @@ export function WorkshopsContent({ workshops }: Props) {
             Kein Vortrag.<br />
             Ein gebauter KI-Analyst.
           </h1>
-          <p className="mb-10 max-w-3xl text-lg leading-relaxed text-muted-foreground">
-            {workshops.length} Selbstlern-Workshop{workshops.length === 1 ? "" : "s"} aus der
-            kostenlosen KI-Lernplattform: Du baust in der Claude-App Schritt für Schritt mit,
-            arbeitest an einem realistischen Übungsfall und nimmst das komplette Material zum
-            Nachbauen mit deinen eigenen Zahlen mit.
+          <p className="mb-10 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+            {workshops.length} Workshop{workshops.length === 1 ? "" : "s"} zum Selbermachen.
+            Du baust in der Claude-App mit und nimmst das Material für deine eigenen
+            Zahlen mit.
           </p>
 
           {/* Manifest */}
           <div className="grid gap-4 sm:grid-cols-3">
             {[
               {
-                label: "Geführt im Selbststudium",
-                body: "Jeder Workshop führt Schritt für Schritt durch den Aufbau. Es gibt derzeit keine Termine oder Buchung.",
+                label: "In deinem Tempo",
+                body: "Schritt für Schritt zum Nachbauen. Keine Termine, keine Buchung.",
               },
               {
-                label: "Synthetischer Hauptfall, echter Zweitfall",
-                body: "Der Hauptfall ist offen als erfunden gekennzeichnet: realistische Zahlen, kein echtes Unternehmen. Fall 2 wendet dieselbe Methode auf die öffentlich eingereichten Quartalszahlen eines echten Unternehmens an.",
+                label: "Erfundener Fall, echte Zahlen",
+                body: "Der Übungsfall ist erfunden, seine Zahlen sind realistisch. Ein zweiter Fall nutzt echte Quartalszahlen.",
               },
               {
                 label: "Material zum Mitnehmen",
-                body: "Slides, Field Card und Übungs-Kit stehen kostenlos und ohne Anmeldung bereit. Die aktuelle Materialfassung ist Englisch.",
+                body: "Kostenlos, ohne Anmeldung, direkt im Browser. Die Materialfassung ist Englisch.",
               },
             ].map((item, i) => (
               <div
@@ -70,8 +70,7 @@ export function WorkshopsContent({ workshops }: Props) {
               Verfügbare Workshops
             </p>
             <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              Jeder Workshop ist ein in sich geschlossenes Selbstlern-Paket: Material im Browser,
-              nichts zu installieren, nichts anzumelden.
+              Alles läuft im Browser. Nichts installieren, nichts anmelden.
             </p>
           </div>
           <m.div
@@ -107,9 +106,8 @@ export function WorkshopsContent({ workshops }: Props) {
               Erst Grundlagen verstehen, dann selbst nachbauen.
             </h2>
             <p className="mb-8 max-w-2xl text-base leading-relaxed text-muted-foreground">
-              Die Workshops setzen keine Vorkenntnisse voraus, ergänzen sich aber gut mit
-              den Kursen: dort vertiefst du die Begriffe, hier wendest du sie in einem
-              geführten Übungsfall an.
+              Keine Vorkenntnisse nötig. In den Kursen lernst du die Begriffe,
+              hier wendest du sie an.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link
@@ -139,59 +137,51 @@ function WorkshopCard({ workshop }: { readonly workshop: Workshop }) {
 
   return (
     <div className="group relative flex h-full flex-col rounded-none border border-border border-t-[3px] border-t-brand-orange bg-card/30 transition-colors hover:bg-card/60">
-      {/* Typenschild: the workshop's facts as a data plate. Every future
-          workshop generates its own from duration/steps/audience/materials,
-          so the card needs no photography. Numeral stays ink: the single
-          Kupfer accent on this view is the top border + CTA. */}
-      <div className="relative border-b border-border bg-background/60 bg-dot-pattern p-5">
-        <span aria-hidden="true" className="absolute left-2 top-2 h-1 w-1 bg-foreground/25" />
-        <span aria-hidden="true" className="absolute right-2 top-2 h-1 w-1 bg-foreground/25" />
-        <span aria-hidden="true" className="absolute bottom-2 left-2 h-1 w-1 bg-foreground/25" />
-        <span aria-hidden="true" className="absolute bottom-2 right-2 h-1 w-1 bg-foreground/25" />
-        <div
+      {/* A real frame of the workshop's own material, so the two cards are
+          told apart by what you actually get rather than by a step count.
+          Decorative: the heading below is the accessible name, and the
+          sr-only paragraph carries the facts. Lazy by default; both files
+          are ~25 KB and sit below the fold. */}
+      <div className="relative aspect-[16/9] overflow-hidden border-b border-border bg-background/60">
+        <Image
+          src={`/workshops/${workshop.slug}/card-preview.webp`}
+          alt=""
           aria-hidden="true"
-          className="flex items-baseline justify-between gap-4 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground"
+          fill
+          sizes="(min-width: 640px) 50vw, 100vw"
+          className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+        />
+        <span
+          aria-hidden="true"
+          className="absolute left-3 top-3 inline-flex items-center gap-1.5 border border-foreground/15 bg-background/85 px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-foreground backdrop-blur-sm"
         >
-          <span className="inline-flex items-center gap-1.5">
-            <Presentation className="h-3.5 w-3.5" aria-hidden="true" />
-            {workshop.format}
-          </span>
-          <span>zum Nachbauen</span>
-        </div>
-        <span aria-hidden="true" className="mt-2 block h-px w-full bg-border" />
-        <div aria-hidden="true" className="grid grid-cols-[1fr_auto] gap-x-4">
-          <dl className="mt-1">
-            {rows.map((row) => (
-              <div
-                key={row.label}
-                className="flex items-baseline justify-between gap-4 border-b border-border/60 py-[6px] font-mono text-[10.5px] uppercase tracking-[0.08em] last:border-b-0"
-              >
-                <dt className="text-muted-foreground">{row.label}</dt>
-                <dd className="min-w-0 text-right font-bold text-foreground">
-                  {row.value}
-                </dd>
-              </div>
-            ))}
-          </dl>
-          <span
-            aria-hidden="true"
-            className="mt-2 font-mono text-[52px] font-bold leading-none tracking-[-0.04em] text-foreground/15"
-          >
-            {pad(workshop.steps.length)}
-          </span>
-        </div>
-        {/* Schrittleiste: the step rail fills on hover, demonstrating the
-            step count the plate states. Decorative; the dl carries the fact. */}
-        <div aria-hidden="true" className="mt-3 flex gap-1">
+          <Presentation className="h-3 w-3" aria-hidden="true" />
+          {workshop.format}
+        </span>
+        {/* Schrittleiste: one tick per step, filling on hover. Shows the
+            shape of the workshop without making the raw count the headline. */}
+        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 flex gap-px">
           {workshop.steps.map((step, i) => (
             <span
               key={step.title}
-              className="h-1 flex-1 bg-border transition-colors duration-200 group-hover:bg-foreground/40"
+              className="h-1 flex-1 bg-foreground/20 transition-colors duration-200 group-hover:bg-brand-orange"
               style={{ transitionDelay: `${i * 35}ms` }}
             />
           ))}
         </div>
       </div>
+
+      <dl
+        aria-hidden="true"
+        className="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-border px-6 py-3 font-mono text-[10.5px] uppercase tracking-[0.08em]"
+      >
+        {rows.map((row) => (
+          <div key={row.label} className="flex items-baseline gap-1.5">
+            <dt className="text-muted-foreground">{row.label}</dt>
+            <dd className="font-bold text-foreground">{row.value}</dd>
+          </div>
+        ))}
+      </dl>
 
       <div className="flex flex-1 flex-col p-6">
         <h2 className="mb-2 text-xl font-semibold leading-snug tracking-[-0.02em] group-hover:text-brand-orange">
@@ -213,10 +203,9 @@ function WorkshopCard({ workshop }: { readonly workshop: Workshop }) {
         <p className="mb-5 line-clamp-4 flex-1 text-sm leading-relaxed text-muted-foreground">
           {workshop.summary}
         </p>
-        <div className="flex items-center justify-between border-t border-border pt-3">
-          <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
-            {workshop.format}
-          </span>
+        {/* The format already reads on the plate chip over the preview, so
+            this row carries only the call to action. */}
+        <div className="flex items-center justify-end border-t border-border pt-3">
           <span className="inline-flex items-center gap-1 text-xs font-medium text-brand-orange opacity-70 transition-opacity group-hover:opacity-100">
             Workshop öffnen
             <ChevronRight className="h-3 w-3 arrow-nudge" />
