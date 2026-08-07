@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Github } from "lucide-react";
+import { Github } from "@/components/icons/brand";
 import { OpenSourceArtifactShelf } from "@/components/open-source/artifact-shelf";
 import { DrawRule } from "@/components/motion/draw-rule";
 import { OPEN_SOURCE_ARTIFACTS } from "@/lib/open-source/artifacts";

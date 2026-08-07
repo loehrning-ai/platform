@@ -17,23 +17,8 @@ import {
   useMotionValueEvent,
   type MotionValue,
 } from "framer-motion";
-import {
-  Menu,
-  X,
-  ChevronDown,
-  Github,
-  GraduationCap,
-  MapPin,
-  ShieldCheck,
-  Sparkles,
-  Users,
-  Zap,
-  BookOpen,
-  LayoutDashboard,
-  Pencil,
-  Presentation,
-  type LucideIcon,
-} from "lucide-react";
+import { Menu, X, ChevronDown, GraduationCap, MapPin, ShieldCheck, Sparkles, Users, Zap, BookOpen, LayoutDashboard, Pencil, Presentation, type LucideIcon } from "lucide-react";
+import { Github } from "@/components/icons/brand";
 import { cn } from "@/lib/utils";
 import { AuthStatus } from "@/components/auth/auth-status";
 import { GITHUB_ORG } from "@/lib/seo/entity";

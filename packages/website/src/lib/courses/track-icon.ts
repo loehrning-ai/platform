@@ -1,23 +1,5 @@
-import {
-  BookOpen,
-  Bot,
-  Database,
-  FileText,
-  Github,
-  GraduationCap,
-  LineChart,
-  Pencil,
-  Play,
-  Presentation,
-  Scale,
-  Server,
-  Sparkles,
-  TerminalSquare,
-  TrendingUp,
-  Users,
-  Workflow,
-  type LucideIcon,
-} from "lucide-react";
+import { BookOpen, Bot, Database, FileText, GraduationCap, LineChart, Pencil, Play, Presentation, Scale, Server, Sparkles, TerminalSquare, TrendingUp, Users, Workflow, type LucideIcon } from "lucide-react";
+import { Github } from "@/components/icons/brand";
 
 /**
  * Maps the string icon names stored in tracks.ts / resource lists to lucide

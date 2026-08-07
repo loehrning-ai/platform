@@ -6,15 +6,8 @@
 // used to be duplicated (once under the courses, once in the closing chips);
 // now they sit here as a single compact set, lighter than the course cards so
 // the courses stay the main event.
-import {
-  BookOpen,
-  Github,
-  GraduationCap,
-  LayoutDashboard,
-  Pencil,
-  Presentation,
-  type LucideIcon,
-} from "lucide-react";
+import { BookOpen, GraduationCap, LayoutDashboard, Pencil, Presentation, type LucideIcon } from "lucide-react";
+import { Github } from "@/components/icons/brand";
 import Link from "next/link";
 import { Card, IconTile, type CardAccent } from "@/components/ui/card";
 

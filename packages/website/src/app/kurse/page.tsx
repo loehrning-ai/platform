@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { GraduationCap, Github } from "lucide-react";
+import { GraduationCap } from "lucide-react";
+import { Github } from "@/components/icons/brand";
 import { JsonLd, SITE_URL } from "@/lib/seo/json-ld";
 import { COURSES_GRAPH } from "@/lib/seo/course-discovery";
 import { Card, IconTile } from "@/components/ui/card";

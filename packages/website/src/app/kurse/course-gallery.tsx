@@ -4,16 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { m } from "framer-motion";
-import {
-  ArrowRight,
-  Check,
-  ExternalLink,
-  Flame,
-  GitCommitHorizontal,
-  Github,
-  Share2,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight, Check, ExternalLink, Flame, GitCommitHorizontal, Share2, Sparkles } from "lucide-react";
+import { Github } from "@/components/icons/brand";
 import { staggerContainer, staggerItem } from "@/lib/animations";
 import {
   ALL_COURSE_CATALOG,
