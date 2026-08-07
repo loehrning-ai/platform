@@ -36,7 +36,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AuthStatus } from "@/components/auth/auth-status";
-import { TIM_ENTITY } from "@/lib/seo/entity";
+import { GITHUB_ORG } from "@/lib/seo/entity";
 import { useFocusTrap } from "@/lib/a11y/use-focus-trap";
 
 interface NavItem {
@@ -594,11 +594,14 @@ export function Nav() {
             </Link>
           ))}
 
+          {/* Site navigation points at the organisation that publishes this
+              platform, not at the maintainer's personal account. Tim's own
+              profile stays on /ueber-mich, where it belongs. */}
           <a
-            href={TIM_ENTITY.personalGithubUrl}
+            href={GITHUB_ORG.url}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Tim auf GitHub"
+            aria-label={`${GITHUB_ORG.displayName} auf GitHub`}
             className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground outline-none transition-colors hover:bg-card-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <Github size={17} aria-hidden="true" />
@@ -647,7 +650,7 @@ export function Nav() {
             </Link>
           ))}
           <a
-            href={TIM_ENTITY.personalGithubUrl}
+            href={GITHUB_ORG.url}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-foreground"
@@ -714,7 +717,7 @@ export function Nav() {
                   </Link>
                 ))}
                 <a
-                  href={TIM_ENTITY.personalGithubUrl}
+                  href={GITHUB_ORG.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setMobileOpen(false)}
