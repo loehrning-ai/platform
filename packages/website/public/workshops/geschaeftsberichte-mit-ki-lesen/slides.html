@@ -609,7 +609,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
       <div>
         <p class="overline" data-rise style="--d:0ms">Prompt 2 of 5</p>
         <h2 class="h2" data-rise style="--d:120ms;font-size:46px;line-height:1.1;margin:22px 0 20px;max-width:760px">Write your rules into a <span class="kupfer-text">Skill</span> file.</h2>
-        <p class="body-md" data-rise style="--d:220ms;margin-bottom:20px;max-width:760px">A Skill is a plain text file of instructions. Claude reads it before it starts work, every single time. Yours ships half written: Claude asks you the missing bits one at a time, you answer in normal words, and it writes your answers into the file. No code anywhere.</p>
+        <p class="body-md" data-rise style="--d:220ms;margin-bottom:20px;max-width:760px">A Skill is a plain text file of instructions. Claude reads it before it starts work, every single time. Yours ships half written: Claude asks you six blanks one at a time, you answer in normal words, and it writes your answers into the file. No code anywhere.</p>
         <div class="open-app" data-rise style="--d:320ms">
           <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
           <span>Back in Claude Code. Open worksheet.md first, then paste this.</span>
@@ -635,10 +635,12 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
           <div class="msg claude dotsline"><span class="dots"><i></i><i></i><i></i></span></div>
           <div class="msg claude" style="flex-direction:column;gap:12px">
             <div class="reveal"><span class="who">Claude</span><div class="label-mono">.claude/skills/northwind-metrics/SKILL.md written</div></div>
-            <div class="reveal skill-line"><span class="ok">✓</span><span class="k">defects</span><span>count per line. Chronic means high 2 months running.</span></div>
+            <div class="reveal skill-line"><span class="ok">✓</span><span class="k">defects</span><span>NCR count per line. Chronic means high 2 months running.</span></div>
             <div class="reveal skill-line"><span class="ok">✓</span><span class="k">marketing</span><span>spend per channel, not split per line</span></div>
-            <div class="reveal skill-line"><span class="ok">✓</span><span class="k">escalations</span><span>complaints at severity high and above</span></div>
-            <div class="reveal skill-line"><span class="ok">✓</span><span class="k">reading rule</span><span>never judge a line on revenue alone</span></div>
+            <div class="reveal skill-line"><span class="ok">✓</span><span class="k">escalations</span><span>open P1/P2, with the team that owns each</span></div>
+            <div class="reveal skill-line"><span class="ok">✓</span><span class="k">rule · compare</span><span>each line vs its own prior month, normalized</span></div>
+            <div class="reveal skill-line"><span class="ok">✓</span><span class="k">rule · flag</span><span>highest price band + highest defects per 1,000</span></div>
+            <div class="reveal skill-line"><span class="ok">✓</span><span class="k">rule · limits</span><span>name the limit in the same sentence as the number</span></div>
           </div>
         </div>
       </div>
@@ -729,7 +731,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
       <div>
         <p class="overline" data-rise style="--d:0ms">Prompt 4 of 5</p>
         <h2 class="h2" data-rise style="--d:120ms;font-size:44px;line-height:1.1;margin:22px 0 20px;max-width:760px">Build the <span class="kupfer-text">dashboard</span> from the numbers your Skill pulled.</h2>
-        <p class="body-md" data-rise style="--d:220ms;margin-bottom:22px;max-width:760px">Why a dashboard at all? The 8-page report is for you. The meeting gets one page. The page itself is a plain template already sitting in your folder: Claude writes one file of numbers, and the page shows whatever is in that file. The thinking already happened, in your rules.</p>
+        <p class="body-md" data-rise style="--d:220ms;margin-bottom:22px;max-width:760px">Why a dashboard at all? Not to reprint the report on one page — that would be pointless. This page carries what the report <b>cannot say</b>: growth normalised per shipping week, defects priced in euros, the machine spread behind the flag, the countries the volume sits in. Claude writes one file of numbers, the page renders it, and the recommendation sits at the top where a VP reads it first.</p>
         <div class="open-app" data-rise style="--d:320ms">
           <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
           <span>Back in Claude Code. This one is a single line.</span>
@@ -740,7 +742,7 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
             <span class="pc-tag">Prompt 4 · paste into Claude Code</span>
             <button class="pc-copy" type="button">Copy</button>
           </div>
-          <p class="pc-body">Build the dashboard from this month's metrics and open it.</p>
+          <p class="pc-body">Build the dashboard from this month's metrics and open it. Include the insights and the decision.</p>
         </div>
         <div class="ph-rows" data-rise style="--d:520ms">
           <div class="ph-row"><span class="ph-k">Reads</span><span><b>metrics/metrics.json</b>, the file prompt 3 wrote</span></div>
@@ -809,7 +811,81 @@ a.report-link:hover .report-shot.lead{transform:translateY(-6px);box-shadow:14px
   </div>
 </section>
 
-<!-- 16 · THREE HARDER THINGS -->
+<!-- 16 · THE ANSWER — what the five prompts actually bought you -->
+<section class="slide" data-label="The answer" data-section="The answer you take to the VP">
+  <div class="body">
+    <p class="overline" data-rise style="--d:0ms">The answer · what your Skill found that the report could not</p>
+    <h2 class="h2" data-rise style="--d:100ms;font-size:34px;line-height:1.1;margin:12px 0 14px;max-width:1560px">The report said <span class="tnum">+26%</span> and “strong close”. Your Skill said <span class="kupfer-text tnum">+0.8%</span> and “don’t fund it yet.”</h2>
+
+    <div data-rise style="--d:220ms;display:grid;grid-template-columns:repeat(4,1fr);border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);margin-bottom:18px">
+      <div style="padding:12px 20px 12px 0">
+        <div class="label-mono" style="letter-spacing:.1em">Per shipping week</div>
+        <div class="tnum" style="font-family:var(--mono);font-size:30px;line-height:1;margin-top:7px">+0.8<span style="color:var(--kupfer-full)">%</span></div>
+        <div class="body-sm" style="margin-top:5px">not +26%. Three lines shrank.</div>
+      </div>
+      <div style="padding:12px 20px;border-left:1px solid var(--line)">
+        <div class="label-mono" style="letter-spacing:.1em">Scrapped before shipping</div>
+        <div class="tnum" style="font-family:var(--mono);font-size:30px;line-height:1;margin-top:7px">€691k</div>
+        <div class="body-sm" style="margin-top:5px">CRAFT · 16.8% of its own revenue</div>
+      </div>
+      <div style="padding:12px 20px;border-left:1px solid var(--line)">
+        <div class="label-mono" style="letter-spacing:.1em">Defect intensity</div>
+        <div class="tnum" style="font-family:var(--mono);font-size:30px;line-height:1;margin-top:7px">2.51</div>
+        <div class="body-sm" style="margin-top:5px">per 1,000 · 2.2× the next-worst</div>
+      </div>
+      <div style="padding:12px 0 12px 20px;border-left:1px solid var(--line)">
+        <div class="label-mono" style="letter-spacing:.1em">Machines involved</div>
+        <div class="tnum" style="font-family:var(--mono);font-size:30px;line-height:1;margin-top:7px">6</div>
+        <div class="body-sm" style="margin-top:5px">a line programme, not one repair</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.25fr 1fr;gap:48px;flex:1;min-height:0">
+      <div>
+        <div class="verdict" data-rise style="--d:300ms">
+          <div class="h">The call you hand the VP</div>
+          <div class="t">Rework CRAFT first. Hold the extra Q3 marketing for one month.</div>
+          <div class="s">One euro of product in six is destroyed before it ships, and the growth the spend case rests on is the fifth week of the calendar.<br><b style="color:var(--ink)">Trigger, agreed now:</b> October below 2.51 per 1,000 and scrap under 8% of revenue releases the money.</div>
+        </div>
+        <div class="verdict" data-rise style="--d:380ms;margin-top:12px;border-left-color:var(--ink)">
+          <div class="h" style="color:var(--ink)">Where the VP is right — say it out loud</div>
+          <div class="t" style="font-size:15px">CRAFT’s defect intensity improved <b>22%</b> in a month, 3.21 → 2.51. The only line getting better.</div>
+          <div class="s">Which is why this is a one-month hold, not a freeze.</div>
+        </div>
+      </div>
+      <div data-rise style="--d:340ms">
+        <p class="label-mono" style="margin-bottom:10px">And what it still cannot tell you</p>
+        <div style="border-top:1px solid var(--line)">
+          <div style="display:grid;grid-template-columns:26px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)">
+            <span class="label-mono" style="color:var(--kupfer-full)">01</span>
+            <div class="body-sm"><b style="color:var(--ink)">No per-SKU cost.</b> €691k is destroyed value, not lost margin. “CRAFT is profitable” stays an assertion.</div>
+          </div>
+          <div style="display:grid;grid-template-columns:26px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)">
+            <span class="label-mono" style="color:var(--kupfer-full)">02</span>
+            <div class="body-sm"><b style="color:var(--ink)">No returns joined to line.</b> NCRs are caught in the plant; nothing here measures what reached a customer.</div>
+          </div>
+          <div style="display:grid;grid-template-columns:26px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)">
+            <span class="label-mono" style="color:var(--kupfer-full)">03</span>
+            <div class="body-sm"><b style="color:var(--ink)">Marketing is campaign-level.</b> Fund it and this data still could not tell you whether it moved CRAFT.</div>
+          </div>
+        </div>
+        <p class="body-sm" style="margin-top:14px">Two of these are the same gap that makes the VP’s case unfalsifiable. Saying so is the job.</p>
+        <p class="label-mono" style="margin-top:18px;color:var(--kupfer-full)">Everything above is on the dashboard you built — one page, no slides needed.</p>
+      </div>
+    </div>
+
+    <div data-rise style="--d:560ms;margin-top:auto;padding-top:20px;border-top:1.5px solid var(--ink)">
+      <p class="label-mono" style="margin-bottom:12px">None of this came from a smarter model. It came from the three rules you wrote in prompt 2.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:44px">
+        <div class="body-sm"><b style="color:var(--kupfer-full)">Rule · compare</b><br>Normalise before comparing → the +26% headline became <b style="color:var(--ink)">+0.8% per shipping week</b>, and three lines turned negative.</div>
+        <div class="body-sm"><b style="color:var(--kupfer-full)">Rule · flag</b><br>Defects per 1,000, not raw count → CRAFT&rsquo;s 21% lead on count became a <b style="color:var(--ink)">2.2× lead on intensity</b>, and €691k of scrap.</div>
+        <div class="body-sm"><b style="color:var(--kupfer-full)">Rule · limits</b><br>Name the limit next to the number → the recommendation says what would <b style="color:var(--ink)">reverse it</b>, so next month is a measurement.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 17 · THREE HARDER THINGS -->
 <section class="slide" data-label="Go further" data-section="Three harder things to try">
   <div class="body">
     <p class="overline" data-rise style="--d:0ms">Optional · once your Skill works</p>
