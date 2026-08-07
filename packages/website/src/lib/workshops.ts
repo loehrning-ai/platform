@@ -1,10 +1,12 @@
 /**
  * Workshops catalog — single in-repo source of truth.
  *
- * Selbstlern-Workshops mit Download-Material: eine Slide-Deck-Anleitung, eine
- * einseitige Field Card und ein Übungs-Kit als ZIP. Die statischen Dateien
- * liegen unter public/workshops/<slug>/ und werden vom Next.js-Server ab
- * Site-Root ausgeliefert (siehe public/book-covers/ für dasselbe Muster).
+ * Selbstlern-Workshops mit Download-Material. Welche Dateien ein Workshop
+ * mitbringt, entscheidet allein sein materials-Array: der Prognose-Workshop
+ * liefert fünf, der Analyst-Workshop zwei. Zähle sie nie anderswo auf, sonst
+ * veraltet die Liste. Die statischen Dateien liegen unter
+ * public/workshops/<slug>/ und werden vom Next.js-Server ab Site-Root
+ * ausgeliefert (siehe public/book-covers/ für dasselbe Muster).
  *
  * Add a new workshop by appending an entry below; never duplicate this array
  * in a page component.
