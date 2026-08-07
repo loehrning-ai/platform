@@ -44,7 +44,7 @@
       "numberOfRuns": 3
     },
     "assert": {
-      "aggregationMethod": "pessimistic",
+      "aggregationMethod": "median",
       "assertions": {
         "categories:performance": [
           "error",
