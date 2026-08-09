@@ -3,6 +3,10 @@ import { describe, expect, it } from "vitest";
 import { GITHUB_ORG, TIM_ENTITY } from "@/lib/seo/entity";
 import { UeberMichContent } from "./ueber-mich-content";
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+}
+
 describe("<UeberMichContent>", () => {
   it("renders the complete German profile as static document content", () => {
     const { container } = render(<UeberMichContent locale="de" />);
@@ -61,7 +65,9 @@ describe("<UeberMichContent>", () => {
       ["Open GitHub profile", TIM_ENTITY.personalGithubUrl],
     ] as const;
     for (const [name, href] of links) {
-      const link = screen.getByRole("link", { name: new RegExp(name, "i") });
+      const link = screen.getByRole("link", {
+        name: new RegExp(escapeRegExp(name), "i"),
+      });
       expect(link).toHaveAttribute("href", href);
       expect(link).toHaveAttribute("target", "_blank");
       expect(link).toHaveAttribute("rel", "noopener noreferrer");

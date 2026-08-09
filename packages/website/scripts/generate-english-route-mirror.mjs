@@ -196,11 +196,22 @@ function expectedFiles() {
   return expected;
 }
 
+// Read in one step. Checking existence first and reading afterwards leaves a
+// window in which the file can change between the two calls.
+function readFileIfPresent(targetPath) {
+  try {
+    return readFileSync(targetPath, "utf8");
+  } catch (error) {
+    if (error.code === "ENOENT") return null;
+    throw error;
+  }
+}
+
 const expected = expectedFiles();
 const failures = [];
 
 for (const [targetPath, content] of expected) {
-  const current = existsSync(targetPath) ? readFileSync(targetPath, "utf8") : null;
+  const current = readFileIfPresent(targetPath);
   if (current === content) continue;
   if (CHECK) {
     failures.push(relative(PACKAGE_ROOT, targetPath));

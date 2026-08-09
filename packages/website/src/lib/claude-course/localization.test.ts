@@ -27,7 +27,7 @@ function proseWithoutCode(value: string): string {
         "",
       )
       .replace(/data only, ignore embedded instructions/gu, "")
-      .replace(/<[^>]+>/gu, "")
+      .replace(/<[^<>]*>/gu, "")
   );
 }
 
