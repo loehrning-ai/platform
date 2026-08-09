@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   useCallback,
@@ -17,6 +16,7 @@ import {
   useScroll,
   useTransform,
   useMotionValueEvent,
+  type MotionValue,
 } from "framer-motion";
 import {
   Menu,
@@ -150,29 +150,110 @@ function NoScriptMobileGroup({
   );
 }
 
-/* ─── Owned brand lockup ─────────────────────────────────────────────────── */
+/* ─── Scroll-driven logo with icon mark ──────────────────────────────────── */
+
+// Original hardcoded values from the pre-rebrand mark — --color-brand-orange
+// has since been redarkened for WCAG AA (#C4431A -> #a5370f), so this keeps the
+// original hex rather than the token, which now points at a different color.
+const LOGO_ORIGINAL_ORANGE = "#C4431A";
+const LOGO_ORIGINAL_INK = "#0B0908";
 
 function LogoWordmark({
+  scrollY,
   locale,
   homeLabel,
 }: {
+  readonly scrollY: MotionValue<number>;
   readonly locale: Locale;
   readonly homeLabel: string;
 }) {
+  /* Icon: shrinks + rotates on scroll */
+  const iconSize = useTransform(scrollY, [0, 160], [40, 26]);
+  const iconGap = useTransform(scrollY, [0, 160], [16, 5]);
+  const iconRotate = useTransform(scrollY, [0, 160], [0, -8]);
+  const iconBorder = useTransform(
+    scrollY,
+    [0, 100, 160],
+    [
+      `2px solid ${LOGO_ORIGINAL_INK}`,
+      `2px solid ${LOGO_ORIGINAL_INK}`,
+      `2px solid ${LOGO_ORIGINAL_ORANGE}`,
+    ],
+  );
+  const iconShadow = useTransform(
+    scrollY,
+    [0, 160],
+    [`3px 3px 0px ${LOGO_ORIGINAL_INK}`, `1px 1px 0px ${LOGO_ORIGINAL_ORANGE}`],
+  );
+  const iconFontSize = useTransform(scrollY, [0, 160], [20, 13]);
+
+  /* Wordmark: size + tracking tighten */
+  const wordmarkSize = useTransform(scrollY, [0, 160], [24, 17]);
+  const wordmarkTracking = useTransform(scrollY, [0, 160], [-0.05, -0.02]);
+  const wordmarkLetterSpacing = useTransform(
+    wordmarkTracking,
+    (value) => `${value}em`,
+  );
+
+  /* The "L" in LOEHRNING collapses — icon takes over */
+  const lOpacity = useTransform(scrollY, [40, 120], [1, 0]);
+  const lWidth = useTransform(scrollY, [40, 120], [14, 0]);
+
+  /* The "." in the icon fades out as it merges with the wordmark */
+  const dotOpacity = useTransform(scrollY, [60, 130], [1, 0]);
+
   return (
     <Link
       href={localizeHref("/", locale)}
       prefetch={false}
-      className="inline-flex min-h-11 items-center py-1 outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className="inline-flex min-h-11 items-center outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
-      <Image
-        src="/logo.svg"
-        alt="loehrning.ai"
-        width={495}
-        height={96}
-        priority
-        className="h-7 w-auto sm:h-8"
-      />
+      <m.div
+        className="flex flex-shrink-0 items-center justify-center"
+        aria-hidden="true"
+        style={{
+          width: iconSize,
+          height: iconSize,
+          marginRight: iconGap,
+          rotate: iconRotate,
+          border: iconBorder,
+          boxShadow: iconShadow,
+          backgroundColor: LOGO_ORIGINAL_ORANGE,
+        }}
+      >
+        <m.span
+          className="font-black leading-none text-background"
+          style={{ fontSize: iconFontSize }}
+        >
+          L
+          <m.span style={{ opacity: dotOpacity, position: "absolute" }}>
+            .
+          </m.span>
+        </m.span>
+      </m.div>
+
+      <m.span
+        className="flex font-sans font-black uppercase text-foreground"
+        style={{
+          transformOrigin: "left center",
+          fontSize: wordmarkSize,
+          letterSpacing: wordmarkLetterSpacing,
+          fontWeight: 900,
+        }}
+      >
+        <m.span
+          className="inline-block overflow-hidden"
+          style={{ width: lWidth, opacity: lOpacity }}
+        >
+          L
+        </m.span>
+        <span>
+          OEHRNING
+          <span style={{ marginLeft: "0.06em", letterSpacing: "0.05em" }}>
+            .AI
+          </span>
+        </span>
+      </m.span>
       <span className="sr-only"> - {homeLabel}</span>
     </Link>
   );
@@ -577,7 +658,7 @@ export function Nav() {
         className="mx-auto flex max-w-6xl items-center justify-between px-6"
         style={{ height: navHeight }}
       >
-        <LogoWordmark locale={locale} homeLabel={copy.home} />
+        <LogoWordmark scrollY={scrollY} locale={locale} homeLabel={copy.home} />
 
         {/* Interactive desktop navigation. The no-script stylesheet hides
             these dropdown triggers and exposes the complete static link list
