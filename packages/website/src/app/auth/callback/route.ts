@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { AuthError, type User } from "@supabase/supabase-js";
-import { trustedRequestOrigin } from "@/lib/auth/origin";
+import { externalRequestUrl, trustedRequestOrigin } from "@/lib/auth/origin";
 import { sanitizeNextPath } from "@/lib/auth/routes";
 import { localizeHref, parseLocalePathname } from "@/lib/i18n/locale";
 import {
@@ -90,7 +90,7 @@ function isBoundedOpaqueAuthorizationCode(value: string): boolean {
 }
 
 export async function GET(request: NextRequest) {
-  const requestUrl = new URL(request.url);
+  const requestUrl = externalRequestUrl(request);
   const codeValues = requestUrl.searchParams.getAll("code");
   const code = codeValues[0] ?? null;
   const next = sanitizeNextPath(requestUrl.searchParams.get("next"));

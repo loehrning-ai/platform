@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { trustedRequestOrigin } from "@/lib/auth/origin";
+import { externalRequestUrl, trustedRequestOrigin } from "@/lib/auth/origin";
 import { isLocale, localizeHref, type Locale } from "@/lib/i18n/locale";
 import { createAuthServerClient, getAuthenticatedUser } from "@/lib/supabase/auth-server";
 import { reportApiError } from "@/lib/observability/api-error";
@@ -83,7 +83,7 @@ async function authenticateBoundOwner(
 }
 
 function isSameOriginPost(request: Request): boolean {
-  const trustedOrigin = trustedRequestOrigin(new URL(request.url));
+  const trustedOrigin = trustedRequestOrigin(externalRequestUrl(request));
   const origin = request.headers.get("origin");
   const fetchSite = request.headers.get("sec-fetch-site");
   return (
