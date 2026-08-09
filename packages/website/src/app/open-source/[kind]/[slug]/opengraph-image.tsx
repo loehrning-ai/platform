@@ -1,14 +1,18 @@
 import { ImageResponse } from "next/og";
 import { notFound } from "next/navigation";
-import { STATUS_LABELS } from "@/components/open-source/status-labels";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
 import {
   OPEN_SOURCE_PROJECT_ARTIFACTS,
   OPEN_SOURCE_TOOL_ARTIFACTS,
   OPEN_SOURCE_VIDEO_ARTIFACTS,
   getOpenSourceArtifactByRoute,
 } from "@/lib/open-source/artifacts";
+import {
+  localizeOpenSourceArtifact,
+  OPEN_SOURCE_SHARED_COPY,
+} from "@/lib/open-source/display-copy";
 
-export const alt = "loehrning.ai Open-Source-Artefakt";
+export const alt = "loehrning.ai open-source artifact";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -33,18 +37,21 @@ export default async function Image({
   params: Promise<{ kind: string; slug: string }>;
 }) {
   const { kind, slug } = await params;
-  const artifact = getOpenSourceArtifactByRoute(kind, slug);
+  const registryArtifact = getOpenSourceArtifactByRoute(kind, slug);
   // A card only exists for a published artifact; an unlisted route resolves to
   // 404 rather than serving a generic card for an unbounded slug space.
-  if (!artifact) notFound();
+  if (!registryArtifact) notFound();
+  const locale = await getRequestLocale();
+  const artifact = localizeOpenSourceArtifact(registryArtifact, locale);
+  const copy = OPEN_SOURCE_SHARED_COPY[locale];
   const title = artifact.title;
   const description = artifact.description;
   const chips = [
-    artifact.license.licenseId ?? "Lizenz hinterlegt",
+    artifact.license.licenseId ?? (locale === "de" ? "Lizenz hinterlegt" : "License recorded"),
     artifact.language,
     // Narrowed before `guide` is read: a video artifact has no guide.
     ...(artifact.kind === "tool" || artifact.kind === "project"
-      ? [STATUS_LABELS[artifact.guide.status]]
+      ? [copy.statuses[artifact.guide.status]]
       : []),
     artifact.source.revision.slice(0, 7),
   ];
@@ -85,7 +92,7 @@ export default async function Image({
               textTransform: "uppercase",
             }}
           >
-            Open-Source-Artefakt
+            {locale === "de" ? "Open-Source-Artefakt" : "Open-source artifact"}
           </div>
         </div>
 
@@ -146,7 +153,7 @@ export default async function Image({
               fontWeight: 900,
             }}
           >
-            /open-source
+            {locale === "de" ? "/open-source" : "/en/open-source"}
           </div>
         </div>
       </div>

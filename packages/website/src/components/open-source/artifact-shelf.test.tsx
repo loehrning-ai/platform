@@ -107,7 +107,7 @@ describe("OpenSourceArtifactShelf", () => {
 
     expect(container).toBeEmptyDOMElement();
     expect(
-      screen.queryByRole("heading", { name: "Alle Werke" }),
+      screen.queryByRole("heading", { name: "Veröffentlicht" }),
     ).not.toBeInTheDocument();
     for (const retired of ["Werkzeuge", "Projekte", "Videos"]) {
       expect(
@@ -120,7 +120,7 @@ describe("OpenSourceArtifactShelf", () => {
     render(<OpenSourceArtifactShelf />);
 
     expect(
-      screen.getByRole("heading", { level: 2, name: "Alle Werke" }),
+      screen.getByRole("heading", { level: 2, name: "Veröffentlicht" }),
     ).toBeInTheDocument();
     expect(screen.getByText("1 Eintrag")).toBeInTheDocument();
     expect(
@@ -138,7 +138,7 @@ describe("OpenSourceArtifactShelf", () => {
     render(<OpenSourceArtifactShelf artifacts={[TOOL]} />);
 
     expect(
-      screen.getByRole("heading", { level: 2, name: "Alle Werke" }),
+      screen.getByRole("heading", { level: 2, name: "Veröffentlicht" }),
     ).toBeInTheDocument();
     expect(screen.getByText("1 Eintrag")).toBeInTheDocument();
     expect(
@@ -154,5 +154,18 @@ describe("OpenSourceArtifactShelf", () => {
         screen.queryByRole("heading", { name: retired }),
       ).not.toBeInTheDocument();
     }
+  });
+
+  it("renders the same featured hierarchy with English shelf labels", () => {
+    render(<OpenSourceArtifactShelf artifacts={[TOOL]} locale="en" />);
+
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Published" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("1 entry")).toBeInTheDocument();
+    expect(screen.getByText("Tool")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: `Details ${TOOL.title}` }),
+    ).toHaveAttribute("href", "/en/open-source/tools/example-tool");
   });
 });

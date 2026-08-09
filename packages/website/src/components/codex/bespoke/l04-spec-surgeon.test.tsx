@@ -23,7 +23,10 @@ function installLocalStoragePolyfill(): void {
 }
 
 beforeAll(() => {
-  if (typeof window.localStorage === "undefined" || typeof window.localStorage.setItem !== "function") {
+  if (
+    typeof window.localStorage === "undefined" ||
+    typeof window.localStorage.setItem !== "function"
+  ) {
     installLocalStoragePolyfill();
   }
 });
@@ -38,31 +41,34 @@ afterEach(() => {
 });
 
 describe("L04SpecSurgeon", () => {
-  it("starts ambiguous with 0/5", () => {
+  it("starts undefined with 0/5", () => {
     render(<L04SpecSurgeon lessonId="L04" cpId="bespoke" />);
-    expect(screen.getByText("0/5 ambiguous")).toBeInTheDocument();
+    expect(screen.getByText("0/5 undefined")).toBeInTheDocument();
   });
 
   it("toggling a section appends it to the assembled spec", () => {
     render(<L04SpecSurgeon lessonId="L04" cpId="bespoke" />);
     fireEvent.click(screen.getByRole("button", { name: "Goal" }));
     expect(screen.getByText(/Add per-IP rate limiting/)).toBeInTheDocument();
-    // 1/5: still below the "thin" threshold (>=2), matching the source's
-    // exact tiering (0-1 ambiguous, 2 thin, 3 ok, 4 strong, 5 surgical).
-    expect(screen.getByText("1/5 ambiguous")).toBeInTheDocument();
+    expect(screen.getByText("1/5 undefined")).toBeInTheDocument();
   });
 
-  it("reaches 'surgical' and awards the checkpoint at 5/5", () => {
+  it("reaches complete and awards the checkpoint at 5/5", () => {
     render(<L04SpecSurgeon lessonId="L04" cpId="bespoke" />);
-    for (const label of ["Goal", "Constraints", "Acceptance Criteria", "Out of scope"]) {
+    for (const label of [
+      "Goal",
+      "Constraints",
+      "Acceptance Criteria",
+      "Out of scope",
+    ]) {
       fireEvent.click(screen.getByRole("button", { name: label }));
     }
     expect(isCheckpointDone("L04", "bespoke")).toBe(false);
     fireEvent.click(screen.getByRole("button", { name: "Context" }));
-    expect(screen.getByText("5/5 surgical")).toBeInTheDocument();
+    expect(screen.getByText("5/5 complete")).toBeInTheDocument();
     expect(isCheckpointDone("L04", "bespoke")).toBe(true);
     expect(getXp()).toBe(XP.CHECKPOINT);
-    expect(screen.getByText(/surgery complete/)).toBeInTheDocument();
+    expect(screen.getByText(/required fields present/)).toBeInTheDocument();
   });
 
   it("disables a toggle once it has been switched on (one-way)", () => {

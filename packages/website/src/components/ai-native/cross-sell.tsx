@@ -3,6 +3,7 @@
 // Server Component (performance hardening: keeps it out of the client bundle).
 import Link from "next/link";
 import { FadeBlock } from "@/components/ai-native/primitives";
+import { localizeHref, type Locale } from "@/lib/i18n/locale";
 
 /* CrossSell — 3-card strip on card background with Kupfer top-border.
  * Points to KI-Führerschein (prerequisite), Glossar, Capstone Gallery. */
@@ -17,37 +18,62 @@ interface Card {
 
 const CARDS: readonly Card[] = [
   {
-    label: "Voraussetzung",
+    label: "Empfohlene Grundlage",
     title: "KI-Führerschein",
-    desc: "Das Minimum: wie Claude funktioniert, was DSGVO damit macht, welche Fallen es gibt. Vor dem Arbeitskurs lesen.",
+    desc: "Kompakte Einführung in KI-Systeme, Datenschutz, praktische Nutzung und Prüfung von Ergebnissen.",
     href: "/ki-fuehrerschein",
-    cta: "Führerschein machen",
+    cta: "KI-Führerschein öffnen",
   },
   {
     label: "Begleitmaterial",
     title: "Glossar · 70 Begriffe",
-    desc: "Von \u201EPrompt\u201C bis \u201EChain-of-Thought\u201C, auf Deutsch. Alles, was im Kurs vorausgesetzt wird.",
+    desc: "Definitionen für technische, organisatorische und regulatorische Begriffe des Kurses.",
     href: "/ai-native/glossar",
     cta: "Glossar öffnen",
   },
   {
-    label: "Praxis · Interaktive Praxisbeispiele",
-    title: "Praxisbeispiel-Galerie",
-    desc: "RAG-Assistent, PII-Scanner, ROI-Rechner, Invoice-OCR, n8n-Flow und Agents: alles ohne Anmeldung ausprobierbar. Simuliert, mit lokalem Kontext.",
+    label: "Lokale Simulationen",
+    title: "Kurssimulationen",
+    desc: "Neun Browser-Beispiele zu Kurslektionen. Sie verwenden synthetische Daten und senden keine Anbieteranfrage.",
     href: "/ai-native/demos",
-    cta: "Praxisbeispiele öffnen",
+    cta: "Simulationen öffnen",
   },
 ];
 
-export function AiNativeCrossSell() {
+const CARDS_EN: readonly Card[] = [
+  {
+    label: "Recommended foundation",
+    title: "AI Fundamentals",
+    desc: "A concise introduction to AI systems, data protection, practical use and output checking.",
+    href: "/ki-fuehrerschein",
+    cta: "Open AI Fundamentals",
+  },
+  {
+    label: "Reference",
+    title: "Glossary · 70 terms",
+    desc: "Definitions for the technical, organizational and regulatory terms used in the course.",
+    href: "/ai-native/glossar",
+    cta: "Open the glossary",
+  },
+  {
+    label: "Local simulations",
+    title: "Course simulation gallery",
+    desc: "Nine browser-based examples connected to course lessons. They use synthetic data and make no live provider request.",
+    href: "/ai-native/demos",
+    cta: "Open the simulations",
+  },
+];
+
+export function AiNativeCrossSell({ locale = "de" }: { readonly locale?: Locale }) {
+  const cards = locale === "en" ? CARDS_EN : CARDS;
   return (
     <section className="border-t border-border bg-card/40 py-20">
       <div className="mx-auto max-w-[1280px] px-6 lg:px-12">
         <div className="grid gap-6 md:grid-cols-3">
-          {CARDS.map((card, i) => (
+          {cards.map((card, i) => (
             <FadeBlock key={card.title} delay={i}>
               <Link
-                href={card.href}
+                href={localizeHref(card.href, locale)}
                 className="group flex h-full flex-col border border-t-[3px] border-border border-t-brand-orange bg-background p-7 transition-colors hover:bg-card-hover"
               >
                 <span className="font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">

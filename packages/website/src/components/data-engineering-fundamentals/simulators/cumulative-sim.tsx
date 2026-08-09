@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Panel } from "../primitives";
+import { useDataEngineeringFundamentalsLocale } from "../locale-context";
 
 // ─── CumulativeSim ────────────────────────────────
 // Ported from `src/chapters/Ch2_Store.js`: day-by-day `user_lifetime_points`
@@ -51,6 +52,7 @@ function computeCumulative(dayIdx: number, bugFromDay: number, patched: boolean)
 const BUG_DAY = 2;
 
 export function CumulativeSim() {
+  const { text } = useDataEngineeringFundamentalsLocale();
   const [day, setDay] = useState(2);
   const [patched, setPatched] = useState(false);
   const [bfKey, setBfKey] = useState(0);
@@ -81,10 +83,10 @@ export function CumulativeSim() {
 
   return (
     <Panel
-      eyebrow="scrubber"
-      title="user_lifetime_points · day by day"
-      meta={`Day ${day + 1}/5`}
-      caption="Each day, yesterday's snapshot merges with today's events into a new snapshot. Break any day and every following day inherits the drift."
+      eyebrow={text("scrubber", "Tagesauswahl")}
+      title={`user_lifetime_points · ${text("day by day", "Tag für Tag")}`}
+      meta={`${text("Day", "Tag")} ${day + 1}/5`}
+      caption={text("In this recursive additive example, each snapshot depends on the prior day. Rebuild the affected range after a faulty input or rule.", "In diesem rekursiven additiven Beispiel hängt jeder Snapshot vom Vortag ab. Nach einer fehlerhaften Eingabe oder Regel wird der betroffene Bereich neu aufgebaut.")}
     >
       <div className="cm-days">
         {[0, 1, 2, 3, 4].map((d) => (
@@ -95,9 +97,9 @@ export function CumulativeSim() {
             onClick={() => setDay(d)}
             aria-pressed={day === d}
           >
-            <div className="num">DAY {d + 1}</div>
+            <div className="num">{text("DAY", "TAG")} {d + 1}</div>
             <div className="date">2026-04-{String(15 + d).padStart(2, "0")}</div>
-            <div className="rc">{genDay(d, patched ? null : BUG_DAY).length} rows</div>
+            <div className="rc">{genDay(d, patched ? null : BUG_DAY).length} {text("rows", "Zeilen")}</div>
           </button>
         ))}
       </div>
@@ -105,20 +107,20 @@ export function CumulativeSim() {
       <div className="cm2-flow">
         <div className="cm2-panel">
           <div className="cm2-panel-head">
-            <div className="cm2-panel-eyebrow">step 1 · prior state</div>
-            <div className="cm2-panel-title">Yesterday&apos;s snapshot</div>
+            <div className="cm2-panel-eyebrow">{text("step 1 · prior state", "Schritt 1 · vorheriger Zustand")}</div>
+            <div className="cm2-panel-title">{text("Yesterday's snapshot", "Snapshot von gestern")}</div>
             <div className="cm2-panel-sub">
-              <code>user_lifetime_points</code> · day {day || "-"}
+              <code>user_lifetime_points</code> · {text("day", "Tag")} {day || "-"}
             </div>
           </div>
           <div className="cm2-table">
             <div className="cm2-thead">
               <span>user_id</span>
-              <span className="r">points</span>
+              <span className="r">{text("points", "Punkte")}</span>
             </div>
             <div className="cm2-tbody">
               {day === 0 ? (
-                <div className="cm2-empty">- no prior state on Day 1 -</div>
+                <div className="cm2-empty">- {text("no prior state on Day 1", "kein vorheriger Zustand an Tag 1")} -</div>
               ) : (
                 yesterday.slice(0, 10).map((r) => (
                   <div className="cm2-row" key={r.id}>
@@ -129,8 +131,8 @@ export function CumulativeSim() {
               )}
             </div>
             <div className="cm2-tfoot">
-              <span>{yesterday.length} users</span>
-              <span className="r">{yesterday.reduce((a, r) => a + r.pts, 0).toLocaleString()} pts</span>
+              <span>{yesterday.length} {text("users", "Nutzer")}</span>
+              <span className="r">{yesterday.reduce((a, r) => a + r.pts, 0).toLocaleString()} {text("pts", "Pkt.")}</span>
             </div>
           </div>
         </div>
@@ -138,7 +140,7 @@ export function CumulativeSim() {
         <div className="cm2-step">
           <div className="cm2-step-arrow">+</div>
           <div className="cm2-step-label">
-            merge
+            {text("merge", "zusammenführen")}
             <br />
             <span>
               FULL OUTER
@@ -150,17 +152,17 @@ export function CumulativeSim() {
 
         <div className={`cm2-panel ${bugActive ? "is-bug" : ""}`}>
           <div className="cm2-panel-head">
-            <div className="cm2-panel-eyebrow">step 2 · incoming</div>
-            <div className="cm2-panel-title">Today&apos;s events</div>
+            <div className="cm2-panel-eyebrow">{text("step 2 · incoming", "Schritt 2 · eingehend")}</div>
+            <div className="cm2-panel-title">{text("Today's events", "Heutige Ereignisse")}</div>
             <div className="cm2-panel-sub">
-              <code>daily_user_points</code> · day {day + 1}
+              <code>daily_user_points</code> · {text("day", "Tag")} {day + 1}
             </div>
-            {bugActive && <div className="cm2-panel-alert">⚠ unit mix-up: points halved</div>}
+            {bugActive && <div className="cm2-panel-alert">⚠ {text("unit mix-up: points halved", "Einheiten verwechselt: Punkte halbiert")}</div>}
           </div>
           <div className="cm2-table">
             <div className="cm2-thead">
               <span>user_id</span>
-              <span className="r">+points</span>
+              <span className="r">+{text("points", "Punkte")}</span>
             </div>
             <div className="cm2-tbody">
               {today.map((r) => (
@@ -171,8 +173,8 @@ export function CumulativeSim() {
               ))}
             </div>
             <div className="cm2-tfoot">
-              <span>{today.length} events</span>
-              <span className="r">+{todayPts} pts</span>
+              <span>{today.length} {text("events", "Ereignisse")}</span>
+              <span className="r">+{todayPts} {text("pts", "Pkt.")}</span>
             </div>
           </div>
         </div>
@@ -180,7 +182,7 @@ export function CumulativeSim() {
         <div className="cm2-step">
           <div className="cm2-step-arrow">=</div>
           <div className="cm2-step-label">
-            result
+            {text("result", "Ergebnis")}
             <br />
             <span>
               COALESCE
@@ -192,17 +194,17 @@ export function CumulativeSim() {
 
         <div className="cm2-panel cm2-panel-result">
           <div className="cm2-panel-head">
-            <div className="cm2-panel-eyebrow">step 3 · written out</div>
-            <div className="cm2-panel-title">Today&apos;s snapshot</div>
+            <div className="cm2-panel-eyebrow">{text("step 3 · written out", "Schritt 3 · geschrieben")}</div>
+            <div className="cm2-panel-title">{text("Today's snapshot", "Heutiger Snapshot")}</div>
             <div className="cm2-panel-sub">
-              <code>user_lifetime_points</code> · day {day + 1}
+              <code>user_lifetime_points</code> · {text("day", "Tag")} {day + 1}
             </div>
           </div>
           <div className="cm2-table">
             <div className="cm2-thead cm2-thead-3">
               <span>user_id</span>
-              <span className="r">points</span>
-              <span className="s">status</span>
+              <span className="r">{text("points", "Punkte")}</span>
+              <span className="s">Status</span>
             </div>
             <div className="cm2-tbody">
               {rowState.map((r) => (
@@ -210,14 +212,14 @@ export function CumulativeSim() {
                   <span className="cm2-key">{r.id}</span>
                   <span className="cm2-val">{r.pts}</span>
                   <span className={`cm2-status cm2-st-${r.state}`}>
-                    {r.state === "new" ? "NEW" : r.state === "upd" ? `+${r.delta}` : "-"}
+                    {r.state === "new" ? text("NEW", "NEU") : r.state === "upd" ? `+${r.delta}` : "-"}
                   </span>
                 </div>
               ))}
             </div>
             <div className="cm2-tfoot">
-              <span>{cumulative.length} users</span>
-              <span className="r">{totalPts.toLocaleString()} pts</span>
+              <span>{cumulative.length} {text("users", "Nutzer")}</span>
+              <span className="r">{totalPts.toLocaleString()} {text("pts", "Pkt.")}</span>
             </div>
           </div>
         </div>
@@ -225,19 +227,19 @@ export function CumulativeSim() {
 
       <div className="cm2-summary">
         <div className="cm2-summary-item">
-          <span className="cm2-summary-k">New users</span>
+          <span className="cm2-summary-k">{text("New users", "Neue Nutzer")}</span>
           <span className="cm2-summary-v">+{newCount}</span>
         </div>
         <div className="cm2-summary-item">
-          <span className="cm2-summary-k">Updated</span>
+          <span className="cm2-summary-k">{text("Updated", "Aktualisiert")}</span>
           <span className="cm2-summary-v">{updCount}</span>
         </div>
         <div className={`cm2-summary-item ${bugActive ? "is-warn" : "is-ok"}`}>
-          <span className="cm2-summary-k">Data quality</span>
-          <span className="cm2-summary-v">{bugActive ? "DRIFT" : "CLEAN"}</span>
+          <span className="cm2-summary-k">{text("Data quality", "Datenqualität")}</span>
+          <span className="cm2-summary-v">{bugActive ? text("DRIFT", "ABWEICHUNG") : text("CLEAN", "SAUBER")}</span>
         </div>
         <div className="cm2-summary-item">
-          <span className="cm2-summary-k">Join key</span>
+          <span className="cm2-summary-k">{text("Join key", "Join-Schlüssel")}</span>
           <span className="cm2-summary-v">
             <code>user_id</code>
           </span>
@@ -247,14 +249,14 @@ export function CumulativeSim() {
       <div className="ctl-row">
         <div className="ctl-slider" style={{ flex: 2 }}>
           <div className="row">
-            <label className="lab" htmlFor="cumulative-scrub-day">Scrub day</label>
-            <span className="val">Day {day + 1}</span>
+            <label className="lab" htmlFor="cumulative-scrub-day">{text("Scrub day", "Tag auswählen")}</label>
+            <span className="val">{text("Day", "Tag")} {day + 1}</span>
           </div>
           <input id="cumulative-scrub-day" type="range" min={0} max={4} step={1} value={day} onChange={(e) => setDay(+e.target.value)} />
-          <span className="hint">click a day card above, or drag here</span>
+          <span className="hint">{text("click a day card above, or drag here", "Tageskarte auswählen oder Regler verschieben")}</span>
         </div>
         <button type="button" className="btn btn-primary" disabled={patched} onClick={startBackfill}>
-          {patched ? `✓ Backfilled from Day ${BUG_DAY + 1}` : `Patch & backfill from Day ${BUG_DAY + 1}`}
+          {patched ? `✓ ${text("Backfilled from Day", "Neu berechnet ab Tag")} ${BUG_DAY + 1}` : `${text("Patch & backfill from Day", "Korrigieren und neu berechnen ab Tag")} ${BUG_DAY + 1}`}
         </button>
       </div>
     </Panel>

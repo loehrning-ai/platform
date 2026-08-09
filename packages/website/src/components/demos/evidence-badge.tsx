@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import type { DemoEvidenceMode, DemoExternalActionMode } from "@/lib/demos";
+import type { Locale } from "@/lib/i18n/locale";
+import { DEMO_ACTION_LABELS, DEMO_EVIDENCE_COPY } from "@/lib/demos-ui-copy";
+import { useDemoLocale } from "./demo-locale";
 
 const EVIDENCE_CONFIG: Record<
   DemoEvidenceMode,
@@ -52,24 +55,20 @@ const EVIDENCE_CONFIG: Record<
   },
 };
 
-const ACTION_LABELS: Record<DemoExternalActionMode, string | null> = {
-  none: null,
-  simulated: "Aktionen simuliert",
-  review_gated: "Freigabe-Schritt simuliert",
-  real_disabled: "Aktionen deaktiviert",
-};
-
 /** Renders a coloured mode badge at the TOP of a demo interactive panel. */
 export function EvidenceBadge({
   evidenceMode,
   externalActionMode,
+  locale = "de",
 }: {
   evidenceMode: DemoEvidenceMode;
   externalActionMode: DemoExternalActionMode;
+  locale?: Locale;
 }) {
   const [open, setOpen] = useState(false);
   const cfg = EVIDENCE_CONFIG[evidenceMode];
-  const actionLabel = ACTION_LABELS[externalActionMode];
+  const evidenceCopy = DEMO_EVIDENCE_COPY[locale][evidenceMode];
+  const actionLabel = DEMO_ACTION_LABELS[locale][externalActionMode];
 
   return (
     <div
@@ -84,7 +83,11 @@ export function EvidenceBadge({
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          aria-label={`Evidenzmodus: ${cfg.label}. Klicke für Details.`}
+          aria-label={
+            locale === "de"
+              ? `Evidenzmodus: ${evidenceCopy.label}. Details einblenden.`
+              : `Evidence mode: ${evidenceCopy.label}. Show details.`
+          }
           style={{
             display: "inline-flex",
             alignItems: "center",
@@ -102,7 +105,7 @@ export function EvidenceBadge({
           }}
         >
           <span aria-hidden="true">{cfg.icon}</span>
-          {cfg.label}
+          {evidenceCopy.label}
           <span aria-hidden="true" style={{ opacity: 0.7, fontSize: 8 }}>
             {open ? "▲" : "▼"}
           </span>
@@ -140,7 +143,7 @@ export function EvidenceBadge({
             border: "1px solid rgba(146,64,14,0.3)",
           }}
         >
-          SIMULIERT
+          {locale === "de" ? "SIMULIERT" : "SIMULATED"}
         </span>
       </div>
 
@@ -159,7 +162,7 @@ export function EvidenceBadge({
             maxWidth: 480,
           }}
         >
-          {cfg.tooltip}
+          {evidenceCopy.tooltip}
         </div>
       )}
     </div>
@@ -172,6 +175,7 @@ export function EvidenceBadge({
  * "before the claim, co-located with it" disclosure principle.
  */
 export function SimulationDisclosure({ children }: { children: React.ReactNode }) {
+  const { locale } = useDemoLocale();
   return (
     <div
       style={{
@@ -186,7 +190,7 @@ export function SimulationDisclosure({ children }: { children: React.ReactNode }
         letterSpacing: "0.02em",
       }}
       role="note"
-      aria-label="Hinweis zur Simulation"
+      aria-label={locale === "de" ? "Hinweis zur Simulation" : "Simulation notice"}
     >
       {children}
     </div>

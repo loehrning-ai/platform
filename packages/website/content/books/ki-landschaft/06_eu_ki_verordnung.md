@@ -1,6 +1,6 @@
 # EU-KI-Verordnung: Rollen und Pflichten präzise prüfen
 
-Die Verordnung (EU) 2024/1689 ist seit 1. August 2024 in Kraft und wird gestaffelt anwendbar. Dieses Kapitel wurde am 28. Juli 2026 geprüft und berücksichtigt die am 27. Juli 2026 in Kraft getretene Verordnung (EU) 2026/1744. Nutze für eine reale Entscheidung immer den [aktuellen Text auf EUR-Lex](https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX%3A32024R1689) und den [offiziellen EU-Zeitplan](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai).
+Die Verordnung (EU) 2024/1689 ist seit 1. August 2024 in Kraft und wird gestaffelt anwendbar. Dieses Kapitel wurde am 9. August 2026 geprüft und berücksichtigt die am 27. Juli 2026 in Kraft getretene Verordnung (EU) 2026/1744. Nutze für eine reale Entscheidung immer den [aktuellen Text auf EUR-Lex](https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX%3A32024R1689) und den [offiziellen EU-Zeitplan](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai).
 
 ## Erst System, Zweck und Rolle klären
 
@@ -16,19 +16,19 @@ Pflichten unterscheiden sich nach Rolle. Ein Betreiber übernimmt nicht automati
 
 ## Anwendung in Stufen
 
-| Datum | Ausgewählte Anwendungspunkte |
-|---|---|
-| 2. Februar 2025 | Kapitel I, Art. 4 und die Verbote des Art. 5 |
-| 2. August 2025 | unter anderem Governance-, Sanktions- und GPAI-Regeln nach den Übergangsvorschriften |
-| 2. August 2026 | weitere allgemeine Regeln, darunter Art. 50, soweit keine besondere Übergangsregel greift |
-| 2. Dezember 2027 | aktueller offizieller EU-Zeitplan für Hochrisiko-Systeme nach Anhang III |
-| 2. August 2028 | aktueller offizieller EU-Zeitplan für in regulierte Produkte eingebettete Hochrisiko-Systeme nach Anhang I |
+| Datum            | Ausgewählte Anwendungspunkte                                                                               |
+| ---------------- | ---------------------------------------------------------------------------------------------------------- |
+| 2. Februar 2025  | Kapitel I, Art. 4 und die Verbote des Art. 5                                                               |
+| 2. August 2025   | unter anderem Governance-, Sanktions- und GPAI-Regeln nach den Übergangsvorschriften                       |
+| 2. August 2026   | weitere allgemeine Regeln, darunter Art. 50, soweit keine besondere Übergangsregel greift                  |
+| 2. Dezember 2027 | aktueller offizieller EU-Zeitplan für Hochrisiko-Systeme nach Anhang III                                   |
+| 2. August 2028   | aktueller offizieller EU-Zeitplan für in regulierte Produkte eingebettete Hochrisiko-Systeme nach Anhang I |
 
 Die Verordnung (EU) 2026/1744 wurde am 24. Juli 2026 im Amtsblatt veröffentlicht und trat am 27. Juli 2026 in Kraft. Sie ändert unter anderem Artikel 4, die Hochrisiko-Zeitpunkte und einzelne Übergangsregeln.
 
 ## Art. 4: KI-Kompetenz ist kontextabhängig
 
-Anbieter und Betreiber müssen Maßnahmen treffen, die die Entwicklung der KI-Kompetenz beim mit Betrieb und Nutzung befassten Personal und anderen in ihrem Auftrag handelnden Personen unterstützen. Zu berücksichtigen sind technische Kenntnisse, Erfahrung, Ausbildung, Kontext und betroffene Personen oder Gruppen. Ein bestimmtes individuelles Kompetenzniveau muss nicht garantiert werden.
+Anbieter und Betreiber müssen Maßnahmen ergreifen, um die Entwicklung der KI-Kompetenz ihres Personals und anderer Personen zu unterstützen, die in ihrem Auftrag mit Betrieb und Nutzung von KI-Systemen befasst sind. Zu berücksichtigen sind technische Kenntnisse, Erfahrung, Aus- und Fortbildung, Einsatzkontext und betroffene Personen oder Personengruppen. Ein bestimmtes individuelles Kompetenzniveau muss nicht garantiert werden.
 
 Die [Q&A der Europäischen Kommission](https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers) stellt klar:
 

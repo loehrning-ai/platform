@@ -92,7 +92,7 @@ afterEach(() => {
 
 describe("codex course reused Tier-A widgets render zero German-only chrome ", () => {
   it("every quiz/compare/task-spec/flashcards instance across all 12 lessons opts into English copy", async () => {
-    const lessons = await getAllCodexLessons();
+    const lessons = await getAllCodexLessons("en");
     let checkedCount = 0;
 
     for (const lesson of lessons) {

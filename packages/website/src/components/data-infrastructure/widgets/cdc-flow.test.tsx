@@ -1,4 +1,12 @@
-import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from "vitest";
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  beforeEach,
+  afterEach,
+  vi,
+} from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { __resetCacheForTests, getXp, isCheckpointDone } from "@/lib/progress";
 import { XP } from "@/lib/progress/types";
@@ -23,7 +31,10 @@ function installLocalStoragePolyfill(): void {
 }
 
 beforeAll(() => {
-  if (typeof window.localStorage === "undefined" || typeof window.localStorage.setItem !== "function") {
+  if (
+    typeof window.localStorage === "undefined" ||
+    typeof window.localStorage.setItem !== "function"
+  ) {
     installLocalStoragePolyfill();
   }
 });
@@ -41,15 +52,36 @@ afterEach(() => {
 describe("CdcFlow", () => {
   it("renders the Kappa diagram by default with real stage labels", () => {
     render(<CdcFlow lessonId="di-cdc-lambda-kappa" cpId="cdc" />);
-    expect(screen.getByRole("img", { name: /Kappa architecture/ })).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: /Kappa architecture/ }),
+    ).toBeInTheDocument();
     expect(screen.getByText(/One pipeline\. Re-process/)).toBeInTheDocument();
   });
 
   it("switches to the Lambda diagram on tab click, showing the killer-flaw callout", () => {
     render(<CdcFlow lessonId="di-cdc-lambda-kappa" cpId="cdc" />);
-    fireEvent.click(screen.getByRole("tab", { name: "Lambda (speed + batch)" }));
-    expect(screen.getByRole("img", { name: /Lambda architecture/ })).toBeInTheDocument();
-    expect(screen.getByText(/Two pipelines computing the same logic/)).toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole("tab", { name: "Lambda (speed + batch)" }),
+    );
+    expect(
+      screen.getByRole("img", { name: /Lambda architecture/ }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Two pipelines computing the same logic/),
+    ).toBeInTheDocument();
+  });
+
+  it("uses stable course-namespaced tab and panel ids", () => {
+    render(<CdcFlow lessonId="di-cdc-lambda-kappa" cpId="cdc" />);
+    expect(
+      screen.getByRole("tab", { name: "Kappa (one stream)" }),
+    ).toHaveAttribute(
+      "aria-controls",
+      "data-infra-di-cdc-lambda-kappa-cdc-kappa-panel",
+    );
+    expect(
+      screen.getByRole("tabpanel", { name: "Kappa (one stream)" }),
+    ).toHaveAttribute("id", "data-infra-di-cdc-lambda-kappa-cdc-kappa-panel");
   });
 
   it("wires tabs to panels and supports roving horizontal keyboard navigation", () => {

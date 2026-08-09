@@ -13,7 +13,9 @@ describe("public book route provider-independence", () => {
         "utf8",
       );
 
-      expect(source).not.toMatch(/getAuthenticatedUser|auth-server|cookies\s*\(/);
+      expect(source).not.toMatch(
+        /getAuthenticatedUser|auth-server|cookies\s*\(/,
+      );
     },
   );
 
@@ -27,11 +29,11 @@ describe("public book route provider-independence", () => {
       "utf8",
     );
 
-    expect(overview).toContain(
-      "href={`/login?next=${encodeURIComponent(book.pdfPath)}`}",
-    );
-    expect(library).toContain(
-      "href={`/login?next=${encodeURIComponent(book.pdfPath)}`}",
-    );
+    for (const source of [overview, library]) {
+      expect(source).toContain(
+        "`/login?next=${encodeURIComponent(book.pdfPath)}`",
+      );
+      expect(source).toContain("localizeHref(");
+    }
   });
 });

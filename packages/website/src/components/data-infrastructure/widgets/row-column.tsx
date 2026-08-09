@@ -10,6 +10,7 @@ import { useCanvasRAF } from "../canvas/use-canvas-raf";
 import { useCanvasAutoSize } from "../canvas/use-canvas-size";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
+import { useDataInfraWidgetLocale } from "../widget-locale-context";
 
 interface RowColumnProps {
   readonly lessonId: string;
@@ -19,7 +20,20 @@ interface RowColumnProps {
 const ROWS = 12;
 const HEADERS = ["id", "user", "country", "amount"] as const;
 const COUNTRIES = ["US", "UK", "JP", "BR", "DE", "FR"];
-const NAMES = ["alice", "bob", "cara", "dan", "eve", "finn", "gabe", "hana", "ivy", "jon", "kim", "leo"];
+const NAMES = [
+  "alice",
+  "bob",
+  "cara",
+  "dan",
+  "eve",
+  "finn",
+  "gabe",
+  "hana",
+  "ivy",
+  "jon",
+  "kim",
+  "leo",
+];
 
 function buildData(): (string | number)[][] {
   return Array.from({ length: ROWS }, (_, i) => [
@@ -31,12 +45,17 @@ function buildData(): (string | number)[][] {
 }
 
 export function RowColumn({ lessonId, cpId }: RowColumnProps): JSX.Element {
+  const { locale } = useDataInfraWidgetLocale();
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const data = useMemo(buildData, []);
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [contextUnavailable, setContextUnavailable] = useState(false);
-  const [stats, setStats] = useState<{ rb: string; cb: string; sv: string }>({ rb: "—", cb: "—", sv: "—" });
+  const [stats, setStats] = useState<{ rb: string; cb: string; sv: string }>({
+    rb: "—",
+    cb: "—",
+    sv: "—",
+  });
 
   const sweepRowRef = useRef(-1);
   const sweepColRef = useRef(-1);
@@ -64,8 +83,16 @@ export function RowColumn({ lessonId, cpId }: RowColumnProps): JSX.Element {
 
     ctx.fillStyle = "#5b8a8f";
     ctx.font = "bold 12px monospace";
-    ctx.fillText("row store · Postgres", padX, 16);
-    ctx.fillText("column store · Parquet", w / 2 + padX, 16);
+    ctx.fillText(
+      locale === "de" ? "Zeilenspeicher · Postgres" : "row store · Postgres",
+      padX,
+      16,
+    );
+    ctx.fillText(
+      locale === "de" ? "Spaltenspeicher · Parquet" : "column store · Parquet",
+      w / 2 + padX,
+      16,
+    );
 
     const rx = padX;
     const ry = padY;
@@ -84,7 +111,10 @@ export function RowColumn({ lessonId, cpId }: RowColumnProps): JSX.Element {
       ctx.strokeStyle = swept ? "#cf8a3f" : "rgba(91,138,143,0.2)";
       ctx.strokeRect(rx, y, colW * 4, rowH - 1);
       row.forEach((cell, c) => {
-        ctx.fillStyle = swept && row[2] === "US" && (c === 2 || c === 3) ? "#2a5a45" : "#334155";
+        ctx.fillStyle =
+          swept && row[2] === "US" && (c === 2 || c === 3)
+            ? "#2a5a45"
+            : "#334155";
         ctx.font = "9px monospace";
         ctx.fillText(String(cell), rx + c * colW + 4, y + rowH / 2 + 3);
       });
@@ -93,7 +123,11 @@ export function RowColumn({ lessonId, cpId }: RowColumnProps): JSX.Element {
     ctx.fillRect(rx, ry, colW * 2, rowH * (ROWS + 1));
     ctx.fillStyle = "#b85a4a";
     ctx.font = "9px monospace";
-    ctx.fillText("wasted (read but unused)", rx, ry + rowH * (ROWS + 1) + 12);
+    ctx.fillText(
+      locale === "de" ? "gelesen, aber nicht genutzt" : "read but unused",
+      rx,
+      ry + rowH * (ROWS + 1) + 12,
+    );
 
     const cx = w / 2 + padX / 2;
     const cy = padY;
@@ -132,7 +166,7 @@ export function RowColumn({ lessonId, cpId }: RowColumnProps): JSX.Element {
     }
 
     return activeRef.current;
-  }, [data, stats.rb]);
+  }, [data, locale, stats.rb]);
 
   const { wake } = useCanvasRAF(draw);
 
@@ -160,15 +194,18 @@ export function RowColumn({ lessonId, cpId }: RowColumnProps): JSX.Element {
     setStats({
       rb: `${rowBytes}B (4 cols)`,
       cb: `${colBytes}B (2 cols)`,
-      sv: `${Math.round((1 - colBytes / rowBytes) * 100)}% less`,
+      sv: `${Math.round((1 - colBytes / rowBytes) * 100)}% ${locale === "de" ? "weniger" : "less"}`,
     });
 
-    setTimeout(() => {
-      activeRef.current = false;
-      wake();
-      complete();
-    }, ROWS * 100 + 900);
-  }, [complete, wake]);
+    setTimeout(
+      () => {
+        activeRef.current = false;
+        wake();
+        complete();
+      },
+      ROWS * 100 + 900,
+    );
+  }, [complete, locale, wake]);
 
   const reset = useCallback(() => {
     sweepRowRef.current = -1;
@@ -179,22 +216,37 @@ export function RowColumn({ lessonId, cpId }: RowColumnProps): JSX.Element {
   }, [wake]);
 
   return (
-    <div className="border-2 border-border bg-card/40 p-5 md:p-6">
+    <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-3 sm:p-5 md:p-6">
       <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        Sim · SELECT SUM(amount) WHERE country=&apos;US&apos;, row vs column {done ? "✓" : ""}
+        {locale === "de"
+          ? "Modell · Zeilen- und Spaltenspeicher"
+          : "Model · Row and column storage"}{" "}
+        {done ? "✓" : ""}
       </p>
 
       {contextUnavailable ? (
         <CanvasFallbackNotice
-          title="Row vs column storage"
-          summary="A row-store scans all 4 columns of every row; a column-store touches only the 2 columns the query needs, country and amount."
+          title={
+            locale === "de"
+              ? "Zeilen- und Spaltenspeicher"
+              : "Row vs column storage"
+          }
+          summary={
+            locale === "de"
+              ? "Der Zeilenspeicher liest vier Spalten jeder Zeile. Der Spaltenspeicher liest nur country und amount."
+              : "A row-store scans all 4 columns of every row; a column-store touches only the 2 columns the query needs, country and amount."
+          }
         />
       ) : (
         <div ref={wrapRef} className="h-[340px] w-full">
           <canvas
             ref={canvasRef}
             role="img"
-            aria-label="Diagram comparing row-oriented and column-oriented storage layouts and which columns a query reads."
+            aria-label={
+              locale === "de"
+                ? "Diagramm zum Vergleich von Zeilen- und Spaltenspeicherung und den von einer Abfrage gelesenen Spalten."
+                : "Diagram comparing row-oriented and column-oriented storage layouts and which columns a query reads."
+            }
             className="h-full w-full"
           />
         </div>
@@ -206,7 +258,7 @@ export function RowColumn({ lessonId, cpId }: RowColumnProps): JSX.Element {
           onClick={run}
           className="border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90"
         >
-          ▶ run query
+          {locale === "de" ? "Abfrage ausführen" : "▶ run query"}
         </button>
         <button
           type="button"
@@ -215,11 +267,15 @@ export function RowColumn({ lessonId, cpId }: RowColumnProps): JSX.Element {
             "border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60",
           )}
         >
-          reset
+          {locale === "de" ? "Zurücksetzen" : "reset"}
         </button>
         <span className="font-mono text-[11px] text-muted-foreground">
-          row store <b className="text-foreground">{stats.rb}</b> · column store <b className="text-foreground">{stats.cb}</b>{" "}
-          · saved <b className="text-foreground">{stats.sv}</b>
+          {locale === "de" ? "Zeilenspeicher" : "row store"}{" "}
+          <b className="text-foreground">{stats.rb}</b> ·{" "}
+          {locale === "de" ? "Spaltenspeicher" : "column store"}{" "}
+          <b className="text-foreground">{stats.cb}</b> ·{" "}
+          {locale === "de" ? "Einsparung" : "saved"}{" "}
+          <b className="text-foreground">{stats.sv}</b>
         </span>
       </div>
     </div>

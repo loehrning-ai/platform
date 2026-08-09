@@ -15,7 +15,9 @@ describe("ScalerDemo ", () => {
     render(<ScalerDemo />);
     expect(screen.getByText("Feature Scaling")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "raw" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "standard" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "standard" }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "minmax" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "robust" })).toBeInTheDocument();
   });
@@ -23,7 +25,9 @@ describe("ScalerDemo ", () => {
   it("switching scaler updates the formula description text", () => {
     render(<ScalerDemo />);
     fireEvent.click(screen.getByRole("button", { name: "robust" }));
-    expect(screen.getByText(/median-centered, ignores tail extremes/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/median-centered; tail extremes do not set the scale/),
+    ).toBeInTheDocument();
   });
 
   it("renders one bar group per feature name (deterministic, hardcoded feature values)", () => {

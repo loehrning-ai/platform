@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Panel } from "../primitives";
+import { useDataEngineeringFundamentalsLocale } from "../locale-context";
 
 // ─── Scanner ──────────────────────────────────────
 // Ported from `src/chapters/Ch0_Fundamentals.js`: row-oriented vs columnar
@@ -16,6 +17,7 @@ const COL_GB = TABLE_GB / COLS;
 type ScanMode = "row" | "col";
 
 export function Scanner() {
+  const { text } = useDataEngineeringFundamentalsLocale();
   const [mode, setMode] = useState<ScanMode>("row");
   const [snappy, setSnappy] = useState(false);
   const [runToken, setRunToken] = useState(0);
@@ -91,32 +93,32 @@ export function Scanner() {
 
   return (
     <Panel
-      eyebrow="live simulator"
-      title="Row vs columnar scanner"
+      eyebrow={text("live simulator", "Live-Simulator")}
+      title={text("Row vs columnar scanner", "Zeilen- und Spaltenscan im Vergleich")}
       meta="SELECT SUM(revenue) FROM sales"
-      caption="Disk layout: 100 columns × 40 rows. Scan head animates real cells being read. Source of truth is bytes."
+      caption={text("Normalized teaching model: 100 columns, 40 visual rows, and illustrative size and throughput assumptions.", "Normiertes Lernmodell: 100 Spalten, 40 sichtbare Zeilen sowie beispielhafte Größen- und Durchsatzannahmen.")}
     >
       <div className="sc-query">
         <div className="sc-q-ln">
           <span className="tok-k">SELECT</span> <span className="tok-f">SUM</span>(<span className="tok-t">revenue</span>){" "}
           <span className="tok-k">FROM</span> sales;
         </div>
-        <div className="sc-q-hint">→ Engine needs one column out of 100.</div>
+        <div className="sc-q-hint">{text("→ Engine needs one column out of 100.", "→ Die Engine benötigt eine von 100 Spalten.")}</div>
       </div>
 
       <div className={`sc-disk ${mode}`}>
         <div className="sc-axis-left">
-          <div>col 0</div>
-          <div>col 25</div>
-          <div>col 50</div>
-          <div>col 75</div>
-          <div>col 99</div>
+          <div>{text("col", "Spalte")} 0</div>
+          <div>{text("col", "Spalte")} 25</div>
+          <div>{text("col", "Spalte")} 50</div>
+          <div>{text("col", "Spalte")} 75</div>
+          <div>{text("col", "Spalte")} 99</div>
         </div>
         <div className="sc-grid-wrap">
           <div className="sc-grid-head">
-            <span>DISK · {mode === "row" ? "row-oriented (CSV / OLTP)" : "columnar (Parquet / ORC)"}</span>
+            <span>{text("DISK", "FESTPLATTE")} · {mode === "row" ? text("row-oriented (CSV / OLTP)", "zeilenorientiert (CSV / OLTP)") : text("columnar (Parquet / ORC)", "spaltenorientiert (Parquet / ORC)")}</span>
             <span>
-              target: <code className="sc-col47">col[47] revenue</code>
+              {text("target", "Ziel")}: <code className="sc-col47">col[47] revenue</code>
             </span>
           </div>
           <div
@@ -142,7 +144,7 @@ export function Scanner() {
             })}
           </div>
           <div className="sc-prog">
-            <div className="sc-prog-lab">scan progress</div>
+            <div className="sc-prog-lab">{text("scan progress", "Scan-Fortschritt")}</div>
             <div className="sc-prog-bar">
               <div className="sc-prog-fill" style={{ width: `${progress * 100}%` }} />
             </div>
@@ -153,60 +155,60 @@ export function Scanner() {
 
       <div className="sc-stats">
         <div className={`sc-stat ${mode === "row" ? "warn" : "good"}`}>
-          <div className="sc-stat-k">bytes scanned</div>
+          <div className="sc-stat-k">{text("bytes scanned", "gelesene Bytes")}</div>
           <div className="sc-stat-v">
             {bytesScanned.toFixed(2)}
             <span className="u"> GB</span>
           </div>
-          <div className="sc-stat-s">of {bytesTotal} GB on disk</div>
+          <div className="sc-stat-s">{text("of", "von")} {bytesTotal} GB {text("on disk", "auf der Festplatte")}</div>
         </div>
         <div className="sc-stat">
-          <div className="sc-stat-k">columns read</div>
+          <div className="sc-stat-k">{text("columns read", "gelesene Spalten")}</div>
           <div className="sc-stat-v">
             {reads.colsRead}
             <span className="u"> / 100</span>
           </div>
-          <div className="sc-stat-s">{mode === "row" ? "row layout forces full scan" : "projection pushdown"}</div>
+          <div className="sc-stat-s">{mode === "row" ? text("row layout forces full scan", "Zeilenlayout erzwingt vollständigen Scan") : "Projection Pushdown"}</div>
         </div>
         <div className={`sc-stat ${mode === "col" ? "good" : ""}`}>
-          <div className="sc-stat-k">efficiency</div>
+          <div className="sc-stat-k">{text("bytes-read ratio (model)", "Verhältnis gelesener Bytes (Modell)")}</div>
           <div className="sc-stat-v">{mode === "row" ? "1×" : `${Math.round(1 / ((snappy ? 0.28 : 1) / COLS))}×`}</div>
           <div className="sc-stat-s">
-            {mode === "row" ? "baseline" : `${Math.round((1 - (snappy ? 0.28 : 1) / COLS) * 100)}% of disk skipped`}
+            {mode === "row" ? text("baseline", "Referenz") : `${Math.round((1 - (snappy ? 0.28 : 1) / COLS) * 100)}% ${text("of disk skipped", "der Festplatte übersprungen")}`}
           </div>
         </div>
         <div className="sc-stat">
-          <div className="sc-stat-k">scan time</div>
+          <div className="sc-stat-k">{text("modeled scan time", "modellierte Scan-Dauer")}</div>
           <div className="sc-stat-v">
             {scanTime.toFixed(2)}
             <span className="u"> s</span>
           </div>
-          <div className="sc-stat-s">at 1 GB/s</div>
+          <div className="sc-stat-s">{text("scenario assumption", "Szenarioannahme")}: 1 GB/s</div>
         </div>
       </div>
 
       <div className="sc-ctrls">
         <div className="sc-tabs">
           <button type="button" className={`sc-tab ${mode === "row" ? "on" : ""}`} onClick={() => setMode("row")}>
-            Row-oriented
+            {text("Row-oriented", "Zeilenorientiert")}
             <span className="sc-tab-sub">CSV · JSON · Postgres</span>
           </button>
           <button type="button" className={`sc-tab ${mode === "col" ? "on" : ""}`} onClick={() => setMode("col")}>
-            Columnar
+            {text("Columnar", "Spaltenorientiert")}
             <span className="sc-tab-sub">Parquet · ORC</span>
           </button>
         </div>
         <label className={`sc-check ${mode !== "col" ? "dis" : ""}`}>
           <input type="checkbox" disabled={mode !== "col"} checked={snappy && mode === "col"} onChange={(e) => setSnappy(e.target.checked)} />
-          <span className="sc-check-lab">Snappy compression</span>
-          <span className="sc-check-sub">shrinks column stripe ~3.5×</span>
+          <span className="sc-check-lab">{text("Snappy compression", "Snappy-Komprimierung")}</span>
+          <span className="sc-check-sub">{text("model assumes 0.28× encoded size", "Modell nimmt 0,28× codierte Größe an")}</span>
         </label>
         <div className="sc-actions">
           <button type="button" className="btn" onClick={reset} disabled={running}>
-            Reset
+            {text("Reset", "Zurücksetzen")}
           </button>
           <button type="button" className="btn btn-primary" onClick={run} disabled={running}>
-            ▶ Run scan
+            {text("▶ Run scan", "▶ Scan starten")}
           </button>
         </div>
       </div>

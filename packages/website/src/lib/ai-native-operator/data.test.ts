@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import {
   __resetAiNativeOperatorCacheForTests,
+  getAiNativeOperatorLocaleRegistry,
   getAllLessons,
   getAllModuleLessonPairs,
   getLesson,
@@ -41,7 +42,7 @@ describe("ai-native-operator content module ", () => {
 
   it("getLesson resolves a real lesson by moduleId + lessonNumber", async () => {
     const lesson = await getLesson("mindset", 1);
-    expect(lesson?.title).toBe('Why "AI-first" is no longer optional');
+    expect(lesson?.title).toBe("Choose tasks before choosing tools");
     const missing = await getLesson("mindset", 99);
     expect(missing).toBeUndefined();
   });
@@ -95,5 +96,29 @@ describe("ai-native-operator content module ", () => {
     const first = await getModuleLessons("mindset");
     const second = await getModuleLessons("mindset");
     expect(first).toBe(second);
+  });
+
+  it("registers complete English and German bundles without changing machine identity", async () => {
+    const registry = await getAiNativeOperatorLocaleRegistry();
+    expect(registry.sourceLocale).toBe("en");
+    expect(registry.availableLocales).toEqual(["de", "en"]);
+    const english = registry.get("en");
+    const german = registry.get("de");
+    expect(english.content.lessons).toHaveLength(39);
+    expect(german.content.lessons).toHaveLength(39);
+    expect(german.identity).toEqual(english.identity);
+    expect(english.config.language).toBe("en");
+    expect(german.config.language).toBe("de");
+    expect(german.content.lessons[0].title).not.toBe(
+      english.content.lessons[0].title,
+    );
+  });
+
+  it("keeps module caches isolated by locale", async () => {
+    const english = await getModuleLessons("mindset", "en");
+    const german = await getModuleLessons("mindset", "de");
+    expect(english).not.toBe(german);
+    expect(english[0].id).toBe(german[0].id);
+    expect(english[0].title).not.toBe(german[0].title);
   });
 });

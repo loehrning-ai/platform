@@ -1,7 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import { CourseProgressBar } from "./course-progress-bar";
-import { __resetCacheForTests, markLessonCompleted } from "@/lib/progress/store";
+import {
+  __resetCacheForTests,
+  markLessonCompleted,
+} from "@/lib/progress/store";
 
 function installLocalStoragePolyfill() {
   const store = new Map<string, string>();

@@ -6,8 +6,14 @@
 // gap, breaking ties along the learning path order.
 
 import { getCatalogCourse } from "@/lib/courses/catalog";
-import { courseFacts, type CourseAccent } from "@/lib/courses/tracks";
+import { localizeCatalogCourse } from "@/lib/courses/catalog-copy";
+import {
+  courseBadges,
+  courseFacts,
+  type CourseAccent,
+} from "@/lib/courses/tracks";
 import type { CourseSlug } from "@/lib/course/types";
+import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import type { DimensionId, DimensionResult, KiCheckResult } from "./types";
 
 /** Below this composite/dimension score the basics count as "not yet solid". */
@@ -50,38 +56,70 @@ export interface KiCheckRecommendation {
 /** Reason lines per focus dimension for the gap case (du-form, warm). */
 const GAP_REASONING: Record<DimensionId, string> = {
   grundlagen:
-    "Beim Verstehen der KI-Grundlagen ist noch Luft. Der {title} legt genau dieses Fundament, Schritt für Schritt.",
+    "Beim Verstehen der KI-Grundlagen liegt der niedrigste Wert. Der {title} behandelt Funktionsweise, Fehlertypen und Prüfung.",
   urteil:
-    "Beim kritischen Einordnen von KI ist noch Luft, etwa bei Deepfakes und Verzerrungen. Der {title} schärft genau diesen Blick.",
+    "Beim kritischen Einordnen liegt der niedrigste Wert. Der {title} behandelt Deepfakes, Verzerrungen und Quellenprüfung.",
   recht:
-    "Bei den Regeln rund um KI ist noch Luft. Der {title} macht aus dem AI Act konkrete, verständliche Schritte.",
+    "Beim Anwenden von KI-Regeln liegt der niedrigste Wert. Der {title} ordnet Rollen, Risikoklassen und Pflichten des AI Act ein.",
   verantwortung:
-    "Beim sicheren, verantwortungsvollen Einsatz ist noch Luft. Der {title} zeigt dir Datenschutz, Transparenz und saubere Nachweise.",
+    "Beim verantwortungsvollen Einsatz liegt der niedrigste Wert. Der {title} behandelt Datenschutz, Transparenz und nachvollziehbare Nachweise.",
   praxis:
-    "In der täglichen Arbeit mit KI ist noch Luft. Der {title} bringt dir Methode in Prompting, Werkzeuge und Prüfung.",
+    "Bei der Anwendung im Arbeitsalltag liegt der niedrigste Wert. Der {title} vermittelt eine Methode für Prompts, Werkzeuge und Prüfung.",
 };
 
 const FOUNDATION_REASONING =
-  "Bevor die Details kommen, lohnt sich ein festes Fundament. Der {title} erklärt KI von Grund auf, ohne Vorwissen, und passt genau zu deinem Start.";
+  "Beginne mit den Grundbegriffen, bevor du Spezialthemen vertiefst. Der {title} erklärt Funktionsweise, Fehlertypen, Datenschutz und Prüfung ohne vorausgesetztes Vorwissen.";
+
+const GAP_REASONING_EN: Record<DimensionId, string> = {
+  grundlagen:
+    "Your basics score is the main gap. {title} explains how AI works, where it fails, and how to check its output.",
+  urteil:
+    "Judging model output is the main gap, including synthetic media and bias. {title} addresses those cases directly.",
+  recht:
+    "Applying AI rules is the main gap. {title} turns the AI Act's roles and risk classes into concrete decisions.",
+  verantwortung:
+    "Responsible use is the main gap. {title} covers data protection, transparency, and traceable records.",
+  praxis:
+    "Applying AI in daily work is the main gap. {title} provides a method for prompts, tools, and review steps.",
+};
+
+const FOUNDATION_REASONING_EN =
+  "Build the basic model before adding specialist detail. {title} explains how AI works, common failures, data protection, and verification without assuming prior knowledge.";
 
 function build(
   focus: DimensionResult,
   kind: RecommendationKind,
+  locale: Locale,
 ): KiCheckRecommendation {
   const slug = DIMENSION_COURSE[focus.id];
-  const course = getCatalogCourse(slug);
+  const baseCourse = getCatalogCourse(slug);
+  const course = baseCourse
+    ? localizeCatalogCourse(baseCourse, locale)
+    : undefined;
   const meta = courseFacts(slug);
 
-  const title = course?.title ?? "Kernkurs";
+  const title =
+    course?.title ?? (locale === "de" ? "Kernkurs" : "Foundation course");
   const template =
-    kind === "foundation" ? FOUNDATION_REASONING : GAP_REASONING[focus.id];
+    locale === "de"
+      ? kind === "foundation"
+        ? FOUNDATION_REASONING
+        : GAP_REASONING[focus.id]
+      : kind === "foundation"
+        ? FOUNDATION_REASONING_EN
+        : GAP_REASONING_EN[focus.id];
 
   return {
     slug,
     courseTitle: title,
-    courseHref: course?.href ?? "/kurse",
-    startHref: course?.startHref ?? "/kurse",
-    badge: meta.badge,
+    courseHref: localizeHref(course?.href ?? "/kurse", locale),
+    startHref: localizeHref(course?.startHref ?? "/kurse", locale),
+    badge:
+      locale === "de"
+        ? meta.badge
+        : courseBadges(slug, locale)
+            .map(({ label }) => label)
+            .join(" · "),
     iconName: meta.iconName,
     accent: meta.accent,
     focusDimensionId: focus.id,
@@ -96,12 +134,15 @@ function build(
  * foundation threshold, always start with the KI-Führerschein. Otherwise route
  * to the weakest remaining dimension's course.
  */
-export function recommend(result: KiCheckResult): KiCheckRecommendation {
+export function recommend(
+  result: KiCheckResult,
+  locale: Locale = "de",
+): KiCheckRecommendation {
   const dimensions = result.dimensions;
   const grundlagen = dimensions.find((d) => d.id === "grundlagen");
 
   if (grundlagen && grundlagen.normalizedScore < FOUNDATION_THRESHOLD) {
-    return build(grundlagen, "foundation");
+    return build(grundlagen, "foundation", locale);
   }
 
   // Grundlagen is solid enough: close the biggest remaining gap.
@@ -114,5 +155,5 @@ export function recommend(result: KiCheckResult): KiCheckRecommendation {
     return PATH_ORDER[a.id] - PATH_ORDER[b.id];
   })[0];
 
-  return build(weakest, "gap");
+  return build(weakest, "gap", locale);
 }

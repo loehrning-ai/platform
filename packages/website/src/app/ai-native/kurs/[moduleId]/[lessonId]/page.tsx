@@ -12,6 +12,9 @@ import { LessonProgressRing } from "@/components/ai-native/kurs/lesson-progress-
 import { getModule, getModuleLessons, getLesson } from "@/lib/ai-native/data";
 import { MODULE_IDS, type ModuleId } from "@/lib/ai-native/types";
 import { SITE_URL } from "@/lib/seo/json-ld";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { localizeHref } from "@/lib/i18n/locale";
+import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
 
 interface PageProps {
   params: Promise<{ moduleId: string; lessonId: string }>;
@@ -27,18 +30,30 @@ export async function generateStaticParams() {
   return perModule.flat();
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { moduleId, lessonId } = await params;
-  const lesson = await getLesson(moduleId as ModuleId, lessonId);
-  if (!lesson) return { title: "Lektion nicht gefunden" };
-  const lessonUrl = `${SITE_URL}/ai-native/kurs/${moduleId}/${lessonId}`;
+  const locale = resolveFoundationCourseContentLocale(
+    "ai-native",
+    await getRequestLocale(),
+  );
+  const lesson = await getLesson(moduleId as ModuleId, lessonId, locale);
+  if (!lesson)
+    return {
+      title: locale === "en" ? "Lesson not found" : "Lektion nicht gefunden",
+      robots: { index: false, follow: false },
+    };
+  const lessonUrl = `${SITE_URL}${localizeHref(`/ai-native/kurs/${moduleId}/${lessonId}`, locale)}`;
+  const courseTitle =
+    locale === "en" ? "AI-Native Workflow Course" : "AI-Native Arbeitskurs";
   return {
-    title: `${lesson.title}: AI-Native Arbeitskurs`,
+    title: `${lesson.title}: ${courseTitle}`,
     description: lesson.subtitle,
     robots: { index: false, follow: true },
     alternates: { canonical: lessonUrl },
     openGraph: {
-      title: `${lesson.title}: AI-Native Arbeitskurs`,
+      title: `${lesson.title}: ${courseTitle}`,
       description: lesson.subtitle,
       url: lessonUrl,
       type: "article",
@@ -48,15 +63,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function AiNativeLessonPage({ params }: PageProps) {
   const { moduleId, lessonId } = await params;
-  const mod = getModule(moduleId as ModuleId);
-  const lesson = await getLesson(moduleId as ModuleId, lessonId);
+  const locale = resolveFoundationCourseContentLocale(
+    "ai-native",
+    await getRequestLocale(),
+  );
+  const mod = getModule(moduleId as ModuleId, locale);
+  const lesson = await getLesson(moduleId as ModuleId, lessonId, locale);
   if (!mod || !lesson) notFound();
 
-  const lessons = await getModuleLessons(moduleId as ModuleId);
+  const lessons = await getModuleLessons(moduleId as ModuleId, locale);
   const currentIdx = lessons.findIndex((l) => l.id === lesson.id);
   const prevLesson = currentIdx > 0 ? lessons[currentIdx - 1] : null;
   const nextLesson =
     currentIdx < lessons.length - 1 ? lessons[currentIdx + 1] : null;
+  const isEnglish = locale === "en";
 
   return (
     <div className="mx-auto max-w-[720px] px-6 py-12 md:py-16">
@@ -65,15 +85,23 @@ export default async function AiNativeLessonPage({ params }: PageProps) {
         aria-label="Breadcrumb"
         className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
       >
-        <Link href="/ai-native" className="hover:text-brand-orange">
-          Kurs
+        <Link
+          href={localizeHref("/ai-native", locale)}
+          className="hover:text-brand-orange"
+        >
+          {isEnglish ? "Course" : "Kurs"}
         </Link>
         <span className="mx-2 opacity-40">/</span>
-        <Link href={`/ai-native/kurs/${mod.id}`} className="hover:text-brand-orange">
-          Modul {mod.number}
+        <Link
+          href={localizeHref(`/ai-native/kurs/${mod.id}`, locale)}
+          className="hover:text-brand-orange"
+        >
+          {isEnglish ? "Module" : "Modul"} {mod.number}
         </Link>
         <span className="mx-2 opacity-40">/</span>
-        <span className="text-brand-orange">Lektion {lesson.number}</span>
+        <span className="text-brand-orange">
+          {isEnglish ? "Lesson" : "Lektion"} {lesson.number}
+        </span>
       </nav>
 
       {/* Header */}
@@ -87,10 +115,10 @@ export default async function AiNativeLessonPage({ params }: PageProps) {
               § {lesson.number}
             </span>
             <div className="flex flex-wrap items-center gap-3">
-              <TierChip tier="FREE" />
+              <TierChip tier="FREE" locale={locale} />
               <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
                 <Clock size={11} className="mr-1 inline" />
-                {lesson.durationMinutes} Min.
+                {lesson.durationMinutes} {isEnglish ? "min" : "Min."}
               </span>
             </div>
           </div>
@@ -101,10 +129,10 @@ export default async function AiNativeLessonPage({ params }: PageProps) {
         </div>
         <ClipHeading
           as="h1"
-          className="mt-5 font-bold leading-[0.95] tracking-[-0.035em] text-foreground"
+          className="mt-5 break-words font-bold leading-[0.95] tracking-[-0.035em] text-foreground"
           style={{ fontSize: "clamp(2rem, 4.5vw, 3rem)" }}
         >
-          {lesson.title}.
+          {lesson.title}
         </ClipHeading>
         <p className="mt-4 max-w-[640px] text-[18px] leading-[1.55] text-muted-foreground">
           {lesson.subtitle}
@@ -114,7 +142,7 @@ export default async function AiNativeLessonPage({ params }: PageProps) {
       {/* Voice anchor (module-level, printed on the lesson) */}
       {mod.voiceAnchor && (
         <div className="mt-12">
-          <VoiceAnchor author={`Modul ${mod.number} Voice-Anchor`}>
+          <VoiceAnchor author={`${isEnglish ? "Module" : "Modul"} ${mod.number} · ${isEnglish ? "course note" : "Kursnotiz"}`}>
             {mod.voiceAnchor}
           </VoiceAnchor>
         </div>
@@ -123,7 +151,7 @@ export default async function AiNativeLessonPage({ params }: PageProps) {
       {/* Lesson-level voice anchor (if different from module's) */}
       {lesson.voiceAnchor && lesson.voiceAnchor !== mod.voiceAnchor && (
         <div className="mt-8">
-          <VoiceAnchor author={`Lektion ${lesson.number}`}>
+          <VoiceAnchor author={`${isEnglish ? "Lesson" : "Lektion"} ${lesson.number}`}>
             {lesson.voiceAnchor}
           </VoiceAnchor>
         </div>
@@ -136,6 +164,7 @@ export default async function AiNativeLessonPage({ params }: PageProps) {
         prevLesson={prevLesson ?? null}
         nextLesson={nextLesson ?? null}
         allModuleLessonIds={lessons.map((l) => l.id)}
+        locale={locale}
       />
     </div>
   );

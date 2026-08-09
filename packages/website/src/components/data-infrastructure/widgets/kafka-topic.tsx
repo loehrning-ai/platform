@@ -7,12 +7,20 @@
 // rects are cached synchronously right after the DOM overlay commits, before
 // any particle path can be computed from a stale/zero rect.
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type JSX } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type JSX,
+} from "react";
 import { useCheckpoint } from "@/lib/progress";
 import { useCanvasRAF } from "../canvas/use-canvas-raf";
 import { useCanvasAutoSize } from "../canvas/use-canvas-size";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
+import { useDataInfraWidgetLocale } from "../widget-locale-context";
 
 interface KafkaTopicProps {
   readonly lessonId: string;
@@ -47,6 +55,7 @@ interface Flight {
 }
 
 export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
+  const { locale } = useDataInfraWidgetLocale();
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -55,8 +64,11 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
   const consRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [contextUnavailable, setContextUnavailable] = useState(false);
 
-  const [offsets, setOffsets] = useState<number[]>(() => new Array(PARTITIONS).fill(0));
-  const [assigns, setAssigns] = useState<Record<number, number>>(INITIAL_ASSIGNS);
+  const [offsets, setOffsets] = useState<number[]>(() =>
+    new Array(PARTITIONS).fill(0),
+  );
+  const [assigns, setAssigns] =
+    useState<Record<number, number>>(INITIAL_ASSIGNS);
   const [dead, setDead] = useState<ReadonlySet<number>>(() => new Set());
   const [prodCount, setProdCount] = useState(0);
   const [consCount, setConsCount] = useState(0);
@@ -70,7 +82,9 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
   const nConsRef = useRef(0);
 
   const prodRectRef = useRef<Rect | null>(null);
-  const partRectsRef = useRef<(Rect | null)[]>(new Array(PARTITIONS).fill(null));
+  const partRectsRef = useRef<(Rect | null)[]>(
+    new Array(PARTITIONS).fill(null),
+  );
   const consRectsRef = useRef<(Rect | null)[]>(new Array(CONSUMERS).fill(null));
   const produceFlights = useRef<Flight[]>([]);
   const consumeFlights = useRef<Flight[]>([]);
@@ -101,7 +115,10 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
     measureRects();
   }, [measureRects]);
 
-  useCanvasAutoSize(canvasRef, wrapRef, { minHeight: 320, onResize: measureRects });
+  useCanvasAutoSize(canvasRef, wrapRef, {
+    minHeight: 320,
+    onResize: measureRects,
+  });
 
   const draw = useCallback((now: number): boolean => {
     const canvas = canvasRef.current;
@@ -176,7 +193,11 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
       rebalanceFlashRef.current *= 0.92;
     }
 
-    return produceFlights.current.length > 0 || consumeFlights.current.length > 0 || rebalanceFlashRef.current > 0.01;
+    return (
+      produceFlights.current.length > 0 ||
+      consumeFlights.current.length > 0 ||
+      rebalanceFlashRef.current > 0.01
+    );
   }, []);
 
   const { wake } = useCanvasRAF(draw);
@@ -184,9 +205,15 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
   const send = useCallback(
     (speed = 1) => {
       nProdRef.current += 1;
-      const key = ["user", "order", "click"][nProdRef.current % 3] + "_" + nProdRef.current;
-      const p = (key.charCodeAt(0) + key.length + nProdRef.current) % PARTITIONS;
-      offsetsRef.current = offsetsRef.current.map((v, i) => (i === p ? v + 1 : v));
+      const key =
+        ["user", "order", "click"][nProdRef.current % 3] +
+        "_" +
+        nProdRef.current;
+      const p =
+        (key.charCodeAt(0) + key.length + nProdRef.current) % PARTITIONS;
+      offsetsRef.current = offsetsRef.current.map((v, i) =>
+        i === p ? v + 1 : v,
+      );
       setOffsets([...offsetsRef.current]);
       setProdCount(nProdRef.current);
 
@@ -246,7 +273,9 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
           }
         }
         if (best === -1) continue;
-        cOffsetsRef.current = cOffsetsRef.current.map((v, i) => (i === best ? v + 1 : v));
+        cOffsetsRef.current = cOffsetsRef.current.map((v, i) =>
+          i === best ? v + 1 : v,
+        );
         nConsRef.current += 1;
         consumed = true;
         const part = partRectsRef.current[best];
@@ -269,7 +298,8 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
       if (consumed) {
         setConsCount(nConsRef.current);
         let lag = 0;
-        for (let i = 0; i < PARTITIONS; i++) lag += offsetsRef.current[i] - cOffsetsRef.current[i];
+        for (let i = 0; i < PARTITIONS; i++)
+          lag += offsetsRef.current[i] - cOffsetsRef.current[i];
         setTotalLag(lag);
         wake();
       }
@@ -278,28 +308,42 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
   }, [wake]);
 
   return (
-    <div className="border-2 border-border bg-card/40 p-5 md:p-6">
+    <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-3 sm:p-5 md:p-6">
       <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        Sim · Kafka topic · 4 partitions · 3 consumers {done ? "✓" : ""}
+        {locale === "de"
+          ? "Modell · Kafka-Topic · 4 Partitionen · 3 Consumer"
+          : "Model · Kafka topic · 4 partitions · 3 consumers"}{" "}
+        {done ? "✓" : ""}
       </p>
 
       {contextUnavailable ? (
         <CanvasFallbackNotice
-          title="Kafka topic"
-          summary="A producer routes messages by key into 4 ordered partitions; a 3-consumer group pulls from them, and killing a consumer triggers a rebalance."
+          title="Kafka-Topic"
+          summary={
+            locale === "de"
+              ? "Ein Producer ordnet Nachrichten anhand ihres Schlüssels vier Partitionen zu. Eine Gruppe aus drei Consumern liest sie; der Ausfall eines Consumers löst ein Rebalancing aus."
+              : "A producer routes messages by key into 4 ordered partitions; a 3-consumer group pulls from them, and killing a consumer triggers a rebalance."
+          }
         />
       ) : (
         <div ref={wrapRef} className="relative h-[320px] w-full">
           <canvas
             ref={canvasRef}
             role="img"
-            aria-label="Animated Kafka topic showing messages routed by key into ordered, partitioned logs consumed by consumer groups."
+            aria-label={
+              locale === "de"
+                ? "Animiertes Kafka-Topic mit schlüsselbasierter Zuordnung zu geordneten Partitionen und einer Consumer-Gruppe."
+                : "Animated Kafka topic showing messages routed by key into ordered, partitioned logs consumed by consumer groups."
+            }
             className="absolute inset-0 h-full w-full"
           />
           <div className="relative flex h-full flex-col justify-between p-2">
             <div className="flex justify-center">
-              <div ref={prodRef} className="border-2 border-brand-orange bg-background px-3 py-1.5 font-mono text-[11px] font-semibold">
-                producer · ● live
+              <div
+                ref={prodRef}
+                className="border-2 border-brand-orange bg-background px-3 py-1.5 font-mono text-[11px] font-semibold"
+              >
+                {locale === "de" ? "Producer · aktiv" : "producer · ● live"}
               </div>
             </div>
             <div className="flex justify-center gap-2">
@@ -319,12 +363,17 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
             <div className="flex justify-center gap-2">
               {Array.from({ length: CONSUMERS }, (_, c) => {
                 const isDead = dead.has(c);
-                const assigned = Array.from({ length: PARTITIONS }, (_, p) => p).filter(
-                  (p) => assigns[p] === c,
-                );
+                const assigned = Array.from(
+                  { length: PARTITIONS },
+                  (_, p) => p,
+                ).filter((p) => assigns[p] === c);
                 const lag = isDead
                   ? null
-                  : assigned.reduce((sum, p) => sum + (offsets[p] - (cOffsetsRef.current[p] ?? 0)), 0);
+                  : assigned.reduce(
+                      (sum, p) =>
+                        sum + (offsets[p] - (cOffsetsRef.current[p] ?? 0)),
+                      0,
+                    );
                 return (
                   <div
                     key={c}
@@ -333,12 +382,24 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
                     }}
                     className={cn(
                       "border-2 px-2.5 py-1.5 text-center font-mono text-[10.5px]",
-                      isDead ? "border-destructive/50 bg-destructive/10 opacity-60" : "border-border bg-background",
+                      isDead
+                        ? "border-destructive/50 bg-destructive/10 opacity-60"
+                        : "border-border bg-background",
                     )}
                   >
                     <div className="font-semibold text-foreground">c{c}</div>
-                    <div className="text-muted-foreground">{isDead ? "dead" : `p${assigned.join(",p")}`}</div>
-                    <div className="text-muted-foreground">{isDead ? "," : `${lag} lag`}</div>
+                    <div className="text-muted-foreground">
+                      {isDead
+                        ? locale === "de"
+                          ? "ausgefallen"
+                          : "dead"
+                        : `p${assigned.join(",p")}`}
+                    </div>
+                    <div className="text-muted-foreground">
+                      {isDead
+                        ? ","
+                        : `${lag} ${locale === "de" ? "Lag" : "lag"}`}
+                    </div>
                   </div>
                 );
               })}
@@ -353,21 +414,21 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
           onClick={() => send(1)}
           className="border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90"
         >
-          ▶ send 1
+          {locale === "de" ? "1 senden" : "▶ send 1"}
         </button>
         <button
           type="button"
           onClick={burst}
           className="border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
         >
-          ▶▶ burst
+          {locale === "de" ? "15 senden" : "▶▶ burst"}
         </button>
         <button
           type="button"
           onClick={storm}
           className="border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
         >
-          ⚡ storm
+          {locale === "de" ? "40 senden" : "⚡ storm"}
         </button>
         <button
           type="button"
@@ -375,11 +436,16 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
           disabled={dead.has(1)}
           className="border-2 border-destructive bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-destructive hover:bg-destructive/10 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          ⚠ kill c1 (rebalance)
+          {locale === "de"
+            ? "c1 ausfallen lassen (Rebalancing)"
+            : "⚠ kill c1 (rebalance)"}
         </button>
         <span className="font-mono text-[11px] text-muted-foreground">
-          produced <b className="text-foreground">{prodCount}</b> · consumed <b className="text-foreground">{consCount}</b> ·
-          lag <b className="text-foreground">{totalLag}</b>
+          {locale === "de" ? "produziert" : "produced"}{" "}
+          <b className="text-foreground">{prodCount}</b> ·{" "}
+          {locale === "de" ? "konsumiert" : "consumed"}{" "}
+          <b className="text-foreground">{consCount}</b> · Lag{" "}
+          <b className="text-foreground">{totalLag}</b>
         </span>
       </div>
     </div>

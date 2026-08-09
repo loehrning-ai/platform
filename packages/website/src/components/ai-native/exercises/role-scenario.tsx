@@ -11,6 +11,7 @@ import {
 import type { ModuleId } from "@/lib/ai-native/types";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import { useDemoLocale } from "@/components/demos/demo-locale";
 
 /**
  * Role-Scenario-Picker — user picks a Mittelstand role, then works through
@@ -71,6 +72,7 @@ function RoleScenarioBody({
   moduleId,
   roles,
 }: RoleScenarioSpec): JSX.Element {
+  const { text } = useDemoLocale();
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -118,7 +120,7 @@ function RoleScenarioBody({
       {!role ? (
         <>
           <p className="mb-3 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-            Wähle deine Rolle
+            {text("Wähle deine Rolle", "Select your role")}
           </p>
           <div className="grid gap-2 md:grid-cols-2">
             {roles.map((r) => (
@@ -135,7 +137,7 @@ function RoleScenarioBody({
                   {r.description}
                 </div>
                 <div className="mt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-brand-orange">
-                  {r.scenarios.length} Szenarien →
+                  {r.scenarios.length} {text("Szenarien", "scenarios")} →
                 </div>
               </button>
             ))}
@@ -147,7 +149,7 @@ function RoleScenarioBody({
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-border pb-2">
             <div className="flex items-baseline gap-2">
               <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-                Rolle:
+                {text("Rolle:", "Role:")}
               </p>
               <p className="text-[13px] font-bold text-foreground">{role.label}</p>
             </div>
@@ -160,7 +162,7 @@ function RoleScenarioBody({
                 }}
                 className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-brand-orange"
               >
-                ← Andere Rolle
+                {text("← Andere Rolle", "← Change role")}
               </button>
             )}
           </div>
@@ -252,7 +254,7 @@ function RoleScenarioBody({
                 )}
               >
                 <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-foreground">
-                  {correctCount}/{role.scenarios.length} richtig · Score {scorePct}%
+                  {correctCount}/{role.scenarios.length} {text("richtig", "correct")} · Score {scorePct}%
                 </p>
               </m.div>
             )}
@@ -271,7 +273,7 @@ function RoleScenarioBody({
                     : "cursor-not-allowed bg-muted-foreground opacity-60",
                 )}
               >
-                Auswerten
+                {text("Auswerten", "Evaluate")}
               </button>
             ) : (
               <ExerciseResetButton onReset={handleReset} />

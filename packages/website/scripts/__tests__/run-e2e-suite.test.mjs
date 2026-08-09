@@ -2,11 +2,7 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { EventEmitter } from "node:events";
-import {
-  mkdtempSync,
-  readFileSync,
-  rmSync,
-} from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -32,12 +28,7 @@ function collectSpecIds(suites) {
 function listIds(arguments_) {
   const result = spawnSync(
     process.execPath,
-    [
-      playwrightCli,
-      ...arguments_,
-      "--list",
-      "--reporter=json",
-    ],
+    [playwrightCli, ...arguments_, "--list", "--reporter=json"],
     {
       encoding: "utf8",
       env: minimalVerificationEnvironment(process.env),
@@ -79,8 +70,7 @@ test("public plan isolates Chromium engines and recycles WebKit processes", () =
     ),
     Array.from(
       { length: MOBILE_WEBKIT_SHARD_COUNT },
-      (_, index) =>
-        `--shard=${index + 1}/${MOBILE_WEBKIT_SHARD_COUNT}`,
+      (_, index) => `--shard=${index + 1}/${MOBILE_WEBKIT_SHARD_COUNT}`,
     ),
   );
   for (const step of plan) {
@@ -90,11 +80,7 @@ test("public plan isolates Chromium engines and recycles WebKit processes", () =
 });
 
 test("real WebKit shard lists cover the complete project exactly once", () => {
-  const full = listIds([
-    "test",
-    "--project=mobile-webkit",
-    "--retries=0",
-  ]);
+  const full = listIds(["test", "--project=mobile-webkit", "--retries=0"]);
   assert.ok(full.length > 0, "the mobile WebKit project must not be empty");
   assert.equal(new Set(full).size, full.length);
 
@@ -151,12 +137,7 @@ test("artifact directories remain isolated inside their dedicated roots", () => 
     /inside test-results/,
   );
   assert.throws(
-    () =>
-      artifactEnvironment(
-        {},
-        "../escaped",
-        "chromium",
-      ),
+    () => artifactEnvironment({}, "../escaped", "chromium"),
     /run ID/,
   );
 });
@@ -170,14 +151,16 @@ test("suite execution continues after a failed shard and returns failure", async
     environment: { E2E_GLOBAL_TIMEOUT: "4200000" },
     now: () => tick++ * 1000,
     run: async (options) => {
-      const label =
-        options.environment.PLAYWRIGHT_OUTPUT_DIR.split("/").at(-1);
+      const label = options.environment.PLAYWRIGHT_OUTPUT_DIR.split("/").at(-1);
       invocations.push({
         args: options.arguments,
         label,
         timeout: options.timeoutMs,
       });
-      return { status: label === "mobile-webkit-03-of-16" ? 1 : 0 };
+      return {
+        status:
+          label === `mobile-webkit-03-of-${MOBILE_WEBKIT_SHARD_COUNT}` ? 1 : 0,
+      };
     },
     log: () => {},
     logError: () => {},
@@ -185,10 +168,11 @@ test("suite execution continues after a failed shard and returns failure", async
   });
   assert.equal(status, 1);
   assert.equal(invocations.length, 2 + MOBILE_WEBKIT_SHARD_COUNT);
-  assert.equal(new Set(invocations.map((entry) => entry.label)).size, 18);
-  assert.ok(
-    invocations.every((entry) => entry.args.includes("--retries=0")),
+  assert.equal(
+    new Set(invocations.map((entry) => entry.label)).size,
+    2 + MOBILE_WEBKIT_SHARD_COUNT,
   );
+  assert.ok(invocations.every((entry) => entry.args.includes("--retries=0")));
 });
 
 test("the aggregate deadline decreases child budgets and fails closed", async () => {
@@ -376,9 +360,7 @@ test("automatic run IDs isolate artifacts across suite invocations", async () =>
         paths.push(options.environment.PLAYWRIGHT_OUTPUT_DIR);
         assert.ok(Number.isSafeInteger(options.timeoutMs));
         assert.ok(
-          Number.isSafeInteger(
-            Number(options.environment.E2E_GLOBAL_TIMEOUT),
-          ),
+          Number.isSafeInteger(Number(options.environment.E2E_GLOBAL_TIMEOUT)),
         );
         return { status: 0 };
       },

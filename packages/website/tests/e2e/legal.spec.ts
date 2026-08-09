@@ -67,7 +67,9 @@ test.describe("/datenschutz", () => {
     await expect(page.getByText(/Vercel Web Analytics/)).toBeVisible();
     await expect(page.locator("#ki")).toContainText(/deaktiviert/);
     await expect(page.getByText(/Sentry ist .*deaktiviert/)).toBeVisible();
-    await expect(page.getByText(/Supabase, Magic-Link-Anmeldung/)).toBeVisible();
+    await expect(
+      page.getByText(/Supabase-Lernkonto, Magic-Link- und Google-Anmeldung/),
+    ).toBeVisible();
     await expect(page.getByText(/Resend/)).toHaveCount(0);
   });
 

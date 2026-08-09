@@ -11,7 +11,7 @@ import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
 import type { AccountDeletionControlState } from "@/lib/progress/account-deletion-control";
 import type { ProgressSyncFailure } from "@/lib/progress/sync-status";
 import { isDefiniteDeleteFailure } from "./deletion-response-policy";
-import DatenschutzPage from "./page";
+import { DatenschutzClient as DatenschutzPage } from "./datenschutz-client";
 
 const resetCourseMock = vi.hoisted(() => vi.fn());
 const clearAccountLocalLearningDataMock = vi.hoisted(() => vi.fn());
@@ -125,6 +125,35 @@ describe("DatenschutzPage course-reset list", () => {
     for (const course of COURSE_CATALOG) {
       expect(screen.getByText(course.title)).toBeInTheDocument();
     }
+  });
+
+  it("localizes the complete account privacy surface and course labels to English", () => {
+    const { container } = render(<DatenschutzPage locale="en" />);
+
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "Privacy and data management.",
+      }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", {
+        name: "Export my data (Article 20 GDPR)",
+      }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", {
+        name: "Delete account (Article 17 GDPR)",
+      }),
+    ).toBeVisible();
+    expect(screen.getByText("AI Fundamentals")).toBeVisible();
+    expect(screen.getByRole("link", { name: "← Back to account" })).toHaveAttribute(
+      "href",
+      "/en/konto",
+    );
+    expect(container.textContent).not.toMatch(
+      /Datenschutz & Datenverwaltung|Meine Daten exportieren|Konto löschen/,
+    );
   });
 
   it("never renders a raw slug string, and never offers to reset an unregistered imported course", () => {
@@ -443,6 +472,25 @@ describe("DatenschutzPage course-reset list", () => {
     expect(confirmAccountDeletionMock).not.toHaveBeenCalled();
     expect(clearAccountLocalLearningDataMock).not.toHaveBeenCalled();
     expect(screen.getByRole("button", { name: "Konto löschen" })).toBeEnabled();
+  });
+
+  it("uses provider-neutral reauthentication copy after a stale session", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      Response.json(
+        { error: "reauthentication_required" },
+        { status: 403 },
+      ),
+    );
+    render(<DatenschutzPage />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Konto löschen" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Ja, Konto endgültig löschen" }),
+    );
+
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveTextContent("mit einer verfügbaren Anmeldemethode");
+    expect(alert).not.toHaveTextContent("Login-Link");
   });
 
   it("keeps deletion locked when a definite server failure cannot release the local barrier", async () => {

@@ -13,12 +13,14 @@ describe("GET /llms.txt", () => {
     }
   });
 
-  it("separates the German spine from the native English technical courses", async () => {
+  it("separates the ordered foundation path from technical courses without stale language claims", async () => {
     const response = GET({} as never);
     const body = await response.text();
 
-    expect(body).toContain("## Deutscher Lernpfad");
-    expect(body).toContain("## Englische technische Vertiefung");
+    expect(body).toContain("## Grundlagenpfad");
+    expect(body).toContain("## Technische Kurse");
+    expect(body).toContain("## Sprachmodell / Language model");
+    expect(body).not.toContain("## Englische technische Vertiefung");
     expect(
       COURSE_CATALOG.filter(
         (course) => courseFacts(course.slug).group === "spine",

@@ -1,4 +1,12 @@
-import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from "vitest";
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  beforeEach,
+  afterEach,
+  vi,
+} from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { __resetCacheForTests, getXp, isCheckpointDone } from "@/lib/progress";
 import { XP } from "@/lib/progress/types";
@@ -23,7 +31,10 @@ function installLocalStoragePolyfill(): void {
 }
 
 beforeAll(() => {
-  if (typeof window.localStorage === "undefined" || typeof window.localStorage.setItem !== "function") {
+  if (
+    typeof window.localStorage === "undefined" ||
+    typeof window.localStorage.setItem !== "function"
+  ) {
     installLocalStoragePolyfill();
   }
 });
@@ -41,7 +52,9 @@ afterEach(() => {
 describe("BackfillDag", () => {
   it("renders three worker-count bands (1/4/10) with a real speedup readout", () => {
     render(<BackfillDag lessonId="di-batch-elt" cpId="dag" />);
-    expect(screen.getByRole("img", { name: /Backfill of 30 daily partitions/ })).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: /Backfill of 30 daily partitions/ }),
+    ).toBeInTheDocument();
     expect(screen.getByText("1 worker")).toBeInTheDocument();
     expect(screen.getByText("4 workers")).toBeInTheDocument();
     expect(screen.getByText("10 workers")).toBeInTheDocument();

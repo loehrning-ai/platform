@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
+import { useDataScienceLocale } from "../locale-context";
 
 // ─── FeatureSelectionSim ────────────────────────────
 //
@@ -38,19 +39,41 @@ const METHODS: readonly { key: SelectionMethod; label: string }[] = [
   { key: "mi", label: "Mutual Information" },
   { key: "lasso", label: "LASSO" },
 ];
-
-const METHOD_DESC: Record<SelectionMethod, string> = {
-  corr: "Remove features with low correlation to the target, then remove pairwise-correlated duplicates (keep highest corr). Fast but misses nonlinear relationships.",
-  mi: "Measures how much knowing a feature reduces uncertainty about the target. Captures nonlinear dependencies. More expensive but rarely misses a useful feature.",
-  lasso:
-    "Fit a regularized linear model; features with zero coefficient are discarded. Jointly considers all features, handles multicollinearity. Assumes linearity.",
+const METHOD_LABELS_DE: Readonly<Record<SelectionMethod, string>> = {
+  corr: "Korrelationsfilter",
+  mi: "Mutual Information",
+  lasso: "LASSO",
 };
 
-function scoreLabelFor(method: SelectionMethod): string {
-  return method === "corr" ? "|corr with target|" : method === "mi" ? "MI score" : "LASSO coef";
+const METHOD_DESC: Record<SelectionMethod, string> = {
+  corr: "This heuristic removes entries with low marginal target correlation and one of each correlated pair. It can miss nonlinear or conditional signal.",
+  mi: "Mutual information can represent nonlinear marginal dependence, but its estimate depends on sample size and estimator settings and does not capture every conditional contribution.",
+  lasso:
+    "A regularized linear model sets some fitted coefficients to zero. Selection depends on scaling, penalty tuning, collinearity, sampling variation, and the specified feature basis.",
+};
+const METHOD_DESC_DE: Record<SelectionMethod, string> = {
+  corr: "Diese Heuristik entfernt Einträge mit geringer marginaler Zielkorrelation und je eines aus korrelierten Paaren. Nichtlineare oder bedingte Signale können fehlen.",
+  mi: "Mutual Information kann nichtlineare marginale Abhängigkeit abbilden. Die Schätzung hängt jedoch von Stichprobengröße und Verfahrenseinstellungen ab und erfasst nicht jeden bedingten Beitrag.",
+  lasso:
+    "Ein regularisiertes lineares Modell setzt einige angepasste Koeffizienten auf null. Die Auswahl hängt von Skalierung, Strafterm, Kollinearität, Stichprobenvariation und Merkmalsbasis ab.",
+};
+
+function scoreLabelFor(method: SelectionMethod, german: boolean): string {
+  if (german)
+    return method === "corr"
+      ? "|Korrelation mit Ziel|"
+      : method === "mi"
+        ? "MI-Wert"
+        : "LASSO-Koeffizient";
+  return method === "corr"
+    ? "|corr with target|"
+    : method === "mi"
+      ? "MI score"
+      : "LASSO coef";
 }
 
 export function FeatureSelectionSim() {
+  const { locale, text } = useDataScienceLocale();
   const [method, setMethod] = useState<SelectionMethod>("corr");
 
   const kept = useMemo(() => {
@@ -69,14 +92,20 @@ export function FeatureSelectionSim() {
 
   return (
     <Panel
-      eyebrow="SIMULATION"
-      title="Feature selection methods"
-      meta={`${keptCount}/8 features kept`}
-      caption="No method dominates. LASSO sees interactions between features. MI catches nonlinearity. Correlation is fast but blind to nonlinear signals."
+      eyebrow={text("SIMULATION", "SIMULATION")}
+      title={text("Feature selection methods", "Verfahren zur Merkmalsauswahl")}
+      meta={text(
+        `${keptCount}/8 features kept`,
+        `${keptCount}/8 Merkmale behalten`,
+      )}
+      caption={text(
+        "The scores, thresholds, and keep/drop decisions are fixed teaching values, not estimates from a dataset. Compare what each method can represent and validate selection stability inside the full modeling procedure.",
+        "Scores, Schwellenwerte und Behalten/Entfernen-Entscheidungen sind feste Lehrwerte, keine Schätzungen aus einem Datensatz. Die darstellbaren Beziehungen vergleichen und die Auswahlstabilität innerhalb des vollständigen Modellverfahrens validieren.",
+      )}
     >
       <div className="sim-controls" style={{ marginBottom: 14 }}>
         <div className="sim-ctrl">
-          <label>Selection method</label>
+          <label>{text("Selection method", "Auswahlverfahren")}</label>
           <div className="seg">
             {METHODS.map((m) => (
               <button
@@ -85,16 +114,16 @@ export function FeatureSelectionSim() {
                 className={method === m.key ? "on" : ""}
                 onClick={() => setMethod(m.key)}
               >
-                {m.label}
+                {locale === "de" ? METHOD_LABELS_DE[m.key] : m.label}
               </button>
             ))}
           </div>
         </div>
         <p className="prose" style={{ fontSize: 12.5, margin: "8px 0 0" }}>
-          {METHOD_DESC[method]}
+          {locale === "de" ? METHOD_DESC_DE[method] : METHOD_DESC[method]}
         </p>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
+      <div className="ds-feature-grid">
         {FEATURES.map((f, i) => {
           const isKept = kept[i];
           const score = scores[i]!;
@@ -106,7 +135,9 @@ export function FeatureSelectionSim() {
                 padding: "10px 12px",
                 border: `1.5px solid ${isKept ? "rgba(31,175,126,0.4)" : "rgba(216,58,58,0.35)"}`,
                 borderRadius: 8,
-                background: isKept ? "rgba(31,175,126,0.08)" : "rgba(216,58,58,0.07)",
+                background: isKept
+                  ? "rgba(31,175,126,0.08)"
+                  : "rgba(216,58,58,0.07)",
                 transition: "background 0.35s, border-color 0.35s",
                 position: "relative",
                 overflow: "hidden",
@@ -123,16 +154,37 @@ export function FeatureSelectionSim() {
                   transition: "width 0.4s, background 0.35s",
                 }}
               />
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: isKept ? "var(--good-ink)" : "var(--bad-ink)" }}>
+              <div className="ds-feature-name-row">
+                <span
+                  style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: 12,
+                    color: isKept ? "var(--good-ink)" : "var(--bad-ink)",
+                  }}
+                >
                   {f.name}
                 </span>
-                <span style={{ fontSize: 11, fontFamily: "'JetBrains Mono', monospace", color: isKept ? "var(--ink-2)" : "var(--bad-ink)" }}>
+                <span
+                  style={{
+                    fontSize: 11,
+                    fontFamily: "'JetBrains Mono', monospace",
+                    color: isKept ? "var(--ink-2)" : "var(--bad-ink)",
+                  }}
+                >
                   {score.toFixed(2)}
                 </span>
               </div>
-              <div style={{ fontSize: 10, color: isKept ? "var(--good-ink)" : "var(--bad-ink)", marginTop: 3 }}>
-                {isKept ? "✓ KEEP" : "✗ DROP"} · {scoreLabelFor(method)}
+              <div
+                style={{
+                  fontSize: 10,
+                  color: isKept ? "var(--good-ink)" : "var(--bad-ink)",
+                  marginTop: 3,
+                }}
+              >
+                {isKept
+                  ? text("✓ KEEP", "✓ BEHALTEN")
+                  : text("✗ DROP", "✗ ENTFERNEN")}{" "}
+                · {scoreLabelFor(method, locale === "de")}
               </div>
             </div>
           );
@@ -150,7 +202,10 @@ export function FeatureSelectionSim() {
             color: "var(--violet-ink)",
           }}
         >
-          page_views dropped: highly correlated with session_dur (r = 0.93). Keeping both adds no information.
+          {text(
+            "page_views dropped: highly correlated with session_dur (r = 0.93). Keeping both adds no information.",
+            "page_views entfernt: stark mit session_dur korreliert (r = 0.93). Beide Merkmale zu behalten fügt keine Information hinzu.",
+          )}
         </div>
       )}
     </Panel>

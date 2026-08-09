@@ -8,15 +8,15 @@
  * as a runtime safety net, but no shipped route may depend on it: any new route
  * added without a deliberate contract class fails here.
  *
- * Matching reuses the contract's own matchesPattern() on probe paths
- * synthesized from the discovered patterns, so this test cannot drift from
- * the runtime matching semantics.
+ * Matching reuses getCrawlRoute() on probe paths synthesized from the
+ * discovered patterns, so locale mirrors and canonical routes share the same
+ * runtime classification semantics.
  */
 
 import { readdirSync, statSync } from "node:fs";
 import { join, relative, resolve, sep } from "node:path";
 import { describe, expect, it } from "vitest";
-import { CRAWL_CONTRACT, getCrawlRoute, matchesPattern } from "./contract";
+import { CRAWL_CONTRACT, getCrawlRoute, NOINDEX_HEADER } from "./contract";
 
 const APP_DIR = resolve(process.cwd(), "src/app");
 
@@ -80,12 +80,42 @@ describe("crawl contract completeness (fail closed)", () => {
 
   it("matches every app route against an explicit contract entry, never the fail-closed fallback", () => {
     const unmatched = discovered.filter(
-      (pattern) => !CRAWL_CONTRACT.some((entry) => matchesPattern(probePathFor(pattern), entry.pattern)),
+      (pattern) =>
+        !CRAWL_CONTRACT.includes(getCrawlRoute(probePathFor(pattern))),
     );
     expect(
       unmatched,
       `Routes without an explicit CRAWL_CONTRACT entry (add a deliberate class in src/lib/crawl/contract.ts): ${unmatched.join(", ")}`,
     ).toEqual([]);
+  });
+
+  it.each([
+    ["/en", "/"],
+    ["/en/kurse", "/kurse"],
+    ["/en/login", "/login"],
+    [
+      "/en/kurse/open-source/claude/kurs",
+      "/kurse/open-source/claude/kurs",
+    ],
+    ["/en/konto", "/konto"],
+    ["/en/leistungen", "/leistungen"],
+  ])("classifies %s with the exact canonical contract for %s", (english, canonical) => {
+    expect(getCrawlRoute(english)).toBe(getCrawlRoute(canonical));
+  });
+
+  it("keeps unknown English paths fail closed", () => {
+    const pagePath = "/en/definitely-unlisted";
+    const page = getCrawlRoute(pagePath);
+    expect(page.pattern).toBe(pagePath);
+    expect(page.routeClass).toBe("public-noindex");
+    expect(page.xRobotsTag).toBe(NOINDEX_HEADER);
+
+    const apiPath = "/en/api/definitely-unlisted";
+    const api = getCrawlRoute(apiPath);
+    expect(api.pattern).toBe(apiPath);
+    expect(api.routeClass).toBe("protected");
+    expect(api.auth).toBe("protected");
+    expect(api.xRobotsTag).toBe(NOINDEX_HEADER);
   });
 
   it("classifies book chapter readers as indexable sitemap entries", () => {

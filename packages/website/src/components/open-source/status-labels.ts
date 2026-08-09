@@ -1,4 +1,6 @@
 import type { SoftwareArtifactStatus } from "@/lib/open-source/artifacts";
+import type { Locale } from "@/lib/i18n/locale";
+import { OPEN_SOURCE_SHARED_COPY } from "@/lib/open-source/display-copy";
 
 /**
  * German labels for the software artifact publication statuses. Shared so the
@@ -12,3 +14,10 @@ export const STATUS_LABELS = {
   maintenance: "Wartungsmodus",
   archived: "Archiviert",
 } as const satisfies Record<SoftwareArtifactStatus, string>;
+
+export function statusLabel(
+  status: SoftwareArtifactStatus,
+  locale: Locale,
+): string {
+  return OPEN_SOURCE_SHARED_COPY[locale].statuses[status];
+}

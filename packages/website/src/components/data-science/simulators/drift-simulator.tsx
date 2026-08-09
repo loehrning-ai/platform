@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useDataScienceLocale } from "@/components/data-science/locale-context";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { clamp, mulberry32, randn, round } from "@/lib/data-science/sim-kit";
 
@@ -11,7 +12,10 @@ interface SeriesPoint {
   readonly boundary: number;
 }
 
-function computeSeries(driftIntensity: number, seed = 7): readonly SeriesPoint[] {
+function computeSeries(
+  driftIntensity: number,
+  seed = 7,
+): readonly SeriesPoint[] {
   const rng = mulberry32(seed);
   return Array.from({ length: 60 }, (_, i) => {
     const stable = i < 30;
@@ -21,11 +25,15 @@ function computeSeries(driftIntensity: number, seed = 7): readonly SeriesPoint[]
     const psi = clamp(
       stable
         ? 0.02 + 5e-3 * Math.abs(randn(rng))
-        : 0.02 + (i - 30) * driftIntensity * 0.012 + 0.01 * Math.abs(randn(rng)),
+        : 0.02 +
+            (i - 30) * driftIntensity * 0.012 +
+            0.01 * Math.abs(randn(rng)),
       0,
       0.8,
     );
-    const boundary = stable ? 0.5 : clamp(0.5 + conceptShift + 0.02 * randn(rng), 0.3, 0.7);
+    const boundary = stable
+      ? 0.5
+      : clamp(0.5 + conceptShift + 0.02 * randn(rng), 0.3, 0.7);
     return { day: i + 1, acc, psi, boundary };
   });
 }
@@ -44,6 +52,7 @@ interface LineChartProps {
   readonly thresholdLabel?: string;
   readonly cursorDay?: number;
   readonly label: string;
+  readonly driftStartLabel: string;
 }
 
 function LineChart({
@@ -58,6 +67,7 @@ function LineChart({
   thresholdLabel,
   cursorDay,
   label,
+  driftStartLabel,
 }: LineChartProps) {
   const pts = series.map((p, i) => {
     const x = (i / (series.length - 1)) * width;
@@ -65,29 +75,74 @@ function LineChart({
     return `${x},${y}`;
   });
   const polyline = pts.join(" ");
-  const thY = thresholdVal != null ? height - ((thresholdVal - yMin) / (yMax - yMin)) * height : null;
+  const thY =
+    thresholdVal != null
+      ? height - ((thresholdVal - yMin) / (yMax - yMin)) * height
+      : null;
 
   return (
     <svg viewBox={`0 0 ${width} ${height + 20}`} style={{ width: "100%" }}>
       {thY != null && (
         <>
-          <line x1="0" y1={thY} x2={width} y2={thY} stroke="rgba(255,107,128,0.45)" strokeDasharray="5 4" />
-          <text x="4" y={thY - 3} fill="#FF6B80" fontSize="8.5" fontFamily="'JetBrains Mono',monospace">
+          <line
+            x1="0"
+            y1={thY}
+            x2={width}
+            y2={thY}
+            stroke="rgba(255,107,128,0.45)"
+            strokeDasharray="5 4"
+          />
+          <text
+            x="4"
+            y={thY - 3}
+            fill="#FF6B80"
+            fontSize="8.5"
+            fontFamily="'JetBrains Mono',monospace"
+          >
             {thresholdLabel} · {thresholdVal}
           </text>
         </>
       )}
-      <line x1={width / 2} y1="0" x2={width / 2} y2={height} stroke="rgba(244,242,236,0.08)" strokeDasharray="3 3" />
-      <text x={width / 2 + 3} y="10" fill="#8A8680" fontSize="8" fontFamily="'JetBrains Mono',monospace">
-        day 30 · drift start
+      <line
+        x1={width / 2}
+        y1="0"
+        x2={width / 2}
+        y2={height}
+        stroke="rgba(244,242,236,0.08)"
+        strokeDasharray="3 3"
+      />
+      <text
+        x={width / 2 + 3}
+        y="10"
+        fill="#8A8680"
+        fontSize="8"
+        fontFamily="'JetBrains Mono',monospace"
+      >
+        {driftStartLabel}
       </text>
-      <polyline points={polyline} fill="none" stroke={color} strokeWidth="1.8" opacity="0.85" />
+      <polyline
+        points={polyline}
+        fill="none"
+        stroke={color}
+        strokeWidth="1.8"
+        opacity="0.85"
+      />
       {series.map((p, i) => {
         const x = (i / (series.length - 1)) * width;
         const y = height - ((p[yKey] - yMin) / (yMax - yMin)) * height;
-        const alarm = thresholdVal != null && (yKey === "psi" ? p[yKey] > thresholdVal : p[yKey] < thresholdVal);
+        const alarm =
+          thresholdVal != null &&
+          (yKey === "psi" ? p[yKey] > thresholdVal : p[yKey] < thresholdVal);
         if (cursorDay == null || (i !== cursorDay - 1 && !alarm)) return null;
-        return <circle key={i} cx={x} cy={y} r={i === cursorDay - 1 ? 4 : 2.5} fill={alarm ? "#FF6B80" : "#D1FF3A"} />;
+        return (
+          <circle
+            key={i}
+            cx={x}
+            cy={y}
+            r={i === cursorDay - 1 ? 4 : 2.5}
+            fill={alarm ? "#FF6B80" : "#D1FF3A"}
+          />
+        );
       })}
       {cursorDay != null &&
         (() => {
@@ -99,14 +154,33 @@ function LineChart({
           const y = height - ((point[yKey] - yMin) / (yMax - yMin)) * height;
           return (
             <>
-              <line x1={x} y1="0" x2={x} y2={height} stroke="rgba(244,242,236,0.2)" strokeWidth="1" />
-              <text x={x + 4} y={y - 5} fill="rgba(244,242,236,0.7)" fontSize="8.5" fontFamily="'JetBrains Mono',monospace">
+              <line
+                x1={x}
+                y1="0"
+                x2={x}
+                y2={height}
+                stroke="rgba(244,242,236,0.2)"
+                strokeWidth="1"
+              />
+              <text
+                x={x + 4}
+                y={y - 5}
+                fill="rgba(244,242,236,0.7)"
+                fontSize="8.5"
+                fontFamily="'JetBrains Mono',monospace"
+              >
                 {round(point[yKey], 3)}
               </text>
             </>
           );
         })()}
-      <text x="4" y={height + 14} fill="#8A8680" fontSize="8.5" fontFamily="'JetBrains Mono',monospace">
+      <text
+        x="4"
+        y={height + 14}
+        fill="#8A8680"
+        fontSize="8.5"
+        fontFamily="'JetBrains Mono',monospace"
+      >
         {label}
       </text>
     </svg>
@@ -114,6 +188,7 @@ function LineChart({
 }
 
 export function DriftSimulator() {
+  const { text } = useDataScienceLocale();
   const [running, setRunning] = useState(false);
   const [day, setDay] = useState(1);
   const [driftIntensity, setDriftIntensity] = useState(1);
@@ -147,16 +222,28 @@ export function DriftSimulator() {
 
   return (
     <Panel
-      eyebrow="SIMULATION"
-      title="Drift simulator"
-      meta={`Day ${day} / 60`}
-      caption="Days 1–30: distribution is stable. Days 31–60: data drift intensifies. PSI > 0.2 triggers an alarm. Watch accuracy and PSI decay together."
+      eyebrow={text("SIMULATION", "SIMULATION")}
+      title={text("Drift simulator", "Drift-Simulator")}
+      meta={`${text("Day", "Tag")} ${day} / 60`}
+      caption={text(
+        "Constructed scenario: days 1–30 use a fixed baseline and days 31–60 add deterministic input and concept shift. The 0.2 PSI line is a demo threshold. Production PSI depends on bins and sample size, does not measure model quality, and must be calibrated with outcome evidence.",
+        "Konstruiertes Szenario: Tage 1–30 verwenden eine feste Basis; Tage 31–60 ergänzen deterministischen Eingabe- und Konzeptdrift. Die PSI-Linie bei 0.2 ist eine Demogrenze. PSI hängt in Produktion von Buckets und Stichprobengröße ab, misst keine Modellgüte und muss mit Ergebnisevidenz kalibriert werden.",
+      )}
     >
-      <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "flex-start", marginBottom: 12 }}>
+      <div
+        style={{
+          display: "flex",
+          gap: 16,
+          flexWrap: "wrap",
+          alignItems: "flex-start",
+          marginBottom: 12,
+        }}
+      >
         <div className="sim-controls" style={{ flex: "0 0 200px" }}>
           <div className="sim-ctrl">
             <label>
-              Drift intensity <span className="mono">{driftIntensity.toFixed(1)}</span>
+              {text("Drift intensity", "Drift-Intensität")}{" "}
+              <span className="mono">{driftIntensity.toFixed(1)}</span>
             </label>
             <input
               type="range"
@@ -164,7 +251,7 @@ export function DriftSimulator() {
               max="3"
               step="0.1"
               value={driftIntensity}
-              aria-label="Drift intensity"
+              aria-label={text("Drift intensity", "Drift-Intensität")}
               onChange={(e) => {
                 setDriftIntensity(+e.target.value);
                 setDay(1);
@@ -172,12 +259,27 @@ export function DriftSimulator() {
               }}
             />
           </div>
-          <div className="sim-ctrl" style={{ display: "flex", gap: 8, marginTop: 4 }}>
-            <button type="button" className="btn" onClick={handleStart} disabled={running}>
-              {day >= 60 ? "↺ Restart" : "▶ Start"}
+          <div
+            className="sim-ctrl"
+            style={{ display: "flex", gap: 8, marginTop: 4 }}
+          >
+            <button
+              type="button"
+              className="btn"
+              onClick={handleStart}
+              disabled={running}
+            >
+              {day >= 60
+                ? text("↺ Restart", "↺ Neu starten")
+                : text("▶ Start", "▶ Starten")}
             </button>
-            <button type="button" className="btn" onClick={() => setRunning(false)} disabled={!running}>
-              ⏸ Pause
+            <button
+              type="button"
+              className="btn"
+              onClick={() => setRunning(false)}
+              disabled={!running}
+            >
+              {text("⏸ Pause", "⏸ Pausieren")}
             </button>
           </div>
           <div
@@ -185,7 +287,9 @@ export function DriftSimulator() {
               marginTop: 12,
               padding: "10px 12px",
               borderRadius: 7,
-              background: psiAlarm ? "rgba(255,107,128,0.1)" : "rgba(100,226,181,0.07)",
+              background: psiAlarm
+                ? "rgba(255,107,128,0.1)"
+                : "rgba(100,226,181,0.07)",
               border: `1px solid ${psiAlarm ? "rgba(255,107,128,0.35)" : "rgba(100,226,181,0.25)"}`,
             }}
           >
@@ -199,16 +303,29 @@ export function DriftSimulator() {
                 color: psiAlarm ? "var(--coral-ink)" : "var(--good-ink)",
               }}
             >
-              {psiAlarm ? "⚠ PSI ALARM" : "✓ PSI OK"}
+              {psiAlarm
+                ? text("DEMO LINE CROSSED", "DEMOGRENZE ÜBERSCHRITTEN")
+                : text("WITHIN DEMO LINE", "INNERHALB DER DEMOGRENZE")}
             </div>
-            <div style={{ fontSize: 11.5, color: "var(--ink-2)", marginTop: 5 }}>
-              PSI = {round(current.psi, 3)} {psiAlarm ? "> 0.2 → retrain!" : "≤ 0.2 → stable"}
+            <div
+              style={{ fontSize: 11.5, color: "var(--ink-2)", marginTop: 5 }}
+            >
+              PSI = {round(current.psi, 3)}{" "}
+              {psiAlarm
+                ? text("> 0.2 → investigate", "> 0.2 → untersuchen")
+                : text("≤ 0.2 → no demo alert", "≤ 0.2 → kein Demoalarm")}
             </div>
-            <div style={{ fontSize: 11.5, color: "var(--ink-2)", marginTop: 3 }}>
-              Accuracy = {round(current.acc, 3)} {accAlarm ? "⬇ degraded" : ""}
+            <div
+              style={{ fontSize: 11.5, color: "var(--ink-2)", marginTop: 3 }}
+            >
+              {text("Accuracy", "Genauigkeit")} = {round(current.acc, 3)}{" "}
+              {accAlarm ? text("⬇ degraded", "⬇ verschlechtert") : ""}
             </div>
-            <div style={{ fontSize: 11.5, color: "var(--ink-2)", marginTop: 3 }}>
-              Decision boundary = {round(current.boundary, 3)}
+            <div
+              style={{ fontSize: 11.5, color: "var(--ink-2)", marginTop: 3 }}
+            >
+              {text("Decision boundary", "Entscheidungsgrenze")} ={" "}
+              {round(current.boundary, 3)}
             </div>
           </div>
           <div
@@ -223,11 +340,22 @@ export function DriftSimulator() {
               lineHeight: 1.5,
             }}
           >
-            <strong style={{ color: "var(--ink-2)" }}>PSI</strong> = Σ (actual% − expected%) × ln(actual%/expected%).
-            Values &lt;0.1 = no shift. 0.1–0.2 = slight. &gt;0.2 = retrain.
+            <strong style={{ color: "var(--ink-2)" }}>PSI</strong> = Σ (actual%
+            − expected%) × ln(actual%/expected%).{" "}
+            {text(
+              "This chart marks 0.2 for demonstration only. Choose bins, reference window, sample checks, and an action threshold from the deployed system.",
+              "Dieses Diagramm markiert 0.2 nur zur Veranschaulichung. Buckets, Referenzfenster, Stichprobenprüfungen und eine Aktionsgrenze müssen aus dem eingesetzten System abgeleitet werden.",
+            )}
           </div>
         </div>
-        <div style={{ flex: "1 1 260px", display: "flex", flexDirection: "column", gap: 8 }}>
+        <div
+          style={{
+            flex: "1 1 260px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+          }}
+        >
           <LineChart
             series={series}
             yKey="acc"
@@ -237,7 +365,14 @@ export function DriftSimulator() {
             thresholdVal={0.82}
             thresholdLabel="alert"
             cursorDay={day}
-            label="Model accuracy (AUC) over 60 days"
+            label={text(
+              "Model accuracy (AUC) over 60 days",
+              "Modellgenauigkeit (AUC) über 60 Tage",
+            )}
+            driftStartLabel={text(
+              "day 30 · drift start",
+              "Tag 30 · Drift beginnt",
+            )}
           />
           <LineChart
             series={series}
@@ -246,9 +381,13 @@ export function DriftSimulator() {
             yMax={0.6}
             color="#7B8CDE"
             thresholdVal={0.2}
-            thresholdLabel="PSI alarm"
+            thresholdLabel={text("demo line", "Demogrenze")}
             cursorDay={day}
             label="PSI (Population Stability Index)"
+            driftStartLabel={text(
+              "day 30 · drift start",
+              "Tag 30 · Drift beginnt",
+            )}
           />
         </div>
       </div>

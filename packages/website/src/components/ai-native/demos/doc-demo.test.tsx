@@ -152,7 +152,7 @@ describe("<DocDemo> initial (idle) render", () => {
     expect(screen.getByText("Validierung")).toBeInTheDocument();
     expect(screen.getByText("Export-Entwurf")).toBeInTheDocument();
     expect(screen.getByText("Azure Form Recognizer")).toBeInTheDocument();
-    expect(screen.getByText("Claude Opus 4.5 · tool_use")).toBeInTheDocument();
+    expect(screen.getByText("Schema-Extraktion · simuliert")).toBeInTheDocument();
     expect(screen.getByText("UStG §14 · SKR03")).toBeInTheDocument();
 
     // Static invoice preview text.
@@ -172,7 +172,7 @@ describe("<DocDemo> initial (idle) render", () => {
     // The extracted-data panel (and its unique USt-ID) is not mounted yet.
     expect(container.textContent).not.toContain("Extrahierte Daten");
     expect(container.textContent).not.toContain("DE000000000 (DUMMY)");
-    expect(container.textContent).not.toContain("97% confidence");
+    expect(container.textContent).not.toContain("Simulationswert 97 %");
   });
 });
 
@@ -203,7 +203,9 @@ describe("<DocDemo> extraction run", () => {
 
     // The data panel is now mounted with the explicitly fictional values.
     expect(screen.getByText("Extrahierte Daten")).toBeInTheDocument();
-    expect(container.textContent).toContain("97% confidence");
+    expect(container.textContent).toContain(
+      "Simulationswert 97 % · nicht kalibriert",
+    );
     expect(container.textContent).toContain("FIKTIVWERK-BEISPIEL AG · Musterstadt (rein fiktiv)");
     expect(container.textContent).toContain("DE000000000 (DUMMY)");
     expect(container.textContent).toContain("DE00 0000 0000 0000 0000 00 (DUMMY)");

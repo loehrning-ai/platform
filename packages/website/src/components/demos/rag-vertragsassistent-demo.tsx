@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { DEMO } from "@/lib/demo-tokens";
 import { DEMO_HEIGHT, usePrefersReducedMotion } from "./demo-utils";
 import { SimulationDisclosure } from "./evidence-badge";
+import { useDemoLocale } from "./demo-locale";
 
 type KonfidenzLevel = "hoch" | "mittel" | "niedrig";
 
@@ -197,6 +198,11 @@ function renderBold(text: string) {
 }
 
 export default function RagVertragsassistentDemo() {
+  const { locale } = useDemoLocale();
+  return locale === "en" ? <RagContractAssistantEnglish /> : <RagVertragsassistentGerman />;
+}
+
+function RagVertragsassistentGerman() {
   const [msgs, setMsgs] = useState<readonly Message[]>([]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
@@ -826,6 +832,156 @@ export default function RagVertragsassistentDemo() {
         >
           Senden →
         </button>
+      </div>
+    </div>
+  );
+}
+
+interface EnglishContractAnswer {
+  readonly answer: string;
+  readonly terms: readonly string[];
+  readonly sources: readonly { readonly document: string; readonly section: string; readonly confidence: "high" | "medium" | "low" }[];
+}
+
+const CONTRACT_ANSWERS_EN: Readonly<Record<string, EnglishContractAnswer>> = {
+  termination: {
+    answer: "The fictional framework agreement sets three months' notice to the end of a quarter. A material breach can trigger extraordinary termination after the stated cure process.",
+    terms: ["termination", "notice", "quarter end"],
+    sources: [
+      { document: "Sample framework agreement v3.2", section: "§12.3 Termination", confidence: "high" },
+      { document: "Sample schedule B", section: "Clause 4", confidence: "medium" },
+    ],
+  },
+  liability: {
+    answer: "The fictional liability cap is three times the annual fee, subject to a maximum of EUR 500,000. The sample excludes indirect loss and does not apply the cap to intent or gross negligence.",
+    terms: ["liability", "annual fee", "cap"],
+    sources: [
+      { document: "Sample framework agreement v3.2", section: "§14 Liability", confidence: "high" },
+      { document: "Sample insurance note", section: "Policy 2026/04", confidence: "low" },
+    ],
+  },
+  signature: {
+    answer: "In the fictional signature policy, Role Alpha and Role Beta may sign individually. The sample power-of-attorney rule requires two signatories; agreements above EUR 250,000 require management approval.",
+    terms: ["signature", "authority", "approval"],
+    sources: [
+      { document: "Sample signature policy v2", section: "Clause 3", confidence: "high" },
+      { document: "Fictional register extract", section: "Entry 82104", confidence: "high" },
+    ],
+  },
+};
+
+const CONTRACT_QUESTIONS_EN = [
+  ["termination", "What is the notice period?"],
+  ["liability", "What liability cap applies?"],
+  ["signature", "Who may sign the agreement?"],
+] as const;
+
+function answerForEnglishContract(query: string): EnglishContractAnswer | null {
+  const value = query.toLowerCase();
+  if (value.includes("terminat") || value.includes("notice")) return CONTRACT_ANSWERS_EN.termination;
+  if (value.includes("liab") || value.includes("cap")) return CONTRACT_ANSWERS_EN.liability;
+  if (value.includes("sign") || value.includes("author")) return CONTRACT_ANSWERS_EN.signature;
+  return null;
+}
+
+function RagContractAssistantEnglish() {
+  const [query, setQuery] = useState("");
+  const [submitted, setSubmitted] = useState("");
+  const [answer, setAnswer] = useState<EnglishContractAnswer | null | undefined>(undefined);
+
+  const runQuery = (value?: string) => {
+    const next = (value ?? query).trim();
+    if (!next) return;
+    setSubmitted(next);
+    setQuery("");
+    setAnswer(answerForEnglishContract(next));
+  };
+
+  return (
+    <div
+      data-demo-id="rag-vertragsassistent"
+      role="region"
+      aria-label="Contract retrieval example"
+      style={{ display: "flex", flexDirection: "column", gap: 14, minHeight: DEMO_HEIGHT, minWidth: 0, fontFamily: DEMO.font.sans, color: DEMO.ink }}
+    >
+      <div>
+        <div style={{ fontFamily: DEMO.font.mono, fontSize: 10, color: "var(--color-brand-orange)", letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 700 }}>Contract archive · deterministic retrieval</div>
+        <h2 style={{ margin: "6px 0 0", fontSize: "clamp(20px, 4vw, 28px)", lineHeight: 1.08 }}>
+          Answer from the archive. <span style={{ color: "var(--color-brand-orange)" }}>Show the source and the gap.</span>
+        </h2>
+        <p style={{ margin: "8px 0 0", maxWidth: 760, color: DEMO.schiefer, fontSize: 12, lineHeight: 1.55 }}>
+          Three fictional contract records are searched with fixed keyword rules in the browser. This is not legal advice and no model or document service is called.
+        </p>
+      </div>
+
+      <SimulationDisclosure>
+        Documents, clauses, answers, confidence labels, and register entries are fictional samples. Verify every answer against the governing agreement and qualified legal review.
+      </SimulationDisclosure>
+
+      <div aria-label="Suggested contract questions" style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+        {CONTRACT_QUESTIONS_EN.map(([key, label]) => (
+          <button key={key} type="button" onClick={() => runQuery(label)} style={{ minHeight: 40, border: `1px solid ${DEMO.ink}`, background: DEMO.kalk, color: DEMO.ink, padding: "7px 10px", fontFamily: DEMO.font.mono, fontSize: 10, cursor: "pointer" }}>{label}</button>
+        ))}
+      </div>
+
+      <div style={{ border: `1px solid ${DEMO.ink}`, background: DEMO.kalk, boxShadow: `3px 3px 0 ${DEMO.ink}`, minWidth: 0 }}>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, padding: "8px 12px", background: DEMO.ink, color: DEMO.kalk, fontFamily: DEMO.font.mono, fontSize: 9, textTransform: "uppercase", letterSpacing: "0.1em" }}>
+          <span style={{ color: "var(--color-brand-orange)" }}>Local sample index</span>
+          <span>3 records · 14 sample clauses</span>
+          <span style={{ marginLeft: "auto" }}>no external connection</span>
+        </div>
+
+        <div aria-live="polite" style={{ minHeight: 310, padding: "clamp(14px, 4vw, 24px)", minWidth: 0 }}>
+          {answer === undefined ? (
+            <div style={{ minHeight: 250, display: "grid", placeItems: "center", textAlign: "center", color: DEMO.schiefer, fontSize: 12 }}>
+              Select a sample question or enter a contract term below.
+            </div>
+          ) : (
+            <div style={{ display: "grid", gap: 14 }}>
+              <div style={{ borderLeft: "3px solid var(--color-brand-orange)", paddingLeft: 12 }}>
+                <div style={{ fontFamily: DEMO.font.mono, fontSize: 9, color: DEMO.schiefer, textTransform: "uppercase", letterSpacing: "0.12em" }}>Query</div>
+                <strong style={{ display: "block", marginTop: 4, overflowWrap: "anywhere" }}>{submitted}</strong>
+              </div>
+              {answer ? (
+                <>
+                  <p style={{ margin: 0, maxWidth: 800, fontSize: 14, lineHeight: 1.65 }}>{answer.answer}</p>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    {answer.terms.map((term) => <span key={term} style={{ border: "1px solid rgba(37,99,235,0.3)", background: "rgba(37,99,235,0.07)", color: "#1d4ed8", padding: "3px 7px", fontFamily: DEMO.font.mono, fontSize: 9 }}>{term}</span>)}
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 230px), 1fr))", gap: 8 }}>
+                    {answer.sources.map((source) => (
+                      <div key={`${source.document}-${source.section}`} style={{ minWidth: 0, border: `1px solid ${DEMO.leinen}`, background: DEMO.birke, padding: 10 }}>
+                        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8 }}>
+                          <strong style={{ fontSize: 11, overflowWrap: "anywhere" }}>{source.document}</strong>
+                          <span style={{ flexShrink: 0, color: source.confidence === "high" ? "#166534" : source.confidence === "medium" ? "#b45309" : "#b91c1c", fontFamily: DEMO.font.mono, fontSize: 9, textTransform: "uppercase" }}>{source.confidence}</span>
+                        </div>
+                        <div style={{ marginTop: 4, color: DEMO.schiefer, fontFamily: DEMO.font.mono, fontSize: 9 }}>{source.section}</div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div role="alert" style={{ border: "1px solid rgba(220,38,38,0.35)", background: "rgba(220,38,38,0.05)", padding: 14 }}>
+                  <strong>No supporting clause found.</strong>
+                  <p style={{ margin: "6px 0 0", fontSize: 12, lineHeight: 1.55 }}>The sample archive cannot answer this query. Do not infer authority or legal effect; inspect the governing documents and route the question to legal review.</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 7, borderTop: `1px solid ${DEMO.leinen}`, padding: 10 }}>
+          <input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            onKeyDown={(event) => { if (event.key === "Enter") runQuery(); }}
+            aria-label="Question for the contract archive"
+            placeholder="Enter a contract term…"
+            style={{ flex: "1 1 220px", minWidth: 0, minHeight: 42, boxSizing: "border-box", border: `1px solid ${DEMO.leinen}`, background: DEMO.birke, color: DEMO.ink, padding: "9px 11px", font: "inherit", fontSize: 12 }}
+          />
+          <button type="button" disabled={!query.trim()} onClick={() => runQuery()} style={{ minHeight: 42, border: `1px solid ${DEMO.ink}`, background: "var(--color-brand-orange)", color: "white", padding: "9px 14px", fontFamily: DEMO.font.mono, fontSize: 10, fontWeight: 700, cursor: query.trim() ? "pointer" : "not-allowed", opacity: query.trim() ? 1 : 0.5 }}>Search sample archive</button>
+          <button type="button" onClick={() => runQuery("Which rules govern foreign contracts?")} style={{ minHeight: 42, border: `1px solid ${DEMO.ink}`, background: DEMO.kalk, color: DEMO.ink, padding: "9px 12px", fontFamily: DEMO.font.mono, fontSize: 10, cursor: "pointer" }}>Run no-match case</button>
+        </div>
       </div>
     </div>
   );

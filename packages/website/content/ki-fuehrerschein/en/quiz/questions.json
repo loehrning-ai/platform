@@ -1,0 +1,622 @@
+[
+  {
+    "id": "q_w01",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "How should you record a spam filter in an AI inventory?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Record the product, exact filtering function, version, purpose, data, and owner; verify the technical and legal classification from evidence.",
+        "isCorrect": true
+      },
+      {
+        "id": "b",
+        "text": "Count every spam filter as a standalone AI system without review.",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Record only the provider; the function and version do not matter.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Never record spam filters because email cannot be an AI use case.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "A product name establishes neither the technical operation nor the legal classification of a specific version. The inventory records the function and links to product evidence and the accountable assessment.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w02",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "You want to draft a private text with an AI assistant. Which selection rule is correct?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Only paid business tools may be used to write text.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "A service may be suitable if you may share the content and its data controls, retention, and terms fit the purpose.",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "Only the best-known product, because a brand determines security.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "No AI tool may be used to write text.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Suitability for private use still depends on the content, rights, data controls, retention, and terms. Price and brand are not security classes; credentials never belong in prompts.",
+    "version": 2,
+    "active": true
+  },
+  {
+    "id": "q_w03",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "A colleague uses suggested replies, a transcription function, and a route forecast. What can you conclude with confidence?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "None of the functions can contain AI.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Exactly one function is AI regardless of product and version.",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "They are automatically exactly three standalone AI systems in legal terms.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "The exact functions and versions belong in the inventory; their technical and legal classification must be reviewed.",
+        "isCorrect": true
+      }
+    ],
+    "explanation": "AI-supported functions can be embedded in everyday products. Three product names do not automatically establish the number of standalone AI systems. Record and review each function and version.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w04",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Why is a maintained inventory of AI functions and systems in use important for an organisation?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "It is needed for the organisation's tax return.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "A maintained inventory provides a reviewable basis for risk assessment, rules, and ownership.",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "It is mandatory only for organisations with more than 250 employees.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Its sole purpose is IT budget planning.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "A reliable inventory supports risk assessment, ownership, and approval. It is one governance component; whether and in what form it is legally required depends on the specific system and the organization's role.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w05",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "An employee wants to process a customer list containing names and email addresses in an unapproved AI service. Which statement is correct?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Business contact details are always unrestricted.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "A paid account is sufficient legal basis.",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Processing stops until the purpose, legal basis, data class, minimization, and specific system approval are established.",
+        "isCorrect": true
+      },
+      {
+        "id": "d",
+        "text": "Digitally stored data may never be processed.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Names and email addresses may be personal data. A DPA alone does not make the processing lawful; purpose, legal basis, minimization, contract, configuration, and organizational approval also matter.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w06",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Which basis is sufficient to approve an AI workflow?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "The product name includes the word Enterprise.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "A documented review of purpose, data class, product feature, contract, configuration, permissions, and retention.",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "The provider excludes customer data from training by default.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "The system runs on a local computer.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Approval applies to a specific combination of purpose, data, feature, and configuration. Contract, permissions, retention, region, and other duties must fit; no brand name replaces that review.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w07",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Why must unapproved consumer services not be used with company data?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Because their answers are worse than those from paid versions.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Because an agreement reviewed by the organisation, binding data controls and documented approval are usually missing.",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "Because they work only in English.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Because they do not require an internet connection.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Unapproved consumer services usually lack a DPA reviewed by the organisation, binding data controls and a committed data region. Using them with company personal data may therefore be unlawful. The specific assessment depends on the purpose, legal basis, contract and configuration.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w08",
+    "questionType": "single_choice",
+    "difficulty": "hard",
+    "questionText": "A colleague wants to analyze a supplier list containing company names, contact people, and purchasing terms. Which statement is correct?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "It is permitted as soon as an enterprise product is used.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "It is always prohibited regardless of purpose and an approved specialist workflow.",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Purpose, personal data, confidentiality, minimization, and the specifically approved workflow must be reviewed before input.",
+        "isCorrect": true
+      },
+      {
+        "id": "d",
+        "text": "Supplier data must never be entered into an AI tool.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Company names may be public, contacts may be personal data, and terms may be trade secrets or contractually protected. The specific purpose, data, and system approval determines whether processing is permitted.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w09",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "What is the main difference between a good prompt and a poor prompt?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "A good prompt is longer than 500 words.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "A useful prompt states the task, relevant inputs, output format, constraints, and how to handle missing information.",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "A good prompt uses English technical terms.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "A good prompt always begins with 'Please'.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Clear inputs and constraints make output easier to review. A role description is optional, and even a precise prompt guarantees neither correctness nor completeness.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w10",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "You use an AI assistant to draft an email to an important customer. The generated text sounds professional. What do you do next?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Send it immediately. AI assistants do not make mistakes in emails.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Check facts and sources, completeness, your authority, the audience, and any required approval.",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "Ask a second AI tool to check the text.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Wait until next week before sending the email to gain some distance.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Professional wording does not establish factual accuracy or authority. Controls should match the impact and cover primary sources, omissions, commitments, data, and intended recipients.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w11",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Which constraint should a good prompt for an email template contain?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "'Use only the supplied facts, mark gaps, and do not add unauthorized commitments'.",
+        "isCorrect": true
+      },
+      {
+        "id": "b",
+        "text": "'Write at least 1,000 words'.",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "'Use emojis to sound friendly'.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "'Include as many technical terms as possible'.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "The constraint exposes unsupported additions and limits commitments. It does not replace approval of the input data or specialist review of the output.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w12",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "You ask an AI assistant to turn your meeting notes into minutes. The output includes a point that was not discussed. What do you do?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Keep the point because the AI assistant may have noticed something you missed.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Check the point against the primary source, remove unsupported content, and narrow the prompt for the next draft.",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "Discard the entire document and write the minutes by hand.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Add a question mark to the point and send it to everyone.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Models can add information absent from the source. A narrower instruction reduces this risk but does not remove it; source checking remains necessary.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w13",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "What is an AI hallucination?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "A technical system error that causes the AI to crash.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Plausible output that is unsupported or factually incorrect.",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "Deliberate manipulation by hackers.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "A visual error in the user interface.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Language models generate token sequences; they do not automatically perform a reliable fact check. Claims that affect a decision must therefore be traced to suitable evidence.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w14",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Copilot produces a market analysis that says, 'The German AI market grew by 34.2% to EUR 12.8 billion in 2025 (source: Bitkom 2025).' How do you verify the claim?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "The figure sounds plausible, which is enough.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Open the Bitkom website and search for the cited study.",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "Ask ChatGPT whether the figure is correct.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Replace the figure with your own estimate.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "A model can produce unsupported citations or figures. Open the stated primary source and verify its definitions, period, and calculation. A second model is not an independent source.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w15",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Which use requires specialist and organizational controls beyond a simple output review?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "When drafting an internal newsletter article.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "For legal assessments, medical advice or decisions with significant consequences for individuals.",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "When translating an email from German into English.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "When creating an agenda for a team meeting.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Legal, medical, and employment-related decisions can have substantial effects. They require qualified accountability, appropriate evidence, and any applicable legal, documentation, and oversight controls.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w16",
+    "questionType": "single_choice",
+    "difficulty": "hard",
+    "questionText": "Copilot summarises a 45-minute Teams meeting. The summary records the following outcome: 'The team agreed to start the project on 1 June.' You remember that the date remained open. What can you conclude?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Copilot is probably right because it analysed the entire recording.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "The date is unsupported; compare it with the transcript or confirmed notes and keep the date open until resolved.",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "The date was probably discussed while you were briefly distracted.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Copilot does not invent specific dates, so the date must be correct.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "The summary conflicts with your recollection and is not primary evidence. Check the approved source and have the responsible participants confirm the record.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w17",
+    "questionType": "single_choice",
+    "difficulty": "easy",
+    "questionText": "Which of the following belongs in an AI usage policy?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "A technical explanation of how neural networks work.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "An approval matrix covering purpose, product version and feature, data classes, configuration, owners, and review status.",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "The full original text of the EU AI Act.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Instructions for programming custom AI models.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "An approval must describe the specific combination of purpose, feature, data, and configuration. The policy also needs review controls, incident reporting, ownership, and review triggers.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w18",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "What does Article 4 of the EU AI Act require from organisations that use AI systems?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Every employee must hold a university degree in computer science.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Providers and deployers must take measures to support the development of AI literacy among people acting on their behalf and consider the required context.",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "Only the IT department may use AI systems.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Organisations must commission an annual AI audit by external auditors.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Article 4 has applied since 2 February 2025. As amended by Regulation (EU) 2026/1744, it concerns measures supporting the development of AI literacy while considering technical knowledge, experience, education and training, use context, and affected people or groups; it does not prescribe a fixed certificate.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w19",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "An employee accidentally enters payroll data into an AI service. What is the correct first response?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Wait to see whether anyone notices.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Delete the chat history and tell no one.",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Use the published incident channel without delay, preserve facts and evidence, and let the responsible functions assess the risk.",
+        "isCorrect": true
+      },
+      {
+        "id": "d",
+        "text": "Ask the provider for a legal assessment and make no internal report.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Workers report the incident without delay through the internal channel and do not alter evidence on their own. The controller assesses whether a personal data breach and notifiable risk exist; internal four- or 24-hour stages are organization-specific, not statutory.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "q_w20",
+    "questionType": "single_choice",
+    "difficulty": "hard",
+    "questionText": "An organisation plans to introduce a new AI tool, such as an industry-specific chatbot. It already has an AI usage policy. What must happen?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Nothing. The existing policy applies automatically to all new tools.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Before use, review the purpose, features, data, contract, configuration, risks, and owners, then update the inventory and approval matrix.",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "Use the tool with real data until the next regular review.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Only the IT department must be informed. The policy remains unchanged.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "A new product or feature triggers review. The organization assesses the specific workflow and records the decision before any use with real data.",
+    "version": 1,
+    "active": true
+  }
+]

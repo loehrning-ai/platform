@@ -75,6 +75,30 @@ describe("ai-native data layer (shared course architecture)", () => {
     expect(meta.totalModules).toBe(MODULE_IDS.length);
   });
 
+  it("serves the audited English bundle without changing stable identities", async () => {
+    const germanModules = getModules("de");
+    const englishModules = getModules("en");
+    expect(englishModules.map((module) => module.id)).toEqual(
+      germanModules.map((module) => module.id),
+    );
+    expect(englishModules[0]?.title).toBe("From task to workflow");
+    expect(englishModules[0]?.title).not.toBe(germanModules[0]?.title);
+
+    for (const moduleId of MODULE_IDS) {
+      const german = await getModuleLessons(moduleId, "de");
+      const english = await getModuleLessons(moduleId, "en");
+      expect(english.map((lesson) => lesson.id)).toEqual(
+        german.map((lesson) => lesson.id),
+      );
+    }
+
+    expect(getCourseMeta("en")).toMatchObject({
+      courseId: getCourseMeta("de").courseId,
+      language: "en",
+      title: "AI-Native Workflow Course",
+    });
+  });
+
   it("every lesson with quiz data exposes well-formed questions for the inline quiz", async () => {
     const all = await getAllLessons();
     for (const lesson of all) {

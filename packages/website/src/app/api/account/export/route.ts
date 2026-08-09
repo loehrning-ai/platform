@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { trustedRequestOrigin } from "@/lib/auth/origin";
+import { isLocale, localizeHref, type Locale } from "@/lib/i18n/locale";
 import { createAuthServerClient, getAuthenticatedUser } from "@/lib/supabase/auth-server";
 import { reportApiError } from "@/lib/observability/api-error";
 import { fetchUnifiedProgressForUser } from "@/lib/progress/server-store";
@@ -515,7 +516,27 @@ const FORM_EXPORT_ERROR_MESSAGES: Readonly<Record<string, string>> = {
     "Die Anmeldung ist nicht mehr gültig. Melde dich erneut an und starte den Export noch einmal.",
 };
 
-async function formExportErrorResponse(response: Response): Promise<Response> {
+const FORM_EXPORT_ERROR_MESSAGES_EN: Readonly<Record<string, string>> = {
+  account_owner_mismatch:
+    "The confirmed account assignment changed. Restart the export from the privacy page.",
+  auth_not_configured: "Data export is not configured in this environment.",
+  auth_unavailable: "The sign-in could not be verified at present.",
+  export_failed: "The stored account data could not be read completely.",
+  export_store_unavailable:
+    "The protected export data store is temporarily unavailable.",
+  invalid_owner_binding: "The account assignment for the export is invalid.",
+  rate_limit_exceeded:
+    "Too many export requests were started for this account. Wait up to one hour before trying again.",
+  rate_limit_unavailable:
+    "The data export abuse-prevention control is temporarily unavailable.",
+  unauthorized:
+    "The sign-in is no longer valid. Sign in again and restart the export.",
+};
+
+async function formExportErrorResponse(
+  response: Response,
+  locale: Locale,
+): Promise<Response> {
   let errorCode = "export_failed";
   try {
     const payload = (await response.json()) as { readonly error?: unknown };
@@ -528,29 +549,52 @@ async function formExportErrorResponse(response: Response): Promise<Response> {
   } catch {
     // The standalone error document still uses a bounded generic code.
   }
-  const mappedMessage = FORM_EXPORT_ERROR_MESSAGES[errorCode];
+  const messages =
+    locale === "en"
+      ? FORM_EXPORT_ERROR_MESSAGES_EN
+      : FORM_EXPORT_ERROR_MESSAGES;
+  const mappedMessage = messages[errorCode];
   const message =
     typeof mappedMessage === "string"
       ? mappedMessage
-      : "Der Exportauftrag konnte nicht abgeschlossen werden.";
+      : locale === "en"
+        ? "The export request could not be completed."
+        : "Der Exportauftrag konnte nicht abgeschlossen werden.";
+  const documentCopy =
+    locale === "en"
+      ? {
+          title: "Data export failed · Loehrning",
+          heading: "Data export failed",
+          incomplete: "No complete export file was provided.",
+          errorCode: "Error code",
+          back: "Back to privacy and data management",
+        }
+      : {
+          title: "Datenexport fehlgeschlagen · Loehrning",
+          heading: "Datenexport fehlgeschlagen",
+          incomplete: "Es wurde keine vollständige Exportdatei bereitgestellt.",
+          errorCode: "Fehlercode",
+          back: "Zurück zu Datenschutz und Datenverwaltung",
+        };
+  const backHref = localizeHref("/konto/datenschutz", locale);
 
   return new Response(
     [
       "<!doctype html>",
-      '<html lang="de">',
+      `<html lang="${locale}">`,
       "<head>",
       '<meta charset="utf-8">',
       '<meta name="viewport" content="width=device-width, initial-scale=1">',
       '<meta name="robots" content="noindex,nofollow,noarchive">',
-      "<title>Datenexport fehlgeschlagen · Loehrning</title>",
+      `<title>${documentCopy.title}</title>`,
       "</head>",
       "<body>",
       "<main>",
-      "<h1>Datenexport fehlgeschlagen</h1>",
+      `<h1>${documentCopy.heading}</h1>`,
       `<p>${message}</p>`,
-      "<p>Es wurde keine vollständige Exportdatei bereitgestellt.</p>",
-      `<p>Fehlercode: <code>${errorCode}</code></p>`,
-      '<p><a href="/konto/datenschutz">Zurück zu Datenschutz und Datenverwaltung</a></p>',
+      `<p>${documentCopy.incomplete}</p>`,
+      `<p>${documentCopy.errorCode}: <code>${errorCode}</code></p>`,
+      `<p><a href="${backHref}">${documentCopy.back}</a></p>`,
       "</main>",
       "</body>",
       "</html>",
@@ -559,7 +603,7 @@ async function formExportErrorResponse(response: Response): Promise<Response> {
       status: response.status >= 400 ? response.status : 500,
       headers: {
         "Content-Type": "text/html; charset=utf-8",
-        "Content-Language": "de",
+        "Content-Language": locale,
         "Cache-Control": "private, no-store",
         "X-Content-Type-Options": "nosniff",
         "Cross-Origin-Resource-Policy": "same-origin",
@@ -642,14 +686,23 @@ export async function POST(request: Request): Promise<Response> {
   }
   const form = new URLSearchParams(body);
   if (
-    [...form.keys()].some((key) => key !== "expectedOwnerId") ||
-    form.getAll("expectedOwnerId").length !== 1
+    [...form.keys()].some(
+      (key) => key !== "expectedOwnerId" && key !== "locale",
+    ) ||
+    form.getAll("expectedOwnerId").length !== 1 ||
+    form.getAll("locale").length > 1
   ) {
+    return jsonError("invalid_export_request", 400);
+  }
+  const requestedLocale = form.get("locale");
+  if (requestedLocale !== null && !isLocale(requestedLocale)) {
     return jsonError("invalid_export_request", 400);
   }
   const response = await exportBoundAccount(
     request,
     form.get("expectedOwnerId"),
   );
-  return response.ok ? response : formExportErrorResponse(response);
+  return response.ok
+    ? response
+    : formExportErrorResponse(response, requestedLocale ?? "de");
 }

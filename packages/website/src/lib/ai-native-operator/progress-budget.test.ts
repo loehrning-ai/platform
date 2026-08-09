@@ -20,7 +20,11 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { getAllLessons } from "./data";
 import { lessonProgressKey } from "./types";
-import type { UnifiedCourseSlice, UnifiedLessonProgress, UnifiedProgress } from "@/lib/progress/types";
+import type {
+  UnifiedCourseSlice,
+  UnifiedLessonProgress,
+  UnifiedProgress,
+} from "@/lib/progress/types";
 import { checkpointKey, UNIFIED_SCHEMA_VERSION } from "@/lib/progress/types";
 import { truncateExerciseSummaries } from "@/lib/progress/migrate";
 import {
@@ -103,7 +107,11 @@ describe("ai-native-operator's contribution to the two progress-budget rows ", (
 
     const slice: UnifiedCourseSlice = {
       lessons: lessonEntries,
-      workshopQuiz: { passed: true, score: 100, completedAt: "2026-07-21T00:00:00.000Z" },
+      workshopQuiz: {
+        passed: true,
+        score: 100,
+        completedAt: "2026-07-21T00:00:00.000Z",
+      },
       capstoneSubmitted: false,
       startedAt: "2026-07-21T00:00:00.000Z",
       lastActivity: "2026-07-21T00:00:00.000Z",
@@ -135,7 +143,12 @@ describe("ai-native-operator's contribution to the two progress-budget rows ", (
       // (see components/ai-native-operator/lesson-reader.tsx).
       if (lesson.kind === "quiz") {
         for (const question of lesson.quiz) {
-          keys.push(checkpointKey(lessonProgressKey(lesson.moduleId, lesson.lessonNumber), question.id));
+          keys.push(
+            checkpointKey(
+              lessonProgressKey(lesson.moduleId, lesson.lessonNumber),
+              question.id,
+            ),
+          );
         }
       }
     }
@@ -168,7 +181,11 @@ describe("ai-native-operator's contribution to the two progress-budget rows ", (
     }
     const slice: UnifiedCourseSlice = {
       lessons: lessonEntries,
-      workshopQuiz: { passed: true, score: 0.95, completedAt: "2026-07-21T00:00:00.000Z" },
+      workshopQuiz: {
+        passed: true,
+        score: 0.95,
+        completedAt: "2026-07-21T00:00:00.000Z",
+      },
       capstoneSubmitted: false,
       startedAt: "2026-07-21T00:00:00.000Z",
       lastActivity: "2026-07-21T00:00:00.000Z",
@@ -187,7 +204,9 @@ describe("ai-native-operator's contribution to the two progress-budget rows ", (
     // calls this on every read), not a hand-rolled JSON round-trip.
     const migrated = truncateExerciseSummaries(progress);
     expect(migrated.courses["ai-native-operator"]).toEqual(slice);
-    expect(Object.keys(migrated.courses["ai-native-operator"]!.lessons)).toHaveLength(39);
+    expect(
+      Object.keys(migrated.courses["ai-native-operator"]!.lessons),
+    ).toHaveLength(39);
 
     // Round-trip through the real store API (replaceUnifiedState mirrors a
     // trusted server-sync payload landing in the local cache).
@@ -203,6 +222,8 @@ describe("ai-native-operator's contribution to the two progress-budget rows ", (
     completeCheckpoint("engineering/3", "exercise");
     expect(isCheckpointDone("engineering/3", "exercise")).toBe(true);
     markLessonCompleted("ai-native-operator", "governance/4");
-    expect(getCourseSlice("ai-native-operator").lessons["governance/4"]?.completed).toBe(true);
+    expect(
+      getCourseSlice("ai-native-operator").lessons["governance/4"]?.completed,
+    ).toBe(true);
   });
 });

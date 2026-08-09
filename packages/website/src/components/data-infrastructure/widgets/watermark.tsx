@@ -9,6 +9,7 @@ import { useCanvasRAF } from "../canvas/use-canvas-raf";
 import { useCanvasAutoSize } from "../canvas/use-canvas-size";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
+import { useDataInfraWidgetLocale } from "../widget-locale-context";
 
 interface WatermarkProps {
   readonly lessonId: string;
@@ -24,17 +25,27 @@ interface StreamEvent {
   kind?: EventKind;
 }
 
-const KIND_COLOR: Record<EventKind, string> = { ok: "#3f8264", late: "#cf8a3f", drop: "#b85a4a" };
+const KIND_COLOR: Record<EventKind, string> = {
+  ok: "#3f8264",
+  late: "#cf8a3f",
+  drop: "#b85a4a",
+};
 const T_MAX = 24;
 const ET_MAX = 22;
 
 export function Watermark({ lessonId, cpId }: WatermarkProps): JSX.Element {
+  const { locale } = useDataInfraWidgetLocale();
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [contextUnavailable, setContextUnavailable] = useState(false);
   const [allowLate, setAllowLate] = useState(true);
-  const [counts, setCounts] = useState({ ok: 0, late: 0, drop: 0, watermark: 0 });
+  const [counts, setCounts] = useState({
+    ok: 0,
+    late: 0,
+    drop: 0,
+    watermark: 0,
+  });
   const [running, setRunning] = useState(false);
 
   const eventsRef = useRef<StreamEvent[]>([]);
@@ -91,7 +102,13 @@ export function Watermark({ lessonId, cpId }: WatermarkProps): JSX.Element {
       ctx.fillStyle = KIND_COLOR[e.kind];
       ctx.globalAlpha = 0.85;
       ctx.beginPath();
-      ctx.arc(tx(Math.min(T_MAX, e.pt)), ty(Math.max(0, Math.min(ET_MAX, e.et))), 4, 0, Math.PI * 2);
+      ctx.arc(
+        tx(Math.min(T_MAX, e.pt)),
+        ty(Math.max(0, Math.min(ET_MAX, e.et))),
+        4,
+        0,
+        Math.PI * 2,
+      );
       ctx.fill();
       ctx.globalAlpha = 1;
     }
@@ -121,7 +138,8 @@ export function Watermark({ lessonId, cpId }: WatermarkProps): JSX.Element {
         const ptT = i * 0.7 + Math.random() * 0.3;
         let et = ptT - Math.random() * 1.5;
         const lateChance = chaos ? 0.55 : 0.32;
-        if (allowLate && Math.random() < lateChance) et = ptT - 2.5 - Math.random() * (chaos ? 5 : 3);
+        if (allowLate && Math.random() < lateChance)
+          et = ptT - 2.5 - Math.random() * (chaos ? 5 : 3);
         events.push({ pt: ptT, et, processed: false });
       }
       eventsRef.current = events;
@@ -147,7 +165,11 @@ export function Watermark({ lessonId, cpId }: WatermarkProps): JSX.Element {
           else drop++;
         }
         const seen = eventsRef.current.filter((e) => e.processed);
-        if (seen.length) watermarkRef.current = Math.max(0, Math.max(...seen.map((e) => e.et)) - 1);
+        if (seen.length)
+          watermarkRef.current = Math.max(
+            0,
+            Math.max(...seen.map((e) => e.et)) - 1,
+          );
         setCounts({ ok: onT, late, drop, watermark: watermarkRef.current });
         wake();
         if (ptRef.current > 22) {
@@ -162,22 +184,33 @@ export function Watermark({ lessonId, cpId }: WatermarkProps): JSX.Element {
   );
 
   return (
-    <div className="border-2 border-border bg-card/40 p-5 md:p-6">
+    <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-3 sm:p-5 md:p-6">
       <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        Sim · Event time vs processing time · watermark {done ? "✓" : ""}
+        {locale === "de"
+          ? "Modell · Ereigniszeit, Verarbeitungszeit und Watermark"
+          : "Model · Event time, processing time, and watermark"}{" "}
+        {done ? "✓" : ""}
       </p>
 
       {contextUnavailable ? (
         <CanvasFallbackNotice
           title="Watermark"
-          summary="Events plotted by processing time (x) vs event time (y): on-time events land near the diagonal, late events fall below it, and events past a 4-second budget are dropped."
+          summary={
+            locale === "de"
+              ? "Ereignisse werden nach Verarbeitungszeit und Ereigniszeit eingezeichnet. Zu späte Ereignisse unterhalb des Vier-Sekunden-Budgets werden verworfen."
+              : "Events plotted by processing time (x) vs event time (y): on-time events land near the diagonal, late events fall below it, and events past a 4-second budget are dropped."
+          }
         />
       ) : (
         <div ref={wrapRef} className="h-[340px] w-full">
           <canvas
             ref={canvasRef}
             role="img"
-            aria-label="Stream-processing watermark visualization showing event time versus processing time and which late events are dropped."
+            aria-label={
+              locale === "de"
+                ? "Watermark-Darstellung für Ereigniszeit, Verarbeitungszeit und verworfene verspätete Ereignisse."
+                : "Stream-processing watermark visualization showing event time versus processing time and which late events are dropped."
+            }
             className="h-full w-full"
           />
         </div>
@@ -190,7 +223,7 @@ export function Watermark({ lessonId, cpId }: WatermarkProps): JSX.Element {
           disabled={running}
           className="border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          ▶ run stream
+          {locale === "de" ? "Stream ausführen" : "▶ run stream"}
         </button>
         <button
           type="button"
@@ -198,7 +231,9 @@ export function Watermark({ lessonId, cpId }: WatermarkProps): JSX.Element {
           disabled={running}
           className="border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          ⚡ chaos (lots late)
+          {locale === "de"
+            ? "Viele verspätete Ereignisse"
+            : "⚡ chaos (lots late)"}
         </button>
         <button
           type="button"
@@ -207,15 +242,23 @@ export function Watermark({ lessonId, cpId }: WatermarkProps): JSX.Element {
             "border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60",
           )}
         >
-          reset
+          {locale === "de" ? "zurücksetzen" : "reset"}
         </button>
         <label className="flex items-center gap-1.5 text-[12px]">
-          <input type="checkbox" checked={allowLate} onChange={(e) => setAllowLate(e.target.checked)} />
-          allow late
+          <input
+            type="checkbox"
+            checked={allowLate}
+            onChange={(e) => setAllowLate(e.target.checked)}
+          />
+          {locale === "de" ? "verspätete Ereignisse zulassen" : "allow late"}
         </label>
         <span className="font-mono text-[11px] text-muted-foreground">
-          on-time <b className="text-foreground">{counts.ok}</b> · late <b className="text-foreground">{counts.late}</b> ·
-          dropped <b className="text-foreground">{counts.drop}</b> · watermark{" "}
+          {locale === "de" ? "pünktlich" : "on-time"}{" "}
+          <b className="text-foreground">{counts.ok}</b> ·{" "}
+          {locale === "de" ? "verspätet" : "late"}{" "}
+          <b className="text-foreground">{counts.late}</b> ·{" "}
+          {locale === "de" ? "verworfen" : "dropped"}{" "}
+          <b className="text-foreground">{counts.drop}</b> · watermark{" "}
           <b className="text-foreground">t={counts.watermark.toFixed(1)}</b>
         </span>
       </div>

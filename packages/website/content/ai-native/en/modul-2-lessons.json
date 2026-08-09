@@ -1,0 +1,1019 @@
+{
+  "moduleId": "modul_2",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-06-22",
+  "nextReview": "2026-12-22",
+  "reviewCadence": "vendor",
+  "riskClass": "vendor",
+  "triggerEvents": [
+    "vendor-api-change",
+    "model-deprecation"
+  ],
+  "lessons": [
+    {
+      "id": "modul_2_lesson_1",
+      "moduleId": "modul_2",
+      "number": 1,
+      "title": "Projects, Memory and Artifacts: your Claude workspace",
+      "subtitle": "From a chat window to a maintained workspace",
+      "durationMinutes": 10,
+      "premiumGated": false,
+      "refreshCadence": "QUARTERLY",
+      "voiceAnchor": "A Project keeps approved recurring context separate from case-specific chat input.",
+      "keyConcepts": [
+        "Claude Project",
+        "System prompt",
+        "Artifact",
+        "Memory"
+      ],
+      "widgets": [
+        {
+          "kind": "exercise-rctfc-checklist",
+          "placement": "before-quiz",
+          "props": {
+            "exerciseId": "modul_2_lesson_1_ex_1",
+            "lessonId": "modul_2_lesson_1",
+            "moduleId": "modul_2",
+            "title": "Build your first Claude Project brief",
+            "scenario": "Write a system prompt containing the approved context that Claude should use across chats in this Project. Keep case-specific and confidential data out of the persistent brief.",
+            "criteria": {
+              "role": {
+                "minChars": 20,
+                "hint": "What role should Claude perform in this Project, such as sales assistant, HR business partner or workshop manager?"
+              },
+              "context": {
+                "minChars": 60,
+                "hint": "Describe the company, industry, size, products and communication rules. Include only background approved for persistent storage."
+              },
+              "task": {
+                "minChars": 25,
+                "hint": "Which three to five bounded tasks should Claude typically support, such as quotation drafts, follow-up questions or analysis?"
+              },
+              "format": {
+                "minChars": 15,
+                "hint": "Define a standard format, such as Markdown, bullet points or a word limit."
+              },
+              "constraints": {
+                "minChars": 20,
+                "hint": "State exclusions such as customer data, unapproved prices, promotional claims or unapproved tool recommendations."
+              }
+            }
+          }
+        }
+      ],
+      "sections": [
+        {
+          "id": "modul_2_lesson_1_section_1",
+          "title": "Why a standalone chat is insufficient for recurring work",
+          "readTimeMinutes": 2,
+          "content": "A standalone chat starts with only the context supplied in that conversation. Repeating the same role, organization and style instructions wastes time and makes results inconsistent.\n\nA Project can hold a maintained system prompt and approved reference files for a defined area of work. Product capabilities, storage and retention vary by plan and setting, so verify the current behavior before relying on it.\n\nUse the Project for stable, non-confidential context. Supply case-specific inputs separately and review what the product retains.",
+          "keyTakeaway": "A Project can hold approved recurring context; it does not remove the need to control data and review output."
+        },
+        {
+          "id": "modul_2_lesson_1_section_2",
+          "title": "Set up a Project brief",
+          "readTimeMinutes": 3,
+          "content": "Use three parts in the system prompt:\n1. Role and organization context\n2. Communication rules\n3. Data and decision boundaries\n\nExample for a sales Project:\n\n```\nI work in sales at an 80-person mechanical-engineering company\nin Bavaria with customers in Germany and Austria.\nTone: pragmatic, plain and direct.\nUse informal address for established customers and formal address for new customers.\nDo not use promotional claims or superlatives.\nDo not include real customer names or active negotiation margins.\nDo not invent prices, dates or commitments.\n```\n\nYou may add an approved, sanitized 2024 quotation template as a format example. Check the product's current storage, access and retention rules before uploading any file.\n\nSubsequent requests can refer to this maintained context instead of repeating it.",
+          "keyTakeaway": "Define the role, communication rules and data boundaries in one maintained Project brief."
+        },
+        {
+          "id": "modul_2_lesson_1_section_3",
+          "title": "Artifacts as editable outputs",
+          "readTimeMinutes": 2,
+          "content": "Artifacts present supported output types in a separate editable panel rather than only in the chat transcript. Depending on the product and current feature set, this may include documents, code, HTML, React components, SVG or Markdown.\n\nAn Artifact can reduce transfers between the model interface and another editor. It does not make the result final: factual, legal, accessibility and technical checks still apply.\n\nMeasure whether the Artifact workflow reduces transfer and revision effort for the selected task.",
+          "keyTakeaway": "Artifacts can reduce copy-and-paste steps while keeping the output available for review and editing."
+        },
+        {
+          "id": "modul_2_lesson_1_section_4",
+          "title": "Memory: what the product retains",
+          "readTimeMinutes": 2,
+          "content": "Memory capabilities vary by product, plan and current setting. Before use, verify what is stored, where it is stored, how long it is retained and how it can be deleted.\n\n**Project context:** use fictional data for exercises, such as \"Customer Alpha (fictional), 80 employees, sample payment term.\"\n\n**Do not place in Memory:**\n- real customer or contact data without an approved basis and policy\n- confidential financial or contract data\n- passwords, tokens or API keys\n\n**Potentially appropriate after policy review:**\n- a non-confidential role description\n- general language and format preferences\n- approved standard tasks\n\nMemory is persistent product data. Curate entries and review access and deletion regularly.",
+          "keyTakeaway": "Use Memory only for approved, non-confidential context; never store secrets."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "modul_2_lesson_1_q1",
+          "questionText": "Which two persistent-context mechanisms are discussed in this lesson?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Short-term and long-term storage",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Project context and cross-chat Memory",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Local and cloud storage",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "User and administrator storage",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Project context applies within a defined Project; cross-chat Memory may retain preferences across conversations when the product and settings support it."
+        },
+        {
+          "id": "modul_2_lesson_1_q2",
+          "questionText": "What should never be stored in Claude Memory?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "An approved public role description",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Passwords, access tokens and unapproved confidential data",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "A general communication preference",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "An approved standard task",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Never store secrets. Apply the organization's data classification and tool policy before retaining customer, financial or contract information."
+        }
+      ]
+    },
+    {
+      "id": "modul_2_lesson_2",
+      "moduleId": "modul_2",
+      "number": 2,
+      "title": "Connector principles: a simulated OAuth exercise with Gmail, Calendar and Drive",
+      "subtitle": "How system access works without connecting real accounts here",
+      "durationMinutes": 12,
+      "premiumGated": false,
+      "refreshCadence": "QUARTERLY",
+      "voiceAnchor": "Claude cannot access your email unless an authorized integration grants that access.",
+      "keyConcepts": [
+        "Connector",
+        "OAuth",
+        "Commitment audit",
+        "Multi-source prompt"
+      ],
+      "widgets": [
+        {
+          "kind": "exercise-workflow-builder",
+          "placement": "before-quiz",
+          "props": {
+            "exerciseId": "modul_2_lesson_2_ex_1",
+            "lessonId": "modul_2_lesson_2",
+            "moduleId": "modul_2",
+            "title": "Build the commitment-audit pipeline",
+            "scenario": "Arrange the nodes for a simulated Monday workflow that compares commitments across sample email, calendar and Drive data.",
+            "palette": [
+              {
+                "id": "trigger-schedule",
+                "kind": "schedule",
+                "label": "Trigger: Monday 07:00",
+                "icon": "⏱",
+                "description": "Weekly scheduled trigger",
+                "category": "trigger"
+              },
+              {
+                "id": "trigger-manual",
+                "kind": "manual",
+                "label": "Trigger: manual",
+                "icon": "▶",
+                "description": "Ad hoc start by button",
+                "category": "trigger"
+              },
+              {
+                "id": "fetch-gmail",
+                "kind": "gmail-fetch",
+                "label": "Sample sent email: seven days",
+                "icon": "✉",
+                "description": "Simulated sent messages from the week",
+                "category": "process"
+              },
+              {
+                "id": "fetch-calendar",
+                "kind": "calendar-fetch",
+                "label": "Sample calendar: seven days",
+                "icon": "📅",
+                "description": "Simulated meetings with notes",
+                "category": "process"
+              },
+              {
+                "id": "fetch-drive",
+                "kind": "drive-fetch",
+                "label": "Sample documents",
+                "icon": "📁",
+                "description": "Simulated documents from the week",
+                "category": "process"
+              },
+              {
+                "id": "claude-analyze",
+                "kind": "claude-analyze",
+                "label": "Claude: extract commitments",
+                "icon": "🧠",
+                "description": "Reads all inputs and identifies commitments with due dates",
+                "category": "process"
+              },
+              {
+                "id": "action-email",
+                "kind": "email-send",
+                "label": "Prepare review list",
+                "icon": "📧",
+                "description": "Prepares the commitment list as a daily summary",
+                "category": "action"
+              },
+              {
+                "id": "action-notion",
+                "kind": "notion-write",
+                "label": "Simulate review dashboard",
+                "icon": "📝",
+                "description": "Shows what a dashboard entry would contain",
+                "category": "action"
+              }
+            ],
+            "solution": {
+              "requiredKinds": [
+                "schedule",
+                "gmail-fetch",
+                "calendar-fetch",
+                "claude-analyze",
+                "email-send"
+              ],
+              "passThreshold": 0.8
+            }
+          }
+        }
+      ],
+      "sections": [
+        {
+          "id": "modul_2_lesson_2_section_1",
+          "title": "A question that requires connected sources",
+          "readTimeMinutes": 2,
+          "content": "Commitments are often distributed across email, meeting notes and documents. A single-source search can miss the follow-up recorded elsewhere.\n\nThis lesson does not connect real accounts. Gmail, Calendar and Drive are sample sources used to model an authorized connector workflow: select the source, minimize permissions, document the data flow and review the result.",
+          "keyTakeaway": "A connector expands an AI system's input only after explicit authorization, limited scopes and review."
+        },
+        {
+          "id": "modul_2_lesson_2_section_2",
+          "title": "What connectors are",
+          "readTimeMinutes": 3,
+          "content": "A connector is a managed integration between an AI product and an external source. Authorization often uses OAuth: select an account, inspect requested scopes, approve access and revoke it when no longer needed.\n\n**Common sources:**\n- Google Workspace: Gmail, Drive, Docs, Calendar\n- Microsoft 365: Outlook, OneDrive, SharePoint\n- Notion, GitHub, Slack, Airtable, Salesforce, HubSpot, Stripe, Jira, Linear\n\nThis learning platform simulates the flow. It does not connect real accounts or read external mailboxes.\n\n**Distinction from MCP:**\n- Product connectors are integrations managed within a product interface.\n- MCP is a protocol for exposing tools and resources to a compatible client; deployment and control vary by server and client.\n\n**GDPR note:** Before production use, establish purpose, legal basis, scopes, logging, deletion, DPA terms and a permission-review process.",
+          "keyTakeaway": "OAuth authorization requires scope review, a legal basis, logging and a revocation process."
+        },
+        {
+          "id": "modul_2_lesson_2_section_3",
+          "title": "The commitment-audit query",
+          "readTimeMinutes": 3,
+          "content": "Use this exercise prompt:\n\n> \"Read the sample emails from the last seven days. Extract statements equivalent to 'I will do X', 'we will deliver Y' or 'Z by Friday'. Compare them with the sample calendar and Drive records to see whether follow-up is documented. Return open commitments, sender, due date, status and source reference.\"\n\nThe lesson is the workflow pattern, not a specific Gmail integration:\n- constrain sources and date range\n- extract commitments into a defined schema\n- use a second source as a cross-check\n- include source references in the table\n- require human review before action\n\nExample exercise result:\n- 14 commitments\n- 9 documented as completed\n- 3 overdue\n- 2 unclear\n\nThe three overdue items are placed in a review list. Nothing is sent automatically.",
+          "keyTakeaway": "A multi-source query produces a review list, not an authoritative or self-executing result."
+        },
+        {
+          "id": "modul_2_lesson_2_section_4",
+          "title": "Access changes the risk boundary",
+          "readTimeMinutes": 2,
+          "content": "A connector may reduce manual data transfer, but it expands the system's access and risk boundary. Define permissions, approved sources, logging and revocation before use.\n\n**Exercise prompts using sample data only:**\n- \"Which fictional sample meetings are scheduled tomorrow? Give three preparation questions for each.\"\n- \"Draft a letter to Customer Alpha from the fictional meeting record.\"\n- \"Find attachments from Customer Alpha in the sample emails and list only their titles.\"\n\nThese are not live queries. Production use requires approved data, minimum scopes and human review.",
+          "keyTakeaway": "A connector reduces manual transfer only after approved sources, minimum scopes and human review are in place."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "modul_2_lesson_2_q1",
+          "questionText": "What is the relevant distinction between a product connector and MCP?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "A connector is managed by a product; MCP defines a protocol-based tool and resource interface",
+              "isCorrect": true
+            },
+            {
+              "id": "b",
+              "text": "Connectors always cost money; MCP is always free",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Connectors can write; MCP can only read",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "They are identical",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "A product connector is configured within a product. MCP defines how a compatible client communicates with exposed tools and resources; either can be local or remote depending on the implementation."
+        },
+        {
+          "id": "modul_2_lesson_2_q2",
+          "questionText": "What can a connector improve compared with repeated manual uploads?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "It is always cheaper",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "It can retrieve authorized data for a request without repeated manual copies; provider terms and privacy documentation still govern processing",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "It removes GDPR obligations",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Anthropic is an EU company",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "A connector can reduce repeated copying and make access scopes explicit. It does not create a GDPR exemption; verify the provider documentation, contract and configured data flow."
+        }
+      ]
+    },
+    {
+      "id": "modul_2_lesson_3",
+      "moduleId": "modul_2",
+      "number": 3,
+      "title": "Skills: reusable commands for recurring work",
+      "subtitle": "Turn repeated tasks into slash commands",
+      "durationMinutes": 10,
+      "premiumGated": false,
+      "refreshCadence": "QUARTERLY",
+      "voiceAnchor": "A Skill packages maintained instructions for a recurring, bounded task.",
+      "keyConcepts": [
+        "Skill",
+        "SKILL.md",
+        "PROMPT.md",
+        "Slash command"
+      ],
+      "widgets": [
+        {
+          "kind": "exercise-fix-prompt",
+          "placement": "before-quiz",
+          "props": {
+            "exerciseId": "modul_2_lesson_3_ex_1",
+            "lessonId": "modul_2_lesson_3",
+            "moduleId": "modul_2",
+            "title": "Write the PROMPT.md for your Skill",
+            "scenario": "You are a sales manager building a `/kunden-antwort` Skill. Replace the placeholder with a reproducible brief containing the role, context, input placeholder, format and exclusions.",
+            "startingPrompt": "Draft a customer reply.",
+            "criteria": [
+              {
+                "id": "role",
+                "label": "Names the sales-assistant role",
+                "pattern": "sales"
+              },
+              {
+                "id": "context",
+                "label": "Provides company context, including industry, size and tone",
+                "pattern": "(bavaria|mechanical engineering|mid-sized|pragmatic)",
+                "regex": true
+              },
+              {
+                "id": "input-placeholder",
+                "label": "Includes a customer-email placeholder such as `{{kunde_mail}}`",
+                "pattern": "\\{\\{",
+                "regex": true
+              },
+              {
+                "id": "format",
+                "label": "Defines a format, word limit or structure",
+                "pattern": "(word|markdown|paragraph)",
+                "regex": true
+              },
+              {
+                "id": "taboo",
+                "label": "States an explicit exclusion for prices or promotional language",
+                "pattern": "(not|no|never|exclude|avoid)",
+                "regex": true
+              }
+            ],
+            "passThreshold": 0.6
+          }
+        }
+      ],
+      "sections": [
+        {
+          "id": "modul_2_lesson_3_section_1",
+          "title": "Why maintained Skills can outperform unused SOPs",
+          "readTimeMinutes": 2,
+          "content": "A standard operating procedure is useful only when people can find and apply it. Long documents are often skipped when the task is time-sensitive.\n\nA Skill can place the relevant instructions into the execution path. Calling `/angebot-draft` applies the maintained procedure for an internal quotation draft.\n\nThe Skill does not replace the SOP owner, approvals or review evidence. It makes the current instructions easier to invoke consistently.",
+          "keyTakeaway": "A Skill makes maintained instructions executable within a defined workflow."
+        },
+        {
+          "id": "modul_2_lesson_3_section_2",
+          "title": "What a Skill is",
+          "readTimeMinutes": 3,
+          "content": "A Skill is a **named, reusable instruction package that may include tool access and hooks**, invoked for a defined task.\n\nIn the course example:\n- it lives in `.claude/skills/skill-name/`\n- it includes `SKILL.md`, `PROMPT.md` and `EXAMPLES.md`\n- it is invoked as `/skill-name` in the supported client\n\nTreat the exact directory and file contract as client-specific and verify it against current product documentation.\n\n**Three useful categories:**\n1. **Output Skills:** produce a draft, such as `/angebot-draft` or `/wochenbericht-auto`\n2. **Analysis Skills:** structure input, such as `/meeting-summary-de` or `/invoice-parse`\n3. **Check Skills:** compare an artifact with a rule, such as `/gdpr-audit` or `/eu-ai-act-classify`\n\nThe course materials include examples of all three.",
+          "keyTakeaway": "Skills package instructions, tools and checks behind a named command."
+        },
+        {
+          "id": "modul_2_lesson_3_section_3",
+          "title": "Build a Skill as a small, testable package",
+          "readTimeMinutes": 3,
+          "content": "Design `/angebot-draft` as a reusable, reviewable workflow.\n\n**Step 1: SKILL.md**\n```markdown\n# /angebot-draft\nDescription: Creates an internal quotation draft.\nInput: approved or fictional brief\nOutput: draft with marked price, date and approval fields\n```\n\n**Step 2: PROMPT.md**\n```\nCreate a quotation draft from a fictional or approved brief.\nDo not invent prices, delivery commitments or contract terms.\nMark every open field for human review.\n```\n\n**Step 3: EXAMPLES.md**\nUse two or three clearly fictional examples, such as `Customer Alpha (fictional), 2 sample machines`.\n\nMeasure setup time, consistency and correction effort. The Skill neither approves nor sends the result.",
+          "keyTakeaway": "Use a small set of maintained files and test the Skill against representative examples."
+        },
+        {
+          "id": "modul_2_lesson_3_section_4",
+          "title": "The three-use review rule",
+          "readTimeMinutes": 2,
+          "content": "When a task recurs, evaluate whether a Skill would improve consistency. Three occurrences per month is a useful review trigger, not a guaranteed return.\n\nEstimate setup, maintenance, execution and review costs for the actual task. A five-minute prompt that produces inconsistent output is not an improvement.\n\n**Exercise:** Select a task completed at least three times this month. Draft `SKILL.md`, `PROMPT.md` and `EXAMPLES.md`. Run the Skill twice with different inputs, compare the results and adjust the instructions.",
+          "keyTakeaway": "Use three monthly occurrences as a prompt to evaluate reuse; keep the Skill only if testing shows a benefit."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "modul_2_lesson_3_q1",
+          "questionText": "When should you evaluate a recurring task for a Skill?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "After one use in every case",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "After it recurs at least three times in a month",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Only after ten uses per day",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Only for critical processes",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "The course uses three monthly occurrences as an evaluation trigger. Actual value depends on setup, maintenance and review effort."
+        },
+        {
+          "id": "modul_2_lesson_3_q2",
+          "questionText": "Which three files form the course's example Skill package?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "README.md, CHANGELOG.md and INDEX.md",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "SKILL.md, PROMPT.md and EXAMPLES.md",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "config.json, prompt.txt and test.md",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Only SKILL.md",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "In this course structure, SKILL.md defines metadata, PROMPT.md holds the instructions and EXAMPLES.md provides test cases."
+        }
+      ]
+    },
+    {
+      "id": "modul_2_lesson_4",
+      "moduleId": "modul_2",
+      "number": 4,
+      "title": "Plugins and MCP: connecting Claude to systems",
+      "subtitle": "Install plugins and configure MCP servers",
+      "durationMinutes": 12,
+      "premiumGated": false,
+      "refreshCadence": "QUARTERLY",
+      "voiceAnchor": "Plugins and MCP servers extend capability and the security boundary at the same time.",
+      "keyConcepts": [
+        "Plugin",
+        "MCP",
+        "handelsregister-mcp",
+        "destatis-mcp"
+      ],
+      "widgets": [
+        {
+          "kind": "demo-agent",
+          "placement": "after-intro"
+        }
+      ],
+      "sections": [
+        {
+          "id": "modul_2_lesson_4_section_1",
+          "title": "Add an integration only after reviewing it",
+          "readTimeMinutes": 2,
+          "content": "A plugin can package multiple Skills, MCP servers, hooks and sub-agents for related work. For example, a GitHub integration may support repository search, pull-request review and issue operations through authenticated APIs.\n\nDo not equate installation with expertise or authorization. The output still needs review, and every API operation is limited by the granted account permissions.\n\nDistinguish between:\n1. **Vendor-maintained packages**, with documented provenance and release ownership\n2. **Community packages**, which require independent code, permission and update review\n\nUse only packages approved by the organization and verify the source, version and requested permissions before installation.",
+          "keyTakeaway": "A plugin bundles capabilities; provenance, permissions and output still require review."
+        },
+        {
+          "id": "modul_2_lesson_4_section_2",
+          "title": "Install a plugin",
+          "readTimeMinutes": 2,
+          "content": "This exercise models the setup sequence:\n\n```bash\n/plugin install github@claude-plugins-official\n```\n\nThe supported client may ask for user or Project scope, then authentication, permission review and restart. Verify the current command and package source before running it.\n\nDo not place secrets in scripts or command arguments. Setup tooling should use an approved secret store or interactive authentication, protect configuration files and document revocation.\n\nExample after a properly authorized connection:\n> \"Search the approved sample customer database for fictional companies in Bavaria with no activity for six months. Draft reactivation emails for five records and do not send them.\"\n\nThe workflow separates data retrieval, text generation and human approval.",
+          "keyTakeaway": "Installation requires source verification, authentication, scope review and a defined revocation path."
+        },
+        {
+          "id": "modul_2_lesson_4_section_3",
+          "title": "MCP as a tool interface",
+          "readTimeMinutes": 3,
+          "content": "**MCP means Model Context Protocol.** It defines how a compatible AI client can discover and call external tools and read exposed resources.\n\nAn MCP server may expose:\n- **Tools:** functions such as `read_file`, `update_record` or `send_message`\n- **Resources:** files or data that a client may read\n\nAn MCP server can provide an integration where no packaged plugin exists.\n\n**Example server categories for learning:**\n- `filesystem`: local files\n- `postgresql`: database access\n- `playwright`: browser automation\n\nFor production use, define permissions, secret handling, logging, least privilege, revocation and human approval for consequential writes.",
+          "keyTakeaway": "MCP defines a tool and resource interface; each server still requires a separate security review."
+        },
+        {
+          "id": "modul_2_lesson_4_section_4",
+          "title": "Dry-run an MCP setup",
+          "readTimeMinutes": 3,
+          "content": "Use an attributable, reviewed installation source for every MCP server. Do not execute an unknown script or a `curl | bash` pipeline.\n\nA safe test records the configuration path, required permissions, secret source, backup and startup check. Use only a fictional query such as `Fiktivwerk Alpha` in the dry run and expect no real registry result.\n\nReal company research requires an approved source, legal basis, search scope and purpose. Verify findings against the legally authoritative primary source.",
+          "keyTakeaway": "Treat registry and statistics integrations as retrieval aids; verify results against authoritative sources."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "modul_2_lesson_4_q1",
+          "questionText": "What is the relevant difference between a plugin and MCP?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "A plugin bundles capabilities; MCP is a protocol for exposing tools and resources",
+              "isCorrect": true
+            },
+            {
+              "id": "b",
+              "text": "They are identical",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Plugins always cost money; MCP is always free",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "MCP is deprecated",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "A plugin is a distribution package. MCP is a protocol that a plugin or standalone integration may use."
+        },
+        {
+          "id": "modul_2_lesson_4_q2",
+          "questionText": "Why restrict installation to reviewed vendor packages or approved organization bundles?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "They are always cheaper",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Unknown scripts can compromise systems or expose secrets",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Every community package is technically inferior",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Anthropic prohibits community plugins",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Unreviewed scripts may overwrite settings, exfiltrate secrets or add persistent access. Verify source, code, version and permissions."
+        }
+      ]
+    },
+    {
+      "id": "modul_2_lesson_5",
+      "moduleId": "modul_2",
+      "number": 5,
+      "title": "Design Skill and Artifacts",
+      "subtitle": "Outputs with a deliberate visual system",
+      "durationMinutes": 10,
+      "premiumGated": false,
+      "refreshCadence": "QUARTERLY",
+      "voiceAnchor": "A design brief should define visual decisions before implementation begins.",
+      "keyConcepts": [
+        "Design Skill",
+        "Artifact",
+        "frontend-design"
+      ],
+      "widgets": [
+        {
+          "kind": "demo-word",
+          "placement": "after-intro"
+        }
+      ],
+      "sections": [
+        {
+          "id": "modul_2_lesson_5_section_1",
+          "title": "Why generated interfaces often look generic",
+          "readTimeMinutes": 2,
+          "content": "A vague request such as \"Build a landing page for my product\" leaves the model to choose typography, color, layout, hierarchy and motion. It will often reuse patterns common in generated interfaces since 2023 and standard component defaults.\n\nThe result may use familiar combinations such as Inter, an indigo gradient, a hero followed by three cards and a generic call to action. None is inherently wrong, but together they reveal that no project-specific design decisions were supplied.\n\nGeneric output is usually caused by an underspecified design brief, not by a single font or framework.",
+          "keyTakeaway": "Specify the visual system, content hierarchy and constraints before requesting implementation."
+        },
+        {
+          "id": "modul_2_lesson_5_section_2",
+          "title": "Install the Design Skill and inspect its first proposal",
+          "readTimeMinutes": 3,
+          "content": "Example installation command:\n\n```\n/plugin install frontend-design@claude-plugins-official\n```\n\nExample invocation:\n\n```\n/frontend-design \"Landing page for a mechanical-engineering company,\n80 employees, audience: craft businesses with 10 to 30 employees,\n35 years in operation, quality is prioritized over lowest price.\"\n```\n\nThe workflow should begin with a design direction rather than code:\n\n> **Proposal:**\n> - Direction: established industrial company with a current digital interface\n> - Type: serif display face with a restrained sans-serif text face\n> - Color: warm gray with a copper accent\n> - Structure: image-led introduction, documented company story, evidence block\n> - Motion: limited to purposeful state changes; no decorative parallax\n>\n> Confirm or revise this direction before implementation.\n\nAfter approval, generate a React and Tailwind draft. Review accessibility, responsiveness, content, dependencies and production fit before integration.",
+          "keyTakeaway": "Separate design direction from code generation and review both stages."
+        },
+        {
+          "id": "modul_2_lesson_5_section_3",
+          "title": "Why the two-stage workflow helps",
+          "readTimeMinutes": 2,
+          "content": "The Design Skill separates two decisions:\n1. Design direction\n2. Implementation\n\nMaking the first stage explicit lets you inspect the rationale, reject generic choices and define a coherent visual system before code exists. The second stage then implements a reviewed direction.\n\n**Other use cases:**\n\n**Presentation:** `/frontend-design \"Ten-slide presentation on Q1 results. Audience: management. Focus: three Q2 decisions.\"`\n\n**Customer dashboard:** `/frontend-design \"Dashboard for the status of a construction project. Show progress, next milestones and current blockers.\"`\n\n**Quotation as a web document:** `/frontend-design \"One-page quotation with scope, reviewed price fields, references and an approval action.\"`\n\nEach output requires task-specific accessibility, data and export checks.",
+          "keyTakeaway": "The same brief-first method applies to landing pages, presentations, dashboards, quotations and reports."
+        },
+        {
+          "id": "modul_2_lesson_5_section_4",
+          "title": "Design work without writing implementation code",
+          "readTimeMinutes": 2,
+          "content": "You can define audience, hierarchy, tone, visual references and constraints without writing React or CSS yourself. The model can prepare an implementation draft.\n\nNo-code authorship does not mean no technical review. Check responsive behavior, semantic structure, keyboard access, contrast, loading, privacy and maintainability.\n\n**Exercise:** Create a landing-page variant using fictional or approved content. Review three materially different design directions before selecting one. Export the final Artifact only after checking it at mobile and desktop widths.",
+          "keyTakeaway": "A prose brief can produce an implementation draft; production readiness still requires technical and content review."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "modul_2_lesson_5_q1",
+          "questionText": "What does the Design Skill separate?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Model selection from billing",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Design-direction decisions from code generation",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "All CSS frameworks from the project",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "SVG output from every other format",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "The workflow reviews a design direction first and generates code only after that direction is accepted."
+        },
+        {
+          "id": "modul_2_lesson_5_q2",
+          "questionText": "Why do generated landing pages often converge on the same patterns?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Claude has a rendering defect",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "The prompt leaves typography, color and structure unspecified, so common defaults are reused",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Every web designer uses the same template",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "CSS supports only three visual styles",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Without explicit project constraints, a model often selects familiar defaults such as common fonts, gradients and card layouts."
+        }
+      ]
+    },
+    {
+      "id": "modul_2_lesson_6",
+      "moduleId": "modul_2",
+      "number": 6,
+      "title": "Claude Code for non-developers",
+      "subtitle": "File and document workflows from the terminal",
+      "durationMinutes": 12,
+      "premiumGated": false,
+      "refreshCadence": "QUARTERLY",
+      "voiceAnchor": "Claude Code can operate on local files, so permissions, backups and review matter as much as the prompt.",
+      "keyConcepts": [
+        "Claude Code",
+        "File-system access",
+        "Batch processing"
+      ],
+      "widgets": [
+        {
+          "kind": "exercise-prompt-diff",
+          "placement": "before-quiz",
+          "props": {
+            "exerciseId": "modul_2_lesson_6_ex_1",
+            "lessonId": "modul_2_lesson_6",
+            "moduleId": "modul_2",
+            "title": "Which Claude Code instruction is adequately specified?",
+            "scenario": "You have 120 PDFs in `~/rechnungen/2025/` and need a CSV containing date, supplier, amount and line items. Which prompt defines a reviewable first attempt?",
+            "candidates": [
+              {
+                "label": "Option A: vague request",
+                "prompt": "Can you read the invoices in this folder?",
+                "critique": "The folder, fields, output format and error behavior are unspecified. The system must ask for details or infer them.",
+                "rating": 1
+              },
+              {
+                "label": "Option B: partly specified",
+                "prompt": "Read all PDFs in `~/rechnungen/2025/`, extract date, supplier and amount, and write the results to a CSV.",
+                "critique": "The path, input type and three fields are defined. Line items, parse errors, column names and validation are still missing.",
+                "rating": 3
+              },
+              {
+                "label": "Option C: testable brief",
+                "prompt": "Task: Read all PDFs in `~/rechnungen/2025/` without modifying them. Extract `datum` (ISO 8601), `lieferant` (string), `brutto` (EUR decimal), `netto` (EUR decimal) and `positionen` (JSON array with `beschreibung`, `menge`, `einzelpreis`). Write `~/rechnungen/2025_summary.csv` as UTF-8 comma-separated data. For parse failures, log the file name and error to stderr and continue. Final report: successful and failed counts plus the three largest supplier totals. Do not overwrite an existing output file.",
+                "critique": "The prompt defines source, schema, output, encoding, failure handling, overwrite protection and a reconciliation report.",
+                "rating": 5
+              }
+            ]
+          }
+        }
+      ],
+      "sections": [
+        {
+          "id": "modul_2_lesson_6_section_1",
+          "title": "What Claude Code is",
+          "readTimeMinutes": 3,
+          "content": "Claude Code is a terminal-based agent that can inspect and operate on files and invoke configured tools. Developers use it for software work, but the same mechanics can support approved document and file workflows.\n\nExamples include:\n- file operations such as renaming, sorting, merging and extraction\n- document analysis such as PDF extraction, spreadsheet cleanup and OCR\n- batch processing with a defined schema and error log\n- maintained note and SOP workflows\n- reports assembled from approved local sources\n\nCapability depends on the installed version, permissions and configured tools. Start in a copied test directory, limit access and inspect the proposed actions before approval.",
+          "keyTakeaway": "Claude Code supports non-coding file workflows, but they require explicit scope, backups and validation."
+        },
+        {
+          "id": "modul_2_lesson_6_section_2",
+          "title": "First exercise: invoices to CSV",
+          "readTimeMinutes": 3,
+          "content": "Verify current installation, plan and authentication requirements at `code.claude.com` before setup and authenticate with the approved Claude.ai account.\n\nUse fictional or redacted invoices in a copied directory for the exercise. Example prompt:\n> \"In `~/Desktop/Rechnungen-2025/` there are 80 fictional PDF invoices. Read without modifying them. Extract date, amount, supplier and purpose. Write `Rechnungen-2025-export.csv` in the same directory, log parse failures and produce a count reconciliation.\"\n\nInspect the plan and permissions before execution. Afterward, validate every failed record and a risk-based sample of successful records. Record execution time, review time and extraction errors.\n\nDo not claim a fixed time saving; document the result of the actual dataset and hardware.",
+          "keyTakeaway": "Use copied, non-sensitive test data and validate the output before applying the workflow to real records."
+        },
+        {
+          "id": "modul_2_lesson_6_section_3",
+          "title": "Build trust through validation",
+          "readTimeMinutes": 2,
+          "content": "Invoice extraction can fail because of scan quality, layout variation, OCR errors or corrupted files. A successful command exit does not prove that every value is correct.\n\nDefine checks before execution:\n- reconcile input and output record counts\n- inspect every parse warning and missing required field\n- validate totals against source documents\n- sample across suppliers, formats and confidence levels\n- require complete review for legally or financially consequential fields\n\nIncrease automation only after repeated runs meet a documented error threshold. Keep source files unchanged and outputs reversible.",
+          "keyTakeaway": "Use risk-based validation and complete review for consequential fields; do not infer reliability from one sample."
+        },
+        {
+          "id": "modul_2_lesson_6_section_4",
+          "title": "Examples for mid-sized companies",
+          "readTimeMinutes": 3,
+          "content": "**Use case 1: Weekly report from notes**\nRead approved notes from `50 Daily/` for the last seven days. Extract decisions, action items and lessons into a one-page draft with links to the source notes.\n\n**Use case 2: Apprenticeship logs**\nRun OCR on fictional photos in `~/Berichtshefte/`. Extract date, hours and work description into CSV, flag unreadable fields and leave signatures for manual handling.\n\n**Use case 3: Letter drafts**\nRead a fictional `Kunden.csv` and prepare individualized draft letters in a new output directory. Do not send them and do not overwrite existing files.\n\nFor each workflow, record setup, execution, correction and approval effort. Batch size alone does not establish a time saving.",
+          "keyTakeaway": "Evaluate file workflows with measured runtime, error rate and review effort rather than fixed savings claims."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "modul_2_lesson_6_q1",
+          "questionText": "Which Claude Code capabilities are relevant outside software development?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Only around ten percent of features",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "File operations, document analysis and controlled batch processing",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Every capability without additional review",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "None; Claude Code is only for developers",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Non-development uses include file operations, document extraction and batch processing. No reliable percentage is claimed."
+        },
+        {
+          "id": "modul_2_lesson_6_q2",
+          "questionText": "What is the appropriate validation strategy for a first batch-processing run?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Trust all output immediately",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Use reconciliation, error review and a risk-based sample; fully review consequential fields",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Never automate any check and repeat all work manually",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Review only high-risk files and ignore parse warnings",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Validate counts and errors, sample across relevant strata and inspect every consequential field. Increase automation only with documented evidence."
+        }
+      ]
+    },
+    {
+      "id": "modul_2_lesson_7",
+      "moduleId": "modul_2",
+      "number": 7,
+      "title": "Memory and CLAUDE.md",
+      "subtitle": "Maintain context without storing the wrong data",
+      "durationMinutes": 10,
+      "premiumGated": false,
+      "refreshCadence": "EVERGREEN",
+      "voiceAnchor": "Persistent context should be minimal, approved, current and removable.",
+      "keyConcepts": [
+        "CLAUDE.md",
+        "Cross-chat Memory",
+        "Memory curation"
+      ],
+      "widgets": [
+        {
+          "kind": "exercise-context-budget",
+          "placement": "before-quiz",
+          "props": {
+            "exerciseId": "modul_2_lesson_7_ex_1",
+            "lessonId": "modul_2_lesson_7",
+            "moduleId": "modul_2",
+            "title": "Build your CLAUDE.md: what belongs there?",
+            "scenario": "Your budget is 2,500 tokens. Decide which context should persist in CLAUDE.md, which belongs in a chat or Skill, and which must not be supplied to Claude. More content can dilute important instructions.",
+            "budgetTokens": 2500,
+            "blocks": [
+              {
+                "id": "rolle-firma",
+                "label": "Role, organization, industry and communication rules",
+                "tokens": 400,
+                "mustHave": true,
+                "description": "Include only stable, approved context that is relevant to the Project."
+              },
+              {
+                "id": "aktive-projekte",
+                "label": "Active projects and goals, three to five lines each",
+                "tokens": 700,
+                "mustHave": true,
+                "description": "Include only current, non-confidential summaries and maintain them."
+              },
+              {
+                "id": "arbeits-regeln",
+                "label": "Working rules: never X, always Y, no unapproved prices",
+                "tokens": 500,
+                "mustHave": true,
+                "description": "Record stable boundaries that the workflow must consistently apply."
+              },
+              {
+                "id": "team-namen",
+                "label": "Team names, roles and responsibilities",
+                "tokens": 400,
+                "mustHave": false,
+                "description": "Optional and subject to data policy; prefer role names when personal names are unnecessary."
+              },
+              {
+                "id": "letzte-chats",
+                "label": "Summaries of the last ten chats",
+                "tokens": 2200,
+                "mustHave": false,
+                "description": "Do not copy automatically. Keep case-specific context in the relevant chat or maintained record."
+              },
+              {
+                "id": "kundendaten",
+                "label": "All customers with revenue and contact details",
+                "tokens": 1800,
+                "mustHave": false,
+                "description": "Do not include this list. Persistent instructions are not an approved customer database."
+              },
+              {
+                "id": "skill-index",
+                "label": "Skill index with short names and one-sentence descriptions",
+                "tokens": 300,
+                "mustHave": false,
+                "description": "A short index can help route work to maintained Skills."
+              },
+              {
+                "id": "lieblings-prompt",
+                "label": "Five favorite prompt templates",
+                "tokens": 600,
+                "mustHave": false,
+                "description": "Move recurring instructions into tested Skills instead of expanding CLAUDE.md."
+              }
+            ]
+          }
+        }
+      ],
+      "sections": [
+        {
+          "id": "modul_2_lesson_7_section_1",
+          "title": "When context does not persist",
+          "readTimeMinutes": 2,
+          "content": "Without persistent instructions, each new conversation starts from the context supplied to it. Repeating stable organization and style rules is inefficient, but storing everything creates privacy, accuracy and maintenance problems.\n\nThis lesson covers two mechanisms:\n\n**CLAUDE.md:** a Markdown instruction file used by Claude Code according to the client's current file-discovery and precedence rules. It can be reviewed and versioned.\n\n**Cross-chat Memory:** a product feature that may retain selected facts across conversations when enabled. Availability, behavior and controls vary by product, plan and date.\n\nNeither mechanism is a security boundary. Verify loading, access, retention and deletion behavior in the current product.",
+          "keyTakeaway": "CLAUDE.md and cross-chat Memory persist different kinds of context and require separate controls."
+        },
+        {
+          "id": "modul_2_lesson_7_section_2",
+          "title": "Build a minimal CLAUDE.md",
+          "readTimeMinutes": 3,
+          "content": "Example with explicitly fictional data:\n\n```markdown\n# CLAUDE.md: Fictional sales role\n\n## Context\n- Identifier: Fictional User Alpha\n- Organization: Fiktivwerk Beispiel GmbH (fictional)\n- Role: sales for fictional sample products\n\n## Language and format\n- Responses: English, plain language\n- Style: concise and pragmatic\n\n## Data boundaries\n- No real customer, financial or access data\n- Prices, dates and commitments remain placeholders until approval\n\n## Tools\n- Use only explicitly approved, least-privileged tools\n- No external messages or write actions without approval\n```\n\nCheck exactly when and from which path the current client loads Project instructions. An instruction file does not enforce permissions.",
+          "keyTakeaway": "Use CLAUDE.md for minimal, approved working instructions; enforce permissions outside the file."
+        },
+        {
+          "id": "modul_2_lesson_7_section_3",
+          "title": "Curate cross-chat Memory",
+          "readTimeMinutes": 2,
+          "content": "Open the current Memory settings in the product you use and inspect each stored entry. Example using fictional data:\n- `Fictional User Alpha prefers English`: verify and correct if needed\n- `Fictional User works on Fiktivwerk Alpha`: too specific for the stated purpose; delete it\n\nStore only necessary, non-confidential preferences. Review accuracy, purpose, access and deletion regularly because interfaces and capabilities can change.",
+          "keyTakeaway": "Review persistent Memory on a regular schedule and remove entries without a current purpose."
+        },
+        {
+          "id": "modul_2_lesson_7_section_4",
+          "title": "Data that does not belong in persistent Memory",
+          "readTimeMinutes": 2,
+          "content": "Do not store third-party personal data, credentials or confidential business information in persistent Memory unless an approved purpose, legal basis, product configuration and retention policy explicitly allow it.\n\nExamples that normally stay out:\n- customer names and contact details\n- account numbers\n- third-party email addresses\n- margins and negotiation strategies\n- HR records\n\nPotentially appropriate after policy review:\n- your public role and organization\n- general style preferences\n- approved tools\n- typical, non-confidential task categories\n\nPersistent context reduces repeated briefing, but every entry creates an accuracy, access and deletion obligation.",
+          "keyTakeaway": "Keep persistent context about approved working preferences, not secrets or unapproved third-party data."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "modul_2_lesson_7_q1",
+          "questionText": "Which two persistent-context mechanisms are covered here?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Session and permanent Memory",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "CLAUDE.md and cross-chat Memory",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Local and cloud Memory",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Only cross-chat Memory",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "CLAUDE.md provides explicit Project instructions under the client's loading rules; cross-chat Memory is a product feature controlled through its settings."
+        },
+        {
+          "id": "modul_2_lesson_7_q2",
+          "questionText": "What should not be stored in persistent Memory without explicit approval and controls?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "A public description of your role",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "A general style preference",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Third-party personal data, customer records and confidential financial information",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "A list of approved tools",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Persistent Memory is not a general customer or HR database. Apply purpose, legal-basis, access and retention controls before storing personal data."
+        }
+      ]
+    }
+  ]
+}

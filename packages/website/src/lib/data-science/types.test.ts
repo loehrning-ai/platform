@@ -65,14 +65,26 @@ describe("data-science types ", () => {
       0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
     ]);
     expect(DS_CHAPTERS.map((c) => c.displayNumber)).toEqual([
-      "—", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12",
+      "—",
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12",
     ]);
   });
 
   it("carries the real title/subtitle/duration content from source, not placeholders", () => {
     const home = DS_CHAPTERS.find((c) => c.id === "home");
     expect(home?.title).toBe("Overview");
-    expect(home?.subtitle).toBe("The whole DS loop, animated");
+    expect(home?.subtitle).toBe("Twelve chapters and local teaching models");
     expect(home?.estimatedMinutes).toBe(3);
 
     const fund = DS_CHAPTERS.find((c) => c.id === "fund");
@@ -86,12 +98,14 @@ describe("data-science types ", () => {
 
     const peek = DS_CHAPTERS.find((c) => c.id === "peek");
     expect(peek?.title).toBe("Peeking & CUPED");
-    expect(peek?.subtitle).toBe("How p-values lie");
+    expect(peek?.subtitle).toBe(
+      "Stopping, multiplicity, and covariate adjustment",
+    );
     expect(peek?.estimatedMinutes).toBe(7);
 
     const cap = DS_CHAPTERS.find((c) => c.id === "cap");
     expect(cap?.title).toBe("Capstone");
-    expect(cap?.subtitle).toBe("The full loop, end to end");
+    expect(cap?.subtitle).toBe("Data audit through deployment review");
     expect(cap?.estimatedMinutes).toBe(12);
   });
 

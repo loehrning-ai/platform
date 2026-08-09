@@ -9,12 +9,19 @@
 // effects always run before any passive effect in the same commit), so the
 // very first draw can never read a zero/stale rect.
 
-import { useCallback, useLayoutEffect, useRef, useState, type JSX } from "react";
+import {
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type JSX,
+} from "react";
 import { useCheckpoint } from "@/lib/progress";
 import { useCanvasRAF } from "../canvas/use-canvas-raf";
 import { useCanvasAutoSize } from "../canvas/use-canvas-size";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
+import { useDataInfraWidgetLocale } from "../widget-locale-context";
 
 interface StackFlowProps {
   readonly lessonId: string;
@@ -35,7 +42,15 @@ const LAYERS: readonly StackLayer[] = [
   { name: "consume", tools: ["Looker", "API", "Feature store"] },
 ];
 
-const PALETTE = ["#cf8a3f", "#5b8a8f", "#a8632c", "#7a4a8a", "#3f8264", "#b85a4a", "#3a6b8c"];
+const PALETTE = [
+  "#cf8a3f",
+  "#5b8a8f",
+  "#a8632c",
+  "#7a4a8a",
+  "#3f8264",
+  "#b85a4a",
+  "#3a6b8c",
+];
 
 interface Trail {
   readonly x: number;
@@ -71,8 +86,9 @@ interface LaneRect {
 }
 
 export function StackFlow({ lessonId, cpId }: StackFlowProps): JSX.Element {
+  const { locale } = useDataInfraWidgetLocale();
   const { done, complete } = useCheckpoint(lessonId, cpId);
-  const wrapRef = useRef<HTMLDivElement>(null);
+  const canvasWrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const laneRefs = useRef<(HTMLDivElement | null)[]>([]);
   const laneRectsRef = useRef<(LaneRect | null)[]>(LAYERS.map(() => null));
@@ -104,7 +120,7 @@ export function StackFlow({ lessonId, cpId }: StackFlowProps): JSX.Element {
     measureLanes();
   }, [measureLanes]);
 
-  useCanvasAutoSize(canvasRef, wrapRef, {
+  useCanvasAutoSize(canvasRef, canvasWrapRef, {
     minHeight: 260,
     onResize: measureLanes,
   });
@@ -139,7 +155,12 @@ export function StackFlow({ lessonId, cpId }: StackFlowProps): JSX.Element {
       if (!lane) return false;
       ctx.fillStyle = "#cf8a3f";
       ctx.globalAlpha = (1 - pu.t) * 0.18;
-      ctx.fillRect(lane.x0, lane.y - lane.h * 0.4, lane.x1 - lane.x0, lane.h * 0.8);
+      ctx.fillRect(
+        lane.x0,
+        lane.y - lane.h * 0.4,
+        lane.x1 - lane.x0,
+        lane.h * 0.8,
+      );
       ctx.globalAlpha = 1;
       return true;
     });
@@ -227,19 +248,26 @@ export function StackFlow({ lessonId, cpId }: StackFlowProps): JSX.Element {
   }, [fire]);
 
   return (
-    <div className="border-2 border-border bg-card/40 p-5 md:p-6">
+    <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-4 sm:p-5 md:p-6">
       <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        Sim · The stack, in motion {done ? "✓" : ""}
+        {locale === "de"
+          ? "Modell · Der Datenfluss"
+          : "Model · The stack, in motion"}{" "}
+        {done ? "✓" : ""}
       </p>
 
       {contextUnavailable ? (
         <CanvasFallbackNotice
-          title="The stack, in motion"
-          summary="An event flows source → log → processing → storage → serving → consume, one lane per layer."
+          title={locale === "de" ? "Der Datenfluss" : "The stack, in motion"}
+          summary={
+            locale === "de"
+              ? "Ein Ereignis durchläuft Quelle, Log, Verarbeitung, Speicherung, Bereitstellung und Nutzung."
+              : "An event flows source → log → processing → storage → serving → consume, one lane per layer."
+          }
         />
       ) : (
-        <div ref={wrapRef} className="flex h-[280px] w-full gap-2">
-          <div className="flex w-[180px] shrink-0 flex-col justify-between gap-1.5 py-1">
+        <div className="flex h-[280px] w-full min-w-0 gap-2">
+          <div className="flex w-[92px] shrink-0 flex-col justify-between gap-1.5 py-1 sm:w-[180px]">
             {LAYERS.map((layer, i) => (
               <div
                 key={layer.name}
@@ -248,27 +276,46 @@ export function StackFlow({ lessonId, cpId }: StackFlowProps): JSX.Element {
                 }}
                 className="flex flex-1 flex-col justify-center gap-0.5 rounded-sm border border-border bg-background px-2 py-1"
               >
-                <span className="font-mono text-[9px] text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
-                <span className="truncate text-[11px] font-semibold text-foreground">{layer.name}</span>
+                <span className="font-mono text-[9px] text-muted-foreground">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="break-words text-[11px] font-semibold text-foreground">
+                  {locale === "de"
+                    ? [
+                        "Quelle",
+                        "Log",
+                        "Verarbeitung",
+                        "Speicherung",
+                        "Bereitstellung",
+                        "Nutzung",
+                      ][i]
+                    : layer.name}
+                </span>
               </div>
             ))}
           </div>
-          <canvas
-            ref={canvasRef}
-            role="img"
-            aria-label="Animated diagram of an event flowing left to right through the data stack: source, log, process, store, serve, consume."
-            className="h-full flex-1"
-          />
+          <div ref={canvasWrapRef} className="h-full min-w-0 flex-1">
+            <canvas
+              ref={canvasRef}
+              role="img"
+              aria-label={
+                locale === "de"
+                  ? "Animiertes Diagramm eines Ereignisses, das den Datenfluss von der Quelle bis zur Nutzung durchläuft."
+                  : "Animated diagram of an event flowing left to right through the data stack: source, log, process, store, serve, consume."
+              }
+              className="block h-full w-full min-w-0 max-w-full"
+            />
+          </div>
         </div>
       )}
 
-      <div className="mt-4 flex flex-wrap items-center gap-2">
+      <div className="mt-4 flex min-w-0 flex-col items-start gap-2 sm:flex-row sm:flex-wrap sm:items-center">
         <button
           type="button"
           onClick={() => fire(1)}
           className="border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90"
         >
-          ▶ trace 1 event
+          {locale === "de" ? "1 Ereignis verfolgen" : "▶ trace 1 event"}
         </button>
         <button
           type="button"
@@ -277,18 +324,22 @@ export function StackFlow({ lessonId, cpId }: StackFlowProps): JSX.Element {
             "border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60",
           )}
         >
-          ▶▶ burst
+          {locale === "de" ? "10 Ereignisse" : "▶▶ burst"}
         </button>
         <button
           type="button"
           onClick={storm}
           className="border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
         >
-          ⚡ storm
+          {locale === "de" ? "40 Ereignisse" : "⚡ storm"}
         </button>
-        <span className="font-mono text-[11px] text-muted-foreground">
-          processed <b className="text-foreground">{counts.n}</b> · flowing <b className="text-foreground">{counts.live}</b> ·
-          throughput <b className="text-foreground">{counts.tps}</b>/s
+        <span className="min-w-0 max-w-full break-words font-mono text-[11px] text-muted-foreground">
+          {locale === "de" ? "verarbeitet" : "processed"}{" "}
+          <b className="text-foreground">{counts.n}</b> ·{" "}
+          {locale === "de" ? "im Fluss" : "flowing"}{" "}
+          <b className="text-foreground">{counts.live}</b> ·{" "}
+          {locale === "de" ? "Modellrate" : "model rate"}{" "}
+          <b className="text-foreground">{counts.tps}</b>/s
         </span>
       </div>
     </div>

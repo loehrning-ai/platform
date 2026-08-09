@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { CODEX_CONFIG } from "./config";
+import { CODEX_CONFIG, CODEX_CONFIG_DE } from "./config";
 
 describe("CODEX_CONFIG ", () => {
   it("registers codex with English-language content and the all-lessons-completion cert path", () => {
@@ -29,5 +29,15 @@ describe("CODEX_CONFIG ", () => {
     expect(CODEX_CONFIG.recordNoun.label).toBe("Certificate of Completion");
     expect(CODEX_CONFIG.recordNoun.possessive).toContain("certificate");
     expect(CODEX_CONFIG.recordNoun.demonstrative).toContain("certificate");
+  });
+
+  it("keeps machine identity stable in the German certificate config", () => {
+    expect(CODEX_CONFIG_DE.language).toBe("de");
+    expect(CODEX_CONFIG_DE.slug).toBe(CODEX_CONFIG.slug);
+    expect(CODEX_CONFIG_DE.basePath).toBe(CODEX_CONFIG.basePath);
+    expect(CODEX_CONFIG_DE.coursePath).toBe(CODEX_CONFIG.coursePath);
+    expect(CODEX_CONFIG_DE.blockIds).toEqual(CODEX_CONFIG.blockIds);
+    expect(CODEX_CONFIG_DE.title).toBe("Codex-Kurs");
+    expect(CODEX_CONFIG_DE.recordNoun.label).toBe("Teilnahmebestätigung");
   });
 });

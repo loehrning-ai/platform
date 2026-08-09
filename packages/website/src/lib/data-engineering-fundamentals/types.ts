@@ -71,7 +71,7 @@ export const DEF_CHAPTERS: readonly ChapterMeta[] = [
   { id: "comp", number: 5, displayNumber: "04", title: "Compute", subtitle: "How data is read", estimatedMinutes: 9, accentHex: "#FF7A59", inkHex: "#D32A00" },
   { id: "orch", number: 6, displayNumber: "05", title: "Orchestrate", subtitle: "Airflow & idempotency", estimatedMinutes: 8, accentHex: "#31A24C", inkHex: "#267E3B" },
   { id: "qual", number: 7, displayNumber: "06", title: "Quality", subtitle: "Pipeline ran ≠ number is right", estimatedMinutes: 8, accentHex: "#E41E3F", inkHex: "#D81A39" },
-  { id: "disc", number: 8, displayNumber: "07", title: "Discover", subtitle: "Six shortcuts over four hours", estimatedMinutes: 7, accentHex: "#B8770A", inkHex: "#986308" },
+  { id: "disc", number: 8, displayNumber: "07", title: "Discover", subtitle: "Catalog and lineage practice", estimatedMinutes: 7, accentHex: "#B8770A", inkHex: "#986308" },
   { id: "serve", number: 9, displayNumber: "08", title: "Serve", subtitle: "Metrics & semantic models", estimatedMinutes: 8, accentHex: "#0091FF", inkHex: "#0070C5" },
   { id: "gov", number: 10, displayNumber: "09", title: "Govern", subtitle: "The deploy gate", estimatedMinutes: 7, accentHex: "#8B5CF6", inkHex: "#7D48F5" },
   { id: "cap", number: 11, displayNumber: "10", title: "Capstone", subtitle: "Build dim_users E2E", estimatedMinutes: 15, accentHex: "#E85D04", inkHex: "#BB4B03" },

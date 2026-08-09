@@ -10,6 +10,9 @@ import {
 import { getModule, getModuleLessons } from "@/lib/ai-native/data";
 import { MODULE_IDS, type ModuleId } from "@/lib/ai-native/types";
 import { SITE_URL } from "@/lib/seo/json-ld";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { localizeHref } from "@/lib/i18n/locale";
+import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
 
 interface PageProps {
   params: Promise<{ moduleId: string }>;
@@ -19,18 +22,30 @@ export async function generateStaticParams() {
   return MODULE_IDS.map((moduleId) => ({ moduleId }));
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { moduleId } = await params;
-  const mod = getModule(moduleId as ModuleId);
-  if (!mod) return { title: "Modul nicht gefunden" };
-  const moduleUrl = `${SITE_URL}/ai-native/kurs/${moduleId}`;
+  const locale = resolveFoundationCourseContentLocale(
+    "ai-native",
+    await getRequestLocale(),
+  );
+  const mod = getModule(moduleId as ModuleId, locale);
+  if (!mod)
+    return {
+      title: locale === "en" ? "Module not found" : "Modul nicht gefunden",
+      robots: { index: false, follow: false },
+    };
+  const moduleUrl = `${SITE_URL}${localizeHref(`/ai-native/kurs/${moduleId}`, locale)}`;
+  const courseTitle =
+    locale === "en" ? "AI-Native Workflow Course" : "AI-Native Arbeitskurs";
   return {
-    title: `${mod.title}: AI-Native Arbeitskurs`,
+    title: `${mod.title}: ${courseTitle}`,
     description: mod.description,
     robots: { index: false, follow: true },
     alternates: { canonical: moduleUrl },
     openGraph: {
-      title: `${mod.title}: AI-Native Arbeitskurs`,
+      title: `${mod.title}: ${courseTitle}`,
       description: mod.description,
       url: moduleUrl,
       type: "article",
@@ -40,14 +55,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function AiNativeModulePage({ params }: PageProps) {
   const { moduleId } = await params;
-  const mod = getModule(moduleId as ModuleId);
+  const locale = resolveFoundationCourseContentLocale(
+    "ai-native",
+    await getRequestLocale(),
+  );
+  const mod = getModule(moduleId as ModuleId, locale);
   if (!mod) notFound();
 
-  const lessons = await getModuleLessons(moduleId as ModuleId);
+  const lessons = await getModuleLessons(moduleId as ModuleId, locale);
   const allModules = MODULE_IDS;
   const idx = allModules.indexOf(moduleId as ModuleId);
-  const prev = idx > 0 ? getModule(allModules[idx - 1]) : null;
-  const next = idx < allModules.length - 1 ? getModule(allModules[idx + 1]) : null;
+  const prev = idx > 0 ? getModule(allModules[idx - 1], locale) : null;
+  const next =
+    idx < allModules.length - 1 ? getModule(allModules[idx + 1], locale) : null;
+  const isEnglish = locale === "en";
 
   return (
     <>
@@ -59,13 +80,15 @@ export default async function AiNativeModulePage({ params }: PageProps) {
             className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
           >
             <Link
-              href="/ai-native"
+              href={localizeHref("/ai-native", locale)}
               className="transition-colors hover:text-brand-orange"
             >
-              Kurs
+              {isEnglish ? "Course" : "Kurs"}
             </Link>
             <span className="mx-2 opacity-40">/</span>
-            <span className="text-brand-orange">Modul {mod.number}</span>
+            <span className="text-brand-orange">
+              {isEnglish ? "Module" : "Modul"} {mod.number}
+            </span>
           </nav>
 
           <div className="mt-8 flex flex-wrap items-baseline gap-6">
@@ -75,12 +98,13 @@ export default async function AiNativeModulePage({ params }: PageProps) {
             >
               {mod.number}
             </span>
-            <div className="min-w-[260px] flex-1">
+            <div className="min-w-0 flex-[1_1_260px]">
               <div className="mb-2.5 flex flex-wrap items-center gap-3.5">
-                <TierChip tier="FREE" />
+                <TierChip tier="FREE" locale={locale} />
                 <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                  {mod.subtitle} · {lessons.length} Lektionen · {mod.durationMinutes}{" "}
-                  Min.
+                  {mod.subtitle} · {lessons.length}{" "}
+                  {isEnglish ? "lessons" : "Lektionen"} · {mod.durationMinutes}{" "}
+                  {isEnglish ? "min" : "Min."}
                 </span>
               </div>
               <ClipHeading
@@ -88,7 +112,7 @@ export default async function AiNativeModulePage({ params }: PageProps) {
                 className="font-bold leading-[0.92] tracking-[-0.04em] text-foreground"
                 style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
               >
-                {mod.title}.
+                {mod.title}
               </ClipHeading>
             </div>
           </div>
@@ -116,14 +140,17 @@ export default async function AiNativeModulePage({ params }: PageProps) {
           <div className="flex flex-wrap items-baseline justify-between gap-5">
             <div>
               <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-orange">
-                Inhalt
+                {isEnglish ? "Contents" : "Inhalt"}
               </p>
-              <h2 className="mt-2.5 font-bold leading-none tracking-[-0.035em] text-foreground" style={{ fontSize: "clamp(2rem, 4.5vw, 3rem)" }}>
-                Lektionen
+              <h2
+                className="mt-2.5 font-bold leading-none tracking-[-0.035em] text-foreground"
+                style={{ fontSize: "clamp(2rem, 4.5vw, 3rem)" }}
+              >
+                {isEnglish ? "Lessons" : "Lektionen"}
               </h2>
             </div>
             <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-              {lessons.length} Einträge
+              {lessons.length} {isEnglish ? "entries" : "Einträge"}
             </span>
           </div>
 
@@ -132,26 +159,29 @@ export default async function AiNativeModulePage({ params }: PageProps) {
               return (
                 <li key={lesson.id}>
                   <Link
-                    href={`/ai-native/kurs/${mod.id}/${lesson.id}`}
-                    className="grid grid-cols-[48px_1fr_auto] items-center gap-5 border-b border-border px-5 py-4 transition-colors hover:bg-card/40"
+                    href={localizeHref(
+                      `/ai-native/kurs/${mod.id}/${lesson.id}`,
+                      locale,
+                    )}
+                    className="grid grid-cols-[40px_minmax(0,1fr)] items-center gap-x-3 gap-y-3 border-b border-border px-3 py-4 transition-colors hover:bg-card/40 sm:grid-cols-[48px_minmax(0,1fr)_auto] sm:gap-x-5 sm:px-5"
                   >
                     <span className="font-mono text-[12px] tracking-[0.05em] text-muted-foreground">
                       {lesson.number}
                     </span>
-                    <div>
+                    <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2.5">
-                        <h3 className="text-[17px] font-semibold tracking-[-0.01em] text-foreground">
+                        <h3 className="min-w-0 break-words text-[17px] font-semibold tracking-[-0.01em] text-foreground">
                           {lesson.title}
                         </h3>
                         <span className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-                          · frei
+                          · {isEnglish ? "free" : "frei"}
                         </span>
                       </div>
-                      <p className="mt-1 text-[13.5px] text-muted-foreground">
+                      <p className="mt-1 break-words text-[13.5px] text-muted-foreground">
                         {lesson.subtitle}
                       </p>
                     </div>
-                    <div className="flex items-center gap-3.5">
+                    <div className="col-start-2 flex min-w-0 items-center gap-3.5 sm:col-auto">
                       <span className="font-mono text-[12px] tracking-[0.05em] text-muted-foreground">
                         <Clock size={11} className="mr-1 inline" />
                         {lesson.durationMinutes} min
@@ -168,14 +198,14 @@ export default async function AiNativeModulePage({ params }: PageProps) {
           <div className="mt-16 grid gap-6 border-t border-border pt-8 sm:grid-cols-2">
             {prev ? (
               <Link
-                href={`/ai-native/kurs/${prev.id}`}
+                href={localizeHref(`/ai-native/kurs/${prev.id}`, locale)}
                 className="group block"
               >
                 <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
-                  ← Vorher
+                  ← {isEnglish ? "Previous" : "Vorher"}
                 </p>
                 <p className="mt-1.5 text-[16px] font-semibold tracking-[-0.01em] text-foreground transition-colors group-hover:text-brand-orange">
-                  Modul {prev.number}: {prev.title}
+                  {isEnglish ? "Module" : "Modul"} {prev.number}: {prev.title}
                 </p>
               </Link>
             ) : (
@@ -183,14 +213,14 @@ export default async function AiNativeModulePage({ params }: PageProps) {
             )}
             {next ? (
               <Link
-                href={`/ai-native/kurs/${next.id}`}
+                href={localizeHref(`/ai-native/kurs/${next.id}`, locale)}
                 className="group block text-right"
               >
                 <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-brand-orange">
-                  Nächstes →
+                  {isEnglish ? "Next" : "Nächstes"} →
                 </p>
                 <p className="mt-1.5 text-[16px] font-semibold tracking-[-0.01em] text-foreground transition-colors group-hover:text-brand-orange">
-                  Modul {next.number}: {next.title}
+                  {isEnglish ? "Module" : "Modul"} {next.number}: {next.title}
                 </p>
               </Link>
             ) : (

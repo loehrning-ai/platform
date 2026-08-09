@@ -43,7 +43,7 @@ const SUBPAGES: ReadonlyArray<{
   {
     path: "/ai-native/demos",
     anchor: (page) =>
-      page.getByRole("textbox", { name: "Praxisbeispiele durchsuchen" }),
+      page.getByRole("textbox", { name: "Kurssimulationen durchsuchen" }),
   },
   {
     path: "/ai-native/capstone-gallery",
@@ -109,7 +109,7 @@ test.describe("ai-native sub-page interactions", () => {
     // A no-match query drives the term list to the explicit empty message.
     await expect(page.getByText(/Keine Treffer/i)).toBeVisible();
 
-    await page.getByRole("button", { name: "Clear", exact: true }).click();
+    await page.getByRole("button", { name: /^(?:Leeren|Clear)$/ }).click();
     await expect(search).toHaveValue("");
   });
 
@@ -119,7 +119,7 @@ test.describe("ai-native sub-page interactions", () => {
     // "load" so the client island hydrates before the search input reacts to fill().
     await page.goto("/ai-native/demos", { waitUntil: "load" });
     const search = page.getByRole("textbox", {
-      name: "Praxisbeispiele durchsuchen",
+      name: "Kurssimulationen durchsuchen",
     });
 
     await search.fill("qxzkwvzznope");

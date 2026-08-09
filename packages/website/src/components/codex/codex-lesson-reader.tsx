@@ -11,7 +11,9 @@ import {
   getReadSectionIds,
   isLessonCompleted,
 } from "@/lib/course/progress";
+import { getCodexCourseCopy } from "@/lib/codex/course-copy";
 import type { CodexLesson } from "@/lib/codex/types";
+import type { Locale } from "@/lib/i18n/locale";
 import { cn } from "@/lib/utils";
 import { subscribe } from "@/lib/progress";
 import { CodexBlockView } from "./codex-blocks";
@@ -28,6 +30,7 @@ import { CodexBespokeInteractive } from "./bespoke-registry";
  * `CodexBlockView` per block instead of one `MarkdownRenderer` call.
  */
 interface CodexLessonReaderProps {
+  readonly locale?: Locale;
   readonly lesson: CodexLesson;
   readonly totalLessons: number;
   readonly prevHref: string | null;
@@ -35,11 +38,13 @@ interface CodexLessonReaderProps {
 }
 
 export function CodexLessonReader({
+  locale = "en",
   lesson,
   totalLessons,
   prevHref,
   nextHref,
 }: CodexLessonReaderProps): JSX.Element {
+  const copy = getCodexCourseCopy(locale).reader;
   const [readIds, setReadIds] = useState<ReadonlySet<string>>(new Set());
   const [completed, setCompleted] = useState(false);
   const [readyLessonId, setReadyLessonId] = useState<string | null>(null);
@@ -74,12 +79,12 @@ export function CodexLessonReader({
   };
 
   return (
-    <div>
-      <header className="mb-8">
+    <div className="min-w-0">
+      <header className="mb-8 min-w-0">
         <p className="mb-1 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-          Lesson {lesson.number} of {totalLessons}
+          {copy.progress(lesson.number, totalLessons)}
         </p>
-        <h1 className="text-[28px] font-bold tracking-[-0.03em] text-foreground md:text-[34px]">
+        <h1 className="break-words text-[28px] font-bold tracking-[-0.03em] text-foreground md:text-[34px]">
           {lesson.title}
         </h1>
         <p className="mt-2 text-[16px] leading-[1.5] text-muted-foreground">{lesson.subtitle}</p>
@@ -98,18 +103,20 @@ export function CodexLessonReader({
         )}
       </header>
 
-      <div className="space-y-8">
+      <div className="min-w-0 space-y-8">
         {lesson.sections.map((section, i) => (
-          <div key={section.id}>
+          <div key={section.id} className="min-w-0">
             {i > 0 && <div className="mb-8 h-px bg-border" />}
-            <div className="space-y-4">
+            <div className="min-w-0 space-y-4">
               <div className="flex items-center justify-between gap-4">
-                <h2 className="text-[19px] font-semibold text-foreground">{section.title}</h2>
+                <h2 className="min-w-0 break-words text-[19px] font-semibold text-foreground">
+                  {section.title}
+                </h2>
                 <span className="shrink-0 font-mono text-[11px] text-muted-foreground">
-                  ~{section.readTimeMinutes} min
+                  {copy.duration(section.readTimeMinutes)}
                 </span>
               </div>
-              <div className="space-y-4">
+              <div className="min-w-0 space-y-4">
                 {section.blocks.map((block, b) => (
                   <CodexBlockView key={b} block={block} />
                 ))}
@@ -118,9 +125,9 @@ export function CodexLessonReader({
                 <div className="border-l-2 border-brand-orange bg-brand-orange/5 px-5 py-4">
                   <div className="flex items-start gap-2.5">
                     <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-brand-orange" aria-hidden="true" />
-                    <div>
+                    <div className="min-w-0">
                       <p className="text-[11px] font-bold uppercase tracking-wider text-brand-orange">
-                        Key takeaway
+                        {copy.takeaway}
                       </p>
                       <p className="mt-1.5 text-[14px] leading-relaxed text-foreground">
                         {section.keyTakeaway}
@@ -138,34 +145,34 @@ export function CodexLessonReader({
                 {readIds.has(section.id) ? (
                   <span className="inline-flex items-center gap-2 text-risk-green">
                     <CheckCircle2 className="h-4 w-4" />
-                    Read
+                    {copy.read}
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-2 text-muted-foreground hover:text-brand-orange">
                     <Circle className="h-4 w-4" />
-                    Mark as read
+                    {copy.markRead}
                   </span>
                 )}
               </button>
             </div>
             {i === 0 &&
               afterIntroWidgets.map((widget, w) => (
-                <WidgetSlot key={`after-intro-${w}`} widget={widget} />
+                <WidgetSlot key={`after-intro-${w}`} locale={locale} widget={widget} />
               ))}
           </div>
         ))}
 
         {[...beforeQuizWidgets, ...endWidgets].map((widget, w) => (
-          <WidgetSlot key={`end-${w}`} widget={widget} />
+          <WidgetSlot key={`end-${w}`} locale={locale} widget={widget} />
         ))}
 
         <section className="mt-10 border-t border-border pt-8">
-          <h2 className="text-[19px] font-semibold text-foreground">Try it: bespoke interactive</h2>
+          <h2 className="text-[19px] font-semibold text-foreground">{copy.practiceTitle}</h2>
           <p className="mt-1 text-[13.5px] text-muted-foreground">
-            A hands-on simulation for this lesson. Click around and feel the shape of the concept.
+            {copy.practiceBody}
           </p>
-          <div className="mt-5">
-            <CodexBespokeInteractive lessonId={lesson.id} />
+          <div className="mt-5 min-w-0">
+            <CodexBespokeInteractive locale={locale} lessonId={lesson.id} />
           </div>
         </section>
 
@@ -174,7 +181,7 @@ export function CodexLessonReader({
             {lessonCompleted ? (
               <span className="inline-flex items-center gap-2 text-[14px] font-medium text-risk-green">
                 <CheckCircle2 className="h-4 w-4" />
-                Lesson complete
+                {copy.completed}
               </span>
             ) : (
               <button
@@ -189,7 +196,7 @@ export function CodexLessonReader({
                 )}
               >
                 <CheckCircle2 className="h-3.5 w-3.5" />
-                Complete lesson
+                {copy.complete}
               </button>
             )}
             {nextHref && (
@@ -197,7 +204,7 @@ export function CodexLessonReader({
                 href={nextHref}
                 className="inline-flex items-center gap-1.5 text-[14px] font-medium text-brand-orange transition-colors hover:opacity-80"
               >
-                Next lesson →
+                {copy.next}
               </Link>
             )}
           </div>
@@ -206,12 +213,13 @@ export function CodexLessonReader({
               href={prevHref}
               className="mt-4 inline-flex items-center gap-1.5 text-[13px] text-muted-foreground transition-colors hover:text-foreground"
             >
-              ← Previous lesson
+              {copy.previous}
             </Link>
           )}
           {!nextHref && (
             <CompletionCertificateCta
               courseSlug="codex"
+              locale={locale}
               className="mt-6"
             />
           )}
@@ -221,10 +229,19 @@ export function CodexLessonReader({
   );
 }
 
-function WidgetSlot({ widget }: { readonly widget: { kind: string; props?: Readonly<Record<string, unknown>> } }) {
+function WidgetSlot({
+  locale,
+  widget,
+}: {
+  readonly locale: Locale;
+  readonly widget: { kind: string; props?: Readonly<Record<string, unknown>> };
+}) {
   return (
-    <div data-widget-kind={widget.kind} className="mt-6">
-      <RenderWidget kind={widget.kind} props={widget.props ?? {}} />
+    <div
+      data-widget-kind={widget.kind}
+      className="mt-6 min-w-0 max-w-full [&_*]:min-w-0 [&_button>span:last-child]:break-words [&_p]:break-words"
+    >
+      <RenderWidget locale={locale} kind={widget.kind} props={widget.props ?? {}} />
     </div>
   );
 }

@@ -1,0 +1,15 @@
+{
+  "slug": "wie-ki-funktioniert",
+  "title": "How Language Models Work",
+  "subtitle": "Four lessons for curious people with no technical background",
+  "durationMinutes": 40,
+  "lessonCount": 4,
+  "stage": "pruefen",
+  "access": "public",
+  "language": "en",
+  "lastReviewed": "2026-08-08",
+  "nextReview": "2027-02-08",
+  "reviewCadence": "semi-annual",
+  "riskClass": "evergreen",
+  "owner": "editorial:conceptual-blocks"
+}

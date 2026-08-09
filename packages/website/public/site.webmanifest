@@ -1,7 +1,8 @@
 {
   "name": "loehrning.ai",
   "short_name": "loehrning",
-  "description": "Kostenlose KI-Lernplattform auf Deutsch mit Kursen, Vorlagen, Buechern und Demos.",
+  "description": "Offene KI- und Daten-Lernplattform mit Kursen, Büchern, Workshops, Demos und Quellmaterial auf Deutsch und Englisch.",
+  "lang": "de",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f3f0e9",

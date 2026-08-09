@@ -9,12 +9,14 @@
 
 import { useCallback, useMemo, useRef, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
-import { INTERVIEW_MOVES } from "@/lib/data-infrastructure/lessons/interview-playbook";
+import { INTERVIEW_MOVES as INTERVIEW_MOVES_EN } from "@/lib/data-infrastructure/lessons/interview-playbook";
+import { INTERVIEW_MOVES as INTERVIEW_MOVES_DE } from "@/lib/data-infrastructure/lessons/de/interview-playbook";
 import { useCanvasRAF } from "../canvas/use-canvas-raf";
 import { useCanvasAutoSize } from "../canvas/use-canvas-size";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
 import { SafeLessonMarkup } from "@/components/safe-lesson-markup";
+import { useDataInfraWidgetLocale } from "../widget-locale-context";
 
 interface InterviewMoveProps {
   readonly lessonId: string;
@@ -50,8 +52,12 @@ function dotPos(i: number, total: number, width: number, height: number) {
   return { x, y };
 }
 
-export function InterviewMove({ lessonId, cpId }: InterviewMoveProps): JSX.Element {
-  const moves = INTERVIEW_MOVES;
+export function InterviewMove({
+  lessonId,
+  cpId,
+}: InterviewMoveProps): JSX.Element {
+  const { locale } = useDataInfraWidgetLocale();
+  const moves = locale === "de" ? INTERVIEW_MOVES_DE : INTERVIEW_MOVES_EN;
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -122,39 +128,56 @@ export function InterviewMove({ lessonId, cpId }: InterviewMoveProps): JSX.Eleme
   const currentColor = useMemo(() => tagColor(current.tag), [current.tag]);
 
   return (
-    <div className="border-2 border-border bg-card/40 p-5 md:p-6">
-      <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        Walkthrough · IC5 design · step through the moves {done ? "✓" : ""}
+    <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-3 sm:p-5 md:p-6">
+      <p className="mb-4 break-words font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange [overflow-wrap:anywhere]">
+        {locale === "de"
+          ? "Ablauf · Staff-Systemdesign · Schritt für Schritt"
+          : "Walkthrough · IC5 design · step through the moves"}{" "}
+        {done ? "✓" : ""}
       </p>
 
       {contextUnavailable ? (
         <CanvasFallbackNotice
-          title="Interview move progress"
-          summary={`Move ${cur + 1} of ${moves.length}: ${current.title}`}
+          title={
+            locale === "de"
+              ? "Fortschritt im Interviewablauf"
+              : "Interview move progress"
+          }
+          summary={
+            locale === "de"
+              ? `Schritt ${cur + 1} von ${moves.length}: ${current.title}`
+              : `Move ${cur + 1} of ${moves.length}: ${current.title}`
+          }
         />
       ) : (
-        <div ref={wrapRef} className="h-[130px] w-full">
+        <div ref={wrapRef} className="h-[130px] min-w-0 w-full">
           <canvas
             ref={canvasRef}
             role="img"
-            aria-label="Interview-replay progress track showing the current move in a system-design walkthrough."
-            className="h-full w-full"
+            aria-label={
+              locale === "de"
+                ? "Fortschrittsanzeige für den aktuellen Schritt im Systemdesign-Interview."
+                : "Interview-replay progress track showing the current move in a system-design walkthrough."
+            }
+            className="block h-full min-w-0 max-w-full w-full"
           />
         </div>
       )}
 
-      <div className="mt-4 border-2 border-border bg-background p-4">
+      <div className="mt-4 min-w-0 max-w-full border-2 border-border bg-background p-3 sm:p-4">
         <span
           className="inline-block px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wide text-white"
           style={{ backgroundColor: currentColor }}
         >
           {current.tag}
         </span>
-        <h3 className="mt-2 text-[15px] font-semibold text-foreground">{current.title}</h3>
-        <div className="prose-sm mt-2 text-[13.5px] leading-relaxed text-foreground [&_code]:font-mono [&_code]:text-[12px] [&_pre]:overflow-x-auto [&_pre]:bg-card [&_pre]:p-2 [&_pre]:font-mono [&_pre]:text-[11px]">
+        <h3 className="mt-2 break-words text-[15px] font-semibold text-foreground [overflow-wrap:anywhere]">
+          {current.title}
+        </h3>
+        <div className="prose-sm mt-2 min-w-0 max-w-full break-words text-[13.5px] leading-relaxed text-foreground [overflow-wrap:anywhere] [&_code]:break-all [&_code]:font-mono [&_code]:text-[12px] [&_pre]:max-w-full [&_pre]:overflow-x-auto [&_pre]:bg-card [&_pre]:p-2 [&_pre]:font-mono [&_pre]:text-[11px]">
           <SafeLessonMarkup html={current.body} />
         </div>
-        <p className="mt-2 border-l-2 border-brand-orange/60 pl-3 text-[12px] italic text-muted-foreground">
+        <p className="mt-2 break-words border-l-2 border-brand-orange/60 pl-3 text-[12px] italic text-muted-foreground [overflow-wrap:anywhere]">
           {current.note}
         </p>
       </div>
@@ -165,28 +188,31 @@ export function InterviewMove({ lessonId, cpId }: InterviewMoveProps): JSX.Eleme
           onClick={() => show(cur - 1)}
           disabled={cur === 0}
           className={cn(
-            "border-2 border-border px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wide",
-            cur === 0 ? "cursor-not-allowed text-muted-foreground" : "text-foreground hover:border-brand-orange/60",
+            "max-w-full break-words border-2 border-border px-3 py-1.5 text-left font-mono text-[11px] font-bold uppercase tracking-wide [overflow-wrap:anywhere]",
+            cur === 0
+              ? "cursor-not-allowed text-muted-foreground"
+              : "text-foreground hover:border-brand-orange/60",
           )}
         >
-          ◀ prev move
+          {locale === "de" ? "vorheriger Schritt" : "◀ prev move"}
         </button>
-        <span className="font-mono text-[11px] text-muted-foreground">
-          move <b className="text-foreground">{cur + 1}</b> / <b className="text-foreground">{moves.length}</b> ·{" "}
-          {current.tag}
+        <span className="max-w-full break-words font-mono text-[11px] text-muted-foreground [overflow-wrap:anywhere]">
+          {locale === "de" ? "Schritt" : "move"}{" "}
+          <b className="text-foreground">{cur + 1}</b> /{" "}
+          <b className="text-foreground">{moves.length}</b> · {current.tag}
         </span>
         <button
           type="button"
           onClick={() => show(cur + 1)}
           disabled={cur === moves.length - 1}
           className={cn(
-            "border-2 border-foreground px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wide",
+            "max-w-full break-words border-2 border-foreground px-3 py-1.5 text-left font-mono text-[11px] font-bold uppercase tracking-wide [overflow-wrap:anywhere]",
             cur === moves.length - 1
               ? "cursor-not-allowed border-border text-muted-foreground"
               : "bg-brand-orange text-white",
           )}
         >
-          next move ▶
+          {locale === "de" ? "nächster Schritt" : "next move ▶"}
         </button>
       </div>
     </div>

@@ -1,5 +1,19 @@
-import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from "vitest";
-import { render, screen, fireEvent, cleanup, act } from "@testing-library/react";
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  beforeEach,
+  afterEach,
+  vi,
+} from "vitest";
+import {
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  act,
+} from "@testing-library/react";
 import { __resetCacheForTests, getXp, isCheckpointDone } from "@/lib/progress";
 import { XP } from "@/lib/progress/types";
 import { SLAdash } from "./sla-dash";
@@ -23,7 +37,10 @@ function installLocalStoragePolyfill(): void {
 }
 
 beforeAll(() => {
-  if (typeof window.localStorage === "undefined" || typeof window.localStorage.setItem !== "function") {
+  if (
+    typeof window.localStorage === "undefined" ||
+    typeof window.localStorage.setItem !== "function"
+  ) {
     installLocalStoragePolyfill();
   }
 });
@@ -41,19 +58,33 @@ afterEach(() => {
 describe("SLAdash", () => {
   it("renders the canvas and play/incident/pause controls", () => {
     render(<SLAdash lessonId="di-sla-quality" cpId="sla" />);
-    expect(screen.getByRole("img", { name: /SLA dashboard showing pipeline freshness/ })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /play 1 hour/ })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /inject incident/ })).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", {
+        name: /SLA dashboard showing pipeline freshness/,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /play 1 hour/ }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /inject incident/ }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /pause/ })).toBeInTheDocument();
   });
 
   it("falls back to a static summary, without crashing, when getContext('2d') returns null", () => {
     const original = HTMLCanvasElement.prototype.getContext;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    HTMLCanvasElement.prototype.getContext = vi.fn().mockReturnValue(null) as any;
+    HTMLCanvasElement.prototype.getContext = vi
+      .fn()
+      .mockReturnValue(null) as any;
     try {
-      expect(() => render(<SLAdash lessonId="di-sla-quality" cpId="sla" />)).not.toThrow();
-      expect(screen.getByRole("img", { name: /4 SLOs tracked/ })).toBeInTheDocument();
+      expect(() =>
+        render(<SLAdash lessonId="di-sla-quality" cpId="sla" />),
+      ).not.toThrow();
+      expect(
+        screen.getByRole("img", { name: /4 SLOs tracked/ }),
+      ).toBeInTheDocument();
     } finally {
       HTMLCanvasElement.prototype.getContext = original;
     }

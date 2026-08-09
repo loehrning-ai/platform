@@ -1,4 +1,10 @@
-import { Hero, SectionLabel, AntiPatterns, BestPractices, Takeaway } from "@/components/data-science/shared/primitives";
+import {
+  Hero,
+  SectionLabel,
+  AntiPatterns,
+  BestPractices,
+  Takeaway,
+} from "@/components/data-science/shared/primitives";
 import { ConfoundingSimulator } from "@/components/data-science/simulators/confounding-simulator";
 import { DAGBuilder } from "@/components/data-science/simulators/dag-builder";
 import { DAGViewer } from "@/components/data-science/simulators/dag-viewer";
@@ -31,10 +37,12 @@ export default function Ch09Causal() {
           The correlation that <em>looks</em> causal.
         </h2>
         <p className="prose">
-          Ice cream sales and drowning deaths are correlated at r ≈ 0.85, yet nobody believes ice
-          cream causes drowning. The driver is temperature: hot weather increases both. Stratify by
-          temperature and each group&apos;s correlation collapses toward zero. This is the
-          confounder in action.
+          The synthetic example links temperature to both ice-cream sales and
+          drowning deaths, creating a positive aggregate association without an
+          ice-cream effect. Within its three constructed temperature bands, the
+          association is much smaller. Real data need a causal model,
+          measurement checks, and uncertainty; stratification alone does not
+          prove that all confounding is removed.
         </p>
         <ConfoundingSimulator />
       </section>
@@ -45,10 +53,12 @@ export default function Ch09Causal() {
           Draw the DAG <em>before</em> the regression.
         </h2>
         <p className="prose">
-          A Directed Acyclic Graph (DAG) is a causal model. Every node is a variable; every arrow is
-          a direct causal claim. The structure tells you which variables to adjust for, and which
-          to leave out. The four structural patterns cover almost every mistake you&apos;ll
-          encounter.
+          A Directed Acyclic Graph (DAG) records assumed causal relations. Nodes
+          are variables and arrows are direct-effect assumptions. Given a
+          correct graph and an explicit estimand, the structure can identify
+          candidate adjustment sets. Data do not verify the arrows by
+          themselves, and the four teaching patterns are not an exhaustive
+          causal model.
         </p>
         <DAGBuilder />
       </section>
@@ -57,8 +67,10 @@ export default function Ch09Causal() {
         <SectionLabel n="09.3">Classic DAG patterns</SectionLabel>
         <h2 className="h2">Confounder. Collider. Mediator.</h2>
         <p className="prose">
-          Nearly every causal mistake in DS is one of these three. Memorise them. Your regression
-          software will never warn you which pattern you&apos;re in.
+          Confounders, colliders, and mediators require different adjustment
+          decisions. Regression software does not infer their causal roles from
+          a table; those roles come from the stated graph and domain
+          assumptions.
         </p>
         <DAGViewer />
       </section>
@@ -66,14 +78,17 @@ export default function Ch09Causal() {
       <section className="section">
         <SectionLabel n="09.4">Quasi-experiments</SectionLabel>
         <h2 className="h2">
-          When randomisation is impossible, find the <em>natural experiment.</em>
+          When randomisation is impossible, find the{" "}
+          <em>natural experiment.</em>
         </h2>
         <p className="prose">
-          Difference-in-Differences (DiD) compares the change in a treated group to the change in an
-          untreated control group over the same period. The control&apos;s trend becomes the
-          counterfactual for what would have happened to the treated group without treatment. The
-          critical assumption: both groups would have followed the same trend in the absence of
-          treatment.
+          Difference-in-Differences (DiD) compares the change in a treated group
+          with the change in an untreated control group. Under parallel trends,
+          no anticipation, no interference, and stable composition or an
+          analysis that accounts for changes, the control trend identifies the
+          treated group&apos;s counterfactual change. Similar pre-trends support
+          the design but cannot prove the unobserved post-treatment
+          counterfactual.
         </p>
         <DifferenceInDifferences />
       </section>
@@ -81,42 +96,45 @@ export default function Ch09Causal() {
       <section className="section">
         <SectionLabel n="09.5">Instrumental variables</SectionLabel>
         <h2 className="h2">
-          Find a lever that moves X but <em>nothing else.</em>
+          Find a source of variation in X with defensible exclusion and
+          exogeneity.
         </h2>
         <p className="prose">
-          When unmeasured confounders bias OLS, an instrumental variable (IV) can save you. The
-          instrument Z must affect X (relevance) without directly affecting Y (exclusion
-          restriction) and without being related to the unobserved confounders (exogeneity).
-          Angrist and Krueger&apos;s classic: proximity to college as an instrument for years of
-          education.
+          When unmeasured confounders bias OLS, an instrumental-variable design
+          can identify an effect only under strong assumptions. Z must affect X
+          (relevance), have no path to Y except through X (exclusion), and be
+          independent of unobserved causes of Y (exogeneity). With heterogeneous
+          effects, the estimand also depends on monotonicity. These assumptions
+          are argued from design and domain knowledge, not established by the
+          first stage alone.
         </p>
         <InstrumentalVariable />
       </section>
 
       <AntiPatterns
         items={[
-          "<b>Controlling for a collider.</b> Opens a fake correlation between its parents, selection bias in disguise.",
-          "<b>Controlling for a mediator.</b> Zeros out the very effect you're trying to measure.",
+          "<b>Controlling for a collider under the assumed DAG.</b> This can open a non-causal association between its causes and introduce selection bias.",
+          "<b>Controlling for a mediator when estimating the total effect.</b> This blocks part of the pathway; mediation analysis needs a different estimand and additional assumptions.",
           "<b>Regressing on everything.</b> More controls ≠ better estimate. The DAG determines the adjustment set.",
-          "<b>Using a weak instrument.</b> F-stat < 10 means IV estimates inherit OLS bias while adding variance.",
-          "<b>Violating parallel trends silently.</b> Always plot the pre-period trends for treatment and control before running DiD.",
+          "<b>Treating the first-stage F-statistic as an IV validity test.</b> Strength does not establish exclusion or exogeneity, and the conventional value 10 is only a context-dependent weak-instrument screen.",
+          "<b>Ignoring pre-treatment dynamics in DiD.</b> Plot event-time estimates and investigate composition changes, anticipation, and other shocks before interpreting the design.",
         ]}
       />
       <BestPractices
         items={[
           "<b>Draw the DAG first.</b> On paper, before any code. Share it with domain experts, they'll spot wrong arrows.",
-          "<b>Use the backdoor criterion.</b> Find the minimal adjustment set that blocks all non-causal paths.",
-          "<b>Test pre-period trends for DiD.</b> If control and treated diverge before treatment, the design is invalid.",
-          "<b>Always report the first-stage F-stat for IV.</b> Rule of thumb: F > 10 means the instrument is relevant.",
+          "<b>Use the backdoor criterion on the assumed graph.</b> Find a sufficient adjustment set and run sensitivity analysis for plausible omitted structure.",
+          "<b>Diagnose pre-period behavior for DiD.</b> Divergence is a warning; apparent similarity is not proof of post-treatment parallel trends.",
+          "<b>Report first-stage diagnostics and weak-IV-robust inference.</b> An F-statistic above 10 does not validate the instrument, and the relevant diagnostic depends on the design.",
           "<b>Be explicit about which effect you want.</b> Total effect? Direct effect? Local Average Treatment Effect (LATE)?",
         ]}
       />
       <Takeaway
         items={[
-          "<b>Draw the DAG before the regression.</b> The DAG tells you what to include, not stepwise selection, not VIF.",
+          "<b>Draw the DAG before the regression.</b> Use it to expose assumptions and propose an adjustment set; do not treat the graph as evidence that its arrows are correct.",
           `<b>"Controlling for X" is not harmless.</b> It depends entirely on X's structural role.`,
           "<b>Causal inference from observational data requires strong assumptions.</b> State them. Defend them.",
-          "<b>When in doubt, run an experiment.</b> All quasi-experimental methods are second-best to randomisation.",
+          "<b>Prefer randomization when it is feasible, ethical, and implemented correctly.</b> Otherwise choose the design whose identification assumptions are most defensible and testable.",
         ]}
       />
     </>

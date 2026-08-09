@@ -2,11 +2,12 @@
 
 import { useState, type CSSProperties } from "react";
 import { Panel } from "../primitives";
+import { useDataEngineeringFundamentalsLocale } from "../locale-context";
 
 // ─── PermissionGateSim ────────────────────────────
 // Ported from `src/chapters/Ch8_Govern.js`: drag actor annotations onto
-// columns and ship a dbt spec — the Access Gateway blocks any deploy with
-// an unannotated PII column.
+// columns and evaluate a DatasetSpec — the reference Access Gateway blocks
+// metadata that violates its configured actor rules.
 
 interface ColumnDef {
   readonly id: string;
@@ -25,12 +26,20 @@ const ACTOR_LABEL: Record<ActorId, string> = {
   none: "none",
 };
 
-const COLUMNS: readonly ColumnDef[] = [
+export const COLUMNS: readonly ColumnDef[] = [
   { id: "user_id", type: "STRING", pii: false, required: null, note: "non-PII internal id" },
   { id: "employee_email", type: "STRING", pii: true, required: "canonicalEmployee", note: "identifies a human" },
   { id: "account_id", type: "STRING", pii: true, required: "canonicalEmployee", note: "device ↔ user linkage" },
   { id: "event_type", type: "INT", pii: false, required: null, note: "CVSS bucket, 0–4" },
   { id: "manager_unixname", type: "STRING", pii: true, required: "canonicalEmployee", note: "identifies a human" },
+];
+
+export const COLUMNS_DE: readonly ColumnDef[] = [
+  { ...COLUMNS[0], note: "interne ID ohne Personenbezug" },
+  { ...COLUMNS[1], note: "identifiziert eine Person" },
+  { ...COLUMNS[2], note: "Verknüpfung zwischen Gerät und Person" },
+  { ...COLUMNS[3], note: "CVSS-Kategorie, 0–4" },
+  { ...COLUMNS[4], note: "identifiziert eine Person" },
 ];
 
 const CHIPS: readonly { id: ActorId; swatch: string }[] = [
@@ -43,6 +52,8 @@ const CHIPS: readonly { id: ActorId; swatch: string }[] = [
 type ShipState = "idle" | "deploying" | "blocked" | "shipped";
 
 export function PermissionGateSim() {
+  const { locale, text } = useDataEngineeringFundamentalsLocale();
+  const columns = locale === "de" ? COLUMNS_DE : COLUMNS;
   const [assignments, setAssignments] = useState<Partial<Record<string, ActorId>>>({});
   const [dragging, setDragging] = useState<ActorId | null>(null);
   const [zoneRequired, setZoneRequired] = useState(false);
@@ -65,14 +76,14 @@ export function PermissionGateSim() {
     });
   };
 
-  const chipLabel = (id: ActorId) => (id === "none" ? "none" : ACTOR_LABEL[id]);
+  const chipLabel = (id: ActorId) => (id === "none" ? text("none", "keine") : ACTOR_LABEL[id]);
 
   const ship = () => {
     setShipState("deploying");
     const push = (line: string) => setConsoleLines((l) => [...l, line]);
-    setConsoleLines(["[access-gateway] starting deploy of dim_users.spec…"]);
+    setConsoleLines([text("[access-gateway] starting deploy of dim_users.spec…", "[access-gateway] Deployment von dim_users.spec wird gestartet …")]);
     const violations: { col: string; needed: string }[] = [];
-    for (const c of COLUMNS) {
+    for (const c of columns) {
       if (c.required) {
         const got = assignments[c.id];
         if (!got || got === "none" || got !== c.required) {
@@ -85,23 +96,29 @@ export function PermissionGateSim() {
       delay += ms;
       setTimeout(() => push(line), delay);
     };
-    schedule("[access-gateway] reading column actor annotations…", 300);
-    schedule(`[access-gateway] ${COLUMNS.length} columns · ${COLUMNS.filter((c) => c.required).length} require actor annotations`, 250);
+    schedule(text("[access-gateway] reading column actor annotations…", "[access-gateway] Akteur-Annotationen der Spalten werden gelesen …"), 300);
+    schedule(
+      text(
+        `[access-gateway] ${columns.length} columns · ${columns.filter((c) => c.required).length} require actor annotations`,
+        `[access-gateway] ${columns.length} Spalten · ${columns.filter((c) => c.required).length} benötigen Akteur-Annotationen`,
+      ),
+      250,
+    );
     if (violations.length > 0) {
       violations.forEach((v) => {
-        schedule(`[access-gateway] ✕ BLOCKED · column "${v.col}" missing required actor <${v.needed}>`, 200);
+        schedule(text(`[access-gateway] ✕ BLOCKED · column "${v.col}" missing required actor <${v.needed}>`, `[access-gateway] ✕ BLOCKIERT · Spalte "${v.col}" ohne erforderlichen Akteur <${v.needed}>`), 200);
       });
-      schedule("[access-gateway] deploy aborted. Patch dbt and re-ship.", 400);
+      schedule(text("[access-gateway] evaluation blocked. Patch DatasetSpec and run again.", "[access-gateway] Prüfung blockiert. DatasetSpec korrigieren und erneut ausführen."), 400);
       setTimeout(() => setShipState("blocked"), delay + 200);
     } else if (zoneRequired && !zone) {
-      schedule('[access-gateway] ✕ BLOCKED · catalog flags dataset as PII-regional · data_classification "pii_secure" required', 250);
-      schedule("[access-gateway] deploy aborted. Add <data_classification: pii_secure> to dbt header.", 400);
+      schedule(text('[access-gateway] ✕ BLOCKED · catalog flags dataset as PII-regional · data_classification "pii_secure" required', '[access-gateway] ✕ BLOCKIERT · Katalog kennzeichnet Datensatz als regional gebundene PII · data_classification "pii_secure" erforderlich'), 250);
+      schedule(text("[access-gateway] evaluation blocked. Add <data_classification: pii_secure> to DatasetSpec.", "[access-gateway] Prüfung blockiert. <data_classification: pii_secure> zur DatasetSpec hinzufügen."), 400);
       setTimeout(() => setShipState("blocked"), delay + 200);
     } else {
-      schedule("[access-gateway] ✓ actor annotations complete", 200);
-      if (zone) schedule("[access-gateway] ✓ data_classification resolved · pii_secure", 150);
-      schedule("[access-gateway] ✓ ACL <dataset_acl: corp_assets> bound", 150);
-      schedule("[access-gateway] ✓ deployed to prod · v237 → v238", 250);
+      schedule(text("[access-gateway] ✓ actor annotations complete", "[access-gateway] ✓ Akteur-Annotationen vollständig"), 200);
+      if (zone) schedule(text("[access-gateway] ✓ data_classification resolved · pii_secure", "[access-gateway] ✓ data_classification aufgelöst · pii_secure"), 150);
+      schedule(text("[access-gateway] ✓ ACL <dataset_acl: corp_assets> bound", "[access-gateway] ✓ ACL <dataset_acl: corp_assets> gebunden"), 150);
+      schedule(text("[access-gateway] ✓ reference policy evaluation accepted · v237 → v238", "[access-gateway] ✓ Referenzregelprüfung akzeptiert · v237 → v238"), 250);
       setTimeout(() => {
         setShipState("shipped");
         setConfetti((c) => c + 1);
@@ -117,7 +134,7 @@ export function PermissionGateSim() {
 
   const autofix = () => {
     const next = { ...assignments };
-    for (const c of COLUMNS) {
+    for (const c of columns) {
       if (c.required) next[c.id] = c.required;
     }
     setAssignments(next);
@@ -127,14 +144,14 @@ export function PermissionGateSim() {
 
   return (
     <Panel
-      eyebrow="live simulator · deploy gate"
-      title="Permission Gate"
-      meta={shipState === "shipped" ? "✓ shipped" : shipState === "blocked" ? "✕ blocked" : shipState === "deploying" ? "deploying…" : "ready to ship"}
-      caption="Access Gateway reads the DatasetSpec at deploy time. Every column that names a human must have an actor annotation. No annotation, no ship."
+      eyebrow={text("live simulator · deploy gate", "Live-Simulator · Deployment-Schranke")}
+      title={text("Permission Gate", "Berechtigungsschranke")}
+      meta={shipState === "shipped" ? text("✓ shipped", "✓ ausgeliefert") : shipState === "blocked" ? text("✕ blocked", "✕ blockiert") : shipState === "deploying" ? text("deploying…", "Deployment läuft …") : text("ready to ship", "bereit zur Auslieferung")}
+      caption={text("Course reference gate. It checks declared actor, classification, and ACL metadata; passing does not establish privacy or legal compliance.", "Referenzschranke des Kurses. Sie prüft deklarierte Akteur-, Klassifikations- und ACL-Metadaten; eine bestandene Prüfung belegt keine Datenschutz- oder Rechtskonformität.")}
     >
       <div className="pg-layout">
         <div className="pg-chip-rail">
-          <div className="pg-rail-lab">Drag an actor</div>
+          <div className="pg-rail-lab">{text("Drag an actor", "Akteur zuweisen")}</div>
           {CHIPS.map((c) => (
             <button
               type="button"
@@ -152,18 +169,18 @@ export function PermissionGateSim() {
             </button>
           ))}
           <div className="pg-rail-hint">
-            Select a chip, then use a column&apos;s assign button, or drag.
+            {text("Select a chip, then use a column's assign button, or drag.", "Chip auswählen und über die Zuweisen-Schaltfläche oder per Drag-and-drop einer Spalte zuordnen.")}
           </div>
           <label className="pg-zone-toggle">
             <input type="checkbox" checked={zoneRequired} onChange={(e) => setZoneRequired(e.target.checked)} />
             <span>
-              Catalog requires Policy Zone <code>pii_secure</code>
+              {text("Catalog requires Policy Zone", "Katalog verlangt die Richtlinienzone")} <code>pii_secure</code>
             </span>
           </label>
           <label className="pg-zone-toggle" style={{ marginTop: 6 }}>
             <input type="checkbox" checked={zone} onChange={(e) => setZone(e.target.checked)} />
             <span>
-              Add <code>data_classification: pii_secure</code> to dbt
+              {text("Add", "Hinzufügen:")} <code>data_classification: pii_secure</code> {text("to DatasetSpec", "zur DatasetSpec")}
             </span>
           </label>
         </div>
@@ -176,7 +193,7 @@ export function PermissionGateSim() {
               <i />
             </span>
             <span className="f">dim_users.spec.yaml</span>
-            <span className="sp">· 5 columns</span>
+            <span className="sp">· 5 {text("columns", "Spalten")}</span>
           </div>
           <div className="pg-ide-body">
             <div className="pg-ide-ln">
@@ -211,7 +228,7 @@ export function PermissionGateSim() {
                 <span className="tok-k">columns</span>:
               </span>
             </div>
-            {COLUMNS.map((c, i) => {
+            {columns.map((c, i) => {
               const assigned = assignments[c.id];
               const ok = !c.required || assigned === c.required;
               const bad = !!c.required && (!assigned || assigned === "none" || assigned !== c.required);
@@ -234,7 +251,7 @@ export function PermissionGateSim() {
                           type="button"
                           className="pill-actor"
                           onClick={() => clearCol(c.id)}
-                          aria-label={`Remove ${chipLabel(assigned)} from ${c.id}`}
+                          aria-label={`${text("Remove", "Entferne")} ${chipLabel(assigned)} ${text("from", "von")} ${c.id}`}
                         >
                           actors: [<code>{chipLabel(assigned)}</code>]<i>×</i>
                         </button>
@@ -243,16 +260,16 @@ export function PermissionGateSim() {
                           type="button"
                           className="pill-assign"
                           onClick={() => assignTo(c.id)}
-                          aria-label={`Assign ${chipLabel(dragging)} to ${c.id}`}
+                          aria-label={`${text("Assign", "Weise")} ${chipLabel(dragging)} ${text("to", "zu")} ${c.id}`}
                         >
-                          Assign <code>{chipLabel(dragging)}</code>
+                          {text("Assign", "Zuweisen")} <code>{chipLabel(dragging)}</code>
                         </button>
                       ) : c.required ? (
                         <span className="pill-need">
-                          needs <code>{ACTOR_LABEL[c.required]}</code>
+                          {text("needs", "benötigt")} <code>{ACTOR_LABEL[c.required]}</code>
                         </span>
                       ) : (
-                        <span className="pill-opt">actor optional</span>
+                        <span className="pill-opt">{text("actor optional", "Akteur optional")}</span>
                       )}
                     </span>
                   </span>
@@ -265,20 +282,20 @@ export function PermissionGateSim() {
 
       <div className={`pg-console ${shipState}`}>
         <div className="pg-console-head">
-          <span>Access Gateway · deploy log</span>
+          <span>Access Gateway · {text("deploy log", "Deployment-Protokoll")}</span>
           <span className={`pg-status ${shipState}`}>
-            {shipState === "idle" && "ready"}
-            {shipState === "deploying" && "● deploying"}
-            {shipState === "blocked" && "✕ blocked"}
-            {shipState === "shipped" && "✓ shipped"}
+            {shipState === "idle" && text("ready", "bereit")}
+            {shipState === "deploying" && text("● deploying", "● Deployment läuft")}
+            {shipState === "blocked" && text("✕ blocked", "✕ blockiert")}
+            {shipState === "shipped" && text("✓ shipped", "✓ ausgeliefert")}
           </span>
         </div>
         <div className="pg-console-body">
           {consoleLines.length === 0 ? (
-            <div className="empty">[access-gateway] waiting for ship…</div>
+            <div className="empty">{text("[access-gateway] waiting for ship…", "[access-gateway] wartet auf Auslieferung …")}</div>
           ) : (
             consoleLines.map((l, i) => (
-              <div key={i} className={`pg-c-ln ${l.includes("BLOCKED") || l.includes("aborted") ? "err" : l.includes("✓") ? "ok" : ""}`}>
+              <div key={i} className={`pg-c-ln ${l.includes("BLOCKED") || l.includes("aborted") || l.includes("BLOCKIERT") || l.includes("abgebrochen") ? "err" : l.includes("✓") ? "ok" : ""}`}>
                 {l}
               </div>
             ))
@@ -288,21 +305,21 @@ export function PermissionGateSim() {
 
       <div className="ctl-row">
         <button type="button" className="btn btn-primary" onClick={ship} disabled={shipState === "deploying"}>
-          {shipState === "deploying" ? "● Deploying…" : "🚢 Ship dbt"}
+          {shipState === "deploying" ? text("● Evaluating…", "● Prüfung läuft …") : text("Evaluate DatasetSpec", "DatasetSpec prüfen")}
         </button>
         <button type="button" className="btn" onClick={autofix}>
-          Autofix · assign PII actors
+          {text("Autofix · assign PII actors", "Automatisch korrigieren · PII-Akteure zuweisen")}
         </button>
         <button type="button" className="btn" onClick={reset}>
-          Reset
+          {text("Reset", "Zurücksetzen")}
         </button>
         {shipState === "shipped" && (
           <span style={{ color: "var(--theme-green)", fontFamily: "var(--font-mono)", fontSize: 12 }}>
-            ✓ confetti {confetti}× · dbt v238 is live
+            ✓ {text("reference evaluation", "Referenzprüfung")} {confetti} · DatasetSpec v238 {text("accepted", "akzeptiert")}
           </span>
         )}
         {shipState === "blocked" && (
-          <span style={{ color: "var(--theme-red)", fontFamily: "var(--font-mono)", fontSize: 12 }}>✕ patch the dbt and re-ship</span>
+          <span style={{ color: "var(--theme-red)", fontFamily: "var(--font-mono)", fontSize: 12 }}>✕ {text("patch the DatasetSpec and evaluate again", "DatasetSpec korrigieren und erneut prüfen")}</span>
         )}
       </div>
     </Panel>

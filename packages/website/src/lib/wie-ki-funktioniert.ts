@@ -1,4 +1,5 @@
 import type { LearningStage } from "@/lib/learning-graph/types";
+import type { Locale } from "@/lib/i18n/locale";
 
 // ---------------------------------------------------------------------------
 // TypeScript interfaces
@@ -31,7 +32,7 @@ export interface WieKiMeta {
   readonly lessonCount: number;
   readonly stage: LearningStage;
   readonly access: "public";
-  readonly language: "de";
+  readonly language: Locale;
   readonly lastReviewed: string;
   readonly nextReview: string;
   readonly reviewCadence: string;
@@ -44,36 +45,80 @@ export interface WieKiMeta {
 // ---------------------------------------------------------------------------
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const metaRaw = require("../../content/wie-ki-funktioniert/meta.json") as WieKiMeta;
+const metaDe = require("../../content/wie-ki-funktioniert/meta.json") as WieKiMeta;
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const l1 = require("../../content/wie-ki-funktioniert/lektion-1-vorhersage.json") as WieKiLektion;
+const l1De = require("../../content/wie-ki-funktioniert/lektion-1-vorhersage.json") as WieKiLektion;
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const l2 = require("../../content/wie-ki-funktioniert/lektion-2-trainingsdaten.json") as WieKiLektion;
+const l2De = require("../../content/wie-ki-funktioniert/lektion-2-trainingsdaten.json") as WieKiLektion;
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const l3 = require("../../content/wie-ki-funktioniert/lektion-3-halluzinationen.json") as WieKiLektion;
+const l3De = require("../../content/wie-ki-funktioniert/lektion-3-halluzinationen.json") as WieKiLektion;
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const l4 = require("../../content/wie-ki-funktioniert/lektion-4-grenzen.json") as WieKiLektion;
+const l4De = require("../../content/wie-ki-funktioniert/lektion-4-grenzen.json") as WieKiLektion;
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const metaEn = require("../../content/wie-ki-funktioniert/en/meta.json") as WieKiMeta;
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const l1En = require("../../content/wie-ki-funktioniert/en/lektion-1-vorhersage.json") as WieKiLektion;
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const l2En = require("../../content/wie-ki-funktioniert/en/lektion-2-trainingsdaten.json") as WieKiLektion;
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const l3En = require("../../content/wie-ki-funktioniert/en/lektion-3-halluzinationen.json") as WieKiLektion;
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const l4En = require("../../content/wie-ki-funktioniert/en/lektion-4-grenzen.json") as WieKiLektion;
 
-export const WIE_KI_META: WieKiMeta = metaRaw;
+export interface WieKiContentBundle {
+  readonly meta: WieKiMeta;
+  readonly lektionen: readonly WieKiLektion[];
+}
 
-export const WIE_KI_LEKTIONEN: readonly WieKiLektion[] = [l1, l2, l3, l4];
+const CONTENT_BY_LOCALE: Readonly<Record<Locale, WieKiContentBundle>> = {
+  de: {
+    meta: metaDe,
+    lektionen: [l1De, l2De, l3De, l4De],
+  },
+  en: {
+    meta: metaEn,
+    lektionen: [l1En, l2En, l3En, l4En],
+  },
+};
+
+export const WIE_KI_META: WieKiMeta = CONTENT_BY_LOCALE.de.meta;
+
+export const WIE_KI_LEKTIONEN: readonly WieKiLektion[] =
+  CONTENT_BY_LOCALE.de.lektionen;
+
+export function getWieKiContent(locale: Locale): WieKiContentBundle {
+  return CONTENT_BY_LOCALE[locale];
+}
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
-export function getLektionById(id: string): WieKiLektion | undefined {
-  return WIE_KI_LEKTIONEN.find((l) => l.id === id);
+export function getLektionById(
+  id: string,
+  locale: Locale = "de",
+): WieKiLektion | undefined {
+  return getWieKiContent(locale).lektionen.find((l) => l.id === id);
 }
 
-export function getPrevLektion(id: string): WieKiLektion | undefined {
-  const idx = WIE_KI_LEKTIONEN.findIndex((l) => l.id === id);
-  return idx > 0 ? WIE_KI_LEKTIONEN[idx - 1] : undefined;
+export function getPrevLektion(
+  id: string,
+  locale: Locale = "de",
+): WieKiLektion | undefined {
+  const lektionen = getWieKiContent(locale).lektionen;
+  const idx = lektionen.findIndex((l) => l.id === id);
+  return idx > 0 ? lektionen[idx - 1] : undefined;
 }
 
-export function getNextLektion(id: string): WieKiLektion | undefined {
-  const idx = WIE_KI_LEKTIONEN.findIndex((l) => l.id === id);
-  return idx >= 0 && idx < WIE_KI_LEKTIONEN.length - 1 ? WIE_KI_LEKTIONEN[idx + 1] : undefined;
+export function getNextLektion(
+  id: string,
+  locale: Locale = "de",
+): WieKiLektion | undefined {
+  const lektionen = getWieKiContent(locale).lektionen;
+  const idx = lektionen.findIndex((l) => l.id === id);
+  return idx >= 0 && idx < lektionen.length - 1
+    ? lektionen[idx + 1]
+    : undefined;
 }
 
 // ---------------------------------------------------------------------------
@@ -91,4 +136,14 @@ export function formatGermanDate(isoDate: string): string {
   const monthNum = parseInt(month ?? "1", 10);
   const monthName = GERMAN_MONTHS[monthNum - 1] ?? "unbekannt";
   return `${monthName} ${year}`;
+}
+
+export function formatReviewDate(isoDate: string, locale: Locale): string {
+  if (locale === "de") return formatGermanDate(isoDate);
+
+  return new Intl.DateTimeFormat("en-GB", {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${isoDate}T00:00:00Z`));
 }

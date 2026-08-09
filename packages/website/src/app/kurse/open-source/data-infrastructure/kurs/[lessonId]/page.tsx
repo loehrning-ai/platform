@@ -1,9 +1,18 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DataInfraLessonPage } from "@/components/data-infrastructure/data-infra-lesson-page";
-import { getAllDataInfraLessons, getDataInfraLesson } from "@/lib/data-infrastructure/data";
-import { DATA_INFRA_LESSON_IDS, isDataInfraLessonId } from "@/lib/data-infrastructure/types";
-import { SITE_URL } from "@/lib/seo/json-ld";
+import { getDataInfraCourseCopy } from "@/lib/data-infrastructure/course-copy";
+import { getDataInfraLesson } from "@/lib/data-infrastructure/data";
+import { getDataInfraLandingManifest } from "@/lib/data-infrastructure/landing-manifest";
+import { isDataInfraLessonId } from "@/lib/data-infrastructure/types";
+import { contentLocalesForPath } from "@/lib/i18n/content-parity";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import {
+  buildTechnicalCourseMetadata,
+  getTechnicalCourseStaticParams,
+  technicalCourseCanonicalHref,
+  technicalCourseHref,
+} from "@/lib/technical-courses/routes";
 
 interface PageProps {
   readonly params: Promise<{ lessonId: string }>;
@@ -12,55 +21,96 @@ interface PageProps {
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return DATA_INFRA_LESSON_IDS.map((lessonId) => ({ lessonId }));
+  return [...getTechnicalCourseStaticParams("data-infrastructure")];
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { lessonId } = await params;
-  if (!isDataInfraLessonId(lessonId)) return { title: "Lesson not found" };
-  const lesson = await getDataInfraLesson(lessonId);
-  if (!lesson) return { title: "Lesson not found" };
-  const lessonUrl = `${SITE_URL}/kurse/open-source/data-infrastructure/kurs/${lessonId}`;
-  return {
-    title: `${lesson.title}: Data Infrastructure`,
-    description: lesson.subtitle,
-    robots: { index: false, follow: true },
-    alternates: { canonical: lessonUrl },
-    openGraph: {
-      title: `${lesson.title}: Data Infrastructure`,
-      description: lesson.subtitle,
-      url: lessonUrl,
-      type: "article",
-    },
-  };
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const [{ lessonId }, locale] = await Promise.all([
+    params,
+    getRequestLocale(),
+  ]);
+  const copy = getDataInfraCourseCopy(locale).reader;
+  if (!isDataInfraLessonId(lessonId)) {
+    return {
+      title: copy.notFoundTitle,
+      robots: { index: false, follow: true },
+    };
+  }
+  const manifest = getDataInfraLandingManifest(locale);
+  const summary = manifest.lessons.find(
+    (candidate) => candidate.id === lessonId,
+  );
+  if (!summary) {
+    return {
+      title: copy.notFoundTitle,
+      robots: { index: false, follow: true },
+    };
+  }
+  const target = { kind: "lesson", lessonId } as const;
+  const canonicalPath = technicalCourseCanonicalHref(
+    "data-infrastructure",
+    target,
+  );
+  return buildTechnicalCourseMetadata({
+    courseSlug: "data-infrastructure",
+    locale,
+    target,
+    title: `${summary.title}: ${manifest.courseTitle}`,
+    description: summary.subtitle,
+    availableContentLocales: contentLocalesForPath(canonicalPath),
+  });
 }
 
 export default async function DataInfraLessonRoute({ params }: PageProps) {
-  const { lessonId } = await params;
+  const [{ lessonId }, locale] = await Promise.all([
+    params,
+    getRequestLocale(),
+  ]);
   if (!isDataInfraLessonId(lessonId)) notFound();
-  const lesson = await getDataInfraLesson(lessonId);
+  const manifest = getDataInfraLandingManifest(locale);
+  const allLessons = manifest.lessons;
+  const lesson = await getDataInfraLesson(lessonId, locale);
   if (!lesson) notFound();
 
-  const allLessons = await getAllDataInfraLessons();
-  const currentIndex = allLessons.findIndex((l) => l.id === lesson.id);
+  const currentIndex = allLessons.findIndex(
+    (candidate) => candidate.id === lesson.id,
+  );
   const prevLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : null;
   const nextLesson =
-    currentIndex >= 0 && currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null;
-
-  const navItems = allLessons.map((l) => ({
-    id: l.id,
-    number: l.number,
-    title: l.title,
-    trackId: l.trackId,
-  }));
+    currentIndex >= 0 && currentIndex < allLessons.length - 1
+      ? allLessons[currentIndex + 1]
+      : null;
 
   return (
     <DataInfraLessonPage
+      locale={locale}
       lesson={lesson}
-      navItems={navItems}
+      tracks={manifest.tracks}
+      navItems={allLessons.map((candidate) => ({
+        id: candidate.id,
+        number: candidate.number,
+        title: candidate.title,
+        trackId: candidate.trackId,
+      }))}
       totalLessons={allLessons.length}
-      prevHref={prevLesson ? `/kurse/open-source/data-infrastructure/kurs/${prevLesson.id}` : null}
-      nextHref={nextLesson ? `/kurse/open-source/data-infrastructure/kurs/${nextLesson.id}` : null}
+      prevHref={
+        prevLesson
+          ? technicalCourseHref("data-infrastructure", locale, {
+              kind: "lesson",
+              lessonId: prevLesson.id,
+            })
+          : null
+      }
+      nextHref={
+        nextLesson
+          ? technicalCourseHref("data-infrastructure", locale, {
+              kind: "lesson",
+              lessonId: nextLesson.id,
+            })
+          : null
+      }
     />
   );
 }

@@ -2,6 +2,7 @@
 
 import { m } from "framer-motion";
 import { drawLine } from "@/lib/animations";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 
 /**
  * A Kupfer accent rule that draws itself in from the left on mount. Transform
@@ -14,7 +15,7 @@ import { drawLine } from "@/lib/animations";
  * appear. The noscript rule in layout.tsx forces `transform: none` on this
  * class, which settles it.
  */
-export function DrawRule({ className }: { className?: string }) {
+function DrawRuleContent({ className }: { className?: string }) {
   return (
     <m.div
       aria-hidden="true"
@@ -26,3 +27,5 @@ export function DrawRule({ className }: { className?: string }) {
     />
   );
 }
+
+export const DrawRule = withMotionProvider(DrawRuleContent);

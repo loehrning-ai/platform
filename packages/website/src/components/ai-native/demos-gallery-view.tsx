@@ -15,6 +15,7 @@ import { RenderWidget } from "@/components/widgets/registry";
 import type { WidgetKind } from "@/lib/widgets/types";
 import { DEMO_KINDS } from "@/lib/widgets/types";
 import { cn } from "@/lib/utils";
+import { localizeHref, type Locale } from "@/lib/i18n/locale";
 
 /**
  * Gallery index view for /ai-native/demos.
@@ -47,6 +48,15 @@ const CATEGORIES: readonly { readonly id: Category; readonly label: string }[] =
   { id: "document-processing", label: "Dokumente" },
   { id: "agents-workflows", label: "Agents & Workflows" },
   { id: "business-roi", label: "ROI & Reife" },
+  { id: "compliance-governance", label: "Compliance" },
+  { id: "observability", label: "Observability" },
+];
+
+const CATEGORIES_EN: readonly { readonly id: Category; readonly label: string }[] = [
+  { id: "chat-knowledge", label: "Chat and knowledge" },
+  { id: "document-processing", label: "Documents" },
+  { id: "agents-workflows", label: "Agents and workflows" },
+  { id: "business-roi", label: "Business cases" },
   { id: "compliance-governance", label: "Compliance" },
   { id: "observability", label: "Observability" },
 ];
@@ -122,13 +132,85 @@ const DEMOS: readonly DemoEntry[] = [
   },
 ];
 
+const DEMOS_EN: readonly DemoEntry[] = [
+  {
+    kind: "demo-chat-rag",
+    title: "Contract retrieval assistant",
+    tagline: "Ask a synthetic contract archive and inspect source-linked answers.",
+    category: "chat-knowledge",
+    teachesIn: "Module 2 · Lesson 2.4 (grounding and retrieval)",
+  },
+  {
+    kind: "demo-compliance",
+    title: "Prompt data scanner",
+    tagline: "A rule-based check for obvious sensitive-data patterns. Not a compliance decision.",
+    category: "compliance-governance",
+    teachesIn: "Module 4 · Lesson 4.3 (data-aware prompting)",
+  },
+  {
+    kind: "demo-roi",
+    title: "ROI scenario calculator",
+    tagline: "Change explicit assumptions and inspect the resulting scenario. Not a forecast.",
+    category: "business-roi",
+    teachesIn: "Course reference · business-case method",
+  },
+  {
+    kind: "demo-doc",
+    title: "Invoice extraction",
+    tagline: "Map a synthetic invoice to structured fields and a review queue.",
+    category: "document-processing",
+    teachesIn: "Module 2 · Lesson 2.3 (Artifacts and documents)",
+  },
+  {
+    kind: "demo-agent",
+    title: "Agent pipeline",
+    tagline: "Inspect a simulated multi-step research and review process.",
+    category: "agents-workflows",
+    teachesIn: "Module 2 · Lesson 2.5 (Claude Code and sub-agents)",
+  },
+  {
+    kind: "demo-workflow",
+    title: "n8n supply-chain workflow",
+    tagline: "Configure a simulated workflow and inspect its review gates.",
+    category: "agents-workflows",
+    teachesIn: "Module 4 · Lesson 4.4 (n8n automation)",
+  },
+  {
+    kind: "demo-excel",
+    title: "Spreadsheet transformation",
+    tagline: "Apply a documented transformation to synthetic worksheet data.",
+    category: "document-processing",
+    teachesIn: "Module 3 · Lesson 3.3 (office integration)",
+  },
+  {
+    kind: "demo-word",
+    title: "Document drafting",
+    tagline: "Turn a structured brief into a reviewable synthetic document draft.",
+    category: "document-processing",
+    teachesIn: "Module 3 · Lesson 3.4 (document generation)",
+  },
+  {
+    kind: "demo-finetune",
+    title: "Fine-tuning decision exercise",
+    tagline: "Compare fine-tuning with prompting and retrieval under stated assumptions.",
+    category: "business-roi",
+    teachesIn: "Post-course reference",
+  },
+];
+
 /** Sanity: the gallery lists one card per active (non-retired) DemoKind. */
 const _assertAllDemoKindsCovered: ReadonlyArray<WidgetKind> =
   DEMOS.map((d) => d.kind);
 void _assertAllDemoKindsCovered;
 void DEMO_KINDS;
 
-function LazyDemoMount({ kind }: { readonly kind: WidgetKind }): JSX.Element {
+function LazyDemoMount({
+  kind,
+  locale,
+}: {
+  readonly kind: WidgetKind;
+  readonly locale: Locale;
+}): JSX.Element {
   const [mounted, setMounted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -158,8 +240,12 @@ function LazyDemoMount({ kind }: { readonly kind: WidgetKind }): JSX.Element {
   }, []);
 
   return (
-    <div ref={ref} className="min-h-[140px]">
-      {mounted ? <RenderWidget kind={kind} /> : <DemoPlaceholderFrame />}
+    <div ref={ref} className="min-h-[140px] min-w-0">
+      {mounted ? (
+        <RenderWidget kind={kind} locale={locale} />
+      ) : (
+        <DemoPlaceholderFrame />
+      )}
     </div>
   );
 }
@@ -173,7 +259,10 @@ function DemoPlaceholderFrame(): JSX.Element {
   );
 }
 
-export function DemosGalleryView(): JSX.Element {
+export function DemosGalleryView({ locale = "de" }: { readonly locale?: Locale }): JSX.Element {
+  const isEnglish = locale === "en";
+  const categories = isEnglish ? CATEGORIES_EN : CATEGORIES;
+  const demos = isEnglish ? DEMOS_EN : DEMOS;
   const [hydrated, setHydrated] = useState(false);
   const [query, setQuery] = useState("");
 
@@ -192,12 +281,12 @@ export function DemosGalleryView(): JSX.Element {
     );
   };
 
-  const groupsRaw = CATEGORIES.map((cat) => ({
+  const groupsRaw = categories.map((cat) => ({
     ...cat,
-    items: DEMOS.filter((d) => d.category === cat.id && matches(d)),
+    items: demos.filter((d) => d.category === cat.id && matches(d)),
   })).filter((g) => g.items.length > 0);
   const groups = groupsRaw;
-  const totalFiltered = DEMOS.filter(matches).length;
+  const totalFiltered = demos.filter(matches).length;
 
   return (
     <>
@@ -208,23 +297,25 @@ export function DemosGalleryView(): JSX.Element {
             aria-label="Breadcrumb"
             className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--color-dark-muted)]"
           >
-            <Link href="/ai-native" className="hover:text-brand-orange">
-              AI-Native Arbeitskurs
+            <Link href={localizeHref("/ai-native", locale)} className="hover:text-brand-orange">
+              {isEnglish ? "AI-Native Workflow Course" : "AI-Native Arbeitskurs"}
             </Link>
             <span className="mx-2 opacity-40">/</span>
-            <span className="text-brand-orange">Praxisbeispiele</span>
+            <span className="text-brand-orange">{isEnglish ? "Simulations" : "Simulationen"}</span>
           </nav>
 
           <FadeBlock delay={0}>
             <div className="mt-8 space-y-2">
               <div className="border border-[rgba(107,114,128,0.4)] bg-[rgba(107,114,128,0.08)] px-3.5 py-2 font-mono text-[11px] font-semibold tracking-[0.08em] text-[rgba(243,240,233,0.65)]">
-                Diese Praxisbeispiele gehören zum AI-Native-Kurs.{" "}
-                <Link href="/demos" className="text-brand-orange underline hover:no-underline">
-                  Zur vollständigen Galerie: /demos
+                {isEnglish
+                  ? "These simulations are connected to AI-Native course lessons."
+                  : "Diese Simulationen gehören zu Lektionen des AI-Native-Kurses."}{" "}
+                <Link href={localizeHref("/demos", locale)} className="text-brand-orange underline hover:no-underline">
+                  {isEnglish ? "Open the complete simulation catalog" : "Vollständigen Beispielkatalog öffnen"}
                 </Link>
               </div>
               <span className="inline-flex items-center gap-2 border border-brand-orange/35 bg-brand-orange/10 px-3.5 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-orange">
-                9 kursgebundene Praxisbeispiele · simuliert · im Browser
+                9 {isEnglish ? "course simulations · synthetic data · in-browser" : "Kurssimulationen · synthetische Daten · im Browser"}
               </span>
             </div>
           </FadeBlock>
@@ -234,34 +325,34 @@ export function DemosGalleryView(): JSX.Element {
             className="mt-6 font-bold leading-[0.92] tracking-[-0.04em] text-[var(--color-dark-fg)]"
             style={{ fontSize: "clamp(2.5rem, 7vw, 5rem)" }}
           >
-            Mach&apos;s einmal.
+            {isEnglish ? "Inspect the process." : "Ablauf prüfen."}
             <br />
-            <span className="text-brand-orange">Dann mach&apos;s mit.</span>
+            <span className="text-brand-orange">{isEnglish ? "Change the assumptions." : "Annahmen verändern."}</span>
           </ClipHeading>
 
           <FadeBlock delay={2}>
             <p className="mt-7 max-w-[620px] text-[18px] leading-[1.6] text-[var(--color-dark-muted)]">
-              Jedes Praxisbeispiel zeigt einen simulierten Mittelstand-Use-Case, den du im
-              Arbeitskurs bauen lernst. Alles läuft lokal im Browser, kein
-              Login, keine Datenbank, keine API-Keys.
+              {isEnglish
+                ? "Each panel is a browser simulation with synthetic data. It illustrates a process and its controls; it does not call a provider or measure real operational performance."
+                : "Jedes Panel ist eine Browser-Simulation mit synthetischen Daten. Es zeigt einen Ablauf und seine Kontrollen; es ruft keinen Anbieter auf und misst keine reale Betriebsleistung."}
             </p>
           </FadeBlock>
 
           <FadeBlock delay={3} className="mt-8 flex flex-wrap gap-3">
             <BrandButton
-              href="/ai-native/kurs/modul_1"
+              href={localizeHref("/ai-native/kurs/modul_1", locale)}
               prefetch={false}
               variant="primary"
               surface="dark"
             >
-              Kurs starten <ArrowRight size={15} />
+              {isEnglish ? "Start the course" : "Kurs starten"} <ArrowRight size={15} />
             </BrandButton>
             <BrandButton
-              href="/ai-native"
+              href={localizeHref("/ai-native", locale)}
               variant="outline"
               surface="dark"
             >
-              Zurück zum Arbeitskurs
+              {isEnglish ? "Back to the course" : "Zurück zum Arbeitskurs"}
             </BrandButton>
           </FadeBlock>
 
@@ -277,9 +368,9 @@ export function DemosGalleryView(): JSX.Element {
                 onChange={(e) => setQuery(e.target.value)}
                 readOnly={!hydrated}
                 aria-disabled={!hydrated}
-                placeholder="Suche: RAG, DSGVO, Excel, Workflow …"
+                placeholder={isEnglish ? "Search: RAG, GDPR, spreadsheet, workflow …" : "Suche: RAG, DSGVO, Excel, Workflow …"}
                 className="flex-1 bg-transparent py-3 text-[16px] text-[var(--color-dark-fg)] outline-none placeholder:text-[var(--color-dark-muted)] focus-visible:ring-2 focus-visible:ring-brand-orange"
-                aria-label="Praxisbeispiele durchsuchen"
+                aria-label={isEnglish ? "Search course simulations" : "Kurssimulationen durchsuchen"}
               />
               {query && (
                 <button
@@ -291,7 +382,7 @@ export function DemosGalleryView(): JSX.Element {
                 </button>
               )}
               <span className="pl-2 font-mono text-[10px] tracking-[0.1em] text-[var(--color-dark-muted)]">
-                {totalFiltered}/{DEMOS.length}
+                {totalFiltered}/{demos.length}
               </span>
             </div>
           </FadeBlock>
@@ -338,18 +429,18 @@ export function DemosGalleryView(): JSX.Element {
             {group.label}.
           </ClipHeading>
 
-          <div className="mt-10 grid gap-8 md:grid-cols-1 lg:gap-12">
+          <div className="mt-10 grid min-w-0 gap-8 md:grid-cols-1 lg:gap-12">
             {group.items.map((demo, i) => (
-              <FadeBlock key={demo.kind} delay={i}>
-                <article className="border border-border bg-card/30 p-6 lg:p-8">
+              <FadeBlock key={demo.kind} delay={i} className="min-w-0">
+                <article className="min-w-0 border border-border bg-card/30 p-6 lg:p-8">
                   <header className="mb-5 flex flex-wrap items-start justify-between gap-4 border-b border-border pb-4">
-                    <div>
+                    <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-                          Praxisbeispiel {String(DEMOS.indexOf(demo) + 1).padStart(2, "0")}
+                          {isEnglish ? "Simulation" : "Simulation"} {String(demos.indexOf(demo) + 1).padStart(2, "0")}
                         </p>
                         <span className="inline-flex items-center gap-1.5 border border-[rgba(107,114,128,0.4)] bg-[rgba(107,114,128,0.08)] px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-[rgba(243,240,233,0.55)]">
-                          ◆ simuliert
+                          ◆ {isEnglish ? "simulated" : "simuliert"}
                         </span>
                       </div>
                       <h3 className="mt-2 text-[22px] font-bold leading-[1.15] tracking-[-0.02em] text-foreground">
@@ -365,7 +456,7 @@ export function DemosGalleryView(): JSX.Element {
                       </span>
                     )}
                   </header>
-                  <LazyDemoMount kind={demo.kind} />
+                  <LazyDemoMount kind={demo.kind} locale={locale} />
                 </article>
               </FadeBlock>
             ))}
@@ -381,32 +472,33 @@ export function DemosGalleryView(): JSX.Element {
             className="font-bold leading-none tracking-[-0.035em] text-[var(--color-dark-fg)]"
             style={{ fontSize: "clamp(2rem, 4.5vw, 3rem)" }}
           >
-            Mehr als Praxisbeispiele.
+            {isEnglish ? "From simulation" : "Von der Simulation"}
             <br />
-            <span className="text-brand-orange">Praxis, nicht Theorie.</span>
+            <span className="text-brand-orange">{isEnglish ? "to a bounded workflow." : "zum begrenzten Workflow."}</span>
           </ClipHeading>
           <FadeBlock delay={1}>
             <p className="mt-6 text-[17px] leading-[1.6] text-[var(--color-dark-muted)]">
-              Jedes Praxisbeispiel entspricht einer Lektion. Im Arbeitskurs baust du das
-              selbst, auf deinen eigenen Daten, mit deinem eigenen Workflow.
+              {isEnglish
+                ? "The course explains the assumptions, review criteria and failure modes behind these examples before you adapt a workflow to your own context."
+                : "Der Kurs erklärt Annahmen, Prüfkriterien und Fehlermöglichkeiten hinter den Beispielen, bevor du einen Ablauf an deinen Kontext anpasst."}
             </p>
           </FadeBlock>
           <FadeBlock delay={2}>
             <div className="mt-8 flex flex-wrap justify-center gap-3.5">
               <BrandButton
-                href="/ai-native/kurs/modul_1"
+                href={localizeHref("/ai-native/kurs/modul_1", locale)}
                 prefetch={false}
                 variant="primary"
                 surface="dark"
               >
-                Kurs starten <ArrowRight size={15} />
+                {isEnglish ? "Start the course" : "Kurs starten"} <ArrowRight size={15} />
               </BrandButton>
               <BrandButton
-                href="/ai-native#os-bundle"
+                href={localizeHref("/ai-native#os-bundle", locale)}
                 variant="outline"
                 surface="dark"
               >
-                Lernmaterialien ansehen
+                {isEnglish ? "View course materials" : "Lernmaterialien ansehen"}
               </BrandButton>
             </div>
           </FadeBlock>

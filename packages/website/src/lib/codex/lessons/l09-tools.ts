@@ -1,17 +1,21 @@
 // Ported from codex/lessons/09-tools.html + codex/js/lessons/L09.js.
 import type { CodexLesson } from "../types";
 import { buildSections } from "../blocks";
-import { CODEX_QUIZ_COPY, CODEX_QUIZ_TITLE, CODEX_COMPARE_KIND_LABEL } from "../widget-copy";
+import {
+  CODEX_QUIZ_COPY,
+  CODEX_QUIZ_TITLE,
+  CODEX_COMPARE_KIND_LABEL,
+} from "../widget-copy";
 
 const lesson: CodexLesson = {
   id: "L09",
   number: 9,
-  title: "The AI Tools Ecosystem",
+  title: "Choosing a Coding-Agent Workflow",
   subtitle:
-    "Claude Code, Copilot, Cursor, Aider, Cline, each solves a different slice of the problem. Picking the wrong one for a job is expensive. Picking the right one is a force multiplier.",
+    "Compare interaction model, execution boundary, provider constraints, and review path before selecting a tool.",
   durationMinutes: 11,
   trackId: "in-the-loop",
-  hook: "Know the landscape.",
+  hook: "Choose by operating requirements.",
   keyConcepts: ["Tool landscape", "MCP", "Task-shape fit", "IDE integration"],
   quiz: [],
   sections: buildSections([
@@ -23,13 +27,13 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "The AI coding landscape fragmented fast. In 2023 there was essentially one tool. In 2025 there are five major categories, each with a different philosophy: inline completions, chat-driven editing, CLI agents, IDE-native agents, and autonomous PR generators. They are not interchangeable.\n\nThe mistake most developers make is treating their first tool as a permanent tool, defaulting to Copilot autocomplete for tasks that need a full agent, or spinning up an autonomous agent for a one-liner fix that would take seconds in an IDE. The cost is compounded daily.\n\nThis lesson is a map. Know the landscape, and you spend your time in flow rather than fighting your toolchain.",
+            "Coding tools combine several interaction models: inline completion, editor chat, terminal agents, IDE agents, and background tasks that return a diff or pull request. Product capabilities change, and several tools now span more than one category.\n\nChoose from operational requirements rather than a static vendor ranking. Check what repository context the tool can read, where commands execute, which writes require approval, whether network access is enabled, how model and data policies are configured, and how the result reaches review.\n\nThe relevant unit is the workflow and its controls, not the product label alone.",
         },
       ],
     },
     {
       id: "s2",
-      title: "The five major tools",
+      title: "Six example tool surfaces",
       readTimeMinutes: 3,
       blocks: [
         {
@@ -37,33 +41,33 @@ const lesson: CodexLesson = {
           cards: [
             {
               eyebrow: "GitHub Copilot",
-              title: "The inline completer",
-              body: "Lives in your editor. Autocompletes at the cursor. Best for: boilerplate, repetitive patterns, filling out function bodies you already know the shape of. Worst for: architectural decisions, multi-file refactors.",
+              title: "Editor and GitHub workflows",
+              body: "Offers inline completion, chat, and agent workflows across supported editors and GitHub surfaces. Confirm repository access, execution location, and review controls for the mode you use.",
             },
             {
               eyebrow: "Cursor",
-              title: "The IDE-native agent",
-              body: "A VSCode fork with AI deeply woven in. Chat with the whole codebase as context. Agent mode can run terminal commands, edit multiple files, and iterate. Best for: interactive brownfield exploration.",
+              title: "AI-focused editor",
+              body: "Combines editor context, chat, and agent execution in an IDE. It can support interactive repository exploration and multi-file work, subject to the selected model and permission settings.",
             },
             {
               eyebrow: "Claude Code",
-              title: "The terminal-first agent",
-              body: "Runs in your existing terminal. Full repo access, shell execution, no dedicated IDE. Best for: developers who live in the terminal. Integrates naturally with git, CI, and custom scripts via hooks.",
+              title: "Terminal-oriented agent",
+              body: "Runs from a terminal and can use repository files and shell tools within configured permissions. Hooks and scripts can connect it to an existing development workflow.",
             },
             {
               eyebrow: "Aider",
-              title: "The open-source CLI agent",
-              body: "Open-source, model-agnostic CLI. You pick the model (GPT-4, Claude, Gemini). Best for: teams that want to bring their own API keys, want full auditability, or need to run air-gapped.",
+              title: "Open-source CLI interface",
+              body: "Supports multiple model providers through a command-line workflow. Offline or isolated operation depends on the chosen model endpoint and local infrastructure, not on the CLI alone.",
             },
             {
               eyebrow: "Cline (formerly Claude Dev)",
-              title: "The VSCode extension agent",
-              body: "VSCode extension that gives you an agentic AI inside your existing editor, not a fork. Supports multiple models. Best for: teams already on VSCode. MCP support makes it highly extensible.",
+              title: "Agent as an editor extension",
+              body: "Adds multi-provider agent workflows and MCP integrations to VS Code. Review its command approvals, provider configuration, and data path before enabling write access.",
             },
             {
               eyebrow: "Codex (OpenAI)",
-              title: "The cloud PR agent",
-              body: "The subject of this course. Runs in an isolated cloud sandbox. Async, you submit a task, come back to a PR. Best for: high-volume parallel work, tasks you can fully specify upfront.",
+              title: "Local and cloud Codex surfaces",
+              body: "Codex supports interactive local CLI and IDE work plus background cloud tasks in dedicated environments. Select the surface according to environment, permission, and review requirements.",
             },
           ],
         },
@@ -77,7 +81,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "The right tool depends on the task shape, not on loyalty to a vendor. A rough decision tree:\n\n- **You know what you want and it's one file** → Copilot autocomplete is fastest. Don't spawn an agent.\n- **You want to explore a codebase you don't know** → Cursor or Cline. Chat with context, ask questions, steer in real time.\n- **You have a well-specified task and want your hands free** → Codex (cloud) or Aider (local). Write the spec, let it run, review the PR.\n- **You live in the terminal and want a capable REPL-style agent** → Claude Code. Fast, composable, hooks into your existing workflow.\n- **You need model flexibility or air-gapped operation** → Aider. Bring your own model.",
+            "Match the workflow to the task and control boundary:\n\n- **Small, local edit with a known implementation** → use direct editing or inline completion when delegation overhead adds no value.\n- **Unfamiliar codebase** → begin with a read-oriented interactive workflow that can cite files and call paths before allowing edits.\n- **Well-specified background task** → use a dedicated environment, explicit checks, and a diff or pull-request review gate.\n- **Terminal-centered workflow** → use a CLI agent that can run the repository's existing commands inside the required sandbox and approval policy.\n- **Provider, residency, or offline constraint** → evaluate the complete model endpoint, telemetry, credential, and network path. A local client does not by itself make a workflow offline.\n\nRecheck product documentation when the decision affects security or procurement; these capabilities change.",
         },
       ],
     },
@@ -89,7 +93,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "MCP stands for Model Context Protocol, a standard for connecting AI agents to external tools, data sources, and services. Think of it as a plugin system for your agent.\n\nWithout MCP, an agent can only see your local filesystem and run shell commands. With MCP, it can query a database, search the web, create GitHub issues, read Slack threads, or call any API, all through a standard interface the agent already knows how to use.\n\nThe architecture is simple:\n\n```\n# How MCP works (conceptually)\n\n# 1. You configure MCP servers in your agent's config\n#    (e.g. ~/.claude/settings.json for Claude Code)\n\n# 2. Each server exposes \"tools\", named functions the agent can call\n#    e.g. mcp__github__create_issue({ title, body, labels })\n#         mcp__postgres__query({ sql })\n#         mcp__slack__send_message({ channel, text })\n\n# 3. The agent decides when to call them, just like any other tool\n#    You don't have to orchestrate the calls manually\n\n# Example: Claude Code with GitHub and Postgres MCP servers\n# Agent can now: read the DB schema, open a GitHub issue,\n# and commit a migration, all in one session\n```\n\nSupported by: Claude Code, Cline, Cursor (via extensions), and a growing list of other agents. MCP servers exist for GitHub, GitLab, Postgres, Supabase, Stripe, Slack, Google Drive, Jira, Linear, and dozens more. You can also write custom MCP servers for your internal tools.\n\nThe practical upside: your agent can participate in your full toolchain, not just your local filesystem. A task that previously required manual steps (\"run the query, paste the result into the prompt\") becomes a single agent-handled loop.",
+            "MCP stands for Model Context Protocol. It standardizes how a client discovers and calls tools, resources, and prompts exposed by an MCP server.\n\nMCP does not itself grant access. The server, transport, credentials, client policy, and user approvals determine what a tool can read or change. A database or GitHub integration should expose the narrowest useful operations and separate read actions from consequential writes.\n\nConceptually:\n\n```\n# 1. Configure a reviewed MCP server in the client.\n# 2. The server advertises named capabilities with input schemas.\n# 3. The client may call an allowed capability when the task requires it.\n# 4. Authentication, authorization, logging, and approval still apply.\n```\n\nMCP can replace manual copy-and-paste steps with structured calls, but it also expands the agent's trust boundary. Treat every configured server as an integration that requires ownership, least privilege, and auditability.",
         },
       ],
     },
@@ -101,7 +105,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Even non-IDE tools (Codex, Aider, Claude Code) integrate with your editor workflow. The common patterns:\n\n- **Diff review in your editor:** Codex and Aider both produce git diffs. Open the PR in your editor's git UI to review, same flow as any human PR.\n- **Running agents on save:** Some teams configure Claude Code or Aider to run a quick check (lint, type check, failing tests only) on every file save. Tight feedback loop without context-switching.\n- **Editor context for the CLI:** Claude Code can read your currently-open files from many editors via filesystem watching. You don't have to paste files, just reference them by name.\n- **Parallel sessions:** Use git worktrees (next lesson) to run an agent on a feature branch while you keep working in main. No context conflicts between the sessions.",
+            "Editor and terminal workflows can share the same repository controls:\n\n- **Review the diff:** inspect changed files, tests, deletions, and generated artifacts in the normal Git review surface.\n- **Run repository checks:** use the documented lint, type, test, and build commands rather than tool-specific claims of success.\n- **Limit context deliberately:** provide the files and logs required for the task; do not broaden repository or secret access for convenience.\n- **Isolate concurrent work:** separate branches or worktrees reduce file conflicts, but shared dependencies and generated state can still conflict.\n\nIntegration should preserve the project's review and security gates instead of bypassing them.",
         },
       ],
     },
@@ -109,7 +113,9 @@ const lesson: CodexLesson = {
       id: "s6",
       title: "Quick check",
       readTimeMinutes: 1,
-      blocks: [{ kind: "prose", markdown: "Two questions on tool selection and MCP." }],
+      blocks: [
+        { kind: "prose", markdown: "Two questions on tool selection and MCP." },
+      ],
     },
   ]),
   widgets: [
@@ -122,11 +128,9 @@ const lesson: CodexLesson = {
         kindLabel: CODEX_COMPARE_KIND_LABEL,
         badLabel: "Over-engineered",
         goodLabel: "Right-sized",
-        bad:
-          "Task: add a missing JSDoc comment to one function.\n\nApproach: spin up a Codex cloud task, write a spec, wait 4 minutes for the sandbox, get a PR, open a review.\n\nCost: ~5 minutes, 2 API calls, a PR to manage.",
-        good:
-          "Task: add a missing JSDoc comment to one function.\n\nApproach: cursor on the function, trigger Copilot inline, tab-complete the comment.\n\nCost: ~8 seconds. Done.\n\nSave the agent for tasks the autocompleter can't do.",
-        note: "Agents have overhead: sandbox spin-up, context loading, PR creation. That overhead is worth paying for a 200-line feature. It is not worth paying for a docstring. Match the tool to the task scope.",
+        bad: "Task: add a missing JSDoc comment to one function.\n\nApproach: create a background environment and a separate pull request for an edit that can be reviewed directly in place.\n\nCost: additional environment and review state without a corresponding reduction in risk.",
+        good: "Task: add a missing JSDoc comment to one function.\n\nApproach: edit or generate the comment beside the function, inspect it against the implementation, and include it in the existing change.\n\nCost: no separate execution environment or review object.",
+        note: "Delegated tasks add environment, context, and review overhead. Use that separation when it improves isolation, verification, or parallelism; otherwise keep the change in the current workflow.",
       },
     },
     {
@@ -139,16 +143,16 @@ const lesson: CodexLesson = {
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
         question:
-          "You need to explore an unfamiliar 80k-line codebase and understand how the authentication flow works before making any changes. Which tool fits best?",
+          "You need to understand authentication in an unfamiliar codebase before making changes. Which workflow is the safest first step?",
         options: [
-          "GitHub Copilot, it's always on and knows your code.",
-          "Cursor or Cline, IDE-native agents with whole-codebase chat let you ask questions and explore interactively before touching anything.",
-          'Codex, submit a task: "explain the auth flow."',
-          "Aider, open-source and model-agnostic.",
+          "Grant write and network access immediately so exploration is unrestricted.",
+          "Start read-oriented, require file and call-path evidence, then define a separate bounded change after reviewing the trace.",
+          "Choose whichever product has the shortest setup flow.",
+          "Ask for an architecture summary without repository access.",
         ],
         correct: 1,
         explanation:
-          "Exploration is interactive and open-ended, you don't know what you're looking for yet. IDE-native agents (Cursor, Cline) excel here because you can ask follow-up questions, jump to definitions, and steer the conversation as understanding develops. Codex is optimized for well-specified tasks, not open-ended exploration.",
+          "Read-oriented exploration limits accidental changes and produces evidence you can verify. Once the authentication path and trust boundaries are known, create a separate task with explicit scope and checks.",
       },
     },
     {
@@ -160,16 +164,16 @@ const lesson: CodexLesson = {
         cpId: "q2",
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
-        question: "What does an MCP server enable that an agent without MCP cannot do?",
+        question: "What does MCP add to a coding-agent workflow?",
         options: [
           "Write code faster.",
-          "Connect to external tools, databases, and APIs (GitHub, Postgres, Slack, etc.) through a standard interface the agent can call directly.",
+          "A standard interface for discovering and calling capabilities exposed by configured servers, subject to authentication and policy.",
           "Run inside a sandboxed environment.",
           "Understand more programming languages.",
         ],
         correct: 1,
         explanation:
-          "MCP (Model Context Protocol) is a plugin standard. It lets agents call named tools that talk to external systems, a Postgres MCP server lets the agent run SQL queries; a GitHub MCP server lets it open issues. Without MCP, the agent is limited to the local filesystem and shell. With it, the agent can participate in your full toolchain.",
+          "MCP standardizes capability discovery and invocation. It does not replace authentication, authorization, approval, logging, or least-privilege design.",
       },
     },
   ],

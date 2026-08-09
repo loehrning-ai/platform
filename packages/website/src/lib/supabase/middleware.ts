@@ -6,17 +6,20 @@ import { AUTH_COOKIE_OPTIONS, getSupabasePublicConfig } from "./config";
 export async function refreshAuthSession(
   request: NextRequest,
   requestHeaders: Headers,
+  continuationResponse?: NextResponse,
 ): Promise<{
   readonly configured: boolean;
   readonly response: NextResponse;
   readonly user: User | null;
   readonly error: unknown | null;
 }> {
-  const response = NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
+  const response =
+    continuationResponse ??
+    NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
 
   try {
     const config = getSupabasePublicConfig();

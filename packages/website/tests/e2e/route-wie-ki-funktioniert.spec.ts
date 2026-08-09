@@ -1,7 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 
 /**
- * Route coverage for the "Wie KI wirklich funktioniert" conceptual block
+ * Route coverage for the "Wie Sprachmodelle arbeiten" conceptual block
  * (regression coverage). The hub at /wie-ki-funktioniert lists four lesson cards
  * that deep-link into /wie-ki-funktioniert/<lektionId>; every lesson page
  * carries a togglable "Kurze Selbstprüfung" comprehension check.
@@ -42,7 +42,7 @@ test.describe("/wie-ki-funktioniert hub", () => {
     await gotoClean(page, HUB);
     await expect(page).not.toHaveURL(/\/login/);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      "Wie KI wirklich funktioniert",
+      "Wie Sprachmodelle arbeiten",
     );
 
     const cards = page.getByTestId("lektion-cards");
@@ -61,7 +61,10 @@ test.describe("/wie-ki-funktioniert hub", () => {
 
   test("clicking a lesson card navigates to that lesson", async ({ page }) => {
     await page.goto(HUB);
-    const firstCard = page.getByTestId("lektion-cards").getByRole("link").first();
+    const firstCard = page
+      .getByTestId("lektion-cards")
+      .getByRole("link")
+      .first();
     const href = await firstCard.getAttribute("href");
     expect(href, "lesson card must carry a deep-link href").toMatch(
       /\/wie-ki-funktioniert\/lektion-/,
@@ -73,7 +76,7 @@ test.describe("/wie-ki-funktioniert hub", () => {
     // assertion timeout. Wait for the lesson breadcrumb back-link (which exists
     // only on lesson pages, never on the hub) before asserting the URL.
     await expect(
-      page.getByRole("link", { name: /Wie KI wirklich funktioniert/ }).first(),
+      page.getByRole("link", { name: /Wie Sprachmodelle arbeiten/ }).first(),
     ).toBeVisible({ timeout: 20000 });
     await expect(page).toHaveURL(/\/wie-ki-funktioniert\/lektion-/);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
@@ -104,7 +107,9 @@ test.describe("/wie-ki-funktioniert/[lektionId] lesson", () => {
     }).toPass({ timeout: 15000 });
   });
 
-  test("an unknown lesson slug renders the not-found page", async ({ page }) => {
+  test("an unknown lesson slug renders the not-found page", async ({
+    page,
+  }) => {
     await page.goto(`${HUB}/diese-lektion-gibt-es-nicht`);
     // The [lektionId] route calls notFound() for unknown slugs, which renders
     // the app 404 boundary. Assert the rendered UI rather than the HTTP status:

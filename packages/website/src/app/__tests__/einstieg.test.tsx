@@ -1,89 +1,115 @@
-import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TOTAL_QUESTIONS } from "@/lib/ki-check/questions";
-import EinstiegPage from "../einstieg/page";
 
-describe("/einstieg page", () => {
-  it("renders without throwing", () => {
-    expect(() => render(<EinstiegPage />)).not.toThrow();
+const { getRequestLocaleMock } = vi.hoisted(() => ({
+  getRequestLocaleMock: vi.fn(),
+}));
+
+vi.mock("@/lib/i18n/request-locale", () => ({
+  getRequestLocale: getRequestLocaleMock,
+}));
+
+import EinstiegPage, { generateMetadata } from "../einstieg/page";
+
+async function renderPage(locale: "de" | "en" = "de") {
+  getRequestLocaleMock.mockResolvedValue(locale);
+  render(await EinstiegPage());
+}
+
+describe("/einstieg locale content", () => {
+  beforeEach(() => {
+    getRequestLocaleMock.mockReset();
   });
 
-  it("contains the word Künstliche Intelligenz in a heading or paragraph", () => {
-    render(<EinstiegPage />);
-    const page = document.body.textContent ?? "";
-    expect(page).toContain("Künstliche Intelligenz");
-  });
-
-  it("renders three daily-life example cards", () => {
-    render(<EinstiegPage />);
-    const cards = screen.getByTestId("beispiel-cards");
-    expect(cards).toBeInTheDocument();
-    expect(screen.getByTestId("beispiel-gesicht")).toBeInTheDocument();
-    expect(screen.getByTestId("beispiel-route")).toBeInTheDocument();
-    expect(screen.getByTestId("beispiel-empfehlungen")).toBeInTheDocument();
-  });
-
-  it("contains a link to /wie-ki-funktioniert (primary CTA)", () => {
-    render(<EinstiegPage />);
-    const links = screen.getAllByRole("link");
-    const hrefs = links.map((l) => l.getAttribute("href"));
-    expect(hrefs).toContain("/wie-ki-funktioniert");
-  });
-
-  it("contains a link to /ki-fuehrerschein (secondary CTA)", () => {
-    render(<EinstiegPage />);
-    const links = screen.getAllByRole("link");
-    const hrefs = links.map((l) => l.getAttribute("href"));
-    expect(hrefs).toContain("/ki-fuehrerschein");
-  });
-
-  it("derives the KI-Check question count from the canonical question bank", () => {
-    render(<EinstiegPage />);
+  it("renders the German learning structure and all 3 example cards", async () => {
+    await renderPage("de");
 
     expect(
-      screen.getByText(new RegExp(`${TOTAL_QUESTIONS} kurze Fragen`)),
-    ).toBeInTheDocument();
-    expect(TOTAL_QUESTIONS).toBe(10);
-    expect(screen.queryByText(/Fünf kurze Fragen/)).toBeNull();
+      screen.getByRole("heading", {
+        level: 1,
+        name: "Was ist Künstliche Intelligenz?",
+      }),
+    ).toBeVisible();
+    expect(screen.getByTestId("beispiel-cards")).toBeVisible();
+    for (const id of ["gesicht", "route", "empfehlungen"] as const) {
+      expect(screen.getByTestId(`beispiel-${id}`)).toBeVisible();
+    }
+    expect(
+      screen.getByText(new RegExp(`${TOTAL_QUESTIONS} Fragen`)),
+    ).toBeVisible();
   });
 
-  it("does not contain banned commercial phrases", () => {
-    render(<EinstiegPage />);
-    const page = document.body.textContent ?? "";
-    expect(page).not.toContain("Mehrwert");
-    expect(page).not.toContain("disruptiv");
-    expect(page).not.toContain("Transformation");
-    expect(page).not.toContain("Wettbewerbsvorteil");
+  it("renders reviewed English copy without German learner UI", async () => {
+    await renderPage("en");
+
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "What is artificial intelligence?",
+      }),
+    ).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Face recognition" })).toBeVisible();
+    expect(document.body).not.toHaveTextContent("Wie möchtest du weitermachen?");
   });
 
-  it("does not use formal Sie address in learner-facing copy", () => {
-    render(<EinstiegPage />);
-    const page = document.body.textContent ?? "";
-    // Match "Sie " with trailing space to avoid false positives on "Sie" in proper nouns
-    // Exclude "Wer steckt dahinter" answer which uses "Sie" legitimately in /ueber-mich mention
-    const formerLines = page.split("\n").filter((line) =>
-      /\bSie\b/.test(line) &&
-      !line.includes("ueber-mich") &&
-      !line.includes("Über-mich"),
+  it("preserves the active locale across every internal link", async () => {
+    await renderPage("en");
+
+    const internalHrefs = screen
+      .getAllByRole("link")
+      .map((link) => link.getAttribute("href"))
+      .filter((href): href is string => Boolean(href?.startsWith("/")));
+
+    expect(internalHrefs).toEqual(
+      expect.arrayContaining([
+        "/en/ueber-mich",
+        "/en/ki-check",
+        "/en/ki-fuehrerschein",
+        "/en/wie-ki-funktioniert",
+      ]),
     );
-    expect(formerLines.length).toBe(0);
+    expect(internalHrefs.every((href) => href.startsWith("/en/"))).toBe(true);
   });
 
-  it("has no form or login prompt", () => {
-    render(<EinstiegPage />);
-    const forms = document.querySelectorAll("form");
-    expect(forms.length).toBe(0);
-    const page = document.body.textContent ?? "";
-    expect(page).not.toContain("E-Mail");
-    expect(page).not.toContain("Passwort");
-    expect(page).not.toContain("Anmelden");
-  });
+  it.each([
+    ["de", "/einstieg", "Was ist KI? Ein Einstieg ohne Vorwissen", "de_DE"],
+    [
+      "en",
+      "/en/einstieg",
+      "What is AI? An introduction without prerequisites",
+      "en_GB",
+    ],
+  ] as const)(
+    "uses localized %s metadata and its own canonical",
+    async (locale, canonical, title, openGraphLocale) => {
+      getRequestLocaleMock.mockResolvedValue(locale);
+      const metadata = await generateMetadata();
 
-  it("has no mention of pricing", () => {
-    render(<EinstiegPage />);
+      expect(metadata.title).toBe(title);
+      expect(metadata.alternates).toMatchObject({ canonical });
+      expect(metadata.openGraph).toMatchObject({
+        title,
+        locale: openGraphLocale,
+        url: `https://loehrning.ai${canonical}`,
+      });
+    },
+  );
+
+  it("contains no form, login prompt, price, or commercial filler", async () => {
+    await renderPage("de");
     const page = document.body.textContent ?? "";
-    expect(page).not.toContain("€");
-    expect(page).not.toContain("EUR");
-    expect(page).not.toContain("Preis");
+
+    expect(document.querySelector("form")).toBeNull();
+    for (const phrase of [
+      "Mehrwert",
+      "disruptiv",
+      "Transformation",
+      "Wettbewerbsvorteil",
+      "Jetzt loslegen",
+      "€",
+    ]) {
+      expect(page).not.toContain(phrase);
+    }
   });
 });

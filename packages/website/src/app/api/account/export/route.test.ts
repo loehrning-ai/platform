@@ -766,6 +766,41 @@ describe("POST /api/account/export", () => {
     expect(mockTryCreateServiceClient).not.toHaveBeenCalled();
   });
 
+  it("localizes the bounded native form error without weakening owner binding", async () => {
+    const response = await POST(
+      exportPostRequest(
+        "expectedOwnerId=user-2&locale=en",
+        "application/x-www-form-urlencoded",
+      ),
+    );
+
+    expect(response.status).toBe(409);
+    expect(response.headers.get("content-language")).toBe("en");
+    const html = await response.text();
+    expect(html).toContain('<html lang="en">');
+    expect(html).toContain("<h1>Data export failed</h1>");
+    expect(html).toContain("<code>account_owner_mismatch</code>");
+    expect(html).toContain('href="/en/konto/datenschutz"');
+    expect(html).toContain("Back to privacy and data management");
+    expect(html).not.toContain("user-1");
+    expect(html).not.toContain("user-2");
+    expect(mockConsumeRateLimit).not.toHaveBeenCalled();
+    expect(mockFetchProgress).not.toHaveBeenCalled();
+  });
+
+  it("rejects duplicate or unsupported form locales before authentication", async () => {
+    for (const body of [
+      "expectedOwnerId=user-1&locale=en&locale=de",
+      "expectedOwnerId=user-1&locale=fr",
+    ]) {
+      const response = await POST(
+        exportPostRequest(body, "application/x-www-form-urlencoded"),
+      );
+      expect(response.status).toBe(400);
+    }
+    expect(mockGetAuthenticatedUser).not.toHaveBeenCalled();
+  });
+
   it("renders a bounded, retryable native form error when export quota is exhausted", async () => {
     mockConsumeRateLimit.mockResolvedValueOnce(false);
 

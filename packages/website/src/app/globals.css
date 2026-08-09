@@ -528,6 +528,7 @@
 
   nav,
   footer,
+  .no-print,
   .print\:hidden {
     display: none !important;
   }

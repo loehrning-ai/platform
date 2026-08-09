@@ -1,0 +1,30 @@
+{
+  "id": "lektion-1-vorhersage",
+  "blockId": "wie-ki-funktioniert",
+  "number": 1,
+  "title": "Token prediction: how language models generate text",
+  "subtitle": "Language models generate responses one token at a time. That process does not prove a claim is true.",
+  "durationMinutes": 10,
+  "keyConcepts": [
+    "Token prediction",
+    "Probability distribution",
+    "Training data",
+    "Large language model"
+  ],
+  "sections": [
+    {
+      "id": "lektion-1-abschnitt-1",
+      "title": "The probability game",
+      "readTimeMinutes": 5,
+      "content": "Imagine that someone shows you the start of a sentence: \"This morning the dog ___\". You probably think of words such as \"barked\", \"ate\", or \"played\", not \"quantum mechanics\".\n\nA language model processes the tokens already in context and calculates a probability distribution for the next token. It selects a token, appends it to the sequence, and repeats the process. A response emerges step by step.\n\nDuring training, model parameters are adjusted so that suitable continuations become more likely. The resulting parameters encode statistical representations of language, relationships, and concepts. Training data and methods differ by model and are not always disclosed in full.\n\nIf you ask for the capital of Bavaria, the answer \"Munich\" can emerge from a learned relationship between those concepts. This is not the same as querying a verified fact database. If the system has access to search, documents, or other tools, their results can also enter the context.\n\nThe processed units are called tokens. A token may be a word, part of a word, or punctuation. A long word may be split into several tokens. The important point is that the response is generated through repeated next-token prediction based on the current context.",
+      "keyTakeaway": "A language model generates text through repeated token prediction. Whether a claim is correct requires separate evidence or verification."
+    },
+    {
+      "id": "lektion-1-abschnitt-2",
+      "title": "Why this matters",
+      "readTimeMinutes": 5,
+      "content": "Token prediction does not include automatic fact-checking. A response can therefore sound fluent and definite while containing a false statement. Search, retrieval, and other tools can support verification, but the quality and relevance of their sources still require review.\n\nIf you ask for the publication year of an obscure book, the model may generate a plausible but incorrect year. Its tone does not reveal whether the year is supported.\n\nConsider this sentence: \"The Berlin Wall fell on 12 November 1989.\" It sounds plausible, but the correct date is 9 November 1989. Linguistic confidence is not a measure of factual confidence.\n\nLanguage models remain useful for drafting, summarizing supplied documents, generating options, or translating text. When a task depends on verifiable facts, source checking is part of the workflow.\n\nTreat an output as a reviewable draft. Identify its important claims, open the underlying sources, and resolve contradictions before using it.",
+      "keyTakeaway": "Linguistic plausibility does not establish factual accuracy. Check consequential claims against traceable sources."
+    }
+  ]
+}

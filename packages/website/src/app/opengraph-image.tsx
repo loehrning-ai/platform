@@ -1,7 +1,8 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "loehrning.ai: kostenlose KI-Lernplattform auf Deutsch.";
+export const alt =
+  "loehrning.ai: free AI and data learning resources in German and English.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -44,9 +45,9 @@ export default function Image() {
               letterSpacing: "0",
             }}
           >
-            <div>KI lernen.</div>
-            <div>Kostenlos.</div>
-            <div>Auf Deutsch.</div>
+            <div>AI and data.</div>
+            <div>KI und Daten.</div>
+            <div>Free to learn.</div>
           </div>
           <div
             style={{
@@ -57,8 +58,8 @@ export default function Image() {
               lineHeight: 1.3,
             }}
           >
-            <div>Kurse, Bücher, Demos und Blog.</div>
-            <div>Ohne Login. Mit offener Methodik und Lernmaterialien.</div>
+            <div>Courses, books, workshops, demos, and source artifacts.</div>
+            <div>Each page states access, sources, and completion evidence.</div>
           </div>
         </div>
 
@@ -70,10 +71,10 @@ export default function Image() {
             borderTop: "2px solid #B73A15",
           }}
         >
-          {["Kurse", "Bücher", "Demos", "Open Source"].map((label) => (
+          {["Courses · Kurse", "Books · Bücher", "Workshops", "Open Source"].map((label) => (
             <div key={label} style={{ display: "flex", flexDirection: "column" }}>
               <div style={{ fontSize: "16px", color: "#4f4640", textTransform: "uppercase", letterSpacing: "0.1em" }}>
-                Ressource
+                Resource · Ressource
               </div>
               <div style={{ fontSize: "20px", color: "#0B0908", fontWeight: 700 }}>{label}</div>
             </div>

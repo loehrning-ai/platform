@@ -76,17 +76,21 @@ describe("<WordDemo>", () => {
   it("renders the form defaults, the derived filename, and the empty doc state", () => {
     render(<WordDemo />);
 
-    expect(screen.getByRole("region", { name: "Praxisbeispiel: Word" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "Praxisbeispiel: Word" }),
+    ).toBeInTheDocument();
     // Default field values.
-    expect(screen.getByLabelText("Adressat")).toHaveValue("Fiktivwerk Beispiel GmbH (rein fiktiv)");
-    expect(screen.getByLabelText("Projekt-Titel")).toHaveValue(
+    expect(screen.getByLabelText("Adressat")).toHaveValue(
+      "Fiktivwerk Beispiel GmbH (rein fiktiv)",
+    );
+    expect(screen.getByLabelText("Projekttitel")).toHaveValue(
       "Wartungs-KI Produktionslinie",
     );
     // Filename stub is the first token of the Adressat.
     expect(screen.getByText(/Projektbrief_Fiktivwerk_/)).toBeInTheDocument();
     // Ungenerated: placeholder shown, no generated KPIs yet.
-    expect(screen.getByText(/Claude füllt dieses/)).toBeInTheDocument();
-    expect(screen.queryByText("Erstellzeit")).not.toBeInTheDocument();
+    expect(screen.getByText(/Die Simulation fügt/)).toBeInTheDocument();
+    expect(screen.queryByText("Simulationsstatus")).not.toBeInTheDocument();
   });
 
   it("re-derives the doc filename live when the Adressat changes", () => {
@@ -97,7 +101,9 @@ describe("<WordDemo>", () => {
     });
 
     expect(screen.getByText(/Projektbrief_Neukunde_/)).toBeInTheDocument();
-    expect(screen.queryByText(/Projektbrief_Fiktivwerk_/)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/Projektbrief_Fiktivwerk_/),
+    ).not.toBeInTheDocument();
   });
 
   it("runs the generate sequence and fills the brief from the form after the timers elapse", () => {
@@ -110,13 +116,13 @@ describe("<WordDemo>", () => {
       );
 
       // generate() enters the busy state synchronously (genStep = 1).
-      const genBtn = screen.getByRole("button", { name: /Generiert/ });
+      const genBtn = screen.getByRole("button", {
+        name: /Entwurf wird erstellt/,
+      });
       expect(genBtn).toBeDisabled();
-      expect(
-        screen.getByText(/Stil-Abgleich mit Musterreferenzen/),
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Musterreferenzen lesen/)).toBeInTheDocument();
       // Doc not generated yet -> placeholder still present.
-      expect(screen.getByText(/Claude füllt dieses/)).toBeInTheDocument();
+      expect(screen.getByText(/Die Simulation fügt/)).toBeInTheDocument();
 
       // Final timer fires at 1500ms and sets generated = true.
       act(() => {
@@ -127,16 +133,16 @@ describe("<WordDemo>", () => {
       expect(
         screen.getByText(/Projektbrief: Wartungs-KI Produktionslinie/),
       ).toBeInTheDocument();
-      expect(screen.getByText("Juli-September 2026")).toBeInTheDocument();
+      expect(screen.getByText("Juli bis September 2026")).toBeInTheDocument();
       // Generated-only KPI grid is now present.
-      expect(screen.getByText("Erstellzeit")).toBeInTheDocument();
-      expect(screen.getByText("4,2 s")).toBeInTheDocument();
+      expect(screen.getByText("Simulationsstatus")).toBeInTheDocument();
+      expect(screen.getByText("abgeschlossen")).toBeInTheDocument();
       // Button flips to the re-generate label and is enabled again.
       expect(
-        screen.getByRole("button", { name: /Neu generieren/ }),
+        screen.getByRole("button", { name: /Neu erstellen/ }),
       ).toBeEnabled();
       // Placeholder replaced by the real doc.
-      expect(screen.queryByText(/Claude füllt dieses/)).not.toBeInTheDocument();
+      expect(screen.queryByText(/Die Simulation fügt/)).not.toBeInTheDocument();
     } finally {
       vi.useRealTimers();
     }

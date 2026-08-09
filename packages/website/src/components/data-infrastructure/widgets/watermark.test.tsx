@@ -1,5 +1,19 @@
-import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from "vitest";
-import { render, screen, fireEvent, cleanup, act } from "@testing-library/react";
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  beforeEach,
+  afterEach,
+  vi,
+} from "vitest";
+import {
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  act,
+} from "@testing-library/react";
 import { __resetCacheForTests, getXp, isCheckpointDone } from "@/lib/progress";
 import { XP } from "@/lib/progress/types";
 import { Watermark } from "./watermark";
@@ -23,7 +37,10 @@ function installLocalStoragePolyfill(): void {
 }
 
 beforeAll(() => {
-  if (typeof window.localStorage === "undefined" || typeof window.localStorage.setItem !== "function") {
+  if (
+    typeof window.localStorage === "undefined" ||
+    typeof window.localStorage.setItem !== "function"
+  ) {
     installLocalStoragePolyfill();
   }
 });
@@ -41,8 +58,12 @@ afterEach(() => {
 describe("Watermark", () => {
   it("renders the canvas and run/chaos/reset controls", () => {
     render(<Watermark lessonId="di-streaming" cpId="wm" />);
-    expect(screen.getByRole("img", { name: /Stream-processing watermark/ })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /run stream/ })).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: /Stream-processing watermark/ }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /run stream/ }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /chaos/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "reset" })).toBeInTheDocument();
     expect(screen.getByLabelText(/allow late/)).toBeChecked();
@@ -51,10 +72,18 @@ describe("Watermark", () => {
   it("falls back to a static summary, without crashing, when getContext('2d') returns null", () => {
     const original = HTMLCanvasElement.prototype.getContext;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    HTMLCanvasElement.prototype.getContext = vi.fn().mockReturnValue(null) as any;
+    HTMLCanvasElement.prototype.getContext = vi
+      .fn()
+      .mockReturnValue(null) as any;
     try {
-      expect(() => render(<Watermark lessonId="di-streaming" cpId="wm" />)).not.toThrow();
-      expect(screen.getByRole("img", { name: /on-time events land near the diagonal/ })).toBeInTheDocument();
+      expect(() =>
+        render(<Watermark lessonId="di-streaming" cpId="wm" />),
+      ).not.toThrow();
+      expect(
+        screen.getByRole("img", {
+          name: /on-time events land near the diagonal/,
+        }),
+      ).toBeInTheDocument();
     } finally {
       HTMLCanvasElement.prototype.getContext = original;
     }

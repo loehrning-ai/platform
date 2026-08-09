@@ -12,6 +12,8 @@
  * in a page component.
  */
 
+import type { Locale } from "./i18n/locale";
+
 export interface WorkshopStep {
   /** Zero-padded step number, e.g. "01". */
   readonly n: string;
@@ -48,6 +50,8 @@ export interface WorkshopMaterial {
   readonly label: string;
   readonly href: string;
   readonly kind: "html" | "zip";
+  /** Language of the linked file itself, independent from the page locale. */
+  readonly language: Locale;
   readonly description: string;
 }
 
@@ -82,7 +86,7 @@ export interface Workshop {
 
 const WORKSHOP_BASE_PATH = "/workshops/geschaeftsberichte-mit-ki-lesen";
 
-export const WORKSHOPS: readonly Workshop[] = [
+const WORKSHOPS_DE: readonly Workshop[] = [
   {
     slug: "ki-prognosen-einschaetzen",
     title: "Kann KI die Zukunft vorhersagen?",
@@ -170,6 +174,7 @@ export const WORKSHOPS: readonly Workshop[] = [
         label: "Workshop-Hub (Englisch)",
         href: "/workshops/ki-prognosen-einschaetzen/hub.html",
         kind: "html",
+        language: "en",
         description:
           "Die Startseite: von hier öffnest du die drei Labore, den Geschäftsfall und die Blätter zum Mitnehmen in der vorgesehenen Reihenfolge.",
       },
@@ -177,6 +182,7 @@ export const WORKSHOPS: readonly Workshop[] = [
         label: "Entscheidungslabor (Englisch, 3 Akte)",
         href: "/workshops/ki-prognosen-einschaetzen/hands-on.html",
         kind: "html",
+        language: "en",
         description:
           "Drei interaktive Akte auf einer Seite: Kapazität festlegen, Aufschaukelung stoppen, schnelle Nachfrage kontrolliert freigeben, jeweils mit Simulation zum Mitspielen.",
       },
@@ -184,6 +190,7 @@ export const WORKSHOPS: readonly Workshop[] = [
         label: "Geschäftsfall (Englisch)",
         href: "/workshops/ki-prognosen-einschaetzen/case-study/index.html",
         kind: "html",
+        language: "en",
         description:
           "Ein Launch, drei Zahlen, eine knappe Menge: Zuteilungsentscheidung, Systemkarte, Kostenasymmetrie und das tägliche Freigabe-Tor.",
       },
@@ -191,6 +198,7 @@ export const WORKSHOPS: readonly Workshop[] = [
         label: "Field Card (Englisch, 1 Seite)",
         href: "/workshops/ki-prognosen-einschaetzen/field-card.html",
         kind: "html",
+        language: "en",
         description:
           "Die druckbare Prüfliste für jede Prognose: fünf Säulen, Servicelevel-Formel, Sicherheitsbestand und die vier nicht prognostizierbaren Ereignisklassen.",
       },
@@ -198,6 +206,7 @@ export const WORKSHOPS: readonly Workshop[] = [
         label: "Übungsaufgabe (Englisch)",
         href: "/workshops/ki-prognosen-einschaetzen/homework.html",
         kind: "html",
+        language: "en",
         description:
           "104 Wochen Nachfrage als CSV plus Anleitung: zwei Prognosen rechnen, vier Zahlen vergleichen, eine Frage beantworten. Tabellenblatt genügt.",
       },
@@ -223,7 +232,7 @@ export const WORKSHOPS: readonly Workshop[] = [
         n: "01",
         title: "Verankern: Claude lernt das Unternehmen",
         description:
-          "Du öffnest den Kit-Ordner in der Claude-App: der Monatsbericht (8 Seiten), fünf CSV-Rohdaten-Dateien (auch in Excel nutzbar) und ein Unternehmenssteckbrief. Ein Satz genügt: Claude liest Steckbrief und Bericht und benennt, wer das Unternehmen ist und welche Entscheidung der Monat vorbereitet. Der Ordner ist der Kontext: nichts wird hochgeladen oder konfiguriert.",
+          "Du wählst den Kit-Ordner in der Claude-App aus: den Monatsbericht (8 Seiten), fünf CSV-Rohdaten-Dateien (auch in Excel nutzbar) und einen Unternehmenssteckbrief. Claude liest Steckbrief und Bericht und benennt, wer das Unternehmen ist und welche Entscheidung der Monat vorbereitet. Die Übungsdateien können dabei an den konfigurierten Dienst übertragen werden; verwende ausschließlich das bereitgestellte fiktive Material und prüfe vor realen Daten die aktuellen Produkt-, Vertrags- und Aufbewahrungseinstellungen.",
         tool: "Dateien",
       },
       {
@@ -311,6 +320,7 @@ export const WORKSHOPS: readonly Workshop[] = [
         label: "Workshop-Walkthrough (Englisch, 21 Slides)",
         href: `${WORKSHOP_BASE_PATH}/slides.html`,
         kind: "html",
+        language: "en",
         description:
           "Englisches Slide-Deck entlang des roten Fadens: das Unternehmen, das Zip-Verzeichnis, die fünf Prompts mit ihren Artefakten, drei anspruchsvollere Zusatz-Prompts und Fall 2 (Meta). Jeder Prompt steht mit Kopier-Knopf auf der Folie. Mit Pfeiltasten blättern.",
       },
@@ -318,6 +328,7 @@ export const WORKSHOPS: readonly Workshop[] = [
         label: "NORTHWIND Analyst Kit (Englisch, .zip)",
         href: `${WORKSHOP_BASE_PATH}/northwind-analyst-kit.zip`,
         kind: "zip",
+        language: "en",
         description:
           "Englisches Kit mit beiden Fällen: CSV-Rohdaten, beide Monatsberichte als Markdown, der halb fertige Kennzahlen-Skill, die Dashboard-Vorlage, das Arbeitsblatt, die Meta-Aufgabe (Fall 2) und eine leere Vorlage für das eigene Unternehmen. Reines Textarchiv: den gestalteten Bericht siehst du im Walkthrough.",
       },
@@ -325,8 +336,275 @@ export const WORKSHOPS: readonly Workshop[] = [
   },
 ];
 
-export function getWorkshopBySlug(slug: string): Workshop | undefined {
-  return WORKSHOPS.find((workshop) => workshop.slug === slug);
+const WORKSHOPS_EN: readonly Workshop[] = [
+  {
+    slug: "ki-prognosen-einschaetzen",
+    title: "Can AI predict the future?",
+    eyebrow: "Self-study workshop · Forecasts and decisions",
+    summary:
+      "Decide when a forecast is useful: price the two error directions, set buffers, and define a release gate. Three decision labs end with a launch whose demand exceeds supply.",
+    description:
+      "A forecast earns its cost only when it changes a decision. This workshop therefore starts before model selection: does the model beat the process already in use? What does excess capacity cost, what does insufficient capacity cost, and which buffer balances the two? How does a team detect that a live forecast is failing? Three interactive decision labs and one worked business case lead to a defensible go or no-go decision. No programming, installation, or AI account is required; the material runs as static pages in the browser.",
+    format: "Self-study kit",
+    duration: "About 90 minutes",
+    audience: [
+      "Planning, supply-chain, and operations teams that work with demand or capacity forecasts",
+      "Specialists and managers who are accountable for forecasts but do not build the models",
+      "Data and analytics teams that must compare a model with the existing process",
+    ],
+    steps: [
+      {
+        n: "01",
+        title: "Beat the existing process in euros",
+        description:
+          "In the first decision lab, six weeks of parcel demand run as a shadow test against the planner's current baseline: the same weekday one week earlier. Insufficient capacity costs more than excess capacity, so that asymmetry determines the result. Switch among three model stages and identify which one earns its cost. A promotion that was never entered remains invisible to every stage and is escalated to a person.",
+        tool: "Lab · Act 1",
+      },
+      {
+        n: "02",
+        title: "Compare stacked buffers with a shared signal",
+        description:
+          "The second lab sends the same demand through the supply chain twice: once with local safety uplifts at every stage, once with a forecast shared by all participants. The amplification ratio, service level, and working capital show what is forecast error and what is simply the result of stacked buffers.",
+        tool: "Lab · Act 2",
+      },
+      {
+        n: "03",
+        title: "Test the release loop under pressure",
+        description:
+          "The third lab introduces demand shocks and compares two operating modes. The blind mode keeps running the plan from launch day. The monitored mode detects the deviation, closes the gate, assigns the case to a named person, and resumes automation only after retraining. The value lies in the controlled process, not in a smoother chart.",
+        tool: "Lab · Act 3",
+      },
+      {
+        n: "04",
+        title: "Business case: one constrained supply, three numbers",
+        description:
+          "Eleven stations follow a product launch. Site requests total 1,370 units, the estimate of underlying demand is 1,180, and confirmed supply is fixed at 1,050. The case moves from a manual spreadsheet round through error-cost asymmetry and model choice (12% rather than 21% deviation) to one-query data traps, rolling backtests, and a daily four-check release gate.",
+        tool: "Business case",
+      },
+      {
+        n: "05",
+        title: "Calculate two forecasts and four measures",
+        description:
+          "The exercise provides 104 weeks of demand as a CSV file. Hold back the final 14 weeks, forecast them once with a naive method and once with smoothing, then assess both with mean error and systematic bias. Four numbers and one sentence answer the relevant question: did smoothing earn its cost? A spreadsheet is sufficient; no code is required.",
+        tool: "Exercise",
+      },
+      {
+        n: "06",
+        title: "Transfer the method to your domain",
+        description:
+          "A one-page field card records the durable parts of the method: five pillars, the service-level formula based on both error costs, a safety-stock rule of thumb, and four classes of events that cannot be forecast reliably. Finish by describing how the logic applies to one of your own cases in five sentences.",
+        tool: "Field card",
+      },
+    ],
+    caseStudy: {
+      companyName: "Product launch with constrained supply",
+      isFictional: true,
+      location: "Constructed practice scenario",
+      sector: "Consumer electronics · Supply and demand management",
+      period: "Launch week for a new device",
+      narrative:
+        "The case reconstructs a common launch-planning problem: estimated demand is higher than confirmed supply. Three sites request 1,370 units in total, a model estimates underlying demand at 1,180, and confirmed supply is fixed at 1,050. Three departments review the same week and use three different numbers. Companies mentioned in the exercise represent typical operating perspectives. All figures were constructed for teaching and do not come from a real company report.",
+      metrics: [
+        { label: "Site requests", value: "1,370" },
+        { label: "Underlying demand (p50)", value: "1,180" },
+        { label: "Confirmed supply", value: "1,050" },
+        { label: "Model / baseline deviation", value: "12% / 21%" },
+      ],
+      decisionQuestion:
+        "Which rule should allocate 1,050 units among three sites of different sizes when 320 requested units cannot be supplied, and at what forecast error must that allocation require human approval?",
+      dataLimitations: [
+        "Sales are not demand. Stockouts never appear as sales and must be reconstructed.",
+        "Only features known at forecast time may enter the model; otherwise the backtest leaks future information.",
+        "One accuracy measure hides systematic bias. A model can look acceptable on average while remaining consistently high.",
+        "Competitor actions and weather remain risks at this horizon and are deliberately not treated as model features.",
+      ],
+    },
+    materials: [
+      {
+        label: "Workshop hub",
+        href: "/workshops/ki-prognosen-einschaetzen/hub.html",
+        kind: "html",
+        language: "en",
+        description:
+          "Starting page for the three labs, business case, and take-away sheets in the intended order.",
+      },
+      {
+        label: "Decision lab · three acts",
+        href: "/workshops/ki-prognosen-einschaetzen/hands-on.html",
+        kind: "html",
+        language: "en",
+        description:
+          "Three interactive acts on one page: set capacity, stop supply-chain amplification, and release fast demand through a controlled process.",
+      },
+      {
+        label: "Business case",
+        href: "/workshops/ki-prognosen-einschaetzen/case-study/index.html",
+        kind: "html",
+        language: "en",
+        description:
+          "One launch, three numbers, and constrained supply: allocation decision, system map, asymmetric error costs, and the daily release gate.",
+      },
+      {
+        label: "Field card · one page",
+        href: "/workshops/ki-prognosen-einschaetzen/field-card.html",
+        kind: "html",
+        language: "en",
+        description:
+          "Printable checklist for any forecast: five pillars, the service-level formula, safety stock, and four classes of events that cannot be forecast reliably.",
+      },
+      {
+        label: "Forecast exercise",
+        href: "/workshops/ki-prognosen-einschaetzen/homework.html",
+        kind: "html",
+        language: "en",
+        description:
+          "A 104-week demand CSV and instructions to calculate two forecasts, compare four measures, and answer one decision question. A spreadsheet is sufficient.",
+      },
+    ],
+  },
+  {
+    slug: "geschaeftsberichte-mit-ki-lesen",
+    title: "Read business reports with AI",
+    eyebrow: "Self-study workshop · Business reports",
+    summary:
+      "Read a monthly report as an analyst: define metrics in plain language, record the rules as a reusable skill, populate a dashboard, and defend a decision. Then apply the method to a real quarterly report.",
+    description:
+      "Five prompts in the Claude app build a small AI analyst. You work with a synthetic company's monthly report and the raw data from which it was written, then define what its metrics mean in plain language. Those rules become a reusable skill that extracts the report, populates a dashboard, and supports a reasoned decision. In the second case, apply the same method to a real company's public quarterly figures. No programming or API key is required. The Claude steps require access to a suitable Claude product.",
+    format: "Self-study kit",
+    duration: "About 90 minutes",
+    audience: [
+      "People who read or prepare monthly and quarterly business reports",
+      "Controlling and finance teams in small and medium-sized companies",
+      "People evaluating Claude as an analysis tool without writing code",
+    ],
+    steps: [
+      {
+        n: "01",
+        title: "Establish the company context",
+        description:
+          "Select the kit folder in the Claude app. It contains an eight-page monthly report, five raw CSV files that also work in Excel, and a company profile. Claude reads the profile and report, identifies the company, and states the decision for which the month is being reviewed. The exercise files may be transferred to the configured service; use only the supplied fictional material and check current product, contract, and retention settings before using real data.",
+        tool: "Files",
+      },
+      {
+        n: "02",
+        title: "Write the metric rules",
+        description:
+          "The metric skill in the kit is deliberately incomplete. Claude asks for each missing definition in turn: what revenue, defects, and marketing mean in this company. It records the answers in plain language in the skill file. Claude then reads those rules first whenever it works in the folder. No code is required.",
+        tool: "Skill",
+      },
+      {
+        n: "03",
+        title: "Extract the figures and check the source",
+        description:
+          "The skill reads the report using your definitions, extracts the month into structured metrics, and checks one figure against the source CSV. Every number remains traceable to a file and column. Running the question once without the skill provides a useful comparison: the generic answer varies, while the recorded rules remain consistent.",
+        tool: "Claude Code",
+      },
+      {
+        n: "04",
+        title: "Populate the dashboard",
+        description:
+          "The kit contains an intentionally empty dashboard template. One prompt writes the extracted metrics into it and opens the page: revenue by product line, the problem line, quality defects, marketing, unresolved escalations, and the pending decision. The analyst retains the eight-page report; the meeting gets one page.",
+        tool: "Dashboard",
+      },
+      {
+        n: "05",
+        title: "Argue the decision against the sales position",
+        description:
+          "The output is a decision rather than a summary: should NORTHWIND rework the premium product line or increase its Q3 marketing budget? State the supporting figure, the cost of being wrong, what the data cannot answer, and the strongest version of the opposing position.",
+        tool: "Decision",
+      },
+      {
+        n: "06",
+        title: "Case 2: a real company quarter",
+        description:
+          "Apply the same method outside the synthetic case. Claude retrieves Meta's Q2 2026 quarterly release filed with the SEC; the kit does not redistribute it. Define six quarterly metrics, extract the figures (+28% revenue and −8% operating income), and have Claude design a dashboard without a supplied template. The decision question is whether $31 billion of quarterly capital expenditure is productive investment or a leak.",
+        tool: "SEC filing · live",
+      },
+      {
+        n: "07",
+        title: "Repeat the method on your own reports",
+        description:
+          "Because the interpretation rules are written down, the process can be repeated for the next month and the next report. The kit includes both cases, the worksheet, and an empty template for rebuilding the analyst around reports from your own organisation.",
+        tool: "Repeat",
+      },
+    ],
+    caseStudy: {
+      companyName: "NORTHWIND GmbH",
+      isFictional: true,
+      location: "Berlin",
+      sector: "Electronics manufacturing",
+      period: "September 2023",
+      narrative:
+        "NORTHWIND is a fictional company created for this workshop: a family-owned electronics manufacturer in Berlin with about 850 employees and eight product lines, closing September 2023. The month's figures do not align at first glance. CRAFT is its coffee line: two espresso machines and a grinder priced from €199 to €699, and the newest, most expensive line in the range. It produces the second-highest revenue despite one of the lowest unit volumes (sixth of seven lines), but it also records the most quality defects for the second month in succession. The decision is whether to rework the line or increase its Q3 marketing budget.",
+      metrics: [
+        { label: "Total revenue", value: "€21.69m" },
+        { label: "Total units", value: "139,056" },
+        { label: "CRAFT revenue", value: "€4.12m" },
+        { label: "CRAFT units", value: "9,162" },
+      ],
+      decisionQuestion:
+        "Should NORTHWIND rework the CRAFT product line, or follow the sales director's proposal and increase CRAFT's Q3 marketing budget?",
+      dataLimitations: [
+        "There is no actual gross margin by product line because unit costs by product are unavailable.",
+        "Customer returns cannot be assigned to product lines because orders are not linked to them.",
+        "Marketing spend cannot be assigned precisely to individual product lines because campaign budgets are not allocated cleanly.",
+      ],
+    },
+    realWorldCase: {
+      companyName: "Meta Platforms, Inc.",
+      source:
+        "Q2 2026 quarterly release, published on 29 July 2026 and filed with the SEC. Claude retrieves it during the workshop; the kit does not redistribute it.",
+      narrative:
+        "Use the same pattern with real disclosures: a strong headline with an unresolved question underneath. Revenue rises materially, operating income falls, and almost all quarterly operating cash flow is spent on infrastructure. Define six quarterly metrics, extract the figures, and ask Claude to design the dashboard without a template.",
+      metrics: [
+        { label: "Revenue", value: "+28%" },
+        { label: "Operating income", value: "−8%" },
+        { label: "Capital expenditure, one quarter", value: "$31.1bn" },
+        { label: "Free cash flow", value: "$784m" },
+      ],
+      decisionQuestion:
+        "$31 billion of capital expenditure in one quarter: an investment expected to earn a return, or a leak? Which reading is more informative: the reported decline or the result excluding special effects?",
+    },
+    materials: [
+      {
+        label: "Workshop walkthrough · 21 slides",
+        href: `${WORKSHOP_BASE_PATH}/slides.html`,
+        kind: "html",
+        language: "en",
+        description:
+          "English slide deck covering the company, the kit directory, five prompts and their outputs, three advanced follow-up prompts, and case 2 on Meta. Every prompt has a copy control. Navigate with the arrow keys.",
+      },
+      {
+        label: "NORTHWIND analyst kit · .zip",
+        href: `${WORKSHOP_BASE_PATH}/northwind-analyst-kit.zip`,
+        kind: "zip",
+        language: "en",
+        description:
+          "English kit containing both cases: raw CSV data, both monthly reports as Markdown, the incomplete metric skill, dashboard template, worksheet, Meta exercise, and an empty template for another company. It is a text-only archive; the rendered report appears in the walkthrough.",
+      },
+    ],
+  },
+];
+
+export const WORKSHOPS_BY_LOCALE: Readonly<
+  Record<Locale, readonly Workshop[]>
+> = {
+  de: WORKSHOPS_DE,
+  en: WORKSHOPS_EN,
+};
+
+/** German remains the canonical catalog for machine endpoints and legacy imports. */
+export const WORKSHOPS: readonly Workshop[] = WORKSHOPS_DE;
+
+export function getWorkshops(locale: Locale = "de"): readonly Workshop[] {
+  return WORKSHOPS_BY_LOCALE[locale];
+}
+
+export function getWorkshopBySlug(
+  slug: string,
+  locale: Locale = "de",
+): Workshop | undefined {
+  return getWorkshops(locale).find((workshop) => workshop.slug === slug);
 }
 
 export function getWorkshopSlugs(): readonly string[] {

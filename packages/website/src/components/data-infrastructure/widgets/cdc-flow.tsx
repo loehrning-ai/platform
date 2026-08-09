@@ -4,13 +4,15 @@
 // Real JSX <svg> rendering, not the source's innerHTML string-building
 //. Not canvas: no RAF loop, no getContext null-check.
 
-import { useId, useState, type JSX } from "react";
+import { useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
 import {
   handleRovingFocusKeyDown,
   rovingTabIndex,
 } from "@/lib/a11y/roving-focus";
 import { cn } from "@/lib/utils";
+import type { Locale } from "@/lib/i18n/locale";
+import { useDataInfraWidgetLocale } from "../widget-locale-context";
 
 interface CdcFlowProps {
   readonly lessonId: string;
@@ -29,17 +31,43 @@ const KAPPA_STAGES = [
   "Iceberg · analytics.dim_users",
 ];
 
+const KAPPA_STAGES_DE = [
+  "Postgres (OLTP)",
+  "WAL / Replikations-Slot",
+  "Debezium / Kafka Connect",
+  "Kafka-Topic · cdc.public.users",
+  "Streaming-Consumer (Flink)",
+  "Iceberg · analytics.dim_users",
+];
+
 const KAPPA_NOTE =
   "One pipeline. Re-process by replaying the topic from offset 0 of a long-retention compacted topic.";
 const LAMBDA_NOTE =
   "Two pipelines computing the same logic, then merged. Killer flaw: two codebases for one transform.";
 
+const KAPPA_NOTE_DE =
+  "Eine Pipeline. Für eine Neuberechnung wird das Topic ab Offset 0 erneut gelesen; dafür braucht es lange Aufbewahrung und Kompaktierung.";
+const LAMBDA_NOTE_DE =
+  "Zwei Pipelines berechnen dieselbe Logik und werden danach zusammengeführt. Der zentrale Nachteil sind zwei Implementierungen derselben Transformation.";
+
 const PAYLOAD_LINES: readonly { key: string; value: string; note: string }[] = [
-  { key: '"op":', value: '"u"', note: ", c·u·d·r (create / update / delete / read=snapshot)" },
+  {
+    key: '"op":',
+    value: '"u"',
+    note: ", c·u·d·r (create / update / delete / read=snapshot)",
+  },
   { key: '"ts_ms":', value: "1714233601000", note: ", commit time on source" },
   { key: '"source":', value: "{ db, schema, lsn, ... }", note: ", provenance" },
-  { key: '"before":', value: '{ id:42, plan:"free" }', note: ", prior row state (UPDATE / DELETE only)" },
-  { key: '"after":', value: '{ id:42, plan:"pro" }', note: ", new row state (INSERT / UPDATE only)" },
+  {
+    key: '"before":',
+    value: '{ id:42, plan:"free" }',
+    note: ", prior row state (UPDATE / DELETE only)",
+  },
+  {
+    key: '"after":',
+    value: '{ id:42, plan:"pro" }',
+    note: ", new row state (INSERT / UPDATE only)",
+  },
 ];
 
 const WHY_CDC_WINS = [
@@ -49,11 +77,22 @@ const WHY_CDC_WINS = [
   "replayable from any offset",
 ];
 
+const WHY_CDC_WINS_DE = [
+  "erfasst DELETEs, obwohl keine Zeile mehr per SELECT lesbar ist",
+  "liest das WAL ohne Abfragelast auf dem Quellsystem",
+  "ist über die LSN geordnet und lückenlos",
+  "kann ab jedem Offset erneut gelesen werden",
+];
+
 export function CdcFlow({ lessonId, cpId }: CdcFlowProps): JSX.Element {
+  const { locale } = useDataInfraWidgetLocale();
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [mode, setMode] = useState<CdcMode>("kappa");
   const [claimed, setClaimed] = useState(false);
-  const tabsId = useId();
+  const tabsId = `data-infra-${lessonId}-${cpId}`.replace(
+    /[^a-zA-Z0-9_-]/g,
+    "-",
+  );
 
   const claim = () => {
     if (claimed || done) return;
@@ -62,14 +101,16 @@ export function CdcFlow({ lessonId, cpId }: CdcFlowProps): JSX.Element {
   };
 
   return (
-    <div className="border-2 border-border bg-card/40 p-5 md:p-6">
+    <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-3 sm:p-5 md:p-6">
       <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        Diagram · CDC pipeline · Kappa vs. Lambda
+        {locale === "de"
+          ? "Diagramm · CDC-Pipeline · Kappa und Lambda"
+          : "Diagram · CDC pipeline · Kappa vs. Lambda"}
       </p>
       <div
         className="mb-4 flex flex-wrap gap-2"
         role="tablist"
-        aria-label="CDC architecture"
+        aria-label={locale === "de" ? "CDC-Architektur" : "CDC architecture"}
         aria-orientation="horizontal"
         data-roving-group
       >
@@ -82,10 +123,7 @@ export function CdcFlow({ lessonId, cpId }: CdcFlowProps): JSX.Element {
             aria-selected={mode === m}
             aria-controls={`${tabsId}-${m}-panel`}
             data-roving-item
-            tabIndex={rovingTabIndex(
-              CDC_MODES.indexOf(mode),
-              index,
-            )}
+            tabIndex={rovingTabIndex(CDC_MODES.indexOf(mode), index)}
             onClick={() => setMode(m)}
             onKeyDown={(event) =>
               handleRovingFocusKeyDown(event, {
@@ -105,7 +143,13 @@ export function CdcFlow({ lessonId, cpId }: CdcFlowProps): JSX.Element {
                 : "border-border bg-background text-muted-foreground hover:border-brand-orange/60",
             )}
           >
-            {m === "kappa" ? "Kappa (one stream)" : "Lambda (speed + batch)"}
+            {m === "kappa"
+              ? locale === "de"
+                ? "Kappa (ein Stream)"
+                : "Kappa (one stream)"
+              : locale === "de"
+                ? "Lambda (Speed und Batch)"
+                : "Lambda (speed + batch)"}
           </button>
         ))}
       </div>
@@ -121,10 +165,20 @@ export function CdcFlow({ lessonId, cpId }: CdcFlowProps): JSX.Element {
           className="outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           <div className="overflow-x-auto">
-            {panelMode === "kappa" ? <KappaDiagram /> : <LambdaDiagram />}
+            {panelMode === "kappa" ? (
+              <KappaDiagram locale={locale} />
+            ) : (
+              <LambdaDiagram locale={locale} />
+            )}
           </div>
           <p className="mt-4 text-[13px] leading-relaxed text-muted-foreground">
-            {panelMode === "kappa" ? KAPPA_NOTE : LAMBDA_NOTE}
+            {panelMode === "kappa"
+              ? locale === "de"
+                ? KAPPA_NOTE_DE
+                : KAPPA_NOTE
+              : locale === "de"
+                ? LAMBDA_NOTE_DE
+                : LAMBDA_NOTE}
           </p>
         </div>
       ))}
@@ -140,28 +194,65 @@ export function CdcFlow({ lessonId, cpId }: CdcFlowProps): JSX.Element {
             : "bg-brand-orange text-white hover:opacity-90",
         )}
       >
-        {claimed || done ? "✓ claimed" : "Got it · claim XP"}
+        {claimed || done
+          ? locale === "de"
+            ? "Bestätigt"
+            : "✓ claimed"
+          : locale === "de"
+            ? "Verstanden"
+            : "Got it · claim XP"}
       </button>
     </div>
   );
 }
 
-function StageBox({ x, y, w, h, label }: { x: number; y: number; w: number; h: number; label: string }) {
+function StageBox({
+  x,
+  y,
+  w,
+  h,
+  label,
+}: {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  label: string;
+}) {
   const words = label.split(" ");
   let line1 = "";
   let line2 = "";
   for (const word of words) {
-    if ((line1 + " " + word).trim().length <= 20) line1 = (line1 + " " + word).trim();
+    if ((line1 + " " + word).trim().length <= 20)
+      line1 = (line1 + " " + word).trim();
     else line2 = (line2 + " " + word).trim();
   }
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h} rx={6} className="fill-card stroke-brand-orange" strokeWidth={1.2} />
-      <text x={x + w / 2} y={y + (line2 ? h / 2 - 4 : h / 2 + 4)} textAnchor="middle" className="fill-foreground text-[11px] font-semibold">
+      <rect
+        x={x}
+        y={y}
+        width={w}
+        height={h}
+        rx={6}
+        className="fill-card stroke-brand-orange"
+        strokeWidth={1.2}
+      />
+      <text
+        x={x + w / 2}
+        y={y + (line2 ? h / 2 - 4 : h / 2 + 4)}
+        textAnchor="middle"
+        className="fill-foreground text-[11px] font-semibold"
+      >
         {line1}
       </text>
       {line2 && (
-        <text x={x + w / 2} y={y + h / 2 + 12} textAnchor="middle" className="fill-foreground text-[11px] font-semibold">
+        <text
+          x={x + w / 2}
+          y={y + h / 2 + 12}
+          textAnchor="middle"
+          className="fill-foreground text-[11px] font-semibold"
+        >
           {line2}
         </text>
       )}
@@ -169,32 +260,98 @@ function StageBox({ x, y, w, h, label }: { x: number; y: number; w: number; h: n
   );
 }
 
-function Arrow({ x1, y1, x2, y2 }: { x1: number; y1: number; x2: number; y2: number }) {
+function Arrow({
+  x1,
+  y1,
+  x2,
+  y2,
+}: {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+}) {
   return (
     <g>
-      <line x1={x1} y1={y1} x2={x2} y2={y2} className="stroke-muted-foreground" strokeWidth={1.2} />
-      <polygon points={`${x2},${y2} ${x2 - 6},${y2 - 4} ${x2 - 6},${y2 + 4}`} className="fill-muted-foreground" />
+      <line
+        x1={x1}
+        y1={y1}
+        x2={x2}
+        y2={y2}
+        className="stroke-muted-foreground"
+        strokeWidth={1.2}
+      />
+      <polygon
+        points={`${x2},${y2} ${x2 - 6},${y2 - 4} ${x2 - 6},${y2 + 4}`}
+        className="fill-muted-foreground"
+      />
     </g>
   );
 }
 
-function PayloadCard({ x, y, w, h }: { x: number; y: number; w: number; h: number }) {
+function PayloadCard({
+  x,
+  y,
+  w,
+  h,
+  locale,
+}: {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  locale: Locale;
+}) {
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h} rx={6} className="fill-card stroke-border" strokeWidth={1} />
-      <text x={x + 14} y={y + 20} className="fill-foreground text-[11px] font-bold">
-        Event payload (Debezium-style)
+      <rect
+        x={x}
+        y={y}
+        width={w}
+        height={h}
+        rx={6}
+        className="fill-card stroke-border"
+        strokeWidth={1}
+      />
+      <text
+        x={x + 14}
+        y={y + 20}
+        className="fill-foreground text-[11px] font-bold"
+      >
+        {locale === "de"
+          ? "Ereignis-Payload (Debezium-Format)"
+          : "Event payload (Debezium-style)"}
       </text>
       {PAYLOAD_LINES.map((line, i) => (
         <g key={line.key}>
-          <text x={x + 20} y={y + 42 + i * 24} className="fill-brand-orange font-mono text-[10px]">
+          <text
+            x={x + 20}
+            y={y + 42 + i * 24}
+            className="fill-brand-orange font-mono text-[10px]"
+          >
             {line.key}
           </text>
-          <text x={x + 78} y={y + 42 + i * 24} className="fill-foreground font-mono text-[10px]">
+          <text
+            x={x + 78}
+            y={y + 42 + i * 24}
+            className="fill-foreground font-mono text-[10px]"
+          >
             {line.value}
           </text>
-          <text x={x + 260} y={y + 42 + i * 24} className="fill-muted-foreground text-[9.5px]">
-            {line.note}
+          <text
+            x={x + 260}
+            y={y + 42 + i * 24}
+            className="fill-muted-foreground text-[9.5px]"
+          >
+            {locale === "de"
+              ? [
+                  "c·u·d·r (create / update / delete / read=Snapshot)",
+                  "Commit-Zeit im Quellsystem",
+                  "Herkunft",
+                  "vorheriger Zeilenzustand (nur UPDATE / DELETE)",
+                  "neuer Zeilenzustand (nur INSERT / UPDATE)",
+                ][i]
+              : line.note}
           </text>
         </g>
       ))}
@@ -202,17 +359,53 @@ function PayloadCard({ x, y, w, h }: { x: number; y: number; w: number; h: numbe
   );
 }
 
-function WhyWinsCard({ x, y, w, h }: { x: number; y: number; w: number; h: number }) {
+function WhyWinsCard({
+  x,
+  y,
+  w,
+  h,
+  locale,
+}: {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  locale: Locale;
+}) {
+  const reasons = locale === "de" ? WHY_CDC_WINS_DE : WHY_CDC_WINS;
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h} rx={6} className="fill-card stroke-border" strokeWidth={1} />
-      <text x={x + 14} y={y + 20} className="fill-foreground text-[11px] font-bold">
-        Why this wins over polling
+      <rect
+        x={x}
+        y={y}
+        width={w}
+        height={h}
+        rx={6}
+        className="fill-card stroke-border"
+        strokeWidth={1}
+      />
+      <text
+        x={x + 14}
+        y={y + 20}
+        className="fill-foreground text-[11px] font-bold"
+      >
+        {locale === "de"
+          ? "Vorteile gegenüber Polling"
+          : "Why this wins over polling"}
       </text>
-      {WHY_CDC_WINS.map((p, i) => (
+      {reasons.map((p, i) => (
         <g key={p}>
-          <circle cx={x + 20} cy={y + 46 + i * 24 - 4} r={3} className="fill-[#3f8264]" />
-          <text x={x + 32} y={y + 46 + i * 24} className="fill-foreground text-[10.5px]">
+          <circle
+            cx={x + 20}
+            cy={y + 46 + i * 24 - 4}
+            r={3}
+            className="fill-[#3f8264]"
+          />
+          <text
+            x={x + 32}
+            y={y + 46 + i * 24}
+            className="fill-foreground text-[10.5px]"
+          >
             {p}
           </text>
         </g>
@@ -221,7 +414,7 @@ function WhyWinsCard({ x, y, w, h }: { x: number; y: number; w: number; h: numbe
   );
 }
 
-function KappaDiagram(): JSX.Element {
+function KappaDiagram({ locale }: { readonly locale: Locale }): JSX.Element {
   const padL = 30;
   const padT = 30;
   const cellW = 160;
@@ -232,27 +425,48 @@ function KappaDiagram(): JSX.Element {
     <svg
       viewBox="0 0 1100 320"
       role="img"
-      aria-label="Kappa architecture: one streaming pipeline from Postgres through Debezium and Kafka to Iceberg."
+      aria-label={
+        locale === "de"
+          ? "Kappa-Architektur: eine Streaming-Pipeline von Postgres über Debezium und Kafka bis Iceberg."
+          : "Kappa architecture: one streaming pipeline from Postgres through Debezium and Kafka to Iceberg."
+      }
       className="min-w-[900px]"
     >
-      {KAPPA_STAGES.map((s, i) => {
+      {(locale === "de" ? KAPPA_STAGES_DE : KAPPA_STAGES).map((s, i) => {
         const x = padL + i * (cellW + gap);
         return (
           <g key={s}>
             <StageBox x={x} y={y} w={cellW} h={cellH} label={s} />
             {i < KAPPA_STAGES.length - 1 && (
-              <Arrow x1={x + cellW + 1} y1={y + cellH / 2} x2={x + cellW + gap - 1} y2={y + cellH / 2} />
+              <Arrow
+                x1={x + cellW + 1}
+                y1={y + cellH / 2}
+                x2={x + cellW + gap - 1}
+                y2={y + cellH / 2}
+              />
             )}
           </g>
         );
       })}
-      <PayloadCard x={padL} y={y + cellH + 36} w={520} h={190} />
-      <WhyWinsCard x={padL + 540} y={y + cellH + 36} w={510} h={190} />
+      <PayloadCard
+        x={padL}
+        y={y + cellH + 36}
+        w={520}
+        h={190}
+        locale={locale}
+      />
+      <WhyWinsCard
+        x={padL + 540}
+        y={y + cellH + 36}
+        w={510}
+        h={190}
+        locale={locale}
+      />
     </svg>
   );
 }
 
-function LambdaDiagram(): JSX.Element {
+function LambdaDiagram({ locale }: { readonly locale: Locale }): JSX.Element {
   const padL = 30;
   const sharedY = 130;
   const cellW = 130;
@@ -272,7 +486,11 @@ function LambdaDiagram(): JSX.Element {
     <svg
       viewBox="0 0 1100 340"
       role="img"
-      aria-label="Lambda architecture: shared ingestion branching into a speed layer and a batch layer, merged for serving."
+      aria-label={
+        locale === "de"
+          ? "Lambda-Architektur: gemeinsame Aufnahme, Verzweigung in Speed- und Batch-Schicht und Zusammenführung für die Bereitstellung."
+          : "Lambda architecture: shared ingestion branching into a speed layer and a batch layer, merged for serving."
+      }
       className="min-w-[900px]"
     >
       {sharedStages.map((s, i) => {
@@ -281,13 +499,38 @@ function LambdaDiagram(): JSX.Element {
           <g key={s}>
             <StageBox x={x} y={sharedY} w={cellW} h={cellH} label={s} />
             {i < sharedStages.length - 1 && (
-              <Arrow x1={x + cellW + 1} y1={sharedY + cellH / 2} x2={x + cellW + gap - 1} y2={sharedY + cellH / 2} />
+              <Arrow
+                x1={x + cellW + 1}
+                y1={sharedY + cellH / 2}
+                x2={x + cellW + gap - 1}
+                y2={sharedY + cellH / 2}
+              />
             )}
           </g>
         );
       })}
-      <StageBox x={branchX} y={speedY} w={branchW} h={cellH} label="Speed layer, Flink · approximate" />
-      <StageBox x={branchX} y={batchY} w={branchW} h={cellH} label="Batch layer, Spark · correct, hourly" />
+      <StageBox
+        x={branchX}
+        y={speedY}
+        w={branchW}
+        h={cellH}
+        label={
+          locale === "de"
+            ? "Speed-Schicht, Flink · näherungsweise"
+            : "Speed layer, Flink · approximate"
+        }
+      />
+      <StageBox
+        x={branchX}
+        y={batchY}
+        w={branchW}
+        h={cellH}
+        label={
+          locale === "de"
+            ? "Batch-Schicht, Spark · korrekt, stündlich"
+            : "Batch layer, Spark · correct, hourly"
+        }
+      />
       <Arrow
         x1={padL + 4 * (cellW + gap) - gap}
         y1={sharedY + cellH / 2}
@@ -300,12 +543,37 @@ function LambdaDiagram(): JSX.Element {
         x2={branchX - 4}
         y2={batchY + cellH / 2}
       />
-      <StageBox x={mergeX} y={mergeY} w={mergeW} h={mergeH} label="Merge / serve, batch ⊕ recent-speed-delta → Iceberg" />
-      <Arrow x1={branchX + branchW} y1={speedY + cellH / 2} x2={mergeX - 4} y2={mergeY + mergeH / 2 - 6} />
-      <Arrow x1={branchX + branchW} y1={batchY + cellH / 2} x2={mergeX - 4} y2={mergeY + mergeH / 2 + 6} />
-      <text x={padL} y={320} className="fill-[#b85a4a] text-[11px] font-semibold">
-        ⚠ Two codebases. Every aggregation expressed twice, once streaming, once batch. Drift between the two is the
-        dominant operational pain.
+      <StageBox
+        x={mergeX}
+        y={mergeY}
+        w={mergeW}
+        h={mergeH}
+        label={
+          locale === "de"
+            ? "Zusammenführen / Bereitstellen, Batch ⊕ aktuelles Delta → Iceberg"
+            : "Merge / serve, batch ⊕ recent-speed-delta → Iceberg"
+        }
+      />
+      <Arrow
+        x1={branchX + branchW}
+        y1={speedY + cellH / 2}
+        x2={mergeX - 4}
+        y2={mergeY + mergeH / 2 - 6}
+      />
+      <Arrow
+        x1={branchX + branchW}
+        y1={batchY + cellH / 2}
+        x2={mergeX - 4}
+        y2={mergeY + mergeH / 2 + 6}
+      />
+      <text
+        x={padL}
+        y={320}
+        className="fill-[#b85a4a] text-[11px] font-semibold"
+      >
+        {locale === "de"
+          ? "Zwei Codebasen: Jede Aggregation existiert als Stream- und Batch-Variante. Abweichungen zwischen beiden erhöhen den Betriebsaufwand."
+          : "⚠ Two codebases. Every aggregation expressed twice, once streaming, once batch. Drift between the two is the dominant operational pain."}
       </text>
     </svg>
   );

@@ -2,7 +2,9 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowLeft, RotateCcw } from "lucide-react";
+import { localizeHref, parseLocalePathname } from "@/lib/i18n/locale";
 import { reportClientBoundaryError } from "@/lib/observability/client-boundary-error";
 
 export default function KursError({
@@ -12,6 +14,24 @@ export default function KursError({
   readonly error: Error & { digest?: string };
   readonly reset: () => void;
 }) {
+  const locale = parseLocalePathname(usePathname()).locale;
+  const copy =
+    locale === "en"
+      ? {
+          eyebrow: "Course unavailable",
+          title: "The course content could not be loaded",
+          body: "Progress data was not changed. Reload the course or return to its overview.",
+          retry: "Reload",
+          back: "Course overview",
+        }
+      : {
+          eyebrow: "Kurs nicht verfügbar",
+          title: "Der Kursinhalt konnte nicht geladen werden",
+          body: "Fortschrittsdaten wurden nicht verändert. Lade den Kurs erneut oder kehre zur Übersicht zurück.",
+          retry: "Erneut laden",
+          back: "Kursübersicht",
+        };
+
   useEffect(() => {
     reportClientBoundaryError("ki-fuehrerschein-course", error);
   }, [error]);
@@ -20,15 +40,12 @@ export default function KursError({
     <div className="flex min-h-[100svh] items-center justify-center bg-background px-6">
       <div className="max-w-md text-center">
         <p className="font-mono text-xs font-bold uppercase tracking-wider text-destructive">
-          Fehler
+          {copy.eyebrow}
         </p>
         <h1 className="mt-2 text-2xl font-bold tracking-[-0.03em]">
-          Etwas ist schiefgelaufen
+          {copy.title}
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Beim Laden des Kursinhalts ist ein Fehler aufgetreten. Bitte versuch
-          es noch einmal.
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">{copy.body}</p>
         <div className="mt-6 flex items-center justify-center gap-4">
           <button
             type="button"
@@ -36,14 +53,14 @@ export default function KursError({
             className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            Erneut versuchen
+            {copy.retry}
           </button>
           <Link
-            href="/ki-fuehrerschein/kurs"
+            href={localizeHref("/ki-fuehrerschein/kurs", locale)}
             className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
-            Zurück zum Kurs
+            {copy.back}
           </Link>
         </div>
       </div>

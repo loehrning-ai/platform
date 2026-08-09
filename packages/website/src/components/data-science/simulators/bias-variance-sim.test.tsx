@@ -15,9 +15,13 @@ describe("BiasVarianceSim ", () => {
 
   it("renders the real panel copy and controls", () => {
     render(<BiasVarianceSim />);
-    expect(screen.getByText("Bias-variance dance")).toBeInTheDocument();
-    expect(screen.getByLabelText("Model complexity (polynomial degree)")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /New training data/ })).toBeInTheDocument();
+    expect(screen.getByText("Bias-variance behavior")).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Model complexity (polynomial degree)"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /New training data/ }),
+    ).toBeInTheDocument();
   });
 
   it("defaults to degree 5 with a 'good fit' regime label", () => {
@@ -27,13 +31,19 @@ describe("BiasVarianceSim ", () => {
 
   it("dragging complexity to 0 shows the underfit regime label", () => {
     render(<BiasVarianceSim />);
-    fireEvent.change(screen.getByLabelText("Model complexity (polynomial degree)"), { target: { value: "0" } });
+    fireEvent.change(
+      screen.getByLabelText("Model complexity (polynomial degree)"),
+      { target: { value: "0" } },
+    );
     expect(screen.getByText("underfit (high bias)")).toBeInTheDocument();
   });
 
   it("dragging complexity to 15 shows the overfit regime label", () => {
     render(<BiasVarianceSim />);
-    fireEvent.change(screen.getByLabelText("Model complexity (polynomial degree)"), { target: { value: "15" } });
+    fireEvent.change(
+      screen.getByLabelText("Model complexity (polynomial degree)"),
+      { target: { value: "15" } },
+    );
     expect(screen.getByText("overfit (high variance)")).toBeInTheDocument();
   });
 

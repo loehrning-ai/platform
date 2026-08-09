@@ -47,10 +47,10 @@ describe("wie-ki-funktioniert data loader", () => {
   it("getLektionById returns correct lektion for valid IDs", () => {
     const l1 = getLektionById("lektion-1-vorhersage");
     expect(l1).toBeDefined();
-    expect(l1?.title).toContain("Vorhersage");
+    expect(l1?.title).toContain("Tokenvorhersage");
     const l4 = getLektionById("lektion-4-grenzen");
     expect(l4).toBeDefined();
-    expect(l4?.title).toContain("Grenzen");
+    expect(l4?.title).toContain("Betriebsgrenzen");
   });
 
   it("getLektionById returns undefined for unknown IDs", () => {
@@ -61,7 +61,10 @@ describe("wie-ki-funktioniert data loader", () => {
 
   it("no lektion has durationMinutes exceeding 20", () => {
     for (const l of WIE_KI_LEKTIONEN) {
-      expect(l.durationMinutes, `${l.id} exceeds 20 minutes`).toBeLessThanOrEqual(20);
+      expect(
+        l.durationMinutes,
+        `${l.id} exceeds 20 minutes`,
+      ).toBeLessThanOrEqual(20);
     }
   });
 
@@ -73,7 +76,9 @@ describe("wie-ki-funktioniert data loader", () => {
 
   it("each lektion has at least 1 keyConcept", () => {
     for (const l of WIE_KI_LEKTIONEN) {
-      expect(l.keyConcepts.length, `${l.id} needs keyConcepts`).toBeGreaterThan(0);
+      expect(l.keyConcepts.length, `${l.id} needs keyConcepts`).toBeGreaterThan(
+        0,
+      );
     }
   });
 
@@ -98,7 +103,9 @@ describe("wie-ki-funktioniert data loader", () => {
     for (const l of WIE_KI_LEKTIONEN) {
       for (const s of l.sections) {
         expect(s.content, `Section ${s.id} has em-dash`).not.toContain("—");
-        expect(s.content, `Section ${s.id} has spaced em-dash`).not.toContain(" — ");
+        expect(s.content, `Section ${s.id} has spaced em-dash`).not.toContain(
+          " — ",
+        );
       }
     }
   });

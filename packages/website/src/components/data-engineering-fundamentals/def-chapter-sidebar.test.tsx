@@ -1,29 +1,66 @@
-import { describe, it, expect, afterEach } from "vitest";
-import { render, screen, cleanup } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { getDefLocalizedChapterMeta } from "@/lib/data-engineering-fundamentals/content";
+import {
+  DEF_CHAPTER_IDS,
+  DEF_CHAPTERS,
+} from "@/lib/data-engineering-fundamentals/types";
 import { DefChapterSidebar } from "./def-chapter-sidebar";
 
 afterEach(cleanup);
 
-describe("DefChapterSidebar ", () => {
-  it("renders all 12 chapters with real titles and durations", () => {
-    render(<DefChapterSidebar activeId="fund" />);
+describe("DefChapterSidebar", () => {
+  it("renders all 12 English chapters with real titles and durations", () => {
+    render(
+      <DefChapterSidebar activeId="fund" locale="en" chapters={DEF_CHAPTERS} />,
+    );
     expect(screen.getByText("Overview")).toBeInTheDocument();
     expect(screen.getByText("Core Fundamentals")).toBeInTheDocument();
     expect(screen.getByText("Capstone")).toBeInTheDocument();
     expect(screen.getByText("15 min")).toBeInTheDocument();
   });
 
-  it("marks only the active chapter with aria-current", () => {
-    render(<DefChapterSidebar activeId="store" />);
+  it("marks only the active chapter and prefixes English links with /en", () => {
+    render(
+      <DefChapterSidebar
+        activeId="store"
+        locale="en"
+        chapters={DEF_CHAPTERS}
+      />,
+    );
     const links = screen.getAllByRole("link");
-    const current = links.filter((l) => l.getAttribute("aria-current") === "page");
+    const current = links.filter(
+      (link) => link.getAttribute("aria-current") === "page",
+    );
     expect(current).toHaveLength(1);
-    expect(current[0]).toHaveAttribute("href", "/kurse/open-source/data-engineering-fundamentals/store");
+    expect(current[0]).toHaveAttribute(
+      "href",
+      "/en/kurse/open-source/data-engineering-fundamentals/store",
+    );
+    for (const link of links) {
+      expect(link.getAttribute("href")).toMatch(
+        /^\/en\/kurse\/open-source\/data-engineering-fundamentals\//,
+      );
+    }
   });
 
-  it("links to the flat per-chapter route, no /kurs prefix", () => {
-    render(<DefChapterSidebar activeId={null} />);
-    const overviewLink = screen.getByText("Overview").closest("a");
-    expect(overviewLink).toHaveAttribute("href", "/kurse/open-source/data-engineering-fundamentals/home");
+  it("renders German metadata on the unprefixed chapter routes", () => {
+    render(
+      <DefChapterSidebar
+        activeId="fund"
+        locale="de"
+        chapters={DEF_CHAPTER_IDS.map((id) =>
+          getDefLocalizedChapterMeta(id, "de"),
+        )}
+      />,
+    );
+    expect(
+      screen.getByRole("navigation", { name: "Kapitelnavigation" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Grundlagen").closest("a")).toHaveAttribute(
+      "href",
+      "/kurse/open-source/data-engineering-fundamentals/fund",
+    );
+    expect(screen.getByText("15 Min.")).toBeInTheDocument();
   });
 });

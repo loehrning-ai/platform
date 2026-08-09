@@ -1,26 +1,22 @@
 import { describe, expect, it } from "vitest";
-import { metadata as homeMetadata } from "../page";
-import { metadata as courseMetadata } from "../kurse/page";
-
-function descriptionOf(metadata: typeof homeMetadata): string {
-  return typeof metadata.description === "string" ? metadata.description : "";
-}
+import { HOME_COPY } from "@/components/home/home-copy";
+import { COURSE_HUB_COPY } from "@/lib/courses/course-hub-copy";
 
 describe("German discovery record copy", () => {
   it("keeps the homepage access description factual", () => {
-    const description = descriptionOf(homeMetadata);
+    const description = HOME_COPY.de.metadata.description;
 
-    expect(description).toContain("technische Kursreader sind ohne Konto nutzbar");
-    expect(description).toContain("vier deutsche Kernkurse");
+    expect(description).toContain("Kostenfreie KI-Kurse");
+    expect(description).toContain("klaren Zugangsregeln");
     expect(description).not.toMatch(/zertifiziert/i);
   });
 
-  it("names the self-issued German records accurately in course metadata", () => {
-    const description = descriptionOf(courseMetadata);
+  it("states the course catalogue scope accurately in metadata", () => {
+    const description = COURSE_HUB_COPY.de.metadataDescription;
 
-    expect(description).toContain("selbst ausgestellten Teilnahmebestätigungen");
-    expect(description).toContain("Lernnachweisen");
-    expect(description).toContain("öffentliche technische Kurse");
+    expect(description).toContain("Zehn Kurse auf Deutsch und Englisch");
+    expect(description).toContain("Quellstand");
+    expect(description).toContain("Workshops und Lernbücher");
     expect(description).not.toMatch(/\bZertifikat\b/i);
   });
 });

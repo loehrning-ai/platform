@@ -5,8 +5,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
 import { getCompletedLessonIds } from "@/lib/course/progress";
-import { MODULE_IDS, MODULE_META, lessonProgressKey, type ModuleId } from "@/lib/ai-native-operator/types";
+import {
+  MODULE_IDS,
+  getModuleMeta,
+  lessonProgressKey,
+  type ModuleId,
+} from "@/lib/ai-native-operator/types";
 import { lessonHref } from "@/lib/ai-native-operator/routes";
+import { canonicalLocalePathname, type Locale } from "@/lib/i18n/locale";
 import { cn } from "@/lib/utils";
 import { subscribe } from "@/lib/progress";
 
@@ -17,6 +23,7 @@ export interface AiNativeOperatorLessonNavItem {
 }
 
 interface LessonSidebarProps {
+  readonly locale?: Locale;
   readonly lessons: readonly AiNativeOperatorLessonNavItem[];
 }
 
@@ -25,9 +32,15 @@ interface LessonSidebarProps {
  * `<LessonShell>`'s `sidebar` slot ( primitive), mirroring
  * `CodexLessonSidebar`'s track-grouped precedent.
  */
-export function AiNativeOperatorLessonSidebar({ lessons }: LessonSidebarProps): JSX.Element {
+export function AiNativeOperatorLessonSidebar({
+  locale = "en",
+  lessons,
+}: LessonSidebarProps): JSX.Element {
   const pathname = usePathname();
-  const [completedIds, setCompletedIds] = useState<ReadonlySet<string>>(new Set());
+  const routePathname = canonicalLocalePathname(pathname);
+  const [completedIds, setCompletedIds] = useState<ReadonlySet<string>>(
+    new Set(),
+  );
 
   useEffect(() => {
     return subscribe(() => {
@@ -36,9 +49,12 @@ export function AiNativeOperatorLessonSidebar({ lessons }: LessonSidebarProps): 
   }, [pathname]);
 
   return (
-    <nav aria-label="Module navigation" className="flex flex-col gap-6">
+    <nav
+      aria-label={locale === "de" ? "Modulnavigation" : "Module navigation"}
+      className="flex flex-col gap-6"
+    >
       {MODULE_IDS.map((moduleId) => {
-        const meta = MODULE_META[moduleId];
+        const meta = getModuleMeta(moduleId, locale);
         const moduleLessons = lessons.filter((l) => l.moduleId === moduleId);
         if (moduleLessons.length === 0) return null;
         return (
@@ -48,9 +64,17 @@ export function AiNativeOperatorLessonSidebar({ lessons }: LessonSidebarProps): 
             </p>
             <ul className="flex flex-col gap-0.5">
               {moduleLessons.map((lesson) => {
-                const href = lessonHref(lesson.moduleId, lesson.lessonNumber);
-                const active = pathname === href;
-                const done = completedIds.has(lessonProgressKey(lesson.moduleId, lesson.lessonNumber));
+                const href = lessonHref(
+                  lesson.moduleId,
+                  lesson.lessonNumber,
+                  locale,
+                );
+                const active =
+                  routePathname !== null &&
+                  routePathname === canonicalLocalePathname(href);
+                const done = completedIds.has(
+                  lessonProgressKey(lesson.moduleId, lesson.lessonNumber),
+                );
                 return (
                   <li key={lesson.lessonNumber}>
                     <Link
@@ -64,13 +88,19 @@ export function AiNativeOperatorLessonSidebar({ lessons }: LessonSidebarProps): 
                       )}
                     >
                       {done ? (
-                        <CheckCircle2 size={13} className="shrink-0 text-risk-green" aria-hidden="true" />
+                        <CheckCircle2
+                          size={13}
+                          className="shrink-0 text-risk-green"
+                          aria-hidden="true"
+                        />
                       ) : (
                         <span className="w-[13px] shrink-0 text-center font-mono text-[10px] text-muted-foreground">
                           {lesson.lessonNumber}
                         </span>
                       )}
-                      <span className="truncate">{lesson.title}</span>
+                      <span className="min-w-0 break-words leading-snug [overflow-wrap:anywhere]">
+                        {lesson.title}
+                      </span>
                     </Link>
                   </li>
                 );

@@ -5,7 +5,7 @@ import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 // ─── Ch5_Quality ──────────────────────────────────
 // Ported from `src/chapters/Ch5_Quality.js`.
 
-const DQ_OPERATOR_PY = `<span class="tok-c"># 1) Write the partition (idempotent, see Ch5)</span>
+export const DQ_OPERATOR_PY = `<span class="tok-c"># 1) Write the partition (idempotency depends on stable inputs and sink semantics)</span>
 <span class="tok-f">InsertOverwriteOperator</span>(
     table=<span class="tok-s">"fct_dau"</span>,
     partition=<span class="tok-s">"&lt;DATEID&gt;"</span>,
@@ -16,7 +16,7 @@ const DQ_OPERATOR_PY = `<span class="tok-c"># 1) Write the partition (idempotent
 <span class="tok-f">ExpectationSuite</span>(
     table=<span class="tok-s">"fct_dau"</span>,
     checks=[
-        <span class="tok-f">RowCountBand</span>(band=<span class="tok-n">0.10</span>),           <span class="tok-c"># ±10% vs 7-day median</span>
+        <span class="tok-f">RowCountBand</span>(band=<span class="tok-n">0.10</span>),           <span class="tok-c"># illustrative threshold; calibrate per table</span>
         <span class="tok-f">SchemaMatch</span>(ref=<span class="tok-s">"fct_dau.contract"</span>),
         <span class="tok-f">Freshness</span>(max_lag=<span class="tok-s">"PT6H"</span>),
         <span class="tok-f">Unique</span>(columns=[<span class="tok-s">"event_id"</span>]),
@@ -24,7 +24,7 @@ const DQ_OPERATOR_PY = `<span class="tok-c"># 1) Write the partition (idempotent
     max_rows_expected=<span class="tok-n">500_000_000</span>,
 )
 
-<span class="tok-c"># 3) Every downstream waits on the SIGNAL, not the data table.</span>
+<span class="tok-c"># 3) Configured downstream tasks wait on the named signal.</span>
 <span class="tok-f">ExternalTaskSensor</span>(
     signal_table=<span class="tok-s">"fct_dau__signal"</span>,
     partition=<span class="tok-s">"&lt;DATEID&gt;"</span>,
@@ -41,38 +41,38 @@ export function Ch5Quality({ chapter }: Ch5QualityProps) {
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Quality: a pipeline that <span class='accent'>ran</span> is not a pipeline that's <span class='accent'>right</span>."
-        hook="The hardest failures to catch are the ones that succeed. The task returns zero, writes a tiny partition, lands on time, and the number on the CFO's deck is wrong. Data-quality gates turn &quot;the pipeline ran&quot; into &quot;the number is trustworthy.&quot; That's the contract the rest of the warehouse depends on."
+        hook="A successful task can still write incomplete, stale, duplicated, or schema-incompatible data. Quality checks record evidence about selected properties. They do not prove that every value or business definition is correct."
         meta={[
           { k: "Primitive", v: "ExpectationSuite" },
           { k: "Barrier", v: "signal table + ExternalTaskSensor" },
-          { k: "Tiers", v: "6h · 24h · 48h SLA" },
+          { k: "Targets", v: "defined per dataset" },
         ]}
       />
 
       <section className="section">
         <SectionLabel n="6.1">Checks are cheap, bugs are expensive</SectionLabel>
-        <h2 className="h2">Four checks that catch 80% of data-incident tickets.</h2>
+        <h2 className="h2">Four checks for distinct failure modes.</h2>
         <p className="prose">
-          <b>Row-count band:</b> today&apos;s row count must sit within ±10% of the trailing 7-day median. Catches empty writes, half-writes,
-          upstream source outages.
+          <b>Row-count band:</b> compare the current partition with a table-specific baseline and threshold. This can detect empty writes,
+          partial writes, or upstream changes.
           <br />
-          <b>Schema check:</b> no new nullable column, no type drift. Catches producer schema bumps that silently break downstream joins.
+          <b>Schema check:</b> compare the observed schema with the versioned contract and its declared compatibility policy.
           <br />
-          <b>Freshness:</b> partition landed before the SLA. Catches slipped pipelines before a dashboard user notices.
+          <b>Freshness:</b> verify the named partition or event-time cutoff against the dataset&apos;s target.
           <br />
-          <b>Uniqueness:</b> primary-key has no duplicates. Catches idempotency bugs (see Ch5) before they corrupt a fact table.
+          <b>Uniqueness:</b> verify the declared key at the declared grain. Not every fact table has a single-row primary key.
         </p>
         <TrustMeterSim />
       </section>
 
       <section className="section">
         <SectionLabel n="6.2">The signal-table barrier</SectionLabel>
-        <h2 className="h2">Downstream waits on the signal, never on the data.</h2>
+        <h2 className="h2">Gate configured consumers on a named quality signal.</h2>
         <p className="prose">
-          A DQ check that <em>runs after the data lands</em> but <em>before anyone reads it</em> is the barrier. When the check passes, the
-          pipeline writes a tiny row to a <b>signal table</b>. Every downstream consumer uses <code>ExternalTaskSensor</code> to block on that
-          signal: not on the data table itself. If the check fails, the signal never lands, downstreams wait, and oncall is auto-paged with an
-          SLA-tier-aware ticket.
+          In this reference design, checks run after a partition write and before dependent tasks proceed. Passing the selected checks writes a
+          row to a <b>signal table</b>. Consumers explicitly configured with an <code>ExternalTaskSensor</code> can wait on that signal. The data
+          table may still be technically readable; visibility and access controls require separate enforcement. Alert routing must also be
+          configured and tested.
         </p>
         <div className="cards-2">
           <div className="ccard">
@@ -83,7 +83,7 @@ export function Ch5Quality({ chapter }: Ch5QualityProps) {
           <div className="ccard">
             <div className="ccard-t">With the barrier</div>
             <div className="ccard-n">Downstream waits on the signal table</div>
-            <div className="ccard-d">Data exists but is invisible until the signal lands. Failures hold the line; oncall wakes up before a consumer hits a bad number.</div>
+            <div className="ccard-d">Configured tasks wait until the selected checks pass. Other readers remain possible unless access is enforced separately.</div>
           </div>
         </div>
       </section>
@@ -95,25 +95,25 @@ export function Ch5Quality({ chapter }: Ch5QualityProps) {
 
       <AntiPatterns
         items={[
-          `<b>"We'll add DQ later."</b> You won't. The pipeline will ship, the first bad day will hit, someone will chase it manually for a week. Add DQ before the first ship, or ship without the pipeline.`,
-          "<b>Waiting on the data table instead of the signal table.</b> This is the most common subtle bug in new pipelines. Partial writes look complete. Downstream reads too early. Use ExternalTaskSensor.",
-          "<b>No SLA tier tag.</b> A task that slips silently at 04:00 and pages no one until someone notices at 14:00 is not a 6h-SLA task. Tag the tier; oncall routing depends on it.",
-          "<b>Catch-all <code>assert len(df) &gt; 0</code>.</b> It passes when the pipeline writes one row on an outage. Use row-count bands, not sanity asserts.",
+          `<b>Adding checks without a dataset contract.</b> A threshold has no meaning until its grain, baseline, exception policy, and owner are defined.`,
+          "<b>Publishing a signal that consumers do not require.</b> Verify dependency wiring; a signal row does not restrict direct table reads.",
+          "<b>Declaring a freshness target without alert ownership.</b> Record the target, measurement point, routing path, and expected response.",
+          "<b>Using only <code>assert len(df) &gt; 0</code>.</b> One row satisfies it. Add checks that match plausible source and transformation failures.",
         ]}
       />
       <BestPractices
         items={[
-          "<b>Every fact table</b> gets row-count band + freshness + uniqueness, minimum. Dimension tables add schema-match.",
+          "Select checks from the table&apos;s <b>grain, key, freshness target, source behavior, and consumer risk</b>.",
           "<b>Signal tables are first-class citizens.</b> Name them <code>&lt;table&gt;__signal</code>. They outlive the pipeline: replays, backfills, and audits all read them.",
-          "<b>SLA-tier your tasks.</b> 6h for ads/exec-deck inputs, 24h for most facts, 48h for discovery/rollups. The tier is the pager contract.",
+          "Set freshness and response targets per dataset, with an owner and tested alert route.",
           "<b>DQ config in version control, not UI.</b> Checks drift; code reviews catch drift; dashboards don't.",
         ]}
       />
       <Takeaway
         items={[
-          "<b>DQ is the contract.</b> It is the difference between data engineering and data plumbing.",
-          "<b>Four checks, four bugs avoided.</b> Row-count, schema, freshness, uniqueness. Every fact table. Every day.",
-          "<b>Wait on the signal.</b> If you remember one word from this chapter, make it <em>signal</em>.",
+          "Quality checks provide evidence about named properties; they do not certify the full business meaning of a dataset.",
+          "Row-count, schema, freshness, and uniqueness address different risks and require table-specific configuration.",
+          "A signal is useful only when it names the checks that passed and dependent consumers are configured to require it.",
         ]}
       />
     </>

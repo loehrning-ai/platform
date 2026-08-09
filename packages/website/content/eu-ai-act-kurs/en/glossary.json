@@ -1,0 +1,186 @@
+[
+  {
+    "term": "KI-Verordnung",
+    "definition": "Regulation (EU) 2024/1689 laying down harmonised rules on artificial intelligence. It is the world's first comprehensive legal framework for AI, in force since 1 August 2024 and becoming applicable in stages through 2028.",
+    "english": "AI Act",
+    "category": "regulatorik",
+    "relatedTerms": ["Risikobasierter Ansatz", "KI-System"],
+    "relatedBlocks": ["block_1"]
+  },
+  {
+    "term": "KI-System",
+    "definition": "A machine-based system designed to operate with autonomy, which may exhibit adaptiveness after deployment and infers from input how to generate outputs such as predictions, recommendations or decisions (Art. 3(1) of Regulation (EU) 2024/1689).",
+    "english": "AI System",
+    "category": "regulatorik",
+    "relatedTerms": ["GPAI-Modell", "Anbieter"],
+    "relatedBlocks": ["block_1"]
+  },
+  {
+    "term": "Risikobasierter Ansatz",
+    "definition": "The basic principle of Regulation (EU) 2024/1689: obligations depend on the risk posed by an AI system, not on the technology. Four levels (prohibited, high, limited, and minimal risk) determine the extent of the requirements.",
+    "english": "Risk-Based Approach",
+    "category": "regulatorik",
+    "relatedTerms": ["Risikopyramide", "KI-Verordnung"],
+    "relatedBlocks": ["block_1", "block_2"]
+  },
+  {
+    "term": "Verbotene Praktiken",
+    "definition": "AI practices presenting an unacceptable risk that are prohibited under Art. 5 of Regulation (EU) 2024/1689. They include social scoring by public authorities, manipulative conduct that harms people and untargeted mass scraping of biometric data. Applicable since 2 February 2025.",
+    "english": "Prohibited Practices",
+    "category": "regulatorik",
+    "relatedTerms": ["Risikopyramide", "Social Scoring"],
+    "relatedBlocks": ["block_2"]
+  },
+  {
+    "term": "Hochrisiko-System",
+    "definition": "An AI system presenting a significant risk to health, safety or fundamental rights, classified under Art. 6 in conjunction with Annex I or Annex III. Regulation (EU) 2026/1744, in force since 27 July 2026, sets 2 December 2027 for standalone Annex III systems and 2 August 2028 for systems integrated into products.",
+    "english": "High-Risk System",
+    "category": "regulatorik",
+    "relatedTerms": ["Anhang III", "Konformitätsbewertung"],
+    "relatedBlocks": ["block_2", "block_3"]
+  },
+  {
+    "term": "Anhang III",
+    "definition": "Annex III to Regulation (EU) 2024/1689 lists the areas in which an AI system is classified as high-risk: biometrics, critical infrastructure, education, employment, access to services, law enforcement, migration and the administration of justice.",
+    "english": "Annex III",
+    "category": "regulatorik",
+    "relatedTerms": ["Hochrisiko-System", "Anhang I"],
+    "relatedBlocks": ["block_2"]
+  },
+  {
+    "term": "Transparenzpflicht",
+    "definition": "Obligations for certain AI systems presenting limited risk under Art. 50 of Regulation (EU) 2024/1689: people must be able to recognise that they are interacting with AI, and AI-generated or manipulated content, including deepfakes and generated text, must be disclosed as such where the Article applies.",
+    "english": "Transparency Obligation",
+    "category": "regulatorik",
+    "relatedTerms": ["Wasserzeichen", "Deepfake"],
+    "relatedBlocks": ["block_2", "block_4"]
+  },
+  {
+    "term": "Minimales Risiko",
+    "definition": "The lowest level of the risk pyramid. AI systems such as spam filters, AI used in warehouse management or recommendation systems are not subject to special obligations tied to a risk class under Regulation (EU) 2024/1689. Art. 4 on AI literacy has nevertheless applied to providers and deployers since 2 February 2025.",
+    "english": "Minimal Risk",
+    "category": "regulatorik",
+    "relatedTerms": ["Risikopyramide", "Verhaltenskodex"],
+    "relatedBlocks": ["block_2"]
+  },
+  {
+    "term": "Konformitätsbewertung",
+    "definition": "The procedure for demonstrating that a high-risk system meets the requirements of Regulation (EU) 2024/1689. It results in an EU declaration of conformity and, as a rule, CE marking before the system is placed on the market (Art. 43, 47 and 48).",
+    "english": "Conformity Assessment",
+    "category": "regulatorik",
+    "relatedTerms": ["Hochrisiko-System", "CE-Kennzeichnung"],
+    "relatedBlocks": ["block_3"]
+  },
+  {
+    "term": "Risikomanagementsystem",
+    "definition": "A continuous, documented process maintained throughout the lifecycle of a high-risk system to identify, assess and mitigate risks (Art. 9 of Regulation (EU) 2024/1689). It provides the basis for the other high-risk obligations.",
+    "english": "Risk Management System",
+    "category": "regulatorik",
+    "relatedTerms": ["Hochrisiko-System", "Technische Dokumentation"],
+    "relatedBlocks": ["block_3"]
+  },
+  {
+    "term": "Menschliche Aufsicht",
+    "definition": "A requirement under Art. 14 of Regulation (EU) 2024/1689: high-risk systems must be designed so that natural persons can oversee their operation, understand their outputs, intervene and stop the system when necessary.",
+    "english": "Human Oversight",
+    "category": "regulatorik",
+    "relatedTerms": ["Hochrisiko-System", "Risikomanagementsystem"],
+    "relatedBlocks": ["block_3"]
+  },
+  {
+    "term": "GPAI-Modell",
+    "definition": "A general-purpose AI (GPAI) model that can perform a wide range of tasks and can be integrated into downstream systems. It is subject to specific obligations under Art. 53 et seq. of Regulation (EU) 2024/1689, applicable from 2 August 2025.",
+    "english": "General-Purpose AI Model",
+    "category": "technik",
+    "relatedTerms": ["Systemisches Risiko", "GPAI Code of Practice"],
+    "relatedBlocks": ["block_4"]
+  },
+  {
+    "term": "Systemisches Risiko",
+    "definition": "A distinct risk associated with highly capable GPAI models. Models trained using more than 10^25 FLOP are presumed to have systemic risk and are subject to additional obligations, including model evaluations and serious-incident reporting (Art. 51 and 55 of Regulation (EU) 2024/1689).",
+    "english": "Systemic Risk",
+    "category": "technik",
+    "relatedTerms": ["GPAI-Modell", "GPAI Code of Practice"],
+    "relatedBlocks": ["block_4"]
+  },
+  {
+    "term": "KI-Kompetenz",
+    "definition": "An organisational duty under Art. 4 of Regulation (EU) 2024/1689, as amended by Regulation (EU) 2026/1744: providers and deployers must take measures to support the development of AI literacy among their staff and other persons dealing with the operation and use of AI systems on their behalf. Technical knowledge, experience, education and training, use context, and affected people or groups must be considered. They do not have to guarantee that each person reaches a particular level of proficiency. Applicable since 2 February 2025.",
+    "english": "AI Literacy",
+    "category": "regulatorik",
+    "relatedTerms": ["Betreiber", "Anbieter"],
+    "relatedBlocks": ["block_4"]
+  },
+  {
+    "term": "Wasserzeichen",
+    "definition": "A machine-readable mark for AI-generated content. Providers of generative AI systems must mark outputs in a machine-readable format so they can be detected as artificially generated or manipulated (Art. 50(2) of Regulation (EU) 2024/1689).",
+    "english": "Watermarking",
+    "category": "technik",
+    "relatedTerms": ["Transparenzpflicht", "Deepfake"],
+    "relatedBlocks": ["block_4"]
+  },
+  {
+    "term": "Deepfake",
+    "definition": "AI-generated or manipulated image, audio or video content that resembles real persons, objects or events and would falsely appear authentic or truthful. Its artificial origin must be disclosed under Art. 50(4) of Regulation (EU) 2024/1689.",
+    "english": "Deepfake",
+    "category": "technik",
+    "relatedTerms": ["Wasserzeichen", "Transparenzpflicht"],
+    "relatedBlocks": ["block_4"]
+  },
+  {
+    "term": "Anbieter",
+    "definition": "A natural or legal person that develops an AI system or GPAI model, or has one developed, and places it on the market under its own name or trademark (Art. 3(3) of Regulation (EU) 2024/1689).",
+    "english": "Provider",
+    "category": "regulatorik",
+    "relatedTerms": ["Betreiber", "KI-System"],
+    "relatedBlocks": ["block_5"]
+  },
+  {
+    "term": "Betreiber",
+    "definition": "A natural or legal person that uses an AI system under its authority, except where the system is used in the course of a personal non-professional activity (Art. 3(4) of Regulation (EU) 2024/1689). An SME is usually a deployer, not a provider.",
+    "english": "Deployer",
+    "category": "regulatorik",
+    "relatedTerms": ["Anbieter", "KI-Kompetenz"],
+    "relatedBlocks": ["block_5"]
+  },
+  {
+    "term": "AI Office",
+    "definition": "The European Commission's Artificial Intelligence Office. It supervises GPAI models, coordinates enforcement of Regulation (EU) 2024/1689 across the EU and oversees the GPAI Code of Practice.",
+    "english": "AI Office",
+    "category": "regulatorik",
+    "relatedTerms": ["Marktüberwachungsbehörde", "GPAI Code of Practice"],
+    "relatedBlocks": ["block_5"]
+  },
+  {
+    "term": "Sanktionen",
+    "definition": "Fines for infringements of Regulation (EU) 2024/1689: up to EUR 35 million or 7 percent of worldwide annual turnover for prohibited practices, with lower tiers for other infringements (Art. 99).",
+    "english": "Penalties",
+    "category": "regulatorik",
+    "relatedTerms": ["AI Office", "Marktüberwachungsbehörde"],
+    "relatedBlocks": ["block_5"]
+  },
+  {
+    "term": "Reallabor",
+    "definition": "A regulatory sandbox under Art. 57 et seq. of Regulation (EU) 2024/1689: a controlled framework supervised by an authority in which innovative AI systems can be tested under real-world conditions before being placed on the market.",
+    "english": "Regulatory Sandbox",
+    "category": "praxis",
+    "relatedTerms": ["AI Office", "Konformitätsbewertung"],
+    "relatedBlocks": ["block_5"]
+  },
+  {
+    "term": "DSGVO-Brücke",
+    "definition": "The practical connection between the General Data Protection Regulation and the AI Act. An organisation that maintains GDPR processes such as records of processing activities and data protection impact assessments has already established a large part of the governance foundation needed for Regulation (EU) 2024/1689.",
+    "english": "GDPR Bridge",
+    "category": "praxis",
+    "relatedTerms": ["Betreiber", "Technische Dokumentation"],
+    "relatedBlocks": ["block_6"]
+  },
+  {
+    "term": "KI-Inventar",
+    "definition": "A maintained list of all AI systems used by an organisation, including their purpose, risk class and responsible owners. It is the first and most important step in an SME audit under Regulation (EU) 2024/1689.",
+    "english": "AI Inventory",
+    "category": "praxis",
+    "relatedTerms": ["Risikobasierter Ansatz", "Betreiber"],
+    "relatedBlocks": ["block_6"]
+  }
+]

@@ -8,10 +8,10 @@ const lesson: ClaudeLesson = {
   id: "reviews",
   number: 8,
   title: "Claude for Code Review and PRs",
-  subtitle: "Your tireless, slightly-pedantic reviewer.",
+  subtitle: "A structured review pass that still requires human verification.",
   durationMinutes: 9,
   trackId: "advanced",
-  hook: "Claude reads diffs. It reads subtext, too.",
+  hook: "Define the change intent, repository rules, and evidence required for a finding.",
   keyConcepts: ["Review prompt template", "Severity tagging", "Focus filters"],
   quiz: [],
   sections: [
@@ -20,7 +20,7 @@ const lesson: ClaudeLesson = {
       title: "Why it works",
       readTimeMinutes: 2,
       content:
-        "Claude reads diffs. It notices naming inconsistencies, missing null checks, tests that don't actually test the thing. It also notices subtext, the \"this PR claims to be a refactor but changes behavior\" kind of notice.\n\nThe trick is prompting it like a teammate, not a linter. That means: give it the author's stated goal, the team's conventions, and a clear bar for what counts as a finding.\n\n> **Heads up on newer Claudes.** If your review prompt says \"only report high-severity issues\" or \"don't nitpick,\" recent Claude models follow that instruction more faithfully than older ones did. They may investigate just as deeply, find the same bugs, and then, by your own rule, not report the ones below your bar. If your review volume drops suddenly after a model upgrade, loosen the filter before assuming a regression.",
+        "A model can analyze a supplied diff for candidate defects, convention violations, and missing tests. It cannot inspect files, callers, runtime behavior, or repository rules that were not included or made available through tools.\n\nProvide the author's stated goal, relevant surrounding code, project conventions, and a severity definition. Require each finding to cite a file and line, explain the failure path, and distinguish evidence from uncertainty.\n\nModel behavior changes across versions. Keep a review eval set and rerun it when the model, prompt, or tool access changes.",
     },
     {
       id: "review-template",
@@ -34,7 +34,7 @@ const lesson: ClaudeLesson = {
       title: "Three times it earns its keep",
       readTimeMinutes: 2,
       content:
-        "- **Before you push.** Paste your own diff, ask for a staff-level review. Catches things you'll be embarrassed by later.\n- **On a big diff.** Before reading 2,000 lines yourself, ask Claude for a call-graph summary and a list of behavioral changes.\n- **Across the repo.** \"Are there other callers of this function I missed?\", paste the call sites, let Claude reason about ripple.",
+        "- **Before review.** Run a focused pass over your diff, then verify each finding and run the relevant checks.\n- **For a large change.** Generate a candidate map of changed behavior and affected call paths; compare it with code search and tests.\n- **Across the repository.** Use repository tools to enumerate callers first, then analyze the concrete results for compatibility risks.",
     },
   ],
   widgets: [
@@ -47,7 +47,8 @@ const lesson: ClaudeLesson = {
         cpId: "review",
         title: "Review a diff",
         hint: "Paste a small diff. Ask for a staff-level review using the template above.",
-        placeholder: "You are reviewing a PR as a staff engineer…\n\nDIFF:\n<paste diff>",
+        placeholder:
+          "You are reviewing a PR as a staff engineer…\n\nDIFF:\n<paste diff>",
       },
     },
     {

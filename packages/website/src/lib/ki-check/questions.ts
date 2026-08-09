@@ -352,7 +352,7 @@ export const STAGE_BANDS: readonly StageBand[] = [
     min: 0,
     max: 20,
     blurb:
-      "Du fängst gerade an, dich mit KI zu beschäftigen. Der beste Moment, es von Anfang an richtig zu lernen.",
+      "Die Grundbegriffe und Prüfschritte sind neu. Beginne mit Funktionsweise, Fehlertypen und Datenregeln.",
   },
   {
     level: 2,
@@ -360,7 +360,7 @@ export const STAGE_BANDS: readonly StageBand[] = [
     min: 20,
     max: 40,
     blurb:
-      "Du hast erste Berührungspunkte. Jetzt geht es darum, aus einzelnen Eindrücken ein klares Bild zu machen.",
+      "Du kennst mehrere Themen. Es fehlt noch eine feste Methode für Prüfung, Datenverwendung und Regeln.",
   },
   {
     level: 3,
@@ -368,7 +368,7 @@ export const STAGE_BANDS: readonly StageBand[] = [
     min: 40,
     max: 60,
     blurb:
-      "Du bewegst dich sicher durch den KI-Alltag. Gezielt gewählte Themen bringen dich aufs nächste Level.",
+      "Du kannst KI für gewöhnliche Aufgaben einsetzen und mehrere Risiken erkennen. Vertiefe gezielt die schwächeren Felder.",
   },
   {
     level: 4,
@@ -376,7 +376,7 @@ export const STAGE_BANDS: readonly StageBand[] = [
     min: 60,
     max: 80,
     blurb:
-      "Du nutzt KI bewusst und kannst anderen weiterhelfen. Feinschliff bei Recht und Praxis lohnt sich.",
+      "Du setzt KI bewusst ein und kannst deine Prüfschritte erklären. Kläre die rechtlichen und betrieblichen Details deiner Rolle.",
   },
   {
     level: 5,
@@ -384,7 +384,7 @@ export const STAGE_BANDS: readonly StageBand[] = [
     min: 80,
     max: 100,
     blurb:
-      "Du gehst souverän mit KI um, prüfst kritisch und handelst verantwortlich. Vertiefe gezielt einzelne Felder.",
+      "Du prüfst KI-Ergebnisse kritisch, schützt Daten und dokumentierst wichtige Entscheidungen. Wähle anhand der Feldwerte ein enges Vertiefungsthema.",
   },
 ] as const;
 

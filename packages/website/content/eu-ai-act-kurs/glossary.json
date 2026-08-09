@@ -105,7 +105,7 @@
   },
   {
     "term": "KI-Kompetenz",
-    "definition": "Organisationspflicht nach Art. 4 der Verordnung (EU) 2024/1689 in der Fassung von Verordnung (EU) 2026/1744: Anbieter und Betreiber müssen kontextgerechte Maßnahmen zur Entwicklung der KI-Kompetenz ihres Personals und beauftragter Personen treffen. Ein bestimmtes Kompetenzniveau einzelner Personen muss nicht garantiert werden. Anwendbar seit dem 2. Februar 2025.",
+    "definition": "Organisationspflicht nach Art. 4 der Verordnung (EU) 2024/1689 in der Fassung von Verordnung (EU) 2026/1744: Anbieter und Betreiber müssen Maßnahmen ergreifen, um die Entwicklung der KI-Kompetenz ihres Personals und anderer in ihrem Auftrag befasster Personen zu unterstützen. Technische Kenntnisse, Erfahrung, Aus- und Fortbildung, Einsatzkontext und betroffene Personen oder Personengruppen sind zu berücksichtigen. Ein bestimmtes Kompetenzniveau einzelner Personen muss nicht garantiert werden. Anwendbar seit dem 2. Februar 2025.",
     "english": "AI Literacy",
     "category": "regulatorik",
     "relatedTerms": ["Betreiber", "Anbieter"],

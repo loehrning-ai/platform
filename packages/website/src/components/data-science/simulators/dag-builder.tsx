@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { inkOf } from "@/lib/data-science/sim-kit";
+import { useDataScienceLocale } from "../locale-context";
 
 // ─── DAGBuilder ────────────────────────────────────
 //
@@ -15,7 +16,8 @@ interface DagNode {
   readonly x: number;
   readonly y: number;
   readonly label: string;
-  readonly role: "treatment" | "outcome" | "confounder" | "mediator" | "collider";
+  readonly role:
+    "treatment" | "outcome" | "confounder" | "mediator" | "collider";
 }
 
 type EdgeType = "causal" | "spurious" | "direct";
@@ -51,7 +53,8 @@ const DAGS: readonly DagPattern[] = [
     answer: "Yes, directly.",
     adjustZ: null,
     adjustIcon: "—",
-    explanation: "No confounders, no colliders. A simple regression of Y on X recovers the causal effect. This is the ideal scenario.",
+    explanation:
+      "The graph assumes no open backdoor path. A regression of Y on X can identify the displayed effect if the graph is correct and consistency, positivity, measurement, and model assumptions also hold.",
   },
   {
     title: "Fork / Confounder",
@@ -70,7 +73,8 @@ const DAGS: readonly DagPattern[] = [
     answer: "Yes, but only after controlling for Z.",
     adjustZ: true,
     adjustIcon: "✓ Adjust for Z",
-    explanation: "Z opens a backdoor path X ← Z → Y. Including Z in the regression blocks this path and isolates the X → Y effect. Classic omitted-variable bias if you skip it.",
+    explanation:
+      "Z creates the backdoor path X ← Z → Y. Under this graph, suitable adjustment for Z blocks that path; identification still depends on the graph, overlap, measurement, and analysis model.",
   },
   {
     title: "Mediator",
@@ -89,7 +93,8 @@ const DAGS: readonly DagPattern[] = [
     answer: "Yes, but do NOT control for Z.",
     adjustZ: false,
     adjustIcon: "✗ Do not adjust for Z",
-    explanation: "Z is on the causal path from X to Y. Conditioning on it blocks the indirect pathway and you measure only the direct effect, not the total. Control for Z only when you explicitly want the direct effect.",
+    explanation:
+      "Z is on the causal path from X to Y. Conditioning on it blocks the indirect pathway and you measure only the direct effect, not the total. Control for Z only when you explicitly want the direct effect.",
   },
   {
     title: "Collider",
@@ -105,12 +110,55 @@ const DAGS: readonly DagPattern[] = [
       { from: "X", to: "Y", type: "spurious" },
     ],
     question: "Can we estimate X → Y?",
-    answer: "Yes, but NEVER condition on Z.",
+    answer: "For the displayed total effect, do not condition on Z.",
     adjustZ: false,
     adjustIcon: "✗ Do not adjust for Z",
-    explanation: 'Z is a collider: both X and Y point into it. Conditioning on Z opens a fake association between X and Y. This is selection bias, e.g., conditioning on "hired by top firm" creates spurious talent-looks tradeoff.',
+    explanation:
+      "Z is a collider in this graph: both X and Y point into it. Conditioning on Z can open a non-causal association between X and Y, a form of selection bias.",
   },
 ];
+const DAGS_DE = [
+  {
+    title: "Direkter Effekt",
+    question: "Kann X → Y geschätzt werden?",
+    answer: "Ja, direkt.",
+    adjustIcon: "—",
+    explanation:
+      "Der Graph nimmt keinen offenen Backdoor-Pfad an. Eine Regression von Y auf X kann den gezeigten Effekt identifizieren, wenn der Graph sowie Konsistenz-, Positivitäts-, Mess- und Modellannahmen gelten.",
+  },
+  {
+    title: "Gabel / Confounder",
+    question: "Kann X → Y geschätzt werden?",
+    answer: "Ja, aber nur unter Kontrolle von Z.",
+    adjustIcon: "✓ Für Z adjustieren",
+    explanation:
+      "Z erzeugt den Backdoor-Pfad X ← Z → Y. Unter diesem Graphen blockiert eine geeignete Anpassung für Z den Pfad; Identifikation hängt weiterhin von Graph, Überlappung, Messung und Analysemodell ab.",
+  },
+  {
+    title: "Mediator",
+    question: "Kann der Gesamteffekt X → Y geschätzt werden?",
+    answer: "Ja, aber NICHT für Z kontrollieren.",
+    adjustIcon: "✗ Nicht für Z adjustieren",
+    explanation:
+      "Z liegt auf dem kausalen Pfad von X nach Y. Eine Konditionierung auf Z blockiert den indirekten Pfad und misst nur den direkten statt des gesamten Effekts. Für Z nur kontrollieren, wenn ausdrücklich der direkte Effekt gesucht ist.",
+  },
+  {
+    title: "Collider",
+    question: "Kann X → Y geschätzt werden?",
+    answer: "Für den gezeigten Gesamteffekt nicht auf Z konditionieren.",
+    adjustIcon: "✗ Nicht für Z adjustieren",
+    explanation:
+      "Z ist in diesem Graphen ein Collider: X und Y zeigen beide auf Z. Eine Konditionierung auf Z kann eine nichtkausale Beziehung zwischen X und Y öffnen und Selektionsbias erzeugen.",
+  },
+] as const;
+
+const ROLE_LABELS_DE: Readonly<Record<DagNode["role"], string>> = {
+  treatment: "Behandlung",
+  outcome: "Ergebnis",
+  confounder: "Confounder",
+  mediator: "Mediator",
+  collider: "Collider",
+};
 
 const ROLE_COLOR: Record<DagNode["role"], string> = {
   treatment: "#5B9BE8",
@@ -120,10 +168,18 @@ const ROLE_COLOR: Record<DagNode["role"], string> = {
   collider: "#FF4DA2",
 };
 
-const EDGE_COLOR: Record<EdgeType, string> = { causal: "#C7C4BC", spurious: "#FF4DA2", direct: "#D1FF3A" };
+const EDGE_COLOR: Record<EdgeType, string> = {
+  causal: "#C7C4BC",
+  spurious: "#FF4DA2",
+  direct: "#D1FF3A",
+};
 
 function markerFor(type: EdgeType): string {
-  return type === "spurious" ? "arr-red9" : type === "direct" ? "arr-lime9" : "arr9";
+  return type === "spurious"
+    ? "arr-red9"
+    : type === "direct"
+      ? "arr-lime9"
+      : "arr9";
 }
 
 const W = 360;
@@ -147,29 +203,70 @@ function edgePath(from: string, to: string, nodes: readonly DagNode[]) {
 }
 
 export function DAGBuilder() {
+  const { locale, text } = useDataScienceLocale();
   const [active, setActive] = useState(0);
   const dag = DAGS[active]!;
-  const adjustColor = dag.adjustZ === null ? "#8A8680" : dag.adjustZ ? "#1FAF7E" : "#FF4DA2";
+  const dagCopy = locale === "de" ? DAGS_DE[active]! : dag;
+  const adjustColor =
+    dag.adjustZ === null ? "#8A8680" : dag.adjustZ ? "#1FAF7E" : "#FF4DA2";
 
   return (
     <Panel
-      eyebrow="SIMULATION"
-      title="DAG patterns · should you adjust for Z?"
+      eyebrow={text("SIMULATION", "SIMULATION")}
+      title={text(
+        "DAG patterns · should you adjust for Z?",
+        "DAG-Muster · für Z adjustieren?",
+      )}
       meta={dag.tag}
-      caption="Four structural patterns. Each has a different answer to 'should I include Z in my regression?' The answer is never obvious from data alone, only the DAG tells you."
+      caption={text(
+        "Four simplified graphs. Adjustment depends on the displayed estimand and assumed arrows; the data do not choose or validate the DAG, and omitted variables can change the answer.",
+        "Vier vereinfachte Graphen. Die Anpassung hängt vom gezeigten Estimand und den angenommenen Pfeilen ab; Daten wählen oder validieren den DAG nicht, und ausgelassene Variablen können die Antwort ändern.",
+      )}
     >
       <div className="sim-row" style={{ gridTemplateColumns: "1fr 1fr" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <div className="seg" style={{ flexDirection: "column", gap: 4 }}>
             {DAGS.map((d, i) => (
-              <button key={i} type="button" className={active === i ? "on" : ""} onClick={() => setActive(i)}>
-                {d.title} <span style={{ opacity: 0.55, fontSize: 10 }}>{d.tag}</span>
+              <button
+                key={i}
+                type="button"
+                className={active === i ? "on" : ""}
+                onClick={() => setActive(i)}
+              >
+                {locale === "de" ? DAGS_DE[i]!.title : d.title}{" "}
+                <span style={{ opacity: 0.55, fontSize: 10 }}>{d.tag}</span>
               </button>
             ))}
           </div>
-          <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 8, padding: "12px 14px", marginTop: 4 }}>
-            <div style={{ fontSize: 11, color: "var(--ink-3)", fontFamily: "'JetBrains Mono',monospace", marginBottom: 6 }}>{dag.question}</div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: "var(--ink-1)", marginBottom: 8 }}>{dag.answer}</div>
+          <div
+            style={{
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(255,255,255,0.07)",
+              borderRadius: 8,
+              padding: "12px 14px",
+              marginTop: 4,
+            }}
+          >
+            <div
+              style={{
+                fontSize: 11,
+                color: "var(--ink-3)",
+                fontFamily: "'JetBrains Mono',monospace",
+                marginBottom: 6,
+              }}
+            >
+              {dagCopy.question}
+            </div>
+            <div
+              style={{
+                fontSize: 13,
+                fontWeight: 700,
+                color: "var(--ink-1)",
+                marginBottom: 8,
+              }}
+            >
+              {dagCopy.answer}
+            </div>
             <div
               style={{
                 display: "inline-block",
@@ -184,10 +281,13 @@ export function DAGBuilder() {
                 marginBottom: 8,
               }}
             >
-              {dag.adjustIcon}
+              {dagCopy.adjustIcon}
             </div>
-            <p className="prose" style={{ fontSize: 11.5, margin: 0, color: "var(--ink-3)" }}>
-              {dag.explanation}
+            <p
+              className="prose"
+              style={{ fontSize: 11.5, margin: 0, color: "var(--ink-3)" }}
+            >
+              {dagCopy.explanation}
             </p>
           </div>
         </div>
@@ -197,7 +297,16 @@ export function DAGBuilder() {
               {(["arr9", "arr-red9", "arr-lime9"] as const).map((id, idx) => {
                 const colors = ["#C7C4BC", "#FF4DA2", "#D1FF3A"];
                 return (
-                  <marker key={id} id={id} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+                  <marker
+                    key={id}
+                    id={id}
+                    viewBox="0 0 10 10"
+                    refX="8"
+                    refY="5"
+                    markerWidth="5"
+                    markerHeight="5"
+                    orient="auto"
+                  >
                     <path d="M0,0 L10,5 L0,10 z" fill={colors[idx]} />
                   </marker>
                 );
@@ -224,8 +333,23 @@ export function DAGBuilder() {
               const col = ROLE_COLOR[n.role] || "#C7C4BC";
               return (
                 <g key={n.id}>
-                  <circle cx={n.x * W} cy={n.y * H} r="26" fill={`${col}18`} stroke={col} strokeWidth="2" />
-                  <text x={n.x * W} y={n.y * H + 5} textAnchor="middle" fill="#F4F2EC" fontSize="15" fontFamily="'JetBrains Mono',monospace" fontWeight="700">
+                  <circle
+                    cx={n.x * W}
+                    cy={n.y * H}
+                    r="26"
+                    fill={`${col}18`}
+                    stroke={col}
+                    strokeWidth="2"
+                  />
+                  <text
+                    x={n.x * W}
+                    y={n.y * H + 5}
+                    textAnchor="middle"
+                    fill="#F4F2EC"
+                    fontSize="15"
+                    fontFamily="'JetBrains Mono',monospace"
+                    fontWeight="700"
+                  >
                     {n.label}
                   </text>
                   <text
@@ -235,9 +359,12 @@ export function DAGBuilder() {
                     fill={col}
                     fontSize="9"
                     fontFamily="'JetBrains Mono',monospace"
-                    style={{ textTransform: "uppercase", letterSpacing: "0.06em" }}
+                    style={{
+                      textTransform: "uppercase",
+                      letterSpacing: "0.06em",
+                    }}
                   >
-                    {n.role}
+                    {locale === "de" ? ROLE_LABELS_DE[n.role] : n.role}
                   </text>
                 </g>
               );

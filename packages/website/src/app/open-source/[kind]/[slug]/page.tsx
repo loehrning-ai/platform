@@ -3,12 +3,19 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { SoftwareArtifactGuide } from "@/components/open-source/software-artifact-guide";
+import { contentLocalesForPath } from "@/lib/i18n/content-parity";
+import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
 import {
   OPEN_SOURCE_PROJECT_ARTIFACTS,
   OPEN_SOURCE_TOOL_ARTIFACTS,
   OPEN_SOURCE_VIDEO_ARTIFACTS,
   getOpenSourceArtifactByRoute,
 } from "@/lib/open-source/artifacts";
+import {
+  localizeOpenSourceArtifact,
+  OPEN_SOURCE_DETAIL_COPY,
+} from "@/lib/open-source/display-copy";
 import { absoluteUrl } from "@/lib/seo/entity";
 import {
   JsonLd,
@@ -40,20 +47,29 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { kind, slug } = await params;
-  const artifact = getOpenSourceArtifactByRoute(kind, slug);
-  if (!artifact) return {};
+  const registryArtifact = getOpenSourceArtifactByRoute(kind, slug);
+  if (!registryArtifact) return {};
+  const locale = await getRequestLocale();
+  const artifact = localizeOpenSourceArtifact(registryArtifact, locale);
+  const localizedPath = localizeHref(artifact.href, locale);
 
   return {
     title: artifact.title,
     description: artifact.description,
-    alternates: { canonical: artifact.href },
+    alternates: {
+      ...buildLocaleAlternates(
+        artifact.href,
+        contentLocalesForPath(artifact.href),
+      ),
+      canonical: localizedPath,
+    },
     robots: { index: true, follow: true },
     openGraph: {
       title: artifact.title,
       description: artifact.description,
-      url: absoluteUrl(artifact.href),
+      url: absoluteUrl(localizedPath),
       siteName: "loehrning.ai",
-      locale: "de_DE",
+      locale: locale === "de" ? "de_DE" : "en_GB",
       type: artifact.kind === "video" ? "video.other" : "website",
     },
     twitter: {
@@ -66,24 +82,29 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function OpenSourceArtifactDetailPage({ params }: PageProps) {
   const { kind, slug } = await params;
-  const artifact = getOpenSourceArtifactByRoute(kind, slug);
-  if (!artifact) notFound();
+  const registryArtifact = getOpenSourceArtifactByRoute(kind, slug);
+  if (!registryArtifact) notFound();
+  const locale = await getRequestLocale();
+  const copy = OPEN_SOURCE_DETAIL_COPY[locale];
+  const artifact = localizeOpenSourceArtifact(registryArtifact, locale);
 
   const launchHref =
     artifact.kind === "video" ? artifact.watchHref : artifact.launchHref;
-  const artifactUrl = absoluteUrl(artifact.href);
+  const artifactUrl = absoluteUrl(localizeHref(artifact.href, locale));
+  const collectionUrl = absoluteUrl(localizeHref("/open-source", locale));
+  const homeUrl = locale === "de" ? SITE_URL : absoluteUrl("/en");
   const jsonLd: JsonLdGraph = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Start", item: SITE_URL },
+          { "@type": "ListItem", position: 1, name: copy.breadcrumbHome, item: homeUrl },
           {
             "@type": "ListItem",
             position: 2,
             name: "Open Source",
-            item: `${SITE_URL}/open-source`,
+            item: collectionUrl,
           },
           {
             "@type": "ListItem",
@@ -105,6 +126,7 @@ export default async function OpenSourceArtifactDetailPage({ params }: PageProps
         description: artifact.description,
         url: artifactUrl,
         isPartOf: { "@id": WEBSITE_ID },
+        mainEntityOfPage: artifactUrl,
         publisher: { "@id": ORG_ID },
         creator: { "@id": PERSON_ID },
         isAccessibleForFree: true,
@@ -130,11 +152,11 @@ export default async function OpenSourceArtifactDetailPage({ params }: PageProps
       <JsonLd data={jsonLd} id={`open-source-${artifact.kind}-${artifact.slug}-jsonld`} />
       <section className="mx-auto max-w-4xl px-6 py-20" aria-labelledby="artifact-title">
         <Link
-          href="/open-source"
+          href={localizeHref("/open-source", locale)}
           className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft size={15} aria-hidden="true" />
-          Open Source
+          {copy.back}
         </Link>
         <p className="mt-10 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
           {artifact.eyebrow}
@@ -147,7 +169,7 @@ export default async function OpenSourceArtifactDetailPage({ params }: PageProps
         </p>
 
         {artifact.kind === "video" ? (
-          <section className="mt-10" aria-label={`Video: ${artifact.title}`}>
+          <section className="mt-10" aria-label={`${copy.videoLabel}: ${artifact.title}`}>
             <video
               className="aspect-video w-full bg-black"
               controls
@@ -170,25 +192,25 @@ export default async function OpenSourceArtifactDetailPage({ params }: PageProps
               href={artifact.transcriptHref}
               className="mt-4 inline-flex border border-border px-4 py-2 text-sm font-semibold hover:border-brand-orange"
             >
-              Transkript lesen
+              {copy.transcript}
             </Link>
           </section>
         ) : null}
 
         <dl className="mt-10 grid gap-4 border-y border-border py-6 sm:grid-cols-3">
           <div>
-            <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Sprache</dt>
+            <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">{copy.language}</dt>
             <dd className="mt-2 font-semibold">{artifact.language}</dd>
           </div>
           <div>
-            <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Commit</dt>
+            <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">{copy.commit}</dt>
             <dd className="mt-2 font-mono text-sm">{artifact.source.revision.slice(0, 12)}</dd>
           </div>
           <div>
-            <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Lizenz</dt>
+            <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">{copy.license}</dt>
             <dd className="mt-2">
               <a href={artifact.license.href} className="font-semibold underline-offset-4 hover:underline">
-                Lizenztext
+                {copy.licenseText}
               </a>
             </dd>
           </div>
@@ -203,13 +225,13 @@ export default async function OpenSourceArtifactDetailPage({ params }: PageProps
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 border border-foreground px-4 py-2 text-sm font-semibold"
               >
-                Öffnen
-                <span className="sr-only">, öffnet in neuem Tab</span>
+                {copy.open}
+                <span className="sr-only">{copy.externalTab}</span>
                 <ExternalLink size={14} aria-hidden="true" />
               </a>
             ) : (
-              <Link href={launchHref} className="border border-foreground px-4 py-2 text-sm font-semibold">
-                Öffnen
+              <Link href={localizeHref(launchHref, locale)} className="border border-foreground px-4 py-2 text-sm font-semibold">
+                {copy.open}
               </Link>
             )
           ) : null}
@@ -219,14 +241,14 @@ export default async function OpenSourceArtifactDetailPage({ params }: PageProps
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 border border-border px-4 py-2 text-sm font-semibold hover:border-brand-orange"
           >
-            Quellstand
-            <span className="sr-only">, öffnet in neuem Tab</span>
+            {copy.sourceRevision}
+            <span className="sr-only">{copy.externalTab}</span>
             <ExternalLink size={14} aria-hidden="true" />
           </a>
         </div>
 
         {artifact.kind === "tool" || artifact.kind === "project" ? (
-          <SoftwareArtifactGuide artifact={artifact} />
+          <SoftwareArtifactGuide artifact={artifact} locale={locale} />
         ) : null}
       </section>
     </>

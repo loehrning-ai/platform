@@ -9,6 +9,7 @@ import {
   Eyebrow,
   FadeBlock,
 } from "@/components/ai-native/primitives";
+import type { Locale } from "@/lib/i18n/locale";
 
 /* TimAnchor — editorial "Der Kurator" section. */
 
@@ -16,15 +17,24 @@ const TIMELINE: readonly (readonly [string, string])[] = [
   ["2022", "M.Sc. Informatik · FAU Erlangen-Nürnberg"],
   ["2021-2025", "Datenrollen in internationalen Produkt- und Infrastrukturteams"],
   ["2025-2026", "Dateninfrastruktur und Analytics in einem globalen Technologieumfeld"],
-  ["2026-heute", "loehrning.ai · freie Kurse, Demos und Arbeitsnotizen zu KI-nativer Arbeit"],
+  ["2026-heute", "loehrning.ai · freie Kurse, Simulationen und Arbeitsnotizen zu KI-gestützter Arbeit"],
 ];
 
-export function AiNativeTimAnchor() {
+const TIMELINE_EN: readonly (readonly [string, string])[] = [
+  ["2022", "MSc Computer Science · FAU Erlangen-Nürnberg"],
+  ["2021-2025", "Data roles in international product and infrastructure teams"],
+  ["2025-2026", "Data infrastructure and analytics in a global technology environment"],
+  ["2026-present", "loehrning.ai · open courses, simulations and working notes"],
+];
+
+export function AiNativeTimAnchor({ locale = "de" }: { readonly locale?: Locale }) {
+  const isEnglish = locale === "en";
+  const timeline = isEnglish ? TIMELINE_EN : TIMELINE;
   return (
-    <SectionShell num="IX" label="Der Kurator">
+    <SectionShell num="IX" label={isEnglish ? "Course editor" : "Kursredaktion"}>
       <div className="max-w-[720px]">
         <div>
-          <Eyebrow>Wer das macht</Eyebrow>
+          <Eyebrow>{isEnglish ? "Course editor" : "Verantwortlich für den Kurs"}</Eyebrow>
           <ClipHeading
             as="h2"
             className="mt-2.5 font-bold leading-none tracking-[-0.035em]"
@@ -32,26 +42,25 @@ export function AiNativeTimAnchor() {
           >
             Tim Löhr.
             <br />
-            Kein Guru. Ingenieur.
+            {isEnglish ? "Computer scientist and course editor." : "Informatiker und Kursredakteur."}
           </ClipHeading>
           <FadeBlock delay={1}>
             <p className="mt-6 max-w-[560px] text-[17px] leading-[1.65] text-foreground">
-              M.Sc. Informatik (FAU Erlangen-Nürnberg). Technischer Hintergrund
-              in Dateninfrastruktur, Analytics und automatisierter Auswertung.
-              Kein LinkedIn-Trainer, sondern jemand, der KI-Werkzeuge täglich
-              als Arbeitsumgebung nutzt.
+              {isEnglish
+                ? "MSc Computer Science from FAU Erlangen-Nürnberg, with a technical background in data infrastructure, analytics and automated analysis."
+                : "M.Sc. Informatik an der FAU Erlangen-Nürnberg, mit technischem Hintergrund in Dateninfrastruktur, Analytics und automatisierter Auswertung."}
             </p>
           </FadeBlock>
           <FadeBlock delay={2}>
             <p className="mt-5 max-w-[560px] text-[16px] leading-[1.6] text-muted-foreground">
-              loehrning.ai sammelt hier öffentliche Materialien zu KI-nativer
-              Arbeit. Dieser Arbeitskurs verdichtet die Arbeitsweise in Übungen,
-              Demos und Capstone-Projekten.
+              {isEnglish
+                ? "loehrning.ai publishes open material on AI-supported work. This course turns that material into lessons, local simulations and a bounded capstone."
+                : "loehrning.ai veröffentlicht freie Materialien zu KI-gestützter Arbeit. Dieser Kurs strukturiert sie als Lektionen, lokale Simulationen und einen begrenzten Capstone."}
             </p>
           </FadeBlock>
           <FadeBlock delay={3}>
             <ol className="mt-9 grid max-w-[520px] gap-4">
-              {TIMELINE.map(([year, text]) => (
+              {timeline.map(([year, text]) => (
                 <li
                   key={year}
                   className="grid grid-cols-[64px_1fr] items-baseline gap-4 border-b border-dashed border-border pb-3.5"

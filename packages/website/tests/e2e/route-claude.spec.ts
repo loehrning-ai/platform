@@ -14,12 +14,12 @@ import { CANONICAL_LESSON_IDS } from "../../src/lib/courses/completion";
  * server run as part of this change) — added so CI picks it up going forward.
  */
 
-const LANDING = "/kurse/open-source/claude";
-const COURSE_PATH = "/kurse/open-source/claude/kurs";
-const LESSON_ROUTE = "/kurse/open-source/claude/kurs/mental-model";
-const QUIZ_ROUTE = "/kurse/open-source/claude/kurs/quiz";
-const CERT_ROUTE = "/kurse/open-source/claude/kurs/zertifikat";
-const VERIFY_ROUTE = "/kurse/open-source/claude/verifizierung";
+const LANDING = "/en/kurse/open-source/claude";
+const COURSE_PATH = "/en/kurse/open-source/claude/kurs";
+const LESSON_ROUTE = "/en/kurse/open-source/claude/kurs/mental-model";
+const QUIZ_ROUTE = "/en/kurse/open-source/claude/kurs/quiz";
+const CERT_ROUTE = "/en/kurse/open-source/claude/kurs/zertifikat";
+const VERIFY_ROUTE = "/en/kurse/open-source/claude/verifizierung";
 
 const UNIFIED_KEY = "loehrning-progress-v2";
 
@@ -90,7 +90,9 @@ function encodeCertHash(payload: {
 }
 
 test.describe("Claude Course golden path", () => {
-  test("home: landing renders and links into the course hub", async ({ page }) => {
+  test("home: landing renders and links into the course hub", async ({
+    page,
+  }) => {
     const res = await page.goto(LANDING, { waitUntil: "domcontentloaded" });
     expect(res?.status()).toBe(200);
     await expect(page).not.toHaveURL(/\/login/);
@@ -125,10 +127,7 @@ test.describe("Claude Course golden path", () => {
     expect(res?.status()).toBe(200);
 
     const assessment = page.locator("#final-assessment");
-    await expect(assessment).toHaveAttribute(
-      "data-assessment-state",
-      "locked",
-    );
+    await expect(assessment).toHaveAttribute("data-assessment-state", "locked");
     await expect(assessment.getByText("Quiz locked")).toBeVisible();
     await expect(assessment.getByRole("status")).toContainText(
       "Complete all 12 lessons",
@@ -144,10 +143,7 @@ test.describe("Claude Course golden path", () => {
     await page.goto(COURSE_PATH, { waitUntil: "domcontentloaded" });
 
     const assessment = page.locator("#final-assessment");
-    await expect(assessment).toHaveAttribute(
-      "data-assessment-state",
-      "ready",
-    );
+    await expect(assessment).toHaveAttribute("data-assessment-state", "ready");
     const startQuiz = assessment.getByRole("link", {
       name: "Start workshop quiz",
     });
@@ -164,10 +160,7 @@ test.describe("Claude Course golden path", () => {
     await page.goto(COURSE_PATH, { waitUntil: "domcontentloaded" });
 
     const assessment = page.locator("#final-assessment");
-    await expect(assessment).toHaveAttribute(
-      "data-assessment-state",
-      "passed",
-    );
+    await expect(assessment).toHaveAttribute("data-assessment-state", "passed");
     await expect(
       assessment.getByRole("link", { name: "Retake quiz" }),
     ).toHaveAttribute("href", QUIZ_ROUTE);
@@ -183,15 +176,18 @@ test.describe("Claude Course golden path", () => {
   test("checkpoint: answering the lesson's first quiz widget correctly awards a checkpoint", async ({
     page,
   }) => {
-    const res = await page.goto(LESSON_ROUTE, { waitUntil: "domcontentloaded" });
+    const res = await page.goto(LESSON_ROUTE, {
+      waitUntil: "domcontentloaded",
+    });
     expect(res?.status()).toBe(200);
 
-    // mental-model's "q1" quiz widget (lib/claude-course/lessons/mental-model.ts):
-    // option index 2 is the correct answer ("Claude invents a plausible answer
-    // that sounds right but isn't grounded."), and CLAUDE_QUIZ_COPY's
-    // correctLabel is the English "Correct." (widget-copy.ts).
-    const correctAnswer = page.getByRole("radio", {
-      name: /Claude invents a plausible answer that sounds right but isn't grounded\./,
+    // mental-model's first quick check keeps the stable `mental-model::q1`
+    // checkpoint identity even when its reviewed answer copy changes.
+    const firstQuestion = page
+      .getByRole("radiogroup", { name: "Answer options" })
+      .first();
+    const correctAnswer = firstQuestion.getByRole("radio", {
+      name: /Any specific service claim is ungrounded; request or supply telemetry before accepting an answer\./,
     });
     await expect(correctAnswer).toBeVisible();
     await correctAnswer.click();
@@ -200,9 +196,23 @@ test.describe("Claude Course golden path", () => {
     await expect(page.getByText("Correct.", { exact: true })).toBeVisible({
       timeout: 10_000,
     });
+    await expect
+      .poll(() =>
+        page.evaluate((storageKey) => {
+          const raw = window.localStorage.getItem(storageKey);
+          if (!raw) return false;
+          const state = JSON.parse(raw) as {
+            checkpoints?: Record<string, boolean>;
+          };
+          return state.checkpoints?.["mental-model::q1"] === true;
+        }, UNIFIED_KEY),
+      )
+      .toBe(true);
   });
 
-  test("quiz: direct access stays locked until every lesson is complete", async ({ page }) => {
+  test("quiz: direct access stays locked until every lesson is complete", async ({
+    page,
+  }) => {
     const res = await page.goto(QUIZ_ROUTE, { waitUntil: "domcontentloaded" });
     expect(res?.status()).toBe(200);
     await expect(page).not.toHaveURL(/\/login/);
@@ -218,7 +228,7 @@ test.describe("Claude Course golden path", () => {
     const res = await page.goto(QUIZ_ROUTE, { waitUntil: "domcontentloaded" });
     expect(res?.status()).toBe(200);
 
-    const nav = page.getByRole("navigation", { name: "Hauptnavigation" });
+    const nav = page.getByRole("navigation", { name: "Primary navigation" });
     const quizHeader = page.getByTestId("workshop-quiz-header");
     await expect(nav).toBeVisible();
     await expect(quizHeader).toBeVisible({ timeout: 10_000 });
@@ -229,9 +239,7 @@ test.describe("Claude Course golden path", () => {
     ]);
     expect(navBox).not.toBeNull();
     expect(quizHeaderBox).not.toBeNull();
-    expect(quizHeaderBox!.y).toBeGreaterThanOrEqual(
-      navBox!.y + navBox!.height,
-    );
+    expect(quizHeaderBox!.y).toBeGreaterThanOrEqual(navBox!.y + navBox!.height);
     await expect(page.getByRole("timer")).toHaveAccessibleName(
       /^Time remaining:/,
     );
@@ -240,16 +248,16 @@ test.describe("Claude Course golden path", () => {
     ).toBeVisible();
 
     const controlsAreTopmost = await quizHeader.evaluate((header) =>
-      Array.from(header.querySelectorAll<HTMLElement>("a, [role='timer']")).every(
-        (control) => {
-          const rect = control.getBoundingClientRect();
-          const topmost = document.elementFromPoint(
-            rect.left + rect.width / 2,
-            rect.top + rect.height / 2,
-          );
-          return topmost === control || control.contains(topmost);
-        },
-      ),
+      Array.from(
+        header.querySelectorAll<HTMLElement>("a, [role='timer']"),
+      ).every((control) => {
+        const rect = control.getBoundingClientRect();
+        const topmost = document.elementFromPoint(
+          rect.left + rect.width / 2,
+          rect.top + rect.height / 2,
+        );
+        return topmost === control || control.contains(topmost);
+      }),
     );
     expect(controlsAreTopmost).toBe(true);
 
@@ -269,9 +277,7 @@ test.describe("Claude Course golden path", () => {
     });
     await expect(nextButton).toBeFocused();
 
-    const questionHeading = page.locator(
-      "h2[id^='workshop-quiz-question-']",
-    );
+    const questionHeading = page.locator("h2[id^='workshop-quiz-question-']");
     const firstQuestion = await questionHeading.textContent();
     expect(firstQuestion).not.toBeNull();
     await nextButton.click();
@@ -301,11 +307,15 @@ test.describe("Claude Course golden path", () => {
       c: "claude",
       v: 1,
     });
-    await page.goto(`${VERIFY_ROUTE}#${hash}`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${VERIFY_ROUTE}#${hash}`, {
+      waitUntil: "domcontentloaded",
+    });
 
     await expect(page.getByText("QR data read", { exact: true })).toBeVisible();
     await expect(page.getByText("Ada Lovelace")).toBeVisible();
-    await expect(page.getByRole("heading", { name: /Claude Course/ })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /Claude Course/ }),
+    ).toBeVisible();
     await expect(page.getByText("Certificate code unreadable")).toHaveCount(0);
   });
 });

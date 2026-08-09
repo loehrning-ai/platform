@@ -134,7 +134,9 @@ describe("claude-course reused Tier-A widgets render zero German-only chrome ", 
         const Component =
           COMPONENT_BY_KIND[widget.kind as keyof typeof COMPONENT_BY_KIND];
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { container, unmount } = render(<Component {...(props as any)} />);
+        const { container, unmount } = render(
+          <Component {...(props as any)} />,
+        );
 
         for (const marker of GERMAN_ONLY_MARKERS) {
           expect(

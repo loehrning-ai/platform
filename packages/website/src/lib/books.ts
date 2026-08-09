@@ -82,8 +82,8 @@ export const allBooks: readonly Book[] = [
       "/book-covers/ki-landschaft-2026-3.png",
     ],
     sourceOwner: "editorial:books",
-    lastReviewed: "2026-07-28",
-    nextReview: "2026-10-28",
+    lastReviewed: "2026-08-09",
+    nextReview: "2026-11-09",
     sourceInputs: [
       "Public primary sources cited in the book",
       "Qualitative AI-readiness frameworks",
@@ -107,8 +107,8 @@ export const allBooks: readonly Book[] = [
     pageCount: 110,
     readingTimeMinutes: 73,
     resourceType: "HTML-Begleitbuch",
-    accessLabel: "kostenlos · jetzt lesen",
-    statusLabel: "Reader online",
+    accessLabel: "nicht veröffentlicht",
+    statusLabel: "Redaktionelle Prüfung offen",
     accessPolicy: "open-reader",
     readerHref: "/buecher/ki-arbeitsalltag",
     relatedResourceHref: "/ki-fuehrerschein",
@@ -138,7 +138,7 @@ export const allBooks: readonly Book[] = [
       "Kostenlos online lesbar; keine öffentliche PDF-Distribution in dieser Version.",
     publicationStatus: "hold",
     publicationReason:
-      "Editorial review is current; final public-release approval and legal sign-off are not recorded.",
+      "Bilingual review, legal sign-off, and public-release approval are incomplete; public routing remains disabled.",
   },
   {
     id: "ki-tools-selbststaendige",
@@ -152,8 +152,8 @@ export const allBooks: readonly Book[] = [
     pageCount: 280,
     readingTimeMinutes: 175,
     resourceType: "HTML-Nachschlagewerk",
-    accessLabel: "kostenlos · jetzt lesen",
-    statusLabel: "Reader online",
+    accessLabel: "nicht veröffentlicht",
+    statusLabel: "Redaktionelle Prüfung offen",
     accessPolicy: "open-reader",
     readerHref: "/buecher/ki-tools-selbststaendige",
     relatedResourceHref: "/ai-native",
@@ -183,7 +183,7 @@ export const allBooks: readonly Book[] = [
       "Kostenlos online lesbar; keine öffentliche PDF-Distribution in dieser Version.",
     publicationStatus: "hold",
     publicationReason:
-      "Editorial review is current; final public-release approval and vendor-claim sign-off are not recorded.",
+      "Bilingual review, vendor-claim sign-off, and public-release approval are incomplete; public routing remains disabled.",
   },
 ];
 

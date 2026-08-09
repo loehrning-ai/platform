@@ -5,13 +5,16 @@ import { useCheckpoint } from "@/lib/progress";
 import { cn } from "@/lib/utils";
 import { WidgetFrame } from "../tier-a/_frame";
 import { RunConsole } from "./_run-console";
-import { genericAnswer, simulatedDelayMs } from "@/lib/claude-course/simulated-claude";
+import {
+  genericAnswer,
+  simulatedDelayMs,
+} from "@/lib/claude-course/simulated-claude";
+import { useClaudeWidgetLocale } from "./locale-context";
 
 /**
- * PromptSandbox, free-form prompt box run against the simulated Claude.
- * Ported from `claude/js/widgets.js:54` (PromptSandbox). No network call
- * (see `lib/claude-course/simulated-claude.ts`); the checkpoint awards once
- * the learner runs a prompt of at least `minChars` characters.
+ * PromptSandbox applies deterministic local response rules to free-form text.
+ * The checkpoint awards once the learner runs a prompt of at least `minChars`
+ * characters.
  */
 export interface PromptSandboxWidgetProps {
   readonly lessonId: string;
@@ -30,12 +33,18 @@ const RUN_BUTTON_CLASS = cn(
 export function PromptSandboxWidget({
   lessonId,
   cpId,
-  title = "Prompt sandbox",
+  title,
   hint,
-  placeholder = "Type a prompt…",
+  placeholder,
   starter = "",
   minChars = 10,
 }: PromptSandboxWidgetProps): JSX.Element {
+  const locale = useClaudeWidgetLocale();
+  const german = locale === "de";
+  const resolvedTitle =
+    title ?? (german ? "Prompt ausprobieren" : "Prompt sandbox");
+  const resolvedPlaceholder =
+    placeholder ?? (german ? "Prompt eingeben…" : "Type a prompt…");
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [value, setValue] = useState(starter);
   const [output, setOutput] = useState<string | null>(null);
@@ -45,25 +54,33 @@ export function PromptSandboxWidget({
     if (!value.trim()) return;
     setLoading(true);
     setOutput(null);
-    await new Promise((resolve) => setTimeout(resolve, simulatedDelayMs(value)));
-    setOutput(genericAnswer(value));
+    await new Promise((resolve) =>
+      setTimeout(resolve, simulatedDelayMs(value)),
+    );
+    setOutput(genericAnswer(value, locale));
     setLoading(false);
     if (value.length >= minChars) complete();
   };
 
   return (
-    <WidgetFrame kindLabel="Try it" title={title} scenario={hint} done={done} xpLabel="+10 XP">
+    <WidgetFrame
+      kindLabel={german ? "Ausprobieren" : "Try it"}
+      title={resolvedTitle}
+      scenario={hint}
+      done={done}
+      xpLabel="+10 XP"
+    >
       <textarea
         rows={5}
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder={placeholder}
-        aria-label={title}
+        placeholder={resolvedPlaceholder}
+        aria-label={resolvedTitle}
         className="w-full border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
       />
       <div className="mt-2 flex items-center justify-between gap-3">
         <span className="font-mono text-[11px] text-muted-foreground">
-          {value.length} chars
+          {value.length} {german ? "Zeichen" : "chars"}
         </span>
         <button
           type="button"
@@ -71,14 +88,22 @@ export function PromptSandboxWidget({
           disabled={loading || !value.trim()}
           className={RUN_BUTTON_CLASS}
         >
-          {loading ? "Running…" : "Run prompt →"}
+          {loading
+            ? german
+              ? "Wird ausgeführt…"
+              : "Running…"
+            : german
+              ? "Prompt simulieren →"
+              : "Run local simulation →"}
         </button>
       </div>
       <RunConsole
         loading={loading}
         output={output}
         onClear={() => setOutput(null)}
-        emptyHint="Output appears here."
+        emptyHint={
+          german ? "Die Ausgabe erscheint hier." : "Output appears here."
+        }
       />
     </WidgetFrame>
   );

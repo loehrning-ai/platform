@@ -15,7 +15,9 @@ describe("FeatureStoreDiagram ", () => {
 
   it("renders the real panel copy, defaulting to feature store OFF with a high skew score", () => {
     render(<FeatureStoreDiagram />);
-    expect(screen.getByText("Feature store & training-serving skew")).toBeInTheDocument();
+    expect(
+      screen.getByText("Feature store & training-serving skew"),
+    ).toBeInTheDocument();
     expect(screen.getByText("OFF")).toBeInTheDocument();
     expect(screen.getByText("0.61")).toBeInTheDocument();
     expect(screen.getByText("Feature pipelines diverged.")).toBeInTheDocument();
@@ -26,6 +28,8 @@ describe("FeatureStoreDiagram ", () => {
     fireEvent.click(screen.getByRole("button", { name: "OFF" }));
     expect(screen.getByText("ON")).toBeInTheDocument();
     expect(screen.getByText("0.04")).toBeInTheDocument();
-    expect(screen.getByText("Same transform, same result.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Shared definition in this diagram."),
+    ).toBeInTheDocument();
   });
 });

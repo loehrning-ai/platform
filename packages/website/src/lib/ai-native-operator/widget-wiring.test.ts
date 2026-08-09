@@ -37,7 +37,7 @@ describe("ai-native-operator widget wiring is exclusively TIER_A, never AI-grade
       for (const widget of lesson.widgets ?? []) {
         expect(widget.kind).not.toBe("exercise-free-response");
         expect(widget.kind.startsWith("exercise-")).toBe(false);
-        expect((TIER_A_KINDS as readonly string[])).toContain(widget.kind);
+        expect(TIER_A_KINDS as readonly string[]).toContain(widget.kind);
       }
     }
   });

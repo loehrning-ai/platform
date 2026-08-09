@@ -4,6 +4,12 @@ import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import * as Sentry from "@sentry/nextjs";
 import RootError from "./error";
 
+const pathnameState = vi.hoisted(() => ({ value: "/" }));
+
+vi.mock("next/navigation", () => ({
+  usePathname: () => pathnameState.value,
+}));
+
 vi.mock("@sentry/nextjs", () => ({
   captureMessage: vi.fn(),
   withScope: (
@@ -23,7 +29,7 @@ vi.mock("@sentry/nextjs", () => ({
 /**
  * Root error boundary (src/app/error.tsx). Guards the two things Next.js relies
  * on this fallback for: it RENDERS a branded, honest recovery UI, and its
- * "Erneut versuchen" button calls the injected reset() so the segment can
+ * retry button calls the injected reset() so the segment can
  * re-render. Assertions target roles and the exact German copy, so a wording
  * refresh that keeps the contract stays green while a dropped reset wiring or a
  * missing home escape hatch fails. The boundary must also report the error to
@@ -31,30 +37,32 @@ vi.mock("@sentry/nextjs", () => ({
  * as a correlation ID users can quote in support requests.
  */
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  pathnameState.value = "/";
+});
 
 describe("src/app/error.tsx", () => {
   it("renders the branded fallback with a home escape hatch", () => {
     render(<RootError error={new Error("boom")} reset={vi.fn()} />);
 
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Etwas ist schiefgelaufen.",
+      "Die Seite konnte nicht geladen werden.",
     );
     expect(
       screen.getByText(
-        "Ein unerwarteter Fehler ist aufgetreten. Bitte versuch es noch einmal.",
+        "Ein unerwarteter Fehler ist aufgetreten. Lade die Anfrage erneut.",
       ),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Zur Startseite" })).toHaveAttribute(
-      "href",
-      "/",
-    );
+    expect(
+      screen.getByRole("link", { name: "Zur Startseite" }),
+    ).toHaveAttribute("href", "/");
   });
 
   it("calls reset() when the retry button is activated", () => {
     const reset = vi.fn();
     render(<RootError error={new Error("boom")} reset={reset} />);
-    fireEvent.click(screen.getByRole("button", { name: "Erneut versuchen" }));
+    fireEvent.click(screen.getByRole("button", { name: "Erneut laden" }));
     expect(reset).toHaveBeenCalledTimes(1);
   });
 
@@ -117,17 +125,33 @@ describe("src/app/error.tsx", () => {
     );
 
     // Fallback is showing.
-    expect(screen.getByText("Etwas ist schiefgelaufen.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Die Seite konnte nicht geladen werden."),
+    ).toBeInTheDocument();
     expect(screen.queryByText("Wieder einsatzbereit")).not.toBeInTheDocument();
 
     // Recover.
-    fireEvent.click(screen.getByRole("button", { name: "Erneut versuchen" }));
+    fireEvent.click(screen.getByRole("button", { name: "Erneut laden" }));
 
     expect(
-      screen.queryByText("Etwas ist schiefgelaufen."),
+      screen.queryByText("Die Seite konnte nicht geladen werden."),
     ).not.toBeInTheDocument();
     expect(screen.getByText("Wieder einsatzbereit")).toBeInTheDocument();
 
     consoleError.mockRestore();
+  });
+
+  it("renders English recovery copy with a locale-preserving home link", () => {
+    pathnameState.value = "/en";
+    render(<RootError error={new Error("boom")} reset={vi.fn()} />);
+
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+      "The page could not be loaded.",
+    );
+    expect(screen.getByRole("button", { name: "Retry" })).toBeVisible();
+    expect(screen.getByRole("link", { name: "Back to home" })).toHaveAttribute(
+      "href",
+      "/en",
+    );
   });
 });

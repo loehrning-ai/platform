@@ -82,6 +82,7 @@ export const APPLICATION_PROVIDER_ENVIRONMENT_KEYS = Object.freeze([
   "SIMPLIFIED_SUPABASE_TEST_WRITE_PROJECT_REF",
   "SUPABASE_CAPTCHA_CONFIRMED_AT",
   "SUPABASE_DPA_CONFIRMED_AT",
+  "SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT",
   "SUPABASE_REGION",
   "SUPABASE_SERVICE_ROLE_KEY",
   "SUPABASE_URL",
@@ -171,6 +172,7 @@ export const PROVIDER_FREE_APPLICATION_ENVIRONMENT = Object.freeze({
   SIMPLIFIED_SUPABASE_PRODUCTION_URL: "",
   SIMPLIFIED_SUPABASE_TEST_WRITE_PROJECT_REF: "",
   SUPABASE_DPA_CONFIRMED_AT: "",
+  SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT: "",
   SUPABASE_REGION: "",
   SUPABASE_SERVICE_ROLE_KEY: "",
   SUPABASE_URL: "",
@@ -183,10 +185,21 @@ export const PROVIDER_FREE_APPLICATION_ENVIRONMENT = Object.freeze({
   VERCEL_TELEMETRY_ENABLED: "false",
 });
 
+function localVerificationOrigin(source) {
+  if (source.E2E_SERVER_MODE !== "production") return "";
+  const rawPort = source.E2E_PORT;
+  if (typeof rawPort !== "string" || !/^[1-9]\d*$/.test(rawPort)) return "";
+  const port = Number(rawPort);
+  return Number.isSafeInteger(port) && port <= 65_535
+    ? `http://localhost:${port}`
+    : "";
+}
+
 export function providerFreeVerificationEnvironment(source = process.env) {
   return {
     ...minimalVerificationEnvironment(source),
     ...PROVIDER_FREE_APPLICATION_ENVIRONMENT,
+    LOEHRNING_LOCAL_VERIFICATION_ORIGIN: localVerificationOrigin(source),
   };
 }
 

@@ -2,13 +2,11 @@
 
 import { type JSX, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { useClaudeWidgetLocale } from "./locale-context";
 
 /**
- * Dots + RunConsole, shared chrome for the claude-course "simulated Claude"
- * widgets. Ported from `claude/js/widgets.js`'s `Dots`
- * and `RunConsole`, simplified to a loading -> output swap (no word-by-word
- * streaming reveal) to match this platform's existing Practice Room widgets
- * (`usePracticeApi` callers) rather than the source's bespoke animation.
+ * Shared output chrome for deterministic Claude-course exercises. The label
+ * states that the result comes from fixed local rules without an API call.
  */
 export function Dots(): JSX.Element {
   return (
@@ -50,50 +48,73 @@ export function RunConsole({
   loading,
   output,
   onClear,
-  label = "claude's output",
-  emptyHint = "Output will appear here.",
+  label,
+  emptyHint,
   tone = "default",
   children,
 }: RunConsoleProps): JSX.Element | null {
+  const locale = useClaudeWidgetLocale();
+  const resolvedLabel =
+    label ?? (locale === "de" ? "Lokale Simulation" : "Local simulation");
+  const resolvedEmptyHint =
+    emptyHint ??
+    (locale === "de"
+      ? "Die Ausgabe erscheint hier."
+      : "Output will appear here.");
   const open = loading || !!output || !!children;
   if (!open) return null;
 
   return (
     <div className={cn("mt-3 border-2 bg-background", TONE_BORDER[tone])}>
-      <div className="flex items-center justify-between border-b border-border px-3 py-2">
-        <span className="inline-flex items-center gap-2 font-mono text-[10.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+      <div className="flex items-start justify-between gap-2 border-b border-border px-3 py-2">
+        <span className="flex min-w-0 flex-1 flex-wrap items-center gap-2 font-mono text-[10.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
           <span
             aria-hidden="true"
             className={cn(
               "h-1.5 w-1.5 rounded-full",
-              loading ? "bg-brand-amber" : output ? TONE_DOT[tone] : "bg-border",
+              loading
+                ? "bg-brand-amber"
+                : output
+                  ? TONE_DOT[tone]
+                  : "bg-border",
             )}
           />
-          {label}
+          {resolvedLabel}
+          <span className="font-normal normal-case tracking-normal text-muted-foreground/80">
+            ·{" "}
+            {locale === "de"
+              ? "feste Regeln, kein API-Aufruf"
+              : "fixed rules, no API call"}
+          </span>
           {loading && <Dots />}
         </span>
         {!loading && output && onClear && (
           <button
             type="button"
             onClick={onClear}
-            aria-label="Dismiss output"
-            className="text-muted-foreground transition-colors hover:text-foreground"
+            aria-label={
+              locale === "de" ? "Ausgabe schließen" : "Dismiss output"
+            }
+            className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
           >
             ×
           </button>
         )}
       </div>
-      <div className="max-h-[280px] overflow-y-auto p-3 text-[13px] leading-[1.6] text-foreground">
+      <div className="min-w-0 max-h-[280px] overflow-y-auto p-3 text-[13px] leading-[1.6] text-foreground">
         {children ? (
           children
         ) : output ? (
-          <p className="whitespace-pre-wrap">{output}</p>
+          <p className="whitespace-pre-wrap break-words">{output}</p>
         ) : loading ? (
           <p className="flex items-center gap-2 text-muted-foreground">
-            Thinking <Dots />
+            {locale === "de"
+              ? "Lokale Regeln werden ausgeführt"
+              : "Running local rules"}{" "}
+            <Dots />
           </p>
         ) : (
-          <p className="italic text-muted-foreground">{emptyHint}</p>
+          <p className="italic text-muted-foreground">{resolvedEmptyHint}</p>
         )}
       </div>
     </div>

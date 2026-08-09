@@ -1,0 +1,31 @@
+{
+  "id": "lektion-4-grenzen",
+  "blockId": "wie-ki-funktioniert",
+  "number": 4,
+  "title": "Operational limits: what AI output does not establish",
+  "subtitle": "Currency, calculations, physical context, and legal position need separate checks.",
+  "durationMinutes": 10,
+  "keyConcepts": [
+    "Knowledge currency and sources",
+    "Hallucination",
+    "AI limits",
+    "Legal reliability",
+    "Calculation accuracy"
+  ],
+  "sections": [
+    {
+      "id": "lektion-4-abschnitt-1",
+      "title": "Four limits to check",
+      "readTimeMinutes": 5,
+      "content": "An AI system's capabilities depend on its model, version, tools, data access, and configuration. Four review boundaries remain relevant in use.\n\nFirst: currency. A base model has a bounded knowledge state. Search or retrieval can supply newer material only when enabled and when they return relevant sources. Do not rely on the model's own statement about its knowledge date; inspect product documentation, source dates, and the retrieval path.\n\nSecond: calculation accuracy. Language models can propose a calculation and some systems can execute code or calculator tools. A displayed result becomes dependable only after the inputs, formula, and executed calculation have been checked.\n\nThird: physical context. General guidance does not contain the exact device, material, safety condition, or environment unless that information has been supplied reliably. For safety-critical work, use manufacturer documentation and qualified review.\n\nFourth: legal certainty. AI output is not legal advice. Whether a contract is valid, a notice is appropriate, or a rule applies depends on current law and a complete set of facts.",
+      "keyTakeaway": "Check currency and sources, executed calculations, the specific physical context, and the current legal position separately from the AI response."
+    },
+    {
+      "id": "lektion-4-abschnitt-2",
+      "title": "What the limits mean and what AI does well",
+      "readTimeMinutes": 5,
+      "content": "The four limits imply a concrete workflow.\n\nFor research, open the cited source, check its publication and retrieval dates, and compare the claim with the original text.\n\nFor calculations, record inputs and formula, then verify the result with an appropriate calculator, spreadsheet, or reproducible code.\n\nFor medical, legal, financial, or safety-critical decisions, involve the person with the relevant professional responsibility. AI output may help structure questions, but it does not carry responsibility or provide formal approval.\n\nSuitable tasks can include a first draft, a summary of supplied documents, a list of options to investigate, a translation, or a code proposal followed by tests and review. Usefulness depends on the task, context, and verification.\n\nFor one of your own tasks, identify the required evidence: a current source, reproducible calculation, complete physical context, or qualified approval. Not every task needs all four, but the relevant checks must be defined before use.",
+      "keyTakeaway": "Define the sources, calculations, context, and qualified approvals required for the specific task before using the output."
+    }
+  ]
+}

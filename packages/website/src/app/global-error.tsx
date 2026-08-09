@@ -6,6 +6,7 @@
 // Tailwind/font pipeline may be exactly what failed. Keep it minimal + branded.
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import {
   reportClientBoundaryError,
   validatedNextDigest,
@@ -18,6 +19,21 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const pathname = usePathname();
+  const english = pathname === "/en" || pathname.startsWith("/en/");
+  const copy = english
+    ? {
+        title: "The application could not be loaded.",
+        body: "An unexpected error occurred. Reload the application.",
+        errorId: "Error ID",
+        retry: "Retry",
+      }
+    : {
+        title: "Die Anwendung konnte nicht geladen werden.",
+        body: "Ein unerwarteter Fehler ist aufgetreten. Lade die Anwendung erneut.",
+        errorId: "Fehler-ID",
+        retry: "Erneut laden",
+      };
   const digest = validatedNextDigest(error);
 
   useEffect(() => {
@@ -25,7 +41,7 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <html lang="de">
+    <html lang={english ? "en" : "de"}>
       <body
         style={{
           margin: 0,
@@ -59,14 +75,14 @@ export default function GlobalError({
             letterSpacing: "-0.04em",
           }}
         >
-          Etwas ist schiefgelaufen.
+          {copy.title}
         </h1>
         <p style={{ margin: 0, maxWidth: "28rem", color: "#a89070" }}>
-          Ein unerwarteter Fehler ist aufgetreten. Bitte lade die Seite neu.
+          {copy.body}
         </p>
         {digest && (
           <p style={{ margin: 0, fontSize: "0.75rem", color: "#a89070" }}>
-            Fehler-ID: {digest}
+            {copy.errorId}: {digest}
           </p>
         )}
         <button
@@ -84,7 +100,7 @@ export default function GlobalError({
             boxShadow: "0 4px 14px rgba(0, 0, 0, 0.3)",
           }}
         >
-          Erneut versuchen
+          {copy.retry}
         </button>
       </body>
     </html>

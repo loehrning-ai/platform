@@ -7,6 +7,7 @@ import {
   afterEach,
 } from "vitest";
 import { render, screen, cleanup, act, fireEvent } from "@testing-library/react";
+import type { ReactElement, ReactNode } from "react";
 
 /**
  * auth-status.test.tsx (regression coverage)
@@ -61,6 +62,15 @@ vi.mock("next/link", async () => {
 });
 
 import { AuthStatus } from "./auth-status";
+import { LocaleProvider } from "@/components/i18n/locale-context";
+
+function GermanLocaleProvider({ children }: { readonly children: ReactNode }) {
+  return <LocaleProvider locale="de">{children}</LocaleProvider>;
+}
+
+function renderGerman(ui: ReactElement) {
+  return render(ui, { wrapper: GermanLocaleProvider });
+}
 
 type AuthSession = { user: unknown } | null;
 type AuthChangeHandler = (event: string, session: AuthSession) => void;
@@ -108,7 +118,7 @@ describe("<AuthStatus>", () => {
   it("does not load the provider client when public Supabase config is absent", async () => {
     mockHasSupabasePublicConfig.mockReturnValue(false);
 
-    render(<AuthStatus />);
+    renderGerman(<AuthStatus />);
     await act(async () => {
       await Promise.resolve();
     });
@@ -122,7 +132,7 @@ describe("<AuthStatus>", () => {
 
   it("renders the signed-out Login link when no Supabase client is configured", () => {
     mockCreateBrowserSupabaseClient.mockReturnValue(null);
-    render(<AuthStatus />);
+    renderGerman(<AuthStatus />);
 
     const link = screen.getByRole("link", { name: /login/i });
     expect(link).toHaveAttribute("href", "/login");
@@ -133,7 +143,7 @@ describe("<AuthStatus>", () => {
     const sb = makeSupabase(null);
     mockCreateBrowserSupabaseClient.mockReturnValue(sb.client);
 
-    render(<AuthStatus />);
+    renderGerman(<AuthStatus />);
 
     const link = await screen.findByRole("link", { name: /login/i });
     expect(link).toHaveAttribute("href", "/login");
@@ -144,7 +154,7 @@ describe("<AuthStatus>", () => {
     const sb = makeSupabase({ id: "user-1" });
     mockCreateBrowserSupabaseClient.mockReturnValue(sb.client);
 
-    render(<AuthStatus />);
+    renderGerman(<AuthStatus />);
 
     const link = await screen.findByRole("link", { name: /konto/i });
     expect(link).toHaveAttribute("href", "/konto");
@@ -155,7 +165,7 @@ describe("<AuthStatus>", () => {
     const sb = makeSupabase(null);
     mockCreateBrowserSupabaseClient.mockReturnValue(sb.client);
 
-    render(<AuthStatus />);
+    renderGerman(<AuthStatus />);
     // Flush the initial getUser(null) resolution: still signed out.
     await screen.findByRole("link", { name: /login/i });
 
@@ -175,7 +185,7 @@ describe("<AuthStatus>", () => {
   it("adds the 44px mobile touch-target classes only when mobile is set", () => {
     mockCreateBrowserSupabaseClient.mockReturnValue(null);
 
-    const { rerender } = render(<AuthStatus mobile />);
+    const { rerender } = renderGerman(<AuthStatus mobile />);
     const mobileLink = screen.getByRole("link");
     expect(mobileLink.className).toContain("min-h-[44px]");
     expect(mobileLink.className).toContain("border-border");
@@ -188,7 +198,7 @@ describe("<AuthStatus>", () => {
     mockCreateBrowserSupabaseClient.mockReturnValue(null);
     const onNavigate = vi.fn();
 
-    render(<AuthStatus mobile onNavigate={onNavigate} />);
+    renderGerman(<AuthStatus mobile onNavigate={onNavigate} />);
     fireEvent.click(screen.getByRole("link", { name: /login/i }));
 
     expect(onNavigate).toHaveBeenCalledTimes(1);
@@ -198,7 +208,7 @@ describe("<AuthStatus>", () => {
     const sb = makeSupabase(null);
     mockCreateBrowserSupabaseClient.mockReturnValue(sb.client);
 
-    const { unmount } = render(<AuthStatus />);
+    const { unmount } = renderGerman(<AuthStatus />);
     await screen.findByRole("link", { name: /login/i });
     expect(sb.client.auth.onAuthStateChange).toHaveBeenCalledTimes(1);
 
@@ -214,7 +224,7 @@ describe("<AuthStatus>", () => {
     mockCreateBrowserSupabaseClient.mockReturnValue(sb.client);
     const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
 
-    render(<AuthStatus />);
+    renderGerman(<AuthStatus />);
 
     expect(
       await screen.findByRole("link", { name: /login/i }),
@@ -235,7 +245,7 @@ describe("<AuthStatus>", () => {
     sb.getUser.mockReturnValue(lookup);
     mockCreateBrowserSupabaseClient.mockReturnValue(sb.client);
 
-    render(<AuthStatus />);
+    renderGerman(<AuthStatus />);
     await act(async () => {
       await Promise.resolve();
     });
@@ -264,7 +274,7 @@ describe("<AuthStatus>", () => {
     sb.getUser.mockReturnValue(lookup);
     mockCreateBrowserSupabaseClient.mockReturnValue(sb.client);
 
-    render(<AuthStatus />);
+    renderGerman(<AuthStatus />);
     await act(async () => {
       await Promise.resolve();
     });
@@ -292,7 +302,7 @@ describe("<AuthStatus>", () => {
     });
     const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
 
-    render(<AuthStatus />);
+    renderGerman(<AuthStatus />);
 
     expect(
       await screen.findByRole("link", { name: /login/i }),
@@ -302,5 +312,25 @@ describe("<AuthStatus>", () => {
     });
     expect(mockCreateBrowserSupabaseClient).toHaveBeenCalledTimes(1);
     expect(consoleError).not.toHaveBeenCalled();
+  });
+
+  it("keeps signed-out and signed-in account navigation in the English URL space", async () => {
+    const sb = makeSupabase({ id: "user-en" });
+    mockCreateBrowserSupabaseClient.mockReturnValue(sb.client);
+
+    render(
+      <LocaleProvider locale="en">
+        <AuthStatus />
+      </LocaleProvider>,
+    );
+
+    expect(screen.getByRole("link", { name: "Login" })).toHaveAttribute(
+      "href",
+      "/en/login",
+    );
+    expect(await screen.findByRole("link", { name: "Account" })).toHaveAttribute(
+      "href",
+      "/en/konto",
+    );
   });
 });

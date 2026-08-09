@@ -21,43 +21,95 @@ describe("robots()", () => {
     expect(disallow).toContain("/api/scan");
     expect(disallow).toContain("/api/journey/scan-insight");
     expect(disallow).toContain("/api/journey/leads");
+    expect(disallow).toContain("/konto/");
+    expect(disallow).toContain("/en/konto/");
+    expect(disallow).toContain("/ki-fuehrerschein/kurs/");
+    expect(disallow).toContain("/en/ki-fuehrerschein/kurs/");
+    expect(disallow).not.toContain("/en/api/progress");
+    expect(disallow).not.toContain("/en/auth/callback");
     expect(allow).not.toContain("/api/buecher/*/download.pdf");
     expect(allow).not.toContain("/api/scan");
     expect(allow).not.toContain("/api/journey/scan-insight");
     expect(allow).not.toContain("/api/journey/leads");
     expect(allow).toContain("/buecher");
     expect(allow).toContain("/book-covers/");
+    expect(allow).toContain("/schema/knowledge-graph/v1");
   });
 
-  it("emits an explicit rule for OAI-SearchBot", () => {
-    const rules = result.rules as Array<{ userAgent: string }>;
-    const found = rules.find((r) => r.userAgent === "OAI-SearchBot");
+  it("keeps permanent redirect origins crawlable in both locale spaces", () => {
+    const rules = result.rules as Array<{
+      userAgent: string;
+      allow?: string | string[];
+      disallow?: string | string[];
+    }>;
+    const wildcard = rules.find((rule) => rule.userAgent === "*");
+    const allow = Array.isArray(wildcard?.allow)
+      ? wildcard.allow
+      : [wildcard?.allow];
+    const disallow = Array.isArray(wildcard?.disallow)
+      ? wildcard.disallow
+      : [wildcard?.disallow];
+
+    expect(allow).toContain("/leistungen");
+    for (const path of [
+      "/leistungen",
+      "/en/leistungen",
+      "/kontakt",
+      "/en/kontakt",
+      "/glossar",
+      "/en/glossar",
+    ]) {
+      expect(disallow).not.toContain(path);
+    }
+  });
+
+  it.each([
+    "OAI-SearchBot",
+    "ChatGPT-User",
+    "PerplexityBot",
+    "Perplexity-User",
+    "Claude-User",
+    "Claude-SearchBot",
+  ])("allows the current AI search or user agent %s on public routes", (userAgent) => {
+    const rules = result.rules as Array<{
+      userAgent: string;
+      allow?: string | string[];
+      disallow?: string | string[];
+    }>;
+    const found = rules.find((rule) => rule.userAgent === userAgent);
+    const allow = Array.isArray(found?.allow) ? found.allow : [found?.allow];
+    const disallow = Array.isArray(found?.disallow)
+      ? found.disallow
+      : [found?.disallow];
+
     expect(found).toBeDefined();
-  });
-
-  it("emits an explicit rule for PerplexityBot", () => {
-    const rules = result.rules as Array<{ userAgent: string }>;
-    const found = rules.find((r) => r.userAgent === "PerplexityBot");
-    expect(found).toBeDefined();
-  });
-
-  it("emits an explicit rule for ClaudeBot", () => {
-    const rules = result.rules as Array<{ userAgent: string }>;
-    const found = rules.find((r) => r.userAgent === "ClaudeBot");
-    expect(found).toBeDefined();
-  });
-
-  it("emits an explicit rule for Google-Extended", () => {
-    const rules = result.rules as Array<{ userAgent: string }>;
-    const found = rules.find((r) => r.userAgent === "Google-Extended");
-    expect(found).toBeDefined();
-  });
-
-  it("does not block AI crawlers from public pages", () => {
-    const rules = result.rules as Array<{ userAgent: string; allow?: string | string[]; disallow?: string | string[] }>;
-    const ai = rules.find((r) => r.userAgent === "OAI-SearchBot");
-    const allow = Array.isArray(ai?.allow) ? ai?.allow : [ai?.allow];
     expect(allow).toContain("/");
+    expect(disallow).toContain("/api/progress");
+    expect(disallow).not.toContain("/");
+  });
+
+  it.each([
+    "GPTBot",
+    "CCBot",
+    "Bytespider",
+    "Google-Extended",
+    "Applebot-Extended",
+    "ClaudeBot",
+    "anthropic-ai",
+  ])("blocks the AI training agent %s from the entire site", (userAgent) => {
+    const rules = result.rules as Array<{
+      userAgent: string;
+      allow?: string | string[];
+      disallow?: string | string[];
+    }>;
+    const found = rules.find((rule) => rule.userAgent === userAgent);
+    const disallow = Array.isArray(found?.disallow)
+      ? found.disallow
+      : [found?.disallow];
+
+    expect(found).toBeDefined();
+    expect(found?.allow).toBeUndefined();
+    expect(disallow).toEqual(["/"]);
   });
 
   it("does NOT contain /api/og in PUBLIC_PATHS (deleted by public-content transition)", () => {

@@ -1,4 +1,9 @@
-import { Hero, SectionLabel, AntiPatterns, Takeaway } from "@/components/data-science/shared/primitives";
+import {
+  Hero,
+  SectionLabel,
+  AntiPatterns,
+  Takeaway,
+} from "@/components/data-science/shared/primitives";
 import { BiasVarianceSim } from "@/components/data-science/simulators/bias-variance-sim";
 
 // ─── Ch05: Model ────────────────────────────────────
@@ -11,12 +16,12 @@ export default function Ch05Model() {
     <>
       <Hero
         eyebrow="Chapter 05 · Model"
-        title='The <em>bias / variance</em> <span class="accent">dance.</span>'
-        hook="Every model lives on a spectrum. Too simple → underfits, misses the pattern. Too flexible → memorizes the noise. <strong>Cross-validation is how you find the sweet spot.</strong>"
+        title="Model flexibility changes <em>bias and variance.</em>"
+        hook="Model flexibility changes approximation error, estimation variance, compute, and interpretability. <strong>Use a validation design that matches deployment to compare those tradeoffs.</strong>"
         meta={[
           { k: "Read", v: "9 min" },
           { k: "Focus", v: "Fit · CV · tune" },
-          { k: "Sims", v: "1 live ensemble" },
+          { k: "Models", v: "1 synthetic ensemble" },
         ]}
       />
 
@@ -26,10 +31,11 @@ export default function Ch05Model() {
           Slide the knob. Reshuffle the data. <em>Watch the cloud fan out.</em>
         </h2>
         <p className="prose">
-          At low complexity, every resample lands on almost the same stiff line, low variance,
-          but high bias (the line can&apos;t bend to match the truth). At high complexity, each
-          resample finds a different wild curve through the same-ish noise, bias falls toward
-          zero, but variance explodes.
+          In this fixed polynomial generator, low degrees produce similar but
+          systematically misspecified curves. Higher degrees fit the sampled
+          points more closely and vary more across seeded resamples. This visual
+          pattern is not a guarantee that complexity moves bias and variance
+          monotonically for another model, regularizer, dataset, or loss.
         </p>
         <BiasVarianceSim />
       </section>
@@ -41,19 +47,23 @@ export default function Ch05Model() {
         </h2>
         <ul className="prose" style={{ paddingLeft: 20 }}>
           <li>
-            <strong>Logistic / linear regression</strong>, interpretable, fast, hard to beat on
-            tabular with good features.
+            <strong>Logistic / linear regression</strong>, interpretable, fast,
+            hard to beat on useful baselines for tabular data when their
+            functional form is adequate.
           </li>
           <li>
-            <strong>Gradient-boosted trees (XGBoost, LightGBM)</strong>, the tabular workhorse.
-            Rarely a wrong answer.
+            <strong>Gradient-boosted trees (XGBoost, LightGBM)</strong>, the
+            tabular workhorse. strong candidates for many tabular tasks, with
+            tuning and calibration still required.
           </li>
           <li>
-            <strong>Random forest</strong>, robust, low-tuning, good first escalation.
+            <strong>Random forest</strong>, a nonlinear ensemble baseline with
+            its own calibration, latency, and extrapolation limits.
           </li>
           <li>
-            <strong>Deep nets</strong>, unstructured data (text, images, audio). Rarely the right
-            call for tabular.
+            <strong>Deep nets</strong>, widely used for text, images, and audio;
+            for tabular data, compare them against simpler baselines under the
+            same budget and split.
           </li>
         </ul>
       </section>
@@ -61,16 +71,16 @@ export default function Ch05Model() {
       <AntiPatterns
         items={[
           "<b>Tuning on the test set.</b> That's just a slower way to overfit.",
-          "<b>Leaderboard chasing.</b> 0.01 AUC on CV is not a real gain if your CV has leakage.",
-          "<b>Deep learning as default.</b> For 90% of business tabular problems, GBDT wins on time, metric, and interpretability.",
+          "<b>Leaderboard chasing.</b> A 0.01 AUC difference is not decision evidence without fold-level uncertainty, leakage checks, and an untouched confirmation set.",
+          "<b>Choosing an architecture by reputation.</b> Compare linear, tree, and neural candidates under the same data, compute budget, latency, calibration, and interpretability requirements.",
         ]}
       />
 
       <Takeaway
         items={[
-          "<b>Generalization is the goal, not fit.</b> Always measure on held-out data.",
-          "<b>Cross-validation is non-optional</b>, single split lies about variance.",
-          "<b>Total error = Bias² + Variance + irreducible noise.</b> You can only move the first two, noise is a floor.",
+          "<b>Generalization is the goal.</b> Keep evaluation data outside model fitting and make the split reproduce future entities, groups, or time.",
+          "<b>Resampling quantifies split sensitivity.</b> Cross-validation helps when folds respect the data structure; grouped, temporal, or nested designs may be required.",
+          "<b>Bias² + variance + noise is a squared-error decomposition.</b> It is a teaching lens under a specified data-generating process, not a universal formula for every metric.",
         ]}
       />
     </>

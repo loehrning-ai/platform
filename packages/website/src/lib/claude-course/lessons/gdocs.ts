@@ -7,41 +7,42 @@ import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 const lesson: ClaudeLesson = {
   id: "gdocs",
   number: 6,
-  title: "Claude for Perfect Google Docs",
-  subtitle: "From bullet dump to crisp doc in under five minutes.",
+  title: "Drafting Structured Documents",
+  subtitle:
+    "Turn source notes into a reviewable document without losing evidence.",
   durationMinutes: 8,
   trackId: "workflows",
-  hook: "The doc is the artifact. The prompt is the mold.",
+  hook: "Define the document structure, source boundary, and review standard.",
   keyConcepts: ["Skeleton", "Voice transfer", "Critique before rewrite"],
   quiz: [],
   sections: [
     {
       id: "why-gdocs",
-      title: "Why Gdocs matter",
+      title: "Why shared documents matter",
       readTimeMinutes: 1,
       content:
-        "The shared doc is a team's native thinking surface. Design reviews, PRDs, post-mortems, launch briefs, they all live there. A doc Claude writes well is one you can paste and polish, not one you have to rewrite.\n\nThree moves do most of the work: give it the skeleton, show it the voice, ask for a critique before a rewrite.",
+        "Teams use shared documents for decisions, specifications, incident reviews, and launch plans. A useful generated draft preserves the supplied facts, exposes missing information, and follows a structure reviewers recognize.\n\nThree controls help: provide the section outline, supply an approved style example, and review claims before rewriting prose.",
     },
     {
       id: "move-1-skeleton",
       title: "Move 1: give it the skeleton",
       readTimeMinutes: 2,
       content:
-        "Gdocs have conventions. Design docs have TL;DRs. PRDs have success metrics. Post-mortems have timelines. If you don't hand Claude the skeleton, you'll get a generic \"article.\"\n\n```\nOutput structure:\n# Title\n## TL;DR (3 bullets, each <15 words)\n## Context\n## Proposal\n## Risks & mitigations\n## Success metrics\n## Open questions\n```",
+        "Document types have organization-specific conventions. Provide the required sections instead of relying on a generic default. For example:\n\n```\nOutput structure:\n# Title\n## TL;DR (3 bullets, each <15 words)\n## Context\n## Proposal\n## Risks & mitigations\n## Success metrics\n## Open questions\n```\n\nName required evidence for each section and mark missing source material rather than filling gaps with assumptions.",
     },
     {
       id: "move-2-voice",
       title: "Move 2: give it the voice",
       readTimeMinutes: 2,
       content:
-        "Good internal docs have a voice: short sentences, active verbs, no marketing language, numbers before adjectives. If you want that voice, paste two paragraphs of an existing doc that has it, and say \"match this voice.\"\n\n> **Voice transfer works.** Pasting 100-300 words of well-written reference text is worth more than 10 adjectives describing the voice you want.",
+        "If terminology and sentence style matter, provide a short, approved reference passage and state which traits to match. Remove confidential details and tell the model not to reuse facts from the style sample.\n\n> A style example demonstrates the target; an evaluation shows whether the result matches it.",
     },
     {
       id: "move-3-critique",
       title: "Move 3: ask for the critique before the rewrite",
       readTimeMinutes: 2,
       content:
-        "After the first draft, resist the urge to immediately ask for a better version. Instead ask: \"What are the three weakest parts of this doc, and why?\" You'll get a better doc by fixing specific weaknesses than by asking for a \"better version\", vague corrections produce vague outputs.\n\nThis is chain-of-thought applied to your own writing. You're forcing Claude to diagnose before it prescribes.",
+        "After the first draft, evaluate it against explicit criteria: unsupported claims, missing decisions, audience mismatch, and structural defects. Ask for a concise list of findings with quoted evidence, then request only the approved changes.\n\nThis produces an inspectable review step. It does not require or expose private chain-of-thought.",
     },
   ],
   widgets: [
@@ -70,7 +71,10 @@ const lesson: ClaudeLesson = {
         blanks: [
           { label: "Audience", hint: "e.g. SRE, exec, design-review" },
           { label: "Bullets", hint: "paste your raw notes" },
-          { label: "Style rules", hint: "e.g. <15 words each, numbers before adjectives" },
+          {
+            label: "Style rules",
+            hint: "e.g. <15 words each, numbers before adjectives",
+          },
         ],
       },
     },
@@ -91,7 +95,7 @@ const lesson: ClaudeLesson = {
         ],
         correct: 2,
         explanation:
-          "Voice transfer via example is far more effective than describing the voice. Show, don't tell.",
+          "An approved example makes style requirements observable. Check that the rewrite preserves source facts and does not copy facts from the style sample.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },

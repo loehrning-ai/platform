@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Panel } from "../primitives";
+import { useDataEngineeringFundamentalsLocale } from "../locale-context";
 
 // ─── SqlDecoderStage ──────────────────────────────
 // Ported from `src/chapters/Ch0_StackSims.js`: SQL → AST → logical →
@@ -71,9 +72,24 @@ const DECODE_PHASES = [
   { k: "stages", t: "Stages", sub: "grouped operators · runtime DAG" },
 ] as const;
 
+const QUERY_LABELS_DE: Readonly<Record<string, string>> = {
+  scan: "Einfacher Scan",
+  hash: "Hash-Join über zwei Tabellen",
+  bcast: "Broadcast einer Dimensionstabelle",
+};
+
+const DECODE_PHASES_DE = [
+  { k: "ast", t: "AST", sub: "Parser · Tokens → Baum" },
+  { k: "logical", t: "Logischer Plan", sub: "relationale Algebra · was berechnet wird" },
+  { k: "physical", t: "Physischer Plan", sub: "verteilt · Exchange-Typen · Worker-Anzahl" },
+  { k: "stages", t: "Stages", sub: "gruppierte Operatoren · Laufzeit-DAG" },
+] as const;
+
 const NUM_WORKERS = 6;
 
 export function SqlDecoderStage() {
+  const { locale, text } = useDataEngineeringFundamentalsLocale();
+  const decodePhases = locale === "de" ? DECODE_PHASES_DE : DECODE_PHASES;
   const [qid, setQid] = useState("hash");
   const Q = QUERIES.find((q) => q.id === qid)!;
   const [phase, setPhase] = useState(0);
@@ -90,7 +106,7 @@ export function SqlDecoderStage() {
     const duration = 3600;
     const step = (t: number) => {
       const p = Math.min(1, (t - start) / duration);
-      setPhase(p * DECODE_PHASES.length);
+      setPhase(p * decodePhases.length);
       if (p < 1) rafRef.current = requestAnimationFrame(step);
       else setRunning(false);
     };
@@ -109,7 +125,7 @@ export function SqlDecoderStage() {
     setSalt(false);
   }, [qid]);
 
-  const phaseIdx = Math.min(DECODE_PHASES.length - 1, Math.floor(phase));
+  const phaseIdx = Math.min(decodePhases.length - 1, Math.floor(phase));
   const showLogical = phase >= 1;
   const showPhysical = phase >= 2;
   const showStages = phase >= 3;
@@ -140,27 +156,27 @@ export function SqlDecoderStage() {
 
   return (
     <Panel
-      eyebrow="live · compiler"
-      title="SQL → AST → logical → physical → stages"
-      meta="click a preset · run plan · poke skew"
-      caption="Five transformations between your text and your bytes. Engine chooses the exchange, you get the stages."
+      eyebrow={text("live · compiler", "live · Compiler")}
+      title={text("SQL → AST → logical → physical → stages", "SQL → AST → logisch → physisch → Stages")}
+      meta={text("click a preset · run plan · poke skew", "Vorlage wählen · Plan ausführen · Skew auslösen")}
+      caption={text("Five transformations between your text and your bytes. Engine chooses the exchange, you get the stages.", "Fünf Transformationen liegen zwischen Text und Bytes. Die Engine wählt den Exchange; daraus entstehen die Stages.")}
     >
       <div className="sd-top">
         <div className="sd-presets">
           {QUERIES.map((q) => (
             <button type="button" key={q.id} className={`sd-preset ${qid === q.id ? "on" : ""}`} onClick={() => setQid(q.id)}>
-              {q.label}
+              {locale === "de" ? QUERY_LABELS_DE[q.id] : q.label}
             </button>
           ))}
           <button type="button" className="btn btn-primary sd-plan" onClick={plan} disabled={running}>
-            {running ? "planning…" : "▶ Plan"}
+            {running ? text("planning…", "Planung…") : text("▶ Plan", "▶ Plan erstellen")}
           </button>
         </div>
         <div className="sd-sql">
           <pre className="sd-sql-pre">{Q.sql}</pre>
         </div>
         <div className="sd-phases">
-          {DECODE_PHASES.map((p, i) => (
+          {decodePhases.map((p, i) => (
             <div key={p.k} className={`sd-phase ${phase >= i + 1 ? "on" : ""} ${phaseIdx === i ? "cur" : ""}`}>
               <div className="sd-phase-n">0{i + 1}</div>
               <div className="sd-phase-t">{p.t}</div>
@@ -174,16 +190,16 @@ export function SqlDecoderStage() {
             <div className="sd-ast">
               <div className="sd-ast-root">SELECT</div>
               <div className="sd-ast-branch">
-                <div className="sd-ast-leaf">projections</div>
-                <div className="sd-ast-leaf">from</div>
-                {qid !== "scan" && <div className="sd-ast-leaf">join</div>}
-                <div className="sd-ast-leaf">where</div>
-                {qid === "hash" && <div className="sd-ast-leaf">group-by</div>}
+                <div className="sd-ast-leaf">{text("projections", "Projektionen")}</div>
+                <div className="sd-ast-leaf">{text("from", "Quelle")}</div>
+                {qid !== "scan" && <div className="sd-ast-leaf">Join</div>}
+                <div className="sd-ast-leaf">{text("where", "Filter")}</div>
+                {qid === "hash" && <div className="sd-ast-leaf">Group By</div>}
               </div>
             </div>
           </div>
           <div className={`sd-plan-col ${showLogical ? "on" : ""}`}>
-            <div className="sd-pc-lab">Logical</div>
+            <div className="sd-pc-lab">{text("Logical", "Logisch")}</div>
             <div className="sd-ops">
               {Q.logical.map((op, i) => (
                 <div key={i} className="sd-op">
@@ -193,7 +209,7 @@ export function SqlDecoderStage() {
             </div>
           </div>
           <div className={`sd-plan-col ${showPhysical ? "on" : ""}`}>
-            <div className="sd-pc-lab">Physical</div>
+            <div className="sd-pc-lab">{text("Physical", "Physisch")}</div>
             <div className="sd-ops">
               {Q.physical.map((op, i) => {
                 const isExch = op.includes("Exchange");
@@ -229,9 +245,9 @@ export function SqlDecoderStage() {
 
       <div className="sd-bot">
         <div className="sd-bot-head">
-          <span className="sd-bot-lab">Stage Visualizer</span>
+          <span className="sd-bot-lab">{text("Stage Visualizer", "Stage-Darstellung")}</span>
           <span className="sd-bot-meta">
-            {Q.stages.length} stage{Q.stages.length > 1 ? "s" : ""} · {NUM_WORKERS} workers
+            {Q.stages.length} {Q.stages.length > 1 ? text("stages", "Stages") : text("stage", "Stage")} · {NUM_WORKERS} {text("workers", "Worker")}
           </span>
           {Q.id === "hash" && (
             <div className="sd-bot-ctrls">
@@ -243,10 +259,10 @@ export function SqlDecoderStage() {
                   if (skew) setSalt(false);
                 }}
               >
-                {skew ? "● skew on" : "inject skew"}
+                {skew ? text("● skew on", "● Skew aktiv") : text("inject skew", "Skew auslösen")}
               </button>
               <button type="button" className={`sv-btn ${salt ? "on" : ""}`} onClick={() => setSalt((s) => !s)} disabled={!skew}>
-                {salt ? "● salted" : "salting fix"}
+                {salt ? text("● salted", "● gesalzen") : text("salting fix", "Salting anwenden")}
               </button>
             </div>
           )}
@@ -254,7 +270,7 @@ export function SqlDecoderStage() {
         <div className="sd-cluster">
           <div className="sd-coord">
             <div className="sd-coord-dot" />
-            <div className="sd-coord-lab">Coordinator</div>
+            <div className="sd-coord-lab">{text("Coordinator", "Koordinator")}</div>
           </div>
           <div className="sd-fan">
             {Array.from({ length: NUM_WORKERS }).map((_, i) => {
@@ -272,7 +288,7 @@ export function SqlDecoderStage() {
           </div>
         </div>
         <div className="sd-gantt">
-          <div className="sd-gantt-lab">timeline</div>
+          <div className="sd-gantt-lab">{text("timeline", "Zeitleiste")}</div>
           <div className="sd-gantt-track">
             {gantt.map((g) => (
               <div key={g.k} className={`sd-gantt-bar sd-${g.color}`} style={{ left: `${g.start}%`, width: `${g.w}%` }}>
@@ -281,9 +297,9 @@ export function SqlDecoderStage() {
             ))}
           </div>
           <div className="sd-gantt-note">
-            {Q.id === "scan" && "Single stage. Scan+filter+project fuse into one pipeline on each worker."}
-            {Q.id === "hash" && "Three stages. Two parallel scans, then a join stage after the shuffle, then a final aggregate."}
-            {Q.id === "bcast" && "One stage. The small dim table is broadcast to every worker: no shuffle of the big table."}
+            {Q.id === "scan" && text("Single stage. Scan+filter+project fuse into one pipeline on each worker.", "Eine Stage. Scan, Filter und Projektion verschmelzen auf jedem Worker zu einer Pipeline.")}
+            {Q.id === "hash" && text("Three stages. Two parallel scans, then a join stage after the shuffle, then a final aggregate.", "Drei Stages. Zwei parallele Scans, danach eine Join-Stage nach dem Shuffle und abschließend die Aggregation.")}
+            {Q.id === "bcast" && text("One stage. The small dim table is broadcast to every worker: no shuffle of the big table.", "Eine Stage. Die kleine Dimensionstabelle wird an jeden Worker übertragen; die große Tabelle wird nicht geshuffelt.")}
           </div>
         </div>
       </div>

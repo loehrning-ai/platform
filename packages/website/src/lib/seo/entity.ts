@@ -1,6 +1,7 @@
 export const SITE_ORIGIN = "https://loehrning.ai" as const;
 export const SITE_NAME = "loehrning.ai" as const;
 export const SITE_LANGUAGE = "de-DE" as const;
+export const SITE_LANGUAGES = ["de-DE", "en-GB"] as const;
 export const SITE_REGION = "DE" as const;
 
 export const TIM_ENTITY = {
@@ -41,16 +42,21 @@ export const SITE_ENTITY = {
   openSourcePath: "/open-source",
   openSourceUrl: `${SITE_ORIGIN}/open-source`,
   description:
-    "Freie deutsche KI-Lernplattform von Tim Löhr mit Kursen, Büchern, Demos und technischen Laboren.",
+    "Freie KI- und Daten-Lernplattform von Tim Löhr mit Kursen, Büchern, Workshops, Demos und offenen Quellartefakten auf Deutsch und Englisch.",
   publisherType: "Organization",
   editorialOwner: TIM_ENTITY.displayName,
   socialHandlePolicy:
     "sameAs enthält nur aktuell verifizierte persönliche Profile und Organisationen.",
 } as const;
 
-export const SAME_AS_URLS = [
+/** Profiles that unambiguously identify Tim Löhr as a person. */
+export const PERSON_SAME_AS_URLS = [
   TIM_ENTITY.linkedInUrl,
   TIM_ENTITY.personalGithubUrl,
+] as const;
+
+/** Profiles that unambiguously identify the loehrning.ai organization. */
+export const ORGANIZATION_SAME_AS_URLS = [
   GITHUB_ORG.url,
 ] as const;
 

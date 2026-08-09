@@ -3,6 +3,7 @@
 import { useState, type ReactNode } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { round } from "@/lib/data-science/sim-kit";
+import { useDataScienceLocale } from "../locale-context";
 
 // ─── DifferenceInDifferences ───────────────────────
 //
@@ -24,11 +25,24 @@ function yScale(v: number): number {
   return H - PAD.b - ((v - yMin) / (yMax - yMin)) * (H - PAD.t - PAD.b);
 }
 
-function XTick({ x, label }: { readonly x: number; readonly label: string }): ReactNode {
+function XTick({
+  x,
+  label,
+}: {
+  readonly x: number;
+  readonly label: string;
+}): ReactNode {
   return (
     <g>
       <line x1={x} y1={H - PAD.b} x2={x} y2={H - PAD.b + 4} stroke="#6A6270" />
-      <text x={x} y={H - PAD.b + 16} textAnchor="middle" fontSize="10" fill="#6A6270" fontFamily="'JetBrains Mono',monospace">
+      <text
+        x={x}
+        y={H - PAD.b + 16}
+        textAnchor="middle"
+        fontSize="10"
+        fill="#6A6270"
+        fontFamily="'JetBrains Mono',monospace"
+      >
         {label}
       </text>
     </g>
@@ -36,6 +50,7 @@ function XTick({ x, label }: { readonly x: number; readonly label: string }): Re
 }
 
 export function DifferenceInDifferences() {
+  const { text } = useDataScienceLocale();
   const [effect, setEffect] = useState(8);
   const [parallelOk, setParallelOk] = useState(true);
 
@@ -46,39 +61,62 @@ export function DifferenceInDifferences() {
 
   return (
     <Panel
-      eyebrow="SIMULATION"
+      eyebrow={text("SIMULATION", "SIMULATION")}
       title="Difference-in-Differences"
-      meta={`DiD estimate = ${round(DiD, 1)}`}
-      caption="The key assumption is parallel trends: in the absence of treatment, both groups would have moved the same way. Drag the effect slider to see what DiD measures."
+      meta={text(
+        `DiD estimate = ${round(DiD, 1)}`,
+        `DiD-Schätzung = ${round(DiD, 1)}`,
+      )}
+      caption={text(
+        "This two-period arithmetic example hard-codes the untreated trend and, in the violated setting, a +5-point bias. Real DiD also requires defensible parallel trends, no anticipation or interference, stable composition, and suitable uncertainty estimates.",
+        "Dieses arithmetische Beispiel mit zwei Perioden programmiert den unbehandelten Trend und im verletzten Szenario einen Bias von +5 Punkten fest. Reale DiD benötigt zusätzlich begründbare parallele Trends, keine Antizipation oder Interferenz, stabile Zusammensetzung und passende Unsicherheitsschätzungen.",
+      )}
     >
       <div className="sim-row" style={{ gridTemplateColumns: "220px 1fr" }}>
         <div className="sim-controls">
           <div className="sim-ctrl">
             <label>
-              True treatment effect <span className="mono">{effect} pts</span>
+              {text("True treatment effect", "Wahrer Behandlungseffekt")}{" "}
+              <span className="mono">
+                {effect} {text("pts", "Pkt.")}
+              </span>
             </label>
             <input
               type="range"
               min="-10"
               max="25"
               step="1"
-              aria-label="True treatment effect"
+              aria-label={text(
+                "True treatment effect",
+                "Wahrer Behandlungseffekt",
+              )}
               value={effect}
               onChange={(e) => setEffect(+e.target.value)}
             />
           </div>
           <div className="sim-ctrl">
-            <label>Parallel trends</label>
+            <label>{text("Parallel trends", "Parallele Trends")}</label>
             <div className="seg" style={{ gap: 4 }}>
-              <button type="button" className={parallelOk ? "on" : ""} onClick={() => setParallelOk(true)}>
-                Hold
+              <button
+                type="button"
+                className={parallelOk ? "on" : ""}
+                onClick={() => setParallelOk(true)}
+              >
+                {text("Hold", "Erfüllt")}
               </button>
-              <button type="button" className={!parallelOk ? "on" : ""} onClick={() => setParallelOk(false)}>
-                Violated
+              <button
+                type="button"
+                className={!parallelOk ? "on" : ""}
+                onClick={() => setParallelOk(false)}
+              >
+                {text("Violated", "Verletzt")}
               </button>
             </div>
           </div>
-          <div className="sim-stats" style={{ gridTemplateColumns: "1fr 1fr", marginTop: 12 }}>
+          <div
+            className="sim-stats"
+            style={{ gridTemplateColumns: "1fr 1fr", marginTop: 12 }}
+          >
             <div>
               <div className="k">T_post − T_pre</div>
               <div className="v" style={{ fontSize: 18 }}>
@@ -92,16 +130,54 @@ export function DifferenceInDifferences() {
               </div>
             </div>
           </div>
-          <div style={{ marginTop: 10, padding: "10px 12px", borderRadius: 8, background: "rgba(91,158,232,0.08)", border: "1px solid rgba(91,158,232,0.2)" }}>
-            <div style={{ fontSize: 11, color: "var(--ink-3)", fontFamily: "'JetBrains Mono',monospace" }}>DiD estimate</div>
-            <div style={{ fontSize: 22, fontWeight: 700, color: DiD > 0 ? "var(--good-ink)" : "var(--magenta-ink)", fontFamily: "'JetBrains Mono',monospace" }}>
-              {round(DiD, 1)} pts
+          <div
+            style={{
+              marginTop: 10,
+              padding: "10px 12px",
+              borderRadius: 8,
+              background: "rgba(91,158,232,0.08)",
+              border: "1px solid rgba(91,158,232,0.2)",
+            }}
+          >
+            <div
+              style={{
+                fontSize: 11,
+                color: "var(--ink-3)",
+                fontFamily: "'JetBrains Mono',monospace",
+              }}
+            >
+              {text("DiD estimate", "DiD-Schätzung")}
             </div>
-            <div style={{ fontSize: 10, color: "var(--ink-3)", marginTop: 4 }}>= (T_post − T_pre) − (C_post − C_pre)</div>
+            <div
+              style={{
+                fontSize: 22,
+                fontWeight: 700,
+                color: DiD > 0 ? "var(--good-ink)" : "var(--magenta-ink)",
+                fontFamily: "'JetBrains Mono',monospace",
+              }}
+            >
+              {round(DiD, 1)} {text("pts", "Pkt.")}
+            </div>
+            <div style={{ fontSize: 10, color: "var(--ink-3)", marginTop: 4 }}>
+              = (T_post − T_pre) − (C_post − C_pre)
+            </div>
           </div>
           {!parallelOk && (
-            <div style={{ marginTop: 8, padding: "8px 10px", borderRadius: 6, background: "rgba(255,77,162,0.08)", border: "1px solid rgba(255,77,162,0.3)", fontSize: 11, color: "var(--magenta-ink)" }}>
-              Parallel trends violated, DiD is biased by +5 pts.
+            <div
+              style={{
+                marginTop: 8,
+                padding: "8px 10px",
+                borderRadius: 6,
+                background: "rgba(255,77,162,0.08)",
+                border: "1px solid rgba(255,77,162,0.3)",
+                fontSize: 11,
+                color: "var(--magenta-ink)",
+              }}
+            >
+              {text(
+                "Parallel trends violated, DiD is biased by +5 pts.",
+                "Parallele Trends verletzt; die DiD-Schätzung ist um +5 Pkt. verzerrt.",
+              )}
             </div>
           )}
         </div>
@@ -109,33 +185,118 @@ export function DifferenceInDifferences() {
           <svg viewBox={`0 0 ${W} ${H}`}>
             {[30, 40, 50, 60, 70].map((v) => (
               <g key={v}>
-                <line x1={PAD.l} y1={yScale(v)} x2={W - PAD.r} y2={yScale(v)} stroke="#2A2520" strokeWidth="1" strokeDasharray="2 4" />
-                <text x={PAD.l - 6} y={yScale(v) + 4} textAnchor="end" fontSize="9" fill="#6A6270" fontFamily="'JetBrains Mono',monospace">
+                <line
+                  x1={PAD.l}
+                  y1={yScale(v)}
+                  x2={W - PAD.r}
+                  y2={yScale(v)}
+                  stroke="#2A2520"
+                  strokeWidth="1"
+                  strokeDasharray="2 4"
+                />
+                <text
+                  x={PAD.l - 6}
+                  y={yScale(v) + 4}
+                  textAnchor="end"
+                  fontSize="9"
+                  fill="#6A6270"
+                  fontFamily="'JetBrains Mono',monospace"
+                >
                   {v}
                 </text>
               </g>
             ))}
-            <line x1={PAD.l} y1={H - PAD.b} x2={W - PAD.r} y2={H - PAD.b} stroke="#4A4540" />
-            <line x1={(xPre + xPost) / 2} y1={PAD.t} x2={(xPre + xPost) / 2} y2={H - PAD.b} stroke="#6A6270" strokeWidth="1" strokeDasharray="3 4" opacity="0.6" />
-            <text x={(xPre + xPost) / 2} y={PAD.t + 10} textAnchor="middle" fontSize="9" fill="#6A6270" fontFamily="'JetBrains Mono',monospace">
-              treatment
+            <line
+              x1={PAD.l}
+              y1={H - PAD.b}
+              x2={W - PAD.r}
+              y2={H - PAD.b}
+              stroke="#4A4540"
+            />
+            <line
+              x1={(xPre + xPost) / 2}
+              y1={PAD.t}
+              x2={(xPre + xPost) / 2}
+              y2={H - PAD.b}
+              stroke="#6A6270"
+              strokeWidth="1"
+              strokeDasharray="3 4"
+              opacity="0.6"
+            />
+            <text
+              x={(xPre + xPost) / 2}
+              y={PAD.t + 10}
+              textAnchor="middle"
+              fontSize="9"
+              fill="#6A6270"
+              fontFamily="'JetBrains Mono',monospace"
+            >
+              {text("treatment", "Behandlung")}
             </text>
-            <line x1={xPre} y1={yScale(C_pre)} x2={xPost} y2={yScale(C_post)} stroke="#5B9BE8" strokeWidth="2.5" />
+            <line
+              x1={xPre}
+              y1={yScale(C_pre)}
+              x2={xPost}
+              y2={yScale(C_post)}
+              stroke="#5B9BE8"
+              strokeWidth="2.5"
+            />
             <circle cx={xPre} cy={yScale(C_pre)} r="5" fill="#5B9BE8" />
             <circle cx={xPost} cy={yScale(C_post)} r="5" fill="#5B9BE8" />
-            <text x={xPost + 8} y={yScale(C_post) + 4} fontSize="10" fill="#5B9BE8" fontFamily="'JetBrains Mono',monospace">
-              Control
+            <text
+              x={xPost + 8}
+              y={yScale(C_post) + 4}
+              fontSize="10"
+              fill="#5B9BE8"
+              fontFamily="'JetBrains Mono',monospace"
+            >
+              {text("Control", "Kontrolle")}
             </text>
-            <line x1={xPre} y1={yScale(T_pre)} x2={xPost} y2={yScale(T_counterfactual)} stroke="#E8A031" strokeWidth="1.5" strokeDasharray="5 4" opacity="0.7" />
-            <circle cx={xPost} cy={yScale(T_counterfactual)} r="4" fill="#E8A031" opacity="0.7" />
-            <text x={xPost + 8} y={yScale(T_counterfactual) + 4} fontSize="10" fill="#E8A031" opacity="0.8" fontFamily="'JetBrains Mono',monospace">
-              Counterfactual
+            <line
+              x1={xPre}
+              y1={yScale(T_pre)}
+              x2={xPost}
+              y2={yScale(T_counterfactual)}
+              stroke="#E8A031"
+              strokeWidth="1.5"
+              strokeDasharray="5 4"
+              opacity="0.7"
+            />
+            <circle
+              cx={xPost}
+              cy={yScale(T_counterfactual)}
+              r="4"
+              fill="#E8A031"
+              opacity="0.7"
+            />
+            <text
+              x={xPost + 8}
+              y={yScale(T_counterfactual) + 4}
+              fontSize="10"
+              fill="#E8A031"
+              opacity="0.8"
+              fontFamily="'JetBrains Mono',monospace"
+            >
+              {text("Counterfactual", "Kontrafaktisch")}
             </text>
-            <line x1={xPre} y1={yScale(T_pre)} x2={xPost} y2={yScale(T_actual)} stroke="#1FAF7E" strokeWidth="2.5" />
+            <line
+              x1={xPre}
+              y1={yScale(T_pre)}
+              x2={xPost}
+              y2={yScale(T_actual)}
+              stroke="#1FAF7E"
+              strokeWidth="2.5"
+            />
             <circle cx={xPre} cy={yScale(T_pre)} r="5" fill="#1FAF7E" />
             <circle cx={xPost} cy={yScale(T_actual)} r="5" fill="#1FAF7E" />
-            <text x={xPost + 8} y={yScale(T_actual) + 4} fontSize="10" fill="#1FAF7E" fontFamily="'JetBrains Mono',monospace">
-              Treated
+            <text
+              x={xPost + 8}
+              y={yScale(T_actual) + 4}
+              fontSize="10"
+              fill="#1FAF7E"
+              fontFamily="'JetBrains Mono',monospace"
+            >
+              {text("Treated", "Behandelt")}
             </text>
             {T_actual !== T_counterfactual && (
               <g>
@@ -148,13 +309,19 @@ export function DifferenceInDifferences() {
                   strokeWidth="1.5"
                   markerEnd="url(#arr9)"
                 />
-                <text x={xPost + 52} y={(yScale(T_counterfactual) + yScale(T_actual)) / 2 + 4} fontSize="10" fill="#9A6BFF" fontFamily="'JetBrains Mono',monospace">
+                <text
+                  x={xPost + 52}
+                  y={(yScale(T_counterfactual) + yScale(T_actual)) / 2 + 4}
+                  fontSize="10"
+                  fill="#9A6BFF"
+                  fontFamily="'JetBrains Mono',monospace"
+                >
                   DiD={round(DiD, 1)}
                 </text>
               </g>
             )}
-            <XTick x={xPre} label="Pre" />
-            <XTick x={xPost} label="Post" />
+            <XTick x={xPre} label={text("Pre", "Vorher")} />
+            <XTick x={xPost} label={text("Post", "Nachher")} />
           </svg>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ProjectArtifact } from "@/lib/open-source/artifacts";
 
 const { PROJECT } = vi.hoisted(() => {
@@ -93,13 +93,25 @@ const { PROJECT } = vi.hoisted(() => {
   return { PROJECT: project };
 });
 
+const { getRequestLocaleMock } = vi.hoisted(() => ({
+  getRequestLocaleMock: vi.fn(),
+}));
+
 vi.mock("@/lib/open-source/artifacts", () => ({
   OPEN_SOURCE_ARTIFACTS: [PROJECT],
 }));
+vi.mock("@/lib/i18n/request-locale", () => ({
+  getRequestLocale: getRequestLocaleMock,
+}));
 
-import OpenSourcePage from "./page";
+import OpenSourcePage, { generateMetadata } from "./page";
 
 describe("OpenSourcePage", () => {
+  beforeEach(() => {
+    getRequestLocaleMock.mockReset();
+    getRequestLocaleMock.mockResolvedValue("de");
+  });
+
   it("keeps its mocked artifact aligned with the publication validator", async () => {
     const { assertOpenSourceArtifacts } = await vi.importActual<
       typeof import("@/lib/open-source/artifacts")
@@ -108,24 +120,24 @@ describe("OpenSourcePage", () => {
     expect(() => assertOpenSourceArtifacts([PROJECT])).not.toThrow();
   });
 
-  it("describes every artifact lane without encoding an empty launch state", () => {
-    const { container } = render(<OpenSourcePage />);
+  it("describes every artifact lane without encoding an empty launch state", async () => {
+    const { container } = render(await OpenSourcePage());
 
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "Das Werkverzeichnis. Offen auf GitHub.",
+        name: "Veröffentlichte Werkzeuge. Quellstand prüfbar.",
       }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/kuratierte Artefaktverzeichnis/),
+      screen.getByText(/veröffentlichte Artefakte/),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/weitere Quell- und Infrastruktur-Repositories/),
+      screen.getByText(/nicht automatisch veröffentlichte Plattform-Artefakte/),
     ).toBeInTheDocument();
     // The mocked published project renders on the shelf with its kind stamp.
     expect(
-      screen.getByRole("heading", { level: 2, name: "Alle Werke" }),
+      screen.getByRole("heading", { level: 2, name: "Veröffentlicht" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Projekt")).toBeInTheDocument();
     expect(screen.queryByText(/in Vorbereitung/i)).not.toBeInTheDocument();
@@ -163,4 +175,55 @@ describe("OpenSourcePage", () => {
       }),
     ]);
   });
+
+  it("renders the English directory and localizes page routes and structured data", async () => {
+    getRequestLocaleMock.mockResolvedValue("en");
+    const { container } = render(await OpenSourcePage());
+
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "Published tools. Verifiable source.",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Published" })).toBeInTheDocument();
+    expect(screen.getByText("Project")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "license policy" }),
+    ).toHaveAttribute("href", "/en/open-source/lizenzrichtlinie");
+    expect(screen.getByRole("link", { name: "/kurse" })).toHaveAttribute(
+      "href",
+      "/en/kurse",
+    );
+
+    const graph = JSON.parse(
+      container.querySelector<HTMLScriptElement>("script#open-source-jsonld")
+        ?.textContent ?? "{}",
+    )["@graph"];
+    expect(graph[1]).toMatchObject({
+      url: "https://loehrning.ai/en/open-source",
+      inLanguage: "en-GB",
+    });
+    expect(graph[1].hasPart[0].url).toBe(
+      "https://loehrning.ai/en/open-source/projects/metadata-project",
+    );
+  });
+
+  it.each([
+    ["de", "/open-source", "Open Source", "de_DE"],
+    ["en", "/en/open-source", "Open source", "en_GB"],
+  ] as const)(
+    "emits %s metadata with a language-specific canonical",
+    async (locale, canonical, title, openGraphLocale) => {
+      getRequestLocaleMock.mockResolvedValue(locale);
+      const metadata = await generateMetadata();
+
+      expect(metadata.title).toBe(title);
+      expect(metadata.alternates).toMatchObject({ canonical });
+      expect(metadata.openGraph).toMatchObject({
+        locale: openGraphLocale,
+        url: `https://loehrning.ai${canonical}`,
+      });
+    },
+  );
 });

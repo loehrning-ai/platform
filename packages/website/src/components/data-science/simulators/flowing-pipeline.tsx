@@ -1,12 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import {
-  useElementVisibility,
-  useTicker,
-} from "@/lib/data-science/hooks";
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
+import { useElementVisibility, useTicker } from "@/lib/data-science/hooks";
 import { dsChapterHref } from "@/lib/data-science/routes";
 import type { DsNumberedChapterId } from "@/lib/data-science/types";
+import { useDataScienceLocale } from "../locale-context";
 
 // ─── FlowingPipeline ────────────────────────────────
 //
@@ -27,13 +31,76 @@ interface Station {
 }
 
 const STATIONS: readonly Station[] = [
-  { id: "fund", lab: "Data", n: "01", cx: 120, cy: 90, hue: "#5B3EE8", glyph: "cloud" },
-  { id: "explore", lab: "Explore", n: "02", cx: 330, cy: 180, hue: "#1CA5D9", glyph: "scatter" },
-  { id: "clean", lab: "Clean", n: "03", cx: 560, cy: 120, hue: "#1FAF7E", glyph: "filter" },
-  { id: "feature", lab: "Feature", n: "04", cx: 640, cy: 300, hue: "#6BCF3F", glyph: "gears" },
-  { id: "model", lab: "Model", n: "05", cx: 430, cy: 380, hue: "#E8A031", glyph: "curve" },
-  { id: "eval", lab: "Evaluate", n: "06", cx: 180, cy: 440, hue: "#F25F3A", glyph: "target" },
+  {
+    id: "fund",
+    lab: "Data",
+    n: "01",
+    cx: 120,
+    cy: 90,
+    hue: "#5B3EE8",
+    glyph: "cloud",
+  },
+  {
+    id: "explore",
+    lab: "Explore",
+    n: "02",
+    cx: 330,
+    cy: 180,
+    hue: "#1CA5D9",
+    glyph: "scatter",
+  },
+  {
+    id: "clean",
+    lab: "Clean",
+    n: "03",
+    cx: 560,
+    cy: 120,
+    hue: "#1FAF7E",
+    glyph: "filter",
+  },
+  {
+    id: "feature",
+    lab: "Feature",
+    n: "04",
+    cx: 640,
+    cy: 300,
+    hue: "#6BCF3F",
+    glyph: "gears",
+  },
+  {
+    id: "model",
+    lab: "Model",
+    n: "05",
+    cx: 430,
+    cy: 380,
+    hue: "#E8A031",
+    glyph: "curve",
+  },
+  {
+    id: "eval",
+    lab: "Evaluate",
+    n: "06",
+    cx: 180,
+    cy: 440,
+    hue: "#F25F3A",
+    glyph: "target",
+  },
 ];
+
+const STATION_LABELS_DE: Readonly<Record<DsNumberedChapterId, string>> = {
+  fund: "Daten",
+  explore: "Exploration",
+  clean: "Bereinigung",
+  feature: "Merkmale",
+  model: "Modell",
+  eval: "Evaluation",
+  interp: "Interpretation",
+  exp: "Experimente",
+  causal: "Kausalität",
+  peek: "Peeking",
+  deploy: "Betrieb",
+  cap: "Abschluss",
+};
 
 function buildSmoothPath(pts: readonly (readonly [number, number])[]): string {
   if (pts.length < 2) return "";
@@ -68,7 +135,15 @@ function StationGlyph({ kind, hue, t, phase }: StationGlyphProps) {
       for (let i = 0; i < 7; i++) {
         const a = (i / 7) * Math.PI * 2 + t * 0.6;
         const r = 8 + 2 * Math.sin(t * 2 + i + phase);
-        dots.push(<circle key={i} cx={Math.cos(a) * r} cy={Math.sin(a) * r} r={1.8} {...common} />);
+        dots.push(
+          <circle
+            key={i}
+            cx={Math.cos(a) * r}
+            cy={Math.sin(a) * r}
+            r={1.8}
+            {...common}
+          />,
+        );
       }
       dots.push(<circle key="c" cx="0" cy="0" r={2.2} {...common} />);
       return <g>{dots}</g>;
@@ -83,8 +158,24 @@ function StationGlyph({ kind, hue, t, phase }: StationGlyphProps) {
       }
       return (
         <g>
-          <line x1="-14" y1="12" x2="14" y2="12" stroke={hue} strokeWidth="0.9" opacity="0.5" />
-          <line x1="-14" y1="12" x2="-14" y2="-12" stroke={hue} strokeWidth="0.9" opacity="0.5" />
+          <line
+            x1="-14"
+            y1="12"
+            x2="14"
+            y2="12"
+            stroke={hue}
+            strokeWidth="0.9"
+            opacity="0.5"
+          />
+          <line
+            x1="-14"
+            y1="12"
+            x2="-14"
+            y2="-12"
+            stroke={hue}
+            strokeWidth="0.9"
+            opacity="0.5"
+          />
           {dots}
         </g>
       );
@@ -94,7 +185,12 @@ function StationGlyph({ kind, hue, t, phase }: StationGlyphProps) {
       const drip2 = 6 + 12 * ((t * 0.6 + 0.33 + phase * 0.3) % 1);
       return (
         <g>
-          <path d="M -12 -10 L 12 -10 L 4 2 L 4 10 L -4 10 L -4 2 Z" fill="none" stroke={hue} strokeWidth="1.6" />
+          <path
+            d="M -12 -10 L 12 -10 L 4 2 L 4 10 L -4 10 L -4 2 Z"
+            fill="none"
+            stroke={hue}
+            strokeWidth="1.6"
+          />
           <circle cx="0" cy={drip1} r={1.4} {...common} />
           <circle cx="0" cy={drip2} r={1.4} {...common} opacity="0.6" />
         </g>
@@ -142,8 +238,22 @@ function StationGlyph({ kind, hue, t, phase }: StationGlyphProps) {
       }
       return (
         <g>
-          <line x1="-14" y1="10" x2="14" y2="10" stroke={hue} strokeWidth="0.9" opacity="0.4" />
-          <polyline points={pts.join(" ")} fill="none" stroke={hue} strokeWidth="1.8" strokeLinecap="round" />
+          <line
+            x1="-14"
+            y1="10"
+            x2="14"
+            y2="10"
+            stroke={hue}
+            strokeWidth="0.9"
+            opacity="0.4"
+          />
+          <polyline
+            points={pts.join(" ")}
+            fill="none"
+            stroke={hue}
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          />
         </g>
       );
     }
@@ -151,11 +261,30 @@ function StationGlyph({ kind, hue, t, phase }: StationGlyphProps) {
       const rot = (t * 60) % 360;
       return (
         <g>
-          <circle r="10" fill="none" stroke={hue} strokeWidth="1.2" opacity="0.35" />
-          <circle r="6" fill="none" stroke={hue} strokeWidth="1.4" opacity="0.6" />
+          <circle
+            r="10"
+            fill="none"
+            stroke={hue}
+            strokeWidth="1.2"
+            opacity="0.35"
+          />
+          <circle
+            r="6"
+            fill="none"
+            stroke={hue}
+            strokeWidth="1.4"
+            opacity="0.6"
+          />
           <circle r={2.2} {...common} />
           <g transform={`rotate(${rot})`}>
-            <line x1="-13" y1="0" x2="-8" y2="0" stroke={hue} strokeWidth="1.5" />
+            <line
+              x1="-13"
+              y1="0"
+              x2="-8"
+              y2="0"
+              stroke={hue}
+              strokeWidth="1.5"
+            />
             <line x1="8" y1="0" x2="13" y2="0" stroke={hue} strokeWidth="1.5" />
           </g>
         </g>
@@ -173,6 +302,7 @@ interface Particle {
 }
 
 export function FlowingPipeline() {
+  const { locale, text } = useDataScienceLocale();
   // Keep the server render and the first client render byte-identical. Starting
   // the RAF immediately can update floating-point SVG attributes while React is
   // still hydrating this large tree, producing an intermittent mismatch.
@@ -193,7 +323,10 @@ export function FlowingPipeline() {
   const pathD = useMemo(() => {
     const s0 = STATIONS[0]!;
     const s5 = STATIONS[5]!;
-    const pathPts: (readonly [number, number])[] = STATIONS.map((s) => [s.cx, s.cy]);
+    const pathPts: (readonly [number, number])[] = STATIONS.map((s) => [
+      s.cx,
+      s.cy,
+    ]);
     return (
       buildSmoothPath(pathPts) +
       ` C ${s5.cx - 120} ${s5.cy + 60}, ${s0.cx - 60} ${s0.cy + 200}, ${s0.cx} ${s0.cy}`
@@ -204,19 +337,33 @@ export function FlowingPipeline() {
   const [pathLen, setPathLen] = useState(0);
 
   useEffect(() => {
-    if (pathRef.current && typeof pathRef.current.getTotalLength === "function") {
+    if (
+      pathRef.current &&
+      typeof pathRef.current.getTotalLength === "function"
+    ) {
       setPathLen(pathRef.current.getTotalLength());
     }
   }, [pathD]);
 
   const N_PARTICLES = 28;
   const particles: Particle[] = [];
-  if (pathLen > 0 && pathRef.current && typeof pathRef.current.getPointAtLength === "function") {
+  if (
+    pathLen > 0 &&
+    pathRef.current &&
+    typeof pathRef.current.getPointAtLength === "function"
+  ) {
     for (let i = 0; i < N_PARTICLES; i++) {
       const speed = 0.05;
       const phase = (i / N_PARTICLES + t * speed) % 1;
       const pt = pathRef.current.getPointAtLength(phase * pathLen);
-      const hue = i % 4 === 0 ? "#5B3EE8" : i % 4 === 1 ? "#E8318F" : i % 4 === 2 ? "#6BCF3F" : "#1CA5D9";
+      const hue =
+        i % 4 === 0
+          ? "#5B3EE8"
+          : i % 4 === 1
+            ? "#E8318F"
+            : i % 4 === 2
+              ? "#6BCF3F"
+              : "#1CA5D9";
       const size = 2.4 + 1.1 * Math.sin(t * 3 + i * 0.7);
       particles.push({ x: pt.x, y: pt.y, hue, size, idx: i });
     }
@@ -238,7 +385,13 @@ export function FlowingPipeline() {
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
-          <filter id="paper-shadow" x="-50%" y="-50%" width="200%" height="200%">
+          <filter
+            id="paper-shadow"
+            x="-50%"
+            y="-50%"
+            width="200%"
+            height="200%"
+          >
             <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
             <feOffset dy="3" />
             <feComponentTransfer>
@@ -250,27 +403,62 @@ export function FlowingPipeline() {
             </feMerge>
           </filter>
         </defs>
-        <path ref={pathRef} d={pathD} fill="none" stroke="url(#loop-grad-l)" strokeWidth="2.5" opacity="0.55" />
-        <path d={pathD} fill="none" stroke="url(#loop-grad-l)" strokeWidth="10" opacity="0.08" filter="url(#soft-glow)" />
+        <path
+          ref={pathRef}
+          d={pathD}
+          fill="none"
+          stroke="url(#loop-grad-l)"
+          strokeWidth="2.5"
+          opacity="0.55"
+        />
+        <path
+          d={pathD}
+          fill="none"
+          stroke="url(#loop-grad-l)"
+          strokeWidth="10"
+          opacity="0.08"
+          filter="url(#soft-glow)"
+        />
         {particles.map((p) => (
-          <circle key={p.idx} cx={p.x} cy={p.y} r={p.size} fill={p.hue} opacity="0.85" filter="url(#soft-glow)" />
+          <circle
+            key={p.idx}
+            cx={p.x}
+            cy={p.y}
+            r={p.size}
+            fill={p.hue}
+            opacity="0.85"
+            filter="url(#soft-glow)"
+          />
         ))}
         {STATIONS.map((s, i) => {
           const h = hover === s.id || focused === s.id;
           const pulseR = 34 + 1.5 * Math.sin(t * 1.4 + i);
+          const label = locale === "de" ? STATION_LABELS_DE[s.id] : s.lab;
           return (
             <g key={s.id} transform={`translate(${s.cx} ${s.cy})`}>
               <a
                 className="ov-loop-node"
-                href={dsChapterHref(s.id)}
-                aria-label={`${s.n} · ${s.lab} - Kapitel öffnen`}
+                href={dsChapterHref(s.id, locale)}
+                aria-label={`${s.n} · ${label} - ${text("Open chapter", "Kapitel öffnen")}`}
                 onMouseEnter={() => setHover(s.id)}
                 onMouseLeave={() => setHover(null)}
                 onFocus={() => setFocused(s.id)}
                 onBlur={() => setFocused(null)}
               >
-                <circle r={pulseR + 6} fill="none" stroke={s.hue} strokeWidth={h ? 1.6 : 0.8} opacity={h ? 0.6 : 0.22} />
-                <circle r={pulseR} fill="#FFFDF7" stroke={s.hue} strokeWidth={h ? 2.6 : 1.8} filter="url(#paper-shadow)" />
+                <circle
+                  r={pulseR + 6}
+                  fill="none"
+                  stroke={s.hue}
+                  strokeWidth={h ? 1.6 : 0.8}
+                  opacity={h ? 0.6 : 0.22}
+                />
+                <circle
+                  r={pulseR}
+                  fill="#FFFDF7"
+                  stroke={s.hue}
+                  strokeWidth={h ? 2.6 : 1.8}
+                  filter="url(#paper-shadow)"
+                />
                 <StationGlyph kind={s.glyph} hue={s.hue} t={t} phase={i} />
                 <text
                   y={pulseR + 18}
@@ -282,15 +470,21 @@ export function FlowingPipeline() {
                   letterSpacing="0.14em"
                   style={{ textTransform: "uppercase" } as CSSProperties}
                 >
-                  {s.n} · {s.lab}
+                  {s.n} · {label}
                 </text>
               </a>
             </g>
           );
         })}
         <g transform="translate(70 330)">
-          <text fontFamily="'Instrument Serif', serif" fontSize="22" fontStyle="italic" fill="#3A3540" opacity="0.5">
-            feedback
+          <text
+            fontFamily="'Instrument Serif', serif"
+            fontSize="22"
+            fontStyle="italic"
+            fill="#3A3540"
+            opacity="0.5"
+          >
+            {text("feedback", "Rückmeldung")}
           </text>
           <text
             y="18"
@@ -300,7 +494,7 @@ export function FlowingPipeline() {
             letterSpacing="0.14em"
             style={{ textTransform: "uppercase" } as CSSProperties}
           >
-            the loop closes
+            {text("the loop closes", "der Zyklus schließt sich")}
           </text>
         </g>
       </svg>

@@ -17,7 +17,7 @@ describe("BackfillSim ", () => {
   it("switches to INSERT mode and updates the panel title", () => {
     render(<BackfillSim />);
     fireEvent.click(screen.getByRole("button", { name: /INSERT/ }));
-    expect(screen.getByText("Backfill with INSERT (non-idempotent)")).toBeInTheDocument();
+    expect(screen.getByText("Backfill with INSERT (non-idempotent in this model)")).toBeInTheDocument();
   });
 
   it("starts a backfill run without throwing", () => {

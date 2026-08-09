@@ -25,7 +25,7 @@ export const glossary: Readonly<Record<string, GlossaryEntry>> = {
   eu_ai_act: {
     label: "EU AI Act",
     short:
-      "EU-Verordnung 2024/1689. Art. 4 KI-Kompetenz gilt seit 2. Februar 2025; Risikoklassifizierung ordnet Art. 5, Art. 50, GPAI und Hochrisiko-Pflichten ein.",
-    long: "Die EU-KI-Verordnung regelt Anbieter und Betreiber von KI-Systemen rollenbezogen. Art. 4 verlangt angemessene KI-Kompetenzmaßnahmen. Risikoklassifizierung ist nötig, um verbotene Praktiken, Transparenzpflichten, GPAI-Anbieterpflichten und Hochrisiko-Konformitätspflichten korrekt zu trennen. Sanktionen sind pflichtspezifisch: Art. 5 bis 35 Mio. Euro oder 7 %, die meisten anderen Pflichten bis 15 Mio. Euro oder 3 %, Falschangaben bis 7,5 Mio. Euro oder 1 %.",
+      "EU-Verordnung 2024/1689. Art. 4 gilt seit 2. Februar 2025; seit 27. Juli 2026 verlangt er Maßnahmen zur Unterstützung von KI-Kompetenz. Die Risikoklassifizierung ordnet Art. 5, Art. 50, GPAI und Hochrisiko-Pflichten ein.",
+    long: "Die EU-KI-Verordnung regelt Anbieter und Betreiber von KI-Systemen rollenbezogen. Art. 4 verlangt kontextbezogene Maßnahmen, die die Entwicklung von KI-Kompetenz unterstützen; er schreibt weder ein bestimmtes Format noch ein individuelles Kompetenzniveau vor. Risikoklassifizierung trennt verbotene Praktiken, Transparenzpflichten, GPAI-Anbieterpflichten und Hochrisiko-Konformitätspflichten. Sanktionen sind pflichtspezifisch: Art. 5 bis 35 Mio. Euro oder 7 %, die meisten anderen Pflichten bis 15 Mio. Euro oder 3 %, Falschangaben bis 7,5 Mio. Euro oder 1 %.",
   },
 };

@@ -1,5 +1,8 @@
 import type { ComponentType, JSX } from "react";
-import { checkpointLessonId, type DataInfraLessonId } from "@/lib/data-infrastructure/types";
+import {
+  checkpointLessonId,
+  type DataInfraLessonId,
+} from "@/lib/data-infrastructure/types";
 import { StackFlow } from "./widgets/stack-flow";
 import { CapTriangle } from "./widgets/cap-triangle";
 import { RowColumn } from "./widgets/row-column";
@@ -12,6 +15,8 @@ import { CdcFlow } from "./widgets/cdc-flow";
 import { BackfillDag } from "./widgets/backfill-dag";
 import { SLAdash } from "./widgets/sla-dash";
 import { InterviewMove } from "./widgets/interview-move";
+import type { Locale } from "@/lib/i18n/locale";
+import { DataInfraWidgetLocaleProvider } from "./widget-locale-context";
 
 /**
  * One-off bespoke simulators, keyed by lesson id — outside the shared
@@ -54,17 +59,21 @@ const BESPOKE_REGISTRY: Record<DataInfraLessonId, readonly BespokeSlot[]> = {
 
 export function DataInfraBespokeInteractives({
   lessonId,
+  locale = "en",
 }: {
   readonly lessonId: DataInfraLessonId;
+  readonly locale?: Locale;
 }): JSX.Element {
   const slots = BESPOKE_REGISTRY[lessonId];
   const namespacedLessonId = checkpointLessonId(lessonId);
   return (
-    <div className="flex flex-col gap-6">
-      {slots.map(({ Component, cpId }) => (
-        <Component key={cpId} lessonId={namespacedLessonId} cpId={cpId} />
-      ))}
-    </div>
+    <DataInfraWidgetLocaleProvider locale={locale}>
+      <div className="flex min-w-0 flex-col gap-6">
+        {slots.map(({ Component, cpId }) => (
+          <Component key={cpId} lessonId={namespacedLessonId} cpId={cpId} />
+        ))}
+      </div>
+    </DataInfraWidgetLocaleProvider>
   );
 }
 

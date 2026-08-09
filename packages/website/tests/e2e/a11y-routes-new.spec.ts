@@ -17,9 +17,21 @@ import { exposeAllAuditedContent } from "./fixtures/a11y-visibility";
 // server pages; /login renders its form for the unauthenticated e2e context and
 // only redirects an already-signed-in user, so axe sees the real page).
 const GROUPS: Record<string, readonly string[]> = {
-  "Lern-Einstieg": ["/einstieg", "/wie-ki-funktioniert", "/ki-check"],
-  "Referenz & Wissen": ["/bekannte-grenzen", "/neuigkeiten"],
-  "Hilfe & Konto": ["/hilfe", "/login"],
+  "Lern-Einstieg": [
+    "/einstieg",
+    "/en/einstieg",
+    "/wie-ki-funktioniert",
+    "/en/wie-ki-funktioniert",
+    "/ki-check",
+    "/en/ki-check",
+  ],
+  "Referenz & Wissen": [
+    "/bekannte-grenzen",
+    "/en/bekannte-grenzen",
+    "/neuigkeiten",
+    "/en/neuigkeiten",
+  ],
+  "Hilfe & Konto": ["/hilfe", "/en/hilfe", "/login", "/en/login"],
 };
 
 type AxeViolation = Awaited<
@@ -93,7 +105,7 @@ for (const [group, routes] of Object.entries(GROUPS)) {
   }) => {
     // Worst case per route: settleMotion (20s) + polled axe (20s); a 3-route
     // group can approach 120s, so budget headroom above that.
-    test.setTimeout(180_000);
+    test.setTimeout(300_000);
     // Audit the reduced-motion variant: perpetual loops render their static
     // state, so every pixel axe samples is a settled colour a real user reads.
     await page.emulateMedia({ reducedMotion: "reduce" });

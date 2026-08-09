@@ -5,6 +5,8 @@ import { m, AnimatePresence } from "framer-motion";
 import { CheckCircle2, XCircle, RotateCcw, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { LessonQuizQuestion } from "@/lib/course/types";
+import type { Locale } from "@/lib/i18n/locale";
+import { getCourseReaderCopy } from "./course-ui-copy";
 
 const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
 
@@ -18,9 +20,16 @@ interface LessonQuizProps {
   readonly questions: readonly LessonQuizQuestion[];
   readonly bestScore: { score: number; total: number } | null;
   readonly onComplete: (score: number, total: number) => void;
+  readonly locale?: Locale;
 }
 
-export function LessonQuiz({ questions, bestScore, onComplete }: LessonQuizProps) {
+export function LessonQuiz({
+  questions,
+  bestScore,
+  onComplete,
+  locale = "de",
+}: LessonQuizProps) {
+  const copy = getCourseReaderCopy(locale).quiz;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [focusedIndex, setFocusedIndex] = useState(0);
@@ -54,11 +63,11 @@ export function LessonQuiz({ questions, bestScore, onComplete }: LessonQuizProps
       const explanation = questions[currentIndex].explanation;
       if (feedbackRef.current) {
         feedbackRef.current.textContent = isCorrect
-          ? `Richtig. ${explanation}`
-          : `Nicht korrekt. ${explanation}`;
+          ? copy.correctFeedback(explanation)
+          : copy.incorrectFeedback(explanation);
       }
     },
-    [showExplanation, answers, currentIndex, questions],
+    [showExplanation, answers, copy, currentIndex, questions],
   );
 
   const handleNext = useCallback(() => {
@@ -128,14 +137,17 @@ export function LessonQuiz({ questions, bestScore, onComplete }: LessonQuizProps
         const correct = questions[i].answerOptions.find((o) => o.isCorrect);
         return sum + (answerId === correct?.id ? 1 : 0);
       }, 0);
-      feedbackRef.current.textContent = `Quiz abgeschlossen: ${score} von ${questions.length} Fragen richtig.`;
+      feedbackRef.current.textContent = copy.completionAnnouncement(
+        score,
+        questions.length,
+      );
     }
-  }, [finished, answers, questions]);
+  }, [finished, answers, copy, questions]);
 
   if (questions.length === 0) {
     return (
       <div className="py-8 text-center text-sm text-muted-foreground">
-        Keine Quizfragen für diese Lektion verfügbar.
+        {copy.empty}
       </div>
     );
   }
@@ -167,13 +179,15 @@ export function LessonQuiz({ questions, bestScore, onComplete }: LessonQuizProps
         >
           {pct}%
         </div>
-        <p className="mt-2 text-lg font-semibold">{score}/{questions.length} richtig</p>
+        <p className="mt-2 text-lg font-semibold">
+          {copy.score(score, questions.length)}
+        </p>
         <p className="mt-1 text-sm text-muted-foreground">
           {pct === 100
-            ? "Perfekt!"
+            ? copy.perfect
             : pct >= 50
-              ? "Gut gemacht! Versuch es nochmal für die volle Punktzahl."
-              : "Lies die Lektion nochmal und versuch es noch einmal."}
+              ? copy.partial
+              : copy.retryLesson}
         </p>
         <div className="mt-6 flex items-center justify-center gap-3">
           <button
@@ -182,7 +196,7 @@ export function LessonQuiz({ questions, bestScore, onComplete }: LessonQuizProps
             className="inline-flex items-center gap-2 border border-border px-4 py-2 text-sm font-medium transition-colors hover:bg-card"
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            Nochmal
+            {copy.retry}
           </button>
         </div>
       </m.div>
@@ -198,11 +212,11 @@ export function LessonQuiz({ questions, bestScore, onComplete }: LessonQuizProps
       <div role="status" aria-live="polite" aria-atomic="true" className="sr-only" ref={feedbackRef} />
       <div className="mb-4 flex items-center justify-between">
         <span className="font-mono text-xs text-muted-foreground">
-          Frage {currentIndex + 1} von {questions.length}
+          {copy.progress(currentIndex + 1, questions.length)}
         </span>
         {bestScore && (
           <span className="font-mono text-xs text-muted-foreground">
-            Bisher: {bestScore.score}/{bestScore.total}
+            {copy.previousBest(bestScore.score, bestScore.total)}
           </span>
         )}
       </div>
@@ -263,14 +277,16 @@ export function LessonQuiz({ questions, bestScore, onComplete }: LessonQuizProps
                   )}
                 >
                   <span className="shrink-0 font-mono text-xs font-bold uppercase text-muted-foreground">{option.id}</span>
-                  <span className="flex-1">{option.text}</span>
+                  <span className="min-w-0 flex-1 break-words">{option.text}</span>
                   {showExplanation && isCorrect && (
-                    <span className="sr-only">Richtige Antwort.</span>
+                    <span className="sr-only">{copy.correctAnswer}</span>
                   )}
                   {showExplanation && isCorrect && <CheckCircle2 className="h-4 w-4 shrink-0 text-brand-sand" aria-hidden="true" />}
                   {showExplanation && isSelected && !isCorrect && (
                     <>
-                      <span className="sr-only">Ihre Auswahl ist falsch.</span>
+                      <span className="sr-only">
+                        {copy.incorrectSelection}
+                      </span>
                       <XCircle className="h-4 w-4 shrink-0 text-destructive" aria-hidden="true" />
                     </>
                   )}
@@ -287,7 +303,7 @@ export function LessonQuiz({ questions, bestScore, onComplete }: LessonQuizProps
               className={cn("mt-4 border-l-2 px-4 py-3", isCorrectAnswer ? "border-brand-sand bg-brand-sand/5" : "border-destructive/50 bg-destructive/5")}
             >
               <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                {isCorrectAnswer ? "Richtig" : "Falsch"}
+                {isCorrectAnswer ? copy.correct : copy.incorrect}
               </p>
               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{question.explanation}</p>
             </m.div>
@@ -300,7 +316,9 @@ export function LessonQuiz({ questions, bestScore, onComplete }: LessonQuizProps
                 onClick={handleNext}
                 className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
               >
-                {currentIndex < questions.length - 1 ? "Weiter" : "Ergebnis"}
+                {currentIndex < questions.length - 1
+                  ? copy.next
+                  : copy.result}
                 <ArrowRight className="h-3.5 w-3.5" />
               </button>
             </m.div>

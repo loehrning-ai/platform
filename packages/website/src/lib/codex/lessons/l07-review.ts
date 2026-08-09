@@ -7,26 +7,32 @@ const lesson: CodexLesson = {
   id: "L07",
   number: 7,
   title: "Reviewing a Codex PR",
-  subtitle: "It wrote 400 lines. Three are subtly wrong. Here's the review checklist that catches them, every time.",
+  subtitle:
+    "Review the requested behavior, complete diff, tests, dependencies, and security boundaries before merge.",
   durationMinutes: 14,
   trackId: "in-the-loop",
-  hook: "Trust, but diff.",
-  keyConcepts: ["Review checklist", "Circular tests", "Security pass", "Auth bypass"],
+  hook: "The diff and logs are evidence, not approval.",
+  keyConcepts: [
+    "Review checklist",
+    "Circular tests",
+    "Security pass",
+    "Auth bypass",
+  ],
   quiz: [],
   sections: buildSections([
     {
       id: "s1",
-      title: "Different failure modes",
+      title: "Review the artifact, not the author",
       readTimeMinutes: 2,
       blocks: [
         {
           kind: "prose",
           markdown:
-            "Reviewing a Codex PR is not the same as reviewing a human PR. The failure modes are different. The biases are different. The things you'd gloss over on a teammate's patch are the exact things worth scrutinizing on an agent's.\n\nHumans make *interesting* mistakes, typos, off-by-ones, missed edge cases. Codex makes *plausible* mistakes. Code that looks right, has the right shape, passes the tests it wrote, and is subtly wrong in a way that only shows up at 3am on a Sunday.\n\nThe fix is not to trust less. It's to have a specific checklist, run it every time, and stop relying on the \"I'll know it when I see it\" reflex. Because you won't.",
+            "Apply the repository's normal review standard to Codex output. Do not lower the bar because the diff is well formatted, includes tests, or reports successful commands. Those properties make review easier; they do not establish correctness.\n\nStart from the requested behavior and trust boundaries. Then inspect the complete repository diff, including staged, unstaged, untracked, generated, configuration, and dependency changes. Read test code and command logs to determine what was actually exercised.\n\nUse a repeatable checklist so the review covers scope, behavior, failure handling, security, operations, and rollback rather than relying on surface plausibility.",
         },
         {
           kind: "pull-quote",
-          text: "Trust, but diff. Every line. Every time. It takes fifteen minutes and it's worth every one.",
+          text: "Acceptance remains a human decision based on the task, the full diff, and independently reviewable evidence.",
         },
       ],
     },
@@ -38,7 +44,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Six checks, in order. Each one catches a class of Codex-specific failure. Don't skip. Don't reorder, the early ones save you time on the late ones.",
+            "Use these six checks as a baseline and add domain-specific review for the affected system. Stop early when the task or scope is wrong; later checks cannot repair a mismatched change.",
         },
         {
           kind: "card-grid",
@@ -46,32 +52,32 @@ const lesson: CodexLesson = {
             {
               eyebrow: "check 01",
               title: "Does it do what you asked?",
-              body: "Read the PR title and description against your task spec. Codex sometimes solves a nearby problem instead of the one you posed. Catch this first, it's the most expensive failure to miss.",
+              body: "Compare observable behavior with the goal and acceptance criteria. Reject a nearby solution even when its implementation is internally consistent.",
             },
             {
               eyebrow: "check 02",
               title: "Is it the right size?",
-              body: "Skim the file list. If it touches more files than you expected, the agent did extra work. Sometimes that's fine; sometimes it's scope creep. Compare to what a careful human would touch.",
+              body: "Inspect every changed and deleted file. Require an explanation for changes outside the stated scope; do not use file count alone as a quality measure.",
             },
             {
               eyebrow: "check 03",
-              title: "Do the new tests actually test?",
-              body: 'The #1 subtle failure. Tests that mock the thing they\'re supposed to verify. Tests that assert the code ran (not that it worked). Read every new test and ask: "would this fail if the implementation were broken?"',
+              title: "Do the tests exercise the requirement?",
+              body: "Read new and modified tests. Check assertions, fixtures, mocks, negative cases, skipped paths, and whether the test fails when the relevant behavior is removed.",
             },
             {
               eyebrow: "check 04",
               title: "Are there new dependencies?",
-              body: "Search the diff for imports you don't recognize, or changes to requirements.txt/package.json. Codex is happy to pull in a new library. You should be less happy.",
+              body: "Review manifest and lockfile changes, package provenance, maintenance status, license, transitive risk, and whether an existing dependency already provides the capability.",
             },
             {
               eyebrow: "check 05",
-              title: "What did it delete?",
-              body: 'The red lines are where bugs hide. Codex occasionally deletes things it thinks are redundant, a comment that was load-bearing, a test it reads as "outdated," a fallback that\'s actually the fallback.',
+              title: "What was removed or bypassed?",
+              body: "Inspect deleted tests, validation, fallbacks, feature flags, comments that encode constraints, and error handling. Confirm each removal is required by the task.",
             },
             {
               eyebrow: "check 06",
-              title: "Does it match the house style?",
-              body: "Error handling, logging, naming, test structure. If it feels like someone else's code, that's usually a sign AGENTS.md was thin, and a signal to strengthen it for next time.",
+              title: "Does it fit the system contract?",
+              body: "Check authorization, data handling, errors, logging, concurrency, migrations, observability, rollback, naming, and repository conventions. Update AGENTS.md only when a durable rule was genuinely missing.",
             },
           ],
         },
@@ -85,7 +91,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'Here\'s a real pattern we see all the time. The spec asked for "a rate limiter on /login." The test file looks fine. Find the problem before scrolling.\n\n```\n# tests/api/test_login_rate_limit.py\n\ndef test_login_rate_limit_blocks_after_5(client, mocker):\n    mock_limiter = mocker.patch("api.auth.limiter.is_allowed")\n    mock_limiter.return_value = False\n\n    response = client.post("/login", json={...})\n\n    assert response.status_code == 429\n    mock_limiter.assert_called_once()\n```\n\nThe test passes. The test proves nothing. It mocks `is_allowed` to return `False`, then asserts that /login returns 429, which is what the *mock* made happen. The actual rate limiter could be completely broken. The test would still go green.\n\nCompare with the version that actually verifies behavior:\n\n```\n# the one that actually tests something\n\ndef test_login_blocks_at_6th_attempt(client):\n    for _ in range(5):\n        r = client.post("/login", json={...})\n        assert r.status_code == 401  # bad creds, allowed\n\n    r = client.post("/login", json={...})\n    assert r.status_code == 429  # blocked\n```',
+            'This example asks for a rate limiter on `/login`, but the test replaces the limiter decision with a mock. Identify which behavior the test actually covers.\n\n```\n# tests/api/test_login_rate_limit.py\n\ndef test_login_maps_denial_to_429(client, mocker):\n    mock_limiter = mocker.patch("api.auth.limiter.is_allowed")\n    mock_limiter.return_value = False\n\n    response = client.post("/login", json={...})\n\n    assert response.status_code == 429\n    mock_limiter.assert_called_once()\n```\n\nThis test verifies that the endpoint maps a denied limiter result to status 429. It does **not** verify counting, the threshold, key selection, storage, or reset behavior. Keep it if that mapping matters, but add a test through the real limiter boundary.\n\n```\n# exercises the configured limiter behavior\n\ndef test_login_blocks_at_6th_attempt(client):\n    for _ in range(5):\n        response = client.post("/login", json={...})\n        assert response.status_code == 401  # bad credentials, request allowed\n\n    response = client.post("/login", json={...})\n    assert response.status_code == 429  # request blocked\n```',
         },
       ],
     },
@@ -93,7 +99,13 @@ const lesson: CodexLesson = {
       id: "s4",
       title: "Spot the problems",
       readTimeMinutes: 1,
-      blocks: [{ kind: "prose", markdown: "Here's a diff. Find the issue before you scroll to the quiz." }],
+      blocks: [
+        {
+          kind: "prose",
+          markdown:
+            "Here's a diff. Find the issue before you scroll to the quiz.",
+        },
+      ],
     },
     {
       id: "s5",
@@ -103,7 +115,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "AI-generated code has a characteristic security failure mode: it solves the stated problem correctly while ignoring the implied security constraint you assumed was obvious. The agent wasn't careless, it just wasn't told. A five-minute targeted pass after the functional review catches the most common class.",
+            "Security requirements must be explicit in both the task and review. Functional tests rarely cover every trust boundary. Base the security pass on the changed data flows, privileges, dependencies, and deployment context.",
         },
         {
           kind: "card-grid",
@@ -111,29 +123,29 @@ const lesson: CodexLesson = {
             {
               eyebrow: "sec 01",
               title: "Input trust boundary",
-              body: "Trace every user-controlled value. Does it flow into a query, a file path, a shell command, or an HTML response without sanitization? Codex frequently omits validation when the spec doesn't mention it.",
+              body: "Trace untrusted values to database queries, file paths, shell commands, templates, redirects, and logs. Apply validation, parameterization, canonicalization, or output encoding appropriate to each sink.",
             },
             {
               eyebrow: "sec 02",
-              title: "Authentication bypass",
-              body: "New endpoints need auth guards. Codex often adds the endpoint correctly but forgets to apply the decorator, middleware, or policy that gates it. Grep every new route for your auth annotation.",
+              title: "Authentication and authorization",
+              body: "For every new or changed operation, verify identity, role, tenant, resource ownership, and default-deny behavior. A route-level authentication guard alone may not enforce object-level authorization.",
             },
             {
               eyebrow: "sec 03",
               title: "Secrets in source",
-              body: "Hardcoded API keys, tokens, or connection strings appear when the agent copies an example from its training context. Grep the diff for anything that looks like a credential before merging.",
+              body: "Inspect source, fixtures, logs, generated files, and configuration for credentials or sensitive values. Use the repository's secret scanner and revoke any exposed credential; deletion from the latest diff does not remove history.",
             },
             {
               eyebrow: "sec 04",
               title: "Error message leakage",
-              body: "Agents tend to return raw exception text in API responses, easy to add, looks fine in tests. An except e: return str(e) leaks stack traces, schema details, and sometimes credentials to callers.",
+              body: "Do not return raw exceptions or log sensitive payloads. Verify client-safe errors, server-side diagnostic context, stable status codes, and redaction at each logging boundary.",
             },
           ],
         },
         {
           kind: "callout",
-          title: "Concrete grep pattern:",
-          body: 'after every Codex PR, run git diff main...HEAD | grep -E "(password|secret|token|api_key)\\s*=" and grep -rn "except.*:" --include="*.py" on changed files. Two commands, thirty seconds, catches the two most common AI-specific security misses.',
+          title: "Use repository-specific security checks:",
+          body: "Run the configured secret, dependency, static-analysis, and authorization tests for the changed stack. Inspect their scope, exclusions, and output. A grep can support triage but is not a security gate.",
         },
         {
           kind: "prose",
@@ -145,10 +157,10 @@ const lesson: CodexLesson = {
           // regex scans the raw .ts source for and would otherwise flag as
           // a leaked address.
           markdown:
-            'Here\'s a before/after that shows the pattern. Spec was: "add a /debug/user endpoint." The agent completed the task correctly, but:\n\n```\n# what Codex produced, functional, insecure\n\n' +
+            'This before-and-after shows why functional output is insufficient. The request was "add a `/debug/user` endpoint," but it omitted authorization, input handling, and response-field constraints.\n\n```\n# insecure version\n\n' +
             '@app.route("/debug/user")           # no auth guard\ndef debug_user():\n    user_id = request.args.get("id")  # no validation\n    try:\n        u = db.session.query(User).get(user_id)\n        return jsonify(u.__dict__)       # exposes all columns\n    except Exception as e:\n        return str(e), 500              # leaks stack trace\n\n# corrected version, same feature, secure\n\n' +
             '@app.route("/debug/user")\n' +
-            '@require_admin                         # auth guard restored\ndef debug_user():\n    user_id = int(request.args.get("id", 0))  # validated\n    try:\n        u = db.session.query(User).get(user_id)\n        if not u: return jsonify({"error": "not found"}), 404\n        return jsonify(u.to_safe_dict())  # explicit field allowlist\n    except ValueError:\n        return jsonify({"error": "invalid id"}), 400  # safe message\n```',
+            '@require_admin                         # explicit authorization\ndef debug_user():\n    try:\n        user_id = int(request.args["id"])\n    except (KeyError, ValueError):\n        return jsonify({"error": "invalid id"}), 400\n\n    user = db.session.get(User, user_id)\n    if user is None:\n        return jsonify({"error": "not found"}), 404\n    return jsonify(user.to_safe_dict())  # explicit field allowlist\n```',
         },
       ],
     },
@@ -156,7 +168,9 @@ const lesson: CodexLesson = {
       id: "s6",
       title: "Quick check",
       readTimeMinutes: 1,
-      blocks: [{ kind: "prose", markdown: "Two questions on reviewing Codex PRs." }],
+      blocks: [
+        { kind: "prose", markdown: "Two questions on reviewing Codex PRs." },
+      ],
     },
   ]),
   widgets: [
@@ -166,7 +180,7 @@ const lesson: CodexLesson = {
       courseSlug: "codex",
       props: {
         title: 'PR: "add caching to /users/:id", what\'s wrong?',
-        file: "api/users.py · +18 / −3",
+        file: "api/users.py",
         lines: [
           { type: "context", text: "from flask import Blueprint, jsonify" },
           { type: "add", text: "from functools import lru_cache" },
@@ -175,17 +189,26 @@ const lesson: CodexLesson = {
           { type: "context", text: "" },
           { type: "add", text: "@lru_cache(maxsize=1000)" },
           { type: "add", text: "def _get_user_cached(user_id: int):" },
-          { type: "add", text: "    return db.session.query(User).filter(User.id == user_id).first()" },
+          {
+            type: "add",
+            text: "    return db.session.query(User).filter(User.id == user_id).first()",
+          },
           { type: "add", text: "" },
           { type: "context", text: '@users_bp.route("/users/<int:user_id>")' },
           { type: "context", text: "def get_user(user_id):" },
-          { type: "remove", text: "    user = db.session.query(User).filter(User.id == user_id).first()" },
+          {
+            type: "remove",
+            text: "    user = db.session.query(User).filter(User.id == user_id).first()",
+          },
           { type: "add", text: "    user = _get_user_cached(user_id)" },
           { type: "context", text: "    if not user:" },
-          { type: "context", text: '        return jsonify({"error": "not found"}), 404' },
+          {
+            type: "context",
+            text: '        return jsonify({"error": "not found"}), 404',
+          },
           { type: "context", text: "    return jsonify(user.to_dict())" },
         ],
-        note: "The bug: lru_cache is process-local and never invalidated. When a user updates their profile, the next GET serves stale data until the server restarts. The test probably passed (\"data is returned\") but the feature is broken. This is why check 06 (match house style) matters: your repo probably uses Redis for caching, with a TTL and invalidation hooks. Codex reached for the simplest Python-standard answer. Reviewable in 30 seconds if you're looking for it.",
+        note: "The cache is process-local and has no invalidation path. A profile update can leave stale objects in each worker until eviction or restart. Review the repository's cache ownership, invalidation, process model, and object-lifecycle rules before accepting this change.",
       },
     },
     {
@@ -198,7 +221,7 @@ const lesson: CodexLesson = {
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
         question:
-          "Codex opens a PR with 18 new passing tests. You're reviewing. What do you do FIRST with those tests?",
+          "Codex returns a diff with new passing tests. What should the reviewer do first with those tests?",
         options: [
           "Trust them, they're green, so they work.",
           'Read each one and ask: "would this test fail if the implementation were wrong?" If the answer isn\'t obviously yes, the test proves nothing.',
@@ -207,7 +230,7 @@ const lesson: CodexLesson = {
         ],
         correct: 1,
         explanation:
-          "The #1 subtle Codex failure is tests that verify mocks, not behavior. A green suite tells you something ran; it doesn't tell you it worked. For each test: remove the implementation mentally, ask \"would this fail?\" If no, the test is a placebo.",
+          "A passing suite reports that its assertions completed in one environment. Read each test to determine which behavior it exercises, then confirm the relevant assertion fails when that behavior is absent or wrong.",
       },
     },
     {
@@ -219,16 +242,17 @@ const lesson: CodexLesson = {
         cpId: "q2",
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
-        question: "The PR adds \"from some-new-lib import magic\" at the top. Your reaction?",
+        question:
+          'The PR adds "from some-new-lib import magic" at the top. Your reaction?',
         options: [
-          "Cool, new dep.",
-          "Flag it. Codex will happily pull in a library. You want to know what it is, whether it's maintained, and whether there's an in-house alternative before you ship it.",
+          "Accept it because the import compiles.",
+          "Review why it is needed, its source and maintenance status, license and security posture, transitive impact, and existing alternatives before accepting it.",
           "Tell Codex to remove it without reading what it does.",
           "Run npm audit and move on.",
         ],
         correct: 1,
         explanation:
-          "New dependencies are the slowest-moving security and maintenance cost in your repo. Codex doesn't feel that weight. You do. Check 04 exists specifically for this, every unfamiliar import gets a 30-second \"is this the right call\" review.",
+          "A dependency changes the supply-chain and maintenance boundary. Review the manifest and lockfile, verify provenance, and require a concrete reason for adding it.",
       },
     },
   ],

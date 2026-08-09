@@ -1,70 +1,78 @@
 // Ported from data-infrastructure/lessons/12-interview-playbook.html.
 import type { DataInfraLesson } from "../types";
 import { checkpointLessonId } from "../types";
-import { DATA_INFRA_QUIZ_COPY, DATA_INFRA_FLASHCARDS_COPY } from "../widget-copy";
+import {
+  DATA_INFRA_QUIZ_COPY,
+  DATA_INFRA_FLASHCARDS_COPY,
+} from "../widget-copy";
 
 const LID = checkpointLessonId("interview-playbook");
 
 const lesson: DataInfraLesson = {
   id: "interview-playbook",
   number: 12,
-  title: "The IC5 Interview, Live",
-  subtitle: "Design a real-time seller analytics platform · 45 min",
+  title: "System Design Review",
+  subtitle: "A seller analytics scenario with explicit assumptions",
   durationMinutes: 20,
   trackId: "scale",
-  hook: "A complete IC5 system design walkthrough, clarification, math, design, deep dives, scoring.",
-  keyConcepts: ["Five-act interview structure", "Back-of-envelope estimation", "Trade-off literacy", "Hot-partition follow-up"],
+  hook: "Turn an ambiguous prompt into a reviewable design with estimates, failure boundaries, and stated trade-offs.",
+  keyConcepts: [
+    "Review structure",
+    "Back-of-envelope estimation",
+    "Trade-off analysis",
+    "Skew handling",
+  ],
   quiz: [],
   sections: [
     {
       id: "s1",
-      title: "Five-act structure",
+      title: "A bounded review loop",
       readTimeMinutes: 3,
       content:
-        "Every data system design interview, regardless of company, is the same five acts. Use this as a template. If the interviewer doesn't lead you through them, lead yourself.\n\n1. **Clarify (5 min).** Don't draw anything yet. Ask what the system is for, who reads the output, what scale, what freshness, what consistency. Write the answers on the board, they're the spec. The three numbers to always extract: writes/sec, reads/sec, freshness target.\n2. **Skeleton (5 min).** Draw the six layers from lesson 1. Mark which layers the question touches. Identify the dominant constraint (usually one of: latency, scale, correctness, or cost).\n3. **Deep dive (20 min).** Pick the hardest 1-2 layers and design them in detail. Schema, partition key, processing topology, SLO targets. This is where the interview is decided. For storage: name the partition key and explain your choice. For streaming: name the watermark strategy. For serving: explain what's on the read path and what's pre-computed.\n4. **Failure modes (10 min).** What breaks? Late data, hot partitions, schema drift, backfills, region failover. Name the monitoring signal for each. The interviewer will probe; surface it yourself first.\n5. **Trade-offs & next steps (5 min).** Recap what you optimized for. Name what you traded away (consistency? cost? simplicity?). Mention what you'd do next quarter, multi-region, GDPR compliance, cost optimization, to show you see past the 45-minute window.\n\nThe single most common mistake: starting to design before clarifying. You'll draw an expensive real-time system when a nightly batch would have been fine. Two minutes of clarifying questions can save twenty minutes of design rework in a 45-minute interview.",
+        "A design review needs structure, but the order and time allocation depend on the prompt. Use this loop and spend more time where uncertainty or risk is highest:\n\n1. **Clarify.** Identify consumers, decisions, peak write and read demand, freshness, correctness, privacy, retention, availability, and cost constraints. Record assumptions that remain unresolved.\n2. **Frame.** Draw only the boundaries involved in the request. State the dominant risks and define the read-path contract before choosing products.\n3. **Estimate and design.** Calculate order-of-magnitude throughput, storage, and concurrency. Select partitioning, processing, storage, and serving mechanisms from those requirements.\n4. **Test failure modes.** Examine late and duplicate data, skew, schema changes, backfills, dependency loss, access isolation, and recovery. Pair each risk with detection and recovery evidence.\n5. **Review trade-offs.** Restate what the design optimizes, what it does not guarantee, and which decisions require a benchmark or prototype.\n\nClarification prevents a low-frequency reporting need from being turned into an unnecessary streaming system. Estimates prevent product selection from preceding the workload.",
       keyTakeaway:
-        "Clarify before you draw, two minutes of requirements questions saves twenty minutes of design rework in a 45-minute interview.",
+        "Clarify the consumer contract and quantify the workload before selecting components.",
     },
     {
       id: "s2",
-      title: "Real interview",
+      title: "Worked scenario",
       readTimeMinutes: 3,
       content:
-        "Click through the 45-minute interview walkthrough below. The prompt is the kind you'll actually get: design real-time analytics for a marketplace, where sellers watch live order, revenue, and inventory dashboards. The walkthrough traces the whole arc, mirroring the prompt back, pinning scale and freshness, back-of-envelope math, sketching the read-path contract first, picking the partition key, the CDC → Kafka → Flink pipeline, the dual-sink storage design, the hot read path, naming the consistency trade-off explicitly, handling a hot seller partition, calling out what's deliberately out of scope, and the operational closing move. Each step pairs the concrete move with the meta-commentary on why it works.",
+        "The interactive walkthrough uses a hypothetical marketplace in which sellers view order and revenue aggregates. All traffic, size, lateness, and freshness values are exercise inputs, not benchmark results or recommended defaults. The design uses named products to make trade-offs concrete; a production decision still requires current compatibility checks, security review, cost modeling, and representative load tests.",
     },
     {
       id: "s3",
-      title: "Senior phrases",
+      title: "Precise review language",
       readTimeMinutes: 2,
       content:
-        "These are not magic words. They're the verbal markers of someone who's actually built the systems before. Use them when they're true:\n\n- *\"Before we design this, what does the consumer of the output actually need?\"*, Frames the problem in terms of read patterns, not write patterns.\n- *\"What's the cost of this being one minute late versus one hour late?\"*, Surfaces the freshness SLO instead of assuming it.\n- *\"Let me size this before I pick a tool.\"*, 1B events/day at 1KB each is 12KB/sec average, 120KB/sec peak. That's tiny. Many problems are smaller than they look once you do the math.\n- *\"I'd default to Iceberg + dbt + Airflow unless we have a specific reason not to.\"*, Names a sensible boring default. Boring defaults are senior.\n- *\"The risk here is X. The mitigation is Y. The accepted residual risk is Z.\"*, Trade-off literacy. Also, naming residual risk explicitly is a thing only senior engineers do.\n- *\"I'd want to see a prototype before committing to that.\"*, Refusing to over-design when uncertainty is high.",
+        'Use language that exposes assumptions and evidence:\n\n- *"What decision does the consumer make from this output, and how stale may it be?"* defines the read contract.\n- *"Is the freshness target measured from event creation, source commit, or ingestion?"* prevents an ambiguous SLI.\n- *"Let me estimate before selecting a component."* One billion 1 KB events represent about 1 TB per day and 11.6 MB/s on average before replication, encoding, indexes, and protocol overhead. Peak demand needs a separate assumption.\n- *"This component is a candidate because it meets these requirements; I would verify connector semantics and benchmark this path."* separates a design hypothesis from proof.\n- *"The risk is X, the mitigation is Y, and Z remains unmitigated."* makes residual risk reviewable.\n- *"This guarantee holds only between these boundaries."* prevents local processing semantics from becoming an end-to-end claim.',
     },
     {
       id: "s4",
-      title: "Junior phrases",
+      title: "Under-specified language",
       readTimeMinutes: 2,
       content:
-        "- *\"We'd use Kafka.\"* (without saying why)\n- *\"I'd just use machine learning to handle that.\"*\n- *\"It needs to be exactly-once.\"* (when the sink is an HTTP API)\n- *\"I'd put it all in Snowflake.\"* (when scale is unstated)\n- *\"Let me just draw it.\"* (without clarifying first)\n- *\"That edge case is unlikely.\"* (when asked about a failure mode)\n\nNone of these are wrong, exactly. They're all under-specified, they skip the reasoning step that an IC5 is hired for. The fix is the same in all cases: name the assumption you're making out loud, and explain when you'd revisit it.",
+        '- *"We would use Kafka."* Which requirement needs a durable partitioned log?\n- *"Machine learning will detect it."* What signal, training data, error cost, and fallback are available?\n- *"It must be exactly-once."* Which state transition and sink boundary must avoid duplicate effects?\n- *"Put everything in one warehouse."* What workload, isolation, and recovery requirements support that choice?\n- *"That failure is unlikely."* What evidence supports the probability, and what is its impact?\n\nEach statement skips a decision boundary. Repair it by naming the requirement, assumption, evidence, and condition that would change the design.',
     },
     {
       id: "s5",
       title: "Quick check",
       readTimeMinutes: 1,
-      content: "Two IC5-level scenario questions.",
+      content: "Two questions on requirement discovery and skew handling.",
     },
     {
       id: "s6",
-      title: "30 things",
+      title: "Course review",
       readTimeMinutes: 3,
       content:
-        "Quick recall. If any of these isn't immediate, go back to the lesson and re-read.\n\n- **Six layers**, Source → Log → Processing → Storage → Serving → Consumption.\n- **CAP**, During a partition, you pick C or A; P is not optional. \"CA\" means a single point of failure.\n- **PACELC**, In normal operation you pick L or C. Cassandra → PA/EL. Spanner → PC/EC.\n- **Star schema**, A fact table (foreign keys + numeric measures) surrounded by dimension tables holding descriptive context.\n- **SCD Type 2**, Insert a new dim row with valid_from/valid_to instead of overwriting; the surrogate key changes, the natural key stays.\n- **Parquet anatomy**, File → row groups → column chunks → pages; the footer holds schema plus per-column-chunk min/max stats.\n- **Predicate pushdown**, Min/max stats per row group let the engine skip entire groups that can't match the filter.\n- **Dictionary encoding**, Replaces low-cardinality values with integer indices into a dictionary; massive compression on columns like country or status.\n- **Iceberg metadata chain**, catalog → metadata.json → manifest list → manifests → data files.\n- **CoW vs MoR**, Copy-on-write suits read-heavy, infrequent updates; merge-on-read suits write-heavy CDC streams. Hudi defaults to MoR; Iceberg/Delta default to CoW.\n- **Time travel**, Free because old snapshots' files survive until VACUUM; reading \"as of timestamp\" just resolves the snapshot active then.\n- **Partition rule of thumb**, Partition by the dominant filter column, aim for ≥128MB per partition file, avoid high-cardinality keys.\n- **Z-order**, Use it when 2-4 columns are filtered with similar frequency; it interleaves bits so min/max pruning works across all of them.\n- **Small file problem**, Cured by compaction, run periodically, targeting roughly 512MB files.\n- **ELT vs ETL**, ELT won because cheap warehouse compute plus raw kept forever makes bug-fix replay free, and tooling democratized to anyone who knows SQL.\n- **Idempotent**, Three ways: MERGE on key, windowed DELETE+INSERT in a transaction, or INSERT ... ON CONFLICT DO NOTHING with a stable event_id.\n- **Kafka partition**, Caps consumer-group parallelism; N partitions means at most N working consumers, so plan high.\n- **Event time vs processing time**, Almost always use event time; processing-time aggregations look right but produce wrong business answers when sources are delayed.\n- **Watermark**, A promise that you've seen all events with event_time ≤ T; crossing T closes the window for emission.\n- **Window types**, Tumbling (fixed, non-overlapping), hopping (fixed, overlapping), session (gap-based), global (custom trigger).\n- **CDC**, Taps the WAL/binlog/oplog the database already writes, capturing inserts, updates, and deletes, including deletes polling can't see.\n- **Lambda vs Kappa**, Kappa won because one codebase is enough once streaming is robust; \"batch\" is just a replay from offset zero.\n- **Outbox pattern**, Used when an app needs to publish a business event atomically with a DB write: write to an outbox table inside the transaction, then let CDC stream it.\n- **Exactly-once truth**, Really at-least-once delivery plus idempotent processing; the system can't prevent duplicate delivery, only duplicate effect.\n- **Backfill design**, Two checks: the same window run twice produces the same output, and adjacent windows run in parallel match the serial result.\n- **Schema compatibility**, Backward: new schema reads old data. Forward: old schema reads new data. Full: both, the default.\n- **Three SLO numbers**, Freshness (how recent), completeness (any missing rows), accuracy (values right).\n- **Lineage**, Auto-routes alerts to the upstream owner of a problem instead of the downstream consumer, saving 30+ minutes per incident.\n- **dbt test families**, Schema tests (registry-enforced) and constraint tests (declarative SQL) are free, run them on every build.\n- **IC5 default stack**, Iceberg on S3 + Trino/Snowflake + dbt + Airflow + Kafka for streams + Debezium for CDC; deviate only with reason.",
+        "Use these statements as review prompts, not universal rules.\n\n- **Reference layers**, Source → Log → Processing → Storage → Serving → Consumption is one way to locate boundaries; omit layers the workload does not need.\n- **CAP**, Under a network partition, a distributed register cannot provide both linearizable responses and a response from every non-failing node. State the model and failure boundary.\n- **PACELC**, Extends the discussion to normal-operation latency and consistency trade-offs; classify a concrete operation, not a vendor as a whole.\n- **Star schema**, A fact table records events or measurements at a declared grain; dimensions provide descriptive context.\n- **SCD Type 2**, Preserves selected attribute history by adding validity-bounded dimension rows. Surrogate-key behavior depends on the model.\n- **Parquet anatomy**, A file contains row groups, column chunks, and pages; metadata can support selective reads.\n- **Predicate pruning**, Statistics can skip regions only when the predicate, metadata, and writer layout make that safe.\n- **Dictionary encoding**, Replaces repeated values with dictionary references when the writer decides the encoding is useful.\n- **Table metadata**, A table format coordinates snapshots and files through catalog and metadata structures whose details vary by format and version.\n- **Copy-on-write and merge-on-read**, Different update/read trade-offs whose cost depends on engine support, workload, and maintenance.\n- **Time travel**, Retained snapshots enable historical reads while consuming storage and requiring explicit retention and access policy.\n- **Partitioning**, Choose transforms from measured filters, file distribution, update patterns, and engine behavior; validate resulting file sizes.\n- **Clustering**, Can improve data skipping for selected predicates, with rewrite and ingestion cost.\n- **Small files**, Increase metadata and planning overhead; compaction policy should follow observed workload and write behavior.\n- **ETL and ELT**, Place transformations where security, governance, latency, replay, and compute constraints support them.\n- **Idempotence**, Repeating a defined operation has no additional effect; `MERGE` or conflict handling achieves this only with stable keys and correct transaction semantics.\n- **Kafka partitions**, Bound active consumer parallelism within a consumer group for a topic and preserve order only inside a partition. Capacity and ordering drive the count.\n- **Event and processing time**, Choose the clock that matches the business question; some operational use cases intentionally use processing time.\n- **Watermark**, A progress policy used to decide when event-time results may be emitted or revised; it is not proof that all earlier events arrived.\n- **Windows**, Tumbling, hopping, session, and custom windows encode different grouping rules and state costs.\n- **CDC**, Reads database change records subject to connector, source, snapshot, retention, and ordering behavior. It imposes source and operational cost.\n- **Batch and streaming architectures**, One or multiple processing paths can be valid; compare correctness, replay, latency, and operating complexity.\n- **Outbox pattern**, Commits an application state change and an outbox row together, then publishes separately. Delivery and sink effects still need handling.\n- **Processing guarantees**, State source replay, processor state, and sink commit guarantees separately. End-to-end duplicate effects require cooperation across every boundary.\n- **Backfills**, Pin input and code versions, isolate or coordinate live writes, make output replacement deterministic, and define validation and rollback.\n- **Schema compatibility**, Backward, forward, and full compatibility are defined relative to reader and writer versions; the appropriate policy depends on deployment order.\n- **Data reliability**, Freshness, completeness, and accuracy need workload-specific SLIs, targets, owners, and responses.\n- **Lineage**, Provides dependency evidence for impact analysis and triage; coverage and causality must be verified.\n- **Data tests**, Schema, constraint, anomaly, and reconciliation checks have different coverage and execution cost.\n- **Stack selection**, Choose components from workload, team, security, interoperability, recovery, and cost evidence. There is no course-wide default stack.",
     },
     {
       id: "s7",
-      title: "Last move",
+      title: "Operational close",
       readTimeMinutes: 1,
       content:
-        "At the end of the interview, when they ask \"any questions for us?\", ask \"what's the data quality story like here?\" and \"how do you handle backfills today?\"\n\nYou'll get a real answer that tells you whether you'd actually want the job. And the interviewer will note that you cared about the operational reality, not the architecture diagram.\n\nThat's the whole course. Now go interview.",
+        "Close the review with the unresolved operating questions: who owns data-quality incidents, how backfills are authorized and isolated, which recovery objectives have been exercised, and which guarantees are measured in production.\n\nA design is incomplete until its ownership, evidence, failure response, and residual risks are explicit.",
     },
   ],
   widgets: [
@@ -77,16 +85,16 @@ const lesson: DataInfraLesson = {
         title: "The clarification move",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          "The prompt is: \"Design a data pipeline for fraud detection.\" Before drawing anything, which three numbers must you extract first?",
+          'The prompt is: "Design a data pipeline for fraud detection." Before drawing anything, which three numbers must you extract first?',
         options: [
-          "\"Which cloud provider?\" \"Do you use Kafka already?\" \"How big is the team?\"",
+          '"Which cloud provider?" "Do you use Kafka already?" "How big is the team?"',
           "Writes/sec (transaction volume at peak), reads/sec or latency budget for the fraud decision, and freshness target (realtime inference vs. nightly batch scoring). These define the architecture.",
-          "\"Do you want batch or streaming?\", let them decide the design for you.",
-          "\"What's the budget?\" and \"How many engineers do we have?\"",
+          '"Do you want batch or streaming?", let them decide the design for you.',
+          '"What\'s the budget?" and "How many engineers do we have?"',
         ],
         correct: 1,
         explanation:
-          "Without the three numbers, writes/sec, reads/sec or decision latency, freshness, every architectural choice is a guess. 100 transactions/sec at \"decisions must be synchronous and <200ms\" forces a very different design than 10,000/sec with \"flag and review within 1 hour.\" The interview budget is 45 minutes; spending 5 extracting requirements saves 20 minutes of designing the wrong thing.",
+          "Peak write demand, read or decision latency, and freshness constrain the architecture. They are not sufficient by themselves: correctness, privacy, retention, availability, and recovery requirements also need to be stated before the design is accepted.",
       },
     },
     {
@@ -101,13 +109,13 @@ const lesson: DataInfraLesson = {
           "Your Kafka topic for orders is partitioned by seller_id. One seller drives 40% of all traffic on Black Friday. What exactly breaks, and what is the IC5 fix?",
         options: [
           "Nothing breaks, Kafka handles it automatically.",
-          "That partition's consumer thread becomes the bottleneck. Fix: repartition entirely by order_id for even spread. Downstream, re-key to seller_id before the windowed aggregation.",
+          "That partition becomes the bottleneck. Use a controlled sub-key such as (seller_id, bucket) to spread the hot seller, pre-aggregate per bucket, then re-key to seller_id for the final aggregation.",
           "Kafka will rebalance partitions automatically to spread the load.",
           "Add more brokers and the partition will split.",
         ],
         correct: 1,
         explanation:
-          "Kafka partitions are the unit of parallelism, one consumer thread per partition. A hot partition makes that one thread the bottleneck for 40% of your throughput. Kafka does NOT rebalance contents; adding brokers moves the partition but not the skew. The fix is two-level keying: hash on (seller_id, order_id % N) to spread across N×more partitions for throughput, then re-key to seller_id before the aggregation stage. This is the canonical hot-partition pattern and shows up in nearly every IC5 streaming interview.",
+          "A consumer group cannot process one partition with multiple active consumers at once, so skew can limit throughput even when other partitions are idle. A controlled sub-key spreads work but adds a second aggregation stage and changes ordering. Select the bucket count from measured skew and capacity, then test recovery and re-keying behavior.",
       },
     },
     {
@@ -119,36 +127,156 @@ const lesson: DataInfraLesson = {
         title: "Flashcards",
         copy: DATA_INFRA_FLASHCARDS_COPY,
         cards: [
-          { term: "Six layers", q: "In order", a: "Source → Log → Processing → Storage → Serving → Consumption." },
-          { term: "CAP", q: "During a partition…", a: "You pick C or A. P is not optional. \"CA\" means you have a single point of failure." },
-          { term: "PACELC", q: "In normal operation…", a: "You pick L or C. Latency vs Consistency. Cassandra → PA/EL. Spanner → PC/EC." },
-          { term: "Star schema", q: "What's in the middle?", a: "A fact table, foreign keys + numeric measures. Surrounding dimension tables hold descriptive context." },
-          { term: "SCD Type 2", q: "How preserve history?", a: "Insert new dim row with valid_from/valid_to instead of overwriting. Surrogate key changes; natural key stays." },
-          { term: "Parquet anatomy", q: "Top-down", a: "File → row groups → column chunks → pages. Footer holds schema + per-column-chunk min/max stats." },
-          { term: "Predicate pushdown", q: "How does it skip work?", a: "Min/max stats per row group. Query amount > 1000, row group max amount = 50 → entire group skipped." },
-          { term: "Dictionary encoding", q: "What does it do?", a: "Replace low-cardinality values with int indices into a dictionary. Massive compression on string columns like country, status." },
-          { term: "Iceberg metadata chain", q: "4 levels", a: "catalog → metadata.json → manifest list → manifests → data files." },
-          { term: "CoW vs MoR", q: "When each?", a: "CoW: read-heavy, infrequent updates. MoR: write-heavy CDC streams. Hudi is MoR-default; Iceberg/Delta are CoW-default." },
-          { term: "Time travel", q: "How is it free?", a: "Old snapshots' files survive until VACUUM. Reading \"as of timestamp\" just resolves the snapshot active then." },
-          { term: "Partition rule of thumb", q: "Pick by what?", a: "The dominant filter column. Aim for ≥128MB per partition file. Avoid high-cardinality keys." },
-          { term: "Z-order", q: "When use it?", a: "When 2-4 columns are filtered with similar frequency. Interleaves bits so min/max prunes well across all of them." },
-          { term: "Small file problem", q: "Cure?", a: "Compaction. Run periodically; aim for ~512MB target file size." },
-          { term: "ELT vs ETL", q: "Why ELT won", a: "Cheap warehouse compute + raw kept forever = bug-fix replay is free. Tooling democratized to anyone with SQL." },
-          { term: "Idempotent", q: "Three ways to achieve", a: "MERGE on key; windowed DELETE+INSERT in a tx; INSERT ... ON CONFLICT DO NOTHING with stable event_id." },
-          { term: "Kafka partition", q: "What does it cap?", a: "Consumer-group parallelism. N partitions = max N working consumers. Plan high." },
-          { term: "Event time vs processing time", q: "Which to use?", a: "Almost always event time. Processing-time aggregations look right but produce wrong business answers when sources are delayed." },
-          { term: "Watermark", q: "What does it promise?", a: "\"I think I've seen all events with event_time ≤ T.\" Crossing T closes the window for emission." },
-          { term: "Window types", q: "Four kinds", a: "Tumbling (fixed non-overlapping), hopping (fixed overlapping), session (gap-based), global (custom trigger)." },
-          { term: "CDC", q: "How does it tap source?", a: "Reads the WAL/binlog/oplog the DB already writes. Captures inserts, updates, deletes, including deletes polling can't see." },
-          { term: "Lambda vs Kappa", q: "Why Kappa won", a: "One codebase. Streaming is robust enough to be source of truth; \"batch\" is just replay from offset zero." },
-          { term: "Outbox pattern", q: "When?", a: "When app needs to publish a business event atomically with a DB write. Write to outbox table inside the tx; CDC streams it." },
-          { term: "Exactly-once truth", q: "What is it really?", a: "At-least-once delivery + idempotent processing. The system can't prevent duplicate delivery, only duplicate effect." },
-          { term: "Backfill design", q: "Two checks", a: "(1) Same window run twice = same output. (2) Adjacent windows in parallel = same as serial." },
-          { term: "Schema compatibility", q: "Backward / forward / full", a: "Backward: new schema reads old data. Forward: old reads new. Full: both. Default to FULL." },
-          { term: "Three SLO numbers", q: "For data?", a: "Freshness (how recent), completeness (any missing rows), accuracy (values right)." },
-          { term: "Lineage", q: "Why it's essential", a: "Auto-routes alerts to the upstream owner of a problem, not the downstream consumer. Saves 30+ min per incident." },
-          { term: "dbt test families", q: "Which two are free?", a: "Schema tests (registry-enforced) + constraint tests (declarative SQL). Run on every build, no excuse not to." },
-          { term: "IC5 default stack", q: "Boring is senior", a: "Iceberg on S3 + Trino/Snowflake + dbt + Airflow + Kafka for streams + Debezium for CDC. Deviate only with reason." },
+          {
+            term: "Six layers",
+            q: "In order",
+            a: "Source → Log → Processing → Storage → Serving → Consumption.",
+          },
+          {
+            term: "CAP",
+            q: "During a partition…",
+            a: "For a defined distributed register, linearizable responses and a response from every non-failing node cannot both be guaranteed. State the model and boundary.",
+          },
+          {
+            term: "PACELC",
+            q: "In normal operation…",
+            a: "It highlights latency and consistency trade-offs outside partitions. Classify a concrete operation, not an entire vendor product.",
+          },
+          {
+            term: "Star schema",
+            q: "What's in the middle?",
+            a: "A fact table, foreign keys + numeric measures. Surrounding dimension tables hold descriptive context.",
+          },
+          {
+            term: "SCD Type 2",
+            q: "How preserve history?",
+            a: "Insert new dim row with valid_from/valid_to instead of overwriting. Surrogate key changes; natural key stays.",
+          },
+          {
+            term: "Parquet anatomy",
+            q: "Top-down",
+            a: "File → row groups → column chunks → pages. Footer holds schema + per-column-chunk min/max stats.",
+          },
+          {
+            term: "Predicate pushdown",
+            q: "How does it skip work?",
+            a: "Min/max stats per row group. Query amount > 1000, row group max amount = 50 → entire group skipped.",
+          },
+          {
+            term: "Dictionary encoding",
+            q: "What does it do?",
+            a: "Replaces repeated values with dictionary references when the writer determines the encoding is useful.",
+          },
+          {
+            term: "Iceberg metadata chain",
+            q: "4 levels",
+            a: "catalog → metadata.json → manifest list → manifests → data files.",
+          },
+          {
+            term: "CoW vs MoR",
+            q: "When each?",
+            a: "They trade update work against read-time merging. Engine support, workload, and maintenance determine the result.",
+          },
+          {
+            term: "Time travel",
+            q: "What enables it?",
+            a: "Retained snapshots and referenced files enable historical reads, with storage, privacy, and retention consequences.",
+          },
+          {
+            term: "Partitioning",
+            q: "Pick by what?",
+            a: "Measured filters, data distribution, update patterns, and engine behavior. Validate file sizes and pruning with representative data.",
+          },
+          {
+            term: "Clustering",
+            q: "When use it?",
+            a: "When selected predicates benefit enough from locality to justify rewrite and ingestion cost. Verify with query evidence.",
+          },
+          {
+            term: "Small file problem",
+            q: "Response?",
+            a: "Measure planning and metadata overhead, then set compaction policy and file targets for the actual engine and workload.",
+          },
+          {
+            term: "ELT vs ETL",
+            q: "How to choose",
+            a: "Place transformations where governance, latency, replay, security, and compute constraints support them.",
+          },
+          {
+            term: "Idempotent",
+            q: "What must hold?",
+            a: "Repeating a defined operation has no additional effect. Stable keys, deterministic logic, and correct transaction semantics are required.",
+          },
+          {
+            term: "Kafka partition",
+            q: "What does it bound?",
+            a: "Active consumer parallelism within a group and the scope of ordering. Choose counts from capacity and ordering needs.",
+          },
+          {
+            term: "Event time vs processing time",
+            q: "Which to use?",
+            a: "Use the clock that answers the business question. Event time handles source-time windows; processing time can fit operational arrival-time questions.",
+          },
+          {
+            term: "Watermark",
+            q: "What does it represent?",
+            a: "A progress policy used to emit or revise event-time results. It is not proof that all earlier events arrived.",
+          },
+          {
+            term: "Window types",
+            q: "Four kinds",
+            a: "Tumbling (fixed non-overlapping), hopping (fixed overlapping), session (gap-based), global (custom trigger).",
+          },
+          {
+            term: "CDC",
+            q: "What does it read?",
+            a: "Database change records, subject to connector, snapshot, source-log retention, ordering, and source-load behavior.",
+          },
+          {
+            term: "Batch vs streaming",
+            q: "Which architecture wins?",
+            a: "Neither universally. Compare latency, replay, correctness, operating complexity, and recovery requirements.",
+          },
+          {
+            term: "Outbox pattern",
+            q: "When?",
+            a: "When an application must commit state and an intent-to-publish row together. Publication and sink effects still need delivery handling.",
+          },
+          {
+            term: "Processing guarantees",
+            q: "How to state them",
+            a: "Describe replay, processor state, and sink commit boundaries separately. End-to-end duplicate effects require cooperation across all of them.",
+          },
+          {
+            term: "Backfill design",
+            q: "What must be controlled?",
+            a: "Pin inputs and code, coordinate live writes, make replacement deterministic, and define validation plus rollback.",
+          },
+          {
+            term: "Schema compatibility",
+            q: "Backward / forward / full",
+            a: "Define compatibility relative to reader and writer versions. Select policy from deployment order and consumer needs.",
+          },
+          {
+            term: "Three SLO numbers",
+            q: "For data?",
+            a: "Freshness (how recent), completeness (any missing rows), accuracy (values right).",
+          },
+          {
+            term: "Lineage",
+            q: "What does it provide?",
+            a: "Dependency evidence for impact analysis and triage. Coverage and causality still require verification.",
+          },
+          {
+            term: "Data test families",
+            q: "How do they differ?",
+            a: "Schema, constraint, anomaly, and reconciliation checks cover different risks and have different execution costs.",
+          },
+          {
+            term: "Stack selection",
+            q: "What drives it?",
+            a: "Workload, team, security, interoperability, recovery, and cost evidence. There is no course-wide default stack.",
+          },
         ],
       },
     },
@@ -157,13 +285,7 @@ const lesson: DataInfraLesson = {
 
 export default lesson;
 
-/**
- * The 12-entry interview walkthrough, ported verbatim from source's inline
- * `D.InterviewMove(..., { moves: [...] })` call (lesson 12's own <script>
- * block) — trusted static content, never user input, so `body`/`note` are
- * rendered as raw HTML by the InterviewMove widget (real formatting tags
- * like <b>/<code>/<p> in the source, not sanitizable plain text).
- */
+/** A fixed, hypothetical review exercise. Values are inputs, not benchmarks. */
 export interface InterviewMoveItem {
   readonly tag: string;
   readonly title: string;
@@ -174,74 +296,74 @@ export interface InterviewMoveItem {
 export const INTERVIEW_MOVES: readonly InterviewMoveItem[] = [
   {
     tag: "clarify",
-    title: "00:00, Mirror the prompt back",
-    body: '<p>Prompt: <em>"Design real-time analytics for a marketplace, sellers see live order/revenue/inventory dashboards."</em></p><p>I say back: <b>"So we need second-fresh dashboards for each seller, scoped to their own data, over an event stream of orders. Tell me if I have the shape right."</b></p>',
-    note: "This is not throat-clearing. It anchors the contract and gives the interviewer a chance to correct you cheaply, before any architecture.",
+    title: "Restate the problem without adding requirements",
+    body: '<p>Prompt: <em>"Design analytics for a marketplace where sellers view order and revenue dashboards."</em></p><p>Restatement: <b>"The system publishes seller-scoped aggregates from order changes. Freshness, traffic, retention, authorization, and consistency are still open requirements."</b></p>',
+    note: "A neutral restatement confirms scope without silently turning an unspecified dashboard into a real-time system.",
   },
   {
     tag: "scope",
-    title: "02:00, Pin scale and freshness",
-    body: '<p>Three numbers I always extract: <b>writes/sec, reads/sec, freshness target</b>.</p><p>"How many orders per second at peak?" → ~10k/s. "How many sellers loading dashboards?" → 50k DAU, ~500 concurrent. "How fresh?" → "feels live" → <b>under 5 seconds</b>.</p>',
-    note: "Without these, every later choice is a guess. With them, choices defend themselves.",
+    title: "Record the exercise assumptions",
+    body: "<p>Assume <b>10,000 order changes per second at peak</b>, <b>500 concurrent dashboard sessions</b>, and a product target to publish accepted events within <b>5 seconds for 99% of events over a rolling hour</b>.</p><p>Also require seller-level authorization, seven years of aggregate retention, replayable raw changes for 30 days, and a documented degraded mode.</p>",
+    note: "These are scenario inputs. A real review obtains them from product, legal, security, and workload evidence.",
   },
   {
     tag: "estimate",
-    title: "05:00, Back-of-envelope the data",
-    body: '<p>10k orders/s × 86,400 = ~860M/day. At 1KB each → <b>~860GB/day raw</b>. Compressed Parquet ~10× → ~86GB/day on the lakehouse. 7-day hot tier ≈ 600GB.</p><p>Cache fan-out: 50k sellers × 50KB pre-agg ≈ <b>2.5GB hot in Redis/Druid</b>. Fits in one node.</p>',
-    note: "Numbers shift the conversation from vibes to engineering. If you don't do this, the interviewer will ask you to.",
+    title: "Estimate before selecting capacity",
+    body: "<p>At the assumed peak sustained for a full day: 10,000 × 86,400 = <b>864 million changes per day</b>. At an illustrative 1 KB payload, that is <b>864 GB per day</b> before replication, indexes, encoding, and protocol overhead.</p><p>Compression ratio, peak duration, aggregate size, and cache residency remain unknown. Measure them with representative data before sizing nodes or spend.</p>",
+    note: "Arithmetic bounds the problem. It does not replace distribution, overhead, failure, and benchmark measurements.",
   },
   {
     tag: "api",
-    title: "08:00, Sketch the consumer contract first",
-    body: "<p>Two endpoints, and I write them on the board:</p><pre>GET /seller/:id/dashboard   → { revenue_24h, orders_24h, top_skus[10] }\nWS  /seller/:id/stream      → { event: 'order', ts, amount, sku }</pre><p>Dashboard load is one cache hit. Live updates push deltas. <b>No SQL on the read path.</b></p>",
-    note: "Designing the consumer's shape first prevents the classic mistake of building beautiful infra that nobody can use.",
+    title: "Define the consumer contract",
+    body: "<p>Start with two provisional interfaces:</p><pre>GET /sellers/:id/dashboard  → { as_of, revenue_24h, orders_24h }\nWS  /sellers/:id/updates    → { event_id, occurred_at, aggregate_delta }</pre><p>Both derive the seller identity from the authenticated principal, enforce tenant scope server-side, and return the data timestamp. The implementation may use a cache or query store after measurement.</p>",
+    note: "The contract exposes freshness and authorization. Storage remains an implementation decision.",
   },
   {
     tag: "data model",
-    title: "12:00, Pick the event shape",
-    body: "<p>One canonical event: <code>order_placed</code>. Fields: <code>order_id, seller_id, ts_event, amount_cents, sku, currency, schema_version</code>.</p><p>Partition key = <b>seller_id</b>, every downstream thing scales with sellers, so co-locate by seller from the source.</p>",
-    note: "The partition key is the most consequential decision. Get it wrong and you re-shuffle for the rest of the design.",
+    title: "Define event identity and ordering",
+    body: "<p>Use an immutable change envelope with <code>event_id, order_id, seller_id, operation, source_commit_position, occurred_at, amount_minor, currency, schema_version</code>.</p><p><code>seller_id</code> supports seller-scoped aggregation, but its skew and per-order ordering behavior must be measured. Do not assume one key satisfies every downstream operation.</p>",
+    note: "Stable identity supports deduplication; the partition key defines ordering and skew boundaries.",
   },
   {
     tag: "streaming",
-    title: "17:00, The pipeline · CDC → Kafka → Flink",
-    body: "<p>Postgres orders table is source of truth. <b>Debezium CDC</b> → Kafka topic <code>orders.cdc</code> (partitioned by seller_id, 64 partitions). <b>Flink</b> reads, applies upserts, computes 1-minute tumbling windows per seller.</p><p>Watermark = max(event_ts) − 30s. Late events past 30s go to a side output.</p>",
-    note: 'Saying "Flink" without saying "watermark" is a tell. Watermarks are the one thing you must pronounce correctly.',
+    title: "Propose a processing path",
+    body: "<p>A candidate path is PostgreSQL change capture → Kafka → a stateful stream processor. Partition count comes from measured throughput, recovery time, and ordering constraints. The processor applies version-aware changes and publishes aggregate updates.</p><p>Choose watermark and allowed-lateness policy from the observed delay distribution and correction requirements. Route invalid or unprocessable records to a restricted, retention-bounded review path.</p>",
+    note: "Connector snapshots, source-log retention, replay, processor checkpoints, and sink commits must be tested as separate boundaries.",
   },
   {
     tag: "storage",
-    title: "22:00, Two sinks, one source",
-    body: "<p>Flink writes <b>two places</b>:<br>1. <b>Iceberg</b> <code>fact_orders</code> on S3, partitioned by <code>day, seller_id_bucket</code>. This is the durable lakehouse layer for ad-hoc/BI.<br>2. <b>Druid</b> rollups, pre-aggregated <code>(seller_id, minute) → revenue, orders, top_skus</code>. This is the dashboard read path.</p>",
-    note: "One pipeline, two materializations. Don't make the analyst query Druid; don't make the dashboard query Iceberg.",
+    title: "Separate history from serving",
+    body: "<p>Maintain a durable historical table for replay and analysis, plus a seller-scoped serving materialization for the dashboard. Iceberg and Druid are candidates in this exercise, not required products.</p><p>Define how both sinks identify a processing attempt, handle retries, expose their committed version, and reconcile. A successful write to one sink does not make the other atomic.</p>",
+    note: "Multiple materializations improve workload isolation but introduce divergence and recovery work.",
   },
   {
     tag: "serving",
-    title: "27:00, The hot read path",
-    body: "<p>Dashboard endpoint hits <b>Druid</b> directly: <code>SELECT sum(revenue) WHERE seller_id=? AND minute &gt;= now()-1d</code>. Druid sub-second on rollups.</p><p>WebSocket stream subscribes to a <b>Kafka consumer group per seller-shard</b>, filters server-side, fans out via a thin gateway. <b>No DB on the websocket path.</b></p>",
-    note: "Live = stream from the bus. Aggregates = serve from the rollup store. Never confuse the two.",
+    title: "Protect the read and push paths",
+    body: "<p>The API queries a pre-aggregated seller view and returns its <code>as_of</code> value. Cache only after defining invalidation, tenant-safe keys, and acceptable staleness.</p><p>The push gateway authorizes each subscription, applies bounded buffers and rate limits, handles slow clients, and revokes access when the session changes. It consumes a shared stream rather than creating one broker consumer group per seller.</p>",
+    note: "Latency claims require a representative load test that includes authorization, fan-out, skew, and failure behavior.",
   },
   {
     tag: "tradeoff",
-    title: "32:00, Call the consistency model",
-    body: '<p>This is <b>PA/EL under PACELC</b>: during a partition we stay available and accept stale reads; in normal operation we optimize latency over linearizability.</p><p>The seller seeing "$1,247 revenue" might be 4 seconds behind truth. <b>That is acceptable</b> for this product. I\'d call this out to the interviewer explicitly.</p>',
-    note: "Naming the consistency model is a senior signal. Most candidates handwave it.",
+    title: "State the consistency boundary",
+    body: "<p>The dashboard serves the latest committed aggregate available in the serving store and exposes its data timestamp. It does not promise linearizable reads against the order database.</p><p>The exercise target allows bounded publication delay, but outage and partition behavior still need a product decision: stale response with a visible timestamp, explicit unavailability, or a degraded summary.</p>",
+    note: "Describe observable behavior for a specific read and failure, not a product-wide consistency label.",
   },
   {
     tag: "scale",
-    title: "37:00, Hot sellers and skew",
-    body: "<p>One seller (Black Friday top brand) takes 30% of traffic → its Kafka partition melts.</p><p>Fix: <b>two-level keying</b>. Hash <code>(seller_id, order_id % 4)</code> for the bus to spread, then re-key to seller_id before the windowed aggregation. Pre-aggregate per sub-key, then merge.</p>",
-    note: "Skew handling is the #1 follow-up at IC5. Have an answer ready before they ask.",
+    title: "Handle measured key skew",
+    body: "<p>Assume one seller accounts for 40% of peak traffic and exceeds one partition consumer's tested capacity.</p><p>Introduce controlled sub-keys such as <code>(seller_id, bucket)</code>, pre-aggregate per bucket, then merge by seller. Derive the bucket count from capacity evidence and document the changed ordering, state, and recovery costs.</p>",
+    note: "Adding brokers can relocate a hot partition; it does not divide that partition's records automatically.",
   },
   {
     tag: "tradeoff",
-    title: "40:00, What I'm NOT building",
-    body: '<p>Out of scope, called out: multi-region failover, GDPR right-to-delete on the stream, fraud detection, A/B exposure of dashboard variants, mobile push.</p><p>"If we had another 30 minutes I\'d sketch the multi-region story, async replication of Iceberg + Kafka MirrorMaker, with <b>region-local serving</b>."</p>',
-    note: "Showing what you cut is as important as what you build. It proves you saw the whole space.",
+    title: "Record exclusions and residual risk",
+    body: "<p>This pass does not design multi-region recovery, privacy deletion across retained logs and snapshots, fraud decisions, or mobile delivery.</p><p>Each exclusion enters the risk register with an owner and decision date. Do not imply a specific replication product solves recovery until failover, ordering, data loss, and restoration have been exercised.</p>",
+    note: "A bounded design names excluded obligations instead of hiding them.",
   },
   {
     tag: "follow-up",
-    title: "43:00, The closing move",
-    body: '<p>"The thing I\'d watch in production: the <b>watermark lag</b> on Flink. If event-time falls behind processing-time by more than 60s, dashboards silently go stale even though Druid is healthy. I\'d page on that, not on raw Kafka lag."</p><p>This is the move that wins the loop.</p>',
-    note: "End on the operational story. The interviewer is now picturing you on call. That's the hire signal.",
+    title: "Close with operational evidence",
+    body: "<p>Monitor end-to-end publication delay, source-to-sink completeness, invalid-record volume, partition skew, checkpoint and sink-commit failures, reconciliation differences, and serving-store data age.</p><p>Page from a user-impacting SLO and use component metrics for diagnosis. Define runbooks for replay, partial sink success, access incidents, and backfill rollback.</p>",
+    note: "The design is reviewable only when its guarantees have measurements, owners, and recovery procedures.",
   },
 ];

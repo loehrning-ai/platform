@@ -90,7 +90,7 @@ describe("canonical course completion", () => {
       "eu-ai-act-kurs": getAllSpineLessons("eu-ai-act-kurs"),
       "ai-native": await getAllAiNativeLessons(),
       claude: await getAllClaudeLessons(),
-      codex: await getAllCodexLessons(),
+      codex: await getAllCodexLessons("en"),
       "data-infrastructure": await getAllDataInfraLessons(),
       "ai-native-operator": await getAllOperatorLessons(),
     } as const;

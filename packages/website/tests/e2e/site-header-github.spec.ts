@@ -47,7 +47,7 @@ test.describe("primary navigation GitHub target", () => {
     await page.waitForLoadState("domcontentloaded");
 
     const labelled = page.locator(
-      `${NAV} a[aria-label="${GITHUB_ORG.displayName} auf GitHub"]`,
+      `${NAV} a[aria-label="${GITHUB_ORG.slug} auf GitHub"]`,
     );
     await expect(labelled).toHaveAttribute("href", GITHUB_ORG.url);
   });

@@ -3,11 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Panel } from "../primitives";
 import { SafeLessonMarkup } from "@/components/safe-lesson-markup";
+import { useDataEngineeringFundamentalsLocale } from "../locale-context";
 
 // ─── DiscoverySpeedrun ────────────────────────────
 // Ported from `src/chapters/Ch6_Discover.js`: a timed practice round of six
 // data-discovery shortcuts. Not a pass/fail quiz gate — free-text input
-// matched by regex, penalties for tips/solutions, a baseline leaderboard.
+// matched by regex, with local timing and penalties for tips/solutions.
 
 interface ResultRow {
   readonly k: string;
@@ -33,14 +34,14 @@ interface Question {
   readonly result: QuestionResult;
 }
 
-const DISC_QUESTIONS: readonly Question[] = [
+export const DISC_QUESTIONS: readonly Question[] = [
   {
     q: "Who owns <b>dim_users</b>?",
     hint: "You need owner · contact · oncall",
     shortcut: "ht dim_users",
     accept: /^\s*ht\s+dim_users\s*$/i,
     tip: 'The "home table" shortcut is <code>ht</code>. Pass it the table name: <code>ht &lt;table&gt;</code>.',
-    why: '<code>ht</code> ("home table") returns the metadata page for a single table: owner, partition, freshness, schema. It is the fastest way to confirm "is this the right table?"',
+    why: '<code>ht</code> returns the course metadata page for one table: owner, partition, freshness, and schema.',
     result: {
       kind: "ht",
       title: "dim_users",
@@ -59,7 +60,7 @@ const DISC_QUESTIONS: readonly Question[] = [
     shortcut: "fpl fct_events",
     accept: /^\s*fpl\s+fct_events\s*$/i,
     tip: 'The "find pipeline" shortcut is <code>fpl</code>. Pass it the table whose producer you want: <code>fpl &lt;table&gt;</code>.',
-    why: '<code>fpl</code> ("find pipeline") jumps from a table to the job that writes it: cadence, reader, oncall. Use this when a number looks wrong and you need to page someone.',
+    why: '<code>fpl</code> opens the course record for the job that writes a table: cadence, input, and owner.',
     result: {
       kind: "fpl",
       title: "Pipeline producing fct_events",
@@ -94,7 +95,7 @@ const DISC_QUESTIONS: readonly Question[] = [
     shortcut: "wut dataset_acl",
     accept: /^\s*wut\s+\S+/i,
     tip: 'The glossary shortcut is <code>wut</code> ("what is this thing"). Pass the term: <code>wut &lt;term&gt;</code>.',
-    why: '<code>wut &lt;term&gt;</code> ("what is this thing") hits the glossary. Use it when you see an unfamiliar acronym in a Slack thread or a YAML file, three keystrokes saves you a tab into the wiki.',
+    why: '<code>wut &lt;term&gt;</code> opens the course glossary entry for a term.',
     result: {
       kind: "wut",
       title: "dataset_acl",
@@ -107,7 +108,7 @@ const DISC_QUESTIONS: readonly Question[] = [
     shortcut: "ds produce dim_accounts",
     accept: /^\s*ds\s+produce\s+\S+/i,
     tip: "The lineage shortcut is <code>ds</code>, with a <code>produce</code> subcommand for downstream: <code>ds produce &lt;table&gt;</code>.",
-    why: "<code>ds produce &lt;table&gt;</code> walks one hop downstream: which facts, dimensions, metrics, and dashboards read this table. Always check this before deprecating or schema-changing, it tells you who you are about to break.",
+    why: "<code>ds produce &lt;table&gt;</code> shows registered one-hop consumers. Verify graph completeness before a deprecation or schema change.",
     result: {
       kind: "lineage",
       title: "dim_accounts · downstream (1 hop)",
@@ -121,14 +122,81 @@ const DISC_QUESTIONS: readonly Question[] = [
   },
 ];
 
-const BASELINE_TIMES = [
-  { name: "adrian · sr_de", t: 42 },
-  { name: "priya · de_oncall", t: 58 },
-  { name: "code-spelunker", t: 247 },
+export const DISC_QUESTIONS_DE: readonly Question[] = [
+  {
+    ...DISC_QUESTIONS[0],
+    q: "Wem gehört <b>dim_users</b>?",
+    hint: "Du brauchst Verantwortliche · Kontakt · Bereitschaftsdienst",
+    tip: 'Das Kürzel für die Tabellenseite lautet <code>ht</code>. Übergib den Tabellennamen: <code>ht &lt;table&gt;</code>.',
+    why: '<code>ht</code> öffnet im Kurs die Metadatenseite einer Tabelle mit Zuständigkeit, Partitionierung, Aktualität und Schema.',
+    result: {
+      ...DISC_QUESTIONS[0].result,
+      rows: [
+        { k: "verantwortlich", v: "analytics_oncall" },
+        { k: "Partition", v: "ds=YYYY-MM-DD" },
+        { k: "Zeilen/Tag", v: "12.4M" },
+        { k: "SLA", v: "24h" },
+      ],
+    },
+  },
+  {
+    ...DISC_QUESTIONS[1],
+    q: "Welcher Job schreibt <b>fct_events</b>?",
+    hint: "Finde die erzeugende Pipeline",
+    tip: 'Das Kürzel zum Auffinden einer Pipeline lautet <code>fpl</code>. Übergib die Tabelle, deren Erzeuger du suchst: <code>fpl &lt;table&gt;</code>.',
+    why: '<code>fpl</code> öffnet im Kurs den Job, der eine Tabelle schreibt, einschließlich Takt, Eingabe und Zuständigkeit.',
+    result: {
+      ...DISC_QUESTIONS[1].result,
+      title: "Pipeline, die fct_events erzeugt",
+      rows: [
+        { k: "Job", v: "analytics.events_rollup" },
+        { k: "Takt", v: "täglich · 04:00" },
+        { k: "Eingabe", v: "page_events_raw" },
+        { k: "verantwortlich", v: "de_oncall" },
+      ],
+    },
+  },
+  {
+    ...DISC_QUESTIONS[2],
+    q: "Finde die UDF, die <b>CIDR-Bereiche</b> verarbeitet.",
+    hint: "Durchsuche den UDF-Katalog",
+    tip: "Das Kürzel für den UDF-Katalog lautet <code>udf</code>. Probiere einen wahrscheinlichen symbolischen Namen: <code>udf cidr_parse</code> oder <code>udf parse_cidr</code>.",
+    why: "<code>udf &lt;name&gt;</code> sucht im UDF-Katalog nach einem symbolischen Namen. Vor einer Laufzeitabhängigkeit brauchst du zwei Angaben aus dem Katalog: wer die Funktion pflegt und wie häufig sie aufgerufen wird.",
+    result: {
+      ...DISC_QUESTIONS[2].result,
+      rows: [
+        { k: "verantwortlich", v: "netops_de" },
+        { k: "Sprache", v: "Spark SQL" },
+        { k: "Aufrufe/Tag", v: "240k" },
+      ],
+    },
+  },
+  {
+    ...DISC_QUESTIONS[3],
+    q: "Was ist eine <b>dataset_acl</b>?",
+    hint: "Schlage den Begriff im Glossar nach",
+    tip: 'Das Glossarkürzel lautet <code>wut</code>. Übergib den Begriff: <code>wut &lt;term&gt;</code>.',
+    why: '<code>wut &lt;term&gt;</code> öffnet im Kurs den Glossareintrag eines Begriffs.',
+    result: {
+      ...DISC_QUESTIONS[3].result,
+      body: "Projektbezogene Zugriffsliste. Sie legt im Kursszenario fest, welche Personen einen Datensatz lesen oder schreiben dürfen. Zusammen mit Akteur-Annotationen wird sie durch die Referenzschranke geprüft.",
+    },
+  },
+  {
+    ...DISC_QUESTIONS[4],
+    q: "Zeige die <b>nachgelagerten Verbraucher</b> von dim_accounts.",
+    hint: "Gehe im Lineage-Graphen einen Schritt abwärts",
+    tip: "Das Lineage-Kürzel lautet <code>ds</code>. Der Unterbefehl <code>produce</code> zeigt nachgelagerte Verbraucher: <code>ds produce &lt;table&gt;</code>.",
+    why: "<code>ds produce &lt;table&gt;</code> zeigt registrierte Verbraucher einen Schritt nachgelagert. Vor Abschaltung oder Schemaänderung die Vollständigkeit des Graphen prüfen.",
+    result: {
+      ...DISC_QUESTIONS[4].result,
+      title: "dim_accounts · nachgelagert (1 Schritt)",
+    },
+  },
 ];
 
-const TIP_PENALTY = 2;
-const SOLUTION_PENALTY = 5;
+export const TIP_PENALTY = 2;
+export const SOLUTION_PENALTY = 5;
 
 type Phase = "intro" | "playing" | "done";
 
@@ -140,6 +208,8 @@ interface RunResult {
 }
 
 export function DiscoverySpeedrun() {
+  const { locale, text } = useDataEngineeringFundamentalsLocale();
+  const questions = locale === "de" ? DISC_QUESTIONS_DE : DISC_QUESTIONS;
   const [phase, setPhase] = useState<Phase>("intro");
   const [qIdx, setQIdx] = useState(0);
   const [inputVal, setInputVal] = useState("");
@@ -175,7 +245,7 @@ export function DiscoverySpeedrun() {
 
   const advance = (entry: RunResult) => {
     setResults((r) => [...r, entry]);
-    if (qIdx === DISC_QUESTIONS.length - 1) {
+    if (qIdx === questions.length - 1) {
       setPhase("done");
     } else {
       setQIdx((i) => i + 1);
@@ -188,7 +258,7 @@ export function DiscoverySpeedrun() {
 
   const submit = (e?: { preventDefault: () => void }) => {
     e?.preventDefault();
-    const q2 = DISC_QUESTIONS[qIdx];
+    const q2 = questions[qIdx];
     if (q2.accept.test(inputVal)) {
       setFlash("ok");
       setTimeout(() => setFlash(null), 400);
@@ -213,7 +283,7 @@ export function DiscoverySpeedrun() {
   };
 
   const fillSolution = () => {
-    const q2 = DISC_QUESTIONS[qIdx];
+    const q2 = questions[qIdx];
     setInputVal(q2.shortcut);
     requestAnimationFrame(() => inputRef.current?.focus());
   };
@@ -221,20 +291,20 @@ export function DiscoverySpeedrun() {
   if (phase === "intro") {
     return (
       <Panel
-        eyebrow="timed · 5 questions · 6 shortcuts"
-        title="Discovery Speedrun"
-        meta="practice round"
-        caption="You don't read code to find a table's owner. You type one of six shortcuts into palette and get the answer in 200ms. Beat the baselines."
+        eyebrow={text("timed · 5 questions · 6 shortcuts", "mit Zeitmessung · 5 Fragen · 6 Kürzel")}
+        title={text("Catalog command practice", "Katalogbefehle üben")}
+        meta={text("practice round", "Übungsrunde")}
+        caption={text("Practice five lookups in the course's fictional command palette. Timing is local feedback, not a benchmark or proficiency threshold.", "Fünf Abfragen in der fiktiven Befehlspalette des Kurses üben. Die Zeitmessung ist lokales Feedback und kein Benchmark oder Kompetenznachweis.")}
       >
         <div className="ds-intro">
           <div className="ds-intro-grid">
             {[
-              { s: "ht <table>", w: "table home: owner, schema, freshness" },
-              { s: "fpl <table>", w: "producing pipeline · cadence · oncall" },
-              { s: "ds produce <table>", w: "downstream consumers · one hop" },
-              { s: "qbgs <term>", w: "search the warehouse by keyword" },
-              { s: "udf <name>", w: "UDF catalog lookup" },
-              { s: "wut <term>", w: "glossary: what IS this thing" },
+              { s: "ht <table>", w: text("table home: owner, schema, freshness", "Tabellenseite: Verantwortliche, Schema, Aktualität") },
+              { s: "fpl <table>", w: text("producing pipeline · cadence · oncall", "erzeugende Pipeline · Takt · Bereitschaftsdienst") },
+              { s: "ds produce <table>", w: text("downstream consumers · one hop", "nachgelagerte Verbraucher · ein Schritt") },
+              { s: "qbgs <term>", w: text("search the warehouse by keyword", "Warehouse nach Stichwort durchsuchen") },
+              { s: "udf <name>", w: text("UDF catalog lookup", "UDF im Katalog nachschlagen") },
+              { s: "wut <term>", w: text("glossary: what IS this thing", "Glossar: Was bedeutet dieser Begriff?") },
             ].map((x) => (
               <div key={x.s} className="ds-shortcut-card">
                 <code>{x.s}</code>
@@ -244,7 +314,7 @@ export function DiscoverySpeedrun() {
           </div>
           <div style={{ textAlign: "center", marginTop: 20 }}>
             <button type="button" className="btn btn-primary btn-lg" onClick={start}>
-              ▶ Start speedrun
+              ▶ {text("Start practice", "Übung starten")}
             </button>
           </div>
         </div>
@@ -256,41 +326,38 @@ export function DiscoverySpeedrun() {
     const final = t0 ? (Date.now() - t0) / 1000 + penalty : penalty;
     const solvedCount = results.filter((r) => r.correct).length;
     const revealedCount = results.filter((r) => r.revealed).length;
-    const board = [...BASELINE_TIMES, { name: "you", t: final, you: true }].sort((a, b) => a.t - b.t);
     return (
       <Panel
-        eyebrow="run complete"
-        title={`Finished in ${final.toFixed(1)}s`}
-        meta={`${solvedCount}/${DISC_QUESTIONS.length} solved${revealedCount ? ` · ${revealedCount} revealed` : ""} · +${penalty}s penalty`}
-        caption="How you compare to the baselines."
+        eyebrow={text("run complete", "Durchlauf abgeschlossen")}
+        title={`${text("Finished in", "Abgeschlossen in")} ${final.toFixed(1)}s`}
+        meta={`${solvedCount}/${questions.length} ${text("solved", "gelöst")}${revealedCount ? ` · ${revealedCount} ${text("revealed", "aufgedeckt")}` : ""} · +${penalty}s ${text("penalty", "Zeitstrafe")}`}
+        caption={text("Local practice result. No comparison baseline or pass threshold is applied.", "Lokales Übungsergebnis ohne Vergleichsbasis oder Bestehensgrenze.")}
       >
         <div className="ds-leaderboard">
-          {board.map((r, i) => (
-            <div key={i} className={`ds-lb-row ${"you" in r && r.you ? "you" : ""}`}>
-              <div className="rank">#{i + 1}</div>
-              <div className="name">{r.name}</div>
-              <div className="time">{r.t.toFixed(1)}s</div>
-            </div>
-          ))}
+          <div className="ds-lb-row you">
+            <div className="rank">1</div>
+            <div className="name">{text("practice result", "Übungsergebnis")}</div>
+            <div className="time">{final.toFixed(1)}s</div>
+          </div>
         </div>
         <div style={{ textAlign: "center", marginTop: 18 }}>
           <button type="button" className="btn btn-primary" onClick={start}>
-            ↻ Replay
+            ↻ {text("Replay", "Wiederholen")}
           </button>
         </div>
       </Panel>
     );
   }
 
-  const q = DISC_QUESTIONS[qIdx];
+  const q = questions[qIdx];
   const lastOk = results[results.length - 1];
 
   return (
     <Panel
-      eyebrow={`question ${qIdx + 1} of ${DISC_QUESTIONS.length}`}
-      title="Discovery Speedrun"
-      meta={`elapsed · ${elapsed.toFixed(1)}s · penalty +${penalty}s`}
-      caption="Type the shortcut · Enter to submit · Tip & Show solution available"
+      eyebrow={`${text("question", "Frage")} ${qIdx + 1} ${text("of", "von")} ${questions.length}`}
+      title={text("Catalog command practice", "Katalogbefehle üben")}
+      meta={`${text("elapsed", "verstrichen")} · ${elapsed.toFixed(1)}s · ${text("penalty", "Zeitstrafe")} +${penalty}s`}
+      caption={text("Type the shortcut · Enter to submit · Tip & Show solution available", "Kürzel eingeben · mit Enter absenden · Tipp und Lösung sind verfügbar")}
     >
       <div className={`ds-terminal ${flash ? "flash-" + flash : ""}`}>
         <div className="ds-term-head">
@@ -314,26 +381,26 @@ export function DiscoverySpeedrun() {
             <input
               ref={inputRef}
               name="shortcut"
-              aria-label="Shortcut answer"
+              aria-label={text("Shortcut answer", "Antwortkürzel")}
               value={inputVal}
               onChange={(e) => setInputVal(e.target.value)}
-              placeholder="type a shortcut…"
+              placeholder={text("type a shortcut…", "Kürzel eingeben …")}
               autoComplete="off"
               spellCheck={false}
             />
             <kbd>↵</kbd>
           </form>
           <div className="ds-help-row">
-            <button type="button" className="ds-help-btn is-tip" onClick={showTip} disabled={tipShown} title="Reveal a small nudge toward the right shortcut">
-              ▹ {tipShown ? "Tip shown" : "Show tip"} <span className="cost">+{TIP_PENALTY}s</span>
+            <button type="button" className="ds-help-btn is-tip" onClick={showTip} disabled={tipShown} title={text("Reveal a small nudge toward the right shortcut", "Einen kleinen Hinweis auf das richtige Kürzel anzeigen")}>
+              ▹ {tipShown ? text("Tip shown", "Tipp angezeigt") : text("Show tip", "Tipp anzeigen")} <span className="cost">+{TIP_PENALTY}s</span>
             </button>
-            <button type="button" className="ds-help-btn is-solution" onClick={showSolution} disabled={solutionShown} title="Reveal the canonical answer">
-              ★ {solutionShown ? "Solution shown" : "Show solution"} <span className="cost">+{SOLUTION_PENALTY}s</span>
+            <button type="button" className="ds-help-btn is-solution" onClick={showSolution} disabled={solutionShown} title={text("Reveal the course answer", "Die Kursantwort anzeigen")}>
+              ★ {solutionShown ? text("Solution shown", "Lösung angezeigt") : text("Show solution", "Lösung anzeigen")} <span className="cost">+{SOLUTION_PENALTY}s</span>
             </button>
           </div>
           {tipShown && (
             <div className="ds-tip-banner">
-              <strong>Tip:</strong>{" "}
+              <strong>{text("Tip:", "Tipp:")}</strong>{" "}
               <span>
                 <SafeLessonMarkup html={q.tip} />
               </span>
@@ -341,7 +408,7 @@ export function DiscoverySpeedrun() {
           )}
           {solutionShown && (
             <div className="ds-solution-banner">
-              <span className="lab">Solution</span>
+              <span className="lab">{text("Solution", "Lösung")}</span>
               <code>{q.shortcut}</code>
               {q.why && (
                 <span className="why">
@@ -350,7 +417,7 @@ export function DiscoverySpeedrun() {
               )}
               <div className="ds-solution-actions">
                 <button type="button" className="ds-help-btn" onClick={fillSolution}>
-                  ↳ Fill input
+                  ↳ {text("Fill input", "Eingabe übernehmen")}
                 </button>
                 <button
                   type="button"
@@ -359,19 +426,19 @@ export function DiscoverySpeedrun() {
                     advance({ q, input: q.shortcut, correct: false, revealed: true });
                   }}
                 >
-                  → Skip to next
+                  → {text("Skip to next", "Zur nächsten Frage")}
                 </button>
               </div>
             </div>
           )}
-          {flash === "err" && <div className="ds-toast err">✕ wrong shortcut · +3s</div>}
+          {flash === "err" && <div className="ds-toast err">✕ {text("wrong shortcut", "falsches Kürzel")} · +3s</div>}
         </div>
       </div>
 
       {lastOk && (
           <div className={`ds-result ${lastOk.revealed ? "is-revealed" : ""}`}>
             <div className="ds-result-head">
-              {lastOk.revealed ? "↳ revealed" : "✓ answered"} · {lastOk.q.result.title}
+              {lastOk.revealed ? text("↳ revealed", "↳ aufgedeckt") : text("✓ answered", "✓ beantwortet")} · {lastOk.q.result.title}
             </div>
             {lastOk.q.result.rows && (
               <div className="ds-result-rows">
@@ -410,7 +477,7 @@ export function DiscoverySpeedrun() {
         )}
 
       <div className="ds-progress">
-        {DISC_QUESTIONS.map((_, i) => (
+        {questions.map((_, i) => (
           <span key={i} className={`ds-prog-dot ${i < qIdx ? "done" : i === qIdx ? "active" : ""}`}>
             {i + 1}
           </span>

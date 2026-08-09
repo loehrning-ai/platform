@@ -82,6 +82,8 @@ The `loehrning.ai` name, logo, icons, favicons, social artwork, and other brand 
 
 Brand files are listed in [ASSET_MANIFEST.json](ASSET_MANIFEST.json). They may remain in a fork for development and compatibility, but public redistribution or modified branding requires separate permission or replacement assets.
 
+Third-party identity and employer marks listed in the asset manifest remain the property of their owners. Their documented nominative or functional use is subject to the owner's guidelines; no repository license grants a right to reuse them or implies endorsement. The profile's inline monochrome Red Bull two-bulls silhouette is derived from the separately inventoried local Red Bull SVG; the inventory records that the exact upstream download URL and independent redistribution permission are not established.
+
 ## Contributions
 
 By contributing code or repository documentation, a contributor agrees to license that contribution under MIT. Contributions to `CODE_OF_CONDUCT.md`, `content/vorlagen/**`, and the CC BY 4.0 marketing paths listed above are accepted under CC BY 4.0. Contributions to `marketing/drafts/**` and other content or assets require an explicit license statement and proof of the contributor's rights.

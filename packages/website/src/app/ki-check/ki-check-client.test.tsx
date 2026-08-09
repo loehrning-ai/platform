@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { KiCheckClient } from "./ki-check-client";
+import { KI_CHECK_CONTENT } from "@/lib/ki-check/localization";
 import { QUESTIONS } from "@/lib/ki-check/questions";
 
 /**
@@ -47,13 +48,24 @@ vi.mock("framer-motion", async () => {
   );
   const Pass = ({ children }: { children?: unknown }) =>
     createElement(Fragment, null, children as never);
-  return { __esModule: true, m, motion: m, AnimatePresence: Pass };
+  return {
+    __esModule: true,
+    m,
+    motion: m,
+    AnimatePresence: Pass,
+    LazyMotion: Pass,
+    MotionConfig: Pass,
+    domAnimation: {},
+  };
 });
 
 afterEach(cleanup);
 
 /** Answer the current question with its first option, then advance. */
-function answerFirstAndAdvance(question: (typeof QUESTIONS)[number], isLast: boolean) {
+function answerFirstAndAdvance(
+  question: (typeof QUESTIONS)[number],
+  isLast: boolean,
+) {
   fireEvent.click(
     screen.getByRole("button", { name: question.options[0].text }),
   );
@@ -131,7 +143,7 @@ describe("KiCheckClient", () => {
     }
 
     fireEvent.click(
-      screen.getByRole("button", { name: /Check nochmal starten/ }),
+      screen.getByRole("button", { name: /Check erneut starten/ }),
     );
 
     expect(
@@ -154,5 +166,41 @@ describe("KiCheckClient", () => {
       screen.getByRole("heading", { level: 2, name: QUESTIONS[0].text }),
     ).toHaveFocus();
     expect(screen.getByRole("button", { name: "Weiter" })).toBeEnabled();
+  });
+
+  it("renders the complete English question and result flow with localized links", () => {
+    const questions = KI_CHECK_CONTENT.en.questions;
+    render(<KiCheckClient locale="en" />);
+
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "What is your current level?",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 2, name: questions[0].text }),
+    ).toBeInTheDocument();
+
+    for (let index = 0; index < questions.length; index += 1) {
+      fireEvent.click(
+        screen.getByRole("button", { name: questions[index].options[0].text }),
+      );
+      fireEvent.click(
+        screen.getByRole("button", {
+          name: index === questions.length - 1 ? "View result" : "Next",
+        }),
+      );
+    }
+
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Current profile." }),
+    ).toHaveFocus();
+    expect(screen.getByText("Level 1: Starting")).toBeInTheDocument();
+    expect(screen.getByText("AI Fundamentals")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Start course/ })).toHaveAttribute(
+      "href",
+      "/en/ki-fuehrerschein/kurs",
+    );
   });
 });

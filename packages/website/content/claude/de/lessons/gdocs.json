@@ -1,0 +1,100 @@
+{
+  "id": "gdocs",
+  "number": 6,
+  "title": "Strukturierte Dokumente entwerfen",
+  "subtitle": "Von unsortierten Stichpunkten zu einem prüfbaren Dokument.",
+  "durationMinutes": 8,
+  "trackId": "workflows",
+  "hook": "Das Dokument ist das Arbeitsergebnis. Der Prompt legt die Form fest.",
+  "keyConcepts": ["Struktur", "Stilübertragung", "Kritik vor Überarbeitung"],
+  "quiz": [],
+  "sections": [
+    {
+      "id": "why-gdocs",
+      "title": "Google Docs als gemeinsame Arbeitsfläche",
+      "readTimeMinutes": 1,
+      "content": "Teams nutzen gemeinsame Dokumente für Entscheidungen, Spezifikationen, Incident-Reviews und Rollout-Pläne. Ein brauchbarer generierter Entwurf erhält bereitgestellte Fakten, kennzeichnet fehlende Angaben und folgt einer vertrauten Struktur.\n\nDrei Kontrollen helfen: Abschnittsstruktur vorgeben, ein freigegebenes Stilbeispiel bereitstellen und Aussagen vor der sprachlichen Überarbeitung prüfen."
+    },
+    {
+      "id": "move-1-skeleton",
+      "title": "Schritt 1: Gib Claude die Struktur vor",
+      "readTimeMinutes": 2,
+      "content": "Google Docs folgen bestimmten Konventionen. Design-Dokumente enthalten TL;DRs. PRDs umfassen Erfolgsmetriken. Post-Mortems beinhalten Zeitpläne. Ohne eine vorgegebene Struktur erstellt Claude einen generischen „Artikel“.\n\n```\nOutput structure:\n# Titel\n## TL;DR (3 Stichpunkte, jeweils <15 Wörter)\n## Kontext\n## Vorschlag\n## Risiken & Gegenmaßnahmen\n## Erfolgsmetriken\n## Offene Fragen\n```"
+    },
+    {
+      "id": "move-2-voice",
+      "title": "Schritt 2: Gib Claude den Stil vor",
+      "readTimeMinutes": 2,
+      "content": "Wenn Terminologie und Satzbau wichtig sind, stelle eine kurze, freigegebene Referenz bereit und benenne die zu übernehmenden Eigenschaften. Entferne vertrauliche Details und verbiete die Übernahme von Fakten aus dem Stilbeispiel.\n\n> Ein Stilbeispiel zeigt das Ziel; ein Eval prüft, ob die Ausgabe dazu passt."
+    },
+    {
+      "id": "move-3-critique",
+      "title": "Schritt 3: Bitte um Kritik vor der Überarbeitung",
+      "readTimeMinutes": 2,
+      "content": "Prüfe den ersten Entwurf anhand expliziter Kriterien: unbelegte Aussagen, fehlende Entscheidungen, falsche Zielgruppe und Strukturfehler. Fordere eine kurze Befundliste mit zitierten Belegen an und beauftrage danach nur die freigegebenen Änderungen.\n\nSo entsteht ein nachvollziehbarer Prüfschritt. Private Chain-of-Thought-Texte sind dafür weder nötig noch vorgesehen."
+    }
+  ],
+  "widgets": [
+    {
+      "kind": "prompt-compare",
+      "placement": "after-intro",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "gdocs",
+        "cpId": "cmp",
+        "weak": "Wandle diese Stichpunkte in ein Design-Dokument um: Auth-Migration, 4 Wochen, OAuth 2.1, ersetzt Legacy-Cookie, SRE-Zielgruppe, Kill Switch vorhanden, On-Call-Rotation vorhanden",
+        "strong": "Du bist ein leitender Ingenieur, der ein Design-Dokument für eine SRE-Zielgruppe entwirft.\n\nQuellmaterial (Stichpunkt-Sammlung):\n- Auth-Migrationsprojekt, 4-Wochen-Fenster\n- Umstellung auf OAuth 2.1, ersetzt Legacy-Cookie-Authentifizierung\n- On-Call: @auth-oncall\n- Kill Switch vorhanden und getestet\n\nErstelle ein Design-Dokument mit genau dieser Struktur:\n# Titel\n## TL;DR (3 Stichpunkte, jeweils <15 Wörter)\n## Kontext\n## Vorschlag\n## Rollout-Plan\n## Risiken & Gegenmaßnahmen\n## Erfolgsmetriken\n## Offene Fragen\n\nStilregeln:\n- Kurze Sätze. Aktive Verben.\n- Keine Marketingsprache.\n- Zahlen vor Adjektiven.\n- SRE-spezifisches Vokabular ist in Ordnung; definiere p99 usw. nicht.\n\nAusgabe als sauberes Markdown."
+      }
+    },
+    {
+      "kind": "fill-blank",
+      "placement": "before-quiz",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "gdocs",
+        "cpId": "drill",
+        "goal": "Wandle eine Stichpunkt-Sammlung in ein prägnantes 3-Stichpunkte-TL;DR um.",
+        "template": "Wandle diese Stichpunkte in ein TL;DR für eine {{0}}-Zielgruppe um.\n\nSTICHPUNKTE\n{{1}}\n\nSTIL\n- Genau 3 Stichpunkte\n- {{2}}\n\nFORMAT\nMarkdown, keine Einleitung.",
+        "blanks": [
+          {
+            "label": "Zielgruppe",
+            "hint": "z.B. SRE, Führungskraft, Design-Review"
+          },
+          {
+            "label": "Stichpunkte",
+            "hint": "füge deine Rohnotizen ein"
+          },
+          {
+            "label": "Stilregeln",
+            "hint": "z.B. <15 Wörter pro Stichpunkt, Zahlen vor Adjektiven"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "quiz",
+      "placement": "end",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "gdocs",
+        "cpId": "q1",
+        "question": "Dein erster Entwurf eines Google Docs ist fast fertig, aber der Stil entspricht nicht den Anforderungen. Was ist der effektivste nächste Schritt?",
+        "options": [
+          "Bitte um „einen professionelleren Ton“.",
+          "Beginne von vorne mit einem neuen Prompt.",
+          "Füge 2-3 Absätze eines Referenzdokuments mit dem gewünschten Stil ein und sage: „Überarbeite dies passend zu diesem Stil.“",
+          "Bitte Claude, „weniger wie eine KI zu sein“."
+        ],
+        "correct": 2,
+        "explanation": "Ein freigegebenes Beispiel macht Stilanforderungen beobachtbar. Prüfe, dass die Überarbeitung Quellenfakten erhält und keine Fakten aus dem Stilbeispiel übernimmt.",
+        "title": "Kurzprüfung",
+        "copy": {
+          "kindLabel": "Kurzprüfung",
+          "optionsAriaLabel": "Antwortoptionen",
+          "correctLabel": "Richtig.",
+          "incorrectLabel": "Nicht ganz."
+        }
+      }
+    }
+  ]
+}

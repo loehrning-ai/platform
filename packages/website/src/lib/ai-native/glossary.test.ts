@@ -11,7 +11,7 @@ import {
 describe("ai-native glossary - getGlossary / getGlossaryEntries", () => {
   it("exposes the JSON meta block verbatim", () => {
     const meta = getGlossary()._meta;
-    expect(meta.title).toBe("AI-Native Arbeitskurs Glossary");
+    expect(meta.title).toBe("Glossar zum AI-Native Arbeitskurs");
     expect(meta.version).toBe("1.0");
     expect(meta.last_updated).toBe("2026-04-18");
   });
@@ -20,6 +20,18 @@ describe("ai-native glossary - getGlossary / getGlossaryEntries", () => {
     // Both readers must expose the identical underlying object (no copy).
     expect(getGlossaryEntries()).toBe(getGlossary().entries);
     expect(getGlossaryEntries().length).toBeGreaterThan(40);
+  });
+
+  it("serves the audited English glossary without changing term identities", () => {
+    const german = getGlossary("de");
+    const english = getGlossary("en");
+    expect(english._meta.title).toBe("AI-Native Workflow Course glossary");
+    expect(english.entries.map((entry) => entry.term)).toEqual(
+      german.entries.map((entry) => entry.term),
+    );
+    expect(english.entries[0]?.definition).not.toBe(
+      german.entries[0]?.definition,
+    );
   });
 });
 
@@ -50,7 +62,7 @@ describe("ai-native glossary - categories & CATEGORY_ORDER", () => {
       "EU AI Act, DSGVO, UWG, Compliance",
     );
     expect(getCategoryLabel("mindset")).toBe(
-      "AI-native Konzepte, Orchestrierung, Coworker-Denkweise",
+      "AI-native Konzepte, Orchestrierung, Delegationsmodell",
     );
   });
 

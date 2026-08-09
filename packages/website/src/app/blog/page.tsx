@@ -1,61 +1,105 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Dateline } from "./_components/dateline";
 import { Runline } from "./_components/runline";
 import { BLOG_POSTS, BLOG_LAST_MODIFIED } from "@/lib/blog-metadata";
-import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
+import { contentLocalesForPath } from "@/lib/i18n/content-parity";
+import {
+  buildLocaleAlternates,
+  localizeHref,
+  type Locale,
+} from "@/lib/i18n/locale";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { SITE_URL } from "@/lib/seo/json-ld";
 
-const BLOG_TITLE = "Blog | loehrning.ai";
-const BLOG_DESCRIPTION =
-  "Lange, nachprüfbare Texte über KI im Alltag, EU AI Act und KI in der Gesellschaft, für die breite deutschsprachige Öffentlichkeit.";
+const PATH = "/blog";
 
-export const metadata = createPublicPageMetadata({
-  title: BLOG_TITLE,
-  documentTitle: { absolute: BLOG_TITLE },
-  description: BLOG_DESCRIPTION,
-  path: "/blog",
-});
-
-// Runline items from the manifest — no hardcoded post titles
-const runItems = [
-  ...BLOG_POSTS.map(
-    (p) => `Artikel Nº ${String(p.postNumber).padStart(2, "0")}: ${p.titleDe}`,
-  ),
-  "loehrning.ai",
-  "Offen · Nachprüfbar · Lernorientiert",
-];
-
-// Most recent dateModified for "Zuletzt aktualisiert" label
-const lastUpdated = new Date(BLOG_LAST_MODIFIED).toLocaleDateString("de-DE", {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-});
-
-const BLOG_DATE_FORMATTER = new Intl.DateTimeFormat("de-DE", {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-  timeZone: "UTC",
-});
-
-type BlogIndexVisual = {
-  readonly label: string;
-  readonly big: string;
-  readonly caption: string;
-  readonly emphasis: string;
-  readonly foot: readonly [string, string];
-};
-
-const BLOG_INDEX_VISUALS: Record<string, BlogIndexVisual> = {
-  "eu-ai-act-grundlagen": {
-    label: "Sieben Abschnitte · Bürgerperspektive",
-    big: "2. Aug",
-    caption: "EU AI Act ab August 2026:",
-    emphasis: "Art. 50 Transparenz + deine Rechte",
-    foot: ["Reg. 2024/1689", "AI Omnibus 2026"],
+const COPY = {
+  de: {
+    metadataTitle: "Blog | loehrning.ai",
+    metadataDescription:
+      "Lange, nachprüfbare Texte über KI im Alltag, EU AI Act und KI in der Gesellschaft, für die breite deutschsprachige Öffentlichkeit.",
+    datelineTitle: "Der loehrning.ai Blog",
+    intro:
+      "Öffentliche Texte zu KI im Alltag, EU AI Act und KI in der Gesellschaft. Offen, nachprüfbar, mit Zahlen und Quellenangaben.",
+    article: (count: number) =>
+      `${count} ${count === 1 ? "Artikel" : "Artikel"}`,
+    lastUpdated: "Zuletzt aktualisiert:",
+    ongoing: "Laufend ergänzt",
+    allArticles: "§ Alle Artikel",
+    feedTitle: "Ein Thema, gründlich statt viel.",
+    published: "erschienen",
+    articleNumber: "Artikel Nº",
+    readingTime: (minutes: number) => `${minutes} Min. Lesezeit`,
+    readLabel: (title: string) => `Artikel lesen: ${title}`,
+    read: "Artikel lesen",
+    noteLabel: "Kein Redaktionsplan.",
+    note: "Dieser Blog erscheint unregelmäßig. Neue Artikel entstehen, wenn ein Thema sauber genug erklärt werden kann und die Quellen stimmen.",
+    runlineStatus: "Offen · Nachprüfbar · Lernorientiert",
+    visual: {
+      label: "Sieben Abschnitte · Bürgerperspektive",
+      big: "2. Aug",
+      caption: "EU AI Act ab August 2026:",
+      emphasis: "Art. 50 Transparenz + deine Rechte",
+    },
   },
-};
+  en: {
+    metadataTitle: "Blog | loehrning.ai",
+    metadataDescription:
+      "Long-form, source-backed writing about everyday AI, the EU AI Act, and AI in society for a general English-speaking audience.",
+    datelineTitle: "The loehrning.ai blog",
+    intro:
+      "Public articles about everyday AI, the EU AI Act, and AI in society. Open access, verifiable claims, explicit figures, and primary sources.",
+    article: (count: number) =>
+      `${count} ${count === 1 ? "article" : "articles"}`,
+    lastUpdated: "Last updated:",
+    ongoing: "Updated when evidence changes",
+    allArticles: "§ All articles",
+    feedTitle: "One subject, examined properly.",
+    published: "published",
+    articleNumber: "Article Nº",
+    readingTime: (minutes: number) => `${minutes} min read`,
+    readLabel: (title: string) => `Read article: ${title}`,
+    read: "Read article",
+    noteLabel: "No publishing quota.",
+    note: "Articles appear when a subject can be explained precisely and the source record is complete. There is no fixed publishing schedule.",
+    runlineStatus: "Open access · Verifiable · Built for learning",
+    visual: {
+      label: "Seven sections · Citizen perspective",
+      big: "2 Aug",
+      caption: "EU AI Act from August 2026:",
+      emphasis: "Article 50 transparency and your rights",
+    },
+  },
+} as const;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const copy = COPY[locale];
+  const localizedPath = localizeHref(PATH, locale);
+  const alternates = buildLocaleAlternates(PATH, contentLocalesForPath(PATH));
+
+  return {
+    title: { absolute: copy.metadataTitle },
+    description: copy.metadataDescription,
+    robots: { index: true, follow: true },
+    alternates: { ...alternates, canonical: localizedPath },
+    openGraph: {
+      title: copy.metadataTitle,
+      description: copy.metadataDescription,
+      url: `${SITE_URL}${localizedPath}`,
+      locale: locale === "de" ? "de_DE" : "en_GB",
+      alternateLocale: [locale === "de" ? "en_GB" : "de_DE"],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: copy.metadataTitle,
+      description: copy.metadataDescription,
+    },
+  };
+}
 
 const BLOG_POSTS_NEWEST_FIRST = [...BLOG_POSTS].sort(
   (a, b) =>
@@ -63,124 +107,147 @@ const BLOG_POSTS_NEWEST_FIRST = [...BLOG_POSTS].sort(
     b.postNumber - a.postNumber,
 );
 
-function formatPostDate(date: string): string {
-  return BLOG_DATE_FORMATTER.format(new Date(`${date}T00:00:00Z`));
+function postCopy(post: (typeof BLOG_POSTS)[number], locale: Locale) {
+  return locale === "de"
+    ? { title: post.titleDe, summary: post.summary, tags: post.tags }
+    : { title: post.titleEn, summary: post.summaryEn, tags: post.tagsEn };
 }
 
-export default function BlogIndexPage() {
+function formatDate(date: string, locale: Locale): string {
+  return new Intl.DateTimeFormat(locale === "de" ? "de-DE" : "en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${date}T00:00:00Z`));
+}
+
+function BlogIndexContent({ locale }: { readonly locale: Locale }) {
+  const copy = COPY[locale];
+  const runItems = [
+    ...BLOG_POSTS.map((post) => {
+      const localized = postCopy(post, locale);
+      return `${copy.articleNumber} ${String(post.postNumber).padStart(2, "0")}: ${localized.title}`;
+    }),
+    "loehrning.ai",
+    copy.runlineStatus,
+  ];
+  const lastUpdated = formatDate(BLOG_LAST_MODIFIED, locale);
+
   return (
     <>
-      {/* Dateline strip */}
       <div className="blog-dateline">
         <div className="left">
-          <Dateline />
+          <Dateline locale={locale} />
         </div>
-        <div className="center" style={{ color: "var(--druckertinte)", fontWeight: 700 }}>
-          Der loehrning.ai Blog
+        <div
+          className="center"
+          style={{ color: "var(--druckertinte)", fontWeight: 700 }}
+        >
+          {copy.datelineTitle}
         </div>
         <div className="right">2026</div>
       </div>
 
-      {/* Masthead */}
       <section className="mast--hero">
         <div>
-          <div className="mast__label">Der loehrning.ai Blog</div>
+          <div className="mast__label">{copy.datelineTitle}</div>
           <h1 className="mast__title">
             Blog<span className="k">.</span>
           </h1>
-          <div className="mast__sub">
-            Öffentliche Texte zu KI im Alltag, EU AI Act und KI in der
-            Gesellschaft. Offen, nachprüfbar, mit Zahlen und Quellenangaben.
-          </div>
+          <div className="mast__sub">{copy.intro}</div>
         </div>
         <div className="mast__meta">
-          <b>{BLOG_POSTS.length} Artikel</b>
-          Zuletzt aktualisiert:
+          <b>{copy.article(BLOG_POSTS.length)}</b>
+          {copy.lastUpdated}
           <br />
           {lastUpdated}
           <br />
-          <span className="live">Laufend ergänzt</span>
+          <span className="live">{copy.ongoing}</span>
         </div>
       </section>
 
       <Runline items={runItems} />
 
-      {/* Feed */}
       <section className="feed">
         <div className="feed__head">
-          <div className="hash">§ Alle Artikel</div>
-          <div className="title">Ein Thema, gründlich statt viel.</div>
+          <div className="hash">{copy.allArticles}</div>
+          <div className="title">{copy.feedTitle}</div>
           <div className="count">
-            <b>{BLOG_POSTS.length}</b> erschienen
+            <b>{BLOG_POSTS.length}</b> {copy.published}
           </div>
         </div>
 
         {BLOG_POSTS_NEWEST_FIRST.map((post) => {
           const number = String(post.postNumber).padStart(2, "0");
-          const visual = BLOG_INDEX_VISUALS[post.slug];
+          const localized = postCopy(post, locale);
           return (
             <Link
               key={post.slug}
-              href={`/blog/${post.slug}`}
+              href={localizeHref(`/blog/${post.slug}`, locale)}
               className="row"
-              aria-label={`Artikel lesen: ${post.titleDe}`}
+              aria-label={copy.readLabel(localized.title)}
             >
               <div className="row__no">
-                <span className="hash">Artikel Nº {number}</span>
+                <span className="hash">
+                  {copy.articleNumber} {number}
+                </span>
                 {number}
               </div>
               <div className="row__body">
                 <div className="row__topline">
-                  <span className="row__tag">{post.tags[0]}</span>
-                  <span className="row__date">{formatPostDate(post.datePublished)}</span>
+                  <span className="row__tag">{localized.tags[0]}</span>
+                  <span className="row__date">
+                    {formatDate(post.datePublished, locale)}
+                  </span>
                   <span className="row__dot">·</span>
-                  <span>{post.readingTimeMin} Min. Lesezeit</span>
+                  <span>{copy.readingTime(post.readingTimeMin)}</span>
                 </div>
-                <h2 className="row__title">{post.titleDe}</h2>
-                <p className="row__dek">{post.summary}</p>
+                <h2 className="row__title">{localized.title}</h2>
+                <p className="row__dek">{localized.summary}</p>
                 <div className="row__foot">
                   <span className="row__author">Tim Löhr</span>
-                  {post.tags.slice(1).map((tag) => (
+                  {localized.tags.slice(1).map((tag) => (
                     <span key={tag} className="contents">
                       <span className="row__dot">·</span>
                       <span>{tag}</span>
                     </span>
                   ))}
                   <span className="row__cta">
-                    Artikel lesen <span className="arr">→</span>
+                    {copy.read} <span className="arr">→</span>
                   </span>
                 </div>
               </div>
-              {visual && (
-                <div className="row__art" aria-hidden="true">
-                  <div className="row__art-label">{visual.label}</div>
-                  <div className="row__art-body">
-                    <div className="row__art-big">{visual.big}</div>
-                    <div className="row__art-cap">
-                      {visual.caption} <b>{visual.emphasis}</b>
-                    </div>
-                  </div>
-                  <div className="row__art-foot">
-                    <span>{visual.foot[0]}</span>
-                    <span style={{ color: "var(--kupfer)" }}>{visual.foot[1]}</span>
+              <div className="row__art" aria-hidden="true">
+                <div className="row__art-label">{copy.visual.label}</div>
+                <div className="row__art-body">
+                  <div className="row__art-big">{copy.visual.big}</div>
+                  <div className="row__art-cap">
+                    {copy.visual.caption} <b>{copy.visual.emphasis}</b>
                   </div>
                 </div>
-              )}
+                <div className="row__art-foot">
+                  <span>Reg. 2024/1689</span>
+                  <span style={{ color: "var(--kupfer)" }}>
+                    AI Omnibus 2026
+                  </span>
+                </div>
+              </div>
             </Link>
           );
         })}
 
-        {/* Note strip */}
         <div className="feed__note">
-          <div className="feed__note-label">Kein Redaktionsplan.</div>
-          <div className="feed__note-body">
-            Dieser Blog erscheint <span className="k">unregelmäßig</span>.
-            Neue Artikel entstehen, wenn ein Thema sauber genug erklärt werden kann
-            und die Quellen stimmen.
-          </div>
-          <span className="feed__note-cta">Laufend ergänzt</span>
+          <div className="feed__note-label">{copy.noteLabel}</div>
+          <div className="feed__note-body">{copy.note}</div>
+          <span className="feed__note-cta">{copy.ongoing}</span>
         </div>
       </section>
     </>
   );
+}
+
+export default async function BlogIndexPage() {
+  const locale = await getRequestLocale();
+  return <BlogIndexContent locale={locale} />;
 }

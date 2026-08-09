@@ -3,7 +3,10 @@ import {
   anthropicRetentionDays,
   hasCompleteSupabaseRuntimeConfig,
   isAccountAbuseProtectionReady,
+  isAccountRuntimeReady,
   isAnthropicRuntimeReady,
+  isGoogleOAuthRuntimeReady,
+  isMagicLinkRuntimeReady,
   turnstileSiteKey,
 } from "./provider-readiness";
 
@@ -17,6 +20,12 @@ function configureCompleteRuntime(): void {
   vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "fake-public-key");
   vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", "fake-service-key");
   vi.stubEnv("RATE_LIMIT_HMAC_SECRET", `rlh1_${"a".repeat(64)}`);
+}
+
+function configureAccountRuntime(): void {
+  configureCompleteRuntime();
+  vi.stubEnv("SUPABASE_REGION", "eu-central-1");
+  vi.stubEnv("SUPABASE_DPA_CONFIRMED_AT", "2026-07-01");
 }
 
 describe("provider runtime readiness", () => {
@@ -67,6 +76,50 @@ describe("provider runtime readiness", () => {
     vi.stubEnv("SUPABASE_CAPTCHA_CONFIRMED_AT", "2026-07-01");
     vi.stubEnv("TURNSTILE_CONFIGURATION_CONFIRMED_AT", "2999-01-01");
     expect(isAccountAbuseProtectionReady()).toBe(false);
+  });
+
+  it("keeps core account, magic-link, and Google OAuth readiness independent", () => {
+    configureAccountRuntime();
+
+    expect(isAccountRuntimeReady()).toBe(true);
+    expect(isMagicLinkRuntimeReady()).toBe(false);
+    expect(isGoogleOAuthRuntimeReady()).toBe(false);
+
+    vi.stubEnv(
+      "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
+      "0x4AAAAAAAFakeProductionKey",
+    );
+    vi.stubEnv("SUPABASE_CAPTCHA_CONFIRMED_AT", "2026-07-01");
+    vi.stubEnv("TURNSTILE_CONFIGURATION_CONFIRMED_AT", "2026-07-01");
+    expect(isMagicLinkRuntimeReady()).toBe(true);
+    expect(isGoogleOAuthRuntimeReady()).toBe(false);
+
+    vi.stubEnv("NEXT_PUBLIC_TURNSTILE_SITE_KEY", "");
+    vi.stubEnv("SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT", "2026-08-08");
+    expect(isMagicLinkRuntimeReady()).toBe(false);
+    expect(isGoogleOAuthRuntimeReady()).toBe(true);
+  });
+
+  it("fails every account sign-in method closed without the core EU account boundary", () => {
+    configureAccountRuntime();
+    vi.stubEnv(
+      "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
+      "0x4AAAAAAAFakeProductionKey",
+    );
+    vi.stubEnv("SUPABASE_CAPTCHA_CONFIRMED_AT", "2026-07-01");
+    vi.stubEnv("TURNSTILE_CONFIGURATION_CONFIRMED_AT", "2026-07-01");
+    vi.stubEnv("SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT", "2026-08-08");
+
+    vi.stubEnv("SUPABASE_REGION", "us-east-1");
+    expect(isAccountRuntimeReady()).toBe(false);
+    expect(isMagicLinkRuntimeReady()).toBe(false);
+    expect(isGoogleOAuthRuntimeReady()).toBe(false);
+
+    vi.stubEnv("SUPABASE_REGION", "eu-central-1");
+    vi.stubEnv("SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT", "2999-01-01");
+    expect(isAccountRuntimeReady()).toBe(true);
+    expect(isMagicLinkRuntimeReady()).toBe(true);
+    expect(isGoogleOAuthRuntimeReady()).toBe(false);
   });
 
   it("rejects Cloudflare test keys in a production runtime", () => {

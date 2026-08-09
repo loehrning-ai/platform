@@ -1,93 +1,127 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { DataScienceLocaleProvider } from "@/components/data-science/locale-context";
 import { DsReaderShell } from "@/components/data-science/reader-shell";
-import ChOverview from "@/components/data-science/chapters/ch-overview";
-import { DS_CHAPTERS } from "@/lib/data-science/types";
-import { dsChapterHref } from "@/lib/data-science/routes";
-import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
-import type { JsonLdGraph } from "@/lib/seo/json-ld";
+import { getDataScienceCourseCopy } from "@/lib/data-science/course-copy";
+import { getDsLocaleRegistry } from "@/lib/data-science/content";
+import { contentLocalesForPath } from "@/lib/i18n/content-parity";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { JsonLd, SITE_URL, type JsonLdGraph } from "@/lib/seo/json-ld";
+import {
+  buildTechnicalCourseJsonLd,
+  buildTechnicalCourseMetadata,
+  technicalCourseHref,
+} from "@/lib/technical-courses/routes";
 
-// ─── Data Science course root — the ported Overview chapter ─
-//
-// Unlike a from-scratch marketing landing page, this course's "landing
-// page" IS the source's own Overview chapter (id "home", App.js's own
-// default screen): source has no distinct marketing splash separate from
-// it. Rendered inside the same DsReaderShell chrome as every numbered
-// chapter (Done Criteria: no home route collision with [chapterSlug]).
+const CANONICAL_PATH = "/kurse/open-source/data-science";
 
-export const metadata: Metadata = {
-  title: "Data Science Fundamentals · Interactive Course",
-  description:
-    "Twelve interactive chapters covering the full data science loop, from EDA and feature engineering to A/B testing, causal inference, and production deployment. Every chapter opens with a live simulation.",
-  robots: { index: true, follow: true },
-  alternates: { canonical: `${SITE_URL}/kurse/open-source/data-science` },
-  openGraph: {
-    title: "Data Science Fundamentals · Interactive Course",
-    description:
-      "Twelve interactive chapters covering the full data science loop, from EDA and feature engineering to A/B testing, causal inference, and production deployment.",
-    url: `${SITE_URL}/kurse/open-source/data-science`,
-    siteName: "loehrning.ai",
-    locale: "en_US",
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  (await getDsLocaleRegistry()).get(locale);
+  const copy = getDataScienceCourseCopy(locale).landingMetadata;
+  return buildTechnicalCourseMetadata({
+    courseSlug: "data-science",
+    locale,
+    target: { kind: "landing" },
+    title: copy.title,
+    description: copy.description,
+    availableContentLocales: contentLocalesForPath(CANONICAL_PATH),
+  });
+}
 
-export default function DataScienceOverviewPage() {
-  const next = DS_CHAPTERS[1];
-
+export default async function DataScienceOverviewPage() {
+  const locale = await getRequestLocale();
+  const bundle = (await getDsLocaleRegistry()).get(locale);
+  const chapters = bundle.content.chapters;
+  const overview = chapters[0];
+  const next = chapters[1];
+  if (!overview || overview.id !== "home") {
+    throw new Error("Data Science locale bundle is missing its overview.");
+  }
+  const copy = getDataScienceCourseCopy(locale);
+  const course = buildTechnicalCourseJsonLd({
+    courseSlug: "data-science",
+    locale,
+    name: bundle.config.title,
+    description: copy.jsonLdDescription,
+    teaches: chapters
+      .filter((chapter) => chapter.id !== "home")
+      .map((chapter) => chapter.meta.title),
+    timeRequired: "PT2H",
+  });
+  const { "@context": _context, ...courseNode } = course;
+  const localizedCourseHref = technicalCourseHref("data-science", locale, {
+    kind: "landing",
+  });
   const courseJsonLd: JsonLdGraph = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Start", item: SITE_URL },
-          { "@type": "ListItem", position: 2, name: "Kurse", item: `${SITE_URL}/kurse` },
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: copy.breadcrumbs[0],
+            item: locale === "en" ? `${SITE_URL}/en` : SITE_URL,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: copy.breadcrumbs[1],
+            item:
+              locale === "en" ? `${SITE_URL}/en/kurse` : `${SITE_URL}/kurse`,
+          },
           {
             "@type": "ListItem",
             position: 3,
-            name: "Data Science Fundamentals",
-            item: `${SITE_URL}/kurse/open-source/data-science`,
+            name: copy.breadcrumbs[2],
+            item: `${SITE_URL}${localizedCourseHref}`,
           },
         ],
       },
       {
-        "@type": "Course",
-        name: "Data Science Fundamentals",
-        description:
-          "Twelve interactive chapters covering the full data science loop, EDA, feature engineering, statistical thinking, CLT, bias/variance, ROC/PR, SHAP, A/B test power, causal DAGs, drift, production deployment, and a capstone.",
-        url: `${SITE_URL}/kurse/open-source/data-science`,
-        inLanguage: "en",
-        isAccessibleForFree: true,
-        provider: { "@id": ORG_ID },
+        ...courseNode,
         hasCourseInstance: {
           "@type": "CourseInstance",
           courseMode: "online",
-          url: `${SITE_URL}/kurse/open-source/data-science`,
+          url: `${SITE_URL}${localizedCourseHref}`,
         },
-        teaches: DS_CHAPTERS.filter((c) => c.id !== "home").map((c) => c.title),
       },
     ],
   };
+  const OverviewComponent = overview.component;
 
   return (
-    <DsReaderShell activeId="home">
+    <DsReaderShell
+      activeId="home"
+      locale={locale}
+      chapters={chapters.map((chapter) => chapter.meta)}
+    >
       <JsonLd data={courseJsonLd} id="data-science-course-jsonld" />
-      <div className="content">
-        <ChOverview />
-        <nav className="tb" aria-label="Chapter pagination" style={{ marginTop: 48 }}>
-          <span />
-          {next && (
-            <Link
-              className="btn btn-primary"
-              href={dsChapterHref(next.id)}
-              prefetch={false}
-            >
-              Next → <span className="kbd">→</span>
-            </Link>
-          )}
-        </nav>
-      </div>
+      <DataScienceLocaleProvider locale={locale}>
+        <div className="content min-w-0">
+          <OverviewComponent chapter={overview.meta} />
+          <nav
+            className="tb mt-12 min-w-0 flex-wrap gap-3"
+            aria-label={copy.reader.paginationLabel}
+          >
+            <span aria-hidden="true" />
+            {next && (
+              <Link
+                className="btn btn-primary max-w-full break-words [overflow-wrap:anywhere]"
+                href={technicalCourseHref("data-science", locale, {
+                  kind: "chapter",
+                  chapterId: next.id,
+                })}
+                prefetch={false}
+              >
+                {copy.reader.next}
+              </Link>
+            )}
+          </nav>
+        </div>
+      </DataScienceLocaleProvider>
     </DsReaderShell>
   );
 }

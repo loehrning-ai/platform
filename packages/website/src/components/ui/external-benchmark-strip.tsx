@@ -5,6 +5,7 @@ import { m } from "framer-motion";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import type { ExternalBenchmark } from "@/lib/external-benchmarks";
 import { trackExternalBenchmarkVisible } from "@/lib/analytics";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 
 export interface ExternalBenchmarkStripProps {
   items: readonly ExternalBenchmark[];
@@ -20,7 +21,7 @@ export interface ExternalBenchmarkStripProps {
  * Kupfer-coded numbers. Fires one analytics event per item when the
  * strip scrolls into view.
  */
-export function ExternalBenchmarkStrip({
+function ExternalBenchmarkStripContent({
   items,
   kicker = "Was unabhängige Studien dazu sagen",
   testId,
@@ -98,3 +99,7 @@ export function ExternalBenchmarkStrip({
     </div>
   );
 }
+
+export const ExternalBenchmarkStrip = withMotionProvider(
+  ExternalBenchmarkStripContent,
+);

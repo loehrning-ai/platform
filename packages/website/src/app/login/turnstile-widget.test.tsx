@@ -122,4 +122,31 @@ describe("<TurnstileWidget>", () => {
     expect(reset).toHaveBeenCalledWith("widget-2");
     expect(onToken).toHaveBeenCalledWith(null);
   });
+
+  it("sets the provider widget and local status copy to English", () => {
+    let language: string | undefined;
+    window.turnstile = {
+      render: vi.fn((_container, options) => {
+        language = options.language;
+        return "widget-en";
+      }),
+      remove: vi.fn(),
+      reset: vi.fn(),
+    };
+
+    render(
+      <TurnstileWidget
+        siteKey={SITE_KEY}
+        onToken={vi.fn()}
+        locale="en"
+      />,
+    );
+
+    expect(language).toBe("en");
+    expect(screen.getByText("Security check")).toBeVisible();
+    expect(screen.getByText("Security check loading.")).toHaveAttribute(
+      "role",
+      "status",
+    );
+  });
 });

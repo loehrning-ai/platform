@@ -30,7 +30,7 @@ const APPS: readonly AppRow[] = [
   {
     id: "vertrag",
     name: "Vertrags-Assistent",
-    model: "Claude Haiku 4.5",
+    model: "route-small",
     calls: 12840,
     cost: 186.42,
     latencyS: 1.2,
@@ -39,7 +39,7 @@ const APPS: readonly AppRow[] = [
   {
     id: "rechnung",
     name: "Rechnungs-Extraktion",
-    model: "Claude Opus 4.5",
+    model: "route-analysis",
     calls: 3210,
     cost: 412.08,
     latencyS: 2.8,
@@ -57,7 +57,7 @@ const APPS: readonly AppRow[] = [
   {
     id: "sales",
     name: "Anfrage-Klassifikation",
-    model: "Claude Sonnet 4.5",
+    model: "route-balanced",
     calls: 7420,
     cost: 96.33,
     latencyS: 0.9,

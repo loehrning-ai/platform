@@ -39,9 +39,11 @@ export function Grundlagen() {
           <p>
             Eine Pflicht betrifft dich trotzdem indirekt:{" "}
             <strong>Artikel 4</strong> verpflichtet Anbieter und Betreiber
-            seit dem 2. Februar 2025, Maßnahmen zur Entwicklung der
-            KI-Kompetenz ihres Personals zu treffen, angepasst an Vorwissen,
-            Einsatzkontext und betroffene Personen. Seit der Änderung durch
+            seit dem 2. Februar 2025, Maßnahmen zu ergreifen, um die
+            Entwicklung der KI-Kompetenz ihres Personals und weiterer in ihrem
+            Auftrag befasster Personen zu unterstützen. Technische Kenntnisse,
+            Erfahrung, Aus- und Fortbildung, Einsatzkontext und betroffene
+            Personen oder Personengruppen sind zu berücksichtigen. Seit der Änderung durch
             die Verordnung (EU) 2026/1744 muss dabei kein bestimmtes
             Kompetenzniveau einzelner Personen garantiert werden. Es gibt
             kein vorgeschriebenes Format, keine Pflichtprüfung und kein

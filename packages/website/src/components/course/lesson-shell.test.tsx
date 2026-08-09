@@ -64,6 +64,11 @@ vi.mock("framer-motion", async () => {
     __esModule: true,
     m,
     motion: m,
+    MotionConfig: ({ children }: any) =>
+      React.createElement(React.Fragment, null, children),
+    LazyMotion: ({ children }: any) =>
+      React.createElement(React.Fragment, null, children),
+    domAnimation: {},
     useReducedMotion: () => true,
   };
 });

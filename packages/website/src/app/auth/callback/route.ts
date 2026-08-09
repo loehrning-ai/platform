@@ -1,22 +1,102 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { AuthError } from "@supabase/supabase-js";
+import { AuthError, type User } from "@supabase/supabase-js";
 import { trustedRequestOrigin } from "@/lib/auth/origin";
 import { sanitizeNextPath } from "@/lib/auth/routes";
+import { localizeHref, parseLocalePathname } from "@/lib/i18n/locale";
+import {
+  isAccountRuntimeReady,
+  isGoogleOAuthRuntimeReady,
+  isMagicLinkRuntimeReady,
+} from "@/lib/provider-readiness";
 import { SITE_ORIGIN } from "@/lib/seo/entity";
 import { createAuthServerClient } from "@/lib/supabase/auth-server";
 
 const CANONICAL_ORIGIN = new URL(SITE_ORIGIN);
-const SUPABASE_PKCE_CODE =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const MAX_AUTHORIZATION_CODE_LENGTH = 2_048;
+const MAX_IDENTITY_AMR_SKEW_SECONDS = 5;
 
-function isSupabasePkceCode(value: string | null): value is string {
-  return value !== null && SUPABASE_PKCE_CODE.test(value);
+type SupportedLoginMethod = "google" | "magic-link";
+
+function isCurrentGoogleOAuthIdentity(user: User, timestamp: number): boolean {
+  const providers = user.app_metadata?.providers;
+  if (
+    !Array.isArray(providers) ||
+    !providers.every((provider) => typeof provider === "string") ||
+    !providers.includes("google") ||
+    !Array.isArray(user.identities)
+  ) {
+    return false;
+  }
+
+  return user.identities.some((identity) => {
+    if (identity.provider !== "google" || !identity.last_sign_in_at) {
+      return false;
+    }
+    const identityTimestamp = Date.parse(identity.last_sign_in_at) / 1_000;
+    return (
+      Number.isFinite(identityTimestamp) &&
+      Math.abs(identityTimestamp - timestamp) <= MAX_IDENTITY_AMR_SKEW_SECONDS
+    );
+  });
+}
+
+function supportedLoginMethodFromClaims(
+  claims: Record<string, unknown>,
+  user: User,
+): SupportedLoginMethod | null {
+  if (claims.sub !== user.id || !Array.isArray(claims.amr)) return null;
+
+  let latest:
+    | { readonly method: SupportedLoginMethod; readonly timestamp: number }
+    | undefined;
+  for (const entry of claims.amr) {
+    if (!entry || typeof entry !== "object" || Array.isArray(entry)) continue;
+    const rawMethod = Reflect.get(entry, "method");
+    const timestamp = Reflect.get(entry, "timestamp");
+    if (
+      typeof rawMethod !== "string" ||
+      typeof timestamp !== "number" ||
+      !Number.isFinite(timestamp)
+    ) {
+      continue;
+    }
+    const method: SupportedLoginMethod | null =
+      rawMethod === "oauth" && isCurrentGoogleOAuthIdentity(user, timestamp)
+        ? "google"
+        : rawMethod === "magiclink" ||
+            rawMethod === "otp" ||
+            rawMethod === "email/signup"
+          ? "magic-link"
+          : null;
+    if (method && (!latest || timestamp > latest.timestamp)) {
+      latest = { method, timestamp };
+    }
+  }
+  return latest?.method ?? null;
+}
+
+function isBoundedOpaqueAuthorizationCode(value: string): boolean {
+  if (
+    value.length === 0 ||
+    value.length > MAX_AUTHORIZATION_CODE_LENGTH ||
+    value.trim().length === 0
+  ) {
+    return false;
+  }
+  return !Array.from(value).some((character) => {
+    const codePoint = character.codePointAt(0) ?? 0;
+    return codePoint <= 31 || codePoint === 127;
+  });
 }
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
-  const code = requestUrl.searchParams.get("code");
+  const codeValues = requestUrl.searchParams.getAll("code");
+  const code = codeValues[0] ?? null;
   const next = sanitizeNextPath(requestUrl.searchParams.get("next"));
+  const nextLocale = parseLocalePathname(
+    new URL(next, CANONICAL_ORIGIN).pathname,
+  ).locale;
   const trustedOrigin = trustedRequestOrigin(requestUrl);
   const redirectOrigin = trustedOrigin ?? CANONICAL_ORIGIN;
 
@@ -28,7 +108,10 @@ export async function GET(request: NextRequest) {
   }
 
   function failureRedirect(reason: string) {
-    const loginUrl = new URL("/login", redirectOrigin);
+    const loginUrl = new URL(
+      localizeHref("/login", nextLocale),
+      redirectOrigin,
+    );
     loginUrl.searchParams.set("next", next);
     loginUrl.searchParams.set("reason", reason);
     return noStoreRedirect(loginUrl);
@@ -64,7 +147,24 @@ export async function GET(request: NextRequest) {
 
   if (!trustedOrigin) return failureRedirect("untrusted-origin");
   if (code === null) return failureRedirect("missing-code");
-  if (!isSupabasePkceCode(code)) return failureRedirect("invalid-code-format");
+  if (
+    codeValues.length !== 1 ||
+    !isBoundedOpaqueAuthorizationCode(code)
+  ) {
+    return failureRedirect("invalid-code-format");
+  }
+
+  // Public Supabase configuration is enough to construct an auth client, but
+  // it is not enough to authorize an account transaction. Bind direct callback
+  // requests to the same server-only privacy, region, abuse-protection, and
+  // provider attestations that control the login page. This prevents a stale
+  // or hand-crafted callback from bypassing a disabled login surface.
+  const accountReady = isAccountRuntimeReady();
+  const magicLinkReady = isMagicLinkRuntimeReady();
+  const googleReady = isGoogleOAuthRuntimeReady();
+  if (!accountReady || (!magicLinkReady && !googleReady)) {
+    return failureRedirect("auth-not-configured");
+  }
 
   let supabase;
   try {
@@ -85,13 +185,20 @@ export async function GET(request: NextRequest) {
     );
   }
   if (exchange.error) return failureRedirect(classifyAuthError(exchange.error));
-  if (!exchange.data.session || !exchange.data.user?.id) {
+  if (
+    !exchange.data.session?.access_token ||
+    !exchange.data.user?.id
+  ) {
     return failureRedirect("invalid-link");
   }
 
   let verification;
+  let claimsResult;
   try {
-    verification = await supabase.auth.getUser();
+    [verification, claimsResult] = await Promise.all([
+      supabase.auth.getUser(exchange.data.session.access_token),
+      supabase.auth.getClaims(exchange.data.session.access_token),
+    ]);
   } catch {
     await supabase.auth.signOut({ scope: "local" }).catch(() => undefined);
     return failureRedirect("auth-unavailable");
@@ -105,6 +212,29 @@ export async function GET(request: NextRequest) {
     return failureRedirect(verification.error
       ? classifyAuthError(verification.error)
       : "invalid-link");
+  }
+
+  if (claimsResult.error || !claimsResult.data?.claims) {
+    await supabase.auth.signOut({ scope: "local" }).catch(() => undefined);
+    return failureRedirect(
+      claimsResult.error instanceof AuthError
+        ? classifyAuthError(claimsResult.error)
+        : "auth-unavailable",
+    );
+  }
+  const loginMethod = supportedLoginMethodFromClaims(
+    claimsResult.data.claims as Record<string, unknown>,
+    verification.data.user,
+  );
+  const methodReady =
+    loginMethod === "google"
+      ? googleReady
+      : loginMethod === "magic-link"
+        ? magicLinkReady
+        : false;
+  if (!methodReady) {
+    await supabase.auth.signOut({ scope: "local" }).catch(() => undefined);
+    return failureRedirect("auth-not-configured");
   }
 
   return noStoreRedirect(new URL(next, trustedOrigin));

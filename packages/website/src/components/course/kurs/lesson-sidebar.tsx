@@ -3,6 +3,8 @@
 import { CheckCircle2, Circle, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Lesson } from "@/lib/course/types";
+import type { Locale } from "@/lib/i18n/locale";
+import { getCourseReaderCopy } from "./course-ui-copy";
 
 // Codex card easing (interactive-courses index.html `.card` transition):
 // fast out, gentle settle. Used for the lesson-card hover accent-bar.
@@ -15,6 +17,7 @@ interface LessonSidebarProps {
   readonly activeLessonId: string;
   readonly completedLessonIds: ReadonlySet<string>;
   readonly onSelectLesson: (lessonId: string) => void;
+  readonly locale?: Locale;
 }
 
 export function LessonSidebar({
@@ -22,11 +25,13 @@ export function LessonSidebar({
   activeLessonId,
   completedLessonIds,
   onSelectLesson,
+  locale = "de",
 }: LessonSidebarProps) {
+  const copy = getCourseReaderCopy(locale);
   return (
-    <nav className="space-y-1" aria-label="Lektionsnavigation">
+    <nav className="space-y-1" aria-label={copy.sidebar.navigation}>
       <p className="mb-3 font-mono text-xs font-bold uppercase tracking-wider text-brand-orange">
-        Lektionen
+        {copy.sidebar.heading}
       </p>
       {lessons.map((lesson) => {
         const isActive = lesson.id === activeLessonId;
@@ -38,7 +43,11 @@ export function LessonSidebar({
             type="button"
             onClick={() => onSelectLesson(lesson.id)}
             aria-current={isActive ? "location" : undefined}
-            aria-label={`Lektion ${lesson.number}: ${lesson.title}${isCompleted ? " (abgeschlossen)" : ""}`}
+            aria-label={copy.sidebar.lessonLabel(
+              lesson.number,
+              lesson.title,
+              isCompleted,
+            )}
             // WCAG 2.5.3: the aria-label above contains the visible lesson title
             // as a substring so voice-input commands ("click Lektion 2: Datenschutz")
             // work correctly. Do NOT rewrite aria-label to a value that omits the
@@ -85,7 +94,7 @@ export function LessonSidebar({
               </p>
               <span className="mt-1 inline-flex items-center gap-1 font-mono text-[11px] text-muted-foreground">
                 <Clock className="h-2.5 w-2.5" />
-                {lesson.durationMinutes} Min
+                {copy.sidebar.minutes(lesson.durationMinutes)}
               </span>
             </div>
           </button>

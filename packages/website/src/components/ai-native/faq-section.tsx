@@ -7,27 +7,31 @@ import {
   ClipHeading,
   Eyebrow,
 } from "@/components/ai-native/primitives";
-import { AI_NATIVE_FAQ } from "@/lib/ai-native/content";
+import { getAiNativeFaq } from "@/lib/ai-native/content";
 import { EASE_OUT_EXPO } from "@/lib/animations";
+import type { Locale } from "@/lib/i18n/locale";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 
 /* FAQ — editorial accordion: numbered questions, big +/- toggle,
  * Kupfer top-border on open row. One item open at a time. */
 
-export function AiNativeFaqSection() {
+function AiNativeFaqSectionContent({ locale = "de" }: { readonly locale?: Locale }) {
   const [open, setOpen] = useState<number | null>(0);
+  const isEnglish = locale === "en";
+  const items = getAiNativeFaq(locale);
 
   return (
-    <SectionShell num="X" label="Fragen?">
+    <SectionShell num="X" label={isEnglish ? "Course facts" : "Kursfragen"}>
       <Eyebrow>FAQ</Eyebrow>
       <ClipHeading
         as="h2"
         className="mt-2.5 font-bold leading-none tracking-[-0.035em]"
         style={{ fontSize: "clamp(2rem, 4.5vw, 3.5rem)" }}
       >
-        Die Fragen, die alle stellen.
+        {isEnglish ? "Course scope and access." : "Umfang und Zugang."}
       </ClipHeading>
       <div className="mt-12 max-w-[860px]">
-        {AI_NATIVE_FAQ.map((item, i) => {
+        {items.map((item, i) => {
           const isOpen = open === i;
           return (
             <div
@@ -79,3 +83,5 @@ export function AiNativeFaqSection() {
     </SectionShell>
   );
 }
+
+export const AiNativeFaqSection = withMotionProvider(AiNativeFaqSectionContent);

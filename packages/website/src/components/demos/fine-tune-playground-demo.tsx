@@ -4,6 +4,7 @@ import { useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { DEMO } from "@/lib/demo-tokens";
 import { DEMO_HEIGHT } from "./demo-utils";
 import { SimulationDisclosure } from "./evidence-badge";
+import { useDemoLocale } from "./demo-locale";
 
 interface Prompt {
   readonly q: string;
@@ -51,6 +52,42 @@ const FT_PROMPTS: readonly Prompt[] = [
   },
 ];
 
+const FT_PROMPTS_EN: readonly Prompt[] = [
+  {
+    q: "What is the standard warranty for the XR-2200 motor?",
+    base:
+      "Motor warranties depend on the manufacturer and commonly range from 12 to 36 months. Contact the manufacturer for the applicable terms.",
+    tuned:
+      "The fictional XR-2200 policy states 36 months from commissioning under sample clause 14.2. Bearings and seals are excluded. A sample maintenance plan extends coverage to 60 months.",
+    baseSpec: 22,
+    tunedSpec: 94,
+    baseConf: 41,
+    tunedConf: 88,
+  },
+  {
+    q: "Which materials are approved for offshore applications?",
+    base:
+      "Offshore applications commonly use corrosion-resistant materials such as 316L stainless steel or duplex steel. Selection depends on the environment.",
+    tuned:
+      "The fictional standard WST-OFF-01 lists 1.4462, 1.4529, and Hastelloy C-276. The seeded Zone 3 example requires duplex steel plus coating system SP-3B.",
+    baseSpec: 18,
+    tunedSpec: 96,
+    baseConf: 37,
+    tunedConf: 91,
+  },
+  {
+    q: "How do we price express orders?",
+    base:
+      "Express orders commonly carry a surcharge. The amount depends on urgency and company policy.",
+    tuned:
+      "The fictional policy marks delivery under 72 hours as high priority and under 24 hours as critical. Weekend work requires approval; material cost is checked separately.",
+    baseSpec: 14,
+    tunedSpec: 92,
+    baseConf: 33,
+    tunedConf: 89,
+  },
+];
+
 const EPOCH_MAX = 10;
 
 function confLabel(pct: number): "niedrig" | "mittel" | "hoch" {
@@ -66,11 +103,15 @@ const CONF_LABEL_CONFIG = {
 } as const;
 
 function ConfChip({ pct, accentColor }: { pct: number; accentColor?: string }) {
+  const { locale, text } = useDemoLocale();
   const level = confLabel(pct);
   const cfg = CONF_LABEL_CONFIG[level];
   return (
     <span
-      title="In diesem Beispiel zeigt Konfidenz, wie stark ein fiktives Modell Vokabular des Trainingssatzes wiedererkennt. Das ist kein ISO-Maß."
+      title={text(
+        "Konfidenz zeigt hier nur, wie stark ein fiktives Modell Wörter aus dem Trainingssatz wiedererkennt. Das ist kein standardisiertes Maß.",
+        "Confidence only represents how strongly a fictional model recognizes vocabulary from the sample training set. It is not a standardized metric.",
+      )}
       style={{
         padding: "2px 7px",
         fontSize: 10,
@@ -84,17 +125,21 @@ function ConfChip({ pct, accentColor }: { pct: number; accentColor?: string }) {
         cursor: "help",
       }}
     >
-      {cfg.label}
+      {locale === "de"
+        ? cfg.label
+        : ({ niedrig: "Low", mittel: "Medium", hoch: "High" } as const)[level]}
     </span>
   );
 }
 
 export default function FineTunePlaygroundDemo() {
+  const { locale, text } = useDemoLocale();
+  const prompts = locale === "de" ? FT_PROMPTS : FT_PROMPTS_EN;
   const [selIdx, setSelIdx] = useState(0);
   const [epoch, setEpoch] = useState(6);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  const prompt = FT_PROMPTS[selIdx];
+  const prompt = prompts[selIdx] ?? prompts[0];
   const accuracyDelta = prompt.tunedSpec - prompt.baseSpec;
 
   const metrics = useMemo(() => {
@@ -144,12 +189,12 @@ export default function FineTunePlaygroundDemo() {
   const handleTabKeyDown = (e: KeyboardEvent<HTMLButtonElement>, i: number) => {
     if (e.key === "ArrowRight" || e.key === "ArrowDown") {
       e.preventDefault();
-      const next = (i + 1) % FT_PROMPTS.length;
+      const next = (i + 1) % prompts.length;
       setSelIdx(next);
       tabRefs.current[next]?.focus();
     } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
       e.preventDefault();
-      const prev = (i - 1 + FT_PROMPTS.length) % FT_PROMPTS.length;
+      const prev = (i - 1 + prompts.length) % prompts.length;
       setSelIdx(prev);
       tabRefs.current[prev]?.focus();
     } else if (e.key === "Home") {
@@ -158,7 +203,7 @@ export default function FineTunePlaygroundDemo() {
       tabRefs.current[0]?.focus();
     } else if (e.key === "End") {
       e.preventDefault();
-      const last = FT_PROMPTS.length - 1;
+      const last = prompts.length - 1;
       setSelIdx(last);
       tabRefs.current[last]?.focus();
     }
@@ -167,6 +212,8 @@ export default function FineTunePlaygroundDemo() {
   return (
     <div
       data-demo-id="fine-tune-playground"
+      role="region"
+      aria-label={text("Fine-Tuning-Beispiel", "Fine-tuning example")}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -255,18 +302,20 @@ export default function FineTunePlaygroundDemo() {
           Fine-Tuning Playground
         </div>
         <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", marginTop: 6 }}>
-          Generisch vs.{" "}
-          <span style={{ color: "var(--color-brand-orange)" }}>Domänenbeispiel.</span>
+          {text("Generische Antwort vs.", "Generic answer versus")}{" "}
+          <span style={{ color: "var(--color-brand-orange)" }}>
+            {text("Domänenbeispiel.", "domain example.")}
+          </span>
         </h2>
       </div>
 
       <div
         data-ft-tabs
         role="tablist"
-        aria-label="Prompt-Auswahl"
+        aria-label={text("Prompt-Auswahl", "Prompt selection")}
         style={{ display: "flex", gap: 6, flexWrap: "wrap" }}
       >
-        {FT_PROMPTS.map((p, i) => {
+        {prompts.map((p, i) => {
           const active = selIdx === i;
           return (
             <button
@@ -317,7 +366,10 @@ export default function FineTunePlaygroundDemo() {
       </div>
 
       <SimulationDisclosure>
-        Alle Konfidenz- und Spezifitäts-Werte sind fiktive Beispielwerte. In diesem Beispiel zeigt Konfidenz, wie stark ein fiktives Modell Vokabular des Trainingssatzes wiedererkennt. Das ist kein ISO-Maß.
+        {text(
+          "Alle Konfidenz- und Spezifitätswerte sind fiktiv. Konfidenz bezeichnet hier nur die Wiedererkennung von Vokabular im Beispiel-Trainingssatz.",
+          "All confidence and specificity values are fictional. Confidence only represents recognition of vocabulary from the sample training set.",
+        )}
       </SimulationDisclosure>
 
       <div
@@ -354,7 +406,7 @@ export default function FineTunePlaygroundDemo() {
                 letterSpacing: "0.12em",
               }}
             >
-              BASISMODELL
+              {text("BASISMODELL", "BASE MODEL")}
             </span>
             <span
               style={{
@@ -383,10 +435,11 @@ export default function FineTunePlaygroundDemo() {
             }}
           >
             <span>
-              <strong style={{ color: DEMO.ink }}>{prompt.baseSpec} %</strong> Spezifität
+              <strong style={{ color: DEMO.ink }}>{prompt.baseSpec} %</strong>{" "}
+              {text("Spezifität", "specificity")}
             </span>
             <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-              Konfidenz <ConfChip pct={prompt.baseConf} />
+              {text("Konfidenz", "Confidence")} <ConfChip pct={prompt.baseConf} />
             </span>
           </div>
         </div>
@@ -418,7 +471,7 @@ export default function FineTunePlaygroundDemo() {
               boxShadow: `1px 1px 0 0 ${DEMO.ink}`,
             }}
           >
-            +{accuracyDelta} %-Punkte Beispielscore
+            +{accuracyDelta} {text("Punkte · Beispiel", "points · sample")}
           </div>
           <div
             style={{
@@ -439,7 +492,7 @@ export default function FineTunePlaygroundDemo() {
                 letterSpacing: "0.12em",
               }}
             >
-              DOMÄNENBEISPIEL · SIMULIERT
+              {text("DOMÄNENBEISPIEL · SIMULIERT", "DOMAIN EXAMPLE · SIMULATED")}
             </span>
             <span
               style={{
@@ -448,7 +501,7 @@ export default function FineTunePlaygroundDemo() {
                 color: DEMO.schiefer,
               }}
             >
-              + fiktive Domänendokumente
+              {text("+ fiktive Domänendokumente", "+ fictional domain documents")}
             </span>
           </div>
           <div style={{ fontSize: 12, lineHeight: 1.55, color: DEMO.ink }}>
@@ -469,10 +522,10 @@ export default function FineTunePlaygroundDemo() {
           >
             <span>
               <strong style={{ color: "var(--color-brand-orange)" }}>{prompt.tunedSpec} %</strong>{" "}
-              Spezifität
+              {text("Spezifität", "specificity")}
             </span>
             <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
-              Konfidenz <ConfChip pct={prompt.tunedConf} accentColor="var(--color-brand-orange)" />
+              {text("Konfidenz", "Confidence")} <ConfChip pct={prompt.tunedConf} accentColor="var(--color-brand-orange)" />
             </span>
           </div>
         </div>
@@ -499,7 +552,7 @@ export default function FineTunePlaygroundDemo() {
               fontWeight: 700,
             }}
           >
-            Trainings-Metriken · Epoche {String(epoch).padStart(2, "0")}/{EPOCH_MAX}
+            {text("Trainingsmetriken · Epoche", "Training metrics · epoch")} {String(epoch).padStart(2, "0")}/{EPOCH_MAX}
           </div>
           <div
             style={{
@@ -525,7 +578,7 @@ export default function FineTunePlaygroundDemo() {
             [
               ["Loss", metrics.loss, "↓"],
               ["Accuracy", `${metrics.acc} %`, "↑"],
-              ["Firmenwissen", `${metrics.specificity} %`, "↑"],
+              [text("Domänenspezifität", "Domain specificity"), `${metrics.specificity} %`, "↑"],
             ] as const
           ).map(([l, v, dir]) => (
             <div key={l}>
@@ -609,7 +662,11 @@ export default function FineTunePlaygroundDemo() {
             preserveAspectRatio="none"
             style={{ width: "100%", height: 60, display: "block" }}
             role="img"
-            aria-label={`Trainingsverlauf bei Epoche ${epoch}: Loss ${metrics.loss}, Accuracy ${metrics.acc} Prozent`}
+            aria-label={
+              locale === "de"
+                ? `Trainingsverlauf bei Epoche ${epoch}: Loss ${metrics.loss}, Accuracy ${metrics.acc} Prozent`
+                : `Training series at epoch ${epoch}: loss ${metrics.loss}, accuracy ${metrics.acc} percent`
+            }
           >
             {/* Grid */}
             {[0, 15, 30, 45].map((y) => (
@@ -704,7 +761,7 @@ export default function FineTunePlaygroundDemo() {
               fontWeight: 700,
             }}
           >
-            EPOCHE
+            {text("EPOCHE", "EPOCH")}
           </span>
           <input
             data-ft-slider
@@ -725,7 +782,11 @@ export default function FineTunePlaygroundDemo() {
                 "--ft-progress": `${(epoch / EPOCH_MAX) * 100}%`,
               } as React.CSSProperties
             }
-            aria-label={`Trainings-Epoche auswählen, aktuell ${epoch} von ${EPOCH_MAX}`}
+            aria-label={
+              locale === "de"
+                ? `Trainingsepoche auswählen, aktuell ${epoch} von ${EPOCH_MAX}`
+                : `Select training epoch, currently ${epoch} of ${EPOCH_MAX}`
+            }
             aria-valuemin={0}
             aria-valuemax={EPOCH_MAX}
             aria-valuenow={epoch}

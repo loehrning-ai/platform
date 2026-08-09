@@ -7,7 +7,7 @@ import { test, expect, type Page } from "@playwright/test";
  * Real block ids come from KI_FUEHRERSCHEIN_CONFIG.blockIds
  * (src/lib/course/config.ts): block_1..block_5. The reader is `protected` in
  * the crawl contract, so an anonymous visitor is redirected by
- * src/middleware.ts to /login?next=<path>&reason=auth-not-configured in the
+ * src/proxy.ts to /login?next=<path>&reason=auth-not-configured in the
  * provider-free suite before ever reaching the reader shell. These tests
  * assert that explicit fallback, not the reader content itself (which needs a live session; see
  * tests/e2e/authenticated-routes.authed.spec.ts).

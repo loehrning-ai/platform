@@ -1,0 +1,499 @@
+{
+  "blockId": "block_6",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-07-14",
+  "nextReview": "2026-10-14",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "eu-ai-act-amendment",
+    "commission-qa-update"
+  ],
+  "lessons": [
+    {
+      "id": "block_6_lesson_1",
+      "blockId": "block_6",
+      "number": 1,
+      "title": "A five-step audit of your organisation's AI systems",
+      "subtitle": "From existing records to a prioritised gap list",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "AI inventory",
+        "Annex III",
+        "gap analysis",
+        "shadow AI",
+        "Article 26(6)"
+      ],
+      "sections": [
+        {
+          "id": "block_6_lesson_1_section_1",
+          "title": "Five steps for a defensible initial inventory",
+          "readTimeMinutes": 2,
+          "content": "The effort required for an AI inventory depends on the organisation, number of systems, shadow IT, supplier records, and risk profile. The following steps are a working method, not a promise that one week or a fixed number of hours will be sufficient.\n\n**1. Build the inventory.** Use the record of processing activities under Article 30 GDPR as one source for AI-supported processing of personal data. Add IT asset and SaaS registers, procurement records, supplier contracts, billing records, browser or SSO approvals, and structured interviews. These additional sources are necessary to identify systems that do not process personal data and shadow AI.\n\n**2. Establish the purpose and system boundary.** Record which function is actually in use. A product name alone does not show whether a function uses AI or establish its intended purpose.\n\n**3. Determine the role and possible risk class.** For each system, assess prohibited practices under Article 5, high-risk classification under Article 6 and Annex I or III, transparency cases under Article 50, or the absence of those specific categories. Check applicable exceptions and application dates.\n\n**4. Collect evidence and assess gaps.** Relevant material may include provider information, contracts, instructions for use, data flows, oversight, logs, security, and the duties applicable to the particular use case. Article 26 applies only to deployers of high-risk systems; Article 50 applies only where one of its specific transparency conditions is met.\n\n**5. Prioritise measures.** Assign each evidenced gap an owner, deadline, dependency, and verification criterion. Set the review cadence according to risk, change, and legal developments rather than using a generic quarterly rule.",
+          "keyTakeaway": "A GDPR record of processing activities is a useful starting point, not a complete AI inventory. Add technical, contractual, and organisational sources and classify the actual use case."
+        },
+        {
+          "id": "block_6_lesson_1_section_2",
+          "title": "An inventory with traceable fields",
+          "readTimeMinutes": 2,
+          "content": "The AI Act does not prescribe a particular spreadsheet format for deployers or a list of 14 mandatory columns. Choose a tool that makes responsibilities, access rights, and changes manageable.\n\n**Useful implementation fields:** system ID, name, version, provider, function actually used, intended and internal purpose, user groups, affected persons, data categories, integrations, your role, possible risk category and rationale, relevant duties, approval status, responsible person, contractual and provider evidence, human oversight, logging, security controls, DPIA or FRIA status where applicable, incidents, last review, and next trigger.\n\n**Reconcile sources:** records of processing activities and DPIAs, IT asset and SaaS management, procurement, supplier contracts, SSO and browser approvals, business units, and secure reporting routes for shadow AI.\n\nVersioning and change history are useful governance controls. Whether and in what form they are legally required depends on the specific role and duty. A spreadsheet alone is not evidence of compliance.",
+          "keyTakeaway": "There is no prescribed 14-column template. The inventory should make the real system purpose, role, classification, evidence, responsibilities, and changes traceable."
+        },
+        {
+          "id": "block_6_lesson_1_section_3",
+          "title": "Review questions that produce useful evidence",
+          "readTimeMinutes": 1,
+          "content": "Treat common risks as review questions, not as unverified findings about your organisation:\n\n- **Which generative services are actually used?** Article 4 requires context-appropriate measures to support AI literacy. Article 50 applies only where its specific transparency conditions are met.\n- **Which HR function is active?** An AI system used to review, filter, or evaluate job applications may fall within Annex III, point 4(a). A brand name or a general AI claim does not establish the classification.\n- **Does use occur outside approved accounts?** Assess this through lawful, proportionate sources and a secure reporting route.\n- **Does a high-risk system generate logs, and does the deployer control them?** Article 26(6) governs retention of automatically generated logs under the deployer's control.\n- **Are current provider information and instructions for use available?** Do not claim that a provider will supply records within a few days. Request them, review what is actually supplied, and retain a versioned record.\n\nBuild the prioritised gap list from evidenced answers and the correct classification.",
+          "keyTakeaway": "Verify rather than assume: active function, intended purpose, approved use, applicable duties, logs, and current provider records."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_6_lesson_1_q1",
+          "questionText": "An organisation uses an AI system whose intended purpose is to review and filter job applications for recruitment. Which classification must it assess?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Minimal risk, with no obligations",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Limited risk, with only a transparency duty under Article 50",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "High-risk under Annex III, point 4(a)",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Prohibited under Article 5",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Annex III, point 4(a), covers AI systems intended for the recruitment or selection of natural persons, in particular to analyse and filter job applications. Final classification requires assessment of the specific intended purpose and Article 6, including any possible exception under Article 6(3)."
+        },
+        {
+          "id": "block_6_lesson_1_q2",
+          "questionText": "For how long must a deployer retain automatically generated logs of a high-risk AI system?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "At least 30 days",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "At least three months",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "At least six months",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Indefinitely, for as long as the system operates",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 26(6) requires automatically generated logs to be kept for a period appropriate to the intended purpose of the system and for at least six months, unless applicable Union or national law provides otherwise."
+        },
+        {
+          "id": "block_6_lesson_1_q3",
+          "questionText": "Which statement about a record of processing activities under Article 30 GDPR as a source for an AI inventory is correct?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "It automatically contains every AI system, including systems that do not process personal data",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "It is a useful starting point for AI-supported processing of personal data, but must be supplemented with technical, contractual, and organisational sources",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "It removes the need to review IT assets, procurement, suppliers, and business units",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "It already proves the correct AI Act risk class",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "A record of processing activities can identify relevant processing of personal data. It does not automatically identify every AI system, every active function, or shadow AI, and it does not replace an inventory of systems, procurement, and business-unit use."
+        }
+      ]
+    },
+    {
+      "id": "block_6_lesson_2",
+      "blockId": "block_6",
+      "number": 2,
+      "title": "Connecting the GDPR, ISO 42001, and ISO 23894",
+      "subtitle": "What you can reuse and what requires separate work",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "data protection impact assessment",
+        "Article 26(9)",
+        "ISO 42001",
+        "prEN 18286",
+        "logging"
+      ],
+      "sections": [
+        {
+          "id": "block_6_lesson_2_section_1",
+          "title": "Using a DPIA as a starting point",
+          "readTimeMinutes": 2,
+          "content": "A data protection impact assessment (DPIA) under Article 35 GDPR may contain reusable information, but it does not replace duties under the AI Act. Article 26(9) requires deployers of high-risk systems to use the information supplied by the provider under Article 13 when carrying out a DPIA where one is required. The degree of overlap depends on the system, data, and available documentation. Fixed coverage percentages are not reliable.\n\n**Assess separately:**\n- **GDPR:** legal basis, purpose limitation, data minimisation, data-subject rights, processing on behalf of a controller, transfers, security, and Article 35.\n- **Deployer obligations under Article 26:** instructions for use, human oversight, input data where controlled by the deployer, monitoring and response, logs where controlled by the deployer, information for employees, and other duties that depend on the use case.\n- **Provider obligations:** these include the conformity assessment and EU declaration of conformity. An organisation does not issue that declaration merely because it deploys the system.\n- **Article 4:** context-appropriate measures to support AI literacy. The provision prescribes neither a particular training plan nor a certificate. Internal records may make implementation traceable.\n\nFor the entities within its scope, Article 27(4) permits a FRIA to be conducted together with a DPIA. The distinct subject matter of each assessment must still be covered.",
+          "keyTakeaway": "Article 26(9) links provider information to a DPIA where one is required. It creates no fixed coverage ratio and replaces neither AI Act nor GDPR analysis."
+        },
+        {
+          "id": "block_6_lesson_2_section_2",
+          "title": "ISO 42001 and ISO 23894 as structural aids",
+          "readTimeMinutes": 2,
+          "content": "**ISO/IEC 42001:2023** can structure a management system for roles, objectives, risks, controls, monitoring, and improvement. **ISO/IEC 23894:2023** provides guidance on AI risk management. Whether particular provisions fit an organisation's role and system requires substantive assessment.\n\nCertification to ISO/IEC 42001 is not automatically evidence of AI Act conformity. A presumption of conformity under Article 40 is tied to relevant harmonised standards, or parts of them, whose references have been published in the Official Journal of the European Union. Draft designations and procedural status can change. Consult the current Official Journal and official standardisation information.\n\nUse management standards as structural aids. Map each control to the specific legal role and duty. Do not claim a presumption of conformity without the required official reference.",
+          "keyTakeaway": "ISO 42001 and ISO 23894 can structure governance and risk management. Certification and a presumption of conformity under the AI Act are separate questions."
+        },
+        {
+          "id": "block_6_lesson_2_section_3",
+          "title": "The crosswalk: identifying additional work",
+          "readTimeMinutes": 1,
+          "content": "A crosswalk reduces duplicate recording when it keeps both common ground and differences visible:\n\n- A record of processing activities may feed personal-data-related AI use into an AI inventory; the inventory requires additional sources.\n- A DPIA can be prepared alongside a FRIA where a FRIA is required. It replaces neither the FRIA nor deployer obligations.\n- A data-processing agreement under Article 28 GDPR applies only to processing on behalf of a controller. Procurement assurances and AI Act assurances require separate assessment based on the role and system.\n- Documentation of technical and organisational measures may allow security controls to be reused. Article 15 addresses providers of high-risk systems, while deployers have their own Article 26 and data-protection duties.\n- Information under Articles 13 and 14 GDPR and Article 26(11) of the AI Act has different conditions and content.\n- The data protection officer may be involved. The AI Act does not require an “AI officer”. Responsibility, independence, and conflicts of interest must be addressed deliberately.\n\n**Additional review fields may include:** deployer logs under Article 26(6), employee information under paragraph 7, EU database duties according to role, context-appropriate Article 4 measures, and responses to risks and incidents under Article 26(5). Article 73 imposes its reporting duty and periods on providers; deployers need a defined information and escalation path.\n\nFor Article 22 GDPR, assess whether there is a solely automated decision that produces legal effects or similarly significantly affects a person, whether an exception applies, and which safeguards are required.",
+          "keyTakeaway": "A crosswalk shows reuse and gaps without confusing roles. Keep the data protection officer separate from AI responsibility, provider duties separate from deployer duties, and GDPR analysis separate from AI Act analysis."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_6_lesson_2_q1",
+          "questionText": "Which standard is being prepared as a harmonised European standard for the quality-management system under Article 17 of the EU AI Act?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "ISO/IEC 42001:2023",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "prEN 18286",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "ISO/IEC 27001:2022",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "ISO/IEC 23894:2023",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "prEN 18286 is the forthcoming harmonised European standard for the quality-management system under Article 17. ISO 42001 is an international standard without an Annex ZA and therefore does not create a presumption of conformity under the AI Act."
+        },
+        {
+          "id": "block_6_lesson_2_q2",
+          "questionText": "You already have a DPIA under Article 35 GDPR for a CV-screening system. Does it replace the obligations under Article 26 of the EU AI Act?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Yes. The DPIA covers every AI Act obligation.",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "No. The DPIA may support the analysis but does not replace AI Act duties. Logging and human-oversight duties may apply to the deployer, while data and conformity-assessment duties must be assigned according to the provider and deployer roles.",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "No. A DPIA is entirely unrelated to the AI Act.",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Only a DPIA more than 24 months old must be supplemented.",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "A DPIA may contain reusable information, but it has no fixed coverage ratio. Article 26(9) requires provider information to be used for a DPIA where one is required. Deployer and provider duties, including conformity-assessment duties, must be allocated separately."
+        },
+        {
+          "id": "block_6_lesson_2_q3",
+          "questionText": "Which article of the EU AI Act expressly refers to a DPIA under Article 35 GDPR?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Article 13(3)",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Article 26(9)",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Article 27(1)",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Article 35(2)",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 26(9) of the EU AI Act requires deployers to use the information supplied under Article 13 when carrying out a data protection impact assessment under Article 35 GDPR where one is required. This creates neither an automatic DPIA duty for every AI use nor a replacement for AI Act duties."
+        }
+      ]
+    },
+    {
+      "id": "block_6_lesson_3",
+      "blockId": "block_6",
+      "number": 3,
+      "title": "Templates and checklists",
+      "subtitle": "How to classify and maintain working templates",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "governance package",
+        "Article 4 AI-literacy measures",
+        "provider contract",
+        "Article 73 reporting duty",
+        "CC BY 4.0"
+      ],
+      "sections": [
+        {
+          "id": "block_6_lesson_3_section_1",
+          "title": "A governance package ordered by priority",
+          "readTimeMinutes": 2,
+          "content": "Build an internal governance package in this order of priority: an AI acceptable-use policy, risk-classification method, Article 4 training framework, DPIA worksheet, provider due-diligence checklist, AI inventory, pilot charter, and use-case assessment matrix.\n\nThese documents are implementation tools, not statutory forms, and their existence does not prove compliance. Article 4, for example, requires context-appropriate measures to support AI literacy but prescribes neither a particular training plan nor a certificate. A DPIA is required only where the conditions in Article 35 GDPR are met. Risk classification and deployer duties follow from the specific system and role, not from completing a file.\n\nTreat each document as a working structure: involve the responsible subject-matter roles, substantiate claims, record reasons for decisions, check the current law, and adapt it to the use case. The work and coordination required cannot be reduced reliably to a single weekend.",
+          "keyTakeaway": "The eight documents are working structures to be created and adapted, not prescribed legal forms or evidence of compliance. Duties and evidence depend on the system, role, and context."
+        },
+        {
+          "id": "block_6_lesson_3_section_2",
+          "title": "What working templates may contain",
+          "readTimeMinutes": 2,
+          "content": "**AI acceptable-use policy.** Possible fields include scope, permitted and excluded use cases, data classes, approval routes, human review, rights, incidents, contacts, and the change process. The AI Act does not prescribe a file with this name.\n\n**Article 4 working framework.** Record the role, prior knowledge, context of use, affected persons, and risks. Derive appropriate learning, instruction, and control measures from that context. The Commission states that there is no single mandatory format, prescribed minimum number of hours, or mandatory certificate. Internal records can make implementation traceable.\n\n**Procurement and contract checklist.** Review fields may include provider information under Article 13, intended purpose, system version, performance limitations, updates, logs, security, support, incidents, data processing, exit arrangements, and required evidence. Audit rights, contractual penalties, reporting cycles, or German-language requirements are negotiation points rather than clauses prescribed universally by law.\n\n**Incident-response worksheet.** Separate deployer duties from provider duties. When a deployer identifies a risk or serious incident, Article 26(5) governs notification and suspension of use. Article 73 contains the reporting duty and periods for providers of high-risk systems. Confirm the competent authority and reporting route against the current national implementation and the relevant sector.",
+          "keyTakeaway": "Templates contain context-dependent review fields. Article 4 specifies no mandatory training hours or certificate. Contract terms and incident roles are not prescribed uniformly."
+        },
+        {
+          "id": "block_6_lesson_3_section_3",
+          "title": "Storage and maintenance responsibilities",
+          "readTimeMinutes": 1,
+          "content": "**Storage:** Choose a controlled system with clear owners, appropriate access rights, versioning, retention, and recovery. Git or SharePoint may be suitable; the AI Act does not prescribe either product.\n\n**Maintenance:** Assign a responsible function. The AI Act does not require an “AI officer”. Review after changes to the system, purpose, provider, model, data, incidents, or law, and additionally at a risk-appropriate interval. A generic quarterly cadence is not an authority-mandated rule.\n\n**Sources:**\n- EUR-Lex and the European Commission for the text of the Regulation, its timeline, guidance, and AI-literacy questions and answers.\n- Data-protection supervisory authorities for GDPR guidance.\n- Competent national and sectoral authorities for current enforcement and reporting information.\n\nSubstantiate decisions about actual systems. File length, format, or version history alone does not prove compliance.",
+          "keyTakeaway": "Use controlled storage, clear responsibility, and event- and risk-based maintenance. Check the current law against primary sources."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_6_lesson_3_q1",
+          "questionText": "What is the legal status of internally created working templates for governance records?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "They are adaptable working tools. The AI Act does not prescribe particular filenames or formats, and the applicable duties must be assessed for each system and role.",
+              "isCorrect": true
+            },
+            {
+              "id": "b",
+              "text": "Four documents are always mandatory and four are always voluntary.",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "All eight documents are prescribed EU forms.",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Completing all eight documents automatically proves compliance.",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "The templates can support inventory work, classification, AI-literacy measures, data protection, and procurement. Neither their filenames nor their formats are prescribed by law. Whether a specific duty such as a DPIA applies depends on the conditions of that duty."
+        },
+        {
+          "id": "block_6_lesson_3_q2",
+          "questionText": "How often should governance records be reviewed according to this lesson?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "After changes to the system, purpose, provider, model, data, incidents, or law, and additionally at a risk-appropriate interval; a fixed quarterly cadence is not prescribed by an authority.",
+              "isCorrect": true
+            },
+            {
+              "id": "b",
+              "text": "Exactly once per quarter, as required by law.",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Only during an authority inspection.",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Never, once the records have been created.",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "The AI Act does not prescribe a fixed review frequency. Relevant triggers include changes to the system, purpose, provider, model, or data, an incident, or a legal change, supplemented by a risk-appropriate interval."
+        },
+        {
+          "id": "block_6_lesson_3_q3",
+          "questionText": "Which statement about Article 73 is correct for a serious incident resulting in death?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Two days",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "The provider of a high-risk system must report immediately after establishing the causal link, and no later than 10 days after becoming aware of the incident; deployers also follow Article 26(5).",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "15 days",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "72 hours",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 73 imposes the reporting duty on providers of high-risk systems. Where a person dies, the provider must report immediately after establishing the causal link or its reasonable likelihood and no later than 10 days after becoming aware of the incident. Deployers have separate notification and suspension duties under Article 26(5)."
+        }
+      ]
+    },
+    {
+      "id": "block_6_lesson_4",
+      "blockId": "block_6",
+      "number": 4,
+      "title": "Case study: an SME introduces a CV-screening tool",
+      "subtitle": "A decision path through the Regulation",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "Annex III, point 4(a)",
+        "Article 26 duties",
+        "Article 27 FRIA scope",
+        "section 87 of the German Works Constitution Act",
+        "three separate issues under the German General Equal Treatment Act"
+      ],
+      "sections": [
+        {
+          "id": "block_6_lesson_4_section_1",
+          "title": "Classification and duties under Article 26",
+          "readTimeMinutes": 2,
+          "content": "**Fictional facts:** XY GmbH is a machinery manufacturer in Bavaria with 200 employees. It procures a CV-screening system whose intended purpose is to rank CVs by a match score and prepare a shortlist. This example makes no claim about the functionality of any real product.\n\n**Step 1: assessment against Article 5.** The described intended purpose is not one of the practices listed there. The specific implementation still requires assessment.\n\n**Step 2: high-risk assessment under Article 6 and Annex III.** Point 4(a) covers AI intended for the recruitment or selection of natural persons, in particular to analyse and filter job applications. The use case generally falls within this category. Assess separately any possible exception under Article 6(3) and its conditions.\n\n**Roles and timeline:** As the organisation using the system, XY GmbH is the deployer. The supplier remains the provider unless a change of role under Article 25 occurs. Regulation (EU) 2026/1744, applicable since 27 July 2026, sets **2 December 2027** as the application date for the high-risk rules governing standalone Annex III systems.\n\n**Deployer obligations where the system is deployed as high-risk and the relevant rules apply:**\n- Paragraph 1: take appropriate technical and organisational measures to ensure use in accordance with the instructions.\n- Paragraphs 2 and 3: assign human oversight to competent, properly qualified and trained persons with the necessary authority and support; address automation bias.\n- Paragraph 4: to the extent the deployer controls input data, ensure that it is relevant and sufficiently representative in view of the intended purpose.\n- Paragraph 5: monitor operation; where there is reason to consider that use may result in a risk, or where a serious incident is identified, inform the provider or distributor and the competent market-surveillance authority and suspend use.\n- Paragraph 6: retain automatically generated logs under the deployer's control for at least six months, unless applicable law provides otherwise.\n- Paragraph 7: before workplace use, inform workers' representatives and the affected workers.\n- Paragraph 9: use provider information for a DPIA where one is required under Article 35 GDPR. Article 26(9) does not make a DPIA automatic for every HR system.\n- Paragraph 11: inform affected persons when the high-risk system makes or assists in making decisions concerning them.",
+          "keyTakeaway": "From the binding application date of 2 December 2027, Annex III, point 4(a), may trigger the Article 26 duties for this use case."
+        },
+        {
+          "id": "block_6_lesson_4_section_2",
+          "title": "What XY GmbH does not have to do solely because of this use: Article 27 FRIA",
+          "readTimeMinutes": 2,
+          "content": "**FRIA:** Article 27(1) covers in particular deployers that are bodies governed by public law or private entities providing public services, as well as deployers of specified systems under Annex III, point 5(b) and (c). A private machinery manufacturer using the HR system described here solely for its own recruitment does not fall within Article 27 for that reason alone. Employment AI under Annex III, point 4, is not listed as a separate private-sector FRIA category.\n\nAssess the DPIA separately. Article 35 GDPR requires one where processing is likely to result in a high risk to the rights and freedoms of natural persons. Article 26(9) provides a link to provider information but does not create an automatic DPIA duty.\n\n**Keep provider and deployer duties separate:**\n- The conformity assessment under Article 43 and EU declaration of conformity under Article 47 generally belong to the provider. The deployer checks the documentation, marking, and instructions for use. A change of role under Article 25 can reallocate duties.\n- Providers of Annex III high-risk systems have registration duties under Article 49. Article 26(8) adds a registration duty for deployers that are Union institutions, bodies, offices, or agencies. A private deployer is not required to register merely because it uses the system.\n\n**Assess parallel law in the fictional case:**\n- **Section 87(1), point 6, of the German Works Constitution Act (BetrVG):** Co-determination may apply where the statutory conditions are met and a works council exists. The procedure and legal consequences require employment-law analysis.\n- **German General Equal Treatment Act (AGG):** Discrimination may give rise to claims under section 15 and the evidential rule in section 22. Amounts and limits depend on the claim and facts; describing liability as universally “uncapped” is not reliable.\n- **Article 22 GDPR:** Assess whether a decision is based solely on automated processing and produces legal effects or similarly significantly affects a person, whether an exception applies, and which safeguards are required. A merely formal human step does not necessarily prevent the decision from being solely automated.\n\nThe AI Act, GDPR, AGG, and co-determination law may apply in parallel. Each regime has its own conditions.",
+          "keyTakeaway": "For the private HR use described, Article 27 alone does not impose a FRIA. Assess the DPIA, co-determination, the AGG, and Article 22 GDPR separately under their own conditions."
+        },
+        {
+          "id": "block_6_lesson_4_section_3",
+          "title": "Procurement review fields for the fictional system",
+          "readTimeMinutes": 1,
+          "content": "The AI Act does not prescribe a universal list of eight contract clauses for deployers. Procurement must still secure the information and assistance that lawful operation actually requires.\n\n**Possible review fields (implementation choices rather than a statutory clause list):**\n- intended purpose, system and model version, performance limits, and instructions for use under Article 13;\n- evidence of the provider role, CE marking, and EU declaration of conformity where applicable;\n- quality, bias, robustness, and security testing proportionate to the risk;\n- notification and documentation of material updates;\n- access to logs and information the deployer needs for Article 26 and data-protection compliance;\n- support concerning risks, incidents, data-subject rights, authority requests, exit arrangements, and deletion of data.\n\nReporting frequency, response periods, audit rights, liability, contractual penalties, language, governing law, and jurisdiction are risk-based procurement and negotiation points. Their suitability depends on the market position, sector, and system. In an incident, XY GmbH follows Article 26(5); the provider performs its reporting duty under Article 73. Identify the competent national or sectoral market-surveillance authority from the current implementation framework.",
+          "keyTakeaway": "There is no universal eight-clause list. Procurement should secure the provider records and update, logging, security, incident, and exit support required for the specific deployment."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_6_lesson_4_q1",
+          "questionText": "A machinery manufacturer with 200 employees introduces Personio with AI-based applicant ranking. Must it conduct a fundamental-rights impact assessment (FRIA) under Article 27 of the EU AI Act?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Yes. Every deployment of high-risk AI triggers a FRIA.",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "No. Article 27(1) applies to public authorities, private entities providing public services, and deployers of systems under Annex III, point 5(b) or (c). Point 4 is not included.",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Yes, because HR AI affects fundamental rights.",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "No, because a DPIA under Article 35 GDPR replaces the FRIA completely.",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 27(1) does not cover the private employer described here solely because it uses HR AI under Annex III, point 4. Assess a DPIA separately under Article 35 GDPR; Article 26(9) does not make it automatic."
+        },
+        {
+          "id": "block_6_lesson_4_q2",
+          "questionText": "Which Article 26 duty applies specifically to an employer before a high-risk AI system is put into service at work?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Article 26(2): human oversight",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Article 26(6): keeping logs for six months",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Article 26(7): informing workers' representatives and affected workers",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Article 26(11): informing applicants",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 26(7) requires an employer, before putting into service or using a high-risk AI system at work, to inform workers' representatives and affected workers that they will be subject to the system. This duty is separate from co-determination rights under the Works Constitution Act."
+        },
+        {
+          "id": "block_6_lesson_4_q3",
+          "questionText": "Which areas of law require separate assessment for the fictional AI applicant-screening use case?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Only the EU AI Act; it displaces all other law.",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "The EU AI Act, the GDPR including Articles 22 and 35 where their conditions are met, the AGG, and co-determination under the Works Constitution Act where applicable.",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "The EU AI Act and GDPR; the AGG does not apply to AI.",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Only the GDPR and Works Constitution Act; the AI Act does not apply until 2027.",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "The AI Act, GDPR, AGG, and Works Constitution Act may apply in parallel. Articles 22 and 35 GDPR, co-determination rights, and claims under the AGG each have their own conditions and consequences; none follows from the label “AI” alone."
+        }
+      ]
+    }
+  ],
+  "blockLastVerified": "2026-06-22"
+}

@@ -13,10 +13,11 @@
 // than generic "completion" fallback.
 
 import type { CourseConfig } from "@/lib/course/types";
+import { createLocalizedTechnicalCourseConfig } from "@/lib/technical-courses/routes";
 
-export const AI_NATIVE_OPERATOR_CONFIG: CourseConfig = {
+export const AI_NATIVE_OPERATOR_CONFIG = {
   slug: "ai-native-operator",
-  title: "The AI-Native Operator",
+  title: "AI-Native Operator",
   language: "en",
   basePath: "/kurse/open-source/ai-native-operator",
   // Like data-engineering-fundamentals/data-science, this course's modules
@@ -33,9 +34,9 @@ export const AI_NATIVE_OPERATOR_CONFIG: CourseConfig = {
   workshopQuizQuestionCount: 22,
   workshopQuizTimeLimitMinutes: 28,
   workshopQuizPassThreshold: 0.7,
-  certificateTitle: "The AI-Native Operator",
+  certificateTitle: "Course completion record: AI-Native Operator",
   certificateSubtitle:
-    "Certificate of completion. Issued by loehrning.ai, an independent education platform. This confirmation is not an accredited qualification.",
+    "Locally generated completion record from the independent learning platform loehrning.ai. It is not server-verified, externally assessed, accredited, or evidence of regulatory compliance.",
   certificateModules: [
     "Mindset & Culture",
     "Engineering Practices",
@@ -48,12 +49,41 @@ export const AI_NATIVE_OPERATOR_CONFIG: CourseConfig = {
     "Measurement & ROI",
   ],
   certificateReferenceLabel:
-    "Personal certificate of completion: operating AI-natively across mindset, engineering, product, operations, talent, org design, data, governance, and measurement",
-  quizPassMessage: "Congratulations! You passed The AI-Native Operator workshop quiz.",
+    "Personal course completion record: model-assisted operations across task selection, engineering, product, workflows, people, organization, data, governance, and measurement",
+  quizPassMessage: "You passed the AI-Native Operator workshop quiz.",
   certificateFileStem: "AI-Native-Operator",
   recordNoun: {
-    label: "Certificate of Completion",
-    possessive: "Your certificate of completion",
-    demonstrative: "This certificate of completion",
+    label: "Course Completion Record",
+    possessive: "Your course completion record",
+    demonstrative: "This course completion record",
   },
-};
+} satisfies CourseConfig;
+
+export const AI_NATIVE_OPERATOR_CONFIG_DE =
+  createLocalizedTechnicalCourseConfig(AI_NATIVE_OPERATOR_CONFIG, "de", {
+    title: "AI-Native Operator: Praxiskurs",
+    certificateTitle: "Teilnahmebestätigung: AI-Native Operator",
+    certificateSubtitle:
+      "Lokal erzeugter Abschlussnachweis der unabhängigen Lernplattform loehrning.ai. Er ist nicht servergeprüft, nicht fremdbewertet, nicht akkreditiert und kein Nachweis regulatorischer Konformität.",
+    certificateModules: [
+      "Mindset und Arbeitskultur",
+      "Technische Praxis",
+      "Produktentwicklung",
+      "Betrieb und Abläufe",
+      "Personal und Kompetenzen",
+      "Organisationsstruktur",
+      "Daten und Infrastruktur",
+      "Steuerung und Sicherheit",
+      "Messung und Wirtschaftlichkeit",
+    ],
+    certificateReferenceLabel:
+      "Persönlicher Abschlussnachweis: modellgestützte Arbeit über Aufgabenauswahl, Technik, Produkt, Abläufe, Personal, Organisation, Daten, Steuerung und Messung",
+    quizPassMessage:
+      "Das Abschlussquiz des Kurses AI-Native Operator ist bestanden.",
+    certificateFileStem: "AI-Native-Operator-Praxiskurs",
+    recordNoun: {
+      label: "Teilnahmebestätigung",
+      possessive: "Deine Teilnahmebestätigung",
+      demonstrative: "Diese Teilnahmebestätigung",
+    },
+  });

@@ -19,10 +19,9 @@ import {
  *
  * The AI-Native design primitives are mostly framer-motion wrappers, but a few
  * carry real, deterministic composition logic worth guarding. We exercise the
- * non-animated ones directly (no mocking): SectionShell's conditional class /
- * marginalia gating, Marginalia's marker, TierChip's fixed German label,
- * ModNumber, and Eyebrow's className merge. The motion-driven primitives
- * (CountUp, ClipHeading, FadeBlock, ...) are intentionally not rendered here.
+ * stable primitives directly (no mocking): SectionShell's conditional class /
+ * marginalia gating, Marginalia's marker, TierChip's localized label,
+ * ModNumber, Eyebrow's className merge, and the server-visible reveal content.
  */
 
 const sectionOf = (c: HTMLElement) => c.querySelector("section") as HTMLElement;
@@ -132,8 +131,8 @@ describe("<Eyebrow>", () => {
   });
 });
 
-describe("no-script motion fallbacks", () => {
-  it("marks every motion primitive that can serialize hidden", () => {
+describe("server-visible primitives", () => {
+  it("renders stabilized content without hidden motion state", () => {
     const { container } = render(
       <>
         <VoiceAnchor>Stimme</VoiceAnchor>
@@ -143,10 +142,11 @@ describe("no-script motion fallbacks", () => {
       </>,
     );
 
-    expect(screen.getByText("Stimme").parentElement).toHaveClass("js-reveal");
-    expect(screen.getByText("Überschrift")).toHaveClass("js-reveal");
-    expect(screen.getByText("Inhalt")).toHaveClass("js-reveal");
-    expect(container.querySelector(".h-px")).toHaveClass("js-reveal");
+    expect(screen.getByText("Stimme")).toBeVisible();
+    expect(screen.getByText("Überschrift")).toBeVisible();
+    expect(screen.getByText("Inhalt")).toBeVisible();
+    expect(container.querySelector(".h-px")).toBeVisible();
+    expect(container.querySelector(".js-reveal")).toBeNull();
   });
 
   it("server-renders CountUp with the truthful authored value", () => {

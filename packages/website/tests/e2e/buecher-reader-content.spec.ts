@@ -56,7 +56,7 @@ test.describe("book chapter reader content fidelity", () => {
     // Wait for the production client island instead of focusing server HTML
     // that hydration may replace between focus and keyup.
     await page.goto(CHAPTER_URL, { waitUntil: "load" });
-    await page.locator('html[data-hydrated="true"]').waitFor();
+    await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
 
     // remark-gfm must produce a real <table> with <th> column headers, not a
     // plaintext pipe blob.

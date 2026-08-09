@@ -5,7 +5,7 @@ import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 // ─── Ch8_Govern ───────────────────────────────────
 // Ported from `src/chapters/Ch8_Govern.js`.
 
-const ANNOTATED_SPEC_YAML = `<span class="tok-k">dataset</span>: <span class="tok-s">dim_users</span>
+export const ANNOTATED_SPEC_YAML = `<span class="tok-k">dataset</span>: <span class="tok-s">dim_users</span>
 <span class="tok-k">owner</span>: <span class="tok-s">analytics_oncall</span>
 <span class="tok-k">dataset_acl</span>: <span class="tok-s">corp_assets</span>
 <span class="tok-k">data_classification</span>: <span class="tok-s">pii_secure</span>
@@ -23,7 +23,7 @@ const ANNOTATED_SPEC_YAML = `<span class="tok-k">dataset</span>: <span class="to
 <span class="tok-k">transforms</span>:
   <span class="tok-k">- name</span>: <span class="tok-s">hash_account_id</span>
     <span class="tok-k">kind</span>: <span class="tok-s">opaque</span>
-    <span class="tok-k">network</span>: <span class="tok-s">NO_NETWORK</span>  <span class="tok-c"># can't exfiltrate PII</span>`;
+    <span class="tok-k">network</span>: <span class="tok-s">NO_NETWORK</span>  <span class="tok-c"># removes direct network egress in this policy</span>`;
 
 export interface Ch8GovernProps {
   readonly chapter: ChapterMeta;
@@ -36,7 +36,7 @@ export function Ch8Govern({ chapter }: Ch8GovernProps) {
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Govern: privacy isn't an audit step. It's the <span class='accent'>deploy gate</span>."
-        hook="Every column that names a human, device, or contractor must declare what kind of identity it carries. Access Gateway reads that declaration at deploy time and refuses to ship a DatasetSpec that has unannotated PII. You don't argue with it; you annotate and re-ship. This is the layer that makes the entire warehouse legally safe to query."
+        hook="This course uses a reference deployment gate that checks declared identity classes, ACL metadata, and transform policy. Passing the automated gate confirms those configured rules only; it does not establish legal compliance."
         meta={[
           { k: "Deploy gate", v: "Access Gateway" },
           { k: "ACL", v: "dataset_acl" },
@@ -48,36 +48,37 @@ export function Ch8Govern({ chapter }: Ch8GovernProps) {
         <SectionLabel n="9.1">Actor annotations</SectionLabel>
         <h2 className="h2">Every column declares what it identifies.</h2>
         <p className="prose">
-          A column isn&apos;t just a type: it&apos;s also a <em>subject</em>. <code>employee_email</code>identifies a person.{" "}
+          A column has both a technical type and a policy-relevant subject. <code>employee_email</code> identifies a person.{" "}
           <code>service_account_id</code> identifies an application.
-          <code>contractor_id</code> identifies a contingent worker. Three canonical actors cover &gt;95% of cases:
+          <code>contractor_id</code> identifies a contingent worker. The three labels below belong to the course taxonomy. A production taxonomy
+          must align with the organization&apos;s legal, privacy, security, and records policies.
         </p>
         <div className="cards-3">
           <div className="ccard">
             <div className="ccard-t">PII_Person</div>
             <div className="ccard-n">Identifies a regular employee</div>
-            <div className="ccard-d">Emails, unixnames, manager chains, device serials that map 1:1 to a person. Most common PII in corp data.</div>
+            <div className="ccard-d">Course label for values that directly or indirectly identify a person, subject to the organization&apos;s classification rules.</div>
           </div>
           <div className="ccard">
             <div className="ccard-t">Service_Identity</div>
             <div className="ccard-n">Identifies an application / service</div>
-            <div className="ccard-d">Service account IDs, bot tokens, app UUIDs. Not human PII, but still sensitive: lives in a different ACL bucket.</div>
+            <div className="ccard-d">Course label for application or service identifiers. Sensitivity and access policy still require explicit classification.</div>
           </div>
           <div className="ccard">
             <div className="ccard-t">PII_Contractor</div>
             <div className="ccard-n">Identifies a contingent worker</div>
-            <div className="ccard-d">Legally distinct retention and access rules from regular employees. Mislabelling is a compliance incident.</div>
+            <div className="ccard-d">Course label for contingent-worker identifiers. Retention and access rules must come from the applicable policy and jurisdiction.</div>
           </div>
         </div>
       </section>
 
       <section className="section">
         <SectionLabel n="9.2">The deploy gate</SectionLabel>
-        <h2 className="h2">Access Gateway reads the dbt, not your pull request.</h2>
+        <h2 className="h2">The reference gate evaluates declared metadata.</h2>
         <p className="prose">
-          Reviewers can miss an unannotated PII column. The deploy gate can&apos;t. When you ship a dbt, Access Gateway walks every column,
-          checks the declared actor set against the inferred PII class, resolves the dataset_acl, and (optionally) verifies the Policy Zone
-          binding. Any failure: no ship. Patch and re-ship.
+          In the simulator, Access Gateway checks each declared column against the course classification rules, resolves
+          <code> dataset_acl</code>, and optionally checks a Policy Zone binding. The gate can catch configured metadata omissions. It cannot
+          detect every sensitive value, policy conflict, or legal requirement without additional review and evidence.
         </p>
         <PermissionGateSim />
       </section>
@@ -85,35 +86,34 @@ export function Ch8Govern({ chapter }: Ch8GovernProps) {
       <section className="section">
         <SectionLabel n="9.3">Policy zones &amp; opaque transforms</SectionLabel>
         <p className="prose">
-          A <b>Policy Zone</b> restricts a column so it&apos;s only readable inside a specific compute environment: for example, a
-          regionally-isolated cluster that&apos;s approved for PII. Opaque transforms (UDFs that take PII in and emit derived non-PII out) must
-          run with<code> network=NO_NETWORK</code> so they can&apos;t exfiltrate. Together these cover the &quot;processing PII without leaking
-          PII&quot; case.
+          In the reference design, a <b>Policy Zone</b> limits execution to a named compute environment. An opaque transform can run with
+          <code> network=NO_NETWORK</code> to remove direct network egress. Neither setting is sufficient alone: identity, storage, logs,
+          dependencies, output controls, and deployment configuration also require enforcement and testing.
         </p>
         <CodeBlock title="dim_users.spec.yaml · the shipped annotation" lang="YAML" html={ANNOTATED_SPEC_YAML} />
       </section>
 
       <AntiPatterns
         items={[
-          "<b>Shipping a dbt without actor annotations.</b> The deploy fails. You'll be tempted to find a workaround. There is no workaround. Annotate the columns.",
-          "<b>Opaque transforms without <code>network=NO_NETWORK</code>.</b> A UDF that touches PII AND has network access is an exfil path. The audit team will find it.",
-          "<b>Catch-all ACL groups.</b> <code>eng_everyone</code> on a PII dataset is not governance. Scope the dataset_acl to the project that needs it.",
-          "<b>Mislabelling contingent-worker columns as employees.</b> Retention windows differ. This is a compliance bug, not a bug.",
+          "<b>Omitting required classification metadata.</b> Fix the declaration and investigate why schema or classification review did not catch the new column earlier.",
+          "<b>Treating <code>network=NO_NETWORK</code> as complete isolation.</b> Review dependencies, local storage, logs, outputs, runtime identity, and the enforcement boundary.",
+          "<b>Using broad ACL groups.</b> Grant the minimum access needed for the documented purpose and review membership and ownership over time.",
+          "<b>Applying a course label as legal advice.</b> Map the taxonomy to approved policy, jurisdiction, retention, and data-subject rules.",
         ]}
       />
       <BestPractices
         items={[
-          "<b>Every PII column gets a <code>PII_Person</code> / <code>Service_Identity</code> / <code>PII_Contractor</code> actor.</b> No exceptions, no \"we'll add it later.\"",
-          "<b>Opaque transforms on PII are network-isolated by default.</b> If you need the network, re-architect so PII never touches that transform.",
-          "<b>ACLs scoped per-project, never per-team.</b> Teams reorg; projects don't. A per-project ACL survives reorgs and reads cleanly.",
-          "<b>Policy Zones for region-restricted data.</b> EU-only data gets a EU-only zone; the column literally can't be read outside that compute environment.",
+          "Classify sensitive columns with the organization&apos;s approved taxonomy and record the policy source and reviewer.",
+          "Reduce transform egress and privileges, then test the full runtime boundary rather than relying on one flag.",
+          "Scope ACLs by least privilege and stable ownership. Review both project- and team-based groups when responsibilities change.",
+          "Validate region controls across storage, compute, backups, logs, support access, and replication before making residency claims.",
         ]}
       />
       <Takeaway
         items={[
-          "<b>Privacy isn't an audit step. It's the deploy gate.</b> Access Gateway refuses before the warehouse ever sees the column.",
-          "<b>Three actors cover &gt;95% of PII.</b> PII_Person, Service_Identity, PII_Contractor. Know which applies; annotate.",
-          "<b>The dbt is the legal document.</b> Version it like code. Review it like a contract.",
+          "Automated deployment checks can enforce declared policy rules, but they do not replace privacy, security, or legal review.",
+          "Classification taxonomies are organization-specific. Tie each label to approved policy and enforcement.",
+          "Version DatasetSpec metadata as operational evidence; do not treat it as a legal determination by itself.",
         ]}
       />
     </>

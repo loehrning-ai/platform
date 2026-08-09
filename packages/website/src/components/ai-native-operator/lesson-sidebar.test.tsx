@@ -36,7 +36,11 @@ import { markLessonCompleted, __resetCacheForTests } from "@/lib/progress";
 const NAV_ITEMS = [
   { moduleId: "mindset" as const, lessonNumber: 1, title: "Why AI-first" },
   { moduleId: "mindset" as const, lessonNumber: 2, title: "Maturity levels" },
-  { moduleId: "engineering" as const, lessonNumber: 1, title: "Keystroke to delegation" },
+  {
+    moduleId: "engineering" as const,
+    lessonNumber: 1,
+    title: "Keystroke to delegation",
+  },
 ];
 
 beforeAll(() => {

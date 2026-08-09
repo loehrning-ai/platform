@@ -12,7 +12,7 @@ import { test, expect, type Page } from "@playwright/test";
  *   - Provider-free scaffold: auth.setup.ts supplies a deterministic mock cookie
  *     and the production build ships without Supabase env
  *     (getSupabasePublicConfig() === null, see src/lib/supabase/config.ts). The
- *     server-validated context is effectively SIGNED OUT, so src/middleware.ts
+ *     server-validated context is effectively SIGNED OUT, so src/proxy.ts
  *     fails /konto/datenschutz closed to /login. In this window the
  *     "signed-out gate" describe RUNS a real green assertion (the /login?next=
  *     redirect for the DSGVO subpath) and the "authenticated DSGVO round-trips"
@@ -27,7 +27,7 @@ import { test, expect, type Page } from "@playwright/test";
  * and proves the client round-trips.
  *
  * Every selector/string below is verified against src/app/konto/datenschutz/
- * page.tsx, src/middleware.ts, src/lib/course/types.ts (COURSE_SLUGS) and
+ * page.tsx, src/proxy.ts, src/lib/course/types.ts (COURSE_SLUGS) and
  * src/lib/progress/types.ts (UNIFIED_STORAGE_KEY) - no invented UI.
  */
 

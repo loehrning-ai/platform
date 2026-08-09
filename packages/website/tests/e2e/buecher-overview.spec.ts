@@ -59,19 +59,27 @@ test.describe("/buecher/[slug] book overview", () => {
 
         // Chapter list length must equal the manifest chapter count, and the
         // headline metadata must agree with it.
-        const toc = page.getByRole("navigation", { name: "Inhaltsverzeichnis" });
+        const toc = page.getByRole("navigation", {
+          name: "Inhaltsverzeichnis",
+        });
         await expect(toc).toBeVisible();
         await expect(toc.getByRole("listitem")).toHaveCount(book.chapterCount);
-        await expect(page.getByText(`${book.chapterCount} Kapitel`)).toBeVisible();
+        await expect(
+          page.getByText(`${book.chapterCount} Kapitel`),
+        ).toBeVisible();
 
         // adaptationNote + provider-free PDF truth. This build deliberately
         // has no account backend, so it must not advertise an impossible login.
-        await expect(page.getByText("Hinweis:", { exact: true })).toBeVisible();
+        await expect(
+          page.getByText("Redaktioneller Hinweis", { exact: true }),
+        ).toBeVisible();
         await expect(
           page.getByText(/PDF-Download in dieser Version nicht verfügbar/i),
         ).toBeVisible();
         await expect(
-          page.getByRole("link", { name: /Anmelden, um als PDF herunterzuladen/i }),
+          page.getByRole("link", {
+            name: /Anmelden, um als PDF herunterzuladen/i,
+          }),
         ).toHaveCount(0);
 
         // Back-to-library affordance.
@@ -93,7 +101,9 @@ test.describe("/buecher/[slug] book overview", () => {
         });
         expect(response?.status()).toBe(200);
 
-        const toc = page.getByRole("navigation", { name: "Inhaltsverzeichnis" });
+        const toc = page.getByRole("navigation", {
+          name: "Inhaltsverzeichnis",
+        });
         const firstLink = toc.locator(
           `a[href="/buecher/${book.slug}/${book.firstChapter.slug}"]`,
         );
@@ -104,10 +114,7 @@ test.describe("/buecher/[slug] book overview", () => {
           "\\$&",
         );
         const readerUrl = new RegExp(`/buecher/${escaped}$`);
-        await Promise.all([
-          page.waitForURL(readerUrl),
-          firstLink.click(),
-        ]);
+        await Promise.all([page.waitForURL(readerUrl), firstLink.click()]);
         await expect(page).toHaveURL(readerUrl);
 
         // Reader chrome confirms we opened chapter 1, not just any route.
@@ -119,7 +126,9 @@ test.describe("/buecher/[slug] book overview", () => {
 
       test("has no horizontal overflow at 390px", async ({ page }) => {
         await page.setViewportSize({ width: 390, height: 844 });
-        await page.goto(`/buecher/${book.slug}`, { waitUntil: "domcontentloaded" });
+        await page.goto(`/buecher/${book.slug}`, {
+          waitUntil: "domcontentloaded",
+        });
 
         await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
         await expect(

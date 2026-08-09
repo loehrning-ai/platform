@@ -7,6 +7,7 @@ afterEach(cleanup);
 describe("ByteTrace ", () => {
   it("renders the warm/cold headline and all 8 trace stops", () => {
     render(<ByteTrace />);
+    expect(screen.getByRole("region", { name: "Byte journey timeline" })).toHaveAttribute("tabindex", "0");
     expect(screen.getAllByText("Warm cache").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Cold cache").length).toBeGreaterThan(0);
     expect(screen.getByText("SQL enters")).toBeInTheDocument();

@@ -22,7 +22,9 @@ function readPublicFiles(directory: string): string[] {
     }
 
     if (/\.(?:test|spec)\.[cm]?[jt]sx?$/u.test(entry.name)) continue;
-    if (![".json", ".md", ".mdx", ".ts", ".tsx"].includes(extname(entry.name))) {
+    if (
+      ![".json", ".md", ".mdx", ".ts", ".tsx"].includes(extname(entry.name))
+    ) {
       continue;
     }
     files.push(readFileSync(path, "utf8"));
@@ -69,9 +71,7 @@ describe("public learning content claim hygiene", () => {
     expect(documentation).toContain(
       "four native core curricula require a configured Supabase learning account",
     );
-    expect(documentation).toContain(
-      "four native core-course readers, quizzes",
-    );
+    expect(documentation).toContain("four native core-course readers, quizzes");
     expect(documentation).not.toContain(
       "No credentials are required for courses",
     );
@@ -82,14 +82,37 @@ describe("public learning content claim hygiene", () => {
 
   it("does not expose the private company scoring dataset", () => {
     const corpus = reviewedFiles.map(read).join("\n");
-    expect(corpus).not.toMatch(/Digifyde|34[.]879|130 digitale Signale|93[,.]3 Prozent/iu);
+    expect(corpus).not.toMatch(
+      /Digifyde|34[.]879|130 digitale Signale|93[,.]3 Prozent/iu,
+    );
+  });
+
+  it("does not restore the superseded Article 4 competence guarantee wording", () => {
+    const corpus = [
+      ...readPublicFiles(root),
+      ...readPublicFiles(sourceRoot),
+    ].join("\n");
+
+    expect(corpus).not.toMatch(
+      /maßnahmen (?:für ein angemessenes niveau an|zur entwicklung (?:der|von)) ki-kompetenz|measures to ensure an appropriate level of ai literacy|measures to develop the ai literacy|measures that develop the ai literacy/iu,
+    );
+    expect(corpus).toMatch(
+      /Maßnahmen,? die die Entwicklung der KI-Kompetenz[^.]*unterstützen/iu,
+    );
+    expect(corpus).toMatch(
+      /measures (?:that|to) support the development of AI literacy/iu,
+    );
   });
 
   it("does not restore vendor, template, or Article 22 absolutes", () => {
     const corpus = reviewedFiles.map(read).join("\n");
-    expect(corpus).not.toContain("Anthropic ist vertrauenswürdig, DSGVO-konform");
+    expect(corpus).not.toContain(
+      "Anthropic ist vertrauenswürdig, DSGVO-konform",
+    );
     expect(corpus).not.toContain("Vier der acht Vorlagen sind direkt");
-    expect(corpus).not.toContain("zum Download benötigst du ein kostenloses Konto");
+    expect(corpus).not.toContain(
+      "zum Download benötigst du ein kostenloses Konto",
+    );
     expect(corpus).not.toContain("Claude Opus 4.7");
     expect(corpus).not.toContain("Llama 3.3 70B");
   });
@@ -100,7 +123,9 @@ describe("public learning content claim hygiene", () => {
     };
 
     for (const chapter of manifest.chapters) {
-      expect(() => read(`books/ki-landschaft/${chapter.sourceFile}`)).not.toThrow();
+      expect(() =>
+        read(`books/ki-landschaft/${chapter.sourceFile}`),
+      ).not.toThrow();
     }
   });
 
@@ -113,16 +138,32 @@ describe("public learning content claim hygiene", () => {
     expect(corpus).not.toMatch(
       /unter 2 Euro im Monat|unter 50 Cent|1-3 Cent pro Anfrage|ab 20 EUR\/Monat für 750|ab 9 EUR\/Monat|37- bis 52-fache|rund 75-fach/iu,
     );
-    expect(corpus).toContain("Fiktives Rechenbeispiel, kein Ergebnisversprechen");
-    expect(corpus).toContain("Ein negativer Wert ist ein gültiges Pilotergebnis");
+    expect(corpus).toContain(
+      "Fiktives Rechenbeispiel, kein Ergebnisversprechen",
+    );
+    expect(corpus).toContain(
+      "Ein negativer Wert ist ein gültiges Pilotergebnis",
+    );
   });
 
   it("uses reserved domains and unmistakable dummy identities in public examples", () => {
-    const corpus = [...readPublicFiles(root), ...readPublicFiles(sourceRoot)].join(
-      "\n",
+    const corpus = [
+      ...readPublicFiles(root),
+      ...readPublicFiles(sourceRoot),
+    ].join("\n");
+    // Inline SVG path data is machine geometry, not learner-visible prose.
+    // Strip it before looking for telephone-shaped digit sequences.
+    const proseCorpus = corpus.replace(/\bpath:\s*"M[^"]*"/gsu, "");
+    // DOI link targets can contain telephone-shaped numeric suffixes. They are
+    // publication identifiers, not learner-visible example identities.
+    const proseWithoutDoiLinks = proseCorpus.replace(
+      /\bhttps:\/\/doi[.]org\/10[.]\d{4,9}\/[-._;()/:a-z0-9]+/giu,
+      "",
     );
     const emails =
-      corpus.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/gu) ?? [];
+      proseCorpus.match(
+        /(?<!\\)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/gu,
+      ) ?? [];
 
     for (const email of emails) {
       const domain = email.toLowerCase().split("@")[1];
@@ -135,10 +176,12 @@ describe("public learning content claim hygiene", () => {
     }
 
     const realLookingPhones =
-      corpus.match(/(?:\+49[ /-]?[1-9][0-9 /-]{6,}|\b0[1-9][0-9]{1,4}[ /-][0-9][0-9 /-]{4,})/gu) ?? [];
+      proseWithoutDoiLinks.match(
+        /(?:\+49[ /-]?[1-9][0-9 /-]{6,}|\b0[1-9][0-9]{1,4}[ /-][0-9][0-9 /-]{4,})/gu,
+      ) ?? [];
     expect(realLookingPhones).toEqual([]);
 
-    expect(corpus).not.toMatch(
+    expect(proseCorpus).not.toMatch(
       /Max Mustermann|Müller Maschinenbau|Maria Schubert|Franz & Voigt|Dr\. Lea Kirchner|Bauer Maschinen|Sabine Vogt|Thomas Schmidt|Schmidt GmbH|Meier AG|Keller KG/iu,
     );
   });

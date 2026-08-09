@@ -32,7 +32,7 @@ function LakehouseDiagram() {
             <div className="lh-k">Storage (cheap, shared)</div>
             <div className="lh-v">Parquet · ORC · HDFS · S3</div>
           </div>
-          <div className="lh-note">Many engines read the same bytes. Compute spins up per-query, storage costs cents.</div>
+          <div className="lh-note">Compatible engines can read the same files. Compute and storage can scale independently.</div>
         </div>
       </div>
     </div>
@@ -41,9 +41,9 @@ function LakehouseDiagram() {
 
 function FormatSpectrum() {
   const formats = [
-    { name: "CSV / JSON", kind: "row", tagline: "Human-readable. No schema. No types. No compression. Fine for hand-off, terrible for analytics.", traits: ["row", "no-schema", "uncompressed"] },
-    { name: "Parquet / ORC", kind: "col", tagline: "Columnar on disk. Schema + types embedded. Snappy/ZSTD. The analytical default.", traits: ["columnar", "schema", "compressed"] },
-    { name: "Iceberg / Delta / Hudi", kind: "tbl", tagline: "A table format on top of Parquet: metadata manifests that give you ACID, schema evolution, time travel.", traits: ["ACID", "time-travel", "schema-evolution"] },
+    { name: "CSV / JSON", kind: "row", tagline: "Text formats suited to exchange and inspection. Types, schema enforcement, and compression depend on the surrounding system.", traits: ["row-oriented", "text", "portable"] },
+    { name: "Parquet / ORC", kind: "col", tagline: "Typed columnar files with metadata and compression. Designed for selective analytical reads.", traits: ["columnar", "schema", "compressed"] },
+    { name: "Iceberg / Delta / Hudi", kind: "tbl", tagline: "Table formats that track data files and add transaction, schema-evolution, and snapshot semantics.", traits: ["transactions", "snapshots", "schema-evolution"] },
   ];
   return (
     <div className="fmt-strip">
@@ -67,9 +67,9 @@ function FormatSpectrum() {
 
 function EngineCards() {
   const engines = [
-    { n: "Presto / Trino", kind: "MPP, in-memory", fits: "Interactive dashboards. Sub-second to tens of seconds.", not: "Hour-long ETL jobs: it dies, can't retry." },
-    { n: "Spark / Databricks", kind: "distributed, fault-tolerant", fits: "Heavy ETL. Big joins. Anything that must finish.", not: "Quick ad-hoc: the JVM spin-up alone eats your latency." },
-    { n: "Snowflake", kind: "cloud DW → lakehouse", fits: "Managed. Zero-ops. Good price/perf on mid-scale.", not: "Anywhere you need to read external Parquet from a non-Snowflake engine." },
+    { n: "Presto / Trino", kind: "distributed SQL", fits: "Interactive SQL across configured catalogs and connectors.", not: "Long transformations without checking spill, retry, and resource settings." },
+    { n: "Spark / Databricks", kind: "distributed processing", fits: "Batch transformations, large joins, and jobs that benefit from recomputation or spill.", not: "Latency-sensitive queries without measuring startup and scheduling overhead." },
+    { n: "Snowflake", kind: "managed cloud warehouse", fits: "Managed SQL compute with independently sized virtual warehouses.", not: "Workloads whose portability or external-engine access requirements conflict with the platform design." },
   ];
   return (
     <div className="eng-cards">
@@ -100,24 +100,25 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Core fundamentals: <span class='accent'>storage, formats, engines.</span>"
-        hook="Before we talk about engines, we talk about physics. The shape of bytes on disk and the engine that reads them decides whether your query is a sip or a flood. <strong>Everything else is a consequence of this.</strong>"
+        hook="Query cost starts with data layout, metadata, and the engine that reads the files. This chapter traces those layers before comparing execution models."
         meta={[
           { k: "Covers", v: '<span class="chip">Lakehouse</span><span class="chip">Row vs columnar</span><span class="chip">Parquet</span><span class="chip">Iceberg</span>' },
           { k: "Engines", v: "Presto · Spark · Trino · Snowflake" },
-          { k: "Outcome", v: "Read 100× less disk per query" },
+          { k: "Outcome", v: "Compare bytes read by row and column layouts" },
         ]}
       />
 
       <section className="section">
         <SectionLabel n="0.1">Decoupling storage from compute</SectionLabel>
-        <h2 className="h2">The quiet shift that changed every warehouse.</h2>
+        <h2 className="h2">Why storage and compute are separated.</h2>
         <p className="prose">
           A decade ago, a warehouse was a box. Oracle, Teradata, Vertica: one appliance owned both the disks and the query engine. You bought them
           together, you scaled them together, and if you wanted to try a new engine you migrated terabytes first.
         </p>
         <p className="prose">
-          The <b>lakehouse</b> move was to put the bytes in a shared object store: S3, GCS, or Azure Blob, as open columnar files (Parquet, ORC) ,
-          and let <em>any</em> engine read them. Compute became a job, not a server. Storage became a commodity.
+          A <b>lakehouse</b> architecture can place data in shared object storage such as S3, GCS, or Azure Blob, commonly as columnar files such
+          as Parquet or ORC. Engines that support the chosen formats, table metadata, and access controls can read those files. Compute and
+          storage then scale through separate controls.
         </p>
         <LakehouseDiagram />
       </section>
@@ -126,8 +127,7 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
         <SectionLabel n="0.2">The layers</SectionLabel>
         <h2 className="h2">Seven layers, one query.</h2>
         <p className="prose">
-          A warehouse query touches seven layers. Most engineers only think about two - the SQL they wrote and the table they named, and are
-          baffled when things break in between. The stack, bottom-up: <b>physical storage</b> (SSD blob tier), <b>blob</b> (S3),<b> file format</b>{" "}
+          The course reference path separates a warehouse query into seven diagnostic layers. The stack, bottom-up: <b>physical storage</b> (SSD blob tier), <b>blob</b> (S3),<b> file format</b>{" "}
           (Parquet · ORC · Avro), <b>table abstraction</b> (namespaces → tables → partitions),<b> catalog</b> (Glue Catalog), <b>query engine</b>{" "}
           (Presto · Spark), <b>application</b> (Hex · dashboards). Knowing the layer means knowing the failure mode.
         </p>
@@ -140,7 +140,7 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
         <p className="prose">
           Let&apos;s make storage tangible. Here&apos;s a single byte: the value of <code>user_email</code> for one row - traced through every stop
           from the SQL statement to the physical bytes on disk. Cold and warm caches have wildly different latency profiles; metastore and blob
-          lookups are the two stops that dominate a cold run.
+          lookups can add substantial work to a cold run. The simulator uses illustrative inputs rather than vendor benchmarks.
         </p>
         <ByteTrace />
       </section>
@@ -149,20 +149,18 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
         <SectionLabel n="0.4">Row vs columnar, visualized</SectionLabel>
         <h2 className="h2">Why analytics loves columns.</h2>
         <p className="prose">
-          In a row layout every record&apos;s fields are stored together: perfect for &quot;fetch user 42&quot; but catastrophic for &quot;average{" "}
-          <code>revenue</code> across a billion rows&quot;. The scanner has no choice but to touch every byte just to find the one column you asked
-          for.
+          In a row layout, a record&apos;s fields are stored together. That layout supports point reads well, but an analytical query over one column
+          may read unrelated fields unless the storage engine has another access path.
         </p>
         <p className="prose">
-          Columnar flips it: all values of <code>revenue</code> are stored contiguously on disk. The engine can <b>skip 99% of the table</b> and go
-          straight to the column it needs. This is called <em>projection pushdown</em>, and it&apos;s the single biggest reason Parquet is the
-          analytical default.
+          In a columnar layout, values of <code>revenue</code> are stored in column chunks. When the format and connector support projection
+          pushdown, the engine reads the requested chunks instead of every field. The actual reduction depends on the selected columns, file
+          layout, and query plan.
         </p>
         <Scanner />
         <p className="prose" style={{ marginTop: 24 }}>
-          Columnar storage compresses beautifully because values in one column are homogenous: a column of timestamps, a column of country codes.
-          Snappy, ZSTD, and run-length encoding routinely shrink a stripe <b>3–10×</b>. The scan head has less to read <em>and</em> the bytes it
-          reads unpack cheaply.
+          Columnar storage can compress efficiently because adjacent values often share a type and distribution. Compression depends on the data,
+          encoding, codec, and row-group size; measure the result on representative files.
         </p>
       </section>
 
@@ -175,8 +173,8 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
         </p>
         <FormatSpectrum />
         <p className="prose" style={{ marginTop: 18 }}>
-          You rarely pick just one. A modern pipeline lands raw JSON, converts to Parquet at ingest, and registers the Parquet in an <b>Iceberg</b>{" "}
-          table so <code>SELECT ... FOR VERSION AS OF</code> works and a bad backfill is one SQL away from rolled back.
+          A pipeline may retain raw JSON for replay, write validated typed records to Parquet, and register those files in a table format such as
+          <b> Iceberg</b>. Snapshot queries and rollback behavior then depend on the selected engine and table-format implementation.
         </p>
       </section>
 
@@ -186,8 +184,8 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
         <p className="prose">
           New hires think SQL &quot;just runs.&quot; In fact a coordinator takes your statement through a pipeline: parser builds an <b>AST</b>,
           analyzer resolves names against the catalog, planner emits a<b> logical</b> tree of relational operators, then a <b>physical</b> plan
-          with exchange types and worker counts, and finally a <b>task graph</b> of stages dispatched across the cluster. Every step is inspectable
-          via <code>EXPLAIN ANALYZE</code>.
+          with exchange types and worker counts, and finally a <b>task graph</b> of stages dispatched across the cluster. Plan and runtime detail
+          exposed by <code>EXPLAIN</code> or <code>EXPLAIN ANALYZE</code> depends on the engine.
         </p>
         <SqlDecoderStage />
       </section>
@@ -197,7 +195,8 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
         <h2 className="h2">Pick the engine for the query, not the other way round.</h2>
         <p className="prose">
           Decoupled storage means you can run <em>different</em> engines against the <em>same</em> bytes depending on what you&apos;re doing.
-          Interactive dashboards want sub-second response; hour-long ETL wants fault tolerance. One engine is rarely best at both.
+          Interactive queries and long transformations place different demands on startup time, memory, spill, retries, and concurrency. Compare
+          those requirements against the engine&apos;s configured behavior.
         </p>
         <EngineCards />
       </section>
@@ -207,8 +206,8 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
         <h2 className="h2">The connector chooses the physics.</h2>
         <p className="prose">
           Trino (the open-source MPP query engine, originally PrestoSQL) ships a pluggable connector interface: the same SQL statement can compile
-          down to fanning out across a thousand S3 blobs, or reading a few megabytes from local SSD, or answering straight from coordinator memory.
-          Latency can vary by <b>six orders of magnitude</b> with no change to the query text.
+          down to distributed object-store reads, local storage access, or coordinator metadata. The same query text can therefore use different
+          I/O paths. Inspect the connector plan, cache state, and data placement before comparing latency.
         </p>
         <ConnectorSwitcher />
       </section>
@@ -216,19 +215,19 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
       <AntiPatterns
         items={[
           "<b>Treating a data lake like a relational DB.</b> <code>UPDATE one_row WHERE id = ...</code> on raw Parquet rewrites an entire file. Use a table format (Iceberg/Delta) that supports row-level changes, or batch the update.",
-          "<b>The small-files problem.</b> 10 000 × 1 MB Parquet files is worse than 10 × 1 GB: file-listing overhead, per-file footer reads, and task spin-up dominate. Compact on a schedule.",
-          "<b>Landing raw CSV in the warehouse.</b> Types unknown, no column pruning, no compression. Always convert to Parquet at ingest.",
+          "<b>The small-files problem.</b> Many small files can add listing, footer-read, and task-scheduling overhead. Define a target file-size range and compact when measurements justify it.",
+          "<b>Using raw CSV as an analytical table.</b> Parse and validate types before writing a typed columnar representation when selective analytical reads are required.",
           "<b><code>SELECT *</code> on a 300-column fact table.</b> Undoes everything columnar gave you. Ask for exactly the columns you need.",
           "<b>Treating Trino and PrestoDB as identical.</b> Trino (formerly PrestoSQL) and PrestoDB diverged around 2020 and have since drifted significantly, function names, connector behavior, and optimizer defaults all differ. Check which one your cluster runs before copy-pasting docs.",
-          "<b>Treating SQL as opaque magic.</b> Every query has a plan, and the plan is inspectable. <code>EXPLAIN ANALYZE</code> before you tune anything.",
-          "<b>Choosing Spark for a job Presto would finish in seconds.</b> Spark cold-start is 2–10× Presto's: the JVM warm-up alone eats any interactive budget.",
+          "<b>Ignoring the execution plan.</b> Use the engine's plan and runtime statistics before changing SQL or cluster settings.",
+          "<b>Choosing an engine by reputation alone.</b> Measure startup, scan, memory, spill, retry, and concurrency behavior for the target workload.",
         ]}
       />
       <Takeaway
         items={[
           "<b>A warehouse is seven layers.</b> Knowing the layer means knowing the failure mode: metastore down is not the same as SSD tier slow.",
-          "<b>SQL → AST → logical → physical → stages → tasks.</b> Five transformations between your text and your bytes. All inspectable.",
-          "<b>The connector chooses the physics.</b> Same SQL, 1000× latency range. Snowflake ≠ Redis-backed cache ≠ System tables.",
+          "<b>SQL → AST → logical → physical → stages → tasks.</b> Use the engine's available plan and runtime detail to inspect these transformations.",
+          "<b>The connector selects the access path.</b> Identical SQL can reach different storage, metadata, and cache layers.",
           "Columnar formats turn analytics into <b>skip-most-of-the-disk</b> operations. Table formats add ACID and time travel on top.",
           "Read the plan before you tune the query. Filter on partition and indexed columns first. Avoid <code>SELECT *</code>.",
         ]}

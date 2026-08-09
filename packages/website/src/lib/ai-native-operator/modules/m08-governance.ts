@@ -1,4 +1,3 @@
-// Ported verbatim from course-data.js's MODULES[7] ("governance", M08).
 import type { AiNativeOperatorLesson } from "../types";
 
 export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
@@ -8,26 +7,28 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 1,
     number: 1,
     kind: "reading",
-    title: "The model registry",
-    subtitle: "Track every model, where it runs, what data it sees, and who approved it.",
-    objective: "Track every model, where it runs, what data it sees, and who approved it.",
+    title: "Maintain a model and system registry",
+    subtitle:
+      "Record deployed model-mediated systems, their owners, intended uses, data access, tools, controls, and current status.",
+    objective:
+      "Record deployed model-mediated systems, their owners, intended uses, data access, tools, controls, and current status.",
     durationMinutes: 18,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "Why a registry exists",
+        title: "Inventory the deployed system, not only the model",
         readTimeMinutes: 9,
         content:
-          'Without a registry, you cannot answer the question "which models are running on which data right now?", and that question gets asked the day you have an incident, a regulator, or an audit. The registry is the boring foundation that makes everything else possible.',
+          "A model name alone does not identify operational risk. Register each deployed use with its business purpose, accountable owner, provider and version, deployment location, data classifications, connected tools, user groups, risk tier, and lifecycle status. Include externally hosted features and embedded vendor capabilities when they affect your data or decisions.",
       },
       {
         id: "s2",
-        title: "What the registry tracks",
+        title: "Keep the registry tied to lifecycle events",
         readTimeMinutes: 9,
         content:
-          "For each model: provider, version, intended use case, data classification approved, permitted tools, owner, last review date, eval scores. Nothing exotic, just the facts, in one place, kept current.",
+          "Create or update the record during intake, approval, release, material change, periodic review, incident response, and retirement. Store evaluation evidence, approval conditions, last review, next review, and unresolved findings. Assign an owner for completeness and a mechanism for discovering unregistered systems.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -40,7 +41,7 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
           lessonId: "governance/1",
           cpId: "exercise",
           scenario:
-            "Can you produce a list of every AI model running in your org right now? What it does, what data it sees? If no, your registry is the next step.",
+            "Choose one deployed model-mediated system. Record its use, owner, provider and version, hosting location, data classes, tools, users, risk tier, approvals, evaluation evidence, review date, and retirement condition. Mark every unknown field.",
           rows: 3,
         },
       },
@@ -52,27 +53,28 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 2,
     number: 2,
     kind: "reading",
-    title: "Eval-driven release",
-    subtitle: "Treat models like services. No release without passing the eval suite. Block regressions automatically.",
+    title: "Release changes through defined controls",
+    subtitle:
+      "Match evaluation, approval, rollout, monitoring, and rollback requirements to the risk of each change.",
     objective:
-      "Treat models like services. No release without passing the eval suite. Block regressions automatically.",
+      "Match evaluation, approval, rollout, monitoring, and rollback requirements to the risk of each change.",
     durationMinutes: 24,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "The release gate",
+        title: "Define a change-specific release gate",
         readTimeMinutes: 12,
         content:
-          "Every model change, provider swap, version bump, prompt edit, tool addition, must pass a defined eval suite before reaching production. Regressions block. The system enforces, not the human memory.",
+          "Model, provider, prompt, retrieval, tool, policy, and routing changes can alter behavior. Classify the change, select representative quality and safety evaluations, set acceptance thresholds, and identify required human review. Automate repeatable checks and preserve the result with the released version.",
       },
       {
         id: "s2",
-        title: "The discipline pays",
+        title: "Control the release after the gate",
         readTimeMinutes: 12,
         content:
-          "In year one, the suite catches a few embarrassments and you mostly grumble at the friction. In year two, it catches a near-disaster and the grumbling stops forever. The teams that scale agentic systems have this gate; the teams that get burned do not.",
+          "Pre-release evaluations cannot cover every production condition. Use staged exposure where feasible, monitor defined outcome and guardrail signals, and prepare rollback or containment criteria. Document an emergency-change path with limited authority, explicit time bounds, retrospective review, and follow-up testing.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -85,7 +87,7 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
           lessonId: "governance/2",
           cpId: "exercise",
           scenario:
-            "For your most-deployed agent, what eval gates exist today? What gates would you add to be confident in any model upgrade?",
+            "For one deployed workflow, define change classes, required evaluations, acceptance thresholds, approvers, staged rollout, production guardrails, rollback criteria, and the emergency-change record.",
           rows: 4,
         },
       },
@@ -97,26 +99,28 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 3,
     number: 3,
     kind: "reading",
-    title: "Agent identity and audit",
-    subtitle: "Every agent has an identity. Permissions, audit, and accountability, same as a human user.",
-    objective: "Every agent has an identity. Permissions, audit, and accountability, same as a human user.",
+    title: "Give agents bounded identity and audit trails",
+    subtitle:
+      "Use attributable workload identities, explicit delegation, least privilege, and protected event records.",
+    objective:
+      "Use attributable workload identities, explicit delegation, least privilege, and protected event records.",
     durationMinutes: 20,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "Why identity matters",
+        title: "Separate the actor, user, and authority",
         readTimeMinutes: 10,
         content:
-          "When an agent takes an action, sends an email, opens a PR, deletes a record, you must be able to answer: which agent, on whose behalf, with what authorization. Without identity, the audit log is a story you tell yourself. With it, you have ground truth.",
+          "When an agent acts, the system should identify the executing workload, the user or service on whose behalf it acts, and the authorization that permits the action. Give each production workload a distinct identity. Use least privilege, short-lived credentials, scoped resources and actions, and explicit revocation rather than shared secrets or broad service accounts.",
       },
       {
         id: "s2",
-        title: "Implementing it",
+        title: "Record enough evidence to reconstruct the event",
         readTimeMinutes: 10,
         content:
-          "Agents are first-class principals in your identity provider. Every action is logged with agent ID + on-behalf-of-user. Permissions are explicit, scoped, time-limited. Reviews happen on a cadence.",
+          "An audit event should include a unique event identifier, timestamps, workload identity, represented user or service, action, resource, authorization decision, policy version, result, and correlation identifiers. Protect integrity and access to the log. Store references or redacted values instead of unnecessary secrets and personal data.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -129,7 +133,7 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
           lessonId: "governance/3",
           cpId: "exercise",
           scenario:
-            "For your most consequential agent action (write/destructive), can you produce an audit trail with agent ID, user, authorization, and timestamp? If no, name the gap.",
+            "Choose one consequential write or destructive action. Identify the workload identity, represented user or service, credential scope, authorization evidence, audit fields, retention, log access, revocation path, and incident owner.",
           rows: 3,
         },
       },
@@ -141,40 +145,69 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Module 8, knowledge check",
-    subtitle: "Lock governance basics.",
-    objective: "Lock governance basics.",
+    title: "Module 8 knowledge check",
+    subtitle: "Check the governance controls from this module.",
+    objective: "Check the governance controls from this module.",
     durationMinutes: 8,
     keyConcepts: [],
     quiz: [
       {
         id: "ano-governance-q1",
         questionText:
-          'Your security team asks: "Which AI models are running on customer PII right now?" You can\'t answer. Highest-leverage fix:',
+          "The security team asks which deployed systems use customer personal data, but no complete answer is available. What is the primary corrective control?",
         answerOptions: [
-          { id: "a", text: "Disable all AI temporarily.", isCorrect: false },
-          { id: "b", text: "Stand up the model registry.", isCorrect: true },
-          { id: "c", text: "Hire a CISO.", isCorrect: false },
-          { id: "d", text: "Add encryption.", isCorrect: false },
+          {
+            id: "a",
+            text: "Disable every model-mediated system without first identifying them.",
+            isCorrect: false,
+          },
+          {
+            id: "b",
+            text: "Create and maintain a system registry tied to intake, release, change, review, incident, and retirement events.",
+            isCorrect: true,
+          },
+          {
+            id: "c",
+            text: "Assign a security executive without creating an inventory process.",
+            isCorrect: false,
+          },
+          {
+            id: "d",
+            text: "Add encryption without identifying uses, owners, data flows, or tools.",
+            isCorrect: false,
+          },
         ],
         explanation:
-          "Not being able to name every model touching customer PII is a registry gap, and the highest-leverage fix is standing one up: provider, version, data classification, owner, and last review date, in one place, kept current. Disabling AI or hiring a CISO react to the symptom; the registry is the boring infrastructure that lets you actually answer the question next time.",
+          "The immediate gap is the absence of a maintained inventory. A registry connects each deployed use to its owner, data classifications, provider and version, tools, controls, approvals, and lifecycle state. Other safeguards remain necessary but do not replace that record.",
       },
       {
         id: "ano-governance-q2",
-        questionText: 'An agent deletes a record. To answer "who did this and why," you need:',
+        questionText:
+          "An agent deletes a record. Which evidence best supports attribution and incident reconstruction?",
         answerOptions: [
-          { id: "a", text: "Sentiment analysis of recent prompts.", isCorrect: false },
-          { id: "b", text: "A rough estimate based on agent name.", isCorrect: false },
+          {
+            id: "a",
+            text: "Sentiment analysis of recent model inputs.",
+            isCorrect: false,
+          },
+          {
+            id: "b",
+            text: "An estimate based on the display name of the agent.",
+            isCorrect: false,
+          },
           {
             id: "c",
-            text: "Agent identity + on-behalf-of-user + timestamp + authorization, all in the audit log.",
+            text: "Workload identity, represented user or service, action, resource, authorization and policy version, timestamps, result, and correlation identifiers.",
             isCorrect: true,
           },
-          { id: "d", text: "A team retrospective.", isCorrect: false },
+          {
+            id: "d",
+            text: "A retrospective written without event records.",
+            isCorrect: false,
+          },
         ],
         explanation:
-          "Answering \"who did this and why\" for an agent's destructive action requires a real audit trail: the agent's identity, the user it was acting on behalf of, its authorization, and a timestamp, all captured in the log at the moment of the action. Sentiment analysis or a retrospective can only ever produce a guess after the fact.",
+          "A protected event record links the executing workload, represented principal, authority, action, resource, and result at the time of the event. Display names and later recollection cannot establish that chain reliably.",
       },
     ],
     sections: [],

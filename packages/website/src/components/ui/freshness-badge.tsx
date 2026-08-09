@@ -1,20 +1,26 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import type { Locale } from "@/lib/i18n/locale";
+import { getCourseReaderCopy } from "@/components/course/kurs/course-ui-copy";
 
 interface FreshnessBadgeProps {
   readonly lastReviewed: string;
   readonly nextReview: string;
   readonly riskClass?: string;
+  readonly locale?: Locale;
 }
 
-function formatMonthYear(isoDate: string): string {
+function formatMonthYear(isoDate: string, locale: Locale): string {
   // Parse as UTC to avoid timezone-offset day shifts
   const [year, month] = isoDate.split("-").map(Number);
-  return new Date(year, month - 1, 1).toLocaleDateString("de-DE", {
-    month: "long",
-    year: "numeric",
-  });
+  return new Date(year, month - 1, 1).toLocaleDateString(
+    getCourseReaderCopy(locale).freshness.dateLocale,
+    {
+      month: "long",
+      year: "numeric",
+    },
+  );
 }
 
 function isOverdue(nextReview: string): boolean {
@@ -35,7 +41,10 @@ export function FreshnessBadge({
   lastReviewed,
   nextReview,
   riskClass,
+  locale = "de",
 }: FreshnessBadgeProps): ReactNode {
+  const copy = getCourseReaderCopy(locale).freshness;
+  const formattedDate = formatMonthYear(lastReviewed, locale);
   // `new Date()` must not run during render (server/client clocks can disagree
   // across midnight), so the overdue flag is derived after mount.
   const [overdue, setOverdue] = useState(false);
@@ -47,11 +56,11 @@ export function FreshnessBadge({
     <div
       data-testid="freshness-badge"
       role="note"
-      aria-label={`Inhalt zuletzt geprüft: ${formatMonthYear(lastReviewed)}`}
+      aria-label={copy.aria(formattedDate)}
       className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground"
     >
       <span>
-        Stand: <time dateTime={lastReviewed}>{formatMonthYear(lastReviewed)}</time>
+        {copy.label}: <time dateTime={lastReviewed}>{formattedDate}</time>
       </span>
       {riskClass && (
         <span className="rounded border border-border px-1.5 py-0.5 font-mono uppercase tracking-wide">
@@ -60,7 +69,7 @@ export function FreshnessBadge({
       )}
       {overdue && (
         <span className="rounded bg-amber-500/15 px-1.5 py-0.5 text-amber-600 dark:text-amber-400">
-          Aktualisierung ausstehend
+          {copy.overdue}
         </span>
       )}
     </div>

@@ -1,3 +1,5 @@
+import { canonicalLocalePathname } from "@/lib/i18n/locale";
+
 const PROGRESS_UI_ROUTE_PREFIXES = [
   "/ai-native",
   "/buecher",
@@ -26,8 +28,11 @@ const OWNER_INDEPENDENT_OPEN_SOURCE_ROUTE =
  * remain in a learning-only async chunk.
  */
 export function isProgressUiRoute(pathname: string): boolean {
+  const routePathname = canonicalLocalePathname(pathname);
+  if (routePathname === null) return false;
   return PROGRESS_UI_ROUTE_PREFIXES.some(
-    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+    (prefix) =>
+      routePathname === prefix || routePathname.startsWith(`${prefix}/`),
   );
 }
 
@@ -40,14 +45,17 @@ export function isProgressUiRoute(pathname: string): boolean {
  * render owner-aware readouts; their public navigation must remain available.
  */
 export function isLearningOwnerRoute(pathname: string): boolean {
-  if (OWNER_INDEPENDENT_OPEN_SOURCE_ROUTE.test(pathname)) return false;
+  const routePathname = canonicalLocalePathname(pathname);
+  if (routePathname === null) return false;
+  if (OWNER_INDEPENDENT_OPEN_SOURCE_ROUTE.test(routePathname)) return false;
 
   return (
-    pathname === "/ai-native" ||
-    pathname === "/konto/datenschutz" ||
-    pathname.startsWith("/konto/datenschutz/") ||
+    routePathname === "/ai-native" ||
+    routePathname === "/konto/datenschutz" ||
+    routePathname.startsWith("/konto/datenschutz/") ||
     LEARNING_OWNER_ROUTE_PREFIXES.some(
-      (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+      (prefix) =>
+        routePathname === prefix || routePathname.startsWith(`${prefix}/`),
     )
   );
 }

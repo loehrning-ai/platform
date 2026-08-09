@@ -15,6 +15,7 @@ import {
   isExerciseCompleted,
 } from "@/lib/ai-native/progress";
 import { reportClientBoundaryError } from "@/lib/observability/client-boundary-error";
+import { useDemoLocale } from "@/components/demos/demo-locale";
 import type {
   AiRubricEntry,
   ExerciseKind,
@@ -87,6 +88,8 @@ export function ExerciseShell({
   scenario,
   children,
 }: ExerciseShellProps): JSX.Element {
+  const { locale, text } = useDemoLocale();
+  const isEnglish = locale === "en";
   const [completed, setCompleted] = useState(false);
   const [prevScore, setPrevScore] = useState<number | null>(null);
 
@@ -116,6 +119,7 @@ export function ExerciseShell({
         <ExerciseFallback
           title={title}
           onSkip={handleSkip}
+          isEnglish={isEnglish}
         />
       }
     >
@@ -126,7 +130,7 @@ export function ExerciseShell({
       >
         <div className="mb-3 flex flex-wrap items-baseline justify-between gap-3">
           <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-            ◆ Übung · {kindLabel(kind)}
+            ◆ {text("Übung", "Exercise")} · {kindLabel(kind, isEnglish)}
           </p>
           {completed && (
             <m.span
@@ -138,7 +142,7 @@ export function ExerciseShell({
               <CheckCircle2 size={12} />
               {prevScore != null
                 ? `${Math.round(prevScore * 100)}%`
-                : "Erledigt"}
+                : text("Erledigt", "Completed")}
             </m.span>
           )}
         </div>
@@ -158,7 +162,7 @@ export function ExerciseShell({
               onClick={handleSkip}
               className="inline-flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-brand-orange"
             >
-              Ich hab's verstanden → weiter
+              {text("Ich hab's verstanden → weiter", "Understood, continue")}
               <ArrowRight size={11} />
             </button>
           </div>
@@ -168,7 +172,7 @@ export function ExerciseShell({
   );
 }
 
-function kindLabel(kind: ExerciseKind): string {
+function kindLabel(kind: ExerciseKind, isEnglish: boolean): string {
   const labels: Record<ExerciseKind, string> = {
     "exercise-fix-prompt": "Fix-this-prompt",
     "exercise-pii-spotter": "PII-Spotter",
@@ -176,8 +180,8 @@ function kindLabel(kind: ExerciseKind): string {
     "exercise-prompt-diff": "Prompt-Diff",
     "exercise-workflow-builder": "Workflow-Builder",
     "exercise-role-scenario": "Role-Scenario",
-    "exercise-rctfc-checklist": "RCTFC-Checkliste",
-    "exercise-free-response": "Freie Antwort",
+    "exercise-rctfc-checklist": isEnglish ? "RCTFC checklist" : "RCTFC-Checkliste",
+    "exercise-free-response": isEnglish ? "Free response" : "Freie Antwort",
   };
   return labels[kind];
 }
@@ -185,9 +189,11 @@ function kindLabel(kind: ExerciseKind): string {
 function ExerciseFallback({
   title,
   onSkip,
+  isEnglish,
 }: {
   readonly title: string;
   readonly onSkip: () => void;
+  readonly isEnglish: boolean;
 }): JSX.Element {
   return (
     <div className="border border-destructive bg-destructive/5 p-5">
@@ -195,19 +201,20 @@ function ExerciseFallback({
         <AlertTriangle size={18} className="mt-0.5 shrink-0 text-destructive" />
         <div className="flex-1">
           <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-destructive">
-            Übung aktuell nicht verfügbar
+            {isEnglish ? "Exercise currently unavailable" : "Übung aktuell nicht verfügbar"}
           </p>
           <h3 className="mt-1 text-[16px] font-bold text-foreground">{title}</h3>
           <p className="mt-2 text-[13.5px] leading-[1.55] text-muted-foreground">
-            Dieses Exercise lässt sich gerade nicht auswerten. Du kannst
-            trotzdem weiterlernen, die Übung wird als übersprungen markiert.
+            {isEnglish
+              ? "This exercise cannot be evaluated right now. You can continue; it will be recorded as skipped."
+              : "Diese Übung lässt sich gerade nicht auswerten. Du kannst weiterlernen; sie wird als übersprungen markiert."}
           </p>
           <button
             type="button"
             onClick={onSkip}
             className="mt-3 inline-flex items-center gap-1.5 border border-foreground bg-transparent px-3 py-1.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.12em] text-foreground transition-colors hover:bg-foreground hover:text-background"
           >
-            Ich hab's verstanden → weiter
+            {isEnglish ? "Understood, continue" : "Ich hab's verstanden → weiter"}
             <ArrowRight size={11} />
           </button>
         </div>
@@ -251,6 +258,7 @@ export function ExerciseResetButton({
 }: {
   readonly onReset: () => void;
 }): JSX.Element {
+  const { text } = useDemoLocale();
   return (
     <button
       type="button"
@@ -258,7 +266,7 @@ export function ExerciseResetButton({
       className="inline-flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-brand-orange"
     >
       <RotateCcw size={11} />
-      Nochmal
+      {text("Nochmal", "Try again")}
     </button>
   );
 }

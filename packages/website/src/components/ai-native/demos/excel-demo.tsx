@@ -127,7 +127,7 @@ function outputFor(taskId: TaskId): Output {
         { region: "Süd", stk: 274, umsatz: "1.328.900 €", anteil: "20 %" },
       ],
       explain:
-        "West führt mit 41 % Umsatz-Anteil bei nur 33 % der Regionen. Süd schwächelt strukturell. Dort Preisdruck prüfen.",
+        "West hat im kleinen Beispieldatensatz den höchsten Umsatzanteil. Produktmix, Preis und Volumen müssen vor einer Interpretation getrennt geprüft werden.",
     };
   }
   return {
@@ -139,7 +139,7 @@ function outputFor(taskId: TaskId): Output {
       { w: "KW 20", pred: 684, lo: 590, hi: 778 },
     ],
     explain:
-      "Trend +7,9 % pro Woche mit leichter Quartals-Saisonalität (Sommer-Peak in KW 20). Konfidenz-Bereich (Beispiel, nicht gemessen). Unsicherheit wächst sichtbar mit Horizont: +/-7 % in KW 17, +/-14 % in KW 20. Empfehlung: Lagerbestand West ab KW 19 verdoppeln.",
+      "Illustrative lineare Fortschreibung aus nur drei Wochen. Saisonale Effekte sind damit nicht belegt; der Bereich ist ein Beispiel und nicht kalibriert. Keine Bestandsentscheidung ohne längere Datenreihe, Lieferzeiten, Fehlmengenkosten und Kapazitätsgrenzen.",
   };
 }
 
@@ -188,9 +188,9 @@ export function ExcelDemo(): JSX.Element {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-[1.1fr_1fr]">
+      <div className="grid w-full min-w-0 max-w-full grid-cols-1 gap-4 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
         {/* Spreadsheet */}
-        <div className="border border-foreground bg-background">
+        <div className="w-full min-w-0 max-w-full border border-foreground bg-background">
           <div
             className="flex items-center gap-2 px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white"
             style={{ backgroundColor: "#107C41" }}
@@ -206,8 +206,14 @@ export function ExcelDemo(): JSX.Element {
           <div className="border-b border-border bg-card/60 px-3 py-1 font-mono text-[10px] text-muted-foreground">
             A1:E10 · 9 Zeilen · 5 Spalten
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse font-mono text-[11px]">
+          <div
+            data-course-horizontal-scroll
+            role="region"
+            aria-label="Beispieldaten des Arbeitsblatts"
+            tabIndex={0}
+            className="w-full min-w-0 max-w-full overflow-x-auto overscroll-x-contain focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
+          >
+            <table className="w-full min-w-[520px] border-collapse font-mono text-[11px]">
               <thead>
                 <tr className="bg-card/60">
                   {["", "Woche", "Region", "SKU", "Stück", "Umsatz"].map(

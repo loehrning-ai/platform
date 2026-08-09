@@ -56,9 +56,15 @@ export function useCanvasAutoSize(
 
     const resize = () => {
       const rect = wrap.getBoundingClientRect();
-      const dpr = typeof window !== "undefined" && window.devicePixelRatio ? window.devicePixelRatio : 1;
+      const dpr =
+        typeof window !== "undefined" && window.devicePixelRatio
+          ? window.devicePixelRatio
+          : 1;
       const cssWidth = Math.max(optionsRef.current.minWidth ?? 0, rect.width);
-      const cssHeight = Math.max(optionsRef.current.minHeight ?? 0, rect.height);
+      const cssHeight = Math.max(
+        optionsRef.current.minHeight ?? 0,
+        rect.height,
+      );
       if (cssWidth <= 0 || cssHeight <= 0) return;
       const widthPx = Math.round(cssWidth * dpr);
       const heightPx = Math.round(cssHeight * dpr);

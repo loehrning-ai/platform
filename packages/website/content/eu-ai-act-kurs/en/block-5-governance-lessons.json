@@ -1,0 +1,499 @@
+{
+  "blockId": "block_5",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-07-14",
+  "nextReview": "2026-12-22",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "eu-ai-act-amendment",
+    "commission-qa-update"
+  ],
+  "lessons": [
+    {
+      "id": "block_5_lesson_1",
+      "blockId": "block_5",
+      "number": 1,
+      "title": "AI Office, AI Board, and Germany's authority structure",
+      "subtitle": "Who oversees an SME in practice: the EU level, the Federal Network Agency, and sectoral authorities",
+      "durationMinutes": 4,
+      "keyConcepts": [
+        "AI Office",
+        "European AI Board",
+        "Federal Network Agency",
+        "single point of contact",
+        "sectoral market surveillance"
+      ],
+      "sections": [
+        {
+          "id": "block_5_lesson_1_section_1",
+          "title": "EU level: AI Office and European AI Board",
+          "readTimeMinutes": 2,
+          "content": "The **AI Office** (European Artificial Intelligence Office) is part of the European Commission's Directorate-General CNECT (Communications Networks, Content and Technology). It now has more than 125 staff across six units, including Regulation and Compliance and AI Safety.\n\nIts remit is defined narrowly. Under Article 88, the AI Office has **exclusive supervisory powers over general-purpose AI (GPAI) models** such as GPT-4, Claude, and Gemini. It coordinates codes of practice, provides the secretariat for the European AI Board, and has operated the public Service Desk since 8 October 2025.\n\nThe **European AI Board** is established by Article 65. Each Member State appoints one representative. The Board coordinates national authorities and advises the Commission.\n\nFor an SME that deploys AI rather than placing a general-purpose AI model on the market, the AI Office and the Board are generally not its direct supervisory contacts. Its operational contacts are in Germany.",
+          "keyTakeaway": "The AI Office supervises GPAI models at EU level. The European AI Board under Article 65 coordinates the Member States. Neither is normally the direct supervisory contact for an SME that only deploys AI."
+        },
+        {
+          "id": "block_5_lesson_1_section_2",
+          "title": "Germany: the Federal Network Agency as the default authority",
+          "readTimeMinutes": 1,
+          "content": "Article 70(2) requires every Member State to designate a **single point of contact**. The German AI Market Implementation Act (KI-MIG) designates the **Federal Network Agency (Bundesnetzagentur, BNetzA)** for this role. The Bundestag adopted the Act on **11 June 2026**; on **10 July 2026**, it passed the Bundesrat without referral to the Mediation Committee. The Act **entered into force on 29 July 2026**. The EU Regulation itself applies directly, but its individual provisions follow the staged application schedule.\n\nSince then, the BNetzA has been the market-surveillance authority for areas without assigned sectoral supervision, as well as the single point of contact and complaints body. The Act provides for a **Coordination and Competence Centre (KoKIVO)** within the BNetzA and an independent market-surveillance chamber for specified areas.\n\nThe correct reporting channel in an individual case continues to depend on the sector and its specific law. For an actual case, consult the enacted legislation, the applicable sectoral law, and current information from the relevant authority.",
+          "keyTakeaway": "The KI-MIG has been in force since 29 July 2026. It makes the BNetzA the single point of contact and complaints body where no sectoral authority has jurisdiction. The specific reporting route still depends on the sector and applicable law."
+        },
+        {
+          "id": "block_5_lesson_1_section_3",
+          "title": "Sectoral supervision: which other authorities retain jurisdiction",
+          "readTimeMinutes": 1,
+          "content": "Article 74 assigns market surveillance in several areas to existing sectoral authorities. Data-protection law and other sector-specific law also remain relevant, with their own allocations of responsibility.\n\n- **Financial institutions:** Article 74(6) generally refers to the authorities responsible under financial-services law.\n- **Products covered by Annex I:** The competent market-surveillance authority generally follows the relevant product-safety law (Article 74(3)).\n- **Bodies referred to in Article 74(8):** The data-protection or other authorities identified there supervise the Annex III systems specified in that paragraph.\n- **Other areas in Germany:** The KI-MIG, in force since 29 July 2026, assigns the BNetzA a residual role. Confirm the specific jurisdictional provision before relying on it.\n\n**Implementation practice:** For each system, record its purpose, your role, its sector, and the authorities that may have jurisdiction. Until authorities consolidate their guidance, treat the mapping explicitly as a legal question that requires confirmation.",
+          "keyTakeaway": "Sectoral supervision and sector-specific law remain relevant. The BNetzA's residual role follows from the KI-MIG, which has been in force since 29 July 2026."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_5_lesson_1_q1",
+          "questionText": "Which authority does the KI-MIG, in force since 29 July 2026, designate as the single point of contact under Article 70(2)?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "The Federal Commissioner for Data Protection and Freedom of Information (BfDI)",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "The Federal Network Agency (BNetzA)",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "The Federal Office for Information Security (BSI)",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "The Federal Ministry for Economic Affairs and Climate Action (BMWK)",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "The KI-MIG entered into force on 29 July 2026 and designates the Federal Network Agency as the single point of contact. Jurisdiction in an individual case continues to depend on the sector and applicable law."
+        },
+        {
+          "id": "block_5_lesson_1_q2",
+          "questionText": "A bank uses an AI system for credit scoring. Which German authority is the market-surveillance authority under Article 74(6)?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "BNetzA",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "BaFin",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "BfDI",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "DAkkS",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 74(6) of the AI Act assigns market surveillance for AI systems used by financial institutions to the competent financial supervisor. In Germany, that is BaFin. Use of the same AI model in another department, such as HR, falls under the BNetzA instead."
+        },
+        {
+          "id": "block_5_lesson_1_q3",
+          "questionText": "What is the AI Office's primary function?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Direct supervision of every AI application used by an SME",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "The authority responsible for fines under Article 99",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Exclusive supervision of GPAI models and coordination at EU level (Article 88)",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Certification of AI regulatory sandboxes in the Member States",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "The AI Office is part of the European Commission's DG CNECT and, under Article 88, has exclusive powers concerning GPAI models such as GPT-4, Claude, and Gemini. Conventional AI use by SMEs falls within the remit of national authorities under Article 70, primarily the BNetzA in Germany."
+        }
+      ]
+    },
+    {
+      "id": "block_5_lesson_2",
+      "blockId": "block_5",
+      "number": 2,
+      "title": "Fines of up to EUR 35 million or 7 percent",
+      "subtitle": "The three penalty tiers under Article 99 and what they mean for an SME with EUR 20 million in turnover",
+      "durationMinutes": 4,
+      "keyConcepts": [
+        "Article 99 of the AI Act",
+        "three fine tiers",
+        "lower-amount rule for SMEs",
+        "proportionality",
+        "German Act on Regulatory Offences (OWiG)"
+      ],
+      "sections": [
+        {
+          "id": "block_5_lesson_2_section_1",
+          "title": "The three penalty tiers under Article 99",
+          "readTimeMinutes": 2,
+          "content": "Article 99 of the AI Act establishes three tiers of fines. The applicable tier determines whether an infringement is costly or threatens the viability of the business.\n\n**Tier 1: Prohibited AI practices (Article 5).** Up to **EUR 35,000,000 or 7 percent of total worldwide annual turnover**, whichever is higher (Article 99(3)). Examples include social scoring, emotion recognition in the workplace, and real-time remote biometric identification in publicly accessible spaces.\n\n**Tier 2: Most operator obligations.** Up to **EUR 15,000,000 or 3 percent of annual turnover**, whichever is higher (Article 99(4)). This tier covers provider obligations under Article 16, authorised representatives (Article 22), importers (Article 23), distributors (Article 24), **deployer obligations under Article 26**, and **transparency obligations under Article 50**.\n\n**Tier 3: Incorrect information supplied to authorities.** Up to **EUR 7,500,000 or 1 percent of annual turnover**, whichever is higher (Article 99(5)). This tier applies when an organisation gives the BNetzA incorrect, incomplete, or misleading information.",
+          "keyTakeaway": "Three tiers: prohibited practices (EUR 35 million / 7 percent), standard obligations (EUR 15 million / 3 percent), and incorrect information (EUR 7.5 million / 1 percent). Article 99(3) to (5)."
+        },
+        {
+          "id": "block_5_lesson_2_section_2",
+          "title": "The SME rule: the lower amount applies",
+          "readTimeMinutes": 1,
+          "content": "For large companies, the **higher** of the two amounts (the absolute amount or the percentage) applies. For SMEs, including start-ups, Article 99(6) reverses that rule: the **lower** amount applies.\n\nThis rule is often overlooked and is material for SMEs. An undertaking with EUR 20 million in annual turnover faces a maximum of EUR 1.4 million, equal to 7 percent, for a prohibited practice rather than EUR 35 million.\n\nArticle 99(7) also requires the authority to consider **10 factors** when setting the fine. They include severity, the number of people affected, intent or negligence, company size, cooperation, and, expressly, **technical and organisational measures** under Article 99(7), point (g).\n\nDocumented AI governance, such as records of Article 4 training measures, a risk register, and an incident process, is relevant to the authority's assessment under Article 99(7). It does not guarantee a particular reduction.",
+          "keyTakeaway": "SME rule under Article 99(6): the lower amount applies. The 10 assessment factors in Article 99(7) include documented technical and organisational measures."
+        },
+        {
+          "id": "block_5_lesson_2_section_3",
+          "title": "Worked examples for SMEs",
+          "readTimeMinutes": 1,
+          "content": "**Example A: machinery manufacturer with EUR 20 million in turnover**\n\n- Tier 1, such as emotion recognition at a factory entrance: 7 percent = EUR 1.4 million. SME ceiling: EUR 1.4 million.\n- Tier 2, such as a missing risk assessment for HR AI: 3 percent = EUR 600,000. SME ceiling: EUR 600,000.\n- Tier 3, incorrect information supplied to the BNetzA: 1 percent = EUR 200,000. SME ceiling: EUR 200,000.\n\n**Example B: craft business with EUR 1.5 million in turnover**\n\n- Tier 1: 7 percent = EUR 105,000. That could threaten the viability of a three-person business.\n\nIn Germany, the competent market-surveillance authority imposes sanctions under the German Act on Regulatory Offences (OWiG). An action before the administrative court is possible under Article 99(10). Member States report annually to the Commission under Article 99(11).\n\nThe headline figure of EUR 35 million is generally not the applicable ceiling for a small or medium-sized organisation. In these examples, the range is EUR 100,000 to EUR 1.4 million per category of infringement. Documented governance is one factor in the authority's assessment, not a guaranteed reduction.\n\nFor context, the maximum fine for most obligations is 3% of total worldwide annual turnover under Article 99(4). For a medium-sized company with EUR 50 million in turnover, that is up to EUR 1.5 million. The actual penalty depends on proportionality and the documented measures.",
+          "keyTakeaway": "Illustrative range for an undertaking with EUR 20 million in turnover: EUR 200,000 to EUR 1.4 million. Documented governance is a relevant factor under Article 99(7), point (g), but does not predetermine the fine."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_5_lesson_2_q1",
+          "questionText": "What is the maximum fine for using a prohibited AI practice under Article 5 of the AI Act?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Up to EUR 7.5 million or 1 percent of annual turnover",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Up to EUR 15 million or 3 percent of annual turnover",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Up to EUR 35 million or 7 percent of annual turnover, whichever is higher",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Up to EUR 50 million or 10 percent of annual turnover",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 99(3) of the AI Act provides for fines of up to EUR 35 million or 7 percent of total worldwide annual turnover for prohibited practices under Article 5, whichever is higher. For SMEs, Article 99(6) makes the lower amount applicable."
+        },
+        {
+          "id": "block_5_lesson_2_q2",
+          "questionText": "Which rule does Article 99(6) of the AI Act expressly apply to SMEs, including start-ups?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "A fixed 50-percent reduction in the fine",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "The lower of the absolute amount and the percentage amount applies",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Complete exemption from fines for the first three years",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Fines are capped at EUR 10,000 regardless of the infringement",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 99(6) reverses the general rule for SMEs: the lower of the absolute amount and the percentage amount applies. For an undertaking with EUR 20 million in turnover, the Tier 1 ceiling is EUR 1.4 million rather than EUR 35 million."
+        },
+        {
+          "id": "block_5_lesson_2_q3",
+          "questionText": "Which fine tier covers incorrect or misleading information that a company provides to a market-surveillance authority?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Tier 1: up to EUR 35 million or 7 percent",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Tier 2: up to EUR 15 million or 3 percent",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Tier 3: up to EUR 7.5 million or 1 percent",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "No fine tier applies; only a warning may be issued",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 99(5) of the AI Act covers incorrect, incomplete, or misleading information supplied to notified bodies or competent national authorities, with fines of up to EUR 7.5 million or 1 percent of annual turnover. A company must cooperate with a BNetzA request, while protections for confidential information continue to apply."
+        }
+      ]
+    },
+    {
+      "id": "block_5_lesson_3",
+      "blockId": "block_5",
+      "number": 3,
+      "title": "AI regulatory sandboxes: free testing arrangements for SMEs",
+      "subtitle": "What Article 57 provides and why the original text, the AI Omnibus, and an operational service must be distinguished",
+      "durationMinutes": 4,
+      "keyConcepts": [
+        "AI regulatory sandbox",
+        "Article 57 of the AI Act",
+        "priority access for SMEs",
+        "written exit report",
+        "three-month decision period"
+      ],
+      "sections": [
+        {
+          "id": "block_5_lesson_3_section_1",
+          "title": "What an AI regulatory sandbox is under Article 57",
+          "readTimeMinutes": 2,
+          "content": "Under Article 3, point (55), an **AI regulatory sandbox** is a controlled framework set up by a competent authority. It enables providers or prospective providers to develop, train, validate, and, where appropriate, test an innovative AI system in real-world conditions.\n\nRegulation (EU) 2026/1744, which has applied since 27 July 2026, sets **2 August 2027** as the deadline in Article 57(1) for establishing at least one national AI regulatory sandbox.\n\nArticle 57 provides, among other things, for guidance, supervision, and a written exit report. The deadline alone does not establish whether, when, or on what terms a specific German sandbox accepts applications. Confirm those points against the enacted KI-MIG and current information from the competent authority.",
+          "keyTakeaway": "Regulation (EU) 2026/1744, applicable since 27 July 2026, moves the sandbox deadline to 2 August 2027. That deadline does not itself prove that an operational German service is accepting applications."
+        },
+        {
+          "id": "block_5_lesson_3_section_2",
+          "title": "What SMEs receive under the Regulation",
+          "readTimeMinutes": 1,
+          "content": "Article 58(2), point (d), establishes **priority access for SMEs, including start-ups**. Access is **free of charge**. An authority may recover only exceptional costs, and only in a fair and proportionate manner.\n\nOther benefits include:\n\n- **Protection from administrative fines:** Article 57(12) states that authorities must not impose administrative fines for infringements of the Regulation where participants follow the sandbox plan in good faith. Liability under other Union and national law for damage caused to third parties remains unaffected.\n- **Three-month decision period:** Under Article 58(2), point (a), the authority must decide on an application within three months.\n- **Support for later conformity assessment:** The written exit report is taken into account positively in a later conformity assessment under Article 57(7).\n\nAn organisation developing a high-risk AI system, such as AI for recruitment or an AI safety component in machinery, can assess a sandbox application before placing the system on the market. This is an implementation option, not a substitute for the applicable legal duties.",
+          "keyTakeaway": "The Regulation provides priority access for SMEs, free access, protection from administrative fines when the sandbox plan is followed in good faith, and a decision within three months. A prospective provider of high-risk AI can assess whether to apply."
+        },
+        {
+          "id": "block_5_lesson_3_section_3",
+          "title": "Status in Germany: BNetzA, BfDI, and Hesse",
+          "readTimeMinutes": 1,
+          "content": "The German pilot project in 2025/2026 was conducted jointly by the **Federal Network Agency**, the **BfDI**, and the **Hessian Ministry for Digitalisation**. It simulated two start-up use cases with a focus on the AI Act and the Medical Device Regulation (MDR). A pilot does not establish that a generally available sandbox with an open application process exists.\n\nThe KI-MIG, in force since 29 July 2026, assigns the BNetzA tasks relating to innovation support. The new EU sandbox deadline of 2 August 2027, by contrast, has been binding law since 27 July 2026.\n\nBefore applying, verify on the current authority website whether the BNetzA is accepting applications.",
+          "keyTakeaway": "The pilot project demonstrates preparatory work, not an operational public service. Verify a German sandbox and its application route using current official information."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_5_lesson_3_q1",
+          "questionText": "What deadline did Parliament and the Council adopt through the AI Omnibus for at least one national AI regulatory sandbox?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "By 2 February 2025",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "By 2 August 2025",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "By 2 August 2026 under the unchanged original text",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "By 2 August 2027 under the adopted AI Omnibus",
+              "isCorrect": true
+            }
+          ],
+          "explanation": "The original text of Article 57(1) specified 2 August 2026. Regulation (EU) 2026/1744, applicable since 27 July 2026, moves the binding deadline to 2 August 2027."
+        },
+        {
+          "id": "block_5_lesson_3_q2",
+          "questionText": "Who receives priority access to an AI regulatory sandbox under Article 58(2), point (d), and what does access cost?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Large companies receive priority; access starts at EUR 50,000",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "SMEs, including start-ups, receive priority; access is free of charge",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Only public authorities receive priority; access is free of charge",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "All companies have equal access; fees are scaled by turnover",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 58(2), point (d), expressly provides priority access for SMEs, including start-ups, and makes access free of charge. Only exceptional costs may be recovered in a fair and proportionate manner."
+        },
+        {
+          "id": "block_5_lesson_3_q3",
+          "questionText": "Which three authorities jointly ran Germany's AI regulatory-sandbox pilot project in 2025/2026?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "BSI, BKA, and the Federal Chancellery",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "BaFin, BfArM, and the Federal Cartel Office",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "The Federal Network Agency, BfDI, and the Hessian Ministry for Digitalisation",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "DAkkS, TÜV, and the Fraunhofer Society",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "The Federal Network Agency ran the German pilot jointly with the Federal Commissioner for Data Protection and Freedom of Information (BfDI) and the Hessian Ministry for Digitalisation, focusing on start-up cases relevant to the AI Act and the MDR."
+        }
+      ]
+    },
+    {
+      "id": "block_5_lesson_4",
+      "blockId": "block_5",
+      "number": 4,
+      "title": "Complaints, incident reports, and requests from the competent authority",
+      "subtitle": "Incident reporting under Article 73, the right to lodge a complaint under Article 85, and an SME response plan",
+      "durationMinutes": 4,
+      "keyConcepts": [
+        "Article 73 reporting duty",
+        "reporting periods of 15, 10, and 2 days",
+        "right to lodge a complaint under Article 85",
+        "right to an explanation under Article 86",
+        "source-code access under Article 74"
+      ],
+      "sections": [
+        {
+          "id": "block_5_lesson_4_section_1",
+          "title": "What providers must report: Articles 72 and 73",
+          "readTimeMinutes": 2,
+          "content": "Once the relevant high-risk rules apply, providers are subject in particular to post-market monitoring and serious-incident reporting duties. Regulation (EU) 2026/1744 sets 2 December 2027 as the application date for standalone Annex III systems and 2 August 2028 for high-risk systems embedded in products covered by Annex I.\n\n**Article 72:** The post-market monitoring system must actively and systematically collect performance data throughout the system's lifetime. The plan forms part of the technical documentation.\n\n**Article 73:** Once the provision applies, a provider reports a serious incident to the competent market-surveillance authority. The Regulation generally specifies 15 days, 10 days for certain incidents resulting in death, and two days for a widespread infringement or disruption of critical infrastructure. Product-safety and data-protection law may independently trigger reporting channels and periods that already apply.\n\nThe periods do not establish which German authority or reporting channel is operational in a particular case.",
+          "keyTakeaway": "Articles 72 and 73 form part of the high-risk regime. Before an actual incident, confirm the application date, competent authority, and any parallel reporting duties against current law and official information."
+        },
+        {
+          "id": "block_5_lesson_4_section_2",
+          "title": "Who may report you: the right to lodge a complaint under Article 85",
+          "readTimeMinutes": 1,
+          "content": "**Article 85 of the AI Act:** Any natural or legal person that has grounds to consider that there has been an infringement may lodge a complaint with the relevant market-surveillance authority.\n\nThe German KI-MIG entered into force on 29 July 2026 and makes the **BNetzA the single point of contact and complaints body** where no sectoral authority has jurisdiction. Before lodging a complaint, also check the applicable sectoral law and current information from the authorities to confirm jurisdiction and the active complaint channel.\n\n**Related provision: Article 86** provides, subject to its conditions, a right to obtain a clear and meaningful explanation of the role of a high-risk system listed in Annex III in the decision-making procedure. It is not a general right to an explanation for every AI output.",
+          "keyTakeaway": "Article 85 provides for complaints to the relevant market-surveillance authority. Confirm the responsible German authority and its active channel under the enacted KI-MIG, applicable sectoral law, and current official information."
+        },
+        {
+          "id": "block_5_lesson_4_section_3",
+          "title": "Authority request: a five-step response plan",
+          "readTimeMinutes": 1,
+          "content": "**Powers of the authority under Article 74:** An authority may obtain full access to documentation and to training, validation, and testing data sets, including through APIs, under Article 74(12). **Access to source code** requires a reasoned request and is available only after other testing or audit procedures have been exhausted or proved insufficient (Article 74(13)).\n\nIf the authority finds non-compliance, it requires the relevant operator to take corrective action. The period is **no more than 15 working days** under Article 79(2). For non-compliance with the prohibition in Article 5, the Union safeguard procedure uses a shortened objection period of 30 days under Article 81.\n\n**Initial response plan (an implementation control, not a statutory five-step format):**\n\n1. **Acknowledge in writing** and record the deadline. Do not disclose source code or training data reflexively. Involve legal counsel.\n2. **Open an incident log:** Record the date, request, people involved, and information communicated.\n3. **Confirm jurisdiction:** Determine whether the BNetzA or a sectoral authority such as BaFin, BfArM, or an LMA has jurisdiction.\n4. **Assemble compliance records:** These may include records of Article 4 training measures, the risk assessment, post-market monitoring records, and the declaration of conformity. They may evidence technical and organisational measures under Article 99(7), point (g); they do not guarantee a lower fine.\n5. **Cooperate without giving incorrect information:** Incorrect or incomplete information falls within Tier 3, up to EUR 7.5 million or 1 percent under Article 99(5).\n\nPrepared records, identified legal support, and a designated spokesperson can make the first 48 hours manageable. These measures do not remove the legal duties or determine the authority's response.",
+          "keyTakeaway": "The corrective-action period is no more than 15 working days under Article 79(2). The five-step implementation plan is to acknowledge, log, confirm jurisdiction, assemble records, and cooperate without giving incorrect information."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_5_lesson_4_q1",
+          "questionText": "Within what period must a provider of a high-risk AI system report a serious incident resulting in death?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Two days after becoming aware",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "10 days after establishing the suspected causal link",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "15 days after becoming aware",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "72 hours after becoming aware",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 73(4) of the AI Act sets a shortened 10-day reporting period for the death of a person, calculated from the date on which the causal link between the high-risk AI system and the incident has been established or its reasonable likelihood identified. The general period is 15 days under paragraph 2; a widespread infringement uses two days under paragraph 3."
+        },
+        {
+          "id": "block_5_lesson_4_q2",
+          "questionText": "Who may lodge a complaint with a market-surveillance authority under Article 85 of the AI Act?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Only directly affected natural persons represented by a lawyer",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Only recognised consumer organisations and trade unions",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Any natural or legal person that has grounds to consider that there has been an infringement",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Only Member States acting through the single point of contact",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 85 of the AI Act allows any natural or legal person to lodge a complaint when they have grounds to consider that an infringement has occurred. No special standing or legal representation is required. Whistleblowers are also protected under Article 87 and Directive (EU) 2019/1937."
+        },
+        {
+          "id": "block_5_lesson_4_q3",
+          "questionText": "When may a market-surveillance authority request access to the source code of a high-risk AI system under Article 74(13)?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "At any time and without stating reasons",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Only after a criminal complaint has been filed against the provider",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Only on a reasoned request and when other testing or audit procedures have been exhausted or proved insufficient",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Only under a court order",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 74(13) sets two cumulative conditions for access to source code: access must be necessary to assess conformity, and the testing or audit procedures based on data and documentation supplied by the provider must have been exhausted or proved insufficient."
+        }
+      ]
+    }
+  ],
+  "blockLastVerified": "2026-06-22"
+}

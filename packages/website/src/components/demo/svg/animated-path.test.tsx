@@ -33,7 +33,16 @@ vi.mock("framer-motion", async () => {
       },
     },
   );
-  return { __esModule: true, m, motion: m };
+  const Pass = ({ children }: { children?: React.ReactNode }) =>
+    React.createElement(React.Fragment, null, children);
+  return {
+    __esModule: true,
+    m,
+    motion: m,
+    LazyMotion: Pass,
+    MotionConfig: Pass,
+    domAnimation: {},
+  };
 });
 
 import { AnimatedPath } from "./animated-path";

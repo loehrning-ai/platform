@@ -5,6 +5,10 @@ import { describe, expect, it } from "vitest";
 
 const css = readFileSync(join(__dirname, "_styles/blog.css"), "utf8");
 const postCss = readFileSync(join(__dirname, "_styles/post.css"), "utf8");
+const indexCss = readFileSync(
+  join(__dirname, "_styles/blog-index.css"),
+  "utf8",
+);
 const layoutSource = readFileSync(join(__dirname, "layout.tsx"), "utf8");
 const heroSource = readFileSync(
   join(__dirname, "eu-ai-act-grundlagen/_sections/hero.tsx"),
@@ -12,6 +16,7 @@ const heroSource = readFileSync(
 );
 const root = postcss.parse(css);
 const postRoot = postcss.parse(postCss);
+const indexRoot = postcss.parse(indexCss);
 
 describe("blog stylesheet isolation", () => {
   it("does not replace site-wide typography tokens when Next.js prefetches the blog", () => {
@@ -86,9 +91,30 @@ describe("blog stylesheet isolation", () => {
       });
     });
 
-    expect(declarations.get("outline")).toBe(
-      "3px solid var(--druckertinte)",
-    );
+    expect(declarations.get("outline")).toBe("3px solid var(--druckertinte)");
     expect(declarations.get("outline-offset")).toBe("5px");
+  });
+
+  it("hides the article visual panel after its base display rule on narrow screens", () => {
+    let baseDisplayLine = 0;
+    let mobileDisplayLine = 0;
+
+    indexRoot.walkRules(".blog-root .row__art", (rule) => {
+      rule.walkDecls("display", (declaration) => {
+        const line = declaration.source?.start?.line ?? 0;
+        if (declaration.value === "flex") baseDisplayLine = line;
+        if (
+          declaration.value === "none" &&
+          rule.parent?.type === "atrule" &&
+          rule.parent.name === "media" &&
+          rule.parent.params.replaceAll(" ", "") === "(max-width:900px)"
+        ) {
+          mobileDisplayLine = line;
+        }
+      });
+    });
+
+    expect(baseDisplayLine).toBeGreaterThan(0);
+    expect(mobileDisplayLine).toBeGreaterThan(baseDisplayLine);
   });
 });

@@ -25,7 +25,7 @@ describe("InstrumentalVariable ", () => {
     fireEvent.click(screen.getByText(/^Weak/));
     expect(screen.getByText("F-stat: 4.2")).toBeInTheDocument();
     expect(screen.getByText("0.31")).toBeInTheDocument();
-    expect(screen.getByText(/weak/)).toBeInTheDocument();
+    expect(screen.getAllByText(/weak/i).length).toBeGreaterThan(1);
 
     fireEvent.click(screen.getByText(/^Strong/));
     expect(screen.getByText("F-stat: 89.4")).toBeInTheDocument();

@@ -13,6 +13,7 @@ export type LearningNodeType =
   | "lesson"
   | "book"
   | "demo"
+  | "workshop"
   | "template"
   | "self_test"
   | "open_source_lab"
@@ -28,10 +29,7 @@ export type LearningEdgeType =
   | "next_step";
 
 export type LearnerPersona =
-  | "mitarbeitende"
-  | "verantwortliche"
-  | "praktiker"
-  | "technische-vertiefung";
+  "mitarbeitende" | "verantwortliche" | "praktiker" | "technische-vertiefung";
 
 export type LearningStage =
   | "pruefen"
@@ -56,7 +54,13 @@ export interface LearningNode {
   readonly title: string;
   readonly route: string;
   readonly access: LearningAccessClass;
+  /** Language of the canonical, unprefixed page copy. */
   readonly language: "de" | "en";
+  /**
+   * Languages of the underlying editorial or downloadable material. This is
+   * deliberately independent from translated page availability.
+   */
+  readonly sourceMaterialLanguages: readonly ("de" | "en")[];
   readonly audience: readonly LearnerPersona[];
   readonly level: "entry" | "intermediate" | "advanced" | "technical";
   readonly stage: LearningStage;

@@ -11,6 +11,7 @@ import {
 import type { ModuleId } from "@/lib/ai-native/types";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import { useDemoLocale } from "@/components/demos/demo-locale";
 
 /**
  * Prompt-Diff-Triage — 3 prompts side-by-side, user picks the best one,
@@ -73,6 +74,7 @@ function PromptDiffBody({
   moduleId,
   candidates,
 }: PromptDiffSpec): JSX.Element {
+  const { text } = useDemoLocale();
   const [selected, setSelected] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const correctIdx = bestIndex(candidates);
@@ -99,7 +101,10 @@ function PromptDiffBody({
   return (
     <div>
       <p className="mb-3 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-        Welcher Prompt ist am besten? Wähle einen aus.
+        {text(
+          "Welcher Prompt ist am besten? Wähle einen aus.",
+          "Which prompt is strongest? Select one.",
+        )}
       </p>
       <div className="grid gap-3 md:grid-cols-3">
         {candidates.map((c, i) => {
@@ -145,7 +150,7 @@ function PromptDiffBody({
                   className="mt-3 border-t border-dashed border-border pt-2"
                 >
                   <p className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-brand-amber">
-                    Kritik
+                    {text("Kritik", "Critique")}
                   </p>
                   <p className="mt-1 text-[12.5px] leading-[1.5] text-muted-foreground">
                     {c.critique}
@@ -193,8 +198,14 @@ function PromptDiffBody({
                 )}
               >
                 {correct
-                  ? `Richtig erkannt: Option ${String.fromCharCode(65 + correctIdx)}`
-                  : `Option ${String.fromCharCode(65 + correctIdx)} wäre die beste Wahl`}
+                  ? text(
+                      `Richtig erkannt: Option ${String.fromCharCode(65 + correctIdx)}`,
+                      `Correct: option ${String.fromCharCode(65 + correctIdx)}`,
+                    )
+                  : text(
+                      `Option ${String.fromCharCode(65 + correctIdx)} wäre die beste Wahl`,
+                      `Option ${String.fromCharCode(65 + correctIdx)} is the strongest choice`,
+                    )}
               </p>
             </div>
           </m.div>
@@ -214,7 +225,7 @@ function PromptDiffBody({
                 : "bg-brand-orange shadow-[3px_3px_0_0_var(--color-foreground)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]",
             )}
           >
-            Prüfen
+            {text("Prüfen", "Evaluate")}
           </button>
         ) : (
           <ExerciseResetButton onReset={handleReset} />

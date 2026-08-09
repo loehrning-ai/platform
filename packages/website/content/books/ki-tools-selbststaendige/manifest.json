@@ -7,7 +7,7 @@
   "reviewCadence": "quarterly",
   "riskClass": "vendor",
   "publicationStatus": "hold",
-  "publicationReason": "Editorial review is current; final public-release approval and vendor-claim sign-off are not recorded.",
+  "publicationReason": "Bilingual review, vendor-claim sign-off, and public-release approval are incomplete; public routing remains disabled.",
   "adaptationNote": "Nachwort-Kapitel (Autor-/Sales-Block) nicht importiert. Kommerzieller Self-Promo-Text entfernt.",
   "chapters": [
     {

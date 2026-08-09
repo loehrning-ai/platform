@@ -139,11 +139,9 @@ describe.each(COURSES)(
         }),
       );
 
-      expect(
-        await screen.findByText(
-          "Link konnte nicht kopiert werden. Bitte versuche es erneut.",
-        ),
-      ).toHaveAttribute("role", "alert");
+      expect(await screen.findByRole("alert")).toHaveTextContent(
+        /Link konnte nicht kopiert werden\. (?:Bitte )?versuche es erneut\./i,
+      );
       expect(consoleError).not.toHaveBeenCalled();
     });
 

@@ -2,8 +2,12 @@ import { ArrowRight } from "lucide-react";
 import { BrandButton } from "@/components/ui/brand-button";
 import { Section } from "@/components/ui/section";
 import { Container } from "@/components/ui/container";
+import { HOME_COPY } from "@/components/home/home-copy";
+import { localizeHref, type Locale } from "@/lib/i18n/locale";
 
-export function FinalCta() {
+export function FinalCta({ locale = "de" }: { readonly locale?: Locale }) {
+  const copy = HOME_COPY[locale].finalCta;
+
   return (
     <Section spacing="default" className="scroll-mt-24" data-testid="final-cta">
       <Container size="3xl" className="text-center">
@@ -14,19 +18,17 @@ export function FinalCta() {
             className="font-bold leading-[1.02] tracking-[-0.035em] text-foreground"
             style={{ fontSize: "clamp(2.5rem, 8vw, 7rem)" }}
           >
-            Deinen Start bestimmen.
+            {copy.headline}
           </h2>
         </div>
 
         <p className="mx-auto mt-8 max-w-md text-lg text-muted-foreground">
-          Der KI-Check bestimmt deinen passenden Einstieg. Bücher, Demos und
-          Workshops sind öffentlich. Die vier deutschen Kernkurse nutzen ein
-          kostenloses Konto für deinen Fortschritt.
+          {copy.body}
         </p>
 
         <div className="mt-10">
-          <BrandButton href="/ki-check" variant="primary" surface="light">
-            Start bestimmen <ArrowRight size={15} />
+          <BrandButton href={localizeHref("/ki-check", locale)} variant="primary" surface="light">
+            {copy.label} <ArrowRight size={15} />
           </BrandButton>
         </div>
 

@@ -42,26 +42,38 @@ test.describe("/login magic-link", () => {
 
     const h1 = page.getByRole("heading", { level: 1 });
     await expect(h1).toBeVisible();
-    const configured = await page.getByLabel(/E-Mail-Adresse/i).isEnabled();
+    const configured =
+      (await page.getByLabel(/E-Mail-Adresse/i).count()) > 0 ||
+      (await page.getByRole("button", { name: /Mit Google anmelden/i }).count()) > 0;
     await expect(h1).toContainText(
-      configured ? /Fortschritt/i : /Ohne Anmeldung lernen/i,
+      configured ? /Lernstand synchronisieren/i : /Weiter ohne Konto/i,
     );
 
     const noise = meaningfulErrors(errors);
     expect(noise, `console errors on ${ROUTE}\n${noise.join("\n")}`).toEqual([]);
   });
 
-  test("renders the email field and the magic-link CTA", async ({ page }) => {
+  test("renders only sign-in methods approved for the runtime", async ({ page }) => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     const email = page.getByLabel(/E-Mail-Adresse/i);
+    const cta = page.getByRole("button", { name: /Login-Link/i });
+    if ((await email.count()) === 0) {
+      await expect(cta).toHaveCount(0);
+      await expect(
+        page.getByRole("note").filter({
+          hasText: /Anmeldung ist in dieser Umgebung nicht konfiguriert/i,
+        }),
+      ).toBeVisible();
+      return;
+    }
+
     await expect(email).toBeVisible();
     // Structural guarantees that drive native validation - a regression that
     // drops either attribute would silently disable the client-side gate.
     await expect(email).toHaveAttribute("type", "email");
     await expect(email).toHaveJSProperty("required", true);
 
-    const cta = page.getByRole("button", { name: /Login-Link/i });
     await expect(cta).toBeVisible();
     await expect(cta).toHaveAttribute("type", "submit");
   });
@@ -73,11 +85,12 @@ test.describe("/login magic-link", () => {
 
     const email = page.getByLabel(/E-Mail-Adresse/i);
     const cta = page.getByRole("button", { name: /Login-Link/i });
-    if (!(await email.isEnabled())) {
-      await expect(email).toBeDisabled();
-      await expect(cta).toBeDisabled();
+    if ((await email.count()) === 0) {
+      await expect(cta).toHaveCount(0);
       await expect(
-        page.getByRole("note").filter({ hasText: /Supabase Auth ist nicht konfiguriert/ }),
+        page.getByRole("note").filter({
+          hasText: /Anmeldung ist in dieser Umgebung nicht konfiguriert/i,
+        }),
       ).toBeVisible();
       await expect(page.getByText(/verschickt/i)).toHaveCount(0);
       return;
@@ -104,9 +117,13 @@ test.describe("/login magic-link", () => {
 
     const email = page.getByLabel(/E-Mail-Adresse/i);
     const cta = page.getByRole("button", { name: /Login-Link/i });
-    if (!(await email.isEnabled())) {
-      await expect(email).toBeDisabled();
-      await expect(cta).toBeDisabled();
+    if ((await email.count()) === 0) {
+      await expect(cta).toHaveCount(0);
+      await expect(
+        page.getByRole("note").filter({
+          hasText: /Anmeldung ist in dieser Umgebung nicht konfiguriert/i,
+        }),
+      ).toBeVisible();
       await expect(page.getByText(/verschickt/i)).toHaveCount(0);
       return;
     }
@@ -133,10 +150,22 @@ test.describe("/login mobile", () => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(page.getByLabel(/E-Mail-Adresse/i)).toBeVisible();
     await expect(
-      page.getByRole("button", { name: /Login-Link/i }),
+      page.locator('form[aria-labelledby="login-form-title"]'),
     ).toBeVisible();
+    const email = page.getByLabel(/E-Mail-Adresse/i);
+    if ((await email.count()) > 0) {
+      await expect(email).toBeVisible();
+      await expect(
+        page.getByRole("button", { name: /Login-Link/i }),
+      ).toBeVisible();
+    } else {
+      await expect(
+        page.getByRole("note").filter({
+          hasText: /Anmeldung ist in dieser Umgebung nicht konfiguriert/i,
+        }),
+      ).toBeVisible();
+    }
 
     const { scrollWidth, innerWidth } = await page.evaluate(() => ({
       scrollWidth: document.scrollingElement?.scrollWidth ?? 0,

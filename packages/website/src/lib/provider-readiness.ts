@@ -29,6 +29,16 @@ export function hasCompleteSupabaseRuntimeConfig(): boolean {
   );
 }
 
+export function isAccountRuntimeReady(): boolean {
+  const region = process.env.SUPABASE_REGION;
+  return Boolean(
+    hasCompleteSupabaseRuntimeConfig() &&
+      region &&
+      /^eu(?:-|$)/i.test(region) &&
+      isPastOrPresentIsoDate(process.env.SUPABASE_DPA_CONFIRMED_AT),
+  );
+}
+
 const TURNSTILE_TEST_SITE_KEYS = new Set([
   "1x00000000000000000000AA",
   "2x00000000000000000000AB",
@@ -55,6 +65,19 @@ export function isAccountAbuseProtectionReady(): boolean {
       isPastOrPresentIsoDate(process.env.SUPABASE_CAPTCHA_CONFIRMED_AT) &&
       isPastOrPresentIsoDate(
         process.env.TURNSTILE_CONFIGURATION_CONFIRMED_AT,
+      ),
+  );
+}
+
+export function isMagicLinkRuntimeReady(): boolean {
+  return isAccountRuntimeReady() && isAccountAbuseProtectionReady();
+}
+
+export function isGoogleOAuthRuntimeReady(): boolean {
+  return Boolean(
+    isAccountRuntimeReady() &&
+      isPastOrPresentIsoDate(
+        process.env.SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT,
       ),
   );
 }

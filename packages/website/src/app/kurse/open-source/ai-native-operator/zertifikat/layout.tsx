@@ -1,17 +1,25 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import { getAiNativeOperatorCourseCopy } from "@/lib/ai-native-operator/course-copy";
+import { getAiNativeOperatorLocaleRegistry } from "@/lib/ai-native-operator/data";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
 
-export const metadata: Metadata = {
-  title: "Certificate: The AI-Native Operator",
-  description: "Download your AI-Native Operator certificate of completion.",
-  robots: { index: false, follow: false },
-  // Utility page: suppress the canonical inherited from the course layout.
-  alternates: { canonical: null },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  (await getAiNativeOperatorLocaleRegistry()).get(locale);
+  const copy = getAiNativeOperatorCourseCopy(locale).certificateMetadata;
+  return {
+    title: copy.title,
+    description: copy.description,
+    robots: { index: false, follow: false },
+    alternates: { canonical: null },
+  };
+}
 
 export default function ZertifikatLayout({
   children,
 }: {
-  readonly children: React.ReactNode;
+  readonly children: ReactNode;
 }) {
   return children;
 }

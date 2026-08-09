@@ -3,14 +3,14 @@
     "id": "an_w01",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Im AI-Native Arbeitskurs steht das Akronym RCTFC für die fünf Bausteine eines guten Claude-Briefings. Wofür steht das erste \"R\"?",
+    "questionText": "Im AI-Native Arbeitskurs bezeichnet RCTFC fünf Teile eines klaren Modell-Briefings. Wofür steht das erste \"R\"?",
     "answerOptions": [
-      { "id": "a", "text": "Rolle. Du weist Claude eine klare Perspektive zu (z. B. \"Du bist ein erfahrener Vertriebsleiter\").", "isCorrect": true },
+      { "id": "a", "text": "Rolle. Du definierst eine für die Aufgabe nützliche Perspektive, etwa die eines erfahrenen Vertriebsleiters.", "isCorrect": true },
       { "id": "b", "text": "Recherche. Claude soll zuerst das Internet durchsuchen.", "isCorrect": false },
       { "id": "c", "text": "Report. Claude soll die Antwort als Bericht formatieren.", "isCorrect": false },
       { "id": "d", "text": "Review. Du überprüfst die Antwort am Ende selbst.", "isCorrect": false }
     ],
-    "explanation": "RCTFC = Rolle, Kontext, Auftrag (Task), Format, Constraints. Die Rolle gibt Claude eine klare Perspektive und hebt die Qualität der Antwort sofort an. Sie ist der erste Hebel beim Wechsel vom leeren Dokument zum Claude-Briefing.",
+    "explanation": "RCTFC steht für Rolle, Kontext, Auftrag, Format und Constraints. Die Rolle definiert eine nützliche Perspektive; die weiteren Felder bestimmen Arbeit, Ausgabe und Grenzen.",
     "version": 1,
     "active": true
   },
@@ -18,14 +18,14 @@
     "id": "an_w02",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Was ist die zentrale Mindset-Verschiebung von Modul 1 \"Von der Aufgabe zum Workflow\"?",
+    "questionText": "Was ist die zentrale Verschiebung in Modul 1 \"Von der Aufgabe zum Workflow\"?",
     "answerOptions": [
       { "id": "a", "text": "Du ersetzt jeden Mitarbeiter durch KI.", "isCorrect": false },
-      { "id": "b", "text": "Du hörst auf, selbst auszuführen, und beginnst zu orchestrieren: Du dirigierst, Claude führt aus.", "isCorrect": true },
+      { "id": "b", "text": "Du wechselst von rein manueller Ausführung zur Orchestrierung: Arbeit definieren, begrenzte Schritte delegieren und Ergebnisse prüfen.", "isCorrect": true },
       { "id": "c", "text": "Du lernst, selbst Code zu schreiben.", "isCorrect": false },
       { "id": "d", "text": "Du nutzt KI nur für E-Mails, sonst nichts.", "isCorrect": false }
     ],
-    "explanation": "AI-Native bedeutet: vom Ausführen zum Orchestrieren. Deine Urteilskraft entscheidet, was getan wird; Claude übernimmt die Ausführung. Das ist der Kern des Claude-Orchestrator-Patterns.",
+    "explanation": "Orchestrierung bedeutet, geeignete Arbeit auszuwählen, sie präzise zu beschreiben, Kontrollen festzulegen und den Output zu prüfen. Urteilskraft und Verantwortung bleiben bei der Person.",
     "version": 1,
     "active": true
   },
@@ -33,14 +33,14 @@
     "id": "an_w03",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Was bleibt laut Arbeitskurs deine Verantwortung als Orchestrator, auch wenn Claude die Ausführung übernimmt?",
+    "questionText": "Was bleibt deine Verantwortung, wenn ein Modell bei der Ausführung unterstützt?",
     "answerOptions": [
       { "id": "a", "text": "Das manuelle Tippen jeder einzelnen Zeile.", "isCorrect": false },
       { "id": "b", "text": "Ausschließlich die Rechtschreibkorrektur.", "isCorrect": false },
-      { "id": "c", "text": "Die Urteilskraft: zu entscheiden, was richtig ist, und das Ergebnis zu verantworten.", "isCorrect": true },
+      { "id": "c", "text": "Urteilskraft anwenden, die Eignung des Ergebnisses bewerten und die Verantwortung für seine Nutzung tragen.", "isCorrect": true },
       { "id": "d", "text": "Nichts mehr, Claude übernimmt alle Entscheidungen.", "isCorrect": false }
     ],
-    "explanation": "Orchestrieren heißt nicht abschalten. Die Urteilskraft, die fachliche Bewertung und die Verantwortung für das Ergebnis bleiben bei dir. Claude liefert Entwürfe, Analysen und Recherche; du entscheidest.",
+    "explanation": "Delegation beseitigt keine Verantwortung. Briefing, Berechtigungen, Fakten- und Fachprüfung sowie die Entscheidung über die Nutzung bleiben bei dir.",
     "version": 1,
     "active": true
   },
@@ -48,14 +48,14 @@
     "id": "an_w04",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Modul 1 nennt drei Basis-Pattern für AI-Orchestrierung. Welche Triade ist gemeint?",
+    "questionText": "Modul 1 führt drei Grundmuster für KI-unterstützte Arbeit ein. Welche sind gemeint?",
     "answerOptions": [
       { "id": "a", "text": "Drafting (Entwurf), Analyse und Recherche.", "isCorrect": true },
       { "id": "b", "text": "Drucken, Speichern und Versenden.", "isCorrect": false },
       { "id": "c", "text": "Kompilieren, Testen und Deployen.", "isCorrect": false },
       { "id": "d", "text": "Lesen, Schreiben und Rechnen.", "isCorrect": false }
     ],
-    "explanation": "Die drei wiederkehrenden Pattern sind Drafting (Claude erstellt einen ersten Entwurf), Analyse (Claude wertet Daten oder Texte aus) und Recherche (Claude sammelt und verdichtet Informationen). Ein gut gesetzter System-Prompt im Claude Project verstärkt alle drei.",
+    "explanation": "Die wiederkehrenden Muster sind ein erster Entwurf, die Analyse bereitgestellten Materials und Recherche anhand definierter Fragen. Jedes Muster braucht zur Aufgabe passende Quellen- und Outputprüfungen.",
     "version": 1,
     "active": true
   },
@@ -63,14 +63,14 @@
     "id": "an_w05",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Der AI-Native Fluency Test (Modul 1) misst dein Können in fünf Dimensionen. Welche Aufzählung trifft zu?",
+    "questionText": "Der AI-Native Fluency Test in Modul 1 verwendet fünf Dimensionen. Welche Aufzählung trifft zu?",
     "answerOptions": [
       { "id": "a", "text": "Lesen, Schreiben, Hören, Sprechen und Rechnen.", "isCorrect": false },
       { "id": "b", "text": "Excel, Word, PowerPoint, Outlook und Teams.", "isCorrect": false },
       { "id": "c", "text": "Marketing, Vertrieb, Finanzen, HR und IT.", "isCorrect": false },
       { "id": "d", "text": "Drafting, Delegation, Automation, Knowledge und Governance.", "isCorrect": true }
     ],
-    "explanation": "Der Fluency Test bewertet 10 Szenarien über die Dimensionen Drafting, Delegation, Automation, Knowledge und Governance. Er ist ein Selbst-Assessment, kein Test mit Noten, und zeigt dir, wo du als AI-Native noch wächst.",
+    "explanation": "Das Selbstassessment deckt Drafting, Delegation, Automation, Knowledge und Governance in zehn Szenarien ab. Es ist eine diagnostische Übung, keine benotete Qualifikation.",
     "version": 1,
     "active": true
   },
@@ -78,14 +78,14 @@
     "id": "an_w06",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Wie beschreibt Modul 2 die Rolle von Claude im Mittelstand?",
+    "questionText": "Wie ordnet Modul 2 Claude in einen Arbeitsablauf ein?",
     "answerOptions": [
       { "id": "a", "text": "Claude ist eine reine Suchmaschine.", "isCorrect": false },
       { "id": "b", "text": "Claude ist ein Ersatz für dein gesamtes Team.", "isCorrect": false },
-      { "id": "c", "text": "Claude ist keine Software, sondern der Kollege, den du seit Jahren einstellen wolltest.", "isCorrect": true },
+      { "id": "c", "text": "Als konfigurierbares System mit definiertem Kontext, begrenzten Aufgaben, Rechten und Review.", "isCorrect": true },
       { "id": "d", "text": "Claude ist nur ein Chatbot für Smalltalk.", "isCorrect": false }
     ],
-    "explanation": "Der Voice-Anchor von Modul 2 lautet: \"Claude ist keine Software. Claude ist der Kollege, den du seit 5 Jahren einstellen wolltest.\" Der Claude-Stack (Projects, Skills, Plugins, MCP) macht ihn zum dauerhaften Arbeitsplatz-Kollegen.",
+    "explanation": "Projects, Skills, Plugins und MCP konfigurieren Kontext und Zugriffe. Menschen begrenzen Rechte, prüfen Ergebnisse und verantworten Entscheidungen.",
     "version": 1,
     "active": true
   },
@@ -93,14 +93,14 @@
     "id": "an_w07",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Wozu dient ein Claude Project mit System-Prompt?",
+    "questionText": "Wozu dient ein Claude Project mit dauerhaften Anweisungen?",
     "answerOptions": [
-      { "id": "a", "text": "Es bündelt Kontext, einen festen System-Prompt und Artifacts zu einem wiederverwendbaren Arbeitsplatz für eine Aufgabe.", "isCorrect": true },
+      { "id": "a", "text": "Es bündelt relevanten Kontext, Anweisungen und Arbeitsergebnisse in einem wiederverwendbaren Arbeitsbereich für ein definiertes Thema.", "isCorrect": true },
       { "id": "b", "text": "Es ist ein statisches Datei-Backup ohne Arbeitskontext.", "isCorrect": false },
       { "id": "c", "text": "Es löscht automatisch alle Chats nach 24 Stunden.", "isCorrect": false },
       { "id": "d", "text": "Es ist ein reines Datei-Backup ohne KI-Funktion.", "isCorrect": false }
     ],
-    "explanation": "Ein Claude Project hält Kontext, System-Prompt, Memory und Artifacts zusammen. So muss man den Hintergrund nicht in jedem Chat neu erklären. Der Workspace ersetzt das wiederholte Briefen im Chat-Fenster.",
+    "explanation": "Ein Project kann relevante Anweisungen und Referenzmaterial zusammenhalten, damit Kontext nicht für jede Aufgabe neu eingegeben werden muss. Konkrete Funktionen und Aufbewahrung hängen vom aktuellen Produkt und den Kontoeinstellungen ab.",
     "version": 1,
     "active": true
   },
@@ -108,14 +108,14 @@
     "id": "an_w08",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Connectors (Modul 2) verbinden Claude unter anderem mit Gmail, Kalender und Drive. Über welches Verfahren wird der Zugriff autorisiert?",
+    "questionText": "Connectors können Claude mit Diensten wie Gmail, Kalender und Drive verbinden. Wie wird der Zugriff typischerweise autorisiert?",
     "answerOptions": [
       { "id": "a", "text": "Indem man Claude sein E-Mail-Passwort im Klartext nennt.", "isCorrect": false },
       { "id": "b", "text": "Über einen physischen USB-Stick.", "isCorrect": false },
       { "id": "c", "text": "Connectors brauchen gar keine Autorisierung.", "isCorrect": false },
-      { "id": "d", "text": "Über OAuth, also eine kontrollierte Berechtigungs-Freigabe ohne Passwort-Weitergabe.", "isCorrect": true }
+      { "id": "d", "text": "Über OAuth, das definierte Zugriffsrechte ohne Weitergabe des Kontopassworts erteilt.", "isCorrect": true }
     ],
-    "explanation": "Connectors nutzen OAuth: Du erteilst eine kontrollierte Freigabe für bestimmte Dienste, ohne dein Passwort weiterzugeben, und kannst den Zugriff jederzeit widerrufen. Ein Beispiel-Use-Case ist das Commitment-Audit über mehrere Quellen.",
+    "explanation": "OAuth erlaubt begrenzte Zugriffsrechte, ohne das Passwort des verbundenen Kontos an die Anwendung zu geben. Freigaben sollten auf notwendige Scopes beschränkt und normalerweise beim Anbieter widerrufbar sein.",
     "version": 1,
     "active": true
   },
@@ -128,9 +128,9 @@
       { "id": "a", "text": "Ein Zertifikat, das man nach einem Kurs erhält.", "isCorrect": false },
       { "id": "b", "text": "Ein kostenpflichtiges Abo-Upgrade.", "isCorrect": false },
       { "id": "c", "text": "Eine Hardware-Komponente von Anthropic.", "isCorrect": false },
-      { "id": "d", "text": "Eine wiederkehrende Aufgabe, als Slash-Command verpackt (definiert über SKILL.md / PROMPT.md).", "isCorrect": true }
+      { "id": "d", "text": "Ein wiederverwendbares Anweisungspaket für eine wiederkehrende Aufgabe, etwa mit SKILL.md und ergänzenden Ressourcen.", "isCorrect": true }
     ],
-    "explanation": "Ein Skill macht aus einer wiederkehrenden Aufgabe ein persönliches /slash-Kommando. Er wird über eine SKILL.md (Beschreibung) und PROMPT.md (Ablauf) definiert und steht danach in jedem passenden Chat zur Verfügung.",
+    "explanation": "Ein Skill bündelt Anweisungen und optionale Ressourcen für einen wiederkehrenden Ablauf. Die genaue Struktur hängt vom Produkt ab; Berechtigungen und enthaltene Dateien müssen vor der Nutzung geprüft werden.",
     "version": 1,
     "active": true
   },
@@ -138,14 +138,14 @@
     "id": "an_w10",
     "questionType": "single_choice",
     "difficulty": "hard",
-    "questionText": "Wofür steht MCP, das Claude mit deinen Systemen verbindet (Modul 2)?",
+    "questionText": "Wofür steht MCP?",
     "answerOptions": [
       { "id": "a", "text": "Manual Copy Protocol.", "isCorrect": false },
-      { "id": "b", "text": "Model Context Protocol, ein offener Standard, über den Claude externe Tools und Datenquellen ansprechen kann.", "isCorrect": true },
+      { "id": "b", "text": "Model Context Protocol, ein offenes Protokoll zur Verbindung von KI-Anwendungen mit externen Tools und Datenquellen.", "isCorrect": true },
       { "id": "c", "text": "Managed Cloud Platform.", "isCorrect": false },
       { "id": "d", "text": "Multi-Channel-Posting.", "isCorrect": false }
     ],
-    "explanation": "MCP steht für Model Context Protocol. Über MCP-Server (z. B. handelsregister-mcp oder destatis-mcp) trifft Claude auf deine Systeme und externe Datenquellen. Plugins und MCP erweitern den Claude-Stack um echte Werkzeuge.",
+    "explanation": "Ein MCP-Server stellt einem kompatiblen Client definierte Tools oder Ressourcen bereit. Die Verbindung erweitert Funktionen und Risiken; Code, Transport, Herkunft und Berechtigungen müssen geprüft werden.",
     "version": 1,
     "active": true
   },
@@ -153,14 +153,14 @@
     "id": "an_w11",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Welche Datei lernt Claude dauerhaft deinen Kontext und deine Konventionen an?",
+    "questionText": "Welche Projektdatei kann Claude Code dauerhafte Anweisungen und Konventionen bereitstellen?",
     "answerOptions": [
       { "id": "a", "text": "README.txt im Download-Ordner.", "isCorrect": false },
       { "id": "b", "text": "Eine Excel-Tabelle mit Makros.", "isCorrect": false },
-      { "id": "c", "text": "CLAUDE.md, sie hält projektübergreifenden Kontext und Memory-Kuration fest.", "isCorrect": true },
+      { "id": "c", "text": "CLAUDE.md, die gepflegten Projektkontext, Anweisungen und Konventionen festhält.", "isCorrect": true },
       { "id": "d", "text": "Die Windows-Registry.", "isCorrect": false }
     ],
-    "explanation": "CLAUDE.md ist der Ort für Cross-Chat-Memory und Konventionen. Gut kuratiert lernt Claude so deinen Kontext, ohne dass du ihn jedes Mal wiederholst. Memory-Kuration heißt: bewusst pflegen statt alles speichern.",
+    "explanation": "Claude Code kann eine CLAUDE.md aus der Projekthierarchie als Anweisungsdatei laden. Sie sollte knappe, aktuelle Projekthinweise enthalten und darf nicht als Ablage für Secrets dienen.",
     "version": 1,
     "active": true
   },
@@ -168,14 +168,14 @@
     "id": "an_w12",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Was ist der \"versteckte Superpower\" von Claude Code für Nicht-Entwickler (Modul 2)?",
+    "questionText": "Welche Funktion von Claude Code ist für Arbeit mit vielen lokalen Dateien besonders relevant?",
     "answerOptions": [
-      { "id": "a", "text": "Filesystem-Zugriff und Batch-Verarbeitung: Claude bearbeitet viele Dateien lokal, nicht nur eine Antwort im Chat.", "isCorrect": true },
+      { "id": "a", "text": "Kontrollierter Dateizugriff und Batch-Operationen über mehrere Dateien, jeweils mit Berechtigungs- und Ergebnisprüfung.", "isCorrect": true },
       { "id": "b", "text": "Es spielt während der Arbeit Musik ab.", "isCorrect": false },
       { "id": "c", "text": "Es ist nur für Software-Entwickler nutzbar.", "isCorrect": false },
       { "id": "d", "text": "Es ersetzt das Betriebssystem.", "isCorrect": false }
     ],
-    "explanation": "Claude Code kann auf das Dateisystem zugreifen und Aufgaben im Batch über viele Dateien ausführen. Auch ohne Programmier-Hintergrund lassen sich so Ordner umbenennen, Dokumente verarbeiten oder Daten extrahieren.",
+    "explanation": "Claude Code kann genehmigte Operationen über mehrere Dateien ausführen. Vor der Annahme prüfst du Zielpfade, geplante Änderungen und den resultierenden Diff.",
     "version": 1,
     "active": true
   },
@@ -183,14 +183,14 @@
     "id": "an_w13",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Warum braucht man laut Modul 3 ein \"zweites Gehirn\"?",
+    "questionText": "Warum führt Modul 3 eine externe Wissensbasis ein?",
     "answerOptions": [
-      { "id": "a", "text": "Weil man das erste Gehirn nicht mehr benutzen soll.", "isCorrect": false },
+      { "id": "a", "text": "Weil eine Wissensbasis die eigene Urteilskraft ersetzt.", "isCorrect": false },
       { "id": "b", "text": "Weil Obsidian dein Gedächtnis löscht.", "isCorrect": false },
-      { "id": "c", "text": "Weil KI ohne ein zweites Gehirn nicht funktioniert.", "isCorrect": false },
-      { "id": "d", "text": "Weil dein Wissen verstreut in Mails, Notizen und Ordnern liegt und erst durch ein durchsuchbares System nutzbar wird.", "isCorrect": true }
+      { "id": "c", "text": "Weil jede KI eine bestimmte Ordnerstruktur voraussetzt.", "isCorrect": false },
+      { "id": "d", "text": "Weil Arbeitswissen oft über Nachrichten, Notizen und Ordner verteilt ist und in einem gepflegten, durchsuchbaren System besser genutzt werden kann.", "isCorrect": true }
     ],
-    "explanation": "Der Voice-Anchor lautet: \"Dein Wissen ist nicht in deinem Kopf. Es ist in 200 Mails, 50 Notion-Seiten, 30 Ordnern.\" Ein zweites Gehirn (Obsidian + Claude) macht dieses Wissen abruf- und abfragbar, also zu Business-Intelligence für eine Person.",
+    "explanation": "Eine externe Wissensbasis ordnet Quellen, Links und Pflegezuständigkeiten. Obsidian und Retrieval-Werkzeuge können die Suche unterstützen, ersetzen aber weder Quellenprüfung noch fachliche Verantwortung.",
     "version": 1,
     "active": true
   },
@@ -198,14 +198,14 @@
     "id": "an_w14",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Wofür steht das PARA-Modell, das Modul 3 als \"Mittelstand-Skelett\" für den Vault empfiehlt?",
+    "questionText": "Wofür steht das in Modul 3 verwendete PARA-Modell?",
     "answerOptions": [
       { "id": "a", "text": "Plan, Act, Review, Adjust.", "isCorrect": false },
       { "id": "b", "text": "People, Assets, Risks, Audits.", "isCorrect": false },
       { "id": "c", "text": "Print, Archive, Read, Approve.", "isCorrect": false },
       { "id": "d", "text": "Projects, Areas, Resources, Archives, eine einfache Ordnerstruktur für dein Wissen.", "isCorrect": true }
     ],
-    "explanation": "PARA steht für Projects, Areas, Resources, Archives. Zusammen mit MOCs (Maps of Content) gibt es dem Vault ein schlankes, sofort nutzbares Skelett, statt sich in komplexen Zettelkasten-Theorien zu verlieren.",
+    "explanation": "PARA steht für Projects, Areas, Resources und Archives. Maps of Content können die Navigation über diese Ordner ergänzen, ohne ein komplexes Notizsystem vorauszusetzen.",
     "version": 1,
     "active": true
   },
@@ -213,14 +213,14 @@
     "id": "an_w15",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Wie wird das Wissen im Vault mit Smart Connections und Copilot abfragbar (Modul 3)?",
+    "questionText": "Wie können Smart Connections und Copilot Vault-Inhalte nach Bedeutung durchsuchbar machen?",
     "answerOptions": [
-      { "id": "a", "text": "Über Embeddings: deine Notizen werden semantisch durchsuchbar, sodass Claude inhaltlich passende Stellen findet.", "isCorrect": true },
+      { "id": "a", "text": "Über Embeddings, die Text numerisch darstellen, damit semantisch verwandte Passagen abgerufen werden können.", "isCorrect": true },
       { "id": "b", "text": "Nur über exakte Wort-für-Wort-Suche wie bei Strg+F.", "isCorrect": false },
       { "id": "c", "text": "Gar nicht, der Vault bleibt eine reine Sammlung.", "isCorrect": false },
       { "id": "d", "text": "Durch Ausdrucken und Einscannen.", "isCorrect": false }
     ],
-    "explanation": "Smart Connections und Copilot for Obsidian erzeugen Embeddings deiner Notizen. Dadurch wird semantische Suche möglich: Claude findet inhaltlich verwandte Stellen, nicht nur exakte Treffer, und dein Wissen wird wirklich abfragbar.",
+    "explanation": "Embeddings unterstützen semantische Suche nach ähnlicher Bedeutung statt nur nach identischen Wörtern. Qualität und Datenfluss hängen von Modell, Index und Konfiguration ab.",
     "version": 1,
     "active": true
   },
@@ -233,9 +233,9 @@
       { "id": "a", "text": "Videos zu schneiden.", "isCorrect": false },
       { "id": "b", "text": "Bilder aus dem Vault zu löschen.", "isCorrect": false },
       { "id": "c", "text": "Den Browser-Verlauf zu leeren.", "isCorrect": false },
-      { "id": "d", "text": "Inhalte aus dem Browser in Sekunden in den Vault zu speichern, optional vom AI Interpreter aufbereitet.", "isCorrect": true }
+      { "id": "d", "text": "Webinhalte im Vault zu speichern und sie optional mit einem Template oder KI-gestützten Interpreter aufzubereiten.", "isCorrect": true }
     ],
-    "explanation": "Der Web Clipper bringt Inhalte vom Browser direkt in den Vault (\"Browser → Vault in 3 Sekunden\"). Der AI Interpreter kann den geclippten Text gleich strukturieren, zusammenfassen oder taggen.",
+    "explanation": "Der Web Clipper überträgt ausgewählte Webinhalte in den Vault. Ein Template oder Interpreter kann sie strukturieren; die gespeicherte Notiz sollte Quelle und Erfassungsdatum behalten.",
     "version": 1,
     "active": true
   },
@@ -243,14 +243,14 @@
     "id": "an_w17",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Warum betont Modul 4, n8n selbst zu hosten (etwa auf Hetzner)?",
+    "questionText": "Warum untersucht Modul 4 das Self-Hosting von n8n?",
     "answerOptions": [
       { "id": "a", "text": "Weil Self-Hosting immer kostenlos ist.", "isCorrect": false },
-      { "id": "b", "text": "Weil Self-Hosting in der DACH-Region datenschutzkonform nach DSGVO (Art. 5 Abs. 1 lit. f) automatisieren lässt, da die Daten unter eigener Kontrolle bleiben. (Diese Einschätzung ersetzt keine Rechtsberatung.)", "isCorrect": true },
+      { "id": "b", "text": "Weil Self-Hosting mehr Kontrolle über Infrastruktur und Datenflüsse geben kann, während Datenschutzkonformität weiterhin von Verträgen, Konfiguration, Zugriff und Betrieb abhängt.", "isCorrect": true },
       { "id": "c", "text": "Weil n8n in der Cloud nicht funktioniert.", "isCorrect": false },
       { "id": "d", "text": "Weil man dafür kein Docker braucht.", "isCorrect": false }
     ],
-    "explanation": "Self-hosted n8n auf Hetzner (per Docker) hält die Daten unter eigener Kontrolle, was für datenschutzkonforme Automatisierung nach DSGVO im DACH-Mittelstand wichtig ist. Das Setup ist in rund 30 Minuten machbar. (Hinweis: Dies ist eine Vereinfachung; die Einschätzung ersetzt keine Rechtsberatung.)",
+    "explanation": "Self-Hosting kann ausgewählte Verarbeitung auf kontrollierter Infrastruktur halten. Es ist keine Compliance-Abkürzung: Updates, Zugriffsschutz, Backups, Logging, Rechtsgrundlage und Auftragsverarbeitung bleiben zu prüfen. Der Kurs ersetzt keine Rechtsberatung.",
     "version": 1,
     "active": true
   },
@@ -262,10 +262,10 @@
     "answerOptions": [
       { "id": "a", "text": "Der Drucker-Treiber.", "isCorrect": false },
       { "id": "b", "text": "Eine zufällige Auswahl.", "isCorrect": false },
-      { "id": "c", "text": "Ein Switch Node, der die von Claude klassifizierte Mail in den passenden Zweig leitet.", "isCorrect": true },
+      { "id": "c", "text": "Ein Switch Node, der die Nachricht anhand des Klassifikationsergebnisses in den passenden Zweig leitet.", "isCorrect": true },
       { "id": "d", "text": "Der Nutzer muss jede Mail manuell zuordnen.", "isCorrect": false }
     ],
-    "explanation": "Der Sandbox-Flow nutzt einen Beispiel-Mail-Trigger, einen Claude-HTTP-Node zur Klassifizierung und einen Switch Node, der die Mail je nach Ergebnis in den passenden Review-Pfad leitet.",
+    "explanation": "Die Übung verwendet einen Beispiel-Mail-Trigger, einen Modellaufruf zur Klassifikation und einen Switch Node zum Routing. Eine Produktivversion braucht zusätzlich Tests, Unsicherheitsbehandlung, Review-Warteschlange und Fehlerpfade.",
     "version": 1,
     "active": true
   },
@@ -273,14 +273,14 @@
     "id": "an_w19",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Wann empfiehlt Modul 4 ausdrücklich Local AI mit LM Studio statt einer Cloud-API?",
+    "questionText": "Wann stellt Modul 4 lokale KI mit LM Studio als Option statt einer gehosteten Modell-API vor?",
     "answerOptions": [
       { "id": "a", "text": "Immer, weil lokale Modelle Claude qualitativ überlegen sind.", "isCorrect": false },
       { "id": "b", "text": "Nie, lokale Modelle sind im Kurs verboten.", "isCorrect": false },
       { "id": "c", "text": "Nur für das Abspielen von Videos.", "isCorrect": false },
-      { "id": "d", "text": "Für vertrauliche Dokumente, die das eigene Netz nicht verlassen sollen, lokal ausgeführt (z. B. mit quantisierten Llama-Modellen).", "isCorrect": true }
+      { "id": "d", "text": "Wenn eine geprüfte Architektur Dokumente auf kontrollierter lokaler Infrastruktur halten soll und ein geeignetes Modell samt Sicherheitskontrollen vorhanden ist.", "isCorrect": true }
     ],
-    "explanation": "LM Studio führt Modelle (etwa quantisierte Llama-Varianten) lokal aus. Das ist die richtige Wahl, wenn vertrauliche Dokumente das eigene System nicht verlassen sollen, ein wichtiger Datenschutz-Hebel.",
+    "explanation": "LM Studio kann unterstützte Modelle auf lokaler Hardware ausführen und dadurch Transfers an eine gehostete API vermeiden. Zugriffe, Modelldateien, Logs, Gerätesicherheit, Outputqualität und interne Richtlinien bleiben zu prüfen.",
     "version": 1,
     "active": true
   },
@@ -288,14 +288,14 @@
     "id": "an_w20",
     "questionType": "single_choice",
     "difficulty": "hard",
-    "questionText": "Der EU-AI-Act-Deep-Dive (Modul 4) unterscheidet Provider und Deployer. Was bezeichnet ein \"Deployer\"?",
+    "questionText": "Der EU-AI-Act-Abschnitt in Modul 4 unterscheidet Anbieter und Betreiber. Was bezeichnet ein \"Deployer\" beziehungsweise Betreiber?",
     "answerOptions": [
       { "id": "a", "text": "Wer die Server-Hardware im Rechenzentrum verkabelt.", "isCorrect": false },
-      { "id": "b", "text": "Wer ein KI-System unter eigener Verantwortung einsetzt (im Gegensatz zum Provider, der es bereitstellt oder entwickelt).", "isCorrect": true },
+      { "id": "b", "text": "Eine Person oder Organisation, die ein KI-System unter eigener Verantwortung verwendet, ausgenommen rein persönliche, nicht berufliche Tätigkeiten.", "isCorrect": true },
       { "id": "c", "text": "Ein Synonym für Endkunde ohne jede Pflicht.", "isCorrect": false },
       { "id": "d", "text": "Eine Behörde, die KI verbietet.", "isCorrect": false }
     ],
-    "explanation": "Der Provider stellt ein KI-System bereit oder entwickelt es; der Deployer setzt es unter eigener Verantwortung ein. Bei Hochrisiko-Anwendungen (Annex III) können Deployer-Pflichten wie eine FRIA und das Zusammenspiel mit Art. 22 DSGVO greifen.",
+    "explanation": "Der EU AI Act definiert getrennte Rollen, darunter Anbieter und Betreiber. Welche Pflichten greifen, hängt von System, Risikoklasse, Rolle und Einsatz ab. Eine Organisation, die ein System unter eigener Verantwortung verwendet, ist grundsätzlich Betreiber.",
     "version": 1,
     "active": true
   },
@@ -307,10 +307,10 @@
     "answerOptions": [
       { "id": "a", "text": "Free Risk Insurance Agreement.", "isCorrect": false },
       { "id": "b", "text": "Federal Reporting Information Act.", "isCorrect": false },
-      { "id": "c", "text": "Fundamental Rights Impact Assessment, eine Grundrechte-Folgenabschätzung für bestimmte Hochrisiko-Einsätze.", "isCorrect": true },
+      { "id": "c", "text": "Fundamental Rights Impact Assessment, eine Grundrechte-Folgenabschätzung für bestimmte Betreiber und qualifizierende Hochrisiko-Einsätze.", "isCorrect": true },
       { "id": "d", "text": "Final Review Internal Audit.", "isCorrect": false }
     ],
-    "explanation": "FRIA steht für Fundamental Rights Impact Assessment, die Grundrechte-Folgenabschätzung. Sie ist Teil der Deployer-Pflichten für bestimmte Hochrisiko-Systeme nach Annex III und wird im Modul gemeinsam mit Art. 22 DSGVO betrachtet.",
+    "explanation": "FRIA steht für Fundamental Rights Impact Assessment. Art. 27 des EU AI Act verpflichtet bestimmte Betreiber bei bestimmten Hochrisiko-Systemen; eine FRIA ist keine allgemeine Pflicht für jedes KI-System.",
     "version": 1,
     "active": true
   },
@@ -318,14 +318,14 @@
     "id": "an_w22",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Was ist der Anspruch des Capstone-Briefs in Modul 4?",
+    "questionText": "Welchen Scope setzt der Capstone-Brief in Modul 4?",
     "answerOptions": [
-      { "id": "a", "text": "Einen echten Workflow in rund 7 Tagen / 10 bis 15 Stunden zu deployen, kein Moonshot, sondern ein klar abgegrenzter Scope.", "isCorrect": true },
+      { "id": "a", "text": "Einen begrenzten Workflow als Pilot planen, dokumentieren und mit freigegebenen Daten testen; Produktivbetrieb folgt erst nach den erforderlichen Kontrollen und Freigaben.", "isCorrect": true },
       { "id": "b", "text": "Eine 100-seitige theoretische Hausarbeit zu schreiben.", "isCorrect": false },
       { "id": "c", "text": "Ein börsenreifes Startup zu gründen.", "isCorrect": false },
       { "id": "d", "text": "Nichts zu liefern, der Capstone ist optional und ohne Kriterien.", "isCorrect": false }
     ],
-    "explanation": "Der Capstone ist bewusst klein gehalten: ein einziger Workflow, der in etwa 7 Tagen real deploybar ist. Eine klare Scope-Definition und die Capstone-Rubric (binäre 7-Punkte-Bewertung) halten ihn machbar.",
+    "explanation": "Der Capstone umfasst einen kleinen, prüfbaren Workflow. Zeitbudget und Umfang richten sich nach Verfügbarkeit und Risiko; die Rubrik prüft Dokumentation, Messung, Fehlerbehandlung und Kontrollen, nicht ein garantiertes Deployment-Datum.",
     "version": 1,
     "active": true
   },
@@ -333,14 +333,14 @@
     "id": "an_w23",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Wie wird ein Capstone laut Arbeitskurs bewertet (Modul 4, Capstone Review)?",
+    "questionText": "Wie wird ein Capstone im Arbeitskurs bewertet?",
     "answerOptions": [
       { "id": "a", "text": "Mit einer Schulnote von 1 bis 6 durch eine externe Jury.", "isCorrect": false },
       { "id": "b", "text": "Per Publikums-Voting auf Social Media.", "isCorrect": false },
       { "id": "c", "text": "Gar nicht, es gibt kein Bewertungsschema.", "isCorrect": false },
-      { "id": "d", "text": "In 7 Punkten binär (erfüllt / nicht erfüllt), selbst eingereicht, ohne externe Beurteilung. Capstone-Einsendungen können nach Opt-in in eine öffentliche Beispielsammlung aufgenommen werden.", "isCorrect": true }
+      { "id": "d", "text": "Anhand von sieben binären Rubrik-Kriterien als Selbsteinschätzung, ohne externe Beurteilung; eine mögliche Veröffentlichung ist eine getrennte Freigabeentscheidung.", "isCorrect": true }
     ],
-    "explanation": "Die Capstone-Rubric bewertet 7 Punkte binär, ohne Graustufen, selbst eingereicht. Es gibt keine externe Prüfung oder Beurteilung durch Dritte. Beispiele können nur nach Opt-in und Redaktion in eine öffentliche Beispielsammlung aufgenommen werden.",
+    "explanation": "Die sieben Kriterien werden mit erfüllt oder nicht erfüllt dokumentiert. Es gibt keine unabhängige Prüfung. Falls eine Beispielsammlung angeboten wird, erfordert die Veröffentlichung ausdrückliches Opt-in sowie Datenschutz-, Geheimhaltungs- und Sicherheitsprüfung.",
     "version": 1,
     "active": true
   },
@@ -348,14 +348,14 @@
     "id": "an_w24",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Was macht das Capstone-Zertifikat des AI-Native Arbeitskurses aus?",
+    "questionText": "Welchen Status hat die Capstone-Teilnahmebestätigung des AI-Native Arbeitskurses?",
     "answerOptions": [
       { "id": "a", "text": "Es ist eine behördlich anerkannte Qualifikation, die von einer externen Stelle ausgestellt wird.", "isCorrect": false },
       { "id": "b", "text": "Es wird automatisch nach jeder abgeschlossenen Lektion per E-Mail versandt.", "isCorrect": false },
       { "id": "c", "text": "Es ist eine Teilnahmebestätigung, die lokal im Browser erstellt wird und auf deiner eigenen Einschätzung basiert, nicht auf einer externen Prüfung.", "isCorrect": true },
       { "id": "d", "text": "Es ist ein kostenpflichtiges Add-on, das separat erworben werden muss.", "isCorrect": false }
     ],
-    "explanation": "Das Zertifikat ist eine Teilnahmebestätigung und wird lokal in deinem Browser generiert, nicht serverseitig ausgestellt. Es ist keine behördliche oder rechtliche Bescheinigung. Die Bewertung basiert auf deiner eigenen Einschätzung (Capstone-Rubric oder Workshop-Quiz).",
+    "explanation": "Das Dokument ist eine lokal im Browser erzeugte Teilnahme- und Abschlussbestätigung. Es wird nicht von einer Behörde oder unabhängigen Prüfstelle ausgestellt; der Bewertungsstand stammt aus der eigenen Capstone-Rubrik oder dem Workshop-Quiz.",
     "version": 1,
     "active": true
   }

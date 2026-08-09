@@ -8,9 +8,9 @@
 //   • badge toasts — when a new badge is awarded
 //
 // Pure presentation: it never writes to the store, only diffs successive
-// emissions. Framer Motion handles entrance/exit; `MotionProvider`
-// (layout.tsx) already maps everything to prefers-reduced-motion, and we
-// additionally drop the slide offset + lengthen the auto-dismiss so a
+// emissions. Framer Motion handles entrance/exit; this runtime reads the
+// user's reduced-motion preference directly, and additionally drops the
+// slide offset + lengthens the auto-dismiss so a
 // reduced-motion user still gets time to read a fade-only toast.
 //
 // Mounted once in the root layout so any course (or the /kurse hub) that
@@ -26,8 +26,8 @@ import { EASE_OUT_EXPO } from "@/lib/animations";
 
 // Scoped domMax load (performance hardening): the toast stack uses the `layout`
 // prop (smooth reflow when a toast above disappears), which needs the
-// projection engine from domMax — the root MotionProvider only ships
-// domAnimation. Because this provider is mounted in the root layout, a static
+// projection engine from domMax. Because this runtime is mounted in the root
+// layout, a static
 // domMax import would land in the shared First Load JS of every page; the
 // async bundle below instead arrives as a small lazy chunk after hydration,
 // long before the first toast can fire (toasts require store activity).

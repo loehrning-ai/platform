@@ -211,7 +211,7 @@ describe("SemanticSpaceWidget — claude-course English override ", () => {
     expect(screen.getByLabelText("New word")).toBeInTheDocument();
   });
 
-  it("the offline heuristic matches an English word to the right cluster (functional, not just cosmetic)", async () => {
+  it("the offline heuristic matches an English word to the right group (functional, not just cosmetic)", async () => {
     mockFetchUnavailable();
     const { CLAUDE_SEMANTIC_SPACE_SEED, CLAUDE_SEMANTIC_SPACE_KEYWORDS, CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS, CLAUDE_SEMANTIC_SPACE_QUADRANT_LABELS, CLAUDE_SEMANTIC_SPACE_COPY } =
       await import("@/lib/claude-course/widget-copy");
@@ -233,7 +233,12 @@ describe("SemanticSpaceWidget — claude-course English override ", () => {
     fireEvent.change(input, { target: { value: "sprint" } });
     fireEvent.click(screen.getByRole("button", { name: /Place in space/i }));
     await waitFor(() => expect(isCheckpointDone("L", "sem")).toBe(true));
-    expect(screen.getByText(/tech cluster/)).toBeInTheDocument();
+    const placementStatus = screen
+      .getAllByRole("status")
+      .find((status) =>
+        status.textContent?.includes("maps it to the tech group"),
+      );
+    expect(placementStatus).toBeInTheDocument();
     expect(screen.queryByText(/technik/)).not.toBeInTheDocument();
   });
 });

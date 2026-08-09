@@ -7,7 +7,11 @@ import {
   getDataInfraTracks,
   __resetDataInfraLessonCacheForTests,
 } from "./data";
-import { DATA_INFRA_LESSON_IDS, DATA_INFRA_TRACK_IDS, isDataInfraLessonId } from "./types";
+import {
+  DATA_INFRA_LESSON_IDS,
+  DATA_INFRA_TRACK_IDS,
+  isDataInfraLessonId,
+} from "./types";
 
 beforeEach(() => {
   __resetDataInfraLessonCacheForTests();
@@ -47,7 +51,10 @@ describe("data-infrastructure content module ", () => {
     for (const lesson of lessons) {
       expect(lesson.sections.length, lesson.id).toBeGreaterThan(0);
       for (const section of lesson.sections) {
-        expect(section.content.trim().length, `${lesson.id}/${section.id}`).toBeGreaterThan(20);
+        expect(
+          section.content.trim().length,
+          `${lesson.id}/${section.id}`,
+        ).toBeGreaterThan(20);
       }
       expect(DATA_INFRA_TRACK_IDS, lesson.id).toContain(lesson.trackId);
       expect(lesson.quiz, lesson.id).toEqual([]);
@@ -62,9 +69,16 @@ describe("data-infrastructure content module ", () => {
     const lessons = await getAllDataInfraLessons();
     for (const lesson of lessons) {
       for (const widget of lesson.widgets ?? []) {
-        expect(isWidgetKind(widget.kind), `${lesson.id}: ${widget.kind}`).toBe(true);
-        expect(ALL_WIDGET_KINDS, `${lesson.id}: ${widget.kind}`).toContain(widget.kind);
-        expect(["quiz", "flashcards"], `${lesson.id}: ${widget.kind}`).toContain(widget.kind);
+        expect(isWidgetKind(widget.kind), `${lesson.id}: ${widget.kind}`).toBe(
+          true,
+        );
+        expect(ALL_WIDGET_KINDS, `${lesson.id}: ${widget.kind}`).toContain(
+          widget.kind,
+        );
+        expect(
+          ["quiz", "flashcards"],
+          `${lesson.id}: ${widget.kind}`,
+        ).toContain(widget.kind);
       }
     }
   });
@@ -99,7 +113,9 @@ describe("data-infrastructure content module ", () => {
   it("every lesson has exactly one flashcards widget with a non-empty deck and a namespaced lessonId", async () => {
     const lessons = await getAllDataInfraLessons();
     for (const lesson of lessons) {
-      const flashWidgets = (lesson.widgets ?? []).filter((w) => w.kind === "flashcards");
+      const flashWidgets = (lesson.widgets ?? []).filter(
+        (w) => w.kind === "flashcards",
+      );
       expect(flashWidgets.length, lesson.id).toBe(1);
       const props = flashWidgets[0].props as {
         lessonId: string;
@@ -130,7 +146,12 @@ describe("data-infrastructure content module ", () => {
 
   it("exposes the four source tracks", () => {
     const tracks = getDataInfraTracks();
-    expect(tracks.map((t) => t.id)).toEqual(["foundations", "storage", "movement", "scale"]);
+    expect(tracks.map((t) => t.id)).toEqual([
+      "foundations",
+      "storage",
+      "movement",
+      "scale",
+    ]);
   });
 
   it("reports 12 total lessons", () => {

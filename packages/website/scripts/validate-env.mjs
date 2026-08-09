@@ -171,22 +171,37 @@ const publicSupabaseKey =
 const serviceSupabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const rateLimitHmacSecret = process.env.RATE_LIMIT_HMAC_SECRET;
 const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
-const SUPABASE_PROVIDER_VARIABLES = [
+const SUPABASE_ACCOUNT_VARIABLES = [
   "NEXT_PUBLIC_SUPABASE_URL",
   "SUPABASE_URL",
   "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
   "NEXT_PUBLIC_SUPABASE_ANON_KEY",
   "SUPABASE_SERVICE_ROLE_KEY",
+  "RATE_LIMIT_HMAC_SECRET",
   "SUPABASE_REGION",
   "SUPABASE_DPA_CONFIRMED_AT",
+];
+const SUPABASE_MAGIC_LINK_VARIABLES = [
   "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
   "SUPABASE_CAPTCHA_CONFIRMED_AT",
   "TURNSTILE_CONFIGURATION_CONFIRMED_AT",
 ];
-const turnstileConfigured = Boolean(
-  turnstileSiteKey ||
-    process.env.SUPABASE_CAPTCHA_CONFIRMED_AT ||
-    process.env.TURNSTILE_CONFIGURATION_CONFIRMED_AT,
+const SUPABASE_GOOGLE_OAUTH_VARIABLES = [
+  "SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT",
+];
+const SUPABASE_PROVIDER_VARIABLES = [
+  ...SUPABASE_ACCOUNT_VARIABLES,
+  ...SUPABASE_MAGIC_LINK_VARIABLES,
+  ...SUPABASE_GOOGLE_OAUTH_VARIABLES,
+];
+const accountSupabaseConfigured = SUPABASE_ACCOUNT_VARIABLES.some(
+  hasNonEmptyEnvironmentValue,
+);
+const magicLinkConfigured = SUPABASE_MAGIC_LINK_VARIABLES.some(
+  hasNonEmptyEnvironmentValue,
+);
+const googleOAuthConfigured = SUPABASE_GOOGLE_OAUTH_VARIABLES.some(
+  hasNonEmptyEnvironmentValue,
 );
 const configuredSupabaseVariables = SUPABASE_PROVIDER_VARIABLES.filter(
   hasNonEmptyEnvironmentValue,
@@ -217,9 +232,14 @@ if (
     "Cloudflare Turnstile test site keys are forbidden in production.",
   );
 }
-if (turnstileConfigured && !supabaseConfigured) {
+if (magicLinkConfigured && !accountSupabaseConfigured) {
   markError(
     "Turnstile is configured without Supabase Auth. Disable every Turnstile variable or provide the complete protected account configuration.",
+  );
+}
+if (googleOAuthConfigured && !accountSupabaseConfigured) {
+  markError(
+    "Google OAuth is attested without Supabase Auth. Remove SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT or provide the complete account configuration.",
   );
 }
 
@@ -358,7 +378,8 @@ if (supabaseConfigured && liveAuthE2EProfile) {
     process.env.SUPABASE_DPA_CONFIRMED_AT ||
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
     process.env.SUPABASE_CAPTCHA_CONFIRMED_AT ||
-    process.env.TURNSTILE_CONFIGURATION_CONFIRMED_AT
+    process.env.TURNSTILE_CONFIGURATION_CONFIRMED_AT ||
+    process.env.SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT
   ) {
     markError(
       "The live-auth-e2e build accepts only the public URL, publishable key, and public Turnstile test site key; privileged, deployment, region, DPA, and anon-alias variables must be absent.",
@@ -377,7 +398,6 @@ if (supabaseConfigured && liveAuthE2EProfile) {
     ],
     ["SUPABASE_SERVICE_ROLE_KEY", serviceSupabaseKey],
     ["RATE_LIMIT_HMAC_SECRET", rateLimitHmacSecret],
-    ["NEXT_PUBLIC_TURNSTILE_SITE_KEY", turnstileSiteKey],
   ]
     .filter(([, value]) => !value)
     .map(([name]) => name);
@@ -396,14 +416,40 @@ if (supabaseConfigured && liveAuthE2EProfile) {
     );
   }
   requireAttestation("SUPABASE_DPA_CONFIRMED_AT", "Supabase");
-  requireAttestation(
-    "SUPABASE_CAPTCHA_CONFIRMED_AT",
-    "Supabase Auth CAPTCHA protection",
-  );
-  requireAttestation(
-    "TURNSTILE_CONFIGURATION_CONFIRMED_AT",
-    "Cloudflare Turnstile hostname and privacy configuration",
-  );
+  if (magicLinkConfigured) {
+    const missingMagicLinkProtection = [
+      ["NEXT_PUBLIC_TURNSTILE_SITE_KEY", turnstileSiteKey],
+      [
+        "SUPABASE_CAPTCHA_CONFIRMED_AT",
+        process.env.SUPABASE_CAPTCHA_CONFIRMED_AT,
+      ],
+      [
+        "TURNSTILE_CONFIGURATION_CONFIRMED_AT",
+        process.env.TURNSTILE_CONFIGURATION_CONFIRMED_AT,
+      ],
+    ]
+      .filter(([, value]) => !value)
+      .map(([name]) => name);
+    if (missingMagicLinkProtection.length > 0) {
+      markError(
+        `Magic-link authentication is partially configured. Missing: ${missingMagicLinkProtection.join(", ")}. Disable every Magic-link/Turnstile variable or provide the complete protected Magic-link configuration.`,
+      );
+    }
+    requireAttestation(
+      "SUPABASE_CAPTCHA_CONFIRMED_AT",
+      "Supabase Auth CAPTCHA protection",
+    );
+    requireAttestation(
+      "TURNSTILE_CONFIGURATION_CONFIRMED_AT",
+      "Cloudflare Turnstile hostname and privacy configuration",
+    );
+  }
+  if (googleOAuthConfigured) {
+    requireAttestation(
+      "SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT",
+      "Supabase Google OAuth",
+    );
+  }
 } else if (liveAuthE2EProfile) {
   markError(
     "The live-auth-e2e build requires NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, and NEXT_PUBLIC_TURNSTILE_SITE_KEY.",

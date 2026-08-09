@@ -3,30 +3,47 @@ import Link from "next/link";
 import { ArrowRight, Clock } from "lucide-react";
 import { getModules } from "@/lib/ai-native/data";
 import { AiNativeQuizCertCta } from "@/components/ai-native/kurs/quiz-cert-cta";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { localizeHref } from "@/lib/i18n/locale";
+import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
+import { SITE_URL } from "@/lib/seo/json-ld";
 
-export const metadata: Metadata = {
-  title: "AI-Native Arbeitskurs: Kurs",
-  description:
-    "4 Module, 27 Lektionen. Kostenloses Lernkonto erforderlich. Mit Workshop-Quiz, Teilnahmebestätigung und synchronisiertem Fortschritt.",
-  robots: { index: false, follow: true },
-  alternates: { canonical: "https://loehrning.ai/ai-native/kurs" },
-  openGraph: {
-    title: "AI-Native Arbeitskurs: Kursübersicht",
-    description:
-      "4 Module, 27 Lektionen. Kostenloses Lernkonto erforderlich. Mit Workshop-Quiz und lokaler Teilnahmebestätigung.",
-    url: "https://loehrning.ai/ai-native/kurs",
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = resolveFoundationCourseContentLocale(
+    "ai-native",
+    await getRequestLocale(),
+  );
+  const title =
+    locale === "en"
+      ? "Course hub: AI-Native Workflow Course"
+      : "Kursübersicht: AI-Native Arbeitskurs";
+  const description =
+    locale === "en"
+      ? "Four modules and 27 lessons. A free learning account stores progress. Includes a final quiz and a locally generated completion record."
+      : "Vier Module und 27 Lektionen. Ein kostenloses Lernkonto speichert den Fortschritt. Mit Abschlussquiz und lokal erzeugter Teilnahmebestätigung.";
+  const url = `${SITE_URL}${localizeHref("/ai-native/kurs", locale)}`;
+  return {
+    title,
+    description,
+    robots: { index: false, follow: true },
+    alternates: { canonical: url },
+    openGraph: { title, description, url, type: "website" },
+  };
+}
 
-export default function AiNativeCourseIndexPage() {
-  const modules = getModules();
+export default async function AiNativeCourseIndexPage() {
+  const locale = resolveFoundationCourseContentLocale(
+    "ai-native",
+    await getRequestLocale(),
+  );
+  const modules = getModules(locale);
+  const isEnglish = locale === "en";
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-12 md:py-20">
       <header className="mb-12">
         <Link
-          href="/ai-native"
+          href={localizeHref("/ai-native", locale)}
           className="text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           ← loehrning.ai/ai-native
@@ -35,11 +52,12 @@ export default function AiNativeCourseIndexPage() {
           className="mt-4 font-bold tracking-[-0.03em] text-foreground"
           style={{ fontSize: "clamp(2rem, 5vw, 3rem)" }}
         >
-          AI-Native Arbeitskurs: Kurs
+          {isEnglish ? "AI-Native Workflow Course" : "AI-Native Arbeitskurs"}
         </h1>
         <p className="mt-3 text-muted-foreground">
-          4 Module, 27 Lektionen. Selbst-paced, komplett kostenlos im
-          Browser. Starte mit Modul 1.
+          {isEnglish
+            ? "Four modules and 27 lessons. Work at your own pace. Start with module 1."
+            : "Vier Module und 27 Lektionen. Bearbeitung im eigenen Tempo. Beginne mit Modul 1."}
         </p>
       </header>
 
@@ -47,7 +65,7 @@ export default function AiNativeCourseIndexPage() {
         {modules.map((mod) => (
           <li key={mod.id}>
             <Link
-              href={`/ai-native/kurs/${mod.id}`}
+              href={localizeHref(`/ai-native/kurs/${mod.id}`, locale)}
               className="group block rounded-none border border-border/50 bg-card/30 p-6 transition-colors hover:border-brand-orange/40"
             >
               <div className="flex items-start gap-4">
@@ -60,7 +78,7 @@ export default function AiNativeCourseIndexPage() {
                       {mod.title}
                     </h2>
                     <span className="rounded-none bg-brand-sand/15 px-2 py-0.5 text-xs font-medium text-brand-sand">
-                      Kostenlos
+                      {isEnglish ? "Free" : "Kostenlos"}
                     </span>
                   </div>
                   <p className="mt-1 text-sm text-muted-foreground">
@@ -72,10 +90,12 @@ export default function AiNativeCourseIndexPage() {
                   <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <Clock size={12} />
-                      {mod.durationMinutes} Min.
+                      {mod.durationMinutes} {isEnglish ? "min" : "Min."}
                     </span>
                     <span>•</span>
-                    <span>{mod.lessonCount} Lektionen</span>
+                    <span>
+                      {mod.lessonCount} {isEnglish ? "lessons" : "Lektionen"}
+                    </span>
                   </div>
                 </div>
                 <ArrowRight
@@ -88,7 +108,7 @@ export default function AiNativeCourseIndexPage() {
         ))}
       </ol>
 
-      <AiNativeQuizCertCta />
+      <AiNativeQuizCertCta locale={locale} />
     </div>
   );
 }

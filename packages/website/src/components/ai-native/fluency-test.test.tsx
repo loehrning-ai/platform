@@ -53,7 +53,15 @@ vi.mock("framer-motion", async () => {
   );
   const Pass = ({ children }: { children?: unknown }) =>
     createElement(Fragment, null, children as never);
-  return { __esModule: true, m, motion: m, AnimatePresence: Pass };
+  return {
+    __esModule: true,
+    m,
+    motion: m,
+    AnimatePresence: Pass,
+    LazyMotion: Pass,
+    MotionConfig: Pass,
+    domAnimation: {},
+  };
 });
 
 vi.mock("@/components/ai-native/primitives", async () => {
@@ -125,7 +133,7 @@ function runToResult(
     fireEvent.click(opts[pick(i)]);
     if (i < 9) act(() => vi.advanceTimersByTime(300));
   }
-  fireEvent.click(screen.getByRole("button", { name: /Auswerten/ }));
+  fireEvent.click(screen.getByRole("button", { name: /Ergebnis berechnen/ }));
 }
 
 beforeEach(() => vi.useFakeTimers());
@@ -134,10 +142,10 @@ afterEach(() => vi.useRealTimers());
 describe("<FluencyTest>", () => {
   it("opens on the first scenario with the 01/10 counter", () => {
     render(<FluencyTest />);
-    expect(screen.getByText("Wo stehst du?")).toBeInTheDocument();
+    expect(screen.getByText("Wie arbeitest du heute?")).toBeInTheDocument();
     expect(screen.getByText("01 / 10")).toBeInTheDocument();
     expect(
-      screen.getByText(/Kundenmail auf deinem Desktop/),
+      screen.getByText(/Eine Kundenmail braucht heute eine Antwort/),
     ).toBeInTheDocument();
   });
 
@@ -146,7 +154,7 @@ describe("<FluencyTest>", () => {
     runToResult(container, () => 3);
     expect(screen.getByText("100%")).toBeInTheDocument();
     expect(screen.getByText("30 / 30")).toBeInTheDocument();
-    expect(screen.getByText("Level: Operator.")).toBeInTheDocument();
+    expect(screen.getByText("Profil: Operator.")).toBeInTheDocument();
   });
 
   it("scores an all-score-2 run as 67% / Practitioner (20 of 30)", () => {
@@ -154,7 +162,7 @@ describe("<FluencyTest>", () => {
     runToResult(container, () => 2);
     expect(screen.getByText("67%")).toBeInTheDocument();
     expect(screen.getByText("20 / 30")).toBeInTheDocument();
-    expect(screen.getByText("Level: Practitioner.")).toBeInTheDocument();
+    expect(screen.getByText("Profil: Practitioner.")).toBeInTheDocument();
   });
 
   it("scores an all-score-1 run as 33% / User (10 of 30)", () => {
@@ -162,7 +170,7 @@ describe("<FluencyTest>", () => {
     runToResult(container, () => 1);
     expect(screen.getByText("33%")).toBeInTheDocument();
     expect(screen.getByText("10 / 30")).toBeInTheDocument();
-    expect(screen.getByText("Level: User.")).toBeInTheDocument();
+    expect(screen.getByText("Profil: User.")).toBeInTheDocument();
   });
 
   it("scores a worst-case run as 0% / Explorer (0 of 30)", () => {
@@ -170,7 +178,7 @@ describe("<FluencyTest>", () => {
     runToResult(container, () => 0);
     expect(screen.getByText("0%")).toBeInTheDocument();
     expect(screen.getByText("0 / 30")).toBeInTheDocument();
-    expect(screen.getByText("Level: Explorer.")).toBeInTheDocument();
+    expect(screen.getByText("Profil: Explorer.")).toBeInTheDocument();
   });
 
   it("routes the weakest dimension to Governance when only the two governance scenarios score 0", () => {
@@ -180,24 +188,31 @@ describe("<FluencyTest>", () => {
     expect(screen.getByText("80%")).toBeInTheDocument();
     expect(screen.getByText("24 / 30")).toBeInTheDocument();
     expect(
-      screen.getByText("Schwächste Dimension: Governance"),
+      screen.getByText("Niedrigster Teilwert: Governance"),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Du bist bei Compliance unsicher/),
+      screen.getByText(/Prüfe zuerst den KI-Führerschein/),
     ).toBeInTheDocument();
   });
 
-  it("returns to the question view when 'Nochmal machen' is clicked", () => {
+  it("returns to the question view when 'Nochmal bearbeiten' is clicked", () => {
     window.scrollTo = vi.fn();
     const { container } = render(<FluencyTest />);
     runToResult(container, () => 0);
     // On the result view now.
-    expect(screen.getByText("Level: Explorer.")).toBeInTheDocument();
+    expect(screen.getByText("Profil: Explorer.")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: /Nochmal machen/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Nochmal bearbeiten/ }));
     // Back to the first question.
-    expect(screen.getByText("Wo stehst du?")).toBeInTheDocument();
+    expect(screen.getByText("Wie arbeitest du heute?")).toBeInTheDocument();
     expect(screen.getByText("01 / 10")).toBeInTheDocument();
-    expect(screen.queryByText("Level: Explorer.")).toBeNull();
+    expect(screen.queryByText("Profil: Explorer.")).toBeNull();
+  });
+
+  it("renders English scenarios and preserves the localized course route", () => {
+    render(<FluencyTest locale="en" />);
+    expect(screen.getByText("How do you work today?")).toBeInTheDocument();
+    expect(screen.getByText(/A customer email requires/)).toBeInTheDocument();
+    expect(screen.queryByText("Wie arbeitest du heute?")).toBeNull();
   });
 });

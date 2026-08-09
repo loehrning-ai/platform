@@ -19,8 +19,9 @@ describe("data-science overview server boundary", () => {
       resolve(process.cwd(), "src/app/kurse/open-source/data-science/page.tsx"),
       "utf8",
     );
+    expect(routeSource).toContain("getDsLocaleRegistry");
     expect(routeSource).toContain(
-      'import ChOverview from "@/components/data-science/chapters/ch-overview"',
+      "const OverviewComponent = overview.component",
     );
     expect(routeSource).not.toContain("getDsChapterComponent");
     expect(routeSource).toContain("prefetch={false}");

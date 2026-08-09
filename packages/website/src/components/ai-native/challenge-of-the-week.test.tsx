@@ -133,7 +133,7 @@ import { AiNativeChallengeOfTheWeek } from "./challenge-of-the-week";
 import { trackEvent, recordForDebug } from "@/lib/ai-native/analytics";
 
 function revealModel(): HTMLElement {
-  const btn = screen.getByRole("button", { name: "Modell-Lösung enthüllen" });
+  const btn = screen.getByRole("button", { name: "Referenzvorgehen anzeigen" });
   fireEvent.click(btn);
   return btn;
 }
@@ -215,7 +215,7 @@ describe("<AiNativeChallengeOfTheWeek> reveal state machine", () => {
     const btn = revealModel();
 
     expect(btn).toBeDisabled();
-    expect(btn).toHaveTextContent("Modell-Lösung enthüllt");
+    expect(btn).toHaveTextContent("Referenzvorgehen sichtbar");
     expect(screen.getByText(/Schritt 1: Kontext bündeln/)).toBeInTheDocument();
 
     expect(trackEvent).toHaveBeenCalledTimes(1);
@@ -240,11 +240,11 @@ describe("<AiNativeChallengeOfTheWeek> reveal state machine", () => {
   it("opens the rubric via its own trigger with a 'rubric' event and leaves the model trigger active", () => {
     render(<AiNativeChallengeOfTheWeek />);
 
-    fireEvent.click(screen.getByRole("button", { name: "7-Punkte-Rubrik öffnen" }));
+    fireEvent.click(screen.getByRole("button", { name: "Sieben-Punkte-Rubrik öffnen" }));
 
     // Same panel is shown, but the model trigger stays enabled/idle.
     const modelBtn = screen.getByRole("button", {
-      name: "Modell-Lösung enthüllen",
+      name: "Referenzvorgehen anzeigen",
     });
     expect(modelBtn).not.toBeDisabled();
     expect(screen.getByLabelText("Kriterium 1")).toBeInTheDocument();
@@ -261,7 +261,7 @@ describe("<AiNativeChallengeOfTheWeek> rubric scoring", () => {
     render(<AiNativeChallengeOfTheWeek />);
     revealModel();
 
-    expect(screen.getByText("Selbst-Bewertung · 0/7")).toBeInTheDocument();
+    expect(screen.getByText("Selbstprüfung · 0/7")).toBeInTheDocument();
     expect(screen.getByText("REVIEW")).toBeInTheDocument();
     expect(screen.queryByText("PASS")).toBeNull();
     // Criterion indices are zero-padded 01..07.
@@ -277,7 +277,7 @@ describe("<AiNativeChallengeOfTheWeek> rubric scoring", () => {
       fireEvent.click(screen.getByLabelText(`Kriterium ${i}`));
     }
 
-    expect(screen.getByText("Selbst-Bewertung · 5/7")).toBeInTheDocument();
+    expect(screen.getByText("Selbstprüfung · 5/7")).toBeInTheDocument();
     expect(screen.getByText("PASS")).toBeInTheDocument();
   });
 
@@ -291,8 +291,16 @@ describe("<AiNativeChallengeOfTheWeek> rubric scoring", () => {
     // Untick one -> 4/7 -> back below the PASS threshold.
     fireEvent.click(screen.getByLabelText("Kriterium 5"));
 
-    expect(screen.getByText("Selbst-Bewertung · 4/7")).toBeInTheDocument();
+    expect(screen.getByText("Selbstprüfung · 4/7")).toBeInTheDocument();
     expect(screen.getByText("REVIEW")).toBeInTheDocument();
     expect(screen.queryByText("PASS")).toBeNull();
+  });
+
+  it("renders the English weekly challenge without German controls", () => {
+    render(<AiNativeChallengeOfTheWeek locale="en" />);
+    expect(screen.getByRole("button", { name: "Show reference approach" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Open seven-point rubric" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Your approach")).toBeInTheDocument();
+    expect(screen.queryByText("Referenzvorgehen anzeigen")).toBeNull();
   });
 });

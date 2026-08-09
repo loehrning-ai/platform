@@ -9,13 +9,18 @@ import { CODEX_QUIZ_COPY, CODEX_QUIZ_TITLE } from "../widget-copy";
 const lesson: CodexLesson = {
   id: "L12",
   number: 12,
-  title: "Your AI Dev Workflow",
+  title: "A Reviewable Development Workflow",
   subtitle:
-    "End-to-end workflow: discuss → plan → implement → review → ship → learn. The capstone task you choose every move.",
+    "Move from request to release through explicit decisions, bounded implementation, independent review, and verified deployment.",
   durationMinutes: 15,
   trackId: "advanced",
-  hook: "From knowledge to habit.",
-  keyConcepts: ["Discuss-plan-implement-review-ship-learn", "Workflow chain", "Capstone", "Circular tests"],
+  hook: "Keep intent, evidence, and accountability connected.",
+  keyConcepts: [
+    "Discuss-plan-implement-review-ship-learn",
+    "Workflow chain",
+    "Capstone",
+    "Circular tests",
+  ],
   quiz: [],
   sections: buildSections([
     {
@@ -26,11 +31,11 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'Everything in this course comes together here. Before the capstone walkthrough, we lay out the full workflow chain, the sequence of phases that takes a raw idea from "someone asked for this" to "shipped and monitored." Then you walk through one realistic task, choosing the right move at each decision point.\n\nThe wrong answers in the capstone are not absurd, they are the things you would genuinely reach for if you had not been through the previous eleven lessons. Notice *why* the correct path is correct, not just what it is.',
+            "This capstone follows one change from request through deployment. At each stage, identify the decision owner, required repository evidence, execution boundary, and review gate.\n\nThe alternatives are plausible shortcuts. Evaluate them by the risks they leave unowned rather than memorizing one tool sequence.",
         },
         {
           kind: "pull-quote",
-          text: "The goal is not to memorize the right moves. It is to feel the shape of the problem space so the right move feels obvious.",
+          text: "A defensible workflow makes each decision, assumption, diff, and verification result inspectable by the accountable reviewer.",
         },
       ],
     },
@@ -42,7 +47,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'Consistent output from AI-assisted development comes from a consistent workflow. Ad hoc "just ask the agent" approaches produce inconsistent results, sometimes great, sometimes a mess. The teams that scale reliably follow a repeatable chain:',
+            "A repeatable workflow reduces hidden assumptions. Adapt the phases to the change, but retain explicit ownership from request through post-deployment verification:",
         },
         {
           kind: "card-grid",
@@ -50,39 +55,39 @@ const lesson: CodexLesson = {
             {
               eyebrow: "phase 01",
               title: "Discuss",
-              body: "Before any code, capture intent. What is the actual problem? What does done look like? What are the constraints? Keep it conversational. A good discussion surfaces assumptions and ambiguities before they become expensive bugs.",
+              body: "Capture the user problem, affected systems, success conditions, constraints, data sensitivity, and unresolved decisions. Do not begin implementation while a material product or security choice remains implicit.",
             },
             {
               eyebrow: "phase 02",
               title: "Plan",
-              body: "Turn the discussion into a concrete implementation plan. Break work into discrete, independently-reviewable tasks. Identify dependencies. Assign acceptance criteria to each task. The plan is a checklist, each item will become a PR.",
+              body: "Map dependencies and valid intermediate states. Split coherent tasks, assign acceptance evidence, record the base revision, and state which steps require approval. A task may produce a local diff or pull request depending on the workflow.",
             },
             {
               eyebrow: "phase 03",
               title: "Implement",
-              body: "Run the agent on each task in the plan. One task at a time for dependent work; in parallel for independent tasks (lesson 10). Each task produces one PR. Keep scope tight.",
+              body: "Use the configured local or cloud environment for each bounded task. Serialize dependencies, isolate genuinely independent work, and record the commands and environment assumptions used.",
             },
             {
               eyebrow: "phase 04",
               title: "Review",
-              body: "Review each PR as you would any human-authored one. Check the diff, look for the failure modes from lesson 07 (circular tests, missing error handling, wrong scope). Two revision rounds max, then re-spec if still stuck (lesson 11).",
+              body: "Compare the complete diff with the task and excluded scope. Read tests and logs, inspect security and operational effects, and re-run trusted checks. Restart when the premise is wrong or revisions diverge; use targeted comments for local defects.",
             },
             {
               eyebrow: "phase 05",
               title: "Ship",
-              body: "Merge, deploy, and verify. AI-written code ships through the same pipeline as human-written code, CI, deployment gates, monitoring. No special treatment needed. If something breaks post-deploy, treat it like any regression.",
+              body: "Use the repository's normal merge, deployment, rollback, and change-approval process. Verify the deployed artifact and relevant behavior in the target environment; local or task-environment success is not deployment proof.",
             },
             {
               eyebrow: "phase 06",
               title: "Learn",
-              body: "After each task: did the agent make a mistake that a better spec would have prevented? Update your agent instructions file with the lesson. 60 seconds of reflection per task compounds into a dramatically better agent over months.",
+              body: "Record durable, non-obvious repository rules only when the task exposed a real gap. Keep task-specific findings in the issue or pull request, and preserve incident or deployment evidence in the system that owns it.",
             },
           ],
         },
         {
           kind: "prose",
           markdown:
-            'The chain does not have to be heavyweight. For a small task, "discuss" might be two sentences in a comment. "Plan" might be three bullet points. "Implement" is one agent run. The phases exist as thinking checkpoints, not bureaucratic steps. The habit is the thing.',
+            "The amount of ceremony should follow risk and reversibility. A small local change may need a brief task and one check; an authentication, data, payment, or migration change needs explicit security and rollout evidence. Do not omit a gate merely because the implementation is short.",
         },
       ],
     },
@@ -91,7 +96,7 @@ const lesson: CodexLesson = {
       title: "Scene 01 · The request",
       readTimeMinutes: 1,
       blocks: [
-        { kind: "prose", markdown: "09:14 Monday. Slack:" },
+        { kind: "prose", markdown: "Incoming request:" },
         {
           kind: "callout",
           title: "#payments-team · priya",
@@ -113,19 +118,25 @@ const lesson: CodexLesson = {
     },
     {
       id: "s5",
-      title: "Scene 03 · The PR comes back",
+      title: "Scene 03 · Review the diff",
       readTimeMinutes: 2,
-      blocks: [{ kind: "prose", markdown: "41 minutes later. PR opened. You look at the diff:" }],
+      blocks: [
+        {
+          kind: "prose",
+          markdown:
+            "The implementation returns a diff and reports passing checks. Review the actual changes:",
+        },
+      ],
     },
     {
       id: "s6",
-      title: "Scene 04 · The nudge",
+      title: "Scene 04 · Targeted correction",
       readTimeMinutes: 1,
       blocks: [
         {
           kind: "prose",
           markdown:
-            "You have noticed: the test mocks active_subscriptions() and asserts the response contains what the mock returned. It is testing the mock, not the endpoint (lesson 11, the circular test pattern). Time to nudge. Which comment will land the fix on the first try?",
+            "The test replaces active_subscriptions() and then checks serialization of the returned fixture. That covers endpoint formatting but not active-subscription selection. Which review comment states the missing evidence precisely?",
         },
       ],
     },
@@ -137,7 +148,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "The PR is solid. Tests verify real behavior. Review is clean. You are about to merge and move to task 02 (the nightly scheduler). One last habit pays off over time. What is it?",
+            "The revised tests cover selection and serialization, the full diff has been reviewed, and trusted checks pass. Before moving to the scheduler task, preserve any durable decision that the next task depends on.",
         },
       ],
     },
@@ -149,7 +160,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "You have got it. The mental model, the craft, the loop, the safety net. The thing left is practice, and that is the easy part, because the tools are cheap to run and fast to learn from.\n\nThree parting habits that pay off forever:\n\n1. **Every failed run is signal.** Read the transcript. Ask: \"what part of my spec was ambiguous?\" Update your agent instructions file. One line learned per run compounds fast.\n2. **Two revisions, then rewrite.** If a PR is stuck after two rounds of comments, re-spec from scratch. Faster every time.\n3. **Keep the review queue short.** Your bottleneck shifts from \"who has time to build this\" to \"who has time to review.\" Four or five parallel PRs in review at once is a sweet spot, more than that and review quality drops.\n\nThat is the whole thing. Go build.",
+            "Use three operating rules after the course:\n\n1. **Separate facts from hypotheses.** Keep file references, exact command results, and verified constraints. Discard unsupported explanations.\n2. **Restart on a false premise.** Use targeted revision for local defects; write a new task when the goal, architecture, or scope must change.\n3. **Bound work by review capacity.** Do not launch more concurrent tasks than the team can inspect, integrate, and verify at the required risk level.\n\nThe output of a coding agent remains a proposed change. The accountable human owns acceptance, merge, deployment, and incident response.",
         },
       ],
     },
@@ -164,16 +175,17 @@ const lesson: CodexLesson = {
         cpId: "q1",
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
-        question: 'The ask is "CSV export, nightly, live by Friday." What do you do first?',
+        question:
+          'The ask is "CSV export, nightly, live by Friday." What do you do first?',
         options: [
           "Open the agent, paste Priya's message verbatim, hit run.",
-          "Decompose: (a) write the export endpoint, (b) add the nightly schedule, (c) wire up the delivery destination. Three smaller tasks, the first one is a morning's work.",
+          "Clarify columns, authorization, data volume, delivery destination, retention, and deadline; then separate the endpoint, schedule, and delivery work along real dependency boundaries.",
           "Ask Priya for the exact CSV columns and ship it as one big task.",
           "Tell Priya it is not feasible this week.",
         ],
         correct: 1,
         explanation:
-          '"CSV export + schedule + delivery" is three separate concerns. Ship it as one task and you get a tangled PR that is hard to review and hard to revise. Decompose and each piece lands clean. Ask Priya for columns while decomposing, you need that information for task (a).',
+          "The request combines data contract, authorization, export generation, scheduling, and delivery. Resolve the missing product and security decisions, then split only where the intermediate state is valid and independently reviewable.",
       },
     },
     {
@@ -194,7 +206,7 @@ const lesson: CodexLesson = {
         ],
         correct: 1,
         explanation:
-          'One sentence of goal. Explicit route. Explicit columns (removes guessing). "Streamed" is a non-obvious constraint, many subscription tables are large, and a naive implementation loads them all into memory and fails in production. Closing that ambiguity upfront saves a revision.',
+          "The specification names the route, fields, selection rule, and memory constraint. It still needs authorization and CSV-safety criteria, but it defines substantially more reviewable behavior than the other options.",
       },
     },
     {
@@ -203,40 +215,76 @@ const lesson: CodexLesson = {
       courseSlug: "codex",
       props: {
         title: "PR · api/admin/exports.py",
-        file: "api/admin/exports.py · +38 / −0",
+        file: "api/admin/exports.py",
         lines: [
-          { type: "add", text: "from flask import Blueprint, Response, stream_with_context" },
+          {
+            type: "add",
+            text: "from flask import Blueprint, Response, stream_with_context",
+          },
           { type: "add", text: "from auth import admin_required" },
-          { type: "add", text: "from repositories.subscriptions import active_subscriptions" },
+          {
+            type: "add",
+            text: "from repositories.subscriptions import active_subscriptions",
+          },
           { type: "add", text: "import csv, io" },
           { type: "add", text: "" },
           { type: "add", text: 'exports_bp = Blueprint("exports", __name__)' },
           { type: "add", text: "" },
-          { type: "add", text: '@exports_bp.route("/admin/exports/subscriptions.csv")' },
+          {
+            type: "add",
+            text: '@exports_bp.route("/admin/exports/subscriptions.csv")',
+          },
           { type: "add", text: "@admin_required" },
           { type: "add", text: "def export_subscriptions():" },
           { type: "add", text: "    def generate():" },
           { type: "add", text: "        buf = io.StringIO()" },
           { type: "add", text: "        w = csv.writer(buf)" },
-          { type: "add", text: '        w.writerow(["id","email","plan","status","current_period_end"])' },
+          {
+            type: "add",
+            text: '        w.writerow(["id","email","plan","status","current_period_end"])',
+          },
           { type: "add", text: "        yield buf.getvalue()" },
           { type: "add", text: "        buf.seek(0); buf.truncate(0)" },
-          { type: "add", text: "        for sub in active_subscriptions(stream=True):" },
-          { type: "add", text: "            w.writerow([sub.id, sub.customer_email, sub.plan," },
-          { type: "add", text: "                        sub.status, sub.current_period_end.isoformat()])" },
+          {
+            type: "add",
+            text: "        for sub in active_subscriptions(stream=True):",
+          },
+          {
+            type: "add",
+            text: "            w.writerow([sub.id, sub.customer_email, sub.plan,",
+          },
+          {
+            type: "add",
+            text: "                        sub.status, sub.current_period_end.isoformat()])",
+          },
           { type: "add", text: "            yield buf.getvalue()" },
           { type: "add", text: "            buf.seek(0); buf.truncate(0)" },
-          { type: "add", text: "    return Response(stream_with_context(generate())," },
+          {
+            type: "add",
+            text: "    return Response(stream_with_context(generate()),",
+          },
           { type: "add", text: '                    mimetype="text/csv")' },
           { type: "context", text: "" },
-          { type: "context", text: "# --- tests/api/admin/test_exports.py ---" },
-          { type: "add", text: "def test_export_subscriptions(client, mocker):" },
+          {
+            type: "context",
+            text: "# --- tests/api/admin/test_exports.py ---",
+          },
+          {
+            type: "add",
+            text: "def test_export_subscriptions(client, mocker):",
+          },
           {
             type: "add",
             text: '    mocker.patch("api.admin.exports.active_subscriptions",',
           },
-          { type: "add", text: '        return_value=[FakeSub(1, "a@example.com", "pro", "active", ...)])' },
-          { type: "add", text: '    r = client.get("/admin/exports/subscriptions.csv")' },
+          {
+            type: "add",
+            text: '        return_value=[FakeSub(1, "a@example.com", "pro", "active", ...)])',
+          },
+          {
+            type: "add",
+            text: '    r = client.get("/admin/exports/subscriptions.csv")',
+          },
           { type: "add", text: "    assert r.status_code == 200" },
           { type: "add", text: '    assert b"a@example.com" in r.data' },
         ],
@@ -254,13 +302,13 @@ const lesson: CodexLesson = {
         question: "First scan of the PR. What is the biggest concern?",
         options: [
           "The endpoint does not use streaming.",
-          "The test mocks active_subscriptions() and then asserts the response contains what the mock returned, it is testing the mock, not the behavior.",
+          "The test covers CSV serialization of a supplied record but does not prove that only active subscriptions are selected.",
           "The imports are in the wrong order.",
           "Nothing, tests pass.",
         ],
         correct: 1,
         explanation:
-          "The endpoint implementation is fine, it does stream. The test is the classic circular pattern from lesson 11: it replaces the thing it claims to verify. Green suite, zero behavior proof. The endpoint could return anything and the test would still pass.",
+          "The test supplies the repository output, so it can exercise endpoint serialization but not the repository's active-status filter. Add evidence through the real selection boundary and retain focused serialization tests where useful.",
       },
     },
     {
@@ -272,16 +320,16 @@ const lesson: CodexLesson = {
         cpId: "q4",
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
-        question: "The comment that lands the fix first try:",
+        question: "Which comment states the missing test evidence precisely?",
         options: [
           '"test is weak, please improve"',
           '"make it test the real thing"',
-          '"tests/api/admin/test_exports.py::test_export_subscriptions mocks active_subscriptions and then asserts the response contains the mock data, which proves nothing. Rewrite to: seed 3 real subscription rows in the test db (2 active, 1 canceled), hit the endpoint, assert the CSV has 2 data rows with the right emails, and the canceled one is absent."',
+          '"tests/api/admin/test_exports.py::test_export_subscriptions verifies serialization but not active-status selection. Add an integration test that seeds active and canceled rows, calls the endpoint through the real repository, and asserts that only active rows appear. Keep a focused serialization test if it covers separate behavior."',
           '"add more tests"',
         ],
         correct: 2,
         explanation:
-          "Good nudges have three parts: what is wrong, where it is, and what right looks like. The winning comment has all three and a concrete fixture plan. The agent can implement it in one pass. Vague feedback (\"weak\", \"improve\", \"more\") forces the agent to guess what you mean, which is how you end up at revision three.",
+          'The precise comment identifies the existing coverage, the missing behavior, the test location, and the required boundary. The reviewer can evaluate the revision against those statements without inferring intent from words such as "weak" or "more."',
       },
     },
     {
@@ -293,7 +341,8 @@ const lesson: CodexLesson = {
         cpId: "q5",
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
-        question: "Before you move to task 02, what is the highest-leverage habit?",
+        question:
+          "Before you move to task 02, which habit preserves the evidence and decisions from task 01?",
         options: [
           "Close the PR tab and move on.",
           '"Note the lesson learned, \\"tests that mock their own subject are a failure mode here\\", and add a line to your agent instructions file so the next run does not repeat it."',
@@ -302,7 +351,7 @@ const lesson: CodexLesson = {
         ],
         correct: 1,
         explanation:
-          'Your agent instructions file gets smarter from rejections. The 30 seconds you spend adding one line ("tests must exercise real behavior, not mocked subjects") pays back on every future run in this repo. This is the habit separating teams that level up with AI assistance from teams that coexist with it.',
+          "Record a rule in AGENTS.md only when it is durable, repository-specific, and not already enforced by tests or tooling. Preserve task-specific decisions and evidence in the issue or pull request so future work can trace their context.",
       },
     },
   ],

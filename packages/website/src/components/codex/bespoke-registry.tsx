@@ -1,5 +1,6 @@
 import type { ComponentType, JSX } from "react";
 import type { LessonId } from "@/lib/codex/types";
+import type { Locale } from "@/lib/i18n/locale";
 import { L01ThreeBodyContract } from "./bespoke/l01-three-body-contract";
 import { L02SandboxBox } from "./bespoke/l02-sandbox-box";
 import { L03AgentsCrystal } from "./bespoke/l03-agents-crystal";
@@ -21,6 +22,7 @@ import { L12DailyLoop } from "./bespoke/l12-daily-loop";
 interface BespokeComponentProps {
   readonly lessonId: string;
   readonly cpId: string;
+  readonly locale?: Locale;
 }
 
 const BESPOKE_REGISTRY: Record<LessonId, ComponentType<BespokeComponentProps>> = {
@@ -39,12 +41,14 @@ const BESPOKE_REGISTRY: Record<LessonId, ComponentType<BespokeComponentProps>> =
 };
 
 export function CodexBespokeInteractive({
+  locale,
   lessonId,
 }: {
+  readonly locale: Locale;
   readonly lessonId: LessonId;
 }): JSX.Element {
   const Component = BESPOKE_REGISTRY[lessonId];
-  return <Component lessonId={lessonId} cpId="bespoke" />;
+  return <Component locale={locale} lessonId={lessonId} cpId="bespoke" />;
 }
 
 export default CodexBespokeInteractive;

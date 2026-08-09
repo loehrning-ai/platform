@@ -11,6 +11,11 @@ describe("ModelServingArchitecture ", () => {
     const { container } = render(<ModelServingArchitecture />);
     expect(container.querySelector("svg")).not.toBeNull();
     expect(container.querySelector("canvas")).toBeNull();
+    expect(
+      screen.getByRole("region", {
+        name: "Model serving architecture diagram",
+      }),
+    ).toHaveAttribute("tabindex", "0");
   });
 
   it("renders the real panel copy and all 7 architecture nodes", () => {
@@ -21,7 +26,9 @@ describe("ModelServingArchitecture ", () => {
     expect(screen.getByText("Feature Store")).toBeInTheDocument();
     expect(screen.getByText("Model Registry")).toBeInTheDocument();
     expect(screen.getByText("Monitoring")).toBeInTheDocument();
-    expect(screen.getByText("Hover, focus, or select a component to inspect it.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Hover, focus, or select a component to inspect it."),
+    ).toBeInTheDocument();
   });
 
   it("shows a node's description and failure mode on hover", () => {
@@ -31,12 +38,16 @@ describe("ModelServingArchitecture ", () => {
     expect(screen.getByText(/Captures prediction logs/)).toBeInTheDocument();
     expect(screen.getByText(/Alert fatigue/)).toBeInTheDocument();
     fireEvent.mouseLeave(monitoring.closest("g")!);
-    expect(screen.getByText("Hover, focus, or select a component to inspect it.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Hover, focus, or select a component to inspect it."),
+    ).toBeInTheDocument();
   });
 
   it("supports focus and keyboard selection for every architecture node", () => {
     render(<ModelServingArchitecture />);
-    const monitoring = screen.getByRole("button", { name: "Inspect Monitoring" });
+    const monitoring = screen.getByRole("button", {
+      name: "Inspect Monitoring",
+    });
 
     fireEvent.focus(monitoring);
     expect(screen.getByText(/Captures prediction logs/)).toBeInTheDocument();

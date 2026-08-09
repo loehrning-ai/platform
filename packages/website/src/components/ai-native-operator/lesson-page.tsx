@@ -7,7 +7,9 @@ import {
   type AiNativeOperatorLessonNavItem,
 } from "./lesson-sidebar";
 import { AiNativeOperatorLessonReader } from "./lesson-reader";
+import { getAiNativeOperatorCourseCopy } from "@/lib/ai-native-operator/course-copy";
 import type { AiNativeOperatorLesson } from "@/lib/ai-native-operator/types";
+import type { Locale } from "@/lib/i18n/locale";
 
 export interface NextTarget {
   readonly href: string;
@@ -16,6 +18,7 @@ export interface NextTarget {
 }
 
 interface AiNativeOperatorLessonPageProps {
+  readonly locale?: Locale;
   readonly lesson: AiNativeOperatorLesson;
   readonly navItems: readonly AiNativeOperatorLessonNavItem[];
   readonly prevHref: string | null;
@@ -25,6 +28,7 @@ interface AiNativeOperatorLessonPageProps {
 
 /** Ties the shared `LessonShell` nav chrome to this course's sidebar + reader. */
 export function AiNativeOperatorLessonPage({
+  locale = "en",
   lesson,
   navItems,
   prevHref,
@@ -32,15 +36,21 @@ export function AiNativeOperatorLessonPage({
   next,
 }: AiNativeOperatorLessonPageProps): JSX.Element {
   const [navOpen, setNavOpen] = useState(false);
+  const copy = getAiNativeOperatorCourseCopy(locale).lesson;
 
   return (
     <LessonShell
       navOpen={navOpen}
       onNavOpenChange={setNavOpen}
-      navLabel="Module navigation"
-      sidebar={<AiNativeOperatorLessonSidebar lessons={navItems} />}
+      navLabel={copy.navLabel}
+      openNavLabel={copy.openNav}
+      closeNavLabel={copy.closeNav}
+      sidebar={
+        <AiNativeOperatorLessonSidebar locale={locale} lessons={navItems} />
+      }
     >
       <AiNativeOperatorLessonReader
+        locale={locale}
         lesson={lesson}
         prevHref={prevHref}
         prevTitle={prevTitle}

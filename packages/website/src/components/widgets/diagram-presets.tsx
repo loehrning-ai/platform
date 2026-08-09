@@ -4,6 +4,7 @@ import { type JSX } from "react";
 import {
   InteractiveDiagram,
   type DiagramNode,
+  type InteractiveDiagramCopy,
 } from "./interactive-diagram";
 
 /**
@@ -28,6 +29,8 @@ export interface DiagramPresetProps {
   readonly reducedMotion?: boolean;
   readonly title?: string;
   readonly caption?: string;
+  readonly nodes?: readonly DiagramNode[];
+  readonly copy?: Partial<InteractiveDiagramCopy>;
 }
 
 // ─── Risk pyramid (StackFlow → stack variant) ────────────────────
@@ -66,16 +69,19 @@ export function RiskPyramidDiagram({
   reducedMotion,
   title = "Die Risikopyramide des EU AI Act",
   caption = "Spiel den Verlauf ab: von der strengsten Stufe oben bis zur freiesten unten.",
+  nodes = RISK_PYRAMID_NODES,
+  copy,
 }: DiagramPresetProps): JSX.Element {
   return (
     <InteractiveDiagram
       variant="stack"
-      nodes={RISK_PYRAMID_NODES}
+      nodes={nodes}
       title={title}
       caption={caption}
       lessonId={lessonId}
       cpId={cpId}
       reducedMotion={reducedMotion}
+      copy={copy}
     />
   );
 }
@@ -156,16 +162,19 @@ export function ObligationLayersDiagram({
   reducedMotion,
   title = "Die Pflichten eines Hochrisiko-Systems",
   caption = "Tipp jede Schicht an: was sie verlangt und was passiert, wenn sie fehlt.",
+  nodes = OBLIGATION_LAYER_NODES,
+  copy,
 }: DiagramPresetProps): JSX.Element {
   return (
     <InteractiveDiagram
       variant="compare"
-      nodes={OBLIGATION_LAYER_NODES}
+      nodes={nodes}
       title={title}
       caption={caption}
       lessonId={lessonId}
       cpId={cpId}
       reducedMotion={reducedMotion}
+      copy={copy}
     />
   );
 }

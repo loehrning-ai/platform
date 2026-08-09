@@ -2,7 +2,11 @@
 // Widget manifest: FailureTagger x1 (tagger), PromptGrader x1 (grader), Quiz
 // x2 (q1, q2). Wired incrementally.
 import type { ClaudeLesson } from "../types";
-import { CLAUDE_FAILURE_TAGGER_COPY, CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
+import {
+  CLAUDE_FAILURE_TAGGER_COPY,
+  CLAUDE_QUIZ_COPY,
+  CLAUDE_QUIZ_TITLE,
+} from "../widget-copy";
 
 const lesson: ClaudeLesson = {
   id: "evals",
@@ -11,7 +15,7 @@ const lesson: ClaudeLesson = {
   subtitle: "How to know a prompt is actually better.",
   durationMinutes: 12,
   trackId: "team",
-  hook: "Vibes are not a measurement.",
+  hook: "A preferred sample is not evidence of a reliable prompt.",
   keyConcepts: [
     "Minimum viable eval",
     "Binary search a prompt",
@@ -24,28 +28,28 @@ const lesson: ClaudeLesson = {
       title: "Why evals",
       readTimeMinutes: 1,
       content:
-        "You tweak a prompt. The next response \"feels better.\" Is it? You don't know. That's the problem.\n\nAnthropic's prompt engineers say it plainly: approach prompting like a scientist, test and iterate. Evals are the test suite. They don't need to be fancy; they need to exist. Five realistic examples beat a thousand gut checks.\n\n> No eval, no improvement, just drift.",
+        "A prompt change can improve one example and regress another. An evaluation defines inputs, success criteria, and grading logic so versions can be compared under the same conditions.\n\nStart with a small representative set, including common cases, edge cases, and known failures. Expand it from production evidence. Because model output varies, use repeated trials when the decision depends on pass rates rather than deterministic checks.\n\n> Record the model, settings, prompt version, inputs, outputs, and grades.",
     },
     {
       id: "mvp-eval",
-      title: "The minimum viable eval",
+      title: "A small evaluation set",
       readTimeMinutes: 2,
       content:
-        "You don't need a platform. You need five examples.\n\n```\neval_v1:\n  - input:    <realistic example 1>\n    expects:  <what a good output looks like>\n  - input:    <realistic example 2, including a hard edge case>\n    expects:  <…>\n  - input:    <example 3, a known failure mode>\n    expects:  <…>\n  - input:    <example 4>\n    expects:  <…>\n  - input:    <example 5, adversarial: empty input, ambiguous input>\n    expects:  <…>\n```\n\nBefore you change the prompt, run all five. Save the outputs. After you change the prompt, run all five again. Diff.",
+        "A spreadsheet, JSON file, or test module is enough to start. Each case needs a realistic input and explicit acceptance criteria.\n\n```\neval_v1:\n  - input:    <common case>\n    expects:  <checkable requirements>\n  - input:    <hard edge case>\n    expects:  <…>\n  - input:    <known failure mode>\n    expects:  <…>\n  - input:    <missing or ambiguous data>\n    expects:  <abstention or clarification behavior>\n```\n\nRun the same cases before and after a change. Save raw outputs and grader results so a reviewer can inspect disagreements.",
     },
     {
       id: "debugging",
       title: "Debugging a broken prompt",
       readTimeMinutes: 2,
       content:
-        "When a prompt misbehaves, resist the urge to add instructions. First, remove. Prompts rot when people pile on. Start with the minimum that should work. If it works, reintroduce constraints one at a time until it breaks. That's your culprit.\n\n> **Binary search your prompt.** Delete half. Works? The problem was in the deleted half. Doesn't work? The problem's in the kept half. Repeat.",
+        "When a prompt regresses, first reproduce the failure with a fixed input, model, settings, and tool state. Then simplify or disable prompt sections to isolate conflicting instructions. Reintroduce one section at a time and rerun the same cases.\n\nThis resembles delta debugging, but model variance means a single pass is not proof of causality. Repeat trials and inspect the transcripts before assigning the cause.",
     },
     {
       id: "llm-as-judge",
       title: "Judging quality with a second model",
       readTimeMinutes: 2,
       content:
-        "For harder-to-grade outputs (\"is this a good review?\"), use Claude itself as a judge. Give it a clear rubric, the output to judge, and ask for a score plus justification. It's noisy but cheap, and it scales.",
+        "A model-based grader can apply a rubric to open-ended output, but it introduces its own errors and preferences. Calibrate it against human-reviewed examples, randomize presentation order for pairwise comparisons, retain grader justification, and track disagreement.\n\nUse deterministic graders for properties such as schema, required fields, citations, and executable tests. Combine graders only when each measures a defined requirement.",
     },
   ],
   widgets: [
@@ -58,12 +62,28 @@ const lesson: ClaudeLesson = {
         cpId: "tagger",
         title: "Name the failure mode",
         scenario:
-          "Five real-looking Claude outputs. Each is broken differently. Tag each with how it went wrong. This is the core move of eval work, you can't fix a class of failure until you can name it.",
+          "Five simulated outputs contain different failure modes. Tag each one. The examples are fixed course data, not live Claude responses.",
         modes: [
-          { id: "halluzination", label: "Hallucination", desc: "Confidently invented a fact." },
-          { id: "verweigerung", label: "Over-refusal", desc: "Refused something it should have done." },
-          { id: "formatdrift", label: "Format drift", desc: "Ignored the requested shape." },
-          { id: "themaverfehlung", label: "Off-topic", desc: "Wandered away from the ask." },
+          {
+            id: "halluzination",
+            label: "Hallucination",
+            desc: "Confidently invented a fact.",
+          },
+          {
+            id: "verweigerung",
+            label: "Over-refusal",
+            desc: "Refused something it should have done.",
+          },
+          {
+            id: "formatdrift",
+            label: "Format drift",
+            desc: "Ignored the requested shape.",
+          },
+          {
+            id: "themaverfehlung",
+            label: "Off-topic",
+            desc: "Wandered away from the ask.",
+          },
         ],
         cases: [
           {
@@ -72,7 +92,7 @@ const lesson: ClaudeLesson = {
             output:
               "The three largest files in your repo are src/bundle.js (4.2MB), dist/vendor.js (3.8MB), and assets/hero-video.mp4 (2.1MB).",
             correct: "halluzination",
-            why: "Claude had no repo access. It fabricated plausible-sounding file names and exact byte counts.",
+            why: "The simulated answer has no repository evidence and invents file names and byte counts.",
           },
           {
             id: "c2",
@@ -88,7 +108,7 @@ const lesson: ClaudeLesson = {
             prompt:
               'Return a JSON array of 3 objects, each with keys "term" and "definition". No prose.',
             output:
-              'Sure! Here are three important terms:\n\n1. Context window: the range of text the model can consider at once.\n2. Token: a unit of text the model processes.\n3. Temperature: sampling randomness parameter.',
+              "Sure! Here are three important terms:\n\n1. Context window: the range of text the model can consider at once.\n2. Token: a unit of text the model processes.\n3. Temperature: sampling randomness parameter.",
             correct: "formatdrift",
             why: "Explicitly asked for a JSON array, no prose. Got prose with numbered bullets.",
           },
@@ -102,11 +122,12 @@ const lesson: ClaudeLesson = {
           },
           {
             id: "c5",
-            prompt: "What's the current version of our internal AuthKit library?",
+            prompt:
+              "What's the current version of our internal AuthKit library?",
             output:
               "AuthKit is currently at version 3.7.2, released on October 14, 2024, with bug fixes for the OAuth flow and a new MFA module.",
             correct: "halluzination",
-            why: "There is no way the model knows your internal library version. Fabricated version, date, and release notes.",
+            why: "The simulated answer has no internal source for the version, date, or release notes.",
           },
         ],
         passThreshold: 4,
@@ -122,7 +143,7 @@ const lesson: ClaudeLesson = {
         cpId: "grader",
         task: "Write a prompt for generating weekly status updates that a judge model can score.",
         rubric:
-          "All Boris sections present, constraints specific, format explicit, includes a way to detect missing data.",
+          "Task and required context are explicit, constraints are testable, output format is defined, and missing data has a specified result.",
       },
     },
     {
@@ -136,12 +157,13 @@ const lesson: ClaudeLesson = {
           'You change a prompt. The new output "feels better." The right next step?',
         options: [
           "Ship it.",
-          "Run both prompts against 5 realistic examples and compare.",
+          "Run both prompt versions against the same representative evaluation cases and compare.",
           "Ask a colleague if they like it.",
           "Ask Claude to grade itself.",
         ],
         correct: 1,
-        explanation: "Vibes lie. Even 5 examples beat gut feel.",
+        explanation:
+          "A controlled comparison shows which requirements improved or regressed. One preferred output does not.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
@@ -154,16 +176,16 @@ const lesson: ClaudeLesson = {
         lessonId: "evals",
         cpId: "q2",
         question:
-          "A working prompt starts producing weird output after weeks of edits. The best debugging move?",
+          "A prompt regresses after several edits. Which step best isolates conflicting instructions?",
         options: [
           "Add more instructions to counteract the weirdness.",
-          "Delete half the prompt and see if the problem goes with it.",
+          "Disable prompt sections, rerun the same evaluation trials, and reintroduce sections one at a time.",
           "Switch to a different model.",
           "Ask Claude to rewrite the prompt from scratch.",
         ],
         correct: 1,
         explanation:
-          "Binary search. Prompts rot when people only add. Subtract to isolate.",
+          "Remove or disable sections to isolate conflicts, then repeat the same evaluation trials before assigning a cause.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },

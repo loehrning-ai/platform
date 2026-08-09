@@ -10,17 +10,20 @@ import {
 import {
   ArrowRight,
   Check,
-  FileText,
   FlaskConical,
   GraduationCap,
+  Wrench,
   type LucideIcon,
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
-import { STEPS } from "@/components/home/hero-network-steps";
+import { heroNetworkSteps } from "@/components/home/hero-network-steps";
+import { HOME_COPY } from "@/components/home/home-copy";
 import { BrandButton } from "@/components/ui/brand-button";
 import { IconTile, type CardAccent } from "@/components/ui/card";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 import { EASE_OUT_EXPO } from "@/lib/animations";
+import { localizeHref, type Locale } from "@/lib/i18n/locale";
 
 // Code-split: hero-network.tsx is a ~35 kB SVG/rAF globe animation that also
 // pulls in the ~26 kB COUNTRY_POLYLINES_3D dataset. It's purely decorative
@@ -68,8 +71,8 @@ function distanceKm(
 }
 
 /** German thousand-separator + arrow prefix. */
-function fmtKm(km: number): string {
-  return `→ ${Math.round(km).toLocaleString("de-DE")} km`;
+function fmtKm(km: number, locale: Locale): string {
+  return `→ ${Math.round(km).toLocaleString(locale === "de" ? "de-DE" : "en-GB")} km`;
 }
 
 /* Berlin reference point — anchor for the distance readout. */
@@ -81,44 +84,14 @@ const BERLIN_LON = 13.405;
    ────────────────────────────────────────────────────────────────────────── */
 
 const EASE = EASE_OUT_EXPO;
-const headlineLines = [
-  { text: "KI", color: "text-muted-foreground" },
-  { text: "lernen.", color: "text-foreground" },
-  { text: "Kostenlos.", color: "text-brand-orange" },
-];
-
-const trustSignals = [
-  "von Tim Löhr",
-  "kostenlos",
-  "technische Labore",
-  "Kostenloses Lernkonto",
-] as const;
-
 // The three ways the platform is used, shown as warm icon cards under the hero.
-const heroPillars: ReadonlyArray<{
-  readonly title: string;
-  readonly body: string;
+const pillarPresentation: ReadonlyArray<{
   readonly icon: LucideIcon;
   readonly accent: CardAccent;
 }> = [
-  {
-    title: "Lernen",
-    body: "Kurse und Bücher schaffen gemeinsame Sprache.",
-    icon: GraduationCap,
-    accent: "kupfer",
-  },
-  {
-    title: "Üben",
-    body: "Demos und Selbsttests machen Annahmen sichtbar.",
-    icon: FlaskConical,
-    accent: "sand",
-  },
-  {
-    title: "Dokumentieren",
-    body: "Blogposts und Lernbücher halten Entscheidungen fest.",
-    icon: FileText,
-    accent: "amber",
-  },
+  { icon: GraduationCap, accent: "kupfer" },
+  { icon: FlaskConical, accent: "sand" },
+  { icon: Wrench, accent: "amber" },
 ];
 
 /* ──────────────────────────────────────────────────────────────────────────
@@ -205,7 +178,18 @@ function RegisterMark({ className }: { className: string }) {
    Section
    ────────────────────────────────────────────────────────────────────────── */
 
-export function HeroSection() {
+function HeroSectionContent({
+  locale = "de",
+}: {
+  readonly locale?: Locale;
+}) {
+  const copy = HOME_COPY[locale].hero;
+  const steps = heroNetworkSteps(locale);
+  const headlineColors = [
+    "text-muted-foreground",
+    "text-foreground",
+    "text-brand-orange",
+  ] as const;
   const sectionRef = useRef<HTMLElement>(null);
   const [networkMode, setNetworkMode] = useState<
     "desktop" | "mobile" | null
@@ -255,7 +239,7 @@ export function HeroSection() {
     if (latRef.current) latRef.current.textContent = fmtLat(v);
     if (distRef.current) {
       distRef.current.textContent = fmtKm(
-        distanceKm(BERLIN_LAT, BERLIN_LON, v, lonMV.get()),
+        distanceKm(BERLIN_LAT, BERLIN_LON, v, lonMV.get()), locale,
       );
     }
   });
@@ -263,27 +247,28 @@ export function HeroSection() {
     if (lonRef.current) lonRef.current.textContent = fmtLon(v);
     if (distRef.current) {
       distRef.current.textContent = fmtKm(
-        distanceKm(BERLIN_LAT, BERLIN_LON, latMV.get(), v),
+        distanceKm(BERLIN_LAT, BERLIN_LON, latMV.get(), v), locale,
       );
     }
   });
   useMotionValueEvent(stepIdxMV, "change", (v) => {
-    const idx = Math.max(0, Math.min(STEPS.length - 1, Math.floor(v)));
-    if (cityRef.current) cityRef.current.textContent = STEPS[idx].city;
+    const idx = Math.max(0, Math.min(steps.length - 1, Math.floor(v)));
+    if (cityRef.current) cityRef.current.textContent = steps[idx].city;
   });
 
   // ── Live MEZ / MESZ clock ────────────────────────────────────────────────
   // Ticks every second, written via ref. Timezone-aware (handles MEZ↔MESZ
   // cutover automatically via Intl).
   useEffect(() => {
-    const fmtTime = new Intl.DateTimeFormat("de-DE", {
+    const intlLocale = locale === "de" ? "de-DE" : "en-GB";
+    const fmtTime = new Intl.DateTimeFormat(intlLocale, {
       timeZone: "Europe/Berlin",
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
       hourCycle: "h23",
     });
-    const fmtZone = new Intl.DateTimeFormat("de-DE", {
+    const fmtZone = new Intl.DateTimeFormat(intlLocale, {
       timeZone: "Europe/Berlin",
       timeZoneName: "short",
     });
@@ -293,14 +278,14 @@ export function HeroSection() {
       const now = new Date();
       const tz =
         fmtZone.formatToParts(now).find((p) => p.type === "timeZoneName")
-          ?.value ?? "MEZ";
+          ?.value ?? (locale === "de" ? "MEZ" : "CET");
       clockRef.current.textContent = `${fmtTime.format(now)} ${tz}`;
     };
 
     tick();
     const id = window.setInterval(tick, 1000);
     return () => window.clearInterval(id);
-  }, []);
+  }, [locale]);
 
   return (
     <section
@@ -355,7 +340,7 @@ export function HeroSection() {
             />
           ))}
           <span className="absolute left-3 top-1/2 origin-top-left -translate-y-1/2 rotate-90 whitespace-nowrap font-mono text-[10px] font-semibold tracking-[0.22em] text-foreground/65">
-            //&nbsp;ÖFFENTLICHE&nbsp;LERNKARTE&nbsp;v3.0
+            //&nbsp;{copy.mapStamp.replaceAll(" ", "\u00a0")}
           </span>
         </div>
 
@@ -388,7 +373,7 @@ export function HeroSection() {
         className="pointer-events-none absolute bottom-32 right-4 top-28 z-10 hidden flex-col items-end gap-3 text-foreground/65 md:flex"
       >
         <span className="font-mono text-[10px] font-semibold tracking-[0.18em] text-foreground/65">
-          //&nbsp;AUSGABE&nbsp;Nr.&nbsp;014&nbsp;/&nbsp;2026
+          //&nbsp;{copy.edition.replaceAll(" ", "\u00a0")}
         </span>
 
         <span className="font-mono text-[12px] font-bold tabular-nums tracking-[0.16em] text-foreground/65">
@@ -405,7 +390,7 @@ export function HeroSection() {
             />
           ))}
           <span className="absolute right-3 top-1/2 origin-top-right -translate-y-1/2 -rotate-90 whitespace-nowrap font-mono text-[10px] font-semibold tracking-[0.22em] text-foreground/65">
-            KURSE&nbsp;·&nbsp;BÜCHER&nbsp;·&nbsp;DEMOS&nbsp;·&nbsp;BLOG&nbsp;//
+            {copy.resourcesStamp.replaceAll(" ", "\u00a0")}
           </span>
         </div>
 
@@ -420,14 +405,14 @@ export function HeroSection() {
               }}
             />
             <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-              Online
+              {copy.online}
             </span>
           </div>
           <span
             ref={clockRef}
             className="mt-1 font-mono text-[10px] font-semibold tabular-nums tracking-[0.14em] text-foreground/65"
           >
-            00:00:00&nbsp;MEZ
+            00:00:00&nbsp;{locale === "de" ? "MEZ" : "CET"}
           </span>
         </div>
       </m.aside>
@@ -460,35 +445,33 @@ export function HeroSection() {
                 aria-hidden="true"
               />
               <span className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-foreground/60">
-                Freie KI-Lernplattform
+                {copy.platformLabel}
               </span>
             </div>
 
             <h1
+              aria-label={copy.headline.join(" ")}
               className="font-bold leading-[0.88] text-foreground"
               style={{
                 fontSize: "clamp(3rem, min(8.4vw, 12.5svh), 8rem)",
                 letterSpacing: "0",
               }}
             >
-              {headlineLines.map((line) => (
-                <span key={line.text} className="block pb-2">
-                  <span className={"block " + line.color}>
-                    {line.text}
+              {copy.headline.map((line, index) => (
+                <span key={line} className="block pb-2">
+                  <span className={"block " + headlineColors[index]}>
+                    {line}
                   </span>
                 </span>
               ))}
             </h1>
 
             <p className="mt-6 max-w-xl text-[1.125rem] leading-relaxed text-muted-foreground">
-              Kurse, Demos, Bücher und Arbeitsnotizen zu
-              KI-Kompetenz, EU AI Act, Dateninfrastruktur und Automatisierung.
-              Gebaut von Tim Löhr, mit öffentlichen Kursprojekten und
-              kostenlosem Lernkonto für die vier deutschen Kernkurse.
+              {copy.introduction}
             </p>
 
             <div className="mt-5 flex max-w-2xl flex-wrap gap-2">
-              {trustSignals.map((signal) => (
+              {copy.trustSignals.map((signal) => (
                 <span
                   key={signal}
                   className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-foreground/70 shadow-tile"
@@ -505,15 +488,15 @@ export function HeroSection() {
             </div>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <BrandButton href="/ki-check" variant="primary" surface="light">
-                Start bestimmen <ArrowRight size={15} />
+              <BrandButton href={localizeHref("/ki-check", locale)} variant="primary" surface="light">
+                {copy.primaryCta} <ArrowRight size={15} />
               </BrandButton>
               <BrandButton
-                href="/open-source"
+                href={localizeHref("/open-source", locale)}
                 variant="outline"
                 surface="light"
               >
-                Open Source <ArrowRight size={15} />
+                {copy.secondaryCta} <ArrowRight size={15} />
               </BrandButton>
             </div>
           </div>
@@ -536,6 +519,7 @@ export function HeroSection() {
             }}
           >
             <HeroNetwork
+              locale={locale}
               scrollProgress={scrollYProgress}
               className="h-full w-full"
               frozen={frozen}
@@ -547,6 +531,7 @@ export function HeroSection() {
         ) : networkMode === "mobile" ? (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
             <HeroNetwork
+              locale={locale}
               scrollProgress={scrollYProgress}
               mobile
               className="h-[300px] w-[280px] opacity-40"
@@ -557,13 +542,15 @@ export function HeroSection() {
 
       <div className="relative z-10 mx-auto mt-12 w-full max-w-6xl md:mt-16">
         <div className="grid gap-4 sm:grid-cols-3">
-          {heroPillars.map((pillar, i) => (
+          {copy.pillars.map((pillar, i) => {
+            const presentation = pillarPresentation[i];
+            return (
             <div
               key={pillar.title}
               className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5 shadow-card"
             >
               <div className="flex items-center justify-between">
-                <IconTile icon={pillar.icon} accent={pillar.accent} />
+                <IconTile icon={presentation.icon} accent={presentation.accent} />
                 <span className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
                   {String(i + 1).padStart(2, "0")}
                 </span>
@@ -575,9 +562,12 @@ export function HeroSection() {
                 {pillar.body}
               </p>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
+
+export const HeroSection = withMotionProvider(HeroSectionContent);

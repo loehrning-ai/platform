@@ -57,7 +57,14 @@ const READING_LESSON: AiNativeOperatorLesson = {
   durationMinutes: 10,
   keyConcepts: [],
   quiz: [],
-  sections: [{ id: "s1", title: "Section one", readTimeMinutes: 3, content: "Section one prose." }],
+  sections: [
+    {
+      id: "s1",
+      title: "Section one",
+      readTimeMinutes: 3,
+      content: "Section one prose.",
+    },
+  ],
   callout: { kind: "note", h: "A note", text: "Note text." },
   exerciseKind: "reflect-box",
   widgets: [
@@ -65,7 +72,11 @@ const READING_LESSON: AiNativeOperatorLesson = {
       kind: "reflect-box",
       placement: "end",
       courseSlug: "ai-native-operator",
-      props: { lessonId: "mindset/1", cpId: "exercise", scenario: "Reflect on it." },
+      props: {
+        lessonId: "mindset/1",
+        cpId: "exercise",
+        scenario: "Reflect on it.",
+      },
     },
   ],
 };
@@ -140,7 +151,14 @@ describe("AiNativeOperatorLessonReader ", () => {
   });
 
   it("renders the header, objective, sections, and callout for a reading lesson", () => {
-    render(<AiNativeOperatorLessonReader lesson={READING_LESSON} prevHref={null} prevTitle={null} next={NEXT_LESSON} />);
+    render(
+      <AiNativeOperatorLessonReader
+        lesson={READING_LESSON}
+        prevHref={null}
+        prevTitle={null}
+        next={NEXT_LESSON}
+      />,
+    );
     expect(screen.getByText("Test reading lesson")).toBeInTheDocument();
     expect(screen.getByText("Learn the thing.")).toBeInTheDocument();
     expect(screen.getByText("Section one prose.")).toBeInTheDocument();
@@ -149,14 +167,28 @@ describe("AiNativeOperatorLessonReader ", () => {
   });
 
   it("renders the exercise widget through the shared registry", async () => {
-    render(<AiNativeOperatorLessonReader lesson={READING_LESSON} prevHref={null} prevTitle={null} next={NEXT_LESSON} />);
+    render(
+      <AiNativeOperatorLessonReader
+        lesson={READING_LESSON}
+        prevHref={null}
+        prevTitle={null}
+        next={NEXT_LESSON}
+      />,
+    );
     expect(
       await screen.findByText("Reflect on it.", {}, { timeout: 5_000 }),
     ).toBeInTheDocument();
   });
 
   it("renders a quiz-kind lesson's questions as stacked quiz widgets", async () => {
-    render(<AiNativeOperatorLessonReader lesson={QUIZ_LESSON} prevHref={null} prevTitle={null} next={NEXT_LESSON} />);
+    render(
+      <AiNativeOperatorLessonReader
+        lesson={QUIZ_LESSON}
+        prevHref={null}
+        prevTitle={null}
+        next={NEXT_LESSON}
+      />,
+    );
     expect(
       await screen.findByText("A test question?", {}, { timeout: 5_000 }),
     ).toBeInTheDocument();
@@ -199,7 +231,14 @@ describe("AiNativeOperatorLessonReader ", () => {
 
   it("requires explicit confirmation for a reading lesson", () => {
     expect(isLessonCompleted("ai-native-operator", "mindset/1")).toBe(false);
-    render(<AiNativeOperatorLessonReader lesson={READING_LESSON} prevHref={null} prevTitle={null} next={NEXT_LESSON} />);
+    render(
+      <AiNativeOperatorLessonReader
+        lesson={READING_LESSON}
+        prevHref={null}
+        prevTitle={null}
+        next={NEXT_LESSON}
+      />,
+    );
     expect(isLessonCompleted("ai-native-operator", "mindset/1")).toBe(false);
     fireEvent.click(screen.getByRole("button", { name: "Complete lesson" }));
     expect(isLessonCompleted("ai-native-operator", "mindset/1")).toBe(true);
@@ -207,7 +246,14 @@ describe("AiNativeOperatorLessonReader ", () => {
 
   it("requires every quiz checkpoint before a quiz lesson can be completed", () => {
     expect(isLessonCompleted("ai-native-operator", "mindset/5")).toBe(false);
-    render(<AiNativeOperatorLessonReader lesson={QUIZ_LESSON} prevHref={null} prevTitle={null} next={NEXT_LESSON} />);
+    render(
+      <AiNativeOperatorLessonReader
+        lesson={QUIZ_LESSON}
+        prevHref={null}
+        prevTitle={null}
+        next={NEXT_LESSON}
+      />,
+    );
     expect(
       screen.getByRole("button", {
         name: "Answer every question correctly first",
@@ -233,6 +279,8 @@ describe("AiNativeOperatorLessonReader ", () => {
         }}
       />,
     );
-    expect(screen.getByText("Next module: Engineering Practices")).toBeInTheDocument();
+    expect(
+      screen.getByText("Next module: Engineering Practices"),
+    ).toBeInTheDocument();
   });
 });

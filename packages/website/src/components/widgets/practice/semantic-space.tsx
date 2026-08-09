@@ -264,7 +264,7 @@ export function SemanticSpaceWidget({
         })}
       </div>
 
-      <div className="mt-4 flex items-center gap-2">
+      <div className="mt-4 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
         <input
           type="text"
           value={input}
@@ -277,14 +277,14 @@ export function SemanticSpaceWidget({
           }}
           placeholder={chrome.placeholder}
           aria-label={chrome.inputAriaLabel}
-          className="flex-1 border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+          className="min-w-0 flex-1 border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
         />
         <button
           type="button"
           onClick={place}
           disabled={api.loading || !input.trim()}
           className={cn(
-            "border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-foreground shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:hover:translate-x-0 disabled:hover:translate-y-0",
+            "w-full border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-foreground shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:hover:translate-x-0 disabled:hover:translate-y-0 sm:w-auto sm:shrink-0",
           )}
         >
           {api.loading ? chrome.placingLabel : chrome.placeLabel}

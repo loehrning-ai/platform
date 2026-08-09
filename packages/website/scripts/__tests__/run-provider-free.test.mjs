@@ -34,6 +34,7 @@ const probe = [
   "'ANTHROPIC_API_KEY',",
   "'NEXT_PUBLIC_SENTRY_DSN',",
   "'SUPABASE_SERVICE_ROLE_KEY',",
+  "'SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT',",
   "'RATE_LIMIT_HMAC_SECRET',",
   "'NEXT_PUBLIC_SUPABASE_URL',",
   "'NEXT_PUBLIC_TURNSTILE_SITE_KEY',",
@@ -71,6 +72,7 @@ const result = spawnSync(
       ANTHROPIC_API_KEY: "sentinel-anthropic",
       NEXT_PUBLIC_SENTRY_DSN: "sentinel-sentry",
       SUPABASE_SERVICE_ROLE_KEY: "sentinel-supabase",
+      SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT: "sentinel-google-oauth-date",
       RATE_LIMIT_HMAC_SECRET: `rlh1_${"a".repeat(64)}`,
       NEXT_PUBLIC_SUPABASE_URL: "https://sentinel.invalid",
       NEXT_PUBLIC_TURNSTILE_SITE_KEY: "sentinel-turnstile",
@@ -104,6 +106,7 @@ for (const key of [
   "ANTHROPIC_API_KEY",
   "NEXT_PUBLIC_SENTRY_DSN",
   "SUPABASE_SERVICE_ROLE_KEY",
+  "SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT",
   "RATE_LIMIT_HMAC_SECRET",
   "NEXT_PUBLIC_SUPABASE_URL",
   "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
@@ -154,6 +157,28 @@ assert.equal(
   "",
   "generic provider-free commands must not receive redirect authority",
 );
+
+const receiptBoundE2eEnvironment = providerFreeVerificationEnvironment({
+  ...process.env,
+  E2E_PORT: "3399",
+  E2E_SERVER_MODE: "production",
+});
+assert.equal(
+  receiptBoundE2eEnvironment.LOEHRNING_LOCAL_VERIFICATION_ORIGIN,
+  "http://localhost:3399",
+  "receipt-bound production E2E must authorize only its exact loopback origin",
+);
+for (const E2E_PORT of ["0", "65536", "invalid", "3399/path"]) {
+  assert.equal(
+    providerFreeVerificationEnvironment({
+      ...process.env,
+      E2E_PORT,
+      E2E_SERVER_MODE: "production",
+    }).LOEHRNING_LOCAL_VERIFICATION_ORIGIN,
+    "",
+    `invalid E2E_PORT ${E2E_PORT} must not create redirect authority`,
+  );
+}
 const reusableProviderFreeEnvironment = providerFreeVerificationEnvironment(
   Object.fromEntries(
     APPLICATION_PROVIDER_ENVIRONMENT_KEYS.map((name) => [name, "sentinel"]),
@@ -341,6 +366,13 @@ assert.match(
   "the complete workspace verification command must cross the minimal environment boundary",
 );
 assert.ok(packageJson.scripts["verify:internal"]);
+assert.equal(
+  packageJson.scripts.typegen,
+  "node scripts/run-provider-free.mjs env __NEXT_NODE_NATIVE_TS_LOADER_ENABLED=true bun run next typegen --webpack",
+  "Next route type generation must use the provider-free environment and native TypeScript config loader",
+);
+assert.equal(packageJson.scripts.pretypecheck, "bun run typegen");
+assert.equal(packageJson.scripts["pretypecheck:test"], "bun run typegen");
 for (const scriptName of ["test:e2e", "test:e2e:built", "test:e2e:dev"]) {
   assert.match(
     packageJson.scripts[scriptName],
@@ -566,6 +598,11 @@ assert.match(
   serverLogPrivacyRunner,
   /NODE_OPTIONS: `\$\{env\.NODE_OPTIONS \?\? ""\} --require=\$\{preload\}`/,
   "the production log probe must compose its preload with the dotenv guard",
+);
+assert.match(
+  serverLogPrivacyRunner,
+  /"start",\s*"--experimental-next-config-strip-types"/,
+  "the production log probe must start Next with the same TypeScript-config mode as the certified build",
 );
 
 function sourceFiles(directory) {

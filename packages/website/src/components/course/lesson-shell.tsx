@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, type ReactNode } from "react";
 import { m } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { MotionProvider } from "@/components/motion-provider";
 import { useFocusTrap } from "@/lib/a11y/use-focus-trap";
 
 /**
@@ -26,6 +27,8 @@ export interface LessonShellProps {
   readonly navLabel: string;
   /** id shared between the toggle's aria-controls and the drawer element. */
   readonly navId?: string;
+  readonly openNavLabel?: string;
+  readonly closeNavLabel?: string;
 }
 
 export function LessonShell({
@@ -35,6 +38,8 @@ export function LessonShell({
   onNavOpenChange,
   navLabel,
   navId = "mobile-lesson-nav",
+  openNavLabel = "Navigation öffnen",
+  closeNavLabel = "Navigation schließen",
 }: LessonShellProps) {
   const closeNav = useCallback(() => onNavOpenChange(false), [onNavOpenChange]);
   const drawerRef = useFocusTrap<HTMLElement>(navOpen, closeNav);
@@ -85,7 +90,7 @@ export function LessonShell({
         aria-hidden={navOpen || undefined}
         aria-expanded={navOpen}
         aria-controls={navId}
-        aria-label="Navigation öffnen"
+        aria-label={openNavLabel}
         className={`fixed bottom-6 left-6 z-40 flex h-12 w-12 items-center justify-center border-2 border-foreground bg-brand-orange text-white shadow-[4px_4px_0_0_var(--color-foreground)] md:hidden ${
           navOpen ? "pointer-events-none invisible" : ""
         }`}
@@ -105,7 +110,8 @@ export function LessonShell({
               toggleButtonRef.current?.focus();
             }}
           />
-          <m.aside
+          <MotionProvider>
+            <m.aside
             ref={drawerRef}
             id={navId}
             role="dialog"
@@ -122,20 +128,21 @@ export function LessonShell({
                 onClick={closeNav}
                 aria-expanded="true"
                 aria-controls={navId}
-                aria-label="Navigation schließen"
+                aria-label={closeNavLabel}
                 className="inline-flex h-11 w-11 items-center justify-center border-2 border-border bg-background text-foreground outline-none transition-colors hover:border-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <X className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
-            {sidebar}
-          </m.aside>
+              {sidebar}
+            </m.aside>
+          </MotionProvider>
         </>
       )}
 
       {/* Main content */}
-      <div className="flex-1 px-6 py-8 lg:px-10">
-        <div className="mx-auto max-w-3xl">{children}</div>
+      <div className="min-w-0 flex-1 px-4 py-8 sm:px-6 lg:px-10">
+        <div className="mx-auto w-full min-w-0 max-w-3xl">{children}</div>
       </div>
     </div>
   );

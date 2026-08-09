@@ -1,215 +1,232 @@
 {
   "_meta": {
-    "title": "AI Challenge of the Week",
+    "title": "KI-Aufgabe der Woche",
     "version": "1.0.0",
     "authored": "2026-04-21",
     "rotationWeeks": 12,
     "language": "de",
-    "rotationNote": "Weekly ISO-week rotation. After week 12 modulo back to week 1. Refresh cadence: author the next 12 challenges by week 10."
+    "rotationNote": "Wöchentliche Rotation nach ISO-Kalenderwoche. Nach Woche 12 beginnt die Folge erneut bei Woche 1. Die nächsten zwölf Aufgaben werden bis Woche 10 vorbereitet."
   },
   "challenges": [
     {
       "weekOffset": 0,
-      "role": "HR · 80-MA-Maschinenbauer",
-      "scenario": "Dein CFO will in 3 Tagen ein Salary-Benchmark mit den Top-5 Wettbewerbern. Du hast Zugriff auf öffentliche Daten (LinkedIn, kununu, Bundesanzeiger), 2 Stunden Zeit und keinen Data-Analyst im Team. Wie gehst du vor?",
-      "stack": ["Claude", "Obsidian", "kununu API"],
+      "role": "HR-Leitung eines Maschinenbauers mit 80 Beschäftigten",
+      "scenario": "Der CFO benötigt innerhalb von drei Tagen einen Gehaltsvergleich mit fünf Wettbewerbern. Du hast öffentliche Quellen wie Unternehmensberichte, Stellenanzeigen und von Beschäftigten gemeldete Gehaltsdaten, zwei Stunden für die erste Analyse und keine Datenanalyse-Unterstützung. Wie erstellst du einen nachvollziehbaren Entwurf?",
+      "stack": ["Claude", "Obsidian", "öffentliche Gehaltsquellen"],
       "timeBudget": "2 Stunden",
-      "modelSolution": "1. Claude-Brief: Rolle (Comp-Analyst), Kontext (80-MA-Maschinenbau, Raum München), Output-Format (5-spaltige Tabelle: Wettbewerber, Median-Gehalt ING/SENIOR, Quelle, Stichproben-Größe, Vertrauens-Level). 2. Quellen sammeln: 5 kununu-URLs + 5 LinkedIn-Listings pro Wettbewerber → in Claude pasten. 3. Claude extrahiert Gehaltsbänder + markiert unsichere Werte mit '?'. 4. Kritik-Runde: 'Welche Zahlen würdest du nochmal prüfen?' → Claude nennt Top-3. 5. Output als Markdown-Table in Obsidian → Export nach Excel → im CFO-Meeting.",
+      "modelSolution": "1. Briefing mit Rolle, Unternehmen, Region und fünfspaltigem Output definieren: Wettbewerber, Rolle und Level, gemeldete Gehaltsspanne, Quelle und Vertrauensniveau. 2. Pro Wettbewerber einen kleinen, dokumentierten Satz öffentlicher Datensätze sammeln. Nutzungsbedingungen beachten und Schätzungen nicht als Abrechnungsdaten darstellen. 3. Das Modell Spannen extrahieren und fehlende oder unsichere Werte markieren lassen. 4. Die drei prüfkritischsten Aussagen bestimmen. 5. Diese Aussagen in den Originalquellen verifizieren, Stichprobenbegrenzungen dokumentieren und die geprüfte Tabelle bereitstellen.",
       "rubric": [
-        "Claude bekommt Rolle + Kontext + Output-Format klar genannt",
-        "Öffentliche Datenquellen werden explizit benannt (nicht 'irgendwas im Netz')",
-        "Stichproben-Größen sind dokumentiert (nicht 'Gefühl')",
-        "Unsichere Werte werden ausgezeichnet (? oder Vertrauens-Level)",
-        "Kritik-Runde vor Finalisierung ist Teil des Flows",
-        "Output-Format matcht den Empfänger (CFO will Tabelle, keine Prosa)",
-        "Zeitplan passt in 2h (nicht ein halber Tag)"
+        "Das Briefing nennt Rolle, Kontext und Ausgabeformat",
+        "Benannte öffentliche Quellen ersetzen eine undefinierte Websuche",
+        "Stichprobengrößen und Quellenbegrenzungen sind dokumentiert",
+        "Unsichere Werte tragen ein ausdrückliches Vertrauenslabel",
+        "Vor der Abgabe findet eine kritische Prüfung statt",
+        "Das Ausgabeformat entspricht dem Tabellenbedarf des CFO",
+        "Das Zwei-Stunden-Limit gilt für eine begrenzte Erstanalyse, nicht für eine vollständige Vergütungsstudie"
       ]
     },
     {
       "weekOffset": 1,
-      "role": "Vertriebsleiter · 45-MA-Handwerksbetrieb",
-      "scenario": "Dein Team hat 230 offene Angebote im System, manche seit 90 Tagen. Du weißt nicht mehr, welche noch lebendig sind. Eine manuelle Nachverfolgung würde 3 Tage dauern. Wie sortierst du in 2 Stunden?",
+      "role": "Vertriebsleitung eines Handwerksbetriebs mit 45 Beschäftigten",
+      "scenario": "Im System liegen 230 offene Angebote, einige davon seit 90 Tagen. Es ist unklar, welche Chancen noch aktiv sind. Die manuelle Prüfung wird auf drei Tage geschätzt. Wie erstellst du in zwei Stunden eine Review-Warteschlange?",
       "stack": ["Claude Code", "CSV-Export", "E-Mail-Templates"],
       "timeBudget": "2 Stunden",
-      "modelSolution": "1. CSV-Export aus Angebots-System (Spalten: Kunde, Summe, Letzte Aktivität, Status). 2. Claude Code: 'Gruppiere nach Alter + Summe, erstelle Triage-Klassen: HOT (< 14d + > 10k€), WARM (14-45d), COLD (> 45d), DEAD (> 90d ohne Reaktion).' 3. Claude generiert drei E-Mail-Templates (HOT = Call-Pitch, WARM = Reminder + Deadline, COLD = Last-Chance-Offer). 4. Du pickst 20 HOT-Kandidaten für persönliche Anrufe, 50 WARM für Templated-Mail heute, 80 COLD für Last-Chance-Kampagne nächste Woche, 80 DEAD archivieren. 5. Follow-up: wöchentlich 30-Min mit Claude drüber schauen.",
+      "modelSolution": "1. Nur die für die Triage erforderlichen Felder exportieren: Kundenreferenz, Wert, letzte Aktivität und Status. Personenbezogene Daten nach dem freigegebenen Verfahren behandeln. 2. Review-Klassen wie HOT, WARM, COLD und DEAD mit ausdrücklichen Alters- und Wertschwellen definieren. 3. Follow-up-Entwürfe zur menschlichen Freigabe erstellen; nicht automatisch senden. 4. Datensätze mit höchster Priorität persönlichen Anrufen zuordnen und die übrigen in Review-Warteschlangen stellen. Nicht allein aufgrund einer Modellbewertung archivieren. 5. Die Regeln wöchentlich mit den tatsächlichen Ergebnissen vergleichen.",
       "rubric": [
-        "Datenexport aus bestehendem System (nicht in Claude alles neu tippen)",
-        "Klare Triage-Klassen mit Schwellenwerten (nicht 'wichtig/unwichtig')",
-        "Templates pro Klasse (DE-Handwerk-Ton, keine US-Sales-Phrasen)",
-        "Human-in-the-loop bei HOT (nicht komplette Automation)",
-        "Zeitplan realistisch (2h für Triage + Template-Generierung)",
-        "Recurring Mechanism (wöchentlich, nicht einmalig)",
-        "DSGVO: Kundendaten verlassen den eigenen Perimeter nicht (lokale LLM-Option oder Abstimmung mit Datenschutz)"
+        "Daten werden aus dem Quellsystem exportiert statt neu eingegeben",
+        "Triage-Klassen verwenden ausdrückliche, prüfbare Schwellenwerte",
+        "Jede Klasse hat einen passenden Entwurf in klarer Geschäftssprache",
+        "Follow-up mit hohem Wert bleibt menschlich geprüft",
+        "Das Zwei-Stunden-Limit umfasst Triage-Aufbau und Entwürfe",
+        "Ein wiederkehrender Review ersetzt eine einmalige Bereinigung",
+        "Kundendaten werden nur über einen freigegebenen Datenschutz- und Zugriffspfad verarbeitet"
       ]
     },
     {
       "weekOffset": 2,
-      "role": "Controller · 120-MA-Logistik",
-      "scenario": "Monats-Reporting für die GF: 8 Kennzahlen, 4 Abteilungen, 12 Zeilen Kommentar. Machst du 6 Stunden lang. Dein Kollege ist krank, du hast noch 90 Minuten. Was tust du?",
+      "role": "Controlling eines Logistikunternehmens mit 120 Beschäftigten",
+      "scenario": "Das Monatsreporting umfasst acht Kennzahlen, vier Abteilungen und zwölf Kommentarzeilen. Der aktuelle Ablauf dauert sechs Stunden. Ein Kollege ist abwesend, und du hast 90 Minuten. Wie erstellst du einen prüfbaren Entwurf?",
       "stack": ["Claude + Notebook", "Excel", "letzte 3 Reports"],
       "timeBudget": "90 Minuten",
-      "modelSolution": "1. Claude-Projekt anlegen, letzte 3 Monats-Reports hochladen (als Style-Referenz). 2. Aktuellen Rohzahlen als CSV pasten. 3. Claude: 'Strukturiere wie die letzten 3 Monate. Markiere Ausreißer vs. Durchschnitt der letzten 6 Monate. Schreibe Kommentar im Ton der bisherigen Reports.' 4. Claude generiert Draft in 2 Minuten. Du verifizierst die Zahlen (nicht die Formulierung!) in 30 Min. 5. Rest der Zeit: Nachfrage an Claude zu 2-3 Auffälligkeiten: 'Was könnte 15 % Dips in Abteilung C erklären?' → Claude schlägt 3 Hypothesen, du pickst die plausibelste. 6. Export als PDF, 1 Stunde Zeit übrig.",
+      "modelSolution": "1. Einen kontrollierten Arbeitsbereich anlegen und die letzten drei Reports als Struktur- und Stilreferenz hinzufügen. 2. Die aktuellen Rohzahlen in einer validierten Tabelle bereitstellen. 3. Dieselbe Struktur, ausdrückliche Abweichungsberechnungen und Kommentare anfordern, die Fakten von Hypothesen trennen. 4. Jede berichtete Zahl in Excel neu berechnen und die referenzierte Quellzelle prüfen. 5. Zwei oder drei wesentliche Abweichungen untersuchen und mehrere mögliche Erklärungen dokumentieren, statt eine unbelegte Ursache auszuwählen. 6. Das geprüfte Dokument im erforderlichen Format exportieren.",
       "rubric": [
-        "Style-Referenzen aus alten Reports (Claude lernt den Ton)",
-        "Zahlen werden verifiziert, Formulierung nicht unnötig umgeschrieben",
-        "Ausreißer-Markierung ist Teil des Briefings (nicht Post-Hoc)",
-        "Hypothesen-Runde mit Claude für Anomalien",
-        "Zeitplan ist realistisch (Verifikation > Schreiben)",
-        "Format des Outputs entspricht GF-Erwartung (PDF, nicht Markdown)",
-        "Repeatable (nächster Monat: Claude-Projekt existiert bereits)"
+        "Frühere Reports liefern Struktur- und Stilreferenzen",
+        "Jede Zahl wird unabhängig vom generierten Text geprüft",
+        "Abweichungsregeln stehen vor der Entwurfserstellung fest",
+        "Mögliche Erklärungen sind als Hypothesen gekennzeichnet",
+        "Verifikation erhält mehr Zeit als sprachliche Anpassungen",
+        "Das Endformat entspricht dem Reporting-Prozess der Geschäftsführung",
+        "Arbeitsbereich und Prüfungen können im nächsten Monat wiederverwendet werden"
       ]
     },
     {
       "weekOffset": 3,
-      "role": "GF-Assistenz · 200-MA-Softwarehaus",
-      "scenario": "Dein Chef fliegt morgen früh zu einem Investoren-Meeting. Du sollst bis heute Abend ein 8-seitiges Briefing zu 3 Wettbewerbern liefern: öffentliche Finanzen, Produktpositionierung, Management-Team, jüngste Pressemeldungen, Einschätzung der Bedrohungslage.",
-      "stack": ["Claude", "Bundesanzeiger", "LinkedIn", "Google News"],
+      "role": "Geschäftsführungsassistenz eines Softwareunternehmens mit 200 Beschäftigten",
+      "scenario": "Eine Führungskraft reist morgen früh zu einem Investorentermin. Bis heute Abend benötigst du ein achtseitiges Briefing zu drei Wettbewerbern: öffentliche Finanzdaten, Produktpositionierung, Management, aktuelle Mitteilungen und eine belegte Risikoeinschätzung.",
+      "stack": [
+        "Claude",
+        "Unternehmensregister",
+        "berufliche Profile",
+        "Nachrichtenquellen"
+      ],
       "timeBudget": "4 Stunden",
-      "modelSolution": "1. Claude-Projekt mit Template: 8-Seiten-Briefing-Struktur definieren (1 Seite Exec, je 2 Seiten Wettbewerber, 1 Seite Fazit). 2. Parallel für jeden Wettbewerber: Bundesanzeiger-Export + 10 neueste News-Schlagzeilen + LinkedIn-Founder-Profile → an Claude pasten. 3. Claude: 'Fasse nach Struktur-Template zusammen. Markiere unsichere Aussagen. Zitat-Style: wie die letzten Briefings meines Chefs (hochgeladen).' 4. Human-Check: Zahlen aus Bilanzen verifizieren (!). 5. Einschätzungs-Abschnitt separat: 'Vergleiche die 3 Wettbewerber entlang 4 Dimensionen (Finanzkraft, Tempo, Team, Produkt). Wo sehen wir unser größtes Risiko?' Claude liefert eine Matrix + begründete Bedrohungs-Rangliste. 6. Final: PDF-Export + Deck-One-Pager für Spontan-Fragen.",
+      "modelSolution": "1. Die achtseitige Struktur vor der Recherche festlegen: eine Seite Zusammenfassung, je zwei Seiten pro Wettbewerber und eine Vergleichsseite. 2. Für jeden Wettbewerber dieselben Quellenkategorien parallel sammeln, einschließlich Veröffentlichungsdatum und Direktlink. 3. Einen Entwurf anhand des Templates erstellen und jede unsichere Aussage markieren lassen. 4. Finanzzahlen und Zitate in den Originaldokumenten prüfen. 5. Die Wettbewerber anhand von Finanzkraft, Umsetzungstempo, Team und Produkt vergleichen und jede Bewertung belegen. 6. Das geprüfte Briefing und eine einseitige Besprechungsreferenz exportieren.",
       "rubric": [
-        "Template-First: Struktur existiert, bevor Claude schreibt",
-        "Parallele Datensammlung (nicht sequenziell)",
-        "Zitat-Stil an den Chef adaptiert (nicht Generic-Consulting)",
-        "Zahlen-Verifikation als Pflicht-Check (kein blindes Claude-Vertrauen)",
-        "Einschätzungs-Teil nutzt Claude für Matrix, nicht für Meinung",
-        "Output: PDF + Backup-One-Pager (Redundanz für das Meeting)",
-        "Zeitplan nutzt die 4h für Qualität, nicht für Volumen"
+        "Die Struktur steht vor Beginn des Entwurfs fest",
+        "Jeder Wettbewerber wird nach demselben Quellenplan recherchiert",
+        "Der Text folgt einem freigegebenen internen Beispiel statt allgemeiner Beratungssprache",
+        "Finanzzahlen und Zitate werden an der Quelle geprüft",
+        "Die Vergleichsmatrix trennt Belege von Bewertung",
+        "Die Lieferobjekte sind Briefing und knappe Besprechungsreferenz",
+        "Der Vier-Stunden-Plan begrenzt den Umfang und reserviert Zeit für Verifikation"
       ]
     },
     {
       "weekOffset": 4,
-      "role": "IT-Leiter · 60-MA-Familienbetrieb",
-      "scenario": "Die Geschäftsleitung fragt: 'Was macht KI für uns sinnvoll?' Du sollst bis nächste Woche ein Konzept vorlegen. Budget offen, Zeit knapp, keine AI-Erfahrung im Haus. Wo fängst du an?",
+      "role": "IT-Leitung eines Familienbetriebs mit 60 Beschäftigten",
+      "scenario": "Die Geschäftsleitung fragt, wo KI sinnvoll eingesetzt werden könnte. Du sollst in der nächsten Woche ein erstes Konzept vorlegen. Das Budget ist offen, die Zeit begrenzt und es gibt noch keine etablierte KI-Praxis. Wo beginnst du?",
       "stack": ["Claude", "Mitarbeiter-Umfrage", "Prozess-Mapping"],
       "timeBudget": "5 Stunden (verteilt auf 3 Tage)",
-      "modelSolution": "1. Tag 1 (1h): Claude-Brief zu 'Mittelstand-KI-Use-Cases 2026, branchenspezifisch'. Claude liefert 20 Ideen, du pickst 5, die zu eurem Geschäft passen. 2. Tag 2 (2h): Kurz-Umfrage (5 Fragen) an 8 Mitarbeiter verschiedener Abteilungen: 'Welche wiederkehrende Aufgabe nervt dich am meisten?'. Claude: 'Clustere die Antworten, finde Patterns.' → 3 konkrete Pain-Points. 3. Tag 3 (2h): Claude baut Entscheidungs-Matrix pro Use-Case: Aufwand (S/M/L), Impact (wenige/mittlere/viele MA), Risiko (intern-only vs Kunden-sichtbar), Zeit-to-Value (Wochen vs Monate). Top-2 werden im GF-Meeting empfohlen. 4. 1-Pager-Deliverable: Problem, Lösung, Aufwand, ROI-Schätzung, Risiko, nächster konkreter Schritt.",
+      "modelSolution": "1. Tag 1: Eine breite, branchenspezifische Liste möglicher Anwendungsfälle erstellen und alle Kandidaten ohne klaren Prozessverantwortlichen oder Datenpfad aussortieren. 2. Tag 2: Acht Personen aus unterschiedlichen Funktionen fünf kurze Fragen zu wiederkehrender Arbeit und Fehlerstellen stellen. Die Antworten mit dem Modell clustern und jedes Cluster gegen die Originalantworten prüfen. 3. Tag 3: Die verbleibenden Fälle nach Aufwand, Zahl betroffener Beschäftigter, Datensensitivität, Betriebsrisiko und Zeit bis zu belastbaren Erkenntnissen vergleichen. 4. Zwei Kandidaten mit Annahmen, Ausschlüssen, erforderlichen Kontrollen und nächstem Validierungsschritt vorlegen. Nutzenschätzungen als Bandbreite aus benannten Eingaben darstellen, nicht als versprochenes Ergebnis.",
       "rubric": [
-        "Bottom-up + Top-down kombiniert (Use-Case-Recherche + Mitarbeiter-Umfrage)",
-        "Claude für Clustering + Matrix, nicht für 'Meinung'",
-        "Entscheidungs-Kriterien sind explizit (Aufwand/Impact/Risiko/Time-to-Value)",
-        "Top-2-Empfehlung, nicht Top-10 (Entscheidbarkeit)",
-        "1-Pager-Output (GF-Zeit ist knapp)",
-        "Nächster Schritt ist konkret (nicht 'weitere Analyse')",
-        "Zeitplan verteilt auf 3 Tage (Incubations-Zeit zwischen Schritten)"
+        "Externe Anwendungsfallrecherche wird mit Aussagen von Beschäftigten verbunden",
+        "Das Modell unterstützt Clustering und Struktur, nicht die abschließende Entscheidung",
+        "Aufwand, Reichweite, Risiko und Zeit bis zum Nachweis sind ausdrückliche Kriterien",
+        "Die Geschäftsleitung erhält zwei priorisierte Kandidaten statt einer langen Liste",
+        "Der Output passt auf eine Entscheidungsseite",
+        "Jeder Kandidat hat einen konkreten Validierungsschritt und eine zuständige Person",
+        "Die Arbeit ist auf drei Tage verteilt, damit Quellen geprüft werden können"
       ]
     },
     {
       "weekOffset": 5,
-      "role": "Marketing-Lead · 30-MA-B2B-SaaS",
-      "scenario": "LinkedIn-Content-Kalender für Q3 planen: 3 Posts pro Woche, 13 Wochen. Thema: 'AI-native Teams'. Kein Budget für Agency. Dein Team ist 1 Person (du).",
+      "role": "Marketingleitung eines B2B-Softwareunternehmens mit 30 Beschäftigten",
+      "scenario": "Plane einen LinkedIn-Kalender für das dritte Quartal mit drei Beiträgen pro Woche über 13 Wochen zum Thema KI-gestützte Teams. Es gibt kein Agenturbudget, und du bist allein für die Arbeit zuständig.",
       "stack": ["Claude", "LinkedIn Analytics", "Buffer"],
-      "timeBudget": "1 Tag für Q3-Plan + 30 Min/Woche für Content",
-      "modelSolution": "1. Claude-Projekt: lade die letzten 30 Posts eurer Seite hoch + Performance-Daten. 'Extrahiere Voice-Patterns + 3 beste Post-Formate.' → 3 Style-Templates. 2. Brainstorm: 'Generiere 40 Post-Ideen rund um AI-native Teams für deutschen B2B-Mittelstand. Claude-first, kein Hype-Sprech.' → du pickst 39 passende (3 × 13). 3. Für jede Idee: '1-Zeiler-Hook + CTA-Frage im Tim-Lohr-Stil'. 4. Quartals-Kalender in Notion mit Preview-Posts. 5. Wöchentlich (30 Min): Claude schreibt 3 Posts basierend auf den Hooks, du redigierst. 6. Monatlich: Performance-Review mit Claude, unterste 2 Ideen umwerfen.",
+      "timeBudget": "1 Tag für den Quartalsplan plus 30 Minuten pro Woche für Entwürfe",
+      "modelSolution": "1. Die letzten 30 Beiträge und verfügbaren Leistungsdaten analysieren, um drei wiederholbare Formate zu bestimmen. Aus kleinen Stichproben keine Kausalität ableiten. 2. Themenkandidaten für eine deutsche B2B-Zielgruppe erzeugen und 39 relevante, nicht doppelte Themen auswählen. 3. Vor Hook oder Handlungsaufforderung für jedes Thema einen sachlichen Ansatz und den erforderlichen Beleg festlegen. 4. Einen Quartalskalender mit verantwortlicher Person, Quellenstatus und Review-Datum anlegen. 5. Wöchentlich drei Entwürfe erstellen und auf Faktentreue sowie Unternehmenssprache redigieren. 6. Die Leistung monatlich prüfen und dokumentieren, was geändert wurde.",
       "rubric": [
-        "Style-Lernen aus historischen Posts (nicht 'schreibe wie Elon')",
-        "Performance-Daten fließen in die Idee-Auswahl",
-        "39 Ideen = 3 × 13 Wochen, klar gerechnet (nicht 'viele Ideen')",
-        "Template + Hook ≠ fertiger Post (Redaktion bleibt Human)",
-        "Wöchentlicher Zeitbudget ist realistisch (30 Min, nicht 2h)",
-        "Performance-Review als Recurring (nicht einmalig)",
-        "Ton passt zur Zielgruppe (DE-Mittelstand, kein SF-Buzzword-Bingo)"
+        "Frühere Beiträge informieren den Stil, ohne kopiert zu werden",
+        "Leistungsdaten informieren die Auswahl und ihre Grenzen sind dokumentiert",
+        "Der Kalender enthält genau 39 Themen für drei Beiträge in 13 Wochen",
+        "Vor jedem Entwurf stehen ein Ansatz und ein Belegerfordernis",
+        "Das wöchentliche 30-Minuten-Ziel gilt für Entwürfe; Review-Zeit wird separat eingeplant",
+        "Ein monatlicher Review erzeugt eine dokumentierte Feedbackschleife",
+        "Die Sprache ist präzise und für eine deutsche B2B-Zielgruppe geeignet"
       ]
     },
     {
       "weekOffset": 6,
-      "role": "Produkt-Manager · 15-MA-Startup",
-      "scenario": "3 konkurrierende Kunden-Feature-Wünsche, eine Entwicklungs-Kapazität für 1 Feature im Sprint. Wie entscheidest du begründet?",
+      "role": "Produktmanagement eines Start-ups mit 15 Beschäftigten",
+      "scenario": "Kunden haben drei konkurrierende Funktionen angefragt, im nächsten Sprint ist aber nur Kapazität für eine vorhanden. Wie triffst und dokumentierst du die Entscheidung?",
       "stack": ["Claude", "Kunden-Interviews (3)", "Usage-Daten"],
       "timeBudget": "3 Stunden",
-      "modelSolution": "1. Claude-Projekt: 3 Kunden-Wünsche mit Kontext pasten + aktuelle Produkt-Usage-Daten (Top-10 Features nach Nutzung). 2. Claude: 'Für jedes Feature: Welches User-Problem löst es? Welchen anderen User-Personas hilft es auch? Welches Feature existiert bereits, das es substituiert?' 3. RICE-Scoring-Matrix: Reach (wie viele User), Impact (Problem-Schwere 1-3), Confidence (% sicher), Effort (Sprint-Tage). Claude berechnet Priorität. 4. Du hinterfragst die Confidence-Werte: 'Welchen Datenpunkt brauchst du um confidence zu verdoppeln?' → Claude schlägt 1-2 Research-Aktionen (z. B. 5-Min-Umfrage an betroffene User). 5. Entscheidung + schriftliche Begründung in Notion. 6. Nach dem Sprint: Impact gegen Schätzung messen, Confidence-Kalibrierung für nächstes Quartal.",
+      "modelSolution": "1. Jede Anfrage mit Kundenkontext und relevanten Produktnutzungsdaten dokumentieren. 2. Pro Funktion Nutzerproblem, betroffene Segmente und vorhandene Ersatzlösungen festhalten. 3. Eine RICE-Tabelle mit ausdrücklichen Definitionen für Reichweite, Wirkung, Vertrauen und Aufwand anlegen. Das Modell erst nach Prüfung der Eingaben rechnen lassen. 4. Für jede Schätzung mit geringer Evidenz eine kleine Recherchehandlung bestimmen, die sie wesentlich verbessern kann. 5. Entscheidung, Annahmen und verworfene Alternativen dokumentieren. 6. Nach der Veröffentlichung tatsächliche Nutzung und Ergebnisse mit den Schätzungen vergleichen.",
       "rubric": [
-        "Framework-First (RICE) statt Bauchgefühl",
-        "Usage-Daten sind Teil des Inputs",
-        "Confidence ist explizit (nicht '5-Sterne')",
-        "Research-Aktion für niedrige Confidence",
-        "Schriftliche Begründung (Lernung für Quartals-Kalibrierung)",
-        "Meßpunkt für Impact nach dem Sprint",
-        "Claude rechnet + strukturiert, du entscheidest"
+        "Ein definiertes Verfahren ersetzt eine undokumentierte Präferenz",
+        "Produktnutzungsdaten fließen ein",
+        "Vertrauen ist ausdrücklich und an Belege gebunden",
+        "Annahmen mit geringer Evidenz erhalten eine Recherchehandlung",
+        "Entscheidung und verworfene Alternativen sind dokumentiert",
+        "Ein Messpunkt nach der Veröffentlichung ist definiert",
+        "Das Modell strukturiert und rechnet; die verantwortliche Person entscheidet"
       ]
     },
     {
       "weekOffset": 7,
-      "role": "Compliance-Beauftragter · Finanz-Mittelstand",
-      "scenario": "Die GF will KI in der Kundenberatung einführen (Chat-Assistent). Du musst in 2 Wochen sagen, ob das geht, und wenn ja, unter welchen Bedingungen. DSGVO + EU-AI-Act + BaFin-Vorschriften kollidieren potenziell.",
-      "stack": ["Claude", "EU-AI-Act-Text", "Ihr DSFA-Template"],
+      "role": "Compliance-Verantwortung in einem mittelständischen Finanzunternehmen",
+      "scenario": "Die Geschäftsleitung will einen KI-Chatassistenten in der Kundenberatung einsetzen. Innerhalb von zwei Wochen musst du begründen, ob der vorgeschlagene Einsatz unter welchen Bedingungen fortgesetzt werden kann. DSGVO, EU AI Act und sektorale Vorgaben können parallel gelten.",
+      "stack": [
+        "Claude",
+        "Text des EU AI Act",
+        "DSFA-Vorlage der Organisation"
+      ],
       "timeBudget": "8 Stunden (verteilt über 2 Wochen)",
-      "modelSolution": "1. Claude-Brief mit Rolle 'Compliance-Analyst'. Kontext: Geschäftsmodell, Datenkategorien (PII, Finanz), geplanter Chat-Use-Case. 2. Parallele Analysen: (a) DSGVO: Rechtsgrundlage Art. 6, Datenminimierung Art. 5, DSFA Art. 35 nötig? (b) EU-AI-Act: Annex III check: fällt der Chat unter Hochrisiko? (c) BaFin: MaRisk-Vorgaben für Automatisierung in Beratungsprozessen. 3. Claude generiert pro Rechtsrahmen: Anforderungen + Nachweise + Restrisiken. 4. Human-Check: Jurist:in prüft die Claude-Zusammenfassung (Pflicht, Compliance ist kein Claude-Solo-Job). 5. Entscheidungsmatrix: Was können wir machen (Sondermodus), was nicht (harte No-Gos), was brauchen wir (AVV, DSFA, Schulungen)? 6. Dokumentation + GF-Empfehlung mit expliziten Bedingungen.",
+      "modelSolution": "1. Vorgeschlagenes System, Nutzerweg, Entscheidungsfolgen, Datenkategorien, Modellanbieter und menschliche Rolle definieren. 2. Jeden Rechtsrahmen getrennt anhand von Primärquellen prüfen: DSGVO-Rechtsgrundlage, Datenminimierung und DSFA; Rolle und Risikoklassifizierung nach EU AI Act; einschlägige Finanzaufsichtsanforderungen. 3. Eine nachvollziehbare Liste von Anforderungen, Nachweisen und offenen Fragen erstellen. 4. Qualifizierte Rechts- und Compliance-Verantwortliche prüfen die Analyse. 5. Eine Entscheidungsmatrix mit erlaubtem Umfang, ausgeschlossenen Nutzungen, erforderlichen Verträgen, Kontrollen, Tests und Schulungen erstellen. 6. Empfehlung und Bedingungen dokumentieren; Modelloutput nicht als Rechtsberatung behandeln.",
       "rubric": [
-        "Parallele Multi-Framework-Analyse (DSGVO ∩ AI-Act ∩ BaFin)",
-        "Claude für Zusammenfassung, nicht für Rechtsrat",
-        "Human-Check durch Jurist:in explizit eingeplant",
-        "Entscheidungsmatrix: Yes/No-Gos/Bedingungen",
-        "Nachweis-Artefakte sind benannt (AVV, DSFA, Schulungs-Log)",
-        "GF bekommt Empfehlung mit Bedingungen (nicht 'geht/geht nicht')",
-        "DSFA + Risikoklassifikation dokumentiert (nachweisbar in 3 Jahren)"
+        "Die Analyse behandelt DSGVO, EU AI Act und einschlägige sektorale Regeln getrennt",
+        "Primärquellen stützen die Zusammenfassung",
+        "Qualifizierter rechtlicher oder Compliance-Review ist verpflichtend",
+        "Die Entscheidungsmatrix trennt erlaubten Umfang, Ausschlüsse und Bedingungen",
+        "Erforderliche Nachweise wie Verträge, Bewertungen und Schulungsaufzeichnungen sind benannt",
+        "Die Geschäftsleitung erhält eine bedingte Empfehlung statt einer binären Modellantwort",
+        "Risikoklassifizierung und Bewertungsentscheidungen sind für spätere Prüfung dokumentiert"
       ]
     },
     {
       "weekOffset": 8,
-      "role": "HR · 500-MA-Industrieunternehmen",
-      "scenario": "Bewerbungen für 5 offene Stellen: 370 Dossiers eingegangen in 10 Tagen. Dein Team schafft 20 pro Tag. Du brauchst eine Triage bis Freitag.",
-      "stack": ["Claude", "Anforderungsprofile", "DSGVO-konforme PII-Redaktion"],
+      "role": "HR-Leitung eines Industrieunternehmens mit 500 Beschäftigten",
+      "scenario": "Für fünf offene Stellen gehen innerhalb von zehn Tagen 370 Bewerbungen ein. Das Team prüft derzeit 20 pro Tag und benötigt bis Freitag einen rechtmäßigen Triage-Prozess. Wie reduzierst du Verwaltungsarbeit, ohne Beschäftigungsentscheidungen an ein Modell zu delegieren?",
+      "stack": [
+        "Claude",
+        "Anforderungsprofile",
+        "freigegebene Kontrollen für personenbezogene Daten"
+      ],
       "timeBudget": "3 Stunden",
-      "modelSolution": "1. Claude-Projekt pro Stelle: Anforderungsprofil hochladen. Claude: 'Extrahiere 8 objektiv messbare Skills + 3 Must-haves + 2 Dealbreaker.' 2. PII-Redaktion der Dossiers (DSGVO-konform): lokales Script oder Claude-Prompt: 'Entferne Name, Foto, Adresse, Alter, Geschlecht aus folgenden Dossiers → anonymisiert.' 3. Claude per Batch: 'Bewerte die anonymisierten Dossiers gegen das Profil. Score pro Must-have (0-5). Markiere Dealbreaker als Ausschluss. Output: CSV.' 4. Human-Check: Du siehst nur anonymisierte Scores. Top 20% pro Stelle = 74 Dossiers → de-anonymisieren für persönliche Review. 5. Bias-Check: Claude: 'Siehst du Pattern in den Scores, die nicht auf Anforderungen zurückgehen?' → du verifizierst. 6. Persönliche Einladung für Top 10 pro Stelle.",
+      "modelSolution": "1. Für jede Stelle legen die Einstellungsverantwortlichen vor der Modellnutzung messbare Anforderungen, Belegregeln und verbotene Proxy-Kriterien fest. 2. Rechtsgrundlage, Aufbewahrung, Zugriffsrechte, Anbietervertrag, einschlägige EU-AI-Act-Klassifizierung und erforderliche Folgenabschätzungen prüfen. 3. KI nur für freigegebene administrative Unterstützung verwenden, etwa zum Extrahieren von Belegen in eine Review-Tabelle. Bewerbungen nicht automatisch bewerten oder ablehnen. 4. Recruiter prüfen die Quellbewerbung und treffen jede Entscheidung. 5. Extraktionsfehler und ungleiche Auswirkungen einschließlich Grenzfällen testen. 6. Audit-Trail führen und erforderliche Information sowie Rechteprozesse für Bewerbende bereitstellen.",
       "rubric": [
-        "Anonymisierung VOR Scoring (Bias-Reduktion)",
-        "Skills-Extraktion aus Anforderungsprofil ist objektiv + messbar",
-        "Dealbreaker sind hart (nicht weich)",
-        "Bias-Check-Runde mit Claude als reflection-loop",
-        "Human-Review nur bei Top-20%, nicht blind",
-        "DSGVO-Nachweis: Redaktions-Log + Aufbewahrungsfrist",
-        "Output ist CSV/strukturiert (nicht Prosa)"
+        "Stellenbezogene Kriterien und verbotene Proxy-Merkmale stehen vor der Verarbeitung fest",
+        "Rechtsgrundlage, EU-AI-Act-Klassifizierung und Pflichten zu Folgenabschätzungen sind geprüft",
+        "Das Modell bewertet oder verwirft Bewerbungen nicht autonom",
+        "Ein Recruiter prüft die Quellbelege und entscheidet jeden Ausgang",
+        "Genauigkeits- und Bias-Tests enthalten dokumentierte Grenzfälle",
+        "Aufbewahrung, Zugriffe und Rechteprozesse für Bewerbende sind dokumentiert",
+        "Der Output ist eine Review-Tabelle mit Quellenverweisen, kein unerklärter Score"
       ]
     },
     {
       "weekOffset": 9,
-      "role": "Sales-Engineer · B2B-SaaS Enterprise",
-      "scenario": "Enterprise-Kunde fragt nach technischer POC in 10 Tagen: euer System + ihr Datenbankzugriff. Normalerweise wäre das ein 6-Wochen-Projekt. Sagt ihr ja?",
-      "stack": ["Claude Code", "API-Spec", "Existing POC-Templates"],
+      "role": "Sales Engineering eines B2B-Softwareunternehmens",
+      "scenario": "Ein Unternehmenskunde verlangt innerhalb von zehn Tagen einen technischen Proof of Concept mit eurem System und Zugriff auf seine Datenbank. Vergleichbare Arbeit dauert normalerweise sechs Wochen. Nimmst du an, und mit welchem Umfang und welchen Kontrollen?",
+      "stack": [
+        "Claude Code",
+        "API-Spezifikation",
+        "bestehende Proof-of-Concept-Templates"
+      ],
       "timeBudget": "10 Tage",
-      "modelSolution": "1. Tag 1: Claude Code durchsucht internes Repo nach ähnlichen POCs. 'Finde 3 POCs mit ähnlicher Architektur. Extrahiere wiederverwendbare Teile.' → 60% Startpoint-Code da. 2. Tag 1-2: Technisches Scoping mit dem Kunden: was zählt als 'working POC'? → klar definierte Minimal-Demo (5 User-Stories, keine 20). 3. Tag 3-7: Implementation + Tests. Claude Code schreibt, du verifizierst. 4. Tag 8: Dry-Run intern. Claude: 'Was würde bei einer Enterprise-IT-Review durchfallen?' → 3 Härtung-Punkte (Auth, Audit-Log, Rate-Limiting) dazugeben. 5. Tag 9: Kunde-Demo-Rehearsal mit Kollegen. 6. Tag 10: Live-Demo. Follow-up: POC = Scope-Ende, nicht Produkt-Ende.",
+      "modelSolution": "1. Tag 1: Das interne Repository nach vergleichbaren Proof-of-Concept-Arbeiten durchsuchen und wiederverwendbare Komponenten mit Lizenz, zuständiger Person und Teststatus erfassen. 2. Tag 1 und 2: Fünf beobachtbare User Stories, Datenzugriffsgrenze, Abnahmekriterien und ausdrückliche Ausschlüsse vereinbaren. 3. Tag 3 bis 7: In einer isolierten Umgebung umsetzen und testen; generierten Code und Abhängigkeiten prüfen. 4. Tag 8: Interner Sicherheits- und Betriebsreview zu Authentifizierung, Audit-Logs, Rate Limits, Secrets und Rückbau. 5. Tag 9: Vorführung und Fehlerpfad proben. 6. Tag 10: Vereinbarten Umfang demonstrieren und dokumentieren, was für Produktion noch erforderlich ist.",
       "rubric": [
-        "Existierende POCs als Starting Point (nicht from scratch)",
-        "Scope ist explizit minimal (5 User-Stories, nicht 20)",
-        "Claude Code für Implementation, Human-Verifikation für Tests",
-        "Enterprise-IT-Härtungs-Check explizit (Auth/Audit/Rate-Limit)",
-        "Dry-Run intern VOR dem Kunden",
-        "POC = Scope-Ende (klar kommuniziert, nicht in Produkt-Version gleiten)",
-        "Zeitplan ist machbar in 10 Tagen (nicht 42)"
+        "Bestehende Komponenten werden auf Wiederverwendung geprüft statt vorausgesetzt",
+        "Der Umfang ist auf fünf beobachtbare User Stories begrenzt",
+        "Generierter Code und Tests erhalten menschlichen Review",
+        "Authentifizierung, Audit-Logging, Rate Limits, Secrets und Rückbau werden geprüft",
+        "Vor dem Kundentermin findet ein interner Probelauf statt",
+        "Der Proof of Concept ist ausdrücklich von einer Produktivzusage getrennt",
+        "Der Zehn-Tage-Plan nennt Verantwortliche, Review-Gates und Ausschlüsse"
       ]
     },
     {
       "weekOffset": 10,
-      "role": "Office-Manager · Anwaltskanzlei mit 40 MA",
-      "scenario": "Mandanten-Emails häufen sich. 120 pro Tag aktuell, davon 40% Rückfragen zu bestehenden Mandaten, 30% Termin-Anfragen, 20% neue Mandanten-Anfragen, 10% Spam/Vertreter. Du und eine Kollegin schaffen das nicht mehr. Wie automatisierst du, ohne Kanzleigeheimnis zu riskieren?",
-      "stack": ["Lokale LLM (nicht Cloud!)", "n8n", "Outlook"],
+      "role": "Office-Management einer Anwaltskanzlei mit 40 Beschäftigten",
+      "scenario": "Die Kanzlei erhält täglich 120 Mandanten-E-Mails: 40 Prozent betreffen bestehende Mandate, 30 Prozent Termine, 20 Prozent neue Anfragen und 10 Prozent Spam oder Vertrieb. Zwei Personen können das Volumen nicht bewältigen. Wie reduzierst du den Bearbeitungsaufwand, ohne vertrauliche Informationen offenzulegen oder ungeprüfte rechtliche Kommunikation zu versenden?",
+      "stack": ["lokales Sprachmodell", "n8n", "Outlook"],
       "timeBudget": "1 Woche Setup + kontinuierliche Verbesserung",
-      "modelSolution": "1. Setup: Lokales LM Studio mit Qwen o. ä. 7B, lokal, kein Cloud-Upload von Mandanten-Daten. 2. n8n-Workflow: neue Mail kommt rein → lokales LLM klassifiziert in 4 Kategorien. 3. Termin-Anfragen → automatische Terminlink-Antwort. 4. Rückfragen zu bestehenden Mandaten → Template-Antwort 'wir bearbeiten, Antwort binnen 48h' + Notiz im CRM. 5. Neue Mandanten-Anfragen → Sammelbox + Termin-Vorschlag. 6. Spam → Filter. 7. Human-Review: Office-Manager sieht nur die Sammelbox + eskalierte Fälle. 8. Iterativ: Klassifikations-Fehler wöchentlich reviewen + Prompts nachjustieren. 9. Dokumentation: DSFA + Aufklärung der Mandanten über KI-Einsatz (Kanzlei-Ethik).",
+      "modelSolution": "1. Vor der Modellwahl Anforderungen aus Vertraulichkeit, Berufsgeheimnis, Aufbewahrung und Zugriff abbilden. Lokale Ausführung kann Transfers reduzieren, belegt aber allein keine Konformität. 2. Einen isolierten n8n-Workflow bauen, der Beispiel- oder freigegebene Nachrichten in vier Warteschlangen klassifiziert. 3. Termin- und Eingangsbestätigungen nur als Entwürfe erstellen und vor Versand durch befugte Beschäftigte freigeben lassen. 4. Nachrichten zu bestehenden Mandaten und unklare Fälle ohne generierten Rechtsrat an das zuständige Team leiten. 5. Spam-Behandlung während der Erprobung reversibel halten. 6. Klassifikationsfehler wöchentlich prüfen und zuerst den festen Testsatz aktualisieren. 7. Bewertung, Anbieter- und Auftragsverarbeitungsrollen, Arbeitsanweisung und Informationspflichten mit qualifizierter Rechtsprüfung dokumentieren.",
       "rubric": [
-        "Lokales LLM (nicht Cloud) wegen Kanzleigeheimnis",
-        "Klassifikation + Routing, nicht Beantwortung (LLM entscheidet nicht)",
-        "Template-Antworten für häufige Fälle (Zeit-zurück)",
-        "Human-Review für Grenzfälle explizit",
-        "Wöchentliche Feedback-Schleife für Prompt-Verbesserung",
-        "Ethik + DSFA dokumentiert (Kanzlei-Pflicht)",
-        "Mandanten werden über KI-Einsatz informiert (Transparenz)"
+        "Die Architektur folgt Vertraulichkeits- und Berufsgeheimnisanforderungen",
+        "Klassifikation unterstützt Routing und trifft keine rechtlichen Entscheidungen",
+        "Templates erfordern vor dem Versand die Freigabe einer befugten Person",
+        "Unklare Nachrichten und bestehende Mandate haben einen ausdrücklichen Review-Pfad",
+        "Ein wöchentlicher Fehlerreview aktualisiert einen festen Testsatz",
+        "Rechtliche Bewertung und Datenschutzkontrollen sind dokumentiert",
+        "Informationspflichten gegenüber Mandanten werden mit qualifizierter Rechtsberatung geprüft"
       ]
     },
     {
       "weekOffset": 11,
-      "role": "Geschäftsführer · 25-MA-Agentur",
-      "scenario": "Jahresplanung 2027 steht an. 200 Zeilen Excel mit Zielen, Budget, Team-Wachstum. Die letzten 3 Jahre hast du 2 Wochen gebraucht. Du willst es in 2 Tagen, ohne Qualität zu verlieren.",
+      "role": "Geschäftsführung einer Agentur mit 25 Beschäftigten",
+      "scenario": "Die Planung für 2027 umfasst 200 Tabellenzeilen zu Zielen, Budget und Teamwachstum. Der bisherige Ablauf dauerte zwei Wochen. Du setzt ein Zwei-Tage-Ziel, ohne die Review-Standards zu senken. Wie begrenzt du die Arbeit?",
       "stack": ["Claude", "letzte 3 Jahresplanungen", "Q4-Zahlen"],
       "timeBudget": "2 Tage",
-      "modelSolution": "1. Tag 1 Vormittag: Claude-Projekt. Lade die letzten 3 Jahresplanungen + IST-vs-PLAN-Diff pro Jahr hoch. 'Welche Kategorien waren konsistent zu optimistisch? Konsistent zu pessimistisch?' → Kalibrierung deiner Biases. 2. Tag 1 Nachmittag: Rohzahlen 2027 eintragen (Umsatz-Prognose, Budget-Kategorien, Team-Wachstum). Claude: 'Erzeuge 3 Szenarien: Base, Bear, Bull. Begründe jede Annahme.' 3. Tag 2 Vormittag: Kritik-Runde mit Leads. Claude moderiert: 'Welche Annahme hält wem nicht stand?' → Risiko-Liste. 4. Tag 2 Nachmittag: Finalisierung + 1-Pager pro Szenario für den Beirat. 5. Quartals-Check-Recurring im Kalender: 'Was hat sich verändert seit Planung?' → Claude analysiert mit Q1-IST vs. PLAN.",
+      "modelSolution": "1. Tag 1 vormittags: Die letzten drei Pläne mit den tatsächlichen Ergebnissen vergleichen und Kategorien mit wiederkehrenden Prognosefehlern bestimmen. 2. Tag 1 nachmittags: Annahmen für 2027 mit Quelle, verantwortlicher Person und Vertrauensniveau erfassen; Basis-, Negativ- und Positivszenario erstellen. 3. Tag 2 vormittags: Funktionsverantwortliche die Annahmen prüfen lassen und offene Risiken dokumentieren. Das Modell kann die Diskussion strukturieren, aber Geschäftsannahmen nicht validieren. 4. Tag 2 nachmittags: Kontrollierte Arbeitsmappe und einseitige Zusammenfassung pro Szenario fertigstellen. 5. Quartalsweise Soll-Ist-Prüfungen terminieren. Das Zwei-Tage-Ziel ist ein begrenztes Prozessziel, keine Garantie gleichwertiger Qualität.",
       "rubric": [
-        "Historische Kalibrierung bewusst (IST vs PLAN der Vergangenheit)",
-        "3 Szenarien (Base/Bear/Bull) mit begründeten Annahmen",
-        "Leads-Kritik-Runde als Validierungs-Schritt",
-        "1-Pager pro Szenario für Entscheider",
-        "Quartals-Recurring-Check eingeplant (nicht jährlich)",
-        "Claude moderiert, GF entscheidet",
-        "Zeitplan hält (2 Tage, nicht 2 Wochen)"
+        "Frühere Plan-Ist-Abweichungen informieren die Kalibrierung",
+        "Basis-, Negativ- und Positivszenario verwenden benannte Annahmen",
+        "Funktionsverantwortliche prüfen die Annahmen kritisch",
+        "Jedes Szenario hat eine einseitige Entscheidungszusammenfassung",
+        "Quartalsreviews vergleichen tatsächliche Ergebnisse mit dem Plan",
+        "Das Modell strukturiert die Analyse; die Geschäftsführung bleibt verantwortlich",
+        "Das Zwei-Tage-Ziel bewahrt ausdrückliche Prüf- und Freigabegates"
       ]
     }
   ]

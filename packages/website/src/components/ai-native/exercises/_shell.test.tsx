@@ -11,6 +11,7 @@ import {
   ExerciseResetButton,
   submitExercise,
 } from "./_shell";
+import { DemoLocaleProvider } from "@/components/demos/demo-locale";
 
 /**
  * _shell.test.tsx (regression coverage)
@@ -204,6 +205,21 @@ describe("<ExerciseShell>", () => {
       expect(container.textContent).toContain(label);
       unmount();
     }
+  });
+
+  it("localizes shared exercise chrome for English lessons", () => {
+    render(
+      <DemoLocaleProvider locale="en">
+        <ExerciseShell {...baseProps} kind="exercise-free-response">
+          <p>Exercise body</p>
+        </ExerciseShell>
+      </DemoLocaleProvider>,
+    );
+    expect(screen.getByText(/Exercise · Free response/)).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Understood, continue" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/Übung ·/)).toBeNull();
   });
 
   it("skips via the escape hatch: records a skipped result and shows the badge", async () => {

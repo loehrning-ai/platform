@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { DEMO } from "@/lib/demo-tokens";
 import { DEMO_HEIGHT, usePrefersReducedMotion, useVisibleAutoplay } from "./demo-utils";
 import { SimulationDisclosure } from "./evidence-badge";
+import { useDemoLocale } from "./demo-locale";
 
 interface Lead {
   readonly name: string;
@@ -57,6 +58,11 @@ const LEADS: readonly Lead[] = [
 ];
 
 export default function OutboundWorkflowDemo() {
+  const { locale } = useDemoLocale();
+  return locale === "en" ? <OutboundWorkflowDemoEnglish /> : <OutboundWorkflowDemoGerman />;
+}
+
+function OutboundWorkflowDemoGerman() {
   const reduced = usePrefersReducedMotion();
   const { ref, visible } = useVisibleAutoplay<HTMLDivElement>();
   const [leadIdx, setLeadIdx] = useState(0);
@@ -796,6 +802,138 @@ export default function OutboundWorkflowDemo() {
           )}
         </div>
       )}
+    </div>
+  );
+}
+
+const LEADS_EN: readonly Lead[] = [
+  {
+    name: "Sample Contact Alpha",
+    role: "Head of Operations",
+    company: "Fictional Works Alpha (sample only)",
+    last: "412 days",
+    signal: "Fictional hiring signal · 42 employees",
+    score: 87,
+    subject: "Order handling: a specific follow-up",
+    email: "Hello,\n\nwe last discussed order handling 14 months ago. The fictional public sample now shows a larger operations team.\n\nA useful first check would cover status updates and inventory requests. This is a draft for human review, not an offer and not a sent email.\n\nReply only if the topic is relevant.",
+    address: "contact-alpha@fictional.example",
+  },
+  {
+    name: "Sample Contact Beta",
+    role: "Managing director",
+    company: "Fictional Works Beta (sample only)",
+    last: "228 days",
+    signal: "Fictional support-system update",
+    score: 74,
+    subject: "Support workload: one follow-up question",
+    email: "Hello,\n\nour last fictional exchange marked support automation as premature. A bounded review could now examine ticket grouping and suggested replies, with manual approval before delivery.\n\nThis sample creates a review draft only.",
+    address: "contact-beta@fictional.example",
+  },
+  {
+    name: "Sample Contact Gamma",
+    role: "CTO",
+    company: "Fictional Works Gamma (sample only)",
+    last: "591 days",
+    signal: "Fictional machinery upgrade in 2024",
+    score: 91,
+    subject: "Maintenance data after the equipment update",
+    email: "Hello,\n\nour earlier fictional discussion stopped because the data was incomplete. After an equipment update, the next valid check is still the same: failure history, ownership, and an escalation threshold.\n\nHas the sample data position changed? No message is sent from this page.",
+    address: "contact-gamma@fictional.example",
+  },
+];
+
+function OutboundWorkflowDemoEnglish() {
+  const [leadIndex, setLeadIndex] = useState(0);
+  const [showControls, setShowControls] = useState(false);
+  const lead = LEADS_EN[leadIndex];
+
+  return (
+    <div
+      data-demo-id="outbound-workflow"
+      role="region"
+      aria-label="Outbound review workflow example"
+      style={{ display: "flex", flexDirection: "column", gap: 16, minHeight: DEMO_HEIGHT, minWidth: 0, fontFamily: DEMO.font.sans, color: DEMO.ink }}
+    >
+      <div>
+        <div style={{ fontFamily: DEMO.font.mono, fontSize: 10, color: "var(--color-brand-orange)", letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 700 }}>Signal-based draft · review required</div>
+        <h2 style={{ margin: "6px 0 0", fontSize: "clamp(20px, 4vw, 28px)", lineHeight: 1.08 }}>
+          State the evidence. <span style={{ color: "var(--color-brand-orange)" }}>Stop before delivery.</span>
+        </h2>
+        <p style={{ margin: "8px 0 0", maxWidth: 760, color: DEMO.schiefer, fontSize: 12, lineHeight: 1.55 }}>
+          All people, companies, addresses, and signals below are fictional. The interface drafts locally and cannot send email.
+        </p>
+      </div>
+
+      <div aria-label="Workflow stages" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 160px), 1fr))", gap: 8 }}>
+        {[
+          ["01", "Sample contact", "fictional CRM row"],
+          ["02", "Evidence check", "public-source field"],
+          ["03", "Draft", "fixed browser copy"],
+          ["04", "Human review", "no delivery action"],
+        ].map(([number, title, detail]) => (
+          <div key={number} style={{ minWidth: 0, border: `1px solid ${DEMO.leinen}`, borderTop: "3px solid var(--color-brand-orange)", background: DEMO.birke, padding: "10px 12px" }}>
+            <span style={{ fontFamily: DEMO.font.mono, fontSize: 9, color: DEMO.schiefer }}>{number}</span>
+            <strong style={{ display: "block", marginTop: 3, overflowWrap: "anywhere" }}>{title}</strong>
+            <span style={{ display: "block", marginTop: 2, fontSize: 10, color: DEMO.schiefer }}>{detail}</span>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 300px), 1fr))", gap: 14 }}>
+        <section aria-label="Fictional contacts" style={{ minWidth: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+          {LEADS_EN.map((item, index) => {
+            const selected = index === leadIndex;
+            return (
+              <button
+                key={item.address}
+                type="button"
+                aria-pressed={selected}
+                onClick={() => setLeadIndex(index)}
+                style={{ minWidth: 0, minHeight: 68, padding: "10px 12px", textAlign: "left", border: `1px solid ${DEMO.ink}`, background: selected ? DEMO.ink : DEMO.kalk, color: selected ? DEMO.kalk : DEMO.ink, boxShadow: selected ? "3px 3px 0 var(--color-brand-orange)" : "none", cursor: "pointer" }}
+              >
+                <strong style={{ display: "block", overflowWrap: "anywhere" }}>{item.name}</strong>
+                <span style={{ display: "block", marginTop: 3, fontSize: 11, opacity: 0.72, overflowWrap: "anywhere" }}>{item.role} · {item.company}</span>
+              </button>
+            );
+          })}
+          <div style={{ border: `1px solid ${DEMO.leinen}`, background: DEMO.birke, padding: 12 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 8, fontFamily: DEMO.font.mono, fontSize: 10 }}><span>Last contact</span><strong>{lead.last}</strong></div>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginTop: 6, fontFamily: DEMO.font.mono, fontSize: 10 }}><span>Sample score</span><strong style={{ color: "var(--color-brand-orange)" }}>{lead.score}/100</strong></div>
+            <div style={{ marginTop: 10, borderLeft: "3px solid var(--color-brand-orange)", paddingLeft: 9, fontSize: 11, lineHeight: 1.5 }}>{lead.signal}</div>
+          </div>
+        </section>
+
+        <section aria-label="Draft email" style={{ minWidth: 0, border: `1px solid ${DEMO.ink}`, background: "white", color: "#222", boxShadow: `3px 3px 0 ${DEMO.ink}` }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", padding: "8px 12px", background: DEMO.ink, color: DEMO.kalk, fontFamily: DEMO.font.mono, fontSize: 10 }}>
+            <strong style={{ color: "var(--color-brand-orange)" }}>REVIEW DRAFT</strong>
+            <span style={{ overflowWrap: "anywhere" }}>to: {lead.address}</span>
+            <span style={{ marginLeft: "auto", color: "#fbbf24" }}>NOT SENT</span>
+          </div>
+          <div style={{ padding: "10px 14px", borderBottom: `1px solid ${DEMO.leinen}`, fontSize: 11, lineHeight: 1.5 }}>
+            <span style={{ color: DEMO.schiefer }}>Subject: </span><strong>{lead.subject}</strong>
+          </div>
+          <div style={{ minHeight: 260, padding: "16px 18px", whiteSpace: "pre-wrap", overflowWrap: "anywhere", fontFamily: "Georgia, serif", fontSize: 12, lineHeight: 1.6 }}>{lead.email}</div>
+          <div style={{ padding: "8px 14px", borderTop: `1px dashed ${DEMO.leinen}`, background: DEMO.birke, fontFamily: DEMO.font.mono, fontSize: 9, color: DEMO.schiefer }}>247 sample tokens · Sonnet 4.6 label · source status: unverified sample</div>
+        </section>
+      </div>
+
+      <SimulationDisclosure>
+        No delivery takes place. The interface demonstrates draft review with fictional data; it has no SMTP, CRM, or provider connection.
+      </SimulationDisclosure>
+
+      <section style={{ border: "1px solid rgba(249,115,22,0.35)", background: "rgba(249,115,22,0.05)", padding: "12px 14px" }}>
+        <button type="button" aria-expanded={showControls} onClick={() => setShowControls((current) => !current)} style={{ minHeight: 40, border: "1px solid var(--color-brand-orange)", background: "transparent", color: "var(--color-brand-orange)", padding: "7px 11px", fontFamily: DEMO.font.mono, fontSize: 10, fontWeight: 700, textTransform: "uppercase", cursor: "pointer" }}>
+          {showControls ? "Hide pre-send controls" : "Show pre-send controls"}
+        </button>
+        {showControls && (
+          <ul style={{ margin: "10px 0 0", paddingLeft: 20, display: "grid", gap: 7, fontSize: 12, lineHeight: 1.5 }}>
+            <li>Document the lawful basis and purpose limitation.</li>
+            <li>Verify the contact source, address, and current relevance.</li>
+            <li>Provide a working opt-out path before any real delivery.</li>
+            <li>Require a named human reviewer to approve the final text.</li>
+          </ul>
+        )}
+      </section>
     </div>
   );
 }

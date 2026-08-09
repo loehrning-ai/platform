@@ -10,6 +10,8 @@ import { useCanvasRAF } from "../canvas/use-canvas-raf";
 import { useCanvasAutoSize } from "../canvas/use-canvas-size";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
+import type { Locale } from "@/lib/i18n/locale";
+import { useDataInfraWidgetLocale } from "../widget-locale-context";
 
 interface PartitionSimProps {
   readonly lessonId: string;
@@ -47,15 +49,20 @@ const COUNTRY_WEIGHTS: readonly [string, number][] = [
   ["ES", 1],
 ];
 
-function buildStrategy(key: StrategyKey): StrategyMeta {
+function buildStrategy(key: StrategyKey, locale: Locale): StrategyMeta {
   switch (key) {
     case "none":
       return {
         bytes: "100 GB",
-        verdict: "full scan, 30× wasted",
+        verdict:
+          locale === "de"
+            ? "vollständiger Scan, 30-facher Aufwand"
+            : "full scan, 30× wasted",
         verdictTone: "bad",
-        skew: "n/a",
-        parts: [{ label: "all data", bytes: 100 }],
+        skew: locale === "de" ? "entfällt" : "n/a",
+        parts: [
+          { label: locale === "de" ? "alle Daten" : "all data", bytes: 100 },
+        ],
         hit: [0],
       };
     case "date": {
@@ -65,20 +72,29 @@ function buildStrategy(key: StrategyKey): StrategyMeta {
       }));
       return {
         bytes: "3.3 GB",
-        verdict: "perfect prune (1 of 30)",
+        verdict:
+          locale === "de"
+            ? "wirksames Pruning (1 von 30)"
+            : "perfect prune (1 of 30)",
         verdictTone: "ok",
-        skew: "even",
+        skew: locale === "de" ? "gleichmäßig" : "even",
         parts,
         hit: [14],
       };
     }
     case "user": {
-      const parts = Array.from({ length: 24 }, (_, i) => ({ label: `hash_${i}`, bytes: 4.2 }));
+      const parts = Array.from({ length: 24 }, (_, i) => ({
+        label: `hash_${i}`,
+        bytes: 4.2,
+      }));
       return {
         bytes: "100 GB",
-        verdict: "no prune, query doesn't mention user",
+        verdict:
+          locale === "de"
+            ? "kein Pruning: Abfrage enthält user_id nicht"
+            : "no prune, query doesn't mention user",
         verdictTone: "bad",
-        skew: "even",
+        skew: locale === "de" ? "gleichmäßig" : "even",
         parts,
         hit: parts.map((_, i) => i),
       };
@@ -87,7 +103,10 @@ function buildStrategy(key: StrategyKey): StrategyMeta {
       const parts = COUNTRY_WEIGHTS.map(([label, bytes]) => ({ label, bytes }));
       return {
         bytes: "100 GB",
-        verdict: "no prune, also: heavy US skew",
+        verdict:
+          locale === "de"
+            ? "kein Pruning; starke Schieflage für US"
+            : "no prune, also: heavy US skew",
         verdictTone: "bad",
         skew: "⚠ US 62%",
         parts,
@@ -98,15 +117,21 @@ function buildStrategy(key: StrategyKey): StrategyMeta {
       const parts: PartCell[] = [];
       for (let d = 0; d < 30; d++) {
         for (let h = 0; h < 24; h++) {
-          parts.push({ label: `${String(d + 1).padStart(2, "0")}/${String(h).padStart(2, "0")}`, bytes: 0.14 });
+          parts.push({
+            label: `${String(d + 1).padStart(2, "0")}/${String(h).padStart(2, "0")}`,
+            bytes: 0.14,
+          });
         }
       }
       const hit = Array.from({ length: 24 }, (_, h) => 14 * 24 + h);
       return {
         bytes: "3.3 GB",
-        verdict: "small-file problem · 720 files for 3.3 GB",
+        verdict:
+          locale === "de"
+            ? "Small-File-Problem · 720 Dateien für 3,3 GB"
+            : "small-file problem · 720 files for 3.3 GB",
         verdictTone: "warn",
-        skew: "over-split",
+        skew: locale === "de" ? "zu fein geteilt" : "over-split",
         parts,
         hit,
       };
@@ -117,7 +142,10 @@ function buildStrategy(key: StrategyKey): StrategyMeta {
 function gridLayout(parts: readonly PartCell[], w: number, h: number) {
   const pad = 10;
   const n = parts.length;
-  const cols = Math.max(1, Math.ceil(Math.sqrt((n * (w - 2 * pad)) / (h - 2 * pad))));
+  const cols = Math.max(
+    1,
+    Math.ceil(Math.sqrt((n * (w - 2 * pad)) / (h - 2 * pad))),
+  );
   const rows = Math.ceil(n / cols);
   const cw = (w - 2 * pad) / cols;
   const ch = (h - 2 * pad) / rows;
@@ -131,13 +159,17 @@ function gridLayout(parts: readonly PartCell[], w: number, h: number) {
   }));
 }
 
-export function PartitionSim({ lessonId, cpId }: PartitionSimProps): JSX.Element {
+export function PartitionSim({
+  lessonId,
+  cpId,
+}: PartitionSimProps): JSX.Element {
+  const { locale } = useDataInfraWidgetLocale();
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [contextUnavailable, setContextUnavailable] = useState(false);
   const [strategy, setStrategy] = useState<StrategyKey>("date");
-  const meta = buildStrategy(strategy);
+  const meta = buildStrategy(strategy, locale);
   const scanningRef = useRef(false);
 
   useCanvasAutoSize(canvasRef, wrapRef, { minHeight: 300 });
@@ -190,63 +222,101 @@ export function PartitionSim({ lessonId, cpId }: PartitionSimProps): JSX.Element
   }, [complete, wake]);
 
   return (
-    <div className="border-2 border-border bg-card/40 p-5 md:p-6">
-      <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        Sim · Partition the orders table, pick a key {done ? "✓" : ""}
+    <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-4 sm:p-5 md:p-6">
+      <p className="mb-4 break-words font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange [overflow-wrap:anywhere]">
+        {locale === "de"
+          ? "Modell · Partitionierung wählen"
+          : "Model · Choose a partition strategy"}{" "}
+        {done ? "✓" : ""}
       </p>
 
       {contextUnavailable ? (
         <CanvasFallbackNotice
-          title="Partition pruning"
-          summary={`${strategy} strategy: ${meta.hit.length} of ${meta.parts.length} partitions scanned, ${meta.bytes} read. ${meta.verdict}.`}
+          title={locale === "de" ? "Partition Pruning" : "Partition pruning"}
+          summary={
+            locale === "de"
+              ? `Strategie ${strategy}: ${meta.hit.length} von ${meta.parts.length} Partitionen gelesen, ${meta.bytes}. ${meta.verdict}.`
+              : `${strategy} strategy: ${meta.hit.length} of ${meta.parts.length} partitions read, ${meta.bytes}. ${meta.verdict}.`
+          }
         />
       ) : (
-        <div ref={wrapRef} className="h-[300px] w-full">
+        <div ref={wrapRef} className="h-[300px] min-w-0 w-full">
           <canvas
             ref={canvasRef}
             role="img"
-            aria-label="Visualization of how a partitioning strategy prunes data files scanned for a query."
+            aria-label={
+              locale === "de"
+                ? "Darstellung, welche Datenpartitionen eine Abfrage bei der gewählten Strategie liest oder auslässt."
+                : "Visualization of how a partitioning strategy prunes data files scanned for a query."
+            }
             className="h-full w-full"
           />
         </div>
       )}
 
-      <div className="mt-4 flex flex-wrap items-center gap-2">
-        <code className="border border-border bg-background px-2 py-1 font-mono text-[11px]">
+      <div className="mt-4 flex min-w-0 flex-wrap items-center gap-2">
+        <code className="max-w-full min-w-0 overflow-x-auto border border-border bg-background px-2 py-1 font-mono text-[11px]">
           SELECT * FROM orders WHERE order_date = &apos;2026-04-15&apos;
         </code>
-        <label className="ml-auto flex items-center gap-2 text-[12px]">
-          <span className="sr-only">Partition strategy</span>
+        <label className="flex w-full min-w-0 max-w-full items-center gap-2 text-[12px] sm:ml-auto sm:w-auto">
+          <span className="sr-only">
+            {locale === "de"
+              ? "Partitionierungsstrategie"
+              : "Partition strategy"}
+          </span>
           <select
-            aria-label="Partition strategy"
+            aria-label={
+              locale === "de"
+                ? "Partitionierungsstrategie"
+                : "Partition strategy"
+            }
             value={strategy}
             onChange={(e) => setStrategy(e.target.value as StrategyKey)}
-            className="border-2 border-border bg-background px-2 py-1.5 font-mono text-[12px]"
+            className="w-full min-w-0 max-w-full border-2 border-border bg-background px-2 py-1.5 font-mono text-[12px] sm:w-auto"
           >
-            <option value="none">, no partition (full scan)</option>
-            <option value="date">order_date (daily)</option>
+            <option value="none">
+              {locale === "de"
+                ? "keine Partitionierung (vollständiger Scan)"
+                : ", no partition (full scan)"}
+            </option>
+            <option value="date">
+              order_date ({locale === "de" ? "täglich" : "daily"})
+            </option>
             <option value="user">user_id (hash 24)</option>
-            <option value="country">country (skewed)</option>
-            <option value="hour">order_hour (over-partitioned)</option>
+            <option value="country">
+              country ({locale === "de" ? "ungleich verteilt" : "skewed"})
+            </option>
+            <option value="hour">
+              order_hour (
+              {locale === "de" ? "zu fein partitioniert" : "over-partitioned"})
+            </option>
           </select>
         </label>
         <button
           type="button"
           onClick={scan}
-          className="border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90"
+          className="max-w-full break-words border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90"
         >
-          ▶ scan
+          {locale === "de" ? "Scan ausführen" : "▶ scan"}
         </button>
       </div>
-      <div className={cn("mt-3 grid grid-cols-2 gap-x-6 gap-y-1 font-mono text-[12px] sm:grid-cols-4")}>
-        <span>
-          files scanned <b className="text-foreground">{meta.hit.length} / {meta.parts.length}</b>
+      <div
+        className={cn(
+          "mt-3 grid min-w-0 grid-cols-1 gap-x-6 gap-y-1 font-mono text-[12px] min-[360px]:grid-cols-2 sm:grid-cols-4",
+        )}
+      >
+        <span className="min-w-0 break-words [overflow-wrap:anywhere]">
+          {locale === "de" ? "gelesene Dateien" : "files read"}{" "}
+          <b className="text-foreground">
+            {meta.hit.length} / {meta.parts.length}
+          </b>
         </span>
-        <span>
-          bytes read <b className="text-foreground">{meta.bytes}</b>
+        <span className="min-w-0 break-words [overflow-wrap:anywhere]">
+          {locale === "de" ? "gelesene Daten" : "data read"}{" "}
+          <b className="text-foreground">{meta.bytes}</b>
         </span>
-        <span>
-          verdict{" "}
+        <span className="min-w-0 break-words [overflow-wrap:anywhere]">
+          {locale === "de" ? "Bewertung" : "verdict"}{" "}
           <b
             className={cn(
               meta.verdictTone === "ok" && "text-[#3f8264]",
@@ -257,8 +327,9 @@ export function PartitionSim({ lessonId, cpId }: PartitionSimProps): JSX.Element
             {meta.verdict}
           </b>
         </span>
-        <span>
-          skew <b className="text-foreground">{meta.skew}</b>
+        <span className="min-w-0 break-words [overflow-wrap:anywhere]">
+          {locale === "de" ? "Verteilung" : "skew"}{" "}
+          <b className="text-foreground">{meta.skew}</b>
         </span>
       </div>
     </div>

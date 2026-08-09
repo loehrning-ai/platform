@@ -30,10 +30,10 @@ describe("FlowingPipeline ", () => {
     render(<FlowingPipeline />);
     const nodes = screen.getAllByRole("link");
     expect(nodes).toHaveLength(6);
-    expect(nodes[0]).toHaveAccessibleName("01 · Data - Kapitel öffnen");
+    expect(nodes[0]).toHaveAccessibleName("01 · Data - Open chapter");
     expect(nodes[0]).toHaveAttribute(
       "href",
-      "/kurse/open-source/data-science/fund",
+      "/en/kurse/open-source/data-science/fund",
     );
   });
 
@@ -42,7 +42,10 @@ describe("FlowingPipeline ", () => {
   });
 
   it("does not start the continuous ticker during the initial mobile paint", () => {
-    const source = readFileSync(join(__dirname, "flowing-pipeline.tsx"), "utf8");
+    const source = readFileSync(
+      join(__dirname, "flowing-pipeline.tsx"),
+      "utf8",
+    );
     expect(source).toContain('rootMargin: "0px 0px -50% 0px"');
   });
 });

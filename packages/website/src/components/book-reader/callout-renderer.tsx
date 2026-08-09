@@ -1,6 +1,4 @@
-"use client";
-
-import type { ReactNode } from "react";
+import { Children, type ReactNode } from "react";
 
 /**
  * callout-renderer.tsx
@@ -24,16 +22,23 @@ import type { ReactNode } from "react";
  *   (fallback)          → border-border        bg-card/20
  */
 
+export interface CalloutStyle {
+  readonly border: string;
+  readonly bg: string;
+  readonly mono?: boolean;
+  readonly icon?: string;
+}
+
 const CALLOUT_STYLES: Record<
   string,
-  { border: string; bg: string; mono?: boolean; icon?: string }
+  CalloutStyle
 > = {
-  "tipp": {
+  tipp: {
     border: "border-l-4 border-[var(--color-brand-orange)]",
     bg: "bg-orange-950/40",
     icon: "💡",
   },
-  "achtung": {
+  achtung: {
     border: "border-l-4 border-amber-500",
     bg: "bg-amber-950/40",
     icon: "⚠️",
@@ -57,15 +62,19 @@ const CALLOUT_STYLES: Record<
     bg: "bg-stone-900/80",
     mono: true,
   },
-  "begriff": {
+  begriff: {
     border: "border-l-4 border-sky-400",
     bg: "bg-sky-950/40",
   },
-  "navigation": {
+  navigation: {
     border: "border-l-4 border-stone-600",
     bg: "bg-stone-900/40",
   },
-  "hinweis": {
+  hinweis: {
+    border: "border-l-4 border-stone-500",
+    bg: "bg-stone-900/40",
+  },
+  note: {
     border: "border-l-4 border-stone-500",
     bg: "bg-stone-900/40",
   },
@@ -75,6 +84,20 @@ const CALLOUT_STYLES: Record<
     mono: true,
   },
 };
+
+export function resolveCalloutStyle(label: string | null): CalloutStyle | null {
+  const labelKey = label?.toLowerCase() ?? null;
+  let style = CALLOUT_STYLES[labelKey ?? ""] ?? null;
+  if (!style && labelKey) {
+    for (const [key, candidate] of Object.entries(CALLOUT_STYLES)) {
+      if (labelKey.startsWith(key) || key.startsWith(labelKey)) {
+        style = candidate;
+        break;
+      }
+    }
+  }
+  return style;
+}
 
 /** Extract the label text from the first strong element in blockquote children. */
 function extractLabel(children: ReactNode): string | null {
@@ -121,37 +144,33 @@ interface CalloutRendererProps {
 
 export function CalloutRenderer({ children }: CalloutRendererProps) {
   const label = extractLabel(children);
-  const labelKey = label?.toLowerCase() ?? null;
-
-  // Find matching style by prefix match (handles "KRAFT-Prompt: ..." etc.)
-  let style = CALLOUT_STYLES[labelKey ?? ""] ?? null;
-  if (!style && labelKey) {
-    // Try prefix match for compound labels
-    for (const [key, val] of Object.entries(CALLOUT_STYLES)) {
-      if (labelKey.startsWith(key) || key.startsWith(labelKey)) {
-        style = val;
-        break;
-      }
-    }
-  }
+  const renderedChildren = Children.toArray(children);
+  const style = resolveCalloutStyle(label);
 
   if (!style) {
     // Fallback: standard blockquote styling
     return (
       <blockquote className="not-prose my-4 border-l-4 border-border bg-card/20 px-4 py-3 text-sm text-foreground/80 italic">
-        {children}
+        {renderedChildren}
       </blockquote>
     );
   }
 
   return (
     <div
-      className={`not-prose my-4 rounded-r px-4 py-3 ${style.border} ${style.bg} ${style.mono ? "font-mono text-xs" : ""}`}
+      className={[
+        "not-prose my-4 rounded-r px-4 py-3",
+        style.border,
+        style.bg,
+        style.mono ? "font-mono text-xs" : null,
+      ]
+        .filter(Boolean)
+        .join(" ")}
       role="note"
       aria-label={label ?? undefined}
     >
       <div className="text-sm leading-relaxed text-foreground/90">
-        {children}
+        {renderedChildren}
       </div>
     </div>
   );

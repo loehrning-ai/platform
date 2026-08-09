@@ -15,20 +15,26 @@ import {
 import { subscribe } from "@/lib/progress";
 import type { CourseSlug, Lesson } from "@/lib/course/types";
 import { FreshnessBadge } from "@/components/ui/freshness-badge";
+import { MotionProvider } from "@/components/motion-provider";
 import type { BlockFreshness } from "@/lib/course/data";
+import type { Locale } from "@/lib/i18n/locale";
+import { getCourseReaderCopy } from "./course-ui-copy";
 
 interface LessonLayoutProps {
   readonly courseSlug: CourseSlug;
   readonly lessons: readonly Lesson[];
   readonly blockTitle: string;
   readonly freshnessMeta?: BlockFreshness | null;
+  readonly locale?: Locale;
 }
 
 export function LessonLayout({
   courseSlug,
   lessons,
   freshnessMeta,
+  locale = "de",
 }: LessonLayoutProps) {
+  const copy = getCourseReaderCopy(locale);
   const [activeLessonId, setActiveLessonId] = useState(lessons[0]?.id ?? "");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -154,39 +160,46 @@ export function LessonLayout({
       activeLessonId={activeLessonId}
       completedLessonIds={completedIds}
       onSelectLesson={handleSelectLesson}
+      locale={locale}
     />
   );
 
   return (
-    <LessonShell
-      navOpen={sidebarOpen}
-      onNavOpenChange={setSidebarOpen}
-      navLabel="Lektionsnavigation"
-      sidebar={sidebar}
-    >
-      {freshnessMeta?.lastReviewed && freshnessMeta?.nextReview && (
-        <div className="mb-4">
-          <FreshnessBadge
-            lastReviewed={freshnessMeta.lastReviewed}
-            nextReview={freshnessMeta.nextReview}
-            riskClass={freshnessMeta.riskClass}
-          />
-        </div>
-      )}
-      <LessonContent
-        courseSlug={courseSlug}
-        lesson={activeLesson}
-        totalLessons={lessons.length}
-        progressReady={progressReady}
-        readSectionIds={readIds}
-        isCompleted={completedIds.has(activeLessonId)}
-        quizBestScore={quizScores.get(activeLessonId) ?? null}
-        hasNextLesson={hasNextLesson}
-        onMarkSectionRead={handleMarkSectionRead}
-        onMarkLessonComplete={handleMarkLessonComplete}
-        onQuizComplete={handleQuizComplete}
-        onNextLesson={handleNextLesson}
-      />
-    </LessonShell>
+    <MotionProvider>
+      <LessonShell
+        navOpen={sidebarOpen}
+        onNavOpenChange={setSidebarOpen}
+        navLabel={copy.shell.navigation}
+        openNavLabel={copy.shell.open}
+        closeNavLabel={copy.shell.close}
+        sidebar={sidebar}
+      >
+        {freshnessMeta?.lastReviewed && freshnessMeta?.nextReview && (
+          <div className="mb-4">
+            <FreshnessBadge
+              lastReviewed={freshnessMeta.lastReviewed}
+              nextReview={freshnessMeta.nextReview}
+              riskClass={freshnessMeta.riskClass}
+              locale={locale}
+            />
+          </div>
+        )}
+        <LessonContent
+          courseSlug={courseSlug}
+          lesson={activeLesson}
+          totalLessons={lessons.length}
+          progressReady={progressReady}
+          readSectionIds={readIds}
+          isCompleted={completedIds.has(activeLessonId)}
+          quizBestScore={quizScores.get(activeLessonId) ?? null}
+          hasNextLesson={hasNextLesson}
+          onMarkSectionRead={handleMarkSectionRead}
+          onMarkLessonComplete={handleMarkLessonComplete}
+          onQuizComplete={handleQuizComplete}
+          onNextLesson={handleNextLesson}
+          locale={locale}
+        />
+      </LessonShell>
+    </MotionProvider>
   );
 }

@@ -15,13 +15,16 @@ import { test, expect, type Page } from "@playwright/test";
  * lib/data-infrastructure/types.ts's checkpointLessonId()).
  */
 
-const LANDING = "/kurse/open-source/data-infrastructure";
-const COURSE_PATH = "/kurse/open-source/data-infrastructure/kurs";
-const LESSON_ROUTE = "/kurse/open-source/data-infrastructure/kurs/mental-model";
+const LANDING = "/en/kurse/open-source/data-infrastructure";
+const COURSE_PATH = "/en/kurse/open-source/data-infrastructure/kurs";
+const LESSON_ROUTE =
+  "/en/kurse/open-source/data-infrastructure/kurs/mental-model";
 const FINAL_LESSON_ROUTE =
-  "/kurse/open-source/data-infrastructure/kurs/interview-playbook";
-const CERT_ROUTE = "/kurse/open-source/data-infrastructure/kurs/zertifikat";
-const VERIFY_ROUTE = "/kurse/open-source/data-infrastructure/verifizierung";
+  "/en/kurse/open-source/data-infrastructure/kurs/interview-playbook";
+const CERT_ROUTE =
+  "/en/kurse/open-source/data-infrastructure/kurs/zertifikat";
+const VERIFY_ROUTE =
+  "/en/kurse/open-source/data-infrastructure/verifizierung";
 
 const UNIFIED_KEY = "loehrning-progress-v2";
 const DATA_INFRA_LESSON_IDS = [
@@ -134,6 +137,57 @@ test.describe("Data Infrastructure golden path", () => {
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 
+  test("responsive: the mental-model StackFlow stays contained at 320px", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 320, height: 900 });
+    const res = await page.goto(LESSON_ROUTE, { waitUntil: "load" });
+    expect(res?.status()).toBe(200);
+    await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+      await new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      );
+    });
+
+    const title = page.getByText(/Model · The stack, in motion/);
+    const card = title.locator("..");
+    const canvas = card.getByRole("img", {
+      name: /Animated diagram of an event flowing/,
+    });
+    await expect(card).toBeVisible();
+    await expect(canvas).toBeVisible();
+
+    const geometry = await card.evaluate((root) => {
+      const canvasElement = root.querySelector("canvas");
+      if (!canvasElement) throw new Error("StackFlow canvas is missing");
+      const cardRect = root.getBoundingClientRect();
+      const canvasRect = canvasElement.getBoundingClientRect();
+      return {
+        bodyScrollWidth: document.body.scrollWidth,
+        cardClientWidth: root.clientWidth,
+        cardScrollWidth: root.scrollWidth,
+        cardLeft: cardRect.left,
+        cardRight: cardRect.right,
+        canvasLeft: canvasRect.left,
+        canvasRight: canvasRect.right,
+        canvasWidth: canvasRect.width,
+        viewportWidth: window.innerWidth,
+      };
+    });
+
+    expect(geometry.cardScrollWidth).toBeLessThanOrEqual(
+      geometry.cardClientWidth + 1,
+    );
+    expect(geometry.canvasWidth).toBeGreaterThan(0);
+    expect(geometry.canvasLeft).toBeGreaterThanOrEqual(geometry.cardLeft - 1);
+    expect(geometry.canvasRight).toBeLessThanOrEqual(geometry.cardRight + 1);
+    expect(geometry.bodyScrollWidth).toBeLessThanOrEqual(
+      geometry.viewportWidth + 1,
+    );
+  });
+
   test("checkpoint: answering mental-model's first quiz widget correctly awards a checkpoint", async ({
     page,
   }) => {
@@ -146,7 +200,7 @@ test.describe("Data Infrastructure golden path", () => {
     // mental-model.ts): option index 1 is correct, and
     // DATA_INFRA_QUIZ_COPY's correctLabel is "Correct."
     const correctAnswer = page.getByRole("radio", {
-      name: "B The log, it's the ordered record of everything that happened.",
+      name: "B The log, because this scenario explicitly gives it complete retained change history.",
     });
     await expect(correctAnswer).toBeVisible();
     await correctAnswer.click();
@@ -167,7 +221,7 @@ test.describe("Data Infrastructure golden path", () => {
     });
     expect(res?.status()).toBe(200);
     await expect(page).not.toHaveURL(/\/login/);
-    await page.locator('html[data-hydrated="true"]').waitFor();
+    await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
 
     const markAsRead = page.getByRole("button", {
       name: "Mark as read",

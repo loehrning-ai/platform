@@ -5,12 +5,15 @@ import { useCheckpoint } from "@/lib/progress";
 import { cn } from "@/lib/utils";
 import { WidgetFrame } from "../tier-a/_frame";
 import { RunConsole } from "./_run-console";
-import { fillBlankFeedback, simulatedDelayMs } from "@/lib/claude-course/simulated-claude";
+import {
+  fillBlankFeedback,
+  simulatedDelayMs,
+} from "@/lib/claude-course/simulated-claude";
+import { useClaudeWidgetLocale } from "./locale-context";
 
 /**
- * FillBlank, fill in a real prompt template, then get coaching feedback
- * from the simulated Claude. Ported from `claude/js/widgets.js:240`
- * (FillBlank).
+ * FillBlank applies fixed local feedback after the learner completes the
+ * template. It does not call a model.
  */
 export interface FillBlankItem {
   readonly label: string;
@@ -40,6 +43,8 @@ export function FillBlankWidget({
   template,
   blanks,
 }: FillBlankWidgetProps): JSX.Element {
+  const locale = useClaudeWidgetLocale();
+  const german = locale === "de";
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [values, setValues] = useState<string[]>(() => blanks.map(() => ""));
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -47,8 +52,10 @@ export function FillBlankWidget({
 
   const check = async () => {
     setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, simulatedDelayMs(values.join("|"))));
-    setFeedback(fillBlankFeedback());
+    await new Promise((resolve) =>
+      setTimeout(resolve, simulatedDelayMs(values.join("|"))),
+    );
+    setFeedback(fillBlankFeedback(locale));
     setLoading(false);
     if (values.every((v) => v.trim().length > 2)) complete();
   };
@@ -56,16 +63,27 @@ export function FillBlankWidget({
   const allFilled = values.every((v) => v.trim().length > 0);
 
   return (
-    <WidgetFrame kindLabel="Drill" title="Fill in the prompt" done={done} xpLabel="+10 XP">
+    <WidgetFrame
+      kindLabel={german ? "Übung" : "Drill"}
+      title={german ? "Prompt-Vorlage ausfüllen" : "Fill in the prompt"}
+      done={done}
+      xpLabel="+10 XP"
+    >
       <p className="mb-3 text-[13.5px] leading-[1.5] text-muted-foreground">
-        <strong className="text-foreground">Goal:</strong> {goal}
+        <strong className="text-foreground">
+          {german ? "Ziel:" : "Goal:"}
+        </strong>{" "}
+        {goal}
       </p>
       <pre className="mb-4 whitespace-pre-wrap break-words border border-border bg-card/40 p-3 font-mono text-[13px] text-foreground">
         {renderPreview(template, values)}
       </pre>
       <div className="flex flex-col gap-3">
         {blanks.map((blank, i) => (
-          <div key={i} className="grid gap-2 sm:grid-cols-[140px_1fr] sm:items-center">
+          <div
+            key={i}
+            className="grid gap-2 sm:grid-cols-[140px_1fr] sm:items-center"
+          >
             <label
               htmlFor={`fill-blank-${lessonId}-${cpId}-${i}`}
               className="font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground"
@@ -77,7 +95,9 @@ export function FillBlankWidget({
               type="text"
               value={values[i]}
               onChange={(e) =>
-                setValues((prev) => prev.map((v, j) => (j === i ? e.target.value : v)))
+                setValues((prev) =>
+                  prev.map((v, j) => (j === i ? e.target.value : v)),
+                )
               }
               placeholder={blank.hint}
               className="border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
@@ -93,15 +113,25 @@ export function FillBlankWidget({
           "mt-4 inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none",
         )}
       >
-        {loading ? "Checking…" : "Have Claude check it →"}
+        {loading
+          ? german
+            ? "Wird geprüft…"
+            : "Checking…"
+          : german
+            ? "Eingaben prüfen →"
+            : "Check entries →"}
       </button>
       <RunConsole
         loading={loading}
         output={feedback}
         onClear={() => setFeedback(null)}
-        label="claude's check"
+        label={german ? "Prüfergebnis" : "Check result"}
         tone="amber"
-        emptyHint="Fill the blanks, then ask Claude to check."
+        emptyHint={
+          german
+            ? "Fülle alle Felder aus und starte die Prüfung."
+            : "Fill every field, then run the check."
+        }
       />
     </WidgetFrame>
   );

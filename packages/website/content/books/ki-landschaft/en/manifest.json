@@ -1,0 +1,74 @@
+{
+  "bookSlug": "ki-landschaft",
+  "title": "AI in German SMEs",
+  "owner": "editorial:books",
+  "lastReviewed": "2026-08-09",
+  "nextReview": "2026-11-09",
+  "reviewCadence": "quarterly",
+  "riskClass": "statistical",
+  "publicationStatus": "published",
+  "publicationReason": "Editorial review and public-release approval are recorded for the HTML reader and authenticated PDF.",
+  "adaptationNote": "The open edition removes consulting-market pricing, private company data, proprietary scores, and rankings derived from them. It uses traceable self-assessments and linked primary sources instead.",
+  "chapters": [
+    {
+      "slug": "01_eisberg",
+      "title": "The iceberg problem",
+      "sourceFile": "01_eisberg.md"
+    },
+    {
+      "slug": "02_methodik",
+      "title": "Method without spurious precision",
+      "sourceFile": "02_methodik.md"
+    },
+    {
+      "slug": "03_reifegrad_ueberblick",
+      "title": "Evidence-based self-assessment",
+      "sourceFile": "03_reifegrad_ueberblick.md"
+    },
+    {
+      "slug": "04_bundesland",
+      "title": "Regional conditions",
+      "sourceFile": "04_bundesland.md"
+    },
+    {
+      "slug": "05_branchen",
+      "title": "Sector patterns as hypotheses",
+      "sourceFile": "05_branchen.md"
+    },
+    {
+      "slug": "06_eu_ki_verordnung",
+      "title": "The EU AI Act and Article 4",
+      "sourceFile": "06_eu_ki_verordnung.md"
+    },
+    {
+      "slug": "07_schnellstart",
+      "title": "A seven-step quick start",
+      "sourceFile": "07_schnellstart.md"
+    },
+    {
+      "slug": "08_fahrplan",
+      "title": "Roadmap for the coming months",
+      "sourceFile": "08_fahrplan.md"
+    },
+    {
+      "slug": "09_ausblick",
+      "title": "Outlook",
+      "sourceFile": "09_ausblick.md"
+    },
+    {
+      "slug": "10_anhang",
+      "title": "Appendix",
+      "sourceFile": "10_anhang.md"
+    }
+  ],
+  "droppedChapters": [
+    {
+      "sourceFile": "06_beratungsmarkt.md",
+      "reason": "commercial-price-positioning"
+    },
+    {
+      "sourceFile": "07_beratungskosten.md",
+      "reason": "commercial-price-positioning"
+    }
+  ]
+}

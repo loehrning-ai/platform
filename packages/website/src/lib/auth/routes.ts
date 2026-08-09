@@ -1,4 +1,5 @@
 import { isProtectedRoute, isPublicRoute } from "@/lib/crawl/contract";
+import { parseLocalePathname } from "@/lib/i18n/locale";
 
 export function isPublicPlatformPath(pathname: string): boolean {
   return isPublicRoute(pathname);
@@ -60,10 +61,18 @@ export function sanitizeNextPath(value: string | null): string {
     if (!parsed.pathname.startsWith("/") || parsed.pathname.startsWith("//")) {
       return fallback;
     }
-    if (parsed.pathname === "/login" || parsed.pathname.startsWith("/login/")) {
+    const localePath = parseLocalePathname(parsed.pathname);
+    if (!localePath.valid) return fallback;
+    if (
+      localePath.pathname === "/login" ||
+      localePath.pathname.startsWith("/login/")
+    ) {
       return fallback;
     }
-    if (parsed.pathname === "/auth" || parsed.pathname.startsWith("/auth/")) {
+    if (
+      localePath.pathname === "/auth" ||
+      localePath.pathname.startsWith("/auth/")
+    ) {
       return fallback;
     }
     const sanitized = `${parsed.pathname}${parsed.search}${parsed.hash}`;

@@ -8,10 +8,10 @@ afterEach(() => {
 });
 
 describe("TrustMeterSim ", () => {
-  it("defaults to a trusted 100/100 score with all 4 checks on", () => {
+  it("defaults to full modeled check weight with all 4 checks on", () => {
     const { container } = render(<TrustMeterSim />);
     expect(container.querySelector(".tm-score-big")?.textContent).toContain("100");
-    expect(screen.getByText("trusted")).toBeInTheDocument();
+    expect(screen.getByText("all modeled categories enabled")).toBeInTheDocument();
   });
 
   it("unchecking a check lowers the score and can flip the verdict", () => {
@@ -20,12 +20,12 @@ describe("TrustMeterSim ", () => {
     fireEvent.click(screen.getByRole("checkbox", { name: /Schema check/ }));
     fireEvent.click(screen.getByRole("checkbox", { name: /Freshness/ }));
     expect(container.querySelector(".tm-score-big")?.textContent).toContain("22");
-    expect(screen.getByText("untrusted")).toBeInTheDocument();
+    expect(screen.getByText("few modeled categories enabled")).toBeInTheDocument();
   });
 
   it("selecting a corruption to inject updates the panel meta", () => {
     render(<TrustMeterSim />);
-    fireEvent.click(screen.getByRole("button", { name: /half-write/ }));
-    expect(screen.getByText(/corruption: half-write/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /partial write/ }));
+    expect(screen.getByText(/corruption: partial write/)).toBeInTheDocument();
   });
 });

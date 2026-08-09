@@ -60,11 +60,12 @@ test.describe("QA sweep - retired commercial routes", () => {
       const response = await request.get(route, { maxRedirects: 0 });
       if (route === "/foerdermittel") {
         expect(response.status()).toBe(410);
+        expect(response.headers()["x-robots-tag"]).toContain("noindex");
       } else {
         expect([301, 308]).toContain(response.status());
         expect(response.headers()["location"]).toContain(target);
+        expect(response.headers()["x-robots-tag"]).toBeUndefined();
       }
-      expect(response.headers()["x-robots-tag"]).toContain("noindex");
     });
   }
 });

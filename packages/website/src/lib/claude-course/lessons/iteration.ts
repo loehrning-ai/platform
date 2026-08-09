@@ -9,8 +9,7 @@ const lesson: ClaudeLesson = {
   id: "iteration",
   number: 5,
   title: "Iterative Prompting",
-  subtitle:
-    "Why the second prompt is always better, and how to get there in fewer tries.",
+  subtitle: "Change one variable, compare results, and keep the evidence.",
   durationMinutes: 10,
   trackId: "workflows",
   hook: "First drafts are for calibration, not delivery.",
@@ -26,28 +25,28 @@ const lesson: ClaudeLesson = {
       title: "The loop",
       readTimeMinutes: 1,
       content:
-        "Beginners write one prompt and judge Claude on the output. Experienced users write a prompt, read the output, and use what they learned to refine the prompt. The model doesn't change. Your prompt does.\n\nAnthropic's own engineers say it flatly: prompt engineering is a science, approach it like a scientist. Test, iterate, compare. The best first prompt you'll ever write is the one you wrote yesterday and are improving today.\n\n> Prompting is a loop, not a shot.",
+        "A single output cannot show whether a prompt is reliable. Run the prompt on representative inputs, label the failures, change one relevant variable, and compare the results against the same criteria.\n\nModel updates and sampling can also change outputs. Record the model, settings, prompt version, and test inputs when reproducibility matters.\n\n> Iterate against evidence, not one preferred response.",
     },
     {
       id: "three-turn-loop",
       title: "The three-turn loop",
       readTimeMinutes: 2,
       content:
-        "- **Turn 1 · calibrate.** Write a reasonable prompt. Read the output. Don't judge, diagnose. What did it misunderstand? What did it over-explain? What tone did it default to?\n- **Turn 2 · correct.** Name the specific thing to fix. \"Shorter.\" \"Drop the intro paragraph.\" \"Use the voice from the attached doc.\" Keep the rest of the prompt stable, change one variable at a time.\n- **Turn 3 · lock.** When it's good: capture the full, working prompt somewhere (CLAUDE.md, a snippet file, Notion). That's now a template. Next time, start from there.\n\n> **Pro move Anthropic uses.** After an output you liked, ask Claude: \"Write the prompt you would have given yourself to produce this output.\" You now have a distilled, reusable prompt, often better than the one you started with.",
+        '- **Turn 1 · establish a baseline.** Run a reasonable prompt on a small test set. Record which requirements pass or fail.\n- **Turn 2 · correct one failure.** Name a testable change: "Remove the first paragraph" or "Start with one status sentence." Keep unrelated variables stable.\n- **Turn 3 · retain the tested version.** Store the complete prompt with its use case, model assumptions, and evaluation cases. Re-run the set after later edits or model changes.\n\nA model can draft a reusable prompt from an accepted output, but that reverse-engineered prompt is only a candidate. Review it and test it on inputs other than the example it came from.',
     },
     {
       id: "show-dont-tell",
       title: "Show, don't tell",
       readTimeMinutes: 2,
       content:
-        "The single highest-leverage iteration move: replace descriptions with examples. Saying \"use a professional tone\" gives Claude a fuzzy target. Pasting three sentences in the exact tone you want gives it coordinates.\n\nAnthropic's prompt-improver workflow does this automatically, it takes your prompt and looks for places to inject 2-5 input/output examples. In their experience, examples are the single most reliable way to drive accuracy and consistency, especially for structured outputs. When your turn-2 correction is \"make it feel more like X,\" paste X.",
+        'Examples can make an ambiguous requirement observable. Instead of "use a professional tone," provide a short, approved reference and identify the properties to preserve. For structured work, include representative input-output pairs and edge cases.\n\nExamples can also cause overfitting or copy unwanted details. Remove confidential information, vary the examples, and evaluate on held-out cases.',
     },
     {
       id: "turn-2-vocabulary",
       title: "What to say in turn 2",
       readTimeMinutes: 2,
       content:
-        "Most failed iterations come from vague corrections. Here's the vocabulary that actually works:\n\n**Do:** \"Cut the first paragraph.\" · \"Use the voice from this example: …\" · \"Make the bullets parallel, each should start with a verb.\" · \"Assume the reader already knows X; skip the intro.\"\n\n**Don't:** \"Make it better.\" · \"Less AI-sounding.\" · \"Sharper.\" · \"You know what I mean.\"",
+        'Corrections work best when a reviewer can determine whether the output followed them.\n\n**Testable:** "Remove the first paragraph." · "Use the sentence length and terminology from this approved example." · "Start each bullet with a verb." · "Assume the reader knows X; omit its definition."\n\n**Not testable:** "Make it better." · "Less AI-sounding." · "Sharper." · "You know what I mean."',
     },
   ],
   widgets: [
@@ -60,7 +59,7 @@ const lesson: ClaudeLesson = {
         strong:
           "Cut the opening paragraph. Start with the status in one sentence, then three bullets in the voice of the attached example. No closing pleasantries.",
         takeaway:
-          "The strong correction is actionable, testable, and uses concrete reference (the attached example). Claude can do something with it.",
+          "The stronger correction names an actionable, testable change and cites a concrete reference. Its result can be checked against the source facts and attached example.",
       },
     },
     {
@@ -72,7 +71,8 @@ const lesson: ClaudeLesson = {
         cpId: "loop",
         title: "Run a turn-1, then iterate",
         hint: "Ask for a quick draft. Then paste the output back with a specific correction and ask again.",
-        placeholder: "Turn 1 prompt goes here. Then update this box and re-run for turn 2.",
+        placeholder:
+          "Turn 1 prompt goes here. Then update this box and re-run for turn 2.",
       },
     },
     {
@@ -92,7 +92,7 @@ const lesson: ClaudeLesson = {
         ],
         correct: 2,
         explanation:
-          "Specific, actionable, testable. The others are vibes, Claude can't act on them.",
+          "The instruction identifies an exact edit that can be checked. The other options do not define acceptance criteria.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
@@ -106,7 +106,8 @@ const lesson: ClaudeLesson = {
         cpId: "arena",
         task: "Correct a first-draft status update that opened with too much throat-clearing.",
         original: "make it sound better and shorter",
-        criteria: "specificity, testability, actionable instruction, avoids vibes",
+        criteria:
+          "specificity, testability, actionable instruction, avoids vibes",
       },
     },
   ],

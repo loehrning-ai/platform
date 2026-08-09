@@ -14,16 +14,23 @@ import {
 } from "lucide-react";
 import { Card, IconTile } from "@/components/ui/card";
 import { BrandButton } from "@/components/ui/brand-button";
-import { PATHWAY_STAGE_DISPLAY } from "@/lib/learning-graph";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
+import type { Locale } from "@/lib/i18n/locale";
+import { DIMENSION_ORDER } from "@/lib/ki-check/questions";
 import {
-  DIMENSION_ORDER,
-  QUESTIONS,
-  TOTAL_QUESTIONS,
-  dimensionMetaFor,
-} from "@/lib/ki-check/questions";
+  KI_CHECK_CONTENT,
+  KI_CHECK_UI_COPY,
+  localizedDimension,
+  localizedRating,
+  localizedStage,
+} from "@/lib/ki-check/localization";
 import { computeResult } from "@/lib/ki-check/scoring";
 import { recommend } from "@/lib/ki-check/recommend";
-import type { Answer, DimensionId } from "@/lib/ki-check/types";
+import type {
+  Answer,
+  DimensionId,
+  DimensionResult,
+} from "@/lib/ki-check/types";
 import { iconByName } from "@/lib/courses/track-icon";
 import { StepIndicator } from "./step-indicator";
 import { RadarChart } from "./radar-chart";
@@ -55,7 +62,14 @@ const slideVariants = {
   exit: { opacity: 0, x: -28 },
 };
 
-export function KiCheckClient() {
+function KiCheckClientContent({
+  locale = "de",
+}: {
+  readonly locale?: Locale;
+}) {
+  const content = KI_CHECK_CONTENT[locale];
+  const questions = content.questions;
+  const ui = KI_CHECK_UI_COPY[locale];
   const [hydrated, setHydrated] = useState(false);
   const [index, setIndex] = useState(0);
   // questionId -> chosen option index. Single source of truth for the whole run.
@@ -78,42 +92,68 @@ export function KiCheckClient() {
     }
   }, []);
 
-  const question = QUESTIONS[index];
+  const question = questions[index];
   const selected = choices[question?.id] ?? null;
-  const isLast = index === QUESTIONS.length - 1;
+  const isLast = index === questions.length - 1;
   const answeredCount = Object.keys(choices).length;
 
   const totalByDimension = useMemo(() => {
     const acc = Object.fromEntries(
       DIMENSION_ORDER.map((id) => [id, 0]),
     ) as Record<DimensionId, number>;
-    for (const q of QUESTIONS) acc[q.dimensionId] += 1;
+    for (const q of questions) acc[q.dimensionId] += 1;
     return acc;
-  }, []);
+  }, [questions]);
 
   const answeredByDimension = useMemo(() => {
     const acc = Object.fromEntries(
       DIMENSION_ORDER.map((id) => [id, 0]),
     ) as Record<DimensionId, number>;
-    for (const q of QUESTIONS) {
+    for (const q of questions) {
       if (choices[q.id] !== undefined) acc[q.dimensionId] += 1;
     }
     return acc;
-  }, [choices]);
+  }, [choices, questions]);
+
+  const rawResult = useMemo(() => {
+    if (!done) return null;
+    const answers: Answer[] = questions
+      .filter((q) => choices[q.id] !== undefined)
+      .map((q) => ({
+        questionId: q.id,
+        dimensionId: q.dimensionId,
+        score: q.options[choices[q.id]].score,
+      }));
+    return computeResult(answers);
+  }, [done, choices, questions]);
 
   const result = useMemo(() => {
-    if (!done) return null;
-    const answers: Answer[] = QUESTIONS.filter(
-      (q) => choices[q.id] !== undefined,
-    ).map((q) => ({
-      questionId: q.id,
-      dimensionId: q.dimensionId,
-      score: q.options[choices[q.id]].score,
-    }));
-    return computeResult(answers);
-  }, [done, choices]);
+    if (!rawResult) return null;
+    const localizeDimensionResult = (
+      dimension: DimensionResult,
+    ): DimensionResult => {
+      const meta = localizedDimension(locale, dimension.id);
+      const rating = localizedRating(locale, dimension.normalizedScore);
+      return {
+        ...dimension,
+        name: meta.name,
+        short: meta.short,
+        ratingLabel: rating.label,
+        ratingToneVar: rating.toneVar,
+      };
+    };
+    const stage = localizedStage(locale, rawResult.stageLevel);
+    return {
+      ...rawResult,
+      stageLabel: stage.label,
+      stageBlurb: stage.blurb,
+      dimensions: rawResult.dimensions.map(localizeDimensionResult),
+      strengths: rawResult.strengths.map(localizeDimensionResult),
+      gaps: rawResult.gaps.map(localizeDimensionResult),
+    };
+  }, [locale, rawResult]);
 
-  const recommendation = result ? recommend(result) : null;
+  const recommendation = rawResult ? recommend(rawResult, locale) : null;
 
   function pick(optionIndex: number) {
     setChoices((prev) => ({ ...prev, [question.id]: optionIndex }));
@@ -154,30 +194,29 @@ export function KiCheckClient() {
     return (
       <div className="mx-auto max-w-[880px] px-6 pb-32 pt-16 sm:pt-20">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-orange">
-          KI-Check · Dein Ergebnis
+          {ui.resultEyebrow}
         </p>
         <h1
           ref={focusHeading}
           tabIndex={-1}
           className="mt-4 text-[34px] font-bold leading-[1.02] tracking-[-0.03em] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:text-[44px]"
         >
-          Hier stehst du gerade.
+          {ui.resultTitle}
         </h1>
         <p className="mt-4 max-w-[560px] text-base leading-relaxed text-muted-foreground">
-          Dein Profil über fünf Kompetenzfelder, dazu der Kurs, der dich am
-          weitesten bringt. Alles nur in deinem Browser gerechnet.
+          {ui.resultIntroduction}
         </p>
 
         {/* Hero band: composite score + radar */}
         <m.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
           className="mt-10 grid gap-8 rounded-2xl bg-kupfer-mist p-8 sm:grid-cols-[1fr_auto] sm:items-center sm:p-10"
         >
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-orange">
-              Gesamtstand
+              {ui.overall}
             </p>
             <div className="mt-2 flex items-end gap-2">
               <span className="text-[68px] font-bold leading-none tracking-[-0.04em] text-foreground">
@@ -188,7 +227,7 @@ export function KiCheckClient() {
               </span>
             </div>
             <p className="mt-3 text-xl font-semibold text-foreground">
-              Stufe {result.stageLevel}: {result.stageLabel}
+              {ui.level} {result.stageLevel}: {result.stageLabel}
             </p>
             <p className="mt-2 max-w-[420px] text-sm leading-relaxed text-muted-foreground">
               {result.stageBlurb}
@@ -207,7 +246,7 @@ export function KiCheckClient() {
                 <IconTile icon={StrongIcon} accent="sand" />
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                    Deine Stärke
+                    {ui.strength}
                   </p>
                   <p className="text-base font-semibold text-foreground">
                     {strongest.name}
@@ -222,7 +261,7 @@ export function KiCheckClient() {
                 <IconTile icon={WeakIcon} accent="amber" />
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                    Größtes Potenzial
+                    {ui.gap}
                   </p>
                   <p className="text-base font-semibold text-foreground">
                     {weakest.name}
@@ -236,11 +275,9 @@ export function KiCheckClient() {
         {/* Per-dimension breakdown */}
         <section className="mt-12">
           <h2 className="text-xl font-bold tracking-[-0.02em] text-foreground">
-            Deine fünf Kompetenzfelder
+            {ui.fieldsTitle}
           </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            So verteilt sich dein Stand. Je voller der Balken, desto sicherer.
-          </p>
+          <p className="mt-2 text-sm text-muted-foreground">{ui.fieldsBody}</p>
           <div className="mt-6">
             <DimensionBars dimensions={result.dimensions} />
           </div>
@@ -249,11 +286,15 @@ export function KiCheckClient() {
         {/* Recommendation */}
         <section className="mt-12">
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-orange">
-            Dein nächster Schritt
+            {ui.nextStep}
           </p>
           <Card accent={recommendation.accent} className="mt-3 gap-0">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
-              <IconTile icon={RecIcon} accent={recommendation.accent} size="lg" />
+              <IconTile
+                icon={RecIcon}
+                accent={recommendation.accent}
+                size="lg"
+              />
               <div className="min-w-0 flex-1">
                 <span className="inline-flex items-center rounded-full bg-kupfer-mist px-3 py-1 text-xs font-semibold text-brand-orange">
                   {recommendation.badge}
@@ -270,14 +311,14 @@ export function KiCheckClient() {
                     prefetch={false}
                     size="md"
                   >
-                    Kurs starten
+                    {ui.startCourse}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </BrandButton>
                   <Link
                     href={recommendation.courseHref}
                     className="text-sm font-semibold text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
                   >
-                    Erst zur Kursübersicht
+                    {ui.courseOverview}
                   </Link>
                 </div>
               </div>
@@ -288,11 +329,10 @@ export function KiCheckClient() {
         {/* Pathway strip */}
         <section className="mt-12">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-            Dein Platz auf dem KI-Kompetenzweg
+            {ui.pathway}
           </p>
           <ol className="flex flex-wrap gap-2">
             {STAGE_ORDER.map((stageId, i) => {
-              const display = PATHWAY_STAGE_DISPLAY[stageId];
               const isActive = stageId === activeStage;
               return (
                 <li
@@ -303,7 +343,9 @@ export function KiCheckClient() {
                       : "flex items-center gap-2 rounded-lg border border-border px-4 py-2.5 text-muted-foreground"
                   }
                 >
-                  <span className="text-xs font-bold tabular-nums">{i + 1}</span>
+                  <span className="text-xs font-bold tabular-nums">
+                    {i + 1}
+                  </span>
                   <span
                     className={
                       isActive
@@ -311,7 +353,7 @@ export function KiCheckClient() {
                         : "text-sm font-medium text-foreground"
                     }
                   >
-                    {display.displayLabel}
+                    {ui.pathwayLabels[stageId]}
                   </span>
                 </li>
               );
@@ -326,7 +368,7 @@ export function KiCheckClient() {
             className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
           >
             <RotateCcw className="h-4 w-4" aria-hidden="true" />
-            Check nochmal starten
+            {ui.restart}
           </button>
         </div>
       </div>
@@ -334,22 +376,21 @@ export function KiCheckClient() {
   }
 
   // -------------------------------------------------------------------- QUIZ
-  const meta = dimensionMetaFor(question.dimensionId);
+  const meta = localizedDimension(locale, question.dimensionId);
   const DimIcon = dimensionIcon(meta.iconName);
-  const progress = Math.round((answeredCount / TOTAL_QUESTIONS) * 100);
+  const progress = Math.round((answeredCount / questions.length) * 100);
   const chosenOption = selected !== null ? question.options[selected] : null;
 
   return (
     <div className="mx-auto max-w-[720px] px-6 pb-32 pt-16 sm:pt-20">
       <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-orange">
-        KI-Kompetenzweg · KI-Check
+        {ui.quizEyebrow}
       </p>
       <h1 className="mt-4 text-[34px] font-bold leading-[1.02] tracking-[-0.03em] text-foreground sm:text-[44px]">
-        Wo stehst du?
+        {ui.quizTitle}
       </h1>
       <p className="mt-4 max-w-[560px] text-base leading-relaxed text-muted-foreground">
-        Zehn kurze Fragen, kein Login, keine Datenspeicherung. Am Ende siehst du
-        dein Profil und den Kurs, der zu deinem Stand passt.
+        {ui.quizIntroduction}
       </p>
 
       {/* Step indicator across the five fields */}
@@ -358,6 +399,7 @@ export function KiCheckClient() {
           currentDimensionId={question.dimensionId}
           answeredByDimension={answeredByDimension}
           totalByDimension={totalByDimension}
+          dimensions={content.dimensions}
         />
       </div>
 
@@ -369,7 +411,7 @@ export function KiCheckClient() {
           className="mb-2 flex items-center justify-between text-xs font-medium text-muted-foreground"
         >
           <span>
-            Frage {index + 1} von {QUESTIONS.length}
+            {ui.question} {index + 1} {ui.of} {questions.length}
           </span>
           <span className="tabular-nums">{progress}%</span>
         </div>
@@ -379,7 +421,7 @@ export function KiCheckClient() {
           aria-valuenow={progress}
           aria-valuemin={0}
           aria-valuemax={100}
-          aria-label="Fortschritt im KI-Check"
+          aria-label={ui.progressLabel}
         >
           <m.div
             className="h-full rounded-full bg-brand-orange"
@@ -391,7 +433,7 @@ export function KiCheckClient() {
 
       {/* Question card */}
       <div className="mt-8">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           <m.div
             key={question.id}
             variants={slideVariants}
@@ -483,7 +525,7 @@ export function KiCheckClient() {
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-              Zurück
+              {ui.back}
             </button>
           ) : (
             <span
@@ -491,7 +533,7 @@ export function KiCheckClient() {
               className="invisible inline-flex items-center gap-1.5 text-sm font-semibold"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-              Zurück
+              {ui.back}
             </span>
           )}
           <BrandButton
@@ -499,7 +541,7 @@ export function KiCheckClient() {
             disabled={!hydrated || selected === null}
             size="md"
           >
-            {isLast ? "Zum Ergebnis" : "Weiter"}
+            {isLast ? ui.result : ui.next}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </BrandButton>
         </div>
@@ -508,9 +550,10 @@ export function KiCheckClient() {
       {/* Reassurance line */}
       <p className="mt-10 flex items-center gap-2 text-xs text-muted-foreground">
         <TrendingUp className="h-3.5 w-3.5" aria-hidden="true" />
-        Ehrlich geantwortet triffst du am Ende die beste Kurswahl. Es gibt kein
-        richtig oder falsch.
+        {ui.reassurance}
       </p>
     </div>
   );
 }
+
+export const KiCheckClient = withMotionProvider(KiCheckClientContent);

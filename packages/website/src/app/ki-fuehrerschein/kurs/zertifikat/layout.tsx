@@ -1,18 +1,31 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
 
-export const metadata: Metadata = {
-  title: "Zertifikat: KI-Führerschein",
-  description:
-    "Lade eine lokal erzeugte Teilnahmebestätigung für den KI-Führerschein herunter. Nicht signiert, nicht servergeprüft, keine behördliche oder rechtliche Bescheinigung.",
-  robots: { index: false, follow: false },
-  // Utility page: suppress the canonical inherited from the kurs layout.
-  alternates: { canonical: null },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = resolveFoundationCourseContentLocale(
+    "ki-fuehrerschein",
+    await getRequestLocale(),
+  );
+  return {
+    title:
+      locale === "en"
+        ? "Course completion record: Everyday AI Literacy"
+        : "Teilnahmebestätigung: KI-Führerschein",
+    description:
+      locale === "en"
+        ? "Download a locally generated course completion record. It is unsigned, not server-verified, and not an official credential."
+        : "Lade eine lokal erzeugte Teilnahmebestätigung herunter. Sie ist nicht signiert, nicht servergeprüft und keine behördliche oder rechtliche Bescheinigung.",
+    robots: { index: false, follow: false },
+    alternates: { canonical: null },
+  };
+}
 
 export default function ZertifikatLayout({
   children,
 }: {
-  readonly children: React.ReactNode;
+  readonly children: ReactNode;
 }) {
   return children;
 }

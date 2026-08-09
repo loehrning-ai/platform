@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { lerp, mulberry32, randn, round } from "@/lib/data-science/sim-kit";
+import { useDataScienceLocale } from "../locale-context";
 
 // ─── CorrelationMatrix ──────────────────────────────
 //
@@ -11,6 +12,7 @@ import { lerp, mulberry32, randn, round } from "@/lib/data-science/sim-kit";
 // deterministic per noise level, never `Math.random()`.
 
 const VARS = ["Age", "Income", "Score", "Satisf."] as const;
+const VARS_DE = ["Alter", "Einkommen", "Score", "Zufried."] as const;
 const N_VARS = 4;
 const N_OBS = 300;
 const TRUE_CORR = [
@@ -36,6 +38,7 @@ function corrColor(r: number): string {
 }
 
 export function CorrelationMatrix() {
+  const { locale, text } = useDataScienceLocale();
   const [noise, setNoise] = useState(0);
 
   const computedCorr = useMemo(() => {
@@ -47,7 +50,8 @@ export function CorrelationMatrix() {
       const age = z[0] ?? 0;
       const income =
         (TRUE_CORR[0]?.[1] ?? 0) * (1 - noiseFactor) * (z[0] ?? 0) +
-        Math.sqrt(1 - ((TRUE_CORR[0]?.[1] ?? 0) * (1 - noiseFactor)) ** 2) * (z[1] ?? 0);
+        Math.sqrt(1 - ((TRUE_CORR[0]?.[1] ?? 0) * (1 - noiseFactor)) ** 2) *
+          (z[1] ?? 0);
       const score =
         (TRUE_CORR[0]?.[2] ?? 0) * (1 - noiseFactor) * (z[0] ?? 0) +
         (TRUE_CORR[1]?.[2] ?? 0) * (1 - noiseFactor) * (z[1] ?? 0) * 0.5 +
@@ -64,7 +68,9 @@ export function CorrelationMatrix() {
     }
     const means = raw.map((col) => col.reduce((s, v) => s + v, 0) / N_OBS);
     const sds = raw.map((col, ci) =>
-      Math.sqrt(col.reduce((s, v) => s + (v - (means[ci] ?? 0)) ** 2, 0) / N_OBS),
+      Math.sqrt(
+        col.reduce((s, v) => s + (v - (means[ci] ?? 0)) ** 2, 0) / N_OBS,
+      ),
     );
     const mat = Array.from({ length: N_VARS }, (_, i) =>
       Array.from({ length: N_VARS }, (_2, j) => {
@@ -72,8 +78,11 @@ export function CorrelationMatrix() {
         const rawI = raw[i] ?? [];
         const rawJ = raw[j] ?? [];
         const cov =
-          rawI.reduce((s, v, k) => s + (v - (means[i] ?? 0)) * ((rawJ[k] ?? 0) - (means[j] ?? 0)), 0) /
-          N_OBS;
+          rawI.reduce(
+            (s, v, k) =>
+              s + (v - (means[i] ?? 0)) * ((rawJ[k] ?? 0) - (means[j] ?? 0)),
+            0,
+          ) / N_OBS;
         return round(cov / ((sds[i] ?? 1) * (sds[j] ?? 1)), 2);
       }),
     );
@@ -86,24 +95,33 @@ export function CorrelationMatrix() {
   const SVG_H = LABEL_W + N_VARS * CELL + 8;
 
   const maxAbsR = Math.max(
-    ...computedCorr.flatMap((row, i) => row.map((v, j) => (i !== j ? Math.abs(v) : 0))),
+    ...computedCorr.flatMap((row, i) =>
+      row.map((v, j) => (i !== j ? Math.abs(v) : 0)),
+    ),
   );
   const strongPairs = computedCorr
-    .flatMap((row, i) => row.map((v, j): number => (i < j && Math.abs(v) >= 0.5 ? 1 : 0)))
+    .flatMap((row, i) =>
+      row.map((v, j): number => (i < j && Math.abs(v) >= 0.5 ? 1 : 0)),
+    )
     .reduce((a, b) => a + b, 0);
+  const variableLabels = locale === "de" ? VARS_DE : VARS;
 
   return (
     <Panel
-      eyebrow="SIMULATOR"
-      title="Correlation Matrix"
-      meta="drag noise → watch r decay"
-      caption="Pearson r per cell. Blue = positive, red = negative. Drag noise to simulate measurement error."
+      eyebrow={text("SIMULATOR", "SIMULATION")}
+      title={text("Correlation Matrix", "Korrelationsmatrix")}
+      meta={text("drag noise → watch r decay", "Rauschen erhöhen → r nimmt ab")}
+      caption={text(
+        "Pearson r per cell. Blue = positive, red = negative. Drag noise to simulate measurement error.",
+        "Jede Zelle zeigt Pearsons r. Blau bedeutet positiv, Rot negativ. Der Regler simuliert Messfehler.",
+      )}
     >
       <div className="sim-row">
         <div className="sim-controls">
           <div className="sim-ctrl">
             <label>
-              Noise <span className="mono">{round(noise, 2)}</span>
+              {text("Noise", "Rauschen")}{" "}
+              <span className="mono">{round(noise, 2)}</span>
             </label>
             <input
               type="range"
@@ -111,16 +129,26 @@ export function CorrelationMatrix() {
               max="1"
               step="0.01"
               value={noise}
-              aria-label="Noise level"
+              aria-label={text("Noise level", "Rauschstärke")}
               onChange={(e) => setNoise(+e.target.value)}
             />
           </div>
-          <div style={{ fontSize: 10, opacity: 0.5, lineHeight: 1.6, marginTop: 8 }}>
-            0 = true structure
+          <div
+            style={{
+              fontSize: 10,
+              opacity: 0.5,
+              lineHeight: 1.6,
+              marginTop: 8,
+            }}
+          >
+            {text("0 = true structure", "0 = tatsächliche Struktur")}
             <br />
-            1 = pure noise
+            {text("1 = pure noise", "1 = reines Rauschen")}
             <br />
-            Watch r shrink toward 0.
+            {text(
+              "Watch r shrink toward 0.",
+              "Beobachte, wie r gegen 0 fällt.",
+            )}
           </div>
           <div className="sim-stats" style={{ marginTop: 12 }}>
             <div>
@@ -128,12 +156,14 @@ export function CorrelationMatrix() {
               <div className="v mono">{round(maxAbsR, 2)}</div>
             </div>
             <div>
-              <div className="k">Strong pairs</div>
+              <div className="k">{text("Strong pairs", "Starke Paare")}</div>
               <div className="v mono">{strongPairs}</div>
             </div>
           </div>
           <div style={{ marginTop: 12 }}>
-            <div style={{ fontSize: 9, opacity: 0.4, marginBottom: 4 }}>Color scale</div>
+            <div style={{ fontSize: 9, opacity: 0.4, marginBottom: 4 }}>
+              {text("Color scale", "Farbskala")}
+            </div>
             <svg width={80} height={14}>
               <defs>
                 <linearGradient id="corrGrad" x1="0" x2="1" y1="0" y2="0">
@@ -142,22 +172,49 @@ export function CorrelationMatrix() {
                   <stop offset="100%" stopColor="rgb(91,62,232)" />
                 </linearGradient>
               </defs>
-              <rect x={0} y={0} width={80} height={10} fill="url(#corrGrad)" rx={2} />
-              <text x={0} y={14} fill="rgba(244,242,236,0.4)" fontSize="7">−1</text>
-              <text x={34} y={14} fill="rgba(244,242,236,0.4)" fontSize="7">0</text>
-              <text x={68} y={14} fill="rgba(244,242,236,0.4)" fontSize="7">+1</text>
+              <rect
+                x={0}
+                y={0}
+                width={80}
+                height={10}
+                fill="url(#corrGrad)"
+                rx={2}
+              />
+              <text x={0} y={14} fill="rgba(244,242,236,0.4)" fontSize="7">
+                −1
+              </text>
+              <text x={34} y={14} fill="rgba(244,242,236,0.4)" fontSize="7">
+                0
+              </text>
+              <text x={68} y={14} fill="rgba(244,242,236,0.4)" fontSize="7">
+                +1
+              </text>
             </svg>
           </div>
         </div>
         <div className="plot-wrap">
           <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`}>
-            {VARS.map((v, j) => (
-              <text key={j} x={LABEL_W + j * CELL + CELL / 2} y={LABEL_W - 6} textAnchor="middle" fill="rgba(244,242,236,0.6)" fontSize="10">
+            {variableLabels.map((v, j) => (
+              <text
+                key={j}
+                x={LABEL_W + j * CELL + CELL / 2}
+                y={LABEL_W - 6}
+                textAnchor="middle"
+                fill="rgba(244,242,236,0.6)"
+                fontSize="10"
+              >
                 {v}
               </text>
             ))}
-            {VARS.map((v, i) => (
-              <text key={i} x={LABEL_W - 6} y={LABEL_W + i * CELL + CELL / 2 + 4} textAnchor="end" fill="rgba(244,242,236,0.6)" fontSize="10">
+            {variableLabels.map((v, i) => (
+              <text
+                key={i}
+                x={LABEL_W - 6}
+                y={LABEL_W + i * CELL + CELL / 2 + 4}
+                textAnchor="end"
+                fill="rgba(244,242,236,0.6)"
+                fontSize="10"
+              >
                 {v}
               </text>
             ))}
@@ -181,7 +238,13 @@ export function CorrelationMatrix() {
                       x={cx + CELL / 2}
                       y={cy + CELL / 2 + 5}
                       textAnchor="middle"
-                      fill={isDiag ? "rgba(244,242,236,0.4)" : Math.abs(r) > 0.5 ? "rgba(255,255,255,0.9)" : "rgba(244,242,236,0.6)"}
+                      fill={
+                        isDiag
+                          ? "rgba(244,242,236,0.4)"
+                          : Math.abs(r) > 0.5
+                            ? "rgba(255,255,255,0.9)"
+                            : "rgba(244,242,236,0.6)"
+                      }
                       fontSize="11"
                       fontWeight="600"
                     >

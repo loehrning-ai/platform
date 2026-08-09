@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { clamp, mulberry32, round } from "@/lib/data-science/sim-kit";
+import { useDataScienceLocale } from "../locale-context";
 
 // ─── PermutationImportance ──────────────────────────
 //
@@ -26,11 +27,19 @@ const PERM_FEATURES: readonly PermFeature[] = [
   { key: "employment_yrs", label: "Employment yrs", trueImportance: 0.07 },
   { key: "savings", label: "Savings", trueImportance: 0.04 },
 ];
+const PERM_LABELS_DE: Readonly<Record<string, string>> = {
+  credit_score: "Kredit-Score",
+  income: "Jahreseinkommen",
+  debt_ratio: "Schuldenquote",
+  employment_yrs: "Beschäftigungsjahre",
+  savings: "Ersparnisse",
+};
 
 const PERM_BASELINE = 0.847;
 const BAR_W = 280;
 
 export function PermutationImportance() {
+  const { locale, text } = useDataScienceLocale();
   const [seed, setSeed] = useState(1);
   const [running, setRunning] = useState(false);
 
@@ -56,24 +65,41 @@ export function PermutationImportance() {
 
   return (
     <Panel
-      eyebrow="SIMULATION"
-      title="Permutation importance"
-      meta={`baseline accuracy ${PERM_BASELINE.toFixed(3)}`}
-      caption="Shuffle one feature column at random → model loses access to it → accuracy drops. The bigger the drop, the more the model relied on that feature. Hit Shuffle to resample noise."
+      eyebrow={text("SIMULATION", "SIMULATION")}
+      title={text("Permutation importance", "Permutationswichtigkeit")}
+      meta={text(
+        `baseline accuracy ${PERM_BASELINE.toFixed(3)}`,
+        `Ausgangsgenauigkeit ${PERM_BASELINE.toFixed(3)}`,
+      )}
+      caption={text(
+        "This panel does not fit a model or shuffle a dataset. It adds seeded jitter to five fixed accuracy-drop values to illustrate how permutation importance is read. In real data, the result depends on the metric, sample, feature dependence, and repeat scheme.",
+        "Dieses Panel passt kein Modell an und permutiert keinen Datensatz. Es ergänzt fünf feste Genauigkeitsrückgänge um initialisiertes Rauschen, um die Lesart der Permutationswichtigkeit zu zeigen. Bei echten Daten hängt das Ergebnis von Metrik, Stichprobe, Merkmalsabhängigkeit und Wiederholung ab.",
+      )}
     >
       <div className="sim-row">
-        <div className="sim-controls" style={{ minWidth: 180 }}>
+        <div className="sim-controls">
           <div className="sim-stats">
             <div>
-              <div className="k">Baseline acc</div>
+              <div className="k">
+                {text("Baseline acc", "Ausgangsgenauigkeit")}
+              </div>
               <div className="v" style={{ color: "var(--good-ink)" }}>
                 {PERM_BASELINE.toFixed(3)}
               </div>
             </div>
             <div>
-              <div className="k">Top feature</div>
-              <div className="v" style={{ color: "var(--warn-ink)", fontSize: 11 }}>
-                {results.reduce((a, b) => (a.drop > b.drop ? a : b)).label}
+              <div className="k">
+                {text("Top feature", "Wichtigstes Merkmal")}
+              </div>
+              <div
+                className="v"
+                style={{ color: "var(--warn-ink)", fontSize: 11 }}
+              >
+                {locale === "de"
+                  ? PERM_LABELS_DE[
+                      results.reduce((a, b) => (a.drop > b.drop ? a : b)).key
+                    ]
+                  : results.reduce((a, b) => (a.drop > b.drop ? a : b)).label}
               </div>
             </div>
           </div>
@@ -84,19 +110,34 @@ export function PermutationImportance() {
             onClick={handleShuffle}
             disabled={running}
           >
-            {running ? "↻ Shuffling…" : "⎘ Shuffle features"}
+            {running
+              ? text("↻ Shuffling…", "↻ Permutation läuft…")
+              : text("⎘ Shuffle features", "⎘ Merkmale permutieren")}
           </button>
-          <p className="prose" style={{ fontSize: 11, marginTop: 10, lineHeight: 1.5 }}>
-            Each run adds small random noise to simulate repeated permutations. The ranking stays
-            stable, that&apos;s the signal.
+          <p
+            className="prose"
+            style={{ fontSize: 11, marginTop: 10, lineHeight: 1.5 }}
+          >
+            {text(
+              "The ranking is stable here because the fixed gaps exceed the seeded jitter. That construction is not evidence that an empirical ranking would be stable.",
+              "Die Rangfolge bleibt hier stabil, weil die festen Abstände größer als das initialisierte Rauschen sind. Diese Konstruktion belegt keine stabile Rangfolge in empirischen Daten.",
+            )}
           </p>
         </div>
         <div className="plot-wrap" style={{ flex: 1 }}>
           <div className="sim-plot-head">
-            Accuracy after shuffle
-            <span className="hint">red = post-shuffle · line = baseline</span>
+            {text("Accuracy after shuffle", "Genauigkeit nach Permutation")}
+            <span className="hint">
+              {text(
+                "red = post-shuffle · line = baseline",
+                "rot = nach Permutation · Linie = Ausgangswert",
+              )}
+            </span>
           </div>
-          <svg viewBox={`0 0 ${BAR_W + 80} ${results.length * 46 + 30}`} style={{ width: "100%" }}>
+          <svg
+            viewBox={`0 0 ${BAR_W + 80} ${results.length * 46 + 30}`}
+            style={{ width: "100%" }}
+          >
             {results.map((f, i) => {
               const barFull = (f.shuffledAcc / PERM_BASELINE) * BAR_W;
               const baseBarFull = BAR_W;
@@ -112,9 +153,16 @@ export function PermutationImportance() {
                     fontFamily="'JetBrains Mono',monospace"
                     fontWeight={isTop ? "700" : "400"}
                   >
-                    {f.label}
+                    {locale === "de" ? PERM_LABELS_DE[f.key] : f.label}
                   </text>
-                  <rect x={0} y={y + 17} width={baseBarFull} height={10} fill="rgba(164,157,154,0.15)" rx="2" />
+                  <rect
+                    x={0}
+                    y={y + 17}
+                    width={baseBarFull}
+                    height={10}
+                    fill="rgba(164,157,154,0.15)"
+                    rx="2"
+                  />
                   <rect
                     x={0}
                     y={y + 17}

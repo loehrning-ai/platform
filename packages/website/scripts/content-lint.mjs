@@ -60,7 +60,9 @@ function walkDir(dir, predicate, results = []) {
   return results;
 }
 
-const contentJsonFiles = walkDir(join(ROOT, "content"), (f) => f.endsWith(".json"));
+const contentJsonFiles = walkDir(join(ROOT, "content"), (f) =>
+  f.endsWith(".json"),
+);
 const contentMdFiles = walkDir(join(ROOT, "content"), (f) => f.endsWith(".md"));
 // The standalone /vorlagen template section was removed from the platform;
 // no template MD files exist, so template-specific rules no-op.
@@ -68,8 +70,14 @@ const templateMdFiles = [];
 
 // TSX files in app/ and components/ (not test files)
 const tsxFiles = [
-  ...walkDir(join(ROOT, "src", "app"), (f) => f.endsWith(".tsx") && !f.endsWith(".test.tsx")),
-  ...walkDir(join(ROOT, "src", "components"), (f) => f.endsWith(".tsx") && !f.endsWith(".test.tsx")),
+  ...walkDir(
+    join(ROOT, "src", "app"),
+    (f) => f.endsWith(".tsx") && !f.endsWith(".test.tsx"),
+  ),
+  ...walkDir(
+    join(ROOT, "src", "components"),
+    (f) => f.endsWith(".tsx") && !f.endsWith(".test.tsx"),
+  ),
 ];
 
 // public-content transition extension: TS data modules under src/lib (e.g. blog-metadata.ts,
@@ -164,13 +172,13 @@ const ALLOWED_DEMO_CONTEXTS = [
   /\bHive(?: Moderation)? Demo\b/i,
 ];
 
-const URL_LEADING_PUNCTUATION = new Set(["(", "[", "{", "<", "\"", "'"]);
+const URL_LEADING_PUNCTUATION = new Set(["(", "[", "{", "<", '"', "'"]);
 const URL_TRAILING_PUNCTUATION = new Set([
   ")",
   "]",
   "}",
   ">",
-  "\"",
+  '"',
   "'",
   ".",
   ",",
@@ -238,7 +246,8 @@ function isIncorrectJsonAnswerOptionLine(lines, index) {
 
   const fragment = lines.slice(index, index + 5).join("\n");
   const objectEnd = fragment.indexOf("}");
-  const answerObject = objectEnd === -1 ? fragment : fragment.slice(0, objectEnd + 1);
+  const answerObject =
+    objectEnd === -1 ? fragment : fragment.slice(0, objectEnd + 1);
   return /"isCorrect"\s*:\s*false/.test(answerObject);
 }
 
@@ -263,16 +272,24 @@ function checkBannedPhrases() {
 
     lines.forEach((line, i) => {
       const lineNum = i + 1;
-      const isIncorrectAnswerOption = isJson && isIncorrectJsonAnswerOptionLine(lines, i);
+      const isIncorrectAnswerOption =
+        isJson && isIncorrectJsonAnswerOptionLine(lines, i);
 
       // Hard-error banned phrases
       for (const { phrase, pattern } of BANNED_PHRASES_ERROR) {
         if (pattern.test(line)) {
           if (isIncorrectAnswerOption) continue;
           // Check if the line has an allowed-context marker (educational use)
-          const hasAllowedContext = ALLOWED_CONTEXT_MARKERS.some((ctx) => line.includes(ctx));
+          const hasAllowedContext = ALLOWED_CONTEXT_MARKERS.some((ctx) =>
+            line.includes(ctx),
+          );
           if (hasAllowedContext) {
-            warn(relFile, lineNum, "BANNED-PHRASE-CONTEXT", `"${phrase}" appears in allowed educational context (verify intent)`);
+            warn(
+              relFile,
+              lineNum,
+              "BANNED-PHRASE-CONTEXT",
+              `"${phrase}" appears in allowed educational context (verify intent)`,
+            );
           } else {
             error(relFile, lineNum, "BANNED-PHRASE", `"${phrase}"`);
           }
@@ -283,7 +300,12 @@ function checkBannedPhrases() {
       if (isJson && !isTemplate) {
         for (const { phrase, pattern } of BANNED_PHRASES_WARN_JSON) {
           if (pattern.test(line)) {
-            warn(relFile, lineNum, "BANNED-PHRASE-WARN", `"${phrase}" (use "dein Unternehmen" or restructure for learner voice)`);
+            warn(
+              relFile,
+              lineNum,
+              "BANNED-PHRASE-WARN",
+              `"${phrase}" (use "dein Unternehmen" or restructure for learner voice)`,
+            );
           }
         }
       }
@@ -296,12 +318,25 @@ function checkBannedPhrases() {
           if (hasAllowedDemoContext(line)) continue;
           if (isTypeOnlyDemoReference(line)) continue;
           // Skip code comments, import statements, variable names, object keys
-          const isCodeLine = /^\s*(\/\/|import |export |const |let |var |function |interface |type |class |\/\*|@|\*)/
-            .test(line);
-          const isDeveloperDiagnostic = /\b(?:errors?|warnings?)\.push\(|\bthrow new Error\(|\bconsole\.(?:warn|error|log|info|debug)\b/.test(line);
-          const isCodeIdentifier = /"demo"|'demo'|\bdemoMode\b|\bDemo(?:Page|Card|Section)\b|(?:^|[,({]\s*)demo\s*:|demo-[a-z0-9]/.test(line);
+          const isCodeLine =
+            /^\s*(\/\/|import |export |const |let |var |function |interface |type |class |\/\*|@|\*)/.test(
+              line,
+            );
+          const isDeveloperDiagnostic =
+            /\b(?:errors?|warnings?)\.push\(|\bthrow new Error\(|\bconsole\.(?:warn|error|log|info|debug)\b/.test(
+              line,
+            );
+          const isCodeIdentifier =
+            /"demo"|'demo'|\bdemoMode\b|\bDemo(?:Page|Card|Section)\b|(?:^|[,({]\s*)demo\s*:|demo-[a-z0-9]/.test(
+              line,
+            );
           if (!isCodeLine && !isDeveloperDiagnostic && !isCodeIdentifier) {
-            warn(relFile, lineNum, "DEMO-LABEL-WARN", `"${phrase}" found — canonical learner-visible label is "Praxisbeispiel"`);
+            warn(
+              relFile,
+              lineNum,
+              "DEMO-LABEL-WARN",
+              `"${phrase}" found — canonical learner-visible label is "Praxisbeispiel"`,
+            );
           }
         }
       }
@@ -313,7 +348,8 @@ function checkBannedPhrases() {
 // 3b. AI Act date string check (whitelist from legal-registry.json)
 // ---------------------------------------------------------------------------
 
-const GERMAN_DATE_PATTERN = /\d+\. (Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember) 202[3-9]/g;
+const GERMAN_DATE_PATTERN =
+  /\d+\. (Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember) 202[3-9]/g;
 
 // Placeholder patterns in templates (fill-in-the-blank user fields)
 const PLACEHOLDER_PATTERNS = [
@@ -323,12 +359,23 @@ const PLACEHOLDER_PATTERNS = [
   /\[Jahr\]/i,
 ];
 
+function isEditorialReviewDate(line, match) {
+  const prefix = line.slice(0, match.index ?? 0);
+  return /(?:Dieses Kapitel wurde am|Letzte redaktionelle Prüfung:\*\*)\s*$/.test(
+    prefix,
+  );
+}
+
 function checkAiActDates() {
   const registryPath = join(ROOT, "src", "lib", "legal-registry.json");
 
   if (!existsSync(registryPath)) {
-    warn("scripts/content-lint.mjs", 0, "REGISTRY-MISSING",
-      "src/lib/legal-registry.json not found — run 'bun run registry:export' first. Skipping date check.");
+    warn(
+      "scripts/content-lint.mjs",
+      0,
+      "REGISTRY-MISSING",
+      "src/lib/legal-registry.json not found — run 'bun run registry:export' first. Skipping date check.",
+    );
     return;
   }
 
@@ -336,8 +383,12 @@ function checkAiActDates() {
   try {
     approvedDates = new Set(JSON.parse(readFileSync(registryPath, "utf-8")));
   } catch {
-    warn("scripts/content-lint.mjs", 0, "REGISTRY-PARSE",
-      "Could not parse src/lib/legal-registry.json. Skipping date check.");
+    warn(
+      "scripts/content-lint.mjs",
+      0,
+      "REGISTRY-PARSE",
+      "Could not parse src/lib/legal-registry.json. Skipping date check.",
+    );
     return;
   }
 
@@ -355,14 +406,23 @@ function checkAiActDates() {
       // Skip placeholder lines in templates
       if (isTemplate && PLACEHOLDER_PATTERNS.some((p) => p.test(line))) return;
       // A deliberately wrong quiz option is not a legal claim.
-      if (file.endsWith(".json") && isIncorrectJsonAnswerOptionLine(lines, i)) return;
+      if (file.endsWith(".json") && isIncorrectJsonAnswerOptionLine(lines, i))
+        return;
 
       const matches = line.matchAll(GERMAN_DATE_PATTERN);
       for (const match of matches) {
         const dateStr = match[0];
+        // An editorial review timestamp records when this repository's prose
+        // was checked. It is not a legal-effective-date claim and therefore
+        // must not be forced into the legal claim registry.
+        if (isEditorialReviewDate(line, match)) continue;
         if (!approvedDates.has(dateStr)) {
-          warn(relFile, lineNum, "HARDCODED-DATE",
-            `"${dateStr}" — date appears correct but is hardcoded. Consider using claimId reference instead (see legal-registry.ts).`);
+          warn(
+            relFile,
+            lineNum,
+            "HARDCODED-DATE",
+            `"${dateStr}" — date appears correct but is hardcoded. Consider using claimId reference instead (see legal-registry.ts).`,
+          );
         }
       }
     });
@@ -398,11 +458,18 @@ const EN_DASH = "–"; // –
 function isTsxSkipLine(line) {
   const trimmed = line.trim();
   // JSX block comments
-  if (trimmed.startsWith("{/*") || trimmed.startsWith("/*") || trimmed.startsWith("* ") || trimmed.startsWith("*/")) return true;
+  if (
+    trimmed.startsWith("{/*") ||
+    trimmed.startsWith("/*") ||
+    trimmed.startsWith("* ") ||
+    trimmed.startsWith("*/")
+  )
+    return true;
   // Single-line JS comments
   if (trimmed.startsWith("//")) return true;
   // Import/export lines
-  if (trimmed.startsWith("import ") || trimmed.startsWith("export ")) return true;
+  if (trimmed.startsWith("import ") || trimmed.startsWith("export "))
+    return true;
   // Developer-facing console diagnostics (not learner copy)
   if (/\bconsole\.(warn|error|log|info|debug)\b/.test(trimmed)) return true;
   // Ternary data-display fallback: `? ... : "—"` (em-dash as placeholder only)
@@ -424,10 +491,19 @@ function stripTrailingLineComment(line) {
   for (let i = 0; i < line.length; i++) {
     const ch = line[i];
     const prev = i > 0 ? line[i - 1] : "";
-    if (ch === "'" && !inDouble && !inBacktick && prev !== "\\") inSingle = !inSingle;
-    else if (ch === '"' && !inSingle && !inBacktick && prev !== "\\") inDouble = !inDouble;
-    else if (ch === "`" && !inSingle && !inDouble && prev !== "\\") inBacktick = !inBacktick;
-    else if (ch === "/" && line[i + 1] === "/" && !inSingle && !inDouble && !inBacktick) {
+    if (ch === "'" && !inDouble && !inBacktick && prev !== "\\")
+      inSingle = !inSingle;
+    else if (ch === '"' && !inSingle && !inBacktick && prev !== "\\")
+      inDouble = !inDouble;
+    else if (ch === "`" && !inSingle && !inDouble && prev !== "\\")
+      inBacktick = !inBacktick;
+    else if (
+      ch === "/" &&
+      line[i + 1] === "/" &&
+      !inSingle &&
+      !inDouble &&
+      !inBacktick
+    ) {
       return line.slice(0, i);
     }
   }
@@ -444,13 +520,21 @@ function checkEmDashInTsx(file, lines) {
     const line = stripTrailingLineComment(rawLine);
     const lineNum = i + 1;
     if (line.includes(EM_DASH)) {
-      error(relFile, lineNum, "EM-DASH",
-        `Em-dash (U+2014) found in TSX copy — use a comma, colon, or parentheses instead (voice spec §5)`);
+      error(
+        relFile,
+        lineNum,
+        "EM-DASH",
+        `Em-dash (U+2014) found in TSX copy — use a comma, colon, or parentheses instead (voice spec §5)`,
+      );
     }
     // En-dashes: flag unless it is a digit–digit range (data, not prose)
     if (line.includes(EN_DASH) && !/\d–\d/.test(line)) {
-      error(relFile, lineNum, "EN-DASH",
-        `En-dash (U+2013) found in TSX prose — use a hyphen (-) for ranges or restructure`);
+      error(
+        relFile,
+        lineNum,
+        "EN-DASH",
+        `En-dash (U+2013) found in TSX prose — use a hyphen (-) for ranges or restructure`,
+      );
     }
   });
 }
@@ -464,12 +548,20 @@ function checkEmDash() {
     lines.forEach((line, i) => {
       const lineNum = i + 1;
       if (line.includes(EM_DASH)) {
-        error(relFile, lineNum, "EM-DASH",
-          `Em-dash (U+2014) found in content prose — use a comma, colon, or parentheses instead`);
+        error(
+          relFile,
+          lineNum,
+          "EM-DASH",
+          `Em-dash (U+2014) found in content prose — use a comma, colon, or parentheses instead`,
+        );
       }
       if (line.includes(EN_DASH)) {
-        error(relFile, lineNum, "EN-DASH",
-          `En-dash (U+2013) found in content prose — use a hyphen (-) for ranges or restructure`);
+        error(
+          relFile,
+          lineNum,
+          "EN-DASH",
+          `En-dash (U+2013) found in content prose — use a hyphen (-) for ranges or restructure`,
+        );
       }
     });
   }
@@ -504,8 +596,12 @@ function checkStudienZeigen() {
     // without a co-located "sources" array
     const violations = findStudienZeigenViolations(parsed, relFile, content);
     for (const v of violations) {
-      error(relFile, v.line, "UNSOURCED-CLAIM",
-        `"Studien zeigen" without co-located sources[] array`);
+      error(
+        relFile,
+        v.line,
+        "UNSOURCED-CLAIM",
+        `"Studien zeigen" without co-located sources[] array`,
+      );
     }
   }
 }
@@ -574,8 +670,12 @@ function checkAuditAuthorityClain() {
 
     lines.forEach((line, i) => {
       if (pattern.test(line)) {
-        error(relFile, i + 1, "UNVERIFIABLE-AUTHORITY",
-          `"Nach dutzenden/zahlreichen Audits" — unverifiable implied testimonial. Use published research attribution instead.`);
+        error(
+          relFile,
+          i + 1,
+          "UNVERIFIABLE-AUTHORITY",
+          `"Nach dutzenden/zahlreichen Audits" — unverifiable implied testimonial. Use published research attribution instead.`,
+        );
       }
     });
   }
@@ -615,7 +715,10 @@ const ASCII_UMLAUT_PATTERNS = [
   { pattern: /\berklaerten\b/i, example: "erklaerten → erklärten" },
   { pattern: /\bVertraege\b/, example: "Vertraege → Verträge" },
   { pattern: /\bVertraegen\b/, example: "Vertraegen → Verträgen" },
-  { pattern: /\bGeschaeftsfuehrung\b/, example: "Geschaeftsfuehrung → Geschäftsführung" },
+  {
+    pattern: /\bGeschaeftsfuehrung\b/,
+    example: "Geschaeftsfuehrung → Geschäftsführung",
+  },
   { pattern: /\bmoeglich\b/i, example: "moeglich → möglich" },
   { pattern: /\benthaelt\b/i, example: "enthaelt → enthält" },
   { pattern: /\bwaehle\b/i, example: "waehle → wähle" },
@@ -635,11 +738,19 @@ const ASCII_UMLAUT_IDENTIFIER_SEP = /[-_/@:]/;
 function isAsciiUmlautIdentifierContext(line, start, end) {
   const before = start > 0 ? line[start - 1] : "";
   const after = end < line.length ? line[end] : "";
-  if (ASCII_UMLAUT_IDENTIFIER_SEP.test(before) || ASCII_UMLAUT_IDENTIFIER_SEP.test(after)) {
+  if (
+    ASCII_UMLAUT_IDENTIFIER_SEP.test(before) ||
+    ASCII_UMLAUT_IDENTIFIER_SEP.test(after)
+  ) {
     return true;
   }
-  if (before === "." && /[A-Za-z0-9]/.test(start > 1 ? line[start - 2] : "")) return true;
-  if (after === "." && /[A-Za-z0-9]/.test(end + 1 < line.length ? line[end + 1] : "")) return true;
+  if (before === "." && /[A-Za-z0-9]/.test(start > 1 ? line[start - 2] : ""))
+    return true;
+  if (
+    after === "." &&
+    /[A-Za-z0-9]/.test(end + 1 < line.length ? line[end + 1] : "")
+  )
+    return true;
   return false;
 }
 
@@ -653,7 +764,12 @@ function checkAsciiUmlauts() {
     lines.forEach((line, i) => {
       // Skip code comments and import lines
       const trimmed = line.trim();
-      if (trimmed.startsWith("//") || trimmed.startsWith("*") || trimmed.startsWith("import")) return;
+      if (
+        trimmed.startsWith("//") ||
+        trimmed.startsWith("*") ||
+        trimmed.startsWith("import")
+      )
+        return;
 
       for (const { pattern, example } of ASCII_UMLAUT_PATTERNS) {
         const globalPattern = new RegExp(
@@ -665,8 +781,12 @@ function checkAsciiUmlauts() {
           const end = start + match[0].length;
           // Legitimate ASCII identifiers (slugs, URLs, paths, emails) are exempt.
           if (isAsciiUmlautIdentifierContext(line, start, end)) continue;
-          error(relFile, i + 1, "ASCII-UMLAUT",
-            `ASCII umlaut substitute in prose - use real umlaut: ${example}`);
+          error(
+            relFile,
+            i + 1,
+            "ASCII-UMLAUT",
+            `ASCII umlaut substitute in prose - use real umlaut: ${example}`,
+          );
         }
       }
     });
@@ -707,8 +827,12 @@ function checkTemplateSources() {
     const hasSourcePolicy = /^sourcePolicy:\s*["']?user-filled["']?$/m.test(fm);
 
     if (!hasSources && !hasSourcePolicy) {
-      warn(relFile, 1, "TEMPLATE-SOURCES",
-        `Template has no sources[] and no sourcePolicy: "user-filled" — add sources or mark as user-filled`);
+      warn(
+        relFile,
+        1,
+        "TEMPLATE-SOURCES",
+        `Template has no sources[] and no sourcePolicy: "user-filled" — add sources or mark as user-filled`,
+      );
     }
   }
 }
@@ -730,10 +854,7 @@ const FRESHNESS_EXCLUDED = [
 ];
 
 export function isFreshnessExcluded(filePath) {
-  const segments = filePath
-    .replaceAll("\\", "/")
-    .split("/")
-    .filter(Boolean);
+  const segments = filePath.replaceAll("\\", "/").split("/").filter(Boolean);
 
   return FRESHNESS_EXCLUDED.some((excluded) => {
     const excludedSegments = excluded.split("/");
@@ -751,14 +872,9 @@ const NATIVE_COURSE_DIRS = [
   join(ROOT, "content", "ai-native"),
   join(ROOT, "content", "ki-und-gesellschaft"),
 ];
-const NESTED_LESSON_METADATA_DIR = join(
-  ROOT,
-  "content",
-  "ki-und-gesellschaft",
-);
-const BOOK_MANIFEST_FILES = walkDir(
-  join(ROOT, "content", "books"),
-  (file) => file.endsWith("manifest.json"),
+const NESTED_LESSON_METADATA_DIR = join(ROOT, "content", "ki-und-gesellschaft");
+const BOOK_MANIFEST_FILES = walkDir(join(ROOT, "content", "books"), (file) =>
+  file.endsWith("manifest.json"),
 );
 const REQUIRED_FRESHNESS_FIELDS = [
   "owner",
@@ -812,7 +928,10 @@ function validIsoDate(value) {
     return false;
   }
   const parsed = new Date(`${value}T00:00:00.000Z`);
-  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+  return (
+    !Number.isNaN(parsed.getTime()) &&
+    parsed.toISOString().slice(0, 10) === value
+  );
 }
 
 /** Gate A: fail if any lesson block JSON or vorlage MD has a nextReview in the past */
@@ -822,17 +941,31 @@ function checkFreshnessGate() {
   if (process.env.SKIP_FRESHNESS_CHECK === "true") {
     if (process.env.CI) {
       console.error("");
-      console.error("[ERROR][FRESHNESS-SKIP-CI] SKIP_FRESHNESS_CHECK=true is set while CI is set.");
-      console.error("The freshness gate MUST run in CI. Remove SKIP_FRESHNESS_CHECK from the CI environment and re-run.");
+      console.error(
+        "[ERROR][FRESHNESS-SKIP-CI] SKIP_FRESHNESS_CHECK=true is set while CI is set.",
+      );
+      console.error(
+        "The freshness gate MUST run in CI. Remove SKIP_FRESHNESS_CHECK from the CI environment and re-run.",
+      );
       console.error("");
       process.exit(1);
     }
     console.warn("");
-    console.warn("################################################################");
-    console.warn("## WARNING: freshness gate SKIPPED (SKIP_FRESHNESS_CHECK=true) ##");
-    console.warn("## Overdue nextReview dates are NOT being checked in this run. ##");
-    console.warn("## Local-dev escape hatch only. CI fails hard when it is set.  ##");
-    console.warn("################################################################");
+    console.warn(
+      "################################################################",
+    );
+    console.warn(
+      "## WARNING: freshness gate SKIPPED (SKIP_FRESHNESS_CHECK=true) ##",
+    );
+    console.warn(
+      "## Overdue nextReview dates are NOT being checked in this run. ##",
+    );
+    console.warn(
+      "## Local-dev escape hatch only. CI fails hard when it is set.  ##",
+    );
+    console.warn(
+      "################################################################",
+    );
     console.warn("");
     warningCount++;
     return;
@@ -848,26 +981,46 @@ function checkFreshnessGate() {
   // Native course block metadata and book-manifest metadata are release gates.
   for (const { label, value } of freshnessJsonRecords()) {
     if (value.nextReview && !validIsoDate(value.nextReview)) {
-      error(label, 1, "FRESHNESS-DATE-INVALID",
-        `nextReview ${String(value.nextReview)} is not a real YYYY-MM-DD date`);
+      error(
+        label,
+        1,
+        "FRESHNESS-DATE-INVALID",
+        `nextReview ${String(value.nextReview)} is not a real YYYY-MM-DD date`,
+      );
     } else if (value.nextReview < today) {
-      error(label, 1, "FRESHNESS-OVERDUE",
-        `nextReview ${value.nextReview} is in the past — content review required before commit`);
+      error(
+        label,
+        1,
+        "FRESHNESS-OVERDUE",
+        `nextReview ${value.nextReview} is in the past — content review required before commit`,
+      );
     }
     if (value.lastReviewed && !validIsoDate(value.lastReviewed)) {
-      error(label, 1, "FRESHNESS-DATE-INVALID",
-        `lastReviewed ${String(value.lastReviewed)} is not a real YYYY-MM-DD date`);
+      error(
+        label,
+        1,
+        "FRESHNESS-DATE-INVALID",
+        `lastReviewed ${String(value.lastReviewed)} is not a real YYYY-MM-DD date`,
+      );
     } else if (value.lastReviewed > today) {
-      error(label, 1, "FRESHNESS-FUTURE",
-        `lastReviewed ${value.lastReviewed} is in the future`);
+      error(
+        label,
+        1,
+        "FRESHNESS-FUTURE",
+        `lastReviewed ${value.lastReviewed} is in the future`,
+      );
     }
     if (
       validIsoDate(value.lastReviewed) &&
       validIsoDate(value.nextReview) &&
       value.nextReview < value.lastReviewed
     ) {
-      error(label, 1, "FRESHNESS-ORDER",
-        `nextReview ${value.nextReview} is earlier than lastReviewed ${value.lastReviewed}`);
+      error(
+        label,
+        1,
+        "FRESHNESS-ORDER",
+        `nextReview ${value.nextReview} is earlier than lastReviewed ${value.lastReviewed}`,
+      );
     }
   }
 
@@ -882,11 +1035,19 @@ function checkFreshnessGate() {
     const nrMatch = fm.match(/^nextReview:\s*["']?(\d{4}-\d{2}-\d{2})["']?$/m);
     if (nrMatch) {
       if (!validIsoDate(nrMatch[1])) {
-        error(relFile, 1, "FRESHNESS-DATE-INVALID",
-          `nextReview ${nrMatch[1]} is not a real YYYY-MM-DD date`);
+        error(
+          relFile,
+          1,
+          "FRESHNESS-DATE-INVALID",
+          `nextReview ${nrMatch[1]} is not a real YYYY-MM-DD date`,
+        );
       } else if (nrMatch[1] < today) {
-        error(relFile, 1, "FRESHNESS-OVERDUE",
-          `nextReview ${nrMatch[1]} is in the past — content review required`);
+        error(
+          relFile,
+          1,
+          "FRESHNESS-OVERDUE",
+          `nextReview ${nrMatch[1]} is in the past — content review required`,
+        );
       }
     }
   }
@@ -894,13 +1055,23 @@ function checkFreshnessGate() {
 
 /** Gate B: fail if required freshness metadata fields are missing */
 function checkMetadataCompleteness() {
-  const REQUIRED_FM_FIELDS = ["owner", "lastReviewed", "nextReview", "reviewCadence", "riskClass"];
+  const REQUIRED_FM_FIELDS = [
+    "owner",
+    "lastReviewed",
+    "nextReview",
+    "reviewCadence",
+    "riskClass",
+  ];
 
   for (const { label, value } of freshnessJsonRecords()) {
     for (const field of REQUIRED_FRESHNESS_FIELDS) {
       if (typeof value[field] !== "string" || value[field].trim() === "") {
-        error(label, 1, "METADATA-MISSING",
-          `Required freshness field "${field}" is missing`);
+        error(
+          label,
+          1,
+          "METADATA-MISSING",
+          `Required freshness field "${field}" is missing`,
+        );
       }
     }
   }
@@ -910,13 +1081,19 @@ function checkMetadataCompleteness() {
     const relFile = file.replace(ROOT + "/", "");
     const content = readFileSync(file, "utf-8");
     const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
-    if (!fmMatch) { continue; }
+    if (!fmMatch) {
+      continue;
+    }
     const fm = fmMatch[1];
     for (const field of REQUIRED_FM_FIELDS) {
       const fieldPattern = new RegExp(`^${field}:`, "m");
       if (!fieldPattern.test(fm)) {
-        error(relFile, 1, "METADATA-MISSING",
-          `Required freshness field "${field}" is missing from frontmatter`);
+        error(
+          relFile,
+          1,
+          "METADATA-MISSING",
+          `Required freshness field "${field}" is missing from frontmatter`,
+        );
       }
     }
   }
@@ -946,27 +1123,45 @@ const ISO_DATE_PATTERN = /\d{4}-\d{2}-\d{2}/;
 
 function isCodeCommentLine(line) {
   const trimmed = line.trim();
-  return trimmed.startsWith("//") || trimmed.startsWith("*") || trimmed.startsWith("/*");
+  return (
+    trimmed.startsWith("//") ||
+    trimmed.startsWith("*") ||
+    trimmed.startsWith("/*")
+  );
 }
 
 /** Reads and validates the shared SITE_CONTENT_DATE value; null on failure. */
 function readSharedFreshnessDate() {
   const modulePath = join(ROOT, FRESHNESS_MODULE);
   if (!existsSync(modulePath)) {
-    error(FRESHNESS_MODULE, 1, "FRESHNESS-SOURCE-MISSING",
-      `Shared freshness module not found. sitemap, llms.txt, and knowledge-graph must derive their date from ${FRESHNESS_CONSTANT}.`);
+    error(
+      FRESHNESS_MODULE,
+      1,
+      "FRESHNESS-SOURCE-MISSING",
+      `Shared freshness module not found. sitemap, llms.txt, and knowledge-graph must derive their date from ${FRESHNESS_CONSTANT}.`,
+    );
     return null;
   }
   const content = readFileSync(modulePath, "utf-8");
-  const match = content.match(/export const SITE_CONTENT_DATE = "(\d{4}-\d{2}-\d{2})"/);
+  const match = content.match(
+    /export const SITE_CONTENT_DATE = "(\d{4}-\d{2}-\d{2})"/,
+  );
   if (!match) {
-    error(FRESHNESS_MODULE, 1, "FRESHNESS-SOURCE-INVALID",
-      `Could not find 'export const ${FRESHNESS_CONSTANT} = "YYYY-MM-DD"' in the shared freshness module.`);
+    error(
+      FRESHNESS_MODULE,
+      1,
+      "FRESHNESS-SOURCE-INVALID",
+      `Could not find 'export const ${FRESHNESS_CONSTANT} = "YYYY-MM-DD"' in the shared freshness module.`,
+    );
     return null;
   }
   if (Number.isNaN(new Date(match[1]).getTime())) {
-    error(FRESHNESS_MODULE, 1, "FRESHNESS-SOURCE-INVALID",
-      `${FRESHNESS_CONSTANT} value "${match[1]}" is not a valid date.`);
+    error(
+      FRESHNESS_MODULE,
+      1,
+      "FRESHNESS-SOURCE-INVALID",
+      `${FRESHNESS_CONSTANT} value "${match[1]}" is not a valid date.`,
+    );
     return null;
   }
   return match[1];
@@ -984,7 +1179,12 @@ function checkFreshnessSurfaceConsistency() {
   for (const relFile of FRESHNESS_SURFACE_FILES) {
     const filePath = join(ROOT, relFile);
     if (!existsSync(filePath)) {
-      error(relFile, 1, "FRESHNESS-SURFACE-MISSING", "Freshness surface file not found");
+      error(
+        relFile,
+        1,
+        "FRESHNESS-SURFACE-MISSING",
+        "Freshness surface file not found",
+      );
       continue;
     }
     const lines = readFileSync(filePath, "utf-8").split("\n");
@@ -995,13 +1195,21 @@ function checkFreshnessSurfaceConsistency() {
       if (line.includes(FRESHNESS_CONSTANT)) referencesConstant = true;
       const hardcoded = line.match(ISO_DATE_PATTERN);
       if (hardcoded) {
-        error(relFile, i + 1, "FRESHNESS-DIVERGENCE",
-          `Hardcoded date "${hardcoded[0]}" would let this surface diverge from ${FRESHNESS_CONSTANT} (${shared}). Derive the date from ${FRESHNESS_MODULE}.`);
+        error(
+          relFile,
+          i + 1,
+          "FRESHNESS-DIVERGENCE",
+          `Hardcoded date "${hardcoded[0]}" would let this surface diverge from ${FRESHNESS_CONSTANT} (${shared}). Derive the date from ${FRESHNESS_MODULE}.`,
+        );
       }
     });
     if (!referencesConstant) {
-      error(relFile, 1, "FRESHNESS-DIVERGENCE",
-        `File does not consume ${FRESHNESS_CONSTANT} from ${FRESHNESS_MODULE}; the three machine surfaces could emit different dates.`);
+      error(
+        relFile,
+        1,
+        "FRESHNESS-DIVERGENCE",
+        `File does not consume ${FRESHNESS_CONSTANT} from ${FRESHNESS_MODULE}; the three machine surfaces could emit different dates.`,
+      );
     }
   }
 
@@ -1009,15 +1217,24 @@ function checkFreshnessSurfaceConsistency() {
   // never claim a modification NEWER than the shared site content date.
   const manifestPath = join(ROOT, BLOG_MANIFEST_FILE);
   if (!existsSync(manifestPath)) {
-    error(BLOG_MANIFEST_FILE, 1, "FRESHNESS-SURFACE-MISSING", "Blog manifest not found");
+    error(
+      BLOG_MANIFEST_FILE,
+      1,
+      "FRESHNESS-SURFACE-MISSING",
+      "Blog manifest not found",
+    );
     return;
   }
   const manifestLines = readFileSync(manifestPath, "utf-8").split("\n");
   manifestLines.forEach((line, i) => {
     const m = line.match(/dateModified:\s*"(\d{4}-\d{2}-\d{2})"/);
     if (m && m[1] > shared) {
-      error(BLOG_MANIFEST_FILE, i + 1, "FRESHNESS-DIVERGENCE",
-        `Blog dateModified ${m[1]} is newer than ${FRESHNESS_CONSTANT} (${shared}). Bump ${FRESHNESS_MODULE} in the same commit as the post update.`);
+      error(
+        BLOG_MANIFEST_FILE,
+        i + 1,
+        "FRESHNESS-DIVERGENCE",
+        `Blog dateModified ${m[1]} is newer than ${FRESHNESS_CONSTANT} (${shared}). Bump ${FRESHNESS_MODULE} in the same commit as the post update.`,
+      );
     }
   });
 }
@@ -1030,10 +1247,19 @@ function checkFreshnessSurfaceConsistency() {
 function checkFreshnessSourceStaleness() {
   let changed;
   try {
-    const gitOpts = { cwd: ROOT, encoding: "utf-8", stdio: ["ignore", "pipe", "ignore"] };
+    const gitOpts = {
+      cwd: ROOT,
+      encoding: "utf-8",
+      stdio: ["ignore", "pipe", "ignore"],
+    };
     const diffOut = execSync("git diff --name-only HEAD --relative", gitOpts);
-    const untrackedOut = execSync("git ls-files --others --exclude-standard", gitOpts);
-    changed = new Set([...diffOut.split("\n"), ...untrackedOut.split("\n")].filter(Boolean));
+    const untrackedOut = execSync(
+      "git ls-files --others --exclude-standard",
+      gitOpts,
+    );
+    changed = new Set(
+      [...diffOut.split("\n"), ...untrackedOut.split("\n")].filter(Boolean),
+    );
   } catch {
     return; // not a git checkout, or git missing: divergence guard above still holds
   }
@@ -1041,8 +1267,12 @@ function checkFreshnessSourceStaleness() {
   if (changed.has(FRESHNESS_MODULE)) return;
   for (const relFile of FRESHNESS_SURFACE_FILES) {
     if (changed.has(relFile)) {
-      warn(relFile, 1, "FRESHNESS-BUMP-CHECK",
-        `Changed in the working tree without ${FRESHNESS_MODULE} changing. If this edit changes served content, bump ${FRESHNESS_CONSTANT}.`);
+      warn(
+        relFile,
+        1,
+        "FRESHNESS-BUMP-CHECK",
+        `Changed in the working tree without ${FRESHNESS_MODULE} changing. If this edit changes served content, bump ${FRESHNESS_CONSTANT}.`,
+      );
     }
   }
 }
@@ -1066,10 +1296,14 @@ function runAllChecks() {
   checkFreshnessSurfaceConsistency();
   checkFreshnessSourceStaleness();
 
-  console.log(`\nContent lint complete: ${errorCount} error(s), ${warningCount} warning(s).`);
+  console.log(
+    `\nContent lint complete: ${errorCount} error(s), ${warningCount} warning(s).`,
+  );
 
   if (errorCount > 0) {
-    console.error(`\nFAIL: ${errorCount} error(s) found. Fix before committing.`);
+    console.error(
+      `\nFAIL: ${errorCount} error(s) found. Fix before committing.`,
+    );
     process.exit(1);
   } else {
     console.log("PASS: No errors.");

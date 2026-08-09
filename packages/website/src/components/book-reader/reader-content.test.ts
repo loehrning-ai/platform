@@ -45,16 +45,17 @@ function expectedReadingTime(markdown: string): number {
 describe("book-reader content: neighbour navigation", () => {
   it("has no previous chapter on the first chapter and no next on the last", async () => {
     for (const book of books) {
-      const chapters = await getBookChapterList(book.id);
+      const chapters = await getBookChapterList(book.id, "de");
       expect(chapters.length).toBeGreaterThanOrEqual(2);
 
-      const first = await getChapterNeighbours(book.id, chapters[0].slug);
+      const first = await getChapterNeighbours(book.id, chapters[0].slug, "de");
       expect(first.prev).toBeNull();
       expect(first.next?.slug).toBe(chapters[1].slug);
 
       const last = await getChapterNeighbours(
         book.id,
         chapters[chapters.length - 1].slug,
+        "de",
       );
       expect(last.next).toBeNull();
       expect(last.prev?.slug).toBe(chapters[chapters.length - 2].slug);
@@ -63,10 +64,14 @@ describe("book-reader content: neighbour navigation", () => {
 
   it("returns both list siblings for a middle chapter", async () => {
     for (const book of books) {
-      const chapters = await getBookChapterList(book.id);
+      const chapters = await getBookChapterList(book.id, "de");
       if (chapters.length < 3) continue;
       const midIndex = Math.floor(chapters.length / 2);
-      const mid = await getChapterNeighbours(book.id, chapters[midIndex].slug);
+      const mid = await getChapterNeighbours(
+        book.id,
+        chapters[midIndex].slug,
+        "de",
+      );
       expect(mid.prev?.slug).toBe(chapters[midIndex - 1].slug);
       expect(mid.next?.slug).toBe(chapters[midIndex + 1].slug);
     }
@@ -76,6 +81,7 @@ describe("book-reader content: neighbour navigation", () => {
     const neighbours = await getChapterNeighbours(
       books[0].id,
       "diese-slug-existiert-nicht",
+      "de",
     );
     expect(neighbours.prev).toBeNull();
     expect(neighbours.next).toBeNull();
@@ -85,9 +91,9 @@ describe("book-reader content: neighbour navigation", () => {
 describe("book-reader content: reading time", () => {
   it("computes reading time with the 200-wpm floor for every chapter", async () => {
     for (const book of books) {
-      const chapters = await getBookChapterList(book.id);
+      const chapters = await getBookChapterList(book.id, "de");
       for (const ch of chapters) {
-        const loaded = await loadBookChapter(book.id, ch.slug);
+        const loaded = await loadBookChapter(book.id, ch.slug, "de");
         expect(loaded.readingTimeMinutes).toBe(
           expectedReadingTime(loaded.rawMarkdown),
         );
@@ -102,9 +108,9 @@ describe("book-reader content: reading time", () => {
 describe("book-reader content: TOC headings", () => {
   it("only collects level 2-3 headings (chapter-title h1 excluded from the TOC)", async () => {
     for (const book of books) {
-      const chapters = await getBookChapterList(book.id);
+      const chapters = await getBookChapterList(book.id, "de");
       for (const ch of chapters) {
-        const loaded = await loadBookChapter(book.id, ch.slug);
+        const loaded = await loadBookChapter(book.id, ch.slug, "de");
         for (const h of loaded.headings) {
           expect([2, 3]).toContain(h.level);
         }
@@ -114,9 +120,9 @@ describe("book-reader content: TOC headings", () => {
 
   it("slugs headings with the umlaut-preserving github-slugger algorithm", async () => {
     for (const book of books) {
-      const chapters = await getBookChapterList(book.id);
+      const chapters = await getBookChapterList(book.id, "de");
       for (const ch of chapters) {
-        const loaded = await loadBookChapter(book.id, ch.slug);
+        const loaded = await loadBookChapter(book.id, ch.slug, "de");
         for (const h of loaded.headings) {
           // id is derived from the heading text by the exact source algorithm:
           // lowercase, drop punctuation, keep umlauts, spaces -> dashes.
@@ -134,9 +140,9 @@ describe("book-reader content: TOC headings", () => {
     // stage 3 fix). The chapter title sits at the top, so the loaded markdown
     // must carry no ATX h1 in its opening lines.
     for (const book of books) {
-      const chapters = await getBookChapterList(book.id);
+      const chapters = await getBookChapterList(book.id, "de");
       for (const ch of chapters) {
-        const loaded = await loadBookChapter(book.id, ch.slug);
+        const loaded = await loadBookChapter(book.id, ch.slug, "de");
         const leadingH1 = loaded.rawMarkdown
           .split("\n")
           .slice(0, 10)

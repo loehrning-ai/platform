@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { useControllableAnimation } from "@/lib/animation-policy";
 import { mulberry32, normCdf } from "@/lib/data-science/sim-kit";
+import { useDataScienceLocale } from "../locale-context";
 
 // ─── ABSim ──────────────────────────────────────────
 //
@@ -64,6 +65,7 @@ function yMap(v: number): number {
 }
 
 export function ABSim() {
+  const { text } = useDataScienceLocale();
   const [trueLift, setTrueLift] = useState(0.02);
   const [baseline, setBaseline] = useState(0.12);
   const [dailyN, setDailyN] = useState(2000);
@@ -108,7 +110,9 @@ export function ABSim() {
         const pC = s2.cC / (s2.nC || 1);
         const pV = s2.cV / (s2.nV || 1);
         const lift = pV - pC;
-        const se = Math.sqrt((pC * (1 - pC)) / (s2.nC || 1) + (pV * (1 - pV)) / (s2.nV || 1));
+        const se = Math.sqrt(
+          (pC * (1 - pC)) / (s2.nC || 1) + (pV * (1 - pV)) / (s2.nV || 1),
+        );
         const z = se > 0 ? lift / se : 0;
         const pval = 2 * (1 - normCdf(Math.abs(z)));
         s2.history.push({
@@ -142,22 +146,32 @@ export function ABSim() {
   const p2 = baseline + trueLift;
   const nPerArm =
     trueLift !== 0
-      ? Math.ceil(((1.96 + 0.84) ** 2 * (p1 * (1 - p1) + p2 * (1 - p2))) / (trueLift * trueLift))
+      ? Math.ceil(
+          ((1.96 + 0.84) ** 2 * (p1 * (1 - p1) + p2 * (1 - p2))) /
+            (trueLift * trueLift),
+        )
       : Infinity;
   const daysNeeded = (nPerArm * 2) / dailyN;
   const progress = Math.min(1, (s.nC + s.nV) / (nPerArm * 2 || 1));
 
   const bandPath = useMemo(() => {
     if (s.history.length < 2) return "";
-    const top = s.history.map((h) => `${xMap(h.day)},${yMap(h.high)}`).join(" L ");
-    const bot = [...s.history].reverse().map((h) => `${xMap(h.day)},${yMap(h.low)}`).join(" L ");
+    const top = s.history
+      .map((h) => `${xMap(h.day)},${yMap(h.high)}`)
+      .join(" L ");
+    const bot = [...s.history]
+      .reverse()
+      .map((h) => `${xMap(h.day)},${yMap(h.low)}`)
+      .join(" L ");
     return `M ${top} L ${bot} Z`;
     // eslint-disable-next-line react-hooks/exhaustive-deps -- mirrors source: keyed off `tick`, since `s.history` is a mutated ref field, not React state
   }, [tick]);
 
   const linePath = useMemo(() => {
     if (s.history.length < 2) return "";
-    return "M " + s.history.map((h) => `${xMap(h.day)},${yMap(h.lift)}`).join(" L ");
+    return (
+      "M " + s.history.map((h) => `${xMap(h.day)},${yMap(h.lift)}`).join(" L ")
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps -- mirrors source: keyed off `tick`, since `s.history` is a mutated ref field, not React state
   }, [tick]);
 
@@ -165,23 +179,30 @@ export function ABSim() {
 
   return (
     <Panel
-      eyebrow="LIVE · A/B TEST"
-      title="Running experiment"
-      meta={`Day ${s.day.toFixed(1)} / 28`}
-      caption="Set a true lift, press play, watch visits stream in. The shaded band is the 95% CI on Δconversion. When it crosses zero for good, you have significance."
+      eyebrow={text("SYNTHETIC · A/B TEST", "SYNTHETISCH · A/B-TEST")}
+      title={text("Experiment stream", "Experimentverlauf")}
+      meta={text(
+        `Day ${s.day.toFixed(1)} / 28`,
+        `Tag ${s.day.toFixed(1)} / 28`,
+      )}
+      caption={text(
+        "The shaded band is an unadjusted, normal-approximation 95% interval for Δconversion in one locally generated Bernoulli stream. A crossing at an interim look is not a stopping rule. The sample estimate assumes equal independent arms, α=0.05, 80% power, no attrition, and a fixed horizon.",
+        "Das schattierte Band ist ein unkorrigiertes 95%-Intervall mit Normalapproximation für ΔConversion in einem lokal erzeugten Bernoulli-Verlauf. Eine Kreuzung bei einer Zwischenanalyse ist keine Stoppregel. Die Stichprobenschätzung setzt gleich große unabhängige Gruppen, α=0.05, 80% Power, keine Ausfälle und einen festen Endzeitpunkt voraus.",
+      )}
     >
       <div className="sim-row" style={{ gridTemplateColumns: "280px 1fr" }}>
         <div className="sim-controls">
           <div className="sim-ctrl">
             <label>
-              True lift <span className="mono">{(trueLift * 100).toFixed(1)} pp</span>
+              {text("True lift", "Wahrer Lift")}{" "}
+              <span className="mono">{(trueLift * 100).toFixed(1)} pp</span>
             </label>
             <input
               type="range"
               min="-0.03"
               max="0.05"
               step="0.002"
-              aria-label="True lift"
+              aria-label={text("True lift", "Wahrer Lift")}
               value={trueLift}
               onChange={(e) => {
                 setTrueLift(+e.target.value);
@@ -191,14 +212,18 @@ export function ABSim() {
           </div>
           <div className="sim-ctrl">
             <label>
-              Baseline CVR <span className="mono">{(baseline * 100).toFixed(0)}%</span>
+              {text("Baseline CVR", "Ausgangs-CVR")}{" "}
+              <span className="mono">{(baseline * 100).toFixed(0)}%</span>
             </label>
             <input
               type="range"
               min="0.02"
               max="0.30"
               step="0.01"
-              aria-label="Baseline conversion rate"
+              aria-label={text(
+                "Baseline conversion rate",
+                "Ausgangs-Conversion-Rate",
+              )}
               value={baseline}
               onChange={(e) => {
                 setBaseline(+e.target.value);
@@ -208,43 +233,54 @@ export function ABSim() {
           </div>
           <div className="sim-ctrl">
             <label>
-              Daily visitors <span className="mono">{dailyN}</span>
+              {text("Daily visitors", "Besucher pro Tag")}{" "}
+              <span className="mono">{dailyN}</span>
             </label>
             <input
               type="range"
               min="500"
               max="10000"
               step="500"
-              aria-label="Daily visitors"
+              aria-label={text("Daily visitors", "Besucher pro Tag")}
               value={dailyN}
               onChange={(e) => setDailyN(+e.target.value)}
             />
           </div>
           <div className="sim-ctrl">
             <label>
-              Speed <span className="mono">{speed}×</span>
+              {text("Speed", "Geschwindigkeit")}{" "}
+              <span className="mono">{speed}×</span>
             </label>
             <input
               type="range"
               min="0.5"
               max="8"
               step="0.5"
-              aria-label="Simulation speed"
+              aria-label={text(
+                "Simulation speed",
+                "Simulationsgeschwindigkeit",
+              )}
               value={speed}
               onChange={(e) => setSpeed(+e.target.value)}
             />
           </div>
           <div className="sim-ctrl-row">
-            <button type="button" className={`btn btn-sm ${running ? "btn-primary" : ""}`} onClick={toggleRunning}>
-              {running ? "❚❚ Pause" : "▶ Play"}
+            <button
+              type="button"
+              className={`btn btn-sm ${running ? "btn-primary" : ""}`}
+              onClick={toggleRunning}
+            >
+              {running
+                ? text("❚❚ Pause", "❚❚ Pause")
+                : text("▶ Play", "▶ Start")}
             </button>
             <button type="button" className="btn btn-sm" onClick={reset}>
-              ↻ Reset
+              ↻ {text("Reset", "Zurücksetzen")}
             </button>
           </div>
           <div className="sim-stats" style={{ gridTemplateColumns: "1fr 1fr" }}>
             <div>
-              <div className="k">CONTROL</div>
+              <div className="k">{text("CONTROL", "KONTROLLE")}</div>
               <div className="v" style={{ fontSize: 22 }}>
                 {(latest.pC * 100).toFixed(2)}%
               </div>
@@ -253,8 +289,11 @@ export function ABSim() {
               </div>
             </div>
             <div>
-              <div className="k">VARIANT</div>
-              <div className="v" style={{ fontSize: 22, color: "var(--violet)" }}>
+              <div className="k">{text("VARIANT", "VARIANTE")}</div>
+              <div
+                className="v"
+                style={{ fontSize: 22, color: "var(--violet)" }}
+              >
                 {(latest.pV * 100).toFixed(2)}%
               </div>
               <div className="sub mono">
@@ -263,29 +302,64 @@ export function ABSim() {
             </div>
           </div>
           <div className="ab-verdict" data-sig={significant ? "yes" : "no"}>
-            <div className="ab-verdict-k">p-value</div>
-            <div className="ab-verdict-v">{latest.pval < 1e-3 ? "<0.001" : latest.pval.toFixed(3)}</div>
-            <div className="ab-verdict-note">{significant ? "✓ significant (α=0.05)" : ", not yet significant"}</div>
+            <div className="ab-verdict-k">{text("p-value", "p-Wert")}</div>
+            <div className="ab-verdict-v">
+              {latest.pval < 1e-3 ? "<0.001" : latest.pval.toFixed(3)}
+            </div>
+            <div className="ab-verdict-note">
+              {significant
+                ? text(
+                    "nominal p < 0.05 at this look",
+                    "nominal p < 0.05 bei dieser Analyse",
+                  )
+                : text(
+                    "nominal p ≥ 0.05 at this look",
+                    "nominal p ≥ 0.05 bei dieser Analyse",
+                  )}
+            </div>
           </div>
           <div className="ab-power">
             <div className="ab-power-head">
-              <span>Sample progress · 80% power</span>
-              <span className="mono">{Math.min(99, Math.floor(progress * 100))}%</span>
+              <span>
+                {text(
+                  "Approximate fixed-horizon sample · 80% power",
+                  "Näherungsstichprobe mit festem Endpunkt · 80% Power",
+                )}
+              </span>
+              <span className="mono">
+                {Math.min(99, Math.floor(progress * 100))}%
+              </span>
             </div>
             <div className="ab-power-bar">
-              <div className="ab-power-fill" style={{ width: `${Math.min(100, progress * 100)}%` }} />
+              <div
+                className="ab-power-fill"
+                style={{ width: `${Math.min(100, progress * 100)}%` }}
+              />
             </div>
             <div className="ab-power-note">
-              Need <span className="mono">{Number.isFinite(nPerArm) ? nPerArm.toLocaleString() : "∞"}</span> per arm · ~
-              <span className="mono">{Number.isFinite(daysNeeded) ? daysNeeded.toFixed(1) : "∞"}</span> days
+              {text("Estimate", "Schätzung")}{" "}
+              <span className="mono">
+                {Number.isFinite(nPerArm) ? nPerArm.toLocaleString() : "∞"}
+              </span>{" "}
+              {text("per arm", "je Gruppe")} · ~
+              <span className="mono">
+                {Number.isFinite(daysNeeded) ? daysNeeded.toFixed(1) : "∞"}
+              </span>{" "}
+              {text("days", "Tage")}
             </div>
           </div>
         </div>
         <div className="sim-plots">
           <div className="plot-wrap">
             <div className="sim-plot-head">
-              Observed lift with 95% CI
-              <span className="hint">true lift = {(trueLift * 100).toFixed(1)}pp</span>
+              {text(
+                "Observed lift with 95% CI",
+                "Beobachteter Lift mit 95%-KI",
+              )}
+              <span className="hint">
+                {text("true lift", "wahrer Lift")} ={" "}
+                {(trueLift * 100).toFixed(1)}pp
+              </span>
             </div>
             <svg viewBox={`0 0 ${W} ${H}`}>
               {[-0.04, -0.02, 0, 0.02, 0.04, 0.06].map((v) => (
@@ -299,12 +373,28 @@ export function ABSim() {
                     strokeWidth={v === 0 ? 1 : 0.5}
                     strokeDasharray={v === 0 ? "0" : "2 3"}
                   />
-                  <text x="26" y={yMap(v) + 3} textAnchor="end" fontSize="9" fill="#6A6270" fontFamily="'JetBrains Mono', monospace">
+                  <text
+                    x="26"
+                    y={yMap(v) + 3}
+                    textAnchor="end"
+                    fontSize="9"
+                    fill="#6A6270"
+                    fontFamily="'JetBrains Mono', monospace"
+                  >
                     {(v * 100).toFixed(0)}pp
                   </text>
                 </g>
               ))}
-              <line x1="30" y1={yMap(trueLift)} x2={W - 10} y2={yMap(trueLift)} stroke="#E8A031" strokeWidth="1" strokeDasharray="4 4" opacity="0.7" />
+              <line
+                x1="30"
+                y1={yMap(trueLift)}
+                x2={W - 10}
+                y2={yMap(trueLift)}
+                stroke="#E8A031"
+                strokeWidth="1"
+                strokeDasharray="4 4"
+                opacity="0.7"
+              />
               <text
                 x={W - 12}
                 y={yMap(trueLift) - 4}
@@ -314,17 +404,42 @@ export function ABSim() {
                 fontFamily="'JetBrains Mono', monospace"
                 fontWeight="700"
               >
-                truth · {(trueLift * 100).toFixed(1)}pp
+                {text("truth", "wahr")} · {(trueLift * 100).toFixed(1)}pp
               </text>
               {bandPath && <path d={bandPath} fill="#5B3EE8" opacity="0.12" />}
-              {linePath && <path d={linePath} fill="none" stroke="#5B3EE8" strokeWidth="1.6" />}
+              {linePath && (
+                <path
+                  d={linePath}
+                  fill="none"
+                  stroke="#5B3EE8"
+                  strokeWidth="1.6"
+                />
+              )}
               {s.history.length > 0 && (
-                <circle cx={xMap(latest.day)} cy={yMap(latest.lift)} r="3.5" fill={significant ? "#1FAF7E" : "#5B3EE8"} />
+                <circle
+                  cx={xMap(latest.day)}
+                  cy={yMap(latest.lift)}
+                  r="3.5"
+                  fill={significant ? "#1FAF7E" : "#5B3EE8"}
+                />
               )}
               {[0, 7, 14, 21, 28].map((d) => (
                 <g key={d}>
-                  <line x1={xMap(d)} y1="160" x2={xMap(d)} y2="164" stroke="#A49D9A" />
-                  <text x={xMap(d)} y="175" textAnchor="middle" fontSize="9" fill="#6A6270" fontFamily="'JetBrains Mono', monospace">
+                  <line
+                    x1={xMap(d)}
+                    y1="160"
+                    x2={xMap(d)}
+                    y2="164"
+                    stroke="#A49D9A"
+                  />
+                  <text
+                    x={xMap(d)}
+                    y="175"
+                    textAnchor="middle"
+                    fontSize="9"
+                    fill="#6A6270"
+                    fontFamily="'JetBrains Mono', monospace"
+                  >
                     d{d}
                   </text>
                 </g>

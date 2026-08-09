@@ -5,7 +5,7 @@ test.describe("/kontakt retired route", () => {
     const res = await request.get("/kontakt", { maxRedirects: 0 });
     expect([301, 308]).toContain(res.status());
     expect(res.headers()["location"]).toContain("/feedback");
-    expect(res.headers()["x-robots-tag"]).toContain("noindex");
+    expect(res.headers()["x-robots-tag"]).toBeUndefined();
     expect(res.headers()["cache-control"]).toContain("public");
   });
 

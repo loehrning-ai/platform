@@ -1,13 +1,26 @@
 import type { Metadata } from "next";
+import { getClaudeCourseBundle } from "@/lib/claude-course/localization";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { buildTechnicalCourseMetadata } from "@/lib/technical-courses/routes";
 
-export const metadata: Metadata = {
-  title: "Verify certificate data: Claude Course",
-  description:
-    "Verification page for Claude Course certificate data encoded in a QR code. The code is a readable certificate record, not a cryptographic signature.",
-  robots: { index: false, follow: false },
-  // Utility page: suppress the canonical inherited from the root layout.
-  alternates: { canonical: null },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const bundle = await getClaudeCourseBundle(locale);
+  return buildTechnicalCourseMetadata({
+    courseSlug: "claude",
+    locale,
+    target: { kind: "verification" },
+    title:
+      locale === "de"
+        ? `Zertifikatdaten lesen: ${bundle.config.title}`
+        : `Read certificate data: ${bundle.config.title}`,
+    description:
+      locale === "de"
+        ? "Liest die im QR-Code enthaltenen Zertifikatdaten. Die Daten sind nicht servergeprüft und nicht kryptografisch signiert."
+        : "Reads certificate data encoded in the QR code. The data is not server-verified or cryptographically signed.",
+    availableContentLocales: ["de", "en"],
+  });
+}
 
 export default function VerifizierungLayout({
   children,

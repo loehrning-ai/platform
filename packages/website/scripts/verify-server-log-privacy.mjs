@@ -79,7 +79,15 @@ Object.assign(env, {
 
 const child = spawn(
   process.execPath,
-  [nextBin, "start", "--hostname", "127.0.0.1", "--port", String(port)],
+  [
+    nextBin,
+    "start",
+    "--experimental-next-config-strip-types",
+    "--hostname",
+    "127.0.0.1",
+    "--port",
+    String(port),
+  ],
   {
     cwd,
     env,

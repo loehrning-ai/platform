@@ -11,6 +11,8 @@
 import { useMemo, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
 import { cn } from "@/lib/utils";
+import type { Locale } from "@/lib/i18n/locale";
+import { useDataInfraWidgetLocale } from "../widget-locale-context";
 
 interface BackfillDagProps {
   readonly lessonId: string;
@@ -63,7 +65,12 @@ function computeSchedule(workers: number): Schedule {
 
 const ROW_H: Record<number, number> = { 1: 36, 4: 22, 10: 18 };
 
-function xScale(t: number, maxTotal: number, titleW: number, innerW: number): number {
+function xScale(
+  t: number,
+  maxTotal: number,
+  titleW: number,
+  innerW: number,
+): number {
   return titleW + (t / maxTotal) * innerW;
 }
 
@@ -75,6 +82,7 @@ function Band({
   titleW,
   innerW,
   svgWidth,
+  locale,
 }: {
   readonly schedule: Schedule;
   readonly speedupOf1: number;
@@ -83,6 +91,7 @@ function Band({
   readonly titleW: number;
   readonly innerW: number;
   readonly svgWidth: number;
+  readonly locale: Locale;
 }): { element: JSX.Element; height: number } {
   const rowH = ROW_H[schedule.workers] ?? 18;
   const bandPad = 12;
@@ -93,16 +102,42 @@ function Band({
 
   const element = (
     <g key={schedule.workers}>
-      <rect x={0} y={yTop} width={svgWidth} height={bandH} className="fill-card stroke-border" strokeWidth={0.6} />
-      <rect x={0} y={yTop} width={titleW} height={bandH} className="fill-card/70" />
-      <text x={16} y={yTop + 24} className="fill-foreground text-[11px] font-bold">
-        {schedule.workers} worker{schedule.workers > 1 ? "s" : ""}
+      <rect
+        x={0}
+        y={yTop}
+        width={svgWidth}
+        height={bandH}
+        className="fill-card stroke-border"
+        strokeWidth={0.6}
+      />
+      <rect
+        x={0}
+        y={yTop}
+        width={titleW}
+        height={bandH}
+        className="fill-card/70"
+      />
+      <text
+        x={16}
+        y={yTop + 24}
+        className="fill-foreground text-[11px] font-bold"
+      >
+        {schedule.workers}{" "}
+        {locale === "de"
+          ? schedule.workers === 1
+            ? "Worker"
+            : "Worker"
+          : `worker${schedule.workers > 1 ? "s" : ""}`}
       </text>
       <text x={16} y={yTop + 42} className="fill-muted-foreground text-[9.5px]">
-        elapsed {schedule.total}
+        {locale === "de" ? "Dauer" : "elapsed"} {schedule.total}
       </text>
-      <text x={16} y={yTop + 58} className="fill-brand-orange text-[9.5px] font-semibold">
-        {speedup}× speedup
+      <text
+        x={16}
+        y={yTop + 58}
+        className="fill-brand-orange text-[9.5px] font-semibold"
+      >
+        {speedup}× {locale === "de" ? "Beschleunigung" : "speedup"}
       </text>
       {Array.from({ length: schedule.workers }, (_, i) => {
         const yRow = yTop + bandPad + i * rowH;
@@ -118,8 +153,15 @@ function Band({
               strokeWidth={0.4}
               strokeDasharray="1 3"
             />
-            {(schedule.workers <= 4 || i % 2 === 0 || i === schedule.workers - 1) && (
-              <text x={titleW - 6} y={yMid + 3.5} textAnchor="end" className="fill-muted-foreground text-[8.5px]">
+            {(schedule.workers <= 4 ||
+              i % 2 === 0 ||
+              i === schedule.workers - 1) && (
+              <text
+                x={titleW - 6}
+                y={yMid + 3.5}
+                textAnchor="end"
+                className="fill-muted-foreground text-[8.5px]"
+              >
                 w{i}
               </text>
             )}
@@ -136,9 +178,22 @@ function Band({
               const rw = Math.max(2, xs(r.end) - xs(r.start));
               return (
                 <g key={ri}>
-                  <rect x={rx} y={yBar} width={rw} height={taskH} rx={2} className="fill-[#e5a49a] stroke-[#b85a4a]" strokeWidth={0.7} />
+                  <rect
+                    x={rx}
+                    y={yBar}
+                    width={rw}
+                    height={taskH}
+                    rx={2}
+                    className="fill-[#e5a49a] stroke-[#b85a4a]"
+                    strokeWidth={0.7}
+                  />
                   {rw > 10 && (
-                    <text x={rx + rw / 2} y={yBar + taskH / 2 + 3.5} textAnchor="middle" className="fill-[#8a3f30] text-[8px]">
+                    <text
+                      x={rx + rw / 2}
+                      y={yBar + taskH / 2 + 3.5}
+                      textAnchor="middle"
+                      className="fill-[#8a3f30] text-[8px]"
+                    >
                       ✗
                     </text>
                   )}
@@ -148,12 +203,27 @@ function Band({
             {(() => {
               const sx = xs(t.start);
               const sw = Math.max(3, xs(t.end) - xs(t.start));
-              const showLabel = (sw > 14 && taskH >= 12) || (sw > 8 && schedule.workers === 10 && t.day % 5 === 0);
+              const showLabel =
+                (sw > 14 && taskH >= 12) ||
+                (sw > 8 && schedule.workers === 10 && t.day % 5 === 0);
               return (
                 <g>
-                  <rect x={sx} y={yBar} width={sw} height={taskH} rx={2} className="fill-[#bfe3cf] stroke-[#3f8264]" strokeWidth={0.7} />
+                  <rect
+                    x={sx}
+                    y={yBar}
+                    width={sw}
+                    height={taskH}
+                    rx={2}
+                    className="fill-[#bfe3cf] stroke-[#3f8264]"
+                    strokeWidth={0.7}
+                  />
                   {showLabel && (
-                    <text x={sx + sw / 2} y={yBar + taskH / 2 + 3.5} textAnchor="middle" className="fill-[#2a5a45] text-[8px]">
+                    <text
+                      x={sx + sw / 2}
+                      y={yBar + taskH / 2 + 3.5}
+                      textAnchor="middle"
+                      className="fill-[#2a5a45] text-[8px]"
+                    >
                       {t.day}
                     </text>
                   )}
@@ -170,6 +240,7 @@ function Band({
 }
 
 export function BackfillDag({ lessonId, cpId }: BackfillDagProps): JSX.Element {
+  const { locale } = useDataInfraWidgetLocale();
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [claimed, setClaimed] = useState(false);
 
@@ -190,11 +261,38 @@ export function BackfillDag({ lessonId, cpId }: BackfillDagProps): JSX.Element {
     const innerW = svgWidth - titleW - padR;
 
     let y = 38;
-    const b1 = Band({ schedule: s1, speedupOf1: s1.total, yTop: y, maxTotal, titleW, innerW, svgWidth });
+    const b1 = Band({
+      schedule: s1,
+      speedupOf1: s1.total,
+      yTop: y,
+      maxTotal,
+      titleW,
+      innerW,
+      svgWidth,
+      locale,
+    });
     y += b1.height + 4;
-    const b4 = Band({ schedule: s4, speedupOf1: s1.total, yTop: y, maxTotal, titleW, innerW, svgWidth });
+    const b4 = Band({
+      schedule: s4,
+      speedupOf1: s1.total,
+      yTop: y,
+      maxTotal,
+      titleW,
+      innerW,
+      svgWidth,
+      locale,
+    });
     y += b4.height + 4;
-    const b10 = Band({ schedule: s10, speedupOf1: s1.total, yTop: y, maxTotal, titleW, innerW, svgWidth });
+    const b10 = Band({
+      schedule: s10,
+      speedupOf1: s1.total,
+      yTop: y,
+      maxTotal,
+      titleW,
+      innerW,
+      svgWidth,
+      locale,
+    });
     y += b10.height;
 
     const axisY = y + 16;
@@ -204,55 +302,106 @@ export function BackfillDag({ lessonId, cpId }: BackfillDagProps): JSX.Element {
     const totalHeight = axisY + 44;
 
     const svgEl = (
-      <svg viewBox={`0 0 ${svgWidth} ${totalHeight}`} role="img" className="min-w-[900px]" aria-label="Backfill of 30 daily partitions run with 1, 4, and 10 workers, showing wall-time scaling and retries.">
+      <svg
+        viewBox={`0 0 ${svgWidth} ${totalHeight}`}
+        role="img"
+        className="min-w-[900px]"
+        aria-label={
+          locale === "de"
+            ? "Backfill von 30 Tagespartitionen mit 1, 4 und 10 Workern; dargestellt sind Laufzeit und Wiederholungen."
+            : "Backfill of 30 daily partitions run with 1, 4, and 10 workers, showing wall-time scaling and retries."
+        }
+      >
         <text x={0} y={22} className="fill-foreground text-[12px] font-bold">
-          Backfill of 30 daily partitions · same workload, different worker counts
+          {locale === "de"
+            ? "Backfill von 30 Tagespartitionen · gleiche Last, unterschiedliche Worker-Zahl"
+            : "Backfill of 30 daily partitions · same workload, different worker counts"}
         </text>
         {b1.element}
         {b4.element}
         {b10.element}
-        <line x1={titleW} y1={axisY} x2={titleW + innerW} y2={axisY} className="stroke-muted-foreground" strokeWidth={1} />
+        <line
+          x1={titleW}
+          y1={axisY}
+          x2={titleW + innerW}
+          y2={axisY}
+          className="stroke-muted-foreground"
+          strokeWidth={1}
+        />
         {ticks.map((t) => {
           const x = xScale(t, maxTotal, titleW, innerW);
           return (
             <g key={t}>
-              <line x1={x} y1={axisY} x2={x} y2={axisY + 5} className="stroke-muted-foreground" strokeWidth={1} />
-              <text x={x} y={axisY + 18} textAnchor="middle" className="fill-muted-foreground text-[9px]">
+              <line
+                x1={x}
+                y1={axisY}
+                x2={x}
+                y2={axisY + 5}
+                className="stroke-muted-foreground"
+                strokeWidth={1}
+              />
+              <text
+                x={x}
+                y={axisY + 18}
+                textAnchor="middle"
+                className="fill-muted-foreground text-[9px]"
+              >
                 {t}
               </text>
             </g>
           );
         })}
-        <text x={titleW + innerW / 2} y={axisY + 34} textAnchor="middle" className="fill-muted-foreground text-[10px]">
-          wall time →
+        <text
+          x={titleW + innerW / 2}
+          y={axisY + 34}
+          textAnchor="middle"
+          className="fill-muted-foreground text-[10px]"
+        >
+          {locale === "de" ? "Laufzeit →" : "elapsed time →"}
         </text>
       </svg>
     );
 
     return { svg: svgEl, totalH: totalHeight };
-  }, []);
+  }, [locale]);
 
   return (
-    <div className="border-2 border-border bg-card/40 p-5 md:p-6">
+    <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-3 sm:p-5 md:p-6">
       <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        Diagram · Backfill 30 days · workers vs. wall time
+        {locale === "de"
+          ? "Diagramm · Backfill über 30 Tage · Worker und Laufzeit"
+          : "Diagram · 30-day backfill · workers and elapsed time"}
       </p>
-      <div className="overflow-x-auto" style={{ minHeight: Math.min(totalH, 320) }}>
+      <div
+        className="overflow-x-auto"
+        style={{ minHeight: Math.min(totalH, 320) }}
+      >
         {svg}
       </div>
       <div className="mt-4 grid gap-2 text-[12.5px] text-muted-foreground sm:grid-cols-2">
         <div>
-          <span className="mr-1.5 inline-block h-2.5 w-2.5 rounded-sm bg-[#bfe3cf] align-middle" /> green bar ·
-          successful run of one day
+          <span className="mr-1.5 inline-block h-2.5 w-2.5 rounded-sm bg-[#bfe3cf] align-middle" />{" "}
+          {locale === "de"
+            ? "grüner Balken · erfolgreicher Lauf für einen Tag"
+            : "green bar · successful run for one day"}
         </div>
         <div>
-          <span className="mr-1.5 inline-block h-2.5 w-2.5 rounded-sm bg-[#e5a49a] align-middle" /> red ✗ bar ·
-          first-attempt failure, then retry
+          <span className="mr-1.5 inline-block h-2.5 w-2.5 rounded-sm bg-[#e5a49a] align-middle" />{" "}
+          {locale === "de"
+            ? "roter Balken · erster Versuch fehlgeschlagen, danach Wiederholung"
+            : "red bar · first attempt failed, then retried"}
         </div>
         <div>
-          3 retries on days <code>06</code>, <code>14</code>, <code>22</code>, typical flake rate
+          {locale === "de"
+            ? "Drei Wiederholungen an den Tagen"
+            : "Three retries on days"}{" "}
+          <code>06</code>, <code>14</code>, <code>22</code>
         </div>
-        <div>Independent per day: any worker can take any day, so wall time scales near-linearly with worker count.</div>
+        <div>
+          {locale === "de"
+            ? "In diesem festen Modell sind Tagesaufgaben unabhängig. Freie Worker übernehmen die nächste Aufgabe; Retry-Kosten und die längste Aufgabe begrenzen den Parallelitätsgewinn."
+            : "In this fixed model, daily tasks are independent. Free workers take the next task; retry penalties and the longest task limit the parallel benefit."}
+        </div>
       </div>
       <button
         type="button"
@@ -265,7 +414,13 @@ export function BackfillDag({ lessonId, cpId }: BackfillDagProps): JSX.Element {
             : "bg-brand-orange text-white hover:opacity-90",
         )}
       >
-        {claimed || done ? "✓ claimed" : "Got it · claim XP"}
+        {claimed || done
+          ? locale === "de"
+            ? "Bestätigt"
+            : "✓ claimed"
+          : locale === "de"
+            ? "Verstanden"
+            : "Got it · claim XP"}
       </button>
     </div>
   );

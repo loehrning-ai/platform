@@ -30,6 +30,8 @@ export interface WidgetFrameProps {
   readonly done?: boolean;
   /** Optional XP amount shown in the done badge, e.g. "+15 XP". */
   readonly xpLabel?: string;
+  /** Localized completion label. Defaults to the established German copy. */
+  readonly doneLabel?: string;
   readonly children: ReactNode;
 }
 
@@ -39,6 +41,7 @@ export function WidgetFrame({
   scenario,
   done = false,
   xpLabel,
+  doneLabel = "Erledigt",
   children,
 }: WidgetFrameProps): JSX.Element {
   const reduced = useReducedMotion();
@@ -65,7 +68,7 @@ export function WidgetFrame({
             className="inline-flex items-center gap-1.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-risk-green"
           >
             <CheckCircle2 size={12} />
-            {xpLabel ? `${xpLabel} ✓` : "Erledigt"}
+            {xpLabel ? `${xpLabel} ✓` : doneLabel}
           </m.span>
         )}
       </div>

@@ -3,13 +3,25 @@
 import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { clamp, mulberry32, round } from "@/lib/data-science/sim-kit";
+import { useDataScienceLocale } from "../locale-context";
 
 // ─── GlobalVsLocal ──────────────────────────────────
 //
 // Typed port of Ch07_Interpret.js's `GlobalVsLocal`: click-a-point
 // global-vs-local SHAP comparison. Seeded with `mulberry32(999)`.
 
-const GVL_FEATURES = ["credit_score", "income", "debt_ratio", "employment_yrs"] as const;
+const GVL_FEATURES = [
+  "credit_score",
+  "income",
+  "debt_ratio",
+  "employment_yrs",
+] as const;
+const GVL_LABELS_DE: Readonly<Record<(typeof GVL_FEATURES)[number], string>> = {
+  credit_score: "Kredit-Score",
+  income: "Einkommen",
+  debt_ratio: "Schuldenquote",
+  employment_yrs: "Beschäftigungsjahre",
+};
 const GVL_WEIGHTS = [0.38, 0.26, -0.22, 0.14] as const;
 
 interface DataPoint {
@@ -25,6 +37,7 @@ const SH = 260;
 const BAR_MAX = 120;
 
 export function GlobalVsLocal() {
+  const { locale, text } = useDataScienceLocale();
   const [selected, setSelected] = useState<number | null>(null);
   const [focused, setFocused] = useState<number | null>(null);
 
@@ -60,22 +73,50 @@ export function GlobalVsLocal() {
 
   return (
     <Panel
-      eyebrow="SIMULATION"
-      title="Global vs local explanations"
+      eyebrow={text("SIMULATION", "SIMULATION")}
+      title={text(
+        "Global vs local explanations",
+        "Globale und lokale Erklärungen",
+      )}
       meta={
         selected !== null && points[selected]
-          ? `point #${selected} selected · score ${round(points[selected].score, 3)}`
-          : "20 data points · click one"
+          ? text(
+              `point #${selected} selected · score ${round(points[selected].score, 3)}`,
+              `Punkt #${selected} ausgewählt · Score ${round(points[selected].score, 3)}`,
+            )
+          : text(
+              "20 data points · click one",
+              "20 Datenpunkte · einen auswählen",
+            )
       }
-      caption="Global importance is the same for every prediction, it describes the model overall. Local SHAP values change for every data point. Click any dot to see how its explanation differs from the global view."
+      caption={text(
+        "This fixed linear construction compares absolute coefficients with per-point coefficient × value contributions. It does not compute global importance or SHAP from a fitted model. Click a dot to inspect the constructed local contribution.",
+        "Diese feste lineare Konstruktion vergleicht absolute Koeffizienten mit punktweisen Beiträgen aus Koeffizient × Wert. Sie berechnet weder globale Wichtigkeit noch SHAP aus einem angepassten Modell. Wähle einen Punkt, um den konstruierten lokalen Beitrag zu prüfen.",
+      )}
     >
       <div className="sim-row">
-        <div className="plot-wrap" style={{ flex: "0 0 auto", width: SW + 20 }}>
+        <div
+          className="plot-wrap ds-global-local-plot"
+          style={{ width: "100%", maxWidth: SW + 20 }}
+        >
           <div className="sim-plot-head">
-            Data points <span className="hint">click any dot</span>
+            {text("Data points", "Datenpunkte")}{" "}
+            <span className="hint">
+              {text("click any dot", "einen Punkt auswählen")}
+            </span>
           </div>
-          <svg viewBox={`0 0 ${SW} ${SH}`} style={{ width: "100%", cursor: "pointer" }}>
-            <rect x={0} y={0} width={SW} height={SH} fill="rgba(20,18,22,0.3)" rx="4" />
+          <svg
+            viewBox={`0 0 ${SW} ${SH}`}
+            style={{ width: "100%", cursor: "pointer" }}
+          >
+            <rect
+              x={0}
+              y={0}
+              width={SW}
+              height={SH}
+              fill="rgba(20,18,22,0.3)"
+              rx="4"
+            />
             {points.map((pt) => {
               const cx = pt.x * SW;
               const cy = (1 - pt.y) * SH;
@@ -88,7 +129,10 @@ export function GlobalVsLocal() {
                   className="gvl-point"
                   role="button"
                   tabIndex={0}
-                  aria-label={`Select data point ${pt.id}, score ${round(pt.score, 3)}`}
+                  aria-label={text(
+                    `Select data point ${pt.id}, score ${round(pt.score, 3)}`,
+                    `Datenpunkt ${pt.id} auswählen, Score ${round(pt.score, 3)}`,
+                  )}
                   aria-pressed={isSel}
                   onClick={() => setSelected(pt.id)}
                   onFocus={() => setFocused(pt.id)}
@@ -111,7 +155,17 @@ export function GlobalVsLocal() {
                       strokeWidth="2"
                     />
                   )}
-                  {isSel && <circle cx={cx} cy={cy} r="13" fill="none" stroke="#E8A031" strokeWidth="2" opacity="0.7" />}
+                  {isSel && (
+                    <circle
+                      cx={cx}
+                      cy={cy}
+                      r="13"
+                      fill="none"
+                      stroke="#E8A031"
+                      strokeWidth="2"
+                      opacity="0.7"
+                    />
+                  )}
                   <circle
                     cx={cx}
                     cy={cy}
@@ -122,7 +176,13 @@ export function GlobalVsLocal() {
                     opacity="0.9"
                   />
                   {isSel && (
-                    <text x={cx + 10} y={cy + 4} fontSize="10" fill="#E8A031" fontFamily="'JetBrains Mono',monospace">
+                    <text
+                      x={cx + 10}
+                      y={cy + 4}
+                      fontSize="10"
+                      fill="#E8A031"
+                      fontFamily="'JetBrains Mono',monospace"
+                    >
                       #{pt.id}
                     </text>
                   )}
@@ -131,18 +191,46 @@ export function GlobalVsLocal() {
             })}
           </svg>
         </div>
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 12, minWidth: 0 }}>
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            gap: 12,
+            minWidth: 0,
+          }}
+        >
           <div className="plot-wrap">
             <div className="sim-plot-head">
-              Global importance <span className="hint">same for every point</span>
+              {text("Global importance", "Globale Wichtigkeit")}{" "}
+              <span className="hint">
+                {text("fixed absolute weights", "feste Absolutgewichte")}
+              </span>
             </div>
-            <svg viewBox={`0 0 ${BAR_MAX + 100} ${GVL_FEATURES.length * 28 + 8}`} style={{ width: "100%" }}>
+            <svg
+              viewBox={`0 0 ${BAR_MAX + 100} ${GVL_FEATURES.length * 28 + 8}`}
+              style={{ width: "100%" }}
+            >
               {globalImportance.map((f, i) => (
                 <g key={f.label}>
-                  <text x={0} y={i * 28 + 15} fontSize="10" fill="#C7C4BC" fontFamily="'JetBrains Mono',monospace">
-                    {f.label}
+                  <text
+                    x={0}
+                    y={i * 28 + 15}
+                    fontSize="10"
+                    fill="#C7C4BC"
+                    fontFamily="'JetBrains Mono',monospace"
+                  >
+                    {locale === "de" ? GVL_LABELS_DE[f.label] : f.label}
                   </text>
-                  <rect x={0} y={i * 28 + 19} width={f.importance * BAR_MAX} height={9} fill="#5B3EE8" rx="2" opacity="0.8" />
+                  <rect
+                    x={0}
+                    y={i * 28 + 19}
+                    width={f.importance * BAR_MAX}
+                    height={9}
+                    fill="#5B3EE8"
+                    rx="2"
+                    opacity="0.8"
+                  />
                   <text
                     x={f.importance * BAR_MAX + 4}
                     y={i * 28 + 27}
@@ -158,14 +246,28 @@ export function GlobalVsLocal() {
           </div>
           <div className="plot-wrap">
             <div className="sim-plot-head">
-              Local SHAP <span className="hint">{selected === null ? "click a point above" : `point #${selected}`}</span>
+              {text("Local SHAP", "Lokales SHAP")}{" "}
+              <span className="hint">
+                {selected === null
+                  ? text("click a point above", "oben einen Punkt auswählen")
+                  : text(`point #${selected}`, `Punkt #${selected}`)}
+              </span>
             </div>
             {localShap === null ? (
-              <p className="prose" style={{ fontSize: 11, padding: "8px 0", opacity: 0.5 }}>
-                Select a data point to see its local explanation.
+              <p
+                className="prose"
+                style={{ fontSize: 11, padding: "8px 0", opacity: 0.5 }}
+              >
+                {text(
+                  "Select a data point to see its local explanation.",
+                  "Wähle einen Datenpunkt, um seine lokale Erklärung zu sehen.",
+                )}
               </p>
             ) : (
-              <svg viewBox={`0 0 ${BAR_MAX * 2 + 100} ${GVL_FEATURES.length * 28 + 8}`} style={{ width: "100%" }}>
+              <svg
+                viewBox={`0 0 ${BAR_MAX * 2 + 100} ${GVL_FEATURES.length * 28 + 8}`}
+                style={{ width: "100%" }}
+              >
                 <line
                   x1={BAR_MAX}
                   y1={0}
@@ -181,8 +283,14 @@ export function GlobalVsLocal() {
                   const color = pos ? "#1FAF7E" : "#D83A3A";
                   return (
                     <g key={f.label}>
-                      <text x={0} y={i * 28 + 15} fontSize="10" fill="#C7C4BC" fontFamily="'JetBrains Mono',monospace">
-                        {f.label}
+                      <text
+                        x={0}
+                        y={i * 28 + 15}
+                        fontSize="10"
+                        fill="#C7C4BC"
+                        fontFamily="'JetBrains Mono',monospace"
+                      >
+                        {locale === "de" ? GVL_LABELS_DE[f.label] : f.label}
                       </text>
                       <rect
                         x={barX}

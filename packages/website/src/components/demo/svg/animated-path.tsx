@@ -2,6 +2,7 @@
 
 import { m } from "framer-motion";
 import { svgDrawOn } from "@/lib/animations";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 
 interface AnimatedPathProps {
   readonly d: string;
@@ -14,7 +15,7 @@ interface AnimatedPathProps {
   readonly className?: string;
 }
 
-export function AnimatedPath({
+function AnimatedPathContent({
   d,
   delay = 0,
   duration = 1.2,
@@ -58,3 +59,5 @@ export function AnimatedPath({
     />
   );
 }
+
+export const AnimatedPath = withMotionProvider(AnimatedPathContent);

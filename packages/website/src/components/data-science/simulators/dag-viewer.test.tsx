@@ -16,16 +16,22 @@ describe("DAGViewer ", () => {
   it("renders the real panel copy and starts on the Confounding scenario", () => {
     render(<DAGViewer />);
     expect(screen.getByText("DAGs · the three patterns")).toBeInTheDocument();
-    expect(screen.getByText(/Age is the confounder/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/age causes both coffee use and heart disease/),
+    ).toBeInTheDocument();
   });
 
   it("clicking through all 3 scenarios renders each one's own distinct blurb", () => {
     render(<DAGViewer />);
 
     fireEvent.click(screen.getByText("Collider bias"));
-    expect(screen.getByText(/negatively correlated with looks in Hollywood/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Conditioning on success can induce/),
+    ).toBeInTheDocument();
 
     fireEvent.click(screen.getByText("Mediation"));
-    expect(screen.getByText(/Sleep is a mediator/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/changes the estimand from the total effect/),
+    ).toBeInTheDocument();
   });
 });

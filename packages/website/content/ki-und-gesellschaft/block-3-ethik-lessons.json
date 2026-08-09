@@ -1,84 +1,136 @@
 {
   "blockId": "block_3",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-07-14",
-  "nextReview": "2027-01-14",
+  "lastReviewed": "2026-08-09",
+  "nextReview": "2027-02-09",
   "reviewCadence": "evergreen",
   "riskClass": "evergreen",
-  "triggerEvents": [
-    "major-conceptual-update"
-  ],
-  "blockLastVerified": "2026-07-14",
+  "triggerEvents": ["major-conceptual-update"],
+  "blockLastVerified": "2026-08-09",
   "lessons": [
     {
       "id": "ethik-3-1",
       "blockId": "block_3",
       "number": 1,
-      "title": "Drei Fälle, die die Debatte verändert haben",
-      "subtitle": "COMPAS, Amazon und Joy Buolamwini",
+      "title": "Drei dokumentierte Fälle und ihre Grenzen",
+      "subtitle": "COMPAS, Amazons Experiment und Gender Shades",
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-07-14",
-      "nextReview": "2026-10-14",
+      "lastReviewed": "2026-08-09",
+      "nextReview": "2027-02-09",
       "reviewCadence": "bi-annual",
       "riskClass": "evergreen",
-      "keyConcepts": ["Bias", "COMPAS", "Amazon Recruiting", "Joy Buolamwini", "Trainingsdaten"],
+      "keyConcepts": [
+        "Bias",
+        "COMPAS",
+        "Amazon Recruiting",
+        "Joy Buolamwini",
+        "Trainingsdaten"
+      ],
       "sections": [
         {
           "id": "ethik-3-1-s1",
-          "title": "COMPAS: wenn ein Algorithmus über Freiheit entscheidet",
+          "title": "COMPAS: unterschiedliche Fairness-Maße",
           "readTimeMinutes": 2,
-          "content": "2016 veröffentlichte das investigative Nachrichtenmedium ProPublica eine Analyse, die die Diskussion um algorithmischen Bias prägte. (Quelle: Angwin et al., ProPublica, 2016)\n\nWorum geht es? Das System COMPAS (Correctional Offender Management Profiling for Alternative Sanctions) wurde in mehreren US-Bundesstaaten eingesetzt, um die Rückfallgefahr von Angeklagten vorherzusagen. Diese Risikobewertungen flossen in Entscheidungen über Kaution, Verurteilung und vorzeitige Entlassung ein.\n\nDer Befund: ProPublica analysierte über 7.000 Datensätze aus Florida und stellte fest, dass schwarze Angeklagte mit doppelt so hoher Wahrscheinlichkeit fälschlicherweise als hohes Rückfallrisiko eingestuft wurden als weiße Angeklagte, die ähnliche oder schwerere Vergehen begangen hatten.\n\nDie Gegendarstellung: Northpointe, die Herstellerfirma, wies die Kritik zurück und argumentierte, das Modell sei bei beiden Gruppen kalibriert. Diese Kontroverse führte zu einer fundamentalen Debatte in der KI-Forschung: Mehrere mathematisch korrekte Definitionen von Fairness schließen sich gegenseitig aus. (Quelle: Chouldechova, A. (2017). Fair prediction with disparate impact. Big Data, 5(2))\n\nEin Algorithmus kann mathematisch korrekt und trotzdem systematisch ungerecht sein.",
-          "keyTakeaway": "COMPAS zeigte, dass ein eingesetztes KI-System für schwarze Angeklagte doppelt so häufig fälschlicherweise hohes Rückfallrisiko vorhersagte. Das ist kein Bug, sondern eine Konsequenz diskriminierender Trainingsdaten und Fairness-Definitionen."
+          "content": "COMPAS ist ein Risikobewertungsinstrument, dessen Werte in Teilen des US-Justizsystems als eine Information unter mehreren verwendet wurden. ProPublica untersuchte 2016 mehr als 7.000 in Broward County, Florida, vergebene Scores und verglich sie mit später registrierten Festnahmen. Die Redaktion berichtete unter anderem, dass schwarze Beschuldigte, die im Beobachtungszeitraum nicht erneut festgenommen wurden, häufiger fälschlich als hohes Risiko eingestuft worden waren als entsprechende weiße Beschuldigte. (Quelle: Angwin et al., ProPublica, 2016)\n\nNorthpointe widersprach der Bewertung und verwies darauf, dass die Scores innerhalb der Risikostufen für beide Gruppen ähnlich kalibriert gewesen seien. Damit standen verschiedene Kriterien nebeneinander: vergleichbare Kalibrierung innerhalb eines Scores und vergleichbare Fehlerraten zwischen Gruppen. Chouldechova zeigte, dass solche Kriterien bei unterschiedlichen Grundraten im Allgemeinen nicht gleichzeitig erfüllt werden können, sofern die Vorhersage nicht perfekt ist. (Quelle: Chouldechova, A. (2017). Fair prediction with disparate impact. Big Data, 5(2))\n\nDie Analyse belegt eine Differenz in ProPublicas Fehlerratenmaß. Sie belegt nicht für sich allein, welche Daten- oder Designentscheidung diese Differenz verursacht hat.",
+          "keyTakeaway": "Beim COMPAS-Streit wurden unterschiedliche Fairness-Maße verwendet. Ein Modell kann innerhalb von Risikostufen ähnlich kalibriert sein und zugleich unterschiedliche Fehlerraten zwischen Gruppen aufweisen."
         },
         {
           "id": "ethik-3-1-s2",
-          "title": "Amazon: das Recruiting-Tool, das Frauen abwertete",
+          "title": "Amazon: ein abgebrochenes Recruiting-Experiment",
           "readTimeMinutes": 2,
-          "content": "2018 berichtete Reuters, dass Amazon ein KI-System zum Screening von Bewerbungen intern eingestellt hatte, weil das Modell systematisch Frauen benachteiligte. (Quelle: Dastin, J., Reuters, Oktober 2018)\n\nWie es passierte: Das System wurde auf historischen Bewerberdaten trainiert, die hauptsächlich von Männern stammten, weil die Tech-Branche über Jahrzehnte männerdominiert war. Das Modell lernte, dass erfolgreiche Kandidaten eher Männer waren und begann, Formulierungen zu entwerten, die mit Frauengruppen assoziiert wurden, wie zum Beispiel 'Frauen-Schachclub' oder Absolventinnen bestimmter Universitäten.\n\nDie Konsequenz: Amazon erkannte das Problem, konnte es nicht vollständig beheben und stellte das Programm 2017 ein. Das Modell hatte einen strukturellen Bias aus der Vergangenheit reproduziert und verstärkt.\n\nDer Mechanismus: Historische Ungleichheit in Trainingsdaten führt dazu, dass Modelle bestehende Muster reproduzieren. Sie optimieren für das, was in der Vergangenheit funktioniert hat, und konservieren damit die Vergangenheit.\n\nWas das für KI-Einsatz bedeutet: Jedes System, das auf historischen Daten trainiert wird, kann historische Verzerrungen perpetuieren. Die Frage 'Was waren die richtigen Kandidaten?' ist nie neutral, sie ist eine Frage darüber, wer früher Chancen bekommen hat.",
-          "keyTakeaway": "Amazon trainierte ein Bewerbungs-KI auf historisch männerdominierten Daten. Das Modell lernte, Frauen zu benachteiligen. Das System wurde 2017 eingestellt. Historische Ungleichheit in Daten reproduziert sich in KI-Ausgaben."
+          "content": "Reuters berichtete 2018 unter Berufung auf mit dem Projekt vertraute Personen über ein internes, experimentelles Amazon-System zur Bewertung von Lebensläufen. Die Modelle waren mit Bewerbungen aus einem Zeitraum von zehn Jahren entwickelt worden; viele dieser Bewerbungen stammten von Männern. Ein Modell benachteiligte unter anderem Begriffe wie „women's“ und die Namen zweier Frauen-Colleges. (Quelle: Dastin, J., Reuters, Oktober 2018)\n\nDas Team entfernte erkennbare geschlechtsbezogene Signale, konnte aber laut Bericht nicht garantieren, dass das System nicht andere mittelbare Merkmale verwenden würde. Amazon löste das Projektteam bis Anfang 2017 auf. Das Unternehmen erklärte Reuters, das Werkzeug sei von Recruitern nie zur Bewertung von Bewerbenden eingesetzt worden.\n\nDer Fall dokumentiert ein Entwicklungsrisiko: Historische Bewerbungsdaten können frühere Auswahlmuster enthalten. Ob und wie ein Modell diese Muster übernimmt, hängt zusätzlich von Zielgröße, Merkmalen, Validierung und Einsatzentscheidung ab. Der Bericht belegt keinen durch dieses Werkzeug verursachten Einstellungsentscheid.",
+          "keyTakeaway": "Reuters dokumentierte ein internes Experiment mit geschlechtsbezogenen Bewertungseffekten. Amazon erklärte, Recruiter hätten das Werkzeug nie zur Bewertung von Bewerbenden eingesetzt."
         },
         {
           "id": "ethik-3-1-s3",
-          "title": "Joy Buolamwini: erst mit weißer Maske erkannte die Software ihr Gesicht",
+          "title": "Gender Shades: Audit kommerzieller Geschlechtsklassifikation",
           "readTimeMinutes": 2,
-          "content": "Joy Buolamwini war MIT-Forscherin und Mitgründerin der Algorithmic Justice League (ajl.org). Ihre Geschichte begann mit einem persönlichen Erlebnis: Ein Gesichtserkennungssystem erkannte ihr Gesicht nicht. Als sie eine weiße Maske aufsetzte, funktionierte es.\n\nDie Forschung: Zusammen mit Timnit Gebru führte sie 2018 die Gender Shades-Studie durch, die kommerzielle Gesichtsklassifikationssysteme von IBM, Microsoft und Face++ auf Bias untersuchte. (Quelle: Buolamwini, J. & Gebru, T. (2018). Gender Shades. Proceedings of Machine Learning Research, 81)\n\nDie Ergebnisse:\n- Hellhäutige Männer: Fehlerrate unter 1 Prozent\n- Dunkelhäutige Frauen: Fehlerrate bis zu 34,7 Prozent\n\nDas ist kein kleiner Unterschied. Es ist ein Faktor von über 30. Die Systeme wurden hauptsächlich auf Daten trainiert, die helle, männliche Gesichter überrepräsentierten.\n\nDie Konsequenz: Alle drei Unternehmen verbesserten ihre Systeme nach Veröffentlichung der Studie. IBM zog sich später aus dem Geschäft mit allgemeiner Gesichtserkennung zurück.\n\nDer Beitrag für das Feld: Buolamwinis Arbeit hat Benchmarking-Standards für KI-Bias mitbegründet. Sie zeigte, dass 'KI sieht keine Hautfarbe' eine falsche Aussage ist, wenn die Trainingsdaten unausgewogen sind. Inzwischen ist Bias-Evaluation fester Bestandteil des EU AI Act (Art. 9, Hochrisiko-KI-Systeme).",
-          "keyTakeaway": "Gesichtserkennungssysteme von IBM, Microsoft und Face++ hatten Fehlerraten bis zu 34,7 Prozent bei dunkelhäutigen Frauen, verglichen mit unter 1 Prozent bei hellhäutigen Männern. Buolamwinis Forschung hat Standards geprägt, die heute im EU AI Act stehen."
+          "content": "Joy Buolamwini und Timnit Gebru prüften 2018 kommerzielle Systeme von IBM, Microsoft und Face++ darauf, wie sie binäres Geschlecht aus Gesichtsbildern klassifizierten. Das war Geschlechtsklassifikation, nicht die Identifizierung einer Person durch Gesichtserkennung. (Quelle: Buolamwini, J. & Gebru, T. (2018). Gender Shades. Proceedings of Machine Learning Research, 81)\n\nFür hellhäutige Männer lag die höchste berichtete Fehlerrate bei 0,8 Prozent. Für dunkelhäutige Frauen reichten die Fehlerraten je nach System bis 34,7 Prozent. Die Studie zeigte damit erhebliche intersektionale Leistungsunterschiede in den geprüften Produkten.\n\nDie Autorinnen untersuchten außerdem die demografische Zusammensetzung zweier verbreiteter Benchmarks und dokumentierten dort Repräsentationsschieflagen. Daraus lässt sich jedoch nicht ohne Zugang zu den jeweiligen Trainingsdaten ableiten, dass genau diese Benchmarks oder eine bestimmte Datenverteilung die Fehler jedes geprüften Herstellers verursacht haben.\n\nDer belastbare Befund ist die gemessene Leistungsdifferenz unter dem Studienaufbau. Ursache, Übertragbarkeit auf andere Aufgaben und heutige Produktleistung müssen getrennt geprüft werden.",
+          "keyTakeaway": "Gender Shades maß bei kommerzieller Geschlechtsklassifikation bis zu 34,7 Prozent Fehler für dunkelhäutige Frauen und höchstens 0,8 Prozent für hellhäutige Männer. Die Studie bewies keine konkrete Trainingsdatenursache für jeden Anbieter."
         }
       ],
       "quiz": [
         {
           "id": "ethik-3-1-q1",
-          "questionText": "Was zeigte die ProPublica-Analyse des COMPAS-Systems?",
+          "questionText": "Welchen Befund berichtete ProPublica in der COMPAS-Analyse?",
           "answerOptions": [
-            { "id": "a", "text": "Das System war technisch fehlerhaft und produzierte willkürliche Ergebnisse", "isCorrect": false },
-            { "id": "b", "text": "Weiße Angeklagte wurden doppelt so häufig fälschlicherweise als hohes Rückfallrisiko eingestuft wie schwarze Angeklagte", "isCorrect": false },
-            { "id": "c", "text": "Schwarze Angeklagte wurden doppelt so häufig fälschlicherweise als hohes Rückfallrisiko eingestuft wie weiße Angeklagte", "isCorrect": true },
-            { "id": "d", "text": "Das System arbeitete perfekt fair, aber der Datensatz war zu klein", "isCorrect": false }
+            {
+              "id": "a",
+              "text": "Das System war technisch fehlerhaft und produzierte willkürliche Ergebnisse",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Weiße Angeklagte wurden doppelt so häufig fälschlicherweise als hohes Rückfallrisiko eingestuft wie schwarze Angeklagte",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Nach ProPublicas Fehlerratenmaß wurden schwarze Beschuldigte ohne erneute Festnahme häufiger fälschlich als hohes Risiko eingestuft als entsprechende weiße Beschuldigte",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Das System arbeitete perfekt fair, aber der Datensatz war zu klein",
+              "isCorrect": false
+            }
           ],
-          "explanation": "ProPublica analysierte 2016 über 7.000 Datensätze aus Florida und fand, dass schwarze Angeklagte mit doppelt so hoher Wahrscheinlichkeit fälschlicherweise als hohes Rückfallrisiko eingestuft wurden. Die Kontroverse zeigte zudem, dass mehrere mathematisch korrekte Fairness-Definitionen sich gegenseitig ausschließen können."
+          "explanation": "ProPublica berichtete unterschiedliche Fehlerraten. Northpointe verwies auf Kalibrierung innerhalb der Risikostufen. Chouldechovas Analyse erklärt, warum Kalibrierung und gleiche Fehlerraten bei unterschiedlichen Grundraten im Allgemeinen unvereinbar sein können."
         },
         {
           "id": "ethik-3-1-q2",
-          "questionText": "Warum bewertete das Amazon-Recruiting-KI Frauen systematisch schlechter?",
+          "questionText": "Was ist über Amazons experimentelles Recruiting-Werkzeug belegt?",
           "answerOptions": [
-            { "id": "a", "text": "Das Modell war absichtlich so programmiert", "isCorrect": false },
-            { "id": "b", "text": "Das System war auf historisch männerdominierten Bewerberdaten trainiert", "isCorrect": true },
-            { "id": "c", "text": "Das System konnte das Geschlecht der Bewerber nicht erkennen", "isCorrect": false },
-            { "id": "d", "text": "Die Bewerbungsunterlagen von Frauen waren tatsächlich schwächer", "isCorrect": false }
+            {
+              "id": "a",
+              "text": "Das Modell war absichtlich so programmiert",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Reuters berichtete über geschlechtsbezogene Bewertungseffekte; Amazon erklärte, Recruiter hätten das Werkzeug nie zur Bewerberbewertung eingesetzt",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Das System konnte das Geschlecht der Bewerber nicht erkennen",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Die Bewerbungsunterlagen von Frauen waren tatsächlich schwächer",
+              "isCorrect": false
+            }
           ],
-          "explanation": "Das Amazon-System wurde auf historischen Bewerberdaten trainiert, die hauptsächlich von Männern stammten, da die Tech-Branche jahrzehntelang männerdominiert war. Das Modell lernte, dass erfolgreiche Kandidaten tendenziell männlich waren, und benachteiligte Formulierungen, die mit Frauen assoziiert wurden. Historische Ungleichheit in Trainingsdaten reproduziert sich in KI-Entscheidungen."
+          "explanation": "Reuters beschrieb ein internes Experiment, das Begriffe wie „women's“ benachteiligte. Amazon erklärte, das Werkzeug sei nie von Recruitern zur Bewertung von Bewerbenden verwendet worden. Der Bericht belegt daher ein Entwicklungsrisiko, nicht einen konkreten Einstellungsentscheid."
         },
         {
           "id": "ethik-3-1-q3",
-          "questionText": "Was ergab Joy Buolamwinis Gender Shades Studie zu Gesichtserkennungssystemen?",
+          "questionText": "Was ergab die Gender-Shades-Studie für kommerzielle Geschlechtsklassifikation?",
           "answerOptions": [
-            { "id": "a", "text": "Die Systeme erkannten alle Gesichter mit ähnlicher Genauigkeit", "isCorrect": false },
-            { "id": "b", "text": "Nur günstigere Systeme hatten Bias-Probleme", "isCorrect": false },
-            { "id": "c", "text": "Dunkelhäutige Männer hatten mit knapp 12 Prozent die höchste Fehlerrate der vier untersuchten Gruppen", "isCorrect": false },
-            { "id": "d", "text": "Hellhäutige Männer hatten unter 1 Prozent Fehlerrate, dunkelhäutige Frauen bis 34,7 Prozent", "isCorrect": true }
+            {
+              "id": "a",
+              "text": "Die Systeme erkannten alle Gesichter mit ähnlicher Genauigkeit",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Nur günstigere Systeme hatten Bias-Probleme",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Dunkelhäutige Männer hatten mit knapp 12 Prozent die höchste Fehlerrate der vier untersuchten Gruppen",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Die höchste Fehlerrate lag bei hellhäutigen Männern bei 0,8 Prozent und bei dunkelhäutigen Frauen je nach System bei bis zu 34,7 Prozent",
+              "isCorrect": true
+            }
           ],
-          "explanation": "Die Gender Shades Studie (2018) analysierte Gesichtsklassifikationssysteme von IBM, Microsoft und Face++. Das Ergebnis: Fehlerraten bis zu 34,7 Prozent bei dunkelhäutigen Frauen im Vergleich zu unter 1 Prozent bei hellhäutigen Männern. Das entspricht einem Faktor von über 30. Die Systeme wurden auf Daten trainiert, die helle, männliche Gesichter überrepräsentierten."
+          "explanation": "Gender Shades prüfte die binäre Geschlechtsklassifikation von IBM, Microsoft und Face++. Die Studie maß erhebliche intersektionale Leistungsunterschiede. Sie war keine Studie zur Personenidentifikation und bewies keine konkrete Trainingsdatenursache für jeden Anbieter."
         }
       ]
     },
@@ -90,54 +142,91 @@
       "subtitle": "Wie man Verantwortung verteilt, ohne sie zu verwässern",
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-07-14",
-      "nextReview": "2026-10-14",
+      "lastReviewed": "2026-08-09",
+      "nextReview": "2027-02-09",
       "reviewCadence": "bi-annual",
       "riskClass": "evergreen",
-      "keyConcepts": ["Erklärbarkeit", "Verantwortlichkeit", "Governance", "EU AI Act Art. 9"],
+      "keyConcepts": [
+        "Erklärbarkeit",
+        "Verantwortlichkeit",
+        "Governance",
+        "EU AI Act Art. 9"
+      ],
       "sections": [
         {
           "id": "ethik-3-2-s1",
           "title": "Ebene 1: Technik",
           "readTimeMinutes": 2,
-          "content": "Auf technischer Ebene geht es darum, was Modelle tun und ob wir verstehen, warum.\n\nErklärbarkeit (Explainability): Viele KI-Modelle sind Black Boxes. Du kannst ihren Output sehen, aber nicht nachvollziehen, welche Faktoren zu welcher Entscheidung geführt haben. Techniken wie SHAP (SHapley Additive exPlanations) und LIME (Local Interpretable Model-agnostic Explanations) machen sichtbar, welche Eingaben das Modell am stärksten beeinflusst haben.\n\nBias-Messung: Bevor ein Modell eingesetzt wird, kann man es auf demographische Gruppen aufteilen und prüfen, ob Fehlerraten oder Trefferquoten systematisch verschieden sind. Der EU AI Act verlangt das für Hochrisiko-KI-Systeme explizit (Art. 9, Art. 10).\n\nRobustheit: Ein Modell ist robust, wenn kleine Änderungen an den Eingaben keine dramatisch anderen Outputs produzieren. Ein Bewerbungs-KI, das je nach Formulierung stark schwankt, ist weder zuverlässig noch fair.\n\nDie Grenze der Technik: Technische Maßnahmen lösen keine gesellschaftlichen Fragen. Ein Gesichtserkennungssystem kann perfekt kalibriert sein und trotzdem für Massenüberwachung eingesetzt werden. Das ist keine technische, sondern eine politische Entscheidung.",
-          "keyTakeaway": "Auf technischer Ebene sind Erklärbarkeit, Bias-Messung und Robustheit die zentralen Werkzeuge. Der EU AI Act (Art. 9, 10) schreibt diese Prüfungen für Hochrisiko-KI-Systeme vor."
+          "content": "Auf technischer Ebene werden Systemleistung, Fehlerverteilung und Grenzen geprüft.\n\nAttributionsverfahren wie SHAP (SHapley Additive exPlanations) oder LIME (Local Interpretable Model-agnostic Explanations) schätzen unter gewählten Modell-, Referenz- und Störungsannahmen, welchen Beitrag Eingabemerkmale zu einer Ausgabe leisten. Sie zeigen keine kausale Wirkung und liefern nicht automatisch eine vollständige Erklärung des Entscheidungsprozesses.\n\nEine Bias-Prüfung vergleicht zum Beispiel Fehler- oder Auswahlraten zwischen sinnvoll abgegrenzten Gruppen. Aussagekraft setzt geeignete Zielgrößen, Nenner, Stichproben und Unsicherheitsangaben voraus. Für Hochrisiko-KI-Systeme regelt Art. 9 ein Risikomanagementsystem. Art. 10 enthält Daten- und Data-Governance-Anforderungen sowie, soweit einschlägig, eine Prüfung möglicher Verzerrungen. Art. 15 behandelt Genauigkeit, Robustheit und Cybersicherheit. Ob diese Pflichten für ein konkretes System bereits gelten, hängt von Einordnung, Rolle und aktuellem Anwendungsdatum ab.\n\nTechnische Prüfungen können Risiken sichtbar machen. Ob ein Einsatzzweck zulässig oder gesellschaftlich vertretbar ist, entscheiden sie nicht.",
+          "keyTakeaway": "Attribution, Gruppenmetriken und Robustheitstests beantworten verschiedene Fragen. Keine einzelne Kennzahl erklärt Ursache, Fairness und Zulässigkeit zugleich."
         },
         {
           "id": "ethik-3-2-s2",
           "title": "Ebene 2: Unternehmen",
           "readTimeMinutes": 2,
-          "content": "Auf Unternehmensebene geht es um Governance: Wer darf was entscheiden, wer ist verantwortlich, wie wird dokumentiert?\n\nVerantwortlichkeit: Hochrisiko-Systeme müssen nach Art. 12 technisch Protokolle erzeugen können. Betreiber bewahren die automatisch erzeugten Logs, die unter ihrer Kontrolle sind, nach Art. 26 Abs. 6 grundsätzlich mindestens sechs Monate auf, vorbehaltlich abweichenden Rechts. Welche Informationen im Einzelfall verfügbar sind, hängt von System, Gebrauchsanweisung und Betreiberzugriff ab.\n\nEthikräte und Reviews: Interne Gremien können neue KI-Systeme vor dem Einsatz prüfen. Ein \"Ethikrat\" ist kein pauschal vorgeschriebenes Organ; entscheidend sind klare Rollen, Kompetenz, Befugnisse und ein belastbarer Freigabe- und Eskalationsprozess.\n\nHinweisgeberschutz: Art. 87 verweist für Meldungen von Verstößen gegen den AI Act und den Schutz meldender Personen auf die Richtlinie (EU) 2019/1937. Ob der Schutz im konkreten Fall greift, ist anhand ihres Anwendungsbereichs und des nationalen Rechts zu prüfen.\n\nGovernance verbindet technische Nachweise mit organisatorischer Entscheidung und Kontrolle.",
-          "keyTakeaway": "Bei Hochrisiko-Systemen erzeugt das System Logs; Betreiber bewahren die unter ihrer Kontrolle befindlichen Logs nach Art. 26 Abs. 6 auf. Rollen, Freigaben, Eskalation und Hinweiswege bleiben organisatorische Aufgaben."
+          "content": "Auf Organisationsebene braucht jeder Einsatz einen benannten Zweck, eine zuständige Rolle, Freigabekriterien und einen dokumentierten Eskalationsweg.\n\nSoweit die jeweiligen Hochrisiko-Vorschriften anwendbar sind, muss ein System nach Art. 12 technisch eine automatische Protokollierung ermöglichen. Betreiber bewahren die automatisch erzeugten Logs, die unter ihrer Kontrolle sind, nach Art. 26 Abs. 6 grundsätzlich mindestens sechs Monate auf, sofern anderes Unions- oder nationales Recht keine andere Frist vorsieht. Welche Informationen vorhanden sind, hängt vom System und vom tatsächlichen Betreiberzugriff ab.\n\nEin internes Prüfungsgremium kann sinnvoll sein, ist aber nicht pauschal als „Ethikrat“ vorgeschrieben. Entscheidend sind Kompetenz, Entscheidungsbefugnis, dokumentierte Freigabe und ein Verfahren für Vorfälle. Art. 87 verweist für Meldungen von Verstößen gegen die KI-Verordnung und den Schutz meldender Personen auf die Richtlinie (EU) 2019/1937; ihr Anwendungsbereich und nationales Recht bleiben zu prüfen.",
+          "keyTakeaway": "Protokollierungspflicht, Aufbewahrung und interne Freigabe sind getrennte Anforderungen. Ihr Anwendungsbereich hängt von Systemkategorie, Rolle und Anwendungsdatum ab."
         },
         {
           "id": "ethik-3-2-s3",
           "title": "Ebene 3: Gesellschaft",
           "readTimeMinutes": 2,
-          "content": "Auf gesellschaftlicher Ebene geht es um Normen, Gesetze und demokratische Kontrolle über Technologie.\n\nGesetzliche Regulierung: Der EU AI Act verbindet Systemkategorien, Rollen und konkrete Pflichten. Datenschutz-, Gleichbehandlungs- und Grundrechtevorgaben können parallel gelten.\n\nÖffentliche Debatte: Forschung und Journalismus haben die Fälle COMPAS, das interne Amazon-Recruiting-System und Gesichtsklassifikations-Bias sichtbar gemacht. Daraus folgt nicht, dass jede Folgewirkung ohne diese Veröffentlichungen sicher fortbestanden hätte; belegt ist ihr Beitrag zur öffentlichen und wissenschaftlichen Debatte.\n\nRechte bei automatisierten Entscheidungen: Art. 22 Abs. 1 DSGVO schützt davor, einer ausschließlich automatisierten Entscheidung einschließlich Profiling unterworfen zu werden, die rechtliche Wirkung entfaltet oder ähnlich erheblich beeinträchtigt. Art. 22 Abs. 2 enthält Ausnahmen. In den Fällen des Art. 22 Abs. 2 lit. a und c verlangt Abs. 3 mindestens das Recht auf menschliches Eingreifen, Darlegung des eigenen Standpunkts und Anfechtung. Art. 13, 14 und 15 enthalten bei einschlägiger automatisierter Entscheidungsfindung Informationsrechte über die involvierte Logik sowie Tragweite und Auswirkungen. Das ist kein pauschales \"Recht auf Erklärung\" für jeden Algorithmus.\n\nWenn du eine erhebliche Entscheidung nicht nachvollziehen kannst, frage nach der Rolle automatisierter Verarbeitung, der Entscheidungsgrundlage und den einschlägigen Datenschutzinformationen. Zivilgesellschaftliche Organisationen wie AlgorithmWatch und Algorithmic Justice League dokumentieren algorithmische Risiken.",
+          "content": "Auf gesellschaftlicher Ebene werden zulässige Zwecke, Rechte und Kontrollwege festgelegt. KI-Verordnung, Datenschutz-, Gleichbehandlungs- und Grundrechtevorgaben können parallel gelten und beantworten unterschiedliche Fragen.\n\nArt. 22 Abs. 1 DSGVO betrifft Entscheidungen, die ausschließlich auf automatisierter Verarbeitung einschließlich Profiling beruhen und rechtliche Wirkung entfalten oder eine Person ähnlich erheblich beeinträchtigen. Art. 22 Abs. 2 enthält Ausnahmen. Für die Fälle nach Abs. 2 lit. a und c verlangt Abs. 3 mindestens die Möglichkeit menschlichen Eingreifens, der Darlegung des eigenen Standpunkts und der Anfechtung. Art. 13, 14 und 15 enthalten bei einschlägiger automatisierter Entscheidungsfindung Informationspflichten beziehungsweise Auskunftsrechte zur involvierten Logik sowie zur Tragweite und zu den angestrebten Auswirkungen. Das ist kein pauschaler Anspruch auf Quellcode oder eine Erklärung für jeden Algorithmus.\n\nBei einer erheblichen Entscheidung sind daher vier Punkte getrennt zu prüfen: War sie ausschließlich automatisiert? Welche Wirkung hatte sie? Greift eine Ausnahme? Welche Informations- und Schutzrechte gelten?",
           "keyTakeaway": "Art. 22 DSGVO betrifft ausschließlich automatisierte Entscheidungen mit rechtlicher oder ähnlich erheblicher Wirkung und kennt Ausnahmen. Schutzmaßnahmen und Informationsrechte sind präzise nach Art. 13 bis 15 und Art. 22 zu prüfen."
         }
       ],
       "quiz": [
         {
           "id": "ethik-3-2-q1",
-          "questionText": "Was verpflichtet der EU AI Act Betreiber von Hochrisiko-KI-Systemen auf Unternehmensebene zu tun?",
+          "questionText": "Welche Aufbewahrungspflicht kann Betreiber von Hochrisiko-KI-Systemen nach Art. 26 Abs. 6 treffen?",
           "answerOptions": [
-            { "id": "a", "text": "Einen monatlichen Report an das AI Office der EU zu schicken", "isCorrect": false },
-            { "id": "b", "text": "Die automatisch erzeugten Logs, die unter ihrer Kontrolle sind, grundsätzlich mindestens sechs Monate aufzubewahren, vorbehaltlich abweichenden Rechts", "isCorrect": true },
-            { "id": "c", "text": "Jeden Algorithmus öffentlich zugänglich zu machen", "isCorrect": false },
-            { "id": "d", "text": "Einen internen Ethikrat einzurichten", "isCorrect": false }
+            {
+              "id": "a",
+              "text": "Einen monatlichen Report an das AI Office der EU zu schicken",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Die automatisch erzeugten Logs, die unter ihrer Kontrolle sind, grundsätzlich mindestens sechs Monate aufzubewahren, vorbehaltlich abweichenden Rechts",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Jeden Algorithmus öffentlich zugänglich zu machen",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Einen internen Ethikrat einzurichten",
+              "isCorrect": false
+            }
           ],
-          "explanation": "Art. 12 verlangt, dass Hochrisiko-Systeme technisch die automatische Protokollierung ermöglichen. Art. 26 Abs. 6 verpflichtet Betreiber, die unter ihrer Kontrolle befindlichen automatisch erzeugten Logs grundsätzlich mindestens sechs Monate aufzubewahren, sofern anderes Recht keine abweichende Frist vorgibt."
+          "explanation": "Soweit die Vorschriften anwendbar sind, verlangt Art. 12 die technische Möglichkeit automatischer Protokollierung. Art. 26 Abs. 6 verlangt vom Betreiber grundsätzlich die Aufbewahrung der unter seiner Kontrolle befindlichen Logs für mindestens sechs Monate, sofern anderes Recht keine andere Frist vorsieht."
         },
         {
           "id": "ethik-3-2-q2",
-        "questionText": "Welche Aussage zu DSGVO Art. 22 ist richtig?",
+          "questionText": "Welche Aussage zu DSGVO Art. 22 ist richtig?",
           "answerOptions": [
-            { "id": "a", "text": "Das Recht, die Löschung aller eigenen Daten zu verlangen", "isCorrect": false },
-            { "id": "b", "text": "Art. 22 verbietet jede Verwendung eines Algorithmus bei einer Entscheidung", "isCorrect": false },
-            { "id": "c", "text": "Art. 22 gewährt bei jedem KI-Output automatisch ein vollständiges Recht auf Offenlegung des Quellcodes", "isCorrect": false },
-            { "id": "d", "text": "Art. 22 schützt vor ausschließlich automatisierten Entscheidungen mit rechtlicher oder ähnlich erheblicher Wirkung; Ausnahmen und die jeweils erforderlichen Schutzmaßnahmen sind zu prüfen", "isCorrect": true }
+            {
+              "id": "a",
+              "text": "Das Recht, die Löschung aller eigenen Daten zu verlangen",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Art. 22 verbietet jede Verwendung eines Algorithmus bei einer Entscheidung",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Art. 22 gewährt bei jedem KI-Output automatisch ein vollständiges Recht auf Offenlegung des Quellcodes",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Art. 22 schützt vor ausschließlich automatisierten Entscheidungen mit rechtlicher oder ähnlich erheblicher Wirkung; Ausnahmen und die jeweils erforderlichen Schutzmaßnahmen sind zu prüfen",
+              "isCorrect": true
+            }
           ],
           "explanation": "Art. 22 Abs. 1 betrifft Entscheidungen, die ausschließlich auf automatisierter Verarbeitung beruhen und rechtliche oder ähnlich erhebliche Wirkung haben. Abs. 2 kennt Ausnahmen. Bei Vertragserforderlichkeit oder ausdrücklicher Einwilligung verlangt Abs. 3 mindestens menschliches Eingreifen, Darlegung des eigenen Standpunkts und Anfechtung; weitere Informationsrechte ergeben sich aus Art. 13 bis 15."
         },
@@ -145,10 +234,26 @@
           "id": "ethik-3-2-q3",
           "questionText": "Was ist ein zentraler Unterschied zwischen technischer und gesellschaftlicher Ebene der KI-Ethik?",
           "answerOptions": [
-            { "id": "a", "text": "Gesellschaftliche Maßnahmen sind unwirksam, weil Technologie schneller ist als Politik", "isCorrect": false },
-            { "id": "b", "text": "Technische Maßnahmen allein legen bereits fest, wofür ein KI-System eingesetzt werden darf", "isCorrect": false },
-            { "id": "c", "text": "Auf technischer Ebene gibt es klare Antworten, auf gesellschaftlicher Ebene nicht", "isCorrect": false },
-            { "id": "d", "text": "Technik kann Bias messen und reduzieren, aber nicht entscheiden, für welche Zwecke KI eingesetzt werden darf; das ist eine gesellschaftlich-politische Entscheidung", "isCorrect": true }
+            {
+              "id": "a",
+              "text": "Gesellschaftliche Maßnahmen sind unwirksam, weil Technologie schneller ist als Politik",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Technische Maßnahmen allein legen bereits fest, wofür ein KI-System eingesetzt werden darf",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Auf technischer Ebene gibt es klare Antworten, auf gesellschaftlicher Ebene nicht",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Technik kann Bias messen und reduzieren, aber nicht entscheiden, für welche Zwecke KI eingesetzt werden darf; das ist eine gesellschaftlich-politische Entscheidung",
+              "isCorrect": true
+            }
           ],
           "explanation": "Technische Maßnahmen (Explainability, Bias-Messung, Robustheit) sind wichtig, aber sie lösen keine politischen Fragen. Ein technisch optimiertes Gesichtserkennungssystem kann immer noch für Massenüberwachung eingesetzt werden. Die Entscheidung, ob das erlaubt ist, trifft die Gesellschaft, nicht die Technik."
         }
@@ -158,60 +263,97 @@
       "id": "ethik-3-3",
       "blockId": "block_3",
       "number": 3,
-      "title": "Was du mitnimmst: KI ist kein neutrales Werkzeug",
-      "subtitle": "Drei Prinzipien für den Alltag mit KI",
+      "title": "Drei Prüfungen für reale KI-Einsätze",
+      "subtitle": "Daten, Zuständigkeit und Kontrollweg",
       "durationMinutes": 4,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-07-14",
-      "nextReview": "2026-10-14",
+      "lastReviewed": "2026-08-09",
+      "nextReview": "2027-02-09",
       "reviewCadence": "bi-annual",
       "riskClass": "evergreen",
-      "keyConcepts": ["Kritisches Denken", "DSGVO Art. 22", "AlgorithmWatch", "Algorithmische Kompetenz"],
+      "keyConcepts": [
+        "Kritisches Denken",
+        "DSGVO Art. 22",
+        "AlgorithmWatch",
+        "Algorithmische Kompetenz"
+      ],
       "sections": [
         {
           "id": "ethik-3-3-s1",
-          "title": "Prinzip 1: Trainingsdaten sind nie neutral",
+          "title": "Prüfung 1: Daten und Zielgröße trennen",
           "readTimeMinutes": 1,
-          "content": "Alles, was du in diesem Block gesehen hast, hat eine gemeinsame Wurzel: KI lernt aus Daten. Und Daten sind Aufzeichnungen der Vergangenheit.\n\nDie Vergangenheit enthält Diskriminierung, Ungleichheit und Machtstrukturen. Wenn ein Modell auf historischen Daten trainiert wird, lernt es diese Muster. Ohne aktive Gegenmaßnahmen reproduziert und verstärkt es sie.\n\nDas bedeutet für dich: Jedes Mal, wenn dir gesagt wird, 'die KI hat entschieden', frag: Auf welchen Daten wurde dieses Modell trainiert? Wessen Erfahrungen und Situationen sind überrepräsentiert? Wessen fehlen?\n\nDas ist keine philosophische Frage. Es ist eine technische Frage mit praktischen Konsequenzen.",
-          "keyTakeaway": "Trainingsdaten sind Aufzeichnungen einer ungleichen Vergangenheit. KI-Modelle reproduzieren diese Ungleichheit, wenn sie nicht aktiv dagegen entworfen werden."
+          "content": "Historische Daten können frühere Ungleichheiten, Messfehler oder Auswahlentscheidungen enthalten. Daraus folgt nicht automatisch, dass jedes darauf trainierte Modell dieselbe Verzerrung reproduziert. Das Ergebnis hängt auch von Stichprobe, Labels, Merkmalen, Zielgröße, Optimierung, Schwellenwerten und Einsatzkontext ab.\n\nPrüfe deshalb nicht nur, woher die Daten stammen. Frage auch: Wer ist in den Daten vertreten? Was gilt als richtiges Ergebnis? Welche Fehler werden für welche Gruppen gemessen? Wurde die Leistung im tatsächlichen Einsatzkontext geprüft?\n\nDie Fälle COMPAS, Amazon und Gender Shades zeigen unterschiedliche Probleme. Sie dürfen nicht auf die eine Formel „schlechte Trainingsdaten“ reduziert werden.",
+          "keyTakeaway": "Datenherkunft, Zielgröße, Fehlermetrik und Einsatzkontext sind getrennt zu prüfen. Historische Daten können Verzerrungen enthalten, bestimmen das Ergebnis aber nicht allein."
         },
         {
           "id": "ethik-3-3-s2",
-          "title": "Prinzip 2: Verantwortung ist konkret und zuweisbar",
+          "title": "Prüfung 2: Rolle und Pflicht zuordnen",
           "readTimeMinutes": 1,
-          "content": "'Die KI hat das entschieden' erklärt weder Zuständigkeit noch Rechtsgrundlage.\n\nDer AI Act definiert in Art. 3 verschiedene Akteure und weist ihnen je nach Rolle Pflichten zu, darunter Anbieter, Betreiber, Bevollmächtigte, Einführer und Händler. Art. 25 regelt bestimmte Rollenwechsel, Art. 26 Betreiberpflichten und Art. 28 Pflichten von Bevollmächtigten. Welche Organisation wofür verantwortlich ist, folgt aus der realen Rolle und Handlung, nicht aus einer pauschalen Liste.\n\nAls betroffene Person kannst du nach Verantwortlichem, Zweck, Rechtsgrundlage und der Rolle automatisierter Verarbeitung fragen. Bei einschlägiger automatisierter Entscheidungsfindung enthalten Art. 13 bis 15 DSGVO Informationsrechte; Art. 22 gilt unter seinen engen Voraussetzungen. Das ist präziser als ein pauschales \"Erklärungsrecht\".\n\nMitarbeitende handeln regelmäßig für ihre Organisation; die konkrete Verantwortungszuweisung und Freigabe muss intern geregelt sein. Verantwortung lässt sich nicht an die Technik delegieren.",
-          "keyTakeaway": "Rollen und Pflichten folgen aus der tatsächlichen Handlung. Datenschutz-Informationsrechte und Art. 22 sind anhand ihrer Voraussetzungen zu nutzen, nicht als pauschales Erklärungsrecht."
+          "content": "„Die KI hat entschieden“ benennt weder eine zuständige Organisation noch eine Rechtsgrundlage. Die KI-Verordnung weist Pflichten nach tatsächlicher Rolle und Handlung zu: Art. 16 enthält Pflichten für Anbieter, Art. 22 für Bevollmächtigte, Art. 23 für Einführer, Art. 24 für Händler und Art. 26 für Betreiber. Art. 25 regelt Fälle, in denen ein anderer Akteur als Anbieter gilt.\n\nDiese Rollenverteilung ist keine pauschale Aussage über Haftung oder darüber, wer einen konkreten diskriminierenden Erfolg verursacht hat. Zusätzlich können Datenschutz-, Gleichbehandlungs-, Arbeits- oder Zivilrecht gelten.\n\nDokumentiere für den Einzelfall: Wer stellt das System bereit? Wer bestimmt Zweck und Einsatz? Wer trifft oder bestätigt die Entscheidung? Welche Vorschrift knüpft an diese Handlung an?",
+          "keyTakeaway": "Ordne erst die tatsächliche Rolle zu, dann die konkrete Pflicht. Art. 16 sowie Art. 22 bis 26 regeln unterschiedliche Akteure; daraus folgt keine pauschale Alleinverantwortung."
         },
         {
           "id": "ethik-3-3-s3",
-          "title": "Prinzip 3: Aufmerksamkeit ist Schutz",
+          "title": "Prüfung 3: einen nachvollziehbaren Kontrollweg nutzen",
           "readTimeMinutes": 2,
-          "content": "Das wichtigste Werkzeug gegen algorithmischen Bias und KI-Missbrauch ist informierte Aufmerksamkeit.\n\nAuf individueller Ebene:\n- Wenn du eine automatisierte Entscheidung nicht nachvollziehen kannst, frage nach einer Erklärung.\n- Wenn ein Deepfake verdächtig wirkt, prüfe ihn mit den Werkzeugen aus Block 2, bevor du ihn weiterteilst.\n- Wenn du ein KI-System nutzt, frage dich: Was weiß ich über die Trainingsdaten?\n\nAuf kollektiver Ebene:\n- AlgorithmWatch (algorithmwatch.org) dokumentiert algorithmische Entscheidungssysteme in Europa und veröffentlicht Auswirkungsanalysen.\n- Algorithmic Justice League (ajl.org) von Joy Buolamwini forscht und bildet aus.\n- netzpolitik.org (Deutschland) berichtet regelmäßig über digitale Bürgerrechte und KI-Politik.\n\nDas Ende dieser Lektion ist kein Abschluss, sondern ein Anfang. KI-Ethik ist keine akademische Disziplin. Sie ist eine Alltagspraxis. Und du hast jetzt die Grundlagen dafür.",
-          "keyTakeaway": "Aufmerksamkeit ist dein stärkstes Werkzeug. Frag nach Erklärungen. Prüfe Verdächtiges. Unterstütze Organisationen, die algorithmischen Bias dokumentieren. KI-Ethik ist keine akademische Disziplin, sondern Alltagspraxis."
+          "content": "Nutze für überprüfbare Fälle einen festen Ablauf:\n\n1. Zweck, verantwortliche Rolle, Datenquelle und menschliche Entscheidungsstelle dokumentieren.\n2. Bei einer erheblichen automatisierten Entscheidung prüfen, ob sie ausschließlich automatisiert war, welche Wirkung sie hatte, welche Ausnahme greifen könnte und welche Informations- oder Schutzrechte bestehen.\n3. Bei mutmaßlich synthetischen Medien die Originalfundstelle sichern und Herkunft sowie Kontext nach dem Ablauf aus Block 2 prüfen.\n4. Befund, Unsicherheit und nächsten Zuständigkeitsweg getrennt festhalten.\n\nFür unabhängige Einordnung veröffentlichen AlgorithmWatch (algorithmwatch.org), die von Joy Buolamwini gegründete Algorithmic Justice League (ajl.org) und netzpolitik.org Recherchen zu algorithmischen Systemen, Bias und digitaler Regulierung.",
+          "keyTakeaway": "Ein belastbarer Kontrollweg dokumentiert Zweck, Rolle, Daten, Entscheidung, Befund und Unsicherheit. Er ersetzt Vermutungen durch prüfbare Schritte."
         }
       ],
       "quiz": [
         {
           "id": "ethik-3-3-q1",
-          "questionText": "Warum reproduzieren KI-Modelle häufig bestehende Ungleichheiten?",
+          "questionText": "Welche Aussage beschreibt das Verhältnis von Trainingsdaten und Modellwirkung präzise?",
           "answerOptions": [
-            { "id": "a", "text": "Weil KI-Entwickler bewusst diskriminierende Modelle bauen wollen", "isCorrect": false },
-            { "id": "b", "text": "Weil Modelle grundsätzlich zu wenige Trainingsdaten verwenden, unabhängig von deren Zusammensetzung", "isCorrect": false },
-            { "id": "c", "text": "Weil einzelne Entwickler unbewusst ihre persönlichen Vorlieben direkt ins Modell programmieren", "isCorrect": false },
-            { "id": "d", "text": "Weil Trainingsdaten Aufzeichnungen einer ungleichen Vergangenheit sind und Modelle diese Muster lernen", "isCorrect": true }
+            {
+              "id": "a",
+              "text": "Weil KI-Entwickler bewusst diskriminierende Modelle bauen wollen",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Weil Modelle grundsätzlich zu wenige Trainingsdaten verwenden, unabhängig von deren Zusammensetzung",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Weil einzelne Entwickler unbewusst ihre persönlichen Vorlieben direkt ins Modell programmieren",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Historische Daten können Ungleichheiten enthalten; die Modellwirkung hängt zusätzlich von Zielgröße, Merkmalen, Prüfung und Einsatz ab",
+              "isCorrect": true
+            }
           ],
-          "explanation": "KI-Modelle lernen Muster aus Trainingsdaten. Diese Daten sind Aufzeichnungen vergangener Entscheidungen, die oft durch Diskriminierung, strukturelle Ungleichheit und Machtasymmetrien geprägt waren. Ohne aktive Gegenmaßnahmen (Daten-Audit, Bias-Messung, gezielte Korrekturen) reproduzieren Modelle diese Muster. Das ist kein Vorsatz, sondern ein systemisches Problem."
+          "explanation": "Historische Daten können frühere Ungleichheiten abbilden. Ob daraus eine nachteilige Modellwirkung entsteht, hängt außerdem von Auswahl, Labels, Zielgröße, Modellierung, Schwellenwerten, Evaluation und Einsatz ab."
         },
         {
           "id": "ethik-3-3-q2",
-          "questionText": "Wer ist laut EU AI Act verantwortlich, wenn ein eingesetztes KI-System diskriminierende Entscheidungen trifft?",
+          "questionText": "Wie ordnet die KI-Verordnung Pflichten entlang der Wertschöpfungskette zu?",
           "answerOptions": [
-            { "id": "a", "text": "Nur der ursprüngliche KI-Entwickler", "isCorrect": false },
-            { "id": "b", "text": "Niemand, weil KI-Systeme eigenständig handeln", "isCorrect": false },
-            { "id": "c", "text": "Ausschließlich die Marktüberwachungsbehörde des jeweiligen EU-Mitgliedstaats", "isCorrect": false },
-            { "id": "d", "text": "Konkrete Akteure wie Anbieter, Betreiber und Einführer, die in Art. 25-28 benannt sind", "isCorrect": true }
+            {
+              "id": "a",
+              "text": "Nur der ursprüngliche KI-Entwickler",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Niemand, weil KI-Systeme eigenständig handeln",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Ausschließlich die Marktüberwachungsbehörde des jeweiligen EU-Mitgliedstaats",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Nach tatsächlicher Rolle: insbesondere Anbieter nach Art. 16, Bevollmächtigte nach Art. 22, Einführer nach Art. 23, Händler nach Art. 24 und Betreiber nach Art. 26; Art. 25 regelt Rollenwechsel",
+              "isCorrect": true
+            }
           ],
-          "explanation": "Der EU AI Act benennt in Art. 25-28 konkrete Verantwortliche: Anbieter (die das System entwickeln), Bevollmächtigte, Einführer (die es importieren), Händler und Betreiber (die es einsetzen). 'Die KI hat entschieden' ist weder eine valide Erklärung noch ein rechtlicher Schutzschild. Jedes eingesetzte System hat zuweisbare Verantwortliche."
+          "explanation": "Die Pflichten stehen in unterschiedlichen Artikeln und knüpfen an die tatsächliche Rolle an. Art. 25 kann einen Rollenwechsel zum Anbieter auslösen. Diese Zuordnung ersetzt keine gesonderte Prüfung von Haftung, Datenschutz oder Gleichbehandlung."
         },
         {
           "id": "ethik-3-3-q3",
@@ -219,10 +361,18 @@
           "answerOptions": [
             { "id": "a", "text": "AlgorithmWatch", "isCorrect": false },
             { "id": "b", "text": "netzpolitik.org", "isCorrect": false },
-            { "id": "c", "text": "Data & Society Research Institute", "isCorrect": false },
-            { "id": "d", "text": "Algorithmic Justice League (ajl.org)", "isCorrect": true }
+            {
+              "id": "c",
+              "text": "Data & Society Research Institute",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Algorithmic Justice League (ajl.org)",
+              "isCorrect": true
+            }
           ],
-          "explanation": "Joy Buolamwini gründete die Algorithmic Justice League (ajl.org), die algorithmischen Bias in KI-Systemen dokumentiert, erforscht und bekämpft. AlgorithmWatch (algorithmwatch.org) ist eine weitere, europäische Organisation, die algorithmische Entscheidungssysteme in Deutschland und Europa untersucht."
+          "explanation": "Joy Buolamwini gründete die Algorithmic Justice League (ajl.org), die zu Schäden und Ungleichheiten in algorithmischen Systemen forscht und Bildungsarbeit leistet. AlgorithmWatch (algorithmwatch.org) untersucht algorithmische Entscheidungssysteme in Europa."
         }
       ]
     }

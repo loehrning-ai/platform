@@ -6,23 +6,48 @@ describe("HeroSection learning-platform positioning", () => {
   it("renders the free German learning platform headline without employer proof", () => {
     render(<HeroSection />);
     expect(screen.getByText("KI")).toBeInTheDocument();
-    expect(screen.getByText("lernen.")).toBeInTheDocument();
-    expect(screen.getByText("Kostenlos.")).toBeInTheDocument();
+    expect(screen.getByText("verstehen.")).toBeInTheDocument();
+    expect(screen.getByText("Sicher anwenden.")).toBeInTheDocument();
     expect(screen.queryByText("Deutsch.")).not.toBeInTheDocument();
     ["Amazon", "Apple", "Red Bull", "Meta"].forEach((name) => {
       expect(screen.queryByText(name)).not.toBeInTheDocument();
     });
   });
 
+  it("renders English positioning and locale-preserving actions", () => {
+    const { container } = render(<HeroSection locale="en" />);
+
+    expect(
+      screen.getByRole("heading", { name: "Understand AI. Apply it safely." }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /Four foundation-path readers require a free learning account/,
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /Open AI check/i }),
+    ).toHaveAttribute("href", "/en/ki-check");
+    expect(screen.getByRole("link", { name: /Open Source/i })).toHaveAttribute(
+      "href",
+      "/en/open-source",
+    );
+    expect(container.textContent).not.toMatch(
+      /\b(?:verstehen|Sicher anwenden|Kostenfreie|Kurse|Bücher|Deutsch|Quellenstand|Öffnen)\b/,
+    );
+  });
+
   it("renders an in-flow primary CTA linking to the diagnostic start", () => {
     render(<HeroSection />);
-    const cta = screen.getByRole("link", { name: /Start bestimmen/i });
+    const cta = screen.getByRole("link", { name: /KI-Check öffnen/i });
     expect(cta).toHaveAttribute("href", "/ki-check");
   });
 
   it("renders the above-fold introduction without a delayed clipping reveal", () => {
     render(<HeroSection />);
-    const introduction = screen.getByText(/Kurse, Demos, Bücher und Arbeitsnotizen/);
+    const introduction = screen.getByText(
+      /Kostenfreie Kurse, Demos, Bücher und Workshops/,
+    );
 
     expect(introduction.tagName).toBe("P");
     expect(introduction).not.toHaveStyle({ opacity: "0" });

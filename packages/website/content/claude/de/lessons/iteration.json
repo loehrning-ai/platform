@@ -1,0 +1,102 @@
+{
+  "id": "iteration",
+  "number": 5,
+  "title": "Iteratives Prompting",
+  "subtitle": "Ändere eine Variable, vergleiche Ergebnisse und sichere die Belege.",
+  "durationMinutes": 10,
+  "trackId": "workflows",
+  "hook": "Erste Entwürfe dienen der Kalibrierung.",
+  "keyConcepts": [
+    "Kalibrieren, korrigieren, fixieren",
+    "Zeigen, nicht erzählen",
+    "Vokabular für Runde 2"
+  ],
+  "quiz": [],
+  "sections": [
+    {
+      "id": "the-loop",
+      "title": "Die Schleife",
+      "readTimeMinutes": 1,
+      "content": "Eine einzelne Ausgabe zeigt nicht, ob ein Prompt zuverlässig ist. Führe ihn mit repräsentativen Eingaben aus, benenne Fehler, ändere eine relevante Variable und vergleiche dieselben Kriterien.\n\nAuch Modellupdates und Sampling können Ausgaben verändern. Dokumentiere Modell, Einstellungen, Prompt-Version und Testfälle, wenn Reproduzierbarkeit wichtig ist.\n\n> Iteriere anhand von Belegen, nicht anhand einer bevorzugten Einzelantwort."
+    },
+    {
+      "id": "three-turn-loop",
+      "title": "Die Drei-Runden-Schleife",
+      "readTimeMinutes": 2,
+      "content": "- **Runde 1 · Basiswert erfassen.** Führe einen ersten Prompt mit einem kleinen Testset aus und dokumentiere erfüllte sowie verletzte Anforderungen.\n- **Runde 2 · einen Fehler korrigieren.** Formuliere eine prüfbare Änderung wie „Entferne den ersten Absatz“. Halte andere Variablen stabil.\n- **Runde 3 · getestete Version sichern.** Speichere Prompt, Einsatzzweck, Modellannahmen und Eval-Fälle. Führe sie nach späteren Änderungen erneut aus.\n\nEin Modell kann aus einer akzeptierten Ausgabe einen wiederverwendbaren Prompt entwerfen. Dieser Entwurf bleibt ein Kandidat und muss mit anderen Eingaben geprüft werden."
+    },
+    {
+      "id": "show-dont-tell",
+      "title": "Zeigen, nicht erzählen",
+      "readTimeMinutes": 2,
+      "content": "Beispiele machen unklare Anforderungen beobachtbar. Statt „professioneller Ton“ kannst du eine kurze, freigegebene Referenz bereitstellen und die zu übernehmenden Merkmale benennen. Für strukturierte Aufgaben helfen repräsentative Ein- und Ausgabepaare sowie Grenzfälle.\n\nBeispiele können auch Überanpassung oder unerwünschte Details fördern. Entferne vertrauliche Inhalte, variiere die Beispiele und prüfe an zurückgehaltenen Fällen."
+    },
+    {
+      "id": "turn-2-vocabulary",
+      "title": "Was du in Runde 2 sagen solltest",
+      "readTimeMinutes": 2,
+      "content": "Vage Korrekturen führen oft zu fehlgeschlagenen Iterationen. Hier ist das Vokabular, das sich als wirksam erwiesen hat:\n\n**Tun:** „Kürze den ersten Absatz.“ · „Verwende die Stimme aus diesem Beispiel: …“ · „Mache die Aufzählungspunkte parallel, jeder sollte mit einem Verb beginnen.“ · „Gehe davon aus, dass der Leser X bereits kennt; überspringe die Einleitung.“\n\n**Nicht tun:** „Mache es besser.“ · „Weniger nach KI klingend.“ · „Prägnanter.“ · „Du weißt, was ich meine.“"
+    }
+  ],
+  "widgets": [
+    {
+      "kind": "prompt-diff",
+      "placement": "after-intro",
+      "courseSlug": "claude",
+      "props": {
+        "weak": "mache es bitte besser und kürzer",
+        "strong": "Kürze den Eröffnungsabsatz. Beginne mit dem Status in einem Satz, dann drei Aufzählungspunkte in der Stimme des angehängten Beispiels. Keine abschließenden Höflichkeiten.",
+        "takeaway": "Die stärkere Korrektur benennt eine umsetzbare, prüfbare Änderung und verweist auf ein konkretes Beispiel. Das Ergebnis lässt sich mit den Quellenfakten und dem Beispiel abgleichen."
+      }
+    },
+    {
+      "kind": "prompt-sandbox",
+      "placement": "after-intro",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "iteration",
+        "cpId": "loop",
+        "title": "Führe eine Runde 1 aus, dann iteriere",
+        "hint": "Fordere einen schnellen Entwurf an. Füge dann die Ausgabe mit einer spezifischen Korrektur wieder ein und frage erneut.",
+        "placeholder": "Prompt für Runde 1 hier eingeben. Dann dieses Feld aktualisieren und für Runde 2 erneut ausführen."
+      }
+    },
+    {
+      "kind": "quiz",
+      "placement": "before-quiz",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "iteration",
+        "cpId": "q1",
+        "question": "Welche Korrektur in Runde 2 wird die Ausgabe am wahrscheinlichsten ändern?",
+        "options": [
+          "\"Mache es besser.\"",
+          "\"Weniger nach KI klingend.\"",
+          "\"Kürze den Eröffnungsabsatz und beginne mit dem Status in einem Satz.\"",
+          "\"Versuche es erneut.\""
+        ],
+        "correct": 2,
+        "explanation": "Die Anweisung benennt eine konkrete Änderung, die geprüft werden kann. Die anderen Optionen definieren kein Abnahmekriterium.",
+        "title": "Schnellprüfung",
+        "copy": {
+          "kindLabel": "Schnellprüfung",
+          "optionsAriaLabel": "Antwortoptionen",
+          "correctLabel": "Richtig.",
+          "incorrectLabel": "Nicht ganz."
+        }
+      }
+    },
+    {
+      "kind": "rewrite-arena",
+      "placement": "end",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "iteration",
+        "cpId": "arena",
+        "task": "Korrigiere ein Status-Update im ersten Entwurf, das mit zu vielen Einleitungen begann.",
+        "original": "soll besser und kürzer klingen",
+        "criteria": "Spezifität, Testbarkeit, umsetzbare Anweisung, vermeidet Vages"
+      }
+    }
+  ]
+}

@@ -69,7 +69,7 @@ vi.mock("@/lib/pdf/certificate-pdf", () => ({
 }));
 
 vi.mock("framer-motion", async () => {
-  const { createElement, forwardRef } = await import("react");
+  const { createElement, forwardRef, Fragment } = await import("react");
   const DROP = new Set(["initial", "animate", "transition"]);
   const MotionElement = forwardRef<HTMLElement, Record<string, unknown>>(
     (props, ref) => {
@@ -80,7 +80,14 @@ vi.mock("framer-motion", async () => {
       return createElement("div", { ...cleanProps, ref });
     },
   );
-  return { m: { div: MotionElement, p: MotionElement } };
+  const Provider = ({ children }: { children?: unknown }) =>
+    createElement(Fragment, null, children as never);
+  return {
+    m: { div: MotionElement, p: MotionElement },
+    MotionConfig: Provider,
+    LazyMotion: Provider,
+    domAnimation: {},
+  };
 });
 
 import { CertificatePage } from "./certificate-page";
@@ -122,7 +129,7 @@ describe("<CertificatePage>", () => {
       .spyOn(URL, "createObjectURL")
       .mockReturnValue("blob:certificate");
 
-    render(<CertificatePage courseSlug="claude" />);
+    render(<CertificatePage courseSlug="claude" locale="en" />);
 
     fireEvent.change(screen.getByRole("textbox", { name: "Full name" }), {
       target: { value: "Account A Learner" },
@@ -158,7 +165,7 @@ describe("<CertificatePage>", () => {
       .mockImplementation(() => {});
     vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:certificate");
 
-    render(<CertificatePage courseSlug="claude" />);
+    render(<CertificatePage courseSlug="claude" locale="en" />);
     fireEvent.change(screen.getByRole("textbox", { name: "Full name" }), {
       target: { value: "Learner" },
     });
@@ -180,7 +187,7 @@ describe("<CertificatePage>", () => {
 
     expect(click).not.toHaveBeenCalled();
     expect(harness.router.push).toHaveBeenCalledWith(
-      "/kurse/open-source/claude/kurs",
+      "/en/kurse/open-source/claude/kurs",
     );
   });
 });

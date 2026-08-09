@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 import { LessonShell } from "@/components/course/lesson-shell";
 import { DsChapterSidebar } from "@/components/data-science/ds-chapter-sidebar";
 import { isInteractiveShortcutTarget } from "@/lib/a11y/keyboard-shortcuts";
-import { DS_CHAPTERS, type DsChapterId } from "@/lib/data-science/types";
+import { getDataScienceCourseCopy } from "@/lib/data-science/course-copy";
+import type { ChapterMeta, DsChapterId } from "@/lib/data-science/types";
 import { dsChapterHref } from "@/lib/data-science/routes";
 import { DS_FONT_VARIABLES } from "@/lib/data-science/fonts";
+import type { Locale } from "@/lib/i18n/locale";
 import "@/components/data-science/ds-v8-scope.css";
 
 // ─── DsReaderShell ─────────────────────────────────
@@ -25,18 +27,26 @@ import "@/components/data-science/ds-v8-scope.css";
 
 export interface DsReaderShellProps {
   readonly activeId: DsChapterId;
+  readonly locale: Locale;
+  readonly chapters: readonly ChapterMeta[];
   readonly children: ReactNode;
 }
 
-export function DsReaderShell({ activeId, children }: DsReaderShellProps) {
+export function DsReaderShell({
+  activeId,
+  locale,
+  chapters,
+  children,
+}: DsReaderShellProps) {
   const router = useRouter();
   const [navOpen, setNavOpen] = useState(false);
 
-  const currentIndex = DS_CHAPTERS.findIndex((c) => c.id === activeId);
-  const prev = currentIndex > 0 ? DS_CHAPTERS[currentIndex - 1] : null;
+  const copy = getDataScienceCourseCopy(locale).reader;
+  const currentIndex = chapters.findIndex((c) => c.id === activeId);
+  const prev = currentIndex > 0 ? chapters[currentIndex - 1] : null;
   const next =
-    currentIndex >= 0 && currentIndex < DS_CHAPTERS.length - 1
-      ? DS_CHAPTERS[currentIndex + 1]
+    currentIndex >= 0 && currentIndex < chapters.length - 1
+      ? chapters[currentIndex + 1]
       : null;
 
   useEffect(() => {
@@ -45,23 +55,30 @@ export function DsReaderShell({ activeId, children }: DsReaderShellProps) {
       if (isInteractiveShortcutTarget(e.target)) return;
       if (e.key === "ArrowLeft" && prev) {
         e.preventDefault();
-        router.push(dsChapterHref(prev.id));
+        router.push(dsChapterHref(prev.id, locale));
       } else if (e.key === "ArrowRight" && next) {
         e.preventDefault();
-        router.push(dsChapterHref(next.id));
+        router.push(dsChapterHref(next.id, locale));
       }
     }
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [prev, next, router]);
+  }, [locale, prev, next, router]);
 
   return (
     <div className={`ds-v8-scope ${DS_FONT_VARIABLES}`}>
       <LessonShell
         navOpen={navOpen}
         onNavOpenChange={setNavOpen}
-        navLabel="Chapter navigation"
-        sidebar={<DsChapterSidebar activeId={activeId} onNavigate={() => setNavOpen(false)} />}
+        navLabel={copy.navLabel}
+        sidebar={
+          <DsChapterSidebar
+            activeId={activeId}
+            locale={locale}
+            chapters={chapters}
+            onNavigate={() => setNavOpen(false)}
+          />
+        }
       >
         {children}
       </LessonShell>

@@ -14,25 +14,33 @@ describe("PostDeployChecklist ", () => {
 
   it("renders the real panel copy and all 8 checklist items, starting at 0%", () => {
     render(<PostDeployChecklist />);
-    expect(screen.getByText("Production readiness checklist")).toBeInTheDocument();
+    expect(
+      screen.getByText("Production readiness checklist"),
+    ).toBeInTheDocument();
     expect(screen.getByText("0 / 8 complete")).toBeInTheDocument();
     expect(screen.getByText("Model card written")).toBeInTheDocument();
     expect(screen.getByText("Fairness audit done")).toBeInTheDocument();
-    expect(screen.getByText("Feature drift monitoring set up")).toBeInTheDocument();
-    expect(screen.getByText("Champion/challenger pipeline")).toBeInTheDocument();
+    expect(
+      screen.getByText("Feature drift monitoring set up"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Champion/challenger pipeline"),
+    ).toBeInTheDocument();
     expect(screen.getByText("Rollback plan documented")).toBeInTheDocument();
-    expect(screen.getByText("SLA defined")).toBeInTheDocument();
+    expect(screen.getByText("Service objectives defined")).toBeInTheDocument();
     expect(screen.getByText("Alert thresholds set")).toBeInTheDocument();
-    expect(screen.getByText("Shadow mode first (2 weeks)")).toBeInTheDocument();
+    expect(
+      screen.getByText("Pre-promotion evidence collected"),
+    ).toBeInTheDocument();
   });
 
-  it("checking an item updates the completion count and shows 'ship it' at 100%", () => {
+  it("checking an item updates the completion count and records review at 100%", () => {
     render(<PostDeployChecklist />);
     const checkboxes = screen.getAllByRole("checkbox");
     expect(checkboxes).toHaveLength(8);
     for (const cb of checkboxes) fireEvent.click(cb);
     expect(screen.getByText("8 / 8 complete")).toBeInTheDocument();
-    expect(screen.getByText(/ship it\./)).toBeInTheDocument();
+    expect(screen.getByText(/review recorded\./)).toBeInTheDocument();
   });
 
   it("exposes an explicit keyboard-accessible details control", () => {
@@ -43,7 +51,9 @@ describe("PostDeployChecklist ", () => {
     fireEvent.click(details);
     expect(details).toHaveAttribute("aria-expanded", "true");
     expect(
-      screen.getByText("Document intended use, limitations, training data, and known failure modes."),
+      screen.getByText(
+        "Document intended use, limitations, training data, and known failure modes.",
+      ),
     ).toBeInTheDocument();
   });
 });

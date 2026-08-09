@@ -7,7 +7,7 @@ import { test, expect, type Page } from "@playwright/test";
  * src/app/buecher/buecher-content.tsx from the src/lib/books.ts catalog:
  * every book card's metadata (title, subtitle, audience, chapter count,
  * resource type, access label), that each cover image actually loads and
- * maps to its book, that the "Reader öffnen" link resolves to the reader,
+ * maps to its book, that the book-overview link resolves to the reader,
  * and that the index has no horizontal overflow on a phone. Assertions target
  * roles, test IDs and stable catalog strings, so a prose refresh stays green
  * while a real regression (a dropped card, a broken cover, a dead reader link)
@@ -19,6 +19,8 @@ import { test, expect, type Page } from "@playwright/test";
  */
 
 const ROUTE = "/buecher";
+const BOOK_OVERVIEW_LINK_NAME =
+  /^(?:Buch und Kapitel öffnen|Open book and chapters)$/i;
 
 // Exact catalog metadata as rendered by src/lib/books.ts. `·` is U+00B7 and
 // the umlauts are literal, matching the DOM text (CSS uppercase is visual only).
@@ -28,14 +30,13 @@ const BOOKS = [
     title: "KI im deutschen Mittelstand",
     subtitle: "Daten, Strukturen, Chancen",
     audience: "Alle mit beruflichem KI-Bezug",
-    chapters: "10 Kapitel",
+    chapters: "10 Kapitel · ca. 95 Seiten",
     resourceType: "HTML-Lesefassung",
+    materialLanguage: "Deutsch",
   },
 ] as const;
 
-// Matches the singular/plural branch in buecher-content.tsx.
-const HERO_HEADLINE =
-  BOOKS.length === 1 ? "1 Lesefassung." : `${BOOKS.length} Lesefassungen.`;
+const HERO_HEADLINE = "Sachbücher mit sichtbaren Quellen und Grenzen.";
 
 // Every captured console error and uncaught page error fails the check.
 function collectConsoleErrors(page: Page): string[] {
@@ -55,7 +56,7 @@ function meaningfulErrors(errors: string[]): string[] {
 function cardFor(page: Page, title: string) {
   return page
     .getByTestId("book-card")
-    .filter({ has: page.getByRole("heading", { level: 2, name: title }) });
+    .filter({ has: page.getByRole("heading", { level: 3, name: title }) });
 }
 
 test.describe("/buecher library index", () => {
@@ -75,7 +76,9 @@ test.describe("/buecher library index", () => {
     await expect(page.getByTestId("book-card")).toHaveCount(BOOKS.length);
 
     const noise = meaningfulErrors(errors);
-    expect(noise, `console errors on ${ROUTE}\n${noise.join("\n")}`).toEqual([]);
+    expect(noise, `console errors on ${ROUTE}\n${noise.join("\n")}`).toEqual(
+      [],
+    );
   });
 
   for (const book of BOOKS) {
@@ -87,19 +90,29 @@ test.describe("/buecher library index", () => {
       await expect(card).toBeVisible();
 
       // Title + subtitle + the four metadata pills + status label.
-      await expect(card.getByText(book.subtitle, { exact: true })).toBeVisible();
-      await expect(card.getByText(book.audience, { exact: true })).toBeVisible();
-      await expect(card.getByText(book.chapters, { exact: true })).toBeVisible();
+      await expect(
+        card.getByText(book.subtitle, { exact: true }),
+      ).toBeVisible();
+      await expect(
+        card.getByText(book.audience, { exact: true }),
+      ).toBeVisible();
+      await expect(
+        card.getByText(book.chapters, { exact: true }),
+      ).toBeVisible();
       await expect(
         card.getByText(book.resourceType, { exact: true }),
       ).toBeVisible();
       await expect(
-        card.getByText("kostenlos · jetzt lesen", { exact: true }),
+        card.getByText(book.materialLanguage, { exact: true }),
       ).toBeVisible();
-      await expect(card.getByText("Reader online", { exact: true })).toBeVisible();
+      await expect(
+        card.getByText("Reader online", { exact: true }),
+      ).toBeVisible();
 
       // Cover: mapped to THIS book and actually decoded (not a broken image).
-      const cover = card.getByRole("img", { name: `Titelseite: ${book.title}` });
+      const cover = card.getByRole("img", {
+        name: `Deutsche Titelseite: ${book.title}`,
+      });
       await cover.scrollIntoViewIfNeeded();
       await expect(cover).toBeVisible();
       await expect(cover).toHaveAttribute(
@@ -126,11 +139,11 @@ test.describe("/buecher library index", () => {
 
       // The reader link is wired to this book's reader route.
       await expect(
-        card.getByRole("link", { name: /Reader öffnen/i }),
+        card.getByRole("link", { name: BOOK_OVERVIEW_LINK_NAME }),
       ).toHaveAttribute("href", `/buecher/${book.slug}`);
     });
 
-    test(`"Reader öffnen" on "${book.title}" opens /buecher/${book.slug}`, async ({
+    test(`book-overview link on "${book.title}" opens /buecher/${book.slug}`, async ({
       page,
     }) => {
       await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
@@ -139,7 +152,9 @@ test.describe("/buecher library index", () => {
       // WebKit tap hardening: bring the link fully into view before clicking
       // so the tap cannot land on the card's cover (which opens the teaser
       // modal instead of navigating).
-      const readerLink = card.getByRole("link", { name: /Reader öffnen/i });
+      const readerLink = card.getByRole("link", {
+        name: BOOK_OVERVIEW_LINK_NAME,
+      });
       await readerLink.scrollIntoViewIfNeeded();
       await readerLink.click();
 

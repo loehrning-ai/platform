@@ -132,12 +132,12 @@ describe("SoftwareArtifactGuide", () => {
     ).toHaveClass("whitespace-pre-wrap", "break-words");
     expect(
       screen.getByRole("button", {
-        name: "Befehl für Install dependencies kopieren",
+        name: "Befehl für Install dependencies: Kopieren",
       }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", {
-        name: "Befehl für Generate the report kopieren",
+        name: "Befehl für Generate the report: Kopieren",
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("JSON")).toBeInTheDocument();
@@ -222,5 +222,35 @@ describe("SoftwareArtifactGuide", () => {
     expect(
       screen.queryByRole("heading", { name: "Kurzdemo" }),
     ).not.toBeInTheDocument();
+  });
+
+  it("renders English guide controls and locale-preserving internal links", () => {
+    render(<SoftwareArtifactGuide artifact={TOOL} locale="en" />);
+
+    for (const heading of [
+      "Publication status",
+      "Data flow",
+      "Requirements",
+      "Installation",
+      "Use",
+      "Integration",
+      "Documentation and further reading",
+    ]) {
+      expect(screen.getByRole("heading", { name: heading })).toBeInTheDocument();
+    }
+    expect(screen.getByText("Experimental")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: "Command for Install dependencies: Copy",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Operating guide" })).toHaveAttribute(
+      "href",
+      "/en/hilfe",
+    );
+    expect(screen.getByRole("link", { name: "Codex course" })).toHaveAttribute(
+      "href",
+      "/en/kurse/open-source/codex",
+    );
   });
 });

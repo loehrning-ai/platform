@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { clamp, round } from "@/lib/data-science/sim-kit";
+import { useDataScienceLocale } from "../locale-context";
 
 // ─── SHAPWaterfallSim ───────────────────────────────
 //
@@ -21,13 +22,69 @@ interface LoanFeature {
 }
 
 const LOAN_FEATURES: readonly LoanFeature[] = [
-  { key: "income", label: "Annual income ($k)", min: 20, max: 200, step: 1, mean: 70, weight: 4e-3 },
-  { key: "age", label: "Age (years)", min: 18, max: 75, step: 1, mean: 38, weight: 55e-4 },
-  { key: "debt_ratio", label: "Debt ratio (%)", min: 0, max: 80, step: 1, mean: 35, weight: -7e-3 },
-  { key: "employment_years", label: "Employment years", min: 0, max: 30, step: 1, mean: 8, weight: 9e-3 },
-  { key: "credit_score", label: "Credit score", min: 300, max: 850, step: 5, mean: 640, weight: 28e-4 },
-  { key: "savings", label: "Savings ($k)", min: 0, max: 150, step: 1, mean: 25, weight: 5e-3 },
+  {
+    key: "income",
+    label: "Annual income ($k)",
+    min: 20,
+    max: 200,
+    step: 1,
+    mean: 70,
+    weight: 4e-3,
+  },
+  {
+    key: "age",
+    label: "Age (years)",
+    min: 18,
+    max: 75,
+    step: 1,
+    mean: 38,
+    weight: 55e-4,
+  },
+  {
+    key: "debt_ratio",
+    label: "Debt ratio (%)",
+    min: 0,
+    max: 80,
+    step: 1,
+    mean: 35,
+    weight: -7e-3,
+  },
+  {
+    key: "employment_years",
+    label: "Employment years",
+    min: 0,
+    max: 30,
+    step: 1,
+    mean: 8,
+    weight: 9e-3,
+  },
+  {
+    key: "credit_score",
+    label: "Credit score",
+    min: 300,
+    max: 850,
+    step: 5,
+    mean: 640,
+    weight: 28e-4,
+  },
+  {
+    key: "savings",
+    label: "Savings ($k)",
+    min: 0,
+    max: 150,
+    step: 1,
+    mean: 25,
+    weight: 5e-3,
+  },
 ];
+const LOAN_FEATURE_LABELS_DE: Readonly<Record<string, string>> = {
+  income: "Jahreseinkommen ($k)",
+  age: "Alter (Jahre)",
+  debt_ratio: "Schuldenquote (%)",
+  employment_years: "Beschäftigungsjahre",
+  credit_score: "Kredit-Score",
+  savings: "Ersparnisse ($k)",
+};
 
 const LOAN_BASE = 0.42;
 
@@ -43,6 +100,7 @@ function xScale(v: number): number {
 }
 
 export function SHAPWaterfallSim() {
+  const { locale, text } = useDataScienceLocale();
   const defaults = useMemo(
     () => Object.fromEntries(LOAN_FEATURES.map((f) => [f.key, f.mean])),
     [],
@@ -62,20 +120,33 @@ export function SHAPWaterfallSim() {
 
   const baseX = xScale(LOAN_BASE);
   const approved = finalScore >= 0.5;
+  const decision = approved
+    ? text("APPROVED", "GENEHMIGT")
+    : text("DECLINED", "ABGELEHNT");
 
   return (
     <Panel
-      eyebrow="SIMULATION"
-      title="SHAP waterfall · loan approval"
-      meta={`score ${round(finalScore, 3)} · ${approved ? "APPROVED" : "DECLINED"}`}
-      caption="Each feature's contribution = (your value − population mean) × weight. Bars extend right (positive) or left (negative) from the running total, which is clamped to a valid [0.01, 0.99] probability."
+      eyebrow={text("SIMULATION", "SIMULATION")}
+      title={text(
+        "SHAP waterfall · loan approval",
+        "SHAP-Wasserfall · Kreditentscheidung",
+      )}
+      meta={text(
+        `score ${round(finalScore, 3)} · ${decision}`,
+        `Score ${round(finalScore, 3)} · ${decision}`,
+      )}
+      caption={text(
+        "This hand-coded additive score uses (value − fixed reference value) × weight. It is not SHAP output from a fitted model. The running display is clipped to [0.01, 0.99]; clipping does not make the score a calibrated probability.",
+        "Dieser fest codierte additive Score verwendet (Wert − fester Referenzwert) × Gewicht. Er ist keine SHAP-Ausgabe eines angepassten Modells. Die Anzeige wird auf [0.01, 0.99] begrenzt; dadurch wird der Score nicht zu einer kalibrierten Wahrscheinlichkeit.",
+      )}
     >
       <div className="sim-row">
-        <div className="sim-controls" style={{ minWidth: 220 }}>
+        <div className="sim-controls">
           {LOAN_FEATURES.map((f) => (
             <div className="sim-ctrl" key={f.key}>
               <label>
-                {f.label} <span className="mono">{vals[f.key]}</span>
+                {locale === "de" ? LOAN_FEATURE_LABELS_DE[f.key] : f.label}{" "}
+                <span className="mono">{vals[f.key]}</span>
               </label>
               <input
                 type="range"
@@ -83,27 +154,52 @@ export function SHAPWaterfallSim() {
                 max={f.max}
                 step={f.step}
                 value={vals[f.key]}
-                aria-label={f.label}
-                onChange={(e) => setVals((v) => ({ ...v, [f.key]: +e.target.value }))}
+                aria-label={
+                  locale === "de" ? LOAN_FEATURE_LABELS_DE[f.key] : f.label
+                }
+                onChange={(e) =>
+                  setVals((v) => ({ ...v, [f.key]: +e.target.value }))
+                }
               />
             </div>
           ))}
-          <button type="button" className="btn btn-sm" style={{ marginTop: 8 }} onClick={() => setVals(defaults)}>
-            Reset to means
+          <button
+            type="button"
+            className="btn btn-sm"
+            style={{ marginTop: 8 }}
+            onClick={() => setVals(defaults)}
+          >
+            {text("Reset to means", "Auf Mittelwerte zurücksetzen")}
           </button>
         </div>
         <div className="plot-wrap" style={{ flex: 1 }}>
           <div className="sim-plot-head">
-            SHAP waterfall
+            {text("SHAP waterfall", "SHAP-Wasserfall")}
             <span className="hint">
-              baseline {LOAN_BASE.toFixed(2)} → score {round(finalScore, 3)}
+              {text("baseline", "Ausgangswert")} {LOAN_BASE.toFixed(2)} →{" "}
+              {text("score", "Score")} {round(finalScore, 3)}
             </span>
           </div>
           <svg viewBox={`0 0 ${W} ${H + 30}`} style={{ width: "100%" }}>
-            <text x={baseX} y="12" textAnchor="middle" fontSize="9" fill="#6A6270" fontFamily="'JetBrains Mono',monospace">
-              BASE {LOAN_BASE.toFixed(2)}
+            <text
+              x={baseX}
+              y="12"
+              textAnchor="middle"
+              fontSize="9"
+              fill="#6A6270"
+              fontFamily="'JetBrains Mono',monospace"
+            >
+              {text("BASE", "BASIS")} {LOAN_BASE.toFixed(2)}
             </text>
-            <line x1={baseX} y1="16" x2={baseX} y2={H - 10} stroke="rgba(164,157,154,0.25)" strokeDasharray="3 3" strokeWidth="1" />
+            <line
+              x1={baseX}
+              y1="16"
+              x2={baseX}
+              y2={H - 10}
+              stroke="rgba(164,157,154,0.25)"
+              strokeDasharray="3 3"
+              strokeWidth="1"
+            />
             {rows.map((f, i) => {
               const y = 22 + i * ROW_H;
               const pos = f.contrib >= 0;
@@ -114,8 +210,15 @@ export function SHAPWaterfallSim() {
               const anchor = pos ? "start" : "end";
               return (
                 <g key={f.key}>
-                  <text x={PAD_LEFT - 6} y={y + 11} textAnchor="end" fontSize="10" fill="#C7C4BC" fontFamily="'JetBrains Mono',monospace">
-                    {f.label}
+                  <text
+                    x={PAD_LEFT - 6}
+                    y={y + 11}
+                    textAnchor="end"
+                    fontSize="10"
+                    fill="#C7C4BC"
+                    fontFamily="'JetBrains Mono',monospace"
+                  >
+                    {locale === "de" ? LOAN_FEATURE_LABELS_DE[f.key] : f.label}
                   </text>
                   {i > 0 && (
                     <line
@@ -137,7 +240,14 @@ export function SHAPWaterfallSim() {
                     rx="2"
                     style={{ transition: "all 200ms ease" }}
                   />
-                  <text x={labelX} y={y + 11} textAnchor={anchor} fontSize="10" fill={color} fontFamily="'JetBrains Mono',monospace">
+                  <text
+                    x={labelX}
+                    y={y + 11}
+                    textAnchor={anchor}
+                    fontSize="10"
+                    fill={color}
+                    fontFamily="'JetBrains Mono',monospace"
+                  >
                     {f.contrib >= 0 ? "+" : ""}
                     {round(f.contrib, 3)}
                   </text>
@@ -161,17 +271,38 @@ export function SHAPWaterfallSim() {
               fontFamily="'JetBrains Mono',monospace"
               fontWeight="700"
             >
-              {round(finalScore, 3)} · {approved ? "APPROVED" : "DECLINED"}
+              {round(finalScore, 3)} · {decision}
             </text>
             {[0, 0.25, 0.5, 0.75, 1].map((v) => (
               <g key={v}>
-                <line x1={xScale(v)} y1={H - 4} x2={xScale(v)} y2={H} stroke="#A49D9A" strokeWidth="0.6" />
-                <text x={xScale(v)} y={H + 10} textAnchor="middle" fontSize="8" fill="#6A6270" fontFamily="'JetBrains Mono',monospace">
+                <line
+                  x1={xScale(v)}
+                  y1={H - 4}
+                  x2={xScale(v)}
+                  y2={H}
+                  stroke="#A49D9A"
+                  strokeWidth="0.6"
+                />
+                <text
+                  x={xScale(v)}
+                  y={H + 10}
+                  textAnchor="middle"
+                  fontSize="8"
+                  fill="#6A6270"
+                  fontFamily="'JetBrains Mono',monospace"
+                >
                   {v.toFixed(2)}
                 </text>
               </g>
             ))}
-            <line x1={PAD_LEFT} y1={H - 4} x2={W - PAD_RIGHT} y2={H - 4} stroke="#A49D9A" strokeWidth="0.6" />
+            <line
+              x1={PAD_LEFT}
+              y1={H - 4}
+              x2={W - PAD_RIGHT}
+              y2={H - 4}
+              stroke="#A49D9A"
+              strokeWidth="0.6"
+            />
           </svg>
         </div>
       </div>

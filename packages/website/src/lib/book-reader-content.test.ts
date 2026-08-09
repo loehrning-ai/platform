@@ -50,7 +50,7 @@ const MAX_FORMAL_PER_CHAPTER = 5;
 describe("book-reader-content: imported chapter bodies", () => {
   it("all manifests can be loaded and have chapters", async () => {
     for (const book of books) {
-      const manifest = await loadBookManifest(book.id);
+      const manifest = await loadBookManifest(book.id, "de");
       expect(manifest.bookSlug).toBe(book.id);
       expect(manifest.chapters.length).toBeGreaterThan(0);
     }
@@ -58,16 +58,16 @@ describe("book-reader-content: imported chapter bodies", () => {
 
   it("chapter counts in manifests match books.ts", async () => {
     for (const book of books) {
-      const chapters = await getBookChapterList(book.id);
+      const chapters = await getBookChapterList(book.id, "de");
       expect(chapters.length).toBe(book.chapters);
     }
   });
 
   it("all chapter bodies are loadable and non-empty", async () => {
     for (const book of books) {
-      const chapters = await getBookChapterList(book.id);
+      const chapters = await getBookChapterList(book.id, "de");
       for (const ch of chapters) {
-        const loaded = await loadBookChapter(book.id, ch.slug);
+        const loaded = await loadBookChapter(book.id, ch.slug, "de");
         expect(loaded.rawMarkdown.length).toBeGreaterThan(100);
         expect(loaded.readingTimeMinutes).toBeGreaterThan(0);
       }
@@ -78,9 +78,9 @@ describe("book-reader-content: imported chapter bodies", () => {
     const violations: string[] = [];
 
     for (const book of books) {
-      const chapters = await getBookChapterList(book.id);
+      const chapters = await getBookChapterList(book.id, "de");
       for (const ch of chapters) {
-        const loaded = await loadBookChapter(book.id, ch.slug);
+        const loaded = await loadBookChapter(book.id, ch.slug, "de");
         const match = loaded.rawMarkdown.match(BODY_FORBIDDEN);
         if (match) {
           violations.push(
@@ -98,11 +98,11 @@ describe("book-reader-content: imported chapter bodies", () => {
   });
 
   it("formal address (Sie/Ihr) is mostly converted to du in ki-landschaft", async () => {
-    const chapters = await getBookChapterList("ki-landschaft");
+    const chapters = await getBookChapterList("ki-landschaft", "de");
     const overLimit: string[] = [];
 
     for (const ch of chapters) {
-      const loaded = await loadBookChapter("ki-landschaft", ch.slug);
+      const loaded = await loadBookChapter("ki-landschaft", ch.slug, "de");
       const matches = loaded.rawMarkdown.match(FORMAL_ADDRESS_RE) ?? [];
       if (matches.length > MAX_FORMAL_PER_CHAPTER) {
         overLimit.push(
@@ -127,9 +127,52 @@ describe("book-reader-content: imported chapter bodies", () => {
     ];
 
     for (const { book, slug } of droppedChecks) {
-      const chapters = await getBookChapterList(book);
+      const chapters = await getBookChapterList(book, "de");
       const found = chapters.find((c) => c.slug === slug);
       expect(found).toBeUndefined();
     }
+  });
+
+  it("loads the reviewed English edition without changing chapter identity", async () => {
+    const [germanManifest, englishManifest] = await Promise.all([
+      loadBookManifest("ki-landschaft", "de"),
+      loadBookManifest("ki-landschaft", "en"),
+    ]);
+
+    expect(englishManifest.title).toBe("AI in German SMEs");
+    expect(englishManifest.chapters.map(({ slug }) => slug)).toEqual(
+      germanManifest.chapters.map(({ slug }) => slug),
+    );
+    expect(englishManifest.chapters.map(({ sourceFile }) => sourceFile)).toEqual(
+      germanManifest.chapters.map(({ sourceFile }) => sourceFile),
+    );
+
+    const chapter = await loadBookChapter(
+      "ki-landschaft",
+      "01_eisberg",
+      "en",
+    );
+    expect(chapter.meta.title).toBe("The iceberg problem");
+    expect(chapter.rawMarkdown).toContain(
+      "This book presents a verifiable method",
+    );
+    expect(chapter.rawMarkdown).not.toContain(
+      "Dieses Buch vermittelt eine prüfbare Arbeitsweise",
+    );
+  });
+
+  it("fails closed when the requested language bundle is absent", async () => {
+    await expect(
+      loadBookManifest("ki-arbeitsalltag", "en"),
+    ).rejects.toMatchObject({ code: "ENOENT" });
+  });
+
+  it("rejects path traversal before accessing the content filesystem", async () => {
+    await expect(loadBookManifest("../ki-landschaft", "de")).rejects.toThrow(
+      'Invalid book slug "../ki-landschaft".',
+    );
+    await expect(
+      loadBookChapter("ki-landschaft", "../manifest", "de"),
+    ).rejects.toThrow('Invalid chapter slug "../manifest".');
   });
 });

@@ -263,6 +263,8 @@ describe("<LessonContent>", () => {
 
     const btn = screen.getByRole("button", { name: /Lektion abschließen/ });
     expect(btn).toBeEnabled();
+    expect(btn.parentElement).toHaveClass("flex-col", "sm:flex-row");
+    expect(btn).toHaveClass("max-w-full", "break-words");
     fireEvent.click(btn);
     expect(onMarkLessonComplete).toHaveBeenCalledTimes(1);
   });

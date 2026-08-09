@@ -9,38 +9,73 @@
 // `getWorkshopQuestions` in ./data.
 
 import type { CourseSlug, QuizQuestion } from "./types";
+import type { Locale } from "@/lib/i18n/locale";
+import { getCourseConfig } from "./config";
 
 const QUESTION_LOADERS: Partial<
-  Record<CourseSlug, () => Promise<{ default: unknown }>>
+  Record<
+    CourseSlug,
+    Partial<Record<Locale, () => Promise<{ default: unknown }>>>
+  >
 > = {
-  "ki-fuehrerschein": () =>
-    import("../../../content/ki-fuehrerschein/quiz/questions.json"),
-  "eu-ai-act-kurs": () =>
-    import("../../../content/eu-ai-act-kurs/quiz/questions.json"),
-  "ai-native": () => import("../../../content/ai-native/quiz/questions.json"),
-  "ki-und-gesellschaft": () =>
-    import("../../../content/ki-und-gesellschaft/quiz/questions.json"),
-  claude: () => import("../../../content/claude/quiz/questions.json"),
-  "ai-native-operator": () =>
-    import("../../../content/ai-native-operator/quiz/questions.json"),
+  "ki-fuehrerschein": {
+    de: () => import("../../../content/ki-fuehrerschein/quiz/questions.json"),
+    en: () =>
+      import("../../../content/ki-fuehrerschein/en/quiz/questions.json"),
+  },
+  "eu-ai-act-kurs": {
+    de: () => import("../../../content/eu-ai-act-kurs/quiz/questions.json"),
+    en: () => import("../../../content/eu-ai-act-kurs/en/quiz/questions.json"),
+  },
+  "ai-native": {
+    de: () => import("../../../content/ai-native/quiz/questions.json"),
+    en: () => import("../../../content/ai-native/en/quiz/questions.json"),
+  },
+  "ki-und-gesellschaft": {
+    de: () =>
+      import("../../../content/ki-und-gesellschaft/quiz/questions.json"),
+    en: () =>
+      import("../../../content/ki-und-gesellschaft/en/quiz/questions.json"),
+  },
+  claude: {
+    de: () => import("../../../content/claude/de/quiz/questions.json"),
+    en: () => import("../../../content/claude/quiz/questions.json"),
+  },
+  "ai-native-operator": {
+    de: () =>
+      import("@/lib/ai-native-operator/workshop-questions").then(
+        async (module) => ({
+          default: await module.getAiNativeOperatorWorkshopQuestions("de"),
+        }),
+      ),
+    en: () =>
+      import("@/lib/ai-native-operator/workshop-questions").then(
+        async (module) => ({
+          default: await module.getAiNativeOperatorWorkshopQuestions("en"),
+        }),
+      ),
+  },
 };
 
 // Memoize per course so retries within one session import the JSON only once.
-const questionCache = new Map<CourseSlug, readonly QuizQuestion[]>();
+const questionCache = new Map<string, readonly QuizQuestion[]>();
 
 export async function loadWorkshopQuestions(
   courseSlug: CourseSlug,
+  locale?: Locale,
 ): Promise<readonly QuizQuestion[]> {
-  const cached = questionCache.get(courseSlug);
+  const contentLocale = locale ?? getCourseConfig(courseSlug).language;
+  const cacheKey = `${courseSlug}:${contentLocale}`;
+  const cached = questionCache.get(cacheKey);
   if (cached) return cached;
-  const loader = QUESTION_LOADERS[courseSlug];
+  const loader = QUESTION_LOADERS[courseSlug]?.[contentLocale];
   if (!loader) {
     throw new Error(
-      `Course "${courseSlug}" has no workshop quiz questions registered.`,
+      `Course "${courseSlug}" has no "${contentLocale}" workshop quiz questions registered.`,
     );
   }
   const mod = await loader();
   const questions = mod.default as QuizQuestion[];
-  questionCache.set(courseSlug, questions);
+  questionCache.set(cacheKey, questions);
   return questions;
 }

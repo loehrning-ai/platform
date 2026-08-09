@@ -114,7 +114,7 @@ export function FineTuneDemo(): JSX.Element {
               Base Model
             </span>
             <span className="font-mono text-[10px] text-muted-foreground">
-              Claude Haiku 4.5
+              Basismodell · Simulation
             </span>
           </div>
           <p className="text-[13px] leading-[1.55] text-muted-foreground">
@@ -122,10 +122,10 @@ export function FineTuneDemo(): JSX.Element {
           </p>
           <div className="mt-3.5 flex gap-3.5 border-t border-border pt-2.5 font-mono text-[10px] text-muted-foreground">
             <span>
-              <strong className="text-foreground">22 %</strong> Spezifität
+              <strong className="text-foreground">generisch</strong> Antworttyp
             </span>
             <span>
-              <strong className="text-foreground">0,41</strong> Nutzen
+              <strong className="text-foreground">keine</strong> Quellenprüfung
             </span>
           </div>
         </div>
@@ -144,10 +144,11 @@ export function FineTuneDemo(): JSX.Element {
           </p>
           <div className="mt-3.5 flex gap-3.5 border-t border-border pt-2.5 font-mono text-[10px] text-muted-foreground">
             <span>
-              <strong className="text-brand-orange">94 %</strong> Spezifität
+              <strong className="text-brand-orange">domänenspezifisch</strong>{" "}
+              Antworttyp
             </span>
             <span>
-              <strong className="text-brand-orange">0,88</strong> Nutzen
+              <strong className="text-brand-orange">offen</strong> Quellenprüfung
             </span>
           </div>
         </div>
@@ -156,16 +157,16 @@ export function FineTuneDemo(): JSX.Element {
       {/* Training metrics */}
       <div>
         <div className="mb-2 flex items-center justify-between">
-          <DemoOverline>Trainings-Metriken · Epoche {epoch}</DemoOverline>
+          <DemoOverline>Simulationskurve · Epoche {epoch}</DemoOverline>
           <div className="font-mono text-[10px] text-muted-foreground">
             LoRA rank 16 · batch 32
           </div>
         </div>
         <div className="dark-section grid grid-cols-3 gap-4 bg-[var(--color-dark-bg)] p-3.5">
           {[
-            ["Loss", metrics.loss, "↓"],
-            ["Accuracy", `${metrics.accuracy}%`, "↑"],
-            ["Firmenwissen", `${metrics.specificity}%`, "↑"],
+            ["Loss · simuliert", metrics.loss, "↓"],
+            ["Trefferquote · simuliert", `${metrics.accuracy}%`, "↑"],
+            ["Domänen-Score · simuliert", `${metrics.specificity}%`, "↑"],
           ].map(([label, val, dir]) => (
             <div key={label}>
               <div className="font-mono text-[10px] tracking-[0.14em] text-[var(--color-dark-muted)]">
@@ -202,6 +203,10 @@ export function FineTuneDemo(): JSX.Element {
             {epoch}/6
           </span>
         </div>
+        <p className="mt-2 text-[11px] leading-[1.5] text-muted-foreground">
+          Didaktische Werte, keine gemessene Modellgüte. Ein reales Training
+          benötigt getrennte Evaluationsdaten, Fehlersichten und Freigabekriterien.
+        </p>
       </div>
     </div>
   );

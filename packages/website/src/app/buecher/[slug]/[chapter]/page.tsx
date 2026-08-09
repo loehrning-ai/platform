@@ -6,12 +6,19 @@ import { books, getBookById } from "@/lib/books";
 import {
   getBookChapterList,
   loadBookChapter,
+  loadBookManifest,
   getChapterNeighbours,
-  type BookChapterMeta,
 } from "@/lib/book-reader-content";
 import { ChapterReader } from "@/components/book-reader/chapter-reader";
 import { ResourceContextBanner } from "@/components/learning/resource-context-banner";
-import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
+import { contentLocalesForPath } from "@/lib/i18n/content-parity";
+import {
+  buildLocaleAlternates,
+  localizeHref,
+} from "@/lib/i18n/locale";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { SITE_URL } from "@/lib/seo/json-ld";
+import { getBookDisplay } from "../../book-copy";
 
 interface Params {
   readonly params: Promise<{
@@ -25,7 +32,7 @@ export async function generateStaticParams() {
   const results: { slug: string; chapter: string }[] = [];
   for (const book of books) {
     try {
-      const chapters = await getBookChapterList(book.id);
+      const chapters = await getBookChapterList(book.id, "de");
       for (const ch of chapters) {
         results.push({ slug: book.id, chapter: ch.slug });
       }
@@ -42,56 +49,94 @@ export async function generateStaticParams() {
 export const dynamicParams = false;
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const { slug, chapter } = await params;
+  const [{ slug, chapter }, locale] = await Promise.all([
+    params,
+    getRequestLocale(),
+  ]);
   const book = getBookById(slug);
-  if (!book) return {};
+  if (!book) {
+    return {
+      title: locale === "de" ? "Kapitel nicht gefunden" : "Chapter not found",
+      robots: { index: false, follow: false },
+    };
+  }
 
   try {
-    const loaded = await loadBookChapter(slug, chapter);
-    return createPublicPageMetadata({
-      title: `${loaded.meta.title} | ${book.title}`,
-      description: loaded.meta.description ?? `${book.subtitle}.`,
-      path: `/buecher/${slug}/${chapter}`,
-    });
+    const [loaded, manifest] = await Promise.all([
+      loadBookChapter(slug, chapter, locale),
+      loadBookManifest(slug, locale),
+    ]);
+    const display = getBookDisplay(book, locale);
+    const canonicalPath = `/buecher/${slug}/${chapter}`;
+    const localizedPath = localizeHref(canonicalPath, locale);
+    const alternates = buildLocaleAlternates(
+      canonicalPath,
+      contentLocalesForPath(canonicalPath),
+    );
+    const title = `${loaded.meta.title} · ${manifest.title}`;
+    const description =
+      loaded.meta.description ??
+      (locale === "de"
+        ? `${display.subtitle}. Kapitel der offenen HTML-Lesefassung.`
+        : `${display.subtitle}. Chapter from the open English HTML reading edition.`);
+
+    return {
+      title,
+      description,
+      robots: { index: true, follow: true },
+      alternates: { ...alternates, canonical: localizedPath },
+      openGraph: {
+        title,
+        description,
+        url: `${SITE_URL}${localizedPath}`,
+        locale: locale === "de" ? "de_DE" : "en_GB",
+        alternateLocale: [locale === "de" ? "en_GB" : "de_DE"],
+        type: "article",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+      },
+    };
   } catch {
-    return {};
+    return {
+      title: locale === "de" ? "Kapitel nicht gefunden" : "Chapter not found",
+      robots: { index: false, follow: false },
+    };
   }
 }
 
 export default async function ChapterPage({ params }: Params) {
-  const { slug, chapter } = await params;
+  const [{ slug, chapter }, locale] = await Promise.all([
+    params,
+    getRequestLocale(),
+  ]);
   const book = getBookById(slug);
   if (!book) notFound();
 
-  let loaded;
-  try {
-    loaded = await loadBookChapter(slug, chapter);
-  } catch {
-    notFound();
-  }
+  const readerContent = await Promise.all([
+      loadBookChapter(slug, chapter, locale),
+      getChapterNeighbours(slug, chapter, locale),
+      getBookChapterList(slug, locale),
+    ]).catch(() => notFound());
 
-  let neighbours;
-  try {
-    neighbours = await getChapterNeighbours(slug, chapter);
-  } catch {
-    neighbours = { prev: null, next: null };
-  }
-
-  let allChapters: BookChapterMeta[];
-  try {
-    allChapters = await getBookChapterList(slug);
-  } catch {
-    allChapters = [];
-  }
+  const [loaded, neighbours, allChapters] = readerContent;
+  const display = getBookDisplay(book, locale);
 
   return (
     <>
-      <ResourceContextBanner nodeId={`book:${book.id}`} />
+      {locale === "de" ? (
+        <ResourceContextBanner nodeId={`book:${book.id}`} />
+      ) : null}
       <ChapterReader
         book={book}
         chapter={loaded}
         neighbours={neighbours}
         allChapters={allChapters}
+        locale={locale}
+        bookTitle={display.title}
+        relatedResourceLabel={display.relatedResourceLabel}
       />
     </>
   );

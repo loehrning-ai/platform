@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { mulberry32, randn, round } from "@/lib/data-science/sim-kit";
+import { useDataScienceLocale } from "../locale-context";
 
 // ─── DistributionExplorer ───────────────────────────
 //
@@ -16,15 +17,43 @@ type Shape = "normal" | "skewed" | "bimodal" | "uniform";
 const SHAPES: readonly Shape[] = ["normal", "skewed", "bimodal", "uniform"];
 const NS = [50, 500, 5000] as const;
 
-function skewLabel(s: number): string {
-  return Math.abs(s) < 0.3 ? "symmetric" : s > 0 ? "right-skewed" : "left-skewed";
+const SHAPE_LABELS_DE: Readonly<Record<Shape, string>> = {
+  normal: "normal",
+  skewed: "schief",
+  bimodal: "bimodal",
+  uniform: "gleichverteilt",
+};
+
+function skewLabel(s: number, german: boolean): string {
+  if (german)
+    return Math.abs(s) < 0.3
+      ? "symmetrisch"
+      : s > 0
+        ? "rechtsschief"
+        : "linksschief";
+  return Math.abs(s) < 0.3
+    ? "symmetric"
+    : s > 0
+      ? "right-skewed"
+      : "left-skewed";
 }
 
-function kurtLabel(k: number): string {
-  return k > 1 ? "leptokurtic (heavy tails)" : k < -1 ? "platykurtic (light tails)" : "mesokurtic (normal)";
+function kurtLabel(k: number, german: boolean): string {
+  if (german)
+    return k > 1
+      ? "leptokurtisch (schwere Ränder)"
+      : k < -1
+        ? "platykurtisch (leichte Ränder)"
+        : "mesokurtisch (normal)";
+  return k > 1
+    ? "leptokurtic (heavy tails)"
+    : k < -1
+      ? "platykurtic (light tails)"
+      : "mesokurtic (normal)";
 }
 
 export function DistributionExplorer() {
+  const { locale, text } = useDataScienceLocale();
   const [shape, setShape] = useState<Shape>("normal");
   const [n, setN] = useState(500);
   const [bins, setBins] = useState(30);
@@ -45,7 +74,8 @@ export function DistributionExplorer() {
       let v: number;
       if (shape === "normal") v = randn(rng);
       else if (shape === "skewed") v = Math.exp(0.6 * randn(rng)) - 1.2;
-      else if (shape === "bimodal") v = rng() < 0.5 ? randn(rng) - 2.2 : randn(rng) + 2.2;
+      else if (shape === "bimodal")
+        v = rng() < 0.5 ? randn(rng) - 2.2 : randn(rng) + 2.2;
       else v = (rng() - 0.5) * 6;
       pts.push(v);
     }
@@ -57,12 +87,17 @@ export function DistributionExplorer() {
     const mean = data.reduce((s, v) => s + v, 0) / data.length;
     const median =
       sorted.length % 2 === 0
-        ? ((sorted[sorted.length / 2 - 1] ?? 0) + (sorted[sorted.length / 2] ?? 0)) / 2
+        ? ((sorted[sorted.length / 2 - 1] ?? 0) +
+            (sorted[sorted.length / 2] ?? 0)) /
+          2
         : (sorted[Math.floor(sorted.length / 2)] ?? 0);
-    const variance = data.reduce((s, v) => s + (v - mean) ** 2, 0) / data.length;
+    const variance =
+      data.reduce((s, v) => s + (v - mean) ** 2, 0) / data.length;
     const sd = Math.sqrt(variance);
-    const skewness = data.reduce((s, v) => s + ((v - mean) / sd) ** 3, 0) / data.length;
-    const kurtosis = data.reduce((s, v) => s + ((v - mean) / sd) ** 4, 0) / data.length - 3;
+    const skewness =
+      data.reduce((s, v) => s + ((v - mean) / sd) ** 3, 0) / data.length;
+    const kurtosis =
+      data.reduce((s, v) => s + ((v - mean) / sd) ** 4, 0) / data.length - 3;
     const min = sorted[0] ?? 0;
     const max = sorted[sorted.length - 1] ?? 0;
     return { mean, median, sd, skewness, kurtosis, min, max };
@@ -84,7 +119,8 @@ export function DistributionExplorer() {
     return histogram.min + (maxIdx + 0.5) * histogram.bw;
   }, [histogram]);
 
-  const xScale = (v: number) => PADL + ((v - histogram.min) / (histogram.max - histogram.min)) * plotW;
+  const xScale = (v: number) =>
+    PADL + ((v - histogram.min) / (histogram.max - histogram.min)) * plotW;
   const maxCount = Math.max(...histogram.counts);
   const barW = plotW / bins;
   const meanX = xScale(stats.mean);
@@ -93,15 +129,18 @@ export function DistributionExplorer() {
 
   return (
     <Panel
-      eyebrow="SIMULATOR"
-      title="Distribution Explorer"
-      meta="shape · N · bins"
-      caption="Mean (purple), median (teal), mode (orange). Skewness and excess kurtosis shown below."
+      eyebrow={text("SIMULATOR", "SIMULATION")}
+      title={text("Distribution Explorer", "Verteilungen untersuchen")}
+      meta={text("shape · N · bins", "Form · N · Klassen")}
+      caption={text(
+        "Mean (purple), median (teal), mode (orange). Skewness and excess kurtosis shown below.",
+        "Mittelwert (violett), Median (türkis), Modalwert (orange). Darunter stehen Schiefe und Exzess-Kurtosis.",
+      )}
     >
       <div className="sim-row">
         <div className="sim-controls">
           <div className="sim-ctrl">
-            <label>Shape</label>
+            <label>{text("Shape", "Form")}</label>
             <div className="sim-ctrl-row" style={{ flexWrap: "wrap", gap: 4 }}>
               {SHAPES.map((s) => (
                 <button
@@ -110,7 +149,7 @@ export function DistributionExplorer() {
                   className={`btn btn-sm${shape === s ? " active" : ""}`}
                   onClick={() => setShape(s)}
                 >
-                  {s}
+                  {locale === "de" ? SHAPE_LABELS_DE[s] : s}
                 </button>
               ))}
             </div>
@@ -134,7 +173,7 @@ export function DistributionExplorer() {
           </div>
           <div className="sim-ctrl">
             <label>
-              Bins <span className="mono">{bins}</span>
+              {text("Bins", "Klassen")} <span className="mono">{bins}</span>
             </label>
             <input
               type="range"
@@ -142,13 +181,16 @@ export function DistributionExplorer() {
               max="60"
               step="1"
               value={bins}
-              aria-label="Number of histogram bins"
+              aria-label={text(
+                "Number of histogram bins",
+                "Anzahl der Histogrammklassen",
+              )}
               onChange={(e) => setBins(+e.target.value)}
             />
           </div>
           <div className="sim-stats">
             <div>
-              <div className="k">Mean</div>
+              <div className="k">{text("Mean", "Mittelwert")}</div>
               <div className="v mono">{round(stats.mean, 3)}</div>
             </div>
             <div>
@@ -160,24 +202,45 @@ export function DistributionExplorer() {
               <div className="v mono">{round(stats.sd, 3)}</div>
             </div>
             <div>
-              <div className="k">Skew</div>
+              <div className="k">{text("Skew", "Schiefe")}</div>
               <div className="v mono">{round(stats.skewness, 2)}</div>
             </div>
             <div>
-              <div className="k">Kurt</div>
+              <div className="k">{text("Kurt", "Kurtosis")}</div>
               <div className="v mono">{round(stats.kurtosis, 2)}</div>
             </div>
           </div>
-          <div style={{ fontSize: 11, opacity: 0.5, lineHeight: 1.4, marginTop: 4 }}>
-            {skewLabel(stats.skewness)}
+          <div
+            style={{
+              fontSize: 11,
+              opacity: 0.5,
+              lineHeight: 1.4,
+              marginTop: 4,
+            }}
+          >
+            {skewLabel(stats.skewness, locale === "de")}
             <br />
-            {kurtLabel(stats.kurtosis)}
+            {kurtLabel(stats.kurtosis, locale === "de")}
           </div>
         </div>
         <div className="plot-wrap">
           <svg viewBox={`0 0 ${W} ${H}`}>
-            <line x1={PADL} y1={PADT + plotH} x2={PADL + plotW} y2={PADT + plotH} stroke="rgba(244,242,236,0.15)" strokeWidth="1" />
-            <line x1={PADL} y1={PADT} x2={PADL} y2={PADT + plotH} stroke="rgba(244,242,236,0.15)" strokeWidth="1" />
+            <line
+              x1={PADL}
+              y1={PADT + plotH}
+              x2={PADL + plotW}
+              y2={PADT + plotH}
+              stroke="rgba(244,242,236,0.15)"
+              strokeWidth="1"
+            />
+            <line
+              x1={PADL}
+              y1={PADT}
+              x2={PADL}
+              y2={PADT + plotH}
+              stroke="rgba(244,242,236,0.15)"
+              strokeWidth="1"
+            />
             {histogram.counts.map((c: number, i: number) => {
               const bx = PADL + i * barW;
               const bh = (c / maxCount) * plotH;
@@ -196,27 +259,71 @@ export function DistributionExplorer() {
               );
             })}
             {meanX > PADL && meanX < PADL + plotW && (
-              <line x1={meanX} y1={PADT} x2={meanX} y2={PADT + plotH} stroke="#A78BFA" strokeWidth="1.5" strokeDasharray="4 2" />
+              <line
+                x1={meanX}
+                y1={PADT}
+                x2={meanX}
+                y2={PADT + plotH}
+                stroke="#A78BFA"
+                strokeWidth="1.5"
+                strokeDasharray="4 2"
+              />
             )}
             {medianX > PADL && medianX < PADL + plotW && (
-              <line x1={medianX} y1={PADT} x2={medianX} y2={PADT + plotH} stroke="#2DD4BF" strokeWidth="1.5" strokeDasharray="4 2" />
+              <line
+                x1={medianX}
+                y1={PADT}
+                x2={medianX}
+                y2={PADT + plotH}
+                stroke="#2DD4BF"
+                strokeWidth="1.5"
+                strokeDasharray="4 2"
+              />
             )}
             {modeX > PADL && modeX < PADL + plotW && (
-              <line x1={modeX} y1={PADT} x2={modeX} y2={PADT + plotH} stroke="#FB923C" strokeWidth="1.5" strokeDasharray="4 2" />
+              <line
+                x1={modeX}
+                y1={PADT}
+                x2={modeX}
+                y2={PADT + plotH}
+                stroke="#FB923C"
+                strokeWidth="1.5"
+                strokeDasharray="4 2"
+              />
             )}
             <circle cx={PADL + 8} cy={PADT + 8} r={4} fill="#A78BFA" />
-            <text x={PADL + 16} y={PADT + 12} fill="#A78BFA" fontSize="9">mean</text>
+            <text x={PADL + 16} y={PADT + 12} fill="#A78BFA" fontSize="9">
+              {text("mean", "Mittel")}
+            </text>
             <circle cx={PADL + 52} cy={PADT + 8} r={4} fill="#2DD4BF" />
-            <text x={PADL + 60} y={PADT + 12} fill="#2DD4BF" fontSize="9">median</text>
+            <text x={PADL + 60} y={PADT + 12} fill="#2DD4BF" fontSize="9">
+              {text("median", "Median")}
+            </text>
             <circle cx={PADL + 104} cy={PADT + 8} r={4} fill="#FB923C" />
-            <text x={PADL + 112} y={PADT + 12} fill="#FB923C" fontSize="9">mode</text>
+            <text x={PADL + 112} y={PADT + 12} fill="#FB923C" fontSize="9">
+              {text("mode", "Modal")}
+            </text>
             {[0, 0.25, 0.5, 0.75, 1].map((frac, i) => {
-              const val = histogram.min + frac * (histogram.max - histogram.min);
+              const val =
+                histogram.min + frac * (histogram.max - histogram.min);
               const tx = PADL + frac * plotW;
               return (
                 <g key={i}>
-                  <line x1={tx} y1={PADT + plotH} x2={tx} y2={PADT + plotH + 4} stroke="rgba(244,242,236,0.25)" strokeWidth="1" />
-                  <text x={tx} y={H - 4} textAnchor="middle" fill="rgba(244,242,236,0.4)" fontSize="8">
+                  <line
+                    x1={tx}
+                    y1={PADT + plotH}
+                    x2={tx}
+                    y2={PADT + plotH + 4}
+                    stroke="rgba(244,242,236,0.25)"
+                    strokeWidth="1"
+                  />
+                  <text
+                    x={tx}
+                    y={H - 4}
+                    textAnchor="middle"
+                    fill="rgba(244,242,236,0.4)"
+                    fontSize="8"
+                  >
                     {round(val, 1)}
                   </text>
                 </g>

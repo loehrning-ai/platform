@@ -1,17 +1,13 @@
-// ─── Simulated Claude responses ──────────────────
+// ─── Local deterministic course responses ────────
 //
-// Ported 1:1 (behavior and copy) from `claude/js/claude-demo.js`, the
-// source course's own demo-mode shim. Its own file comment confirms this
-// course never called a real Claude API: it is a static site with no
-// backend, so `window.claude.complete` is replaced with a local, canned
-// responder. This module is that same responder, adapted from
-// prompt-string-round-tripping (the vanilla-JS version formats a system
-// prompt string, then regex-sniffs it to route) to direct, typed function
-// calls, one function per widget need, since every caller here is a
-// same-process TypeScript component, not a fetch() boundary. Wiring a real
-// Anthropic call is an explicit non-goal ( constraints).
+// Deterministic local responses for the Claude course widgets, adapted from
+// the legacy course demo. The copy is explicit about missing source data and
+// avoids implying a model or network request. Each caller invokes a typed,
+// same-process function rather than a fetch boundary.
 //
 // No network call anywhere in this file.
+
+import type { Locale } from "@/lib/i18n/locale";
 
 function hash(str: string): number {
   let h = 0;
@@ -29,51 +25,90 @@ function clamp01(n: number): number {
 // ─── Generic prompt completion (PromptSandbox, PromptCompare) ──────
 
 /**
- * A plausible, honest completion for a raw prompt, tailored a little so it
- * never feels canned-in-a-bad-way, ported from claude-demo.js's
- * `genericAnswer`.
+ * A deterministic teaching example for a raw prompt. This is not a model
+ * completion and must be presented as a local simulation by callers.
  */
-export function genericAnswer(prompt: string): string {
+export function genericAnswer(prompt: string, locale: Locale = "en"): string {
   const p = prompt.toLowerCase();
+  const german = locale === "de";
 
-  if (/launch email|announc|rollout|release email/.test(p)) {
+  if (
+    /launch email|announc|rollout|release email|ankündig|einführung|e-mail/.test(
+      p,
+    )
+  ) {
     const structured =
       /constraints|format|audience|context|role/.test(p) || prompt.length > 240;
     if (structured) {
-      return `Subject: AuthKit v2 is live Monday, one action to migrate
+      if (german) {
+        return `Betreff: Authentifizierungsumstellung: Aktion erforderlich
 
-We're replacing legacy SSO with AuthKit v2. It ships Monday, opt-in for two weeks, then becomes the default.
+Wir ersetzen [bisheriges System] durch [neues System]. Das Migrationsfenster läuft vom [Startdatum] bis [Enddatum]. Die verpflichtende Umstellung erfolgt am [Datum].
 
-Do this now: point your service at the new endpoint and run the migration check.
+Aktion: Stelle deinen Dienst anhand des freigegebenen Runbooks um und führe die dokumentierte Prüfung aus.
 
-\`\`\`
-authkit migrate --check --service <your-service>
-\`\`\`
+Rollback-Kriterium: [messbares Kriterium aus dem Rollout-Plan].
 
-Nothing else changes for you today. Tokens, scopes, and refresh behavior are identical. The two-week window is there so you can roll back if the check surfaces anything unexpected.
+Support: [Kanal oder Kontakt]. Runbook: [Link].
 
-Questions go to the #authkit channel. Full migration notes are in the runbook.`;
+Ersetze die Platzhalter vor dem Versand mit Angaben aus dem freigegebenen Rollout-Plan.`;
+      }
+      return `Subject: Authentication migration: action required
+
+We are replacing [current system] with [new system]. The migration window runs from [start date] to [end date]. Mandatory cutover is [date].
+
+Action: migrate your service using the approved runbook and run the documented check.
+
+Rollback criterion: [measurable criterion from the rollout plan].
+
+Support: [channel or contact]. Runbook: [link].
+
+Replace every placeholder with approved rollout data before sending.`;
     }
-    return `Subject: New authentication service
+    if (german) {
+      return `Betreff: Neuer Authentifizierungsdienst
 
-Hi all, we're launching a new authentication service. It should make signing in faster and more secure. Take a look when you get a chance and let us know if you have questions. Thanks!`;
+Wir führen einen neuen Authentifizierungsdienst ein. Details zu Zeitplan, Migration und Support fehlen in diesem Prompt. Ergänze diese Angaben, bevor du den Text verwendest.`;
+    }
+    return `Subject: Authentication service change
+
+The prompt does not provide the migration window, required action, cutover date, rollback criteria, or support route. Add those facts from the approved rollout plan before drafting the announcement.`;
   }
 
   if (/p99|latency|microservice|observability|which.*service/.test(p)) {
-    return `Based on typical patterns, the checkout-service tends to show the highest p99, usually a downstream database call under load.
+    if (german) {
+      return `Beispiel für eine unbelegte Antwort: „checkout-service hat die höchste p99-Latenz.“
 
-(Heads up: I don't actually have your telemetry. I'm pattern-matching, not measuring. To get a real answer, paste the p99 numbers or wire me to your metrics, otherwise this is a confident guess, which is exactly the failure mode this lesson is about.)`;
+Diese lokale Simulation hat keine Telemetriedaten und ruft Claude nicht auf. Ein realer Ablauf muss gemessene p99-Werte anfordern oder ein lesendes Metrik-Tool verwenden und die Aussage damit belegen.`;
+    }
+    return `Illustrative unsupported answer: "checkout-service has the highest p99."
+
+This local simulation has no telemetry and does not call Claude. A real workflow should request measured p99 values or use a read-only metrics tool, then cite the result.`;
   }
 
-  if (/oncall|on-call|rotation|owns|who (owns|manages)/.test(p)) {
-    return `That's typically owned by the platform or identity team, with a weekly on-call rotation.
+  if (
+    /oncall|on-call|rotation|owns|who (owns|manages)|zuständig|verantwort/.test(
+      p,
+    )
+  ) {
+    if (german) {
+      return `Beispiel für eine unbelegte Antwort: „Das Identity-Team ist zuständig.“
 
-(But I'm guessing, none of your team's actual rotation data is in this window. Watch how readily I answered anyway. That's the point of the lesson: if it isn't in context, it isn't knowledge.)`;
+Diese lokale Simulation hat keinen Dienstkatalog oder Bereitschaftsplan und ruft Claude nicht auf. Stelle die aktuelle Quelle bereit, bevor du eine Zuständigkeit übernimmst.`;
+    }
+    return `Illustrative unsupported answer: "the identity team owns it."
+
+This local simulation has no service catalog or on-call data and does not call Claude. Supply the current source before accepting an ownership claim.`;
   }
 
-  return `Here's a useful response to that. I've taken your prompt at face value and given you the most likely-helpful continuation.
+  if (german) {
+    return `Dies ist eine feste lokale Antwort aus Kursregeln, keine Claude-Ausgabe.
 
-If the answer depends on facts about your specific project, team, or data, remember I can only work from what's in this window, so the more concrete context you give, the better and more grounded this gets.`;
+Stelle für eine reale Aufgabe das benötigte Quellenmaterial bereit und prüfe wesentliche Aussagen daran.`;
+  }
+  return `This is a fixed local response generated by course rules, not Claude.
+
+For a real task, provide the source material required by the prompt and verify material claims against it.`;
 }
 
 // ─── Prompt grading (PromptGrader) ──────────────────────────────────
@@ -92,49 +127,126 @@ export interface GraderResult {
  * prompt sent upstream, never read by the grading regexes) so there is no
  * `task` parameter here.
  */
-export function gradePrompt(userPrompt: string): GraderResult {
+export function gradePrompt(
+  userPrompt: string,
+  locale: Locale = "en",
+): GraderResult {
   const lower = userPrompt.toLowerCase();
+  const german = locale === "de";
   const has = (re: RegExp) => re.test(lower);
   const strengths: string[] = [];
   const weaknesses: string[] = [];
   let score = 30;
 
-  if (has(/you are|act as|role/)) {
+  if (has(german ? /du bist|du prüfst|als .+|rolle/ : /you are|act as|role/)) {
     score += 14;
-    strengths.push("Sets a clear role, which anchors tone and vocabulary.");
+    strengths.push(
+      german
+        ? "Die lokale Regel hat eine Rolle oder Prüfperspektive erkannt."
+        : "The local rule detected a role or review perspective.",
+    );
   } else {
-    weaknesses.push("No role, Claude has to guess who it is being.");
+    weaknesses.push(
+      german
+        ? "Die lokale Regel hat keine ausdrückliche Rolle oder Prüfperspektive erkannt."
+        : "The local rule found no explicit role or review perspective.",
+    );
   }
-  if (has(/context|background|we're|because/)) {
+  if (
+    has(
+      german
+        ? /kontext|hintergrund|wir |weil|da /
+        : /context|background|we're|because/,
+    )
+  ) {
     score += 14;
-    strengths.push("Supplies context the model could not otherwise know.");
+    strengths.push(
+      german
+        ? "Die lokale Regel hat einen Kontextmarker erkannt; prüfe, ob die nötigen Fakten enthalten sind."
+        : "The local rule detected a context marker; verify that it contains the required facts.",
+    );
   } else {
-    weaknesses.push("Thin on context; add the background the task depends on.");
+    weaknesses.push(
+      german
+        ? "Die lokale Regel hat keinen ausdrücklichen Kontextmarker erkannt."
+        : "The local rule found no explicit context marker.",
+    );
   }
-  if (has(/format|json|bullet|section|under \d|words|steps/)) {
+  if (
+    has(
+      german
+        ? /format|json|stichpunkt|abschnitt|höchstens \d|wörter|schritte/
+        : /format|json|bullet|section|under \d|words|steps/,
+    )
+  ) {
     score += 16;
-    strengths.push("Specifies an output shape, so the result is predictable.");
+    strengths.push(
+      german
+        ? "Die lokale Regel hat eine prüfbare Formatvorgabe erkannt."
+        : "The local rule detected a checkable format marker.",
+    );
   } else {
-    weaknesses.push("No format constraint, the output shape is left to chance.");
+    weaknesses.push(
+      german
+        ? "Die lokale Regel hat keine ausdrückliche Formatvorgabe erkannt."
+        : "The local rule found no explicit format marker.",
+    );
   }
   if (userPrompt.length > 220) {
     score += 14;
-    strengths.push("Detailed enough to remove most ambiguity.");
+    strengths.push(
+      german
+        ? "Der Prompt enthält zusätzliche Angaben; ihre Relevanz muss weiterhin geprüft werden."
+        : "Includes additional detail; its relevance still needs review.",
+    );
   } else if (userPrompt.length < 80) {
-    weaknesses.push("Quite short; more specificity would sharpen the result.");
+    weaknesses.push(
+      german
+        ? "Der Prompt ist kurz; konkrete Angaben würden die Aufgabe eingrenzen."
+        : "Quite short; more specificity would sharpen the result.",
+    );
   }
-  if (has(/example|e\.g\.|for instance/)) {
+  if (has(german ? /beispiel|z\.\s?b\./ : /example|e\.g\.|for instance/)) {
     score += 10;
-    strengths.push('Includes an example of what "good" looks like.');
+    strengths.push(
+      german
+        ? "Die lokale Regel hat einen Beispielmarker erkannt; prüfe Freigabe und Repräsentativität."
+        : "The local rule detected an example marker; verify approval and representativeness.",
+    );
   }
 
   score = Math.max(8, Math.min(96, score));
-  if (strengths.length === 0) strengths.push("Gets the basic intent across.");
+  if (strengths.length === 0) {
+    strengths.push(
+      german
+        ? "Die grundlegende Absicht ist erkennbar."
+        : "Gets the basic intent across.",
+    );
+  }
   if (weaknesses.length === 0) {
-    weaknesses.push('Could add one concrete example to lock in the style.');
+    weaknesses.push(
+      german
+        ? "Ein konkretes Beispiel könnte die erwartete Form weiter eingrenzen."
+        : "Could add one reviewed example to clarify the expected style.",
+    );
   }
 
-  const rewrite = `You are a senior specialist on this task.
+  const rewrite = german
+    ? `Bearbeite diese Aufgabe anhand der folgenden Spezifikation.
+
+KONTEXT
+<notwendiger Hintergrund>
+
+AUFGABE
+${(userPrompt.split("\n")[0] || "Bearbeite die Aufgabe").slice(0, 120)}
+
+VORGABEN
+- Formuliere konkret.
+- Kennzeichne Annahmen, statt fehlende Fakten zu erraten.
+
+FORMAT
+<genaue Form der erwarteten Ausgabe>`
+    : `Complete this task using the following specification.
 
 CONTEXT
 <the background the model needs>
@@ -168,25 +280,51 @@ export interface ArenaResult {
   readonly originalScore: number;
 }
 
-/** Deterministic rewrite-vs-original judging, ported from `arenaJSON`. */
-export function judgeRewrite(original: string, rewrite: string): ArenaResult {
+/** Deterministic rewrite-vs-original structure comparison. */
+export function judgeRewrite(
+  original: string,
+  rewrite: string,
+  locale: Locale = "en",
+): ArenaResult {
   const r = rewrite.toLowerCase();
+  const german = locale === "de";
   let userScore = 45;
-  if (/you are|role|act as/.test(r)) userScore += 14;
-  if (/context|background/.test(r)) userScore += 12;
-  if (/format|json|bullet|section|under \d|steps/.test(r)) userScore += 14;
+  if ((german ? /du bist|als .+|rolle/ : /you are|role|act as/).test(r))
+    userScore += 14;
+  if ((german ? /kontext|hintergrund/ : /context|background/).test(r))
+    userScore += 12;
+  if (
+    (german
+      ? /format|json|stichpunkt|abschnitt|höchstens \d|schritte/
+      : /format|json|bullet|section|under \d|steps/
+    ).test(r)
+  )
+    userScore += 14;
   if (rewrite.length > original.length + 60) userScore += 10;
-  if (/example|e\.g\./.test(r)) userScore += 8;
+  if ((german ? /beispiel|z\.\s?b\./ : /example|e\.g\./).test(r))
+    userScore += 8;
   userScore = Math.max(20, Math.min(95, userScore));
 
-  const originalScore = Math.max(8, Math.min(40, 18 + (original.length > 120 ? 10 : 0)));
+  const originalScore = Math.max(
+    8,
+    Math.min(40, 18 + (original.length > 120 ? 10 : 0)),
+  );
   const winner: ArenaWinner =
-    userScore > originalScore + 4 ? "user" : userScore < originalScore - 4 ? "original" : "tie";
-  const why =
-    winner === "user"
+    userScore > originalScore + 4
+      ? "user"
+      : userScore < originalScore - 4
+        ? "original"
+        : "tie";
+  const why = german
+    ? winner === "user"
+      ? "Die Überarbeitung ergänzt Rolle, Kontext und Ausgabeformat. Dadurch bleiben weniger Angaben offen."
+      : winner === "tie"
+        ? "Beide Fassungen benennen die Absicht, legen das Ausgabeformat aber nicht vollständig fest."
+        : "Das Original ist hier konkreter; in der Überarbeitung fehlen notwendige Angaben."
+    : winner === "user"
       ? "Your rewrite adds role, context, and an explicit output shape, so there is far less for the model to guess."
       : winner === "tie"
-        ? "Both convey the intent, but neither fully pins down the output format, that is the deciding gap."
+        ? "Both convey the intent, but neither fully pins down the output format, which is the deciding gap."
         : "The original is more concrete here; your rewrite drops some specifics it needs.";
 
   return { winner, why, userScore, originalScore };
@@ -194,30 +332,48 @@ export function judgeRewrite(original: string, rewrite: string): ArenaResult {
 
 // ─── Fixed coaching feedback (FillBlank, PromptLibraryShaper) ──────
 
-/** Ported from claude-demo.js's `shortFeedback` fill-blank branch (fixed string). */
-export function fillBlankFeedback(): string {
-  return "Solid start, the structure is there and the intent is clear. To make it bulletproof, tighten the success criteria so there's no room to drift: say exactly what \"done\" looks like and in what format.";
+/** Fixed local feedback for the fill-blank exercise. */
+export function fillBlankFeedback(locale: Locale = "en"): string {
+  return locale === "de"
+    ? "Die Grundstruktur und die Absicht sind erkennbar. Ergänze messbare Erfolgskriterien und ein konkretes Ausgabeformat, damit weniger Interpretationsspielraum bleibt."
+    : "The basic structure and intent are clear. Add measurable success criteria and a concrete output format to reduce ambiguity.";
 }
 
-/** Ported from claude-demo.js's `shortFeedback` shareability branch (fixed string). */
-export function shareabilityFeedback(): string {
-  return "The biggest win is parameterization: swap the hardcoded repo, teammate names, and channel references for <PLACEHOLDERS> so anyone on the team can drop in their own specifics. A one-line \"when to use\" at the top makes it instantly reusable.";
+/** Fixed local feedback for the shareability exercise. */
+export function shareabilityFeedback(locale: Locale = "en"): string {
+  return locale === "de"
+    ? "Ersetze feste Repository-, Personen- und Kanalnamen durch <PLATZHALTER>. Ergänze oben einen kurzen Einsatzhinweis, damit Teammitglieder den Prompt korrekt einordnen können."
+    : "Replace fixed repository, teammate, and channel names with <PLACEHOLDERS>. Add a one-line use note so teammates can apply the prompt in the right context.";
 }
 
 // ─── Socratic tutor (SocraticTutor) ─────────────────────────────────
 
 const OPENERS = [
-  "Good, you're circling the right idea.",
-  "That intuition is close.",
-  "Let's pressure-test that.",
-  "Right instinct.",
+  "Separate supplied context from external retrieval.",
+  "State the evidence boundary.",
+  "Test the claim against the available source.",
+  "Identify what the current context contains.",
 ] as const;
 
 const QUESTIONS = [
-  "So if none of that lives in the context window, where exactly does Claude get the answer from?",
-  "What would you have to put in the window to turn that guess into knowledge?",
-  "When it answered confidently with nothing grounded, what failure mode was that, and how would you fix it?",
-  "If you removed the role and context from your prompt, which part of the output would degrade first, and why?",
+  "If the fact is absent from the context, which authorized source or retrieval tool could supply it?",
+  "Which source would support the claim, and how would you verify the cited passage?",
+  "Which failure mode applies when an output states an unsupported fact, and which control addresses it?",
+  "If role and context were removed, which requirements would become underspecified?",
+] as const;
+
+const OPENERS_DE = [
+  "Trenne bereitgestellten Kontext von externem Retrieval.",
+  "Benenne die Beleggrenze.",
+  "Prüfe die Aussage an der verfügbaren Quelle.",
+  "Bestimme, was der aktuelle Kontext enthält.",
+] as const;
+
+const QUESTIONS_DE = [
+  "Wenn die Tatsache im Kontext fehlt: Welche freigegebene Quelle oder welches Retrieval-Tool kann sie liefern?",
+  "Welche Quelle würde die Aussage stützen, und wie prüfst du die zitierte Passage?",
+  "Welches Fehlerbild liegt vor, wenn eine Ausgabe eine unbelegte Tatsache nennt, und welche Kontrolle wirkt dagegen?",
+  "Welche Anforderungen wären ohne Rolle und Kontext nicht mehr eindeutig?",
 ] as const;
 
 /**
@@ -225,14 +381,26 @@ const QUESTIONS = [
  * `socraticReply`. `turnCount` is the number of user turns sent so far
  * (including this one).
  */
-export function socraticReply(lastUserMessage: string, turnCount: number): string {
-  const opener = OPENERS[Math.abs(hash(lastUserMessage)) % OPENERS.length];
+export function socraticReply(
+  lastUserMessage: string,
+  turnCount: number,
+  locale: Locale = "en",
+): string {
+  const openers = locale === "de" ? OPENERS_DE : OPENERS;
+  const questions = locale === "de" ? QUESTIONS_DE : QUESTIONS;
+  const opener = openers[Math.abs(hash(lastUserMessage)) % openers.length];
   if (turnCount >= 3) {
-    return `${opener} You've got it: Claude is a completion engine that works only from what's in the window, steered to be helpful, harmless, and honest. Everything else in this course is a way to put better material in that window. Want to try applying it to a real prompt of yours?`;
+    return locale === "de"
+      ? `${opener} Claude erzeugt Fortsetzungen aus dem aktuellen Kontextfenster. Verlässliche Ergebnisse benötigen deshalb relevante Quellen, klare Vorgaben und eine Prüfung. Übertrage das jetzt auf einen eigenen Prompt.`
+      : `${opener} Claude generates continuations from the current context window. Reliable results therefore need relevant sources, clear constraints, and verification. Apply that to one of your own prompts.`;
   }
   const question =
-    QUESTIONS[Math.abs(hash(lastUserMessage + String(turnCount))) % QUESTIONS.length];
-  return `${opener} A short answer: think of Claude as continuing the most likely helpful text given everything in front of it, not retrieving, not remembering. ${question}`;
+    questions[
+      Math.abs(hash(lastUserMessage + String(turnCount))) % questions.length
+    ];
+  return locale === "de"
+    ? `${opener} Kurzfassung: Claude setzt Text anhand des aktuellen Kontexts fort; Claude ruft dabei nicht automatisch Projektwissen ab. ${question}`
+    : `${opener} In short: Claude continues text from the current context; it does not automatically retrieve project knowledge. ${question}`;
 }
 
 // ─── CLAUDE.md builder (ClaudeMdBuilder) ────────────────────────────
@@ -246,17 +414,54 @@ export interface ClaudeMdFields {
 }
 
 /**
- * Ready-to-paste CLAUDE.md markdown, ported from claude-demo.js's `claudeMd`
- * (there the fields were regex-extracted from a formatted prompt string;
- * here the caller already has the typed form fields, so no extraction step
- * is needed).
+ * Generates a local CLAUDE.md draft from typed fields. Callers must present
+ * it as a draft and keep secrets out of the input.
  */
-export function buildClaudeMd(fields: ClaudeMdFields): string {
-  const project = fields.project.trim() || "Your project";
-  const stack = fields.stack.trim() || "language, framework, key tools";
-  const conventions = fields.conventions.trim() || "house style";
-  const avoid = fields.avoid.trim() || "known anti-patterns";
+export function buildClaudeMd(
+  fields: ClaudeMdFields,
+  locale: Locale = "en",
+): string {
+  const german = locale === "de";
+  const project =
+    fields.project.trim() || (german ? "Dein Projekt" : "Your project");
+  const stack =
+    fields.stack.trim() ||
+    (german
+      ? "Sprache, Framework, wichtige Tools"
+      : "language, framework, key tools");
+  const conventions =
+    fields.conventions.trim() || (german ? "Teamregeln" : "house style");
+  const avoid =
+    fields.avoid.trim() ||
+    (german ? "bekannte problematische Muster" : "known anti-patterns");
   const commands = fields.commands.trim() || "build / test / lint";
+  if (german) {
+    return `# CLAUDE.md
+
+## Projekt
+${project}
+
+## Stack
+${stack}
+
+## Regeln
+- ${conventions}
+- Änderungen klein und auf ein Thema begrenzt halten.
+- Tests zusammen mit dem Code schreiben.
+
+## Vermeiden
+- ${avoid}
+- Keine neue Abhängigkeit ohne dokumentierte Begründung.
+
+## Befehle
+\`\`\`
+${commands}
+\`\`\`
+
+## Arbeitsweise
+- Präzise und übersichtlich formulieren. Mit dem Ergebnis beginnen.
+- Bei Unklarheiten die Annahme nennen, statt still zu raten.`;
+  }
   return `# CLAUDE.md
 
 ## Project

@@ -10,10 +10,7 @@ import {
   courseGroupFor,
   courseIconName,
 } from "./tracks";
-import {
-  COURSE_CATALOG,
-  IMPORTED_COURSE_CATALOG,
-} from "./catalog";
+import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "./catalog";
 import { BRAINSTER_COURSE_CATALOG } from "./tracks";
 import { getCourseConfig } from "@/lib/course/config";
 import type { CourseSlug } from "@/lib/course/types";
@@ -44,7 +41,7 @@ describe("learner-first course model", () => {
     }
   });
 
-  it("keeps the spine to exactly the 4 native German record courses, everything else deeper", () => {
+  it("keeps the spine to exactly the 4 ordered foundation courses, everything else deeper", () => {
     // group is independent of nativeStatus/catalog membership (
     // stage 6 unified CatalogCourse/ImportedCourse behind nativeStatus,
     // which is orthogonal to which learner-facing shelf a course sits in).
@@ -59,13 +56,21 @@ describe("learner-first course model", () => {
       "ki-und-gesellschaft",
     ];
     for (const slug of ALL_SLUGS) {
-      const expected = SPINE_SLUGS.includes(slug as CourseSlug) ? "spine" : "deeper";
-      expect(courseGroupFor(slug), `${slug} should be group:"${expected}"`).toBe(expected);
+      const expected = SPINE_SLUGS.includes(slug as CourseSlug)
+        ? "spine"
+        : "deeper";
+      expect(
+        courseGroupFor(slug),
+        `${slug} should be group:"${expected}"`,
+      ).toBe(expected);
     }
     // Every spine slug must also be a live, native COURSE_CATALOG entry —
     // spine implies native, but native does not imply spine.
     for (const slug of SPINE_SLUGS) {
-      expect(COURSE_CATALOG.some((c) => c.slug === slug), `${slug} must be in COURSE_CATALOG`).toBe(true);
+      expect(
+        COURSE_CATALOG.some((c) => c.slug === slug),
+        `${slug} must be in COURSE_CATALOG`,
+      ).toBe(true);
     }
   });
 
@@ -96,15 +101,27 @@ describe("learner-first course model", () => {
     }
   });
 
-  it("builds honest badge chips: language always, record only when issued, extern only for labs", () => {
+  it("builds honest badge chips: availability always, record only when issued, extern only for labs", () => {
     const fuehrerschein = courseBadges("ki-fuehrerschein");
     expect(fuehrerschein).toEqual([
-      { label: "Deutsch", tone: "language" },
+      { label: "DE + EN", tone: "language" },
       { label: "mit Teilnahmebestätigung", tone: "record" },
     ]);
 
     const gesellschaft = courseBadges("ki-und-gesellschaft");
-    expect(gesellschaft).toContainEqual({ label: "mit Lernnachweis", tone: "record" });
+    expect(gesellschaft).toContainEqual({
+      label: "mit Lernnachweis",
+      tone: "record",
+    });
+
+    expect(courseBadges("codex", "de")).toEqual([
+      { label: "DE + EN", tone: "language" },
+      { label: "mit Teilnahmebestätigung", tone: "record" },
+    ]);
+    expect(courseBadges("codex", "en")).toEqual([
+      { label: "DE + EN", tone: "language" },
+      { label: "completion certificate", tone: "record" },
+    ]);
 
     // data-engineering-fundamentals flipped to a certified native course in
     //, data-science in,
@@ -112,20 +129,20 @@ describe("learner-first course model", () => {
     // a certified native course; none render "extern · GitHub" anymore.
     const certifiedLab = courseBadges("data-engineering-fundamentals");
     expect(certifiedLab).toEqual([
-      { label: "Englisch", tone: "language" },
-      { label: "mit Certificate", tone: "record" },
+      { label: "DE + EN", tone: "language" },
+      { label: "mit Teilnahmebestätigung", tone: "record" },
     ]);
 
     const certifiedDs = courseBadges("data-science");
     expect(certifiedDs).toEqual([
-      { label: "Englisch", tone: "language" },
-      { label: "mit Certificate", tone: "record" },
+      { label: "DE + EN", tone: "language" },
+      { label: "mit Teilnahmebestätigung", tone: "record" },
     ]);
 
     const certifiedAno = courseBadges("ai-native-operator");
     expect(certifiedAno).toEqual([
-      { label: "Englisch", tone: "language" },
-      { label: "mit Certificate", tone: "record" },
+      { label: "DE + EN", tone: "language" },
+      { label: "mit Teilnahmebestätigung", tone: "record" },
     ]);
     expect(certifiedAno.some((b) => b.tone === "external")).toBe(false);
 
@@ -140,14 +157,10 @@ describe("learner-first course model", () => {
   });
 
   it("exposes both learner-facing sections", () => {
-    expect(COURSE_SECTIONS.spine.title).toBe("Der Lernpfad");
-    expect(COURSE_SECTIONS.deeper.title).toBe("Tiefer gehen");
-    expect(COURSE_SECTIONS.spine.blurb).toContain(
-      "selbst ausgestellte Teilnahmebestätigung",
-    );
-    expect(COURSE_SECTIONS.deeper.blurb).toContain(
-      "selbst ausgestelltes Certificate",
-    );
+    expect(COURSE_SECTIONS.spine.title).toBe("Grundlagenpfad");
+    expect(COURSE_SECTIONS.deeper.title).toBe("Technikkurse");
+    expect(COURSE_SECTIONS.spine.blurb).toContain("selbst ausgestellt");
+    expect(COURSE_SECTIONS.deeper.blurb).toContain("selbst ausgestellt");
   });
 
   it("carries an accent + badge for every course (migrated from TRACK_META)", () => {
@@ -158,15 +171,21 @@ describe("learner-first course model", () => {
     }
     expect(COURSE_FACTS["ki-fuehrerschein"].accent).toBe("kupfer");
     expect(COURSE_FACTS["ki-fuehrerschein"].badge).toBe(
-      "Teilnahmebestätigung · Deutsch",
+      "Teilnahmebestätigung · DE + EN",
     );
     expect(COURSE_FACTS["ki-und-gesellschaft"].badge).toBe(
-      "Lernnachweis · Deutsch",
+      "Lernnachweis · DE + EN",
     );
     expect(COURSE_FACTS["data-engineering-fundamentals"].accent).toBe("sand");
     expect(COURSE_FACTS["data-engineering-fundamentals"].badge).toBe(
-      "Certificate · Englisch",
+      "Teilnahmebestätigung · DE + EN",
     );
+  });
+
+  it("declares reviewed German and English availability for every visible offering", () => {
+    for (const slug of ALL_SLUGS) {
+      expect(COURSE_FACTS[slug].availableLanguages, slug).toEqual(["de", "en"]);
+    }
   });
 
   it("RecordKind gains a 'certificate' value with a matching RECORD_LABEL entry ", () => {

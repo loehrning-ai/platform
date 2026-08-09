@@ -160,6 +160,34 @@ describe("crawl contract", () => {
     expect(entry.routeClass).toBe("retired");
     expect(entry.redirectTo).toBe(to);
     expect(entry.status).toBe(301);
+    expect(entry.robots).toBe("allow");
+    expect(entry.xRobotsTag).toBeUndefined();
+  });
+
+  it("keeps every permanent redirect origin crawlable", () => {
+    const redirects = CRAWL_CONTRACT.filter(
+      (entry) => entry.auth === "redirect" && entry.status === 301,
+    );
+    expect(redirects.length).toBeGreaterThan(0);
+    for (const entry of redirects) {
+      expect(entry.robots, entry.pattern).toBe("allow");
+      expect(entry.xRobotsTag, entry.pattern).toBeUndefined();
+      expect(entry.includeInSitemap, entry.pattern).toBe(false);
+    }
+
+    const disallow = robotsDisallowPaths();
+    for (const path of [
+      "/leistungen",
+      "/en/leistungen",
+      "/kontakt",
+      "/en/kontakt",
+      "/glossar",
+      "/en/glossar",
+      "/blog/digify",
+      "/en/blog/digify",
+    ]) {
+      expect(disallow, path).not.toContain(path);
+    }
   });
 
   it.each([
@@ -235,6 +263,7 @@ describe("crawl contract", () => {
     expect(allow).toContain("/book-covers/");
     expect(allow).toContain("/artifacts/");
     expect(allow).toContain("/api/knowledge-graph.json");
+    expect(allow).toContain("/schema/knowledge-graph/v1");
     for (const slug of [
       "claude",
       "codex",

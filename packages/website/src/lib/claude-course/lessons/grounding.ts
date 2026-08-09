@@ -7,34 +7,35 @@ import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 const lesson: ClaudeLesson = {
   id: "grounding",
   number: 9,
-  title: "Avoiding Hallucinations",
-  subtitle: "Ground the model in your data, or prepare for fiction.",
+  title: "Grounding and Unsupported Claims",
+  subtitle:
+    "Connect claims to sources, define abstention, and verify citations.",
   durationMinutes: 10,
   trackId: "advanced",
-  hook: "If it isn't in context, it isn't knowledge.",
+  hook: "A fluent claim still needs evidence.",
   keyConcepts: ["Paste it, cite it, refuse mode", "Green flags vs. red flags"],
   quiz: [],
   sections: [
     {
       id: "not-a-bug",
-      title: "Not a bug",
+      title: "Define the failure precisely",
       readTimeMinutes: 1,
       content:
-        "Hallucination is not a bug. It's Claude doing its job, completing plausibly, with no ground truth to complete against. The fix isn't asking nicely. The fix is structural: give it the data, require citations, and allow an honest \"I don't know.\"\n\n> If a fact isn't in context, treat it as fiction until proven otherwise.",
+        "An unsupported claim is a statement that cannot be justified by the allowed sources. It can appear even when relevant context is present. Causes include missing retrieval, conflicting documents, ambiguous instructions, model error, or a citation that does not support the sentence.\n\nReduce the risk structurally: supply authoritative data, define the allowed source boundary, require inspectable citations, allow abstention, and verify the result.\n\n> A citation is a pointer to check, not proof by itself.",
     },
     {
       id: "three-grounding-moves",
       title: "The three grounding moves",
       readTimeMinutes: 2,
       content:
-        "- **01 · Paste it.** Direct grounding. Paste the doc, the log, the PR description. Then ask about that. \"According to the attached…\"\n- **02 · Cite it.** Tell Claude: \"Cite the exact line or quote for every claim. If you can't cite, say so.\" You get citations, and honest gaps.\n- **03 · Refuse mode.** \"If the answer isn't in the provided context, respond exactly: NOT_IN_CONTEXT.\" Gives you a clean signal instead of a guess.",
+        '- **01 · Supply or retrieve the source.** Use the current policy, log, or code rather than relying on model training for private or changing facts.\n- **02 · Require traceability.** Request a source identifier and quoted passage for each material claim. Validate that the passage supports the claim.\n- **03 · Define abstention.** For example: "If the allowed sources do not support an answer, return `NOT_IN_CONTEXT` and list the missing information." Test both answerable and unanswerable cases.',
     },
     {
       id: "smell-test",
       title: "Smell test: how to spot a hallucination",
       readTimeMinutes: 2,
       content:
-        "**Green flags:** quotes from context with line numbers. \"I can't find this in the attached docs.\" Acknowledgements of uncertainty.\n\n**Red flags:** oddly specific numbers with no source. Named people/projects that don't appear in context. Confident plural claims (\"studies show…\").",
+        '**Useful signals:** source identifiers, short supporting quotations, explicit gaps, and separation of source facts from inference.\n\n**Review triggers:** precise numbers without a source, entities absent from the allowed material, citations that point to irrelevant text, and broad claims such as "studies show" without named evidence. These signals guide review; they do not replace it.',
     },
   ],
   widgets: [
@@ -59,16 +60,16 @@ const lesson: ClaudeLesson = {
         lessonId: "grounding",
         cpId: "q1",
         question:
-          "What's the most reliable way to stop Claude from inventing facts?",
+          "Which workflow most directly reduces unsupported factual claims?",
         options: [
           'Add "do not hallucinate" to every prompt.',
-          "Use a smarter model.",
+          "Select a different model without changing the evidence workflow.",
           'Provide the source data and require citations or an explicit "not in context" signal.',
           "Ask twice and compare answers.",
         ],
         correct: 2,
         explanation:
-          'Structural grounding beats pleading. Give the data, require citations, and allow a clean "I don\'t know" signal.',
+          "Provide authoritative data, require traceable support, define abstention, and verify the cited passages.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
@@ -80,7 +81,7 @@ const lesson: ClaudeLesson = {
       props: {
         lessonId: "grounding",
         cpId: "arena",
-        task: "Write a prompt for answering questions about an attached policy doc with zero hallucination tolerance.",
+        task: "Write a prompt that answers from an attached policy document and abstains when the document does not support an answer.",
         original: "answer questions about this doc and dont make stuff up",
         criteria:
           "requires citations, provides an explicit out-of-context signal, restricts answers to attached context",

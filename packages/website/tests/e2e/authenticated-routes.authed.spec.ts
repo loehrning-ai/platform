@@ -14,7 +14,7 @@ import { COURSE_CATALOG } from "../../src/lib/courses/catalog";
  *     cookie and the production build ships without Supabase env
  *     (getSupabasePublicConfig() === null, see src/lib/supabase/config.ts). The
  *     server-validated context is therefore effectively SIGNED OUT and
- *     src/middleware.ts fails /konto closed to /login. In this window the
+ *     src/proxy.ts fails /konto closed to /login. In this window the
  *     "signed-out surface" describe RUNS real green assertions (the /login?next=
  *     gate, every reason-query copy branch, the idle state, and the unconfigured
  *     no-config + error path) and the "authenticated /konto" describe SKIPS with
@@ -26,7 +26,7 @@ import { COURSE_CATALOG } from "../../src/lib/courses/catalog";
  * redirects fail the run. The scaffold name is deliberately not live-auth proof.
  *
  * Every selector/string below is verified against src/app/login/page.tsx,
- * src/app/login/login-form.tsx, src/app/konto/page.tsx, src/middleware.ts and
+ * src/app/login/login-form.tsx, src/app/konto/page.tsx, src/proxy.ts and
  * src/lib/courses/catalog.ts - no invented UI.
  */
 
@@ -48,11 +48,11 @@ function meaningfulErrors(errors: string[]): string[] {
 // src/app/login/page.tsx. "zzz-unbekannt" is any unknown reason and must hit
 // the default fallback branch.
 const REASON_COPY: ReadonlyArray<readonly [string, RegExp]> = [
-  ["progress-save", /Melde dich an, um deinen Lernfortschritt/],
-  ["auth-not-configured", /Login ist in dieser Umgebung noch nicht konfiguriert/],
+  ["progress-save", /Eine Anmeldung ist in dieser Umgebung nicht freigegeben/],
+  ["auth-not-configured", /Eine Anmeldung ist in dieser Umgebung nicht freigegeben/],
   ["abgelaufen", /Dieser Link ist abgelaufen/],
   ["ungueltig", /Dieser Link ist ungültig/],
-  ["zzz-unbekannt", /Der Login konnte nicht abgeschlossen werden/],
+  ["zzz-unbekannt", /Die Anmeldung konnte nicht abgeschlossen werden/],
 ];
 
 // ---------------------------------------------------------------------------
@@ -86,15 +86,16 @@ test.describe("signed-out surface (login gate + reason copy)", () => {
     expect(url.searchParams.get("next"), "next must round-trip /konto").toBe("/konto");
     expect(url.searchParams.get("reason")).toBe("auth-not-configured");
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      /Ohne Anmeldung lernen/i,
+      /Weiter ohne Konto/i,
     );
   });
 
   for (const [reason, copy] of REASON_COPY) {
     test(`/login?reason=${reason} renders its alert copy`, async ({ page }) => {
       await page.goto(`/login?reason=${reason}`, { waitUntil: "domcontentloaded" });
-      const expectedCopy = /Das Lernkonto ist in dieser Version deaktiviert/;
-      await expect(page.getByRole("alert").filter({ hasText: expectedCopy }).first()).toBeVisible();
+      await expect(
+        page.getByRole("alert").filter({ hasText: copy }).first(),
+      ).toBeVisible();
     });
   }
 
@@ -114,12 +115,12 @@ test.describe("signed-out surface (login gate + reason copy)", () => {
     await page.goto("/login", { waitUntil: "domcontentloaded" });
 
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      /Ohne Anmeldung lernen/i,
+      /Weiter ohne Konto/i,
     );
     const alerts = page.locator('[role="alert"]:not(#__next-route-announcer__)');
     await expect(alerts).toHaveCount(0);
     await expect(
-      page.getByRole("note").filter({ hasText: /Supabase Auth ist nicht konfiguriert/ }),
+      page.getByRole("note").filter({ hasText: /Anmeldung ist in dieser Umgebung nicht konfiguriert/ }),
     ).toBeVisible();
     await expect(page.getByRole("status")).toHaveCount(0);
 
@@ -127,16 +128,16 @@ test.describe("signed-out surface (login gate + reason copy)", () => {
     expect(noise, `console errors on /login\n${noise.join("\n")}`).toEqual([]);
   });
 
-  test("unconfigured build fails closed with disabled login controls", async ({
+  test("unconfigured build fails closed without rendering provider controls", async ({
     page,
   }) => {
     await page.goto("/login", { waitUntil: "domcontentloaded" });
 
     const email = page.getByLabel(/E-Mail-Adresse/i);
-    await expect(email).toBeDisabled();
-    await expect(page.getByRole("button", { name: /Login-Link/i })).toBeDisabled();
+    await expect(email).toHaveCount(0);
+    await expect(page.getByRole("button", { name: /Login-Link/i })).toHaveCount(0);
     await expect(
-      page.getByRole("note").filter({ hasText: /Supabase Auth ist nicht konfiguriert/ }),
+      page.getByRole("note").filter({ hasText: /Anmeldung ist in dieser Umgebung nicht konfiguriert/ }),
     ).toBeVisible();
     await expect(page.getByText(/verschickt/i)).toHaveCount(0);
   });
@@ -241,7 +242,7 @@ test.describe("authenticated /konto (requires a live session)", () => {
 // createBrowserSupabaseClient() is null and the request never fires. Selectors
 // are the real login-form outputs (src/app/login/login-form.tsx): a first send
 // sets role=status "Login-Link verschickt"; a second submit inside 30s stays
-// role=status but switches to the "wurde bereits verschickt" throttle copy.
+// role=status but switches to the "wurde gerade verschickt" throttle copy.
 // Enable when CI provides a configured isolated Supabase client and OTP mock.
 // ---------------------------------------------------------------------------
 
@@ -264,7 +265,7 @@ test.fixme(
     // Second submit inside the 30s window -> throttled, still "sent".
     await submit.click();
     await expect(page.getByRole("status")).toContainText(
-      /Login-Link wurde bereits verschickt/,
+      /Login-Link wurde gerade verschickt/,
     );
   },
 );

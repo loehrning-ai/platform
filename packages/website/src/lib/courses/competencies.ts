@@ -16,6 +16,8 @@
 
 import type { CourseSlug } from "@/lib/course/types";
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
+import { localizeCatalogCourse } from "@/lib/courses/catalog-copy";
+import type { Locale } from "@/lib/i18n/locale";
 import type { UnifiedProgress } from "@/lib/progress/types";
 import { isCourseCompletionEarned } from "./completion";
 
@@ -41,29 +43,35 @@ export interface EarnedCompetency extends Competency {
  * only once their own plan flips them to a certified record — see
  * `isCourseRecordEarned`, which never looks up a slug outside `COURSE_CATALOG`.
  */
-export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency[]>> = {
+export const COURSE_COMPETENCIES: Partial<
+  Record<CourseSlug, readonly Competency[]>
+> = {
   "ki-fuehrerschein": [
     {
       id: "ki-grundlagen-verstehen",
       label: "KI-Grundlagen verstehen",
-      description: "Erkennt, was KI-Systeme leisten und wo ihre Grenzen liegen.",
+      description:
+        "Erkennt, was KI-Systeme leisten und wo ihre Grenzen liegen.",
     },
     {
       id: "eu-ai-act-artikel-4",
       label: "EU AI Act, Artikel 4",
-      description: "Kennt die Pflicht zu KI-Kompetenz und wendet sie im Arbeitsalltag an.",
+      description:
+        "Ordnet die Pflicht zu kontextbezogenen KI-Kompetenzmaßnahmen im Arbeitsalltag ein.",
     },
     {
       id: "ki-output-pruefen",
       label: "KI-Output prüfen",
-      description: "Bewertet KI-Ergebnisse kritisch und dokumentiert die Prüfung.",
+      description:
+        "Bewertet KI-Ergebnisse kritisch und dokumentiert die Prüfung.",
     },
   ],
   "ki-und-gesellschaft": [
     {
       id: "ki-und-arbeit-einordnen",
       label: "KI und Arbeit einordnen",
-      description: "Ordnet die Wirkung von KI auf Arbeit und Gesellschaft nüchtern ein.",
+      description:
+        "Ordnet die Wirkung von KI auf Arbeit und Gesellschaft nüchtern ein.",
     },
     {
       id: "deepfakes-erkennen",
@@ -73,61 +81,71 @@ export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency
     {
       id: "bias-und-ethik",
       label: "Bias und Ethik",
-      description: "Versteht, wie algorithmischer Bias entsteht und wo ethische Grenzen liegen.",
+      description:
+        "Versteht, wie algorithmischer Bias entsteht und wo ethische Grenzen liegen.",
     },
   ],
   "eu-ai-act-kurs": [
     {
       id: "risikoklassen-einordnen",
       label: "Risikoklassen einordnen",
-      description: "Ordnet KI-Systeme nach Annex III in die Risikoklassen des EU AI Act ein.",
+      description:
+        "Ordnet KI-Systeme nach Annex III in die Risikoklassen des EU AI Act ein.",
     },
     {
       id: "pflichten-hochrisiko-gpai",
       label: "Pflichten für Hochrisiko und GPAI",
-      description: "Kennt die Anforderungen an Hochrisiko-Systeme und General-Purpose-KI.",
+      description:
+        "Kennt die Anforderungen an Hochrisiko-Systeme und General-Purpose-KI.",
     },
     {
       id: "eu-ai-act-umsetzen",
       label: "Umsetzung planen",
-      description: "Plant die Umsetzung entlang der Fristen bis 2028 im Mittelstand.",
+      description:
+        "Plant die Umsetzung entlang der Fristen bis 2028 im Mittelstand.",
     },
   ],
   "ai-native": [
     {
       id: "ai-native-arbeiten",
       label: "AI-native arbeiten",
-      description: "Formuliert Intent, gibt Kontext und prüft Output systematisch.",
+      description:
+        "Formuliert Intent, gibt Kontext und prüft Output systematisch.",
     },
     {
       id: "claude-stack-nutzen",
       label: "Den Claude-Stack nutzen",
-      description: "Setzt Projects, Skills und MCP für wiederkehrende Aufgaben ein.",
+      description:
+        "Setzt Projects, Skills und MCP für wiederkehrende Aufgaben ein.",
     },
     {
       id: "automatisierung-mit-governance",
       label: "Automatisierung mit Governance",
-      description: "Baut Automationen mit n8n und beachtet dabei den EU AI Act.",
+      description:
+        "Baut Automationen mit n8n und beachtet dabei den EU AI Act.",
     },
   ],
   // English course: the labels/descriptions stay English
   // to match the course's own content language (`CLAUDE_CONFIG.language`),
-  // unlike the four German competency sets above.
+  // unlike the four foundation-path competency sets above.
   claude: [
     {
       id: "structured-prompting",
       label: "Structured prompting",
-      description: "Writes role, context, task, constraints, examples, and format instead of guessing.",
+      description:
+        "Writes role, context, task, constraints, examples, and format instead of guessing.",
     },
     {
       id: "context-engineering",
       label: "Context engineering",
-      description: "Grounds Claude in real data and structures the context window deliberately.",
+      description:
+        "Grounds Claude in real data and structures the context window deliberately.",
     },
     {
       id: "safe-team-workflows",
       label: "Safe team workflows",
-      description: "Shares prompts and CLAUDE.md files safely, with evals and without leaking sensitive data.",
+      description:
+        "Shares prompts and CLAUDE.md files safely, with evals and without leaking sensitive data.",
     },
   ],
   // English course: same reasoning as claude above.
@@ -135,17 +153,20 @@ export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency
     {
       id: "task-spec-authoring",
       label: "Task spec authoring",
-      description: "Writes goal, constraints, acceptance criteria, and out-of-scope so an agent lands the PR right the first time.",
+      description:
+        "Writes goal, constraints, acceptance criteria, and out-of-scope so an agent lands the PR right the first time.",
     },
     {
       id: "agent-pr-review",
       label: "Agent PR review",
-      description: "Runs the review checklist that catches circular tests, scope creep, and Codex-specific security misses.",
+      description:
+        "Runs the review checklist that catches circular tests, scope creep, and Codex-specific security misses.",
     },
     {
       id: "parallel-agent-workflows",
       label: "Parallel agent workflows",
-      description: "Decomposes work into independent tasks and runs multiple agents across git worktrees without merge conflicts.",
+      description:
+        "Decomposes work into independent tasks and runs multiple agents across git worktrees without merge conflicts.",
     },
   ],
   // English course: same reasoning as claude/codex above.
@@ -153,17 +174,20 @@ export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency
     {
       id: "idempotent-pipeline-writes",
       label: "Idempotent pipeline writes",
-      description: "Writes every scheduled task as INSERT OVERWRITE keyed by <DATEID>, so retries and backfills never double-write or drift with wall-clock time.",
+      description:
+        "Writes every scheduled task as INSERT OVERWRITE keyed by <DATEID>, so retries and backfills never double-write or drift with wall-clock time.",
     },
     {
       id: "streaming-boundary-guards",
       label: "Streaming boundary guards",
-      description: "Applies dedup-by-event_id and watermark-based late-drop as two independent guards at every stream-to-warehouse boundary.",
+      description:
+        "Applies dedup-by-event_id and watermark-based late-drop as two independent guards at every stream-to-warehouse boundary.",
     },
     {
       id: "data-quality-signal-barrier",
       label: "Data-quality signal barrier",
-      description: "Gates downstream consumption on a signal table written only after row-count, freshness, schema, and uniqueness checks pass — never on the raw data table.",
+      description:
+        "Gates downstream consumption on a signal table written only after row-count, freshness, schema, and uniqueness checks pass — never on the raw data table.",
     },
   ],
   // English course: same reasoning as claude/codex above.
@@ -171,17 +195,20 @@ export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency
     {
       id: "metric-before-model",
       label: "Choosing the metric before the model",
-      description: "Picks precision, recall, F1, or PR-AUC from the real cost of a false positive vs. a false negative, not library defaults.",
+      description:
+        "Picks precision, recall, F1, or PR-AUC from the real cost of a false positive vs. a false negative, not library defaults.",
     },
     {
       id: "sampling-clt-intuition",
       label: "Sampling & CLT intuition",
-      description: "Explains why a sampling distribution trends normal regardless of the population's shape, and uses it to size confidence intervals.",
+      description:
+        "Explains why a sampling distribution trends normal regardless of the population's shape, and uses it to size confidence intervals.",
     },
     {
       id: "causal-dag-literacy",
       label: "Causal DAG literacy",
-      description: "Draws the DAG before the regression and identifies confounders, mediators, and colliders to choose the correct adjustment set.",
+      description:
+        "Draws the DAG before the regression and identifies confounders, mediators, and colliders to choose the correct adjustment set.",
     },
   ],
   // English course: same reasoning as claude/codex above.
@@ -189,17 +216,20 @@ export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency
     {
       id: "system-design-tradeoffs",
       label: "System-design trade-offs",
-      description: "Names the CAP/PACELC trade-off explicitly and matches storage/streaming choices to real latency and freshness targets.",
+      description:
+        "Names the CAP/PACELC trade-off explicitly and matches storage/streaming choices to real latency and freshness targets.",
     },
     {
       id: "storage-format-internals",
       label: "Storage-format internals",
-      description: "Reasons about row-vs-columnar layout, Parquet row groups, predicate pushdown, and lakehouse table formats at the byte level.",
+      description:
+        "Reasons about row-vs-columnar layout, Parquet row groups, predicate pushdown, and lakehouse table formats at the byte level.",
     },
     {
       id: "ic5-interview-structure",
       label: "IC5 interview structure",
-      description: "Runs the five-act system-design interview structure — clarify, skeleton, deep dive, failure modes, trade-offs — under time pressure.",
+      description:
+        "Runs the five-act system-design interview structure — clarify, skeleton, deep dive, failure modes, trade-offs — under time pressure.",
     },
   ],
   // English course: same reasoning as claude/codex above.
@@ -207,17 +237,20 @@ export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency
     {
       id: "maturity-self-diagnosis",
       label: "Honest AI-maturity self-diagnosis",
-      description: "Places themselves and their team on the L0-L3 maturity ladder honestly, calibrating trust to task type and cost of error rather than a single global verdict.",
+      description:
+        "Places themselves and their team on the L0-L3 maturity ladder honestly, calibrating trust to task type and cost of error rather than a single global verdict.",
     },
     {
       id: "spec-first-delegation",
       label: "Spec-first delegation",
-      description: "Writes an agent spec with a tight goal sentence, explicit non-goals, and concrete test cases, and directs a small fleet of agents against it instead of hand-typing the work.",
+      description:
+        "Writes an agent spec with a tight goal sentence, explicit non-goals, and concrete test cases, and directs a small fleet of agents against it instead of hand-typing the work.",
     },
     {
       id: "governance-as-speed",
       label: "Governance as a speed enabler",
-      description: "Builds the model registry, eval-driven release gate, and agent-identity audit trail that let a team move faster with agents, not slower.",
+      description:
+        "Builds the model registry, eval-driven release gate, and agent-identity audit trail that let a team move faster with agents, not slower.",
     },
   ],
 };
@@ -225,6 +258,176 @@ export const COURSE_COMPETENCIES: Partial<Record<CourseSlug, readonly Competency
 const COURSE_TITLE: Record<string, string> = Object.fromEntries(
   COURSE_CATALOG.map((c) => [c.slug, c.title]),
 );
+
+type CompetencyCopy = Pick<Competency, "label" | "description">;
+
+/**
+ * Only copy that differs from a competency's source language belongs here.
+ * Stable competency IDs remain the cross-locale identity and completion gate.
+ */
+const ENGLISH_COMPETENCY_COPY: Readonly<Record<string, CompetencyCopy>> = {
+  "ki-grundlagen-verstehen": {
+    label: "Understand AI fundamentals",
+    description:
+      "Identifies what AI systems can do and where their limits are.",
+  },
+  "eu-ai-act-artikel-4": {
+    label: "EU AI Act, Article 4",
+    description:
+      "Places the duty to provide context-specific AI literacy measures in day-to-day work.",
+  },
+  "ki-output-pruefen": {
+    label: "Review AI output",
+    description: "Evaluates AI output critically and records the review.",
+  },
+  "ki-und-arbeit-einordnen": {
+    label: "Put AI and work in context",
+    description:
+      "Assesses effects of AI on work and society without overclaiming.",
+  },
+  "deepfakes-erkennen": {
+    label: "Recognise deepfakes",
+    description:
+      "Identifies manipulated media and common signs of fabrication.",
+  },
+  "bias-und-ethik": {
+    label: "Bias and ethics",
+    description:
+      "Explains how algorithmic bias arises and where ethical limits apply.",
+  },
+  "risikoklassen-einordnen": {
+    label: "Classify risk categories",
+    description: "Classifies AI systems under the EU AI Act and Annex III.",
+  },
+  "pflichten-hochrisiko-gpai": {
+    label: "Duties for high-risk AI and GPAI",
+    description:
+      "Identifies requirements for high-risk systems and general-purpose AI.",
+  },
+  "eu-ai-act-umsetzen": {
+    label: "Plan implementation",
+    description:
+      "Maps implementation work to the applicable deadlines through 2028.",
+  },
+  "ai-native-arbeiten": {
+    label: "Work with AI systematically",
+    description:
+      "States intent, supplies context, and reviews output systematically.",
+  },
+  "claude-stack-nutzen": {
+    label: "Use the Claude tool stack",
+    description: "Uses Projects, Skills, and MCP for repeatable tasks.",
+  },
+  "automatisierung-mit-governance": {
+    label: "Automation with governance",
+    description:
+      "Builds n8n automations with explicit controls and EU AI Act checks.",
+  },
+};
+
+const GERMAN_COMPETENCY_COPY: Readonly<Record<string, CompetencyCopy>> = {
+  "structured-prompting": {
+    label: "Strukturiertes Prompting",
+    description:
+      "Formuliert Rolle, Kontext, Aufgabe, Grenzen, Beispiele und Ausgabeformat ausdrücklich.",
+  },
+  "context-engineering": {
+    label: "Kontextgestaltung",
+    description:
+      "Verankert Claude in geprüften Daten und strukturiert das Kontextfenster bewusst.",
+  },
+  "safe-team-workflows": {
+    label: "Sichere Team-Workflows",
+    description:
+      "Teilt Prompts und CLAUDE.md-Dateien mit Tests, ohne vertrauliche Daten offenzulegen.",
+  },
+  "task-spec-authoring": {
+    label: "Aufgabenspezifikationen verfassen",
+    description:
+      "Definiert Ziel, Grenzen, Akzeptanzkriterien und ausgeschlossene Änderungen für Coding-Agenten.",
+  },
+  "agent-pr-review": {
+    label: "Agenten-PRs prüfen",
+    description:
+      "Prüft Agentenänderungen auf zirkuläre Tests, unnötigen Umfang und Sicherheitsfehler.",
+  },
+  "parallel-agent-workflows": {
+    label: "Parallele Agenten-Workflows",
+    description:
+      "Zerlegt Arbeit in unabhängige Aufgaben und koordiniert Agenten ohne Merge-Konflikte.",
+  },
+  "idempotent-pipeline-writes": {
+    label: "Idempotente Pipeline-Schreibvorgänge",
+    description:
+      "Entwirft wiederholbare Schreibvorgänge, damit Retries und Backfills keine Daten doppelt schreiben.",
+  },
+  "streaming-boundary-guards": {
+    label: "Schutz an Streaming-Grenzen",
+    description:
+      "Trennt Ereignis-Deduplizierung und Watermarks als unabhängige Schutzmechanismen.",
+  },
+  "data-quality-signal-barrier": {
+    label: "Freigabe durch Datenqualitätssignal",
+    description:
+      "Gibt nachgelagerte Verarbeitung erst nach bestandenen Qualitätsprüfungen frei.",
+  },
+  "metric-before-model": {
+    label: "Metrik vor dem Modell wählen",
+    description:
+      "Wählt Bewertungsmetriken anhand der tatsächlichen Kosten falscher Entscheidungen.",
+  },
+  "sampling-clt-intuition": {
+    label: "Stichproben und zentralen Grenzwertsatz einordnen",
+    description:
+      "Erklärt Stichprobenverteilungen und leitet daraus Konfidenzintervalle ab.",
+  },
+  "causal-dag-literacy": {
+    label: "Kausale Diagramme lesen",
+    description:
+      "Unterscheidet Confounder, Mediatoren und Collider vor der Modellierung.",
+  },
+  "system-design-tradeoffs": {
+    label: "Zielkonflikte im Systemdesign",
+    description:
+      "Ordnet CAP- und PACELC-Zielkonflikte konkreten Latenz- und Aktualitätszielen zu.",
+  },
+  "storage-format-internals": {
+    label: "Interna von Speicherformaten",
+    description:
+      "Begründet Zeilen- und Spaltenlayout, Parquet-Row-Groups und Tabellenformate auf Byte-Ebene.",
+  },
+  "ic5-interview-structure": {
+    label: "IC5-Systemdesign-Interview strukturieren",
+    description:
+      "Bearbeitet Anforderungen, Grundstruktur, Vertiefung, Ausfälle und Zielkonflikte in fester Reihenfolge.",
+  },
+  "maturity-self-diagnosis": {
+    label: "KI-Reife nüchtern einordnen",
+    description:
+      "Ordnet Fähigkeiten nach Aufgabentyp, Prüfpraxis und Fehlerkosten ein.",
+  },
+  "spec-first-delegation": {
+    label: "Delegation mit Spezifikation",
+    description:
+      "Definiert Ziel, Nicht-Ziele und Tests, bevor ein Agent eine Aufgabe bearbeitet.",
+  },
+  "governance-as-speed": {
+    label: "Governance als Betriebskontrolle",
+    description:
+      "Verbindet Modellregister, Evaluationsgates und Agentenidentität zu einer prüfbaren Betriebskontrolle.",
+  },
+};
+
+function localizeCompetency(
+  competency: Competency,
+  locale: Locale,
+): Competency {
+  const copy =
+    locale === "en"
+      ? ENGLISH_COMPETENCY_COPY[competency.id]
+      : GERMAN_COMPETENCY_COPY[competency.id];
+  return copy ? { ...competency, ...copy } : competency;
+}
 
 /**
  * True when a course's record has been earned — the SAME bar as the
@@ -244,16 +447,20 @@ export function isCourseRecordEarned(
  */
 export function earnedCompetencies(
   progress: UnifiedProgress | null,
+  locale: Locale = "de",
 ): readonly EarnedCompetency[] {
   if (!progress) return [];
   const earned: EarnedCompetency[] = [];
   for (const course of COURSE_CATALOG) {
     if (!isCourseRecordEarned(progress, course.slug)) continue;
     for (const competency of COURSE_COMPETENCIES[course.slug] ?? []) {
+      const localizedCompetency = localizeCompetency(competency, locale);
+      const localizedCourse = localizeCatalogCourse(course, locale);
       earned.push({
-        ...competency,
+        ...localizedCompetency,
         courseSlug: course.slug,
-        courseTitle: COURSE_TITLE[course.slug] ?? course.title,
+        courseTitle:
+          localizedCourse.title ?? COURSE_TITLE[course.slug] ?? course.title,
       });
     }
   }

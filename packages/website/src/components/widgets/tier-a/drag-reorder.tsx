@@ -244,7 +244,7 @@ export function DragReorderWidget({
               data-pos={i}
               data-id={b.id}
               className={cn(
-                "grid grid-cols-[28px_1fr_auto] items-center gap-3 border-2 bg-background p-3 transition-[background-color,border-color,color,opacity,transform,box-shadow]",
+                "grid grid-cols-[28px_minmax(0,1fr)_auto] items-center gap-3 border-2 bg-background p-3 transition-[background-color,border-color,color,opacity,transform,box-shadow]",
                 isCorrect && "border-risk-green bg-risk-green/5",
                 isWrong && "border-destructive bg-destructive/5",
                 isOver && "border-brand-amber bg-brand-amber/10",
@@ -263,8 +263,8 @@ export function DragReorderWidget({
               >
                 {i + 1}
               </span>
-              <span>
-                <span className="block text-[14px] font-semibold leading-[1.3] text-foreground">
+              <span className="min-w-0">
+                <span className="block break-words text-[14px] font-semibold leading-[1.3] text-foreground [overflow-wrap:anywhere]">
                   {b.label}
                 </span>
                 {b.sample && (

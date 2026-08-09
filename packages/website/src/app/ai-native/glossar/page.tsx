@@ -6,31 +6,55 @@ import {
   CATEGORY_ORDER,
 } from "@/lib/ai-native/glossary";
 import { GlossaryView } from "@/components/ai-native/glossary-view";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
+import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
+import { SITE_URL } from "@/lib/seo/json-ld";
 
-export const metadata: Metadata = {
-  title: "Glossar, AI-Native Arbeitskurs",
-  description:
-    "Alle ~70 Begriffe aus dem AI-Native Arbeitskurs erklärt: Claude, MCP, Obsidian, n8n, EU AI Act, PARA, RCTFC, Capstone und mehr. Deutsche Definitionen, kategorisiert.",
-  robots: { index: false, follow: true },
-  alternates: { canonical: "https://loehrning.ai/ai-native/glossar" },
-  openGraph: {
-    title: "AI-Native Arbeitskurs Glossar",
-    description:
-      "70+ Begriffe erklärt: Claude, MCP, Obsidian, n8n, EU AI Act, PARA, RCTFC. Referenz-Doku für den Arbeitskurs.",
-    url: "https://loehrning.ai/ai-native/glossar",
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = resolveFoundationCourseContentLocale(
+    "ai-native",
+    await getRequestLocale(),
+  );
+  const title =
+    locale === "en"
+      ? "Glossary: AI-Native Workflow Course"
+      : "Glossar: AI-Native Arbeitskurs";
+  const description =
+    locale === "en"
+      ? "Seventy definitions for the technical, organizational and regulatory terms used in the AI-Native Workflow Course."
+      : "Siebzig Definitionen für die technischen, organisatorischen und regulatorischen Begriffe des AI-Native Arbeitskurses.";
+  const localizedPath = localizeHref("/ai-native/glossar", locale);
+  const url = `${SITE_URL}${localizedPath}`;
+  const alternates = buildLocaleAlternates("/ai-native/glossar", ["de", "en"]);
+  return {
+    title,
+    description,
+    robots: { index: false, follow: true },
+    alternates: { ...alternates, canonical: localizedPath },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "website",
+      locale: locale === "en" ? "en_GB" : "de_DE",
+    },
+  };
+}
 
-export default function GlossarPage() {
-  const { _meta, entries } = getGlossary();
+export default async function GlossarPage() {
+  const locale = resolveFoundationCourseContentLocale(
+    "ai-native",
+    await getRequestLocale(),
+  );
+  const { _meta, entries } = getGlossary(locale);
   const groups = CATEGORY_ORDER.map((cat, i) => ({
     key: cat,
     num: `0${i + 1}`.slice(-2),
-    label: getCategoryLabel(cat),
-    entries: getEntriesByCategory(cat)
+    label: getCategoryLabel(cat, locale),
+    entries: getEntriesByCategory(cat, locale)
       .slice()
-      .sort((a, b) => a.term.localeCompare(b.term, "de")),
+      .sort((a, b) => a.term.localeCompare(b.term, locale)),
   })).filter((g) => g.entries.length > 0);
 
   return (
@@ -39,6 +63,7 @@ export default function GlossarPage() {
       totalTerms={entries.length}
       version={_meta.version}
       lastUpdated={_meta.last_updated}
+      locale={locale}
     />
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Panel } from "../primitives";
+import { useDataEngineeringFundamentalsLocale } from "../locale-context";
 
 // ─── LineageCamera ────────────────────────────────
 // Ported from `src/chapters/Ch6_Discover.js`: click a node in the lineage
@@ -37,6 +38,7 @@ const EDGES: readonly (readonly [string, string])[] = [
 ];
 
 export function LineageCamera() {
+  const { text } = useDataEngineeringFundamentalsLocale();
   const [focus, setFocus] = useState("fct_events");
 
   const highlighted = new Set([focus]);
@@ -47,10 +49,10 @@ export function LineageCamera() {
 
   return (
     <Panel
-      eyebrow="bonus sim · lineage camera"
-      title={`Lineage of ${focus}`}
-      meta="click a node to pan"
-      caption="OpenLineage/DataHub serves the same graph. Click any node; the camera re-focuses and fades unrelated edges."
+      eyebrow={text("bonus sim · lineage camera", "Zusatzsimulation · Lineage-Ansicht")}
+      title={`${text("Lineage of", "Lineage von")} ${focus}`}
+      meta={text("click a node to pan", "Knoten auswählen und Ansicht fokussieren")}
+      caption={text("Illustrative catalog graph. Actual edges depend on emitted lineage, ingestion, and integration coverage.", "Beispielhafter Kataloggraph. Reale Kanten hängen von ausgegebener Lineage, Aufnahme und Integrationsabdeckung ab.")}
     >
       <div className="lc-stage">
         <svg viewBox="0 0 800 360" preserveAspectRatio="xMidYMid meet" style={{ width: "100%", display: "block", userSelect: "none" }}>
@@ -97,7 +99,7 @@ export function LineageCamera() {
                 className="lineage-node"
                 role="button"
                 tabIndex={0}
-                aria-label={`Focus lineage on ${n.label}`}
+                aria-label={`${text("Focus lineage on", "Lineage fokussieren auf")} ${n.label}`}
                 aria-pressed={isFocus}
                 style={{ cursor: "pointer", opacity: on ? 1 : 0.4, transition: "opacity 280ms cubic-bezier(0.32,0.72,0,1)" }}
                 onClick={() => setFocus(id)}
@@ -118,7 +120,7 @@ export function LineageCamera() {
                   textAnchor="middle"
                   style={{ fontFamily: "var(--font-mono)", fontSize: 10, fill: "var(--fg-2)", letterSpacing: "0.1em", textTransform: "uppercase" }}
                 >
-                  {n.kind}
+                  {n.kind === "source" ? text("source", "Quelle") : n.kind === "metric" ? text("metric", "Metrik") : n.kind === "dash" ? "Dashboard" : "ETL"}
                 </text>
               </g>
             );

@@ -160,7 +160,7 @@ test.describe("edge: retired routes 301 to a live destination or 410 Gone", () =
   ] as const;
 
   for (const [route, target] of RETIRED_REDIRECTS) {
-    test(`${route} responds 301 -> ${target} with noindex`, async ({
+    test(`${route} responds 301 -> ${target} without noindex`, async ({
       request,
     }) => {
       const response = await request.get(route, { maxRedirects: 0 });
@@ -168,7 +168,7 @@ test.describe("edge: retired routes 301 to a live destination or 410 Gone", () =
       expect(response.headers()["location"], `Location for ${route}`).toContain(
         target,
       );
-      expect(response.headers()["x-robots-tag"]).toContain("noindex");
+      expect(response.headers()["x-robots-tag"]).toBeUndefined();
     });
   }
 
@@ -220,7 +220,7 @@ test.describe("edge: provider-free /feedback fallback", () => {
     await page.goto(FEEDBACK, { waitUntil: "load" });
 
     await expect(
-      page.getByText(/serverseitige Feedback-Formular ist .* deaktiviert/),
+      page.getByText(/serverseitige Speicherung ist .* nicht freigeschaltet/),
     ).toBeVisible();
     await expect(page.getByRole("status")).toContainText(
       "Es werden keine Formulardaten gespeichert.",

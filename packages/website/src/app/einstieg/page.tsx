@@ -1,287 +1,368 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { TOTAL_QUESTIONS } from "@/lib/ki-check/questions";
-import { JsonLd, type JsonLdSingle, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
+import { contentLocalesForPath } from "@/lib/i18n/content-parity";
+import {
+  buildLocaleAlternates,
+  localizeHref,
+  type Locale,
+} from "@/lib/i18n/locale";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { ENTRY_COPY } from "@/lib/i18n/public-info-copy";
+import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
+import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
 
-export const metadata: Metadata = {
-  title: "Was ist KI? Ein Einstieg ohne Vorwissen",
-  description:
-    "KI kurz erklärt: was Künstliche Intelligenz ist, drei Beispiele aus dem Alltag, und wie du ohne Vorkenntnisse weiterlernen kannst. Kostenlos, kein Login.",
-  robots: { index: true, follow: true },
-  alternates: { canonical: "/einstieg" },
-  openGraph: {
-    title: "Was ist KI? Ein Einstieg ohne Vorwissen",
-    description:
-      "KI kurz erklärt: was Künstliche Intelligenz ist, drei Beispiele aus dem Alltag, und wie du ohne Vorkenntnisse weiterlernen kannst. Kostenlos, kein Login.",
-    url: `${SITE_URL}/einstieg`,
-    siteName: "loehrning.ai",
-    locale: "de_DE",
-    type: "article",
-  },
-};
+const PATH = "/einstieg";
+const AI_ACT_SOURCE = "https://eur-lex.europa.eu/eli/reg/2024/1689/oj";
 
-const EINSTIEG_ARTICLE: JsonLdSingle = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  headline: "Was ist KI? Ein Einstieg ohne Vorwissen",
-  description:
-    "KI kurz erklärt: was Künstliche Intelligenz ist, drei Beispiele aus dem Alltag, und wie du ohne Vorkenntnisse weiterlernen kannst.",
-  url: `${SITE_URL}/einstieg`,
-  inLanguage: "de",
-  isAccessibleForFree: true,
-  author: { "@id": ORG_ID },
-  publisher: { "@id": ORG_ID },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const copy = ENTRY_COPY[locale].metadata;
+  const localizedPath = localizeHref(PATH, locale);
+  const metadata = createPublicPageMetadata({
+    title: copy.title,
+    description: copy.description,
+    path: localizedPath,
+    locale,
+  });
 
-const EXAMPLES = [
-  {
-    id: "gesicht",
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={1.5}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-        className="h-7 w-7 text-brand-orange"
-      >
-        <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
-        <line x1="12" y1="18" x2="12.01" y2="18" />
+  return {
+    ...metadata,
+    alternates: {
+      ...buildLocaleAlternates(PATH, contentLocalesForPath(PATH)),
+      canonical: localizedPath,
+    },
+    openGraph: metadata.openGraph
+      ? {
+          ...metadata.openGraph,
+          type: "article",
+          locale: locale === "de" ? "de_DE" : "en_GB",
+        }
+      : metadata.openGraph,
+  };
+}
+
+function ExampleIcon({ id }: { readonly id: string }) {
+  const common = {
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.5,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": true,
+    className: "h-7 w-7",
+  };
+
+  if (id === "gesicht") {
+    return (
+      <svg {...common}>
+        <rect x="5" y="2" width="14" height="20" rx="2" />
         <path d="M9 10a3 3 0 0 0 6 0" />
         <circle cx="9.5" cy="8.5" r=".5" fill="currentColor" />
         <circle cx="14.5" cy="8.5" r=".5" fill="currentColor" />
       </svg>
-    ),
-    heading: "Gesichtserkennung",
-    body: "Dein Smartphone entsperrt sich, wenn es dein Gesicht erkennt. Das Modell wurde mit Tausenden Gesichtsbildern trainiert: es trifft keine Regeln, es erkennt Muster.",
-  },
-  {
-    id: "route",
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={1.5}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-        className="h-7 w-7 text-brand-orange"
-      >
-        <polygon points="3 11 22 2 13 21 11 13 3 11" />
-      </svg>
-    ),
-    heading: "Routenplanung",
-    body: "Google Maps und Apple Maps sagen Staus vorher, weil sie aus Millionen früherer Fahrten gelernt haben, wann es wo stockt.",
-  },
-  {
-    id: "empfehlungen",
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={1.5}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-        className="h-7 w-7 text-brand-orange"
-      >
-        <path d="M9 18V5l12-2v13" />
-        <circle cx="6" cy="18" r="3" />
-        <circle cx="18" cy="16" r="3" />
-      </svg>
-    ),
-    heading: "Musik- und Filmempfehlungen",
-    body: "Wenn Spotify oder Netflix dir etwas vorschlägt, hat ein Modell aus deinem bisherigen Nutzungsverhalten Muster abgeleitet. Es kennt dich nicht. Es erkennt, was ähnliche Nutzerinnen und Nutzer danach gehört oder gesehen haben.",
-  },
-] as const;
+    );
+  }
 
-export default function EinstiegPage() {
+  if (id === "route") {
+    return (
+      <svg {...common}>
+        <path d="M4 19c4-7 6-10 9-10 2.5 0 3.5 2 7 2" />
+        <circle cx="4" cy="19" r="2" />
+        <circle cx="20" cy="11" r="2" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg {...common}>
+      <path d="M4 7h16M4 12h11M4 17h7" />
+      <circle cx="18" cy="17" r="2" />
+    </svg>
+  );
+}
+
+function EinstiegContent({ locale }: { readonly locale: Locale }) {
+  const copy = ENTRY_COPY[locale];
+  const localizedPath = localizeHref(PATH, locale);
+  const article = {
+    "@context": "https://schema.org" as const,
+    "@type": "Article",
+    headline: copy.metadata.title,
+    description: copy.metadata.description,
+    url: `${SITE_URL}${localizedPath}`,
+    inLanguage: locale === "de" ? "de-DE" : "en-GB",
+    isAccessibleForFree: true,
+    author: { "@id": ORG_ID },
+    publisher: { "@id": ORG_ID },
+  };
+
   return (
     <>
-      <JsonLd data={EINSTIEG_ARTICLE} id="einstieg-article-jsonld" />
+      <JsonLd data={article} id="einstieg-article-jsonld" />
 
-      <div className="mx-auto max-w-[780px] px-6 pb-32 pt-20">
-
-        {/* Section 1: Banner */}
-        <div className="mb-12">
-          <p className="mb-4 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-            Stufe 1: Orientierung. Kein Login, kein Test, kostenlos.
-          </p>
-          <h1 className="text-[36px] font-bold leading-[1.05] tracking-[-0.04em] text-foreground sm:text-[48px]">
-            Was ist Künstliche Intelligenz eigentlich?
-          </h1>
-          <p className="mt-4 text-[18px] leading-[1.6] text-muted-foreground">
-            Hier bekommst du eine klare Antwort. In 10 Minuten. Kein Vorwissen nötig.
-          </p>
-        </div>
-
-        {/* Section 2: Definition */}
-        <section aria-labelledby="definition-heading" className="mb-14">
-          <h2
-            id="definition-heading"
-            className="mb-5 text-[24px] font-bold tracking-[-0.03em] text-foreground sm:text-[28px]"
-          >
-            Was ist KI? Eine ehrliche Antwort
-          </h2>
-
-          <div className="border-l-4 border-brand-orange py-2 pl-6">
-            <p className="text-[18px] leading-[1.6] text-foreground">
-              KI sind Computerprogramme, die aus vielen Beispielen lernen, um Muster zu
-              erkennen, Texte zu schreiben oder Entscheidungen vorzubereiten.
+      <article className="mx-auto w-full max-w-6xl px-5 pb-28 pt-16 sm:px-8 sm:pt-20 lg:px-10">
+        <header className="grid gap-10 border-b border-border pb-12 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-end">
+          <div className="min-w-0">
+            <div className="h-[3px] w-24 bg-brand-orange" />
+            <p className="mt-7 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
+              {copy.eyebrow}
+            </p>
+            <h1 className="mt-5 max-w-4xl text-pretty text-[clamp(2.5rem,7vw,5.75rem)] font-bold leading-[0.92] tracking-[-0.055em] text-foreground">
+              {copy.title}
+            </h1>
+            <p className="mt-7 max-w-2xl text-pretty text-lg leading-relaxed text-muted-foreground sm:text-xl">
+              {copy.intro}
             </p>
           </div>
 
-          <div className="mt-4">
-            <details className="group">
-              <summary className="cursor-pointer font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-muted-foreground hover:text-foreground">
-                Woher kommt diese Definition?
-              </summary>
-              <p className="mt-2 text-[14px] leading-[1.6] text-muted-foreground">
-                Diese Definition folgt Artikel 3 der EU-KI-Verordnung (EU) 2024/1689.
-              </p>
-            </details>
-          </div>
-        </section>
-
-        {/* Section 3: Three daily-life examples */}
-        <section aria-labelledby="beispiele-heading" className="mb-14">
-          <h2
-            id="beispiele-heading"
-            className="mb-7 text-[24px] font-bold tracking-[-0.03em] text-foreground sm:text-[28px]"
-          >
-            KI begegnet dir jeden Tag
-          </h2>
-
-          <div className="grid gap-5 sm:grid-cols-3" data-testid="beispiel-cards">
-            {EXAMPLES.map((ex) => (
+          <dl className="grid border-t border-border sm:grid-cols-3 lg:grid-cols-1 lg:border-l lg:border-t-0">
+            {copy.facts.map((fact, index) => (
               <div
-                key={ex.id}
-                className="border border-border bg-card p-5"
-                data-testid={`beispiel-${ex.id}`}
+                key={fact}
+                className="min-w-0 border-b border-border py-4 sm:border-r sm:px-4 lg:border-r-0 lg:px-6"
               >
-                <div className="mb-4">{ex.icon}</div>
-                <h3 className="mb-2 text-[16px] font-bold text-foreground">{ex.heading}</h3>
-                <p className="text-[14px] leading-[1.6] text-muted-foreground">{ex.body}</p>
+                <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                  {String(index + 1).padStart(2, "0")}
+                </dt>
+                <dd className="mt-1 break-words text-sm font-semibold text-foreground">
+                  {fact}
+                </dd>
               </div>
             ))}
-          </div>
-        </section>
+          </dl>
+        </header>
 
-        {/* Section 4: FAQ with native details/summary */}
-        <section aria-labelledby="faq-heading" className="mb-14">
-          <h2
-            id="faq-heading"
-            className="mb-7 text-[24px] font-bold tracking-[-0.03em] text-foreground sm:text-[28px]"
-          >
-            Drei Fragen, die viele am Anfang stellen
-          </h2>
-
-          <div className="space-y-3">
-            <details className="border border-border bg-card">
-              <summary className="cursor-pointer px-5 py-4 font-bold text-foreground hover:bg-background">
-                Brauche ich Programmierkenntnisse?
+        <section
+          aria-labelledby="definition-heading"
+          className="grid gap-8 border-b border-border py-14 md:grid-cols-[12rem_minmax(0,1fr)] lg:gap-14"
+        >
+          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+            {copy.definitionIndex}
+          </p>
+          <div className="min-w-0">
+            <h2
+              id="definition-heading"
+              className="text-pretty text-3xl font-bold tracking-[-0.035em] text-foreground sm:text-4xl"
+            >
+              {copy.definitionHeading}
+            </h2>
+            <p className="mt-7 border-l-4 border-brand-orange pl-5 text-pretty text-xl leading-relaxed text-foreground sm:pl-7 sm:text-2xl">
+              {copy.definition}
+            </p>
+            <details className="group mt-7 border-t border-border pt-4">
+              <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 text-sm font-semibold text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background [&::-webkit-details-marker]:hidden">
+                <span>{copy.definitionSourceLabel}</span>
+                <span aria-hidden="true" className="font-mono group-open:rotate-45">
+                  +
+                </span>
               </summary>
-              <p className="border-t border-border px-5 py-4 text-[15px] leading-[1.6] text-muted-foreground">
-                Nein. Dieser Einstieg setzt keinerlei technisches Vorwissen voraus. Und der
-                KI-Führerschein auch nicht.
-              </p>
-            </details>
-
-            <details className="border border-border bg-card">
-              <summary className="cursor-pointer px-5 py-4 font-bold text-foreground hover:bg-background">
-                Ist das alles kostenlos?
-              </summary>
-              <p className="border-t border-border px-5 py-4 text-[15px] leading-[1.6] text-muted-foreground">
-                Ja. Ohne Werbung, ohne Abo, ohne deine Daten zu verkaufen. Die Plattform ist
-                ein freies Bildungsangebot.
-              </p>
-            </details>
-
-            <details className="border border-border bg-card">
-              <summary className="cursor-pointer px-5 py-4 font-bold text-foreground hover:bg-background">
-                Wer steckt dahinter?
-              </summary>
-              <p className="border-t border-border px-5 py-4 text-[15px] leading-[1.6] text-muted-foreground">
-                Tim Löhr, Datenwissenschaftler aus Nürnberg. Er arbeitet seit Jahren mit
-                KI-Systemen und erklärt hier, was davon im Alltag wirklich zählt. Mehr auf der{" "}
-                <Link
-                  href="/ueber-mich"
-                  className="text-brand-orange underline-offset-4 hover:underline"
+              <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                {copy.definitionSource}{" "}
+                <a
+                  href={AI_ACT_SOURCE}
+                  className="break-words text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
                 >
-                  Über-mich-Seite
-                </Link>
-                .
+                  EUR-Lex
+                </a>
               </p>
             </details>
           </div>
         </section>
 
-        {/* Section 5: Three ways forward */}
-        <section aria-labelledby="weiter-heading" className="mb-10">
-          <h2
-            id="weiter-heading"
-            className="mb-7 text-[24px] font-bold tracking-[-0.03em] text-foreground sm:text-[28px]"
-          >
-            Wie möchtest du weitermachen?
-          </h2>
-
-          <div className="space-y-4">
-            {/* Primary CTA */}
-            <div className="border border-brand-orange bg-brand-orange/5 p-6">
-              <p className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-                Empfohlen für diesen Einstieg
+        <section aria-labelledby="beispiele-heading" className="py-14">
+          <div className="grid gap-5 md:grid-cols-[12rem_minmax(0,1fr)] lg:gap-14">
+            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+              {copy.examplesIndex}
+            </p>
+            <div>
+              <h2
+                id="beispiele-heading"
+                className="text-pretty text-3xl font-bold tracking-[-0.035em] text-foreground sm:text-4xl"
+              >
+                {copy.examplesHeading}
+              </h2>
+              <p className="mt-4 max-w-2xl text-pretty leading-relaxed text-muted-foreground">
+                {copy.examplesIntro}
               </p>
-              <h3 className="mb-2 text-[18px] font-bold text-foreground">
-                KI-Check (ca. 5 min)
+            </div>
+          </div>
+
+          <div
+            className="mt-10 grid gap-px overflow-hidden border border-border bg-border md:grid-cols-3"
+            data-testid="beispiel-cards"
+          >
+            {copy.examples.map((example) => (
+              <article
+                key={example.id}
+                className="group min-w-0 bg-background p-6 sm:p-7"
+                data-testid={`beispiel-${example.id}`}
+              >
+                <div className="flex items-start justify-between gap-4 text-brand-orange">
+                  <ExampleIcon id={example.id} />
+                  <span className="font-mono text-[11px] tracking-[0.16em]">
+                    {example.number}
+                  </span>
+                </div>
+                <p className="mt-8 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+                  {example.task}
+                </p>
+                <h3 className="mt-2 text-pretty text-xl font-bold tracking-[-0.02em] text-foreground">
+                  {example.heading}
+                </h3>
+                <p className="mt-4 break-words text-sm leading-relaxed text-muted-foreground">
+                  {example.body}
+                </p>
+              </article>
+            ))}
+          </div>
+
+          <div className="grid border-x border-b border-border bg-card/40 md:grid-cols-[12rem_minmax(0,1fr)]">
+            <p className="border-b border-border p-6 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-brand-orange md:border-b-0 md:border-r">
+              {copy.boundaryLabel}
+            </p>
+            <div className="min-w-0 p-6 sm:p-8">
+              <h3 className="text-pretty text-2xl font-bold tracking-[-0.03em] text-foreground">
+                {copy.boundaryHeading}
               </h3>
-              <p className="mb-5 text-[14px] leading-[1.6] text-muted-foreground">
-                {TOTAL_QUESTIONS} kurze Fragen ordnen deinen Stand ein und führen dich zum
-                passenden nächsten Kurs.
-              </p>
-              <Link
-                href="/ki-check"
-                className="inline-flex items-center gap-2 rounded-none bg-brand-orange px-5 py-3 font-mono text-[13px] font-bold text-white transition-colors hover:bg-brand-orange/90"
-              >
-                KI-Check starten
-                <span aria-hidden="true">&#8594;</span>
-              </Link>
-            </div>
-
-            {/* Secondary CTA */}
-            <div className="border border-border bg-card p-6">
-              <h3 className="mb-2 text-[17px] font-bold text-foreground">Zum KI-Führerschein</h3>
-              <p className="mb-5 text-[14px] leading-[1.6] text-muted-foreground">
-                Du willst direkt mit dem kostenlosen Kurs beginnen. Kein Vorwissen nötig.
-              </p>
-              <Link
-                href="/ki-fuehrerschein"
-                className="inline-flex items-center gap-2 border border-border bg-background px-5 py-3 font-mono text-[13px] font-bold text-foreground transition-colors hover:bg-card"
-              >
-                KI-Führerschein starten
-                <span aria-hidden="true">&#8594;</span>
-              </Link>
-            </div>
-
-            {/* Tertiary quiet link */}
-            <div className="py-3">
-              <p className="text-[14px] text-muted-foreground">
-                Erst das technische Grundmodell verstehen?{" "}
-                <Link
-                  href="/wie-ki-funktioniert"
-                  className="text-foreground underline-offset-4 hover:underline"
-                >
-                  Die 40-minütige Einführung erklärt, wie KI rechnet und warum
-                  sie irrt.
-                </Link>
+              <p className="mt-3 max-w-3xl break-words leading-relaxed text-muted-foreground">
+                {copy.boundaryBody}
               </p>
             </div>
           </div>
         </section>
-      </div>
+
+        <section
+          aria-labelledby="faq-heading"
+          className="grid gap-8 border-y border-border py-14 md:grid-cols-[12rem_minmax(0,1fr)] lg:gap-14"
+        >
+          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+            {copy.faqIndex}
+          </p>
+          <div className="min-w-0">
+            <h2
+              id="faq-heading"
+              className="text-pretty text-3xl font-bold tracking-[-0.035em] text-foreground sm:text-4xl"
+            >
+              {copy.faqHeading}
+            </h2>
+            <div className="mt-8 divide-y divide-border border-y border-border">
+              {copy.faqs.map((faq) => (
+                <details key={faq.question} className="group scroll-mt-24 py-1">
+                  <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-5 py-4 font-semibold text-foreground outline-none hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background [&::-webkit-details-marker]:hidden">
+                    <span className="min-w-0 text-pretty">{faq.question}</span>
+                    <span
+                      className="shrink-0 font-mono text-muted-foreground group-open:rotate-45"
+                      aria-hidden="true"
+                    >
+                      +
+                    </span>
+                  </summary>
+                  <p className="max-w-3xl pb-5 pr-8 text-sm leading-relaxed text-muted-foreground">
+                    {"answer" in faq ? faq.answer : faq.answerBeforeLink}
+                    {"linkLabel" in faq ? (
+                      <Link
+                        href={localizeHref("/ueber-mich", locale)}
+                        className="text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                      >
+                        {faq.linkLabel}
+                      </Link>
+                    ) : null}
+                    {"answerAfterLink" in faq ? faq.answerAfterLink : null}
+                  </p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section aria-labelledby="weiter-heading" className="pt-14">
+          <div className="max-w-3xl">
+            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+              {copy.nextIndex}
+            </p>
+            <h2
+              id="weiter-heading"
+              className="mt-4 text-pretty text-3xl font-bold tracking-[-0.035em] text-foreground sm:text-4xl"
+            >
+              {copy.nextHeading}
+            </h2>
+            <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
+              {copy.nextIntro}
+            </p>
+          </div>
+
+          <div className="mt-9 grid gap-px overflow-hidden border border-border bg-border lg:grid-cols-3">
+            <article className="flex min-w-0 flex-col bg-brand-orange/[0.06] p-6 sm:p-8">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-foreground">
+                {copy.primaryLabel}
+              </p>
+              <div className="mt-5 flex flex-wrap items-baseline justify-between gap-2">
+                <h3 className="text-2xl font-bold tracking-[-0.03em] text-foreground">
+                  {copy.primaryTitle}
+                </h3>
+                <span className="font-mono text-[11px] text-muted-foreground">
+                  {copy.primaryMeta}
+                </span>
+              </div>
+              <p className="mt-4 flex-1 break-words text-sm leading-relaxed text-muted-foreground">
+                {copy.primaryBody.replace("{count}", String(TOTAL_QUESTIONS))}
+              </p>
+              <Link
+                href={localizeHref("/ki-check", locale)}
+                className="mt-7 inline-flex min-h-11 items-center justify-between gap-4 border border-brand-orange bg-brand-orange px-4 py-3 font-mono text-xs font-bold text-white transition-colors hover:bg-kupfer-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                <span>{copy.primaryCta}</span>
+                <span aria-hidden="true">→</span>
+              </Link>
+            </article>
+
+            <article className="flex min-w-0 flex-col bg-background p-6 sm:p-8">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+                {copy.courseLabel}
+              </p>
+              <h3 className="mt-5 text-2xl font-bold tracking-[-0.03em] text-foreground">
+                {copy.courseTitle}
+              </h3>
+              <p className="mt-4 flex-1 break-words text-sm leading-relaxed text-muted-foreground">
+                {copy.courseBody}
+              </p>
+              <Link
+                href={localizeHref("/ki-fuehrerschein", locale)}
+                className="mt-7 inline-flex min-h-11 items-center justify-between gap-4 border border-border px-4 py-3 font-mono text-xs font-bold text-foreground transition-colors hover:border-foreground hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                <span>{copy.courseCta}</span>
+                <span aria-hidden="true">→</span>
+              </Link>
+            </article>
+
+            <article className="flex min-w-0 flex-col bg-background p-6 sm:p-8">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+                {copy.primerLabel}
+              </p>
+              <h3 className="mt-5 text-2xl font-bold tracking-[-0.03em] text-foreground">
+                {copy.primerTitle}
+              </h3>
+              <p className="mt-4 flex-1 break-words text-sm leading-relaxed text-muted-foreground">
+                {copy.primerBody}
+              </p>
+              <Link
+                href={localizeHref("/wie-ki-funktioniert", locale)}
+                className="mt-7 inline-flex min-h-11 items-center justify-between gap-4 border border-border px-4 py-3 font-mono text-xs font-bold text-foreground transition-colors hover:border-foreground hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                <span>{copy.primerCta}</span>
+                <span aria-hidden="true">→</span>
+              </Link>
+            </article>
+          </div>
+        </section>
+      </article>
     </>
   );
+}
+
+export default async function EinstiegPage() {
+  const locale = await getRequestLocale();
+  return <EinstiegContent locale={locale} />;
 }

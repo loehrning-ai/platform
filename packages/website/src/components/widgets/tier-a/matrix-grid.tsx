@@ -9,6 +9,7 @@ import {
 } from "@/lib/a11y/roving-focus";
 import { cn } from "@/lib/utils";
 import { WidgetFrame } from "./_frame";
+import type { Locale } from "@/lib/i18n/locale";
 
 /**
  * MatrixGrid — a row-by-column selection matrix: for each row, pick exactly
@@ -32,6 +33,7 @@ export interface MatrixGridWidgetProps {
   readonly scenario?: string;
   readonly rows: readonly string[];
   readonly cols: readonly string[];
+  readonly locale?: Locale;
 }
 
 type Picks = Readonly<Record<string, number>>;
@@ -43,21 +45,39 @@ export function MatrixGridWidget({
   scenario,
   rows,
   cols,
+  locale = "en",
 }: MatrixGridWidgetProps): JSX.Element {
   const { done, complete } = useCheckpoint(lessonId, cpId);
-  const [picks, setPicks] = useDraftValue<Picks>(`matrix::${lessonId}::${cpId}`, {});
+  const [picks, setPicks] = useDraftValue<Picks>(
+    `matrix::${lessonId}::${cpId}`,
+    {},
+  );
 
-  const allRowsPicked = rows.length > 0 && rows.every((row) => picks[row] != null);
+  const allRowsPicked =
+    rows.length > 0 && rows.every((row) => picks[row] != null);
 
   useEffect(() => {
     if (allRowsPicked) complete();
   }, [allRowsPicked, complete]);
 
-  const pick = (row: string, colIndex: number) => setPicks({ ...picks, [row]: colIndex });
+  const pick = (row: string, colIndex: number) =>
+    setPicks({ ...picks, [row]: colIndex });
 
   return (
-    <WidgetFrame kindLabel="Matrix" title={title} scenario={scenario} done={done} xpLabel="+10 XP">
-      <div className="overflow-x-auto">
+    <WidgetFrame
+      kindLabel="Matrix"
+      title={title}
+      scenario={scenario}
+      done={done}
+      xpLabel="+10 XP"
+      doneLabel={locale === "de" ? "Erledigt" : "Done"}
+    >
+      <div
+        role="region"
+        aria-label={title}
+        tabIndex={0}
+        className="max-w-full overflow-x-auto"
+      >
         <table className="w-full border-collapse text-[13px]">
           <thead>
             <tr>
@@ -80,7 +100,9 @@ export function MatrixGridWidget({
                 aria-label={row}
                 data-roving-group
               >
-                <td className="p-2 pr-4 text-[13px] font-medium text-foreground">{row}</td>
+                <td className="p-2 pr-4 text-[13px] font-medium text-foreground">
+                  {row}
+                </td>
                 {cols.map((col, colIndex) => {
                   const active = picks[row] === colIndex;
                   const storedIndex = picks[row];

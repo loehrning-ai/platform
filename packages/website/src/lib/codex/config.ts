@@ -7,8 +7,9 @@
 // course.
 
 import type { CourseConfig } from "@/lib/course/types";
+import { createLocalizedTechnicalCourseConfig } from "@/lib/technical-courses/routes";
 
-export const CODEX_CONFIG: CourseConfig = {
+export const CODEX_CONFIG = {
   slug: "codex",
   title: "Codex Course",
   language: "en",
@@ -33,15 +34,41 @@ export const CODEX_CONFIG: CourseConfig = {
     "Fundamentals: mental model, the sandbox contract, AGENTS.md",
     "Task craft: task specs, scoping, acceptance criteria",
     "In the loop: review, iteration, the AI tools ecosystem",
-    "Advanced: parallelism, proven patterns, the end-to-end workflow",
+    "Advanced: parallelism, reusable patterns, a reviewable workflow",
   ],
   certificateReferenceLabel:
     "Personal certificate of completion: working effectively with Codex",
-  quizPassMessage: "Congratulations! You completed the Codex Course.",
+  quizPassMessage: "Codex Course completed.",
   certificateFileStem: "Codex-Course",
   recordNoun: {
     label: "Certificate of Completion",
     possessive: "Your certificate of completion",
     demonstrative: "This certificate of completion",
   },
-};
+} satisfies CourseConfig;
+
+export const CODEX_CONFIG_DE = createLocalizedTechnicalCourseConfig(
+  CODEX_CONFIG,
+  "de",
+  {
+    title: "Codex-Kurs",
+    certificateTitle: "Teilnahmebestätigung: Codex-Kurs",
+    certificateSubtitle:
+      "Lokal erzeugter Abschlussnachweis der unabhängigen Lernplattform loehrning.ai. Keine staatlich anerkannte oder akkreditierte Qualifikation.",
+    certificateModules: [
+      "Grundlagen: Arbeitsmodell, Sandbox-Rahmen und AGENTS.md",
+      "Auftragsgestaltung: Spezifikation, Umfang und Akzeptanzkriterien",
+      "Arbeitszyklus: Review, Iteration und Werkzeuge",
+      "Fortgeschritten: parallele Arbeit, wiederverwendbare Muster und prüfbarer Ablauf",
+    ],
+    certificateReferenceLabel:
+      "Persönlicher Abschlussnachweis: kontrolliert mit Codex arbeiten",
+    quizPassMessage: "Der Codex-Kurs ist abgeschlossen.",
+    certificateFileStem: "Codex-Kurs",
+    recordNoun: {
+      label: "Teilnahmebestätigung",
+      possessive: "Deine Teilnahmebestätigung",
+      demonstrative: "Diese Teilnahmebestätigung",
+    },
+  },
+);

@@ -23,7 +23,10 @@ function installLocalStoragePolyfill(): void {
 }
 
 beforeAll(() => {
-  if (typeof window.localStorage === "undefined" || typeof window.localStorage.setItem !== "function") {
+  if (
+    typeof window.localStorage === "undefined" ||
+    typeof window.localStorage.setItem !== "function"
+  ) {
     installLocalStoragePolyfill();
   }
 });
@@ -40,31 +43,41 @@ afterEach(() => {
 describe("L08DecisionBranch", () => {
   it("renders the first scenario", () => {
     render(<L08DecisionBranch lessonId="L08" cpId="bespoke" />);
-    expect(screen.getByText(/Tests 1 of 3 passing/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/intermittent failures with different error output/),
+    ).toBeInTheDocument();
   });
 
   it("choosing the wrong decision shows the wrong-explanation and stays on the same scenario", () => {
     render(<L08DecisionBranch lessonId="L08" cpId="bespoke" />);
-    fireEvent.click(screen.getByRole("button", { name: "rewrite" }));
-    expect(screen.getByText(/Suboptimal/)).toBeInTheDocument();
-    expect(screen.getByText(/Tests 1 of 3 passing/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "restart" }));
+    expect(screen.getByText(/bounded investigation/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/intermittent failures with different error output/),
+    ).toBeInTheDocument();
   });
 
   it("choosing correctly advances to the next unsolved scenario", () => {
     render(<L08DecisionBranch lessonId="L08" cpId="bespoke" />);
-    fireEvent.click(screen.getByRole("button", { name: "nudge" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "targeted correction" }),
+    );
     expect(screen.getByText("solved: 1 / 3")).toBeInTheDocument();
-    expect(screen.getByText(/300-line refactor/)).toBeInTheDocument();
+    expect(screen.getByText(/unrelated refactor/)).toBeInTheDocument();
   });
 
   it("awards the checkpoint once all three scenarios are solved", () => {
     render(<L08DecisionBranch lessonId="L08" cpId="bespoke" />);
-    fireEvent.click(screen.getByRole("button", { name: "nudge" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "targeted correction" }),
+    );
     fireEvent.click(screen.getByRole("button", { name: "re-spec" }));
     expect(isCheckpointDone("L08", "bespoke")).toBe(false);
-    fireEvent.click(screen.getByRole("button", { name: "rewrite" }));
+    fireEvent.click(screen.getByRole("button", { name: "restart" }));
     expect(isCheckpointDone("L08", "bespoke")).toBe(true);
     expect(getXp()).toBe(XP.CHECKPOINT);
-    expect(screen.getByText(/Iteration compass aligned/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/All revision decisions recorded/),
+    ).toBeInTheDocument();
   });
 });

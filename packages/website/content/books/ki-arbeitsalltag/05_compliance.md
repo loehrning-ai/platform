@@ -2,7 +2,7 @@
 
 Datenschutz ist längst nicht mehr reine IT-Sache. Sobald du KI nutzt, ist es auch dein Thema.
 
-Du musst kein Jurist werden. Artikel 4 der EU-KI-Verordnung verlangt seit dem 2. Februar 2025 kontextgerechte Maßnahmen zur Entwicklung von KI-Kompetenz. Seit dem 27. Juli 2026 muss die Organisation kein bestimmtes Kompetenzniveau einzelner Personen garantieren. Reines Bewusstsein ohne konkrete Maßnahme reicht trotzdem nicht.
+Du musst kein Jurist werden. Artikel 4 der EU-KI-Verordnung verlangt seit dem 2. Februar 2025 von Anbietern und Betreibern kontextgerechte Maßnahmen, die die Entwicklung der KI-Kompetenz ihres Personals und weiterer in ihrem Auftrag handelnder Personen unterstützen. Seit dem 27. Juli 2026 muss die Organisation kein bestimmtes Kompetenzniveau einzelner Personen garantieren. Reines Bewusstsein ohne konkrete Maßnahme reicht trotzdem nicht.
 
 Hier die vier wichtigsten Regeln, vereinfacht.
 

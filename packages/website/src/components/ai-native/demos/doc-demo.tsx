@@ -40,7 +40,7 @@ const STAGE_META: readonly {
   readonly detail: string;
 }[] = [
   { stage: 1, title: "OCR", detail: "Azure Form Recognizer" },
-  { stage: 2, title: "Struktur-Parsing", detail: "Claude Opus 4.5 · tool_use" },
+  { stage: 2, title: "Struktur-Parsing", detail: "Schema-Extraktion · simuliert" },
   { stage: 3, title: "Validierung", detail: "UStG §14 · SKR03" },
   { stage: 4, title: "Export-Entwurf", detail: "Beispieldatensatz" },
 ];
@@ -384,7 +384,8 @@ export function DocDemo(): JSX.Element {
                   <DemoOverline>Extrahierte Daten</DemoOverline>
                   <span className="inline-flex items-center gap-1 border border-risk-green/40 bg-risk-green/10 px-2 py-0.5 font-mono text-[10px] text-risk-green">
                     <span className="h-1.5 w-1.5 rounded-full bg-risk-green" />
-                    {Math.round(extracted.confidence * 100)}% confidence
+                    Simulationswert {Math.round(extracted.confidence * 100)} % ·
+                    nicht kalibriert
                   </span>
                 </div>
                 <div className="mb-2.5 grid grid-cols-1 gap-x-3 gap-y-1 font-mono text-[11px] md:grid-cols-2">

@@ -11,6 +11,7 @@ import {
 import type { ModuleId } from "@/lib/ai-native/types";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import { useDemoLocale } from "@/components/demos/demo-locale";
 
 /**
  * PII-Spotter — click tokens in a text passage to flag them as
@@ -88,6 +89,7 @@ function PiiSpotterBody({
   piiIndices,
   passThreshold = 0.7,
 }: PiiSpotterSpec): JSX.Element {
+  const { text: copy } = useDemoLocale();
   const tokens = useMemo(() => tokenize(text), [text]);
   const truth = useMemo(() => new Set(piiIndices), [piiIndices]);
   const [selected, setSelected] = useState<Set<number>>(new Set());
@@ -138,7 +140,10 @@ function PiiSpotterBody({
   return (
     <div>
       <p className="mb-2 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-        Markiere PII / Geschäftsgeheimnis per Klick
+        {copy(
+          "Markiere PII / Geschäftsgeheimnis per Klick",
+          "Select personal data or confidential business information",
+        )}
       </p>
       <div className="min-h-[100px] border border-border bg-background p-4 text-[14.5px] leading-[1.9] text-foreground">
         {tokens.map((t, i) => {
@@ -212,12 +217,14 @@ function PiiSpotterBody({
                 {Math.round(recall * 100)}%
               </span>
               <span className="ml-auto font-mono text-[10.5px] text-muted-foreground">
-                {truth.size} sensible Tokens insgesamt
+                {truth.size} {copy("sensible Tokens insgesamt", "sensitive tokens in total")}
               </span>
             </div>
             <p className="mt-2 text-[13.5px] leading-[1.55] text-foreground">
-              Grün = richtig erkannt · Rot = übersehen · Amber = fälschlicherweise
-              markiert.
+              {copy(
+                "Grün = richtig erkannt · Rot = übersehen · Amber = fälschlicherweise markiert.",
+                "Green = correct · red = missed · amber = false positive.",
+              )}
             </p>
           </m.div>
         )}
@@ -231,7 +238,10 @@ function PiiSpotterBody({
             onClick={handleSubmit}
             className="inline-flex items-center gap-1.5 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
           >
-            Prüfen ({selected.size} markiert)
+            {copy(
+              `Prüfen (${selected.size} markiert)`,
+              `Evaluate (${selected.size} selected)`,
+            )}
           </button>
         ) : (
           <ExerciseResetButton onReset={handleReset} />

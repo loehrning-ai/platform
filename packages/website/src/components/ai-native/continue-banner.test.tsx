@@ -115,7 +115,7 @@ import {
 } from "@/lib/ai-native/progress";
 
 const DISMISS_KEY = "ai-native-continue-dismissed";
-const BANNER_LABEL = "Zurück zum letzten Kursschritt";
+const BANNER_LABEL = "Zum letzten Kursschritt zurückkehren";
 
 /**
  * Some vitest/jsdom combos expose a no-op Web Storage; the store facade + the
@@ -233,6 +233,24 @@ describe("<AiNativeContinueBanner> resume state (real store + modules.json)", ()
       "/ai-native/kurs/modul_2",
     );
   });
+
+  it("keeps the English resume state and destination localized", async () => {
+    markLessonCompleted("modul_1_lesson_1");
+
+    render(<AiNativeContinueBanner locale="en" />);
+
+    const banner = await screen.findByLabelText(
+      "Return to the latest course step",
+    );
+    expect(banner).toHaveTextContent("Module 1:");
+    expect(banner).toHaveTextContent(/1 \/ 5 lessons/);
+    expect(
+      screen.getByRole("link", { name: /Continue learning/ }),
+    ).toHaveAttribute("href", "/en/ai-native/kurs/modul_1");
+    expect(
+      screen.getByRole("button", { name: "Dismiss course banner" }),
+    ).toBeInTheDocument();
+  });
 });
 
 describe("<AiNativeContinueBanner> dismiss action", () => {
@@ -241,7 +259,7 @@ describe("<AiNativeContinueBanner> dismiss action", () => {
     render(<AiNativeContinueBanner />);
 
     await screen.findByLabelText(BANNER_LABEL);
-    fireEvent.click(screen.getByRole("button", { name: "Banner schließen" }));
+    fireEvent.click(screen.getByRole("button", { name: "Kursbanner schließen" }));
 
     expect(screen.queryByLabelText(BANNER_LABEL)).toBeNull();
     expect(sessionStorage.getItem(DISMISS_KEY)).toBe("1");

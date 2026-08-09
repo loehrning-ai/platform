@@ -8,10 +8,11 @@ const lesson: ClaudeLesson = {
   id: "team",
   number: 10,
   title: "Team Workflows",
-  subtitle: "Shared prompts, shared CLAUDE.md, shared gains.",
+  subtitle:
+    "Version prompts, document their scope, and test changes as a team.",
   durationMinutes: 10,
   trackId: "team",
-  hook: "One person's breakthrough is everybody's baseline.",
+  hook: "A reusable prompt needs an owner, a use case, and regression tests.",
   keyConcepts: [
     "Prompt library",
     "Shared CLAUDE.md",
@@ -25,7 +26,7 @@ const lesson: ClaudeLesson = {
       title: "Why share",
       readTimeMinutes: 1,
       content:
-        "The biggest team-wide Claude wins don't come from finding a better model. They come from circulating prompts that work. If one person figured out the perfect PR-review prompt, the other 40 on the team shouldn't have to rediscover it.\n\nAt Anthropic itself, where much of the codebase is now written with Claude Code, the pattern is the same: engineers focus on architecture, product thinking, and orchestrating multiple agents. The compounding advantage isn't the model, it's the shared scaffolding around it.",
+        "A prompt used by one person often contains hidden context: local paths, team names, unstated source access, or an output format understood only by its author. Sharing the text alone does not make the workflow reusable.\n\nTreat recurring prompts as maintained artifacts. Record the task, required inputs, supported model or tool assumptions, expected output, owner, and evaluation cases.",
     },
     {
       id: "three-artifacts",
@@ -39,14 +40,14 @@ const lesson: ClaudeLesson = {
       title: "How to share a prompt well",
       readTimeMinutes: 2,
       content:
-        "A prompt that works on your laptop is not the same as a prompt your team can use. Before you send it:\n\n- **Strip your specifics.** Replace hardcoded project names with placeholders like `<PROJECT>`.\n- **Add a one-line \"when to use.\"** Future-you will forget.\n- **Show a sample output.** Sets expectations in a way words can't.\n- **Note failure modes.** \"Tends to over-explain; add 'no preamble'.\"",
+        "Before publishing a prompt:\n\n- **Parameterize local details.** Replace hardcoded project names and paths with named inputs such as `<PROJECT>`.\n- **State scope and prerequisites.** Explain when to use it, which sources it needs, and which actions it may take.\n- **Provide a reviewed example.** Mark it as illustrative and remove sensitive data.\n- **Document known failures.** Link each material failure to an evaluation case or operational control.",
     },
     {
       id: "rituals",
       title: "Rituals that compound",
       readTimeMinutes: 1,
       content:
-        "> **15 minutes on Fridays.** One teammate demos a prompt they found useful this week. Over a quarter, that's 12 new team-level capabilities.",
+        "Use a short, recurring review to examine one workflow, its evidence, and one failure case. Promote it to the shared library only after another teammate can run it from the documentation and reproduce the intended result.",
     },
   ],
   widgets: [
@@ -76,7 +77,7 @@ const lesson: ClaudeLesson = {
         ],
         correct: 1,
         explanation:
-          'Shareable prompts are parameterized and documented. Strip specifics, state when to use, and show a sample output.',
+          "Shareable prompts are parameterized and documented. Strip specifics, state when to use, and show a sample output.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
@@ -89,7 +90,8 @@ const lesson: ClaudeLesson = {
         lessonId: "team",
         cpId: "tutor",
         topic: "building a team-wide Claude practice",
-        persona: "Push on ownership, staleness, and how to avoid \"one person owns all the prompts.\"",
+        persona:
+          'Push on ownership, staleness, and how to avoid "one person owns all the prompts."',
       },
     },
   ],

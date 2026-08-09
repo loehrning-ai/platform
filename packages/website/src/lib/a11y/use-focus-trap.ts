@@ -21,6 +21,7 @@ import { useEffect, useRef } from "react";
 export function useFocusTrap<T extends HTMLElement>(
   open: boolean,
   onClose: () => void,
+  { restoreFocus = true }: { readonly restoreFocus?: boolean } = {},
 ) {
   const ref = useRef<T | null>(null);
   const restoreRef = useRef<HTMLElement | null>(null);
@@ -76,9 +77,9 @@ export function useFocusTrap<T extends HTMLElement>(
     document.addEventListener("keydown", onKeyDown);
     return () => {
       document.removeEventListener("keydown", onKeyDown);
-      restoreRef.current?.focus?.();
+      if (restoreFocus) restoreRef.current?.focus?.();
     };
-  }, [open, onClose]);
+  }, [open, onClose, restoreFocus]);
 
   return ref;
 }

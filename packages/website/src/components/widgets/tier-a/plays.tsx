@@ -5,6 +5,7 @@ import { useCheckpoint } from "@/lib/progress";
 import { useDraftValue } from "./use-draft-value";
 import { cn } from "@/lib/utils";
 import { WidgetFrame } from "./_frame";
+import type { Locale } from "@/lib/i18n/locale";
 
 /**
  * Plays — commit to a set of concrete next moves by toggling options on.
@@ -25,15 +26,23 @@ export interface PlaysWidgetProps {
   readonly options: readonly string[];
   /** Minimum picks needed to "lock" the commitment + award XP. Default 1. */
   readonly minPick?: number;
+  readonly locale?: Locale;
+  readonly kindLabel?: string;
+  readonly selectedLabel?: string;
+  readonly confirmedLabel?: string;
 }
 
 export function PlaysWidget({
   lessonId,
   cpId,
-  title = "Deine nächsten Züge",
-  scenario = "Wähle die Maßnahmen, zu denen du dich verpflichtest.",
+  title,
+  scenario,
   options,
   minPick = 1,
+  locale = "de",
+  kindLabel = "Commitment",
+  selectedLabel,
+  confirmedLabel,
 }: PlaysWidgetProps): JSX.Element {
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [picked, setPicked] = useDraftValue<readonly number[]>(
@@ -54,11 +63,17 @@ export function PlaysWidget({
 
   return (
     <WidgetFrame
-      kindLabel="Commitment"
-      title={title}
-      scenario={scenario}
+      kindLabel={kindLabel}
+      title={title ?? (locale === "de" ? "Nächste Schritte" : "Next controls")}
+      scenario={
+        scenario ??
+        (locale === "de"
+          ? "Wähle die Maßnahmen, die du verbindlich umsetzen wirst."
+          : "Select the controls you will implement.")
+      }
       done={done}
       xpLabel="+10 XP"
+      doneLabel={locale === "de" ? "Erledigt" : "Done"}
     >
       <div className="flex flex-col gap-2">
         {options.map((option, i) => {
@@ -98,8 +113,13 @@ export function PlaysWidget({
           locked ? "text-risk-green" : "text-muted-foreground",
         )}
       >
-        {picked.length} / {minPick} gewählt
-        {locked ? " · ✓ Commitment gesetzt" : ""}
+        {picked.length} / {minPick}{" "}
+        {selectedLabel ?? (locale === "de" ? "gewählt" : "selected")}
+        {locked
+          ? locale === "de"
+            ? ` · ${confirmedLabel ?? "Commitment gesetzt"}`
+            : ` · ${confirmedLabel ?? "Confirmed"}`
+          : ""}
       </p>
     </WidgetFrame>
   );

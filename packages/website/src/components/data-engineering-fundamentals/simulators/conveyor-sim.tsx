@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Panel } from "../primitives";
 import { useControllableAnimation } from "@/lib/animation-policy";
+import { useDataEngineeringFundamentalsLocale } from "../locale-context";
 
 // ─── ConveyorSim ──────────────────────────────────
 // Ported from `src/chapters/Ch1_5_Streaming.js`: events fall onto a
@@ -52,6 +53,7 @@ function eventTimeToX(et: number, now: number): number {
 }
 
 export function ConveyorSim() {
+  const { text } = useDataEngineeringFundamentalsLocale();
   const [rate, setRate] = useState(10);
   const [dupPct, setDupPct] = useState(22);
   const [latePct, setLatePct] = useState(15);
@@ -295,10 +297,10 @@ export function ConveyorSim() {
 
   return (
     <Panel
-      eyebrow="live simulator · streaming boundary"
-      title="The Ingestion Conveyor Belt"
-      meta={`${rate}/s · dup ${dupPct}% · late ${latePct}%`}
-      caption={`Time advances left→right. The watermark trails ~${CV_WATERMARK_LAG}s behind "now". Two independent guards: dedup by event_id, drop-late by watermark: protect the warehouse boundary.`}
+      eyebrow={text("live simulator · streaming boundary", "Live-Simulator · Streaming-Grenze")}
+      title={text("The Ingestion Conveyor Belt", "Das Förderband der Datenaufnahme")}
+      meta={`${rate}/s · ${text("dup", "Duplikate")} ${dupPct}% · ${text("late", "verspätet")} ${latePct}%`}
+      caption={text(`The simulation uses a fixed ${CV_WATERMARK_LAG}-second watermark lag and a discard-late policy. Deduplication and late-data handling are two separate modeled controls.`, `Die Simulation verwendet eine feste Watermark-Verzögerung von ${CV_WATERMARK_LAG} Sekunden und verwirft Nachzügler. Deduplizierung und Nachzüglerbehandlung sind zwei getrennte modellierte Kontrollen.`)}
     >
       <div className="cv-stage" ref={stageRef}>
         <div className="cv-field">
@@ -317,7 +319,7 @@ export function ConveyorSim() {
           </svg>
           <div className="cv-labels">
             <div className="cv-label-settled" style={{ left: 0, width: `${watermarkX}%` }}>
-              ◄ SETTLED · behind watermark
+              ◄ {text("SETTLED · behind watermark", "ABGESCHLOSSEN · hinter der Watermark")}
             </div>
             <div className="cv-label-watermark" style={{ left: `${watermarkX}%` }}>
               WATERMARK
@@ -325,22 +327,22 @@ export function ConveyorSim() {
               <span>now − {CV_WATERMARK_LAG}s</span>
             </div>
             <div className="cv-label-gate" style={{ left: `${CV_GATE_X}%` }}>
-              <div className="g">GATE</div>
-              <div className="gsub">{dedupOn && lateGateOn ? "dedup · late" : dedupOn ? "dedup only" : lateGateOn ? "late only" : "pass-all"}</div>
+              <div className="g">{text("GATE", "SCHRANKE")}</div>
+              <div className="gsub">{dedupOn && lateGateOn ? text("dedup · late", "Deduplizierung · Verspätung") : dedupOn ? text("dedup only", "nur Deduplizierung") : lateGateOn ? text("late only", "nur Verspätung") : text("pass-all", "alles durchlassen")}</div>
             </div>
-            <div className="cv-label-now">NOW ►</div>
+            <div className="cv-label-now">{text("NOW", "JETZT")} ►</div>
           </div>
           <div className="cv-events-layer" ref={eventsLayerRef} />
           <svg className="cv-links-svg" viewBox="0 0 100 100" preserveAspectRatio="none" ref={linksSvgRef} />
         </div>
         <div className="cv-ledger">
           <div className="cv-ledger-head">
-            <span>SEEN</span>
+            <span>{text("SEEN", "GESEHEN")}</span>
             <span className="n">{ledger.length}</span>
           </div>
           <div className="cv-ledger-body">
             {ledger.length === 0 ? (
-              <div className="empty">ledger empty</div>
+              <div className="empty">{text("ledger empty", "Register leer")}</div>
             ) : (
               ledger.map((id, i) => (
                 <div key={id + "-" + i} className="cv-ledger-row">
@@ -350,26 +352,26 @@ export function ConveyorSim() {
               ))
             )}
           </div>
-          <div className="cv-ledger-foot">{dedupOn ? "dedup by event_id · on" : "dedup · OFF"}</div>
+          <div className="cv-ledger-foot">{dedupOn ? text("dedup by event_id · on", "Deduplizierung nach event_id · aktiv") : text("dedup · OFF", "Deduplizierung · AUS")}</div>
         </div>
       </div>
 
       {!beginner && (
         <div className="cv-drawer-2">
           <div className="cv-drawer-head">
-            <span className="k">LATE DRAWER</span>
+            <span className="k">{text("LATE DRAWER", "VERSPÄTETE EREIGNISSE")}</span>
             <span className="c">{lateDrawer.length}</span>
-            <span className="h">events arrived after their window closed</span>
+            <span className="h">{text("events arrived after their window closed", "Ereignisse trafen nach Schließung ihres Fensters ein")}</span>
           </div>
           <div className="cv-drawer-rows">
             {lateDrawer.length === 0 ? (
-              <div className="empty">no late events in the window</div>
+              <div className="empty">{text("no late events in the window", "keine verspäteten Ereignisse im Fenster")}</div>
             ) : (
               lateDrawer.map((e, i) => (
                 <div key={i} className="cv-late-row">
                   <code>{e.id}</code>
-                  <span className="et">event-time t={e.et.toFixed(1)}s</span>
-                  <span className="lag">+{e.lag.toFixed(1)}s late</span>
+                  <span className="et">{text("event-time", "Ereigniszeit")} t={e.et.toFixed(1)}s</span>
+                  <span className="lag">+{e.lag.toFixed(1)}s {text("late", "verspätet")}</span>
                 </div>
               ))
             )}
@@ -379,48 +381,48 @@ export function ConveyorSim() {
 
       <div className={`cv-readouts ${beginner ? "cv-readouts-beginner" : ""}`}>
         <div className="cv-r cv-r-rt">
-          <div className="k">Real-time (events/s)</div>
+          <div className="k">{text("Scenario rate (events/s)", "Szenariorate (Ereignisse/s)")}</div>
           <div className="v">{rtCount}</div>
-          <div className="s">1-second rolling window · jittery</div>
+          <div className="s">{text("1-second rolling window · jittery", "gleitendes 1-Sekunden-Fenster · schwankend")}</div>
         </div>
         <div className="cv-r cv-r-wh">
-          <div className="k">Warehouse · settled rows</div>
+          <div className="k">Warehouse · {text("settled rows", "abgeschlossene Zeilen")}</div>
           <div className="v">{whCount.toLocaleString()}</div>
-          <div className="s">event-time ≤ watermark · stable</div>
+          <div className="s">{text("event-time", "Ereigniszeit")} ≤ Watermark · {text("stable", "stabil")}</div>
         </div>
         {!beginner && (
           <div className={`cv-r ${Math.abs(drift) > 8 ? "warn" : ""}`}>
-            <div className="k">Passed − settled</div>
+            <div className="k">{text("Passed − settled", "Passiert − abgeschlossen")}</div>
             <div className="v">
               {drift >= 0 ? "+" : ""}
               {drift}
             </div>
-            <div className="s">in-flight (passed, not yet behind watermark)</div>
+            <div className="s">{text("in-flight (passed, not yet behind watermark)", "in Bearbeitung (passiert, noch nicht hinter der Watermark)")}</div>
             <svg className="cv-spark" viewBox="0 0 100 100" preserveAspectRatio="none">
               <path d={spark} stroke="var(--accent)" strokeWidth="1.2" fill="none" />
             </svg>
           </div>
         )}
         <div className={`cv-r cv-r-gate ${snapped + droppedLate > 0 ? "danger" : ""}`}>
-          <div className="k">Gate actions</div>
+          <div className="k">{text("Gate actions", "Schrankenaktionen")}</div>
           <div className="v cv-gate-nums">
             <span>
-              <b>{snapped}</b> dedup
+              <b>{snapped}</b> {text("dedup", "Deduplizierung")}
             </span>
             {!beginner && (
               <span>
-                <b>{droppedLate}</b> late
+                <b>{droppedLate}</b> {text("late", "verspätet")}
               </span>
             )}
           </div>
-          <div className="s">blocked at the boundary</div>
+          <div className="s">{text("blocked at the boundary", "an der Grenze blockiert")}</div>
         </div>
       </div>
 
       <label className="cv-mode">
         <input type="checkbox" checked={beginner} onChange={(e) => setBeginner(e.target.checked)} />
-        <span className="cv-mode-name">Beginner mode</span>
-        <span className="cv-mode-sub">{beginner ? "focus on dedup only · late drawer hidden" : "all guards visible"}</span>
+        <span className="cv-mode-name">{text("Beginner mode", "Einsteigermodus")}</span>
+        <span className="cv-mode-sub">{beginner ? text("focus on dedup only · late drawer hidden", "nur Deduplizierung · verspätete Ereignisse ausgeblendet") : text("all guards visible", "alle Schranken sichtbar")}</span>
       </label>
 
       <div className="cv-ctls">
@@ -429,17 +431,17 @@ export function ConveyorSim() {
             <input type="checkbox" checked={dedupOn} onChange={(e) => setDedupOn(e.target.checked)} />
             <div>
               <div className="n">
-                Dedup by <code>event_id</code>
+                {text("Dedup by", "Deduplizierung nach")} <code>event_id</code>
               </div>
-              <div className="d">Suppress events whose id the gate has already passed</div>
+              <div className="d">{text("Suppress events whose id the gate has already passed", "Ereignisse unterdrücken, deren ID die Schranke bereits passiert hat")}</div>
             </div>
           </label>
           {!beginner && (
             <label className={`cv-guard ${lateGateOn ? "on" : ""}`}>
               <input type="checkbox" checked={lateGateOn} onChange={(e) => setLateGateOn(e.target.checked)} />
               <div>
-                <div className="n">Drop late (past watermark)</div>
-                <div className="d">Events whose event-time trails the watermark at arrival</div>
+                <div className="n">{text("Drop late (past watermark)", "Verspätete Ereignisse verwerfen (hinter der Watermark)")}</div>
+                <div className="d">{text("Events whose event-time trails the watermark at arrival", "Ereignisse, deren Ereigniszeit beim Eintreffen hinter der Watermark liegt")}</div>
               </div>
             </label>
           )}
@@ -447,14 +449,14 @@ export function ConveyorSim() {
         <div className="cv-sliders">
           <div className="cv-slider">
             <div className="row">
-              <label className="lab" htmlFor="conveyor-event-rate">Event rate</label>
+              <label className="lab" htmlFor="conveyor-event-rate">{text("Event rate", "Ereignisrate")}</label>
               <span className="val">{rate}/s</span>
             </div>
             <input id="conveyor-event-rate" type="range" min={3} max={60} value={rate} onChange={(e) => setRate(+e.target.value)} />
           </div>
           <div className="cv-slider warn">
             <div className="row">
-              <label className="lab" htmlFor="conveyor-duplicate-rate">Duplicate %</label>
+              <label className="lab" htmlFor="conveyor-duplicate-rate">{text("Duplicate %", "Duplikate %")}</label>
               <span className="val">{dupPct}%</span>
             </div>
             <input id="conveyor-duplicate-rate" type="range" min={0} max={45} value={dupPct} onChange={(e) => setDupPct(+e.target.value)} />
@@ -462,7 +464,7 @@ export function ConveyorSim() {
           {!beginner && (
             <div className="cv-slider warn">
               <div className="row">
-                <label className="lab" htmlFor="conveyor-late-rate">Late %</label>
+                <label className="lab" htmlFor="conveyor-late-rate">{text("Late %", "Verspätet %")}</label>
                 <span className="val">{latePct}%</span>
               </div>
               <input id="conveyor-late-rate" type="range" min={0} max={35} value={latePct} onChange={(e) => setLatePct(+e.target.value)} />
@@ -471,10 +473,10 @@ export function ConveyorSim() {
         </div>
         <div className="cv-btns">
           <button type="button" className="btn btn-primary" onClick={toggleRunning}>
-            {running ? "⏸ Pause" : "▶ Resume"}
+            {running ? text("⏸ Pause", "⏸ Pausieren") : text("▶ Resume", "▶ Fortsetzen")}
           </button>
           <button type="button" className="btn" onClick={reset}>
-            ↻ Reset
+            {text("↻ Reset", "↻ Zurücksetzen")}
           </button>
         </div>
       </div>

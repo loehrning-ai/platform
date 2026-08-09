@@ -142,7 +142,7 @@ const bookRows = books.map((book) =>
 const bookChapterRows = (
   await Promise.all(
     books.map(async (book) => {
-      const chapters = await getBookChapterList(book.id);
+      const chapters = await getBookChapterList(book.id, "de");
       return chapters.map((chapter) =>
         row([
           `${SITE_ORIGIN}/buecher/${book.id}/${chapter.slug}`,

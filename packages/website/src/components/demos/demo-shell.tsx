@@ -9,6 +9,9 @@ import {
   type DemoOpenSource,
 } from "@/lib/analytics";
 import { EngagementTracker } from "./engagement-tracker";
+import { DemoLocaleProvider } from "./demo-locale";
+import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
+import type { Locale } from "@/lib/i18n/locale";
 
 const DEMO_OPEN_SOURCE_SET = new Set<string>(DEMO_OPEN_SOURCES);
 
@@ -23,7 +26,7 @@ function parseDemoOpenSource(value: string | null | undefined): DemoOpenSource |
  * and derives the optional analytics source in the browser. Keeping query-string
  * access out of the server page preserves static metadata in the initial HTML.
  */
-export function DemoShell({ demo }: { demo: Demo }) {
+export function DemoShell({ demo, locale = "de" }: { demo: Demo; locale?: Locale }) {
   const Comp = getDemoComponent(demo.slug);
   const trackedKeyRef = useRef<string | null>(null);
 
@@ -40,20 +43,22 @@ export function DemoShell({ demo }: { demo: Demo }) {
 
   return (
     <div
-      className={`border-2 ${demo.dark ? "dark-section border-border" : "border-foreground bg-background"} p-6 shadow-[6px_6px_0_0_var(--color-brand-orange)]`}
+      className={`min-w-0 overflow-hidden border-2 ${demo.dark ? "dark-section border-border" : "border-foreground bg-background"} p-2 shadow-[4px_4px_0_0_var(--color-brand-orange)] sm:p-4 sm:shadow-[6px_6px_0_0_var(--color-brand-orange)] lg:p-6`}
     >
-      {Comp ? (
-        <Comp />
-      ) : (
-        <div
-          role="status"
-          aria-live="polite"
-          className="py-8 text-center text-sm text-muted-foreground"
-        >
-          Praxisbeispiel wird geladen…
-        </div>
-      )}
-      <EngagementTracker slug={demo.slug} />
+      <DemoLocaleProvider locale={locale}>
+        {Comp ? (
+          <Comp />
+        ) : (
+          <div
+            role="status"
+            aria-live="polite"
+            className="py-8 text-center text-sm text-muted-foreground"
+          >
+            {DEMOS_PAGE_COPY[locale].shell.loading}
+          </div>
+        )}
+        <EngagementTracker slug={demo.slug} />
+      </DemoLocaleProvider>
     </div>
   );
 }

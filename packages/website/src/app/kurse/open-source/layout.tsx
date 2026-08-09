@@ -1,14 +1,15 @@
 import type { ReactNode } from "react";
 
 /**
- * The technical course tree is English while the surrounding platform
- * navigation remains German. Mark the complete course subtree as an English
- * language part for assistive technology and browser language tools.
+ * Technical courses inherit the request language from the root document.
+ * Keeping a second async locale wrapper here is redundant and, under a cold
+ * streamed render, can move React's hydration cursor inside the wrapper before
+ * the wrapper fiber itself is claimed.
  */
 export default function OpenSourceCoursesLayout({
   children,
 }: {
   readonly children: ReactNode;
 }) {
-  return <div lang="en">{children}</div>;
+  return children;
 }

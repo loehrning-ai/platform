@@ -3,7 +3,7 @@
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DIMENSIONS } from "@/lib/ki-check/questions";
-import type { DimensionId } from "@/lib/ki-check/types";
+import type { DimensionId, DimensionMeta } from "@/lib/ki-check/types";
 
 interface StepIndicatorProps {
   /** The dimension the current question belongs to. */
@@ -12,6 +12,8 @@ interface StepIndicatorProps {
   readonly answeredByDimension: Record<DimensionId, number>;
   /** Total questions per dimension. */
   readonly totalByDimension: Record<DimensionId, number>;
+  /** Locale-owned display labels in canonical dimension order. */
+  readonly dimensions?: readonly DimensionMeta[];
 }
 
 /**
@@ -24,12 +26,13 @@ export function StepIndicator({
   currentDimensionId,
   answeredByDimension,
   totalByDimension,
+  dimensions = DIMENSIONS,
 }: StepIndicatorProps) {
-  const lastIndex = DIMENSIONS.length - 1;
+  const lastIndex = dimensions.length - 1;
 
   return (
     <ol className="flex items-start justify-between gap-1" aria-hidden="true">
-      {DIMENSIONS.map((dim, i) => {
+      {dimensions.map((dim, i) => {
         const answered = answeredByDimension[dim.id] ?? 0;
         const total = totalByDimension[dim.id] ?? 0;
         const isDone = total > 0 && answered >= total;
@@ -55,7 +58,11 @@ export function StepIndicator({
                   !isDone && !isCurrent && "bg-card text-muted-foreground",
                 )}
               >
-                {isDone ? <Check className="h-4 w-4" strokeWidth={2.5} /> : i + 1}
+                {isDone ? (
+                  <Check className="h-4 w-4" strokeWidth={2.5} />
+                ) : (
+                  i + 1
+                )}
               </span>
               <span
                 className={cn(

@@ -1,5 +1,19 @@
-import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from "vitest";
-import { render, screen, fireEvent, cleanup, act } from "@testing-library/react";
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  beforeEach,
+  afterEach,
+  vi,
+} from "vitest";
+import {
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  act,
+} from "@testing-library/react";
 import { __resetCacheForTests, getXp, isCheckpointDone } from "@/lib/progress";
 import { XP } from "@/lib/progress/types";
 import { PartitionSim } from "./partition-sim";
@@ -23,7 +37,10 @@ function installLocalStoragePolyfill(): void {
 }
 
 beforeAll(() => {
-  if (typeof window.localStorage === "undefined" || typeof window.localStorage.setItem !== "function") {
+  if (
+    typeof window.localStorage === "undefined" ||
+    typeof window.localStorage.setItem !== "function"
+  ) {
     installLocalStoragePolyfill();
   }
 });
@@ -41,25 +58,39 @@ afterEach(() => {
 describe("PartitionSim", () => {
   it("defaults to the date strategy with a perfect-prune verdict", () => {
     render(<PartitionSim lessonId="di-partitioning" cpId="part" />);
-    expect(screen.getByRole("img", { name: /Visualization of how a partitioning strategy/ })).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", {
+        name: /Visualization of how a partitioning strategy/,
+      }),
+    ).toBeInTheDocument();
     expect(screen.getByText("1 / 30")).toBeInTheDocument();
     expect(screen.getByText("perfect prune (1 of 30)")).toBeInTheDocument();
   });
 
   it("switching to the country strategy shows the skew warning and no-prune verdict", () => {
     render(<PartitionSim lessonId="di-partitioning" cpId="part" />);
-    fireEvent.change(screen.getByLabelText("Partition strategy"), { target: { value: "country" } });
+    fireEvent.change(screen.getByLabelText("Partition strategy"), {
+      target: { value: "country" },
+    });
     expect(screen.getByText("⚠ US 62%")).toBeInTheDocument();
-    expect(screen.getByText(/no prune, also: heavy US skew/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/no prune, also: heavy US skew/),
+    ).toBeInTheDocument();
   });
 
   it("falls back to a static summary, without crashing, when getContext('2d') returns null", () => {
     const original = HTMLCanvasElement.prototype.getContext;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    HTMLCanvasElement.prototype.getContext = vi.fn().mockReturnValue(null) as any;
+    HTMLCanvasElement.prototype.getContext = vi
+      .fn()
+      .mockReturnValue(null) as any;
     try {
-      expect(() => render(<PartitionSim lessonId="di-partitioning" cpId="part" />)).not.toThrow();
-      expect(screen.getByRole("img", { name: /Partition pruning/ })).toBeInTheDocument();
+      expect(() =>
+        render(<PartitionSim lessonId="di-partitioning" cpId="part" />),
+      ).not.toThrow();
+      expect(
+        screen.getByRole("img", { name: /Partition pruning/ }),
+      ).toBeInTheDocument();
     } finally {
       HTMLCanvasElement.prototype.getContext = original;
     }

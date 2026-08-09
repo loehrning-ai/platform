@@ -1,40 +1,28 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { Locale } from "@/lib/i18n/locale";
 
-const DAYS = [
-  "Sonntag",
-  "Montag",
-  "Dienstag",
-  "Mittwoch",
-  "Donnerstag",
-  "Freitag",
-  "Samstag",
-];
-const MONTHS = [
-  "Januar",
-  "Februar",
-  "März",
-  "April",
-  "Mai",
-  "Juni",
-  "Juli",
-  "August",
-  "September",
-  "Oktober",
-  "November",
-  "Dezember",
-];
-
-export function Dateline({ prefix = "Nürnberg" }: { prefix?: string }) {
-  const [label, setLabel] = useState(prefix);
+export function Dateline({
+  prefix,
+  locale = "de",
+}: {
+  prefix?: string;
+  locale?: Locale;
+}) {
+  const resolvedPrefix = prefix ?? (locale === "de" ? "Nürnberg" : "Nuremberg");
+  const [label, setLabel] = useState(resolvedPrefix);
 
   useEffect(() => {
     const dt = new Date();
-    setLabel(
-      `${prefix} · ${DAYS[dt.getDay()]} · ${dt.getDate()}. ${MONTHS[dt.getMonth()]} ${dt.getFullYear()}`,
-    );
-  }, [prefix]);
+    const date = new Intl.DateTimeFormat(locale === "de" ? "de-DE" : "en-GB", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }).format(dt);
+    setLabel(`${resolvedPrefix} · ${date}`);
+  }, [locale, resolvedPrefix]);
 
   return <>{label}</>;
 }

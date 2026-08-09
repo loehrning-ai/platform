@@ -1,5 +1,19 @@
-import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from "vitest";
-import { render, screen, fireEvent, cleanup, act } from "@testing-library/react";
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  beforeEach,
+  afterEach,
+  vi,
+} from "vitest";
+import {
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  act,
+} from "@testing-library/react";
 import { __resetCacheForTests, getXp, isCheckpointDone } from "@/lib/progress";
 import { XP } from "@/lib/progress/types";
 import { L10GitGraphOrchestrator } from "./l10-git-graph-orchestrator";
@@ -23,7 +37,10 @@ function installLocalStoragePolyfill(): void {
 }
 
 beforeAll(() => {
-  if (typeof window.localStorage === "undefined" || typeof window.localStorage.setItem !== "function") {
+  if (
+    typeof window.localStorage === "undefined" ||
+    typeof window.localStorage.setItem !== "function"
+  ) {
     installLocalStoragePolyfill();
   }
 });
@@ -83,7 +100,9 @@ describe("L10GitGraphOrchestrator", () => {
   it("unmounting mid-run clears every pending interval instead of leaking them", () => {
     vi.useFakeTimers();
     const clearSpy = vi.spyOn(global, "clearInterval");
-    const { unmount } = render(<L10GitGraphOrchestrator lessonId="L10" cpId="bespoke" />);
+    const { unmount } = render(
+      <L10GitGraphOrchestrator lessonId="L10" cpId="bespoke" />,
+    );
     fireEvent.click(screen.getAllByRole("button", { name: "Launch" })[0]);
     act(() => {
       vi.advanceTimersByTime(150);

@@ -13,6 +13,7 @@ describe("isProgressUiRoute", () => {
     "/ki-fuehrerschein/kurs/quiz",
     "/ki-und-gesellschaft",
     "/kurse/open-source/data-science",
+    "/en/kurse/open-source/data-infrastructure",
   ])("keeps progress UI available on %s", (pathname) => {
     expect(isProgressUiRoute(pathname)).toBe(true);
   });
@@ -37,6 +38,7 @@ describe("isProgressUiRoute", () => {
       true,
     );
     expect(isLearningOwnerRoute("/kurse/open-source/codex/kurs")).toBe(true);
+    expect(isLearningOwnerRoute("/en/kurse/open-source/codex/kurs")).toBe(true);
     expect(
       isLearningOwnerRoute("/kurse/open-source/claude/kurs/zertifikat"),
     ).toBe(true);
@@ -59,6 +61,7 @@ describe("isProgressUiRoute", () => {
     "/kurse/open-source/claude",
     "/kurse/open-source/codex/verifizierung",
     "/kurse/open-source/data-infrastructure/verifizierung",
+    "/en/kurse/open-source/data-infrastructure/verifizierung",
   ])("does not block the read-only public route %s", (pathname) => {
     expect(isLearningOwnerRoute(pathname)).toBe(false);
   });

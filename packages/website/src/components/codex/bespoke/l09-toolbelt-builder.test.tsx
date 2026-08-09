@@ -1,5 +1,19 @@
-import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from "vitest";
-import { render, screen, fireEvent, cleanup, act } from "@testing-library/react";
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  beforeEach,
+  afterEach,
+  vi,
+} from "vitest";
+import {
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  act,
+} from "@testing-library/react";
 import { __resetCacheForTests, getXp, isCheckpointDone } from "@/lib/progress";
 import { XP } from "@/lib/progress/types";
 import { L09ToolbeltBuilder } from "./l09-toolbelt-builder";
@@ -23,7 +37,10 @@ function installLocalStoragePolyfill(): void {
 }
 
 beforeAll(() => {
-  if (typeof window.localStorage === "undefined" || typeof window.localStorage.setItem !== "function") {
+  if (
+    typeof window.localStorage === "undefined" ||
+    typeof window.localStorage.setItem !== "function"
+  ) {
     installLocalStoragePolyfill();
   }
 });
@@ -50,27 +67,36 @@ describe("L09ToolbeltBuilder", () => {
     expect(screen.getByText("belt: 1 / 5")).toBeInTheDocument();
   });
 
-  it("picking a mismatched tool flashes overkill and reverts", () => {
+  it("picking a mismatched tool shows that it is not required and reverts", () => {
     vi.useFakeTimers();
     render(<L09ToolbeltBuilder lessonId="L09" cpId="bespoke" />);
     fireEvent.click(screen.getByText("pytest"));
-    expect(screen.getByText(/fit: overkill/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/not required by this scenario/),
+    ).toBeInTheDocument();
     act(() => {
       vi.advanceTimersByTime(800);
     });
-    expect(screen.queryByText(/fit: overkill/)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/not required by this scenario/),
+    ).not.toBeInTheDocument();
     expect(screen.getByText("belt: 0 / 5")).toBeInTheDocument();
   });
 
   it("awards the checkpoint once all 5 needed tools are placed", () => {
     render(<L09ToolbeltBuilder lessonId="L09" cpId="bespoke" />);
-    for (const id of ["vitest", "eslint", "docker-compose", "postgres-test-db"]) {
+    for (const id of [
+      "vitest",
+      "eslint",
+      "docker-compose",
+      "postgres-test-db",
+    ]) {
       fireEvent.click(screen.getByText(id));
     }
     expect(isCheckpointDone("L09", "bespoke")).toBe(false);
     fireEvent.click(screen.getByText("make ci"));
     expect(isCheckpointDone("L09", "bespoke")).toBe(true);
     expect(getXp()).toBe(XP.CHECKPOINT);
-    expect(screen.getByText(/READY FOR CODEX/)).toBeInTheDocument();
+    expect(screen.getByText(/TOOL SET RECORDED/)).toBeInTheDocument();
   });
 });

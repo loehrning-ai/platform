@@ -8,10 +8,7 @@ import {
 } from "./competencies";
 import { COURSE_CATALOG } from "./catalog";
 import { UNIFIED_SCHEMA_VERSION } from "@/lib/progress/types";
-import type {
-  UnifiedCourseSlice,
-  UnifiedProgress,
-} from "@/lib/progress/types";
+import type { UnifiedCourseSlice, UnifiedProgress } from "@/lib/progress/types";
 import type { CourseSlug } from "@/lib/course/types";
 import { CANONICAL_LESSON_IDS } from "./completion";
 
@@ -22,7 +19,9 @@ import { CANONICAL_LESSON_IDS } from "./completion";
  *   • the selectors are pure and null-safe.
  */
 
-function slice(overrides: Partial<UnifiedCourseSlice> = {}): UnifiedCourseSlice {
+function slice(
+  overrides: Partial<UnifiedCourseSlice> = {},
+): UnifiedCourseSlice {
   return {
     lessons: {},
     workshopQuiz: { passed: false, score: 0, completedAt: null },
@@ -105,7 +104,15 @@ describe("earned competencies", () => {
   it("does not grant competencies for mere lesson progress without the record", () => {
     const started = progressWith({
       "ki-fuehrerschein": slice({
-        lessons: { l1: { sectionsRead: ["s1"], quizScore: null, quizTotal: null, completed: true, exercisesCompleted: {} } },
+        lessons: {
+          l1: {
+            sectionsRead: ["s1"],
+            quizScore: null,
+            quizTotal: null,
+            completed: true,
+            exercisesCompleted: {},
+          },
+        },
       }),
     });
     expect(isCourseRecordEarned(started, "ki-fuehrerschein")).toBe(false);
@@ -144,7 +151,11 @@ describe("earned competencies", () => {
     const passed = progressWith({
       "eu-ai-act-kurs": slice({
         lessons: completedLessons("eu-ai-act-kurs"),
-        workshopQuiz: { passed: true, score: 0.9, completedAt: "2026-01-02T00:00:00.000Z" },
+        workshopQuiz: {
+          passed: true,
+          score: 0.9,
+          completedAt: "2026-01-02T00:00:00.000Z",
+        },
       }),
     });
     expect(isCourseRecordEarned(passed, "eu-ai-act-kurs")).toBe(true);
@@ -192,5 +203,40 @@ describe("earned competencies", () => {
       earned: expected,
       total: totalCompetencyCount(),
     });
+  });
+
+  it("localizes visible competency and course copy without changing identity", () => {
+    const state = progressWith({
+      "ki-fuehrerschein": slice({
+        lessons: completedLessons("ki-fuehrerschein"),
+        workshopQuiz: {
+          passed: true,
+          score: 0.8,
+          completedAt: "2026-01-02T00:00:00.000Z",
+        },
+      }),
+      "data-science": slice({
+        lessons: completedLessons("data-science"),
+      }),
+    });
+
+    const english = earnedCompetencies(state, "en");
+    const german = earnedCompetencies(state, "de");
+
+    expect(
+      english.find((item) => item.id === "ki-grundlagen-verstehen"),
+    ).toMatchObject({
+      label: "Understand AI fundamentals",
+      courseTitle: "AI Fundamentals",
+    });
+    expect(
+      german.find((item) => item.id === "metric-before-model"),
+    ).toMatchObject({
+      label: "Metrik vor dem Modell wählen",
+      courseTitle: "Data Science Fundamentals",
+    });
+    expect(english.map((item) => item.id)).toEqual(
+      german.map((item) => item.id),
+    );
   });
 });

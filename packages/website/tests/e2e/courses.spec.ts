@@ -66,13 +66,13 @@ test.describe("/kurse unified hub", () => {
     const res = await page.goto("/kurse", { waitUntil: "domcontentloaded" });
     expect(res?.status(), "/kurse should not 404").toBeLessThan(400);
 
-    await expect(page.locator("h1")).toContainText("KI lernen");
+    await expect(page.locator("h1")).toContainText("KI verstehen,");
 
     await expect(page.locator("body")).toContainText("KI-Führerschein");
     await expect(page.locator("body")).toContainText("EU AI Act Kurs");
     await expect(page.locator("body")).toContainText("AI-Native Arbeitskurs");
 
-    await expect(page.locator("body")).toContainText("Tiefer gehen");
+    await expect(page.locator("body")).toContainText("Grundlagenpfad");
     await expect(page.locator("body")).toContainText("Technikkurse");
     for (const course of PORTED_COURSE_CATALOG) {
       await expect(
@@ -220,7 +220,7 @@ test.describe("AI-Native public preview and login-gated course app (: /ai-native
       expect(url.searchParams.get("reason")).toBe("auth-not-configured");
       await expect(
         page.getByText(
-          "Das Lernkonto ist in dieser Version deaktiviert. Die vier deutschen Kernkurse sind deshalb vorübergehend nicht erreichbar.",
+          "Eine Anmeldung ist in dieser Umgebung nicht freigegeben. Die vier Grundlagenkurse sind deshalb vorübergehend nicht erreichbar. Bücher, Demos, KI-Check und technische Kurse bleiben öffentlich.",
         ),
       ).toBeVisible();
     });

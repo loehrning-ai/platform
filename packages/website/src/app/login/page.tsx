@@ -3,73 +3,96 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAuthenticatedUser } from "@/lib/supabase/auth-server";
 import { sanitizeNextPath } from "@/lib/auth/routes";
+import { localizeHref, type Locale } from "@/lib/i18n/locale";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { getRuntimeFeatures } from "@/lib/runtime-features";
 import { createNoindexPageMetadata } from "@/lib/seo/page-metadata";
+import { LOGIN_COPY } from "./login-copy";
 import { LoginForm } from "./login-form";
 
-export const metadata: Metadata = createNoindexPageMetadata({
-  title: "Login | Freie Lernplattform",
-  description:
-    "Kostenloses Lernkonto für die vier deutschen Kernkurse von loehrning.ai.",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  return createNoindexPageMetadata(LOGIN_COPY[locale].metadata);
+}
 
 export default async function LoginPage({
   searchParams,
 }: {
   readonly searchParams: Promise<{ readonly next?: string; readonly reason?: string }>;
 }) {
-  const params = await searchParams;
-  const next = sanitizeNextPath(params.next ?? "/konto");
-  const { configured, user, error: authError } = await getAuthenticatedUser();
+  const [params, locale, auth] = await Promise.all([
+    searchParams,
+    getRequestLocale(),
+    getAuthenticatedUser(),
+  ]);
+  const next = localizeHref(
+    sanitizeNextPath(params.next ?? "/konto"),
+    locale,
+  );
+  const { configured, user, error: authError } = auth;
   const runtime = getRuntimeFeatures();
+  const copy = LOGIN_COPY[locale];
 
-  if (configured && runtime.account && user && !authError) redirect(next);
-  const loginAvailable = configured && runtime.account && !authError;
+  const accountReady = configured && runtime.account && !authError;
+  const magicLinkReady = accountReady && runtime.magicLink;
+  const googleReady = accountReady && runtime.google;
+  const loginAvailable = magicLinkReady || googleReady;
+  if (accountReady && user) redirect(next);
 
   return (
-    <section className="min-h-[calc(100svh-4rem)] py-20">
-      <div className="mx-auto max-w-3xl px-6">
-        <div className="h-[3px] w-28 bg-brand-orange" />
-        <p className="mt-8 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-          Freie Lernplattform · Login
-        </p>
-        <h1 className="mt-5 text-4xl font-bold leading-[0.95] tracking-[-0.04em] text-foreground sm:text-6xl">
-          {authError
-            ? "Login vorübergehend nicht verfügbar."
-            : loginAvailable
-              ? "Fortschritt sichern."
-              : "Ohne Anmeldung lernen."}
-        </h1>
-        <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-          Bücher, Demos, KI-Check und technische Vertiefungskurse sind ohne Anmeldung zugänglich.
-          {authError
-            ? " Der Authentifizierungsdienst ist gerade nicht erreichbar. Öffentliche Inhalte bleiben verfügbar; versuche den Login später erneut."
-            : loginAvailable
-            ? " Das aktivierte Lernkonto kann Fortschritt zwischen Geräten synchronisieren."
-            : " Das optionale Lernkonto ist in dieser Version deaktiviert; Fortschritt bleibt lokal in deinem Browser."}
-          {" "}Lernnachweise und Zertifikate werden aus dem erfassten
-          Abschlussstatus erstellt.
-        </p>
-        {params.reason && (
-          <div
-            role="alert"
-            className="mt-6 max-w-xl border border-border bg-card p-4 text-sm leading-relaxed text-muted-foreground"
-          >
-            {loginReasonMessage(params.reason, loginAvailable)}
+    <section className="min-h-[calc(100svh-4rem)] py-12 sm:py-16 lg:py-20">
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="grid min-w-0 items-start gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)] lg:gap-16">
+          <div className="min-w-0">
+            <div className="h-[3px] w-24 bg-brand-orange sm:w-28" />
+            <p className="mt-7 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange sm:mt-8 sm:tracking-[0.18em]">
+              {copy.eyebrow}
+            </p>
+            <h1 className="mt-5 max-w-3xl break-words text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-foreground sm:text-6xl lg:text-7xl">
+              {authError
+                ? copy.heading.outage
+                : loginAvailable
+                  ? copy.heading.available
+                  : copy.heading.unavailable}
+            </h1>
+            <p className="mt-6 max-w-2xl break-words text-base leading-relaxed text-muted-foreground sm:text-lg">
+              {copy.introduction.publicAccess}{" "}
+              {authError
+                ? copy.introduction.outage
+                : loginAvailable
+                  ? copy.introduction.available
+                  : accountReady
+                    ? copy.introduction.methodsUnavailable
+                    : copy.introduction.accountUnavailable}{" "}
+              {copy.introduction.records}
+            </p>
+            {params.reason ? (
+              <div
+                role="alert"
+                className="mt-7 max-w-2xl break-words border-l-4 border-brand-orange bg-card p-4 text-sm leading-relaxed text-muted-foreground sm:p-5"
+              >
+                {loginReasonMessage(params.reason, loginAvailable, locale)}
+              </div>
+            ) : null}
           </div>
-        )}
-        <LoginForm
-          next={next}
-          configured={loginAvailable}
-          turnstileSiteKey={runtime.turnstileSiteKey}
-          unavailableReason={
-            authError
-              ? "outage"
-              : configured && !runtime.account
-                ? "protection"
-                : "disabled"
-          }
-        />
+          <LoginForm
+            next={next}
+            accountReady={accountReady}
+            magicLinkReady={magicLinkReady}
+            googleReady={googleReady}
+            turnstileSiteKey={runtime.turnstileSiteKey}
+            locale={locale}
+            unavailableReason={
+              authError
+                ? "outage"
+                : configured && !runtime.account
+                  ? "configuration"
+                  : accountReady && !loginAvailable
+                    ? "methods"
+                    : "disabled"
+            }
+          />
+        </div>
       </div>
     </section>
   );
@@ -77,16 +100,26 @@ export default async function LoginPage({
 
 function loginReasonMessage(
   reason: string,
-  configured: boolean,
+  loginAvailable: boolean,
+  locale: Locale,
 ): React.ReactNode {
-  if (!configured) {
+  const copy = LOGIN_COPY[locale].reason;
+  const coursesHref = localizeHref("/kurse", locale);
+
+  if (
+    !loginAvailable &&
+    (reason === "progress-save" ||
+      reason === "kurs-login" ||
+      reason === "auth-not-configured")
+  ) {
     return (
       <>
-        Das Lernkonto ist in dieser Version deaktiviert. Die vier deutschen
-        Kernkurse sind deshalb vorübergehend nicht erreichbar. Bücher, Demos,
-        KI-Check und technische Vertiefungen bleiben öffentlich.{" "}
-        <Link href="/kurse" className="underline underline-offset-2 hover:text-foreground">
-          Zum Kursangebot
+        {copy.accountUnavailable}{" "}
+        <Link
+          href={coursesHref}
+          className="font-medium text-foreground underline underline-offset-4 hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+        >
+          {copy.accountUnavailableLink}
         </Link>
       </>
     );
@@ -96,53 +129,46 @@ function loginReasonMessage(
     case "progress-save":
       return (
         <>
-          Melde dich an, um deinen Lernfortschritt auf allen Geräten zu sichern.
-          Bücher und technische Vertiefungskurse bleiben ohne Anmeldung nutzbar.{" "}
-          <Link href="/kurse" className="underline underline-offset-2 hover:text-foreground">
-            Zurück zum Kursangebot
+          {copy.progressSave}{" "}
+          <Link
+            href={coursesHref}
+            className="font-medium text-foreground underline underline-offset-4 hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+          >
+            {copy.progressSaveLink}
           </Link>
         </>
       );
     case "kurs-login":
       return (
         <>
-          Dieser deutsche Kernkurs führt zu einem Lernnachweis oder Zertifikat
-          und erfordert ein Lernkonto. Technische Vertiefungskurse, Bücher und
-          Demos bleiben ohne Anmeldung nutzbar.{" "}
-          <Link href="/kurse" className="underline underline-offset-2 hover:text-foreground">
-            Zurück zum Kursangebot
+          {copy.courseLogin}{" "}
+          <Link
+            href={coursesHref}
+            className="font-medium text-foreground underline underline-offset-4 hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+          >
+            {copy.courseLoginLink}
           </Link>
         </>
       );
     case "anderes-geraet":
-      return (
-        <>
-          Du hast den Link auf einem anderen Gerät geöffnet. Bitte fordere einen
-          neuen Link direkt auf diesem Gerät an.
-        </>
-      );
+      return copy.otherDevice;
     case "abgelaufen":
-      return (
-        <>
-          Dieser Link ist abgelaufen. Bitte fordere einen neuen an.
-        </>
-      );
+      return copy.expired;
     case "ungueltig":
-      return (
-        <>
-          Dieser Link ist ungültig oder wurde bereits verwendet. Bitte fordere
-          einen neuen an.
-        </>
-      );
+      return copy.invalid;
     case "auth-not-configured":
-      return "Login ist in dieser Umgebung noch nicht konfiguriert.";
+      return copy.authNotConfigured;
     case "auth-unavailable":
-      return "Der Authentifizierungsdienst ist vorübergehend nicht erreichbar. Der Link wurde nicht als ungültig eingestuft.";
+      return copy.authUnavailable;
     case "missing-code":
-      return "Der Login-Link ist unvollständig.";
+      return copy.missingCode;
     case "invalid-link":
-      return "Der Login-Link ist abgelaufen oder wurde bereits verwendet.";
+      return copy.invalidLink;
+    case "untrusted-origin":
+      return copy.untrustedOrigin;
+    case "invalid-code-format":
+      return copy.invalidCodeFormat;
     default:
-      return "Der Login konnte nicht abgeschlossen werden.";
+      return copy.fallback;
   }
 }

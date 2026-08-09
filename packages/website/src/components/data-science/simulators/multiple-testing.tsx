@@ -1,8 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useDataScienceLocale } from "@/components/data-science/locale-context";
 import { Panel } from "@/components/data-science/shared/primitives";
-import { clamp, mulberry32, normCdf, randn, round } from "@/lib/data-science/sim-kit";
+import {
+  clamp,
+  mulberry32,
+  normCdf,
+  randn,
+  round,
+} from "@/lib/data-science/sim-kit";
 
 // ─── MultipleTesting ───────────────────────────────
 //
@@ -19,6 +26,7 @@ const BGHT = "var(--panel-hi)";
 const alpha = 0.05;
 
 export function MultipleTesting() {
+  const { text } = useDataScienceLocale();
   const [n, setN] = useState(10);
 
   const fwer = useMemo(() => (1 - Math.pow(1 - alpha, n)) * 100, [n]);
@@ -36,14 +44,29 @@ export function MultipleTesting() {
 
   return (
     <Panel
-      eyebrow="SIMULATION"
-      title="Multiple Testing & FWER"
-      caption="All hypotheses are null (no real effect). How many do we accidentally call significant?"
+      eyebrow={text("SIMULATION", "SIMULATION")}
+      title={text("Multiple Testing & FWER", "Mehrfachtests und FWER")}
+      caption={text(
+        "The formula assumes independent tests with valid uniform null p-values. The dots are one deterministic seeded draw, not an estimate from observed experiments; correlated tests have a different family-wise error rate.",
+        "Die Formel setzt unabhängige Tests mit gültigen, unter der Nullhypothese gleichverteilten p-Werten voraus. Die Punkte sind eine deterministische initialisierte Ziehung, keine Schätzung aus beobachteten Experimenten; korrelierte Tests haben eine andere Family-Wise Error Rate.",
+      )}
     >
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+      <div className="ds-responsive-split">
         <div>
-          <div style={{ marginBottom: 6, fontSize: 11, color: INK3, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            Number of hypotheses tested: <strong style={{ color: "var(--ink-1)" }}>{n}</strong>
+          <div
+            style={{
+              marginBottom: 6,
+              fontSize: 11,
+              color: INK3,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+            }}
+          >
+            {text(
+              "Number of hypotheses tested",
+              "Anzahl getesteter Hypothesen",
+            )}
+            : <strong style={{ color: "var(--ink-1)" }}>{n}</strong>
           </div>
           <input
             type="range"
@@ -51,33 +74,120 @@ export function MultipleTesting() {
             max={50}
             value={n}
             onChange={(e) => setN(+e.target.value)}
-            aria-label="Number of hypotheses tested"
+            aria-label={text(
+              "Number of hypotheses tested",
+              "Anzahl getesteter Hypothesen",
+            )}
             style={{ width: "100%", marginBottom: 16 }}
           />
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 16 }}>
+          <div className="ds-responsive-metrics" style={{ marginBottom: 16 }}>
             {[
-              { label: "FWER", value: `${round(fwer, 1)}%`, sub: "1−(1−α)ⁿ", color: BAD },
-              { label: "Bonferroni α", value: bonferroni, sub: "α / n", color: BLUE },
-              { label: "Expected FP", value: expectedFP, sub: "α × n", color: AMB },
-              { label: "Nominal α", value: "5%", sub: "per test", color: MINT },
+              {
+                label: "FWER",
+                value: `${round(fwer, 1)}%`,
+                sub: "1−(1−α)ⁿ",
+                color: BAD,
+              },
+              {
+                label: "Bonferroni α",
+                value: bonferroni,
+                sub: "α / n",
+                color: BLUE,
+              },
+              {
+                label: text("Expected FP", "Erwartete FP"),
+                value: expectedFP,
+                sub: "α × n",
+                color: AMB,
+              },
+              {
+                label: text("Nominal α", "Nominales α"),
+                value: "5%",
+                sub: text("per test", "pro Test"),
+                color: MINT,
+              },
             ].map(({ label, value, sub, color }) => (
-              <div key={label} style={{ padding: "10px 12px", background: BGHT, borderRadius: 8, border: `1px solid ${HAIR}` }}>
-                <div style={{ fontSize: 10, color, textTransform: "uppercase", letterSpacing: "0.08em" }}>{label}</div>
-                <div style={{ fontSize: 22, fontFamily: "var(--font-serif,serif)", color, marginTop: 2 }}>{value}</div>
+              <div
+                key={label}
+                style={{
+                  padding: "10px 12px",
+                  background: BGHT,
+                  borderRadius: 8,
+                  border: `1px solid ${HAIR}`,
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 10,
+                    color,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.08em",
+                  }}
+                >
+                  {label}
+                </div>
+                <div
+                  style={{
+                    fontSize: 22,
+                    fontFamily: "var(--font-serif,serif)",
+                    color,
+                    marginTop: 2,
+                  }}
+                >
+                  {value}
+                </div>
                 <div style={{ fontSize: 11, color: INK3 }}>{sub}</div>
               </div>
             ))}
           </div>
-          <div style={{ padding: "10px 14px", background: "rgba(245,158,11,0.08)", borderRadius: 8, fontSize: 12.5, color: AMB, lineHeight: 1.6 }}>
-            Out of <strong>{n}</strong> tests, expect <strong>~{expectedFP}</strong> false positives by chance at α=0.05.
+          <div
+            style={{
+              padding: "10px 14px",
+              background: "rgba(245,158,11,0.08)",
+              borderRadius: 8,
+              fontSize: 12.5,
+              color: AMB,
+              lineHeight: 1.6,
+            }}
+          >
+            {text("Out of", "Bei")} <strong>{n}</strong>{" "}
+            {text("tests, expect", "Tests sind")} <strong>~{expectedFP}</strong>{" "}
+            {text(
+              "false positives by chance at α=0.05.",
+              "zufällige falsch-positive Ergebnisse bei α=0.05 zu erwarten.",
+            )}
           </div>
         </div>
         <div>
-          <div style={{ fontSize: 11, color: INK3, marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            Simulated p-values (all null)
+          <div
+            style={{
+              fontSize: 11,
+              color: INK3,
+              marginBottom: 8,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+            }}
+          >
+            {text(
+              "Simulated p-values (all null)",
+              "Simulierte p-Werte (alle Nullhypothesen gelten)",
+            )}
           </div>
-          <svg width="100%" viewBox={`0 0 220 ${Math.max(n * 14 + 30, 60)}`} style={{ overflow: "visible" }}>
-            <line x1={alpha * 200} y1={0} x2={alpha * 200} y2={n * 14 + 10} stroke={MINT} strokeWidth={1} strokeDasharray="3,2" opacity={0.7} />
+          <svg
+            width="100%"
+            viewBox={`0 0 220 ${Math.max(n * 14 + 30, 60)}`}
+            style={{ overflow: "visible" }}
+          >
+            <line
+              x1={alpha * 200}
+              y1={0}
+              x2={alpha * 200}
+              y2={n * 14 + 10}
+              stroke={MINT}
+              strokeWidth={1}
+              strokeDasharray="3,2"
+              opacity={0.7}
+            />
             <line
               x1={Math.min(bonferroni * 200, 200)}
               y1={0}
@@ -92,10 +202,10 @@ export function MultipleTesting() {
               α=0.05
             </text>
             <text x={0} y={n * 14 + 26} fontSize={8} fill={MINT}>
-              {nomSig} sig (uncorrected)
+              {nomSig} {text("sig (uncorrected)", "sign. (unkorrigiert)")}
             </text>
             <text x={100} y={n * 14 + 26} fontSize={8} fill={BLUE}>
-              {bonfSig} sig (Bonferroni)
+              {bonfSig} {text("sig (Bonferroni)", "sign. (Bonferroni)")}
             </text>
             {pValues.map((p, i) => {
               const x = clamp(p * 200, 1, 199);
@@ -105,7 +215,15 @@ export function MultipleTesting() {
               const color = sigBonf ? BLUE : sigNom ? BAD : INK3;
               return (
                 <g key={i}>
-                  <rect x={0} y={y - 5} width={x} height={8} rx={2} fill={color} opacity={sigNom ? 0.4 : 0.15} />
+                  <rect
+                    x={0}
+                    y={y - 5}
+                    width={x}
+                    height={8}
+                    rx={2}
+                    fill={color}
+                    opacity={sigNom ? 0.4 : 0.15}
+                  />
                   <circle cx={x} cy={y} r={3} fill={color} />
                 </g>
               );

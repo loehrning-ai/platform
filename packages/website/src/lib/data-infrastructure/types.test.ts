@@ -57,7 +57,9 @@ describe("data-infrastructure types ", () => {
       expect(track.title.length).toBeGreaterThan(0);
       expect(track.hint.length).toBeGreaterThan(0);
     }
-    expect(DATA_INFRA_TRACKS[0].title).toBe("How to think about data systems.");
+    expect(DATA_INFRA_TRACKS[0].title).toBe(
+      "Reason about data-system boundaries.",
+    );
   });
 
   it("a minimal DataInfraLesson shape satisfies the DataInfraLesson interface", () => {

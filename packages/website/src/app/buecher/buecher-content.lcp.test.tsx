@@ -1,5 +1,5 @@
 import { createElement, forwardRef } from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("framer-motion", () => {
@@ -27,14 +27,6 @@ vi.mock("framer-motion", () => {
               for (const [key, value] of Object.entries(props)) {
                 if (!motionOnly.has(key)) domProps[key] = value;
               }
-              if ("initial" in props) {
-                domProps["data-motion-initial"] = JSON.stringify(props.initial);
-              }
-              if ("whileInView" in props) {
-                domProps["data-motion-while-in-view"] = JSON.stringify(
-                  props.whileInView,
-                );
-              }
               return createElement(tag, domProps);
             }),
           );
@@ -61,60 +53,89 @@ vi.mock("@/lib/books", async (importOriginal) => {
 
 import { BuecherContent } from "./buecher-content";
 
-describe("BuecherContent LCP loading policy", () => {
-  it("does not hide the above-fold heading behind hydration", () => {
-    render(<BuecherContent accountEnabled={false} />);
-
-    expect(screen.getByRole("heading", { level: 1 })).toHaveAttribute(
-      "data-motion-initial",
-      "false",
-    );
-    expect(screen.getByText("Bücher")).toHaveAttribute(
-      "data-motion-initial",
-      "false",
-    );
-  });
-
-  it("renders only the first card without the in-view hidden state", () => {
-    render(<BuecherContent accountEnabled={false} />);
-
-    const cards = screen.getAllByTestId("book-card");
-    expect(cards).toHaveLength(2);
-    expect(cards[0]).toHaveAttribute("data-motion-initial", "false");
-    expect(cards[0]).not.toHaveAttribute("data-motion-while-in-view");
-    expect(cards[1]).toHaveAttribute(
-      "data-motion-initial",
-      JSON.stringify({ opacity: 0, y: 20 }),
-    );
-    expect(cards[1]).toHaveAttribute(
-      "data-motion-while-in-view",
-      JSON.stringify({ opacity: 1, y: 0 }),
-    );
-    expect(cards[1]).toHaveClass("js-reveal");
-  });
-
-  it("marks every server-hidden public motion element for the no-script fallback", () => {
-    const { container } = render(<BuecherContent accountEnabled={false} />);
-    const hiddenMotionNodes = Array.from(
-      container.querySelectorAll<HTMLElement>("[data-motion-initial]"),
-    ).filter((element) =>
-      element.getAttribute("data-motion-initial")?.includes('"opacity":0'),
+describe("BuecherContent visibility, loading, and locale behavior", () => {
+  it("renders the German heading and every card in the initial document state", () => {
+    const { container } = render(
+      <BuecherContent accountEnabled={false} locale="de" />,
     );
 
-    expect(hiddenMotionNodes.length).toBeGreaterThan(0);
-    hiddenMotionNodes.forEach((element) =>
-      expect(element).toHaveClass("js-reveal"),
-    );
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "Sachbücher mit sichtbaren Quellen und Grenzen.",
+      }),
+    ).toBeVisible();
+    expect(screen.getAllByTestId("book-card")).toHaveLength(2);
+    expect(
+      container.querySelectorAll('[data-motion-initial*="opacity"]').length,
+    ).toBe(0);
+    expect(container.querySelectorAll('[style*="opacity: 0"]').length).toBe(0);
   });
 
   it("requests only the first cover eagerly and at high priority", () => {
-    render(<BuecherContent accountEnabled={false} />);
+    render(<BuecherContent accountEnabled={false} locale="de" />);
 
-    const covers = screen.getAllByRole("img", { name: /^Titelseite:/ });
+    const covers = screen.getAllByRole("img", {
+      name: /^Deutsche Titelseite:/,
+    });
     expect(covers).toHaveLength(2);
     expect(covers[0]).toHaveAttribute("loading", "eager");
     expect(covers[0]).toHaveAttribute("fetchpriority", "high");
     expect(covers[1]).toHaveAttribute("loading", "lazy");
     expect(covers[1]).not.toHaveAttribute("fetchpriority");
+  });
+
+  it("renders reviewed English interface copy and locale-preserving page links", () => {
+    const { container } = render(
+      <BuecherContent accountEnabled={false} locale="en" />,
+    );
+
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "Reference books with visible sources and limits.",
+      }),
+    ).toBeVisible();
+    expect(
+      screen.getAllByText("Material language", { exact: true }).length,
+    ).toBeGreaterThan(0);
+    expect(screen.getAllByText("English").length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByRole("link", { name: "Open book and chapters" })[0],
+    ).toHaveAttribute("href", "/en/buecher/ki-landschaft");
+    expect(screen.getByRole("link", { name: "View courses" })).toHaveAttribute(
+      "href",
+      "/en/kurse",
+    );
+
+    const pageLinks = Array.from(
+      container.querySelectorAll<HTMLAnchorElement>('a[href^="/"]'),
+    );
+    expect(
+      pageLinks.every((link) => link.getAttribute("href")?.startsWith("/en")),
+    ).toBe(true);
+  });
+
+  it("localizes the cover-preview dialog and keeps its material language explicit", () => {
+    render(<BuecherContent accountEnabled={false} locale="en" />);
+
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Open the cover preview for “AI in German SMEs”",
+      }),
+    );
+
+    const dialog = screen.getByRole("dialog", {
+      name: "Cover preview: AI in German SMEs",
+    });
+    expect(dialog).toBeVisible();
+    expect(
+      within(dialog).getByText(
+        "Source cover in German · English HTML reader",
+      ),
+    ).toBeVisible();
+    expect(
+      within(dialog).getByRole("link", { name: "Open book and chapters" }),
+    ).toHaveAttribute("href", "/en/buecher/ki-landschaft");
   });
 });

@@ -2,7 +2,14 @@
 
 import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
-import { clamp, inkOf, mulberry32, randn, round } from "@/lib/data-science/sim-kit";
+import {
+  clamp,
+  inkOf,
+  mulberry32,
+  randn,
+  round,
+} from "@/lib/data-science/sim-kit";
+import { useDataScienceLocale } from "../locale-context";
 
 // ─── PolynomialExpansion ────────────────────────────
 //
@@ -22,7 +29,9 @@ function fitPoly(pts: readonly Point[], degree: number): readonly number[] {
   const d = degree + 1;
   const X = pts.map((p) => Array.from({ length: d }, (_, k) => p.x ** k));
   const XtX = Array.from({ length: d }, (_, i) =>
-    Array.from({ length: d }, (_2, j) => X.reduce((s, row) => s + row[i]! * row[j]!, 0)),
+    Array.from({ length: d }, (_2, j) =>
+      X.reduce((s, row) => s + row[i]! * row[j]!, 0),
+    ),
   );
   const Xty = Array.from({ length: d }, (_, i) =>
     X.reduce((s, row, r) => s + row[i]! * pts[r]!.y, 0),
@@ -74,6 +83,7 @@ function yScale(y: number): number {
 }
 
 export function PolynomialExpansion() {
+  const { locale, text } = useDataScienceLocale();
   const [degree, setDegree] = useState(2);
   const pts = useMemo(() => {
     const rng = mulberry32(42);
@@ -95,42 +105,100 @@ export function PolynomialExpansion() {
   }, [coeffs]);
 
   const complexityLabel =
-    degree === 1 ? "Underfits (high bias)" : degree === 2 ? "Good fit" : "Slight overfit (high complexity)";
-  const complexityColor = degree === 1 ? "#ff6b6b" : degree === 2 ? "#D1FF3A" : "#ffa94d";
+    locale === "de"
+      ? degree === 1
+        ? "Unteranpassung (hoher Bias)"
+        : degree === 2
+          ? "Passende Anpassung"
+          : "Leichte Überanpassung (hohe Komplexität)"
+      : degree === 1
+        ? "Underfits (high bias)"
+        : degree === 2
+          ? "Good fit"
+          : "Slight overfit (high complexity)";
+  const complexityColor =
+    degree === 1 ? "#ff6b6b" : degree === 2 ? "#D1FF3A" : "#ffa94d";
 
   return (
     <Panel
-      eyebrow="SIMULATION"
-      title="Polynomial feature expansion"
-      meta={`Degree ${degree} · Train R² = ${r2}`}
-      caption="Degree 1 cannot capture the parabola (bias). Degree 2 fits well. Degree 3 starts chasing noise (variance)."
+      eyebrow={text("SIMULATION", "SIMULATION")}
+      title={text(
+        "Polynomial feature expansion",
+        "Polynomiale Merkmalserweiterung",
+      )}
+      meta={text(
+        `Degree ${degree} · Train R² = ${r2}`,
+        `Grad ${degree} · Training R² = ${r2}`,
+      )}
+      caption={text(
+        "Degree 1 cannot capture the parabola (bias). Degree 2 fits well. Degree 3 starts chasing noise (variance).",
+        "Grad 1 kann die Parabel nicht abbilden (Bias). Grad 2 passt zur Struktur. Grad 3 beginnt, Rauschen anzupassen (Varianz).",
+      )}
     >
       <div className="sim-controls" style={{ marginBottom: 12 }}>
         <div className="sim-ctrl">
-          <label>Polynomial degree</label>
+          <label>{text("Polynomial degree", "Polynomgrad")}</label>
           <div className="seg">
             {[1, 2, 3].map((d) => (
-              <button key={d} type="button" className={degree === d ? "on" : ""} onClick={() => setDegree(d)}>
-                Degree {d}
+              <button
+                key={d}
+                type="button"
+                className={degree === d ? "on" : ""}
+                onClick={() => setDegree(d)}
+              >
+                {text("Degree", "Grad")} {d}
               </button>
             ))}
           </div>
         </div>
-        <div style={{ display: "flex", gap: 24, marginTop: 8, fontSize: 12, fontFamily: "'JetBrains Mono', monospace" }}>
-          <span style={{ color: inkOf(complexityColor) }}>{complexityLabel}</span>
-          <span style={{ color: "var(--ink-3)" }}>Features: {degree === 1 ? "x" : degree === 2 ? "x, x²" : "x, x², x³"}</span>
+        <div
+          className="ds-polynomial-summary"
+          style={{
+            display: "flex",
+            gap: 24,
+            marginTop: 8,
+            fontSize: 12,
+            fontFamily: "'JetBrains Mono', monospace",
+          }}
+        >
+          <span style={{ color: inkOf(complexityColor) }}>
+            {complexityLabel}
+          </span>
           <span style={{ color: "var(--ink-3)" }}>
-            Complexity: {"●".repeat(degree)}
+            {text("Features", "Merkmale")}:{" "}
+            {degree === 1 ? "x" : degree === 2 ? "x, x²" : "x, x², x³"}
+          </span>
+          <span style={{ color: "var(--ink-3)" }}>
+            {text("Complexity", "Komplexität")}: {"●".repeat(degree)}
             {"○".repeat(3 - degree)}
           </span>
         </div>
       </div>
-      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", display: "block" }}>
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        style={{ width: "100%", display: "block" }}
+      >
         {[-0.5, 0, 0.5, 1].map((yv) => (
-          <line key={yv} x1={PAD.l} x2={W - PAD.r} y1={yScale(yv)} y2={yScale(yv)} stroke="#2a2a2a" strokeWidth="1" />
+          <line
+            key={yv}
+            x1={PAD.l}
+            x2={W - PAD.r}
+            y1={yScale(yv)}
+            y2={yScale(yv)}
+            stroke="#2a2a2a"
+            strokeWidth="1"
+          />
         ))}
         {[-0.75, -0.25, 0.25, 0.75].map((xv) => (
-          <line key={xv} x1={xScale(xv)} x2={xScale(xv)} y1={PAD.t} y2={H - PAD.b} stroke="#2a2a2a" strokeWidth="1" />
+          <line
+            key={xv}
+            x1={xScale(xv)}
+            x2={xScale(xv)}
+            y1={PAD.t}
+            y2={H - PAD.b}
+            stroke="#2a2a2a"
+            strokeWidth="1"
+          />
         ))}
         {[-0.5, 0, 0.5, 1].map((yv) => (
           <text
@@ -157,16 +225,56 @@ export function PolynomialExpansion() {
           strokeDasharray="4 3"
         />
         {pts.map((p, i) => (
-          <circle key={i} cx={xScale(p.x)} cy={yScale(clamp(p.y, -0.8, 1.35))} r="3" fill="#4a7fa5" opacity="0.7" />
+          <circle
+            key={i}
+            cx={xScale(p.x)}
+            cy={yScale(clamp(p.y, -0.8, 1.35))}
+            r="3"
+            fill="#4a7fa5"
+            opacity="0.7"
+          />
         ))}
-        <path d={curvePath} stroke={complexityColor} strokeWidth="2.2" fill="none" style={{ transition: "stroke 0.3s" }} />
-        <line x1={W - 130} x2={W - 110} y1="22" y2="22" stroke="#444" strokeWidth="1.5" strokeDasharray="4 3" />
-        <text x={W - 105} y="26" fontSize="9" fontFamily="'JetBrains Mono', monospace" fill="#555">
-          true y=x²
+        <path
+          d={curvePath}
+          stroke={complexityColor}
+          strokeWidth="2.2"
+          fill="none"
+          style={{ transition: "stroke 0.3s" }}
+        />
+        <line
+          x1={W - 130}
+          x2={W - 110}
+          y1="22"
+          y2="22"
+          stroke="#444"
+          strokeWidth="1.5"
+          strokeDasharray="4 3"
+        />
+        <text
+          x={W - 105}
+          y="26"
+          fontSize="9"
+          fontFamily="'JetBrains Mono', monospace"
+          fill="#555"
+        >
+          {text("true y=x²", "wahr y=x²")}
         </text>
-        <line x1={W - 130} x2={W - 110} y1="36" y2="36" stroke={complexityColor} strokeWidth="2.2" />
-        <text x={W - 105} y="40" fontSize="9" fontFamily="'JetBrains Mono', monospace" fill={complexityColor}>
-          degree {degree} fit
+        <line
+          x1={W - 130}
+          x2={W - 110}
+          y1="36"
+          y2="36"
+          stroke={complexityColor}
+          strokeWidth="2.2"
+        />
+        <text
+          x={W - 105}
+          y="40"
+          fontSize="9"
+          fontFamily="'JetBrains Mono', monospace"
+          fill={complexityColor}
+        >
+          {text(`degree ${degree} fit`, `Anpassung Grad ${degree}`)}
         </text>
       </svg>
     </Panel>

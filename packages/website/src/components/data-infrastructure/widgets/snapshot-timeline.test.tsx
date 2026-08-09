@@ -1,4 +1,12 @@
-import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from "vitest";
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  beforeEach,
+  afterEach,
+  vi,
+} from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { __resetCacheForTests, getXp, isCheckpointDone } from "@/lib/progress";
 import { XP } from "@/lib/progress/types";
@@ -23,7 +31,10 @@ function installLocalStoragePolyfill(): void {
 }
 
 beforeAll(() => {
-  if (typeof window.localStorage === "undefined" || typeof window.localStorage.setItem !== "function") {
+  if (
+    typeof window.localStorage === "undefined" ||
+    typeof window.localStorage.setItem !== "function"
+  ) {
     installLocalStoragePolyfill();
   }
 });
@@ -41,7 +52,9 @@ afterEach(() => {
 describe("SnapshotTimeline", () => {
   it("renders the canvas timeline, detail panel, and one-Tab-stop snapshot picker", () => {
     render(<SnapshotTimeline lessonId="di-lakehouse" cpId="snap" />);
-    expect(screen.getByRole("img", { name: /Lakehouse snapshot timeline/ })).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: /Lakehouse snapshot timeline/ }),
+    ).toBeInTheDocument();
     const listbox = screen.getByRole("listbox", { name: "Snapshot picker" });
     const options = screen.getAllByRole("option");
     expect(options).toHaveLength(7);
@@ -61,10 +74,16 @@ describe("SnapshotTimeline", () => {
   it("falls back to a static summary, without crashing, when getContext('2d') returns null — the keyboard picker still works underneath", () => {
     const original = HTMLCanvasElement.prototype.getContext;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    HTMLCanvasElement.prototype.getContext = vi.fn().mockReturnValue(null) as any;
+    HTMLCanvasElement.prototype.getContext = vi
+      .fn()
+      .mockReturnValue(null) as any;
     try {
-      expect(() => render(<SnapshotTimeline lessonId="di-lakehouse" cpId="snap" />)).not.toThrow();
-      expect(screen.getByRole("img", { name: /Currently viewing snapshot/ })).toBeInTheDocument();
+      expect(() =>
+        render(<SnapshotTimeline lessonId="di-lakehouse" cpId="snap" />),
+      ).not.toThrow();
+      expect(
+        screen.getByRole("img", { name: /Currently viewing snapshot/ }),
+      ).toBeInTheDocument();
       expect(screen.getAllByRole("option")).toHaveLength(7);
     } finally {
       HTMLCanvasElement.prototype.getContext = original;
@@ -79,7 +98,9 @@ describe("SnapshotTimeline", () => {
     // this test — only .focus() (Tab-navigation equivalent) and Enter/Space
     // activation on a real <button>, which real browsers translate into a
     // click via the standard HTML button activation-behavior spec.
-    const rollbackOption = screen.getByRole("option", { name: "13:08 · ROLLBACK" });
+    const rollbackOption = screen.getByRole("option", {
+      name: "13:08 · ROLLBACK",
+    });
     rollbackOption.focus();
     expect(document.activeElement).toBe(rollbackOption);
     fireEvent.keyDown(rollbackOption, { key: "Enter" });

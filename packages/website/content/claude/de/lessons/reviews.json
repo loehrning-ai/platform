@@ -1,0 +1,86 @@
+{
+  "id": "reviews",
+  "number": 8,
+  "title": "Claude für Code-Reviews und PRs",
+  "subtitle": "Ein systematischer Reviewer für klar abgegrenzte Prüfaufgaben.",
+  "durationMinutes": 9,
+  "trackId": "advanced",
+  "hook": "Claude kann Diffs und die behauptete Änderungsabsicht vergleichen.",
+  "keyConcepts": [
+    "Prompt-Vorlage für Reviews",
+    "Schweregrad-Kennzeichnung",
+    "Fokusfilter"
+  ],
+  "quiz": [],
+  "sections": [
+    {
+      "id": "why-it-works",
+      "title": "Welche Prüfaufgaben sich eignen",
+      "readTimeMinutes": 2,
+      "content": "Ein Modell kann einen bereitgestellten Diff auf mögliche Fehler, Konventionsverstöße und fehlende Tests untersuchen. Dateien, Aufrufer, Laufzeitverhalten oder Repository-Regeln, die weder beigefügt noch über Tools erreichbar sind, bleiben außerhalb der Prüfung.\n\nStelle Änderungsziel, relevanten Umgebungscode, Projektkonventionen und Schweregrade bereit. Fordere für jeden Befund Datei und Zeile, einen konkreten Fehlerpfad sowie die Trennung von Beleg und Unsicherheit.\n\nModellverhalten ändert sich zwischen Versionen. Halte ein Review-Eval-Set vor und führe es nach Änderungen an Modell, Prompt oder Tool-Zugriff erneut aus."
+    },
+    {
+      "id": "review-template",
+      "title": "Die Prompt-Vorlage für Reviews",
+      "readTimeMinutes": 3,
+      "content": "```\nDu überprüfst einen PR als Staff Engineer im Team.\n\nKONTEXT\n- Repo: <Kurzbeschreibung des Projekts>\n- Konventionen: <CLAUDE.md verlinken oder Zusammenfassung einfügen>\n- Ziel des Autors für diesen PR: <Beschreibung einfügen>\n\nDIFF\n<Diff einfügen>\n\nAUFGABE\nÜberprüfe den Diff. Gib für jedes Problem Folgendes an:\n- Schweregrad (blocker | nit | frage)\n- Datei:Zeile\n- Was du ändern würdest und warum, in einem Satz.\n\nFokus auf:\n1. Erfüllt der Code die in der Beschreibung genannten Anforderungen?\n2. Korrektheit, insbesondere Randfälle und Fehlerpfade.\n3. Tests: Validieren sie die Änderung oder sind sie nur vorhanden?\n4. Konsistenz mit bestehenden Konventionen im Repo.\n\nNICHT:\n- Den Code umschreiben.\n- Stil kommentieren, es sei denn, er verstößt gegen eine Konvention.\n- Das Review mit Lob aufblähen.\n```"
+    },
+    {
+      "id": "when-it-earns-its-keep",
+      "title": "Drei geeignete Einsatzsituationen",
+      "readTimeMinutes": 2,
+      "content": "- **Vor dem Review.** Führe einen fokussierten Durchlauf über den Diff aus, verifiziere jeden Befund und starte die relevanten Checks.\n- **Bei großen Änderungen.** Erzeuge eine vorläufige Karte geänderten Verhaltens und betroffener Aufrufpfade; vergleiche sie mit Codesuche und Tests.\n- **Repository-weit.** Ermittle Aufrufer zuerst mit Repository-Tools und analysiere anschließend die konkreten Ergebnisse auf Kompatibilitätsrisiken."
+    }
+  ],
+  "widgets": [
+    {
+      "kind": "prompt-sandbox",
+      "placement": "after-intro",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "reviews",
+        "cpId": "review",
+        "title": "Diff überprüfen",
+        "hint": "Füge einen kleinen Diff ein. Bitte um ein Review auf Staff-Level unter Verwendung der obigen Vorlage.",
+        "placeholder": "Du überprüfst einen PR als Staff Engineer…\n\nDIFF:\n<Diff einfügen>"
+      }
+    },
+    {
+      "kind": "quiz",
+      "placement": "before-quiz",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "reviews",
+        "cpId": "q1",
+        "question": "Dein Review-Prompt erzeugt 40 Stil-Nits und übersieht einen echten Korrektheitsfehler. Was ist die Lösung?",
+        "options": [
+          "Ein größeres Modell verwenden.",
+          "Claude explizit anweisen, Stil zu ignorieren und sich auf Korrektheit und Verhaltensänderungen zu konzentrieren.",
+          "Den Diff zufällig kürzen.",
+          "Zweimal mit unterschiedlicher Formulierung fragen."
+        ],
+        "correct": 1,
+        "explanation": "Prompts steuern den Fokus. Weise den Reviewer an, was zu priorisieren und was zu ignorieren ist.",
+        "title": "Kurzprüfung",
+        "copy": {
+          "kindLabel": "Kurzprüfung",
+          "optionsAriaLabel": "Antwortoptionen",
+          "correctLabel": "Korrekt.",
+          "incorrectLabel": "Nicht ganz."
+        }
+      }
+    },
+    {
+      "kind": "rewrite-arena",
+      "placement": "end",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "reviews",
+        "cpId": "arena",
+        "task": "Schreibe einen Review-Prompt für einen PR, der vorgibt, ein Refactoring zu sein.",
+        "original": "Überprüfe diesen PR und bewerte ihn.",
+        "criteria": "nennt die Rolle des Reviewers, legt den Fokus fest, schließt Stil aus, fragt nach Schweregrad-Kennzeichnung, verhindert Lob-Aufblähung"
+      }
+    }
+  ]
+}

@@ -5,14 +5,13 @@ import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 // ─── Ch2_Store ────────────────────────────────────
 // Ported from `src/chapters/Ch2_Store.js`.
 
-const CUMULATIVE_SQL = `<span class="tok-k">INSERT OVERWRITE TABLE</span> user_lifetime_points <span class="tok-k">PARTITION</span> (ds=<span class="tok-s">'&lt;DATEID&gt;'</span>)
+export const CUMULATIVE_SQL = `<span class="tok-k">INSERT OVERWRITE TABLE</span> user_lifetime_points <span class="tok-k">PARTITION</span> (ds=<span class="tok-s">'&lt;DATEID&gt;'</span>)
 <span class="tok-k">SELECT</span>
   <span class="tok-f">COALESCE</span>(y.user_id, t.user_id) <span class="tok-k">AS</span> user_id,
   <span class="tok-f">COALESCE</span>(y.lifetime_pts, <span class="tok-n">0</span>) + <span class="tok-f">COALESCE</span>(t.pts_today, <span class="tok-n">0</span>) <span class="tok-k">AS</span> lifetime_pts
-<span class="tok-k">FROM</span> user_lifetime_points y                           <span class="tok-c">-- yesterday</span>
-  <span class="tok-k">FULL OUTER JOIN</span> daily_user_points t                 <span class="tok-c">-- today's delta</span>
-    <span class="tok-k">ON</span> y.user_id = t.user_id
-<span class="tok-k">WHERE</span> y.ds = <span class="tok-s">'&lt;DATEID-1&gt;'</span> <span class="tok-k">AND</span> t.ds = <span class="tok-s">'&lt;DATEID&gt;'</span>;`;
+<span class="tok-k">FROM</span> (<span class="tok-k">SELECT</span> * <span class="tok-k">FROM</span> user_lifetime_points <span class="tok-k">WHERE</span> ds = <span class="tok-s">'&lt;DATEID-1&gt;'</span>) y
+<span class="tok-k">FULL OUTER JOIN</span> (<span class="tok-k">SELECT</span> * <span class="tok-k">FROM</span> daily_user_points <span class="tok-k">WHERE</span> ds = <span class="tok-s">'&lt;DATEID&gt;'</span>) t
+  <span class="tok-k">ON</span> y.user_id = t.user_id;`;
 
 export interface Ch2StoreProps {
   readonly chapter: ChapterMeta;
@@ -24,8 +23,8 @@ export function Ch2Store({ chapter }: Ch2StoreProps) {
       <Hero
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
-        title="Store: <span class='accent'>one bad day</span> poisons every day that follows it."
-        hook="Most tables are a photo of yesterday. <strong>Cumulative tables</strong> are the whole photo album: each day, you carry yesterday's state forward and merge in today's deltas. Elegant when clean, catastrophic when broken: one bad day taints every day after it until you backfill."
+        title="Store: <span class='accent'>cumulative state</span> carries errors forward."
+        hook="In this additive example, each partition combines the previous state with the current day's deltas. An error in one partition affects later partitions until the affected range is rebuilt."
         meta={[
           { k: "Pattern", v: "state-carrying" },
           { k: "Engine", v: "Spark (FULL OUTER JOIN)" },
@@ -37,13 +36,13 @@ export function Ch2Store({ chapter }: Ch2StoreProps) {
         <SectionLabel n="3.1">The pattern</SectionLabel>
         <h2 className="h2">Yesterday + today = today&apos;s cumulative.</h2>
         <p className="prose">
-          Every cumulative table has the same shape: <code>FULL OUTER JOIN</code> yesterday&apos;s cumulative with today&apos;s deltas on the
-          entity key, then <code>COALESCE</code> to pick the newer value.<b> FULL OUTER</b> is the important part: <code>LEFT JOIN</code> will
-          silently drop every user appearing for the first time today.
+          This additive course example uses a <code>FULL OUTER JOIN</code> between the prior partition and today&apos;s deltas, followed by
+          <code> COALESCE</code>. That join preserves keys present on either side. Other cumulative models may require merges, deletions,
+          validity intervals, or different conflict rules.
         </p>
         <p className="prose">
-          The magic is compounding: day 7&apos;s cumulative is day 6 + today, which is already day 5 + its today, all the way back. The curse is
-          the same: a bug on day 3 lives in every day that follows, forever, until someone catches it and backfills.
+          Day 7 depends on day 6, which already contains earlier inputs. If day 3 is wrong, rebuild from the earliest affected partition through
+          every dependent partition. A code fix alone does not rewrite stored history.
         </p>
       </section>
 
@@ -64,24 +63,24 @@ export function Ch2Store({ chapter }: Ch2StoreProps) {
 
       <AntiPatterns
         items={[
-          "<b>Using <code>LEFT JOIN</code> instead of <code>FULL OUTER</code>.</b> You will silently drop every entity appearing today for the first time. Half your new users: gone.",
-          "<b>Forgetting to backfill after a bug.</b> The bad value lives forever in every downstream cumulative. A fix deployed tomorrow does nothing about yesterday.",
-          "<b>Depending on wall-clock time.</b> <code>CURRENT_DATE</code>, <code>NOW()</code>, today's timezone: all fatal. A backfill in May must produce identical output to the original run.",
-          "<b>Mutating the cumulative table in place.</b> Always write to a new partition and swap. Mutation kills reproducibility and breaks every downstream snapshot reader.",
+          "<b>Using a left join in this additive pattern.</b> Keys that first appear in today's delta would be omitted. Test new, existing, and missing-key cases.",
+          "<b>Deploying a fix without rebuilding dependent partitions.</b> Determine the earliest affected date and recompute the downstream range.",
+          "<b>Reading wall-clock time inside a backfill.</b> Pass the logical partition and other run inputs explicitly so the same input selects the same source range.",
+          "<b>Publishing partial state.</b> Use the table format's supported atomic replace, merge, or snapshot operation so readers do not observe an incomplete partition.",
         ]}
       />
       <BestPractices
         items={[
-          "Always key every partition by <code>&lt;DATEID&gt;</code>. The job's clock is the partition, not the wall clock.",
-          "Version your cumulative logic. When the formula changes, backfill the whole history: don't let new rules and old rows coexist.",
-          "Add a <b>row-count guardrail</b>: today's cumulative row count should never decrease. A shrink means you used <code>LEFT JOIN</code> instead of <code>FULL OUTER</code>.",
+          "Pass <code>&lt;DATEID&gt;</code> as the logical partition for this daily model instead of deriving it from the wall clock.",
+          "Version cumulative logic and record which version produced each partition. Rebuild the range whose semantics changed.",
+          "Define <b>invariants from the business model</b>. Row count may decrease legitimately under deletion or retention, so test expected key transitions rather than assuming monotonic growth.",
         ]}
       />
       <Takeaway
         items={[
-          "Cumulative = <b>yesterday ⊕ today</b>. Every broken day taints every future day until you backfill.",
-          "<code>FULL OUTER JOIN</code> + <code>COALESCE</code> is the canonical shape. <code>LEFT JOIN</code> drops new entities.",
-          "Always key off <code>&lt;DATEID&gt;</code>, never <code>CURRENT_DATE</code>: backfills demand determinism.",
+          "In this model, cumulative state is <b>prior partition plus current delta</b>. Rebuild every dependent partition after a faulty input or rule.",
+          "<code>FULL OUTER JOIN</code> and <code>COALESCE</code> implement the additive example; choose merge semantics from the actual entity lifecycle.",
+          "Use an explicit logical date and stable inputs so backfills select the intended source range.",
         ]}
       />
     </>

@@ -1,24 +1,110 @@
+import type { Metadata } from "next";
+import { contentLocalesForPath } from "@/lib/i18n/content-parity";
+import {
+  buildLocaleAlternates,
+  localizeHref,
+  type Locale,
+} from "@/lib/i18n/locale";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { formatServiceAddress, LEGAL_IDENTITY } from "@/lib/legal-identity";
 import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
 
-export const metadata = createPublicPageMetadata({
-  title: "Impressum",
-  description: "Impressum von loehrning.ai | Tim Löhr",
-  path: "/impressum",
-});
+const IMPRINT_COPY = {
+  de: {
+    title: "Impressum",
+    description: "Impressum von loehrning.ai | Tim Löhr",
+    legalBasis: "Angaben gemäß § 5 DDG",
+    provider: "Anbieter",
+    email: "E-Mail",
+    contact: "Kontakt",
+    contentResponsibility:
+      "Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV",
+    fallbackResponsibility: (email: string) =>
+      ". Erreichbar per E-Mail: " + email + ".",
+    liability: "Haftungsausschluss",
+    liabilityContent: "Haftung für Inhalte",
+    liabilityContentText:
+      "Für eigene Inhalte gelten die allgemeinen Gesetze. Die Lernmaterialien werden sorgfältig gepflegt, sind aber keine Rechts-, Steuer-, Sicherheits- oder Compliance-Beratung. Gesetzliche Haftungsregeln werden durch diesen Hinweis nicht eingeschränkt.",
+    liabilityLinks: "Haftung für Links",
+    liabilityLinksText:
+      "Diese Website enthält Links zu externen Webseiten Dritter, auf deren Inhalte ich keinen Einfluss habe. Für die Inhalte der verlinkten Seiten ist der jeweilige Anbieter verantwortlich. Konkrete Hinweise auf rechtswidrige oder nicht mehr zutreffende Verlinkungen werden geprüft; betroffene Links werden entfernt oder korrigiert.",
+    copyright: "Urheberrecht",
+    copyrightText:
+      "Der veröffentlichte Quellcode, Schriftdateien, importierte Materialien, redaktionelle Inhalte und Markenassets unterliegen unterschiedlichen Lizenzen und Nutzungsrechten. Maßgeblich sind die Lizenzhinweise des jeweiligen Materials und die öffentliche Lizenzrichtlinie des Projekts. Eine offene Quellcode-Lizenz gewährt nicht automatisch Rechte an Kursprosa, Büchern oder Marken.",
+  },
+  en: {
+    title: "Legal notice",
+    description: "Legal notice for loehrning.ai | Tim Löhr",
+    legalBasis: "Information under Section 5 DDG",
+    provider: "Provider",
+    email: "Email",
+    contact: "Contact",
+    contentResponsibility:
+      "Responsible for content under Section 18(2) MStV",
+    fallbackResponsibility: (email: string) =>
+      ". Available by email at " + email + ".",
+    liability: "Liability notice",
+    liabilityContent: "Liability for content",
+    liabilityContentText:
+      "The general laws apply to content published by the provider. The learning material is maintained with care, but it is not legal, tax, security, or compliance advice. This notice does not restrict statutory liability.",
+    liabilityLinks: "Liability for links",
+    liabilityLinksText:
+      "This website links to external websites operated by third parties whose content is outside the provider's control. The operator of the linked page is responsible for that content. Specific reports of unlawful or outdated links are reviewed; affected links are removed or corrected.",
+    copyright: "Copyright and licences",
+    copyrightText:
+      "Published source code, font files, imported material, editorial content, and brand assets are subject to different licences and usage rights. The licence notice attached to each item and the project's public licence policy determine the applicable terms. An open-source software licence does not automatically grant rights to course prose, books, or trademarks.",
+  },
+} as const;
 
-export default function ImpressumPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const copy = IMPRINT_COPY[locale];
+  const localizedPath = localizeHref("/impressum", locale);
+  const metadata = createPublicPageMetadata({
+    title: copy.title,
+    description: copy.description,
+    path: localizedPath,
+    locale,
+  });
+
+  return {
+    ...metadata,
+    alternates: {
+      ...buildLocaleAlternates(
+        "/impressum",
+        contentLocalesForPath("/impressum"),
+      ),
+      canonical: localizedPath,
+    },
+    openGraph: metadata.openGraph
+      ? {
+          ...metadata.openGraph,
+          locale: locale === "de" ? "de_DE" : "en_GB",
+        }
+      : metadata.openGraph,
+  };
+}
+
+export default async function ImpressumPage() {
+  return <ImpressumContent locale={await getRequestLocale()} />;
+}
+
+function ImpressumContent({ locale }: { readonly locale: Locale }) {
+  const copy = IMPRINT_COPY[locale];
   const address = LEGAL_IDENTITY.serviceAddress;
   const formattedAddress = formatServiceAddress(address);
 
   return (
-    <section className="py-24">
-      <div className="mx-auto max-w-3xl px-6">
-        <h1 className="text-3xl font-bold tracking-[-0.04em] sm:text-4xl">
-          Impressum
+    <section className="py-24" aria-labelledby="imprint-title">
+      <div className="mx-auto max-w-3xl break-words px-6">
+        <h1
+          id="imprint-title"
+          className="text-3xl font-bold tracking-[-0.04em] sm:text-4xl"
+        >
+          {copy.title}
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Angaben gemäß § 5 DDG
+          {copy.legalBasis}
         </p>
 
         <div className="mt-12 space-y-8 text-sm leading-relaxed text-muted-foreground">
@@ -31,7 +117,7 @@ export default function ImpressumPage() {
             data-address-country={address?.country ?? ""}
           >
             <h2 className="mb-2 text-lg font-semibold text-foreground">
-              Anbieter
+              {copy.provider}
             </h2>
             <p>
               {LEGAL_IDENTITY.providerName}
@@ -52,10 +138,10 @@ export default function ImpressumPage() {
 
           <div>
             <h2 className="mb-2 text-lg font-semibold text-foreground">
-              Kontakt
+              {copy.contact}
             </h2>
             <p>
-              E-Mail: {LEGAL_IDENTITY.email}
+              {copy.email}: {LEGAL_IDENTITY.email}
               <br />
               LinkedIn:{" "}
               <a
@@ -71,57 +157,36 @@ export default function ImpressumPage() {
 
           <div>
             <h2 className="mb-2 text-lg font-semibold text-foreground">
-              Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV
+              {copy.contentResponsibility}
             </h2>
             <p>
               {LEGAL_IDENTITY.providerName}
               {formattedAddress
-                ? `, ${formattedAddress}.`
-                : `. Erreichbar per E-Mail: ${LEGAL_IDENTITY.email}.`}
+                ? ", " + formattedAddress + "."
+                : copy.fallbackResponsibility(LEGAL_IDENTITY.email)}
             </p>
           </div>
 
           <div>
             <h2 className="mb-2 text-lg font-semibold text-foreground">
-              Haftungsausschluss
+              {copy.liability}
             </h2>
             <h3 className="mb-1 font-medium text-foreground">
-              Haftung für Inhalte
+              {copy.liabilityContent}
             </h3>
-            <p>
-              Für eigene Inhalte gelten die allgemeinen Gesetze. Die
-              Lernmaterialien werden sorgfältig gepflegt, sind aber keine
-              Rechts-, Steuer-, Sicherheits- oder Compliance-Beratung.
-              Gesetzliche Haftungsregeln werden durch diesen Hinweis nicht
-              eingeschränkt.
-            </p>
+            <p>{copy.liabilityContentText}</p>
 
             <h3 className="mb-1 mt-4 font-medium text-foreground">
-              Haftung für Links
+              {copy.liabilityLinks}
             </h3>
-            <p>
-              Diese Website enthält Links zu externen Webseiten Dritter, auf
-              deren Inhalte ich keinen Einfluss habe. Für die Inhalte der
-              verlinkten Seiten ist der jeweilige Anbieter verantwortlich.
-              Konkrete Hinweise auf rechtswidrige oder nicht mehr zutreffende
-              Verlinkungen werden geprüft; betroffene Links werden entfernt oder
-              korrigiert.
-            </p>
+            <p>{copy.liabilityLinksText}</p>
           </div>
 
           <div>
             <h2 className="mb-2 text-lg font-semibold text-foreground">
-              Urheberrecht
+              {copy.copyright}
             </h2>
-            <p>
-              Der veröffentlichte Quellcode, Schriftdateien,
-              importierte Materialien, redaktionelle Inhalte und Markenassets
-              unterliegen unterschiedlichen Lizenzen und Nutzungsrechten.
-              Maßgeblich sind die Lizenzhinweise des jeweiligen Materials und
-              die öffentliche Lizenzrichtlinie des Projekts. Eine offene
-              Quellcode-Lizenz gewährt nicht automatisch Rechte an Kursprosa,
-              Büchern oder Marken.
-            </p>
+            <p>{copy.copyrightText}</p>
           </div>
         </div>
       </div>

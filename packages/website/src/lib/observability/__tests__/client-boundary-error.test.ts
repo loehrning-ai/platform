@@ -21,6 +21,7 @@ vi.mock("@sentry/nextjs", () => ({
 }));
 
 import {
+  CLIENT_BOUNDARY_IDS,
   reportClientBoundaryError,
   validatedNextDigest,
 } from "../client-boundary-error";
@@ -58,11 +59,15 @@ describe("validatedNextDigest", () => {
   });
 
   it("drops throwing digest accessors without exposing or rethrowing them", () => {
-    const error = Object.defineProperty(new Error("private message"), "digest", {
-      get() {
-        throw new Error("digest getter contained a secret");
+    const error = Object.defineProperty(
+      new Error("private message"),
+      "digest",
+      {
+        get() {
+          throw new Error("digest getter contained a secret");
+        },
       },
-    });
+    );
 
     expect(() => validatedNextDigest(error)).not.toThrow();
     expect(validatedNextDigest(error)).toBeUndefined();
@@ -70,6 +75,10 @@ describe("validatedNextDigest", () => {
 });
 
 describe("reportClientBoundaryError", () => {
+  it("registers the Data Infrastructure recovery boundary", () => {
+    expect(CLIENT_BOUNDARY_IDS).toContain("data-infrastructure-course");
+  });
+
   it("reports only a generic boundary id and a validated Next digest", () => {
     const error = Object.assign(
       new Error(

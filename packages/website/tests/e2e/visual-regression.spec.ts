@@ -60,7 +60,7 @@ async function prepareReviewedFont(page: Page) {
 
   const reloadResponse = await page.reload({ waitUntil: "load" });
   expect(reloadResponse?.status()).toBe(200);
-  await page.locator('html[data-hydrated="true"]').waitFor();
+  await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
   await expect(page.locator("h1").first()).toBeVisible();
 
   const appliedFontState = await page.evaluate(async (weights) => {
@@ -157,7 +157,7 @@ async function assertVisualSmoke(page: Page, route: string) {
   await page.goto(route, { waitUntil: "load" });
   await expect(page.locator("h1").first()).toBeVisible();
   await expect(page.locator("body")).not.toContainText("Application error");
-  await page.locator('html[data-hydrated="true"]').waitFor();
+  await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
   await page.evaluate(async () => {
     await document.fonts.ready;
     await new Promise<void>((resolve) =>
@@ -294,7 +294,7 @@ test.describe("reviewed desktop pixel baselines", () => {
     test(`${route} matches its reviewed viewport`, async ({ page }) => {
       const response = await page.goto(route, { waitUntil: "load" });
       expect(response?.status()).toBe(200);
-      await page.locator('html[data-hydrated="true"]').waitFor();
+      await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
       await expect(page.locator("h1").first()).toBeVisible();
       await prepareReviewedFont(page);
 

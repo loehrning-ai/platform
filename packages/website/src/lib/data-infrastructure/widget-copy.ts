@@ -32,5 +32,6 @@ export const DATA_INFRA_FLASHCARDS_COPY: FlashcardsWidgetCopy = {
   prevLabel: "← Prev",
   nextLabel: "Next →",
   emptyLabel: "No cards available.",
-  ariaLabelTemplate: "Flashcard {current} of {total}. Activate to reveal the answer.",
+  ariaLabelTemplate:
+    "Flashcard {current} of {total}. Activate to reveal the answer.",
 };

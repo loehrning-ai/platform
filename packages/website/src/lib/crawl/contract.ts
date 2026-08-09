@@ -1,4 +1,5 @@
 import { absoluteUrl, SITE_ORIGIN } from "@/lib/seo/entity";
+import { parseLocalePathname } from "@/lib/i18n/locale";
 
 export type CrawlClass =
   | "public-indexable"
@@ -221,6 +222,7 @@ const PUBLIC_MACHINE_PATHS = [
   "/llms.txt",
   "/api/books.json",
   "/api/knowledge-graph.json",
+  "/schema/knowledge-graph/v1",
   "/api/health",
 ] as const;
 
@@ -463,12 +465,22 @@ function route(
 ): CrawlRoute {
   const protectedRoute = routeClass === "protected";
   const retiredRoute = routeClass === "retired";
-  const noindex = routeClass === "public-noindex" || protectedRoute || retiredRoute;
+  const permanentRedirect = retiredRoute && overrides.auth === "redirect";
+  const noindex =
+    routeClass === "public-noindex" ||
+    protectedRoute ||
+    (retiredRoute && !permanentRedirect);
   return {
     pattern,
     routeClass,
     auth: protectedRoute ? "protected" : retiredRoute ? "gone" : "public",
-    robots: protectedRoute || retiredRoute ? "disallow" : "allow",
+    // A permanent redirect must remain crawlable so crawlers can observe the
+    // 301 and transfer canonical signals. Only terminal retired resources stay
+    // disallowed and carry noindex.
+    robots:
+      protectedRoute || (retiredRoute && !permanentRedirect)
+        ? "disallow"
+        : "allow",
     // Sitemap membership is explicit per pattern (public-content contract):
     // public-indexable patterns default to inclusion; ":"-patterns are
     // enumerated per known slug in src/app/sitemap.ts. Keeping a pattern out
@@ -480,6 +492,9 @@ function route(
     explanation,
     owner: "crawl-contract",
     ...overrides,
+    ...(permanentRedirect
+      ? { robots: "allow" as const, xRobotsTag: undefined }
+      : {}),
   };
 }
 
@@ -554,17 +569,25 @@ export function matchesPattern(pathname: string, pattern: string): boolean {
 }
 
 export function getCrawlRoute(pathname: string): CrawlRoute {
+  // Concrete /en pages mirror the canonical route tree. Reuse the canonical
+  // entry object so every crawl, indexing, cache, and auth distinction stays
+  // identical without duplicating the contract registry.
+  const localePath = parseLocalePathname(pathname);
+  const contractPathname =
+    localePath.valid && localePath.explicitLocale === "en"
+      ? localePath.pathname
+      : pathname;
   const explicit = CRAWL_CONTRACT.find((entry) =>
-    matchesPattern(pathname, entry.pattern),
+    matchesPattern(contractPathname, entry.pattern),
   );
   if (explicit) return explicit;
   // Fail-closed defaults: an unlisted route is noindex until it earns an
   // explicit CRAWL_CONTRACT class. An unlisted /api/* path additionally
   // defaults to auth "protected" so a future authenticated API route added
   // without a contract entry still gets the middleware auth gate
-  // (src/middleware.ts via isProtectedPlatformPath). Page paths keep the
+  // (src/proxy.ts via isProtectedPlatformPath). Page paths keep the
   // public default so they still resolve, with X-Robots-Tag: noindex.
-  if (pathname.startsWith("/api/")) {
+  if (contractPathname.startsWith("/api/")) {
     return route(
       pathname,
       "protected",
@@ -611,11 +634,16 @@ export function robotsAllowPaths(): readonly string[] {
 }
 
 export function robotsDisallowPaths(): readonly string[] {
+  const canonicalPaths = CRAWL_CONTRACT
+    .filter((entry) => entry.robots === "disallow")
+    .map((entry) => robotsPattern(entry.pattern));
   return Array.from(
     new Set(
-      CRAWL_CONTRACT
-        .filter((entry) => entry.robots === "disallow")
-        .map((entry) => robotsPattern(entry.pattern)),
+      canonicalPaths.flatMap((path) =>
+        path.startsWith("/api/") || path.startsWith("/auth/")
+          ? [path]
+          : [path, `/en${path}`],
+      ),
     ),
   );
 }

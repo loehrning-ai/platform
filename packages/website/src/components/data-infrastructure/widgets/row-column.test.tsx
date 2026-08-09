@@ -1,5 +1,19 @@
-import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from "vitest";
-import { render, screen, fireEvent, cleanup, act } from "@testing-library/react";
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  beforeEach,
+  afterEach,
+  vi,
+} from "vitest";
+import {
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  act,
+} from "@testing-library/react";
 import { __resetCacheForTests, getXp, isCheckpointDone } from "@/lib/progress";
 import { XP } from "@/lib/progress/types";
 import { RowColumn } from "./row-column";
@@ -23,7 +37,10 @@ function installLocalStoragePolyfill(): void {
 }
 
 beforeAll(() => {
-  if (typeof window.localStorage === "undefined" || typeof window.localStorage.setItem !== "function") {
+  if (
+    typeof window.localStorage === "undefined" ||
+    typeof window.localStorage.setItem !== "function"
+  ) {
     installLocalStoragePolyfill();
   }
 });
@@ -41,18 +58,28 @@ afterEach(() => {
 describe("RowColumn", () => {
   it("renders the canvas and run/reset controls", () => {
     render(<RowColumn lessonId="di-modeling" cpId="rc" />);
-    expect(screen.getByRole("img", { name: /Diagram comparing row-oriented/ })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /run query/ })).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: /Diagram comparing row-oriented/ }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /run query/ }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "reset" })).toBeInTheDocument();
   });
 
   it("falls back to a static summary, without crashing, when getContext('2d') returns null", () => {
     const original = HTMLCanvasElement.prototype.getContext;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    HTMLCanvasElement.prototype.getContext = vi.fn().mockReturnValue(null) as any;
+    HTMLCanvasElement.prototype.getContext = vi
+      .fn()
+      .mockReturnValue(null) as any;
     try {
-      expect(() => render(<RowColumn lessonId="di-modeling" cpId="rc" />)).not.toThrow();
-      expect(screen.getByRole("img", { name: /row-store scans all 4 columns/ })).toBeInTheDocument();
+      expect(() =>
+        render(<RowColumn lessonId="di-modeling" cpId="rc" />),
+      ).not.toThrow();
+      expect(
+        screen.getByRole("img", { name: /row-store scans all 4 columns/ }),
+      ).toBeInTheDocument();
     } finally {
       HTMLCanvasElement.prototype.getContext = original;
     }

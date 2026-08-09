@@ -1,18 +1,31 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
 
-export const metadata: Metadata = {
-  title: "Zertifikat: EU AI Act Kurs",
-  description:
-    "Lade eine lokal erzeugte Teilnahmebestätigung für den EU AI Act Kurs herunter. Nicht signiert, nicht servergeprüft, keine Rechts- oder Compliance-Bestätigung.",
-  robots: { index: false, follow: false },
-  // Utility page: suppress the canonical inherited from the kurs layout.
-  alternates: { canonical: null },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = resolveFoundationCourseContentLocale(
+    "eu-ai-act-kurs",
+    await getRequestLocale(),
+  );
+  return {
+    title:
+      locale === "en"
+        ? "Course completion record: EU AI Act Course"
+        : "Teilnahmebestätigung: EU AI Act Kurs",
+    description:
+      locale === "en"
+        ? "Download a locally generated course completion record. It is unsigned, not server-verified, and not evidence of legal compliance."
+        : "Lade eine lokal erzeugte Teilnahmebestätigung herunter. Sie ist nicht signiert, nicht servergeprüft und keine Rechts- oder Compliance-Bestätigung.",
+    robots: { index: false, follow: false },
+    alternates: { canonical: null },
+  };
+}
 
 export default function ZertifikatLayout({
   children,
 }: {
-  readonly children: React.ReactNode;
+  readonly children: ReactNode;
 }) {
   return children;
 }

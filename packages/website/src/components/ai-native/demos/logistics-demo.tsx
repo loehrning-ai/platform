@@ -58,7 +58,7 @@ const COLUMNS: readonly Column[] = [
       },
       {
         id: "llm",
-        title: "Claude Haiku · Brief",
+        title: "Klassifikationsmodell · Brief",
         kind: "LLM",
         icon: "◈",
         note: "~200 Tokens · DE · Beispielwert",
@@ -115,7 +115,7 @@ const EVENTS: readonly LogEvent[] = [
   },
   {
     t: "09:14:04",
-    source: "Claude · Haiku",
+    source: "Modellroute · Beispiel",
     message: "Kunden-E-Mail als Entwurf generiert",
     level: "info",
   },
@@ -360,10 +360,10 @@ export function LogisticsDemo(): JSX.Element {
       {/* KPIs */}
       <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
         {[
-          ["Reaktionszeit", "4 s"],
-          ["Vorher (manuell)", "≈ 45 min"],
-          ["Runs / Monat", "1.240"],
-          ["Hosting", "Self-host"],
+          ["Datengrundlage", "fiktiv"],
+          ["Ereignisse", "6"],
+          ["Freigabe", "offen"],
+          ["Ausführung", "simuliert"],
         ].map(([label, val]) => (
           <div key={label} className="border border-border bg-background p-3">
             <div className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-muted-foreground">

@@ -145,9 +145,9 @@ describe("<AgentDemo> initial (idle) render", () => {
     expect(screen.getByText("Redakteur")).toBeInTheDocument();
 
     // Their models: Sonnet is shared by two agents.
-    expect(screen.getByText("Haiku 4.5")).toBeInTheDocument();
-    expect(screen.getByText("Opus 4.5")).toBeInTheDocument();
-    expect(screen.getAllByText("Sonnet 4.5")).toHaveLength(2);
+    expect(screen.getByText("small-classifier")).toBeInTheDocument();
+    expect(screen.getByText("analysis-model")).toBeInTheDocument();
+    expect(screen.getAllByText("general-model")).toHaveLength(2);
 
     // A couple of the (unique) task strings.
     expect(

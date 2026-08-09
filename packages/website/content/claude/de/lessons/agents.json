@@ -1,0 +1,112 @@
+{
+  "id": "agents",
+  "number": 7,
+  "title": "Agenten-Workflows und Tool-Nutzung",
+  "subtitle": "Tool-Schleifen mit klarer Autorität, Grenzen und Verifizierung entwerfen.",
+  "durationMinutes": 11,
+  "trackId": "advanced",
+  "hook": "Agenten arbeiten in Schleifen und benötigen klare Leitplanken.",
+  "keyConcepts": [
+    "Kontext sammeln, handeln, überprüfen, wiederholen",
+    "Umfang, Budget, Bestätigung, Verifizierung"
+  ],
+  "quiz": [],
+  "sections": [
+    {
+      "id": "agents-vs-chat",
+      "title": "Agenten vs. Chat",
+      "readTimeMinutes": 2,
+      "content": "Anthropic unterscheidet Workflows und Agenten. Ein Workflow folgt im Code definierten Pfaden; bei einem Agenten wählt ein Modell Aktionen und Tools anhand von Zwischenergebnissen. Beide können Modellaufrufe, Retrieval und Tools nutzen.\n\nEine einfache Agentenschleife übergibt Ziel und Zustand an ein Modell, validiert angeforderte Tool-Aufrufe, führt sie innerhalb der Richtlinie aus, gibt Ergebnisse zurück und prüft ein Abbruchkriterium. Produktionssysteme können Parallelität, Queues, Freigaben, Retries und persistente Zustände ergänzen.\n\n> Tool-Zugriff schafft Autorität. Begrenze diese Autorität in Code und Infrastruktur."
+    },
+    {
+      "id": "the-loop-explicit",
+      "title": "Die Schleife, explizit",
+      "readTimeMinutes": 2,
+      "content": "```\n// ein Agenten-Zug\nrequest   ← Modell erhält Ziel und erlaubten Zustand\npropose   ← Modell liefert Antwort oder Tool-Anfrage\nvalidate  ← Harness prüft Schema, Berechtigung und Richtlinie\nexecute   ← freigegebenes Tool läuft\nrecord    ← Ergebnis und Seiteneffekte werden protokolliert\ndecide    ← fortsetzen, stoppen oder menschliche Eingabe anfordern\n\n// bis\n  Abnahmetests bestehen | Grenze erreicht | Mensch greift ein\n```\n\nDefiniere Abbruch, Retries, Idempotenz und Wiederherstellung vor der Vergabe von Schreibrechten. Eine Stop-Anweisung im Prompt ist keine technische Durchsetzung."
+    },
+    {
+      "id": "four-guardrails",
+      "title": "Die vier Leitplanken",
+      "readTimeMinutes": 3,
+      "content": "- **01 · Umfang.** Stelle nur benötigte Tools, Ressourcen und Netzwerkziele bereit. Trenne Lese- und Schreibrechte.\n- **02 · Grenzen.** Begrenze Schritte, Tokens, Zeit, Kosten, Retries und Parallelität passend zum System.\n- **03 · Freigabe und Richtlinie.** Erzwinge eine Freigabe für Löschen, Deployment, Zahlung oder externe Nachrichten. Produktstandard und Berechtigungsmodus variieren; prüfe die aktive Konfiguration.\n- **04 · Verifizierung.** Prüfe Ergebnisse möglichst deterministisch: Schema, Linter, Typprüfung, Tests, Screenshots und anschließendes Lesen geschriebener Daten.\n\nVerifizierung macht einen Agenten nicht automatisch korrekt, legt aber definierte Fehler offen. Prüfe auch, ob der Verifier das eigentliche Ergebnis statt eines Stellvertreters misst."
+    },
+    {
+      "id": "when-to-use",
+      "title": "Wann du einen Agenten einsetzen solltest",
+      "readTimeMinutes": 2,
+      "content": "**Agent geeignet:** mehrstufige Aufgaben, bei denen spätere Aktionen von Tool-Ergebnissen abhängen, die Umgebung prüfbares Feedback liefert und zusätzliche Latenz sowie Kosten gerechtfertigt sind.\n\n**Workflow oder Einzelaufruf bevorzugen:** feste Sequenzen, einmalige Transformationen oder Aufgaben ohne belastbares Abbruchkriterium. Beginne mit der einfachsten Architektur, die die evaluierten Anforderungen erfüllt."
+    }
+  ],
+  "widgets": [
+    {
+      "kind": "agent-loop",
+      "placement": "after-intro",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "agents",
+        "cpId": "loop"
+      }
+    },
+    {
+      "kind": "quiz",
+      "placement": "end",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "agents",
+        "cpId": "q1",
+        "question": "Ein Agent hat kein Budget für maximale Schritte. Was ist der wahrscheinlichste Fehlerfall?",
+        "options": [
+          "Der Agent weigert sich zu starten.",
+          "Der Agent läuft, bis Tokens/Budget erschöpft sind, oft ohne zu konvergieren.",
+          "Der Agent produziert keine Ausgabe.",
+          "Nichts, Budgets sind optional."
+        ],
+        "correct": 1,
+        "explanation": "Ohne erzwungene Abbruchgrenze kann der Harness Modell- und Tool-Aufrufe fortsetzen, bis eine andere Ressource oder externe Grenze greift.",
+        "title": "Kurzprüfung",
+        "copy": {
+          "kindLabel": "Kurzprüfung",
+          "optionsAriaLabel": "Antwortoptionen",
+          "correctLabel": "Richtig.",
+          "incorrectLabel": "Nicht ganz."
+        }
+      }
+    },
+    {
+      "kind": "quiz",
+      "placement": "end",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "agents",
+        "cpId": "q2",
+        "question": "Für welche Aufgabe ist ein Agent überdimensioniert?",
+        "options": [
+          "Fasse ein Besprechungsprotokoll in 5 Stichpunkten zusammen.",
+          "Untersuche einen instabilen Test über 4 Dateien hinweg.",
+          "Sammle Daten von 3 Dashboards und entwirf ein wöchentliches Update.",
+          "Behebe wiederholt Lint-Fehler in einem Monorepo, bis es sauber ist."
+        ],
+        "correct": 0,
+        "explanation": "Ein einzelner Prompt und das Protokoll sind ausreichend. Agenten rechtfertigen ihre Komplexität, wenn die Aufgabe mehrere Tool-Aufrufe erfordert.",
+        "title": "Kurzprüfung",
+        "copy": {
+          "kindLabel": "Kurzprüfung",
+          "optionsAriaLabel": "Antwortoptionen",
+          "correctLabel": "Richtig.",
+          "incorrectLabel": "Nicht ganz."
+        }
+      }
+    },
+    {
+      "kind": "socratic-tutor",
+      "placement": "end",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "agents",
+        "cpId": "tutor",
+        "topic": "Sichere Gestaltung agentischer Workflows",
+        "persona": "Fokus auf Leitplanken, Budgets und die Definition von „erledigt“."
+      }
+    }
+  ]
+}

@@ -10,12 +10,20 @@ import { getCompletedLessonIds } from "@/lib/ai-native/progress";
 import { subscribe } from "@/lib/progress/store";
 import { fadeUp } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import type { Locale } from "@/lib/i18n/locale";
+import { localizeHref } from "@/lib/i18n/locale";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 
-export function AiNativeModulesOverview() {
-  const modules = getModules();
-  const [completedLessonIds, setCompletedLessonIds] = useState<ReadonlySet<string>>(
-    new Set(),
-  );
+function AiNativeModulesOverviewContent({
+  locale = "de",
+}: {
+  readonly locale?: Locale;
+}) {
+  const isEnglish = locale === "en";
+  const modules = getModules(locale);
+  const [completedLessonIds, setCompletedLessonIds] = useState<
+    ReadonlySet<string>
+  >(new Set());
 
   useEffect(() => {
     return subscribe(() => {
@@ -28,8 +36,12 @@ export function AiNativeModulesOverview() {
       <div className="mx-auto max-w-5xl px-6">
         <SectionHeader
           eyebrow="Curriculum"
-          heading="4 Module, 1 Denkweise"
-          description="Alle vier Module kostenlos mit Lernkonto. Quiz und Teilnahmebestätigung gehören zum Kurs. Selbst-paced in 4-8 Wochen."
+          heading={isEnglish ? "4 modules, one working method" : "4 Module, eine Arbeitsmethode"}
+          description={
+            isEnglish
+              ? "All four modules are free with a learning account. The final quiz and local completion record are part of the course. Work at your own pace."
+              : "Alle vier Module sind mit Lernkonto kostenlos. Abschlussquiz und lokale Teilnahmebestätigung gehören zum Kurs. Bearbeitung im eigenen Tempo."
+          }
         />
 
         <m.div
@@ -50,11 +62,12 @@ export function AiNativeModulesOverview() {
               totalLessons === 0
                 ? 0
                 : Math.round((completedCount / totalLessons) * 100);
-            const fullyComplete = totalLessons > 0 && completedCount === totalLessons;
+            const fullyComplete =
+              totalLessons > 0 && completedCount === totalLessons;
             return (
               <Link
                 key={mod.id}
-                href={`/ai-native/kurs/${mod.id}`}
+                href={localizeHref(`/ai-native/kurs/${mod.id}`, locale)}
                 prefetch={false}
                 className="group"
               >
@@ -75,11 +88,7 @@ export function AiNativeModulesOverview() {
                         fullyComplete ? "bg-risk-green" : "bg-brand-orange",
                       )}
                     >
-                      {fullyComplete ? (
-                        <CheckCircle2 size={20} />
-                      ) : (
-                        mod.number
-                      )}
+                      {fullyComplete ? <CheckCircle2 size={20} /> : mod.number}
                     </div>
                     <div className="min-w-0 flex-1">
                       <h3 className="text-base font-semibold text-foreground">
@@ -91,10 +100,10 @@ export function AiNativeModulesOverview() {
                         </span>
                         <span className="flex items-center gap-1 text-xs text-muted-foreground">
                           <Clock size={12} />
-                          {mod.durationMinutes} Min.
+                          {mod.durationMinutes} {isEnglish ? "min" : "Min."}
                         </span>
                         <span className="rounded-none bg-brand-sand/15 px-2 py-0.5 text-xs font-medium text-brand-sand">
-                          Kostenlos
+                          {isEnglish ? "Free" : "Kostenlos"}
                         </span>
                       </div>
                     </div>
@@ -104,8 +113,16 @@ export function AiNativeModulesOverview() {
                   {completedCount > 0 && (
                     <div className="mt-4">
                       <div className="mb-1 flex items-baseline justify-between font-mono text-[10px] uppercase tracking-[0.12em]">
-                        <span className="text-muted-foreground">Fortschritt</span>
-                        <span className={cn(fullyComplete ? "text-risk-green" : "text-brand-orange")}>
+                        <span className="text-muted-foreground">
+                          {isEnglish ? "Progress" : "Fortschritt"}
+                        </span>
+                        <span
+                          className={cn(
+                            fullyComplete
+                              ? "text-risk-green"
+                              : "text-brand-orange",
+                          )}
+                        >
                           {completedCount}/{totalLessons} · {pct}%
                         </span>
                       </div>
@@ -113,7 +130,10 @@ export function AiNativeModulesOverview() {
                         <m.div
                           initial={{ width: 0 }}
                           animate={{ width: `${pct}%` }}
-                          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                          transition={{
+                            duration: 0.5,
+                            ease: [0.16, 1, 0.3, 1],
+                          }}
                           className={cn(
                             "h-full",
                             fullyComplete ? "bg-risk-green" : "bg-brand-orange",
@@ -138,7 +158,7 @@ export function AiNativeModulesOverview() {
                     ))}
                     {mod.topics.length > 4 && (
                       <li className="pl-6 text-xs italic text-muted">
-                        + {mod.topics.length - 4} weitere Themen
+                        + {mod.topics.length - 4} {isEnglish ? "more topics" : "weitere Themen"}
                       </li>
                     )}
                   </ul>
@@ -151,3 +171,7 @@ export function AiNativeModulesOverview() {
     </section>
   );
 }
+
+export const AiNativeModulesOverview = withMotionProvider(
+  AiNativeModulesOverviewContent,
+);

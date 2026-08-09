@@ -4,7 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { m } from "framer-motion";
-import { ArrowRight, Check, ExternalLink, Flame, GitCommitHorizontal, Share2, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  ExternalLink,
+  Flame,
+  GitCommitHorizontal,
+  Share2,
+  Sparkles,
+} from "lucide-react";
 import { Github } from "@/components/icons/brand";
 import { staggerContainer, staggerItem } from "@/lib/animations";
 import {
@@ -12,20 +20,21 @@ import {
   type CatalogCourse,
   type ImportedCourse,
 } from "@/lib/courses/catalog";
+import { localizeCatalog } from "@/lib/courses/catalog-copy";
+import { COURSE_GALLERY_COPY } from "@/lib/courses/course-gallery-copy";
 import {
-  COURSE_FACTS,
-  COURSE_SECTIONS,
   courseBadges,
   courseGroupFor,
   courseIconName,
+  courseSections,
   type BadgeTone,
   type CourseBadge,
 } from "@/lib/courses/tracks";
+import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { iconByName } from "@/lib/courses/track-icon";
 import { Card, IconTile } from "@/components/ui/card";
 import { BrandButton } from "@/components/ui/brand-button";
-import { CoursePlate } from "./course-plate";
-import { PlateReveal } from "@/components/motion/plate-reveal";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 import { serializeProgress } from "@/lib/course/progress";
 import {
   getCompletedLessonsCount,
@@ -56,12 +65,14 @@ function BadgeRow({
   slug,
   extra,
   label,
+  locale,
 }: {
   readonly slug: string;
   readonly extra?: readonly CourseBadge[];
   readonly label: string;
+  readonly locale: Locale;
 }) {
-  const badges = [...courseBadges(slug), ...(extra ?? [])];
+  const badges = [...courseBadges(slug, locale), ...(extra ?? [])];
   if (badges.length === 0) return null;
   return (
     <ul className="mt-4 flex flex-wrap gap-2" aria-label={label}>
@@ -95,22 +106,9 @@ function readStat(
   return {
     completed,
     certified: isCertificateEligible(course.slug),
-    started:
-      completed > 0 ||
-      hasCourseStarted(progress, course.slug),
+    started: completed > 0 || hasCourseStarted(progress, course.slug),
     resumeHref: resolveCourseResumeHref(progress, course.slug),
   };
-}
-
-/** Up to 12 dots per course so a 27-lesson course stays a single tidy row. */
-function dotCount(course: CatalogCourse): number {
-  return Math.min(course.totalLessons, 12);
-}
-
-function filledDots(stat: CourseStat, course: CatalogCourse): number {
-  if (course.totalLessons === 0) return 0;
-  const ratio = stat.completed / course.totalLessons;
-  return Math.round(ratio * dotCount(course));
 }
 
 function SectionHeader({
@@ -137,22 +135,18 @@ function SectionHeader({
   );
 }
 
-function SubHeader({ children }: { readonly children: React.ReactNode }) {
-  return (
-    <h3 className="mb-5 flex items-center gap-2 font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-foreground">
-      {children}
-    </h3>
-  );
-}
-
 // Both sections branch card treatment on nativeStatus, not on which array a
 // course came from — so a course plan's single-field flip
 // is sufficient to move it between "Der Lernpfad" and "Tiefer gehen".
-function isLiveCourse(course: CatalogCourse | ImportedCourse): course is CatalogCourse {
+function isLiveCourse(
+  course: CatalogCourse | ImportedCourse,
+): course is CatalogCourse {
   return course.nativeStatus === "live";
 }
 
-function isPendingCourse(course: CatalogCourse | ImportedCourse): course is ImportedCourse {
+function isPendingCourse(
+  course: CatalogCourse | ImportedCourse,
+): course is ImportedCourse {
   return course.nativeStatus === "pending";
 }
 
@@ -160,8 +154,8 @@ const LIVE_COURSES = ALL_COURSE_CATALOG.filter(isLiveCourse);
 const PENDING_COURSES = ALL_COURSE_CATALOG.filter(isPendingCourse);
 
 // The visual split follows the declared classification in COURSE_FACTS: the
-// four German spine courses form "Der Lernpfad" with Typenschild plates; the
-// six English ported courses shelve under "Tiefer gehen" as framed specimens.
+// four ordered foundation courses form "Der Lernpfad" with Typenschild plates;
+// the six source-pinned technical courses sit under "Tiefer gehen" as framed specimens.
 // Unknown slugs default to the spine treatment (the tracks guard test forces
 // every catalog slug into COURSE_FACTS, so the hole is fenced).
 const SPINE_COURSES = LIVE_COURSES.filter(
@@ -171,7 +165,16 @@ const DEEPER_NATIVE_COURSES = LIVE_COURSES.filter(
   (course) => courseGroupFor(course.slug) === "deeper",
 );
 
-export function CourseGallery() {
+function CourseGalleryContent({
+  locale = "de",
+}: {
+  readonly locale?: Locale;
+}) {
+  const copy = COURSE_GALLERY_COPY[locale];
+  const sections = courseSections(locale);
+  const spineCourses = localizeCatalog(SPINE_COURSES, locale);
+  const deeperNativeCourses = localizeCatalog(DEEPER_NATIVE_COURSES, locale);
+  const pendingCourses = localizeCatalog(PENDING_COURSES, locale);
   const [stats, setStats] = useState<Record<string, CourseStat>>({});
   const [xp, setXp] = useState(0);
   const [streakDays, setStreakDays] = useState(0);
@@ -205,7 +208,7 @@ export function CourseGallery() {
   async function shareProgress(course: CatalogCourse) {
     const encoded = serializeProgress(course.slug);
     if (!encoded) return;
-    const url = `${window.location.origin}${course.startHref}#progress=${encoded}`;
+    const url = `${window.location.origin}${localizeHref(course.startHref, locale)}#progress=${encoded}`;
     if (shareResetTimer.current !== null) {
       window.clearTimeout(shareResetTimer.current);
       shareResetTimer.current = null;
@@ -237,9 +240,9 @@ export function CourseGallery() {
         aria-atomic="true"
       >
         {shareState?.status === "copied"
-          ? "Link kopiert"
+          ? copy.linkCopied
           : shareState?.status === "error"
-            ? "Kopieren fehlgeschlagen"
+            ? copy.copyFailed
             : ""}
       </p>
 
@@ -250,91 +253,104 @@ export function CourseGallery() {
           className="flex flex-wrap items-center gap-6 rounded-xl border border-border bg-card px-6 py-4 shadow-card"
         >
           <span className="inline-flex items-center gap-2 font-mono text-[13px] font-bold uppercase tracking-[0.08em] text-foreground">
-            <Sparkles size={16} className="text-brand-orange" aria-hidden="true" />
+            <Sparkles
+              size={16}
+              className="text-brand-orange"
+              aria-hidden="true"
+            />
             {xp} XP
           </span>
           {streakDays > 0 && (
             <span className="inline-flex items-center gap-2 font-mono text-[13px] font-bold uppercase tracking-[0.08em] text-foreground">
-              <Flame size={16} className="text-brand-orange" aria-hidden="true" />
-              {streakDays} {streakDays === 1 ? "Tag" : "Tage"} Serie
+              <Flame
+                size={16}
+                className="text-brand-orange"
+                aria-hidden="true"
+              />
+              {streakDays} {streakDays === 1 ? copy.day : copy.days}{" "}
+              {copy.streak}
             </span>
           )}
         </div>
       )}
 
-      {/* ── Section 1: Der Lernpfad (numbered certified spine) ── */}
+      {/* ── Section 1: Grundlagenpfad (numbered certified spine) ── */}
       <section id="lernpfad" className="scroll-mt-24">
         <SectionHeader
-          eyebrow={COURSE_SECTIONS.spine.eyebrow}
-          title={COURSE_SECTIONS.spine.title}
-          blurb={COURSE_SECTIONS.spine.blurb}
+          eyebrow={sections.spine.eyebrow}
+          title={sections.spine.title}
+          blurb={sections.spine.blurb}
         />
 
         <m.ol
-          className="grid gap-6 sm:grid-cols-2"
+          className="grid gap-6 md:grid-cols-12"
           variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-40px" }}
+          initial={false}
+          animate="visible"
         >
-          {SPINE_COURSES.map((course) => {
+          {spineCourses.map((course, index) => {
             const stat = stats[course.slug] ?? {
               completed: 0,
               certified: false,
               started: false,
               resumeHref: course.startHref,
             };
-            const dots = dotCount(course);
-            const filled = filledDots(stat, course);
             const pct =
               course.totalLessons === 0
                 ? 0
                 : Math.round((stat.completed / course.totalLessons) * 100);
             const inProgress = stat.started && !stat.certified;
             const startLabel = stat.certified
-              ? "Nachweis ansehen"
+              ? copy.viewRecord
               : stat.started
-                ? "Weiterlernen"
-                : "Kurs starten";
+                ? copy.continue
+                : copy.start;
             const startHref = stat.started
-              ? stat.resumeHref
-              : course.startHref;
+              ? localizeHref(stat.resumeHref, locale)
+              : localizeHref(course.startHref, locale);
 
             return (
-              <m.li key={course.slug} variants={staggerItem} className="js-reveal">
-                <Card interactive accent="kupfer" className="h-full">
-                  <PlateReveal>
-                    <CoursePlate
-                      slug={course.slug}
-                      step={course.step}
-                      stepCount={SPINE_COURSES.length}
-                      unitCount={course.unitCount}
-                      unitLabel={course.unitLabel}
-                      totalLessons={course.totalLessons}
-                      duration={course.duration}
-                      // Safe access, not courseFacts(): the flip-test fixture
-                      // renders unknown slugs through this branch.
-                      record={
-                        COURSE_FACTS[course.slug]?.record ??
-                        "teilnahmebestaetigung"
-                      }
-                      certified={hydrated && stat.certified}
-                      certifiedTestId={`certified-${course.slug}`}
+              <m.li
+                key={course.slug}
+                variants={staggerItem}
+                className={cn(
+                  "js-reveal min-w-0",
+                  index % 2 === 0 ? "md:col-span-7" : "md:col-span-5",
+                )}
+              >
+                <Card
+                  interactive
+                  accent="kupfer"
+                  className="h-full min-w-0 overflow-hidden"
+                >
+                  <div className="relative -mx-6 -mt-6 mb-6 aspect-[16/9] overflow-hidden border-b border-border bg-background">
+                    <Image
+                      src={course.coverImage ?? ""}
+                      alt={course.coverImageAlt ?? ""}
+                      fill
+                      sizes="(min-width: 768px) 58vw, calc(100vw - 48px)"
+                      className="object-cover transition-transform duration-300 group-hover:scale-[1.015]"
                     />
-                  </PlateReveal>
+                    <span className="absolute left-4 top-4 border border-foreground/20 bg-background/90 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-foreground backdrop-blur-sm">
+                      {copy.step} {String(course.step).padStart(2, "0")} /{" "}
+                      {String(spineCourses.length).padStart(2, "0")}
+                    </span>
+                    {hydrated && stat.certified ? (
+                      <span
+                        data-testid={`certified-${course.slug}`}
+                        className="stamp-in absolute bottom-4 right-4 border border-brand-orange bg-background/90 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-brand-orange"
+                      >
+                        {copy.completed}
+                      </span>
+                    ) : null}
+                  </div>
 
                   <h3 className="text-[22px] font-bold leading-tight tracking-[-0.03em] text-foreground">
-                    <span className="sr-only">Schritt {course.step}: </span>
+                    <span className="sr-only">
+                      {copy.step} {course.step}:{" "}
+                    </span>
                     {course.title}
                   </h3>
-                  {/* Accessible twin of the aria-hidden plate: same facts,
-                      unpadded values, announced AFTER the heading so they
-                      attach to the right course. */}
-                  <p className="sr-only">
-                    Umfang: {course.unitCount} {course.unitLabel},{" "}
-                    {course.totalLessons} Lektionen. Dauer: {course.duration}.
-                    Preis: Kostenlos.
-                  </p>
                   <p className="mt-2 text-[15px] font-semibold leading-snug text-foreground">
                     {course.tagline}
                   </p>
@@ -342,12 +358,45 @@ export function CourseGallery() {
                     {course.description}
                   </p>
 
-                  <BadgeRow slug={course.slug} label={`${course.title}: Merkmale`} />
+                  <BadgeRow
+                    slug={course.slug}
+                    locale={locale}
+                    label={`${course.title}: ${copy.features}`}
+                  />
 
-                  {/* Cross-course progress dots (client-side, unified store) */}
+                  <dl className="mt-5 grid grid-cols-2 gap-x-5 gap-y-3 border-y border-border py-4 font-mono text-[10px] uppercase tracking-[0.08em] sm:grid-cols-4">
+                    <div className="min-w-0">
+                      <dt className="text-muted-foreground">{copy.duration}</dt>
+                      <dd className="mt-1 break-words font-bold text-foreground">
+                        {course.duration}
+                      </dd>
+                    </div>
+                    <div className="min-w-0">
+                      <dt className="text-muted-foreground">{copy.scope}</dt>
+                      <dd className="mt-1 break-words font-bold text-foreground">
+                        {course.totalLessons} {copy.lessons}
+                      </dd>
+                    </div>
+                    <div className="min-w-0">
+                      <dt className="text-muted-foreground">
+                        {copy.structure}
+                      </dt>
+                      <dd className="mt-1 break-words font-bold text-foreground">
+                        {course.unitCount} {course.unitLabel}
+                      </dd>
+                    </div>
+                    <div className="min-w-0">
+                      <dt className="text-muted-foreground">{copy.access}</dt>
+                      <dd className="mt-1 break-words font-bold text-foreground">
+                        {copy.free}
+                      </dd>
+                    </div>
+                  </dl>
+
+                  {/* Exact course progress. */}
                   <div className="mt-6">
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                    <div className="flex min-w-0 items-start justify-between gap-3">
+                      <span className="min-w-0 break-words font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                         {course.audience}
                       </span>
                       <span
@@ -358,32 +407,27 @@ export function CourseGallery() {
                       </span>
                     </div>
                     <div
-                      className="mt-2 flex flex-wrap gap-1.5"
+                      className="mt-3 h-2 overflow-hidden bg-border"
                       role="progressbar"
                       aria-valuemin={0}
                       aria-valuemax={course.totalLessons}
                       aria-valuenow={hydrated ? stat.completed : 0}
                       aria-valuetext={
                         hydrated
-                          ? `${stat.completed} von ${course.totalLessons} Lektionen abgeschlossen`
-                          : `Fortschritt ${course.title} wird geladen`
+                          ? copy.progressLoaded(
+                              stat.completed,
+                              course.totalLessons,
+                            )
+                          : copy.progressLoading(course.title)
                       }
-                      aria-label={`Fortschritt ${course.title}`}
+                      aria-label={`${copy.progress} ${course.title}`}
                       data-testid={`progress-dots-${course.slug}`}
                     >
-                      {Array.from({ length: dots }).map((_, d) => (
-                        <span
-                          key={d}
-                          aria-hidden="true"
-                          className={cn(
-                            "h-2.5 w-2.5 rounded-full transition-colors duration-300",
-                            hydrated && d < filled
-                              ? "bg-brand-orange"
-                              : "bg-border",
-                          )}
-                          style={{ transitionDelay: `${d * 25}ms` }}
-                        />
-                      ))}
+                      <span
+                        aria-hidden="true"
+                        className="block h-full bg-brand-orange transition-[width] duration-300"
+                        style={{ width: hydrated ? `${pct}%` : "0%" }}
+                      />
                     </div>
                   </div>
 
@@ -399,34 +443,35 @@ export function CourseGallery() {
                       <span className="sr-only">: {course.title}</span>
                       <ArrowRight size={15} aria-hidden="true" />
                     </BrandButton>
-                    <BrandButton href={course.href} variant="outline" size="sm">
-                      Details
+                    <Link
+                      href={localizeHref(course.href, locale)}
+                      className="inline-flex min-h-11 items-center gap-1.5 px-1 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+                    >
+                      {copy.details}
                       <span className="sr-only">: {course.title}</span>
-                    </BrandButton>
+                    </Link>
                     {hydrated && inProgress && (
                       <button
                         type="button"
                         onClick={() => shareProgress(course)}
-                        aria-label={`${course.title}: Fortschritt teilen`}
+                        aria-label={`${course.title}: ${copy.shareProgress}`}
                         className="inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground transition-colors hover:text-foreground"
                       >
                         {shareState?.slug === course.slug &&
                         shareState.status === "copied" ? (
-                          <span
-                            className="stamp-in inline-flex items-center gap-1.5"
-                          >
+                          <span className="stamp-in inline-flex items-center gap-1.5">
                             <Check size={13} aria-hidden="true" />
-                            Link kopiert
+                            {copy.linkCopied}
                           </span>
                         ) : shareState?.slug === course.slug &&
                           shareState.status === "error" ? (
                           <span className="inline-flex items-center gap-1.5 text-destructive">
-                            Kopieren fehlgeschlagen
+                            {copy.copyFailed}
                           </span>
                         ) : (
                           <>
                             <Share2 size={13} aria-hidden="true" />
-                            Fortschritt teilen
+                            {copy.shareProgress}
                           </>
                         )}
                       </button>
@@ -439,52 +484,43 @@ export function CourseGallery() {
         </m.ol>
       </section>
 
-      {/* ── Section 2: Tiefer gehen (external labs + applied courses) ── */}
+      {/* ── Section 2: Technikkurse ── */}
       <section id="tiefer-gehen" className="scroll-mt-24">
         <SectionHeader
-          eyebrow={COURSE_SECTIONS.deeper.eyebrow}
-          title={COURSE_SECTIONS.deeper.title}
-          blurb={COURSE_SECTIONS.deeper.blurb}
+          eyebrow={sections.deeper.eyebrow}
+          title={sections.deeper.title}
+          blurb={sections.deeper.blurb}
         />
 
-        {/* Sub-shelf: Technikkurse (ported natives as framed specimens, plus
-            any still-pending imports). */}
+        {/* Ported native courses as framed specimens, plus any pending imports. */}
         <div id="open-source" className="scroll-mt-24">
-          <SubHeader>
-            <Github className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
-            Technikkurse
-          </SubHeader>
-
           <m.ul
             className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
             variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-40px" }}
+            initial={false}
+            animate="visible"
           >
-            {DEEPER_NATIVE_COURSES.map((course) => {
+            {deeperNativeCourses.map((course) => {
               const stat = stats[course.slug] ?? {
                 completed: 0,
                 certified: false,
                 started: false,
                 resumeHref: course.startHref,
               };
-              const dots = dotCount(course);
-              const filled = filledDots(stat, course);
               const pct =
                 course.totalLessons === 0
                   ? 0
                   : Math.round((stat.completed / course.totalLessons) * 100);
               const startLabel = stat.certified
-                ? "Nachweis ansehen"
+                ? copy.viewRecord
                 : stat.started
-                  ? "Weiterlernen"
-                  : "Kurs starten";
+                  ? copy.continue
+                  : copy.start;
               const startHref = stat.started
-                ? stat.resumeHref
-                : course.startHref;
+                ? localizeHref(stat.resumeHref, locale)
+                : localizeHref(course.startHref, locale);
               // The six ported courses all carry provenance; the fields are
-              // optional on the type only for German spine entries, which
+              // optional on the type only for foundation-path entries, which
               // never reach this branch.
               const repoPath = course.sourceHref
                 ? new URL(course.sourceHref).pathname
@@ -495,8 +531,16 @@ export function CourseGallery() {
                 : null;
 
               return (
-                <m.li key={course.slug} variants={staggerItem} className="js-reveal">
-                  <Card interactive accent="sand" className="h-full">
+                <m.li
+                  key={course.slug}
+                  variants={staggerItem}
+                  className="js-reveal min-w-0"
+                >
+                  <Card
+                    interactive
+                    accent="sand"
+                    className="h-full min-w-0 overflow-hidden"
+                  >
                     {/* Framed specimen: the pinned course screenshot mounted on
                         a mat at its true 16:10, with the provenance caption
                         (repo · MIT · commit) always visible. */}
@@ -504,15 +548,22 @@ export function CourseGallery() {
                       <div className="group/spec overflow-hidden border border-border bg-background">
                         <Image
                           src={course.coverImage ?? course.imageSrc ?? ""}
-                          alt={course.coverImageAlt ?? course.imageAlt ?? course.title}
+                          alt={
+                            course.coverImageAlt ??
+                            course.imageAlt ??
+                            course.title
+                          }
                           width={1280}
                           height={800}
                           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 48vw, calc(100vw - 48px)"
                           className="aspect-[16/10] h-auto w-full object-cover transition-transform duration-300 group-hover/spec:scale-[1.02]"
                         />
                       </div>
-                      {repoPath && course.sourceHref && course.sourceCommit && course.sourceCommitHref ? (
-                        <p className="mt-2 flex items-center justify-between gap-3 font-mono text-[9.5px] uppercase tracking-[0.08em] text-muted-foreground">
+                      {repoPath &&
+                      course.sourceHref &&
+                      course.sourceCommit &&
+                      course.sourceCommitHref ? (
+                        <p className="mt-2 flex min-w-0 max-w-full items-center justify-between gap-3 overflow-hidden font-mono text-[9.5px] uppercase tracking-[0.08em] text-muted-foreground">
                           <a
                             href={course.sourceHref}
                             target="_blank"
@@ -522,10 +573,14 @@ export function CourseGallery() {
                             // speech input cannot address the link by what it
                             // reads. Same composition as the Werkverzeichnis
                             // card's source action.
-                            aria-label={`Quellcode auf GitHub: ${repoPath}, ${course.title}`}
+                            aria-label={`${copy.sourceCode}: ${repoPath}, ${course.title}`}
                             className="inline-flex min-w-0 items-center gap-1 truncate transition-colors hover:text-foreground"
                           >
-                            <Github className="h-3 w-3 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                            <Github
+                              className="h-3 w-3 shrink-0"
+                              strokeWidth={1.75}
+                              aria-hidden="true"
+                            />
                             <span className="truncate">{repoPath}</span>
                           </a>
                           <span className="flex shrink-0 items-center gap-3">
@@ -534,7 +589,7 @@ export function CourseGallery() {
                               href={course.sourceCommitHref}
                               target="_blank"
                               rel="noopener noreferrer"
-                              aria-label={`Quell-Commit ${course.sourceCommit.slice(0, 7)} auf GitHub`}
+                              aria-label={`${copy.sourceCommit} ${course.sourceCommit.slice(0, 7)} ${copy.onGitHub}`}
                               className="transition-colors hover:text-foreground"
                             >
                               #{course.sourceCommit.slice(0, 7)}
@@ -547,39 +602,44 @@ export function CourseGallery() {
                           data-testid={`certified-${course.slug}`}
                           className="stamp-in absolute right-5 top-5 border border-brand-orange bg-background/90 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-brand-orange"
                         >
-                          erreicht
+                          {copy.achieved}
                         </span>
                       )}
                     </div>
 
-                    <h3 className="text-[20px] font-bold leading-tight tracking-[-0.03em] text-foreground">
+                    <h3 className="break-words text-[20px] font-bold leading-tight tracking-[-0.03em] text-foreground">
                       {course.title}
                     </h3>
                     <p className="mt-2 text-[14px] font-semibold leading-snug text-foreground">
                       {course.tagline}
                     </p>
-                    <p className="mt-3 flex-1 text-[14px] leading-[1.55] text-muted-foreground line-clamp-3">
+                    <p className="mt-3 flex-1 text-[14px] leading-[1.55] text-muted-foreground">
                       {course.description}
                     </p>
 
-                    <BadgeRow slug={course.slug} label={`${course.title}: Merkmale`} />
+                    <BadgeRow
+                      slug={course.slug}
+                      locale={locale}
+                      label={`${course.title}: ${copy.features}`}
+                    />
 
                     <dl className="mt-4 flex flex-wrap gap-x-5 gap-y-1 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
                       <div>
-                        <dt className="sr-only">Umfang</dt>
+                        <dt className="sr-only">{copy.scope}</dt>
                         <dd>
-                          {course.unitCount} {course.unitLabel} · {course.totalLessons} Lektionen
+                          {course.unitCount} {course.unitLabel} ·{" "}
+                          {course.totalLessons} {copy.lessons}
                         </dd>
                       </div>
                       <div>
-                        <dt className="sr-only">Dauer</dt>
+                        <dt className="sr-only">{copy.duration}</dt>
                         <dd>{course.duration}</dd>
                       </div>
                     </dl>
 
                     <div className="mt-5">
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                      <div className="flex min-w-0 items-start justify-between gap-3">
+                        <span className="min-w-0 break-words font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                           {course.audience}
                         </span>
                         <span
@@ -590,30 +650,27 @@ export function CourseGallery() {
                         </span>
                       </div>
                       <div
-                        className="mt-2 flex flex-wrap gap-1.5"
+                        className="mt-3 h-2 overflow-hidden bg-border"
                         role="progressbar"
                         aria-valuemin={0}
                         aria-valuemax={course.totalLessons}
                         aria-valuenow={hydrated ? stat.completed : 0}
                         aria-valuetext={
                           hydrated
-                            ? `${stat.completed} von ${course.totalLessons} Lektionen abgeschlossen`
-                            : `Fortschritt ${course.title} wird geladen`
+                            ? copy.progressLoaded(
+                                stat.completed,
+                                course.totalLessons,
+                              )
+                            : copy.progressLoading(course.title)
                         }
-                        aria-label={`Fortschritt ${course.title}`}
+                        aria-label={`${copy.progress} ${course.title}`}
                         data-testid={`progress-dots-${course.slug}`}
                       >
-                        {Array.from({ length: dots }).map((_, d) => (
-                          <span
-                            key={d}
-                            aria-hidden="true"
-                            className={cn(
-                              "h-2.5 w-2.5 rounded-full transition-colors duration-300",
-                              hydrated && d < filled ? "bg-brand-orange" : "bg-border",
-                            )}
-                            style={{ transitionDelay: `${d * 25}ms` }}
-                          />
-                        ))}
+                        <span
+                          aria-hidden="true"
+                          className="block h-full bg-brand-orange transition-[width] duration-300"
+                          style={{ width: hydrated ? `${pct}%` : "0%" }}
+                        />
                       </div>
                     </div>
 
@@ -623,20 +680,30 @@ export function CourseGallery() {
                         <span className="sr-only">: {course.title}</span>
                         <ArrowRight size={15} aria-hidden="true" />
                       </BrandButton>
-                      <BrandButton href={course.href} variant="outline" size="sm">
-                        Details
+                      <Link
+                        href={localizeHref(course.href, locale)}
+                        className="inline-flex min-h-11 items-center gap-1.5 px-1 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+                      >
+                        {copy.details}
                         <span className="sr-only">: {course.title}</span>
-                      </BrandButton>
+                      </Link>
                     </div>
                   </Card>
                 </m.li>
               );
             })}
-            {PENDING_COURSES.map((course) => {
+            {pendingCourses.map((course) => {
               const Icon = iconByName(courseIconName(course.slug));
               return (
-                <m.li key={course.slug} variants={staggerItem} className="js-reveal">
-                  <Card accent="sand" className="h-full">
+                <m.li
+                  key={course.slug}
+                  variants={staggerItem}
+                  className="js-reveal min-w-0"
+                >
+                  <Card
+                    accent="sand"
+                    className="h-full min-w-0 overflow-hidden"
+                  >
                     {/* Screenshot preview + stroke-only GitHub link */}
                     <div className="relative overflow-hidden rounded-lg border border-border">
                       <Image
@@ -651,10 +718,14 @@ export function CourseGallery() {
                         href={course.sourceHref}
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label="Quellcode auf GitHub"
+                        aria-label={copy.sourceCode}
                         className="absolute right-2 top-2 inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-background/90 text-foreground shadow-tile transition-colors hover:bg-background"
                       >
-                        <Github className="h-5 w-5" strokeWidth={1.75} aria-hidden="true" />
+                        <Github
+                          className="h-5 w-5"
+                          strokeWidth={1.75}
+                          aria-hidden="true"
+                        />
                       </a>
                     </div>
 
@@ -675,25 +746,27 @@ export function CourseGallery() {
                       {course.description}
                     </p>
 
-                    {/* Honest badges: Englisch · extern · GitHub · MIT */}
+                    {/* Honest badges: available languages · hosting boundary · licence */}
                     <BadgeRow
                       slug={course.slug}
+                      locale={locale}
                       extra={[{ label: "MIT", tone: "external" }]}
-                      label={`${course.title}: Merkmale`}
+                      label={`${course.title}: ${copy.features}`}
                     />
 
                     <dl className="mt-4 flex flex-wrap gap-x-5 gap-y-1 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
                       <div>
-                        <dt className="sr-only">Umfang</dt>
+                        <dt className="sr-only">{copy.scope}</dt>
                         <dd>
-                          {course.unitCount} {course.unitLabel} · {course.lessonCountLabel}
+                          {course.unitCount} {course.unitLabel} ·{" "}
+                          {course.lessonCountLabel}
                         </dd>
                       </div>
                     </dl>
 
                     <ul
                       className="mt-4 flex flex-wrap gap-2"
-                      aria-label={`${course.title}: Kerndaten und Themen`}
+                      aria-label={`${course.title}: ${copy.coreFacts}`}
                     >
                       {course.sourceFacts.slice(0, 4).map((fact) => (
                         <li
@@ -718,21 +791,36 @@ export function CourseGallery() {
                       href={course.sourceCommitHref}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={`Quell-Commit ${course.sourceCommit.slice(0, 7)} auf GitHub`}
+                      aria-label={`${copy.sourceCommit} ${course.sourceCommit.slice(0, 7)} ${copy.onGitHub}`}
                       className="mt-4 inline-flex w-fit items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground transition-colors hover:text-foreground"
                     >
-                      <GitCommitHorizontal className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+                      <GitCommitHorizontal
+                        className="h-3.5 w-3.5"
+                        strokeWidth={1.75}
+                        aria-hidden="true"
+                      />
                       Commit {course.sourceCommit.slice(0, 7)}
                     </a>
 
                     <div className="mt-6 flex flex-wrap items-center gap-3">
-                      <BrandButton href={course.launchHref} external variant="primary" size="sm">
-                        Kurs öffnen
-                        <span className="sr-only">: {course.title}, extern in neuem Tab</span>
+                      <BrandButton
+                        href={course.launchHref}
+                        external
+                        variant="primary"
+                        size="sm"
+                      >
+                        {copy.openCourse}
+                        <span className="sr-only">
+                          : {course.title}, {copy.externalNewTab}
+                        </span>
                         <ExternalLink size={15} aria-hidden="true" />
                       </BrandButton>
-                      <BrandButton href={course.href} variant="outline" size="sm">
-                        Details
+                      <BrandButton
+                        href={localizeHref(course.href, locale)}
+                        variant="outline"
+                        size="sm"
+                      >
+                        {copy.pendingDetails}
                         <span className="sr-only">: {course.title}</span>
                       </BrandButton>
                     </div>
@@ -743,10 +831,9 @@ export function CourseGallery() {
           </m.ul>
 
           <p className="mt-8 text-sm leading-relaxed text-muted-foreground">
-            Angewandte Selbstlernmaterialien auf Basis von Workshop-Inhalten
-            findest du unter{" "}
+            {copy.workshopLead}{" "}
             <Link
-              href="/workshops"
+              href={localizeHref("/workshops", locale)}
               className="font-semibold text-foreground underline underline-offset-4"
             >
               /workshops
@@ -758,3 +845,5 @@ export function CourseGallery() {
     </div>
   );
 }
+
+export const CourseGallery = withMotionProvider(CourseGalleryContent);

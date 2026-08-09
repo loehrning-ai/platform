@@ -36,13 +36,13 @@ describe("<AiNativePromptPlayground>", () => {
       screen.getByRole("button", { name: "kontext + format" }),
     ).toHaveAttribute("aria-pressed", "true");
     expect(
-      screen.getByRole("button", { name: "so machen's die meisten" }),
+      screen.getByRole("button", { name: "unklare Anfrage" }),
     ).toHaveAttribute("aria-pressed", "false");
     expect(screen.getByLabelText("Qualität: 4 von 5")).toBeInTheDocument();
     expect(
-      screen.getByText(/Letzte Woche haben wir bei einem Mittelständler/),
+      screen.getByText(/Ein KI-gestützter Arbeitsablauf beginnt/),
     ).toBeInTheDocument();
-    expect(screen.getByText(/Direkt postbar/)).toBeInTheDocument();
+    expect(screen.getByText(/Klarer Zweck und Review-Schritt/)).toBeInTheDocument();
     // Character counter matches the editor content it is derived from.
     const editor = screen.getByLabelText("Prompt-Editor") as HTMLTextAreaElement;
     expect(
@@ -53,18 +53,18 @@ describe("<AiNativePromptPlayground>", () => {
   it("switching to the 'bad' preset resets output, critique, quality and the editor prompt", () => {
     render(<AiNativePromptPlayground />);
     fireEvent.click(
-      screen.getByRole("button", { name: "so machen's die meisten" }),
+      screen.getByRole("button", { name: "unklare Anfrage" }),
     );
 
     expect(
-      screen.getByRole("button", { name: "so machen's die meisten" }),
+      screen.getByRole("button", { name: "unklare Anfrage" }),
     ).toHaveAttribute("aria-pressed", "true");
 
     expect(screen.getByLabelText("Qualität: 1 von 5")).toBeInTheDocument();
     expect(
       screen.getByText(/Hier sind einige Marketing-Trends/),
     ).toBeInTheDocument();
-    expect(screen.getByText(/Generisch\. Kein Kontext/)).toBeInTheDocument();
+    expect(screen.getByText(/Zu allgemein: Kontext/)).toBeInTheDocument();
 
     // The effect re-seeds the editor with the bad preset's prompt.
     const badPrompt = "schreib mir was zum marketing trend";
@@ -88,7 +88,7 @@ describe("<AiNativePromptPlayground>", () => {
     expect(screen.getByText("4 Zeichen")).toBeInTheDocument();
     // Output still belongs to the (unchanged) active 'good' preset.
     expect(
-      screen.getByText(/Letzte Woche haben wir bei einem Mittelständler/),
+      screen.getByText(/Ein KI-gestützter Arbeitsablauf beginnt/),
     ).toBeInTheDocument();
   });
 });

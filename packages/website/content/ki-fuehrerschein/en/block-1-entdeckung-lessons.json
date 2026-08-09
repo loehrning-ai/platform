@@ -1,0 +1,272 @@
+{
+  "blockId": "block_1",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-08-08",
+  "nextReview": "2027-02-08",
+  "reviewCadence": "evergreen",
+  "riskClass": "evergreen",
+  "triggerEvents": ["major-conceptual-update"],
+  "blockLastVerified": "2026-08-08",
+  "lessons": [
+    {
+      "id": "block_1_lesson_1",
+      "blockId": "block_1",
+      "number": 1,
+      "title": "Recognize AI functions",
+      "subtitle": "Record products by function, purpose, and data",
+      "durationMinutes": 4,
+      "keyConcepts": [
+        "AI system",
+        "AI literacy",
+        "EU AI Act Art. 4",
+        "Machine learning"
+      ],
+      "sections": [
+        {
+          "id": "block_1_lesson_1_section_1",
+          "title": "Check functions, not labels",
+          "readTimeMinutes": 2,
+          "content": "Many everyday products contain functions that can use machine learning or other AI techniques. Depending on the product version, examples include spam detection, text suggestions, image grouping, speech recognition, traffic prediction, or search ranking.\n\nA product name is not enough for classification. A spam filter can use rules, statistical methods, machine learning, or a combination. Two functions with the same label can also work differently.\n\nRecord the concrete function, version, and configuration. Then document its purpose, affected data, and responsible function. Keep unresolved technical questions marked as open until product owners, provider documentation, or a technical review resolves them.",
+          "keyTakeaway": "Check the concrete function and version. A product name alone establishes neither the technical nor the legal classification as an AI system."
+        },
+        {
+          "id": "block_1_lesson_1_section_2",
+          "title": "AI-supported functions in a workflow",
+          "readTimeMinutes": 2,
+          "content": "AI-supported functions can appear in document processing, transcription, translation, search, forecasting, and assistance systems. Whether a concrete function qualifies as an AI system under the Regulation must be assessed from how it works and how it is used.\n\nPractical control starts with a reliable inventory: concrete function and version, purpose, affected data, user roles, responsible function, and approval status. Data rules, review duties, and training needs can then be assigned.\n\nIn its current form, Article 4 of the EU AI Act requires providers and deployers to take measures to support the development of AI literacy among staff and other people dealing with the operation and use of AI systems on their behalf. Technical knowledge, experience, education and training, use context, and affected people or groups must be considered. An inventory is not an expressly prescribed standalone record, but it can support this context-specific planning.",
+          "keyTakeaway": "A function inventory supports role- and risk-based planning for AI literacy measures. It does not replace a legal or technical assessment of the concrete use.",
+          "sources": [
+            {
+              "claimId": "ai-act-article-4-literacy-2025-02-02",
+              "lastVerified": "2026-08-08"
+            }
+          ]
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_1_lesson_1_q1",
+          "questionText": "A colleague uses suggested replies, a transcription function, and a route forecast. What can be recorded with confidence?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "None of these functions can contain AI techniques",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Record all three functions with product version, purpose, and data; their technical and legal classification still needs review",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Only the transcription can qualify as an AI-supported function",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Do not record the functions until their legal classification is complete",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "An inventory first records concrete functions and versions. The subsequent technical and legal review determines which entries are AI systems under the Regulation and which measures apply."
+        },
+        {
+          "id": "block_1_lesson_1_q2",
+          "questionText": "What does Article 4 of the EU AI Act require from providers and deployers of AI systems?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Every company must develop its own AI",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Every employee must complete a computer science degree",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Providers and deployers must take measures to support the development of AI literacy among people acting on their behalf",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Only IT departments may use AI systems",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 4 concerns measures supporting the development of AI literacy among people dealing with the operation and use of AI systems on behalf of providers or deployers. Technical knowledge, experience, education and training, use context, and affected people or groups shape those measures."
+        }
+      ]
+    },
+    {
+      "id": "block_1_lesson_2",
+      "blockId": "block_1",
+      "number": 2,
+      "title": "Select AI tools",
+      "subtitle": "Check products, contracts, and configurations",
+      "durationMinutes": 3,
+      "keyConcepts": [
+        "Product selection",
+        "Data controls",
+        "Contract",
+        "Configuration",
+        "Approval"
+      ],
+      "sections": [
+        {
+          "id": "block_1_lesson_2_section_1",
+          "title": "Compare four operating models",
+          "readTimeMinutes": 2,
+          "content": "Compare the concrete product edition and how it is operated, not only the brand:\n\n| Operating model | Minimum checks | Common false inference |\n|---|---|---|\n| **Consumer service** | Terms, account settings, retention, training use, legal basis, and permitted content | A familiar or paid product is automatically approved for company data |\n| **Enterprise SaaS** | Contract and DPA, roles and permissions, data region, retention, logging, connectors, and training use | An enterprise contract secures every configuration and data class |\n| **Local or self-hosted** | Model source, endpoint or infrastructure, patches, telemetry, extensions, access, and logging | Local automatically means offline, current, and secure |\n| **Embedded function** | Concrete function and version, activation, data flows, inherited permissions, and owner | Approval of the main product covers every new AI function |\n\nProvider documentation and contractual terms change. Review them during procurement, after material feature changes, and at the review triggers defined by the organization.",
+          "keyTakeaway": "The concrete product edition, configuration, and approval determine permitted use. An operating model or brand name is not a security assessment."
+        },
+        {
+          "id": "block_1_lesson_2_section_2",
+          "title": "Which tool fits which task?",
+          "readTimeMinutes": 1,
+          "content": "Assess the specific use:\n\n- **Private learning and writing:** A consumer service may be suitable if you have the right to share the content and its data controls, retention, and terms fit your purpose. Use synthetic placeholders instead of details about other people. Credentials do not belong in prompts.\n\n- **Work tasks:** Use only a product, configuration, and workflow approved for the purpose and affected data classes. A business subscription or existing enterprise account is not approval by itself.\n\n- **Local models:** Local inference can limit data flows. Extensions, telemetry, model downloads, shared devices, and weak access controls can still create risk.\n\nBlock 2 applies the full check across purpose, data, rights, system, and approval.",
+          "keyTakeaway": "Free, paid, cloud, and local are not security classes. Purpose, data, rights, contract, configuration, and specific approval determine suitability."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_1_lesson_2_q1",
+          "questionText": "You want to draft a private text with an AI assistant. Which statement is correct?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Only paid business tools may be used for writing",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "A consumer service may be suitable if you may share the content and its data controls, retention, and terms fit the purpose",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "No AI tool may be used to write text",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Only the best-known product is suitable because a brand determines security",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Suitability for private tasks still depends on content, rights, data controls, retention, and terms. Use placeholders for examples and never enter credentials."
+        },
+        {
+          "id": "block_1_lesson_2_q2",
+          "questionText": "What distinguishes an approved enterprise workflow from an arbitrary AI subscription?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "An enterprise workflow always produces better answers",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Approval covers purpose, data classes, contract, configuration, permissions, and responsibilities; a subscription alone does not",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "A paid subscription may process every data class",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Only the provider's EU headquarters matters",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Organizational approval applies to a specific purpose, product edition, configuration, data class, and allocation of responsibilities. Price, brand, or headquarters do not replace that review."
+        }
+      ]
+    },
+    {
+      "id": "block_1_lesson_3",
+      "blockId": "block_1",
+      "number": 3,
+      "title": "Exercise: quick inventory",
+      "subtitle": "Record the AI functions and systems you actually use",
+      "durationMinutes": 3,
+      "keyConcepts": ["AI inventory", "Shadow AI", "Self-assessment"],
+      "sections": [
+        {
+          "id": "block_1_lesson_3_section_1",
+          "title": "The AI inventory",
+          "readTimeMinutes": 1,
+          "content": "Work through the table and complete the remaining columns. Product names are insufficient: record the function, provider or operator, purpose, affected data, and responsible function. Whether a feature legally qualifies as an AI system must be checked against its concrete version and operation.\n\n| No. | Product and function | Purpose | Affected data | Approval known? |\n|-----|----------------------|---------|---------------|-----------------|\n| 1 | Email: suggested replies | | | |\n| 2 | Spreadsheet: assistance or pattern detection | | | |\n| 3 | Conferencing software: transcription or assistance | | | |\n| 4 | Search engine: AI summary | | | |\n| 5 | Email: spam filter | | | |\n| 6 | Smartphone keyboard: word prediction | | | |\n| 7 | Navigation: route or traffic prediction | | | |\n| 8 | | | | |\n| 9 | | | | |\n| 10 | | | | |\n\nAdd functions that are actually used. Do not guess the technical classification; mark unknown items for review by the product owner, IT, or procurement.",
+          "keyTakeaway": "A useful inventory records the concrete function, purpose, data, approval, and owner. It supports role- and risk-based AI literacy planning under Article 4."
+        },
+        {
+          "id": "block_1_lesson_3_section_2",
+          "title": "Review your results",
+          "readTimeMinutes": 2,
+          "content": "Check every entry for completeness: concrete function and version, purpose, affected data, user roles, responsible function, and approval status. Mark unknown information explicitly; an assumption is not inventory evidence.\n\nThen summarize the open points and assign an owner and next review step to each one. The result is a working record, not an automatically complete list of every AI system.\n\nArticle 4 does not prescribe a particular inventory format. A maintained inventory can, however, help assign context-specific literacy measures, data rules, and review procedures to the functions actually in use. Block 2 adds data classes, rights, and system approvals to the assessment.",
+          "keyTakeaway": "An inventory remains reliable when unknowns are visible, owners are assigned, and changes are maintained. It is a control instrument, not complete evidence of Article 4 compliance."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_1_lesson_3_q1",
+          "questionText": "A colleague uses suggested replies, a transcription function, and a route forecast. What can you conclude with confidence?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "None of these functions can contain AI",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Exactly one AI system, because only transcription uses AI",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Exactly three standalone AI systems under the AI Act",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "The functions belong in the inventory; their technical and legal classification must be checked against the product and version",
+              "isCorrect": true
+            }
+          ],
+          "explanation": "AI-supported functions can be embedded in everyday products. Three product names do not automatically establish the number of standalone AI systems in legal terms. The inventory records the function and version for subsequent review."
+        },
+        {
+          "id": "block_1_lesson_3_q2",
+          "questionText": "Why is an AI inventory important?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "It is required for a tax return",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Without an inventory, you cannot assess the risks or determine which rules apply",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "It is mandatory only for companies with at least 250 employees",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "It is used only for IT budget planning",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "An inventory provides data for risk assessment, data rules, and ownership. It supports governance and AI literacy measures but does not meet the requirements of the EU AI Act by itself."
+        }
+      ]
+    }
+  ]
+}

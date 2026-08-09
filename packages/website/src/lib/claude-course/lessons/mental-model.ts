@@ -13,7 +13,7 @@ const lesson: ClaudeLesson = {
   subtitle: "A useful mental model before you type a single prompt.",
   durationMinutes: 8,
   trackId: "foundations",
-  hook: "Claude is not a search engine. It is not a database. It is something stranger and more useful.",
+  hook: "A language model generates responses from the context it receives. Retrieval and persistence come from the product and tools around it.",
   keyConcepts: [
     "Completion engine",
     "Constitutional AI",
@@ -28,37 +28,37 @@ const lesson: ClaudeLesson = {
       title: "What it is (and isn't)",
       readTimeMinutes: 3,
       content:
-        "The fastest way to get better at prompting is to stop thinking of Claude as a thing that *knows*, and start thinking of it as a thing that *continues*. Given everything in front of it (system prompt, your message, pasted docs, prior turns) it produces the most likely helpful continuation. That's the whole job. Everything else downstream (why some prompts sing, why others flop, why CLAUDE.md matters, why grounding matters) is a consequence of that one fact.\n\nSo before we get to techniques, three things Claude **isn't**:\n\n**Claude is not a search engine.** It doesn't retrieve from an index. It doesn't look anything up unless you wire a tool to it. Ask \"which of our services has the worst p99?\" with nothing attached and it won't say \"I don't have data.\" It will give you a plausible answer. Confidently. That's not a bug, it's Claude doing exactly what it's trained to do.\n\n**Claude is not a database.** It has no standing memory of your team, your codebase, your last conversation, or you. Some surfaces (Projects, Claude Code's CLAUDE.md, auto-memory in newer versions) graft persistence on top. But the base model is stateless. Default assumption: every new chat is a blank window.\n\n**Claude is not a colleague.** It has no stake in being right, no pride in being wrong, no long-run model of what you care about. It won't push back on a bad framing unless you invite it to. Great news if you want a tireless collaborator, a real risk if you want a second opinion.\n\n> It is a very, very good completion of the most likely next few thousand tokens, given everything you put in the window.\n\nAnthropic's own guidance puts it more usefully: treat Claude like a brilliant new hire on their first day. They have world-class general skills. They have zero context on your project, your team, or what \"good\" looks like at your company. Every great prompting technique in this course is, at heart, a way to onboard that new hire faster.",
+        "Claude generates a response conditioned on the request, the conversation, system instructions, and any tool results or documents supplied by the product. The output is probabilistic: the same request can produce different wording or conclusions.\n\nThree boundaries matter:\n\n**Generation is not retrieval.** A model response is not evidence that a source was searched. Web search, repository access, or database lookup requires an enabled tool and a successful tool call.\n\n**The model does not provide durable storage.** A product can add chat history, project context, or memory files. Check the product's controls instead of assuming that information carries between conversations.\n\n**Fluent output is not independent review.** The model can follow an incorrect premise or produce an unsupported detail. Treat important output as a draft that needs source checks, tests, or human review.\n\n> Judge a response by its evidence and verification, not by fluency.",
       keyTakeaway:
-        "Claude is a very, very good completion of the most likely next few thousand tokens, given everything you put in the window.",
+        "Claude generates responses from the supplied context; retrieval, persistence, and verification require explicit product features or tools.",
     },
     {
       id: "three-things",
       title: "The three things in every exchange",
       readTimeMinutes: 2,
       content:
-        "Every time you hit send, three things are in play. Keep this map in your head.\n\n- **The window.** System prompt + your message + pasted docs + prior turns + tool results. This is the *only* situational information Claude has. If it's not here, it doesn't exist.\n- **The priors.** What it was trained on: broad world knowledge, code idioms, writing conventions, reasoning patterns. Zero company-internal anything. Frozen at training time, no live web, no live data.\n- **The objective.** What it's trying to do: produce a response that's helpful, harmless, and honest (the HHH frame from Constitutional AI). Not \"be right.\" \"Be the likely-best helpful continuation.\"\n\n> **The grounding rule.** If a fact isn't in the window, it isn't knowledge, it's a guess. Good prompting is the discipline of putting real facts in the window before asking for answers that depend on them. The rest of this course is a toolkit for doing that well.",
+        "Three inputs shape a generation:\n\n- **Current context.** System and product instructions, messages, attached material, and tool results that fit in the active context window.\n- **Model training.** General patterns and information learned during training. Coverage and recency vary, so training is not a source for private or current facts.\n- **Generation settings and safeguards.** The selected model, sampling settings, enabled tools, and product policies affect the response.\n\n> **Grounding rule.** When an answer depends on current, private, or high-stakes facts, provide an authoritative source and verify that the response is supported by it.",
     },
     {
       id: "constitutional-ai",
       title: "Constitutional AI, in 90 seconds",
       readTimeMinutes: 2,
       content:
-        "Claude is trained with a technique Anthropic calls Constitutional AI (CAI). In plain English: instead of humans rating every response for safety, Anthropic writes down a \"constitution\", a set of principles, and trains Claude to critique and revise its own outputs against those principles. The model learns to be helpful, harmless, and honest from the principles themselves.\n\nThree practical consequences you'll feel in your prompts:\n\n1. **Claude will push back on clearly harmful asks**, but it's calibrated to be helpful first. If it refuses something reasonable, the refusal is usually a misread of intent. Re-frame the ask with context and it often works.\n2. **Claude will caveat and hedge when uncertain**, unless you tell it not to. \"Just answer, no hedging\" is a legitimate instruction in many cases.\n3. **Claude has a bias toward honest uncertainty.** If you give it room to say \"I don't know,\" it will take that room. Most hallucinations happen when the prompt doesn't leave that door open.\n\nNone of this is mystical. It's a training choice, and you can steer against it or with it depending on the job.",
+        "Constitutional AI is one method Anthropic uses during model training. A written set of principles is used to generate critiques, revisions, and preference data. It complements other training and safety methods; it does not make every response correct or every refusal consistent.\n\nPractical implications:\n\n1. **A refusal is a model output, not a policy ruling.** For a legitimate task, add the missing purpose and constraints. Do not try to bypass a valid safety boundary.\n2. **Uncertainty language is not calibrated confidence.** A confident answer can be wrong, and a cautious answer can be correct. Check evidence.\n3. **An abstention path helps.** State what the model should return when the supplied sources are insufficient. Then test that behavior with known and unknown cases.",
     },
     {
       id: "feel-it",
       title: "Feel it: the unknown-knowns test",
       readTimeMinutes: 1,
       content:
-        "Ask Claude something *specific* about your team, your project, or a file you didn't paste. Watch what happens. (Spoiler: it will answer. Confidently. Probably wrong.)\n\nThis isn't Claude being broken. It's Claude doing exactly what it's designed to do, completing the most likely helpful next tokens, with nothing real to complete from. The fix is always the same.\n\n> Put. The facts. In the window.",
+        "Ask a question that depends on private project data you have not supplied. The response may abstain, request context, or produce an unsupported answer; behavior varies by model, product, and prompt.\n\nThe evaluation criterion is simple: no project-specific claim is trustworthy without project-specific evidence.\n\n> Supply the source, request a citation, and verify the citation.",
     },
     {
       id: "failure-modes",
       title: "The three failure modes, named",
       readTimeMinutes: 1,
       content:
-        "Most bad Claude outputs trace back to one of three failures. Once you can name them, you can fix them.\n\n- **Hallucination.** Claude invents a plausible fact. Almost always a grounding failure, the fact wasn't in the window, so the model generated a shaped-right guess. Fix: paste the real source, or give it a tool to look it up.\n- **Drift.** Output starts strong, slowly wanders off-spec. Usually a constraint failure, the format or rules weren't strong enough to hold across a long generation. Fix: tighten constraints, ask for structured output, or break the task into steps.\n- **Generic slop.** Output is technically on-topic but reads like a LinkedIn post. A specificity failure, not enough context, not enough role, not enough concrete examples. Fix: add a few-shot example of what \"good\" looks like.",
+        "Use these labels to diagnose output before changing a prompt:\n\n- **Unsupported claim.** A statement has no support in the supplied source. Fix: add retrieval or source material, require citations, and verify them.\n- **Instruction drift.** The response violates a stated constraint or format. Fix: make the criterion testable, use schema validation where available, or split the task.\n- **Generic output.** The response lacks the domain details or style the task requires. Fix: add relevant context and a reviewed example, then compare results on representative inputs.",
     },
   ],
   widgets: [
@@ -71,7 +71,8 @@ const lesson: ClaudeLesson = {
         cpId: "feel-it",
         title: "Ask about something it can't know",
         hint: 'Try: "Which oncall rotation owns the auth service in my team?", then watch it answer.',
-        placeholder: "Ask Claude something that depends on context you haven't given it…",
+        placeholder:
+          "Ask Claude something that depends on context you haven't given it…",
       },
     },
     {
@@ -86,12 +87,12 @@ const lesson: ClaudeLesson = {
         options: [
           "Claude queries your observability stack and answers accurately.",
           "Claude refuses to answer without data.",
-          "Claude invents a plausible answer that sounds right but isn't grounded.",
+          "Any specific service claim is ungrounded; request or supply telemetry before accepting an answer.",
           'Claude returns the string "unknown".',
         ],
         correct: 2,
         explanation:
-          "Claude doesn't refuse by default and doesn't know your systems. Without data in the window, it generates a plausible-sounding completion. That's a grounding failure, the textbook hallucination pattern.",
+          "Any named service would be unsupported without telemetry. Supply measured data or a read-only metrics tool, then verify the answer against that source.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
@@ -113,7 +114,7 @@ const lesson: ClaudeLesson = {
         ],
         correct: 1,
         explanation:
-          "The base model is stateless. Some surfaces (Projects, CLAUDE.md, auto-memory) graft persistence on top, but the safe default assumption is \"no memory.\"",
+          "Persistence is a product feature. Surfaces can supply Projects, CLAUDE.md, or auto-memory; inspect the current product controls instead of assuming cross-chat recall.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
@@ -126,7 +127,7 @@ const lesson: ClaudeLesson = {
         lessonId: "mental-model",
         cpId: "q3",
         question:
-          "Which is the single best summary of Claude's job during a generation?",
+          "Which statement most accurately describes a model generation?",
         options: [
           "Retrieve the correct answer from its training data.",
           "Predict the most likely helpful continuation given everything in the window.",
@@ -135,7 +136,7 @@ const lesson: ClaudeLesson = {
         ],
         correct: 1,
         explanation:
-          "It's a completion engine, trained to be helpful, harmless, and honest. That framing explains both its strengths (creative drafting, structured transformation) and its failure modes (confident wrongness without grounding).",
+          "The model generates a response conditioned on the current input and context. Correctness still depends on evidence and verification.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
@@ -148,7 +149,8 @@ const lesson: ClaudeLesson = {
         lessonId: "mental-model",
         cpId: "tutor",
         topic: "the mental model for what Claude is",
-        persona: "Keep the learner honest. If they gesture vaguely, press them. Use concrete, real-world examples.",
+        persona:
+          "Keep the learner honest. If they gesture vaguely, press them. Use concrete, real-world examples.",
       },
     },
   ],

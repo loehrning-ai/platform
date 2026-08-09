@@ -1,0 +1,89 @@
+{
+  "id": "team",
+  "number": 10,
+  "title": "Team-Workflows",
+  "subtitle": "Prompts, CLAUDE.md und Evals als gemeinsam gepflegte Arbeitsmittel.",
+  "durationMinutes": 10,
+  "trackId": "team",
+  "hook": "Ein dokumentierter Prompt kann als gemeinsame Grundlage dienen.",
+  "keyConcepts": [
+    "Prompt-Bibliothek",
+    "Geteiltes CLAUDE.md",
+    "Evaluierungs-Set",
+    "Checkliste für die Teilbarkeit"
+  ],
+  "quiz": [],
+  "sections": [
+    {
+      "id": "why-share",
+      "title": "Warum Prompts teilen",
+      "readTimeMinutes": 1,
+      "content": "Ein Prompt für eine Person enthält häufig versteckten Kontext: lokale Pfade, Teamnamen, unausgesprochenen Quellenzugriff oder ein nur der Autorin bekanntes Ausgabeformat. Das Teilen des Textes macht den Ablauf noch nicht wiederverwendbar.\n\nBehandle wiederkehrende Prompts als gepflegte Artefakte. Dokumentiere Aufgabe, notwendige Eingaben, Modell- und Tool-Annahmen, erwartete Ausgabe, Eigentümer und Eval-Fälle."
+    },
+    {
+      "id": "three-artifacts",
+      "title": "Drei gemeinsam gepflegte Arbeitsmittel",
+      "readTimeMinutes": 2,
+      "content": "- **01 · Prompt-Bibliothek.** Ein Repository oder Gdoc mit benannten, getesteten Prompts für wiederkehrende Aufgaben: PR-Überprüfung, Standup-Zusammenfassung, Post-Mortem-Entwurf, Release Notes.\n- **02 · CLAUDE.md.** Im Repository eingecheckt. Wie Code überprüft. Aktualisiert, wenn sich Konventionen ändern.\n- **03 · Evaluierungs-Set.** Eine Handvoll realistischer Beispiele, Eingabe plus erwartete Art der Ausgabe. Nutze es, um zu prüfen, ob eine Prompt-Änderung keine Regression verursacht hat."
+    },
+    {
+      "id": "sharing-well",
+      "title": "Einen Prompt für andere nutzbar machen",
+      "readTimeMinutes": 2,
+      "content": "Vor der Veröffentlichung:\n\n- **Lokale Angaben parametrisieren.** Ersetze feste Projekt- und Pfadnamen durch benannte Eingaben wie `<PROJECT>`.\n- **Umfang und Voraussetzungen nennen.** Dokumentiere Einsatzfall, benötigte Quellen und erlaubte Aktionen.\n- **Geprüftes Beispiel bereitstellen.** Kennzeichne es als Illustration und entferne sensible Daten.\n- **Bekannte Fehler dokumentieren.** Verknüpfe wesentliche Fehler mit Eval-Fällen oder technischen Kontrollen."
+    },
+    {
+      "id": "rituals",
+      "title": "Regelmäßige kurze Reviews",
+      "readTimeMinutes": 1,
+      "content": "Nutze ein kurzes wiederkehrendes Review für einen Ablauf, seine Belege und einen Fehlerfall. Übernimm ihn erst dann in die gemeinsame Bibliothek, wenn eine andere Person ihn anhand der Dokumentation ausführen und das beabsichtigte Ergebnis reproduzieren kann."
+    }
+  ],
+  "widgets": [
+    {
+      "kind": "prompt-library-shaper",
+      "placement": "after-intro",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "team",
+        "cpId": "shaper"
+      }
+    },
+    {
+      "kind": "quiz",
+      "placement": "end",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "team",
+        "cpId": "q1",
+        "question": "Dein teamweit geteilter Prompt funktioniert für dich, aber nicht für andere. Was ist die wahrscheinlichste Ursache?",
+        "options": [
+          "Unterschiedliche Claude-Modelle.",
+          "Fest codierte Spezifika (Projektnamen, Pfade) und fehlende Hinweise zum \"Wann zu verwenden\".",
+          "Tageszeit.",
+          "Nicht genügend Adjektive."
+        ],
+        "correct": 1,
+        "explanation": "Teilbare Prompts sind parametrisiert und dokumentiert. Entferne Spezifika, gib an, wann sie zu verwenden sind, und zeige eine Beispielausgabe.",
+        "title": "Kurzprüfung",
+        "copy": {
+          "kindLabel": "Kurzprüfung",
+          "optionsAriaLabel": "Antwortoptionen",
+          "correctLabel": "Richtig.",
+          "incorrectLabel": "Nicht ganz."
+        }
+      }
+    },
+    {
+      "kind": "socratic-tutor",
+      "placement": "end",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "team",
+        "cpId": "tutor",
+        "topic": "Aufbau einer teamweiten Claude-Praxis",
+        "persona": "Betone Verantwortlichkeit, Veralterung und wie sich vermeiden lässt, dass „eine Person alle Prompts besitzt“."
+      }
+    }
+  ]
+}

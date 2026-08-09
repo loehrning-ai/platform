@@ -10,6 +10,7 @@ import {
 } from "@/components/ai-native/primitives";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 
 /* TerminalDemo — "Claude · drei Oberflächen".
  * Three animated surface mockups (Chat, Artifacts, Claude Code) with
@@ -67,7 +68,7 @@ function useReducedMotion() {
   return r;
 }
 
-export function AiNativeTerminalDemo() {
+function AiNativeTerminalDemoContent() {
   const [active, setActive] = useState<SurfaceKey>("chat");
   const current = SURFACES.find((s) => s.key === active) ?? SURFACES[0];
 
@@ -162,6 +163,10 @@ export function AiNativeTerminalDemo() {
     </SectionShell>
   );
 }
+
+export const AiNativeTerminalDemo = withMotionProvider(
+  AiNativeTerminalDemoContent,
+);
 
 /* ──────────────────────────────────────────────────────────────
    Surface 1, Claude.ai chat with streaming messages
@@ -615,8 +620,8 @@ function CodeSurface() {
         <span className="inline-block h-1.5 w-1.5 animate-pulse bg-brand-orange" />
         <span className="text-brand-amber">Advanced · optional</span>
         <span className="hidden sm:inline">
-          · Terminal-basiert. Nicht jeder braucht das, aber wer's lernt,
-          arbeitet damit 5× schneller an Daten-Tasks.
+          · Terminal-basiert. Geeignet für wiederholbare Datei- und
+          Datenaufgaben, wenn Zielpfade, Berechtigungen und Diffs geprüft werden.
         </span>
       </div>
     </m.div>

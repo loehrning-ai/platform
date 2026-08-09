@@ -8,6 +8,7 @@ import {
   FadeBlock,
   CountUp,
 } from "@/components/ai-native/primitives";
+import type { Locale } from "@/lib/i18n/locale";
 
 /* SkillGraph — editorial column spread showing how the 4 modules connect.
  * No graph, no complex animation — just 4 articles with clear hierarchy. */
@@ -61,24 +62,74 @@ const COLUMNS: readonly Column[] = [
   },
 ];
 
-export function AiNativeSkillGraph() {
+const COLUMNS_EN: readonly Column[] = [
+  {
+    n: "01",
+    tag: "Foundation",
+    title: "Task and prompt structure",
+    hook: "Define the work before asking a model to perform it.",
+    body: "Specify role, context, task, output format and constraints. Treat the context window as a limited working set and state how the result will be checked.",
+    skills: ["Prompt structure", "Context budget", "Failure modes"],
+    meta: "5 lessons · 50 min",
+  },
+  {
+    n: "02",
+    tag: "Tools",
+    title: "Claude workspace",
+    hook: "Select the interface that fits the task.",
+    body: "Use chat for dialogue, Artifacts for reviewable outputs and Claude Code for bounded work on files. Projects, Skills and MCP provide context and controlled connections.",
+    skills: ["Projects", "Skills", "Claude Code"],
+    meta: "7 lessons · 76 min",
+  },
+  {
+    n: "03",
+    tag: "Knowledge",
+    title: "Maintained knowledge",
+    hook: "Make source material searchable, citable and reviewable.",
+    body: "Organize notes with PARA and maps of content, connect selected tools and keep provenance visible. Retrieval quality depends on maintained source material.",
+    skills: ["Obsidian", "Retrieval", "Source review"],
+    meta: "7 lessons · 89 min",
+  },
+  {
+    n: "04",
+    tag: "Automation",
+    title: "Controlled workflows",
+    hook: "Automate bounded steps, not undefined responsibility.",
+    body: "Map repeated work, identify human review points and test a small n8n workflow. The capstone documents one pilot and its controls.",
+    skills: ["n8n", "Governance", "Capstone"],
+    meta: "8 lessons · 88 min",
+  },
+];
+
+export function AiNativeSkillGraph({
+  locale = "de",
+}: {
+  readonly locale?: Locale;
+}) {
+  const isEnglish = locale === "en";
+  const columns = isEnglish ? COLUMNS_EN : COLUMNS;
   return (
-    <SectionShell num="IV" label="Skill Graph">
-      <Eyebrow>Wie alles zusammenhängt</Eyebrow>
+    <SectionShell
+      num="IV"
+      label={isEnglish ? "Learning structure" : "Lernstruktur"}
+    >
+      <Eyebrow>
+        {isEnglish ? "How the modules connect" : "Wie die Module zusammenhängen"}
+      </Eyebrow>
       <ClipHeading
         as="h2"
         className="mt-2.5 font-bold leading-none tracking-[-0.035em] text-foreground"
         style={{ fontSize: "clamp(2rem, 4.5vw, 3.5rem)" }}
       >
-        Vier Module.
+        {isEnglish ? "Four modules." : "Vier Module."}
         <br />
-        Ein Bogen.
+        {isEnglish ? "One reviewable workflow." : "Ein prüfbarer Ablauf."}
       </ClipHeading>
       <FadeBlock delay={1}>
         <p className="mt-5 max-w-[680px] text-[18px] leading-[1.55] text-muted-foreground">
-          Kein Ranking, keine Hierarchie. Jedes Modul öffnet die nächste
-          Fähigkeit. Wer bei Modul vier steht, kommt leichter zu Modul eins
-          zurück, nicht umgekehrt.
+          {isEnglish
+            ? "Each module adds a specific capability: define the task, configure the workspace, maintain knowledge and automate bounded steps."
+            : "Jedes Modul ergänzt eine konkrete Fähigkeit: Aufgabe definieren, Arbeitsumgebung einrichten, Wissen pflegen und begrenzte Schritte automatisieren."}
         </p>
       </FadeBlock>
 
@@ -88,23 +139,23 @@ export function AiNativeSkillGraph() {
           <div>
             <CountUp value={4} className="text-[2.5rem] text-brand-orange" />
             <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground">
-              Module
+              {isEnglish ? "Modules" : "Module"}
             </p>
           </div>
           <div>
             <CountUp value={27} className="text-[2.5rem] text-brand-orange" />
             <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground">
-              Lektionen
+              {isEnglish ? "Lessons" : "Lektionen"}
             </p>
           </div>
           <div>
             <CountUp
-              value={9}
+              value={12}
               suffix="h"
               className="text-[2.5rem] text-brand-orange"
             />
             <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground">
-              Kernzeit
+              {isEnglish ? "Lesson time" : "Lernzeit"}
             </p>
           </div>
           <div>
@@ -115,7 +166,7 @@ export function AiNativeSkillGraph() {
               ∞
             </span>
             <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground">
-              eigene Praxis
+              {isEnglish ? "own practice" : "eigene Praxis"}
             </p>
           </div>
         </div>
@@ -124,7 +175,7 @@ export function AiNativeSkillGraph() {
       {/* Editorial column spread */}
       <FadeBlock delay={3}>
         <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-          {COLUMNS.map((col) => (
+          {columns.map((col) => (
             <article
               key={col.n}
               className="flex flex-col border-t border-t-border pt-5"
@@ -170,19 +221,25 @@ export function AiNativeSkillGraph() {
       <FadeBlock delay={5}>
         <div className="mt-12 border-t border-border pt-6">
           <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-            <span>Fundament</span>
+            <span>{isEnglish ? "Foundation" : "Fundament"}</span>
             <span>→</span>
-            <span>Werkzeuge</span>
+            <span>{isEnglish ? "Tools" : "Werkzeuge"}</span>
             <span>→</span>
-            <span>Praxis</span>
+            <span>{isEnglish ? "Knowledge" : "Wissen"}</span>
             <span>→</span>
-            <span className="text-brand-orange">Capstone</span>
+            <span className="text-brand-orange">
+              {isEnglish ? "Automation" : "Automatisierung"}
+            </span>
           </div>
           <p className="mt-4 max-w-[640px] text-[14px] leading-[1.55] text-muted-foreground">
             <span className="font-bold text-brand-orange">
-              Alle 4 Module sind kostenlos
+              {isEnglish
+                ? "All four modules are free"
+                : "Alle vier Module sind kostenlos"}
             </span>{" "}
-            und ohne Kurs-Zugang offen.
+            {isEnglish
+              ? "and the protected reader uses a free learning account."
+              : "und der geschützte Reader nutzt ein kostenloses Lernkonto."}
           </p>
         </div>
       </FadeBlock>

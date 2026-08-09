@@ -21,7 +21,7 @@ test.describe("QA visuals — homepage scroll capture", () => {
     const response = await page.goto("/", { waitUntil: "domcontentloaded" });
     expect(response?.status()).toBe(200);
     await expect(page).toHaveURL("/");
-    await expect(page.locator('html[data-hydrated="true"]')).toBeAttached();
+    await expect(page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]')).toBeAttached();
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
     // Section list matches the current homepage composition (hero → urgency

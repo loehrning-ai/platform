@@ -10,6 +10,7 @@ const KEYS = [
   "RATE_LIMIT_HMAC_SECRET",
   "SUPABASE_REGION",
   "SUPABASE_DPA_CONFIRMED_AT",
+  "SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT",
   "SUPABASE_CAPTCHA_CONFIRMED_AT",
   "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
   "TURNSTILE_CONFIGURATION_CONFIRMED_AT",
@@ -52,6 +53,8 @@ describe("getRuntimeFeatures", () => {
   it("reports the credential-free default without optional providers", () => {
     expect(getRuntimeFeatures()).toEqual({
       account: false,
+      magicLink: false,
+      google: false,
       turnstileSiteKey: null,
       feedback: false,
       supabase: false,
@@ -65,7 +68,7 @@ describe("getRuntimeFeatures", () => {
     });
   });
 
-  it("requires both public and service Supabase boundaries for an account", () => {
+  it("keeps account readiness independent from optional sign-in methods", () => {
     process.env.NEXT_PUBLIC_SUPABASE_URL =
       "https://fake-project.supabase.co";
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = "fake-public-key";
@@ -77,13 +80,17 @@ describe("getRuntimeFeatures", () => {
     process.env.SUPABASE_REGION = "eu-central-1";
     expect(getRuntimeFeatures().account).toBe(false);
     process.env.SUPABASE_DPA_CONFIRMED_AT = "2026-07-01";
-    expect(getRuntimeFeatures().account).toBe(false);
+    expect(getRuntimeFeatures().account).toBe(true);
+    expect(getRuntimeFeatures().magicLink).toBe(false);
+    expect(getRuntimeFeatures().google).toBe(false);
     process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY =
       "0x4AAAAAAAFakeProductionKey";
     process.env.SUPABASE_CAPTCHA_CONFIRMED_AT = "2026-07-01";
     process.env.TURNSTILE_CONFIGURATION_CONFIRMED_AT = "2026-07-01";
     const features = getRuntimeFeatures();
     expect(features.account).toBe(true);
+    expect(features.magicLink).toBe(true);
+    expect(features.google).toBe(false);
     expect(features.turnstileSiteKey).toBe(
       "0x4AAAAAAAFakeProductionKey",
     );
@@ -93,6 +100,14 @@ describe("getRuntimeFeatures", () => {
     process.env.FEEDBACK_ENABLED = "true";
     process.env.FEEDBACK_RETENTION_CRON_CONFIRMED_AT = "2026-07-14";
     expect(getRuntimeFeatures().feedback).toBe(true);
+
+    process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY = "";
+    process.env.SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT = "2026-08-08";
+    const googleOnlyFeatures = getRuntimeFeatures();
+    expect(googleOnlyFeatures.account).toBe(true);
+    expect(googleOnlyFeatures.magicLink).toBe(false);
+    expect(googleOnlyFeatures.google).toBe(true);
+    expect(googleOnlyFeatures.turnstileSiteKey).toBeNull();
   });
 
   it("fails the account closed for missing, future, malformed, or production-test CAPTCHA configuration", () => {
@@ -108,12 +123,14 @@ describe("getRuntimeFeatures", () => {
     process.env.TURNSTILE_CONFIGURATION_CONFIRMED_AT = "2026-07-01";
 
     process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY = "bad";
-    expect(getRuntimeFeatures().account).toBe(false);
+    expect(getRuntimeFeatures().account).toBe(true);
+    expect(getRuntimeFeatures().magicLink).toBe(false);
 
     process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY =
       "0x4AAAAAAAFakeProductionKey";
     process.env.SUPABASE_CAPTCHA_CONFIRMED_AT = "2999-01-01";
-    expect(getRuntimeFeatures().account).toBe(false);
+    expect(getRuntimeFeatures().account).toBe(true);
+    expect(getRuntimeFeatures().magicLink).toBe(false);
     expect(getRuntimeFeatures().turnstileSiteKey).toBeNull();
   });
 

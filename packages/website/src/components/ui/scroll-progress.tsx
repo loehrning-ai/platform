@@ -1,8 +1,9 @@
 "use client";
 
 import { m, useScroll } from "framer-motion";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 
-export function ScrollProgress() {
+function ScrollProgressContent() {
   const { scrollYProgress } = useScroll();
 
   return (
@@ -12,3 +13,5 @@ export function ScrollProgress() {
     />
   );
 }
+
+export const ScrollProgress = withMotionProvider(ScrollProgressContent);

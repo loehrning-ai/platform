@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { localizeHref, type Locale } from "@/lib/i18n/locale";
 
 export interface RailItem {
   readonly id: string;
@@ -17,9 +18,11 @@ export interface RailItem {
 export function RailNav({
   kicker,
   items,
+  locale = "de",
 }: {
   kicker: string;
   items: readonly RailItem[];
+  locale?: Locale;
 }) {
   const [active, setActive] = useState<string | null>(items[0]?.id ?? null);
 
@@ -51,22 +54,28 @@ export function RailNav({
     };
   }, [items]);
 
-  const handleClick = (id: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const t = document.getElementById(id);
-    if (!t) return;
-    // Account for the fixed site Nav (64px) + sticky railbar (~50px).
-    const offset = 120;
-    const targetTop = t.getBoundingClientRect().top + window.scrollY - offset;
-    window.scrollTo({ top: targetTop, behavior: "smooth" });
-    window.history.replaceState(null, "", `#${id}`);
-  };
+  const handleClick =
+    (id: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      const t = document.getElementById(id);
+      if (!t) return;
+      // Account for the fixed site Nav (64px) + sticky railbar (~50px).
+      const offset = 120;
+      const targetTop = t.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top: targetTop, behavior: "smooth" });
+      window.history.replaceState(null, "", `#${id}`);
+    };
 
   return (
     <nav className="railbar" aria-label={kicker}>
       <div className="railbar__inner">
-        <Link href="/blog" className="railbar__back" aria-label="Zurück zum Blog">
-          <span aria-hidden="true">←</span> Zurück
+        <Link
+          href={localizeHref("/blog", locale)}
+          className="railbar__back"
+          aria-label={locale === "de" ? "Zurück zum Blog" : "Back to the blog"}
+        >
+          <span aria-hidden="true">←</span>{" "}
+          {locale === "de" ? "Zurück" : "Back"}
         </Link>
         <span className="railbar__kicker">{kicker}</span>
         {items.map((i) => (

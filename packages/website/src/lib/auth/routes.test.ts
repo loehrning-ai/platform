@@ -182,8 +182,12 @@ describe("platform route access model", () => {
     expect(sanitizeNextPath(`/${"a".repeat(2_048)}`)).toBe("/konto");
     expect(sanitizeNextPath("https://evil.example")).toBe("/konto");
     expect(sanitizeNextPath("/login")).toBe("/konto");
+    expect(sanitizeNextPath("/en/login")).toBe("/konto");
+    expect(sanitizeNextPath("/de/login?next=/konto")).toBe("/konto");
     expect(sanitizeNextPath("/safe/%2e%2e/login")).toBe("/konto");
     expect(sanitizeNextPath("/auth/callback")).toBe("/konto");
+    expect(sanitizeNextPath("/en/auth/callback")).toBe("/konto");
+    expect(sanitizeNextPath("/en/konto")).toBe("/en/konto");
     expect(sanitizeNextPath("/ki-fuehrerschein/kurs")).toBe("/ki-fuehrerschein/kurs");
     expect(
       sanitizeNextPath("/api/buecher/ki-landschaft/download.pdf"),

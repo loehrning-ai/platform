@@ -1,36 +1,21 @@
-import { cleanup, render, waitFor } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { MotionProvider } from "./motion-provider";
 
-afterEach(() => {
-  cleanup();
-  delete document.documentElement.dataset.hydrated;
-});
+afterEach(cleanup);
 
 describe("MotionProvider hydration contract", () => {
-  it("marks the root document only after the client provider mounts", async () => {
-    expect(document.documentElement).not.toHaveAttribute(
-      "data-hydrated",
-      "true",
-    );
-
-    const { unmount } = render(
+  it("provides motion features without owning a readiness marker", () => {
+    const { container } = render(
       <MotionProvider>
         <div>hydrated content</div>
       </MotionProvider>,
     );
 
-    await waitFor(() =>
-      expect(document.documentElement).toHaveAttribute(
-        "data-hydrated",
-        "true",
-      ),
-    );
-
-    unmount();
-    expect(document.documentElement).not.toHaveAttribute(
-      "data-hydrated",
-      "true",
-    );
+    expect(screen.getByText("hydrated content")).toBeVisible();
+    expect(
+      container.querySelector('[data-app-hydration-marker="true"]'),
+    ).toBeNull();
+    expect(document.documentElement).not.toHaveAttribute("data-hydrated");
   });
 });

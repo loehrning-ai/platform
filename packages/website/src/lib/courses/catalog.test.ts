@@ -12,15 +12,15 @@ import {
   getCatalogCourse,
   getImportedCourse,
 } from "./catalog";
-import {
-  getBlocks,
-  getTotalLessonCount,
-} from "@/lib/course/data";
+import { getBlocks, getTotalLessonCount } from "@/lib/course/data";
 import {
   getAllLessons as getAllAiNativeLessons,
   getModules as getAiNativeModules,
 } from "@/lib/ai-native/data";
-import { getClaudeTotalLessons, getClaudeTracks } from "@/lib/claude-course/data";
+import {
+  getClaudeTotalLessons,
+  getClaudeTracks,
+} from "@/lib/claude-course/data";
 import { getCodexTotalLessons, getCodexTracks } from "@/lib/codex/data";
 import { COURSE_SLUGS } from "@/lib/course/types";
 import { getRegisteredCourseSlugs } from "@/lib/course/config";
@@ -49,7 +49,9 @@ describe("course catalog (shared course architecture)", () => {
   });
 
   it("numbers the learning-path steps 1 through 10", () => {
-    expect(COURSE_CATALOG.map((c) => c.step)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    expect(COURSE_CATALOG.map((c) => c.step)).toEqual([
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+    ]);
   });
 
   it("only references slugs registered in the shared course engine", () => {
@@ -66,7 +68,9 @@ describe("course catalog (shared course architecture)", () => {
     const c = getCatalogCourse("ai-native-operator")!;
     expect(c.href).toBe("/kurse/open-source/ai-native-operator");
     expect(c.nativeStatus).toBe("live");
-    expect(c.launchHref).toMatch(/^https:\/\/www\.timloehr\.me\/interactive-courses\//);
+    expect(c.launchHref).toMatch(
+      /^https:\/\/www\.timloehr\.me\/interactive-courses\//,
+    );
     // public-content contract: "Quelle" list links are commit-pinned so the
     // /open-source list and the detail pages agree on the same tree. The
     // upstream source folder is "ai-native" (never "ai-native-operator") —
@@ -128,15 +132,17 @@ describe("course catalog (shared course architecture)", () => {
   // not array identity — catches an entry silently drifting out of sync
   // (e.g. landing in COURSE_CATALOG without nativeStatus: "live").
   it("partitions ALL_COURSE_CATALOG by nativeStatus exactly onto COURSE_CATALOG/IMPORTED_COURSE_CATALOG", () => {
-    const liveSlugs = ALL_COURSE_CATALOG.filter((c) => c.nativeStatus === "live").map(
-      (c) => c.slug,
-    );
-    const pendingSlugs = ALL_COURSE_CATALOG.filter((c) => c.nativeStatus === "pending").map(
-      (c) => c.slug,
-    );
+    const liveSlugs = ALL_COURSE_CATALOG.filter(
+      (c) => c.nativeStatus === "live",
+    ).map((c) => c.slug);
+    const pendingSlugs = ALL_COURSE_CATALOG.filter(
+      (c) => c.nativeStatus === "pending",
+    ).map((c) => c.slug);
     expect(liveSlugs).toEqual(COURSE_CATALOG.map((c) => c.slug));
     expect(pendingSlugs).toEqual(IMPORTED_COURSE_CATALOG.map((c) => c.slug));
-    expect(liveSlugs.length + pendingSlugs.length).toBe(ALL_COURSE_CATALOG.length);
+    expect(liveSlugs.length + pendingSlugs.length).toBe(
+      ALL_COURSE_CATALOG.length,
+    );
   });
 
   it("carries nativeStatus: all ten shipped courses are live and no pending import is exposed", () => {
@@ -160,7 +166,7 @@ describe("course catalog (shared course architecture)", () => {
     }
   });
 
-  it("describes German records accurately while retaining explicit English Certificate labels", () => {
+  it("keeps card descriptions factual and free of credential marketing claims", () => {
     const germanCoreCourses = COURSE_CATALOG.filter(
       (course) => courseGroupFor(course.slug) === "spine",
     );
@@ -170,12 +176,14 @@ describe("course catalog (shared course architecture)", () => {
 
     expect(germanCoreCourses).toHaveLength(4);
     expect(
-      germanCoreCourses.some((course) => /\bZertifikat\b/i.test(course.description)),
+      germanCoreCourses.some((course) =>
+        /\bZertifikat\b/i.test(course.description),
+      ),
     ).toBe(false);
     expect(technicalCourses).toHaveLength(6);
-    for (const course of technicalCourses) {
-      expect(course.description, course.slug).toContain(
-        "selbst ausgestelltem Certificate",
+    for (const course of COURSE_CATALOG) {
+      expect(course.description, course.slug).not.toMatch(
+        /selbst ausgestelltem Certificate|akkreditiert|amtlich anerkannt|zertifizierte Kompetenz/iu,
       );
     }
   });
@@ -190,7 +198,9 @@ describe("course catalog (shared course architecture)", () => {
     expect(eu?.unitCount).toBe(getBlocks("eu-ai-act-kurs").length);
 
     const society = getCatalogCourse("ki-und-gesellschaft");
-    expect(society?.totalLessons).toBe(getTotalLessonCount("ki-und-gesellschaft"));
+    expect(society?.totalLessons).toBe(
+      getTotalLessonCount("ki-und-gesellschaft"),
+    );
     expect(society?.unitCount).toBe(getBlocks("ki-und-gesellschaft").length);
 
     const aiNative = getCatalogCourse("ai-native");
@@ -208,12 +218,14 @@ describe("course catalog (shared course architecture)", () => {
     const codex = getCatalogCourse("codex");
     expect(codex?.totalLessons).toBe(getCodexTotalLessons());
     expect(codex?.unitCount).toBe(getCodexTotalLessons());
-    expect(getCodexTracks().length).toBe(4);
+    expect(getCodexTracks("en").length).toBe(4);
   });
 
   it("retains claude's open-source provenance fields after the flip to native", () => {
     const claude = getCatalogCourse("claude");
-    expect(claude?.imageSrc).toMatch(/^\/imported-courses\/screenshots\/.+\.jpg$/);
+    expect(claude?.imageSrc).toMatch(
+      /^\/imported-courses\/screenshots\/.+\.jpg$/,
+    );
     expect(claude?.sourceCommit).toBe(IMPORTED_COURSE_SOURCE_COMMIT);
     expect(claude?.imageSha256).toMatch(/^[a-f0-9]{64}$/);
     expect(claude?.licenseSha256).toMatch(/^[a-f0-9]{64}$/);
@@ -232,7 +244,9 @@ describe("course catalog (shared course architecture)", () => {
     expect(def?.unitCount).toBe(12);
     expect(def?.lessonCountLabel).toBe("12 Kapitel");
     expect(def?.nativeStatus).toBe("live");
-    expect(def?.startHref).toBe("/kurse/open-source/data-engineering-fundamentals/home");
+    expect(def?.startHref).toBe(
+      "/kurse/open-source/data-engineering-fundamentals/home",
+    );
   });
 
   it("retains data-engineering-fundamentals's open-source provenance fields after the flip to native", () => {
@@ -278,7 +292,9 @@ describe("course catalog (shared course architecture)", () => {
 
   it("retains codex's open-source provenance fields after the flip to native", () => {
     const codex = getCatalogCourse("codex");
-    expect(codex?.imageSrc).toMatch(/^\/imported-courses\/screenshots\/.+\.jpg$/);
+    expect(codex?.imageSrc).toMatch(
+      /^\/imported-courses\/screenshots\/.+\.jpg$/,
+    );
     expect(codex?.sourceCommit).toBe(IMPORTED_COURSE_SOURCE_COMMIT);
     expect(codex?.imageSha256).toMatch(/^[a-f0-9]{64}$/);
     expect(codex?.licenseSha256).toMatch(/^[a-f0-9]{64}$/);
@@ -300,7 +316,9 @@ describe("course catalog (shared course architecture)", () => {
       expect(c.sourceFacts.length).toBeGreaterThanOrEqual(3);
       expect(c.sourceCommit).toBe(IMPORTED_COURSE_SOURCE_COMMIT);
       expect(c.sourceImagePath).toMatch(/^docs\/screenshots\/.+\.jpg$/);
-      expect(c.sourceLicensePath).toMatch(/(^LICENSE$|LICENSE\.txt$|\/LICENSE$)/);
+      expect(c.sourceLicensePath).toMatch(
+        /(^LICENSE$|LICENSE\.txt$|\/LICENSE$)/,
+      );
       expect(c.imageSha256).toMatch(/^[a-f0-9]{64}$/);
       expect(c.licenseSha256).toMatch(/^[a-f0-9]{64}$/);
       expect(c.licenseSizeBytes).toBeGreaterThan(0);
@@ -319,14 +337,15 @@ describe("course catalog (shared course architecture)", () => {
     // "data-science"/"ai-native-operator" are deliberate exceptions: their
     // URLs stay under
     // /kurse/open-source/<slug> across the imported-to-native flip instead
-    // of moving to a top-level /<slug> path like the 4 German courses, so
+    // of moving to a top-level /<slug> path like the 4 foundation courses, so
     // their public URLs never break.
     const HREF_OVERRIDE: Partial<Record<string, string>> = {
       "ai-native": "ai-native",
       claude: "kurse/open-source/claude",
       codex: "kurse/open-source/codex",
       "data-infrastructure": "kurse/open-source/data-infrastructure",
-      "data-engineering-fundamentals": "kurse/open-source/data-engineering-fundamentals",
+      "data-engineering-fundamentals":
+        "kurse/open-source/data-engineering-fundamentals",
       "data-science": "kurse/open-source/data-science",
       "ai-native-operator": "kurse/open-source/ai-native-operator",
     };
@@ -340,7 +359,8 @@ describe("course catalog (shared course architecture)", () => {
   it("getCatalogCourse resolves by slug and returns undefined for unknown", () => {
     expect(getCatalogCourse("ai-native")?.title).toBe("AI-Native Arbeitskurs");
     expect(getCatalogCourse("claude")?.title).toBe("Claude Course");
-    expect(getCatalogCourse("codex")?.title).toBe("Codex Course");
+    expect(getCatalogCourse("codex")?.title).toBe("Codex-Kurs");
+    expect(getCatalogCourse("codex")?.language).toBe("Deutsch + Englisch");
     // @ts-expect-error — exercising the not-found branch with an invalid slug
     expect(getCatalogCourse("does-not-exist")).toBeUndefined();
   });
@@ -353,8 +373,12 @@ describe("course catalog (shared course architecture)", () => {
     expect(getImportedCourse("data-science")).toBeUndefined();
   });
 
-  it("getCatalogCourse resolves ai-native-operator with its English-track facts", () => {
-    expect(getCatalogCourse("ai-native-operator")?.language).toBe("Englisch");
-    expect(getCatalogCourse("ai-native-operator")?.title).toBe("The AI-Native Operator");
+  it("getCatalogCourse resolves ai-native-operator with bilingual availability", () => {
+    expect(getCatalogCourse("ai-native-operator")?.language).toBe(
+      "Deutsch + Englisch",
+    );
+    expect(getCatalogCourse("ai-native-operator")?.title).toBe(
+      "The AI-Native Operator",
+    );
   });
 });

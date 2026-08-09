@@ -1,26 +1,36 @@
 import { ImageResponse } from "next/og";
-import { DEMO_LEVEL_LABELS, demos, getDemoBySlug } from "@/lib/demos";
+import { demos } from "@/lib/demos";
+import {
+  DEMO_CATEGORY_LABELS,
+  DEMO_LEVEL_LABELS_BY_LOCALE,
+  getDemoForLocale,
+} from "@/lib/demos-localization";
 import { getDemoCopy } from "@/lib/demos-copy";
+import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
+import { localizeHref } from "@/lib/i18n/locale";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = "loehrning.ai Praxisbeispiel";
+export const alt = "loehrning.ai interactive AI example · KI-Praxisbeispiel";
 
 export async function generateStaticParams() {
   return demos.map((d) => ({ slug: d.slug }));
 }
 
-export default async function OgImage({ params }: { params: { slug: string } }) {
-  const demo = getDemoBySlug(params.slug);
+export default async function OgImage({ params }: { params: Promise<{ slug: string }> }) {
+  const [{ slug }, locale] = await Promise.all([params, getRequestLocale()]);
+  const demo = getDemoForLocale(slug, locale);
+  const pageCopy = DEMOS_PAGE_COPY[locale].og;
 
-  const title = demo ? `${demo.title} ${demo.titleKicker}` : "Praxisbeispiele · loehrning.ai";
+  const title = demo ? `${demo.title} ${demo.titleKicker}` : pageCopy.fallbackTitle;
   const subtitle = demo
-    ? (getDemoCopy(demo.slug)?.ogSubtitle ?? demo.description)
-    : "Zwölf interaktive KI-Praxisbeispiele für den Mittelstand.";
+    ? (getDemoCopy(demo.slug, locale)?.ogSubtitle ?? demo.description)
+    : pageCopy.fallbackSubtitle;
   const categoryLine = demo
-    ? `${demo.category}${demo.level ? ` · ${DEMO_LEVEL_LABELS[demo.level]}` : ""}`
-    : "DEMO-GALERIE";
-  const slugLine = demo ? `/demos/${demo.slug}` : "/demos";
+    ? `${DEMO_CATEGORY_LABELS[locale][demo.category]}${demo.level ? ` · ${DEMO_LEVEL_LABELS_BY_LOCALE[locale][demo.level]}` : ""}`
+    : pageCopy.gallery;
+  const slugLine = localizeHref(demo ? `/demos/${demo.slug}` : "/demos", locale);
 
   return new ImageResponse(
     (
@@ -121,7 +131,7 @@ export default async function OgImage({ params }: { params: { slug: string } }) 
               textTransform: "uppercase",
             }}
           >
-            Praxisbeispiel öffnen →
+            {pageCopy.open}
           </div>
         </div>
       </div>

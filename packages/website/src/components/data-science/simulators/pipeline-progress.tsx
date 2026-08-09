@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import { useDataScienceLocale } from "@/components/data-science/locale-context";
 import { Panel } from "@/components/data-science/shared/primitives";
 
 interface PipelineStep {
@@ -86,16 +87,97 @@ const PIPELINE_STEPS: readonly PipelineStep[] = [
   },
 ];
 
+const PIPELINE_STEPS_DE: readonly PipelineStep[] = [
+  {
+    label: "Laden und prüfen",
+    icon: "📦",
+    log: [
+      "> creditcard.csv wird geladen …",
+      "> Zeilen: 284,807  Spalten: 31",
+      "> Merkmale: Time, V1-V28 (PCA), Amount, Class",
+      "> Betrugstransaktionen: 492 (0.172%)",
+      "> Keine fehlenden Werte erkannt.",
+      "✓ Datensatz geladen.",
+    ],
+  },
+  {
+    label: "Feature Engineering",
+    icon: "🔧",
+    log: [
+      "> V1-V28: PCA-transformiert (bereits anonymisiert)",
+      "> Amount: roher Transaktionswert in EUR",
+      "> Time: Sekunden seit der ersten Transaktion",
+      "> Ergänzung: log1p(Amount), um Schiefe zu reduzieren",
+      "> Ergänzung: hour_of_day aus dem Merkmal Time",
+      "✓ Form der Merkmalsmatrix: (284807, 33)",
+    ],
+  },
+  {
+    label: "Amount und Time skalieren",
+    icon: "⚖️",
+    log: [
+      "> StandardScaler für Amount und Time (nicht V1-V28)",
+      "> Mittelwert Amount: 88.35 → skaliert: 0.00",
+      "> Standardabweichung Amount:  250.12",
+      "> Mittelwert Time:   94813 → skaliert: 0.00",
+      "> Scaler nur am Trainingssplit angepasst (kein Leakage)",
+      "✓ Skalierung abgeschlossen.",
+    ],
+  },
+  {
+    label: "Train/Test-Split",
+    icon: "✂️",
+    log: [
+      "> Stratifizierter Split: 80% Training / 20% Test",
+      "> Training: 227,845 Zeilen  (Betrug: 394)",
+      "> Test:      56,962 Zeilen  (Betrug:  98)",
+      "> Betrugsquote Training: 0.173%  Test: 0.172%",
+      "> Stratifizierung erhält das Klassenverhältnis ✓",
+      "✓ Split abgeschlossen.",
+    ],
+  },
+  {
+    label: "XGBoost anpassen",
+    icon: "🌲",
+    log: [
+      "> XGBClassifier(n_estimators=300, max_depth=6,",
+      '    scale_pos_weight=578, eval_metric="aucpr")',
+      "> Training …",
+      "> [100]  train-aucpr: 0.8812",
+      "> [200]  train-aucpr: 0.9143",
+      "> [300]  train-aucpr: 0.9271",
+      "✓ Modell in 18.4s angepasst",
+    ],
+  },
+  {
+    label: "Auswerten",
+    icon: "📊",
+    log: [
+      "> Schwellenwert: 0.30",
+      "> Präzision:     0.871",
+      "> Recall:        0.918",
+      "> F1:            0.894",
+      "> PR-AUC:        0.934",
+      "> ROC-AUC:       0.981",
+      "✓ Modell bereit für die Abstimmung des Schwellenwerts.",
+    ],
+  },
+];
+
 export function PipelineProgress() {
+  const { locale, text } = useDataScienceLocale();
+  const steps = locale === "de" ? PIPELINE_STEPS_DE : PIPELINE_STEPS;
   const [currentStep, setCurrentStep] = useState(0);
-  const [completedSteps, setCompletedSteps] = useState<ReadonlySet<number>>(new Set());
+  const [completedSteps, setCompletedSteps] = useState<ReadonlySet<number>>(
+    new Set(),
+  );
   const [logLines, setLogLines] = useState<readonly string[]>([]);
   const [running, setRunning] = useState(false);
   const logRef = useRef<HTMLDivElement | null>(null);
 
   const runStep = useCallback(() => {
     if (running) return;
-    const step = PIPELINE_STEPS[currentStep]!;
+    const step = steps[currentStep]!;
     setRunning(true);
     setLogLines([]);
     let i = 0;
@@ -104,15 +186,16 @@ export function PipelineProgress() {
         const line = step.log[i]!;
         setLogLines((prev) => [...prev, line]);
         i++;
-        if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
+        if (logRef.current)
+          logRef.current.scrollTop = logRef.current.scrollHeight;
       } else {
         clearInterval(interval);
         setCompletedSteps((prev) => new Set([...prev, currentStep]));
         setRunning(false);
-        if (currentStep < PIPELINE_STEPS.length - 1) setCurrentStep((c) => c + 1);
+        if (currentStep < steps.length - 1) setCurrentStep((c) => c + 1);
       }
     }, 200);
-  }, [currentStep, running]);
+  }, [currentStep, running, steps]);
 
   const reset = () => {
     setCurrentStep(0);
@@ -123,14 +206,27 @@ export function PipelineProgress() {
 
   return (
     <Panel
-      eyebrow="SIMULATOR"
-      title="ML pipeline, step-by-step"
-      meta={`Step ${currentStep + 1} / ${PIPELINE_STEPS.length}`}
-      caption="Each step is a real decision point. Run them in order, the output of each step feeds the next."
+      eyebrow={text("SIMULATOR", "SIMULATOR")}
+      title={text(
+        "ML pipeline, step-by-step",
+        "ML-Pipeline, Schritt für Schritt",
+      )}
+      meta={`${text("Step", "Schritt")} ${currentStep + 1} / ${steps.length}`}
+      caption={text(
+        "Each step is a real decision point. Run them in order, the output of each step feeds the next.",
+        "Jeder Schritt enthält eine konkrete Entscheidung. Die Schritte nacheinander ausführen; jede Ausgabe fließt in den nächsten Schritt.",
+      )}
     >
       <div className="sim-row">
-        <div style={{ display: "flex", flexDirection: "column", gap: 2, minWidth: 170 }}>
-          {PIPELINE_STEPS.map((step, i) => {
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            minWidth: 170,
+          }}
+        >
+          {steps.map((step, i) => {
             const done = completedSteps.has(i);
             const active = i === currentStep;
             return (
@@ -143,7 +239,9 @@ export function PipelineProgress() {
                   padding: "8px 10px",
                   borderRadius: 6,
                   background: active ? "var(--bg-hi)" : "transparent",
-                  border: active ? "1px solid var(--hair-2)" : "1px solid transparent",
+                  border: active
+                    ? "1px solid var(--hair-2)"
+                    : "1px solid transparent",
                 }}
               >
                 <div
@@ -157,19 +255,44 @@ export function PipelineProgress() {
                     justifyContent: "center",
                     fontSize: 11,
                     fontWeight: 700,
-                    background: done ? "rgba(100,226,181,0.2)" : active ? "rgba(209,255,58,0.15)" : "rgba(255,255,255,0.05)",
-                    border: done ? "1px solid rgba(100,226,181,0.5)" : active ? "1px solid rgba(209,255,58,0.4)" : "1px solid var(--hair)",
-                    color: done ? "var(--mint-ink)" : active ? "var(--lime-ink)" : "var(--ink-4)",
+                    background: done
+                      ? "rgba(100,226,181,0.2)"
+                      : active
+                        ? "rgba(209,255,58,0.15)"
+                        : "rgba(255,255,255,0.05)",
+                    border: done
+                      ? "1px solid rgba(100,226,181,0.5)"
+                      : active
+                        ? "1px solid rgba(209,255,58,0.4)"
+                        : "1px solid var(--hair)",
+                    color: done
+                      ? "var(--mint-ink)"
+                      : active
+                        ? "var(--lime-ink)"
+                        : "var(--ink-4)",
                   }}
                 >
                   {done ? "✓" : i + 1}
                 </div>
-                <span style={{ fontSize: 12, color: done ? "var(--mint-ink)" : active ? "var(--ink-1)" : "var(--ink-4)" }}>{step.label}</span>
+                <span
+                  style={{
+                    fontSize: 12,
+                    color: done
+                      ? "var(--mint-ink)"
+                      : active
+                        ? "var(--ink-1)"
+                        : "var(--ink-4)",
+                  }}
+                >
+                  {step.label}
+                </span>
               </div>
             );
           })}
         </div>
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 12 }}>
+        <div
+          style={{ flex: 1, display: "flex", flexDirection: "column", gap: 12 }}
+        >
           <div
             ref={logRef}
             style={{
@@ -187,20 +310,38 @@ export function PipelineProgress() {
             }}
           >
             {logLines.length === 0 && (
-              <span style={{ color: "#A39E98" }}>// Click &quot;Run step&quot; to execute: {PIPELINE_STEPS[currentStep]!.label}</span>
+              <span style={{ color: "#A39E98" }}>
+                //{" "}
+                {text(
+                  'Click "Run step" to execute',
+                  'Zum Ausführen auf "Schritt ausführen" klicken',
+                )}
+                : {steps[currentStep]!.label}
+              </span>
             )}
             {logLines.map((line, i) => (
-              <div key={i} style={{ color: line.startsWith("✓") ? "#64E2B5" : line.startsWith(">") ? "#D8D3CC" : "#9FE06B" }}>
+              <div
+                key={i}
+                style={{
+                  color: line.startsWith("✓")
+                    ? "#64E2B5"
+                    : line.startsWith(">")
+                      ? "#D8D3CC"
+                      : "#9FE06B",
+                }}
+              >
                 {line}
               </div>
             ))}
-            {running && <span style={{ color: "#9FE06B", animation: "none" }}>▋</span>}
+            {running && (
+              <span style={{ color: "#9FE06B", animation: "none" }}>▋</span>
+            )}
           </div>
           <div style={{ display: "flex", gap: 10 }}>
             <button
               type="button"
               onClick={runStep}
-              disabled={running || completedSteps.size === PIPELINE_STEPS.length}
+              disabled={running || completedSteps.size === steps.length}
               style={{
                 padding: "10px 22px",
                 borderRadius: 7,
@@ -211,10 +352,14 @@ export function PipelineProgress() {
                 font: "inherit",
                 fontSize: 13,
                 fontWeight: 700,
-                opacity: completedSteps.size === PIPELINE_STEPS.length ? 0.4 : 1,
+                opacity: completedSteps.size === steps.length ? 0.4 : 1,
               }}
             >
-              {running ? "Running…" : completedSteps.size === PIPELINE_STEPS.length ? "Done ✓" : `Run step ${currentStep + 1}`}
+              {running
+                ? text("Running…", "Wird ausgeführt …")
+                : completedSteps.size === steps.length
+                  ? text("Done ✓", "Fertig ✓")
+                  : `${text("Run step", "Schritt ausführen")} ${currentStep + 1}`}
             </button>
             <button
               type="button"
@@ -230,7 +375,7 @@ export function PipelineProgress() {
                 fontSize: 13,
               }}
             >
-              Reset
+              {text("Reset", "Zurücksetzen")}
             </button>
           </div>
         </div>

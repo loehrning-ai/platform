@@ -5,6 +5,9 @@ import { LogIn, UserRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { hasSupabasePublicConfig } from "@/lib/supabase/config";
+import { GLOBAL_NAVIGATION_COPY } from "@/lib/i18n/global-copy";
+import { localizeHref } from "@/lib/i18n/locale";
+import { useLocale } from "@/components/i18n/locale-context";
 
 export function AuthStatus({
   mobile = false,
@@ -13,6 +16,7 @@ export function AuthStatus({
   readonly mobile?: boolean;
   readonly onNavigate?: () => void;
 }) {
+  const locale = useLocale();
   const [signedIn, setSignedIn] = useState(false);
 
   useEffect(() => {
@@ -64,8 +68,9 @@ export function AuthStatus({
     };
   }, []);
 
-  const href = signedIn ? "/konto" : "/login";
-  const label = signedIn ? "Konto" : "Login";
+  const copy = GLOBAL_NAVIGATION_COPY[locale];
+  const href = localizeHref(signedIn ? "/konto" : "/login", locale);
+  const label = signedIn ? copy.account : copy.login;
   const Icon = signedIn ? UserRound : LogIn;
 
   return (

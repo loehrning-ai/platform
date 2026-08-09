@@ -5,7 +5,7 @@ import { test, expect } from "@playwright/test";
  * : login-gated). route-matrix.spec.ts covers the course landing.
  * The reader — /kurs overview and every /kurs/[blockId] lesson page — now
  * requires login (exception to policy D1 — see src/lib/crawl/contract.ts
- * PROTECTED_PATHS). An anonymous visitor is redirected by src/middleware.ts
+ * PROTECTED_PATHS). An anonymous visitor is redirected by src/proxy.ts
  * to /login?next=<path>&reason=auth-not-configured in the provider-free
  * suite before ever reaching the reader shell, so these tests assert that
  * explicit fallback. The reader-content and

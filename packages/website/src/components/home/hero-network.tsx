@@ -4,7 +4,8 @@ import { useEffect, useMemo, useRef, useCallback } from "react";
 import { useReducedMotion, type MotionValue } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { COUNTRY_POLYLINES_3D, type CountryKey3D } from "@/lib/country-polylines-3d";
-import { STEPS } from "@/components/home/hero-network-steps";
+import { heroNetworkSteps, STEPS } from "@/components/home/hero-network-steps";
+import type { Locale } from "@/lib/i18n/locale";
 
 // Re-exported for backward compatibility (hero-network.test.tsx imports
 // STEPS from this module). hero.tsx imports STEPS directly from
@@ -282,6 +283,7 @@ function buildGrid(rLon: number, rLat: number): { front: Seg[]; back: Seg[] } {
 // ─── Component ──────────────────────────────────────────────────────────────
 
 interface HeroNetworkProps {
+  locale?: Locale;
   scrollProgress: MotionValue<number>;
   className?: string;
   mobile?: boolean;
@@ -293,7 +295,8 @@ interface HeroNetworkProps {
   stepIdxOut?: MotionValue<number>;
 }
 
-export function HeroNetwork({ className, mobile, frozen, latOut, lonOut, stepIdxOut }: HeroNetworkProps) {
+export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, lonOut, stepIdxOut }: HeroNetworkProps) {
+  const localizedSteps = useMemo(() => heroNetworkSteps(locale), [locale]);
   const prefersReduced = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef(0);
@@ -331,12 +334,12 @@ export function HeroNetwork({ className, mobile, frozen, latOut, lonOut, stepIdx
 
     // Step panning
     const activeT = Math.max(0, t - 2);
-    const totalCycle = STEPS.length * STEP_DUR;
+    const totalCycle = localizedSteps.length * STEP_DUR;
     const cycleT = activeT % totalCycle;
-    const stepIdx = Math.floor(cycleT / STEP_DUR) % STEPS.length;
+    const stepIdx = Math.floor(cycleT / STEP_DUR) % localizedSteps.length;
     const stepT = (cycleT - stepIdx * STEP_DUR) / STEP_DUR;
-    const cur = STEPS[stepIdx];
-    const next = STEPS[(stepIdx + 1) % STEPS.length];
+    const cur = localizedSteps[stepIdx];
+    const next = localizedSteps[(stepIdx + 1) % localizedSteps.length];
     // Globe rotation centers — fall back to the city's coords if no override.
     // The override lets us frame the country off-center within the disc (e.g.
     // SF rotates further east so USA fills the right side, away from the
@@ -370,7 +373,7 @@ export function HeroNetwork({ className, mobile, frozen, latOut, lonOut, stepIdx
     // sidebar feels like it's leading the eye toward where the globe is going.
     const displayIdx =
       isTransitioning && (stepT - DWELL) / (1 - DWELL) > 0.5
-        ? (stepIdx + 1) % STEPS.length
+        ? (stepIdx + 1) % localizedSteps.length
         : stepIdx;
     stepIdxOut?.set(displayIdx);
 
@@ -577,7 +580,7 @@ export function HeroNetwork({ className, mobile, frozen, latOut, lonOut, stepIdx
     // Self-schedule only while the loop is meant to be running (paused when the
     // hero scrolls off-screen / the tab is hidden — see the gating effect below).
     if (runningRef.current) rafRef.current = requestAnimationFrame(animate);
-  }, [frozen, latOut, lonOut, stepIdxOut]);
+  }, [frozen, latOut, localizedSteps, lonOut, stepIdxOut]);
 
   useEffect(() => {
     if (prefersReduced || mobile) return;
@@ -771,8 +774,8 @@ export function HeroNetwork({ className, mobile, frozen, latOut, lonOut, stepIdx
         {/* Step dots */}
         {!mobile && (
           <g ref={stepDotsRef} opacity="0.5">
-            {STEPS.map((_, i) => (
-              <circle key={i} cx={CX - ((STEPS.length - 1) * 7) / 2 + i * 7} cy={CY + R + 16} r={1.2} fill={LC} opacity={0.2} />
+            {localizedSteps.map((_, i) => (
+              <circle key={i} cx={CX - ((localizedSteps.length - 1) * 7) / 2 + i * 7} cy={CY + R + 16} r={1.2} fill={LC} opacity={0.2} />
             ))}
           </g>
         )}

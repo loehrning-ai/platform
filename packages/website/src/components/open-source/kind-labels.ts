@@ -1,4 +1,6 @@
 import type { OpenSourceArtifactKind } from "@/lib/open-source/artifacts";
+import type { Locale } from "@/lib/i18n/locale";
+import { OPEN_SOURCE_SHARED_COPY } from "@/lib/open-source/display-copy";
 
 /**
  * Singular German kind stamps pressed onto each Werkverzeichnis card. These
@@ -13,3 +15,10 @@ export const KIND_LABELS = {
   project: "Projekt",
   video: "Video",
 } as const satisfies Record<OpenSourceArtifactKind, string>;
+
+export function kindLabel(
+  kind: OpenSourceArtifactKind,
+  locale: Locale,
+): string {
+  return OPEN_SOURCE_SHARED_COPY[locale].kinds[kind];
+}

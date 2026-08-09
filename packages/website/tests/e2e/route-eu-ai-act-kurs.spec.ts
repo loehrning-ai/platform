@@ -6,7 +6,7 @@ import { test, expect, type Page } from "@playwright/test";
  * (exception to policy D1 — see src/lib/crawl/contract.ts PROTECTED_PATHS).
  * An anonymous visitor following the funnel or a real block link
  * (EU_AI_ACT_KURS_CONFIG.blockIds = block_1..block_6) is redirected by
- * src/middleware.ts to /login?next=<path>&reason=auth-not-configured in the
+ * src/proxy.ts to /login?next=<path>&reason=auth-not-configured in the
  * provider-free suite before reaching the hub/reader. These tests assert that
  * explicit fallback, not the reader content itself (which needs a live session; see
  * tests/e2e/authenticated-routes.authed.spec.ts).
@@ -15,6 +15,10 @@ import { test, expect, type Page } from "@playwright/test";
 const LANDING = "/eu-ai-act-kurs";
 const HUB = "/eu-ai-act-kurs/kurs";
 const BLOCK = "/eu-ai-act-kurs/kurs/block_1"; // first real blockId, always prerendered
+const LANDING_HEADING = "Rollen, Risiken und Pflichten einordnen.";
+const CURRICULUM_HEADING =
+  "Sechs Blöcke, eine durchgehende Klassifikationslogik.";
+const START_CTA = "Kurs mit Lernkonto starten";
 
 // Every captured console error and uncaught page error fails the check.
 function collectConsoleErrors(page: Page): string[] {
@@ -42,7 +46,7 @@ test.describe("/eu-ai-act-kurs landing", () => {
 
     const h1 = page.getByRole("heading", { level: 1 });
     await expect(h1).toBeVisible();
-    await expect(h1).toContainText(/EU AI Act/i);
+    await expect(h1).toHaveText(LANDING_HEADING);
 
     const noise = meaningfulErrors(errors);
     expect(noise, `console errors on ${LANDING}\n${noise.join("\n")}`).toEqual(
@@ -57,12 +61,16 @@ test.describe("/eu-ai-act-kurs landing", () => {
 
     // Curriculum section header: catches a stripped block list.
     await expect(
-      page.getByRole("heading", { name: "Was du lernst." }),
+      page.getByRole("heading", {
+        level: 2,
+        name: CURRICULUM_HEADING,
+        exact: true,
+      }),
     ).toBeVisible();
 
     // Primary funnel CTA (rendered top + bottom); first must resolve to the hub.
     const startCta = page
-      .getByRole("link", { name: "Kostenlos mit Lernkonto starten" })
+      .getByRole("link", { name: START_CTA, exact: true })
       .first();
     await expect(startCta).toBeVisible();
     await expect(startCta).toHaveAttribute("href", HUB);
@@ -75,12 +83,13 @@ test.describe("/eu-ai-act-kurs funnel (login-gated hub)", () => {
   }) => {
     await page.goto(LANDING, { waitUntil: "domcontentloaded" });
 
-    await page
-      .getByRole("link", { name: "Kostenlos mit Lernkonto starten" })
-      .first()
-      .click();
-
-    await page.waitForURL(/\/login/);
+    await Promise.all([
+      page.waitForURL(/\/login/),
+      page
+        .getByRole("link", { name: START_CTA, exact: true })
+        .first()
+        .click(),
+    ]);
     const url = new URL(page.url());
     expect(url.pathname, "CTA must land on /login for an anonymous visitor").toBe(
       "/login",
@@ -113,7 +122,7 @@ test.describe("/eu-ai-act-kurs mobile", () => {
 
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await expect(
-      page.getByRole("link", { name: "Kostenlos mit Lernkonto starten" }).first(),
+      page.getByRole("link", { name: START_CTA, exact: true }).first(),
     ).toBeVisible();
 
     const { scrollWidth, innerWidth } = await page.evaluate(() => ({

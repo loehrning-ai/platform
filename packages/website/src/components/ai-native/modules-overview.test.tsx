@@ -14,7 +14,7 @@ import { render, screen, act } from "@testing-library/react";
  */
 
 vi.mock("framer-motion", async () => {
-  const { createElement, forwardRef } = await import("react");
+  const { createElement, forwardRef, Fragment } = await import("react");
   const cache = new Map<string, unknown>();
   const DROP = new Set([
     "initial",
@@ -47,7 +47,16 @@ vi.mock("framer-motion", async () => {
       },
     },
   );
-  return { __esModule: true, m, motion: m };
+  const Pass = ({ children }: { children?: unknown }) =>
+    createElement(Fragment, null, children as never);
+  return {
+    __esModule: true,
+    m,
+    motion: m,
+    LazyMotion: Pass,
+    MotionConfig: Pass,
+    domAnimation: {},
+  };
 });
 
 vi.mock("next/link", async () => {
@@ -153,12 +162,23 @@ beforeEach(() => {
 describe("<AiNativeModulesOverview>", () => {
   it("renders the curriculum header and all module titles", () => {
     render(<AiNativeModulesOverview />);
-    expect(screen.getByText("4 Module, 1 Denkweise")).toBeInTheDocument();
+    expect(screen.getByText("4 Module, eine Arbeitsmethode")).toBeInTheDocument();
     expect(screen.getByText("Prompt-Architektur")).toBeInTheDocument();
     expect(screen.getByText("Tool-Orchestrierung")).toBeInTheDocument();
     expect(screen.getByText("Workflow-Integration")).toBeInTheDocument();
     // One "Kostenlos" chip per module.
     expect(screen.getAllByText("Kostenlos")).toHaveLength(3);
+  });
+
+  it("localizes module chrome and links without changing module identity", () => {
+    render(<AiNativeModulesOverview locale="en" />);
+    expect(screen.getByText("4 modules, one working method")).toBeInTheDocument();
+    expect(screen.getAllByText("Free")).toHaveLength(3);
+    expect(screen.getAllByText("Progress")).toHaveLength(2);
+    expect(screen.getAllByRole("link")[0]).toHaveAttribute(
+      "href",
+      "/en/ai-native/kurs/modul_1",
+    );
   });
 
   it("marks a fully-completed module 100% and a partial module by its rounded percent", () => {

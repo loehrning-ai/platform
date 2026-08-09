@@ -22,10 +22,10 @@ import { test, expect, type Page } from "@playwright/test";
  *     path.
  */
 
-const LANDING = "/kurse/open-source/data-science";
-const CHAPTER_ROUTE = "/kurse/open-source/data-science/fund";
-const CERT_ROUTE = "/kurse/open-source/data-science/zertifikat";
-const VERIFY_ROUTE = "/kurse/open-source/data-science/verifizierung";
+const LANDING = "/en/kurse/open-source/data-science";
+const CHAPTER_ROUTE = "/en/kurse/open-source/data-science/fund";
+const CERT_ROUTE = "/en/kurse/open-source/data-science/zertifikat";
+const VERIFY_ROUTE = "/en/kurse/open-source/data-science/verifizierung";
 
 const UNIFIED_KEY = "loehrning-progress-v2";
 const DS_NUMBERED_CHAPTER_IDS = [
@@ -49,7 +49,13 @@ function allChaptersCompletedDsState() {
   const lessons = Object.fromEntries(
     DS_NUMBERED_CHAPTER_IDS.map((id) => [
       id,
-      { sectionsRead: [], quizScore: null, quizTotal: null, completed: true, exercisesCompleted: {} },
+      {
+        sectionsRead: [],
+        quizScore: null,
+        quizTotal: null,
+        completed: true,
+        exercisesCompleted: {},
+      },
     ]),
   );
   return {
@@ -115,23 +121,27 @@ test.describe("Data Science Fundamentals golden path", () => {
   test("chapter: explicit confirmation marks it completed in the unified progress store", async ({
     page,
   }) => {
-    const res = await page.goto(CHAPTER_ROUTE, { waitUntil: "domcontentloaded" });
+    const res = await page.goto(CHAPTER_ROUTE, {
+      waitUntil: "domcontentloaded",
+    });
     expect(res?.status()).toBe(200);
     await expect(page.locator("h1")).toHaveCount(1);
 
-    await page
-      .getByRole("button", { name: "Mark chapter complete" })
-      .click();
+    await page.getByRole("button", { name: "Mark chapter complete" }).click();
     await expect
       .poll(async () =>
         page.evaluate((key) => {
           const raw = window.localStorage.getItem(key);
           if (!raw) return false;
           const parsed = JSON.parse(raw) as {
-            courses?: Record<string, { lessons?: Record<string, { completed?: boolean }> }>;
+            courses?: Record<
+              string,
+              { lessons?: Record<string, { completed?: boolean }> }
+            >;
           };
           return (
-            parsed.courses?.["data-science"]?.lessons?.["fund"]?.completed === true
+            parsed.courses?.["data-science"]?.lessons?.["fund"]?.completed ===
+            true
           );
         }, UNIFIED_KEY),
       )
@@ -170,12 +180,18 @@ test.describe("Data Science Fundamentals golden path", () => {
       c: "data-science",
       v: 1,
     });
-    await page.goto(`${VERIFY_ROUTE}#${hash}`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${VERIFY_ROUTE}#${hash}`, {
+      waitUntil: "domcontentloaded",
+    });
 
     await expect(page.getByText("QR data read", { exact: true })).toBeVisible();
     await expect(page.getByText("Ada Lovelace")).toBeVisible();
-    await expect(page.getByText("Completion path: all lessons finished")).toBeVisible();
-    await expect(page.getByRole("heading", { name: /Data Science Fundamentals/ })).toBeVisible();
+    await expect(
+      page.getByText("Completion path: all lessons finished"),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /Data Science Fundamentals/ }),
+    ).toBeVisible();
     await expect(page.getByText("Certificate code unreadable")).toHaveCount(0);
   });
 });

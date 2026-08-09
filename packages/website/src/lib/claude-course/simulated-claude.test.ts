@@ -17,27 +17,36 @@ describe("simulated-claude ", () => {
         "Write a launch email announcing our new authentication service. Audience: engineers. Format: subject then body. Context: replacing legacy SSO.",
       );
       expect(out).toContain("Subject:");
-      expect(out).toContain("authkit migrate");
+      expect(out).toContain("[start date]");
+      expect(out).toContain("approved rollout data");
+      expect(out).not.toContain(
+        "Tokens, scopes, and refresh behavior are identical",
+      );
     });
 
     it("returns a short generic launch-email answer for a bare launch-email prompt", () => {
       const out = genericAnswer("write a launch email");
-      expect(out).toContain("Subject: New authentication service");
+      expect(out).toContain("Subject: Authentication service change");
+      expect(out).toContain("does not provide the migration window");
+      expect(out).not.toContain("faster and more secure");
     });
 
     it("returns an honest, self-aware answer for a p99/latency prompt", () => {
       const out = genericAnswer("which service has the worst p99 latency?");
-      expect(out.toLowerCase()).toContain("don't actually have your telemetry");
+      expect(out.toLowerCase()).toContain("no telemetry");
+      expect(out.toLowerCase()).toContain("does not call claude");
     });
 
     it("returns an honest, self-aware answer for an oncall prompt", () => {
       const out = genericAnswer("who owns the oncall rotation for auth?");
-      expect(out.toLowerCase()).toContain("guessing");
+      expect(out.toLowerCase()).toContain("no service catalog or on-call data");
+      expect(out.toLowerCase()).toContain("does not call claude");
     });
 
     it("falls back to a generic honest continuation for anything else", () => {
       const out = genericAnswer("summarize this thread");
-      expect(out).toContain("useful response");
+      expect(out).toContain("fixed local response");
+      expect(out).toContain("provide the source material");
     });
   });
 
@@ -104,11 +113,14 @@ describe("simulated-claude ", () => {
 
     it("wraps up with the course thesis at turn 3 or beyond", () => {
       const out = socraticReply("ok I think I get it", 3);
-      expect(out).toContain("completion engine");
+      expect(out).toContain("current context window");
+      expect(out).toContain("verification");
     });
 
     it("is deterministic for the same input", () => {
-      expect(socraticReply("same input", 1)).toBe(socraticReply("same input", 1));
+      expect(socraticReply("same input", 1)).toBe(
+        socraticReply("same input", 1),
+      );
     });
   });
 

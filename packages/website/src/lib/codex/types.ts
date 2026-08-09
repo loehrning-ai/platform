@@ -17,6 +17,7 @@
 // chrome instead of losing the distinction inside one markdown string.
 
 import type { BaseLesson, LessonSection } from "@/lib/course/types";
+import type { Locale } from "@/lib/i18n/locale";
 
 export const CODEX_LESSON_IDS = [
   "L01",
@@ -66,27 +67,63 @@ export const CODEX_TRACKS: readonly CodexTrack[] = [
     id: "fundamentals",
     label: "Track 01, Fundamentals",
     title: "The mental model",
-    hint: "Three lessons on what Codex is and how it sees your repo.",
+    hint: "Three lessons on task execution, sandbox boundaries, and repository context.",
   },
   {
     id: "task-craft",
     label: "Track 02, Task Craft",
-    title: "Writing tasks that work",
-    hint: "Where most of the quality lives. Spec it right, ship it right.",
+    title: "Writing reviewable tasks",
+    hint: "Specifications, scope, and acceptance evidence for bounded changes.",
   },
   {
     id: "in-the-loop",
     label: "Track 03, In the Loop",
-    title: "Working with the agent",
-    hint: "Review, iterate, give it the tools it needs to finish the job.",
+    title: "Reviewing and revising changes",
+    hint: "Diff review, targeted iteration, and task-specific tools.",
   },
   {
     id: "advanced",
     label: "Track 04, Advanced",
-    title: "Scale it into your workflow",
-    hint: "Parallel agents, proven patterns, and the daily loop.",
+    title: "Integrating the development workflow",
+    hint: "Parallel work, reusable task patterns, and a reviewable release flow.",
   },
 ];
+
+export const CODEX_TRACKS_DE: readonly CodexTrack[] = [
+  {
+    id: "fundamentals",
+    label: "Track 01, Grundlagen",
+    title: "Das Arbeitsmodell",
+    hint: "Drei Lektionen zu Agentenlauf, Sandbox und Repository-Kontext.",
+  },
+  {
+    id: "task-craft",
+    label: "Track 02, Auftragsgestaltung",
+    title: "Prüfbare Aufgaben formulieren",
+    hint: "Spezifikation, Umfang und Akzeptanzkriterien für kontrollierbare Änderungen.",
+  },
+  {
+    id: "in-the-loop",
+    label: "Track 03, Im Arbeitszyklus",
+    title: "Ergebnisse prüfen und überarbeiten",
+    hint: "Diff-Review, gezielte Iteration und passende Werkzeuge für den Auftrag.",
+  },
+  {
+    id: "advanced",
+    label: "Track 04, Fortgeschritten",
+    title: "In den Entwicklungsablauf integrieren",
+    hint: "Parallele Arbeit, wiederverwendbare Muster und ein vollständiger Ablauf.",
+  },
+];
+
+export const CODEX_TRACKS_BY_LOCALE = Object.freeze({
+  en: CODEX_TRACKS,
+  de: CODEX_TRACKS_DE,
+}) satisfies Readonly<Record<Locale, readonly CodexTrack[]>>;
+
+export function getCodexTracksForLocale(locale: Locale): readonly CodexTrack[] {
+  return CODEX_TRACKS_BY_LOCALE[locale];
+}
 
 // ─── CodexBlock — recurring non-widget presentational patterns ─────
 

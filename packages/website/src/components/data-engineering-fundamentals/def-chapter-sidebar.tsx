@@ -2,7 +2,13 @@
 
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { DEF_CHAPTERS, type DefChapterId } from "@/lib/data-engineering-fundamentals/types";
+import { getDataEngineeringFundamentalsCourseCopy } from "@/lib/data-engineering-fundamentals/course-copy";
+import type {
+  ChapterMeta,
+  DefChapterId,
+} from "@/lib/data-engineering-fundamentals/types";
+import type { Locale } from "@/lib/i18n/locale";
+import { technicalCourseHref } from "@/lib/technical-courses/routes";
 
 // ─── DefChapterSidebar ───────────────────────────
 // Nav rail consumed by both LessonShell's desktop rail and mobile drawer
@@ -13,20 +19,33 @@ import { DEF_CHAPTERS, type DefChapterId } from "@/lib/data-engineering-fundamen
 
 export interface DefChapterSidebarProps {
   readonly activeId: DefChapterId | null;
+  readonly locale: Locale;
+  readonly chapters: readonly ChapterMeta[];
   readonly onNavigate?: () => void;
 }
 
-export function DefChapterSidebar({ activeId, onNavigate }: DefChapterSidebarProps) {
+export function DefChapterSidebar({
+  activeId,
+  locale,
+  chapters,
+  onNavigate,
+}: DefChapterSidebarProps) {
+  const copy = getDataEngineeringFundamentalsCourseCopy(locale);
   return (
-    <nav className="sb-nav" aria-label="Chapters">
-      {DEF_CHAPTERS.map((c) => {
+    <nav className="sb-nav" aria-label={copy.reader.navLabel}>
+      {chapters.map((c) => {
         const active = activeId === c.id;
         return (
           <Link
             key={c.id}
-            href={`/kurse/open-source/data-engineering-fundamentals/${c.id}`}
+            href={technicalCourseHref("data-engineering-fundamentals", locale, {
+              kind: "chapter",
+              chapterId: c.id,
+            })}
             className={`sb-item ${active ? "active" : ""}`}
-            style={{ "--ch-hex": c.accentHex, "--ch-ink": c.inkHex } as CSSProperties}
+            style={
+              { "--ch-hex": c.accentHex, "--ch-ink": c.inkHex } as CSSProperties
+            }
             onClick={onNavigate}
             aria-current={active ? "page" : undefined}
           >
@@ -34,7 +53,11 @@ export function DefChapterSidebar({ activeId, onNavigate }: DefChapterSidebarPro
             <div className="sb-text">
               <div className="sb-title">{c.title}</div>
             </div>
-            <div className="sb-time">{c.estimatedMinutes} min</div>
+            <div className="sb-time">
+              {locale === "de"
+                ? `${c.estimatedMinutes} Min.`
+                : `${c.estimatedMinutes} min`}
+            </div>
           </Link>
         );
       })}

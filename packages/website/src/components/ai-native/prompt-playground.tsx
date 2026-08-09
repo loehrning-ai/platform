@@ -27,12 +27,12 @@ interface Preset {
 const PRESETS: readonly Preset[] = [
   {
     key: "bad",
-    label: "so machen's die meisten",
+    label: "unklare Anfrage",
     prompt: "schreib mir was zum marketing trend",
     output:
       "Hier sind einige Marketing-Trends: 1. Personalisierung 2. KI 3. Nachhaltigkeit 4. Video. Gerne kann ich auf einen dieser Punkte näher eingehen.",
     critique:
-      "Generisch. Kein Kontext, kein Format, kein Empfänger, kein Zweck. Output ist Wikipedia-Wasser.",
+      "Zu allgemein: Kontext, Zweck, Empfänger, Quellen und Ausgabeformat fehlen.",
     quality: 1,
   },
   {
@@ -43,17 +43,15 @@ Kontext: B2B-SaaS, Zielgruppe Mittelstand-Geschäftsführung, 50-500 MA.
 Aufgabe: Entwurf für LinkedIn-Post (max 1200 Zeichen) über den Trend "AI-native Teams".
 Constraints: Kein Hype-Sprech, kein "revolutionär", konkretes Beispiel, eine direkte Frage am Ende.
 Voice: Tim Löhr, nüchtern, direkt, leicht ironisch.`,
-    output: `Letzte Woche haben wir bei einem Mittelständler (220 MA) beobachtet, wie ein Controller in 12 Minuten einen Deckungsbeitragsrechner gebaut hat, den die IT seit 14 Monaten auf dem Backlog hatte.
+    output: `Ein KI-gestützter Arbeitsablauf beginnt nicht beim Modell, sondern bei einer klaren Aufgabe.
 
-Kein Tool. Kein Hack. Nur: klarer Intent, Zugriff auf die richtigen Daten, Claude als Sparring-Partner.
+Beispiel Controlling: Ausgangsdaten und Berechnungsregeln werden versioniert bereitgestellt. Das Modell erstellt einen Rechner-Entwurf. Ein Controller prüft Formeln, Stichproben und Abweichungen, bevor das Ergebnis verwendet wird.
 
-"AI-native" heißt nicht, ChatGPT offen zu haben. Es heißt, deinen Arbeitsablauf so neu zu denken, dass ein Assistant sinnvoll andocken kann.
+Entscheidend sind nachvollziehbare Eingaben, ein festes Ausgabeformat und ein benannter Review-Schritt.
 
-Die meisten Teams sind nicht zu langsam mit AI: sie sind zu langsam beim Loslassen alter Prozesse.
-
-Wo in eurem Team habt ihr den ersten Workflow wirklich AI-native umgebaut?`,
+Welcher wiederkehrende Arbeitsablauf in eurem Team hat bereits eine messbare Ausgangslage und klare Prüfkriterien?`,
     critique:
-      "Direkt postbar. Stimme passt. Zahl ist verifizierbar (wir würden sie trotzdem prüfen).",
+      "Klarer Zweck und Review-Schritt. Vor Veröffentlichung fehlen noch ein belegtes Beispiel und die Freigabe der verwendeten Kennzahlen.",
     quality: 4,
   },
   {
@@ -65,7 +63,7 @@ Ziel: LinkedIn-Post über "AI-native Teams".
 # Vor dem Schreiben, mache drei Runden:
 1. Lies unsere letzten 10 Posts (anhängend als .md). Extrahiere Voice-Patterns.
 2. Lies das Kundenfeedback-Doc (anhängend). Finde den EINEN konkreten Case.
-3. Prüfe LinkedIn-Algorithmus-Best-Practices 2025.
+3. Prüfe die bereitgestellten Redaktions- und Freigaberegeln.
 
 # Dann schreibe:
 - 3 Post-Varianten (hook-driven · story-driven · contrarian)
@@ -73,13 +71,15 @@ Ziel: LinkedIn-Post über "AI-native Teams".
 - Jede max 1200 Zeichen
 
 # Output-Format: Markdown, H3 pro Variante, darunter der Post, darunter "Warum funktioniert's".`,
-    output: `### Variante A · hook-driven
+    output: `### Variante A · sachlicher Einstieg
 
-14 Monate IT-Backlog. 12 Minuten mit Claude. Ein Controller bei einem Mittelständler (220 MA) hat letzte Woche einen Deckungsbeitragsrechner gebaut, den, auf den er seit Ewigkeiten wartete...
+Ein Rechner-Entwurf ist kein geprüftes Controlling-Instrument. Bei Fiktivwerk werden deshalb Datenstand, Formeln, Stichproben und Freigabe im selben Workflow dokumentiert.
 
-**Warum funktioniert's:** Zahl + Zeitkontrast in Zeile 1 ist unser Post-Pattern #3 (siehe post_2024_09_12). CTA-Frage triggert Erfahrungsteilen.`,
+**Belegstatus:** fiktives Kursbeispiel. Vor einer realen Veröffentlichung sind Quelle, Messmethode und Freigabe zu ergänzen.
+
+**Warum diese Variante:** Sie trennt beobachtbare Prozessschritte von einer noch unbelegten Wirkungsbehauptung.`,
     critique:
-      "Die Klasse, in der wir ausbilden. Claude arbeitet mehrstufig, mit Quellen, mit verifizierbarem Reasoning.",
+      "Mehrstufig und prüfbar: Quellenstatus, Annahmen und Freigabe sind sichtbar. Der Entwurf behauptet keine erfundene Wirkung.",
     quality: 5,
   },
 ];
@@ -118,16 +118,16 @@ export function AiNativePromptPlayground() {
         className="mt-2.5 font-bold leading-none tracking-[-0.035em]"
         style={{ fontSize: "clamp(2rem, 4.5vw, 3.5rem)" }}
       >
-        Ein schlechter Prompt.
+        Eine unklare Anfrage.
         <br />
         Ein guter Prompt.
         <br />
-        Ein AI-native Briefing.
+        Ein prüfbares Briefing.
       </ClipHeading>
       <FadeBlock delay={1}>
         <p className="mt-4 max-w-[640px] text-[17px] text-muted-foreground">
-          Der Unterschied ist nicht subtil. Wechsle die Presets und sieh was
-          passiert.
+          Wechsle die Presets und vergleiche, welche Angaben den Entwurf
+          prüfbar machen.
         </p>
       </FadeBlock>
 
@@ -195,8 +195,8 @@ export function AiNativePromptPlayground() {
 
       <FadeBlock delay={3}>
         <p className="mt-6 font-mono text-[12.5px] tracking-[0.02em] text-muted-foreground">
-          Output ist statisch simuliert. Im Kurs bauen wir echte Briefings mit
-          Claude Code + Sub-Agents + Artefakt-Verifikation.
+          Der Output ist statisch simuliert. Im Kurs definierst du Briefings,
+          Berechtigungen und Prüfkriterien für begrenzte Modellaufgaben.
         </p>
       </FadeBlock>
     </SectionShell>
