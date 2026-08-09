@@ -138,7 +138,7 @@ export default async function RootLayout({
         {/* App Router children remain entirely server-owned here. Passing this
             streamed subtree through a root client provider can make a retry
             resume with React's hydration cursor inside the next server host. */}
-        <main id="main-content" className="relative z-0 pt-16">
+        <main id="main-content" className="relative pt-16">
           {children}
         </main>
         <ScrollToTop />

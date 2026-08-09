@@ -150,7 +150,7 @@ export const HOME_COPY = {
     },
     finalCta: {
       headline: "Den passenden Einstieg finden.",
-      body: "Fünf Fragen ordnen deinen aktuellen Kenntnisstand einem sinnvollen Einstieg zu. Die Auswertung läuft im Browser und benötigt kein Konto.",
+      body: "Zehn Fragen ordnen deinen aktuellen Kenntnisstand einem sinnvollen Einstieg zu. Die Auswertung läuft im Browser und benötigt kein Konto.",
       label: "KI-Check öffnen",
     },
   },
@@ -302,7 +302,7 @@ export const HOME_COPY = {
     },
     finalCta: {
       headline: "Find the right starting point.",
-      body: "Five questions match your current knowledge to a suitable entry point. The assessment runs in your browser and requires no account.",
+      body: "Ten questions match your current knowledge to a suitable entry point. The assessment runs in your browser and requires no account.",
       label: "Open AI check",
     },
   },

@@ -257,7 +257,7 @@ export const LEARNING_NODES: readonly LearningNode[] = [
     evidenceMode: "self_attested",
     sourceOwner: "editorial:self-tests",
     summary:
-      "Fünf Fragen, kein Login, kein Backend. Zeigt dir, wo du auf dem KI-Kompetenzweg stehst.",
+      "Zehn Fragen, kein Login, kein Backend. Zeigt dir, wo du auf dem KI-Kompetenzweg stehst.",
   },
   ON_RAMP_NODE,
   CONCEPTUAL_BLOCK_NODE,

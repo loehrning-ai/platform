@@ -68,7 +68,7 @@ describe("Offering section", () => {
       screen.getByRole("link", { name: /View all courses/ }),
     ).toHaveAttribute("href", "/en/kurse");
     expect(container.textContent).not.toMatch(
-      /\b(?:Kurse|Bücher|Deutsch|Englisch|Lektionen|Dauer|Grundlagenpfad|Konto|Quellen|ansehen)\b/,
+      /\b(?:Kurse|Kurs|Bücher|Deutsch|Englisch|Lektionen|Dauer|Grundlagenpfad|Konto|Quellen|ansehen)\b/,
     );
   });
 

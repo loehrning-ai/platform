@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Github } from "@/components/icons/brand";
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
+import { localizeCatalogCourse } from "@/lib/courses/catalog-copy";
 import { Card, IconTile } from "@/components/ui/card";
 import { courseFacts, courseGroupFor } from "@/lib/courses/tracks";
 import { iconByName } from "@/lib/courses/track-icon";
@@ -23,20 +24,27 @@ const SPINE_HOME_COURSES = COURSE_CATALOG.filter(
 const DEEPER_HOME_COURSES = COURSE_CATALOG.filter(
   (course) => courseGroupFor(course.slug) === "deeper",
 );
-const LAB_PREVIEWS = DEEPER_HOME_COURSES.flatMap((course) =>
-  course.imageSrc && course.imageAlt && course.sourceHref
-    ? [
-        {
-          slug: course.slug,
-          href: course.href,
-          title: course.title,
-          imageSrc: course.imageSrc,
-          imageAlt: course.imageAlt,
-          sourceHref: course.sourceHref,
-        },
-      ]
-    : [],
-).slice(0, 3);
+// Built per render, not at module scope. The catalog is German; freezing these
+// entries once captured the German title and alt text before a locale existed,
+// so English readers were served "Codex-Kurs" in the heading, the image alt and
+// the aria-label.
+function labPreviews(locale: Locale) {
+  return DEEPER_HOME_COURSES.flatMap((course) => {
+    const localized = localizeCatalogCourse(course, locale);
+    return localized.imageSrc && localized.imageAlt && localized.sourceHref
+      ? [
+          {
+            slug: localized.slug,
+            href: localized.href,
+            title: localized.title,
+            imageSrc: localized.imageSrc,
+            imageAlt: localized.imageAlt,
+            sourceHref: localized.sourceHref,
+          },
+        ]
+      : [];
+  }).slice(0, 3);
+}
 
 // The catalog carries German cover descriptions. English falls back to the
 // localized course title rather than shipping the German string to an English
@@ -308,7 +316,7 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
           </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {LAB_PREVIEWS.map((course) => (
+            {labPreviews(locale).map((course) => (
               <div
                 key={course.slug}
                 className="group/lab overflow-hidden rounded-xl border border-border bg-card shadow-card transition-shadow hover:shadow-card-hover"
@@ -321,7 +329,7 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
                   <span className="relative block aspect-[16/10] overflow-hidden bg-card-hover">
                     <Image
                       src={course.imageSrc}
-                      alt={locale === "de" ? course.imageAlt : `Screenshot of the ${course.title} course`}
+                      alt={course.imageAlt}
                       width={640}
                       height={400}
                       sizes="(min-width: 1024px) 300px, (min-width: 640px) 45vw, 90vw"

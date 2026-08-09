@@ -37,7 +37,7 @@ describe("FinalCta", () => {
 
   it("states the scope and privacy boundary of the orientation check", () => {
     render(<FinalCta />);
-    expect(screen.getByText(/Fünf Fragen ordnen deinen aktuellen Kenntnisstand/)).toBeInTheDocument();
+    expect(screen.getByText(/Zehn Fragen ordnen deinen aktuellen Kenntnisstand/)).toBeInTheDocument();
     expect(screen.getByText(/läuft im Browser und benötigt kein Konto/)).toBeInTheDocument();
     expect(screen.getByText("// loehrning.ai")).toBeInTheDocument();
   });

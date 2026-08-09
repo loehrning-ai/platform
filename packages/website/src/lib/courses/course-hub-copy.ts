@@ -13,7 +13,7 @@ export const COURSE_HUB_COPY = {
     intro:
       "Zehn Kurse sind vollständig auf Deutsch und Englisch verfügbar. Vier Grundlagenkurse bilden einen festen Lernpfad; sechs Technikkurse behandeln Prompting, Coding Agents, Datenarbeit und Betriebsmodelle. Dauer, Voraussetzungen, Zugang und Nachweis stehen direkt am Kurs.",
     firstStep: "Dein erster Schritt:",
-    checkLabel: "Der fünfminütige KI-Check",
+    checkLabel: "Der KI-Check in rund fünf Minuten",
     checkExplanation:
       "ordnet deinen Stand ein und verweist auf einen passenden Einstieg. Er ersetzt keine Prüfung und erzeugt keinen Nachweis.",
     offersLabel: "Lernangebote",
@@ -47,7 +47,7 @@ export const COURSE_HUB_COPY = {
     intro:
       "All ten courses are available in English and German. Four foundation courses form a fixed path; six technical courses cover prompting, coding agents, data work, and operating models. Duration, prerequisites, access, and completion record are stated on each course.",
     firstStep: "Starting point:",
-    checkLabel: "The five-minute AI check",
+    checkLabel: "The AI check, about five minutes",
     checkExplanation:
       "maps your current knowledge to a suitable entry point. It is not an exam and does not issue a completion record.",
     offersLabel: "Learning catalogue",
