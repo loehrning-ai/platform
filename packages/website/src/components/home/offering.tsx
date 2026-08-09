@@ -38,6 +38,18 @@ const LAB_PREVIEWS = DEEPER_HOME_COURSES.flatMap((course) =>
     : [],
 ).slice(0, 3);
 
+// The catalog carries German cover descriptions. English falls back to the
+// localized course title rather than shipping the German string to an English
+// reader, matching how the lab previews below handle their screenshots.
+function courseCoverAlt(
+  course: { readonly coverImageAlt?: string },
+  localizedTitle: string,
+  locale: Locale,
+): string {
+  if (locale === "de" && course.coverImageAlt) return course.coverImageAlt;
+  return `Cover illustration for the ${localizedTitle} course`;
+}
+
 const META_LINE =
   "font-mono text-[10.5px] uppercase tracking-[0.1em] text-muted-foreground";
 const BADGE_CHIP =
@@ -153,6 +165,18 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
               </div>
 
               <div className="flex shrink-0 flex-col gap-3 md:min-w-[200px]">
+                {featured.coverImage ? (
+                  <span className="relative block aspect-square w-full max-w-[200px] overflow-hidden rounded-lg border border-border bg-card-hover">
+                    <Image
+                      src={featured.coverImage}
+                      alt={courseCoverAlt(featured, featuredCopy.title, locale)}
+                      width={610}
+                      height={610}
+                      sizes="200px"
+                      className="h-full w-full object-cover"
+                    />
+                  </span>
+                ) : null}
                 <CourseBadges slug={featured.slug} locale={locale} />
                 {/* Mini Typenschild: the featured course's data plate. */}
                 <div className="relative border border-border bg-background bg-dot-pattern p-4">
@@ -201,6 +225,18 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
             return (
               <div key={course.slug} className="h-full">
                 <Card href={localizeHref(course.href, locale)} accent={meta.accent} className="h-full">
+                  {course.coverImage ? (
+                    <span className="relative -mx-6 -mt-6 mb-5 block aspect-[16/10] overflow-hidden rounded-t-xl border-b border-border bg-card-hover">
+                      <Image
+                        src={course.coverImage}
+                        alt={courseCoverAlt(course, courseCopy.title, locale)}
+                        width={610}
+                        height={610}
+                        sizes="(min-width: 1024px) 300px, (min-width: 640px) 45vw, 90vw"
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                      />
+                    </span>
+                  ) : null}
                   <div className="flex items-start gap-4">
                     <span
                       aria-hidden="true"
