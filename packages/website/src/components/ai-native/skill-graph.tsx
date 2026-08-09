@@ -27,38 +27,38 @@ const COLUMNS: readonly Column[] = [
   {
     n: "01",
     tag: "Fundament",
-    title: "Prompt-Architektur",
-    hook: "Wie man mit Sprachmodellen redet.",
-    body: "Rolle, Kontext, Format, Constraints. Wann man Beispiele gibt, wann man es lässt. Wie man Kontext-Fenster denkt, nicht als Box, sondern als knappes Budget.",
-    skills: ["Prompt-Craft", "Kontext-Budget", "Fehler-Modi"],
-    meta: "6 Lektionen · 2h",
+    title: "Von der Aufgabe zum Workflow",
+    hook: "Die Arbeit beschreiben, bevor ein Modell sie ausführt.",
+    body: "Rolle, Kontext, Aufgabe, Ausgabeformat und Grenzen festlegen. Das Kontextfenster als knappes Arbeitsbudget behandeln und vorab benennen, woran das Ergebnis geprüft wird.",
+    skills: ["Prompt-Aufbau", "Kontext-Budget", "Fehlermodi"],
+    meta: "5 Lektionen · 50 Min.",
   },
   {
     n: "02",
     tag: "Werkzeuge",
-    title: "Tool-Orchestrierung",
-    hook: "Claude hat drei Oberflächen. Modul zwei zeigt alle.",
-    body: "Chat für Dialog. Artifacts für Dokumente, die neben dem Gespräch entstehen. Claude Code für Dateien und Daten. Welches Werkzeug wann, und warum sich das nicht ausschließt.",
-    skills: ["Artifacts", "Sub-Agents", "Claude Code"],
-    meta: "7 Lektionen · 2.5h",
+    title: "Claude im definierten Arbeitskontext",
+    hook: "Die Oberfläche wählen, die zur Aufgabe passt.",
+    body: "Chat für den Dialog, Artifacts für prüfbare Ergebnisse, Claude Code für begrenzte Arbeit an Dateien. Projects, Skills und MCP liefern Kontext und kontrollierte Verbindungen.",
+    skills: ["Projects", "Skills", "Claude Code"],
+    meta: "7 Lektionen · 76 Min.",
   },
   {
     n: "03",
-    tag: "Praxis",
-    title: "Workflow-Integration",
-    hook: "Assistants in Prozesse einbauen: so, dass sie bleiben.",
-    body: "MCP-Server, die Claude mit deinen Tools verbinden. Eval-Loops, die Qualität messbar machen. Governance, die nicht erstickt. Was passiert, wenn ein Team das täglich nutzt.",
-    skills: ["MCP", "Evaluation", "Governance"],
-    meta: "7 Lektionen · 2.5h",
+    tag: "Wissen",
+    title: "Gepflegte Wissensbasis",
+    hook: "Quellen durchsuchbar, zitierbar und prüfbar machen.",
+    body: "Notizen mit PARA und Maps of Content ordnen, ausgewählte Werkzeuge anbinden und die Herkunft sichtbar halten. Die Qualität des Retrievals hängt an der Pflege der Quellen.",
+    skills: ["Obsidian", "Retrieval", "Quellenprüfung"],
+    meta: "7 Lektionen · 89 Min.",
   },
   {
     n: "04",
-    tag: "Capstone",
-    title: "AI-native Arbeiten",
-    hook: "Denkweise, Teams, Lern-Loops.",
-    body: "Wie du deine Arbeit neu auflegst, nicht nur optimierst. Wie du anderen beibringst, was du gelernt hast. Am Ende: ein eigener Workflow, gebaut, getestet, verteidigt.",
-    skills: ["Methodik", "Teams", "Lernmaterialien"],
-    meta: "6 Lektionen · 2h",
+    tag: "Automatisierung",
+    title: "Kontrollierte Abläufe",
+    hook: "Begrenzte Schritte automatisieren, nicht die Verantwortung.",
+    body: "Wiederkehrende Arbeit kartieren, menschliche Prüfpunkte festlegen und einen kleinen n8n-Workflow testen. Das Capstone dokumentiert einen Piloten und seine Kontrollen.",
+    skills: ["n8n", "Governance", "Capstone"],
+    meta: "8 Lektionen · 88 Min.",
   },
 ];
 
@@ -150,7 +150,7 @@ export function AiNativeSkillGraph({
           </div>
           <div>
             <CountUp
-              value={12}
+              value={5}
               suffix="h"
               className="text-[2.5rem] text-brand-orange"
             />
