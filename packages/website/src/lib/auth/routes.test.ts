@@ -169,6 +169,19 @@ describe("platform route access model", () => {
     }
   });
 
+  // Next's searchParams yields an array when a query key repeats, so
+  // /login?next=/a&next=/b reached this with a value the signature did not
+  // describe and threw inside the server render.
+  it.each([
+    ["an array from a repeated query key", ["/konto", "/kurse"]],
+    ["undefined", undefined],
+    ["a number", 7],
+    ["an object", {}],
+  ])("falls back for %s instead of throwing", (_label, value) => {
+    expect(() => sanitizeNextPath(value)).not.toThrow();
+    expect(sanitizeNextPath(value)).toBe("/konto");
+  });
+
   it("sanitizes next paths to internal non-auth targets", () => {
     expect(sanitizeNextPath(null)).toBe("/konto");
     expect(sanitizeNextPath("//evil.example")).toBe("/konto");

@@ -13,11 +13,31 @@ import { createAuthServerClient } from "@/lib/supabase/auth-server";
 
 const CANONICAL_ORIGIN = new URL(SITE_ORIGIN);
 const MAX_AUTHORIZATION_CODE_LENGTH = 2_048;
-const MAX_IDENTITY_AMR_SKEW_SECONDS = 5;
+const NON_OAUTH_IDENTITY_PROVIDERS = new Set(["email", "phone"]);
 
 type SupportedLoginMethod = "google" | "magic-link";
 
-function isCurrentGoogleOAuthIdentity(user: User, timestamp: number): boolean {
+/**
+ * Attributes an `oauth` authentication event to Google.
+ *
+ * The signed `amr` claim already proves this session was created through OAuth.
+ * What it does not carry is which provider, and the user object has no
+ * per-event provider field either — `app_metadata.provider` records the
+ * original sign-up method. Google is therefore inferred from the linked
+ * identities, and only when it is the account's sole OAuth identity. With a
+ * second one present the event cannot be attributed to either, so it is
+ * refused rather than guessed.
+ *
+ * An earlier revision instead required the Google identity's `last_sign_in_at`
+ * to fall within five seconds of the `amr` timestamp. GoTrue does not advance
+ * that column on a returning sign-in — it keeps the value written when the
+ * identity was linked — so the window rejected every user who had signed in
+ * with Google before, and did so after the one-time code had already been
+ * consumed, leaving no way to recover but to fail again. Measured on this
+ * project, an existing account's identity timestamp trailed its user timestamp
+ * by 41,670 seconds against that five-second tolerance.
+ */
+function isGoogleOAuthEvent(user: User): boolean {
   const providers = user.app_metadata?.providers;
   if (
     !Array.isArray(providers) ||
@@ -28,16 +48,14 @@ function isCurrentGoogleOAuthIdentity(user: User, timestamp: number): boolean {
     return false;
   }
 
-  return user.identities.some((identity) => {
-    if (identity.provider !== "google" || !identity.last_sign_in_at) {
-      return false;
-    }
-    const identityTimestamp = Date.parse(identity.last_sign_in_at) / 1_000;
-    return (
-      Number.isFinite(identityTimestamp) &&
-      Math.abs(identityTimestamp - timestamp) <= MAX_IDENTITY_AMR_SKEW_SECONDS
-    );
-  });
+  const oauthIdentities = user.identities.filter(
+    (identity) =>
+      typeof identity.provider === "string" &&
+      !NON_OAUTH_IDENTITY_PROVIDERS.has(identity.provider),
+  );
+  return (
+    oauthIdentities.length === 1 && oauthIdentities[0]?.provider === "google"
+  );
 }
 
 function supportedLoginMethodFromClaims(
@@ -61,7 +79,7 @@ function supportedLoginMethodFromClaims(
       continue;
     }
     const method: SupportedLoginMethod | null =
-      rawMethod === "oauth" && isCurrentGoogleOAuthIdentity(user, timestamp)
+      rawMethod === "oauth" && isGoogleOAuthEvent(user)
         ? "google"
         : rawMethod === "magiclink" ||
             rawMethod === "otp" ||

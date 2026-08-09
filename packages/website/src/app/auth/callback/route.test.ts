@@ -359,6 +359,46 @@ describe("Supabase PKCE callback session verification", () => {
     expect(signOutMock).not.toHaveBeenCalled();
   });
 
+  // GoTrue writes identities.last_sign_in_at when the identity is linked and
+  // does not advance it on later sign-ins, so a returning Google user arrives
+  // with a timestamp days or months behind the AMR event. Attribution must not
+  // depend on the two agreeing.
+  it("accepts a returning Google user whose identity timestamp is stale", async () => {
+    getUserMock.mockResolvedValueOnce({
+      data: {
+        user: {
+          id: "user-1",
+          app_metadata: { provider: "google", providers: ["google"] },
+          identities: [
+            {
+              provider: "google",
+              last_sign_in_at: "2026-01-04T09:15:00.000Z",
+            },
+          ],
+        },
+      },
+      error: null,
+    });
+    getClaimsMock.mockResolvedValueOnce({
+      data: {
+        claims: {
+          sub: "user-1",
+          amr: [{ method: "oauth", timestamp: 1_786_140_000 }],
+        },
+      },
+      error: null,
+    });
+
+    const response = await GET(
+      callbackRequest(
+        `https://loehrning.ai/auth/callback?code=${VALID_CODE}&next=/konto`,
+      ),
+    );
+
+    expect(location(response).href).toBe("https://loehrning.ai/konto");
+    expect(signOutMock).not.toHaveBeenCalled();
+  });
+
   it("rejects a generic OAuth AMR when the verified current identity is not Google", async () => {
     getUserMock.mockResolvedValueOnce({
       data: {

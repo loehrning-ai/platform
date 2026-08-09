@@ -33,9 +33,16 @@ function hasControlCharacter(value: string): boolean {
   });
 }
 
-export function sanitizeNextPath(value: string | null): string {
+// Accepts `unknown` on purpose. Next's searchParams yields an array when a key
+// repeats, so a caller typed for a single string can still hand this a
+// string[]; narrowing here keeps that from throwing inside a server render.
+export function sanitizeNextPath(value: unknown): string {
   const fallback = "/konto";
-  if (!value || value.length > 2_048 || !value.startsWith("/")) {
+  if (
+    typeof value !== "string" ||
+    value.length > 2_048 ||
+    !value.startsWith("/")
+  ) {
     return fallback;
   }
 
