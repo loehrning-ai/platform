@@ -158,6 +158,30 @@ function NoScriptMobileGroup({
 const LOGO_ORIGINAL_ORANGE = "#C4431A";
 const LOGO_ORIGINAL_INK = "#0B0908";
 
+// The lockup deliberately does NOT go through `--font-sans`. That token leads
+// with the brand face, which ships weights 400-700 and loads
+// `font-display: optional` with no preload, so on a cold visit it is skipped and
+// the chain lands on the generated `loehrningSans Fallback` face —
+// `local("Arial")` declared at weight 400. A 900-weight lockup therefore
+// rendered as thin Arial in production.
+//
+// These are all locally installed families, so the lockup costs no bytes and no
+// request. That is the constraint, not a preference: the business site reaches
+// its black cut through a Geist Sans webfont, and importing that here added 68KB
+// on the critical path of every route, which pushed `largest-contentful-paint`
+// past its 4500ms Lighthouse budget on /ai-native (4729ms),
+// /blog/eu-ai-act-grundlagen (4707ms) and /kurse/open-source/data-science
+// (4861ms). Lighthouse simulates ~1.6Mbps, where 68KB is ~340ms of link time.
+// Arial Black is a real 900-weight face on macOS and Windows rather than a
+// synthesized one; elsewhere the chain degrades to a bolded grotesque.
+// Subsetting Geist to the lockup's ten glyphs would be ~3KB and match the
+// business site exactly, but THIRD_PARTY_NOTICES.md states Geist "is installed
+// from the package lock and is not checked into this repository", and the SIL
+// OFL reserved-font-name clause covers a subset. That is a licensing decision,
+// not a styling one.
+const LOCKUP_FONT_STACK =
+  '"Arial Black", "Helvetica Neue", Helvetica, Arial, sans-serif';
+
 function LogoWordmark({
   scrollY,
   locale,
@@ -203,10 +227,14 @@ function LogoWordmark({
   const dotOpacity = useTransform(scrollY, [60, 130], [1, 0]);
 
   return (
+    /* No clip on this box. The square's rotated bounding box and its hard
+       offset shadow both grow past the flex item's edges, so an `overflow-hidden`
+       here sliced the corner off the mark as it turned. Containment now sits on
+       the wordmark, which is the part that can actually outgrow the row. */
     <Link
       href={localizeHref("/", locale)}
       prefetch={false}
-      className="inline-flex min-h-11 min-w-0 shrink items-center overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className="inline-flex min-h-11 min-w-0 shrink items-center outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <m.div
         className="flex flex-shrink-0 items-center justify-center"
@@ -221,14 +249,18 @@ function LogoWordmark({
           backgroundColor: LOGO_ORIGINAL_ORANGE,
         }}
       >
+        {/* The dot stays in flow, as it does on the business site. Taking it
+            out with `position: absolute` left the mark centring the bare "L",
+            pushing the visible "L." off-centre inside the square. */}
         <m.span
-          className="font-black leading-none text-background"
-          style={{ fontSize: iconFontSize }}
+          className="leading-none text-background"
+          style={{
+            fontSize: iconFontSize,
+            fontFamily: LOCKUP_FONT_STACK,
+            fontWeight: 900,
+          }}
         >
-          L
-          <m.span style={{ opacity: dotOpacity, position: "absolute" }}>
-            .
-          </m.span>
+          L<m.span style={{ opacity: dotOpacity }}>.</m.span>
         </m.span>
       </m.div>
 
@@ -239,11 +271,12 @@ function LogoWordmark({
           the brand at that width; the full lockup returns at sm. */}
       <m.span
         aria-hidden="true"
-        className="hidden whitespace-nowrap font-sans font-black uppercase text-foreground sm:flex"
+        className="hidden overflow-hidden whitespace-nowrap uppercase text-foreground sm:flex"
         style={{
           transformOrigin: "left center",
           fontSize: wordmarkSize,
           letterSpacing: wordmarkLetterSpacing,
+          fontFamily: LOCKUP_FONT_STACK,
           fontWeight: 900,
         }}
       >
