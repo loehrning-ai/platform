@@ -11,8 +11,11 @@ import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
 
-// The root layout template ("%s | loehrning.ai") appends the site name, so the
-// title itself stays descriptive and suffix-free (no "loehrning.ai | loehrning.ai").
+// Next applies a layout's title template to its CHILD segments, not to the
+// segment that declares it. The root layout owns "%s | loehrning.ai", so "/en"
+// gets the suffix one segment deeper while "/" would render bare — every other
+// route on the site is suffixed. Set the document title absolutely here so the
+// homepage matches, without double-suffixing the OpenGraph title below.
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
   const copy = HOME_COPY[locale].metadata;
@@ -22,6 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description: copy.description,
     path: localizedPath,
     locale,
+    documentTitle: { absolute: `${copy.title} | loehrning.ai` },
   });
   const localeAlternates = buildLocaleAlternates(
     "/",

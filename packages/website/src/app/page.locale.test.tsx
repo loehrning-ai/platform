@@ -24,7 +24,10 @@ describe("homepage locale metadata", () => {
       getRequestLocaleMock.mockResolvedValue(locale);
       const metadata = await generateMetadata();
 
-      expect(metadata.title).toBe(title);
+      // The root layout's "%s | loehrning.ai" template reaches child segments
+      // only, so the homepage sets its document title absolutely. The
+      // OpenGraph title below stays unsuffixed.
+      expect(metadata.title).toEqual({ absolute: `${title} | loehrning.ai` });
       expect(metadata.alternates).toEqual({
         canonical,
         languages: { de: "/", en: "/en", "x-default": "/" },
