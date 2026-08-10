@@ -79,7 +79,7 @@ describe("reportClientBoundaryError", () => {
     expect(CLIENT_BOUNDARY_IDS).toContain("data-infrastructure-course");
   });
 
-  it("reports only a generic boundary id and a validated Next digest", () => {
+  it("reports only a generic boundary id and a validated Next digest", async () => {
     const error = Object.assign(
       new Error(
         "learner@example.com prompt=private-answer token=sk-ant-secret-value",
@@ -89,6 +89,9 @@ describe("reportClientBoundaryError", () => {
     error.stack = `Authorization: Bearer ${JWT_HEADER_CANARY}.private`;
 
     reportClientBoundaryError("ai-native-exercise", error);
+    // The SDK is imported dynamically to keep it out of every route's initial
+    // script list, so the report lands a microtask later.
+    await vi.waitFor(() => expect(scope.setTag).toHaveBeenCalled());
 
     expect(withScope).toHaveBeenCalledTimes(1);
     expect(scope.clear).toHaveBeenCalledTimes(1);
@@ -123,12 +126,13 @@ describe("reportClientBoundaryError", () => {
     }
   });
 
-  it("drops an unsafe digest instead of leaking it to Sentry or console", () => {
+  it("drops an unsafe digest instead of leaking it to Sentry or console", async () => {
     const error = Object.assign(new Error("private prompt"), {
       digest: "learner@example.com",
     });
 
     reportClientBoundaryError("workshop-quiz", error);
+    await vi.waitFor(() => expect(scope.setTag).toHaveBeenCalled());
 
     expect(scope.setTag).toHaveBeenCalledTimes(1);
     expect(scope.setTag).toHaveBeenCalledWith(

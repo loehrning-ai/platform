@@ -1,6 +1,5 @@
 "use client";
 
-import * as Sentry from "@sentry/nextjs";
 
 export const CLIENT_BOUNDARY_IDS = [
   "app-root",
@@ -94,16 +93,27 @@ export function reportClientBoundaryError(
   // thrown value. Strict browser tests intentionally fail on this safe signal.
   console.error(`[${REPORT_MESSAGE}]`, metadata);
 
-  try {
-    Sentry.withScope((scope) => {
-      scope.clear();
-      scope.setLevel("error");
-      scope.setTag("client.boundary", safeBoundaryId);
-      if (digest) scope.setTag("next.digest", digest);
-      Sentry.captureMessage(REPORT_MESSAGE);
-    });
-  } catch {
-    // Telemetry must never break the recovery boundary. Do not log the SDK
-    // failure: its error could itself contain transport or configuration data.
-  }
+  // Imported dynamically, not at module scope. This module is "use client" and
+  // is pulled in by the App Router error boundaries, which Next places in every
+  // route's INITIAL script list — so a static `import * as Sentry` shipped
+  // ~43 KB of @sentry/core to every page, including pages that never report.
+  // instrumentation-client.ts already loads the SDK only when a DSN is set, so
+  // in a DSN-less build (CI's Lighthouse server among them) those bytes were
+  // downloaded and never used.
+  //
+  // The catch covers a rejected import and a throw inside the callback alike:
+  // telemetry must never break the recovery boundary. The SDK failure is not
+  // logged, because its error could itself carry transport or configuration
+  // data.
+  void import("@sentry/nextjs")
+    .then(({ withScope, captureMessage }) => {
+      withScope((scope) => {
+        scope.clear();
+        scope.setLevel("error");
+        scope.setTag("client.boundary", safeBoundaryId);
+        if (digest) scope.setTag("next.digest", digest);
+        captureMessage(REPORT_MESSAGE);
+      });
+    })
+    .catch(() => undefined);
 }
