@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
+import type { Locale } from "@/lib/i18n/locale";
 import { cn } from "@/lib/utils";
 
 /**
@@ -9,20 +10,21 @@ import { cn } from "@/lib/utils";
  * Ported from `codex/js/lessons/L05.js` (functional parity; the source's
  * confused-avatar rotation + SVG probability curve is simplified to a
  * numeric readout — the graded interaction is dwelling the slider in the
- * "sweet spot" (task size ≤ 1/3 of the range, roughly "morning-sized"),
+ * focused end of an explicitly illustrative coupling range,
  * not the avatar chrome).
  *
- * A slider from "1h" to "1w" of task size. Success probability follows the
- * source's exact formula (`0.92 * (1 - val) ** 2.5 + 0.08`). Dwelling in
- * the sweet spot (val ≤ 1/3) for 800ms awards the checkpoint once — the
+ * The source's curve
+ * (`0.92 * (1 - val) ** 2.5 + 0.08`) is retained only as an illustrative
+ * scope-fit score, not presented as an empirical success probability. Dwelling in
+ * the focused range (val ≤ 1/3) for 800ms awards the checkpoint once — the
  * dwell timer is cleared on unmount so it never fires after the component
  * is gone, mirroring the source's own guarded `setTimeout`.
  */
 
-const SWEET_SPOT_MAX = 1 / 3;
+const FOCUSED_RANGE_MAX = 1 / 3;
 const DWELL_MS = 800;
 
-function successProbability(val: number): number {
+function illustrativeScopeFit(val: number): number {
   return 0.92 * Math.pow(1 - val, 2.5) + 0.08;
 }
 
@@ -35,9 +37,50 @@ function toneFor(pct: number): "ok" | "warn" | "bad" {
 interface L05ScopeSliderProps {
   readonly lessonId: string;
   readonly cpId: string;
+  readonly locale?: Locale;
 }
 
-export function L05ScopeSlider({ lessonId, cpId }: L05ScopeSliderProps): JSX.Element {
+const COPY = {
+  en: {
+    heading: "◆ Exercise · Scope coupling",
+    sliderLabel: "Task scope from one behavior to a multi-change initiative",
+    valueText: (value: number) =>
+      `${value} percent of the illustrative coupling range`,
+    units: ["one behavior", "coupled", "multi-change", "initiative"],
+    score: "illustrative reviewability",
+    holding: "holding target range…",
+    locked: "target range confirmed",
+  },
+  de: {
+    heading: "◆ Praxis · Aufgabenumfang",
+    sliderLabel:
+      "Aufgabenumfang von einem Verhalten bis zu einer Initiative mit mehreren Änderungen",
+    valueText: (value: number) =>
+      `${value} Prozent des illustrativen Kopplungsbereichs`,
+    units: ["ein Verhalten", "gekoppelt", "mehrere Änderungen", "Initiative"],
+    score: "illustrative Prüfbarkeit",
+    holding: "Zielbereich halten…",
+    locked: "Zielbereich bestätigt",
+  },
+} as const satisfies Record<
+  Locale,
+  {
+    readonly heading: string;
+    readonly sliderLabel: string;
+    readonly valueText: (value: number) => string;
+    readonly units: readonly string[];
+    readonly score: string;
+    readonly holding: string;
+    readonly locked: string;
+  }
+>;
+
+export function L05ScopeSlider({
+  lessonId,
+  cpId,
+  locale = "en",
+}: L05ScopeSliderProps): JSX.Element {
+  const copy = COPY[locale];
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [value, setValue] = useState(0.6);
   const [locked, setLocked] = useState(false);
@@ -54,7 +97,7 @@ export function L05ScopeSlider({ lessonId, cpId }: L05ScopeSliderProps): JSX.Ele
 
   useEffect(() => {
     if (locked) return;
-    if (value <= SWEET_SPOT_MAX) {
+    if (value <= FOCUSED_RANGE_MAX) {
       if (!dwellTimeoutRef.current) {
         dwellTimeoutRef.current = setTimeout(() => {
           dwellTimeoutRef.current = null;
@@ -67,14 +110,14 @@ export function L05ScopeSlider({ lessonId, cpId }: L05ScopeSliderProps): JSX.Ele
     }
   }, [value, locked, complete, clearDwell]);
 
-  const pct = Math.round(successProbability(value) * 100);
+  const pct = Math.round(illustrativeScopeFit(value) * 100);
   const tone = toneFor(pct);
-  const inSweetSpot = value <= SWEET_SPOT_MAX;
+  const inFocusedRange = value <= FOCUSED_RANGE_MAX;
 
   return (
-    <div className="border-2 border-border bg-card/40 p-5 md:p-6">
+    <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-5 md:p-6">
       <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        ◆ Bespoke · Scope slider
+        {copy.heading}
       </p>
       <div className="flex flex-col gap-3">
         <div className="relative">
@@ -82,7 +125,7 @@ export function L05ScopeSlider({ lessonId, cpId }: L05ScopeSliderProps): JSX.Ele
             className={cn(
               "pointer-events-none absolute inset-y-0 left-0 bg-brand-orange/15",
             )}
-            style={{ width: `${SWEET_SPOT_MAX * 100}%` }}
+            style={{ width: `${FOCUSED_RANGE_MAX * 100}%` }}
             aria-hidden="true"
           />
           <input
@@ -91,34 +134,39 @@ export function L05ScopeSlider({ lessonId, cpId }: L05ScopeSliderProps): JSX.Ele
             max={100}
             value={Math.round(value * 100)}
             onChange={(e) => setValue(Number(e.target.value) / 100)}
-            aria-label="Task size, from an hour to a week"
-            aria-valuetext={`${Math.round(value * 100)} percent of the range`}
+            aria-label={copy.sliderLabel}
+            aria-valuetext={copy.valueText(Math.round(value * 100))}
             disabled={locked}
             className="relative z-10 w-full accent-[var(--brand-orange)]"
           />
         </div>
         <div className="flex justify-between font-mono text-[10.5px] text-muted-foreground">
-          <span>1h</span>
-          <span>1d</span>
-          <span>3d</span>
-          <span>1w</span>
+          {copy.units.map((unit) => (
+            <span key={unit}>{unit}</span>
+          ))}
         </div>
 
         <div className="mt-2 flex items-center justify-between">
           <span
             className={cn(
               "font-mono text-[15px] font-bold",
-              tone === "ok" ? "text-risk-green" : tone === "warn" ? "text-brand-amber" : "text-destructive",
+              tone === "ok"
+                ? "text-risk-green"
+                : tone === "warn"
+                  ? "text-brand-amber"
+                  : "text-destructive",
             )}
           >
-            success: {pct}%
+            {copy.score}: {pct}/100
           </span>
-          {inSweetSpot && !locked && (
-            <span className="font-mono text-[11px] text-muted-foreground">holding sweet spot…</span>
+          {inFocusedRange && !locked && (
+            <span className="font-mono text-[11px] text-muted-foreground">
+              {copy.holding}
+            </span>
           )}
           {locked && (
             <span className="font-mono text-[11px] font-bold text-risk-green">
-              sweet spot locked {done ? "✓" : ""}
+              {copy.locked} {done ? "✓" : ""}
             </span>
           )}
         </div>

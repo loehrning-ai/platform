@@ -15,7 +15,9 @@ describe("DAGBuilder ", () => {
 
   it("renders the real panel copy and starts on the Direct effect pattern", () => {
     render(<DAGBuilder />);
-    expect(screen.getByText("DAG patterns · should you adjust for Z?")).toBeInTheDocument();
+    expect(
+      screen.getByText("DAG patterns · should you adjust for Z?"),
+    ).toBeInTheDocument();
     expect(screen.getByText("Yes, directly.")).toBeInTheDocument();
   });
 
@@ -23,19 +25,33 @@ describe("DAGBuilder ", () => {
     render(<DAGBuilder />);
 
     fireEvent.click(screen.getByText(/^Fork \/ Confounder/));
-    expect(screen.getByText("Yes, but only after controlling for Z.")).toBeInTheDocument();
-    expect(screen.getByText(/opens a backdoor path/)).toBeInTheDocument();
+    expect(
+      screen.getByText("Yes, but only after controlling for Z."),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/creates the backdoor path/)).toBeInTheDocument();
 
     fireEvent.click(screen.getByText(/^Mediator/));
-    expect(screen.getByText("Yes, but do NOT control for Z.")).toBeInTheDocument();
-    expect(screen.getByText(/on the causal path from X to Y/)).toBeInTheDocument();
+    expect(
+      screen.getByText("Yes, but do NOT control for Z."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/on the causal path from X to Y/),
+    ).toBeInTheDocument();
 
     fireEvent.click(screen.getByText(/^Collider/));
-    expect(screen.getByText("Yes, but NEVER condition on Z.")).toBeInTheDocument();
-    expect(screen.getByText(/both X and Y point into it/)).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "For the displayed total effect, do not condition on Z.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/can open a non-causal association/),
+    ).toBeInTheDocument();
 
     fireEvent.click(screen.getByText(/^Direct effect/));
     expect(screen.getByText("Yes, directly.")).toBeInTheDocument();
-    expect(screen.getByText(/No confounders, no colliders/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/assumes no open backdoor path/),
+    ).toBeInTheDocument();
   });
 });

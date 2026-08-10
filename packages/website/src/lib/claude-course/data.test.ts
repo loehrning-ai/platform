@@ -47,7 +47,10 @@ describe("claude-course content module ", () => {
     for (const lesson of lessons) {
       expect(lesson.sections.length, lesson.id).toBeGreaterThan(0);
       for (const section of lesson.sections) {
-        expect(section.content.trim().length, `${lesson.id}/${section.id}`).toBeGreaterThan(20);
+        expect(
+          section.content.trim().length,
+          `${lesson.id}/${section.id}`,
+        ).toBeGreaterThan(20);
       }
       expect(CLAUDE_TRACK_IDS, lesson.id).toContain(lesson.trackId);
       expect(lesson.quiz, lesson.id).toEqual([]);
@@ -62,8 +65,12 @@ describe("claude-course content module ", () => {
     const lessons = await getAllClaudeLessons();
     for (const lesson of lessons) {
       for (const widget of lesson.widgets ?? []) {
-        expect(isWidgetKind(widget.kind), `${lesson.id}: ${widget.kind}`).toBe(true);
-        expect(ALL_WIDGET_KINDS, `${lesson.id}: ${widget.kind}`).toContain(widget.kind);
+        expect(isWidgetKind(widget.kind), `${lesson.id}: ${widget.kind}`).toBe(
+          true,
+        );
+        expect(ALL_WIDGET_KINDS, `${lesson.id}: ${widget.kind}`).toContain(
+          widget.kind,
+        );
       }
     }
   });

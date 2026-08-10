@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-07-29",
+  "generated": "2026-08-09",
   "hashAlgorithm": "sha256",
   "assets": [
     {
@@ -153,6 +153,42 @@
       "redistribution": "Included for repository operation; reuse is not granted"
     },
     {
+      "path": "packages/website/public/course-covers/ai-native-cover-v2.webp",
+      "sizeBytes": 66776,
+      "sha256": "b7dad0c964f0dedc0aa4f62ed737d7d9d80380b11f1f03c43892b0dba028df68",
+      "owner": "Tim Löhr",
+      "source": "Original loehrning.ai editorial course-cover atlas generated for this repository on 2026-08-08",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
+    },
+    {
+      "path": "packages/website/public/course-covers/eu-ai-act-kurs-cover-v2.webp",
+      "sizeBytes": 57516,
+      "sha256": "fdd8c36ea22b6ec80a44ae66e1e2d130566a742f1367c9591857413bc0521352",
+      "owner": "Tim Löhr",
+      "source": "Original loehrning.ai editorial course-cover atlas generated for this repository on 2026-08-08",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
+    },
+    {
+      "path": "packages/website/public/course-covers/ki-fuehrerschein-cover-v2.webp",
+      "sizeBytes": 62804,
+      "sha256": "56fa80a887f73700853a390b154ee9cbca8827f4e4dbfbe879903afc175c5a78",
+      "owner": "Tim Löhr",
+      "source": "Original loehrning.ai editorial course-cover atlas generated for this repository on 2026-08-08",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
+    },
+    {
+      "path": "packages/website/public/course-covers/ki-und-gesellschaft-cover-v2.webp",
+      "sizeBytes": 78916,
+      "sha256": "619d83f8877f8bd1f5d4b70e0e8c7cdb12740ef12ed81a3457ba9ced2deeff40",
+      "owner": "Tim Löhr",
+      "source": "Original loehrning.ai editorial course-cover atlas generated for this repository on 2026-08-08",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
+    },
+    {
       "path": "packages/website/public/favicon-16x16.png",
       "sizeBytes": 221,
       "sha256": "97532161d0a5db008c4fa674f3e02b1a7eb67d364b3d9d30eb344484ce05e1ab",
@@ -178,6 +214,15 @@
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/google-signin-icon-light.svg",
+      "sizeBytes": 10791,
+      "sha256": "6587b180203a99da15c0a041018e15c94ffd9556c4b9855bdc69806081a93791",
+      "owner": "Google LLC",
+      "source": "https://developers.google.com/identity/branding-guidelines",
+      "license": "LicenseRef-Google-Brand",
+      "redistribution": "Included only for the Sign in with Google control; use remains subject to Google's branding guidelines"
     },
     {
       "path": "packages/website/public/icon-192-maskable.png",
@@ -334,10 +379,10 @@
     },
     {
       "path": "packages/website/public/logo.svg",
-      "sizeBytes": 5400,
-      "sha256": "88caaeb331ee63acf52003323df5ec4ad5c1eb7b5aa35699e36dc3266dd99871",
+      "sizeBytes": 4645,
+      "sha256": "477a5b796f82ea5afb453b6ab03e6dbdf5abc066aa11cd710e4fbdec079d75ed",
       "owner": "Tim Löhr",
-      "source": "loehrning.ai brand asset",
+      "source": "loehrning.ai brand asset package v5.3, lockup-horizontal.svg",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
@@ -349,6 +394,33 @@
       "source": "loehrning.ai brand asset",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/ueber-mich/logos/apple.svg",
+      "sizeBytes": 665,
+      "sha256": "cb37345aafe221e5db55565e27cb9320201efc8fa2634ddcbfc453a7b1d6ffae",
+      "owner": "Apple Inc.",
+      "source": "Existing local business-site employer-mark asset; upstream download provenance is not recorded",
+      "license": "LicenseRef-Third-Party-Trademark",
+      "redistribution": "Included only for nominative biographical identification; no trademark reuse right or endorsement is granted"
+    },
+    {
+      "path": "packages/website/public/ueber-mich/logos/meta.svg",
+      "sizeBytes": 1339,
+      "sha256": "abc6a9f1c8f23f78f9c3941fdf4d8ee600ffbfb0f453c9054768c442daaae6fa",
+      "owner": "Meta Platforms, Inc.",
+      "source": "Existing local business-site employer-mark asset; upstream download provenance is not recorded",
+      "license": "LicenseRef-Third-Party-Trademark",
+      "redistribution": "Included only for nominative biographical identification; no trademark reuse right or endorsement is granted"
+    },
+    {
+      "path": "packages/website/public/ueber-mich/logos/red-bull.svg",
+      "sizeBytes": 18759,
+      "sha256": "917b1074fb78614927110990d2d5add3b7745911124e72c29b9cde2b12b23f4b",
+      "owner": "Red Bull GmbH",
+      "source": "Existing local business-site employer-mark asset; file header identifies SVG Repo but exact upstream URL is not recorded. The profile renders only its two-bulls silhouette.",
+      "license": "LicenseRef-Third-Party-Trademark",
+      "redistribution": "Included only for nominative biographical identification; no trademark reuse right or endorsement is granted"
     },
     {
       "path": "packages/website/public/ueber-mich/tim-loehr.jpg",
@@ -681,8 +753,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/books-desktop.png",
-      "sizeBytes": 119995,
-      "sha256": "219c224b90dee2ed1fb5b338f62df3859ccc096b9e12c3c18b7a554717c97bb4",
+      "sizeBytes": 132351,
+      "sha256": "e581d1b1264f7a9568185c16ac4ce884a7f21a995625163f2c44518248b1cef2",
       "owner": "Tim Löhr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",
@@ -690,8 +762,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/courses-desktop.png",
-      "sizeBytes": 123497,
-      "sha256": "3dbbf00af5ff6a2d3c1ccd54752628ca5fe181808d8dfb1ee09b2a628733266b",
+      "sizeBytes": 131250,
+      "sha256": "0ab7f223c32453e21b8a118cb52977bb6158cecc036ab09c3c335a60d1f09b4b",
       "owner": "Tim Löhr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",
@@ -708,8 +780,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/open-source-desktop.png",
-      "sizeBytes": 157378,
-      "sha256": "d54b13586387d7fbc3424d338f43e8cca2089473830211cb4208fb00cf399184",
+      "sizeBytes": 198704,
+      "sha256": "f403bd6f2b2dcd5cf0b95f63482c22f31cf88c06f995d1b850f2334a920ec64c",
       "owner": "Tim Löhr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",

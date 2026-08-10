@@ -1,4 +1,3 @@
-// Ported verbatim from course-data.js's MODULES[8] ("measurement", M09).
 import type { AiNativeOperatorLesson } from "../types";
 
 export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
@@ -8,26 +7,28 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 1,
     number: 1,
     kind: "reading",
-    title: "Beyond seat counts",
-    subtitle: 'Stop measuring "how many people have an AI license." Measure outcomes.',
-    objective: 'Stop measuring "how many people have an AI license." Measure outcomes.',
+    title: "Separate adoption from outcome measurement",
+    subtitle:
+      "Use activity data to understand operation, but evaluate value with predefined outcomes, costs, and guardrails.",
+    objective:
+      "Use activity data to understand operation, but evaluate value with predefined outcomes, costs, and guardrails.",
     durationMinutes: 18,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "The vanity metric",
+        title: "Activity is diagnostic, not proof of value",
         readTimeMinutes: 9,
         content:
-          'Adoption dashboards counting active users, prompts sent, tokens consumed, these tell you nothing about whether AI is working. They are the AI-era equivalent of "lines of code shipped." Comforting; useless.',
+          "Licenses, active users, model calls, tokens, and feature use can reveal reach, load, cost, and support needs. They do not show whether the intervention improved the work. Keep adoption measures, operational measures, outcome measures, and guardrails separate so that one category is not presented as another.",
       },
       {
         id: "s2",
-        title: "What to measure instead",
+        title: "Define a balanced measure set",
         readTimeMinutes: 9,
         content:
-          "Per team, pick 2-3 outcome metrics that should improve with AI: cycle time, throughput, defect rate, NPS, deal velocity, ticket resolution time. Track them. Compare to baseline. The metric matters; the activity around it does not.",
+          "Start from the expected mechanism: which behavior changes, and which outcome should follow? Select a small set of role-relevant outcomes and pair them with quality, risk, equity, and cost guardrails. Define the population, calculation, source, owner, review cadence, and decision threshold before inspecting results.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -39,9 +40,9 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
         props: {
           lessonId: "measurement/1",
           cpId: "exercise",
-          title: "Outcome KPI Picker",
+          title: "Measure set",
           scenario:
-            "For your team, pick 2-3 outcome KPIs that AI should measurably move. State the current baseline and the 90-day target.",
+            "For one workflow, state the expected mechanism, primary outcome, quality and risk guardrails, cost measure, population, data source, owner, review cadence, and decision threshold.",
           rows: 4,
         },
       },
@@ -53,27 +54,28 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 2,
     number: 2,
     kind: "reading",
-    title: "Baseline before scaling",
-    subtitle: "Before rolling out any AI tool, baseline the metric. Without baseline, you are telling stories.",
+    title: "Establish a comparable baseline",
+    subtitle:
+      "Define the metric and comparison design before rollout, then account for variability, seasonality, and other changes.",
     objective:
-      "Before rolling out any AI tool, baseline the metric. Without baseline, you are telling stories.",
+      "Define the metric and comparison design before rollout, then account for variability, seasonality, and other changes.",
     durationMinutes: 14,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "The discipline",
+        title: "Choose a baseline period from the data",
         readTimeMinutes: 7,
         content:
-          "No AI rollout begins without a measured baseline of the target metric. Two weeks minimum. Same conditions as the post-rollout measurement. Without this, every claimed improvement is anecdote.",
+          "The required observation period depends on event frequency, variance, seasonality, and the size of change the decision needs to detect. Freeze the metric definition, population, exclusions, and data-quality checks before rollout. Record uncertainty rather than treating one historical average as exact.",
       },
       {
         id: "s2",
-        title: "Why teams skip it (and shouldn't)",
+        title: "Build a credible comparison",
         readTimeMinutes: 7,
         content:
-          'Baselining is unglamorous and feels slow. The pressure to "just ship the AI tool" is high. Skipping it costs you the ability to ever prove the ROI, and that means the program eventually loses funding when budgets tighten.',
+          "A before-and-after comparison can be distorted by staffing, demand, policy, product, or market changes. Use a randomized, staggered, matched, or interrupted-time design where feasible. Record concurrent changes and interpretation limits. If the comparison cannot support a causal claim, report an association instead.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -86,7 +88,7 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           lessonId: "measurement/2",
           cpId: "exercise",
           scenario:
-            "Pick one AI rollout you did or are planning. What is the baseline measurement? If you don't have one, stop and gather it.",
+            "Choose one rollout. Define the metric, population, exclusions, baseline period, variability and seasonality checks, comparison group or design, concurrent changes, and the strongest claim the evidence could support.",
           rows: 3,
         },
       },
@@ -98,26 +100,28 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 3,
     number: 3,
     kind: "reading",
-    title: "The quarterly leverage review",
-    subtitle: "Run leverage reviews on the same cadence and rigor as revenue reviews.",
-    objective: "Run leverage reviews on the same cadence and rigor as revenue reviews.",
+    title: "Run evidence reviews on a defined cadence",
+    subtitle:
+      "Use a decision forum to examine outcomes, uncertainty, guardrails, costs, and the next controlled action.",
+    objective:
+      "Use a decision forum to examine outcomes, uncertainty, guardrails, costs, and the next controlled action.",
     durationMinutes: 20,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "The ritual",
+        title: "Set cadence from the decision cycle",
         readTimeMinutes: 10,
         content:
-          "Every quarter, every team presents AI leverage like a revenue review. What metrics moved. Why. What worked. What didn't. What's next quarter's bet. The seriousness of the ritual signals the seriousness of the program.",
+          "Review frequency should match how quickly evidence accumulates, how often the intervention can change, and the cost of delayed correction. Define participants, decision rights, required evidence, and submission dates. The review is for decisions, not a recital of activity or a product demonstration.",
       },
       {
         id: "s2",
-        title: "What good looks like",
+        title: "Use a consistent evidence packet",
         readTimeMinutes: 10,
         content:
-          "A 20-minute deck. Three slides on outcomes, one on causes, one on next bets. No vanity metrics. Honest about what didn't work. The first few are awkward; by the third quarter the format is muscle memory and the program compounds.",
+          "Present the hypothesis, intervention, baseline and comparison, outcome results with uncertainty, guardrails and incidents, operating cost, limitations, and proposed decision. Record whether to continue, change, pause, or stop; name the owner and next review condition. Preserve the result so later teams can reuse the evidence.",
       },
     ],
     exerciseKind: "slot-fill",
@@ -129,15 +133,15 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
         props: {
           lessonId: "measurement/3",
           cpId: "exercise",
-          title: "Leverage Review Slides",
+          title: "Evidence review packet",
           scenario:
-            "Sketch the 5-slide leverage review for your team next quarter. Slide titles + one-line content per slide.",
+            "Draft five sections for the next review. Each section should state the evidence shown and the decision it informs.",
           placeholders: [
-            "Slide 1, Outcomes this quarter",
-            "Slide 2, Metric movement",
-            "Slide 3, What worked",
-            "Slide 4, Causes of misses",
-            "Slide 5, Next quarter's bets",
+            "1. Hypothesis and intervention",
+            "2. Baseline, comparison, and uncertainty",
+            "3. Outcomes, guardrails, and incidents",
+            "4. Cost, limitations, and alternatives",
+            "5. Decision, owner, and next review condition",
           ],
         },
       },
@@ -149,52 +153,97 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Module 9, knowledge check & capstone",
-    subtitle: "Confirm measurement primitives, then commit.",
-    objective: "Confirm measurement primitives, then commit.",
+    title: "Module 9 knowledge check and capstone",
+    subtitle: "Check the measurement practices from this module.",
+    objective: "Check the measurement practices from this module.",
     durationMinutes: 15,
     keyConcepts: [],
     quiz: [
       {
         id: "ano-measurement-q1",
         questionText:
-          "Your AI rollout claims 30% productivity gain. The hardest question a board member can ask is:",
+          "A rollout is reported to have improved productivity. Which question most directly tests the claim?",
         answerOptions: [
-          { id: "a", text: "What model are you using?", isCorrect: false },
-          { id: "b", text: "What is the baseline measurement and when was it taken?", isCorrect: true },
-          { id: "c", text: "Who is the vendor?", isCorrect: false },
-          { id: "d", text: "How many seats?", isCorrect: false },
+          {
+            id: "a",
+            text: "Which model provider was selected?",
+            isCorrect: false,
+          },
+          {
+            id: "b",
+            text: "How was productivity defined, what baseline and comparison were used, and which concurrent changes were considered?",
+            isCorrect: true,
+          },
+          {
+            id: "c",
+            text: "Which vendor sold the implementation?",
+            isCorrect: false,
+          },
+          {
+            id: "d",
+            text: "How many user licenses were assigned?",
+            isCorrect: false,
+          },
         ],
         explanation:
-          "The hardest and most legitimate question a board member can ask about a productivity claim is what the baseline was and when it was measured, without a baseline taken under comparable conditions, a 30% gain is a story, not a result. Model choice, vendor, and seat count are all secondary to whether the comparison is even valid.",
+          "A quantified improvement needs a stable definition, a credible baseline and comparison, and an account of other changes that could explain the result. Provider, vendor, and license count do not establish that the intervention caused the reported outcome.",
       },
       {
         id: "ano-measurement-q2",
-        questionText: "The most reliable signal that an AI program is working:",
+        questionText:
+          "Which evidence most strongly supports that a model-assisted program is working?",
         answerOptions: [
-          { id: "a", text: "Number of active users.", isCorrect: false },
-          { id: "b", text: "Tokens per month.", isCorrect: false },
+          {
+            id: "a",
+            text: "The number of active users increased.",
+            isCorrect: false,
+          },
+          {
+            id: "b",
+            text: "Monthly token volume increased.",
+            isCorrect: false,
+          },
           {
             id: "c",
-            text: "Outcome metrics (cycle time, defect rate, throughput) moving against a measured baseline.",
+            text: "Predefined outcome and guardrail measures improved relative to a credible comparison, with costs, uncertainty, and concurrent changes considered.",
             isCorrect: true,
           },
-          { id: "d", text: "Internal survey sentiment.", isCorrect: false },
+          {
+            id: "d",
+            text: "An internal survey reported enthusiasm for the tool.",
+            isCorrect: false,
+          },
         ],
         explanation:
-          "The reliable signal that an AI program is working is outcome metrics, cycle time, defect rate, throughput, moving against a measured baseline, because those numbers reflect the work actually getting better. Active-user counts, token volume, and survey sentiment are activity or vibes metrics that can rise even while nothing real improves.",
+          "Adoption and sentiment can help explain operation but do not demonstrate value. The stronger evidence connects predefined outcomes and guardrails to a credible comparison while reporting cost, uncertainty, and alternative explanations.",
       },
       {
         id: "ano-measurement-q3",
-        questionText: "A quarterly leverage review should look most like:",
+        questionText: "What should an evidence review produce?",
         answerOptions: [
-          { id: "a", text: "A project status update.", isCorrect: false },
-          { id: "b", text: "A revenue review, with the same rigor and seriousness.", isCorrect: true },
-          { id: "c", text: "A demo day.", isCorrect: false },
-          { id: "d", text: "A retrospective.", isCorrect: false },
+          {
+            id: "a",
+            text: "A project status report without a decision.",
+            isCorrect: false,
+          },
+          {
+            id: "b",
+            text: "A documented decision based on predefined measures, comparison, uncertainty, guardrails, cost, and risk, with an owner and next review condition.",
+            isCorrect: true,
+          },
+          {
+            id: "c",
+            text: "A demonstration of the newest model features.",
+            isCorrect: false,
+          },
+          {
+            id: "d",
+            text: "A retrospective with no measurement record.",
+            isCorrect: false,
+          },
         ],
         explanation:
-          "A quarterly leverage review earns its seriousness by mirroring a revenue review: the same cadence, the same rigor, real numbers that moved and why, presented to people who will ask hard questions. Treating it like an informal status update or a demo day undersells the discipline the program needs to keep its funding.",
+          "The review exists to decide whether to continue, change, pause, or stop an intervention. A consistent evidence packet, named decision owner, and explicit next condition make the result auditable and reusable.",
       },
     ],
     sections: [],

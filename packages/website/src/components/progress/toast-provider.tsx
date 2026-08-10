@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import type { JSX } from "react";
+import { type JSX, useEffect, useState } from "react";
 import { isProgressUiRoute } from "@/lib/progress/learning-route-policy";
 
 const ProgressToastRuntime = dynamic(
@@ -19,5 +19,13 @@ const ProgressToastRuntime = dynamic(
  */
 export function ProgressToastProvider(): JSX.Element | null {
   const pathname = usePathname();
-  return isProgressUiRoute(pathname) ? <ProgressToastRuntime /> : null;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  return mounted && isProgressUiRoute(pathname) ? (
+    <ProgressToastRuntime />
+  ) : null;
 }

@@ -3,12 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { m } from "framer-motion";
-import {
-  Award,
-  GraduationCap,
-  LockKeyhole,
-  Trophy,
-} from "lucide-react";
+import { Award, GraduationCap, LockKeyhole, Trophy } from "lucide-react";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { getCourseConfig } from "@/lib/course/config";
 import type { CourseSlug } from "@/lib/course/types";
@@ -25,10 +20,14 @@ import {
 import { subscribe } from "@/lib/progress/store";
 import type { UnifiedProgress } from "@/lib/progress/types";
 import { cn } from "@/lib/utils";
+import type { Locale } from "@/lib/i18n/locale";
+import { localizeHref } from "@/lib/i18n/locale";
+import { MotionProvider } from "@/components/motion-provider";
 
 interface CourseAssessmentCtaProps {
   readonly courseSlug: CourseSlug;
   readonly className?: string;
+  readonly locale?: Locale;
 }
 
 interface AssessmentProgress {
@@ -91,8 +90,7 @@ const ASSESSMENT_COPY: Readonly<Record<"de" | "en", AssessmentCopy>> = {
     loading: "Checking course progress…",
     details: (questions, passPercentage, minutes) =>
       `${questions} questions · ${passPercentage}% to pass · ${minutes} minutes`,
-    progress: (completed, total) =>
-      `${completed} of ${total} lessons complete`,
+    progress: (completed, total) => `${completed} of ${total} lessons complete`,
     locked: (remaining, total) =>
       `Complete all ${total} lessons to unlock the workshop quiz. ${remaining} ${
         remaining === 1 ? "lesson" : "lessons"
@@ -119,8 +117,7 @@ function deriveAssessmentProgress(
   return {
     completedLessons: completedCanonicalLessonCount(progress, courseSlug),
     courseCompleted: isCourseFullyCompleted(progress, courseSlug),
-    quizPassed:
-      progress.courses[courseSlug]?.workshopQuiz.passed === true,
+    quizPassed: progress.courses[courseSlug]?.workshopQuiz.passed === true,
     certificateEligible: isCourseCompletionEarned(progress, courseSlug),
   };
 }
@@ -135,15 +132,18 @@ function deriveAssessmentProgress(
 export function CourseAssessmentCta({
   courseSlug,
   className,
+  locale,
 }: CourseAssessmentCtaProps) {
-  const config = getCourseConfig(courseSlug);
+  const config = getCourseConfig(courseSlug, locale);
   const copy = ASSESSMENT_COPY[config.language];
   const totalLessons = CANONICAL_LESSON_IDS[courseSlug].length;
-  const quizHref = `${config.coursePath}/quiz`;
-  const certificateHref = `${config.coursePath}/zertifikat`;
-  const passPercentage = Math.round(
-    config.workshopQuizPassThreshold * 100,
-  );
+  const quizHref = locale
+    ? localizeHref(`${config.coursePath}/quiz`, locale)
+    : `${config.coursePath}/quiz`;
+  const certificateHref = locale
+    ? localizeHref(`${config.coursePath}/zertifikat`, locale)
+    : `${config.coursePath}/zertifikat`;
+  const passPercentage = Math.round(config.workshopQuizPassThreshold * 100);
   const headingId = `course-assessment-${courseSlug}-heading`;
   const [progress, setProgress] = useState<AssessmentProgress | null>(null);
 
@@ -176,10 +176,7 @@ export function CourseAssessmentCta({
       stateCopy = copy.locked(remainingLessons, totalLessons);
     } else if (progress.quizPassed) {
       stateCopy = copy.passed(config.recordNoun.possessive);
-    } else if (
-      courseSlug === "ai-native" &&
-      progress.certificateEligible
-    ) {
+    } else if (courseSlug === "ai-native" && progress.certificateEligible) {
       stateCopy = copy.capstoneEligible(config.recordNoun.possessive);
     } else {
       stateCopy = copy.ready(totalLessons);
@@ -187,34 +184,31 @@ export function CourseAssessmentCta({
   }
 
   return (
-    <m.section
-      id="final-assessment"
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: EASE_OUT_EXPO }}
-      className={cn(
-        "mt-12 scroll-mt-24 border-2 border-foreground bg-card/40 p-6 shadow-[4px_4px_0_0_var(--color-foreground)] md:p-8",
-        className,
-      )}
-      aria-labelledby={headingId}
-      data-assessment-state={
-        progress === null
-          ? "loading"
-          : progress.courseCompleted
-            ? progress.quizPassed
-              ? "passed"
-              : progress.certificateEligible
-                ? "certificate-eligible"
-                : "ready"
-            : "locked"
-      }
-    >
+    <MotionProvider>
+      <m.section
+        id="final-assessment"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: EASE_OUT_EXPO }}
+        className={cn(
+          "mt-12 scroll-mt-24 border-2 border-foreground bg-card/40 p-6 shadow-[4px_4px_0_0_var(--color-foreground)] md:p-8",
+          className,
+        )}
+        aria-labelledby={headingId}
+        data-assessment-state={
+          progress === null
+            ? "loading"
+            : progress.courseCompleted
+              ? progress.quizPassed
+                ? "passed"
+                : progress.certificateEligible
+                  ? "certificate-eligible"
+                  : "ready"
+              : "locked"
+        }
+      >
       <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        <Award
-          size={12}
-          className="mr-1.5 inline"
-          aria-hidden="true"
-        />
+        <Award size={12} className="mr-1.5 inline" aria-hidden="true" />
         {copy.eyebrow}
       </p>
       <h2
@@ -261,10 +255,7 @@ export function CourseAssessmentCta({
                 href={certificateHref}
                 className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-card px-5 py-3 text-sm font-bold uppercase tracking-wide text-foreground shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
               >
-                <GraduationCap
-                  className="h-4 w-4"
-                  aria-hidden="true"
-                />
+                <GraduationCap className="h-4 w-4" aria-hidden="true" />
                 {copy.downloadRecord(config.recordNoun.label)}
               </Link>
             )}
@@ -286,6 +277,7 @@ export function CourseAssessmentCta({
           {copy.localRecordNotice}
         </p>
       )}
-    </m.section>
+      </m.section>
+    </MotionProvider>
   );
 }

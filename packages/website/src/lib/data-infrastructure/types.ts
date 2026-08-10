@@ -38,7 +38,9 @@ export const DATA_INFRA_LESSON_IDS = [
 
 export type DataInfraLessonId = (typeof DATA_INFRA_LESSON_IDS)[number];
 
-export function isDataInfraLessonId(value: unknown): value is DataInfraLessonId {
+export function isDataInfraLessonId(
+  value: unknown,
+): value is DataInfraLessonId {
   return (
     typeof value === "string" &&
     (DATA_INFRA_LESSON_IDS as readonly string[]).includes(value)
@@ -67,31 +69,59 @@ export interface DataInfraTrack {
   readonly hint: string;
 }
 
-/** Four tracks, ported verbatim from `js/lessons.js`'s `window.TRACKS`. */
+/** Four stable tracks with reviewed learner-facing copy. */
 export const DATA_INFRA_TRACKS: readonly DataInfraTrack[] = [
   {
     id: "foundations",
     label: "01 · foundations",
-    title: "How to think about data systems.",
-    hint: "The mental model, the constraints (CAP / PACELC), the modeling decision tree. Everything downstream is downstream of these three.",
+    title: "Reason about data-system boundaries.",
+    hint: "Map the data flow, state the CAP and PACELC trade-offs, and select a data model from concrete access and history requirements.",
   },
   {
     id: "storage",
     label: "02 · storage",
-    title: "Bytes on disk, queryable at scale.",
-    hint: "Row vs columnar, Parquet internals, the lakehouse table-format wars, partitioning that actually prunes.",
+    title: "Choose storage layouts from access patterns.",
+    hint: "Compare row and column layouts, inspect Parquet metadata, evaluate open table formats, and design partitioning from measured queries.",
   },
   {
     id: "movement",
     label: "03 · movement",
-    title: "Bytes in motion, batch and stream.",
-    hint: "Airflow & dbt, Kafka & Flink, watermarks, change data capture, and the Lambda-vs-Kappa religious war.",
+    title: "Move bounded and unbounded data.",
+    hint: "Compare batch and stream processing, watermarks, change data capture, orchestration, and replay requirements without assuming one architecture fits every workload.",
   },
   {
     id: "scale",
-    label: "04 · at scale",
-    title: "What separates IC4 from IC5.",
-    hint: "Idempotency. Backfills. Effectively-exactly-once. Observability that catches the silent-failure modes. The interview itself.",
+    label: "04 · operations",
+    title: "Operate and review data pipelines.",
+    hint: "Define idempotency boundaries, safe backfills, scoped processing guarantees, quality signals, and an evidence-based system-design review.",
+  },
+];
+
+/** Reviewed German display copy. Track IDs and ordering remain canonical. */
+export const DATA_INFRA_TRACKS_DE: readonly DataInfraTrack[] = [
+  {
+    id: "foundations",
+    label: "01 · grundlagen",
+    title: "Grenzen von Datensystemen begründet beurteilen.",
+    hint: "Datenfluss abbilden, Zielkonflikte nach CAP und PACELC benennen und das Datenmodell aus Zugriffs- und Verlaufsanforderungen ableiten.",
+  },
+  {
+    id: "storage",
+    label: "02 · speicherung",
+    title: "Speicherlayouts aus Zugriffsmustern ableiten.",
+    hint: "Zeilen- und Spaltenlayouts vergleichen, Parquet-Metadaten untersuchen, offene Tabellenformate bewerten und Partitionierung anhand gemessener Abfragen entwerfen.",
+  },
+  {
+    id: "movement",
+    label: "03 · transport",
+    title: "Begrenzte und unbegrenzte Daten verarbeiten.",
+    hint: "Batch- und Stream-Verarbeitung, Watermarks, Change Data Capture, Orchestrierung und Replay-Anforderungen vergleichen, ohne eine Architektur pauschal vorzuziehen.",
+  },
+  {
+    id: "scale",
+    label: "04 · betrieb",
+    title: "Datenpipelines betreiben und prüfen.",
+    hint: "Idempotenzgrenzen, sichere Backfills, klar begrenzte Verarbeitungsgarantien, Qualitätssignale und eine belegbare Systemdesign-Prüfung definieren.",
   },
 ];
 

@@ -1,18 +1,28 @@
 // Ported from codex/lessons/11-patterns.html + codex/js/lessons/L11.js.
 import type { CodexLesson } from "../types";
 import { buildSections } from "../blocks";
-import { CODEX_QUIZ_COPY, CODEX_QUIZ_TITLE, CODEX_COMPARE_KIND_LABEL } from "../widget-copy";
+import {
+  CODEX_QUIZ_COPY,
+  CODEX_QUIZ_TITLE,
+  CODEX_COMPARE_KIND_LABEL,
+} from "../widget-copy";
 
 const lesson: CodexLesson = {
   id: "L11",
   number: 11,
-  title: "Patterns That Work",
+  title: "Reusable Task Patterns",
   subtitle:
-    "TDD with AI, brownfield onboarding, refactoring, debugging, the task shapes that consistently succeed, and three that reliably fail.",
+    "Use reviewed tests, repository exploration, bounded transformations, and reproducible debugging to reduce ambiguity.",
   durationMinutes: 13,
   trackId: "advanced",
-  hook: "A library of proven shapes.",
-  keyConcepts: ["TDD with AI", "Brownfield onboarding", "Refactoring", "Debugging", "Two-revision rule"],
+  hook: "Choose a task shape that exposes evidence.",
+  keyConcepts: [
+    "Tests-first",
+    "Brownfield exploration",
+    "Bounded refactoring",
+    "Reproducible debugging",
+    "Restart criteria",
+  ],
   quiz: [],
   sections: buildSections([
     {
@@ -23,11 +33,11 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Some tasks run smoothly with an AI agent every time. Others fail reliably, not because of a bad prompt, but because the task shape is wrong for the tool. Over time, the patterns become clear.\n\nThis lesson is a catalog of the recurring patterns: what works, why it works, and what the failure mode looks like when you get it wrong. Use it as a reference when you are planning a new task and something feels off.",
+            "Task structure influences what can be inspected and corrected. The patterns in this lesson make requirements, repository evidence, and verification boundaries explicit. They are not success guarantees; each still requires a suitable environment and human review.\n\nUse the catalog to decide which evidence should exist before edits begin, which transformations can be bounded mechanically, and when an attempt should be restarted from a corrected specification.",
         },
         {
           kind: "pull-quote",
-          text: "The failure is almost never the AI. It is the task shape.",
+          text: "Diagnose the request, repository context, environment, diff, and checks separately; any of them can invalidate the result.",
         },
       ],
     },
@@ -39,12 +49,12 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "**The idea:** write tests first (or have the agent write them first), then implement. The test suite becomes the acceptance criterion, and the agent can iterate autonomously until all tests pass.\n\n**Why it works:** the agent has a concrete, unambiguous signal for \"done.\" Without tests, it is guessing. With tests, it can iterate, run, fail, patch, run again, without any human in the loop. The result is a PR with verified behavior, not just plausible code.\n\n**The two-phase approach:**\n\n1. *Phase 1, tests only:* \"Write the test suite for this feature. Do not implement the feature yet. Tests should fail.\" Review the tests; they are your acceptance criteria made concrete.\n2. *Phase 2, implementation:* \"Implement the feature until all tests from phase 1 pass.\" The agent now has an objective to optimize against.\n\n**The failure mode:** asking for tests and implementation in a single task. The agent writes the implementation first and then writes tests that pass against what it just built, which proves nothing. The tests are circular. Always split the phases.",
+            "**Pattern:** define behavior in tests before implementation when the requirement can be expressed that way.\n\n**Value:** a reviewed failing test provides an executable example and confirms that the test detects the missing behavior. Passing it later is useful evidence, but not proof of untested security, performance, or integration requirements.\n\n**Two-phase form:**\n\n1. *Test design:* request tests without production changes. Review their assertions, fixtures, boundaries, and failure reason.\n2. *Implementation:* request the bounded change and require the reviewed tests plus relevant regression checks.\n\nTests and implementation can also share one task when the scope is clear, but review them independently. The risk is circular evidence: generated tests can encode the same misunderstanding as generated code.",
         },
         {
           kind: "callout",
-          title: "Watch for the circular test:",
-          body: "if a test mocks the very function it is testing and then asserts what the mock returned, it is not a test, it is theater. A good test exercises real behavior: seed data, call the real function, assert real output.",
+          title: "Name the boundary a test covers:",
+          body: "A test that mocks a collaborator may validly cover mapping or error handling, but it does not cover the collaborator's behavior. Add a test through the real boundary when that behavior is part of the requirement.",
         },
       ],
     },
@@ -56,7 +66,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            '**The idea:** before making any changes to an existing codebase, give the agent an exploration phase. Explicitly tell it: "do not write any code yet. Read the relevant files and tell me what you find."\n\n**Why it works:** AI agents are optimistic, given any task, they will make assumptions to fill gaps and start writing. On a greenfield project that is fine. On an existing codebase, those assumptions are often wrong: they will duplicate existing utilities, miss caching layers, violate naming conventions, and break callers. A mandatory exploration phase forces the agent to build a mental model before touching anything.\n\n**The exploration checklist before any brownfield task:**\n\n- What existing code does this feature touch or depend on?\n- Are there existing utilities, helpers, or abstractions that already solve part of the problem?\n- What conventions does the existing code follow (naming, error handling, test patterns)?\n- What tests currently cover the area being changed?\n\nOnly after the agent can answer these questions should it start writing code.\n\n**The failure mode:** skipping exploration and treating a large existing codebase like a greenfield. The agent rewrites existing functionality, ignores established patterns, and produces a PR that looks right in isolation but breaks things a human reviewer has to catch.',
+            "**Pattern:** begin an unfamiliar repository task with read-only exploration. Require file paths, call paths, existing utilities, configuration, and relevant tests as evidence.\n\n**Questions to answer before edits:**\n\n- Which code and external systems does the behavior depend on?\n- Which existing utility or abstraction already covers part of it?\n- Which repository instructions and conventions apply?\n- Which tests exercise the current behavior?\n- Which security and operational boundaries can the change affect?\n\nReview the exploration before granting a broader write or network boundary. If important claims are unsupported, request direct repository evidence rather than an architectural summary.\n\n**Risk:** editing from an incomplete model can duplicate infrastructure, bypass conventions, or break callers. Exploration reduces that risk but does not eliminate the need to inspect the final diff.",
         },
       ],
     },
@@ -68,7 +78,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            '**The idea:** use the agent to apply a refactoring pattern consistently across a codebase, extracting a utility, renaming, converting to a new pattern, updating all call sites.\n\n**Why it works:** agents excel at mechanical consistency. Applying the same transformation to 40 files is tedious and error-prone for a human; it is straightforward for an agent. The spec is precise ("convert all X to Y"), the change is verifiable (tests still pass), and there is no ambiguity about what "done" looks like.\n\n**How to spec a refactoring task:**\n\n- Name the old pattern and the new pattern explicitly, with a code example of each.\n- Reference an existing example of the new pattern: "see src/models/project.py for the pattern to follow."\n- Specify scope: "apply to all files in src/repositories/." Do not say "refactor the codebase," that is a wish, not a task.\n- Specify what not to change: "do not touch legacy/ or any file that has a TODO: migrate comment."\n\n**The failure mode:** open-ended refactoring ("clean up the code"). The agent will make judgment calls about what "clean" means, often adding abstractions, renaming things by preference, or restructuring in ways you did not want. Narrow refactoring tasks with explicit patterns win every time.',
+            '**Pattern:** define a behavior-preserving transformation with an old example, an accepted new example, an explicit file set, and regression checks.\n\n**Specification fields:**\n\n- Name the old and new pattern with code examples.\n- Cite an existing repository example when it is authoritative.\n- Define included files and explicit exclusions.\n- State which public interfaces and behavior must remain unchanged.\n- Name checks for callers, generated output, types, and migrations where relevant.\n\n**Risk:** an open request such as "clean up the codebase" delegates architectural and naming decisions that have not been specified. A bounded mechanical transformation is easier to review, but broad repetition can still propagate a flawed target pattern.',
         },
       ],
     },
@@ -80,25 +90,25 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "**The idea:** give the agent the symptom, the reproduction case, and permission to read and run, then let it hypothesize and verify in the feedback loop.\n\n**Why it works:** agents are effective at the mechanical part of debugging: reading stack traces, searching for the relevant code path, writing a minimal reproduction, and testing a hypothesis. The bottleneck in human debugging is context-switching and search; agents do not get tired of reading files.\n\n**What to give the agent:**\n\n- The error message and full stack trace, verbatim.\n- The steps to reproduce (or a failing test if you have one).\n- What you have already ruled out (prevents the agent from retreading ground you have covered).\n- Permission to write a test that reproduces the bug before fixing it. This prevents regressions.\n\n**The failure mode:** asking the agent to \"fix the bug\" without a reproduction case. The agent will guess, often plausibly, and you will get a diff that looks like it might help. Sometimes it does. Often it fixes the symptom while leaving the root cause. Always reproduce first, fix second.",
+            "**Pattern:** provide the observed symptom, environment, exact error output, reproduction steps, and known exclusions. Ask for a hypothesis tied to a file and call path before authorizing a fix.\n\n**Useful inputs:**\n\n- exact error text and stack trace with secrets removed;\n- minimal reproduction or a failing test;\n- relevant versions, configuration, and runtime conditions;\n- prior hypotheses already ruled out and the evidence for doing so.\n\nWhen appropriate, add a regression test that fails for the reported defect before changing production code. Confirm its failure reason, then review the fix and broader checks.\n\n**Risk:** without a reproducible symptom, a plausible diff may change adjacent behavior without establishing the cause.",
         },
       ],
     },
     {
       id: "s6",
-      title: "Pattern 05, The two-revision rule",
+      title: "Pattern 05, Restart criteria",
       readTimeMinutes: 2,
       blocks: [
         {
           kind: "prose",
           markdown:
-            "**The idea:** if a PR is stuck, if you have sent two rounds of comments and the agent still has not landed the fix cleanly, stop commenting and re-spec from scratch.\n\n**Why it works:** when a PR needs more than two revision rounds, the problem is almost never the agent's execution. It is the spec. Something in the original task description was ambiguous, missing, or wrong, and the agent has been compensating by guessing. No amount of comment nudging will fix a fundamentally underspecified task.\n\nRe-speccing from scratch takes ten minutes and typically produces a clean PR on the first pass. Two more rounds of comments will take longer and may not get there at all.\n\n**Signals that it is time to restart:**\n\n- The agent keeps making the same mistake in different forms.\n- Your comments are getting longer and more detailed, you are essentially writing the implementation in the comments.\n- The PR diff is growing with each revision instead of converging.\n\nWhen you see these signals: close the PR, read the original spec, find what was underspecified, rewrite. The discipline to restart is what separates teams that scale with AI assistance from teams that fight it.",
+            "**Pattern:** restart from a corrected specification when revision is preserving a false premise or expanding the diff.\n\n**Signals:**\n\n- the same requirement is implemented differently without addressing the review evidence;\n- review comments are redefining the goal or architecture rather than correcting a local defect;\n- the diff grows across unrelated files or concerns;\n- accepted behavior is repeatedly removed; or\n- the current session contains conflicting instructions.\n\nBefore restarting, retain verified repository findings, rejected approaches with reasons, and relevant command output. Do not carry speculative explanations or the entire transcript. A fixed revision count is not a reliable threshold; use convergence and task validity.",
         },
       ],
     },
     {
       id: "s7",
-      title: "Three patterns that consistently fail",
+      title: "Three high-risk task shapes",
       readTimeMinutes: 1,
       blocks: [
         {
@@ -107,17 +117,17 @@ const lesson: CodexLesson = {
             {
               eyebrow: "fail 01",
               title: "The wishlist task",
-              body: '"Improve the codebase." "Make it more performant." "Clean things up." Zero actionable signal. The agent will make plausible-looking changes that may or may not be what you wanted. Specific tasks only.',
+              body: '"Improve the codebase" and "make it faster" define neither target behavior nor evidence. Replace them with a measured problem, bounded scope, and acceptance checks.',
             },
             {
               eyebrow: "fail 02",
               title: "The no-test task",
-              body: "Any non-trivial task without a test suite. The agent ships code it believes is correct. Without a feedback loop it has no way to verify, so it does not. The PR looks good. The bug shows up in production three weeks later.",
+              body: "A behavior change with no executable check leaves the reported result difficult to verify. If automated tests are infeasible, define another reproducible validation path and document the remaining risk.",
             },
             {
               eyebrow: "fail 03",
               title: "The grand refactor",
-              body: '"Refactor the entire architecture." Large-scope, high-ambiguity tasks produce massive diffs that are impossible to review. The agent touches everything, tests break in complex ways, and you spend more time fixing than you saved.',
+              body: '"Refactor the entire architecture" combines design, migration, implementation, and rollout decisions. Separate the accepted target architecture, compatibility steps, and bounded transformations.',
             },
           ],
         },
@@ -127,7 +137,12 @@ const lesson: CodexLesson = {
       id: "s8",
       title: "Quick check",
       readTimeMinutes: 1,
-      blocks: [{ kind: "prose", markdown: "Two questions on the proven and failing patterns." }],
+      blocks: [
+        {
+          kind: "prose",
+          markdown: "Two questions on usable and high-risk task patterns.",
+        },
+      ],
     },
   ]),
   widgets: [
@@ -140,11 +155,9 @@ const lesson: CodexLesson = {
         kindLabel: CODEX_COMPARE_KIND_LABEL,
         badLabel: "Skip exploration",
         goodLabel: "Explore first",
-        bad:
-          'Task: "Add rate limiting to the API."\n\nAgent starts writing immediately. Adds a new RateLimiter class. Does not notice there is already a throttle decorator in middleware/. Does not match the error-response format used by the rest of the API. Creates a new config key instead of extending the existing one.\n\nResult: duplicate infrastructure, inconsistent behavior, PR rejected.',
-        good:
-          'Task: "Before writing any code: read the relevant files and tell me (1) what rate limiting infrastructure already exists, (2) how errors are currently returned by the API, (3) where rate-limit config lives. Then propose an approach."\n\nAgent finds the throttle decorator, understands the error format, locates the config. Proposes extending what is already there.\n\nResult: minimal, consistent change. PR approved.',
-        note: "The exploration step costs 2 minutes. Reviewing a PR built on wrong assumptions costs 30. Always spend the 2 minutes on brownfield tasks.",
+        bad: 'Task: "Add rate limiting to the API."\n\nThe request does not identify existing middleware, the error contract, configuration ownership, keying rules, or verification. A resulting diff introduces a second limiter and a separate configuration path.\n\nReview result: scope and architecture are unsupported.',
+        good: 'Task: "Before editing, cite the files that define existing rate limiting, API error responses, configuration, and tests. Trace the relevant call path and propose a bounded change. Do not write until the evidence is reviewed."\n\nThe exploration identifies the existing throttle decorator, error formatter, configuration owner, and current tests. The implementation task can now reference those artifacts explicitly.',
+        note: "Read-only exploration makes assumptions visible before they enter a diff. Review every cited file and call path; an exploration summary can still be incomplete.",
       },
     },
     {
@@ -157,16 +170,16 @@ const lesson: CodexLesson = {
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
         question:
-          "You ask an agent to write tests for a new feature and implement it in a single task. The tests all pass. What is the likely problem?",
+          "Tests and implementation were generated in one task and the tests pass. What review risk requires attention?",
         options: [
-          "The implementation is probably wrong.",
-          "The tests probably do not verify real behavior, the agent likely wrote the implementation first and then wrote tests that pass against what it built, making them circular.",
+          "The implementation must be wrong because the work was combined.",
+          "The tests may encode the same misunderstanding as the implementation; review their assertions and confirm they fail when the required behavior is absent.",
           "Nothing, green tests mean the feature is correct.",
-          "The tests are probably too slow.",
+          "The test runner must have used the wrong language.",
         ],
         correct: 1,
         explanation:
-          "When tests and implementation are written together, agents almost always write the implementation first (or simultaneously) and then write tests to match. The tests pass, but they test the agent's own assumptions about what the code should do, not whether it does what you wanted. Split the phases: tests first (and verify they fail), then implementation.",
+          "Generated tests are not independent evidence by default. Review the requirement-to-assertion mapping, fixtures, mocks, and failure behavior. A separate tests-first phase can make that review easier but is not mandatory for every task.",
       },
     },
     {
@@ -179,16 +192,16 @@ const lesson: CodexLesson = {
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
         question:
-          "A PR has gone through three rounds of comments and the agent still has not landed the fix correctly. What is the right move?",
+          "A revised diff keeps expanding and review comments now redefine the original goal. What is the right move?",
         options: [
-          "Add more detail to the next comment and try a fourth round.",
-          "Re-spec the task from scratch. Three revision rounds signals the original spec was underspecified, no amount of nudging will fix that. Rewrite, rerun.",
+          "Continue commenting without changing the task contract.",
+          "Stop the current iteration, preserve verified findings, and start from a corrected specification and scope.",
           "Accept the PR as-is since you have spent enough time on it.",
           "Switch to a different AI tool.",
         ],
         correct: 1,
         explanation:
-          "Two revision rounds is the ceiling. If you are at three, the problem is the spec, not the agent. Re-speccing takes 10 minutes and almost always produces a clean PR on the first pass. Continuing to add comments compounds the original specification error.",
+          "When comments are changing the premise and the diff is diverging, local revision is no longer the right operation. Restart from one internally consistent contract. Use convergence, not a fixed retry count, as the decision signal.",
       },
     },
   ],

@@ -1,4 +1,7 @@
+"use client";
+
 import type { JSX } from "react";
+import { useDataInfraWidgetLocale } from "../widget-locale-context";
 
 // ─── CanvasFallbackNotice ────────────────────────
 //
@@ -13,20 +16,29 @@ export interface CanvasFallbackNoticeProps {
   readonly summary: string;
 }
 
-export function CanvasFallbackNotice({ title, summary }: CanvasFallbackNoticeProps): JSX.Element {
+export function CanvasFallbackNotice({
+  title,
+  summary,
+}: CanvasFallbackNoticeProps): JSX.Element {
+  const { text } = useDataInfraWidgetLocale();
+
   return (
     <div
       role="img"
       aria-label={`${title}. ${summary}`}
-      className="flex min-h-[160px] flex-col items-center justify-center gap-2 border-2 border-dashed border-border bg-card/40 p-6 text-center"
+      className="flex min-h-[160px] min-w-0 max-w-full flex-col items-center justify-center gap-2 border-2 border-dashed border-border bg-card/40 p-4 text-center sm:p-6"
     >
       <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
         {title}
       </p>
-      <p className="max-w-[440px] text-[13px] leading-relaxed text-muted-foreground">{summary}</p>
-      <p className="text-[11px] text-muted-foreground/70">
-        This browser blocked canvas rendering, so a static summary is shown instead of the live
-        simulation.
+      <p className="max-w-[440px] break-words text-[13px] leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
+        {summary}
+      </p>
+      <p className="break-words text-[11px] text-muted-foreground/70 [overflow-wrap:anywhere]">
+        {text(
+          "Canvas rendering is unavailable in this browser. The model is summarized as text instead.",
+          "Die Canvas-Darstellung ist in diesem Browser nicht verfügbar. Das Modell wird stattdessen als Text zusammengefasst.",
+        )}
       </p>
     </div>
   );

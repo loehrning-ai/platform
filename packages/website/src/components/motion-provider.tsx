@@ -1,13 +1,13 @@
 "use client";
 
 import { LazyMotion, MotionConfig, domAnimation } from "framer-motion";
-import { useEffect, type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 /**
- * Client boundary that makes every Framer Motion animation respect the user's
+ * Scoped client boundary that makes its Framer Motion subtree respect the user's
  * prefers-reduced-motion setting (transform/layout animations resolve to their
- * final state; opacity is preserved). layout.tsx is a Server Component, so the
- * MotionConfig provider has to live in its own "use client" island.
+ * final state; opacity is preserved). Server layouts wrap only concrete client
+ * islands with this provider; streamed route children remain server-owned.
  *
  * Bundle size (performance hardening): LazyMotion + domAnimation + `m.*` components
  * tree-shake the full-bundle renderer out of every page. `strict` makes any
@@ -19,14 +19,7 @@ import { useEffect, type ReactNode } from "react";
  * This covers Framer motion only. Non-Framer motion is guarded separately:
  * the hero clip-path entrance (hero.tsx).
  */
-export function MotionProvider({ children }: { children: ReactNode }) {
-  useEffect(() => {
-    document.documentElement.dataset.hydrated = "true";
-    return () => {
-      delete document.documentElement.dataset.hydrated;
-    };
-  }, []);
-
+export function MotionProvider({ children }: { readonly children: ReactNode }) {
   return (
     <LazyMotion features={domAnimation} strict>
       <MotionConfig reducedMotion="user">{children}</MotionConfig>

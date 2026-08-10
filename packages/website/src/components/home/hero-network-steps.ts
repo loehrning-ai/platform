@@ -34,3 +34,31 @@ export const STEPS: readonly Step[] = [
   { lat: 19.1,  lon: 72.9,                  word: "EU AI Act",         city: "MUMBAI" },
   { lat: 35.7,  lon: 139.7,                 word: "Blog",              city: "TŌKYŌ" },
 ];
+
+const ENGLISH_STEP_WORDS = [
+  "Courses",
+  "Books",
+  "Open Source",
+  "Demos",
+  "EU AI Act",
+  "Blog",
+] as const;
+
+const ENGLISH_STEP_CITIES = [
+  "BERLIN",
+  "SÃO PAULO",
+  "BEIJING",
+  "SAN FRANCISCO",
+  "MUMBAI",
+  "TŌKYŌ",
+] as const;
+
+export function heroNetworkSteps(locale: Locale): readonly Step[] {
+  if (locale === "de") return STEPS;
+  return STEPS.map((step, index) => ({
+    ...step,
+    word: ENGLISH_STEP_WORDS[index],
+    city: ENGLISH_STEP_CITIES[index],
+  }));
+}
+import type { Locale } from "@/lib/i18n/locale";

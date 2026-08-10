@@ -1,22 +1,120 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { AuthError } from "@supabase/supabase-js";
-import { trustedRequestOrigin } from "@/lib/auth/origin";
+import { AuthError, type User } from "@supabase/supabase-js";
+import { externalRequestUrl, trustedRequestOrigin } from "@/lib/auth/origin";
 import { sanitizeNextPath } from "@/lib/auth/routes";
+import { localizeHref, parseLocalePathname } from "@/lib/i18n/locale";
+import {
+  isAccountRuntimeReady,
+  isGoogleOAuthRuntimeReady,
+  isMagicLinkRuntimeReady,
+} from "@/lib/provider-readiness";
 import { SITE_ORIGIN } from "@/lib/seo/entity";
 import { createAuthServerClient } from "@/lib/supabase/auth-server";
 
 const CANONICAL_ORIGIN = new URL(SITE_ORIGIN);
-const SUPABASE_PKCE_CODE =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const MAX_AUTHORIZATION_CODE_LENGTH = 2_048;
+const NON_OAUTH_IDENTITY_PROVIDERS = new Set(["email", "phone"]);
 
-function isSupabasePkceCode(value: string | null): value is string {
-  return value !== null && SUPABASE_PKCE_CODE.test(value);
+type SupportedLoginMethod = "google" | "magic-link";
+
+/**
+ * Attributes an `oauth` authentication event to Google.
+ *
+ * The signed `amr` claim already proves this session was created through OAuth.
+ * What it does not carry is which provider, and the user object has no
+ * per-event provider field either — `app_metadata.provider` records the
+ * original sign-up method. Google is therefore inferred from the linked
+ * identities, and only when it is the account's sole OAuth identity. With a
+ * second one present the event cannot be attributed to either, so it is
+ * refused rather than guessed.
+ *
+ * An earlier revision instead required the Google identity's `last_sign_in_at`
+ * to fall within five seconds of the `amr` timestamp. GoTrue does not advance
+ * that column on a returning sign-in — it keeps the value written when the
+ * identity was linked — so the window rejected every user who had signed in
+ * with Google before, and did so after the one-time code had already been
+ * consumed, leaving no way to recover but to fail again. Measured on this
+ * project, an existing account's identity timestamp trailed its user timestamp
+ * by 41,670 seconds against that five-second tolerance.
+ */
+function isGoogleOAuthEvent(user: User): boolean {
+  const providers = user.app_metadata?.providers;
+  if (
+    !Array.isArray(providers) ||
+    !providers.every((provider) => typeof provider === "string") ||
+    !providers.includes("google") ||
+    !Array.isArray(user.identities)
+  ) {
+    return false;
+  }
+
+  const oauthIdentities = user.identities.filter(
+    (identity) =>
+      typeof identity.provider === "string" &&
+      !NON_OAUTH_IDENTITY_PROVIDERS.has(identity.provider),
+  );
+  return (
+    oauthIdentities.length === 1 && oauthIdentities[0]?.provider === "google"
+  );
+}
+
+function supportedLoginMethodFromClaims(
+  claims: Record<string, unknown>,
+  user: User,
+): SupportedLoginMethod | null {
+  if (claims.sub !== user.id || !Array.isArray(claims.amr)) return null;
+
+  let latest:
+    | { readonly method: SupportedLoginMethod; readonly timestamp: number }
+    | undefined;
+  for (const entry of claims.amr) {
+    if (!entry || typeof entry !== "object" || Array.isArray(entry)) continue;
+    const rawMethod = Reflect.get(entry, "method");
+    const timestamp = Reflect.get(entry, "timestamp");
+    if (
+      typeof rawMethod !== "string" ||
+      typeof timestamp !== "number" ||
+      !Number.isFinite(timestamp)
+    ) {
+      continue;
+    }
+    const method: SupportedLoginMethod | null =
+      rawMethod === "oauth" && isGoogleOAuthEvent(user)
+        ? "google"
+        : rawMethod === "magiclink" ||
+            rawMethod === "otp" ||
+            rawMethod === "email/signup"
+          ? "magic-link"
+          : null;
+    if (method && (!latest || timestamp > latest.timestamp)) {
+      latest = { method, timestamp };
+    }
+  }
+  return latest?.method ?? null;
+}
+
+function isBoundedOpaqueAuthorizationCode(value: string): boolean {
+  if (
+    value.length === 0 ||
+    value.length > MAX_AUTHORIZATION_CODE_LENGTH ||
+    value.trim().length === 0
+  ) {
+    return false;
+  }
+  return !Array.from(value).some((character) => {
+    const codePoint = character.codePointAt(0) ?? 0;
+    return codePoint <= 31 || codePoint === 127;
+  });
 }
 
 export async function GET(request: NextRequest) {
-  const requestUrl = new URL(request.url);
-  const code = requestUrl.searchParams.get("code");
+  const requestUrl = externalRequestUrl(request);
+  const codeValues = requestUrl.searchParams.getAll("code");
+  const code = codeValues[0] ?? null;
   const next = sanitizeNextPath(requestUrl.searchParams.get("next"));
+  const nextLocale = parseLocalePathname(
+    new URL(next, CANONICAL_ORIGIN).pathname,
+  ).locale;
   const trustedOrigin = trustedRequestOrigin(requestUrl);
   const redirectOrigin = trustedOrigin ?? CANONICAL_ORIGIN;
 
@@ -28,7 +126,10 @@ export async function GET(request: NextRequest) {
   }
 
   function failureRedirect(reason: string) {
-    const loginUrl = new URL("/login", redirectOrigin);
+    const loginUrl = new URL(
+      localizeHref("/login", nextLocale),
+      redirectOrigin,
+    );
     loginUrl.searchParams.set("next", next);
     loginUrl.searchParams.set("reason", reason);
     return noStoreRedirect(loginUrl);
@@ -64,7 +165,24 @@ export async function GET(request: NextRequest) {
 
   if (!trustedOrigin) return failureRedirect("untrusted-origin");
   if (code === null) return failureRedirect("missing-code");
-  if (!isSupabasePkceCode(code)) return failureRedirect("invalid-code-format");
+  if (
+    codeValues.length !== 1 ||
+    !isBoundedOpaqueAuthorizationCode(code)
+  ) {
+    return failureRedirect("invalid-code-format");
+  }
+
+  // Public Supabase configuration is enough to construct an auth client, but
+  // it is not enough to authorize an account transaction. Bind direct callback
+  // requests to the same server-only privacy, region, abuse-protection, and
+  // provider attestations that control the login page. This prevents a stale
+  // or hand-crafted callback from bypassing a disabled login surface.
+  const accountReady = isAccountRuntimeReady();
+  const magicLinkReady = isMagicLinkRuntimeReady();
+  const googleReady = isGoogleOAuthRuntimeReady();
+  if (!accountReady || (!magicLinkReady && !googleReady)) {
+    return failureRedirect("auth-not-configured");
+  }
 
   let supabase;
   try {
@@ -85,13 +203,20 @@ export async function GET(request: NextRequest) {
     );
   }
   if (exchange.error) return failureRedirect(classifyAuthError(exchange.error));
-  if (!exchange.data.session || !exchange.data.user?.id) {
+  if (
+    !exchange.data.session?.access_token ||
+    !exchange.data.user?.id
+  ) {
     return failureRedirect("invalid-link");
   }
 
   let verification;
+  let claimsResult;
   try {
-    verification = await supabase.auth.getUser();
+    [verification, claimsResult] = await Promise.all([
+      supabase.auth.getUser(exchange.data.session.access_token),
+      supabase.auth.getClaims(exchange.data.session.access_token),
+    ]);
   } catch {
     await supabase.auth.signOut({ scope: "local" }).catch(() => undefined);
     return failureRedirect("auth-unavailable");
@@ -105,6 +230,29 @@ export async function GET(request: NextRequest) {
     return failureRedirect(verification.error
       ? classifyAuthError(verification.error)
       : "invalid-link");
+  }
+
+  if (claimsResult.error || !claimsResult.data?.claims) {
+    await supabase.auth.signOut({ scope: "local" }).catch(() => undefined);
+    return failureRedirect(
+      claimsResult.error instanceof AuthError
+        ? classifyAuthError(claimsResult.error)
+        : "auth-unavailable",
+    );
+  }
+  const loginMethod = supportedLoginMethodFromClaims(
+    claimsResult.data.claims as Record<string, unknown>,
+    verification.data.user,
+  );
+  const methodReady =
+    loginMethod === "google"
+      ? googleReady
+      : loginMethod === "magic-link"
+        ? magicLinkReady
+        : false;
+  if (!methodReady) {
+    await supabase.auth.signOut({ scope: "local" }).catch(() => undefined);
+    return failureRedirect("auth-not-configured");
   }
 
   return noStoreRedirect(new URL(next, trustedOrigin));

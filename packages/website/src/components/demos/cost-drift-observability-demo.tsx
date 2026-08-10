@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { DEMO } from "@/lib/demo-tokens";
 import { DEMO_HEIGHT, usePrefersReducedMotion, useVisibleAutoplay } from "./demo-utils";
 import { SimulationDisclosure } from "./evidence-badge";
+import { useDemoLocale } from "./demo-locale";
 
 interface App {
   readonly id: string;
@@ -22,6 +23,13 @@ const APPS: readonly App[] = [
   { id: "sales", n: "Anfrage-Klassifikation", model: "Claude Sonnet 4.6", calls: 7_420, cost: 96.33, lat: 0.9, err: 0.3 },
 ];
 
+const APP_NAMES_EN: Readonly<Record<string, string>> = {
+  vertrag: "Contract assistant",
+  rechnung: "Invoice extraction",
+  agent: "Memo pipeline",
+  sales: "Request classification",
+};
+
 function makeSeries(len: number, base: number, amp: number): readonly number[] {
   const arr: number[] = [];
   let v = base;
@@ -33,6 +41,7 @@ function makeSeries(len: number, base: number, amp: number): readonly number[] {
 }
 
 export default function CostDriftObservabilityDemo() {
+  const { locale, text } = useDemoLocale();
   const reduced = usePrefersReducedMotion();
   const { ref, visible } = useVisibleAutoplay<HTMLDivElement>();
   const [selApp, setSelApp] = useState("vertrag");
@@ -53,6 +62,10 @@ export default function CostDriftObservabilityDemo() {
 
   const activeApp = APPS.find((a) => a.id === selApp) ?? APPS[0];
   const total = APPS.reduce((s, a) => s + a.cost, 0);
+  const appName = (app: App) =>
+    locale === "de"
+      ? app.n
+      : APP_NAMES_EN[app.id] ?? app.n;
 
   const W = 600;
   const H = 100;
@@ -69,6 +82,8 @@ export default function CostDriftObservabilityDemo() {
     <div
       ref={ref}
       data-demo-id="cost-drift-observability"
+      role="region"
+      aria-label={text("Kosten- und Drift-Beispiel", "Cost and drift example")}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -130,15 +145,20 @@ export default function CostDriftObservabilityDemo() {
             fontWeight: 700,
           }}
         >
-          Observability & Kosten
+          {text("Observability & Kosten", "Observability and cost")}
         </div>
         <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", marginTop: 6 }}>
-          LLM-Kosten und Drift:{" "}
-          <span style={{ color: "var(--color-brand-orange)" }}>ein Beispiel-Szenario.</span>
+          {text("LLM-Kosten und Drift:", "LLM cost and drift:")}{" "}
+          <span style={{ color: "var(--color-brand-orange)" }}>
+            {text("ein Beispiel-Szenario.", "a seeded scenario.")}
+          </span>
         </h2>
       </div>
       <SimulationDisclosure>
-        Alle Werte sind festgelegte Beispiel-Szenarien, keine Live-Messwerte. Das Diagramm zeigt eine kontinuierlich fortgeschriebene Beispielkurve, um Drift-Erkennung zu illustrieren.
+        {text(
+          "Alle Werte sind festgelegte Beispiel-Szenarien, keine Live-Messwerte. Das Diagramm schreibt eine Beispielkurve fort, um einen Drift-Indikator zu erklären.",
+          "All values are fixed sample scenarios, not live measurements. The chart extends a sample series to explain a drift indicator.",
+        )}
       </SimulationDisclosure>
 
       <div
@@ -153,10 +173,10 @@ export default function CostDriftObservabilityDemo() {
       >
         {(
           [
-            ["Spend · MTD", `€${total.toFixed(0)}`, "+12 % vs. Vormo.", "var(--color-brand-orange)", true, [3, 4, 3, 5, 6, 7, 8, 9]],
-            ["Calls · 24h", "5.284", "+3,2 %", DEMO.ink, false, [5, 6, 5, 7, 6, 8, 7, 9]],
-            ["p95 Latenz", "2,4 s", "−8 % verbessert", DEMO.statusGreen, false, [8, 7, 8, 6, 5, 5, 4, 3]],
-            ["Fehlerquote", "0,41 %", "innerhalb SLA", DEMO.statusGreen, false, [2, 3, 2, 3, 2, 2, 3, 2]],
+            [text("Spend · MTD", "Spend · month to date"), `€${total.toFixed(0)}`, text("+12 % vs. Vormo.", "+12% versus prior month"), "var(--color-brand-orange)", true, [3, 4, 3, 5, 6, 7, 8, 9]],
+            [text("Aufrufe · 24 h", "Calls · 24h"), text("5.284", "5,284"), text("+3,2 %", "+3.2%"), DEMO.ink, false, [5, 6, 5, 7, 6, 8, 7, 9]],
+            [text("p95-Latenz", "p95 latency"), text("2,4 s", "2.4 s"), text("−8 % verbessert", "8% lower"), DEMO.statusGreen, false, [8, 7, 8, 6, 5, 5, 4, 3]],
+            [text("Fehlerquote", "Error rate"), text("0,41 %", "0.41%"), text("innerhalb SLA", "within SLA"), DEMO.statusGreen, false, [2, 3, 2, 3, 2, 2, 3, 2]],
           ] as const
         ).map(([l, v, d, c, alerting, spark]) => {
           const smax = Math.max(...spark);
@@ -264,7 +284,7 @@ export default function CostDriftObservabilityDemo() {
               marginBottom: 6,
             }}
           >
-            Anwendungen
+            {text("Anwendungen", "Applications")}
           </div>
           <div className="demo-cdo-apps">
             {APPS.map((a) => (
@@ -283,7 +303,7 @@ export default function CostDriftObservabilityDemo() {
                 }}
               >
                 <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "-0.02em" }}>
-                  {a.n}
+                  {appName(a)}
                 </div>
                 <div
                   style={{
@@ -307,7 +327,7 @@ export default function CostDriftObservabilityDemo() {
                   }}
                 >
                   <span>€{a.cost.toFixed(0)}</span>
-                  <span>{a.calls.toLocaleString("de-DE")}</span>
+                  <span>{a.calls.toLocaleString(locale === "de" ? "de-DE" : "en-GB")}</span>
                 </div>
               </button>
             ))}
@@ -331,7 +351,7 @@ export default function CostDriftObservabilityDemo() {
           >
             <div>
               <div style={{ fontSize: 14, fontWeight: 700, letterSpacing: "-0.02em" }}>
-                {activeApp.n}
+                {appName(activeApp)}
               </div>
               <div
                 style={{
@@ -343,12 +363,15 @@ export default function CostDriftObservabilityDemo() {
                   marginTop: 2,
                 }}
               >
-                Latenz · Seed-Szenario (simuliert)
+                {text("Latenz · Seed-Szenario (simuliert)", "Latency · seeded scenario (simulated)")}
               </div>
             </div>
             <span
               role="note"
-              title="Alle Werte sind festgelegte Beispiel-Szenarien, keine Live-Messwerte."
+              title={text(
+                "Alle Werte sind festgelegte Beispiel-Szenarien, keine Live-Messwerte.",
+                "All values are fixed sample scenarios, not live measurements.",
+              )}
               style={{
                 fontFamily: DEMO.font.mono,
                 fontSize: 11,
@@ -364,7 +387,7 @@ export default function CostDriftObservabilityDemo() {
                 gap: 6,
               }}
             >
-              ◎ SEED-SZENARIO
+              {text("◎ SEED-SZENARIO", "◎ SEEDED SCENARIO")}
             </span>
           </div>
           <svg
@@ -373,7 +396,7 @@ export default function CostDriftObservabilityDemo() {
             viewBox={`0 0 ${W} ${H}`}
             preserveAspectRatio="none"
             style={{ display: "block" }}
-            aria-label="Latenz-Verlauf, letzte 60 Minuten"
+            aria-label={text("Latenz-Verlauf, letzte 60 Minuten", "Latency series, last 60 minutes")}
           >
             <defs>
               <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
@@ -414,10 +437,10 @@ export default function CostDriftObservabilityDemo() {
           >
             {(
               [
-                ["Calls", activeApp.calls.toLocaleString("de-DE")],
-                ["Kosten", `€${activeApp.cost.toFixed(2)}`],
-                ["Avg Latenz", `${activeApp.lat} s`],
-                ["Fehler", `${activeApp.err} %`],
+                [text("Aufrufe", "Calls"), activeApp.calls.toLocaleString(locale === "de" ? "de-DE" : "en-GB")],
+                [text("Kosten", "Cost"), `€${activeApp.cost.toFixed(2)}`],
+                [text("Ø Latenz", "Average latency"), `${activeApp.lat} s`],
+                [text("Fehler", "Errors"), `${activeApp.err} %`],
               ] as const
             ).map(([l, v]) => (
               <div key={l}>
@@ -461,7 +484,7 @@ export default function CostDriftObservabilityDemo() {
             marginBottom: 6,
           }}
         >
-          Log-Stream
+          {text("Log-Stream", "Event log")}
         </div>
         <div
           style={{
@@ -477,12 +500,12 @@ export default function CostDriftObservabilityDemo() {
         >
           {(
             [
-              [`${tick}s`, "info", "haiku·42ms", "Abfrage: 'Kündigungsfrist Q3'", DEMO.statusGreen],
-              [`${tick - 2}s`, "info", "haiku·38ms", "Abfrage: 'Haftungsgrenze'", DEMO.statusGreen],
-              [`${tick - 4}s`, "warn", "opus·3.2s", "Retry nach Timeout", DEMO.statusAmber],
-              [`${tick - 7}s`, "info", "sonnet·1.8s", "Pipeline: Anfrage-Klassifikation", DEMO.statusGreen],
-              [`${tick - 9}s`, "error", "opus·0ms", "Rate-Limit (org-1)", DEMO.statusRed],
-              [`${tick - 12}s`, "info", "haiku·29ms", "Cache-Hit", DEMO.statusGreen],
+              [`${tick}s`, "info", "haiku·42ms", text("Abfrage: 'Kündigungsfrist Q3'", "Query: 'Q3 cancellation period'"), DEMO.statusGreen],
+              [`${tick - 2}s`, "info", "haiku·38ms", text("Abfrage: 'Haftungsgrenze'", "Query: 'liability limit'"), DEMO.statusGreen],
+              [`${tick - 4}s`, "warn", "opus·3.2s", text("Wiederholung nach Timeout", "Retry after timeout"), DEMO.statusAmber],
+              [`${tick - 7}s`, "info", "sonnet·1.8s", text("Pipeline: Anfrage-Klassifikation", "Pipeline: request classification"), DEMO.statusGreen],
+              [`${tick - 9}s`, "error", "opus·0ms", text("Ratenbegrenzung (org-1)", "Rate limit (org-1)"), DEMO.statusRed],
+              [`${tick - 12}s`, "info", "haiku·29ms", text("Cache-Treffer", "Cache hit"), DEMO.statusGreen],
             ] as const
           ).map(([t, lvl, tag, msg, c], i) => (
             <div key={i}>

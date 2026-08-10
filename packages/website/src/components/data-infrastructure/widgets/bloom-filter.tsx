@@ -9,6 +9,7 @@ import { useCanvasRAF } from "../canvas/use-canvas-raf";
 import { useCanvasAutoSize } from "../canvas/use-canvas-size";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
+import { useDataInfraWidgetLocale } from "../widget-locale-context";
 
 interface BloomFilterProps {
   readonly lessonId: string;
@@ -27,7 +28,11 @@ function hashes(s: string): [number, number, number] {
     h1 = Math.imul(h1, 16777619);
     h2 = ((h2 << 5) + h2 + s.charCodeAt(i)) | 0;
   }
-  return [Math.abs(h1) % N_BITS, Math.abs(h2) % N_BITS, Math.abs(h1 + h2) % N_BITS];
+  return [
+    Math.abs(h1) % N_BITS,
+    Math.abs(h2) % N_BITS,
+    Math.abs(h1 + h2) % N_BITS,
+  ];
 }
 
 function bitPos(i: number, w: number, h: number) {
@@ -36,17 +41,26 @@ function bitPos(i: number, w: number, h: number) {
   const cellW = (w - 2 * padX) / COLS;
   const c = i % COLS;
   const r = Math.floor(i / COLS);
-  return { x: padX + c * cellW + cellW / 2, y: padY + r * (h - padY - 10) / 2, w: cellW - 3, h: 16 };
+  return {
+    x: padX + c * cellW + cellW / 2,
+    y: padY + (r * (h - padY - 10)) / 2,
+    w: cellW - 3,
+    h: 16,
+  };
 }
 
 export function BloomFilter({ lessonId, cpId }: BloomFilterProps): JSX.Element {
+  const { locale } = useDataInfraWidgetLocale();
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [contextUnavailable, setContextUnavailable] = useState(false);
   const [addValue, setAddValue] = useState("user_42");
   const [checkValue, setCheckValue] = useState("user_99");
-  const [outcome, setOutcome] = useState<{ kind: "add" | "maybe" | "no"; key: string } | null>(null);
+  const [outcome, setOutcome] = useState<{
+    kind: "add" | "maybe" | "no";
+    key: string;
+  } | null>(null);
   const [added, setAdded] = useState(0);
   const [bitsSet, setBitsSet] = useState(0);
 
@@ -68,7 +82,11 @@ export function BloomFilter({ lessonId, cpId }: BloomFilterProps): JSX.Element {
     ctx.clearRect(0, 0, w, h);
     ctx.fillStyle = "#5b8a8f";
     ctx.font = "bold 11px monospace";
-    ctx.fillText(`BLOOM FILTER · ${N_BITS} bits · ${N_HASHES} hash functions`, 12, 16);
+    ctx.fillText(
+      `BLOOM FILTER · ${N_BITS} Bits · ${N_HASHES} ${locale === "de" ? "Hashfunktionen" : "hash functions"}`,
+      12,
+      16,
+    );
     for (let i = 0; i < N_BITS; i++) {
       const p = bitPos(i, w, h);
       const set = bitsRef.current[i] === 1;
@@ -82,7 +100,7 @@ export function BloomFilter({ lessonId, cpId }: BloomFilterProps): JSX.Element {
       ctx.fillText(String(bitsRef.current[i]), p.x - 3, p.y + p.h / 2 + 3);
     }
     return false;
-  }, []);
+  }, [locale]);
 
   const { wake } = useCanvasRAF(draw);
 
@@ -122,22 +140,31 @@ export function BloomFilter({ lessonId, cpId }: BloomFilterProps): JSX.Element {
   const fpr = Math.pow(bitsSet / N_BITS, N_HASHES);
 
   return (
-    <div className="border-2 border-border bg-card/40 p-5 md:p-6">
+    <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-3 sm:p-5 md:p-6">
       <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        Sim · Bloom filter, fast &quot;definitely no&quot; checks {done ? "✓" : ""}
+        {locale === "de" ? "Modell · Bloom-Filter" : "Model · Bloom filter"}{" "}
+        {done ? "✓" : ""}
       </p>
 
       {contextUnavailable ? (
         <CanvasFallbackNotice
-          title="Bloom filter"
-          summary={`${bitsSet} of ${N_BITS} bits set after ${added} additions, ${N_HASHES} hash functions per key.`}
+          title="Bloom-Filter"
+          summary={
+            locale === "de"
+              ? `${bitsSet} von ${N_BITS} Bits sind nach ${added} Einträgen gesetzt; ${N_HASHES} Hashfunktionen pro Schlüssel.`
+              : `${bitsSet} of ${N_BITS} bits set after ${added} additions, ${N_HASHES} hash functions per key.`
+          }
         />
       ) : (
         <div ref={wrapRef} className="h-[200px] w-full">
           <canvas
             ref={canvasRef}
             role="img"
-            aria-label="Bloom filter visualization showing how membership tests can return false positives but never false negatives."
+            aria-label={
+              locale === "de"
+                ? "Bloom-Filter-Darstellung: Mitgliedschaftstests können falsch-positive, aber keine falsch-negativen Ergebnisse liefern."
+                : "Bloom filter visualization showing that membership tests can return false positives but not false negatives."
+            }
             className="h-full w-full"
           />
         </div>
@@ -145,7 +172,7 @@ export function BloomFilter({ lessonId, cpId }: BloomFilterProps): JSX.Element {
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <input
-          aria-label="key to add"
+          aria-label={locale === "de" ? "Schlüssel hinzufügen" : "key to add"}
           value={addValue}
           onChange={(e) => setAddValue(e.target.value)}
           className="border-2 border-border bg-background px-2 py-1.5 font-mono text-[12px]"
@@ -155,10 +182,10 @@ export function BloomFilter({ lessonId, cpId }: BloomFilterProps): JSX.Element {
           onClick={add}
           className="border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
         >
-          + add
+          {locale === "de" ? "+ hinzufügen" : "+ add"}
         </button>
         <input
-          aria-label="key to check"
+          aria-label={locale === "de" ? "Schlüssel prüfen" : "key to check"}
           value={checkValue}
           onChange={(e) => setCheckValue(e.target.value)}
           className="border-2 border-border bg-background px-2 py-1.5 font-mono text-[12px]"
@@ -168,7 +195,7 @@ export function BloomFilter({ lessonId, cpId }: BloomFilterProps): JSX.Element {
           onClick={check}
           className="border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90"
         >
-          ? check
+          {locale === "de" ? "prüfen" : "? check"}
         </button>
         <button
           type="button"
@@ -177,35 +204,68 @@ export function BloomFilter({ lessonId, cpId }: BloomFilterProps): JSX.Element {
             "border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60",
           )}
         >
-          reset
+          {locale === "de" ? "zurücksetzen" : "reset"}
         </button>
       </div>
       <p className="mt-2 font-mono text-[11px] text-muted-foreground">
-        added <b className="text-foreground">{added}</b> · bits set <b className="text-foreground">{bitsSet}</b>/
-        <b className="text-foreground">{N_BITS}</b> · est FPR <b className="text-foreground">{(fpr * 100).toFixed(1)}%</b>
+        {locale === "de" ? "Einträge" : "added"}{" "}
+        <b className="text-foreground">{added}</b> ·{" "}
+        {locale === "de" ? "gesetzte Bits" : "bits set"}{" "}
+        <b className="text-foreground">{bitsSet}</b>/
+        <b className="text-foreground">{N_BITS}</b> ·{" "}
+        {locale === "de"
+          ? "geschätzte Falsch-positiv-Rate"
+          : "estimated false-positive rate"}{" "}
+        <b className="text-foreground">{(fpr * 100).toFixed(1)}%</b>
       </p>
-      <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground" role="status">
+      <p
+        className="mt-3 text-[13px] leading-relaxed text-muted-foreground"
+        role="status"
+      >
         {outcome == null && (
           <>
-            Try adding a few keys and then checking new ones. Bloom can say{" "}
-            <b className="text-[#3f8264]">&quot;definitely no&quot;</b> instantly, or{" "}
-            <b className="text-brand-orange">&quot;maybe&quot;</b>, never a false negative, only false positives.
+            {locale === "de"
+              ? "Füge Schlüssel hinzu und prüfe danach andere. Der Filter antwortet entweder "
+              : "Add keys, then check different ones. The filter returns either "}
+            <b className="text-[#3f8264]">
+              {locale === "de" ? "sicher nicht enthalten" : "definitely no"}
+            </b>{" "}
+            {locale === "de" ? "oder " : "or "}
+            <b className="text-brand-orange">
+              {locale === "de" ? "möglicherweise enthalten" : "maybe"}
+            </b>
+            .
           </>
         )}
         {outcome?.kind === "add" && (
           <>
-            added &quot;{outcome.key}&quot; · 3 hashes set the corresponding bits to 1
+            {locale === "de" ? "hinzugefügt" : "added"} &quot;{outcome.key}
+            &quot; ·{" "}
+            {locale === "de"
+              ? "drei Hashes setzen die zugehörigen Bits auf 1"
+              : "three hashes set the corresponding bits to 1"}
           </>
         )}
         {outcome?.kind === "maybe" && (
           <>
-            <b className="text-brand-orange">&quot;maybe&quot;</b> · all 3 bits set. Real hit or false positive, go check
-            the actual file.
+            <b className="text-brand-orange">
+              {locale === "de" ? "möglicherweise enthalten" : "maybe"}
+            </b>{" "}
+            ·{" "}
+            {locale === "de"
+              ? "Alle drei Bits sind gesetzt. Prüfe die eigentliche Datei, um Treffer und Falsch-positiv zu unterscheiden."
+              : "All three bits are set. Check the actual file to distinguish a hit from a false positive."}
           </>
         )}
         {outcome?.kind === "no" && (
           <>
-            <b className="text-[#3f8264]">&quot;definitely not&quot;</b> · at least one bit was 0. Skip the file entirely.
+            <b className="text-[#3f8264]">
+              {locale === "de" ? "sicher nicht enthalten" : "definitely not"}
+            </b>{" "}
+            ·{" "}
+            {locale === "de"
+              ? "Mindestens ein Bit ist 0. Die Datei muss nicht gelesen werden."
+              : "At least one bit is 0. The file does not need to be read."}
           </>
         )}
       </p>

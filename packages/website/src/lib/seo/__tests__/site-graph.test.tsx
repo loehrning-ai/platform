@@ -3,7 +3,12 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { render } from "@testing-library/react";
 import { GET as getKnowledgeGraph } from "@/app/api/knowledge-graph.json/route";
-import { GITHUB_ORG, SAME_AS_URLS } from "../entity";
+import {
+  GITHUB_ORG,
+  ORGANIZATION_SAME_AS_URLS,
+  PERSON_SAME_AS_URLS,
+  TIM_ENTITY,
+} from "../entity";
 import { JsonLd } from "../json-ld";
 import { SITE_GRAPH } from "../site-graph";
 
@@ -44,14 +49,36 @@ function organizationSameAs(graph: typeof SITE_GRAPH): unknown[] {
   return Array.isArray(org?.sameAs) ? org.sameAs : [];
 }
 
+function personSameAs(graph: typeof SITE_GRAPH): unknown[] {
+  const person = graph["@graph"].find((node) => node["@type"] === "Person");
+  expect(person, "Person node must exist in the site graph").toBeDefined();
+  expect(Array.isArray(person?.sameAs), "Person sameAs must be an array").toBe(true);
+  return Array.isArray(person?.sameAs) ? person.sameAs : [];
+}
+
 describe("GitHub organization links", () => {
   it("rendered site JSON-LD links the verified GitHub organization", () => {
     const orgLinks = organizationSameAs(renderedSiteJsonLd());
     expect(orgLinks.filter(isExactGitHubOrgUrl)).toEqual([GITHUB_ORG.url]);
   });
 
-  it("sameAs lists the verified GitHub organization", () => {
-    expect(SAME_AS_URLS.filter(isExactGitHubOrgUrl)).toEqual([GITHUB_ORG.url]);
+  it("Organization sameAs lists only the verified GitHub organization", () => {
+    expect(ORGANIZATION_SAME_AS_URLS).toEqual([GITHUB_ORG.url]);
+    expect(organizationSameAs(renderedSiteJsonLd())).toEqual([GITHUB_ORG.url]);
+  });
+
+  it("Person sameAs lists personal profiles and excludes the organization", () => {
+    expect(PERSON_SAME_AS_URLS).toEqual([
+      TIM_ENTITY.linkedInUrl,
+      TIM_ENTITY.personalGithubUrl,
+    ]);
+    expect(personSameAs(renderedSiteJsonLd())).toEqual([
+      TIM_ENTITY.linkedInUrl,
+      TIM_ENTITY.personalGithubUrl,
+    ]);
+    expect(personSameAs(renderedSiteJsonLd()).filter(isExactGitHubOrgUrl)).toEqual(
+      [],
+    );
   });
 
   it.each([
@@ -89,5 +116,14 @@ describe("Organization logo", () => {
 
   it("ships the 512x512 square logo asset in public/", () => {
     expect(existsSync(join(process.cwd(), "public", "logo-square-512.png"))).toBe(true);
+  });
+});
+
+describe("site languages", () => {
+  it("declares the reviewed German and English website languages", () => {
+    const website = SITE_GRAPH["@graph"].find(
+      (node) => node["@type"] === "WebSite",
+    );
+    expect(website?.inLanguage).toEqual(["de-DE", "en-GB"]);
   });
 });

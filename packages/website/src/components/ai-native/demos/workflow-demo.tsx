@@ -10,8 +10,8 @@ import { cn } from "@/lib/utils";
  * WorkflowDemo — signal-based message pipeline.
  *
  * Renders a 7-node n8n-style flow as SVG with animated pulses on edges,
- * picks a dormant lead, streams a personalized outbound email through
- * 4 stages (signal → write → send + DB touch + tracking).
+ * picks a fictional dormant lead and streams a review draft through
+ * four simulated stages (signal → draft → review state + DB preview).
  *
  * Provenance: first-party loehrning.ai implementation by Tim Löhr.
  * Ported 2026-04-21. See AI-native demo gallery implementation.
@@ -49,7 +49,7 @@ const NODES: readonly Node[] = [
   {
     id: "score",
     title: "Intent-Score",
-    kind: "Claude Haiku",
+    kind: "Klassifikationsmodell",
     col: 1,
     row: 2,
     icon: "◈",
@@ -58,7 +58,7 @@ const NODES: readonly Node[] = [
   {
     id: "write",
     title: "Text-Generierung",
-    kind: "Claude Sonnet",
+    kind: "Entwurfsmodell",
     col: 2,
     row: 1,
     icon: "✎",
@@ -576,7 +576,7 @@ export function WorkflowDemo(): JSX.Element {
                     />
                     {stage === 1
                       ? "// Signal-Scan läuft…"
-                      : "// Claude Sonnet generiert personalisierten Text…"}
+                      : "// Konfiguriertes Modell erstellt einen Review-Entwurf…"}
                   </div>
                 ) : (
                   <m.div
@@ -594,12 +594,12 @@ export function WorkflowDemo(): JSX.Element {
               </div>
               {stage >= 3 && (
                 <div className="flex flex-wrap gap-3.5 border-t border-dashed border-border px-3.5 py-2 font-mono text-[9px] uppercase tracking-[0.1em] text-muted-foreground">
-                  <span>◆ 247 Tokens</span>
-                  <span>◆ Sonnet 4.5</span>
-                  <span>◆ 1,8 s</span>
-                  <span>◆ Quelle geprüft</span>
+                  <span>◆ Tokenzahl · Beispiel</span>
+                  <span>◆ Modellroute · simuliert</span>
+                  <span>◆ Dauer · Simulation</span>
+                  <span>◆ Quellenprüfung · offen</span>
                   <span className="ml-auto text-brand-orange">
-                    {stage >= 4 ? "DB: touched_at = 2026-04-21" : ""}
+                    {stage >= 4 ? "DB-Vorschau: touched_at · simuliert" : ""}
                   </span>
                 </div>
               )}
@@ -611,9 +611,9 @@ export function WorkflowDemo(): JSX.Element {
       {/* KPIs */}
       <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
         {[
-          ["Quellenabdeckung", "100 %"],
-          ["PII-Check", "aktiv"],
-          ["Entwürfe", "3"],
+          ["Quellenstatus", "ungeprüft"],
+          ["PII-Check", "simuliert"],
+          ["Entwürfe", "3 · fiktiv"],
           ["Review-Status", "offen"],
         ].map(([label, val]) => (
           <div

@@ -1,4 +1,12 @@
-import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from "vitest";
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  beforeEach,
+  afterEach,
+  vi,
+} from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { __resetCacheForTests, getXp, isCheckpointDone } from "@/lib/progress";
 import { XP } from "@/lib/progress/types";
@@ -23,7 +31,10 @@ function installLocalStoragePolyfill(): void {
 }
 
 beforeAll(() => {
-  if (typeof window.localStorage === "undefined" || typeof window.localStorage.setItem !== "function") {
+  if (
+    typeof window.localStorage === "undefined" ||
+    typeof window.localStorage.setItem !== "function"
+  ) {
     installLocalStoragePolyfill();
   }
 });
@@ -41,18 +52,35 @@ afterEach(() => {
 describe("InterviewMove ", () => {
   it("renders the canvas progress track and the first move's real title", () => {
     render(<InterviewMove lessonId="di-interview-playbook" cpId="iv" />);
-    expect(screen.getByRole("img", { name: /Interview-replay progress track/ })).toBeInTheDocument();
-    expect(screen.getByText("00:00, Mirror the prompt back")).toBeInTheDocument();
-    expect(screen.getByText(/Design real-time analytics for a marketplace/)).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: /Interview-replay progress track/ }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Restate the problem without adding requirements"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Design analytics for a marketplace/),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Restate the problem without adding requirements")
+        .parentElement?.parentElement,
+    ).toHaveClass("min-w-0", "max-w-full");
+    expect(screen.getByRole("img")).toHaveClass("min-w-0", "max-w-full");
   });
 
   it("falls back to a static summary, without crashing, when getContext('2d') returns null", () => {
     const original = HTMLCanvasElement.prototype.getContext;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    HTMLCanvasElement.prototype.getContext = vi.fn().mockReturnValue(null) as any;
+    HTMLCanvasElement.prototype.getContext = vi
+      .fn()
+      .mockReturnValue(null) as any;
     try {
-      expect(() => render(<InterviewMove lessonId="di-interview-playbook" cpId="iv" />)).not.toThrow();
-      expect(screen.getByRole("img", { name: /Move 1 of 12/ })).toBeInTheDocument();
+      expect(() =>
+        render(<InterviewMove lessonId="di-interview-playbook" cpId="iv" />),
+      ).not.toThrow();
+      expect(
+        screen.getByRole("img", { name: /Move 1 of 12/ }),
+      ).toBeInTheDocument();
     } finally {
       HTMLCanvasElement.prototype.getContext = original;
     }
@@ -65,21 +93,27 @@ describe("InterviewMove ", () => {
     expect(prev).toBeDisabled();
 
     fireEvent.click(next);
-    expect(screen.getByText("02:00, Pin scale and freshness")).toBeInTheDocument();
+    expect(
+      screen.getByText("Record the exercise assumptions"),
+    ).toBeInTheDocument();
     expect(prev).not.toBeDisabled();
 
     fireEvent.click(prev);
-    expect(screen.getByText("00:00, Mirror the prompt back")).toBeInTheDocument();
+    expect(
+      screen.getByText("Restate the problem without adding requirements"),
+    ).toBeInTheDocument();
   });
 
-  it("awards the checkpoint once the final move (43:00) is reached, not before", () => {
+  it("awards the checkpoint once the final move is reached, not before", () => {
     render(<InterviewMove lessonId="di-interview-playbook" cpId="iv" />);
     const next = screen.getByRole("button", { name: /next move/ });
     expect(isCheckpointDone("di-interview-playbook", "iv")).toBe(false);
     for (let i = 0; i < 10; i++) fireEvent.click(next);
     expect(isCheckpointDone("di-interview-playbook", "iv")).toBe(false);
     fireEvent.click(next);
-    expect(screen.getByText("43:00, The closing move")).toBeInTheDocument();
+    expect(
+      screen.getByText("Close with operational evidence"),
+    ).toBeInTheDocument();
     expect(next).toBeDisabled();
     expect(isCheckpointDone("di-interview-playbook", "iv")).toBe(true);
     expect(getXp()).toBe(XP.CHECKPOINT);

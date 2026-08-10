@@ -8,7 +8,8 @@ const lesson: ClaudeLesson = {
   id: "agents",
   number: 7,
   title: "Agentic Workflows and Tool Use",
-  subtitle: "When Claude stops answering and starts doing.",
+  subtitle:
+    "Design tool loops with explicit authority, limits, and verification.",
   durationMinutes: 11,
   trackId: "advanced",
   hook: "Agents are loops. Loops need guardrails.",
@@ -23,28 +24,28 @@ const lesson: ClaudeLesson = {
       title: "Agents vs. chat",
       readTimeMinutes: 2,
       content:
-        "A chat is one turn in, one turn out. An agent is Claude in a loop: gather context, take action, verify work, repeat. That's the phrase Anthropic's engineering team uses to describe the shape of every agent they build, from Claude Code to research agents to email assistants. The \"action\" step is a tool call: reading a file, running a search, writing code, hitting an API.\n\nUnder the hood, Claude Code itself is this exact pattern, deliberately kept simple: `while(tool_call) → execute → feed results → repeat`. A single-threaded loop. No swarms. When Claude produces a response without a tool call, the loop ends.\n\n> An agent is Claude with hands, and a loop telling it when to put them down.",
+        "Anthropic distinguishes workflows from agents. A workflow follows code-defined paths; an agent lets a model select actions and tools based on intermediate results. Both can use model calls, retrieval, and tools.\n\nA basic agent loop sends the current goal and state to a model, validates a requested tool call, executes it within policy, returns the result, and checks a stopping condition. Production systems may add parallel work, queues, approvals, retries, and state persistence.\n\n> Tool access creates authority. Bound that authority in code and infrastructure.",
     },
     {
       id: "the-loop-explicit",
       title: "The loop, explicitly",
       readTimeMinutes: 2,
       content:
-        "```\n// one agent turn\nplan      ← claude reads goal + state, writes next step\nact       ← claude calls a tool (readFile, bash, search, …)\nobserve   ← tool result appended to the window\nupdate    ← claude integrates the observation\ndecide    ← continue the loop, or stop\n\n// until\n  goal met  |  max steps reached  |  human intervenes\n```\n\nEvery part of that loop is a choice you make when designing the agent. Get them wrong and you have an infinite loop with a credit card.",
+        "```\n// one agent turn\nrequest   ← model receives goal + allowed state\npropose   ← model returns a response or tool request\nvalidate  ← harness checks schema, permission, and policy\nexecute   ← approved tool runs\nrecord    ← result and side effects are logged\ndecide    ← continue, stop, or request human input\n\n// until\n  acceptance checks pass | a limit is reached | a person intervenes\n```\n\nDefine termination, retries, idempotency, and recovery before granting write access. A prompt-level request to stop is not an enforcement boundary.",
     },
     {
       id: "four-guardrails",
       title: "The four guardrails",
       readTimeMinutes: 3,
       content:
-        "- **01 · Scope.** Give the agent the smallest set of tools it needs. Every tool is a footgun for something.\n- **02 · Budget.** Max steps. Max tokens. Max wall-clock. Always set all three. An agent without a budget is a bug.\n- **03 · Confirmation.** Destructive actions (delete, deploy, send) should require explicit user confirmation. Claude Code's default is to ask before modifying files or running commands, match that for your own agents.\n- **04 · Verification.** Give the agent a way to check its own work. Linters, type checks, tests, screenshots, concrete rules-based feedback. Agents that can evaluate their output are fundamentally more reliable than ones that can't.\n\n> **Why verification matters most.** Anthropic's engineering team is blunt: the best form of feedback is clearly defined rules for an output, then explaining which rules failed and why. This is why generating TypeScript and linting it beats generating plain JavaScript, more layers of automatic feedback. Design the verification step before you design the action step.",
+        "- **01 · Scope.** Expose only required tools, resources, and network destinations. Use separate read and write permissions.\n- **02 · Limits.** Set appropriate bounds for steps, tokens, time, cost, retries, and concurrency. The relevant limits depend on the system.\n- **03 · Approval and policy.** Enforce approval for consequential actions such as deletion, deployment, payment, or external messaging. Product defaults and permission modes vary; inspect the active configuration.\n- **04 · Verification.** Check outcomes with deterministic tools where possible: schemas, linters, type checks, tests, screenshots, and read-after-write confirmation.\n\nVerification does not make an agent correct by itself. It makes defined failures observable. Include negative tests and check that the verifier measures the intended outcome rather than a proxy.",
     },
     {
       id: "when-to-use",
       title: "When to reach for an agent",
       readTimeMinutes: 2,
       content:
-        "**Agent fits:** multi-step investigation (trace a bug across files). Research and synthesis (gather data, summarize). Repetitive work with clear stopping criteria.\n\n**Agent overkill:** one-shot writing tasks. Anything where a single structured prompt plus a paste of context would work. Tasks without a crisp \"done\" condition.",
+        "**Agent fit:** a multi-step task where later actions depend on tool results, the environment supplies verifiable feedback, and the added latency and cost are justified.\n\n**Prefer a workflow or single call:** a fixed sequence, a one-shot transformation, or a task without a defensible stopping condition. Start with the least complex architecture that meets the evaluated requirement.",
     },
   ],
   widgets: [
@@ -74,7 +75,7 @@ const lesson: ClaudeLesson = {
         ],
         correct: 1,
         explanation:
-          "Agents loop. Without a step or token budget, they can churn indefinitely. Always cap.",
+          "Without an enforced stopping limit, the harness can continue issuing model and tool calls until another resource or external limit stops it.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
@@ -108,7 +109,7 @@ const lesson: ClaudeLesson = {
         lessonId: "agents",
         cpId: "tutor",
         topic: "designing agentic workflows safely",
-        persona: "Push on guardrails, budgets, and what \"done\" looks like.",
+        persona: 'Push on guardrails, budgets, and what "done" looks like.',
       },
     },
   ],

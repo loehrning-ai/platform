@@ -260,9 +260,9 @@ export async function generateBookPdf(book: Book, bookSlug: string): Promise<Buf
   const P = await pdfPrimitives();
   const { Document, Page, Text, View } = P;
 
-  const manifest = await loadBookManifest(bookSlug);
+  const manifest = await loadBookManifest(bookSlug, "de");
   const chapters = await Promise.all(
-    manifest.chapters.map((c) => loadBookChapter(bookSlug, c.slug)),
+    manifest.chapters.map((c) => loadBookChapter(bookSlug, c.slug, "de")),
   );
 
   const pageStyle = {

@@ -1,8 +1,13 @@
 "use client";
 
 import { useEffect, useState, type JSX } from "react";
-import { subscribe, getCompletedLessonsCount, getOverallProgress } from "@/lib/progress/store";
+import {
+  subscribe,
+  getCompletedLessonsCount,
+  getOverallProgress,
+} from "@/lib/progress/store";
 import { TOTAL_LESSON_COUNT } from "@/lib/ai-native-operator/types";
+import type { Locale } from "@/lib/i18n/locale";
 
 /**
  * CourseProgressBar — reading-progress bar sourced from the unified store
@@ -11,7 +16,11 @@ import { TOTAL_LESSON_COUNT } from "@/lib/ai-native-operator/types";
  * than sidebar chrome. SSR-safe: renders "0 / 39" until mounted, then
  * subscribes to the unified store for live cross-tab updates.
  */
-export function CourseProgressBar(): JSX.Element {
+export function CourseProgressBar({
+  locale = "en",
+}: {
+  readonly locale?: Locale;
+}): JSX.Element {
   const [mounted, setMounted] = useState(false);
   const [done, setDone] = useState(0);
   const [pct, setPct] = useState(0);
@@ -29,14 +38,15 @@ export function CourseProgressBar(): JSX.Element {
     <div className="mt-6">
       <div className="flex items-center justify-between font-mono text-[11px] text-muted-foreground">
         <span>
-          {mounted ? done : 0} / {TOTAL_LESSON_COUNT} lessons
+          {mounted ? done : 0} / {TOTAL_LESSON_COUNT}{" "}
+          {locale === "de" ? "Lektionen" : "lessons"}
         </span>
         <span>{mounted ? pct : 0}%</span>
       </div>
       <div
         className="mt-1.5 h-1.5 overflow-hidden bg-border"
         role="progressbar"
-        aria-label="Lesson progress"
+        aria-label={locale === "de" ? "Lektionsfortschritt" : "Lesson progress"}
         aria-valuenow={mounted ? pct : 0}
         aria-valuemin={0}
         aria-valuemax={100}

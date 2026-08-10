@@ -11,5 +11,5 @@ test("legacy /daten-audit redirects to /ueber-die-plattform", async ({ request }
   const res = await request.get("/daten-audit", { maxRedirects: 0 });
   expect([301, 308]).toContain(res.status());
   expect(res.headers()["location"]).toContain("/ueber-die-plattform");
-  expect(res.headers()["x-robots-tag"]).toContain("noindex");
+  expect(res.headers()["x-robots-tag"]).toBeUndefined();
 });

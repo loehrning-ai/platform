@@ -1,18 +1,27 @@
 // Ported from codex/lessons/03-agents-md.html + codex/js/lessons/L03.js.
 import type { CodexLesson } from "../types";
 import { buildSections } from "../blocks";
-import { CODEX_QUIZ_COPY, CODEX_QUIZ_TITLE, CODEX_TASK_SPEC_TIER_LABELS } from "../widget-copy";
+import {
+  CODEX_QUIZ_COPY,
+  CODEX_QUIZ_TITLE,
+  CODEX_TASK_SPEC_TIER_LABELS,
+} from "../widget-copy";
 
 const lesson: CodexLesson = {
   id: "L03",
   number: 3,
-  title: "AGENTS.md, Codex's Memory",
+  title: "AGENTS.md: Repository Instructions",
   subtitle:
-    'One file, committed to your repo. It\'s the difference between "write a PR" and "write a PR the way we write PRs here."',
+    "Versioned instructions give Codex explicit project rules, commands, and boundaries.",
   durationMinutes: 11,
   trackId: "fundamentals",
-  hook: "Onboard the agent like a new hire.",
-  keyConcepts: ["AGENTS.md", "Convention file", "Context management", "CLAUDE.md"],
+  hook: "Make repository rules explicit.",
+  keyConcepts: [
+    "AGENTS.md",
+    "Convention file",
+    "Context management",
+    "CLAUDE.md",
+  ],
   quiz: [],
   sections: buildSections([
     {
@@ -23,11 +32,11 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Codex has no persistent memory. The sandbox is ephemeral. The agent has never met your team before. Yet, somehow, people get Codex to produce PRs that look like the humans on the team wrote them, same error-handling conventions, same test patterns, same casual profanity in commit messages. How?\n\nAnswer: `AGENTS.md`. A plain-text file, in your repo root, that Codex reads at the start of every task. It's your onboarding doc for the agent. The new-hire manual that the new hire actually reads on day one.\n\nThe concept is the same across tools. Claude Code uses `CLAUDE.md`. GitHub Copilot Workspace uses a repo instructions file. Cursor uses `.cursorrules`. The names differ; the principle is identical: a plain-text file committed to your repo that the agent reads before it touches anything. This lesson uses `AGENTS.md` as the canonical example, apply everything here to whatever convention file your tool expects.\n\nAnything worth knowing about how your team builds software belongs here. Conventions. Folder structure. Test commands. Known quirks. The one library you love and the one you're migrating off. The exact set of things a competent junior engineer would pick up by osmosis over their first six weeks, except you're writing it down, once, and every agent run benefits.",
+            "Codex reads `AGENTS.md` instructions before it starts work. The file is not memory; it is versioned project context. Use it for rules that should apply consistently across tasks.\n\nInstruction discovery is layered. Codex can load global guidance from the Codex home directory, then project guidance from the project root down to the current working directory. In each directory, `AGENTS.override.md` takes precedence over `AGENTS.md`. Instructions closer to the working directory appear later and can override broader guidance.\n\nA repository-level file should contain information that changes the work: exact setup and verification commands, architectural boundaries, test expectations, known constraints, and actions that require approval. Task-specific goals and acceptance criteria still belong in the task request.",
         },
         {
           kind: "pull-quote",
-          text: "Think of AGENTS.md as the onboarding doc you wish your team had written years ago. Now you have a reason to write it.",
+          text: "Use AGENTS.md for durable project rules. Use the task request for the current change.",
         },
       ],
     },
@@ -39,7 +48,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "There's no schema. The file is read as context. But a few sections pay off reliably across every repo we've seen.",
+            "AGENTS.md is Markdown without a required content schema. Organize it around rules the agent can apply and checks it can execute.",
         },
       ],
     },
@@ -51,7 +60,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Here's the shape of a production `AGENTS.md`. Not a template, a sample. Your file should look nothing like this structurally. It should look exactly like this in *specificity*.\n\n```\n# AGENTS.md\n\n## What this repo is\nPayments service. Python 3.11, Flask, Postgres, Stripe.\nCritical path: /checkout endpoint. Downtime costs money literally.\n\n## Running locally\n$ make setup       # installs everything\n$ make test         # pytest, must pass before any PR\n$ make lint         # ruff + mypy, also mandatory\n\n## Conventions we actually enforce\n- No bare except: clauses. Catch specific exceptions.\n- Every endpoint gets an integration test in tests/api/.\n- Log with structlog, never print. Log context as kwargs, not f-strings.\n- Migrations go in db/migrations/, numbered, never edited after merge.\n- We use pydantic v2. If you see v1 patterns, flag it, we're mid-migration.\n\n## Known quirks\n- tests/integration/test_webhooks.py is flaky. Re-run once before debugging.\n- user_service.py has 400 lines we've been meaning to split. Don't make it worse.\n- Our Stripe test keys live in .env.test, already in the sandbox.\n\n## Definitely don't\n- Touch legacy/ without explicit permission, it runs in prod, unowned.\n- Add new top-level dependencies without asking.\n- Write code in server_v1.py. It's deprecated.\n```",
+            "This is an illustrative `AGENTS.md`, not a universal template. Its useful property is specificity.\n\n```\n# AGENTS.md\n\n## What this repo is\nPayments service. Python 3.11, Flask, Postgres, Stripe.\nCritical path: /checkout endpoint.\n\n## Running locally\n$ make setup       # installs dependencies\n$ make test         # pytest; required before review\n$ make lint         # ruff + mypy; also required\n\n## Conventions we enforce\n- No bare except: clauses. Catch specific exceptions.\n- Every endpoint gets an integration test in tests/api/.\n- Log with structlog, never print. Log context as kwargs, not f-strings.\n- Migrations go in db/migrations/, numbered, never edited after merge.\n- We use pydantic v2. Flag v1 patterns; migration is in progress.\n\n## Known constraints\n- tests/integration/test_webhooks.py is flaky. Re-run once before debugging.\n- user_service.py is already oversized. Do not add responsibilities to it.\n- Tests use non-production fixtures; never request or print live credentials.\n\n## Requires explicit approval\n- Changes under legacy/.\n- New top-level dependencies.\n- Any edit to deprecated server_v1.py.\n```",
         },
       ],
     },
@@ -63,12 +72,12 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'Same task, "add a /health endpoint that checks the database." Same repo. The only variable: whether `AGENTS.md` was present. Look at the resulting patches.',
+            'The following comparison is illustrative. Both patches answer "add a /health endpoint that checks the database"; the second also follows the repository rules stated in `AGENTS.md`.',
         },
         {
           kind: "callout",
           title: "Both versions work.",
-          body: "But the second one fits. It uses structlog because the repo does. It catches OperationalError specifically because the style guide says so. It writes a test in tests/api/ because that's where tests go. A human reviewer spends 30 seconds on the second PR; they spend 10 minutes on the first asking \"why didn't you…\"",
+          body: "The second version also follows the stated project rules: structlog, a specific OperationalError branch, and an integration test under tests/api/. The review can check those choices against explicit instructions instead of inferred preferences.",
         },
       ],
     },
@@ -76,7 +85,12 @@ const lesson: CodexLesson = {
       id: "s5",
       title: "Quick check",
       readTimeMinutes: 1,
-      blocks: [{ kind: "prose", markdown: "One question on writing a good AGENTS.md entry." }],
+      blocks: [
+        {
+          kind: "prose",
+          markdown: "One question on writing a good AGENTS.md entry.",
+        },
+      ],
     },
     {
       id: "s6",
@@ -86,12 +100,12 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Three moves to get value out of `AGENTS.md` in a week:\n\n1. **Start with 30 lines.** A half-page is better than a perfect document that never ships. Answer: what does this repo do, how do I run it, what are three things a new hire always gets wrong?\n2. **Grow it from rejections.** Each time you reject an agent PR for a stylistic reason, add a line to AGENTS.md so the next run doesn't repeat the mistake. The file should get measurably smarter every sprint.\n3. **Review it like code.** The file is source. When conventions change, AGENTS.md changes. Stale docs poison the well worse than missing docs.\n\n### Context management: what goes in, what stays out\n\nThe convention file competes for space in the context window with your task spec and the repo contents the agent reads. Keep it focused:\n\n- **In:** things that change how code is written (conventions, patterns, must-avoid). Anything a new engineer would ask on their first week.\n- **Out:** things the agent can infer from the code itself (don't describe your folder structure if it's obvious). Marketing copy, meeting notes, personal preferences.\n- **In:** exact commands. `make test`, not \"run the tests.\" The agent executes commands literally.\n- **Out:** vague principles. \"Write clean code\" adds no signal. \"No bare except: clauses, catch specific exceptions\" does.\n\nA 200-line `AGENTS.md` that is specific and accurate outperforms a 600-line one that's half filler. Prune aggressively. Every line should earn its spot by preventing a real mistake.",
+            'Build the file from observed project needs:\n\n1. **Start with executable basics.** State the repository purpose, setup command, required checks, and boundaries that are not obvious from code.\n2. **Update it from reviews.** When a recurring project rule causes a rejected change, add the precise rule and its safe path.\n3. **Review it with code.** When commands or conventions change, update the instruction file in the same change.\n\n### Context management: what goes in, what stays out\n\nInstruction files consume context alongside the task and code. Keep them specific:\n\n- **Include:** rules that affect implementation, review, or safety.\n- **Exclude:** marketing copy, meeting notes, and preferences with no testable effect.\n- **Include:** exact commands such as `make test`, with prerequisites when needed.\n- **Exclude:** vague goals such as "write clean code." Replace them with observable rules.\n\nLength is not a quality measure. Retain instructions that prevent a known error, define a boundary, or enable verification.',
         },
         {
           kind: "callout",
-          title: "Tool-specific note.",
-          body: "Claude Code reads CLAUDE.md and supports directory-level convention files (e.g., src/CLAUDE.md for frontend-specific rules). If you're using Claude Code on a monorepo, layer your convention files: root-level for universal rules, directory-level for domain-specific ones.",
+          title: "Directory-specific rules.",
+          body: "Codex discovers one instruction file per directory from the project root to the current working directory. Put repository-wide rules at the root and narrower rules near the code they govern. An AGENTS.override.md file takes precedence within its directory.",
         },
       ],
     },
@@ -113,27 +127,42 @@ const lesson: CodexLesson = {
           {
             section: "What this repo is",
             hint: "One paragraph. Business purpose, not architecture.",
-            body: ["Payments service. Python 3.11, Flask, Postgres.", "Critical path: /checkout endpoint."],
+            body: [
+              "Payments service. Python 3.11, Flask, Postgres.",
+              "Critical path: /checkout endpoint.",
+            ],
           },
           {
             section: "How to run tests & lint",
-            hint: "The exact commands. Codex will run them.",
-            body: ["make test   # pytest, must pass", "make lint   # ruff + mypy"],
+            hint: "Exact commands Codex can run when the environment supports them.",
+            body: [
+              "make test   # pytest, must pass",
+              "make lint   # ruff + mypy",
+            ],
           },
           {
             section: "Conventions we enforce",
             hint: 'Not "be clean." Specific rules.',
-            body: ["No bare except:. Catch specific exceptions.", "Log with structlog, not print."],
+            body: [
+              "No bare except:. Catch specific exceptions.",
+              "Log with structlog, not print.",
+            ],
           },
           {
             section: "Known quirks",
             hint: "The undocumented minefields. Saves wasted runs.",
-            body: ["test_webhooks.py is flaky, re-run once.", "user_service.py is 400 lines, don't add to it."],
+            body: [
+              "test_webhooks.py has a documented intermittent failure; preserve the first log before retrying.",
+              "Do not add responsibilities to user_service.py; a separate extraction is planned.",
+            ],
           },
           {
             section: "Definitely don't",
             hint: "Hard stops. More useful than style preferences.",
-            body: ["Never edit legacy/. Runs in prod, unowned.", "No new top-level deps without asking."],
+            body: [
+              "Never edit legacy/. Runs in prod, unowned.",
+              "No new top-level deps without asking.",
+            ],
           },
           {
             section: "Our favorite color",
@@ -163,7 +192,10 @@ const lesson: CodexLesson = {
           { type: "add", text: '        db.session.execute("SELECT 1")' },
           { type: "add", text: '        return jsonify({"ok": True})' },
           { type: "add", text: "    except Exception as e:" },
-          { type: "add", text: '        log.error(f"health check failed: {e}")' },
+          {
+            type: "add",
+            text: '        log.error(f"health check failed: {e}")',
+          },
           { type: "add", text: '        return jsonify({"ok": False}), 500' },
         ],
       },
@@ -189,10 +221,16 @@ const lesson: CodexLesson = {
           { type: "add", text: '        db.session.execute("SELECT 1")' },
           { type: "add", text: '        return jsonify({"ok": True})' },
           { type: "add", text: "    except OperationalError as e:" },
-          { type: "add", text: '        log.error("health_check_failed", error=str(e))' },
+          {
+            type: "add",
+            text: '        log.error("health_check_failed", error=str(e))',
+          },
           { type: "add", text: '        return jsonify({"ok": False}), 503' },
           { type: "context", text: "" },
-          { type: "context", text: "# --- tests/api/test_health.py, also added ---" },
+          {
+            type: "context",
+            text: "# --- tests/api/test_health.py, also added ---",
+          },
         ],
         note: "Notice the specifics: OperationalError (not generic Exception), structlog with kwargs (not f-strings), 503 not 500, and a test file in tests/api/. None of this was in the task. All of it was in AGENTS.md.",
       },
@@ -206,7 +244,8 @@ const lesson: CodexLesson = {
         cpId: "q1",
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
-        question: 'Which is the better AGENTS.md entry for "how we handle errors"?',
+        question:
+          'Which is the better AGENTS.md entry for "how we handle errors"?',
         options: [
           '"Handle errors thoughtfully and follow best practices."',
           '"Catch specific exceptions, never bare except. Log with structlog. Return 4xx for client errors, 5xx only for server bugs. Don\'t swallow exceptions in endpoints, let the global handler format them."',
@@ -215,7 +254,7 @@ const lesson: CodexLesson = {
         ],
         correct: 1,
         explanation:
-          'The agent\'s output is bounded by the specificity of your instructions. "Best practices" is a non-instruction, the agent has to guess what you mean. Concrete rules give it something to actually apply. This is the single highest-leverage skill in AGENTS.md authoring.',
+          '"Best practices" does not define observable behavior. Concrete rules name the required exception type, logging API, status-code boundary, and error-formatting path, so both the agent and reviewer can check them.',
       },
     },
   ],

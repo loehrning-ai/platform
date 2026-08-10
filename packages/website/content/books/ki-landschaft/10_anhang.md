@@ -2,18 +2,18 @@
 
 ## Glossar
 
-| Begriff | Definition |
-|---|---|
-| **AI Act** | Verordnung (EU) 2024/1689 mit rollen-, system- und risikobezogenen Pflichten. |
-| **Anbieter** | Akteur nach Art. 3 Nr. 3 AI Act; die Einordnung folgt der tatsächlichen Handlung und kann sich nach Art. 25 ändern. |
-| **Betreiber** | Akteur nach Art. 3 Nr. 4 AI Act, der ein KI-System unter eigener Verantwortung verwendet, außer bei persönlicher nicht beruflicher Tätigkeit. |
-| **Datenfluss** | Dokumentierte Bewegung von Daten zwischen Personen, Geräten, Diensten, Regionen, Unterauftragsverarbeitern, Logs und Backups. |
-| **DSFA** | Datenschutz-Folgenabschätzung nach Art. 35 DSGVO, wenn eine Verarbeitung voraussichtlich ein hohes Risiko zur Folge hat. |
-| **FRIA** | Grundrechte-Folgenabschätzung nach Art. 27 AI Act für den dort bestimmten Adressatenkreis und Hochrisiko-Einsatz. |
-| **Hochrisiko-KI** | KI-Systeme, die unter Art. 6 mit Anhang I oder III fallen; Ausnahmen und konkrete Zweckbestimmung sind zu prüfen. |
-| **KI-Kompetenz** | Fähigkeiten, Wissen und Verständnis nach Art. 3 Nr. 56; Art. 4 verlangt kontextgerechte Maßnahmen, kein bestimmtes Zertifikat. |
-| **Menschliche Aufsicht** | Organisatorische und technische Möglichkeit kompetenter, befugter Personen, ein System zu verstehen, zu überwachen, zu übersteuern oder zu stoppen. |
-| **Pilot** | Begrenzter, messbarer Test mit definierten Daten, Nutzern, Kontrollen, Stopkriterien und Auswertung. |
+| Begriff                   | Definition                                                                                                                                          |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **AI Act**                | Verordnung (EU) 2024/1689 mit rollen-, system- und risikobezogenen Pflichten.                                                                       |
+| **Anbieter**              | Akteur nach Art. 3 Nr. 3 AI Act; die Einordnung folgt der tatsächlichen Handlung und kann sich nach Art. 25 ändern.                                 |
+| **Betreiber**             | Akteur nach Art. 3 Nr. 4 AI Act, der ein KI-System unter eigener Verantwortung verwendet, außer bei persönlicher nicht beruflicher Tätigkeit.       |
+| **Datenfluss**            | Dokumentierte Bewegung von Daten zwischen Personen, Geräten, Diensten, Regionen, Unterauftragsverarbeitern, Logs und Backups.                       |
+| **DSFA**                  | Datenschutz-Folgenabschätzung nach Art. 35 DSGVO, wenn eine Verarbeitung voraussichtlich ein hohes Risiko zur Folge hat.                            |
+| **FRIA**                  | Grundrechte-Folgenabschätzung nach Art. 27 AI Act für den dort bestimmten Adressatenkreis und Hochrisiko-Einsatz.                                   |
+| **Hochrisiko-KI**         | KI-Systeme, die unter Art. 6 mit Anhang I oder III fallen; Ausnahmen und konkrete Zweckbestimmung sind zu prüfen.                                   |
+| **KI-Kompetenz**          | Fähigkeiten, Wissen und Verständnis nach Art. 3 Nr. 56; Art. 4 verlangt kontextgerechte Maßnahmen, kein bestimmtes Zertifikat.                      |
+| **Menschliche Aufsicht**  | Organisatorische und technische Möglichkeit kompetenter, befugter Personen, ein System zu verstehen, zu überwachen, zu übersteuern oder zu stoppen. |
+| **Pilot**                 | Begrenzter, messbarer Test mit definierten Daten, Nutzern, Kontrollen, Stopkriterien und Auswertung.                                                |
 | **Technische Exposition** | Überschneidung zwischen Aufgaben und technischen Systemfähigkeiten; nicht gleichbedeutend mit Einführung, Automatisierung oder Arbeitsplatzverlust. |
 
 ## Verifizierte Primärquellen
@@ -39,4 +39,4 @@ Nicht verwendet werden außerdem Marktprognosen oder Produktrankings aus kommerz
 4. Produktfunktionen, Preise, Verträge, Datenflüsse und Rechtsstand ändern sich. Volatile Angaben brauchen Prüfdatum und Primärquelle.
 5. Ein Lernmaterial ersetzt keine Rechts-, Datenschutz-, Sicherheits- oder Fachprüfung des konkreten Einsatzes.
 
-**Letzte redaktionelle Prüfung:** 28. Juli 2026.
+**Letzte redaktionelle Prüfung:** 9. August 2026.

@@ -1,4 +1,10 @@
-import { Hero, SectionLabel, AntiPatterns, BestPractices, Takeaway } from "@/components/data-science/shared/primitives";
+import {
+  Hero,
+  SectionLabel,
+  AntiPatterns,
+  BestPractices,
+  Takeaway,
+} from "@/components/data-science/shared/primitives";
 import { CUPEDExplainer } from "@/components/data-science/simulators/cuped-explainer";
 import { MultipleTesting } from "@/components/data-science/simulators/multiple-testing";
 import { PeekingSimulator } from "@/components/data-science/simulators/peeking-simulator";
@@ -16,7 +22,7 @@ export default function Ch10Peeking() {
       <Hero
         eyebrow="Chapter 10 · Peeking & Experimental Integrity"
         title='How <em>p-values</em> <span class="accent">lie.</span>'
-        hook="Peeking. Multiple comparisons. Optional stopping. Variance inflation. The subtle ways significance gets manufactured, and the statistical tools to prevent it."
+        hook="Peeking, multiple comparisons, optional stopping, and covariate adjustment. Learn how unplanned analysis changes error rates and which assumptions each correction needs."
         meta={[
           { k: "Read", v: "12 min" },
           { k: "Focus", v: "Peeking · CUPED · Power · MC" },
@@ -26,37 +32,45 @@ export default function Ch10Peeking() {
 
       <section className="section">
         <SectionLabel n="10.1">Peeking &amp; Optional Stopping</SectionLabel>
-        <h2 className="h2">Every interim look inflates your false-positive rate.</h2>
+        <h2 className="h2">
+          Repeated unadjusted looks can inflate the false-positive rate.
+        </h2>
         <p className="prose">
-          Suppose you run an A/B test and check the p-value each day. If it ever dips below 0.05
-          you stop and declare victory. The problem: even when H₀ is <em>exactly true</em>, you
-          will find p&lt;0.05 ~22-30% of the time with daily checks over 7 weeks, not the 5% you
-          budgeted. This is <strong>optional stopping bias</strong>.
+          Suppose a fixed-sample A/B test is checked repeatedly and stopped at
+          the first p&lt;0.05. The nominal 5% threshold no longer controls the
+          experiment-wide Type-I error. The actual rate depends on the look
+          schedule, maximum sample size, outcome model, and dependence between
+          looks. The simulator estimates one explicitly configured design; it is
+          not a universal peeking rate.
         </p>
         <PeekingSimulator />
         <AntiPatterns
           items={[
-            "<strong>Continuous monitoring with naive α</strong>, checking significance every day and stopping at first p&lt;0.05 breaks the Type-I error guarantee.",
+            "<strong>Continuous monitoring with fixed-sample α:</strong> checking repeatedly and stopping at the first p&lt;0.05 invalidates the fixed-sample error calibration.",
             '<strong>"It was significant yesterday"</strong>, the p-value is a random variable; a single dip below threshold is not a discovery.',
-            "<strong>HARKing (Hypothesising After Results are Known)</strong>, writing a hypothesis after seeing the data guarantees inflated FPR.",
+            "<strong>HARKing (Hypothesising After Results are Known):</strong> a pattern discovered after looking at the data is exploratory and needs confirmation on new data.",
           ]}
         />
         <BestPractices
           items={[
             "<strong>Pre-register</strong> sample size, primary metric, and test duration before data collection begins.",
-            "<strong>Sequential testing</strong> (mSPRT, always-valid p-values) formally allows interim looks with α spending.",
-            "<strong>Bayesian A/B testing</strong> with explicit stopping rules is naturally coherent under optional stopping.",
+            "<strong>Use a planned sequential design</strong>, such as group-sequential boundaries, α-spending, or an mSPRT, and check that its model and stopping assumptions fit the experiment.",
+            "<strong>For Bayesian decisions</strong>, predefine the likelihood, prior, loss, and stopping rule; then inspect frequentist operating characteristics when error control matters.",
           ]}
         />
       </section>
 
       <section className="section">
         <SectionLabel n="10.2">Multiple Comparisons</SectionLabel>
-        <h2 className="h2">Test 20 metrics. Expect 1 false positive, by construction.</h2>
+        <h2 className="h2">
+          Twenty valid null tests yield one false positive in expectation at
+          α=0.05.
+        </h2>
         <p className="prose">
-          The family-wise error rate (FWER) for <em>n</em> independent tests at α = 0.05 is
-          1 − (1 − 0.05)ⁿ. At n = 20 that is 64%. Slide the dial below to see how fast this
-          compounds.
+          The family-wise error rate (FWER) for <em>n</em> independent tests at
+          α = 0.05 is 1 − (1 − 0.05)ⁿ. At n = 20 that is about 64%. This formula
+          assumes independent tests with valid null p-values; dependence changes
+          the family-wise rate.
         </p>
         <MultipleTesting />
         <AntiPatterns
@@ -68,7 +82,7 @@ export default function Ch10Peeking() {
         <BestPractices
           items={[
             "<strong>Bonferroni correction</strong>: use α/n per test. Conservative but simple.",
-            "<strong>Benjamini-Hochberg</strong> (FDR): less conservative, controls expected proportion of false discoveries.",
+            "<strong>Benjamini-Hochberg</strong> (FDR): controls the expected false-discovery proportion under its dependence conditions.",
             "<strong>Nominate a primary metric</strong> before the test. Secondary metrics inform; they do not decide.",
           ]}
         />
@@ -76,20 +90,25 @@ export default function Ch10Peeking() {
 
       <section className="section">
         <SectionLabel n="10.3">CUPED</SectionLabel>
-        <h2 className="h2">Same data, higher power, for free.</h2>
+        <h2 className="h2">
+          Pre-period information can reduce variance when the assumptions hold.
+        </h2>
         <p className="prose">
-          CUPED (Controlled-experiment Using Pre-Experiment Data) uses a pre-period covariate X
-          correlated with the outcome Y to construct an adjusted metric Ŷ with lower variance. The
-          point estimate is unbiased and the confidence interval shrinks, you reach significance
-          faster or need fewer users. Variance reductions of 20–60% are common.
+          CUPED (Controlled-experiment Using Pre-Experiment Data) uses a
+          pre-period covariate X correlated with the outcome Y to construct an
+          adjusted metric Ŷ. With randomized assignment, a genuinely
+          pre-treatment covariate, and a correctly estimated adjustment, this
+          can reduce estimator variance. The finite-sample point estimate can
+          move, and the benefit depends on predictive correlation and
+          implementation details.
         </p>
         <CUPEDExplainer />
         <BestPractices
           items={[
-            "<strong>Always apply CUPED</strong> when you have pre-period data. It is never harmful.",
-            "Good covariates: prior purchase rate, prior visit frequency, account age, prior metric value.",
-            "θ is estimated on the <em>combined</em> data (not per arm) to avoid leakage from treatment assignment.",
-            "CUPED is compatible with any test statistic, just replace Y with Ŷ.",
+            "<strong>Use covariates measured before assignment.</strong> Post-treatment variables can absorb part of the treatment effect and bias the comparison.",
+            "Candidate covariates include a prior value of the outcome or stable pre-period behavior measured consistently for both groups.",
+            "Estimate θ with a procedure compatible with the randomization and standard-error calculation; cross-fitting can help when the adjustment model is flexible.",
+            "Report raw and adjusted estimates. A weak or unstable covariate can provide little precision gain, and implementation errors can make the result worse.",
           ]}
         />
       </section>
@@ -98,9 +117,12 @@ export default function Ch10Peeking() {
         <SectionLabel n="10.4">Statistical Power</SectionLabel>
         <h2 className="h2">Underpowered tests waste time and money.</h2>
         <p className="prose">
-          Power = P(reject H₀ | H₁ true). An underpowered study will miss a real effect and waste
-          the experiment slot. The minimum detectable effect (MDE) drives everything: halving the
-          MDE quadruples the required sample size. Calculate power <em>before</em> you start.
+          Power = P(reject H₀ | H₁ true). An underpowered study will miss a real
+          effect and waste the experiment slot. The minimum detectable effect
+          (MDE) drives everything: halving the MDE roughly quadruples the
+          required sample size in common two-arm approximations when variance,
+          α, power, and allocation stay fixed. Calculate power <em>before</em>{" "}
+          collection and state the model behind the calculation.
         </p>
         <PowerCalculator />
         <AntiPatterns
@@ -112,21 +134,21 @@ export default function Ch10Peeking() {
         />
         <BestPractices
           items={[
-            "Target ≥ 80% power (industry standard). 90% for high-stakes decisions.",
-            "Use historical variance and conversion rate to size tests ahead of time.",
-            "Reduce required n by applying CUPED (lowers σ²) or by increasing α for exploration.",
-            "Use a power calculator, not intuition, every time.",
+            "Choose a power target, often 80% or 90%, from the cost of missed effects and available sample; neither value is universal.",
+            "Use historical variance and conversion rate, then test sensitivity to drift, attrition, unequal allocation, and multiplicity.",
+            "A validated pre-treatment adjustment can reduce required n by lowering variance; do not assume the gain before measuring it.",
+            "Use a calculator that matches the outcome, allocation, test, and analysis plan.",
           ]}
         />
       </section>
 
       <Takeaway
         items={[
-          "<b>Peeking is not harmless curiosity.</b> Each interim look multiplies your false-positive risk. Pre-register or use sequential tests.",
-          "<b>Multiple comparisons compound fast.</b> 20 tests at α=0.05 → 64% chance of at least one false positive. Correct with Bonferroni or BH.",
-          "<b>CUPED is almost free.</b> Apply it whenever you have pre-period data. Variance drops 20–60% with zero bias cost.",
-          "<b>Power first.</b> Calculate minimum sample size before collecting data. Underpowered tests are expensive noise.",
-          "<b>The pre-registration contract.</b> Committing to metric, sample size, and duration before seeing data is the single highest-leverage habit in experimentation.",
+          "<b>Unplanned stopping changes the test.</b> Use the fixed plan or a sequential method designed for interim looks.",
+          "<b>Multiplicity requires an error target.</b> Bonferroni controls family-wise error; BH targets false discovery rate under stated conditions.",
+          "<b>CUPED is conditional, not automatic.</b> Verify timing, assignment independence, predictive value, and standard errors; report raw and adjusted results.",
+          "<b>Power is a design calculation.</b> State the effect, variance, allocation, α, test, attrition, and multiplicity assumptions.",
+          "<b>Pre-registration separates confirmation from exploration.</b> Record the primary metric, analysis, stopping rule, and exclusions before outcomes are inspected.",
         ]}
       />
     </>

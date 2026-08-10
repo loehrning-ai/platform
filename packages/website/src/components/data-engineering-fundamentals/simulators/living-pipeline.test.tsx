@@ -10,6 +10,7 @@ afterEach(() => {
 describe("LivingPipeline ", () => {
   it("renders all 6 sabotage buttons, all healthy by default", () => {
     render(<LivingPipeline />);
+    expect(screen.getByRole("region", { name: /Pipeline from raw source/ })).toHaveAttribute("tabindex", "0");
     for (const title of ["Cumulative merge", "Idempotent write", "Watermark + dedup", "Data-quality gate", "Access Gateway deploy", "Semantic binding"]) {
       expect(screen.getAllByText(title).length).toBeGreaterThan(0);
     }
@@ -26,9 +27,9 @@ describe("LivingPipeline ", () => {
   it("starts and stops the guided tutorial", () => {
     render(<LivingPipeline />);
     fireEvent.click(screen.getByRole("button", { name: /guided tutorial/ }));
-    expect(screen.getByText("Pipeline running clean")).toBeInTheDocument();
+    expect(screen.getByText("Modeled controls enabled")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /stop tutorial/ }));
-    expect(screen.queryByText("Pipeline running clean")).not.toBeInTheDocument();
+    expect(screen.queryByText("Modeled controls enabled")).not.toBeInTheDocument();
   });
 
   it("fix all clears every broken contract", () => {

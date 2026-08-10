@@ -12,6 +12,7 @@ import { gradeWithAI, type GradeWithAIResult } from "./_ai-grade";
 import type { AiRubricEntry, ModuleId } from "@/lib/ai-native/types";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import { useDemoLocale } from "@/components/demos/demo-locale";
 import {
   getLearningOwnerContext,
   getOwnedSessionLearningItem,
@@ -76,24 +77,40 @@ const FIELD_LABELS: Record<FieldKey, string> = {
   constraints: "Constraints",
 };
 
+const FIELD_LABELS_EN: Record<FieldKey, string> = {
+  role: "Role",
+  context: "Context",
+  task: "Task",
+  format: "Format",
+  constraints: "Constraints",
+};
+
 function gradeField(
   value: string,
   spec: RctfcFieldCriteria,
+  isEnglish = false,
 ): { readonly passed: boolean; readonly reason: string } {
   const trimmed = value.trim();
   if (trimmed.length < spec.minChars) {
     return {
       passed: false,
-      reason: `Zu kurz (${trimmed.length} / min. ${spec.minChars} Zeichen).`,
+      reason: isEnglish
+        ? `Too short (${trimmed.length} / minimum ${spec.minChars} characters).`
+        : `Zu kurz (${trimmed.length} / min. ${spec.minChars} Zeichen).`,
     };
   }
   if (spec.mustInclude && !trimmed.toLowerCase().includes(spec.mustInclude.toLowerCase())) {
     return {
       passed: false,
-      reason: `Sollte „${spec.mustInclude}" erwähnen.`,
+      reason: isEnglish
+        ? `Must mention “${spec.mustInclude}”.`
+        : `Sollte „${spec.mustInclude}" erwähnen.`,
     };
   }
-  return { passed: true, reason: "Kriterium erfüllt." };
+  return {
+    passed: true,
+    reason: isEnglish ? "Criterion met." : "Kriterium erfüllt.",
+  };
 }
 
 export function RctfcChecklistExercise(props: RctfcSpec): JSX.Element {
@@ -117,6 +134,8 @@ function RctfcBody({
   moduleId,
   criteria,
 }: RctfcSpec): JSX.Element {
+  const { locale, text } = useDemoLocale();
+  const isEnglish = locale === "en";
   const [values, setValues] =
     useState<Record<FieldKey, string>>(emptyValues);
   const [submitted, setSubmitted] = useState(false);
@@ -161,7 +180,7 @@ function RctfcBody({
 
     const grades = FIELD_ORDER.map((k) => ({
       key: k,
-      ...gradeField(values[k], criteria[k]),
+      ...gradeField(values[k], criteria[k], isEnglish),
     }));
     const passCount = grades.filter((g) => g.passed).length;
     const fallbackScore = passCount / FIELD_ORDER.length;
@@ -170,7 +189,9 @@ function RctfcBody({
       passed: g.passed,
       rationale: g.reason,
     }));
-    const fallbackSummary = `Regel-basierte Auswertung: ${passCount}/${FIELD_ORDER.length} Felder erfüllen die Mindestkriterien.`;
+    const fallbackSummary = isEnglish
+      ? `Rule-based evaluation: ${passCount}/${FIELD_ORDER.length} fields meet the minimum criteria.`
+      : `Regel-basierte Auswertung: ${passCount}/${FIELD_ORDER.length} Felder erfüllen die Mindestkriterien.`;
 
     const result = await gradeWithAI({
       kind: "exercise-rctfc-checklist",
@@ -215,7 +236,7 @@ function RctfcBody({
         if (ai) {
           return { key: k, passed: ai.passed, reason: ai.rationale };
         }
-        return { key: k, ...gradeField(values[k], criteria[k]) };
+        return { key: k, ...gradeField(values[k], criteria[k], isEnglish) };
       })
     : null;
   const score = aiResult?.score ?? 0;
@@ -234,7 +255,7 @@ function RctfcBody({
                   htmlFor={`${exerciseId}-${k}`}
                   className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-brand-orange"
                 >
-                  {FIELD_LABELS[k]}
+                  {(isEnglish ? FIELD_LABELS_EN : FIELD_LABELS)[k]}
                 </label>
                 {grade && (
                   <span
@@ -335,10 +356,10 @@ function RctfcBody({
             {isGrading ? (
               <>
                 <Loader2 size={12} className="animate-spin" />
-                AI bewertet …
+                {text("AI bewertet …", "AI is evaluating …")}
               </>
             ) : (
-              "Prüfen"
+              text("Prüfen", "Evaluate")
             )}
           </button>
         ) : (

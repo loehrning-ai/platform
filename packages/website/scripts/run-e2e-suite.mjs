@@ -12,7 +12,7 @@ const PLAYWRIGHT_CLI = require.resolve("@playwright/test/cli");
 const DEFAULT_SUITE_TIMEOUT_MS = 70 * 60 * 1000;
 const MINIMUM_CHILD_BUDGET_MS = 65_000;
 const CHILD_SHUTDOWN_BUDGET_MS = 5_000;
-export const MOBILE_WEBKIT_SHARD_COUNT = 16;
+export const MOBILE_WEBKIT_SHARD_COUNT = 21;
 
 const ARTIFACT_DIRECTORIES = [
   ["PLAYWRIGHT_OUTPUT_DIR", "test-results"],
@@ -31,9 +31,7 @@ function boundedSuiteTimeout(raw) {
     value < MINIMUM_CHILD_BUDGET_MS ||
     value > 2 * 60 * 60 * 1000
   ) {
-    throw new Error(
-      "E2E_GLOBAL_TIMEOUT must be between 65000 and 7200000.",
-    );
+    throw new Error("E2E_GLOBAL_TIMEOUT must be between 65000 and 7200000.");
   }
   return value;
 }
@@ -47,7 +45,9 @@ function artifactPath(base, root, label) {
     configured.includes("\\") ||
     segments[0] !== root ||
     segments.length >= 4 ||
-    segments.some((segment) => !/^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$/.test(segment))
+    segments.some(
+      (segment) => !/^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$/.test(segment),
+    )
   ) {
     throw new Error(
       `${root} artifact base must be a bounded relative path inside ${root}.`,
@@ -75,11 +75,7 @@ export function artifactEnvironment(environment, runId, label) {
   return Object.fromEntries(
     ARTIFACT_DIRECTORIES.map(([name, root]) => [
       name,
-      artifactPath(
-        environment[name],
-        root,
-        `${safeRunId}/${label}`,
-      ),
+      artifactPath(environment[name], root, `${safeRunId}/${label}`),
     ]),
   );
 }
@@ -112,8 +108,7 @@ function signalExitCode(signal) {
 
 export function runManagedProcess(options) {
   const timeoutMs = options.timeoutMs;
-  const shutdownBudgetMs =
-    options.shutdownBudgetMs ?? CHILD_SHUTDOWN_BUDGET_MS;
+  const shutdownBudgetMs = options.shutdownBudgetMs ?? CHILD_SHUTDOWN_BUDGET_MS;
   if (
     !Number.isSafeInteger(timeoutMs) ||
     !Number.isSafeInteger(shutdownBudgetMs) ||
@@ -332,8 +327,7 @@ export async function executeE2eSuite(options = {}) {
       return 1;
     }
 
-    const childGlobalTimeout =
-      remaining - CHILD_SHUTDOWN_BUDGET_MS;
+    const childGlobalTimeout = remaining - CHILD_SHUTDOWN_BUDGET_MS;
     const childEnvironment = {
       ...environment,
       ...artifactEnvironment(environment, runId, step.label),

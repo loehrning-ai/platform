@@ -2,15 +2,15 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 export const alt =
-  "loehrning.ai Kurse: vier deutsche Kernkurse und sechs Technikkurse auf Englisch";
+  "loehrning.ai course catalog: AI foundations, technical courses, and applied workshops in German and English";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 const labels = [
-  "KI-Führerschein",
-  "KI und Gesellschaft",
-  "EU AI Act Kurs",
-  "AI-Native Arbeitskurs",
+  "AI basics · KI-Grundlagen",
+  "AI & society · Gesellschaft",
+  "EU AI Act",
+  "AI-native work · Arbeit",
 ];
 
 export default function Image() {
@@ -22,8 +22,8 @@ export default function Image() {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
-          padding: 70,
+          justifyContent: "flex-start",
+          padding: 56,
           background: "#F3F0E9",
           color: "#0B0908",
           fontFamily: "system-ui, -apple-system, sans-serif",
@@ -37,38 +37,48 @@ export default function Image() {
             <path d="M18 34 H78 V88 H18 Z M36 52 H60 V70 H36 Z" fillRule="evenodd" />
           </svg>
           <div style={{ display: "flex", fontSize: 26, fontWeight: 900 }}>
-            loehrning<span style={{ color: "#B73A15" }}>.ai</span> · Kurse
+            loehrning<span style={{ color: "#B73A15" }}>.ai</span> · Courses · Kurse
           </div>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+            marginTop: 34,
+          }}
+        >
           <div
             style={{
               display: "flex",
-              fontSize: 78,
+              flexDirection: "column",
+              fontSize: 60,
               fontWeight: 900,
               lineHeight: 1,
               letterSpacing: 0,
               maxWidth: 980,
             }}
           >
-            KI lernen. Daten verstehen.
+            <div>AI and data work.</div>
+            <div>KI- und Datenarbeit.</div>
           </div>
           <div
             style={{
               display: "flex",
-              fontSize: 28,
+              flexDirection: "column",
+              fontSize: 22,
               lineHeight: 1.35,
               color: "#4f4640",
-              maxWidth: 900,
+              maxWidth: 1040,
             }}
           >
-            Vier deutsche Kernkurse mit Lernkonto und Abschlussnachweis, dazu
-            sechs öffentliche technische Kurse auf Englisch.
+            <div>Foundation path, technical courses, and applied workshops.</div>
+            <div>Grundlagenpfad, Technikkurse und angewandte Workshops.</div>
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: 16 }}>
+        <div style={{ display: "flex", gap: 12, marginTop: 34 }}>
           {labels.map((label, index) => (
             <div
               key={label}
@@ -76,8 +86,8 @@ export default function Image() {
                 flex: 1,
                 display: "flex",
                 flexDirection: "column",
-                gap: 18,
-                padding: 22,
+                gap: 12,
+                padding: 16,
                 background: "#FFFDF8",
                 border: "3px solid #0B0908",
                 boxShadow: "5px 5px 0 #0B0908",
@@ -86,7 +96,7 @@ export default function Image() {
               <div
                 style={{
                   display: "flex",
-                  fontSize: 18,
+                  fontSize: 15,
                   fontWeight: 900,
                   color: "#B73A15",
                   fontFamily: "monospace",
@@ -94,7 +104,7 @@ export default function Image() {
               >
                 {String(index + 1).padStart(2, "0")}
               </div>
-              <div style={{ display: "flex", fontSize: 25, fontWeight: 900 }}>
+              <div style={{ display: "flex", fontSize: 20, fontWeight: 900 }}>
                 {label}
               </div>
             </div>

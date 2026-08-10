@@ -9,6 +9,7 @@ import {
 } from "@/lib/a11y/roving-focus";
 import { cn } from "@/lib/utils";
 import { WidgetFrame } from "./_frame";
+import type { Locale } from "@/lib/i18n/locale";
 
 /**
  * SelfRate — rate yourself along several axes, each a row of anchor pills.
@@ -33,6 +34,7 @@ export interface SelfRateWidgetProps {
   readonly title?: string;
   readonly scenario?: string;
   readonly axes: readonly SelfRateAxis[];
+  readonly locale?: Locale;
 }
 
 type Ratings = Readonly<Record<string, number>>;
@@ -40,9 +42,10 @@ type Ratings = Readonly<Record<string, number>>;
 export function SelfRateWidget({
   lessonId,
   cpId,
-  title = "Selbsteinschätzung",
-  scenario = "Wo stehst du gerade? Nur du siehst diese Einschätzung.",
+  title,
+  scenario,
   axes,
+  locale = "de",
 }: SelfRateWidgetProps): JSX.Element {
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [ratings, setRatings] = useDraftValue<Ratings>(
@@ -50,7 +53,8 @@ export function SelfRateWidget({
     {},
   );
 
-  const allRated = axes.length > 0 && axes.every((ax) => ratings[ax.id] != null);
+  const allRated =
+    axes.length > 0 && axes.every((ax) => ratings[ax.id] != null);
 
   useEffect(() => {
     if (allRated) complete();
@@ -61,11 +65,19 @@ export function SelfRateWidget({
 
   return (
     <WidgetFrame
-      kindLabel="Einschätzung"
-      title={title}
-      scenario={scenario}
+      kindLabel={locale === "de" ? "Einschätzung" : "Assessment"}
+      title={
+        title ?? (locale === "de" ? "Selbsteinschätzung" : "Self-assessment")
+      }
+      scenario={
+        scenario ??
+        (locale === "de"
+          ? "Bewerte den aktuellen Stand anhand konkreter Belege."
+          : "Rate the current state using concrete evidence.")
+      }
       done={done}
       xpLabel="+10 XP"
+      doneLabel={locale === "de" ? "Erledigt" : "Done"}
     >
       <div className="flex flex-col gap-5">
         {axes.map((ax) => (

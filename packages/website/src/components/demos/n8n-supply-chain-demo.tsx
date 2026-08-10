@@ -8,6 +8,7 @@ import {
   useVisibleAutoplay,
 } from "./demo-utils";
 import { SimulationDisclosure } from "./evidence-badge";
+import { useDemoLocale } from "./demo-locale";
 
 type Severity = "warn" | "ok" | "info" | "err";
 
@@ -26,6 +27,15 @@ const EVENTS: readonly Omit<LogEvent, "id">[] = [
   { t: "+2.9 s", src: "SMTP", msg: "Mail-Entwurf für einkauf@fiktivwerk.example vorbereitet", lvl: "ok" },
   { t: "+3.1 s", src: "Slack", msg: "#logistik-warn · @disposition angepingt", lvl: "ok" },
   { t: "+4.0 s", src: "SAP · MM-BANF", msg: "Bestellanforderung als Review-Vorschlag markiert", lvl: "ok" },
+];
+
+const EVENTS_EN: readonly Omit<LogEvent, "id">[] = [
+  { t: "+0.0 s", src: "DHL webhook", msg: "Shipment 42291-A · delayed by 31h", lvl: "warn" },
+  { t: "+0.9 s", src: "SAP · MM02", msg: "Stock for SKU S-2200: 14 units · 2 days cover", lvl: "info" },
+  { t: "+2.3 s", src: "Claude · Haiku", msg: "Customer-email draft generated (sample: about 200 tokens)", lvl: "info" },
+  { t: "+2.9 s", src: "SMTP", msg: "Draft prepared for procurement@example.invalid", lvl: "ok" },
+  { t: "+3.1 s", src: "Slack", msg: "#logistics-alert · dispatcher mentioned", lvl: "ok" },
+  { t: "+4.0 s", src: "SAP · MM-BANF", msg: "Purchase request marked as a review proposal", lvl: "ok" },
 ];
 
 interface NodeSpec {
@@ -67,6 +77,31 @@ const COLS: readonly ColSpec[] = [
   },
 ];
 
+const COLS_EN: readonly ColSpec[] = [
+  {
+    label: "① Trigger",
+    nodes: [
+      { id: "trigger", t: "DHL / DB Schenker", k: "Webhook", ic: "◎", note: "Shipment 42291-A · 31h delay", step: 0 },
+    ],
+  },
+  {
+    label: "② Enrichment and logic",
+    nodes: [
+      { id: "enrich", t: "Check SAP stock", k: "HTTP", ic: "▦", note: "Stock: 14 units · 2 days cover", step: 1 },
+      { id: "delay", t: "Classify delay", k: "IF node", ic: "△", note: "ETA > 24h → alert path", step: 1 },
+      { id: "llm", t: "Claude Haiku · draft", k: "LLM", ic: "◈", note: "About 200 tokens · EN · sample", step: 2 },
+    ],
+  },
+  {
+    label: "③ Actions",
+    nodes: [
+      { id: "mail", t: "Prepare customer message", k: "Email", ic: "✉", note: "procurement@example.invalid", step: 3 },
+      { id: "slack", t: "Alert dispatch", k: "Slack", ic: "◉", note: "#logistics-alert · dispatcher", step: 3 },
+      { id: "erp", t: "Draft emergency order", k: "SAP MM", ic: "▦", note: "BANF 4500-8821 · 20 units", step: 3 },
+    ],
+  },
+];
+
 type NodeStatus = "pending" | "active" | "done";
 
 function statusFor(step: number, activeStep: number): NodeStatus {
@@ -102,6 +137,9 @@ function StatusPill({ status }: { status: NodeStatus }) {
 }
 
 export default function N8nSupplyChainDemo() {
+  const { locale, text } = useDemoLocale();
+  const sourceEvents = locale === "de" ? EVENTS : EVENTS_EN;
+  const columns = locale === "de" ? COLS : COLS_EN;
   const reduced = usePrefersReducedMotion();
   const { ref, visible } = useVisibleAutoplay<HTMLDivElement>();
   const [activeStep, setActiveStep] = useState(-1);
@@ -110,7 +148,7 @@ export default function N8nSupplyChainDemo() {
   useEffect(() => {
     if (reduced) {
       setActiveStep(3);
-      setEvents(EVENTS.map((e, i) => ({ ...e, id: i })));
+      setEvents(sourceEvents.map((e, i) => ({ ...e, id: i })));
       return;
     }
     if (!visible) return;
@@ -123,7 +161,7 @@ export default function N8nSupplyChainDemo() {
       [0, 1, 2, 3].forEach((step) => {
         setTimeout(() => mounted && setActiveStep(step), step * 650);
       });
-      EVENTS.forEach((e, i) => {
+      sourceEvents.forEach((e, i) => {
         setTimeout(() => {
           if (!mounted) return;
           setEvents((arr) => [...arr, { ...e, id: Date.now() + i }]);
@@ -136,7 +174,7 @@ export default function N8nSupplyChainDemo() {
       mounted = false;
       clearInterval(interval);
     };
-  }, [visible, reduced]);
+  }, [visible, reduced, sourceEvents]);
 
   const allDone = activeStep >= 3;
 
@@ -144,6 +182,8 @@ export default function N8nSupplyChainDemo() {
     <div
       ref={ref}
       data-demo-id="n8n-supply-chain"
+      role="region"
+      aria-label={text("Simulierter n8n-Lieferkettenablauf", "Simulated n8n supply-chain flow")}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -164,7 +204,7 @@ export default function N8nSupplyChainDemo() {
             fontWeight: 700,
           }}
         >
-          n8n · Supply-Chain Automation
+          {text("n8n · Supply-Chain-Automation", "n8n · supply-chain automation")}
         </div>
         <h2
           style={{
@@ -175,15 +215,18 @@ export default function N8nSupplyChainDemo() {
             color: DEMO.kalk,
           }}
         >
-          Lieferverzug erkannt.{" "}
+          {text("Lieferverzug erkannt.", "Delivery delay detected.")}{" "}
           <span style={{ color: "var(--color-brand-orange)" }}>
-            Kundenentwurf vorbereitet. Laufzeit simuliert.
+            {text("Entwurf vorbereitet. Laufzeit simuliert.", "Draft prepared. Runtime simulated.")}
           </span>
         </h2>
       </div>
 
       <SimulationDisclosure>
-        Alle Zeitstempel und Token-Werte sind Beispielwerte, keine gemessenen Produktionsdaten. Diese Simulation zeigt, wie n8n-Schritte sequenziell ablaufen, kein echter Workflow wird ausgeführt.
+        {text(
+          "Alle Zeitstempel und Tokenwerte sind Beispieldaten. Die Simulation zeigt die Reihenfolge; kein echter Workflow und keine Außenaktion werden ausgeführt.",
+          "All timestamps and token counts are sample data. The simulation shows sequence only; no real workflow or external action runs.",
+        )}
       </SimulationDisclosure>
 
       {/* Workflow canvas: horizontal on >=640px, stacked on mobile */}
@@ -200,7 +243,7 @@ export default function N8nSupplyChainDemo() {
           gap: 14,
         }}
       >
-        {COLS.map((col, ci) => (
+        {columns.map((col, ci) => (
           <div key={col.label} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 8, minWidth: 0 }}>
               <div
@@ -297,7 +340,7 @@ export default function N8nSupplyChainDemo() {
                 );
               })}
             </div>
-            {ci < COLS.length - 1 && (
+            {ci < columns.length - 1 && (
               <div
                 className="demo-n8n-arrow"
                 style={{
@@ -363,10 +406,12 @@ export default function N8nSupplyChainDemo() {
             </span>
             <span>› DEMO-LOG · WORKFLOW SC-042</span>
           </span>
-          <span>{events.length}/{EVENTS.length} EREIGNISSE</span>
+          <span>{events.length}/{sourceEvents.length} {text("EREIGNISSE", "EVENTS")}</span>
         </div>
         {events.length === 0 && (
-          <div style={{ color: "rgba(243,240,233,0.5)" }}>// warte auf Webhook-Event…</div>
+          <div style={{ color: "rgba(243,240,233,0.5)" }}>
+            // {text("warte auf Webhook-Ereignis…", "waiting for webhook event…")}
+          </div>
         )}
         {events.map((e) => {
           const c =
@@ -392,9 +437,12 @@ export default function N8nSupplyChainDemo() {
             </div>
           );
         })}
-        {allDone && events.length === EVENTS.length && (
+        {allDone && events.length === sourceEvents.length && (
           <div style={{ marginTop: 6, color: DEMO.statusGreen, letterSpacing: "0.08em" }}>
-            ✓ Workflow-Simulation abgeschlossen · Beispiel-Laufzeit 4,02 s
+            {text(
+              "✓ Workflow-Simulation abgeschlossen · Beispiel-Laufzeit 4,02 s",
+              "✓ Workflow simulation complete · sample runtime 4.02 s",
+            )}
           </div>
         )}
       </div>
@@ -402,10 +450,10 @@ export default function N8nSupplyChainDemo() {
       <div className="demo-n8n-metrics" style={{ display: "grid", gridTemplateColumns: "repeat(4,minmax(0,1fr))", gap: 8 }}>
         {(
           [
-            ["Reaktionszeit", "4 s", true],
-            ["Vorher (manuell)", "≈ 45 min", false],
-            ["Runs / Monat", "1.240", false],
-            ["Hosting", "Self-host", false],
+            [text("Beispiel-Reaktionszeit", "Sample response time"), "4 s", true],
+            [text("Manuelle Annahme", "Manual assumption"), "≈ 45 min", false],
+            [text("Beispiel-Läufe / Monat", "Sample runs / month"), text("1.240", "1,240"), false],
+            [text("Hosting", "Hosting"), "Self-hosted", false],
           ] as const
         ).map(([l, v, hero]) => (
           <div
@@ -465,7 +513,10 @@ export default function N8nSupplyChainDemo() {
             marginBottom: 6,
           }}
         >
-          Alternativer Pfad: Konfidenz niedrig &rarr; Mensch übernimmt
+          {text(
+            "Alternativer Pfad: Konfidenz niedrig → Mensch übernimmt",
+            "Alternate path: low confidence → human review",
+          )}
         </div>
         <div
           style={{
@@ -478,11 +529,11 @@ export default function N8nSupplyChainDemo() {
           }}
         >
           {[
-            { label: "Trigger", color: "#d97706", sub: "Verspätung unklar" },
+            { label: "Trigger", color: "#d97706", sub: text("Verspätung unklar", "Delay unclear") },
             { label: "→", color: "rgba(243,240,233,0.4)", sub: "" },
-            { label: "IF: Konfidenz niedrig", color: "#d97706", sub: "Score < Schwellenwert" },
+            { label: text("IF: Konfidenz niedrig", "IF: low confidence"), color: "#d97706", sub: text("Score < Schwellenwert", "Score below threshold") },
             { label: "→", color: "rgba(243,240,233,0.4)", sub: "" },
-            { label: "Manuelle Prüfung erforderlich", color: "#f59e0b", sub: "Disposition entscheidet" },
+            { label: text("Manuelle Prüfung erforderlich", "Manual review required"), color: "#f59e0b", sub: text("Disposition entscheidet", "Dispatcher decides") },
           ].map((n, i) =>
             n.label === "→" ? (
               <span key={i} style={{ color: n.color, fontSize: 14, fontWeight: 700 }}>&rarr;</span>
@@ -520,7 +571,10 @@ export default function N8nSupplyChainDemo() {
             fontFamily: DEMO.font.mono,
           }}
         >
-          Wenn das Modell unsicher ist, stoppt der automatisierte Pfad. Ein Mensch prüft und entscheidet.
+          {text(
+            "Wenn das Modell unsicher ist, stoppt der automatisierte Pfad. Ein Mensch prüft und entscheidet.",
+            "When the model is uncertain, the automated path stops. A person reviews and decides.",
+          )}
         </div>
       </div>
 

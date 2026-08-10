@@ -1,4 +1,12 @@
-import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from "vitest";
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  beforeEach,
+  afterEach,
+  vi,
+} from "vitest";
 import { fireEvent, render, cleanup, screen } from "@testing-library/react";
 import { isLessonCompleted, resetProgress } from "@/lib/course/progress";
 import { __resetCacheForTests } from "@/lib/progress/store";
@@ -23,7 +31,10 @@ function installLocalStoragePolyfill(): void {
 }
 
 beforeAll(() => {
-  if (typeof window.localStorage === "undefined" || typeof window.localStorage.setItem !== "function") {
+  if (
+    typeof window.localStorage === "undefined" ||
+    typeof window.localStorage.setItem !== "function"
+  ) {
     installLocalStoragePolyfill();
   }
 });
@@ -41,29 +52,46 @@ afterEach(() => {
 describe("MarkChapterVisited", () => {
   it("marks the chapter only after explicit confirmation", () => {
     resetProgress("data-engineering-fundamentals");
-    expect(isLessonCompleted("data-engineering-fundamentals", "fund")).toBe(false);
-    render(<MarkChapterVisited chapterId="fund" />);
-    expect(isLessonCompleted("data-engineering-fundamentals", "fund")).toBe(false);
-    fireEvent.click(
-      screen.getByRole("button", { name: "Mark chapter complete" }),
+    expect(isLessonCompleted("data-engineering-fundamentals", "fund")).toBe(
+      false,
     );
-    expect(isLessonCompleted("data-engineering-fundamentals", "fund")).toBe(true);
+    render(<MarkChapterVisited chapterId="fund" locale="en" />);
+    expect(isLessonCompleted("data-engineering-fundamentals", "fund")).toBe(
+      false,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Complete chapter" }));
+    expect(isLessonCompleted("data-engineering-fundamentals", "fund")).toBe(
+      true,
+    );
   });
 
   it("does not mark a different chapter completed", () => {
     resetProgress("data-engineering-fundamentals");
-    render(<MarkChapterVisited chapterId="ingest" />);
-    fireEvent.click(
-      screen.getByRole("button", { name: "Mark chapter complete" }),
+    render(<MarkChapterVisited chapterId="ingest" locale="en" />);
+    fireEvent.click(screen.getByRole("button", { name: "Complete chapter" }));
+    expect(isLessonCompleted("data-engineering-fundamentals", "ingest")).toBe(
+      true,
     );
-    expect(isLessonCompleted("data-engineering-fundamentals", "ingest")).toBe(true);
-    expect(isLessonCompleted("data-engineering-fundamentals", "stream")).toBe(false);
+    expect(isLessonCompleted("data-engineering-fundamentals", "stream")).toBe(
+      false,
+    );
   });
 
   it("renders an explicit completion control", () => {
-    render(<MarkChapterVisited chapterId="home" />);
+    render(<MarkChapterVisited chapterId="home" locale="en" />);
     expect(
-      screen.getByRole("button", { name: "Mark chapter complete" }),
+      screen.getByRole("button", { name: "Complete chapter" }),
     ).toHaveAttribute("aria-pressed", "false");
+  });
+
+  it("uses German control copy without changing the progress key", () => {
+    resetProgress("data-engineering-fundamentals");
+    render(<MarkChapterVisited chapterId="qual" locale="de" />);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Kapitel abschließen" }),
+    );
+    expect(isLessonCompleted("data-engineering-fundamentals", "qual")).toBe(
+      true,
+    );
   });
 });

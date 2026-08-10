@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 import { m, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, CheckCircle2, Circle } from "lucide-react";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 import { MarkdownRenderer } from "@/components/course/kurs/markdown-renderer";
 import { LegalClaimBadge } from "@/components/legal-claim-badge";
 import { LessonQuiz } from "@/components/course/kurs/lesson-quiz";
@@ -42,6 +43,8 @@ import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 import { isInteractiveShortcutTarget } from "@/lib/a11y/keyboard-shortcuts";
 import { subscribe } from "@/lib/progress/store";
+import type { Locale } from "@/lib/i18n/locale";
+import { localizeHref } from "@/lib/i18n/locale";
 
 /**
  * AiNativeLessonReader — progressive-disclosure lesson reader.
@@ -70,15 +73,98 @@ interface Props {
   readonly prevLesson: AiNativeLesson | null;
   readonly nextLesson: AiNativeLesson | null;
   readonly allModuleLessonIds: readonly string[];
+  readonly locale?: Locale;
 }
 
-export function AiNativeLessonReader({
+function AiNativeLessonReaderContent({
   module,
   lesson,
   prevLesson,
   nextLesson,
   allModuleLessonIds,
+  locale = "de",
 }: Props): JSX.Element {
+  const copy =
+    locale === "en"
+      ? {
+          keyboard: "Keyboard",
+          next: "next",
+          previous: "previous",
+          readContinue: "read · continue",
+          readerLabel: "Lesson content with keyboard shortcuts",
+          section: "Section",
+          read: "read",
+          keyTakeaway: "Key point",
+          markSection: (number: number) => `Mark section ${number} as read`,
+          markRead: "Mark as read",
+          continue: "Continue",
+          finishLesson: "Complete lesson",
+          lessonComplete: "Lesson complete",
+          progressSaved:
+            "Progress is stored for your learning account. You can return later.",
+          capstoneQuestion: "Completed the capstone self-review?",
+          capstoneComplete:
+            "Your capstone rubric is marked complete in local progress. The course completion record is now available without the workshop quiz.",
+          downloadRecord: "Download completion record",
+          capstonePrompt:
+            "If you documented and reviewed a workflow against the capstone rubric, mark the self-review complete. Passing the workshop quiz is the alternative route.",
+          markRubric: "Mark self-review complete",
+          selfReport:
+            "This is a self-report that you worked through the task. No external assessment takes place.",
+          knowledgeCheck: "Knowledge check",
+          lessonQuiz: "Short lesson quiz",
+          quizIntro: (count: number) =>
+            `${count} ${count === 1 ? "question" : "questions"}. Immediate feedback, repeatable. The best result is stored.`,
+          moduleComplete: (number: number) => `Module ${number} complete`,
+          moduleBody: (count: number) =>
+            `All ${count} lessons in this module are complete. Continue to the next module or return to the overview.`,
+          overview: "Back to overview",
+          nextLesson: "Next lesson",
+          previousShort: "Previous",
+          nextShort: "Next",
+          backModule: "Back to module",
+          moduleOverview: (number: number) => `Module ${number} overview`,
+        }
+      : {
+          keyboard: "Tastatur",
+          next: "nächster",
+          previous: "voriger",
+          readContinue: "gelesen · weiter",
+          readerLabel: "Lektionsinhalt mit Tastenkürzeln",
+          section: "Abschnitt",
+          read: "gelesen",
+          keyTakeaway: "Kernaussage",
+          markSection: (number: number) =>
+            `Abschnitt ${number} als gelesen markieren`,
+          markRead: "Als gelesen markieren",
+          continue: "Weiter",
+          finishLesson: "Lektion abschließen",
+          lessonComplete: "Lektion abgeschlossen",
+          progressSaved:
+            "Der Fortschritt ist deinem Lernkonto zugeordnet. Du kannst später zurückkehren.",
+          capstoneQuestion: "Capstone-Selbstprüfung abgeschlossen?",
+          capstoneComplete:
+            "Deine Capstone-Rubrik ist im lokalen Fortschritt als vollständig markiert. Die Teilnahmebestätigung ist damit auch ohne Workshop-Quiz verfügbar.",
+          downloadRecord: "Teilnahmebestätigung herunterladen",
+          capstonePrompt:
+            "Wenn du einen Workflow anhand der Capstone-Rubrik dokumentiert und geprüft hast, markiere die Selbstprüfung als vollständig. Alternativ genügt das bestandene Workshop-Quiz.",
+          markRubric: "Selbstprüfung als vollständig markieren",
+          selfReport:
+            "Damit bestätigst du selbst, die Aufgabe bearbeitet zu haben. Eine externe Prüfung findet nicht statt.",
+          knowledgeCheck: "Verständnis-Check",
+          lessonQuiz: "Kurzes Quiz zu dieser Lektion",
+          quizIntro: (count: number) =>
+            `${count} ${count === 1 ? "Frage" : "Fragen"}. Sofortiges Feedback, beliebig oft wiederholbar. Das beste Ergebnis wird gespeichert.`,
+          moduleComplete: (number: number) => `Modul ${number} abgeschlossen`,
+          moduleBody: (count: number) =>
+            `Alle ${count} Lektionen dieses Moduls sind erledigt. Gehe zum nächsten Modul oder zurück zur Übersicht.`,
+          overview: "Zurück zur Übersicht",
+          nextLesson: "Nächste Lektion",
+          previousShort: "Vorher",
+          nextShort: "Nächstes",
+          backModule: "Zurück zum Modul",
+          moduleOverview: (number: number) => `Modul ${number} Übersicht`,
+        };
   const [currentIndex, setCurrentIndex] = useState(0);
   const [readSet, setReadSet] = useState<ReadonlySet<string>>(new Set());
   const [mounted, setMounted] = useState(false);
@@ -246,13 +332,19 @@ export function AiNativeLessonReader({
         aria-hidden="true"
         className="mt-10 hidden items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.14em] text-muted-foreground md:flex"
       >
-        <span>Tastatur</span>
-        <kbd className="rounded-none border border-border bg-card px-1.5 py-0.5 text-[10px] text-foreground">j</kbd>
-        <span>nächster</span>
-        <kbd className="rounded-none border border-border bg-card px-1.5 py-0.5 text-[10px] text-foreground">k</kbd>
-        <span>voriger</span>
-        <kbd className="rounded-none border border-border bg-card px-1.5 py-0.5 text-[10px] text-foreground">Space</kbd>
-        <span>gelesen · weiter</span>
+        <span>{copy.keyboard}</span>
+        <kbd className="rounded-none border border-border bg-card px-1.5 py-0.5 text-[10px] text-foreground">
+          j
+        </kbd>
+        <span>{copy.next}</span>
+        <kbd className="rounded-none border border-border bg-card px-1.5 py-0.5 text-[10px] text-foreground">
+          k
+        </kbd>
+        <span>{copy.previous}</span>
+        <kbd className="rounded-none border border-border bg-card px-1.5 py-0.5 text-[10px] text-foreground">
+          Space
+        </kbd>
+        <span>{copy.readContinue}</span>
       </div>
 
       {/* "after-intro" widget slot (above sections, below voice anchor) */}
@@ -263,6 +355,7 @@ export function AiNativeLessonReader({
               key={`intro-${w.kind}-${i}`}
               widget={w}
               label="after-intro"
+              locale={locale}
             />
           ))}
         </div>
@@ -272,7 +365,7 @@ export function AiNativeLessonReader({
       <article
         id="lesson-body"
         tabIndex={0}
-        aria-label="Lektionsinhalt mit Tastenkürzeln"
+        aria-label={copy.readerLabel}
         aria-keyshortcuts="J K ArrowDown ArrowUp Space"
         onKeyDown={handleReaderKeyDown}
         className="mt-14 space-y-14"
@@ -289,22 +382,22 @@ export function AiNativeLessonReader({
                 sectionRefs.current[i] = el;
               }}
               data-section-index={i}
-              data-state={
-                isLocked ? "locked" : isCurrent ? "current" : "done"
-              }
+              data-state={isLocked ? "locked" : isCurrent ? "current" : "done"}
               aria-hidden={isLocked ? "true" : "false"}
               className={cn(
                 "transition-opacity duration-500",
                 isLocked && "pointer-events-none select-none opacity-0",
               )}
-              style={isLocked ? { visibility: "hidden", maxHeight: 0 } : undefined}
+              style={
+                isLocked ? { visibility: "hidden", maxHeight: 0 } : undefined
+              }
             >
               <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-                Abschnitt {String(i + 1).padStart(2, "0")}
+                {copy.section} {String(i + 1).padStart(2, "0")}
                 {isRead && (
                   <span className="ml-2 inline-flex items-center gap-1 text-brand-sand">
                     <CheckCircle2 size={11} />
-                    <span className="font-mono text-[10px]">gelesen</span>
+                    <span className="font-mono text-[10px]">{copy.read}</span>
                   </span>
                 )}
               </p>
@@ -327,7 +420,7 @@ export function AiNativeLessonReader({
               {section.keyTakeaway && (
                 <div className="mt-7 border-l-[3px] border-brand-orange bg-[var(--color-kupfer-mist)] px-6 py-5">
                   <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-                    Kern-Insight
+                    {copy.keyTakeaway}
                   </p>
                   <p className="mt-2 text-[16px] font-medium leading-[1.5] tracking-[-0.01em] text-foreground">
                     {section.keyTakeaway}
@@ -343,10 +436,10 @@ export function AiNativeLessonReader({
                       type="button"
                       onClick={() => markRead(section.id, i)}
                       className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-                      aria-label={`Abschnitt ${i + 1} als gelesen markieren`}
+                      aria-label={copy.markSection(i + 1)}
                     >
                       <Circle size={14} />
-                      Als gelesen markieren
+                      {copy.markRead}
                     </button>
                   ) : (
                     <m.span
@@ -360,7 +453,7 @@ export function AiNativeLessonReader({
                       className="inline-flex items-center gap-2 text-sm text-brand-sand"
                     >
                       <CheckCircle2 size={14} />
-                      Gelesen
+                      {copy.read}
                     </m.span>
                   )}
                   <div className="ml-auto flex items-center gap-3">
@@ -379,7 +472,7 @@ export function AiNativeLessonReader({
                             : "cursor-not-allowed bg-card text-muted-foreground opacity-50",
                         )}
                       >
-                        Weiter <ArrowRight size={12} />
+                        {copy.continue} <ArrowRight size={12} />
                       </button>
                     ) : (
                       <button
@@ -393,7 +486,7 @@ export function AiNativeLessonReader({
                             : "cursor-not-allowed bg-card text-muted-foreground opacity-50",
                         )}
                       >
-                        Lektion abschließen <CheckCircle2 size={12} />
+                        {copy.finishLesson} <CheckCircle2 size={12} />
                       </button>
                     )}
                   </div>
@@ -412,6 +505,7 @@ export function AiNativeLessonReader({
               key={`pre-quiz-${w.kind}-${i}`}
               widget={w}
               label="before-quiz"
+              locale={locale}
             />
           ))}
         </div>
@@ -429,11 +523,11 @@ export function AiNativeLessonReader({
             <div className="flex items-center gap-3">
               <CheckCircle2 size={20} className="text-brand-orange" />
               <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-                Lektion abgeschlossen
+                {copy.lessonComplete}
               </p>
             </div>
             <p className="mt-2 text-[14px] leading-[1.55] text-foreground">
-              Super. Fortschritt ist gespeichert, du kannst jederzeit zurückkommen.
+              {copy.progressSaved}
             </p>
           </m.div>
         )}
@@ -446,31 +540,26 @@ export function AiNativeLessonReader({
             ◆ Capstone
           </p>
           <h3 className="mt-2 text-[22px] font-bold tracking-[-0.02em] text-foreground">
-            Capstone-Rubrik abgeschlossen?
+            {copy.capstoneQuestion}
           </h3>
           {capstoneSubmitted ? (
             <>
               <p className="mt-2 max-w-[640px] text-[14.5px] leading-[1.55] text-muted-foreground">
-                Deine Capstone-Rubrik ist lokal als vollständig markiert. Damit
-                ist die Teilnahmebestätigung freigeschaltet, auch ohne das
-                Workshop-Quiz.
+                {copy.capstoneComplete}
               </p>
               <div className="mt-5 flex flex-wrap gap-3">
                 <Link
-                  href="/ai-native/kurs/zertifikat"
+                  href={localizeHref("/ai-native/kurs/zertifikat", locale)}
                   className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
                 >
-                  Zertifikat herunterladen <ArrowRight size={12} />
+                  {copy.downloadRecord} <ArrowRight size={12} />
                 </Link>
               </div>
             </>
           ) : (
             <>
               <p className="mt-2 max-w-[640px] text-[14.5px] leading-[1.55] text-muted-foreground">
-                Hast du einen Workflow nach dem Capstone-Brief anhand der Rubrik
-                dokumentiert und geprüft? Markiere die Rubrik als vollständig, um
-                die Teilnahmebestätigung freizuschalten. Alternativ reicht das
-                bestandene Workshop-Quiz.
+                {copy.capstonePrompt}
               </p>
               <div className="mt-5">
                 <button
@@ -478,11 +567,11 @@ export function AiNativeLessonReader({
                   onClick={handleCapstoneSubmit}
                   className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
                 >
-                  Rubrik als vollständig markieren <CheckCircle2 size={12} />
+                  {copy.markRubric} <CheckCircle2 size={12} />
                 </button>
               </div>
               <p className="mt-3 text-[13px] text-muted-foreground">
-                Damit bestätigst du dir selbst, die Aufgabe durchgearbeitet zu haben. Eine externe Prüfung findet nicht statt.
+                {copy.selfReport}
               </p>
             </>
           )}
@@ -501,21 +590,20 @@ export function AiNativeLessonReader({
           className="mt-14 border-2 border-border bg-card/40 p-6"
         >
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-            ◆ Verständnis-Check
+            ◆ {copy.knowledgeCheck}
           </p>
           <h3 className="mt-2 text-[22px] font-bold tracking-[-0.02em] text-foreground">
-            Kurzes Quiz zu dieser Lektion
+            {copy.lessonQuiz}
           </h3>
           <p className="mt-2 max-w-[640px] text-[14.5px] leading-[1.55] text-muted-foreground">
-            {quiz.length} {quiz.length === 1 ? "Frage" : "Fragen"}. Sofortiges
-            Feedback, beliebig oft wiederholbar. Dein bestes Ergebnis wird
-            gespeichert.
+            {copy.quizIntro(quiz.length)}
           </p>
           <div className="mt-6">
             <LessonQuiz
               questions={quiz}
               bestScore={quizBestScore}
               onComplete={handleQuizComplete}
+              locale={locale}
             />
           </div>
         </m.div>
@@ -525,7 +613,12 @@ export function AiNativeLessonReader({
       {endWidgets.length > 0 && (
         <div className="mt-10 space-y-6">
           {endWidgets.map((w, i) => (
-            <WidgetSlot key={`end-${w.kind}-${i}`} widget={w} label="end" />
+            <WidgetSlot
+              key={`end-${w.kind}-${i}`}
+              widget={w}
+              label="end"
+              locale={locale}
+            />
           ))}
         </div>
       )}
@@ -541,29 +634,30 @@ export function AiNativeLessonReader({
             role="status"
           >
             <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-              ◆ Modul {module.number} abgeschlossen
+              ◆ {copy.moduleComplete(module.number)}
             </p>
             <h3 className="mt-2 text-[22px] font-bold tracking-[-0.02em] text-foreground">
               {module.title}. <span className="text-brand-orange">✓</span>
             </h3>
             <p className="mt-2 max-w-[640px] text-[14.5px] leading-[1.55] text-muted-foreground">
-              Alle {allModuleLessonIds.length} Lektionen dieses Moduls erledigt.
-              Du kannst jetzt zum nächsten Modul weitergehen, oder ein anderes
-              Thema wählen.
+              {copy.moduleBody(allModuleLessonIds.length)}
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <Link
-                href="/ai-native"
+                href={localizeHref("/ai-native", locale)}
                 className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
               >
-                Zurück zur Übersicht <ArrowRight size={12} />
+                {copy.overview} <ArrowRight size={12} />
               </Link>
               {nextLesson && (
                 <Link
-                  href={`/ai-native/kurs/${module.id}/${nextLesson.id}`}
+                  href={localizeHref(
+                    `/ai-native/kurs/${module.id}/${nextLesson.id}`,
+                    locale,
+                  )}
                   className="inline-flex items-center gap-2 border border-foreground bg-transparent px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-foreground transition-colors hover:bg-foreground hover:text-background"
                 >
-                  Nächste Lektion <ArrowRight size={12} />
+                  {copy.nextLesson} <ArrowRight size={12} />
                 </Link>
               )}
             </div>
@@ -575,12 +669,15 @@ export function AiNativeLessonReader({
       <nav className="mt-14 grid gap-6 sm:grid-cols-2">
         {prevLesson ? (
           <Link
-            href={`/ai-native/kurs/${module.id}/${prevLesson.id}`}
+            href={localizeHref(
+              `/ai-native/kurs/${module.id}/${prevLesson.id}`,
+              locale,
+            )}
             className="group block border-t border-border py-5"
           >
             <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
               <ArrowLeft size={11} className="mr-1 inline" />
-              Vorher · {prevLesson.number}
+              {copy.previousShort} · {prevLesson.number}
             </p>
             <p className="mt-1.5 text-[16px] font-semibold tracking-[-0.01em] text-foreground transition-colors group-hover:text-brand-orange">
               {prevLesson.title}
@@ -591,11 +688,14 @@ export function AiNativeLessonReader({
         )}
         {nextLesson ? (
           <Link
-            href={`/ai-native/kurs/${module.id}/${nextLesson.id}`}
+            href={localizeHref(
+              `/ai-native/kurs/${module.id}/${nextLesson.id}`,
+              locale,
+            )}
             className="group block border-t border-border py-5 text-right"
           >
             <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-brand-orange">
-              Nächstes · {nextLesson.number}
+              {copy.nextShort} · {nextLesson.number}
               <ArrowRight size={11} className="ml-1 inline" />
             </p>
             <p className="mt-1.5 text-[16px] font-semibold tracking-[-0.01em] text-foreground transition-colors group-hover:text-brand-orange">
@@ -604,15 +704,15 @@ export function AiNativeLessonReader({
           </Link>
         ) : (
           <Link
-            href={`/ai-native/kurs/${module.id}`}
+            href={localizeHref(`/ai-native/kurs/${module.id}`, locale)}
             className="group block border-t border-border py-5 text-right"
           >
             <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-brand-orange">
-              Zurück zum Modul
+              {copy.backModule}
               <ArrowRight size={11} className="ml-1 inline" />
             </p>
             <p className="mt-1.5 text-[16px] font-semibold tracking-[-0.01em] text-foreground">
-              Modul {module.number} Übersicht
+              {copy.moduleOverview(module.number)}
             </p>
           </Link>
         )}
@@ -621,12 +721,18 @@ export function AiNativeLessonReader({
   );
 }
 
+export const AiNativeLessonReader = withMotionProvider(
+  AiNativeLessonReaderContent,
+);
+
 function WidgetSlot({
   widget,
   label,
+  locale,
 }: {
   readonly widget: Widget;
   readonly label: string;
+  readonly locale: Locale;
 }): JSX.Element {
   return (
     <div
@@ -634,7 +740,7 @@ function WidgetSlot({
       data-widget-kind={widget.kind}
       className="mt-6"
     >
-      <RenderWidget kind={widget.kind} props={widget.props ?? {}} />
+      <RenderWidget kind={widget.kind} props={widget.props ?? {}} locale={locale} />
     </div>
   );
 }

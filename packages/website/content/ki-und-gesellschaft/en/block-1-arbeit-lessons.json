@@ -1,0 +1,385 @@
+{
+  "blockId": "block_1",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-08-09",
+  "nextReview": "2026-11-09",
+  "reviewCadence": "quarterly",
+  "riskClass": "statistical",
+  "triggerEvents": ["major-conceptual-update"],
+  "blockLastVerified": "2026-08-09",
+  "lessons": [
+    {
+      "id": "arbeit-1-1",
+      "blockId": "block_1",
+      "number": 1,
+      "title": "AI and work: exposure is not a forecast",
+      "subtitle": "How to read OECD and IAB evidence correctly",
+      "durationMinutes": 5,
+      "owner": "editorial:ki-und-gesellschaft",
+      "lastReviewed": "2026-08-09",
+      "nextReview": "2026-11-09",
+      "reviewCadence": "quarterly",
+      "riskClass": "statistical",
+      "keyConcepts": [
+        "Task exposure",
+        "Substitution potential",
+        "Employment effects"
+      ],
+      "sections": [
+        {
+          "id": "arbeit-1-1-s1",
+          "title": "Four terms with four different meanings",
+          "readTimeMinutes": 2,
+          "content": "Labour-market studies do not all measure the same thing. Four terms must remain separate:\n\n1. Task exposure: a technology overlaps with tasks in an occupation.\n2. Technical substitution potential: technology could perform tasks automatically at the current state of development.\n3. Adoption: an organisation actually introduces the technology and redesigns the workflow.\n4. Employment effect: working time, headcount, wages or skill requirements change.\n\nFrey and Osborne estimated a theoretical probability of automation for US occupations in 2013. The OECD Employment Outlook 2023 uses different data and methods and reports the employment share in occupations at high risk of automation across the OECD countries studied. It is neither a forecast for Germany nor a prediction of specific job losses.\n\nThe IAB uses BERUFENET to estimate the share of an occupation's core tasks that available technology could in principle perform fully automatically. The IAB states explicitly that substitutability does not mean a task will actually be automated.\n\nSources: OECD Employment Outlook 2023, Chapter 3; IAB Brief Report 5/2024 on the 2022 recalculation.",
+          "keyTakeaway": "Exposure, technical potential, adoption and employment effects are different measures. None of them alone predicts how many jobs will disappear."
+        },
+        {
+          "id": "arbeit-1-1-s2",
+          "title": "Performance depends on the task, test and context",
+          "readTimeMinutes": 2,
+          "content": "Claims that \"AI is better than people\" are too broad without test conditions. Check four points instead:\n\n- Task: are the input, expected output and quality measure defined?\n- Data: do the test data represent the real target population and deployment?\n- Consequences: what is the cost of an error, and who reviews borderline cases?\n- Environment: is the situation standardised or physically and socially variable?\n\nA model can score highly on a bounded image-classification test and still be unsuitable in clinical practice. A language model can accelerate a draft while inventing facts. A planning system can handle standard cases and fail on a rare exception.\n\nLegal responsibility, approvals and balancing stakeholder interests belong to people and organisations. This is a statement about accountability, not a claim about a model's biological capacities.",
+          "keyTakeaway": "Assess a system for a specific task, population and error consequence. A benchmark or fluent output does not establish general superiority."
+        },
+        {
+          "id": "arbeit-1-1-s3",
+          "title": "From an automatable task to a changed occupation",
+          "readTimeMinutes": 1,
+          "content": "An occupation is a bundle of tasks. When one task becomes technically automatable, the employment outcome remains open. Organisations may save time, handle more cases, reassign tasks, improve quality or reduce positions. Demand, cost, liability, co-determination and new tasks operate at the same time.\n\nExample: radiology software flags anomalies in images. Whether it saves work or creates additional review depends on sensitivity and error rates, the patient population, integration and required oversight. A flag does not itself determine a diagnosis or treatment.\n\nA task analysis is therefore more useful than an occupational forecast: which steps are standardised? Where do errors arise? Which decisions need expertise, context or approval? Where does a new tool create additional review?",
+          "keyTakeaway": "An automatable task does not establish an occupational forecast. The result depends on how technology, review and the remaining tasks interact in the real workflow."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "arbeit-1-1-q1",
+          "questionText": "Which statement correctly describes labour-market studies of AI and automation?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Every exposure figure directly forecasts future job losses",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Exposure, technical potential and employment effects are different measures",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "The IAB measures only AI already deployed in companies",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "The OECD Employment Outlook 2023 predicts German unemployment caused by AI",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Studies of exposure or technical substitution potential describe possible overlap between technology and tasks. Adoption and employment effects depend on further economic, legal and organisational factors."
+        },
+        {
+          "id": "arbeit-1-1-q2",
+          "questionText": "What does the IAB's substitution potential based on BERUFENET measure?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "How many employees already use generative AI",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Which occupations will disappear within one year",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "The share of core tasks that technology could in principle perform fully automatically",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Which companies are legally required to automate",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "The IAB classifies core tasks against technology available at the time. It measures technical potential, not actual adoption, economic viability or future job losses."
+        },
+        {
+          "id": "arbeit-1-1-q3",
+          "questionText": "Which conclusion can be drawn from an automatable task?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "The entire occupation will disappear within the planning horizon",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "The technology will be economical in every organisation",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Every remaining task will become more valuable to employees",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "The workflow may change; the employment effect requires separate analysis",
+              "isCorrect": true
+            }
+          ],
+          "explanation": "Technical potential initially describes a task. Whether it produces time savings, additional review, higher throughput or fewer positions depends on the deployment."
+        }
+      ]
+    },
+    {
+      "id": "arbeit-1-2",
+      "blockId": "block_1",
+      "number": 2,
+      "title": "AI as assistance: test workflows under control",
+      "subtitle": "Define the task, review and accountability",
+      "durationMinutes": 6,
+      "owner": "editorial:ki-und-gesellschaft",
+      "lastReviewed": "2026-08-09",
+      "nextReview": "2026-11-09",
+      "reviewCadence": "quarterly",
+      "riskClass": "statistical",
+      "keyConcepts": [
+        "AI literacy",
+        "Assisted workflow",
+        "Works council",
+        "BetrVG"
+      ],
+      "sections": [
+        {
+          "id": "arbeit-1-2-s1",
+          "title": "Assistance without a performance promise",
+          "readTimeMinutes": 2,
+          "content": "An assisted workflow assigns a bounded step to the system and leaves approval and accountability with a named person. Whether it saves time must be measured in the organisation's own process.\n\nSynthetic examples:\n- A nurse uses approved, data-protection-compliant notes to create a draft and checks every statement against the record. Patient data may enter only a system approved for that purpose.\n- An accounting team has unusual entries flagged. A flag is a prompt for review, not a finding of fraud or error.\n- A communications team generates image drafts. Before publication it checks rights, factual fit, disclosure and approval.\n\nA controlled test defines the task, permitted data, quality criteria, reviewer, stop rule and records in advance. Only evidence from that test shows whether the use is beneficial.",
+          "keyTakeaway": "Assistance is a workflow, not a performance promise. Bound the task, protect data, review output and measure the actual benefit."
+        },
+        {
+          "id": "arbeit-1-2-s2",
+          "title": "What AI literacy means in practice",
+          "readTimeMinutes": 2,
+          "content": "Practical AI literacy combines five abilities:\n\n1. Describe the task: state the purpose, context, required format and limits.\n2. Review the output: check claims, figures and sources against reliable material.\n3. Recognise risk: stop and involve the responsible function when personal data, confidential information or consequential decisions are involved.\n4. Understand the tool: know its approval status, data handling, documented limits and version changes.\n5. Record the work: where the process requires it, retain a trace of inputs, material outputs, human changes and approvals.\n\nAs amended by Regulation (EU) 2026/1744, Article 4 of the AI Act requires providers and deployers to take measures to support the development of AI literacy among their staff and other people operating or using AI systems on their behalf. It does not require them to guarantee a particular level for each individual.",
+          "keyTakeaway": "AI literacy means understanding the task and risk, protecting data, reviewing output and recording decisions where required."
+        },
+        {
+          "id": "arbeit-1-2-s3",
+          "title": "Preparing to speak with the works council",
+          "readTimeMinutes": 2,
+          "content": "Section 87(1)(6) of the German Works Constitution Act (BetrVG) gives the works council, where no statutory or collective-agreement rule exists, a right of co-determination over the introduction and use of technical equipment intended to monitor employees' behaviour or performance. Whether an AI system falls within the provision depends on its function and use. The right belongs to the works council; it is not a blanket individual co-determination right for each employee.\n\nQuestions for the workplace assessment:\n- What purpose and specific decision does the system support?\n- Which employee data are collected, inferred or stored?\n- Who can view the analysis, and how long is it retained?\n- What human review, correction and complaint route exists?\n- What training and binding use rules apply?\n\nIf the parties cannot agree on a matter subject to co-determination, the conciliation committee decides under Section 87(2). The classification of a specific system requires qualified employment-law analysis.",
+          "keyTakeaway": "Section 87(1)(6) BetrVG can trigger works-council co-determination for monitoring-related AI. Purpose and actual function determine the assessment."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "arbeit-1-2-q1",
+          "questionText": "What defines a controlled AI-assisted workflow?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "A fluent output is accepted as correct without further review",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "The task, permitted data, review and accountable approval are defined in advance",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Personal data may be entered into any available system",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "The benefit is taken from general vendor claims",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "A controlled workflow bounds the system's task, protects data, defines quality criteria and assigns review and approval to an accountable person. Time or quality gains must be demonstrated in the actual process."
+        },
+        {
+          "id": "arbeit-1-2-q2",
+          "questionText": "Which of the following skills forms part of AI literacy for people who do not program?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Training and calibrating your own AI models",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Writing Python code for AI applications",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Configuring and maintaining AI hardware",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Critically assessing AI outputs and recognising limits",
+              "isCorrect": true
+            }
+          ],
+          "explanation": "Practical AI literacy includes task definition, source and quality checks, risk classification, tool knowledge and traceable records. Programming may help but is not a prerequisite."
+        },
+        {
+          "id": "arbeit-1-2-q3",
+          "questionText": "Which rule may apply to an AI system intended to monitor employee behaviour or performance?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Article 4 AI Act (measures supporting AI literacy)",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Section 106 GewO (employer's right to issue instructions)",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Article 22 GDPR (automated individual decision-making)",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Section 87(1)(6) BetrVG (co-determination for technical monitoring equipment)",
+              "isCorrect": true
+            }
+          ],
+          "explanation": "Section 87(1)(6) BetrVG concerns the introduction and use of technical equipment intended to monitor behaviour or performance. Whether its conditions are met depends on the specific system and deployment."
+        }
+      ]
+    },
+    {
+      "id": "arbeit-1-3",
+      "blockId": "block_1",
+      "number": 3,
+      "title": "Which tasks may change and what you can assess",
+      "subtitle": "Task characteristics instead of occupation lists",
+      "durationMinutes": 5,
+      "owner": "editorial:ki-und-gesellschaft",
+      "lastReviewed": "2026-08-09",
+      "nextReview": "2026-11-09",
+      "reviewCadence": "quarterly",
+      "riskClass": "statistical",
+      "keyConcepts": [
+        "Task analysis",
+        "Continuing education",
+        "Skills development"
+      ],
+      "sections": [
+        {
+          "id": "arbeit-1-3-s1",
+          "title": "Characteristics associated with higher technical potential",
+          "readTimeMinutes": 2,
+          "content": "Technical potential tends to be higher when a work step is repeated frequently, receives digital inputs, has clear rules or quality measures and requires little changing physical context. Examples include transferring structured data, formal completeness checks or drafting from a template.\n\nAdoption still remains uncertain. Poor data, rare exceptions, liability, integration cost or required review may limit the benefit. Conversely, technology can assist individual steps in almost any occupation.\n\nThe IAB classifies core tasks against market-ready technology and updates this snapshot regularly. Its unit of analysis is the task within an occupation, not a promise about the occupation's future.",
+          "keyTakeaway": "Standardised digital steps often have greater technical potential. Whether they are automated is decided in the specific organisation."
+        },
+        {
+          "id": "arbeit-1-3-s2",
+          "title": "Characteristics that make automation harder",
+          "readTimeMinutes": 1,
+          "content": "Automation is harder when a task combines several of these characteristics:\n\n- a changing physical environment and fine-motor work\n- incomplete information and rare exceptions\n- direct responsibility for safety or fundamental rights\n- negotiation among several parties\n- relationships, trust or local contextual knowledge\n\nNone of this makes an occupation \"AI-proof\". Documentation, planning and information retrieval can change in care, skilled trades, education and advice. Robotics may also shift physical tasks over time. A sound assessment therefore examines tasks rather than occupational labels.",
+          "keyTakeaway": "Physical, social and legal context can make automation harder. It does not guarantee that an occupation will remain unchanged."
+        },
+        {
+          "id": "arbeit-1-3-s3",
+          "title": "What you can do in practice",
+          "readTimeMinutes": 2,
+          "content": "Three defensible steps:\n\n1. Inventory tasks: record repeated steps, error consequences, required data and approvals.\n2. Test safely: use only approved tools and no confidential or personal test data. Compare results against a defined reference.\n3. Check rights and responsibilities: Germany's Federal Employment Agency provides \"Berufsberatung im Erwerbsleben\", or career guidance for people in employment, and information about continuing education and funding. At work, relevant functions include management, data protection, information security and, where present, the works council.\n\nArticle 5 of the AI Act has prohibited specified practices since 2 February 2025, including emotion recognition in the workplace as a general rule. Recruitment and selection systems may fall under Annex III. Under Regulation (EU) 2026/1744, the high-risk rules for stand-alone Annex III systems begin on 2 December 2027. The AGG, GDPR and employment law may already apply independently.\n\nIn recruitment, relevant questions concern the purpose, data used, significance of the system output, human involvement and responsible entity.",
+          "keyTakeaway": "Analyse tasks, test only within an approved setting and establish accountability. Legal effects depend on the specific system and use."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "arbeit-1-3-q1",
+          "questionText": "Which task typically has greater technical automation potential?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Negotiating a new conflict among several parties",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Repairing equipment in an unfamiliar physical environment",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Repeated formal completeness checks on structured digital data",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "A consequential case-specific judgement based on incomplete information",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Repeated, digital and clearly testable steps often have greater technical potential. This does not establish whether a particular organisation will automate them."
+        },
+        {
+          "id": "arbeit-1-3-q2",
+          "questionText": "Which service does Germany's Federal Employment Agency publish for employees with continuing-education questions?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Automatic retraining for every occupation affected by AI",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Career guidance for people in employment, including information on training and funding",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "A guarantee that every requested course will be funded",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Mandatory certification under Article 4 of the AI Act",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Germany's Federal Employment Agency publishes career guidance for people in employment. Advice, eligibility and funding depend on the person, measure and applicable conditions."
+        },
+        {
+          "id": "arbeit-1-3-q3",
+          "questionText": "Which statement about the EU AI Act in the employment context is correct?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Article 5 prohibits every form of recruitment AI",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "All high-risk obligations have applied since 2 February 2025",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Article 5 has no relevance to the workplace",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Article 5 has prohibited certain practices since 2 February 2025; recruitment AI must be assessed separately under Annex III and existing law",
+              "isCorrect": true
+            }
+          ],
+          "explanation": "Article 5 has applied to specified prohibitions since 2 February 2025, including emotion recognition in the workplace as a general rule. Recruitment and selection systems may fall under Annex III; the postponed high-risk dates, the AGG, GDPR and co-determination must be assessed separately."
+        }
+      ]
+    }
+  ]
+}

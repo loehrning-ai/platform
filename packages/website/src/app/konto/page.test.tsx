@@ -14,6 +14,7 @@ const mocks = vi.hoisted(() => ({
   fetchUnifiedProgressForUser: vi.fn(),
   reportApiError: vi.fn(),
   redirect: vi.fn(),
+  getRequestLocale: vi.fn(),
 }));
 
 vi.mock("next/navigation", () => ({
@@ -29,8 +30,11 @@ vi.mock("@/lib/progress/server-store", () => ({
 vi.mock("@/lib/observability/api-error", () => ({
   reportApiError: mocks.reportApiError,
 }));
+vi.mock("@/lib/i18n/request-locale", () => ({
+  getRequestLocale: mocks.getRequestLocale,
+}));
 
-import KontoPage from "./page";
+import KontoPage, { generateMetadata } from "./page";
 
 const USER = {
   id: "learner-1",
@@ -69,9 +73,7 @@ function courseSlice(
   };
 }
 
-function progress(
-  courses: UnifiedProgress["courses"],
-): UnifiedProgress {
+function progress(courses: UnifiedProgress["courses"]): UnifiedProgress {
   return {
     schemaVersion: 3,
     courses,
@@ -111,6 +113,7 @@ beforeEach(() => {
   });
   mocks.createAuthServerClient.mockResolvedValue(AUTH_CLIENT);
   mocks.fetchUnifiedProgressForUser.mockResolvedValue(successfulFetch(null));
+  mocks.getRequestLocale.mockResolvedValue("de");
   mocks.redirect.mockImplementation(() => {
     throw REDIRECT;
   });
@@ -125,9 +128,7 @@ describe("KontoPage course resume integration", () => {
         "2026-07-29T11:00:00.000Z",
       ),
     });
-    mocks.fetchUnifiedProgressForUser.mockResolvedValue(
-      successfulFetch(state),
-    );
+    mocks.fetchUnifiedProgressForUser.mockResolvedValue(successfulFetch(state));
 
     render(await KontoPage());
 
@@ -149,20 +150,15 @@ describe("KontoPage course resume integration", () => {
         "2026-07-29T11:00:00.000Z",
       ),
     });
-    mocks.fetchUnifiedProgressForUser.mockResolvedValue(
-      successfulFetch(state),
-    );
+    mocks.fetchUnifiedProgressForUser.mockResolvedValue(successfulFetch(state));
 
     render(await KontoPage());
 
     expect(
-      within(courseCard("Codex Course")).getByRole("link", {
+      within(courseCard("Codex-Kurs")).getByRole("link", {
         name: /Nachweis ansehen/,
       }),
-    ).toHaveAttribute(
-      "href",
-      "/kurse/open-source/codex/kurs/zertifikat",
-    );
+    ).toHaveAttribute("href", "/kurse/open-source/codex/kurs/zertifikat");
   });
 
   it("chooses the most recently active incomplete course for the primary continuation", async () => {
@@ -178,16 +174,15 @@ describe("KontoPage course resume integration", () => {
         "2026-07-29T12:00:00.000Z",
       ),
     });
-    mocks.fetchUnifiedProgressForUser.mockResolvedValue(
-      successfulFetch(state),
-    );
+    mocks.fetchUnifiedProgressForUser.mockResolvedValue(successfulFetch(state));
 
     render(await KontoPage());
 
     const continuation = screen.getByText("Weiter lernen").closest("div.group");
     expect(continuation).not.toBeNull();
-    expect(within(continuation as HTMLElement).getByText("EU AI Act Kurs"))
-      .toBeInTheDocument();
+    expect(
+      within(continuation as HTMLElement).getByText("EU AI Act Kurs"),
+    ).toBeInTheDocument();
     expect(
       within(continuation as HTMLElement).getByRole("link", {
         name: "Weiterlernen",
@@ -233,5 +228,30 @@ describe("KontoPage course resume integration", () => {
     expect(mocks.redirect).toHaveBeenCalledWith("/login?next=/konto");
     expect(mocks.createAuthServerClient).not.toHaveBeenCalled();
     expect(mocks.fetchUnifiedProgressForUser).not.toHaveBeenCalled();
+  });
+
+  it("renders reviewed English account copy, course data, links, and metadata", async () => {
+    mocks.getRequestLocale.mockResolvedValue("en");
+
+    render(await KontoPage());
+
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Your learning record." }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Courses completed")).toBeInTheDocument();
+    expect(screen.getAllByText("AI Fundamentals").length).toBeGreaterThan(0);
+    expect(screen.getAllByRole("link", { name: "Start" })[0]).toHaveAttribute(
+      "href",
+      expect.stringMatching(/^\/en\//),
+    );
+    expect(
+      screen.getByRole("link", { name: "Privacy and data controls" }),
+    ).toHaveAttribute("href", "/en/konto/datenschutz");
+    expect(document.body).not.toHaveTextContent("Deine Kurse");
+
+    const metadata = await generateMetadata();
+    expect(metadata.title).toBe("Account | Free learning platform");
+    expect(metadata.robots).toMatchObject({ index: false, follow: false });
+    expect(metadata.alternates).toEqual({ canonical: null });
   });
 });

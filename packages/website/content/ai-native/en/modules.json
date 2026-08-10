@@ -1,0 +1,83 @@
+{
+  "modules": [
+    {
+      "id": "modul_1",
+      "number": 1,
+      "title": "From task to workflow",
+      "subtitle": "Move from manual execution to orchestration",
+      "description": "Combine existing tools into repeatable workflows. You specify the task, assess the output and remain responsible for the result.",
+      "durationMinutes": 50,
+      "lessonCount": 5,
+      "premiumGated": false,
+      "voiceAnchor": "Start with the tools you already use. Connect them through explicit instructions, review points and repeatable handoffs.",
+      "topics": [
+        "Deciding what to delegate and what to retain",
+        "How teams delegate bounded work to AI systems",
+        "Claude in the workflow: specify, constrain and review",
+        "Ten repeatable tasks to examine for delegation",
+        "AI-Native Fluency Test (self-assessment)"
+      ]
+    },
+    {
+      "id": "modul_2",
+      "number": 2,
+      "title": "Claude in a defined work context",
+      "subtitle": "The Claude stack: Projects, Skills, Plugins and MCP",
+      "description": "Configure Claude around a defined work context instead of treating each chat as an isolated request.",
+      "durationMinutes": 76,
+      "lessonCount": 7,
+      "premiumGated": false,
+      "voiceAnchor": "Configure the working context, limit permissions and review every result before use.",
+      "topics": [
+        "Projects, Memory and Artifacts: your Claude workspace",
+        "Connector principles: Gmail, Calendar and Drive in a simulated OAuth exercise",
+        "Skills: reusable command workflows",
+        "Plugins and MCP: connecting Claude to systems",
+        "Design Skill and Artifacts",
+        "Claude Code for non-developers",
+        "Memory and CLAUDE.md"
+      ]
+    },
+    {
+      "id": "modul_3",
+      "number": 3,
+      "title": "A searchable knowledge base",
+      "subtitle": "Obsidian and Claude for structured business knowledge",
+      "description": "Bring material from email, notes and folders into a maintained system that can be searched, cited and reviewed.",
+      "durationMinutes": 89,
+      "lessonCount": 7,
+      "premiumGated": false,
+      "voiceAnchor": "Useful knowledge is often dispersed across messages, notes and folders. A maintained knowledge base makes its provenance and current state visible.",
+      "topics": [
+        "Setup walkthrough (optional, without a time limit)",
+        "Why a maintained knowledge base matters",
+        "PARA and MOC: a practical structure for small and medium-sized organisations",
+        "Smart Connections and Copilot",
+        "Obsidian Web Clipper",
+        "Daily workflow and precise prompting with RCTFC and JSON output",
+        "Claude and Obsidian through MCP"
+      ]
+    },
+    {
+      "id": "modul_4",
+      "number": 4,
+      "title": "Automate repeatable work",
+      "subtitle": "n8n, EU AI Act and the capstone",
+      "description": "Identify repeated manual steps, define controls and test whether a bounded n8n workflow is appropriate.",
+      "durationMinutes": 88,
+      "lessonCount": 8,
+      "premiumGated": false,
+      "voiceAnchor": "Repeated work is a candidate for analysis. Automate only when the inputs, review point, failure path and accountability are clear.",
+      "topics": [
+        "Self-hosting n8n: data-protection and operations basics",
+        "Sandbox build 1: email triage to a review list",
+        "Sandbox build 2: meeting notes to a to-do draft",
+        "Sandbox build 3: weekly report from notes",
+        "Local AI with LM Studio",
+        "EU AI Act analysis (Annex III)",
+        "Capstone brief: a bounded seven-day pilot",
+        "Capstone review and privacy primer"
+      ]
+    }
+  ]
+}

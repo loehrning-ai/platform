@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Panel } from "../primitives";
 import { useControllableAnimation } from "@/lib/animation-policy";
+import { useDataEngineeringFundamentalsLocale } from "../locale-context";
 
 // ─── WatermarkSim ─────────────────────────────────
 // Ported from `src/chapters/Ch1_Ingest.js`: drag the watermark line to see
@@ -16,12 +17,27 @@ interface SimEvent {
   readonly late: boolean;
 }
 
+const INITIAL_WATERMARK = 720;
+
 export function WatermarkSim() {
-  const [watermark, setWatermark] = useState(720);
+  const { text } = useDataEngineeringFundamentalsLocale();
+  const [watermark, setWatermark] = useState(INITIAL_WATERMARK);
   const { running, toggle: toggleRunning } = useControllableAnimation();
   const [events, setEvents] = useState<readonly SimEvent[]>([]);
   const [lateness, setLateness] = useState(20);
+  const stageScrollRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      const viewport = stageScrollRef.current;
+      const stage = stageRef.current;
+      if (!viewport || !stage || viewport.scrollWidth <= viewport.clientWidth) return;
+      const watermarkX = (INITIAL_WATERMARK / 1000) * stage.clientWidth;
+      viewport.scrollLeft = Math.max(0, watermarkX - viewport.clientWidth / 2);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, []);
 
   useEffect(() => {
     if (!running) return;
@@ -56,24 +72,33 @@ export function WatermarkSim() {
 
   const included = events.filter((e) => e.x < watermark).length;
   const dropped = events.filter((e) => e.x >= watermark && e.late).length;
-  const mode = watermark > 800 ? "exact" : watermark > 520 ? "balanced" : "real-time";
+  const mode = watermark > 800 ? "wide" : watermark > 520 ? "middle" : "tight";
+  const modeLabel = mode === "wide" ? text("wide window", "weites Fenster") : mode === "middle" ? text("middle window", "mittleres Fenster") : text("tight window", "enges Fenster");
 
   return (
     <Panel
-      eyebrow="live simulator"
-      title="kafka-to-warehouse · drag the watermark"
-      meta={`${events.length} events buffered`}
-      caption="Green = on-time. Amber = late. Watermark is the event-time point past which a window is closed and late events are dropped."
+      eyebrow={text("live simulator", "Live-Simulator")}
+      title={text("kafka-to-warehouse · drag the watermark", "Kafka zum Warehouse · Watermark verschieben")}
+      meta={`${events.length} ${text("events buffered", "Ereignisse gepuffert")}`}
+      caption={text("This simulator uses a discard-late policy. Green events arrive before the modeled watermark; amber events arrive after it.", "Dieser Simulator verwirft Nachzügler. Grüne Ereignisse treffen vor der modellierten Watermark ein, gelbe danach.")}
     >
-      <div className="wm-stage" ref={stageRef}>
-        <svg className="wm-svg" viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet">
+      <div
+        className="wm-stage-scroll"
+        role="region"
+        aria-label={text("Event-time and watermark timeline", "Zeitleiste für Ereigniszeit und Watermark")}
+        tabIndex={0}
+        data-course-horizontal-scroll
+        ref={stageScrollRef}
+      >
+        <div className="wm-stage" ref={stageRef}>
+          <svg className="wm-svg" viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet">
           <line x1={60} y1={360} x2={960} y2={360} stroke="var(--theme-gray-300)" strokeWidth={1} />
           <line x1={60} y1={40} x2={60} y2={360} stroke="var(--theme-gray-300)" strokeWidth={1} />
           <text x={500} y={390} textAnchor="middle" className="wm-axis-label">
-            event time →
+            {text("event time", "Ereigniszeit")} →
           </text>
           <text x={30} y={200} textAnchor="middle" transform="rotate(-90 30 200)" className="wm-axis-label">
-            session
+            {text("session", "Sitzung")}
           </text>
           {[200, 400, 600, 800].map((x) => (
             <g key={x}>
@@ -104,7 +129,7 @@ export function WatermarkSim() {
             textAnchor="middle"
             style={{ fontFamily: "var(--font-mono)", fontSize: 15, fontWeight: 800, letterSpacing: "0.12em", fill: "#8B5C00", opacity: 0.55 }}
           >
-            DROPPED
+            {text("DROPPED", "VERWORFEN")}
           </text>
           <g style={{ cursor: "ew-resize" }} onMouseDown={onDragStart}>
             <line x1={watermark} y1={40} x2={watermark} y2={360} stroke="var(--theme-blue)" strokeWidth={3} />
@@ -116,22 +141,24 @@ export function WatermarkSim() {
               textAnchor="middle"
               style={{ fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 800, fill: "var(--theme-blue)", letterSpacing: "0.08em" }}
             >
-              WATERMARK: drag
+              WATERMARK: {text("drag", "ziehen")}
             </text>
           </g>
-        </svg>
+          </svg>
+        </div>
       </div>
+      <div className="course-scroll-hint" aria-hidden="true">{text("Scroll horizontally →", "Horizontal scrollen →")}</div>
 
       <div className="readout-grid">
         <div className="readout ok">
-          <div className="r-k">Included</div>
+          <div className="r-k">{text("Included", "Enthalten")}</div>
           <div className="r-v">{included}</div>
-          <div className="r-s">before watermark</div>
+          <div className="r-s">{text("before watermark", "vor der Watermark")}</div>
         </div>
         <div className="readout warn">
-          <div className="r-k">Late · dropped</div>
+          <div className="r-k">{text("Late · dropped", "Verspätet · verworfen")}</div>
           <div className="r-v">{dropped}</div>
-          <div className="r-s">excluded from window</div>
+          <div className="r-s">{text("excluded from window", "vom Fenster ausgeschlossen")}</div>
         </div>
         <div className="readout">
           <div className="r-k">Watermark</div>
@@ -139,36 +166,36 @@ export function WatermarkSim() {
             t−{((1000 - watermark) / 100).toFixed(1)}
             <small>m</small>
           </div>
-          <div className="r-s">event time</div>
+          <div className="r-s">{text("event time", "Ereigniszeit")}</div>
         </div>
         <div className="readout blue">
-          <div className="r-k">Mode</div>
+          <div className="r-k">{text("Mode", "Modus")}</div>
           <div className="r-v" style={{ fontSize: 17, textTransform: "uppercase" }}>
-            {mode}
+            {modeLabel}
           </div>
-          <div className="r-s">{mode === "exact" ? "low loss · high delay" : mode === "balanced" ? "default" : "real-time · lossy"}</div>
+          <div className="r-s">{mode === "wide" ? text("more arrivals included · later closure", "mehr Ankünfte enthalten · spätere Schließung") : mode === "middle" ? text("scenario midpoint", "Mittelwert des Szenarios") : text("fewer arrivals included · earlier closure", "weniger Ankünfte enthalten · frühere Schließung")}</div>
         </div>
       </div>
 
       <div className="ctl-row">
         <div className="ctl-slider" style={{ flex: 1.5 }}>
           <div className="row">
-            <label className="lab" htmlFor="watermark-position">Watermark position</label>
+            <label className="lab" htmlFor="watermark-position">{text("Watermark position", "Watermark-Position")}</label>
             <span className="val">t−{((1000 - watermark) / 100).toFixed(1)}m</span>
           </div>
           <input id="watermark-position" type="range" min={150} max={920} step={5} value={watermark} onChange={(e) => setWatermark(+e.target.value)} />
-          <span className="hint">drag the slider or the blue line above</span>
+          <span className="hint">{text("drag the slider or the blue line above", "Regler oder blaue Linie verschieben")}</span>
         </div>
         <div className="ctl-slider warn" style={{ flex: 1 }}>
           <div className="row">
-            <label className="lab" htmlFor="watermark-network-lateness">Network lateness</label>
+            <label className="lab" htmlFor="watermark-network-lateness">{text("Network lateness", "Netzwerkverzögerung")}</label>
             <span className="val">{lateness}%</span>
           </div>
           <input id="watermark-network-lateness" type="range" min={0} max={60} step={5} value={lateness} onChange={(e) => setLateness(+e.target.value)} />
-          <span className="hint">% of events arriving late</span>
+          <span className="hint">% {text("of events arriving late", "verspätet eintreffende Ereignisse")}</span>
         </div>
         <button type="button" className="btn" onClick={toggleRunning}>
-          {running ? "⏸ Pause stream" : "▶ Resume"}
+          {running ? text("⏸ Pause stream", "⏸ Stream pausieren") : text("▶ Resume", "▶ Fortsetzen")}
         </button>
       </div>
     </Panel>

@@ -10,6 +10,7 @@ import {
 } from "@/lib/a11y/roving-focus";
 import { cn } from "@/lib/utils";
 import { WidgetFrame } from "./_frame";
+import type { Locale } from "@/lib/i18n/locale";
 
 /**
  * Quiz — single-question, in-lesson multiple-choice check.
@@ -56,17 +57,19 @@ export interface QuizWidgetProps {
   readonly correct: number;
   readonly explanation: string;
   readonly copy?: Partial<QuizWidgetCopy>;
+  readonly locale?: Locale;
 }
 
 export function QuizWidget({
   lessonId,
   cpId,
-  title = "Schneller Check",
+  title,
   question,
   options,
   correct,
   explanation,
   copy,
+  locale = "de",
 }: QuizWidgetProps): JSX.Element {
   const c = { ...DEFAULT_COPY, ...copy };
   const reduced = useReducedMotion();
@@ -111,9 +114,10 @@ export function QuizWidget({
   return (
     <WidgetFrame
       kindLabel={c.kindLabel}
-      title={title}
+      title={title ?? (locale === "de" ? "Kurze Prüfung" : "Quick check")}
       done={done}
       xpLabel="+10 XP"
+      doneLabel={locale === "de" ? "Erledigt" : "Done"}
     >
       <div ref={containerRef}>
         <p className="mb-4 text-[15px] font-semibold leading-[1.5] text-foreground">
@@ -173,7 +177,9 @@ export function QuizWidget({
               initial={reduced ? false : { opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={
-                reduced ? { duration: 0 } : { duration: 0.28, ease: EASE_OUT_EXPO }
+                reduced
+                  ? { duration: 0 }
+                  : { duration: 0.28, ease: EASE_OUT_EXPO }
               }
               className={cn(
                 "mt-4 border-l-[3px] p-4 text-[13.5px] leading-[1.55] text-foreground",

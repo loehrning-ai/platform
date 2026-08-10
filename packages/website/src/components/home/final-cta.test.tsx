@@ -16,20 +16,29 @@ describe("FinalCta", () => {
     render(<FinalCta />);
     expect(screen.getByTestId("final-cta")).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Deinen Start bestimmen." }),
+      screen.getByRole("heading", { name: "Den passenden Einstieg finden." }),
     ).toBeInTheDocument();
+  });
+
+  it("renders the English check boundary and localized route", () => {
+    const { container } = render(<FinalCta locale="en" />);
+
+    expect(screen.getByRole("heading", { name: "Find the right starting point." })).toBeInTheDocument();
+    expect(screen.getByText(/assessment runs in your browser and requires no account/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Open AI check/i })).toHaveAttribute("href", "/en/ki-check");
+    expect(container.textContent).not.toMatch(/\b(?:passenden|Einstieg|Fragen|Kenntnisstand|Browser|Konto|öffnen)\b/);
   });
 
   it("routes the single primary CTA to the orientation check", () => {
     render(<FinalCta />);
-    const cta = screen.getByRole("link", { name: /Start bestimmen/i });
+    const cta = screen.getByRole("link", { name: /KI-Check öffnen/i });
     expect(cta).toHaveAttribute("href", "/ki-check");
   });
 
-  it("states the public resources and account-gated core-course boundary", () => {
+  it("states the scope and privacy boundary of the orientation check", () => {
     render(<FinalCta />);
-    expect(screen.getByText(/Bücher, Demos und Workshops sind öffentlich/)).toBeInTheDocument();
-    expect(screen.getByText(/vier deutschen Kernkurse nutzen ein kostenloses Konto/)).toBeInTheDocument();
+    expect(screen.getByText(/Zehn Fragen ordnen deinen aktuellen Kenntnisstand/)).toBeInTheDocument();
+    expect(screen.getByText(/läuft im Browser und benötigt kein Konto/)).toBeInTheDocument();
     expect(screen.getByText("// loehrning.ai")).toBeInTheDocument();
   });
 });

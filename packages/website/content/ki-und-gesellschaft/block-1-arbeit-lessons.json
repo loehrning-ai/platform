@@ -1,84 +1,134 @@
 {
   "blockId": "block_1",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-06-22",
-  "nextReview": "2026-12-22",
-  "reviewCadence": "evergreen",
-  "riskClass": "evergreen",
-  "triggerEvents": [
-    "major-conceptual-update"
-  ],
-  "blockLastVerified": "2026-06-22",
+  "lastReviewed": "2026-08-09",
+  "nextReview": "2026-11-09",
+  "reviewCadence": "quarterly",
+  "riskClass": "statistical",
+  "triggerEvents": ["major-conceptual-update"],
+  "blockLastVerified": "2026-08-09",
   "lessons": [
     {
       "id": "arbeit-1-1",
       "blockId": "block_1",
       "number": 1,
-      "title": "Was KI mit Arbeit macht: die ehrliche Bilanz",
-      "subtitle": "Was sagen OECD und Bundesagentur wirklich?",
+      "title": "KI und Arbeit: Exposition ist keine Prognose",
+      "subtitle": "Wie OECD- und IAB-Daten richtig gelesen werden",
       "durationMinutes": 5,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-06-22",
-      "nextReview": "2026-09-20",
+      "lastReviewed": "2026-08-09",
+      "nextReview": "2026-11-09",
       "reviewCadence": "quarterly",
       "riskClass": "statistical",
-      "keyConcepts": ["Substituierbarkeit", "Komparativer Vorteil", "Tätigkeitswandel"],
+      "keyConcepts": [
+        "Aufgabenexposition",
+        "Substituierbarkeitspotenzial",
+        "Beschäftigungswirkung"
+      ],
       "sections": [
         {
           "id": "arbeit-1-1-s1",
-          "title": "Was sagen die Daten wirklich?",
+          "title": "Vier Begriffe, vier verschiedene Aussagen",
           "readTimeMinutes": 2,
-          "content": "Die Zahl, die du am häufigsten hörst, lautet 47 Prozent. So viele Jobs seien in den USA durch Automatisierung bedroht, schrieben Frey und Osborne 2013. Seitdem geistert diese Zahl durch Schlagzeilen, Politiker-Reden und Betriebsversammlungen.\n\nDas Problem: Die Methode misst, ob ein Beruf theoretisch automatisierbar wäre, nicht ob er tatsächlich verschwindet. Und die Zahl stammt aus einer Zeit, bevor KI-Systeme wie heute verfügbar waren. Neuere Studien kommen zu anderen Ergebnissen.\n\nDie OECD aktualisierte ihre Analyse 2023 mit verfeinerter Methodik: In Deutschland gelten etwa 9 Prozent der Berufe als hoch automatisierungsexponiert, also als Berufe, in denen die überwiegende Mehrheit der Tätigkeiten durch aktuelle KI ersetzbar wäre. (Quelle: OECD Employment Outlook 2023)\n\nDie Bundesagentur für Arbeit analysiert seit Jahren das sogenannte Substituierbarkeitspotenzial von Berufen. Ihr Berufenet-Datensatz zeigt: Neunzehn von zwanzig Berufen haben mindestens eine Teiltätigkeit, die KI-Systeme prinzipiell übernehmen könnten. Aber: Berufe verschwinden nicht, Tätigkeiten innerhalb von Berufen verändern sich. (Quelle: IAB-Substituierbarkeitsanalysen auf BERUFENET-Basis)\n\nDer Unterschied ist entscheidend. Dass ein Buchhalter Standardbuchungen automatisch buchen lassen kann, bedeutet nicht, dass der Beruf des Buchhalters verschwindet. Es bedeutet, dass der Buchhalter mehr Zeit für Analyse, Beratung und Urteilsarbeit hat.",
-          "keyTakeaway": "9 Prozent der Berufe in Deutschland sind hoch automatisierungsexponiert, nicht 47 Prozent. Und selbst dort verschwinden Berufe seltener als einzelne Tätigkeiten innerhalb von Berufen."
+          "content": "Arbeitsmarktstudien messen nicht alle dasselbe. Vier Begriffe müssen getrennt bleiben:\n\n1. Aufgabenexposition: Eine Technologie überschneidet sich mit Tätigkeiten eines Berufs.\n2. Technisches Substituierbarkeitspotenzial: Tätigkeiten könnten nach dem Stand der Technik automatisiert erledigt werden.\n3. Einsatz: Eine Organisation führt die Technik tatsächlich ein und gestaltet den Arbeitsablauf neu.\n4. Beschäftigungswirkung: Arbeitszeit, Stellenzahl, Lohn oder Qualifikationsbedarf ändern sich.\n\nFrey und Osborne schätzten 2013 für US-Berufe eine theoretische Automatisierungswahrscheinlichkeit. Der OECD Employment Outlook 2023 verwendet andere Daten und Methoden und berichtet für die untersuchten OECD-Länder den Beschäftigungsanteil in Berufen mit hohem Automatisierungsrisiko. Das ist weder eine Deutschland-Prognose noch eine Vorhersage konkreter Jobverluste.\n\nDas IAB berechnet auf Basis von BERUFENET, welcher Anteil der Kerntätigkeiten eines Berufs mit jeweils verfügbarer Technik prinzipiell vollautomatisch erledigt werden könnte. Das IAB weist ausdrücklich darauf hin: Substituierbarkeit bedeutet nicht, dass die Tätigkeit tatsächlich automatisiert wird.\n\nQuellen: OECD Employment Outlook 2023, Kapitel 3; IAB-Kurzbericht 5/2024 zur Neuberechnung 2022.",
+          "keyTakeaway": "Exposition, technisches Potenzial, betrieblicher Einsatz und Beschäftigungswirkung sind verschiedene Größen. Keine davon allein sagt voraus, wie viele Stellen verschwinden."
         },
         {
           "id": "arbeit-1-1-s2",
-          "title": "Was KI gut, schlecht und gar nicht kann",
+          "title": "Leistung hängt von Aufgabe, Test und Kontext ab",
           "readTimeMinutes": 2,
-          "content": "Um zu verstehen, welche Tätigkeiten KI verändern wird, hilft eine einfache Dreiteilung.\n\nTätigkeiten, bei denen KI heute schon besser ist als die meisten Menschen:\n- Mustererkennung in großen Datensätzen (Röntgenbilder auf typische Anomalien prüfen, Betrugsversuche in Millionen Transaktionen erkennen)\n- Texte zusammenfassen, Standardantworten formulieren, Inhalte auf Rechtschreibfehler prüfen\n- Bilderkennung und Klassifikation bei bekannten Kategorien\n- Repetitive Formularverarbeitung, Dateneingabe, Routineübersetzungen\n\nTätigkeiten, bei denen KI noch deutlich schwächer ist:\n- Kontextabhängige soziale Urteile (Wie geht es dieser Person wirklich? Was braucht dieses Kind gerade?)\n- Physisches Handling in unstrukturierten Umgebungen (Handwerk, Pflege, Wartung)\n- Komplexe Problemlösung in neuartigen Situationen ohne klares Schema\n\nTätigkeiten, die KI nicht verlässlich übernehmen kann:\n- Kausalurteile (nicht nur Korrelation, sondern Ursache und Wirkung verstehen)\n- Rechtliche und moralische Verantwortlichkeit tragen\n- Interessenabwägung mit echten Stakeholdern führen\n\nDiese Dreiteilung gilt heute. Sie wird sich in den nächsten Jahren verschieben, aber wahrscheinlich nicht so schnell und vollständig, wie mancher Hype behauptet.",
-          "keyTakeaway": "KI ist heute sehr gut bei Mustererkennung und Routinetätigkeiten. Bei sozialen Urteilen, physischer Arbeit und moralischer Verantwortung ist der Mensch deutlich besser."
+          "content": "Aussagen wie \"KI ist besser als Menschen\" sind ohne Testbedingungen zu grob. Prüfe stattdessen vier Punkte:\n\n- Aufgabe: Sind Eingang, gewünschter Ausgang und Qualitätsmaß klar definiert?\n- Daten: Entsprechen Testdaten der realen Zielgruppe und dem späteren Einsatz?\n- Folgen: Was kostet ein Fehler, und wer prüft Grenzfälle?\n- Umgebung: Ist die Situation standardisiert oder physisch und sozial wechselhaft?\n\nEin Modell kann in einem begrenzten Bildklassifikationstest hohe Werte erreichen und im Klinikbetrieb trotzdem ungeeignet sein. Ein Sprachmodell kann einen Textentwurf beschleunigen und zugleich erfundene Angaben liefern. Ein Planungssystem kann Standardfälle bearbeiten und bei einer seltenen Ausnahme scheitern.\n\nRechtliche Verantwortung, Freigaben und Interessenabwägungen liegen bei Menschen und Organisationen. Das ist keine Aussage über eine biologische Fähigkeit des Modells, sondern über Zuständigkeit und Rechenschaft.",
+          "keyTakeaway": "Bewerte ein System für eine konkrete Aufgabe, Zielgruppe und Fehlerfolge. Ein Benchmark oder eine flüssige Ausgabe belegt keine allgemeine Überlegenheit."
         },
         {
           "id": "arbeit-1-1-s3",
-          "title": "Was komparativer Vorteil bedeutet und warum er zählt",
+          "title": "Von der automatisierbaren Aufgabe zum veränderten Beruf",
           "readTimeMinutes": 1,
-          "content": "Der Begriff komparativer Vorteil klingt nach Wirtschaftslehre, ist aber eigentlich sehr intuitiv.\n\nEin Beispiel: Stell dir vor, eine Ärztin kann einen Röntgenbefund sowohl lesen als auch dem Patienten erklären. Ein KI-System kann denselben Befund in manchen Kategorien sogar schneller und genauer einordnen als die Ärztin. Trotzdem ist die Ärztin unverzichtbar. Denn sie kann erklären, was das Ergebnis bedeutet, Ängste nehmen, behandlungsentscheidend abwägen und für die Konsequenzen einstehen.\n\nDas KI-System hat einen absoluten Vorteil bei der technischen Befundauswertung. Die Ärztin hat einen komparativen Vorteil bei allem, was danach kommt: Einordnung, Kommunikation, Entscheidung, Verantwortung.\n\nDer entscheidende Punkt: KI verändert, welche Tätigkeiten am wertvollsten sind. Wer das versteht, kann sich auf die Seiten seines Berufs konzentrieren, die KI nicht übernehmen kann.",
-          "keyTakeaway": "KI ersetzt Aufgaben schneller als Berufe. In fast jedem Job gibt es Teile, die KI besser macht, und Teile, die du besser machst. Der entscheidende Unterschied ist, welche Seite du ausbaust."
+          "content": "Ein Beruf ist ein Bündel aus Aufgaben. Wenn eine Aufgabe technisch automatisierbar wird, bleibt das Beschäftigungsergebnis offen. Unternehmen können Zeit sparen, mehr Fälle bearbeiten, Aufgaben neu verteilen, Qualität erhöhen oder Stellen abbauen. Nachfrage, Kosten, Haftung, Mitbestimmung und neue Aufgaben wirken gleichzeitig.\n\nBeispiel: Eine radiologische Software markiert Auffälligkeiten in Bildern. Ob sie Arbeit spart oder zusätzliche Prüfung erzeugt, hängt von Treffer- und Fehlerraten, dem Patientenkollektiv, der Integration und der vorgeschriebenen Kontrolle ab. Die ärztliche Diagnose und Behandlung folgen nicht automatisch aus einer Markierung.\n\nFür die eigene Arbeit ist deshalb eine Aufgabenanalyse sinnvoller als eine Berufsprognose: Welche Schritte sind standardisiert? Wo entstehen Fehler? Welche Entscheidungen brauchen Fachwissen, Kontext oder Freigabe? Wo erzeugt ein neues Werkzeug zusätzliche Kontrolle?",
+          "keyTakeaway": "Aus einer automatisierbaren Teilaufgabe folgt keine sichere Berufsprognose. Entscheidend ist, wie Technik, Kontrolle und übrige Aufgaben im realen Arbeitsablauf zusammenwirken."
         }
       ],
       "quiz": [
         {
           "id": "arbeit-1-1-q1",
-          "questionText": "Welche Zahl nennt die OECD 2023 für den Anteil der Berufe in Deutschland, die als hoch automatisierungsexponiert gelten?",
+          "questionText": "Welche Aussage beschreibt Arbeitsmarktstudien zu KI und Automatisierung korrekt?",
           "answerOptions": [
-            { "id": "a", "text": "47 Prozent aller Berufe", "isCorrect": false },
-            { "id": "b", "text": "9 Prozent der Berufe", "isCorrect": true },
-            { "id": "c", "text": "Über 60 Prozent aller Berufe", "isCorrect": false },
-            { "id": "d", "text": "Weniger als 1 Prozent", "isCorrect": false }
+            {
+              "id": "a",
+              "text": "Jede Expositionszahl ist eine direkte Prognose künftiger Stellenverluste",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Exposition, technisches Potenzial und Beschäftigungswirkung sind verschiedene Messgrößen",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Das IAB misst ausschließlich den bereits realisierten KI-Einsatz in Betrieben",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Der OECD Employment Outlook 2023 prognostiziert die Zahl deutscher Arbeitsloser durch KI",
+              "isCorrect": false
+            }
           ],
-          "explanation": "Die OECD-Analyse von 2023 kommt mit verfeinerter Methodik zu dem Ergebnis, dass in Deutschland etwa 9 Prozent der Berufe als hoch automatisierungsexponiert gelten. Die häufig zitierte 47-Prozent-Zahl stammt aus einer älteren Studie (Frey/Osborne, 2013) mit einer anderen Methodik."
+          "explanation": "Studien zu Exposition oder technischem Substituierbarkeitspotenzial beschreiben mögliche Überschneidungen zwischen Technik und Aufgaben. Ob Technik eingeführt wird und wie sich Beschäftigung verändert, hängt von weiteren wirtschaftlichen, rechtlichen und organisatorischen Faktoren ab."
         },
         {
           "id": "arbeit-1-1-q2",
-          "questionText": "Was zeigt die Berufenet-Analyse der Bundesagentur für Arbeit über KI und Berufe?",
+          "questionText": "Was misst das IAB-Substituierbarkeitspotenzial auf Basis von BERUFENET?",
           "answerOptions": [
-            { "id": "a", "text": "Die meisten Berufe haben keine KI-substituierbaren Tätigkeiten", "isCorrect": false },
-            { "id": "b", "text": "Nur technische Berufe sind betroffen", "isCorrect": false },
-            { "id": "c", "text": "19 von 20 Berufen haben mindestens eine KI-substituierbare Teiltätigkeit, aber Berufe als solche verschwinden selten", "isCorrect": true },
-            { "id": "d", "text": "Alle Berufe werden bis 2030 vollständig automatisiert", "isCorrect": false }
+            {
+              "id": "a",
+              "text": "Wie viele Beschäftigte bereits mit generativer KI arbeiten",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Welche Berufe innerhalb eines Jahres verschwinden werden",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Welcher Anteil der Kerntätigkeiten technisch prinzipiell vollautomatisch erledigt werden könnte",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Welche Unternehmen gesetzlich zur Automatisierung verpflichtet sind",
+              "isCorrect": false
+            }
           ],
-          "explanation": "Die Bundesagentur für Arbeit analysiert das Substituierbarkeitspotenzial von Berufen. Ihr Befund: Fast alle Berufe haben einzelne Tätigkeiten, die KI übernehmen könnte. Aber Berufe verschwinden seltener als einzelne Teiltätigkeiten sich verändern. Der Wandel betrifft das Was innerhalb eines Berufs, nicht den Beruf als Ganzes."
+          "explanation": "Das IAB ordnet Kerntätigkeiten anhand der jeweils verfügbaren Technik ein. Es misst technisches Potenzial, nicht tatsächlichen Einsatz, Wirtschaftlichkeit oder künftige Stellenverluste."
         },
         {
           "id": "arbeit-1-1-q3",
-          "questionText": "Welche Fähigkeit ist ein Beispiel für den komparativen Vorteil einer Ärztin gegenüber einem KI-System bei der Röntgendiagnostik?",
+          "questionText": "Welche Schlussfolgerung ist aus einer automatisierbaren Teilaufgabe zulässig?",
           "answerOptions": [
-            { "id": "a", "text": "Das schnelle Lesen von Standardbefunden", "isCorrect": false },
-            { "id": "b", "text": "Die Klassifikation typischer Anomalien in Bilddaten", "isCorrect": false },
-            { "id": "c", "text": "Die schnellere Erstellung des schriftlichen Befundtexts", "isCorrect": false },
-            { "id": "d", "text": "Die empathische Erklärung des Befundes und die Übernahme von Behandlungsverantwortung", "isCorrect": true }
+            {
+              "id": "a",
+              "text": "Der gesamte Beruf verschwindet im nächsten Planungshorizont",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Die Technik wird in jedem Betrieb wirtschaftlich eingesetzt",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Alle übrigen Aufgaben werden für Beschäftigte wertvoller",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Der Arbeitsablauf kann sich ändern; die Beschäftigungswirkung muss gesondert untersucht werden",
+              "isCorrect": true
+            }
           ],
-          "explanation": "Der komparative Vorteil der Ärztin liegt in dem, was nach der technischen Diagnose kommt: erklären, abwägen, kommunizieren, Verantwortung übernehmen. Das KI-System hat bei der reinen Bildauswertung teils sogar einen absoluten Vorteil, aber der Beruf des Arztes wächst genau dort, wo KI nicht verlässlich ist."
+          "explanation": "Technisches Potenzial beschreibt zunächst eine Aufgabe. Ob daraus Zeitersparnis, zusätzliche Prüfung, höhere Fallzahlen oder weniger Stellen entstehen, hängt vom konkreten Einsatz ab."
         }
       ]
     },
@@ -86,71 +136,124 @@
       "id": "arbeit-1-2",
       "blockId": "block_1",
       "number": 2,
-      "title": "KI als Werkzeug, nicht als Ersatz: konkrete Wege",
-      "subtitle": "Wie du KI sinnvoll in deine Arbeit integrierst",
+      "title": "KI als Assistenz: Arbeitsabläufe kontrolliert testen",
+      "subtitle": "Aufgabe, Prüfung und Zuständigkeit klar festlegen",
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-06-22",
-      "nextReview": "2026-09-20",
+      "lastReviewed": "2026-08-09",
+      "nextReview": "2026-11-09",
       "reviewCadence": "quarterly",
       "riskClass": "statistical",
-      "keyConcepts": ["KI-Kompetenz", "Amplifier-Modell", "Betriebsrat", "BetrVG"],
+      "keyConcepts": [
+        "KI-Kompetenz",
+        "Assistenz-Workflow",
+        "Betriebsrat",
+        "BetrVG"
+      ],
       "sections": [
         {
           "id": "arbeit-1-2-s1",
-          "title": "Das Amplifier-Modell: KI als Verstärker",
+          "title": "Assistenz ohne Leistungsversprechen",
           "readTimeMinutes": 2,
-          "content": "Es gibt zwei Arten, KI am Arbeitsplatz zu betrachten. Die erste: KI als Bedrohung, die Aufgaben übernimmt. Die zweite: KI als Verstärker, der deine Arbeit effizienter macht.\n\nDas Amplifier-Modell ist nicht Schönfärberei. Es beschreibt, was in der Praxis funktioniert.\n\nBeispiele:\n- Du bist Pflegefachkraft und schreibst täglich Verlaufsberichte. Ein KI-Textassistent kann aus deinen Stichpunkten einen ersten Entwurf machen, den du in zwei Minuten überarbeitest statt in zehn. Du bleibst der Autor, du trägst die Verantwortung, du kennst den Patienten.\n- Du bist Buchhalter und prüfst Rechnungen auf Plausibilität. Ein KI-gestütztes Buchführungswerkzeug markiert auffällige Einträge automatisch. Du entscheidest, was damit passiert.\n- Du bist in der Kommunikation tätig und entwirfst Pressemitteilungen. Ein KI-Bildgenerator kann schnell visuelle Optionen liefern, die du bewertest und auswählst.\n\nIn allen drei Fällen: KI beschleunigt Routineschritte. Der Mensch bleibt zuständig für Urteil, Kontext und Verantwortung.",
-          "keyTakeaway": "KI als Amplifier bedeutet: Routinen beschleunigen, damit mehr Zeit für das bleibt, was KI nicht kann."
+          "content": "Ein Assistenz-Workflow weist dem System einen begrenzten Schritt zu und lässt Freigabe und Verantwortung bei einer benannten Person. Ob das Zeit spart, muss im eigenen Prozess gemessen werden.\n\nSynthetische Beispiele:\n- Eine Pflegefachkraft lässt aus freigegebenen, datenschutzkonformen Stichpunkten einen Entwurf erstellen und prüft jede Angabe gegen die Dokumentation. Patientendaten dürfen nur in ein dafür freigegebenes System gelangen.\n- Eine Buchhaltung lässt ungewöhnliche Einträge markieren. Die Markierung ist ein Prüfhinweis, keine Feststellung von Betrug oder Fehler.\n- Ein Kommunikationsteam erzeugt Bildentwürfe. Vor Veröffentlichung prüft es Rechte, Sachbezug, Kennzeichnung und Freigabe.\n\nFür einen kontrollierten Test werden Aufgabe, erlaubte Daten, Qualitätskriterien, Prüfer, Abbruchregel und Protokollierung vorab festgelegt. Erst Messdaten aus diesem Test zeigen, ob der Einsatz nützt.",
+          "keyTakeaway": "Assistenz ist ein Arbeitsablauf, kein Leistungsversprechen. Begrenze die Aufgabe, schütze Daten, prüfe Ergebnisse und miss den tatsächlichen Nutzen."
         },
         {
           "id": "arbeit-1-2-s2",
           "title": "Was KI-Kompetenz konkret bedeutet",
           "readTimeMinutes": 2,
-          "content": "KI-Kompetenz heißt nicht, Programmieren zu können. Sie beschreibt ein Bündel von Fähigkeiten, die dich in die Lage versetzen, KI-Systeme sinnvoll einzusetzen.\n\nFünf Fähigkeiten machen den Kern von KI-Kompetenz für Nicht-Programmiererinnen aus:\n\n1. Prompts formulieren: Klare, präzise Anfragen an KI-Systeme stellen. Das klingt trivial, ist aber eine Fähigkeit, die sich mit Übung verbessert.\n2. Ausgaben bewerten: Kritisch prüfen, ob das, was ein KI-System ausgibt, korrekt, vollständig und angemessen ist. KI halluziniert, irrt sich, vereinfacht.\n3. Grenzen erkennen: Wissen, wann ein KI-System an seine Grenzen stößt und ein Mensch eingreifen muss.\n4. Datenschutzregeln kennen: Verstehen, welche Daten du in welches Tool eingeben darfst und welche nicht.\n5. Eigene Arbeit mit KI-Output kennzeichnen: Transparent machen, wenn KI-generierte Inhalte Teil deiner Arbeit sind.\n\nDiese fünf Fähigkeiten lassen sich lernen, ohne Informatik zu studieren.",
-          "keyTakeaway": "KI-Kompetenz heißt nicht, Programmieren zu lernen. Es heißt zu wissen, wann du KI sinnvoll einsetzt und wann du mit deinem eigenen Urteil besser fährst."
+          "content": "Praktische KI-Kompetenz verbindet fünf Fähigkeiten:\n\n1. Aufgabe beschreiben: Zweck, Kontext, gewünschtes Format und Grenzen nennen.\n2. Ausgabe prüfen: Behauptungen, Zahlen und Quellen gegen verlässliche Unterlagen kontrollieren.\n3. Risiko erkennen: Bei personenbezogenen Daten, vertraulichen Informationen oder folgenreichen Entscheidungen stoppen und die zuständige Stelle einbeziehen.\n4. Werkzeug einordnen: Freigabestatus, Datenverarbeitung, bekannte Grenzen und Versionsänderungen kennen.\n5. Arbeit dokumentieren: Eingaben, relevante Ausgaben, menschliche Änderungen und Freigaben nachvollziehbar festhalten, wenn der Prozess es verlangt.\n\nArt. 4 der KI-Verordnung verpflichtet Anbieter und Betreiber seit der Änderung durch Verordnung (EU) 2026/1744, Maßnahmen zur Unterstützung der Entwicklung von KI-Kompetenz ihrer Mitarbeitenden und weiterer für sie handelnder Personen zu ergreifen. Die Norm verlangt kein garantiertes individuelles Kompetenzniveau.",
+          "keyTakeaway": "KI-Kompetenz heißt: Aufgabe und Risiko einordnen, Daten schützen, Ausgaben prüfen und Entscheidungen nachvollziehbar dokumentieren."
         },
         {
           "id": "arbeit-1-2-s3",
           "title": "Das Gespräch mit dem Betriebsrat vorbereiten",
           "readTimeMinutes": 2,
-          "content": "Wenn dein Unternehmen beginnt, KI-Systeme einzusetzen, hast du als Arbeitnehmende Person das Recht, informiert zu werden und mitzusprechen. Das ist keine Theorie.\n\nParagraph 87, Absatz 1, Nummer 6 des Betriebsverfassungsgesetzes (BetrVG) gibt dem Betriebsrat ein Mitbestimmungsrecht bei der Einführung technischer Einrichtungen, die dazu geeignet sind, das Verhalten oder die Leistung der Arbeitnehmer zu überwachen. KI-Systeme, die Arbeitsprozesse steuern oder auswerten, können darunter fallen. (Hinweis: Das ist kein Rechtsberatungsanspruch. Im Einzelfall entscheidet die konkrete Ausgestaltung des Systems.)\n\nFragen, die du bei deinem Betriebsrat ansprechen kannst:\n- Welche KI-Systeme plant das Unternehmen einzuführen?\n- Wie werden Mitarbeitende auf neue Anforderungen vorbereitet?\n- Gibt es Weiterbildungsangebote zu KI-Tools?\n- Wie werden Leistungs- und Verhaltensdaten der Mitarbeitenden geschützt?\n\nDer Betriebsrat ist in dieser Frage dein Verbündeter, kein Bremser. Gut vorbereitete Fragen führen zu besseren Betriebsvereinbarungen.",
-          "keyTakeaway": "Als Arbeitnehmende Person hast du das Recht auf Mitbestimmung, wenn KI in deinen Arbeitsprozess eingreift. Der Betriebsrat ist dein erster Ansprechpartner."
+          "content": "§ 87 Abs. 1 Nr. 6 BetrVG gibt dem Betriebsrat, soweit keine gesetzliche oder tarifliche Regelung besteht, ein Mitbestimmungsrecht bei Einführung und Anwendung technischer Einrichtungen, die dazu bestimmt sind, Verhalten oder Leistung der Arbeitnehmer zu überwachen. Ob ein KI-System darunter fällt, hängt von Funktion und Einsatz ab. Das Mitbestimmungsrecht steht dem Betriebsrat zu, nicht pauschal jeder einzelnen beschäftigten Person.\n\nSachliche Fragen für die betriebliche Prüfung:\n- Welcher Zweck und welche konkrete Entscheidung werden unterstützt?\n- Welche Beschäftigtendaten werden erhoben, abgeleitet oder gespeichert?\n- Wer sieht Auswertungen, und wie lange werden sie aufbewahrt?\n- Welche menschliche Kontrolle, Fehlerkorrektur und Beschwerdemöglichkeit gibt es?\n- Welche Schulung und welche verbindlichen Nutzungsregeln gelten?\n\nBei Uneinigkeit über eine mitbestimmungspflichtige Angelegenheit entscheidet nach § 87 Abs. 2 die Einigungsstelle. Die rechtliche Einordnung des konkreten Systems gehört in fachkundige arbeitsrechtliche Prüfung.",
+          "keyTakeaway": "§ 87 Abs. 1 Nr. 6 BetrVG kann bei überwachungsbezogenen KI-Systemen Mitbestimmung des Betriebsrats auslösen. Maßgeblich sind Zweck und konkrete Funktion."
         }
       ],
       "quiz": [
         {
           "id": "arbeit-1-2-q1",
-          "questionText": "Eine Pflegefachkraft nutzt einen KI-Textassistenten, um aus ihren Stichpunkten erste Entwürfe für Verlaufsberichte zu erstellen, die sie dann überarbeitet. Was beschreibt diesen Einsatz am besten?",
+          "questionText": "Was kennzeichnet einen kontrollierten KI-Assistenz-Workflow?",
           "answerOptions": [
-            { "id": "a", "text": "Die KI ersetzt die Pflegefachkraft bei der Dokumentation", "isCorrect": false },
-            { "id": "b", "text": "KI als Amplifier: Routineschritte werden beschleunigt, die Fachkraft bleibt verantwortlich", "isCorrect": true },
-            { "id": "c", "text": "Das ist kein legitimer KI-Einsatz, weil KI keine Patientendaten verarbeiten darf", "isCorrect": false },
-            { "id": "d", "text": "Die Pflegefachkraft hat keinen Mehrwert mehr in der Dokumentation", "isCorrect": false }
+            {
+              "id": "a",
+              "text": "Eine flüssige Ausgabe gilt ohne weitere Prüfung als richtig",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Aufgabe, erlaubte Daten, Prüfung und verantwortliche Freigabe sind vorab festgelegt",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Personenbezogene Daten dürfen in jedes verfügbare System eingegeben werden",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Der Nutzen wird aus allgemeinen Herstellerangaben übernommen",
+              "isCorrect": false
+            }
           ],
-          "explanation": "Das ist ein klassisches Amplifier-Modell: KI beschleunigt den Routineschritt (ersten Entwurf erstellen), der Mensch bleibt zuständig für Inhalt, Kontext und Verantwortung (überarbeiten, prüfen, zeichnen). Der KI-Output ist Werkzeug, nicht Endprodukt."
+          "explanation": "Ein kontrollierter Workflow begrenzt die Systemaufgabe, schützt Daten, definiert Qualitätskriterien und weist Prüfung sowie Freigabe einer verantwortlichen Person zu. Zeit- oder Qualitätsgewinn muss im eigenen Prozess belegt werden."
         },
         {
           "id": "arbeit-1-2-q2",
           "questionText": "Welche der folgenden Fähigkeiten gehört zu KI-Kompetenz für Nicht-Programmiererinnen?",
           "answerOptions": [
-            { "id": "a", "text": "Eigene KI-Modelle trainieren und kalibrieren", "isCorrect": false },
-            { "id": "b", "text": "Python-Code für KI-Anwendungen schreiben", "isCorrect": false },
-            { "id": "c", "text": "KI-Hardware konfigurieren und warten", "isCorrect": false },
-            { "id": "d", "text": "KI-Ausgaben kritisch bewerten und Grenzen erkennen", "isCorrect": true }
+            {
+              "id": "a",
+              "text": "Eigene KI-Modelle trainieren und kalibrieren",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Python-Code für KI-Anwendungen schreiben",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "KI-Hardware konfigurieren und warten",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "KI-Ausgaben kritisch bewerten und Grenzen erkennen",
+              "isCorrect": true
+            }
           ],
-          "explanation": "KI-Kompetenz umfasst unter anderem: Prompts formulieren, Ausgaben bewerten, Grenzen erkennen, Datenschutzregeln kennen und KI-Output kennzeichnen. Keine dieser Fähigkeiten setzt Programmierkenntnisse voraus."
+          "explanation": "Praktische KI-Kompetenz umfasst Aufgabenbeschreibung, Quellen- und Qualitätsprüfung, Risikoeinordnung, Werkzeugkenntnis und nachvollziehbare Dokumentation. Programmieren kann nützlich sein, ist dafür aber keine Voraussetzung."
         },
         {
           "id": "arbeit-1-2-q3",
-          "questionText": "Welches gesetzliche Recht gibt dem Betriebsrat Mitbestimmung bei der Einführung von KI-Systemen, die Arbeitsprozesse steuern?",
+          "questionText": "Welche Norm kann bei einem KI-System greifen, das Verhalten oder Leistung von Beschäftigten überwachen soll?",
           "answerOptions": [
-            { "id": "a", "text": "Art. 4 EU AI Act (KI-Kompetenzpflicht für Betreiber)", "isCorrect": false },
-            { "id": "b", "text": "§ 106 GewO (Weisungsrecht des Arbeitgebers)", "isCorrect": false },
-            { "id": "c", "text": "DSGVO Art. 22 (automatisierte Einzelentscheidungen)", "isCorrect": false },
-            { "id": "d", "text": "§ 87 Abs. 1 Nr. 6 BetrVG (Mitbestimmung bei technischen Überwachungseinrichtungen)", "isCorrect": true }
+            {
+              "id": "a",
+              "text": "Art. 4 KI-Verordnung (Maßnahmen zur Unterstützung von KI-Kompetenz)",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "§ 106 GewO (Weisungsrecht des Arbeitgebers)",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "DSGVO Art. 22 (automatisierte Einzelentscheidungen)",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "§ 87 Abs. 1 Nr. 6 BetrVG (Mitbestimmung bei technischen Überwachungseinrichtungen)",
+              "isCorrect": true
+            }
           ],
-          "explanation": "Paragraph 87, Absatz 1, Nummer 6 des Betriebsverfassungsgesetzes gibt dem Betriebsrat ein Mitbestimmungsrecht bei technischen Einrichtungen, die das Verhalten oder die Leistung von Mitarbeitenden überwachen können. KI-Systeme in Arbeitsprozessen können darunter fallen. Im Einzelfall entscheidet die konkrete Ausgestaltung."
+          "explanation": "§ 87 Abs. 1 Nr. 6 BetrVG betrifft Einführung und Anwendung technischer Einrichtungen, die zur Überwachung von Verhalten oder Leistung bestimmt sind. Ob die Voraussetzungen erfüllt sind, hängt vom konkreten System und Einsatz ab."
         }
       ]
     },
@@ -158,71 +261,119 @@
       "id": "arbeit-1-3",
       "blockId": "block_1",
       "number": 3,
-      "title": "Welche Berufe sich stark verändern und was du jetzt tun kannst",
-      "subtitle": "Wandeldruck und konkrete Handlungsoptionen",
+      "title": "Welche Aufgaben sich verändern können und was du prüfen kannst",
+      "subtitle": "Tätigkeitsmerkmale statt Berufslisten",
       "durationMinutes": 5,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-06-22",
-      "nextReview": "2026-09-20",
+      "lastReviewed": "2026-08-09",
+      "nextReview": "2026-11-09",
       "reviewCadence": "quarterly",
       "riskClass": "statistical",
-      "keyConcepts": ["Automatisierungspotenzial", "Weiterbildung", "Qualifizierung"],
+      "keyConcepts": ["Aufgabenanalyse", "Weiterbildung", "Qualifizierung"],
       "sections": [
         {
           "id": "arbeit-1-3-s1",
-          "title": "Berufsfelder mit hohem Wandeldruck",
+          "title": "Merkmale mit höherem technischem Potenzial",
           "readTimeMinutes": 2,
-          "content": "Einige Berufsfelder erfahren durch KI mehr Veränderung als andere. Das bedeutet nicht, dass diese Berufe verschwinden. Es bedeutet, dass sich das Tätigkeitsprofil deutlich verschiebt.\n\nVerwaltung und Sachbearbeitung: Standardisierte Vorgänge (Antragsbearbeitung, Dateneingabe, Formularprüfung) werden zunehmend automatisiert. Was wächst: komplexe Fallentscheidungen, Bürgerorientierung, Ausnahmesituationen. (Quelle: IAB-Substituierbarkeitsanalysen auf BERUFENET-Basis)\n\nFinanzwesen und Buchhaltung: Standardbuchungen, Kontenabstimmungen und Berichterstellung übernimmt KI schnell. Was bleibt: Finanzberatung, Risikourteil, Strategieentscheidungen.\n\nLogistik und Disposition: Routineplanung und Kapazitätsoptimierung kann KI gut. Was bleibt: Ausnahmesituationen, Lieferantengespräche, lokales Wissen.\n\nTextarbeit (Teile von Journalismus und Marketing): Standardtexte, Zusammenfassungen und erste Entwürfe entstehen schnell mit KI. Was bleibt: Recherche, Einordnung, originäre Haltung, investigative Arbeit. (Quelle: OECD Employment Outlook 2023)\n\nDer Wandel dieser Felder ist real und hat begonnen. Aber er verläuft graduell, nicht über Nacht.",
-          "keyTakeaway": "Berufe in Verwaltung, Finanzen, Logistik und Textarbeit verändern sich stark. Das bedeutet: mehr Urteilsarbeit und weniger Routine, nicht das Ende dieser Berufe."
+          "content": "Technisches Potenzial ist eher erhöht, wenn ein Arbeitsschritt häufig wiederholt wird, digitale Eingaben hat, klare Regeln oder Qualitätsmaße besitzt und wenig wechselnden physischen Kontext benötigt. Beispiele sind das Übertragen strukturierter Daten, formale Vollständigkeitsprüfungen oder das Erstellen eines Entwurfs nach Vorlage.\n\nAuch dann bleibt die Einführung offen. Schlechte Daten, seltene Ausnahmen, Haftungsrisiken, Integrationskosten oder notwendige Nachkontrolle können den Nutzen begrenzen. Umgekehrt kann Technik einzelne Schritte in nahezu jedem Beruf unterstützen.\n\nDas IAB ordnet Kerntätigkeiten anhand marktreifer Technik ein und aktualisiert diese Momentaufnahme regelmäßig. Die Einheit der Analyse ist die Tätigkeit im Beruf, nicht ein Versprechen über dessen Zukunft.",
+          "keyTakeaway": "Standardisierte digitale Schritte haben oft höheres technisches Potenzial. Ob sie tatsächlich automatisiert werden, entscheidet sich erst im konkreten Betrieb."
         },
         {
           "id": "arbeit-1-3-s2",
-          "title": "Berufsfelder mit niedrigem Substituierungsdruck",
+          "title": "Merkmale, die Automatisierung erschweren",
           "readTimeMinutes": 1,
-          "content": "Es gibt Berufe, in denen KI deutlich langsamer Fuß fasst, weil die Tätigkeiten grundlegend von Dingen abhängen, die KI heute nicht kann.\n\nPflege und Betreuung: Die Arbeit basiert auf physischer Präsenz, emotionaler Beziehung und situativer Reaktion auf Menschen. KI kann dokumentieren und informieren helfen, aber nicht pflegen.\n\nHandwerk und Technik im Feld: Wartung, Reparatur und Installation in unstrukturierten, wechselnden Umgebungen sind hochgradig kontextabhängig und physisch. KI kann planen helfen, aber nicht schrauben.\n\nPädagogik und Therapie: Bildung und Heilung sind Beziehungsarbeit. Ein Therapeut, der zuhört und einordnet, ist nicht durch ein KI-System zu ersetzen, das Texte verarbeitet.\n\nKomplexe Beratung: Steuerberatung für Sonderfälle, anwaltliche Vertretung, strategische Unternehmensberatung erfordern Urteil, Verantwortungsübernahme und soziales Kapital.\n\nEhrlicherweise: Auch in diesen Feldern werden KI-unterstützte Werkzeuge eingesetzt werden. Die Pflege wird Dokumentationstools nutzen. Der Handwerker wird KI-basierte Diagnosetools nutzen. Aber der Kernberuf bleibt.",
-          "keyTakeaway": "Pflege, Handwerk, Pädagogik und komplexe Beratung verändern sich langsamer. Das liegt an physischer Präsenz, Beziehungsarbeit und situativem Kontext, den KI nicht replizieren kann."
+          "content": "Automatisierung ist schwieriger, wenn eine Tätigkeit mehrere dieser Merkmale verbindet:\n\n- wechselnde physische Umgebung und feinmotorische Arbeit\n- unvollständige Informationen und seltene Ausnahmen\n- unmittelbare Verantwortung für Sicherheit oder Grundrechte\n- Verhandlung mit mehreren Beteiligten\n- Beziehung, Vertrauen oder lokale Kontextkenntnis\n\nDas macht keinen Beruf \"KI-sicher\". Dokumentation, Planung oder Informationssuche können sich auch in Pflege, Handwerk, Pädagogik und Beratung verändern. Ebenso kann Robotik langfristig physische Aufgaben verschieben. Eine belastbare Einschätzung betrachtet deshalb einzelne Aufgaben, nicht Berufslabels.",
+          "keyTakeaway": "Physischer, sozialer und rechtlicher Kontext kann Automatisierung erschweren. Er garantiert aber nicht, dass ein Beruf unverändert bleibt."
         },
         {
           "id": "arbeit-1-3-s3",
           "title": "Was du konkret tun kannst",
           "readTimeMinutes": 2,
-          "content": "Du musst KI nicht mögen. Aber es hilft dir zu wissen, was sie kann und was nicht. Drei Handlungsoptionen, die du ohne großen Aufwand beginnen kannst:\n\n(a) Weiterbildung nutzen: Die Bundesagentur für Arbeit bietet Qualifizierungsberatung an. Die Beratung ist kostenlos und hilft dir, passende Förderangebote zu finden. Volkshochschulen (VHS) und IHKs bieten ebenfalls Weiterbildungsangebote.\n\n(b) KI selbst ausprobieren: Gib dabei keine vertraulichen Firmen- oder Kundendaten ein. Teste mit fiktiven Szenarien oder öffentlich bekannten Sachverhalten und beachte die Nutzungsbedingungen des Dienstes.\n\n(c) Rechte präzise prüfen: Art. 5 verbietet seit dem 2. Februar 2025 genau bezeichnete Praktiken, darunter grundsätzlich Emotionserkennung am Arbeitsplatz. Er verbietet nicht pauschal jede diskriminierende Recruiting-KI. Systeme für Einstellung und Bewerberauswahl können Hochrisiko-Systeme nach Anhang III sein; für eigenständige Anhang-III-Systeme setzt die seit dem 27. Juli 2026 geltende Verordnung (EU) 2026/1744 den 2. Dezember 2027 als Anwendungsbeginn der Hochrisiko-Regeln. AGG, DSGVO, Mitbestimmung und anderes Arbeitsrecht können unabhängig davon bereits gelten. Eine AI-Act-Informationspflicht hängt vom konkreten System und der anwendbaren Vorschrift ab.\n\nWenn KI in einem Bewerbungsprozess eingesetzt wird, frage nach Zweck, Daten, menschlicher Prüfung und Ansprechpartnern.",
-          "keyTakeaway": "Drei konkrete Schritte: Qualifizierungsberatung nutzen, KI gefahrlos selbst testen, deine Rechte im Bewerbungsprozess kennen."
+          "content": "Drei belastbare Schritte:\n\n1. Aufgaben inventarisieren: Notiere wiederkehrende Schritte, Fehlerfolgen, benötigte Daten und Freigaben.\n2. Sicher testen: Nutze nur freigegebene Werkzeuge und nicht vertrauliche oder personenbezogene Testdaten. Vergleiche Ergebnisse mit einer festgelegten Referenz.\n3. Rechte und Zuständigkeiten prüfen: Die Bundesagentur für Arbeit bietet \"Berufsberatung im Erwerbsleben\" und Informationen zu Weiterbildung und Förderung. Im Betrieb sind Führungskraft, Datenschutz, Informationssicherheit und gegebenenfalls Betriebsrat relevante Stellen.\n\nArt. 5 der KI-Verordnung verbietet seit 2. Februar 2025 bestimmte Praktiken, darunter grundsätzlich Emotionserkennung am Arbeitsplatz. Systeme für Einstellung oder Auswahl können unter Anhang III fallen. Für eigenständige Anhang-III-Systeme beginnen die Hochrisiko-Regeln nach Verordnung (EU) 2026/1744 am 2. Dezember 2027. AGG, DSGVO und Arbeitsrecht können unabhängig davon bereits gelten.\n\nBei einem Bewerbungsverfahren sind Zweck, verwendete Daten, Bedeutung der Systemausgabe, menschliche Beteiligung und verantwortliche Stelle die relevanten Fragen.",
+          "keyTakeaway": "Analysiere Aufgaben, teste nur in einem freigegebenen Rahmen und kläre Zuständigkeiten. Rechtsfolgen hängen vom konkreten System und Einsatz ab."
         }
       ],
       "quiz": [
         {
           "id": "arbeit-1-3-q1",
-          "questionText": "Welches Berufsfeld hat laut OECD und Bundesagentur für Arbeit einen besonders hohen Wandeldruck durch KI?",
+          "questionText": "Welche Aufgabe weist typischerweise ein höheres technisches Automatisierungspotenzial auf?",
           "answerOptions": [
-            { "id": "a", "text": "Pflege und Betreuung", "isCorrect": false },
-            { "id": "b", "text": "Handwerk im Feld", "isCorrect": false },
-            { "id": "c", "text": "Verwaltung und Sachbearbeitung mit standardisierten Vorgängen", "isCorrect": true },
-            { "id": "d", "text": "Komplexe anwaltliche Beratung", "isCorrect": false }
+            {
+              "id": "a",
+              "text": "Eine Verhandlung mit mehreren Beteiligten in einem neuen Konflikt",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Eine Reparatur in einer unbekannten physischen Umgebung",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Eine wiederholte formale Vollständigkeitsprüfung strukturierter digitaler Daten",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Eine folgenschwere Einzelfallabwägung mit unvollständigen Informationen",
+              "isCorrect": false
+            }
           ],
-          "explanation": "Verwaltung und Sachbearbeitung haben einen hohen Wandeldruck, weil standardisierte Vorgänge wie Antragsbearbeitung, Dateneingabe und Formularprüfung gut automatisierbar sind. Pflege, Handwerk und komplexe Beratung haben deutlich niedrigeren Substituierungsdruck."
+          "explanation": "Wiederholte, digital vorliegende und klar prüfbare Schritte haben häufig ein höheres technisches Potenzial. Das sagt noch nicht, ob der konkrete Betrieb sie automatisiert."
         },
         {
           "id": "arbeit-1-3-q2",
-          "questionText": "Welche kostenlose Möglichkeit bietet die Bundesagentur für Arbeit Beschäftigten, die sich über KI weiterbilden wollen?",
+          "questionText": "Welches Angebot veröffentlicht die Bundesagentur für Arbeit für Beschäftigte mit Weiterbildungsfragen?",
           "answerOptions": [
-            { "id": "a", "text": "Einen eigenen KI-Kurs der Bundesagentur, der online zugänglich ist", "isCorrect": false },
-            { "id": "b", "text": "Kostenlose Qualifizierungsberatung, die bei der Suche nach Förderangeboten hilft", "isCorrect": true },
-            { "id": "c", "text": "Direkte Umschulung zum KI-Entwickler auf Kosten der Bundesagentur", "isCorrect": false },
-            { "id": "d", "text": "Eine Zertifizierung nach EU AI Act Art. 4 für alle Beschäftigten", "isCorrect": false }
+            {
+              "id": "a",
+              "text": "Eine automatische Umschulung für jeden von KI betroffenen Beruf",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Berufsberatung im Erwerbsleben mit Informationen zu Weiterbildung und Förderung",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Eine Garantie auf Finanzierung jeder gewünschten Weiterbildung",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Eine verpflichtende Zertifizierung nach Art. 4 der KI-Verordnung",
+              "isCorrect": false
+            }
           ],
-          "explanation": "Die Bundesagentur für Arbeit bietet kostenlose Qualifizierungsberatung an, die Beschäftigte dabei unterstützt, passende Weiterbildungs- und Förderangebote zu finden. Umschulungen und Zertifizierungen sind separate Maßnahmen, die von anderen Stellen angeboten werden."
+          "explanation": "Die Bundesagentur für Arbeit veröffentlicht die Berufsberatung im Erwerbsleben. Konkrete Beratung, Förderfähigkeit und Finanzierung hängen von Person, Maßnahme und geltenden Voraussetzungen ab."
         },
         {
           "id": "arbeit-1-3-q3",
           "questionText": "Welche Aussage zum EU AI Act im Beschäftigungskontext ist korrekt?",
           "answerOptions": [
-            { "id": "a", "text": "Art. 5 verbietet jede Form von Recruiting-KI", "isCorrect": false },
-            { "id": "b", "text": "Alle Hochrisiko-Pflichten gelten bereits seit 2. Februar 2025", "isCorrect": false },
-            { "id": "c", "text": "Art. 5 hat mit dem Arbeitsplatz nichts zu tun", "isCorrect": false },
-            { "id": "d", "text": "Art. 5 verbietet seit 2. Februar 2025 bestimmte Praktiken; Recruiting-KI ist separat nach Anhang III und bestehendem Recht zu prüfen", "isCorrect": true }
+            {
+              "id": "a",
+              "text": "Art. 5 verbietet jede Form von Recruiting-KI",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Alle Hochrisiko-Pflichten gelten bereits seit 2. Februar 2025",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Art. 5 hat mit dem Arbeitsplatz nichts zu tun",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Art. 5 verbietet seit 2. Februar 2025 bestimmte Praktiken; Recruiting-KI ist separat nach Anhang III und bestehendem Recht zu prüfen",
+              "isCorrect": true
+            }
           ],
-          "explanation": "Art. 5 gilt seit dem 2. Februar 2025 und verbietet genau bezeichnete Praktiken, darunter grundsätzlich Emotionserkennung am Arbeitsplatz. Recruiting- und Bewerberauswahlsysteme können nach Art. 6 und Anhang III Hochrisiko sein; AGG, DSGVO und Mitbestimmung sind separat zu prüfen."
+          "explanation": "Art. 5 gilt seit dem 2. Februar 2025 für genau bezeichnete Verbote, darunter grundsätzlich Emotionserkennung am Arbeitsplatz. Einstellungs- und Auswahlsysteme können unter Anhang III fallen; die verschobenen Hochrisiko-Termine sowie AGG, DSGVO und Mitbestimmung sind gesondert zu prüfen."
         }
       ]
     }

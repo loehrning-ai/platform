@@ -24,7 +24,16 @@ describe("Ressourcen section (Workflow)", () => {
     render(<Workflow />);
     expect(screen.getByTestId("ressourcen-section")).toBeInTheDocument();
     expect(screen.getByText("Ressourcen")).toBeInTheDocument();
-    expect(screen.getByText(/Material zum Anwenden/)).toBeInTheDocument();
+    expect(screen.getByText(/Nachlesen, prüfen, übertragen/)).toBeInTheDocument();
+  });
+
+  it("renders English resource copy and preserves the locale in every route", () => {
+    const { container } = render(<Workflow locale="en" />);
+
+    expect(screen.getByRole("heading", { name: "Read, test, transfer." })).toBeInTheDocument();
+    expect(screen.getByText("Learning books").closest("a")).toHaveAttribute("href", "/en/buecher");
+    expect(screen.getByRole("link", { name: /Go to account/ })).toHaveAttribute("href", "/en/konto");
+    expect(container.textContent).not.toMatch(/\b(?:Ressourcen|Lernbücher|Praxisbeispiele|Quellstand|Konto|Fortschritt)\b/);
   });
 
   it("surfaces every supporting resource area as a single linked set", () => {

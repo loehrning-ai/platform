@@ -10,6 +10,8 @@ import { getWorkshopSlugs } from "@/lib/workshops";
 import { CRAWL_CONTRACT, getCrawlRoute, SITE_ORIGIN } from "@/lib/crawl/contract";
 import { SITE_CONTENT_DATE } from "@/lib/content-freshness";
 import { OPEN_SOURCE_ARTIFACTS } from "@/lib/open-source/artifacts";
+import { contentLocalesForPath } from "@/lib/i18n/content-parity";
+import { localizeHref } from "@/lib/i18n/locale";
 
 // Shared frozen content date keeps <lastmod> stable across requests so
 // Google actually trusts it, and keeps sitemap, llms.txt, and
@@ -35,6 +37,33 @@ function makeEntry(path: string, priority: number, changeFrequency: Frequency, l
     changeFrequency,
     priority,
   };
+}
+
+/**
+ * Emit an English URL only when the exact public route has reviewed content
+ * parity. Both sitemap records carry the same reciprocal language map, while
+ * German-only pages remain single entries without an unsupported hreflang.
+ */
+function expandLocalizedEntries(entries: readonly Entry[]): MetadataRoute.Sitemap {
+  return entries.flatMap((entry) => {
+    const pathname = new URL(entry.url).pathname;
+    if (!contentLocalesForPath(pathname).includes("en")) return [entry];
+
+    const germanUrl = entry.url;
+    const englishUrl = `${SITE}${localizeHref(pathname, "en")}`;
+    const alternates = {
+      languages: {
+        de: germanUrl,
+        en: englishUrl,
+        "x-default": germanUrl,
+      },
+    };
+
+    return [
+      { ...entry, alternates },
+      { ...entry, url: englishUrl, alternates },
+    ];
+  });
 }
 
 // Dynamic ":"-patterns are included by explicit contract flag (public-content governance
@@ -107,7 +136,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ? (
         await Promise.all(
           books.map(async (book) => {
-            const chapters = await getBookChapterList(book.id);
+            const chapters = await getBookChapterList(book.id, "de");
             return chapters.map((chapter) =>
               makeEntry(
                 `/buecher/${book.id}/${chapter.slug}`,
@@ -142,7 +171,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((artifact) => getCrawlRoute(artifact.href).includeInSitemap)
     .map((artifact) => makeEntry(artifact.href, 0.6, "monthly"));
 
-  return [
+  return expandLocalizedEntries([
     ...publicPages,
     ...wieKiLektionEntries,
     ...bookEntries,
@@ -151,5 +180,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...workshopEntries,
     ...blogPosts,
     ...openSourceArtifactEntries,
-  ];
+  ]);
 }

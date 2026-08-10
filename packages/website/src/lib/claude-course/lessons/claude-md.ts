@@ -11,7 +11,7 @@ const lesson: ClaudeLesson = {
   subtitle: "Persistent instructions that travel with your project.",
   durationMinutes: 9,
   trackId: "workflows",
-  hook: "Write it once. Never re-explain your stack again.",
+  hook: "Store concise project instructions in a file the team can review.",
   keyConcepts: [
     "CLAUDE.md hierarchy",
     "Lazy-loaded sub-folder files",
@@ -25,35 +25,35 @@ const lesson: ClaudeLesson = {
       title: "What it is",
       readTimeMinutes: 2,
       content:
-        "A `CLAUDE.md` is a plain markdown file at the root of your project. Claude Code reads it automatically at the start of every session and injects it into context before it sees your first message. Think of it as a standing brief, the stuff you'd otherwise retype into every prompt.\n\nAnthropic's own engineering team treats CLAUDE.md as the single most impactful lever for improving Claude's output in a repo. The reason is simple: if Claude is a brilliant new hire, CLAUDE.md is the onboarding doc they re-read every morning.\n\n> Stop teaching Claude your project once per conversation. Teach it once, in a file, forever.",
+        "`CLAUDE.md` is a plain Markdown instruction file used by Claude Code. A project file can live at `./CLAUDE.md` or `./.claude/CLAUDE.md`; user, managed, local, and nested files have different scopes.\n\nClaude Code loads applicable instructions into the conversation context. They guide model behavior but are not enforced configuration. Use permissions, hooks, sandboxing, and CI for controls that must hold.\n\n> Keep shared project guidance specific, reviewable, and version-controlled.",
     },
     {
       id: "hierarchy",
       title: "How the hierarchy actually loads",
       readTimeMinutes: 2,
       content:
-        "CLAUDE.md files cascade. Understanding the cascade saves you hours of confusion.\n\n```\n# Loaded into every session, in this order:\n~/.claude/CLAUDE.md              # Your global preferences\n<repo>/CLAUDE.md                 # Team-shared project rules (commit this)\n<repo>/CLAUDE.local.md           # Your personal overrides (gitignore this)\n\n# Loaded lazily, only when Claude touches files in that folder:\n<repo>/frontend/CLAUDE.md\n<repo>/services/auth/CLAUDE.md\n```\n\nRules combine, they don't replace. All levels apply at once; more-specific levels win on conflicts. Descendant CLAUDE.md files are lazy-loaded, Claude only pulls them into context when it actually reads files in that directory. This is a big deal in monorepos: you can document each service's conventions next to its code without paying the token cost on every session.",
+        "Claude Code discovers instruction files by scope and directory. A simplified project view is:\n\n```\n~/.claude/CLAUDE.md              # User instructions across projects\n<repo>/CLAUDE.md                 # Team-shared project instructions\n<repo>/.claude/CLAUDE.md         # Alternative project location\n<repo>/CLAUDE.local.md           # Personal project instructions; gitignore\n\n# Discovered on demand when files in these folders are read:\n<repo>/frontend/CLAUDE.md\n<repo>/services/auth/CLAUDE.md\n```\n\nApplicable files are combined in context. A more local instruction is read later, but conflicting instructions are not a dependable precedence mechanism; remove contradictions. Use `/memory` to inspect which files loaded. For path-specific rules, prefer `.claude/rules/` with `paths` frontmatter.",
     },
     {
       id: "keep-in-leave-out",
       title: "What goes in it",
       readTimeMinutes: 2,
       content:
-        "**Keep in:**\n\n- What the project is, in one sentence\n- Stack, tooling, notable libs\n- Coding conventions the team enforces\n- Commands (`build`, `test`, `lint`)\n- Things never to do (anti-patterns)\n- Where the important docs live (`docs/architecture.md`, etc.)\n- Terminology that has project-specific meaning\n\n**Leave out:**\n\n- Secrets, tokens, keys, ever\n- Full files, link or reference with `@path/to/file.md`\n- Historical context nobody needs\n- Vibes (\"write good code\"). Be specific or delete.\n- Ad-hoc knowledge that belongs in `docs/` and gets pulled in on demand\n\n> **The size rule.** Every byte of CLAUDE.md burns tokens on every session. Keep it lean. If something is only needed sometimes, put it in `docs/` and reference it (`@docs/architecture.md`) when relevant.",
+        '**Include:**\n\n- A one-sentence project description\n- Stack and supported versions\n- Commands for build, test, and lint\n- Verifiable coding conventions\n- Important paths and project terminology\n- Links to maintained architecture or deployment documentation\n\n**Exclude:**\n\n- Secrets, tokens, credentials, and personal data\n- Vague instructions such as "write good code"\n- Stale history that does not affect current work\n- Long procedures that belong in a skill or maintained document\n\nCLAUDE.md consumes context and longer files can reduce adherence. Anthropic\'s current guidance recommends concise, structured instructions and suggests targeting fewer than 200 lines per file. Imports improve organization but still enter context at launch. Use permission rules, not prose instructions, to block access to sensitive paths.',
     },
     {
       id: "template",
-      title: "A battle-tested template",
+      title: "A practical template",
       readTimeMinutes: 1,
       content:
-        "```\n# <Project name>\n\n## What this is\nOne or two sentences. Who uses it, what it does. Link to the README for more.\n\n## Stack\n- Language / framework / versions\n- Build + test tools\n- Notable libs Claude should know about\n\n## Conventions\n- File layout rules (e.g. \"colocate tests as `*.test.ts`\")\n- Style rules the team enforces\n- Naming conventions\n- Error-handling pattern\n\n## Commands\n- `yarn build`: production build\n- `yarn test`: unit tests (run before committing)\n- `yarn test:e2e`: e2e suite (slow, only on CI)\n- `arc lint`: linter + formatter\n\n## Don't\n- Add new npm deps without asking\n- Use `any` in TypeScript\n- Edit files in `generated/`\n- Ship code without a matching test\n\n## Terminology\n- \"Workspace\" (not \"project\"): our product uses this term consistently\n- \"Member\" (not \"user\") in customer-facing copy\n\n## Where things live\n- Source: `src/`\n- Tests: colocated (`*.test.ts`)\n- Architecture notes: `@docs/architecture.md`\n- Deployment: `@docs/deploy.md`\n```",
+        '```\n# <Project name>\n\n## What this is\nOne or two sentences. Who uses it, what it does. Link to the README for more.\n\n## Stack\n- Language / framework / versions\n- Build + test tools\n- Notable libs Claude should know about\n\n## Conventions\n- File layout rules (e.g. "colocate tests as `*.test.ts`")\n- Style rules the team enforces\n- Naming conventions\n- Error-handling pattern\n\n## Commands\n- `yarn build`: production build\n- `yarn test`: unit tests (run before committing)\n- `yarn test:e2e`: e2e suite (slow, only on CI)\n- `arc lint`: linter + formatter\n\n## Don\'t\n- Add new npm deps without asking\n- Use `any` in TypeScript\n- Edit files in `generated/`\n- Ship code without a matching test\n\n## Terminology\n- "Workspace" (not "project"): our product uses this term consistently\n- "Member" (not "user") in customer-facing copy\n\n## Where things live\n- Source: `src/`\n- Tests: colocated (`*.test.ts`)\n- Architecture notes: `@docs/architecture.md`\n- Deployment: `@docs/deploy.md`\n```',
     },
     {
       id: "auto-memory",
-      title: "Auto memory: the new half of the system",
+      title: "Auto memory and project instructions",
       readTimeMinutes: 2,
       content:
-        "Recent Claude Code versions add auto memory, Claude writes its own notes to a separate memory file as it learns your preferences, without you typing anything. Correct it once (\"we prefix debug logs with `[DEBUG]`\"), and it'll remember next session.\n\nTwo things carry knowledge across sessions now:\n\n- **CLAUDE.md**: instructions you write, to steer behavior deliberately.\n- **Auto memory**: notes Claude writes, accumulating from your corrections.\n\nUse CLAUDE.md for things you want a team to share and version-control. Let auto memory pick up personal habits. Don't try to hand-maintain both.",
+        "Claude Code versions that support auto memory can write project-specific notes to local Markdown files. Auto memory is configurable, does not save something in every session, and should be inspected rather than treated as guaranteed recall.\n\nThe two mechanisms have different ownership:\n\n- **CLAUDE.md:** instructions maintained by people, suitable for shared and reviewed project rules.\n- **Auto memory:** machine-local notes selected during use, shared across worktrees of the same repository on that machine.\n\nUse `/memory` to inspect, edit, disable, or delete stored notes. Do not place secrets in either mechanism.",
     },
   ],
   widgets: [
@@ -82,7 +82,7 @@ const lesson: ClaudeLesson = {
         ],
         correct: 2,
         explanation:
-          "CLAUDE.md is standing context. Keep it crisp and specific, conventions, commands, anti-patterns. Never secrets.",
+          "Claude Code loads applicable CLAUDE.md instructions into the conversation context. Keep them concise and specific, do not store secrets there, and use technical controls for enforced policy.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
@@ -97,14 +97,14 @@ const lesson: ClaudeLesson = {
         question:
           "In a monorepo with CLAUDE.md files in frontend/ and services/auth/, when do those sub-folder files get loaded?",
         options: [
-          "At every session start, always.",
+          "At session start, regardless of the files being read.",
           "Only when Claude reads files inside that sub-folder, they're lazy-loaded.",
-          "Never, only the root CLAUDE.md loads.",
+          "They are ignored because only the root CLAUDE.md loads.",
           "Randomly, based on file size.",
         ],
         correct: 1,
         explanation:
-          "Descendant CLAUDE.md files are lazy-loaded only when Claude touches files in that directory. This is how you scale CLAUDE.md across a big repo without blowing your context budget.",
+          "Descendant CLAUDE.md files are discovered when Claude Code reads files in that directory. Use `/memory` to confirm actual loading.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },
@@ -117,7 +117,8 @@ const lesson: ClaudeLesson = {
         lessonId: "claude-md",
         cpId: "tutor",
         topic: "using CLAUDE.md effectively in a team",
-        persona: "Push the learner to think about staleness, review cadence, what belongs at root vs. sub-folder, and where CLAUDE.md ends and docs/ begins.",
+        persona:
+          "Push the learner to think about staleness, review cadence, what belongs at root vs. sub-folder, and where CLAUDE.md ends and docs/ begins.",
       },
     },
   ],

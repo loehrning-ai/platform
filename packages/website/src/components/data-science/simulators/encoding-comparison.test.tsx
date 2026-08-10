@@ -11,11 +11,16 @@ describe("EncodingComparison ", () => {
     const { container } = render(<EncodingComparison />);
     expect(container.querySelector("canvas")).toBeNull();
     expect(container.querySelector("table")).not.toBeNull();
+    expect(
+      screen.getByRole("region", { name: "Categorical encoding values" }),
+    ).toHaveAttribute("tabindex", "0");
   });
 
   it("renders the real panel copy and defaults to one-hot encoding of the 5 cities", () => {
     render(<EncodingComparison />);
-    expect(screen.getByText("Categorical encoding methods")).toBeInTheDocument();
+    expect(
+      screen.getByText("Categorical encoding methods"),
+    ).toBeInTheDocument();
     expect(screen.getByText("New York")).toBeInTheDocument();
     expect(screen.getAllByText("Berlin").length).toBeGreaterThan(0);
     expect(screen.getByRole("button", { name: "One-Hot" })).toBeInTheDocument();
@@ -24,7 +29,9 @@ describe("EncodingComparison ", () => {
   it("switching to label encoding shows the false-ordering warning", () => {
     render(<EncodingComparison />);
     fireEvent.click(screen.getByRole("button", { name: "Label" }));
-    expect(screen.getByText(/Linear models will treat Berlin/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Linear models will treat Berlin/),
+    ).toBeInTheDocument();
   });
 
   it("switching to target encoding shows the out-of-fold confirmation and correct values", () => {

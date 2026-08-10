@@ -23,7 +23,10 @@ function installLocalStoragePolyfill(): void {
 }
 
 beforeAll(() => {
-  if (typeof window.localStorage === "undefined" || typeof window.localStorage.setItem !== "function") {
+  if (
+    typeof window.localStorage === "undefined" ||
+    typeof window.localStorage.setItem !== "function"
+  ) {
     installLocalStoragePolyfill();
   }
 });
@@ -39,13 +42,17 @@ afterEach(() => {
 
 describe("L03AgentsCrystal", () => {
   it("renders the default (generic) PR preview", () => {
-    const { container } = render(<L03AgentsCrystal lessonId="L03" cpId="bespoke" />);
+    const { container } = render(
+      <L03AgentsCrystal lessonId="L03" cpId="bespoke" />,
+    );
     expect(screen.getByText("Refactor auth")).toBeInTheDocument();
     expect(container.textContent).toContain("test_underscore.js");
   });
 
   it("absorbing a convention updates the preview and disables the chip", () => {
-    const { container } = render(<L03AgentsCrystal lessonId="L03" cpId="bespoke" />);
+    const { container } = render(
+      <L03AgentsCrystal lessonId="L03" cpId="bespoke" />,
+    );
     fireEvent.click(screen.getByText("test layout"));
     expect(container.textContent).toContain("tests/spec.js");
     expect(screen.getByRole("button", { name: "test layout" })).toBeDisabled();
@@ -61,7 +68,12 @@ describe("L03AgentsCrystal", () => {
 
   it("awards the checkpoint once all five conventions are absorbed", () => {
     render(<L03AgentsCrystal lessonId="L03" cpId="bespoke" />);
-    for (const label of ["test layout", "error handling", "lint command", "branch naming"]) {
+    for (const label of [
+      "test layout",
+      "error handling",
+      "lint command",
+      "branch naming",
+    ]) {
       fireEvent.click(screen.getByText(label));
     }
     expect(isCheckpointDone("L03", "bespoke")).toBe(false);

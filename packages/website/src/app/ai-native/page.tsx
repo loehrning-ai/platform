@@ -12,104 +12,175 @@ import { AiNativeTimAnchor } from "@/components/ai-native/tim-anchor";
 import { AiNativeFaqSection } from "@/components/ai-native/faq-section";
 import { AiNativeCrossSell } from "@/components/ai-native/cross-sell";
 import { AiNativeFinalCta } from "@/components/ai-native/final-cta";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
+import {
+  buildLocaleAlternates,
+  localizeHref,
+  type Locale,
+} from "@/lib/i18n/locale";
+import { getCourseMeta } from "@/lib/ai-native/data";
 
-export const metadata: Metadata = {
-  title: "AI-Native Arbeitskurs: Arbeiten mit Claude",
-  description:
-    "Kostenloser AI-Native Arbeitskurs für Mitarbeiter, Selbstständige und Studierende. 27 Lektionen, 4 Module, Claude-first, auf Deutsch. Erfordert ein kostenloses Lernkonto.",
-  robots: { index: true, follow: true },
-  alternates: { canonical: "https://loehrning.ai/ai-native" },
-  openGraph: {
-    title: "AI-Native Arbeitskurs: Arbeiten mit Claude",
+const COURSE_PATH = "/ai-native";
+
+const LANDING_COPY = {
+  de: {
+    title: "AI-Native Arbeitskurs: Aufgaben mit Claude strukturieren",
     description:
-      "Komplett kostenlos, mit Lernkonto. 27 Lektionen, 4 Module, auf Deutsch. Mit Skills-Mustern, Prompts, Vault-Struktur und n8n-Flow-Beispielen.",
-    url: "https://loehrning.ai/ai-native",
-    type: "website",
+      "Kostenloser Arbeitskurs mit 4 Modulen und 27 Lektionen. Aufgaben abgrenzen, Kontext bereitstellen, Ergebnisse prüfen und wiederholbare Abläufe dokumentieren.",
+    home: "Start",
+    courses: "Kurse",
+    courseName: "AI-Native Arbeitskurs",
+    graphDescription:
+      "Arbeitskurs zu klaren Aufgaben, prüfbaren Claude-Workflows, Wissensorganisation und kontrollierter Automatisierung.",
+    audience: "Berufstätige, Selbstständige und Studierende",
+    teaches: [
+      "Aufgaben für KI-Unterstützung abgrenzen",
+      "Kontext und Prüfkriterien dokumentieren",
+      "wiederholbare Abläufe mit klaren Kontrollen entwerfen",
+    ],
   },
-};
+  en: {
+    title: "AI-Native Workflow Course: structured work with Claude",
+    description:
+      "Free course with 4 modules and 27 lessons. Define bounded tasks, provide context, review outputs and document repeatable workflows.",
+    home: "Home",
+    courses: "Courses",
+    courseName: "AI-Native Workflow Course",
+    graphDescription:
+      "A practical course on bounded tasks, reviewable Claude workflows, maintained knowledge and controlled automation.",
+    audience: "Professionals, independent workers and students",
+    teaches: [
+      "define bounded tasks for AI assistance",
+      "document context and review criteria",
+      "design repeatable workflows with explicit controls",
+    ],
+  },
+} as const satisfies Record<Locale, Record<string, unknown>>;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = resolveFoundationCourseContentLocale(
+    "ai-native",
+    await getRequestLocale(),
+  );
+  const copy = LANDING_COPY[locale];
+  const localizedPath = localizeHref(COURSE_PATH, locale);
+  const url = `${SITE_URL}${localizedPath}`;
+  const alternates = buildLocaleAlternates(COURSE_PATH, ["de", "en"]);
+  return {
+    title: copy.title,
+    description: copy.description,
+    robots: { index: true, follow: true },
+    alternates: { ...alternates, canonical: localizedPath },
+    openGraph: {
+      title: copy.title,
+      description: copy.description,
+      url,
+      type: "website",
+      locale: locale === "en" ? "en_GB" : "de_DE",
+      alternateLocale: [locale === "en" ? "de_DE" : "en_GB"],
+    },
+  };
+}
 
 // Breadcrumb + Course @graph (shared course architecture): mirrors the KI-Führerschein
 // and EU-AI-Act landing pages so all three courses emit a breadcrumb trail and
 // a free-access Course node. The breadcrumb runs Start → Kurse → AI-Native so
 // the new /kurse hub is part of the indexed trail.
-const courseJsonLd = {
-  "@context": "https://schema.org" as const,
-  "@graph": [
-    {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Start", item: SITE_URL },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Kurse",
-          item: `${SITE_URL}/kurse`,
-        },
-        {
-          "@type": "ListItem",
-          position: 3,
-          name: "AI-Native Arbeitskurs",
-          item: `${SITE_URL}/ai-native`,
-        },
-      ],
-    },
-    {
-      "@type": "Course",
-      name: "AI-Native Arbeitskurs",
-      description:
-        "Claude-first AI-Arbeitsweise für Mittelstand. 27 Lektionen, 4 Module, kostenlos mit Lernkonto, mit prüfbaren Sandbox-Übungen.",
-      provider: { "@id": ORG_ID },
-      isAccessibleForFree: true,
-      inLanguage: "de",
-      educationalLevel: "Intermediate",
-      hasCourseInstance: {
-        "@type": "CourseInstance",
-        courseMode: "online",
-        courseWorkload: "PT12H",
-        inLanguage: "de",
+function buildCourseJsonLd(locale: Locale) {
+  const copy = LANDING_COPY[locale];
+  const meta = getCourseMeta(locale);
+  const localizedPath = localizeHref(COURSE_PATH, locale);
+  return {
+    "@context": "https://schema.org" as const,
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: copy.home,
+            item: `${SITE_URL}${localizeHref("/", locale)}`,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: copy.courses,
+            item: `${SITE_URL}${localizeHref("/kurse", locale)}`,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: copy.courseName,
+            item: `${SITE_URL}${localizedPath}`,
+          },
+        ],
       },
-    },
-  ],
-};
+      {
+        "@type": "Course",
+        name: meta.title,
+        description: copy.graphDescription,
+        url: `${SITE_URL}${localizedPath}`,
+        provider: { "@id": ORG_ID },
+        isAccessibleForFree: true,
+        inLanguage: locale,
+        educationalLevel: "Intermediate",
+        audience: { "@type": "Audience", audienceType: copy.audience },
+        teaches: copy.teaches,
+        hasCourseInstance: {
+          "@type": "CourseInstance",
+          courseMode: "online",
+          courseWorkload: "PT12H",
+          inLanguage: locale,
+        },
+      },
+    ],
+  };
+}
 
-export default function AiNativePage() {
+export default async function AiNativePage() {
+  const locale = resolveFoundationCourseContentLocale(
+    "ai-native",
+    await getRequestLocale(),
+  );
   return (
     <>
-      <JsonLd data={courseJsonLd} id="ai-native-landing-jsonld" />
+      <JsonLd data={buildCourseJsonLd(locale)} id="ai-native-landing-jsonld" />
       <ScrollProgress />
 
       {/* Continue-where-you-left-off banner (renders only when progress exists) */}
-      <AiNativeContinueBanner />
+      <AiNativeContinueBanner locale={locale} />
 
       {/* Hero */}
-      <AiNativeHero />
+      <AiNativeHero locale={locale} />
 
       {/* Module overview */}
-      <AiNativeModulesOverview />
+      <AiNativeModulesOverview locale={locale} />
 
       {/* Skill graph */}
-      <AiNativeSkillGraph />
+      <AiNativeSkillGraph locale={locale} />
 
       {/* Week-in-life timeline */}
-      <AiNativeWeekInLife />
+      <AiNativeWeekInLife locale={locale} />
 
       {/* Learning materials */}
-      <AiNativeBundleShowcase />
+      <AiNativeBundleShowcase locale={locale} />
 
       {/* AI Challenge of the Week */}
-      <AiNativeChallengeOfTheWeek />
+      <AiNativeChallengeOfTheWeek locale={locale} />
 
       {/* Author section */}
-      <AiNativeTimAnchor />
+      <AiNativeTimAnchor locale={locale} />
 
       {/* FAQ */}
-      <AiNativeFaqSection />
+      <AiNativeFaqSection locale={locale} />
 
       {/* Demo cross-link */}
-      <AiNativeCrossSell />
+      <AiNativeCrossSell locale={locale} />
 
       {/* Final call to action */}
-      <AiNativeFinalCta />
+      <AiNativeFinalCta locale={locale} />
 
       {/* Trimmed in AI-native demo gallery implementation: BeforeAfter, PromptPlayground,
           TerminalDemo, their content lives richer in /ai-native/demos

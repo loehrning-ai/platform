@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
+import type { Locale } from "@/lib/i18n/locale";
 import { cn } from "@/lib/utils";
 
 /**
@@ -25,22 +26,24 @@ interface SpecSection {
   readonly content: string;
 }
 
-const SECTIONS: readonly SpecSection[] = [
+const SECTIONS_EN: readonly SpecSection[] = [
   {
     id: "goal",
     title: "Goal",
-    content: "Add per-IP rate limiting to POST /auth/login. 5 requests per 60 seconds. Redis-backed.",
+    content:
+      "Add per-IP rate limiting to POST /auth/login. 5 requests per 60 seconds. Redis-backed.",
   },
   {
     id: "constraints",
     title: "Constraints",
-    content: "Do not modify the user model. Reuse the existing Redis client at src/redis.ts.",
+    content:
+      "Do not modify the user model. Reuse the existing Redis client at src/redis.ts.",
   },
   {
     id: "acceptance",
     title: "Acceptance Criteria",
     content:
-      "All 34 existing tests pass. New tests cover under-limit, at-limit, over-limit, TTL reset. Returns 429 with Retry-After header on over-limit.",
+      "The documented test command passes and its log is reviewed. New tests cover below, at, and above the limit plus reset behavior. Requests above the limit return 429 with Retry-After.",
   },
   {
     id: "outOfScope",
@@ -50,41 +53,114 @@ const SECTIONS: readonly SpecSection[] = [
   {
     id: "context",
     title: "Context",
-    content: "See docs/rate-limits.md. Pattern used elsewhere in repo: src/rateLimit.ts.",
+    content:
+      "See docs/rate-limits.md. Pattern used elsewhere in repo: src/rateLimit.ts.",
   },
 ];
 
-const STATUS_FOR: readonly { readonly min: number; readonly label: string }[] = [
-  { min: 5, label: "surgical" },
-  { min: 4, label: "strong" },
-  { min: 3, label: "ok" },
-  { min: 2, label: "thin" },
-  { min: 0, label: "ambiguous" },
+const SECTIONS_DE: readonly SpecSection[] = [
+  {
+    id: "goal",
+    title: "Ziel",
+    content:
+      "POST /auth/login auf fünf Anfragen pro IP innerhalb von 60 Sekunden begrenzen. Redis als Speicher verwenden.",
+  },
+  {
+    id: "constraints",
+    title: "Einschränkungen",
+    content:
+      "Benutzermodell nicht ändern. Bestehenden Redis-Client aus src/redis.ts wiederverwenden.",
+  },
+  {
+    id: "acceptance",
+    title: "Akzeptanzkriterien",
+    content:
+      "Der dokumentierte Testbefehl besteht und sein Protokoll wird geprüft. Neue Tests decken Werte unterhalb, an und oberhalb der Grenze sowie das Reset-Verhalten ab. Oberhalb der Grenze Status 429 mit Retry-After zurückgeben.",
+  },
+  {
+    id: "outOfScope",
+    title: "Nicht Bestandteil",
+    content: "Andere Auth-Endpunkte nicht ändern. Keine neuen Abhängigkeiten.",
+  },
+  {
+    id: "context",
+    title: "Kontext",
+    content: "Siehe docs/rate-limits.md. Bestehendes Muster: src/rateLimit.ts.",
+  },
 ];
 
-function statusFor(score: number): string {
-  return STATUS_FOR.find((s) => score >= s.min)?.label ?? "ambiguous";
+const COPY = {
+  en: {
+    heading: "◆ Exercise · Complete the task contract",
+    source: "refactor our auth module",
+    statuses: [
+      "undefined",
+      "partial",
+      "reviewable",
+      "bounded",
+      "complete",
+    ] as const,
+    complete: "required fields present",
+    sections: SECTIONS_EN,
+  },
+  de: {
+    heading: "◆ Praxis · Spezifikation präzisieren",
+    source: "Unser Auth-Modul refaktorisieren",
+    statuses: [
+      "undefiniert",
+      "teilweise",
+      "prüfbar",
+      "abgegrenzt",
+      "vollständig",
+    ] as const,
+    complete: "erforderliche Felder vorhanden",
+    sections: SECTIONS_DE,
+  },
+} as const satisfies Record<
+  Locale,
+  {
+    readonly heading: string;
+    readonly source: string;
+    readonly statuses: readonly [string, string, string, string, string];
+    readonly complete: string;
+    readonly sections: readonly SpecSection[];
+  }
+>;
+
+function statusFor(score: number, statuses: readonly string[]): string {
+  if (score >= 5) return statuses[4] ?? "";
+  if (score >= 4) return statuses[3] ?? "";
+  if (score >= 3) return statuses[2] ?? "";
+  if (score >= 2) return statuses[1] ?? "";
+  return statuses[0] ?? "";
 }
 
 interface L04SpecSurgeonProps {
   readonly lessonId: string;
   readonly cpId: string;
+  readonly locale?: Locale;
 }
 
-export function L04SpecSurgeon({ lessonId, cpId }: L04SpecSurgeonProps): JSX.Element {
+export function L04SpecSurgeon({
+  lessonId,
+  cpId,
+  locale = "en",
+}: L04SpecSurgeonProps): JSX.Element {
+  const copy = COPY[locale];
+  const sections = copy.sections;
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [on, setOn] = useState<ReadonlySet<SpecSection["id"]>>(() => new Set());
 
   const score = on.size;
-  const status = statusFor(score);
-  const pct = (score / SECTIONS.length) * 100;
+  const status = statusFor(score, copy.statuses);
+  const pct = (score / sections.length) * 100;
 
   useEffect(() => {
-    if (score === SECTIONS.length && !done) complete();
-  }, [complete, done, score]);
+    if (score === sections.length && !done) complete();
+  }, [complete, done, score, sections.length]);
 
   const toggle = (id: SpecSection["id"]) => {
-    if (score === SECTIONS.length) return;
+    if (score === sections.length) return;
     setOn((prev) => {
       const next = new Set(prev);
       next.add(id);
@@ -93,27 +169,27 @@ export function L04SpecSurgeon({ lessonId, cpId }: L04SpecSurgeonProps): JSX.Ele
   };
 
   const assembledSections = useMemo(
-    () => SECTIONS.filter((s) => on.has(s.id)),
-    [on],
+    () => sections.filter((s) => on.has(s.id)),
+    [on, sections],
   );
 
   return (
-    <div className="border-2 border-border bg-card/40 p-5 md:p-6">
+    <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-5 md:p-6">
       <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        ◆ Bespoke · Spec surgeon
+        {copy.heading}
       </p>
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="border-2 border-border bg-background p-3 font-mono text-[13px] text-muted-foreground">
-          refactor our auth module
+      <div className="grid min-w-0 gap-4 md:grid-cols-2">
+        <div className="min-w-0 break-words border-2 border-border bg-background p-3 font-mono text-[13px] text-muted-foreground">
+          {copy.source}
         </div>
         <div
           className={cn(
-            "border-2 bg-background p-3 transition-colors",
-            score === SECTIONS.length ? "border-risk-green" : "border-border",
+            "min-w-0 border-2 bg-background p-3 transition-colors",
+            score === sections.length ? "border-risk-green" : "border-border",
           )}
         >
           <div className="mb-2 flex items-center gap-2">
-            <div className="h-2 flex-1 bg-border">
+            <div className="h-2 min-w-0 flex-1 bg-border">
               <div
                 className={cn(
                   "h-full transition-[width,background-color] duration-500",
@@ -127,26 +203,26 @@ export function L04SpecSurgeon({ lessonId, cpId }: L04SpecSurgeonProps): JSX.Ele
               />
             </div>
             <span className="font-mono text-[11px] text-muted-foreground">
-              {score}/{SECTIONS.length} {status}
+              {score}/{sections.length} {status}
             </span>
           </div>
           <div className="flex flex-col gap-2 font-mono text-[12px] text-foreground">
             {assembledSections.map((s) => (
               <div key={s.id}>
                 <p className="font-bold text-brand-orange">{s.title}</p>
-                <p className="text-muted-foreground">{s.content}</p>
+                <p className="break-words text-muted-foreground">{s.content}</p>
               </div>
             ))}
           </div>
-          {score === SECTIONS.length && (
+          {score === sections.length && (
             <p className="mt-2 font-mono text-[11px] font-bold text-risk-green">
-              surgery complete {done ? "✓" : ""}
+              {copy.complete} {done ? "✓" : ""}
             </p>
           )}
         </div>
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
-        {SECTIONS.map((s) => (
+        {sections.map((s) => (
           <button
             key={s.id}
             type="button"
@@ -154,7 +230,7 @@ export function L04SpecSurgeon({ lessonId, cpId }: L04SpecSurgeonProps): JSX.Ele
             disabled={on.has(s.id)}
             aria-pressed={on.has(s.id)}
             className={cn(
-              "border-2 px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.06em] transition-colors",
+              "min-w-0 break-words border-2 px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.06em] transition-colors",
               on.has(s.id)
                 ? "border-brand-orange bg-brand-orange text-white"
                 : "border-border bg-background text-foreground hover:border-brand-orange",

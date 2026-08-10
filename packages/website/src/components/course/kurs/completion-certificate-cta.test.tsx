@@ -1,17 +1,5 @@
-import {
-  act,
-  cleanup,
-  render,
-  screen,
-} from "@testing-library/react";
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest";
+import { act, cleanup, render, screen } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { CourseSlug } from "@/lib/course/types";
 
 type Owner = {
@@ -96,41 +84,57 @@ describe("<CompletionCertificateCta>", () => {
 
     expect(
       screen.queryByRole("heading", {
-        name: "Your certificate of completion is ready.",
+        name: "Deine Teilnahmebestätigung ist bereit.",
       }),
     ).not.toBeInTheDocument();
   });
 
   it.each([
-    [
-      "codex",
-      "/kurse/open-source/codex/kurs/zertifikat",
-    ],
-    [
-      "data-infrastructure",
-      "/kurse/open-source/data-infrastructure/kurs/zertifikat",
-    ],
+    {
+      courseSlug: "codex",
+      locale: undefined,
+      certificateHref: "/kurse/open-source/codex/kurs/zertifikat",
+      heading: "Deine Teilnahmebestätigung ist bereit.",
+      link: "Teilnahmebestätigung öffnen",
+    },
+    {
+      courseSlug: "codex",
+      locale: "en",
+      certificateHref: "/en/kurse/open-source/codex/kurs/zertifikat",
+      heading: "Your certificate of completion is ready.",
+      link: "Open Certificate of Completion",
+    },
+    {
+      courseSlug: "data-infrastructure",
+      locale: "en",
+      certificateHref:
+        "/en/kurse/open-source/data-infrastructure/kurs/zertifikat",
+      heading: "Your certificate of completion is ready.",
+      link: "Open Certificate of Completion",
+    },
   ] as const)(
-    "links eligible %s progress to its guarded certificate route",
-    (courseSlug, certificateHref) => {
-      render(<CompletionCertificateCta courseSlug={courseSlug} />);
+    "links eligible $courseSlug progress to its guarded certificate route",
+    ({ courseSlug, locale, certificateHref, heading, link }) => {
+      render(
+        <CompletionCertificateCta courseSlug={courseSlug} locale={locale} />,
+      );
       resolveOwner(true);
 
       expect(
         screen.getByRole("heading", {
-          name: "Your certificate of completion is ready.",
+          name: heading,
         }),
       ).toBeInTheDocument();
       expect(
         screen.getByRole("link", {
-          name: "Open Certificate of Completion",
+          name: link,
         }),
       ).toHaveAttribute("href", certificateHref);
     },
   );
 
   it("removes a visible CTA immediately when the learning owner changes", () => {
-    render(<CompletionCertificateCta courseSlug="codex" />);
+    render(<CompletionCertificateCta courseSlug="codex" locale="en" />);
     resolveOwner(true);
     expect(
       screen.getByRole("link", {
@@ -151,5 +155,20 @@ describe("<CompletionCertificateCta>", () => {
         name: "Open Certificate of Completion",
       }),
     ).not.toBeInTheDocument();
+  });
+
+  it("uses precise German completion copy for a German course", () => {
+    render(<CompletionCertificateCta courseSlug="ai-native" />);
+    resolveOwner(true);
+
+    expect(screen.getByText("Kurs abgeschlossen")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: "Deine Teilnahmebestätigung ist bereit.",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Teilnahmebestätigung öffnen" }),
+    ).toHaveAttribute("href", "/ai-native/kurs/zertifikat");
   });
 });

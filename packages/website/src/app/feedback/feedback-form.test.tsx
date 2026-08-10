@@ -35,7 +35,7 @@ describe("<FeedbackForm>", () => {
     expect(message).toHaveAttribute("autocomplete", "off");
     expect(message).toHaveAttribute(
       "placeholder",
-      "Zum Beispiel: Eine Quellenangabe ist unklar …",
+      "Beispiel: Die Quellenangabe in Abschnitt 2 ist unklar …",
     );
     expect(message).toHaveAttribute(
       "aria-describedby",
@@ -84,6 +84,25 @@ describe("<FeedbackForm>", () => {
     expect(JSON.parse(String(init?.body))).not.toHaveProperty("contextUrl");
   });
 
+  it("does not report the localized feedback route as its own context", async () => {
+    vi.spyOn(document, "referrer", "get").mockReturnValue(
+      `${window.location.origin}/en/feedback?draft=private`,
+    );
+    const fetchMock = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(new Response(JSON.stringify({ ok: true }), { status: 200 }));
+
+    render(<FeedbackForm locale="en" />);
+    fireEvent.change(screen.getByLabelText(/Message/), {
+      target: { value: "A sufficiently detailed report." },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Send feedback" }));
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    const init = fetchMock.mock.calls[0]?.[1];
+    expect(JSON.parse(String(init?.body))).not.toHaveProperty("contextUrl");
+  });
+
   it("keeps submit available, focuses and associates an inline error, then clears it after correction", () => {
     render(<FeedbackForm />);
 
@@ -111,7 +130,7 @@ describe("<FeedbackForm>", () => {
     expect(submit).toBeEnabled();
     expect(message).toHaveAttribute("aria-invalid", "false");
     expect(screen.queryByText("Gib mindestens 10 Zeichen ein.")).toBeNull();
-    expect(screen.getByText("42 / 2000")).toBeVisible();
+    expect(screen.getByText("42 / 2.000")).toBeVisible();
   });
 
   it("recovers from a failed request without leaving the submit control pending", async () => {
@@ -152,7 +171,29 @@ describe("<FeedbackForm>", () => {
       finishRequest(new Response(JSON.stringify({ ok: true }), { status: 200 }));
       await response;
     });
-    expect(await screen.findByText("Danke für deine Rückmeldung.")).toBeVisible();
+    expect(await screen.findByText("Rückmeldung gespeichert")).toBeVisible();
     expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("renders a specific localized rate-limit error with a usable contact link", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ error: "rate_limit_exceeded" }), {
+        status: 429,
+      }),
+    );
+    render(<FeedbackForm locale="en" />);
+
+    fireEvent.change(screen.getByRole("textbox", { name: /Message/i }), {
+      target: { value: "A sufficiently detailed report." },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Send feedback/i }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "24-hour submission limit",
+    );
+    expect(screen.getByRole("link", { name: "tim@loehrning.ai" })).toHaveAttribute(
+      "href",
+      "mailto:tim@loehrning.ai",
+    );
   });
 });

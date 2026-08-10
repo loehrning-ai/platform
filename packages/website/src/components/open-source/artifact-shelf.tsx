@@ -4,6 +4,8 @@ import {
   OPEN_SOURCE_ARTIFACTS,
   type OpenSourceArtifact,
 } from "@/lib/open-source/artifacts";
+import type { Locale } from "@/lib/i18n/locale";
+import { OPEN_SOURCE_SHARED_COPY } from "@/lib/open-source/display-copy";
 
 /**
  * The Werkverzeichnis shelf: every published artifact in ONE ruled grid,
@@ -15,10 +17,13 @@ import {
  */
 export function OpenSourceArtifactShelf({
   artifacts = OPEN_SOURCE_ARTIFACTS,
+  locale = "de",
 }: {
   artifacts?: readonly OpenSourceArtifact[];
+  locale?: Locale;
 }) {
   if (artifacts.length === 0) return null;
+  const copy = OPEN_SOURCE_SHARED_COPY[locale];
 
   return (
     <section
@@ -30,18 +35,27 @@ export function OpenSourceArtifactShelf({
           id="open-source-shelf-heading"
           className="text-2xl font-bold tracking-[-0.03em] text-foreground"
         >
-          Alle Werke
+          {copy.published}
         </h2>
         <p className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
-          {artifacts.length === 1
-            ? "1 Eintrag"
-            : `${artifacts.length} Einträge`}
+          {copy.entries(artifacts.length)}
         </p>
       </div>
-      <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+      <div
+        className={
+          artifacts.length === 1
+            ? "mt-6 grid gap-5"
+            : "mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
+        }
+      >
         {artifacts.map((artifact, index) => (
           <ShelfReveal key={artifact.id} index={index} className="h-full">
-            <OpenSourceArtifactCard artifact={artifact} position={index + 1} />
+            <OpenSourceArtifactCard
+              artifact={artifact}
+              position={index + 1}
+              featured={artifacts.length === 1}
+              locale={locale}
+            />
           </ShelfReveal>
         ))}
       </div>

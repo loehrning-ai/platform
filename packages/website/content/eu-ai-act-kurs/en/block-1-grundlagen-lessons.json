@@ -1,0 +1,522 @@
+{
+  "blockId": "block_1",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-06-22",
+  "nextReview": "2026-12-22",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "eu-ai-act-amendment",
+    "commission-qa-update"
+  ],
+  "blockLastVerified": "2026-06-22",
+  "lessons": [
+    {
+      "id": "block_1_lesson_1",
+      "blockId": "block_1",
+      "number": 1,
+      "title": "Why the AI Act exists",
+      "subtitle": "How experience with the GDPR, the CE framework, and 27 separate national approaches produced the world's first comprehensive AI law.",
+      "durationMinutes": 4,
+      "keyConcepts": [
+        "Single-market fragmentation",
+        "New Legislative Framework",
+        "Product-safety logic",
+        "Complementarity with the GDPR",
+        "Brussels Effect"
+      ],
+      "sections": [
+        {
+          "id": "block_1_lesson_1_section_1",
+          "title": "The problem: 27 national AI laws in the pipeline",
+          "readTimeMinutes": 2,
+          "content": "By 2023, several EU Member States were preparing their own AI rules. France had the CNIL, Spain the AESIA, and Italy's Garante imposed the ChatGPT ban in March 2023. Without harmonisation, German SMEs could soon have had to manage 27 compliance regimes in parallel, each with its own definitions, reporting duties, and fines.\n\nRecital 3 of Regulation (EU) 2024/1689 identifies the problem directly: divergent national rules may lead to fragmentation of the internal market. In its guidelines, the European Commission states two explicit objectives: ensuring trustworthy AI in the internal market while promoting innovation (Article 1(1), points (a) and (h)).\n\n**Legal basis:** Article 114 TFEU (internal market), not Article 16 TFEU (data protection). The AI Act treats AI as a product issue, not merely as a data issue. This determines its structure: conformity assessment, technical documentation, market surveillance, and CE marking.\n\n**What this means for you:** one set of rules, whether you supply customers in Munich, Milan, or Madrid (Article 1(1)).",
+          "keyTakeaway": "A harmonised regulation costs SMEs less than 27 national laws. The AI Act follows the logic of internal-market law (Article 114 TFEU), not data-protection law."
+        },
+        {
+          "id": "block_1_lesson_1_section_2",
+          "title": "Why voluntary commitments such as the OECD Principles were not enough",
+          "readTimeMinutes": 2,
+          "content": "Between 2019 and 2023, voluntary guidance proliferated: the OECD AI Principles, the EU High-Level Expert Group's Ethics Guidelines, and various industry codes. None prevented major technology companies from deploying problematic systems. Social-scoring prototypes, mass biometric surveillance in public spaces, and emotion recognition in the workplace all remained in a grey area.\n\nRecital 8 draws the consequence: harmonised rules are needed because voluntary codes are not sufficient to protect fundamental rights. The EU learned from its experience with the GDPR that binding law is required to change conduct.\n\n**Brussels Effect 2.0:** anyone selling in the EU must comply with EU rules. Because companies do not usually build separate product versions for a market of 500 million consumers, the EU standard becomes global. The GDPR established the pattern: California's CCPA, Brazil's LGPD, and Japan's APPI followed. The AI Act uses the same mechanism. If OpenAI or Anthropic make their systems compliant with EU law, all customers benefit from that work, but it does not replace their own deployer obligations (Recital 1).",
+          "keyTakeaway": "Voluntary codes did not protect fundamental rights. Recital 8 therefore calls for binding, harmonised rules. The Brussels Effect can turn EU rules into global standards."
+        },
+        {
+          "id": "block_1_lesson_1_section_3",
+          "title": "The existing framework: CE marking, the Machinery Regulation, and product liability",
+          "readTimeMinutes": 2,
+          "content": "The AI Act is not an entirely new legal model. It is product-safety law. Regulation 765/2008, part of the New Legislative Framework, connects it to the CE system that German machinery manufacturers have used for decades: conformity assessment, notified bodies, technical documentation, EU declarations of conformity, CE marking, and market surveillance.\n\n**What this means for you:** companies that already manufacture in conformity with CE rules, whether for machinery, medical devices, or toys, know the mechanism. The AI Act adds another layer. For many SMEs, the AI-specific material becomes an additional chapter in existing technical documentation.\n\n**The GDPR continues to apply in parallel.** Article 2(7) makes this explicit: the Regulation is without prejudice to the General Data Protection Regulation. Anyone who enters personal data into an AI system must comply with both bodies of law. This is not duplicate work but a set of complementary obligations. The GDPR governs whether processing is permitted; the AI Act governs how the AI system must operate (Recital 9).\n\n**A regulation, not a directive.** The AI Act is an EU regulation (Article 288(2) TFEU). It applies directly in all 27 Member States without national transposition legislation. The prohibitions in Article 5 and the AI-literacy obligation in Article 4 have applied directly since 2 February 2025. Germany does not need a separate law before these obligations affect you.",
+          "keyTakeaway": "The AI Act is product-safety law built on the CE-marking model. The GDPR and the AI Act apply in parallel; neither replaces the other."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_1_lesson_1_q1",
+          "questionText": "What is the primary legal basis for the AI Act?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Article 114 TFEU, which concerns harmonisation of the internal market",
+              "isCorrect": true
+            },
+            {
+              "id": "b",
+              "text": "Article 16 TFEU, which concerns data protection",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Article 4 TEU, which concerns national security",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Article 101 TFEU, which concerns competition law",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "The AI Act is an internal-market measure based on Article 114 TFEU. Recital 3 of Regulation (EU) 2024/1689 explains its objective as preventing national fragmentation, not regulating data protection."
+        },
+        {
+          "id": "block_1_lesson_1_q2",
+          "questionText": "Why did the EU decide against relying only on voluntary commitments?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Voluntary codes had not been sufficient to protect fundamental rights",
+              "isCorrect": true
+            },
+            {
+              "id": "b",
+              "text": "Because the GDPR already covers every AI risk",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Because the OECD AI Principles apply only in the United States",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Because voluntary commitments are unlawful in the EU",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Recital 8 calls for harmonised rules because voluntary codes do not ensure a sufficiently high level of protection for fundamental rights. Experience with the GDPR showed that binding law is required to change conduct."
+        },
+        {
+          "id": "block_1_lesson_1_q3",
+          "questionText": "Which existing regulation does the AI Act supplement rather than replace?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "The GDPR (Regulation (EU) 2016/679)",
+              "isCorrect": true
+            },
+            {
+              "id": "b",
+              "text": "The Machinery Directive is replaced in full",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "CE marking no longer applies to AI products",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "The Product Liability Directive is repealed",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 2(7) of Regulation (EU) 2024/1689 states that the AI Act is without prejudice to the GDPR. Recital 9 also places the AI Act within the EU's New Legislative Framework for product safety."
+        }
+      ]
+    },
+    {
+      "id": "block_1_lesson_2",
+      "blockId": "block_1",
+      "number": 2,
+      "title": "Roles: provider, deployer, importer, and distributor",
+      "subtitle": "Your role under the AI Act determines most of your obligations, and many SMEs classify themselves incorrectly.",
+      "durationMinutes": 4,
+      "keyConcepts": [
+        "Provider",
+        "Deployer",
+        "Importer",
+        "Distributor",
+        "Substantial modification"
+      ],
+      "sections": [
+        {
+          "id": "block_1_lesson_2_section_1",
+          "title": "Four roles, one regulation",
+          "readTimeMinutes": 2,
+          "content": "Article 3 of Regulation (EU) 2024/1689 defines the relevant roles in precise legal terms. The applicable role determines the scope of your obligations:\n\n- **Provider (Article 3(3)):** develops an AI system and places it on the market under its own name or trademark. Examples include OpenAI, Microsoft, Aleph Alpha, and SAP.\n- **Deployer (Article 3(4)):** uses an AI system under its authority in the course of a professional activity. Examples include any SME using ChatGPT Enterprise, Personio, or an AI feature in DATEV.\n- **Authorised representative (Article 3(5)):** a person established in the EU with a mandate from a third-country provider.\n- **Importer (Article 3(6)):** first places an AI system bearing the name or trademark of a third-country entity on the EU market.\n- **Distributor (Article 3(7)):** any other operator in the supply chain, other than the provider or importer.\n\n**Change-of-role rule (Article 25):** anyone who makes a substantial modification to an AI system becomes the provider and assumes the full set of provider obligations. Most German SMEs begin as deployers.",
+          "keyTakeaway": "Article 3(3) to (7) defines the roles of provider, deployer, importer, and distributor. Most SMEs are deployers."
+        },
+        {
+          "id": "block_1_lesson_2_section_2",
+          "title": "SME examples: when the role changes",
+          "readTimeMinutes": 2,
+          "content": "**Case 1 (deployer):** A machinery manufacturer buys a predictive-maintenance model from a startup and integrates it into its own equipment. It uses the system without retraining it. Role: deployer.\n\n**Case 2 (provider):** The same manufacturer further trains the model on its own sensor data and sells the machine, including the model, under its own trademark. The further training is a substantial modification (Article 3(23)). Its role changes. Role: provider, with full conformity-assessment obligations if the system is high-risk (Article 25).\n\n**Case 3 (deployer):** An HR team uses Personio with AI matching enabled to select applicants. Personio is the provider. The employer is the deployer and has specific obligations because applicant matching is a high-risk use case (Annex III, point 4).\n\n**Case 4 (importer):** An HR consultant distributes a US applicant-screening bot through her website to German clients. The US provider has no establishment in the EU. Role: importer.\n\n**What this means for you:** if you white-label AI systems, substantially modify them, or distribute them under your own trademark, you move into the provider role and assume its full set of obligations (Article 25).",
+          "keyTakeaway": "Further training or distribution under your own trademark can turn a deployer into a provider (Article 3(23), Article 25). This substantially increases the compliance work."
+        },
+        {
+          "id": "block_1_lesson_2_section_3",
+          "title": "The operator definition and the personal-use exemption (Article 2(10))",
+          "readTimeMinutes": 1,
+          "content": "Article 3(8) groups all of these roles, together with authorised representatives and product manufacturers, under the term **operator**. Once you are an operator, Article 4 on AI literacy applies at a minimum, irrespective of your precise role.\n\nThe result is straightforward: anyone who uses or distributes AI professionally is within scope. The remaining question is which set of obligations applies.\n\n**The personal-use exemption (Article 2(10))**\n\nA person who uses AI **exclusively in a personal, non-professional activity**, for example ChatGPT for personal writing, images, or a tax return, is **not a deployer within the meaning of the Regulation**. Article 2(10) expressly excludes purely personal use by natural persons. This means:\n\n- A private individual using ChatGPT to plan a holiday: **outside the scope**.\n- The same person, as an employee using ChatGPT on behalf of an employer for customer correspondence: **within scope** because the employer uses it in a professional activity as a deployer under Article 3(4).\n- A managing director using ChatGPT to draft quotations: **within scope** because the company acts as deployer.\n\n**Rule to remember:** the AI Act regulates professional use and placing systems on the market, not what individuals do solely for themselves at home.",
+          "keyTakeaway": "A person who uses AI exclusively for personal purposes, such as using ChatGPT for private writing, is not a deployer under the Regulation. Article 2(10) expressly excludes purely personal use. Professional use is within scope regardless of company size.",
+          "_claimRef": "ai-act-general-application-2026-08-02",
+          "sources": [
+            {
+              "claimId": "ai-act-general-application-2026-08-02"
+            }
+          ]
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_1_lesson_2_q1",
+          "questionText": "A machinery manufacturer buys a predictive-maintenance model, further trains it on its own sensor data, and sells the machine including the model under its own trademark. What role does it have?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Deployer, because it uses the model itself",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Provider, because it substantially modifies the model and places it on the market under its own trademark",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Distributor, because it only resells the model",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Importer, because the model originally came from a startup",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 3(3) defines a provider by reference to placing a system on the market under its own name or trademark. Further training can constitute a substantial modification under Article 3(23), triggering the change to the provider role under Article 25."
+        },
+        {
+          "id": "block_1_lesson_2_q2",
+          "questionText": "Who is NOT within the scope of the AI Act?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "A managing director who uses ChatGPT to draft quotations",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "A private individual who uses ChatGPT at home to prepare a tax return",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "An SME using Personio with AI applicant matching enabled",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "A freelancer who uses Copilot for client presentations",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 2(10) of Regulation (EU) 2024/1689 excludes natural persons who use AI systems in the course of a purely personal, non-professional activity. Once the use forms part of a professional activity, the Regulation applies (Article 3(4))."
+        },
+        {
+          "id": "block_1_lesson_2_q3",
+          "questionText": "What role does an SME have when it uses an AI system supplied by a US provider for its own operations without modifying it?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Deployer",
+              "isCorrect": true
+            },
+            {
+              "id": "b",
+              "text": "Importer",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Provider",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Distributor",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 3(4) defines the deployer as the person using an AI system under its authority. An importer under Article 3(6) is the person that first places the third-country system on the EU market, not a person that merely uses it."
+        }
+      ]
+    },
+    {
+      "id": "block_1_lesson_3",
+      "blockId": "block_1",
+      "number": 3,
+      "title": "Extraterritorial scope",
+      "subtitle": "Why a US SaaS provider falls within the AI Act as soon as its output is used in Germany.",
+      "durationMinutes": 4,
+      "keyConcepts": [
+        "Output-in-the-EU trigger",
+        "Authorised representative",
+        "Anti-circumvention safeguard",
+        "Brussels Effect 2.0"
+      ],
+      "sections": [
+        {
+          "id": "block_1_lesson_3_section_1",
+          "title": "The output trigger: Article 2(1), point (c)",
+          "readTimeMinutes": 2,
+          "content": "Article 2(1), point (c), of Regulation (EU) 2024/1689 applies to providers and deployers of AI systems established in a third country where the output produced by the system is used in the Union.\n\n**The practical consequence:** OpenAI in San Francisco generates a contract summary. An employee in Nuremberg reads it. This brings OpenAI within the scope of the AI Act.\n\n**Specific scenario:** a US provider placing an AI system on the EU market must appoint an authorised representative in the EU where Article 22 requires one. Without that appointment, it may not place the relevant system on the market.\n\nRecital 22 describes the output trigger as an anti-circumvention safeguard: it is intended to prevent circumvention of the Regulation and ensure effective protection of natural persons located in the Union. Without this clause, a provider could attempt to avoid the rules simply by moving its servers to Nevada.\n\n**What this means for you:** compliance with the provider's obligations remains the US provider's responsibility. Ask directly during vendor assessment how it meets those obligations.",
+          "keyTakeaway": "Article 2(1), point (c), gives the AI Act extraterritorial reach: once output is used in the EU, the Regulation applies even to third-country providers. Recital 22 explains this as an anti-circumvention safeguard."
+        },
+        {
+          "id": "block_1_lesson_3_section_2",
+          "title": "The authorised representative as the required EU contact point",
+          "readTimeMinutes": 2,
+          "content": "Article 3(5) defines an **authorised representative** as a natural or legal person located or established in the EU that has received a written mandate to perform obligations on behalf of a provider. Article 22 makes this appointment mandatory for third-country providers of high-risk AI systems covered by that provision. The representative performs the tasks specified in the mandate on behalf of the provider.\n\n**Practical consequence:** OpenAI in Ireland, Microsoft in Ireland, Salesforce, Workday, and other providers have EU entities or representation arrangements. Article 22 is one legal reason for this structure.\n\n**What this means for you:** ask for three items in the next vendor contract:\n\n- **Who is the EU authorised representative?** Article 22: name, registered office, and contact details.\n- **Is the technical documentation required by Article 11 available?** If so, obtain a contractual commitment that it will be made available where required.\n- **How has the system been classified?** Prohibited practice, high risk under Annex III or Annex I, an Article 50 transparency case, minimal risk, or a general-purpose AI model?\n\nA vendor unable to answer these questions promptly is not ready to substantiate its AI Act compliance.",
+          "keyTakeaway": "Third-country providers of high-risk AI systems covered by Article 22 need an EU authorised representative (Article 3(5), Article 22). Require this contact to be identified explicitly in the vendor contract."
+        },
+        {
+          "id": "block_1_lesson_3_section_3",
+          "title": "Brussels Effect 2.0 for German SMEs",
+          "readTimeMinutes": 1,
+          "content": "When your SaaS provider must implement the AI Act, it supplies part of the compliance foundation: it handles its system's provider-side transparency obligations under Article 50, technical documentation, and any applicable conformity assessment. If OpenAI or Anthropic make their systems compliant with EU law, customers benefit from that work, but it does not replace their own deployer obligations.\n\n**The limit:** your deployer obligations remain your responsibility. Article 26 lists obligations for deployers of high-risk AI systems, including following instructions for use, ensuring human oversight, retaining logs where required, and checking the relevance and sufficient representativeness of input data under their control. Article 4 on AI literacy also applies to every operator, including you.\n\nVendor compliance does not replace your own compliance. The two levels operate together.\n\n**Practical consequence:** include provider-compliance clauses in every new SaaS contract. Require contractual evidence of the applicable declaration of conformity and authorised representative. A vendor that evades these points is not ready. As deployer, you remain responsible for your own obligations.",
+          "keyTakeaway": "The Brussels Effect can deliver US systems with provider-side compliance work already completed. Articles 26 and 4 remain your responsibility. Vendor compliance does not replace deployer compliance."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_1_lesson_3_q1",
+          "questionText": "A US SaaS provider has no establishment in the EU. Its AI output is used by an SME in Bavaria. Does the AI Act apply to the provider?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Yes, because of the output-in-the-EU trigger in Article 2(1), point (c)",
+              "isCorrect": true
+            },
+            {
+              "id": "b",
+              "text": "No, because it is established outside the EU",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Only if it actively markets the system in the EU",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Only if its servers are located in the EU",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 2(1), point (c), of Regulation (EU) 2024/1689 covers third-country providers where the output produced by the system is used in the EU. Recital 22 confirms that this is a deliberate anti-circumvention rule."
+        },
+        {
+          "id": "block_1_lesson_3_q2",
+          "questionText": "What is the role of an authorised representative under Article 3(5)?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "The representative replaces all obligations of the third-country provider",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "The representative is established in the EU and performs AI Act tasks on behalf of the provider under a written mandate",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "The representative must be a German lawyer",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "The representative is required only for general-purpose AI models",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 3(5) defines an authorised representative as a person located or established in the EU with a written mandate. Article 22 requires covered third-country providers of high-risk AI systems to appoint one. The representative acts for the provider but does not replace it."
+        },
+        {
+          "id": "block_1_lesson_3_q3",
+          "questionText": "What should an SME ask a US AI provider during vendor assessment?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Only the price; every other matter belongs to the vendor",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Its authorised representative, technical documentation, and risk classification",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Only its GDPR privacy notice",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Only the country where its servers are located",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 26 creates deployer obligations that cannot be met without relevant provider information. You need to know the EU authorised representative under Article 22, whether Article 11 technical documentation exists, and how the system has been classified."
+        }
+      ]
+    },
+    {
+      "id": "block_1_lesson_4",
+      "blockId": "block_1",
+      "number": 4,
+      "title": "Timeline: February 2025, August 2025, August 2026, December 2027, August 2028",
+      "subtitle": "Phased application: AI-literacy duties and prohibitions already apply; the amended high-risk timetable is now in force.",
+      "durationMinutes": 4,
+      "keyConcepts": [
+        "Article 113 (phased application)",
+        "Article 111 transitional provisions",
+        "Transitional treatment of existing systems",
+        "Substantial modification",
+        "Fine framework"
+      ],
+      "sections": [
+        {
+          "id": "block_1_lesson_4_section_1",
+          "title": "The application dates and the amended high-risk timetable",
+          "readTimeMinutes": 2,
+          "content": "Regulation (EU) 2024/1689 entered into force on **1 August 2024**. Its provisions then apply in stages:\n\n- **2 February 2025:** Article 4 on AI literacy and most prohibitions in Article 5 apply.\n- **2 August 2025:** the rules for general-purpose AI models, the governance structure, and much of the penalties framework apply; Commission enforcement against providers of general-purpose AI models begins on **2 August 2026**.\n- **27 July 2026:** Regulation (EU) 2026/1744 enters into force, amending Article 4, individual prohibitions, transitional provisions, and the high-risk timetable, among other provisions.\n- **2 August 2026:** the transparency obligations in Article 50 and other general application points apply.\n- **2 December 2027:** high-risk rules apply to stand-alone systems under Article 6(2) and Annex III.\n- **2 August 2028:** high-risk rules apply to systems embedded in products under Article 6(1) and Annex I.\n\nThe high-risk dates are part of applicable law under the published amending regulation. The Regulation contains separate transitional provisions for systems placed on the market before the new dates.",
+          "keyTakeaway": "Article 4 has applied since February 2025 and was amended with effect from 27 July 2026; Article 50 applies from 2 August 2026. The high-risk dates of 2 December 2027 and 2 August 2028 are in force.",
+          "_claimRef": "ai-act-article-4-literacy-2025-02-02",
+          "sources": [
+            {
+              "claimId": "ai-act-article-4-literacy-2025-02-02"
+            }
+          ]
+        },
+        {
+          "id": "block_1_lesson_4_section_2",
+          "title": "What each date means for you",
+          "readTimeMinutes": 2,
+          "content": "**Position as of 28 July 2026:** Article 4 does not require a particular certificate and, following the amendment, does not require operators to guarantee a particular level of competence for every individual. Providers and deployers must take measures that support the development of AI literacy in a manner appropriate to the context.\n\n**Current priorities:**\n\n- maintain a complete inventory of all AI systems in the organisation, including shadow IT\n- classify the risk of each system under Annex III, Article 5, the rules for general-purpose AI, or the low-risk remainder\n- document role- and risk-appropriate measures supporting AI literacy under Article 4\n- implement the transparency and interaction notices required by Article 50 by 2 August 2026 where the relevant conditions are met\n\n**For 2027 and 2028:**\n\n- plan for stand-alone high-risk obligations from **2 December 2027**\n- plan for high-risk systems embedded in products from **2 August 2028**\n- prepare vendor documents, logs, human oversight, and any fundamental rights impact assessment that may be required\n\n**Transitional treatment has a limit:** substantial modifications may end transitional treatment or trigger a new assessment. Every major update therefore requires a renewed classification.",
+          "keyTakeaway": "An AI inventory, context-appropriate Article 4 measures, and Article 50 preparation are relevant now. The 2027 and 2028 high-risk dates are in force.",
+          "_claimRef": "ai-literacy-supervision-2026-08-02",
+          "sources": [
+            {
+              "claimId": "ai-literacy-supervision-2026-08-02"
+            }
+          ]
+        },
+        {
+          "id": "block_1_lesson_4_section_3",
+          "title": "When does enforcement begin?",
+          "readTimeMinutes": 2,
+          "content": "Article 99 of Regulation (EU) 2024/1689 establishes three levels of administrative fines. For undertakings, the higher of the two amounts generally applies:\n\n- **Prohibited practices under Article 5:** up to **EUR 35 million or 7%** of total worldwide annual turnover (Article 99(3)).\n- **Obligations listed in Article 99(4):** up to **EUR 15 million or 3%**.\n- **Supplying incorrect information to authorities:** up to **EUR 7.5 million or 1%** (Article 99(5)).\n\n**SME rule:** SMEs and, following the amendment, small mid-cap enterprises are subject to specific maximum limits. The precise calculation and allocation of an infringement to a penalty provision require a case-specific assessment.\n\n**Context:** Article 4 has applied since 2 February 2025 and was amended by Regulation (EU) 2026/1744. According to the Commission FAQ, national supervision and enforcement begin in early August 2026. Article 50 applies from 2 August 2026. Whether an administrative fine is available depends on the infringed provision, its application date, the competent authority, and the individual case.\n\nThe high-risk application dates of 2 December 2027 for stand-alone Annex III systems and 2 August 2028 for systems embedded in Annex I products have been in force since 27 July 2026.",
+          "keyTakeaway": "Article 4 has applied since February 2025 in the form amended from 27 July 2026. According to the Commission FAQ, national supervision and enforcement begin in early August 2026.",
+          "_claimRef": "ai-literacy-supervision-2026-08-02",
+          "sources": [
+            {
+              "claimId": "ai-literacy-supervision-2026-08-02"
+            }
+          ]
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_1_lesson_4_q1",
+          "questionText": "From which date has the obligation to support sufficient AI literacy under Article 4 applied?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "2 August 2026",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "2 February 2025",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "2 August 2027",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "1 August 2024",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 113, point (a), of Regulation (EU) 2024/1689 states that Chapters I and II, including Article 4, apply from 2 February 2025. The obligation has applied since that date; the Commission FAQ identifies 2 August 2026 as the start of national supervision and enforcement."
+        },
+        {
+          "id": "block_1_lesson_4_q2",
+          "questionText": "Which date did Parliament and the Council adopt for stand-alone high-risk systems under Annex III?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "2 August 2025",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "2 August 2026",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "2 August 2027",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "2 December 2027",
+              "isCorrect": true
+            }
+          ],
+          "explanation": "Regulation (EU) 2026/1744, which entered into force on 27 July 2026, specifies 2 December 2027 for stand-alone high-risk systems under Annex III and 2 August 2028 for high-risk systems embedded in products under Annex I."
+        },
+        {
+          "id": "block_1_lesson_4_q3",
+          "questionText": "What is the maximum fine for an infringement of the prohibitions in Article 5?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "EUR 7.5 million or 1% of turnover",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "EUR 15 million or 3% of turnover",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "EUR 35 million or 7% of turnover, whichever is higher",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "EUR 50 million or 10% of turnover",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 99(3) provides for administrative fines of up to EUR 35 million or 7% of total worldwide annual turnover for infringements of the prohibited practices listed in Article 5. For SMEs, Article 99(6) caps the fine at the lower of the two amounts."
+        }
+      ]
+    }
+  ]
+}

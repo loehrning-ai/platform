@@ -1,0 +1,26 @@
+{
+  "courseId": "ai-native-arbeitskurs",
+  "title": "AI-Native Workflow Course",
+  "tagline": "You define the task, constraints and review. Claude assists with execution.",
+  "language": "en",
+  "createdAt": "2026-04-18",
+  "version": "1.0",
+  "pricing": {
+    "free": true,
+    "includes": [
+      "Modules 1 to 4 in full (27 lessons plus setup)",
+      "AI-native learning materials",
+      "Public course materials",
+      "Capstone rubric",
+      "Completion record with QR verification"
+    ]
+  },
+  "prerequisites": {
+    "recommended": "ki-fuehrerschein",
+    "note": "The AI Fundamentals course is recommended but not required."
+  },
+  "totalLessons": 27,
+  "totalModules": 4,
+  "targetDurationHours": 12,
+  "supportedLanguages": ["en"]
+}

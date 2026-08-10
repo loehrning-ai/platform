@@ -1,5 +1,11 @@
 import { describe, it, expect, afterEach } from "vitest";
-import { render, cleanup, screen, fireEvent, waitFor } from "@testing-library/react";
+import {
+  render,
+  cleanup,
+  screen,
+  fireEvent,
+  waitFor,
+} from "@testing-library/react";
 import { PeekingSimulator } from "./peeking-simulator";
 
 afterEach(() => {
@@ -14,10 +20,14 @@ describe("PeekingSimulator ", () => {
 
   it("renders the real panel copy and check-frequency/alpha options before running", () => {
     render(<PeekingSimulator />);
-    expect(screen.getByText("Peeking False-Positive Inflator")).toBeInTheDocument();
-    expect(screen.getByText("Daily (every 100 obs)")).toBeInTheDocument();
+    expect(
+      screen.getByText("Peeking False-Positive Inflator"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Every 100 observations")).toBeInTheDocument();
     expect(screen.getByText("End-only (no peeking)")).toBeInTheDocument();
-    expect(screen.getByText("Run the simulation to see results.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Run the simulation to see results."),
+    ).toBeInTheDocument();
   });
 
   it("running the simulation shows the nominal/actual FPR results", async () => {

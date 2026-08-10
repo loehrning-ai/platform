@@ -1,92 +1,92 @@
-"use client";
+import { BookOpen, GraduationCap, Globe2 } from "lucide-react";
+import type { Locale } from "@/lib/i18n/locale";
+import { PROFILE_COPY } from "@/lib/i18n/profile-copy";
 
-import { m } from "framer-motion";
-import { BookOpen, GraduationCap } from "lucide-react";
-import { fadeUp } from "@/lib/animations";
+const ICONS = {
+  degree: GraduationCap,
+  international: Globe2,
+  research: BookOpen,
+} as const;
 
-const credentials = [
-  {
-    icon: GraduationCap,
-    title: "M.Sc. Informatik",
-    subtitle: "FAU Erlangen-Nürnberg",
-    detail:
-      "Abschluss mit Auszeichnung, Deutschlandstipendium. Schwerpunkt Daten, Machine Learning und Software Engineering",
-  },
-  {
-    icon: GraduationCap,
-    title: "Internationale Ausbildung",
-    subtitle: "Oxford ML Summer School · EELISA Pisa",
-    detail: "NLP × Finance (Oxford) · Innovation Management (SSSA)",
-  },
-  {
-    icon: BookOpen,
-    title: "KI-Forschung",
-    subtitle: "",
-    detail: "Machine Learning in klinischen Studien und angewandter Datenanalyse",
-    journals: [
-      "Publikation: Journal of Evolutionary Intelligence (Healthcare-Podcasts, MaD Lab)",
-      "Best Paper Award: Machine Learning in klinischen Studien",
-    ],
-  },
-] as const;
+export function Credentials({ locale }: { readonly locale: Locale }) {
+  const copy = PROFILE_COPY[locale].credentials;
 
-export function Credentials() {
   return (
-    <section className="py-20">
-      <div className="mx-auto max-w-4xl px-6">
-        <m.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="js-reveal"
-        >
-          <m.h2
-            custom={0}
-            variants={fadeUp}
-            className="js-reveal text-2xl font-bold tracking-[-0.04em]"
-          >
-            Akademischer Hintergrund
-          </m.h2>
-
-          <div className="mt-8 grid gap-6 sm:grid-cols-3">
-            {credentials.map((c, i) => {
-              const Icon = c.icon;
-              return (
-                <m.div
-                  key={c.title}
-                  custom={i + 1}
-                  variants={fadeUp}
-                  className="js-reveal rounded-none border border-border/30 bg-card/30 p-6"
-                >
-                  <Icon size={20} className="text-brand-sand" />
-                  <h3 className="mt-3 font-semibold text-foreground">
-                    {c.title}
-                  </h3>
-                  {c.subtitle && (
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {c.subtitle}
-                    </p>
-                  )}
-                  {c.detail && (
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {c.detail}
-                    </p>
-                  )}
-                  {"journals" in c && c.journals && (
-                    <ul className="mt-2 space-y-1">
-                      {(c.journals as readonly string[]).map((j) => (
-                        <li key={j} className="flex items-start gap-1.5 text-xs text-muted-foreground">
-                          <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-brand-orange" />
-                          {j}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </m.div>
-              );
-            })}
+    <section
+      id="ausbildung"
+      className="border-t border-border bg-card/30 py-20 sm:py-24"
+      aria-labelledby="credentials-heading"
+    >
+      <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
+        <header className="grid gap-5 border-b border-border pb-9 md:grid-cols-[minmax(0,0.7fr)_minmax(18rem,0.5fr)] md:items-end md:gap-10">
+          <div className="min-w-0">
+            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
+              {copy.eyebrow}
+            </p>
+            <h2
+              id="credentials-heading"
+              className="mt-4 text-pretty text-3xl font-bold tracking-[-0.04em] text-foreground sm:text-4xl"
+            >
+              {copy.title}
+            </h2>
           </div>
-        </m.div>
+          <p className="min-w-0 text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
+            {copy.intro}
+          </p>
+        </header>
+
+        <div className="mt-8 grid min-w-0 gap-4 lg:grid-cols-3">
+          {copy.cards.map((credential, index) => {
+            const Icon = ICONS[credential.id];
+            return (
+              <article
+                key={credential.id}
+                className="group min-w-0 border border-border bg-background p-6 shadow-card sm:p-8"
+              >
+                <div className="flex items-center justify-between gap-4">
+                  <span className="inline-flex h-11 w-11 items-center justify-center border border-border bg-card text-brand-orange">
+                    <Icon size={20} aria-hidden="true" />
+                  </span>
+                  <span className="font-mono text-[11px] font-bold tabular-nums text-muted-foreground">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                </div>
+                <h3 className="mt-8 break-words text-pretty text-xl font-bold tracking-[-0.025em] text-foreground [overflow-wrap:anywhere]">
+                  {credential.title}
+                </h3>
+                {credential.subtitle ? (
+                  <p className="mt-2 break-words text-sm font-semibold text-brand-orange [overflow-wrap:anywhere]">
+                    {credential.subtitle}
+                  </p>
+                ) : null}
+                <p className="mt-4 break-words text-sm leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
+                  {credential.detail}
+                </p>
+                {credential.evidence ? (
+                  <ul className="mt-6 space-y-3 border-t border-border pt-5">
+                    {credential.evidence.map((item) => (
+                      <li
+                        key={item.href}
+                        className="grid min-w-0 grid-cols-[0.5rem_minmax(0,1fr)] gap-3 text-xs leading-relaxed text-muted-foreground"
+                      >
+                        <span
+                          className="mt-[0.42rem] h-1.5 w-1.5 bg-brand-orange"
+                          aria-hidden="true"
+                        />
+                        <a
+                          href={item.href}
+                          className="min-w-0 break-words underline decoration-border underline-offset-4 hover:text-foreground hover:decoration-current [overflow-wrap:anywhere]"
+                        >
+                          {item.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+              </article>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

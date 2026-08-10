@@ -1,6 +1,12 @@
 import type { JsonLdGraph } from "@/lib/seo/json-ld";
 import { ORG_ID, PERSON_ID, SITE_URL, WEBSITE_ID } from "@/lib/seo/json-ld";
-import { SAME_AS_URLS, SITE_ENTITY, TIM_ENTITY } from "@/lib/seo/entity";
+import {
+  ORGANIZATION_SAME_AS_URLS,
+  PERSON_SAME_AS_URLS,
+  SITE_ENTITY,
+  SITE_LANGUAGES,
+  TIM_ENTITY,
+} from "@/lib/seo/entity";
 
 // Site-wide JSON-LD graph rendered once in the root layout. It lives here so
 // tests can verify the exact emitted graph without importing the font pipeline.
@@ -25,7 +31,7 @@ export const SITE_GRAPH: JsonLdGraph = {
         "Data Engineering",
         "AI-native Workflows",
       ],
-      sameAs: [...SAME_AS_URLS],
+      sameAs: [...ORGANIZATION_SAME_AS_URLS],
     },
     {
       "@type": "Person",
@@ -45,14 +51,14 @@ export const SITE_GRAPH: JsonLdGraph = {
       ],
       knowsLanguage: ["de", "en"],
       knowsAbout: [...TIM_ENTITY.knowsAbout],
-      sameAs: [...SAME_AS_URLS],
+      sameAs: [...PERSON_SAME_AS_URLS],
     },
     {
       "@type": "WebSite",
       "@id": WEBSITE_ID,
       url: SITE_URL,
       name: "loehrning.ai",
-      inLanguage: "de-DE",
+      inLanguage: [...SITE_LANGUAGES],
       publisher: { "@id": ORG_ID },
     },
   ],

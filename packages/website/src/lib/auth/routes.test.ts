@@ -169,6 +169,19 @@ describe("platform route access model", () => {
     }
   });
 
+  // Next's searchParams yields an array when a query key repeats, so
+  // /login?next=/a&next=/b reached this with a value the signature did not
+  // describe and threw inside the server render.
+  it.each([
+    ["an array from a repeated query key", ["/konto", "/kurse"]],
+    ["undefined", undefined],
+    ["a number", 7],
+    ["an object", {}],
+  ])("falls back for %s instead of throwing", (_label, value) => {
+    expect(() => sanitizeNextPath(value)).not.toThrow();
+    expect(sanitizeNextPath(value)).toBe("/konto");
+  });
+
   it("sanitizes next paths to internal non-auth targets", () => {
     expect(sanitizeNextPath(null)).toBe("/konto");
     expect(sanitizeNextPath("//evil.example")).toBe("/konto");
@@ -182,8 +195,12 @@ describe("platform route access model", () => {
     expect(sanitizeNextPath(`/${"a".repeat(2_048)}`)).toBe("/konto");
     expect(sanitizeNextPath("https://evil.example")).toBe("/konto");
     expect(sanitizeNextPath("/login")).toBe("/konto");
+    expect(sanitizeNextPath("/en/login")).toBe("/konto");
+    expect(sanitizeNextPath("/de/login?next=/konto")).toBe("/konto");
     expect(sanitizeNextPath("/safe/%2e%2e/login")).toBe("/konto");
     expect(sanitizeNextPath("/auth/callback")).toBe("/konto");
+    expect(sanitizeNextPath("/en/auth/callback")).toBe("/konto");
+    expect(sanitizeNextPath("/en/konto")).toBe("/en/konto");
     expect(sanitizeNextPath("/ki-fuehrerschein/kurs")).toBe("/ki-fuehrerschein/kurs");
     expect(
       sanitizeNextPath("/api/buecher/ki-landschaft/download.pdf"),

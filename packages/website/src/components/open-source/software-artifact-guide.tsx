@@ -1,23 +1,31 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
+import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import type {
   ProjectArtifact,
   SoftwareArtifactProcedure,
   ToolArtifact,
 } from "@/lib/open-source/artifacts";
+import {
+  localizeOpenSourceArtifact,
+  OPEN_SOURCE_SHARED_COPY,
+  SOFTWARE_GUIDE_COPY,
+} from "@/lib/open-source/display-copy";
 import { CommandCopyButton } from "./command-copy-button";
-import { STATUS_LABELS } from "./status-labels";
 
 function Procedure({
   id,
   title,
   procedure,
+  locale,
 }: {
   readonly id: string;
   readonly title: string;
   readonly procedure: SoftwareArtifactProcedure;
+  readonly locale: Locale;
 }) {
+  const copy = SOFTWARE_GUIDE_COPY[locale];
   return (
     <section className="border-t border-border pt-8" aria-labelledby={id}>
       <h2 id={id} className="text-2xl font-bold tracking-[-0.03em]">
@@ -45,11 +53,12 @@ function Procedure({
                   <div className="flex justify-end border-b border-border p-1.5">
                     <CommandCopyButton
                       command={step.command}
-                      label={`Befehl für ${step.title}`}
+                      label={copy.copyCommand(step.title)}
+                      locale={locale}
                     />
                   </div>
                   <pre
-                    aria-label={`Befehl für ${step.title}`}
+                    aria-label={copy.copyCommand(step.title)}
                     className="whitespace-pre-wrap break-words p-3 text-sm"
                   >
                     <code>{step.command}</code>
@@ -66,11 +75,16 @@ function Procedure({
 
 export function SoftwareArtifactGuide({
   artifact,
+  locale = "de",
 }: {
   readonly artifact: ToolArtifact | ProjectArtifact;
+  readonly locale?: Locale;
 }) {
-  const { guide } = artifact;
-  const idPrefix = `${artifact.kind}-${artifact.slug}`;
+  const displayArtifact = localizeOpenSourceArtifact(artifact, locale);
+  const { guide } = displayArtifact;
+  const copy = SOFTWARE_GUIDE_COPY[locale];
+  const sharedCopy = OPEN_SOURCE_SHARED_COPY[locale];
+  const idPrefix = `${displayArtifact.kind}-${displayArtifact.slug}`;
 
   return (
     <div className="mt-12 space-y-10">
@@ -83,10 +97,10 @@ export function SoftwareArtifactGuide({
             id={`${idPrefix}-status`}
             className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground"
           >
-            Veröffentlichungsstatus
+            {copy.publicationStatus}
           </h2>
           <p className="mt-2 font-semibold text-foreground">
-            {STATUS_LABELS[guide.status]}
+            {sharedCopy.statuses[guide.status]}
           </p>
         </div>
         <p className="leading-relaxed text-muted-foreground">
@@ -102,7 +116,7 @@ export function SoftwareArtifactGuide({
           id={`${idPrefix}-data-flow`}
           className="text-2xl font-bold tracking-[-0.03em]"
         >
-          Datenfluss
+          {copy.dataFlow}
         </h2>
         <p className="mt-3 leading-relaxed text-muted-foreground">
           {guide.dataFlow}
@@ -135,11 +149,10 @@ export function SoftwareArtifactGuide({
             id={`${idPrefix}-demo`}
             className="text-2xl font-bold tracking-[-0.03em]"
           >
-            Kurzdemo
+            {copy.shortDemo}
           </h2>
           <p className="mt-3 leading-relaxed text-muted-foreground">
-            Vier Aufnahmen aus dem Werkzeug, in der Reihenfolge, in der du es
-            benutzt. Alle stammen aus dem gepinnten Quellstand.
+            {copy.demoIntroduction}
           </p>
           <ol className="mt-6 space-y-8">
             {guide.demo.map((step, index) => (
@@ -191,7 +204,7 @@ export function SoftwareArtifactGuide({
           id={`${idPrefix}-prerequisites`}
           className="text-2xl font-bold tracking-[-0.03em]"
         >
-          Voraussetzungen
+          {copy.prerequisites}
         </h2>
         <ul className="mt-5 space-y-4">
           {guide.prerequisites.map((prerequisite) => (
@@ -207,13 +220,13 @@ export function SoftwareArtifactGuide({
                     >
                       {prerequisite.label}
                       <span className="sr-only">
-                        , öffnet in neuem Tab
+                        {copy.externalTab}
                       </span>
                       <ExternalLink size={13} aria-hidden="true" />
                     </a>
                   ) : (
                     <Link
-                      href={prerequisite.href}
+                      href={localizeHref(prerequisite.href, locale)}
                       className="underline-offset-4 hover:underline"
                     >
                       {prerequisite.label}
@@ -233,13 +246,15 @@ export function SoftwareArtifactGuide({
 
       <Procedure
         id={`${idPrefix}-installation`}
-        title="Installation"
+        title={copy.installation}
         procedure={guide.installation}
+        locale={locale}
       />
       <Procedure
         id={`${idPrefix}-usage`}
-        title="Verwendung"
+        title={copy.usage}
         procedure={guide.usage}
+        locale={locale}
       />
 
       <section
@@ -250,14 +265,14 @@ export function SoftwareArtifactGuide({
           id={`${idPrefix}-integration`}
           className="text-2xl font-bold tracking-[-0.03em]"
         >
-          Integration
+          {copy.integration}
         </h2>
         <p className="mt-3 leading-relaxed text-muted-foreground">
           {guide.integration.summary}
         </p>
         <dl className="mt-5">
           <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-            Schnittstellen und Ziele
+            {copy.integrationTargets}
           </dt>
           <dd className="mt-2 flex flex-wrap gap-2">
             {guide.integration.targets.map((target) => (
@@ -284,11 +299,12 @@ export function SoftwareArtifactGuide({
                   <div className="flex justify-end border-b border-border p-1.5">
                     <CommandCopyButton
                       command={step.command}
-                      label={`Befehl für ${step.title}`}
+                      label={copy.copyCommand(step.title)}
+                      locale={locale}
                     />
                   </div>
                   <pre
-                    aria-label={`Befehl für ${step.title}`}
+                    aria-label={copy.copyCommand(step.title)}
                     className="whitespace-pre-wrap break-words p-3 text-sm"
                   >
                     <code>{step.command}</code>
@@ -309,7 +325,7 @@ export function SoftwareArtifactGuide({
             id={`${idPrefix}-next`}
             className="text-2xl font-bold tracking-[-0.03em]"
           >
-            Dokumentation und Vertiefung
+            {copy.documentation}
           </h2>
           {guide.documentation.href.startsWith("https://") ? (
             <a
@@ -319,12 +335,12 @@ export function SoftwareArtifactGuide({
               className="mt-4 inline-flex items-center gap-1 font-semibold underline-offset-4 hover:underline"
             >
               {guide.documentation.label}
-              <span className="sr-only">, öffnet in neuem Tab</span>
+              <span className="sr-only">{copy.externalTab}</span>
               <ExternalLink size={14} aria-hidden="true" />
             </a>
           ) : (
             <Link
-              href={guide.documentation.href}
+              href={localizeHref(guide.documentation.href, locale)}
               className="mt-4 inline-flex font-semibold underline-offset-4 hover:underline"
             >
               {guide.documentation.label}
@@ -335,7 +351,7 @@ export function SoftwareArtifactGuide({
           {guide.relatedLearning.map((related) => (
             <li key={related.href}>
               <Link
-                href={related.href}
+                href={localizeHref(related.href, locale)}
                 className="font-semibold text-foreground underline-offset-4 hover:underline"
               >
                 {related.title}

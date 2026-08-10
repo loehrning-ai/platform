@@ -5,7 +5,7 @@ test("homepage primary CTA uses the KI-Check to determine the learner's start", 
 }) => {
   await page.goto("/");
   const startLink = page
-    .getByRole("link", { name: "Start bestimmen" })
+    .getByRole("link", { name: "KI-Check öffnen" })
     .first();
   await expect(startLink).toHaveAttribute("href", "/ki-check");
   await startLink.click();
@@ -13,30 +13,40 @@ test("homepage primary CTA uses the KI-Check to determine the learner's start", 
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 });
 
-test("navigation remains resource-first on both viewports", async ({ page }) => {
+test("navigation remains task-oriented on both viewports", async ({ page }) => {
   test.setTimeout(60_000);
   await page.goto("/");
-  const desktopCourses = page.getByRole("button", { name: /Kurse/ }).first();
-  if (await desktopCourses.isVisible()) {
+  const desktopLearning = page.getByRole("button", { name: "Lernen" });
+  if (await desktopLearning.isVisible()) {
     const nav = page.getByRole("navigation", { name: "Hauptnavigation" });
     await expect(
       nav.getByRole("link", { name: "Open Source", exact: true }),
     ).toBeVisible();
-    await desktopCourses.click();
+    await desktopLearning.click();
     await expect(
-      page.locator("#akademie-nav-menu").getByRole("link", {
+      page.locator("#lernen-nav-menu").getByRole("link", {
         name: "Alle Kurse",
       }),
     ).toHaveAttribute("href", "/kurse");
-
-    const resources = nav.getByRole("button", { name: "Ressourcen" });
-    await resources.click();
-    const resourcesMenu = page.locator("#ressourcen-nav-menu");
     await expect(
-      resourcesMenu.getByRole("link", { name: "KI-Check" }),
+      page.locator("#lernen-nav-menu").getByRole("link", { name: "KI-Check" }),
     ).toHaveAttribute("href", "/ki-check");
+
+    const practice = nav.getByRole("button", { name: "Praxis" });
+    await practice.click();
     await expect(
-      resourcesMenu.getByRole("link", { name: "Blog", exact: true }),
+      page.locator("#praxis-nav-menu").getByRole("link", {
+        name: "Workshops",
+      }),
+    ).toHaveAttribute("href", "/workshops");
+
+    const knowledge = nav.getByRole("button", { name: "Wissen" });
+    await knowledge.click();
+    await expect(
+      page.locator("#wissen-nav-menu").getByRole("link", {
+        name: "Blog",
+        exact: true,
+      }),
     ).toHaveAttribute("href", "/blog");
   } else {
     await expect(async () => {

@@ -1,11 +1,4 @@
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   act,
   cleanup,
@@ -22,12 +15,10 @@ const quizMocks = vi.hoisted(() => ({
   ownerGeneration: 1,
   ownerKind: "anonymous" as "anonymous" | "unknown",
   ownerListener: null as
-    | ((
-        owner: {
-          readonly kind: "anonymous" | "unknown";
-          readonly generation: number;
-        },
-      ) => void)
+    | ((owner: {
+        readonly kind: "anonymous" | "unknown";
+        readonly generation: number;
+      }) => void)
     | null,
   progressListener: null as ((progress: unknown) => void) | null,
   reportBoundaryError: vi.fn(),
@@ -99,9 +90,14 @@ vi.mock("framer-motion", async () => {
   );
   const AnimatePresence = ({ children }: { children?: unknown }) =>
     createElement(Fragment, null, children as never);
+  const Provider = ({ children }: { children?: unknown }) =>
+    createElement(Fragment, null, children as never);
   return {
     m: { div: MotionDiv },
     AnimatePresence,
+    MotionConfig: Provider,
+    LazyMotion: Provider,
+    domAnimation: {},
   };
 });
 
@@ -151,11 +147,9 @@ afterEach(cleanup);
 describe("<WorkshopQuizPage>", () => {
   it("does not flash a false lock while the learning owner is unresolved", async () => {
     quizMocks.ownerKind = "unknown";
-    render(<WorkshopQuizPage courseSlug="claude" />);
+    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
 
-    expect(screen.getByRole("status")).toHaveTextContent(
-      "Quiz is loading…",
-    );
+    expect(screen.getByRole("status")).toHaveTextContent("Quiz is loading…");
     expect(
       screen.queryByRole("heading", {
         name: "Complete every lesson first",
@@ -182,15 +176,13 @@ describe("<WorkshopQuizPage>", () => {
   });
 
   it("invalidates and resets an active quiz across learning-owner generations", async () => {
-    render(<WorkshopQuizPage courseSlug="claude" />);
+    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
 
     await screen.findByRole("heading", {
       level: 2,
       name: "Which answer is correct?",
     });
-    fireEvent.click(
-      screen.getByRole("radio", { name: /Correct option/ }),
-    );
+    fireEvent.click(screen.getByRole("radio", { name: /Correct option/ }));
     expect(screen.getByRole("button", { name: "Result" })).toHaveFocus();
 
     await act(
@@ -211,9 +203,7 @@ describe("<WorkshopQuizPage>", () => {
       quizMocks.progressListener?.({});
     });
 
-    expect(screen.getByRole("status")).toHaveTextContent(
-      "Quiz is loading…",
-    );
+    expect(screen.getByRole("status")).toHaveTextContent("Quiz is loading…");
     expect(screen.queryByRole("radio")).not.toBeInTheDocument();
     expect(quizMocks.saveResult).not.toHaveBeenCalled();
 
@@ -243,7 +233,7 @@ describe("<WorkshopQuizPage>", () => {
   });
 
   it("keeps the fixed quiz header below the global nav and localizes English chrome", async () => {
-    render(<WorkshopQuizPage courseSlug="claude" />);
+    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
 
     await screen.findByRole("heading", {
       level: 2,
@@ -253,6 +243,11 @@ describe("<WorkshopQuizPage>", () => {
     const header = screen.getByTestId("workshop-quiz-header");
     expect(header).toHaveStyle({ top: "65px" });
     expect(header).toHaveClass("z-40");
+    expect(header.firstElementChild).toHaveClass(
+      "grid",
+      "grid-cols-[minmax(0,1fr)_auto]",
+      "sm:flex",
+    );
     expect(screen.getByRole("link", { name: "Cancel" })).toBeInTheDocument();
     expect(within(header).getByText("Workshop quiz")).toBeInTheDocument();
     expect(
@@ -271,7 +266,7 @@ describe("<WorkshopQuizPage>", () => {
       .mockRejectedValueOnce(privateLoaderError)
       .mockResolvedValueOnce(QUESTIONS);
 
-    render(<WorkshopQuizPage courseSlug="claude" />);
+    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
 
     expect(
       await screen.findByRole("heading", {
@@ -281,7 +276,9 @@ describe("<WorkshopQuizPage>", () => {
     expect(screen.getByRole("alert")).toHaveTextContent(
       "The quiz questions could not be loaded.",
     );
-    expect(screen.queryByText(/private provider detail/)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/private provider detail/),
+    ).not.toBeInTheDocument();
     expect(quizMocks.reportBoundaryError).toHaveBeenCalledWith(
       "workshop-quiz",
       privateLoaderError,
@@ -299,7 +296,7 @@ describe("<WorkshopQuizPage>", () => {
   });
 
   it("announces answer and result feedback and moves focus through the quiz", async () => {
-    render(<WorkshopQuizPage courseSlug="claude" />);
+    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
 
     await screen.findByRole("heading", {
       level: 2,
@@ -316,9 +313,7 @@ describe("<WorkshopQuizPage>", () => {
     expect(radios[1]).toHaveFocus();
     expect(radios[1]).toHaveAttribute("tabindex", "0");
 
-    fireEvent.click(
-      screen.getByRole("radio", { name: /Correct option/ }),
-    );
+    fireEvent.click(screen.getByRole("radio", { name: /Correct option/ }));
 
     const resultButton = screen.getByRole("button", { name: "Result" });
     await waitFor(() => expect(resultButton).toHaveFocus());
@@ -343,18 +338,13 @@ describe("<WorkshopQuizPage>", () => {
   });
 
   it("moves focus to the next question after the animated question swap", async () => {
-    quizMocks.loadQuestions.mockResolvedValue([
-      ...QUESTIONS,
-      SECOND_QUESTION,
-    ]);
+    quizMocks.loadQuestions.mockResolvedValue([...QUESTIONS, SECOND_QUESTION]);
 
-    render(<WorkshopQuizPage courseSlug="claude" />);
+    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
 
     const firstHeading = await screen.findByRole("heading", { level: 2 });
     fireEvent.click(screen.getAllByRole("radio")[0]);
-    fireEvent.click(
-      screen.getByRole("button", { name: /^Next$/ }),
-    );
+    fireEvent.click(screen.getByRole("button", { name: /^Next$/ }));
 
     await waitFor(() => {
       const nextHeading = screen.getByRole("heading", { level: 2 });
@@ -372,19 +362,20 @@ describe("<WorkshopQuizPage>", () => {
       name: "Which answer is correct?",
     });
 
-    expect(
-      screen.getByRole("link", { name: "Abbrechen" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Abbrechen" })).toBeInTheDocument();
     expect(
       screen.getByRole("progressbar", { name: "Frage 1 von 1" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("timer")).toHaveAccessibleName(
       /^Verbleibende Zeit: \d+ Minuten \d+ Sekunden$/,
     );
+    expect(
+      screen
+        .getByRole("radio", { name: /Correct option/ })
+        .querySelector("span:nth-child(2)"),
+    ).toHaveClass("min-w-0", "break-words");
 
-    fireEvent.click(
-      screen.getByRole("radio", { name: /Correct option/ }),
-    );
+    fireEvent.click(screen.getByRole("radio", { name: /Correct option/ }));
     expect(screen.getByRole("status")).toHaveTextContent(
       "Richtig. Because B is correct.",
     );

@@ -7,7 +7,13 @@ import {
   afterEach,
   vi,
 } from "vitest";
-import { render, screen, fireEvent, cleanup, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  waitFor,
+} from "@testing-library/react";
 import { isCheckpointDone, __resetCacheForTests } from "@/lib/progress";
 import { PromptSandboxWidget } from "./prompt-sandbox";
 import { PromptCompareWidget } from "./prompt-compare";
@@ -20,6 +26,7 @@ import { AgentLoopWidget } from "./agent-loop";
 import { TokenizerWidget } from "./tokenizer";
 import { ClaudeMdBuilderWidget } from "./claude-md-builder";
 import { PromptLibraryShaperWidget } from "./prompt-library-shaper";
+import { ClaudeWidgetLocaleProvider } from "./locale-context";
 
 function installLocalStoragePolyfill(): void {
   const store = new Map<string, string>();
@@ -98,28 +105,50 @@ describe("PromptSandboxWidget", () => {
   it("renders the textarea and run button", () => {
     render(<PromptSandboxWidget lessonId="l1" cpId="sb1" title="Try it" />);
     expect(screen.getByRole("textbox")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Run prompt/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Run local simulation/i }),
+    ).toBeInTheDocument();
   });
 
   it("runs a prompt of at least minChars and awards the checkpoint", async () => {
     render(
-      <PromptSandboxWidget lessonId="l1" cpId="sb1" title="Try it" minChars={5} />,
+      <PromptSandboxWidget
+        lessonId="l1"
+        cpId="sb1"
+        title="Try it"
+        minChars={5}
+      />,
     );
     fireEvent.change(screen.getByRole("textbox"), {
       target: { value: "Ask something about the auth service oncall rotation" },
     });
-    fireEvent.click(screen.getByRole("button", { name: /Run prompt/i }));
+    fireEvent.click(
+      screen.getByRole("button", { name: /Run local simulation/i }),
+    );
     await waitFor(() => expect(isCheckpointDone("l1", "sb1")).toBe(true));
-    expect(screen.getByText(/guessing/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/no service catalog or on-call data/i),
+    ).toBeInTheDocument();
   });
 
   it("does not award the checkpoint below minChars", async () => {
     render(
-      <PromptSandboxWidget lessonId="l1" cpId="sb1" title="Try it" minChars={50} />,
+      <PromptSandboxWidget
+        lessonId="l1"
+        cpId="sb1"
+        title="Try it"
+        minChars={50}
+      />,
     );
     fireEvent.change(screen.getByRole("textbox"), { target: { value: "hi" } });
-    fireEvent.click(screen.getByRole("button", { name: /Run prompt/i }));
-    await waitFor(() => expect(screen.getByText(/useful response/i)).toBeInTheDocument());
+    fireEvent.click(
+      screen.getByRole("button", { name: /Run local simulation/i }),
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByText(/provide the source material/i),
+      ).toBeInTheDocument(),
+    );
     expect(isCheckpointDone("l1", "sb1")).toBe(false);
   });
 
@@ -138,23 +167,46 @@ describe("PromptCompareWidget", () => {
     "You are a senior comms writer. Context: rolling out AuthKit v2. Format: subject then body, under 180 words.";
 
   it("renders both prompt columns", () => {
-    render(<PromptCompareWidget lessonId="l1" cpId="cmp1" weak={weak} strong={strong} />);
+    render(
+      <PromptCompareWidget
+        lessonId="l1"
+        cpId="cmp1"
+        weak={weak}
+        strong={strong}
+      />,
+    );
     expect(screen.getByText(weak)).toBeInTheDocument();
     expect(screen.getByText(strong)).toBeInTheDocument();
   });
 
   it("runs both prompts and awards the checkpoint once", async () => {
-    render(<PromptCompareWidget lessonId="l1" cpId="cmp1" weak={weak} strong={strong} />);
+    render(
+      <PromptCompareWidget
+        lessonId="l1"
+        cpId="cmp1"
+        weak={weak}
+        strong={strong}
+      />,
+    );
     fireEvent.click(screen.getByRole("button", { name: /Run both/i }));
     await waitFor(() => expect(isCheckpointDone("l1", "cmp1")).toBe(true));
-    expect(screen.getByText("weak output")).toBeInTheDocument();
-    expect(screen.getByText("strong output")).toBeInTheDocument();
+    expect(screen.getByText("Weak-prompt output")).toBeInTheDocument();
+    expect(screen.getByText("Structured-prompt output")).toBeInTheDocument();
   });
 
   it("renders with reduced motion enabled", () => {
     setReducedMotion(true);
-    render(<PromptCompareWidget lessonId="l1" cpId="cmp1" weak={weak} strong={strong} />);
-    expect(screen.getByRole("button", { name: /Run both/i })).toBeInTheDocument();
+    render(
+      <PromptCompareWidget
+        lessonId="l1"
+        cpId="cmp1"
+        weak={weak}
+        strong={strong}
+      />,
+    );
+    expect(
+      screen.getByRole("button", { name: /Run both/i }),
+    ).toBeInTheDocument();
   });
 });
 
@@ -170,7 +222,9 @@ describe("PromptGraderWidget", () => {
         rubric="Must include all six parts."
       />,
     );
-    expect(screen.getByRole("button", { name: /Grade my prompt/i })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: /Check structure/i }),
+    ).toBeDisabled();
   });
 
   it("grades a prompt, shows the score dial, and awards the checkpoint", async () => {
@@ -188,9 +242,11 @@ describe("PromptGraderWidget", () => {
           "You are a senior engineer. Context: weekly update for internal team. Format as three bullets.",
       },
     });
-    fireEvent.click(screen.getByRole("button", { name: /Grade my prompt/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Check structure/i }));
     await waitFor(() => expect(isCheckpointDone("l1", "grade1")).toBe(true));
-    expect(screen.getByRole("img", { name: /Score:/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: /Rule score:/i }),
+    ).toBeInTheDocument();
   });
 
   it("renders with reduced motion enabled", () => {
@@ -203,7 +259,9 @@ describe("PromptGraderWidget", () => {
         rubric="Rubric"
       />,
     );
-    expect(screen.getByRole("textbox", { name: /your prompt/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("textbox", { name: /your prompt/i }),
+    ).toBeInTheDocument();
   });
 });
 
@@ -220,7 +278,9 @@ describe("RewriteArenaWidget", () => {
         criteria="specificity"
       />,
     );
-    expect(screen.getByRole("button", { name: /Enter the arena/i })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: /Check structure rules/i }),
+    ).toBeDisabled();
   });
 
   it("judges a strong rewrite as the winner and awards the checkpoint", async () => {
@@ -239,9 +299,13 @@ describe("RewriteArenaWidget", () => {
           "You are a senior editor. Context: internal status update. Format as three bullets. For example: shipped X.",
       },
     });
-    fireEvent.click(screen.getByRole("button", { name: /Enter the arena/i }));
+    fireEvent.click(
+      screen.getByRole("button", { name: /Check structure rules/i }),
+    );
     await waitFor(() => expect(isCheckpointDone("l1", "arena1")).toBe(true));
-    expect(screen.getAllByText("Your rewrite wins").length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText("Rewrite matches more structure rules").length,
+    ).toBeGreaterThan(0);
   });
 
   it("renders with reduced motion enabled", () => {
@@ -255,7 +319,9 @@ describe("RewriteArenaWidget", () => {
         criteria="criteria"
       />,
     );
-    expect(screen.getByRole("textbox", { name: /your rewrite/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("textbox", { name: /your rewrite/i }),
+    ).toBeInTheDocument();
   });
 });
 
@@ -263,11 +329,20 @@ describe("RewriteArenaWidget", () => {
 
 describe("FillBlankWidget", () => {
   const template = "You are {{0}}.\n\nTASK\n{{1}}";
-  const blanks = [{ label: "Role", hint: "e.g. a PM" }, { label: "Task", hint: "one verb" }];
+  const blanks = [
+    { label: "Role", hint: "e.g. a PM" },
+    { label: "Task", hint: "one verb" },
+  ];
 
   it("renders the goal, template preview, and one input per blank", () => {
     render(
-      <FillBlankWidget lessonId="l1" cpId="fb1" goal="Summarize a PRD." template={template} blanks={blanks} />,
+      <FillBlankWidget
+        lessonId="l1"
+        cpId="fb1"
+        goal="Summarize a PRD."
+        template={template}
+        blanks={blanks}
+      />,
     );
     expect(screen.getByText(/Summarize a PRD\./)).toBeInTheDocument();
     expect(screen.getAllByRole("textbox")).toHaveLength(2);
@@ -275,9 +350,15 @@ describe("FillBlankWidget", () => {
 
   it("keeps the check button disabled until every blank is filled, then awards the checkpoint", async () => {
     render(
-      <FillBlankWidget lessonId="l1" cpId="fb1" goal="Summarize a PRD." template={template} blanks={blanks} />,
+      <FillBlankWidget
+        lessonId="l1"
+        cpId="fb1"
+        goal="Summarize a PRD."
+        template={template}
+        blanks={blanks}
+      />,
     );
-    const check = screen.getByRole("button", { name: /Have Claude check it/i });
+    const check = screen.getByRole("button", { name: /Check entries/i });
     expect(check).toBeDisabled();
     const inputs = screen.getAllByRole("textbox");
     fireEvent.change(inputs[0], { target: { value: "a senior PM" } });
@@ -291,7 +372,13 @@ describe("FillBlankWidget", () => {
   it("renders with reduced motion enabled", () => {
     setReducedMotion(true);
     render(
-      <FillBlankWidget lessonId="l1" cpId="fb1" goal="Goal" template={template} blanks={blanks} />,
+      <FillBlankWidget
+        lessonId="l1"
+        cpId="fb1"
+        goal="Goal"
+        template={template}
+        blanks={blanks}
+      />,
     );
     expect(screen.getAllByRole("textbox")).toHaveLength(2);
   });
@@ -308,8 +395,10 @@ describe("PromptDiffWidget", () => {
         takeaway="The strong correction is actionable."
       />,
     );
-    expect(screen.getByText("What changed, word by word")).toBeInTheDocument();
-    expect(screen.getByText(/The strong correction is actionable\./)).toBeInTheDocument();
+    expect(screen.getByText("Changes side by side")).toBeInTheDocument();
+    expect(
+      screen.getByText(/The strong correction is actionable\./),
+    ).toBeInTheDocument();
     expect(screen.queryByText(/XP/)).not.toBeInTheDocument();
   });
 
@@ -326,20 +415,30 @@ describe("PromptDiffWidget", () => {
 
 describe("SocraticTutorWidget", () => {
   it("shows the topic-scoped empty state before any message", () => {
-    render(<SocraticTutorWidget lessonId="l1" cpId="tutor1" topic="prompt anatomy" />);
+    render(
+      <SocraticTutorWidget
+        lessonId="l1"
+        cpId="tutor1"
+        topic="prompt anatomy"
+      />,
+    );
     expect(screen.getByText(/prompt anatomy/)).toBeInTheDocument();
   });
 
   it("replies with a probing question and awards the checkpoint after 3 user turns", async () => {
-    render(<SocraticTutorWidget lessonId="l1" cpId="tutor1" topic="grounding" />);
-    const input = screen.getByRole("textbox", { name: /your question/i });
-    const ask = screen.getByRole("button", { name: /Ask/i });
+    render(
+      <SocraticTutorWidget lessonId="l1" cpId="tutor1" topic="grounding" />,
+    );
+    const input = screen.getByRole("textbox", { name: /your note/i });
+    const ask = screen.getByRole("button", { name: /Add note/i });
 
     for (let turn = 1; turn <= 3; turn += 1) {
       fireEvent.change(input, { target: { value: `question ${turn}` } });
       fireEvent.click(ask);
       // eslint-disable-next-line no-await-in-loop
-      await waitFor(() => expect(screen.getAllByText("tutor").length).toBe(turn));
+      await waitFor(() =>
+        expect(screen.getAllByText("tutor").length).toBe(turn),
+      );
     }
     expect(isCheckpointDone("l1", "tutor1")).toBe(true);
   });
@@ -347,7 +446,9 @@ describe("SocraticTutorWidget", () => {
   it("renders with reduced motion enabled", () => {
     setReducedMotion(true);
     render(<SocraticTutorWidget lessonId="l1" cpId="tutor1" topic="topic" />);
-    expect(screen.getByRole("textbox", { name: /your question/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("textbox", { name: /your note/i }),
+    ).toBeInTheDocument();
   });
 });
 
@@ -356,7 +457,9 @@ describe("SocraticTutorWidget", () => {
 describe("AgentLoopWidget", () => {
   it("shows the empty state before running", () => {
     render(<AgentLoopWidget lessonId="l1" cpId="loop1" />);
-    expect(screen.getByText(/Click "Start loop"/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Start the loop to see each step/i),
+    ).toBeInTheDocument();
   });
 
   it("runs the canned script and awards the checkpoint", async () => {
@@ -366,10 +469,29 @@ describe("AgentLoopWidget", () => {
     expect(screen.getAllByText(/answer/i).length).toBeGreaterThan(0);
   });
 
+  it("uses German explanatory text in the German fixed example", async () => {
+    render(
+      <ClaudeWidgetLocaleProvider locale="de">
+        <AgentLoopWidget lessonId="l1" cpId="loop-de" />
+      </ClaudeWidgetLocaleProvider>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /Schleife starten/i }));
+    expect(
+      await screen.findByText(/Einstieg: initEngine\(canvas\)/i),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/Main entry:/i)).not.toBeInTheDocument();
+    expect(
+      screen.getByText(/Feste lokale Demonstration ohne Modell-/i),
+    ).toBeInTheDocument();
+  });
+
   it("renders with reduced motion enabled", () => {
     setReducedMotion(true);
     render(<AgentLoopWidget lessonId="l1" cpId="loop1" />);
-    expect(screen.getByRole("button", { name: /Start loop/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Start loop/i }),
+    ).toBeInTheDocument();
   });
 });
 
@@ -378,9 +500,9 @@ describe("AgentLoopWidget", () => {
 describe("TokenizerWidget", () => {
   it("renders the default text tokenized into colored spans", () => {
     render(<TokenizerWidget lessonId="l1" cpId="tok1" />);
-    expect(screen.getByRole("textbox", { name: /text to tokenize/i })).toHaveValue(
-      "The quick brown fox jumps over the lazy dog.",
-    );
+    expect(
+      screen.getByRole("textbox", { name: /text to tokenize/i }),
+    ).toHaveValue("The quick brown fox jumps over the lazy dog.");
   });
 
   it("awards the checkpoint once the text exceeds 80 characters", () => {
@@ -408,16 +530,18 @@ describe("ClaudeMdBuilderWidget", () => {
     fireEvent.change(screen.getByPlaceholderText(/Reporting dashboard/i), {
       target: { value: "Private reporting project" },
     });
-    fireEvent.change(screen.getByPlaceholderText(/TypeScript, React 18/i), {
+    fireEvent.change(screen.getByPlaceholderText(/TypeScript, React/i), {
       target: { value: "TypeScript" },
     });
-    fireEvent.click(screen.getByRole("button", { name: /Generate CLAUDE.md/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Create draft/i }));
     await screen.findByRole("button", { name: "Copy" });
   }
 
   it("keeps generate disabled until project and stack are filled", () => {
     render(<ClaudeMdBuilderWidget lessonId="l1" cpId="builder1" />);
-    expect(screen.getByRole("button", { name: /Generate CLAUDE.md/i })).toBeDisabled();
+    expect(
+      screen.getByRole("button", { name: /Create draft/i }),
+    ).toBeDisabled();
   });
 
   it("generates a CLAUDE.md from the form and awards the checkpoint", async () => {
@@ -425,10 +549,10 @@ describe("ClaudeMdBuilderWidget", () => {
     fireEvent.change(screen.getByPlaceholderText(/Reporting dashboard/i), {
       target: { value: "My project" },
     });
-    fireEvent.change(screen.getByPlaceholderText(/TypeScript, React 18/i), {
+    fireEvent.change(screen.getByPlaceholderText(/TypeScript, React/i), {
       target: { value: "TypeScript" },
     });
-    fireEvent.click(screen.getByRole("button", { name: /Generate CLAUDE.md/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Create draft/i }));
     await waitFor(() => expect(isCheckpointDone("l1", "builder1")).toBe(true));
     expect(screen.getAllByText(/My project/).length).toBeGreaterThan(0);
   });
@@ -436,7 +560,9 @@ describe("ClaudeMdBuilderWidget", () => {
   it("renders with reduced motion enabled", () => {
     setReducedMotion(true);
     render(<ClaudeMdBuilderWidget lessonId="l1" cpId="builder1" />);
-    expect(screen.getByRole("button", { name: /Generate CLAUDE.md/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Create draft/i }),
+    ).toBeInTheDocument();
   });
 
   it("shows copied only after the generated document reaches the clipboard", async () => {
@@ -468,7 +594,9 @@ describe("ClaudeMdBuilderWidget", () => {
       configurable: true,
       value: { writeText },
     });
-    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
     await renderGeneratedBuilder();
 
     fireEvent.click(screen.getByRole("button", { name: "Copy" }));
@@ -486,25 +614,29 @@ describe("ClaudeMdBuilderWidget", () => {
 // ─── PromptLibraryShaper ─────────────────────────────────────────
 
 describe("PromptLibraryShaperWidget", () => {
-  it("starts with the sample prompt and a sub-100 shareability score", () => {
+  it("starts with the sample prompt and a sub-100 rule score", () => {
     render(<PromptLibraryShaperWidget lessonId="l1" cpId="shaper1" />);
-    expect(screen.getByText(/shareability · /)).toBeInTheDocument();
+    expect(screen.getByText(/rule coverage · /i)).toBeInTheDocument();
   });
 
   it("loading the ideal version raises the score to 80+ and reviewing awards the checkpoint", async () => {
     render(<PromptLibraryShaperWidget lessonId="l1" cpId="shaper1" />);
-    fireEvent.click(screen.getByRole("button", { name: /Load an ideal version/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Load example/i }));
     // Matches the source's own `loadIdeal()` text exactly, which itself
     // scores 80 (not 100) against these checks: "EXAMPLE OUTPUT" has no
     // colon and no code fence, so the "sample output" check stays unmet.
-    expect(screen.getByText("shareability · 80")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: /Let Claude review/i }));
+    expect(screen.getByText(/rule coverage · 80/i)).toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole("button", { name: /Show fixed guidance/i }),
+    );
     await waitFor(() => expect(isCheckpointDone("l1", "shaper1")).toBe(true));
   });
 
   it("renders with reduced motion enabled", () => {
     setReducedMotion(true);
     render(<PromptLibraryShaperWidget lessonId="l1" cpId="shaper1" />);
-    expect(screen.getByRole("button", { name: /Let Claude review/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Show fixed guidance/i }),
+    ).toBeInTheDocument();
   });
 });

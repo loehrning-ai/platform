@@ -1,5 +1,6 @@
 node_modules/
 .next/
+packages/website/next-env.d.ts
 .turbo/
 .cache/
 .bun-cache/

@@ -3,167 +3,224 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { HeroOrrery } from "@/components/imported-courses/claude/hero-orrery";
 import { HeroTransform } from "@/components/imported-courses/claude/hero-transform";
-import { getAllClaudeLessons } from "@/lib/claude-course/data";
-import { CLAUDE_TRACKS } from "@/lib/claude-course/types";
-import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
-import type { JsonLdGraph } from "@/lib/seo/json-ld";
+import { getClaudeCourseBundle } from "@/lib/claude-course/localization";
+import { contentLocalesForPath } from "@/lib/i18n/content-parity";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import {
+  buildTechnicalCourseJsonLd,
+  buildTechnicalCourseMetadata,
+  technicalCourseHref,
+  TECHNICAL_COURSE_ROUTES,
+} from "@/lib/technical-courses/routes";
+import { JsonLd } from "@/lib/seo/json-ld";
 
-/**
- * Claude Course native landing page. Once
- * `catalog.ts`'s claude entry flips to `nativeStatus: "live"` (stage 10),
- * this static route replaces the generic external-course template for
- * `/kurse/open-source/claude` (Next.js resolves the static segment ahead of
- * the `[slug]` dynamic one regardless of catalog data).
- */
-
-export const metadata: Metadata = {
-  title: "Claude Course: prompt like you mean it",
-  description:
-    "Twelve hands-on lessons on prompting Claude effectively: prompt anatomy, context engineering, CLAUDE.md, agents and tool use, code review, grounding, evals, and safety.",
-  robots: { index: true, follow: true },
-  alternates: { canonical: `${SITE_URL}/kurse/open-source/claude` },
-  openGraph: {
-    title: "Claude Course: prompt like you mean it",
-    description:
-      "Twelve hands-on lessons on prompting Claude effectively. Every lesson has an interactive widget.",
-    url: `${SITE_URL}/kurse/open-source/claude`,
-    siteName: "loehrning.ai",
-    locale: "en_US",
-    type: "website",
+const LANDING_COPY = {
+  de: {
+    metadataTitle: "Claude-Kurs: klare Prompts und überprüfbare Arbeitsabläufe",
+    metadataDescription:
+      "Zwölf praktische Lektionen zu Prompt-Struktur, Kontext, CLAUDE.md, Agenten, Code-Reviews, Grounding, Evals und sicherer Nutzung.",
+    eyebrow: "Technischer Claude-Kurs",
+    title: "Claude mit klarer Struktur einsetzen.",
+    intro:
+      "Zwölf Lektionen zeigen, wie du Aufgaben präzise beschreibst, relevante Fakten bereitstellst und Ergebnisse prüfst. Jede Lektion enthält eine interaktive Übung.",
+    startLesson: "Lektion 01 starten",
+    courseMap: "Zum Kursplan",
+    facts: [
+      "12 Lektionen",
+      "117 Minuten",
+      "4 Themenbereiche",
+      "Übung in jeder Lektion",
+    ],
+    demoEyebrow: "Prompt-Bausteine",
+    demoIntro:
+      "Aktiviere einzelne Bestandteile und vergleiche die simulierten Ergebnisse.",
+    courseEyebrow: "Kursplan",
+    courseTitle: "Vier Themenbereiche, zwölf Lektionen",
+    courseIntro:
+      "Beginne mit dem mentalen Modell. Danach folgen wiederverwendbare Arbeitsabläufe, Agenten, Prüfverfahren und Teamregeln.",
+    lessonLabel: "Lektion",
+    finalEyebrow: "Einstieg",
+    finalTitle: "Lektion 01: Was Claude tatsächlich ist",
+    finalBody:
+      "Die erste Lektion erklärt Kontextfenster, Grounding und typische Fehlerbilder. Bearbeitungszeit: acht Minuten.",
+    begin: "Beginnen",
+    teaches: [
+      "Prompt-Struktur und Kontextfenster",
+      "CLAUDE.md und wiederverwendbare Arbeitsabläufe",
+      "Agenten, Code-Review und Grounding",
+      "Evals, Teamregeln und sichere Nutzung",
+    ],
   },
-};
+  en: {
+    metadataTitle: "Claude course: clear prompts and verifiable workflows",
+    metadataDescription:
+      "Twelve practical lessons on prompt structure, context, CLAUDE.md, agents, code review, grounding, evals, and safe use.",
+    eyebrow: "Technical Claude course",
+    title: "Use Claude with clear structure.",
+    intro:
+      "Twelve lessons cover precise task briefs, relevant context, and verifiable output. Every lesson includes an interactive exercise.",
+    startLesson: "Start lesson 01",
+    courseMap: "View course map",
+    facts: [
+      "12 lessons",
+      "117 minutes",
+      "4 tracks",
+      "Exercise in every lesson",
+    ],
+    demoEyebrow: "Prompt components",
+    demoIntro:
+      "Toggle individual components and compare the simulated results.",
+    courseEyebrow: "Course map",
+    courseTitle: "Four tracks, twelve lessons",
+    courseIntro:
+      "Start with the mental model, then move through reusable workflows, agents, evaluation methods, and team rules.",
+    lessonLabel: "Lesson",
+    finalEyebrow: "Start here",
+    finalTitle: "Lesson 01: What Claude actually is",
+    finalBody:
+      "The first lesson explains context windows, grounding, and common failure modes. Estimated time: eight minutes.",
+    begin: "Begin",
+    teaches: [
+      "Prompt structure and context windows",
+      "CLAUDE.md and reusable workflows",
+      "Agents, code review, and grounding",
+      "Evals, team rules, and safe use",
+    ],
+  },
+} as const;
+
+const BASE_PATH = TECHNICAL_COURSE_ROUTES.claude.basePath;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const copy = LANDING_COPY[locale];
+  return buildTechnicalCourseMetadata({
+    courseSlug: "claude",
+    locale,
+    target: { kind: "landing" },
+    title: copy.metadataTitle,
+    description: copy.metadataDescription,
+    availableContentLocales: contentLocalesForPath(BASE_PATH),
+  });
+}
 
 export default async function ClaudeCourseLandingPage() {
-  const lessons = await getAllClaudeLessons();
-
-  const courseJsonLd: JsonLdGraph = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Start", item: SITE_URL },
-          { "@type": "ListItem", position: 2, name: "Kurse", item: `${SITE_URL}/kurse` },
-          {
-            "@type": "ListItem",
-            position: 3,
-            name: "Claude Course",
-            item: `${SITE_URL}/kurse/open-source/claude`,
-          },
-        ],
-      },
-      {
-        "@type": "Course",
-        name: "Claude Course",
-        description:
-          "Twelve hands-on lessons on prompting Claude effectively, across four tracks.",
-        url: `${SITE_URL}/kurse/open-source/claude`,
-        inLanguage: "en",
-        isAccessibleForFree: true,
-        provider: { "@id": ORG_ID },
-        hasCourseInstance: {
-          "@type": "CourseInstance",
-          courseMode: "online",
-          url: `${SITE_URL}/kurse/open-source/claude/kurs`,
-        },
-        teaches: CLAUDE_TRACKS.map((t) => t.label),
-      },
-    ],
-  };
+  const locale = await getRequestLocale();
+  const bundle = await getClaudeCourseBundle(locale);
+  const copy = LANDING_COPY[locale];
+  const firstLessonHref = technicalCourseHref("claude", locale, {
+    kind: "lesson",
+    lessonId: "mental-model",
+  });
+  const courseJsonLd = buildTechnicalCourseJsonLd({
+    courseSlug: "claude",
+    locale,
+    name: bundle.config.title,
+    description: copy.metadataDescription,
+    teaches: copy.teaches,
+    timeRequired: "PT117M",
+  });
 
   return (
     <>
       <JsonLd data={courseJsonLd} id="claude-course-jsonld" />
-      <section className="mx-auto max-w-[1100px] px-6 pb-20 pt-20">
+      <section
+        lang={locale}
+        className="mx-auto max-w-[1100px] px-4 pb-20 pt-14 sm:px-6 sm:pt-20"
+      >
         <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-          the claude best-practices course
+          {copy.eyebrow}
         </p>
-        <h1 className="mt-6 max-w-[900px] text-[44px] font-bold leading-[0.98] tracking-[-0.04em] text-foreground sm:text-[60px] md:text-[76px]">
-          Prompt like you mean it.
+        <h1 className="mt-6 max-w-[900px] break-words text-[42px] font-bold leading-[0.98] tracking-[-0.04em] text-foreground sm:text-[60px] md:text-[76px]">
+          {copy.title}
         </h1>
         <p className="mt-7 max-w-[680px] text-[18px] leading-[1.6] text-muted-foreground">
-          The difference between people who love Claude and people who bounce off it isn&apos;t
-          talent, it&apos;s a handful of habits. Twelve lessons. Every one hands-on, with
-          interactive widgets from the first click.
+          {copy.intro}
         </p>
 
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
-            href="/kurse/open-source/claude/kurs/mental-model"
-            className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-6 py-4 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)]"
+            href={firstLessonHref}
+            className="inline-flex min-h-12 items-center gap-2 border-2 border-foreground bg-brand-orange px-6 py-3 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)]"
           >
-            Start lesson 01
+            {copy.startLesson}
             <ArrowRight size={15} aria-hidden="true" />
           </Link>
           <Link
             href="#lessons"
-            className="inline-flex items-center gap-2 border-2 border-foreground bg-background px-6 py-4 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-foreground shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:bg-card"
+            className="inline-flex min-h-12 items-center gap-2 border-2 border-foreground bg-background px-6 py-3 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-foreground shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:bg-card"
           >
-            Jump to course map
+            {copy.courseMap}
           </Link>
         </div>
 
         <div className="mt-6 flex flex-wrap gap-2">
-          {["12 lessons", "~2 hours", "fully interactive", "hands-on widget in every lesson"].map(
-            (chip) => (
-              <span
-                key={chip}
-                className="border border-foreground bg-background px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-foreground"
-              >
-                {chip}
-              </span>
-            ),
-          )}
+          {copy.facts.map((fact) => (
+            <span
+              key={fact}
+              className="border border-foreground bg-background px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-foreground"
+            >
+              {fact}
+            </span>
+          ))}
         </div>
 
         <div className="mt-16">
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-            the orrery
+            {copy.demoEyebrow}
           </p>
           <p className="mt-1 text-[14px] text-muted-foreground">
-            Toggle the parts. Watch the quality shift. Run it live.
+            {copy.demoIntro}
           </p>
           <div className="mt-6">
-            <HeroOrrery />
+            <HeroOrrery locale={locale} />
           </div>
           <div className="mt-8">
-            <HeroTransform />
+            <HeroTransform locale={locale} />
           </div>
         </div>
 
         <section id="lessons" className="mt-20 scroll-mt-24">
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-            the course
+            {copy.courseEyebrow}
           </p>
           <h2 className="mt-2 text-[28px] font-bold tracking-[-0.03em] text-foreground sm:text-[34px]">
-            Four tracks. Twelve lessons. One arc.
+            {copy.courseTitle}
           </h2>
-          <p className="mt-3 max-w-[600px] text-[15px] leading-relaxed text-muted-foreground">
-            Start with the mental model. End with a team that ships better work, faster.
-            Everything in between is practice.
+          <p className="mt-3 max-w-[640px] text-[15px] leading-relaxed text-muted-foreground">
+            {copy.courseIntro}
           </p>
 
           <div className="mt-8 flex flex-col gap-8">
-            {CLAUDE_TRACKS.map((track) => {
-              const trackLessons = lessons.filter((l) => l.trackId === track.id);
+            {bundle.content.tracks.map((track) => {
+              const trackLessons = bundle.content.lessons.filter(
+                (lesson) => lesson.trackId === track.id,
+              );
               return (
                 <div key={track.id}>
-                  <h3 className="text-[18px] font-bold text-foreground">{track.label}</h3>
-                  <p className="text-[13px] text-muted-foreground">{track.hint}</p>
+                  <h3 className="text-[18px] font-bold text-foreground">
+                    {track.label}
+                  </h3>
+                  <p className="text-[13px] text-muted-foreground">
+                    {track.hint}
+                  </p>
                   <ul className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     {trackLessons.map((lesson) => (
                       <li key={lesson.id}>
                         <Link
-                          href={`/kurse/open-source/claude/kurs/${lesson.id}`}
-                          className="block h-full border-2 border-border bg-card p-4 transition-colors hover:border-brand-orange"
+                          href={technicalCourseHref("claude", locale, {
+                            kind: "lesson",
+                            lessonId: lesson.id,
+                          })}
+                          className="block h-full min-w-0 border-2 border-border bg-card p-4 transition-colors hover:border-brand-orange"
                         >
                           <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-brand-orange">
-                            lesson {lesson.number}
+                            {copy.lessonLabel} {lesson.number}
                           </p>
-                          <h4 className="mt-1 text-[15px] font-semibold text-foreground">
+                          <h4 className="mt-1 break-words text-[15px] font-semibold text-foreground">
                             {lesson.title}
                           </h4>
-                          <p className="mt-1 text-[12.5px] leading-[1.4] text-muted-foreground">
+                          <p className="mt-1 break-words text-[12.5px] leading-[1.4] text-muted-foreground">
                             {lesson.subtitle}
                           </p>
                         </Link>
@@ -176,22 +233,21 @@ export default async function ClaudeCourseLandingPage() {
           </div>
         </section>
 
-        <div className="mt-16 border-2 border-foreground bg-card p-8 text-center shadow-[6px_6px_0_var(--color-foreground)]">
+        <div className="mt-16 border-2 border-foreground bg-card p-6 text-center shadow-[6px_6px_0_var(--color-foreground)] sm:p-8">
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-            start now
+            {copy.finalEyebrow}
           </p>
           <h2 className="mt-2 text-[26px] font-bold text-foreground sm:text-[32px]">
-            Ready for lesson 01?
+            {copy.finalTitle}
           </h2>
-          <p className="mx-auto mt-3 max-w-[440px] text-[14px] leading-relaxed text-muted-foreground">
-            Eight minutes. A handful of interactives. The only lesson where you&apos;re allowed to
-            be wrong about what Claude actually is.
+          <p className="mx-auto mt-3 max-w-[480px] text-[14px] leading-relaxed text-muted-foreground">
+            {copy.finalBody}
           </p>
           <Link
-            href="/kurse/open-source/claude/kurs/mental-model"
-            className="mt-6 inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-6 py-4 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)]"
+            href={firstLessonHref}
+            className="mt-6 inline-flex min-h-12 items-center gap-2 border-2 border-foreground bg-brand-orange px-6 py-3 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)]"
           >
-            Begin
+            {copy.begin}
             <ArrowRight size={15} aria-hidden="true" />
           </Link>
         </div>

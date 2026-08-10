@@ -1,23 +1,40 @@
-# Was ist neu
+## 2026-08-09: Zweisprachige Plattformrevision
 
-## 2026-07-16: Blog gestartet
+Diese Revision ordnet Lernangebote nach Grundlagen, technischen Kursen, Workshops und Büchern. Die öffentlichen Seiten und veröffentlichten Lernmaterialien stehen auf Deutsch und Englisch bereit. Zugangsbedingungen, Quellen, Simulationen und externe Abhängigkeiten werden direkt am jeweiligen Inhalt ausgewiesen.
 
-Der Blog ist live. Erster Beitrag: "Der EU AI Act: was er bedeutet, wenn du keine Juristin bist", mit Stand zum AI Omnibus (Juli 2026), deinen Rechten nach Art. 50, 85 und 86 und Primärquellen zu allen Angaben.
+### Geändert
 
-**Neu:**
-- Blog (/blog) mit dem Beitrag "Der EU AI Act: was er bedeutet, wenn du keine Juristin bist"
+- Sprachumschalter mit beständigen deutschen und englischen Routen
+- Neu gestalteter Kurskatalog mit eigenen Titelbildern, klaren Lernzielen und responsiven Karten
+- Überarbeitete Kurs-, Workshop-, Demo- und Plattformtexte mit engeren Behauptungen und expliziten Grenzen
+- Veröffentlichte englische Lesefassung von „KI im deutschen Mittelstand“; zwei nicht geprüfte Buchentwürfe bleiben ohne öffentliche Leseroute
+- Lokalisierte Metadaten, Sitemaps, strukturierte Daten und Installationsmanifeste
+- Strengere Sicherheitsheader und fehlertolerante Authentifizierung; Google-Anmeldung erscheint erst nach dokumentierter Provider-Konfiguration
 
-## 2026-07-14: Plattform gestartet
+### Korrigiert
 
-Zum Start verfügbar: Kurse, Lernbücher und Demos, kostenlos und ohne Konto nutzbar. Quellen und bekannte Grenzen sind offen dokumentiert.
+- Überläufe, ungleichmäßige Abstände und schmale Inhaltsbereiche in Kursansichten
+- Pauschale Aussagen zu kostenlosem Zugriff, anonymem Feedback und nicht gemessenen Demo-Werten
+- Ein nicht belegter Auszeichnungshinweis im Profil; Publikationen verweisen nun auf nachprüfbare Quellen
 
-**Neu:**
-- KI-Führerschein (5 Blöcke, Zertifikat)
-- EU AI Act Kurs (6 Blöcke, Zertifikat)
-- AI-Native Arbeitskurs (4 Module, Praxisübungen)
+## 2026-07-16: Blog veröffentlicht
+
+Der Blog ging mit einem Beitrag zu Grundlagen des EU AI Act online. Der Beitrag nennt seinen Rechtsstand und verweist für rechtliche Aussagen auf Primärquellen.
+
+### Hinzugefügt
+
+- Blogbereich mit dem ersten Grundlagenbeitrag zum EU AI Act
+- Datierter Rechtsstand im Beitrag
+- Primärquellen zu den rechtlichen Aussagen
+
+## 2026-07-14: Erste Plattformfassung veröffentlicht
+
+Die erste öffentliche Fassung umfasste Kurse, Lernbücher, Demos und den KI-Check. Zugangsbedingungen, Quellen und bekannte Grenzen wurden auf den jeweiligen Seiten ausgewiesen.
+
+### Hinzugefügt
+
+- 4 Grundlagenkurse und 1 Kurs zu KI und Gesellschaft
 - 3 Lernbücher
-- KI-Check (Lernpfad-Empfehlung)
-- Einführung "Wie KI wirklich funktioniert"
-- Kurs "KI und Gesellschaft"
-
-Die öffentliche Lernoberfläche ist kostenlos und ohne Konto nutzbar. Der Quellcode und die redaktionellen Inhalte haben unterschiedliche Lizenzen; die verbindliche Zuordnung steht in der Lizenzrichtlinie des Repositories.
+- KI-Check zur Lernweg-Einordnung
+- Technische Einführung zur Funktionsweise von KI
+- Lizenzrichtlinie für Quellcode und redaktionelle Inhalte

@@ -9,12 +9,13 @@ import { ALL_COURSE_CATALOG } from "@/lib/courses/catalog";
 import { OPEN_SOURCE_ARTIFACTS } from "@/lib/open-source/artifacts";
 import { getWorkshopSlugs } from "@/lib/workshops";
 import { CRAWL_CONTRACT } from "@/lib/crawl/contract";
+import { hasEnglishContentParity } from "@/lib/i18n/content-parity";
 
 const result = await sitemap();
 const publishedBookChapters = (
   await Promise.all(
     books.map(async (book) => {
-      const chapters = await getBookChapterList(book.id);
+      const chapters = await getBookChapterList(book.id, "de");
       return chapters.map((chapter) => ({
         book,
         chapter,
@@ -48,7 +49,10 @@ describe("sitemap()", () => {
     const expectedStatic = CRAWL_CONTRACT.filter(
       (entry) => entry.includeInSitemap && !entry.pattern.includes(":"),
     ).length;
-    expect(result.length).toBe(
+    const germanCanonicalEntries = result.filter(
+      (entry) => !new URL(entry.url).pathname.startsWith("/en"),
+    );
+    expect(germanCanonicalEntries.length).toBe(
       expectedStatic +
         wieKiLektionCount +
         detailPageCount +
@@ -58,6 +62,33 @@ describe("sitemap()", () => {
     expect(result.some((e) => e.url.endsWith("/ueber-die-plattform"))).toBe(true);
     expect(result.some((e) => e.url.endsWith("/einstieg"))).toBe(true);
     expect(result.some((e) => e.url.endsWith("/wie-ki-funktioniert"))).toBe(true);
+  });
+
+  it("emits reciprocal locale sitemap records only for reviewed English routes", () => {
+    const byUrl = new Map(result.map((entry) => [entry.url, entry]));
+    const germanEntries = result.filter(
+      (entry) => !new URL(entry.url).pathname.startsWith("/en"),
+    );
+
+    for (const entry of germanEntries) {
+      const pathname = new URL(entry.url).pathname;
+      const englishUrl = `https://loehrning.ai${
+        pathname === "/" ? "/en" : `/en${pathname}`
+      }`;
+
+      if (hasEnglishContentParity(pathname)) {
+        expect(byUrl.has(englishUrl), pathname).toBe(true);
+        expect(entry.alternates?.languages, pathname).toEqual({
+          de: entry.url,
+          en: englishUrl,
+          "x-default": entry.url,
+        });
+        expect(byUrl.get(englishUrl)?.alternates).toEqual(entry.alternates);
+      } else {
+        expect(byUrl.has(englishUrl), pathname).toBe(false);
+        expect(entry.alternates, pathname).toBeUndefined();
+      }
+    }
   });
 
   it("includes /ki-check, /einstieg, and /wie-ki-funktioniert as indexable public routes", () => {

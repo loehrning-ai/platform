@@ -1,6 +1,7 @@
 "use client";
 
 import { m, useReducedMotion } from "framer-motion";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 
 interface FlowParticleProps {
   /** SVG path d-string (must be "M x y C cx1 cy1, cx2 cy2, ex ey" format) */
@@ -46,7 +47,7 @@ function sampleBezier(
  * A circle that animates along an SVG cubic bezier path.
  * Uses Framer Motion cx/cy keyframes (works natively on SVG elements).
  */
-export function FlowParticle({
+function FlowParticleContent({
   path,
   duration = 2.5,
   delay = 0,
@@ -86,3 +87,5 @@ export function FlowParticle({
     />
   );
 }
+
+export const FlowParticle = withMotionProvider(FlowParticleContent);

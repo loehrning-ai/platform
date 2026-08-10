@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import type { Locale } from "@/lib/i18n/locale";
 import { absoluteUrl } from "@/lib/seo/entity";
 
 type PublicPageMetadataOptions = {
   readonly title: string;
   readonly description: string;
   readonly path: string;
+  readonly locale: Locale;
   readonly documentTitle?: Metadata["title"];
   readonly robots?: Metadata["robots"];
 };
@@ -18,6 +20,7 @@ export function createPublicPageMetadata({
   title,
   description,
   path,
+  locale,
   documentTitle,
   robots = { index: true, follow: true },
 }: PublicPageMetadataOptions): Metadata {
@@ -31,7 +34,8 @@ export function createPublicPageMetadata({
       description,
       url: absoluteUrl(path),
       siteName: "loehrning.ai",
-      locale: "de_DE",
+      locale: locale === "de" ? "de_DE" : "en_GB",
+      alternateLocale: [locale === "de" ? "en_GB" : "de_DE"],
       type: "website",
     },
     twitter: {

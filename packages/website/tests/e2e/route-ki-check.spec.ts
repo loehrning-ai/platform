@@ -116,7 +116,7 @@ test.describe("/ki-check", () => {
     await expect(cta).toHaveAttribute("href", expected.startHref);
 
     // Reset returns to question 1 (proves the control is wired, not decorative).
-    const reset = main.getByRole("button", { name: "Check nochmal starten" });
+    const reset = main.getByRole("button", { name: "Check erneut starten" });
     const firstQuestion = page.getByRole("heading", { name: QUESTIONS[0].text });
     await expect(async () => {
       await reset.click();

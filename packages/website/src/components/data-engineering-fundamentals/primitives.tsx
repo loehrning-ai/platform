@@ -138,12 +138,13 @@ export function BestPractices({ items, title = "The right way" }: CalloutItemsPr
 
 export interface TakeawayProps {
   readonly items: readonly string[];
+  readonly title?: string;
 }
 
-export function Takeaway({ items }: TakeawayProps) {
+export function Takeaway({ items, title = "Key takeaways" }: TakeawayProps) {
   return (
     <div className="takeaway">
-      <div className="takeaway-head">Key takeaways</div>
+      <div className="takeaway-head">{title}</div>
       <div className="takeaway-list">
         {items.map((item, i) => (
           <div className="takeaway-item" key={i}>

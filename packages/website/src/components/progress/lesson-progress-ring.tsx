@@ -17,6 +17,7 @@ import { subscribe } from "@/lib/progress/store";
 import { getReadSectionIds, isLessonCompleted } from "@/lib/progress/store";
 import type { CourseSlug } from "@/lib/course/types";
 import { cn } from "@/lib/utils";
+import type { Locale } from "@/lib/i18n/locale";
 
 interface Props {
   readonly courseSlug: CourseSlug;
@@ -24,6 +25,7 @@ interface Props {
   readonly totalSections: number;
   readonly size?: number;
   readonly className?: string;
+  readonly locale?: Locale;
 }
 
 export function LessonProgressRing({
@@ -32,6 +34,7 @@ export function LessonProgressRing({
   totalSections,
   size = 56,
   className,
+  locale = "de",
 }: Props): JSX.Element {
   const prefersReduced = useReducedMotion();
   const [mounted, setMounted] = useState(false);
@@ -65,8 +68,12 @@ export function LessonProgressRing({
       role="img"
       aria-label={
         mounted
-          ? `${sectionsRead} von ${totalSections} Abschnitten gelesen`
-          : `${totalSections} Abschnitte`
+          ? locale === "en"
+            ? `${sectionsRead} of ${totalSections} sections read`
+            : `${sectionsRead} von ${totalSections} Abschnitten gelesen`
+          : locale === "en"
+            ? `${totalSections} sections`
+            : `${totalSections} Abschnitte`
       }
     >
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>

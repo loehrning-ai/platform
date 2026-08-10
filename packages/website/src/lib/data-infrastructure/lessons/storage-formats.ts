@@ -1,7 +1,10 @@
 // Ported from data-infrastructure/lessons/04-storage-formats.html.
 import type { DataInfraLesson } from "../types";
 import { checkpointLessonId } from "../types";
-import { DATA_INFRA_QUIZ_COPY, DATA_INFRA_FLASHCARDS_COPY } from "../widget-copy";
+import {
+  DATA_INFRA_QUIZ_COPY,
+  DATA_INFRA_FLASHCARDS_COPY,
+} from "../widget-copy";
 
 const LID = checkpointLessonId("storage-formats");
 
@@ -12,8 +15,14 @@ const lesson: DataInfraLesson = {
   subtitle: "Encodings · row groups · pushdown",
   durationMinutes: 13,
   trackId: "storage",
-  hook: "Why columnar wins for analytics. A Parquet file, dissected byte-by-byte.",
-  keyConcepts: ["Columnar storage", "Row group", "Predicate pushdown", "Dictionary encoding", "Bloom filter"],
+  hook: "Relate physical layout and metadata to the bytes an analytical query must read.",
+  keyConcepts: [
+    "Columnar storage",
+    "Row group",
+    "Predicate pushdown",
+    "Dictionary encoding",
+    "Bloom filter",
+  ],
   quiz: [],
   sections: [
     {
@@ -21,21 +30,21 @@ const lesson: DataInfraLesson = {
       title: "Why columnar wins",
       readTimeMinutes: 2,
       content:
-        'Almost every analytical query is shaped like: *"give me a few columns, filtered, aggregated, over many rows."* The query engine has to read bytes from disk to answer it. The crucial question, and almost the entire reason columnar storage exists, is: **how many of those bytes are useful?**\n\nIn a row-oriented store, all of a row\'s columns are physically next to each other. To get one column from a billion rows, you read all the other columns too. The disk doesn\'t know which bytes you wanted; the OS just hands them over.\n\nIn a column-oriented store, all values of one column are physically next to each other. You read only the columns you asked for. For a typical analytical query that touches 4 of 200 columns, that\'s a 50x IO reduction. And once values are co-located by column, they compress vastly better, because they\'re all the same type, usually with very low cardinality.',
+        "Many analytical queries select a subset of columns, filter rows, and aggregate the result. Physical layout affects how much data the engine must fetch and decode.\n\nA row-oriented layout keeps a record's fields together, which favors keyed operations that need much of a record. A columnar layout groups values by column within larger row groups, so an engine can avoid reading unselected columns. Similar values can also be encoded efficiently.\n\nThe reduction is workload-specific, not a fixed multiplier. Projection width, predicate selectivity, file statistics, compression, storage latency, cache state, and engine implementation all affect the bytes read and elapsed time.",
     },
     {
       id: "s2",
       title: "Same query, two layouts",
       readTimeMinutes: 2,
       content:
-        "The simulator runs `SELECT SUM(amount) WHERE country='US'` against a row store (Postgres) and a column store (Parquet) side by side, sweeping through both layouts and showing exactly how many bytes each has to read to answer the same query.",
+        "The interactive model applies `SELECT SUM(amount) WHERE country='US'` to two small fixed layouts and counts the cells selected by its simplified rules. It explains projection and pruning; it does not reproduce Postgres, Parquet, storage, cache, or query-engine behavior.",
     },
     {
       id: "s3",
       title: "Anatomy of Parquet",
       readTimeMinutes: 4,
       content:
-        "Parquet is the de-facto columnar format for analytics on object storage. It's a binary file, but its structure is the most useful thing in this entire course. Memorize this layout.\n\nBytes from top to bottom: `PAR1` (magic header), then one or more **row groups** (each ~128MB / ~1M rows, made of **column chunks**, all values of one column, contiguous, each split into ~1MB **pages**, the smallest unit of decompression), then a **footer** that indexes everything (schema, row-group metadata with byte offsets and sizes, column-chunk metadata with min/max and null counts and encodings, key/value user metadata), then `PAR1` again.\n\nReaders *seek to the end first*, parse the footer to learn schema and per-column-chunk min/max, then jump to just the pages they need. Three columns ignored, one column read, one row group skipped, that's a 50x IO reduction without ever touching the bulk of the file.\n\nThree things make this format fast:\n\n1. **Columnar layout.** A query for `SUM(amount)` reads the *amount* column chunk in each row group, and nothing else.\n2. **Per-column encoding.** Run-length encoding for repeated values, dictionary encoding for low-cardinality strings (`country` = US, US, US, UK becomes ints 0, 0, 0, 1 + a tiny dict). Often 5-10x compression on top of GZIP/Snappy.\n3. **Min/max statistics per row group, per column.** If a query says `WHERE amount > 1000` and a row group's max `amount` is 50, the engine skips the entire row group *without reading a single byte from it*. This is **predicate pushdown**, and it's the main reason analytical queries can hit a petabyte and return in 200ms.\n\nORC (Optimized Row Columnar) is Parquet's closest sibling, also columnar, born in Hive, sharing the same core ideas: column chunks, per-chunk statistics, footer-first reading. Avro is the row-oriented complement: schema-embedded, great for streaming and Kafka payloads, bad for analytics. The pattern is almost always *Avro on the wire, Parquet at rest.*",
+        'Parquet is a columnar file format widely supported by analytical engines. A file begins and ends with the `PAR1` magic bytes. Between them are one or more **row groups**. Each row group contains one **column chunk** per column, and chunks contain encoded **pages**. The footer records schema and metadata needed to locate chunks; optional statistics and indexes can support pruning.\n\nWriters choose row-group and page sizes. Common defaults are useful starting points, not requirements, and the number of rows per group depends on row width and encoding. Readers inspect footer metadata, select required column chunks, and may skip row groups or pages whose available statistics cannot match a predicate.\n\nThree mechanisms matter:\n\n1. **Column projection.** A query for `SUM(amount)` can omit unrelated column chunks.\n2. **Encoding and compression.** Dictionary, run-length, delta, bit-packed, and plain encodings suit different value distributions. Compression results must be measured on representative data.\n3. **Statistics and indexes.** If trustworthy metadata proves a row group cannot satisfy `amount > 1000`, the engine can skip its data pages. Missing, truncated, or unusable statistics reduce pruning.\n\nORC uses a related columnar design with its own metadata and indexing choices. Avro is row-oriented and schema-aware. Select a format from consumers, evolution requirements, interoperability, and measured read/write behavior rather than a fixed "wire versus rest" rule.',
       keyTakeaway:
         "A Parquet reader seeks to the footer first, then jumps only to the row groups and pages a query's predicates actually need.",
     },
@@ -44,21 +53,21 @@ const lesson: DataInfraLesson = {
       title: "Encodings",
       readTimeMinutes: 2,
       content:
-        "| Encoding | Best for | Example |\n|---|---|---|\n| Plain | High-entropy data; floats, hashes. | Just the raw bytes. |\n| Dictionary | Low-cardinality strings. | \"US\"→0, \"UK\"→1 + index list. |\n| RLE | Long runs of repeats. | [0,0,0,0,1,1] → [(0,4),(1,2)]. |\n| Bit-packing | Small integers. | Pack 8 booleans into a byte. |\n| Delta encoding | Sorted columns (timestamps, auto-increment IDs). | Store diffs from prev value, not absolute values. Unrelated to Delta Lake. |\n\n**The interview move.** When asked to compute storage cost or query latency, separate *logical row count × bytes-per-row* from *physical bytes after encoding + compression*. They differ by 5-20x for typical analytical data. A 1TB CSV is usually 50-200GB as Parquet.",
+        '| Encoding | Often useful for | Example |\n|---|---|---|\n| Plain | Values that do not benefit from a specialized encoding. | Store the format\'s plain representation. |\n| Dictionary | Repeated values within the dictionary limit. | `"US"→0`, `"UK"→1` plus indices. |\n| RLE | Repeated values or definition/repetition levels. | `[0,0,0,0,1,1] → [(0,4),(1,2)]`. |\n| Bit-packing | Integers with a small required bit width. | Pack values into the required bits. |\n| Delta encoding | Values with small deltas, such as sorted integers. | Store differences from previous values. |\n\nEstimate logical input separately from encoded and compressed bytes. Then test representative files: encoding effectiveness varies with cardinality, ordering, null distribution, codec, and writer settings.',
     },
     {
       id: "s5",
       title: "Iceberg vs Delta",
       readTimeMinutes: 3,
       content:
-        "A common confusion: Parquet, Iceberg, and Delta Lake are not competing formats. They operate at different levels.\n\n- **Parquet** is a *file format*. It defines how bytes are laid out within a single file: row groups, column chunks, encodings, footer stats. It knows nothing about transactions, schema evolution across files, or which files make up a \"table.\"\n- **Apache Iceberg** and **Delta Lake** are *open table formats* (also called lakehouse table formats). They sit one layer above Parquet: they manage a *collection* of Parquet (or ORC) files as a logical table and add the things Parquet lacks, ACID transactions, snapshot isolation, time-travel queries, schema and partition evolution, and file-level manifests that enable efficient planning.\n\nThe key architectural differences between Iceberg and Delta Lake:\n\n- **Metadata model.** Iceberg uses a tree of JSON manifest files, a snapshot points to one or more manifest lists, each pointing to individual Parquet files. Delta uses a transaction log (`_delta_log/`) of JSON commit files with sequential numbering. Both support time travel; Iceberg's tree is better for large-scale concurrent writes; Delta's linear log is simpler to reason about for single-writer workloads.\n- **Partition evolution.** Iceberg supports partition spec changes without rewriting data, old partitions stay on the old spec, new writes use the new spec, and the engine handles both transparently. Delta Lake requires a full rewrite to change partition layout.\n- **Hidden partitioning.** Iceberg can partition by a transform of a column (e.g. `months(order_date)`) and hide that from the query writer, queries filter by `order_date` and the engine maps to partition files automatically. Delta Lake uses physical partition directories (Hive-style), so the partition column must appear in the query.\n- **Ecosystem.** Delta Lake is tightly integrated with Databricks and Spark; Iceberg has broader engine support (Flink, Trino, Snowflake, Athena, Spark) and is the preferred default for multi-engine architectures.\n\n**The interview move.** If asked \"should we use Iceberg or Delta?\", the honest answer is: Delta wins if you're a Databricks shop (better tooling, Liquid Clustering, DML optimisations). Iceberg wins if you need engine portability or partition evolution. Both are vastly better than bare Parquet files with Hive-style directories.",
+        "Parquet and lakehouse table formats operate at different layers.\n\n- **Parquet** defines bytes within a file: row groups, column chunks, pages, encodings, and metadata. It does not define which files form the current version of a table.\n- **Apache Iceberg, Delta Lake, and Apache Hudi** manage sets of data and delete files as table versions. They define commit, snapshot, schema, partition, and maintenance behavior, with capabilities that vary by specification version and engine integration.\n\nTheir metadata designs differ. Iceberg snapshots reference manifest lists and manifests. Delta records table actions in `_delta_log/` and checkpoints. Hudi maintains a timeline and file groups. Those structures affect planning, concurrency validation, incremental reads, maintenance, and interoperability.\n\nDo not choose from a static feature matrix. Record the required operations, isolation level, delete semantics, partition evolution, supported engines, catalog, governance boundary, and upgrade path. Verify each requirement against the current specification and the exact engine versions in use.",
     },
     {
       id: "s6",
       title: "Bloom filters",
       readTimeMinutes: 2,
       content:
-        'Min/max stats only help with range predicates. For *point lookups*, `WHERE user_id = \'abc-123\'`, min/max is useless because almost every row group will contain that range. The fix: a **Bloom filter** per column chunk, a small probabilistic data structure that can answer "is X definitely not here?" with zero false negatives. False positives are tunable, usually 1%. The simulator below lets you add keys and check membership against a live 32-bit filter.',
+        'Min/max statistics are often weak for unsorted high-cardinality point predicates such as `WHERE user_id = \'abc-123\'`. A **Bloom filter** can report either "definitely absent" or "possibly present." A correctly constructed filter has no false negatives for inserted values, while its false-positive probability depends on bit count, hash count, and inserted items. The interactive model uses a deliberately tiny 32-bit filter to make collisions visible; it is not a production sizing example.',
     },
     {
       id: "s7",
@@ -71,7 +80,7 @@ const lesson: DataInfraLesson = {
       title: "Vocab",
       readTimeMinutes: 1,
       content:
-        "- **Row group**, the right size is 128MB-512MB. Too small → metadata dominates, too many tiny IO ops. Too large → can't parallelize work, can't skip cleanly.\n- **Page**, the smallest unit of decompression, ~1MB by default. Lets the engine load just the part of a column chunk it needs, without inflating the whole thing.\n- **Footer-first**, streaming writers don't know the schema/stats until they've seen all the data. Readers seek to the end first, parse the footer, then jump to the relevant pages. Two seeks, no full scan.\n- **ORC**, Parquet's sibling: columnar, similar layout, born in Hive. Slightly better compression on some workloads, slightly worse ecosystem support outside Hadoop. Most modern stacks pick Parquet.\n- **Avro**, row-oriented, schema-embedded, great for streaming and Kafka payloads, bad for analytics. Often: Avro on the wire, Parquet at rest.\n- **Z-ordering**, a space-filling curve that lets you sort by multiple columns at once, so min/max stats prune well across *any* of those columns. Delta's killer feature for multi-dimensional queries.",
+        "- **Row group**, a horizontal set of rows containing one column chunk per column. Size trades metadata and parallelism against scan and compression behavior; test it with the target engine.\n- **Page**, an encoded block inside a column chunk and a unit the reader may decode or skip when indexes permit. Writers choose page sizing.\n- **Footer-first**, a reader locates file metadata at the end, then plans the required chunks and pages. Remote-storage range requests and engine behavior determine the actual I/O pattern.\n- **ORC**, another columnar file format with stripes, indexes, and encodings. Support and performance depend on the selected engines.\n- **Avro**, a row-oriented, schema-aware format often used for record exchange and archival. Suitability depends on consumers and access patterns.\n- **Z-ordering**, a multidimensional clustering technique that can improve data skipping for selected columns. Benefit declines when data distribution or query predicates do not match the clustering choice.",
     },
   ],
   widgets: [
@@ -87,13 +96,13 @@ const lesson: DataInfraLesson = {
           "Your table has 1,000 row groups. The query is WHERE order_date = '2026-04-15'. The data is sorted by order_date. Roughly how many row groups does the engine actually open?",
         options: [
           "All 1,000, it has to check.",
-          "About 1, sorted data + min/max stats means most row groups have order_date ranges that don't include April 15, so they're skipped without being read.",
+          "Only row groups whose available date statistics overlap April 15; the exact count depends on row-group boundaries and metadata.",
           "About 100, there's no way to skip.",
           "It depends on the encoding.",
         ],
         correct: 1,
         explanation:
-          "When data is sorted by the predicate column, min/max stats are tight per row group, typically only one or two row groups will have an overlapping range. Predicate pushdown skips the rest entirely. This is why data layout matters as much as the format: Parquet on unsorted data is barely faster than CSV; Parquet on sorted-by-the-right-column data is 100x faster.",
+          "Sorted data tends to produce tighter min/max ranges. The engine can eliminate groups whose trustworthy statistics cannot match, then read the overlapping groups. The exact count and speedup require the actual files, metadata, engine, storage, and cache state.",
       },
     },
     {
@@ -105,7 +114,7 @@ const lesson: DataInfraLesson = {
         title: "Bloom verdict",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          'A query asks WHERE user_id = \'abc-123\'. The Bloom filter for the user_id column says: "definitely not in this row group." What does the engine do?',
+          "A query asks WHERE user_id = 'abc-123'. The Bloom filter for the user_id column says: \"definitely not in this row group.\" What does the engine do?",
         options: [
           "Open the row group anyway, just to be safe.",
           "Skip the row group entirely without reading any data pages.",
@@ -114,7 +123,7 @@ const lesson: DataInfraLesson = {
         ],
         correct: 1,
         explanation:
-          'Bloom filters have zero false negatives. A "definitely not" answer is final, the engine skips the entire row group, saving the IO. The flip side: a "maybe" is just that, the value might be in there, or might not, and you have to actually open the row group to know. Tuning the false-positive rate (typically 1%) is a knob in Iceberg/Delta.',
+          'A correctly constructed Bloom filter has no false negatives for inserted values, so "definitely absent" permits the engine to skip the covered data. "Possibly present" requires another check. The configured false-positive target and storage integration are implementation choices.',
       },
     },
     {
@@ -129,32 +138,32 @@ const lesson: DataInfraLesson = {
           {
             term: "Row group",
             q: "What is the right size?",
-            a: "128MB-512MB is the sweet spot. Too small → metadata dominates, too many tiny IO ops. Too large → can't parallelize work, can't skip cleanly.",
+            a: "Choose from measured scan size, metadata overhead, compression, memory, and parallelism. Small groups increase metadata; large groups can reduce pruning granularity and parallelism.",
           },
           {
             term: "Page",
             q: "Why are pages a thing?",
-            a: "A page is the smallest unit of decompression. ~1MB by default. Lets the engine load just the part of a column chunk it needs, without inflating the whole thing.",
+            a: "A page is an encoded block inside a column chunk. Readers decode pages and may skip them when indexes and predicates permit; writers choose the size.",
           },
           {
             term: "Footer-first",
             q: "Why is the footer at the end?",
-            a: "Streaming writers don't know the schema/stats until they've seen all the data. Readers seek to the end first, parse the footer, then jump to the relevant pages. Two seeks, no full scan.",
+            a: "The footer records schema and locations of row groups and column chunks. Readers locate it first, then issue the range reads required by their plan; the number of requests varies.",
           },
           {
             term: "ORC",
             q: "How is ORC different?",
-            a: "ORC is Parquet's sibling, columnar, similar layout, born in Hive. Slightly better compression on some workloads, slightly worse ecosystem support outside Hadoop. Most modern stacks pick Parquet.",
+            a: "ORC is a columnar format organized into stripes with indexes and encodings. Compare support and measured behavior in the engines that must read and write it.",
           },
           {
             term: "Avro",
             q: "When do you use Avro?",
-            a: "Row-oriented, schema-embedded, great for streaming and Kafka payloads. Bad for analytics. Often: Avro on the wire, Parquet at rest.",
+            a: "A row-oriented, schema-aware format. It can suit record exchange or archival; analytical scans over a subset of columns often favor a columnar format.",
           },
           {
             term: "Z-ordering",
             q: "What does it do?",
-            a: "A space-filling curve that lets you sort by multiple columns at once, so min/max stats prune well across any of those columns. Delta's killer feature for multi-dim queries.",
+            a: "A multidimensional clustering technique intended to improve data skipping for selected columns. Validate benefit against the actual predicate mix and data distribution.",
           },
         ],
       },

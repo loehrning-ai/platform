@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { inkOf, mulberry32, round } from "@/lib/data-science/sim-kit";
+import { useDataScienceLocale } from "../locale-context";
 
 // ─── MissingnessSim ─────────────────────────────────
 //
@@ -16,6 +17,14 @@ type Pattern = "MCAR" | "MAR" | "MNAR";
 
 const ROWS = 8;
 const COLS = ["Age", "Income", "Score", "Clicks", "Region", "Churn"] as const;
+const COL_LABELS_DE: Readonly<Record<(typeof COLS)[number], string>> = {
+  Age: "Alter",
+  Income: "Einkommen",
+  Score: "Score",
+  Clicks: "Klicks",
+  Region: "Region",
+  Churn: "Abgang",
+};
 
 interface Row {
   readonly Age: number;
@@ -26,14 +35,24 @@ interface Row {
   readonly Churn: number;
 }
 
-const COLORS: Record<Pattern, string> = { MCAR: "#4DE2FF", MAR: "#D1FF3A", MNAR: "#FF6B80" };
+const COLORS: Record<Pattern, string> = {
+  MCAR: "#4DE2FF",
+  MAR: "#D1FF3A",
+  MNAR: "#FF6B80",
+};
 const DESC: Record<Pattern, string> = {
   MCAR: "Sensor dropped a packet. Missingness is unrelated to any value, coin flip. Safe to drop rows or impute.",
   MAR: "Income & Score go missing more in the EU region (observed in other columns). Impute carefully; missingness is explainable.",
   MNAR: "High earners omit income; low scorers skip the score field. The missing value predicts its own absence. Dangerous, imputation will be biased.",
 };
+const DESC_DE: Record<Pattern, string> = {
+  MCAR: "Ein Sensor hat ein Paket verworfen. Das Fehlen hängt von keinem Wert ab, sondern ist zufällig. Zeilen können entfernt oder Werte imputiert werden.",
+  MAR: "Einkommen und Score fehlen in der EU-Region häufiger; diese Region ist in einer anderen Spalte beobachtet. Die Fehlwerte sind erklärbar, müssen aber gezielt imputiert werden.",
+  MNAR: "Hohe Einkommen und niedrige Scores fehlen häufiger. Der unbeobachtete Wert beeinflusst sein eigenes Fehlen. Eine einfache Imputation erzeugt deshalb Bias.",
+};
 
 export function MissingnessSim() {
+  const { locale, text } = useDataScienceLocale();
   const [pattern, setPattern] = useState<Pattern>("MCAR");
 
   const base = useMemo<readonly Row[]>(() => {
@@ -78,7 +97,10 @@ export function MissingnessSim() {
   }, [base, pattern]);
 
   const pctMissing = useMemo(
-    () => COLS.map((c) => round((missing.filter((r) => r[c]).length / ROWS) * 100, 0)),
+    () =>
+      COLS.map((c) =>
+        round((missing.filter((r) => r[c]).length / ROWS) * 100, 0),
+      ),
     [missing],
   );
 
@@ -86,45 +108,98 @@ export function MissingnessSim() {
 
   return (
     <Panel
-      eyebrow="SIMULATION"
-      title="Missingness Patterns"
-      meta={`${ROWS} rows · ${COLS.length} columns`}
-      caption="Pattern determines what you can safely do about it. MCAR → drop or impute freely. MAR → model the missingness. MNAR → you may need to model the mechanism itself."
+      eyebrow={text("SIMULATION", "SIMULATION")}
+      title={text("Missingness Patterns", "Muster fehlender Werte")}
+      meta={text(
+        `${ROWS} rows · ${COLS.length} columns`,
+        `${ROWS} Zeilen · ${COLS.length} Spalten`,
+      )}
+      caption={text(
+        "Pattern determines what you can safely do about it. MCAR → drop or impute freely. MAR → model the missingness. MNAR → you may need to model the mechanism itself.",
+        "Das Muster bestimmt die zulässige Behandlung. MCAR → entfernen oder imputieren. MAR → das Fehlen modellieren. MNAR → den Entstehungsmechanismus selbst untersuchen.",
+      )}
     >
       <div className="sim-row">
         <div className="sim-controls">
           <div className="sim-ctrl">
-            <label>Pattern</label>
+            <label>{text("Pattern", "Muster")}</label>
             <div className="seg">
               {(["MCAR", "MAR", "MNAR"] as const).map((p) => (
-                <button key={p} type="button" className={pattern === p ? "on" : ""} onClick={() => setPattern(p)}>
+                <button
+                  key={p}
+                  type="button"
+                  className={pattern === p ? "on" : ""}
+                  onClick={() => setPattern(p)}
+                >
                   {p}
                 </button>
               ))}
             </div>
           </div>
           <p className="prose" style={{ fontSize: 12.5, margin: 0 }}>
-            {DESC[pattern]}
+            {locale === "de" ? DESC_DE[pattern] : DESC[pattern]}
           </p>
           <div className="sim-stats" style={{ marginTop: 12 }}>
             {COLS.map((c, i) => (
               <div key={c}>
-                <div className="k">{c}</div>
-                <div className="v" style={{ color: (pctMissing[i] ?? 0) > 30 ? inkOf(color) : "inherit" }}>
+                <div className="k">
+                  {locale === "de" ? COL_LABELS_DE[c] : c}
+                </div>
+                <div
+                  className="v"
+                  style={{
+                    color: (pctMissing[i] ?? 0) > 30 ? inkOf(color) : "inherit",
+                  }}
+                >
                   {pctMissing[i]}%
                 </div>
               </div>
             ))}
           </div>
         </div>
-        <div className="plot-wrap" style={{ overflowX: "auto" }}>
-          <table style={{ borderCollapse: "collapse", fontSize: 12, fontFamily: "'JetBrains Mono', monospace", minWidth: 380 }}>
+        <div
+          className="plot-wrap"
+          data-horizontal-scroll
+          role="region"
+          aria-label={text(
+            "Dataset with missing values",
+            "Datensatz mit fehlenden Werten",
+          )}
+          tabIndex={0}
+          style={{ overflowX: "auto" }}
+        >
+          <table
+            style={{
+              borderCollapse: "collapse",
+              fontSize: 12,
+              fontFamily: "'JetBrains Mono', monospace",
+              minWidth: 380,
+            }}
+          >
             <thead>
               <tr>
-                <th style={{ padding: "4px 8px", textAlign: "left", color: "#6A6270", fontWeight: 700, letterSpacing: "0.1em" }}>#</th>
+                <th
+                  style={{
+                    padding: "4px 8px",
+                    textAlign: "left",
+                    color: "#6A6270",
+                    fontWeight: 700,
+                    letterSpacing: "0.1em",
+                  }}
+                >
+                  #
+                </th>
                 {COLS.map((c) => (
-                  <th key={c} style={{ padding: "4px 8px", textAlign: "right", color: "#6A6270", fontWeight: 700 }}>
-                    {c}
+                  <th
+                    key={c}
+                    style={{
+                      padding: "4px 8px",
+                      textAlign: "right",
+                      color: "#6A6270",
+                      fontWeight: 700,
+                    }}
+                  >
+                    {locale === "de" ? COL_LABELS_DE[c] : c}
                   </th>
                 ))}
               </tr>
@@ -132,7 +207,9 @@ export function MissingnessSim() {
             <tbody>
               {base.map((row, r) => (
                 <tr key={r} style={{ borderTop: "1px solid #E8E2DA" }}>
-                  <td style={{ padding: "4px 8px", color: "var(--ink-3)" }}>{r + 1}</td>
+                  <td style={{ padding: "4px 8px", color: "var(--ink-3)" }}>
+                    {r + 1}
+                  </td>
                   {COLS.map((c) => {
                     const isMissing = missing[r]?.[c] ?? false;
                     const value = row[c as keyof Row];
@@ -148,7 +225,11 @@ export function MissingnessSim() {
                           borderRadius: 3,
                         }}
                       >
-                        {isMissing ? "," : c === "Income" ? value.toLocaleString() : value}
+                        {isMissing
+                          ? ","
+                          : c === "Income"
+                            ? value.toLocaleString()
+                            : value}
                       </td>
                     );
                   })}

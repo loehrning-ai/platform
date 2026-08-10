@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { DS_CHAPTERS, type DsChapterId } from "@/lib/data-science/types";
+import { getDataScienceCourseCopy } from "@/lib/data-science/course-copy";
+import type { ChapterMeta, DsChapterId } from "@/lib/data-science/types";
 import { dsChapterHref } from "@/lib/data-science/routes";
+import type { Locale } from "@/lib/i18n/locale";
 
 // ─── DsChapterSidebar ──────────────────────────────
 //
@@ -14,18 +16,26 @@ import { dsChapterHref } from "@/lib/data-science/routes";
 
 export interface DsChapterSidebarProps {
   readonly activeId: DsChapterId | null;
+  readonly locale: Locale;
+  readonly chapters: readonly ChapterMeta[];
   readonly onNavigate?: () => void;
 }
 
-export function DsChapterSidebar({ activeId, onNavigate }: DsChapterSidebarProps) {
+export function DsChapterSidebar({
+  activeId,
+  locale,
+  chapters,
+  onNavigate,
+}: DsChapterSidebarProps) {
+  const copy = getDataScienceCourseCopy(locale).reader;
   return (
-    <nav className="sb-nav" aria-label="Chapters">
-      {DS_CHAPTERS.map((c) => {
+    <nav className="sb-nav" aria-label={copy.navLabel}>
+      {chapters.map((c) => {
         const active = activeId === c.id;
         return (
           <Link
             key={c.id}
-            href={dsChapterHref(c.id)}
+            href={dsChapterHref(c.id, locale)}
             prefetch={false}
             className={`sb-item ${active ? "active" : ""}`}
             onClick={onNavigate}
@@ -36,7 +46,11 @@ export function DsChapterSidebar({ activeId, onNavigate }: DsChapterSidebarProps
               <div className="sb-title">{c.title}</div>
               <div className="sb-sub">{c.subtitle}</div>
             </div>
-            <div className="sb-time">{c.estimatedMinutes} min</div>
+            <div className="sb-time">
+              {locale === "de"
+                ? `${c.estimatedMinutes} Min.`
+                : `${c.estimatedMinutes} min`}
+            </div>
           </Link>
         );
       })}

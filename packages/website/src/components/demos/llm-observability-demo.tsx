@@ -3,6 +3,8 @@
 import { useState, type JSX } from "react";
 import { cn } from "@/lib/utils";
 import { SimulationDisclosure } from "./evidence-badge";
+import { useDemoLocale } from "./demo-locale";
+import type { Locale } from "@/lib/i18n/locale";
 
 /**
  * LlmObservabilityDemo — honest rebuild of the observability concept.
@@ -72,6 +74,49 @@ const EVAL_ROWS: readonly EvalRow[] = [
   },
 ];
 
+const ENGLISH_EVAL_ROWS: readonly EvalRow[] = [
+  {
+    id: "r1",
+    prompt: "Explain the difference between the GDPR and the EU AI Act.",
+    output:
+      "The GDPR governs personal-data processing. The EU AI Act regulates AI systems through risk-based duties. A deployment may be subject to both regimes.",
+    autoScore: "hoch",
+    humanScore: "hoch",
+    driftFlag: false,
+    note: "Automated and human ratings agree; the answer is concise and distinguishes the two regulatory scopes.",
+  },
+  {
+    id: "r2",
+    prompt: "How long does a contract continue after a cancellation deadline?",
+    output:
+      "Without specific contract terms, a German contract generally renews for its original duration unless one party objects.",
+    autoScore: "mittel",
+    humanScore: "niedrig",
+    driftFlag: false,
+    note: "The automated check rates fluency and length, not legal accuracy. The statement is overgeneralized and requires legal review.",
+  },
+  {
+    id: "r3",
+    prompt: "Which risk category applies to an AI customer-support chatbot?",
+    output:
+      "A general support chatbot may have transparency duties. Its classification depends on purpose and context; credit or medical uses require a separate assessment.",
+    autoScore: "hoch",
+    humanScore: null,
+    driftFlag: true,
+    note: "The seeded drift flag marks a change from the prior baseline. It does not identify a cause or a live model change.",
+  },
+  {
+    id: "r4",
+    prompt: "Describe how a multi-agent system divides work.",
+    output:
+      "An orchestrator delegates research, analysis, and editing tasks to specialist agents, then combines their outputs.",
+    autoScore: "hoch",
+    humanScore: "mittel",
+    driftFlag: false,
+    note: "The reviewer marks missing error handling, source checks, and propagation risk despite the high automated score.",
+  },
+];
+
 const SCORE_COLORS: Readonly<Record<"hoch" | "mittel" | "niedrig", string>> = {
   hoch: "text-[#166534] border-[#166534] bg-[#dcfce7]",
   mittel: "text-brand-amber border-brand-amber bg-brand-amber/10",
@@ -87,9 +132,11 @@ const SCORE_LABELS: Readonly<Record<"hoch" | "mittel" | "niedrig", string>> = {
 function ScoreChip({
   score,
   label,
+  locale,
 }: {
   readonly score: "hoch" | "mittel" | "niedrig";
   readonly label: string;
+  readonly locale: Locale;
 }): JSX.Element {
   return (
     <span
@@ -98,20 +145,22 @@ function ScoreChip({
         SCORE_COLORS[score],
       )}
     >
-      {label}: {SCORE_LABELS[score]}
+      {label}: {locale === "de" ? SCORE_LABELS[score] : ({ hoch: "HIGH", mittel: "MEDIUM", niedrig: "LOW" } as const)[score]}
     </span>
   );
 }
 
 export function LlmObservabilityDemo(): JSX.Element {
-  const [selectedId, setSelectedId] = useState<string>(EVAL_ROWS[0].id);
+  const { locale, text } = useDemoLocale();
+  const rows = locale === "de" ? EVAL_ROWS : ENGLISH_EVAL_ROWS;
+  const [selectedId, setSelectedId] = useState<string>(rows[0].id);
   const [showFailureBeat, setShowFailureBeat] = useState(false);
 
-  const selected = EVAL_ROWS.find((r) => r.id === selectedId) ?? EVAL_ROWS[0];
+  const selected = rows.find((r) => r.id === selectedId) ?? rows[0];
 
   // Failure-mode beat: Row r2 and r4 show Auto/Human divergence.
   // The explicit failure beat focuses on r3 (drift) and r4 (human disagrees with high auto-score).
-  const divergenceRows = EVAL_ROWS.filter(
+  const divergenceRows = rows.filter(
     (r) => r.humanScore !== null && r.humanScore !== r.autoScore,
   );
 
@@ -119,37 +168,40 @@ export function LlmObservabilityDemo(): JSX.Element {
     <div
       className="flex flex-col gap-5"
       role="region"
-      aria-label="LLM-Qualitätsmessung Praxisbeispiel"
+      aria-label={text("LLM-Qualitätsmessung Praxisbeispiel", "LLM quality measurement practice example")}
     >
       <SimulationDisclosure>
-        Dieses Praxisbeispiel zeigt keine Live-Telemetrie, alle Eval-Scores und Drift-Indikatoren sind feste Beispiel-Szenarien zur Veranschaulichung von Eval-Konzepten.
+        {text(
+          "Dieses Praxisbeispiel zeigt keine Live-Telemetrie. Alle Eval-Scores und Drift-Indikatoren sind feste Beispieldaten.",
+          "This example shows no live telemetry. All evaluation scores and drift indicators are fixed sample data.",
+        )}
       </SimulationDisclosure>
 
       {/* Summary KPIs */}
-      <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-4">
         {[
           {
-            label: "Eval-Läufe (Beispiel)",
+            label: text("Eval-Läufe (Beispiel)", "Evaluation runs (sample)"),
             value: "4",
-            sub: "Seed-Szenarien",
+            sub: text("Seed-Szenarien", "Seeded scenarios"),
             accent: false,
           },
           {
-            label: "Drift-Ereignisse",
+            label: text("Drift-Ereignisse", "Drift flags"),
             value: "1",
-            sub: "Flagge gesetzt",
+            sub: text("Flagge gesetzt", "One flag set"),
             accent: true,
           },
           {
-            label: "Auto/Mensch Abweichung",
+            label: text("Auto/Mensch Abweichung", "Automated/human mismatch"),
             value: "2",
-            sub: "von 3 bewertet",
+            sub: text("von 3 bewertet", "of 3 reviewed"),
             accent: true,
           },
           {
-            label: "Ø Auto-Score",
-            value: "hoch",
-            sub: "3× hoch, 1× mittel",
+            label: text("Ø Auto-Score", "Average automated rating"),
+            value: text("hoch", "high"),
+            sub: text("3× hoch, 1× mittel", "3 high, 1 medium"),
             accent: false,
           },
         ].map(({ label, value, sub, accent }) => (
@@ -174,10 +226,10 @@ export function LlmObservabilityDemo(): JSX.Element {
       {/* Eval row picker */}
       <div>
         <div className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-          Eval-Szenarien (Beispiele)
+          {text("Eval-Szenarien (Beispiele)", "Evaluation scenarios (samples)")}
         </div>
         <div className="flex flex-col gap-1.5">
-          {EVAL_ROWS.map((row) => {
+          {rows.map((row) => {
             const active = selectedId === row.id;
             return (
               <button
@@ -193,7 +245,7 @@ export function LlmObservabilityDemo(): JSX.Element {
                 )}
               >
                 <div className="min-w-0 flex-1">
-                  <div className="truncate text-[12px] font-bold leading-[1.2] tracking-[-0.01em]">
+                  <div className="break-words text-[12px] font-bold leading-[1.35] tracking-[-0.01em]">
                     {row.prompt}
                   </div>
                 </div>
@@ -205,7 +257,7 @@ export function LlmObservabilityDemo(): JSX.Element {
                   )}
                   {row.humanScore !== null && row.humanScore !== row.autoScore && (
                     <span className="border border-destructive bg-destructive/10 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-destructive">
-                      DIVERGENZ
+                      {text("DIVERGENZ", "MISMATCH")}
                     </span>
                   )}
                 </div>
@@ -218,21 +270,21 @@ export function LlmObservabilityDemo(): JSX.Element {
       {/* Selected row detail */}
       <div className="border border-border bg-background p-4">
         <div className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-          Beispiel-Output
+          {text("Beispiel-Output", "Sample output")}
         </div>
         <p className="mt-2 text-[13px] leading-[1.7] text-foreground">{selected.output}</p>
         <div className="mt-4 flex flex-wrap gap-2">
-          <ScoreChip score={selected.autoScore} label="Auto-Eval" />
+          <ScoreChip score={selected.autoScore} label={text("Auto-Eval", "Automated evaluation")} locale={locale} />
           {selected.humanScore !== null ? (
-            <ScoreChip score={selected.humanScore} label="Mensch" />
+            <ScoreChip score={selected.humanScore} label={text("Mensch", "Human review")} locale={locale} />
           ) : (
             <span className="border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.1em] text-muted-foreground">
-              Mensch: ausstehend
+              {text("Mensch: ausstehend", "Human review: pending")}
             </span>
           )}
           {selected.driftFlag && (
             <span className="border border-brand-amber bg-brand-amber/10 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-brand-amber">
-              DRIFT-INDIKATOR AKTIV
+              {text("DRIFT-INDIKATOR AKTIV", "DRIFT FLAG ACTIVE")}
             </span>
           )}
         </div>
@@ -251,7 +303,10 @@ export function LlmObservabilityDemo(): JSX.Element {
         >
           <div className="flex items-center justify-between gap-2">
             <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-              Grenzfall: Was passiert, wenn Auto-Eval und Mensch sich widersprechen?
+              {text(
+                "Grenzfall: Was passiert, wenn Auto-Eval und Mensch sich widersprechen?",
+                "Boundary case: what happens when automated and human ratings disagree?",
+              )}
             </div>
             <span className="shrink-0 font-mono text-[10px] text-muted-foreground" aria-hidden="true">
               {showFailureBeat ? "▲" : "▼"}
@@ -261,14 +316,16 @@ export function LlmObservabilityDemo(): JSX.Element {
         {showFailureBeat && (
           <div className="mt-4 flex flex-col gap-3">
             <p className="text-[13px] leading-[1.6] text-foreground">
-              In {divergenceRows.length} von {EVAL_ROWS.filter((r) => r.humanScore !== null).length} bewerteten Szenarien (Beispiel) widerspricht die menschliche Einschätzung dem automatischen Score:
+              {locale === "de"
+                ? `In ${divergenceRows.length} von ${rows.filter((r) => r.humanScore !== null).length} bewerteten Beispielen widerspricht die menschliche Einschätzung dem automatischen Score:`
+                : `Human review disagrees with the automated score in ${divergenceRows.length} of ${rows.filter((r) => r.humanScore !== null).length} reviewed examples:`}
             </p>
             {divergenceRows.map((row) => (
               <div key={row.id} className="border border-destructive/30 bg-destructive/5 p-3">
                 <div className="text-[12px] font-bold text-foreground">{row.prompt}</div>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  <ScoreChip score={row.autoScore} label="Auto-Eval" />
-                  {row.humanScore && <ScoreChip score={row.humanScore} label="Mensch" />}
+                  <ScoreChip score={row.autoScore} label={text("Auto-Eval", "Automated evaluation")} locale={locale} />
+                  {row.humanScore && <ScoreChip score={row.humanScore} label={text("Mensch", "Human review")} locale={locale} />}
                 </div>
                 <p className="mt-2 text-[12px] leading-[1.5] text-muted-foreground">
                   {row.note}
@@ -277,7 +334,11 @@ export function LlmObservabilityDemo(): JSX.Element {
             ))}
             <div className="border-l-2 border-brand-orange bg-brand-orange/5 p-3">
               <p className="text-[12px] leading-[1.6] text-foreground">
-                <strong>Lernpunkt:</strong> Automatische Eval-Scores messen Fluenz, Länge und Muster, sie erfassen keine Rechtsgenauigkeit, Sicherheitsrisiken oder fachliche Tiefe. Produktionssysteme brauchen einen menschlichen Review-Zyklus, nicht nur automatische Metriken.
+                <strong>{text("Lernpunkt:", "Learning point:")}</strong>{" "}
+                {text(
+                  "Automatische Eval-Scores messen Fluenz, Länge und Muster. Sie erfassen keine Rechtsgenauigkeit, Sicherheitsrisiken oder fachliche Tiefe. Produktionssysteme brauchen einen menschlichen Review-Zyklus.",
+                  "Automated scores measure fluency, length, and patterns. They do not establish legal accuracy, safety, or subject-matter depth. Production systems need a human review cycle.",
+                )}
               </p>
             </div>
           </div>

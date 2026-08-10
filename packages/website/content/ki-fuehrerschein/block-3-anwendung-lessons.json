@@ -1,14 +1,11 @@
 {
   "blockId": "block_3",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-06-22",
-  "nextReview": "2026-12-22",
+  "lastReviewed": "2026-08-08",
+  "nextReview": "2027-02-08",
   "reviewCadence": "vendor",
   "riskClass": "vendor",
-  "triggerEvents": [
-    "vendor-api-change",
-    "model-deprecation"
-  ],
+  "triggerEvents": ["vendor-api-change", "model-deprecation"],
   "lessons": [
     {
       "id": "block_3_lesson_1",
@@ -28,15 +25,15 @@
           "id": "block_3_lesson_1_section_1",
           "title": "Die Situation und Schritt-für-Schritt-Anleitung",
           "readTimeMinutes": 4,
-          "content": "In deinem Posteingang liegt eine Kundenreklamation. Firma Bergmann, Bestandskunde seit 4 Jahren, bestellt regelmäßig Hydraulikkomponenten. Die letzte Lieferung kam 8 Arbeitstage zu spät. Der Einkaufsleiter schreibt:\n\n\"Sehr geehrte Damen und Herren, die Lieferung unserer Bestellung HB-2026-0412 ist mit 8 Arbeitstagen Verspätung eingetroffen. Das hat unsere Produktion erheblich gestört. Wir erwarten eine Stellungnahme und möchten wissen, wie Sie sicherstellen, dass das nicht wieder passiert.\"\n\nDu musst antworten. Professionell. Schnell. Ohne falsche Zusagen.\n\n**Mit Copilot in Outlook** (wenn du M365 in deinem Unternehmen nutzt):\n\n1. Öffne die E-Mail von Firma Bergmann in Outlook.\n2. Klick auf **Antworten**.\n3. Klick auf das **Copilot-Symbol** in der Symbolleiste.\n4. Wähle **Mit Copilot entwerfen**.\n5. Gib folgenden Prompt ein: \"Antworte professionell auf diese Reklamation. Ton: verständnisvoll aber sachlich. Maximal 150 Wörter. Biete eine Lösung an, mache keine Zusagen ohne Rücksprache mit dem Vertrieb.\"\n6. Copilot generiert einen Entwurf. Lies ihn.\n7. Klick bei Bedarf auf **Anpassen**.\n8. Klick auf **Einfügen**, wenn der Entwurf passt.\n\n**Kostenlose Alternativen** (ohne M365):\n\nDu kannst dieselbe Aufgabe mit diesen kostenlosen Tools erledigen. Kopiere den Prompt und die Kunden-E-Mail in das Tool deiner Wahl. Entferne vorher alle personenbezogenen Daten (Kundennamen, Kundennummern), die für die Antwort nicht nötig sind:\n\n- **ChatGPT** (kostenlose Version, OpenAI): Verbraucherangebot; prüfe Datenkontrollen und aktuelle Bedingungen. Nicht für Firmendaten ohne Freigabe.\n- **Gemini** (kostenlose Version von Google): Verbraucherangebot; prüfe Datenkontrollen und aktuelle Bedingungen. Nicht für Firmendaten ohne Freigabe.\n- **Le Chat** (kostenloser Assistent von Mistral AI, einem europäischen Anbieter): Französischer Anbieter; Firmensitz und Datenregion sind nicht dasselbe. Prüfe die aktuellen Vertrags- und Verarbeitungsbedingungen.",
-          "keyTakeaway": "Mit einem KI-Assistenten beantwortest du eine Kundenreklamation in 4 statt 12 Minuten. Der richtige Prompt steuert Ton, Länge und Einschränkungen."
+          "content": "In deinem Posteingang liegt eine Kundenreklamation. Firma Bergmann bestellt regelmäßig Hydraulikkomponenten. Die letzte Lieferung kam acht Arbeitstage zu spät. Der Einkauf verlangt eine Erklärung und belastbare Gegenmaßnahmen.\n\nWenn deine Organisation eine Assistenzfunktion für diesen Zweck freigegeben hat, erstelle damit einen Entwurf. Die genaue Oberfläche hängt von Produkt und Version ab. Ein geeigneter Arbeitsauftrag lautet:\n\n\"Entwirf eine Antwort auf die Reklamation. Verwende nur die unten genannten Fakten. Ton: respektvoll und sachlich. Maximal 150 Wörter. Erfinde keine Ursache, Frist, Entschädigung oder Gegenmaßnahme. Markiere fehlende Angaben in eckigen Klammern.\"\n\nFüge nur Informationen ein, die für den Zweck notwendig und vom freigegebenen Arbeitsablauf umfasst sind. Redaktion oder Pseudonymisierung senkt Risiken, macht einen nicht freigegebenen Dienst aber nicht automatisch zulässig.\n\nWenn kein geeignetes System freigegeben ist, schreibe den Entwurf ohne KI oder arbeite mit einem vollständig synthetischen Beispiel. Kopiere die Kundenmail nicht in ein beliebiges Verbraucherangebot.",
+          "keyTakeaway": "Ein Assistent liefert nur einen Entwurf. Begrenze ihn auf belegte Fakten, markiere fehlende Angaben und verwende ausschließlich den freigegebenen Arbeitsablauf."
         },
         {
           "id": "block_3_lesson_1_section_2",
-          "title": "Zeitvergleich, Prüfschritt und Prompt-Analyse",
+          "title": "Freigabeprüfung und Prompt-Analyse",
           "readTimeMinutes": 4,
-          "content": "**Zeitvergleich:** Ohne KI brauchst du 12 Minuten (Formulierung überlegen, schreiben, Ton prüfen). Mit KI brauchst du 4 Minuten (Ton prüfen und anpassen plus Faktencheck). Ersparnis: 8 Minuten pro Reklamationsantwort. Bei 3 Reklamationen pro Woche: 24 Minuten.\n\n**Der Prüfschritt:** Bevor du auf Senden klickst, drei Fragen:\n\n1. **Stimmt der Ton?** Verständnisvoll, aber nicht unterwürfig. Sachlich, aber nicht kalt.\n2. **Keine falschen Zusagen?** KI neigt dazu, konkrete Liefertermine oder Kompensationen anzubieten. Streiche alles, was du nicht autorisiert bist zuzusagen.\n3. **Keine vertraulichen Daten?** Prüfe, ob der Entwurf interne Informationen enthält, die der Kunde nicht sehen soll.\n\nDieser Prüfschritt dauert 60 Sekunden. Überspring ihn nie.\n\n**Warum der Prompt funktioniert:** Der Prompt enthält vier Steuerungselemente:\n\n1. **\"Professionell\"** setzt den Grundton.\n2. **\"Verständnisvoll aber sachlich\"** verhindert übertriebenes Entschuldigen und kalte Sachlichkeit.\n3. **\"Maximal 150 Wörter\"** erzwingt Kürze.\n4. **\"Mache keine Zusagen ohne Rücksprache mit dem Vertrieb\"** ist die wichtigste Einschränkung. KI bietet gerne konkrete Lösungen an: Rabatte, Expresslieferungen, Gutschriften. Nichts davon hast du autorisiert.\n\nOhne diese Steuerungselemente erhältst du einen generischen Text, den du komplett umschreiben musst. Mit ihnen erhältst du einen Entwurf, den du in 2 Minuten finalisierst.",
-          "keyTakeaway": "Der Prüfschritt (Ton, Zusagen, vertrauliche Daten) dauert 60 Sekunden und darf nie übersprungen werden. Ein guter Prompt enthält Ton, Länge und Einschränkungen."
+          "content": "Prüfe den Entwurf vor dem Senden wie jeden anderen geschäftlichen Text:\n\n1. **Fakten und Quelle:** Stimmen Bestellung, Verzögerung und bisherige Kommunikation mit den Primärquellen überein?\n2. **Befugnis:** Enthält der Entwurf Fristen, Rabatte, Haftungsanerkenntnisse oder andere Zusagen, die du nicht geben darfst?\n3. **Empfängerkreis:** Enthält er interne Ursachen, Namen oder vertrauliche Angaben, die nicht nach außen gehören?\n4. **Vollständigkeit:** Sind offene Punkte sichtbar markiert, statt mit plausibel klingenden Angaben gefüllt?\n5. **Ton und Sprache:** Ist der Text klar, respektvoll und frei von unbelegten Bewertungen?\n\nDer Prompt steuert Format und Grenzen, garantiert aber kein korrektes Ergebnis. Die Formulierung \"verwende nur diese Fakten\" und die Anweisung, Lücken zu markieren, erleichtern die Prüfung. Sie ersetzen sie nicht.\n\nMiss einen möglichen Zeitgewinn im eigenen Prozess. Ohne wiederholte Messung gibt es keine belastbare allgemeine Minutenangabe.",
+          "keyTakeaway": "Prüfe Fakten, Befugnis, Empfängerkreis, Vollständigkeit und Ton. Prompt-Grenzen erleichtern die Kontrolle, garantieren aber nichts."
         }
       ],
       "quiz": [
@@ -105,8 +102,8 @@
             "badLabel": "Schwacher Prompt",
             "goodLabel": "Starker Prompt",
             "bad": "Schreib mir eine Antwort auf diese Kunden-Mail.",
-            "good": "Rolle: Du bist Kundenservice-Mitarbeiterin eines Handwerksbetriebs. Kontext: Der Kunde reklamiert eine um zwei Wochen verspätete Lieferung. Aufgabe: Schreibe eine Antwort, die sich entschuldigt, um Verständnis bittet und einen Rückruf durch den Vertrieb bis morgen 12 Uhr ankündigt. Format: höflicher E-Mail-Text, maximal 120 Wörter, mit Anrede und Gruß. Vorgaben: keine Zusagen zu Terminen oder Rabatten ohne Freigabe, kein Fachjargon, keine Schuldzuweisung an Lieferanten.",
-            "note": "Der starke Prompt folgt dem RCTFC-Schema (Rolle, Kontext, Aufgabe, Format, Vorgaben). Je präziser die Eingabe, desto weniger musst du an der Ausgabe nacharbeiten."
+            "good": "Kontext: Der Kunde reklamiert eine um zwei Wochen verspätete Lieferung. Aufgabe: Entwirf eine sachliche Antwort anhand der angegebenen Fakten. Format: E-Mail, maximal 120 Wörter, mit Anrede und Gruß. Vorgaben: keine Ursache, Frist, Entschädigung oder Gegenmaßnahme erfinden; fehlende Angaben in eckigen Klammern markieren; keine Schuldzuweisung.",
+            "note": "Kontext, Aufgabe, Format und Grenzen machen den Entwurf leichter prüfbar. Sie belegen weder Fakten noch Freigaben."
           }
         }
       ]
@@ -116,7 +113,7 @@
       "blockId": "block_3",
       "number": 2,
       "title": "Meeting zusammenfassen",
-      "subtitle": "Meeting-Protokolle in 5 statt 30 Minuten",
+      "subtitle": "Entscheidungen, Aufgaben und offene Punkte nachvollziehbar erfassen",
       "durationMinutes": 7,
       "keyConcepts": [
         "KI-Assistent",
@@ -129,15 +126,15 @@
           "id": "block_3_lesson_2_section_1",
           "title": "Variante A: Copilot in Microsoft Teams",
           "readTimeMinutes": 3,
-          "content": "Du kommst aus einem 30-Minuten-Meeting. Fünf Teilnehmer: Vertriebsleitung, zwei Außendienstmitarbeitende, Innendienst, Marketingleitung. Es ging um die Pipeline, einen Neukunden, eine Messevorbereitung und ein CRM-Problem. Du musst ein Protokoll schreiben. Ohne KI dauert das 20 bis 30 Minuten. Mit KI unter 5.\n\n**Variante A: Copilot in Microsoft Teams** (wenn du M365 nutzt)\n\nWenn das Meeting in Teams stattfand und die Aufzeichnung aktiviert war:\n\n1. Öffne den Teams-Chat des Meetings.\n2. Klick auf **Zusammenfassung** (oder **Recap**) im oberen Bereich.\n3. Copilot zeigt automatisch: Zusammenfassung, Aufgaben, Schlüsselmomente.\n4. Klick auf **Aufgaben**, um die erkannten Action Items zu sehen.\n5. Korrigiere die Zuordnung der Verantwortlichen, falls die KI Namen verwechselt hat.\n\nDas dauert 3 Minuten. Inklusive Korrektur.\n\n**Typische Fehler bei automatischen Meeting-Zusammenfassungen:** KI verwechselt gelegentlich Sprecher, wenn mehrere Personen ähnliche Stimmen haben. Prüfe immer, ob die Aufgaben den richtigen Personen zugeordnet sind. Außerdem fasst KI beiläufige Bemerkungen manchmal als Entscheidungen zusammen. \"Wäre schön, wenn wir das mal angehen\" ist kein Beschluss. Streiche alles, was nicht eindeutig entschieden wurde.",
-          "keyTakeaway": "Automatische Meeting-Zusammenfassungen erstellen Protokolle in 3 Minuten, verwechseln aber gelegentlich Sprecher und interpretieren beiläufige Bemerkungen als Beschlüsse."
+          "content": "Automatische Zusammenfassungen setzen mehr voraus als eine Lizenz. Vor Aufzeichnung oder Transkription müssen Zweck, Information der Beteiligten, Rechtsgrundlage oder Einwilligung, Mitbestimmung, Aufbewahrung, Zugriffsrechte und der konkrete Dienst geklärt sein.\n\nWenn der Arbeitsablauf freigegeben und im Produkt verfügbar ist, kann eine Zusammenfassungsfunktion einen Entwurf mit Themen, Aufgaben und Zeitmarken erzeugen. Die Oberfläche unterscheidet sich nach Version und Lizenz.\n\nVergleiche den Entwurf mit Aufzeichnung, Transkript oder bestätigten Notizen. Kontrolliere insbesondere Sprecher, Verantwortliche, Fristen und den Unterschied zwischen Vorschlag und Beschluss. \"Das könnten wir prüfen\" ist keine Entscheidung.\n\nDie Beteiligten sollten das freigegebene Protokoll erhalten und Fehler über einen definierten Prozess korrigieren können.",
+          "keyTakeaway": "Aufzeichnung und Transkription brauchen einen freigegebenen Rechts- und Betriebsrahmen. Ein automatisch erzeugtes Protokoll bleibt ein Entwurf, der mit Primärquellen abgeglichen wird."
         },
         {
           "id": "block_3_lesson_2_section_2",
           "title": "Variante B: Manuell mit Prompt",
           "readTimeMinutes": 4,
-          "content": "Wenn das Meeting nicht aufgezeichnet wurde oder du kein M365 hast, nutze deine handschriftlichen Notizen oder Stichpunkte mit folgendem Prompt:\n\n\"Fasse folgendes Protokoll zusammen. Extrahiere: (1) Entscheidungen (2) Aufgaben mit Verantwortlichen und Fristen (3) Offene Fragen (4) Nächste Schritte\"\n\n**Vorher (deine Stichpunkte):**\n- Pipeline 1,2 Mio offen, 400k heiss\n- Neukunde Stöcker will Pilot Pred. Maintenance, 35k\n- Hartmann will Wartungsvertrag auf 2. Werk, 8k/Monat, Deadline 15.04.\n- CRM-Daten veraltet, 30% ohne aktuelle Telefonnr.\n- Aksoy braucht techn. Datenblatt PM-Lösung\n\n**Nachher (strukturiertes Protokoll):**\n- **Entscheidungen:** Hartmann-Angebot hat Priorität. CRM-Bereinigung im April genehmigt.\n- **Aufgaben:** Nowak: Angebot Hartmann bis 07.04. / Richter: CRM-Bereinigung planen / Marketing: Datenblatt PM bis 10.04.\n- **Offene Fragen:** Entscheider bei Stöcker (techn. Leiter vs. GF)?\n- **Nächste Schritte:** Außendienst liefert aktuelle Kontaktdaten für CRM.\n\nZeitersparnis: 15 bis 25 Minuten pro Meeting.\n\n**Wichtig bei dieser Variante:** Kopiere nur deine eigenen Notizen in das KI-Tool. Keine vollständigen Meetingaufzeichnungen mit Personennamen und internen Zahlen in kostenlose Tools eingeben. Für Personalgespräche, Betriebsratssitzungen, Disziplinarverfahren oder vertrauliche Strategiediskussionen gilt: handschriftliches Protokoll, kein KI-Tool. Das schützt die betroffenen Personen.\n\n**Welches Tool für Variante B:** ChatGPT (kostenlose Version), Gemini oder Le Chat sind geeignet, solange keine personenbezogenen oder vertraulichen Firmendaten in den Prompt eingehen.",
-          "keyTakeaway": "Zeitersparnis: 15 bis 25 Minuten pro Meeting. Für Personalgespräche und Disziplinarverfahren: handschriftliches Protokoll, kein KI-Tool."
+          "content": "Auch aus freigegebenen Notizen kann ein Assistent eine Struktur vorschlagen:\n\n\"Ordne die Notizen in: bestätigte Entscheidungen, Aufgaben mit ausdrücklich genannten Verantwortlichen und Fristen, offene Fragen. Erfinde keine Namen, Daten oder Beschlüsse. Markiere fehlende Angaben.\"\n\n**Ausgangsnotizen:**\n- Pipeline 1,2 Mio. offen, 400 Tsd. priorisiert\n- Pilot für vorausschauende Wartung angefragt, 35 Tsd.\n- Wartungsvertrag für zweites Werk, genannte Frist 15.04.\n- CRM-Daten teilweise veraltet\n- technisches Datenblatt benötigt\n\nEin Entwurf, der daraus Namen, neue Fristen oder eine Genehmigung der CRM-Bereinigung ableitet, enthält unbelegte Angaben. Verschiebe diese Punkte unter \"offen\", statt sie als Beschluss auszugeben.\n\nEigene Notizen können weiterhin personenbezogene, vertrauliche oder mitbestimmungspflichtige Inhalte enthalten. Nutze sie nur im freigegebenen Arbeitsablauf. Für Personal-, Betriebsrats- oder Disziplinarthemen gelten die speziellen Regeln der Organisation; weder Handschrift noch lokale Verarbeitung schafft automatisch Rechtmäßigkeit.",
+          "keyTakeaway": "Ein strukturierter Entwurf darf keine Verantwortlichen, Fristen oder Beschlüsse ergänzen. Auch eigene Notizen unterliegen Daten-, Arbeits- und Mitbestimmungsregeln."
         }
       ],
       "quiz": [
@@ -170,7 +167,7 @@
         },
         {
           "id": "block_3_lesson_2_q2",
-          "questionText": "Welche Art von Meeting darf auf keinen Fall mit KI zusammengefasst werden?",
+          "questionText": "Welche Regel gilt für die KI-gestützte Zusammenfassung besonders sensibler Meetings?",
           "answerOptions": [
             {
               "id": "a",
@@ -184,7 +181,7 @@
             },
             {
               "id": "c",
-              "text": "Personalgespräche wie Abmahnungen oder Gehaltsverhandlungen",
+              "text": "Sie darf nur in einem ausdrücklich freigegebenen Arbeitsablauf erfolgen, der Zweck, Rechtsgrundlage, Mitbestimmung, Zugriff und Aufbewahrung abdeckt",
               "isCorrect": true
             },
             {
@@ -193,7 +190,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Meetings mit sensiblen Inhalten (Personalgespräche, Betriebsratssitzungen, Disziplinarverfahren, vertrauliche Strategiediskussionen) dürfen nicht mit KI zusammengefasst werden. Personenbezogene Daten besonderer Kategorien gehören in kein externes Tool."
+          "explanation": "Bei Personal-, Betriebsrats- oder Disziplinarthemen reichen ein Produktname oder eine lokale Installation nicht aus. Die Organisation muss den konkreten Zweck und Arbeitsablauf rechtlich, technisch und organisatorisch freigeben; andernfalls findet keine KI-Verarbeitung statt."
         }
       ]
     },
@@ -202,7 +199,7 @@
       "blockId": "block_3",
       "number": 3,
       "title": "Daten analysieren mit KI",
-      "subtitle": "Quartalszahlen auswerten ohne Formelkenntnisse",
+      "subtitle": "Berechnungen und Aussagen getrennt prüfen",
       "durationMinutes": 8,
       "keyConcepts": [
         "Datenanalyse",
@@ -215,15 +212,15 @@
           "id": "block_3_lesson_3_section_1",
           "title": "Schritt für Schritt: Daten analysieren",
           "readTimeMinutes": 4,
-          "content": "Dein Chef will bis 15 Uhr die Quartalszahlen ausgewertet haben. Du hast eine Excel-Tabelle mit 4 Produktlinien und 4 Quartalen. Du bist kein Excel-Experte. Normalerweise verbringst du 45 Minuten mit Formeln, Pivot-Tabellen und Diagrammen. Heute nicht.\n\n**Mit Copilot in Excel** (wenn du M365 nutzt):\n\n1. Öffne die Excel-Datei mit deinen Quartalszahlen.\n2. Stelle sicher, dass die Daten als **Tabelle** formatiert sind (Strg+T).\n3. Klick auf das **Copilot-Symbol** in der Symbolleiste.\n4. Gib ein: \"Analysiere diese Tabelle. Finde die Top-5 Produkte nach Umsatz. Zeige den Trend über die letzten 4 Quartale. Markiere Ausreißer.\"\n5. Copilot zeigt dir eine Analyse mit Diagrammen.\n\n**Kostenlose Alternative mit ChatGPT oder Le Chat:**\n\nDu kannst die Zahlen (als Text oder CSV) in ChatGPT (kostenlose Version) oder Le Chat einfügen und denselben Prompt verwenden. Wichtig: Keine internen Quartalszahlen in kostenlose Tools eingeben, wenn sie vertraulich sind (Stufe 3). Für vertrauliche Finanzdaten: Copilot im Unternehmens-Tenant oder lokale KI verwenden.\n\n**Beispiel: Was die KI findet**\n\nBei einer Tabelle mit 4 Produktlinien (HZ-300, LA-500, PV-100, KM-800) über 4 Quartale erkennt die KI:\n- **KM-800** ist die umsatzstärkste Produktlinie (2.265 TEUR gesamt, stabiler Aufwärtstrend).\n- **LA-500** zeigt einen **Einbruch** von Q2 zu Q4 (395 auf 290 TEUR). Das ist der Ausreißer.\n- **HZ-300** und **PV-100** wachsen stetig, aber langsam.",
-          "keyTakeaway": "KI-Assistenten schreiben Formeln im Hintergrund und liefern nicht nur Zahlen, sondern Interpretationen. Für vertrauliche Finanzdaten nur Copilot oder lokale KI verwenden."
+          "content": "Du sollst eine Tabelle mit vier Produktlinien und vier Quartalen untersuchen. Kläre zuerst Definitionen: Welche Spalte ist Umsatz, in welcher Einheit, netto oder brutto, welche Währung, und was bedeutet \"Ausreißer\"?\n\nIn einem für diese Daten freigegebenen Analysewerkzeug kannst du einen Entwurf anfordern:\n\n\"Berechne je Produktlinie den Gesamtumsatz und die prozentuale Veränderung von Q2 zu Q4. Zeige Formel, Bezugswerte und Rundung. Nenne keine Ursache. Markiere Werte nur dann als Ausreißer, wenn du Methode und Schwelle angibst.\"\n\nVerwende für die Übung synthetische Daten. Reale interne Finanzdaten gehören ausschließlich in den dafür freigegebenen Arbeitsablauf; weder Unternehmens-Tenant noch lokale Installation genügen als alleinige Freigabe.\n\nWenn LA-500 von 395 auf 290 sinkt, ist das zunächst eine deskriptive Veränderung von rund -26,6 Prozent. Ob der Wert statistisch auffällig ist, hängt von Vergleichsreihe, Methode und Schwelle ab. Aus vier Quartalen folgt keine Ursache.",
+          "keyTakeaway": "Fordere Formel, Bezugswerte, Rundung und Ausreißermethode an. Eine Veränderung ist noch keine Ursache und nicht automatisch ein statistischer Ausreißer."
         },
         {
           "id": "block_3_lesson_3_section_2",
           "title": "Prüfschritt und Warnung bei Finanzdaten",
           "readTimeMinutes": 4,
-          "content": "**Warum das funktioniert:** Du brauchst keine Excel-Kenntnisse. KI schreibt die Formeln im Hintergrund: SUMME, MITTELWERT, prozentuale Veränderungen und bedingte Formatierungen. Der entscheidende Vorteil: KI liefert nicht nur Zahlen, sondern Interpretationen.\n\n**Prüfschritt:**\n\n1. **Stichproben prüfen.** Wähle 2 bis 3 Werte und rechne nach. Wenn die KI 23% sagt und du bei 26,6% landest, hat sie möglicherweise einen anderen Bezugspunkt gewählt. Frag nach.\n2. **Kontext ergänzen.** KI weiß nicht, warum ein Produkt eingebrochen ist. Vielleicht gab es einen Produktrückruf. Diese Information musst du hinzufügen.\n3. **Keine Prognosen übernehmen.** Wenn die KI sagt \"Q1 2026 wird voraussichtlich bei 270 TEUR liegen\", ist das eine statistische Extrapolation. Keine Marktanalyse.\n\n**Datenschutz bei Finanzdaten:**\n\nMicrosoft 365 Copilot arbeitet innerhalb der Microsoft-365-Dienstgrenze. Nutze ihn für interne Daten nur, wenn Vertrag, Tenant-Geografie, Berechtigungen und Datenklassen betrieblich geprüft und freigegeben sind.\n\nChatGPT (kostenlose Version) ist für vertrauliche Umsatzzahlen, Deckungsbeiträge oder Margenanalysen **nicht** geeignet. Für öffentlich zugängliche Daten oder eigene Lernübungen ohne Firmendaten kannst du die kostenlose Version nutzen.",
-          "keyTakeaway": "Immer Stichproben nachrechnen, da KI unterschiedliche Bezugspunkte wählen kann. Vertrauliche Finanzdaten nur in Copilot oder Enterprise-KI eingeben."
+          "content": "**Prüfschritt:**\n\n1. **Schema prüfen:** Stimmen Spalten, Einheiten, fehlende Werte, Datentypen und Filter?\n2. **Berechnungen reproduzieren:** Rechne kritische Kennzahlen mit einer unabhängigen Formel oder einem zweiten Werkzeug nach. Zwei bis drei Stichproben reichen nicht für jede Hochrisikoentscheidung.\n3. **Definitionen festhalten:** Dokumentiere Nenner, Zeitraum, Rundung, Ausschlüsse und Ausreißermethode.\n4. **Aussage begrenzen:** Trenne beobachtete Veränderung, Hypothese, Prognose und belegte Ursache.\n5. **Freigabe prüfen:** Kontrolliere Datenklasse, Zweck, Berechtigungen, Vertrag, Aufbewahrung, Region und Exportfunktionen des konkreten Systems.\n\nEin Assistent kann Formeln oder Interpretationen vorschlagen. Du brauchst genug Fachkenntnis oder eine zuständige Prüfperson, um die Ausgabe zu validieren. Eine plausibel klingende Begründung ist kein Beleg.",
+          "keyTakeaway": "Validiere Schema, Berechnung, Definition und Aussagegrenze. Nutze reale Finanzdaten nur im konkret freigegebenen System und Arbeitsablauf."
         }
       ],
       "quiz": [
@@ -256,11 +253,11 @@
         },
         {
           "id": "block_3_lesson_3_q2",
-          "questionText": "Warum dürfen vertrauliche Umsatzzahlen nicht in die kostenlose ChatGPT-Version eingegeben werden?",
+          "questionText": "Warum dürfen vertrauliche Umsatzzahlen nicht in einen nicht freigegebenen Verbraucher-KI-Dienst eingegeben werden?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "Die kostenlose Version hat eine zu kleine Zeichenbegrenzung",
+              "text": "Der Dienst hat eine zu kleine Zeichenbegrenzung",
               "isCorrect": false
             },
             {
@@ -270,12 +267,12 @@
             },
             {
               "id": "c",
-              "text": "Die kostenlose Version kann keine Zahlen verarbeiten",
+              "text": "Verbraucherangebote können grundsätzlich keine Zahlen verarbeiten",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Copilot ist kostenlos und ChatGPT kostenpflichtig",
+              "text": "Ein kostenpflichtiges Konkurrenzprodukt wäre automatisch freigegeben",
               "isCorrect": false
             }
           ],
@@ -288,7 +285,7 @@
       "blockId": "block_3",
       "number": 4,
       "title": "Bericht schreiben",
-      "subtitle": "Vom Stichpunkt zum Bericht in 10 Minuten",
+      "subtitle": "Aus Notizen einen prüfbaren Berichtsentwurf erstellen",
       "durationMinutes": 7,
       "keyConcepts": [
         "Statusbericht",
@@ -301,15 +298,15 @@
           "id": "block_3_lesson_4_section_1",
           "title": "Schritt für Schritt: Bericht erstellen",
           "readTimeMinutes": 4,
-          "content": "Jeden Freitag schreibst du einen Statusbericht. 7 Stichpunkte aus deiner Woche müssen in einen lesbaren Bericht für die Geschäftsführung. Normalerweise brauchst du 45 Minuten: Formulieren, Strukturieren, Korrekturlesen. Heute brauchst du 10.\n\n**Mit einem KI-Assistenten deiner Wahl:**\n\n1. Öffne ChatGPT (kostenlose Version), Le Chat, Gemini oder Copilot.\n2. Gib ein: \"Erstelle aus diesen Stichpunkten einen strukturierten Bericht. Format: Zusammenfassung (3 Sätze), Details als Unterpunkte, Nächste Schritte mit Verantwortlichen.\"\n3. Füge deine Stichpunkte ein. Kein Unternehmensname oder vertrauliche Zahlen nötig, wenn der Bericht intern ist.\n4. Die KI generiert einen strukturierten Bericht.\n5. Lies, korrigiere, gib frei.\n\n**Hinweis zum Tool:** Für einen internen Statusbericht ohne streng vertrauliche Daten (Stufe 2) sind kostenlose Tools geeignet. Für einen Bericht mit unveröffentlichten Quartalszahlen oder Geschäftsgeheimnissen: Copilot im Unternehmens-Tenant verwenden.\n\n**Vorher (deine Stichpunkte):** 7 unstrukturierte Bulletpoints. Keine Priorisierung. Kein roter Faden.\n\n**Nachher (KI-generierter Bericht):**\n\n**Zusammenfassung:** Der Website-Relaunch liegt im Zeitplan mit geplantem Launch am 20.04. Die Google-Ads-Performance ist im Zielkorridor. Handlungsbedarf besteht beim Cookie-Banner, für den eine DSGVO-konforme Nachbesserung erforderlich ist.\n\n**Risiko:** Cookie-Banner ist nicht DSGVO-konform (Anwaltliche Beanstandung). Agentur-Angebot liegt vor: 1.800 EUR, 5 Werktage.\n\n**Nächste Schritte:** Freigabe 1.800 EUR Cookie-Banner-Update (Entscheidung GF), SEO-Texte finalisieren bis 10.04. (Marketing), Website-Launch vorbereiten bis 20.04. (Entwicklung).\n\nDas ist kein perfekter Bericht. Aber es ist ein solider Entwurf, der 80% der Arbeit erledigt.",
+          "content": "Ein Assistent kann freigegebene Stichpunkte nach einem festen Schema ordnen. Verwende nur den für die Daten und Empfänger freigegebenen Arbeitsablauf.\n\nEin prüfbarer Auftrag lautet:\n\n\"Ordne die Stichpunkte in Status, belegte Risiken, bestätigte Entscheidungen, Aufgaben mit ausdrücklich genannten Verantwortlichen und Fristen sowie offene Punkte. Verwende nur Angaben aus der Quelle. Markiere fehlende Besitzer, Termine und Belege.\"\n\nDer Entwurf muss jede Aussage auf die Ausgangsnotizen zurückführen lassen. Aus \"Agentur-Angebot: 1.800 EUR, fünf Werktage\" darf beispielsweise keine Freigabe der Ausgabe werden. Aus einem geplanten Datum darf kein bestätigter Termin werden.\n\nEin interner Bericht kann personenbezogene, finanzielle oder geheimhaltungsbedürftige Angaben enthalten. \"Intern\" ist keine Freigabe für Verbraucherangebote; prüfe den konkreten Dienst und Arbeitsablauf.",
           "keyTakeaway": "KI verwandelt unstrukturierte Stichpunkte in einen lesbaren Bericht mit Zusammenfassung, Details, Risiken und nächsten Schritten."
         },
         {
           "id": "block_3_lesson_4_section_2",
           "title": "Was du anpassen musst",
           "readTimeMinutes": 3,
-          "content": "Die restlichen 20% sind deine Korrekturen. Drei Dinge korrigierst du immer:\n\n1. **Priorisierung.** Die KI weiß nicht, dass das Cookie-Banner dringender ist als der LinkedIn-Erfolg. Verschiebe Risiken nach oben.\n2. **Bewertungen.** \"Die positive LinkedIn-Entwicklung zeigt, dass unsere Content-Strategie greift\" klingt gut. Aber das steht nicht in deinen Stichpunkten. Streiche oder belege.\n3. **Fehlender Kontext.** Warum ist das Cookie-Banner plötzlich ein Thema? Das weiß die KI nicht. Ergänze den Kontext, der die Dringlichkeit erklärt.\n\n**Zeitersparnis:**\n\n- Ohne KI: 45 Minuten (Strukturieren, Formulieren, Formatieren, Korrekturlesen)\n- Mit KI: 10 Minuten (Korrekturlesen und Anpassen)\n- Ersparnis: 35 Minuten pro Wochenbericht",
-          "keyTakeaway": "KI kann nicht priorisieren, keine Bewertungen belegen und keinen fehlenden Kontext ergänzen. Diese drei Korrekturen machen aus dem 80%-Entwurf einen guten Bericht."
+          "content": "Prüfe vier Ebenen:\n\n1. **Quelle:** Ist jede Zahl, Frist, Person und Entscheidung in den Notizen belegt?\n2. **Status:** Sind Fakt, Plan, Annahme, Risiko und offene Frage klar getrennt?\n3. **Priorität:** Wurde die Reihenfolge von einer verantwortlichen Person festgelegt und nicht aus Formulierungen erraten?\n4. **Freigabe:** Dürfen Inhalt und Empfängerkreis zusammengebracht werden, und ist die zuständige Person mit dem finalen Text einverstanden?\n\nBewerte Zeit und Qualität mit eigenen Vergleichsfällen. Miss Bearbeitungszeit, Zahl der sachlichen Korrekturen und ausgelassene Risiken. Ein Prozentwert ohne Messreihe ist keine belastbare Produktivitätsaussage.",
+          "keyTakeaway": "Ein Berichtsentwurf braucht Quellenabgleich, klare Statusarten, verantwortete Priorisierung und Freigabe. Produktivität wird gemessen, nicht behauptet."
         }
       ],
       "quiz": [
@@ -342,30 +339,30 @@
         },
         {
           "id": "block_3_lesson_4_q2",
-          "questionText": "Wie viel Zeit sparst du laut der Berechnung pro Wochenbericht mit KI-Unterstützung?",
+          "questionText": "Wie bewertest du, ob KI-Unterstützung den Berichtsprozess verbessert?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "5 Minuten",
+              "text": "Mit einer allgemeinen Herstellerangabe zur Zeitersparnis",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "15 Minuten",
+              "text": "Nur anhand der Länge des erzeugten Textes",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "35 Minuten",
+              "text": "Mit wiederholten Vergleichsfällen: Bearbeitungszeit, sachliche Korrekturen und ausgelassene Risiken messen",
               "isCorrect": true
             },
             {
               "id": "d",
-              "text": "60 Minuten",
+              "text": "Durch die Annahme, dass jeder Entwurf denselben Nutzen hat",
               "isCorrect": false
             }
           ],
-          "explanation": "Ohne KI dauert ein Wochenbericht 45 Minuten. Mit KI nur 10 Minuten (Korrekturlesen und Anpassen). Ersparnis: 35 Minuten pro Bericht."
+          "explanation": "Zeitgewinn und Qualität hängen von Aufgabe, Ausgangsdaten, Werkzeug und Prüfaufwand ab. Wiederholte Vergleichsfälle liefern eine belastbare Grundlage; eine erfundene Minutenangabe nicht."
         }
       ]
     }

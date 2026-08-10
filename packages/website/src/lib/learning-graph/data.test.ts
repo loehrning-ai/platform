@@ -16,10 +16,16 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { LEARNING_EDGES, LEARNING_NODES, PATHWAY_STAGE_DISPLAY, PATHWAY_STAGES } from "./data";
+import {
+  LEARNING_EDGES,
+  LEARNING_NODES,
+  PATHWAY_STAGE_DISPLAY,
+  PATHWAY_STAGES,
+} from "./data";
 import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
 import { books } from "@/lib/books";
 import { demos } from "@/lib/demos";
+import { WORKSHOPS } from "@/lib/workshops";
 
 function nodeById(id: string) {
   return LEARNING_NODES.find((n) => n.id === id);
@@ -66,7 +72,8 @@ describe("demo node derivation", () => {
     expect(nodeById("demo:prompt-scanner")?.stage).toBe("dokumentieren");
     expect(nodeById("demo:excel")?.stage).toBe("anwenden");
     for (const demo of demos) {
-      const expectedStage = demo.category === "Governance" ? "dokumentieren" : "anwenden";
+      const expectedStage =
+        demo.category === "Governance" ? "dokumentieren" : "anwenden";
       expect(nodeById(`demo:${demo.slug}`)?.stage).toBe(expectedStage);
     }
   });
@@ -84,8 +91,12 @@ describe("demo node derivation", () => {
 
   it("carries the demo evidenceMode through onto the node", () => {
     expect(nodeById("demo:excel")?.evidenceMode).toBe("synthetic");
-    expect(nodeById("demo:rag-vertragsassistent")?.evidenceMode).toBe("rule_based");
-    expect(nodeById("demo:agent-pipeline")?.evidenceMode).toBe("recorded_trace");
+    expect(nodeById("demo:rag-vertragsassistent")?.evidenceMode).toBe(
+      "rule_based",
+    );
+    expect(nodeById("demo:agent-pipeline")?.evidenceMode).toBe(
+      "recorded_trace",
+    );
   });
 });
 
@@ -151,7 +162,9 @@ describe("book node derivation", () => {
   });
 
   it("assigns the published book a persona-specific audience", () => {
-    expect(nodeById("book:ki-landschaft")?.audience).toEqual(["verantwortliche"]);
+    expect(nodeById("book:ki-landschaft")?.audience).toEqual([
+      "verantwortliche",
+    ]);
   });
 
   it("places every book in the vertiefen stage with source_backed evidence", () => {
@@ -178,6 +191,21 @@ describe("open-source lab node derivation", () => {
   });
 });
 
+describe("workshop node derivation", () => {
+  it("derives one public applied node from every workshop", () => {
+    for (const workshop of WORKSHOPS) {
+      const node = nodeById(`workshop:${workshop.slug}`);
+      expect(node?.route).toBe(`/workshops/${workshop.slug}`);
+      expect(node?.summary).toBe(workshop.summary);
+      expect(node?.access).toBe("public");
+      expect(node?.stage).toBe("anwenden");
+      expect(node?.sourceMaterialLanguages).toEqual([
+        ...new Set(workshop.materials.map((material) => material.language)),
+      ]);
+    }
+  });
+});
+
 describe("derived edges", () => {
   it("creates a practice_for edge from every demo to its course", () => {
     for (const demo of demos) {
@@ -187,7 +215,10 @@ describe("derived edges", () => {
           e.to === `course:${demo.courseSlug}` &&
           e.type === "practice_for",
       );
-      expect(edge, `missing practice_for edge for demo ${demo.slug}`).toBeDefined();
+      expect(
+        edge,
+        `missing practice_for edge for demo ${demo.slug}`,
+      ).toBeDefined();
     }
   });
 
@@ -199,7 +230,10 @@ describe("derived edges", () => {
           e.to === "course:ai-native" &&
           e.type === "supports",
       );
-      expect(edge, `missing supports edge for lab ${course.slug}`).toBeDefined();
+      expect(
+        edge,
+        `missing supports edge for lab ${course.slug}`,
+      ).toBeDefined();
     }
   });
 });

@@ -158,17 +158,35 @@ describe("<GlossaryView> search", () => {
     expect(screen.queryByText("DSGVO")).toBeNull();
   });
 
-  it("Clear resets the query back to the grouped browse view", () => {
+  it("Leeren resets the query back to the grouped browse view", () => {
     renderView();
     const input = screen.getByLabelText("Glossar durchsuchen");
     fireEvent.change(input, { target: { value: "prompt" } });
     expect(screen.queryByText("DSGVO")).toBeNull();
 
-    fireEvent.click(screen.getByRole("button", { name: "Clear" }));
+    fireEvent.click(screen.getByRole("button", { name: "Leeren" }));
     // Back to grouped view: category headings + all terms return.
     expect(screen.getByText("Claude.")).toBeInTheDocument();
     expect(screen.getByText("DSGVO")).toBeInTheDocument();
     expect(input).toHaveValue("");
+  });
+
+  it("renders English search chrome and a locale-prefixed course link", () => {
+    render(
+      <GlossaryView
+        groups={groups}
+        totalTerms={3}
+        version="1.4"
+        lastUpdated="14 July 2026"
+        locale="en"
+      />,
+    );
+    expect(screen.getByLabelText("Search glossary")).toBeInTheDocument();
+    expect(screen.getByText("3 entries · 2 categories")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Course" })).toHaveAttribute(
+      "href",
+      "/en/ai-native",
+    );
   });
 });
 

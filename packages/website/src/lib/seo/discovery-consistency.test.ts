@@ -2,12 +2,14 @@ import { describe, expect, it } from "vitest";
 import { GET as getKnowledgeGraph } from "@/app/api/knowledge-graph.json/route";
 import { GET as getLlmsTxt } from "@/app/llms.txt/route";
 import sitemap from "@/app/sitemap";
-import { COURSES_GRAPH } from "@/lib/seo/course-discovery";
+import { COURSES_GRAPH, createCoursesGraph } from "@/lib/seo/course-discovery";
 import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
-import { courseFacts } from "@/lib/courses/tracks";
+import { localizeCatalog } from "@/lib/courses/catalog-copy";
 import { getCrawlRoute } from "@/lib/crawl/contract";
 import { OPEN_SOURCE_ARTIFACTS } from "@/lib/open-source/artifacts";
 import { absoluteUrl } from "@/lib/seo/entity";
+import { contentLocalesForPath } from "@/lib/i18n/content-parity";
+import { localizeHref } from "@/lib/i18n/locale";
 
 type ItemListEntry = {
   readonly url: string;
@@ -17,13 +19,35 @@ type ItemListEntry = {
 };
 
 type KnowledgeGraphPayload = {
-  readonly nodes: readonly { readonly id: string; readonly url: string; readonly crawlClass: string }[];
+  readonly site: { readonly language: readonly string[] };
+  readonly nodes: readonly {
+    readonly id: string;
+    readonly url: string;
+    readonly crawlClass: string;
+    readonly availablePageLanguages: readonly string[];
+    readonly sourceMaterialLanguages: readonly string[];
+    readonly localizedPages: Readonly<
+      Record<
+        string,
+        {
+          readonly url: string;
+          readonly pageLanguage: string;
+          readonly title: string;
+          readonly summary: string;
+        }
+      >
+    >;
+  }[];
   readonly catalogs: {
-    readonly openSourceLabs: readonly { readonly id: string; readonly url: string }[];
+    readonly openSourceLabs: readonly {
+      readonly id: string;
+      readonly url: string;
+    }[];
     readonly openSourceArtifacts: readonly {
       readonly id: string;
       readonly kind: string;
       readonly url: string;
+      readonly localizedUrls: Readonly<Record<string, string>>;
       readonly sourceUrl: string;
       readonly sourceCommit: string;
       readonly licenseUrl: string;
@@ -33,29 +57,52 @@ type KnowledgeGraphPayload = {
 };
 
 function courseItemListUrls(): readonly string[] {
-  const itemList = COURSES_GRAPH["@graph"].find(
+  const itemLists = COURSES_GRAPH["@graph"].filter(
     (node) => node["@type"] === "ItemList",
-  ) as { readonly itemListElement: readonly ItemListEntry[] } | undefined;
-  return itemList?.itemListElement.map((entry) => entry.url) ?? [];
+  ) as readonly { readonly itemListElement: readonly ItemListEntry[] }[];
+  return itemLists.flatMap((list) =>
+    list.itemListElement.map((entry) => entry.url),
+  );
 }
 
 function courseItemListEntries(): readonly ItemListEntry[] {
-  const itemList = COURSES_GRAPH["@graph"].find(
+  const itemLists = COURSES_GRAPH["@graph"].filter(
     (node) => node["@type"] === "ItemList",
-  ) as { readonly itemListElement: readonly ItemListEntry[] } | undefined;
-  return itemList?.itemListElement ?? [];
+  ) as readonly { readonly itemListElement: readonly ItemListEntry[] }[];
+  return itemLists.flatMap((list) => list.itemListElement);
 }
 
 describe("course discovery consistency", () => {
+  it("models the foundation as an ordered path and technical courses as an unordered collection", () => {
+    const lists = COURSES_GRAPH["@graph"].filter(
+      (node) => node["@type"] === "ItemList",
+    );
+    expect(lists).toHaveLength(2);
+    expect(lists[0]).toMatchObject({
+      name: "Grundlagenpfad von loehrning.ai",
+      itemListOrder: "https://schema.org/ItemListOrderAscending",
+      numberOfItems: 4,
+    });
+    expect(lists[1]).toMatchObject({
+      name: "Technikkurse von loehrning.ai",
+      itemListOrder: "https://schema.org/ItemListUnordered",
+      numberOfItems: COURSE_CATALOG.length - 4 + IMPORTED_COURSE_CATALOG.length,
+    });
+  });
+
   it("publishes every native course across human and machine discovery surfaces", async () => {
     const sitemapUrls = new Set((await sitemap()).map((entry) => entry.url));
     const llms = await getLlmsTxt({} as never).text();
-    const knowledgeGraph = (await (await getKnowledgeGraph()).json()) as KnowledgeGraphPayload;
+    const knowledgeGraph = (await (
+      await getKnowledgeGraph()
+    ).json()) as KnowledgeGraphPayload;
     const jsonLdUrls = new Set(courseItemListUrls());
 
     for (const course of COURSE_CATALOG) {
       const url = `https://loehrning.ai${course.href}`;
-      expect(getCrawlRoute(course.href).routeClass, course.slug).toBe("public-indexable");
+      expect(getCrawlRoute(course.href).routeClass, course.slug).toBe(
+        "public-indexable",
+      );
       expect(sitemapUrls.has(url), course.slug).toBe(true);
       expect(llms, course.slug).toContain(url);
       expect(jsonLdUrls.has(url), course.slug).toBe(true);
@@ -71,35 +118,87 @@ describe("course discovery consistency", () => {
     }
   });
 
-  it("publishes each native course with the language declared by COURSE_FACTS", () => {
+  it("publishes every unprefixed native course as German content", () => {
     const entries = courseItemListEntries();
 
     for (const course of COURSE_CATALOG) {
       const entry = entries.find(
         (candidate) => candidate.url === `https://loehrning.ai${course.href}`,
       );
-      const expectedLanguage =
-        courseFacts(course.slug).language === "Englisch" ? "en" : "de";
-      expect(entry?.item.inLanguage, course.slug).toBe(expectedLanguage);
+      expect(entry?.item.inLanguage, course.slug).toBe("de");
+    }
+  });
+
+  it("publishes an English-owned graph on the English catalog route", () => {
+    const graph = createCoursesGraph("en");
+    const breadcrumb = graph["@graph"].find(
+      (node) => node["@type"] === "BreadcrumbList",
+    );
+    expect(breadcrumb).toMatchObject({
+      itemListElement: [
+        {
+          name: "Home",
+          item: "https://loehrning.ai/en",
+        },
+        {
+          name: "Courses",
+          item: "https://loehrning.ai/en/kurse",
+        },
+      ],
+    });
+
+    const lists = graph["@graph"].filter(
+      (node) => node["@type"] === "ItemList",
+    );
+    expect(lists.map((list) => list.name)).toEqual([
+      "loehrning.ai foundation path",
+      "loehrning.ai technical courses",
+    ]);
+
+    const entries = lists.flatMap((list) => list.itemListElement);
+    const localizedCourses = localizeCatalog(COURSE_CATALOG, "en");
+    expect(entries).toHaveLength(localizedCourses.length);
+
+    for (const course of localizedCourses) {
+      const entry = entries.find(
+        (candidate) =>
+          candidate.url === `https://loehrning.ai/en${course.href}`,
+      );
+      expect(entry, course.slug).toMatchObject({
+        item: {
+          name: course.title,
+          description: course.description,
+          inLanguage: "en",
+          hasCourseInstance: {
+            inLanguage: "en",
+            url: `https://loehrning.ai/en${course.startHref}`,
+          },
+        },
+      });
     }
   });
 
   it("publishes every imported lab locally while retaining its external launch boundary", async () => {
     const sitemapUrls = new Set((await sitemap()).map((entry) => entry.url));
     const llms = await getLlmsTxt({} as never).text();
-    const knowledgeGraph = (await (await getKnowledgeGraph()).json()) as KnowledgeGraphPayload;
+    const knowledgeGraph = (await (
+      await getKnowledgeGraph()
+    ).json()) as KnowledgeGraphPayload;
     const jsonLdUrls = new Set(courseItemListUrls());
 
     for (const course of IMPORTED_COURSE_CATALOG) {
       const url = `https://loehrning.ai${course.href}`;
       expect(course.launchHref).not.toBe(url);
-      expect(getCrawlRoute(course.href).routeClass, course.slug).toBe("public-indexable");
+      expect(getCrawlRoute(course.href).routeClass, course.slug).toBe(
+        "public-indexable",
+      );
       expect(sitemapUrls.has(url), course.slug).toBe(true);
       expect(llms, course.slug).toContain(url);
       expect(jsonLdUrls.has(url), course.slug).toBe(true);
       expect(
         knowledgeGraph.catalogs.openSourceLabs.some(
-          (node) => node.id === `open-source-lab:${course.slug}` && node.url === url,
+          (node) =>
+            node.id === `open-source-lab:${course.slug}` && node.url === url,
         ),
         course.slug,
       ).toBe(true);
@@ -112,6 +211,56 @@ describe("course discovery consistency", () => {
         course.slug,
       ).toBe(false);
     }
+  });
+});
+
+describe("localized machine discovery", () => {
+  it("publishes exact reviewed locale URLs for bilingual public tools", async () => {
+    const knowledgeGraph = (await (
+      await getKnowledgeGraph()
+    ).json()) as KnowledgeGraphPayload;
+
+    expect(knowledgeGraph.site.language).toEqual(["de-DE", "en-GB"]);
+
+    const bilingualCourse = knowledgeGraph.nodes.find(
+      (node) => node.id === "course:ki-fuehrerschein",
+    );
+    expect(bilingualCourse).toMatchObject({
+      availablePageLanguages: ["de-DE", "en-GB"],
+      sourceMaterialLanguages: ["de"],
+      localizedPages: {
+        de: {
+          url: "https://loehrning.ai/ki-fuehrerschein",
+          pageLanguage: "de-DE",
+          title: "KI-Führerschein",
+        },
+        en: {
+          url: "https://loehrning.ai/en/ki-fuehrerschein",
+          pageLanguage: "en-GB",
+          title: "AI Fundamentals",
+        },
+      },
+    });
+
+    const bilingualCheck = knowledgeGraph.nodes.find(
+      (node) => node.id === "self-test:ki-check",
+    );
+    expect(bilingualCheck).toMatchObject({
+      availablePageLanguages: ["de-DE", "en-GB"],
+      sourceMaterialLanguages: ["de"],
+      localizedPages: {
+        de: {
+          url: "https://loehrning.ai/ki-check",
+          pageLanguage: "de-DE",
+          title: "KI-Check: Wo stehst du?",
+        },
+        en: {
+          url: "https://loehrning.ai/en/ki-check",
+          pageLanguage: "en-GB",
+          title: "AI check: assess your current level",
+        },
+      },
+    });
   });
 });
 
@@ -152,10 +301,9 @@ describe("open-source artifact discovery consistency", () => {
         `${artifact.id} canonical llms.txt entry`,
       ).toHaveLength(1);
 
-      const graphEntries =
-        knowledgeGraph.catalogs.openSourceArtifacts.filter(
-          (entry) => entry.id === artifact.id,
-        );
+      const graphEntries = knowledgeGraph.catalogs.openSourceArtifacts.filter(
+        (entry) => entry.id === artifact.id,
+      );
       expect(graphEntries, `${artifact.id} knowledge-graph entry`).toHaveLength(
         1,
       );
@@ -163,6 +311,12 @@ describe("open-source artifact discovery consistency", () => {
         id: expectedId,
         kind: artifact.kind,
         url: canonicalUrl,
+        localizedUrls: Object.fromEntries(
+          contentLocalesForPath(artifact.href).map((locale) => [
+            locale,
+            absoluteUrl(localizeHref(artifact.href, locale)),
+          ]),
+        ),
         sourceUrl: artifact.source.href,
         sourceCommit: artifact.source.revision,
         licenseUrl: absoluteUrl(artifact.license.href),

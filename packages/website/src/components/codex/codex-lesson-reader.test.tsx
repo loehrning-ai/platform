@@ -116,8 +116,12 @@ describe("CodexLessonReader ", () => {
     const host = document.createElement("div");
     host.innerHTML = markup;
     const buttons = Array.from(host.querySelectorAll("button"));
-    const markAsRead = buttons.filter((button) => button.textContent?.includes("Mark as read"));
-    const completeLesson = buttons.find((button) => button.textContent?.includes("Complete lesson"));
+    const markAsRead = buttons.filter((button) =>
+      button.textContent?.includes("Mark as read"),
+    );
+    const completeLesson = buttons.find((button) =>
+      button.textContent?.includes("Complete lesson"),
+    );
 
     expect(markAsRead).toHaveLength(LESSON.sections.length);
     expect(markAsRead.every((button) => button.disabled)).toBe(true);
@@ -126,46 +130,98 @@ describe("CodexLessonReader ", () => {
   });
 
   it("renders the lesson header, sections, and key takeaway", () => {
-    render(<CodexLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />);
+    render(
+      <CodexLessonReader
+        lesson={LESSON}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+      />,
+    );
     expect(screen.getByText("Test Lesson Title")).toBeInTheDocument();
     expect(screen.getByText("Section one content.")).toBeInTheDocument();
     expect(screen.getByText("The key takeaway.")).toBeInTheDocument();
   });
 
   it("renders each CodexBlock kind with its own treatment", () => {
-    render(<CodexLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />);
+    render(
+      <CodexLessonReader
+        lesson={LESSON}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+      />,
+    );
     expect(screen.getByText("A pulled quote.")).toBeInTheDocument();
     expect(screen.getByText(/A callout body\./)).toBeInTheDocument();
     expect(screen.getByText("Card title")).toBeInTheDocument();
   });
 
   it("renders the embedded widget through the shared registry", async () => {
-    render(<CodexLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />);
+    render(
+      <CodexLessonReader
+        lesson={LESSON}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+      />,
+    );
     expect(
       await screen.findByText("A test question?", {}, { timeout: 5_000 }),
     ).toBeInTheDocument();
   });
 
   it("renders the bespoke interactive for the lesson id", () => {
-    render(<CodexLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />);
-    expect(screen.getByText(/Bespoke · Three-body contract/)).toBeInTheDocument();
+    render(
+      <CodexLessonReader
+        lesson={LESSON}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+      />,
+    );
+    expect(
+      screen.getByText(/Exercise · Task contract inputs/),
+    ).toBeInTheDocument();
   });
 
   it("gates the complete-lesson button until every section is marked read", () => {
-    render(<CodexLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />);
-    const completeButton = screen.getByRole("button", { name: /Complete lesson/i });
+    render(
+      <CodexLessonReader
+        lesson={LESSON}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+      />,
+    );
+    const completeButton = screen.getByRole("button", {
+      name: /Complete lesson/i,
+    });
     expect(completeButton).toBeDisabled();
 
-    fireEvent.click(screen.getAllByRole("button", { name: /Mark as read/i })[0]);
+    fireEvent.click(
+      screen.getAllByRole("button", { name: /Mark as read/i })[0],
+    );
     expect(completeButton).toBeDisabled();
 
-    fireEvent.click(screen.getAllByRole("button", { name: /Mark as read/i })[0]);
+    fireEvent.click(
+      screen.getAllByRole("button", { name: /Mark as read/i })[0],
+    );
     expect(completeButton).not.toBeDisabled();
   });
 
   it("marks the lesson complete in the unified store", () => {
-    render(<CodexLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />);
-    for (const button of screen.getAllByRole("button", { name: /Mark as read/i })) {
+    render(
+      <CodexLessonReader
+        lesson={LESSON}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+      />,
+    );
+    for (const button of screen.getAllByRole("button", {
+      name: /Mark as read/i,
+    })) {
       fireEvent.click(button);
     }
     fireEvent.click(screen.getByRole("button", { name: /Complete lesson/i }));
@@ -186,9 +242,8 @@ describe("CodexLessonReader ", () => {
       "href",
       "/kurse/open-source/codex/kurs/next",
     );
-    expect(screen.getByRole("link", { name: /Previous lesson/i })).toHaveAttribute(
-      "href",
-      "/kurse/open-source/codex/kurs/prev",
-    );
+    expect(
+      screen.getByRole("link", { name: /Previous lesson/i }),
+    ).toHaveAttribute("href", "/kurse/open-source/codex/kurs/prev");
   });
 });

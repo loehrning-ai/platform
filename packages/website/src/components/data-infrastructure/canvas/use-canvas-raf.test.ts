@@ -3,7 +3,10 @@ import { renderHook, act } from "@testing-library/react";
 import { useCanvasRAF } from "./use-canvas-raf";
 
 function setHidden(hidden: boolean): void {
-  Object.defineProperty(document, "hidden", { value: hidden, configurable: true });
+  Object.defineProperty(document, "hidden", {
+    value: hidden,
+    configurable: true,
+  });
 }
 
 function setReducedMotion(matches: boolean): void {

@@ -1,0 +1,354 @@
+{
+  "id": "context",
+  "number": 3,
+  "title": "Kontextfenster, Tokens und Retrieval",
+  "subtitle": "Was in eine Anfrage eingeht, wie Tokenisierung funktioniert und was geprüft werden muss.",
+  "durationMinutes": 10,
+  "trackId": "foundations",
+  "hook": "Kontext ist begrenzt. Relevanz, Quellenqualität und Anordnung müssen getestet werden.",
+  "keyConcepts": [
+    "Kontext-Engineering",
+    "Semantischer Raum",
+    "Positionale Aufmerksamkeit",
+    "Tokens",
+    "Dokumentenabgrenzung"
+  ],
+  "quiz": [],
+  "sections": [
+    {
+      "id": "context-is-the-product",
+      "title": "Kontext ist das Produkt",
+      "readTimeMinutes": 3,
+      "content": "Kontext-Engineering bezeichnet Auswahl und Anordnung der Informationen, die einem Modell für eine Aufgabe zur Verfügung stehen: Anweisungen, Quelldokumente, Beispiele, frühere Nachrichten und Tool-Ergebnisse. Klare Sprache bleibt wichtig, kann aber keine fehlende private Tatsache liefern oder eine unzuverlässige Quelle reparieren.\n\nZwei technische Punkte helfen:\n\n**Semantische Repräsentationen.** Modelle verarbeiten Tokens über hochdimensionale numerische Zustände. Verwandte Begriffe können ähnliche Repräsentationen haben; eine zweidimensionale Karte ist jedoch nur eine Illustration und kein Einblick in eine Claude-Anfrage.\n\n**Begrenzter Kontext.** Modell und Produkt haben dokumentierte Kontextgrenzen. Lange Eingaben können dennoch scheitern, weil relevante Stellen schwer auffindbar sind, Quellen widersprechen oder die Ausgabe Budget benötigt. Teste mit dem tatsächlich eingesetzten Modell und den realen Eingaben."
+    },
+    {
+      "id": "meaning-in-space",
+      "title": "Bedeutung lebt im Raum",
+      "readTimeMinutes": 1,
+      "content": "Die Übung unten ist eine lokale, regelbasierte Illustration. Dabei werden Wörter vordefinierten Themenfeldern zugeordnet; Claude wird nicht aufgerufen und Modell-Embeddings werden nicht berechnet.\n\n> Begriffe wie „prägnant“ und „erschöpfend“ stehen für unterschiedliche Anforderungen. Wenn Konsistenz wichtig ist, übersetze solche Begriffe in prüfbare Grenzen."
+    },
+    {
+      "id": "window-as-budget",
+      "title": "Das Kontextfenster als begrenzte Ressource",
+      "readTimeMinutes": 2,
+      "content": "Der Kontext einer Anfrage kann System- und Produktanweisungen, Nachrichten, Dokumente, frühere Interaktionen und Tool-Ergebnisse enthalten. Auch die Antwort verbraucht Tokens.\n\nDrei praktische Kontrollen:\n\n1. **Trenne Dokumente und Frage.** Anthropics Langkontext-Anleitung platziert Quellen bei Mehrdokument-Aufgaben vor der Frage. Prüfe diese Anordnung mit eigenen Evals.\n2. **Beschrifte jede Quelle.** Tags wie `<document index=\"1\" source=\"…\">` erhalten Quellgrenzen und erleichtern ein festes Zitatformat.\n3. **Definiere die Belegregel neben der Aufgabe.** Lege erlaubte Quellen und die Ausgabe bei fehlender Stützung fest.\n\nReiche große Dokumentmengen nicht ohne Retrieval- oder Relevanzstrategie ein. Mehr Text kann Widersprüche und Ablenkung hinzufügen."
+    },
+    {
+      "id": "long-context-template",
+      "title": "Die Langkontext-Vorlage",
+      "readTimeMinutes": 2,
+      "content": "Nutze eine Struktur wie diese, wenn eine Antwort ausschließlich auf bereitgestellten Dokumenten beruhen soll.\n\n```\n<documents>\n  <document index=\"1\" source=\"rollout-plan.md\">\n  [vollständiger Text von Dokument 1]\n  </document>\n  <document index=\"2\" source=\"oncall-guide.md\">\n  [vollständiger Text von Dokument 2]\n  </document>\n</documents>\n\n<instructions>\nAntworte NUR unter Verwendung der oben genannten Dokumente. Wenn die Antwort nicht vorhanden ist, sage dies.\nZitiere Quellen als [doc-1] oder [doc-2] inline.\n</instructions>\n\n<question>\nWie lautet unser Rollback-Verfahren, wenn die erzwungene Umstellung fehlschlägt?\n</question>\n```\n\nDie Struktur trennt Quellen, Regeln und Frage. Zitate machen Aussagen prüfbar, müssen aber weiterhin mit der zitierten Passage abgeglichen werden."
+    },
+    {
+      "id": "tokens-briefly",
+      "title": "Tokens in Kurzform",
+      "readTimeMinutes": 1,
+      "content": "Claude-API-Eingaben werden vor der Inferenz tokenisiert. Die Anzahl hängt von Modell, Sprache, Zeichensetzung und Inhaltstyp ab; Wort-zu-Token-Formeln sind nur Planungswerte.\n\nNutze den Token-Counting-Endpunkt oder das Werkzeug des ausgewählten Produkts, wenn Kontextgrenze oder Kosten relevant sind."
+    },
+    {
+      "id": "too-big-docs",
+      "title": "Wenn deine Dokumente zu groß sind",
+      "readTimeMinutes": 1,
+      "content": "Wenn der Quellenbestand größer als das nutzbare Kontextbudget ist, erhalte die Nachvollziehbarkeit:\n\n1. **Retrieval vor Antwort.** Wähle relevante Passagen mit Quellenkennungen und miss die Trefferquote an bekannten Fragen.\n2. **Aufgabe stufenweise bearbeiten.** Trenne Extraktion, Klassifikation, Entwurf und Review, wenn jede Stufe ein prüfbares Ergebnis hat.\n3. **Tools für veränderliche Quellen.** Datei-, Datenbank- oder Websuche kann aktuelle Belege liefern. Beschränke Berechtigungen und protokolliere die genutzten Quellen.\n\nEine Zusammenfassung ist selbst eine abgeleitete Quelle und kann Details verlieren. Verlinke Originalpassagen und prüfe dort kritische Aussagen."
+    }
+  ],
+  "widgets": [
+    {
+      "kind": "semantic-space",
+      "placement": "after-intro",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "context",
+        "cpId": "drop",
+        "title": "Bedeutung lebt im Raum",
+        "scenario": "Diese lokale Illustration ordnet Wörter vordefinierten Themenfeldern zu. Claude wird nicht aufgerufen; Embeddings werden nicht berechnet.",
+        "seed": [
+          {
+            "w": "database",
+            "x": 0.08,
+            "y": 0.18,
+            "cluster": "technik"
+          },
+          {
+            "w": "kubernetes",
+            "x": 0.22,
+            "y": 0.14,
+            "cluster": "technik"
+          },
+          {
+            "w": "server",
+            "x": 0.1,
+            "y": 0.38,
+            "cluster": "technik"
+          },
+          {
+            "w": "commit",
+            "x": 0.25,
+            "y": 0.32,
+            "cluster": "technik"
+          },
+          {
+            "w": "pr review",
+            "x": 0.08,
+            "y": 0.58,
+            "cluster": "technik"
+          },
+          {
+            "w": "roadmap",
+            "x": 0.7,
+            "y": 0.14,
+            "cluster": "vertrieb"
+          },
+          {
+            "w": "okr",
+            "x": 0.86,
+            "y": 0.22,
+            "cluster": "vertrieb"
+          },
+          {
+            "w": "stakeholder",
+            "x": 0.68,
+            "y": 0.38,
+            "cluster": "vertrieb"
+          },
+          {
+            "w": "kickoff",
+            "x": 0.88,
+            "y": 0.44,
+            "cluster": "vertrieb"
+          },
+          {
+            "w": "espresso",
+            "x": 0.4,
+            "y": 0.74,
+            "cluster": "werkstatt"
+          },
+          {
+            "w": "latte",
+            "x": 0.56,
+            "y": 0.78,
+            "cluster": "werkstatt"
+          },
+          {
+            "w": "cortado",
+            "x": 0.46,
+            "y": 0.9,
+            "cluster": "werkstatt"
+          },
+          {
+            "w": "grinder",
+            "x": 0.62,
+            "y": 0.92,
+            "cluster": "werkstatt"
+          },
+          {
+            "w": "violin",
+            "x": 0.1,
+            "y": 0.78,
+            "cluster": "verwaltung"
+          },
+          {
+            "w": "sonata",
+            "x": 0.22,
+            "y": 0.9,
+            "cluster": "verwaltung"
+          },
+          {
+            "w": "concerto",
+            "x": 0.08,
+            "y": 0.92,
+            "cluster": "verwaltung"
+          }
+        ],
+        "clusterKeywords": {
+          "technik": [
+            "database",
+            "kubernetes",
+            "server",
+            "commit",
+            "pr review",
+            "algorithm",
+            "sprint",
+            "deploy",
+            "api",
+            "cache",
+            "compiler",
+            "kernel",
+            "docker",
+            "merge"
+          ],
+          "vertrieb": [
+            "roadmap",
+            "okr",
+            "stakeholder",
+            "kickoff",
+            "backlog",
+            "milestone",
+            "standup",
+            "retro",
+            "scope"
+          ],
+          "werkstatt": [
+            "espresso",
+            "latte",
+            "cortado",
+            "grinder",
+            "cappuccino",
+            "mocha",
+            "brew",
+            "beans",
+            "flat white"
+          ],
+          "verwaltung": [
+            "violin",
+            "sonata",
+            "concerto",
+            "cello",
+            "piano",
+            "fugue",
+            "symphony",
+            "opera",
+            "tempo",
+            "melody"
+          ]
+        },
+        "clusterLabels": {
+          "technik": "Technik",
+          "vertrieb": "Produkt",
+          "werkstatt": "Kaffee",
+          "verwaltung": "Musik"
+        },
+        "quadrantLabels": [
+          {
+            "label": "Technik",
+            "x": 16,
+            "y": 4
+          },
+          {
+            "label": "Produkt",
+            "x": 82,
+            "y": 4
+          },
+          {
+            "label": "Musik",
+            "x": 16,
+            "y": 68
+          },
+          {
+            "label": "Kaffee",
+            "x": 58,
+            "y": 68
+          }
+        ],
+        "copy": {
+          "kindLabel": "Lokale Illustration",
+          "canvasAriaLabel": "Semantischer Raum mit platzierten Wörtern",
+          "placeholder": "Probiere: Sprint, Cappuccino, Algorithmus, Cello…",
+          "inputAriaLabel": "Neues Wort",
+          "placingLabel": "Platziere…",
+          "placeLabel": "Im Raum platzieren →",
+          "landedNearText": "landete in der Nähe von",
+          "emptyStatusText": "Gib ein Wort ein, um die lokale Zuordnungsregel auszuführen.",
+          "nearPlacedTemplate": "die lokale Wortliste ordnet es der Gruppe {cluster} zu.",
+          "heuristicTemplate": "kein Wortlisten-Treffer; die lokale Fallback-Regel wählt diese Gruppe."
+        }
+      }
+    },
+    {
+      "kind": "tokenizer",
+      "placement": "after-intro",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "context",
+        "cpId": "tok"
+      }
+    },
+    {
+      "kind": "prompt-sandbox",
+      "placement": "end",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "context",
+        "cpId": "feel",
+        "title": "Kontext rein, Kontext raus",
+        "hint": "Füge etwas ein, einen Thread, eine PR-Beschreibung, und frage dann etwas, das davon abhängt.",
+        "placeholder": "<documents>\n<document index=\"1\">\n[füge hier ein kurzes Dokument ein]\n</document>\n</documents>\n\n<question>\nStelle eine Frage, die nur aus dem Dokument beantwortet werden kann\n</question>"
+      }
+    },
+    {
+      "kind": "quiz",
+      "placement": "before-quiz",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "context",
+        "cpId": "q1",
+        "question": "Eine wichtige Tatsache steht in einer langen Dokumentmenge. Welcher Ablauf liefert den stärksten Beleg für die Antwort?",
+        "options": [
+          "Alle Dokumente unbeschriftet einreichen und der Zusammenfassung vertrauen.",
+          "Die relevante Passage abrufen, einen Quellenbeleg verlangen und den zitierten Text prüfen.",
+          "Vor der Anfrage jede Datei in PDF umwandeln.",
+          "Dieselbe Anfrage wiederholen, bis zwei Antworten übereinstimmen."
+        ],
+        "correct": 1,
+        "explanation": "Retrieval grenzt die Belegmenge ein. Quellenkennungen und Zitatprüfung machen die Aussage nachvollziehbar.",
+        "title": "Kurzprüfung",
+        "copy": {
+          "kindLabel": "Kurzprüfung",
+          "optionsAriaLabel": "Antwortoptionen",
+          "correctLabel": "Richtig.",
+          "incorrectLabel": "Nicht ganz."
+        }
+      }
+    },
+    {
+      "kind": "quiz",
+      "placement": "before-quiz",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "context",
+        "cpId": "q2",
+        "question": "Wie prüfst du, ob eine lange Dokumentmenge in das Kontextbudget des gewählten Modells passt?",
+        "options": [
+          "Ein Token pro zehn Wörter annehmen.",
+          "Die Dateigröße in Kilobyte verwenden.",
+          "Das Token-Counting-Werkzeug oder den Endpunkt des Modells verwenden.",
+          "Nur sichtbare Überschriften zählen."
+        ],
+        "correct": 2,
+        "explanation": "Tokenisierung variiert nach Modell, Sprache, Zeichensetzung und Inhaltstyp. Nutze den unterstützten Zähler, wenn Kontextgrenze oder Kosten relevant sind.",
+        "title": "Kurzprüfung",
+        "copy": {
+          "kindLabel": "Kurzprüfung",
+          "optionsAriaLabel": "Antwortoptionen",
+          "correctLabel": "Richtig.",
+          "incorrectLabel": "Nicht ganz."
+        }
+      }
+    },
+    {
+      "kind": "quiz",
+      "placement": "before-quiz",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "context",
+        "cpId": "q3",
+        "question": "Du hast drei Quelldokumente und eine Frage. Wo empfiehlt Anthropics, die Frage zu platzieren?",
+        "options": [
+          "Ganz oben, Claude liest von oben nach unten.",
+          "Nach den Dokumenten, nahe am Ende des Prompts.",
+          "Zwischen den Dokumenten.",
+          "Die Reihenfolge spielt keine Rolle."
+        ],
+        "correct": 1,
+        "explanation": "Anthropics Langkontext-Anleitung platziert Dokumente bei Mehrdokument-Aufgaben vor der Frage. Bestätige die Anordnung mit Evals für Modell und Eingaben.",
+        "title": "Kurzprüfung",
+        "copy": {
+          "kindLabel": "Kurzprüfung",
+          "optionsAriaLabel": "Antwortoptionen",
+          "correctLabel": "Richtig.",
+          "incorrectLabel": "Nicht ganz."
+        }
+      }
+    }
+  ]
+}

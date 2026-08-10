@@ -1,6 +1,11 @@
-import { act, cleanup, render } from "@testing-library/react";
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+} from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { Book } from "@/lib/books";
 import type {
   BookChapterMeta,
   ChapterNeighbours,
@@ -9,7 +14,10 @@ import type {
 const readerMocks = vi.hoisted(() => ({
   getOwnedLocalLearningItem: vi.fn<() => string | null>(),
   ownerListener: null as
-    | ((owner: { readonly kind: "anonymous"; readonly generation: number }) => void)
+    | ((owner: {
+        readonly kind: "anonymous";
+        readonly generation: number;
+      }) => void)
     | null,
   push: vi.fn(),
   scrollIntoView: vi.fn(),
@@ -40,15 +48,10 @@ vi.mock("@/lib/progress/browser-learning-storage", () => ({
   },
 }));
 
-import { ChapterReaderClient } from "./chapter-reader-client";
-
-const BOOK = {
-  id: "test-book",
-  title: "Testbuch",
-  relatedResourceHref: "/test-kurs",
-  relatedResourceLabel: "Testkurs",
-  pdfPath: null,
-} as Book;
+import {
+  ChapterReaderClient,
+  ChapterTocLinks,
+} from "./chapter-reader-client";
 
 const CHAPTER: BookChapterMeta = {
   slug: "test-chapter",
@@ -61,17 +64,27 @@ const NEIGHBOURS: ChapterNeighbours = {
   next: null,
 };
 
-function renderReader() {
+function renderReader({
+  locale = "de",
+  neighbours = NEIGHBOURS,
+}: {
+  readonly locale?: "de" | "en";
+  readonly neighbours?: ChapterNeighbours;
+} = {}) {
+  const headings = [
+    { id: "late-anchor", text: "Late anchor", level: 2 as const },
+  ];
   return render(
-    <ChapterReaderClient
-      book={BOOK}
-      chapterMeta={CHAPTER}
-      headings={[{ id: "late-anchor", text: "Late anchor", level: 2 }]}
-      readingTimeMinutes={3}
-      neighbours={NEIGHBOURS}
-      allChapters={[CHAPTER]}
-      content={<h2 id="late-anchor">Late anchor</h2>}
-    />,
+    <>
+      <h2 id="late-anchor">Late anchor</h2>
+      <ChapterReaderClient
+        bookId="test-book"
+        chapterSlug={CHAPTER.slug}
+        neighbours={neighbours}
+        locale={locale}
+      />
+      <ChapterTocLinks headings={headings} />
+    </>,
   );
 }
 
@@ -135,5 +148,46 @@ describe("ChapterReaderClient fragment restoration", () => {
       top: 0,
       behavior: "instant",
     });
+  });
+
+  it("hydrates a plain-data TOC leaf and marks runtime readiness", () => {
+    renderReader({ locale: "en" });
+
+    expect(screen.getByRole("link", { name: "Late anchor" })).toHaveAttribute(
+      "href",
+      "#late-anchor",
+    );
+    expect(screen.getByRole("link", { name: "Late anchor" })).toHaveAttribute(
+      "aria-current",
+      "location",
+    );
+    expect(
+      document.querySelector(
+        '[data-book-reader-runtime="test-book:test-chapter"]',
+      ),
+    ).toHaveAttribute("data-book-reader-ready", "test-book:test-chapter");
+    expect(document.documentElement).not.toHaveAttribute(
+      "data-book-reader-ready",
+    );
+  });
+
+  it("keeps keyboard navigation and progress identity locale-independent", () => {
+    const next: BookChapterMeta = {
+      slug: "next-chapter",
+      title: "Next chapter",
+      sourceFile: "next.md",
+    };
+    renderReader({
+      locale: "en",
+      neighbours: { prev: null, next },
+    });
+
+    expect(readerMocks.getOwnedLocalLearningItem).toHaveBeenCalledWith(
+      "reader:progress:test-book:test-chapter",
+    );
+    fireEvent.keyDown(window, { key: "ArrowRight" });
+    expect(readerMocks.push).toHaveBeenCalledWith(
+      "/en/buecher/test-book/next-chapter",
+    );
   });
 });

@@ -24,6 +24,8 @@ const ROUTES = [
   "/demos/prompt-scanner",
   "/blog",
   "/blog/eu-ai-act-grundlagen",
+  "/en/blog",
+  "/en/blog/eu-ai-act-grundlagen",
   "/wie-ki-funktioniert/lektion-1-vorhersage",
   "/kurse/open-source/data-engineering-fundamentals",
   "/workshops/geschaeftsberichte-mit-ki-lesen",
@@ -54,9 +56,7 @@ const ROUTES = [
 async function settleMotion(page: import("@playwright/test").Page) {
   const sample = () =>
     page.evaluate(() =>
-      Array.from(
-        document.querySelectorAll<HTMLElement>('[style*="opacity"]'),
-      )
+      Array.from(document.querySelectorAll<HTMLElement>('[style*="opacity"]'))
         .map((el) => getComputedStyle(el).opacity)
         .join("|"),
     );
@@ -136,7 +136,10 @@ for (const route of ROUTES) {
       }
     }
 
-    expect(blocking, `axe found ${blocking.length} WCAG violations on ${route}`).toEqual([]);
+    expect(
+      blocking,
+      `axe found ${blocking.length} WCAG violations on ${route}`,
+    ).toEqual([]);
   });
 }
 
@@ -196,10 +199,13 @@ for (const route of KEYBOARD_ROUTES) {
       const focusedElement = focused.asElement();
       const bbox = await focusedElement?.boundingBox();
       const focusMeta = await focusedElement?.evaluate((el) => {
-        const href = el instanceof HTMLAnchorElement ? el.getAttribute("href") : null;
+        const href =
+          el instanceof HTMLAnchorElement ? el.getAttribute("href") : null;
         return {
           inNav: Boolean(el.closest("nav")),
-          isSkipLink: href === "#main-content" || /Zum Inhalt/i.test(el.textContent ?? ""),
+          isSkipLink:
+            href === "#main-content" ||
+            /Zum Inhalt/i.test(el.textContent ?? ""),
         };
       });
 
@@ -232,6 +238,10 @@ for (const route of KEYBOARD_ROUTES) {
 const REFLOW_ROUTES_A11Y = [
   "/",
   "/kurse",
+  "/blog",
+  "/blog/eu-ai-act-grundlagen",
+  "/en/blog",
+  "/en/blog/eu-ai-act-grundlagen",
   "/ki-fuehrerschein",
   "/impressum",
   ...OPEN_SOURCE_DETAIL_ROUTES,

@@ -100,9 +100,36 @@ describe("CourseGallery (learner-first: path + deeper shelf)", () => {
 
   it("labels the path and the deeper shelf so their difference is legible", () => {
     render(<CourseGallery />);
-    expect(screen.getByText("Der Lernpfad")).toBeInTheDocument();
-    expect(screen.getByText("Tiefer gehen")).toBeInTheDocument();
+    expect(screen.getByText("Grundlagenpfad")).toBeInTheDocument();
     expect(screen.getByText("Technikkurse")).toBeInTheDocument();
+  });
+
+  it("renders English interface copy, translated foundation cards, and locale-preserving actions", () => {
+    render(<CourseGallery locale="en" />);
+
+    expect(screen.getByText("Foundation path")).toBeInTheDocument();
+    expect(screen.getByText("Technical courses")).toBeInTheDocument();
+    expect(screen.getByText("AI Fundamentals")).toBeInTheDocument();
+    expect(screen.getByText("AI and Society")).toBeInTheDocument();
+    expect(screen.getByText("EU AI Act Course")).toBeInTheDocument();
+    expect(screen.getByText("AI-Native Work Course")).toBeInTheDocument();
+    expect(screen.queryByText("Grundlagenpfad")).toBeNull();
+
+    const card = screen.getByText("AI Fundamentals").closest("li");
+    expect(card).not.toBeNull();
+    const scoped = within(card as HTMLElement);
+    expect(scoped.getByText("Duration")).toBeInTheDocument();
+    expect(scoped.getByText("Access")).toBeInTheDocument();
+    expect(scoped.getByText("Free")).toBeInTheDocument();
+    expect(
+      scoped.getByRole("link", { name: "Start course: AI Fundamentals" }),
+    ).toHaveAttribute("href", "/en/ki-fuehrerschein/kurs");
+    expect(
+      scoped.getByRole("link", { name: "Course details: AI Fundamentals" }),
+    ).toHaveAttribute("href", "/en/ki-fuehrerschein");
+    expect(
+      scoped.getByRole("progressbar", { name: "Progress AI Fundamentals" }),
+    ).toHaveAttribute("aria-valuetext", "0 of 18 lessons completed");
   });
 
   it("splits the path from the shelf along the declared classification", () => {
@@ -114,16 +141,18 @@ describe("CourseGallery (learner-first: path + deeper shelf)", () => {
       const home = spine.includes(course.slug) ? lernpfad : shelf;
       expect(within(home).getByText(course.title)).toBeInTheDocument();
     }
-    // Spine plates are data, not pictures: no <img> inside the Lernpfad, and
-    // the plate rows carry the facts the old body meta line stated.
-    expect(lernpfad.querySelector("img")).toBeNull();
+    // Every foundation course has an owned cover and the same compact fact
+    // grammar; visual identity must not remove operational detail.
+    expect(lernpfad.querySelectorAll("img")).toHaveLength(4);
+    for (const course of COURSE_CATALOG.slice(0, 4)) {
+      expect(
+        within(lernpfad).getByAltText(course.coverImageAlt ?? ""),
+      ).toBeInTheDocument();
+    }
     expect(within(lernpfad).getAllByText("Umfang")).toHaveLength(4);
     expect(within(lernpfad).getAllByText("Dauer")).toHaveLength(4);
-    expect(within(lernpfad).getAllByText("Nachweis")).toHaveLength(4);
-    expect(
-      within(lernpfad).getAllByText("Teilnahmebestätigung"),
-    ).toHaveLength(3);
-    expect(within(lernpfad).getAllByText("Lernnachweis")).toHaveLength(1);
+    expect(within(lernpfad).getAllByText("Aufbau")).toHaveLength(4);
+    expect(within(lernpfad).getAllByText("Zugang")).toHaveLength(4);
     expect(within(lernpfad).getAllByText("Kostenlos")).toHaveLength(4);
   });
 
@@ -225,16 +254,14 @@ describe("CourseGallery (learner-first: path + deeper shelf)", () => {
 
     render(<CourseGallery />);
 
-    // Completed course -> 100% and all 12 dots filled.
+    // Completed course -> exact 100% bar.
     expect(
       screen.getByTestId("progress-pct-ki-fuehrerschein").textContent,
     ).toBe("100%");
-    const dots = within(
+    const bar = within(
       screen.getByTestId("progress-dots-ki-fuehrerschein"),
-    ).getAllByText("", { selector: "span" });
-    expect(dots.filter((d) => d.className.includes("bg-brand-orange"))).toHaveLength(
-      12,
-    );
+    ).getByText("", { selector: "span" });
+    expect(bar).toHaveStyle({ width: "100%" });
 
     const banner = screen.getByTestId("kurse-gamification");
     expect(banner.textContent).toMatch(/120 XP/);
@@ -323,5 +350,27 @@ describe("CourseGallery (learner-first: path + deeper shelf)", () => {
     );
     expect(shareButton).toHaveTextContent("Kopieren fehlgeschlagen");
     expect(writeText).toHaveBeenCalledTimes(1);
+  });
+
+  it("localizes the shared progress URL and success state in English", async () => {
+    storeMock.getCompletedLessonsCount.mockImplementation((slug: string) =>
+      slug === "eu-ai-act-kurs" ? 5 : 0,
+    );
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: { writeText },
+    });
+
+    render(<CourseGallery locale="en" />);
+    const shareButton = screen.getByRole("button", {
+      name: "EU AI Act Course: Share progress",
+    });
+    fireEvent.click(shareButton);
+
+    await waitFor(() => expect(shareButton).toHaveTextContent("Link copied"));
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringContaining("/en/eu-ai-act-kurs/kurs#progress=ENCODED"),
+    );
   });
 });

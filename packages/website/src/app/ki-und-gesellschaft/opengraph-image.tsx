@@ -1,17 +1,33 @@
 import { ImageResponse } from "next/og";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
 
-export const runtime = "edge";
-export const alt = "KI und Gesellschaft: Arbeit, Deepfakes und Ethik. Kostenloser Kurs auf loehrning.ai";
+export const alt =
+  "KI und Gesellschaft / AI and Society course on loehrning.ai";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const blocks = [
-  { num: "01", label: "KI und Arbeit" },
-  { num: "02", label: "Deepfakes erkennen" },
-  { num: "03", label: "Ethik und Bias" },
-];
-
-export default function Image() {
+export default async function Image() {
+  const locale = resolveFoundationCourseContentLocale(
+    "ki-und-gesellschaft",
+    await getRequestLocale(),
+  );
+  const copy =
+    locale === "en"
+      ? {
+          course: "AI and Society",
+          title: "Work. Deepfakes. Bias.",
+          description:
+            "A course for assessing social claims about AI. 3 blocks, 9 lessons, 46 minutes.",
+          blocks: ["AI and work", "Assessing deepfakes", "Bias and ethics"],
+        }
+      : {
+          course: "KI und Gesellschaft",
+          title: "Arbeit. Deepfakes. Bias.",
+          description:
+            "Ein Kurs zur Einordnung gesellschaftlicher KI-Fragen. 3 Blöcke, 9 Lektionen, 46 Minuten.",
+          blocks: ["KI und Arbeit", "Deepfakes prüfen", "Bias und Ethik"],
+        };
   return new ImageResponse(
     (
       <div
@@ -35,7 +51,7 @@ export default function Image() {
             <path d="M18 34 H78 V88 H18 Z M36 52 H60 V70 H36 Z" fillRule="evenodd" />
           </svg>
           <div style={{ display: "flex", fontSize: 26, fontWeight: 900 }}>
-            loehrning<span style={{ color: "#B73A15" }}>.ai</span> · KI und Gesellschaft
+            loehrning<span style={{ color: "#B73A15" }}>.ai</span> · {copy.course}
           </div>
         </div>
 
@@ -50,7 +66,7 @@ export default function Image() {
               maxWidth: 980,
             }}
           >
-            Arbeit. Deepfakes. Ethik.
+            {copy.title}
           </div>
           <div
             style={{
@@ -61,14 +77,14 @@ export default function Image() {
               maxWidth: 900,
             }}
           >
-            Kostenloser Kurs zu gesellschaftlichen KI-Themen. 3 Blöcke, 9 Lektionen, ca. 46 Min.
+            {copy.description}
           </div>
         </div>
 
         <div style={{ display: "flex", gap: 16 }}>
-          {blocks.map((block) => (
+          {copy.blocks.map((label, index) => (
             <div
-              key={block.num}
+              key={label}
               style={{
                 flex: 1,
                 display: "flex",
@@ -89,10 +105,10 @@ export default function Image() {
                   fontFamily: "monospace",
                 }}
               >
-                {block.num}
+                {String(index + 1).padStart(2, "0")}
               </div>
               <div style={{ display: "flex", fontSize: 25, fontWeight: 900 }}>
-                {block.label}
+                {label}
               </div>
             </div>
           ))}

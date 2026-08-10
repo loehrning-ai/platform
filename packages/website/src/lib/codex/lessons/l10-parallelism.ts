@@ -1,29 +1,38 @@
 // Ported from codex/lessons/10-parallelism.html + codex/js/lessons/L10.js.
 import type { CodexLesson } from "../types";
 import { buildSections } from "../blocks";
-import { CODEX_QUIZ_COPY, CODEX_QUIZ_TITLE, CODEX_COMPARE_KIND_LABEL } from "../widget-copy";
+import {
+  CODEX_QUIZ_COPY,
+  CODEX_QUIZ_TITLE,
+  CODEX_COMPARE_KIND_LABEL,
+} from "../widget-copy";
 
 const lesson: CodexLesson = {
   id: "L10",
   number: 10,
   title: "Parallel Tasks, One Repo",
   subtitle:
-    "Git worktrees, task decomposition, and coordination patterns. How to run multiple agents in parallel without merge hell.",
+    "Use worktrees, dependency ordering, and explicit file ownership to isolate concurrent changes and expose merge risk.",
   durationMinutes: 12,
   trackId: "advanced",
-  hook: "Multiplayer mode.",
-  keyConcepts: ["Git worktrees", "Task decomposition", "Independent vs dependent", "Review queue"],
+  hook: "Parallelize only independent change sets.",
+  keyConcepts: [
+    "Git worktrees",
+    "Task decomposition",
+    "Independent vs dependent",
+    "Review queue",
+  ],
   quiz: [],
   sections: buildSections([
     {
       id: "s1",
-      title: "Ten tasks at once",
+      title: "Concurrency changes the review problem",
       readTimeMinutes: 2,
       blocks: [
         {
           kind: "prose",
           markdown:
-            "The sneaky power of agentic coding isn't that one task goes faster than a human can type. It's that you can have ten of them going at once. Each in its own branch, each oblivious to the others. If you've structured the work right, you come back after lunch to ten PRs, review them in a batch, merge the clean ones.\n\nThat workflow only holds up if the tasks are *independent*. The moment two parallel runs touch the same file, you're in conflict-resolution land, which undoes all the speedup. The skill is learning to carve work into independent slabs.",
+            "Multiple coding tasks can run concurrently, but execution capacity does not create independent work. Every task still consumes review capacity and may interact through shared files, schemas, APIs, generated artifacts, dependencies, or deployment state.\n\nParallelize only after identifying those dependencies. Separate working trees prevent concurrent processes from editing the same checkout; they do not prevent semantic conflicts when branches are merged.",
         },
         {
           kind: "pull-quote",
@@ -39,7 +48,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "When running multiple local AI agents simultaneously (Claude Code, Cursor, Aider), the usual pattern is to open multiple terminal tabs, each on a different branch. The problem: each agent's edits bleed into the others because they all share the same working directory.\n\n**Git worktrees** solve this. A worktree is a second (or third, or tenth) checkout of your repo, each pointing to a different branch, each with its own working directory on disk. The same git repository, multiple isolated workspaces.\n\n```\n# Set up three parallel worktrees\ngit worktree add ../myrepo-feat-auth feat/auth\ngit worktree add ../myrepo-feat-export feat/export\ngit worktree add ../myrepo-feat-api feat/api\n\n# Now start an agent in each one\n# (using Claude Code as an example)\ncd ../myrepo-feat-auth  &&  claude -n \"auth-refactor\"\ncd ../myrepo-feat-export &&  claude -n \"csv-export\"\ncd ../myrepo-feat-api   &&  claude -n \"api-v2\"\n\n# Each agent operates in its own directory, no shared file state\n# Clean up when done:\ngit worktree remove ../myrepo-feat-auth\n```\n\nWorktrees are especially useful for overnight runs: start three or four agent sessions before you leave, each in its own worktree on its own branch. Come back in the morning to review the PRs. No merge conflicts to untangle, the branches never touched each other.",
+            "Two local sessions in one working directory share file state. A write from one session can change what the other reads or tests.\n\n**Git worktrees** provide separate working directories backed by the same repository object database. Each worktree normally uses its own branch.\n\n```\n# Create worktrees on distinct branches\ngit worktree add ../myrepo-feat-auth feat/auth\ngit worktree add ../myrepo-feat-export feat/export\ngit worktree add ../myrepo-feat-api feat/api\n\n# Start the configured coding tool from each worktree.\n# Verify the path and branch before editing.\n\n# Remove a worktree after its changes are integrated or preserved\ngit worktree remove ../myrepo-feat-auth\n```\n\nWorktrees isolate uncommitted file state. They still share Git metadata and may share external state such as dependency caches, databases, ports, and generated files outside the worktree. Branches can also conflict at merge time when their diffs overlap semantically.",
         },
       ],
     },
@@ -51,7 +60,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Not all work is naturally parallel. The skill is decomposing a large task into pieces that can be parallelized. Three structural moves that work reliably:",
+            "These decomposition patterns can expose independent work, provided shared contracts and side effects are checked first:",
         },
         {
           kind: "card-grid",
@@ -59,24 +68,24 @@ const lesson: CodexLesson = {
             {
               eyebrow: "pattern 01",
               title: "Entity fan-out",
-              body: 'One task per entity. "Add audit logging to Users." "…to Projects." "…to Teams." Same shape, different files. Zero conflict by construction.',
+              body: "Use one task per entity when each entity owns separate code and data paths. A shared schema, helper, or audit sink creates a dependency that must be handled explicitly.",
             },
             {
               eyebrow: "pattern 02",
               title: "Directory fan-out",
-              body: '"Migrate module X to the new pattern." "…module Y." "…module Z." Each task owns one subtree. Independent because the subtrees don\'t overlap.',
+              body: "Assign one subtree to each task. Confirm that shared exports, generated indexes, configuration, and cross-module tests are not modified concurrently.",
             },
             {
               eyebrow: "pattern 03",
               title: "Test-coverage fan-out",
-              body: '"Write tests for file A." "…file B." "…file C." Test files only; doesn\'t touch production code. Almost always safe to run in parallel.',
+              body: "Separate test additions by behavior and owned fixture set. Shared snapshots, fixtures, test configuration, and production seams can still create conflicts.",
             },
           ],
         },
         {
           kind: "prose",
           markdown:
-            "The question to ask for every proposed parallel task: *which files does this touch?* List them. If any file appears in two tasks, those tasks are not independent. Either serialize them, or restructure so each task owns its own slice.",
+            "For each proposed task, list expected files, interfaces, generated outputs, services, ports, and data stores. Overlap does not always prohibit concurrency, but it requires an integration order and explicit conflict ownership.",
         },
       ],
     },
@@ -88,12 +97,12 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'The move to avoid: parallel tasks that each "do X, and refactor shared helpers as needed." Each one will refactor the helpers in its own direction. You\'ll get three PRs with conflicting rewrites of utils.py. Pick one, resolve the others by hand, lose the day.',
+            'Avoid parallel tasks that each say "refactor shared helpers as needed." The phrase leaves ownership of the same dependency open to every task and makes merge behavior unpredictable.',
         },
         {
           kind: "callout",
           title: "The fix:",
-          body: "if tasks share infrastructure, land the infrastructure change first as its own task. Then fan out the follow-ups. Serial-then-parallel beats parallel-then-merge-hell every time.",
+          body: "If tasks depend on the same infrastructure change, define and review that contract first. Rebase dependent tasks onto the accepted revision, then run only the independent adoption work concurrently.",
         },
       ],
     },
@@ -105,12 +114,12 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Before launching a batch of parallel tasks, classify each one:\n\n- **Independent:** touches files no other task touches. Safe to parallelize immediately.\n- **Sequentially dependent:** task B requires task A's output. Run A first, then fan out B, C, D in parallel once A is merged.\n- **Conflict-prone:** two tasks that both need to touch a shared file. Restructure or serialize. Do not parallelize hoping for the best.\n\nA useful heuristic: tasks are independent if their *diff sets are disjoint*. Before launching, mentally walk through what each task will change. If the sets don't intersect, run them in parallel.",
+            "Before launching concurrent tasks, classify each one:\n\n- **Independent:** no shared code, contract, generated state, or external side effect is expected. Parallel execution is reasonable, subject to review capacity.\n- **Sequentially dependent:** a task requires another task's accepted output. Run and review the dependency first.\n- **Conflict-prone:** tasks modify a shared file, interface, schema, fixture, or service. Restructure, assign ownership, or serialize them.\n\nDisjoint expected file lists are useful evidence, not proof of independence. Integration tests and merge review still need to evaluate semantic overlap.",
         },
         {
           kind: "callout",
           title: "Scheduling pattern:",
-          body: "1) Identify shared infrastructure changes, run these first, alone. 2) After those merge, identify all independent leaf tasks, run these in parallel. 3) Review in a batch. Merge the clean ones. Revise the others.",
+          body: "1) Map dependencies and shared state. 2) Land shared contracts before their consumers. 3) Give each concurrent task an owner, base revision, scope, and checks. 4) Integrate and re-run cross-cutting checks in a controlled order.",
         },
       ],
     },
@@ -122,7 +131,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "The team shape that makes parallel AI workflows sing:\n\n- **One human \"scout\" per feature area**, writes specs, reviews PRs, owns the agent instructions for that area.\n- **Agents run the specs in parallel;** the scout triages the resulting PRs.\n- **The rest of the team** does the work that *shouldn't* be automated, design calls, customer conversations, architectural decisions, anything that requires judgment calls about what to build.\n\nThe bottleneck shifts from \"who has time to type this out\" to \"who has time to review.\" That's a fundamentally different bottleneck, and the solutions are different: better acceptance criteria, tests-first specs, cleaner scope. Most of this course.\n\nOne practical tip: keep your review queue bounded. It's tempting to launch ten parallel tasks, but reviewing ten PRs at once is cognitively taxing and you'll miss things. Four or five in parallel is a sweet spot for one reviewer. Batch in waves.",
+            "Parallel execution needs explicit human ownership:\n\n- Assign a reviewer who understands each affected feature area and trust boundary.\n- Record the base revision, dependency order, and integration owner for every task.\n- Limit active tasks to the team's ability to review diffs and verification evidence without delaying security or release checks.\n- Keep product, architecture, and risk decisions with accountable humans; delegate implementation only after those decisions are stated.\n\nThere is no universal concurrency target. Use queue age, review complexity, overlap, and deployment risk to decide when to start another task.",
         },
       ],
     },
@@ -130,7 +139,12 @@ const lesson: CodexLesson = {
       id: "s7",
       title: "Quick check",
       readTimeMinutes: 1,
-      blocks: [{ kind: "prose", markdown: "Two questions on parallelizing agent work." }],
+      blocks: [
+        {
+          kind: "prose",
+          markdown: "Two questions on parallelizing agent work.",
+        },
+      ],
     },
   ]),
   widgets: [
@@ -143,11 +157,9 @@ const lesson: CodexLesson = {
         kindLabel: CODEX_COMPARE_KIND_LABEL,
         badLabel: "Parallel-hostile",
         goodLabel: "Parallel-friendly",
-        bad:
-          'Three tasks running concurrently:\n\n· "Add validation to signup, refactor shared validators as needed."\n· "Add validation to checkout, refactor shared validators as needed."\n· "Add validation to profile update, refactor shared validators as needed."\n\nAll three touch validators.py. All three will rewrite it differently.',
-        good:
-          'Task A (runs first, alone):\n"Restructure validators.py: one validator per field, composable, typed."\n\nTasks B, C, D (run after A merges, in parallel):\n"Use the new validators for signup."\n"...for checkout."\n"...for profile update."\n\nShared work lands once. Feature work parallelizes cleanly.',
-        note: "This is the single highest-leverage scheduling move in agentic workflows. Serialize the shared stuff. Parallelize the leaves.",
+        bad: 'Three tasks running concurrently:\n\n· "Add validation to signup, refactor shared validators as needed."\n· "Add validation to checkout, refactor shared validators as needed."\n· "Add validation to profile update, refactor shared validators as needed."\n\nAll three may modify validators.py, so ownership and merge order are undefined.',
+        good: 'Task A (runs first):\n"Define and test the shared validator interface in validators.py."\n\nAfter Task A is reviewed, separate adoption tasks use that accepted interface for signup, checkout, and profile update.\n\nEach adoption task owns its endpoint and tests; the shared validator remains out of scope.',
+        note: "Serialize tasks that modify shared foundations. Parallelize independent leaf tasks after their dependencies are stable.",
       },
     },
     {
@@ -191,7 +203,7 @@ const lesson: CodexLesson = {
         ],
         correct: 1,
         explanation:
-          "Git worktrees give each agent its own working directory on disk, all backed by the same repository object database. No file-state conflicts between sessions. A full clone works but wastes disk and makes sharing history harder. Worktrees are the precise tool for this problem.",
+          "Git worktrees provide separate working directories backed by the same repository object database. They isolate uncommitted file state, but you must still use distinct branches and manage shared services, generated state, and later merge conflicts.",
       },
     },
   ],

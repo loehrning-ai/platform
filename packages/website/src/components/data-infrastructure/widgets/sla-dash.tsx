@@ -10,6 +10,7 @@ import { useCanvasRAF } from "../canvas/use-canvas-raf";
 import { useCanvasAutoSize } from "../canvas/use-canvas-size";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
+import { useDataInfraWidgetLocale } from "../widget-locale-context";
 
 interface SlaDashProps {
   readonly lessonId: string;
@@ -27,10 +28,42 @@ interface Panel {
 }
 
 const PANELS: readonly Panel[] = [
-  { key: "fresh", title: "freshness", unit: "min", slo: 10, higherWorse: true, color: "#cf8a3f", fmt: (v) => `${v.toFixed(1)} min` },
-  { key: "vol", title: "row volume", unit: "rows/min", slo: 80000, higherWorse: false, color: "#3f8264", fmt: (v) => `${Math.round(v).toLocaleString()}` },
-  { key: "null", title: "null rate", unit: "%", slo: 1, higherWorse: true, color: "#b85a4a", fmt: (v) => `${v.toFixed(2)}%` },
-  { key: "lag", title: "consumer lag", unit: "msgs", slo: 500, higherWorse: true, color: "#7a4a8a", fmt: (v) => `${Math.round(v)} msgs` },
+  {
+    key: "fresh",
+    title: "freshness",
+    unit: "min",
+    slo: 10,
+    higherWorse: true,
+    color: "#cf8a3f",
+    fmt: (v) => `${v.toFixed(1)} min`,
+  },
+  {
+    key: "vol",
+    title: "row volume",
+    unit: "rows/min",
+    slo: 80000,
+    higherWorse: false,
+    color: "#3f8264",
+    fmt: (v) => `${Math.round(v).toLocaleString()}`,
+  },
+  {
+    key: "null",
+    title: "null rate",
+    unit: "%",
+    slo: 1,
+    higherWorse: true,
+    color: "#b85a4a",
+    fmt: (v) => `${v.toFixed(2)}%`,
+  },
+  {
+    key: "lag",
+    title: "consumer lag",
+    unit: "msgs",
+    slo: 500,
+    higherWorse: true,
+    color: "#7a4a8a",
+    fmt: (v) => `${Math.round(v)} msgs`,
+  },
 ];
 
 interface FeedEntry {
@@ -40,6 +73,7 @@ interface FeedEntry {
 }
 
 export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
+  const { locale } = useDataInfraWidgetLocale();
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -48,7 +82,12 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
   const [status, setStatus] = useState<"healthy" | "incident">("healthy");
   const [feed, setFeed] = useState<readonly FeedEntry[]>([]);
 
-  const seriesRef = useRef<Record<Panel["key"], number[]>>({ fresh: [], vol: [], null: [], lag: [] });
+  const seriesRef = useRef<Record<Panel["key"], number[]>>({
+    fresh: [],
+    vol: [],
+    null: [],
+    lag: [],
+  });
   const tRef = useRef(0);
   const incidentRef = useRef(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -93,10 +132,36 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
 
       ctx.fillStyle = p.color;
       ctx.font = "bold 11px monospace";
-      ctx.fillText(p.title.toUpperCase(), x + 10, y + 18);
+      const panelTitle =
+        locale === "de"
+          ? (
+              {
+                fresh: "Freshness",
+                vol: "Zeilenvolumen",
+                null: "NULL-Rate",
+                lag: "Consumer-Lag",
+              } as const
+            )[p.key]
+          : p.title;
+      const panelUnit =
+        locale === "de"
+          ? (
+              {
+                fresh: "min",
+                vol: "Zeilen/min",
+                null: "%",
+                lag: "Nachr.",
+              } as const
+            )[p.key]
+          : p.unit;
+      ctx.fillText(panelTitle.toUpperCase(), x + 10, y + 18);
       ctx.fillStyle = "rgba(91,138,143,0.6)";
       ctx.font = "9px monospace";
-      ctx.fillText(`SLO ${p.higherWorse ? "<" : ">"} ${p.slo.toLocaleString()} ${p.unit}`, x + 10, y + 32);
+      ctx.fillText(
+        `SLO ${p.higherWorse ? "<" : ">"} ${p.slo.toLocaleString()} ${panelUnit}`,
+        x + 10,
+        y + 32,
+      );
 
       const chartX = x + 10;
       const chartY = y + 42;
@@ -105,7 +170,10 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
 
       let maxV = series.length ? Math.max(...series) : p.slo * 1.5;
       let minV = series.length ? Math.min(...series, 0) : 0;
-      if (p.key === "vol") { maxV = Math.max(maxV, 110000); minV = 60000; }
+      if (p.key === "vol") {
+        maxV = Math.max(maxV, 110000);
+        minV = 60000;
+      }
       if (p.key === "fresh") maxV = Math.max(maxV, 16);
       if (p.key === "null") maxV = Math.max(maxV, 2);
       if (p.key === "lag") maxV = Math.max(maxV, 700);
@@ -137,14 +205,19 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
       }
 
       const cur = series[series.length - 1];
-      const breached = cur != null && (p.higherWorse ? cur > p.slo : cur < p.slo);
+      const breached =
+        cur != null && (p.higherWorse ? cur > p.slo : cur < p.slo);
       ctx.fillStyle = breached ? "#b85a4a" : p.color;
       ctx.font = "bold 13px monospace";
       ctx.fillText(cur != null ? p.fmt(cur) : "—", x + 10, y + ch - 8);
       if (breached) {
         ctx.fillStyle = "#b85a4a";
         ctx.font = "bold 9px monospace";
-        ctx.fillText("▲ BREACH", x + cw - 62, y + ch - 8);
+        ctx.fillText(
+          locale === "de" ? "▲ VERLETZT" : "▲ BREACH",
+          x + cw - 68,
+          y + ch - 8,
+        );
       } else if (cur != null) {
         ctx.fillStyle = "#3f8264";
         ctx.font = "9px monospace";
@@ -152,7 +225,7 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
       }
     });
     return timerRef.current != null;
-  }, []);
+  }, [locale]);
 
   const { wake } = useCanvasRAF(draw);
   wakeRef.current = wake;
@@ -162,10 +235,16 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
     const t = tRef.current;
     const incident = incidentRef.current;
     const series = seriesRef.current;
-    const fr = 4 + Math.random() * 2 + (incident && t > 20 ? Math.min(15, (t - 20) * 1.2) : 0);
-    const vo = 95000 + Math.random() * 8000 - (incident && t > 22 ? (t - 22) * 4500 : 0);
-    const nu = 0.4 + Math.random() * 0.3 + (incident && t > 24 ? (t - 24) * 0.4 : 0);
-    const la = 200 + Math.random() * 120 + (incident && t > 20 ? (t - 20) * 40 : 0);
+    const fr =
+      4 +
+      Math.random() * 2 +
+      (incident && t > 20 ? Math.min(15, (t - 20) * 1.2) : 0);
+    const vo =
+      95000 + Math.random() * 8000 - (incident && t > 22 ? (t - 22) * 4500 : 0);
+    const nu =
+      0.4 + Math.random() * 0.3 + (incident && t > 24 ? (t - 24) * 0.4 : 0);
+    const la =
+      200 + Math.random() * 120 + (incident && t > 20 ? (t - 20) * 40 : 0);
 
     series.fresh.push(fr);
     series.vol.push(vo);
@@ -176,21 +255,53 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
     });
 
     const mins = 12 * 60 + t;
-    setClock(`${String(Math.floor(mins / 60)).padStart(2, "0")}:${String(mins % 60).padStart(2, "0")}`);
+    setClock(
+      `${String(Math.floor(mins / 60)).padStart(2, "0")}:${String(mins % 60).padStart(2, "0")}`,
+    );
     const anyBreach = fr > 10 || nu > 1 || la > 500 || vo < 80000;
     setStatus(anyBreach ? "incident" : "healthy");
 
     if (incident && t === 22) {
       const id = ++feedSeqRef.current;
-      setFeed((f) => [{ id, text: "[12:22] PAGE · freshness above SLO (10 min) · on-call paged", bad: true }, ...f]);
+      setFeed((f) => [
+        {
+          id,
+          text:
+            locale === "de"
+              ? "[12:22] ALARM · Freshness über SLO (10 min) · Bereitschaft alarmiert"
+              : "[12:22] PAGE · freshness above SLO (10 min) · on-call paged",
+          bad: true,
+        },
+        ...f,
+      ]);
     }
     if (incident && t === 26) {
       const id = ++feedSeqRef.current;
-      setFeed((f) => [{ id, text: "[12:26] PAGE · null_rate(price) > 1% · upstream schema changed", bad: true }, ...f]);
+      setFeed((f) => [
+        {
+          id,
+          text:
+            locale === "de"
+              ? "[12:26] ALARM · null_rate(price) > 1 % · Quellschema geändert"
+              : "[12:26] PAGE · null_rate(price) > 1% · upstream schema changed",
+          bad: true,
+        },
+        ...f,
+      ]);
     }
     if (incident && t === 34) {
       const id = ++feedSeqRef.current;
-      setFeed((f) => [{ id, text: "[12:34] paused downstream consumers · investigating", bad: false }, ...f]);
+      setFeed((f) => [
+        {
+          id,
+          text:
+            locale === "de"
+              ? "[12:34] nachgelagerte Consumer pausiert · Untersuchung läuft"
+              : "[12:34] paused downstream consumers · investigating",
+          bad: false,
+        },
+        ...f,
+      ]);
     }
 
     wakeRef.current();
@@ -200,7 +311,7 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
       timerRef.current = null;
       complete();
     }
-  }, [complete]);
+  }, [complete, locale]);
 
   const start = useCallback(
     (withIncident: boolean) => {
@@ -230,32 +341,51 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
   }, []);
 
   return (
-    <div className="border-2 border-border bg-card/40 p-5 md:p-6">
+    <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-3 sm:p-5 md:p-6">
       <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        Sim · Pipeline observability · NOC dashboard {done ? "✓" : ""}
+        {locale === "de"
+          ? "Modell · Pipeline-Beobachtbarkeit · Betriebsübersicht"
+          : "Model · Pipeline observability · operations view"}{" "}
+        {done ? "✓" : ""}
       </p>
 
       {contextUnavailable ? (
         <CanvasFallbackNotice
-          title="SLA dashboard"
-          summary="4 SLOs tracked: freshness, row volume, null rate, consumer lag."
+          title={locale === "de" ? "SLA-Übersicht" : "SLA dashboard"}
+          summary={
+            locale === "de"
+              ? "Vier SLOs: Freshness, Zeilenvolumen, NULL-Rate und Consumer-Lag."
+              : "4 SLOs tracked: freshness, row volume, null rate, consumer lag."
+          }
         />
       ) : (
         <div ref={wrapRef} className="h-[420px] w-full">
           <canvas
             ref={canvasRef}
             role="img"
-            aria-label="SLA dashboard showing pipeline freshness against its service-level objective and error budget."
+            aria-label={
+              locale === "de"
+                ? "SLA-Übersicht für Freshness, Zeilenvolumen, NULL-Rate und Consumer-Lag."
+                : "SLA dashboard showing pipeline freshness against its service-level objective and error budget."
+            }
             className="h-full w-full"
           />
         </div>
       )}
 
-      <div className="mt-3 max-h-[120px] overflow-y-auto font-mono text-[11px]" aria-live="polite">
+      <div
+        className="mt-3 max-h-[120px] overflow-y-auto font-mono text-[11px]"
+        aria-live="polite"
+      >
         {feed.map((entry) => (
           <div
             key={entry.id}
-            className={cn("border-l-2 py-0.5 pl-2", entry.bad ? "border-destructive text-destructive" : "border-risk-green text-risk-green")}
+            className={cn(
+              "border-l-2 py-0.5 pl-2",
+              entry.bad
+                ? "border-destructive text-destructive"
+                : "border-risk-green text-risk-green",
+            )}
           >
             {entry.text}
           </div>
@@ -268,25 +398,36 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
           onClick={() => start(false)}
           className="border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wide text-white"
         >
-          ▶ play 1 hour
+          {locale === "de" ? "1 Stunde abspielen" : "▶ play 1 hour"}
         </button>
         <button
           type="button"
           onClick={() => start(true)}
           className="border-2 border-border px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
         >
-          ⚠ inject incident
+          {locale === "de" ? "Störung auslösen" : "⚠ inject incident"}
         </button>
         <button
           type="button"
           onClick={pause}
           className="border-2 border-border px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
         >
-          ⏸ pause
+          {locale === "de" ? "Pausieren" : "⏸ pause"}
         </button>
         <span className="ml-auto font-mono text-[11px] text-muted-foreground">
-          t = <b className="text-foreground">{clock}</b> · status{" "}
-          <b className={status === "incident" ? "text-destructive" : "text-risk-green"}>{status}</b>
+          t = <b className="text-foreground">{clock}</b> ·{" "}
+          {locale === "de" ? "Status" : "status"}{" "}
+          <b
+            className={
+              status === "incident" ? "text-destructive" : "text-risk-green"
+            }
+          >
+            {locale === "de"
+              ? status === "incident"
+                ? "Störung"
+                : "stabil"
+              : status}
+          </b>
         </span>
       </div>
     </div>

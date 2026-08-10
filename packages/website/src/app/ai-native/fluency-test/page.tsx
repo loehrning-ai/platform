@@ -1,21 +1,45 @@
 import type { Metadata } from "next";
 import { FluencyTest } from "@/components/ai-native/fluency-test";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
+import { SITE_URL } from "@/lib/seo/json-ld";
+import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
 
-export const metadata: Metadata = {
-  title: "AI-Native Fluency Test: 10 Szenarien",
-  description:
-    "In 5 Minuten herausfinden, wo du in 5 AI-Fluency-Dimensionen stehst: Drafting, Delegation, Automation, Knowledge, Governance. Kostenloser Selbsttest ohne Anmeldung.",
-  robots: { index: false, follow: true },
-  alternates: { canonical: "https://loehrning.ai/ai-native/fluency-test" },
-  openGraph: {
-    title: "AI-Native Fluency Test: 5 Minuten, 5 Dimensionen",
-    description:
-      "10 Szenarien, die dir zeigen, wo du AI-nativ arbeitest und wo nicht. Kostenlos ohne Anmeldung.",
-    url: "https://loehrning.ai/ai-native/fluency-test",
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = resolveFoundationCourseContentLocale(
+    "ai-native",
+    await getRequestLocale(),
+  );
+  const title =
+    locale === "en"
+      ? "Workflow self-assessment: AI-Native course"
+      : "Workflow-Selbsttest: AI-Native Arbeitskurs";
+  const description =
+    locale === "en"
+      ? "Ten workplace scenarios across drafting, delegation, automation, knowledge and governance. A local self-assessment, not a standardized test."
+      : "Zehn Arbeitsszenarien zu Entwurf, Delegation, Automatisierung, Wissen und Governance. Lokale Selbstprüfung, kein standardisierter Test.";
+  const localizedPath = localizeHref("/ai-native/fluency-test", locale);
+  const url = `${SITE_URL}${localizedPath}`;
+  const alternates = buildLocaleAlternates("/ai-native/fluency-test", ["de", "en"]);
+  return {
+    title,
+    description,
+    robots: { index: false, follow: true },
+    alternates: { ...alternates, canonical: localizedPath },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "website",
+      locale: locale === "en" ? "en_GB" : "de_DE",
+    },
+  };
+}
 
-export default function FluencyTestPage() {
-  return <FluencyTest />;
+export default async function FluencyTestPage() {
+  const locale = resolveFoundationCourseContentLocale(
+    "ai-native",
+    await getRequestLocale(),
+  );
+  return <FluencyTest locale={locale} />;
 }

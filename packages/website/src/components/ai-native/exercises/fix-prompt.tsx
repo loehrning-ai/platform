@@ -12,6 +12,7 @@ import { gradeWithAI, type GradeWithAIResult } from "./_ai-grade";
 import type { AiRubricEntry, ModuleId } from "@/lib/ai-native/types";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import { useDemoLocale } from "@/components/demos/demo-locale";
 import {
   getLearningOwnerContext,
   getOwnedSessionLearningItem,
@@ -94,6 +95,8 @@ function FixPromptBody({
   criteria,
   passThreshold = 0.6,
 }: FixPromptSpec): JSX.Element {
+  const { locale, text } = useDemoLocale();
+  const isEnglish = locale === "en";
   const storageKey = `ai-native-exercise-draft-${lessonId}-${exerciseId}`;
   const [draft, setDraft] = useState(startingPrompt);
   const [submitted, setSubmitted] = useState(false);
@@ -163,8 +166,12 @@ function FixPromptBody({
       rationale: c.label,
     }));
     const fallbackSummary = passed
-      ? `Regel-basierte Auswertung: ${Math.round(grading.score * 100)} % der Kriterien erfüllt.`
-      : `Regel-basierte Auswertung: ${Math.round(grading.score * 100)} %. Nicht alle Pflichtelemente erkannt.`;
+      ? isEnglish
+        ? `Rule-based evaluation: ${Math.round(grading.score * 100)}% of the criteria were detected.`
+        : `Regel-basierte Auswertung: ${Math.round(grading.score * 100)} % der Kriterien erfüllt.`
+      : isEnglish
+        ? `Rule-based evaluation: ${Math.round(grading.score * 100)}%. Required elements are still missing.`
+        : `Regel-basierte Auswertung: ${Math.round(grading.score * 100)} %. Nicht alle Pflichtelemente erkannt.`;
 
     const result = await gradeWithAI({
       kind: "exercise-fix-prompt",
@@ -205,7 +212,7 @@ function FixPromptBody({
         htmlFor={`${exerciseId}-textarea`}
         className="mb-2 block font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground"
       >
-        Dein Prompt
+        {text("Dein Prompt", "Your prompt")}
       </label>
       <textarea
         id={`${exerciseId}-textarea`}
@@ -267,8 +274,8 @@ function FixPromptBody({
             >
               <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-foreground">
                 {aiResult.source === "ai"
-                  ? "AI-Zusammenfassung"
-                  : "Zusammenfassung"}
+                  ? text("AI-Zusammenfassung", "AI summary")
+                  : text("Zusammenfassung", "Summary")}
               </p>
               <p className="mt-2 text-[13.5px] leading-[1.55] text-foreground">
                 {aiResult.summary}
@@ -333,10 +340,10 @@ function FixPromptBody({
             {isGrading ? (
               <>
                 <Loader2 size={12} className="animate-spin" />
-                AI bewertet …
+                {text("AI bewertet …", "AI is evaluating …")}
               </>
             ) : (
-              "Prompt prüfen"
+              text("Prompt prüfen", "Evaluate prompt")
             )}
           </button>
         ) : (

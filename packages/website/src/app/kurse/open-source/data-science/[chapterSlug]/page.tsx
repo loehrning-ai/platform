@@ -1,16 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { DataScienceLocaleProvider } from "@/components/data-science/locale-context";
 import { MarkChapterVisited } from "@/components/data-science/mark-chapter-visited";
-import { getDsChapterComponent } from "@/lib/data-science/chapters";
+import { getDataScienceCourseCopy } from "@/lib/data-science/course-copy";
+import { getDsLocaleRegistry } from "@/lib/data-science/content";
+import { isDsNumberedChapterId } from "@/lib/data-science/types";
+import { contentLocalesForPath } from "@/lib/i18n/content-parity";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
 import {
-  DS_CHAPTERS,
-  DS_NUMBERED_CHAPTER_IDS,
-  getDsChapterMeta,
-  isDsNumberedChapterId,
-} from "@/lib/data-science/types";
-import { dsChapterHref } from "@/lib/data-science/routes";
-import { SITE_URL } from "@/lib/seo/json-ld";
+  buildTechnicalCourseMetadata,
+  getTechnicalCourseStaticParams,
+  technicalCourseCanonicalHref,
+  technicalCourseHref,
+} from "@/lib/technical-courses/routes";
 
 interface PageProps {
   readonly params: Promise<{ chapterSlug: string }>;
@@ -19,60 +22,118 @@ interface PageProps {
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return DS_NUMBERED_CHAPTER_IDS.map((chapterSlug) => ({ chapterSlug }));
+  return [...getTechnicalCourseStaticParams("data-science")];
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { chapterSlug } = await params;
-  if (!isDsNumberedChapterId(chapterSlug)) return { title: "Chapter not found" };
-  const meta = getDsChapterMeta(chapterSlug);
-  const url = `${SITE_URL}${dsChapterHref(chapterSlug)}`;
-  const title = `${meta.title}: Data Science Fundamentals`;
-  return {
-    title,
-    description: meta.subtitle,
-    robots: { index: false, follow: true },
-    alternates: { canonical: url },
-    openGraph: { title, description: meta.subtitle, url, type: "article" },
-  };
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const [{ chapterSlug }, locale] = await Promise.all([
+    params,
+    getRequestLocale(),
+  ]);
+  const copy = getDataScienceCourseCopy(locale).reader;
+  if (!isDsNumberedChapterId(chapterSlug)) {
+    return {
+      title: copy.notFoundTitle,
+      robots: { index: false, follow: true },
+    };
+  }
+
+  const bundle = (await getDsLocaleRegistry()).get(locale);
+  const chapter = bundle.content.chapters.find(
+    (candidate) => candidate.id === chapterSlug,
+  );
+  if (!chapter) {
+    return {
+      title: copy.notFoundTitle,
+      robots: { index: false, follow: true },
+    };
+  }
+
+  const target = { kind: "chapter", chapterId: chapterSlug } as const;
+  const canonicalPath = technicalCourseCanonicalHref("data-science", target);
+  return buildTechnicalCourseMetadata({
+    courseSlug: "data-science",
+    locale,
+    target,
+    title: `${chapter.meta.title}: ${bundle.config.title}`,
+    description: chapter.meta.subtitle,
+    availableContentLocales: contentLocalesForPath(canonicalPath),
+  });
 }
 
 export default async function DsChapterRoute({ params }: PageProps) {
-  const { chapterSlug } = await params;
+  const [{ chapterSlug }, locale] = await Promise.all([
+    params,
+    getRequestLocale(),
+  ]);
   if (!isDsNumberedChapterId(chapterSlug)) notFound();
 
-  const meta = getDsChapterMeta(chapterSlug);
-  const ChapterComponent = await getDsChapterComponent(chapterSlug);
-  if (!ChapterComponent) notFound();
+  const bundle = (await getDsLocaleRegistry()).get(locale);
+  const chapters = bundle.content.chapters;
+  const currentIndex = chapters.findIndex(
+    (candidate) => candidate.id === chapterSlug,
+  );
+  if (currentIndex < 0) notFound();
 
-  const currentIndex = DS_CHAPTERS.findIndex((c) => c.id === chapterSlug);
-  const prev = currentIndex > 0 ? DS_CHAPTERS[currentIndex - 1] : null;
-  const next = currentIndex < DS_CHAPTERS.length - 1 ? DS_CHAPTERS[currentIndex + 1] : null;
+  const chapter = chapters[currentIndex];
+  if (!chapter) notFound();
+  const prev = currentIndex > 0 ? chapters[currentIndex - 1] : null;
+  const next =
+    currentIndex < chapters.length - 1 ? chapters[currentIndex + 1] : null;
+  const ChapterComponent = chapter.component;
+  const copy = getDataScienceCourseCopy(locale).reader;
 
   return (
-    <div className="content">
-      <ChapterComponent chapter={meta} />
-      <div style={{ marginTop: 32 }}>
-        <MarkChapterVisited chapterId={chapterSlug} />
+    <DataScienceLocaleProvider locale={locale}>
+      <div className="content min-w-0">
+        <ChapterComponent chapter={chapter.meta} />
+        <div className="mt-8 min-w-0">
+          <MarkChapterVisited chapterId={chapterSlug} locale={locale} />
+        </div>
+        <nav
+          className="tb mt-12 min-w-0 flex-wrap gap-3"
+          aria-label={copy.paginationLabel}
+        >
+          {prev ? (
+            <Link
+              className="btn max-w-full break-words [overflow-wrap:anywhere]"
+              href={technicalCourseHref("data-science", locale, {
+                kind: "chapter",
+                chapterId: prev.id,
+              })}
+              prefetch={false}
+            >
+              {copy.previous}
+            </Link>
+          ) : (
+            <span aria-hidden="true" />
+          )}
+          {next ? (
+            <Link
+              className="btn btn-primary max-w-full break-words [overflow-wrap:anywhere]"
+              href={technicalCourseHref("data-science", locale, {
+                kind: "chapter",
+                chapterId: next.id,
+              })}
+              prefetch={false}
+            >
+              {copy.next}
+            </Link>
+          ) : (
+            <Link
+              className="btn btn-primary max-w-full break-words [overflow-wrap:anywhere]"
+              href={technicalCourseHref("data-science", locale, {
+                kind: "certificate",
+              })}
+              prefetch={false}
+            >
+              {copy.certificate}
+            </Link>
+          )}
+        </nav>
       </div>
-      <nav className="tb" aria-label="Chapter pagination" style={{ marginTop: 48 }}>
-        {prev ? (
-          <Link className="btn" href={dsChapterHref(prev.id)}>
-            ← Prev <span className="kbd">←</span>
-          </Link>
-        ) : (
-          <span />
-        )}
-        {next ? (
-          <Link className="btn btn-primary" href={dsChapterHref(next.id)}>
-            Next → <span className="kbd">→</span>
-          </Link>
-        ) : (
-          <Link className="btn btn-primary" href="/kurse/open-source/data-science/zertifikat">
-            Get your certificate →
-          </Link>
-        )}
-      </nav>
-    </div>
+    </DataScienceLocaleProvider>
   );
 }

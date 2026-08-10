@@ -34,9 +34,8 @@ export default tseslint.config(
     ],
   },
   {
-    // Register framework plugins globally. Next.js checks the fully-resolved
-    // config file itself during `next build`; a TS-only registration makes
-    // the plugin active for source linting but invisible to that check.
+    // Register framework plugins globally so JavaScript and TypeScript files
+    // receive the same React Hooks and Next.js rule set.
     plugins: {
       "react-hooks": reactHooks,
       "@next/next": nextPlugin,
@@ -50,7 +49,6 @@ export default tseslint.config(
       globals: { ...globals.browser, ...globals.node },
     },
     rules: {
-      ...reactHooks.configs.recommended.rules,
       ...nextPlugin.configs.recommended.rules,
       ...nextPlugin.configs["core-web-vitals"].rules,
       // Correctness (errors)

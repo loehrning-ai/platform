@@ -79,7 +79,7 @@ export function ScrollReveal({
           return node.cloneNode(true);
         };
         const wrapped = wrap(el);
-        el.innerHTML = "";
+        el.replaceChildren();
         while (wrapped.firstChild) el.appendChild(wrapped.firstChild);
         el.dataset.wrapped = "true";
       }

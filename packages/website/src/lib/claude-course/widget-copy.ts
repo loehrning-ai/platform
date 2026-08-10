@@ -1,10 +1,8 @@
 // ─── Claude Course chrome-copy overrides ─────────
 //
-// English chrome copy for the 4 reused Tier-A widgets (quiz, drag-reorder,
-// failure-tagger, redaction-drill), passed as their `copy` prop from every
-// claude-course lesson so button/status text renders in English instead of
-// the components' German defaults. Source strings mirror the wording used
-// in `claude/js/widgets.js` and `claude/lessons/*.html` themselves.
+// English chrome copy for four reused Tier-A widgets (quiz, drag-reorder,
+// failure-tagger, redaction-drill). Every English Claude lesson passes these
+// overrides so the shared components do not fall back to German copy.
 
 import type { QuizWidgetCopy } from "@/components/widgets/tier-a/quiz";
 import type { DragReorderWidgetCopy } from "@/components/widgets/tier-a/drag-reorder";
@@ -39,7 +37,7 @@ export const CLAUDE_DRAG_REORDER_COPY: DragReorderWidgetCopy = {
   shuffleLabel: "Shuffle",
   moveUpSuffix: "move up",
   moveDownSuffix: "move down",
-  correctStatusLabel: "Perfect, that's the template.",
+  correctStatusLabel: "Matches the example order.",
   wrongStatusLabel: "Not quite. Green rows are in the right place.",
   idleStatusLabel: "Order them, then check.",
   checkLabel: "Check order",
@@ -53,7 +51,7 @@ export const CLAUDE_FAILURE_TAGGER_COPY: FailureTaggerWidgetCopy = {
   correctSuffix: "correct",
   taggedSuffix: "tagged",
   submitLabel: "Check my tags",
-  passedLabel: "You know what a failure looks like",
+  passedLabel: "Required classifications complete",
   retryPromptLabel: "Reread the mode descriptions",
   resetLabel: "Try again",
   perCaseCorrectLabel: "Correct.",
@@ -73,22 +71,24 @@ export const CLAUDE_REDACTION_DRILL_COPY: RedactionDrillWidgetCopy = {
   legendRedactedChip: "redacted",
   legendCleanedLabel: "cleaned",
   countSuffix: "caught",
-  submitLabel: "Submit paste",
+  submitLabel: "Check redaction",
   resetLabel: "Reset & try again",
-  cleanStatusLabel: "Safe",
-  leakStatusLabel: "Leaky",
+  cleanStatusLabel: "Required fields redacted",
+  leakStatusLabel: "Protected data remains",
   allScenariosCleanLabel: "Both scenarios cleaned",
   scenarioOfWord: "of",
-  safeHeadline: "Safe to paste.",
+  safeHeadline: "Required fields are redacted.",
   safeBodyTemplate:
-    "All {n} sensitive fields caught, no false positives. This is the habit, read before you paste.",
+    "All {n} fields defined by this exercise are redacted. Apply your actual data policy before submission.",
   notSafeHeadline: "Don't send this yet.",
-  missingSingularTemplate: "{n} sensitive field is still exposed (highlighted red).",
-  missingPluralTemplate: "{n} sensitive fields are still exposed (highlighted red).",
+  missingSingularTemplate:
+    "{n} sensitive field is still exposed (highlighted red).",
+  missingPluralTemplate:
+    "{n} sensitive fields are still exposed (highlighted red).",
   mistakesSingularTemplate:
-    "You over-redacted {n} safe field, fine, but unnecessary.",
+    "You redacted {n} non-sensitive field defined by this exercise.",
   mistakesPluralTemplate:
-    "You over-redacted {n} safe fields, fine, but unnecessary.",
+    "You redacted {n} non-sensitive fields defined by this exercise.",
 };
 
 // ─── SemanticSpace overrides ─────────────────────
@@ -125,20 +125,64 @@ export const CLAUDE_SEMANTIC_SPACE_KEYWORDS: Record<
   readonly string[]
 > = {
   technik: [
-    "database", "kubernetes", "server", "commit", "pr review", "algorithm",
-    "sprint", "deploy", "api", "cache", "compiler", "kernel", "docker", "merge",
+    "database",
+    "kubernetes",
+    "server",
+    "commit",
+    "pr review",
+    "algorithm",
+    "sprint",
+    "deploy",
+    "api",
+    "cache",
+    "compiler",
+    "kernel",
+    "docker",
+    "merge",
   ],
-  vertrieb: ["roadmap", "okr", "stakeholder", "kickoff", "backlog", "milestone", "standup", "retro", "scope"],
-  werkstatt: ["espresso", "latte", "cortado", "grinder", "cappuccino", "mocha", "brew", "beans", "flat white"],
-  verwaltung: ["violin", "sonata", "concerto", "cello", "piano", "fugue", "symphony", "opera", "tempo", "melody"],
+  vertrieb: [
+    "roadmap",
+    "okr",
+    "stakeholder",
+    "kickoff",
+    "backlog",
+    "milestone",
+    "standup",
+    "retro",
+    "scope",
+  ],
+  werkstatt: [
+    "espresso",
+    "latte",
+    "cortado",
+    "grinder",
+    "cappuccino",
+    "mocha",
+    "brew",
+    "beans",
+    "flat white",
+  ],
+  verwaltung: [
+    "violin",
+    "sonata",
+    "concerto",
+    "cello",
+    "piano",
+    "fugue",
+    "symphony",
+    "opera",
+    "tempo",
+    "melody",
+  ],
 };
 
-export const CLAUDE_SEMANTIC_SPACE_QUADRANT_LABELS: readonly SemanticSpaceQuadrantLabel[] = [
-  { label: "tech", x: 16, y: 4 },
-  { label: "product", x: 82, y: 4 },
-  { label: "music", x: 16, y: 68 },
-  { label: "coffee", x: 58, y: 68 },
-];
+export const CLAUDE_SEMANTIC_SPACE_QUADRANT_LABELS: readonly SemanticSpaceQuadrantLabel[] =
+  [
+    { label: "tech", x: 16, y: 4 },
+    { label: "product", x: 82, y: 4 },
+    { label: "music", x: 16, y: 68 },
+    { label: "coffee", x: 58, y: 68 },
+  ];
 
 export const CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS: Record<
   Exclude<SemanticSpaceCluster, "user">,
@@ -151,14 +195,15 @@ export const CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS: Record<
 };
 
 export const CLAUDE_SEMANTIC_SPACE_COPY: SemanticSpaceCopy = {
-  kindLabel: "Hero demo",
+  kindLabel: "Local illustration",
   canvasAriaLabel: "Semantic space with placed words",
   placeholder: "Try: sprint, cappuccino, algorithm, cello…",
   inputAriaLabel: "New word",
   placingLabel: "Placing…",
   placeLabel: "Place in space →",
   landedNearText: "landed near",
-  emptyStatusText: "Drop a word and Claude will explain where it landed.",
-  nearPlacedTemplate: "it shares meaning with the {cluster} cluster, so it lands beside related words.",
-  heuristicTemplate: "its meaning is closest to that neighbourhood of the space.",
+  emptyStatusText: "Enter a word to run the local topic-matching rule.",
+  nearPlacedTemplate: "the local keyword list maps it to the {cluster} group.",
+  heuristicTemplate:
+    "no keyword matched, so the local fallback selected this group.",
 };

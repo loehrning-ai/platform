@@ -84,4 +84,17 @@ describe("recommend", () => {
   it("keeps FOUNDATION_THRESHOLD at the solid boundary", () => {
     expect(FOUNDATION_THRESHOLD).toBe(50);
   });
+
+  it("localizes the English recommendation title, paths, badge, and reasoning", () => {
+    const result = computeResult(makeAnswers({}, 1));
+    const rec = recommend(result, "en");
+
+    expect(rec.courseTitle).toBe("AI Fundamentals");
+    expect(rec.courseHref).toBe("/en/ki-fuehrerschein");
+    expect(rec.startHref).toBe("/en/ki-fuehrerschein/kurs");
+    expect(rec.badge).toContain("DE + EN");
+    expect(rec.badge).toContain("participation record");
+    expect(rec.reasoning).toContain("AI Fundamentals");
+    expect(rec.reasoning).not.toMatch(/\b(?:Du|dein|Kurs)\b/);
+  });
 });

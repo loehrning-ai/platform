@@ -1,6 +1,7 @@
 "use client";
 
 import { m, useReducedMotion } from "framer-motion";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 
 export interface RadarDimension {
   readonly nameDe: string;
@@ -22,7 +23,7 @@ function polarToCartesian(angle: number, radius: number): [number, number] {
   return [CENTER + radius * Math.cos(rad), CENTER + radius * Math.sin(rad)];
 }
 
-export function RadarChart({ dimensions }: RadarChartProps) {
+function RadarChartContent({ dimensions }: RadarChartProps) {
   // Entrance animations (scale/opacity on polygon and data points) are guarded
   // explicitly: MotionConfig reducedMotion="user" only neutralizes transform
   // animations, and even those should snap to final state under reduced motion.
@@ -154,3 +155,5 @@ export function RadarChart({ dimensions }: RadarChartProps) {
     </div>
   );
 }
+
+export const RadarChart = withMotionProvider(RadarChartContent);

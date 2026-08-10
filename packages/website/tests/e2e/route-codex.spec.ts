@@ -16,12 +16,12 @@ import { test, expect, type Page } from "@playwright/test";
  * flow directly against a running dev server instead.
  */
 
-const LANDING = "/kurse/open-source/codex";
-const COURSE_PATH = "/kurse/open-source/codex/kurs";
-const LESSON_ROUTE = "/kurse/open-source/codex/kurs/L01";
-const FINAL_LESSON_ROUTE = "/kurse/open-source/codex/kurs/L12";
-const CERT_ROUTE = "/kurse/open-source/codex/kurs/zertifikat";
-const VERIFY_ROUTE = "/kurse/open-source/codex/verifizierung";
+const LANDING = "/en/kurse/open-source/codex";
+const COURSE_PATH = "/en/kurse/open-source/codex/kurs";
+const LESSON_ROUTE = "/en/kurse/open-source/codex/kurs/L01";
+const FINAL_LESSON_ROUTE = "/en/kurse/open-source/codex/kurs/L12";
+const CERT_ROUTE = "/en/kurse/open-source/codex/kurs/zertifikat";
+const VERIFY_ROUTE = "/en/kurse/open-source/codex/verifizierung";
 
 const UNIFIED_KEY = "loehrning-progress-v2";
 const CODEX_LESSON_IDS = [
@@ -36,6 +36,15 @@ const CODEX_LESSON_IDS = [
   "L09",
   "L10",
   "L11",
+  "L12",
+] as const;
+
+const MOBILE_REFLOW_LESSON_IDS = [
+  "L03",
+  "L04",
+  "L06",
+  "L07",
+  "L08",
   "L12",
 ] as const;
 
@@ -168,7 +177,7 @@ test.describe("Codex Course golden path", () => {
     });
     expect(res?.status()).toBe(200);
     await expect(page).not.toHaveURL(/\/login/);
-    await page.locator('html[data-hydrated="true"]').waitFor();
+    await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
 
     const markAsRead = page.getByRole("button", {
       name: "Mark as read",
@@ -226,5 +235,97 @@ test.describe("Codex Course golden path", () => {
       page.getByRole("heading", { name: /Codex Course/ }),
     ).toBeVisible();
     await expect(page.getByText("Certificate code unreadable")).toHaveCount(0);
+  });
+});
+
+test.describe("Codex Course 320px reflow", () => {
+  test.use({ viewport: { width: 320, height: 900 } });
+
+  test("wide lesson widgets stay contained without clipping essential content", async ({
+    page,
+  }) => {
+    test.setTimeout(90_000);
+    await page.emulateMedia({ reducedMotion: "reduce" });
+
+    for (const lessonId of MOBILE_REFLOW_LESSON_IDS) {
+      await test.step(lessonId, async () => {
+        const response = await page.goto(`${COURSE_PATH}/${lessonId}`, {
+          waitUntil: "load",
+        });
+        expect(response?.status()).toBe(200);
+        await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+        await page.evaluate(async () => {
+          await document.fonts.ready;
+          await new Promise<void>((resolve) =>
+            requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+          );
+        });
+
+        const geometry = await page.evaluate(() => {
+          const viewportTolerance = 1;
+          const viewportRight = window.innerWidth + viewportTolerance;
+          const uncontained = Array.from(
+            document.body.querySelectorAll<HTMLElement>("*"),
+          )
+            .filter((element) => {
+              const rect = element.getBoundingClientRect();
+              const style = getComputedStyle(element);
+              if (
+                style.display === "none" ||
+                style.visibility === "hidden" ||
+                rect.width <= 0 ||
+                rect.height <= 0 ||
+                (rect.left >= -viewportTolerance && rect.right <= viewportRight)
+              ) {
+                return false;
+              }
+
+              for (
+                let ancestor = element.parentElement;
+                ancestor && ancestor !== document.body;
+                ancestor = ancestor.parentElement
+              ) {
+                const ancestorRect = ancestor.getBoundingClientRect();
+                const overflowX = getComputedStyle(ancestor).overflowX;
+                const isContainedScroller =
+                  (overflowX === "auto" || overflowX === "scroll") &&
+                  ancestor.scrollWidth > ancestor.clientWidth + viewportTolerance &&
+                  ancestorRect.left >= -viewportTolerance &&
+                  ancestorRect.right <= viewportRight;
+                if (isContainedScroller) return false;
+              }
+
+              return true;
+            })
+            .slice(0, 10)
+            .map((element) => {
+              const rect = element.getBoundingClientRect();
+              return {
+                tag: element.tagName.toLowerCase(),
+                text:
+                  element.textContent?.trim().replace(/\s+/g, " ").slice(0, 80) ??
+                  "",
+                left: Math.round(rect.left),
+                right: Math.round(rect.right),
+              };
+            });
+
+          return {
+            bodyScrollWidth: document.body.scrollWidth,
+            innerWidth: window.innerWidth,
+            uncontained,
+          };
+        });
+
+        expect(
+          geometry.bodyScrollWidth,
+          `${lessonId}: body scroll width ${geometry.bodyScrollWidth}px exceeds ${geometry.innerWidth}px`,
+        ).toBeLessThanOrEqual(geometry.innerWidth + 1);
+        expect(
+          geometry.uncontained,
+          `${lessonId}: elements escape the viewport without an explicit horizontal scroller`,
+        ).toEqual([]);
+      });
+    }
   });
 });

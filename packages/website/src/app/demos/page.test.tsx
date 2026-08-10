@@ -2,6 +2,10 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { DemoGridInitialFilters } from "@/components/demos/demo-grid";
 
+vi.mock("@/lib/i18n/request-locale", () => ({
+  getRequestLocale: vi.fn(async () => "de"),
+}));
+
 vi.mock("@/components/demos/demo-grid", () => ({
   DemoGrid: ({
     initialFilters,

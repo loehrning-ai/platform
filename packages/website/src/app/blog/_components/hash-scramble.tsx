@@ -28,7 +28,7 @@ export function HashScramble({
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReduced) {
-      valueEl.innerHTML = "";
+      valueEl.replaceChildren();
       for (let i = 0; i < hash.length; i++) {
         const s = document.createElement("span");
         s.className = "char";
@@ -40,7 +40,7 @@ export function HashScramble({
     }
 
     const start = () => {
-      valueEl.innerHTML = "";
+      valueEl.replaceChildren();
       const spans: HTMLSpanElement[] = [];
       for (let i = 0; i < hash.length; i++) {
         const s = document.createElement("span");

@@ -1,4 +1,10 @@
-import { Hero, SectionLabel, AntiPatterns, BestPractices, Takeaway } from "@/components/data-science/shared/primitives";
+import {
+  Hero,
+  SectionLabel,
+  AntiPatterns,
+  BestPractices,
+  Takeaway,
+} from "@/components/data-science/shared/primitives";
 import { DistributionExplorer } from "@/components/data-science/simulators/distribution-explorer";
 import { OutlierDetector } from "@/components/data-science/simulators/outlier-detector";
 import { CorrelationMatrix } from "@/components/data-science/simulators/correlation-matrix";
@@ -15,7 +21,7 @@ export default function Ch02Explore() {
       <Hero
         eyebrow="Chapter 02"
         title="Exploratory Data Analysis, <em>look before you leap.</em>"
-        hook="Thirty minutes of plots save thirty days of debugging. Before a single <code>.fit()</code>, answer: what shape, what outliers, what correlations? This chapter is the checklist."
+        hook="Before <code>.fit()</code>, inspect distributions, missingness, unusual observations, relationships, units, and time. The goal is to find assumptions and data defects before they enter a model."
         meta={[
           { k: "Topics", v: "Distributions · Outliers · Correlations" },
           { k: "Time", v: "10 min" },
@@ -26,85 +32,91 @@ export default function Ch02Explore() {
 
       <SectionLabel n="01">Distribution Shapes</SectionLabel>
       <p className="prose">
-        The histogram is the first thing you draw on any new dataset, not a mean, not a scatter
-        plot. A histogram tells you at a glance whether your data is roughly bell-shaped (safe to
-        use parametric tests), skewed (log-transform candidate), bimodal (hidden
-        sub-populations?), or uniform (likely a synthetic key, not a real measurement).
+        A histogram is one useful first view of a numeric variable. Bin choices
+        can hide or create apparent structure, so combine it with counts,
+        quantiles, an empirical CDF, missingness, and domain-valid ranges. Shape
+        alone does not make a parametric test valid or identify a
+        transformation.
       </p>
       <p className="prose">
-        <strong>Skewness</strong> measures asymmetry. Positive skew (long right tail) pushes the
-        mean above the median, classic for income, latency, claim sizes.
-        <strong> Kurtosis</strong> (excess) measures tail weight. Heavy-tailed distributions
-        (kurtosis &gt; 0) produce more extreme events than a normal, which matters for risk and
-        anomaly detection. Change N to see how estimation stabilises with more data.
+        <strong>Skewness</strong> measures asymmetry. Positive skew (long right
+        tail) pushes the mean above the median in many common distributions,
+        including income and latency.
+        <strong> Excess kurtosis</strong> is based on the fourth moment and is
+        highly sensitive to extremes; it does not describe tail risk by itself.
+        Change N to inspect sampling variability in these estimates.
       </p>
       <DistributionExplorer />
       <BestPractices
         title="Best practices, distributions"
         items={[
-          "<b>Always plot a histogram before computing statistics.</b> Summary stats can be identical for wildly different distributions (Anscombe's Quartet is the classic proof).",
-          "<b>If skewness &gt; 1, consider log-transforming</b> before fitting linear models or computing Pearson r.",
-          "<b>Vary bin count.</b> Freedman-Diaconis rule (bin width ∝ IQR · n<sup>−1/3</sup>) is a solid automatic choice.",
+          "<b>Pair summaries with plots.</b> Similar means and variances can hide different distributions, nonlinear structure, or influential observations.",
+          "<b>Treat skewness &gt; 1 as a prompt, not a rule.</b> A log transform requires positive values and should serve the model assumptions and interpretation.",
+          "<b>Vary bin count.</b> The Freedman-Diaconis width (∝ IQR · n<sup>−1/3</sup>) is one starting rule; inspect sensitivity to bin boundaries.",
           "<b>Compare mean vs. median.</b> A large gap signals skew or heavy outliers contaminating the mean.",
         ]}
       />
 
       <SectionLabel n="02">Outlier Detection</SectionLabel>
       <p className="prose">
-        Outliers are not bugs, they are signals. A transaction 50× the typical value could be
-        fraud, a test-account flush, or a genuine whale customer. The right move is to detect,
-        investigate, and then decide: remove, cap (winsorise), or model separately. Never silently
-        drop outliers without documenting why.
+        Outliers are not bugs, they are signals. A transaction 50× the typical
+        value could be fraud, a test-account flush, or a genuine whale customer.
+        The right move is to detect, investigate, and then decide: remove, cap
+        (winsorise), or model separately. Never silently drop outliers without
+        documenting why.
       </p>
       <p className="prose">
-        Three detection strategies dominate in practice.
-        <strong> Z-score</strong> (threshold = 3σ) is fast but assumes normality, it collapses on
-        heavily skewed data.
-        <strong> IQR fences</strong> (Tukey, 1.5 × IQR) are distribution-free and robust to skew.
-        They are the default in most box-plot implementations.
-        <strong> Isolation Forest</strong> recursively partitions the feature space at random;
-        anomalies require fewer splits to isolate. It scales to high dimensions where
-        distance-based methods fail.
+        Three simple strategies illustrate different assumptions.
+        <strong> Z-score</strong> flags distance from a mean in
+        standard-deviation units and is sensitive to skew and extremes.
+        <strong> IQR fences</strong> (Tukey, 1.5 × IQR) are a nonparametric
+        visual flag, not proof that an observation is erroneous.
+        <strong> Isolation Forest</strong> recursively partitions the feature
+        space at random; points isolated in fewer splits receive higher anomaly
+        scores. Performance in high dimensions still depends on sample size,
+        contamination, feature representation, and tuning.
       </p>
       <OutlierDetector />
       <AntiPatterns
         title="Outlier anti-patterns"
         items={[
           "<b>Removing outliers to improve R².</b> Outliers contain information. Deleting them without investigation is data falsification.",
-          "<b>Using only Z-score on skewed data.</b> When data is right-skewed, Z-score almost never flags right-tail extremes because the mean and SD are already pulled right.",
+          "<b>Using only Z-scores on skewed data.</b> Mean and standard deviation are themselves affected by the long tail, so the chosen cutoff can misclassify observations.",
           "<b>Treating multivariate outliers as univariate ones.</b> A point at (x=1.5σ, y=1.5σ) looks fine on each axis but can be a genuine outlier in 2D joint space (Mahalanobis distance catches this).",
         ]}
       />
 
       <SectionLabel n="03">Correlation Structure</SectionLabel>
       <p className="prose">
-        A correlation matrix gives you a bird&apos;s-eye view of linear relationships across all
-        feature pairs. It answers: which features move together, which are independent, and
-        which might be proxies for the same underlying cause. This matters for feature selection
-        (collinear features add noise) and for understanding the domain (high income-satisfaction
+        A correlation matrix gives you a bird&apos;s-eye view of linear
+        relationships across all feature pairs. It answers: which features move
+        together, which are independent, and which might be proxies for the same
+        underlying cause. This matters for feature selection (collinear features
+        add noise) and for understanding the domain (high income-satisfaction
         correlation hints at a mechanism worth investigating).
       </p>
       <p className="prose">
-        Drag the <strong>noise slider</strong> to simulate measurement noise or a smaller
-        effective sample. Watch Pearson r decay toward 0, this is the attenuation bias that
-        plagues survey data, wearable sensors, and self-reported measurements. Correcting for
-        attenuation (disattenuation) is an underused technique in applied ML.
+        The <strong>noise slider</strong> adds seeded independent noise to this
+        constructed linear relationship. Pearson r then moves toward 0. This is
+        attenuation under a classical measurement-error setup; other error
+        mechanisms can bias correlation differently. Disattenuation requires
+        defensible reliability estimates.
       </p>
       <CorrelationMatrix />
       <AntiPatterns
         title="Correlation anti-patterns"
         items={[
-          "<b>Equating high correlation with causation.</b> Spurious correlates are everywhere. Always ask: is there a common cause? (Ch 09 covers causal graphs.)",
-          "<b>Computing Pearson r on non-linear relationships.</b> Two variables with a perfect U-shape have r ≈ 0. Use Spearman rank correlation or mutual information instead.",
-          "<b>Ignoring multicollinearity.</b> Two features with r = 0.95 carry almost the same information. Keeping both inflates variance in linear models and makes coefficients unstable.",
-          "<b>Reading a correlation matrix and skipping the scatter plots.</b> Always spot-check the highest correlations visually, outliers can manufacture or destroy Pearson r.",
+          "<b>Equating high correlation with causation.</b> Ask which common causes, selection processes, or time trends could generate the association; see Chapter 09.",
+          "<b>Using Pearson r as a general dependence measure.</b> A symmetric U-shaped relation can have r near 0. Inspect the plot and select a measure that matches the question; Spearman captures monotonic association, not every nonlinearity.",
+          "<b>Ignoring multicollinearity.</b> Strongly related predictors can destabilize individual coefficients in linear models; impact depends on the estimand, sample, and regularization.",
+          "<b>Reading a matrix without the underlying plots.</b> Spot-check important pairs because outliers, clusters, and nonlinearity can change the interpretation of Pearson r.",
         ]}
       />
       <BestPractices
         title="Best practices, correlations"
         items={[
           "<b>Plot the correlation matrix as a heatmap</b>, not a table of numbers. The visual makes high/low clusters obvious at a glance.",
-          "<b>For non-normal or ordinal data, use Spearman's ρ</b> instead of Pearson r.",
+          "<b>For ordinal or monotonic questions, consider Spearman's ρ.</b> Distributional assumptions matter for inference, while the choice of coefficient should match the association of interest.",
           "<b>After finding strong correlations, cluster features</b> (hierarchical clustering on the distance matrix 1−|r|) to reveal groups of redundant predictors.",
           "<b>Check the target variable last.</b> Strong correlation with the target is useful; strong correlation between two features you plan to use together is a red flag.",
         ]}
@@ -112,11 +124,11 @@ export default function Ch02Explore() {
 
       <Takeaway
         items={[
-          "<b>Histogram first, stats second.</b> Mean and variance are summaries of a shape you haven't seen yet, look at the shape first.",
-          "<b>Outliers are signals, not noise.</b> Detect with Z-score for normal data, IQR for skewed data, and Isolation Forest for high-dimensional data. Then investigate before deleting.",
-          "<b>Correlation r measures linear association only.</b> Always complement with scatter plots and consider Spearman for ordinal or non-normal data.",
-          "<b>Noise attenuates correlations.</b> Measurement error biases r toward zero, the true relationship is stronger than your matrix suggests.",
-          "<b>EDA is a checklist, not a one-time event.</b> Rerun it after every data join, imputation step, or feature engineering pass. New transformations create new distributions.",
+          "<b>Plots and summaries answer different questions.</b> Check bin sensitivity, quantiles, missingness, ranges, and domain constraints together.",
+          "<b>An anomaly score is a review signal.</b> The decision to correct, retain, cap, or segment an observation needs provenance and downstream-impact analysis.",
+          "<b>Pearson r measures linear association.</b> Add the underlying plot and choose rank-based or nonlinear measures only when they match the question.",
+          "<b>Measurement error needs a model.</b> Classical independent noise attenuates correlation; systematic or differential error can behave differently.",
+          "<b>Repeat EDA after material transformations.</b> Joins, imputation, and feature construction can change distributions and data quality.",
         ]}
       />
     </div>

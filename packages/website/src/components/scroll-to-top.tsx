@@ -10,5 +10,11 @@ export function ScrollToTop() {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  return null;
+  return (
+    <span
+      data-scroll-to-top-runtime="true"
+      hidden
+      aria-hidden="true"
+    />
+  );
 }

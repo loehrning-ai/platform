@@ -7,8 +7,9 @@
 // exactly like every other course.
 
 import type { CourseConfig } from "@/lib/course/types";
+import { createLocalizedTechnicalCourseConfig } from "@/lib/technical-courses/routes";
 
-export const DATA_ENGINEERING_FUNDAMENTALS_CONFIG: CourseConfig = {
+export const DATA_ENGINEERING_FUNDAMENTALS_CONFIG = {
   slug: "data-engineering-fundamentals",
   title: "Data Engineering Fundamentals",
   language: "en",
@@ -40,15 +41,44 @@ export const DATA_ENGINEERING_FUNDAMENTALS_CONFIG: CourseConfig = {
     "Fundamentals: storage, formats, and query engines",
     "Ingest and streaming: where data is born, watermarks, and the bridge to the warehouse",
     "Store and compute: how data lives and how it is read",
-    "Orchestrate, quality, discovery, serving, and governance: idempotency, trust, and the deploy gate",
+    "Orchestrate, quality, discovery, serving, and governance: idempotency, quality signals, and a reference deploy gate",
   ],
   certificateReferenceLabel:
-    "Personal certificate of completion: production-ready data pipelines, source to serving",
-  quizPassMessage: "Congratulations! You completed the Data Engineering Fundamentals course.",
+    "Personal certificate of completion: data-pipeline design from source to serving",
+  quizPassMessage:
+    "Congratulations! You completed the Data Engineering Fundamentals course.",
   certificateFileStem: "Data-Engineering-Fundamentals",
   recordNoun: {
     label: "Certificate of Completion",
     possessive: "Your certificate of completion",
     demonstrative: "This certificate of completion",
   },
-};
+} satisfies CourseConfig;
+
+export const DATA_ENGINEERING_FUNDAMENTALS_CONFIG_DE =
+  createLocalizedTechnicalCourseConfig(
+    DATA_ENGINEERING_FUNDAMENTALS_CONFIG,
+    "de",
+    {
+      title: "Data Engineering Fundamentals",
+      certificateTitle: "Teilnahmebestätigung: Data Engineering Fundamentals",
+      certificateSubtitle:
+        "Lokal erzeugter Abschlussnachweis der unabhängigen Lernplattform loehrning.ai. Keine staatlich anerkannte oder akkreditierte Qualifikation.",
+      certificateModules: [
+        "Grundlagen: Speicher, Formate und Abfrage-Engines",
+        "Datenaufnahme und Streaming: Ereigniszeit, Watermarks und der Weg ins Warehouse",
+        "Speicherung und Verarbeitung: Datenmodelle, Dateiformate, Partitionierung und verteilte Ausführung",
+        "Orchestrierung, Qualität, Ermittlung, Bereitstellung und Governance: Idempotenz, Qualitätsnachweise und eine Referenz-Freigabeschranke",
+      ],
+      certificateReferenceLabel:
+        "Persönlicher Abschlussnachweis: Entwurf von Datenpipelines von der Quelle bis zur Bereitstellung",
+      quizPassMessage:
+        "Der Kurs Data Engineering Fundamentals ist abgeschlossen.",
+      certificateFileStem: "Data-Engineering-Fundamentals",
+      recordNoun: {
+        label: "Teilnahmebestätigung",
+        possessive: "Deine Teilnahmebestätigung",
+        demonstrative: "Diese Teilnahmebestätigung",
+      },
+    },
+  );

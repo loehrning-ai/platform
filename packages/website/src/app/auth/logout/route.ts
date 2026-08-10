@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import {
+  externalRequestUrl,
   redirectOriginForRequest,
   trustedRequestOrigin,
 } from "@/lib/auth/origin";
@@ -34,7 +35,7 @@ async function signOut(request: NextRequest) {
     );
   }
   const response = NextResponse.redirect(
-    new URL("/login", redirectOriginForRequest(new URL(request.url))),
+    new URL("/login", redirectOriginForRequest(externalRequestUrl(request))),
   );
   response.headers.set("Cache-Control", "private, no-store");
   response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
@@ -42,7 +43,7 @@ async function signOut(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const requestUrl = new URL(request.url);
+  const requestUrl = externalRequestUrl(request);
   const trustedOrigin = trustedRequestOrigin(requestUrl);
   const suppliedOrigin = request.headers.get("origin");
   const fetchSite = request.headers.get("sec-fetch-site");

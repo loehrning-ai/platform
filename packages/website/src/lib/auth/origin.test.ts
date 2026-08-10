@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  externalRequestUrl,
   redirectOriginForRequest,
   trustedRequestOrigin,
 } from "./origin";
@@ -119,5 +120,74 @@ describe("trusted request origins", () => {
         new URL("https://platform-pr-42.vercel.app.evil.example"),
       ),
     ).toBeNull();
+  });
+});
+
+function probeRequest(url: string, headers: Record<string, string>) {
+  return { url, headers: new Headers(headers) };
+}
+
+describe("external request URL reconstruction", () => {
+  // Next serves route handlers with a placeholder authority behind the
+  // platform proxy. Without this repair every callback fails closed as
+  // untrusted-origin, which is exactly what production did.
+  it("restores the visible authority from forwarded headers", () => {
+    const url = externalRequestUrl(
+      probeRequest("http://n/auth/callback?code=abc", {
+        "x-forwarded-host": "loehrning.ai",
+        "x-forwarded-proto": "https",
+        host: "loehrning.ai",
+      }),
+    );
+    expect(url.origin).toBe("https://loehrning.ai");
+    expect(url.pathname).toBe("/auth/callback");
+    expect(url.searchParams.get("code")).toBe("abc");
+    expect(trustedRequestOrigin(url)?.origin).toBe("https://loehrning.ai");
+  });
+
+  it("takes the first hop of a forwarded header list", () => {
+    const url = externalRequestUrl(
+      probeRequest("http://n/auth/callback", {
+        "x-forwarded-host": "loehrning.ai, evil.example",
+        "x-forwarded-proto": "https, http",
+      }),
+    );
+    expect(url.origin).toBe("https://loehrning.ai");
+  });
+
+  it("falls back to the host header when no forwarded host is present", () => {
+    const url = externalRequestUrl(
+      probeRequest("http://n/auth/callback", {
+        host: "loehrning.ai",
+        "x-forwarded-proto": "https",
+      }),
+    );
+    expect(url.origin).toBe("https://loehrning.ai");
+  });
+
+  it.each<Record<string, string>>([
+    {},
+    { "x-forwarded-host": "loehrning.ai" },
+    { "x-forwarded-host": "loehrning.ai", "x-forwarded-proto": "ftp" },
+    { "x-forwarded-host": "", "x-forwarded-proto": "https" },
+    { "x-forwarded-host": "user:pass@loehrning.ai", "x-forwarded-proto": "https" },
+    { "x-forwarded-host": "loehrning.ai/../evil", "x-forwarded-proto": "https" },
+  ])("keeps the internal URL for unusable headers %#", (headers) => {
+    const url = externalRequestUrl(
+      probeRequest("http://n/auth/callback", headers),
+    );
+    expect(url.origin).toBe("http://n");
+    expect(trustedRequestOrigin(url)).toBeNull();
+  });
+
+  it("does not by itself widen trust to an arbitrary authority", () => {
+    const url = externalRequestUrl(
+      probeRequest("http://n/auth/callback", {
+        "x-forwarded-host": "evil.example",
+        "x-forwarded-proto": "https",
+      }),
+    );
+    expect(url.origin).toBe("https://evil.example");
+    expect(trustedRequestOrigin(url)).toBeNull();
   });
 });

@@ -264,12 +264,12 @@ describe("certificate wording", () => {
     expect(content).not.toContain("Zertifikat herunterladen");
   });
 
-  it("EU AI Act config certificateSubtitle says 'Teilnahme bestätigt' and cites Commission Q&A", () => {
+  it("EU AI Act config says 'Teilnahme bestätigt' and cites the amended regulation", () => {
     const config = readFile("lib/course/config.ts");
     // Find the EU_AI_ACT_KURS_CONFIG section
     const euSection = config.slice(config.indexOf("EU_AI_ACT_KURS_CONFIG"), config.indexOf("AI_NATIVE_CONFIG"));
     expect(euSection).toContain("Teilnahme bestätigt");
-    expect(euSection).toContain("FAQ KI-Kompetenz");
+    expect(euSection).toContain("Verordnung (EU) 2026/1744");
   });
 });
 
@@ -286,14 +286,15 @@ describe("landing page reframe", () => {
     expect(content).not.toContain("Sie haben den KI-Führerschein gemacht");
   });
 
-  it("landing page title is 'EU AI Act: Was du wissen musst'", () => {
+  it("landing page title states the roles, risks, and duties scope", () => {
     const content = readFile("app/eu-ai-act-kurs/page.tsx");
-    expect(content).toContain("EU AI Act: Was du wissen musst");
+    expect(content).toContain("EU AI Act Kurs: Rollen, Risiken und Pflichten");
   });
 
-  it("landing page has 'Was du nach diesem Kurs kannst' section", () => {
+  it("landing page states concrete classification outcomes", () => {
     const content = readFile("app/eu-ai-act-kurs/page.tsx");
-    expect(content).toContain("Was du nach diesem Kurs kannst");
+    expect(content).toContain("eine konkrete Nutzung den Rollen Anbieter");
+    expect(content).toContain("Risikoklassifizierung");
   });
 
   it("landing page has two-track callout", () => {
@@ -304,7 +305,8 @@ describe("landing page reframe", () => {
 
   it("landing page has disclaimer about Art.4 not requiring a certificate", () => {
     const content = readFile("app/eu-ai-act-kurs/page.tsx");
-    expect(content).toContain("FAQ KI-Kompetenz");
+    expect(content).toContain("Eine Teilnahme allein begründet keine Vermutung");
+    expect(content).toContain("Artikel 4");
   });
 
   it("landing page does NOT contain 'Compliance-Roadmap 2026-2028'", () => {

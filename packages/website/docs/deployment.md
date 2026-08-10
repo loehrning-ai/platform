@@ -6,14 +6,14 @@ from the code in this tree (`scripts/validate-env.mjs`, `next.config.ts`,
 
 ## Vercel project settings
 
-| Setting | Value | Why |
-|---|---|---|
-| Root Directory | `packages/website` | Bun workspace monorepo; `next` is a dependency of the nested package only. |
-| Include source files outside of Root Directory | ON (default) | `next.config.ts` sets `outputFileTracingRoot` to the repo root; `bun.lock` lives at the repo root; `/open-source/lizenzrichtlinie` reads `LICENSE_POLICY.md` from the repo root at build time. |
-| Framework Preset | Next.js | |
-| Install / Build command | pinned in `vercel.json` | `packages/website/vercel.json` sets `framework: nextjs`, `buildCommand: bun run build` (triggers `prebuild`: `validate-env` + non-mutating `registry:check`), and `installCommand: cd ../.. && bun install --frozen-lockfile --ignore-scripts` — install must run from the repo root because `bun.lock` and the fail-closed `bunfig.toml` live there. Regenerate a reviewed legal-date change explicitly with `bun run registry:export` before commit. Keep the dashboard overrides empty so `vercel.json` wins. |
-| Node.js version | 22.x or 24.x | `engines: ^22.18.0 \|\| ^24.0.0`, `.nvmrc` 24.x. The registry check/export imports a `.ts` module through plain `node` and relies on type stripping (Node >= 22.18). |
-| Fluid Compute | ON (default) | `src/middleware.ts` uses `runtime: "nodejs"`. |
+| Setting                                        | Value                   | Why                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| ---------------------------------------------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Root Directory                                 | `packages/website`      | Bun workspace monorepo; `next` is a dependency of the nested package only.                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Include source files outside of Root Directory | ON (default)            | `next.config.ts` sets `outputFileTracingRoot` to the repo root; `bun.lock` lives at the repo root; `/open-source/lizenzrichtlinie` reads `LICENSE_POLICY.md` from the repo root at build time.                                                                                                                                                                                                                                                                                                                   |
+| Framework Preset                               | Next.js                 |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Install / Build command                        | pinned in `vercel.json` | `packages/website/vercel.json` sets `framework: nextjs`, `buildCommand: bun run build` (triggers `prebuild`: `validate-env` + non-mutating `registry:check`), and `installCommand: cd ../.. && bun install --frozen-lockfile --ignore-scripts` — install must run from the repo root because `bun.lock` and the fail-closed `bunfig.toml` live there. Regenerate a reviewed legal-date change explicitly with `bun run registry:export` before commit. Keep the dashboard overrides empty so `vercel.json` wins. |
+| Node.js version                                | 22.x or 24.x            | `engines: ^22.18.0 \|\| ^24.0.0`, `.nvmrc` 24.x. The registry check/export imports a `.ts` module through plain `node` and relies on type stripping (Node >= 22.18).                                                                                                                                                                                                                                                                                                                                             |
+| Fluid Compute                                  | ON (default)            | `src/proxy.ts` uses Next.js 16's Node.js proxy runtime.                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 
 ## Environment variables
 
@@ -32,20 +32,44 @@ Disabled means every runtime, region, retention, and attestation variable for
 that provider is absent or empty. A standalone compliance attestation is still
 partial configuration and fails instead of surviving as stale release state.
 
-- Supabase (login, course progress, feedback): `NEXT_PUBLIC_SUPABASE_URL`,
+- Supabase account core (sessions, course progress, feedback): `NEXT_PUBLIC_SUPABASE_URL`,
   `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_URL`,
   `SUPABASE_SERVICE_ROLE_KEY`, `RATE_LIMIT_HMAC_SECRET`,
   `SUPABASE_REGION` (must match `^eu`),
-  `SUPABASE_DPA_CONFIRMED_AT`, `NEXT_PUBLIC_TURNSTILE_SITE_KEY`,
+  and `SUPABASE_DPA_CONFIRMED_AT`. Also apply `supabase/migrations/` and add the
+  exact application callback, such as
+  `https://loehrning.ai/auth/callback`, to Supabase Auth's redirect allow-list.
+  Magic-link and Google login are separate optional readiness groups. A core
+  account configuration with neither group passes validation but exposes no
+  new-session method until one group is verified.
+- Magic-link login additionally requires `NEXT_PUBLIC_TURNSTILE_SITE_KEY`,
   `SUPABASE_CAPTCHA_CONFIRMED_AT`, and
-  `TURNSTILE_CONFIGURATION_CONFIRMED_AT`. Also apply `supabase/migrations/`, set the
-  Auth redirect URL to `https://loehrning.ai/auth/callback`, and configure
-  custom SMTP with German templates in the Supabase dashboard. Enable
-  Cloudflare Turnstile under Supabase Auth > Bot and Abuse Protection with the
-  matching server-side secret, restrict the widget to exact deployment
-  hostnames, and verify one real magic-link request before dating the
-  attestations. The Turnstile secret belongs in Supabase, never in Vercel.
-  With zero
+  `TURNSTILE_CONFIGURATION_CONFIRMED_AT`. Configure custom SMTP with German
+  templates in the Supabase dashboard. Enable Cloudflare Turnstile under
+  Supabase Auth > Bot and Abuse Protection with the matching server-side
+  secret, restrict the widget to exact deployment hostnames, and verify one
+  real Magic-link request before dating the attestations. The Turnstile secret
+  belongs in Supabase, never in Vercel. Turnstile protects only the OTP request;
+  the Google OAuth action does not load or submit it.
+- Google login additionally requires the server-only, non-secret
+  `SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT` attestation set to a past-or-present
+  `YYYY-MM-DD`. Keep the Google
+  client ID and client secret exclusively in the Google and Supabase provider
+  consoles. In Google, register the exact Supabase Auth callback shown by the
+  project. In Supabase, enable the Google provider and allow-list each exact
+  application callback. Complete a real Google sign-in in the target
+  environment before dating the attestation. The application calls
+  `signInWithOAuth` with provider `google` and a sanitized application callback;
+  it requests no additional Google scopes. Keep every other social provider
+  disabled. The callback verifies the exchanged user and signed AMR claim, then
+  rejects and clears an OAuth session unless the Google attestation is active;
+  a Magic-link attestation cannot authorize an OAuth callback.
+  The visible control uses Google's current standard-gradient G asset and light
+  button measurements. Recheck the current
+  [Sign in with Google branding guidelines](https://developers.google.com/identity/branding-guidelines)
+  during Google app verification; the attestation does not substitute for that
+  external review.
+- With zero
   Supabase vars the site builds and runs with auth cleanly disabled.
   `NEXT_PUBLIC_*` values are inlined at build time and feed the CSP, so
   adding them later requires a redeploy.

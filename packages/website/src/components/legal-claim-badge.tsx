@@ -25,19 +25,32 @@
 
 import { Calendar } from "lucide-react";
 import { getLegalClaim } from "@/lib/legal-registry";
+import type { Locale } from "@/lib/i18n/locale";
 
-const SOURCE_KIND_LABELS: Record<string, string> = {
-  primary: "EUR-Lex (Primärrecht)",
-  "official-guidance": "Europäische Kommission",
-  secondary: "Sekundärquelle",
+const SOURCE_KIND_LABELS: Record<Locale, Record<string, string>> = {
+  de: {
+    primary: "EUR-Lex (Primärrecht)",
+    "official-guidance": "Europäische Kommission",
+    secondary: "Sekundärquelle",
+  },
+  en: {
+    primary: "EUR-Lex (primary law)",
+    "official-guidance": "European Commission",
+    secondary: "Secondary source",
+  },
 };
 
 interface LegalClaimBadgeProps {
   readonly claimId: string;
   readonly shortSource?: string;
+  readonly locale?: Locale;
 }
 
-export function LegalClaimBadge({ claimId, shortSource }: LegalClaimBadgeProps) {
+export function LegalClaimBadge({
+  claimId,
+  shortSource,
+  locale = "de",
+}: LegalClaimBadgeProps) {
   const claim = getLegalClaim(claimId);
 
   if (!claim) {
@@ -52,7 +65,7 @@ export function LegalClaimBadge({ claimId, shortSource }: LegalClaimBadgeProps) 
   const standDate = (() => {
     try {
       const d = new Date(claim.lastVerified + "T00:00:00Z");
-      return d.toLocaleDateString("de-DE", {
+      return d.toLocaleDateString(locale === "en" ? "en-GB" : "de-DE", {
         month: "long",
         year: "numeric",
         timeZone: "UTC",
@@ -62,15 +75,24 @@ export function LegalClaimBadge({ claimId, shortSource }: LegalClaimBadgeProps) 
     }
   })();
 
-  const sourceLabel = shortSource ?? SOURCE_KIND_LABELS[claim.sourceKind] ?? claim.sourceKind;
+  const sourceLabel =
+    shortSource ??
+    SOURCE_KIND_LABELS[locale][claim.sourceKind] ??
+    claim.sourceKind;
 
   return (
     <div className="mt-3 flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground">
       <Calendar className="h-3 w-3 shrink-0" aria-hidden="true" />
       <span>
-        <span className="font-semibold">Stand:</span> {standDate}
+        <span className="font-semibold">
+          {locale === "en" ? "Reviewed:" : "Stand:"}
+        </span>{" "}
+        {standDate}
         {" · "}
-        <span className="font-semibold">Quelle:</span> {sourceLabel}
+        <span className="font-semibold">
+          {locale === "en" ? "Source:" : "Quelle:"}
+        </span>{" "}
+        {sourceLabel}
       </span>
     </div>
   );

@@ -4,7 +4,13 @@ import { useRef, useState, useEffect, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { m } from "framer-motion";
-import { ArrowLeft, Download, GraduationCap, Loader2, User } from "lucide-react";
+import {
+  ArrowLeft,
+  Download,
+  GraduationCap,
+  Loader2,
+  User,
+} from "lucide-react";
 import {
   isCertificateEligible,
   isCapstoneSubmitted,
@@ -21,6 +27,9 @@ import { getCourseConfig } from "@/lib/course/config";
 import { certificateFormSchema } from "@/lib/course/validation";
 import type { CertificateCompletionMode } from "@/lib/course/certificate-constants";
 import type { CourseSlug } from "@/lib/course/types";
+import type { Locale } from "@/lib/i18n/locale";
+import { localizeHref } from "@/lib/i18n/locale";
+import { MotionProvider } from "@/components/motion-provider";
 
 /**
  * Shared certificate screen for every free course (shared course architecture,
@@ -30,12 +39,16 @@ import type { CourseSlug } from "@/lib/course/types";
 
 interface CertificatePageProps {
   readonly courseSlug: CourseSlug;
+  readonly locale?: Locale;
 }
 
 type NonQuizMode = Exclude<CertificateCompletionMode, "quiz">;
 
 /** On-screen preview completion line for the two non-quiz eligibility paths. */
-const PREVIEW_COMPLETION_LABEL: Record<"de" | "en", Record<NonQuizMode, string>> = {
+const PREVIEW_COMPLETION_LABEL: Record<
+  "de" | "en",
+  Record<NonQuizMode, string>
+> = {
   de: {
     capstone: "Abschlussweg: Capstone-Rubrik",
     completion: "Abschlussweg: Alle Lektionen abgeschlossen",
@@ -46,8 +59,11 @@ const PREVIEW_COMPLETION_LABEL: Record<"de" | "en", Record<NonQuizMode, string>>
   },
 };
 
-export function CertificatePage({ courseSlug }: CertificatePageProps) {
-  const config = getCourseConfig(courseSlug);
+export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
+  const config = getCourseConfig(courseSlug, locale);
+  const localizedCoursePath = locale
+    ? localizeHref(config.coursePath, locale)
+    : config.coursePath;
   const router = useRouter();
   const [eligible, setEligible] = useState(false);
   const [name, setName] = useState("");
@@ -83,7 +99,7 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
         downloadAttemptRef.current += 1;
         setCompletion(null);
         setLoading(false);
-        router.push(config.coursePath);
+        router.push(localizedCoursePath);
         return;
       }
 
@@ -110,7 +126,7 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
         completedAt,
       });
     });
-  }, [router, courseSlug, config.coursePath, config.language]);
+  }, [router, courseSlug, config.language, localizedCoursePath]);
 
   useEffect(() => {
     const unsubscribe = subscribeLearningOwner(() => {
@@ -152,7 +168,12 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
       for (const issue of result.error.issues) {
         const field = issue.path[0];
         if (typeof field === "string" && !fieldErrors[field]) {
-          fieldErrors[field] = issue.message;
+          fieldErrors[field] =
+            config.language === "en"
+              ? issue.code === "too_big"
+                ? "The name must be 100 characters or fewer."
+                : "Enter your full name."
+              : issue.message;
         }
       }
       setErrors(fieldErrors);
@@ -166,7 +187,8 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
     setLoading(true);
     try {
       // Dynamic import to keep jsPDF out of the main bundle
-      const { generateCertificatePdf } = await import("@/lib/pdf/certificate-pdf");
+      const { generateCertificatePdf } =
+        await import("@/lib/pdf/certificate-pdf");
       if (!attemptIsCurrent()) return;
       const blob = await generateCertificatePdf(
         {
@@ -207,15 +229,16 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
 
   return (
     <div className="min-h-[100svh] bg-background">
-      <div className="mx-auto max-w-2xl px-6 py-16">
-        <m.div
+      <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6 sm:py-16">
+        <MotionProvider>
+          <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="space-y-8"
         >
           <Link
-            href={config.coursePath}
+            href={localizedCoursePath}
             className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -223,15 +246,18 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
           </Link>
 
           {/* Certificate Preview */}
-          <div className="border-2 border-brand-orange bg-card p-8 text-center">
+          <div className="border-2 border-brand-orange bg-card p-5 text-center sm:p-8">
             <GraduationCap className="mx-auto h-12 w-12 text-brand-orange" />
-            <h1 className="mt-4 text-3xl font-bold tracking-[-0.03em]">
+            <h1 className="mt-4 max-w-full break-words text-3xl font-bold tracking-[-0.03em] [overflow-wrap:anywhere]">
               {config.certificateTitle}
             </h1>
-            <p className="mt-1 text-muted-foreground">{config.certificateSubtitle}</p>
+            <p className="mt-1 text-muted-foreground">
+              {config.certificateSubtitle}
+            </p>
             <div className="mx-auto mt-6 h-px w-20 bg-brand-orange" />
             <p className="mt-6 font-mono text-sm text-muted-foreground">
-              {config.language === "en" ? "Completed on" : "Abgeschlossen am"} {completionDate}
+              {config.language === "en" ? "Completed on" : "Abgeschlossen am"}{" "}
+              {completionDate}
             </p>
             <p className="mt-1 font-mono text-sm text-muted-foreground">
               {completionMode === "quiz"
@@ -241,7 +267,7 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
                 : PREVIEW_COMPLETION_LABEL[config.language][completionMode]}
             </p>
             <div className="mx-auto mt-6 h-px w-20 bg-border" />
-            <p className="mt-4 text-xs text-muted">
+            <p className="mt-4 break-words text-xs text-muted [overflow-wrap:anywhere]">
               loehrning.ai | {config.certificateReferenceLabel}
             </p>
           </div>
@@ -262,16 +288,33 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
             <form className="space-y-3" onSubmit={handleDownload}>
               <div>
                 <div className="relative">
-                  <User aria-hidden="true" className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <User
+                    aria-hidden="true"
+                    className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                  />
                   <input
                     ref={nameInputRef}
                     type="text"
                     name="name"
                     autoComplete="name"
-                    aria-label={config.language === "en" ? "Full name" : "Vor- und Nachname"}
-                    placeholder={config.language === "en" ? "Full name" : "Vor- und Nachname"}
+                    aria-label={
+                      config.language === "en"
+                        ? "Full name"
+                        : "Vor- und Nachname"
+                    }
+                    placeholder={
+                      config.language === "en"
+                        ? "Full name"
+                        : "Vor- und Nachname"
+                    }
                     value={name}
-                    onChange={(e) => { setName(e.target.value); setErrors((prev) => { const { name: _, ...rest } = prev; return rest; }); }}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      setErrors((prev) => {
+                        const { name: _, ...rest } = prev;
+                        return rest;
+                      });
+                    }}
                     aria-invalid={!!errors.name}
                     aria-describedby={errors.name ? "error-name" : undefined}
                     className={`w-full border bg-card py-3 pl-10 pr-4 text-sm text-foreground placeholder:text-muted focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange ${errors.name ? "border-destructive" : "border-border"}`}
@@ -292,15 +335,24 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
                 type="submit"
                 disabled={loading}
                 aria-busy={loading}
-                className={`inline-flex items-center gap-2 border-2 border-foreground px-7 py-3.5 text-sm font-bold uppercase tracking-wide shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] ${
+                className={`inline-flex max-w-full items-center gap-2 break-words border-2 border-foreground px-5 py-3.5 text-left text-sm font-bold uppercase tracking-wide shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] sm:px-7 ${
                   !loading
                     ? "bg-brand-orange text-white hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
                     : "cursor-not-allowed bg-border text-muted-foreground shadow-none"
                 }`}
               >
-                {loading ? <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" /> : <Download aria-hidden="true" className="h-4 w-4" />}
+                {loading ? (
+                  <Loader2
+                    aria-hidden="true"
+                    className="h-4 w-4 animate-spin"
+                  />
+                ) : (
+                  <Download aria-hidden="true" className="h-4 w-4" />
+                )}
                 {loading
-                  ? config.language === "en" ? "Generating…" : "Wird generiert…"
+                  ? config.language === "en"
+                    ? "Generating…"
+                    : "Wird generiert…"
                   : config.language === "en"
                     ? `Download ${config.recordNoun.label}`
                     : `${config.recordNoun.label} herunterladen`}
@@ -326,18 +378,27 @@ export function CertificatePage({ courseSlug }: CertificatePageProps) {
             )}
 
             <p className="text-xs text-muted">
-              {config.language === "en"
-                ? <>The name is only written into the downloaded file. Your course progress
-                    stays local in the browser; the PDF is not an official or legally
-                    binding credential. {config.recordNoun.demonstrative} is based on your
-                    own self-assessment, not an external exam.</>
-                : <>Der Name wird nur in die heruntergeladene Datei geschrieben. Der
-                    Kursfortschritt bleibt lokal im Browser gespeichert; die PDF ist keine
-                    behördliche oder rechtliche Bescheinigung. {config.recordNoun.demonstrative} basiert
-                    auf deiner eigenen Einschätzung, nicht auf einer externen Prüfung.</>}
+              {config.language === "en" ? (
+                <>
+                  The name is only written into the downloaded file. Your course
+                  progress stays local in the browser; the PDF is not an
+                  official or legally binding credential.{" "}
+                  {config.recordNoun.demonstrative} is based on your own
+                  self-assessment, not an external exam.
+                </>
+              ) : (
+                <>
+                  Der Name wird nur in die heruntergeladene Datei geschrieben.
+                  Der Kursfortschritt bleibt lokal im Browser gespeichert; die
+                  PDF ist keine behördliche oder rechtliche Bescheinigung.{" "}
+                  {config.recordNoun.demonstrative} basiert auf deiner eigenen
+                  Einschätzung, nicht auf einer externen Prüfung.
+                </>
+              )}
             </p>
           </div>
-        </m.div>
+          </m.div>
+        </MotionProvider>
       </div>
     </div>
   );

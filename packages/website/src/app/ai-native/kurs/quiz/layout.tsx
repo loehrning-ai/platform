@@ -1,18 +1,31 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
 
-export const metadata: Metadata = {
-  title: "Workshop-Quiz: AI-Native Arbeitskurs",
-  description:
-    "20 Fragen aus dem AI-Native Arbeitskurs: Orchestrieren mit Claude, der Claude-Stack, zweites Gehirn und Automatisierung. 70% zum Bestehen, 25 Minuten Zeitlimit. Kostenloses Lernkonto erforderlich.",
-  robots: { index: false, follow: false },
-  // Utility page: suppress the canonical inherited from the root layout.
-  alternates: { canonical: null },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = resolveFoundationCourseContentLocale(
+    "ai-native",
+    await getRequestLocale(),
+  );
+  return {
+    title:
+      locale === "en"
+        ? "Workshop quiz: AI-Native Workflow Course"
+        : "Workshop-Quiz: AI-Native Arbeitskurs",
+    description:
+      locale === "en"
+        ? "Twenty questions on bounded tasks, Claude workspaces, maintained knowledge and controlled automation. Pass mark: 70 percent. Time limit: 25 minutes."
+        : "20 Fragen zu klaren Aufgaben, Claude-Arbeitsumgebungen, gepflegtem Wissen und kontrollierter Automatisierung. 70 Prozent zum Bestehen, 25 Minuten Zeitlimit.",
+    robots: { index: false, follow: false },
+    alternates: { canonical: null },
+  };
+}
 
 export default function AiNativeQuizLayout({
   children,
 }: {
-  readonly children: React.ReactNode;
+  readonly children: ReactNode;
 }) {
   return children;
 }

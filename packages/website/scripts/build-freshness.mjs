@@ -5,8 +5,10 @@ import { createHash, randomUUID } from "node:crypto";
 import {
   closeSync,
   constants,
+  existsSync,
   fstatSync,
   lstatSync,
+  mkdirSync,
   openSync,
   readFileSync,
   readdirSync,
@@ -37,7 +39,7 @@ const RECEIPT_VERSION = 2;
 const MAX_RECEIPT_BYTES = 32 * 1024;
 const RECEIPT_FILE_NAME = "loehrning-build-receipt.json";
 const RECEIPT_TEMPORARY_FILE_PREFIX = ".loehrning-build-receipt-";
-const MUTABLE_ARTIFACT_ROOT_ENTRIES = new Set(["cache", "trace"]);
+const MUTABLE_ARTIFACT_ROOT_ENTRIES = new Set(["cache", "dev", "trace"]);
 
 export const BUILD_INPUT_SCOPES = Object.freeze([
   "bun.lock",
@@ -50,7 +52,6 @@ export const BUILD_INPUT_SCOPES = Object.freeze([
   "packages/website/public",
   "packages/website/src",
   "packages/website/package.json",
-  "packages/website/next-env.d.ts",
   "packages/website/next.config.ts",
   "packages/website/postcss.config.mjs",
   "packages/website/sentry.edge.config.ts",
@@ -860,19 +861,69 @@ function sameBuildState(left, right) {
   );
 }
 
+function resetNextBuildDirectory(websiteRoot, nextDirectory) {
+  const expectedDirectory = join(websiteRoot, ".next");
+  if (resolve(nextDirectory) !== resolve(expectedDirectory)) {
+    throw new Error("Build receipt must live in the website .next directory.");
+  }
+
+  if (existsSync(nextDirectory)) {
+    const stat = lstatSync(nextDirectory);
+    if (!stat.isDirectory() || stat.isSymbolicLink()) {
+      throw new Error(".next must be a real build directory.");
+    }
+    // Next 16 owns `.next/dev` separately so `next dev` and `next build` can run
+    // concurrently. Preserve that directory while removing every production
+    // artifact: a route can move between prerendered and request-rendered output,
+    // and a stale HTML/RSC file must never survive into a receipt-bearing build.
+    for (const entry of readdirSync(nextDirectory, { withFileTypes: true })) {
+      const entryPath = join(nextDirectory, entry.name);
+      if (entry.name === "dev") {
+        const developmentStat = lstatSync(entryPath);
+        if (
+          !entry.isDirectory() ||
+          entry.isSymbolicLink() ||
+          !developmentStat.isDirectory() ||
+          developmentStat.isSymbolicLink()
+        ) {
+          throw new Error(".next/dev must be a real development directory.");
+        }
+        continue;
+      }
+      rmSync(entryPath, { recursive: true, force: true });
+    }
+  }
+  mkdirSync(nextDirectory, { recursive: true, mode: 0o755 });
+}
+
+// Receipt-bearing builds deliberately use the certified Webpack production
+// path. Do not let Next 16's default Turbopack selection vary with ANALYZE:
+// regular and analyzer receipts must attest the same bundler. Native type
+// stripping is required because next.config.ts imports TypeScript modules.
+export function defaultBuildCommandArguments() {
+  return [
+    "run",
+    "next",
+    "build",
+    "--webpack",
+    "--experimental-next-config-strip-types",
+  ];
+}
+
 export function runBuildAndRecord(options = {}) {
   const receiptOptions = withReceiptEnvironment(options);
   const websiteRoot = receiptOptions.websiteRoot ?? WEBSITE_ROOT;
   const receiptPath =
     receiptOptions.receiptPath ??
     join(websiteRoot, ".next", "loehrning-build-receipt.json");
+  const nextDirectory = dirname(receiptPath);
   const before = computeBuildState(receiptOptions);
   const beforeObservation = computeBuildInputObservation(receiptOptions);
   const beforeToolchain = captureToolchain(receiptOptions);
-  rmSync(receiptPath, { force: true });
+  resetNextBuildDirectory(websiteRoot, nextDirectory);
   const result = spawnSync(
     receiptOptions.command ?? "bun",
-    receiptOptions.commandArguments ?? ["run", "next", "build"],
+    receiptOptions.commandArguments ?? defaultBuildCommandArguments(),
     {
       cwd: websiteRoot,
       env: receiptOptions.environment,

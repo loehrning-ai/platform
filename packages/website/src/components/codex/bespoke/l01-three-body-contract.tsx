@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
+import type { Locale } from "@/lib/i18n/locale";
 import { cn } from "@/lib/utils";
 
 /**
@@ -33,27 +34,55 @@ const WEIGHT: Record<Lever, number> = {
   sandbox: 0.3,
 };
 
-const LABEL: Record<Lever, string> = {
-  task: "Task",
-  repo: "Repo",
-  sandbox: "Sandbox",
-};
-
-const ACTION_LABEL: Record<Lever, string> = {
-  task: "Vague the task",
-  repo: "Drop AGENTS.md",
-  sandbox: "Cut sandbox tests",
-};
+const COPY = {
+  en: {
+    heading: "◆ Exercise · Task contract inputs",
+    labels: { task: "Task", repo: "Repo", sandbox: "Sandbox" },
+    actions: {
+      task: "Vague the task",
+      repo: "Drop AGENTS.md",
+      sandbox: "Cut sandbox tests",
+    },
+    reset: "Reset",
+    quality: "Illustrative PR fit",
+    complete: "$ contract-invariant confirmed",
+  },
+  de: {
+    heading: "◆ Praxis · Drei Bestandteile des Auftragsrahmens",
+    labels: { task: "Aufgabe", repo: "Repository", sandbox: "Sandbox" },
+    actions: {
+      task: "Aufgabe unklar machen",
+      repo: "AGENTS.md entfernen",
+      sandbox: "Sandbox-Tests entfernen",
+    },
+    reset: "Zurücksetzen",
+    quality: "Illustrative Passung",
+    complete: "$ Auftragsrahmen vollständig geprüft",
+  },
+} as const satisfies Record<
+  Locale,
+  {
+    readonly heading: string;
+    readonly labels: Record<Lever, string>;
+    readonly actions: Record<Lever, string>;
+    readonly reset: string;
+    readonly quality: string;
+    readonly complete: string;
+  }
+>;
 
 interface L01ThreeBodyContractProps {
   readonly lessonId: string;
   readonly cpId: string;
+  readonly locale?: Locale;
 }
 
 export function L01ThreeBodyContract({
   lessonId,
   cpId,
+  locale = "en",
 }: L01ThreeBodyContractProps): JSX.Element {
+  const copy = COPY[locale];
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [values, setValues] = useState<Record<Lever, number>>({
     task: 1,
@@ -63,7 +92,10 @@ export function L01ThreeBodyContract({
   const [weakened, setWeakened] = useState<ReadonlySet<Lever>>(() => new Set());
 
   const quality = useMemo(() => {
-    const raw = LEVERS.reduce((sum, lever) => sum + values[lever] * WEIGHT[lever], 0);
+    const raw = LEVERS.reduce(
+      (sum, lever) => sum + values[lever] * WEIGHT[lever],
+      0,
+    );
     return Math.round(raw * 95);
   }, [values]);
 
@@ -91,14 +123,18 @@ export function L01ThreeBodyContract({
   return (
     <div className="border-2 border-border bg-card/40 p-5 md:p-6">
       <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        ◆ Bespoke · Three-body contract
+        {copy.heading}
       </p>
       <div className="grid gap-6 md:grid-cols-[1fr_auto]">
         <div className="flex flex-col gap-3">
           {LEVERS.map((lever) => (
             <div key={lever}>
               <div className="mb-1 flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
-                <span className={cn(weakened.has(lever) && "text-brand-orange")}>{LABEL[lever]}</span>
+                <span
+                  className={cn(weakened.has(lever) && "text-brand-orange")}
+                >
+                  {copy.labels[lever]}
+                </span>
                 <span>{Math.round(values[lever] * 100)}%</span>
               </div>
               <div className="h-2 w-full bg-border">
@@ -117,7 +153,7 @@ export function L01ThreeBodyContract({
                 onClick={() => weaken(lever)}
                 className="border-2 border-border bg-background px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-foreground transition-colors hover:border-brand-orange"
               >
-                {ACTION_LABEL[lever]}
+                {copy.actions[lever]}
               </button>
             ))}
             <button
@@ -125,7 +161,7 @@ export function L01ThreeBodyContract({
               onClick={reset}
               className="border-2 border-brand-orange bg-background px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-brand-orange transition-colors hover:bg-brand-orange/10"
             >
-              Reset
+              {copy.reset}
             </button>
           </div>
         </div>
@@ -134,20 +170,29 @@ export function L01ThreeBodyContract({
             <div
               className={cn(
                 "absolute bottom-0 left-0 right-0 transition-[height,background-color] duration-500",
-                tone === "bad" ? "bg-destructive" : tone === "warn" ? "bg-brand-amber" : "bg-risk-green",
+                tone === "bad"
+                  ? "bg-destructive"
+                  : tone === "warn"
+                    ? "bg-brand-amber"
+                    : "bg-risk-green",
               )}
               style={{ height: `${quality}%` }}
             />
           </div>
-          <span className="font-mono text-[14px] font-bold text-foreground">{quality}</span>
+          <span className="font-mono text-[14px] font-bold text-foreground">
+            {quality}
+          </span>
           <span className="font-mono text-[9.5px] uppercase tracking-[0.1em] text-muted-foreground">
-            PR quality
+            {copy.quality}
           </span>
         </div>
       </div>
       {weakened.size === LEVERS.length && (
-        <p className="mt-4 font-mono text-[11px] text-risk-green" data-testid="l01-completion-message">
-          $ contract-invariant confirmed {done ? "✓" : ""}
+        <p
+          className="mt-4 font-mono text-[11px] text-risk-green"
+          data-testid="l01-completion-message"
+        >
+          {copy.complete} {done ? "✓" : ""}
         </p>
       )}
     </div>

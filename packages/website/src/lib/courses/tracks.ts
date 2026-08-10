@@ -1,3 +1,5 @@
+import type { Locale } from "@/lib/i18n/locale";
+
 /**
  * Course-track taxonomy (CI v3.1). Kept separate from catalog.ts so the catalog
  * stays plain data (no React/icon imports leak into build scripts). The UI joins
@@ -6,8 +8,8 @@
  *
  * Three tracks, folded into `CourseFacts.accent`/`.badge` below (
  * stage 3 — the former standalone `TRACK_META` table is gone):
- *   lernpfad    — the 4 native German courses with a self-issued record (Kupfer)
- *   github-lab  — the 6 English MIT technical courses, external (Sand)
+ *   lernpfad    — the 4 ordered foundation courses with a self-issued record (Kupfer)
+ *   github-lab  — the 6 source-pinned MIT technical courses (Sand)
  *   brainster   — applied client workshops turned courses (Amber)
  */
 
@@ -59,9 +61,9 @@ export const BRAINSTER_COURSE_CATALOG: readonly BrainsterCourse[] = [
 // This is the model the redesigned surfaces (homepage, /kurse) consume. It
 // replaces the three colour "tracks" above with what a person actually needs
 // to see:
-//   1. ONE ordered starting path — "der Lernpfad" — the German
+//   1. ONE ordered starting path — "der Lernpfad" — the foundation
 //      courses that share the progress + record engine.
-//   2. A "Tiefer gehen" shelf — external GitHub labs (English) + applied
+//   2. A "Tiefer gehen" shelf — source-pinned GitHub courses + applied
 //      workshop courses.
 // Instead of a colour code, each course carries honest badges derived from
 // real facts: its language, whether it issues a record (and which kind), and
@@ -78,16 +80,13 @@ export type CourseAccent = "kupfer" | "sand" | "amber";
  * courses is `lib/course/config.ts` (`certificateTitle`); the guard test in
  * `tracks.test.ts` fails loudly if this drifts from it.
  *
- * "certificate" is the English-track record kind for the
+ * "certificate" is the English-locale record kind for the
  * imported courses. Pinned here, final: no course flips to it in this plan —
  * each imported course's own plan flips its single `COURSE_FACTS` entry once
  * it ships real native routes + certificate wiring.
  */
 export type RecordKind =
-  | "teilnahmebestaetigung"
-  | "lernnachweis"
-  | "certificate"
-  | "none";
+  "teilnahmebestaetigung" | "lernnachweis" | "certificate" | "none";
 
 /** Semantic tone of a badge chip; the UI maps each tone to a warm colour. */
 export type BadgeTone = "record" | "language" | "external";
@@ -103,7 +102,10 @@ export interface CourseFacts {
   readonly group: CourseGroup;
   /** lucide-react export name; resolved to a component in the UI layer. */
   readonly iconName: string;
+  /** Original editorial/source language. This is provenance, not availability. */
   readonly language: "Deutsch" | "Englisch";
+  /** Reviewed interface and reader languages currently available on loehrning.ai. */
+  readonly availableLanguages: readonly Locale[];
   readonly record: RecordKind;
   /** True when the course is hosted outside loehrning.ai (GitHub labs). */
   readonly external: boolean;
@@ -119,39 +121,149 @@ export interface CourseFacts {
  * so adding a course without classifying it fails CI.
  */
 export const COURSE_FACTS: Record<string, CourseFacts> = {
-  // Spine — the 4 native German courses with a self-issued record.
+  // Spine — the 4 ordered foundation courses with a self-issued record.
   // group is independent of nativeStatus/catalog membership: a course can be
   // native (COURSE_CATALOG, nativeStatus "live") and still belong to the
-  // "deeper" shelf, as every English-track ported course below does. Only
+  // "deeper" shelf, as every ported technical course below does. Only
   // these 4 slugs are ever "spine" — do not add a course here just because
   // it joined COURSE_CATALOG.
-  "ki-fuehrerschein": { group: "spine", iconName: "GraduationCap", language: "Deutsch", record: "teilnahmebestaetigung", external: false, accent: "kupfer", badge: "Teilnahmebestätigung · Deutsch" },
-  "ki-und-gesellschaft": { group: "spine", iconName: "Users", language: "Deutsch", record: "lernnachweis", external: false, accent: "kupfer", badge: "Lernnachweis · Deutsch" },
-  "eu-ai-act-kurs": { group: "spine", iconName: "Scale", language: "Deutsch", record: "teilnahmebestaetigung", external: false, accent: "kupfer", badge: "Teilnahmebestätigung · Deutsch" },
-  "ai-native": { group: "spine", iconName: "Bot", language: "Deutsch", record: "teilnahmebestaetigung", external: false, accent: "kupfer", badge: "Teilnahmebestätigung · Deutsch" },
+  "ki-fuehrerschein": {
+    group: "spine",
+    iconName: "GraduationCap",
+    language: "Deutsch",
+    availableLanguages: ["de", "en"],
+    record: "teilnahmebestaetigung",
+    external: false,
+    accent: "kupfer",
+    badge: "Teilnahmebestätigung · DE + EN",
+  },
+  "ki-und-gesellschaft": {
+    group: "spine",
+    iconName: "Users",
+    language: "Deutsch",
+    availableLanguages: ["de", "en"],
+    record: "lernnachweis",
+    external: false,
+    accent: "kupfer",
+    badge: "Lernnachweis · DE + EN",
+  },
+  "eu-ai-act-kurs": {
+    group: "spine",
+    iconName: "Scale",
+    language: "Deutsch",
+    availableLanguages: ["de", "en"],
+    record: "teilnahmebestaetigung",
+    external: false,
+    accent: "kupfer",
+    badge: "Teilnahmebestätigung · DE + EN",
+  },
+  "ai-native": {
+    group: "spine",
+    iconName: "Bot",
+    language: "Deutsch",
+    availableLanguages: ["de", "en"],
+    record: "teilnahmebestaetigung",
+    external: false,
+    accent: "kupfer",
+    badge: "Teilnahmebestätigung · DE + EN",
+  },
 
-  // Deeper — the 6 ported/imported English-track courses. "claude" (plan
+  // Deeper — six ported/imported technical courses. All expose reviewed
+  // German content on the unprefixed route and English content under /en.
+  // "claude" (plan
   // 008), "codex", "data-infrastructure",
   // "data-engineering-fundamentals", "data-science",
   // and "ai-native-operator" all flipped nativeStatus to "live"
   // (real routes, real progress, certificate), but stay in the "deeper"
-  // shelf per the confirmed /discuss decision: only the 4 German certified
+  // shelf per the confirmed /discuss decision: only the 4 ordered foundation
   // courses form the ordered spine. nativeStatus and group are independent
   // axes — joining COURSE_CATALOG does not mean joining the spine. Every
   // one of the 6 ported courses is "deeper" — never "spine" — this is the
   // single most important invariant in this migration (
   // post-implementation correction note has the full story of the one
   // time this was gotten wrong).
-  "claude": { group: "deeper", iconName: "Sparkles", language: "Englisch", record: "certificate", external: false, accent: "sand", badge: "Certificate · Englisch" },
-  "codex": { group: "deeper", iconName: "TerminalSquare", language: "Englisch", record: "certificate", external: false, accent: "sand", badge: "Certificate · Englisch" },
-  "data-engineering-fundamentals": { group: "deeper", iconName: "Database", language: "Englisch", record: "certificate", external: false, accent: "sand", badge: "Certificate · Englisch" },
-  "data-science": { group: "deeper", iconName: "LineChart", language: "Englisch", record: "certificate", external: false, accent: "sand", badge: "Certificate · Englisch" },
-  "data-infrastructure": { group: "deeper", iconName: "Server", language: "Englisch", record: "certificate", external: false, accent: "sand", badge: "Certificate · Englisch" },
-  "ai-native-operator": { group: "deeper", iconName: "Workflow", language: "Englisch", record: "certificate", external: false, accent: "sand", badge: "Certificate · Englisch" },
+  claude: {
+    group: "deeper",
+    iconName: "Sparkles",
+    language: "Englisch",
+    availableLanguages: ["de", "en"],
+    record: "teilnahmebestaetigung",
+    external: false,
+    accent: "sand",
+    badge: "Teilnahmebestätigung · DE + EN",
+  },
+  codex: {
+    group: "deeper",
+    iconName: "TerminalSquare",
+    language: "Englisch",
+    availableLanguages: ["de", "en"],
+    record: "teilnahmebestaetigung",
+    external: false,
+    accent: "sand",
+    badge: "Teilnahmebestätigung · DE + EN",
+  },
+  "data-engineering-fundamentals": {
+    group: "deeper",
+    iconName: "Database",
+    language: "Englisch",
+    availableLanguages: ["de", "en"],
+    record: "teilnahmebestaetigung",
+    external: false,
+    accent: "sand",
+    badge: "Teilnahmebestätigung · DE + EN",
+  },
+  "data-science": {
+    group: "deeper",
+    iconName: "LineChart",
+    language: "Englisch",
+    availableLanguages: ["de", "en"],
+    record: "teilnahmebestaetigung",
+    external: false,
+    accent: "sand",
+    badge: "Teilnahmebestätigung · DE + EN",
+  },
+  "data-infrastructure": {
+    group: "deeper",
+    iconName: "Server",
+    language: "Englisch",
+    availableLanguages: ["de", "en"],
+    record: "teilnahmebestaetigung",
+    external: false,
+    accent: "sand",
+    badge: "Teilnahmebestätigung · DE + EN",
+  },
+  "ai-native-operator": {
+    group: "deeper",
+    iconName: "Workflow",
+    language: "Englisch",
+    availableLanguages: ["de", "en"],
+    record: "teilnahmebestaetigung",
+    external: false,
+    accent: "sand",
+    badge: "Teilnahmebestätigung · DE + EN",
+  },
 
   // Deeper — applied courses from real workshops (German).
-  "geschaeftsberichte-mit-ki-lesen": { group: "deeper", iconName: "Presentation", language: "Deutsch", record: "none", external: false, accent: "amber", badge: "Workshop · Deutsch" },
-  "ai-forecasting": { group: "deeper", iconName: "TrendingUp", language: "Deutsch", record: "none", external: false, accent: "amber", badge: "Workshop · Deutsch" },
+  "geschaeftsberichte-mit-ki-lesen": {
+    group: "deeper",
+    iconName: "Presentation",
+    language: "Deutsch",
+    availableLanguages: ["de", "en"],
+    record: "none",
+    external: false,
+    accent: "amber",
+    badge: "Workshop · DE + EN",
+  },
+  "ai-forecasting": {
+    group: "deeper",
+    iconName: "TrendingUp",
+    language: "Deutsch",
+    availableLanguages: ["de", "en"],
+    record: "none",
+    external: false,
+    accent: "amber",
+    badge: "Workshop · DE + EN",
+  },
 };
 
 /** Facts for a slug, or undefined if it is not a known course. */
@@ -188,37 +300,120 @@ export const RECORD_LABEL: Record<Exclude<RecordKind, "none">, string> = {
   certificate: "mit Certificate",
 };
 
+const RECORD_LABEL_EN: typeof RECORD_LABEL = {
+  teilnahmebestaetigung: "participation record",
+  lernnachweis: "learning record",
+  certificate: "completion certificate",
+};
+
+const ENGLISH_FACT_OVERRIDES: Readonly<
+  Partial<Record<string, Pick<CourseFacts, "record" | "badge">>>
+> = {
+  claude: {
+    record: "certificate",
+    badge: "Certificate · DE + EN",
+  },
+  codex: {
+    record: "certificate",
+    badge: "Certificate · DE + EN",
+  },
+  "data-engineering-fundamentals": {
+    record: "certificate",
+    badge: "Certificate · DE + EN",
+  },
+  "data-science": {
+    record: "certificate",
+    badge: "Certificate · DE + EN",
+  },
+  "data-infrastructure": {
+    record: "certificate",
+    badge: "Certificate · DE + EN",
+  },
+  "ai-native-operator": {
+    record: "certificate",
+    badge: "Certificate · DE + EN",
+  },
+};
+
 /**
- * Honest badge chips for a course card: language, record kind (if any), and an
+ * Honest badge chips for a course card: available languages, record kind (if any), and an
  * "extern" marker for GitHub-hosted labs. Returns [] for an unknown slug.
  */
-export function courseBadges(slug: string): readonly CourseBadge[] {
-  const facts = COURSE_FACTS[slug];
-  if (!facts) return [];
-  const badges: CourseBadge[] = [{ label: facts.language, tone: "language" }];
+export function courseBadges(
+  slug: string,
+  locale: Locale = "de",
+): readonly CourseBadge[] {
+  const baseFacts = COURSE_FACTS[slug];
+  if (!baseFacts) return [];
+  const facts =
+    locale === "en" && ENGLISH_FACT_OVERRIDES[slug]
+      ? { ...baseFacts, ...ENGLISH_FACT_OVERRIDES[slug] }
+      : baseFacts;
+  const badges: CourseBadge[] = [
+    {
+      label:
+        facts.availableLanguages.length === 2
+          ? "DE + EN"
+          : facts.availableLanguages[0] === "en"
+            ? "English"
+            : "Deutsch",
+      tone: "language",
+    },
+  ];
   if (facts.record !== "none") {
-    badges.push({ label: RECORD_LABEL[facts.record], tone: "record" });
+    badges.push({
+      label:
+        locale === "en"
+          ? RECORD_LABEL_EN[facts.record]
+          : RECORD_LABEL[facts.record],
+      tone: "record",
+    });
   }
   if (facts.external) {
-    badges.push({ label: "extern · GitHub", tone: "external" });
+    badges.push({
+      label: locale === "en" ? "external · GitHub" : "extern · GitHub",
+      tone: "external",
+    });
   }
   return badges;
 }
 
 /** Section headers for the two-group /kurse + homepage layout. */
 export const COURSE_SECTIONS: Readonly<
-  Record<CourseGroup, { readonly title: string; readonly eyebrow: string; readonly blurb: string }>
+  Record<
+    CourseGroup,
+    { readonly title: string; readonly eyebrow: string; readonly blurb: string }
+  >
 > = {
   spine: {
-    title: "Der Lernpfad",
-    eyebrow: "Deutsch · Schritt für Schritt · mit Nachweis",
+    title: "Grundlagenpfad",
+    eyebrow: "4 Kurse · DE + EN · fester Ablauf",
     blurb:
-      "Vier aufeinander aufbauende Kurse auf Deutsch. Dein Fortschritt wird gespeichert; je nach Kurs erhältst du eine selbst ausgestellte Teilnahmebestätigung oder einen Lernnachweis.",
+      "Vier Kurse bauen in fester Reihenfolge aufeinander auf. Alle Inhalte sind auf Deutsch und Englisch verfügbar. Fortschritt, Umfang und Abschlussbedingung werden je Kurs ausgewiesen. Teilnahmebestätigungen und Lernnachweise werden von loehrning.ai selbst ausgestellt.",
   },
   deeper: {
-    title: "Tiefer gehen",
-    eyebrow: "Englisch · portiert von GitHub · mit Certificate",
+    title: "Technikkurse",
+    eyebrow: "6 Kurse · DE + EN · offener Quellstand",
     blurb:
-      "Sechs technische Kurse auf Englisch, portiert aus offenen GitHub-Repositories und hier nativ nutzbar. Dein Fortschritt wird gespeichert; jeder Kurs bietet ein selbst ausgestelltes Certificate und nennt seinen geprüften Quellstand.",
+      "Sechs Kurse behandeln Prompting, Coding Agents, Datenarbeit und technische Betriebsmodelle. Alle Inhalte sind auf Deutsch und Englisch verfügbar. Umfang, Voraussetzungen, Lizenz und übernommener Quellstand bleiben sichtbar. Das Abschlussdokument wird von loehrning.ai selbst ausgestellt.",
   },
 };
+
+const COURSE_SECTIONS_EN: typeof COURSE_SECTIONS = {
+  spine: {
+    title: "Foundation path",
+    eyebrow: "4 courses · DE + EN · fixed sequence",
+    blurb:
+      "Four courses build on one another in a fixed sequence. Every course is available in English and German. Each course states its progress model, scope, and completion conditions. Participation and learning records are issued by loehrning.ai.",
+  },
+  deeper: {
+    title: "Technical courses",
+    eyebrow: "6 courses · DE + EN · traceable source revision",
+    blurb:
+      "Six courses cover prompting, coding agents, data work, and technical operating models. Every course is available in English and German. Each course states its scope, prerequisites, licence, and imported source revision. Completion documents are issued by loehrning.ai.",
+  },
+};
+
+export function courseSections(locale: Locale): typeof COURSE_SECTIONS {
+  return locale === "en" ? COURSE_SECTIONS_EN : COURSE_SECTIONS;
+}

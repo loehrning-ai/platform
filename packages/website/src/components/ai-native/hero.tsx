@@ -4,32 +4,63 @@ import { useEffect, useRef, useState, type RefObject } from "react";
 import { m } from "framer-motion";
 import { ArrowRight, Zap } from "lucide-react";
 import { BrandButton } from "@/components/ui/brand-button";
-import { AI_NATIVE_TRUST_SIGNALS } from "@/lib/ai-native/content";
+import { getAiNativeTrustSignals } from "@/lib/ai-native/content";
 import { useMotionAllowed } from "@/lib/animation-policy";
+import { localizeHref, type Locale } from "@/lib/i18n/locale";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 
 /* Cycling demo prompts — design-only content, lives inline with hero */
-const DEMO_PROMPTS = [
+interface DemoPrompt {
+  readonly cmd: string;
+  readonly out: string;
+  readonly tag: string;
+}
+
+const DEMO_PROMPTS: readonly DemoPrompt[] = [
   {
-    cmd: "du > Claude: finde alle Verträge mit Preisanpassungsklausel",
-    out: "12 Treffer. Sortiert nach Risiko. Rahmenvertrag #4712 (hoch), Lieferant Bosch (mittel), 10 weitere. PDF-Briefing liegt in /dokumente/review.md.",
-    tag: "Claude Code · agentic search",
+    cmd: "du > Claude: finde in diesem fiktiven Ordner Verträge mit Preisanpassungsklausel",
+    out: "Simulierter Suchentwurf: Fundstellen mit Dateipfad und Textausschnitt. Risikoeinstufung und Vollständigkeit sind noch zu prüfen.",
+    tag: "Claude Code · begrenzte Suche · Simulation",
   },
   {
-    cmd: "du > Claude: baue den Angebots-Vergleich aus PDF-Ordner",
-    out: "3 Angebote extrahiert. Tabelle mit 14 Zeilen, 8 Spalten. Ausreißer markiert (Lieferzeit Angebot B, Zahlungsziel Angebot C). Export als .xlsx.",
-    tag: "structured output · batch",
+    cmd: "du > Claude: vergleiche die fiktiven Angebote in diesem PDF-Ordner",
+    out: "Simulierter Tabellenentwurf mit Quellenzeilen. Lieferzeit und Zahlungsziel sind als Abweichungen markiert; Extraktion und Export brauchen Review.",
+    tag: "strukturierte Ausgabe · Simulation",
   },
   {
-    cmd: "du > Claude: refactor dieses Skript, aber behalte die Logik",
-    out: "Skript zerlegt in 4 Funktionen, Typ-Annotationen ergänzt, 23 Tests geschrieben, alle grün. Diff liegt im Branch ai/refactor-invoice.",
-    tag: "sub-agents · verify",
+    cmd: "du > Claude: refaktorisiere dieses Beispielskript, ohne das Verhalten zu ändern",
+    out: "Simulierter Änderungsvorschlag mit getrennten Funktionen, Typen und Tests. Diff, Testabdeckung und Verhaltensgleichheit müssen geprüft werden.",
+    tag: "Änderungsentwurf · Prüfung erforderlich",
   },
   {
-    cmd: "du > Claude: mach ein Onboarding-Memo für den neuen Praktikanten",
-    out: "Memo entworfen · 1 Seite · Ton: freundlich, konkret · beinhaltet Repo-Links, Meeting-Rhythmus, erste 3 Tasks. Draft in /hr/onboarding_v3.md.",
-    tag: "context-rich · draft",
+    cmd: "du > Claude: entwirf aus diesen freigegebenen Angaben ein Onboarding-Memo",
+    out: "Simulierter Einseitenentwurf mit Beispiel-Links, Terminrhythmus und ersten Aufgaben. Fachliche und personelle Freigabe ausstehend.",
+    tag: "kontextgebundener Entwurf · Simulation",
   },
 ] as const;
+
+const DEMO_PROMPTS_EN: readonly DemoPrompt[] = [
+  {
+    cmd: "you > Claude: find price-adjustment clauses in this fictional contract folder",
+    out: "Simulated search draft with file paths and excerpts. Completeness and risk classification still require review.",
+    tag: "Claude Code · bounded search · simulation",
+  },
+  {
+    cmd: "you > Claude: compare the fictional quotations in this PDF folder",
+    out: "Simulated table draft with source rows. Delivery-time and payment-term differences are flagged; extraction and export require review.",
+    tag: "structured output · simulation",
+  },
+  {
+    cmd: "you > Claude: refactor this sample script without changing behaviour",
+    out: "Simulated change proposal with separated functions, types and tests. Review the diff, coverage and behavioural equivalence.",
+    tag: "change draft · review required",
+  },
+  {
+    cmd: "you > Claude: draft an onboarding memo from these approved details",
+    out: "Simulated one-page draft with sample links, meeting cadence and initial tasks. Subject-matter and people review remain pending.",
+    tag: "bounded-context draft · simulation",
+  },
+];
 
 type Phase = "typing" | "output" | "hold" | "fadeout";
 
@@ -63,19 +94,20 @@ function usePaletteInView(): readonly [RefObject<HTMLDivElement | null>, boolean
   return [ref, inView] as const;
 }
 
-function CommandPalette() {
+function CommandPalette({ locale }: { readonly locale: Locale }) {
   const reducedMotion = usePrefersReducedMotion();
   const motionAllowed = useMotionAllowed();
   const [paletteRef, paletteInView] = usePaletteInView();
   const [idx, setIdx] = useState(0);
   const [typed, setTyped] = useState("");
   const [phase, setPhase] = useState<Phase>("typing");
-  const cur = DEMO_PROMPTS[idx];
+  const prompts = locale === "en" ? DEMO_PROMPTS_EN : DEMO_PROMPTS;
+  const cur = prompts[idx];
 
   useEffect(() => {
     if (reducedMotion) {
       // Static: show the first prompt fully with output — no cycling.
-      setTyped(DEMO_PROMPTS[0].cmd);
+      setTyped(prompts[0].cmd);
       setPhase("hold");
       return;
     }
@@ -100,7 +132,7 @@ function CommandPalette() {
       timer = setTimeout(() => {
         setTyped("");
         setPhase("typing");
-        setIdx((i) => (i + 1) % DEMO_PROMPTS.length);
+        setIdx((i) => (i + 1) % prompts.length);
       }, 500);
     }
     return () => clearTimeout(timer);
@@ -111,6 +143,7 @@ function CommandPalette() {
     reducedMotion,
     motionAllowed,
     paletteInView,
+    prompts,
   ]);
 
   const showOutput = phase === "output" || phase === "hold" || phase === "fadeout";
@@ -125,9 +158,9 @@ function CommandPalette() {
       <div className="dark-section overflow-hidden border border-[var(--color-dark-border)] bg-[var(--color-dark-bg)]">
         {/* header */}
         <div className="flex items-center justify-between border-b border-[var(--color-dark-border)] px-4 py-2.5 font-mono text-[10.5px] uppercase tracking-[0.12em] text-[var(--color-dark-muted)]">
-          <span>claude · live demo</span>
+          <span>{locale === "en" ? "claude · simulated example" : "claude · simuliertes Beispiel"}</span>
           <span className="flex gap-1.5">
-            {DEMO_PROMPTS.map((_, i) => (
+            {prompts.map((_, i) => (
               <span
                 key={i}
                 className={`h-0.5 w-4 transition-colors ${
@@ -173,9 +206,11 @@ function CommandPalette() {
   );
 }
 
-export function AiNativeHero() {
+function AiNativeHeroContent({ locale = "de" }: { readonly locale?: Locale }) {
+  const isEnglish = locale === "en";
+  const trustSignals = getAiNativeTrustSignals(locale);
   return (
-    <section className="relative flex min-h-[100dvh] items-start bg-background px-6 pb-12 pt-24 md:pt-28 lg:items-center lg:px-12 lg:pb-14">
+    <section className="relative flex min-h-[100dvh] items-start bg-background px-4 pb-12 pt-24 sm:px-6 md:pt-28 lg:items-center lg:px-12 lg:pb-14">
       <div className="mx-auto w-full max-w-[1280px]">
         <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-14">
           {/* LEFT — copy + CTAs */}
@@ -183,7 +218,9 @@ export function AiNativeHero() {
             <div>
               <span className="inline-flex items-center gap-2 border border-brand-orange/35 bg-brand-orange/10 px-3.5 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-orange">
                 <Zap size={12} />
-                AI-Native Arbeitskurs · alle Module kostenlos
+                {isEnglish
+                  ? "AI-Native Workflow Course · all modules free"
+                  : "AI-Native Arbeitskurs · alle Module kostenlos"}
               </span>
             </div>
 
@@ -197,55 +234,66 @@ export function AiNativeHero() {
               className="mt-5 bg-background font-bold leading-[0.92] tracking-[-0.04em] text-foreground"
               style={{ fontSize: "clamp(2.25rem, 6vw, 4.75rem)" }}
             >
-              Kontext geben.
+              {isEnglish ? "Define the task." : "Kontext geben."}
               <br />
-              <span className="text-brand-orange">Output prüfen.</span>
+              <span className="text-brand-orange">
+                {isEnglish ? "Review the output." : "Output prüfen."}
+              </span>
             </h1>
 
             <p className="mt-5 max-w-[520px] text-[17px] leading-[1.55] text-muted-foreground">
-              AI-native arbeiten heißt:{" "}
-              <strong className="text-foreground">
-                Intent formulieren, Kontext geben, Output verifizieren.
-              </strong>{" "}
-              In vier Modulen, 27 Lektionen, auf Deutsch, mit Claude als
-              Standard-Werkzeug.
+              {isEnglish ? (
+                <>
+                  AI-native work means defining a bounded task, supplying the
+                  relevant context and checking the result against explicit
+                  criteria. The course covers that method in four modules and
+                  27 lessons, using Claude as the main example.
+                </>
+              ) : (
+                <>
+                  AI-native arbeiten heißt: Aufgabe abgrenzen, relevanten
+                  Kontext bereitstellen und das Ergebnis anhand klarer
+                  Kriterien prüfen. Der Kurs zeigt diese Methode in vier
+                  Modulen und 27 Lektionen am Beispiel Claude.
+                </>
+              )}
             </p>
 
             <div className="mt-6 flex flex-wrap gap-3">
               <BrandButton
-                href="/ai-native/kurs/modul_1"
+                href={localizeHref("/ai-native/kurs/modul_1", locale)}
                 prefetch={false}
                 variant="primary"
               >
-                Kostenlos mit Lernkonto starten <ArrowRight size={15} />
+                {isEnglish ? "Start with a free learning account" : "Kostenlos mit Lernkonto starten"} <ArrowRight size={15} />
               </BrandButton>
               <BrandButton
-                href="/ai-native/fluency-test"
+                href={localizeHref("/ai-native/fluency-test", locale)}
                 variant="outline"
               >
-                Fluency-Test · 5 Min
+                {isEnglish ? "Fluency self-assessment · 5 min" : "Fluency-Test · 5 Min"}
               </BrandButton>
             </div>
 
             <div className="mt-6 flex flex-wrap gap-x-5 gap-y-1.5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-muted-foreground">
               <span>
-                <span className="text-brand-orange">▸</span> 27 Lektionen
+                <span className="text-brand-orange">▸</span> 27 {isEnglish ? "lessons" : "Lektionen"}
               </span>
               <span>
-                <span className="text-brand-orange">▸</span> 4 Module
+                <span className="text-brand-orange">▸</span> 4 {isEnglish ? "modules" : "Module"}
               </span>
               <span>
-                <span className="text-brand-orange">▸</span> 15 h · selbst-paced
+                <span className="text-brand-orange">▸</span> 12 h · {isEnglish ? "self-paced" : "im eigenen Tempo"}
               </span>
               <span>
-                <span className="text-brand-orange">▸</span> Claude-first · deutsch
+                <span className="text-brand-orange">▸</span> Claude example · {isEnglish ? "English" : "Deutsch"}
               </span>
             </div>
 
             {/* Trust signals — hidden on short viewports to keep hero in one screen */}
             <div>
               <ul className="mt-6 hidden space-y-1.5 text-[13px] text-muted-foreground md:block">
-                {AI_NATIVE_TRUST_SIGNALS.map((signal, i) => (
+                {trustSignals.map((signal, i) => (
                   <li key={i} className="flex items-start gap-3">
                     <span className="mt-2 h-px w-4 shrink-0 bg-brand-sand/50" />
                     <span>{signal}</span>
@@ -257,38 +305,40 @@ export function AiNativeHero() {
             {/* Quick-nav footer — preserves AI-native navigation links; hidden on shorter screens */}
             <div className="mt-6 hidden flex-wrap gap-x-6 gap-y-2 text-xs text-muted-foreground lg:flex">
               <a
-                href="/ai-native/demos"
+                href={localizeHref("/ai-native/demos", locale)}
                 className="transition-colors hover:text-brand-orange"
               >
-                → 12 Demos ausprobieren
+                → {isEnglish ? "Open 9 course simulations" : "9 Kurssimulationen öffnen"}
               </a>
               <a
-                href="/ai-native/glossar"
+                href={localizeHref("/ai-native/glossar", locale)}
                 className="transition-colors hover:text-brand-orange"
               >
-                → Glossar ({">"}70 Begriffe)
+                → {isEnglish ? "Glossary (70 terms)" : "Glossar (70 Begriffe)"}
               </a>
               <a
-                href="/ai-native/capstone-gallery"
+                href={localizeHref("/ai-native/capstone-gallery", locale)}
                 className="transition-colors hover:text-brand-orange"
               >
-                → Capstone Gallery
+                → {isEnglish ? "Capstone publication policy" : "Capstone-Veröffentlichungsregeln"}
               </a>
               <a
-                href="/ki-fuehrerschein"
+                href={localizeHref("/ki-fuehrerschein", locale)}
                 className="transition-colors hover:text-brand-orange"
               >
-                → KI-Führerschein
+                → {isEnglish ? "AI Fundamentals" : "KI-Führerschein"}
               </a>
             </div>
           </div>
 
           {/* RIGHT — live command palette */}
           <div>
-            <CommandPalette />
+            <CommandPalette locale={locale} />
           </div>
         </div>
       </div>
     </section>
   );
 }
+
+export const AiNativeHero = withMotionProvider(AiNativeHeroContent);

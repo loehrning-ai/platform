@@ -1,7 +1,7 @@
 [
   {
     "term": "3-Schritt-Prüfung",
-    "definition": "Verifikationsworkflow für jede KI-Ausgabe: (1) Faktisch korrekt? Stimmen Fakten, Zahlen, Daten, Namen? (2) Vollständig? Fehlen relevante Aspekte? (3) Angemessen? Passt der Tonfall, gibt es diskriminierende Formulierungen?",
+    "definition": "Basisschema für Ausgaben, die vor ihrer Verwendung geprüft werden müssen: (1) Faktisch korrekt? Stimmen Fakten, Zahlen, Daten und Namen? (2) Vollständig? Fehlen relevante Aspekte? (3) Angemessen? Passt der Tonfall, und enthält die Formulierung diskriminierende Aussagen? Prüftiefe und zusätzliche Kontrollen richten sich nach Zweck und Auswirkung.",
     "english": "3-Step Verification",
     "category": "praxis",
     "relatedTerms": ["Halluzination", "Human-in-the-Loop"],
@@ -17,17 +17,20 @@
   },
   {
     "term": "Attention-Mechanismus",
-    "definition": "Technik in Transformer-Modellen, die bestimmt, welche Teile der Eingabe für die aktuelle Ausgabe am relevantesten sind. Ermöglicht Kontextverständnis über lange Texte.",
+    "definition": "Mechanismus, der gewichtete Beziehungen zwischen Repräsentationen von Tokens berechnet. Er hilft Transformer-Modellen, Kontextinformationen zu verknüpfen; er belegt weder Relevanz noch Verständnis.",
     "english": "Attention Mechanism",
     "category": "technik",
     "relatedTerms": ["Transformer", "Large Language Model (LLM)"]
   },
   {
     "term": "Auftragsverarbeitung (AVV)",
-    "definition": "Vertragliche Regelung nach DSGVO Art. 28 zwischen Verantwortlichem und Auftragsverarbeiter. Pflicht bei jedem externen KI-Tool, das Daten verarbeitet.",
+    "definition": "Vertragliche Regelung nach DSGVO Art. 28, wenn ein Verantwortlicher einen Auftragsverarbeiter mit der Verarbeitung personenbezogener Daten beauftragt. Ob ein AVV erforderlich und ausreichend ist, hängt von Rollen und Verarbeitung ab.",
     "english": "Data Processing Agreement (DPA)",
     "category": "regulatorik",
-    "relatedTerms": ["Datenschutz-Folgenabschätzung (DSFA)", "Betroffenenrechte"],
+    "relatedTerms": [
+      "Datenschutz-Folgenabschätzung (DSFA)",
+      "Betroffenenrechte"
+    ],
     "relatedBlocks": ["block_2", "block_5"]
   },
   {
@@ -35,11 +38,14 @@
     "definition": "Rechte natürlicher Personen nach DSGVO: Auskunft (Art. 15), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung (Art. 18), Widerspruch (Art. 21). Gelten auch bei KI-Verarbeitung.",
     "english": "Data Subject Rights",
     "category": "regulatorik",
-    "relatedTerms": ["Auftragsverarbeitung (AVV)", "Datenschutz-Folgenabschätzung (DSFA)"]
+    "relatedTerms": [
+      "Auftragsverarbeitung (AVV)",
+      "Datenschutz-Folgenabschätzung (DSFA)"
+    ]
   },
   {
     "term": "Betreiber",
-    "definition": "Natürliche oder juristische Person, die ein KI-System unter eigener Verantwortung einsetzt. Wer ChatGPT oder Copilot nutzt, ist Betreiber. (EU AI Act Art. 3(4)).",
+    "definition": "Natürliche oder juristische Person, Behörde, Einrichtung oder sonstige Stelle, die ein KI-System in eigener Verantwortung verwendet; die persönliche, nicht berufliche Nutzung ist ausgenommen (EU AI Act Art. 3(4)).",
     "english": "Deployer",
     "category": "regulatorik",
     "relatedTerms": ["Anbieter", "KI-System"],
@@ -47,7 +53,7 @@
   },
   {
     "term": "Bias",
-    "definition": "Systematische Verzerrung in KI-Ausgaben, verursacht durch unausgewogene Trainingsdaten oder fehlerhafte Modellarchitektur. Führt zu Diskriminierung.",
+    "definition": "Systematische Abweichung, die unter anderem aus Datenerhebung, Labels, Zielgrößen, Modellierung, Bewertung oder Einsatzkontext entstehen kann. Sie kann Gruppen unterschiedlich betreffen, führt aber nicht in jedem Fall automatisch zu Diskriminierung.",
     "english": "Bias",
     "category": "technik",
     "relatedTerms": ["Trainingsdaten", "Halluzination"],
@@ -70,7 +76,7 @@
   },
   {
     "term": "Datenschutz-Folgenabschätzung (DSFA)",
-    "definition": "Pflichtbewertung nach DSGVO Art. 35 bei hohem Risiko für Betroffene. Bei KI-Systemen mit personenbezogenen Daten fast immer erforderlich.",
+    "definition": "Bewertung nach DSGVO Art. 35, wenn eine geplante Verarbeitung voraussichtlich ein hohes Risiko für Rechte und Freiheiten natürlicher Personen zur Folge hat. Der Einsatz von KI kann ein Risikofaktor sein, löst aber nicht automatisch eine DSFA aus.",
     "english": "Data Protection Impact Assessment (DPIA)",
     "category": "regulatorik",
     "relatedTerms": ["Auftragsverarbeitung (AVV)", "Betroffenenrechte"],
@@ -78,7 +84,7 @@
   },
   {
     "term": "Datenklassifizierung (4-Stufen-Modell)",
-    "definition": "System zur Einteilung von Unternehmensdaten in vier Vertraulichkeitsstufen: (1) Öffentlich, (2) Intern, (3) Vertraulich, (4) Streng vertraulich. Bestimmt, welche Daten in welche KI-Tools eingegeben werden dürfen.",
+    "definition": "Beispielmodell zur Einteilung von Unternehmensdaten in vier Schutzstufen. Die Organisation legt Bezeichnungen, Kriterien und zulässige Arbeitsabläufe fest; die Stufe allein bestimmt keine Produktfreigabe.",
     "english": "Data Classification",
     "category": "praxis",
     "relatedTerms": ["Auftragsverarbeitung (AVV)", "Shadow AI"],
@@ -93,14 +99,14 @@
   },
   {
     "term": "Deepfake",
-    "definition": "KI-generierte Fälschung von Bild, Video oder Audio einer realen Person. Einsatz für Betrug (CEO Fraud), Desinformation oder Identitätsdiebstahl.",
+    "definition": "Mit KI erzeugter oder manipulierter Bild-, Audio- oder Videoinhalt, der echten Personen, Gegenständen, Orten oder Ereignissen ähnelt und fälschlich authentisch erscheinen kann. Die rechtliche Definition richtet sich nach dem jeweiligen Regelwerk.",
     "english": "Deepfake",
     "category": "technik",
     "relatedTerms": ["Generative KI", "Bias"]
   },
   {
     "term": "Fine-Tuning",
-    "definition": "Nachtraining eines vortrainierten Modells auf spezifischen Daten, um es für eine bestimmte Aufgabe zu optimieren. Macht ein generelles Modell zum Spezialisten.",
+    "definition": "Weiteres Training eines vortrainierten Modells auf ausgewählten Daten oder Präferenzen, um sein Verhalten für bestimmte Aufgaben oder Domänen anzupassen. Der Erfolg muss mit getrennten Evaluationen geprüft werden.",
     "english": "Fine-Tuning",
     "category": "technik",
     "relatedTerms": ["Large Language Model (LLM)", "Trainingsdaten"]
@@ -115,7 +121,7 @@
   },
   {
     "term": "Halluzination",
-    "definition": "Phänomen, bei dem ein KI-System plausibel klingende, aber sachlich falsche Informationen erzeugt. Entsteht durch Token-Vorhersage ohne Faktenprüfung.",
+    "definition": "Plausibel wirkende Ausgabe eines generativen Modells, die unbelegt, inkonsistent oder sachlich falsch ist. Sprachmodellgenerierung enthält keine automatische Garantie auf Faktenprüfung.",
     "english": "Hallucination",
     "category": "technik",
     "relatedTerms": ["3-Schritt-Prüfung", "Human-in-the-Loop"],
@@ -130,7 +136,7 @@
   },
   {
     "term": "Human-in-the-Loop",
-    "definition": "Prinzip, bei dem ein Mensch in den KI-Entscheidungsprozess eingebunden ist und die finale Entscheidung trifft. Nach EU AI Act Art. 14 bei Hochrisiko-KI verpflichtend.",
+    "definition": "Gestaltung, bei der Menschen definierte Überwachungs-, Eingriffs- oder Entscheidungsbefugnisse haben. Artikel 14 der EU-KI-Verordnung verlangt für Hochrisiko-Systeme wirksame menschliche Aufsicht; eine menschliche Letztentscheidung ist nicht für jeden Anwendungsfall identisch ausgestaltet.",
     "english": "Human-in-the-Loop",
     "category": "praxis",
     "relatedTerms": ["3-Schritt-Prüfung", "Hochrisiko-KI-System"],
@@ -145,7 +151,7 @@
   },
   {
     "term": "KI-Kompetenz",
-    "definition": "Fähigkeiten, Kenntnisse und Verständnis, die einen informierten Einsatz von KI-Systemen ermöglichen (EU AI Act Art. 3(56)). Pflicht nach Art. 4.",
+    "definition": "Fähigkeiten, Kenntnisse und Verständnis, die einen informierten KI-Einsatz sowie Bewusstsein für Chancen, Risiken und mögliche Schäden ermöglichen (EU AI Act Art. 3(56)). Artikel 4 verlangt kontextbezogene Maßnahmen zur Unterstützung der Entwicklung dieser Kompetenz.",
     "english": "AI Literacy",
     "category": "regulatorik",
     "relatedTerms": ["KI-System", "Compliance-Mappe"],
@@ -161,14 +167,14 @@
   },
   {
     "term": "Konformitätsbewertung",
-    "definition": "Verfahren zum Nachweis, dass ein Hochrisiko-KI-System alle Anforderungen der EU-KI-Verordnung erfüllt. Ergebnis: CE-Kennzeichnung.",
+    "definition": "Verfahren zur Prüfung, ob die für ein Hochrisiko-KI-System geltenden Anforderungen erfüllt sind. Verfahren und Beteiligung einer notifizierten Stelle hängen von System und Rechtsgrundlage ab; eine CE-Kennzeichnung folgt nur, soweit das Regelwerk sie vorsieht.",
     "english": "Conformity Assessment",
     "category": "regulatorik",
     "relatedTerms": ["Hochrisiko-KI-System", "Compliance-Mappe"]
   },
   {
     "term": "Künstliche Intelligenz (KI)",
-    "definition": "Oberbegriff für maschinenbasierte Systeme, die Aufgaben ausführen, die typischerweise menschliche Intelligenz erfordern: Mustererkennung, Sprachverarbeitung, Entscheidungsfindung.",
+    "definition": "Technischer Sammelbegriff für maschinenbasierte Systeme, die aus Eingaben Ausgaben wie Vorhersagen, Inhalte, Empfehlungen oder Entscheidungen ableiten. Die genaue Definition hängt vom fachlichen oder rechtlichen Kontext ab.",
     "english": "Artificial Intelligence (AI)",
     "category": "technik",
     "relatedTerms": ["KI-System", "Maschinelles Lernen (ML)"],
@@ -176,17 +182,21 @@
   },
   {
     "term": "Large Language Model (LLM)",
-    "definition": "Großes Sprachmodell, trainiert auf Milliarden von Textdaten. Erzeugt Text durch statistische Vorhersage des nächsten Tokens. Beispiele: GPT-4, Claude, Gemini, Llama.",
+    "definition": "Großes Modell für Tokenfolgen, das auf umfangreichen Daten trainiert wird und Wahrscheinlichkeiten für Ausgaben modelliert. Je nach Modell verarbeitet es neben Text weitere Modalitäten; Produktname und Modellversion sind zu unterscheiden.",
     "english": "Large Language Model",
     "category": "technik",
     "relatedTerms": ["Token", "Transformer", "Halluzination"]
   },
   {
     "term": "Maschinelles Lernen (ML)",
-    "definition": "Teilgebiet der KI, bei dem Systeme aus Daten lernen, statt explizit programmiert zu werden. Drei Typen: Supervised, Unsupervised, Reinforcement Learning.",
+    "definition": "Teilgebiet der KI, in dem Modellparameter anhand von Daten und Optimierungszielen angepasst werden. Überwachtes, unüberwachtes, selbstüberwachtes und bestärkendes Lernen sind verbreitete, nicht abschließende Kategorien.",
     "english": "Machine Learning (ML)",
     "category": "technik",
-    "relatedTerms": ["Deep Learning", "Supervised Learning", "Unsupervised Learning"]
+    "relatedTerms": [
+      "Deep Learning",
+      "Supervised Learning",
+      "Unsupervised Learning"
+    ]
   },
   {
     "term": "Modell",
@@ -211,21 +221,21 @@
   },
   {
     "term": "Overfitting",
-    "definition": "Modell hat Trainingsdaten auswendig gelernt statt Muster zu erkennen. Funktioniert auf Trainingsdaten gut, versagt bei neuen Daten.",
+    "definition": "Ein Modell passt sich zu stark an Besonderheiten oder Rauschen der Trainingsdaten an und generalisiert dadurch schlechter auf neue Daten. Auswendiglernen kann ein Symptom sein, ist aber nicht die einzige Form.",
     "english": "Overfitting",
     "category": "technik",
     "relatedTerms": ["Trainingsdaten", "Parameter"]
   },
   {
     "term": "Parameter",
-    "definition": "Lernbare Werte eines Modells (Gewichte und Biases). GPT-4 hat geschätzt 1,7 Billionen Parameter. Mehr Parameter = mehr Kapazität, aber nicht zwingend mehr Qualität.",
+    "definition": "Während des Trainings angepasste Werte eines Modells, etwa Gewichte und Bias-Terme. Die Parameterzahl allein erlaubt keinen belastbaren Vergleich von Qualität, Kosten oder Eignung.",
     "english": "Parameters",
     "category": "technik",
     "relatedTerms": ["Modell", "Fine-Tuning"]
   },
   {
     "term": "Prompt",
-    "definition": "Die Eingabe (Anweisung, Frage, Kontext), die ein KI-System erhält. Die Qualität des Prompts bestimmt die Qualität der Ausgabe.",
+    "definition": "Eingabe an ein generatives System, etwa Anweisung, Frage, Daten und Kontext. Ein klarer Prompt kann die Ausgabe beeinflussen, bestimmt aber weder Richtigkeit noch Qualität allein.",
     "english": "Prompt",
     "category": "praxis",
     "relatedTerms": ["Prompt-Bibliothek", "RCTFC-Schema"],
@@ -233,7 +243,7 @@
   },
   {
     "term": "Prompt-Bibliothek",
-    "definition": "Sammlung getesteter und optimierter Prompt-Vorlagen für wiederkehrende Aufgaben im Team. Reduziert Qualitätsschwankungen und beschleunigt das Onboarding neuer Mitarbeitender.",
+    "definition": "Versionierte Sammlung von Prompt-Vorlagen für wiederkehrende Aufgaben mit Zweck, zulässigen Eingaben, Beispielausgaben, Prüfschritten und Evaluationsergebnissen. Nutzen und Grenzen müssen im konkreten Prozess gemessen werden.",
     "english": "Prompt Library",
     "category": "praxis",
     "relatedTerms": ["Prompt", "RCTFC-Schema"],
@@ -241,21 +251,21 @@
   },
   {
     "term": "Prompt Injection",
-    "definition": "Angriffstechnik, bei der versteckte Anweisungen in Daten eingebettet werden, die ein KI-System verarbeitet. OWASP LLM01:2025, höchstes Sicherheitsrisiko für LLM-Anwendungen.",
+    "definition": "Angriff oder Fehlsteuerung, bei der Anweisungen in Nutzereingaben oder verarbeiteten Inhalten das vorgesehene Verhalten eines Modells beeinflussen. OWASP führt Prompt Injection in den Top 10 für LLM-Anwendungen 2025 als LLM01.",
     "english": "Prompt Injection",
     "category": "technik",
     "relatedTerms": ["Prompt", "Large Language Model (LLM)"]
   },
   {
     "term": "RAG (Retrieval-Augmented Generation)",
-    "definition": "Technik, bei der ein LLM vor der Antwortgenerierung relevante Informationen aus einer Wissensdatenbank abruft. Reduziert Halluzinationen durch Faktenverankerung.",
+    "definition": "Muster, bei dem ein generatives Modell abgerufene Inhalte als Kontext erhält. Es kann Nachvollziehbarkeit und Faktentreue verbessern, ist aber von Suche, Quellenqualität und korrekter Nutzung abhängig und verhindert keine Halluzinationen.",
     "english": "Retrieval-Augmented Generation",
     "category": "technik",
     "relatedTerms": ["Large Language Model (LLM)", "Halluzination"]
   },
   {
     "term": "RCTFC-Schema",
-    "definition": "Struktur für professionelle Prompts mit fünf Bestandteilen: Rolle, Context, Task, Format und Constraints. Ermöglicht konsistent hochwertige KI-Ausgaben.",
+    "definition": "Kursvorlage mit den Feldern Rolle, Kontext, Aufgabe, Format und Grenzen. Sie hilft, Anforderungen sichtbar zu machen; nicht jede Aufgabe braucht alle Felder, und die Vorlage garantiert keine korrekte Ausgabe.",
     "english": "RCTFC Prompt Framework",
     "category": "praxis",
     "relatedTerms": ["Prompt", "Prompt-Bibliothek"],
@@ -270,10 +280,13 @@
   },
   {
     "term": "Shadow AI",
-    "definition": "Nicht genehmigte Nutzung von KI-Tools durch Mitarbeitende, z.B. private ChatGPT-Nutzung für Arbeitstexte ohne Wissen der IT-Abteilung. Birgt DSGVO-Risiken und verstößt gegen die KI-Nutzungsrichtlinie.",
+    "definition": "Nutzung von KI-Diensten oder -Funktionen außerhalb des genehmigten Inventars und der vorgesehenen Kontrollen. Das kann Verbraucherangebote, Erweiterungen, integrierte Funktionen oder lokale Modelle betreffen.",
     "english": "Shadow AI",
     "category": "praxis",
-    "relatedTerms": ["Datenklassifizierung (4-Stufen-Modell)", "Compliance-Mappe"],
+    "relatedTerms": [
+      "Datenklassifizierung (4-Stufen-Modell)",
+      "Compliance-Mappe"
+    ],
     "relatedBlocks": ["block_2", "block_5"]
   },
   {
@@ -292,14 +305,14 @@
   },
   {
     "term": "Trainingsdaten",
-    "definition": "Daten, mit denen ein ML-Modell trainiert wird. Qualität und Repräsentativität der Trainingsdaten bestimmen die Qualität des Modells. Bias in Daten = Bias im Modell.",
+    "definition": "Daten, die zur Anpassung von Modellparametern verwendet werden. Auswahl, Qualität, Repräsentativität und Dokumentation beeinflussen das Verhalten; Modell, Zielgröße, Evaluation und Einsatzkontext wirken ebenfalls.",
     "english": "Training Data",
     "category": "technik",
     "relatedTerms": ["Bias", "Overfitting"]
   },
   {
     "term": "Transformer",
-    "definition": "Neuronale Netzarchitektur (2017, Google). Grundlage aller modernen LLMs. Nutzt Attention-Mechanismen statt sequentieller Verarbeitung. Ermöglicht Parallelisierung und Skalierung.",
+    "definition": "2017 vorgestellte neuronale Netzarchitektur, die Attention und positionsbezogene Informationen nutzt. Sie bildet die Grundlage vieler aktueller Sprachmodelle und erlaubt stark parallelisierbares Training; nicht jedes moderne Modell ist identisch aufgebaut.",
     "english": "Transformer",
     "category": "technik",
     "relatedTerms": ["Attention-Mechanismus", "Large Language Model (LLM)"]

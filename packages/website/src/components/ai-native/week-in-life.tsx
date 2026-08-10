@@ -10,9 +10,10 @@ import {
 } from "@/components/ai-native/primitives";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import type { Locale } from "@/lib/i18n/locale";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 
-/* WeekInLife — "Dashboard in 30 Minuten". Toggles between manual workflow
- * and Claude-assisted, showing a staggered timeline of steps. */
+/* A worked dashboard example. It compares process structure, not speed. */
 
 type Mode = "before" | "after";
 
@@ -30,72 +31,96 @@ interface Flow {
   readonly steps: readonly Step[];
 }
 
-const BEFORE: Flow = {
-  label: "Der alte Weg",
-  total: "≈ 8 Stunden",
-  subtotal: "ein ganzer Arbeitstag",
+const BEFORE_DE: Flow = {
+  label: "Ad-hoc-Ablauf",
+  total: "Nicht dokumentiert",
+  subtotal: "Entscheidungen liegen in Dateien, Nachrichten und Einzelschritten",
   accent: "muted",
   steps: [
-    { t: "09:00", title: "Anforderungen sammeln", desc: "Excel-Skizze, Screenshot vom alten Dashboard, 3 Slack-Threads durchgehen." },
-    { t: "09:40", title: "Erste Query schreiben", desc: "SQL gegen das Data Warehouse. Schema-Doku rauskramen. Join findet nicht das richtige Feld." },
-    { t: "10:30", title: "Widget bauen", desc: "Query in das BI-Tool kopieren. Chart-Typ wählen. Achsen beschriften. Farben setzen." },
-    { t: "11:15", title: "Nächste Query …", desc: "Der Prozess wiederholt sich. Jede Query braucht ein eigenes Widget, eigenen Titel, eigene Filter." },
-    { t: "13:30", title: "Copy-paste-copy-paste", desc: "Acht, zehn, zwölf Widgets. Titel-Tippfehler. Filter, die auf manchen Widgets greifen, auf anderen nicht." },
-    { t: "15:45", title: "Layout aufräumen", desc: "Widgets in ein Raster ziehen. Eines ist zu groß, eines zu klein. Mobile-Ansicht ist zerschossen." },
-    { t: "17:30", title: "Feedback-Runde", desc: "Manager sagt: »Kannst du noch Quartals-Vergleich dazu?« Drei Widgets müssen neu gebaut werden." },
+    { t: "01", title: "Anforderungen zusammentragen", desc: "Metriken, Screenshots und Gesprächsnotizen werden aus mehreren Quellen gesammelt." },
+    { t: "02", title: "Abfragen einzeln erstellen", desc: "Jede Kennzahl wird separat umgesetzt; Annahmen und Join-Entscheidungen bleiben häufig implizit." },
+    { t: "03", title: "Visualisierungen aufbauen", desc: "Filter, Achsen und Beschriftungen werden pro Diagramm konfiguriert." },
+    { t: "04", title: "Änderungen nachziehen", desc: "Eine neue Anforderung muss in mehreren Abfragen und Diagrammen konsistent umgesetzt werden." },
   ],
 };
 
-const AFTER: Flow = {
-  label: "Mit Claude + Notebook",
-  total: "≈ 30 Minuten",
-  subtotal: "vor dem ersten Kaffee-Refill",
+const AFTER_DE: Flow = {
+  label: "Dokumentierter Ablauf mit Claude",
+  total: "Vier Prüfschritte",
+  subtotal: "Briefing, Entwurf, fachliche Prüfung und freigegebene Änderung",
   accent: "orange",
   steps: [
-    { t: "09:00", title: "Briefing an Claude", desc: "»Ich brauche ein Dashboard für Supplier-Performance: Lead-Time, On-Time-Rate, Defect-Rate, nach Region.« 4 Sätze, kein SQL." },
-    { t: "09:06", title: "Notebook entsteht", desc: "Claude generiert alle sechs Queries. Sauber dokumentiert, mit Kommentaren, als Notebook-Zellen. Du prüfst, nicht du schreibst." },
-    { t: "09:14", title: "Queries verifizieren", desc: "Eine Zelle pro Query, Ergebnis direkt darunter. Zwei Zahlen wirken falsch. Eine Nachfrage, Claude korrigiert den Join." },
-    { t: "09:22", title: "Dashboard generiert sich", desc: "Aus dem Notebook heraus baut Claude die App. Widget-Titel, Filter, Layout, alles konsistent. Ein Artefakt, keine Klick-Orgie." },
-    { t: "09:28", title: "Feinschliff", desc: "»Mach den Regions-Filter global, nicht pro Widget.« 40 Sekunden später ist es gemacht. Im selben Notebook, reproduzierbar." },
-    { t: "09:32", title: "Fertig. Share-Link raus.", desc: "Manager fragt nach Quartals-Vergleich. Du antwortest: »Moment.« Zwei Minuten später liegt es drin." },
+    { t: "01", title: "Briefing und Kriterien festhalten", desc: "Kennzahlen, Datenquellen, Zielgruppe, Ausgabeformat und Prüfkriterien stehen im Notebook." },
+    { t: "02", title: "Abfrageentwürfe erzeugen", desc: "Claude erstellt kommentierte Entwürfe. Schema, Filter und Annahmen bleiben neben dem Code sichtbar." },
+    { t: "03", title: "Ergebnisse verifizieren", desc: "Stichproben, Kontrollsummen und bekannte Referenzwerte prüfen, ob Join und Aggregation stimmen." },
+    { t: "04", title: "Freigegebenen Stand dokumentieren", desc: "Nur geprüfte Abfragen speisen das Dashboard. Spätere Änderungen laufen erneut durch dieselben Kontrollen." },
   ],
 };
 
-export function AiNativeWeekInLife() {
+const BEFORE_EN: Flow = {
+  label: "Ad hoc process",
+  total: "Undocumented",
+  subtotal: "Decisions are spread across files, messages and isolated steps",
+  accent: "muted",
+  steps: [
+    { t: "01", title: "Collect requirements", desc: "Metrics, screenshots and meeting notes are gathered from several sources." },
+    { t: "02", title: "Write queries separately", desc: "Each metric is implemented on its own; assumptions and join decisions often remain implicit." },
+    { t: "03", title: "Build visualisations", desc: "Filters, axes and labels are configured for each chart." },
+    { t: "04", title: "Propagate changes", desc: "A new requirement must be applied consistently across several queries and charts." },
+  ],
+};
+
+const AFTER_EN: Flow = {
+  label: "Documented Claude-assisted process",
+  total: "Four review steps",
+  subtotal: "Brief, draft, domain review and an approved change",
+  accent: "orange",
+  steps: [
+    { t: "01", title: "Record the brief and criteria", desc: "Metrics, sources, audience, output format and review criteria are written in the notebook." },
+    { t: "02", title: "Generate query drafts", desc: "Claude produces commented drafts. Schema choices, filters and assumptions remain visible beside the code." },
+    { t: "03", title: "Verify the results", desc: "Samples, control totals and known reference values test whether joins and aggregations are correct." },
+    { t: "04", title: "Document the approved state", desc: "Only reviewed queries feed the dashboard. Later changes pass through the same controls." },
+  ],
+};
+
+function AiNativeWeekInLifeContent({ locale = "de" }: { readonly locale?: Locale }) {
   const [mode, setMode] = useState<Mode>("after");
-  const active = mode === "before" ? BEFORE : AFTER;
+  const isEnglish = locale === "en";
+  const before = isEnglish ? BEFORE_EN : BEFORE_DE;
+  const after = isEnglish ? AFTER_EN : AFTER_DE;
+  const active = mode === "before" ? before : after;
 
   return (
-    <SectionShell num="VI" label="Dashboard in 30 Minuten">
-      <Eyebrow>Ein konkretes Beispiel</Eyebrow>
+    <SectionShell num="VI" label={isEnglish ? "Worked example" : "Arbeitsbeispiel"}>
+      <Eyebrow>{isEnglish ? "A dashboard workflow" : "Ein Dashboard-Ablauf"}</Eyebrow>
       <ClipHeading
         as="h2"
         className="mt-2.5 font-bold leading-none tracking-[-0.035em] text-foreground"
         style={{ fontSize: "clamp(2rem, 4.5vw, 3.5rem)" }}
       >
-        Ein Dashboard. Zwei Welten.
+        {isEnglish ? "Same output. Different controls." : "Gleiches Ergebnis. Andere Kontrollen."}
       </ClipHeading>
       <FadeBlock delay={1}>
         <p className="mt-4 max-w-[720px] text-[17px] leading-[1.6] text-muted-foreground">
-          Früher: ein ganzer Arbeitstag. Eine Query, ein Widget, ein Titel.
-          Dann nochmal. Und nochmal. Heute: ein Briefing, ein Notebook, ein
-          generiertes Dashboard. Vor dem Mittagessen fertig.
+          {isEnglish
+            ? "The example compares an ad hoc process with a documented, Claude-assisted process. It makes no speed or quality claim; the result depends on the data, task and review work."
+            : "Das Beispiel vergleicht einen Ad-hoc-Ablauf mit einem dokumentierten, Claude-gestützten Ablauf. Es behauptet keinen Zeit- oder Qualitätsgewinn; das Ergebnis hängt von Daten, Aufgabe und Prüfung ab."}
         </p>
       </FadeBlock>
 
       {/* Toggle */}
       <FadeBlock delay={2}>
-        <div className="mt-10 inline-flex border border-border">
+        <div className="mt-10 grid w-full grid-cols-2 border border-border sm:inline-grid sm:w-auto">
           {(["before", "after"] as const).map((m) => {
             const isActive = mode === m;
-            const flow = m === "before" ? BEFORE : AFTER;
+            const flow = m === "before" ? before : after;
             return (
               <button
                 key={m}
                 type="button"
                 onClick={() => setMode(m)}
                 className={cn(
-                  "flex min-w-[180px] flex-col items-start px-5 py-3 transition-colors",
+                  "flex min-w-0 flex-col items-start px-3 py-3 text-left transition-colors sm:min-w-[180px] sm:px-5",
                   isActive
                     ? m === "after"
                       ? "bg-brand-orange text-white"
@@ -104,8 +129,10 @@ export function AiNativeWeekInLife() {
                 )}
                 aria-pressed={isActive}
               >
-                <span className="font-mono text-[10.5px] uppercase tracking-[0.14em]">
-                  {m === "before" ? "Manuell" : "Mit Claude + Notebook"}
+                <span className="break-words font-mono text-[10px] uppercase tracking-[0.1em] sm:text-[10.5px] sm:tracking-[0.14em]">
+                  {m === "before"
+                    ? isEnglish ? "Ad hoc" : "Ad hoc"
+                    : isEnglish ? "Claude-assisted" : "Mit Claude"}
                 </span>
                 <span className="mt-1 font-mono text-[13px] font-bold tracking-[-0.01em]">
                   {flow.total}
@@ -152,7 +179,7 @@ export function AiNativeWeekInLife() {
               {active.steps.length}
             </span>
             <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-muted-foreground">
-              Schritte
+              {isEnglish ? "Steps" : "Schritte"}
             </span>
           </div>
         </div>
@@ -205,9 +232,21 @@ export function AiNativeWeekInLife() {
       <FadeBlock delay={3}>
         <div className="mt-8 grid gap-6 border-t border-border pt-6 md:grid-cols-3">
           {[
-            { n: "16×", label: "schneller", sub: "vom Briefing bis zum Dashboard" },
-            { n: "1", label: "Notebook", sub: "statt Copy-paste durch sechs Tabs" },
-            { n: "0", label: "handgeschriebene Queries", sub: "Claude schreibt, du verifizierst" },
+            {
+              n: "1",
+              label: isEnglish ? "written brief" : "schriftliches Briefing",
+              sub: isEnglish ? "scope, sources and acceptance criteria" : "Umfang, Quellen und Prüfkriterien",
+            },
+            {
+              n: "2",
+              label: isEnglish ? "review gates" : "Prüfpunkte",
+              sub: isEnglish ? "technical checks and domain review" : "technische Prüfung und Fachprüfung",
+            },
+            {
+              n: "1",
+              label: isEnglish ? "reviewable notebook" : "prüfbares Notebook",
+              sub: isEnglish ? "drafts, assumptions and results together" : "Entwürfe, Annahmen und Ergebnisse zusammen",
+            },
           ].map((item) => (
             <div key={item.label}>
               <span
@@ -229,3 +268,5 @@ export function AiNativeWeekInLife() {
     </SectionShell>
   );
 }
+
+export const AiNativeWeekInLife = withMotionProvider(AiNativeWeekInLifeContent);

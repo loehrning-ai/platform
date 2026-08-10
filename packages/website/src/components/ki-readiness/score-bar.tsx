@@ -3,6 +3,7 @@
 import { m, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { EASE_OUT_EXPO } from "@/lib/animations";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 
 interface ScoreBarProps {
   value: number; // 0-100
@@ -16,7 +17,7 @@ const colorMap = {
   sand: "bg-brand-sand",
 };
 
-export function ScoreBar({ value, color = "orange", delay = 0 }: ScoreBarProps) {
+function ScoreBarContent({ value, color = "orange", delay = 0 }: ScoreBarProps) {
   // The width animation is NOT a transform, so MotionConfig reducedMotion="user"
   // does not neutralize it — guard it explicitly.
   const reduceMotion = useReducedMotion();
@@ -31,3 +32,5 @@ export function ScoreBar({ value, color = "orange", delay = 0 }: ScoreBarProps) 
     </div>
   );
 }
+
+export const ScoreBar = withMotionProvider(ScoreBarContent);

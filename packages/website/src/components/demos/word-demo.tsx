@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DEMO } from "@/lib/demo-tokens";
 import { DEMO_HEIGHT, usePrefersReducedMotion } from "./demo-utils";
+import { useDemoLocale } from "./demo-locale";
 
 interface FormState {
   kunde: string;
@@ -21,6 +22,11 @@ const INITIAL: FormState = {
 type StepState = "idle" | "running" | "done";
 
 export default function WordDemo() {
+  const { locale } = useDemoLocale();
+  return locale === "en" ? <WordDemoEnglish /> : <WordDemoGerman />;
+}
+
+function WordDemoGerman() {
   const [form, setForm] = useState<FormState>(INITIAL);
   const [genStep, setGenStep] = useState<0 | 1 | 2 | 3 | 4>(0);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -542,6 +548,109 @@ const fileName = useMemo(
             </div>
           </div>
         ))}
+      </div>
+    </div>
+  );
+}
+
+const INITIAL_EN: FormState = {
+  kunde: "Fictional Works Ltd (sample only)",
+  projekt: "Maintenance assistant for production line",
+  budget: "68000",
+  zeitraum: "July to September 2026",
+};
+
+function WordDemoEnglish() {
+  const [form, setForm] = useState<FormState>(INITIAL_EN);
+  const [generated, setGenerated] = useState(false);
+  const fileName = useMemo(
+    () => `project-brief_${form.kunde.split(" ")[0].toLowerCase()}_sample.docx`,
+    [form.kunde],
+  );
+  const fields = [
+    ["kunde", "Recipient"],
+    ["projekt", "Project title"],
+    ["budget", "Planning amount"],
+    ["zeitraum", "Period"],
+  ] as const;
+
+  return (
+    <div
+      data-demo-id="word"
+      role="region"
+      aria-label="Document drafting example"
+      style={{ display: "flex", flexDirection: "column", gap: 16, minHeight: DEMO_HEIGHT, minWidth: 0, fontFamily: DEMO.font.sans, color: DEMO.ink }}
+    >
+      <div>
+        <Overline>Document lab · editable sample</Overline>
+        <h2 style={{ margin: "6px 0 0", fontSize: "clamp(20px, 4vw, 28px)", lineHeight: 1.08 }}>
+          Draft a project brief. <span style={{ color: "var(--color-brand-orange)" }}>Keep the approval visible.</span>
+        </h2>
+        <p style={{ margin: "8px 0 0", maxWidth: 720, color: DEMO.schiefer, fontSize: 12, lineHeight: 1.55 }}>
+          The output is assembled from fixed browser templates. No Word file, Microsoft 365 tenant, or AI provider is contacted.
+        </p>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))", gap: 16, alignItems: "stretch" }}>
+        <section aria-label="Brief inputs" style={{ minWidth: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+          <Overline>Brief inputs</Overline>
+          {fields.map(([key, label]) => (
+            <label key={key} style={{ display: "grid", gap: 4, minWidth: 0 }}>
+              <span style={{ fontFamily: DEMO.font.mono, fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: DEMO.schiefer }}>{label}</span>
+              <input
+                value={form[key]}
+                inputMode={key === "budget" ? "numeric" : undefined}
+                onChange={(event) => {
+                  setGenerated(false);
+                  setForm((current) => ({ ...current, [key]: event.target.value }));
+                }}
+                style={{ width: "100%", minWidth: 0, boxSizing: "border-box", border: `1px solid ${DEMO.ink}`, background: DEMO.birke, color: DEMO.ink, padding: "10px 11px", font: "inherit", fontSize: 12 }}
+              />
+            </label>
+          ))}
+          <div style={{ display: "grid", gap: 6, padding: 10, border: `1px solid ${DEMO.leinen}`, background: DEMO.kalk, fontFamily: DEMO.font.mono, fontSize: 10 }}>
+            <span>01 · compare the sample style references</span>
+            <span>02 · assemble a browser-only draft</span>
+            <span>03 · mark the approval as pending</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setGenerated(true)}
+            style={{ minHeight: 44, border: `2px solid ${DEMO.ink}`, background: "var(--color-brand-orange)", color: "white", boxShadow: `3px 3px 0 ${DEMO.ink}`, padding: "10px 14px", fontFamily: DEMO.font.mono, fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}
+          >
+            {generated ? "Rebuild sample brief" : "Build sample brief"}
+          </button>
+        </section>
+
+        <section aria-live="polite" style={{ minWidth: 0, display: "flex", flexDirection: "column", border: `1px solid ${DEMO.ink}`, background: "white" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", background: "#2B579A", color: "white", padding: "8px 10px", fontFamily: DEMO.font.mono, fontSize: 10 }}>
+            <strong style={{ border: "1px solid white", padding: "1px 5px" }}>W</strong>
+            <span style={{ overflowWrap: "anywhere" }}>{fileName}</span>
+            <span style={{ marginLeft: "auto", opacity: 0.75 }}>simulated</span>
+          </div>
+          <div style={{ flex: 1, padding: "clamp(18px, 5vw, 32px)", color: "#222", fontFamily: "Georgia, serif", fontSize: 12, lineHeight: 1.62, overflowWrap: "anywhere" }}>
+            {!generated ? (
+              <div style={{ minHeight: 300, display: "grid", placeItems: "center", textAlign: "center", color: "#777" }}>
+                Enter the brief inputs, then build the fixed sample document.
+              </div>
+            ) : (
+              <>
+                <div style={{ fontFamily: DEMO.font.mono, fontSize: 9, color: "#666" }}>FICTIONAL WORKS · SAMPLE ADDRESS · NOT FOR DELIVERY</div>
+                <hr style={{ border: 0, borderTop: "1px solid #222", margin: "12px 0 20px" }} />
+                <div>{form.kunde}<br />For the attention of: procurement review</div>
+                <div style={{ textAlign: "right", color: "#666", marginTop: 12 }}>Berlin · sample dated 8 August 2026</div>
+                <h3 style={{ margin: "18px 0 10px", fontSize: 16 }}>Project brief: {form.projekt}</h3>
+                <p>Dear review team,</p>
+                <p>This draft covers the proposed work for <strong>{form.projekt}</strong> during <strong>{form.zeitraum}</strong>.</p>
+                <p>The planning amount is <strong>€{Number(form.budget || 0).toLocaleString("en-GB")}</strong>. It is an assumption, not an approval or supplier offer.</p>
+                <p>Required before use: subject-matter review, data-protection review, budget confirmation, and named ownership.</p>
+                <div style={{ marginTop: 18, paddingTop: 10, borderTop: "1px solid #ddd", fontFamily: DEMO.font.mono, fontSize: 10 }}>
+                  <strong style={{ color: "#b45309" }}>APPROVAL PENDING</strong><br />Human review required before export or delivery.
+                </div>
+              </>
+            )}
+          </div>
+        </section>
       </div>
     </div>
   );

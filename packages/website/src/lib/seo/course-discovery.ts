@@ -1,74 +1,131 @@
 import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
+import { localizeCatalog } from "@/lib/courses/catalog-copy";
 import { courseFacts } from "@/lib/courses/tracks";
+import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 
-const COURSE_ITEMS = [
-  ...COURSE_CATALOG.map((course) => ({
-    title: course.title,
-    description: course.description,
-    href: course.href,
-    language: courseFacts(course.slug).language === "Englisch" ? "en" : "de",
-    launchHref: course.startHref,
-    licenseHref: course.licenseHref,
-  })),
-  ...IMPORTED_COURSE_CATALOG.map((course) => ({
-    title: course.title,
-    description: course.description,
-    href: course.href,
-    language: course.language === "Englisch" ? "en" : "de",
-    launchHref: course.launchHref,
-    licenseHref: course.licenseHref,
-  })),
-];
+type CourseDiscoveryItem = Readonly<{
+  title: string;
+  description: string;
+  href: string;
+  language: "de" | "en";
+  launchHref: string;
+  licenseHref?: string;
+  group: "spine" | "deeper";
+}>;
 
-export const COURSES_GRAPH = {
-  "@context": "https://schema.org" as const,
-  "@graph": [
-    {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Start", item: SITE_URL },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Kurse",
-          item: `${SITE_URL}/kurse`,
-        },
-      ],
+function absoluteHref(href: string): string {
+  return href.startsWith("http") ? href : `${SITE_URL}${href}`;
+}
+
+function courseItems(locale: Locale): readonly CourseDiscoveryItem[] {
+  const nativeCourses = localizeCatalog(COURSE_CATALOG, locale).map(
+    (course) => {
+      const facts = courseFacts(course.slug);
+      return {
+        title: course.title,
+        description: course.description,
+        href: localizeHref(course.href, locale),
+        language: locale,
+        launchHref: localizeHref(course.startHref, locale),
+        licenseHref: course.licenseHref,
+        group: facts.group,
+      };
     },
-    {
-      "@type": "ItemList",
-      name: "Kostenlose KI-Kurse von loehrning.ai",
-      itemListOrder: "https://schema.org/ItemListOrderAscending",
-      numberOfItems: COURSE_ITEMS.length,
-      itemListElement: COURSE_ITEMS.map((course, index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        url: `${SITE_URL}${course.href}`,
-        item: {
-          "@type": "Course",
-          name: course.title,
-          description: course.description,
-          url: `${SITE_URL}${course.href}`,
-          provider: { "@id": ORG_ID },
-          inLanguage: course.language,
-          isAccessibleForFree: true,
-          hasCourseInstance: {
-            "@type": "CourseInstance",
-            courseMode: "online",
-            url: course.launchHref.startsWith("http")
-              ? course.launchHref
-              : `${SITE_URL}${course.launchHref}`,
+  );
+
+  const importedCourses = localizeCatalog(IMPORTED_COURSE_CATALOG, locale).map(
+    (course) => ({
+      title: course.title,
+      description: course.description,
+      href: localizeHref(course.href, locale),
+      language: locale,
+      launchHref: course.launchHref,
+      licenseHref: course.licenseHref,
+      group: "deeper" as const,
+    }),
+  );
+
+  return [...nativeCourses, ...importedCourses];
+}
+
+function courseListItem(course: CourseDiscoveryItem, index: number) {
+  const url = absoluteHref(course.href);
+  return {
+    "@type": "ListItem" as const,
+    position: index + 1,
+    url,
+    item: {
+      "@type": "Course" as const,
+      name: course.title,
+      description: course.description,
+      url,
+      provider: { "@id": ORG_ID },
+      inLanguage: course.language,
+      isAccessibleForFree: true,
+      hasCourseInstance: {
+        "@type": "CourseInstance" as const,
+        courseMode: "online",
+        inLanguage: course.language,
+        url: absoluteHref(course.launchHref),
+      },
+      ...(course.licenseHref
+        ? { license: absoluteHref(course.licenseHref) }
+        : {}),
+    },
+  };
+}
+
+export function createCoursesGraph(locale: Locale) {
+  const items = courseItems(locale);
+  const foundationItems = items.filter((course) => course.group === "spine");
+  const technicalItems = items.filter((course) => course.group === "deeper");
+  const catalogPath = localizeHref("/kurse", locale);
+  const catalogUrl = absoluteHref(catalogPath);
+
+  return {
+    "@context": "https://schema.org" as const,
+    "@graph": [
+      {
+        "@type": "BreadcrumbList" as const,
+        itemListElement: [
+          {
+            "@type": "ListItem" as const,
+            position: 1,
+            name: locale === "de" ? "Start" : "Home",
+            item: absoluteHref(localizeHref("/", locale)),
           },
-          ...(course.licenseHref
-            ? {
-                license: course.licenseHref.startsWith("/")
-                  ? `${SITE_URL}${course.licenseHref}`
-                  : course.licenseHref,
-              }
-            : {}),
-        },
-      })),
-    },
-  ],
-};
+          {
+            "@type": "ListItem" as const,
+            position: 2,
+            name: locale === "de" ? "Kurse" : "Courses",
+            item: catalogUrl,
+          },
+        ],
+      },
+      {
+        "@type": "ItemList" as const,
+        name:
+          locale === "de"
+            ? "Grundlagenpfad von loehrning.ai"
+            : "loehrning.ai foundation path",
+        itemListOrder: "https://schema.org/ItemListOrderAscending" as const,
+        numberOfItems: foundationItems.length,
+        itemListElement: foundationItems.map(courseListItem),
+      },
+      {
+        "@type": "ItemList" as const,
+        name:
+          locale === "de"
+            ? "Technikkurse von loehrning.ai"
+            : "loehrning.ai technical courses",
+        itemListOrder: "https://schema.org/ItemListUnordered" as const,
+        numberOfItems: technicalItems.length,
+        itemListElement: technicalItems.map(courseListItem),
+      },
+    ],
+  };
+}
+
+/** German canonical graph retained for machine endpoints and compatibility. */
+export const COURSES_GRAPH = createCoursesGraph("de");

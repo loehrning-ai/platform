@@ -34,7 +34,9 @@ function TestCanvasWidget(): JSX.Element {
   });
 
   if (contextUnavailable) {
-    return <CanvasFallbackNotice title="Test widget" summary="A static summary." />;
+    return (
+      <CanvasFallbackNotice title="Test widget" summary="A static summary." />
+    );
   }
 
   return (
@@ -47,17 +49,25 @@ function TestCanvasWidget(): JSX.Element {
 describe("canvas widget harness ", () => {
   it("renders a real canvas element when getContext succeeds", () => {
     render(<TestCanvasWidget />);
-    expect(screen.getByRole("img", { name: "Test canvas widget" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: "Test canvas widget" }),
+    ).toBeInTheDocument();
   });
 
   it("falls back to a static text summary, without crashing, when getContext('2d') returns null", () => {
     const original = HTMLCanvasElement.prototype.getContext;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    HTMLCanvasElement.prototype.getContext = vi.fn().mockReturnValue(null) as any;
+    HTMLCanvasElement.prototype.getContext = vi
+      .fn()
+      .mockReturnValue(null) as any;
     try {
       expect(() => render(<TestCanvasWidget />)).not.toThrow();
-      expect(screen.getByRole("img", { name: /Test widget\. A static summary\./ })).toBeInTheDocument();
-      expect(screen.queryByRole("img", { name: "Test canvas widget" })).not.toBeInTheDocument();
+      expect(
+        screen.getByRole("img", { name: /Test widget\. A static summary\./ }),
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole("img", { name: "Test canvas widget" }),
+      ).not.toBeInTheDocument();
     } finally {
       HTMLCanvasElement.prototype.getContext = original;
     }
@@ -78,18 +88,26 @@ describe("canvas widget harness ", () => {
     })) as any;
     try {
       expect(() => render(<TestCanvasWidget />)).not.toThrow();
-      expect(screen.getByRole("img", { name: "Test canvas widget" })).toBeInTheDocument();
+      expect(
+        screen.getByRole("img", { name: "Test canvas widget" }),
+      ).toBeInTheDocument();
     } finally {
       window.matchMedia = original;
     }
   });
 
   it("does not crash when mounted while the tab is hidden", () => {
-    Object.defineProperty(document, "hidden", { value: true, configurable: true });
+    Object.defineProperty(document, "hidden", {
+      value: true,
+      configurable: true,
+    });
     try {
       expect(() => render(<TestCanvasWidget />)).not.toThrow();
     } finally {
-      Object.defineProperty(document, "hidden", { value: false, configurable: true });
+      Object.defineProperty(document, "hidden", {
+        value: false,
+        configurable: true,
+      });
     }
   });
 });

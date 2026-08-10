@@ -24,7 +24,7 @@ const ROUTES = [
   ...OPEN_SOURCE_ARTIFACTS.map((artifact) => artifact.href),
 ] as const;
 
-const ENGLISH_COURSE_ROUTES = [
+const TECHNICAL_COURSE_ROUTES = [
   "/kurse/open-source/claude",
   "/kurse/open-source/codex",
   "/kurse/open-source/data-infrastructure",
@@ -32,6 +32,13 @@ const ENGLISH_COURSE_ROUTES = [
   "/kurse/open-source/data-science",
   "/kurse/open-source/ai-native-operator",
 ] as const;
+
+const TECHNICAL_COURSE_LOCALE_ROUTES = TECHNICAL_COURSE_ROUTES.flatMap(
+  (route) => [
+    { route, locale: "de" as const },
+    { route: `/en${route}`, locale: "en" as const },
+  ],
+);
 
 /**
  * One evaluate pass over the settled DOM. An <img> without an alt attribute is
@@ -102,15 +109,17 @@ test.describe("landmark + structure sweep", () => {
     });
   }
 
-  for (const route of ENGLISH_COURSE_ROUTES) {
-    test(`${route} marks its English course content`, async ({ page }) => {
+  for (const { route, locale } of TECHNICAL_COURSE_LOCALE_ROUTES) {
+    test(`${route} marks its ${locale} course content`, async ({ page }) => {
       await page.goto(route, { waitUntil: "domcontentloaded" });
+
+      await expect(page.locator("html")).toHaveAttribute("lang", locale);
 
       const heading = page.getByRole("heading", { level: 1 });
       await expect(heading).toBeVisible();
       await expect(heading.locator("xpath=ancestor-or-self::*[@lang][1]")).toHaveAttribute(
         "lang",
-        "en",
+        locale,
       );
     });
   }

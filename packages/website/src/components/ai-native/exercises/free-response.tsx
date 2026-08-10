@@ -11,6 +11,7 @@ import {
 import type { ModuleId } from "@/lib/ai-native/types";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import { useDemoLocale } from "@/components/demos/demo-locale";
 import {
   getLearningOwnerContext,
   getOwnedSessionLearningItem,
@@ -82,6 +83,8 @@ function FreeResponseBody({
   passThreshold = 0.6,
   placeholder,
 }: FreeResponseSpec): JSX.Element {
+  const { locale, text } = useDemoLocale();
+  const isEnglish = locale === "en";
   const storageKey = `ai-native-exercise-draft-${lessonId}-${exerciseId}`;
   const [draft, setDraft] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -178,7 +181,9 @@ function FreeResponseBody({
         exerciseId,
         kind: "exercise-free-response",
         score: null,
-        summary: "AI-Bewertung gerade nicht verfügbar. Versuch's später nochmal.",
+        summary: isEnglish
+          ? "AI evaluation is currently unavailable. Try again later."
+          : "AI-Bewertung gerade nicht verfügbar. Versuch's später nochmal.",
         gradingSource: "fallback",
       });
     } finally {
@@ -202,7 +207,7 @@ function FreeResponseBody({
         htmlFor={`${exerciseId}-textarea`}
         className="mb-2 block font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground"
       >
-        Deine Antwort
+        {text("Deine Antwort", "Your response")}
       </label>
       <textarea
         id={`${exerciseId}-textarea`}
@@ -212,7 +217,9 @@ function FreeResponseBody({
         maxLength={maxLength}
         rows={9}
         disabled={submitted || grading}
-        placeholder={placeholder ?? "Schreib deine Antwort hier …"}
+        placeholder={
+          placeholder ?? text("Schreib deine Antwort hier …", "Write your response here …")
+        }
         className={cn(
           "w-full resize-y border border-border bg-background p-3.5 font-mono text-[13px] leading-[1.6] text-foreground outline-none",
           submitted || grading
@@ -250,7 +257,7 @@ function FreeResponseBody({
               )}
             >
               <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-foreground">
-                AI-Zusammenfassung
+                {text("AI-Zusammenfassung", "AI summary")}
               </p>
               <p className="mt-2 text-[13.5px] leading-[1.55] text-foreground">
                 {result.summary}
@@ -294,7 +301,7 @@ function FreeResponseBody({
             </ul>
             {result.cached && (
               <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-                Cache-Hit · identische Eingabe
+                {text("Cache-Hit · identische Eingabe", "Cached · identical input")}
               </p>
             )}
           </m.div>
@@ -307,11 +314,13 @@ function FreeResponseBody({
             className="mt-4 border-l-[3px] border-brand-amber bg-brand-amber/5 px-4 py-3"
           >
             <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-brand-amber">
-              AI-Bewertung nicht verfügbar
+              {text("AI-Bewertung nicht verfügbar", "AI evaluation unavailable")}
             </p>
             <p className="mt-2 text-[13.5px] leading-[1.55] text-foreground">
-              Deine Antwort ist gespeichert, die Bewertung kommt beim
-              nächsten Versuch automatisch.
+              {text(
+                "Deine Antwort ist gespeichert. Beim nächsten Versuch wird sie erneut zur Bewertung gesendet.",
+                "Your response is saved. It will be submitted for evaluation again on your next attempt.",
+              )}
             </p>
           </m.div>
         )}
@@ -334,10 +343,10 @@ function FreeResponseBody({
             {grading ? (
               <>
                 <Loader2 size={12} className="animate-spin" />
-                AI bewertet …
+                {text("AI bewertet …", "AI is evaluating …")}
               </>
             ) : (
-              "Antwort einreichen"
+              text("Antwort einreichen", "Submit response")
             )}
           </button>
         ) : (

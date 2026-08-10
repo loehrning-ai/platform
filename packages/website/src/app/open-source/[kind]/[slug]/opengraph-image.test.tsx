@@ -1,5 +1,7 @@
+/** @vitest-environment node */
+
 import { createHash } from "node:crypto";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ProjectArtifact } from "@/lib/open-source/artifacts";
 
 const { PROJECTS } = vi.hoisted(() => {
@@ -105,6 +107,10 @@ const { PROJECTS } = vi.hoisted(() => {
   };
 });
 
+const { getRequestLocaleMock } = vi.hoisted(() => ({
+  getRequestLocaleMock: vi.fn(),
+}));
+
 vi.mock("@/lib/open-source/artifacts", () => ({
   OPEN_SOURCE_PROJECT_ARTIFACTS: PROJECTS,
   OPEN_SOURCE_TOOL_ARTIFACTS: [],
@@ -113,6 +119,9 @@ vi.mock("@/lib/open-source/artifacts", () => ({
     kind === "projects"
       ? PROJECTS.find((artifact) => artifact.slug === slug)
       : undefined,
+}));
+vi.mock("@/lib/i18n/request-locale", () => ({
+  getRequestLocale: getRequestLocaleMock,
 }));
 
 import OpenGraphImage, {
@@ -152,6 +161,11 @@ async function renderImage(
 }
 
 describe("open-source artifact social image file conventions", () => {
+  beforeEach(() => {
+    getRequestLocaleMock.mockReset();
+    getRequestLocaleMock.mockResolvedValue("de");
+  });
+
   it("keeps every mocked artifact aligned with the publication validator", async () => {
     const { assertOpenSourceArtifacts } = await vi.importActual<
       typeof import("@/lib/open-source/artifacts")

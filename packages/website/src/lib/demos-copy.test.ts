@@ -24,7 +24,9 @@ describe("getDemoCopy", () => {
     expect(copy).toBeDefined();
     // Returns the exact record entry (same reference), not a copy.
     expect(copy).toBe(demoCopy.excel);
-    expect(copy?.ogSubtitle).toBe("Excel-Lab: Formel, Pivot, Prognose im Beispiel.");
+    expect(copy?.ogSubtitle).toBe(
+      "Excel-Lab: Formel, Pivot, Prognose im Beispiel.",
+    );
     expect(copy?.why).toContain("Excel");
   });
 
@@ -42,7 +44,10 @@ describe("demoCopy record integrity", () => {
     for (const [slug, copy] of Object.entries(demoCopy)) {
       expect(copy.why.trim().length, `${slug}.why`).toBeGreaterThan(0);
       expect(copy.proof.trim().length, `${slug}.proof`).toBeGreaterThan(0);
-      expect(copy.ogSubtitle.trim().length, `${slug}.ogSubtitle`).toBeGreaterThan(0);
+      expect(
+        copy.ogSubtitle.trim().length,
+        `${slug}.ogSubtitle`,
+      ).toBeGreaterThan(0);
     }
   });
 
@@ -50,6 +55,21 @@ describe("demoCopy record integrity", () => {
     for (const [slug, copy] of Object.entries(demoCopy)) {
       expect(copy.proof, `${slug}.proof`).toMatch(/^Sandbox-Szenario:/);
     }
+  });
+
+  it("labels seeded figures as fictional assumptions rather than measured proof", () => {
+    const figures = ["excel", "word", "agent-pipeline", "fine-tune-playground"];
+    for (const slug of figures) {
+      expect(demoCopy[slug]?.proof, slug).toMatch(
+        /fiktiv|angenommen|hypothetisch|vorgegeben/i,
+      );
+    }
+    expect(demoCopy["agent-pipeline"]?.proof).not.toContain(
+      "von 3 Tagen auf 20 Minuten",
+    );
+    expect(demoCopy["fine-tune-playground"]?.proof).toContain(
+      "keine Trainingsergebnisse",
+    );
   });
 });
 

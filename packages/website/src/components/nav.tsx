@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type KeyboardEvent as ReactKeyboardEvent,
@@ -17,16 +18,49 @@ import {
   useMotionValueEvent,
   type MotionValue,
 } from "framer-motion";
-import { Menu, X, ChevronDown, GraduationCap, MapPin, ShieldCheck, Sparkles, Users, Zap, BookOpen, LayoutDashboard, Pencil, Presentation, type LucideIcon } from "lucide-react";
+import {
+  Menu,
+  X,
+  ChevronDown,
+  GraduationCap,
+  MapPin,
+  ShieldCheck,
+  Sparkles,
+  Users,
+  Zap,
+  BookOpen,
+  LayoutDashboard,
+  Pencil,
+  Presentation,
+  type LucideIcon,
+} from "lucide-react";
 import { Github } from "@/components/icons/brand";
 import { cn } from "@/lib/utils";
 import { AuthStatus } from "@/components/auth/auth-status";
 import { GITHUB_ORG } from "@/lib/seo/entity";
 import { useFocusTrap } from "@/lib/a11y/use-focus-trap";
+import {
+  GLOBAL_NAVIGATION_COPY,
+  type GlobalNavigationCopy,
+} from "@/lib/i18n/global-copy";
+import {
+  localizeHref,
+  parseLocalePathname,
+  type Locale,
+} from "@/lib/i18n/locale";
+import { useLocale } from "@/components/i18n/locale-context";
+import { LanguageSwitch } from "@/components/i18n/language-switch";
+import { setNavModalOpen } from "@/lib/a11y/nav-modal-state";
+import {
+  NAV_MENU_INERT_ATTRIBUTE,
+  setSharedInertOwner,
+} from "@/lib/a11y/shared-inert";
+
+type NavigationLabel = keyof GlobalNavigationCopy;
 
 interface NavItem {
   readonly href: string;
-  readonly label: string;
+  readonly label: NavigationLabel;
   readonly icon: LucideIcon;
 }
 
@@ -35,49 +69,63 @@ interface AkademieItem extends NavItem {
   readonly disabled?: boolean;
 }
 
-// Kurse dropdown: the hub, then the four certified courses in learning-path
-// order. Courses only — the KI-Check entry tool now lives under Ressourcen.
-const akademieNavItems: readonly AkademieItem[] = [
-  { href: "/kurse", label: "Alle Kurse", icon: Sparkles },
-  { href: "/ki-fuehrerschein", label: "KI-Führerschein", icon: GraduationCap },
-  { href: "/ki-und-gesellschaft", label: "KI und Gesellschaft", icon: Users },
-  { href: "/eu-ai-act-kurs", label: "EU AI Act Kurs", icon: ShieldCheck },
-  { href: "/ai-native", label: "AI-Native Arbeitskurs", icon: Zap },
+// Navigation follows the learner's task, not the site's content types.
+// Individual course cards remain on the hub, where their sequence and access
+// facts can be explained without turning the header into a catalog.
+const lernenNavItems: readonly AkademieItem[] = [
+  { href: "/kurse", label: "allCourses", icon: Sparkles },
+  { href: "/kurse#lernpfad", label: "foundations", icon: GraduationCap },
+  { href: "/kurse#tiefer-gehen", label: "technicalCourses", icon: Zap },
+  { href: "/ki-check", label: "aiCheck", icon: MapPin },
+  { href: "/buecher", label: "learningBooks", icon: BookOpen },
 ];
 
-// Ressourcen dropdown: the self-assessment entry tool plus everything to read,
-// try, and apply. Open Source is a standalone top-level link (see primaryLinks).
-const ressourcenNavItems: readonly AkademieItem[] = [
-  { href: "/ki-check", label: "KI-Check", icon: MapPin },
-  { href: "/blog", label: "Blog", icon: Pencil },
-  { href: "/buecher", label: "Lernbücher", icon: BookOpen },
-  { href: "/demos", label: "Praxisbeispiele", icon: LayoutDashboard },
-  { href: "/workshops", label: "Workshops", icon: Presentation },
+const praxisNavItems: readonly AkademieItem[] = [
+  { href: "/workshops", label: "workshops", icon: Presentation },
+  { href: "/demos", label: "appliedExamples", icon: LayoutDashboard },
 ];
 
-const akademiePaths = [
+const wissenNavItems: readonly AkademieItem[] = [
+  { href: "/wie-ki-funktioniert", label: "howAiWorks", icon: Sparkles },
+  { href: "/blog", label: "blog", icon: Pencil },
+  { href: "/bekannte-grenzen", label: "knownLimits", icon: ShieldCheck },
+  { href: "/ueber-die-plattform", label: "aboutPlatform", icon: Users },
+  { href: "/ueber-mich", label: "aboutTim", icon: GraduationCap },
+];
+
+const lernenPaths = [
   "/kurse",
   "/ki-fuehrerschein",
   "/eu-ai-act-kurs",
   "/ai-native",
   "/ki-und-gesellschaft",
+  "/ki-check",
+  "/buecher",
 ];
 
-const ressourcenPaths = ["/ki-check", "/blog", "/buecher", "/demos", "/workshops"];
+const praxisPaths = ["/demos", "/workshops"];
+const wissenPaths = [
+  "/wie-ki-funktioniert",
+  "/blog",
+  "/bekannte-grenzen",
+  "/ueber-die-plattform",
+  "/ueber-mich",
+];
 
-const primaryLinks = [
-  { href: "/open-source", label: "Open Source" },
-  { href: "/ueber-mich", label: "Über mich" },
-] as const;
+const primaryLinks = [{ href: "/open-source", label: "openSource" }] as const;
 
-type DropdownId = "akademie" | "ressourcen" | null;
+type DropdownId = "lernen" | "praxis" | "wissen" | null;
 
 function NoScriptMobileGroup({
   label,
   items,
+  locale,
+  copy,
 }: {
   readonly label: string;
   readonly items: readonly AkademieItem[];
+  readonly locale: Locale;
+  readonly copy: GlobalNavigationCopy;
 }) {
   return (
     <div className="space-y-2">
@@ -90,11 +138,11 @@ function NoScriptMobileGroup({
           .map((item) => (
             <Link
               key={item.href}
-              href={item.href}
+              href={localizeHref(item.href, locale)}
               prefetch={false}
               className="inline-flex min-h-11 items-center text-sm text-foreground"
             >
-              {item.label}
+              {copy[item.label]}
             </Link>
           ))}
       </div>
@@ -104,19 +152,21 @@ function NoScriptMobileGroup({
 
 /* ─── Scroll-driven logo with icon mark ──────────────────────────────────── */
 
-// Original hardcoded values from the pre-rebrand mark (see LogoWordmark
-// below) — --color-brand-orange has since been redarkened for WCAG AA
-// (#C4431A -> #a5370f), so this restoration hardcodes the original hex
-// rather than the token, which now points at a different color.
+// Original hardcoded values from the pre-rebrand mark — --color-brand-orange
+// has since been redarkened for WCAG AA (#C4431A -> #a5370f), so this keeps the
+// original hex rather than the token, which now points at a different color.
 const LOGO_ORIGINAL_ORANGE = "#C4431A";
 const LOGO_ORIGINAL_INK = "#0B0908";
 
-function LogoWordmark({ scrollY }: { scrollY: MotionValue<number> }) {
-  /* Restored verbatim from the pre-rebrand nav (business repo history,
-     commit 2cce718), not a reinterpretation. The "Ö" (two-dot) mark stays
-     the canonical brand icon everywhere else (favicons, OG images); this is
-     kept here in the nav specifically by preference. */
-
+function LogoWordmark({
+  scrollY,
+  locale,
+  homeLabel,
+}: {
+  readonly scrollY: MotionValue<number>;
+  readonly locale: Locale;
+  readonly homeLabel: string;
+}) {
   /* Icon: shrinks + rotates on scroll */
   const iconSize = useTransform(scrollY, [0, 160], [40, 26]);
   const iconGap = useTransform(scrollY, [0, 160], [16, 5]);
@@ -140,6 +190,10 @@ function LogoWordmark({ scrollY }: { scrollY: MotionValue<number> }) {
   /* Wordmark: size + tracking tighten */
   const wordmarkSize = useTransform(scrollY, [0, 160], [24, 17]);
   const wordmarkTracking = useTransform(scrollY, [0, 160], [-0.05, -0.02]);
+  const wordmarkLetterSpacing = useTransform(
+    wordmarkTracking,
+    (value) => `${value}em`,
+  );
 
   /* The "L" in LOEHRNING collapses — icon takes over */
   const lOpacity = useTransform(scrollY, [40, 120], [1, 0]);
@@ -150,9 +204,9 @@ function LogoWordmark({ scrollY }: { scrollY: MotionValue<number> }) {
 
   return (
     <Link
-      href="/"
+      href={localizeHref("/", locale)}
       prefetch={false}
-      className="flex items-center"
+      className="inline-flex min-h-11 min-w-0 shrink items-center overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <m.div
         className="flex flex-shrink-0 items-center justify-center"
@@ -172,16 +226,24 @@ function LogoWordmark({ scrollY }: { scrollY: MotionValue<number> }) {
           style={{ fontSize: iconFontSize }}
         >
           L
-          <m.span style={{ opacity: dotOpacity, position: "absolute" }}>.</m.span>
+          <m.span style={{ opacity: dotOpacity, position: "absolute" }}>
+            .
+          </m.span>
         </m.span>
       </m.div>
 
+      {/* Hidden below sm. The restored lockup is ~225px of fixed-size type, and
+          this nav also carries the DE/EN control that the pre-rebrand one did
+          not, so together they overflowed a 320px viewport by 59px. That is
+          what the responsive containment suites caught. The mark alone carries
+          the brand at that width; the full lockup returns at sm. */}
       <m.span
-        className="flex font-sans font-black uppercase text-foreground"
+        aria-hidden="true"
+        className="hidden whitespace-nowrap font-sans font-black uppercase text-foreground sm:flex"
         style={{
           transformOrigin: "left center",
           fontSize: wordmarkSize,
-          letterSpacing: useTransform(wordmarkTracking, (v) => `${v}em`),
+          letterSpacing: wordmarkLetterSpacing,
           fontWeight: 900,
         }}
       >
@@ -193,10 +255,12 @@ function LogoWordmark({ scrollY }: { scrollY: MotionValue<number> }) {
         </m.span>
         <span>
           OEHRNING
-          <span style={{ marginLeft: "0.06em", letterSpacing: "0.05em" }}>.AI</span>
+          <span style={{ marginLeft: "0.06em", letterSpacing: "0.05em" }}>
+            .AI
+          </span>
         </span>
       </m.span>
-      <span className="sr-only"> - Startseite</span>
+      <span className="sr-only">loehrning.ai - {homeLabel}</span>
     </Link>
   );
 }
@@ -204,10 +268,30 @@ function LogoWordmark({ scrollY }: { scrollY: MotionValue<number> }) {
 /* ─── Nav ─────────────────────────────────────────────────────────────────── */
 
 export function Nav() {
+  const locale = useLocale();
+  const copy = GLOBAL_NAVIGATION_COPY[locale];
   const pathname = usePathname() ?? "";
+  const parsedPathname = parseLocalePathname(pathname || "/");
+  const routePathname = parsedPathname.valid ? parsedPathname.pathname : "/";
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileDialogLocked, setMobileDialogLocked] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<DropdownId>(null);
   const dropdownTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const mobileToggleRef = useRef<HTMLButtonElement>(null);
+  const restoreMobileToggleAfterExit = useRef(false);
+  const openMobileMenu = useCallback(() => {
+    setMobileDialogLocked(true);
+    setMobileOpen(true);
+  }, []);
+  const closeMobileMenu = useCallback(() => {
+    restoreMobileToggleAfterExit.current = true;
+    setMobileOpen(false);
+  }, []);
+  const mobileMenuRef = useFocusTrap<HTMLDivElement>(
+    mobileOpen,
+    closeMobileMenu,
+    { restoreFocus: false },
+  );
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
   const navHeight = useTransform(scrollY, [0, 160], [64, 52]);
@@ -216,13 +300,19 @@ export function Nav() {
     setScrolled(latest > 80);
   });
 
-  const isActivePath = (href: string) =>
-    pathname === href || pathname.startsWith(href + "/");
-  const isKurseActive = akademiePaths.some(
-    (p) => pathname === p || pathname.startsWith(p + "/"),
+  const hrefPathname = (href: string) => href.split(/[?#]/, 1)[0] || "/";
+  const isActivePath = (href: string) => {
+    const target = hrefPathname(href);
+    return routePathname === target || routePathname.startsWith(target + "/");
+  };
+  const isLernenActive = lernenPaths.some(
+    (p) => routePathname === p || routePathname.startsWith(p + "/"),
   );
-  const isRessourcenActive = ressourcenPaths.some(
-    (p) => pathname === p || pathname.startsWith(p + "/"),
+  const isPraxisActive = praxisPaths.some(
+    (p) => routePathname === p || routePathname.startsWith(p + "/"),
+  );
+  const isWissenActive = wissenPaths.some(
+    (p) => routePathname === p || routePathname.startsWith(p + "/"),
   );
 
   function openMenu(id: DropdownId) {
@@ -252,54 +342,82 @@ export function Nav() {
   }, [openDropdown]);
 
   // Keep the document behind the mobile dialog out of the accessibility tree
-  // and lock body scroll while the dialog is open.
-  useEffect(() => {
-    if (!mobileOpen) return;
+  // and lock body scroll until its exit animation has removed the dialog.
+  useLayoutEffect(() => {
+    setNavModalOpen(mobileDialogLocked);
+    if (!mobileDialogLocked) {
+      if (restoreMobileToggleAfterExit.current) {
+        restoreMobileToggleAfterExit.current = false;
+        mobileToggleRef.current?.focus();
+      }
+      return;
+    }
     const toInert = Array.from(
-      document.querySelectorAll<HTMLElement>("main, footer"),
+      document.querySelectorAll<HTMLElement>(
+        "main, footer, [data-nav-header-row], .no-js-mobile-nav",
+      ),
     );
     for (const el of toInert) {
-      el.setAttribute("inert", "");
+      setSharedInertOwner(el, NAV_MENU_INERT_ATTRIBUTE, true);
     }
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       for (const el of toInert) {
-        el.removeAttribute("inert");
+        setSharedInertOwner(el, NAV_MENU_INERT_ATTRIBUTE, false);
       }
       document.body.style.overflow = previousOverflow;
+      setNavModalOpen(false);
     };
-  }, [mobileOpen]);
+  }, [mobileDialogLocked]);
 
-  // Mobile dialog focus management: move focus inside, trap Tab/Shift+Tab,
-  // close on Escape, and restore focus to the hamburger toggle.
-  const mobileToggleRef = useRef<HTMLButtonElement>(null);
-  const restoreMobileToggleAfterExit = useRef(false);
-  const closeMobileMenu = useCallback(() => {
-    restoreMobileToggleAfterExit.current = true;
+  // Route changes and pointer/focus leaving a desktop disclosure both settle
+  // the navigation state. A disclosure must never remain expanded after the
+  // user has moved elsewhere on the page.
+  useEffect(() => {
+    setOpenDropdown(null);
     setMobileOpen(false);
-  }, []);
-  const mobileMenuRef = useFocusTrap<HTMLDivElement>(
-    mobileOpen,
-    closeMobileMenu,
-  );
+  }, [pathname]);
 
-  // ── WAI-ARIA menu keyboard support (Kurse dropdown) ──
+  useEffect(() => {
+    if (openDropdown === null) return;
+    function closeWhenOutside(event: PointerEvent | FocusEvent) {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      if (!target.closest("[data-nav-dropdown]")) {
+        setOpenDropdown(null);
+      }
+    }
+    document.addEventListener("pointerdown", closeWhenOutside);
+    document.addEventListener("focusin", closeWhenOutside);
+    return () => {
+      document.removeEventListener("pointerdown", closeWhenOutside);
+      document.removeEventListener("focusin", closeWhenOutside);
+    };
+  }, [openDropdown]);
+
+  // ── WAI-ARIA disclosure keyboard support ──
   // Trigger: ArrowDown/ArrowUp opens the menu and moves focus to the
   // first/last item. Inside the menu: ArrowDown/ArrowUp cycle, Home/End
   // jump, Escape closes and returns focus to the trigger, Tab closes.
-  const akademieTriggerRef = useRef<HTMLButtonElement>(null);
-  const akademieMenuRef = useRef<HTMLDivElement>(null);
-  const ressourcenTriggerRef = useRef<HTMLButtonElement>(null);
-  const ressourcenMenuRef = useRef<HTMLDivElement>(null);
+  const lernenTriggerRef = useRef<HTMLButtonElement>(null);
+  const lernenMenuRef = useRef<HTMLDivElement>(null);
+  const praxisTriggerRef = useRef<HTMLButtonElement>(null);
+  const praxisMenuRef = useRef<HTMLDivElement>(null);
+  const wissenTriggerRef = useRef<HTMLButtonElement>(null);
+  const wissenMenuRef = useRef<HTMLDivElement>(null);
   const pendingMenuFocus = useRef<"first" | "last" | null>(null);
 
   function menuRefFor(id: Exclude<DropdownId, null>) {
-    return id === "ressourcen" ? ressourcenMenuRef : akademieMenuRef;
+    if (id === "praxis") return praxisMenuRef;
+    if (id === "wissen") return wissenMenuRef;
+    return lernenMenuRef;
   }
 
   function triggerRefFor(id: Exclude<DropdownId, null>) {
-    return id === "ressourcen" ? ressourcenTriggerRef : akademieTriggerRef;
+    if (id === "praxis") return praxisTriggerRef;
+    if (id === "wissen") return wissenTriggerRef;
+    return lernenTriggerRef;
   }
 
   function menuItemsOf(menu: HTMLElement | null): HTMLElement[] {
@@ -372,8 +490,8 @@ export function Nav() {
     };
   }
 
-  // One desktop dropdown (trigger + animated menu), shared by Kurse + Ressourcen
-  // so both keep identical keyboard/focus/ARIA behaviour.
+  // One desktop disclosure renderer keeps keyboard, focus, and ARIA behaviour
+  // identical across the three task groups.
   function renderDropdown(
     id: Exclude<DropdownId, null>,
     label: string,
@@ -385,6 +503,7 @@ export function Nav() {
     const menuRef = menuRefFor(id);
     return (
       <div
+        data-nav-dropdown={id}
         className="relative"
         onMouseEnter={() => openMenu(id)}
         onMouseLeave={closeMenu}
@@ -394,10 +513,11 @@ export function Nav() {
           ref={triggerRef}
           aria-controls={menuId}
           aria-expanded={openDropdown === id}
+          aria-current={active ? "true" : undefined}
           onClick={() => setOpenDropdown(openDropdown === id ? null : id)}
           onKeyDown={handleTriggerKeyDown(id)}
           className={cn(
-            "inline-flex items-center gap-1 text-sm outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+            "inline-flex min-h-11 items-center gap-1 px-1 text-sm outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
             active ? "text-foreground" : "text-muted-foreground",
           )}
         >
@@ -426,16 +546,18 @@ export function Nav() {
             >
               {items.map((item) => {
                 const Icon = item.icon;
+                const itemLabel = copy[item.label];
+                const targetPathname = hrefPathname(item.href);
                 if (item.disabled) {
                   return (
                     <span
-                      key={item.label}
+                      key={item.href}
                       data-nav-menu-item
                       aria-disabled="true"
                       className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted cursor-default"
                     >
                       <Icon size={15} />
-                      <span>{item.label}</span>
+                      <span>{itemLabel}</span>
                       {item.badge && (
                         <span className="ml-auto rounded-full bg-card-hover px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-muted">
                           {item.badge}
@@ -447,21 +569,23 @@ export function Nav() {
                 return (
                   <Link
                     key={item.href}
-                    href={item.href}
+                    href={localizeHref(item.href, locale)}
                     prefetch={false}
                     data-nav-menu-item
                     onClick={() => setOpenDropdown(null)}
-                    aria-current={isActivePath(item.href) ? "page" : undefined}
+                    aria-current={
+                      routePathname === targetPathname ? "page" : undefined
+                    }
                     className={cn(
                       "flex items-center gap-2 rounded-lg px-3 py-2 text-sm outline-none transition-colors hover:bg-card-hover focus-visible:bg-card-hover focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange",
-                      pathname === item.href ||
-                        pathname.startsWith(item.href + "/")
+                      routePathname === targetPathname ||
+                        routePathname.startsWith(targetPathname + "/")
                         ? "text-foreground"
                         : "text-muted-foreground hover:text-foreground",
                     )}
                   >
                     <Icon size={15} />
-                    <span>{item.label}</span>
+                    <span>{itemLabel}</span>
                   </Link>
                 );
               })}
@@ -472,12 +596,8 @@ export function Nav() {
     );
   }
 
-  // One labelled group of links in the mobile dialog, shared by Kurse +
-  // Ressourcen.
-  function renderMobileGroup(
-    label: string,
-    items: readonly AkademieItem[],
-  ) {
+  // The mobile dialog uses the same task groups as desktop.
+  function renderMobileGroup(label: string, items: readonly AkademieItem[]) {
     return (
       <div className="space-y-2">
         <span className="text-sm font-medium text-muted-foreground">
@@ -486,14 +606,16 @@ export function Nav() {
         <div className="ml-3 flex flex-col gap-1 border-l border-border pl-3">
           {items.map((item) => {
             const Icon = item.icon;
+            const itemLabel = copy[item.label];
+            const targetPathname = hrefPathname(item.href);
             if (item.disabled) {
               return (
                 <span
-                  key={item.label}
+                  key={item.href}
                   className="inline-flex items-center gap-2 text-sm text-muted"
                 >
                   <Icon size={14} />
-                  {item.label}
+                  {itemLabel}
                   {item.badge && (
                     <span className="rounded-full bg-card-hover px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-muted">
                       {item.badge}
@@ -505,20 +627,20 @@ export function Nav() {
             return (
               <Link
                 key={item.href}
-                href={item.href}
+                href={localizeHref(item.href, locale)}
                 prefetch={false}
                 onClick={() => setMobileOpen(false)}
                 aria-current={isActivePath(item.href) ? "page" : undefined}
                 className={cn(
                   "inline-flex min-h-[44px] items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground",
-                  (pathname === item.href ||
-                    pathname.startsWith(item.href + "/")) &&
+                  (routePathname === targetPathname ||
+                    routePathname.startsWith(targetPathname + "/")) &&
                     "text-foreground",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                 )}
               >
                 <Icon size={14} />
-                {item.label}
+                {itemLabel}
               </Link>
             );
           })}
@@ -529,7 +651,7 @@ export function Nav() {
 
   return (
     <nav
-      aria-label="Hauptnavigation"
+      aria-label={copy.mainNavigation}
       className={cn(
         "no-js-primary-nav fixed top-0 z-50 w-full transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300",
         scrolled
@@ -538,46 +660,58 @@ export function Nav() {
       )}
     >
       <m.div
+        data-nav-header-row
         className="mx-auto flex max-w-6xl items-center justify-between px-6"
         style={{ height: navHeight }}
       >
-        <LogoWordmark scrollY={scrollY} />
+        <LogoWordmark scrollY={scrollY} locale={locale} homeLabel={copy.home} />
 
         {/* Interactive desktop navigation. The no-script stylesheet hides
             these dropdown triggers and exposes the complete static link list
             below instead. */}
-        <div className="js-desktop-nav hidden items-center gap-6 lg:flex xl:gap-7">
+        <div className="js-desktop-nav hidden items-center gap-4 lg:flex xl:gap-6">
           {renderDropdown(
-            "akademie",
-            "Kurse",
-            akademieNavItems,
-            "akademie-nav-menu",
-            isKurseActive,
+            "lernen",
+            copy.learning,
+            lernenNavItems,
+            "lernen-nav-menu",
+            isLernenActive,
           )}
           {renderDropdown(
-            "ressourcen",
-            "Ressourcen",
-            ressourcenNavItems,
-            "ressourcen-nav-menu",
-            isRessourcenActive,
+            "praxis",
+            copy.practice,
+            praxisNavItems,
+            "praxis-nav-menu",
+            isPraxisActive,
+          )}
+          {renderDropdown(
+            "wissen",
+            copy.knowledge,
+            wissenNavItems,
+            "wissen-nav-menu",
+            isWissenActive,
           )}
 
           {primaryLinks.map((link) => (
             <Link
               key={link.href}
-              href={link.href}
+              href={localizeHref(link.href, locale)}
               prefetch={false}
-              aria-current={isActivePath(link.href) ? "page" : undefined}
+              aria-current={
+                routePathname === hrefPathname(link.href) ? "page" : undefined
+              }
               className={cn(
-                "text-sm transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                "inline-flex min-h-11 items-center px-1 text-sm transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                 isActivePath(link.href)
                   ? "text-foreground"
                   : "text-muted-foreground",
               )}
             >
-              {link.label}
+              {copy[link.label]}
             </Link>
           ))}
+
+          <LanguageSwitch />
 
           {/* Site navigation points at the organisation that publishes this
               platform, not at the maintainer's personal account. Tim's own
@@ -586,7 +720,7 @@ export function Nav() {
             href={GITHUB_ORG.url}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`${GITHUB_ORG.displayName} auf GitHub`}
+            aria-label={copy.githubOrganisation}
             className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground outline-none transition-colors hover:bg-card-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <Github size={17} aria-hidden="true" />
@@ -595,23 +729,27 @@ export function Nav() {
           <AuthStatus />
         </div>
 
-        {/* Mobile toggle */}
-        <button
-          type="button"
-          ref={mobileToggleRef}
-          onClick={() => setMobileOpen((open) => !open)}
-          tabIndex={mobileOpen ? -1 : undefined}
-          aria-hidden={mobileOpen || undefined}
-          className={cn(
-            "js-mobile-nav-toggle inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg p-2 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background lg:hidden",
-            mobileOpen && "pointer-events-none invisible",
-          )}
-          aria-label="Menü öffnen"
-          aria-expanded={mobileOpen}
-          aria-controls="mobile-menu"
-        >
-          <Menu size={19} aria-hidden="true" />
-        </button>
+        {/* Keep the locale control visible in the top bar on small screens.
+            It remains reachable without opening the navigation dialog. */}
+        <div className="flex items-center gap-1 lg:hidden">
+          <LanguageSwitch />
+          <button
+            type="button"
+            ref={mobileToggleRef}
+            onClick={openMobileMenu}
+            tabIndex={mobileOpen ? -1 : undefined}
+            aria-hidden={mobileOpen || undefined}
+            className={cn(
+              "js-mobile-nav-toggle inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg p-2 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+              mobileOpen && "pointer-events-none invisible",
+            )}
+            aria-label={copy.openMenu}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
+          >
+            <Menu size={19} aria-hidden="true" />
+          </button>
+        </div>
       </m.div>
 
       {/* Complete server-rendered navigation for browsers without scripting.
@@ -620,18 +758,34 @@ export function Nav() {
           <noscript> stylesheet. */}
       <div className="no-js-mobile-nav hidden border-b border-border bg-background px-6 py-6 lg:hidden">
         <div className="grid gap-5 sm:grid-cols-2">
-          <NoScriptMobileGroup label="Kurse" items={akademieNavItems} />
-          <NoScriptMobileGroup label="Ressourcen" items={ressourcenNavItems} />
+          <NoScriptMobileGroup
+            label={copy.learning}
+            items={lernenNavItems}
+            locale={locale}
+            copy={copy}
+          />
+          <NoScriptMobileGroup
+            label={copy.practice}
+            items={praxisNavItems}
+            locale={locale}
+            copy={copy}
+          />
+          <NoScriptMobileGroup
+            label={copy.knowledge}
+            items={wissenNavItems}
+            locale={locale}
+            copy={copy}
+          />
         </div>
         <div className="mt-4 flex flex-col border-t border-border pt-3">
           {primaryLinks.map((link) => (
             <Link
               key={link.href}
-              href={link.href}
+              href={localizeHref(link.href, locale)}
               prefetch={false}
               className="inline-flex min-h-11 items-center text-sm font-medium text-foreground"
             >
-              {link.label}
+              {copy[link.label]}
             </Link>
           ))}
           <a
@@ -644,11 +798,11 @@ export function Nav() {
             GitHub
           </a>
           <Link
-            href="/login"
+            href={localizeHref("/login", locale)}
             prefetch={false}
             className="inline-flex min-h-11 items-center text-sm font-medium text-foreground"
           >
-            Login
+            {copy.login}
           </Link>
         </div>
       </div>
@@ -656,9 +810,7 @@ export function Nav() {
       {/* Mobile menu */}
       <AnimatePresence
         onExitComplete={() => {
-          if (!restoreMobileToggleAfterExit.current) return;
-          restoreMobileToggleAfterExit.current = false;
-          mobileToggleRef.current?.focus();
+          setMobileDialogLocked(false);
         }}
       >
         {mobileOpen && (
@@ -667,29 +819,32 @@ export function Nav() {
             id="mobile-menu"
             role="dialog"
             aria-modal="true"
-            aria-label="Hauptnavigation"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden overscroll-contain border-b border-border bg-background lg:hidden"
+            aria-label={copy.mainNavigation}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.16 }}
+            className="overscroll-contain border-b border-border bg-background lg:hidden"
           >
             <div className="flex max-h-[calc(100dvh-4rem)] flex-col gap-4 overflow-y-auto overscroll-contain px-6 py-6">
               <button
                 type="button"
                 onClick={closeMobileMenu}
                 className="ml-auto inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                aria-label="Menü schließen"
+                aria-label={copy.closeMenu}
               >
                 <X size={19} aria-hidden="true" />
               </button>
-              {renderMobileGroup("Kurse", akademieNavItems)}
-              {renderMobileGroup("Ressourcen", ressourcenNavItems)}
+              <LanguageSwitch className="self-start" />
+              {renderMobileGroup(copy.learning, lernenNavItems)}
+              {renderMobileGroup(copy.practice, praxisNavItems)}
+              {renderMobileGroup(copy.knowledge, wissenNavItems)}
 
               <div className="mt-1 flex flex-col gap-1 border-t border-border pt-3">
                 {primaryLinks.map((link) => (
                   <Link
                     key={link.href}
-                    href={link.href}
+                    href={localizeHref(link.href, locale)}
                     prefetch={false}
                     onClick={() => setMobileOpen(false)}
                     aria-current={isActivePath(link.href) ? "page" : undefined}
@@ -698,7 +853,7 @@ export function Nav() {
                       isActivePath(link.href) && "text-foreground",
                     )}
                   >
-                    {link.label}
+                    {copy[link.label]}
                   </Link>
                 ))}
                 <a
@@ -711,10 +866,7 @@ export function Nav() {
                   <Github size={16} aria-hidden="true" />
                   GitHub
                 </a>
-                <AuthStatus
-                  mobile
-                  onNavigate={() => setMobileOpen(false)}
-                />
+                <AuthStatus mobile onNavigate={() => setMobileOpen(false)} />
               </div>
             </div>
           </m.div>

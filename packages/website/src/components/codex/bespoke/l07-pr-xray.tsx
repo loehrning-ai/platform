@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type JSX } from "react";
+import type { Locale } from "@/lib/i18n/locale";
 import { useCheckpoint } from "@/lib/progress";
 import { cn } from "@/lib/utils";
 
@@ -38,21 +39,72 @@ const CODE_LINES: readonly string[] = [
   "}",
 ];
 
-const BUGS: Record<number, string> = {
-  4: "Inconsistent units, WINDOW (ms) is never used",
-  11: "Off-by-one, > allows a 101st request",
-  15: "TTL unit mismatch, hardcoded 60, comment is wrong",
+const BUG_LINES = [4, 11, 15] as const;
+
+const COPY: Record<
+  Locale,
+  {
+    readonly eyebrow: string;
+    readonly ariaLine: string;
+    readonly ariaCaught: string;
+    readonly title: string;
+    readonly bugsCaught: string;
+    readonly falseAlarms: string;
+    readonly caught: string;
+    readonly noneYet: string;
+    readonly reviewer: string;
+    readonly bugs: Readonly<Record<(typeof BUG_LINES)[number], string>>;
+  }
+> = {
+  en: {
+    eyebrow: "◆ Exercise · PR review",
+    ariaLine: "Line",
+    ariaCaught: "bug caught",
+    title: "PR x-ray",
+    bugsCaught: "Bugs caught",
+    falseAlarms: "False alarms",
+    caught: "Caught",
+    noneYet: "None yet.",
+    reviewer: "🏅 REVIEWER",
+    bugs: {
+      4: "Inconsistent units, WINDOW (ms) is never used",
+      11: "Off-by-one, > allows a 101st request",
+      15: "TTL unit mismatch, hardcoded 60, comment is wrong",
+    },
+  },
+  de: {
+    eyebrow: "◆ Interaktiv · PR-Prüfung",
+    ariaLine: "Zeile",
+    ariaCaught: "Fehler gefunden",
+    title: "PR-Prüfung",
+    bugsCaught: "Gefundene Fehler",
+    falseAlarms: "Fehlalarme",
+    caught: "Gefunden",
+    noneYet: "Noch keiner.",
+    reviewer: "🏅 REVIEW ABGESCHLOSSEN",
+    bugs: {
+      4: "Inkonsistente Einheiten: WINDOW (ms) wird nie verwendet",
+      11: "Off-by-one: > erlaubt eine 101. Anfrage",
+      15: "Falsche TTL-Einheit: 60 ist fest codiert, der Kommentar ist falsch",
+    },
+  },
 };
 
-const TOTAL_BUGS = Object.keys(BUGS).length;
+const TOTAL_BUGS = BUG_LINES.length;
 
 interface L07PrXrayProps {
   readonly lessonId: string;
   readonly cpId: string;
+  readonly locale?: Locale;
 }
 
-export function L07PrXray({ lessonId, cpId }: L07PrXrayProps): JSX.Element {
+export function L07PrXray({
+  lessonId,
+  cpId,
+  locale = "en",
+}: L07PrXrayProps): JSX.Element {
   const { done, complete } = useCheckpoint(lessonId, cpId);
+  const copy = COPY[locale];
   const [found, setFound] = useState<ReadonlySet<number>>(() => new Set());
   const [falseAlarms, setFalseAlarms] = useState(0);
   const [flashLine, setFlashLine] = useState<number | null>(null);
@@ -66,12 +118,15 @@ export function L07PrXray({ lessonId, cpId }: L07PrXrayProps): JSX.Element {
 
   const handleClick = (lineNumber: number) => {
     if (found.size === TOTAL_BUGS) return;
-    if (BUGS[lineNumber] && !found.has(lineNumber)) {
+    if (
+      BUG_LINES.includes(lineNumber as (typeof BUG_LINES)[number]) &&
+      !found.has(lineNumber)
+    ) {
       const next = new Set(found);
       next.add(lineNumber);
       setFound(next);
       if (next.size === TOTAL_BUGS) complete();
-    } else if (!BUGS[lineNumber]) {
+    } else if (!BUG_LINES.includes(lineNumber as (typeof BUG_LINES)[number])) {
       setFalseAlarms((n) => n + 1);
       setFlashLine(lineNumber);
       if (flashTimeoutRef.current) clearTimeout(flashTimeoutRef.current);
@@ -83,54 +138,66 @@ export function L07PrXray({ lessonId, cpId }: L07PrXrayProps): JSX.Element {
   };
 
   return (
-    <div className="border-2 border-border bg-card/40 p-5 md:p-6">
+    <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-5 md:p-6">
       <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        ◆ Bespoke · PR x-ray
+        {copy.eyebrow}
       </p>
-      <div className="grid gap-5 md:grid-cols-[1fr_220px]">
-        <div className="border-2 border-border bg-background p-3">
-          {CODE_LINES.map((line, i) => {
-            const lineNumber = i + 1;
-            const isFound = found.has(lineNumber);
-            return (
-              <button
-                key={lineNumber}
-                type="button"
-                onClick={() => handleClick(lineNumber)}
-                aria-label={`Line ${lineNumber}${isFound ? " (bug caught)" : ""}`}
-                className={cn(
-                  "flex w-full items-start gap-3 px-1.5 py-0.5 text-left font-mono text-[12.5px] transition-colors",
-                  isFound && "border border-risk-green bg-risk-green/10",
-                  flashLine === lineNumber && "bg-destructive/20",
-                  !isFound && "hover:bg-card",
-                )}
-              >
-                <span className="w-6 shrink-0 select-none text-right text-muted-foreground/60">
-                  {lineNumber}
-                </span>
-                <span className="whitespace-pre text-foreground">{line}</span>
-              </button>
-            );
-          })}
+      <div className="grid min-w-0 gap-5 md:grid-cols-[minmax(0,1fr)_220px]">
+        <div className="min-w-0 overflow-x-auto border-2 border-border bg-background p-3">
+          <div className="min-w-max">
+            {CODE_LINES.map((line, i) => {
+              const lineNumber = i + 1;
+              const isFound = found.has(lineNumber);
+              return (
+                <button
+                  key={lineNumber}
+                  type="button"
+                  onClick={() => handleClick(lineNumber)}
+                  aria-label={`${copy.ariaLine} ${lineNumber}${isFound ? ` (${copy.ariaCaught})` : ""}`}
+                  className={cn(
+                    "flex w-full items-start gap-3 px-1.5 py-0.5 text-left font-mono text-[12.5px] transition-colors",
+                    isFound && "border border-risk-green bg-risk-green/10",
+                    flashLine === lineNumber && "bg-destructive/20",
+                    !isFound && "hover:bg-card",
+                  )}
+                >
+                  <span className="w-6 shrink-0 select-none text-right text-muted-foreground/60">
+                    {lineNumber}
+                  </span>
+                  <span className="whitespace-pre text-foreground">{line}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
-        <div className="border-2 border-border bg-background p-3">
-          <h3 className="mb-2 font-mono text-[13px] font-bold text-foreground">PR x-ray</h3>
+        <div className="min-w-0 border-2 border-border bg-background p-3">
+          <h3 className="mb-2 font-mono text-[13px] font-bold text-foreground">
+            {copy.title}
+          </h3>
           <p className="font-mono text-[11px] text-muted-foreground">
-            Bugs caught: {found.size} / {TOTAL_BUGS}
+            {copy.bugsCaught}: {found.size} / {TOTAL_BUGS}
           </p>
-          <p className="font-mono text-[11px] text-muted-foreground">False alarms: {falseAlarms}</p>
+          <p className="font-mono text-[11px] text-muted-foreground">
+            {copy.falseAlarms}: {falseAlarms}
+          </p>
           <h4 className="mt-3 font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
-            Caught:
+            {copy.caught}:
           </h4>
           <div className="mt-1 flex flex-col gap-1 font-mono text-[11.5px] text-foreground">
-            {[...found].sort((a, b) => a - b).map((line) => (
-              <span key={line}>✓ {BUGS[line]}</span>
-            ))}
-            {found.size === 0 && <span className="text-muted-foreground/70">None yet.</span>}
+            {[...found]
+              .sort((a, b) => a - b)
+              .map((line) => (
+                <span key={line} className="break-words">
+                  ✓ {copy.bugs[line as (typeof BUG_LINES)[number]]}
+                </span>
+              ))}
+            {found.size === 0 && (
+              <span className="text-muted-foreground/70">{copy.noneYet}</span>
+            )}
           </div>
           {found.size === TOTAL_BUGS && (
             <p className="mt-3 border-2 border-risk-green bg-risk-green/10 px-2 py-1 font-mono text-[11px] font-bold text-risk-green">
-              🏅 REVIEWER {done ? "✓" : ""}
+              {copy.reviewer} {done ? "✓" : ""}
             </p>
           )}
         </div>

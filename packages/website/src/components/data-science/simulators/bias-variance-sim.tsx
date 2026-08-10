@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { clamp, mulberry32, randn, round } from "@/lib/data-science/sim-kit";
+import { useDataScienceLocale } from "../locale-context";
 
 // ─── BiasVarianceSim ────────────────────────────────
 //
@@ -44,7 +45,8 @@ function fitPoly(pts: readonly Point[], deg: number): readonly number[] {
   const m = XTX.map((row: number[], i: number) => [...row, XTy[i]]);
   for (let i = 0; i < D; i++) {
     let max = i;
-    for (let k = i + 1; k < D; k++) if (Math.abs(m[k][i]) > Math.abs(m[max][i])) max = k;
+    for (let k = i + 1; k < D; k++)
+      if (Math.abs(m[k][i]) > Math.abs(m[max][i])) max = k;
     [m[i], m[max]] = [m[max], m[i]];
     for (let k = i + 1; k < D; k++) {
       const f = m[k][i] / (m[i][i] || 1e-12);
@@ -76,6 +78,7 @@ function yMap(y: number): number {
 }
 
 export function BiasVarianceSim() {
+  const { locale, text } = useDataScienceLocale();
   const [complexity, setComplexity] = useState(5);
   const [dataSeed, setDataSeed] = useState(17);
   const [svgKey, setSvgKey] = useState(0);
@@ -101,7 +104,10 @@ export function BiasVarianceSim() {
     return out;
   }, [dataSeed, complexity]);
 
-  const mainCoeffs = useMemo(() => fitPoly(train, complexity), [train, complexity]);
+  const mainCoeffs = useMemo(
+    () => fitPoly(train, complexity),
+    [train, complexity],
+  );
   const predict = (x: number) => predictWith(mainCoeffs, x);
 
   const testPts = useMemo(() => {
@@ -112,8 +118,10 @@ export function BiasVarianceSim() {
     });
   }, []);
 
-  const trainErr = train.reduce((a, p) => a + (p.y - predict(p.x)) ** 2, 0) / train.length;
-  const testErr = testPts.reduce((a, p) => a + (p.y - predict(p.x)) ** 2, 0) / testPts.length;
+  const trainErr =
+    train.reduce((a, p) => a + (p.y - predict(p.x)) ** 2, 0) / train.length;
+  const testErr =
+    testPts.reduce((a, p) => a + (p.y - predict(p.x)) ** 2, 0) / testPts.length;
 
   const { bias2, variance } = useMemo(() => {
     const GRID = 40;
@@ -148,7 +156,18 @@ export function BiasVarianceSim() {
     return "M " + pts.join(" L ");
   }, []);
 
-  const regimeLabel = complexity <= 1 ? "underfit (high bias)" : complexity >= 10 ? "overfit (high variance)" : "good fit";
+  const regimeLabel =
+    locale === "de"
+      ? complexity <= 1
+        ? "Unteranpassung (hoher Bias)"
+        : complexity >= 10
+          ? "Überanpassung (hohe Varianz)"
+          : "passende Anpassung"
+      : complexity <= 1
+        ? "underfit (high bias)"
+        : complexity >= 10
+          ? "overfit (high variance)"
+          : "good fit";
 
   const reshuffle = () => {
     setDataSeed((s) => s + 17);
@@ -157,32 +176,48 @@ export function BiasVarianceSim() {
 
   return (
     <Panel
-      eyebrow="LIVE · ENSEMBLE"
-      title="Bias-variance dance"
-      meta={`degree ${complexity} · ${resampleFits.length} bootstraps`}
-      caption="Gray cloud = the range of fits you'd get from resampling. Narrow cloud + close to truth = good. Narrow + far = bias. Wide & wild = variance. The tradeoff is the dance."
+      eyebrow={text("SYNTHETIC · ENSEMBLE", "SYNTHETISCH · ENSEMBLE")}
+      title={text("Bias-variance behavior", "Bias-Varianz-Verhalten")}
+      meta={text(
+        `degree ${complexity} · ${resampleFits.length} bootstraps`,
+        `Grad ${complexity} · ${resampleFits.length} Bootstraps`,
+      )}
+      caption={text(
+        "Gray cloud = the range of fits you'd get from resampling. Narrow cloud + close to truth = good. Narrow + far = bias. Wide & wild = variance. The tradeoff is the dance.",
+        "Die graue Wolke zeigt Anpassungen aus wiederholten Stichproben. Schmal und nah an der wahren Funktion ist günstig. Schmal und weit entfernt bedeutet Bias; breit bedeutet hohe Varianz.",
+      )}
     >
       <div className="sim-row" style={{ gridTemplateColumns: "280px 1fr" }}>
         <div className="sim-controls">
           <div className="sim-ctrl">
             <label>
-              Model complexity <span className="mono">deg {complexity}</span>
+              {text("Model complexity", "Modellkomplexität")}{" "}
+              <span className="mono">
+                {text("deg", "Grad")} {complexity}
+              </span>
             </label>
             <input
               type="range"
               min="0"
               max="15"
               value={complexity}
-              aria-label="Model complexity (polynomial degree)"
+              aria-label={text(
+                "Model complexity (polynomial degree)",
+                "Modellkomplexität (Polynomgrad)",
+              )}
               onChange={(e) => setComplexity(+e.target.value)}
             />
           </div>
-          <button type="button" className="btn btn-sm btn-primary" onClick={reshuffle}>
-            ⟲ New training data
+          <button
+            type="button"
+            className="btn btn-sm btn-primary"
+            onClick={reshuffle}
+          >
+            ⟲ {text("New training data", "Neue Trainingsdaten")}
           </button>
           <div className="sim-stats">
             <div>
-              <div className="k">Train MSE</div>
+              <div className="k">{text("Train MSE", "Training MSE")}</div>
               <div className="v" style={{ color: "var(--cyan-ink)" }}>
                 {round(trainErr, 3)}
               </div>
@@ -194,8 +229,11 @@ export function BiasVarianceSim() {
               </div>
             </div>
             <div>
-              <div className="k">Regime</div>
-              <div className="v serif" style={{ fontStyle: "italic", fontSize: 15 }}>
+              <div className="k">{text("Regime", "Bereich")}</div>
+              <div
+                className="v serif"
+                style={{ fontStyle: "italic", fontSize: 15 }}
+              >
                 {regimeLabel}
               </div>
             </div>
@@ -208,7 +246,7 @@ export function BiasVarianceSim() {
               </div>
             </div>
             <div>
-              <div className="k">Variance</div>
+              <div className="k">{text("Variance", "Varianz")}</div>
               <div className="v" style={{ color: "var(--violet)" }}>
                 {round(variance, 3)}
               </div>
@@ -219,17 +257,51 @@ export function BiasVarianceSim() {
             </div>
           </div>
           <div className="galton-note">
-            <span className="tag-pill">tip</span>
-            At low <code className="mono">deg</code>, bias is huge (stiff line misses curve). At
-            high <code className="mono">deg</code>, bias collapses but variance explodes, the
-            gray cloud fans wildly.
+            <span className="tag-pill">{text("tip", "Hinweis")}</span>
+            {locale === "de" ? (
+              <>
+                Bei niedrigem <code className="mono">deg</code> ist der Bias
+                hoch: Die starre Linie verfehlt die Kurve. Bei hohem{" "}
+                <code className="mono">deg</code> sinkt der Bias, während die
+                Varianz stark wächst und die graue Wolke auffächert.
+              </>
+            ) : (
+              <>
+                At low <code className="mono">deg</code>, bias is huge (stiff
+                line misses curve). At high <code className="mono">deg</code>,
+                bias collapses but variance explodes, the gray cloud fans
+                wildly.
+              </>
+            )}
           </div>
         </div>
         <div className="plot-wrap" style={{ padding: 16 }}>
           <svg viewBox={`0 0 ${W} ${H}`} key={`${svgKey}-${complexity}`}>
-            <line x1={xMap(0)} y1={yMap(0)} x2={xMap(1)} y2={yMap(0)} stroke="#A49D9A" strokeWidth="0.6" strokeDasharray="3 3" opacity="0.5" />
-            <line x1={xMap(0)} y1={yMap(-1.5)} x2={xMap(0)} y2={yMap(1.5)} stroke="#A49D9A" strokeWidth="0.6" />
-            <path d={truthPath} fill="none" stroke="#14121655" strokeWidth="1.2" strokeDasharray="4 3" />
+            <line
+              x1={xMap(0)}
+              y1={yMap(0)}
+              x2={xMap(1)}
+              y2={yMap(0)}
+              stroke="#A49D9A"
+              strokeWidth="0.6"
+              strokeDasharray="3 3"
+              opacity="0.5"
+            />
+            <line
+              x1={xMap(0)}
+              y1={yMap(-1.5)}
+              x2={xMap(0)}
+              y2={yMap(1.5)}
+              stroke="#A49D9A"
+              strokeWidth="0.6"
+            />
+            <path
+              d={truthPath}
+              fill="none"
+              stroke="#14121655"
+              strokeWidth="1.2"
+              strokeDasharray="4 3"
+            />
             {resampleFits.map((c, i) => (
               <path
                 key={i}
@@ -272,18 +344,59 @@ export function BiasVarianceSim() {
               />
             ))}
             <g transform="translate(48 16)">
-              <line x1="0" y1="0" x2="20" y2="0" stroke="#14121655" strokeWidth="1.2" strokeDasharray="4 3" />
-              <text x="26" y="4" fontSize="10" fill="#3A3540" fontFamily="'JetBrains Mono', monospace">
-                truth
+              <line
+                x1="0"
+                y1="0"
+                x2="20"
+                y2="0"
+                stroke="#14121655"
+                strokeWidth="1.2"
+                strokeDasharray="4 3"
+              />
+              <text
+                x="26"
+                y="4"
+                fontSize="10"
+                fill="#3A3540"
+                fontFamily="'JetBrains Mono', monospace"
+              >
+                {text("truth", "wahre Funktion")}
               </text>
-              <line x1="100" y1="0" x2="120" y2="0" stroke="#E8318F" strokeWidth="2.4" />
-              <text x="126" y="4" fontSize="10" fill="#3A3540" fontFamily="'JetBrains Mono', monospace">
-                this fit
+              <line
+                x1="100"
+                y1="0"
+                x2="120"
+                y2="0"
+                stroke="#E8318F"
+                strokeWidth="2.4"
+              />
+              <text
+                x="126"
+                y="4"
+                fontSize="10"
+                fill="#3A3540"
+                fontFamily="'JetBrains Mono', monospace"
+              >
+                {text("this fit", "diese Anpassung")}
               </text>
               <g transform="translate(220 0)">
-                <line x1="0" y1="0" x2="20" y2="0" stroke="#5B3EE8" strokeWidth="1.4" opacity="0.5" />
-                <text x="26" y="4" fontSize="10" fill="#3A3540" fontFamily="'JetBrains Mono', monospace">
-                  24 resamples
+                <line
+                  x1="0"
+                  y1="0"
+                  x2="20"
+                  y2="0"
+                  stroke="#5B3EE8"
+                  strokeWidth="1.4"
+                  opacity="0.5"
+                />
+                <text
+                  x="26"
+                  y="4"
+                  fontSize="10"
+                  fill="#3A3540"
+                  fontFamily="'JetBrains Mono', monospace"
+                >
+                  {text("24 resamples", "24 neue Stichproben")}
                 </text>
               </g>
             </g>

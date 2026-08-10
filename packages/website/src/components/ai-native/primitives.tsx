@@ -1,16 +1,8 @@
 "use client";
 
-import {
-  m,
-  useInView,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-} from "framer-motion";
-import { useEffect, useRef, type ReactNode, type ElementType } from "react";
+import type { ReactNode, ElementType } from "react";
 import { cn } from "@/lib/utils";
-import { revealUp, fadeUp, drawLine, EASE_OUT_EXPO } from "@/lib/animations";
+import type { Locale } from "@/lib/i18n/locale";
 
 /* ──────────────────────────────────────────────────────────────
    AI-Native Arbeitskurs, design primitives
@@ -59,7 +51,7 @@ export function SectionShell({
         className,
       )}
     >
-      <div className="relative mx-auto max-w-[1280px] px-6 lg:px-12">
+      <div className="relative mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-12">
         {num && label && <Marginalia num={num} label={label} />}
         <div
           className={cn(
@@ -86,12 +78,8 @@ export function VoiceAnchor({
   readonly className?: string;
 }) {
   return (
-    <m.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.6, ease: EASE_OUT_EXPO }}
-      className={cn("js-reveal relative max-w-[720px] py-3 pl-8", className)}
+    <div
+      className={cn("relative max-w-[720px] py-3 pl-8", className)}
     >
       <p className="ai-voice-anchor text-foreground">{children}</p>
       {author && (
@@ -99,16 +87,22 @@ export function VoiceAnchor({
           {author}
         </p>
       )}
-    </m.div>
+    </div>
   );
 }
 
 /* TierChip — mono underline badge for FREE courses only */
-export function TierChip({ tier }: { tier: "FREE" }) {
+export function TierChip({
+  tier,
+  locale = "de",
+}: {
+  tier: "FREE";
+  locale?: Locale;
+}) {
   void tier; // always "FREE", the type guards against accidental extension
   return (
     <span className="inline-flex items-baseline gap-1.5 border-b-2 pb-0.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-      KOSTENLOS
+      {locale === "en" ? "FREE" : "KOSTENLOS"}
     </span>
   );
 }
@@ -122,7 +116,7 @@ export function ModNumber({ num }: { num: string }) {
   );
 }
 
-/* ClipHeading — revealUp-animated heading with overflow-hidden wrapper */
+/* ClipHeading — stable editorial heading with a layout-safe wrapper. */
 interface ClipHeadingProps {
   readonly as?: ElementType;
   readonly className?: string;
@@ -138,24 +132,14 @@ export function ClipHeading({
   children,
   delay = 0,
 }: ClipHeadingProps) {
-  const MotionTag = m.create(Tag);
-  // No `overflow-hidden` on the wrapper — the inner `clipPath` animation
-  // (revealUp in animations.ts) already handles the reveal effect. Clipping
-  // at the wrapper level would crop descenders (g, y, p, j, q) on tight
-  // line-height headings and is redundant for the animation.
+  void delay;
+  const HeadingTag = Tag;
+  // No overflow clipping: it would crop descenders on tight headings.
   return (
     <span className="block">
-      <MotionTag
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-80px" }}
-        custom={delay}
-        variants={revealUp}
-        className={cn("js-reveal", className)}
-        style={style}
-      >
+      <HeadingTag className={className} style={style}>
         {children}
-      </MotionTag>
+      </HeadingTag>
     </span>
   );
 }
@@ -170,16 +154,12 @@ export function DrawRule({
   readonly dark?: boolean;
   readonly delay?: number;
 }) {
+  void delay;
   return (
-    <m.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      custom={delay}
-      variants={drawLine}
+    <div
       style={{ transformOrigin: "left" }}
       className={cn(
-        "js-reveal h-px w-full",
+        "h-px w-full",
         dark ? "bg-[var(--color-dark-border)]" : "bg-border",
         className,
       )}
@@ -199,52 +179,16 @@ export function CountUp({
   readonly duration?: number;
   readonly className?: string;
 }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
-  const reducedMotion = useReducedMotion();
-  // Start from the authored value so server HTML and the pre-hydration frame
-  // remain truthful. Once hydrated and visible, motion-allowed clients replay
-  // the count from zero.
-  const motionValue = useMotionValue(value);
-  const spring = useSpring(motionValue, { duration: duration * 1000, bounce: 0 });
-  const display = useTransform(spring, (latest) => Math.round(latest).toString());
-  const animated = useRef(false);
-
-  useEffect(() => {
-    if (!inView) return;
-
-    if (animated.current) {
-      if (reducedMotion) {
-        motionValue.jump(value);
-        spring.jump(value);
-      } else {
-        motionValue.set(value);
-      }
-      return;
-    }
-    animated.current = true;
-
-    if (reducedMotion) {
-      motionValue.jump(value);
-      spring.jump(value);
-      return;
-    }
-
-    motionValue.jump(0);
-    spring.jump(0);
-    const frame = requestAnimationFrame(() => motionValue.set(value));
-    return () => cancelAnimationFrame(frame);
-  }, [inView, motionValue, reducedMotion, spring, value]);
+  void duration;
 
   return (
     <span
-      ref={ref}
       className={cn(
         "font-mono font-bold tracking-[-0.02em] text-brand-orange",
         className,
       )}
     >
-      <m.span>{display}</m.span>
+      <span>{Math.round(value)}</span>
       {suffix && (
         <span className="text-[0.55em] text-muted-foreground">{suffix}</span>
       )}
@@ -262,17 +206,11 @@ export function FadeBlock({
   readonly delay?: number;
   readonly className?: string;
 }) {
+  void delay;
   return (
-    <m.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-60px" }}
-      custom={delay}
-      variants={fadeUp}
-      className={cn("js-reveal", className)}
-    >
+    <div className={className}>
       {children}
-    </m.div>
+    </div>
   );
 }
 

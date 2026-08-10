@@ -8,6 +8,7 @@ import {
   usePrefersReducedMotion,
   useVisibleAutoplay,
 } from "./demo-utils";
+import { useDemoLocale } from "./demo-locale";
 
 const ROWS = [
   { w: "KW 14", region: "Nord", stk: 142, umsatz: 688_700 },
@@ -69,6 +70,11 @@ const FORECAST_ROWS = [
 ] as const;
 
 export default function ExcelDemo() {
+  const { locale } = useDemoLocale();
+  return locale === "en" ? <ExcelDemoEnglish /> : <ExcelDemoGerman />;
+}
+
+function ExcelDemoGerman() {
   const reduced = usePrefersReducedMotion();
   const { ref, visible } = useVisibleAutoplay<HTMLDivElement>();
 
@@ -178,6 +184,141 @@ export default function ExcelDemo() {
         {task === "pivot" && <PivotOutput />}
         {task === "forecast" && <ForecastOutput />}
       </div>
+    </div>
+  );
+}
+
+const TASKS_EN = [
+  {
+    id: "formula" as const,
+    title: "Week-over-week growth",
+    detail: "Calculate the percentage change for each region.",
+    output: "=(D5-D2)/D2",
+    result: "North: +9.9% · South: −16.3% · West: +8.0%",
+  },
+  {
+    id: "pivot" as const,
+    title: "Revenue by region",
+    detail: "Group the sample rows and sort by total revenue.",
+    output: "West · €2,740,250 · 41%",
+    result: "North · €2,226,150 · 33%  |  South · €1,328,900 · 20%",
+  },
+  {
+    id: "forecast" as const,
+    title: "Forecast weeks 17–20",
+    detail: "Extend the sample series with a linear projection.",
+    output: "Week 17: 492 units · 90% interval: 458–526",
+    result: "Illustrative projection only; validate against held-out data before use.",
+  },
+] as const;
+
+function ExcelDemoEnglish() {
+  const [task, setTask] = useState<TaskId>("formula");
+  const active = TASKS_EN.find((item) => item.id === task) ?? TASKS_EN[0];
+
+  return (
+    <div
+      data-demo-id="excel"
+      role="region"
+      aria-label="Spreadsheet analysis example"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 16,
+        minHeight: DEMO_HEIGHT,
+        width: "100%",
+        minWidth: 0,
+        fontFamily: DEMO.font.sans,
+        color: DEMO.ink,
+      }}
+    >
+      <div>
+        <Overline>Spreadsheet lab · fixed sample data</Overline>
+        <h2 style={{ margin: "6px 0 0", fontSize: "clamp(20px, 4vw, 28px)", lineHeight: 1.08 }}>
+          Inspect the calculation. <span style={{ color: "var(--color-brand-orange)" }}>Then challenge it.</span>
+        </h2>
+        <p style={{ margin: "8px 0 0", maxWidth: 720, color: DEMO.schiefer, fontSize: 12, lineHeight: 1.55 }}>
+          This browser-only example uses nine fictional sales rows. It does not connect to Excel, Microsoft 365, or an AI provider.
+        </p>
+      </div>
+
+      <div style={{ display: "grid", width: "100%", minWidth: 0, maxWidth: "100%", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 300px), 1fr))", gap: 14 }}>
+        <section style={{ width: "100%", minWidth: 0, maxWidth: "100%", border: `1px solid ${DEMO.ink}`, background: DEMO.kalk }} aria-label="Sample worksheet">
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, padding: "8px 10px", background: "#107C41", color: "white", fontFamily: DEMO.font.mono, fontSize: 10 }}>
+            <strong style={{ border: "1px solid white", padding: "1px 5px" }}>X</strong>
+            <span style={{ overflowWrap: "anywhere" }}>sales-weeks-14-16.xlsx</span>
+            <span style={{ marginLeft: "auto", opacity: 0.8 }}>local sample</span>
+          </div>
+          <div
+            data-course-horizontal-scroll
+            role="region"
+            aria-label="Sample worksheet data"
+            tabIndex={0}
+            className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
+            style={{
+              width: "100%",
+              minWidth: 0,
+              maxWidth: "100%",
+              overflowX: "auto",
+              overscrollBehaviorX: "contain",
+            }}
+          >
+            <div style={{ minWidth: 430, display: "grid", gridTemplateColumns: "42px 1fr 1fr 0.75fr 1.15fr", fontFamily: DEMO.font.mono, fontSize: 10 }}>
+              {(["", "Week", "Region", "Units", "Revenue"] as const).map((label) => (
+                <div key={label || "row"} style={{ padding: "7px 8px", borderBottom: `1px solid ${DEMO.leinen}`, background: DEMO.birke, fontWeight: 700 }}>{label}</div>
+              ))}
+              {ROWS.map((row, index) => (
+                <div key={`${row.w}-${row.region}`} style={{ display: "contents" }}>
+                  <div style={{ padding: "6px 8px", color: DEMO.schiefer, borderBottom: `1px solid ${DEMO.leinen}` }}>{index + 2}</div>
+                  <div style={{ padding: "6px 8px", borderBottom: `1px solid ${DEMO.leinen}` }}>{row.w.replace("KW", "Wk")}</div>
+                  <div style={{ padding: "6px 8px", borderBottom: `1px solid ${DEMO.leinen}` }}>{({ Nord: "North", Süd: "South", West: "West" } as const)[row.region]}</div>
+                  <div style={{ padding: "6px 8px", textAlign: "right", borderBottom: `1px solid ${DEMO.leinen}` }}>{row.stk}</div>
+                  <div style={{ padding: "6px 8px", textAlign: "right", borderBottom: `1px solid ${DEMO.leinen}` }}>€{row.umsatz.toLocaleString("en-GB")}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section style={{ minWidth: 0, border: `1px solid ${DEMO.leinen}`, background: DEMO.birke, padding: 12 }} aria-label="Analysis tasks">
+          <Overline>Choose an analysis</Overline>
+          <div style={{ display: "grid", gap: 8, marginTop: 10 }}>
+            {TASKS_EN.map((item, index) => {
+              const selected = item.id === task;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  aria-pressed={selected}
+                  onClick={() => setTask(item.id)}
+                  style={{
+                    minHeight: 58,
+                    width: "100%",
+                    minWidth: 0,
+                    padding: "10px 12px",
+                    textAlign: "left",
+                    background: selected ? DEMO.ink : DEMO.kalk,
+                    color: selected ? DEMO.kalk : DEMO.ink,
+                    border: `1px solid ${DEMO.ink}`,
+                    boxShadow: selected ? `3px 3px 0 var(--color-brand-orange)` : "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  <span style={{ fontFamily: DEMO.font.mono, fontSize: 9, color: selected ? "var(--color-brand-orange)" : DEMO.schiefer }}>0{index + 1}</span>
+                  <strong style={{ display: "block", marginTop: 3, overflowWrap: "anywhere" }}>{item.title}</strong>
+                  <span style={{ display: "block", marginTop: 3, fontSize: 11, lineHeight: 1.4, opacity: 0.75 }}>{item.detail}</span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      </div>
+
+      <section aria-live="polite" style={{ minWidth: 0, borderLeft: "4px solid var(--color-brand-orange)", background: DEMO.ink, color: DEMO.kalk, padding: "14px 16px" }}>
+        <div style={{ fontFamily: DEMO.font.mono, fontSize: 9, letterSpacing: "0.13em", color: "var(--color-brand-orange)", textTransform: "uppercase" }}>Deterministic sample output</div>
+        <code style={{ display: "block", marginTop: 9, overflowWrap: "anywhere", whiteSpace: "pre-wrap", fontSize: 13 }}>{active.output}</code>
+        <p style={{ margin: "9px 0 0", color: "rgba(243,240,233,0.76)", fontSize: 12, lineHeight: 1.55 }}>{active.result}</p>
+      </section>
     </div>
   );
 }

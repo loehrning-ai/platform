@@ -47,6 +47,7 @@ const CONTROLLED_KEYS = [
   "RATE_LIMIT_HMAC_SECRET",
   "SUPABASE_REGION",
   "SUPABASE_DPA_CONFIRMED_AT",
+  "SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT",
   "SUPABASE_CAPTCHA_CONFIRMED_AT",
   "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
   "TURNSTILE_CONFIGURATION_CONFIRMED_AT",
@@ -117,11 +118,17 @@ function completeSupabase(overrides = {}) {
     RATE_LIMIT_HMAC_SECRET: RATE_LIMIT_HMAC_SECRET_FIXTURE,
     SUPABASE_REGION: "eu-central-1",
     SUPABASE_DPA_CONFIRMED_AT: "2026-07-01",
+    ...overrides,
+  };
+}
+
+function completeMagicLinkSupabase(overrides = {}) {
+  return completeSupabase({
     SUPABASE_CAPTCHA_CONFIRMED_AT: "2026-07-01",
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: "0x4AAAAAAAFakeProductionKey",
     TURNSTILE_CONFIGURATION_CONFIRMED_AT: "2026-07-01",
     ...overrides,
-  };
+  });
 }
 
 function main() {
@@ -257,6 +264,10 @@ function main() {
     [
       "SUPABASE_CAPTCHA_CONFIRMED_AT",
       { SUPABASE_CAPTCHA_CONFIRMED_AT: "2026-07-01" },
+    ],
+    [
+      "SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT",
+      { SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT: "2026-08-08" },
     ],
     [
       "TURNSTILE_CONFIGURATION_CONFIRMED_AT",
@@ -413,18 +424,54 @@ function main() {
   assert.equal(unverifiedSupabase.status, 1, combined(unverifiedSupabase));
   assert.match(combined(unverifiedSupabase), /SUPABASE_REGION/);
   assert.match(combined(unverifiedSupabase), /SUPABASE_DPA_CONFIRMED_AT/);
-  assert.match(
-    combined(unverifiedSupabase),
-    /NEXT_PUBLIC_TURNSTILE_SITE_KEY/,
+
+  const accountWithoutSignInMethods = runValidateEnv(completeSupabase());
+  assert.equal(
+    accountWithoutSignInMethods.status,
+    0,
+    `core account configuration must not require either optional sign-in method\n${combined(accountWithoutSignInMethods)}`,
   );
-  assert.match(
-    combined(unverifiedSupabase),
-    /SUPABASE_CAPTCHA_CONFIRMED_AT/,
+
+  const partialMagicLink = runValidateEnv(
+    completeSupabase({
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: "0x4AAAAAAAFakeProductionKey",
+    }),
   );
-  assert.match(
-    combined(unverifiedSupabase),
-    /TURNSTILE_CONFIGURATION_CONFIRMED_AT/,
+  assert.equal(partialMagicLink.status, 1, combined(partialMagicLink));
+  assert.match(combined(partialMagicLink), /Magic-link authentication is partially configured/);
+  assert.match(combined(partialMagicLink), /SUPABASE_CAPTCHA_CONFIRMED_AT/);
+  assert.match(combined(partialMagicLink), /TURNSTILE_CONFIGURATION_CONFIRMED_AT/);
+
+  const completeMagicLink = runValidateEnv(completeMagicLinkSupabase());
+  assert.equal(
+    completeMagicLink.status,
+    0,
+    `complete protected Magic-link configuration must pass\n${combined(completeMagicLink)}`,
   );
+
+  const googleOnlySignIn = runValidateEnv(
+    completeSupabase({
+      SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT: "2026-08-08",
+    }),
+  );
+  assert.equal(
+    googleOnlySignIn.status,
+    0,
+    `Google OAuth attestation must not require Turnstile\n${combined(googleOnlySignIn)}`,
+  );
+
+  for (const googleAttestation of ["not-a-date", "2999-01-01"]) {
+    const invalidGoogleOAuth = runValidateEnv(
+      completeSupabase({
+        SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT: googleAttestation,
+      }),
+    );
+    assert.equal(invalidGoogleOAuth.status, 1, combined(invalidGoogleOAuth));
+    assert.match(
+      combined(invalidGoogleOAuth),
+      /SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT/,
+    );
+  }
 
   for (const malformedOrigin of [
     " https://aaaaaaaaaaaa.supabase.co",
@@ -448,7 +495,7 @@ function main() {
   }
 
   const productionTurnstileTestKey = runValidateEnv(
-    completeSupabase({
+    completeMagicLinkSupabase({
       VERCEL: "1",
       VERCEL_ENV: "production",
       VERCEL_DPA_CONFIRMED_AT: "2026-07-01",
@@ -606,6 +653,7 @@ function main() {
     RATE_LIMIT_HMAC_SECRET: RATE_LIMIT_HMAC_SECRET_FIXTURE,
     SUPABASE_REGION: "eu-central-1",
     SUPABASE_DPA_CONFIRMED_AT: "2026-07-01",
+    SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT: "2026-08-08",
     SUPABASE_CAPTCHA_CONFIRMED_AT: "2026-07-01",
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: "0x4AAAAAAAFakeProductionKey",
     TURNSTILE_CONFIGURATION_CONFIRMED_AT: "2026-07-01",
@@ -795,6 +843,7 @@ function main() {
   assert.match(deploymentDocs, /`ANTHROPIC_DPA_CONFIRMED_AT`/);
   assert.match(deploymentDocs, /`ANTHROPIC_RETENTION_DAYS`/);
   assert.match(deploymentDocs, /`RATE_LIMIT_HMAC_SECRET`/);
+  assert.match(deploymentDocs, /`SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT`/);
   assert.match(deploymentDocs, /one-time quota reset/i);
   assert.doesNotMatch(deploymentDocs, /budget attestation vars/i);
 

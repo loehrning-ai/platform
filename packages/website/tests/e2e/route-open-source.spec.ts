@@ -12,6 +12,11 @@ import {
   type ToolArtifact,
   type VideoArtifact,
 } from "../../src/lib/open-source/artifacts";
+import {
+  OPEN_SOURCE_PAGE_COPY,
+  OPEN_SOURCE_SHARED_COPY,
+  SOFTWARE_GUIDE_COPY,
+} from "../../src/lib/open-source/display-copy";
 
 /**
  * /open-source smoke and interaction coverage. Assertions target roles and
@@ -286,7 +291,7 @@ async function expectSoftwareGuide(
         ).toBeVisible();
         await expect(
           page.getByRole("button", {
-            name: `Befehl für ${step.title} kopieren`,
+            name: `${SOFTWARE_GUIDE_COPY.de.copyCommand(step.title)}: ${SOFTWARE_GUIDE_COPY.de.copy}`,
           }),
         ).toBeVisible();
       }
@@ -333,12 +338,15 @@ test.describe("/open-source hub", () => {
 
     const h1 = page.getByRole("heading", { level: 1 });
     await expect(h1).toBeVisible();
-    await expect(h1).toContainText(/Werkverzeichnis/i);
+    await expect(h1).toHaveText(OPEN_SOURCE_PAGE_COPY.de.title);
 
     // The shelf: one unified grid, the kind as a stamp on the card (never a
     // heading), and the GitHub action naming the repo path.
     await expect(
-      page.getByRole("heading", { level: 2, name: "Alle Werke" }),
+      page.getByRole("heading", {
+        level: 2,
+        name: OPEN_SOURCE_SHARED_COPY.de.published,
+      }),
     ).toBeVisible();
     await expect(page.getByText("Werkzeug", { exact: true })).toBeVisible();
     await expect(

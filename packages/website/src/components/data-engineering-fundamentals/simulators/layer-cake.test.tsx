@@ -43,6 +43,6 @@ describe("LayerCake ", () => {
     expect(screen.getByText("✕")).toBeInTheDocument();
     fireEvent.focus(blob);
     expect(screen.getByText("If this layer is down")).toBeInTheDocument();
-    expect(screen.getByText("Reads slow, retries kick in, timeouts cascade up to engine.")).toBeInTheDocument();
+    expect(screen.getByText("Higher latency or errors can trigger configured retries and query timeouts.")).toBeInTheDocument();
   });
 });

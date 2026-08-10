@@ -1,14 +1,11 @@
 {
   "blockId": "block_2",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-06-22",
-  "nextReview": "2026-12-22",
+  "lastReviewed": "2026-08-08",
+  "nextReview": "2027-02-08",
   "reviewCadence": "legal",
   "riskClass": "legal",
-  "triggerEvents": [
-    "eu-ai-act-amendment",
-    "commission-qa-update"
-  ],
+  "triggerEvents": ["eu-ai-act-amendment", "commission-qa-update"],
   "lessons": [
     {
       "id": "block_2_lesson_1",
@@ -18,25 +15,25 @@
       "subtitle": "KI-Tools und ihre Datenschutz-Unterschiede",
       "durationMinutes": 5,
       "keyConcepts": [
-        "M365 Copilot",
-        "ChatGPT Business",
+        "Produktedition",
+        "Datenflüsse",
         "Shadow AI",
-        "AVV"
+        "Auftragsverarbeitung"
       ],
       "sections": [
         {
           "id": "block_2_lesson_1_section_1",
-          "title": "Die wichtigsten KI-Optionen",
+          "title": "Produkt und Betrieb gemeinsam prüfen",
           "readTimeMinutes": 3,
-          "content": "Nicht jedes KI-Tool ist gleich. Entscheidend ist die konkrete Kombination aus Produkt, Vertrag, Datenkontrollen, Berechtigungen und Datenregion.\n\n| Option | Was du prüfen musst | Trainingsnutzung | Empfehlung |\n|------|------------------|----------------------|------------|\n| **Microsoft 365 Copilot** | Tenant-Geografie, Multi-Geo, Berechtigungen und Produktbedingungen | Microsoft sagt zu, Kundendaten nicht zum Training der Basismodelle zu verwenden | Nur in der von IT und Datenschutz freigegebenen Konfiguration |\n| **ChatGPT Business** | Geschäftsbedingungen, DPA, Datenkontrollen und zulässige Datenklassen | Workspace-Daten sind laut OpenAI standardmäßig vom Training ausgeschlossen | Nur nach betrieblicher Freigabe |\n| **Verbraucherangebote** | Kontoeinstellungen, aktuelle Bedingungen und fehlende Unternehmensvereinbarung | Kann vom Produkt und von Datenkontrollen abhängen | Keine internen oder personenbezogenen Firmendaten |\n| **Lokale KI** | Netzwerkzugriffe, Erweiterungen, Telemetrie und Geräteschutz | Lokale Inferenz trainiert nicht automatisch ein Anbietermodell | Geeignet, wenn Betrieb und Gerät abgesichert sind |\n\nEs gibt keine universelle Sicherheitsrangfolge nach Markennamen. Microsoft 365 Copilot arbeitet innerhalb der Microsoft-365-Dienstgrenze, aber eine EU-Datenresidenz hängt von Tenant-Geografie und Konfiguration ab und kennt dokumentierte Ausnahmen. ChatGPT Business schließt Workspace-Daten standardmäßig vom Training aus; für den betrieblichen Einsatz müssen trotzdem Vertrag, DPA, Transfers und Datenklassen geprüft werden.\n\nVerbraucherangebote sind für vertrauliche Firmendaten ungeeignet, solange keine ausdrückliche Freigabe vorliegt. Lokale Modelle können mehr Kontrolle bieten, aber nur, wenn Modell, Erweiterungen, Telemetrie und Endgerät geprüft sind.",
-          "keyTakeaway": "Kein Markenname macht ein KI-Tool automatisch sicher. Nutze für Firmendaten nur ein geprüftes Produkt in der freigegebenen Konfiguration und kontrolliere Vertrag, Berechtigungen, Datenregion und Trainingsnutzung."
+          "content": "Datenschutz und Informationssicherheit hängen von der konkreten Produktedition, dem Vertrag, der Konfiguration und dem Arbeitsablauf ab. Prüfe mindestens:\n\n| Prüffeld | Konkrete Fragen |\n|---|---|\n| **Rollen** | Wer ist Verantwortlicher, Auftragsverarbeiter oder weiterer Empfänger? Ist ein Vertrag zur Auftragsverarbeitung erforderlich und abgeschlossen? |\n| **Datenflüsse** | Welche Inhalte, Metadaten und Protokolle verlassen welches System? In welchen Regionen werden sie gespeichert oder verarbeitet? |\n| **Nutzung durch den Anbieter** | Werden Eingaben oder Ausgaben zur Modellentwicklung, Qualitätsprüfung oder Missbrauchserkennung verwendet? Welche Einstellungen und vertraglichen Zusagen gelten? |\n| **Zugriff und Funktionen** | Welche Rollen, Berechtigungen, Konnektoren, Erweiterungen und Freigabelinks sind aktiv? |\n| **Lebenszyklus** | Wie lange bleiben Eingaben, Ausgaben, Protokolle und Sicherungen erhalten? Wie funktionieren Auskunft, Löschung und Export? |\n| **Betriebliche Freigabe** | Für welche Zwecke, Datenklassen, Nutzergruppen und Konfigurationen gilt die Genehmigung? |\n\nCloud, lokal, kostenlos, bezahlt, Verbraucher- oder Unternehmensprodukt sind keine Datenschutzklassen. Auch lokale Systeme können Telemetrie, Erweiterungen oder Netzwerkzugriffe haben. Auch ein Unternehmensvertrag deckt nicht automatisch jede Funktion und Datenklasse ab. Prüfe aktuelle Vertrags- und Produktunterlagen bei Beschaffung und nach wesentlichen Änderungen erneut.",
+          "keyTakeaway": "Bewerte Rollen, Datenflüsse, Anbieternutzung, Zugriffe, Aufbewahrung und den freigegebenen Zweck. Produktkategorie und Markenname ersetzen diese Prüfung nicht."
         },
         {
           "id": "block_2_lesson_1_section_2",
           "title": "Shadow AI und die Lösung",
           "readTimeMinutes": 2,
-          "content": "Viele Mitarbeitende nutzen ein Verbraucherangebot privat und übertragen diese Gewohnheit später auf berufliche Aufgaben. So können Firmendaten ohne Freigabe in ein externes System gelangen.\n\nDieses Phänomen heißt \"Shadow AI\": die unautorisierte Nutzung von KI-Tools durch Mitarbeitende, ohne Wissen oder Genehmigung des Unternehmens. Shadow AI entsteht oft aus dem Bedürfnis, effizienter zu arbeiten.\n\nDas Problem: Bei einem nicht freigegebenen Produkt fehlen dem Unternehmen möglicherweise ein geeigneter Vertrag, eine dokumentierte Rechtsgrundlage, kontrollierte Datenregionen und verbindliche Einstellungen zur Datennutzung. Selbst wenn ein Anbieter Trainingsnutzung abschalten lässt, ersetzt das keine betriebliche Prüfung.\n\nWirksam sind klare Regeln, Schulung und eine freigegebene Alternative. Ein Unternehmensprodukt wie Microsoft 365 Copilot oder ChatGPT Business ist erst dann diese Alternative, wenn Vertrag, Konfiguration, Berechtigungen und zulässige Datenklassen geprüft sind.\n\n**Die Faustregel:** Für berufliche Aufgaben mit internen Informationen zuerst die Freigabe von IT oder Datenschutz prüfen.",
-          "keyTakeaway": "Shadow AI ist die unautorisierte Nutzung von KI-Tools durch Mitarbeitende. Die Lösung ist nicht Verbieten, sondern eine sichere Alternative bereitzustellen."
+          "content": "Shadow AI bezeichnet die nicht genehmigte Nutzung von KI-Produkten oder -Funktionen für betriebliche Aufgaben. Dazu zählen nicht nur private Chatkonten, sondern auch Browser-Erweiterungen, neue Funktionen in bereits beschaffter Software, eigene API-Schlüssel und lokale Modelle außerhalb des Betriebsprozesses.\n\nBei einem nicht freigegebenen Arbeitsablauf können Vertrag, Rechtsgrundlage, Berechtigungen, Datenregion, Aufbewahrung, Protokollierung oder technische Kontrollen fehlen. Eine ausgeschaltete Trainingsnutzung löst diese Fragen nicht allein.\n\nKontrollen müssen praktisch nutzbar sein: eine aktuelle Freigabematrix, verständliche Datenregeln, erreichbare Ansprechpartner, ein prüfbarer Beschaffungsweg und geeignete genehmigte Alternativen. Technische Maßnahmen können je nach Risiko Zugriffssteuerung, Konfigurationsrichtlinien, Protokollierung oder Sperren umfassen.\n\nVor einer beruflichen Verarbeitung prüfst du den veröffentlichten Freigabestatus für genau den Zweck, die Datenklasse, die Produktedition und die aktive Konfiguration.",
+          "keyTakeaway": "Shadow AI umfasst jeden nicht genehmigten KI-Arbeitsablauf. Klare Freigaben, geeignete Alternativen und technische Kontrollen reduzieren das Risiko."
         }
       ],
       "quiz": [
@@ -46,7 +43,7 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "ChatGPT (kostenlose Version), weil es kostenlos und weit verbreitet ist",
+              "text": "Ein beliebiger kostenloser Dienst, weil seine Verbreitung als Freigabe genügt",
               "isCorrect": false
             },
             {
@@ -56,7 +53,7 @@
             },
             {
               "id": "c",
-              "text": "Le Chat, weil es ein europäischer Anbieter ist",
+              "text": "Ein Dienst mit europäischem Firmensitz, ohne Produkt und Datenflüsse weiter zu prüfen",
               "isCorrect": false
             },
             {
@@ -88,11 +85,11 @@
             },
             {
               "id": "d",
-              "text": "Ein spezielles Datenschutz-Feature von ChatGPT",
+              "text": "Eine Datenschutzfunktion eines bestimmten Chatprodukts",
               "isCorrect": false
             }
           ],
-          "explanation": "Shadow AI bezeichnet die unautorisierte Nutzung von KI-Tools durch Mitarbeitende. Sie entsteht meist aus Gewohnheit: Mitarbeitende kennen ChatGPT Free von zu Hause und nutzen es dann auch für Firmendaten, ohne die Datenschutzrisiken zu kennen."
+          "explanation": "Shadow AI bezeichnet nicht genehmigte KI-Arbeitsabläufe. Dazu können Verbraucherangebote, Erweiterungen, persönliche API-Schlüssel, lokale Modelle oder neue Funktionen in beschaffter Software gehören."
         }
       ]
     },
@@ -112,46 +109,46 @@
       "sections": [
         {
           "id": "block_2_lesson_2_section_1",
-          "title": "Vier Stufen der Vertraulichkeit",
+          "title": "Ein Beispielmodell mit vier Stufen",
           "readTimeMinutes": 3,
-          "content": "Jetzt weißt du, welche Tools sicher sind. Aber welche Daten dürfen überhaupt rein? Die Antwort: Es kommt auf die Vertraulichkeitsstufe an.\n\nJede Person und jedes Unternehmen hat Daten mit unterschiedlicher Sensibilität. Ein öffentlicher Produktkatalog ist etwas anderes als eine Gehaltsabrechnung. Diese vier Stufen helfen dir, in Sekunden zu entscheiden:\n\n**Stufe 1: Öffentlich** (Alles erlaubt)\nInformationen, die bereits öffentlich zugänglich sind oder für die Veröffentlichung bestimmt sind. Beispiele: Firmen-Website-Text, veröffentlichte Pressemitteilungen, öffentlicher Produktkatalog. Diese Daten kannst du in jedes KI-Tool eingeben.\n\n**Stufe 2: Intern** (Copilot/ChatGPT Business ja, kostenlose Version nein)\nInformationen, die innerhalb des Unternehmens frei geteilt werden, aber nicht nach außen gehören. Beispiele: interne Meeting-Protokolle, Projektpläne, allgemeine Geschäftskorrespondenz. Diese Daten gehören in sichere Tools: M365 Copilot oder ChatGPT Business.\n\n**Stufe 3: Vertraulich** (Nur Copilot oder Enterprise-KI)\nInformationen mit geschäftskritischem Wert. Beispiele: Quartalszahlen vor der Veröffentlichung, Kundenlisten mit Kontaktdaten, Vertragskonditionen mit Lieferanten, strategische Planungen. Diese Daten gehören ausschließlich in Copilot oder vergleichbare Enterprise-KI mit vertraglichem Datenschutz.\n\n**Stufe 4: Streng vertraulich** (Niemals in KI-Tools)\nInformationen, deren Offenlegung schweren Schaden verursachen würde. Beispiele: Gehaltsdaten, Gesundheitsdaten von Mitarbeitenden, Patentanträge vor der Einreichung, Bewerbungsunterlagen, Zugangsdaten und Passwörter. Diese Daten gehören in kein KI-Tool. Das gilt auch für Dokumente, die solche Daten als Anhang enthalten.",
-          "keyTakeaway": "Vier Stufen: Öffentlich (alles erlaubt), Intern (nur sichere Tools), Vertraulich (nur Enterprise-KI), Streng vertraulich (niemals in KI). Je höher der Schaden bei Offenlegung, desto höher die Stufe."
+          "content": "Welche Daten in welchem System verarbeitet werden dürfen, legt die Organisation fest. Die folgenden vier Stufen sind ein Beispiel, keine allgemeingültige Zuordnung zu Produktnamen.\n\n**Stufe 1: Öffentlich**\nBereits veröffentlichte Informationen, etwa freigegebene Website-Texte oder Produktkataloge. Auch hier sind Urheberrecht, Lizenzen, eingebettete personenbezogene Daten, Integrität und die betriebliche Tool-Freigabe zu prüfen. Öffentlich bedeutet nicht automatisch frei verwendbar.\n\n**Stufe 2: Intern**\nInformationen, die nicht für externe Empfänger bestimmt sind, etwa interne Projektpläne oder Protokolle. Nutze sie nur in einem für diesen Zweck und diese Datenklasse freigegebenen Arbeitsablauf.\n\n**Stufe 3: Vertraulich**\nInformationen mit erhöhtem geschäftlichem, vertraglichem oder datenschutzrechtlichem Schutzbedarf, etwa unveröffentlichte Kennzahlen, Kundenlisten oder Lieferantenkonditionen. Erforderlich sind eine konkrete Freigabe sowie geprüfte Verträge, Konfiguration, Berechtigungen, Aufbewahrung und gegebenenfalls eine Rechtsgrundlage oder Datenschutz-Folgenabschätzung.\n\n**Stufe 4: Besonders geschützt**\nInformationen, deren Verlust oder Fehlverarbeitung schweren Schaden verursachen kann, etwa Gesundheits- und Gehaltsdaten, Bewerbungsunterlagen oder unveröffentlichte Erfindungen. In allgemeinen Assistenten sind sie standardmäßig gesperrt. Eine Verarbeitung kommt nur in einem ausdrücklich genehmigten, eng begrenzten System und Arbeitsablauf infrage. Passwörter, API-Schlüssel und andere Zugangsdaten gehören nicht in Prompts.\n\nDie Bezeichnungen und Freigaben können in deiner Organisation anders aussehen. Entscheidend ist die veröffentlichte Richtlinie, nicht der Markenname des Tools.",
+          "keyTakeaway": "Datenklasse und Tool-Freigabe sind organisationsspezifisch. Prüfe Zweck, Rechte, Vertrag, Konfiguration und Berechtigungen; ein Produktname erteilt keine Freigabe."
         },
         {
           "id": "block_2_lesson_2_section_2",
           "title": "Der Entscheidungsbaum",
           "readTimeMinutes": 2,
-          "content": "Bevor du Daten in ein KI-Tool eingibst, stell dir drei Fragen:\n\n1. **Welche Stufe haben diese Daten?** (1 bis 4)\n2. **Welches Tool nutze ich?** (Copilot, ChatGPT Business, kostenlose Version, anderes)\n3. **Passt das zusammen?** (Siehe Stufenübersicht)\n\nDie Zuordnung ist einfach:\n- Stufe 1 (Öffentlich): Jedes Tool ist in Ordnung.\n- Stufe 2 (Intern): Copilot oder ChatGPT Business. Nicht die kostenlose Version.\n- Stufe 3 (Vertraulich): Nur Copilot oder Enterprise-KI mit Vertrag.\n- Stufe 4 (Streng vertraulich): Kein KI-Tool. Das gilt auch für E-Mails oder Dokumente, die solche Daten enthalten.\n\n**Die goldene Regel: Im Zweifel höher einordnen.**\n\nWenn du unsicher bist, welche Stufe ein Datenelement hat, ordne es eine Stufe höher ein. Lieber zu vorsichtig als zu nachlässig. Im Zweifelsfall frag deine IT-Abteilung oder Vorgesetzte.\n\nDiese Regel verhindert einen Großteil aller Datenschutzprobleme bei KI. Du brauchst kein Jura-Studium. Du brauchst keine 50-seitige Datenschutzrichtlinie. Du brauchst drei Fragen und die Bereitschaft, im Zweifel vorsichtiger zu sein.",
-          "keyTakeaway": "Drei Fragen vor jeder KI-Eingabe: Welche Stufe? Welches Tool? Passt das zusammen? Im Zweifel immer eine Stufe höher einordnen."
+          "content": "Prüfe vor jeder Eingabe fünf Punkte:\n\n1. **Zweck:** Welche konkrete Aufgabe soll das System erledigen?\n2. **Daten und Rechte:** Welche Datenarten, Personen, Urheberrechte, Geschäftsgeheimnisse oder vertraglichen Pflichten sind betroffen?\n3. **Interne Einstufung:** Welche Datenklasse nennt die Richtlinie deiner Organisation?\n4. **Freigabe:** Ist genau dieses Produkt mit dieser Konfiguration, diesen Erweiterungen und diesem Arbeitsablauf dafür genehmigt?\n5. **Minimierung:** Welche Inhalte kannst du weglassen, anonymisieren oder durch synthetische Beispiele ersetzen?\n\nWenn eine Antwort fehlt, gib die Daten nicht ein. Nutze den veröffentlichten Freigabe- oder Eskalationsweg deiner Organisation. Eine kostenpflichtige Lizenz, ein Unternehmens-Tenant oder eine ausgeschaltete Trainingsnutzung beantwortet diese Fragen nicht allein.\n\nEine vorsichtige Einstufung reduziert Risiken, ersetzt aber weder Rechtsgrundlage noch Zweckbindung, Berechtigung oder Vertrag.",
+          "keyTakeaway": "Prüfe Zweck, Daten und Rechte, interne Einstufung, konkrete Systemfreigabe und Datenminimierung. Fehlt eine Antwort, stoppe die Eingabe und nutze den betrieblichen Klärungsweg."
         }
       ],
       "quiz": [
         {
           "id": "block_2_lesson_2_q1",
-          "questionText": "Eine Mitarbeiterin gibt eine Kundenliste mit Namen und E-Mail-Adressen in ChatGPT (kostenlose Version) ein. Welche Vertraulichkeitsstufe haben diese Daten?",
+          "questionText": "Eine Mitarbeiterin will eine Kundenliste mit Namen und E-Mail-Adressen in einem nicht freigegebenen KI-Dienst verarbeiten. Welche Aussage ist richtig?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "Stufe 1: Öffentlich, weil es nur Kontaktdaten sind",
+              "text": "Geschäftliche Kontaktdaten sind immer öffentlich und ohne weitere Prüfung verwendbar",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Stufe 2: Intern, weil sie im Unternehmen bekannt sind",
+              "text": "Eine kostenpflichtige Lizenz reicht als Freigabe aus",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "Stufe 3: Vertraulich, weil es personenbezogene Kundendaten mit geschäftskritischem Wert sind",
+              "text": "Die Verarbeitung muss bis zur Klärung von Zweck, Rechtsgrundlage, Datenklasse und konkreter Tool-Freigabe unterbleiben",
               "isCorrect": true
             },
             {
               "id": "d",
-              "text": "Stufe 4: Streng vertraulich, weil sie digital vorliegen",
+              "text": "Digital gespeicherte Daten dürfen grundsätzlich nicht mit Software verarbeitet werden",
               "isCorrect": false
             }
           ],
-          "explanation": "Kundenlisten mit Kontaktdaten sind Stufe 3 (Vertraulich): Sie enthalten personenbezogene Daten nach DSGVO und haben geschäftskritischen Wert. Sie gehören ausschließlich in Copilot oder Enterprise-KI. Die kostenlose ChatGPT-Version ist hier ein klarer Verstoß."
+          "explanation": "Namen und E-Mail-Adressen können personenbezogene Daten sein. Die zulässige Verarbeitung hängt unter anderem von Zweck, Rechtsgrundlage, interner Einstufung, Vertrag, Konfiguration und Datenminimierung ab. Ein Produktname oder Preismodell entscheidet das nicht."
         },
         {
           "id": "block_2_lesson_2_q2",
@@ -164,7 +161,7 @@
             },
             {
               "id": "b",
-              "text": "Das Datenelement eine Stufe höher einordnen als du vermutest",
+              "text": "Die Eingabe stoppen und die geltende Richtlinie oder die zuständige Freigabestelle nutzen",
               "isCorrect": true
             },
             {
@@ -178,7 +175,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Die goldene Regel lautet: Im Zweifel höher einordnen. Lieber zu vorsichtig als zu nachlässig. Diese einfache Regel verhindert einen Großteil aller Datenschutzprobleme bei KI-Nutzung."
+          "explanation": "Eine konservative Einstufung kann sinnvoll sein, ersetzt aber keine Freigabe. Wenn Datenklasse oder zulässiger Arbeitsablauf unklar sind, darf die Eingabe erst nach Klärung erfolgen."
         }
       ]
     },
@@ -189,81 +186,77 @@
       "title": "Übung: 10 Datenelemente klassifizieren",
       "subtitle": "Datenklassifizierung in der Praxis anwenden",
       "durationMinutes": 5,
-      "keyConcepts": [
-        "Datenklassifizierung",
-        "Praxisübung",
-        "DSGVO Art. 28"
-      ],
+      "keyConcepts": ["Datenklassifizierung", "Praxisübung", "DSGVO Art. 28"],
       "sections": [
         {
           "id": "block_2_lesson_3_section_1",
           "title": "Die Übung",
           "readTimeMinutes": 3,
-          "content": "Ordne die folgenden 10 Datenelemente den vier Stufen zu. Entscheide für jedes Element: Welche Stufe? Und in welches Tool darf es?\n\n| Nr. | Datenelement | Stufe | Begründung |\n|-----|-------------|-------|------------|\n| 1 | Firmen-Website Text | Stufe 1: Öffentlich | Bereits öffentlich zugänglich, kein Schutzbedarf. |\n| 2 | Internes Meeting-Protokoll | Stufe 2: Intern | Keine sensiblen Daten, aber nicht für Externe bestimmt. |\n| 3 | Quartalsumsatz (unveröffentlicht) | Stufe 3: Vertraulich | Geschäftskritisch, börsenrelevant bei AG, strategisch sensibel. |\n| 4 | Kundenliste mit Kontaktdaten | Stufe 3: Vertraulich | Personenbezogene Daten (DSGVO), geschäftskritischer Wert. |\n| 5 | Gehaltsabrechnung | Stufe 4: Streng vertraulich | Hochsensible personenbezogene Daten, niemals in KI. |\n| 6 | Produktkatalog (öffentlich) | Stufe 1: Öffentlich | Für Kunden veröffentlicht, frei zugänglich. |\n| 7 | Bewerbungsunterlagen | Stufe 4: Streng vertraulich | Personenbezogene Daten Dritter, besonderer Schutz nach DSGVO. |\n| 8 | Patentantrag (vor Einreichung) | Stufe 4: Streng vertraulich | Neuheitsverlust bei Offenlegung, existenzbedrohend. |\n| 9 | Pressemitteilung (Entwurf) | Stufe 2: Intern | Noch nicht veröffentlicht, aber keine sensiblen Geschäftsdaten. |\n| 10 | Lieferantenkonditionen | Stufe 3: Vertraulich | Wettbewerbsrelevant, vertragliche Geheimhaltung üblich. |\n\nVergleiche deine Antworten mit der Auswertung in der nächsten Sektion.",
-          "keyTakeaway": "Die 10 Datenelemente verteilen sich auf: 2x Öffentlich, 2x Intern, 3x Vertraulich, 3x Streng vertraulich. Die Logik ist immer dieselbe: Je höher der Schaden bei Offenlegung, desto höher die Stufe."
+          "content": "Nutze für diese Übung das Beispielmodell aus der vorherigen Lektion. Die Einstufungen sind Annahmen für ein fiktives Unternehmen; in der Praxis gilt die eigene Richtlinie.\n\n| Nr. | Datenelement | Beispielstufe | Zusätzliche Prüfung |\n|-----|-------------|---------------|----------------------|\n| 1 | Freigegebener Website-Text | Öffentlich | Nutzungsrechte, personenbezogene Angaben und Aktualität |\n| 2 | Internes Meeting-Protokoll | Intern | Teilnehmende, Themen, Einwilligung oder Rechtsgrundlage, freigegebener Arbeitsablauf |\n| 3 | Quartalsumsatz vor Veröffentlichung | Vertraulich | Kapitalmarkt-, Geheimhaltungs- und Zugriffsregeln |\n| 4 | Kundenliste mit Kontaktdaten | Vertraulich | Zweck, Rechtsgrundlage, Auftragsverarbeitung und Datenminimierung |\n| 5 | Gehaltsabrechnung | Besonders geschützt | Nur ausdrücklich genehmigte Fachverfahren; keine allgemeinen Assistenten |\n| 6 | Veröffentlichter Produktkatalog | Öffentlich | Rechte, Version und freigegebene Verwendung |\n| 7 | Bewerbungsunterlagen | Besonders geschützt | Zweckbindung, Zugriffsrechte, Aufbewahrung und mögliche Folgen für Betroffene |\n| 8 | Erfindungsbeschreibung vor Anmeldung | Besonders geschützt | Patent- und Geheimnisschutz; nur mit ausdrücklicher Freigabe |\n| 9 | Pressemitteilung im Entwurf | Intern oder vertraulich | Inhalt und geplanter Veröffentlichungszeitpunkt |\n| 10 | Lieferantenkonditionen | Vertraulich | Vertragliche Geheimhaltung und Berechtigungen |\n\nOrdne nicht nur eine Stufe zu. Notiere auch Zweck, Datenminimierung, erforderliche Freigabe und zuständige Stelle.",
+          "keyTakeaway": "Eine Datenklasse ist nur ein Teil der Entscheidung. Zweck, Rechte, konkrete Systemfreigabe, Konfiguration und Minimierung bestimmen, ob ein Arbeitsablauf zulässig ist."
         },
         {
           "id": "block_2_lesson_3_section_2",
           "title": "Auswertung und Tipp",
           "readTimeMinutes": 2,
-          "content": "**Auswertung nach Stufen:**\n\n- **Stufe 1 (Nr. 1, 6):** Alles erlaubt. Jedes KI-Tool ist in Ordnung. Firmen-Website und öffentlicher Produktkatalog sind bereits für jeden zugänglich.\n- **Stufe 2 (Nr. 2, 9):** Copilot oder ChatGPT Business. Nicht die kostenlose Version. Meeting-Protokolle und Pressemitteilungs-Entwürfe sind intern, aber nicht geschäftskritisch.\n- **Stufe 3 (Nr. 3, 4, 10):** Nur Copilot oder Enterprise-KI mit Vertrag. Quartalszahlen, Kundenlisten und Lieferantenkonditionen sind geschäftskritisch oder enthalten personenbezogene Daten.\n- **Stufe 4 (Nr. 5, 7, 8):** Kein KI-Tool. Gehaltsabrechnungen, Bewerbungsunterlagen und Patentanträge sind hochsensibel. Deren Offenlegung kann schweren Schaden verursachen.\n\nWenn du bei allen zehn richtig lagst, hast du das Prinzip verstanden. Wenn nicht: Lies die vier Stufen noch einmal. Die Logik ist immer dieselbe. Je höher der Schaden bei Offenlegung, desto höher die Stufe.\n\n**Tipp für den Alltag:** Drucke die 4-Stufen-Übersicht aus und leg sie neben deinen Bildschirm. Nach ein paar Wochen brauchst du die Übersicht kaum noch.",
-          "keyTakeaway": "Drucke die 4-Stufen-Übersicht aus und leg sie neben deinen Bildschirm. Nach ein paar Wochen wird die richtige Klassifizierung schnell zur Routine."
+          "content": "**Auswertung des Beispielmodells:**\n\n- **Öffentlich (Nr. 1, 6):** Der Inhalt ist bereits freigegeben. Prüfe trotzdem Rechte, personenbezogene Angaben, Aktualität und betriebliche Tool-Regeln.\n- **Intern (Nr. 2, teilweise Nr. 9):** Der Inhalt bleibt im vorgesehenen Empfängerkreis. Verwende nur den dafür freigegebenen Arbeitsablauf und entferne nicht benötigte Details.\n- **Vertraulich (Nr. 3, 4, 10; je nach Inhalt Nr. 9):** Vertrag, Rechtsgrundlage, Berechtigungen, Datenregion, Aufbewahrung und Systemkonfiguration müssen zum Zweck passen. Ein Unternehmensprodukt allein genügt nicht.\n- **Besonders geschützt (Nr. 5, 7, 8):** Allgemeine Assistenten sind im Beispiel gesperrt. Eine Ausnahme verlangt einen dokumentierten, fachlich und rechtlich geprüften Arbeitsablauf.\n\nEine reale Richtlinie muss außerdem Verantwortliche, freigegebene Produkte und Funktionen, verbotene Daten, Vorfallsmeldung und einen Prozess für neue Anwendungsfälle benennen.",
+          "keyTakeaway": "Dokumentiere nicht nur die Stufe, sondern auch Zweck, freigegebenes System, zulässige Funktionen, Verantwortliche und Eskalationsweg."
         }
       ],
       "quiz": [
         {
           "id": "block_2_lesson_3_q1",
-          "questionText": "Welche Vertraulichkeitsstufe hat ein Patentantrag vor der Einreichung?",
+          "questionText": "Wie ist eine Erfindungsbeschreibung vor einer Patentanmeldung im Beispielmodell zu behandeln?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "Stufe 1: Öffentlich, weil es ein technisches Dokument ist",
+              "text": "Als öffentlich, weil es ein technisches Dokument ist",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Stufe 2: Intern, weil es noch nicht veröffentlicht ist",
+              "text": "Als intern; ein Unternehmens-Abonnement reicht für die Verarbeitung aus",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "Stufe 3: Vertraulich, weil es geschäftskritisch ist",
+              "text": "Als vertraulich; jede lokale Installation ist automatisch zulässig",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Stufe 4: Streng vertraulich, weil eine Offenlegung den Neuheitsverlust und damit existenzbedrohenden Schaden verursacht",
+              "text": "Als besonders geschützt; ohne ausdrücklich genehmigten Arbeitsablauf nicht eingeben, weil eine Offenlegung Patent- oder Geheimnisschutz gefährden kann",
               "isCorrect": true
             }
           ],
-          "explanation": "Ein Patentantrag vor der Einreichung ist Stufe 4 (Streng vertraulich). Wird der Inhalt vor der offiziellen Einreichung offengelegt, geht die Neuheit verloren. Das Patent kann nicht mehr erteilt werden. Das kann existenzbedrohend sein."
+          "explanation": "Eine unkontrollierte Offenlegung kann Neuheit oder Geschäftsgeheimnisschutz gefährden. Ob eine konkrete Verarbeitung zulässig ist, muss der genehmigte Patent-, Sicherheits- und Datenschutzprozess bestimmen; weder Cloud noch lokal ist automatisch richtig."
         },
         {
           "id": "block_2_lesson_3_q2",
-          "questionText": "Ein internes Meeting-Protokoll ohne sensible Geschäftsdaten soll mit KI zusammengefasst werden. Welche Tools sind geeignet?",
+          "questionText": "Ein internes Meeting-Protokoll soll mit KI zusammengefasst werden. Welche Auswahlregel ist richtig?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "Jedes beliebige KI-Tool, auch die kostenlose Version",
+              "text": "Jeder Dienst ist geeignet, sofern das Protokoll keine Zahlen enthält",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Copilot oder ChatGPT Business, nicht die kostenlose Version",
+              "text": "Nur ein für Protokolle, beteiligte Datenarten und konkrete Konfiguration freigegebener Arbeitsablauf; nicht benötigte Angaben werden entfernt",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Kein KI-Tool, Meeting-Protokolle dürfen nie in KI",
+              "text": "Kein System ist jemals geeignet, auch kein eigens freigegebenes Fachverfahren",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Nur lokale KI wie LM Studio",
+              "text": "Jede lokale Installation ist automatisch geeignet",
               "isCorrect": false
             }
           ],
-          "explanation": "Ein internes Meeting-Protokoll ohne sensible Daten ist Stufe 2 (Intern). Interne Daten gehören in sichere Tools wie M365 Copilot oder ChatGPT Business, nicht in die kostenlose Version, bei der Eingaben zum Modelltraining verwendet werden können."
+          "explanation": "Protokolle können personenbezogene, vertrauliche oder besonders geschützte Inhalte enthalten. Produkt, Vertrag, Funktionen wie Aufzeichnung und Transkription, Berechtigungen, Aufbewahrung und Zweck müssen ausdrücklich freigegeben sein."
         }
       ],
       "widgets": [
@@ -275,7 +268,7 @@
             "lessonId": "block_2_lesson_3",
             "cpId": "redaction-drill",
             "title": "Schwärzen vor dem Einfügen",
-            "scenario": "Bevor du ein Protokoll oder eine Kunden-E-Mail in ein KI-Tool kopierst: markiere jede Stelle, die niemals den Betrieb verlassen darf. Zwei Durchgänge, der zweite ist absichtlich kniffliger."
+            "scenario": "Prüfe vor dem Einfügen eines Protokolls oder einer Kunden-E-Mail jede Information: Ist sie für den Zweck nötig, vom freigegebenen Arbeitsablauf umfasst oder zu entfernen? Zwei Durchgänge, der zweite enthält weniger offensichtliche Risiken."
           }
         }
       ]

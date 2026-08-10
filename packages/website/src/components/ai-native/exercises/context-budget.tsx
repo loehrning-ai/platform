@@ -11,6 +11,7 @@ import {
 import type { ModuleId } from "@/lib/ai-native/types";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import { useDemoLocale } from "@/components/demos/demo-locale";
 
 /**
  * Context-Budget Drag-Drop — user drags (or tap-to-place) blocks into the
@@ -106,6 +107,7 @@ function ContextBudgetBody({
   budgetTokens,
   blocks,
 }: ContextBudgetSpec): JSX.Element {
+  const { locale, text } = useDemoLocale();
   const coarse = useCoarsePointer();
   const [inContext, setInContext] = useState<Set<string>>(new Set());
   const [draggedId, setDraggedId] = useState<string | null>(null);
@@ -180,8 +182,14 @@ function ContextBudgetBody({
       <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
         <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
           {coarse
-            ? "Tippe einen Block, tippe dann den Ziel-Bereich"
-            : "Ziehe Blöcke in das Context-Window oder wähle sie per Tastatur"}
+            ? text(
+                "Tippe einen Block, tippe dann den Ziel-Bereich",
+                "Tap a block, then tap its destination",
+              )
+            : text(
+                "Ziehe Blöcke in das Context-Window oder wähle sie per Tastatur",
+                "Drag blocks into the context window or select them with the keyboard",
+              )}
         </p>
         <p className="font-mono text-[10.5px] tracking-[0.12em]">
           <span
@@ -190,7 +198,7 @@ function ContextBudgetBody({
               grading.overBudget ? "text-destructive" : "text-foreground",
             )}
           >
-            {grading.tokensUsed.toLocaleString("de-DE")}
+            {grading.tokensUsed.toLocaleString(locale === "en" ? "en-GB" : "de-DE")}
           </span>{" "}
           / {budgetTokens.toLocaleString("de-DE")} Tokens
         </p>
@@ -220,7 +228,7 @@ function ContextBudgetBody({
           className="flex min-h-[200px] flex-col gap-1.5 border border-dashed border-border bg-card/30 p-3"
         >
           <p className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-            Verfügbar
+          {text("Verfügbar", "Available")}
           </p>
           {blocks
             .filter((b) => !inContext.has(b.id))
@@ -249,7 +257,9 @@ function ContextBudgetBody({
           )}
         >
           <p className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-            ◆ Context-Window ({budgetTokens.toLocaleString("de-DE")} Tokens)
+            {locale === "en"
+              ? `◆ Context window (${budgetTokens.toLocaleString("en-GB")} tokens)`
+              : `◆ Context-Window (${budgetTokens.toLocaleString("de-DE")} Tokens)`}
           </p>
           {blocks
             .filter((b) => inContext.has(b.id))
@@ -266,10 +276,16 @@ function ContextBudgetBody({
             ))}
           {inContext.size === 0 && (
             <p className="my-auto text-center text-[12px] text-muted-foreground">
-              Leer.{" "}
+              {text("Leer.", "Empty.")}{" "}
               {coarse
-                ? "Tippe links einen Block zur Aufnahme."
-                : "Blöcke hierher ziehen oder auswählen."}
+                ? text(
+                    "Tippe links einen Block zur Aufnahme.",
+                    "Tap a block on the left to add it.",
+                  )
+                : text(
+                    "Blöcke hierher ziehen oder auswählen.",
+                    "Drag or select blocks to add them.",
+                  )}
             </p>
           )}
         </div>
@@ -301,7 +317,10 @@ function ContextBudgetBody({
               )}
               <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-foreground">
                 {grading.overBudget
-                  ? "Über Budget: Kontext wird abgeschnitten"
+                  ? text(
+                      "Über Budget: Kontext wird abgeschnitten",
+                      "Over budget: the context will be truncated",
+                    )
                   : `${grading.mustHavesIncluded}/${grading.mustHavesTotal} Must-haves · Score ${Math.round(grading.score * 100)}%`}
               </p>
             </div>
@@ -316,7 +335,7 @@ function ContextBudgetBody({
             onClick={handleSubmit}
             className="inline-flex items-center gap-1.5 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
           >
-            Prüfen
+            {text("Prüfen", "Evaluate")}
           </button>
         ) : (
           <ExerciseResetButton onReset={handleReset} />
@@ -341,6 +360,7 @@ function BlockCard({
   readonly draggable: boolean;
   readonly submitted: boolean;
 }): JSX.Element {
+  const { locale, text } = useDemoLocale();
   const shownAsMust = submitted && block.mustHave && !inContext;
   return (
     <div
@@ -351,7 +371,11 @@ function BlockCard({
       tabIndex={!submitted ? 0 : -1}
       aria-pressed={!submitted ? inContext : undefined}
       aria-label={!submitted
-        ? `${block.label}: ${inContext ? "aus Context-Window entfernen" : "zum Context-Window hinzufügen"}`
+        ? `${block.label}: ${
+            inContext
+              ? text("aus Context-Window entfernen", "remove from context window")
+              : text("zum Context-Window hinzufügen", "add to context window")
+          }`
         : undefined}
       onKeyDown={(e) => {
         if (!submitted && (e.key === "Enter" || e.key === " ") && onClick) {
@@ -381,7 +405,7 @@ function BlockCard({
         <p className="mt-0.5 text-[11px] text-muted-foreground">{block.description}</p>
       </div>
       <span className="shrink-0 font-mono text-[11px] font-bold text-foreground">
-        {block.tokens.toLocaleString("de-DE")}
+        {block.tokens.toLocaleString(locale === "en" ? "en-GB" : "de-DE")}
       </span>
     </div>
   );

@@ -7,6 +7,7 @@
 // module, so no lesson route's bundle pays for a sibling lesson's content.
 
 import type { BaseLesson } from "@/lib/course/types";
+import type { Locale } from "@/lib/i18n/locale";
 
 export const CLAUDE_TRACK_IDS = [
   "foundations",
@@ -24,7 +25,7 @@ export interface ClaudeTrack {
 }
 
 /** Four tracks, ported verbatim from `claude/js/lessons.js`'s `window.TRACKS`. */
-export const CLAUDE_TRACKS: readonly ClaudeTrack[] = [
+export const CLAUDE_TRACKS_EN: readonly ClaudeTrack[] = [
   {
     id: "foundations",
     label: "Foundations",
@@ -33,7 +34,7 @@ export const CLAUDE_TRACKS: readonly ClaudeTrack[] = [
   {
     id: "workflows",
     label: "Everyday workflows",
-    hint: "Where Claude saves you hours every week.",
+    hint: "Reusable patterns for recurring work.",
   },
   {
     id: "advanced",
@@ -46,6 +47,39 @@ export const CLAUDE_TRACKS: readonly ClaudeTrack[] = [
     hint: "Share it safely, measure it honestly.",
   },
 ];
+
+export const CLAUDE_TRACKS_DE: readonly ClaudeTrack[] = [
+  {
+    id: "foundations",
+    label: "Grundlagen",
+    hint: "Beginne mit dem mentalen Modell und klar strukturierten Prompts.",
+  },
+  {
+    id: "workflows",
+    label: "Arbeitsabläufe",
+    hint: "Wiederverwendbare Muster für regelmäßig anfallende Aufgaben.",
+  },
+  {
+    id: "advanced",
+    label: "Vertiefung",
+    hint: "Agenten, Code-Reviews und Grounding gegen unbelegte Aussagen.",
+  },
+  {
+    id: "team",
+    label: "Team und Qualität",
+    hint: "Prompts sicher teilen und ihre Ergebnisse nachvollziehbar prüfen.",
+  },
+];
+
+export const CLAUDE_TRACKS_BY_LOCALE: Readonly<
+  Record<Locale, readonly ClaudeTrack[]>
+> = {
+  de: CLAUDE_TRACKS_DE,
+  en: CLAUDE_TRACKS_EN,
+};
+
+/** Backward-compatible name for the reviewed canonical English source. */
+export const CLAUDE_TRACKS = CLAUDE_TRACKS_EN;
 
 /** 12 lesson ids, ported verbatim from `claude/js/lessons.js`'s `window.LESSONS`. */
 export const CLAUDE_LESSON_IDS = [
@@ -81,6 +115,7 @@ export function isClaudeLessonId(value: unknown): value is ClaudeLessonId {
  * represented as a `"quiz"` kind widget instead (see ./lessons/*.ts).
  */
 export interface ClaudeLesson extends BaseLesson {
+  readonly id: ClaudeLessonId;
   readonly trackId: ClaudeTrackId;
   readonly hook: string;
 }

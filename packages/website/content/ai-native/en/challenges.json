@@ -1,0 +1,216 @@
+{
+  "_meta": {
+    "title": "AI Challenge of the Week",
+    "version": "1.0.0",
+    "authored": "2026-04-21",
+    "rotationWeeks": 12,
+    "language": "en",
+    "rotationNote": "Weekly ISO week rotation. After week 12, continue again at week 1. Prepare the next set of 12 challenges by week 10."
+  },
+  "challenges": [
+    {
+      "weekOffset": 0,
+      "role": "HR lead at an 80-person engineering company",
+      "scenario": "Your CFO wants a salary benchmark against five competitors within three days. You have public sources such as company reports, job listings and employee-submitted salary data, two hours for the first analysis and no data analyst. How do you produce a defensible draft?",
+      "stack": ["Claude", "Obsidian", "public salary sources"],
+      "timeBudget": "2 hours",
+      "modelSolution": "1. Write a brief that defines the analyst role, the company and region, and a five-column output: competitor, role and level, reported salary range, source and confidence. 2. Collect a small, documented set of public records for each competitor. Respect site terms and do not treat estimates as payroll facts. 3. Ask Claude to extract ranges and mark missing or uncertain values. 4. Ask which three claims need the strongest manual check. 5. Verify those claims at their original sources, record sample limitations and export the reviewed table for the CFO.",
+      "rubric": [
+        "The brief states the role, context and output format",
+        "Named public sources replace an undefined web search",
+        "Sample sizes and source limitations are recorded",
+        "Uncertain values carry an explicit confidence label",
+        "A critical review takes place before delivery",
+        "The output format matches the CFO's need for a table",
+        "The two-hour limit applies to a bounded first analysis, not a complete compensation study"
+      ]
+    },
+    {
+      "weekOffset": 1,
+      "role": "Sales lead at a 45-person trade business",
+      "scenario": "Your system contains 230 open quotations, some 90 days old. You no longer know which opportunities are active. Manual review is estimated at three days. How do you create a review queue in two hours?",
+      "stack": ["Claude Code", "CSV export", "email templates"],
+      "timeBudget": "2 hours",
+      "modelSolution": "1. Export only the fields required for triage: customer reference, value, last activity and status. Handle personal data under the organisation's approved process. 2. Define review classes such as HOT, WARM, COLD and DEAD using explicit age and value thresholds. 3. Generate draft follow-up templates for human approval; do not send automatically. 4. Assign the highest-priority records to personal calls and place the remaining records in review queues. Do not archive solely on a model recommendation. 5. Repeat the review weekly and compare the rules with actual outcomes.",
+      "rubric": [
+        "Data is exported from the source system instead of retyped",
+        "Triage classes use explicit, reviewable thresholds",
+        "Each class has an appropriate draft template in plain business language",
+        "High-value follow-up remains subject to human review",
+        "The two-hour limit covers triage setup and drafts",
+        "A recurring review replaces a one-off cleanup",
+        "Customer data is processed only through an approved data-protection and access-control path"
+      ]
+    },
+    {
+      "weekOffset": 2,
+      "role": "Controller at a 120-person logistics company",
+      "scenario": "Management reporting contains eight metrics, four departments and twelve commentary lines. The current process takes six hours. A colleague is absent and you have 90 minutes. How do you prepare a reviewable draft?",
+      "stack": ["Claude with a notebook", "Excel", "three previous reports"],
+      "timeBudget": "90 minutes",
+      "modelSolution": "1. Create a controlled workspace and add the previous three reports as structure and style references. 2. Provide the current raw figures in a validated table. 3. Ask for the same structure, explicit variance calculations and commentary that distinguishes facts from hypotheses. 4. Recalculate every reported figure in Excel and inspect each cited source cell. 5. Use the remaining time to investigate two or three material variances and record several possible explanations rather than selecting one without evidence. 6. Export the reviewed document in the required format.",
+      "rubric": [
+        "Previous reports provide a structure and style reference",
+        "Every figure is checked independently of generated prose",
+        "Variance rules are defined before the draft is created",
+        "Possible explanations are labelled as hypotheses",
+        "Verification receives more time than wording changes",
+        "The final format matches management's reporting process",
+        "The workspace and checks can be reused next month"
+      ]
+    },
+    {
+      "weekOffset": 3,
+      "role": "Executive assistant at a 200-person software company",
+      "scenario": "An executive leaves tomorrow morning for an investor meeting. By the end of today, you must prepare an eight-page briefing on three competitors: public financial information, product positioning, management, recent announcements and an evidence-based risk assessment.",
+      "stack": ["Claude", "company registers", "professional profiles", "news sources"],
+      "timeBudget": "4 hours",
+      "modelSolution": "1. Define the eight-page structure before research: one-page summary, two pages per competitor and a one-page comparison. 2. Collect the same source categories for each competitor in parallel, including filing dates and direct links. 3. Ask Claude to draft against the template and mark every uncertain statement. 4. Verify financial figures and quotations in the original documents. 5. Compare the competitors across financial capacity, delivery pace, team and product, with evidence for each rating. 6. Export the reviewed briefing and a one-page meeting reference.",
+      "rubric": [
+        "The structure exists before drafting starts",
+        "Each competitor is researched against the same source plan",
+        "The writing follows an approved internal example rather than generic consulting language",
+        "Financial figures and quotations are checked at the source",
+        "The comparison matrix separates evidence from judgement",
+        "The deliverables are the briefing and a concise meeting reference",
+        "The four-hour plan limits scope while reserving time for verification"
+      ]
+    },
+    {
+      "weekOffset": 4,
+      "role": "IT lead at a 60-person family business",
+      "scenario": "Management asks where AI could be useful. You must present a first concept next week. The budget is undecided, time is limited and the company has no established AI practice. Where do you start?",
+      "stack": ["Claude", "employee survey", "process mapping"],
+      "timeBudget": "5 hours across 3 days",
+      "modelSolution": "1. Day 1: build a broad, industry-specific list of candidate use cases, then reject those without a clear owner or data path. 2. Day 2: ask eight people from different functions five short questions about repeated work and failure points. Use Claude to cluster the answers, then verify each cluster against the responses. 3. Day 3: compare the remaining use cases by effort, number of affected staff, data sensitivity, operational risk and time to evidence. 4. Present two candidates with assumptions, exclusions, required controls and the next validation step. Treat any return estimate as a range based on stated inputs, not a promised result.",
+      "rubric": [
+        "External use-case research is combined with employee evidence",
+        "Claude supports clustering and structure, not the final decision",
+        "Effort, reach, risk and evidence time are explicit criteria",
+        "Management receives two prioritised candidates rather than a long list",
+        "The output fits on one decision page",
+        "Each candidate has a concrete validation step and owner",
+        "Work is distributed across three days to allow source checking"
+      ]
+    },
+    {
+      "weekOffset": 5,
+      "role": "Marketing lead at a 30-person B2B software company",
+      "scenario": "Plan a Q3 LinkedIn calendar with three posts per week for 13 weeks on the subject of AI-native teams. There is no agency budget and you are the only person assigned to the work.",
+      "stack": ["Claude", "LinkedIn Analytics", "Buffer"],
+      "timeBudget": "1 day for the Q3 plan plus 30 minutes per week for drafting",
+      "modelSolution": "1. Analyse the previous 30 posts and their available performance data to identify three repeatable formats. Do not infer causation from small samples. 2. Generate candidate topics for German B2B audiences, then select 39 that are relevant and non-duplicative. 3. Write one factual angle and evidence requirement for each topic before any hook or call to action. 4. Build a quarterly calendar with owner, source status and review date. 5. Draft three posts each week and edit them for factual accuracy and company voice. 6. Review performance monthly and document what changed.",
+      "rubric": [
+        "Previous posts inform the style without copying them",
+        "Performance data informs selection with its limitations recorded",
+        "The calendar contains exactly 39 topics for 3 posts across 13 weeks",
+        "An angle and evidence requirement precede each draft",
+        "The weekly 30-minute target covers drafting, with review time accounted for separately",
+        "A monthly review creates a documented feedback loop",
+        "The language is precise and appropriate for a German B2B audience"
+      ]
+    },
+    {
+      "weekOffset": 6,
+      "role": "Product manager at a 15-person startup",
+      "scenario": "Customers have requested three competing features, but the next sprint has capacity for one. How do you make and document the decision?",
+      "stack": ["Claude", "three customer interviews", "usage data"],
+      "timeBudget": "3 hours",
+      "modelSolution": "1. Record each request with the customer's context and the relevant product-usage data. 2. For each feature, state the user problem, affected segments and any existing substitute. 3. Build a RICE table with explicit definitions for reach, impact, confidence and effort. Use Claude for arithmetic only after checking the inputs. 4. For each low-confidence estimate, identify one small research action that would materially improve it. 5. Record the decision, assumptions and rejected alternatives. 6. After release, compare observed use and outcomes with the estimates.",
+      "rubric": [
+        "A defined framework replaces an undocumented preference",
+        "Product-usage evidence is included",
+        "Confidence is explicit and tied to evidence",
+        "Low-confidence assumptions receive a research action",
+        "The decision and rejected alternatives are recorded",
+        "A post-release measurement point is defined",
+        "Claude structures and calculates; the accountable owner decides"
+      ]
+    },
+    {
+      "weekOffset": 7,
+      "role": "Compliance officer at a medium-sized financial company",
+      "scenario": "Management wants to introduce an AI chat assistant in customer advice. Within two weeks, you must state whether the proposed use can proceed and under which conditions. GDPR, the EU AI Act and sector rules may all apply.",
+      "stack": ["Claude", "EU AI Act text", "the organisation's DPIA template"],
+      "timeBudget": "8 hours across 2 weeks",
+      "modelSolution": "1. Define the proposed system, user journey, decision effects, data categories, model provider and human role. 2. Analyse each legal framework separately against primary sources: GDPR legal basis, minimisation and DPIA; EU AI Act role and risk classification; and applicable financial-supervision requirements. 3. Create a traceable list of requirements, evidence and unresolved questions. 4. Have qualified legal and compliance reviewers check the analysis. 5. Produce a decision matrix covering permitted scope, prohibited uses, required contracts, controls, testing and training. 6. Record the recommendation and its conditions; do not treat model output as legal advice.",
+      "rubric": [
+        "The analysis covers GDPR, the EU AI Act and applicable sector rules separately",
+        "Primary sources support the summary",
+        "Qualified legal or compliance review is mandatory",
+        "The decision matrix distinguishes permitted scope, exclusions and conditions",
+        "Required evidence such as contracts, assessments and training records is named",
+        "Management receives a conditional recommendation rather than a binary model answer",
+        "Risk classification and assessment decisions are documented for later audit"
+      ]
+    },
+    {
+      "weekOffset": 8,
+      "role": "HR lead at a 500-person industrial company",
+      "scenario": "Five vacancies receive 370 applications in ten days. The team currently reviews 20 per day and needs a lawful triage process by Friday. How do you reduce administrative work without delegating employment decisions to a model?",
+      "stack": ["Claude", "job requirements", "approved personal-data controls"],
+      "timeBudget": "3 hours",
+      "modelSolution": "1. For each role, have hiring owners define measurable requirements, evidence rules and prohibited proxy criteria before using a model. 2. Confirm the legal basis, retention rules, access controls, provider contract, applicable EU AI Act classification and any required impact assessment. 3. Use AI only for approved administrative support, such as extracting evidence into a review table. Do not automatically rank or reject candidates. 4. Recruiters inspect the source application and make each decision. 5. Test for extraction errors and disparate outcomes, including edge cases. 6. Keep an audit trail and provide the required applicant information and rights process.",
+      "rubric": [
+        "Job-related criteria and prohibited proxies are defined before processing",
+        "Legal basis, EU AI Act classification and impact-assessment duties are checked",
+        "The model does not autonomously rank or reject applicants",
+        "A recruiter checks source evidence and decides every outcome",
+        "Accuracy and bias tests include documented edge cases",
+        "Retention, access and applicant-rights processes are recorded",
+        "The output is a review table with source references, not an unexplained score"
+      ]
+    },
+    {
+      "weekOffset": 9,
+      "role": "Sales engineer at an enterprise B2B software company",
+      "scenario": "An enterprise customer requests a technical proof of concept in ten days using your system and access to its database. Similar work normally takes six weeks. Do you accept, and under which scope and controls?",
+      "stack": ["Claude Code", "API specification", "existing proof-of-concept templates"],
+      "timeBudget": "10 days",
+      "modelSolution": "1. Day 1: search the internal repository for comparable proof-of-concept work and identify reusable components with their licences, owners and test state. 2. Days 1 and 2: agree on five observable user stories, a data-access boundary, acceptance criteria and explicit exclusions. 3. Days 3 to 7: implement and test within an isolated environment. Review generated code and dependencies. 4. Day 8: conduct an internal security and operations review covering authentication, audit logs, rate limits, secrets and teardown. 5. Day 9: rehearse the demonstration and failure path. 6. Day 10: demonstrate the agreed scope and record what would be required for production.",
+      "rubric": [
+        "Existing components are reviewed for reuse instead of assuming a fresh build",
+        "Scope is limited to five observable user stories",
+        "Generated code and tests receive human review",
+        "Authentication, audit logging, rate limits, secrets and teardown are checked",
+        "An internal dry run occurs before the customer session",
+        "The proof of concept is explicitly separated from a production commitment",
+        "The ten-day schedule has owners, review gates and exclusions"
+      ]
+    },
+    {
+      "weekOffset": 10,
+      "role": "Office manager at a 40-person law firm",
+      "scenario": "The firm receives 120 client emails a day: 40 percent concern existing matters, 30 percent request appointments, 20 percent are new enquiries and 10 percent are spam or sales messages. Two people cannot keep pace. How do you reduce handling work without exposing privileged information or sending unreviewed legal communications?",
+      "stack": ["local language model", "n8n", "Outlook"],
+      "timeBudget": "1 week for setup plus continuous improvement",
+      "modelSolution": "1. Map confidentiality, professional-secrecy, retention and access requirements before selecting any model. Local execution can reduce transfers but does not establish compliance on its own. 2. Build an isolated n8n workflow that classifies example or approved messages into four queues. 3. Draft appointment and acknowledgement templates, but require authorised staff approval before sending. 4. Route existing-matter and ambiguous messages to the responsible team without adding generated legal advice. 5. Keep spam handling reversible during evaluation. 6. Review classification errors weekly and update tests before prompts. 7. Document the assessment, provider and processor roles, staff procedure and client information duties with qualified counsel.",
+      "rubric": [
+        "The architecture follows confidentiality and professional-secrecy requirements",
+        "Classification supports routing and does not make legal decisions",
+        "Templates require authorised human approval before sending",
+        "Ambiguous and existing-matter messages have an explicit review path",
+        "A weekly error review updates a fixed test set",
+        "The legal assessment and data-protection controls are documented",
+        "Client transparency duties are assessed with qualified counsel"
+      ]
+    },
+    {
+      "weekOffset": 11,
+      "role": "Managing director at a 25-person agency",
+      "scenario": "Planning for 2027 covers 200 spreadsheet rows across targets, budget and team growth. The previous process took two weeks. You have set a two-day target without lowering the review standard. How do you bound the work?",
+      "stack": ["Claude", "three previous annual plans", "Q4 figures"],
+      "timeBudget": "2 days",
+      "modelSolution": "1. Day 1 morning: compare the previous three plans with actual results and identify categories with repeated forecast error. 2. Day 1 afternoon: enter the 2027 assumptions with source, owner and confidence, then create base, downside and upside scenarios. 3. Day 2 morning: ask functional leads to challenge the assumptions and record unresolved risks. Claude can structure the discussion but cannot validate the business assumptions. 4. Day 2 afternoon: finalise the controlled workbook and one-page summary for each scenario. 5. Schedule quarterly checks comparing actuals with the plan. Treat the two-day duration as a scoped process target, not a guarantee of equivalent quality.",
+      "rubric": [
+        "Previous plan-to-actual differences inform calibration",
+        "Base, downside and upside scenarios use stated assumptions",
+        "Functional leads challenge the assumptions",
+        "Each scenario has a one-page decision summary",
+        "Quarterly reviews compare actual results with the plan",
+        "Claude structures analysis; the managing director remains accountable",
+        "The two-day target preserves explicit verification and sign-off gates"
+      ]
+    }
+  ]
+}

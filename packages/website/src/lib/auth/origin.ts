@@ -68,6 +68,60 @@ function previewDeploymentOrigin(requestUrl: URL): URL | null {
   return null;
 }
 
+function firstForwardedValue(raw: string | null): string | null {
+  if (!raw) return null;
+  const first = raw.split(",")[0]?.trim();
+  return first && first.length > 0 && first.length <= 255 ? first : null;
+}
+
+/**
+ * Rebuilds the externally visible request URL for a route handler.
+ *
+ * Next serves route handlers with a placeholder authority (`http://n/…`) behind
+ * the platform proxy, so `request.url` — and `request.nextUrl`, which derives
+ * from it — describe the internal invocation rather than the request the user
+ * made. Only the path and query survive that hop intact, so the authority is
+ * restored from the proxy's forwarded headers.
+ *
+ * The result is a *claim*, never a grant. Callers must still pass it through
+ * `trustedRequestOrigin`, which accepts an authority only when it matches the
+ * production hostnames or this deployment's own Vercel URL, so a forged header
+ * cannot widen trust beyond the origins the app already redirects to.
+ */
+export function externalRequestUrl(request: {
+  readonly url: string;
+  readonly headers: Headers;
+}): URL {
+  const internalUrl = new URL(request.url);
+  const host =
+    firstForwardedValue(request.headers.get("x-forwarded-host")) ??
+    firstForwardedValue(request.headers.get("host"));
+  const protocol = firstForwardedValue(
+    request.headers.get("x-forwarded-proto"),
+  );
+  if (!host || (protocol !== "http" && protocol !== "https")) {
+    return internalUrl;
+  }
+
+  try {
+    const externalUrl = new URL(
+      `${protocol}://${host}${internalUrl.pathname}${internalUrl.search}`,
+    );
+    // A forwarded authority must be a bare host. Anything carrying credentials
+    // or a mismatched path is treated as untrustworthy input, not sanitized.
+    if (
+      externalUrl.username !== "" ||
+      externalUrl.password !== "" ||
+      externalUrl.pathname !== internalUrl.pathname
+    ) {
+      return internalUrl;
+    }
+    return externalUrl;
+  } catch {
+    return internalUrl;
+  }
+}
+
 /**
  * Resolves an origin only when its authority is independently trusted.
  *

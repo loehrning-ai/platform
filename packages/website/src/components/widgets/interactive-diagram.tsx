@@ -10,7 +10,7 @@ import {
 } from "react";
 // Scoped domMax load (performance hardening): the trace pulse uses `layoutId`
 // (shared-element transition between nodes), which needs the projection
-// engine from domMax — the root MotionProvider only ships domAnimation.
+// engine from domMax, so this widget owns the required feature bundle.
 // This widget is only ever loaded through the registry's dynamic import, so
 // the static domMax bundle stays confined to the already-lazy widget chunk
 // and never touches a route's First Load JS.
@@ -87,6 +87,18 @@ export interface InteractiveDiagramProps {
   readonly reducedMotion?: boolean;
   /** XP awarded on completion. Cosmetic label only; store value is fixed. */
   readonly xpOnComplete?: number;
+  readonly copy?: Partial<InteractiveDiagramCopy>;
+}
+
+export interface InteractiveDiagramCopy {
+  readonly kindLabel: string;
+  readonly inspectHeading: string;
+  readonly inspectBody: string;
+  readonly consequencePrefix: string;
+  readonly traceComplete: string;
+  readonly tracing: string;
+  readonly traceIdle: string;
+  readonly traceButton: string;
 }
 
 const KIND_LABEL: Record<DiagramVariant, string> = {
@@ -107,6 +119,17 @@ const DEFAULT_CAPTION: Record<DiagramVariant, string> = {
   compare: "Tippe eine Schicht an: was sie tut und was passiert, wenn sie fehlt.",
 };
 
+const DEFAULT_COPY: Omit<InteractiveDiagramCopy, "kindLabel"> = {
+  inspectHeading: "Schicht antippen",
+  inspectBody:
+    "Tipp eine Schicht an, um zu sehen, was sie tut und was passiert, wenn sie fehlt.",
+  consequencePrefix: "Wenn diese Schicht fehlt:",
+  traceComplete: "Durchlauf komplett. So fließt es durch den Stapel.",
+  tracing: "Impuls läuft …",
+  traceIdle: "Starte den Durchlauf.",
+  traceButton: "Verlauf abspielen",
+};
+
 /** Step delay (ms) between nodes during a trace. Held short for snappiness. */
 const STEP_MS = 420;
 
@@ -120,7 +143,13 @@ export function InteractiveDiagram({
   cpId,
   reducedMotion,
   xpOnComplete = 10,
+  copy,
 }: InteractiveDiagramProps): JSX.Element {
+  const chrome: InteractiveDiagramCopy = {
+    kindLabel: KIND_LABEL[variant],
+    ...DEFAULT_COPY,
+    ...copy,
+  };
   const mediaReduced = useReducedMotion();
   const reduced = reducedMotion ?? mediaReduced ?? false;
 
@@ -209,7 +238,7 @@ export function InteractiveDiagram({
     // against accidental full `motion` components active here too.
     <LazyMotion features={domMax} strict>
     <WidgetFrame
-      kindLabel={KIND_LABEL[variant]}
+      kindLabel={chrome.kindLabel}
       title={title ?? DEFAULT_TITLE[variant]}
       scenario={caption ?? DEFAULT_CAPTION[variant]}
       done={hasCheckpoint ? done : false}
@@ -271,7 +300,7 @@ export function InteractiveDiagram({
                     </span>
                   </span>
                   <span className="min-w-0">
-                    <span className="block truncate text-[14.5px] font-bold leading-[1.25] text-foreground">
+                    <span className="block break-words text-[14.5px] font-bold leading-[1.25] text-foreground [overflow-wrap:anywhere]">
                       {node.label}
                     </span>
                     {node.sub && (
@@ -321,7 +350,7 @@ export function InteractiveDiagram({
                 {activeNode.consequence && (
                   <p className="mt-3 border-l-[3px] border-destructive bg-destructive/5 p-2.5 text-[12.5px] leading-[1.5] text-foreground">
                     <span className="font-bold text-destructive">
-                      Wenn diese Schicht fehlt:{" "}
+                      {chrome.consequencePrefix}{" "}
                     </span>
                     {activeNode.consequence}
                   </p>
@@ -330,11 +359,10 @@ export function InteractiveDiagram({
             ) : (
               <div className="text-[13px] leading-[1.55] text-muted-foreground">
                 <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-                  Schicht antippen
+                  {chrome.inspectHeading}
                 </p>
                 <p className="mt-2">
-                  Tipp eine Schicht an, um zu sehen, was sie tut und was
-                  passiert, wenn sie fehlt.
+                  {chrome.inspectBody}
                 </p>
               </div>
             )}
@@ -346,10 +374,10 @@ export function InteractiveDiagram({
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <span className="text-[12.5px] text-muted-foreground" aria-live="polite">
             {traceIdx === nodes.length - 1
-              ? "Durchlauf komplett. So fließt es durch den Stapel."
+              ? chrome.traceComplete
               : tracing
-                ? "Impuls läuft …"
-                : "Starte den Durchlauf."}
+                ? chrome.tracing
+                : chrome.traceIdle}
           </span>
           <button
             type="button"
@@ -363,7 +391,7 @@ export function InteractiveDiagram({
             )}
           >
             <Play size={12} aria-hidden="true" />
-            Verlauf abspielen
+            {chrome.traceButton}
           </button>
         </div>
       )}

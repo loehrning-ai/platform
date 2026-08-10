@@ -1,107 +1,299 @@
-import { test, expect, type Page } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
-/**
- * /ueber-mich smoke + structured-data (regression coverage, wave 2). Canonical
- * ProfilePage: h1, career/academic biography, and a ProfilePage + Person JSON-LD
- * graph. Assertions target roles and stable heading labels (not exact copy), so
- * a reword stays green while a real regression (missing h1, dropped bio
- * sections, absent structured data, mobile overflow) fails.
- *
- * The JSON-LD is a plain inline <script> in the page body (React 19 does not
- * hoist non-src inline scripts to <head>), so we query the whole document for
- * script[type="application/ld+json"] and assert the page-unique "ProfilePage"
- * token alongside "Person".
- */
+const VIEWPORTS = [320, 390, 768, 1024, 1440] as const;
+const LOCALES = [
+  {
+    locale: "de",
+    route: "/ueber-mich",
+    htmlLang: "de",
+    title: "Über Tim Löhr",
+    h1: "Ich baue loehrning.ai als öffentliches Lernarchiv.",
+    timeline: "Berufliche Stationen",
+    academic: "Akademischer Hintergrund",
+    feedback: "/feedback",
+    courses: "/kurse",
+    openSource: "/open-source",
+    otherLocale: "/en/ueber-mich",
+  },
+  {
+    locale: "en",
+    route: "/en/ueber-mich",
+    htmlLang: "en",
+    title: "About Tim Löhr",
+    h1: "I build loehrning.ai as a public learning archive.",
+    timeline: "Professional timeline",
+    academic: "Academic background",
+    feedback: "/en/feedback",
+    courses: "/en/kurse",
+    openSource: "/en/open-source",
+    otherLocale: "/ueber-mich",
+  },
+] as const;
 
-const ROUTE = "/ueber-mich";
-
-// Every captured console error and uncaught page error fails the check.
-function collectConsoleErrors(page: Page): string[] {
+function collectBrowserErrors(page: Page): string[] {
   const errors: string[] = [];
-  page.on("console", (msg) => {
-    if (msg.type() === "error") errors.push(msg.text());
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("console", (message) => {
+    if (message.type() === "error") errors.push(message.text());
   });
-  page.on("pageerror", (err) => errors.push(err.message));
   return errors;
 }
 
-function meaningfulErrors(errors: string[]): string[] {
-  return errors;
+function visibleLanguageSwitchLink(page: Page, href: string) {
+  return page
+    .locator("[data-language-switch]:visible")
+    .locator(`a[href="${href}"]`)
+    .first();
 }
 
-test.describe("/ueber-mich profile page", () => {
-  test("loads without login, shows the h1, and logs no console error", async ({
-    page,
-  }) => {
-    const errors = collectConsoleErrors(page);
-    const response = await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
-
-    expect(response?.status(), `status for ${ROUTE}`).toBe(200);
-    await expect(page).not.toHaveURL(/\/login/);
-
-    const h1 = page.getByRole("heading", { level: 1 });
-    await expect(h1).toBeVisible();
-    // Copy-resilient: assert the h1 carries content, not a specific phrasing.
-    await expect(h1).not.toBeEmpty();
-
-    const noise = meaningfulErrors(errors);
-    expect(noise, `console errors on ${ROUTE}\n${noise.join("\n")}`).toEqual([]);
-  });
-
-  test("renders the career and academic biography sections", async ({
-    page,
-  }) => {
-    await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
-
-    // Stable section labels (role-based) are the biography payload: a silently
-    // dropped timeline or credentials block fails here, a reword does not.
-    await expect(
-      page.getByRole("heading", { name: "Karriere" }),
-    ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "Akademischer Hintergrund" }),
-    ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "M.Sc. Informatik" }),
-    ).toBeVisible();
-  });
-
-  test("embeds ProfilePage and Person structured data", async ({ page }) => {
-    await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
-
-    const ldScripts = page.locator('script[type="application/ld+json"]');
-    await expect(ldScripts.first()).toBeAttached();
-
-    const combined = (await ldScripts.allTextContents()).join("\n");
-    expect(
-      combined,
-      "page must emit a ProfilePage JSON-LD node",
-    ).toContain("ProfilePage");
-    expect(combined, "page must emit a Person JSON-LD node").toContain(
-      "Person",
+async function settle(page: Page) {
+  await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    await Promise.all(
+      Array.from(document.images, (image) =>
+        image.complete
+          ? Promise.resolve()
+          : new Promise<void>((resolve) => {
+              image.addEventListener("load", () => resolve(), { once: true });
+              image.addEventListener("error", () => resolve(), { once: true });
+            }),
+      ),
+    );
+    await new Promise<void>((resolve) =>
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
     );
   });
-});
+}
 
-test.describe("/ueber-mich mobile", () => {
-  test("has no horizontal overflow at 390px and keeps content visible", async ({
+async function expectContainedLayout(page: Page, label: string) {
+  const geometry = await page.evaluate(() => {
+    const tolerance = 1;
+    const viewportRight = window.innerWidth + tolerance;
+    const escaped = Array.from(document.body.querySelectorAll<HTMLElement>("*"))
+      .filter((element) => {
+        const rect = element.getBoundingClientRect();
+        const style = getComputedStyle(element);
+        if (
+          style.display === "none" ||
+          style.visibility === "hidden" ||
+          rect.width <= 0 ||
+          rect.height <= 0 ||
+          rect.right <= 0 ||
+          rect.left >= window.innerWidth ||
+          (rect.left >= -tolerance && rect.right <= viewportRight)
+        ) {
+          return false;
+        }
+        return true;
+      })
+      .slice(0, 12)
+      .map((element) => {
+        const rect = element.getBoundingClientRect();
+        return {
+          tag: element.tagName.toLowerCase(),
+          text: element.textContent?.trim().replace(/\s+/g, " ").slice(0, 90),
+          left: Math.round(rect.left),
+          right: Math.round(rect.right),
+        };
+      });
+
+    return {
+      bodyScrollWidth: document.body.scrollWidth,
+      documentScrollWidth: document.documentElement.scrollWidth,
+      innerWidth: window.innerWidth,
+      escaped,
+    };
+  });
+
+  expect(
+    geometry.bodyScrollWidth,
+    `${label}: body width ${geometry.bodyScrollWidth}px exceeds ${geometry.innerWidth}px`,
+  ).toBeLessThanOrEqual(geometry.innerWidth + 1);
+  expect(
+    geometry.documentScrollWidth,
+    `${label}: document width ${geometry.documentScrollWidth}px exceeds ${geometry.innerWidth}px`,
+  ).toBeLessThanOrEqual(geometry.innerWidth + 1);
+  expect(geometry.escaped, `${label}: visible elements escape the viewport`).toEqual([]);
+}
+
+for (const localeCase of LOCALES) {
+  test(`${localeCase.locale} profile owns metadata, structured data, links, and images`, async ({
     page,
   }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
+    const browserErrors = collectBrowserErrors(page);
+    const response = await page.goto(localeCase.route, {
+      waitUntil: "domcontentloaded",
+    });
+    expect(response?.status()).toBe(200);
+    await settle(page);
 
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(page.locator("html")).toHaveAttribute("lang", localeCase.htmlLang);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(localeCase.h1);
+    await expect(page).toHaveTitle(new RegExp(localeCase.title));
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      "href",
+      `https://loehrning.ai${localeCase.route}`,
+    );
+    await expect(page.locator('link[rel="alternate"][hreflang="de"]')).toHaveAttribute(
+      "href",
+      "https://loehrning.ai/ueber-mich",
+    );
+    await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute(
+      "href",
+      "https://loehrning.ai/en/ueber-mich",
+    );
+    await expect(page.locator('meta[property="og:type"]')).toHaveAttribute(
+      "content",
+      "profile",
+    );
+    await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute(
+      "content",
+      localeCase.locale === "de" ? "de_DE" : "en_GB",
+    );
+
+    const graph = JSON.parse(
+      (await page.locator("#ueber-mich-jsonld").textContent()) ?? "",
+    ) as { "@graph": Record<string, unknown>[] };
+    expect(
+      graph["@graph"].find((node) => node["@type"] === "ProfilePage"),
+    ).toMatchObject({
+      url: `https://loehrning.ai${localeCase.route}`,
+      inLanguage: localeCase.locale === "de" ? "de-DE" : "en-GB",
+    });
+
     await expect(
-      page.getByRole("heading", { name: "Karriere" }),
+      page.getByRole("link", { name: localeCase.locale === "de" ? "das Feedback-Formular" : "the feedback form" }),
+    ).toHaveAttribute("href", localeCase.feedback);
+    await expect(
+      page.getByRole("link", { name: localeCase.locale === "de" ? /Kurse öffnen/ : /Open course catalog/ }),
+    ).toHaveAttribute("href", localeCase.courses);
+    await expect(
+      page.getByRole("link", { name: localeCase.locale === "de" ? /Open-Source-Hub öffnen/ : /Open open-source hub/ }),
+    ).toHaveAttribute("href", localeCase.openSource);
+    await expect(
+      visibleLanguageSwitchLink(page, localeCase.otherLocale),
     ).toBeVisible();
 
-    const { scrollWidth, innerWidth } = await page.evaluate(() => ({
-      scrollWidth: document.scrollingElement?.scrollWidth ?? 0,
-      innerWidth: window.innerWidth,
-    }));
+    const imageState = await page.locator("img").evaluateAll((images) =>
+      images.map((image) => ({
+        src: (image as HTMLImageElement).currentSrc,
+        complete: (image as HTMLImageElement).complete,
+        width: (image as HTMLImageElement).naturalWidth,
+      })),
+    );
+    expect(imageState.length).toBeGreaterThanOrEqual(3);
     expect(
-      scrollWidth,
-      `horizontal overflow at 390px: scrollWidth ${scrollWidth} > innerWidth ${innerWidth}`,
-    ).toBeLessThanOrEqual(innerWidth + 1);
+      imageState.every((image) => image.complete && image.width > 0),
+      JSON.stringify(imageState),
+    ).toBe(true);
+    expect(browserErrors).toEqual([]);
   });
+}
+
+test.describe("profile content without JavaScript", () => {
+  test.use({ javaScriptEnabled: false });
+
+  for (const localeCase of LOCALES) {
+    test(`${localeCase.locale} keeps its complete profile visible`, async ({ page }) => {
+      const response = await page.goto(localeCase.route, {
+        waitUntil: "domcontentloaded",
+      });
+      expect(response?.status()).toBe(200);
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(localeCase.h1);
+      await expect(page.getByRole("heading", { name: localeCase.timeline })).toBeVisible();
+      await expect(page.getByRole("heading", { name: localeCase.academic })).toBeVisible();
+      await expect(page.locator("#ueber-mich-jsonld")).toBeAttached();
+      await expectContainedLayout(page, `${localeCase.locale}/no-js`);
+    });
+  }
+});
+
+test("both locales reflow without escaped elements at five widths", async ({
+  page,
+}, testInfo) => {
+  test.skip(
+    testInfo.project.name !== "chromium",
+    "The explicit five-width matrix runs once in Chromium.",
+  );
+  test.setTimeout(120_000);
+  const browserErrors = collectBrowserErrors(page);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+
+  for (const width of VIEWPORTS) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const localeCase of LOCALES) {
+      browserErrors.length = 0;
+      const response = await page.goto(localeCase.route, {
+        waitUntil: "domcontentloaded",
+      });
+      expect(response?.status(), `${localeCase.locale}/${width}`).toBe(200);
+      await settle(page);
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(localeCase.h1);
+      await expect(page.getByRole("heading", { name: localeCase.timeline })).toBeVisible();
+      await expect(page.getByRole("heading", { name: localeCase.academic })).toBeVisible();
+      await expectContainedLayout(page, `${localeCase.locale}/${width}`);
+      expect(browserErrors, `${localeCase.locale}/${width}`).toEqual([]);
+    }
+  }
+});
+
+test("locale switch and internal links support keyboard activation", async ({
+  page,
+}) => {
+  await page.goto("/ueber-mich", { waitUntil: "domcontentloaded" });
+  await settle(page);
+
+  const switchToEnglish = visibleLanguageSwitchLink(page, "/en/ueber-mich");
+  await switchToEnglish.focus();
+  await expect(switchToEnglish).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/en\/ueber-mich$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(LOCALES[1].h1);
+
+  const courses = page.getByRole("link", { name: /Open course catalog/ });
+  await courses.focus();
+  await expect(courses).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/en\/kurse$/);
+});
+
+test("both locales remain contained at 200 percent zoom", async ({ page }, testInfo) => {
+  test.skip(
+    testInfo.project.name !== "chromium",
+    "The explicit zoom audit runs once in Chromium.",
+  );
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+
+  for (const localeCase of LOCALES) {
+    await page.goto(localeCase.route, { waitUntil: "domcontentloaded" });
+    await settle(page);
+    await page.evaluate(() => {
+      document.documentElement.style.zoom = "2";
+    });
+    await expectContainedLayout(page, `${localeCase.locale}/zoom-200`);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  }
+});
+
+test("reduced-motion preference leaves every profile section visible", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/en/ueber-mich", { waitUntil: "domcontentloaded" });
+  await settle(page);
+
+  expect(
+    await page.evaluate(() => matchMedia("(prefers-reduced-motion: reduce)").matches),
+  ).toBe(true);
+  for (const heading of [
+    LOCALES[1].h1,
+    LOCALES[1].timeline,
+    LOCALES[1].academic,
+    "How I review content",
+    "Contact me directly",
+  ]) {
+    await expect(page.getByRole("heading", { name: heading })).toBeVisible();
+  }
 });

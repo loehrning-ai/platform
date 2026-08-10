@@ -12,6 +12,8 @@ import {
   type GlossaryEntry,
 } from "@/lib/ai-native/glossary";
 import { cn } from "@/lib/utils";
+import type { Locale } from "@/lib/i18n/locale";
+import { localizeHref } from "@/lib/i18n/locale";
 
 interface CategoryGroup {
   readonly key: GlossaryCategory;
@@ -25,9 +27,52 @@ interface Props {
   readonly totalTerms: number;
   readonly version: string;
   readonly lastUpdated: string;
+  readonly locale?: Locale;
 }
 
-export function GlossaryView({ groups, totalTerms, version, lastUpdated }: Props) {
+export function GlossaryView({
+  groups,
+  totalTerms,
+  version,
+  lastUpdated,
+  locale = "de",
+}: Props) {
+  const copy =
+    locale === "en"
+      ? {
+          course: "Course",
+          glossary: "Glossary",
+          counts: `${totalTerms} entries · ${groups.length} categories`,
+          intro:
+            "Definitions for the technical, organizational and regulatory terms used in the course. Terms retain established product names where translation would reduce precision.",
+          placeholder: "Search: GDPR, MCP, PARA …",
+          searchLabel: "Search glossary",
+          clear: "Clear",
+          updated: `Version ${version} · last updated ${lastUpdated}`,
+          categories: "Categories",
+          results: (count: number) => `${count} ${count === 1 ? "result" : "results"}`,
+          noResults: "No results. Try another term.",
+          terms: "terms",
+          footer:
+            "Definitions are reviewed with the course content. This reference remains publicly accessible.",
+        }
+      : {
+          course: "Kurs",
+          glossary: "Glossar",
+          counts: `${totalTerms} Einträge · ${groups.length} Kategorien`,
+          intro:
+            "Definitionen für die technischen, organisatorischen und regulatorischen Begriffe des Kurses. Etablierte Produktnamen bleiben unverändert, wenn eine Übersetzung ungenau wäre.",
+          placeholder: "Suche: DSGVO, MCP, PARA …",
+          searchLabel: "Glossar durchsuchen",
+          clear: "Leeren",
+          updated: `Version ${version} · zuletzt aktualisiert ${lastUpdated}`,
+          categories: "Kategorien",
+          results: (count: number) => `${count} Treffer`,
+          noResults: "Keine Treffer. Versuche einen anderen Begriff.",
+          terms: "Begriffe",
+          footer:
+            "Definitionen werden zusammen mit dem Kursinhalt geprüft. Diese Referenz bleibt frei zugänglich.",
+        };
   const [hydrated, setHydrated] = useState(false);
   const [query, setQuery] = useState("");
   const [activeCat, setActiveCat] = useState<string>(groups[0]?.key ?? "");
@@ -73,14 +118,17 @@ export function GlossaryView({ groups, totalTerms, version, lastUpdated }: Props
               aria-label="Breadcrumb"
               className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
             >
-              <Link href="/ai-native" className="hover:text-brand-orange">
-                Kurs
+              <Link
+                href={localizeHref("/ai-native", locale)}
+                className="hover:text-brand-orange"
+              >
+                {copy.course}
               </Link>
               <span className="mx-2 opacity-40">/</span>
-              <span className="text-brand-orange">Glossar</span>
+              <span className="text-brand-orange">{copy.glossary}</span>
             </nav>
             <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-              {totalTerms} Einträge · {groups.length} Kategorien
+              {copy.counts}
             </span>
           </div>
           <ClipHeading
@@ -88,13 +136,11 @@ export function GlossaryView({ groups, totalTerms, version, lastUpdated }: Props
             className="font-bold leading-[0.92] tracking-[-0.04em] text-foreground"
             style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)" }}
           >
-            Glossar.
+            {copy.glossary}
           </ClipHeading>
           <FadeBlock delay={1}>
             <p className="mt-5 max-w-[640px] text-[18px] leading-[1.6] text-muted-foreground">
-              Die Begriffe, die im AI-Native Arbeitskurs fallen, kurz, scharf,
-              ohne Beratungs-Floskel. Referenz-Ressource. Verlinke was du
-              brauchst.
+              {copy.intro}
             </p>
           </FadeBlock>
           <FadeBlock delay={2}>
@@ -108,9 +154,9 @@ export function GlossaryView({ groups, totalTerms, version, lastUpdated }: Props
                 readOnly={!hydrated}
                 aria-disabled={!hydrated}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Suche: DSGVO, MCP, PARA …"
+                placeholder={copy.placeholder}
                 className="flex-1 bg-transparent py-3 text-[16px] text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-brand-orange"
-                aria-label="Glossar durchsuchen"
+                aria-label={copy.searchLabel}
               />
               {query && (
                 <button
@@ -118,13 +164,13 @@ export function GlossaryView({ groups, totalTerms, version, lastUpdated }: Props
                   onClick={() => setQuery("")}
                   className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-brand-orange"
                 >
-                  Clear
+                  {copy.clear}
                 </button>
               )}
             </div>
           </FadeBlock>
           <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
-            Version {version} · zuletzt aktualisiert {lastUpdated}
+            {copy.updated}
           </p>
         </div>
       </section>
@@ -136,7 +182,7 @@ export function GlossaryView({ groups, totalTerms, version, lastUpdated }: Props
             {/* Sidebar — sticky on lg+ */}
             <aside className="lg:sticky lg:top-24 lg:self-start">
               <p className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-                Kategorien
+                {copy.categories}
               </p>
               <ul className="grid gap-1.5">
                 {groups.map((g) => {
@@ -156,7 +202,9 @@ export function GlossaryView({ groups, totalTerms, version, lastUpdated }: Props
                         <span
                           className={cn(
                             "font-mono text-[10px] font-bold tracking-[0.12em]",
-                            isActive ? "text-brand-orange" : "text-muted-foreground",
+                            isActive
+                              ? "text-brand-orange"
+                              : "text-muted-foreground",
                           )}
                         >
                           § {g.num}
@@ -184,12 +232,11 @@ export function GlossaryView({ groups, totalTerms, version, lastUpdated }: Props
                     aria-atomic="true"
                     className="mb-5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange"
                   >
-                    {filtered.length}{" "}
-                    {filtered.length === 1 ? "Treffer" : "Treffer"}
+                    {copy.results(filtered.length)}
                   </p>
                   {filtered.length === 0 ? (
                     <p className="text-[15px] text-muted-foreground">
-                      Keine Treffer. Versuche einen anderen Begriff.
+                      {copy.noResults}
                     </p>
                   ) : (
                     <dl className="grid gap-6">
@@ -247,7 +294,7 @@ export function GlossaryView({ groups, totalTerms, version, lastUpdated }: Props
                         {g.label}.
                       </h2>
                       <span className="ml-auto font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                        {g.entries.length} Begriffe
+                        {g.entries.length} {copy.terms}
                       </span>
                     </div>
                     <dl className="grid gap-0">
@@ -301,14 +348,13 @@ export function GlossaryView({ groups, totalTerms, version, lastUpdated }: Props
 
       <footer className="border-t border-border py-8">
         <div className="mx-auto max-w-[960px] px-6 text-[13px] text-muted-foreground lg:px-12">
-          Begriffe und Definitionen werden bei inhaltlichen Kursupdates
-          ergänzt. Diese Referenz bleibt frei zugänglich.
+          {copy.footer}
         </div>
       </footer>
     </>
   );
 }
 
-export function useGlossaryEyebrow() {
-  return <Eyebrow>Referenz · Glossar</Eyebrow>;
+export function useGlossaryEyebrow(locale: Locale = "de") {
+  return <Eyebrow>{locale === "en" ? "Reference · Glossary" : "Referenz · Glossar"}</Eyebrow>;
 }

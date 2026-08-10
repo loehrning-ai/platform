@@ -1,4 +1,9 @@
-import { Hero, SectionLabel, AntiPatterns, Takeaway } from "@/components/data-science/shared/primitives";
+import {
+  Hero,
+  SectionLabel,
+  AntiPatterns,
+  Takeaway,
+} from "@/components/data-science/shared/primitives";
 import { GaltonSim } from "@/components/data-science/simulators/galton-sim";
 
 // ─── Ch01: Fundamentals ─────────────────────────────
@@ -17,56 +22,63 @@ export default function Ch01Fundamentals() {
         meta={[
           { k: "Read", v: "7 min" },
           { k: "Focus", v: "CLT · sampling · the DS loop" },
-          { k: "Sims", v: "1 physics-based · live" },
+          { k: "Sims", v: "1 interactive teaching model" },
         ]}
       />
 
       <section className="section">
         <SectionLabel n="01.1">Sample vs population</SectionLabel>
         <h2 className="h2">
-          You never see the truth. <em>You see a shadow of it.</em>
+          A sample is evidence about a population, not the population itself.
         </h2>
         <p className="prose">
-          Your company has <strong>44 million users</strong>. Your A/B test touched{" "}
-          <strong>180,000</strong> of them over two weeks. The result you report, &quot;retention
-          went up 2.3%&quot;, isn&apos;t a measurement of reality. It&apos;s a <em>guess</em>,
-          informed by a sliver of reality, wrapped in uncertainty.
+          Consider a hypothetical service with <strong>44 million users</strong>{" "}
+          and an A/B test containing <strong>180,000</strong> eligible
+          observations. A reported 2.3% retention difference estimates a
+          population quantity from that sample. Its meaning depends on
+          assignment, missing data, measurement, sampling, and statistical
+          uncertainty.
         </p>
         <p className="prose">
-          Every data scientist lives in this gap: we work from <code>samples</code>, but we make
-          claims about <code>populations</code>. Everything else in this course, confidence
-          intervals, p-values, A/B tests, model accuracy, is machinery for honestly quantifying
-          how much that gap matters.
+          Data science often works from <code>samples</code> while making claims
+          about <code>populations</code> or future cases. Confidence intervals,
+          tests, validation, and experimental design quantify different parts of
+          that uncertainty; none repairs a biased sample or an invalid
+          measurement.
         </p>
         <GaltonSim />
         <p className="prose" style={{ marginTop: 22 }}>
-          Crank <code>n</code> from 2 to 100. Watch the pink distribution narrow, its spread
-          shrinks by
-          <code> 1/√n</code>. Switch from <em>bell</em> to <em>skew</em> to <em>bimodal</em>: the{" "}
-          <strong>population</strong>can be any ugly shape, yet the <strong>sampling distribution</strong>{" "}
-          tracks the violet normal curve. That&apos;s the central limit theorem, and it&apos;s why
-          A/B tests work at all.
+          Move <code>n</code> from 2 to 100. In this independent,
+          finite-variance generator, the standard error of the mean scales with{" "}
+          <code>1/√n</code> and the sampling distribution approaches a normal
+          shape as n grows. The central limit theorem has conditions; heavy
+          tails, dependence, small samples, and changing populations can make
+          the approximation poor.
         </p>
       </section>
 
       <section className="section">
         <SectionLabel n="01.2">The DS loop</SectionLabel>
         <h2 className="h2">
-          Six stages. One feedback loop. <em>No skipping.</em>
+          Six recurring stages. <em>The order depends on the problem.</em>
         </h2>
         <p className="prose">
-          Every serious DS project runs through the same loop:
-          <strong> Data → Explore → Clean → Feature → Model → Evaluate</strong>, then back around.
-          Each chapter covers one stage, plus the meta-skills on top, experimentation, causal
-          reasoning, deployment.
+          A useful working loop is
+          <strong> Data → Explore → Clean → Feature → Model → Evaluate</strong>,
+          then back around. Each chapter covers one stage, plus the meta-skills
+          on top, experimentation, causal reasoning, deployment.
         </p>
         <div className="loop-mini">
-          {["Data", "Explore", "Clean", "Feature", "Model", "Evaluate"].map((s, i) => (
-            <div className="loop-mini-stage" key={s}>
-              <div className="loop-mini-n">{String(i + 1).padStart(2, "0")}</div>
-              <div className="loop-mini-t">{s}</div>
-            </div>
-          ))}
+          {["Data", "Explore", "Clean", "Feature", "Model", "Evaluate"].map(
+            (s, i) => (
+              <div className="loop-mini-stage" key={s}>
+                <div className="loop-mini-n">
+                  {String(i + 1).padStart(2, "0")}
+                </div>
+                <div className="loop-mini-t">{s}</div>
+              </div>
+            ),
+          )}
         </div>
         <AntiPatterns
           items={[
@@ -79,9 +91,9 @@ export default function Ch01Fundamentals() {
 
       <Takeaway
         items={[
-          "<b>Sample, not truth.</b> Every number you report is a guess with uncertainty attached. Quantify it.",
-          "<b>CLT is a gift.</b> Regardless of ugly populations, sample means trend toward normal. This is why A/B tests work.",
-          "<b>The loop is non-negotiable.</b> Skipping explore → leakage. Skipping evaluate → false confidence. Skipping feedback → stale models.",
+          "<b>State the target population.</b> Report how sampling, assignment, missingness, and measurement limit the estimate.",
+          "<b>The CLT has conditions.</b> For many independent finite-variance settings, sample means become approximately normal as n grows; verify whether that approximation fits.",
+          "<b>Use the loop as a control system.</b> Explore, validate, and monitor at the points where new data or transformations can invalidate prior evidence.",
         ]}
       />
     </>

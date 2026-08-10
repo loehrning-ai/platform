@@ -1,4 +1,6 @@
 import glossaryData from "../../../content/ai-native/glossary.json";
+import glossaryDataEn from "../../../content/ai-native/en/glossary.json";
+import type { Locale } from "@/lib/i18n/locale";
 
 export type GlossaryCategory =
   | "claude"
@@ -28,30 +30,52 @@ export interface Glossary {
   readonly entries: readonly GlossaryEntry[];
 }
 
-const GLOSSARY = glossaryData as Glossary;
+const GLOSSARIES: Partial<Record<Locale, Glossary>> = {
+  de: glossaryData as Glossary,
+  en: glossaryDataEn as Glossary,
+};
 
-export function getGlossary(): Glossary {
-  return GLOSSARY;
+function glossary(locale: Locale): Glossary {
+  const value = GLOSSARIES[locale];
+  if (!value) {
+    throw new Error(
+      `AI-Native has no audited "${locale}" glossary registered.`,
+    );
+  }
+  return value;
 }
 
-export function getGlossaryEntries(): readonly GlossaryEntry[] {
-  return GLOSSARY.entries;
+export function getGlossary(locale: Locale = "de"): Glossary {
+  return glossary(locale);
+}
+
+export function getGlossaryEntries(
+  locale: Locale = "de",
+): readonly GlossaryEntry[] {
+  return glossary(locale).entries;
 }
 
 export function getEntriesByCategory(
   category: GlossaryCategory,
+  locale: Locale = "de",
 ): readonly GlossaryEntry[] {
-  return GLOSSARY.entries.filter((e) => e.category === category);
+  return glossary(locale).entries.filter((e) => e.category === category);
 }
 
-export function getGlossaryTerm(term: string): GlossaryEntry | undefined {
-  return GLOSSARY.entries.find(
+export function getGlossaryTerm(
+  term: string,
+  locale: Locale = "de",
+): GlossaryEntry | undefined {
+  return glossary(locale).entries.find(
     (e) => e.term.toLowerCase() === term.toLowerCase(),
   );
 }
 
-export function getCategoryLabel(category: GlossaryCategory): string {
-  return GLOSSARY.categories[category];
+export function getCategoryLabel(
+  category: GlossaryCategory,
+  locale: Locale = "de",
+): string {
+  return glossary(locale).categories[category];
 }
 
 export const CATEGORY_ORDER: readonly GlossaryCategory[] = [

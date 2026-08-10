@@ -12,6 +12,7 @@ describe("page metadata contract", () => {
       title: "Hilfe",
       description: "Antworten zur Lernplattform.",
       path: "/hilfe",
+      locale: "de",
     });
 
     expect(metadata.alternates?.canonical).toBe("/hilfe");
@@ -19,10 +20,26 @@ describe("page metadata contract", () => {
       title: "Hilfe",
       description: "Antworten zur Lernplattform.",
       url: "https://loehrning.ai/hilfe",
+      locale: "de_DE",
+      alternateLocale: ["en_GB"],
     });
     expect(metadata.twitter).toMatchObject({
       title: "Hilfe",
       description: "Antworten zur Lernplattform.",
+    });
+  });
+
+  it("emits reciprocal English Open Graph locale metadata", () => {
+    const metadata = createPublicPageMetadata({
+      title: "Help",
+      description: "Answers about the learning platform.",
+      path: "/en/hilfe",
+      locale: "en",
+    });
+
+    expect(metadata.openGraph).toMatchObject({
+      locale: "en_GB",
+      alternateLocale: ["de_DE"],
     });
   });
 

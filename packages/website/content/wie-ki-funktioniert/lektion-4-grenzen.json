@@ -2,24 +2,30 @@
   "id": "lektion-4-grenzen",
   "blockId": "wie-ki-funktioniert",
   "number": 4,
-  "title": "Grenzen: was KI wirklich nicht kann",
-  "subtitle": "Wer die Grenzen kennt, nutzt KI besser.",
+  "title": "Betriebsgrenzen: was eine KI-Ausgabe nicht belegt",
+  "subtitle": "Aktualität, Rechenweg, physischer Kontext und Rechtslage brauchen eigene Prüfungen.",
   "durationMinutes": 10,
-  "keyConcepts": ["Trainings-Cutoff", "Halluzination", "KI-Grenzen", "Rechtssicherheit", "Rechengenauigkeit"],
+  "keyConcepts": [
+    "Wissensstand und Quellen",
+    "Halluzination",
+    "KI-Grenzen",
+    "Rechtssicherheit",
+    "Rechengenauigkeit"
+  ],
   "sections": [
     {
       "id": "lektion-4-abschnitt-1",
-      "title": "Vier strukturelle Grenzen",
+      "title": "Vier Grenzen, die du prüfen musst",
       "readTimeMinutes": 5,
-      "content": "KI-Modelle können vieles. Aber vier Grenzen sind strukturell: sie ergeben sich aus der Methode, nicht aus mangelnder Weiterentwicklung. Künftige Modelle werden besser. Diese Grenzen bleiben.\n\nErste Grenze: Kein Echtzeit-Wissen. Ein Sprachmodell kennt die Welt nur bis zu seinem Trainings-Cutoff, also dem Datum, an dem die Trainingsdaten abgeschlossen wurden. Was danach passiert ist, existiert für das Modell nicht. Manche Modelle haben inzwischen Zugang zu Websuchen. Aber das ist ein separates Werkzeug, nicht das Modell selbst. Wenn kein solches Werkzeug freigeschaltet ist, antwortet das Modell aus seinem Trainingsstand. Das kann Monate oder Jahre in der Vergangenheit liegen.\n\nZweite Grenze: Keine verlässliche Mathematik bei komplexen Berechnungen. Sprachmodelle sind keine Taschenrechner. Einfache Additionen stimmen meist. Aber komplexere Kettenrechnungen, mehrstufige Prozentrechnung oder verschachtelte Formeln können falsch sein. Das Modell erzeugt eine Abfolge von Zeichen, die wie eine Rechnung aussieht. Das Ergebnis stimmt nicht immer.\n\nDritte Grenze: Kein räumliches oder physikalisches Verständnis. Bei Aufgaben, die räumliches Denken oder mechanisches Verständnis erfordern, sind aktuelle Sprachmodelle strukturell schwach. \"Wie schraubst du das ab?\" kann das Modell beschreiben. Ob die Beschreibung auf dein spezifisches Gerät zutrifft, ist eine andere Frage.\n\nVierte Grenze: Keine Rechtssicherheit. Eine KI-Auskunft ersetzt keine Rechtsberatung. Das gilt nicht nur für komplizierte Rechtsfragen. Es gilt auch für scheinbar einfache: ob ein Vertrag wirksam ist, ob eine Kündigung korrekt formuliert ist, ob eine Regelung auf deinen Fall zutrifft. Diese Fragen hängen von Einzelheiten ab, die das Modell nicht kennt.",
-      "keyTakeaway": "Vier strukturelle Grenzen: kein Echtzeit-Wissen, keine verlässliche Mathematik, kein räumliches Verständnis, keine Rechtssicherheit. Diese Grenzen sind methodisch, nicht behebbar."
+      "content": "Die Fähigkeiten eines KI-Systems hängen von Modell, Version, Werkzeugen, Datenzugriff und Konfiguration ab. Vier Prüfgrenzen bleiben für den Einsatz relevant.\n\nErste Grenze: Aktualität. Ein Basismodell hat einen begrenzten Wissensstand. Suche oder Retrieval können neuere Quellen einbringen, aber nur wenn sie aktiviert sind und tatsächlich passende Quellen liefern. Verlasse dich nicht auf eine Selbstauskunft des Modells zum Wissensstand; prüfe Produktdokumentation, Quelldatum und Abrufweg.\n\nZweite Grenze: Rechengenauigkeit. Sprachmodelle können Rechenwege vorschlagen und in manchen Systemen Code oder Rechnerwerkzeuge ausführen. Ein angezeigtes Ergebnis ist trotzdem erst belastbar, wenn Eingaben, Formel und ausgeführter Rechenweg geprüft wurden.\n\nDritte Grenze: physischer Kontext. Eine allgemeine Anleitung kennt dein konkretes Gerät, Material, Sicherheitszustand und deine Umgebung nur, wenn diese Informationen zuverlässig bereitgestellt wurden. Bei sicherheitsrelevanten Arbeiten gelten Herstellerunterlagen und fachkundige Prüfung.\n\nVierte Grenze: Rechtssicherheit. Eine KI-Ausgabe ersetzt keine Rechtsberatung. Ob ein Vertrag wirksam ist, eine Kündigung passt oder eine Regel auf deinen Fall anwendbar ist, hängt von aktueller Rechtslage und vollständigem Sachverhalt ab.",
+      "keyTakeaway": "Prüfe Aktualität und Quellen, ausgeführte Berechnungen, den konkreten physischen Kontext sowie die aktuelle Rechtslage getrennt von der KI-Ausgabe."
     },
     {
       "id": "lektion-4-abschnitt-2",
       "title": "Was das für dich bedeutet und was KI gut kann",
       "readTimeMinutes": 5,
-      "content": "Die vier Grenzen haben konkrete Konsequenzen für den Alltag.\n\nBei Recherchen: Achte immer auf den Trainings-Cutoff des Modells. Aktuelle Ereignisse, neue Gesetze, neue Produkte, neue Studien. Diese kennt das Modell möglicherweise nicht. Frage immer nach dem Stand des Wissens und prüfe aktuelle Quellen selbst.\n\nBei Berechnungen: Verwende für wichtige Rechenergebnisse einen echten Taschenrechner oder eine Tabellenkalkulationssoftware. Die KI kann dir helfen, die richtige Formel zu finden. Das Ergebnis solltest du selbst ausrechnen oder prüfen.\n\nBei wichtigen Entscheidungen: Bei allem, was deine Gesundheit, dein Recht oder deine Finanzen betrifft, ist eine Fachperson nötig. KI kann einen guten Einstieg geben. Sie kann dir erklären, was du nicht weißt. Aber sie kann die Verantwortung nicht tragen.\n\nJetzt das Gegengewicht: Was KI wirklich gut kann.\n\nTextentwürfe formulieren. Lange Texte zusammenfassen. Ideen entwickeln, wenn du feststeckst. Texte in andere Sprachen übersetzen. Code-Vorschläge machen, die du dann überprüfst. E-Mails auf Klarheit prüfen. Eine Liste von Möglichkeiten generieren, aus der du auswählst.\n\nDas sind echte Stärken. Sie sind hilfreich, weil du weißt, was das Modell produziert: einen sprachlich überzeugenden Vorschlag, den du beurteilen und verbessern kannst.\n\nEin kurzer Moment zum Nachdenken: Welche der vier Grenzen hat für deinen Alltag die größte Bedeutung? Das Echtzeit-Wissen? Die Mathematik? Die rechtliche Frage?\n\nDie Botschaft dieser Lektion ist nicht: KI ist gefährlich. Die Botschaft ist: KI ist ein mächtiges, aber begrenztes Werkzeug. Wer die Grenzen kennt, nutzt es besser.",
-      "keyTakeaway": "Wer die Grenzen kennt, nutzt KI besser. KI ist kein Orakel. Es ist ein mächtiges, aber begrenztes Werkzeug."
+      "content": "Aus den vier Grenzen folgt ein klarer Arbeitsablauf.\n\nBei Recherchen öffnest du die genannte Quelle, prüfst Veröffentlichungs- und Abrufdatum und vergleichst die Behauptung mit dem Original.\n\nBei Berechnungen hältst du Eingaben und Formel fest und prüfst das Ergebnis mit einem geeigneten Rechenwerkzeug oder reproduzierbarem Code.\n\nBei medizinischen, rechtlichen, finanziellen oder sicherheitsrelevanten Entscheidungen beziehst du die fachlich zuständige Person ein. Die KI-Ausgabe kann Fragen strukturieren, trägt aber weder Verantwortung noch erteilt sie eine formelle Freigabe.\n\nGeeignete Aufgaben sind beispielsweise ein erster Textentwurf, die Zusammenfassung bereitgestellter Dokumente, eine Liste zu prüfender Optionen, eine Übersetzung oder ein Codevorschlag mit anschließendem Test und Review. Ob die Ausgabe brauchbar ist, hängt von Aufgabe, Kontext und Prüfung ab.\n\nOrdne für eine eigene Aufgabe vier Nachweise zu: aktuelle Quelle, reproduzierbarer Rechenweg, vollständiger physischer Kontext und zuständige fachliche Freigabe. Nicht jede Aufgabe benötigt alle vier; die relevanten Nachweise müssen jedoch vor der Nutzung feststehen.",
+      "keyTakeaway": "Definiere vor der Nutzung, welche Quellen, Berechnungen, Kontextangaben und fachlichen Freigaben für die konkrete Aufgabe erforderlich sind."
     }
   ]
 }

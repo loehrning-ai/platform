@@ -14,6 +14,8 @@ import {
   RoiRechnerPreview,
   WordPreview,
 } from "./demo-gallery-previews";
+import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
+import { useDemoLocale } from "./demo-locale";
 
 /**
  * Lazy-loaded demo component registry.
@@ -21,16 +23,18 @@ import {
  * Keyed by Demo.slug. Each demo is split into its own chunk via next/dynamic
  * with `ssr: false` to avoid server-render cost for interactive widgets.
  */
-const LoadingPlaceholder = () =>
-  createElement(
+const LoadingPlaceholder = () => {
+  const { locale } = useDemoLocale();
+  return createElement(
     "div",
     {
       role: "status",
       "aria-live": "polite",
       className: "py-8 text-center text-sm text-muted-foreground",
     },
-    "Praxisbeispiel wird geladen…",
+    DEMOS_PAGE_COPY[locale].shell.loading,
   );
+};
 
 /** Small static thumbnail components shown inside gallery tiles. */
 export const galleryPreviews: Readonly<Record<string, ComponentType>> = {

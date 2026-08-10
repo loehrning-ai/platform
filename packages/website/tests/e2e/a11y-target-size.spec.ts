@@ -5,7 +5,7 @@ import { test, expect, type Locator } from "@playwright/test";
  * (regression coverage). Pointer targets on a touch-first surface must be at
  * least 24x24 CSS px. This spec spot-checks the highest-traffic interactive
  * controls that axe cannot measure automatically: the nav hamburger toggle,
- * the "Reader oeffnen" links on /buecher, the chapter prev/next links in the
+ * the book-overview links on /buecher, the chapter prev/next links in the
  * book reader, and the "Kurs starten" CTAs on /kurse.
  *
  * Every control measured here clears 24px in BOTH dimensions outright, so the
@@ -20,6 +20,8 @@ import { test, expect, type Locator } from "@playwright/test";
  */
 
 const MIN = 24;
+const BOOK_OVERVIEW_LINK_NAME =
+  /^(?:Buch und Kapitel öffnen|Open book and chapters)$/i;
 
 async function expectMinTargetSize(
   locator: Locator,
@@ -52,7 +54,7 @@ test.describe("a11y: target size (WCAG 2.5.8) at 390x844", () => {
     await expectMinTargetSize(hamburger, "nav hamburger toggle");
   });
 
-  test('"Reader oeffnen" links on /buecher are large-enough touch targets', async ({
+  test("book-overview links on /buecher are large-enough touch targets", async ({
     page,
   }) => {
     // Reduced motion so the whileInView book cards settle to their final,
@@ -60,12 +62,15 @@ test.describe("a11y: target size (WCAG 2.5.8) at 390x844", () => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/buecher", { waitUntil: "domcontentloaded" });
 
-    const readerLinks = page.getByRole("link", { name: /Reader öffnen/i });
+    const readerLinks = page.getByRole("link", {
+      name: BOOK_OVERVIEW_LINK_NAME,
+    });
     await expect(readerLinks.first()).toBeVisible();
     const count = await readerLinks.count();
-    expect(count, "expected at least one book-card reader link").toBeGreaterThan(
-      0,
-    );
+    expect(
+      count,
+      "expected at least one book-card reader link",
+    ).toBeGreaterThan(0);
     for (let i = 0; i < count; i++) {
       await expectMinTargetSize(readerLinks.nth(i), `Reader-Link #${i + 1}`);
     }
@@ -74,7 +79,9 @@ test.describe("a11y: target size (WCAG 2.5.8) at 390x844", () => {
   test("book reader prev/next chapter links are large-enough touch targets", async ({
     page,
   }) => {
-    await page.goto("/buecher/ki-landschaft", { waitUntil: "domcontentloaded" });
+    await page.goto("/buecher/ki-landschaft", {
+      waitUntil: "domcontentloaded",
+    });
     // Enter the first chapter via the table of contents (no chapter slug hardcoded).
     await page
       .getByRole("navigation", { name: "Inhaltsverzeichnis" })

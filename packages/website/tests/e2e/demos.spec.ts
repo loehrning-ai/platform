@@ -18,14 +18,18 @@ test.describe("/demos gallery", () => {
   test("anonymous learners can access the public gallery", async ({ page }) => {
     await page.goto("/demos", { waitUntil: "domcontentloaded" });
     await expect(page).toHaveURL(/\/demos$/);
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("KI-Praxisbeispiele");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      "Arbeitsabläufe prüfen. Annahmen sichtbar machen.",
+    );
     await expect(page.locator("[data-demo-tile]").first()).toBeVisible();
   });
 
   test("query-state URL remains public", async ({ page }) => {
     await page.goto("/demos?cat=RAG&level=einstieg");
     await expect(page).toHaveURL(/\/demos\?cat=RAG&level=einstieg/);
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("KI-Praxisbeispiele");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      "Arbeitsabläufe prüfen. Annahmen sichtbar machen.",
+    );
     await expect(page).not.toHaveURL(/\/login/);
   });
 });

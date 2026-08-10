@@ -1,85 +1,122 @@
 import type { Metadata } from "next";
 import { UeberMichContent } from "./ueber-mich-content";
-import { JsonLd, PERSON_ID, SITE_URL } from "@/lib/seo/json-ld";
-import { SAME_AS_URLS, TIM_ENTITY } from "@/lib/seo/entity";
+import { contentLocalesForPath } from "@/lib/i18n/content-parity";
+import {
+  buildLocaleAlternates,
+  localizeHref,
+  type Locale,
+} from "@/lib/i18n/locale";
+import { PROFILE_COPY } from "@/lib/i18n/profile-copy";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { JsonLd, PERSON_ID, SITE_URL, WEBSITE_ID } from "@/lib/seo/json-ld";
+import { PERSON_SAME_AS_URLS, TIM_ENTITY } from "@/lib/seo/entity";
 
-// Neutral biographic phrasing per TIM_ENTITY.noEndorsementNotice (public-content governance).
-// Former employers appear as biography only, never as endorsements.
-const PAGE_DESCRIPTION =
-  "Tim Löhr betreibt loehrning.ai als freie deutsche KI-Lernplattform. Frühere Stationen bei Apple, Red Bull und Meta dienen der biografischen Einordnung.";
-// Social title carries name + role so LinkedIn/X shares render a personal
-// card instead of the generic site card. The root og-image is inherited.
-const SOCIAL_TITLE = `${TIM_ENTITY.displayName}: ${TIM_ENTITY.role}`;
+const PATH = "/ueber-mich";
 
-export const metadata: Metadata = {
-  title: "Über Tim Löhr",
-  description: PAGE_DESCRIPTION,
-  alternates: { canonical: "/ueber-mich" },
-  robots: { index: true, follow: true },
-  openGraph: {
-    title: SOCIAL_TITLE,
-    description: PAGE_DESCRIPTION,
-    url: TIM_ENTITY.profileUrl,
-    type: "profile",
-    firstName: TIM_ENTITY.givenName,
-    lastName: TIM_ENTITY.familyName,
-    images: [
-      {
-        url: TIM_ENTITY.portraitUrl,
-        width: 800,
-        height: 800,
-        alt: `Porträt von ${TIM_ENTITY.displayName}`,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary",
-    title: SOCIAL_TITLE,
-    description: PAGE_DESCRIPTION,
-    images: [TIM_ENTITY.portraitUrl],
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const copy = PROFILE_COPY[locale].metadata;
+  const localizedPath = localizeHref(PATH, locale);
 
-const UEBER_MICH_GRAPH = {
-  "@context": "https://schema.org" as const,
-  "@graph": [
-    {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Start", item: SITE_URL },
-        { "@type": "ListItem", position: 2, name: "Über Tim Löhr", item: `${SITE_URL}/ueber-mich` },
+  return {
+    title: copy.title,
+    description: copy.description,
+    alternates: {
+      ...buildLocaleAlternates(PATH, contentLocalesForPath(PATH)),
+      canonical: localizedPath,
+    },
+    robots: { index: true, follow: true },
+    openGraph: {
+      title: copy.socialTitle,
+      description: copy.description,
+      url: `${SITE_URL}${localizedPath}`,
+      siteName: "loehrning.ai",
+      locale: locale === "de" ? "de_DE" : "en_GB",
+      type: "profile",
+      firstName: TIM_ENTITY.givenName,
+      lastName: TIM_ENTITY.familyName,
+      images: [
+        {
+          url: TIM_ENTITY.portraitUrl,
+          width: 800,
+          height: 800,
+          alt: copy.portraitAlt,
+        },
       ],
     },
-    {
-      "@type": "ProfilePage",
-      mainEntity: { "@id": PERSON_ID },
-      url: `${SITE_URL}/ueber-mich`,
-      name: "Über Tim Löhr",
-      inLanguage: "de-DE",
+    twitter: {
+      card: "summary",
+      title: copy.socialTitle,
+      description: copy.description,
+      images: [{ url: TIM_ENTITY.portraitUrl, alt: copy.portraitAlt }],
     },
-    {
-      "@type": "Person",
-      "@id": PERSON_ID,
-      name: TIM_ENTITY.displayName,
-      jobTitle: TIM_ENTITY.role,
-      url: TIM_ENTITY.profileUrl,
-      image: TIM_ENTITY.portraitUrl,
-      sameAs: [...SAME_AS_URLS],
-      knowsAbout: [...TIM_ENTITY.knowsAbout],
-      alumniOf: {
-        "@type": "CollegeOrUniversity",
-        name: "Friedrich-Alexander-Universität Erlangen-Nürnberg",
-        url: "https://www.fau.de",
-      },
-    },
-  ],
-};
+  };
+}
 
-export default function UeberMichPage() {
+function profileGraph(locale: Locale) {
+  const copy = PROFILE_COPY[locale];
+  const path = localizeHref(PATH, locale);
+  const homePath = localizeHref("/", locale);
+  const pageUrl = `${SITE_URL}${path}`;
+
+  return {
+    "@context": "https://schema.org" as const,
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: copy.breadcrumbHome,
+            item: `${SITE_URL}${homePath === "/" ? "" : homePath}`,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: copy.metadata.title,
+            item: pageUrl,
+          },
+        ],
+      },
+      {
+        "@type": "ProfilePage",
+        url: pageUrl,
+        name: copy.metadata.title,
+        description: copy.metadata.description,
+        inLanguage: locale === "de" ? "de-DE" : "en-GB",
+        isPartOf: { "@id": WEBSITE_ID },
+        mainEntity: { "@id": PERSON_ID },
+      },
+      {
+        "@type": "Person",
+        "@id": PERSON_ID,
+        name: TIM_ENTITY.displayName,
+        givenName: TIM_ENTITY.givenName,
+        familyName: TIM_ENTITY.familyName,
+        jobTitle: copy.personJobTitle,
+        description: copy.personDescription,
+        url: pageUrl,
+        image: TIM_ENTITY.portraitUrl,
+        sameAs: [...PERSON_SAME_AS_URLS],
+        knowsAbout: [...copy.knowsAbout],
+        alumniOf: {
+          "@type": "CollegeOrUniversity",
+          name: "Friedrich-Alexander-Universität Erlangen-Nürnberg",
+          url: "https://www.fau.de",
+        },
+      },
+    ],
+  };
+}
+
+export default async function UeberMichPage() {
+  const locale = await getRequestLocale();
+
   return (
     <>
-      <JsonLd data={UEBER_MICH_GRAPH} id="ueber-mich-jsonld" />
-      <UeberMichContent />
+      <JsonLd data={profileGraph(locale)} id="ueber-mich-jsonld" />
+      <UeberMichContent locale={locale} />
     </>
   );
 }

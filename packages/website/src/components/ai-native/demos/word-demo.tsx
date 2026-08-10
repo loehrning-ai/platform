@@ -3,14 +3,15 @@
 import { useEffect, useRef, useState, type JSX } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { DemoOverline } from "./_shared";
+import { useDemoLocale } from "@/components/demos/demo-locale";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 
 /**
- * WordDemo — Claude ↔ Microsoft Word project-brief generator.
+ * WordDemo — simulated Microsoft Word project-brief workflow.
  *
- * 4-field form → Claude generates a 2-page styled internal project brief,
- * pulled from prior internal documents as reference.
+ * A four-field form produces a styled, reviewable sample brief from fictional
+ * references. It does not connect to Word or internal documents.
  *
  * Provenance: first-party loehrning.ai implementation by Tim Löhr.
  * Ported 2026-04-21. See AI-native demo gallery implementation.
@@ -23,19 +24,19 @@ interface FormState {
   readonly zeitraum: string;
 }
 
-const FIELDS: readonly [keyof FormState, string, string][] = [
-  ["kunde", "Adressat", "Team oder Firma"],
-  ["projekt", "Projekt-Titel", "Beschreibung…"],
-  ["budget", "Rahmenwert", "60000"],
-  ["zeitraum", "Zeitraum", "Q3 2026"],
-];
-
 export function WordDemo(): JSX.Element {
+  const { locale, text } = useDemoLocale();
   const [form, setForm] = useState<FormState>({
-    kunde: "Fiktivwerk Beispiel GmbH (rein fiktiv)",
-    projekt: "Wartungs-KI Produktionslinie",
+    kunde: text(
+      "Fiktivwerk Beispiel GmbH (rein fiktiv)",
+      "Fictitious Works Example Ltd (fictional)",
+    ),
+    projekt: text(
+      "Wartungs-KI Produktionslinie",
+      "Production-line maintenance AI",
+    ),
     budget: "68000",
-    zeitraum: "Juli-September 2026",
+    zeitraum: text("Juli bis September 2026", "July to September 2026"),
   });
   const [generated, setGenerated] = useState(false);
   const [genStep, setGenStep] = useState(0);
@@ -67,33 +68,55 @@ export function WordDemo(): JSX.Element {
     );
   }
 
-  const todayDe = new Date().toLocaleDateString("de-DE");
-  const fileStub = form.kunde.split(" ")[0] || "Kunde";
+  const fields: readonly [keyof FormState, string, string][] = [
+    [
+      "kunde",
+      text("Adressat", "Addressee"),
+      text("Team oder Firma", "Team or company"),
+    ],
+    [
+      "projekt",
+      text("Projekttitel", "Project title"),
+      text("Beschreibung…", "Description…"),
+    ],
+    ["budget", text("Rahmenwert", "Planning value"), "60000"],
+    ["zeitraum", text("Zeitraum", "Period"), "Q3 2026"],
+  ];
+  const today = new Date().toLocaleDateString(
+    locale === "en" ? "en-GB" : "de-DE",
+  );
+  const fileStub = form.kunde.split(" ")[0] || text("Kunde", "Customer");
   const iso = new Date().toISOString().slice(0, 10);
 
   return (
     <div
       className="flex flex-col gap-4 overflow-hidden"
       role="region"
-      aria-label="Praxisbeispiel: Word"
+      aria-label={text("Praxisbeispiel: Word", "Practice example: Word")}
     >
       <div>
-        <DemoOverline>Word-Lab mit KI-Assistent</DemoOverline>
+        <DemoOverline>
+          {text("Word-Dokumentenlabor", "Word document lab")}
+        </DemoOverline>
         <h3 className="mt-2 text-[24px] font-bold tracking-[-0.03em] text-foreground md:text-[26px]">
-          Projektbriefe, die{" "}
-          <span className="text-brand-orange">prüfbar bleiben.</span>
+          {text("Projektbriefe, die", "Project briefs that")}{" "}
+          <span className="text-brand-orange">
+            {text("prüfbar bleiben.", "remain reviewable.")}
+          </span>
         </h3>
         <p className="mt-1.5 max-w-[620px] text-[13px] leading-[1.55] text-muted-foreground">
-          Vier Eckdaten → Dokumententwurf mit Annahmen, Risiken, Datenquellen
-          und Freigabevermerk. Nutzt Musterreferenzen, keine internen Dateien.
+          {text(
+            "Vier Eckdaten → Dokumententwurf mit Annahmen, Risiken, Datenquellen und Freigabevermerk. Nutzt Musterreferenzen, keine internen Dateien.",
+            "Four inputs → a document draft with assumptions, risks, data sources, and approval status. It uses sample references, not internal files.",
+          )}
         </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-[320px_1fr]">
         {/* Form */}
         <div className="flex flex-col gap-3">
-          <DemoOverline>Eckdaten</DemoOverline>
-          {FIELDS.map(([key, label, placeholder]) => (
+          <DemoOverline>{text("Eckdaten", "Inputs")}</DemoOverline>
+          {fields.map(([key, label, placeholder]) => (
             <label key={key} className="flex flex-col gap-1">
               <span className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                 {label}
@@ -117,10 +140,14 @@ export function WordDemo(): JSX.Element {
             </div>
             <div>
               <div className="font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-foreground">
-                Vorlage: Projektbrief_Standard.docx
+                {text("Vorlage", "Template")}: Projektbrief_Standard.docx
               </div>
               <div className="mt-0.5 font-mono text-[9px] text-muted-foreground">
-                + Musterreferenzen als Stilvorlage
+                +{" "}
+                {text(
+                  "Musterreferenzen als Stilvorlage",
+                  "sample references for style",
+                )}
               </div>
             </div>
           </div>
@@ -136,17 +163,20 @@ export function WordDemo(): JSX.Element {
             )}
           >
             {genStep > 0
-              ? "◆ Generiert…"
+              ? text("◆ Entwurf wird erstellt…", "◆ Creating draft…")
               : generated
-                ? "↻ Neu generieren"
-                : "▶ Projektbrief erstellen"}
+                ? text("↻ Neu erstellen", "↻ Create again")
+                : text("▶ Projektbrief erstellen", "▶ Create project brief")}
           </button>
           {genStep > 0 && (
             <div className="font-mono text-[10px] leading-[1.8] tracking-[0.1em]">
               {[
-                [1, "Stil-Abgleich mit Musterreferenzen"],
-                [2, "Claude Sonnet 4.5 · Draft"],
-                [3, "Word-Export mit Vorlage"],
+                [1, text("Musterreferenzen lesen", "Read sample references")],
+                [2, text("Modellaufruf · Entwurf", "Model call · draft")],
+                [
+                  3,
+                  text("Word-Export mit Vorlage", "Word export with template"),
+                ],
               ].map(([step, label]) => {
                 const active = genStep >= (step as number);
                 return (
@@ -191,8 +221,10 @@ export function WordDemo(): JSX.Element {
                   exit={{ opacity: 0 }}
                   className="px-5 py-20 text-center italic text-[#999]"
                 >
-                  Klicken Sie „Projektbrief erstellen". Claude füllt dieses
-                  Dokument in wenigen Sekunden mit einem prüfbaren Entwurf.
+                  {text(
+                    "Wähle „Projektbrief erstellen“. Die Simulation fügt einen prüfbaren Entwurf ein.",
+                    'Select "Create project brief". The simulation inserts a reviewable draft.',
+                  )}
                 </m.div>
               ) : (
                 <m.div
@@ -203,58 +235,79 @@ export function WordDemo(): JSX.Element {
                   transition={{ duration: 0.4, ease: EASE_OUT_EXPO }}
                 >
                   <div className="font-mono text-[9px] tracking-[0.08em] text-[#666]">
-                    MUSTERWERK GMBH · INTERNE PROJEKTNOTIZ
+                    {text(
+                      "MUSTERWERK GMBH · INTERNE PROJEKTNOTIZ",
+                      "SAMPLE WORKS LTD · INTERNAL PROJECT NOTE",
+                    )}
                   </div>
                   <hr className="my-2.5 border-t border-black" />
                   <div className="mt-3.5 text-[10px] text-[#555]">
                     {form.kunde}
                     <br />
-                    z.Hd. Einkaufsleitung
+                    {text(
+                      "z. Hd. Einkaufsleitung",
+                      "For the attention of procurement",
+                    )}
                     <br />
                     <br />
                   </div>
                   <div className="text-right text-[10px] text-[#777]">
-                    Berlin, {todayDe}
+                    Berlin, {today}
                   </div>
                   <h4 className="mb-2.5 mt-4 text-[15px] font-bold">
-                    Projektbrief: {form.projekt}
+                    {text("Projektbrief", "Project brief")}: {form.projekt}
                   </h4>
-                  <p className="mb-2.5">Sehr geehrte Damen und Herren,</p>
                   <p className="mb-2.5">
-                    dieser Entwurf sammelt die relevanten Annahmen zur{" "}
-                    <strong>Wartungs-KI für die Produktionslinie</strong>,
-                    konzipiert für den Zeitraum <strong>{form.zeitraum}</strong>
-                    .
+                    {text("Sehr geehrte Damen und Herren,", "Dear team,")}
                   </p>
                   <p className="mb-2.5">
-                    Unser Vorgehen folgt drei Phasen: (1) zweiwöchige
-                    Datenaufnahme an den vier kritischen Anlagen, (2)
-                    Pilotbetrieb mit Echtzeit-Anomalieerkennung, (3) Integration
-                    in das bestehende MES. Der interne Rahmenwert ist mit{" "}
+                    {text(
+                      "Dieser Entwurf sammelt die relevanten Annahmen zu",
+                      "This draft records the relevant assumptions for",
+                    )}{" "}
+                    <strong>{form.projekt}</strong>,{" "}
+                    {text("geplant für", "planned for")}{" "}
+                    <strong>{form.zeitraum}</strong>.
+                  </p>
+                  <p className="mb-2.5">
+                    {text(
+                      "Der Beispielplan hat drei zu prüfende Phasen: (1) begrenzte Datenaufnahme, (2) Pilot mit Anomaliehinweisen und menschlicher Prüfung, (3) Entscheidung über eine mögliche MES-Integration. Der interne Rahmenwert ist mit",
+                      "The sample plan has three phases to review: (1) bounded data collection, (2) a pilot with anomaly flags and human review, and (3) a decision on possible MES integration. The internal planning value is",
+                    )}{" "}
                     <strong>
-                      {Number(form.budget || 0).toLocaleString("de-DE")} €
+                      {Number(form.budget || 0).toLocaleString(
+                        locale === "en" ? "en-GB" : "de-DE",
+                      )}{" "}
+                      €
                     </strong>{" "}
-                    als Planungsannahme markiert. Keine Freigabe ohne
-                    Datenschutz- und Fachreview.
+                    {text(
+                      "als Annahme markiert. Keine Freigabe ohne Datenschutz-, Sicherheits- und Fachreview.",
+                      "and is marked as an assumption. No approval without data-protection, security, and subject-matter review.",
+                    )}
                   </p>
                   <p className="mb-2.5 text-[10px] italic text-[#555]">
-                    […] weitere Abschnitte: Annahmen, Risiken, Datenquellen,
-                    Freigaben.
+                    {text(
+                      "[…] weitere Abschnitte: Annahmen, Risiken, Datenquellen, Freigaben.",
+                      "[…] further sections: assumptions, risks, data sources, approvals.",
+                    )}
                   </p>
                   <div className="mt-4 flex gap-5 text-[10px] text-[#555]">
                     <div className="flex-1">
-                      Interne Notiz
+                      {text("Interne Notiz", "Internal note")}
                       <br />
                       <br />
                       <strong className="text-black">
-                        Freigabe ausstehend
+                        {text("Freigabe ausstehend", "Approval pending")}
                       </strong>
                       <br />
-                      Review durch Fachbereich und Datenschutz
+                      {text(
+                        "Review durch Fachbereich, Sicherheit und Datenschutz",
+                        "Review by subject matter, security, and data protection",
+                      )}
                     </div>
                     <div className="border-l border-[#ddd] pl-4 text-right">
                       <div className="text-[9px] text-[#888]">
-                        SEITE 1 VON 2
+                        {text("SEITE 1 VON 2", "PAGE 1 OF 2")}
                       </div>
                     </div>
                   </div>
@@ -269,7 +322,7 @@ export function WordDemo(): JSX.Element {
               transition={{ duration: 0.4, ease: EASE_OUT_EXPO }}
               className="absolute right-2 top-7 bg-brand-orange px-2 py-0.5 font-mono text-[9px] font-bold tracking-[0.12em] text-white"
             >
-              ◆ LIVE
+              ◆ {text("SIMULATION", "SIMULATION")}
             </m.div>
           )}
         </div>
@@ -283,10 +336,16 @@ export function WordDemo(): JSX.Element {
           className="grid grid-cols-2 gap-2 md:grid-cols-4"
         >
           {[
-            ["Erstellzeit", "4,2 s"],
-            ["Manuell sonst", "≈ 3 h"],
-            ["Stil-Treffer", "96 %"],
-            ["Review-Hinweis", "Pflicht"],
+            [
+              text("Simulationsstatus", "Simulation status"),
+              text("abgeschlossen", "complete"),
+            ],
+            [text("Quellenstatus", "Source status"), text("Muster", "samples")],
+            [
+              text("Behauptungsstatus", "Claim status"),
+              text("ungeprüft", "unverified"),
+            ],
+            [text("Review", "Review"), text("erforderlich", "required")],
           ].map(([label, val]) => (
             <div
               key={label}

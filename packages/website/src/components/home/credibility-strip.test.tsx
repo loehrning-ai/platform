@@ -15,16 +15,31 @@ describe("CredibilityStrip", () => {
   it("exposes the platform-principles section anchor and overline", () => {
     render(<CredibilityStrip />);
     expect(screen.getByTestId("platform-principles")).toBeInTheDocument();
-    expect(screen.getByText("Was dich hier erwartet")).toBeInTheDocument();
+    expect(screen.getByText("Betriebsprinzipien")).toBeInTheDocument();
+  });
+
+  it("renders the same operating facts in English without German labels", () => {
+    const { container } = render(<CredibilityStrip locale="en" />);
+
+    expect(screen.getByText("Operating principles")).toBeInTheDocument();
+    expect(screen.getByText("No paywall")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /Only the four foundation-path readers require a free learning account/,
+      ),
+    ).toBeInTheDocument();
+    expect(container.textContent).not.toMatch(
+      /\b(?:Betriebsprinzipien|Zugang|Sprachen|Quellen|Redaktion|Deutsch|öffentlich|Konto)\b/,
+    );
   });
 
   it("renders all four principles with label and title", () => {
     render(<CredibilityStrip />);
     const expected: ReadonlyArray<readonly [string, string]> = [
-      ["Gratis", "Wirklich kostenlos"],
-      ["Deutsch", "Für den Arbeitsalltag hier"],
-      ["Belegt", "Jede Zahl hat eine Quelle"],
-      ["Ehrlich", "Kein Marketing-Team"],
+      ["Zugang", "Keine Paywall"],
+      ["Sprachen", "Zwei vollständige Fassungen"],
+      ["Quellen", "Stand und Herkunft sichtbar"],
+      ["Redaktion", "Von Tim Löhr redigiert"],
     ];
     for (const [label, title] of expected) {
       expect(screen.getByText(label)).toBeInTheDocument();
@@ -32,23 +47,29 @@ describe("CredibilityStrip", () => {
     }
   });
 
-  it("keeps the anti-selling positioning while stating the account boundary", () => {
+  it("states the commercial and account boundary directly", () => {
     render(<CredibilityStrip />);
     expect(
-      screen.getByText(/kein verstecktes Verkaufsgespräch/),
+      screen.getByText(/kein Abo und keine Premiumstufe/),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/vier deutschen Lernpfad-Kurse brauchen ein kostenloses Konto/),
+      screen.getByText(
+        /vier Reader des Grundlagenpfads benötigen ein kostenloses Lernkonto/,
+      ),
     ).toBeInTheDocument();
   });
 
-  it("distinguishes public resources from the account-gated German path", () => {
+  it("distinguishes public resources from the account-gated foundation path", () => {
     render(<CredibilityStrip />);
     expect(
-      screen.getByText(/Bücher, Demos, KI-Check und technische Vertiefungen sind öffentlich/),
+      screen.getByText(
+        /Bücher, Demos, KI-Check und technische Vertiefungen sind öffentlich/,
+      ),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/vier deutschen Lernpfad-Kurse brauchst du ein kostenloses Konto/),
+      screen.getByText(
+        /vier Reader des Grundlagenpfads brauchst du ein kostenloses Konto/,
+      ),
     ).toBeInTheDocument();
   });
 });

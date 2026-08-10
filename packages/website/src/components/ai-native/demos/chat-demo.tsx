@@ -427,7 +427,10 @@ export function ChatDemo(): JSX.Element {
       </div>
 
       {/* Composer */}
-      <div className="flex gap-2 border-t border-border p-3">
+      <div
+        data-chat-composer
+        className="flex min-w-0 max-w-full gap-2 border-t border-border p-3"
+      >
         <input
           type="text"
           value={input}
@@ -435,13 +438,13 @@ export function ChatDemo(): JSX.Element {
           onKeyDown={onKeyDown}
           maxLength={500}
           placeholder="Fragen Sie zu Ihren Verträgen…"
-          className="flex-1 border border-border bg-card/40 px-3.5 py-2.5 text-[14px] text-foreground outline-none placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange"
+          className="min-w-0 flex-1 border border-border bg-card/40 px-3.5 py-2.5 text-[14px] text-foreground outline-none placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange"
           aria-label="Frage eingeben"
         />
         <button
           type="button"
           onClick={() => submit()}
-          className="bg-brand-orange px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-brand-amber"
+          className="shrink-0 bg-brand-orange px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-brand-amber"
         >
           Senden →
         </button>

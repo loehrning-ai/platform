@@ -1,0 +1,189 @@
+{
+  "id": "evals",
+  "number": 11,
+  "title": "Prompt-Debugging und Evals",
+  "subtitle": "Wie du erkennst, ob ein Prompt wirklich besser ist.",
+  "durationMinutes": 12,
+  "trackId": "team",
+  "hook": "Ein Eindruck ersetzt keine Prüfung.",
+  "keyConcepts": [
+    "Minimaler Eval",
+    "Binäre Suche eines Prompts",
+    "LLM als Richter"
+  ],
+  "quiz": [],
+  "sections": [
+    {
+      "id": "why-evals",
+      "title": "Warum Evals?",
+      "readTimeMinutes": 1,
+      "content": "Eine Prompt-Änderung kann einen Fall verbessern und einen anderen verschlechtern. Ein Eval definiert Eingaben, Erfolgskriterien und Bewertungslogik, damit Versionen unter denselben Bedingungen verglichen werden.\n\nBeginne mit einer kleinen repräsentativen Menge aus häufigen Fällen, Grenzfällen und bekannten Fehlern. Erweitere sie mit Evidenz aus dem Betrieb. Da Modellausgaben variieren, sind bei Entscheidungen über Erfolgsquoten mehrere Durchläufe nötig.\n\n> Dokumentiere Modell, Einstellungen, Prompt-Version, Eingaben, Ausgaben und Bewertungen."
+    },
+    {
+      "id": "mvp-eval",
+      "title": "Ein kleines Eval-Set",
+      "readTimeMinutes": 2,
+      "content": "Eine Tabelle, JSON-Datei oder ein Testmodul reicht für den Anfang. Jeder Fall benötigt eine realistische Eingabe und explizite Abnahmekriterien.\n\n```\neval_v1:\n  - input:    <häufiger Fall>\n    expects:  <prüfbare Anforderungen>\n  - input:    <schwieriger Grenzfall>\n    expects:  <…>\n  - input:    <bekannter Fehlerfall>\n    expects:  <…>\n  - input:    <fehlende oder mehrdeutige Daten>\n    expects:  <Abstention oder Rückfrage>\n```\n\nFühre vor und nach einer Änderung dieselben Fälle aus. Speichere Rohdaten und Bewertungen, damit Meinungsverschiedenheiten geprüft werden können."
+    },
+    {
+      "id": "debugging",
+      "title": "Debugging eines fehlerhaften Prompts",
+      "readTimeMinutes": 2,
+      "content": "Reproduziere eine Regression zuerst mit fester Eingabe, Modell, Einstellungen und Tool-Zustand. Vereinfache oder deaktiviere anschließend Prompt-Abschnitte, um widersprüchliche Anweisungen einzugrenzen. Führe Abschnitte einzeln wieder ein und teste dieselben Fälle.\n\nDas ähnelt Delta-Debugging. Wegen Modellvarianz beweist ein einzelner Durchlauf jedoch keine Ursache. Wiederhole Versuche und prüfe die Transkripte."
+    },
+    {
+      "id": "llm-as-judge",
+      "title": "Qualität mit einem zweiten Modell beurteilen",
+      "readTimeMinutes": 2,
+      "content": "Ein Modell-Grader kann offene Ausgaben anhand einer Rubrik bewerten, bringt aber eigene Fehler und Präferenzen ein. Kalibriere ihn mit menschlich geprüften Beispielen, variiere bei Paarvergleichen die Reihenfolge, speichere die Begründung und miss Abweichungen.\n\nNutze deterministische Grader für Schema, Pflichtfelder, Zitate und ausführbare Tests. Kombiniere Grader nur, wenn jeder eine definierte Anforderung misst."
+    }
+  ],
+  "widgets": [
+    {
+      "kind": "failure-tagger",
+      "placement": "before-quiz",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "evals",
+        "cpId": "tagger",
+        "title": "Benenne den Fehlerfall",
+        "scenario": "Fünf simulierte Ausgaben enthalten unterschiedliche Fehlerbilder. Die Beispiele sind feste Kursdaten, keine Live-Antworten von Claude.",
+        "modes": [
+          {
+            "id": "halluzination",
+            "label": "Halluzination",
+            "desc": "Hat selbstbewusst eine Tatsache erfunden."
+          },
+          {
+            "id": "verweigerung",
+            "label": "Übermäßige Verweigerung",
+            "desc": "Hat etwas verweigert, das es hätte tun sollen."
+          },
+          {
+            "id": "formatdrift",
+            "label": "Formatabweichung",
+            "desc": "Hat die angeforderte Form ignoriert."
+          },
+          {
+            "id": "themaverfehlung",
+            "label": "Thema verfehlt",
+            "desc": "Ist vom Thema abgewichen."
+          }
+        ],
+        "cases": [
+          {
+            "id": "c1",
+            "prompt": "Liste die drei größten Dateien in unserem Repo nach Bytes auf.",
+            "output": "Die drei größten Dateien in deinem Repo sind src/bundle.js (4.2MB), dist/vendor.js (3.8MB) und assets/hero-video.mp4 (2.1MB).",
+            "correct": "halluzination",
+            "why": "Claude hatte keinen Zugriff auf das Repository. Es hat plausible Dateinamen und genaue Byte-Zahlen erfunden."
+          },
+          {
+            "id": "c2",
+            "prompt": "Schreibe ein kurzes JSON-Objekt, das einen generischen Benutzer beschreibt: {name, role, email}.",
+            "output": "Ich kann keine Beispieldaten mit E-Mails generieren, da dies mit einer realen Person verwechselt werden könnte. Könntest du deinen Anwendungsfall präzisieren?",
+            "correct": "verweigerung",
+            "why": "Die Anfrage ist harmlos und betrifft Beispieldaten. Dies ist eine klassische übervorsichtige Verweigerung."
+          },
+          {
+            "id": "c3",
+            "prompt": "Gib ein JSON-Array mit 3 Objekten zurück, jedes mit den Schlüsseln „term“ und „definition“. Kein Fließtext.",
+            "output": "Sicher! Hier sind drei wichtige Begriffe:\n\n1. Kontextfenster: der Textbereich, den das Modell auf einmal berücksichtigen kann.\n2. Token: eine Texteinheit, die das Modell verarbeitet.\n3. Temperatur: Parameter für die Stichprobenzufälligkeit.",
+            "correct": "formatdrift",
+            "why": "Explizit ein JSON-Array ohne Fließtext angefordert. Erhalten wurde Fließtext mit nummerierten Aufzählungspunkten."
+          },
+          {
+            "id": "c4",
+            "prompt": "Fasse den angehängten Vorfallbericht in einem Satz zusammen.",
+            "output": "Vorfälle sind in schnelllebigen Teams üblich. Hier sind sieben Best Practices für Post-Mortems: 1. Fehlerfreie Kultur 2. Klare Zeitlinie 3. Ursachenanalyse...",
+            "correct": "themaverfehlung",
+            "why": "Hat den spezifischen Bericht nicht zusammengefasst, sondern ist zu allgemeinen Ratschlägen über Post-Mortems übergegangen."
+          },
+          {
+            "id": "c5",
+            "prompt": "Was ist die aktuelle Version unserer internen AuthKit-Bibliothek?",
+            "output": "AuthKit ist derzeit in Version 3.7.2, angeblich in einem aktuellen Release veröffentlicht, mit Fehlerbehebungen für den OAuth-Flow und einem neuen MFA-Modul.",
+            "correct": "halluzination",
+            "why": "Das Modell kann die Version deiner internen Bibliothek unmöglich kennen. Es hat Version, Datum und Release Notes erfunden."
+          }
+        ],
+        "passThreshold": 4,
+        "copy": {
+          "kindLabel": "Eval-Übung",
+          "promptLabel": "Prompt",
+          "outputLabel": "Claudes Ausgabe",
+          "tagAriaLabelPrefix": "Fehlerfall für:",
+          "correctSuffix": "korrekt",
+          "taggedSuffix": "markiert",
+          "submitLabel": "Meine Markierungen prüfen",
+          "passedLabel": "Du erkennst einen Fehlerfall",
+          "retryPromptLabel": "Lies die Modusbeschreibungen erneut",
+          "resetLabel": "Erneut versuchen",
+          "perCaseCorrectLabel": "Korrekt.",
+          "perCaseWrongLabel": "Tatsächlich:"
+        }
+      }
+    },
+    {
+      "kind": "prompt-grader",
+      "placement": "before-quiz",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "evals",
+        "cpId": "grader",
+        "task": "Schreibe einen Prompt zum Generieren wöchentlicher Status-Updates, der von einem Richtermodell bewertet werden kann.",
+        "rubric": "Alle Boris-Abschnitte vorhanden, Einschränkungen spezifisch, Format explizit, enthält eine Möglichkeit, fehlende Daten zu erkennen."
+      }
+    },
+    {
+      "kind": "quiz",
+      "placement": "end",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "evals",
+        "cpId": "q1",
+        "question": "Du änderst einen Prompt. Die neue Ausgabe „fühlt sich besser an“. Was ist der richtige nächste Schritt?",
+        "options": [
+          "Veröffentlichen.",
+          "Führe beide Prompts mit 5 realistischen Beispielen aus und vergleiche die Ergebnisse.",
+          "Frage einen Kollegen, ob es ihm gefällt.",
+          "Bitte Claude, sich selbst zu bewerten."
+        ],
+        "correct": 1,
+        "explanation": "Ein kontrollierter Vergleich zeigt, welche Anforderungen besser oder schlechter erfüllt werden. Eine bevorzugte Einzelantwort zeigt das nicht.",
+        "title": "Kurzprüfung",
+        "copy": {
+          "kindLabel": "Kurzprüfung",
+          "optionsAriaLabel": "Antwortoptionen",
+          "correctLabel": "Korrekt.",
+          "incorrectLabel": "Nicht ganz."
+        }
+      }
+    },
+    {
+      "kind": "quiz",
+      "placement": "end",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "evals",
+        "cpId": "q2",
+        "question": "Ein Prompt zeigt nach mehreren Änderungen eine Regression. Welcher Schritt grenzt widersprüchliche Anweisungen am besten ein?",
+        "options": [
+          "Füge weitere Anweisungen hinzu, um die Seltsamkeit zu beheben.",
+          "Deaktiviere Abschnitte, wiederhole dieselben Eval-Durchläufe und führe Abschnitte einzeln wieder ein.",
+          "Wechsle zu einem anderen Modell.",
+          "Bitte Claude, den Prompt von Grund auf neu zu schreiben."
+        ],
+        "correct": 1,
+        "explanation": "Deaktiviere Abschnitte, um Konflikte einzugrenzen, und wiederhole dieselben Eval-Durchläufe, bevor du eine Ursache festlegst.",
+        "title": "Kurzprüfung",
+        "copy": {
+          "kindLabel": "Kurzprüfung",
+          "optionsAriaLabel": "Antwortoptionen",
+          "correctLabel": "Korrekt.",
+          "incorrectLabel": "Nicht ganz."
+        }
+      }
+    }
+  ]
+}

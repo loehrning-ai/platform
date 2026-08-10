@@ -23,7 +23,10 @@ function installLocalStoragePolyfill(): void {
 }
 
 beforeAll(() => {
-  if (typeof window.localStorage === "undefined" || typeof window.localStorage.setItem !== "function") {
+  if (
+    typeof window.localStorage === "undefined" ||
+    typeof window.localStorage.setItem !== "function"
+  ) {
     installLocalStoragePolyfill();
   }
 });
@@ -40,27 +43,39 @@ afterEach(() => {
 describe("L12DailyLoop", () => {
   it("renders all 6 phases as schedulable", () => {
     render(<L12DailyLoop lessonId="L12" cpId="bespoke" />);
-    expect(screen.getByText("triage (15m)")).toBeInTheDocument();
-    expect(screen.getByText("merge (10m)")).toBeInTheDocument();
+    expect(screen.getByText("triage (request and owner)")).toBeInTheDocument();
+    expect(
+      screen.getByText("merge (release and rollback gate)"),
+    ).toBeInTheDocument();
   });
 
   it("scheduling a phase moves it into the day's timeline in order", () => {
     render(<L12DailyLoop lessonId="L12" cpId="bespoke" />);
-    fireEvent.click(screen.getByText("triage (15m)"));
-    fireEvent.click(screen.getByText("spec (30m)"));
-    expect(screen.getByText("1. triage (15m)")).toBeInTheDocument();
-    expect(screen.getByText("2. spec (30m)")).toBeInTheDocument();
+    fireEvent.click(screen.getByText("triage (request and owner)"));
+    fireEvent.click(screen.getByText("specify (scope and checks)"));
+    expect(
+      screen.getByText("1. triage (request and owner)"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("2. specify (scope and checks)"),
+    ).toBeInTheDocument();
   });
 
   it("awards the checkpoint once all 6 phases are scheduled", () => {
     render(<L12DailyLoop lessonId="L12" cpId="bespoke" />);
-    for (const label of ["triage (15m)", "spec (30m)", "launch (5m)", "async review (20m)", "iterate (15m)"]) {
+    for (const label of [
+      "triage (request and owner)",
+      "specify (scope and checks)",
+      "execute (environment and base revision)",
+      "async review (diff and command logs)",
+      "iterate (review findings)",
+    ]) {
       fireEvent.click(screen.getByText(label));
     }
     expect(isCheckpointDone("L12", "bespoke")).toBe(false);
-    fireEvent.click(screen.getByText("merge (10m)"));
+    fireEvent.click(screen.getByText("merge (release and rollback gate)"));
     expect(isCheckpointDone("L12", "bespoke")).toBe(true);
     expect(getXp()).toBe(XP.CHECKPOINT);
-    expect(screen.getByText(/You are Codex-fluent/)).toBeInTheDocument();
+    expect(screen.getByText(/Workflow sequence recorded/)).toBeInTheDocument();
   });
 });

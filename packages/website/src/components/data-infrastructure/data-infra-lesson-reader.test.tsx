@@ -48,7 +48,12 @@ const LESSON: DataInfraLesson = {
   keyConcepts: ["Concept A", "Concept B"],
   quiz: [],
   sections: [
-    { id: "s1", title: "Section One", readTimeMinutes: 1, content: "Section one content." },
+    {
+      id: "s1",
+      title: "Section One",
+      readTimeMinutes: 1,
+      content: "Section one content.",
+    },
     {
       id: "s2",
       title: "Section Two",
@@ -74,7 +79,10 @@ const LESSON: DataInfraLesson = {
 };
 
 beforeAll(() => {
-  if (typeof window.localStorage === "undefined" || typeof window.localStorage.setItem !== "function") {
+  if (
+    typeof window.localStorage === "undefined" ||
+    typeof window.localStorage.setItem !== "function"
+  ) {
     installLocalStoragePolyfill();
   }
 });
@@ -99,8 +107,12 @@ describe("DataInfraLessonReader ", () => {
     const host = document.createElement("div");
     host.innerHTML = markup;
     const buttons = Array.from(host.querySelectorAll("button"));
-    const markAsRead = buttons.filter((button) => button.textContent?.includes("Mark as read"));
-    const completeLesson = buttons.find((button) => button.textContent?.includes("Complete lesson"));
+    const markAsRead = buttons.filter((button) =>
+      button.textContent?.includes("Mark as read"),
+    );
+    const completeLesson = buttons.find((button) =>
+      button.textContent?.includes("Complete lesson"),
+    );
 
     expect(markAsRead).toHaveLength(LESSON.sections.length);
     expect(markAsRead.every((button) => button.disabled)).toBe(true);
@@ -109,40 +121,88 @@ describe("DataInfraLessonReader ", () => {
   });
 
   it("renders the lesson header, sections, and key takeaway", () => {
-    render(<DataInfraLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />);
+    render(
+      <DataInfraLessonReader
+        lesson={LESSON}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+      />,
+    );
     expect(screen.getByText("Test Lesson Title")).toBeInTheDocument();
     expect(screen.getByText("Section one content.")).toBeInTheDocument();
     expect(screen.getByText("The key takeaway.")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Section One" }).parentElement,
+    ).toHaveClass("flex-col", "sm:flex-row");
   });
 
   it("renders the embedded widget through the shared registry", async () => {
-    render(<DataInfraLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />);
+    render(
+      <DataInfraLessonReader
+        lesson={LESSON}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+      />,
+    );
     expect(
       await screen.findByText("A test question?", {}, { timeout: 5_000 }),
     ).toBeInTheDocument();
   });
 
   it("renders this lesson's bespoke simulator (StackFlow for mental-model)", () => {
-    render(<DataInfraLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />);
-    expect(screen.getByText(/Live simulator/)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /trace 1 event/ })).toBeInTheDocument();
+    render(
+      <DataInfraLessonReader
+        lesson={LESSON}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+      />,
+    );
+    expect(screen.getByText(/Interactive model/)).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /trace 1 event/ }),
+    ).toBeInTheDocument();
   });
 
   it("gates the complete-lesson button until every section is marked read", () => {
-    render(<DataInfraLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />);
-    const completeButton = screen.getByRole("button", { name: /Complete lesson/i });
+    render(
+      <DataInfraLessonReader
+        lesson={LESSON}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+      />,
+    );
+    const completeButton = screen.getByRole("button", {
+      name: /Complete lesson/i,
+    });
     expect(completeButton).toBeDisabled();
 
-    fireEvent.click(screen.getAllByRole("button", { name: /Mark as read/i })[0]);
+    fireEvent.click(
+      screen.getAllByRole("button", { name: /Mark as read/i })[0],
+    );
     expect(completeButton).toBeDisabled();
 
-    fireEvent.click(screen.getAllByRole("button", { name: /Mark as read/i })[0]);
+    fireEvent.click(
+      screen.getAllByRole("button", { name: /Mark as read/i })[0],
+    );
     expect(completeButton).not.toBeDisabled();
   });
 
   it("marks the lesson complete in the unified store", () => {
-    render(<DataInfraLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />);
-    for (const button of screen.getAllByRole("button", { name: /Mark as read/i })) {
+    render(
+      <DataInfraLessonReader
+        lesson={LESSON}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+      />,
+    );
+    for (const button of screen.getAllByRole("button", {
+      name: /Mark as read/i,
+    })) {
       fireEvent.click(button);
     }
     fireEvent.click(screen.getByRole("button", { name: /Complete lesson/i }));
@@ -163,7 +223,9 @@ describe("DataInfraLessonReader ", () => {
       "href",
       "/kurse/open-source/data-infrastructure/kurs/next",
     );
-    expect(screen.getByRole("link", { name: /Previous lesson/i })).toHaveAttribute(
+    expect(
+      screen.getByRole("link", { name: /Previous lesson/i }),
+    ).toHaveAttribute(
       "href",
       "/kurse/open-source/data-infrastructure/kurs/prev",
     );

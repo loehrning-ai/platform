@@ -1,4 +1,3 @@
-// Ported verbatim from course-data.js's MODULES[6] ("data", M07).
 import type { AiNativeOperatorLesson } from "../types";
 
 export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
@@ -8,40 +7,41 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 1,
     number: 1,
     kind: "reading",
-    title: "The unified context layer",
-    subtitle: "Stand up a single retrieval surface (RAG/MCP) over docs, code, tickets, and conversations.",
+    title: "Build a governed retrieval layer",
+    subtitle:
+      "Connect approved sources through explicit identity, authorization, freshness, and provenance controls.",
     objective:
-      "Stand up a single retrieval surface (RAG/MCP) over docs, code, tickets, and conversations.",
+      "Connect approved sources through explicit identity, authorization, freshness, and provenance controls.",
     durationMinutes: 24,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "Why context is everything",
+        title: "Start with the supported decisions",
         readTimeMinutes: 8,
         content:
-          "The same model, with rich context, gives expert-level answers. Without context, generic ones. The investment that compounds is the context layer, the unified, permissioned, queryable surface over all of your work artifacts.",
+          "Define which questions or actions the retrieval layer will support before connecting sources. For each use case, name the authoritative records, acceptable staleness, data classification, and required evidence. A single search surface can simplify access, but it must preserve differences in authority, sensitivity, and retention.",
       },
       {
         id: "s2",
-        title: "What to include",
+        title: "Connect only justified sources",
         readTimeMinutes: 8,
         content:
-          "Docs (Confluence, Notion, Drive). Code (Git). Tickets (Jira, Linear). Conversations (Slack, email, with care). Calendars. CRMs. The agent should see the same surface a thoughtful new hire would, after their first month, but on day one.",
+          "Documents, code, tickets, customer records, messages, calendars, and other sources carry different risks. Apply purpose limitation and data minimization. Involve privacy, security, legal, and worker-representation owners where required. Do not ingest a source merely because a connector exists.",
       },
       {
         id: "s3",
-        title: "The build",
+        title: "Return evidence with the result",
         readTimeMinutes: 8,
         content:
-          "Most teams should not build the context layer from scratch. Use MCP-compatible connectors. Standardize on identity and permissions. Invest in the index quality and the freshness, the quality of agent answers is downstream.",
+          "A retrieved answer should expose source references, relevant versions or timestamps, and any material access or freshness limits. The user must be able to inspect the evidence. When coverage is insufficient or sources conflict, the system should state the limitation or abstain instead of presenting unsupported synthesis as fact.",
       },
     ],
     callout: {
       kind: "note",
-      h: "A useful sequencing",
-      text: "Phase 1: docs + code (most ROI per week of work). Phase 2: tickets + recent decisions. Phase 3: conversations (only with explicit privacy review). Skipping straight to phase 3 is the most common path to disaster.",
+      h: "Sequence by value and risk",
+      text: "Begin with sources that support a defined use case and have clear ownership, stable access rules, and manageable sensitivity. Add operational records when freshness and deletion handling are controlled. Add communications only after explicit privacy, security, retention, and worker-impact review.",
     },
     exerciseKind: "reflect-box",
     widgets: [
@@ -52,9 +52,9 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
         props: {
           lessonId: "data/1",
           cpId: "exercise",
-          title: "Context Sources",
+          title: "Source register",
           scenario:
-            "List the top 5 sources of context your team's agents need. For each: who owns it, what is the access model, how stale is it.",
+            "List five candidate sources. For each, record the supported use case, owner, authority, data classification, access model, freshness requirement, retention rule, and evidence shown to users.",
           rows: 5,
         },
       },
@@ -66,33 +66,35 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 2,
     number: 2,
     kind: "reading",
-    title: "Permission-aware retrieval",
-    subtitle: "Make the agent see exactly what the user sees, nothing more, nothing less.",
-    objective: "Make the agent see exactly what the user sees, nothing more, nothing less.",
+    title: "Enforce authorization at retrieval time",
+    subtitle:
+      "Evaluate the user's rights, the workload identity, and the requested resource before returning content.",
+    objective:
+      "Evaluate the user's rights, the workload identity, and the requested resource before returning content.",
     durationMinutes: 20,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "The leak that ends the program",
+        title: "Place the control before disclosure",
         readTimeMinutes: 7,
         content:
-          "A single incident, agent returns a doc the user shouldn't see, agent leaks a customer record, sets the program back two years. Permission-aware retrieval is the discipline that prevents this.",
+          "Authorization belongs in the retrieval path and at the source boundary. A response filter acts after content has already been retrieved and may miss indirect disclosure. Evaluate access before returning documents, passages, metadata, or derived results, and test the policy with both allowed and denied cases.",
       },
       {
         id: "s2",
-        title: "How it works",
+        title: "Represent both user and workload identity",
         readTimeMinutes: 7,
         content:
-          'The agent inherits the calling user\'s identity. Every retrieval is filtered by the user\'s ACLs. The index stores ACLs alongside the content. There is no "agent identity" with elevated access, the agent is always acting on behalf of a specific user, with that user\'s permissions.',
+          "The system should know which user initiated the request and which agent or service executed it. Effective access should be no broader than the intersection of the user's rights, the workload's assigned scope, and current policy. Use short-lived credentials and explicit delegation; do not rely on a shared elevated account.",
       },
       {
         id: "s3",
-        title: "The audit",
+        title: "Log decisions without creating a new leak",
         readTimeMinutes: 6,
         content:
-          "Every retrieval is logged: user, query, results returned, ACLs applied. When something goes wrong, you can reconstruct exactly what happened. Without this, you are guessing in incident response.",
+          "Record the user, workload identity, time, requested resource identifiers, policy version, authorization decision, and returned source identifiers. Protect the log itself and avoid storing raw secrets or unnecessary sensitive query text. The record should support incident reconstruction without becoming a second uncontrolled data store.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -105,7 +107,7 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
           lessonId: "data/2",
           cpId: "exercise",
           scenario:
-            'For your context layer, can you answer: "Which user, on which day, retrieved which document via which agent, with which ACLs applied?" If no, name the gap.',
+            "For one retrieval flow, identify the user identity, workload identity, authorization source, effective permission rule, credential lifetime, denial behavior, and audit fields. Name any gap you cannot currently reconstruct.",
           rows: 3,
         },
       },
@@ -117,27 +119,28 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 3,
     number: 3,
     kind: "reading",
-    title: "Live knowledge graphs",
-    subtitle: "Move from snapshot indexes to live, governed knowledge, agents working with fresh context.",
+    title: "Manage freshness as an explicit contract",
+    subtitle:
+      "Set source-specific staleness limits, propagate changes and deletions, and expose the data timestamp.",
     objective:
-      "Move from snapshot indexes to live, governed knowledge, agents working with fresh context.",
+      "Set source-specific staleness limits, propagate changes and deletions, and expose the data timestamp.",
     durationMinutes: 22,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "Snapshots are radioactive",
+        title: "Match freshness to the decision",
         readTimeMinutes: 11,
         content:
-          "A nightly index is fine for some uses. For agentic workflows, it is poison: the agent answers based on yesterday's reality, takes action in today's, and the answer is wrong. The bar for fresh context is minutes, not days.",
+          "A periodic snapshot may be adequate for stable reference material and unsafe for a workflow acting on rapidly changing state. Define a maximum acceptable age for each use case and source. Include updates, revocations, and deletions in the contract; stale permissions can be as consequential as stale content.",
       },
       {
         id: "s2",
-        title: "The investment that pays",
+        title: "Detect and expose stale state",
         readTimeMinutes: 11,
         content:
-          "Streaming change events into the index. Per-source freshness SLAs. Stale-data detection, the agent should know when it's working with stale context and warn the user.",
+          "Choose event-driven, scheduled, or on-demand synchronization from the required freshness and operating cost. Monitor ingestion delay and failed updates. Return an as-of timestamp or version with results, and define whether the workflow warns, requests confirmation, falls back to the source, or stops when the freshness limit is exceeded.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -150,7 +153,7 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
           lessonId: "data/3",
           cpId: "exercise",
           scenario:
-            "For each major source of context, what is the current freshness? What is the target freshness? Where is the gap?",
+            "For each major source, record the current update method, observed delay, maximum acceptable age, deletion behavior, stale-state signal, and workflow response when the limit is exceeded.",
           rows: 4,
         },
       },
@@ -162,44 +165,69 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Module 7, knowledge check",
-    subtitle: "Confirm context discipline.",
-    objective: "Confirm context discipline.",
+    title: "Module 7 knowledge check",
+    subtitle: "Check the retrieval controls from this module.",
+    objective: "Check the retrieval controls from this module.",
     durationMinutes: 9,
     keyConcepts: [],
     quiz: [
       {
         id: "ano-data-q1",
         questionText:
-          "An agent returns a confidential document the calling user should not see. The right architectural fix is:",
+          "A retrieval system returns a confidential document that the requesting user may not access. What is the primary architectural correction?",
         answerOptions: [
-          { id: "a", text: "Add a content filter on the response.", isCorrect: false },
+          {
+            id: "a",
+            text: "Add a text filter after generating the response.",
+            isCorrect: false,
+          },
           {
             id: "b",
-            text: "Permission-aware retrieval: agent inherits user identity, retrieval is filtered by user ACLs.",
+            text: "Enforce authorization in the retrieval path using the user's rights, the workload scope, and current policy.",
             isCorrect: true,
           },
-          { id: "c", text: "Hide the agent from senior users.", isCorrect: false },
-          { id: "d", text: "Disable retrieval temporarily.", isCorrect: false },
+          {
+            id: "c",
+            text: "Hide the system from users with senior roles.",
+            isCorrect: false,
+          },
+          {
+            id: "d",
+            text: "Disable retrieval without correcting the authorization design.",
+            isCorrect: false,
+          },
         ],
         explanation:
-          "The architectural fix is permission-aware retrieval: the agent inherits the calling user's identity, and every retrieval is filtered by that user's real ACLs, so there is never an \"agent identity\" with elevated access. A response-level content filter is a patch on the symptom; the leak keeps being possible until the retrieval layer itself respects permissions.",
+          "The system must deny unauthorized content before disclosure. A response filter is too late and can miss indirect leakage. Effective access should reflect both the requesting user's rights and the workload's explicitly assigned scope.",
       },
       {
         id: "ano-data-q2",
-        questionText: 'Why are nightly snapshots "radioactive" for agentic workflows?',
+        questionText:
+          "Why can a periodic snapshot be unsafe for an action-taking workflow?",
         answerOptions: [
-          { id: "a", text: "They are slow to build.", isCorrect: false },
-          { id: "b", text: "They use too much storage.", isCorrect: false },
+          {
+            id: "a",
+            text: "Every snapshot is inherently slow to build.",
+            isCorrect: false,
+          },
+          {
+            id: "b",
+            text: "Snapshots always use more storage than event streams.",
+            isCorrect: false,
+          },
           {
             id: "c",
-            text: "The agent answers based on yesterday's reality, takes action in today's, and the answer is wrong.",
+            text: "The workflow can act on state older than its allowed staleness unless freshness is measured and enforced.",
             isCorrect: true,
           },
-          { id: "d", text: "They miss new files.", isCorrect: false },
+          {
+            id: "d",
+            text: "Snapshots cannot contain newly created files.",
+            isCorrect: false,
+          },
         ],
         explanation:
-          "Nightly snapshots are dangerous for agentic workflows specifically because the agent reasons from yesterday's state but acts in today's reality, a deleted record, a changed price, a closed ticket won't show up until the next sync, and the agent will confidently act on stale facts. Build cost and storage are real concerns but not the reason this pattern is called out as dangerous.",
+          "Snapshot frequency is safe only relative to the decision's freshness requirement. The control is to define that requirement, measure actual delay, expose the data timestamp, and stop or degrade the workflow when the limit is exceeded.",
       },
     ],
     sections: [],

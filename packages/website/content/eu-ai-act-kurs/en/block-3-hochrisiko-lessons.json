@@ -1,0 +1,495 @@
+{
+  "blockId": "block_3",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-06-22",
+  "nextReview": "2026-12-22",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "eu-ai-act-amendment",
+    "commission-qa-update"
+  ],
+  "lessons": [
+    {
+      "id": "block_3_lesson_1",
+      "blockId": "block_3",
+      "number": 1,
+      "title": "Risk management and data governance",
+      "subtitle": "The lifecycle loop, and why poor training data can become your most expensive problem",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "Risk-management system as an iterative process (Article 9)",
+        "Acceptable residual risk (Article 9(5))",
+        "Eight data-governance measures (Article 10(2))",
+        "Special-category data exception for bias correction (Article 10(5))"
+      ],
+      "sections": [
+        {
+          "id": "block_3_lesson_1_section_1",
+          "title": "The risk-management system as a lifecycle loop",
+          "readTimeMinutes": 2,
+          "content": "**From this block onwards, the material is for people who work with AI systems professionally or are responsible for them.**\n\nIf you only want to understand the legal framework and your rights as a member of the public, the first two blocks cover the essentials. Blocks 3 to 6 go further. They are intended for anyone who procures, deploys, or is accountable for AI systems.\n\n---\n\nA high-risk AI system requires a risk-management system that is **established, implemented, documented, and maintained** (Article 9(1)). Maintained is the important word. This is not a one-off document. It is a continuous, iterative process throughout the system's lifecycle and must be reviewed and updated systematically (Article 9(2)).\n\n**Four required steps** (Article 9(2), points (a) to (d)):\n\n- **(a) Identify and analyse** known and reasonably foreseeable risks to health, safety, and fundamental rights.\n- **(b) Estimate and evaluate** risks that may emerge under reasonably foreseeable misuse.\n- **(c) Evaluate** other risks identified through post-market monitoring under Article 72.\n- **(d) Adopt** appropriate and targeted risk-management measures.\n\n**Hierarchy of measures** (Article 9(5), second subparagraph): eliminate or reduce risks through design and development first; implement adequate mitigation and control measures next; provide information and training under Article 13 for remaining risks. Testing is required before the system is placed on the market or put into service (Article 9(8)). The likely impact on persons under 18 must be considered explicitly (Article 9(9)).\n\n**Practical implementation for SMEs:** maintain a risk register or matrix that records the risk, likelihood, severity, controls, owner, and model version. Set a review interval proportionate to the system and feed findings from post-market monitoring under Article 72 back into it. A quarterly review may be a useful control for a changing system; the Regulation does not prescribe that interval. Infringements of the requirements or obligations listed in Article 99(4) can attract fines of up to EUR 15 million or 3% of total worldwide annual turnover, subject to the conditions and calculation rules in Article 99.",
+          "keyTakeaway": "The risk-management system is a lifecycle process with four required steps: identification and analysis, estimation and evaluation, assessment of post-market findings, and targeted measures. Update it for relevant system and model changes rather than documenting it once and forgetting it."
+        },
+        {
+          "id": "block_3_lesson_1_section_2",
+          "title": "Data governance: eight required elements in Article 10",
+          "readTimeMinutes": 2,
+          "content": "Training, validation, and testing data sets are subject to quality criteria (Article 10(1)). For systems that do not use techniques involving model training, the criteria apply only to testing data sets (Article 10(6)).\n\n**Eight practices to address and document** (Article 10(2), points (a) to (h)):\n\n- (a) relevant design choices\n- (b) data-collection processes and the origin of data; for personal data, the original purpose of collection\n- (c) relevant data-preparation operations, including annotation, labelling, cleaning, updating, enrichment, and aggregation\n- (d) assumptions about what the data is intended to measure and represent\n- (e) assessment of the availability, quantity, and suitability of the data sets\n- (f) examination of possible biases that may affect health, safety, fundamental rights, or lead to discrimination prohibited under Union law\n- (g) appropriate measures to detect, prevent, and mitigate those biases\n- (h) identification of relevant data gaps or shortcomings and how they can be addressed\n\nData sets must be **relevant, sufficiently representative, and, to the best extent possible, free of errors and complete** (Article 10(3)). They must also take account of the characteristics or elements particular to the geographical, contextual, behavioural, or functional setting in which the system is intended to be used (Article 10(4)).\n\n**Practical implementation for SMEs:** maintain a data sheet for each data set covering its source, acquisition method, size, principal characteristics, labelling, and cleaning steps, in line with Annex IV, point 2(d). Apply the same scrutiny to third-party data from services such as Hugging Face or Kaggle. Missing provenance and preparation records leave a material gap in the technical documentation and conformity assessment.",
+          "keyTakeaway": "Data governance means documenting all eight elements in Article 10(2) for each relevant data set. Apply the same review standard to third-party and internally collected data."
+        },
+        {
+          "id": "block_3_lesson_1_section_3",
+          "title": "Special-category data for bias correction and the GDPR link",
+          "readTimeMinutes": 2,
+          "content": "Article 10(5) permits processing of special categories of personal data, such as data revealing racial or ethnic origin, health data, or religious beliefs under Article 9 GDPR, on an exceptional basis for bias detection and correction. The processing must be strictly necessary, and attempts to use other data, including synthetic or anonymised data, must not make it possible to achieve the objective effectively.\n\n**Six cumulative conditions** (Article 10(5), points (a) to (f)); every condition must be satisfied:\n\n- (a) the bias cannot be detected and corrected effectively by processing other data\n- (b) the special-category data is subject to technical limitations on reuse and state-of-the-art security and privacy-preserving measures, including pseudonymisation\n- (c) the data is secured, protected, subject to access controls, and accessible only to authorised persons under confidentiality obligations\n- (d) the data is not transmitted, transferred, or otherwise accessed by other parties\n- (e) the data is deleted once the bias has been corrected or the retention period for personal data ends, whichever occurs first\n- (f) the records of processing under Article 30 GDPR include the reasons why processing was strictly necessary and why the objective could not be achieved with other data\n\nBias can also be exploited deliberately for data-poisoning attacks (BSI white paper *Bias in AI*, July 2025). Detection can use variance and subgroup analysis; mitigation may occur before, during, or after model training.\n\n**Practical implementation for SMEs:** assessing a recruitment system for sex-related bias may require data about sex. Article 10(5) provides a narrow legal basis only when every condition is documented and satisfied. Involve the data protection officer where the GDPR requires it and maintain the Article 30 record with the strict-necessity rationale. Consent is not specified as an additional condition in Article 10(5), but the exception remains narrow and other applicable data-protection duties continue to apply.\n\nMany organisations assign a named owner for AI risk management. Recording the person's name, role, and start date creates an auditable accountability control for the Article 9 process; the Regulation does not prescribe that job title.",
+          "keyTakeaway": "Special-category data may be processed for bias detection and correction only when all six conditions in Article 10(5) are met cumulatively. Record the strict-necessity rationale under Article 30 GDPR and apply the remaining data-protection requirements."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_3_lesson_1_q1",
+          "questionText": "Which statement about the risk-management system under Article 9 of the AI Act is correct?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "A one-off risk analysis before placing the system on the market is sufficient if it is archived.",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "It is a continuous, iterative process throughout the lifecycle, with regular systematic review and updating (Article 9(2)).",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "It is required only when the high-risk AI system is a safety component of a product listed in Annex I.",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "It is the responsibility of the notified body, not the provider.",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 9(2) expressly requires a continuous, iterative process throughout the entire lifecycle, with regular systematic review and updating. Findings from post-market monitoring under Article 72 feed back into the process. The provider is responsible for establishing the risk-management system."
+        },
+        {
+          "id": "block_3_lesson_1_q2",
+          "questionText": "Which measure does Article 10(2) NOT expressly require for training, validation, and testing data sets?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Data-preparation operations such as annotation, labelling, and cleaning (Article 10(2), point (c))",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Examination of possible biases that may lead to prohibited discrimination (Article 10(2), point (f))",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "A statement of the training data's carbon footprint",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Identification of data gaps and shortcomings, and how they can be addressed (Article 10(2), point (h))",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 10(2) lists eight practices in points (a) to (h). A carbon-footprint statement is not among them. Information about energy consumption is included in the technical documentation requirements for GPAI models in Annex XI."
+        },
+        {
+          "id": "block_3_lesson_1_q3",
+          "questionText": "When may a provider process special categories of personal data, such as data revealing ethnic origin, to detect and correct bias?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Whenever a high-risk system is trained and there is a suspicion of bias.",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Only when all six conditions in Article 10(5), points (a) to (f), are met cumulatively and other data cannot achieve the objective effectively.",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Only with the express written consent of every data subject.",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Only after a notified body has approved the processing.",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 10(5) creates a narrow exception for processing special categories of personal data. All six safeguards must be met: no effective alternative, technical limitations and privacy-preserving measures, access controls, no access by other parties, timely deletion, and an Article 30 GDPR record explaining strict necessity. Consent is not specified as an additional condition in Article 10(5), but other applicable GDPR duties remain."
+        }
+      ]
+    },
+    {
+      "id": "block_3_lesson_2",
+      "blockId": "block_3",
+      "number": 2,
+      "title": "Technical documentation and logs",
+      "subtitle": "What Annex IV requires and why event logs serve as the system's flight recorder",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "Annex IV as the minimum documentation structure",
+        "Simplified SME form (Article 11(1), second subparagraph)",
+        "Automatic logging (Article 12)",
+        "Retention: 10 years for provider records, at least 6 months for deployer logs"
+      ],
+      "sections": [
+        {
+          "id": "block_3_lesson_2_section_1",
+          "title": "Annex IV: what the technical documentation must contain",
+          "readTimeMinutes": 2,
+          "content": "The technical documentation must be prepared **before the system is placed on the market or put into service** and kept up to date (Article 11(1)). It is a central evidence source during a conformity assessment or regulatory review.\n\n**SME simplification** (Article 11(1), second subparagraph): microenterprises and small and medium-sized enterprises may provide the elements of Annex IV in a simplified manner. The Commission is to establish a form that notified bodies must accept. The required subject matter still has to be covered.\n\n**Nine main parts of Annex IV:**\n\n- (1) a general description, including intended purpose, provider, version, and forms of distribution\n- (2) a detailed description of the system and development process, including methods, architecture, data requirements, human oversight, validation, and cybersecurity\n- (3) detailed information about monitoring, functioning, and control, including accuracy for relevant persons or groups\n- (4) the appropriateness of performance metrics\n- (5) the risk-management system under Article 9\n- (6) relevant changes through the lifecycle\n- (7) harmonised standards and other specifications applied\n- (8) a copy of the EU declaration of conformity\n- (9) the post-market monitoring plan under Article 72\n\n**Practical implementation for SMEs:** Article 18(1) requires providers to keep the documentation listed there for 10 years after the system has been placed on the market or put into service. Use the simplified form when available and applicable. Version the documentation with every relevant release and retain it in a controlled repository with an audit trail.",
+          "keyTakeaway": "Annex IV sets out nine documentation areas. Use the simplified SME form under Article 11(1) when applicable, retain the provider records for 10 years under Article 18, and version them for relevant releases."
+        },
+        {
+          "id": "block_3_lesson_2_section_2",
+          "title": "Automatic recording: event logs under Article 12",
+          "readTimeMinutes": 2,
+          "content": "Article 12(1) makes automatic event recording a **design requirement**. The high-risk system must technically allow events relevant to identifying risk situations and substantial modifications to be recorded over its lifetime.\n\n**Purposes of the logs** (Article 12(2)): identifying situations that may create a risk under Article 79(1) or constitute a substantial modification; facilitating post-market monitoring under Article 72; and monitoring operation under Article 26(5).\n\n**Minimum logging capabilities for remote biometric identification systems** listed in Annex III, point 1(a) (Article 12(3), points (a) to (d)):\n\n- (a) the period of each use, including the start and end date and time\n- (b) the reference database against which input data was checked\n- (c) the input data for which a match resulted\n- (d) the identification of the natural persons involved in verifying the results under Article 14(5)\n\n**Retention by the deployer:** at least **six months** (Article 26(6)), unless applicable Union or national law, including data-protection law, provides otherwise.\n\n**Practical implementation for SMEs:** configure machine-readable, exportable logging that covers the events relevant to the legal purposes and the particular system. Integrity controls, restricted deletion, and append-only storage can support evidential reliability, but Article 12 does not prescribe a particular logging product or storage architecture. SIEM tools such as Splunk, the Elastic Stack, or Wazuh may be implementation options where proportionate.",
+          "keyTakeaway": "Article 12 makes automatic logging a design requirement. Remote biometric identification systems have four specified logging capabilities. Deployers retain logs under their control for at least six months, subject to other applicable law."
+        },
+        {
+          "id": "block_3_lesson_2_section_3",
+          "title": "Provider and deployer: who documents what",
+          "readTimeMinutes": 2,
+          "content": "The duties are divided by role. The boundary can change when a deployer modifies a system.\n\n**Provider** (Articles 11, 18, 19, and 47):\n\n- prepares the Annex IV technical documentation before the system is placed on the market or put into service\n- keeps logs automatically generated by the system to the extent they are under the provider's control (Article 19)\n- keeps the EU declaration of conformity for 10 years (Article 47(1))\n\n**Deployer** (Article 26(5) and (6)):\n\n- monitors the system's operation on the basis of the instructions for use\n- keeps automatically generated logs under its control for at least six months, unless other applicable law provides otherwise\n- follows the reporting and cooperation duties that apply when it identifies a risk or serious incident; provider reporting deadlines are set out in Article 73 and vary by circumstance\n\n**Change of role** (Article 25): a person that makes a **substantial modification** to a high-risk system or changes its intended purpose in a way covered by Article 25 may become the provider and assume the corresponding documentation and conformity-assessment duties. Fine-tuning or retraining is not automatically a substantial modification in every case; assess it against the definition in Article 3(23), the planned changes identified by the original provider, and Article 25.\n\n**Practical implementation for SMEs:** using a recruitment product as supplied ordinarily leaves the customer in the deployer role. Fine-tuning it on applicant data or changing its intended purpose requires a documented Article 25 assessment. If the change is substantial within the Regulation, the organisation assumes provider duties, including the relevant Annex IV documentation and conformity assessment.",
+          "keyTakeaway": "Providers prepare the Annex IV documentation and keep specified provider records for 10 years. Deployers retain logs under their control for at least six months. A change makes the deployer a provider only when the conditions in Article 25 are met; fine-tuning is not automatically decisive."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_3_lesson_2_q1",
+          "questionText": "What must the technical documentation for a high-risk AI system contain at a minimum?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "A two-page summary of the business model and target market.",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "The nine main areas in Annex IV, kept up to date (Article 11(1) read with Annex IV).",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Only the EU declaration of conformity under Annex V.",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Only a copy of the instructions for use under Article 13.",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Annex IV sets the minimum structure: a general description; system elements and development process; monitoring, functioning, and control; performance metrics; the risk-management system; lifecycle changes; standards; the declaration of conformity; and the post-market monitoring plan. SMEs may use the simplified Commission form under Article 11(1), second subparagraph, but must still cover the required subject matter."
+        },
+        {
+          "id": "block_3_lesson_2_q2",
+          "questionText": "For how long must a deployer keep automatically generated logs of a high-risk AI system that are under its control?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "For 24 hours after use ends.",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "For at least six months, unless applicable Union or national law provides otherwise (Article 26(6)).",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "For 10 years after the system is placed on the market, matching the EU declaration of conformity.",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Until the system's next major update.",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 26(6) sets a minimum period of six months for logs under the deployer's control, unless applicable Union or national law provides otherwise. Data-protection requirements may limit retention, while other legal duties may require a longer period. The 10-year period in Article 47(1) concerns the provider's EU declaration of conformity."
+        },
+        {
+          "id": "block_3_lesson_2_q3",
+          "questionText": "A company fine-tunes a purchased AI recruitment tool using its own applicant data. What is the correct role assessment?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "It always remains only a deployer because fine-tuning is legally irrelevant.",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "It must assess whether the change is a substantial modification under Article 25; if it is, the company becomes the provider and assumes the relevant documentation and conformity-assessment duties.",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "It becomes an importer within the meaning of Article 23.",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "It is responsible only for logs, never for technical documentation.",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 25 changes the role when its conditions are met, including where a person makes a substantial modification to a high-risk AI system. Fine-tuning may be relevant, but it is not automatically a substantial modification in every case. Assess the change against Article 3(23), the provider's predetermined changes, the intended purpose, and Article 25."
+        }
+      ]
+    },
+    {
+      "id": "block_3_lesson_3",
+      "blockId": "block_3",
+      "number": 3,
+      "title": "Human oversight, robustness, and cybersecurity",
+      "subtitle": "The stop control, independent verification, and AI-specific attacks on the supply chain",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "Five oversight capabilities (Article 14(4))",
+        "Two-person verification for remote biometric identification (Article 14(5))",
+        "Accuracy and robustness as design requirements (Article 15)",
+        "Four AI-specific attack classes (Article 15(5))"
+      ],
+      "sections": [
+        {
+          "id": "block_3_lesson_3_section_1",
+          "title": "Human oversight: from the concept to a stop control",
+          "readTimeMinutes": 2,
+          "content": "Article 14(1) makes human oversight a **design requirement**: high-risk AI systems must be designed and developed so they can be effectively overseen by natural persons while in use.\n\n**Two sources of oversight measures** (Article 14(3)):\n\n- (a) measures identified and, when technically feasible, built into the system by the provider before it is placed on the market or put into service, such as interface controls, confidence information, or a stop function\n- (b) measures identified by the provider that the deployer is expected to implement, such as roles, training, and escalation paths\n\n**Five oversight capabilities** (Article 14(4), points (a) to (e)) that the oversight measures must enable, as appropriate and proportionate:\n\n- (a) **understand** the system's relevant capacities and limitations and detect anomalies\n- (b) remain **aware of automation bias**, particularly when the output informs decisions made by natural persons\n- (c) **interpret** the output correctly, taking the available interpretation tools and methods into account\n- (d) **decide not to use** the system or disregard, override, or reverse its output\n- (e) **intervene in operation or stop the system** through a stop control or comparable safe procedure\n\n**Independent verification** (Article 14(5)): for remote biometric identification systems listed in Annex III, point 1(a), no action or decision may be taken on the basis of an identification unless at least two natural persons with the necessary competence, training, and authority have separately verified and confirmed it. The paragraph contains a proportionate exception for certain law-enforcement, migration, border-control, and asylum systems where Union or national law considers the requirement disproportionate.\n\n**Practical implementation for SMEs:** the oversight interface should expose the controls and information needed for the system's actual risk, including a safe stop or override route where required. For remote biometric identification at a site entrance, an automated match should not itself unlock a door; follow the separate-verification rule where Article 14(5) applies.",
+          "keyTakeaway": "Human oversight requires the five capabilities in Article 14(4), implemented in a form appropriate and proportionate to the system. Remote biometric identification under Article 14(5) generally requires separate verification and confirmation by at least two qualified people."
+        },
+        {
+          "id": "block_3_lesson_3_section_2",
+          "title": "Accuracy and robustness: what an appropriate level means",
+          "readTimeMinutes": 2,
+          "content": "Article 15(1) requires an **appropriate level** of accuracy, robustness, and cybersecurity throughout the lifecycle. The requirement is informed by the generally acknowledged state of the art under Article 8(1). Applying harmonised standards published under Article 40 can create a presumption of conformity for the requirements they cover.\n\n**Metrics in the instructions for use** (Article 15(3)): providers must declare the levels of accuracy and relevant accuracy metrics in the accompanying instructions. Oversight is weak if operators cannot see how performance was measured.\n\n**Robustness** (Article 15(4)): the system must be as resilient as possible to errors, faults, or inconsistencies, whether within the system or in its operating environment. Technical redundancy may include backup or fail-safe plans. For systems that continue to learn after being placed on the market or put into service, potentially biased outputs used as future inputs must be addressed with appropriate mitigation measures.\n\n**Practical implementation for SMEs:** define performance criteria before release, using metrics and representative data appropriate to the intended purpose. Monitor relevant performance and drift in operation, then connect threshold breaches to the post-market monitoring and corrective-action process under Article 72. A value such as F1 >= 0.85 is only an example; the Regulation does not set that universal threshold. Use applicable harmonised standards once published and otherwise document the technical specifications and state-of-the-art basis selected.",
+          "keyTakeaway": "Accuracy and robustness are lifecycle design requirements. Define purpose-specific metrics before release, monitor material changes in operation, and document how the post-market process responds."
+        },
+        {
+          "id": "block_3_lesson_3_section_3",
+          "title": "Cybersecurity: four AI-specific attack classes",
+          "readTimeMinutes": 2,
+          "content": "Article 15(5) requires high-risk systems to be resilient against attempts by unauthorised third parties to alter their use, outputs, or performance by exploiting system vulnerabilities.\n\n**Four AI-specific threats** expressly identified in the paragraph:\n\n- **data poisoning**, meaning manipulation of the training data before or during training\n- **model poisoning**, meaning manipulation of trained model components, including backdoors\n- **adversarial examples or model evasion**, meaning crafted inputs that induce incorrect outputs\n- **confidentiality attacks**, including model inversion or membership inference used to extract or infer training information\n\nThe BSI white paper *Bias in AI* (July 2025) notes that bias can be exploited deliberately in data-poisoning attacks. Bias controls and cybersecurity controls therefore interact and should not be assessed in isolation.\n\n**Practical implementation for SMEs:** establish a risk-based adversarial-testing cadence and record the methods, scope, findings, and remediation. Annual testing may be a useful baseline for some systems, but Article 15 does not prescribe a universal interval. Tools may include IBM's Adversarial Robustness Toolbox or CleverHans. For third-party models, review the model card and provenance, pin model versions, record integrity hashes where available, and reassess material upstream changes. Relevant cybersecurity testing and control evidence belongs in the technical documentation under Annex IV, point 2(g).",
+          "keyTakeaway": "Address data poisoning, model poisoning, adversarial examples or model evasion, and confidentiality attacks with documented, risk-based controls and testing. Article 15 does not prescribe one universal test interval."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_3_lesson_3_q1",
+          "questionText": "Which combination describes the five oversight capabilities in Article 14(4)?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Understand relevant capacities and limitations, remain aware of automation bias, interpret output, disregard or override output, and intervene or stop the system.",
+              "isCorrect": true
+            },
+            {
+              "id": "b",
+              "text": "Notify the provider, manager, data protection officer, works council, and IT team.",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Read source code, debug the model, adjust hyperparameters, initiate retraining, and perform a rollback.",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Read the documentation, complete training, keep a log, report an incident, and escalate to an AI officer.",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 14(4), points (a) to (e), lists these capabilities for effective oversight, with measures appropriate and proportionate to the risks, autonomy, and context. Notification chains and technical maintenance tasks may matter operationally, but they are not the five-item list in Article 14(4)."
+        },
+        {
+          "id": "block_3_lesson_3_q2",
+          "questionText": "What does the separate-verification rule in Article 14(5) require?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Four people must approve every AI output before it can be used.",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "For remote biometric identification under Annex III, point 1(a), at least two competent, trained, and authorised natural persons must separately verify and confirm the identification before action is taken, subject to the stated exception.",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "The provider and deployer must each appoint two oversight officers.",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Two people must purchase the system and two must maintain it.",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 14(5) prevents action or decisions based on an identification unless at least two competent, trained, and authorised natural persons have separately verified and confirmed it. The rule concerns remote biometric identification under Annex III, point 1(a), and includes a proportionate exception for specified public-authority contexts."
+        },
+        {
+          "id": "block_3_lesson_3_q3",
+          "questionText": "Which attack is NOT one of the four AI-specific threats identified in Article 15(5)?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Data poisoning through manipulation of training data",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Model poisoning through manipulation of trained model components",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Email phishing directed at end users",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Adversarial examples or model evasion",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 15(5) identifies data poisoning, model poisoning, adversarial examples or model evasion, and confidentiality attacks. Phishing is a general social-engineering attack against people, not one of the AI-specific vulnerabilities listed there. It remains a security issue outside that specific list."
+        }
+      ]
+    },
+    {
+      "id": "block_3_lesson_4",
+      "blockId": "block_3",
+      "number": 4,
+      "title": "Conformity assessment and CE marking",
+      "subtitle": "When a notified body is required, when internal control applies, and how digital systems carry CE marking",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "Internal control (Annex VI) and notified-body assessment (Annex VII)",
+        "EU declaration of conformity retained for 10 years (Article 47)",
+        "CE marking, including digital marking (Article 48)",
+        "Registration in the EU database (Articles 49 and 71)"
+      ],
+      "sections": [
+        {
+          "id": "block_3_lesson_4_section_1",
+          "title": "Which procedure applies? The decision logic in Article 43",
+          "readTimeMinutes": 2,
+          "content": "The applicable conformity-assessment procedure depends on the high-risk category.\n\n**Annex III, point 1 (biometrics):** if the provider has applied the harmonised standards under Article 40, or common specifications under Article 41, the provider may choose internal control under Annex VI or assessment of its quality-management system and technical documentation by a notified body under Annex VII (Article 43(1)). The conditions in Article 43(1) determine when the notified-body route is required.\n\n**Annex III, points 2 to 8** (critical infrastructure, education, employment, access to services, law enforcement, migration, and administration of justice): the provider follows internal control under Annex VI (Article 43(2)); that paragraph does not require a notified body.\n\n**Sector-specific cases** (Article 43(3)): for systems related to products covered by Annex I, section A, such as machinery, medical devices, motor vehicles, or toys, the relevant sectoral conformity-assessment procedure integrates the AI Act requirements.\n\n**Internal control (Annex VI):** the provider verifies the quality-management system under Article 17, examines the technical documentation, and checks that the design, development, and post-market monitoring process are consistent with it. The provider retains responsibility for the assessment.\n\n**Notified body (Annex VII):** the body assesses the quality-management system and technical documentation and carries out surveillance. It may obtain access to training, validation, and testing data, including through an API or other appropriate technical means. A certificate is valid for no more than four years for systems covered by Annex III (Article 44(2)).\n\n**Practical implementation for SMEs:** recruitment AI under point 4, creditworthiness systems under point 5, and education systems under point 3 use Annex VI under Article 43(2). For remote biometric identification under point 1(a), assess the exact Article 43(1) conditions. Verify candidate notified bodies through the relevant accreditation authority and the Commission's NANDO database.",
+          "keyTakeaway": "Annex III, point 1 uses the Article 43(1) choice and conditions. Systems in points 2 to 8 follow internal control under Annex VI pursuant to Article 43(2)."
+        },
+        {
+          "id": "block_3_lesson_4_section_2",
+          "title": "EU declaration of conformity and CE marking",
+          "readTimeMinutes": 2,
+          "content": "**EU declaration of conformity** (Article 47):\n\n- it must be in writing, machine-readable, and signed physically or electronically\n- the provider keeps it for **10 years** after the system has been placed on the market or put into service (Article 47(1))\n- its content follows Annex V, including system identification, a statement of conformity, applicable standards and specifications, and provider details\n- where several Union legal acts apply, a single declaration may cover all relevant acts and identify them\n\n**CE marking** (Article 48):\n\n- it follows the general principles in Article 30 of Regulation (EC) No 765/2008 and must be affixed visibly, legibly, and indelibly\n- where that is not possible or not warranted because of the system's nature, it is affixed to the packaging or accompanying documentation, as appropriate\n- **digital CE marking** is used for systems supplied digitally and may be accessed through the interface or an easily accessible machine-readable code or other electronic means (Article 48(2))\n- where a notified body is involved, its identification number follows the CE marking (Article 48(4))\n\n**Practical implementation for SMEs:** for SaaS, an API, or other digitally supplied software, make the CE marking and declaration accessible through the interface or another route that satisfies Article 48. Document why the chosen placement is visible and accessible for the delivery model. Incorrect or missing CE marking may constitute formal non-compliance under Article 83. Infringements of obligations listed in Article 99(5) can attract fines of up to EUR 7.5 million or 1% of total worldwide annual turnover, subject to the Regulation's calculation and proportionality rules.",
+          "keyTakeaway": "Keep the EU declaration of conformity for 10 years under Article 47. Affix CE marking in the form required by Article 48, including the digital route for systems supplied digitally."
+        },
+        {
+          "id": "block_3_lesson_4_section_3",
+          "title": "Registration in the EU database under Articles 49 and 71",
+          "readTimeMinutes": 2,
+          "content": "Once the relevant high-risk rules apply, providers of systems listed in Annex III must register themselves and their system in the EU database under Article 71 **before placing the system on the market or putting it into service** (Article 49(1)). Systems covered by Annex III, point 2, are registered at national level (Article 49(5)).\n\nProviders that conclude under Article 6(3) that an Annex III system is not high-risk must document the assessment and follow the registration requirement in the applicable text. Public-authority deployers and Union institutions, bodies, offices, or agencies deploying Annex III systems also have registration duties under Article 49.\n\n**Required information from Annex VIII, section A** includes provider details, trade name, intended purpose, system status, standards applied, a copy of the declaration of conformity, and electronic instructions for use.\n\nThe Commission is the controller of the EU database (Article 71(6)). The registered information is generally publicly accessible and machine-readable, while non-public sections apply to specified public-authority uses.\n\n**Substantial modification** (Article 43(4)): a new conformity assessment may be required where a system already assessed is substantially modified.\n\n**Timing:** providers should check the registration and conformity-assessment requirements before each release and record whether a material update changes the analysis. Regulation (EU) 2026/1744, in force since 27 July 2026, sets 2 December 2027 for stand-alone Annex III systems and 2 August 2028 for systems embedded in products covered by Annex I.\n\n**For deployers:** applying your own CE marking is not automatically a deployer duty. Check the provider's documentation and EU declaration of conformity, and assess any change of role under Article 25.",
+          "keyTakeaway": "Register covered Annex III systems before placing them on the market or putting them into service under Articles 49 and 71. A substantial modification may require a new conformity assessment under Article 43(4). The amended high-risk dates are staged across 2027 and 2028."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_3_lesson_4_q1",
+          "questionText": "An SME develops an AI recruitment system that is high-risk under Annex III, point 4(a). Which conformity-assessment procedure applies?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Assessment by a notified body under Annex VII, with a four-year certificate.",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Internal control under Annex VI; Article 43(2) does not require a notified body.",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "A TÜV certification is mandatory regardless of the high-risk category.",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Only registration in the EU database is required; there is no assessment procedure.",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 43(2) prescribes internal control under Annex VI for high-risk systems listed in Annex III, points 2 to 8. Recruitment systems are in point 4. A notified-body assessment is relevant to point 1 biometric systems under the conditions in Article 43(1)."
+        },
+        {
+          "id": "block_3_lesson_4_q2",
+          "questionText": "For how long must the provider keep the EU declaration of conformity for a high-risk AI system?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Six months, matching the deployer's log-retention period under Article 26(6).",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Four years, matching the maximum validity of a notified body's certificate under Article 44(2).",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "10 years after the system has been placed on the market or put into service, with the declaration supplied to authorities on request (Article 47(1)).",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Until the first substantial modification, after which the new declaration replaces every prior record.",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 47(1) requires the provider to keep the declaration for 10 years after the system has been placed on the market or put into service and provide it to competent national authorities on request. The six-month period concerns deployer logs under Article 26(6); four years is the maximum certificate validity stated in Article 44(2) for systems covered by Annex III."
+        },
+        {
+          "id": "block_3_lesson_4_q3",
+          "questionText": "Where is an Annex III high-risk AI system, other than one in point 2, registered before it is placed on the market or put into service?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "With Germany's Federal Office for Information Security (BSI).",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "In the Commission's EU database under Article 71, using the information required by Annex VIII (Article 49(1)).",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "With the German Patent and Trade Mark Office (DPMA).",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "With the provider's local chamber of commerce.",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Article 49(1) requires registration in the EU database under Article 71. Registered information is generally publicly accessible and machine-readable, and the Commission is the controller under Article 71(6). Annex III, point 2 systems follow national registration under Article 49(5)."
+        }
+      ]
+    }
+  ],
+  "blockLastVerified": "2026-06-22"
+}

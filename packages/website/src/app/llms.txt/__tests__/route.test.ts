@@ -51,4 +51,12 @@ describe("GET /llms.txt", () => {
     const res = GET(new Request("https://loehrning.ai/llms.txt") as never);
     expect(res.headers.get("cache-control")).toMatch(/public/);
   });
+
+  it("declares its bilingual content and sitemap relation", () => {
+    const res = GET(new Request("https://loehrning.ai/llms.txt") as never);
+    expect(res.headers.get("content-language")).toBe("de, en");
+    expect(res.headers.get("link")).toBe(
+      '<https://loehrning.ai/sitemap.xml>; rel="sitemap"',
+    );
+  });
 });

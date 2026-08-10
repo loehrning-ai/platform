@@ -1,0 +1,370 @@
+{
+  "blockId": "block_3",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-08-08",
+  "nextReview": "2027-02-08",
+  "reviewCadence": "vendor",
+  "riskClass": "vendor",
+  "triggerEvents": ["vendor-api-change", "model-deprecation"],
+  "lessons": [
+    {
+      "id": "block_3_lesson_1",
+      "blockId": "block_3",
+      "number": 1,
+      "title": "Replying to an email with AI",
+      "subtitle": "Respond to complaints quickly and professionally",
+      "durationMinutes": 8,
+      "keyConcepts": [
+        "Prompt engineering",
+        "AI assistant",
+        "Customer complaint",
+        "Review step"
+      ],
+      "sections": [
+        {
+          "id": "block_3_lesson_1_section_1",
+          "title": "The situation and step-by-step instructions",
+          "readTimeMinutes": 4,
+          "content": "A customer complaint has arrived. Bergmann regularly orders hydraulic components. The latest delivery was eight working days late, and Procurement requests an explanation and credible corrective action.\n\nIf your organization has approved an assistance function for this purpose, use it to create a draft. The exact interface depends on the product and version. A suitable instruction is:\n\n\"Draft a response to the complaint. Use only the facts below. Tone: respectful and factual. Maximum 150 words. Do not invent a cause, deadline, compensation, or corrective action. Mark missing information in square brackets.\"\n\nEnter only information necessary for the purpose and covered by the approved workflow. Redaction or pseudonymization reduces risk but does not make an unapproved service permissible by itself.\n\nIf no suitable system has been approved, draft the response without AI or work with a fully synthetic example. Do not paste the customer email into an arbitrary consumer service.",
+          "keyTakeaway": "An assistant produces a draft only. Limit it to supported facts, mark missing information, and use only the approved workflow."
+        },
+        {
+          "id": "block_3_lesson_1_section_2",
+          "title": "Approval check and prompt analysis",
+          "readTimeMinutes": 4,
+          "content": "Review the draft before sending it, as with any business communication:\n\n1. **Facts and source:** Do the order, delay, and prior correspondence match the primary records?\n2. **Authority:** Does the draft contain deadlines, discounts, admissions of liability, or other commitments you cannot make?\n3. **Audience:** Does it expose internal causes, names, or confidential information?\n4. **Completeness:** Are open points visibly marked instead of filled with plausible details?\n5. **Tone and language:** Is the text clear, respectful, and free of unsupported judgments?\n\nThe prompt constrains format and scope but does not guarantee a correct result. Instructions to use only supplied facts and mark gaps make review easier; they do not replace it.\n\nMeasure any time benefit in your own process. There is no defensible universal minute figure without repeated measurement.",
+          "keyTakeaway": "Check facts, authority, audience, completeness, and tone. Prompt constraints help review but guarantee nothing."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_3_lesson_1_q1",
+          "questionText": "You ask an AI assistant to draft a response to a complaint. What must you check before sending it?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Whether the email is at least 300 words long",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Whether the AI made specific commitments that you are not authorised to make",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Whether the email contains an automatic signature",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Whether the draft was written in English",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "AI tends to propose specific remedies such as discounts, express deliveries and credit notes. You are not authorised to make those commitments. Before sending, review the tone, remove unsupported commitments and check for confidential information."
+        },
+        {
+          "id": "block_3_lesson_1_q2",
+          "questionText": "According to the course, which prompt control matters most when responding to a complaint?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "\"Professionally\" to set the basic tone",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "\"No more than 150 words\" to keep it concise",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "\"Do not make any commitments without consulting Sales\"",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "\"Use bullet points\"",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "The instruction not to make commitments without consulting Sales is the most important constraint. AI readily proposes discounts, express deliveries and credit notes that you may not be authorised to offer."
+        }
+      ],
+      "widgets": [
+        {
+          "kind": "compare",
+          "placement": "after-intro",
+          "courseSlug": "ki-fuehrerschein",
+          "props": {
+            "title": "The same task, two prompts",
+            "badLabel": "Weak prompt",
+            "goodLabel": "Strong prompt",
+            "bad": "Write a reply to this customer email.",
+            "good": "Context: The customer complains about a delivery that arrived two weeks late. Task: Draft a factual response using only the supplied facts. Format: email, maximum 120 words, with greeting and closing. Constraints: do not invent a cause, deadline, compensation, or corrective action; mark missing information in square brackets; do not assign blame.",
+            "note": "Context, task, format, and constraints make the draft easier to review. They do not establish facts or approvals."
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_3_lesson_2",
+      "blockId": "block_3",
+      "number": 2,
+      "title": "Summarising a meeting",
+      "subtitle": "Record decisions, actions, and open points with traceable evidence",
+      "durationMinutes": 7,
+      "keyConcepts": [
+        "AI assistant",
+        "Meeting minutes",
+        "Action items",
+        "Data protection"
+      ],
+      "sections": [
+        {
+          "id": "block_3_lesson_2_section_1",
+          "title": "Option A: Copilot in Microsoft Teams",
+          "readTimeMinutes": 3,
+          "content": "Automated summaries require more than a licence. Before recording or transcription, the organization must establish the purpose, notice to participants, legal basis or consent, worker-representation requirements, retention, access rights, and approved service.\n\nWhere the workflow is approved and the feature is available, a summary function can produce a draft containing topics, actions, and timestamps. The interface varies by version and licence.\n\nCompare the draft with the recording, transcript, or confirmed notes. Check speakers, owners, deadlines, and the distinction between a suggestion and a decision. \"We could examine that\" is not a decision.\n\nParticipants should receive the approved record and have a defined way to correct errors.",
+          "keyTakeaway": "Recording and transcription require an approved legal and operational framework. An automated meeting record remains a draft that must be checked against primary evidence."
+        },
+        {
+          "id": "block_3_lesson_2_section_2",
+          "title": "Option B: Use a prompt and written notes",
+          "readTimeMinutes": 4,
+          "content": "An assistant can also propose a structure from approved notes:\n\n\"Organize the notes into confirmed decisions, tasks with explicitly named owners and deadlines, and open questions. Do not invent names, dates, or decisions. Mark missing information.\"\n\n**Source notes:**\n- open pipeline 1.2m, 400k prioritized\n- predictive-maintenance pilot requested, 35k\n- service agreement for second site, stated deadline 15.04\n- some CRM records outdated\n- technical data sheet required\n\nA draft that adds names, new deadlines, or approval of a CRM cleanup contains unsupported information. Move those items to \"open\" instead of presenting them as decisions.\n\nYour own notes can still contain personal, confidential, or worker-representation-sensitive information. Use them only in the approved workflow. Personnel, works-council, and disciplinary matters follow the organization's specialist rules; handwriting and local processing do not make the activity lawful by themselves.",
+          "keyTakeaway": "A structured draft must not add owners, deadlines, or decisions. Personal notes remain subject to data, employment, and worker-representation rules."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_3_lesson_2_q1",
+          "questionText": "What common error occurs in automated AI meeting summaries?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "They delete the meeting recording after producing the summary",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "They sometimes confuse speakers and record passing remarks as decisions",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "They can only summarise meetings held in English",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "They automatically send the summary to every participant",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "AI sometimes confuses speakers with similar voices and records passing remarks such as \"It would be good to look at that sometime\" as decisions. Both errors require manual correction."
+        },
+        {
+          "id": "block_3_lesson_2_q2",
+          "questionText": "Which rule applies to AI-supported summaries of particularly sensitive meetings?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Sales meetings about the pipeline",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Weekly team stand-ups",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "They may be processed only in an expressly approved workflow covering purpose, legal basis, worker representation, access, and retention",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Meetings with more than five participants",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "For personnel, works-council, or disciplinary matters, a product name or local installation is insufficient. The organization must approve the specific purpose and workflow across legal, technical, and organizational controls; otherwise no AI processing occurs."
+        }
+      ]
+    },
+    {
+      "id": "block_3_lesson_3",
+      "blockId": "block_3",
+      "number": 3,
+      "title": "Analysing data with AI",
+      "subtitle": "Check calculations and claims separately",
+      "durationMinutes": 8,
+      "keyConcepts": [
+        "Data analysis",
+        "Pivot table",
+        "Spot checks",
+        "Data protection"
+      ],
+      "sections": [
+        {
+          "id": "block_3_lesson_3_section_1",
+          "title": "Step by step: analyse data",
+          "readTimeMinutes": 4,
+          "content": "You need to examine a table containing four product lines and four quarters. Define the fields first: Which column is revenue, which unit and currency apply, are values net or gross, and what does \"outlier\" mean?\n\nIn an analysis tool approved for these data, request a reviewable result:\n\n\"For each product line, calculate total revenue and the percentage change from Q2 to Q4. Show the formula, reference values, and rounding. Do not infer a cause. Label a value as an outlier only if you state the method and threshold.\"\n\nUse synthetic data for the exercise. Real internal financial data belongs only in the approved workflow; neither an enterprise tenant nor a local installation is sufficient approval by itself.\n\nIf LA-500 falls from 395 to 290, that is initially a descriptive change of about -26.6 percent. Whether it is statistically unusual depends on the comparison series, method, and threshold. Four quarters do not establish a cause.",
+          "keyTakeaway": "Require the formula, reference values, rounding, and outlier method. A change is not a cause and is not automatically a statistical outlier."
+        },
+        {
+          "id": "block_3_lesson_3_section_2",
+          "title": "Review step and warning about financial data",
+          "readTimeMinutes": 4,
+          "content": "**Review procedure:**\n\n1. **Check the schema:** Confirm columns, units, missing values, data types, and filters.\n2. **Reproduce calculations:** Recalculate critical metrics with an independent formula or second tool. Two or three spot checks are not sufficient for every high-impact decision.\n3. **Record definitions:** Document denominator, period, rounding, exclusions, and outlier method.\n4. **Bound the claim:** Separate observed change, hypothesis, forecast, and supported cause.\n5. **Check approval:** Confirm data class, purpose, permissions, contract, retention, region, and export functions for the exact system.\n\nAn assistant can propose formulas or interpretations. You need enough subject knowledge, or a responsible reviewer, to validate the output. A plausible explanation is not evidence.",
+          "keyTakeaway": "Validate the schema, calculation, definition, and claim boundary. Use real financial data only in the specifically approved system and workflow."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_3_lesson_3_q1",
+          "questionText": "An AI assistant analyses your quarterly figures and reports a 23% fall in revenue. What should you do?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Copy the figure directly into the report because AI calculates correctly",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Recalculate two or three samples manually and check the reference point",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Discard the entire analysis and start again manually",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Repeat the prompt until the AI provides a different figure",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "AI can use different reference points, such as Q1 instead of Q2, and therefore produce different percentages. Check a sample and ask about any discrepancies."
+        },
+        {
+          "id": "block_3_lesson_3_q2",
+          "questionText": "Why must confidential revenue figures not be entered into an unapproved consumer AI service?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "The service has too small a character limit",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "The organisation has no reviewed contract, approval or binding data controls for the consumer product",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Consumer services cannot process numbers",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "A paid competing product would be approved automatically",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "An unapproved consumer product does not provide the organisation with a reviewed contract and configuration framework. Use confidential financial data only in an explicitly approved enterprise product; even then, check the data class, contract, permissions and region."
+        }
+      ]
+    },
+    {
+      "id": "block_3_lesson_4",
+      "blockId": "block_3",
+      "number": 4,
+      "title": "Writing a report",
+      "subtitle": "Turn notes into a reviewable report draft",
+      "durationMinutes": 7,
+      "keyConcepts": [
+        "Status report",
+        "Structuring",
+        "Prioritisation",
+        "AI assistant"
+      ],
+      "sections": [
+        {
+          "id": "block_3_lesson_4_section_1",
+          "title": "Step by step: create a report",
+          "readTimeMinutes": 4,
+          "content": "An assistant can organize approved notes using a fixed structure. Use only the workflow approved for the data and recipients.\n\nA reviewable instruction is:\n\n\"Organize the notes into status, supported risks, confirmed decisions, tasks with explicitly named owners and deadlines, and open points. Use only information from the source. Mark missing owners, dates, and evidence.\"\n\nEvery statement in the draft must trace back to the source notes. For example, \"agency quote: EUR 1,800, five working days\" does not authorize the expenditure. A planned date is not a confirmed commitment.\n\nAn internal report can contain personal, financial, or trade-secret information. \"Internal\" is not approval for a consumer service; review the exact service and workflow.",
+          "keyTakeaway": "AI can turn unstructured bullet points into a readable report with a summary, details, risks and next steps."
+        },
+        {
+          "id": "block_3_lesson_4_section_2",
+          "title": "What you need to change",
+          "readTimeMinutes": 3,
+          "content": "Review four layers:\n\n1. **Source:** Is every number, date, person, and decision supported by the notes?\n2. **Status:** Are facts, plans, assumptions, risks, and open questions clearly separated?\n3. **Priority:** Was the ordering set by a responsible person rather than inferred from wording?\n4. **Approval:** May the content be shared with the recipients, and has the responsible person approved the final text?\n\nEvaluate time and quality with your own comparison cases. Measure editing time, factual corrections, and omitted risks. A percentage without a measured series is not a defensible productivity claim.",
+          "keyTakeaway": "A report draft needs source checking, explicit status categories, accountable prioritization, and approval. Productivity is measured, not asserted."
+        }
+      ],
+      "quiz": [
+        {
+          "id": "block_3_lesson_4_q1",
+          "questionText": "An AI assistant creates a status report from your bullet points. What is the most important correction to make?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Change the font",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Adjust the priorities because the AI does not know what is urgent",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Remove every number",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Rewrite the entire report",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "The AI does not know which issues are urgent. Move risks and urgent decisions to the top. Also remove unsupported judgements and add missing context."
+        },
+        {
+          "id": "block_3_lesson_4_q2",
+          "questionText": "How should you determine whether AI support improves the reporting process?",
+          "answerOptions": [
+            {
+              "id": "a",
+              "text": "Use a general vendor claim about time savings",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Judge only by the length of the generated text",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Run repeated comparison cases and measure editing time, factual corrections, and omitted risks",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Assume every generated draft has the same value",
+              "isCorrect": false
+            }
+          ],
+          "explanation": "Time and quality depend on the task, source data, tool, and review burden. Repeated comparison cases provide evidence; an invented minute figure does not."
+        }
+      ]
+    }
+  ]
+}

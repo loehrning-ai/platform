@@ -1,84 +1,123 @@
 {
   "blockId": "block_2",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-06-22",
-  "nextReview": "2026-12-22",
-  "reviewCadence": "evergreen",
-  "riskClass": "evergreen",
-  "triggerEvents": [
-    "major-conceptual-update"
-  ],
-  "blockLastVerified": "2026-06-22",
+  "lastReviewed": "2026-08-09",
+  "nextReview": "2026-09-20",
+  "reviewCadence": "6-weekly",
+  "riskClass": "vendor",
+  "triggerEvents": ["major-conceptual-update"],
+  "blockLastVerified": "2026-08-09",
   "lessons": [
     {
       "id": "deepfake-2-1",
       "blockId": "block_2",
       "number": 1,
-      "title": "Was ist ein Deepfake? Und warum sollte dich das interessieren?",
-      "subtitle": "Citizen-Selbstverteidigung gegen synthetische Medien",
+      "title": "Was ist ein Deepfake und was nicht?",
+      "subtitle": "Synthetische Medien präzise einordnen",
       "durationMinutes": 4,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-08-02",
-      "nextReview": "2026-09-13",
+      "lastReviewed": "2026-08-09",
+      "nextReview": "2026-09-20",
       "reviewCadence": "6-weekly",
       "riskClass": "vendor",
-      "keyConcepts": ["Deepfake", "Synthetische Medien", "EU AI Act Art. 50", "Desinformation"],
+      "keyConcepts": [
+        "Deepfake",
+        "Synthetische Medien",
+        "EU AI Act Art. 50",
+        "Desinformation"
+      ],
       "sections": [
         {
           "id": "deepfake-2-1-s1",
-          "title": "Drei Beispiele aus dem Leben",
+          "title": "Drei synthetische Risikoszenarien",
           "readTimeMinutes": 2,
-          "content": "Deepfakes sind kein Science-Fiction-Problem. Sie passieren heute, in deinem Alltag.\n\nBeispiel 1: Ein Video zeigt einen Politiker in einer Pressekonferenz. Er sagt Dinge, die er nie gesagt hat. Das Video verbreitet sich innerhalb von Stunden über WhatsApp und Twitter. Erst Stunden später wird es als Fälschung identifiziert. Aber da haben es bereits Hunderttausende gesehen und geteilt.\n\nBeispiel 2: Du bekommst einen Anruf. Die Stimme klingt wie deine Mutter. Sie sagt, sie sei in einem Unfall und brauche dringend Geld. Du erkennst die Stimme, die Sprechmuster, sogar den Dialekt. Aber es ist niemand, den du kennst. Es ist eine KI-geklonte Stimme, basierend auf einem kurzen Audio-Clip deiner Mutter, der öffentlich zugänglich war.\n\nBeispiel 3: Du siehst ein Profilfoto auf LinkedIn. Die Person sieht echt aus, hat Kontakte und einen plausiblen Lebenslauf. Aber sie existiert nicht. Das Gesicht stammt von einer KI, die Person hat nie existiert.\n\nDeepfakes sind ein Werkzeug, das missbraucht wird. Wer es kennt, kann es erkennen.",
-          "keyTakeaway": "Deepfakes sind kein Science-Fiction-Problem. Sie passieren auf WhatsApp, in Wahlkampagnen und in Betrugsmaschen, und du kannst lernen, sie zu erkennen."
+          "content": "Die folgenden Fälle sind synthetische Beispiele, keine Berichte über konkrete Ereignisse:\n\n1. Ein manipuliertes Video lässt eine bekannte Person eine Aussage machen, die sie nicht gemacht hat.\n2. Ein Betrugsanruf verwendet eine geklonte Stimme und verlangt unter Zeitdruck eine Überweisung.\n3. Ein Konto nutzt ein vollständig erzeugtes Profilbild und eine erfundene Biografie, um Vertrauen aufzubauen.\n\nDie Fälle erfordern unterschiedliche Prüfungen. Das erste und zweite Szenario können Deepfakes im rechtlichen Sinn sein, weil bestehende Personen oder Ereignisse täuschend nachgebildet werden. Ein vollständig erfundenes Gesicht ist synthetischer Inhalt, aber nicht automatisch ein Deepfake nach der Definition der KI-Verordnung, wenn es keiner bestehenden Person oder Entität ähnelt.\n\nAussehen oder Klang allein beweisen weder Echtheit noch Manipulation.",
+          "keyTakeaway": "Deepfake und synthetischer Inhalt sind keine Synonyme. Entscheidend ist, ob bestehende Personen, Objekte, Orte, Entitäten oder Ereignisse täuschend echt nachgebildet werden."
         },
         {
           "id": "deepfake-2-1-s2",
-          "title": "Wie Deepfakes entstehen (drei Sätze)",
+          "title": "Was der Begriff umfasst",
           "readTimeMinutes": 1,
-          "content": "Wie entstehen Deepfakes? Die kurze, nicht-technische Antwort:\n\nNeuronale Netze lernen das Aussehen und den Klang einer Person aus vielen Beispielen. Sie analysieren Tausende von Bildern oder Audio-Clips und extrahieren Muster: Wie bewegt sich dieses Gesicht? Wie klingt diese Stimme in verschiedenen Emotionen? Aus diesen Mustern erzeugen die Netze danach neue Bilder, Videos oder Audio-Clips, die nie existiert haben.\n\nDas reicht als Grundverständnis. Du musst kein KI-Ingenieur werden, um Deepfakes zu erkennen. Du musst nur wissen, dass sie existieren und wie du sie prüfen kannst.",
-          "keyTakeaway": "Deepfakes entstehen, wenn KI das Aussehen oder den Klang einer Person aus vielen Beispielen lernt und daraus neue, nicht existente Inhalte erzeugt."
+          "content": "Art. 3 Nr. 60 der KI-Verordnung definiert einen Deepfake als KI-erzeugten oder manipulierten Bild-, Audio- oder Videoinhalt, der bestehenden Personen, Objekten, Orten, Entitäten oder Ereignissen ähnelt und einer Person fälschlich authentisch oder wahr erscheinen würde.\n\nTechnisch können unterschiedliche Verfahren beteiligt sein: Gesichtstausch, Lippensynchronisation, Sprachsynthese, Stimmenklonen oder generative Bild- und Videomodelle. Die benötigte Referenzmenge und Qualität hängen vom Verfahren ab; eine feste Zahl von Bildern oder Audiominuten gibt es nicht.\n\nDer Begriff beschreibt das Ergebnis und seine Täuschungswirkung, nicht ein einzelnes Modellverfahren. Auch konventionelle Bearbeitung kann täuschen, fällt aber nur dann unter diese AI-Act-Definition, wenn der Inhalt KI-erzeugt oder KI-manipuliert ist.",
+          "keyTakeaway": "Die KI-Verordnung definiert Deepfakes über KI-Erzeugung oder -Manipulation, Ähnlichkeit mit Bestehendem und den falschen Eindruck von Authentizität."
         },
         {
           "id": "deepfake-2-1-s3",
-          "title": "Warum dich das als Bürgerin oder Bürger betrifft",
+          "title": "Welche Transparenzpflichten seit August 2026 gelten",
           "readTimeMinutes": 1,
-          "content": "Du bist nicht nur Zuschauer. Du bist Zielperson, Verteiler und potenzielles Opfer.\n\nAls Zielperson: Deepfakes können eingesetzt werden, um Wahlen zu beeinflussen, Fehlinformationen über Personen des öffentlichen Lebens zu verbreiten oder dich mit gefälschten Angeboten zu betrügen.\n\nAls Verteiler: Wenn du ein manipuliertes Video teilst, ohne es zu prüfen, verstärkst du seinen Effekt. Die Verbreitung passiert schneller als die Richtigstellung.\n\nAls mögliches Opfer: Dein Gesicht kann in Deepfake-Materialien erscheinen, wenn jemand Fotos von dir verwendet. Das betrifft Privatpersonen genauso wie öffentliche Personen.\n\nSeit dem **2. August 2026** gelten die Transparenzpflichten aus Art. 50. Anbieter erfasster generativer Systeme müssen Ausgaben maschinenlesbar markieren; Betreiber, die Deepfakes veröffentlichen, müssen die künstliche Erzeugung oder Manipulation grundsätzlich sichtbar offenlegen. Das sind unterschiedliche Pflichten mit Ausnahmen, keine pauschale Kennzeichnung jedes KI-Inhalts. Wichtig für dich: Für generative Systeme, die schon vor dem 2. August 2026 auf dem Markt waren, greift die maschinenlesbare Markierung erst ab dem 2. Dezember 2026. Eine fehlende Markierung ist deshalb vorerst normal und kein Beweis dafür, dass ein Inhalt echt ist. (Quelle: Verordnung (EU) 2024/1689, Art. 50; Verordnung (EU) 2026/1744)\n\nDiese Lektion behandelt die Bürgerperspektive: wie du Inhalte prüfst und dich schützt.",
-          "keyTakeaway": "Deepfakes betreffen dich als Zielperson, Verteiler und mögliches Opfer. Art. 50 schafft seit dem 2. August 2026 rollenbezogene Markierungs- und Offenlegungspflichten."
+          "content": "Art. 50 der KI-Verordnung trennt zwei Pflichten:\n\n- Anbieter erfasster generativer Systeme müssen synthetische Ausgaben grundsätzlich maschinenlesbar als künstlich erzeugt oder manipuliert markieren.\n- Betreiber, die einen Deepfake erzeugen oder manipulieren und offenlegen, müssen grundsätzlich sichtbar mitteilen, dass der Inhalt künstlich erzeugt oder manipuliert wurde. Für erkennbar künstlerische, kreative, satirische, fiktionale oder ähnliche Werke gilt eine angepasste Offenlegung; weitere gesetzliche Ausnahmen sind zu prüfen.\n\nArt. 50 ist seit 2. August 2026 anwendbar. Anbieter von Systemen, die schon vor diesem Datum auf dem Markt waren, müssen Art. 50 Abs. 2 nach der Übergangsregel in Verordnung (EU) 2026/1744 ab 2. Dezember 2026 erfüllen. Eine vorhandene Markierung kann Provenienz stützen. Ihr Fehlen beweist bis dahin und auch danach nicht, dass ein Inhalt echt ist, weil Markierungen entfernt werden oder Ausnahmen greifen können.\n\nQuellen: Verordnung (EU) 2024/1689, Art. 3 Nr. 60 und Art. 50; Verordnung (EU) 2026/1744, Art. 1 Nr. 39 Buchst. b.",
+          "keyTakeaway": "Art. 50 trennt maschinenlesbare Anbieter-Markierung und sichtbare Betreiber-Offenlegung. Beides ist kontextabhängig und kein Echtheitsbeweis."
         }
       ],
       "quiz": [
         {
           "id": "deepfake-2-1-q1",
-          "questionText": "Was trifft auf Deepfakes zu?",
+          "questionText": "Welche Aussage entspricht der Deepfake-Definition der KI-Verordnung?",
           "answerOptions": [
-            { "id": "a", "text": "Deepfakes sind ausschließlich in professionellen Filmproduktionen relevant", "isCorrect": false },
-            { "id": "b", "text": "Deepfakes betreffen nur Personen des öffentlichen Lebens, nicht Privatpersonen", "isCorrect": false },
-            { "id": "c", "text": "Deepfakes werden von den Plattformen automatisch erkannt und sofort entfernt", "isCorrect": false },
-            { "id": "d", "text": "Deepfakes werden bereits heute für Betrug, Desinformation und Rufschädigung im Alltag eingesetzt", "isCorrect": true }
+            {
+              "id": "a",
+              "text": "Jedes vollständig erzeugte Bild ist unabhängig vom Inhalt ein Deepfake",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Nur Inhalte über Personen des öffentlichen Lebens können Deepfakes sein",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Der Begriff setzt immer eine bestimmte Software und eine feste Trainingsdatenmenge voraus",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Der Inhalt ist KI-erzeugt oder -manipuliert, ähnelt Bestehendem und würde fälschlich authentisch oder wahr erscheinen",
+              "isCorrect": true
+            }
           ],
-          "explanation": "Deepfakes sind heute Realität: Sie erscheinen in WhatsApp-Betrugsmaschen (geklonte Stimmen), in politischen Desinformationskampagnen und bei Rufschädigung durch gefälschte Bilder. Sie sind kein zukünftiges oder nur professionelles Problem."
+          "explanation": "Art. 3 Nr. 60 definiert Deepfakes anhand von KI-Erzeugung oder -Manipulation, Ähnlichkeit mit bestehenden Personen, Objekten, Orten, Entitäten oder Ereignissen und dem falschen Eindruck von Authentizität oder Wahrheit."
         },
         {
           "id": "deepfake-2-1-q2",
-          "questionText": "Wie entstehen Deepfakes?",
+          "questionText": "Welche technische Aussage zu Deepfakes ist korrekt?",
           "answerOptions": [
-            { "id": "a", "text": "Durch aufwendige manuelle Bildbearbeitung durch Grafiker", "isCorrect": false },
-            { "id": "b", "text": "Neuronale Netze lernen Muster aus Bildern/Audio und erzeugen neue, nie existente Inhalte", "isCorrect": true },
-            { "id": "c", "text": "Durch einfaches Kopieren und Einfügen von Bildmaterial", "isCorrect": false },
-            { "id": "d", "text": "Ausschließlich durch staatliche Akteure mit Spezialequipment", "isCorrect": false }
+            {
+              "id": "a",
+              "text": "Deepfakes entstehen ausschließlich durch manuellen Gesichtstausch",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Gesichtstausch, Lippensynchronisation, Sprachsynthese und generative Modelle können beteiligt sein",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Für jeden Deepfake sind zwingend Tausende Referenzbilder erforderlich",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Nur staatliche Akteure können die erforderlichen Verfahren betreiben",
+              "isCorrect": false
+            }
           ],
-          "explanation": "Deepfakes entstehen, wenn neuronale Netze aus vielen Beispielen (Bildern, Videos, Audio-Clips) lernen, wie eine Person aussieht oder klingt, und daraus neue Inhalte generieren. Kein manueller Aufwand mehr nötig. Diese Technologie ist heute für jedermann zugänglich."
+          "explanation": "Deepfake-Inhalte können mit verschiedenen Verfahren erzeugt oder manipuliert werden. Die benötigten Referenzdaten und manuellen Schritte variieren; es gibt keine allgemeingültige Mindestmenge."
         },
         {
           "id": "deepfake-2-1-q3",
-          "questionText": "Ab wann sind Anbieter nach dem EU AI Act verpflichtet, KI-generierte Inhalte zu kennzeichnen?",
+          "questionText": "Seit wann ist Art. 50 der KI-Verordnung grundsätzlich anwendbar?",
           "answerOptions": [
             { "id": "a", "text": "Ab dem 2. Februar 2025", "isCorrect": false },
             { "id": "b", "text": "Ab dem 2. August 2026", "isCorrect": true },
             { "id": "c", "text": "Ab dem 1. Januar 2027", "isCorrect": false },
-            { "id": "d", "text": "Die Kennzeichnungspflicht gilt bereits seit 2020 (DSGVO)", "isCorrect": false }
+            {
+              "id": "d",
+              "text": "Die Kennzeichnungspflicht gilt bereits seit 2020 (DSGVO)",
+              "isCorrect": false
+            }
           ],
-          "explanation": "Art. 50 wird am 2. August 2026 anwendbar. Anbieter erfasster generativer Systeme müssen Ausgaben nach Abs. 2 maschinenlesbar markieren; Betreiber legen Deepfakes nach Abs. 4 grundsätzlich sichtbar offen. (Quelle: Verordnung (EU) 2024/1689, Art. 50)"
+          "explanation": "Art. 50 ist seit 2. August 2026 anwendbar. Anbieter erfasster Systeme markieren nach Abs. 2 maschinenlesbar; Betreiber legen Deepfakes nach Abs. 4 grundsätzlich sichtbar offen. Für vor diesem Datum vermarktete generative Systeme gilt für Abs. 2 die Übergangsfrist bis 2. Dezember 2026."
         }
       ]
     },
@@ -86,71 +125,124 @@
       "id": "deepfake-2-2",
       "blockId": "block_2",
       "number": 2,
-      "title": "Wie du manipulierte Bilder und Videos erkennst",
-      "subtitle": "Kostenlose Werkzeuge und visuelle Checkliste",
+      "title": "Wie du Herkunft und Kontext prüfst",
+      "subtitle": "Quellenarbeit statt Detektor-Urteil",
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-08-02",
-      "nextReview": "2026-09-13",
+      "lastReviewed": "2026-08-09",
+      "nextReview": "2026-09-20",
       "reviewCadence": "6-weekly",
       "riskClass": "vendor",
-      "keyConcepts": ["Rückwärtsbildersuche", "InVID WeVerify", "Hive Moderation", "Visuelle Prüfung"],
+      "keyConcepts": [
+        "Rückwärtsbildersuche",
+        "InVID WeVerify",
+        "Provenienz",
+        "Quellenprüfung"
+      ],
       "sections": [
         {
           "id": "deepfake-2-2-s1",
-          "title": "Drei kostenlose Prüfwerkzeuge",
+          "title": "Werkzeuge für Herkunft, nicht für Wahrheit",
           "readTimeMinutes": 2,
-          "content": "Du brauchst kein Expertenwissen, um erste Prüfschritte durchzuführen. Drei kostenlose Werkzeuge, die du sofort nutzen kannst:\n\n(a) Rückwärtsbildersuche mit Google Bilder oder TinEye\n\nWie es funktioniert: Lade das Bild auf images.google.com hoch (Kamera-Symbol in der Suchleiste anklicken) oder gib die Bild-URL ein. Google zeigt dir, wo dieses Bild im Internet noch erscheint. TinEye (tineye.com) macht dasselbe mit einem anderen Index.\n\nWofür es gut ist: Bilder, die als \"aktuell\" verbreitet werden, aber eigentlich alt oder aus einem anderen Kontext stammen. Beispiel: Ein Foto soll einen aktuellen Protest zeigen, taucht aber in der Suche aus 2019 auf.\n\nDauer: unter 30 Sekunden.\n\n(b) InVID/WeVerify Browser-Erweiterung\n\nWas es ist: Eine kostenlose Browser-Erweiterung, finanziert durch EU Horizon 2020. Verfügbar für Chrome und Firefox. Download und Informationen: weverify.eu\n\nWas es kann: Automatische Analyse von Videos auf verräterische Metadaten, Geolokation und Schlüsselframe-Rückwärtssuche. Du klickst mit Rechtsklick auf ein Video und wählst die WeVerify-Funktion.\n\nBesonders geeignet für: Nachrichtenvideos und viral geteilte Clips, die du auf ihre Herkunft prüfen möchtest.\n\n(c) Hive Moderation öffentliches Demo\n\nWas es ist: Ein kostenlos nutzbares Demo unter hivemoderation.com/demo, das Bilder auf KI-Generierung prüft.\n\nWas es zeigt: Einen Wahrscheinlichkeitswert, wie hoch die Chance ist, dass ein Bild KI-generiert wurde.\n\nWichtige Einschränkung: Kein Tool erkennt jeden Deepfake. Ein hoher Wert ist ein Warnsignal, kein Beweis. Ein niedriger Wert bedeutet \"kein sicheres Signal gefunden\", nicht \"das Bild ist echt\".",
-          "keyTakeaway": "Drei Schritte in unter zwei Minuten: Rückwärtsbildersuche, InVID/WeVerify für Videos, Hive Moderation Demo für Bilder. Kein Tool ist 100 Prozent sicher."
+          "content": "Drei Werkzeugklassen liefern prüfbare Hinweise:\n\n1. Rückwärtsbildersuche: Google Lens und TinEye (tineye.com) können frühere oder ähnliche Fundstellen zeigen. Ein frühes Ergebnis ist ein Hinweis auf Kontext, nicht automatisch die Originalquelle.\n2. Videozerlegung: InVID/WeVerify (weverify.eu) kann Videos in Schlüsselbilder zerlegen, Rückwärtssuchen anstoßen und verfügbare Metadaten anzeigen. Die Erweiterung ist ein Recherchewerkzeug; sie entscheidet nicht automatisch, ob ein Video wahr ist.\n3. Provenienzdaten: Vorhandene Content Credentials oder andere signierte Herkunftsinformationen können Bearbeitungsschritte und Aussteller dokumentieren. Fehlende Provenienzdaten beweisen keine Manipulation, vorhandene Daten müssen auf Gültigkeit und Aussteller geprüft werden.\n\nLade vertrauliche, intime oder personenbezogene Inhalte nicht ungeprüft bei Drittanbietern hoch. Prüfe vor einem Upload Datenschutz, Nutzungsbedingungen und eine mögliche lokale Alternative.",
+          "keyTakeaway": "Rückwärtssuche, Schlüsselbilder und Provenienzdaten liefern Hinweise. Keines dieser Werkzeuge entscheidet allein über Echtheit oder Aussagegehalt."
         },
         {
           "id": "deepfake-2-2-s2",
-          "title": "Was dein Auge prüfen kann",
+          "title": "Eine Quellenprüfung in fünf Schritten",
           "readTimeMinutes": 2,
-          "content": "Neben automatischen Tools hilft eine visuelle Prüfung. Zehn konkrete Indikatoren:\n\n1. Haare am Rand des Gesichts: Bei Deepfakes oft unscharf, verwaschen oder seltsam abgeschnitten. Einzelne Strähnen wirken manchmal wie gemalt.\n\n2. Ohren und Schmuck: Häufig asymmetrisch oder unlogisch platziert. Ohrringe können fehlen oder an der falschen Stelle sitzen.\n\n3. Augen und Blinzeln: Menschen blinzeln regelmäßig. Deepfake-Personen blinzeln oft zu selten oder synchron auf unnatürliche Weise.\n\n4. Hintergrund bei Bewegungen: Bei schnellen Bewegungen entstehen Artefakte im Hintergrund. Die Konturen der Person verschwimmen sichtbar in den Hintergrund.\n\n5. Beleuchtung: Schatten auf Hals und Kinn stimmen oft nicht mit der Lichtquelle im Bild überein.\n\n6. Zähne: Bei Deepfakes manchmal verwaschen, mit falscher Anzahl oder unnatürlich glatt.\n\n7. Fingerzahl: Generative KI-Modelle halluzinieren Finger. Zähle die Finger bei Bildern mit Händen.\n\n8. Textur: Haut sieht manchmal unnatürlich glatt oder zu porös aus. Keine sichtbaren Poren oder Unreinheiten bei einer Nahaufnahme.\n\n9. Bild-Metadaten prüfen: EXIF-Daten sind in einem Foto gespeicherte Zusatzinfos wie Aufnahmezeit, Kameramodell und Standort. Diese können fehlen oder inkonsistent sein. Ein kostenloses Online-Tool wie exif.tools zeigt dir die Zusatzinfos eines hochgeladenen Fotos.\n\n10. Kontext und Quelle: Wer hat das Video geteilt? Wann? Gibt es andere Quellen, die dasselbe zeigen? Konsistenz erhöht die Glaubwürdigkeit.",
-          "keyTakeaway": "Haare, Ohren, Blinzeln, Finger und Metadaten sind die häufigsten Schwachstellen von Deepfakes. Ein geübtes Auge erkennt oft schon beim ersten Hinsehen Unstimmigkeiten."
+          "content": "1. Behauptung festhalten: Was soll der Inhalt belegen, wann und wo soll er entstanden sein?\n2. Quelle öffnen: Suche den frühesten erreichbaren Beitrag, das vollständige Video und das Konto oder Medium hinter der Veröffentlichung. Ein Screenshot ohne Link ist keine belastbare Quelle.\n3. Kontext abgleichen: Prüfe Datum, Ort, Sprache, Wetter, sichtbare Schilder und den ungeschnittenen Ablauf gegen unabhängige Quellen.\n4. Herkunft suchen: Nutze Rückwärtsbildersuche oder Schlüsselbilder. Vergleiche nicht nur ähnliche Motive, sondern konkrete Bilddetails.\n5. Ergebnis begrenzen: Dokumentiere, was bestätigt, widerlegt oder offen ist. \"Nicht verifiziert\" ist ein zulässiges Ergebnis.\n\nVisuelle Auffälligkeiten wie Hände, Haare, Blinzeln, Licht oder Kompressionsartefakte können einen genaueren Blick auslösen. Sie sind keine stabile Checkliste: Generatoren ändern sich, und dieselben Auffälligkeiten entstehen auch durch Kamera, Schnitt oder Kompression.",
+          "keyTakeaway": "Beginne mit Behauptung, Quelle und Kontext. Visuelle Artefakte sind Hinweise, aber weder notwendig noch hinreichend für einen Deepfake-Nachweis."
         },
         {
           "id": "deepfake-2-2-s3",
-          "title": "Warum kein Werkzeug 100 Prozent sicher ist",
+          "title": "Was Detektorwerte aussagen können",
           "readTimeMinutes": 2,
-          "content": "Ein ehrlicher Hinweis: KI-Erkennungstools laufen strukturell hinter dem Stand der Generierungstools her.\n\nWarum? Weil Deepfake-Erkennungstools mit bekannten Mustern trainiert werden. Sobald Deepfake-Generatoren neue Techniken verwenden, müssen Erkennungstools nachgezogen werden. Das ist ein permanentes Katz-und-Maus-Spiel.\n\nWas das für dich bedeutet:\n- Ein negatives Ergebnis (kein KI-Signal) bedeutet nicht \"dieses Bild ist echt\". Es bedeutet \"kein bekanntes Muster gefunden\".\n- Ein positives Ergebnis (KI-Signal) ist ein begründetes Warnsignal, aber kein juristischer Beweis.\n- Werkzeuge erhöhen deine Treffsicherheit deutlich, ersetzen aber kein kritisches Urteil und keine Quellenprüfung.\n\nDie verlässlichste Methode bleibt eine Kombination: automatische Tools als erster Schritt, dann Quellenprüfung (Wer berichtet noch darüber? Welche seriösen Nachrichtenorganisationen bestätigen das?), dann visuelles Urteil.\n\nInformationskompetenz ist kein Single-Tool-Problem. Sie ist eine Praxis.",
-          "keyTakeaway": "Keine App der Welt erkennt jeden Deepfake sicher. Aber drei kostenlose Schritte in unter zwei Minuten können dir sagen, ob Misstrauen berechtigt ist."
+          "content": "Ein Detektorwert ist eine modellabhängige Schätzung. Seine Aussagekraft hängt von Trainingsdaten, getesteten Generatoren, Kompression, Ausschnitt, Nachbearbeitung und Schwellenwert ab. Eine angezeigte Prozentzahl ist nicht automatisch eine kalibrierte Wahrscheinlichkeit für den Einzelfall.\n\nDarum gelten zwei Grenzen:\n- Ein negatives Ergebnis belegt keine Echtheit. Der Inhalt kann außerhalb der bekannten Testverteilung liegen oder verändert worden sein.\n- Ein positives Ergebnis belegt keine Manipulation. Auch echte Aufnahmen können Merkmale auslösen, die das Modell falsch einordnet.\n\nNutze einen Detektor höchstens als zusätzlichen Hinweis. Für eine Veröffentlichung, Beschuldigung oder rechtliche Maßnahme braucht es nachvollziehbare Herkunft, Kontext, weitere Belege und gegebenenfalls forensische Fachprüfung.",
+          "keyTakeaway": "Ein Detektorwert ist ein Hinweis unter bekannten Testbedingungen. Er darf weder als Echtheitszertifikat noch als alleiniger Manipulationsnachweis dienen."
         }
       ],
       "quiz": [
         {
           "id": "deepfake-2-2-q1",
-          "questionText": "Was kann die Rückwärtsbildersuche mit Google Bilder oder TinEye herausfinden?",
+          "questionText": "Was kann eine Rückwärtsbildersuche belastbar beitragen?",
           "answerOptions": [
-            { "id": "a", "text": "Ob ein Bild KI-generiert wurde", "isCorrect": false },
-            { "id": "b", "text": "Ob die EXIF-Metadaten eines Bildes nachträglich manipuliert wurden", "isCorrect": false },
-            { "id": "c", "text": "Ob ein Bild an anderen Stellen im Internet erscheint und aus welchem Kontext es ursprünglich stammt", "isCorrect": true },
-            { "id": "d", "text": "Den Namen der Person auf dem Bild", "isCorrect": false }
+            {
+              "id": "a",
+              "text": "Sie beweist, dass ein Bild mit KI erzeugt wurde",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Sie bestätigt automatisch sämtliche EXIF-Metadaten",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Sie kann frühere oder ähnliche Fundstellen und damit Hinweise auf den Kontext liefern",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Sie identifiziert jede abgebildete Person zuverlässig",
+              "isCorrect": false
+            }
           ],
-          "explanation": "Die Rückwärtsbildersuche zeigt dir, wo ein Bild im Internet erscheint. So kannst du erkennen, ob ein angeblich 'aktuelles' Bild tatsächlich alt ist oder aus einem anderen Kontext stammt. Sie erkennt keine KI-Generierung direkt, aber sie prüft die Herkunft und den Kontext."
+          "explanation": "Rückwärtssuchen finden indexierte gleiche oder ähnliche Bilder. Das kann eine frühere Verwendung oder einen anderen Kontext zeigen. Das früheste Suchergebnis ist nicht zwingend die Originalquelle."
         },
         {
           "id": "deepfake-2-2-q2",
-          "questionText": "Was ist ein typisches Erkennungsmerkmal von Deepfake-Videos?",
+          "questionText": "Welche Prüfmethode ist gegenüber einer Liste visueller Artefakte belastbarer?",
           "answerOptions": [
-            { "id": "a", "text": "Die Personen sprechen immer zu schnell", "isCorrect": false },
-            { "id": "b", "text": "Das Video ist immer in schlechter Qualität aufgenommen", "isCorrect": false },
-            { "id": "c", "text": "Ein sichtbares Wasserzeichen des KI-Generators im Videobild", "isCorrect": false },
-            { "id": "d", "text": "Unnatürliches Blinzeln, unscharfe Haare am Gesichtsrand und falsche Fingerzahl", "isCorrect": true }
+            {
+              "id": "a",
+              "text": "Nur die Fingerzahl in einem einzelnen Frame prüfen",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Schlechte Bildqualität als Manipulationsbeweis behandeln",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Ein fehlendes Wasserzeichen als Echtheitsbeweis behandeln",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Originalquelle, vollständigen Kontext, frühere Fundstellen und unabhängige Bestätigung prüfen",
+              "isCorrect": true
+            }
           ],
-          "explanation": "Typische visuelle Indikatoren bei Deepfakes sind: unnatürliches Blinzeln (zu selten oder synchron), unscharfe Haare am Gesichtsrand, asymmetrische Ohren und Schmuck, falsche Fingerzahl und nicht stimmige Beleuchtung. Diese Merkmale entstehen durch Schwächen der aktuellen Generierungsmodelle."
+          "explanation": "Visuelle Auffälligkeiten verändern sich mit den Generatoren und können auch in echten, komprimierten oder bearbeiteten Aufnahmen vorkommen. Quellen- und Kontextprüfung liefert nachvollziehbarere Belege."
         },
         {
           "id": "deepfake-2-2-q3",
-          "questionText": "Was bedeutet ein 'negatives Ergebnis' bei einem Deepfake-Erkennungstool wie Hive Moderation?",
+          "questionText": "Was bedeutet ein negatives Ergebnis eines Deepfake-Detektors?",
           "answerOptions": [
-            { "id": "a", "text": "Das Bild ist mit Sicherheit echt", "isCorrect": false },
-            { "id": "b", "text": "Das Bild wurde von einer echten Person aufgenommen", "isCorrect": false },
-            { "id": "c", "text": "Kein bekanntes KI-Muster wurde gefunden, aber das ist kein Beweis der Echtheit", "isCorrect": true },
-            { "id": "d", "text": "Das Tool hat das Bild nicht verarbeiten können", "isCorrect": false }
+            {
+              "id": "a",
+              "text": "Das Bild ist mit Sicherheit echt",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Das Bild wurde von einer echten Person aufgenommen",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Unter den Bedingungen dieses Detektors wurde kein ausreichendes Signal gefunden; Echtheit ist damit nicht bewiesen",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Das Tool hat das Bild nicht verarbeiten können",
+              "isCorrect": false
+            }
           ],
-          "explanation": "Ein negatives Ergebnis bedeutet: Kein bekanntes Deepfake-Muster wurde erkannt. Das ist kein Beweis der Echtheit. KI-Erkennungstools laufen strukturell hinter Generierungstools her, weil sie nur bekannte Muster erkennen. Ein negatives Ergebnis senkt das Risiko, beweist aber nichts abschließend."
+          "explanation": "Ein negatives Ergebnis gilt nur für das konkrete Modell, seinen Schwellenwert und den geprüften Inhalt. Unbekannte Verfahren oder Nachbearbeitung können die Erkennung verändern."
         }
       ]
     },
@@ -159,70 +251,124 @@
       "blockId": "block_2",
       "number": 3,
       "title": "Was tun, wenn du einen Deepfake findest?",
-      "subtitle": "Vier Handlungsschritte und deine Rechte",
+      "subtitle": "Sichern, melden und Betroffene schützen",
       "durationMinutes": 4,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-08-02",
-      "nextReview": "2026-09-13",
+      "lastReviewed": "2026-08-09",
+      "nextReview": "2026-09-20",
       "reviewCadence": "6-weekly",
       "riskClass": "vendor",
-      "keyConcepts": ["Meldepflicht", "Plattformmeldung", "BKA Onlinewache", "KUG", "Recht am eigenen Bild"],
+      "keyConcepts": [
+        "Beweissicherung",
+        "Plattformmeldung",
+        "DSA Art. 16",
+        "KUG",
+        "Recht am eigenen Bild"
+      ],
       "sections": [
         {
           "id": "deepfake-2-3-s1",
-          "title": "Vier Schritte in aufsteigender Ernsthaftigkeit",
+          "title": "Fünf Schritte ohne weitere Verbreitung",
           "readTimeMinutes": 2,
-          "content": "Du hast ein Video oder Bild gefunden, das du für manipuliert hältst. Was tust du?\n\n(a) Nicht teilen: Das ist der einfachste und wirksamste Schritt. Jedes Mal, wenn ein Deepfake geteilt wird, erreicht er mehr Menschen. Du unterbrichst die Verbreitung, indem du nicht weitermachst. Kein Druck, kein Drama: einfach stoppen.\n\n(b) Auf der Plattform melden: Jede große Plattform hat Mechanismen für manipulierte Inhalte.\n- Instagram (Meta): Drei Punkte auf dem Post antippen, dann 'Melden' und 'Falschinformationen' oder 'Manipulierter Inhalt' auswählen.\n- YouTube: Unter dem Video 'Melden' antippen, dann 'Spam oder Irreführung'.\n- TikTok: Auf den Post gedrückt halten, dann 'Inhalte melden' und 'Falschinformationen'.\n\nPlattformen sind nach EU Digital Services Act verpflichtet, gemeldete Inhalte zu überprüfen.\n\n(c) Behörde informieren: Bei strafbaren Inhalten (Beleidigung, üble Nachrede, Nötigung, Betrug) kannst du Anzeige erstatten, auch online über die Onlinewache deiner Landespolizei (Übersicht auf polizei.de).\n\n(d) Betroffene Person warnen: Wenn du weißt, wer in dem Deepfake gezeigt wird, informiere die betreffende Person, bevor du irgendetwas teilst. Sie hat das Recht, zuerst zu wissen und selbst zu entscheiden.",
-          "keyTakeaway": "Du musst Deepfakes nicht passiv hinnehmen. Drei Schritte (nicht teilen, melden, warnen) machen den Unterschied zwischen Verstärkung und Eindämmung."
+          "content": "1. Nicht weiterverbreiten: Teile, zitiere oder kommentiere den Inhalt nicht öffentlich. Sichere, soweit gefahrlos möglich, URL, Kontoname, Zeitpunkt und einen Screenshot lokal.\n2. Vor einem Vorwurf prüfen: Trenne den Verdacht von einem belegten Befund und nutze die Quellenprüfung aus Lektion 2.\n3. Präzise melden: Nutze den aktuell angezeigten Meldeweg der Plattform und nenne die konkrete URL sowie den möglichen Rechts- oder Regelverstoß. Art. 16 des Digital Services Act verpflichtet Hostingdienste zu einem leicht zugänglichen elektronischen Meldeverfahren für mutmaßlich rechtswidrige Inhalte. Hinreichend genaue Meldungen müssen zeitnah, sorgfältig, objektiv und frei von Willkür bearbeitet und entschieden werden. Daraus folgt keine Pflicht, jeden gemeldeten Inhalt zu entfernen.\n4. Betroffene privat informieren: Übermittle die Fundstelle und vorhandene Belege, ohne den Inhalt weiter zu verbreiten.\n5. Bei möglicher Straftat oder unmittelbarer Gefahr Polizei einschalten: Die zuständige Onlinewache ist über polizei.de erreichbar; in einer akuten Gefahrensituation gilt der Notruf.",
+          "keyTakeaway": "Nicht verstärken, Belege sichern, präzise melden und Betroffene schützen. Eine Meldung führt zu einer Prüfung und Entscheidung, nicht automatisch zur Entfernung."
         },
         {
           "id": "deepfake-2-3-s2",
-          "title": "Was der EU AI Act seit August 2026 für dich bedeutet",
+          "title": "Art. 50 und der zuständige Beschwerdeweg",
           "readTimeMinutes": 1,
-          "content": "Seit dem 2. August 2026 sind weitere Teile des EU AI Act allgemein anwendbar, einschließlich Art. 50. Nicht alle Vorschriften wurden gleichzeitig anwendbar: Der Digital Omnibus (Verordnung (EU) 2026/1744, in Kraft seit 27. Juli 2026) hat die Pflichten für Hochrisiko-Systeme nach hinten verschoben. Die Transparenzpflichten aus Art. 50 wurden nicht verschoben.\n\nWas Art. 50 für Deepfakes bedeutet:\n- Anbieter erfasster generativer Systeme müssen Ausgaben maschinenlesbar markieren (Abs. 2). Für Systeme, die vor dem 2. August 2026 auf dem Markt waren, greift diese Pflicht erst ab dem 2. Dezember 2026.\n- Betreiber, die Deepfakes veröffentlichen, müssen grundsätzlich offenlegen, dass der Inhalt künstlich erzeugt oder manipuliert wurde (Abs. 4).\n- Ob eine fehlende Markierung oder Offenlegung einen Verstoß darstellt, hängt von Rolle, Inhalt und den gesetzlichen Ausnahmen ab.\n\nArt. 85 sieht Beschwerden bei der zuständigen Marktüberwachungsbehörde vor. Das deutsche KI-MIG ist am 29. Juli 2026 in Kraft getreten. Es macht die Bundesnetzagentur zur Marktüberwachungsbehörde, Anlaufstelle und Beschwerdestelle für die KI-Verordnung, soweit keine Fachbehörde zuständig ist. Den konkreten Beschwerdeweg prüfst du auf der offiziellen Seite der Bundesnetzagentur.\n\n(Quelle: Verordnung (EU) 2024/1689, Art. 50 und 85; Verordnung (EU) 2026/1744; KI-MIG, in Kraft seit 29. Juli 2026)",
-          "keyTakeaway": "Art. 50 gilt seit dem 2. August 2026. Markierung, Offenlegung und Beschwerdeweg sind getrennt zu prüfen; die maschinenlesbare Markierung älterer Systeme greift erst ab dem 2. Dezember 2026."
+          "content": "Art. 50 der KI-Verordnung trennt die maschinenlesbare Markierung durch Anbieter erfasster generativer Systeme von der sichtbaren Offenlegung durch Betreiber, die Deepfakes erzeugen oder manipulieren und offenlegen. Die jeweiligen Ausnahmen und Übergangsregeln sind getrennt zu prüfen. Für Systeme, die schon vor dem 2. August 2026 auf dem Markt waren, gilt Art. 50 Abs. 2 nach Verordnung (EU) 2026/1744 ab dem 2. Dezember 2026.\n\nArt. 85 ermöglicht eine Beschwerde bei der zuständigen Marktüberwachungsbehörde. Nach dem KI-MIG ist die Bundesnetzagentur grundsätzlich Marktüberwachungsbehörde, Anlaufstelle und Beschwerdestelle, soweit keine Fachbehörde zuständig ist. Maßgeblich ist der aktuell veröffentlichte offizielle Behördenkanal.\n\nEine Plattformmeldung nach dem DSA, eine Strafanzeige und eine Beschwerde wegen eines möglichen Verstoßes gegen die KI-Verordnung sind drei verschiedene Verfahren.\n\nQuellen: Verordnung (EU) 2024/1689, Art. 50 und 85; Verordnung (EU) 2026/1744; KI-MIG.",
+          "keyTakeaway": "Plattformmeldung, Strafanzeige und AI-Act-Beschwerde haben unterschiedliche Voraussetzungen und Adressaten. Prüfe Rolle, Ausnahme und aktuellen Behördenkanal getrennt."
         },
         {
           "id": "deepfake-2-3-s3",
-          "title": "Dein Recht, wenn du selbst betroffen bist",
+          "title": "Wenn dein Bild oder deine Stimme betroffen ist",
           "readTimeMinutes": 1,
-          "content": "Wenn du selbst Opfer eines Deepfakes wirst, dein Gesicht oder deine Stimme ohne Einwilligung verwendet wurde, gibt es rechtliche Wege.\n\nRecht am eigenen Bild (Paragraph 22 KUG): Das Recht am eigenen Bild schützt davor, dass Fotos oder Videos von dir ohne Einwilligung veröffentlicht werden. Deepfakes, die dein Gesicht verwenden, können dieses Recht verletzen. Eine Abmahnung oder einstweilige Verfügung kann die weitere Verbreitung stoppen.\n\nJe nach Fall können Straftatbestände greifen, etwa Beleidigung oder üble Nachrede (§§ 185 ff. StGB). Ob § 201a StGB auch rein KI-erzeugte Bilder erfasst, ist rechtlich noch nicht abschließend geklärt.\n\nAnsprechpartner:\n- Verbraucherzentrale: verbraucherzentrale.de bietet Erstberatung zu digitalen Rechtsfragen.\n- Medienpädagogische Angebote: klicksafe.de (EU-finanziert) hat Ratgeber zu Betroffenenrechten.\n\nWichtig: Das hier ist kein Rechtsberatungsanspruch. Im konkreten Fall wende dich an eine Anwältin oder einen Anwalt für Medienrecht oder an die Verbraucherzentrale.",
-          "keyTakeaway": "Wenn du selbst betroffen bist, hast du rechtliche Möglichkeiten. KUG (Recht am eigenen Bild) und StGB 201a schützen dich. Im Ernstfall: Verbraucherzentrale oder Anwalt."
+          "content": "§ 22 KUG enthält als Grundregel, dass Bildnisse nur mit Einwilligung der abgebildeten Person verbreitet oder öffentlich zur Schau gestellt werden dürfen. Die Ausnahmen in § 23 KUG und die Interessenabwägung nach § 23 Abs. 2 bleiben zu prüfen. Ob ein Deepfake diese Rechte verletzt und welcher Anspruch besteht, hängt deshalb vom konkreten Inhalt, Kontext und Verbreitungsweg ab.\n\nDie Stimme schützt § 22 KUG nicht für sich allein. Bei geklonten oder manipulierten Audioaufnahmen können je nach Nutzung das allgemeine Persönlichkeitsrecht, Datenschutzrecht sowie zivil- oder strafrechtliche Vorschriften relevant sein. Eine bestimmte Rechtsfolge lässt sich ohne Prüfung des Einzelfalls nicht zusagen.\n\nSichere Fundstelle und Belege, ohne den Inhalt weiterzugeben. verbraucherzentrale.de und klicksafe.de bieten allgemeine Orientierung; für die Bewertung konkreter Ansprüche ist qualifizierte medienrechtliche Beratung erforderlich.",
+          "keyTakeaway": "§ 22 KUG enthält eine Grundregel für Bildnisse, aber § 23 enthält Ausnahmen. Stimme, Anspruch und Rechtsweg sind gesondert und fallbezogen zu prüfen."
         }
       ],
       "quiz": [
         {
           "id": "deepfake-2-3-q1",
-          "questionText": "Welcher Schritt ist am einfachsten und wirksamsten, wenn du einen Deepfake entdeckst?",
+          "questionText": "Was ist der richtige erste Umgang mit einem mutmaßlichen Deepfake?",
           "answerOptions": [
-            { "id": "a", "text": "Das Video sofort an alle bekannten Medien weiterschicken, damit es analysiert werden kann", "isCorrect": false },
-            { "id": "b", "text": "Das Video nicht teilen, damit die Verbreitung gestoppt wird", "isCorrect": true },
-            { "id": "c", "text": "Das Bundeskriminalamt sofort anrufen", "isCorrect": false },
-            { "id": "d", "text": "Einen eigenen Fakt-Check auf Social Media posten", "isCorrect": false }
+            {
+              "id": "a",
+              "text": "Das Video sofort an alle bekannten Medien weiterschicken, damit es analysiert werden kann",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Nicht öffentlich teilen; Fundstelle und vorhandene Belege lokal sichern",
+              "isCorrect": true
+            },
+            {
+              "id": "c",
+              "text": "Das Bundeskriminalamt sofort anrufen",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Einen eigenen Fakt-Check auf Social Media posten",
+              "isCorrect": false
+            }
           ],
-          "explanation": "Der einfachste und wirksamste erste Schritt ist: nicht teilen. Jede Weiterleitung eines Deepfakes vergrößert seinen Schaden. Du unterbrichst die Verbreitung, ohne eigene Risiken einzugehen. Weitere Schritte (melden, Behörde informieren, betroffene Person warnen) folgen danach."
+          "explanation": "Öffentliche Weitergabe kann die Reichweite erhöhen. Sichere URL, Konto, Zeitpunkt und einen Screenshot, soweit das gefahrlos möglich ist, und nutze danach den passenden Melde- oder Behördenweg."
         },
         {
           "id": "deepfake-2-3-q2",
-          "questionText": "Wie prüfst du am 28. Juli 2026 den deutschen Beschwerdeweg für einen möglichen Art.-50-Verstoß?",
+          "questionText": "Wie bestimmst du den deutschen Beschwerdeweg für einen möglichen Art.-50-Verstoß?",
           "answerOptions": [
-            { "id": "a", "text": "Bundeskriminalamt (BKA)", "isCorrect": false },
-            { "id": "b", "text": "Bundesanstalt für Finanzdienstleistungsaufsicht (BaFin)", "isCorrect": false },
-            { "id": "c", "text": "Immer direkt an die Bundesnetzagentur schreiben, unabhängig von Sektor und veröffentlichter Zuständigkeit", "isCorrect": false },
-            { "id": "d", "text": "Verkündetes KI-MIG, Fachrecht und den aktuell veröffentlichten Behördenkanal prüfen", "isCorrect": true }
+            {
+              "id": "a",
+              "text": "Bundeskriminalamt (BKA)",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Bundesanstalt für Finanzdienstleistungsaufsicht (BaFin)",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Immer direkt an die Bundesnetzagentur schreiben, unabhängig von Sektor und veröffentlichter Zuständigkeit",
+              "isCorrect": false
+            },
+            {
+              "id": "d",
+              "text": "Offizielle Angaben der Bundesnetzagentur, mögliche Fachzuständigkeit und den aktuell veröffentlichten Behördenkanal prüfen",
+              "isCorrect": true
+            }
           ],
-          "explanation": "Das KI-MIG ist am 29. Juli 2026 in Kraft getreten und macht die Bundesnetzagentur zur Marktüberwachungsbehörde, Anlaufstelle und Beschwerdestelle, soweit keine Fachbehörde zuständig ist. Welche Stelle im Einzelfall zuständig ist, hängt weiterhin vom Sektor ab. Prüfe deshalb den aktuell veröffentlichten Behördenkanal."
+          "explanation": "Die Bundesnetzagentur ist nach dem KI-MIG grundsätzlich zuständig, soweit keine Fachbehörde zuständig ist. Maßgeblich sind deshalb die aktuelle offizielle Zuständigkeitsinformation und der veröffentlichte Behördenkanal."
         },
         {
           "id": "deepfake-2-3-q3",
           "questionText": "Was schützt Paragraph 22 KUG (Kunsturhebergesetz)?",
           "answerOptions": [
-            { "id": "a", "text": "Das Recht, eigene Kunstwerke zu veröffentlichen", "isCorrect": false },
-            { "id": "b", "text": "Das Urheberrecht des Fotografen an seinen Aufnahmen", "isCorrect": false },
-            { "id": "c", "text": "Das Recht am eigenen Bild: Fotos und Videos von dir dürfen nicht ohne Einwilligung veröffentlicht werden", "isCorrect": true },
-            { "id": "d", "text": "Das Recht, KI-generierte Bilder zu löschen", "isCorrect": false }
+            {
+              "id": "a",
+              "text": "Das Recht, eigene Kunstwerke zu veröffentlichen",
+              "isCorrect": false
+            },
+            {
+              "id": "b",
+              "text": "Das Urheberrecht des Fotografen an seinen Aufnahmen",
+              "isCorrect": false
+            },
+            {
+              "id": "c",
+              "text": "Die Grundregel, dass Bildnisse nur mit Einwilligung verbreitet oder öffentlich gezeigt werden dürfen; gesetzliche Ausnahmen bleiben zu prüfen",
+              "isCorrect": true
+            },
+            {
+              "id": "d",
+              "text": "Das Recht, KI-generierte Bilder zu löschen",
+              "isCorrect": false
+            }
           ],
-          "explanation": "Paragraph 22 KUG schützt das Recht am eigenen Bild. Bilder und Videos einer Person dürfen nicht ohne Einwilligung veröffentlicht werden. Deepfakes, die dein Gesicht verwenden, können dieses Recht verletzen und Grundlage für rechtliche Schritte (Abmahnung, einstweilige Verfügung) sein."
+          "explanation": "§ 22 KUG enthält die allgemeine Einwilligungsregel für die Verbreitung und öffentliche Zurschaustellung von Bildnissen. § 23 KUG enthält Ausnahmen und eine Interessenabwägung. Ob ein Deepfake ein Recht verletzt, ist daher fallbezogen zu prüfen."
         }
       ]
     }

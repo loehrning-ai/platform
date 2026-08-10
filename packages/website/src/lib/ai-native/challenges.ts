@@ -1,4 +1,6 @@
 import challengesData from "../../../content/ai-native/challenges.json";
+import challengesDataEn from "../../../content/ai-native/en/challenges.json";
+import type { Locale } from "@/lib/i18n/locale";
 
 /**
  * AI Challenge of the Week — content loader + ISO-week resolver.
@@ -31,14 +33,17 @@ interface ChallengesData {
   readonly challenges: readonly Challenge[];
 }
 
-const DATA = challengesData as ChallengesData;
+const DATA: Record<Locale, ChallengesData> = {
+  de: challengesData as ChallengesData,
+  en: challengesDataEn as ChallengesData,
+};
 
-export function getAllChallenges(): readonly Challenge[] {
-  return DATA.challenges;
+export function getAllChallenges(locale: Locale = "de"): readonly Challenge[] {
+  return DATA[locale].challenges;
 }
 
-export function getChallengesMeta(): ChallengesData["_meta"] {
-  return DATA._meta;
+export function getChallengesMeta(locale: Locale = "de"): ChallengesData["_meta"] {
+  return DATA[locale]._meta;
 }
 
 /**
@@ -46,10 +51,16 @@ export function getChallengesMeta(): ChallengesData["_meta"] {
  * Pure function — takes the reference date as a parameter for deterministic
  * testing (no hidden Date.now() in grading).
  */
-export function getChallengeForDate(now: Date = new Date()): Challenge {
+export function getChallengeForDate(
+  now: Date = new Date(),
+  locale: Locale = "de",
+): Challenge {
+  const data = DATA[locale];
   const isoWeek = getISOWeek(now);
-  const offset = (isoWeek - 1) % DATA.challenges.length;
-  return DATA.challenges[offset < 0 ? offset + DATA.challenges.length : offset];
+  const offset = (isoWeek - 1) % data.challenges.length;
+  return data.challenges[
+    offset < 0 ? offset + data.challenges.length : offset
+  ];
 }
 
 /**

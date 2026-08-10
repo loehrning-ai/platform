@@ -3,6 +3,7 @@
 import { m } from "framer-motion";
 import { DEMO } from "@/lib/demo-tokens";
 import { nodeAppear } from "@/lib/animations";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 
 interface NodeBoxProps {
   readonly x: number;
@@ -37,7 +38,7 @@ const VARIANT_STYLES = {
   },
 } as const;
 
-export function NodeBox({
+function NodeBoxContent({
   x,
   y,
   w = 100,
@@ -129,3 +130,5 @@ export function NodeBox({
     </m.g>
   );
 }
+
+export const NodeBox = withMotionProvider(NodeBoxContent);

@@ -1,0 +1,120 @@
+{
+  "id": "claude-md",
+  "number": 4,
+  "title": "Die CLAUDE.md-Datei",
+  "subtitle": "Projektbezogene Anweisungen, die Claude Code automatisch lädt.",
+  "durationMinutes": 9,
+  "trackId": "workflows",
+  "hook": "Dokumentiere wiederkehrende Projektregeln an einer festen Stelle.",
+  "keyConcepts": [
+    "CLAUDE.md-Hierarchie",
+    "Lazy-geladene Unterordner-Dateien",
+    "Automatischer Speicher",
+    "Dauerhaftes Briefing"
+  ],
+  "quiz": [],
+  "sections": [
+    {
+      "id": "what-it-is",
+      "title": "Was es ist",
+      "readTimeMinutes": 2,
+      "content": "`CLAUDE.md` ist eine Markdown-Anweisungsdatei für Claude Code. Eine Projektdatei kann unter `./CLAUDE.md` oder `./.claude/CLAUDE.md` liegen; Benutzer-, Managed-, lokale und verschachtelte Dateien haben unterschiedliche Geltungsbereiche.\n\nClaude Code lädt anwendbare Anweisungen in den Gesprächskontext. Diese Anweisungen beeinflussen das Modellverhalten, sind aber keine erzwungene Konfiguration. Nutze Berechtigungen, Hooks, Sandbox und CI für Regeln, die technisch gelten müssen.\n\n> Halte gemeinsame Projektanweisungen konkret, prüfbar und versioniert."
+    },
+    {
+      "id": "hierarchy",
+      "title": "Wie die Hierarchie tatsächlich geladen wird",
+      "readTimeMinutes": 2,
+      "content": "Claude Code entdeckt Anweisungsdateien nach Geltungsbereich und Verzeichnis. Eine vereinfachte Projektansicht:\n\n```\n~/.claude/CLAUDE.md              # Benutzeranweisungen für alle Projekte\n<repo>/CLAUDE.md                 # Gemeinsame Projektanweisungen\n<repo>/.claude/CLAUDE.md         # Alternative Projektposition\n<repo>/CLAUDE.local.md           # Persönlich und projektspezifisch; gitignore\n\n# Beim Lesen von Dateien in diesen Ordnern entdeckt:\n<repo>/frontend/CLAUDE.md\n<repo>/services/auth/CLAUDE.md\n```\n\nAnwendbare Dateien werden im Kontext kombiniert. Lokalere Anweisungen stehen später, aber Widersprüche haben keine verlässliche Vorrangregel; entferne sie. Mit `/memory` prüfst du die tatsächlich geladenen Dateien. Für pfadspezifische Regeln eignet sich `.claude/rules/` mit `paths`-Frontmatter."
+    },
+    {
+      "id": "keep-in-leave-out",
+      "title": "Was hineingehört",
+      "readTimeMinutes": 2,
+      "content": "**Aufnehmen:**\n\n- Eine Projektbeschreibung in einem Satz\n- Stack und unterstützte Versionen\n- Befehle für Build, Tests und Linting\n- Überprüfbare Entwicklungskonventionen\n- Wichtige Pfade und Projektbegriffe\n- Links auf gepflegte Architektur- oder Bereitstellungsdokumentation\n\n**Nicht aufnehmen:**\n\n- Geheimnisse, Tokens, Zugangsdaten oder personenbezogene Daten\n- Vage Anweisungen wie \"schreibe guten Code\"\n- Veraltete Historie ohne Auswirkung auf die aktuelle Arbeit\n- Lange Abläufe, die in eine gepflegte Anleitung oder Dokumentation gehören\n\nCLAUDE.md belegt Kontext; längere Dateien können die Befolgung einzelner Anweisungen verschlechtern. Anthropics aktuelle Anleitung empfiehlt kurze, klar strukturierte Regeln und nennt weniger als 200 Zeilen pro Datei als Richtwert. Imports ordnen Inhalte, laden sie aber beim Start ebenfalls in den Kontext. Sperre sensible Pfade mit Berechtigungsregeln statt mit bloßen Textanweisungen."
+    },
+    {
+      "id": "template",
+      "title": "Eine praktische Vorlage",
+      "readTimeMinutes": 1,
+      "content": "```\n# <Projektname>\n\n## Was das ist\nEin oder zwei Sätze. Wer es nutzt, was es tut. Link zur README für weitere Informationen.\n\n## Stack\n- Sprache / Framework / Versionen\n- Build- + Test-Tools\n- Wichtige Bibliotheken, die Claude kennen sollte\n\n## Konventionen\n- Regeln für die Dateistruktur (z.B. \"Tests als `*.test.ts` kollokieren\")\n- Stilregeln, die das Team durchsetzt\n- Namenskonventionen\n- Fehlerbehandlungsmuster\n\n## Befehle\n- `yarn build`: Produktions-Build\n- `yarn test`: Unit-Tests (vor dem Commit ausführen)\n- `yarn test:e2e`: E2E-Suite (langsam, nur auf CI)\n- `arc lint`: Linter + Formatter\n\n## Nicht tun\n- Neue npm-Abhängigkeiten ohne Rücksprache hinzufügen\n- `any` in TypeScript verwenden\n- Dateien in `generated/` bearbeiten\n- Code ohne passenden Test ausliefern\n\n## Terminologie\n- \"Workspace\" (nicht \"Projekt\"): Unser Produkt verwendet diesen Begriff konsistent\n- \"Mitglied\" (nicht \"Benutzer\") in kundenorientierten Texten\n\n## Wo die Dinge liegen\n- Quellcode: `src/`\n- Tests: kollokiert (`*.test.ts`)\n- Architektur-Notizen: `@docs/architecture.md`\n- Deployment: `@docs/deploy.md`\n```"
+    },
+    {
+      "id": "auto-memory",
+      "title": "Auto-Memory als ergänzende Funktion",
+      "readTimeMinutes": 2,
+      "content": "Claude-Code-Versionen mit Auto-Memory-Unterstützung können projektspezifische Notizen in lokale Markdown-Dateien schreiben. Die Funktion ist konfigurierbar, speichert nicht in jeder Sitzung etwas und ist nicht als verlässliche Erinnerung zu behandeln.\n\nDie Mechanismen haben unterschiedliche Eigentümer:\n\n- **CLAUDE.md:** von Menschen gepflegte Anweisungen für gemeinsame, überprüfte Projektregeln.\n- **Auto-Memory:** lokal ausgewählte Notizen, die auf derselben Maschine von Worktrees desselben Repositorys geteilt werden.\n\nMit `/memory` kannst du Notizen prüfen, bearbeiten, deaktivieren oder löschen. Speichere in keinem der beiden Mechanismen Geheimnisse."
+    }
+  ],
+  "widgets": [
+    {
+      "kind": "claude-md-builder",
+      "placement": "after-intro",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "claude-md",
+        "cpId": "built"
+      }
+    },
+    {
+      "kind": "quiz",
+      "placement": "before-quiz",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "claude-md",
+        "cpId": "q1",
+        "question": "Was gehört in deine Stamm-CLAUDE.md?",
+        "options": [
+          "Eine Liste von API-Keys, damit Claude dir beim Testen helfen kann.",
+          "Ein Einfügen deines gesamten Monorepos als Referenz.",
+          "Eine kurze, spezifische Liste von Konventionen, Befehlen und Anti-Patterns, die das Team durchsetzt.",
+          "Ein Changelog dessen, was dein Team im letzten Quartal ausgeliefert hat."
+        ],
+        "correct": 2,
+        "explanation": "CLAUDE.md liefert projektbezogene Anweisungen. Halte die Datei kurz und konkret: Konventionen, Befehle und Antimuster. Speichere dort keine Geheimnisse.",
+        "title": "Kurzprüfung",
+        "copy": {
+          "kindLabel": "Kurzprüfung",
+          "optionsAriaLabel": "Antwortoptionen",
+          "correctLabel": "Richtig.",
+          "incorrectLabel": "Nicht ganz."
+        }
+      }
+    },
+    {
+      "kind": "quiz",
+      "placement": "before-quiz",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "claude-md",
+        "cpId": "q2",
+        "question": "In einem Monorepo mit CLAUDE.md-Dateien in frontend/ und services/auth/, wann werden diese Unterordner-Dateien geladen?",
+        "options": [
+          "Zu Beginn jeder Sitzung, unabhängig von gelesenen Dateien.",
+          "Nur wenn Claude Dateien in diesem Unterordner liest, werden sie lazy geladen.",
+          "Verschachtelte Dateien werden ignoriert, weil nur die Stamm-CLAUDE.md geladen wird.",
+          "Zufällig, basierend auf der Dateigröße."
+        ],
+        "correct": 1,
+        "explanation": "Verschachtelte CLAUDE.md-Dateien werden entdeckt, wenn Claude Code Dateien im jeweiligen Verzeichnis liest. Mit `/memory` prüfst du das tatsächliche Laden.",
+        "title": "Kurzprüfung",
+        "copy": {
+          "kindLabel": "Kurzprüfung",
+          "optionsAriaLabel": "Antwortoptionen",
+          "correctLabel": "Richtig.",
+          "incorrectLabel": "Nicht ganz."
+        }
+      }
+    },
+    {
+      "kind": "socratic-tutor",
+      "placement": "end",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "claude-md",
+        "cpId": "tutor",
+        "topic": "CLAUDE.md effektiv im Team nutzen",
+        "persona": "Fordere den Lernenden auf, über Veralterung, Überprüfungsfrequenz, was ins Stammverzeichnis vs. Unterordner gehört und wo CLAUDE.md endet und docs/ beginnt, nachzudenken."
+      }
+    }
+  ]
+}

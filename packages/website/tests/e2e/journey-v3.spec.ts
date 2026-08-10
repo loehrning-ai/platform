@@ -1,11 +1,11 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("retired journey routes", () => {
-  test("/ki-transformation-check redirects and stays noindex", async ({ request }) => {
+  test("/ki-transformation-check redirects without noindex", async ({ request }) => {
     const res = await request.get("/ki-transformation-check", { maxRedirects: 0 });
     expect([301, 308]).toContain(res.status());
     expect(res.headers()["location"]).toContain("/ki-check");
-    expect(res.headers()["x-robots-tag"]).toContain("noindex");
+    expect(res.headers()["x-robots-tag"]).toBeUndefined();
   });
 
   test("seeded local journey state cannot resurrect the retired route", async ({ page }) => {

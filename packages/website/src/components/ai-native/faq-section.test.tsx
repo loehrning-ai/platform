@@ -39,7 +39,15 @@ vi.mock("framer-motion", async () => {
   );
   const Pass = ({ children }: { children?: unknown }) =>
     createElement(Fragment, null, children as never);
-  return { __esModule: true, m, motion: m, AnimatePresence: Pass };
+  return {
+    __esModule: true,
+    m,
+    motion: m,
+    AnimatePresence: Pass,
+    LazyMotion: Pass,
+    MotionConfig: Pass,
+    domAnimation: {},
+  };
 });
 
 vi.mock("@/components/ai-native/primitives", async () => {

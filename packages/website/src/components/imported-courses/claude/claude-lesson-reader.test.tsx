@@ -100,13 +100,18 @@ describe("ClaudeLessonReader ", () => {
         totalLessons={12}
         prevHref={null}
         nextHref={null}
+        locale="en"
       />,
     );
     const host = document.createElement("div");
     host.innerHTML = markup;
     const buttons = Array.from(host.querySelectorAll("button"));
-    const markAsRead = buttons.filter((button) => button.textContent?.includes("Mark as read"));
-    const completeLesson = buttons.find((button) => button.textContent?.includes("Complete lesson"));
+    const markAsRead = buttons.filter((button) =>
+      button.textContent?.includes("Mark as read"),
+    );
+    const completeLesson = buttons.find((button) =>
+      button.textContent?.includes("Complete lesson"),
+    );
 
     expect(markAsRead).toHaveLength(LESSON.sections.length);
     expect(markAsRead.every((button) => button.disabled)).toBe(true);
@@ -116,7 +121,13 @@ describe("ClaudeLessonReader ", () => {
 
   it("renders the lesson header, sections, and key takeaway", () => {
     render(
-      <ClaudeLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />,
+      <ClaudeLessonReader
+        lesson={LESSON}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+        locale="en"
+      />,
     );
     expect(screen.getByText("Test Lesson Title")).toBeInTheDocument();
     expect(screen.getByText("Section one content.")).toBeInTheDocument();
@@ -125,7 +136,13 @@ describe("ClaudeLessonReader ", () => {
 
   it("renders the embedded widget through the shared registry", async () => {
     render(
-      <ClaudeLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />,
+      <ClaudeLessonReader
+        lesson={LESSON}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+        locale="en"
+      />,
     );
     // RenderWidget lazy-loads the component, so the question text arrives
     // after the initial render.
@@ -136,24 +153,44 @@ describe("ClaudeLessonReader ", () => {
 
   it("gates the complete-lesson button until every section is marked read", () => {
     render(
-      <ClaudeLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />,
+      <ClaudeLessonReader
+        lesson={LESSON}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+        locale="en"
+      />,
     );
-    const completeButton = screen.getByRole("button", { name: /Complete lesson/i });
+    const completeButton = screen.getByRole("button", {
+      name: /Complete lesson/i,
+    });
     expect(completeButton).toBeDisabled();
 
-    const markReadButtons = screen.getAllByRole("button", { name: /Mark as read/i });
+    const markReadButtons = screen.getAllByRole("button", {
+      name: /Mark as read/i,
+    });
     fireEvent.click(markReadButtons[0]);
     expect(completeButton).toBeDisabled();
 
-    fireEvent.click(screen.getAllByRole("button", { name: /Mark as read/i })[0]);
+    fireEvent.click(
+      screen.getAllByRole("button", { name: /Mark as read/i })[0],
+    );
     expect(completeButton).not.toBeDisabled();
   });
 
   it("marks the lesson complete in the unified store", () => {
     render(
-      <ClaudeLessonReader lesson={LESSON} totalLessons={12} prevHref={null} nextHref={null} />,
+      <ClaudeLessonReader
+        lesson={LESSON}
+        totalLessons={12}
+        prevHref={null}
+        nextHref={null}
+        locale="en"
+      />,
     );
-    for (const button of screen.getAllByRole("button", { name: /Mark as read/i })) {
+    for (const button of screen.getAllByRole("button", {
+      name: /Mark as read/i,
+    })) {
       fireEvent.click(button);
     }
     fireEvent.click(screen.getByRole("button", { name: /Complete lesson/i }));
@@ -168,15 +205,55 @@ describe("ClaudeLessonReader ", () => {
         totalLessons={12}
         prevHref="/kurse/open-source/claude/kurs/prev"
         nextHref="/kurse/open-source/claude/kurs/next"
+        locale="en"
       />,
     );
     expect(screen.getByRole("link", { name: /Next lesson/i })).toHaveAttribute(
       "href",
       "/kurse/open-source/claude/kurs/next",
     );
-    expect(screen.getByRole("link", { name: /Previous lesson/i })).toHaveAttribute(
-      "href",
-      "/kurse/open-source/claude/kurs/prev",
+    expect(
+      screen.getByRole("link", { name: /Previous lesson/i }),
+    ).toHaveAttribute("href", "/kurse/open-source/claude/kurs/prev");
+  });
+
+  it("renders German reader chrome without changing progress identities", () => {
+    const germanLesson: ClaudeLesson = {
+      ...LESSON,
+      title: "Testlektion",
+      subtitle: "Untertitel der Testlektion.",
+      sections: LESSON.sections.map((section, index) => ({
+        ...section,
+        title: `Abschnitt ${index + 1}`,
+        content: `Inhalt ${index + 1}.`,
+        keyTakeaway: index === 1 ? "Die Kernaussage." : undefined,
+      })),
+      widgets: [],
+    };
+
+    render(
+      <ClaudeLessonReader
+        lesson={germanLesson}
+        totalLessons={12}
+        prevHref="/kurse/open-source/claude/kurs/context"
+        nextHref="/kurse/open-source/claude/kurs/anatomy"
+        locale="de"
+      />,
     );
+
+    expect(screen.getByText("Lektion 3 von 12")).toBeInTheDocument();
+    expect(screen.getByText("Kernaussage")).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("button", { name: /Als gelesen markieren/i }),
+    ).toHaveLength(2);
+    expect(
+      screen.getByRole("button", { name: /Lektion abschließen/i }),
+    ).toBeDisabled();
+    expect(
+      screen.getByRole("link", { name: /Nächste Lektion/i }),
+    ).toHaveAttribute("href", "/kurse/open-source/claude/kurs/anatomy");
+    expect(
+      screen.queryByText(/Mark as read|Complete lesson|Key takeaway/),
+    ).not.toBeInTheDocument();
   });
 });

@@ -20,7 +20,7 @@ describe("codex content module ", () => {
   });
 
   it("loads exactly 12 lessons, uniquely numbered 1-12", async () => {
-    const lessons = await getAllCodexLessons();
+    const lessons = await getAllCodexLessons("en");
     expect(lessons).toHaveLength(12);
     expect(new Set(lessons.map((l) => l.id)).size).toBe(12);
     expect(lessons.map((l) => l.number)).toEqual(
@@ -30,7 +30,7 @@ describe("codex content module ", () => {
 
   it("resolves each lesson id individually via the per-lesson loader", async () => {
     for (const id of CODEX_LESSON_IDS) {
-      const lesson = await getCodexLesson(id);
+      const lesson = await getCodexLesson(id, "en");
       expect(lesson, id).toBeDefined();
       expect(lesson?.id).toBe(id);
     }
@@ -38,12 +38,12 @@ describe("codex content module ", () => {
 
   it("returns undefined for an unregistered id", async () => {
     // @ts-expect-error deliberately invalid id to exercise the guard
-    const lesson = await getCodexLesson("L99");
+    const lesson = await getCodexLesson("L99", "en");
     expect(lesson).toBeUndefined();
   });
 
   it("every lesson has non-empty sections with real content and structured blocks, a valid track, and an empty quiz array", async () => {
-    const lessons = await getAllCodexLessons();
+    const lessons = await getAllCodexLessons("en");
     for (const lesson of lessons) {
       expect(lesson.sections.length, lesson.id).toBeGreaterThan(0);
       for (const section of lesson.sections) {
@@ -66,7 +66,7 @@ describe("codex content module ", () => {
   });
 
   it("every widget kind referenced by a lesson resolves against ALL_WIDGET_KINDS", async () => {
-    const lessons = await getAllCodexLessons();
+    const lessons = await getAllCodexLessons("en");
     for (const lesson of lessons) {
       for (const widget of lesson.widgets ?? []) {
         expect(isWidgetKind(widget.kind), `${lesson.id}: ${widget.kind}`).toBe(true);
@@ -76,7 +76,7 @@ describe("codex content module ", () => {
   });
 
   it("every quiz widget instance has exactly one valid correct index and a non-empty explanation", async () => {
-    const lessons = await getAllCodexLessons();
+    const lessons = await getAllCodexLessons("en");
     let quizCount = 0;
     for (const lesson of lessons) {
       for (const widget of lesson.widgets ?? []) {
@@ -99,13 +99,13 @@ describe("codex content module ", () => {
   });
 
   it("caches a lesson module after the first load", async () => {
-    const first = await getCodexLesson("L01");
-    const second = await getCodexLesson("L01");
+    const first = await getCodexLesson("L01", "en");
+    const second = await getCodexLesson("L01", "en");
     expect(first).toBe(second);
   });
 
   it("exposes the four source tracks", () => {
-    const tracks = getCodexTracks();
+    const tracks = getCodexTracks("en");
     expect(tracks.map((t) => t.id)).toEqual([
       "fundamentals",
       "task-craft",

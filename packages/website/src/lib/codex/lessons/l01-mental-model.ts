@@ -8,7 +8,7 @@ const lesson: CodexLesson = {
   number: 1,
   title: "What Codex Actually Is",
   subtitle:
-    "An autonomous agent, not an autocomplete. Get this wrong and every task spec after is working against the model's actual shape.",
+    "A task-oriented coding agent that can inspect a repository, change files, run checks, and return work for review.",
   durationMinutes: 10,
   trackId: "fundamentals",
   hook: "Agent, not assistant.",
@@ -29,20 +29,20 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Your starting mental model matters more than any prompting trick you'll ever learn. Codex is not Copilot with a bigger context window. It's not a chat assistant that can read your repo. Those comparisons feel intuitive and are wrong, they lead people to write tasks that are shaped for the wrong thing.\n\nThe same is true of Claude Code, GitHub Copilot Workspace, and other modern agentic coding tools: all of them follow the same pattern. They are **autonomous software engineering agents**. When you give one a task, the following happens, every time, in this order:\n\n1. It receives your task description and any context you have given it (repo contents, convention file, prior examples).\n2. It spins up a fresh, isolated sandbox with your repo cloned into it.\n3. It plans a series of steps to complete your task.\n4. It executes those steps, reading files, editing code, running tests, reading the output, revising.\n5. When it thinks it's done, it produces a **patch**, a diff of the changes it wants to make.\n6. That patch lands as a pull request (or a diff, depending on the tool) for you to review and merge.\n\nNone of this is magic, and none of it is interactive. You hand over a task. Some minutes later, a PR shows up. In between, the agent was alone in a box.",
+            "Codex is a **task-oriented coding agent**. It can work locally in the CLI or IDE and in dedicated cloud environments. The interface and permission model differ by surface, but the working loop is similar:\n\n1. It receives your request plus the context available in the current session and repository.\n2. It operates within configured filesystem, command, approval, and network boundaries.\n3. It examines the relevant code and determines a sequence of changes.\n4. It edits files, runs available checks, reads their output, and revises when needed.\n5. It returns a summary and a **diff** or patch for review. A cloud task can also open a pull request when that workflow is configured.\n\nThis is delegation with inspection points. Local sessions can be interactive; cloud tasks can continue in the background. In both cases, the result still requires review against the task and repository evidence.",
         },
         {
           kind: "pull-quote",
-          text: "Think \"junior engineer you handed a Jira ticket,\" not \"assistant you're pair-programming with.\"",
+          text: 'Think "bounded engineering task with review" rather than "autocomplete at the cursor."',
         },
         {
           kind: "prose",
           markdown:
-            "This framing fixes most failure modes. A junior engineer with a vague ticket flails and delivers the wrong thing. A junior engineer with no acceptance criteria ships something that kind of works. A junior engineer with no access to your test suite guesses at correctness. The fixes for all three are obvious when you name them, and we'll spend the next eleven lessons doing exactly that.\n\nOne more mental model worth pinning: think of the agent's context window as a **blackboard**. Everything the agent knows about your task, your codebase, and your conventions must be written on that blackboard before the run starts. Nothing persists between runs. When the session ends, the blackboard is erased. Your `AGENTS.md`, your task spec, and your test suite are how you write on that blackboard, reliably, every time.",
+            "This framing makes common failures easier to diagnose. An ambiguous request permits several valid interpretations. Missing acceptance criteria make completion subjective. Unavailable tests leave correctness unverified. The next lessons turn those gaps into explicit task inputs.\n\nTreat the active context as a **workboard**: the request, relevant code, instructions, command results, and prior turns that the current surface exposes. Do not assume that all context transfers to a new session. Put durable repository guidance in `AGENTS.md`, keep verification commands executable, and restate task-specific constraints in the request.",
         },
       ],
       keyTakeaway:
-        "Codex is an autonomous software engineering agent that plans, edits, tests, and hands back a patch, with nothing interactive in between.",
+        "Codex can inspect, edit, and test within configured boundaries; the output is a reviewable change, not proof that the task is correct.",
     },
     {
       id: "s2",
@@ -52,7 +52,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Every Codex run is a small contract between you and the agent. Three things are always in play. If you can name them, you can reason about why runs succeed or fail.",
+            "A Codex run depends on three inputs. Naming them makes failures easier to diagnose.",
         },
         {
           kind: "card-grid",
@@ -65,19 +65,19 @@ const lesson: CodexLesson = {
             {
               eyebrow: "02 · the repo",
               title: "What the agent can see",
-              body: "The full codebase, the tests, the AGENTS.md conventions, configured lint and CI commands. Whatever the sandbox has installed.",
+              body: "The files available in the selected repository or working directory, including tests, AGENTS.md instructions, and documented check commands.",
             },
             {
               eyebrow: "03 · the sandbox",
               title: "What the agent can do",
-              body: "Run commands, read files, write files, execute tests, install dependencies. No network unless you grant it. Ephemeral, every run starts clean.",
+              body: "The configured filesystem, command, approval, and network permissions. Local and cloud environments can expose different capabilities.",
             },
           ],
         },
         {
           kind: "callout",
           title: "The contract rule.",
-          body: "A Codex run's quality is bounded by these three things. Vague task leads to a flaky run. Missing repo context (no AGENTS.md) leads to a generic PR. Broken sandbox (tests don't run) leads to unverifiable changes. Every technique in this course tightens one of these three.",
+          body: "An ambiguous task permits scope drift. Missing repository guidance makes local conventions harder to infer. Unavailable checks leave changes unverified. Each technique in this course makes one of those inputs more explicit.",
         },
       ],
     },
@@ -89,11 +89,11 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Words are cheap. Here's a condensed replay of what Codex does when you give it the task *\"add rate limiting to the /login endpoint\"*. This is the real shape of a run: plan, probe, try, test, revise.",
+            'Words are cheap. Here\'s a condensed replay of what Codex does when you give it the task *"add rate limiting to the /login endpoint"*. This is the real shape of a run: plan, probe, try, test, revise.',
         },
       ],
       keyTakeaway:
-        "A run is plan, probe, try, test, revise, patch, never a straight line from task to code.",
+        "A run can include planning, inspection, edits, checks, revision, and a final diff.",
     },
     {
       id: "s4",
@@ -114,7 +114,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Most bad Codex runs trace to one of these three. Learn to name them and the fix is usually obvious.",
+            "These three failure modes are common and can be checked directly.",
         },
         {
           kind: "card-grid",
@@ -127,12 +127,12 @@ const lesson: CodexLesson = {
             {
               eyebrow: "mode 02",
               title: "No conventions",
-              body: "Without AGENTS.md, Codex writes reasonable generic code. It won't match your style, your error-handling pattern, your test layout. Fix: commit conventions to the repo.",
+              body: "Without repository guidance, Codex must infer conventions from code and configuration. Fix: document non-obvious rules and exact check commands in the repository.",
             },
             {
               eyebrow: "mode 03",
               title: "Broken feedback loop",
-              body: "Tests don't run in the sandbox, or the command isn't documented. Agent can't verify its own work. Ships hopeful code. Fix: make tests runnable with one command.",
+              body: "Required checks are unavailable or undocumented, so the returned result lacks verification evidence. Fix: make the relevant commands reproducible and inspect their output.",
             },
           ],
         },
@@ -169,67 +169,136 @@ const lesson: CodexLesson = {
           },
           {
             segments: [
-              { text: "→ sandbox ready · 47 files · python 3.11 · pytest configured", tone: "comment" },
+              {
+                text: "→ environment ready · python 3.11 · pytest configured",
+                tone: "comment",
+              },
             ],
             delayMs: 700,
           },
-          { segments: [{ text: "codex> planning…", tone: "prompt" }], delayMs: 600 },
           {
-            segments: [{ text: "  plan: 1) read /login handler  2) add limiter  3) test", tone: "comment" }],
-            delayMs: 700,
+            segments: [{ text: "codex> planning…", tone: "prompt" }],
+            delayMs: 600,
           },
-          { segments: [{ text: "$ cat api/auth.py", tone: "prompt" }], delayMs: 400 },
-          {
-            segments: [{ text: "→ 128 lines · uses flask · no rate limiting", tone: "comment" }],
-            delayMs: 500,
-          },
-          { segments: [{ text: "$ cat AGENTS.md | head", tone: "prompt" }], delayMs: 400 },
           {
             segments: [
-              { text: "→ found: uses flask-limiter for rate limits. tests in tests/api/", tone: "comment" },
+              {
+                text: "  plan: 1) read /login handler  2) add limiter  3) test",
+                tone: "comment",
+              },
             ],
-            delayMs: 600,
-          },
-          { segments: [{ text: "$ cat tests/api/test_auth.py", tone: "prompt" }], delayMs: 400 },
-          {
-            segments: [{ text: "→ pattern established: pytest fixtures, fake redis", tone: "comment" }],
-            delayMs: 600,
-          },
-          { segments: [{ text: "codex> editing api/auth.py …", tone: "prompt" }], delayMs: 700 },
-          {
-            segments: [{ text: "codex> editing tests/api/test_auth.py …", tone: "prompt" }],
             delayMs: 700,
           },
           {
-            segments: [{ text: "$ pytest tests/api/test_auth.py -v", tone: "prompt" }],
+            segments: [{ text: "$ cat api/auth.py", tone: "prompt" }],
             delayMs: 400,
           },
           {
             segments: [
-              { text: "→ FAIL: test_login_respects_limit (limit=10, got 11)", tone: "error" },
+              {
+                text: "→ uses Flask · no rate limiting in this handler",
+                tone: "comment",
+              },
+            ],
+            delayMs: 500,
+          },
+          {
+            segments: [{ text: "$ cat AGENTS.md | head", tone: "prompt" }],
+            delayMs: 400,
+          },
+          {
+            segments: [
+              {
+                text: "→ found: uses flask-limiter for rate limits. tests in tests/api/",
+                tone: "comment",
+              },
+            ],
+            delayMs: 600,
+          },
+          {
+            segments: [
+              { text: "$ cat tests/api/test_auth.py", tone: "prompt" },
+            ],
+            delayMs: 400,
+          },
+          {
+            segments: [
+              {
+                text: "→ pattern established: pytest fixtures, fake redis",
+                tone: "comment",
+              },
+            ],
+            delayMs: 600,
+          },
+          {
+            segments: [
+              { text: "codex> editing api/auth.py …", tone: "prompt" },
+            ],
+            delayMs: 700,
+          },
+          {
+            segments: [
+              {
+                text: "codex> editing tests/api/test_auth.py …",
+                tone: "prompt",
+              },
+            ],
+            delayMs: 700,
+          },
+          {
+            segments: [
+              { text: "$ pytest tests/api/test_auth.py -v", tone: "prompt" },
+            ],
+            delayMs: 400,
+          },
+          {
+            segments: [
+              {
+                text: "→ FAIL: test_login_respects_limit (limit=10, got 11)",
+                tone: "error",
+              },
             ],
             dim: true,
             delayMs: 800,
           },
           {
-            segments: [{ text: "codex> revising: off-by-one in limiter window…", tone: "prompt" }],
+            segments: [
+              {
+                text: "codex> revising: off-by-one in limiter window…",
+                tone: "prompt",
+              },
+            ],
             delayMs: 700,
           },
           {
-            segments: [{ text: "$ pytest tests/api/test_auth.py -v", tone: "prompt" }],
+            segments: [
+              { text: "$ pytest tests/api/test_auth.py -v", tone: "prompt" },
+            ],
             delayMs: 400,
           },
-          { segments: [{ text: "→ 6 passed in 0.4s", tone: "output" }], delayMs: 600 },
-          { segments: [{ text: "codex> producing patch…", tone: "prompt" }], delayMs: 500 },
+          {
+            segments: [{ text: "→ selected tests passed", tone: "output" }],
+            delayMs: 600,
+          },
+          {
+            segments: [{ text: "codex> producing patch…", tone: "prompt" }],
+            delayMs: 500,
+          },
           {
             segments: [
-              { text: '→ PR #482 opened: "rate-limit /login (5 req/min per IP)"', tone: "comment" },
+              {
+                text: '→ review artifact created: "rate-limit /login (5 req/min per IP)"',
+                tone: "comment",
+              },
             ],
             delayMs: 500,
           },
           {
             segments: [
-              { text: "→ +34 / −2 lines across 2 files · tests: 6 new, all passing", tone: "comment" },
+              {
+                text: "→ diff and selected-test log ready for review",
+                tone: "comment",
+              },
             ],
             delayMs: 400,
           },
@@ -249,13 +318,13 @@ const lesson: CodexLesson = {
           'You open a Codex task: "refactor our auth module." No other detail. The agent returns a PR that rewrites your user model and breaks three downstream services. What went wrong?',
         options: [
           "Codex has a bug and shouldn't be used for auth.",
-          "The task was ambiguous, \"refactor auth\" spans a huge scope and the agent picked an aggressive interpretation.",
+          'The task was ambiguous, "refactor auth" spans a huge scope and the agent picked an aggressive interpretation.',
           "The sandbox didn't have the downstream services available.",
           "You needed to give it write access to prod.",
         ],
         correct: 1,
         explanation:
-          'Classic vague spec. Codex doesn\'t know where your auth module ends and your user model begins. Given only "refactor auth," it picks the most plausible interpretation, usually the biggest one, and goes. Fix: scope down. "Extract the token-validation logic from api/auth.py into a standalone module, keeping the public interface identical. Do not touch User or Session."',
+          'The request does not define the intended boundary between the auth module and the user model. Narrow it: "Extract token validation from api/auth.py into a standalone module. Keep the public interface unchanged. Do not modify User or Session."',
       },
     },
     {
@@ -268,16 +337,16 @@ const lesson: CodexLesson = {
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
         question:
-          "Between two Codex runs on the same repo, does the agent remember what you discussed last time?",
+          "What context should you assume will be available in a new Codex session?",
         options: [
-          "Yes, Codex has persistent memory across sessions.",
-          "No, every run gets a fresh sandbox. The only persistence is what's committed to your repo (AGENTS.md, tests, docs).",
-          "Only within the same conversation thread.",
-          "Only if you're on the team plan.",
+          "The complete history of every earlier session on that repository.",
+          "Only context the current surface loads or you provide; keep durable project rules in versioned instructions and configuration.",
+          "Only the most recent pull-request description.",
+          "All local terminal output from previous runs.",
         ],
         correct: 1,
         explanation:
-          "Every run is ephemeral. The sandbox is destroyed after the PR is produced. The persistence mechanism isn't memory, it's your convention file (AGENTS.md for Codex, CLAUDE.md for Claude Code, or equivalent) and your test suite. That's why those are the two biggest leverage points in this course.",
+          "Session history and environment behavior vary by Codex surface and configuration. Versioned instructions, tests, and setup files are the reliable place for project rules; task-specific constraints still belong in the current request.",
       },
     },
     {
@@ -296,18 +365,19 @@ const lesson: CodexLesson = {
           prevLabel: "← Prev",
           nextLabel: "Next →",
           emptyLabel: "No cards available.",
-          ariaLabelTemplate: "Flashcard {current} of {total}. Press Space or click to flip.",
+          ariaLabelTemplate:
+            "Flashcard {current} of {total}. Press Space or click to flip.",
         },
         cards: [
           {
             term: "Mental model",
             q: "What is Codex, in one sentence?",
-            a: "An autonomous software engineering agent that runs in an isolated sandbox, works alone on your task, and hands back a pull request.",
+            a: "A task-oriented coding agent that can inspect and change a repository, run available checks, and return a diff or pull request for review.",
           },
           {
             term: "Contract",
-            q: "What are the three parts of every agent run?",
-            a: "The task (what you asked for), the repo (what the agent can see, including AGENTS.md or CLAUDE.md), and the sandbox (what the agent can do, run tests, install deps, etc).",
+            q: "What are the three inputs to a coding-agent run?",
+            a: "The task, the repository context available to the session, and the environment permissions and tools.",
           },
           {
             term: "Failure modes",
@@ -317,17 +387,17 @@ const lesson: CodexLesson = {
           {
             term: "Persistence",
             q: 'How does an agentic coding tool "remember" things between runs?',
-            a: "It doesn't. Memory is whatever you commit to the repo: AGENTS.md (or CLAUDE.md) for conventions, the test suite for correctness, docs for context. Every run starts from a fresh sandbox.",
+            a: "Do not assume prior context transfers. Store durable rules in versioned instructions, tests, documentation, and environment configuration; restate task-specific constraints.",
           },
           {
             term: "The shift",
             q: "How is an autonomous coding agent different from autocomplete tools like Copilot?",
-            a: "Copilot is synchronous pair-programming, it responds inline as you type. Agentic tools (Codex, Claude Code, Copilot Workspace) are asynchronous task delegation, you hand over a full task and get a diff or PR back. Nothing in between is interactive.",
+            a: "Autocomplete proposes code at the cursor. A coding agent can inspect multiple files, run tools, and carry a bounded task through to a reviewable diff; some agent surfaces are interactive and others run in the background.",
           },
           {
             term: "The blackboard",
             q: "What mental model helps explain why context matters so much in agentic coding?",
-            a: "Think of the context window as a blackboard. Everything the agent knows, your task, conventions, test commands, codebase shape, must be written there before the run starts. Nothing persists between runs. The blackboard is erased when the session ends.",
+            a: "Treat active context as a workboard assembled from the current request, repository, instructions, tool results, and available conversation history. Put durable rules in versioned files.",
           },
         ],
       },

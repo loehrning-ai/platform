@@ -3,44 +3,75 @@ import Link from "next/link";
 import { Github } from "@/components/icons/brand";
 import { OpenSourceArtifactShelf } from "@/components/open-source/artifact-shelf";
 import { DrawRule } from "@/components/motion/draw-rule";
+import { contentLocalesForPath } from "@/lib/i18n/content-parity";
+import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { OPEN_SOURCE_ARTIFACTS } from "@/lib/open-source/artifacts";
+import {
+  localizeOpenSourceArtifact,
+  OPEN_SOURCE_PAGE_COPY,
+} from "@/lib/open-source/display-copy";
 import { JsonLd, SITE_URL, WEBSITE_ID } from "@/lib/seo/json-ld";
 import { absoluteUrl, GITHUB_ORG } from "@/lib/seo/entity";
 
 const PLATFORM_REPOSITORY_URL = `${GITHUB_ORG.url}/platform`;
 
-export const metadata: Metadata = {
-  title: "Open Source",
-  description:
-    "Das Werkverzeichnis von loehrning.ai auf github.com/loehrning-ai: Werkzeuge, Projekte und Videos mit geprüftem Quellstand, Lizenz und Anleitung.",
-  alternates: { canonical: "/open-source" },
-  robots: { index: true, follow: true },
-  openGraph: {
-    title: "Open Source | loehrning.ai",
-    description:
-      "Werkverzeichnis der GitHub-Organisation loehrning-ai: öffentliches Repository, Commit-Pin, Lizenz und Anleitung für jeden Eintrag.",
-    url: `${SITE_URL}/open-source`,
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const copy = OPEN_SOURCE_PAGE_COPY[locale].metadata;
+  const localizedPath = localizeHref("/open-source", locale);
 
-const OPEN_SOURCE_GRAPH = {
+  return {
+    title: copy.title,
+    description: copy.description,
+    alternates: {
+      ...buildLocaleAlternates(
+        "/open-source",
+        contentLocalesForPath("/open-source"),
+      ),
+      canonical: localizedPath,
+    },
+    robots: { index: true, follow: true },
+    openGraph: {
+      title: `${copy.title} | loehrning.ai`,
+      description: copy.socialDescription,
+      url: absoluteUrl(localizedPath),
+      locale: locale === "de" ? "de_DE" : "en_GB",
+      type: "website",
+    },
+  };
+}
+
+function openSourceGraph(locale: "de" | "en") {
+  const copy = OPEN_SOURCE_PAGE_COPY[locale];
+  const pagePath = localizeHref("/open-source", locale);
+  const pageUrl = absoluteUrl(pagePath);
+
+  return {
   "@context": "https://schema.org" as const,
   "@graph": [
     {
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Start", item: SITE_URL },
-        { "@type": "ListItem", position: 2, name: "Open Source", item: `${SITE_URL}/open-source` },
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: locale === "de" ? "Start" : "Home",
+          item: locale === "de" ? SITE_URL : absoluteUrl("/en"),
+        },
+        { "@type": "ListItem", position: 2, name: copy.metadata.title, item: pageUrl },
       ],
     },
     {
       "@type": "CollectionPage",
-      name: "Open Source",
-      url: `${SITE_URL}/open-source`,
-      inLanguage: "de-DE",
+      name: copy.metadata.title,
+      description: copy.metadata.description,
+      url: pageUrl,
+      inLanguage: locale === "de" ? "de-DE" : "en-GB",
       isPartOf: { "@id": WEBSITE_ID },
-      hasPart: OPEN_SOURCE_ARTIFACTS.map((artifact) => ({
+      hasPart: OPEN_SOURCE_ARTIFACTS.map((registryArtifact) => {
+        const artifact = localizeOpenSourceArtifact(registryArtifact, locale);
+        return {
         "@type":
           artifact.kind === "tool"
             ? "SoftwareApplication"
@@ -48,7 +79,8 @@ const OPEN_SOURCE_GRAPH = {
               ? "SoftwareSourceCode"
               : "VideoObject",
         name: artifact.title,
-        url: absoluteUrl(artifact.href),
+        description: artifact.description,
+        url: absoluteUrl(localizeHref(artifact.href, locale)),
         isAccessibleForFree: true,
         inLanguage: artifact.languageTag,
         license: absoluteUrl(artifact.license.href),
@@ -74,33 +106,26 @@ const OPEN_SOURCE_GRAPH = {
               ],
             }
           : {}),
-      })),
+        };
+      }),
     },
   ],
-};
-
-/**
- * Status line for the Quellenprinzip panel, derived from the canonical
- * registry rather than hand-maintained copy (CONTENT_GUIDE.md: collection
- * counts come from their canonical registries). The singular branch is
- * grammatical, not decorative: German adjective endings must agree with the
- * noun, so "1 veröffentlichte Einträge" would be wrong.
- */
-function publishedArtifactsStatus(count: number): string {
-  if (count === 0) return "Noch kein Eintrag veröffentlicht";
-  if (count === 1) return "1 veröffentlichter Eintrag";
-  return `${count} veröffentlichte Einträge`;
+  };
 }
 
-export default function OpenSourcePage() {
+export default async function OpenSourcePage() {
+  const locale = await getRequestLocale();
+  const copy = OPEN_SOURCE_PAGE_COPY[locale];
+  const graph = openSourceGraph(locale);
+
   return (
     <>
-      <JsonLd data={OPEN_SOURCE_GRAPH} id="open-source-jsonld" />
+      <JsonLd data={graph} id="open-source-jsonld" />
       <section className="py-20">
         <div className="mx-auto max-w-6xl px-6">
           <DrawRule className="h-[3px] w-28 bg-brand-orange" />
           <p className="mt-8 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-            Open Source
+            {copy.eyebrow}
           </p>
           <div className="mt-5 grid gap-8 lg:grid-cols-[1fr_320px] lg:items-start">
             <div>
@@ -108,13 +133,12 @@ export default function OpenSourcePage() {
                 {/* The trailing space is load-bearing: without it the line
                     break joins the sentences in the accessible name, and a
                     screen reader announces "Werkverzeichnis.Offen". */}
-                Das Werkverzeichnis.{" "}
+                {copy.title.split(". ")[0]}.{" "}
                 <br />
-                Offen auf GitHub.
+                {copy.title.split(". ").slice(1).join(". ")}
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-                Hier findest du das kuratierte Artefaktverzeichnis der
-                GitHub-Organisation{" "}
+                {copy.introductionPrefix}{" "}
                 <a
                   href={GITHUB_ORG.url}
                   target="_blank"
@@ -123,21 +147,15 @@ export default function OpenSourcePage() {
                 >
                   {GITHUB_ORG.slug}
                   <span className="sr-only">
-                    , öffnet in neuem Tab
+                    {copy.externalTab}
                   </span>
                 </a>
-                : Werkzeuge, Projekte und Videos, die den unten beschriebenen
-                Veröffentlichungsstandard vollständig erfüllen. Die
-                Organisation kann weitere Quell- und
-                Infrastruktur-Repositories enthalten, die nicht als
-                Artefaktkarte gelistet sind. Jeder Eintrag verweist auf den
-                geprüften Quellstand, seine Lizenz und die zugehörige
-                Anleitung.
+                {copy.introductionSuffix}
               </p>
               <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-                Die technischen Lernkurse findest du unter{" "}
+                {copy.coursesPrefix}{" "}
                 <Link
-                  href="/kurse"
+                  href={localizeHref("/kurse", locale)}
                   className="font-semibold text-foreground underline-offset-4 hover:underline"
                 >
                   /kurse
@@ -149,12 +167,12 @@ export default function OpenSourcePage() {
             <aside className="border border-border bg-card/35 p-5">
               <div className="flex items-center gap-2 text-sm font-bold text-foreground">
                 <Github size={16} aria-hidden="true" />
-                Quellenprinzip
+                {copy.sourcePrinciple}
               </div>
               <dl className="mt-4 space-y-3 text-sm">
                 <div>
                   <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-                    Quellplattform
+                    {copy.sourcePlatform}
                   </dt>
                   <dd className="mt-1">
                     <a
@@ -165,71 +183,63 @@ export default function OpenSourcePage() {
                     >
                       GitHub · {GITHUB_ORG.slug}
                       <span className="sr-only">
-                        , öffnet in neuem Tab
+                        {copy.externalTab}
                       </span>
                     </a>
                   </dd>
                 </div>
                 <div>
                   <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-                    Stand
+                    {copy.snapshot}
                   </dt>
                   <dd className="mt-1 text-muted-foreground">
-                    {publishedArtifactsStatus(OPEN_SOURCE_ARTIFACTS.length)}
+                    {copy.publishedStatus(OPEN_SOURCE_ARTIFACTS.length)}
                   </dd>
                 </div>
               </dl>
             </aside>
           </div>
 
-          <OpenSourceArtifactShelf />
+          <OpenSourceArtifactShelf locale={locale} />
 
           {OPEN_SOURCE_ARTIFACTS.length > 0 ? (
             <p className="mt-10 border-t border-border pt-4 font-mono text-xs text-muted-foreground">
-              Die Repositories, Anleitungen und Commits auf GitHub sind auf
-              Englisch. Diese Seite bleibt deutsch.
+              {copy.repositoryLanguage}
             </p>
           ) : null}
 
           <section className="mt-14 border-t border-border pt-8">
             <h2 className="text-2xl font-bold tracking-[-0.03em] text-foreground">
-              Veröffentlichungsstandard
+              {copy.publicationStandard}
             </h2>
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-              Ein Eintrag erscheint hier erst mit vier Nachweisen: einem
-              öffentlichen GitHub-Repository, einem unveränderlichen Commit als
-              geprüftem Quellstand, einer eindeutigen Lizenz mit lokal
-              gespeicherter Kopie und einer Anleitung für Installation,
-              Verwendung und Integration. Unvollständige Einträge werden nicht
-              gelistet.
+              {copy.publicationStandardBody}
             </p>
           </section>
 
           <section id="lizenzmodell" className="mt-14 border-t border-border pt-8">
             <h2 className="text-2xl font-bold tracking-[-0.03em] text-foreground">
-              Code und redaktionelle Inhalte
+              {copy.codeAndEditorial}
             </h2>
             <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
-              Der{" "}
+              {copy.codeAndEditorialBefore}{" "}
               <a
                 href={PLATFORM_REPOSITORY_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-semibold text-foreground underline-offset-4 hover:underline"
               >
-                Plattform-Code auf GitHub
-                <span className="sr-only">, öffnet in neuem Tab</span>
+                {copy.platformCode}
+                <span className="sr-only">{copy.externalTab}</span>
               </a>{" "}
-              steht unter MIT. Sichtbarer Quelltext bedeutet nicht automatisch
-              freie Wiederverwendung aller Lerntexte, Marken- oder
-              Medieninhalte. Die verbindliche Zuordnung steht in der{" "}
+              {copy.codeAndEditorialMiddle}{" "}
               <Link
-                href="/open-source/lizenzrichtlinie"
+                href={localizeHref("/open-source/lizenzrichtlinie", locale)}
                 className="font-semibold text-foreground underline-offset-4 hover:underline"
               >
-                Lizenzrichtlinie
+                {copy.licensePolicy}
               </Link>{" "}
-              und in den Lizenzangaben jedes veröffentlichten Eintrags.
+              {copy.codeAndEditorialAfter}
             </p>
           </section>
         </div>

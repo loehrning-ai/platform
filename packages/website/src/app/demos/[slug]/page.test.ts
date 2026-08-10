@@ -1,6 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("@/lib/i18n/request-locale", () => ({
+  getRequestLocale: vi.fn(async () => "de"),
+}));
+
 import {
-  dynamic,
   dynamicParams,
   generateMetadata,
   generateStaticParams,
@@ -9,8 +13,7 @@ import { demos } from "@/lib/demos";
 import { getDemoCopy } from "@/lib/demos-copy";
 
 describe("/demos/[slug] static route contract", () => {
-  it("rejects Dynamic APIs and unknown on-demand slugs", () => {
-    expect(dynamic).toBe("error");
+  it("rejects unknown on-demand slugs", () => {
     expect(dynamicParams).toBe(false);
   });
 
@@ -29,7 +32,7 @@ describe("/demos/[slug] static route contract", () => {
         getDemoCopy(demo.slug)?.ogSubtitle ?? demo.description,
       );
       expect(metadata.alternates?.canonical).toBe(
-        `https://loehrning.ai/demos/${demo.slug}`,
+        `/demos/${demo.slug}`,
       );
     }
   });
@@ -39,6 +42,9 @@ describe("/demos/[slug] static route contract", () => {
       generateMetadata({
         params: Promise.resolve({ slug: "not-in-the-catalog" }),
       }),
-    ).resolves.toEqual({ title: "Praxisbeispiel nicht gefunden" });
+    ).resolves.toEqual({
+      title: "Praxisbeispiel nicht gefunden",
+      robots: { index: false, follow: false },
+    });
   });
 });

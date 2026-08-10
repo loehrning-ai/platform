@@ -18,10 +18,13 @@ import { test, expect, type Page } from "@playwright/test";
  *     own no-quiz "completion" eligibility path.
  */
 
-const LANDING = "/kurse/open-source/data-engineering-fundamentals";
-const CHAPTER_ROUTE = "/kurse/open-source/data-engineering-fundamentals/home";
-const CERT_ROUTE = "/kurse/open-source/data-engineering-fundamentals/zertifikat";
-const VERIFY_ROUTE = "/kurse/open-source/data-engineering-fundamentals/verifizierung";
+const LANDING = "/en/kurse/open-source/data-engineering-fundamentals";
+const CHAPTER_ROUTE =
+  "/en/kurse/open-source/data-engineering-fundamentals/home";
+const CERT_ROUTE =
+  "/en/kurse/open-source/data-engineering-fundamentals/zertifikat";
+const VERIFY_ROUTE =
+  "/en/kurse/open-source/data-engineering-fundamentals/verifizierung";
 
 const UNIFIED_KEY = "loehrning-progress-v2";
 const DEF_CHAPTER_IDS = [
@@ -116,7 +119,7 @@ test.describe("Data Engineering Fundamentals golden path", () => {
     await expect(page.locator("h1")).toHaveCount(1);
 
     await page
-      .getByRole("button", { name: "Mark chapter complete" })
+      .getByRole("button", { name: "Complete chapter" })
       .click();
     await expect
       .poll(

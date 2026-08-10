@@ -11,6 +11,7 @@ import {
 import type { ModuleId } from "@/lib/ai-native/types";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import { useDemoLocale } from "@/components/demos/demo-locale";
 
 /**
  * Workflow-Builder — simplified n8n-style ordered-list builder.
@@ -109,6 +110,7 @@ function WorkflowBuilderBody({
   palette,
   solution,
 }: WorkflowBuilderSpec): JSX.Element {
+  const { text } = useDemoLocale();
   const [chain, setChain] = useState<WorkflowNode[]>([]);
   const [submitted, setSubmitted] = useState(false);
 
@@ -161,7 +163,7 @@ function WorkflowBuilderBody({
   return (
     <div>
       <p className="mb-3 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-        Baue einen Workflow · Reihenfolge zählt
+        {text("Baue einen Workflow · Reihenfolge zählt", "Build a workflow · order matters")}
       </p>
 
       <div className="grid gap-3 md:grid-cols-[1fr_1fr]">
@@ -198,11 +200,17 @@ function WorkflowBuilderBody({
         {/* Chain */}
         <div>
           <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-            Dein Workflow ({chain.length} Knoten)
+            {text(
+              `Dein Workflow (${chain.length} Knoten)`,
+              `Your workflow (${chain.length} nodes)`,
+            )}
           </p>
           {chain.length === 0 ? (
             <div className="flex min-h-[120px] items-center justify-center border border-dashed border-border bg-card/30 p-4 text-center text-[12px] text-muted-foreground">
-              Klicke links einen Palette-Knoten zur Aufnahme.
+              {text(
+                "Klicke links einen Palette-Knoten zur Aufnahme.",
+                "Select a node from the palette to add it.",
+              )}
             </div>
           ) : (
             <ol className="grid gap-1">
@@ -238,7 +246,7 @@ function WorkflowBuilderBody({
                             type="button"
                             onClick={() => moveUp(idx)}
                             disabled={idx === 0}
-                            aria-label="Hoch"
+                            aria-label={text("Hoch", "Move up")}
                             className="border border-border px-1 text-[11px] text-muted-foreground disabled:opacity-30 hover:border-foreground hover:text-foreground"
                           >
                             ↑
@@ -247,7 +255,7 @@ function WorkflowBuilderBody({
                             type="button"
                             onClick={() => moveDown(idx)}
                             disabled={idx === chain.length - 1}
-                            aria-label="Runter"
+                            aria-label={text("Runter", "Move down")}
                             className="border border-border px-1 text-[11px] text-muted-foreground disabled:opacity-30 hover:border-foreground hover:text-foreground"
                           >
                             ↓
@@ -255,7 +263,7 @@ function WorkflowBuilderBody({
                           <button
                             type="button"
                             onClick={() => removeAt(idx)}
-                            aria-label="Entfernen"
+                            aria-label={text("Entfernen", "Remove")}
                             className="border border-border px-1 text-muted-foreground hover:border-destructive hover:text-destructive"
                           >
                             <Trash2 size={10} />
@@ -294,8 +302,10 @@ function WorkflowBuilderBody({
                 <XCircle size={16} className="text-brand-amber" />
               )}
               <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-foreground">
-                {grading.presentCount}/{grading.totalRequired} Must-Have-Knoten ·{" "}
-                {grading.orderCorrect ? "Reihenfolge korrekt" : "Reihenfolge falsch"} ·{" "}
+                {grading.presentCount}/{grading.totalRequired} {text("Must-Have-Knoten", "required nodes")} ·{" "}
+                {grading.orderCorrect
+                  ? text("Reihenfolge korrekt", "order correct")
+                  : text("Reihenfolge falsch", "order incorrect")} ·{" "}
                 Score {Math.round(grading.score * 100)}%
               </p>
             </div>
@@ -316,7 +326,7 @@ function WorkflowBuilderBody({
                 : "bg-brand-orange shadow-[3px_3px_0_0_var(--color-foreground)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]",
             )}
           >
-            Workflow prüfen
+            {text("Workflow prüfen", "Evaluate workflow")}
           </button>
         ) : (
           <ExerciseResetButton onReset={handleReset} />

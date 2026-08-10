@@ -3,73 +3,94 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { CourseProgressBar } from "@/components/ai-native-operator/course-progress-bar";
 import { CourseAssessmentCta } from "@/components/course/kurs/course-assessment-cta";
-import { COURSE_META, MODULE_IDS, TOTAL_LESSON_COUNT, orderedModuleMetas } from "@/lib/ai-native-operator/types";
+import { getAiNativeOperatorCourseCopy } from "@/lib/ai-native-operator/course-copy";
+import { getAiNativeOperatorLocaleRegistry } from "@/lib/ai-native-operator/data";
 import { lessonHref, moduleHref } from "@/lib/ai-native-operator/routes";
-import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
-import type { JsonLdGraph } from "@/lib/seo/json-ld";
+import {
+  MODULE_IDS,
+  TOTAL_LESSON_COUNT,
+  getCourseMeta,
+  orderedModuleMetas,
+} from "@/lib/ai-native-operator/types";
+import { contentLocalesForPath } from "@/lib/i18n/content-parity";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { JsonLd, SITE_URL, type JsonLdGraph } from "@/lib/seo/json-ld";
+import {
+  buildTechnicalCourseJsonLd,
+  buildTechnicalCourseMetadata,
+  technicalCourseHref,
+} from "@/lib/technical-courses/routes";
 
-/**
- * AI-Native Operator course native landing page. Once
- * `catalog.ts`'s ai-native-operator entry flips to `nativeStatus: "live"`
- * (stage 12), this static route replaces the generic external-course
- * template for `/kurse/open-source/ai-native-operator` (Next.js resolves
- * the static segment ahead of the `[slug]` dynamic one regardless of
- * catalog data, matching claude/codex's own precedent).
- */
-
+const CANONICAL_PATH = "/kurse/open-source/ai-native-operator";
 const TOTAL_EXERCISE_COUNT = 30;
 
-export const metadata: Metadata = {
-  title: "The AI-Native Operator: Course",
-  description:
-    "A 9-module course for individuals, leaders, and executives who intend to compete in 2026 and beyond. Mindset, engineering practice, product building, operations, talent, org structure, data, governance, and measurement.",
-  robots: { index: true, follow: true },
-  alternates: { canonical: `${SITE_URL}/kurse/open-source/ai-native-operator` },
-  openGraph: {
-    title: "The AI-Native Operator: Course",
-    description:
-      "39 lessons across 9 modules. 30 hands-on exercises. Diagnose your AI maturity, redesign your team, and build the governance that lets you go faster.",
-    url: `${SITE_URL}/kurse/open-source/ai-native-operator`,
-    siteName: "loehrning.ai",
-    locale: "en_US",
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  (await getAiNativeOperatorLocaleRegistry()).get(locale);
+  const copy = getAiNativeOperatorCourseCopy(locale).landingMetadata;
+  return buildTechnicalCourseMetadata({
+    courseSlug: "ai-native-operator",
+    locale,
+    target: { kind: "landing" },
+    title: copy.title,
+    description: copy.description,
+    availableContentLocales: contentLocalesForPath(CANONICAL_PATH),
+  });
+}
 
-export default function AiNativeOperatorLandingPage() {
-  const modules = orderedModuleMetas();
+export default async function AiNativeOperatorLandingPage() {
+  const locale = await getRequestLocale();
+  const bundle = (await getAiNativeOperatorLocaleRegistry()).get(locale);
+  const modules = orderedModuleMetas(locale);
+  const courseMeta = getCourseMeta(locale);
+  const copy = getAiNativeOperatorCourseCopy(locale).landing;
   const firstModuleId = MODULE_IDS[0];
-
+  const landingHref = technicalCourseHref("ai-native-operator", locale, {
+    kind: "landing",
+  });
+  const course = buildTechnicalCourseJsonLd({
+    courseSlug: "ai-native-operator",
+    locale,
+    name: bundle.config.title,
+    description: courseMeta.subtitle,
+    teaches: modules.map((module) => module.name),
+    timeRequired: "PT14H",
+  });
+  const { "@context": _context, ...courseNode } = course;
   const courseJsonLd: JsonLdGraph = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Start", item: SITE_URL },
-          { "@type": "ListItem", position: 2, name: "Kurse", item: `${SITE_URL}/kurse` },
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: copy.breadcrumbs[0],
+            item: locale === "en" ? `${SITE_URL}/en` : SITE_URL,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: copy.breadcrumbs[1],
+            item:
+              locale === "en" ? `${SITE_URL}/en/kurse` : `${SITE_URL}/kurse`,
+          },
           {
             "@type": "ListItem",
             position: 3,
-            name: "The AI-Native Operator",
-            item: `${SITE_URL}/kurse/open-source/ai-native-operator`,
+            name: copy.breadcrumbs[2],
+            item: `${SITE_URL}${landingHref}`,
           },
         ],
       },
       {
-        "@type": "Course",
-        name: COURSE_META.title,
-        description: COURSE_META.subtitle,
-        url: `${SITE_URL}/kurse/open-source/ai-native-operator`,
-        inLanguage: "en",
-        isAccessibleForFree: true,
-        provider: { "@id": ORG_ID },
+        ...courseNode,
         hasCourseInstance: {
           "@type": "CourseInstance",
           courseMode: "online",
-          url: `${SITE_URL}/kurse/open-source/ai-native-operator`,
+          url: `${SITE_URL}${landingHref}`,
         },
-        teaches: modules.map((m) => m.name),
       },
     ],
   };
@@ -77,66 +98,69 @@ export default function AiNativeOperatorLandingPage() {
   return (
     <>
       <JsonLd data={courseJsonLd} id="ai-native-operator-course-jsonld" />
-      <section className="mx-auto max-w-[1100px] px-6 pb-20 pt-20">
-        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-          the ai operating model course
+      <section className="mx-auto w-full max-w-[1100px] overflow-x-clip px-4 pb-20 pt-14 sm:px-6 sm:pt-20">
+        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+          {copy.eyebrow}
         </p>
-        <h1 className="mt-6 max-w-[900px] text-[44px] font-bold leading-[0.98] tracking-[-0.04em] text-foreground sm:text-[60px] md:text-[76px]">
-          The AI-Native
-          <br />
-          Operator.
+        <h1 className="mt-6 max-w-[900px] break-words text-[40px] font-bold leading-[0.98] tracking-[-0.04em] text-foreground sm:text-[60px] md:text-[76px]">
+          {copy.title}
         </h1>
-        <p className="mt-7 max-w-[680px] text-[18px] leading-[1.6] text-muted-foreground">
-          {COURSE_META.subtitle}
+        <p className="mt-7 max-w-[720px] text-[17px] leading-[1.65] text-muted-foreground sm:text-[18px]">
+          {courseMeta.subtitle}
         </p>
 
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
-            href={lessonHref(firstModuleId, 1)}
-            className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-6 py-4 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)]"
+            href={lessonHref(firstModuleId, 1, locale)}
+            className="inline-flex min-h-12 max-w-full items-center gap-2 break-words border-2 border-foreground bg-brand-orange px-5 py-3.5 font-mono text-[12px] font-bold uppercase tracking-[0.05em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)] sm:px-6 sm:text-[13px]"
           >
-            Begin Module 01
-            <ArrowRight size={15} aria-hidden="true" />
+            {copy.start}
+            <ArrowRight size={15} className="shrink-0" aria-hidden="true" />
           </Link>
           <Link
             href="#syllabus"
-            className="inline-flex items-center gap-2 border-2 border-foreground bg-background px-6 py-4 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-foreground shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:bg-card"
+            className="inline-flex min-h-12 max-w-full items-center break-words border-2 border-foreground bg-background px-5 py-3.5 font-mono text-[12px] font-bold uppercase tracking-[0.05em] text-foreground shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:bg-card sm:px-6 sm:text-[13px]"
           >
-            Jump to syllabus
+            {copy.syllabusLink}
           </Link>
         </div>
 
         <div className="mt-6 flex flex-wrap gap-2">
-          {[`${modules.length} modules`, `${TOTAL_LESSON_COUNT} lessons`, `${TOTAL_EXERCISE_COUNT} exercises`, COURSE_META.duration.replace("~14 hours of reading + 30 exercises", "~14h")].map(
-            (chip) => (
-              <span
-                key={chip}
-                className="border border-foreground bg-background px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-foreground"
-              >
-                {chip}
-              </span>
-            ),
-          )}
+          {[
+            copy.moduleCount(modules.length),
+            copy.lessonCount(TOTAL_LESSON_COUNT),
+            copy.exerciseCount(TOTAL_EXERCISE_COUNT),
+            copy.durationShort,
+          ].map((chip) => (
+            <span
+              key={chip}
+              className="max-w-full break-words border border-foreground bg-background px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-foreground"
+            >
+              {chip}
+            </span>
+          ))}
         </div>
 
         <div className="mt-8 max-w-[420px]">
-          <CourseProgressBar />
+          <CourseProgressBar locale={locale} />
         </div>
 
         <div className="mt-16">
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-            what you will be able to do
+            {copy.outcomesEyebrow}
           </p>
           <h2 className="mt-2 text-[28px] font-bold tracking-[-0.03em] text-foreground sm:text-[34px]">
-            Outcomes
+            {copy.outcomesTitle}
           </h2>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2">
-            {COURSE_META.outcomes.map((outcome, i) => (
-              <div key={outcome} className="flex gap-4">
-                <span className="font-mono text-[13px] font-bold text-brand-orange">
-                  {String(i + 1).padStart(2, "0")}
+          <div className="mt-8 grid min-w-0 gap-6 sm:grid-cols-2">
+            {courseMeta.outcomes.map((outcome, index) => (
+              <div key={outcome} className="flex min-w-0 gap-4">
+                <span className="shrink-0 font-mono text-[13px] font-bold text-brand-orange">
+                  {String(index + 1).padStart(2, "0")}
                 </span>
-                <p className="text-[15px] leading-[1.5] text-foreground">{outcome}</p>
+                <p className="min-w-0 break-words text-[15px] leading-[1.55] text-foreground">
+                  {outcome}
+                </p>
               </div>
             ))}
           </div>
@@ -145,37 +169,39 @@ export default function AiNativeOperatorLandingPage() {
         <section id="syllabus" className="mt-20 scroll-mt-24">
           <div className="flex flex-wrap items-baseline justify-between gap-3">
             <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-              syllabus
+              {copy.syllabusEyebrow}
             </p>
             <p className="font-mono text-[11px] text-muted-foreground">
-              9 modules · linear or self-directed
+              {copy.syllabusMode}
             </p>
           </div>
-          <h2 className="mt-2 text-[28px] font-bold tracking-[-0.03em] text-foreground sm:text-[34px]">
-            Nine modules. Thirty-nine lessons.
+          <h2 className="mt-2 break-words text-[28px] font-bold tracking-[-0.03em] text-foreground sm:text-[34px]">
+            {copy.syllabusTitle}
           </h2>
 
-          <div className="mt-8 flex flex-col divide-y divide-border border-t border-border">
-            {modules.map((m) => (
+          <div className="mt-8 flex min-w-0 flex-col divide-y divide-border border-t border-border">
+            {modules.map((module) => (
               <Link
-                key={m.id}
-                href={moduleHref(m.id)}
-                className="group flex items-center gap-5 py-5 transition-colors hover:bg-card"
+                key={module.id}
+                href={moduleHref(module.id, locale)}
+                className="group grid min-w-0 grid-cols-[44px_minmax(0,1fr)_16px] items-center gap-3 py-5 transition-colors hover:bg-card sm:grid-cols-[56px_minmax(0,1fr)_16px] sm:gap-5"
               >
-                <div className="w-14 shrink-0 font-mono text-[13px] font-bold text-brand-orange">
-                  {m.code}
+                <div className="font-mono text-[12px] font-bold text-brand-orange sm:text-[13px]">
+                  {module.code}
                 </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-[17px] font-semibold text-foreground">{m.name}</h3>
-                  <p className="mt-0.5 text-[13.5px] leading-[1.4] text-muted-foreground">
-                    {m.tagline}
+                <div className="min-w-0">
+                  <h3 className="break-words text-[16px] font-semibold text-foreground sm:text-[17px]">
+                    {module.name}
+                  </h3>
+                  <p className="mt-0.5 break-words text-[13px] leading-[1.45] text-muted-foreground sm:text-[13.5px]">
+                    {module.tagline}
                   </p>
-                  <div className="mt-2 flex flex-wrap items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.06em] text-muted-foreground">
-                    <span>{m.difficulty}</span>
+                  <div className="mt-2 flex flex-wrap items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.05em] text-muted-foreground">
+                    <span>{module.difficulty}</span>
                     <span aria-hidden="true">·</span>
-                    <span>{m.lessonCount} lessons</span>
+                    <span>{copy.lessonUnit(module.lessonCount)}</span>
                     <span aria-hidden="true">·</span>
-                    <span>{m.duration}</span>
+                    <span>{module.duration}</span>
                   </div>
                 </div>
                 <ArrowRight
@@ -187,7 +213,7 @@ export default function AiNativeOperatorLandingPage() {
           </div>
         </section>
 
-        <CourseAssessmentCta courseSlug="ai-native-operator" />
+        <CourseAssessmentCta courseSlug="ai-native-operator" locale={locale} />
       </section>
     </>
   );

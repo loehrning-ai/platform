@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { SafeLessonMarkup } from "@/components/safe-lesson-markup";
+import { SimulationDisclosure } from "@/components/data-science/shared/simulation-disclosure";
 
 // ─── Data Science shared primitives ────────────────
 //
@@ -37,7 +38,11 @@ export function Hero({ eyebrow, title, hook, meta }: HeroProps) {
       {meta && (
         <div className="hero-meta">
           {meta.map((m, i) => (
-            <div className="m" key={m.k} style={{ animationDelay: `${0.3 + i * 0.08}s` }}>
+            <div
+              className="m"
+              key={m.k}
+              style={{ animationDelay: `${0.3 + i * 0.08}s` }}
+            >
               <div className="k">{m.k}</div>
               <div className="v">
                 <SafeLessonMarkup html={m.v} />
@@ -84,6 +89,7 @@ export function Panel({ eyebrow, title, meta, children, caption }: PanelProps) {
         {meta && <div className="panel-meta">{meta}</div>}
       </div>
       <div className="panel-body">{children}</div>
+      <SimulationDisclosure />
       {caption && <div className="panel-caption">{caption}</div>}
     </div>
   );
@@ -118,22 +124,29 @@ export interface CalloutItemsProps {
   readonly title?: string;
 }
 
-export function AntiPatterns({ items, title = "Anti-patterns" }: CalloutItemsProps) {
+export function AntiPatterns({
+  items,
+  title = "Anti-patterns",
+}: CalloutItemsProps) {
   return <CalloutList items={items} title={title} />;
 }
 
-export function BestPractices({ items, title = "The right way" }: CalloutItemsProps) {
+export function BestPractices({
+  items,
+  title = "The right way",
+}: CalloutItemsProps) {
   return <CalloutList items={items} title={title} className="mint" />;
 }
 
 export interface TakeawayProps {
   readonly items: readonly string[];
+  readonly title?: string;
 }
 
-export function Takeaway({ items }: TakeawayProps) {
+export function Takeaway({ items, title = "Key takeaways" }: TakeawayProps) {
   return (
     <div className="takeaway">
-      <div className="takeaway-head">Key takeaways</div>
+      <div className="takeaway-head">{title}</div>
       <div className="takeaway-list">
         {items.map((item, i) => (
           <div className="takeaway-item" key={i}>

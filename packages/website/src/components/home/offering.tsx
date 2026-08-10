@@ -3,12 +3,18 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Github } from "@/components/icons/brand";
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
-import { PersonaCourseLinks } from "@/app/kurse/persona-filter";
+import { localizeCatalogCourse } from "@/lib/courses/catalog-copy";
 import { Card, IconTile } from "@/components/ui/card";
-import { courseBadges, courseFacts, courseGroupFor } from "@/lib/courses/tracks";
+import { courseFacts, courseGroupFor } from "@/lib/courses/tracks";
 import { iconByName } from "@/lib/courses/track-icon";
+import {
+  HOME_COPY,
+  homeCourseBadges,
+  homeCourseCopy,
+} from "@/components/home/home-copy";
+import { localizeHref, type Locale } from "@/lib/i18n/locale";
 
-// The homepage splits along the declared classification: the four German
+// The homepage splits along the declared classification: the four ordered
 // spine courses carry the "Vier Kurse." section, and the Technikkurse band
 // previews three of the six ported English courses. Real screenshots from
 // public/imported-courses/screenshots, linking to each course's detail route.
@@ -18,20 +24,39 @@ const SPINE_HOME_COURSES = COURSE_CATALOG.filter(
 const DEEPER_HOME_COURSES = COURSE_CATALOG.filter(
   (course) => courseGroupFor(course.slug) === "deeper",
 );
-const LAB_PREVIEWS = DEEPER_HOME_COURSES.flatMap((course) =>
-  course.imageSrc && course.imageAlt && course.sourceHref
-    ? [
-        {
-          slug: course.slug,
-          href: course.href,
-          title: course.title,
-          imageSrc: course.imageSrc,
-          imageAlt: course.imageAlt,
-          sourceHref: course.sourceHref,
-        },
-      ]
-    : [],
-).slice(0, 3);
+// Built per render, not at module scope. The catalog is German; freezing these
+// entries once captured the German title and alt text before a locale existed,
+// so English readers were served "Codex-Kurs" in the heading, the image alt and
+// the aria-label.
+function labPreviews(locale: Locale) {
+  return DEEPER_HOME_COURSES.flatMap((course) => {
+    const localized = localizeCatalogCourse(course, locale);
+    return localized.imageSrc && localized.imageAlt && localized.sourceHref
+      ? [
+          {
+            slug: localized.slug,
+            href: localized.href,
+            title: localized.title,
+            imageSrc: localized.imageSrc,
+            imageAlt: localized.imageAlt,
+            sourceHref: localized.sourceHref,
+          },
+        ]
+      : [];
+  }).slice(0, 3);
+}
+
+// The catalog carries German cover descriptions. English falls back to the
+// localized course title rather than shipping the German string to an English
+// reader, matching how the lab previews below handle their screenshots.
+function courseCoverAlt(
+  course: { readonly coverImageAlt?: string },
+  localizedTitle: string,
+  locale: Locale,
+): string {
+  if (locale === "de" && course.coverImageAlt) return course.coverImageAlt;
+  return `Cover illustration for the ${localizedTitle} course`;
+}
 
 const META_LINE =
   "font-mono text-[10.5px] uppercase tracking-[0.1em] text-muted-foreground";
@@ -41,20 +66,22 @@ const BADGE_CHIP =
 // Honest per-course badges (Deutsch · mit Teilnahmebestätigung / mit
 // Lernnachweis), driven by COURSE_FACTS so the homepage matches /kurse instead
 // of a hardcoded label.
-function CourseBadges({ slug }: { readonly slug: string }) {
+function CourseBadges({ slug, locale }: { readonly slug: string; readonly locale: Locale }) {
   return (
     <span className="flex flex-wrap gap-1.5">
-      {courseBadges(slug).map((badge) => (
-        <span key={badge.label} className={BADGE_CHIP}>
-          {badge.label}
+      {homeCourseBadges(locale, slug).map((badge) => (
+        <span key={badge} className={BADGE_CHIP}>
+          {badge}
         </span>
       ))}
     </span>
   );
 }
 
-export function Offering() {
+export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
+  const copy = HOME_COPY[locale].offering;
   const [featured, ...restCourses] = SPINE_HOME_COURSES;
+  const featuredCopy = homeCourseCopy(locale, featured.slug);
   const featuredMeta = courseFacts(featured.slug);
   const FeaturedIcon = iconByName(featuredMeta.iconName);
 
@@ -69,34 +96,49 @@ export function Offering() {
           className="mb-12 h-px w-full bg-border"
         />
 
-        <p className="overline mb-4">
-          Die Kurse
-        </p>
+        <p className="overline mb-4">{copy.overline}</p>
 
         <h2
           className="font-bold leading-[0.95] tracking-[-0.04em] text-foreground"
           style={{ fontSize: "clamp(2rem, 4.5vw, 3.5rem)" }}
         >
-          Vier Kurse.
+          {copy.headline[0]}
           <br />
           <span className="text-muted-foreground">
-            Vom ersten Prompt bis zum EU-Gesetz.
+            {copy.headline[1]}
           </span>
         </h2>
 
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          Der KI-Check bestimmt deinen Einstieg; bei null startest du mit dem
-          KI-Führerschein. Alle vier Kurse sind kostenlos, komplett auf Deutsch
-          und erfordern ein Lernkonto.
+          {copy.introduction}
         </p>
 
-        <PersonaCourseLinks />
+        <nav
+          aria-label={copy.personaAria}
+          data-testid="persona-filter"
+          className="mt-8 flex flex-wrap gap-3"
+        >
+          <span className="self-center font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+            {copy.personaLabel}
+          </span>
+          {copy.personas.map((persona) => (
+            <Link
+              key={persona.href}
+              href={localizeHref(persona.href, locale)}
+              aria-label={copy.personaLinkAria(persona.label, persona.course)}
+              className="rounded-lg border border-border bg-card px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground shadow-tile transition-[color,border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-brand-orange/40 hover:text-foreground focus-visible:border-brand-orange/40 focus-visible:text-foreground"
+            >
+              {persona.label}
+              <span aria-hidden="true"> →</span>
+            </Link>
+          ))}
+        </nav>
 
         {/* Featured lead course: larger card, warm kupfer-mist fill, so the
             recommended starting point does not read as one of five equal boxes. */}
         <div className="mt-12">
           <Card
-            href={featured.href}
+            href={localizeHref(featured.href, locale)}
             accent={featuredMeta.accent}
             className="bg-kupfer-mist"
           >
@@ -109,29 +151,41 @@ export function Offering() {
                     size="lg"
                   />
                   <span className="inline-flex items-center rounded-none bg-brand-orange/10 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-brand-orange">
-                    Start bei null
+                    {copy.recommended}
                   </span>
                 </div>
                 <span className="mt-4 block font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-                  {featured.eyebrow}
+                  {featuredCopy.eyebrow}
                 </span>
                 <h3 className="mt-2 flex items-center gap-2 text-2xl font-bold tracking-[-0.025em] text-foreground group-hover:text-brand-orange sm:text-[1.75rem]">
-                  <span>{featured.title}</span>
+                  <span>{featuredCopy.title}</span>
                   <ArrowRight
                     size={20}
                     className="text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-brand-orange"
                   />
                 </h3>
                 <p className="mt-3 text-[15px] leading-relaxed text-foreground/80">
-                  {featured.tagline}
+                  {featuredCopy.tagline}
                 </p>
                 <p className="mt-3 max-w-prose text-sm leading-relaxed text-muted-foreground">
-                  {featured.description}
+                  {featuredCopy.description}
                 </p>
               </div>
 
               <div className="flex shrink-0 flex-col gap-3 md:min-w-[200px]">
-                <CourseBadges slug={featured.slug} />
+                {featured.coverImage ? (
+                  <span className="relative block aspect-square w-full max-w-[200px] overflow-hidden rounded-lg border border-border bg-card-hover">
+                    <Image
+                      src={featured.coverImage}
+                      alt={courseCoverAlt(featured, featuredCopy.title, locale)}
+                      width={610}
+                      height={610}
+                      sizes="200px"
+                      className="h-full w-full object-cover"
+                    />
+                  </span>
+                ) : null}
+                <CourseBadges slug={featured.slug} locale={locale} />
                 {/* Mini Typenschild: the featured course's data plate. */}
                 <div className="relative border border-border bg-background bg-dot-pattern p-4">
                   <span aria-hidden="true" className="absolute left-1.5 top-1.5 h-1 w-1 bg-foreground/25" />
@@ -146,19 +200,19 @@ export function Offering() {
                   </span>
                   <dl className="relative flex flex-col font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
                     <div className="flex items-center justify-between gap-3 border-b border-border/60 py-1.5">
-                      <dt>Dauer</dt>
+                      <dt>{copy.duration}</dt>
                       <dd className="font-bold text-foreground">
-                        {featured.duration}
+                        {featuredCopy.duration}
                       </dd>
                     </div>
                     <div className="flex items-center justify-between gap-3 border-b border-border/60 py-1.5">
-                      <dt>{featured.unitLabel}</dt>
+                      <dt>{featuredCopy.unitLabel}</dt>
                       <dd className="font-bold text-foreground">
                         {featured.unitCount}
                       </dd>
                     </div>
                     <div className="flex items-center justify-between gap-3 py-1.5">
-                      <dt>Lektionen</dt>
+                      <dt>{copy.lessons}</dt>
                       <dd className="font-bold text-foreground">
                         {featured.totalLessons}
                       </dd>
@@ -175,9 +229,22 @@ export function Offering() {
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {restCourses.map((course) => {
             const meta = courseFacts(course.slug);
+            const courseCopy = homeCourseCopy(locale, course.slug);
             return (
               <div key={course.slug} className="h-full">
-                <Card href={course.href} accent={meta.accent} className="h-full">
+                <Card href={localizeHref(course.href, locale)} accent={meta.accent} className="h-full">
+                  {course.coverImage ? (
+                    <span className="relative -mx-6 -mt-6 mb-5 block aspect-[16/10] overflow-hidden rounded-t-xl border-b border-border bg-card-hover">
+                      <Image
+                        src={course.coverImage}
+                        alt={courseCoverAlt(course, courseCopy.title, locale)}
+                        width={610}
+                        height={610}
+                        sizes="(min-width: 1024px) 300px, (min-width: 640px) 45vw, 90vw"
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                      />
+                    </span>
+                  ) : null}
                   <div className="flex items-start gap-4">
                     <span
                       aria-hidden="true"
@@ -187,10 +254,10 @@ export function Offering() {
                     </span>
                     <div className="min-w-0">
                       <span className="block font-mono text-[10.5px] font-bold uppercase tracking-[0.12em] text-brand-orange">
-                        {course.eyebrow}
+                        {courseCopy.eyebrow}
                       </span>
                       <h3 className="mt-1 flex items-center gap-1.5 text-lg font-bold tracking-[-0.02em] text-foreground group-hover:text-brand-orange">
-                        <span>{course.title}</span>
+                        <span>{courseCopy.title}</span>
                         <ArrowRight
                           size={15}
                           className="shrink-0 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-brand-orange"
@@ -199,14 +266,14 @@ export function Offering() {
                     </div>
                   </div>
                   <p className="mt-4 flex-1 text-sm leading-relaxed text-muted-foreground">
-                    {course.tagline}
+                    {courseCopy.tagline}
                   </p>
                   <div className="mt-5 flex flex-col gap-2">
-                    <CourseBadges slug={course.slug} />
+                    <CourseBadges slug={course.slug} locale={locale} />
                     <span className={`flex flex-wrap gap-x-2 gap-y-1 ${META_LINE}`}>
-                      <span>{course.duration}</span>
+                      <span>{courseCopy.duration}</span>
                       <span aria-hidden="true">·</span>
-                      <span>{course.totalLessons} Lektionen</span>
+                      <span>{course.totalLessons} {copy.lessons}</span>
                     </span>
                   </div>
                 </Card>
@@ -216,13 +283,12 @@ export function Offering() {
         </div>
 
         <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
-          Dazu {DEEPER_HOME_COURSES.length} technische Kurse auf Englisch, von
-          Data Engineering bis System Design.{" "}
+          {copy.deeperSummary(DEEPER_HOME_COURSES.length)}{" "}
           <Link
-            href="/kurse"
+            href={localizeHref("/kurse", locale)}
             className="font-bold text-brand-orange underline-offset-4 hover:underline"
           >
-            Alle Kurse ansehen &#8594;
+            {copy.viewAllCourses} &#8594;
           </Link>
         </p>
 
@@ -234,32 +300,31 @@ export function Offering() {
               <IconTile icon={Github} accent="sand" />
               <div>
                 <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-                  Technikkurse
+                  {copy.technicalCourses}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Portiert aus offenen GitHub-Repositories. Auf Englisch, mit
-                  selbst ausgestelltem Certificate.
+                  {copy.technicalDescription}
                 </p>
               </div>
             </div>
             <Link
-              href="/kurse"
+              href={localizeHref("/kurse", locale)}
               className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-foreground underline-offset-4 hover:underline"
             >
-              Alle Technikkurse ansehen &#8594;
+              {copy.viewTechnicalCourses} &#8594;
             </Link>
           </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {LAB_PREVIEWS.map((course) => (
+            {labPreviews(locale).map((course) => (
               <div
                 key={course.slug}
                 className="group/lab overflow-hidden rounded-xl border border-border bg-card shadow-card transition-shadow hover:shadow-card-hover"
               >
                 <Link
-                  href={course.href}
+                  href={localizeHref(course.href, locale)}
                   className="block"
-                  aria-label={`${course.title}: Details ansehen`}
+                  aria-label={copy.detailsAria(course.title)}
                 >
                   <span className="relative block aspect-[16/10] overflow-hidden bg-card-hover">
                     <Image
@@ -275,20 +340,20 @@ export function Offering() {
                 <div className="flex items-start justify-between gap-2 p-4">
                   <div className="min-w-0">
                     <Link
-                      href={course.href}
+                      href={localizeHref(course.href, locale)}
                       className="block truncate text-sm font-bold tracking-[-0.01em] text-foreground hover:text-brand-orange"
                     >
                       {course.title}
                     </Link>
                     <span className="mt-1 block font-mono text-[9.5px] uppercase tracking-[0.08em] text-muted-foreground">
-                      GitHub · MIT · Englisch
+                      {copy.sourceFacts}
                     </span>
                   </div>
                   <a
                     href={course.sourceHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`Quellcode auf GitHub: ${course.title}`}
+                    aria-label={copy.sourceAria(course.title)}
                     className="shrink-0 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-card-hover hover:text-foreground"
                   >
                     <Github size={17} strokeWidth={1.75} aria-hidden="true" />

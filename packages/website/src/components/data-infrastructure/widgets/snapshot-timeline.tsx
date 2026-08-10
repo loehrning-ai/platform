@@ -23,6 +23,8 @@ import { useCanvasRAF } from "../canvas/use-canvas-raf";
 import { useCanvasAutoSize } from "../canvas/use-canvas-size";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
+import type { Locale } from "@/lib/i18n/locale";
+import { useDataInfraWidgetLocale } from "../widget-locale-context";
 
 interface SnapshotTimelineProps {
   readonly lessonId: string;
@@ -31,20 +33,63 @@ interface SnapshotTimelineProps {
 
 interface Snapshot {
   readonly t: string;
-  readonly op: "CREATE" | "INSERT" | "UPDATE" | "COMPACT" | "BAD WRITE" | "ROLLBACK";
+  readonly op:
+    "CREATE" | "INSERT" | "UPDATE" | "COMPACT" | "BAD WRITE" | "ROLLBACK";
   readonly desc: string;
   readonly files: number;
   readonly bytes: string;
 }
 
 const SNAPS: readonly Snapshot[] = [
-  { t: "10:00", op: "CREATE", desc: "initial load · 1.2 TB · 4,800 files", files: 4800, bytes: "1.2 TB" },
-  { t: "10:42", op: "INSERT", desc: "+ 12 GB clickstream · adds 48 files", files: 4848, bytes: "1.21 TB" },
-  { t: "11:15", op: "UPDATE", desc: "GDPR delete for 412 users · 6 files rewritten (CoW)", files: 4854, bytes: "1.21 TB" },
-  { t: "11:50", op: "COMPACT", desc: "small-file compaction · 4,854 → 1,920 files", files: 1920, bytes: "1.21 TB" },
-  { t: "12:33", op: "INSERT", desc: "hourly batch · +14 GB · adds 56 files", files: 1976, bytes: "1.22 TB" },
-  { t: "13:01", op: "BAD WRITE", desc: "bad transformation · NULLs in price column", files: 2010, bytes: "1.22 TB" },
-  { t: "13:08", op: "ROLLBACK", desc: "rolled back to snap @12:33 · time travel", files: 1976, bytes: "1.22 TB" },
+  {
+    t: "10:00",
+    op: "CREATE",
+    desc: "initial load · 1.2 TB · 4,800 files",
+    files: 4800,
+    bytes: "1.2 TB",
+  },
+  {
+    t: "10:42",
+    op: "INSERT",
+    desc: "+ 12 GB clickstream · adds 48 files",
+    files: 4848,
+    bytes: "1.21 TB",
+  },
+  {
+    t: "11:15",
+    op: "UPDATE",
+    desc: "GDPR delete for 412 users · 6 files rewritten (CoW)",
+    files: 4854,
+    bytes: "1.21 TB",
+  },
+  {
+    t: "11:50",
+    op: "COMPACT",
+    desc: "small-file compaction · 4,854 → 1,920 files",
+    files: 1920,
+    bytes: "1.21 TB",
+  },
+  {
+    t: "12:33",
+    op: "INSERT",
+    desc: "hourly batch · +14 GB · adds 56 files",
+    files: 1976,
+    bytes: "1.22 TB",
+  },
+  {
+    t: "13:01",
+    op: "BAD WRITE",
+    desc: "bad transformation · NULLs in price column",
+    files: 2010,
+    bytes: "1.22 TB",
+  },
+  {
+    t: "13:08",
+    op: "ROLLBACK",
+    desc: "rolled back to snap @12:33 · time travel",
+    files: 1976,
+    bytes: "1.22 TB",
+  },
 ];
 
 const OP_COLOR: Record<Snapshot["op"], string> = {
@@ -56,6 +101,24 @@ const OP_COLOR: Record<Snapshot["op"], string> = {
   ROLLBACK: "#cf8a3f",
 };
 
+const SNAPSHOT_DESCRIPTIONS_DE = [
+  "initialer Import · 1,2 TB · 4.800 Dateien",
+  "+12 GB Clickstream · 48 neue Dateien",
+  "DSGVO-Löschung für 412 Nutzer · 6 Dateien neu geschrieben (CoW)",
+  "Small-File-Kompaktierung · 4.854 → 1.920 Dateien",
+  "stündlicher Batch · +14 GB · 56 neue Dateien",
+  "fehlerhafte Transformation · NULL-Werte in price",
+  "Rollback auf Snapshot 12:33 · Zeitreise",
+] as const;
+
+function snapshotDescription(
+  locale: Locale,
+  snapshot: Snapshot,
+  index: number,
+): string {
+  return locale === "de" ? SNAPSHOT_DESCRIPTIONS_DE[index] : snapshot.desc;
+}
+
 function nodeX(i: number, w: number) {
   const pad = 40;
   return pad + (i + 0.5) * ((w - 2 * pad) / SNAPS.length);
@@ -64,7 +127,11 @@ function nodeY(i: number, h: number) {
   return SNAPS[i].op === "BAD WRITE" ? h / 2 + 30 : h / 2 - 6;
 }
 
-export function SnapshotTimeline({ lessonId, cpId }: SnapshotTimelineProps): JSX.Element {
+export function SnapshotTimeline({
+  lessonId,
+  cpId,
+}: SnapshotTimelineProps): JSX.Element {
+  const { locale } = useDataInfraWidgetLocale();
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -127,14 +194,17 @@ export function SnapshotTimeline({ lessonId, cpId }: SnapshotTimelineProps): JSX
     [complete],
   );
 
-  const pickAt = useCallback((mx: number, my: number, w: number, h: number): number => {
-    for (let i = 0; i < SNAPS.length; i++) {
-      const x = nodeX(i, w);
-      const y = nodeY(i, h);
-      if ((mx - x) ** 2 + (my - y) ** 2 < 20 * 20) return i;
-    }
-    return -1;
-  }, []);
+  const pickAt = useCallback(
+    (mx: number, my: number, w: number, h: number): number => {
+      for (let i = 0; i < SNAPS.length; i++) {
+        const x = nodeX(i, w);
+        const y = nodeY(i, h);
+        if ((mx - x) ** 2 + (my - y) ** 2 < 20 * 20) return i;
+      }
+      return -1;
+    },
+    [],
+  );
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -162,24 +232,36 @@ export function SnapshotTimeline({ lessonId, cpId }: SnapshotTimelineProps): JSX
   );
 
   const current = SNAPS[cur];
+  const currentDescription = snapshotDescription(locale, current, cur);
 
   return (
-    <div className="border-2 border-border bg-card/40 p-5 md:p-6">
+    <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-3 sm:p-5 md:p-6">
       <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        Sim · Iceberg snapshots · git-style time travel {done ? "✓" : ""}
+        {locale === "de"
+          ? "Modell · Iceberg-Snapshots und Zeitreise"
+          : "Model · Iceberg snapshots and time travel"}{" "}
+        {done ? "✓" : ""}
       </p>
 
       {contextUnavailable ? (
         <CanvasFallbackNotice
-          title="Snapshot timeline"
-          summary={`Currently viewing snapshot @ ${current.t} (${current.op}): ${current.desc}`}
+          title={locale === "de" ? "Snapshot-Zeitleiste" : "Snapshot timeline"}
+          summary={
+            locale === "de"
+              ? `Aktiver Snapshot ${current.t} (${current.op}): ${currentDescription}`
+              : `Currently viewing snapshot @ ${current.t} (${current.op}): ${currentDescription}`
+          }
         />
       ) : (
         <div ref={wrapRef} className="h-[130px] w-full">
           <canvas
             ref={canvasRef}
             role="img"
-            aria-label="Lakehouse snapshot timeline; selecting a snapshot shows the table state at that point in time."
+            aria-label={
+              locale === "de"
+                ? "Lakehouse-Snapshot-Zeitleiste. Die Auswahl zeigt den Tabellenzustand zu diesem Zeitpunkt."
+                : "Lakehouse snapshot timeline. Selecting a snapshot shows the table state at that time."
+            }
             onClick={handleClick}
             onMouseMove={handleMouseMove}
             className="h-full w-full cursor-pointer"
@@ -189,27 +271,36 @@ export function SnapshotTimeline({ lessonId, cpId }: SnapshotTimelineProps): JSX
 
       <div className="mt-4 border-2 border-border bg-background p-3">
         <div className="flex items-center gap-2">
-          <b className="font-mono text-[12px]">snapshot @ {current.t}</b>
+          <b className="font-mono text-[12px]">
+            {locale === "de" ? "Snapshot" : "snapshot"} @ {current.t}
+          </b>
           <span
             className="border px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase"
-            style={{ borderColor: OP_COLOR[current.op], color: OP_COLOR[current.op] }}
+            style={{
+              borderColor: OP_COLOR[current.op],
+              color: OP_COLOR[current.op],
+            }}
           >
             {current.op}
           </span>
         </div>
-        <p className="mt-1 text-[13px] text-muted-foreground">{current.desc}</p>
+        <p className="mt-1 break-words text-[13px] text-muted-foreground">
+          {currentDescription}
+        </p>
         <pre className="mt-2 whitespace-pre-wrap font-mono text-[10.5px] text-muted-foreground">
-          {`manifest_list: snap-${1000 + cur}.avro\nfiles:        ${current.files.toLocaleString()}\nbytes:        ${current.bytes}\nparent:       ${cur > 0 ? `snap-${999 + cur}` : "(none)"}`}
+          {`manifest_list: snap-${1000 + cur}.avro\n${locale === "de" ? "Dateien" : "files"}:        ${current.files.toLocaleString(locale === "de" ? "de-DE" : "en-US")}\n${locale === "de" ? "Bytes" : "bytes"}:          ${current.bytes}\n${locale === "de" ? "Vorgänger" : "parent"}:     ${cur > 0 ? `snap-${999 + cur}` : locale === "de" ? "(keiner)" : "(none)"}`}
         </pre>
       </div>
 
       <div className="mt-4">
         <p className="mb-1.5 font-mono text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-          Jump to a snapshot (keyboard-accessible)
+          {locale === "de"
+            ? "Snapshot auswählen (mit Tastatur bedienbar)"
+            : "Select a snapshot (keyboard accessible)"}
         </p>
         <div
           role="listbox"
-          aria-label="Snapshot picker"
+          aria-label={locale === "de" ? "Snapshot-Auswahl" : "Snapshot picker"}
           aria-orientation="horizontal"
           data-roving-group
           className="flex flex-wrap gap-1.5"
@@ -251,21 +342,21 @@ export function SnapshotTimeline({ lessonId, cpId }: SnapshotTimelineProps): JSX
           onClick={() => select(Math.max(0, cur - 1))}
           className="border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
         >
-          ◀ prev
+          {locale === "de" ? "vorheriger" : "◀ prev"}
         </button>
         <button
           type="button"
           onClick={() => select(Math.min(SNAPS.length - 1, cur + 1))}
           className="border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
         >
-          next ▶
+          {locale === "de" ? "nächster" : "next ▶"}
         </button>
         <button
           type="button"
           onClick={() => select(4)}
           className="border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90"
         >
-          ⏎ rollback to 12:33
+          {locale === "de" ? "Rollback auf 12:33" : "⏎ rollback to 12:33"}
         </button>
       </div>
     </div>

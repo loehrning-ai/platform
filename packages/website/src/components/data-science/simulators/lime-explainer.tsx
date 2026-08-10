@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { clamp, mulberry32, round } from "@/lib/data-science/sim-kit";
+import { useDataScienceLocale } from "../locale-context";
 
 // ─── LIMEExplainer ──────────────────────────────────
 //
@@ -29,6 +30,7 @@ interface Sample {
 }
 
 export function LIMEExplainer() {
+  const { text } = useDataScienceLocale();
   const [qx, setQx] = useState(0.55);
   const [qy, setQy] = useState(0.45);
 
@@ -108,16 +110,23 @@ export function LIMEExplainer() {
 
   return (
     <Panel
-      eyebrow="SIMULATION"
-      title="LIME · local linear explanation"
+      eyebrow={text("SIMULATION", "SIMULATION")}
+      title={text(
+        "LIME · local linear explanation",
+        "LIME · lokale lineare Erklärung",
+      )}
       meta={`P(class B) = ${round(localExplanation.prob, 3)}`}
-      caption="LIME samples points around the query (dashed circle), weights them by distance, and fits a simple linear model locally. The dotted line is the local decision boundary, valid only within the circle."
+      caption={text(
+        "This teaching model evaluates a fixed synthetic response surface near the query and draws a local linear approximation. Its fidelity depends on the chosen neighborhood and surface; the dotted line is not a validated boundary for a fitted production model.",
+        "Dieses Lehrmodell wertet eine feste synthetische Antwortfläche nahe dem Abfragepunkt aus und zeichnet eine lokale lineare Approximation. Ihre Güte hängt von Nachbarschaft und Fläche ab; die gepunktete Linie ist keine validierte Grenze eines angepassten Produktionsmodells.",
+      )}
     >
       <div className="sim-row">
-        <div className="sim-controls" style={{ minWidth: 200 }}>
+        <div className="sim-controls">
           <div className="sim-ctrl">
             <label>
-              Query X <span className="mono">{round(qx, 2)}</span>
+              {text("Query X", "Abfrage X")}{" "}
+              <span className="mono">{round(qx, 2)}</span>
             </label>
             <input
               type="range"
@@ -125,13 +134,14 @@ export function LIMEExplainer() {
               max="0.95"
               step="0.01"
               value={qx}
-              aria-label="Query point X"
+              aria-label={text("Query point X", "Abfragepunkt X")}
               onChange={(e) => setQx(+e.target.value)}
             />
           </div>
           <div className="sim-ctrl">
             <label>
-              Query Y <span className="mono">{round(qy, 2)}</span>
+              {text("Query Y", "Abfrage Y")}{" "}
+              <span className="mono">{round(qy, 2)}</span>
             </label>
             <input
               type="range"
@@ -139,50 +149,79 @@ export function LIMEExplainer() {
               max="0.95"
               step="0.01"
               value={qy}
-              aria-label="Query point Y"
+              aria-label={text("Query point Y", "Abfragepunkt Y")}
               onChange={(e) => setQy(+e.target.value)}
             />
           </div>
           <div className="sim-stats" style={{ marginTop: 12 }}>
             <div>
-              <div className="k">P(class B)</div>
+              <div className="k">P({text("class B", "Klasse B")})</div>
               <div className="v" style={{ color: "var(--violet-ink)" }}>
                 {round(localExplanation.prob, 3)}
               </div>
             </div>
             <div>
-              <div className="k">Local ∂/∂x</div>
-              <div className="v" style={{ color: a1 >= 0 ? "var(--good-ink)" : "var(--bad-ink)" }}>
+              <div className="k">{text("Local", "Lokal")} ∂/∂x</div>
+              <div
+                className="v"
+                style={{
+                  color: a1 >= 0 ? "var(--good-ink)" : "var(--bad-ink)",
+                }}
+              >
                 {a1 >= 0 ? "+" : ""}
                 {round(a1, 3)}
               </div>
             </div>
             <div>
-              <div className="k">Local ∂/∂y</div>
-              <div className="v" style={{ color: a2 >= 0 ? "var(--good-ink)" : "var(--bad-ink)" }}>
+              <div className="k">{text("Local", "Lokal")} ∂/∂y</div>
+              <div
+                className="v"
+                style={{
+                  color: a2 >= 0 ? "var(--good-ink)" : "var(--bad-ink)",
+                }}
+              >
                 {a2 >= 0 ? "+" : ""}
                 {round(a2, 3)}
               </div>
             </div>
           </div>
-          <p className="prose" style={{ fontSize: 11, marginTop: 8, lineHeight: 1.5 }}>
+          <p
+            className="prose"
+            style={{ fontSize: 11, marginTop: 8, lineHeight: 1.5 }}
+          >
             {Math.abs(a1) > Math.abs(a2) ? (
               <>
-                <strong>Feature X</strong> drives this prediction more than Y locally.
+                <strong>{text("Feature X", "Merkmal X")}</strong>{" "}
+                {text(
+                  "has the larger local slope magnitude in this construction.",
+                  "hat in dieser Konstruktion den größeren lokalen Steigungsbetrag.",
+                )}
               </>
             ) : (
               <>
-                <strong>Feature Y</strong> drives this prediction more than X locally.
+                <strong>{text("Feature Y", "Merkmal Y")}</strong>{" "}
+                {text(
+                  "has the larger local slope magnitude in this construction.",
+                  "hat in dieser Konstruktion den größeren lokalen Steigungsbetrag.",
+                )}
               </>
             )}
           </p>
         </div>
         <div className="plot-wrap" style={{ flex: 1 }}>
           <div className="sim-plot-head">
-            Decision boundary
-            <span className="hint">class A (blue) · class B (pink) · locality circle (dashed)</span>
+            {text("Decision boundary", "Entscheidungsgrenze")}
+            <span className="hint">
+              {text(
+                "class A (blue) · class B (pink) · locality circle (dashed)",
+                "Klasse A (blau) · Klasse B (pink) · lokaler Kreis (gestrichelt)",
+              )}
+            </span>
           </div>
-          <svg viewBox={`0 0 ${SW} ${SH}`} style={{ width: "100%", cursor: "crosshair" }}>
+          <svg
+            viewBox={`0 0 ${SW} ${SH}`}
+            style={{ width: "100%", cursor: "crosshair" }}
+          >
             {cells.map(({ cx, cy, p }, i) => {
               const r = Math.round(91 + p * 164);
               const g = Math.round(62 + (1 - p) * 100);
@@ -208,8 +247,14 @@ export function LIMEExplainer() {
               strokeWidth="1.5"
               strokeDasharray="5 3"
             />
-            <text x={0.5 * SW + 4} y="14" fontSize="9" fill="rgba(244,242,236,0.5)" fontFamily="'JetBrains Mono',monospace">
-              global boundary
+            <text
+              x={0.5 * SW + 4}
+              y="14"
+              fontSize="9"
+              fill="rgba(244,242,236,0.5)"
+              fontFamily="'JetBrains Mono',monospace"
+            >
+              {text("global boundary", "globale Grenze")}
             </text>
             <circle
               cx={qsvgX}
@@ -239,19 +284,50 @@ export function LIMEExplainer() {
               stroke="#FBF8F1"
               strokeWidth="2"
             />
-            <text x={qsvgX + 10} y={qsvgY + 4} fontSize="10" fill="#FBF8F1" fontFamily="'JetBrains Mono',monospace">
-              query
+            <text
+              x={qsvgX + 10}
+              y={qsvgY + 4}
+              fontSize="10"
+              fill="#FBF8F1"
+              fontFamily="'JetBrains Mono',monospace"
+            >
+              {text("query", "Abfrage")}
             </text>
-            <text x={SW - 4} y={SH - 4} textAnchor="end" fontSize="9" fill="#6A6270" fontFamily="'JetBrains Mono',monospace">
+            <text
+              x={SW - 4}
+              y={SH - 4}
+              textAnchor="end"
+              fontSize="9"
+              fill="#6A6270"
+              fontFamily="'JetBrains Mono',monospace"
+            >
               X →
             </text>
-            <text x="4" y="14" fontSize="9" fill="#6A6270" fontFamily="'JetBrains Mono',monospace">
+            <text
+              x="4"
+              y="14"
+              fontSize="9"
+              fill="#6A6270"
+              fontFamily="'JetBrains Mono',monospace"
+            >
               Y ↑
             </text>
-            <text x="8" y={SH / 2} fontSize="9" fill="rgba(91,62,232,0.7)" fontFamily="'JetBrains Mono',monospace">
+            <text
+              x="8"
+              y={SH / 2}
+              fontSize="9"
+              fill="rgba(91,62,232,0.7)"
+              fontFamily="'JetBrains Mono',monospace"
+            >
               A
             </text>
-            <text x={SW - 16} y={SH / 2} fontSize="9" fill="rgba(232,49,143,0.7)" fontFamily="'JetBrains Mono',monospace">
+            <text
+              x={SW - 16}
+              y={SH / 2}
+              fontSize="9"
+              fill="rgba(232,49,143,0.7)"
+              fontFamily="'JetBrains Mono',monospace"
+            >
               B
             </text>
           </svg>

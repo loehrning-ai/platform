@@ -38,7 +38,7 @@ export function ExcelPreview() {
         <div style={{ background: "#107C41", color: "white", padding: "3px 8px", fontSize: 9, letterSpacing: "0.1em", fontWeight: 700, display: "flex", alignItems: "center", gap: 6 }}>
           <span style={{ width: 12, height: 12, background: "white", color: "#107C41", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 900 }}>X</span>
           Absatz-KW.xlsx
-          <span style={{ marginLeft: "auto", fontSize: 8, opacity: 0.7 }}>SHEET1</span>
+          <span style={{ marginLeft: "auto", fontSize: 8 }}>SHEET1</span>
         </div>
         {/* Formula bar */}
         <div style={{ background: "white", borderBottom: `1px solid ${DEMO.leinen}`, padding: "3px 8px", display: "flex", alignItems: "center", gap: 6, fontSize: 9, color: DEMO.ink }}>
@@ -172,11 +172,11 @@ export function AgentPipelinePreview() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <span style={{ fontSize: 8, opacity: i === 0 ? 1 : 0.55, fontWeight: 700 }}>{r.n}</span>
+          <span style={{ fontSize: 8, fontWeight: 700 }}>{r.n}</span>
           <span style={{ width: 5, height: 5, borderRadius: "50%", background: r.dotColor, display: "inline-block", marginLeft: "auto" }} />
         </div>
         <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.08em", lineHeight: 1 }}>{r.role}</div>
-        <div style={{ fontSize: 8, opacity: 0.65, letterSpacing: "0.04em" }}>{r.sub}</div>
+        <div style={{ fontSize: 8, letterSpacing: "0.04em" }}>{r.sub}</div>
       </div>,
     );
     if (i < roles.length - 1) {
@@ -218,7 +218,7 @@ export function N8nSupplyChainPreview() {
         <div style={{ color: ACCENT_DARK, fontSize: 12, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700 }}>→</div>
         <div style={{ background: ACCENT, padding: "6px 8px", color: DEMO.kalk, borderTop: `2px solid ${ACCENT}`, display: "flex", flexDirection: "column", gap: 2, minWidth: 0 }}>
           <div style={{ fontWeight: 800, letterSpacing: "0.04em" }}>◈ CLAUDE</div>
-          <div style={{ fontSize: 8, opacity: 0.75, letterSpacing: "0.06em" }}>BRIEF + ACTION</div>
+          <div style={{ fontSize: 8, letterSpacing: "0.06em" }}>BRIEF + ACTION</div>
         </div>
         <div style={{ color: ACCENT_DARK, fontSize: 12, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700 }}>→</div>
         <div style={{ background: DK.fill, padding: "6px 8px", border: `1px solid ${DK.border}`, color: DK.text, display: "flex", flexDirection: "column", gap: 2, minWidth: 0 }}>

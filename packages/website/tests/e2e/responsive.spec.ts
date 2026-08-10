@@ -8,7 +8,7 @@ import { devices, test, expect, type Page } from "@playwright/test";
  *   1. No horizontal overflow at 320/360/390/768/1024/1440 on the highest-traffic
  *      routes, incl. one real chapter reader.
  *   2. The nav hamburger appears below the Tailwind `lg` breakpoint (1024px; no
- *      override in globals.css) while the desktop Kurse dropdown is hidden there,
+ *      override in globals.css) while the desktop Lernen dropdown is hidden there,
  *      and the reverse on a desktop width.
  *   3. The hero section and its long German headline stay inside a 320px viewport.
  *   4. Book-reader GFM tables stay inside `overflow-x-auto` wrappers
@@ -42,9 +42,9 @@ const KEY_ROUTES = [
 
 // Nav breakpoint (nav.tsx): the desktop cluster is `hidden ... lg:flex` and the
 // hamburger toggle is `... lg:hidden`, so widths below Tailwind's `lg` (1024px)
-// show the hamburger and hide the desktop Kurse dropdown. The Kurse trigger is
+// show the hamburger and hide the desktop Lernen dropdown. The Lernen trigger is
 // uniquely addressable by its aria-controls; the hamburger by its aria-label.
-const KURSE_TRIGGER = 'button[aria-controls="akademie-nav-menu"]';
+const LERNEN_TRIGGER = 'button[aria-controls="lernen-nav-menu"]';
 const HAMBURGER_NAME = /Menü öffnen/i;
 
 // Table chapter: the route and title are sourced from the public catalog rather
@@ -53,9 +53,11 @@ const HAMBURGER_NAME = /Menü öffnen/i;
 const TABLE_URL = "/buecher/ki-landschaft/08_fahrplan";
 const TABLE_TITLE = "Fahrplan für die nächsten Monate";
 
-// Every captured console error, uncaught page error, and failed request fails
-// the check. Each width gets a fresh page so navigation teardown cannot leak
-// speculative RSC/chunk cancellations into the next width's verdict.
+// Every captured console error, uncaught page error, and non-cancelled request
+// failure fails the check. A production Link may cancel a same-origin RSC
+// prefetch after it enters the viewport; only that narrow router-abort shape is
+// excluded below. Each width gets a fresh page so navigation teardown cannot
+// leak speculative RSC/chunk cancellations into the next width's verdict.
 function collectBrowserErrors(page: Page): string[] {
   const errors: string[] = [];
   page.on("console", (msg) => {
@@ -64,23 +66,24 @@ function collectBrowserErrors(page: Page): string[] {
   page.on("pageerror", (err) => errors.push(err.message));
   page.on("requestfailed", (request) => {
     const failure = request.failure()?.errorText ?? "unknown error";
-    let expectedLoginPrefetchAbort = false;
+    let expectedRouterAbort = false;
     try {
       const target = new URL(request.url());
       const current = new URL(page.url());
-      expectedLoginPrefetchAbort =
+      expectedRouterAbort =
         failure === "net::ERR_ABORTED" &&
         request.method() === "GET" &&
+        request.resourceType() === "fetch" &&
         !request.isNavigationRequest() &&
         target.origin === current.origin &&
-        target.pathname === "/login" &&
         (target.searchParams.has("_rsc") ||
-          (target.searchParams.has("next") &&
+          (target.pathname === "/login" &&
+            target.searchParams.has("next") &&
             target.searchParams.get("reason") === "auth-not-configured"));
     } catch {
       // Preserve malformed URLs as failures below.
     }
-    if (expectedLoginPrefetchAbort) return;
+    if (expectedRouterAbort) return;
     errors.push(
       `Request failed: ${request.method()} ${request.url()} (${failure})`,
     );
@@ -125,7 +128,7 @@ test.describe("responsive: no horizontal overflow across the width matrix", () =
           // web fonts settle.
           await widthPage.locator("h1").first().waitFor({ state: "visible" });
           await widthPage
-            .locator('html[data-hydrated="true"]')
+            .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
             .waitFor({ state: "attached" });
           await widthPage.evaluate(async () => {
             await document.fonts.ready;
@@ -159,10 +162,10 @@ test.describe("responsive: no horizontal overflow across the width matrix", () =
 });
 
 test.describe("responsive: navigation hamburger breakpoint", () => {
-  // Below lg (1024px): the hamburger is the only nav control; the desktop Kurse
+  // Below lg (1024px): the hamburger is the only nav control; the desktop Lernen
   // dropdown trigger is display:none. Both tablet (768) and phone (390) widths.
   for (const width of [768, 390] as const) {
-    test(`@${width}: hamburger is visible and the desktop Kurse dropdown is hidden`, async ({
+    test(`@${width}: hamburger is visible and the desktop Lernen dropdown is hidden`, async ({
       page,
     }) => {
       await page.setViewportSize({ width, height: 900 });
@@ -171,18 +174,18 @@ test.describe("responsive: navigation hamburger breakpoint", () => {
       await expect(
         page.getByRole("button", { name: HAMBURGER_NAME }),
       ).toBeVisible();
-      await expect(page.locator(KURSE_TRIGGER)).toBeHidden();
+      await expect(page.locator(LERNEN_TRIGGER)).toBeHidden();
     });
   }
 
   // At/above lg: the reverse - the desktop dropdown is visible, hamburger hidden.
-  test("@1280: the desktop Kurse dropdown is visible and the hamburger is hidden", async ({
+  test("@1280: the desktop Lernen dropdown is visible and the hamburger is hidden", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto("/", { waitUntil: "domcontentloaded" });
 
-    await expect(page.locator(KURSE_TRIGGER)).toBeVisible();
+    await expect(page.locator(LERNEN_TRIGGER)).toBeVisible();
     await expect(
       page.getByRole("button", { name: HAMBURGER_NAME }),
     ).toBeHidden();
@@ -242,7 +245,7 @@ test.describe("responsive: book reader wide-table containment", () => {
     page,
   }) => {
     await page.goto(TABLE_URL, { waitUntil: "load" });
-    await page.locator('html[data-hydrated="true"]').waitFor();
+    await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
     await page.evaluate(async () => {
       await document.fonts.ready;
       await new Promise<void>((resolve) =>

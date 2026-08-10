@@ -8,9 +8,11 @@ import {
   absoluteUrl,
   ENTITY_IDS,
   GITHUB_ORG,
-  SAME_AS_URLS,
+  ORGANIZATION_SAME_AS_URLS,
+  PERSON_SAME_AS_URLS,
   SITE_ENTITY,
   SITE_LANGUAGE,
+  SITE_LANGUAGES,
   SITE_NAME,
   SITE_ORIGIN,
   SITE_REGION,
@@ -72,6 +74,7 @@ describe("anchor constants", () => {
     expect(SITE_ORIGIN).toBe("https://loehrning.ai");
     expect(SITE_NAME).toBe("loehrning.ai");
     expect(SITE_LANGUAGE).toBe("de-DE");
+    expect(SITE_LANGUAGES).toEqual(["de-DE", "en-GB"]);
     expect(SITE_REGION).toBe("DE");
   });
 });
@@ -114,17 +117,21 @@ describe("ENTITY_IDS", () => {
   });
 });
 
-describe("SAME_AS_URLS", () => {
-  it("lists the verified personal profiles and live organization", () => {
-    expect([...SAME_AS_URLS]).toEqual([
+describe("entity-specific sameAs URLs", () => {
+  it("keeps only verified personal profiles on the Person entity", () => {
+    expect([...PERSON_SAME_AS_URLS]).toEqual([
       TIM_ENTITY.linkedInUrl,
       TIM_ENTITY.personalGithubUrl,
-      GITHUB_ORG.url,
     ]);
+    expect(PERSON_SAME_AS_URLS).not.toContain(GITHUB_ORG.url);
   });
 
-  it("contains the live GitHub organization", () => {
-    expect(SAME_AS_URLS).toContain(GITHUB_ORG.url);
+  it("keeps only the live GitHub organization on the Organization entity", () => {
+    expect([...ORGANIZATION_SAME_AS_URLS]).toEqual([GITHUB_ORG.url]);
+    expect(ORGANIZATION_SAME_AS_URLS).not.toContain(
+      TIM_ENTITY.personalGithubUrl,
+    );
+    expect(ORGANIZATION_SAME_AS_URLS).not.toContain(TIM_ENTITY.linkedInUrl);
   });
 });
 

@@ -4,6 +4,7 @@ import { useEffect, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
 import { useDraftValue } from "./use-draft-value";
 import { WidgetFrame } from "./_frame";
+import type { Locale } from "@/lib/i18n/locale";
 
 /**
  * SlotFill — a numbered list of short-text inputs, one per named slot.
@@ -28,14 +29,16 @@ export interface SlotFillWidgetProps {
   readonly title?: string;
   readonly scenario?: string;
   readonly placeholders: readonly string[];
+  readonly locale?: Locale;
 }
 
 export function SlotFillWidget({
   lessonId,
   cpId,
-  title = "Fill in the slots",
+  title,
   scenario,
   placeholders,
+  locale = "en",
 }: SlotFillWidgetProps): JSX.Element {
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [values, setValues] = useDraftValue<readonly string[]>(
@@ -44,7 +47,9 @@ export function SlotFillWidget({
   );
 
   const allFilled =
-    placeholders.length > 0 && values.length === placeholders.length && values.every((v) => v.trim().length > 0);
+    placeholders.length > 0 &&
+    values.length === placeholders.length &&
+    values.every((v) => v.trim().length > 0);
 
   useEffect(() => {
     if (allFilled) complete();
@@ -57,20 +62,35 @@ export function SlotFillWidget({
   };
 
   return (
-    <WidgetFrame kindLabel="Build" title={title} scenario={scenario} done={done} xpLabel="+10 XP">
+    <WidgetFrame
+      kindLabel={locale === "de" ? "Ausfüllen" : "Build"}
+      title={
+        title ?? (locale === "de" ? "Felder ausfüllen" : "Fill in the slots")
+      }
+      scenario={scenario}
+      done={done}
+      xpLabel="+10 XP"
+      doneLabel={locale === "de" ? "Erledigt" : "Done"}
+    >
       <div className="flex flex-col gap-2.5">
         {placeholders.map((placeholder, i) => (
-          <div key={i} className="flex items-center gap-3">
+          <div key={i} className="flex min-w-0 items-center gap-3">
             <span className="w-6 shrink-0 font-mono text-[11px] font-bold text-muted-foreground">
               {String(i + 1).padStart(2, "0")}
             </span>
             <input
               type="text"
-              placeholder={placeholder || `Item ${i + 1}`}
+              placeholder={
+                placeholder ||
+                `${locale === "de" ? "Eintrag" : "Item"} ${i + 1}`
+              }
               value={values[i] ?? ""}
               onChange={(e) => setSlot(i, e.target.value)}
-              aria-label={placeholder || `Item ${i + 1}`}
-              className="flex-1 border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none"
+              aria-label={
+                placeholder ||
+                `${locale === "de" ? "Eintrag" : "Item"} ${i + 1}`
+              }
+              className="min-w-0 flex-1 border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none"
             />
           </div>
         ))}

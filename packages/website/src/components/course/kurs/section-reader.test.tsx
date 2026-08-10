@@ -86,7 +86,7 @@ describe("<SectionReader>", () => {
     );
     expect(
       screen.getByRole("heading", { level: 3, name: "Was ist KI?" }),
-    ).toBeInTheDocument();
+    ).toHaveClass("min-w-0", "break-words");
     expect(screen.getByText("~4 Min")).toBeInTheDocument();
     expect(
       screen.getByText("Ein einfacher Absatz zum Testen."),
@@ -160,5 +160,26 @@ describe("<SectionReader>", () => {
     fireEvent.click(screen.getByRole("button", { name: "Gelesen" }));
     // The button is disabled, so the click handler is a no-op.
     expect(onMarkRead).not.toHaveBeenCalled();
+  });
+
+  it("renders English reader chrome when the English bundle is selected", () => {
+    render(
+      <SectionReader
+        section={{
+          ...baseSection,
+          title: "What is AI?",
+          content: "A short explanation.",
+          keyTakeaway: "Check the system and its output.",
+        }}
+        isRead={false}
+        locale="en"
+        onMarkRead={() => {}}
+      />,
+    );
+
+    expect(screen.getByText("~4 min")).toBeInTheDocument();
+    expect(screen.getByText("Key point")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Mark as read" })).toBeEnabled();
+    expect(screen.queryByText("Kernaussage")).toBeNull();
   });
 });

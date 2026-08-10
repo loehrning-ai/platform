@@ -2,6 +2,7 @@
 
 import { useMemo, type JSX } from "react";
 import { WidgetFrame } from "../tier-a/_frame";
+import { useClaudeWidgetLocale } from "./locale-context";
 
 /**
  * PromptDiff, word-by-word diff between a weak and a strong prompt. Ported
@@ -20,7 +21,10 @@ interface DiffToken {
   readonly changed: boolean;
 }
 
-function diffTokens(source: string, otherWordSet: ReadonlySet<string>): DiffToken[] {
+function diffTokens(
+  source: string,
+  otherWordSet: ReadonlySet<string>,
+): DiffToken[] {
   return source.split(/(\s+)/).map((token) => {
     const bare = token.toLowerCase().trim();
     const changed = bare.length > 0 && !otherWordSet.has(bare);
@@ -33,6 +37,8 @@ export function PromptDiffWidget({
   strong,
   takeaway,
 }: PromptDiffWidgetProps): JSX.Element {
+  const locale = useClaudeWidgetLocale();
+  const german = locale === "de";
   const weakTokens = useMemo(() => {
     const strongWords = new Set(strong.toLowerCase().split(/\s+/));
     return diffTokens(weak, strongWords);
@@ -43,16 +49,24 @@ export function PromptDiffWidget({
   }, [weak, strong]);
 
   return (
-    <WidgetFrame kindLabel="Diff view" title="What changed, word by word">
+    <WidgetFrame
+      kindLabel={german ? "Diff-Ansicht" : "Diff view"}
+      title={
+        german ? "Änderungen im direkten Vergleich" : "Changes side by side"
+      }
+    >
       <div className="grid gap-4 md:grid-cols-2">
         <div>
           <p className="mb-1.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.1em] text-destructive">
-            before
+            {german ? "Vorher" : "Before"}
           </p>
           <div className="border border-destructive/30 bg-destructive/5 p-3 text-[13px] leading-[1.7] text-foreground">
             {weakTokens.map((token, i) =>
               token.changed ? (
-                <span key={i} className="bg-destructive/20 line-through decoration-destructive">
+                <span
+                  key={i}
+                  className="bg-destructive/20 line-through decoration-destructive"
+                >
                   {token.text}
                 </span>
               ) : (
@@ -63,7 +77,7 @@ export function PromptDiffWidget({
         </div>
         <div>
           <p className="mb-1.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.1em] text-risk-green">
-            after
+            {german ? "Nachher" : "After"}
           </p>
           <div className="border border-risk-green/30 bg-risk-green/5 p-3 text-[13px] leading-[1.7] text-foreground">
             {strongTokens.map((token, i) =>
@@ -80,7 +94,7 @@ export function PromptDiffWidget({
       </div>
       {takeaway && (
         <div className="mt-4 border-l-[3px] border-brand-amber bg-brand-amber/5 px-3 py-2 text-[13.5px] leading-[1.5] text-foreground">
-          <strong>Takeaway:</strong> {takeaway}
+          <strong>{german ? "Kernaussage:" : "Takeaway:"}</strong> {takeaway}
         </div>
       )}
     </WidgetFrame>

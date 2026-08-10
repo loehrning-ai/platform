@@ -1,136 +1,81 @@
-"use client";
+import type { Locale } from "@/lib/i18n/locale";
+import { PROFILE_COPY } from "@/lib/i18n/profile-copy";
 
-import { m } from "framer-motion";
-import { fadeUp } from "@/lib/animations";
+export function CareerTimeline({ locale }: { readonly locale: Locale }) {
+  const copy = PROFILE_COPY[locale].timeline;
 
-// Frühere Arbeitgeber werden namentlich genannt; die rechtliche Einordnung
-// übernimmt TIM_ENTITY.noEndorsementNotice auf der /ueber-mich-Seite.
-const milestones = [
-  {
-    period: "2021",
-    role: "Werkstudent",
-    company: "Amazon",
-    description: "Erste Datenrolle neben dem Studium",
-    color: "text-muted-foreground",
-  },
-  {
-    period: "2022-2024",
-    role: "Data Scientist",
-    company: "Apple",
-    description: "Analytics, Datenmodelle und operative Auswertung",
-    color: "text-muted-foreground",
-  },
-  {
-    period: "2024-2025",
-    role: "Data Scientist",
-    company: "Red Bull",
-    description: "KI-Tools für Fachbereiche, MLOps und Supply-Chain-Analytics",
-    color: "text-muted-foreground",
-  },
-  {
-    period: "2025-2026",
-    role: "Data Engineer",
-    company: "Meta",
-    description: "Datenqualität, Pipelines und Analytics-Systeme",
-    color: "text-muted-foreground",
-  },
-  {
-    period: "2026-heute",
-    role: "Kurator",
-    company: "loehrning.ai",
-    description: "Freie KI-Kurse, Bücher, Demos und Arbeitsnotizen",
-    color: "text-brand-orange",
-  },
-] as const;
-
-export function CareerTimeline() {
   return (
-    <section className="py-20">
-      <div className="mx-auto max-w-5xl px-6">
-        <m.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="js-reveal"
-        >
-          <m.h2
-            custom={0}
-            variants={fadeUp}
-            className="js-reveal text-2xl font-bold tracking-[-0.04em]"
+    <section
+      id="laufbahn"
+      className="border-t border-border py-20 sm:py-24"
+      aria-labelledby="career-heading"
+    >
+      <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(14rem,0.34fr)_minmax(0,1fr)] lg:gap-14 lg:px-10">
+        <header className="min-w-0 lg:sticky lg:top-24 lg:self-start">
+          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
+            {copy.eyebrow}
+          </p>
+          <h2
+            id="career-heading"
+            className="mt-4 max-w-xl text-pretty text-3xl font-bold tracking-[-0.04em] text-foreground sm:text-4xl"
           >
-            Karriere
-          </m.h2>
+            {copy.title}
+          </h2>
+          <p className="mt-5 max-w-xl text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
+            {copy.intro}
+          </p>
+        </header>
 
-          {/* Desktop: horizontal strip — only at lg+ where the columns have
-              room; tablet keeps the legible vertical list below (was cramped
-              at md). The column count is a literal because Tailwind cannot
-              generate a class from a runtime value: it must stay equal to
-              `milestones.length`, which career-timeline.test.tsx asserts. */}
-          <div className="mt-10 hidden lg:block">
-            <div className="relative">
-              {/* Line */}
-              <div className="absolute left-0 right-0 top-4 h-px bg-border/50" />
-
-              <div className="grid grid-cols-5 gap-4">
-                {milestones.map((mil, i) => (
-                  <m.div
-                    key={mil.period}
-                    custom={i + 1}
-                    variants={fadeUp}
-                    className="js-reveal relative pt-10"
-                  >
-                    {/* Dot */}
-                    <div className={`absolute top-2 left-0 h-4 w-4 rounded-full border-2 border-background ${
-                      mil.company === "loehrning.ai" ? "bg-brand-orange" : "bg-border"
-                    }`} />
-
-                    <span className="text-xs font-medium text-muted-foreground">
-                      {mil.period}
-                    </span>
-                    <h3 className={`mt-1 font-semibold ${mil.color}`}>
-                      {mil.company}
-                    </h3>
-                    <p className="text-sm text-brand-orange">{mil.role}</p>
-                    <p className="mt-2 text-xs text-muted-foreground">
-                      {mil.description}
-                    </p>
-                  </m.div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Mobile: vertical */}
-          <div className="mt-8 space-y-6 lg:hidden">
-            {milestones.map((mil, i) => (
-              <m.div
-                key={mil.period}
-                custom={i + 1}
-                variants={fadeUp}
-                className="js-reveal flex gap-4"
+        <ol
+          aria-label={copy.ariaLabel}
+          className="grid min-w-0 gap-px overflow-hidden border border-border bg-border sm:grid-cols-2 xl:grid-cols-5"
+        >
+          {copy.milestones.map((milestone, index) => {
+            const current = index === copy.milestones.length - 1;
+            return (
+              <li
+                key={`${milestone.period}-${milestone.company}`}
+                className={`relative min-w-0 bg-background p-5 sm:p-6 ${
+                  current ? "xl:bg-card" : ""
+                }`}
               >
-                <div className="flex flex-col items-center">
-                  <div className={`h-3 w-3 rounded-full ${
-                    mil.company === "loehrning.ai" ? "bg-brand-orange" : "bg-border"
-                  }`} />
-                  {i < milestones.length - 1 && (
-                    <div className="mt-1 h-full w-px bg-border/50" />
-                  )}
-                </div>
-                <div className="pb-4">
-                  <span className="text-xs text-muted-foreground">
-                    {mil.period}
+                <div className="flex items-start justify-between gap-4">
+                  <span className="font-mono text-[11px] font-bold tabular-nums text-muted-foreground">
+                    {String(index + 1).padStart(2, "0")}
                   </span>
-                  <h3 className={`font-semibold ${mil.color}`}>{mil.company}</h3>
-                  <p className="text-sm text-brand-orange">{mil.role}</p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {mil.description}
-                  </p>
+                  <span
+                    className={`mt-1 h-2.5 w-2.5 shrink-0 ${
+                      current ? "bg-brand-orange" : "bg-border"
+                    }`}
+                    aria-hidden="true"
+                  />
                 </div>
-              </m.div>
-            ))}
-          </div>
-        </m.div>
+                <p className="mt-10 break-words font-mono text-xs font-bold tabular-nums text-muted-foreground [overflow-wrap:anywhere]">
+                  {milestone.period}
+                </p>
+                <h3
+                  translate="no"
+                  className={`mt-2 break-words text-xl font-bold tracking-[-0.025em] [overflow-wrap:anywhere] ${
+                    current ? "text-brand-orange" : "text-foreground"
+                  }`}
+                >
+                  {milestone.company}
+                </h3>
+                <p className="mt-2 break-words text-sm font-semibold text-foreground [overflow-wrap:anywhere]">
+                  {milestone.role}
+                </p>
+                <p className="mt-4 break-words text-sm leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
+                  {milestone.description}
+                </p>
+                {current ? (
+                  <p className="mt-6 inline-flex border border-brand-orange px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-brand-orange">
+                    {copy.currentLabel}
+                  </p>
+                ) : null}
+              </li>
+            );
+          })}
+        </ol>
       </div>
     </section>
   );

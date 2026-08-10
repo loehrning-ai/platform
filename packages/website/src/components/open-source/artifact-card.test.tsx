@@ -230,4 +230,30 @@ describe("OpenSourceArtifactCard", () => {
       }),
     ).toHaveAccessibleDescription("Wird in einem neuen Tab geöffnet.");
   });
+
+  it("renders English labels and locale-preserving internal actions", () => {
+    const launchable: ToolArtifact = {
+      ...toolFixture("example-tool", "Example Tool"),
+      delivery: "internal-route",
+      launchHref: "/demos/example-tool",
+    };
+    render(<OpenSourceArtifactCard artifact={launchable} locale="en" />);
+
+    expect(screen.getByText("Tool")).toBeInTheDocument();
+    expect(screen.getByText("Experimental")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: `Details ${launchable.title}` }),
+    ).toHaveAttribute("href", "/en/open-source/tools/example-tool");
+    expect(
+      screen.getByRole("link", { name: `Open ${launchable.title}` }),
+    ).toHaveAttribute("href", "/en/demos/example-tool");
+    expect(
+      screen.getByRole("link", { name: `License ${launchable.title}` }),
+    ).toHaveAttribute("href", launchable.license.href);
+    expect(
+      screen.getByRole("link", {
+        name: `Source loehrning-ai/${launchable.slug} ${launchable.title}`,
+      }),
+    ).toHaveAccessibleDescription("Opens in a new tab.");
+  });
 });

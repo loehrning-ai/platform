@@ -6,7 +6,7 @@ import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 // ─── Ch6_Discover ─────────────────────────────────
 // Ported from `src/chapters/Ch6_Discover.js`.
 
-const DATASETSPEC_YAML = `<span class="tok-k">dataset</span>: <span class="tok-s">dim_users</span>
+export const DATASETSPEC_YAML = `<span class="tok-k">dataset</span>: <span class="tok-s">dim_users</span>
 <span class="tok-k">owner</span>: <span class="tok-s">analytics_oncall</span>
 <span class="tok-k">sla_tier</span>: <span class="tok-s">"24h"</span>
 <span class="tok-k">partition</span>: <span class="tok-s">ds</span>
@@ -36,8 +36,8 @@ export function Ch6Discover({ chapter }: Ch6DiscoverProps) {
       <Hero
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
-        title="Discover: <span class='accent'>six shortcuts</span> replace four hours of code spelunking."
-        hook="A consumer's first question is always the same: &quot;is this the right table?&quot; The answer should be instant. palette shortcuts, DatasetSpec metadata files, and OpenLineage lineage turn <em>hours of Snowflake code archaeology</em> into <em>three-character commands</em>. Learn the six and you are faster than 90% of the org."
+        title="Discover: <span class='accent'>find ownership, contract, and lineage.</span>"
+        hook="The course uses a fictional command palette, a DatasetSpec metadata file, and a lineage graph to practice common discovery tasks. These interfaces are reference designs, not industry standards."
         meta={[
           { k: "Glossary", v: "palette + wut" },
           { k: "Metadata", v: "DatasetSpec" },
@@ -47,12 +47,11 @@ export function Ch6Discover({ chapter }: Ch6DiscoverProps) {
 
       <section className="section">
         <SectionLabel n="7.1">The six shortcuts</SectionLabel>
-        <h2 className="h2">Memorize these before writing a single SQL query.</h2>
+        <h2 className="h2">Use the course palette before adopting a dataset.</h2>
         <p className="prose">
-          Before you write a query, you need to know three things: <em>is this the right table</em>, <em> who owns it</em>, and{" "}
-          <em>is it deprecated</em>. The shortcuts get you all three in under three seconds each. <code>ht</code> answers &quot;is this
-          it?&quot; <code>fpl</code> answers &quot;who writes it?&quot; <code>ds produce</code> answers &quot;who consumes it?&quot;{" "}
-          <code>qbgs</code> searches. <code>udf</code>finds a function. <code>wut</code> defines a term. That&apos;s the whole kit.
+          Before adopting a table, inspect its purpose, owner, status, upstream producer, and registered consumers. In the course palette,
+          <code> ht</code> shows table metadata, <code>fpl</code> opens the producing file, <code>ds produce</code> lists registered consumers,
+          <code> qbgs</code> searches examples, <code>udf</code> finds a function, and <code>wut</code> opens a glossary entry.
         </p>
         <DiscoverySpeedrun />
       </section>
@@ -60,9 +59,9 @@ export function Ch6Discover({ chapter }: Ch6DiscoverProps) {
       <section className="section">
         <SectionLabel n="7.2">The metadata file</SectionLabel>
         <p className="prose">
-          The reason the shortcuts work is that every dataset ships a <b>DatasetSpec</b> file in the same repo as its pipeline code. Columns have
-          descriptions, owners, and actor annotations (see Ch9). The warehouse, the lineage graph, and the metrics layer all read from the same
-          file, so there&apos;s one source of truth.
+          In this reference design, each dataset has a versioned <b>DatasetSpec</b> beside its pipeline code. Integrations can read its
+          descriptions, owner, status, and actor annotations. The file is a declared contract; verify that the catalog and lineage ingestion are
+          current before relying on them.
         </p>
         <CodeBlock title="dim_users.spec.yaml · dataset metadata" lang="YAML" html={DATASETSPEC_YAML} />
       </section>
@@ -70,32 +69,31 @@ export function Ch6Discover({ chapter }: Ch6DiscoverProps) {
       <section className="section">
         <SectionLabel n="7.3">Lineage as a camera</SectionLabel>
         <p className="prose">
-          When someone asks <em>&quot;what would break if we change fct_events?&quot;</em>, you don&apos;t grep the warehouse. You click the node.
-          Column-level edges show which downstream metric and dashboard reads which specific column. This is the adoption-safety gate: trace one
-          hop up and one hop down before you commit.
+          A lineage graph can show emitted upstream and downstream edges, including column-level relationships when the integrations provide
+          them. It may be incomplete. Combine the graph with owners, source code, catalog search, and runtime evidence before estimating impact.
         </p>
         <LineageCamera />
       </section>
 
       <AntiPatterns
         items={[
-          "<b>Searching code blindly.</b> <code>ht &lt;table&gt;</code> answers in 2s what <code>grep -R</code> answers in 4 hours (wrong).",
+          "<b>Starting with broad code search.</b> Check the catalog entry and owner first, then use source search to verify details or fill metadata gaps.",
           "<b>Adopting a table without checking the deprecation banner.</b> The table exists, returns data, has the right schema. The banner says 'deprecated 2023-06, migrate to v2.' You won't know until migration week.",
-          "<b>Consuming a table whose lineage you've never traced.</b> If you can't answer 'what upstream producer would I page on an outage' in 5s, you haven't adopted: you've borrowed.",
+          "<b>Assuming the lineage graph is complete.</b> Confirm the upstream owner and at least one critical consumer against code or runtime evidence.",
         ]}
       />
       <BestPractices
         items={[
-          "<b>Six shortcuts before any question.</b> Reflex, not process.",
-          "<b>Read the dbt file, not the table.</b> The file tells you owner, SLA, actor annotations, deprecation. The table just tells you shape.",
+          "Use the course palette to inspect metadata before exploratory SQL.",
+          "Read both the declared DatasetSpec and the observed table. The contract and deployed state can drift.",
           "<b>One hop up, one hop down.</b> Trace the upstream producer and at least one downstream consumer before relying on a table.",
         ]}
       />
       <Takeaway
         items={[
-          "<b>Six shortcuts replace four hours of code spelunking.</b> Learn them once; they pay back every day.",
-          "<b>DatasetSpec is the contract.</b> Owner, schema, actors, deprecation: one file, one truth.",
-          "<b>Lineage is a camera, not a document.</b> You don't read it top-down; you click the node and the view comes to you.",
+          "A discovery workflow should expose purpose, owner, status, schema, and known lineage before adoption.",
+          "A DatasetSpec is a versioned declaration. Compare it with the deployed catalog and data when accuracy matters.",
+          "Lineage is evidence from instrumented systems, not a guaranteed inventory of every dependency.",
         ]}
       />
     </>

@@ -1,19 +1,28 @@
 // Ported from data-infrastructure/lessons/02-cap-pacelc.html.
 import type { DataInfraLesson } from "../types";
 import { checkpointLessonId } from "../types";
-import { DATA_INFRA_QUIZ_COPY, DATA_INFRA_FLASHCARDS_COPY } from "../widget-copy";
+import {
+  DATA_INFRA_QUIZ_COPY,
+  DATA_INFRA_FLASHCARDS_COPY,
+} from "../widget-copy";
 
 const LID = checkpointLessonId("cap-pacelc");
 
 const lesson: DataInfraLesson = {
   id: "cap-pacelc",
   number: 2,
-  title: "CAP, PACELC & The Latency Tax",
-  subtitle: "The two impossibility theorems",
+  title: "CAP, PACELC & Coordination Cost",
+  subtitle: "Partition behavior and normal-operation trade-offs",
   durationMinutes: 14,
   trackId: "foundations",
-  hook: "You can't have all three. What you trade for what, and the question CAP forgot to ask.",
-  keyConcepts: ["CAP theorem", "PACELC", "Quorum", "Linearizability", "Eventual consistency"],
+  hook: "State the failure model first, then choose consistency and availability behavior per operation.",
+  keyConcepts: [
+    "CAP theorem",
+    "PACELC",
+    "Quorum",
+    "Linearizability",
+    "Eventual consistency",
+  ],
   quiz: [],
   sections: [
     {
@@ -21,39 +30,39 @@ const lesson: DataInfraLesson = {
       title: "CAP, restated",
       readTimeMinutes: 3,
       content:
-        "Three nodes. A network split. You must choose: *do reads stay correct, or do reads stay possible?* CAP says you can't have both. Real designs make this choice **per-table, per-API, per-millisecond.**\n\nThe CAP theorem was published by Eric Brewer in 2000 and proved by Gilbert and Lynch in 2002. In a distributed system, when a network **partition** happens, two nodes can't talk to each other, you must choose between **consistency** (every read sees the latest write) and **availability** (every request gets a non-error response). You cannot have both, simultaneously, during a partition. There is no design that beats this.\n\nThe version interviewers actually want is sharper: *\"CA\" is not a real choice.* Real networks partition. Cables fail, switches reboot, regions get hurricane'd. P is not a knob; it's a fact. So the real question CAP asks is: **when (not if) we partition, which do you give up, C or A?**",
+        'CAP applies when a network partition prevents parts of a distributed system from communicating. Under the theorem\'s model, the system cannot simultaneously guarantee **linearizable consistency** and **availability for every request to a non-failing node** for the affected operations.\n\nThat definition is narrower than the labels often used in product diagrams. Consistency here is not simply "correct data," and availability is not an uptime percentage. A design can reject or delay selected operations, serve stale data for others, or use different policies for different records. State the operation, failure model, and client-visible behavior before attaching a CAP label.',
       keyTakeaway:
-        "CAP forces a choice only during a partition, and partitions are a fact of real networks, not an option you can design away.",
+        "CAP describes behavior during a communication partition; it does not rank databases or replace an operation-level failure policy.",
     },
     {
       id: "s2",
       title: "Pick a trade",
       readTimeMinutes: 2,
       content:
-        "The simulator ('the partition theatre') puts three replicas in front of a client. Cut the cable between them and pick the trade: **CP** refuses writes it can't replicate safely, so reads stay truthful but some requests fail. **AP** accepts writes anywhere, so every request succeeds but replicas can diverge until they're reconciled.\n\n**\"CA\" is not a real choice.** Single-node Postgres is \"CA\" because there's no network between replicas to partition. Add a replica and you're back to choosing CP or AP.",
+        'The interactive model places three replicas behind a client and then removes communication between them. In its simplified **CP** branch, an isolated replica rejects operations that cannot satisfy the selected consistency rule. In its simplified **AP** branch, reachable replicas accept operations and may diverge until reconciliation.\n\nThe model does not simulate a database protocol or measured failure behavior. A single-node database falls outside the replicated partition scenario; it has different availability and durability risks rather than a useful "CA" classification.',
     },
     {
       id: "s3",
       title: "PACELC",
       readTimeMinutes: 3,
       content:
-        "CAP only describes the bad day. PACELC describes *both*: **if** partition, choose A or C; **else**, choose Latency or Consistency. The \"else\" is where your bill lives.\n\nTo give a read strong consistency on a multi-region cluster, you have to coordinate across regions, a network round-trip, often 50-150ms. Or you can answer from the local replica in 1ms and risk staleness. Every distributed DB sits somewhere on this 2D plane, and the choice is usually *configurable per-query*.\n\nThe four PACELC quadrants: **PA/EL** (available during a partition, low latency otherwise, fast and loose, always), **PA/EC** (available during a partition, strongly consistent otherwise, the popular default for user-state stores, e.g. MongoDB/Couchbase), **PC/EL** (consistent during a partition, low latency otherwise), and **PC/EC** (strongly consistent everywhere, e.g. Spanner, pays the coordination cost on every read).",
+        "PACELC adds a normal-operation question to the partition case: **if there is a partition, which availability or consistency behavior is chosen; else, how does the system trade coordination latency against consistency?**\n\nCross-node coordination adds work and at least one communication path. The actual cost depends on topology, quorum placement, workload, cache state, and failure conditions; a local replica is not inherently a fixed number of milliseconds faster. Some products expose consistency choices per request or transaction, while others bind them at a table, session, or deployment level.\n\nThe PA/EL, PA/EC, PC/EL, and PC/EC labels are shorthand for discussing those choices. They are not permanent vendor classifications: configuration and operation type can move one deployment between behaviors.",
     },
     {
       id: "s4",
       title: "Latency tax",
       readTimeMinutes: 2,
       content:
-        "Every step toward stronger consistency has a price tag in milliseconds. The frontier simulator plots typical p99 read latency for a 3-region active-active cluster against five freshness guarantees, from cheapest to most expensive:\n\n- **None**, best-effort, effectively free.\n- **Eventual**, cheap; replicas converge in the background with no ordering guarantee on when.\n- **Read-your-writes** (~8ms), a client always sees its own most recent write; other clients may see staler data. Implemented with sticky sessions or version pinning. A cheap local-replica read with a session token check, staying inside one region's failure domain.\n- **Causal**, reads respect the order writes were made, even across clients, without paying for a full global lock.\n- **Linearizable** (highest cost), a wide-area quorum on every read, i.e. the full round-trip.\n\nThe flat plateau in the middle of the curve, around read-your-writes, is where most production systems actually live.",
+        "The frontier graphic is an **illustrative ordering**, not a latency benchmark. Stronger guarantees often require more coordination or restricted replica choices, but measured latency depends on the implementation and deployment.\n\n- **Best effort**, no stated freshness or ordering contract.\n- **Eventual consistency**, replicas are expected to converge after writes stop, without a bound unless the system specifies one.\n- **Read-your-writes**, a client session observes its acknowledged writes; other clients can still observe older versions.\n- **Causal consistency**, observations preserve defined causal relationships between operations.\n- **Linearizability**, each operation appears to take effect atomically between invocation and response. Implementations may coordinate reads, writes, leases, or leaders differently.\n\nBenchmark the configured deployment under normal and degraded conditions. Do not infer a p99 value from the name of a consistency model.",
     },
     {
       id: "s5",
       title: "Consistency staircase",
       readTimeMinutes: 3,
       content:
-        "\"Consistency\" is one word for at least five guarantees. The staircase simulator replays the same race under each rule: writer A writes `x=1` then `x=2`; reader B reads `x`. A blue dot is a write; green means the read returned a value at-least-as-fresh as that level's contract requires; crimson means the read returned a value the level explicitly allows to be stale.\n\n**The interview move.** When a question requires \"consistency,\" ask *which kind*. *\"Read-your-writes for the user's own session, eventual for everyone else's view\"* is a perfectly normal design, and a much cheaper one than going linearizable everywhere.",
+        '"Consistency" names several distinct contracts. The staircase model replays one synthetic race: writer A writes `x=1` then `x=2`; reader B reads `x`. Green means the displayed result satisfies the contract defined for that step; crimson means the simplified model permits the displayed stale value.\n\nWhen a requirement says "consistent," replace it with an observable rule: for example, "a session must read its acknowledged writes" or "all clients must observe inventory decrements in one linearizable order." Then test whether the selected product and configuration provide that rule under the stated failures.',
       keyTakeaway:
-        "Consistency is a spectrum of five distinct guarantees, not a single on/off property, and you're usually free to mix levels per use case.",
+        'Name the client-visible consistency rule and its scope; the word "consistent" alone is not an acceptance criterion.',
     },
     {
       id: "s6",
@@ -66,7 +75,7 @@ const lesson: DataInfraLesson = {
       title: "Vocab",
       readTimeMinutes: 1,
       content:
-        "- **Quorum (N/R/W)**, replication factor (N), read quorum (R), write quorum (W). To guarantee a read sees the latest write you need `R + W > N`, e.g. N=3, R=2, W=2.\n- **Sloppy quorum**, under a partition, accept writes on *any* N nodes, not just the canonical replicas, to keep availability. Reconcile later via hinted handoff. Cassandra/Dynamo do this.\n- **Read repair**, when a read hits multiple replicas with different versions, the coordinator returns the latest value *and* writes it to the stale replicas. Background \"anti-entropy\" repair handles the rest.\n- **Linearizable**, requires that every read returns a value at-least-as-fresh as any acknowledged write, globally. Implementing it across regions means coordinating with a quorum on every read, a wide-area round-trip per read.\n- **Bounded staleness**, \"you can be at most 5 seconds behind, or at most 10 versions behind.\" Cosmos DB exposes this as a first-class consistency level. Cheaper than strong, more useful than eventual.",
+        "- **Quorum (N/R/W)**, a shorthand for replica count, read responses, and write acknowledgements. `R + W > N` creates overlap under simplified assumptions; conflict resolution, failed nodes, sloppy quorums, and acknowledgement rules still determine what a read can guarantee.\n- **Sloppy quorum**, writes may be accepted by temporary non-home replicas during a failure and transferred later. Exact behavior is product- and configuration-specific.\n- **Read repair**, a read that observes divergent replicas can trigger reconciliation. It is one repair mechanism, not a complete convergence proof.\n- **Linearizability**, each operation appears atomic and respects real-time ordering. Implementations can use leaders, leases, consensus, quorums, or other mechanisms.\n- **Bounded staleness**, a contract that limits version or time lag. The bound, enforcement point, and behavior when the bound cannot be met must be specified.",
     },
   ],
   widgets: [
@@ -79,16 +88,16 @@ const lesson: DataInfraLesson = {
         title: "A real interview question",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          'You\'re designing a global checkout cart. The team wants "low latency in every region" and "the cart shows the same items if the user opens it on a different device 30 seconds later." Which PACELC quadrant fits?',
+          "You are designing a replicated checkout cart. During a partition, the product accepts temporary cart divergence to keep reachable regions writable. In normal operation, it requires coordinated cart state across devices. Which PACELC shorthand describes that stated policy?",
         options: [
-          "PA/EL, fast and loose, always.",
-          "PC/EC, strong consistency always; users will tolerate the latency.",
+          "PA/EL, prioritize availability during partitions and latency otherwise.",
+          "PC/EC, reject partitioned writes and coordinate in normal operation.",
           "PA/EC, strong consistency in the normal case, but stay available during partitions.",
           "PC/EL, strong consistency under partition, low latency otherwise.",
         ],
         correct: 2,
         explanation:
-          "PA/EC is the sweet spot for this kind of user-state workload. You want consistency in the 99.9% case (so the cart matches across devices), but if a region temporarily splits from the rest, you'd rather let the user keep shopping (and reconcile later) than throw an error. PC/EC would force the user to wait for cross-region coordination on every cart edit. PA/EL would let stale carts stick around forever. MongoDB and Couchbase are tuned roughly here.",
+          "PA/EC matches the policy as stated: remain available during the partition and coordinate for consistency in normal operation. The label does not select a product or prove the cart's merge behavior; those require an explicit conflict policy and tests.",
       },
     },
     {
@@ -97,19 +106,19 @@ const lesson: DataInfraLesson = {
       props: {
         lessonId: LID,
         cpId: "q2",
-        title: '"Eventual" is a trap',
+        title: '"Eventual" needs a bound',
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          'A junior engineer says: "We picked Cassandra because we need eventual consistency." What\'s the actual question you should ask back?',
+          'A design says only: "the replicas are eventually consistent." What question is still unanswered?',
         options: [
-          '"How long is eventual?", eventual is a guarantee about the limit, not the timeline.',
+          '"What convergence distribution and failure behavior can clients observe?" Eventual consistency alone gives no time bound.',
           '"What\'s your replication factor?"',
           '"Are you sure you don\'t mean strong consistency?"',
           '"Why not Postgres?"',
         ],
         correct: 0,
         explanation:
-          "Eventual consistency means \"if writes stop, replicas converge eventually.\" It says nothing about when. In practice, eventual is usually milliseconds. But under load, partitions, or hot keys, it can stretch to seconds or even minutes, long enough to ruin a UX. The right question is always: what's the tail latency of convergence, and what does the UI do during that window? \"Read-your-writes\" via sticky sessions is the usual fix.",
+          "Eventual consistency states convergence under assumptions such as writes stopping; it does not provide a time bound. Measure convergence under expected load and failures, define the client behavior while replicas differ, and add a stronger session guarantee only if the product requires it.",
       },
     },
     {
@@ -121,16 +130,16 @@ const lesson: DataInfraLesson = {
         title: "The trick question",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          'Why is "CA", consistency + availability without partition tolerance, usually called a non-choice for distributed systems?',
+          'Why is "CA" usually unhelpful shorthand for a replicated system whose nodes can lose communication?',
         options: [
           "Because consistency and availability conflict by definition.",
-          "Because partitions are inevitable in real networks; assuming them away means you don't have a distributed system, you have a single point of failure.",
+          "Because it does not specify what the replicated system does when communication between non-failing nodes is unavailable.",
           "Because the CAP theorem doesn't apply to modern systems.",
-          "Because CA systems are always slow.",
+          "Because CA systems use only slow networks.",
         ],
         correct: 1,
         explanation:
-          'P is not a design choice, it\'s a property of the physical world. Switches reboot, links flap, regions go offline. A "CA" system is one that fails entirely when those things happen, because it can\'t make progress without all nodes reachable. That\'s a fragility property, not a strength. The interview move is to refuse the C-vs-A framing as binary: "During a partition I\'d pick X. In normal operation, the trade is L vs C, and I\'d pick Y."',
+          'A replicated design needs defined behavior when nodes cannot communicate. It may reject selected operations, serve stale state, fail closed, or use another policy. Labeling it "CA" omits that behavior instead of designing it.',
       },
     },
     {
@@ -145,27 +154,27 @@ const lesson: DataInfraLesson = {
           {
             term: "Quorum",
             q: "What is N/R/W?",
-            a: "Replication factor (N), read quorum (R), write quorum (W). To guarantee a read sees the latest write you need R + W > N. e.g. N=3, R=2, W=2.",
+            a: "Replication factor (N), read responses (R), and write acknowledgements (W). R + W > N creates overlap in a simplified model; other protocol and failure assumptions determine the actual guarantee.",
           },
           {
             term: "Sloppy quorum",
             q: 'What does "sloppy" mean?',
-            a: "Under a partition, accept writes on any N nodes, not just the canonical replicas, to keep availability. Reconcile later via hinted handoff. Cassandra/Dynamo do this.",
+            a: "During a failure, a system may accept writes on temporary non-home replicas and transfer them later. Product configuration and conflict resolution determine the resulting guarantees.",
           },
           {
             term: "Read repair",
             q: "How does eventual consistency converge?",
-            a: "When a read hits multiple replicas with different versions, the coordinator returns the latest and writes the newer value to the stale replicas. Background \"anti-entropy\" repair handles the rest.",
+            a: "A read that observes divergent replicas can trigger reconciliation. Background anti-entropy can provide an additional repair path; neither removes the need to define version ordering and conflicts.",
           },
           {
             term: "Linearizable",
             q: "Why is it expensive?",
-            a: "It requires that every read returns a value at-least-as-fresh as any acknowledged write, globally. Implementing it across regions means coordinating with a quorum every time. That's a wide-area RTT per read.",
+            a: "Each operation must appear atomic and respect real-time ordering. Implementations may use leaders, leases, consensus, or quorums; the coordination path and measured cost depend on the design.",
           },
           {
             term: "Bounded staleness",
             q: "A useful middle ground",
-            a: '"You can be at most 5 seconds behind, or at most 10 versions behind." Cosmos DB exposes this as a first-class consistency level. Cheaper than strong, more useful than eventual.',
+            a: 'A contract such as "no more than a defined time or version lag." Specify where the bound is measured and what happens when the system cannot satisfy it.',
           },
         ],
       },

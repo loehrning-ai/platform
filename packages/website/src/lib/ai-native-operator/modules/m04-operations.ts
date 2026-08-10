@@ -1,4 +1,3 @@
-// Ported verbatim from course-data.js's MODULES[3] ("operations", M04).
 import type { AiNativeOperatorLesson } from "../types";
 
 export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
@@ -8,35 +7,35 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 1,
     number: 1,
     kind: "reading",
-    title: "Async-default meetings",
+    title: "Choose synchronous and asynchronous coordination",
     subtitle:
-      "Reclaim a third of your week by routing status through async + AI summary instead of synchronous time.",
+      "Route routine updates through written records and reserve meetings for work that needs live interaction.",
     objective:
-      "Reclaim a third of your week by routing status through async + AI summary instead of synchronous time.",
+      "Route routine updates through written records and reserve meetings for work that needs live interaction.",
     durationMinutes: 14,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "The status meeting is dead",
+        title: "Classify the purpose first",
         readTimeMinutes: 5,
         content:
-          "Five people each report what they did. Four of them are reporting it to four others who do not need to know. The decision-makers wait through the rest. This ritual was never efficient, it was a coordination tax. AI removes the tax.",
+          "A status update, a decision, and a sensitive discussion require different forms of coordination. Routine facts can usually be recorded asynchronously. Contested decisions, incidents, relationship work, and ambiguous issues often need a live conversation. Classify the purpose before choosing the format.",
       },
       {
         id: "s2",
-        title: "The new ritual",
+        title: "Make written updates usable",
         readTimeMinutes: 5,
         content:
-          "Each person posts a one-paragraph status to a channel. An agent summarizes the channel. The summary surfaces conflicts, blockers, and decisions needed. The leader spends 5 minutes reading. A 30-minute meeting only happens when a real-time decision is required.",
+          "Use a consistent update format: current state, evidence or source links, blockers, owner, timestamp, and decisions needed. A model can group and summarize the entries, but its summary is a routing aid, not the record. Readers must be able to inspect the underlying updates because summaries can omit or distort details.",
       },
       {
         id: "s3",
-        title: "What you lose, and how to recover it",
+        title: "Document the live decision",
         readTimeMinutes: 4,
         content:
-          'You lose serendipity, the side conversations that produced unexpected ideas. Recover this through a different ritual: a weekly "open hour" where the team is together with no agenda. The serendipity was never in the status meeting; it was in being in the same room.',
+          "When a live meeting is justified, define the decision owner and the required input in advance. Record the decision, reasoning, dissent, actions, and owners afterward. Separate time for informal contact when the team needs it; do not depend on a status meeting to provide it accidentally.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -48,9 +47,9 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
         props: {
           lessonId: "operations/1",
           cpId: "exercise",
-          title: "Meeting Audit",
+          title: "Meeting audit",
           scenario:
-            "List your five most frequent recurring meetings. For each, mark whether it is a decision meeting (keep) or a status meeting (kill, replace with async + AI summary).",
+            "List five recurring meetings. For each one, record its purpose, required input, expected output, and decision owner. Mark whether it belongs in a written update, a live meeting, or both.",
           rows: 5,
         },
       },
@@ -62,26 +61,28 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 2,
     number: 2,
     kind: "reading",
-    title: "AI in every doc",
-    subtitle: "Eliminate the blank page from your team's working life.",
-    objective: "Eliminate the blank page from your team's working life.",
+    title: "Draft documents from explicit briefs",
+    subtitle:
+      "Give a drafting tool a defined audience, purpose, evidence base, constraints, and owner.",
+    objective:
+      "Give a drafting tool a defined audience, purpose, evidence base, constraints, and owner.",
     durationMinutes: 12,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "The blank-page tax",
+        title: "Write the brief before the draft",
         readTimeMinutes: 6,
         content:
-          "Most knowledge work begins by staring at a blank page for 20 minutes. AI eliminates this tax. The first draft is no longer where you spend your effort, it is where you start your effort. The blank page should never appear again in your team's life.",
+          "A useful brief states who will read the document, what decision or outcome it supports, which sources are authoritative, which constraints apply, and who owns the result. The brief reduces ambiguity for both a human writer and a drafting model. It also gives reviewers a stable basis for judging the draft.",
       },
       {
         id: "s2",
-        title: "The brief-first habit",
+        title: "Treat generated text as an unverified draft",
         readTimeMinutes: 6,
         content:
-          "For every doc, design, technical, planning, performance, comms, start with a one-paragraph brief. The agent drafts. You sharpen. The shape of the work has changed: 80% editor, 20% writer. The output quality is higher, not lower, because editing is harder than writing and you spend the time on the harder part.",
+          "Generated prose is not evidence. Verify citations, figures, names, policy statements, and sensitive claims against their sources. Preserve document versions and identify the human approver. The tool may accelerate drafting, but the named owner remains accountable for accuracy, disclosure, and release.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -94,7 +95,7 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
           lessonId: "operations/2",
           cpId: "exercise",
           scenario:
-            "Pick one doc on your plate this week. Write the one-paragraph brief now. (You can paste this brief into your tool of choice when you sit down to draft.)",
+            "Choose one document due this week. Write a brief with its audience, required outcome, approved sources, constraints, owner, and review criteria.",
           rows: 4,
         },
       },
@@ -106,35 +107,35 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 3,
     number: 3,
     kind: "reading",
-    title: "Ticket triage agents",
+    title: "Controlled ticket triage",
     subtitle:
-      "Set up an agent that classifies, enriches, deduplicates, and assigns inbound tickets, leaving humans to handle exceptions only.",
+      "Automate bounded classification and routing while keeping uncertainty, impact, and escalation visible.",
     objective:
-      "Set up an agent that classifies, enriches, deduplicates, and assigns inbound tickets, leaving humans to handle exceptions only.",
+      "Automate bounded classification and routing while keeping uncertainty, impact, and escalation visible.",
     durationMinutes: 17,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "The triage pipeline",
+        title: "Define the triage record",
         readTimeMinutes: 6,
         content:
-          "Inbound ticket → agent reads → agent classifies (severity, area, owner) → agent enriches (links related tickets, recent context) → agent assigns. Human reviews exceptions only, the ones where the agent flagged uncertainty.",
+          "For each ticket, record category, severity, proposed owner, confidence, and supporting evidence. Limit automatic actions to documented rules. Preserve the original request and link any related tickets or operational context so that a reviewer can reconstruct the route.",
       },
       {
         id: "s2",
-        title: "The 95/5 rule",
+        title: "Set risk-based review rules",
         readTimeMinutes: 6,
         content:
-          "A well-designed triage agent handles 95% of tickets without human touch. The remaining 5% are the genuinely ambiguous ones, and they go to a human with full context. The human spends 1 hour a day on triage instead of 4, and the work is more interesting because all the easy cases are gone.",
+          "Escalate uncertain, conflicting, novel, high-impact, or policy-required cases. Thresholds should reflect the cost of a wrong route rather than an assumed automation rate. Review a risk-based sample of other cases as well; confidence scores alone do not demonstrate correctness or reveal systematic errors.",
       },
       {
         id: "s3",
-        title: "The escalation path",
+        title: "Close the correction loop",
         readTimeMinutes: 5,
         content:
-          "When the agent is wrong, what happens? The eng team needs a clear escalation path: who reviews, who fixes, who closes the loop with the user. Triage agents fail silently if you let them. Build the loop.",
+          "Assign owners for reviewing escalations, correcting the route, updating rules or examples, and communicating with affected users. Keep an audit trail of inputs, outputs, overrides, and final outcomes. Monitor error patterns and suspend automatic actions when the control no longer performs as intended.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -146,9 +147,9 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
         props: {
           lessonId: "operations/3",
           cpId: "exercise",
-          title: "Triage Pipeline",
+          title: "Triage pipeline",
           scenario:
-            "Sketch your triage pipeline. Inputs, classification dimensions, enrichment sources, escalation rules.",
+            "Sketch a ticket-triage pipeline. Specify its inputs, classification fields, evidence sources, automatic actions, escalation rules, review sample, and correction owner.",
           rows: 5,
         },
       },
@@ -160,41 +161,69 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Module 4, knowledge check",
-    subtitle: "Operational basics, locked.",
-    objective: "Operational basics, locked.",
+    title: "Module 4 knowledge check",
+    subtitle: "Check the operating controls from this module.",
+    objective: "Check the operating controls from this module.",
     durationMinutes: 7,
     keyConcepts: [],
     quiz: [
       {
         id: "ano-operations-q1",
         questionText:
-          "A weekly status meeting with 8 attendees mostly reports information already in writing. The right move is:",
+          "A weekly status meeting mostly repeats information that already exists in writing. What is the best response?",
         answerOptions: [
-          { id: "a", text: "Make the meeting shorter.", isCorrect: false },
+          {
+            id: "a",
+            text: "Keep the meeting and reduce its scheduled duration.",
+            isCorrect: false,
+          },
           {
             id: "b",
-            text: "Replace with async status + AI summary; reserve sync time for decisions.",
+            text: "Move routine updates to a structured written record, use summaries as routing aids, and keep live time for decisions or ambiguity.",
             isCorrect: true,
           },
-          { id: "c", text: "Add an agenda.", isCorrect: false },
-          { id: "d", text: "Rotate the meeting time.", isCorrect: false },
+          {
+            id: "c",
+            text: "Keep the format and add a longer agenda.",
+            isCorrect: false,
+          },
+          {
+            id: "d",
+            text: "Rotate the meeting time between participants.",
+            isCorrect: false,
+          },
         ],
         explanation:
-          "When a status meeting is mostly information that already exists in writing, the fix is to route it async and let an agent summarize the channel for conflicts, blockers, and decisions needed, reserving the synchronous time for moments that actually require a live decision. Shortening or reorganizing the same ritual doesn't remove the coordination tax, it just trims it.",
+          "Routine facts belong in an inspectable written record. A summary can help route attention but does not replace the source material. Live time remains appropriate when people must resolve a contested decision, incident, sensitive issue, or material ambiguity.",
       },
       {
         id: "ano-operations-q2",
         questionText:
-          "A well-designed ticket triage agent handles ~95% of tickets without human touch. The 5% that escalate to humans should be:",
+          "Which tickets should a controlled triage system send to human review?",
         answerOptions: [
-          { id: "a", text: "Random sample.", isCorrect: false },
-          { id: "b", text: "The oldest tickets.", isCorrect: false },
-          { id: "c", text: "The cases where the agent flagged uncertainty.", isCorrect: true },
-          { id: "d", text: "The ones from VIP customers only.", isCorrect: false },
+          {
+            id: "a",
+            text: "Only a fixed random sample, regardless of impact.",
+            isCorrect: false,
+          },
+          {
+            id: "b",
+            text: "Only the oldest tickets in the queue.",
+            isCorrect: false,
+          },
+          {
+            id: "c",
+            text: "Uncertain, conflicting, novel, high-impact, or policy-required cases, plus a risk-based sample of other cases.",
+            isCorrect: true,
+          },
+          {
+            id: "d",
+            text: "Only tickets from a designated customer tier.",
+            isCorrect: false,
+          },
         ],
         explanation:
-          "A well-designed triage agent should escalate the cases where it is genuinely unsure, not a random sample or an arbitrary rule like ticket age or customer tier, flagged uncertainty is the signal that a human's judgment is actually needed. Escalating anything else wastes the human's attention on cases the agent could already handle.",
+          "Review rules should reflect error cost and policy obligations. Uncertainty is one signal, not the only one. A risk-based sample can expose systematic errors in cases the system classified with high confidence.",
       },
     ],
     sections: [],

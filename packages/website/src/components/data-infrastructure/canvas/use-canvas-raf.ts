@@ -28,7 +28,8 @@ const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 const REDUCED_MOTION_INTERVAL_MS = 250;
 
 function readReducedMotion(): boolean {
-  if (typeof window === "undefined" || typeof window.matchMedia !== "function") return false;
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function")
+    return false;
   try {
     return window.matchMedia(REDUCED_MOTION_QUERY).matches;
   } catch {
@@ -57,7 +58,9 @@ export interface UseCanvasRAFHandle {
  *   still pending animation state so the loop keeps scheduling; return
  *   `false` once idle so scheduling stops.
  */
-export function useCanvasRAF(draw: (now: number) => boolean): UseCanvasRAFHandle {
+export function useCanvasRAF(
+  draw: (now: number) => boolean,
+): UseCanvasRAFHandle {
   const drawRef = useRef(draw);
   drawRef.current = draw;
 
@@ -77,7 +80,10 @@ export function useCanvasRAF(draw: (now: number) => boolean): UseCanvasRAFHandle
       timeoutIdRef.current = null;
     }
     if (visibilityListenerRef.current) {
-      document.removeEventListener("visibilitychange", visibilityListenerRef.current);
+      document.removeEventListener(
+        "visibilitychange",
+        visibilityListenerRef.current,
+      );
       visibilityListenerRef.current = null;
     }
     scheduledRef.current = false;

@@ -62,7 +62,10 @@ function splitSelectorList(selector: string): string[] {
   return parts;
 }
 
-function collectRuleSelectors(node: import("postcss").Container, out: string[]): void {
+function collectRuleSelectors(
+  node: import("postcss").Container,
+  out: string[],
+): void {
   node.each((child) => {
     if (child.type === "rule") {
       out.push(child.selector);
@@ -158,5 +161,14 @@ describe("ds-v8-scope.css ", () => {
     expect(css).toContain('.ds-v8-scope input[type="range"]');
     expect(css).not.toMatch(/^\* \{/m);
     expect(css).not.toMatch(/^input\[type="range"\]/m);
+  });
+
+  it("contains long course content and exposes intentional horizontal scrollers at 320px", () => {
+    expect(css).toContain(".ds-v8-scope [data-horizontal-scroll]");
+    expect(css).toContain("overflow-x: auto");
+    expect(css).toContain("overflow-wrap: anywhere");
+    expect(css).toContain(".ds-v8-scope .prose code");
+    expect(css).toContain(".ds-v8-scope .simulation-disclosure");
+    expect(css).toContain("@media (max-width: 460px)");
   });
 });

@@ -34,14 +34,13 @@ const COURSES = [
   //: claude's basePath is nested under /kurse/open-source/
   // (unlike the other three courses' top-level paths), exercising the same
   // shared VerificationPage/decodeHash logic on a differently-shaped URL.
-  // English course (CourseConfig.language: "en") — the verification page
-  // renders its English copy branch (fixed post-migration: this page used to
-  // hardcode German chrome regardless of course language).
+  // Locale now follows the route tree. German routes render German chrome;
+  // their /en mirrors are covered by the course-specific locale suites.
   {
     route: "/kurse/open-source/claude/verifizierung",
     slug: "claude",
-    title: /Claude Course/,
-    lang: "en",
+    title: /Claude-Kurs/,
+    lang: "de",
   },
   //: codex, same nested-path shape as claude and the same
   // "completion" (all-lessons-done) eligibility path rather than a quiz —
@@ -49,8 +48,8 @@ const COURSES = [
   {
     route: "/kurse/open-source/codex/verifizierung",
     slug: "codex",
-    title: /Codex Course/,
-    lang: "en",
+    title: /Codex-Kurs/,
+    lang: "de",
   },
   //: data-infrastructure, same nested-path shape and
   // "completion" eligibility path as codex. The m: "quiz" payload below is
@@ -61,7 +60,7 @@ const COURSES = [
     route: "/kurse/open-source/data-infrastructure/verifizierung",
     slug: "data-infrastructure",
     title: /Data Infrastructure/,
-    lang: "en",
+    lang: "de",
   },
   //: data-engineering-fundamentals, same nested-path shape
   // and "completion" (all-12-chapters-visited) eligibility path as codex and
@@ -73,7 +72,7 @@ const COURSES = [
     route: "/kurse/open-source/data-engineering-fundamentals/verifizierung",
     slug: "data-engineering-fundamentals",
     title: /Data Engineering Fundamentals/,
-    lang: "en",
+    lang: "de",
   },
   //: data-science, same nested-path shape and
   // "completion" (all-12-numbered-chapters-visited) eligibility path as
@@ -85,7 +84,7 @@ const COURSES = [
     route: "/kurse/open-source/data-science/verifizierung",
     slug: "data-science",
     title: /Data Science Fundamentals/,
-    lang: "en",
+    lang: "de",
   },
   //: ai-native-operator, sixth and last imported course to
   // flip. Same nested-path shape as claude/codex/data-*, but unlike the four
@@ -96,8 +95,8 @@ const COURSES = [
   {
     route: "/kurse/open-source/ai-native-operator/verifizierung",
     slug: "ai-native-operator",
-    title: /The AI-Native Operator/,
-    lang: "en",
+    title: /AI-Native Operator/,
+    lang: "de",
   },
 ] as const;
 

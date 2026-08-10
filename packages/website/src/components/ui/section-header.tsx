@@ -2,6 +2,7 @@
 
 import { m } from "framer-motion";
 import { fadeUp } from "@/lib/animations";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 
 interface SectionHeaderProps {
   readonly eyebrow?: string;
@@ -11,7 +12,7 @@ interface SectionHeaderProps {
   readonly centered?: boolean;
 }
 
-export function SectionHeader({
+function SectionHeaderContent({
   eyebrow,
   eyebrowColor = "text-brand-orange",
   heading,
@@ -53,3 +54,5 @@ export function SectionHeader({
     </m.div>
   );
 }
+
+export const SectionHeader = withMotionProvider(SectionHeaderContent);

@@ -12,7 +12,7 @@ test.describe("legacy /eu-ai-act-check redirects", () => {
       const res = await request.get(route, { maxRedirects: 0 });
       expect([301, 308]).toContain(res.status());
       expect(res.headers()["location"]).toContain("/ki-check");
-      expect(res.headers()["x-robots-tag"]).toContain("noindex");
+      expect(res.headers()["x-robots-tag"]).toBeUndefined();
     });
   }
 

@@ -13,6 +13,8 @@ import {
 import { BrandButton } from "@/components/ui/brand-button";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import { localizeHref, type Locale } from "@/lib/i18n/locale";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 
 /* AI-Native Fluency Test
  * 10 scenarios across 5 dimensions. One question at a time, step dots,
@@ -32,37 +34,75 @@ const DIMENSIONS: readonly DimensionMeta[] = [
   {
     id: "drafting",
     label: "Drafting",
-    shortDesc: "Erzeugst du Text-Entwürfe mit Claude oder selbst?",
+    shortDesc: "Wie kommst du von Quellenmaterial zu einem prüfbaren Entwurf?",
     weakestRecommendation:
-      "Du tippst noch zu viel selbst. Modul 1 · Lektion 1.1 (Claude-Brief-Methode) plus Lektion 1.4 (10 Use-Cases) sind dein direkter Sprung.",
+      "Beginne mit Modul 1, Lektion 1.1 und 1.4. Sie behandeln begrenzte Briefings und wiederkehrende Entwurfsaufgaben.",
   },
   {
     id: "delegation",
     label: "Delegation",
-    shortDesc: "Übergibst du ganze Aufgaben mit Kontext?",
+    shortDesc: "Definierst du Kontext, Grenzen und Prüfkriterien?",
     weakestRecommendation:
-      "Du arbeitest mit Claude, aber briefst ihn nicht systematisch. Modul 1 · Lektion 1.3 (Orchestrator) plus Modul 2 · Lektion 2.1 (Projects) decken das ab.",
+      "Nutze Modul 1, Lektion 1.3 und Modul 2, Lektion 2.1, um Aufgaben und ihren dauerhaften Kontext zu definieren.",
   },
   {
     id: "automation",
     label: "Automation",
-    shortDesc: "Laufen Workflows im Hintergrund für dich?",
+    shortDesc: "Welche wiederkehrenden Schritte haben ausdrückliche Kontrollen?",
     weakestRecommendation:
-      "Du machst Dinge noch manuell, die vorbereitet werden könnten. Modul 4 · Sandbox-Builds 4.2 bis 4.4 geben dir drei prüfbare Muster.",
+      "Nutze die drei begrenzten Workflow-Übungen in Modul 4, Lektion 4.2 bis 4.4.",
   },
   {
     id: "knowledge",
     label: "Knowledge",
-    shortDesc: "Ist dein Wissen AI-abfragbar?",
+    shortDesc: "Kannst du Entscheidungen mit ihrem Quellenkontext abrufen?",
     weakestRecommendation:
-      "Dein Wissen ist noch nicht AI-abfragbar. Modul 3 (Obsidian + Claude) ist dein nächster Schritt.",
+      "Modul 3 behandelt gepflegte Notizen, Abruf und Quellenprüfung mit Obsidian und Claude.",
   },
   {
     id: "governance",
     label: "Governance",
-    shortDesc: "Kennst du die DSGVO/AI-Act-Grenzen?",
+    shortDesc: "Erkennst du Daten- und Regulierungsprüfpunkte?",
     weakestRecommendation:
-      "Du bist bei Compliance unsicher. Starte mit dem kostenlosen KI-Führerschein, dann Modul 4 · Lektion 4.6 (Annex III).",
+      "Prüfe zuerst den KI-Führerschein und danach Modul 4, Lektion 4.6. Das Material dient der Bildung und ist keine Rechtsberatung.",
+  },
+];
+
+const DIMENSIONS_EN: readonly DimensionMeta[] = [
+  {
+    id: "drafting",
+    label: "Drafting",
+    shortDesc: "How do you move from source material to a reviewable draft?",
+    weakestRecommendation:
+      "Start with module 1, lessons 1.1 and 1.4. They cover bounded briefs and repeatable drafting tasks.",
+  },
+  {
+    id: "delegation",
+    label: "Delegation",
+    shortDesc: "Do you provide context, constraints and review criteria?",
+    weakestRecommendation:
+      "Use module 1, lesson 1.3 and module 2, lesson 2.1 to define a task and maintain its context.",
+  },
+  {
+    id: "automation",
+    label: "Automation",
+    shortDesc: "Which repeated steps have explicit controls?",
+    weakestRecommendation:
+      "Use the three bounded workflow exercises in module 4, lessons 4.2 to 4.4.",
+  },
+  {
+    id: "knowledge",
+    label: "Knowledge",
+    shortDesc: "Can you retrieve decisions with their source context?",
+    weakestRecommendation:
+      "Module 3 covers maintained notes, retrieval and source review with Obsidian and Claude.",
+  },
+  {
+    id: "governance",
+    label: "Governance",
+    shortDesc: "Can you identify data and regulatory review points?",
+    weakestRecommendation:
+      "Review AI Fundamentals first, then module 4, lesson 4.6. The material is educational and not legal advice.",
   },
 ];
 
@@ -77,130 +117,246 @@ const SCENARIOS: readonly Scenario[] = [
   {
     id: "s1",
     dimension: "drafting",
-    question: "Kundenmail auf deinem Desktop, Antwort muss heute raus. Wie startest du?",
+    question: "Eine Kundenmail braucht heute eine Antwort. Wie beginnst du?",
     options: [
-      { label: "Ich öffne Google Docs und tippe", score: 0 },
-      { label: "Ich öffne Claude, tippe kurze Stichworte", score: 1 },
-      { label: "Ich öffne Claude, kopiere die Kundenmail rein, gebe Rolle+Kontext+Auftrag", score: 2 },
-      { label: "Ich habe eine Skill dafür, rufe /kunden-antwort auf", score: 3 },
+      { label: "Ich schreibe sie in einem leeren Dokument vollständig selbst", score: 0 },
+      { label: "Ich lasse aus wenigen Stichpunkten einen Entwurf erstellen", score: 1 },
+      { label: "Ich gebe freigegebene Mail, Rolle, Kontext, Auftrag und Ausgabegrenzen vor", score: 2 },
+      { label: "Ich nutze einen gepflegten Skill mit Pflichtkontext und Review-Checkliste", score: 3 },
     ],
   },
   {
     id: "s2",
     dimension: "delegation",
-    question: "Du musst eine Stellenausschreibung schreiben.",
+    question: "Du brauchst eine Stellenausschreibung.",
     options: [
-      { label: "Ich öffne Word und tippe", score: 0 },
-      { label: "Ich bitte Claude: 'schreib eine Stellenausschreibung'", score: 1 },
-      { label: "Ich gebe Claude: Rolle, Firmen-Kontext, Tätigkeitsprofil, Gehaltsrange", score: 2 },
-      { label: "Ich habe ein Claude-Project mit vollständigem Briefing, ein Satz reicht", score: 3 },
+      { label: "Ich schreibe sie vollständig selbst", score: 0 },
+      { label: "Ich fordere ohne weitere Angaben eine Stellenausschreibung an", score: 1 },
+      { label: "Ich gebe Rolle, freigegebenen Firmenkontext, Tätigkeitsprofil, Gehaltsrahmen und Format vor", score: 2 },
+      { label: "Ich nutze ein gepflegtes Project mit Quellenmaterial und Freigabekriterien", score: 3 },
     ],
   },
   {
     id: "s3",
     dimension: "automation",
-    question: "Du erhältst eine Website-Formular-Anfrage.",
+    question: "Eine Website-Anfrage geht ein.",
     options: [
-      { label: "Ich sehe sie in Email, übertrage manuell ins CRM", score: 0 },
-      { label: "Formular schreibt direkt ins CRM", score: 1 },
-      { label: "Formular schreibt ins CRM UND triggert Claude-Prompt für Erst-Antwort", score: 2 },
-      { label: "Der gesamte Prozess läuft ohne mich", score: 3 },
+      { label: "Ich übertrage sie manuell aus der E-Mail ins CRM", score: 0 },
+      { label: "Das Formular schreibt direkt ins CRM", score: 1 },
+      { label: "Nach dem CRM-Eintrag entsteht ein Antwortentwurf zur Prüfung", score: 2 },
+      { label: "Ein überwachter Ablauf validiert, weist einen Review zu und führt ein Audit-Protokoll", score: 3 },
     ],
   },
   {
     id: "s4",
     dimension: "knowledge",
-    question: "Vorgesetzter fragt: 'Was haben wir im Januar zum Thema X entschieden?'",
+    question: "Eine Führungskraft fragt nach einer Entscheidung aus dem Januar.",
     options: [
-      { label: "Ich suche in meinem Kopf", score: 0 },
-      { label: "Ich suche in Emails + Notion + Dateiablage", score: 1 },
-      { label: "Ich frage Copilot for Obsidian", score: 2 },
-      { label: "Ich habe Skill /entscheidungs-log", score: 3 },
+      { label: "Ich antworte aus dem Gedächtnis", score: 0 },
+      { label: "Ich suche getrennt in E-Mail, Notizen und Dateiablage", score: 1 },
+      { label: "Ich durchsuche eine gepflegte Wissensbasis", score: 2 },
+      { label: "Ich rufe Entscheidung, Quelle, verantwortliche Person und spätere Änderungen zusammen ab", score: 3 },
     ],
   },
   {
     id: "s5",
     dimension: "governance",
-    question: "Kollege fragt, ob er ChatGPT mit Kundendaten nutzen darf.",
+    question: "Eine Person fragt, ob Kundendaten in ein KI-Werkzeug eingegeben werden dürfen.",
     options: [
-      { label: "'Ich weiß nicht genau'", score: 0 },
-      { label: "'Ich glaube nicht, wegen DSGVO'", score: 1 },
-      { label: "Ich kann klassifizieren und konkret empfehlen", score: 2 },
-      { label: "Unsere Firma hat eine KI-Richtlinie, ich verweise drauf", score: 3 },
+      { label: "Ich weiß es nicht", score: 0 },
+      { label: "Ich nehme pauschal an, die DSGVO verbiete es", score: 1 },
+      { label: "Ich klassifiziere die Daten und prüfe Werkzeug sowie Verarbeitungsbedingungen", score: 2 },
+      { label: "Ich wende Organisationsrichtlinie, Werkzeugregister und Eskalationsweg an", score: 3 },
     ],
   },
   {
     id: "s6",
     dimension: "drafting",
-    question: "Du brauchst Stichpunkte für eine Präsentation.",
+    question: "Du brauchst eine Gliederung für eine Präsentation.",
     options: [
-      { label: "Stundenlang Brainstormen, dann formatieren", score: 0 },
-      { label: "Claude fragen: 'mach mir eine Präsentation zu X'", score: 1 },
-      { label: "Claude: Rohmaterial geben, Audience + Länge + Stil spezifizieren", score: 2 },
-      { label: "/praesentation-struktur Skill mit festem Format", score: 3 },
+      { label: "Ich entwickle und formatiere sie vollständig selbst", score: 0 },
+      { label: "Ich fordere ohne Quellen eine Präsentation zum Thema an", score: 1 },
+      { label: "Ich gebe Quellenmaterial, Zielgruppe, Länge, Ton und Ausgabestruktur vor", score: 2 },
+      { label: "Ich nutze ein gepflegtes Muster mit Quellen und Review-Checkliste je Folie", score: 3 },
     ],
   },
   {
     id: "s7",
     dimension: "delegation",
-    question: "Wöchentlicher Bericht an Vorgesetzte.",
+    question: "Du erstellst einen Wochenbericht für eine Führungskraft.",
     options: [
-      { label: "Ich schreibe ihn Freitag nachmittag von Hand", score: 0 },
-      { label: "Ich lass Claude aus Stichworten schreiben", score: 1 },
-      { label: "Claude holt aus meinem Obsidian die Woche, schreibt Draft", score: 2 },
-      { label: "n8n-Flow läuft Freitag 15 Uhr automatisch, ich review + schicke Freitag 16 Uhr", score: 3 },
+      { label: "Ich schreibe ihn am Ende der Woche vollständig selbst", score: 0 },
+      { label: "Ich lasse Stichpunkte in Fließtext umwandeln", score: 1 },
+      { label: "Ich erstelle einen Entwurf aus gepflegten Notizen und prüfe jede Aussage", score: 2 },
+      { label: "Ein geplanter Entwurf enthält Quellenlinks, Ausnahmehinweise und menschliche Freigabe", score: 3 },
     ],
   },
   {
     id: "s8",
     dimension: "automation",
-    question: "Meeting-Transkript von tl;dv.",
+    question: "Ein Besprechungstranskript liegt vor.",
     options: [
-      { label: "Ich lese es durch, extrahiere manuell Action-Items", score: 0 },
-      { label: "Ich schicke es an Claude, lass Action-Items extrahieren", score: 1 },
-      { label: "Skill /meeting-summary-de läuft auf jeden tl;dv-Link", score: 2 },
-      { label: "n8n-Flow: tl;dv → Skill → Notion-Datenbank → Slack-Notification", score: 3 },
+      { label: "Ich lese es und extrahiere Aufgaben manuell", score: 0 },
+      { label: "Ich lasse Aufgaben ohne festes Schema extrahieren", score: 1 },
+      { label: "Ich nutze ein gepflegtes Muster und prüfe Namen, Termine und Verantwortliche", score: 2 },
+      { label: "Ein Ablauf validiert den Entwurf und holt Freigaben ein, bevor nachgelagerte Systeme schreiben", score: 3 },
     ],
   },
   {
     id: "s9",
     dimension: "knowledge",
-    question: "Du liest eine relevante Web-Quelle.",
+    question: "Du liest eine Quelle, die für die aktuelle Arbeit relevant ist.",
     options: [
-      { label: "Ich speichere den Tab und lese später (nie)", score: 0 },
-      { label: "Ich kopiere die URL in eine Notiz", score: 1 },
-      { label: "Obsidian Web Clipper: Artikel landet automatisch in Inbox mit AI-Summary", score: 2 },
-      { label: "Zusätzlich: Smart Connections zeigt mir sofort, zu welchen meiner Projekte der Artikel relevant ist", score: 3 },
+      { label: "Ich lasse den Browser-Tab geöffnet", score: 0 },
+      { label: "Ich speichere die URL in einer Notiz", score: 1 },
+      { label: "Ich erfasse Titel, Datum, Quelle und eine eigene Zusammenfassung", score: 2 },
+      { label: "Ich verknüpfe sie mit aktueller Arbeit und dokumentiere, welche Aussage sie stützt oder infrage stellt", score: 3 },
     ],
   },
   {
     id: "s10",
     dimension: "governance",
-    question: "Neuer AI-Workflow in deiner Firma soll pilotiert werden. Was prüfst du?",
+    question: "Ein neuer KI-gestützter Ablauf soll pilotiert werden. Was prüfst du?",
     options: [
-      { label: "Ob es funktioniert", score: 0 },
-      { label: "Ob DSGVO-relevante Daten fließen", score: 1 },
-      { label: "DSGVO + Annex-III-Klassifikation (ist es Hochrisiko?) + AVVs", score: 2 },
-      { label: "Standard-Audit-Checkliste: DSGVO, EU-AI-Act, Art. 22, AVVs, FRIA falls nötig, Betriebsrat", score: 3 },
+      { label: "Ob die Demonstration funktioniert", score: 0 },
+      { label: "Ob personenbezogene Daten verarbeitet werden", score: 1 },
+      { label: "Zweck, Daten, Rollen, Risikoklassifikation, Anbieterbedingungen und menschliche Prüfung", score: 2 },
+      { label: "Ein dokumentiertes Pilot-Gate mit Verantwortlichen, Belegen, nötiger Rechtsprüfung und Stoppbedingung", score: 3 },
+    ],
+  },
+];
+
+const SCENARIOS_EN: readonly Scenario[] = [
+  {
+    id: "s1",
+    dimension: "drafting",
+    question: "A customer email requires a response today. How do you begin?",
+    options: [
+      { label: "Open a blank document and write from scratch", score: 0 },
+      { label: "Ask Claude to draft a reply from a few notes", score: 1 },
+      { label: "Provide the email, role, context, task and output constraints", score: 2 },
+      { label: "Use a maintained Skill with required context and a review checklist", score: 3 },
+    ],
+  },
+  {
+    id: "s2",
+    dimension: "delegation",
+    question: "You need to draft a job description.",
+    options: [
+      { label: "Open a blank document and draft it manually", score: 0 },
+      { label: "Ask Claude to write a job description", score: 1 },
+      { label: "Provide role, company context, responsibilities, range and format", score: 2 },
+      { label: "Use a maintained Project with source material and explicit approval criteria", score: 3 },
+    ],
+  },
+  {
+    id: "s3",
+    dimension: "automation",
+    question: "A website enquiry enters your organization.",
+    options: [
+      { label: "Copy it from email into the CRM", score: 0 },
+      { label: "Send the form directly to the CRM", score: 1 },
+      { label: "Create a reply draft after the CRM record is written", score: 2 },
+      { label: "Use a monitored workflow with validation, human approval and an audit trail", score: 3 },
+    ],
+  },
+  {
+    id: "s4",
+    dimension: "knowledge",
+    question: "A manager asks what was decided about a topic in January.",
+    options: [
+      { label: "Answer from memory", score: 0 },
+      { label: "Search email, notes and folders separately", score: 1 },
+      { label: "Search a maintained knowledge base", score: 2 },
+      { label: "Retrieve the decision, source note, owner and later changes together", score: 3 },
+    ],
+  },
+  {
+    id: "s5",
+    dimension: "governance",
+    question: "A colleague asks whether customer data may be entered into an AI tool.",
+    options: [
+      { label: "Say that you are not sure", score: 0 },
+      { label: "Assume it is prohibited because of the GDPR", score: 1 },
+      { label: "Classify the data and check the approved tool and processing terms", score: 2 },
+      { label: "Apply the organization policy, approved-tool register and escalation route", score: 3 },
+    ],
+  },
+  {
+    id: "s6",
+    dimension: "drafting",
+    question: "You need an outline for a presentation.",
+    options: [
+      { label: "Brainstorm and format it manually", score: 0 },
+      { label: "Ask Claude to make a presentation about the topic", score: 1 },
+      { label: "Provide source material, audience, length, tone and output structure", score: 2 },
+      { label: "Use a maintained pattern with citations and a slide-level review checklist", score: 3 },
+    ],
+  },
+  {
+    id: "s7",
+    dimension: "delegation",
+    question: "You prepare a weekly report for a manager.",
+    options: [
+      { label: "Write it manually at the end of the week", score: 0 },
+      { label: "Ask Claude to turn notes into prose", score: 1 },
+      { label: "Create a draft from maintained notes and verify every claim", score: 2 },
+      { label: "Use a scheduled draft with source links, exception flags and human approval", score: 3 },
+    ],
+  },
+  {
+    id: "s8",
+    dimension: "automation",
+    question: "A meeting transcript is available.",
+    options: [
+      { label: "Read it and extract actions manually", score: 0 },
+      { label: "Ask Claude to extract action items", score: 1 },
+      { label: "Use a maintained summary pattern and review names, dates and owners", score: 2 },
+      { label: "Route a draft through validation and owner approval before writing downstream systems", score: 3 },
+    ],
+  },
+  {
+    id: "s9",
+    dimension: "knowledge",
+    question: "You read a source relevant to current work.",
+    options: [
+      { label: "Leave the browser tab open", score: 0 },
+      { label: "Save the URL in a note", score: 1 },
+      { label: "Capture the article with title, date, source and your own summary", score: 2 },
+      { label: "Connect it to current work and record what claim it supports or challenges", score: 3 },
+    ],
+  },
+  {
+    id: "s10",
+    dimension: "governance",
+    question: "A new AI-supported workflow is proposed for a pilot. What do you review?",
+    options: [
+      { label: "Whether the demonstration works", score: 0 },
+      { label: "Whether personal data is processed", score: 1 },
+      { label: "Purpose, data, roles, risk classification, provider terms and human review", score: 2 },
+      { label: "A documented pilot gate with owners, evidence, legal review where required and a stop condition", score: 3 },
     ],
   },
 ];
 
 type Answers = Record<string, number>;
 
-export function FluencyTest() {
+function FluencyTestContent({ locale = "de" }: { readonly locale?: Locale }) {
+  const isEnglish = locale === "en";
+  const scenarios = isEnglish ? SCENARIOS_EN : SCENARIOS;
+  const dimensions = isEnglish ? DIMENSIONS_EN : DIMENSIONS;
   const [answers, setAnswers] = useState<Answers>({});
   const [idx, setIdx] = useState(0);
   const [submitted, setSubmitted] = useState(false);
 
-  const current = SCENARIOS[idx];
+  const current = scenarios[idx];
   const answered = Object.keys(answers).length;
 
   const selectAnswer = (optionIndex: number) => {
     setAnswers((prev) => ({ ...prev, [current.id]: optionIndex }));
     // Auto-advance after a beat (skips if last)
-    if (idx < SCENARIOS.length - 1) {
-      setTimeout(() => setIdx((i) => Math.min(SCENARIOS.length - 1, i + 1)), 220);
+    if (idx < scenarios.length - 1) {
+      setTimeout(() => setIdx((i) => Math.min(scenarios.length - 1, i + 1)), 220);
     }
   };
 
@@ -215,18 +371,18 @@ export function FluencyTest() {
   const totalScore = useMemo(
     () =>
       Object.entries(answers).reduce((sum, [sid, optIdx]) => {
-        const s = SCENARIOS.find((x) => x.id === sid);
+        const s = scenarios.find((x) => x.id === sid);
         return sum + (s?.options[optIdx]?.score ?? 0);
       }, 0),
-    [answers],
+    [answers, scenarios],
   );
-  const maxScore = SCENARIOS.length * 3;
+  const maxScore = scenarios.length * 3;
   const percent = Math.round((totalScore / maxScore) * 100);
 
   const perDim = useMemo(
     () =>
-      DIMENSIONS.map((d) => {
-        const items = SCENARIOS.filter((s) => s.dimension === d.id);
+      dimensions.map((d) => {
+        const items = scenarios.filter((s) => s.dimension === d.id);
         const scored = items.reduce((sum, s) => {
           const oi = answers[s.id];
           return sum + (oi != null ? (s.options[oi]?.score ?? 0) : 0);
@@ -234,7 +390,7 @@ export function FluencyTest() {
         const max = items.length * 3;
         return { ...d, score: scored, max, pct: max > 0 ? scored / max : 0 };
       }),
-    [answers],
+    [answers, dimensions, scenarios],
   );
 
   const weakest = useMemo(
@@ -246,34 +402,42 @@ export function FluencyTest() {
     percent < 25
       ? {
           title: "Explorer",
-          desc: "Du nutzt KI gelegentlich. Modul 1 ist für dich entworfen.",
+          desc: isEnglish
+            ? "Your answers show limited use of documented AI-supported workflows. Start with module 1."
+            : "Deine Antworten zeigen wenig dokumentierte KI-gestützte Abläufe. Beginne mit Modul 1.",
         }
       : percent < 50
         ? {
             title: "User",
-            desc: "Du bist dabei, aber orchestrierst nicht. Der Arbeitskurs schliesst die Lücke.",
+            desc: isEnglish
+              ? "You use AI tools, but context and review criteria are not yet consistent. Modules 1 and 2 address that gap."
+              : "Du nutzt KI-Werkzeuge, aber Kontext und Prüfkriterien sind noch nicht konsistent. Die Module 1 und 2 behandeln diese Lücke.",
           }
         : percent < 75
           ? {
               title: "Practitioner",
-              desc: "Du bist weiter als 80 % deiner Kollegen. Modul 3 - 4 hebt dich auf Operator-Level.",
+              desc: isEnglish
+                ? "You use several structured practices. Modules 3 and 4 focus on maintained knowledge and controlled automation."
+                : "Du nutzt mehrere strukturierte Praktiken. Die Module 3 und 4 behandeln gepflegtes Wissen und kontrollierte Automatisierung.",
             }
           : {
               title: "Operator",
-              desc: "Du arbeitest schon AI-native. Der Arbeitskurs gibt dir die systematische Sprache dafür.",
+              desc: isEnglish
+                ? "Your answers show a documented working method. Use the course to test it against explicit exercises and controls."
+                : "Deine Antworten zeigen eine dokumentierte Arbeitsmethode. Nutze den Kurs, um sie anhand klarer Übungen und Kontrollen zu prüfen.",
             };
 
   /* ─── Result view ─── */
   if (submitted) {
     return (
       <div className="mx-auto max-w-[960px] px-6 py-14 md:py-20">
-        <Eyebrow>Dein Ergebnis</Eyebrow>
+        <Eyebrow>{isEnglish ? "Your self-assessment" : "Deine Selbstprüfung"}</Eyebrow>
         <ClipHeading
           as="h1"
           className="mt-2.5 font-bold leading-none tracking-[-0.035em] text-foreground"
           style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}
         >
-          Hier stehst du.
+          {isEnglish ? "Your current pattern." : "Dein aktuelles Muster."}
         </ClipHeading>
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
@@ -293,7 +457,7 @@ export function FluencyTest() {
                 </span>
               </div>
               <p className="mt-5 text-[22px] font-bold tracking-[-0.02em] text-foreground">
-                Level: {level.title}.
+                {isEnglish ? "Profile" : "Profil"}: {level.title}.
               </p>
               <p className="mt-2 max-w-[480px] text-[15.5px] leading-[1.65] text-muted-foreground">
                 {level.desc}
@@ -304,7 +468,7 @@ export function FluencyTest() {
           <FadeBlock delay={2}>
             <div>
               <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
-                5 Dimensionen
+                5 {isEnglish ? "dimensions" : "Dimensionen"}
               </p>
               <div className="mt-4 grid gap-5">
                 {perDim.map((d, i) => (
@@ -343,7 +507,7 @@ export function FluencyTest() {
         <FadeBlock delay={7}>
           <div className="mt-14 border-l-[3px] border-brand-orange bg-[var(--color-kupfer-mist)] px-8 py-7">
             <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-              Schwächste Dimension: {weakest.label}
+              {isEnglish ? "Lowest-scoring dimension" : "Niedrigster Teilwert"}: {weakest.label}
             </p>
             <p className="mt-3 max-w-[640px] text-[17px] leading-[1.55] text-foreground">
               {weakest.weakestRecommendation}
@@ -354,22 +518,22 @@ export function FluencyTest() {
         <FadeBlock delay={8}>
           <div className="mt-10 flex flex-wrap items-center gap-3.5">
             <BrandButton
-              href="/ai-native/kurs/modul_1"
+              href={localizeHref("/ai-native/kurs/modul_1", locale)}
               prefetch={false}
               variant="primary"
               surface="light"
             >
-              Kurs starten <ArrowRight size={14} />
+              {isEnglish ? "Start the course" : "Kurs starten"} <ArrowRight size={14} />
             </BrandButton>
-            <BrandButton href="/ai-native" variant="outline" surface="light">
-              Zurück zur Übersicht
+            <BrandButton href={localizeHref("/ai-native", locale)} variant="outline" surface="light">
+              {isEnglish ? "Back to overview" : "Zurück zur Übersicht"}
             </BrandButton>
             <button
               type="button"
               onClick={reset}
               className="inline-flex items-center gap-1.5 p-3.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-brand-orange"
             >
-              <RotateCcw size={12} /> Nochmal machen
+              <RotateCcw size={12} /> {isEnglish ? "Start again" : "Nochmal bearbeiten"}
             </button>
           </div>
         </FadeBlock>
@@ -382,25 +546,25 @@ export function FluencyTest() {
     <div className="mx-auto max-w-[960px] px-6 py-14 md:py-20">
       <div className="flex flex-wrap items-baseline justify-between gap-5">
         <div>
-          <Eyebrow>Fluency-Test</Eyebrow>
+          <Eyebrow>{isEnglish ? "Workflow self-assessment" : "Workflow-Selbsttest"}</Eyebrow>
           <ClipHeading
             as="h1"
             className="mt-2.5 font-bold leading-none tracking-[-0.035em] text-foreground"
             style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}
           >
-            Wo stehst du?
+            {isEnglish ? "How do you work today?" : "Wie arbeitest du heute?"}
           </ClipHeading>
         </div>
         <span className="font-mono text-[12px] uppercase tracking-[0.14em] text-muted-foreground">
-          {String(idx + 1).padStart(2, "0")} / {String(SCENARIOS.length).padStart(2, "0")}
+          {String(idx + 1).padStart(2, "0")} / {String(scenarios.length).padStart(2, "0")}
         </span>
       </div>
 
       <FadeBlock delay={1}>
         <p className="mt-4 max-w-[640px] text-[16px] leading-[1.65] text-muted-foreground">
-          10 Szenarien aus dem Mittelstand-Alltag. 5 Dimensionen. Nach ca. 5
-          Minuten weisst du, wo du stehst, und welches Modul dein nächster
-          Schritt ist.
+          {isEnglish
+            ? "Ten workplace scenarios across five dimensions. The result is a local self-assessment, not a standardized test or comparison with other people."
+            : "Zehn Arbeitsszenarien in fünf Dimensionen. Das Ergebnis ist eine lokale Selbstprüfung, kein standardisierter Test und kein Vergleich mit anderen Personen."}
         </p>
       </FadeBlock>
 
@@ -409,18 +573,18 @@ export function FluencyTest() {
         <div className="h-0.5 flex-1 overflow-hidden bg-border">
           <m.div
             className="h-full bg-brand-orange"
-            animate={{ width: `${(answered / SCENARIOS.length) * 100}%` }}
+            animate={{ width: `${(answered / scenarios.length) * 100}%` }}
             transition={{ duration: 0.3 }}
           />
         </div>
         <span className="font-mono text-[11px] tracking-[0.12em] text-muted-foreground">
-          {answered}/{SCENARIOS.length}
+          {answered}/{scenarios.length}
         </span>
       </div>
 
       {/* Step dots */}
       <div className="mt-5 flex flex-wrap gap-1.5">
-        {SCENARIOS.map((s, i) => {
+        {scenarios.map((s, i) => {
           const done = answers[s.id] != null;
           const cur = i === idx;
           return (
@@ -428,7 +592,7 @@ export function FluencyTest() {
               key={s.id}
               type="button"
               onClick={() => setIdx(i)}
-              aria-label={`Szenario ${i + 1}`}
+              aria-label={`${isEnglish ? "Scenario" : "Szenario"} ${i + 1}`}
               className={cn(
                 "inline-flex h-7 w-7 items-center justify-center border p-0 font-mono text-[11px] font-bold transition-[background-color,border-color,color,opacity,transform,box-shadow]",
                 cur
@@ -455,8 +619,8 @@ export function FluencyTest() {
           className="mt-14"
         >
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-            Szenario {String(idx + 1).padStart(2, "0")} ·{" "}
-            {DIMENSIONS.find((d) => d.id === current.dimension)?.label}
+            {isEnglish ? "Scenario" : "Szenario"} {String(idx + 1).padStart(2, "0")} ·{" "}
+            {dimensions.find((d) => d.id === current.dimension)?.label}
           </p>
           <h2
             className="mt-3 font-bold leading-[1.15] tracking-[-0.03em] text-foreground"
@@ -511,24 +675,24 @@ export function FluencyTest() {
               : "text-muted-foreground hover:text-brand-orange",
           )}
         >
-          ← Zurück
+          ← {isEnglish ? "Back" : "Zurück"}
         </button>
-        {idx < SCENARIOS.length - 1 ? (
+        {idx < scenarios.length - 1 ? (
           <button
             type="button"
-            onClick={() => setIdx(Math.min(SCENARIOS.length - 1, idx + 1))}
+            onClick={() => setIdx(Math.min(scenarios.length - 1, idx + 1))}
             className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange transition-colors hover:text-brand-amber"
           >
-            Weiter →
+            {isEnglish ? "Next" : "Weiter"} →
           </button>
         ) : (
           <BrandButton
             variant="primary"
             surface="light"
             onClick={() => setSubmitted(true)}
-            disabled={answered < SCENARIOS.length}
+            disabled={answered < scenarios.length}
           >
-            Auswerten <ArrowRight size={14} />
+            {isEnglish ? "Calculate result" : "Ergebnis berechnen"} <ArrowRight size={14} />
           </BrandButton>
         )}
       </div>
@@ -536,16 +700,20 @@ export function FluencyTest() {
       {/* Cross-link to KI-F */}
       <FadeBlock delay={2}>
         <p className="mt-10 text-center text-sm text-muted-foreground">
-          Noch ganz am Anfang?{" "}
+          {isEnglish ? "Need the foundation first?" : "Fehlt noch die Grundlage?"}{" "}
           <Link
-            href="/ki-fuehrerschein"
+            href={localizeHref("/ki-fuehrerschein", locale)}
             className="text-brand-orange underline decoration-brand-orange/40 underline-offset-4 hover:text-brand-amber"
           >
-            KI-Führerschein
+            {isEnglish ? "AI Fundamentals" : "KI-Führerschein"}
           </Link>{" "}
-          ist kostenlos und zählt als Prerequisite.
+          {isEnglish
+            ? "is free and recommended before this course."
+            : "ist kostenlos und vor diesem Kurs empfohlen."}
         </p>
       </FadeBlock>
     </div>
   );
 }
+
+export const FluencyTest = withMotionProvider(FluencyTestContent);

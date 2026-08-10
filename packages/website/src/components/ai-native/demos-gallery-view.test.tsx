@@ -104,7 +104,7 @@ vi.mock("framer-motion", async () => {
 
 import { DemosGalleryView } from "./demos-gallery-view";
 
-const SEARCH_LABEL = "Praxisbeispiele durchsuchen";
+const SEARCH_LABEL = "Kurssimulationen durchsuchen";
 
 function typeQuery(value: string): void {
   fireEvent.change(screen.getByLabelText(SEARCH_LABEL), { target: { value } });
@@ -139,6 +139,17 @@ describe("<DemosGalleryView> default listing", () => {
   it("hides the Clear button until a query is entered", () => {
     render(<DemosGalleryView />);
     expect(screen.queryByRole("button", { name: "Clear" })).toBeNull();
+  });
+
+  it("renders the English catalog and localized course route", () => {
+    render(<DemosGalleryView locale="en" />);
+    expect(screen.getByText("Contract retrieval assistant")).toBeInTheDocument();
+    expect(screen.getByLabelText("Search course simulations")).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: /Start the course/ })[0]).toHaveAttribute(
+      "href",
+      "/en/ai-native/kurs/modul_1",
+    );
+    expect(screen.queryByText("RAG Vertrags-Assistent")).toBeNull();
   });
 });
 

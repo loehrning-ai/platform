@@ -21,6 +21,7 @@ import {
   buildReceiptEnvironment,
   CANONICAL_BUILD_EXECUTION_ENVIRONMENT,
   computeBuildState,
+  defaultBuildCommandArguments,
   listBuildInputPaths,
   recordBuildReceipt,
   readStableRegularFile,
@@ -87,6 +88,59 @@ test("default scope resolution binds provider-free policy mutations", () => {
     assert.throws(
       () => verifyBuildReceipt({ ...defaultScopeOptions, environment: {} }),
       /Stale production build/,
+    );
+  } finally {
+    rmSync(current.repositoryRoot, { recursive: true, force: true });
+  }
+});
+
+test("Next generated declarations do not invalidate a receipt-bearing build", () => {
+  const current = fixture();
+  try {
+    const generatedDeclarationPath = join(
+      current.websiteRoot,
+      "next-env.d.ts",
+    );
+    const buildIdPath = join(current.websiteRoot, ".next", "BUILD_ID");
+    writeFileSync(
+      generatedDeclarationPath,
+      'import "./.next/dev/types/routes.d.ts";\n',
+    );
+
+    assert.equal(
+      BUILD_INPUT_SCOPES.includes("packages/website/next-env.d.ts"),
+      false,
+    );
+    assert.equal(
+      listBuildInputPaths(current.repositoryRoot).includes(
+        "packages/website/next-env.d.ts",
+      ),
+      false,
+    );
+
+    runBuildAndRecord({
+      ...current,
+      files: undefined,
+      environment: {},
+      command: process.execPath,
+      commandArguments: [
+        "-e",
+        [
+          `const fs = require("node:fs");`,
+          `fs.writeFileSync(${JSON.stringify(generatedDeclarationPath)}, 'import "./.next/types/routes.d.ts";\\n');`,
+          `fs.writeFileSync(${JSON.stringify(buildIdPath)}, "generated-types-build\\n");`,
+        ].join(""),
+      ],
+      stdio: "pipe",
+    });
+
+    assert.equal(
+      verifyBuildReceipt({
+        ...current,
+        files: undefined,
+        environment: {},
+      }).buildId,
+      "generated-types-build",
     );
   } finally {
     rmSync(current.repositoryRoot, { recursive: true, force: true });
@@ -286,6 +340,16 @@ test("receipt builds canonicalize launcher-mutated locale and telemetry controls
   );
   assert.equal(directEnvironment.ANALYZE, "");
   assert.equal(buildReceiptEnvironment({ ANALYZE: "true" }).ANALYZE, "true");
+});
+
+test("receipt builds pin Next 16 to the certified Webpack production path", () => {
+  assert.deepEqual(defaultBuildCommandArguments(), [
+    "run",
+    "next",
+    "build",
+    "--webpack",
+    "--experimental-next-config-strip-types",
+  ]);
 });
 
 test("the default composite build passes its canonical environment to the child", () => {
@@ -608,6 +672,65 @@ test("the composite build records only a newly completed stable build", () => {
   }
 });
 
+test("the composite build removes stale route artifacts before compiling", () => {
+  const current = fixture();
+  try {
+    const buildIdPath = join(current.websiteRoot, ".next", "BUILD_ID");
+    const developmentArtifactDirectory = join(
+      current.websiteRoot,
+      ".next",
+      "dev",
+      "server",
+      "app",
+      "live-route",
+    );
+    const developmentArtifactPath = join(
+      developmentArtifactDirectory,
+      "page.html",
+    );
+    const staleRouteDirectory = join(
+      current.websiteRoot,
+      ".next",
+      "server",
+      "app",
+      "stale-route",
+    );
+    const staleRoutePath = join(staleRouteDirectory, "page.html");
+    mkdirSync(developmentArtifactDirectory, { recursive: true });
+    writeFileSync(developmentArtifactPath, "active development output\n");
+    mkdirSync(staleRouteDirectory, { recursive: true });
+    writeFileSync(staleRoutePath, "stale prerender\n");
+
+    runBuildAndRecord({
+      ...current,
+      environment: {},
+      command: process.execPath,
+      commandArguments: [
+        "-e",
+        [
+          `const fs = require("node:fs");`,
+          `if (fs.existsSync(${JSON.stringify(staleRoutePath)})) process.exit(19);`,
+          `if (fs.readFileSync(${JSON.stringify(developmentArtifactPath)}, "utf8") !== "active development output\\n") process.exit(20);`,
+          `fs.writeFileSync(${JSON.stringify(buildIdPath)}, "clean-build\\n");`,
+        ].join(""),
+      ],
+      stdio: "pipe",
+    });
+
+    assert.equal(existsSync(staleRoutePath), false);
+    assert.equal(
+      readFileSync(developmentArtifactPath, "utf8"),
+      "active development output\n",
+    );
+    assert.equal(
+      verifyBuildReceipt({ ...current, environment: {} }).buildId,
+      "clean-build",
+    );
+  } finally {
+    rmSync(current.repositoryRoot, { recursive: true, force: true });
+  }
+});
+
 test("the default composite build cannot load unrecorded dotenv inputs", () => {
   const current = fixture();
   try {
@@ -660,10 +783,14 @@ test("post-build artifact changes invalidate a receipt", () => {
   }
 });
 
-test("receipt, runtime trace, and cache mutations stay outside artifact integrity", () => {
+test("development output, receipt, runtime trace, and cache mutations stay outside artifact integrity", () => {
   const current = fixture();
   try {
     const options = { ...current, environment: {} };
+    const developmentDirectory = join(current.websiteRoot, ".next", "dev");
+    const developmentArtifact = join(developmentDirectory, "server-output.js");
+    mkdirSync(developmentDirectory, { recursive: true });
+    writeFileSync(developmentArtifact, "development output one\n");
     recordBuildReceipt(options);
     const cacheDirectory = join(current.websiteRoot, ".next", "cache");
     mkdirSync(cacheDirectory, { recursive: true });
@@ -672,6 +799,7 @@ test("receipt, runtime trace, and cache mutations stay outside artifact integrit
       join(current.websiteRoot, ".next", "trace"),
       "runtime trace\n",
     );
+    writeFileSync(developmentArtifact, "development output two\n");
     assert.equal(verifyBuildReceipt(options).buildId, "build-one");
   } finally {
     rmSync(current.repositoryRoot, { recursive: true, force: true });

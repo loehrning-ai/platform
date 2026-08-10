@@ -6,6 +6,7 @@ import { ArrowRight, GraduationCap } from "lucide-react";
 import { getCourseConfig } from "@/lib/course/config";
 import { isCertificateEligible } from "@/lib/course/progress";
 import type { CourseSlug } from "@/lib/course/types";
+import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import {
   getLearningOwnerContext,
   subscribeLearningOwner,
@@ -16,6 +17,7 @@ import { cn } from "@/lib/utils";
 interface CompletionCertificateCtaProps {
   readonly courseSlug: CourseSlug;
   readonly className?: string;
+  readonly locale?: Locale;
 }
 
 /**
@@ -29,8 +31,9 @@ interface CompletionCertificateCtaProps {
 export function CompletionCertificateCta({
   courseSlug,
   className,
+  locale,
 }: CompletionCertificateCtaProps): JSX.Element | null {
-  const config = getCourseConfig(courseSlug);
+  const config = getCourseConfig(courseSlug, locale);
   const [eligible, setEligible] = useState(false);
 
   useEffect(() => {
@@ -53,7 +56,11 @@ export function CompletionCertificateCta({
 
   if (!eligible) return null;
 
-  const certificateHref = `${config.coursePath}/zertifikat`;
+  const isGerman = config.language === "de";
+
+  const certificateHref = locale
+    ? localizeHref(`${config.coursePath}/zertifikat`, locale)
+    : `${config.coursePath}/zertifikat`;
   const headingId = `completion-certificate-${courseSlug}-heading`;
 
   return (
@@ -67,23 +74,28 @@ export function CompletionCertificateCta({
     >
       <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
         <GraduationCap className="mr-1.5 inline h-3.5 w-3.5" aria-hidden="true" />
-        Course complete
+        {isGerman ? "Kurs abgeschlossen" : "Course complete"}
       </p>
       <h2
         id={headingId}
         className="mt-2 text-[20px] font-bold tracking-[-0.02em] text-foreground"
       >
-        Your {config.recordNoun.label.toLowerCase()} is ready.
+        {isGerman
+          ? `${config.recordNoun.possessive} ist bereit.`
+          : `Your ${config.recordNoun.label.toLowerCase()} is ready.`}
       </h2>
       <p className="mt-2 max-w-[620px] text-[13.5px] leading-relaxed text-muted-foreground">
-        Every required lesson is complete. The certificate page checks your
-        progress again before preparing the local PDF.
+        {isGerman
+          ? "Alle erforderlichen Lektionen sind abgeschlossen. Die Download-Seite prüft deinen Lernstand erneut, bevor sie die lokale PDF vorbereitet."
+          : "Every required lesson is complete. The download page checks your progress again before preparing the local PDF."}
       </p>
       <Link
         href={certificateHref}
-        className="mt-4 inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-3 text-[12px] font-bold uppercase tracking-wide text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
+        className="mt-4 inline-flex min-h-11 max-w-full items-center gap-2 break-words border-2 border-foreground bg-brand-orange px-5 py-3 text-left text-[12px] font-bold uppercase tracking-wide text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
       >
-        Open {config.recordNoun.label}
+        {isGerman
+          ? `${config.recordNoun.label} öffnen`
+          : `Open ${config.recordNoun.label}`}
         <ArrowRight className="h-4 w-4" aria-hidden="true" />
       </Link>
     </section>

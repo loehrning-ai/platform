@@ -17,6 +17,9 @@ import {
   resolveCourseResumeHref,
 } from "@/lib/courses/resume";
 import type { CourseSlug } from "@/lib/course/types";
+import type { Locale } from "@/lib/i18n/locale";
+import { localizeHref, parseLocalePathname } from "@/lib/i18n/locale";
+import { localizeCatalogCourse } from "@/lib/courses/catalog-copy";
 
 const SPINE_COURSES = COURSE_CATALOG.filter(
   (course) => courseGroupFor(course.slug) === "spine",
@@ -40,6 +43,7 @@ export interface LernbegleiterState {
 export function computeStripState(
   progress: UnifiedProgress,
   pathname?: string,
+  locale: Locale = "de",
 ): LernbegleiterState {
   const completion = SPINE_COURSES.map((course) => {
     const completedLessons = completedCanonicalLessonCount(
@@ -59,12 +63,16 @@ export function computeStripState(
     .filter((entry) => entry.complete)
     .map((entry) => entry.course.slug);
   const completedCourseCount = completedCourseSlugs.length;
-  const routeCourseIndex = pathname
+  const parsedPathname = pathname ? parseLocalePathname(pathname) : null;
+  const routePathname = parsedPathname?.valid
+    ? parsedPathname.pathname
+    : pathname;
+  const routeCourseIndex = routePathname
     ? completion.findIndex(
         (entry) =>
           !entry.complete &&
-          (pathname === entry.course.href ||
-            pathname.startsWith(`${entry.course.href}/`)),
+          (routePathname === entry.course.href ||
+            routePathname.startsWith(`${entry.course.href}/`)),
       )
     : -1;
   const mostRecentlyActive = completion
@@ -90,37 +98,54 @@ export function computeStripState(
       currentCourseIndex: SPINE_COURSES.length - 1,
       completedCourseCount,
       completedCourseSlugs,
-      nextLabel: "Lernpfad abgeschlossen · tiefer gehen",
-      nextHref: "/kurse#tiefer-gehen",
+      nextLabel:
+        locale === "en"
+          ? "Learning path complete · continue in depth"
+          : "Lernpfad abgeschlossen · tiefer gehen",
+      nextHref: localizeHref("/kurse#tiefer-gehen", locale),
       allComplete: true,
     };
   }
 
   const current = completion[currentCourseIndex];
   const hasStarted = current.completedLessons > 0 || current.started;
+  const localizedCourse = localizeCatalogCourse(current.course, locale);
+  const nextHref = hasStarted
+    ? resolveCourseResumeHref(progress, current.course.slug)
+    : current.course.startHref;
 
   return {
     currentCourseIndex,
     completedCourseCount,
     completedCourseSlugs,
-    nextLabel: `${hasStarted ? "Weiterlernen" : "Starten"}: ${current.course.title}`,
-    nextHref: hasStarted
-      ? resolveCourseResumeHref(progress, current.course.slug)
-      : current.course.startHref,
+    nextLabel: `${
+      locale === "en"
+        ? hasStarted
+          ? "Continue"
+          : "Start"
+        : hasStarted
+          ? "Weiterlernen"
+          : "Starten"
+    }: ${localizedCourse.title}`,
+    nextHref: localizeHref(nextHref, locale),
     allComplete: false,
   };
 }
 
-export function LernbegleiterStrip() {
+export function LernbegleiterStrip({
+  locale = "de",
+}: {
+  readonly locale?: Locale;
+}) {
   const [state, setState] = useState<LernbegleiterState | null>(null);
   const pathname = usePathname();
 
   useEffect(
     () =>
       subscribe((progress) => {
-        setState(computeStripState(progress, pathname));
+        setState(computeStripState(progress, pathname, locale));
       }),
-    [pathname],
+    [locale, pathname],
   );
 
   if (!state || SPINE_COURSES.length === 0) return null;
@@ -128,7 +153,7 @@ export function LernbegleiterStrip() {
   return (
     <div
       className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-background/95 backdrop-blur-sm"
-      aria-label="Lernbegleiter"
+      aria-label={locale === "en" ? "Learning path" : "Lernbegleiter"}
       style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
     >
       <div className="mx-auto flex max-w-5xl items-center gap-4 px-6 py-3">
@@ -142,7 +167,7 @@ export function LernbegleiterStrip() {
             return (
               <div
                 key={course.slug}
-                title={course.title}
+                title={localizeCatalogCourse(course, locale).title}
                 className={`h-1.5 w-6 rounded-full transition-colors ${
                   isDone
                     ? "bg-brand-orange"
@@ -156,7 +181,7 @@ export function LernbegleiterStrip() {
         </div>
 
         <span className="hidden shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground sm:block">
-          Lernpfad{" "}
+          {locale === "en" ? "Learning path" : "Lernpfad"}{" "}
           {state.allComplete
             ? SPINE_COURSES.length
             : state.currentCourseIndex + 1}

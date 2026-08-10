@@ -17,7 +17,10 @@
 // blows the budget fails loudly here instead of at a learner's INSERT.
 import { describe, it, expect } from "vitest";
 import { getAllClaudeLessons } from "./data";
-import type { UnifiedCourseSlice, UnifiedLessonProgress } from "@/lib/progress/types";
+import type {
+  UnifiedCourseSlice,
+  UnifiedLessonProgress,
+} from "@/lib/progress/types";
 import { checkpointKey } from "@/lib/progress/types";
 
 const ROW_BYTE_CAP = 65536;
@@ -49,7 +52,11 @@ describe("claude course's contribution to the two progress-budget rows ", () => 
 
     const slice: UnifiedCourseSlice = {
       lessons: lessonEntries,
-      workshopQuiz: { passed: true, score: 100, completedAt: "2026-07-21T00:00:00.000Z" },
+      workshopQuiz: {
+        passed: true,
+        score: 100,
+        completedAt: "2026-07-21T00:00:00.000Z",
+      },
       capstoneSubmitted: false,
       startedAt: "2026-07-21T00:00:00.000Z",
       lastActivity: "2026-07-21T00:00:00.000Z",

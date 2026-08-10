@@ -1,12 +1,14 @@
 "use client";
 
 import { type JSX } from "react";
+import { useClaudeWidgetLocale } from "./locale-context";
 
 /**
  * ScoreDial, circular 0-100 gauge, ported from `claude/js/widgets.js`'s
  * `ScoreDial`. Pure SVG, no motion to gate (a static arc, no animation).
  */
 export function ScoreDial({ score }: { readonly score: number }): JSX.Element {
+  const locale = useClaudeWidgetLocale();
   const r = 42;
   const c = 2 * Math.PI * r;
   const pct = Math.max(0, Math.min(100, Math.round(score)));
@@ -24,9 +26,20 @@ export function ScoreDial({ score }: { readonly score: number }): JSX.Element {
       height={96}
       viewBox="0 0 110 110"
       role="img"
-      aria-label={`Score: ${pct} out of 100`}
+      aria-label={
+        locale === "de"
+          ? `Regelwert: ${pct} von 100`
+          : `Rule score: ${pct} out of 100`
+      }
     >
-      <circle cx={55} cy={55} r={r} fill="none" stroke="var(--color-border)" strokeWidth={8} />
+      <circle
+        cx={55}
+        cy={55}
+        r={r}
+        fill="none"
+        stroke="var(--color-border)"
+        strokeWidth={8}
+      />
       <circle
         cx={55}
         cy={55}
@@ -56,7 +69,7 @@ export function ScoreDial({ score }: { readonly score: number }): JSX.Element {
         fill="var(--color-muted-foreground)"
         letterSpacing={1}
       >
-        SCORE
+        {locale === "de" ? "REGELN" : "RULES"}
       </text>
     </svg>
   );

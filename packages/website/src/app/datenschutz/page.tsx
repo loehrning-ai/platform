@@ -1,26 +1,78 @@
+import type { Metadata } from "next";
+import { EnglishPrivacyContent } from "./privacy-content-en";
+import { contentLocalesForPath } from "@/lib/i18n/content-parity";
+import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { getRuntimeFeatures } from "@/lib/runtime-features";
 import { formatServiceAddress, LEGAL_IDENTITY } from "@/lib/legal-identity";
 import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
 
-export const metadata = createPublicPageMetadata({
-  title: "Datenschutz",
-  description: "Datenschutzerklärung von loehrning.ai | Tim Löhr",
-  path: "/datenschutz",
-});
+const PRIVACY_METADATA = {
+  de: {
+    title: "Datenschutz",
+    description: "Datenschutzerklärung von loehrning.ai | Tim Löhr",
+  },
+  en: {
+    title: "Privacy",
+    description: "Privacy policy for loehrning.ai | Tim Löhr",
+  },
+} as const;
 
-export default function DatenschutzPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const copy = PRIVACY_METADATA[locale];
+  const localizedPath = localizeHref("/datenschutz", locale);
+  const metadata = createPublicPageMetadata({
+    title: copy.title,
+    description: copy.description,
+    path: localizedPath,
+    locale,
+  });
+
+  return {
+    ...metadata,
+    alternates: {
+      ...buildLocaleAlternates(
+        "/datenschutz",
+        contentLocalesForPath("/datenschutz"),
+      ),
+      canonical: localizedPath,
+    },
+    openGraph: metadata.openGraph
+      ? {
+          ...metadata.openGraph,
+          locale: locale === "de" ? "de_DE" : "en_GB",
+        }
+      : metadata.openGraph,
+  };
+}
+
+export default async function DatenschutzPage() {
+  const locale = await getRequestLocale();
+  const features = getRuntimeFeatures();
+  return locale === "en" ? (
+    <EnglishPrivacyContent features={features} />
+  ) : (
+    <GermanPrivacyContent />
+  );
+}
+
+function GermanPrivacyContent() {
   const features = getRuntimeFeatures();
   const address = LEGAL_IDENTITY.serviceAddress;
   const formattedAddress = formatServiceAddress(address);
 
   return (
-    <section className="py-24">
-      <div className="mx-auto max-w-3xl px-6">
-        <h1 className="text-3xl font-bold tracking-[-0.04em] sm:text-4xl">
+    <section className="py-24" aria-labelledby="privacy-title">
+      <div className="mx-auto max-w-3xl break-words px-6">
+        <h1
+          id="privacy-title"
+          className="text-3xl font-bold tracking-[-0.04em] sm:text-4xl"
+        >
           Datenschutzerklärung
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Stand: 30. Juli 2026
+          Stand: 8. August 2026
         </p>
 
         <div className="mt-12 space-y-8 text-sm leading-relaxed text-muted-foreground">
@@ -297,34 +349,59 @@ export default function DatenschutzPage() {
                   Aktivierung dokumentiert worden. Marketing-Leads und Berichtsanfragen
                   werden nicht im Lernkonto gespeichert.
                 </p>
-                <p className="mt-2">
-                  Vor dem Versand eines Magic-Links wird Cloudflare Turnstile
-                  (Cloudflare, Inc., USA) als sichtbare, technisch erforderliche
-                  Sicherheitsprüfung geladen. Turnstile verarbeitet
-                  Verbindungsdaten sowie Signale aus Browser und Endgerät, um
-                  automatisierte Anfragen von regulärer Nutzung zu
-                  unterscheiden. Die Plattform übermittelt die eingegebene
-                  E-Mail-Adresse nicht als Turnstile-Parameter. Das erzeugte,
-                  kurzlebige Einmaltoken wird mit der Auth-Anfrage an Supabase
-                  übergeben und dort gegen die in Supabase hinterlegte
-                  Turnstile-Konfiguration geprüft. Die Funktion dient
-                  ausschließlich dem Schutz des öffentlichen Login- und
-                  E-Mail-Versandbudgets; Feedback-Erfassung im Turnstile-Widget
-                  ist deaktiviert. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f
-                  DSGVO. Der Zugriff auf Endgeräteinformationen wird nur
-                  insoweit auf § 25 Abs. 2 Nr. 2 TDDDG gestützt, wie er für
-                  diese ausdrücklich angeforderte, geschützte Anmeldung
-                  unbedingt erforderlich ist. Hostnamenbeschränkung,
-                  Anbieterbedingungen und{" "}
-                  <a
-                    href="https://www.cloudflare.com/turnstile-privacy-policy/"
-                    rel="noreferrer"
-                    className="underline underline-offset-2 hover:text-foreground"
-                  >
-                    Turnstile Privacy Addendum
-                  </a>{" "}
-                  sind vor Aktivierung datiert dokumentiert worden.
-                </p>
+                {features.magicLink ? (
+                  <p className="mt-2">
+                    Vor dem Versand eines Magic-Links wird Cloudflare Turnstile
+                    (Cloudflare, Inc., USA) als sichtbare, technisch erforderliche
+                    Sicherheitsprüfung geladen. Turnstile verarbeitet
+                    Verbindungsdaten sowie Signale aus Browser und Endgerät, um
+                    automatisierte Anfragen von regulärer Nutzung zu
+                    unterscheiden. Die Plattform übermittelt die eingegebene
+                    E-Mail-Adresse nicht als Turnstile-Parameter. Das erzeugte,
+                    kurzlebige Einmaltoken wird mit der OTP-Anfrage an Supabase
+                    übergeben und dort gegen die in Supabase hinterlegte
+                    Turnstile-Konfiguration geprüft. Die Funktion dient
+                    ausschließlich dem Schutz des öffentlichen Login- und
+                    E-Mail-Versandbudgets; Feedback-Erfassung im Turnstile-Widget
+                    ist deaktiviert. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f
+                    DSGVO. Der Zugriff auf Endgeräteinformationen wird nur
+                    insoweit auf § 25 Abs. 2 Nr. 2 TDDDG gestützt, wie er für
+                    diese ausdrücklich angeforderte, geschützte Anmeldung
+                    unbedingt erforderlich ist. Hostnamenbeschränkung,
+                    Anbieterbedingungen und{" "}
+                    <a
+                      href="https://www.cloudflare.com/turnstile-privacy-policy/"
+                      rel="noreferrer"
+                      className="underline underline-offset-2 hover:text-foreground"
+                    >
+                      Turnstile Privacy Addendum
+                    </a>{" "}
+                    sind vor Aktivierung datiert dokumentiert worden.
+                  </p>
+                ) : null}
+                {features.google ? (
+                  <p className="mt-2">
+                    Bei der Anmeldung mit Google leitet Supabase den Browser zu
+                    Google und anschließend an den freigegebenen Rücksprungpfad
+                    dieser Plattform weiter. Dabei verarbeiten Google und
+                    Supabase die für die Anmeldung erforderlichen
+                    Verbindungs-, Konto- und Profildaten einschließlich der
+                    E-Mail-Adresse. Die Plattform fordert keine zusätzlichen
+                    Google-Berechtigungen an und erhält insbesondere keinen
+                    Zugriff auf Google Drive, Kalender oder andere
+                    Google-Inhalte. Cloudflare Turnstile wird für diese
+                    Google-Anmeldung weder geladen noch als Parameter
+                    übermittelt. Die Provider- und Rücksprungkonfiguration ist
+                    vor Aktivierung datiert verifiziert worden.
+                  </p>
+                ) : null}
+                {!features.magicLink && !features.google ? (
+                  <p className="mt-2">
+                    Das Lernkonto-Backend ist aktiv, aber für neue Anmeldungen
+                    ist derzeit weder Magic-Link noch Google als vollständig
+                    verifizierte Anmeldemethode freigegeben.
+                  </p>
+                ) : null}
                 <p className="mt-2">
                   Für Fortschrittssynchronisierung, Kurs-Reset, PDF-Download
                   und Kontolöschung verarbeitet Supabase außerdem
@@ -342,14 +419,15 @@ export default function DatenschutzPage() {
               </>
             ) : (
               <p>
-                Supabase, Magic-Link-Anmeldung, serverseitige
-                Fortschrittssynchronisierung und Kontoverwaltung sind in dieser
-                Bereitstellung deaktiviert. Fortschritt verbleibt ausschließlich
-                im jeweiligen Browser. Bei einer späteren Aktivierung verlangt
-                der Aktivierungsprozess eine vollständige Konfiguration, eine
-                bestätigte EU-Region, ein datiertes Supabase-DPA sowie eine
-                aktivierte und rechtlich geprüfte
-                Turnstile-Missbrauchsbegrenzung.
+                Supabase-Lernkonto, Magic-Link- und Google-Anmeldung,
+                serverseitige Fortschrittssynchronisierung und Kontoverwaltung
+                sind in dieser Bereitstellung deaktiviert. Fortschritt verbleibt
+                ausschließlich im jeweiligen Browser. Bei einer späteren
+                Aktivierung verlangt das Lernkonto eine vollständige
+                Serverkonfiguration, eine bestätigte EU-Region und ein datiertes
+                Supabase-DPA. Jede Anmeldemethode bleibt zusätzlich deaktiviert,
+                bis ihre eigene technische und rechtliche Konfiguration
+                verifiziert ist.
               </p>
             )}
           </LegalSection>

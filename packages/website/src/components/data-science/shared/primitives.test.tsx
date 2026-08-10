@@ -1,6 +1,13 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { Hero, SectionLabel, Panel, AntiPatterns, BestPractices, Takeaway } from "./primitives";
+import {
+  Hero,
+  SectionLabel,
+  Panel,
+  AntiPatterns,
+  BestPractices,
+  Takeaway,
+} from "./primitives";
 
 describe("data-science shared primitives ", () => {
   it("Hero renders eyebrow, title (with inline markup), hook, and meta", () => {
@@ -32,7 +39,12 @@ describe("data-science shared primitives ", () => {
 
   it("Panel renders eyebrow, title, meta, caption, and children", () => {
     render(
-      <Panel eyebrow="LIVE" title="Galton Board" meta="n = 25" caption="A caption.">
+      <Panel
+        eyebrow="LIVE"
+        title="Galton Board"
+        meta="n = 25"
+        caption="A caption."
+      >
         <div>sim content</div>
       </Panel>,
     );
@@ -41,6 +53,9 @@ describe("data-science shared primitives ", () => {
     expect(screen.getByText("n = 25")).toBeInTheDocument();
     expect(screen.getByText("A caption.")).toBeInTheDocument();
     expect(screen.getByText("sim content")).toBeInTheDocument();
+    expect(
+      screen.getByText(/This local teaching model uses fixed synthetic inputs/),
+    ).toBeInTheDocument();
   });
 
   it("Panel omits the eyebrow/meta/caption blocks when not provided", () => {
@@ -55,7 +70,9 @@ describe("data-science shared primitives ", () => {
   });
 
   it("AntiPatterns numbers items and defaults its title", () => {
-    render(<AntiPatterns items={["<b>First</b> mistake.", "Second mistake."]} />);
+    render(
+      <AntiPatterns items={["<b>First</b> mistake.", "Second mistake."]} />,
+    );
     expect(screen.getByText("Anti-patterns")).toBeInTheDocument();
     expect(screen.getByText("01")).toBeInTheDocument();
     expect(screen.getByText("02")).toBeInTheDocument();

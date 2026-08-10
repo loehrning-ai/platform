@@ -6,13 +6,21 @@
 // one eagerly-imported array, so no lesson route's bundle pays for a
 // sibling lesson's content.
 
+import type { Locale } from "@/lib/i18n/locale";
 import type { ClaudeLesson, ClaudeLessonId } from "./types";
-import { CLAUDE_LESSON_IDS, CLAUDE_TRACKS } from "./types";
+import { CLAUDE_LESSON_IDS, CLAUDE_TRACKS_BY_LOCALE } from "./types";
 
-const LESSON_LOADERS: Record<
-  ClaudeLessonId,
-  () => Promise<{ default: ClaudeLesson }>
-> = {
+type ClaudeLessonLoader = () => Promise<{ default: ClaudeLesson }>;
+
+function jsonLessonLoader(
+  loader: () => Promise<{ default: unknown }>,
+): ClaudeLessonLoader {
+  return async () => ({
+    default: (await loader()).default as ClaudeLesson,
+  });
+}
+
+const EN_LESSON_LOADERS: Record<ClaudeLessonId, ClaudeLessonLoader> = {
   "mental-model": () => import("./lessons/mental-model"),
   anatomy: () => import("./lessons/anatomy"),
   context: () => import("./lessons/context"),
@@ -27,31 +35,84 @@ const LESSON_LOADERS: Record<
   safety: () => import("./lessons/safety"),
 };
 
+const DE_LESSON_LOADERS: Record<ClaudeLessonId, ClaudeLessonLoader> = {
+  "mental-model": jsonLessonLoader(
+    () => import("../../../content/claude/de/lessons/mental-model.json"),
+  ),
+  anatomy: jsonLessonLoader(
+    () => import("../../../content/claude/de/lessons/anatomy.json"),
+  ),
+  context: jsonLessonLoader(
+    () => import("../../../content/claude/de/lessons/context.json"),
+  ),
+  "claude-md": jsonLessonLoader(
+    () => import("../../../content/claude/de/lessons/claude-md.json"),
+  ),
+  iteration: jsonLessonLoader(
+    () => import("../../../content/claude/de/lessons/iteration.json"),
+  ),
+  gdocs: jsonLessonLoader(
+    () => import("../../../content/claude/de/lessons/gdocs.json"),
+  ),
+  agents: jsonLessonLoader(
+    () => import("../../../content/claude/de/lessons/agents.json"),
+  ),
+  reviews: jsonLessonLoader(
+    () => import("../../../content/claude/de/lessons/reviews.json"),
+  ),
+  grounding: jsonLessonLoader(
+    () => import("../../../content/claude/de/lessons/grounding.json"),
+  ),
+  team: jsonLessonLoader(
+    () => import("../../../content/claude/de/lessons/team.json"),
+  ),
+  evals: jsonLessonLoader(
+    () => import("../../../content/claude/de/lessons/evals.json"),
+  ),
+  safety: jsonLessonLoader(
+    () => import("../../../content/claude/de/lessons/safety.json"),
+  ),
+};
+
+const LESSON_LOADERS_BY_LOCALE: Readonly<
+  Record<Locale, Record<ClaudeLessonId, ClaudeLessonLoader>>
+> = {
+  de: DE_LESSON_LOADERS,
+  en: EN_LESSON_LOADERS,
+};
+
 // Memoized per lesson so a single request that touches a lesson more than
 // once (e.g. metadata + page render) imports its module only once.
-const lessonCache = new Map<ClaudeLessonId, ClaudeLesson>();
+const lessonCache = new Map<string, ClaudeLesson>();
 
 export async function getClaudeLesson(
   id: ClaudeLessonId,
+  locale: Locale = "en",
 ): Promise<ClaudeLesson | undefined> {
-  const cached = lessonCache.get(id);
+  const cacheKey = `${locale}:${id}`;
+  const cached = lessonCache.get(cacheKey);
   if (cached) return cached;
-  const loader = LESSON_LOADERS[id];
+  const loader = LESSON_LOADERS_BY_LOCALE[locale][id];
   if (!loader) return undefined;
   const mod = await loader();
-  lessonCache.set(id, mod.default);
-  return mod.default;
+  const lesson = mod.default as ClaudeLesson;
+  lessonCache.set(cacheKey, lesson);
+  return lesson;
 }
 
-export async function getAllClaudeLessons(): Promise<readonly ClaudeLesson[]> {
-  const all = await Promise.all(CLAUDE_LESSON_IDS.map(getClaudeLesson));
+export async function getAllClaudeLessons(
+  locale: Locale = "en",
+): Promise<readonly ClaudeLesson[]> {
+  const all = await Promise.all(
+    CLAUDE_LESSON_IDS.map((lessonId) => getClaudeLesson(lessonId, locale)),
+  );
   return all
     .filter((l): l is ClaudeLesson => l != null)
     .sort((a, b) => a.number - b.number);
 }
 
-export function getClaudeTracks() {
-  return CLAUDE_TRACKS;
+export function getClaudeTracks(locale: Locale = "en") {
+  return CLAUDE_TRACKS_BY_LOCALE[locale];
 }
 
 export function getClaudeTotalLessons(): number {

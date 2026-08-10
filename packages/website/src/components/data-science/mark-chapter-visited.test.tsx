@@ -17,7 +17,7 @@ describe("MarkChapterVisited", () => {
   it("does not mark the chapter until the learner confirms completion", () => {
     __resetCacheForTests();
     expect(isChapterVisited("fund")).toBe(false);
-    render(<MarkChapterVisited chapterId="fund" />);
+    render(<MarkChapterVisited chapterId="fund" locale="en" />);
     expect(isChapterVisited("fund")).toBe(false);
     fireEvent.click(
       screen.getByRole("button", { name: "Mark chapter complete" }),
@@ -30,18 +30,20 @@ describe("MarkChapterVisited", () => {
 
   it("does not complete a newly rendered chapter implicitly", () => {
     __resetCacheForTests();
-    const { rerender } = render(<MarkChapterVisited chapterId="fund" />);
+    const { rerender } = render(
+      <MarkChapterVisited chapterId="fund" locale="en" />,
+    );
     fireEvent.click(
       screen.getByRole("button", { name: "Mark chapter complete" }),
     );
-    rerender(<MarkChapterVisited chapterId="explore" />);
+    rerender(<MarkChapterVisited chapterId="explore" locale="en" />);
     expect(isChapterVisited("fund")).toBe(true);
     expect(isChapterVisited("explore")).toBe(false);
   });
 
   it("renders an explicit completion control", () => {
     __resetCacheForTests();
-    render(<MarkChapterVisited chapterId="fund" />);
+    render(<MarkChapterVisited chapterId="fund" locale="en" />);
     expect(
       screen.getByRole("button", { name: "Mark chapter complete" }),
     ).toHaveAttribute("aria-pressed", "false");

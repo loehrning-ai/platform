@@ -10,22 +10,22 @@ function IngestStreams() {
     <div className="cards-2">
       <div className="ccard">
         <div className="ccard-t">ClickHouse</div>
-        <div className="ccard-n">Sampled · real-time</div>
+        <div className="ccard-n">Sampled · operational view</div>
         <div className="ccard-d">
-          1-in-N rows. Sub-minute freshness. Perfect for <em>&quot;is something on fire?&quot;</em> Never sum raw sample counts and expect truth:
-          always multiply by the sample rate.
+          The course scenario stores one of every N events for an operational view. Any estimate derived from that sample must use the declared
+          sampling design and estimator.
         </div>
       </div>
       <div className="ccard">
         <div className="ccard-t">Snowflake</div>
-        <div className="ccard-n">Exact · batch</div>
-        <div className="ccard-d">100% of rows, deterministic. Hours of delay. What you use for finance, policy, and anything a regulator might subpoena.</div>
+        <div className="ccard-n">Complete · scheduled batch</div>
+        <div className="ccard-d">The course batch retains all accepted raw events and rebuilds a partition from fixed inputs. Completeness still depends on source capture and late-data policy.</div>
       </div>
     </div>
   );
 }
 
-const KAFKA_TO_WAREHOUSE_SQL = `<span class="tok-k">INSERT OVERWRITE TABLE</span> events_daily <span class="tok-k">PARTITION</span> (ds=<span class="tok-s">'&lt;DATEID&gt;'</span>)
+export const KAFKA_TO_WAREHOUSE_SQL = `<span class="tok-k">INSERT OVERWRITE TABLE</span> events_daily <span class="tok-k">PARTITION</span> (ds=<span class="tok-s">'&lt;DATEID&gt;'</span>)
 <span class="tok-k">SELECT</span>
   user_id,
   event_name,
@@ -46,8 +46,8 @@ export function Ch1Ingest({ chapter }: Ch1IngestProps) {
       <Hero
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
-        title="Ingest: <span class='accent'>where data is born,</span> and what it costs to trust it."
-        hook="Events are captured live on the edge and land in two places: a <strong>sampled, real-time store</strong> (ClickHouse) for on-call; and an <strong>exact, batch warehouse</strong> (Snowflake) for accounting. The bridge between them is a watermark: a line past which late events are dropped. Drag it wrong and you ship wrong numbers."
+        title="Ingest: <span class='accent'>event time, processing time, and late data.</span>"
+        hook="The course reference pipeline writes a sampled operational projection to ClickHouse and a complete scheduled batch to Snowflake. A watermark closes each event-time window; the configured late-data policy determines what happens after closure."
         meta={[
           { k: "Source", v: '<span class="chip">ClickHouse</span><span class="chip">Loggers</span><span class="chip">CDC</span>' },
           { k: "Sink", v: "Snowflake · Iceberg tables" },
@@ -64,9 +64,9 @@ export function Ch1Ingest({ chapter }: Ch1IngestProps) {
           diverge. Any system that pretends they&apos;re the same ships the wrong numbers.
         </p>
         <p className="prose">
-          Modern logger tiers (Kafka + Flink CDC) emit events into ClickHouse within <em>seconds</em> of event time; Snowflake lands them as
-          Parquet minutes to hours later. Between those two, the <b>watermark</b> decides which late events get to join the aggregate and which
-          get dropped.
+          In the course architecture, Kafka transports events and a Flink job processes them before separate operational and batch writes. The
+          <b> watermark</b> expresses how far event-time processing has progressed. A configured policy may update a window, route late records
+          elsewhere, or discard them.
         </p>
       </section>
 
@@ -74,53 +74,54 @@ export function Ch1Ingest({ chapter }: Ch1IngestProps) {
         <SectionLabel n="1.2">The compromise, visualized</SectionLabel>
         <h2 className="h2">When do you stop waiting?</h2>
         <p className="prose">
-          Drag the blue line. Green dots are on-time events; amber dots arrived late. Anything past the watermark is <em>dropped</em>: gone from
-          Snowflake. Too tight and you lose real data; too loose and dashboards lag by an hour. There is no free correct answer.
+          Drag the blue line. Green dots arrive before the simulated watermark and amber dots arrive later. This simulator uses a discard-late
+          policy. A production pipeline can instead retain raw input and route or reprocess late records. The choice changes both publication
+          delay and completeness.
         </p>
         <WatermarkSim />
         <p className="prose" style={{ marginTop: 22 }}>
-          In production, watermarks are typically <b>15–60 minutes</b> behind real-time: long enough to absorb mobile stragglers, short enough
-          that dashboards feel live. Finance-critical pipelines push the watermark out to hours and accept the delay.
+          Set the watermark from observed lateness distributions and the consumer&apos;s publication tolerance. Record how much data arrives after
+          closure and revise the policy when that distribution changes.
         </p>
       </section>
 
       <section className="section">
         <SectionLabel n="1.3">Two stores, two jobs</SectionLabel>
         <h2 className="h2">
-          ClickHouse answers <em>&quot;now&quot;</em>. Snowflake answers <em>&quot;exactly&quot;</em>.
+          Separate the operational projection from the complete batch.
         </h2>
         <p className="prose">
-          The rule is not &quot;pick one.&quot; It&apos;s <em>use both, and know which question each one answers</em>. ClickHouse is for live
-          debugging, oncall, and broad strokes. Snowflake is for contracts, finance, and any number that has to survive a regulator.
+          These roles belong to this reference architecture, not to the vendor names themselves. The sampled projection supports operational
+          inspection. The scheduled batch supports reproducible reporting once its source, completeness checks, and late-data policy are known.
         </p>
         <IngestStreams />
       </section>
 
       <section className="section">
-        <SectionLabel n="1.4">The canonical kafka-to-warehouse SQL</SectionLabel>
+        <SectionLabel n="1.4">The course kafka-to-warehouse SQL</SectionLabel>
         <CodeBlock title="kafka_to_warehouse_events.sql" lang="Spark" html={KAFKA_TO_WAREHOUSE_SQL} />
       </section>
 
       <AntiPatterns
         items={[
-          "<b>Summing raw ClickHouse counts without the sample rate.</b> A 1:1000 sample reports 1000× fewer impressions. Always multiply by <code>sample_rate</code>.",
-          "<b>Watermark = now.</b> You'll drop every mobile event that round-trips through a cell tower. Give it at least 15 minutes of grace.",
-          "<b>Treating the kafka-to-warehouse pipeline as eventually consistent.</b> It isn't. Once the window closes, late events are <em>gone</em>: no backfill, no retry will save them.",
+          "<b>Using raw sample counts as population counts.</b> A 1:1000 sample needs a declared weighting or estimator, plus assumptions about how the sample was selected.",
+          "<b>Closing a window without measuring lateness.</b> Use observed event-time and processing-time gaps to choose and monitor the watermark.",
+          "<b>Discarding late events without retaining a recovery path.</b> Preserve an immutable raw log or a side output when later correction is required.",
           "<b>Reading <code>NOW()</code> inside an ingest job.</b> A backfill in May for last Tuesday becomes unreproducible. Use <code>&lt;DATEID&gt;</code>.",
         ]}
       />
       <BestPractices
         items={[
           "Emit <b>both timestamps</b> on every event: <code>event_time</code> (device) and <code>processing_time</code> (server). The gap between them is your watermark budget.",
-          "Budget your watermark from the <b>p99 network delay</b> for mobile, not the median. 30 minutes is a sane starting point.",
-          'Dashboards that demand real-time: read <b>ClickHouse</b>, annotate them <em>"sampled"</em>. Anything cited in a deck: read <b>Snowflake</b>.',
+          "Choose the watermark from the <b>observed lateness distribution</b> and a documented completeness-versus-delay requirement.",
+          'Label sampled outputs with their sample design. Label scheduled outputs with their cutoff, source coverage, and correction policy.',
         ]}
       />
       <Takeaway
         items={[
           "Every event has two clocks: <b>event time</b> and <b>processing time</b>. Late arrivals live in the gap between them.",
-          "The <b>watermark</b> is the price you pay to close a window. Tighter = lossier. Looser = later.",
-          "<b>ClickHouse</b> is sampled and fast; <b>Snowflake</b> is exact and slow. Use both: know which question each one answers.",
+          "A <b>watermark</b> marks event-time progress. The late-data policy decides whether later records update, reroute, or drop.",
+          "Vendor choice does not establish freshness or completeness. State those properties for each pipeline output.",
         ]}
       />
     </>

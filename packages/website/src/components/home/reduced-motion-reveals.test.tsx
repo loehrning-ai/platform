@@ -19,14 +19,14 @@ describe("homepage static content visibility", () => {
     expect(html).not.toContain("opacity:0");
     expect(html).not.toContain("scaleX(0)");
     expect(html).toContain("Vier Kurse.");
-    expect(html).toContain("Was dich hier erwartet");
-    expect(html).toContain("Deinen Start bestimmen.");
+    expect(html).toContain("Betriebsprinzipien");
+    expect(html).toContain("Den passenden Einstieg finden.");
   });
 
   it("renders the featured course inside a visible static wrapper", () => {
     render(<Offering />);
 
-    const featuredReveal = screen.getByText("Start bei null").closest("a")?.parentElement;
+    const featuredReveal = screen.getByText("Empfohlener Einstieg").closest("a")?.parentElement;
     expect(featuredReveal).not.toBeNull();
     expect(featuredReveal?.tagName).toBe("DIV");
     expect(featuredReveal).toHaveClass("mt-12");

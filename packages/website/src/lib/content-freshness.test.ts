@@ -1,10 +1,14 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
+
+vi.mock("@/lib/i18n/request-locale", () => ({
+  getRequestLocale: async () => "de" as const,
+}));
 import { SITE_CONTENT_DATE } from "./content-freshness";
 import { BLOG_POSTS } from "./blog-metadata";
 import sitemap from "@/app/sitemap";
 import { GET as getLlmsTxt } from "@/app/llms.txt/route";
 import { GET as getKnowledgeGraph } from "@/app/api/knowledge-graph.json/route";
-import { metadata as euAiActGrundlagenMeta } from "@/app/blog/eu-ai-act-grundlagen/page";
+import { generateMetadata as generateEuAiActGrundlagenMetadata } from "@/app/blog/eu-ai-act-grundlagen/page";
 import { generateMetadata as generateDemoMetadata } from "@/app/demos/[slug]/page";
 import { demos } from "./demos";
 
@@ -24,8 +28,13 @@ async function sitemapStaticDate(): Promise<string> {
 async function llmsTxtDate(): Promise<string> {
   const res = getLlmsTxt(new Request("https://loehrning.ai/llms.txt") as never);
   const text = await res.text();
-  const match = text.match(/Veröffentlichungsdatum dieser Datei: (\d{4}-\d{2}-\d{2})\./);
-  expect(match, "llms.txt is missing the Veröffentlichungsdatum line").not.toBeNull();
+  const match = text.match(
+    /Veröffentlichungsdatum dieser Datei: (\d{4}-\d{2}-\d{2})\./,
+  );
+  expect(
+    match,
+    "llms.txt is missing the Veröffentlichungsdatum line",
+  ).not.toBeNull();
   return match?.[1] ?? "";
 }
 
@@ -78,7 +87,10 @@ describe("shared content freshness source (public-content contract)", () => {
 
 describe("blog OpenGraph article freshness meta (public-content contract)", () => {
   const pages = [
-    { slug: "eu-ai-act-grundlagen", metadata: euAiActGrundlagenMeta },
+    {
+      slug: "eu-ai-act-grundlagen",
+      generateMetadata: generateEuAiActGrundlagenMetadata,
+    },
   ] as const;
 
   it("covers every manifest post with a page metadata assertion", () => {
@@ -87,10 +99,11 @@ describe("blog OpenGraph article freshness meta (public-content contract)", () =
     );
   });
 
-  for (const { slug, metadata } of pages) {
-    it(`/blog/${slug} emits article:published_time and article:modified_time from the manifest`, () => {
+  for (const { slug, generateMetadata } of pages) {
+    it(`/blog/${slug} emits article:published_time and article:modified_time from the manifest`, async () => {
       const post = BLOG_POSTS.find((p) => p.slug === slug);
       expect(post, `manifest entry missing for ${slug}`).toBeDefined();
+      const metadata = await generateMetadata();
       const og = metadata.openGraph as ArticleOpenGraph | undefined;
       expect(og?.type).toBe("article");
       expect(og?.publishedTime).toBe(post?.datePublished);
@@ -107,8 +120,13 @@ describe("dated catalog pages emit article:modified_time (public-content contrac
       });
       const og = pageMeta.openGraph as ArticleOpenGraph | undefined;
       expect(og?.type, `${demo.slug}: og type`).toBe("article");
-      expect(demo.lastReviewed, `${demo.slug}: catalog lastReviewed missing`).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-      expect(og?.modifiedTime, `${demo.slug}: modifiedTime`).toBe(demo.lastReviewed);
+      expect(
+        demo.lastReviewed,
+        `${demo.slug}: catalog lastReviewed missing`,
+      ).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(og?.modifiedTime, `${demo.slug}: modifiedTime`).toBe(
+        demo.lastReviewed,
+      );
     }
   });
 });

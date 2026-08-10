@@ -4,9 +4,10 @@ import { useMemo, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
 import { cn } from "@/lib/utils";
 import { WidgetFrame } from "../tier-a/_frame";
+import { useClaudeWidgetLocale } from "./locale-context";
 
 /**
- * Tokenizer, approximate BPE-style tokenization display. Ported from
+ * Tokenizer, local tokenization illustration. Ported from
  * `claude/js/widgets.js:741` (Tokenizer). Pure client-side, no simulated
  * Claude call.
  */
@@ -46,17 +47,32 @@ function tokenize(text: string): Token[] {
   return result;
 }
 
-export function TokenizerWidget({ lessonId, cpId }: TokenizerWidgetProps): JSX.Element {
+export function TokenizerWidget({
+  lessonId,
+  cpId,
+}: TokenizerWidgetProps): JSX.Element {
+  const locale = useClaudeWidgetLocale();
+  const german = locale === "de";
   const { done, complete } = useCheckpoint(lessonId, cpId);
-  const [text, setText] = useState("The quick brown fox jumps over the lazy dog.");
+  const [text, setText] = useState(
+    german
+      ? "Der schnelle braune Fuchs springt über den faulen Hund."
+      : "The quick brown fox jumps over the lazy dog.",
+  );
   const tokens = useMemo(() => tokenize(text), [text]);
   const nonWhitespaceCount = tokens.filter((t) => !t.whitespace).length;
 
   return (
     <WidgetFrame
-      kindLabel="Under the hood"
-      title="Claude reads tokens, not letters"
-      scenario="Approximate BPE tokenization. Short common words stay whole. Long or rare words split into pieces."
+      kindLabel={german ? "Technik" : "Under the hood"}
+      title={
+        german ? "Tokenisierung veranschaulichen" : "Tokenization illustration"
+      }
+      scenario={
+        german
+          ? "Lokale Heuristik, kein Claude-Tokenizer. Verwende für echte Zählungen das Tool des gewählten Modells."
+          : "Local heuristic, not a Claude tokenizer. Use the selected model's tool for real counts."
+      }
       done={done}
       xpLabel="+10 XP"
     >
@@ -68,11 +84,13 @@ export function TokenizerWidget({ lessonId, cpId }: TokenizerWidgetProps): JSX.E
           setText(next);
           if (next.length > 80) complete();
         }}
-        aria-label="Text to tokenize"
+        aria-label={german ? "Zu tokenisierender Text" : "Text to tokenize"}
         className="w-full border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
       />
       <p className="mt-2 font-mono text-[11px] text-muted-foreground">
-        ~{nonWhitespaceCount} tokens · {text.length} chars
+        {nonWhitespaceCount}{" "}
+        {german ? "simulierte Segmente" : "simulated segments"} · {text.length}{" "}
+        {german ? "Zeichen" : "chars"}
       </p>
       <div className="mt-3 border border-border bg-card/40 p-4 text-[15px] leading-[2.2]">
         {tokens.map((token, i) =>
@@ -83,9 +101,13 @@ export function TokenizerWidget({ lessonId, cpId }: TokenizerWidgetProps): JSX.E
               key={i}
               className={cn(
                 "mr-0.5 rounded px-1.5 py-0.5 font-mono text-[13px]",
-                token.subword ? "border border-dashed border-muted-foreground" : "border border-transparent",
+                token.subword
+                  ? "border border-dashed border-muted-foreground"
+                  : "border border-transparent",
               )}
-              style={{ background: `oklch(0.88 0.08 ${HUES[i % HUES.length]} / 0.6)` }}
+              style={{
+                background: `oklch(0.88 0.08 ${HUES[i % HUES.length]} / 0.6)`,
+              }}
             >
               {token.text}
             </span>
@@ -93,8 +115,9 @@ export function TokenizerWidget({ lessonId, cpId }: TokenizerWidgetProps): JSX.E
         )}
       </div>
       <p className="mt-2 text-[12.5px] italic text-muted-foreground">
-        Dashed borders = subword continuation pieces. Claude&apos;s context window is measured in
-        tokens (~3-4 chars avg English). A 200k-token window is about a 500-page book.
+        {german
+          ? "Gestrichelte Rahmen markieren lokal erzeugte Teilstücke. Die tatsächliche Tokenisierung hängt von Modell und Inhalt ab."
+          : "Dashed borders mark locally generated pieces. Actual tokenization depends on the model and content."}
       </p>
     </WidgetFrame>
   );

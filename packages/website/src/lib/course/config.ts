@@ -7,17 +7,35 @@
 // so existing server-side imports keep working unchanged.
 
 import type { BlockId, CourseConfig, CourseSlug } from "./types";
-import { CODEX_CONFIG } from "@/lib/codex/config";
-import { DATA_INFRASTRUCTURE_CONFIG } from "@/lib/data-infrastructure/config";
-import { DATA_ENGINEERING_FUNDAMENTALS_CONFIG } from "@/lib/data-engineering-fundamentals/config";
-import { DATA_SCIENCE_CONFIG } from "@/lib/data-science/config";
-import { AI_NATIVE_OPERATOR_CONFIG } from "@/lib/ai-native-operator/config";
+import type { Locale } from "@/lib/i18n/locale";
+import { createLocalizedCourseConfig } from "./localization";
+import { CODEX_CONFIG, CODEX_CONFIG_DE } from "@/lib/codex/config";
+import {
+  DATA_INFRASTRUCTURE_CONFIG,
+  DATA_INFRASTRUCTURE_CONFIG_DE,
+} from "@/lib/data-infrastructure/config";
+import {
+  DATA_ENGINEERING_FUNDAMENTALS_CONFIG,
+  DATA_ENGINEERING_FUNDAMENTALS_CONFIG_DE,
+} from "@/lib/data-engineering-fundamentals/config";
+import {
+  DATA_SCIENCE_CONFIG,
+  DATA_SCIENCE_CONFIG_DE,
+} from "@/lib/data-science/config";
+import {
+  AI_NATIVE_OPERATOR_CONFIG,
+  AI_NATIVE_OPERATOR_CONFIG_DE,
+} from "@/lib/ai-native-operator/config";
+import { createLocalizedTechnicalCourseConfig } from "@/lib/technical-courses/routes";
 
-export { CODEX_CONFIG };
-export { DATA_INFRASTRUCTURE_CONFIG };
-export { DATA_ENGINEERING_FUNDAMENTALS_CONFIG };
-export { DATA_SCIENCE_CONFIG };
-export { AI_NATIVE_OPERATOR_CONFIG };
+export { CODEX_CONFIG, CODEX_CONFIG_DE };
+export { DATA_INFRASTRUCTURE_CONFIG, DATA_INFRASTRUCTURE_CONFIG_DE };
+export {
+  DATA_ENGINEERING_FUNDAMENTALS_CONFIG,
+  DATA_ENGINEERING_FUNDAMENTALS_CONFIG_DE,
+};
+export { DATA_SCIENCE_CONFIG, DATA_SCIENCE_CONFIG_DE };
+export { AI_NATIVE_OPERATOR_CONFIG, AI_NATIVE_OPERATOR_CONFIG_DE };
 
 // ─── KI-Führerschein ───────────────────────────────────────────
 
@@ -32,7 +50,8 @@ export const KI_FUEHRERSCHEIN_CONFIG: CourseConfig = {
   workshopQuizTimeLimitMinutes: 25,
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "KI-Führerschein",
-  certificateSubtitle: "Teilnahmebestätigung. Ausgestellt von loehrning.ai, einer unabhängigen Bildungsplattform. Diese Bestätigung ist kein akkreditierter Abschluss.",
+  certificateSubtitle:
+    "Teilnahmebestätigung. Ausgestellt von loehrning.ai, einer unabhängigen Bildungsplattform. Diese Bestätigung ist kein akkreditierter Abschluss.",
   certificateModules: [
     "KI-Systeme erkennen und verstehen",
     "Datenschutz bei KI-Nutzung",
@@ -40,7 +59,8 @@ export const KI_FUEHRERSCHEIN_CONFIG: CourseConfig = {
     "KI-Output verifizieren",
     "KI-Nutzungsrichtlinie erstellen",
   ],
-  certificateReferenceLabel: "Persönliche Teilnahmebestätigung: KI im Alltag verstehen",
+  certificateReferenceLabel:
+    "Persönliche Teilnahmebestätigung: KI im Alltag verstehen",
   quizPassMessage:
     "Herzlichen Glückwunsch! Du hast den KI-Führerschein bestanden.",
   certificateFileStem: "KI-Fuehrerschein",
@@ -50,6 +70,30 @@ export const KI_FUEHRERSCHEIN_CONFIG: CourseConfig = {
     demonstrative: "Diese Teilnahmebestätigung",
   },
 };
+
+export const KI_FUEHRERSCHEIN_EN_CONFIG: CourseConfig =
+  createLocalizedCourseConfig(KI_FUEHRERSCHEIN_CONFIG, "en", {
+    title: "Everyday AI Literacy",
+    certificateTitle: "Course Completion Record: Everyday AI Literacy",
+    certificateSubtitle:
+      "Participation record. Issued by loehrning.ai, an independent learning platform. This record is not an accredited qualification.",
+    certificateModules: [
+      "Recognizing and understanding AI systems",
+      "Data protection when using AI",
+      "Practical AI use at work",
+      "Checking AI output",
+      "Creating an AI use policy",
+    ],
+    certificateReferenceLabel:
+      "Personal participation record: understanding AI in everyday work",
+    quizPassMessage: "You passed the Everyday AI Literacy workshop quiz.",
+    certificateFileStem: "Everyday-AI-Literacy",
+    recordNoun: {
+      label: "Course Completion Record",
+      possessive: "Your course completion record",
+      demonstrative: "This course completion record",
+    },
+  });
 
 // ─── EU AI Act Kurs ────────────────────────────────────────────
 
@@ -65,7 +109,7 @@ export const EU_AI_ACT_KURS_CONFIG: CourseConfig = {
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "EU AI Act Kurs",
   certificateSubtitle:
-    "Teilnahme bestätigt. Dieser Kurs vermittelt Wissen im Bereich KI-Kompetenz. Art. 4 EU AI Act verpflichtet Betreiber zu KI-Kompetenzmaßnahmen, schreibt jedoch weder ein Zertifikat noch ein bestimmtes Format vor. (Quelle: Europäische Kommission, FAQ KI-Kompetenz, Mai 2025.)",
+    "Teilnahme bestätigt. Dieser Kurs vermittelt Wissen im Bereich KI-Kompetenz. Art. 4 EU AI Act verlangt von Anbietern und Betreibern kontextbezogene Maßnahmen zur Unterstützung der KI-Kompetenz, schreibt jedoch weder ein Zertifikat noch ein bestimmtes Format vor. (Quelle: Art. 4 in der Fassung der Verordnung (EU) 2026/1744.)",
   certificateModules: [
     "Geltungsbereich und Rollen",
     "Risikoklassen und Entscheidungsbaum",
@@ -84,6 +128,31 @@ export const EU_AI_ACT_KURS_CONFIG: CourseConfig = {
     demonstrative: "Diese Teilnahmebestätigung",
   },
 };
+
+export const EU_AI_ACT_KURS_EN_CONFIG: CourseConfig =
+  createLocalizedCourseConfig(EU_AI_ACT_KURS_CONFIG, "en", {
+    title: "EU AI Act Course",
+    certificateTitle: "Course Completion Record: EU AI Act",
+    certificateSubtitle:
+      "Participation record. Issued by loehrning.ai, an independent learning platform. This record confirms completion of this course only; it is not an accredited qualification, legal advice, or evidence of regulatory compliance.",
+    certificateModules: [
+      "Scope, roles, and application dates",
+      "Risk categories and classification",
+      "High-risk system obligations",
+      "GPAI, AI literacy, and transparency",
+      "Governance and penalties",
+      "Implementation for small and medium-sized organizations",
+    ],
+    certificateReferenceLabel:
+      "Course content: Regulation (EU) 2024/1689, as amended",
+    quizPassMessage: "You passed the EU AI Act Course workshop quiz.",
+    certificateFileStem: "EU-AI-Act-Course",
+    recordNoun: {
+      label: "Course Completion Record",
+      possessive: "Your course completion record",
+      demonstrative: "This course completion record",
+    },
+  });
 
 // ─── AI-Native (shared course architecture) ────────────
 //
@@ -105,14 +174,16 @@ export const AI_NATIVE_CONFIG: CourseConfig = {
   workshopQuizTimeLimitMinutes: 25,
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "AI-Native Arbeitskurs",
-  certificateSubtitle: "Teilnahmebestätigung. Ausgestellt von loehrning.ai, einer unabhängigen Bildungsplattform. Diese Bestätigung ist kein akkreditierter Abschluss.",
+  certificateSubtitle:
+    "Teilnahmebestätigung. Ausgestellt von loehrning.ai, einer unabhängigen Bildungsplattform. Diese Bestätigung ist kein akkreditierter Abschluss.",
   certificateModules: [
     "Die Mindset-Operation: orchestrieren statt ausführen",
     "Der Claude-Stack: Projects, Skills, Plugins, MCP",
     "Zweites Gehirn: Obsidian + Claude als Business-Intelligence",
     "Automatisierung mit n8n, Local AI und EU AI Act",
   ],
-  certificateReferenceLabel: "Capstone selbst eingereicht (nicht fremdbeurteilt)",
+  certificateReferenceLabel:
+    "Capstone selbst eingereicht (nicht fremdbeurteilt)",
   quizPassMessage:
     "Herzlichen Glückwunsch! Du hast den AI-Native Arbeitskurs bestanden.",
   certificateFileStem: "AI-Native-Arbeitskurs",
@@ -122,6 +193,32 @@ export const AI_NATIVE_CONFIG: CourseConfig = {
     demonstrative: "Diese Teilnahmebestätigung",
   },
 };
+
+export const AI_NATIVE_EN_CONFIG: CourseConfig = createLocalizedCourseConfig(
+  AI_NATIVE_CONFIG,
+  "en",
+  {
+    title: "AI-Native Workflow Course",
+    certificateTitle: "Course Completion Record: AI-Native Workflow Course",
+    certificateSubtitle:
+      "Participation record. Issued by loehrning.ai, an independent learning platform. This record confirms course completion only; it is not an accredited qualification or an external assessment.",
+    certificateModules: [
+      "From task to workflow",
+      "Claude as a work assistant",
+      "A searchable knowledge base",
+      "Automating repeatable work with controls",
+    ],
+    certificateReferenceLabel:
+      "Capstone rubric self-reported; no external assessment",
+    quizPassMessage: "You passed the AI-Native Workflow Course workshop quiz.",
+    certificateFileStem: "AI-Native-Workflow-Course",
+    recordNoun: {
+      label: "Course Completion Record",
+      possessive: "Your course completion record",
+      demonstrative: "This course completion record",
+    },
+  },
+);
 
 // ─── KI und Gesellschaft (KI und Gesellschaft course review) ───────────────────────────
 
@@ -138,7 +235,8 @@ export const KI_UND_GESELLSCHAFT_CONFIG: CourseConfig = {
   certificateTitle: "Lernnachweis: KI und Gesellschaft",
   certificateSubtitle: "Arbeit · Deepfakes · Ethik",
   certificateModules: ["KI und Arbeit", "Deepfakes erkennen", "Ethik und Bias"],
-  certificateReferenceLabel: "Selbst ausgestellt: lokal generiert, nicht servergeprüft",
+  certificateReferenceLabel:
+    "Selbst ausgestellt: lokal generiert, nicht servergeprüft",
   quizPassMessage:
     "Herzlichen Glückwunsch! Du hast KI und Gesellschaft abgeschlossen.",
   certificateFileStem: "lernnachweis-ki-gesellschaft",
@@ -148,6 +246,27 @@ export const KI_UND_GESELLSCHAFT_CONFIG: CourseConfig = {
     demonstrative: "Dieser Lernnachweis",
   },
 };
+
+export const KI_UND_GESELLSCHAFT_EN_CONFIG: CourseConfig =
+  createLocalizedCourseConfig(KI_UND_GESELLSCHAFT_CONFIG, "en", {
+    title: "AI and Society",
+    certificateTitle: "Course Completion Record: AI and Society",
+    certificateSubtitle: "Work · Deepfakes · Bias and ethics",
+    certificateModules: [
+      "AI and work",
+      "Assessing deepfakes",
+      "Bias, ethics, and accountability",
+    ],
+    certificateReferenceLabel:
+      "Self-issued: generated locally, not server-verified",
+    quizPassMessage: "You passed the AI and Society workshop quiz.",
+    certificateFileStem: "AI-and-Society-course-record",
+    recordNoun: {
+      label: "Course Completion Record",
+      possessive: "Your course completion record",
+      demonstrative: "This course completion record",
+    },
+  });
 
 // ─── Claude Course ───────────────────────────
 //
@@ -177,7 +296,7 @@ export const KI_UND_GESELLSCHAFT_CONFIG: CourseConfig = {
 // the shared "_meta" row, under 1.5 KB even generously rounded, comfortable
 // headroom alongside every other course's checkpoints in that same row.
 
-export const CLAUDE_CONFIG: CourseConfig = {
+export const CLAUDE_CONFIG: CourseConfig & { readonly slug: "claude" } = {
   slug: "claude",
   title: "Claude Course",
   language: "en",
@@ -210,6 +329,32 @@ export const CLAUDE_CONFIG: CourseConfig = {
   },
 };
 
+export const CLAUDE_CONFIG_DE = createLocalizedTechnicalCourseConfig(
+  CLAUDE_CONFIG,
+  "de",
+  {
+    title: "Claude-Kurs",
+    certificateTitle: "Teilnahmebestätigung: Claude-Kurs",
+    certificateSubtitle:
+      "Teilnahmebestätigung für den abgeschlossenen Claude-Kurs. Ausgestellt von loehrning.ai, einer unabhängigen Lernplattform. Diese Bestätigung ist kein akkreditierter Abschluss.",
+    certificateModules: [
+      "Grundlagen: mentales Modell, Prompt-Struktur und Kontextfenster",
+      "Arbeitsabläufe: CLAUDE.md, Iteration und Google Docs",
+      "Vertiefung: Agenten, Tool-Nutzung, Code-Review und Grounding",
+      "Team und Qualität: Prompts teilen, Evals und Sicherheit",
+    ],
+    certificateReferenceLabel:
+      "Persönliche Teilnahmebestätigung: Claude strukturiert einsetzen",
+    quizPassMessage: "Du hast das Abschlussquiz des Claude-Kurses bestanden.",
+    certificateFileStem: "Claude-Kurs",
+    recordNoun: {
+      label: "Teilnahmebestätigung",
+      possessive: "Deine Teilnahmebestätigung",
+      demonstrative: "Diese Teilnahmebestätigung",
+    },
+  },
+);
+
 // ─── Config registry ───────────────────────────────────────────
 
 // All registered courses share the engine (). `config()`
@@ -220,19 +365,60 @@ const COURSE_CONFIGS: Partial<Record<CourseSlug, CourseConfig>> = {
   "eu-ai-act-kurs": EU_AI_ACT_KURS_CONFIG,
   "ai-native": AI_NATIVE_CONFIG,
   "ki-und-gesellschaft": KI_UND_GESELLSCHAFT_CONFIG,
-  claude: CLAUDE_CONFIG,
-  codex: CODEX_CONFIG,
-  "data-infrastructure": DATA_INFRASTRUCTURE_CONFIG,
-  "data-engineering-fundamentals": DATA_ENGINEERING_FUNDAMENTALS_CONFIG,
-  "data-science": DATA_SCIENCE_CONFIG,
-  "ai-native-operator": AI_NATIVE_OPERATOR_CONFIG,
+  claude: CLAUDE_CONFIG_DE,
+  codex: CODEX_CONFIG_DE,
+  "data-infrastructure": DATA_INFRASTRUCTURE_CONFIG_DE,
+  "data-engineering-fundamentals": DATA_ENGINEERING_FUNDAMENTALS_CONFIG_DE,
+  "data-science": DATA_SCIENCE_CONFIG_DE,
+  "ai-native-operator": AI_NATIVE_OPERATOR_CONFIG_DE,
 };
 
-function config(courseSlug: CourseSlug): CourseConfig {
-  const data = COURSE_CONFIGS[courseSlug];
+// Locale-specific config stays JSON-free so client components can select
+// reviewed copy without importing lesson, glossary, or quiz bodies. English
+// foundation configs are registered only with their complete audited bundle.
+const COURSE_CONFIGS_BY_LOCALE: Partial<
+  Record<CourseSlug, Partial<Record<Locale, CourseConfig>>>
+> = {
+  "ki-fuehrerschein": {
+    de: KI_FUEHRERSCHEIN_CONFIG,
+    en: KI_FUEHRERSCHEIN_EN_CONFIG,
+  },
+  "eu-ai-act-kurs": {
+    de: EU_AI_ACT_KURS_CONFIG,
+    en: EU_AI_ACT_KURS_EN_CONFIG,
+  },
+  "ai-native": { de: AI_NATIVE_CONFIG, en: AI_NATIVE_EN_CONFIG },
+  "ki-und-gesellschaft": {
+    de: KI_UND_GESELLSCHAFT_CONFIG,
+    en: KI_UND_GESELLSCHAFT_EN_CONFIG,
+  },
+  claude: { de: CLAUDE_CONFIG_DE, en: CLAUDE_CONFIG },
+  codex: { de: CODEX_CONFIG_DE, en: CODEX_CONFIG },
+  "data-infrastructure": {
+    de: DATA_INFRASTRUCTURE_CONFIG_DE,
+    en: DATA_INFRASTRUCTURE_CONFIG,
+  },
+  "data-engineering-fundamentals": {
+    de: DATA_ENGINEERING_FUNDAMENTALS_CONFIG_DE,
+    en: DATA_ENGINEERING_FUNDAMENTALS_CONFIG,
+  },
+  "data-science": { de: DATA_SCIENCE_CONFIG_DE, en: DATA_SCIENCE_CONFIG },
+  "ai-native-operator": {
+    de: AI_NATIVE_OPERATOR_CONFIG_DE,
+    en: AI_NATIVE_OPERATOR_CONFIG,
+  },
+};
+
+function config(courseSlug: CourseSlug, locale?: Locale): CourseConfig {
+  const data =
+    locale === undefined
+      ? COURSE_CONFIGS[courseSlug]
+      : COURSE_CONFIGS_BY_LOCALE[courseSlug]?.[locale];
   if (!data) {
     throw new Error(
-      `Course "${courseSlug}" is not registered in the shared engine.`,
+      locale === undefined
+        ? `Course "${courseSlug}" is not registered in the shared engine.`
+        : `Course "${courseSlug}" has no audited "${locale}" config registered.`,
     );
   }
   return data;
@@ -247,24 +433,39 @@ export function isCourseRegistered(courseSlug: CourseSlug): boolean {
   return COURSE_CONFIGS[courseSlug] !== undefined;
 }
 
-export function getCourseConfig(courseSlug: CourseSlug): CourseConfig {
-  return config(courseSlug);
+export function getCourseConfig(
+  courseSlug: CourseSlug,
+  locale?: Locale,
+): CourseConfig {
+  return config(courseSlug, locale);
 }
 
-export function getCourseBlockIds(courseSlug: CourseSlug): readonly BlockId[] {
-  return config(courseSlug).blockIds;
+export function getCourseBlockIds(
+  courseSlug: CourseSlug,
+  locale?: Locale,
+): readonly BlockId[] {
+  return config(courseSlug, locale).blockIds;
 }
 
 // ─── Workshop quiz config queries ──────────────────────────────
 
-export function getWorkshopPassThreshold(courseSlug: CourseSlug): number {
-  return config(courseSlug).workshopQuizPassThreshold;
+export function getWorkshopPassThreshold(
+  courseSlug: CourseSlug,
+  locale?: Locale,
+): number {
+  return config(courseSlug, locale).workshopQuizPassThreshold;
 }
 
-export function getWorkshopQuestionCount(courseSlug: CourseSlug): number {
-  return config(courseSlug).workshopQuizQuestionCount;
+export function getWorkshopQuestionCount(
+  courseSlug: CourseSlug,
+  locale?: Locale,
+): number {
+  return config(courseSlug, locale).workshopQuizQuestionCount;
 }
 
-export function getWorkshopTimeLimitMinutes(courseSlug: CourseSlug): number {
-  return config(courseSlug).workshopQuizTimeLimitMinutes;
+export function getWorkshopTimeLimitMinutes(
+  courseSlug: CourseSlug,
+  locale?: Locale,
+): number {
+  return config(courseSlug, locale).workshopQuizTimeLimitMinutes;
 }

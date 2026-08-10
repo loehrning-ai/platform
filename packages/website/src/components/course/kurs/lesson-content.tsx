@@ -16,6 +16,9 @@ import { RenderWidget, resolveWidgetsForSlot } from "@/components/widgets/regist
 import { LessonProgressRing } from "@/components/progress/lesson-progress-ring";
 import type { CourseSlug, Lesson } from "@/lib/course/types";
 import type { Widget } from "@/lib/widgets/types";
+import type { Locale } from "@/lib/i18n/locale";
+import { localizeCourseWidgetProps } from "@/lib/course/widget-localization";
+import { getCourseReaderCopy } from "./course-ui-copy";
 
 const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
 type Tab = "lernen" | "quiz";
@@ -33,6 +36,7 @@ interface LessonContentProps {
   readonly onMarkLessonComplete: () => void;
   readonly onQuizComplete: (score: number, total: number) => void;
   readonly onNextLesson: () => void;
+  readonly locale?: Locale;
 }
 
 export function LessonContent({
@@ -48,7 +52,9 @@ export function LessonContent({
   onMarkLessonComplete,
   onQuizComplete,
   onNextLesson,
+  locale = "de",
 }: LessonContentProps) {
+  const copy = getCourseReaderCopy(locale).lesson;
   const [activeTab, setActiveTab] = useState<Tab>("lernen");
   const tabRefs = useRef<Partial<Record<Tab, HTMLButtonElement | null>>>({});
   const allSectionsRead = lesson.sections.every((s) => readSectionIds.has(s.id));
@@ -111,10 +117,16 @@ export function LessonContent({
       <div className="mb-6 flex items-start justify-between gap-4">
         <div className="min-w-0">
           <p className="mb-1 font-mono text-xs font-bold uppercase tracking-wider text-brand-orange">
-            Lektion {lesson.number} von {totalLessons}
+            {copy.position(lesson.number, totalLessons)}
           </p>
-          <h2 className="text-2xl font-bold tracking-[-0.03em]">{lesson.title}</h2>
-          {lesson.subtitle && <p className="mt-1 text-muted-foreground">{lesson.subtitle}</p>}
+          <h2 className="break-words text-2xl font-bold tracking-[-0.03em]">
+            {lesson.title}
+          </h2>
+          {lesson.subtitle && (
+            <p className="break-words mt-1 text-muted-foreground">
+              {lesson.subtitle}
+            </p>
+          )}
 
           {lesson.keyConcepts.length > 0 && (
             <div className="mt-3 flex flex-wrap items-center gap-1.5">
@@ -134,11 +146,12 @@ export function LessonContent({
           lessonId={lesson.id}
           totalSections={lesson.sections.length}
           className="shrink-0"
+          locale={locale}
         />
       </div>
 
       {/* Tabs */}
-      <div className="mb-6 flex gap-1 border-b border-border" role="tablist" aria-label="Lektionsinhalt">
+      <div className="mb-6 flex gap-1 border-b border-border" role="tablist" aria-label={copy.tablist}>
         <button
           ref={(element) => {
             tabRefs.current.lernen = element;
@@ -157,7 +170,7 @@ export function LessonContent({
           )}
         >
           <BookOpen className="h-4 w-4" />
-          Lernen
+          {copy.learn}
         </button>
         {hasQuiz && (
           <button
@@ -178,7 +191,7 @@ export function LessonContent({
             )}
           >
             <HelpCircle className="h-4 w-4" />
-            Quiz ({lesson.quiz.length})
+            {copy.quiz} ({lesson.quiz.length})
           </button>
         )}
       </div>
@@ -205,11 +218,17 @@ export function LessonContent({
                   isRead={readSectionIds.has(section.id)}
                   interactionReady={progressReady}
                   onMarkRead={onMarkSectionRead}
+                  locale={locale}
                 />
                 {/* after-intro widgets render below the first section */}
                 {i === 0 &&
                   afterIntroWidgets.map((widget, w) => (
-                    <WidgetSlot key={`ai-${w}`} widget={widget} label="after-intro" />
+                    <WidgetSlot
+                      key={`ai-${w}`}
+                      widget={widget}
+                      label="after-intro"
+                      locale={locale}
+                    />
                   ))}
               </div>
             ))}
@@ -217,15 +236,20 @@ export function LessonContent({
             {/* before-quiz + end widgets render after the prose, above the
                 completion bar (no separate quiz pane in the lernen tab) */}
             {[...beforeQuizWidgets, ...endWidgets].map((widget, w) => (
-              <WidgetSlot key={`end-${w}`} widget={widget} label="end" />
+              <WidgetSlot
+                key={`end-${w}`}
+                widget={widget}
+                label="end"
+                locale={locale}
+              />
             ))}
 
             <div className="border-t border-border pt-6">
-              <div className="flex items-center justify-between gap-4">
+              <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
                 {isCompleted ? (
                   <span className="inline-flex items-center gap-2 text-sm font-medium text-brand-sand">
                     <CheckCircle2 className="h-4 w-4" />
-                    Lektion abgeschlossen
+                    {copy.completed}
                   </span>
                 ) : (
                   <button
@@ -233,14 +257,14 @@ export function LessonContent({
                     onClick={onMarkLessonComplete}
                     disabled={!canCompleteLesson}
                     className={cn(
-                      "inline-flex items-center gap-2 border-2 border-foreground px-5 py-2.5 text-xs font-bold uppercase tracking-wide shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
+                      "inline-flex max-w-full items-center gap-2 break-words border-2 border-foreground px-5 py-2.5 text-left text-xs font-bold uppercase tracking-wide shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
                       canCompleteLesson
                         ? "bg-brand-orange text-white hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
                         : "cursor-not-allowed bg-border text-muted-foreground shadow-none",
                     )}
                   >
                     <CheckCircle2 className="h-3.5 w-3.5" />
-                    Lektion abschließen
+                    {copy.complete}
                   </button>
                 )}
                 {hasNextLesson && (
@@ -249,7 +273,7 @@ export function LessonContent({
                     onClick={onNextLesson}
                     className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-orange transition-colors hover:text-kupfer-dark"
                   >
-                    Nächste Lektion
+                    {copy.next}
                     <ArrowRight className="h-4 w-4" />
                   </button>
                 )}
@@ -267,14 +291,19 @@ export function LessonContent({
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25, ease: EASE_OUT_EXPO }}
           >
-            <LessonQuiz questions={lesson.quiz} bestScore={quizBestScore} onComplete={handleQuizComplete} />
+            <LessonQuiz
+              questions={lesson.quiz}
+              bestScore={quizBestScore}
+              onComplete={handleQuizComplete}
+              locale={locale}
+            />
           </m.div>
         )}
       </AnimatePresence>
 
       {/* Legal footer */}
       <p className="mt-8 border-t border-border/50 pt-4 text-[10px] leading-relaxed text-muted">
-        Alle Angaben nach bestem Wissen, Stand April 2026. Keine Rechtsberatung.
+        {copy.legalNote}
       </p>
     </div>
   );
@@ -284,13 +313,16 @@ export function LessonContent({
 function WidgetSlot({
   widget,
   label,
+  locale,
 }: {
   readonly widget: Widget;
   readonly label: string;
+  readonly locale: Locale;
 }) {
+  const props = localizeCourseWidgetProps(widget, locale);
   return (
     <div data-widget-slot={label} data-widget-kind={widget.kind} className="mt-6">
-      <RenderWidget kind={widget.kind} props={widget.props ?? {}} />
+      <RenderWidget kind={widget.kind} props={props} locale={locale} />
     </div>
   );
 }

@@ -20,12 +20,14 @@ import {
 } from "@/lib/ai-native/analytics";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 import {
   getLearningOwnerContext,
   getOwnedSessionLearningItem,
   setOwnedSessionLearningItem,
   subscribeLearningOwner,
 } from "@/lib/progress/browser-learning-storage";
+import type { Locale } from "@/lib/i18n/locale";
 
 /**
  * AiNativeChallengeOfTheWeek — landing-page section with a rotating
@@ -43,7 +45,12 @@ interface ChallengeRubricState {
   readonly solved: readonly boolean[];
 }
 
-export function AiNativeChallengeOfTheWeek(): JSX.Element {
+function AiNativeChallengeOfTheWeekContent({
+  locale = "de",
+}: {
+  readonly locale?: Locale;
+}): JSX.Element {
+  const isEnglish = locale === "en";
   // Hydration-safe: compute on client only.
   const [mounted, setMounted] = useState(false);
   const [weekIso, setWeekIso] = useState<string>("");
@@ -51,43 +58,50 @@ export function AiNativeChallengeOfTheWeek(): JSX.Element {
 
   useEffect(() => {
     const now = new Date();
-    setChallenge(getChallengeForDate(now));
+    setChallenge(getChallengeForDate(now, locale));
     setWeekIso(formatWeekIso(now));
     setMounted(true);
-  }, []);
+  }, [locale]);
 
   return (
-    <SectionShell num="AI" label="Challenge of the Week">
+    <SectionShell num="AI" label={isEnglish ? "Weekly exercise" : "Wochenübung"}>
       <Eyebrow>AI Challenge · {weekIso || "…"}</Eyebrow>
       <ClipHeading
         as="h2"
         className="mt-2.5 font-bold leading-none tracking-[-0.035em]"
         style={{ fontSize: "clamp(2rem, 4.5vw, 3rem)" }}
       >
-        Eine Aufgabe. <span className="text-brand-orange">Eine Woche.</span>
+        {isEnglish ? "One scenario." : "Ein Szenario."}{" "}
+        <span className="text-brand-orange">
+          {isEnglish ? "Your proposed process." : "Dein Vorgehen."}
+        </span>
       </ClipHeading>
       <FadeBlock delay={1}>
         <p className="mt-4 max-w-[640px] text-[17px] leading-[1.65] text-muted-foreground">
-          Jede Woche ein Mittelstand-Szenario. Du schreibst deine Lösung, enthüllst
-          dann ein Modell-Vorgehen und benotest dich selbst gegen ein 7-Punkte-Rubrik.
-          Keine Registrierung, kein KI-Call, nur dein Denken.
+          {isEnglish
+            ? "Draft a process for a workplace scenario, compare it with a reference approach and review it against seven explicit criteria. The exercise runs locally and makes no model request."
+            : "Entwirf einen Ablauf für ein Arbeitsszenario, vergleiche ihn mit einem Referenzvorgehen und prüfe ihn anhand von sieben Kriterien. Die Übung läuft lokal und sendet keine Modellanfrage."}
         </p>
       </FadeBlock>
 
       {mounted && challenge ? (
-        <ChallengeRunner challenge={challenge} weekIso={weekIso} />
+        <ChallengeRunner challenge={challenge} weekIso={weekIso} locale={locale} />
       ) : (
-        <ChallengeSkeleton />
+        <ChallengeSkeleton locale={locale} />
       )}
     </SectionShell>
   );
 }
 
-function ChallengeSkeleton(): JSX.Element {
+export const AiNativeChallengeOfTheWeek = withMotionProvider(
+  AiNativeChallengeOfTheWeekContent,
+);
+
+function ChallengeSkeleton({ locale }: { readonly locale: Locale }): JSX.Element {
   return (
     <div
       role="status"
-      aria-label="Lädt Challenge"
+      aria-label={locale === "en" ? "Loading weekly exercise" : "Wochenübung wird geladen"}
       className="mt-10 h-[320px] w-full animate-pulse border border-border bg-card/40"
     />
   );
@@ -96,10 +110,13 @@ function ChallengeSkeleton(): JSX.Element {
 function ChallengeRunner({
   challenge,
   weekIso,
+  locale,
 }: {
   readonly challenge: Challenge;
   readonly weekIso: string;
+  readonly locale: Locale;
 }): JSX.Element {
+  const isEnglish = locale === "en";
   const storageKey = useMemo(
     () => `ai-native-challenge-draft-${challenge.weekOffset}`,
     [challenge.weekOffset],
@@ -168,7 +185,7 @@ function ChallengeRunner({
           <div className="flex flex-wrap items-baseline justify-between gap-4 border-b border-border pb-4">
             <div>
               <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-                Diese Woche · {weekIso}
+                {isEnglish ? "This week" : "Diese Woche"} · {weekIso}
               </p>
               <h3 className="mt-2 text-[20px] font-bold tracking-[-0.02em] text-foreground md:text-[22px]">
                 {challenge.role}
@@ -201,7 +218,7 @@ function ChallengeRunner({
             htmlFor="challenge-draft"
             className="mb-2 block font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground"
           >
-            Dein Vorgehen
+            {isEnglish ? "Your approach" : "Dein Vorgehen"}
           </label>
           <textarea
             id="challenge-draft"
@@ -210,7 +227,11 @@ function ChallengeRunner({
             onBlur={onDraftBlur}
             maxLength={4000}
             rows={8}
-            placeholder="Wie gehst du vor? Schreibe 3-6 Bullets."
+            placeholder={
+              isEnglish
+                ? "How would you proceed? Write three to six points."
+                : "Wie gehst du vor? Schreibe drei bis sechs Punkte."
+            }
             className="w-full resize-y border border-border bg-card/40 p-4 font-mono text-[13px] leading-[1.6] text-foreground outline-none placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange"
           />
           <div className="mt-1 text-right font-mono text-[10px] text-muted-foreground">
@@ -233,7 +254,9 @@ function ChallengeRunner({
                 : "bg-brand-orange shadow-[4px_4px_0_0_var(--color-foreground)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]",
             )}
           >
-            {revealed === "model" ? "◆ Modell-Lösung enthüllt" : "Modell-Lösung enthüllen"}
+            {revealed === "model"
+              ? isEnglish ? "◆ Reference approach visible" : "◆ Referenzvorgehen sichtbar"
+              : isEnglish ? "Show reference approach" : "Referenzvorgehen anzeigen"}
           </button>
           <button
             type="button"
@@ -243,7 +266,7 @@ function ChallengeRunner({
               "hover:bg-foreground hover:text-background",
             )}
           >
-            7-Punkte-Rubrik öffnen
+            {isEnglish ? "Open seven-point rubric" : "Sieben-Punkte-Rubrik öffnen"}
           </button>
         </div>
       </FadeBlock>
@@ -258,7 +281,7 @@ function ChallengeRunner({
             className="mt-8 grid gap-6 md:grid-cols-2"
           >
             <div className="border-l-[3px] border-brand-orange bg-[var(--color-kupfer-mist)] px-5 py-5">
-              <Eyebrow>Modell-Vorgehen</Eyebrow>
+              <Eyebrow>{isEnglish ? "Reference approach" : "Referenzvorgehen"}</Eyebrow>
               <p className="mt-3 whitespace-pre-line text-[14px] leading-[1.65] text-foreground">
                 {challenge.modelSolution}
               </p>
@@ -266,7 +289,7 @@ function ChallengeRunner({
 
             <div className="border border-border bg-card/40 p-5">
               <div className="mb-3 flex items-baseline justify-between">
-                <Eyebrow>Selbst-Bewertung · {rubricScore}/7</Eyebrow>
+                <Eyebrow>{isEnglish ? "Self-review" : "Selbstprüfung"} · {rubricScore}/{challenge.rubric.length}</Eyebrow>
                 <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                   {rubricScore >= 5 ? "PASS" : "REVIEW"}
                 </span>
@@ -285,7 +308,7 @@ function ChallengeRunner({
                         checked={rubric.solved[idx]}
                         onChange={() => toggleRubricItem(idx)}
                         className="mt-0.5 h-4 w-4 shrink-0 accent-brand-orange"
-                        aria-label={`Kriterium ${idx + 1}`}
+                        aria-label={`${isEnglish ? "Criterion" : "Kriterium"} ${idx + 1}`}
                       />
                       <span
                         className={cn(
@@ -305,7 +328,9 @@ function ChallengeRunner({
                 ))}
               </ul>
               <p className="mt-4 border-t border-dashed border-border pt-3 font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted-foreground">
-                5/7 = PASS · 7/7 = Kandidat für Capstone-Beispielsammlung
+                {isEnglish
+                  ? "5/7 = self-review threshold · 7/7 plus explicit consent = publication candidate"
+                  : "5/7 = Schwelle der Selbstprüfung · 7/7 plus ausdrückliche Freigabe = Veröffentlichungskandidat"}
               </p>
             </div>
           </m.div>

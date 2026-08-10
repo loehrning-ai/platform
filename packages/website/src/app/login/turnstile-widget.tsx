@@ -8,6 +8,8 @@ import {
   useRef,
   useState,
 } from "react";
+import type { Locale } from "@/lib/i18n/locale";
+import { LOGIN_COPY } from "./login-copy";
 
 const TURNSTILE_SCRIPT_ID = "cloudflare-turnstile-script";
 const TURNSTILE_SCRIPT_URL =
@@ -22,6 +24,7 @@ interface TurnstileApi {
       readonly appearance: "always";
       readonly "feedback-enabled": false;
       readonly "response-field": false;
+      readonly language: Locale;
       readonly size: "flexible";
       readonly theme: "auto";
       readonly callback: (token: string) => void;
@@ -48,17 +51,19 @@ export interface TurnstileWidgetHandle {
 interface TurnstileWidgetProps {
   readonly siteKey: string;
   readonly onToken: (token: string | null) => void;
+  readonly locale?: Locale;
 }
 
 export const TurnstileWidget = forwardRef<
   TurnstileWidgetHandle,
   TurnstileWidgetProps
->(function TurnstileWidget({ siteKey, onToken }, forwardedRef) {
+>(function TurnstileWidget({ siteKey, onToken, locale = "de" }, forwardedRef) {
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
   const [state, setState] = useState<
     "loading" | "ready" | "error" | "expired"
   >("loading");
+  const copy = LOGIN_COPY[locale].turnstile;
 
   const invalidate = useCallback(
     (nextState: "error" | "expired") => {
@@ -106,6 +111,7 @@ export const TurnstileWidget = forwardRef<
           appearance: "always",
           "feedback-enabled": false,
           "response-field": false,
+          language: locale,
           size: "flexible",
           theme: "auto",
           callback: (token) => {
@@ -185,7 +191,7 @@ export const TurnstileWidget = forwardRef<
         }
       }
     };
-  }, [invalidate, onToken, siteKey]);
+  }, [invalidate, locale, onToken, siteKey]);
 
   return (
     <div className="mt-4">
@@ -193,12 +199,12 @@ export const TurnstileWidget = forwardRef<
         id="login-security-check-label"
         className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange"
       >
-        Sicherheitsprüfung
+        {copy.label}
       </p>
       <div
         ref={containerRef}
         aria-labelledby="login-security-check-label"
-        className="min-h-[65px] max-w-full"
+        className="min-h-[65px] w-full min-w-0 max-w-full"
       />
       <p
         role={state === "error" ? "alert" : "status"}
@@ -209,12 +215,12 @@ export const TurnstileWidget = forwardRef<
         }
       >
         {state === "ready"
-          ? "Sicherheitsprüfung abgeschlossen."
+          ? copy.ready
           : state === "error"
-            ? "Sicherheitsprüfung nicht verfügbar. Lade die Seite neu oder prüfe, ob ein Inhaltsblocker sie verhindert."
+            ? copy.error
             : state === "expired"
-              ? "Sicherheitsprüfung abgelaufen. Schließe die erneuerte Prüfung ab."
-              : "Sicherheitsprüfung wird geladen."}
+              ? copy.expired
+              : copy.loading}
       </p>
     </div>
   );

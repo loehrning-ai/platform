@@ -1,4 +1,3 @@
-// Ported verbatim from course-data.js's MODULES[0] ("mindset", M01).
 import type { AiNativeOperatorLesson } from "../types";
 
 export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
@@ -8,41 +7,41 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 1,
     number: 1,
     kind: "reading",
-    title: 'Why "AI-first" is no longer optional',
+    title: "Choose tasks before choosing tools",
     subtitle:
-      "Understand the economic and competitive forces that have made reflexive AI use a baseline expectation, not an aspiration.",
+      "Assess whether a task is suitable for model assistance before deciding how to delegate it.",
     objective:
-      "Understand the economic and competitive forces that have made reflexive AI use a baseline expectation, not an aspiration.",
+      "Assess whether a task is suitable for model assistance before deciding how to delegate it.",
     durationMinutes: 14,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "The reckoning that already happened",
+        title: "Start with the required outcome",
         readTimeMinutes: 5,
         content:
-          "In 2023 you could still treat AI as a curiosity, a tab you opened when you needed a haiku or a regex. By 2025 the floor moved. Tobi Lütke at Shopify wrote what every executive was thinking but few had the courage to say: before you ask for headcount, prove an AI cannot do the job. Klarna replaced 700 customer-service agents with one assistant and reported CSAT on par with humans. Microsoft's Work Trend Index put a number on the office worker's lift, roughly fourteen hours per month back, every month, forever. Compounded across a workforce, that is not a productivity bump. It is a different company.",
+          "Do not begin with the question, 'Where can I add AI?' Begin with the outcome, the acceptable error rate, and the person accountable for the result. Model assistance is useful when it reduces effort without weakening those conditions. If the outcome is unclear, clarify it before choosing a tool.",
       },
       {
         id: "s2",
-        title: "The competitive math",
+        title: "Check delegation fit",
         readTimeMinutes: 5,
         content:
-          "A team that adopts AI-native operating gets two things at once: more output per person, and a faster learning loop. The output gain is what most leaders see first, more shipped, fewer hours. The learning loop is what kills you if you are on the other side of it. An AI-native team runs more experiments, sees more outcomes, and gets smarter faster. Six months in, the gap is not 20%, it is generational.",
+          "Good initial candidates have defined inputs, observable outputs, and a review step that costs less than doing the whole task manually. Poor candidates have ambiguous authority, irreversible effects, sensitive data without approved controls, or outputs that cannot be checked. The same task can move between these categories as its specification and safeguards improve.",
       },
       {
         id: "s3",
-        title: 'What "AI-first" actually means',
+        title: "Delegate a bounded first pass",
         readTimeMinutes: 4,
         content:
-          'It does not mean "use AI more." It means: every new task starts with the question, "what if a model did this?", and you only do by hand the work that genuinely requires you. The artifact you produce is no longer the work; the artifact is the judgment about whether the work is right. Your job description is half the words it used to be, and the words that remain are heavier.',
+          "Give the model a narrow task, a clear stopping condition, and explicit constraints. Keep decisions, approvals, and external side effects with a named person until the workflow has evidence that its controls work. Expand the scope only after reviewing real outputs and failure cases.",
       },
     ],
     callout: {
       kind: "quote",
-      text: "Reflexive AI usage is now a baseline expectation. Before asking for more headcount, teams must demonstrate why AI cannot do the job.",
-      attr: "Tobi Lütke · Shopify · 2025",
+      text: "Delegate work only when the expected benefit exceeds the cost of specification, review, and correction.",
+      attr: "Operating principle",
     },
     exerciseKind: "reflect-box",
     widgets: [
@@ -54,7 +53,7 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
           lessonId: "mindset/1",
           cpId: "exercise",
           scenario:
-            "List three tasks you did this week that took more than 30 minutes. For each, write one sentence describing how an AI could have done the first 80%.",
+            "List three tasks from this week that took more than 30 minutes. For each, record the expected outcome, the cost of an error, and one bounded part that could be delegated safely.",
           rows: 3,
         },
       },
@@ -66,46 +65,48 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 2,
     number: 2,
     kind: "reading",
-    title: "The four maturity levels",
-    subtitle: "Place yourself, your team, and your org honestly on the L0 → L3 maturity ladder.",
-    objective: "Place yourself, your team, and your org honestly on the L0 → L3 maturity ladder.",
+    title: "Four levels of operating control",
+    subtitle:
+      "Assess how consistently you define, verify, and govern model-assisted work across four levels.",
+    objective:
+      "Assess how consistently you define, verify, and govern model-assisted work across four levels.",
     durationMinutes: 11,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "L0, Spectator",
+        title: "L0, Unexamined",
         readTimeMinutes: 3,
         content:
-          "AI is something other people talk about. You have an account somewhere; you have not opened it this week. Real work happens in tabs you have already mastered. There is no shame in L0, most of the world is here. There is, however, a clock.",
+          "Tasks are completed through existing manual processes, and the team has not assessed where model assistance would or would not be appropriate. This can be a valid choice for a task, but it should be a deliberate choice based on risk and cost rather than an untested default.",
       },
       {
         id: "s2",
-        title: "L1, User",
+        title: "L1, Assisted",
         readTimeMinutes: 3,
         content:
-          'You use AI for "small stuff." Phrasing an email, summarizing a meeting, writing a regex. Trust is fragile: one hallucination ends the experiment for the week. AI sits on the side of your work, never in the middle of it.',
+          "A person uses a model for bounded drafts, summaries, or transformations. The person remains inside the task, supplies the source material, and checks the result before use. Practices are individual and may not yet be repeatable across the team.",
       },
       {
         id: "s3",
-        title: "L2, Operator",
+        title: "L2, Controlled workflow",
         readTimeMinutes: 3,
         content:
-          "AI is the default first draft for everything. You do not write the doc, you brief the model, then edit. You do not investigate the bug, the agent investigates, you adjudicate. The interface of work has changed: you spend more time reviewing, less time generating.",
+          "Recurring tasks have specifications, approved context, evaluation criteria, and review ownership. Model outputs enter normal engineering or operational controls instead of bypassing them. Failures are recorded and used to revise the workflow.",
       },
       {
         id: "s4",
-        title: "L3, Conductor",
+        title: "L3, Orchestrated portfolio",
         readTimeMinutes: 2,
         content:
-          "You direct fleets of agents. The unit of work is a delegation, not a keystroke. Agents spec, write, test, refactor, and open PRs while you orchestrate. Humans choose, judge, and ship; agents do the in-between. This is where the leverage compounds.",
+          "Several independent tasks can run in parallel with isolated workspaces, explicit permissions, release gates, and named human owners. Parallelism is used only where dependencies are understood. A person remains accountable for accepting, rejecting, or releasing each result.",
       },
     ],
     callout: {
       kind: "note",
-      h: "A note on honesty",
-      text: "Most people overestimate their level by one. The senior engineer who uses Cursor for autocomplete thinks they are L2; they are L1. The L2 engineer thinks they are L3; they are L2. Calibrate down. The course is more useful that way.",
+      h: "Rate controls, not tool usage",
+      text: "Frequent model use does not establish a high maturity level. Look for repeatable specifications, evaluation evidence, incident handling, and clear ownership. Rate each task family separately when practices differ.",
     },
     exerciseKind: "self-rate",
     widgets: [
@@ -116,23 +117,39 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
         props: {
           lessonId: "mindset/2",
           cpId: "exercise",
-          title: "Self-Rating",
-          scenario: "Rate yourself on each axis. Be honest. The scoring is for you alone.",
+          title: "Control self-assessment",
+          scenario:
+            "Rate the way you work today. Use evidence from recent tasks rather than intended future practice.",
           axes: [
             {
               id: "tasks",
-              label: "Default task posture",
-              anchors: ["Hand-do everything", "Sometimes ask AI", "AI drafts first", "Delegate by default"],
+              label: "Task-selection practice",
+              anchors: [
+                "Not assessed",
+                "Individual experiments",
+                "Defined task criteria",
+                "Portfolio-level controls",
+              ],
             },
             {
               id: "tools",
-              label: "Tool depth",
-              anchors: ["Browser tab", "Copilot autocomplete", "Agent IDE daily", "Multi-agent fleets"],
+              label: "Workflow integration",
+              anchors: [
+                "Manual process",
+                "Bounded assistance",
+                "Controlled workflow",
+                "Isolated parallel work",
+              ],
             },
             {
               id: "trust",
-              label: "Trust calibration",
-              anchors: ["No trust", "Brittle trust", "Verification habits", "Calibrated by domain"],
+              label: "Verification practice",
+              anchors: [
+                "No calibration",
+                "Informal review",
+                "Task-specific checks",
+                "Measured release gates",
+              ],
             },
           ],
         },
@@ -145,41 +162,41 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 3,
     number: 3,
     kind: "reading",
-    title: "Trust calibration: the new senior skill",
+    title: "Calibrate verification to error cost",
     subtitle:
-      "Build a personal practice for knowing when to trust an AI output and when to verify, without slipping into either blind faith or paranoia.",
+      "Set review depth from the likelihood, impact, and detectability of an error instead of relying on general trust.",
     objective:
-      "Build a personal practice for knowing when to trust an AI output and when to verify, without slipping into either blind faith or paranoia.",
+      "Set review depth from the likelihood, impact, and detectability of an error instead of relying on general trust.",
     durationMinutes: 16,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "Trust is not a binary",
+        title: "Trust belongs to a task and control set",
         readTimeMinutes: 5,
         content:
-          'The L0 mindset says "AI lies, so don\'t use it." The naive L1 mindset says "AI was right last time, so it\'s right now." Both are wrong. Trust is a calibrated, domain-specific function: how often is this model right on this kind of task with this kind of context, and what does failure cost? The senior practitioner internalizes that function and moves accordingly.',
+          "A model is not globally trustworthy or untrustworthy. Evidence applies to a particular task, model version, prompt, context source, tool set, and evaluation method. Change one of those conditions and the previous result may no longer predict current behavior.",
       },
       {
         id: "s2",
-        title: "The cost-of-error frame",
+        title: "Use an error-cost frame",
         readTimeMinutes: 6,
         content:
-          "Some errors are cheap, a typo in an internal email is undone in seconds. Some errors are expensive, a wrong number in a board deck or a leaked customer record. Calibrate verification effort to cost-of-error, not to your mood. A useful rule: if the cost of being wrong is more than the cost of verifying, verify. If less, ship.",
+          "Estimate the likelihood of an error, its impact, and how easily a reviewer could detect it. A reversible internal draft may need a quick check. A security change, customer decision, financial figure, or disclosure may require source verification, tests, a second reviewer, or no model involvement at all. Verification effort should rise with residual risk.",
       },
       {
         id: "s3",
-        title: "Building the habit",
+        title: "Build evidence from reviewed cases",
         readTimeMinutes: 5,
         content:
-          "Pick one task per week where you let an AI be wrong on purpose, and you must catch it. Run agents on tasks where you have ground truth. Note the failure modes, they cluster. Within a month you will know, without thinking, which kinds of outputs to scan and which to trust.",
+          "Start with tasks where a reliable answer or test oracle exists. Compare outputs with that reference, label the failure type, and record the conditions under which it occurred. Revisit the sample after model, prompt, data, or tool changes. This turns confidence into task-specific evidence.",
       },
     ],
     callout: {
       kind: "warn",
-      h: "Failure mode: the senior who never verifies",
-      text: "A common pattern: confident senior + confident agent + no verification = a wrong answer that nobody catches. The seniority of the human is a multiplier, not a corrective. Build the habit before the cost.",
+      h: "Accountability does not transfer to the model",
+      text: "A confident output and an experienced reviewer can still produce an accepted error. The named owner must perform the checks required by the task's residual risk and must be able to explain the acceptance decision.",
     },
     exerciseKind: "matrix-grid",
     widgets: [
@@ -190,9 +207,9 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
         props: {
           lessonId: "mindset/3",
           cpId: "exercise",
-          title: "Verification Matrix",
+          title: "Verification matrix",
           scenario:
-            "For each task type below, mark how much you should verify in your current role. There is no right answer, calibrate to your context.",
+            "For each task type, select a minimum verification level for your current context. Increase it where errors are costly or hard to detect.",
           rows: [
             "Internal email draft",
             "External customer email",
@@ -201,7 +218,12 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
             "Board-facing number",
             "Performance review draft",
           ],
-          cols: ["Skim", "Read carefully", "Verify against source", "Have a second human review"],
+          cols: [
+            "Skim",
+            "Read carefully",
+            "Verify against source",
+            "Have a second human review",
+          ],
         },
       },
     ],
@@ -212,35 +234,35 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "reading",
-    title: "Killing the hero artisan",
+    title: "Reward reliable systems, not heroics",
     subtitle:
-      "Recognize and dismantle the cultural patterns that reward heroic individual effort over leveraged outcomes.",
+      "Align team recognition with clear ownership, reproducible work, and controlled outcomes.",
     objective:
-      "Recognize and dismantle the cultural patterns that reward heroic individual effort over leveraged outcomes.",
+      "Align team recognition with clear ownership, reproducible work, and controlled outcomes.",
     durationMinutes: 12,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "The 2 a.m. PR is no longer the move",
+        title: "Manual effort is not the quality measure",
         readTimeMinutes: 4,
         content:
-          "For twenty years, software culture celebrated the person who hand-coded a feature alone overnight. That person was the hero. In 2026, that person is a bottleneck. The new hero shipped three features by Tuesday with agents and was home for dinner. Recognize this shift and the comp/promo signals that go with it.",
+          "Hours worked and lines written do not show whether a change is correct, maintainable, or useful. Model usage does not show that either. Evaluate the outcome, the evidence behind it, the operational cost, and whether another person can understand and repeat the process.",
       },
       {
         id: "s2",
-        title: "What leaders should publicly praise",
+        title: "Recognise controls that improve the team",
         readTimeMinutes: 4,
         content:
-          "Praise the engineer who set up the eval suite that caught a regression. Praise the PM who replaced a five-step flow with one delegated agent. Praise the manager who shrank their team by 30% and grew its output. The signal you send shapes the culture more than any policy.",
+          "Recognise people who clarify specifications, add regression tests, document failure modes, reduce unnecessary steps, or stop unsafe work. These actions improve more than one delivery. Do not reward head-count reduction or output volume without examining quality, workload, and downstream risk.",
       },
       {
         id: "s3",
-        title: "Resistance from senior ICs",
+        title: "Apply senior judgment at review boundaries",
         readTimeMinutes: 4,
         content:
-          "The most common resistance comes from senior individual contributors who built their identity around manual mastery. Take them seriously. Their craft is real. The path forward is not to dismiss it, it is to redirect: the same taste, the same standards, applied to specs, evals, and review. Their craft scales now.",
+          "Experienced practitioners contribute domain knowledge, architectural context, and the ability to recognise subtle failure. Use that expertise to define constraints, review exceptions, and teach others how to evaluate results. The tool may generate an artifact; the accountable person decides whether it is acceptable.",
       },
     ],
     exerciseKind: "plays",
@@ -252,15 +274,15 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
         props: {
           lessonId: "mindset/4",
           cpId: "exercise",
-          title: "Your Next Moves",
-          scenario: "Pick three plays you will personally adopt this month.",
+          title: "Your next controls",
+          scenario: "Choose three practices to apply during the next month.",
           minPick: 3,
           options: [
-            'For every new task, write a one-line "AI delegation plan" before starting.',
-            "Run one weekly retro with my team about what AI did and didn't do well.",
-            "Publicly share one delegation per week, what worked, what didn't.",
-            "Stop celebrating long hours. Start celebrating leveraged outcomes.",
-            "Ask one peer to call me out when I revert to manual habits.",
+            "Write a one-line delegation boundary before starting a model-assisted task.",
+            "Review one model-assisted workflow each week for errors and control gaps.",
+            "Share one reviewed example, including what failed and how it was detected.",
+            "Recognise reproducible outcomes instead of long hours or output volume.",
+            "Ask a peer to challenge one assumption in a high-impact acceptance decision.",
           ],
         },
       },
@@ -273,60 +295,99 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
     number: 5,
     kind: "quiz",
     title: "Module 1, knowledge check",
-    subtitle: "Confirm you can articulate the why, the levels, and the practice, in your own words.",
-    objective: "Confirm you can articulate the why, the levels, and the practice, in your own words.",
+    subtitle:
+      "Check your understanding of task selection, operating controls, verification, and accountability.",
+    objective:
+      "Check your understanding of task selection, operating controls, verification, and accountability.",
     durationMinutes: 8,
     keyConcepts: [],
     quiz: [
       {
         id: "ano-mindset-q1",
         questionText:
-          'A teammate says "I tried AI and it gave me a wrong answer, so I don\'t trust it." What is the most useful response?',
+          "A teammate rejects model assistance after one incorrect result. Which response is most useful?",
         answerOptions: [
-          { id: "a", text: "Agree, AI is unreliable for serious work.", isCorrect: false },
+          {
+            id: "a",
+            text: "Agree that models are unsuitable for serious work.",
+            isCorrect: false,
+          },
           {
             id: "b",
-            text: "Trust is calibrated per task type. The question is when you should verify, not whether to use it.",
+            text: "Assess the specific task, error cost, and available verification controls before deciding.",
             isCorrect: true,
           },
-          { id: "c", text: "Use a different model.", isCorrect: false },
-          { id: "d", text: "Wait six months for the technology to improve.", isCorrect: false },
+          {
+            id: "c",
+            text: "Use a newer model without changing the workflow.",
+            isCorrect: false,
+          },
+          {
+            id: "d",
+            text: "Wait until models stop producing errors.",
+            isCorrect: false,
+          },
         ],
         explanation:
-          "Trust is a calibrated, domain-specific function of how often a model is right on a given task and what failure costs, not a single global verdict earned or lost from one interaction. Dismissing AI after one wrong answer is the same error as blindly trusting it after one right one; both skip the calibration step that separates senior practitioners from everyone else.",
+          "One result does not establish reliability for every task. Decide from task-specific evidence, the impact and detectability of an error, and the controls available to reduce residual risk.",
       },
       {
         id: "ano-mindset-q2",
-        questionText: "Which best describes L3 (Conductor)?",
+        questionText:
+          "Which practice best describes L3, Orchestrated portfolio?",
         answerOptions: [
-          { id: "a", text: "You use Cursor or Claude Code for autocomplete daily.", isCorrect: false },
-          { id: "b", text: "AI writes your first draft of every doc.", isCorrect: false },
+          {
+            id: "a",
+            text: "Using autocomplete every day.",
+            isCorrect: false,
+          },
+          {
+            id: "b",
+            text: "Using a model for the first draft of each document.",
+            isCorrect: false,
+          },
           {
             id: "c",
-            text: "You direct multiple agents in parallel; the unit of work is a delegation, not a keystroke.",
+            text: "Running independent tasks in parallel with isolation, release gates, and named human owners.",
             isCorrect: true,
           },
-          { id: "d", text: "You have read three books on AI.", isCorrect: false },
+          {
+            id: "d",
+            text: "Giving agents unrestricted access so they do not need supervision.",
+            isCorrect: false,
+          },
         ],
         explanation:
-          "L3 is defined by the unit of work changing from a keystroke to a delegation: the operator directs multiple agents in parallel, assigning, checking in, redirecting, while the agents do the spec-to-PR work. Daily autocomplete use (L1) and AI-first-draft habits (L2) are real progress, but neither involves orchestrating a fleet.",
+          "L3 combines bounded parallel work with isolation, permissions, evaluation gates, and explicit acceptance ownership. Parallel tool use without those controls does not meet the definition.",
       },
       {
         id: "ano-mindset-q3",
         questionText:
-          'A senior engineer hand-codes a feature overnight to "prove they still can." In an AI-native culture, the leader\'s response is:',
+          "A senior engineer completes a change alone overnight. What should the leader examine?",
         answerOptions: [
-          { id: "a", text: "Celebrate the heroic effort publicly.", isCorrect: false },
+          {
+            id: "a",
+            text: "Whether the effort deserves public praise because it took many hours.",
+            isCorrect: false,
+          },
           {
             id: "b",
-            text: "Privately appreciate the craft, then redirect: ask them to scale that taste through specs and evals.",
+            text: "Whether the result is correct, reviewable, maintainable, and supported by a reproducible process.",
             isCorrect: true,
           },
-          { id: "c", text: "Punish them for not using AI.", isCorrect: false },
-          { id: "d", text: "Ignore it.", isCorrect: false },
+          {
+            id: "c",
+            text: "Whether the engineer can be required to use a model next time.",
+            isCorrect: false,
+          },
+          {
+            id: "d",
+            text: "Only how quickly the change reached production.",
+            isCorrect: false,
+          },
         ],
         explanation:
-          "The craft behind a hand-coded overnight feature is real and worth acknowledging privately, but publicly celebrating solo heroics re-anchors the culture on hours and individual effort instead of leverage. The AI-native move is to redirect that same taste and standards toward specs, evals, and review, where it scales across a whole fleet of agents instead of one person's night.",
+          "Neither manual effort nor model usage is a quality measure. Review the result, its evidence, maintainability, operational risk, and whether the process can be understood and repeated.",
       },
     ],
     sections: [],

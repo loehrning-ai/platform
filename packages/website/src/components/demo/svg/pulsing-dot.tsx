@@ -1,6 +1,7 @@
 "use client";
 
 import { m, useReducedMotion } from "framer-motion";
+import { withMotionProvider } from "@/components/motion/with-motion-provider";
 
 interface PulsingDotProps {
   readonly cx: number;
@@ -11,7 +12,7 @@ interface PulsingDotProps {
   readonly immediate?: boolean;
 }
 
-export function PulsingDot({
+function PulsingDotContent({
   cx,
   cy,
   r = 4,
@@ -65,3 +66,5 @@ export function PulsingDot({
     </>
   );
 }
+
+export const PulsingDot = withMotionProvider(PulsingDotContent);

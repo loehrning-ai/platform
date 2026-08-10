@@ -34,11 +34,11 @@ export const CODEX_QUIZ_TITLE = "Quick check";
 /** Matches `codex/js/widgets.js`'s Compare: `<span class="w-kind">Compare</span>`. */
 export const CODEX_COMPARE_KIND_LABEL = "Compare";
 
-/** Matches the source's tier vocabulary: `weak` / `meh` / `strong`. */
+/** Review-state labels for the assembled task specification. */
 export const CODEX_TASK_SPEC_TIER_LABELS: TaskSpecTierLabels = {
-  weak: "weak",
-  meh: "meh",
-  strong: "strong",
+  weak: "incomplete",
+  meh: "partial",
+  strong: "reviewable",
 };
 
 /**
@@ -53,5 +53,6 @@ export const CODEX_FLASHCARDS_COPY: FlashcardsWidgetCopy = {
   prevLabel: "← Prev",
   nextLabel: "Next →",
   emptyLabel: "No cards available.",
-  ariaLabelTemplate: "Flashcard {current} of {total}. Press Space or click to flip.",
+  ariaLabelTemplate:
+    "Flashcard {current} of {total}. Press Space or click to flip.",
 };

@@ -14,14 +14,14 @@
       "id": "modul_3_lesson_1",
       "moduleId": "modul_3",
       "number": 1,
-      "title": "Warum du ein zweites Gehirn brauchst",
-      "subtitle": "Business-Intelligence für eine Person",
+      "title": "Warum eine gepflegte Wissensbasis wichtig ist",
+      "subtitle": "Nachvollziehbare Wissenssuche für eine Person",
       "durationMinutes": 8,
       "premiumGated": false,
       "refreshCadence": "EVERGREEN",
-      "voiceAnchor": "Ich habe in 8 Monaten 340 Entscheidungen getroffen. Mein Kopf erinnert sich an 20.",
+      "voiceAnchor": "Entscheidungen gehören in gepflegte Aufzeichnungen; Erinnerung dient nicht als verlässliches Register.",
       "keyConcepts": [
-        "Zweites Gehirn",
+        "Externe Wissensbasis",
         "BI",
         "Retrieval"
       ],
@@ -36,21 +36,21 @@
           "id": "modul_3_lesson_1_section_1",
           "title": "Das Dokumentations-Paradox",
           "readTimeMinutes": 2,
-          "content": "Wie oft hast du in den letzten 30 Tagen einen Satz gesagt wie: \"Wir hatten das mal besprochen, ich weiß nicht mehr wo.\" \"Ich glaube, wir haben damals entschieden...\" \"Ich müsste nachschauen.\"\n\nJedes dieser Male kostet dich Zeit. Deine Kollegen. Kundenvertrauen.\n\nDein Kopf ist kein CRM. Dein Kopf ist kein Entscheidungs-Log. Dein Kopf taugt nicht als Speicher für strukturierte Daten. Für Urteile ist er hervorragend.",
-          "keyTakeaway": "Dein Kopf taugt nicht als Speicher für strukturierte Daten. Für Urteile ist er hervorragend."
+          "content": "Sätze wie \"Wir hatten das besprochen, aber ich finde den Beschluss nicht\" weisen auf ein Aufzeichnungsproblem hin. Die Suche kostet Zeit und kann Entscheidungen verzögern.\n\nEin CRM oder Entscheidungsprotokoll speichert strukturierte Angaben, Verantwortliche und Quellen. Menschliches Urteil bleibt für Einordnung, Konflikte und Freigaben erforderlich.",
+          "keyTakeaway": "Nutze Aufzeichnungen für strukturierte Daten und menschliches Urteil für deren Einordnung."
         },
         {
           "id": "modul_3_lesson_1_section_2",
           "title": "BI für eine Person",
           "readTimeMinutes": 3,
-          "content": "Große Unternehmen haben Business-Intelligence-Teams. Data-Warehouses. Dashboards. Wenn ein Executive fragt \"Wie war unser Umsatz in Q1 in Süddeutschland?\", kann jemand das in Minuten beantworten.\n\nDu als Mittelstand-Mitarbeiter? Wenn dein Vorgesetzter fragt \"Was haben wir im Januar zum Thema X entschieden?\", **du rennst rum und suchst.**\n\nEin zweites Gehirn mit AI ist **dein persönliches BI-Team**. Ein Obsidian-Vault mit Smart Connections und Copilot. Du fragst: \"Welche Entscheidungen zu Kunde Y habe ich in den letzten 90 Tagen getroffen?\", und bekommst in 30 Sekunden eine Liste mit Quellenangabe.\n\n**Ohne AI ist ein zweites Gehirn zu aufwendig. Mit AI ist es operative Notwendigkeit.**\n\n2015er-Logik: Evernote-Datenbank mit 10.000 Notizen und schlechter Suche = mehr Arbeit als Nutzen.\n\n2026er-Logik: Obsidian-Vault mit Smart Connections und Copilot = dein BI-Team für 8 Euro im Monat.",
-          "keyTakeaway": "Ohne AI ist ein zweites Gehirn zu aufwendig. Mit AI ist es operative Notwendigkeit."
+          "content": "Business-Intelligence-Systeme beantworten definierte Fragen aus gepflegten Daten. Bei verteilten Notizen löst dieselbe Frage häufig eine manuelle Suche über mehrere Ablagen aus.\n\nEin Obsidian-Vault mit Smart Connections oder Copilot kann die Suche für eine Person unterstützen. Eine Frage wie \"Welche Entscheidungen zu Kunde Y sind in den letzten 90 Tagen dokumentiert?\" sollte ein Ergebnis mit Quellenpfaden liefern, das anschließend geprüft wird.\n\nDer Nutzen hängt nicht von der Zahl gespeicherter Notizen ab. Entscheidend sind Pflege, Metadaten, Herkunft und die Qualität der Suche. Preise, Modellzugriff und Datenflüsse hängen von der aktuellen Plugin- und Providerkonfiguration ab.",
+          "keyTakeaway": "KI-gestützte Suche kann eine gepflegte Wissensbasis praktikabel machen; jedes Ergebnis benötigt weiterhin Quellenprüfung."
         }
       ],
       "quiz": [
         {
           "id": "modul_3_lesson_1_q1",
-          "questionText": "Was löst AI beim zweiten Gehirn, das vorher nicht ging?",
+          "questionText": "Welche Funktion ergänzt KI-gestützte Suche in einer Wissensbasis?",
           "answerOptions": [
             {
               "id": "a",
@@ -73,7 +73,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Speicherung ist seit Jahrzehnten gelöst. Problem: Retrieval. AI + Embeddings machen Retrieval billig, Dokumentations-Aufwand lohnt sich jetzt."
+          "explanation": "Embeddings können semantische Suche über gepflegte Notizen unterstützen. Ergebnisqualität, Kosten und Datenfluss hängen von Modell, Index und Konfiguration ab."
         }
       ]
     },
@@ -82,11 +82,11 @@
       "moduleId": "modul_3",
       "number": 0,
       "title": "Setup-Walkthrough (Bonus)",
-      "subtitle": "Obsidian + 5 Core-Plugins in 25 Minuten",
+      "subtitle": "Obsidian und fünf Kern-Plugins einrichten",
       "durationMinutes": 25,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
-      "voiceAnchor": "Das Setup kostet dich einmal 25 Minuten. Danach nutzt du es jeden Tag.",
+      "voiceAnchor": "Führe jeden Einrichtungsschritt aus und prüfe ihn, bevor du den Ablauf im Alltag verwendest.",
       "keyConcepts": [
         "Obsidian",
         "Templater",
@@ -100,22 +100,22 @@
           "id": "modul_3_lesson_0_section_1",
           "title": "Obsidian installieren",
           "readTimeMinutes": 3,
-          "content": "Willkommen zur einen Lektion ohne Zeit-Cap. Warum: weil Setup-Reibung der Killer ist.\n\n**Schritt 1:** `obsidian.md` öffnen → Download für dein OS (macOS/Windows/Linux) → Installer ausführen → Starten.\n\n**Wichtig:** lehn \"Sync Service\" erstmal ab. Wir nutzen lokalen Vault.\n\n**Schritt 2: Vault-Template importieren**\n\nOption A (empfohlen für Einsteiger): **Leeren Vault erstellen + Template überlagern**\n1. \"Create new vault\" → Ordner wählen (z.B. `~/Documents/mein-vault`)\n2. Kursmaterial `vault-template.zip` entpacken\n3. Inhalt in den leeren Vault-Ordner kopieren\n\nOption B: **Bestehenden Vault um Template erweitern**\n- Kopiere nur `_System/Templates/` + `_System/Dashboards/`\n- Ordnerstruktur manuell anlegen\n- Nicht überschreiben, was du schon hast\n\nDein Vault ist heilig.",
-          "keyTakeaway": "Setup-Reibung ist der Killer. Das Setup kostet dich einmal 25 Minuten. Danach nutzt du es jeden Tag."
+          "content": "Diese Setup-Lektion hat kein Zeitlimit. Schließe jeden Schritt ab und prüfe ihn, bevor du fortfährst.\n\n**Schritt 1:** Öffne `obsidian.md`, lade die aktuelle Version für dein Betriebssystem herunter, prüfe die Quelle und installiere die Anwendung.\n\n**Schritt 2: Synchronisierung entscheiden.** Ein lokaler Vault vermeidet nicht automatisch externe Datenflüsse. Prüfe vor Aktivierung eines Sync-Diensts dessen Verschlüsselung, Konten, Gerätezugriff, Wiederherstellung und Organisationsfreigabe.\n\n**Schritt 3: Vault-Template importieren.**\n\nOption A: Erstelle einen leeren Übungs-Vault, entpacke `vault-template.zip` und kopiere den Inhalt hinein.\n\nOption B: Sichere einen vorhandenen Vault und kopiere nur die benötigten Verzeichnisse. Überschreibe keine bestehenden Dateien ohne Diff und Backup.",
+          "keyTakeaway": "Schließe das Setup einmal vollständig ab und prüfe es, bevor du es in den täglichen Ablauf übernimmst."
         },
         {
           "id": "modul_3_lesson_0_section_2",
           "title": "Die 5 Core-Plugins",
           "readTimeMinutes": 8,
-          "content": "Settings → Community Plugins → Browse. Safe-Mode auf \"off\" (nötig für Community-Plugins).\n\n**In dieser Reihenfolge installieren:**\n\n**1. Templater** (3 Min): Pflicht für Templates\n- Install → Enable\n- Settings → Templates folder: `_System/Templates`\n- Hot-Keys für Daily-Note-Insert zuweisen\n\n**2. Dataview** (1 Min): Pflicht für Dashboards\n- Install → Enable\n- Settings → \"Enable JavaScript Queries\": on\n\n**3. Smart Connections** (1 Min): semantische Verknüpfungen\n- Install → Enable\n- Lokaler Embeddings-Model (kostenlos)\n- Indexing läuft im Hintergrund, 5 Minuten für mittelgroßen Vault\n\n**4. Obsidian Copilot** (1 Min): Chat mit Vault\n- Install → Enable\n- Settings → Model Provider → Claude\n- Claude API-Key (aus console.anthropic.com)\n- Default Model: Sonnet 4.6 für Alltag, Opus 4.7 für Tiefenanalyse\n\n**5. Note Companion** (1 Min, optional Woche 1): AI-Auto-Tagging\n- Install → Enable\n- Lass ihn erst beobachten, noch nicht auto-organisieren\n\n**Power-Tier (optional, für Lesson 3.6):**\n**6. Obsidian Claude Code MCP**: WebSocket-Bridge, wird separat installiert",
-          "keyTakeaway": "5 Plugins in dieser Reihenfolge: Templater, Dataview, Smart Connections, Copilot, Note Companion."
+          "content": "Community-Plugins führen Code mit Zugriff auf den Vault aus. Prüfe vor jeder Installation Herausgeber, Repository, aktuelle Version, Änderungsverlauf, angeforderte Rechte, Datenfluss und Wartungszustand. Aktiviere nur die für den Übungsablauf benötigten Plugins.\n\n**Kurskonfiguration:**\n1. **Templater:** Vorlagenordner `_System/Templates`; JavaScript nur bei geprüftem Bedarf\n2. **Dataview:** Abfragen zunächst ohne JavaScript; JavaScript-Abfragen nur nach Codeprüfung\n3. **Smart Connections:** Embedding-Modell und Netzwerkzugriff in der aktuellen Dokumentation prüfen\n4. **Obsidian Copilot:** Provider, Modell, Abrechnung, Aufbewahrung und API-Key-Speicherort prüfen\n5. **Note Companion:** optional; automatische Verschiebungen zunächst deaktivieren\n\nFür jedes Plugin einen Test mit fiktiven Daten durchführen. Modellnamen, Preise, Menüs und Funktionen können sich ändern; verwende die aktuelle Dokumentation statt einer festen Kursbehauptung.",
+          "keyTakeaway": "Installiere nur geprüfte Plugins und dokumentiere Version, Rechte, Datenfluss und Rückbau."
         },
         {
           "id": "modul_3_lesson_0_section_3",
           "title": "Web Clipper + erste Daily-Note",
           "readTimeMinutes": 8,
-          "content": "**Obsidian Web Clipper im Browser** (separate Browser-Extension):\n1. `obsidian.md/clipper` öffnen\n2. Extension für deinen Browser installieren\n3. Settings:\n   - Target Vault: dein eben erstellter Vault\n   - Target Folder: `00 Inbox/`\n   - AI Interpreter: aktivieren (nutzt Claude API)\n\nTest: auf einer News-Seite → Extension klicken → \"Clip to Obsidian\"\n→ Neue Notiz in `00 Inbox/` mit Content + AI-Summary.\n\n**Erste Daily-Note:**\n\nCmd/Ctrl+P → \"Templater: insert template\" → `_System/Templates/daily-note.md`\n\nTemplater erstellt `50 Daily/2026-04-18.md`:\n- Frontmatter (Datum, Status)\n- 3-Prioritäten-Feld\n- Offene-Schleifen-Feld\n- Tages-Notizen-Bereich\n- Abend-Reflexion\n\nIch fülle die 3 Prioritäten aus. Smart-Connections beginnt Verknüpfungen aufzubauen.\n\n**Validierung:** Plugins sichtbar, Smart Connections zeigt Verknüpfungen, Copilot-Chat öffnet, Web Clipper clippt ins Inbox, Templater Daily-Note funktioniert.\n\nWenn alles grün: **fertig**. Wenn rot: anhand der Fehlermeldung prüfen und den Setup-Schritt wiederholen.",
-          "keyTakeaway": "Web Clipper + Daily-Note = Start-Ritual. In 25 Min komplett setup-fertig."
+          "content": "**Obsidian Web Clipper im Browser:**\n1. Öffne die offizielle Clipper-Seite und installiere die Erweiterung aus der offiziellen Browser-Quelle.\n2. Wähle den Übungs-Vault und `00 Inbox/` als Ziel.\n3. Lasse den AI Interpreter zunächst deaktiviert. Bei Aktivierung muss geprüft werden, welcher Provider Inhalte erhält, wie Schlüssel gespeichert werden und welche Daten aufbewahrt werden.\n\nTeste mit einer unkritischen öffentlichen Seite. Kontrolliere Titel, URL, Abrufdatum und Inhalt der neuen Notiz.\n\n**Erste Daily Note:**\nCmd/Ctrl+P → `Templater: insert template` → `_System/Templates/daily-note.md`.\n\nPrüfe anschließend:\n- erwartete Plugins und Versionen sind sichtbar\n- der Clipper speichert in den richtigen Übungsordner\n- das Template erzeugt den erwarteten Dateinamen und die Felder\n- Verknüpfungs- oder Chatfunktionen arbeiten nur mit der dokumentierten Konfiguration\n\nBei einem Fehler stoppt der Ablauf am betreffenden Schritt; die Fehlermeldung wird dokumentiert und behoben, bevor reale Daten verwendet werden.",
+          "keyTakeaway": "Prüfe Clipper, Template, Datenfluss und Fehlerpfad mit unkritischen Testdaten."
         }
       ],
       "quiz": []
@@ -124,12 +124,12 @@
       "id": "modul_3_lesson_2",
       "moduleId": "modul_3",
       "number": 2,
-      "title": "PARA + MOC: das Mittelstand-Skelett",
-      "subtitle": "Live-Vault-Setup in 20 Minuten",
+      "title": "PARA und MOC: eine einfache Wissensstruktur",
+      "subtitle": "Einen kleinen Übungs-Vault strukturieren",
       "durationMinutes": 12,
       "premiumGated": false,
       "refreshCadence": "EVERGREEN",
-      "voiceAnchor": "Vergiss Zettelkasten. Du brauchst vier Ordner und eine Master-Notiz.",
+      "voiceAnchor": "Vier Ablagekategorien und gepflegte Übersichtsnotizen reichen als prüfbarer Ausgangspunkt.",
       "keyConcepts": [
         "PARA",
         "MOC",
@@ -445,31 +445,31 @@
       "sections": [
         {
           "id": "modul_3_lesson_2_section_1",
-          "title": "PARA in 2 Minuten erklärt",
+          "title": "PARA als vierteilige Ablagestruktur",
           "readTimeMinutes": 2,
           "content": "PARA = **Projects, Areas, Resources, Archive.**\n\n**P. Projects:** Dinge mit klarem Endpunkt, zum Beispiel das ausdrücklich fiktive Projekt \"Angebot Kunde Alpha abschließen\".\n\n**A. Areas:** laufende Verantwortlichkeiten ohne Endpunkt, etwa Vertrieb, Finanzen oder Team.\n\n**R. Resources:** Referenzmaterial wie Artikel, PDFs und Vorlagen.\n\n**A. Archive:** abgeschlossene Projekte und nicht mehr aktive Ressourcen.\n\n**Entscheidungsbaum pro Notiz:**\n- aktives Projekt → Projects\n- laufende Verantwortung → Areas\n- Referenzmaterial → Resources\n- abgeschlossen oder inaktiv → Archive\n\nDie Struktur ist eine Arbeitskonvention, kein allgemeines Gesetz. Passe sie an Auffindbarkeit, Aufbewahrung und Datenschutz an.",
-          "keyTakeaway": "4 Ordner: Projects, Areas, Resources, Archive. Tags nur für Status."
+          "keyTakeaway": "Projects, Areas, Resources und Archive trennen befristete Vorhaben, laufende Verantwortung, Referenzen und abgeschlossene Inhalte."
         },
         {
           "id": "modul_3_lesson_2_section_2",
           "title": "Das Skelett im Vault",
           "readTimeMinutes": 3,
-          "content": "```\nvault-root/\n├── 00 Inbox/              ← alles Neue landet hier\n├── 10 Projects/\n│   └── Projekt-Angebot-Mueller/\n│       └── _MOC.md       ← Master-Notiz\n├── 20 Areas/\n│   ├── Vertrieb/\n│   ├── Finanzen/\n│   ├── Team/\n│   └── Strategie/\n├── 30 Resources/\n│   ├── Branche/\n│   ├── KI-Tools/\n│   └── Vorlagen/\n├── 40 Archive/\n├── 50 Daily/\n└── _System/\n    ├── Templates/\n    └── Dashboards/\n```\n\nFalls du OS-Bundle-Template importiert hast (Lesson 3.0): existiert schon.\n\n**Was ich in 20 Minuten mache:**\n1. Inbox existiert\n2. 3-5 aktive Projects rein migrieren\n3. 4 Areas anlegen (minimal-Set)\n4. Resources: bisherige PDF-Sammlung einsortieren\n5. Archive: alles ältere ab-2024",
-          "keyTakeaway": "Kopierbar aus den Kursmaterialien. 20 Min Migration von bestehendem Chaos."
+          "content": "```\nvault-root/\n├── 00 Inbox/              ← neue Eingänge\n├── 10 Projects/\n│   └── Projekt-Angebot-Mueller/\n│       └── _MOC.md       ← Übersichtsnotiz\n├── 20 Areas/\n│   ├── Vertrieb/\n│   ├── Finanzen/\n│   ├── Team/\n│   └── Strategie/\n├── 30 Resources/\n│   ├── Branche/\n│   ├── KI-Tools/\n│   └── Vorlagen/\n├── 40 Archive/\n├── 50 Daily/\n└── _System/\n    ├── Templates/\n    └── Dashboards/\n```\n\nWenn du das Kurs-Template in Lektion 3.0 importiert hast, ist die Struktur bereits vorhanden.\n\n**Begrenzte Migrationsübung:**\n1. Inbox prüfen\n2. drei bis fünf aktive Projects übernehmen\n3. nur die aktuell benötigten Areas anlegen\n4. eine kleine, repräsentative Auswahl von Referenzen einsortieren\n5. abgeschlossene Inhalte ins Archive verschieben\n\nMigriere nicht den gesamten Bestand, bevor Suche, Links und Backup mit dieser Stichprobe funktionieren.",
+          "keyTakeaway": "Beginne mit einer kleinen Auswahl aktiver Inhalte und erweitere erst nach einer erfolgreichen Prüfung."
         },
         {
           "id": "modul_3_lesson_2_section_3",
           "title": "MOC: das Master-Notiz-Konzept",
           "readTimeMinutes": 4,
           "content": "**MOC = Map of Content.** Eine Master-Notiz kann als Hub für ein Projekt dienen.\n\nFiktive Struktur von `10 Projects/Projekt-Kunde-Alpha/_MOC.md`:\n\n```markdown\n---\nstatus: aktiv\nprojekt: Kunde-Alpha-Fiktivfall\n---\n\n# Angebot Kunde Alpha (fiktiv)\n\n## Ziel\nEntwurf für drei fiktive Beispielmaschinen; Preis und Liefertermin sind ungeprüfte Platzhalter.\n\n## Status\n- [x] fiktive Anfrage erfasst\n- [ ] fachliche Angaben prüfen\n- [ ] Angebot intern freigeben\n\n## Beteiligte\n- Fiktiv-Rolle Alpha: Entscheidung\n- Fiktiv-Rolle Beta: Preisfreigabe\n\n## Offene Fragen\n- Preis, Lieferbarkeit und Rabatt bestätigt?\n```\n\nDie MOC ist ein Status-Board. Verwende in einer echten Notiz nur notwendige, freigegebene Daten und passende Zugriffsrechte.",
-          "keyTakeaway": "MOC = Status-Board pro Project. 30-Sekunden-Klarheit auf einen Blick."
+          "keyTakeaway": "Eine Project-MOC hält Status, nächste Aktionen, Beteiligte und Links in einer prüfbaren Übersichtsnotiz zusammen."
         },
         {
           "id": "modul_3_lesson_2_section_4",
           "title": "Tagging-Politik",
           "readTimeMinutes": 3,
-          "content": "**Regel: maximal 10 Tags system-weit.**\n\nEmpfohlenes Set:\n- `#todo`: offene Aktion\n- `#entscheidung`: getroffene Entscheidung (für Audit-Trail)\n- `#warten-auf`: blockierte Aktion (wer blockt?)\n- `#idee`: Vielleicht-Thema\n- `#followup`: innerhalb nächster 7 Tage prüfen\n- `#archivieren`: Kandidat fürs Archiv\n\n**Was Tags NICHT sind:**\n- Taxonomie (dafür sind Ordner)\n- Projekte (Links zu MOC sind besser)\n- Menschen-Namen (in Frontmatter)\n- Branchen-Kategorien (dafür Ordner in Resources)\n\nWenn du mehr als 12 Tags hast, ist etwas schiefgelaufen. Zurück zu Ordnern und Links.\n\n**PARA + MOC = du findest alles. MOC = du verstehst alles.**\n\nPARA macht Dinge findbar. MOC macht Projects verstehbar, in 30 Sekunden.\n\nDer größte Fehler neuer Vault-Nutzer: zu viele Tags + keine MOCs. Das Resultat ist ein Gewühl, das sich weigert, abgefragt zu werden.",
-          "keyTakeaway": "Max 10 Tags system-weit. Tags für Status, Ordner für Taxonomie, MOCs für Kontext."
+          "content": "Beginne mit einem kleinen dokumentierten Tag-Satz, zum Beispiel:\n- `#todo`: offene Aktion\n- `#entscheidung`: dokumentierte Entscheidung\n- `#warten-auf`: blockierte Aktion\n- `#idee`: ungeprüfter Vorschlag\n- `#followup`: erneut zu prüfender Punkt\n- `#archivieren`: Archivkandidat\n\nVerwende Ordner für die grobe Ablage, MOCs für Project-Kontext und Tags für wenige querliegende Zustände. Namen von Personen oder sensible Merkmale gehören nicht ohne Datenkonzept in Tags.\n\nEine Zahl wie zehn ist eine Startgrenze, kein Naturgesetz. Wenn der Satz wächst, prüfe Überschneidungen, dokumentiere Bedeutungen und teste, ob Abfragen weiterhin vorhersehbar sind.",
+          "keyTakeaway": "Halte Tags klein und dokumentiert; nutze Ordner für Ablage und MOCs für Project-Kontext."
         }
       ],
       "quiz": [
@@ -525,7 +525,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "MOC = Map of Content. Eine Master-Notiz pro Project mit Ziel, Status, nächste Aktion, Beteiligte, Links, beantwortet Projektstand in 30 Sek."
+          "explanation": "MOC bedeutet Map of Content. Eine gepflegte Übersichtsnotiz bündelt Ziel, Status, nächste Aktion, Beteiligte und Links eines Projects."
         }
       ]
     },
@@ -534,11 +534,11 @@
       "moduleId": "modul_3",
       "number": 3,
       "title": "Smart Connections + Copilot",
-      "subtitle": "Dein Wissen wird abfragbar",
+      "subtitle": "Semantische Suche mit Quellenprüfung",
       "durationMinutes": 10,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
-      "voiceAnchor": "Das erste Mal, wenn Smart Connections dir eine Notiz von vor 8 Monaten zeigt, die du vergessen hattest, das ist der Moment.",
+      "voiceAnchor": "Der erste belastbare Test ist, ob eine relevante ältere Notiz mit prüfbarer Quelle gefunden wird.",
       "keyConcepts": [
         "Smart Connections",
         "Copilot for Obsidian",
@@ -555,21 +555,21 @@
           "id": "modul_3_lesson_3_section_1",
           "title": "Smart Connections in Aktion",
           "readTimeMinutes": 3,
-          "content": "Ich öffne eine neue Notiz und beginne zu schreiben:\n\n> Kunde Alpha hat angefragt, ob bei Bestellung von 5 Maschinen statt 3 ein Rabatt möglich ist.\n\nNach 10 Sekunden: Smart Connections Seitenleiste zeigt 3 Notizen:\n- `Kunde-Beta-Mengenrabatt/_MOC.md` (90% Ähnlichkeit)\n- `Vorlagen/rabatt-richtlinien-2025.md` (75%)\n- `Kunde-Gamma-Verhandlung/_MOC.md` (68%)\n\nIch klicke Kunde-Beta. Dort: \"Wir haben 7% Rabatt ab 4 Maschinen angeboten, Kunde hat angenommen, Zahlungsziel 60 Tage statt 30.\"\n\nPerfekt. Ich weiß jetzt, was wir ähnlichen Fällen angeboten haben. Nicht von Kopf-Erinnerung abhängig.\n\n**Wie Smart Connections funktioniert:** lokale Embeddings (kein API-Key, keine Daten raus) vektorisieren jeden Notiz-Text. Bei neuen Notizen: semantische Ähnlichkeit in Real-Time.",
-          "keyTakeaway": "Lokale Embeddings → semantische Verknüpfungen schon beim Tippen. Keine Cloud, keine Kosten."
+          "content": "Im fiktiven Beispiel enthält eine neue Notiz die Frage nach einem Mengenrabatt für Kunde Alpha. Smart Connections schlägt dazu ältere Rabattnotizen und eine aktuelle Richtlinie vor.\n\nEin Ähnlichkeitswert ist kein fachlicher Beleg. Öffne die Quellnotiz, prüfe Datum und Kontext und bestätige, ob die aktuelle Freigaberegel dieselben Konditionen erlaubt.\n\nSmart Connections nutzt Embeddings, um semantisch ähnliche Texte zu finden. Welches Modell die Vektoren erzeugt, wo es läuft, ob Netzwerkzugriff stattfindet und welche Kosten entstehen, hängt von der aktuellen Plugin-Konfiguration ab.",
+          "keyTakeaway": "Semantische Vorschläge sind Suchhinweise; prüfe Modell, Datenfluss und jede gefundene Quellnotiz."
         },
         {
           "id": "modul_3_lesson_3_section_2",
-          "title": "Copilot: dein Vault-Chatbot",
+          "title": "Copilot als Suchoberfläche für den Vault",
           "readTimeMinutes": 4,
           "content": "In einem isolierten Übungs-Vault kannst du fragen: \"Welche fiktiven Rabattentscheidungen sind in den letzten 90 Tagen dokumentiert? Nenne für jede Aussage Dateipfad und Datum.\"\n\nEin Beispieloutput kann Einträge zu Kunde Alpha, Beta oder Gamma auflisten. Behandle ihn trotzdem als Suchentwurf: Öffne jede verlinkte Notiz, prüfe Kontext und erkenne fehlende oder widersprüchliche Einträge.\n\nEine zweite Übungsfrage lautet: \"Fasse die freigegebenen Übungsnotizen zu Kunde Alpha zusammen und markiere jede Aussage ohne Quelle.\"\n\nWeder Geschwindigkeit noch Faktengenauigkeit sind garantiert. Quellenlinks verbessern die Prüfbarkeit, ersetzen die Prüfung aber nicht.",
-          "keyTakeaway": "Copilot-Queries mit Quellenangabe = 30 Sekunden vs. stundenlanges Suchen."
+          "keyTakeaway": "Copilot-Ausgaben bleiben Suchentwürfe; Quellenpfade machen die anschließende Prüfung möglich."
         },
         {
           "id": "modul_3_lesson_3_section_3",
           "title": "Die richtigen Fragen stellen",
           "readTimeMinutes": 3,
-          "content": "Copilot ist so gut wie deine Fragen. Drei Prinzipien:\n\n**Konkret > abstrakt.** Nicht \"Was denke ich über Preispolitik?\", stattdessen \"Welche Entscheidungen zu Rabatten habe ich in den letzten 90 Tagen getroffen?\"\n\n**Zeit-beschränkt.** \"Letzten 30 Tage,\" \"Q1 2026,\" \"seit März 2026.\" Ohne Zeitrahmen sucht Copilot alles und wird langsam.\n\n**Mit Quellenangabe.** Standardmäßig: \"Mit Quellen aus meinen Notizen.\"\n\n**Smart Connections zeigt dir, was du vergessen hast. Copilot beantwortet, woran du dich nicht mehr erinnerst.**\n\nZwei verschiedene Mechanismen, gleicher Effekt: dein Gedächtnis ist nicht mehr der Flaschenhals.\n\nDie Dividende ist nicht \"ich weiß mehr.\" Die Dividende ist \"ich ruhe beim Schreiben mehr.\" Du entscheidest jetzt auf Basis von Daten, nicht Bauchgefühl.\n\nNach 30 Tagen mit diesem Setup merkst du: du sagst seltener \"ich glaube, wir haben damals...\" und öfter \"ich check schnell, einen Moment.\"",
+          "content": "Copilot-Ergebnisse hängen von Frage und indexiertem Quellenbestand ab. Verwende drei Einschränkungen:\n\n**Konkret statt abstrakt.** Frage nicht \"Was denke ich über Preispolitik?\", sondern \"Welche Rabattentscheidungen sind in den letzten 90 Tagen dokumentiert?\"\n\n**Zeitlich begrenzt.** Verwende einen Zeitraum wie \"Q1 2026\" oder \"seit März 2026\", wenn er fachlich sinnvoll ist.\n\n**Mit Quellen.** Fordere Dateipfad, Datum und relevante Textstelle für jede Aussage an.\n\nSmart Connections schlägt verwandte Notizen vor; Copilot beantwortet eine Abfrage über indexiertes Material. Beide Outputs sind Recherchehilfen, keine maßgeblichen Aufzeichnungen.\n\nVergleiche Suchzeit, Anteil fehlender Quellen und Korrekturaufwand mit dem vorherigen Ablauf. Behalte die Konfiguration nur, wenn diese Werte für deine Aufgabe besser werden.",
           "keyTakeaway": "Drei Prinzipien: konkret, zeit-beschränkt, mit Quellenangabe."
         }
       ],
@@ -585,7 +585,7 @@
             },
             {
               "id": "b",
-              "text": "Lokale Embeddings, vektorisierte Notizen, semantische Ähnlichkeit",
+              "text": "Embeddings, vektorisierte Notizen und semantische Ähnlichkeit; Modell und Datenfluss hängen von der Konfiguration ab",
               "isCorrect": true
             },
             {
@@ -599,7 +599,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Smart Connections läuft lokal, Embeddings werden auf deinem Rechner berechnet, keine Cloud-Daten, kein API-Key."
+          "explanation": "Smart Connections nutzt Embeddings für semantische Ähnlichkeit. Prüfe in der aktuellen Konfiguration, welches Modell verwendet wird und wohin Notizinhalte übertragen werden."
         },
         {
           "id": "modul_3_lesson_3_q2",
@@ -626,7 +626,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Konkret statt abstrakt. Zeit-beschränkt (verhindert zu breite Suche). Mit Quellenangabe (faktengenau statt Halluzinations-Risiko)."
+          "explanation": "Konkrete, zeitlich begrenzte Fragen mit Quellenanforderung machen Suchergebnisse enger und besser prüfbar; sie garantieren keine Faktentreue."
         }
       ]
     },
@@ -635,11 +635,11 @@
       "moduleId": "modul_3",
       "number": 4,
       "title": "Obsidian Web Clipper",
-      "subtitle": "Browser → Vault in 3 Sekunden",
+      "subtitle": "Vom Browser in eine geprüfte Vault-Notiz",
       "durationMinutes": 8,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
-      "voiceAnchor": "Tabs offen lassen ist kein Second Brain. Clippen ist.",
+      "voiceAnchor": "Eine gespeicherte Notiz hat Quelle, Metadaten und einen Wiederauffindbarkeitspfad; ein offener Tab nicht.",
       "keyConcepts": [
         "Obsidian Web Clipper",
         "AI Interpreter"
@@ -680,22 +680,22 @@
           "id": "modul_3_lesson_4_section_1",
           "title": "Die Browser-Tab-Realität",
           "readTimeMinutes": 2,
-          "content": "Schau mal kurz auf deinen Browser-Tab-Bar. Wie viele Tabs hast du gerade offen?\n\nWenn du sagst \"drei, vier vielleicht\", lügst du. Die meisten Wissensarbeiter haben 15+, manche 40+. Artikel, die du \"später lesen\" willst. Recherche, die du \"noch checken\" musst. Referenzen, die du \"brauchst.\"\n\nDiese Tabs sind tote Informationen. Weil: später kommt nie. Und wenn später kommt, findest du sie nicht.\n\nHeute machen wir Schluss damit. Web Clipper clippt, AI tagged, Obsidian indexiert. Alles in 3 Sekunden pro Artikel.",
-          "keyTakeaway": "Browser-Tabs sind tote Informationen. Web Clipper + Vault = lebendig, durchsuchbar."
+          "content": "Zähle die Browser-Tabs, die du für späteres Lesen oder als Referenz geöffnet lässt. Ein offener Tab ist keine dauerhafte Aufzeichnung: einheitlicher Ablageort, Metadaten und Wiederauffindbarkeit fehlen.\n\nDiese Lektion prüft einen Capture-Ablauf, in dem Web Clipper einen Artikel speichert, der AI Interpreter Metadaten vorschlägt und Obsidian die Notiz indexiert. Erfasse die Zeit pro Artikel, statt den Wert eines Beispiels zu übernehmen.",
+          "keyTakeaway": "Eine erfasste Notiz ist dauerhaft und durchsuchbar; ein offener Browser-Tab ist es nicht."
         },
         {
           "id": "modul_3_lesson_4_section_2",
-          "title": "Live-Clip mit AI-Interpreter",
+          "title": "Einen Clip mit AI Interpreter prüfen",
           "readTimeMinutes": 3,
-          "content": "Ich öffne einen Artikel auf Heise.de über EU-AI-Act-Neuheiten. 2.500 Wörter Text.\n\nKlick auf Web-Clipper-Extension.\n\nExtension-Panel öffnet sich:\n- **Titel** (auto-extrahiert, editierbar)\n- **AI-Summary** (2 Sätze, in 3 Sek generiert)\n- **Ordner:** `30 Resources/Branche/` (AI vorgeschlagen)\n- **Tags:** `#eu-ai-act`, `#regulierung`, `#branche-news`\n- **Template:** Standard \"article\"\n\nIch bestätige. Obsidian öffnet die neue Notiz automatisch. Drin:\n- Frontmatter mit URL, Datum, Tags\n- AI-Summary oben\n- Voll-Content als Markdown darunter\n\n**Wie Web Clipper + AI-Interpreter funktioniert:** der AI-Interpreter in Extension-Settings macht pre-import: fasst Artikel zusammen, extrahiert Schlüsselwörter, schlägt Ordner-Destination vor, generiert Tags. In 3-5 Sekunden via Claude API.",
-          "keyTakeaway": "AI-Interpreter macht pre-import Strukturierung. Tags + Ordner + Summary automatisch."
+          "content": "Öffne für die Übung einen unkritischen öffentlichen Artikel und starte Web Clipper. Das Panel kann Titel, Zielordner, Tags, Template und eine optionale Zusammenfassung anbieten.\n\nPrüfe vor dem Speichern:\n- Titel, kanonische URL und Abrufdatum stimmen\n- der vorgeschlagene Ordner entspricht der Ablageregel\n- Tags stammen aus dem dokumentierten Tag-Satz\n- die Zusammenfassung ist durch den Artikel belegt\n- eingebettete persönliche oder vertrauliche Angaben wurden entfernt\n\nDer AI Interpreter kann Artikelinhalt an einen konfigurierten Modellanbieter übertragen. Prüfe Provider, Modell, API-Schlüsselablage, Aufbewahrung und Kosten in der aktuellen Erweiterung. Speichere die Quelle zusammen mit jeder erzeugten Zusammenfassung.",
+          "keyTakeaway": "Der AI Interpreter schlägt Zusammenfassung, Tags und Ordner vor; prüfe Datenfluss und jedes Feld vor dem Speichern."
         },
         {
           "id": "modul_3_lesson_4_section_3",
-          "title": "Die 3-Sekunden-Entscheidung",
+          "title": "Ein Kriterium für die Aufnahme",
           "readTimeMinutes": 3,
-          "content": "Nicht jeder Artikel ist es wert. Regel:\n\n**Clippe wenn:**\n- Direkt relevant für aktuelles Projekt\n- Referenz für Thema, das regelmäßig wiederkommt\n- Einzigartige Daten oder Insights (nicht einfach googlebar)\n\n**Nicht clippen (Browser-Tab-Fall zurücklegen):**\n- Random-Interest-Artikel, die du einmal liest und vergisst\n- Duplikat zu etwas, das du schon hast\n- Clickbait ohne Substanz\n\nWenn unsicher: 3-Sekunden-Test. Würdest du den Artikel in 30 Tagen noch einmal finden wollen? Wenn nein, nicht clippen.\n\n**Tabs sind tote Informationen. Vault-Einträge sind lebendig.**\n\nIn 4 Wochen hast du 30-60 Clips. Smart Connections zeigt Verknüpfungen, mit denen du nicht gerechnet hättest. Copilot findet Muster aus Clips + deinen eigenen Notizen.\n\n**Homework:** Die nächsten 3 Artikel, die du online findest, clippen. Nicht mehr, nicht weniger. Geh durch deine aktuellen Browser-Tabs. Die 3 \"ich muss lesen\"-Tabs: clipp sie ins Inbox, schließ die Tabs, verarbeite morgen beim Inbox-Processing.",
-          "keyTakeaway": "3-Sekunden-Test: würdest du es in 30 Tagen nochmal suchen? Wenn nein, nicht clippen."
+          "content": "Nimm einen Artikel auf, wenn er für ein aktives Project relevant ist, regelmäßig benötigtes Referenzmaterial enthält oder eine belegte, schwer ersetzbare Quelle darstellt.\n\nNimm ihn nicht auf, wenn er ein Duplikat ist, keinen absehbaren Verwendungszweck hat oder nur unbelegte Behauptungen wiederholt.\n\nFormuliere vor dem Speichern einen Satz: \"Ich werde diese Quelle für [Project oder Area] verwenden, um [konkrete Frage] zu beantworten.\" Fehlt ein belastbarer Satz, schließe den Tab.\n\n**Übung:** Wähle höchstens drei vorhandene Tabs aus. Speichere Quelle, Abrufdatum und Verwendungszweck, prüfe die erzeugten Felder und verarbeite die Notizen in der nächsten geplanten Inbox-Sitzung.",
+          "keyTakeaway": "Speichere nur Quellen mit einem konkreten Verwendungszweck und nachvollziehbaren Metadaten."
         }
       ],
       "quiz": [
@@ -724,7 +724,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "AI-Interpreter = Claude-API-Call, der den Artikel pre-import strukturiert: Summary, Tags, Ordner-Vorschlag."
+          "explanation": "Der AI Interpreter kann vor dem Import Zusammenfassung, Tags und Ordner vorschlagen. Der tatsächliche Provider und Datenfluss hängen von der aktuellen Konfiguration ab."
         }
       ]
     },
@@ -732,12 +732,12 @@
       "id": "modul_3_lesson_5",
       "moduleId": "modul_3",
       "number": 5,
-      "title": "Daily Workflow + Prompt-Mastery",
-      "subtitle": "Inbox zu Klarheit in 30 Minuten + RCTFC",
+      "title": "Täglicher Ablauf und präzise Prompts",
+      "subtitle": "Inbox-Pflege mit RCTFC und prüfbaren Ausgaben",
       "durationMinutes": 12,
       "premiumGated": false,
       "refreshCadence": "EVERGREEN",
-      "voiceAnchor": "30 Minuten pro Morgen. Das ist deine neue Routine.",
+      "voiceAnchor": "Ein begrenzter Pflegeablauf hält Inbox, MOCs und Daily Notes aktuell; Dauer und Frequenz werden gemessen.",
       "keyConcepts": [
         "RCTFC",
         "Structured Output",
@@ -752,8 +752,8 @@
             "exerciseId": "modul_3_lesson_5_ex_1",
             "lessonId": "modul_3_lesson_5",
             "moduleId": "modul_3",
-            "title": "Welcher Daily-Obsidian-Prompt holt dich am schnellsten raus?",
-            "scenario": "Morgens 8 Uhr, Wochenbericht fällig. Du willst aus deinem Obsidian Vault die letzte Arbeitswoche synthetisieren. Welcher Prompt an Copilot liefert direkt ein brauchbares Ergebnis?",
+            "title": "Welcher Daily-Obsidian-Prompt ist prüfbar?",
+            "scenario": "Ein Wochenbericht ist fällig. Du willst die letzte Arbeitswoche aus dem Übungs-Vault zusammenfassen. Welcher Prompt definiert Quellen, Format und Grenzen?",
             "candidates": [
               {
                 "label": "Variante A: die Pauschale",
@@ -770,7 +770,7 @@
               {
                 "label": "Variante C: RCTFC + Structured Output",
                 "prompt": "Rolle: Chief of Staff, schreibt für Geschäftsführung. Kontext: Analysiere Daily-Notes 2026-04-14 bis 2026-04-20 im Vault. Task: Generiere Wochenbericht. Format: Markdown, 3 Abschnitte (1. Highlights, 3 Bullet Points je max 15 Wörter, 2. Blocker mit Lösungsvorschlag, max 3, 3. Nächste Woche, max 5 Zeilen). Tabu: Keine Adverbien wie erfolgreich, produktiv, fokussiert. Quelle: Nur Fakten aus den Notes, keine Ergänzungen, keine Meinungen. Constraint: Wenn Zeitraum keine Daten hat, sag bescheid, erfinde nichts.",
-                "critique": "Volles RCTFC, Output-Schema, Tabu-Liste und Fakten-Treue-Klausel. Das Ergebnis ist reproduzierbar, du brauchst keine 10 Versuche mehr.",
+                "critique": "Der Brief definiert RCTFC-Felder, Output-Schema, ausgeschlossene Sprache und eine Quellenregel. Wiederholte Ergebnisse lassen sich dadurch leichter vergleichen und prüfen.",
                 "rating": 5
               }
             ]
@@ -780,24 +780,24 @@
       "sections": [
         {
           "id": "modul_3_lesson_5_section_1",
-          "title": "Die 30-Minuten-Morgen-Routine",
+          "title": "Ein begrenzter Pflegeablauf",
           "readTimeMinutes": 3,
-          "content": "Zweite Gehirne sind nur so gut wie die tägliche Disziplin.\n\n**07:15, Inbox öffnen (10 Min.)**\n\nAlles, was gestern via Web-Clipper, Gmail-Forward-to-Obsidian, tl;dv-Transkript, Voice-Memo-Transkript reingekommen ist, liegt in `00 Inbox/`. Während Capture: NICHT organisieren.\n\n**07:25, Processing (15 Min.)**\n\nJede Notiz, ein Entscheidungs-Baum:\n```\n→ Gehört zu aktivem Projekt? → verschieben in 10 Projects/{projekt}/\n→ Ongoing-Verantwortlichkeit? → 20 Areas/{area}/\n→ Referenz-Material, das du nochmal brauchst? → 30 Resources/{kategorie}/\n→ In 10 Sek nicht beantwortbar? → 40 Archive/\n```\n\n**Regel: Inbox am Ende jeder Processing-Session leer. Wenn nicht, lügt dein System.**\n\n**07:40, MOCs updaten (5 Min.)**\n\nFür jedes Projekt, das du gestern berührt hast: öffne `_MOC.md`. Eine Zeile hinzufügen. MOC ist Status-Board, nicht Tagebuch.\n\n**07:45, Daily-Note öffnen**\n\nTemplater erstellt die Tages-Notiz. Drei Prioritäten für heute.\n\n**30 Minuten. Nicht 90.**",
-          "keyTakeaway": "Capture + Process + MOCs + Daily = 30 Min. Inbox-Zero ist Pflicht."
+          "content": "Eine Wissensbasis bleibt nur nützlich, wenn neue Einträge verarbeitet und Übersichten aktualisiert werden. Nutze eine begrenzte Sitzung mit vier Schritten:\n\n1. **Inbox prüfen:** neue Clips, Transkripte und Notizen zählen; keine automatische Weiterleitung realer Daten ohne Freigabe.\n2. **Einordnen:** jedem Eintrag Project, Area, Resource oder Archive zuweisen. Unklare Einträge bleiben markiert in der Inbox statt blind im Archive zu landen.\n3. **MOCs aktualisieren:** bei berührten Projects Status, nächste Aktion und Quelllink ergänzen.\n4. **Daily Note erstellen:** Prioritäten und offene Punkte aus den geprüften Aufzeichnungen übernehmen.\n\nLege ein Zeitlimit fest, das zu deinem Volumen passt, und erfasse Rückstand sowie Fehlzuordnungen. Eine leere Inbox ist kein Qualitätsnachweis, wenn Einträge falsch abgelegt wurden.",
+          "keyTakeaway": "Pflege Inbox, MOCs und Daily Notes in einem begrenzten Ablauf und miss Rückstand sowie Fehlzuordnungen."
         },
         {
           "id": "modul_3_lesson_5_section_2",
           "title": "RCTFC: das Prompt-Schema",
           "readTimeMinutes": 3,
-          "content": "**RCTFC** = **Role, Context, Task, Format, Constraints.**\n\nStandardprompt:\n> \"Schreib eine Kundenabsage-Email.\"\n\n→ Generisch, unbrauchbar.\n\nRCTFC-Prompt:\n\n- **Role:** Vertriebsmitarbeiter für Maschinenbau, Mittelstand, Du-Form bei Stammkunden\n- **Context:** Kunde Alpha, Stammkunde, hat Anfrage gestellt, die wir nicht erfüllen können\n- **Task:** Absage-Email schreiben\n- **Format:** Email mit Betreff, Anrede, 2 Absätze, Signatur\n- **Constraints:** Unter 120 Wörtern, kein \"leider leider\" (einmal reicht), alternative Lösung anbieten\n\n→ Scharfer Output, der trotzdem geprüft werden muss.\n\n**Warum RCTFC funktioniert:** Claude braucht Struktur, um nicht auf Default zurückzufallen. Ohne Struktur macht Claude \"Marketing-Generic-Text.\" Mit Struktur wird der Output spezifischer.\n\nIn den Kursmaterialien: `P020-rctfc-template` als Copy-Paste-Vorlage.",
-          "keyTakeaway": "Role + Context + Task + Format + Constraints. Ohne Struktur = generic. Mit = scharf."
+          "content": "**RCTFC** steht für **Role, Context, Task, Format, Constraints.**\n\nOffene Anfrage:\n> \"Schreibe eine Absage-E-Mail an einen Kunden.\"\n\nStrukturierter Brief:\n- **Role:** Vertriebsmitarbeiter eines mittelständischen Maschinenbauunternehmens\n- **Context:** fiktiver Stammkunde Alpha; eine dokumentierte Anfrage kann nicht erfüllt werden\n- **Task:** internen Absageentwurf erstellen\n- **Format:** Betreff, Anrede, zwei Absätze, Signatur\n- **Constraints:** weniger als 120 Wörter, keine erfundenen Gründe oder Zusagen, alternative Option nur als geprüften Platzhalter angeben\n\nDie Felder schränken Entscheidungen ein, die das Modell sonst aus allgemeinen Mustern ableiten müsste. Auch ein strukturierter Entwurf bleibt prüfpflichtig. Das Kursmaterial `P020-rctfc-template` dient als Vorlage.",
+          "keyTakeaway": "Rolle, Kontext, Aufgabe, Format und Grenzen machen Entwürfe vergleichbarer und leichter prüfbar."
         },
         {
           "id": "modul_3_lesson_5_section_3",
           "title": "Structured Output (JSON) + Few-shot + CoT",
           "readTimeMinutes": 4,
-          "content": "**Structured Output (JSON):** Manchmal willst du **verarbeitbare Daten**, nicht Prosa.\n\n```\nAnalysiere dieses Meeting-Transkript. Gib mir strikt valides JSON:\n\n{\n  \"entscheidungen\": [{\"text\": \"...\", \"verantwortlich\": \"...\"}],\n  \"action_items\": [{\"text\": \"...\", \"fälligkeit\": \"YYYY-MM-DD\", \"verantwortlich\": \"...\"}],\n  \"offene_fragen\": [{\"text\": \"...\", \"wer_antwortet\": \"...\"}]\n}\n\nKein Prosa, keine Erklärung, nur das JSON.\n```\n\nClaude gibt pures JSON zurück. Ich pipe das direkt in n8n oder Python. Keine manuelle Extraktion.\n\n**Few-shot:** gib Claude 2-3 Beispiele, wie es aussehen soll, vor der echten Anfrage. Claude folgt dem Muster. Sehr präzise Outputs.\n\n**Chain-of-Thought:** zwinge Claude zu Zwischen-Schritten:\n```\nDenke Schritt für Schritt:\n1. Erst analysiere die Situation.\n2. Dann identifiziere die 3 Kern-Optionen.\n3. Bewerte jede Option.\n4. Gib dann deine Empfehlung.\n```\n\nClaude macht Zwischen-Schritte sichtbar, Qualität steigt deutlich.\n\n**Wann CoT, wann nicht:** für komplexe Entscheidungen ja; für einfache Texte verlängert CoT nur Output ohne Qualitäts-Gewinn.\n\n**Routine schlägt Technik. Aber beides zusammen schlägt alles.**\n\nDie 30-Minuten-Routine ist die Basis. Die Prompt-Mastery (RCTFC, JSON, Few-shot, CoT) ist die Qualitäts-Multiplikation. Zusammen: 2-3x effektiver als jemand, der beides nicht hat.",
-          "keyTakeaway": "Routine (30 Min) × Prompt-Mastery (RCTFC, JSON, Few-shot, CoT) = 2-3x Effektivität."
+          "content": "**Strukturierte Ausgabe als JSON:** Verarbeitbare Daten benötigen ein festes Schema und technische Validierung.\n\n```\nAnalysiere dieses fiktive Meeting-Transkript. Gib strikt valides JSON zurück:\n{\n  \"entscheidungen\": [{\"text\": \"...\", \"verantwortlich\": null}],\n  \"action_items\": [{\"text\": \"...\", \"fälligkeit\": null, \"verantwortlich\": null}],\n  \"offene_fragen\": [{\"text\": \"...\", \"wer_antwortet\": null}]\n}\nNutze null für unbekannte Werte. Erfinde keine Angaben.\n```\n\nParse und validiere das Ergebnis gegen ein Schema, bevor es an n8n oder Python übergeben wird. Fehlerhafte JSON-Ausgabe muss in einen dokumentierten Fehlerpfad gelangen.\n\n**Beispiele:** Zwei oder drei repräsentative Ein- und Ausgaben können das gewünschte Muster konkretisieren. Sie belegen keine allgemeine Genauigkeit.\n\n**Prüfbare Zwischenergebnisse:** Bitte bei komplexen Aufgaben um kurze Belege, Annahmen und Schlussfolgerungen. Fordere keine verborgenen Gedankengänge an. Für einfache Textaufgaben können zusätzliche Schritte nur Länge erzeugen.\n\nVergleiche Routine, Schema und Beispiele anhand der konkreten Aufgabe; nimm keinen festen Produktivitätsgewinn an.",
+          "keyTakeaway": "Nutze wiederholbare Abläufe, explizite Schemata und technische Validierung; miss ihren Nutzen an der konkreten Aufgabe."
         }
       ],
       "quiz": [
@@ -830,30 +830,30 @@
         },
         {
           "id": "modul_3_lesson_5_q2",
-          "questionText": "Wann Chain-of-Thought nutzen, wann nicht?",
+          "questionText": "Welche Anforderung ist bei einer komplexen Analyse angemessen?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "Immer, macht alles besser",
+              "text": "Bei jeder Aufgabe vollständige verborgene Gedankengänge verlangen",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Für komplexe Analysen ja, für einfache Texte nein (verlängert nur)",
+              "text": "Kurze, prüfbare Belege und Annahmen anfordern; bei einfachen Texten unnötige Zwischenschritte weglassen",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Nur in der API, nicht in Claude.ai",
+              "text": "Nur in einer API und nie in einer Benutzeroberfläche prüfen",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Nur mit Opus, nicht mit Sonnet",
+              "text": "Die Methode an einen festen Modellnamen binden",
               "isCorrect": false
             }
           ],
-          "explanation": "CoT hilft bei komplexen Entscheidungen, Analysen, Strategie, wo Zwischen-Schritte Qualität heben. Bei einfachen Texten verlängert es nur."
+          "explanation": "Fordere für komplexe Aufgaben knappe, prüfbare Belege und Annahmen an. Verborgene Gedankengänge sind weder erforderlich noch ein Qualitätsnachweis."
         }
       ]
     },
@@ -862,11 +862,11 @@
       "moduleId": "modul_3",
       "number": 6,
       "title": "Claude + Obsidian via MCP",
-      "subtitle": "Die Power-Tier-Integration",
+      "subtitle": "Erweiterte Vault-Integration",
       "durationMinutes": 14,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
-      "voiceAnchor": "Claude Code + dein Vault = dein Vault ist jetzt eine SQL-Datenbank, die du in Deutsch abfragst.",
+      "voiceAnchor": "Ein MCP-Server kann freigegebene Vault-Operationen über eine definierte Schnittstelle für Claude Code bereitstellen.",
       "keyConcepts": [
         "obsidian-claude-code-mcp",
         "WebSocket-Bridge"
@@ -882,29 +882,29 @@
           "id": "modul_3_lesson_6_section_1",
           "title": "Die dritte Verbindung",
           "readTimeMinutes": 3,
-          "content": "Bis jetzt hat dein Vault zwei Wege, mit Claude zu sprechen:\n- Via Copilot-Plugin im Obsidian selbst (Lesson 3.3)\n- Via manuellem Copy-Paste in Claude.ai\n\nBeides gut. Beide limitiert.\n\nHeute bauen wir die dritte Verbindung: Claude Code spricht direkt mit deinem Vault. Programmatisch. Ohne Copy-Paste. Ohne Plugin-UI-Abhängigkeit.\n\nDas ist die Ebene, wo dein Vault nicht mehr \"Notizen-App\" ist. Das ist die Ebene, wo er Infrastruktur ist.\n\n**Was ist obsidian-claude-code-mcp?**\n\nMCP-Server, der deinen Obsidian-Vault über WebSocket-Protokoll für Claude Code verfügbar macht. Reference-Implementation: `iansinnott/obsidian-claude-code-mcp` auf GitHub, aktualisiert März 2026.\n\n**Was Claude Code damit kann:**\n- **Lesen:** alle Notizen, nach Ordner/Tag/Datum gefiltert\n- **Schreiben:** neue Notizen erstellen, bestehende updaten\n- **Abfragen:** komplexe Queries\n- **Transformieren:** Batch-Updates (z.B. alle Daily-Notes → Wochenbericht)",
-          "keyTakeaway": "Vault wird Infrastruktur statt Notizen-App. Programmatischer Zugriff via WebSocket-Bridge."
+          "content": "Ein Obsidian-Plugin bietet eine Oberfläche innerhalb des Vaults; Copy-and-paste überträgt ausgewählte Inhalte manuell. Eine MCP-Integration ergänzt eine programmgesteuerte Schnittstelle und erweitert damit Berechtigungs- und Prüfbereich.\n\nDie Kursreferenz `obsidian-claude-code-mcp` beschreibt eine WebSocket-Bridge. Prüfe vor Verwendung Repository, aktuelle Version, Maintainer, Lizenz, Abhängigkeiten, bekannte Sicherheitsmeldungen und Kompatibilität.\n\nJe nach implementierten Tools kann ein Server Notizen lesen, suchen, erstellen oder verändern. Gewähre nicht pauschal den gesamten Vault. Beginne mit einem kopierten Übungs-Vault und ausschließlich lesenden, auf einen Ordner begrenzten Operationen.",
+          "keyTakeaway": "Eine WebSocket-Bridge ergänzt programmgesteuerten Vault-Zugriff; Rechte begrenzen und zuerst schreibgeschützt testen."
         },
         {
           "id": "modul_3_lesson_6_section_2",
           "title": "Setup",
           "readTimeMinutes": 4,
-          "content": "Der OS-Bundle-Script `install-obsidian-claude-code-mcp.sh` erledigt:\n1. Klonen des Repos\n2. Node-Dependencies installieren\n3. WebSocket-Server konfigurieren (default Port 22360)\n4. Claude Code `settings.json` um MCP-Eintrag erweitern\n5. Vault-Pfad abfragen + eintragen\n6. Bestätigung + Neustart-Hinweis\n\n```bash\nbash install-obsidian-claude-code-mcp.sh\n```\n\nInteraktion:\n- Pfad zum Vault? → `~/Documents/mein-vault`\n- WebSocket-Port? → `22360` (default)\n- Überschreibe existierende MCP-Einträge? → `nein` (zusätzlich)\n\nScript fertig. Ich starte Obsidian (damit WebSocket-Server aktiv ist). Dann Claude Code neu.",
-          "keyTakeaway": "OS-Bundle-Script macht Setup in 5 Minuten. Obsidian muss laufen, damit WebSocket aktiv."
+          "content": "Das Kurs-Bundle enthält `install-obsidian-claude-code-mcp.sh`. Führe ein Setup-Skript nicht ungeprüft aus.\n\n**Vor der Ausführung:**\n1. Skript und festgelegte Abhängigkeitsversionen lesen\n2. Repository-URL und Commit prüfen\n3. Claude-Code-Konfiguration sichern\n4. expliziten Pfad zu einem kopierten Übungs-Vault festlegen\n5. Loopback-Bindung, Port und Authentifizierung der Bridge prüfen\n6. sicherstellen, dass das Skript vorhandene MCP-Einträge nicht überschreibt\n7. keine Secrets als Befehlsargumente übergeben\n\nFühre anschließend einen Start- und Stopptest aus. Dokumentiere geänderte Dateien, laufende Prozesse und den vollständigen Rückbau.",
+          "keyTakeaway": "Prüfe Installationsquelle, Änderungen, Netzwerkbindung und Rückbau; verwende zunächst einen kopierten Übungs-Vault."
         },
         {
           "id": "modul_3_lesson_6_section_3",
           "title": "Erste Abfrage",
           "readTimeMinutes": 4,
-          "content": "Ich starte Claude Code im Terminal.\n\nPrompt:\n> Hallo Claude. Du hast jetzt Zugriff auf meinen Obsidian-Vault über den obsidian-mcp-Server. Zeig mir kurz, was du siehst.\n\nClaude: \"Ich sehe deinen Vault unter `~/Documents/mein-vault`. Top-Level-Ordner: 00 Inbox (3 Notizen), 10 Projects (7 Projekte), 20 Areas (4 Bereiche), 30 Resources (31 Dokumente), 40 Archive (58 Einträge), 50 Daily (42 Daily Notes).\"\n\n**Echte Aufgabe:**\n> \"Lies alle Notizen in `10 Projects/` deren status: aktiv ist. Für jedes Projekt: generiere einen 2-Satz-Status aus dem MOC + letzter Update. Schreibe das kombinierte Ergebnis als Wochenbericht-Draft nach `30 Resources/Wochenberichte/KW-16-auto.md`.\"\n\nClaude Code:\n- Liest 7 aktive Projekt-MOCs\n- Extrahiert Status + letzten Update pro Projekt\n- Generiert 2-Satz-Status\n- Kombiniert zu 1-Seiten-Wochenbericht\n- Schreibt neue Notiz\n\nDauer: 90 Sekunden Prompt + 45 Sek Claude Code + 2 Min Review = 4 Min total. Manuell: 45 Min.",
-          "keyTakeaway": "Natürlichsprachliche Vault-Queries. 45 Min Arbeit → 4 Min Orchestrierung."
+          "content": "Starte mit einem schreibgeschützten Test im kopierten Übungs-Vault:\n\n> \"Liste die obersten Verzeichnisse und die Zahl der Markdown-Dateien pro Verzeichnis. Öffne keine Dateiinhalte und führe keine Schreibaktion aus.\"\n\nVergleiche die Ausgabe mit einer lokalen Dateiliste. Prüfe, dass nicht freigegebene Verzeichnisse fehlen.\n\nErweitere danach auf eine begrenzte Aufgabe:\n> \"Lies ausschließlich freigegebene MOCs in `10 Projects/` mit `status: aktiv`. Erstelle einen internen Statusentwurf mit Quellpfad und Datum für jede Aussage. Schreibe noch keine Datei.\"\n\nErst nach Prüfung von Quellen, Berechtigungen und Output darf eine neue Datei in ein separates Ausgabeverzeichnis geschrieben werden. Erfasse Laufzeit und Korrekturaufwand im eigenen Test.",
+          "keyTakeaway": "Beginne schreibgeschützt, gleiche die Sichtbarkeit ab und erlaube Schreibzugriff erst nach Prüfung."
         },
         {
           "id": "modul_3_lesson_6_section_4",
           "title": "Weitere Use-Cases",
           "readTimeMinutes": 3,
           "content": "**Follow-up-Extraktion:**\n> \"Finde in freigegebenen Übungsnotizen alle offenen `#warten-auf`-Einträge. Erstelle interne Entwürfe und nenne pro Aussage die Quelldatei. Kein Versand.\"\n\n**Entscheidungsübersicht:**\n> \"Liste Übungsnotizen mit Tag `#entscheidung`. Nenne Datum, Thema, Entscheidung, Folgeaktion und Quelldatei. Markiere Widersprüche.\"\n\n**Fiktives Kundenprofil:**\n> \"Erstelle aus freigegebenen Übungsnotizen ein Profil für Kunde Alpha (fiktiv). Verwende keine echten Personen- oder Kontaktdaten.\"\n\nMCP kann den kontrollierten Zugriff auf einen Vault ermöglichen. Es macht aus Notizen keine automatisch korrekte Datenbank. Berechtigungen, Datenminimierung, Quellenprüfung und schreibgeschützte Tests bleiben erforderlich. Produkt-Roadmaps und Integrationen können sich ändern; prüfe aktuelle offizielle Dokumentation statt auf eine Datumsprognose zu vertrauen.",
-          "keyTakeaway": "Vault wird aktiv statt passiv. Prüfe die aktuelle offizielle Dokumentation, statt auf eine Datumsprognose zu vertrauen."
+          "keyTakeaway": "MCP macht Notizen nicht automatisch korrekt; Berechtigungen, Datenminimierung und Quellenprüfung bleiben erforderlich."
         }
       ],
       "quiz": [
@@ -914,7 +914,7 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Programmatischer Zugriff via Claude Code, nicht UI-basiert",
+              "text": "Eine konfigurierte MCP-Schnittstelle stellt programmgesteuerte Tools bereit; Copilot arbeitet als Oberfläche innerhalb von Obsidian",
               "isCorrect": true
             },
             {
@@ -933,7 +933,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Copilot = Chat-UI im Obsidian. MCP = programmatische Bridge via WebSocket, nutzbar aus Claude Code CLI + n8n-Workflows."
+          "explanation": "Copilot ist eine Oberfläche innerhalb von Obsidian. MCP beschreibt eine Werkzeugschnittstelle für kompatible Clients; Transport und verfügbare Aktionen hängen vom konkreten Server ab."
         }
       ]
     }

@@ -13,6 +13,15 @@ describe("data-science routes ", () => {
     expect(dsChapterHref("cap")).toBe("/kurse/open-source/data-science/cap");
   });
 
+  it("preserves the selected locale without changing chapter identities", () => {
+    expect(dsChapterHref("home", "en")).toBe(
+      "/en/kurse/open-source/data-science",
+    );
+    expect(dsChapterHref("fund", "en")).toBe(
+      "/en/kurse/open-source/data-science/fund",
+    );
+  });
+
   it("produces a unique href for every chapter", () => {
     const hrefs = DS_CHAPTERS.map((c) => dsChapterHref(c.id));
     expect(new Set(hrefs).size).toBe(DS_CHAPTERS.length);

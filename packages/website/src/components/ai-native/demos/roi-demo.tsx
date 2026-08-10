@@ -2,6 +2,7 @@
 
 import { useState, type JSX } from "react";
 import { DemoOverline } from "./_shared";
+import { useDemoLocale } from "@/components/demos/demo-locale";
 import { cn } from "@/lib/utils";
 
 /**
@@ -9,7 +10,7 @@ import { cn } from "@/lib/utils";
  *
  * Four sliders (headcount, hourly rate, adoption %, hours/week/employee)
  * feed a deterministic three-year cashflow calculation. Implementation cost
- * and per-seat license baseline are baked in as authored benchmarks.
+ * and per-seat license baseline are explicit illustrative assumptions.
  *
  * Provenance: first-party loehrning.ai implementation by Tim Löhr.
  * Ported 2026-04-21 to Tailwind + brand tokens.
@@ -31,6 +32,7 @@ const YEAR_2_GROWTH = 1.25;
 const YEAR_3_GROWTH = 1.4;
 
 export function RoiDemo(): JSX.Element {
+  const { text } = useDemoLocale();
   const [headcount, setHeadcount] = useState(180);
   const [hourly, setHourly] = useState(85);
   const [adoptionPct, setAdoptionPct] = useState(55);
@@ -53,12 +55,12 @@ export function RoiDemo(): JSX.Element {
           ((IMPLEMENTATION_COST + licensesPerYear) / annualSavings) *
           12
         ).toFixed(1)
-      : "—";
+      : null;
 
   const sliderSpecs: readonly [SliderSpec, number, (n: number) => void][] = [
     [
       {
-        label: "Mitarbeiter",
+        label: text("Beschäftigte", "Employees"),
         min: 20,
         max: 1000,
         step: 10,
@@ -69,7 +71,7 @@ export function RoiDemo(): JSX.Element {
     ],
     [
       {
-        label: "Stundensatz vollbelastet",
+        label: text("Vollkosten pro Stunde", "Fully loaded hourly cost"),
         min: 40,
         max: 200,
         step: 5,
@@ -80,7 +82,10 @@ export function RoiDemo(): JSX.Element {
     ],
     [
       {
-        label: "KI-Adoption",
+        label: text(
+          "Anteil einbezogener Beschäftigter",
+          "Share of employees included",
+        ),
         min: 10,
         max: 95,
         step: 5,
@@ -91,7 +96,10 @@ export function RoiDemo(): JSX.Element {
     ],
     [
       {
-        label: "Stunden/Woche/Mitarb.",
+        label: text(
+          "Angenommene Stunden/Woche/Person",
+          "Assumed hours/week/person",
+        ),
         min: 1,
         max: 12,
         step: 0.5,
@@ -113,15 +121,23 @@ export function RoiDemo(): JSX.Element {
     <div
       className="flex flex-col gap-4 overflow-hidden"
       role="region"
-      aria-label="ROI Calculator"
+      aria-label={text("Wirtschaftlichkeits-Szenario", "Economic scenario")}
     >
       <div>
-        <DemoOverline>Wirtschaftlichkeits-Rechner</DemoOverline>
+        <DemoOverline>
+          {text("Wirtschaftlichkeits-Szenario", "Economic scenario")}
+        </DemoOverline>
         <h3 className="mt-2 text-[24px] font-bold tracking-[-0.03em] text-foreground md:text-[26px]">
-          Was bringt <span className="text-brand-orange">KI</span> wirklich?
+          {text("Annahmen und", "Assumptions and")}{" "}
+          <span className="text-brand-orange">
+            {text("modellierter Cashflow", "modelled cash flow")}
+          </span>
         </h3>
         <p className="mt-1.5 text-[13px] text-muted-foreground">
-          Drei-Jahres-Kalkulation auf Basis von 34 Mittelstands-Einsätzen.
+          {text(
+            "Didaktische Rechnung mit veränderbaren Arbeitsannahmen und fest ausgewiesenen Kostenparametern. Kein Benchmark und keine Prognose.",
+            "Illustrative calculation with adjustable work assumptions and disclosed cost parameters. It is not a benchmark or forecast.",
+          )}
         </p>
       </div>
 
@@ -158,16 +174,27 @@ export function RoiDemo(): JSX.Element {
       <div className="dark-section grid grid-cols-2 gap-4 border-t-[3px] border-brand-orange bg-[var(--color-dark-bg)] px-5 py-5 md:grid-cols-[1.5fr_1fr_1fr_1fr] md:gap-5 md:px-6">
         <div>
           <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--color-dark-muted)]">
-            Netto 3 Jahre
+            {text(
+              "Modellierter Netto-Wert · 3 Jahre",
+              "Modelled net value · 3 years",
+            )}
           </div>
           <div className="mt-1.5 font-mono text-[34px] font-bold leading-none tracking-[-0.04em] text-brand-orange md:text-[38px]">
             {(totalNet / 1e6).toFixed(2)} M€
           </div>
         </div>
         {[
-          ["ROI", `${roiPct}%`],
-          ["Amortisation", `${paybackMonths} Mo.`],
-          ["Stunden/Jahr", `${Math.round(annualHours / 1000)}k`],
+          [text("Modellierter ROI", "Modelled ROI"), `${roiPct}%`],
+          [
+            text("Modellierte Amortisation", "Modelled payback"),
+            paybackMonths === null
+              ? text("nicht erreicht", "not reached")
+              : `${paybackMonths} ${text("Mon.", "mo.")}`,
+          ],
+          [
+            text("Angenommene Stunden/Jahr", "Assumed hours/year"),
+            `${Math.round(annualHours / 1000)}k`,
+          ],
         ].map(([label, val]) => (
           <div key={label}>
             <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--color-dark-muted)]">
@@ -183,7 +210,9 @@ export function RoiDemo(): JSX.Element {
       {/* Cashflow projection */}
       <div>
         <DemoOverline>
-          <span className="mb-3 inline-block">Cashflow-Projektion</span>
+          <span className="mb-3 inline-block">
+            {text("Rechenszenario", "Calculation scenario")}
+          </span>
         </DemoOverline>
         <div className="flex h-[160px] items-end gap-2.5 border-b border-border pb-1">
           {yearBars.map((bar) => {
@@ -213,15 +242,16 @@ export function RoiDemo(): JSX.Element {
         </div>
       </div>
 
-      {/* Benchmark disclosure */}
+      {/* Assumption disclosure */}
       <div className="flex gap-3.5 border-l-[3px] border-brand-orange bg-card/60 px-4 py-3">
         <div className="shrink-0 font-mono text-[10px] font-bold tracking-[0.14em] text-brand-orange">
-          ◆ BENCHMARK
+          ◆ {text("ANNAHMEN", "ASSUMPTIONS")}
         </div>
         <div className="text-[12px] leading-[1.5] text-muted-foreground">
-          Basis: 34 Mittelstands-Einsätze 2024–2026. Median 22%
-          Produktivitätsgewinn in adoptierten Funktionen. Konservative Annahme:
-          60% der theoretischen Einsparung realisiert.
+          {text(
+            "Fest im Beispiel: 46 Arbeitswochen, 280.000 € Implementierung, 45 € Lizenz pro Person und Monat sowie Auslastungsfaktoren 1,25 und 1,40 in Jahr 2 und 3. Diese Werte sind keine empirischen Benchmarks. Ersetze sie vor einer Entscheidung durch geprüfte interne Werte und dokumentiere Unsicherheit, Nebenkosten und nicht realisierte Zeit.",
+            "Fixed in this example: 46 working weeks, €280,000 implementation cost, €45 licence cost per person per month, and utilisation factors of 1.25 and 1.40 in years 2 and 3. These values are not empirical benchmarks. Replace them with reviewed internal values before a decision, and document uncertainty, indirect costs, and time that cannot be converted into savings.",
+          )}
         </div>
       </div>
     </div>

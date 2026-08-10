@@ -4,6 +4,7 @@ import { useEffect, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
 import { useDraftValue } from "./use-draft-value";
 import { WidgetFrame } from "./_frame";
+import type { Locale } from "@/lib/i18n/locale";
 
 /**
  * ReflectBox — a single free-text reflection prompt, saved locally only.
@@ -32,18 +33,23 @@ export interface ReflectBoxWidgetProps {
   readonly scenario?: string;
   readonly rows?: number;
   readonly placeholder?: string;
+  readonly locale?: Locale;
 }
 
 export function ReflectBoxWidget({
   lessonId,
   cpId,
-  title = "Reflect",
+  title,
   scenario,
   rows = 4,
-  placeholder = "Type here. Saved locally, only you see this.",
+  placeholder,
+  locale = "en",
 }: ReflectBoxWidgetProps): JSX.Element {
   const { done, complete } = useCheckpoint(lessonId, cpId);
-  const [value, setValue] = useDraftValue<string>(`reflect::${lessonId}::${cpId}`, "");
+  const [value, setValue] = useDraftValue<string>(
+    `reflect::${lessonId}::${cpId}`,
+    "",
+  );
   const [hydrated, setHydrated] = useState(false);
 
   const hasContent = value.trim().length > 0;
@@ -56,16 +62,30 @@ export function ReflectBoxWidget({
     if (hasContent) complete();
   }, [hasContent, complete]);
 
+  const localizedTitle = title ?? (locale === "de" ? "Reflexion" : "Reflect");
+  const localizedPlaceholder =
+    placeholder ??
+    (locale === "de"
+      ? "Hier eingeben. Wird nur lokal in diesem Browser gespeichert."
+      : "Type here. Stored only in this browser.");
+
   return (
-    <WidgetFrame kindLabel="Reflection" title={title} scenario={scenario} done={done} xpLabel="+10 XP">
+    <WidgetFrame
+      kindLabel={locale === "de" ? "Reflexion" : "Reflection"}
+      title={localizedTitle}
+      scenario={scenario}
+      done={done}
+      xpLabel="+10 XP"
+      doneLabel={locale === "de" ? "Erledigt" : "Done"}
+    >
       <textarea
         rows={rows}
-        placeholder={placeholder}
+        placeholder={localizedPlaceholder}
         value={value}
         onChange={(e) => setValue(e.target.value)}
         readOnly={!hydrated}
         aria-disabled={!hydrated}
-        aria-label={title}
+        aria-label={localizedTitle}
         className="w-full resize-y border-2 border-border bg-background p-3 text-[14px] leading-[1.5] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none"
       />
     </WidgetFrame>

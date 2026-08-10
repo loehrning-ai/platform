@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { clamp, mulberry32, randn, round } from "@/lib/data-science/sim-kit";
+import { useDataScienceLocale } from "../locale-context";
 
 // ─── ThresholdSim ───────────────────────────────────
 //
@@ -49,6 +50,7 @@ function xMap(s: number): number {
 }
 
 export function ThresholdSim() {
+  const { text } = useDataScienceLocale();
   const [thr, setThr] = useState(0.5);
   const [auto, setAuto] = useState(false);
   const data = useMemo(() => buildData(), []);
@@ -105,16 +107,23 @@ export function ThresholdSim() {
 
   return (
     <Panel
-      eyebrow="LIVE · SWEEP"
-      title="Threshold · confusion · ROC"
+      eyebrow={text("SYNTHETIC · SWEEP", "SYNTHETISCH · SCHWELLENWERT")}
+      title={text(
+        "Threshold · confusion · ROC",
+        "Schwellenwert · Konfusionsmatrix · ROC",
+      )}
       meta={`τ = ${thr.toFixed(2)}`}
-      caption="Drag τ. Dots above flip to 'predicted positive', some are right (violet), some are false alarms (orange). The ROC curve traces every possible τ; the square is where you are now."
+      caption={text(
+        "Drag τ. Dots above flip to 'predicted positive', some are right (violet), some are false alarms (orange). The ROC curve traces every possible τ; the square is where you are now.",
+        "Verschiebe τ. Punkte oberhalb gelten als positiv vorhergesagt: Einige sind korrekt (violett), andere Fehlalarme (orange). Die ROC-Kurve enthält jedes mögliche τ; das Quadrat markiert den aktuellen Wert.",
+      )}
     >
       <div className="sim-row" style={{ gridTemplateColumns: "260px 1fr" }}>
         <div className="sim-controls">
           <div className="sim-ctrl">
             <label>
-              Threshold τ <span className="mono">{thr.toFixed(2)}</span>
+              {text("Threshold", "Schwellenwert")} τ{" "}
+              <span className="mono">{thr.toFixed(2)}</span>
             </label>
             <input
               type="range"
@@ -122,7 +131,10 @@ export function ThresholdSim() {
               max="1"
               step="0.01"
               value={thr}
-              aria-label="Decision threshold"
+              aria-label={text(
+                "Decision threshold",
+                "Entscheidungsschwellenwert",
+              )}
               onChange={(e) => {
                 setAuto(false);
                 setThr(+e.target.value);
@@ -135,7 +147,9 @@ export function ThresholdSim() {
               className={`btn btn-sm ${auto ? "btn-primary" : ""}`}
               onClick={() => setAuto((a) => !a)}
             >
-              {auto ? "■ Stop sweep" : "▶ Auto-sweep τ"}
+              {auto
+                ? text("■ Stop sweep", "■ Durchlauf stoppen")
+                : text("▶ Auto-sweep τ", "▶ τ automatisch durchlaufen")}
             </button>
           </div>
           <div className="sim-stats">
@@ -157,22 +171,34 @@ export function ThresholdSim() {
             </div>
           </div>
           <div
+            className="ds-confusion-grid"
             style={{
               fontSize: 9,
               color: "var(--muted)",
               fontFamily: "'JetBrains Mono',monospace",
               display: "grid",
-              gridTemplateColumns: "28px 1fr 1fr",
               gap: 2,
               marginTop: 4,
             }}
           >
             <div />
-            <div style={{ textAlign: "center", paddingBottom: 2, borderBottom: "1px solid var(--hair-2)" }}>
-              PRED +
+            <div
+              style={{
+                textAlign: "center",
+                paddingBottom: 2,
+                borderBottom: "1px solid var(--hair-2)",
+              }}
+            >
+              {text("PRED +", "VORH +")}
             </div>
-            <div style={{ textAlign: "center", paddingBottom: 2, borderBottom: "1px solid var(--hair-2)" }}>
-              PRED −
+            <div
+              style={{
+                textAlign: "center",
+                paddingBottom: 2,
+                borderBottom: "1px solid var(--hair-2)",
+              }}
+            >
+              {text("PRED −", "VORH −")}
             </div>
             <div
               style={{
@@ -183,16 +209,32 @@ export function ThresholdSim() {
                 borderRight: "1px solid var(--hair-2)",
               }}
             >
-              ACT +
+              {text("ACT +", "WAHR +")}
             </div>
-            <div className="cm-cell" style={{ background: "rgba(91,62,232,0.08)", border: "1px solid rgba(91,62,232,0.3)" }}>
-              <div className="cm-lab">TP · caught</div>
+            <div
+              className="cm-cell"
+              style={{
+                background: "rgba(91,62,232,0.08)",
+                border: "1px solid rgba(91,62,232,0.3)",
+              }}
+            >
+              <div className="cm-lab">
+                {text("TP · caught", "TP · erkannt")}
+              </div>
               <div className="cm-val" style={{ color: "var(--violet)" }}>
                 {tp}
               </div>
             </div>
-            <div className="cm-cell" style={{ background: "rgba(216,58,58,0.08)", border: "1px solid rgba(216,58,58,0.3)" }}>
-              <div className="cm-lab">FN · missed</div>
+            <div
+              className="cm-cell"
+              style={{
+                background: "rgba(216,58,58,0.08)",
+                border: "1px solid rgba(216,58,58,0.3)",
+              }}
+            >
+              <div className="cm-lab">
+                {text("FN · missed", "FN · übersehen")}
+              </div>
               <div className="cm-val" style={{ color: "var(--bad)" }}>
                 {fn}
               </div>
@@ -206,16 +248,32 @@ export function ThresholdSim() {
                 borderRight: "1px solid var(--hair-2)",
               }}
             >
-              ACT −
+              {text("ACT −", "WAHR −")}
             </div>
-            <div className="cm-cell" style={{ background: "rgba(232,160,49,0.08)", border: "1px solid rgba(232,160,49,0.3)" }}>
-              <div className="cm-lab">FP · false alarm</div>
+            <div
+              className="cm-cell"
+              style={{
+                background: "rgba(232,160,49,0.08)",
+                border: "1px solid rgba(232,160,49,0.3)",
+              }}
+            >
+              <div className="cm-lab">
+                {text("FP · false alarm", "FP · Fehlalarm")}
+              </div>
               <div className="cm-val" style={{ color: "var(--amber)" }}>
                 {fp}
               </div>
             </div>
-            <div className="cm-cell" style={{ background: "rgba(20,18,22,0.04)", border: "1px solid var(--hair-2)" }}>
-              <div className="cm-lab">TN · correct reject</div>
+            <div
+              className="cm-cell"
+              style={{
+                background: "rgba(20,18,22,0.04)",
+                border: "1px solid var(--hair-2)",
+              }}
+            >
+              <div className="cm-lab">
+                {text("TN · correct reject", "TN · korrekt verworfen")}
+              </div>
               <div className="cm-val">{tn}</div>
             </div>
           </div>
@@ -223,14 +281,33 @@ export function ThresholdSim() {
         <div className="sim-plots">
           <div className="plot-wrap">
             <div className="sim-plot-head">
-              Score distribution
-              <span className="hint">upper band = positives · lower band = negatives · x = score</span>
+              {text("Score distribution", "Score-Verteilung")}
+              <span className="hint">
+                {text(
+                  "upper band = positives · lower band = negatives · x = score",
+                  "oberes Band = positive · unteres Band = negative · x = Score",
+                )}
+              </span>
             </div>
             <svg viewBox={`0 0 ${W} ${H}`}>
-              <line x1="30" y1="90" x2={W - 30} y2="90" stroke="#A49D9A" strokeWidth="0.8" />
+              <line
+                x1="30"
+                y1="90"
+                x2={W - 30}
+                y2="90"
+                stroke="#A49D9A"
+                strokeWidth="0.8"
+              />
               {[0, 0.25, 0.5, 0.75, 1].map((v) => (
                 <g key={v}>
-                  <line x1={xMap(v)} y1="86" x2={xMap(v)} y2="94" stroke="#A49D9A" strokeWidth="0.6" />
+                  <line
+                    x1={xMap(v)}
+                    y1="86"
+                    x2={xMap(v)}
+                    y2="94"
+                    stroke="#A49D9A"
+                    strokeWidth="0.6"
+                  />
                   <text
                     x={xMap(v)}
                     y="106"
@@ -243,8 +320,22 @@ export function ThresholdSim() {
                   </text>
                 </g>
               ))}
-              <line x1={xMap(thr)} y1="10" x2={xMap(thr)} y2="170" stroke="#141216" strokeWidth="2" />
-              <rect x={xMap(thr) - 16} y="4" width="32" height="14" rx="3" fill="#141216" />
+              <line
+                x1={xMap(thr)}
+                y1="10"
+                x2={xMap(thr)}
+                y2="170"
+                stroke="#141216"
+                strokeWidth="2"
+              />
+              <rect
+                x={xMap(thr) - 16}
+                y="4"
+                width="32"
+                height="14"
+                rx="3"
+                fill="#141216"
+              />
               <text
                 x={xMap(thr)}
                 y="14"
@@ -256,12 +347,25 @@ export function ThresholdSim() {
               >
                 τ={thr.toFixed(2)}
               </text>
-              <rect x={xMap(thr)} y="20" width={xMap(1) - xMap(thr)} height="60" fill="#5B3EE8" opacity="0.05" />
+              <rect
+                x={xMap(thr)}
+                y="20"
+                width={xMap(1) - xMap(thr)}
+                height="60"
+                fill="#5B3EE8"
+                opacity="0.05"
+              />
               {data.map((d, i) => {
                 const pred = d.score >= thr;
                 const isPos = d.label === 1;
                 const baseY = isPos ? 20 + d.jy * 50 : 100 + d.jy * 50;
-                const fill = isPos ? (pred ? "#5B3EE8" : "#D83A3A") : pred ? "#E8A031" : "#1FAF7E";
+                const fill = isPos
+                  ? pred
+                    ? "#5B3EE8"
+                    : "#D83A3A"
+                  : pred
+                    ? "#E8A031"
+                    : "#1FAF7E";
                 return (
                   <circle
                     key={i}
@@ -274,31 +378,85 @@ export function ThresholdSim() {
                   />
                 );
               })}
-              <text x="30" y="18" fontSize="10" fill="#6A6270" fontFamily="'JetBrains Mono', monospace" fontWeight="700">
-                POSITIVES
+              <text
+                x="30"
+                y="18"
+                fontSize="10"
+                fill="#6A6270"
+                fontFamily="'JetBrains Mono', monospace"
+                fontWeight="700"
+              >
+                {text("POSITIVES", "POSITIVE")}
               </text>
-              <text x="30" y="124" fontSize="10" fill="#6A6270" fontFamily="'JetBrains Mono', monospace" fontWeight="700">
-                NEGATIVES
+              <text
+                x="30"
+                y="124"
+                fontSize="10"
+                fill="#6A6270"
+                fontFamily="'JetBrains Mono', monospace"
+                fontWeight="700"
+              >
+                {text("NEGATIVES", "NEGATIVE")}
               </text>
             </svg>
           </div>
           <div className="plot-wrap">
             <div className="sim-plot-head">
-              ROC curve
+              {text("ROC curve", "ROC-Kurve")}
               <span className="hint">AUC ≈ {round(areaUnder(roc), 3)}</span>
             </div>
             <svg viewBox="0 0 200 160">
-              <rect x="20" y="10" width="160" height="130" fill="none" stroke="#A49D9A" strokeWidth="0.6" />
-              <line x1="20" y1="140" x2="180" y2="10" stroke="#A49D9A" strokeDasharray="3 3" strokeWidth="0.8" />
+              <rect
+                x="20"
+                y="10"
+                width="160"
+                height="130"
+                fill="none"
+                stroke="#A49D9A"
+                strokeWidth="0.6"
+              />
+              <line
+                x1="20"
+                y1="140"
+                x2="180"
+                y2="10"
+                stroke="#A49D9A"
+                strokeDasharray="3 3"
+                strokeWidth="0.8"
+              />
               <path
-                d={"M " + roc.map(([x, y]) => `${20 + x * 160},${140 - y * 130}`).join(" L ")}
+                d={
+                  "M " +
+                  roc
+                    .map(([x, y]) => `${20 + x * 160},${140 - y * 130}`)
+                    .join(" L ")
+                }
                 fill="none"
                 stroke="#5B3EE8"
                 strokeWidth="1.8"
               />
-              <circle cx={20 + fpr * 160} cy={140 - tpr * 130} r="6" fill="none" stroke="#E8318F" strokeWidth="2" />
-              <circle cx={20 + fpr * 160} cy={140 - tpr * 130} r="3.2" fill="#E8318F" />
-              <text x="100" y="158" textAnchor="middle" fontSize="9" fill="#6A6270" fontFamily="'JetBrains Mono', monospace">
+              <circle
+                cx={20 + fpr * 160}
+                cy={140 - tpr * 130}
+                r="6"
+                fill="none"
+                stroke="#E8318F"
+                strokeWidth="2"
+              />
+              <circle
+                cx={20 + fpr * 160}
+                cy={140 - tpr * 130}
+                r="3.2"
+                fill="#E8318F"
+              />
+              <text
+                x="100"
+                y="158"
+                textAnchor="middle"
+                fontSize="9"
+                fill="#6A6270"
+                fontFamily="'JetBrains Mono', monospace"
+              >
                 FPR = {fpr.toFixed(2)}
               </text>
               <text

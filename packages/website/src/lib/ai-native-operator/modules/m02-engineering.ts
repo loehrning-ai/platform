@@ -1,4 +1,3 @@
-// Ported verbatim from course-data.js's MODULES[1] ("engineering", M02).
 import type { AiNativeOperatorLesson } from "../types";
 
 export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
@@ -8,35 +7,35 @@ export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 1,
     number: 1,
     kind: "reading",
-    title: "From keystroke to delegation",
+    title: "Engineering as controlled delegation",
     subtitle:
-      "Internalize the shift in what an engineer's day looks like, and where the leverage now lives.",
+      "Separate work that can be delegated from decisions that require engineering ownership.",
     objective:
-      "Internalize the shift in what an engineer's day looks like, and where the leverage now lives.",
+      "Separate work that can be delegated from decisions that require engineering ownership.",
     durationMinutes: 15,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "The old day",
+        title: "Classify the task before assigning it",
         readTimeMinutes: 5,
         content:
-          "A senior engineer in 2022 wrote ~50 lines of production code per day, hand-typed in an IDE. They read Stack Overflow. They debugged by print statement. They reviewed peers' PRs by reading every line. The work was honest and the work was slow.",
+          "Begin with the change's scope, dependencies, error cost, and available test oracle. A contained refactor with strong tests may be suitable for delegation. An architectural decision, security boundary, unfamiliar migration, or incident response may require direct human analysis or a much narrower model role.",
       },
       {
         id: "s2",
-        title: "The new day",
+        title: "Use a visible control loop",
         readTimeMinutes: 5,
         content:
-          "A senior engineer in 2026 ships 5-10 PRs per day, all reviewed and tested. Agents draft them while she sleeps. She wakes, reviews the morning batch, pushes one tweak per PR, and approves. Her afternoons are spent on the harder problems, system design, evals, the things that truly need her judgment. She works fewer hours and ships more.",
+          "A controlled delegation has five steps: define the result, constrain the workspace, let the agent produce a change, inspect the diff and evidence, then accept or reject it. The human owner does not merely approve the final screen. They verify assumptions, test behavior, and retain responsibility for the merge.",
       },
       {
         id: "s3",
-        title: "The skills that suddenly matter more",
+        title: "Skills that support reliable delegation",
         readTimeMinutes: 5,
         content:
-          "Spec writing. Eval design. Code review at scale. System architecture. Debugging an agent's reasoning, not just its output. These were always senior skills, they are now also junior skills, because juniors who do not have them never become senior in the new world.",
+          "Task decomposition, interface design, specification writing, test design, code review, observability, and incident handling all become more important when generation is cheap. These skills define what may change, expose errors, and make the result understandable to the next engineer.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -49,7 +48,7 @@ export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
           lessonId: "engineering/1",
           cpId: "exercise",
           scenario:
-            "For your last shipped PR or feature: how much of it could a competent agent have done if you had given it the right spec? Be honest.",
+            "Review your last shipped change. Identify what could have been delegated, what required your judgment, which evidence supported the merge, and which uncertainty remained.",
           rows: 4,
         },
       },
@@ -61,40 +60,40 @@ export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 2,
     number: 2,
     kind: "reading",
-    title: "Spec-first development",
+    title: "Specification-first development",
     subtitle:
-      "Learn to write a spec an agent can implement, with enough constraint to be correct, enough freedom to be useful.",
+      "Write a specification that bounds implementation choices and defines observable acceptance criteria.",
     objective:
-      "Learn to write a spec an agent can implement, with enough constraint to be correct, enough freedom to be useful.",
+      "Write a specification that bounds implementation choices and defines observable acceptance criteria.",
     durationMinutes: 22,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "A spec is the new code",
+        title: "A specification reduces ambiguity",
         readTimeMinutes: 7,
         content:
-          "In 2026 you do not start by writing code. You start by writing a spec the agent can implement. The spec describes the goal, the interfaces, the constraints, and the test cases. The code is downstream. If the spec is good, the code is good. If the spec is sloppy, no model on earth saves you.",
+          "Before implementation, state the intended behavior, affected interfaces, constraints, and acceptance evidence. A specification does not guarantee correct code, but it gives both the implementer and reviewer a shared object against which to test the result. If an important decision is unresolved, mark it as unresolved instead of letting the agent infer silently.",
       },
       {
         id: "s2",
-        title: "Anatomy of a good agent spec",
+        title: "Five useful specification sections",
         readTimeMinutes: 8,
         content:
-          "A useful spec has five sections: (1) the goal in one sentence; (2) the interfaces, function signatures, API contracts, file paths it can touch; (3) the invariants that must hold; (4) the explicit non-goals, what NOT to do; (5) the test cases, concrete inputs and expected outputs. Most spec failures come from skipping (3) and (4).",
+          "Use five sections: (1) goal, including the user or system outcome; (2) interfaces, such as API contracts, function signatures, data shapes, and permitted files; (3) invariants that must remain true; (4) explicit non-goals and forbidden changes; and (5) test cases with concrete inputs and expected results. Add security, privacy, migration, or rollback requirements when the task needs them.",
       },
       {
         id: "s3",
-        title: "The 80/20 rule for specs",
+        title: "Prioritise constraints by risk",
         readTimeMinutes: 7,
         content:
-          "Spend 80% of your effort on the parts of the spec that constrain the search space. The opening sentence and the test cases do almost all the work. Long prose in the middle is mostly decoration, and sometimes worse than nothing, because it gives the agent license to drift.",
+          "Spend specification effort where a wrong implementation could cause harm or be difficult to detect. State boundary conditions, failure behavior, compatibility requirements, and the evidence needed for acceptance. Extra prose is useful only when it removes a real ambiguity; length by itself does not improve a specification.",
       },
     ],
     callout: {
       kind: "spec",
-      h: "Example: a spec the agent can implement",
+      h: "Example: an implementable specification",
       lines: [
         "# Goal",
         "Add idempotency to the /api/orders POST endpoint via an Idempotency-Key header.",
@@ -126,8 +125,9 @@ export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
         props: {
           lessonId: "engineering/2",
           cpId: "exercise",
-          title: "Spec Builder",
-          scenario: "Write a 5-section spec for a real ticket on your backlog. Use the structure above.",
+          title: "Specification builder",
+          scenario:
+            "Write a five-section specification for a real backlog item. Include at least one invariant, one non-goal, and one failure-path test.",
           rows: 4,
         },
       },
@@ -139,35 +139,35 @@ export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 3,
     number: 3,
     kind: "reading",
-    title: "Background agent fleets",
+    title: "Parallel work with isolation",
     subtitle:
-      'Move from "one agent at a time" to "three to five agents working in parallel while you orchestrate."',
+      "Run independent agent tasks concurrently without creating hidden conflicts or unreviewed changes.",
     objective:
-      'Move from "one agent at a time" to "three to five agents working in parallel while you orchestrate."',
+      "Run independent agent tasks concurrently without creating hidden conflicts or unreviewed changes.",
     durationMinutes: 24,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "The mental model",
+        title: "Parallelism requires independent boundaries",
         readTimeMinutes: 8,
         content:
-          'A fleet is not "lots of windows open." A fleet is a small number of specialized agents, each with a clear role, running in parallel against well-bounded specs. You are the conductor, you assign, you check in, you redirect. You are not in the IDE; you are above the IDE.',
+          "Several agents can work concurrently only when their scopes, files, data, permissions, and completion criteria are clear. Use separate worktrees or sandboxes, avoid shared mutable resources, and identify dependencies before starting. Parallelising coupled tasks often creates more reconciliation work than it saves.",
       },
       {
         id: "s2",
-        title: "A starter fleet",
+        title: "A bounded starter pattern",
         readTimeMinutes: 8,
         content:
-          "Three agents are usually enough to start. Agent A handles the bug backlog overnight, working through tickets one at a time. Agent B handles small feature work from the spec inbox. Agent C handles refactors, cleanups, and dependency upgrades, the work that always slips. You spend ~30 minutes each morning reviewing what they did.",
+          "Start with three independent roles: one agent investigates and proposes a fix, one implements a small specified change, and one reviews tests or documentation. Give each role a narrow input and output. A named engineer reviews the artifacts, resolves conflicts, and decides what may proceed.",
       },
       {
         id: "s3",
-        title: "When fleets break",
+        title: "Common parallel-work failures",
         readTimeMinutes: 8,
         content:
-          "Fleets break when the specs are bad, the context is shallow, or the eval gates are missing. They also break when the human tries to micromanage, defeating the purpose. The fix is almost always upstream: tighten the spec, deepen the context, raise the eval bar.",
+          "Parallel work fails when agents edit overlapping surfaces, use stale assumptions, exceed their permissions, or produce changes faster than people can review them. Reduce concurrency, narrow the specifications, refresh shared context, and strengthen integration tests. Do not treat a larger agent count as a performance goal.",
       },
     ],
     exerciseKind: "slot-fill",
@@ -179,9 +179,9 @@ export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
         props: {
           lessonId: "engineering/3",
           cpId: "exercise",
-          title: "Your Starter Fleet",
+          title: "Your starter work queue",
           scenario:
-            "Design your starter fleet. Three agents, each with a one-sentence role and a typical task type.",
+            "Define three independent agent assignments. Give each a role, scope boundary, expected artifact, and human owner.",
           placeholders: ["Agent A, role", "Agent B, role", "Agent C, role"],
         },
       },
@@ -193,41 +193,41 @@ export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "reading",
-    title: "Evals: the only thing keeping you safe",
+    title: "Evaluations as a release control",
     subtitle:
-      "Treat your agents like services. Build evals. Track regressions. Pin versions. Roll back when they get worse.",
+      "Use representative cases, regression checks, and explicit release criteria for agent changes.",
     objective:
-      "Treat your agents like services. Build evals. Track regressions. Pin versions. Roll back when they get worse.",
+      "Use representative cases, regression checks, and explicit release criteria for agent changes.",
     durationMinutes: 20,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "Why evals are non-negotiable",
+        title: "Evaluations provide bounded evidence",
         readTimeMinutes: 7,
         content:
-          "An agent without an eval suite is a service without monitoring. It works until it doesn't, and you find out from the customer. The teams that scale agentic workflows are the ones that built the eval suite first. The teams that didn't are the ones telling cautionary tales at conferences.",
+          "An evaluation suite checks defined behavior on a known set of cases. It can expose regressions and compare versions, but it does not prove safety outside that set. Combine evaluations with code review, security controls, staged release, monitoring, and incident response according to the task's risk.",
       },
       {
         id: "s2",
-        title: "What to measure",
+        title: "Choose cases from real work and known risk",
         readTimeMinutes: 7,
         content:
-          "For each agent, define a small, expensive, high-signal eval set: 30–100 tasks that represent the real distribution of work. Score automatically where you can; score with human judgment where you must. Run on every model upgrade, every prompt change, every tool addition.",
+          "Build the smallest set that represents important normal cases, boundary conditions, and observed failure modes. Automate scoring where a reliable oracle exists. Use documented human rubrics where judgment is necessary, and measure reviewer agreement when inconsistency would change a release decision.",
       },
       {
         id: "s3",
-        title: "The eval-driven release",
+        title: "Define release and rollback criteria",
         readTimeMinutes: 6,
         content:
-          "No agent change ships without passing the eval suite. Regressions block. The discipline feels heavy until the day it saves you, and then you never give it up.",
+          "Run the relevant evaluations after model, prompt, context, tool, or policy changes. Specify which regressions block release, who can approve an exception, what evidence that exception requires, and how to roll back. Record the version and result so an incident can be reconstructed.",
       },
     ],
     callout: {
       kind: "note",
-      h: "A useful starting taxonomy",
-      text: "Group your eval cases by: (1) golden, must always pass, (2) typical, represent the real workload, (3) adversarial, known failure modes you have seen in prod. Track scores per group; a regression in any one is a release blocker.",
+      h: "A useful case taxonomy",
+      text: "Group cases into: (1) critical invariants that must pass, (2) representative workload cases, and (3) adversarial or previously observed failures. Track each group separately so an average score cannot hide a critical regression.",
     },
     exerciseKind: "slot-fill",
     widgets: [
@@ -238,9 +238,9 @@ export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
         props: {
           lessonId: "engineering/4",
           cpId: "exercise",
-          title: "Eval Test Cases",
+          title: "Evaluation cases",
           scenario:
-            "For one of your agents, list five test cases, three typical, two adversarial. Be specific about input and expected output.",
+            "For one agent workflow, define five cases: three representative and two adversarial. State the input, expected behavior, and scoring method.",
           placeholders: [
             "Test case 1 (typical)",
             "Test case 2 (typical)",
@@ -259,56 +259,99 @@ export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
     number: 5,
     kind: "quiz",
     title: "Module 2, knowledge check",
-    subtitle: "Confirm engineering primitives are clear before you scale them.",
-    objective: "Confirm engineering primitives are clear before you scale them.",
+    subtitle:
+      "Check your understanding of delegation boundaries, specifications, parallel work, and release evaluations.",
+    objective:
+      "Check your understanding of delegation boundaries, specifications, parallel work, and release evaluations.",
     durationMinutes: 9,
     keyConcepts: [],
     quiz: [
       {
         id: "ano-engineering-q1",
-        questionText: "What is the most important section of an agent spec?",
+        questionText:
+          "Which parts of a specification most directly define the intended result and how it will be accepted?",
         answerOptions: [
-          { id: "a", text: "The opening sentence and the test cases", isCorrect: true },
-          { id: "b", text: "The middle prose explaining context", isCorrect: false },
-          { id: "c", text: "The list of files", isCorrect: false },
-          { id: "d", text: "The author and timestamp", isCorrect: false },
+          {
+            id: "a",
+            text: "The goal and the test cases.",
+            isCorrect: true,
+          },
+          {
+            id: "b",
+            text: "The longest explanatory paragraph.",
+            isCorrect: false,
+          },
+          {
+            id: "c",
+            text: "The list of available models.",
+            isCorrect: false,
+          },
+          {
+            id: "d",
+            text: "The author name and timestamp.",
+            isCorrect: false,
+          },
         ],
         explanation:
-          "The opening sentence and the test cases constrain the search space the most: the sentence sets the goal the agent optimizes for, and the test cases pin down exactly what \"correct\" means. Long explanatory prose in the middle does comparatively little work and can even invite drift if it's vague.",
+          "The goal states the required outcome, while test cases provide observable acceptance evidence. Interfaces, invariants, and non-goals remain essential constraints, but length or authorship does not define correctness.",
       },
       {
         id: "ano-engineering-q2",
         questionText:
-          "A teammate ships an agent change without running the eval suite. What is the right response?",
+          "A high-impact agent change has not passed its required evaluation gate. What should happen?",
         answerOptions: [
-          { id: "a", text: "Allow it; evals slow things down.", isCorrect: false },
+          {
+            id: "a",
+            text: "Release it because evaluations reduce delivery speed.",
+            isCorrect: false,
+          },
           {
             id: "b",
-            text: "Block the change. Eval-driven release is the discipline that lets you go fast safely.",
+            text: "Block the release unless the documented exception owner reviews evidence and accepts the residual risk.",
             isCorrect: true,
           },
-          { id: "c", text: "Run the eval after merge.", isCorrect: false },
-          { id: "d", text: "Add a comment to the PR but merge anyway.", isCorrect: false },
+          {
+            id: "c",
+            text: "Run the evaluation only after a user reports a problem.",
+            isCorrect: false,
+          },
+          {
+            id: "d",
+            text: "Merge it and leave an informal comment for later.",
+            isCorrect: false,
+          },
         ],
         explanation:
-          "Eval-driven release means no agent change reaches production without passing the suite, regressions are a hard block, enforced by the system rather than relying on someone remembering to check. Skipping the gate \"just this once\" is exactly how a model upgrade or prompt tweak silently breaks a workflow nobody is watching.",
+          "A release gate is effective only when failure blocks release or follows a controlled exception process. The exception must have an owner, evidence, a stated residual risk, and a rollback path.",
       },
       {
         id: "ano-engineering-q3",
         questionText:
-          "Your fleet of three agents is producing low-quality PRs. What is the most likely cause?",
+          "Three parallel agents produce conflicting, low-quality changes. Which response addresses the workflow first?",
         answerOptions: [
-          { id: "a", text: "The agents need to be replaced with newer models.", isCorrect: false },
-          { id: "b", text: "You are micromanaging.", isCorrect: false },
+          {
+            id: "a",
+            text: "Replace every model without examining the assignments.",
+            isCorrect: false,
+          },
+          {
+            id: "b",
+            text: "Increase concurrency so more alternatives are available.",
+            isCorrect: false,
+          },
           {
             id: "c",
-            text: "The specs are bad, the context is shallow, or the eval gates are missing.",
+            text: "Reduce overlap, tighten specifications, refresh context, and strengthen integration checks.",
             isCorrect: true,
           },
-          { id: "d", text: "Agents fundamentally cannot do this work.", isCorrect: false },
+          {
+            id: "d",
+            text: "Merge all changes and resolve failures in production.",
+            isCorrect: false,
+          },
         ],
         explanation:
-          "Low-quality PRs from a fleet almost always trace upstream to the inputs the fleet was given: vague specs, shallow context, or missing eval gates. Swapping models or micromanaging treats the symptom; tightening the spec, deepening the context, and raising the eval bar treats the cause.",
+          "Conflicts and low-quality output often indicate coupled scopes, ambiguous requirements, stale context, or weak integration gates. Correct those conditions before changing the model or increasing concurrency.",
       },
     ],
     sections: [],

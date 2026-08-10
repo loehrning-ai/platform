@@ -9,8 +9,9 @@
 // fundamentals's own stage-1 precedent.
 
 import type { CourseConfig } from "@/lib/course/types";
+import { createLocalizedTechnicalCourseConfig } from "@/lib/technical-courses/routes";
 
-export const DATA_SCIENCE_CONFIG: CourseConfig = {
+export const DATA_SCIENCE_CONFIG = {
   slug: "data-science",
   title: "Data Science Fundamentals",
   language: "en",
@@ -43,11 +44,37 @@ export const DATA_SCIENCE_CONFIG: CourseConfig = {
   ],
   certificateReferenceLabel:
     "Personal certificate of completion: the data science loop, EDA to deployment",
-  quizPassMessage: "Congratulations! You completed the Data Science Fundamentals course.",
+  quizPassMessage: "Data Science Fundamentals is complete.",
   certificateFileStem: "Data-Science-Fundamentals",
   recordNoun: {
     label: "Certificate of Completion",
     possessive: "Your certificate of completion",
     demonstrative: "This certificate of completion",
   },
-};
+} satisfies CourseConfig;
+
+export const DATA_SCIENCE_CONFIG_DE = createLocalizedTechnicalCourseConfig(
+  DATA_SCIENCE_CONFIG,
+  "de",
+  {
+    title: "Data Science Fundamentals",
+    certificateTitle: "Teilnahmebestätigung: Data Science Fundamentals",
+    certificateSubtitle:
+      "Lokal erzeugter Abschlussnachweis der unabhängigen Lernplattform loehrning.ai. Keine staatlich anerkannte oder akkreditierte Qualifikation.",
+    certificateModules: [
+      "Grundlagen und Exploration: Stichproben, Data-Science-Zyklus, EDA und Datenbereinigung",
+      "Feature Engineering und Modellierung: Kodierung, Leakage und Bias-Varianz-Abwägung",
+      "Evaluation und Experimente: ROC/PR-Kurven, SHAP-Interpretation und Power von A/B-Tests",
+      "Kausale Inferenz und Betrieb: DAGs, Peeking/CUPED, Drift-Monitoring und Deployment",
+    ],
+    certificateReferenceLabel:
+      "Persönlicher Abschlussnachweis: Data-Science-Zyklus von EDA bis Deployment",
+    quizPassMessage: "Der Kurs Data Science Fundamentals ist abgeschlossen.",
+    certificateFileStem: "Data-Science-Fundamentals",
+    recordNoun: {
+      label: "Teilnahmebestätigung",
+      possessive: "Deine Teilnahmebestätigung",
+      demonstrative: "Diese Teilnahmebestätigung",
+    },
+  },
+);

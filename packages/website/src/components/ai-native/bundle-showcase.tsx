@@ -9,30 +9,33 @@ import {
   Eyebrow,
   FadeBlock,
 } from "@/components/ai-native/primitives";
-import { AI_NATIVE_BUNDLE_ITEMS } from "@/lib/ai-native/content";
+import { getAiNativeBundleItems } from "@/lib/ai-native/content";
 import { cn } from "@/lib/utils";
+import { localizeHref, type Locale } from "@/lib/i18n/locale";
 
 /* BundleShowcase — section with hover/click-driven split:
  *   LEFT:  numbered list of learning-material bausteine + access block
  *   RIGHT: sticky detail pane showing active baustein's full info */
 
-export function AiNativeBundleShowcase() {
+export function AiNativeBundleShowcase({ locale = "de" }: { readonly locale?: Locale }) {
   const [active, setActive] = useState(0);
-  const items = AI_NATIVE_BUNDLE_ITEMS;
+  const isEnglish = locale === "en";
+  const items = getAiNativeBundleItems(locale);
   const current = items[active];
   const CurrentIcon = current.icon;
 
   return (
-    <SectionShell id="os-bundle" num="VIII" label="Lernmaterialien">
-      <Eyebrow>Kursmaterial</Eyebrow>
+    <SectionShell id="os-bundle" num="VIII" label={isEnglish ? "Course materials" : "Lernmaterialien"}>
+      <Eyebrow>{isEnglish ? "Reference material" : "Kursmaterial"}</Eyebrow>
       <ClipHeading
         as="h2"
         className="mt-2.5 font-bold leading-none tracking-[-0.035em] text-foreground"
         style={{ fontSize: "clamp(2rem, 4.5vw, 3.5rem)" }}
       >
-        Die <span className="text-brand-orange">Lernmaterialien</span>.
+        {isEnglish ? "Materials in" : "Materialien im"}{" "}
+        <span className="text-brand-orange">{isEnglish ? "context" : "Kontext"}</span>.
         <br />
-        Muster, nicht Autopilot.
+        {isEnglish ? "Patterns, not an autopilot." : "Muster, kein Autopilot."}
       </ClipHeading>
 
       <div className="mt-14 grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-16">
@@ -40,9 +43,9 @@ export function AiNativeBundleShowcase() {
         <div>
           <FadeBlock delay={1}>
             <p className="max-w-[520px] text-[17px] leading-[1.6] text-muted-foreground">
-              Der Arbeitskurs ist das Fundament. Die Lernmaterialien sind in
-              den Lektionen eingebettet, Prompt-Muster, Diagramme und
-              Checklisten direkt im Kontext.
+              {isEnglish
+                ? "Prompt patterns, diagrams and checklists sit beside the lessons that explain their purpose and limits."
+                : "Prompt-Muster, Diagramme und Checklisten stehen direkt bei den Lektionen, die Zweck und Grenzen erklären."}
             </p>
           </FadeBlock>
 
@@ -97,24 +100,25 @@ export function AiNativeBundleShowcase() {
                   className="font-mono font-bold tracking-[-0.04em] text-brand-orange"
                   style={{ fontSize: "clamp(2.75rem, 6vw, 3.5rem)" }}
                 >
-                  Kostenlos
+                  {isEnglish ? "Free" : "Kostenlos"}
                 </span>
                 <span className="ml-auto font-mono text-[10.5px] uppercase tracking-[0.14em] text-muted-foreground">
-                  mit Lernkonto
+                  {isEnglish ? "with a learning account" : "mit Lernkonto"}
                 </span>
               </div>
               <p className="mt-3.5 text-[14px] leading-[1.55] text-muted-foreground">
-                Arbeitskurs Modul 1-4, komplett kostenlos mit Lernkonto. Alle
-                Lernmaterialien sind in den Lektionen eingebettet.
+                {isEnglish
+                  ? "Modules 1 to 4 are free with a learning account. All course materials are embedded in the lessons."
+                  : "Die Module 1 bis 4 sind mit Lernkonto kostenlos. Alle Kursmaterialien sind in den Lektionen eingebettet."}
               </p>
               <div className="mt-5">
                 <BrandButton
-                  href="/ai-native/kurs/modul_1"
+                  href={localizeHref("/ai-native/kurs/modul_1", locale)}
                   prefetch={false}
                   variant="primary"
                   size="sm"
                 >
-                  Kurs starten <ArrowRight size={13} />
+                  {isEnglish ? "Start the course" : "Kurs starten"} <ArrowRight size={13} />
                 </BrandButton>
               </div>
             </div>
@@ -126,7 +130,7 @@ export function AiNativeBundleShowcase() {
           <div className="border border-border bg-card p-8 min-h-[420px]">
             <div className="flex items-start justify-between gap-4">
               <span className="font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-                Baustein {String(active + 1).padStart(2, "0")}
+                {isEnglish ? "Item" : "Baustein"} {String(active + 1).padStart(2, "0")}
               </span>
               <span className="inline-flex h-10 w-10 items-center justify-center border border-border bg-brand-orange/10 text-brand-orange">
                 <CurrentIcon size={18} />
@@ -140,7 +144,7 @@ export function AiNativeBundleShowcase() {
             </p>
             <div className="mt-7 border-t border-dashed border-border pt-5">
               <span className="font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
-                Wo
+                {isEnglish ? "Location" : "Fundstelle"}
               </span>
               <p className="mt-2 font-mono text-[14px] text-foreground">
                 {current.count}
@@ -148,8 +152,9 @@ export function AiNativeBundleShowcase() {
             </div>
             <div className="mt-5 border-t border-dashed border-border pt-5">
               <p className="text-[13px] leading-[1.55] text-muted-foreground">
-                Die Lernmaterialien sind direkt in den Lektionen eingebettet
-                und dort im fachlichen Kontext erklärt.
+                {isEnglish
+                  ? "The material remains inside the lessons, where its assumptions and use are explained."
+                  : "Das Material bleibt in den Lektionen, wo Annahmen und Einsatz erklärt werden."}
               </p>
             </div>
           </div>

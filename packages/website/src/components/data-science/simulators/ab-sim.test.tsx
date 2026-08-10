@@ -17,9 +17,14 @@ describe("ABSim ", () => {
 
   it("renders the real panel copy and all controls", () => {
     render(<ABSim />);
-    expect(screen.getByText("Running experiment")).toBeInTheDocument();
+    expect(screen.getByText("Experiment stream")).toBeInTheDocument();
+    expect(
+      screen.getByText(/A crossing at an interim look is not a stopping rule/),
+    ).toBeInTheDocument();
     expect(screen.getByLabelText("True lift")).toBeInTheDocument();
-    expect(screen.getByLabelText("Baseline conversion rate")).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Baseline conversion rate"),
+    ).toBeInTheDocument();
     expect(screen.getByLabelText("Daily visitors")).toBeInTheDocument();
     expect(screen.getByLabelText("Simulation speed")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Pause/ })).toBeInTheDocument();

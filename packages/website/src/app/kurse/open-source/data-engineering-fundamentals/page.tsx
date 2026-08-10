@@ -1,164 +1,230 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { DEF_CHAPTERS } from "@/lib/data-engineering-fundamentals/types";
-import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
-import type { JsonLdGraph } from "@/lib/seo/json-ld";
+import { getDataEngineeringFundamentalsCourseCopy } from "@/lib/data-engineering-fundamentals/course-copy";
+import { getDefLocaleRegistry } from "@/lib/data-engineering-fundamentals/content";
+import { contentLocalesForPath } from "@/lib/i18n/content-parity";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { JsonLd, SITE_URL, type JsonLdGraph } from "@/lib/seo/json-ld";
+import {
+  buildTechnicalCourseJsonLd,
+  buildTechnicalCourseMetadata,
+  technicalCourseHref,
+} from "@/lib/technical-courses/routes";
 
-// ─── Data Engineering Fundamentals native landing page ─
-// Converts the source's hero/pipeline-flow into the platform's course-landing
-// pattern (following data-infrastructure's precedent):
-// Tailwind chrome for this marketing page, while the chapter readers
-// themselves (under /[chapterId]) use the ported de-course.css design
-// system for full source fidelity.
+const CANONICAL_PATH = "/kurse/open-source/data-engineering-fundamentals";
 
-export const metadata: Metadata = {
-  title: "Data Engineering Fundamentals: production-ready pipelines, source to serving",
-  description:
-    "A 12-chapter, deeply interactive crash course on data engineering: storage internals, streaming, orchestration, data quality, discovery, governance, with 17 live simulators and a sabotage-able capstone.",
-  robots: { index: true, follow: true },
-  alternates: { canonical: `${SITE_URL}/kurse/open-source/data-engineering-fundamentals` },
-  openGraph: {
-    title: "Data Engineering Fundamentals: production-ready pipelines, source to serving",
-    description: "Twelve chapters, 17 live simulators, and a capstone you can break to see exactly what fails.",
-    url: `${SITE_URL}/kurse/open-source/data-engineering-fundamentals`,
-    siteName: "loehrning.ai",
-    locale: "en_US",
-    type: "website",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  (await getDefLocaleRegistry()).get(locale);
+  const copy = getDataEngineeringFundamentalsCourseCopy(locale).landingMetadata;
+  return buildTechnicalCourseMetadata({
+    courseSlug: "data-engineering-fundamentals",
+    locale,
+    target: { kind: "landing" },
+    title: copy.title,
+    description: copy.description,
+    availableContentLocales: contentLocalesForPath(CANONICAL_PATH),
+  });
+}
 
-export default function DataEngineeringFundamentalsLandingPage() {
+export default async function DataEngineeringFundamentalsLandingPage() {
+  const locale = await getRequestLocale();
+  const bundle = (await getDefLocaleRegistry()).get(locale);
+  const chapters = bundle.content.chapters;
+  const copy = getDataEngineeringFundamentalsCourseCopy(locale).landing;
+  const overviewHref = technicalCourseHref(
+    "data-engineering-fundamentals",
+    locale,
+    { kind: "chapter", chapterId: "home" },
+  );
+  const course = buildTechnicalCourseJsonLd({
+    courseSlug: "data-engineering-fundamentals",
+    locale,
+    name: bundle.config.title,
+    description: copy.jsonLdDescription,
+    teaches: chapters
+      .filter((chapter) => chapter.id !== "home")
+      .map((chapter) => chapter.meta.title),
+    timeRequired: "PT1H30M",
+  });
+  const { "@context": _context, ...courseNode } = course;
   const courseJsonLd: JsonLdGraph = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Start", item: SITE_URL },
-          { "@type": "ListItem", position: 2, name: "Kurse", item: `${SITE_URL}/kurse` },
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: copy.breadcrumbs[0],
+            item: locale === "en" ? `${SITE_URL}/en` : SITE_URL,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: copy.breadcrumbs[1],
+            item:
+              locale === "en" ? `${SITE_URL}/en/kurse` : `${SITE_URL}/kurse`,
+          },
           {
             "@type": "ListItem",
             position: 3,
-            name: "Data Engineering Fundamentals",
-            item: `${SITE_URL}/kurse/open-source/data-engineering-fundamentals`,
+            name: copy.breadcrumbs[2],
+            item: `${SITE_URL}${technicalCourseHref(
+              "data-engineering-fundamentals",
+              locale,
+              { kind: "landing" },
+            )}`,
           },
         ],
       },
       {
-        "@type": "Course",
-        name: "Data Engineering Fundamentals",
-        description:
-          "The system, not the tools: storage & formats, ingest, streaming, storage patterns, compute, orchestration, quality, discovery, serving, and governance, built around interactive simulators of every concept usually drawn on a whiteboard.",
-        url: `${SITE_URL}/kurse/open-source/data-engineering-fundamentals`,
-        inLanguage: "en",
-        isAccessibleForFree: true,
-        provider: { "@id": ORG_ID },
+        ...courseNode,
         hasCourseInstance: {
           "@type": "CourseInstance",
           courseMode: "online",
-          url: `${SITE_URL}/kurse/open-source/data-engineering-fundamentals/home`,
+          url: `${SITE_URL}${overviewHref}`,
         },
-        teaches: DEF_CHAPTERS.filter((c) => c.id !== "home").map((c) => c.title),
       },
     ],
   };
 
   return (
     <>
-      <JsonLd data={courseJsonLd} id="data-engineering-fundamentals-course-jsonld" />
-      <section className="mx-auto max-w-[1100px] px-6 pb-20 pt-20">
-        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">data-engineering / fundamentals</p>
-        <h1 className="mt-6 max-w-[900px] text-[44px] font-bold leading-[0.98] tracking-[-0.04em] text-foreground sm:text-[60px] md:text-[76px]">
-          Think like a data engineer by lunch.
-        </h1>
-        <p className="mt-7 max-w-[680px] text-[18px] leading-[1.6] text-muted-foreground">
-          The system, not the tools. Storage &amp; formats, ingest, streaming, storage patterns, compute, orchestration, data quality, discovery,
-          serving, and governance, no slides, no toy code. By the end, you&apos;ll know where a pipeline fails before it does.
-        </p>
-
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link
-            href="/kurse/open-source/data-engineering-fundamentals/home"
-            className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-6 py-4 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)]"
-          >
-            $ start the course
-            <ArrowRight size={15} aria-hidden="true" />
-          </Link>
-          <Link
-            href="#chapters"
-            className="inline-flex items-center gap-2 border-2 border-foreground bg-background px-6 py-4 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-foreground shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:bg-card"
-          >
-            Browse the chapters
-          </Link>
-        </div>
-
-        <div className="mt-6 flex flex-wrap gap-2">
-          {["12 chapters", "17 live simulators", "~90 min", "no signup"].map((chip) => (
-            <span
-              key={chip}
-              className="border border-foreground bg-background px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-foreground"
-            >
-              {chip}
-            </span>
-          ))}
-        </div>
-
-        <div className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {[
-            { n: "12", l: "chapters" },
-            { n: "17", l: "live simulators" },
-            { n: "1", l: "sabotage-able capstone" },
-            { n: "0", l: "signup required" },
-          ].map((stat) => (
-            <div key={stat.l} className="border-2 border-border bg-card p-4 text-center">
-              <p className="font-mono text-[26px] font-bold text-foreground">{stat.n}</p>
-              <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground">{stat.l}</p>
-            </div>
-          ))}
-        </div>
-
-        <section id="chapters" className="mt-20 scroll-mt-24">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">the course</p>
-          <h2 className="mt-2 text-[28px] font-bold tracking-[-0.03em] text-foreground sm:text-[34px]">
-            One pipeline. Twelve chapters. A capstone you can break.
-          </h2>
-          <p className="mt-3 max-w-[600px] text-[15px] leading-relaxed text-muted-foreground">
-            Linear the first time, each chapter assumes the last. The capstone (chapter 10) stitches all six contracts together and lets you
-            sabotage any one to watch exactly what fails downstream.
+      <JsonLd
+        data={courseJsonLd}
+        id="data-engineering-fundamentals-course-jsonld"
+      />
+      <main className="mx-auto w-full max-w-[1180px] min-w-0 px-4 pb-20 pt-14 sm:px-6 sm:pt-20">
+        <section className="min-w-0 border-y-2 border-foreground py-10 sm:py-14">
+          <p className="break-words font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
+            {copy.eyebrow}
+          </p>
+          <h1 className="mt-6 max-w-[980px] break-words text-[42px] font-bold leading-[0.98] tracking-[-0.045em] text-foreground [overflow-wrap:anywhere] sm:text-[60px] md:text-[76px]">
+            {copy.title}
+          </h1>
+          <p className="mt-7 max-w-[760px] break-words text-[17px] leading-[1.65] text-muted-foreground [overflow-wrap:anywhere] sm:text-[18px]">
+            {copy.intro}
           </p>
 
-          <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {DEF_CHAPTERS.map((c) => (
-              <li key={c.id}>
-                <Link
-                  href={`/kurse/open-source/data-engineering-fundamentals/${c.id}`}
-                  className="block h-full border-2 border-border bg-card p-4 transition-colors hover:border-brand-orange"
-                >
-                  <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-brand-orange">chapter {c.displayNumber}</p>
-                  <h3 className="mt-1 text-[15px] font-semibold text-foreground">{c.title}</h3>
-                  <p className="mt-1 text-[12.5px] leading-[1.4] text-muted-foreground">{c.subtitle}</p>
-                </Link>
+          <div className="mt-8 flex min-w-0 flex-wrap gap-3">
+            <Link
+              href={overviewHref}
+              prefetch={false}
+              className="inline-flex min-h-12 max-w-full items-center gap-2 break-words border-2 border-foreground bg-brand-orange px-5 py-3.5 font-mono text-[12px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)] sm:px-6 sm:text-[13px]"
+            >
+              {copy.start}
+              <ArrowRight size={15} className="shrink-0" aria-hidden="true" />
+            </Link>
+            <Link
+              href="#chapters"
+              className="inline-flex min-h-12 max-w-full items-center break-words border-2 border-foreground bg-background px-5 py-3.5 font-mono text-[12px] font-bold uppercase tracking-[0.06em] text-foreground shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:bg-card sm:px-6 sm:text-[13px]"
+            >
+              {copy.browse}
+            </Link>
+          </div>
+
+          <ul className="mt-7 grid min-w-0 gap-px border border-foreground bg-foreground sm:grid-cols-2 lg:grid-cols-4">
+            {copy.facts.map((fact) => (
+              <li
+                key={fact}
+                className="min-w-0 break-words bg-background px-4 py-3 font-mono text-[11px] font-bold uppercase tracking-[0.07em] text-foreground [overflow-wrap:anywhere]"
+              >
+                {fact}
               </li>
             ))}
           </ul>
         </section>
 
-        <div className="mt-16 border-2 border-foreground bg-card p-8 text-center shadow-[6px_6px_0_var(--color-foreground)]">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">start now</p>
-          <h2 className="mt-2 text-[26px] font-bold text-foreground sm:text-[32px]">Open the overview.</h2>
-          <p className="mx-auto mt-3 max-w-[440px] text-[14px] leading-relaxed text-muted-foreground">
-            The pipeline, end to end, in three minutes. Then the rest of the course is just zooming in.
+        <dl className="mt-12 grid min-w-0 grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+          {copy.stats.map((stat) => (
+            <div
+              key={stat.label}
+              className="min-w-0 border-2 border-border bg-card p-4 text-center"
+            >
+              <dd className="break-words font-mono text-[24px] font-bold text-foreground sm:text-[26px]">
+                {stat.value}
+              </dd>
+              <dt className="mt-1 break-words font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground [overflow-wrap:anywhere] sm:text-[11px]">
+                {stat.label}
+              </dt>
+            </div>
+          ))}
+        </dl>
+
+        <section id="chapters" className="mt-16 min-w-0 scroll-mt-24 sm:mt-20">
+          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+            {copy.courseEyebrow}
+          </p>
+          <h2 className="mt-2 max-w-[900px] break-words text-[28px] font-bold tracking-[-0.03em] text-foreground [overflow-wrap:anywhere] sm:text-[36px]">
+            {copy.courseTitle}
+          </h2>
+          <p className="mt-3 max-w-[700px] break-words text-[15px] leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
+            {copy.courseIntro}
+          </p>
+
+          <ol className="mt-9 grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {chapters.map((chapter) => (
+              <li key={chapter.id} className="min-w-0">
+                <Link
+                  href={technicalCourseHref(
+                    "data-engineering-fundamentals",
+                    locale,
+                    { kind: "chapter", chapterId: chapter.id },
+                  )}
+                  prefetch={false}
+                  className="group flex h-full min-w-0 flex-col border-2 border-border bg-card p-4 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-brand-orange"
+                >
+                  <div className="flex min-w-0 items-start justify-between gap-3">
+                    <p className="min-w-0 break-words font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-brand-orange [overflow-wrap:anywhere]">
+                      {copy.chapterLabel(
+                        chapter.meta.displayNumber,
+                        chapter.id,
+                      )}
+                    </p>
+                    <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
+                      {copy.duration(chapter.meta.estimatedMinutes)}
+                    </span>
+                  </div>
+                  <h3 className="mt-2 break-words text-[16px] font-semibold text-foreground [overflow-wrap:anywhere]">
+                    {chapter.meta.title}
+                  </h3>
+                  <p className="mt-1.5 break-words text-[12.5px] leading-[1.5] text-muted-foreground [overflow-wrap:anywhere]">
+                    {chapter.meta.subtitle}
+                  </p>
+                  <ArrowRight
+                    size={15}
+                    className="mt-auto self-end pt-3 text-brand-orange transition-transform group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
+                </Link>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section className="mt-16 min-w-0 border-2 border-foreground bg-card p-6 shadow-[6px_6px_0_var(--color-foreground)] sm:mt-20 sm:p-8">
+          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+            {copy.finalEyebrow}
+          </p>
+          <h2 className="mt-2 break-words text-[26px] font-bold text-foreground [overflow-wrap:anywhere] sm:text-[32px]">
+            {copy.finalTitle}
+          </h2>
+          <p className="mt-3 max-w-[620px] break-words text-[14px] leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
+            {copy.finalBody}
           </p>
           <Link
-            href="/kurse/open-source/data-engineering-fundamentals/home"
-            className="mt-6 inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-6 py-4 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)]"
+            href={overviewHref}
+            prefetch={false}
+            className="mt-6 inline-flex min-h-12 max-w-full items-center gap-2 break-words border-2 border-foreground bg-brand-orange px-5 py-3.5 font-mono text-[12px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)] sm:px-6 sm:text-[13px]"
           >
-            $ start
-            <ArrowRight size={15} aria-hidden="true" />
+            {copy.finalCta}
+            <ArrowRight size={15} className="shrink-0" aria-hidden="true" />
           </Link>
-        </div>
-      </section>
+        </section>
+      </main>
     </>
   );
 }

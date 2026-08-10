@@ -1,5 +1,19 @@
-import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from "vitest";
-import { render, screen, fireEvent, cleanup, act } from "@testing-library/react";
+import {
+  describe,
+  it,
+  expect,
+  beforeAll,
+  beforeEach,
+  afterEach,
+  vi,
+} from "vitest";
+import {
+  render,
+  screen,
+  fireEvent,
+  cleanup,
+  act,
+} from "@testing-library/react";
 import { __resetCacheForTests, getXp, isCheckpointDone } from "@/lib/progress";
 import { XP } from "@/lib/progress/types";
 import { L02SandboxBox } from "./l02-sandbox-box";
@@ -23,7 +37,10 @@ function installLocalStoragePolyfill(): void {
 }
 
 beforeAll(() => {
-  if (typeof window.localStorage === "undefined" || typeof window.localStorage.setItem !== "function") {
+  if (
+    typeof window.localStorage === "undefined" ||
+    typeof window.localStorage.setItem !== "function"
+  ) {
     installLocalStoragePolyfill();
   }
 });
@@ -46,20 +63,26 @@ describe("L02SandboxBox", () => {
     expect(screen.getByLabelText("network")).not.toBeChecked();
     expect(screen.getByLabelText("env vars")).not.toBeChecked();
     expect(screen.getByLabelText("secrets")).not.toBeChecked();
-    expect(screen.getByText("codex can verify work")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "configured checks are marked available; inspect their output",
+      ),
+    ).toBeInTheDocument();
   });
 
   it("turning tests off flips the verification readout", () => {
     render(<L02SandboxBox lessonId="L02" cpId="bespoke" />);
     fireEvent.click(screen.getByLabelText("tests"));
-    expect(screen.getByText("codex cannot verify work, flying blind")).toBeInTheDocument();
+    expect(
+      screen.getByText("configured checks are unavailable in this scenario"),
+    ).toBeInTheDocument();
   });
 
   it("shows a transient warning when network is turned on, then clears it", () => {
     vi.useFakeTimers();
     render(<L02SandboxBox lessonId="L02" cpId="bespoke" />);
     fireEvent.click(screen.getByLabelText("network"));
-    expect(screen.getByRole("alert")).toHaveTextContent("NET ON");
+    expect(screen.getByRole("alert")).toHaveTextContent("NETWORK ENABLED");
     act(() => {
       vi.advanceTimersByTime(1000);
     });

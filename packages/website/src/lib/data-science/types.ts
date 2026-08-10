@@ -65,7 +65,7 @@ export function isDsNumberedChapterId(
   );
 }
 
-/** Per-chapter metadata, ported verbatim from `App.js`'s `CHAPTERS` array. */
+/** Stable chapter identity plus current learner-visible metadata. */
 export interface ChapterMeta {
   readonly id: DsChapterId;
   /** 0-based order, matching source array position. */
@@ -79,24 +79,115 @@ export interface ChapterMeta {
 }
 
 /**
- * Verbatim port of `App.js`'s `CHAPTERS` array. Cheap and eager (unlike the
+ * Current chapter metadata. Cheap and eager (unlike the
  * heavier per-chapter body content in ./chapters, which loads via
  * per-chapter dynamic `import()`).
  */
 export const DS_CHAPTERS: readonly ChapterMeta[] = [
-  { id: "home", number: 0, displayNumber: "—", title: "Overview", subtitle: "The whole DS loop, animated", estimatedMinutes: 3 },
-  { id: "fund", number: 1, displayNumber: "01", title: "Fundamentals", subtitle: "Sample vs population, the loop", estimatedMinutes: 7 },
-  { id: "explore", number: 2, displayNumber: "02", title: "Explore", subtitle: "Distributions · outliers · corr", estimatedMinutes: 8 },
-  { id: "clean", number: 3, displayNumber: "03", title: "Clean", subtitle: "Missingness · scaling · leakage", estimatedMinutes: 7 },
-  { id: "feature", number: 4, displayNumber: "04", title: "Feature", subtitle: "Encoding · interactions · leak", estimatedMinutes: 8 },
-  { id: "model", number: 5, displayNumber: "05", title: "Model", subtitle: "Bias/variance live", estimatedMinutes: 9 },
-  { id: "eval", number: 6, displayNumber: "06", title: "Evaluate", subtitle: "Confusion · threshold · ROC/PR", estimatedMinutes: 8 },
-  { id: "interp", number: 7, displayNumber: "07", title: "Interpret", subtitle: "SHAP · feature importance", estimatedMinutes: 7 },
-  { id: "exp", number: 8, displayNumber: "08", title: "Experiment", subtitle: "A/B · power · MDE", estimatedMinutes: 9 },
-  { id: "causal", number: 9, displayNumber: "09", title: "Causal", subtitle: "DAGs · confounders · backdoors", estimatedMinutes: 8 },
-  { id: "peek", number: 10, displayNumber: "10", title: "Peeking & CUPED", subtitle: "How p-values lie", estimatedMinutes: 7 },
-  { id: "deploy", number: 11, displayNumber: "11", title: "Deploy", subtitle: "Drift · monitoring · retrain", estimatedMinutes: 7 },
-  { id: "cap", number: 12, displayNumber: "12", title: "Capstone", subtitle: "The full loop, end to end", estimatedMinutes: 12 },
+  {
+    id: "home",
+    number: 0,
+    displayNumber: "—",
+    title: "Overview",
+    subtitle: "Twelve chapters and local teaching models",
+    estimatedMinutes: 3,
+  },
+  {
+    id: "fund",
+    number: 1,
+    displayNumber: "01",
+    title: "Fundamentals",
+    subtitle: "Sample vs population, the loop",
+    estimatedMinutes: 7,
+  },
+  {
+    id: "explore",
+    number: 2,
+    displayNumber: "02",
+    title: "Explore",
+    subtitle: "Distributions · outliers · corr",
+    estimatedMinutes: 8,
+  },
+  {
+    id: "clean",
+    number: 3,
+    displayNumber: "03",
+    title: "Clean",
+    subtitle: "Missingness · scaling · leakage",
+    estimatedMinutes: 7,
+  },
+  {
+    id: "feature",
+    number: 4,
+    displayNumber: "04",
+    title: "Feature",
+    subtitle: "Encoding · interactions · leak",
+    estimatedMinutes: 8,
+  },
+  {
+    id: "model",
+    number: 5,
+    displayNumber: "05",
+    title: "Model",
+    subtitle: "Bias, variance, and validation",
+    estimatedMinutes: 9,
+  },
+  {
+    id: "eval",
+    number: 6,
+    displayNumber: "06",
+    title: "Evaluate",
+    subtitle: "Confusion · threshold · ROC/PR",
+    estimatedMinutes: 8,
+  },
+  {
+    id: "interp",
+    number: 7,
+    displayNumber: "07",
+    title: "Interpret",
+    subtitle: "SHAP · feature importance",
+    estimatedMinutes: 7,
+  },
+  {
+    id: "exp",
+    number: 8,
+    displayNumber: "08",
+    title: "Experiment",
+    subtitle: "A/B · power · MDE",
+    estimatedMinutes: 9,
+  },
+  {
+    id: "causal",
+    number: 9,
+    displayNumber: "09",
+    title: "Causal",
+    subtitle: "DAGs · confounders · backdoors",
+    estimatedMinutes: 8,
+  },
+  {
+    id: "peek",
+    number: 10,
+    displayNumber: "10",
+    title: "Peeking & CUPED",
+    subtitle: "Stopping, multiplicity, and covariate adjustment",
+    estimatedMinutes: 7,
+  },
+  {
+    id: "deploy",
+    number: 11,
+    displayNumber: "11",
+    title: "Deploy",
+    subtitle: "Drift · monitoring · retrain",
+    estimatedMinutes: 7,
+  },
+  {
+    id: "cap",
+    number: 12,
+    displayNumber: "12",
+    title: "Capstone",
+    subtitle: "Data audit through deployment review",
+    estimatedMinutes: 12,
+  },
 ];
 
 export function getDsChapterMeta(id: DsChapterId): ChapterMeta {

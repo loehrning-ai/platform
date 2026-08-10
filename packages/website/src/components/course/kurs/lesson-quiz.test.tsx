@@ -104,7 +104,9 @@ afterEach(cleanup);
 describe("<LessonQuiz> empty + initial state", () => {
   it("renders the fallback message for an empty question set", () => {
     const onComplete = vi.fn();
-    render(<LessonQuiz questions={[]} bestScore={null} onComplete={onComplete} />);
+    render(
+      <LessonQuiz questions={[]} bestScore={null} onComplete={onComplete} />,
+    );
     expect(
       screen.getByText("Keine Quizfragen für diese Lektion verfügbar."),
     ).toBeInTheDocument();
@@ -113,12 +115,14 @@ describe("<LessonQuiz> empty + initial state", () => {
 
   it("renders the first question with a labelled radiogroup and roving tabindex", () => {
     render(
-      <LessonQuiz questions={questions} bestScore={null} onComplete={() => {}} />,
+      <LessonQuiz
+        questions={questions}
+        bestScore={null}
+        onComplete={() => {}}
+      />,
     );
     expect(screen.getByText(/Frage 1 von 2/)).toBeInTheDocument();
-    expect(
-      screen.getByText("Was ergibt zwei plus zwei?"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Was ergibt zwei plus zwei?")).toBeInTheDocument();
     expect(screen.getByRole("radiogroup")).toBeInTheDocument();
 
     const radios = screen.getAllByRole("radio");
@@ -130,7 +134,11 @@ describe("<LessonQuiz> empty + initial state", () => {
 
   it("shows the best-score line only when a bestScore is supplied", () => {
     const { unmount } = render(
-      <LessonQuiz questions={questions} bestScore={null} onComplete={() => {}} />,
+      <LessonQuiz
+        questions={questions}
+        bestScore={null}
+        onComplete={() => {}}
+      />,
     );
     expect(screen.queryByText(/Bisher/)).toBeNull();
     unmount();
@@ -149,7 +157,11 @@ describe("<LessonQuiz> empty + initial state", () => {
 describe("<LessonQuiz> selection + explanation", () => {
   it("reveals 'Richtig' + explanation and checks the radio when the correct option is chosen", () => {
     render(
-      <LessonQuiz questions={questions} bestScore={null} onComplete={() => {}} />,
+      <LessonQuiz
+        questions={questions}
+        bestScore={null}
+        onComplete={() => {}}
+      />,
     );
     const radios = screen.getAllByRole("radio");
     fireEvent.click(radios[CORRECT_INDEX[0]]);
@@ -158,14 +170,16 @@ describe("<LessonQuiz> selection + explanation", () => {
     expect(screen.getByText("Richtig")).toBeInTheDocument();
     expect(screen.getByText("Zwei plus zwei ergibt vier.")).toBeInTheDocument();
     // Advancing affordance appears; it is "Weiter" while questions remain.
-    expect(
-      screen.getByRole("button", { name: /Weiter/ }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Weiter/ })).toBeInTheDocument();
   });
 
   it("reveals 'Falsch' when an incorrect option is chosen", () => {
     render(
-      <LessonQuiz questions={questions} bestScore={null} onComplete={() => {}} />,
+      <LessonQuiz
+        questions={questions}
+        bestScore={null}
+        onComplete={() => {}}
+      />,
     );
     const radios = screen.getAllByRole("radio");
     // Index 0 ("Drei") is wrong for q1 (correct is index 1 = "Vier").
@@ -200,10 +214,10 @@ describe("<LessonQuiz> completion scoring", () => {
 
     expect(onComplete).toHaveBeenCalledTimes(1);
     expect(onComplete).toHaveBeenCalledWith(2, 2);
-    // Result screen: 2/2 -> 100% -> "Perfekt!".
+    // Result screen: 2/2 -> 100% -> the precise completion label.
     expect(screen.getByText("100%")).toBeInTheDocument();
     expect(screen.getByText("2/2 richtig")).toBeInTheDocument();
-    expect(screen.getByText("Perfekt!")).toBeInTheDocument();
+    expect(screen.getByText("Alle Antworten richtig.")).toBeInTheDocument();
   });
 
   it("reports a zero score and the retry-band message when every answer is wrong", () => {
@@ -230,15 +244,17 @@ describe("<LessonQuiz> completion scoring", () => {
     expect(screen.getByText("0%")).toBeInTheDocument();
     expect(screen.getByText("0/2 richtig")).toBeInTheDocument();
     expect(
-      screen.getByText(
-        "Lies die Lektion nochmal und versuch es noch einmal.",
-      ),
+      screen.getByText("Lies die Lektion nochmal und versuch es noch einmal."),
     ).toBeInTheDocument();
   });
 
   it("resets to the first question when 'Nochmal' is clicked", () => {
     render(
-      <LessonQuiz questions={questions} bestScore={null} onComplete={() => {}} />,
+      <LessonQuiz
+        questions={questions}
+        bestScore={null}
+        onComplete={() => {}}
+      />,
     );
 
     // Finish the quiz (answers do not matter for the reset behaviour).
@@ -251,9 +267,7 @@ describe("<LessonQuiz> completion scoring", () => {
     fireEvent.click(screen.getByRole("button", { name: /Nochmal/ }));
 
     expect(screen.getByText(/Frage 1 von 2/)).toBeInTheDocument();
-    expect(
-      screen.getByText("Was ergibt zwei plus zwei?"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Was ergibt zwei plus zwei?")).toBeInTheDocument();
     // Fresh question: nothing selected yet.
     screen
       .getAllByRole("radio")
@@ -264,7 +278,11 @@ describe("<LessonQuiz> completion scoring", () => {
 describe("<LessonQuiz> keyboard navigation", () => {
   it("moves the roving tabindex with ArrowDown and selects with Space", () => {
     render(
-      <LessonQuiz questions={questions} bestScore={null} onComplete={() => {}} />,
+      <LessonQuiz
+        questions={questions}
+        bestScore={null}
+        onComplete={() => {}}
+      />,
     );
     let radios = screen.getAllByRole("radio");
 
@@ -285,7 +303,11 @@ describe("<LessonQuiz> keyboard navigation", () => {
 
   it("wraps the roving tabindex from the first option to the last with ArrowUp", () => {
     render(
-      <LessonQuiz questions={questions} bestScore={null} onComplete={() => {}} />,
+      <LessonQuiz
+        questions={questions}
+        bestScore={null}
+        onComplete={() => {}}
+      />,
     );
     fireEvent.keyDown(screen.getAllByRole("radio")[0], { key: "ArrowUp" });
     const radios = screen.getAllByRole("radio");

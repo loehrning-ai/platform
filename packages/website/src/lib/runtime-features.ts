@@ -2,14 +2,17 @@ import "server-only";
 import {
   anthropicRetentionDays,
   hasCompleteSupabaseRuntimeConfig,
-  isAccountAbuseProtectionReady,
+  isAccountRuntimeReady,
   isAnthropicRuntimeReady,
-  isPastOrPresentIsoDate,
+  isGoogleOAuthRuntimeReady,
+  isMagicLinkRuntimeReady,
   turnstileSiteKey,
 } from "@/lib/provider-readiness";
 
 export interface RuntimeFeatures {
   readonly account: boolean;
+  readonly magicLink: boolean;
+  readonly google: boolean;
   readonly turnstileSiteKey: string | null;
   readonly feedback: boolean;
   readonly supabase: boolean;
@@ -40,19 +43,15 @@ export function getRuntimeFeatures(): RuntimeFeatures {
   const anthropicRetention = anthropicRetentionDays();
   const vercelHosting = process.env.VERCEL === "1";
   const supabaseRegion = process.env.SUPABASE_REGION || null;
-  const supabaseComplianceReady =
-    Boolean(supabaseRegion && /^eu(?:-|$)/i.test(supabaseRegion)) &&
-    isPastOrPresentIsoDate(process.env.SUPABASE_DPA_CONFIRMED_AT);
-  const captchaSiteKey = turnstileSiteKey();
-  const accountProtectionReady = isAccountAbuseProtectionReady();
+  const accountReady = isAccountRuntimeReady();
+  const magicLinkReady = isMagicLinkRuntimeReady();
+  const googleReady = isGoogleOAuthRuntimeReady();
 
   return {
-    account:
-      publicSupabase &&
-      serviceSupabase &&
-      supabaseComplianceReady &&
-      accountProtectionReady,
-    turnstileSiteKey: accountProtectionReady ? captchaSiteKey : null,
+    account: accountReady,
+    magicLink: magicLinkReady,
+    google: googleReady,
+    turnstileSiteKey: magicLinkReady ? turnstileSiteKey() : null,
     feedback:
       serviceSupabase &&
       process.env.FEEDBACK_ENABLED === "true" &&

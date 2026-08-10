@@ -1,0 +1,174 @@
+{
+  "id": "anatomy",
+  "number": 2,
+  "title": "Anatomie eines effektiven Prompts",
+  "subtitle": "Eine praktische Checkliste für Kontext, Aufgabe, Vorgaben, Beispiele und Ausgabeformat.",
+  "durationMinutes": 12,
+  "trackId": "foundations",
+  "hook": "Effektive Prompts sind klar gegliedert.",
+  "keyConcepts": [
+    "Rolle, Kontext, Aufgabe, Einschränkungen, Beispiele, Format",
+    "XML-Tags",
+    "Reasoning-Steuerung",
+    "Strukturierte Ausgaben",
+    "Umgang mit fehlenden Belegen"
+  ],
+  "quiz": [],
+  "sections": [
+    {
+      "id": "contracts-not-incantations",
+      "title": "Prompts sind Verträge, keine Beschwörungen",
+      "readTimeMinutes": 2,
+      "content": "Behandle einen Prompt als Spezifikation. Benenne die Aufgabe, liefere relevanten Kontext, definiere Vorgaben und beschreibe eine prüfbare Ausgabe. Ergänze Rolle oder Beispiel nur, wenn sie benötigte Information liefern.\n\nDie sechsteilige Struktur dieses Kurses ist eine Checkliste, keine vorgeschriebene Syntax oder universelle Reihenfolge. Kurze Aufgaben benötigen oft nur eine direkte Anweisung. Komplexe, wiederkehrende Aufgaben profitieren von klaren Abschnitten und Prüfkriterien.\n\n> Formuliere Anforderungen, die ein Review oder Test prüfen kann."
+    },
+    {
+      "id": "six-parts",
+      "title": "Die sechs Teile",
+      "readTimeMinutes": 4,
+      "content": "- **01 · Rolle: Welche Perspektive ist relevant?** Nutze sie für Fachgebiet, Zielgruppe oder Prüfnorm, nicht als Beleg für Expertise.\n  ```\n  Prüfe den Text als technische Redaktion für interne Dokumentation.\n  ```\n- **02 · Kontext: Von welchen Fakten hängt die Aufgabe ab?** Liefere Zielgruppe und freigegebene Quellen. Entferne Geheimnisse und irrelevante Daten.\n  ```\n  Zielgruppe: SREs. Release-Takt: wöchentlich. Geplante Auth-Migration: Q2.\n  ```\n- **03 · Aufgabe: Welche Handlung ist gefordert?** Nutze ein direktes Verb und nummeriere mehrere Ergebnisse.\n  ```\n  Entwirf ein Rollout-Dokument mit Übersicht, Risiken und On-Call-Runbook.\n  ```\n- **04 · Vorgaben: Was muss die Ausgabe erfüllen?** Formuliere Länge, Ausschlüsse und Pflichtangaben als prüfbare Regeln.\n  ```\n  Höchstens 600 Wörter. Keine Marketingsprache. Kill-Switch-Verfahren aufnehmen.\n  ```\n- **05 · Beispiele: Wie sieht ein akzeptiertes Ergebnis aus?** Ein geprüftes Ein-/Ausgabebeispiel kann Ton oder Struktur klären. Prüfe Repräsentativität und Freigabe.\n- **06 · Format: Wie wird das Ergebnis weiterverwendet?** Fordere Markdown, JSON, Tabelle oder Schema an und validiere maschinenlesbare Ausgaben.\n\nDiese Reihenfolge ist eine lesbare Anordnung. Ändere sie, wenn modellbezogene Dokumentation und Evals für deinen Anwendungsfall etwas anderes zeigen."
+    },
+    {
+      "id": "xml-tags",
+      "title": "XML-Tags als Strukturhilfe",
+      "readTimeMinutes": 2,
+      "content": "Anthropic dokumentiert XML-Tags als eine Möglichkeit, Anweisungen, Kontext, Beispiele und variable Eingaben zu trennen. Tags sind besonders nützlich, wenn ein Prompt mehrere Inhaltstypen mischt; sie ersetzen keine klaren Anforderungen oder Evals.\n\n```\n<context>\nWir migrieren den Auth-Dienst in Q2 von Cookies zu OAuth 2.1.\nZielgruppe: SREs im Infrastrukturteam.\n</context>\n<task>\nEntwirf ein Rollout-Dokument mit Übersicht, Risiken, On-Call-Runbook und Rollback-Plan.\n</task>\n<constraints>\n- Höchstens 600 Wörter.\n- Keine Marketingsprache.\n- Kill-Switch-Verfahren nennen.\n</constraints>\n<format>\nMarkdown mit H2-Abschnitten und Codeblöcken für Shell-Befehle.\n</format>\n```\n\nNutze konsistente, beschreibende Namen. Verschachtele Tags nur bei echter Hierarchie und teste den Prompt mit repräsentativen Eingaben."
+    },
+    {
+      "id": "pro-moves",
+      "title": "Drei Techniken aus der Dokumentation",
+      "readTimeMinutes": 2,
+      "content": "- **Nutze unterstützte Reasoning-Steuerung.** Wenn Modell und API erweitertes Denken unterstützen, konfiguriere es über die dokumentierte Schnittstelle. Fordere Ergebnis und Belege an, nicht private Chain-of-Thought-Texte.\n- **Nutze unterstützte Ausgabeformate.** Bevorzuge strukturierte Ausgaben oder ein explizites Schema. Claude 4.6 und neuer unterstützen kein Assistant-Prefilling; prüfe die API-Dokumentation des gewählten Modells, bevor du dieses Muster verwendest.\n- **Definiere fehlende Belege.** Lege die genaue Antwort bei unzureichenden Informationen fest. Das verringert den Druck zu raten, stellt Faktentreue aber nicht sicher; teste und prüfe das Ergebnis."
+    }
+  ],
+  "widgets": [
+    {
+      "kind": "prompt-compare",
+      "placement": "after-intro",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "anatomy",
+        "cpId": "compare",
+        "weak": "Schreibe eine Start-E-Mail für unseren neuen SSO-Rollout.",
+        "strong": "Du bist ein erfahrener Kommunikationsautor, der für ein Ingenieurpublikum schreibt.\n\n<context>\nWir führen OAuth 2.1 SSO ein, um die alte Cookie-Authentifizierung für interne Tools zu ersetzen.\nMigrationsfenster: 6 Wochen, zuerst Opt-in, dann erzwungene Umstellung.\nDie Bereitschaftsrotation ist @auth-oncall.\nZielgruppe: ca. 3000 Ingenieure im gesamten Unternehmen, gemischte Seniorität.\n</context>\n\n<task>\nEntwirf eine Start-E-Mail, die den Rollout an die Ingenieure ankündigt.\n</task>\n\n<constraints>\n- Unter 250 Wörtern.\n- Keine Marketingsprache. Prägnant, sachlich.\n- Muss enthalten: das Migrationsfenster, das Opt-in-Datum, das Datum der erzwungenen Umstellung und Informationen zur Hilfestellung.\n- Ton: interne Kommunikation, direkt, respektvoll gegenüber der Zeit der Leser.\n- Gib den Lesern eine klare, einzelne nächste Aktion.\n</constraints>\n\n<format>\nMarkdown. Zuerst die Betreffzeile, dann der Text. Gruß von „Das Identity Platform Team“.\n</format>"
+      }
+    },
+    {
+      "kind": "drag-reorder",
+      "placement": "before-quiz",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "anatomy",
+        "cpId": "reorder",
+        "title": "Ordne die Beispielstruktur.",
+        "prompt": "Bringe die Abschnitte in die Reihenfolge aus diesem Kursbeispiel.",
+        "hint": "Diese Reihenfolge ist eine lesbare Variante, keine universelle Vorgabe.",
+        "blocks": [
+          {
+            "id": "role",
+            "label": "Rolle",
+            "sample": "\"Du bist ein erfahrener technischer Redakteur.\""
+          },
+          {
+            "id": "context",
+            "label": "Kontext",
+            "sample": "\"Wir migrieren zu OAuth 2.1; Zielgruppe sind SREs.\""
+          },
+          {
+            "id": "task",
+            "label": "Aufgabe",
+            "sample": "\"Entwirf ein Rollout-Dokument.\""
+          },
+          {
+            "id": "constraints",
+            "label": "Einschränkungen",
+            "sample": "\"Unter 600 Wörtern. Keine Marketingsprache.\""
+          },
+          {
+            "id": "examples",
+            "label": "Beispiele",
+            "sample": "\"<example>…früheres Rollout-Dokument…</example>\""
+          },
+          {
+            "id": "format",
+            "label": "Format",
+            "sample": "\"Markdown mit H2-Abschnitten und Aufzählungen.\""
+          }
+        ],
+        "correctOrder": [
+          "role",
+          "context",
+          "task",
+          "constraints",
+          "examples",
+          "format"
+        ],
+        "copy": {
+          "kindLabel": "Abschnitte ordnen",
+          "shuffleLabel": "Mischen",
+          "moveUpSuffix": "nach oben verschieben",
+          "moveDownSuffix": "nach unten verschieben",
+          "correctStatusLabel": "Entspricht der Beispielreihenfolge.",
+          "wrongStatusLabel": "Nicht ganz. Grüne Zeilen sind an der richtigen Stelle.",
+          "idleStatusLabel": "Ordne die Elemente, dann prüfe.",
+          "checkLabel": "Reihenfolge prüfen."
+        }
+      }
+    },
+    {
+      "kind": "fill-blank",
+      "placement": "before-quiz",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "anatomy",
+        "cpId": "drill",
+        "goal": "Fasse ein 30-seitiges PRD in einem Executive Brief zusammen.",
+        "template": "Du bist {{0}}.\n\n<context>\n{{1}}\n</context>\n\n<task>\n{{2}}\n</task>\n\n<constraints>\n{{3}}\n</constraints>\n\n<format>\n{{4}}\n</format>",
+        "blanks": [
+          {
+            "label": "Rolle",
+            "hint": "z.B. ein Senior PM, der Executive Summaries verfasst"
+          },
+          {
+            "label": "Kontext",
+            "hint": "Worum geht es im PRD? Wer liest diesen Brief? Welche Entscheidungen hängen davon ab?"
+          },
+          {
+            "label": "Aufgabe",
+            "hint": "ein Verb, z.B. „zusammenfassen“, „extrahieren“, „entwerfen“"
+          },
+          {
+            "label": "Einschränkungen",
+            "hint": "Länge, Ton, erforderliche Elemente, zu vermeidende Elemente"
+          },
+          {
+            "label": "Format",
+            "hint": "Aufzählungen? Abschnitte? Markdown? Spezifische Struktur?"
+          }
+        ]
+      }
+    },
+    {
+      "kind": "rewrite-arena",
+      "placement": "before-quiz",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "anatomy",
+        "cpId": "arena",
+        "task": "Erstelle Release Notes für ein internes Tool-Update.",
+        "original": "Schreibe bitte Release Notes für unsere neuen Änderungen diese Woche, mach es gut.",
+        "criteria": "Vorhandensein von Rolle, Kontext, Aufgabe, Einschränkungen und Format; Spezifität; Verwendung von XML-Tags; Few-Shot-Beispiel; Abwesenheit von Füllwörtern."
+      }
+    },
+    {
+      "kind": "prompt-grader",
+      "placement": "end",
+      "courseSlug": "claude",
+      "props": {
+        "lessonId": "anatomy",
+        "cpId": "grade",
+        "task": "Formuliere eine ausschweifende Slack-Nachricht in ein prägnantes Update mit tl;dr, Status, Blockern und nächstem Schritt um.",
+        "rubric": "Aufgabe, relevanter Kontext, prüfbare Vorgaben und Ausgabeformat müssen klar sein. Rolle, Beispiel, Rubrik oder XML-Grenzen nur ergänzen, wenn sie die Aufgabe präzisieren."
+      }
+    }
+  ]
+}

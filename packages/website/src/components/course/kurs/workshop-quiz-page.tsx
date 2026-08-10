@@ -39,6 +39,9 @@ import {
 } from "@/lib/progress/browser-learning-storage";
 import { subscribe } from "@/lib/progress/store";
 import type { CourseSlug, QuizQuestion } from "@/lib/course/types";
+import type { Locale } from "@/lib/i18n/locale";
+import { localizeHref } from "@/lib/i18n/locale";
+import { MotionProvider } from "@/components/motion-provider";
 
 /**
  * Shared workshop-quiz screen for every free course (shared course architecture,
@@ -78,10 +81,7 @@ interface QuizCopy {
   readonly selectedIncorrect: string;
   readonly next: string;
   readonly result: string;
-  readonly answerFeedback: (
-    correct: boolean,
-    explanation: string,
-  ) => string;
+  readonly answerFeedback: (correct: boolean, explanation: string) => string;
   readonly completionFeedback: (
     score: number,
     total: number,
@@ -110,8 +110,7 @@ const QUIZ_COPY: Readonly<Record<"de" | "en", QuizCopy>> = {
       `Verbleibende Zeit: ${minutes} ${
         minutes === 1 ? "Minute" : "Minuten"
       } ${seconds} ${seconds === 1 ? "Sekunde" : "Sekunden"}`,
-    questionProgress: (current, total) =>
-      `Frage ${current} von ${total}`,
+    questionProgress: (current, total) => `Frage ${current} von ${total}`,
     correct: "Richtig",
     incorrect: "Falsch",
     correctAnswer: "Richtige Antwort.",
@@ -143,8 +142,7 @@ const QUIZ_COPY: Readonly<Record<"de" | "en", QuizCopy>> = {
       `Time remaining: ${minutes} ${
         minutes === 1 ? "minute" : "minutes"
       } ${seconds} ${seconds === 1 ? "second" : "seconds"}`,
-    questionProgress: (current, total) =>
-      `Question ${current} of ${total}`,
+    questionProgress: (current, total) => `Question ${current} of ${total}`,
     correct: "Correct",
     incorrect: "Incorrect",
     correctAnswer: "Correct answer.",
@@ -192,14 +190,21 @@ export function shuffleArray<T>(arr: readonly T[], seed?: number): T[] {
 
 interface WorkshopQuizPageProps {
   readonly courseSlug: CourseSlug;
+  readonly locale?: Locale;
 }
 
-export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
-  const config = getCourseConfig(courseSlug);
-  const passThreshold = getWorkshopPassThreshold(courseSlug);
-  const questionCount = getWorkshopQuestionCount(courseSlug);
-  const timeLimitMinutes = getWorkshopTimeLimitMinutes(courseSlug);
+export function WorkshopQuizPage({
+  courseSlug,
+  locale,
+}: WorkshopQuizPageProps) {
+  const config = getCourseConfig(courseSlug, locale);
+  const passThreshold = getWorkshopPassThreshold(courseSlug, locale);
+  const questionCount = getWorkshopQuestionCount(courseSlug, locale);
+  const timeLimitMinutes = getWorkshopTimeLimitMinutes(courseSlug, locale);
   const copy = QUIZ_COPY[config.language];
+  const localizedCoursePath = locale
+    ? localizeHref(config.coursePath, locale)
+    : config.coursePath;
 
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -211,9 +216,7 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
   const [timeLeft, setTimeLeft] = useState(timeLimitMinutes * 60);
   const [direction, setDirection] = useState(1);
   const [accessAllowed, setAccessAllowed] = useState<boolean | null>(null);
-  const [ownerGeneration, setOwnerGeneration] = useState<number | null>(
-    null,
-  );
+  const [ownerGeneration, setOwnerGeneration] = useState<number | null>(null);
   const [loadError, setLoadError] = useState(false);
   const [loadAttempt, setLoadAttempt] = useState(0);
   const activeQuizGenerationRef = useRef<number | null>(null);
@@ -269,7 +272,7 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
     resetQuizSession();
     if (accessAllowed !== true || ownerGeneration === null) return;
     const quizGeneration = ownerGeneration;
-    loadWorkshopQuestions(courseSlug)
+    loadWorkshopQuestions(courseSlug, locale)
       .then((allQuestions) => {
         if (
           cancelled ||
@@ -307,6 +310,7 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
   }, [
     accessAllowed,
     courseSlug,
+    locale,
     loadAttempt,
     ownerGeneration,
     questionCount,
@@ -330,12 +334,7 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
       setTimeLeft((prev) => Math.max(0, prev - 1));
     }, 1000);
     return () => clearInterval(interval);
-  }, [
-    accessAllowed,
-    finished,
-    ownerGeneration,
-    questions.length,
-  ]);
+  }, [accessAllowed, finished, ownerGeneration, questions.length]);
 
   useEffect(() => {
     if (
@@ -418,18 +417,10 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
     } else {
       setFinished(true);
     }
-  }, [
-    accessAllowed,
-    currentIndex,
-    ownerGeneration,
-    questions.length,
-  ]);
+  }, [accessAllowed, currentIndex, ownerGeneration, questions.length]);
 
   const handleOptionKeyDown = useCallback(
-    (
-      event: ReactKeyboardEvent<HTMLButtonElement>,
-      optionIndex: number,
-    ) => {
+    (event: ReactKeyboardEvent<HTMLButtonElement>, optionIndex: number) => {
       if (showExplanation || shuffledOptions.length === 0) return;
       let nextIndex: number | null = null;
       switch (event.key) {
@@ -440,8 +431,7 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
         case "ArrowUp":
         case "ArrowLeft":
           nextIndex =
-            (optionIndex - 1 + shuffledOptions.length) %
-            shuffledOptions.length;
+            (optionIndex - 1 + shuffledOptions.length) % shuffledOptions.length;
           break;
         case "Home":
           nextIndex = 0;
@@ -520,15 +510,7 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
       );
     }
     scoreRef.current?.focus();
-  }, [
-    accessAllowed,
-    copy,
-    finished,
-    ownerGeneration,
-    pct,
-    score,
-    total,
-  ]);
+  }, [accessAllowed, copy, finished, ownerGeneration, pct, score, total]);
 
   const sessionIsCurrent =
     accessAllowed === true &&
@@ -546,7 +528,7 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
             {copy.completeLessonsBody}
           </p>
           <Link
-            href={config.coursePath}
+            href={localizedCoursePath}
             className="mt-6 inline-flex min-h-11 items-center gap-2 border-2 border-foreground px-5 text-sm font-bold text-foreground"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
@@ -564,10 +546,7 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
           <h1 className="text-2xl font-bold text-foreground">
             {copy.loadErrorTitle}
           </h1>
-          <p
-            role="alert"
-            className="mt-3 text-muted-foreground"
-          >
+          <p role="alert" className="mt-3 text-muted-foreground">
             {copy.loadErrorBody}
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
@@ -580,7 +559,7 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
               {copy.retry}
             </button>
             <Link
-              href={config.coursePath}
+              href={localizedCoursePath}
               className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
@@ -615,15 +594,19 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
           ref={feedbackRef}
         />
         <div className="mx-auto max-w-2xl px-6 py-16">
-          <m.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
-            className="text-center"
-          >
+          <MotionProvider>
+            <m.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
+              className="text-center"
+            >
             <Trophy
               aria-hidden="true"
-              className={cn("mx-auto h-16 w-16", passed ? "text-brand-sand" : "text-muted-foreground")}
+              className={cn(
+                "mx-auto h-16 w-16",
+                passed ? "text-brand-sand" : "text-muted-foreground",
+              )}
             />
             <div
               ref={scoreRef}
@@ -646,7 +629,11 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               {passed ? (
                 <Link
-                  href={`${config.coursePath}/zertifikat`}
+                  href={
+                    locale
+                      ? localizeHref(`${config.coursePath}/zertifikat`, locale)
+                      : `${config.coursePath}/zertifikat`
+                  }
                   className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
                 >
                   {copy.downloadRecord(config.recordNoun.label)}
@@ -663,14 +650,15 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
                 </button>
               )}
               <Link
-                href={config.coursePath}
+                href={localizedCoursePath}
                 className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
               >
                 <ArrowLeft className="h-4 w-4" aria-hidden="true" />
                 {copy.backToCourse}
               </Link>
             </div>
-          </m.div>
+            </m.div>
+          </MotionProvider>
         </div>
       </div>
     );
@@ -680,7 +668,7 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
   const isCorrectAnswer = selectedId === correctOption?.id;
 
   return (
-    <div className="min-h-[100svh] bg-background">
+    <div className="min-h-[100svh] overflow-x-clip bg-background">
       <h1 className="sr-only">{copy.title}</h1>
       <div
         role="status"
@@ -695,22 +683,25 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
         className="fixed left-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur-sm"
         style={{ top: GLOBAL_NAV_OFFSET_PX }}
       >
-        <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-6">
+        <div className="mx-auto grid min-h-14 max-w-3xl grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 px-4 py-2 sm:flex sm:h-14 sm:px-6 sm:py-0">
           <Link
-            href={config.coursePath}
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+            href={localizedCoursePath}
+            className="min-w-0 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             {copy.cancel}
           </Link>
-          <span className="font-mono text-sm font-bold text-brand-orange">
+          <span className="order-3 col-span-2 min-w-0 break-words font-mono text-xs font-bold text-brand-orange sm:order-none sm:col-span-1 sm:text-sm">
             {copy.title}
           </span>
           <span
             role="timer"
             aria-live="off"
             aria-label={copy.timeRemaining(minutes, seconds)}
-            className={cn("inline-flex items-center gap-1 font-mono text-sm font-bold", timeLeft < 120 ? "text-destructive" : "text-muted-foreground")}
+            className={cn(
+              "order-2 inline-flex shrink-0 items-center gap-1 font-mono text-sm font-bold sm:order-none",
+              timeLeft < 120 ? "text-destructive" : "text-muted-foreground",
+            )}
           >
             <Clock className="h-3.5 w-3.5" aria-hidden="true" />
             {minutes}:{seconds.toString().padStart(2, "0")}
@@ -739,8 +730,9 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
           />
         </div>
 
-        <AnimatePresence mode="wait" custom={direction}>
-          <m.div
+        <MotionProvider>
+          <AnimatePresence mode="wait" custom={direction}>
+            <m.div
             key={currentIndex}
             custom={direction}
             variants={SLIDE}
@@ -765,10 +757,13 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
               {shuffledOptions.map((option, optionIndex) => {
                 const isSelected = selectedId === option.id;
                 const isCorrect = option.isCorrect;
-                let optionClass = "border-border bg-card hover:border-brand-orange/30";
+                let optionClass =
+                  "border-border bg-card hover:border-brand-orange/30";
                 if (showExplanation) {
-                  if (isCorrect) optionClass = "border-brand-sand bg-brand-sand/5";
-                  else if (isSelected) optionClass = "border-destructive/50 bg-destructive/5";
+                  if (isCorrect)
+                    optionClass = "border-brand-sand bg-brand-sand/5";
+                  else if (isSelected)
+                    optionClass = "border-destructive/50 bg-destructive/5";
                   else optionClass = "border-border bg-card opacity-50";
                 }
                 return (
@@ -781,8 +776,7 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
                     role="radio"
                     aria-checked={isSelected}
                     tabIndex={
-                      !showExplanation &&
-                      focusedOptionIndex === optionIndex
+                      !showExplanation && focusedOptionIndex === optionIndex
                         ? 0
                         : -1
                     }
@@ -792,16 +786,24 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
                     }
                     onClick={() => handleSelect(option.id)}
                     disabled={showExplanation}
-                    className={cn("flex w-full items-center gap-3 border px-4 py-3 text-left text-sm transition-[background-color,border-color,color,opacity,transform,box-shadow]", optionClass)}
+                    className={cn(
+                      "flex w-full items-center gap-3 border px-4 py-3 text-left text-sm transition-[background-color,border-color,color,opacity,transform,box-shadow]",
+                      optionClass,
+                    )}
                   >
-                    <span className="shrink-0 font-mono text-xs font-bold uppercase text-muted-foreground">{option.id}</span>
-                    <span className="flex-1">{option.text}</span>
+                    <span className="shrink-0 font-mono text-xs font-bold uppercase text-muted-foreground">
+                      {option.id}
+                    </span>
+                    <span className="min-w-0 flex-1 break-words">
+                      {option.text}
+                    </span>
                     {showExplanation && isCorrect && (
                       <>
-                        <span className="sr-only">
-                          {copy.correctAnswer}
-                        </span>
-                        <CheckCircle2 className="h-4 w-4 shrink-0 text-brand-sand" aria-hidden="true" />
+                        <span className="sr-only">{copy.correctAnswer}</span>
+                        <CheckCircle2
+                          className="h-4 w-4 shrink-0 text-brand-sand"
+                          aria-hidden="true"
+                        />
                       </>
                     )}
                     {showExplanation && isSelected && !isCorrect && (
@@ -809,7 +811,10 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
                         <span className="sr-only">
                           {copy.selectedIncorrect}
                         </span>
-                        <XCircle className="h-4 w-4 shrink-0 text-destructive" aria-hidden="true" />
+                        <XCircle
+                          className="h-4 w-4 shrink-0 text-destructive"
+                          aria-hidden="true"
+                        />
                       </>
                     )}
                   </button>
@@ -822,17 +827,29 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
-                className={cn("mt-4 border-l-2 px-4 py-3", isCorrectAnswer ? "border-brand-sand bg-brand-sand/5" : "border-destructive/50 bg-destructive/5")}
+                className={cn(
+                  "mt-4 border-l-2 px-4 py-3",
+                  isCorrectAnswer
+                    ? "border-brand-sand bg-brand-sand/5"
+                    : "border-destructive/50 bg-destructive/5",
+                )}
               >
                 <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   {isCorrectAnswer ? copy.correct : copy.incorrect}
                 </p>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{question.explanation}</p>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                  {question.explanation}
+                </p>
               </m.div>
             )}
 
             {showExplanation && (
-              <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="mt-5">
+              <m.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="mt-5"
+              >
                 <button
                   ref={nextButtonRef}
                   type="button"
@@ -844,8 +861,9 @@ export function WorkshopQuizPage({ courseSlug }: WorkshopQuizPageProps) {
                 </button>
               </m.div>
             )}
-          </m.div>
-        </AnimatePresence>
+            </m.div>
+          </AnimatePresence>
+        </MotionProvider>
       </div>
     </div>
   );

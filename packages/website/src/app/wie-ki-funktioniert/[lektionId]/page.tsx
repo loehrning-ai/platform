@@ -1,240 +1,380 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { ComprehensionCheck } from "@/components/wie-ki-funktioniert/ComprehensionCheck";
+import { contentLocalesForPath } from "@/lib/i18n/content-parity";
+import {
+  buildLocaleAlternates,
+  localizeHref,
+  type Locale,
+} from "@/lib/i18n/locale";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
+import {
+  createNoindexPageMetadata,
+  createPublicPageMetadata,
+} from "@/lib/seo/page-metadata";
 import {
   WIE_KI_LEKTIONEN,
-  WIE_KI_META,
+  formatReviewDate,
   getLektionById,
-  getPrevLektion,
   getNextLektion,
-  formatGermanDate,
+  getPrevLektion,
+  getWieKiContent,
+  type WieKiLektion,
 } from "@/lib/wie-ki-funktioniert";
-import { ComprehensionCheck } from "@/components/wie-ki-funktioniert/ComprehensionCheck";
-import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
+import {
+  WIE_KI_COMPREHENSION_CHECKS,
+  WIE_KI_LESSON_COPY,
+} from "@/lib/wie-ki-funktioniert-copy";
 
-// Comprehension check content per lektion
-const COMPREHENSION_CHECKS: Record<string, { question: string; answer: string }> = {
-  "lektion-1-vorhersage": {
-    question:
-      "Warum kann ein Sprachmodell eine Frage richtig beantworten, ohne die Antwort wirklich zu 'wissen'?",
-    answer:
-      "Weil die richtige Antwort in den Trainingsdaten statistisch sehr häufig auf diese Frage folgte. Das Modell hat Muster gelernt, keine Fakten gespeichert. Bei häufig vorkommenden Fakten funktioniert das gut. Bei seltenen oder sehr spezifischen Fakten kann die Vorhersage falsch sein.",
-  },
-  "lektion-2-trainingsdaten": {
-    question:
-      "Ein KI-Modell schreibt bei einem Text über Krankenpflege automatisch in der weiblichen Form. Ist das ein Programmierfehler?",
-    answer:
-      "Nein. Es ist ein Echo der Trainingsdaten. Wenn in den Texten, aus denen das Modell gelernt hat, Krankenpflege häufiger mit weiblichen Personen verknüpft war, hat das Modell dieses Muster übernommen. Das ist Bias aus den Daten, kein bewusst eingebauter Fehler.",
-  },
-  "lektion-3-halluzinationen": {
-    question:
-      "Du bittest ein KI-Modell, eine wissenschaftliche Quelle zu nennen, die deine These belegt. Das Modell nennt eine Studie mit Autor, Zeitschrift und Jahr. Was solltest du tun?",
-    answer:
-      "Die Quelle prüfen, bevor du sie verwendest. KI-Modelle können Quellen erfinden oder Angaben vermischen. Suche die Studie in einer Literaturdatenbank oder über eine Websuche. Wenn du sie nicht findest, gehe davon aus, dass sie nicht existiert.",
-  },
-  "lektion-4-grenzen": {
-    question:
-      "Du verwendest ein KI-Modell, um aktuelle Informationen zu einem Gesetz zu erhalten. Welche Grenze ist hier besonders relevant?",
-    answer:
-      "Der Trainings-Cutoff. Das Modell kennt nur Informationen bis zu dem Datum, an dem seine Trainingsdaten abgeschlossen wurden. Aktuelle Gesetzesänderungen kennt es möglicherweise nicht. Für rechtliche Fragen: immer aktuelle offizielle Quellen prüfen und eine Fachperson einbeziehen.",
-  },
-};
+const COURSE_PATH = "/wie-ki-funktioniert";
 
 interface PageParams {
-  lektionId: string;
+  readonly lektionId: string;
 }
 
 export const dynamicParams = false;
 
 export async function generateStaticParams(): Promise<PageParams[]> {
-  return WIE_KI_LEKTIONEN.map((l) => ({ lektionId: l.id }));
+  return WIE_KI_LEKTIONEN.map((lektion) => ({ lektionId: lektion.id }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<PageParams>;
+  readonly params: Promise<PageParams>;
 }): Promise<Metadata> {
-  const { lektionId } = await params;
-  const lektion = getLektionById(lektionId);
-  if (!lektion) return {};
-  return createPublicPageMetadata({
-    title: `${lektion.title} | Wie KI wirklich funktioniert`,
+  const [{ lektionId }, locale] = await Promise.all([
+    params,
+    getRequestLocale(),
+  ]);
+  const lektion = getLektionById(lektionId, locale);
+  const copy = WIE_KI_LESSON_COPY[locale];
+  if (!lektion) {
+    return createNoindexPageMetadata({
+      title:
+        locale === "de" ? "Lektion nicht gefunden" : "Lesson not found",
+      description:
+        locale === "de"
+          ? "Diese Lektion ist nicht veröffentlicht."
+          : "This lesson has not been published.",
+    });
+  }
+
+  const path = `${COURSE_PATH}/${lektionId}`;
+  const localizedPath = localizeHref(path, locale);
+  const metadata = createPublicPageMetadata({
+    title: `${lektion.title} | ${copy.metadataSuffix}`,
     description: lektion.subtitle,
-    path: `/wie-ki-funktioniert/${lektionId}`,
+    path: localizedPath,
+    locale,
   });
+
+  return {
+    ...metadata,
+    alternates: {
+      ...buildLocaleAlternates(path, contentLocalesForPath(path)),
+      canonical: localizedPath,
+    },
+    openGraph: metadata.openGraph
+      ? {
+          ...metadata.openGraph,
+          type: "article",
+          locale: locale === "de" ? "de_DE" : "en_GB",
+          alternateLocale: [locale === "de" ? "en_GB" : "de_DE"],
+        }
+      : metadata.openGraph,
+  };
 }
 
-export default async function LektionPage({ params }: { params: Promise<PageParams> }) {
-  const { lektionId } = await params;
-  const lektion = getLektionById(lektionId);
+function lessonGraph({
+  locale,
+  lektion,
+}: {
+  readonly locale: Locale;
+  readonly lektion: WieKiLektion;
+}) {
+  const copy = WIE_KI_LESSON_COPY[locale];
+  const localizedCoursePath = localizeHref(COURSE_PATH, locale);
+  const localizedLessonPath = localizeHref(
+    `${COURSE_PATH}/${lektion.id}`,
+    locale,
+  );
+  const courseUrl = `${SITE_URL}${localizedCoursePath}`;
+  const lessonUrl = `${SITE_URL}${localizedLessonPath}`;
+
+  return {
+    "@context": "https://schema.org" as const,
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${lessonUrl}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: copy.home,
+            item: `${SITE_URL}${localizeHref("/", locale)}`,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: copy.courseTitle,
+            item: courseUrl,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: lektion.title,
+            item: lessonUrl,
+          },
+        ],
+      },
+      {
+        "@type": "LearningResource",
+        "@id": `${lessonUrl}#lesson`,
+        name: lektion.title,
+        description: lektion.subtitle || copy.schemaDescription,
+        url: lessonUrl,
+        inLanguage: locale,
+        learningResourceType: "lesson",
+        educationalLevel: "Beginner",
+        isAccessibleForFree: true,
+        timeRequired: `PT${lektion.durationMinutes}M`,
+        dateModified: getWieKiContent(locale).meta.lastReviewed,
+        provider: { "@id": ORG_ID },
+        isPartOf: {
+          "@type": "Course",
+          "@id": `${courseUrl}#course`,
+          name: copy.courseTitle,
+          url: courseUrl,
+        },
+        teaches: lektion.keyConcepts,
+        breadcrumb: { "@id": `${lessonUrl}#breadcrumb` },
+      },
+    ],
+  };
+}
+
+function WieKiLektionContent({
+  locale,
+  lektionId,
+}: {
+  readonly locale: Locale;
+  readonly lektionId: string;
+}) {
+  const { meta, lektionen } = getWieKiContent(locale);
+  const lektion = getLektionById(lektionId, locale);
   if (!lektion) notFound();
 
-  const prev = getPrevLektion(lektionId);
-  const next = getNextLektion(lektionId);
-  const check = COMPREHENSION_CHECKS[lektionId];
-  const standDate = formatGermanDate(WIE_KI_META.lastReviewed);
+  const copy = WIE_KI_LESSON_COPY[locale];
+  const prev = getPrevLektion(lektionId, locale);
+  const next = getNextLektion(lektionId, locale);
+  const check = WIE_KI_COMPREHENSION_CHECKS[locale][lektionId];
+  const standDate = formatReviewDate(meta.lastReviewed, locale);
   const isLastLektion = !next;
 
   return (
-    <div className="mx-auto max-w-[780px] px-6 pb-32 pt-20">
-      {/* Breadcrumb */}
-      <nav aria-label="Brotkrümelnavigation" className="mb-8">
-        <ol className="flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
-          <li>
-            <Link href="/" className="hover:text-foreground">
-              Startseite
-            </Link>
-          </li>
-          <li aria-hidden="true">›</li>
-          <li>
-            <Link href="/wie-ki-funktioniert" className="hover:text-foreground">
-              Wie KI wirklich funktioniert
-            </Link>
-          </li>
-          <li aria-hidden="true">›</li>
-          <li className="text-foreground" aria-current="page">
-            Lektion {lektion.number}
-          </li>
-        </ol>
-      </nav>
+    <>
+      <JsonLd
+        data={lessonGraph({ locale, lektion })}
+        id="wie-ki-lesson-jsonld"
+      />
 
-      {/* Lesson header */}
-      <div className="mb-2">
-        <span className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-          Lektion {lektion.number} von {WIE_KI_LEKTIONEN.length} · {lektion.durationMinutes} Min.
-        </span>
-      </div>
-      <h1 className="text-[28px] font-bold leading-[1.1] tracking-[-0.03em] text-foreground sm:text-[36px]">
-        {lektion.title}
-      </h1>
-      <p className="mt-2 text-[16px] leading-[1.5] text-muted-foreground">{lektion.subtitle}</p>
-
-      {/* Stand badge */}
-      <p className="mt-3 font-mono text-[11px] text-muted-foreground">
-        <time dateTime={WIE_KI_META.lastReviewed}>Stand: {standDate}</time>
-      </p>
-
-      {/* Key concepts */}
-      <div className="mt-5 flex flex-wrap gap-2">
-        {lektion.keyConcepts.map((concept) => (
-          <span
-            key={concept}
-            className="border border-border bg-card px-2 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground"
-          >
-            {concept}
-          </span>
-        ))}
-      </div>
-
-      {/* Sections */}
-      <div className="mt-10 space-y-14">
-        {lektion.sections.map((section, idx) => (
-          <section key={section.id} aria-labelledby={`section-${section.id}`}>
-            <div className="mb-1 flex items-center gap-3">
-              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-brand-orange">
-                Abschnitt {idx + 1}
-              </span>
-              <span className="font-mono text-[10px] text-muted-foreground">
-                {section.readTimeMinutes} Min. Lesezeit
-              </span>
-            </div>
-            <h2
-              id={`section-${section.id}`}
-              className="mb-5 text-[22px] font-bold tracking-[-0.02em] text-foreground"
+      <main className="mx-auto w-full max-w-5xl min-w-0 px-4 pb-24 pt-12 sm:px-6 sm:pb-32 sm:pt-20 lg:px-10">
+        <nav aria-label={copy.breadcrumbLabel} className="mb-10 min-w-0">
+          <ol className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground sm:tracking-[0.1em]">
+            <li>
+              <Link
+                href={localizeHref("/", locale)}
+                className="break-words hover:text-foreground"
+              >
+                {copy.home}
+              </Link>
+            </li>
+            <li aria-hidden="true">›</li>
+            <li className="min-w-0">
+              <Link
+                href={localizeHref(COURSE_PATH, locale)}
+                className="break-words hover:text-foreground [overflow-wrap:anywhere]"
+              >
+                {copy.courseTitle}
+              </Link>
+            </li>
+            <li aria-hidden="true">›</li>
+            <li
+              className="min-w-0 break-words text-foreground [overflow-wrap:anywhere]"
+              aria-current="page"
             >
-              {section.title}
-            </h2>
+              {copy.lessonBreadcrumb(lektion.number)}
+            </li>
+          </ol>
+        </nav>
 
-            {/* Content: split on double newlines */}
-            <div className="space-y-4">
-              {section.content.split("\n\n").map((para, pIdx) => (
-                <p
-                  key={pIdx}
-                  className="text-[16px] leading-[1.7] text-foreground"
+        <article className="min-w-0">
+          <header className="min-w-0 border-b-2 border-foreground pb-10">
+            <p className="break-words font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-brand-orange sm:tracking-[0.14em]">
+              {copy.lessonProgress(
+                lektion.number,
+                lektionen.length,
+                lektion.durationMinutes,
+              )}
+            </p>
+            <h1 className="mt-5 max-w-4xl break-words text-[clamp(2.25rem,6vw,4.5rem)] font-bold leading-[0.96] tracking-[-0.045em] text-foreground [overflow-wrap:anywhere]">
+              {lektion.title}
+            </h1>
+            <p className="mt-5 max-w-3xl break-words text-[17px] leading-[1.6] text-muted-foreground [overflow-wrap:anywhere] sm:text-[20px]">
+              {lektion.subtitle}
+            </p>
+            <p className="mt-5 break-words font-mono text-[11px] text-muted-foreground">
+              <time dateTime={meta.lastReviewed}>
+                {copy.reviewed}: {standDate}
+              </time>
+            </p>
+
+            <ul
+              className="mt-6 flex min-w-0 flex-wrap gap-2"
+              aria-label={copy.conceptsLabel}
+            >
+              {lektion.keyConcepts.map((concept) => (
+                <li
+                  key={concept}
+                  className="max-w-full break-words border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.06em] text-muted-foreground [overflow-wrap:anywhere] sm:tracking-[0.08em]"
                 >
-                  {para}
-                </p>
+                  {concept}
+                </li>
               ))}
-            </div>
+            </ul>
+          </header>
 
-            {/* Key takeaway */}
-            <div className="mt-6 border-l-4 border-brand-orange bg-brand-orange/5 py-3 pl-5 pr-4">
-              <p className="mb-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-brand-orange">
-                Das Wichtigste aus diesem Abschnitt
+          <div className="mt-12 min-w-0 space-y-16">
+            {lektion.sections.map((section, index) => (
+              <section
+                key={section.id}
+                className="min-w-0 scroll-mt-24"
+                aria-labelledby={`section-${section.id}`}
+              >
+                <div className="mb-3 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+                  <span className="break-words font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-brand-orange sm:tracking-[0.12em]">
+                    {copy.section(index + 1)}
+                  </span>
+                  <span className="break-words font-mono text-[10px] text-muted-foreground">
+                    {copy.readTime(section.readTimeMinutes)}
+                  </span>
+                </div>
+                <h2
+                  id={`section-${section.id}`}
+                  className="mb-6 max-w-3xl break-words text-[26px] font-bold leading-tight tracking-[-0.025em] text-foreground [overflow-wrap:anywhere] sm:text-[32px]"
+                >
+                  {section.title}
+                </h2>
+
+                <div className="max-w-3xl min-w-0 space-y-5">
+                  {section.content.split("\n\n").map((paragraph, paragraphIndex) => (
+                    <p
+                      key={paragraphIndex}
+                      className="break-words text-[16px] leading-[1.75] text-foreground [overflow-wrap:anywhere] sm:text-[17px]"
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+
+                <aside className="mt-7 max-w-3xl min-w-0 border-l-4 border-brand-orange bg-brand-orange/5 py-4 pl-4 pr-4 sm:pl-5">
+                  <p className="break-words font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-brand-orange sm:tracking-[0.1em]">
+                    {copy.takeaway}
+                  </p>
+                  <p className="mt-2 break-words text-[15px] font-bold leading-[1.55] text-foreground [overflow-wrap:anywhere] sm:text-[16px]">
+                    {section.keyTakeaway}
+                  </p>
+                </aside>
+
+                {index === lektion.sections.length - 1 && check && (
+                  <div className="max-w-3xl">
+                    <ComprehensionCheck
+                      id={lektion.id}
+                      question={check.question}
+                      answer={check.answer}
+                      label={copy.selfCheck}
+                    />
+                  </div>
+                )}
+              </section>
+            ))}
+          </div>
+        </article>
+
+        <nav
+          aria-label={copy.lessonNavigation}
+          className="mt-16 min-w-0 border-t border-border pt-8"
+        >
+          <div className="grid min-w-0 gap-4 sm:grid-cols-2 sm:items-center">
+            <div className="min-w-0">
+              {prev && (
+                <Link
+                  href={localizeHref(`${COURSE_PATH}/${prev.id}`, locale)}
+                  className="inline-flex min-h-11 max-w-full items-center gap-2 break-words py-2 font-mono text-[12px] font-bold uppercase tracking-[0.06em] text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange sm:tracking-[0.08em]"
+                >
+                  <span aria-hidden="true" className="shrink-0">←</span>
+                  {copy.previousLesson}
+                </Link>
+              )}
+            </div>
+            <div className="min-w-0 sm:text-right">
+              {next && (
+                <Link
+                  href={localizeHref(`${COURSE_PATH}/${next.id}`, locale)}
+                  className="inline-flex min-h-11 max-w-full items-center gap-2 break-words py-2 font-mono text-[12px] font-bold uppercase tracking-[0.06em] text-brand-orange hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange sm:tracking-[0.08em]"
+                >
+                  {copy.nextLesson}
+                  <span aria-hidden="true" className="shrink-0">→</span>
+                </Link>
+              )}
+            </div>
+          </div>
+
+          {isLastLektion && (
+            <aside className="mt-10 min-w-0 border-2 border-brand-orange bg-brand-orange/5 p-5 sm:p-7">
+              <p className="break-words font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-brand-orange sm:tracking-[0.14em]">
+                {copy.completedEyebrow}
               </p>
-              <p className="text-[15px] font-bold leading-[1.5] text-foreground">
-                {section.keyTakeaway}
+              <p className="mt-3 max-w-3xl break-words text-[20px] font-bold leading-snug tracking-[-0.02em] text-foreground [overflow-wrap:anywhere] sm:text-[24px]">
+                {copy.completedHeading}
               </p>
-            </div>
-
-            {/* Comprehension check after last section */}
-            {idx === lektion.sections.length - 1 && check && (
-              <ComprehensionCheck
-                id={lektion.id}
-                question={check.question}
-                answer={check.answer}
-              />
-            )}
-          </section>
-        ))}
-      </div>
-
-      {/* Bottom navigation */}
-      <div className="mt-16 border-t border-border pt-8">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            {prev && (
-              <Link
-                href={`/wie-ki-funktioniert/${prev.id}`}
-                className="inline-flex items-center gap-2 font-mono text-[12px] font-bold uppercase tracking-[0.08em] text-muted-foreground hover:text-foreground"
-              >
-                <span aria-hidden="true">&#8592;</span> Vorherige Lektion
-              </Link>
-            )}
-          </div>
-          <div>
-            {next && (
-              <Link
-                href={`/wie-ki-funktioniert/${next.id}`}
-                className="inline-flex items-center gap-2 font-mono text-[12px] font-bold uppercase tracking-[0.08em] text-brand-orange hover:text-foreground"
-              >
-                Nächste Lektion <span aria-hidden="true">&#8594;</span>
-              </Link>
-            )}
-          </div>
-        </div>
-
-        {/* After last lesson: CTA to KI-Führerschein */}
-        {isLastLektion && (
-          <div className="mt-10 border-2 border-brand-orange bg-brand-orange/5 p-6">
-            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-              Gut gemacht
-            </p>
-            <p className="mt-2 text-[18px] font-bold tracking-[-0.02em] text-foreground">
-              Du weißt jetzt, wie KI wirklich funktioniert.
-            </p>
-            <p className="mt-2 text-[15px] leading-[1.6] text-muted-foreground">
-              Als nächster Schritt: der KI-Führerschein. Kostenlos, kein technisches
-              Vorwissen nötig.
-            </p>
-            <div className="mt-5 flex flex-wrap gap-3">
-              <Link
-                href="/ki-fuehrerschein"
-                className="inline-flex items-center gap-2 bg-brand-orange px-5 py-3 font-mono text-[12px] font-bold text-white transition-colors hover:bg-brand-orange/90"
-              >
-                Zum KI-Führerschein &#8594;
-              </Link>
-              <Link
-                href="/einstieg"
-                className="inline-flex items-center gap-2 border border-border bg-background px-5 py-3 font-mono text-[12px] font-bold text-foreground transition-colors hover:bg-card"
-              >
-                Zum Einstieg zurück
-              </Link>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+              <p className="mt-3 max-w-3xl break-words text-[15px] leading-[1.65] text-muted-foreground [overflow-wrap:anywhere]">
+                {copy.completedBody}
+              </p>
+              <div className="mt-6 flex min-w-0 flex-col items-start gap-3 sm:flex-row sm:flex-wrap">
+                <Link
+                  href={localizeHref("/ki-fuehrerschein", locale)}
+                  className="inline-flex min-h-11 max-w-full items-center gap-2 break-words bg-brand-orange px-5 py-3 text-left font-mono text-[12px] font-bold text-white transition-colors hover:bg-brand-orange/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground"
+                >
+                  {copy.driverLicense} <span aria-hidden="true">→</span>
+                </Link>
+                <Link
+                  href={localizeHref("/einstieg", locale)}
+                  className="inline-flex min-h-11 max-w-full items-center gap-2 break-words border border-border bg-background px-5 py-3 text-left font-mono text-[12px] font-bold text-foreground transition-colors hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                >
+                  {copy.backToEntry}
+                </Link>
+              </div>
+            </aside>
+          )}
+        </nav>
+      </main>
+    </>
   );
+}
+
+export default async function LektionPage({
+  params,
+}: {
+  readonly params: Promise<PageParams>;
+}) {
+  const [{ lektionId }, locale] = await Promise.all([
+    params,
+    getRequestLocale(),
+  ]);
+  return <WieKiLektionContent locale={locale} lektionId={lektionId} />;
 }

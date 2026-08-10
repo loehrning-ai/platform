@@ -2,7 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 
 /**
  * /kurse hub smoke + interaction (regression coverage). The unified course hub:
- * four native German course-track cards with cross-course progress indicators
+ * four ordered foundation cards with cross-course progress indicators
  * and direct learning-goal recommendations. Assertions target roles and stable
  * test IDs so a wording refresh stays green while a real regression (missing track cards,
  * dead "Kurs starten" CTA, broken progress dots, mobile overflow) fails.
@@ -48,7 +48,7 @@ test.describe("/kurse hub", () => {
 
     const h1 = page.getByRole("heading", { level: 1 });
     await expect(h1).toBeVisible();
-    await expect(h1).toContainText("KI lernen");
+    await expect(h1).toContainText("KI verstehen");
 
     const noise = meaningfulErrors(errors);
     expect(noise, `console errors on ${ROUTE}\n${noise.join("\n")}`).toEqual(
@@ -68,7 +68,7 @@ test.describe("/kurse hub", () => {
     await expect(
       page.getByRole("heading", {
         level: 2,
-        name: "Der Lernpfad",
+        name: "Grundlagenpfad",
         exact: true,
       }),
     ).toBeVisible();
@@ -100,9 +100,10 @@ test.describe("/kurse hub", () => {
     await startCta.click();
     await page.waitForURL(/\/login/);
     const url = new URL(page.url());
-    expect(url.pathname, "CTA must land on /login for an anonymous visitor").toBe(
-      "/login",
-    );
+    expect(
+      url.pathname,
+      "CTA must land on /login for an anonymous visitor",
+    ).toBe("/login");
     expect(url.searchParams.get("next")).toBe("/ki-fuehrerschein/kurs");
     expect(url.searchParams.get("reason")).toBe("auth-not-configured");
   });
@@ -120,15 +121,15 @@ test.describe("/kurse hub", () => {
         "/ki-fuehrerschein",
       ],
       [
-        "Gesellschaft und Ethik verstehen: direkt zum Kurs KI und Gesellschaft",
+        "Deepfakes und Bias prüfen: direkt zum Kurs KI und Gesellschaft",
         "/ki-und-gesellschaft",
       ],
       [
-        "Regeln und Einordnen: direkt zum Kurs EU AI Act Kurs",
+        "Pflichten und Risiken einordnen: direkt zum Kurs EU AI Act Kurs",
         "/eu-ai-act-kurs",
       ],
       [
-        "Aktiv mit KI arbeiten: direkt zum Kurs AI-Native Arbeitskurs",
+        "KI-Arbeit strukturieren: direkt zum Kurs AI-Native Arbeitskurs",
         "/ai-native",
       ],
     ] as const;
@@ -164,3 +165,37 @@ test.describe("/kurse mobile", () => {
     ).toBeLessThanOrEqual(innerWidth + 1);
   });
 });
+
+for (const route of ["/kurse", "/en/kurse"] as const) {
+  test(`${route} loads every course-card cover when it enters the viewport`, async ({
+    page,
+  }) => {
+    test.setTimeout(60_000);
+    await page.setViewportSize({ width: 390, height: 844 });
+    const response = await page.goto(route, { waitUntil: "domcontentloaded" });
+    expect(response?.status()).toBe(200);
+
+    const covers = page.locator("main img");
+    await expect(covers).toHaveCount(10);
+    for (let index = 0; index < (await covers.count()); index += 1) {
+      const cover = covers.nth(index);
+      await cover.scrollIntoViewIfNeeded();
+      await expect
+        .poll(
+          () =>
+            cover.evaluate((image) => ({
+              complete: (image as HTMLImageElement).complete,
+              naturalWidth: (image as HTMLImageElement).naturalWidth,
+            })),
+          { timeout: 15_000 },
+        )
+        .toMatchObject({ complete: true });
+      expect(
+        await cover.evaluate(
+          (image) => (image as HTMLImageElement).naturalWidth,
+        ),
+        `${route} cover ${index + 1} must decode to non-zero width`,
+      ).toBeGreaterThan(0);
+    }
+  });
+}

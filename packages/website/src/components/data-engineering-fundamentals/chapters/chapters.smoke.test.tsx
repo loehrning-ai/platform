@@ -28,7 +28,7 @@ afterEach(() => {
 describe("all 12 chapter components render with real ported content, not placeholders ", () => {
   it("ChOverview renders the real hero copy and all 10 pipeline stops", () => {
     render(<ChOverview />);
-    expect(screen.getByText(/Think like a/)).toBeInTheDocument();
+    expect(screen.getByText(/Trace a/)).toBeInTheDocument();
     expect(screen.getByText("Capstone")).toBeInTheDocument();
     expect(screen.getAllByText("Kafka").length).toBeGreaterThan(0);
   });
@@ -69,14 +69,14 @@ describe("all 12 chapter components render with real ported content, not placeho
     expect(screen.getByText(/Backfill with INSERT OVERWRITE/)).toBeInTheDocument();
   });
 
-  it("Ch5Quality renders the trust meter", () => {
+  it("Ch5Quality renders the check-coverage simulator", () => {
     render(<Ch5Quality chapter={getDefChapterMeta("qual")} />);
-    expect(screen.getByText("Trust Meter")).toBeInTheDocument();
+    expect(screen.getByText("Check coverage")).toBeInTheDocument();
   });
 
-  it("Ch6Discover renders the discovery speedrun intro and lineage camera", () => {
+  it("Ch6Discover renders the catalog practice intro and lineage camera", () => {
     render(<Ch6Discover chapter={getDefChapterMeta("disc")} />);
-    expect(screen.getByText("Discovery Speedrun")).toBeInTheDocument();
+    expect(screen.getByText("Catalog command practice")).toBeInTheDocument();
     expect(screen.getByText("Lineage of fct_events")).toBeInTheDocument();
   });
 
@@ -91,9 +91,9 @@ describe("all 12 chapter components render with real ported content, not placeho
     expect(screen.getByText("Permission Gate")).toBeInTheDocument();
   });
 
-  it("Ch9Capstone renders the living pipeline with all 6 contracts", () => {
+  it("Ch9Capstone renders the living pipeline with 6 modeled controls", () => {
     render(<Ch9Capstone chapter={getDefChapterMeta("cap")} />);
-    expect(screen.getByText("Six contracts. Every one is load-bearing.")).toBeInTheDocument();
+    expect(screen.getByText("Six modeled controls. Inspect each failure mode.")).toBeInTheDocument();
   });
 
   it("every chapter's real accent/ink hex from source flows into the Hero", () => {

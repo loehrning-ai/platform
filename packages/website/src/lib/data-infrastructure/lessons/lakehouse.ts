@@ -1,7 +1,10 @@
 // Ported from data-infrastructure/lessons/05-lakehouse.html.
 import type { DataInfraLesson } from "../types";
 import { checkpointLessonId } from "../types";
-import { DATA_INFRA_QUIZ_COPY, DATA_INFRA_FLASHCARDS_COPY } from "../widget-copy";
+import {
+  DATA_INFRA_QUIZ_COPY,
+  DATA_INFRA_FLASHCARDS_COPY,
+} from "../widget-copy";
 
 const LID = checkpointLessonId("lakehouse");
 
@@ -12,7 +15,7 @@ const lesson: DataInfraLesson = {
   subtitle: "ACID on object storage",
   durationMinutes: 15,
   trackId: "storage",
-  hook: "Snapshots, manifests, copy-on-write vs merge-on-read. The format war, ranked.",
+  hook: "Inspect snapshots, commit validation, delete handling, and maintenance before choosing a table format.",
   keyConcepts: [
     "Metadata layer",
     "Catalog",
@@ -28,7 +31,7 @@ const lesson: DataInfraLesson = {
       title: "Why a lakehouse",
       readTimeMinutes: 2,
       content:
-        "For a decade, the data lake was a directory of Parquet files on S3, and that was it. It was wonderful, cheap, durable, scalable, and it was missing everything: no atomic writes, no schema evolution, no time travel, no concurrent updates without corruption, no idea which files belonged to which version of the table. To delete one user's data for GDPR, you rewrote the entire dataset.\n\nThe lakehouse fixes this with one architectural move: **add a metadata layer on top of the file layout that tracks which files belong to which version of the table.** Three formats compete to be that layer:\n\n- **Apache Iceberg**, born at Netflix, donated to Apache, the reference implementation people pick for openness. Engine-agnostic.\n- **Delta Lake**, born at Databricks, open-sourced under Linux Foundation, deeply integrated with Spark. Now interoperates with Iceberg via UniForm.\n- **Apache Hudi**, born at Uber, optimized for streaming upserts and CDC. Niche but excellent at its niche.",
+        "A directory of data files does not by itself define an atomic table version, concurrent-write validation, schema evolution, or snapshot retention. Implementations historically added metastore conventions and engine-specific procedures, but file listing alone is an incomplete table contract.\n\nA lakehouse table format adds metadata that identifies the files and delete information belonging to a committed table state. **Apache Iceberg, Delta Lake, and Apache Hudi** all address this layer with different metadata, commit, maintenance, and interoperability models.\n\nTreat origin stories and popularity as context, not selection criteria. Compare the current specification and the exact catalog and engine versions against required operations, isolation, deletes, retention, governance, and recovery.",
     },
     {
       id: "s2",
@@ -44,21 +47,21 @@ const lesson: DataInfraLesson = {
       title: "ACID & catalogs",
       readTimeMinutes: 3,
       content:
-        "Object storage has no lock server. How can two concurrent writers avoid corrupting the table? The answer is **optimistic concurrency control (OCC)**: both writers proceed in parallel, and only the *last step*, swapping the catalog pointer, is serialized.\n\n1. Writer A and Writer B both read the current metadata pointer: `v18.json`.\n2. Both write their new data, manifests, and metadata files in isolation.\n3. Writer A commits first: the catalog atomically swaps from `v18.json` → `v19a.json`. Succeeds.\n4. Writer B tries to swap `v18.json` → `v19b.json`. The CAS fails, `v18.json` is no longer current. Writer B either retries (reading the new base) or raises a conflict error.\n\nThis gives **serializable isolation for non-conflicting writes** at essentially zero cost, most concurrent writers don't touch the same rows. Row-level conflict detection is format-specific: Delta uses transaction logs with conflict predicates; Iceberg uses manifest-level conflict detection.\n\nThe catalog is whatever service holds the `table name → current metadata file` mapping:\n\n- **Hive Metastore (HMS)**, the classic, a relational DB fronted by a Thrift service. Works everywhere; operationally heavy.\n- **AWS Glue Data Catalog**, managed HMS-compatible service in AWS. Zero-ops for AWS shops.\n- **Project Nessie / REST catalog**, git-for-data semantics (branches, tags, merges). Nessie is the reference implementation; the Iceberg REST catalog spec lets any HTTP server act as a catalog.\n- **Unity Catalog (Databricks)**, governance-first, fine-grained access control, multi-cloud.",
+        "Table formats use a commit protocol to publish a new table state without exposing a partial update. In Iceberg's optimistic model, two writers can prepare changes concurrently and then validate and atomically replace the current table-metadata pointer.\n\n1. Writer A and Writer B read `v18.json`.\n2. Each writes candidate data and metadata files.\n3. Writer A atomically commits a new metadata location.\n4. Writer B's stale-base commit fails. It must validate against the new state before retrying, or return a conflict.\n\nAtomic publication does not make every concurrent operation non-conflicting or free. Isolation and validation depend on operation type, engine options, catalog guarantees, and table-format rules. Failed attempts can also leave files that maintenance must identify safely.\n\nThe catalog is part of the correctness boundary: it resolves a table identifier to metadata and must provide the atomic operations required by the format. Hive Metastore, managed catalogs, REST catalogs, and governance catalogs differ in protocol support, authorization, availability, and operational ownership. Verify those properties instead of assuming catalog names are interchangeable.",
     },
     {
       id: "s4",
       title: "Snapshot timeline",
       readTimeMinutes: 2,
       content:
-        "Click through the snapshot timeline below. Each snapshot is a complete view of the table, by jumping back to an earlier one you get true **time travel** for free. A bad write at 13:01? Roll back to 12:33's snapshot in milliseconds.",
+        "The timeline is a fixed illustrative sequence of table snapshots. Selecting an earlier snapshot shows how metadata can resolve a prior table state. Query and rollback cost depend on metadata size, catalog and storage latency, engine planning, retained files, and the operation used. Time travel also consumes storage until retention and garbage-collection policies remove unreachable data.",
     },
     {
       id: "s5",
       title: "CoW vs MoR",
       readTimeMinutes: 3,
       content:
-        "The deepest architectural decision in any lakehouse is how it handles updates and deletes. Object storage doesn't support in-place edits, so an `UPDATE orders SET status='shipped' WHERE id=42` forces the engine to pick a strategy:\n\n- **Copy-on-Write (CoW).** Find the data file containing row 42. Rewrite it without that row. Add a new file with the updated row. Atomically swap. Fast reads (each row exists in exactly one file), slow writes (rewrites whole files for one-row changes), write amplification.\n- **Merge-on-Read (MoR).** Don't touch the data file. Write a small \"delete marker\" file recording *\"row 42 in file abc.parquet is dead\"*. At read time, the engine reads the data file **and** the delete files, merges them on the fly. Fast writes, slower reads, compaction needed to keep read latency reasonable.\n\nIceberg supports both, picked per-table. Delta is CoW by default with deletion vectors as an MoR-flavored optimization. Hudi pioneered MoR and it's their default.",
+        "Object-store table updates normally publish new files or delete metadata rather than editing bytes in place. An `UPDATE orders SET status='shipped' WHERE id=42` therefore introduces a read/write trade-off:\n\n- **Copy-on-Write (CoW).** Rewrite affected data files and publish a snapshot that references the replacements. Reads see consolidated files; updates can amplify writes.\n- **Merge-on-Read (MoR).** Publish new records or delete information separately and reconcile them during reads or compaction. Updates can write less immediately; reads and maintenance must merge more state.\n\nThe exact delete-file types, indexes, defaults, compaction rules, and supported engines differ across table-format and engine versions. Choose from measured update rate, read pattern, file size, maintenance capacity, and delete semantics.",
       keyTakeaway:
         "Rule of thumb: infrequent updates + read-heavy → CoW; frequent CDC-style updates → MoR.",
     },
@@ -67,7 +70,7 @@ const lesson: DataInfraLesson = {
       title: "Format comparison",
       readTimeMinutes: 3,
       content:
-        "| | Iceberg | Delta | Hudi |\n|---|---|---|---|\n| Origin | Netflix → Apache | Databricks → Linux Foundation | Uber → Apache |\n| Engine support | Broadest (Spark, Trino, Flink, Snowflake, BigQuery, Athena) | Best on Databricks; broadening | Spark, Flink, Presto |\n| Default updates | CoW (configurable MoR) | CoW + deletion vectors | MoR (CoW available) |\n| Partitioning | Hidden (transform-based, no stored column) | Hive-style + generated columns | Hive-style + custom keygens |\n| Schema evolution | Full (add/drop/rename/reorder, type promotion) | Add/drop/reorder; rename via column-mapping | Add/drop |\n| Catalog | HMS, Glue, Nessie, REST (any) | HMS, Unity Catalog (native) | HMS, custom |\n| Sweet spot | Multi-engine OSS warehouse | Spark / Databricks shop | Streaming CDC ingest |\n\n**The 2026 reality.** Iceberg has won the multi-engine open standard. Snowflake, BigQuery, Athena, and Databricks all read it natively. Pick Iceberg unless you have a specific reason, and \"I'm a heavy Databricks shop\" is one of the few good ones.",
+        "Use a requirements matrix whose cells can be verified against current documentation and a small compatibility test:\n\n| Decision | Evidence to collect |\n|---|---|\n| Engine interoperability | Required read and write operations for every exact engine/version combination |\n| Commit and isolation | Catalog atomicity, concurrent-write validation, retry behavior, and unknown-commit recovery |\n| Updates and deletes | CoW/MoR support, delete representation, merge cost, and privacy-deletion lifecycle |\n| Schema and partition evolution | Supported changes, reader compatibility, and whether old files need rewriting |\n| Incremental processing | Change-feed semantics, ordering, retention, and checkpoint identity |\n| Operations | Compaction, snapshot expiration, orphan cleanup, observability, and disaster recovery |\n| Governance | Authorization boundary, audit events, encryption, catalog availability, and ownership |\n\nA format name alone does not prove any row in this matrix. Engine integrations can lag specifications or expose only a subset of operations.",
     },
     {
       id: "s7",
@@ -80,14 +83,14 @@ const lesson: DataInfraLesson = {
       title: "Key takeaways",
       readTimeMinutes: 2,
       content:
-        "- **The metadata layer is the product.** Iceberg/Delta/Hudi are not storage systems, they are metadata management layers on top of Parquet on object storage. ACID comes from atomic CAS on the catalog pointer, not from the storage layer itself.\n- **OCC, not locking.** Concurrent writers use optimistic concurrency control: both write in parallel; only the final catalog pointer swap is serialized. Conflict = retry, not deadlock.\n- **CoW vs MoR is a read/write trade-off.** Read-heavy, infrequent updates → CoW. CDC-style high-frequency upserts → MoR. Most formats support both; choose per table.\n- **Iceberg hidden partitioning removes a class of bugs.** Hive-style partitions require writers to maintain a separate physical column; hidden partitioning derives it from the source column, so changing partition granularity is a metadata-only migration.\n- **Pick Iceberg for multi-engine.** If queries come from more than one engine (Spark writes, Trino reads, Athena ad-hoc), Iceberg's engine-agnostic spec is the safest long-term bet.",
+        "- **Metadata defines table state.** Data files alone do not identify a committed table version. The format and catalog jointly define publication and recovery.\n- **Optimistic commits require validation.** A stale writer must validate against the new state before retrying. Conflict behavior depends on the operation and isolation configuration.\n- **CoW and MoR trade write amplification against read and maintenance work.** Measure both paths for the intended workload.\n- **Partition evolution separates logical predicates from changing physical layouts.** Existing files can retain old specs while new files use a new spec; engines still need compatible readers and planning.\n- **Interoperability is an operation matrix.** Prove reads, writes, deletes, evolution, and recovery on the exact engine versions instead of relying on a format-level claim.",
     },
     {
       id: "s9",
       title: "Vocab",
       readTimeMinutes: 2,
       content:
-        "- **Snapshot**, a complete, immutable view of a table at a point in time.\n- **Time travel**, reading a table as of a past snapshot; free and fast since every snapshot is fully described by metadata.\n- **VACUUM**, garbage-collects data files no longer referenced by any retained snapshot.\n- **Hidden partitioning**, Iceberg deriving the partition value from a transform on an existing column, instead of storing a separate physical partition column.\n- **OCC**, optimistic concurrency control: both writers proceed, conflict is detected at commit time via compare-and-swap.\n- **Compaction**, periodically rewriting many small files into fewer, larger ones.\n- **Z-order**, interleaving bits of multiple column values so files cluster well for multi-column filter queries.",
+        "- **Snapshot**, metadata identifying a committed table state. Immutability and retention are defined by the table format and catalog.\n- **Time travel**, resolving and reading a retained prior snapshot. It has planning, I/O, and storage-retention costs.\n- **Snapshot expiration / VACUUM**, removes retained history and eventually makes unreferenced files eligible for deletion under product-specific rules.\n- **Hidden partitioning**, derives partition values from source columns and lets queries use source-column predicates.\n- **OCC**, optimistic concurrency control: writers prepare independently, then validate and commit against current metadata.\n- **Compaction**, rewrites selected files into a new layout; scheduling and conflict handling are operational work.\n- **Z-order**, a multidimensional clustering technique used by some engines to improve data skipping for selected predicates.",
     },
   ],
   widgets: [
@@ -104,12 +107,12 @@ const lesson: DataInfraLesson = {
         options: [
           "The 50 rows are rewritten in place.",
           "A delete marker file is written; nothing else changes.",
-          "The 30 affected data files are rewritten without those rows; a new snapshot points to the new files; the old files become orphaned and are cleaned up by VACUUM.",
+          "The affected files are rewritten without those rows; a new snapshot references replacements; older snapshots may still reference the prior files until their retention expires.",
           "The whole table is rewritten.",
         ],
         correct: 2,
         explanation:
-          "Under CoW, only the files containing the deleted rows get rewritten, not the whole table. The new snapshot atomically points to the new files. Crucially, the old files survive until VACUUM runs (typically a 7-day retention), which is what enables time travel back to before the delete. For GDPR you usually run an immediate VACUUM after to actually purge the bytes.",
+          "Under the stated CoW model, affected files are replaced and the new snapshot omits the deleted rows. Prior snapshots, branches, tags, object versions, replicas, and backups can still retain the bytes. A privacy deletion procedure must trace every retention layer and verify removal under the organization's legal and recovery requirements; an immediate cleanup command alone is not proof.",
       },
     },
     {
@@ -121,16 +124,16 @@ const lesson: DataInfraLesson = {
         title: "CoW vs MoR for CDC",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          "You're building a pipeline that mirrors a Postgres source via CDC, typically 2 million row updates per minute. Which format strategy fits?",
+          "A CDC mirror produces frequent small keyed updates. Reads can tolerate merge work and the team operates regular compaction. Which strategy is the better initial hypothesis to benchmark?",
         options: [
           "CoW. Always.",
-          "MoR. CDC produces many small upserts; CoW would rewrite huge files for tiny changes, write amplification kills you. MoR appends delete-then-insert markers; periodic compaction merges them.",
+          "MoR. It can reduce immediate rewrite amplification, while shifting work to reads and compaction.",
           "Doesn't matter; the engine handles it.",
           "Use CSV.",
         ],
         correct: 1,
         explanation:
-          "High-frequency upserts are the textbook case for MoR. CoW's write amplification, rewriting a 256MB file to change one row, would destroy your throughput and IO budget. MoR writes small delta files quickly; reads merge on the fly; a background compaction job rewrites things in larger chunks during quieter windows. This is exactly why Hudi was built.",
+          "MoR is a reasonable hypothesis because the stated workload accepts read-side merge and maintenance in exchange for less immediate file rewriting. Validate it against actual file sizes, update distribution, engine support, read latency, and compaction capacity; CoW can still win for clustered updates or read-heavy workloads.",
       },
     },
     {
@@ -145,37 +148,37 @@ const lesson: DataInfraLesson = {
           {
             term: "Snapshot",
             q: "What is in a snapshot?",
-            a: "A complete, immutable view of a table at a point in time. Just a manifest list pointing to manifests pointing to data files. Snapshots accumulate; old ones are pruned by retention policy.",
+            a: "A committed table version that references metadata and files for a logical point in the table history. Retention operations determine when older snapshots and eligible files can be removed.",
           },
           {
             term: "Time travel",
             q: "How does it work?",
-            a: "Every snapshot is fully described by metadata. Reading `SELECT … AS OF TIMESTAMP '2026-04-15'` just resolves the snapshot active at that timestamp and reads its manifests. Free, fast, no special storage.",
+            a: "The engine resolves a retained snapshot and plans its files. SQL syntax, planning cost, storage requests, and retention behavior depend on the engine and catalog.",
           },
           {
             term: "VACUUM",
             q: "Why do you run it?",
-            a: "To garbage-collect data files no longer referenced by any retained snapshot. Without VACUUM, deleted/updated data accumulates forever. Default retention: 7 days. Set short for GDPR; long for safety.",
+            a: "To expire eligible history and remove files no longer referenced under the configured policy. Privacy deletion must also account for branches, tags, object versions, replicas, and backups.",
           },
           {
             term: "Hidden partitioning",
-            q: "Iceberg's killer feature vs Hive-style",
-            a: "Hive-style partitioning stores a separate physical column (e.g. order_date) that writers must populate. Iceberg hidden partitioning derives the partition value from a transform on an existing column (e.g. days(order_ts)). No extra column, no partition column in the schema, no rewrites when you change granularity.",
+            q: "How does it differ from path-based partitioning?",
+            a: "A transform such as days(order_ts) is declared in table metadata and derived by compatible writers. Partition evolution lets new files use a new spec while old files retain their layout; it does not rewrite old data automatically.",
           },
           {
             term: "OCC",
             q: "Optimistic concurrency control",
-            a: "Both writers proceed; conflict is detected at commit time via a compare-and-swap on the metadata pointer. The losing writer retries. No locks, no deadlocks, no coordination service needed.",
+            a: "Writers prepare candidate changes, then validate and atomically commit against current metadata. A stale writer may safely retry only after its operation-specific assumptions are revalidated.",
           },
           {
             term: "Compaction",
             q: "Why is it needed?",
-            a: "Streaming writes produce many small files. Many small files = bad query performance + bad object-storage cost. Compaction periodically rewrites them into fewer, larger files. Background, non-blocking.",
+            a: "Small files can increase planning and storage-request overhead. Compaction publishes a rewritten layout, consumes compute and I/O, and can conflict with concurrent changes; schedule and verify it like any other data job.",
           },
           {
             term: "Z-order",
             q: "When does it help?",
-            a: "When queries filter on multiple columns equally (not one-and-done). Z-ordering interleaves bits of the column values so files are clustered in multi-dimensional space. Both WHERE country=X and WHERE category=Y prune well.",
+            a: "It can improve locality and data skipping for selected columns. Benefit depends on the engine, data distribution, predicate mix, rewrite policy, and available statistics, so verify it with representative plans and reads.",
           },
         ],
       },

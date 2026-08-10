@@ -10,6 +10,7 @@
 
 import { promises as fs } from "fs";
 import path from "path";
+import type { Locale } from "@/lib/i18n/locale";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -57,22 +58,42 @@ function contentRoot(): string {
   return candidate;
 }
 
-function bookDir(bookSlug: string): string {
-  return path.join(contentRoot(), bookSlug);
+function assertSafeContentSegment(value: string, label: string): void {
+  if (!/^[a-z0-9][a-z0-9_-]*$/i.test(value)) {
+    throw new Error(`Invalid ${label} "${value}".`);
+  }
+}
+
+function bookDir(bookSlug: string, locale: Locale): string {
+  assertSafeContentSegment(bookSlug, "book slug");
+  const baseDirectory = path.join(contentRoot(), bookSlug);
+  return locale === "de" ? baseDirectory : path.join(baseDirectory, locale);
 }
 
 // ── Manifest ─────────────────────────────────────────────────────────────────
 
-export async function loadBookManifest(bookSlug: string): Promise<BookManifest> {
-  const manifestPath = path.join(bookDir(bookSlug), "manifest.json");
+export async function loadBookManifest(
+  bookSlug: string,
+  locale: Locale,
+): Promise<BookManifest> {
+  const manifestPath = path.join(bookDir(bookSlug, locale), "manifest.json");
   const raw = await fs.readFile(manifestPath, "utf-8");
-  return JSON.parse(raw) as BookManifest;
+  const manifest = JSON.parse(raw) as BookManifest;
+  if (manifest.bookSlug !== bookSlug || !Array.isArray(manifest.chapters)) {
+    throw new Error(
+      `Invalid ${locale} manifest for book "${bookSlug}".`,
+    );
+  }
+  return manifest;
 }
 
 // ── Chapter list (metadata only) ─────────────────────────────────────────────
 
-export async function getBookChapterList(bookSlug: string): Promise<BookChapterMeta[]> {
-  const manifest = await loadBookManifest(bookSlug);
+export async function getBookChapterList(
+  bookSlug: string,
+  locale: Locale,
+): Promise<BookChapterMeta[]> {
+  const manifest = await loadBookManifest(bookSlug, locale);
   return [...manifest.chapters];
 }
 
@@ -114,9 +135,11 @@ function computeReadingTime(markdown: string): number {
 
 export async function loadBookChapter(
   bookSlug: string,
-  chapterSlug: string
+  chapterSlug: string,
+  locale: Locale,
 ): Promise<LoadedChapter> {
-  const manifest = await loadBookManifest(bookSlug);
+  assertSafeContentSegment(chapterSlug, "chapter slug");
+  const manifest = await loadBookManifest(bookSlug, locale);
   const meta = manifest.chapters.find((c) => c.slug === chapterSlug);
   if (!meta) {
     throw new Error(
@@ -124,7 +147,12 @@ export async function loadBookChapter(
     );
   }
 
-  const filePath = path.join(bookDir(bookSlug), `${chapterSlug}.md`);
+  if (path.basename(meta.sourceFile) !== meta.sourceFile) {
+    throw new Error(
+      `Invalid source file "${meta.sourceFile}" for chapter "${chapterSlug}".`,
+    );
+  }
+  const filePath = path.join(bookDir(bookSlug, locale), meta.sourceFile);
   const fileContents = await fs.readFile(filePath, "utf-8");
   // The reader chrome renders its own <h1> from the manifest title, while the
   // chapter markdown files also carry a `# Titel` line near the top (after an
@@ -159,9 +187,10 @@ export interface ChapterNeighbours {
 
 export async function getChapterNeighbours(
   bookSlug: string,
-  chapterSlug: string
+  chapterSlug: string,
+  locale: Locale,
 ): Promise<ChapterNeighbours> {
-  const chapters = await getBookChapterList(bookSlug);
+  const chapters = await getBookChapterList(bookSlug, locale);
   const idx = chapters.findIndex((c) => c.slug === chapterSlug);
   return {
     prev: idx > 0 ? (chapters[idx - 1] ?? null) : null,

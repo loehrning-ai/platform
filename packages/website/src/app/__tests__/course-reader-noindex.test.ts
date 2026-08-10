@@ -36,7 +36,7 @@ describe("public-access course reader noindex metadata", () => {
     it(`${reader.course} reader declares robots index:false, follow:true (${reader.source})`, () => {
       const source = readFileSync(reader.source, "utf8");
       expect(source, `${reader.source} must export metadata`).toMatch(
-        /export\s+const\s+metadata\s*:/,
+        /export\s+(?:const\s+metadata\s*:|async\s+function\s+generateMetadata\s*\()/,
       );
       expect(source, `${reader.source} must keep the reader noindex contract`).toMatch(
         /robots\s*:\s*\{\s*index\s*:\s*false\s*,\s*follow\s*:\s*true\s*\}/,

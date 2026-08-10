@@ -1,23 +1,8 @@
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest";
-import {
-  act,
-  cleanup,
-  render,
-  screen,
-} from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
 import type { CourseSlug } from "@/lib/course/types";
-import type {
-  UnifiedProgress,
-  UnifiedCourseSlice,
-} from "@/lib/progress/types";
+import type { UnifiedProgress, UnifiedCourseSlice } from "@/lib/progress/types";
 
 type Owner = {
   readonly kind: "unknown" | "anonymous";
@@ -50,7 +35,7 @@ vi.mock("@/lib/progress/store", () => ({
 }));
 
 vi.mock("framer-motion", async () => {
-  const { createElement, forwardRef } = await import("react");
+  const { createElement, forwardRef, Fragment } = await import("react");
   const DROP = new Set([
     "initial",
     "animate",
@@ -68,7 +53,14 @@ vi.mock("framer-motion", async () => {
       return createElement("section", { ...cleanProps, ref });
     },
   );
-  return { m: { section: MotionSection } };
+  const Provider = ({ children }: { children?: unknown }) =>
+    createElement(Fragment, null, children as never);
+  return {
+    m: { section: MotionSection },
+    MotionConfig: Provider,
+    LazyMotion: Provider,
+    domAnimation: {},
+  };
 });
 
 import { AiNativeQuizCertCta } from "@/components/ai-native/kurs/quiz-cert-cta";
@@ -158,7 +150,7 @@ afterEach(cleanup);
 
 describe("<CourseAssessmentCta>", () => {
   it("keeps owner-unknown progress unresolved and exposes no premature route", () => {
-    render(<CourseAssessmentCta courseSlug="claude" />);
+    render(<CourseAssessmentCta courseSlug="claude" locale="en" />);
 
     emitProgress(progressFor("claude", 0));
 
@@ -171,18 +163,18 @@ describe("<CourseAssessmentCta>", () => {
     );
     expect(
       document.querySelector(
-        'a[href="/kurse/open-source/claude/kurs/quiz"]',
+        'a[href="/en/kurse/open-source/claude/kurs/quiz"]',
       ),
     ).toBeNull();
     expect(
       document.querySelector(
-        'a[href="/kurse/open-source/claude/kurs/zertifikat"]',
+        'a[href="/en/kurse/open-source/claude/kurs/zertifikat"]',
       ),
     ).toBeNull();
   });
 
   it("keeps incomplete and corrupt passed-bit states locked with exact requirements", () => {
-    render(<CourseAssessmentCta courseSlug="claude" />);
+    render(<CourseAssessmentCta courseSlug="claude" locale="en" />);
     resolveOwner();
 
     emitProgress(progressFor("claude", 11, true));
@@ -191,23 +183,21 @@ describe("<CourseAssessmentCta>", () => {
       "Complete all 12 lessons to unlock the workshop quiz. 1 lesson remaining.",
     );
     expect(screen.getByText("11 of 12 lessons complete")).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Quiz locked" }),
-    ).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Quiz locked" })).toBeDisabled();
     expect(
       document.querySelector(
-        'a[href="/kurse/open-source/claude/kurs/quiz"]',
+        'a[href="/en/kurse/open-source/claude/kurs/quiz"]',
       ),
     ).toBeNull();
     expect(
       document.querySelector(
-        'a[href="/kurse/open-source/claude/kurs/zertifikat"]',
+        'a[href="/en/kurse/open-source/claude/kurs/zertifikat"]',
       ),
     ).toBeNull();
   });
 
   it("updates Claude from ready to passed without remounting", () => {
-    render(<CourseAssessmentCta courseSlug="claude" />);
+    render(<CourseAssessmentCta courseSlug="claude" locale="en" />);
     resolveOwner();
 
     emitProgress(progressFor("claude", 12));
@@ -217,10 +207,7 @@ describe("<CourseAssessmentCta>", () => {
     );
     expect(
       screen.getByRole("link", { name: "Start workshop quiz" }),
-    ).toHaveAttribute(
-      "href",
-      "/kurse/open-source/claude/kurs/quiz",
-    );
+    ).toHaveAttribute("href", "/en/kurse/open-source/claude/kurs/quiz");
     expect(
       screen.queryByRole("link", {
         name: "Download Certificate of Completion",
@@ -230,24 +217,19 @@ describe("<CourseAssessmentCta>", () => {
     emitProgress(progressFor("claude", 12, true));
 
     expect(screen.getByRole("status")).toHaveTextContent("Passed.");
-    expect(
-      screen.getByRole("link", { name: "Retake quiz" }),
-    ).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Retake quiz" })).toHaveAttribute(
       "href",
-      "/kurse/open-source/claude/kurs/quiz",
+      "/en/kurse/open-source/claude/kurs/quiz",
     );
     expect(
       screen.getByRole("link", {
         name: "Download Certificate of Completion",
       }),
-    ).toHaveAttribute(
-      "href",
-      "/kurse/open-source/claude/kurs/zertifikat",
-    );
+    ).toHaveAttribute("href", "/en/kurse/open-source/claude/kurs/zertifikat");
   });
 
   it("uses the Operator configuration, isolated progress slice, and exact routes", () => {
-    render(<CourseAssessmentCta courseSlug="ai-native-operator" />);
+    render(<CourseAssessmentCta courseSlug="ai-native-operator" locale="en" />);
     resolveOwner();
 
     emitProgress(
@@ -263,19 +245,16 @@ describe("<CourseAssessmentCta>", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: "Start workshop quiz" }),
-    ).toHaveAttribute(
-      "href",
-      "/kurse/open-source/ai-native-operator/quiz",
-    );
+    ).toHaveAttribute("href", "/en/kurse/open-source/ai-native-operator/quiz");
 
     emitProgress(progressFor("ai-native-operator", 39, true));
     expect(
       screen.getByRole("link", {
-        name: "Download Certificate of Completion",
+        name: "Download Course Completion Record",
       }),
     ).toHaveAttribute(
       "href",
-      "/kurse/open-source/ai-native-operator/zertifikat",
+      "/en/kurse/open-source/ai-native-operator/zertifikat",
     );
   });
 
@@ -289,15 +268,11 @@ describe("<CourseAssessmentCta>", () => {
       "Schließe alle 27 Lektionen ab",
     );
     expect(screen.getByText("Quiz gesperrt")).toBeInTheDocument();
-    expect(
-      document.querySelector('a[href="/ai-native/kurs/quiz"]'),
-    ).toBeNull();
+    expect(document.querySelector('a[href="/ai-native/kurs/quiz"]')).toBeNull();
 
     emitProgress(progressFor("ai-native", 27, false, true));
 
-    expect(screen.getByRole("status")).toHaveTextContent(
-      "Capstone-Rubrik",
-    );
+    expect(screen.getByRole("status")).toHaveTextContent("Capstone-Rubrik");
     expect(
       screen.getByRole("link", { name: "Workshop-Quiz starten" }),
     ).toHaveAttribute("href", "/ai-native/kurs/quiz");

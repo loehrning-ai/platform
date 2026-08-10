@@ -8,15 +8,21 @@ import type {
   QuizQuestion,
 } from "./types";
 import type { Widget } from "@/lib/widgets/types";
+import type { Locale } from "@/lib/i18n/locale";
 
 // Course configs live in ./config (performance hardening) so config-only client
 // components avoid this module's heavy JSON graph. Re-exported below for
 // backward compatibility — server-side callers keep importing from ./data.
 import {
+  AI_NATIVE_EN_CONFIG,
   AI_NATIVE_CONFIG,
+  EU_AI_ACT_KURS_EN_CONFIG,
   EU_AI_ACT_KURS_CONFIG,
+  getCourseConfig,
   KI_FUEHRERSCHEIN_CONFIG,
+  KI_FUEHRERSCHEIN_EN_CONFIG,
   KI_UND_GESELLSCHAFT_CONFIG,
+  KI_UND_GESELLSCHAFT_EN_CONFIG,
 } from "./config";
 
 export {
@@ -37,6 +43,12 @@ import kfBlock3 from "../../../content/ki-fuehrerschein/block-3-anwendung-lesson
 import kfBlock4 from "../../../content/ki-fuehrerschein/block-4-verifikation-lessons.json";
 import kfBlock5 from "../../../content/ki-fuehrerschein/block-5-richtlinie-lessons.json";
 import kfWorkshop from "../../../content/ki-fuehrerschein/quiz/questions.json";
+import kfEnBlock1 from "../../../content/ki-fuehrerschein/en/block-1-entdeckung-lessons.json";
+import kfEnBlock2 from "../../../content/ki-fuehrerschein/en/block-2-datenschutz-lessons.json";
+import kfEnBlock3 from "../../../content/ki-fuehrerschein/en/block-3-anwendung-lessons.json";
+import kfEnBlock4 from "../../../content/ki-fuehrerschein/en/block-4-verifikation-lessons.json";
+import kfEnBlock5 from "../../../content/ki-fuehrerschein/en/block-5-richtlinie-lessons.json";
+import kfEnWorkshop from "../../../content/ki-fuehrerschein/en/quiz/questions.json";
 
 // ─── EU AI Act Kurs content ────────────────────────────────────
 
@@ -47,6 +59,13 @@ import eaBlock4 from "../../../content/eu-ai-act-kurs/block-4-gpai-transparenz-l
 import eaBlock5 from "../../../content/eu-ai-act-kurs/block-5-governance-lessons.json";
 import eaBlock6 from "../../../content/eu-ai-act-kurs/block-6-praxis-lessons.json";
 import eaWorkshop from "../../../content/eu-ai-act-kurs/quiz/questions.json";
+import eaEnBlock1 from "../../../content/eu-ai-act-kurs/en/block-1-grundlagen-lessons.json";
+import eaEnBlock2 from "../../../content/eu-ai-act-kurs/en/block-2-risikoklassen-lessons.json";
+import eaEnBlock3 from "../../../content/eu-ai-act-kurs/en/block-3-hochrisiko-lessons.json";
+import eaEnBlock4 from "../../../content/eu-ai-act-kurs/en/block-4-gpai-transparenz-lessons.json";
+import eaEnBlock5 from "../../../content/eu-ai-act-kurs/en/block-5-governance-lessons.json";
+import eaEnBlock6 from "../../../content/eu-ai-act-kurs/en/block-6-praxis-lessons.json";
+import eaEnWorkshop from "../../../content/eu-ai-act-kurs/en/quiz/questions.json";
 
 // ─── KI und Gesellschaft content (KI und Gesellschaft course review) ────────────────────
 
@@ -54,10 +73,15 @@ import kugBlock1 from "../../../content/ki-und-gesellschaft/block-1-arbeit-lesso
 import kugBlock2 from "../../../content/ki-und-gesellschaft/block-2-deepfakes-lessons.json";
 import kugBlock3 from "../../../content/ki-und-gesellschaft/block-3-ethik-lessons.json";
 import kugWorkshop from "../../../content/ki-und-gesellschaft/quiz/questions.json";
+import kugEnBlock1 from "../../../content/ki-und-gesellschaft/en/block-1-arbeit-lessons.json";
+import kugEnBlock2 from "../../../content/ki-und-gesellschaft/en/block-2-deepfakes-lessons.json";
+import kugEnBlock3 from "../../../content/ki-und-gesellschaft/en/block-3-ethik-lessons.json";
+import kugEnWorkshop from "../../../content/ki-und-gesellschaft/en/quiz/questions.json";
 
 // ─── AI-Native workshop quiz (shared course architecture) ─
 
 import anWorkshop from "../../../content/ai-native/quiz/questions.json";
+import anEnWorkshop from "../../../content/ai-native/en/quiz/questions.json";
 
 // ─── KI-Führerschein glossary (shared course architecture) ──────────────
 // The 42-term glossary was previously unimported dead data. It now has a
@@ -65,6 +89,7 @@ import anWorkshop from "../../../content/ai-native/quiz/questions.json";
 // glossary page can reuse the same accessor).
 
 import kfGlossary from "../../../content/ki-fuehrerschein/glossary.json";
+import kfEnGlossary from "../../../content/ki-fuehrerschein/en/glossary.json";
 
 // ─── EU AI Act Kurs glossary (shared course architecture) ───────────────
 // Risikostufen + Verordnung (EU) 2024/1689 terminology. Registered below in
@@ -72,6 +97,7 @@ import kfGlossary from "../../../content/ki-fuehrerschein/glossary.json";
 // Flashcards review deck (filtered via `relatedBlocks`).
 
 import eaGlossary from "../../../content/eu-ai-act-kurs/glossary.json";
+import eaEnGlossary from "../../../content/eu-ai-act-kurs/en/glossary.json";
 
 // ─── Shared types ──────────────────────────────────────────────
 
@@ -81,11 +107,20 @@ type BlockMeta = {
   durationMinutes: number;
 };
 
+type RawBlockContent = {
+  readonly lessons: Lesson[];
+  readonly lastReviewed?: string;
+  readonly nextReview?: string;
+  readonly riskClass?: string;
+};
+
 type CourseData = {
   readonly config: CourseConfig;
   readonly blockMeta: Partial<Record<BlockId, BlockMeta>>;
-  readonly lessonData: Partial<Record<BlockId, { lessons: Lesson[] }>>;
+  readonly lessonData: Partial<Record<BlockId, RawBlockContent>>;
   readonly workshopQuestions: QuizQuestion[];
+  readonly glossary: readonly GlossaryEntry[];
+  readonly glossaryFlashcardsTitle: string;
 };
 
 // ─── KI-Führerschein course config ─────────────────────────────
@@ -95,38 +130,91 @@ const KI_FUEHRERSCHEIN: CourseData = {
   blockMeta: {
     block_1: {
       title: "KI ist schon da",
-      description: "Erkenne, welche KI-Systeme du bereits täglich nutzt — und warum das der erste Schritt ist.",
+      description:
+        "Erkenne, welche KI-Systeme du bereits täglich nutzt — und warum das der erste Schritt ist.",
       durationMinutes: 10,
     },
     block_2: {
       title: "Datenschutz und KI",
-      description: "4-Stufen-Datenklassifikation für KI-Tools. Wissen, welche Daten in welches Tool gehören.",
+      description:
+        "4-Stufen-Datenklassifikation für KI-Tools. Wissen, welche Daten in welches Tool gehören.",
       durationMinutes: 15,
     },
     block_3: {
       title: "KI anwenden",
-      description: "4 praktische Aufgaben: E-Mail, Meeting-Protokoll, Datenanalyse, Bericht.",
+      description:
+        "4 praktische Aufgaben: E-Mail, Meeting-Protokoll, Datenanalyse, Bericht.",
       durationMinutes: 30,
     },
     block_4: {
       title: "KI-Output prüfen",
-      description: "3-Schritt-Prüfung, Halluzinationen erkennen, Vertrauensgrenzen kennen.",
+      description:
+        "3-Schritt-Prüfung, Halluzinationen erkennen, Vertrauensgrenzen kennen.",
       durationMinutes: 20,
     },
     block_5: {
       title: "KI-Richtlinie Schritt für Schritt",
-      description: "So entsteht eine KI-Nutzungsrichtlinie Schritt für Schritt. Was Art. 4 dazu zu sagen hat.",
+      description:
+        "So entsteht eine KI-Nutzungsrichtlinie Schritt für Schritt. Was Art. 4 dazu zu sagen hat.",
       durationMinutes: 25,
     },
   },
   lessonData: {
-    block_1: kfBlock1 as { lessons: Lesson[] },
-    block_2: kfBlock2 as { lessons: Lesson[] },
-    block_3: kfBlock3 as { lessons: Lesson[] },
-    block_4: kfBlock4 as { lessons: Lesson[] },
-    block_5: kfBlock5 as { lessons: Lesson[] },
+    block_1: kfBlock1 as RawBlockContent,
+    block_2: kfBlock2 as RawBlockContent,
+    block_3: kfBlock3 as RawBlockContent,
+    block_4: kfBlock4 as RawBlockContent,
+    block_5: kfBlock5 as RawBlockContent,
   },
   workshopQuestions: kfWorkshop as unknown as QuizQuestion[],
+  glossary: kfGlossary as unknown as GlossaryEntry[],
+  glossaryFlashcardsTitle: "Glossar-Karten zu diesem Block",
+};
+
+const KI_FUEHRERSCHEIN_EN: CourseData = {
+  config: KI_FUEHRERSCHEIN_EN_CONFIG,
+  blockMeta: {
+    block_1: {
+      title: "AI is already here",
+      description:
+        "Identify the AI systems you already use and the decisions they influence.",
+      durationMinutes: 10,
+    },
+    block_2: {
+      title: "Data protection and AI",
+      description:
+        "Classify data before it enters an AI tool and assess the product, contract, and configuration.",
+      durationMinutes: 15,
+    },
+    block_3: {
+      title: "Applying AI at work",
+      description:
+        "Work through four concrete tasks: email, meeting notes, data analysis, and reporting.",
+      durationMinutes: 30,
+    },
+    block_4: {
+      title: "Checking AI output",
+      description:
+        "Use a three-step review, identify hallucinations, and set clear trust boundaries.",
+      durationMinutes: 20,
+    },
+    block_5: {
+      title: "Building an AI use policy",
+      description:
+        "Define approved tools, data rules, review duties, and incident handling for an organization.",
+      durationMinutes: 25,
+    },
+  },
+  lessonData: {
+    block_1: kfEnBlock1 as RawBlockContent,
+    block_2: kfEnBlock2 as RawBlockContent,
+    block_3: kfEnBlock3 as RawBlockContent,
+    block_4: kfEnBlock4 as RawBlockContent,
+    block_5: kfEnBlock5 as RawBlockContent,
+  },
+  workshopQuestions: kfEnWorkshop as unknown as QuizQuestion[],
+  glossary: kfEnGlossary as unknown as GlossaryEntry[],
+  glossaryFlashcardsTitle: "Glossary cards for this block",
 };
 
 // ─── EU AI Act Kurs course config ──────────────────────────────
@@ -172,14 +260,69 @@ const EU_AI_ACT_KURS: CourseData = {
     },
   },
   lessonData: {
-    block_1: eaBlock1 as { lessons: Lesson[] },
-    block_2: eaBlock2 as { lessons: Lesson[] },
-    block_3: eaBlock3 as { lessons: Lesson[] },
-    block_4: eaBlock4 as { lessons: Lesson[] },
-    block_5: eaBlock5 as { lessons: Lesson[] },
-    block_6: eaBlock6 as { lessons: Lesson[] },
+    block_1: eaBlock1 as RawBlockContent,
+    block_2: eaBlock2 as RawBlockContent,
+    block_3: eaBlock3 as RawBlockContent,
+    block_4: eaBlock4 as RawBlockContent,
+    block_5: eaBlock5 as RawBlockContent,
+    block_6: eaBlock6 as RawBlockContent,
   },
   workshopQuestions: eaWorkshop as unknown as QuizQuestion[],
+  glossary: eaGlossary as unknown as GlossaryEntry[],
+  glossaryFlashcardsTitle: "Glossar-Karten zu diesem Block",
+};
+
+const EU_AI_ACT_KURS_EN: CourseData = {
+  config: EU_AI_ACT_KURS_EN_CONFIG,
+  blockMeta: {
+    block_1: {
+      title: "Scope, roles, and application dates",
+      description:
+        "Identify who the Regulation covers, distinguish provider and deployer roles, and map the dates that apply.",
+      durationMinutes: 16,
+    },
+    block_2: {
+      title: "Risk categories and classification",
+      description:
+        "Work through prohibited practices, high-risk systems, transparency duties, and minimal-risk uses.",
+      durationMinutes: 18,
+    },
+    block_3: {
+      title: "High-risk system obligations",
+      description:
+        "Separate provider and deployer duties for risk management, documentation, oversight, and conformity assessment.",
+      durationMinutes: 20,
+    },
+    block_4: {
+      title: "GPAI, AI literacy, and transparency",
+      description:
+        "Assess general-purpose AI duties, Article 4 measures, and Article 50 disclosure requirements.",
+      durationMinutes: 20,
+    },
+    block_5: {
+      title: "Governance and penalties",
+      description:
+        "Understand the roles of EU and national authorities, enforcement routes, sandboxes, and penalty limits.",
+      durationMinutes: 16,
+    },
+    block_6: {
+      title: "Implementation for smaller organizations",
+      description:
+        "Build an evidence-based inventory, connect AI Act and GDPR work, and assign accountable next steps.",
+      durationMinutes: 20,
+    },
+  },
+  lessonData: {
+    block_1: eaEnBlock1 as RawBlockContent,
+    block_2: eaEnBlock2 as RawBlockContent,
+    block_3: eaEnBlock3 as RawBlockContent,
+    block_4: eaEnBlock4 as RawBlockContent,
+    block_5: eaEnBlock5 as RawBlockContent,
+    block_6: eaEnBlock6 as RawBlockContent,
+  },
+  workshopQuestions: eaEnWorkshop as unknown as QuizQuestion[],
+  glossary: eaEnGlossary as unknown as GlossaryEntry[],
+  glossaryFlashcardsTitle: "Glossary cards for this block",
 };
 
 // ─── AI-Native course config (shared course architecture) ──
@@ -195,6 +338,17 @@ const AI_NATIVE: CourseData = {
   blockMeta: {},
   lessonData: {},
   workshopQuestions: anWorkshop as unknown as QuizQuestion[],
+  glossary: [],
+  glossaryFlashcardsTitle: "Glossar-Karten zu diesem Block",
+};
+
+const AI_NATIVE_EN: CourseData = {
+  config: AI_NATIVE_EN_CONFIG,
+  blockMeta: {},
+  lessonData: {},
+  workshopQuestions: anEnWorkshop as unknown as QuizQuestion[],
+  glossary: [],
+  glossaryFlashcardsTitle: "Glossary cards for this module",
 };
 
 // ─── KI und Gesellschaft ────────────────────────────────────────────────────
@@ -207,42 +361,93 @@ const KI_UND_GESELLSCHAFT: CourseData = {
   blockMeta: {
     block_1: {
       title: "KI und Arbeit",
-      description: "Was sagen OECD und Bundesagentur wirklich? Ehrliche Bilanz, Amplifier-Modell und konkrete Handlungsoptionen.",
+      description:
+        "Ordne Befunde zu Automatisierung ein: Aufgaben statt ganzer Berufe, Datenbasis, Zeithorizont und konkrete Handlungsoptionen.",
       durationMinutes: 16,
     },
     block_2: {
       title: "Deepfakes erkennen",
-      description: "Wie synthetische Medien entstehen, drei kostenlose Prüfwerkzeuge und was du tust, wenn du einen Deepfake findest.",
+      description:
+        "Verstehe, wie synthetische Medien entstehen, und kombiniere Quellen-, Kontext- und Werkzeugprüfung.",
       durationMinutes: 14,
     },
     block_3: {
       title: "Ethik und Bias",
-      description: "COMPAS, Amazon und Buolamwini: wie Bias entsteht, drei Handlungsebenen und was du als Bürgerin oder Bürger tun kannst.",
+      description:
+        "Untersuche dokumentierte Bias-Fälle und trenne Probleme in Daten, Modellen, Entscheidungen und Verantwortlichkeit.",
       durationMinutes: 16,
     },
   },
   lessonData: {
-    block_1: kugBlock1 as { lessons: Lesson[] },
-    block_2: kugBlock2 as { lessons: Lesson[] },
-    block_3: kugBlock3 as { lessons: Lesson[] },
+    block_1: kugBlock1 as RawBlockContent,
+    block_2: kugBlock2 as RawBlockContent,
+    block_3: kugBlock3 as RawBlockContent,
   },
   workshopQuestions: kugWorkshop as unknown as QuizQuestion[],
+  glossary: [],
+  glossaryFlashcardsTitle: "Glossar-Karten zu diesem Block",
+};
+
+const KI_UND_GESELLSCHAFT_EN: CourseData = {
+  config: KI_UND_GESELLSCHAFT_EN_CONFIG,
+  blockMeta: {
+    block_1: {
+      title: "AI and work",
+      description:
+        "Separate changes to individual tasks from changes to entire occupations, examine the available evidence, and identify practical responses.",
+      durationMinutes: 16,
+    },
+    block_2: {
+      title: "Assessing deepfakes",
+      description:
+        "Understand how synthetic media is made, apply source and context checks, and decide what to do when media appears manipulated.",
+      durationMinutes: 14,
+    },
+    block_3: {
+      title: "Bias, ethics, and accountability",
+      description:
+        "Trace how bias enters data and decisions, examine documented cases, and identify action at individual, organizational, and public levels.",
+      durationMinutes: 16,
+    },
+  },
+  lessonData: {
+    block_1: kugEnBlock1 as RawBlockContent,
+    block_2: kugEnBlock2 as RawBlockContent,
+    block_3: kugEnBlock3 as RawBlockContent,
+  },
+  workshopQuestions: kugEnWorkshop as unknown as QuizQuestion[],
+  glossary: [],
+  glossaryFlashcardsTitle: "Glossary cards for this block",
 };
 
 // ─── Course registry ───────────────────────────────────────────
 
-const COURSES: Partial<Record<CourseSlug, CourseData>> = {
-  "ki-fuehrerschein": KI_FUEHRERSCHEIN,
-  "eu-ai-act-kurs": EU_AI_ACT_KURS,
-  "ai-native": AI_NATIVE,
-  "ki-und-gesellschaft": KI_UND_GESELLSCHAFT,
+const COURSES: Partial<
+  Record<CourseSlug, Partial<Record<Locale, CourseData>>>
+> = {
+  "ki-fuehrerschein": {
+    de: KI_FUEHRERSCHEIN,
+    en: KI_FUEHRERSCHEIN_EN,
+  },
+  "eu-ai-act-kurs": {
+    de: EU_AI_ACT_KURS,
+    en: EU_AI_ACT_KURS_EN,
+  },
+  "ai-native": { de: AI_NATIVE, en: AI_NATIVE_EN },
+  "ki-und-gesellschaft": {
+    de: KI_UND_GESELLSCHAFT,
+    en: KI_UND_GESELLSCHAFT_EN,
+  },
 };
 
-function course(courseSlug: CourseSlug): CourseData {
-  const data = COURSES[courseSlug];
+function course(courseSlug: CourseSlug, locale?: Locale): CourseData {
+  const contentLocale: Locale = locale ?? "de";
+  const data = COURSES[courseSlug]?.[contentLocale];
   if (!data) {
     throw new Error(
-      `Course "${courseSlug}" is not registered in the shared engine.`,
+      locale === undefined
+        ? `Course "${courseSlug}" is not registered in the shared engine.`
+        : `Course "${courseSlug}" has no audited "${locale}" content bundle registered.`,
     );
   }
   return data;
@@ -263,9 +468,11 @@ function glossaryFlashcardsWidget(
   courseSlug: CourseSlug,
   blockId: BlockId,
   lessonId: string,
+  locale?: Locale,
 ): Widget | null {
-  const terms = getGlossaryTerms(courseSlug, blockId);
+  const terms = getGlossaryTerms(courseSlug, blockId, locale);
   if (terms.length === 0) return null;
+  const data = course(courseSlug, locale);
   return {
     kind: "flashcards",
     placement: "end",
@@ -273,12 +480,27 @@ function glossaryFlashcardsWidget(
     props: {
       lessonId: `${courseSlug}:${lessonId}`,
       cpId: `glossar-${blockId}`,
-      title: "Glossar-Karten zu diesem Block",
+      title: data.glossaryFlashcardsTitle,
       cards: terms.map((t) => ({
-        term: t.english,
-        q: t.term,
+        term: locale === "en" ? t.term : t.english,
+        q: locale === "en" ? t.english : t.term,
         a: t.definition,
       })),
+      ...(locale === "en"
+        ? {
+            copy: {
+              kindLabel: "Cards",
+              revealHint: "Select to reveal",
+              backLabel: "Answer",
+              flipBackHint: "Select to return",
+              prevLabel: "Previous",
+              nextLabel: "Next",
+              emptyLabel: "No cards available.",
+              ariaLabelTemplate:
+                "Card {current} of {total}. Press Space or select to flip.",
+            },
+          }
+        : {}),
     },
   };
 }
@@ -293,12 +515,14 @@ function withGlossaryFlashcards(
   courseSlug: CourseSlug,
   blockId: BlockId,
   lessons: readonly Lesson[],
+  locale?: Locale,
 ): readonly Lesson[] {
   if (lessons.length === 0) return lessons;
   const widget = glossaryFlashcardsWidget(
     courseSlug,
     blockId,
     lessons[lessons.length - 1].id,
+    locale,
   );
   if (!widget) return lessons;
   const lastIndex = lessons.length - 1;
@@ -315,9 +539,12 @@ function withGlossaryFlashcards(
 
 // ─── Block + lesson queries ────────────────────────────────────
 
-export function getBlocks(courseSlug: CourseSlug): readonly BlockDefinition[] {
-  const data = course(courseSlug);
-  return data.config.blockIds.map((id, i) => {
+export function getBlocks(
+  courseSlug: CourseSlug,
+  locale?: Locale,
+): readonly BlockDefinition[] {
+  const data = course(courseSlug, locale);
+  return getCourseConfig(courseSlug, locale).blockIds.map((id, i) => {
     const meta = data.blockMeta[id];
     return {
       id,
@@ -329,6 +556,7 @@ export function getBlocks(courseSlug: CourseSlug): readonly BlockDefinition[] {
         courseSlug,
         id,
         data.lessonData[id]?.lessons ?? [],
+        locale,
       ),
     };
   });
@@ -337,44 +565,60 @@ export function getBlocks(courseSlug: CourseSlug): readonly BlockDefinition[] {
 export function getBlock(
   courseSlug: CourseSlug,
   blockId: BlockId,
+  locale?: Locale,
 ): BlockDefinition | undefined {
-  return getBlocks(courseSlug).find((b) => b.id === blockId);
+  return getBlocks(courseSlug, locale).find((b) => b.id === blockId);
 }
 
 export function getBlockLessons(
   courseSlug: CourseSlug,
   blockId: BlockId,
+  locale?: Locale,
 ): readonly Lesson[] {
   return withGlossaryFlashcards(
     courseSlug,
     blockId,
-    course(courseSlug).lessonData[blockId]?.lessons ?? [],
+    course(courseSlug, locale).lessonData[blockId]?.lessons ?? [],
+    locale,
   );
 }
 
-export function getAllLessons(courseSlug: CourseSlug): readonly Lesson[] {
-  const data = course(courseSlug);
-  return data.config.blockIds.flatMap((id) =>
-    withGlossaryFlashcards(courseSlug, id, data.lessonData[id]?.lessons ?? []),
+export function getAllLessons(
+  courseSlug: CourseSlug,
+  locale?: Locale,
+): readonly Lesson[] {
+  const data = course(courseSlug, locale);
+  return getCourseConfig(courseSlug, locale).blockIds.flatMap((id) =>
+    withGlossaryFlashcards(
+      courseSlug,
+      id,
+      data.lessonData[id]?.lessons ?? [],
+      locale,
+    ),
   );
 }
 
-export function getTotalLessonCount(courseSlug: CourseSlug): number {
-  return getAllLessons(courseSlug).length;
+export function getTotalLessonCount(
+  courseSlug: CourseSlug,
+  locale?: Locale,
+): number {
+  return getAllLessons(courseSlug, locale).length;
 }
 
 export function getBlockLessonCount(
   courseSlug: CourseSlug,
   blockId: BlockId,
+  locale?: Locale,
 ): number {
-  return getBlockLessons(courseSlug, blockId).length;
+  return getBlockLessons(courseSlug, blockId, locale).length;
 }
 
 export function getBlockLessonIds(
   courseSlug: CourseSlug,
   blockId: BlockId,
+  locale?: Locale,
 ): readonly string[] {
-  return getBlockLessons(courseSlug, blockId).map((l) => l.id);
+  return getBlockLessons(courseSlug, blockId, locale).map((l) => l.id);
 }
 
 // ─── Workshop quiz queries ─────────────────────────────────────
@@ -385,8 +629,9 @@ export function getBlockLessonIds(
 
 export function getWorkshopQuestions(
   courseSlug: CourseSlug,
+  locale?: Locale,
 ): readonly QuizQuestion[] {
-  return course(courseSlug).workshopQuestions;
+  return course(courseSlug, locale).workshopQuestions;
 }
 
 // ─── Block freshness queries ─────────────────────────────────────────────────
@@ -401,36 +646,7 @@ export interface BlockFreshness {
   readonly riskClass: string;
 }
 
-type RawBlockJson = {
-  readonly lastReviewed?: string;
-  readonly nextReview?: string;
-  readonly riskClass?: string;
-};
-
-const BLOCK_FRESHNESS: Partial<Record<CourseSlug, Partial<Record<BlockId, BlockFreshness>>>> = {
-  "ki-fuehrerschein": {
-    block_1: extractFreshness(kfBlock1 as RawBlockJson),
-    block_2: extractFreshness(kfBlock2 as RawBlockJson),
-    block_3: extractFreshness(kfBlock3 as RawBlockJson),
-    block_4: extractFreshness(kfBlock4 as RawBlockJson),
-    block_5: extractFreshness(kfBlock5 as RawBlockJson),
-  },
-  "eu-ai-act-kurs": {
-    block_1: extractFreshness(eaBlock1 as RawBlockJson),
-    block_2: extractFreshness(eaBlock2 as RawBlockJson),
-    block_3: extractFreshness(eaBlock3 as RawBlockJson),
-    block_4: extractFreshness(eaBlock4 as RawBlockJson),
-    block_5: extractFreshness(eaBlock5 as RawBlockJson),
-    block_6: extractFreshness(eaBlock6 as RawBlockJson),
-  },
-  "ki-und-gesellschaft": {
-    block_1: extractFreshness(kugBlock1 as RawBlockJson),
-    block_2: extractFreshness(kugBlock2 as RawBlockJson),
-    block_3: extractFreshness(kugBlock3 as RawBlockJson),
-  },
-};
-
-function extractFreshness(raw: RawBlockJson): BlockFreshness {
+function extractFreshness(raw: RawBlockContent): BlockFreshness {
   return {
     lastReviewed: raw.lastReviewed ?? "",
     nextReview: raw.nextReview ?? "",
@@ -441,16 +657,19 @@ function extractFreshness(raw: RawBlockJson): BlockFreshness {
 export function getBlockFreshness(
   courseSlug: CourseSlug,
   blockId: BlockId,
+  locale?: Locale,
 ): BlockFreshness | null {
-  return BLOCK_FRESHNESS[courseSlug]?.[blockId] ?? null;
+  const raw = course(courseSlug, locale).lessonData[blockId];
+  return raw ? extractFreshness(raw) : null;
 }
 
 /** Alias retained for block-page-shell.tsx compatibility. */
 export function getBlockFreshnessMeta(
   courseSlug: CourseSlug,
   blockId: BlockId,
+  locale?: Locale,
 ): BlockFreshness | null {
-  return getBlockFreshness(courseSlug, blockId);
+  return getBlockFreshness(courseSlug, blockId, locale);
 }
 
 // ─── Glossary queries (shared course architecture + 12) ─────────────────
@@ -460,11 +679,6 @@ export function getBlockFreshnessMeta(
 // in here with zero call-site churn. Courses without a glossary return an
 // empty list.
 
-const GLOSSARIES: Partial<Record<CourseSlug, readonly GlossaryEntry[]>> = {
-  "ki-fuehrerschein": kfGlossary as unknown as GlossaryEntry[],
-  "eu-ai-act-kurs": eaGlossary as unknown as GlossaryEntry[],
-};
-
 /**
  * Return the glossary terms for a course, optionally filtered to those tagged
  * with a given block via `relatedBlocks`. Returns a stable, term-sorted copy
@@ -473,14 +687,20 @@ const GLOSSARIES: Partial<Record<CourseSlug, readonly GlossaryEntry[]>> = {
 export function getGlossaryTerms(
   courseSlug: CourseSlug,
   blockId?: BlockId,
+  locale?: Locale,
 ): readonly GlossaryEntry[] {
-  const all = GLOSSARIES[courseSlug] ?? [];
+  const all = course(courseSlug, locale).glossary;
   const filtered = blockId
     ? all.filter((t) => t.relatedBlocks?.includes(blockId))
     : all;
-  return [...filtered].sort((a, b) => a.term.localeCompare(b.term, "de"));
+  return [...filtered].sort((a, b) =>
+    a.term.localeCompare(b.term, locale ?? "de"),
+  );
 }
 
-export function getGlossaryTermCount(courseSlug: CourseSlug): number {
-  return (GLOSSARIES[courseSlug] ?? []).length;
+export function getGlossaryTermCount(
+  courseSlug: CourseSlug,
+  locale?: Locale,
+): number {
+  return course(courseSlug, locale).glossary.length;
 }

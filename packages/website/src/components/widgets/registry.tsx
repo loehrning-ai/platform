@@ -3,6 +3,9 @@
 import { lazy, Suspense, type ComponentType } from "react";
 import type { Widget, WidgetKind } from "@/lib/widgets/types";
 import { isWidgetKind, isWidgetPlacement } from "@/lib/widgets/types";
+import type { Locale } from "@/lib/i18n/locale";
+import { DemoLocaleProvider } from "@/components/demos/demo-locale";
+import { MotionProvider } from "@/components/motion-provider";
 
 /**
  * Widget registry — maps a WidgetKind to a lazy-loaded component.
@@ -220,14 +223,36 @@ const REGISTRY: Record<WidgetKind, () => Promise<{ default: WidgetComponent }>> 
     })),
 } as const satisfies Record<WidgetKind, () => Promise<{ default: WidgetComponent }>>;
 
-const lazyCache = new Map<WidgetKind, ComponentType<Record<string, unknown>>>();
+const ENGLISH_DEMO_REGISTRY: Partial<
+  Record<WidgetKind, () => Promise<{ default: WidgetComponent }>>
+> = {
+  "demo-chat-rag": () => import("@/components/demos/rag-vertragsassistent-demo"),
+  "demo-compliance": () => import("@/components/demos/prompt-scanner-demo"),
+  "demo-roi": () => import("@/components/demos/roi-rechner-demo"),
+  "demo-doc": () => import("@/components/demos/rechnung-zu-sap-demo"),
+  "demo-agent": () => import("@/components/demos/agent-pipeline-demo"),
+  "demo-finetune": () => import("@/components/demos/fine-tune-playground-demo"),
+  "demo-workflow": () => import("@/components/demos/n8n-supply-chain-demo"),
+  "demo-maturity": () => import("@/components/demos/roi-rechner-demo"),
+  "demo-observ": () => import("@/components/demos/llm-observability-demo"),
+  "demo-excel": () => import("@/components/demos/excel-demo"),
+  "demo-word": () => import("@/components/demos/word-demo"),
+  "demo-logistics": () => import("@/components/demos/n8n-supply-chain-demo"),
+};
 
-function getLazyComponent(kind: WidgetKind): ComponentType<Record<string, unknown>> {
-  const cached = lazyCache.get(kind);
+const lazyCache = new Map<string, ComponentType<Record<string, unknown>>>();
+
+function getLazyComponent(
+  kind: WidgetKind,
+  locale: Locale,
+): ComponentType<Record<string, unknown>> {
+  const cacheKey = `${locale}:${kind}`;
+  const cached = lazyCache.get(cacheKey);
   if (cached) return cached;
-  const loader = REGISTRY[kind];
+  const loader =
+    locale === "en" ? ENGLISH_DEMO_REGISTRY[kind] ?? REGISTRY[kind] : REGISTRY[kind];
   const Component = lazy(loader);
-  lazyCache.set(kind, Component);
+  lazyCache.set(cacheKey, Component);
   return Component;
 }
 
@@ -237,9 +262,11 @@ function getLazyComponent(kind: WidgetKind): ComponentType<Record<string, unknow
 export function RenderWidget({
   kind,
   props = {},
+  locale = "de",
 }: {
   readonly kind: string;
   readonly props?: Readonly<Record<string, unknown>>;
+  readonly locale?: Locale;
 }) {
   if (!isWidgetKind(kind)) {
      
@@ -259,10 +286,14 @@ export function RenderWidget({
     }
     return null;
   }
-  const Component = getLazyComponent(kind);
+  const Component = getLazyComponent(kind, locale);
   return (
-    <Suspense fallback={<WidgetSkeleton />}>
-      <Component {...props} />
+    <Suspense fallback={<WidgetSkeleton locale={locale} />}>
+      <DemoLocaleProvider locale={locale}>
+        <MotionProvider>
+          <Component {...props} locale={locale} />
+        </MotionProvider>
+      </DemoLocaleProvider>
     </Suspense>
   );
 }
@@ -289,10 +320,10 @@ export function resolveWidgetsForSlot(
 }
 
 /** Light skeleton while the lazy component loads. */
-function WidgetSkeleton() {
+function WidgetSkeleton({ locale }: { readonly locale: Locale }) {
   return (
     <div
-      aria-label="Widget wird geladen"
+      aria-label={locale === "en" ? "Widget is loading" : "Widget wird geladen"}
       className="h-[120px] w-full animate-pulse border border-border bg-card/40"
     />
   );

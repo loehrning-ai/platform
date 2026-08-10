@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 
 const UserProgressSyncRuntime = dynamic(
   () =>
@@ -15,5 +16,11 @@ const UserProgressSyncRuntime = dynamic(
  * safety, but its storage, merge, and network machinery is not first-load JS.
  */
 export function UserProgressSync() {
-  return <UserProgressSyncRuntime />;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  return mounted ? <UserProgressSyncRuntime /> : null;
 }

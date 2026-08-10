@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { DEMO } from "@/lib/demo-tokens";
 import { DEMO_HEIGHT, usePrefersReducedMotion, useVisibleAutoplay } from "./demo-utils";
+import { useDemoLocale } from "./demo-locale";
 
 interface Agent {
   readonly id: string;
@@ -43,6 +44,13 @@ const AGENTS: readonly Agent[] = [
   },
 ];
 
+const AGENTS_EN: readonly Agent[] = [
+  { id: "scout", n: "Scout", r: "Research", model: "Haiku 4.5", task: "Searches a sample archive for relevant prior cases" },
+  { id: "analyst", n: "Analyst", r: "Synthesis", model: "Opus 4.5", task: "Combines claims and rates the available evidence" },
+  { id: "critic", n: "Critic", r: "Red team", model: "Sonnet 4.6", task: "Identifies weak claims and counterarguments" },
+  { id: "writer", n: "Editor", r: "Output", model: "Sonnet 4.6", task: "Writes a structured memo for management review" },
+];
+
 // Tint per agent index for log color-coding
 const AGENT_TINT: readonly string[] = [
   "#f7b267", // Scout, warm sand
@@ -76,6 +84,23 @@ const SCRIPT: readonly [number, string, string, number][] = [
   [3, "Redakteur", "✓ Memo fertig (2,4k Tokens, 18 Quellen)", 4800],
 ];
 
+const SCRIPT_EN: readonly [number, string, string, number][] = [
+  [0, "Scout", "Starting archive search…", 200],
+  [0, "Scout", "42 documents found; retaining 8", 600],
+  [0, "Scout → Analyst", "Handoff: 8 documents and context", 1000],
+  [1, "Analyst", "Extracting 4 core claims", 1400],
+  [1, "Analyst", "Evidence score: 0.82 / 0.67 / 0.91 / 0.54", 1700],
+  [1, "Analyst → Critic", "Handoff: claims and evidence matrix", 2000],
+  [2, "Critic", "Checking claim 3: counterclaim identified", 2400],
+  [2, "Critic", "Further research required for claim 4", 2700],
+  [2, "Critic → Scout", "Request: industry comparison for claim 4", 3000],
+  [0, "Scout", "Adding 3 further sources", 3400],
+  [0, "Scout → Editor", "Handoff: final evidence set", 3700],
+  [3, "Editor", "Structuring a four-section memo", 4000],
+  [3, "Editor", "Reviewing wording and citations", 4400],
+  [3, "Editor", "Memo complete (2.4k tokens, 18 sources)", 4800],
+];
+
 // Deterministic timestamp base so SSR/CSR match: 10:42:15.000
 const TS_BASE_MS = 10 * 3600_000 + 42 * 60_000 + 15_000;
 
@@ -89,6 +114,9 @@ function fmtTs(offsetMs: number): string {
 }
 
 export default function AgentPipelineDemo() {
+  const { locale, text } = useDemoLocale();
+  const agents = locale === "de" ? AGENTS : AGENTS_EN;
+  const script = locale === "de" ? SCRIPT : SCRIPT_EN;
   const reduced = usePrefersReducedMotion();
   const { ref, visible } = useVisibleAutoplay<HTMLDivElement>();
   const [active, setActive] = useState(-1);
@@ -102,7 +130,7 @@ export default function AgentPipelineDemo() {
 
   useEffect(() => {
     if (reduced) {
-      setLogs(SCRIPT.map(([ag, src, t, delay], id) => ({ id, ag, src, t, ts: fmtTs(delay) })));
+      setLogs(script.map(([ag, src, t, delay], id) => ({ id, ag, src, t, ts: fmtTs(delay) })));
       setDone(true);
       return;
     }
@@ -110,7 +138,7 @@ export default function AgentPipelineDemo() {
     setActive(0);
     setLogs([]);
     setDone(false);
-    const timers = SCRIPT.map(([ag, src, t, delay], i) =>
+    const timers = script.map(([ag, src, t, delay], i) =>
       setTimeout(() => {
         setActive(ag);
         setLogs((l) => [...l, { id: i, ag, src, t, ts: fmtTs(delay) }]);
@@ -128,12 +156,14 @@ export default function AgentPipelineDemo() {
       clearTimeout(endT);
       clearTimeout(restart);
     };
-  }, [visible, reduced, done]);
+  }, [visible, reduced, done, script]);
 
   return (
     <div
       ref={ref}
       data-demo-id="agent-pipeline"
+      role="region"
+      aria-label={text("Aufgezeichnete Agenten-Pipeline", "Recorded agent pipeline")}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -173,7 +203,7 @@ export default function AgentPipelineDemo() {
             fontWeight: 700,
           }}
         >
-          Multi-Agent Workflow
+          {text("Multi-Agent Workflow", "Multi-agent workflow")}
         </div>
         <h2
           style={{
@@ -184,7 +214,10 @@ export default function AgentPipelineDemo() {
             color: DEMO.kalk,
           }}
         >
-          Vier Agenten. <span style={{ color: "var(--color-brand-orange)" }}>Ein Memo.</span>
+          {text("Vier Agenten.", "Four agents.")}{" "}
+          <span style={{ color: "var(--color-brand-orange)" }}>
+            {text("Ein Memo.", "One memo.")}
+          </span>
         </h2>
       </div>
 
@@ -197,7 +230,7 @@ export default function AgentPipelineDemo() {
         }}
         className="agent-pipeline-grid"
       >
-        {AGENTS.map((a, i) => {
+        {agents.map((a, i) => {
           const activeCard = active === i;
           const inactiveTextBase = "rgba(243,240,233,0.6)";
           return (
@@ -216,6 +249,7 @@ export default function AgentPipelineDemo() {
                 borderLeft: `1px solid ${activeCard ? "rgba(249,115,22,0.6)" : "rgba(243,240,233,0.14)"}`,
                 transition: "background 240ms, border-color 240ms",
                 position: "relative",
+                minWidth: 0,
                 animation:
                   activeCard && !reduced
                     ? "agent-pipeline-pulse 1.4s ease-in-out infinite"
@@ -280,6 +314,7 @@ export default function AgentPipelineDemo() {
                   lineHeight: 1.4,
                   marginTop: 6,
                   color: activeCard ? "rgba(243,240,233,0.88)" : "rgba(243,240,233,0.65)",
+                  overflowWrap: "anywhere",
                 }}
               >
                 {a.task}
@@ -346,12 +381,12 @@ export default function AgentPipelineDemo() {
                 fontVariantNumeric: "tabular-nums",
               }}
             >
-              {String(logs.length).padStart(2, "0")} EREIGNISSE
+              {String(logs.length).padStart(2, "0")} {text("EREIGNISSE", "EVENTS")}
             </span>
           </div>
           {logs.length === 0 && (
             <div style={{ color: "rgba(243,240,233,0.45)" }}>
-              // warten auf pipeline start
+              // {text("warten auf pipeline start", "waiting for pipeline start")}
               <span
                 aria-hidden
                 style={{
@@ -373,6 +408,7 @@ export default function AgentPipelineDemo() {
                 key={l.id}
                 style={{
                   display: "flex",
+                  flexWrap: "wrap",
                   gap: 6,
                   padding: "2px 0",
                   color: "rgba(243,240,233,0.85)",
@@ -393,7 +429,7 @@ export default function AgentPipelineDemo() {
                 >
                   {l.src}
                 </span>
-                <span style={{ minWidth: 0 }}>{l.t}</span>
+                <span style={{ minWidth: 0, flex: "1 1 140px", overflowWrap: "anywhere" }}>{l.t}</span>
               </div>
             );
           })}
@@ -432,7 +468,10 @@ export default function AgentPipelineDemo() {
               }}
             >
               <span>
-                → MEMO ERSCHEINT NACH PIPELINE-ABSCHLUSS
+                {text(
+                  "→ MEMO ERSCHEINT NACH PIPELINE-ABSCHLUSS",
+                  "→ MEMO APPEARS AFTER THE PIPELINE FINISHES",
+                )}
                 <span
                   aria-hidden
                   style={{
@@ -469,7 +508,7 @@ export default function AgentPipelineDemo() {
                     fontWeight: 700,
                   }}
                 >
-                  ◆ Memo · Geschäftsführung
+                  ◆ {text("Memo · Geschäftsführung", "Memo · management review")}
                 </div>
                 <span
                   style={{
@@ -480,7 +519,7 @@ export default function AgentPipelineDemo() {
                     fontVariantNumeric: "tabular-nums",
                   }}
                 >
-                  2,4k TOKENS · 18 QUELLEN
+                  {text("2,4k TOKENS · 18 QUELLEN", "2.4k TOKENS · 18 SOURCES")}
                 </span>
               </div>
               <h3
@@ -493,9 +532,12 @@ export default function AgentPipelineDemo() {
                   color: DEMO.kalk,
                 }}
               >
-                Empfehlung:{" "}
+                {text("Empfehlung:", "Recommendation:")}{" "}
                 <span style={{ color: "var(--color-brand-orange)" }}>
-                  KI-Einführung in 2 Phasen, Start Q3/2026.
+                  {text(
+                    "KI-Einführung in 2 Phasen, Start Q3/2026.",
+                    "Two-phase AI rollout, starting Q3 2026.",
+                  )}
                 </span>
               </h3>
               <div
@@ -510,16 +552,25 @@ export default function AgentPipelineDemo() {
                 }}
               >
                 <MemoSection
-                  title="§1 · KERNTHESE"
-                  body="3 von 4 Thesen tragen. Evidenz-Score Ø 0,84, robust genug für Vorstands-Vorlage."
+                  title={text("§1 · KERNTHESE", "§1 · CORE CLAIM")}
+                  body={text(
+                    "Drei von vier Thesen werden durch die Beispielquellen gestützt. Eine These bleibt offen.",
+                    "The sample sources support three of four claims. One claim remains unresolved.",
+                  )}
                 />
                 <MemoSection
-                  title="§2 · RISIKEN"
-                  body="These 3 benötigt Branchenvergleich (vom Kritiker markiert, durch Scout nachgereicht)."
+                  title={text("§2 · RISIKEN", "§2 · RISKS")}
+                  body={text(
+                    "These 3 benötigt einen Branchenvergleich. Der Kritiker markiert die Lücke, der Scout ergänzt Quellen.",
+                    "Claim 3 requires an industry comparison. The critic marks the gap and the scout adds sources.",
+                  )}
                 />
                 <MemoSection
-                  title="§3 · NÄCHSTE SCHRITTE"
-                  body="Phase 1: Excel-Add-In, 2 Abteilungen · Phase 2: Multi-Agent-Pipeline, Q4. Budget: 180.000 €."
+                  title={text("§3 · NÄCHSTE SCHRITTE", "§3 · NEXT STEPS")}
+                  body={text(
+                    "Phase 1: begrenzter Tabellenpilot in zwei Teams. Phase 2 nur nach Ergebnis- und Risikoprüfung.",
+                    "Phase 1: a bounded spreadsheet pilot in two teams. Phase 2 only after outcome and risk review.",
+                  )}
                 />
               </div>
             </div>

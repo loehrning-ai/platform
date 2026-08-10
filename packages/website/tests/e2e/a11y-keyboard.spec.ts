@@ -8,7 +8,7 @@ import { test, expect, type Page } from "@playwright/test";
  *
  * Only features verified in source are asserted: layout.tsx ships the
  * <a href="#main-content"> skip-link (sr-only -> focus:not-sr-only, first
- * focusable in <body>); nav.tsx gives the Kurse trigger a focus-visible:ring-2
+ * focusable in <body>); nav.tsx gives the Lernen trigger a focus-visible:ring-2
  * box-shadow ring, and the mobile toggle is a native <button>
  * (aria-controls="mobile-menu") whose Escape handler closes the dialog and
  * restores focus. Viewports are forced per test for determinism on BOTH the
@@ -83,14 +83,21 @@ test.describe("keyboard: skip-link and focus visibility", () => {
       // Focus-visibility (WCAG 2.4.7) via real Tab traversal is asserted on
       // Chromium only. WebKit's DEFAULT Tab policy excludes links AND buttons
       // from the tab order (it stops on text fields unless the OS "Full Keyboard
-      // Access" setting is on), so a synthetic Tab never reaches the Kurse
+      // Access" setting is on), so a synthetic Tab never reaches the Lernen
       // <button> there - it cannot exercise this path at all, and forcing it
       // would assert a browser policy, not the site. The ring itself is
       // correctly declared (focus-visible:ring-2 in nav.tsx) and verified here
       // on Chromium's real traversal.
       if (browserName === "chromium") {
-        const trigger = await tabUntilAttr(page, "aria-controls", "akademie-nav-menu");
-        expect(trigger, "Tab should reach the Kurse dropdown trigger").not.toBeNull();
+        const trigger = await tabUntilAttr(
+          page,
+          "aria-controls",
+          "lernen-nav-menu",
+        );
+        expect(
+          trigger,
+          "Tab should reach the Lernen dropdown trigger",
+        ).not.toBeNull();
         expect(
           trigger!.focusVisible,
           `focus needs an outline or ring (boxShadow=${trigger!.boxShadow})`,

@@ -1,0 +1,101 @@
+"use client";
+
+import { useEffect, useState, type ReactNode } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { LessonShell } from "@/components/course/lesson-shell";
+import { DefChapterSidebar } from "@/components/data-engineering-fundamentals/def-chapter-sidebar";
+import { getDataEngineeringFundamentalsCourseCopy } from "@/lib/data-engineering-fundamentals/course-copy";
+import {
+  isDefChapterId,
+  type ChapterMeta,
+} from "@/lib/data-engineering-fundamentals/types";
+import { isInteractiveShortcutTarget } from "@/lib/a11y/keyboard-shortcuts";
+import type { Locale } from "@/lib/i18n/locale";
+import { technicalCourseHref } from "@/lib/technical-courses/routes";
+import "@/components/data-engineering-fundamentals/de-course.css";
+
+export function DefChapterLayoutClient({
+  children,
+  locale,
+  chapters,
+}: {
+  readonly children: ReactNode;
+  readonly locale: Locale;
+  readonly chapters: readonly ChapterMeta[];
+}) {
+  const params = useParams<{ chapterId: string }>();
+  const router = useRouter();
+  const [navOpen, setNavOpen] = useState(false);
+  const copy = getDataEngineeringFundamentalsCourseCopy(locale).reader;
+
+  const currentId = isDefChapterId(params.chapterId) ? params.chapterId : null;
+  const currentIndex = currentId
+    ? chapters.findIndex((chapter) => chapter.id === currentId)
+    : -1;
+  const prev = currentIndex > 0 ? chapters[currentIndex - 1] : null;
+  const next =
+    currentIndex >= 0 && currentIndex < chapters.length - 1
+      ? chapters[currentIndex + 1]
+      : null;
+
+  useEffect(() => {
+    function handleKey(event: KeyboardEvent) {
+      if (
+        event.defaultPrevented ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.altKey ||
+        isInteractiveShortcutTarget(event.target)
+      ) {
+        return;
+      }
+      if (event.key === "ArrowLeft" && prev) {
+        event.preventDefault();
+        router.push(
+          technicalCourseHref("data-engineering-fundamentals", locale, {
+            kind: "chapter",
+            chapterId: prev.id,
+          }),
+        );
+      } else if (event.key === "ArrowRight" && next) {
+        event.preventDefault();
+        router.push(
+          technicalCourseHref("data-engineering-fundamentals", locale, {
+            kind: "chapter",
+            chapterId: next.id,
+          }),
+        );
+      } else if (event.key === "j") {
+        window.scrollBy({ top: 120, behavior: "smooth" });
+      } else if (event.key === "k") {
+        window.scrollBy({ top: -120, behavior: "smooth" });
+      }
+    }
+
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [locale, next, prev, router]);
+
+  return (
+    <div className="de-course min-w-0">
+      <LessonShell
+        navOpen={navOpen}
+        onNavOpenChange={setNavOpen}
+        navLabel={copy.navLabel}
+        navId="def-mobile-chapter-nav"
+        openNavLabel={copy.openNavLabel}
+        closeNavLabel={copy.closeNavLabel}
+        sidebar={
+          <DefChapterSidebar
+            activeId={currentId}
+            locale={locale}
+            chapters={chapters}
+            onNavigate={() => setNavOpen(false)}
+          />
+        }
+      >
+        {children}
+      </LessonShell>
+    </div>
+  );
+}

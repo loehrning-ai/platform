@@ -11,6 +11,7 @@ import {
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { books } from "@/lib/books";
 import { demos } from "@/lib/demos";
+import { WORKSHOPS } from "@/lib/workshops";
 
 describe("learning graph", () => {
   it("validates without orphan nodes or broken edges", () => {
@@ -19,11 +20,34 @@ describe("learning graph", () => {
     expect(result.ok).toBe(true);
   });
 
-  it("covers every native course, book, and demo", () => {
+  it("covers every native course, book, demo, and workshop", () => {
     const ids = new Set(LEARNING_NODES.map((node) => node.id));
     for (const course of COURSE_CATALOG) expect(ids.has(`course:${course.slug}`)).toBe(true);
     for (const book of books) expect(ids.has(`book:${book.id}`)).toBe(true);
     for (const demo of demos) expect(ids.has(`demo:${demo.slug}`)).toBe(true);
+    for (const workshop of WORKSHOPS) {
+      expect(ids.has(`workshop:${workshop.slug}`)).toBe(true);
+    }
+  });
+
+  it("publishes workshops as German applied learning with an explicit practice edge", () => {
+    for (const workshop of WORKSHOPS) {
+      const node = LEARNING_NODES.find(
+        (candidate) => candidate.id === `workshop:${workshop.slug}`,
+      );
+      expect(node?.type).toBe("workshop");
+      expect(node?.route).toBe(`/workshops/${workshop.slug}`);
+      expect(node?.language).toBe("de");
+      expect(node?.stage).toBe("anwenden");
+      expect(node?.evidenceMode).toBe("synthetic");
+      expect(
+        LEARNING_EDGES.some(
+          (edge) =>
+            edge.from === `workshop:${workshop.slug}` &&
+            edge.type === "practice_for",
+        ),
+      ).toBe(true);
+    }
   });
 
   it("maps every catalog course back to its course context", () => {

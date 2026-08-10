@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Panel } from "@/components/data-science/shared/primitives";
 import { inkOf, mulberry32, randn, round } from "@/lib/data-science/sim-kit";
+import { useDataScienceLocale } from "../locale-context";
 
 // ─── ConfoundingSimulator ──────────────────────────
 //
@@ -75,6 +76,27 @@ const SCENARIOS: Record<ScenarioKey, Scenario> = {
     },
   },
 };
+const SCENARIO_COPY_DE: Readonly<
+  Record<
+    ScenarioKey,
+    Pick<Scenario, "label" | "xLab" | "yLab" | "zLab" | "zGroups">
+  >
+> = {
+  icecream: {
+    label: "Eisverkauf und Ertrinken",
+    xLab: "Eisverkauf (Einheiten/Tag)",
+    yLab: "Todesfälle durch Ertrinken / Woche",
+    zLab: "Temperatur (°C)",
+    zGroups: ["Kühl  (10–17°C)", "Warm  (18–24°C)", "Heiß   (25–32°C)"],
+  },
+  reading: {
+    label: "Schuhgröße und Lesen",
+    xLab: "Schuhgröße (EU)",
+    yLab: "Lesewert (0–100)",
+    zLab: "Altersgruppe",
+    zGroups: ["Alter 6–8", "Alter 9–11", "Alter 12–14"],
+  },
+};
 
 function pearsonR(xs: readonly number[], ys: readonly number[]): number {
   const n = xs.length;
@@ -98,10 +120,12 @@ const H = 260;
 const PAD = { l: 48, r: 16, t: 16, b: 40 };
 
 export function ConfoundingSimulator() {
+  const { locale, text } = useDataScienceLocale();
   const [scenario, setScenario] = useState<ScenarioKey>("icecream");
   const [revealed, setRevealed] = useState(false);
 
   const sc = SCENARIOS[scenario];
+  const display = locale === "de" ? SCENARIO_COPY_DE[scenario] : sc;
   const pts = useMemo(() => {
     const rng = mulberry32(scenario === "icecream" ? 42 : 77);
     return sc.generate(rng);
@@ -112,7 +136,10 @@ export function ConfoundingSimulator() {
   const rAll = pearsonR(xs, ys);
   const rPerGroup = [0, 1, 2].map((g) => {
     const sub = pts.filter((p) => p.z === g);
-    return pearsonR(sub.map((p) => p.x), sub.map((p) => p.y));
+    return pearsonR(
+      sub.map((p) => p.x),
+      sub.map((p) => p.y),
+    );
   });
 
   const xMin = Math.min(...xs);
@@ -122,7 +149,8 @@ export function ConfoundingSimulator() {
   const xRange = xMax - xMin || 1;
   const yRange = yMax - yMin || 1;
   const px = (v: number) => PAD.l + ((v - xMin) / xRange) * (W - PAD.l - PAD.r);
-  const py = (v: number) => H - PAD.b - ((v - yMin) / yRange) * (H - PAD.t - PAD.b);
+  const py = (v: number) =>
+    H - PAD.b - ((v - yMin) / yRange) * (H - PAD.t - PAD.b);
 
   const mxAll = xs.reduce((a, b) => a + b, 0) / xs.length;
   const myAll = ys.reduce((a, b) => a + b, 0) / ys.length;
@@ -141,15 +169,21 @@ export function ConfoundingSimulator() {
 
   return (
     <Panel
-      eyebrow="SIMULATION"
-      title="Confounding · the lurking variable"
-      meta={sc.label}
-      caption="Both variables really do correlate, they share a common cause. Stratify by the confounder and each group's correlation collapses toward zero."
+      eyebrow={text("SIMULATION", "SIMULATION")}
+      title={text(
+        "Confounding · the lurking variable",
+        "Confounding · die verborgene Variable",
+      )}
+      meta={display.label}
+      caption={text(
+        "The seeded generator makes group membership shift both variables, so the aggregate association is larger than the within-group associations. This demonstrates one known confounder; stratification does not establish that a real dataset has no residual confounding.",
+        "Der initialisierte Generator verschiebt über die Gruppenzugehörigkeit beide Variablen, daher ist die Gesamtassoziation größer als die Assoziationen innerhalb der Gruppen. Das zeigt einen bekannten Confounder; Stratifizierung belegt bei realen Daten keine vollständige Entzerrung.",
+      )}
     >
       <div className="sim-row" style={{ gridTemplateColumns: "220px 1fr" }}>
         <div className="sim-controls">
           <div className="sim-ctrl">
-            <label>Scenario</label>
+            <label>{text("Scenario", "Szenario")}</label>
             <div className="seg" style={{ flexDirection: "column", gap: 4 }}>
               {Object.entries(SCENARIOS).map(([k, v]) => (
                 <button
@@ -161,7 +195,9 @@ export function ConfoundingSimulator() {
                     setRevealed(false);
                   }}
                 >
-                  {v.label}
+                  {locale === "de"
+                    ? SCENARIO_COPY_DE[k as ScenarioKey].label
+                    : v.label}
                 </button>
               ))}
             </div>
@@ -172,45 +208,101 @@ export function ConfoundingSimulator() {
               className={`btn btn-sm ${revealed ? "btn-primary" : ""}`}
               onClick={() => setRevealed((r) => !r)}
             >
-              {revealed ? "✓ Confounder visible" : "Reveal confounder"}
+              {revealed
+                ? text("✓ Confounder visible", "✓ Confounder sichtbar")
+                : text("Reveal confounder", "Confounder anzeigen")}
             </button>
           </div>
-          <div className="sim-stats" style={{ marginTop: 12, gridTemplateColumns: "1fr" }}>
+          <div
+            className="sim-stats"
+            style={{ marginTop: 12, gridTemplateColumns: "1fr" }}
+          >
             <div>
-              <div className="k">OVERALL r</div>
-              <div className="v" style={{ fontSize: 24, color: "var(--magenta-ink)" }}>
+              <div className="k">{text("OVERALL r", "GESAMT r")}</div>
+              <div
+                className="v"
+                style={{ fontSize: 24, color: "var(--magenta-ink)" }}
+              >
                 {round(rAll, 2)}
               </div>
-              <div className="sub">looks causal!</div>
+              <div className="sub">{text("looks causal!", "wirkt kausal")}</div>
             </div>
             {revealed && (
               <div style={{ marginTop: 10 }}>
                 {rPerGroup.map((r, g) => (
-                  <div key={g} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                    <span style={{ fontSize: 11, color: inkOf(sc.zColors[g]), fontFamily: "'JetBrains Mono',monospace" }}>
-                      {sc.zGroups[g]}
+                  <div
+                    key={g}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginBottom: 4,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: 11,
+                        color: inkOf(sc.zColors[g]),
+                        fontFamily: "'JetBrains Mono',monospace",
+                      }}
+                    >
+                      {display.zGroups[g]}
                     </span>
-                    <span style={{ fontSize: 13, fontFamily: "'JetBrains Mono',monospace", color: "var(--ink-3)" }}>
+                    <span
+                      style={{
+                        fontSize: 13,
+                        fontFamily: "'JetBrains Mono',monospace",
+                        color: "var(--ink-3)",
+                      }}
+                    >
                       r = {round(r, 2)}
                     </span>
                   </div>
                 ))}
                 <div className="sub" style={{ marginTop: 6 }}>
-                  within-group r ≈ 0
+                  {text("within-group r ≈ 0", "innerhalb der Gruppe r ≈ 0")}
                 </div>
               </div>
             )}
           </div>
-          <p className="prose" style={{ fontSize: 11.5, marginTop: 10, color: "var(--ink-3)" }}>
-            {sc.zLab} drives both axes. Remove its influence and the correlation vanishes.
+          <p
+            className="prose"
+            style={{ fontSize: 11.5, marginTop: 10, color: "var(--ink-3)" }}
+          >
+            {display.zLab}{" "}
+            {text(
+              "drives both axes. Remove its influence and the correlation vanishes.",
+              "beeinflusst beide Achsen. Wird dieser Einfluss entfernt, verschwindet die Korrelation.",
+            )}
           </p>
         </div>
         <div className="plot-wrap">
           <svg viewBox={`0 0 ${W} ${H}`}>
-            <line x1={PAD.l} y1={H - PAD.b} x2={W - PAD.r} y2={H - PAD.b} stroke="#4A4540" strokeWidth="1" />
-            <line x1={PAD.l} y1={PAD.t} x2={PAD.l} y2={H - PAD.b} stroke="#4A4540" strokeWidth="1" />
-            <text x={W / 2} y={H - 4} textAnchor="middle" fontSize="10" fill="#6A6270" fontFamily="'JetBrains Mono',monospace">
-              {sc.xLab}
+            <line
+              x1={PAD.l}
+              y1={H - PAD.b}
+              x2={W - PAD.r}
+              y2={H - PAD.b}
+              stroke="#4A4540"
+              strokeWidth="1"
+            />
+            <line
+              x1={PAD.l}
+              y1={PAD.t}
+              x2={PAD.l}
+              y2={H - PAD.b}
+              stroke="#4A4540"
+              strokeWidth="1"
+            />
+            <text
+              x={W / 2}
+              y={H - 4}
+              textAnchor="middle"
+              fontSize="10"
+              fill="#6A6270"
+              fontFamily="'JetBrains Mono',monospace"
+            >
+              {display.xLab}
             </text>
             <text
               x={10}
@@ -221,10 +313,19 @@ export function ConfoundingSimulator() {
               fontFamily="'JetBrains Mono',monospace"
               transform={`rotate(-90,10,${H / 2})`}
             >
-              {sc.yLab}
+              {display.yLab}
             </text>
             {!revealed && (
-              <line x1={px(lx1)} y1={py(ly1)} x2={px(lx2)} y2={py(ly2)} stroke="#FF4DA2" strokeWidth="1.5" strokeDasharray="5 4" opacity="0.7" />
+              <line
+                x1={px(lx1)}
+                y1={py(ly1)}
+                x2={px(lx2)}
+                y2={py(ly2)}
+                stroke="#FF4DA2"
+                strokeWidth="1.5"
+                strokeDasharray="5 4"
+                opacity="0.7"
+              />
             )}
             {revealed &&
               [0, 1, 2].map((g) => {

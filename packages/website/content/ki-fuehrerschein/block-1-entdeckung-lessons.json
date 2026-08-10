@@ -1,21 +1,19 @@
 {
   "blockId": "block_1",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-06-22",
-  "nextReview": "2026-12-22",
+  "lastReviewed": "2026-08-08",
+  "nextReview": "2027-02-08",
   "reviewCadence": "evergreen",
   "riskClass": "evergreen",
-  "triggerEvents": [
-    "major-conceptual-update"
-  ],
-  "blockLastVerified": "2026-06-20",
+  "triggerEvents": ["major-conceptual-update"],
+  "blockLastVerified": "2026-08-08",
   "lessons": [
     {
       "id": "block_1_lesson_1",
       "blockId": "block_1",
       "number": 1,
-      "title": "KI ist überall",
-      "subtitle": "Erkenne, was du bereits nutzt",
+      "title": "KI-Funktionen erkennen",
+      "subtitle": "Produkte nach Funktion, Zweck und Daten erfassen",
       "durationMinutes": 4,
       "keyConcepts": [
         "KI-System",
@@ -26,21 +24,21 @@
       "sections": [
         {
           "id": "block_1_lesson_1_section_1",
-          "title": "Die unsichtbare KI",
+          "title": "Funktionen statt Etiketten prüfen",
           "readTimeMinutes": 2,
-          "content": "Du nutzt Künstliche Intelligenz. Jeden Tag. Seit Jahren. Du wusstest es nur nicht.\n\nDein Spamfilter sortiert täglich Dutzende E-Mails aus, bevor du sie siehst. Das ist KI. Die Autovervollständigung und die Schnellantworten in Outlook (\"Klingt gut, danke!\")? KI. Die Google-Suche, die versteht, was du meinst, obwohl du es falsch geschrieben hast? KI.\n\nUnd das sind nur die offensichtlichen Beispiele.\n\nDenk an dein Smartphone. Die Gesichtserkennung beim Entsperren ist KI. Die Fotos-App, die automatisch Personen erkennt und sortiert, ist KI. Der Routenplaner, der Staus vorhersagt und Alternativrouten berechnet, ist KI. Sogar die Tastatur auf deinem Handy, die Wörter vorhersagt, während du tippst, ist KI.",
-          "keyTakeaway": "KI ist keine Zukunftstechnologie. Du nutzt sie bereits jeden Tag, ohne es zu wissen."
+          "content": "Viele Alltagsprodukte enthalten Funktionen, die mit maschinellem Lernen oder anderen KI-Verfahren arbeiten können. Dazu gehören je nach Produktversion etwa Spam-Erkennung, Textvorschläge, Bildgruppierung, Spracherkennung, Verkehrsvorhersagen oder Ranking in einer Suche.\n\nDer Produktname reicht für die Einordnung nicht aus. Ein Spamfilter kann Regeln, statistische Verfahren, maschinelles Lernen oder eine Kombination davon verwenden. Auch zwei gleich benannte Funktionen können technisch verschieden arbeiten.\n\nErfasse deshalb die konkrete Funktion, Version und Konfiguration. Dokumentiere anschließend ihren Zweck, die betroffenen Daten und die verantwortliche Stelle. Offene technische Fragen bleiben als offen markiert, bis Produktverantwortliche, Anbieterunterlagen oder eine technische Prüfung sie klären.",
+          "keyTakeaway": "Prüfe die konkrete Funktion und Version. Aus einem Produktnamen allein folgt weder die technische noch die rechtliche Einordnung als KI-System."
         },
         {
           "id": "block_1_lesson_1_section_2",
-          "title": "KI im Alltag",
+          "title": "KI-gestützte Funktionen im Arbeitsablauf",
           "readTimeMinutes": 2,
-          "content": "Im Büro geht es weiter. Excel erkennt Muster in deinen Daten und schlägt Diagramme vor. Teams kann Meetings transkribieren. CRM-Systeme berechnen, welche Leads am wahrscheinlichsten kaufen. DeepL übersetzt E-Mails an internationale Partner. Und wenn du ein Dokument scannst, erkennt OCR-Software den Text automatisch.\n\nIn der Praxis nutzen viele Büromitarbeitende täglich mehr KI-Werkzeuge als ihnen bewusst ist: von Spamfiltern über Textvorschläge bis zur Routenplanung. Die meisten nehmen es nicht als KI wahr, weil die Tools einfach funktionieren. Weil niemand \"Achtung, hier kommt KI\" davorgeschrieben hat.\n\nDas ist der erste Schritt zur KI-Kompetenz: erkennen, was du bereits nutzt. Wer seine KI-Systeme nicht kennt, kann sie nicht verantwortungsvoll einsetzen. Artikel 4 verlangt bei Anbietern und Betreibern angemessene KI-Kompetenzmaßnahmen, abhängig von Rolle, Kontext und Risiko. Bewusstsein ist ein Baustein, nicht der ganze Nachweis.\n\nDie gute Nachricht: Du musst kein KI-Ingenieur werden. Du musst verstehen, welche Systeme da sind, welche Daten hineindürfen und wann ein Mensch prüfen muss.",
-          "keyTakeaway": "Viele Menschen nutzen täglich mehr KI-Systeme als ihnen bewusst ist. Bewusstsein ist der erste Baustein für rollen- und risikogerechte KI-Kompetenz nach Art. 4.",
+          "content": "Im Arbeitsalltag können KI-gestützte Funktionen unter anderem in Dokumentenverarbeitung, Transkription, Übersetzung, Suche, Prognosen und Assistenzsystemen stecken. Ob eine konkrete Funktion tatsächlich ein KI-System im Sinne der Verordnung ist, muss anhand ihrer Funktionsweise und des jeweiligen Einsatzes geprüft werden.\n\nFür die praktische Steuerung brauchst du zunächst ein belastbares Inventar: konkrete Funktion und Version, Zweck, betroffene Daten, Nutzerrollen, verantwortliche Stelle und Freigabestatus. Danach lassen sich Datenregeln, Prüfpflichten und Schulungsbedarf zuordnen.\n\nArtikel 4 der EU-KI-Verordnung verpflichtet Anbieter und Betreiber in der geltenden Fassung, Maßnahmen zu ergreifen, um die Entwicklung der KI-Kompetenz von Personen zu unterstützen, die in ihrem Auftrag mit Betrieb und Nutzung von KI-Systemen befasst sind. Technische Kenntnisse, Erfahrung, Aus- und Fortbildung, Einsatzkontext und betroffene Personen oder Personengruppen sind dabei zu berücksichtigen. Ein Inventar ist kein ausdrücklich vorgeschriebener Einzelnachweis, kann diese kontextbezogene Planung aber unterstützen.",
+          "keyTakeaway": "Ein Funktionsinventar unterstützt die rollen- und risikobezogene Planung von KI-Kompetenzmaßnahmen. Es ersetzt keine rechtliche oder technische Einzelfallprüfung.",
           "sources": [
             {
               "claimId": "ai-act-article-4-literacy-2025-02-02",
-              "lastVerified": "2026-06-20"
+              "lastVerified": "2026-08-08"
             }
           ]
         }
@@ -48,30 +46,30 @@
       "quiz": [
         {
           "id": "block_1_lesson_1_q1",
-          "questionText": "Eine Kollegin sagt: 'Ich nutze keine KI bei der Arbeit.' Sie verwendet aber täglich Outlook-Schnellantworten, Teams-Transkription und Google Maps für die Routenplanung. Was stimmt?",
+          "questionText": "Eine Kollegin nutzt vorgeschlagene Antworten, eine Transkriptionsfunktion und eine Routenprognose. Was lässt sich belastbar festhalten?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "Sie hat Recht, das sind normale Softwarefunktionen, keine KI",
+              "text": "Keine der Funktionen kann KI-Verfahren enthalten",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Sie nutzt mindestens drei KI-gestützte Systeme, ohne es zu wissen",
+              "text": "Die drei Funktionen gehören mit Produktversion, Zweck und Daten ins Inventar; ihre technische und rechtliche Einordnung bleibt zu prüfen",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Nur die Teams-Transkription zählt als KI",
+              "text": "Nur die Transkription kann als KI-gestützte Funktion gelten",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Das lässt sich ohne technisches Expertenwissen nicht beurteilen",
+              "text": "Die Funktionen dürfen erst erfasst werden, wenn ihre rechtliche Einordnung abgeschlossen ist",
               "isCorrect": false
             }
           ],
-          "explanation": "Viele alltägliche Tools enthalten KI-Komponenten: Spamfilter, Textvorschläge, Sprachassistenten, Karten-Apps. Die meisten Menschen nehmen diese Systeme nicht als KI wahr, obwohl KI-Kompetenz nach Art. 4 EU AI Act genau hier ansetzt."
+          "explanation": "Ein Inventar erfasst zunächst konkrete Funktionen und Versionen. Erst die anschließende technische und rechtliche Prüfung klärt, welche Einträge KI-Systeme im Sinne der Verordnung sind und welche Maßnahmen erforderlich sind."
         },
         {
           "id": "block_1_lesson_1_q2",
@@ -89,7 +87,7 @@
             },
             {
               "id": "c",
-              "text": "Unternehmen müssen die KI-Kompetenz ihrer Mitarbeitenden sicherstellen",
+              "text": "Anbieter und Betreiber müssen Maßnahmen ergreifen, um die Entwicklung der KI-Kompetenz der in ihrem Auftrag befassten Personen zu unterstützen",
               "isCorrect": true
             },
             {
@@ -98,7 +96,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Artikel 4 verlangt angemessene KI-Kompetenzmaßnahmen für Personen, die im Auftrag von Anbietern oder Betreibern mit KI-Systemen umgehen. Bewusstsein ist ein Einstieg; Kontext, Rolle und Risiko bestimmen die Tiefe."
+          "explanation": "Artikel 4 betrifft Maßnahmen zur Unterstützung der Entwicklung der KI-Kompetenz von Personen, die im Auftrag von Anbietern oder Betreibern mit Betrieb und Nutzung von KI-Systemen befasst sind. Technische Kenntnisse, Erfahrung, Aus- und Fortbildung, Einsatzkontext und betroffene Personen oder Personengruppen bestimmen die Ausgestaltung."
         }
       ]
     },
@@ -106,36 +104,36 @@
       "id": "block_1_lesson_2",
       "blockId": "block_1",
       "number": 2,
-      "title": "KI-Werkzeuge im Vergleich",
-      "subtitle": "Copilot, ChatGPT und andere: was passt zu dir?",
+      "title": "KI-Werkzeuge auswählen",
+      "subtitle": "Produkte, Verträge und Konfigurationen prüfen",
       "durationMinutes": 3,
       "keyConcepts": [
-        "Microsoft Copilot",
-        "ChatGPT",
-        "Gemini",
-        "Le Chat",
-        "Datenschutz"
+        "Produktauswahl",
+        "Datenkontrollen",
+        "Vertrag",
+        "Konfiguration",
+        "Freigabe"
       ],
       "sections": [
         {
           "id": "block_1_lesson_2_section_1",
-          "title": "Die wichtigsten KI-Assistenten",
+          "title": "Vier Betriebsmodelle vergleichen",
           "readTimeMinutes": 2,
-          "content": "Es gibt viele KI-Assistenten. Hier sind vier verbreitete Angebote:\n\n**Microsoft 365 Copilot**: In Outlook, Excel, Teams, Word und PowerPoint integriert. Copilot arbeitet innerhalb der Microsoft-365-Dienstgrenze und berücksichtigt die Berechtigungen des angemeldeten Nutzers. Ob Daten innerhalb der EU gespeichert und verarbeitet werden, hängt unter anderem von Tenant-Geografie, Vertrag und Multi-Geo-Konfiguration ab. Prüfe die tatsächliche Datenregion im Microsoft-365-Admin-Center.\n\n**ChatGPT** (Verbraucherangebot von OpenAI): Im Browser erreichbar. Datenkontrollen und Nutzungsbedingungen können sich nach Produkt und Einstellung unterscheiden. Nutze das Verbraucherangebot nicht für vertrauliche oder fremde personenbezogene Daten.\n\n**Gemini** (Verbraucherangebot von Google): Mit Google-Diensten integriert. Auch hier gelten produkt- und kontospezifische Datenkontrollen. Nutze es nicht für Firmendaten, solange dein Unternehmen es nicht geprüft und freigegeben hat.\n\n**Le Chat** (Mistral AI): Assistent eines französischen Anbieters. Der Firmensitz allein belegt keine bestimmte Datenregion; prüfe die aktuellen Vertrags-, Speicher- und Verarbeitungsbedingungen.\n\nAlle vier helfen beim Schreiben, Zusammenfassen, Beantworten von Fragen und bei einfachen Analysen.",
-          "keyTakeaway": "Entscheidend sind nicht Anbietername oder Firmensitz, sondern das konkrete Produkt, der Vertrag, die Tenant-Konfiguration, Berechtigungen und die tatsächlich zugesagte Datenregion."
+          "content": "Vergleiche nicht nur Marken, sondern die konkrete Produktedition und ihren Betrieb:\n\n| Betriebsmodell | Mindestens zu prüfen | Typischer Fehlschluss |\n|---|---|---|\n| **Verbraucherdienst** | Nutzungsbedingungen, Kontoeinstellungen, Aufbewahrung, Trainingsnutzung, Rechtsgrundlage und zulässige Inhalte | Ein bekanntes oder kostenpflichtiges Produkt sei automatisch für Firmendaten freigegeben |\n| **Unternehmens-SaaS** | Vertrag und AVV, Rollen und Berechtigungen, Datenregion, Aufbewahrung, Protokollierung, Konnektoren und Trainingsnutzung | Ein Enterprise-Vertrag sichere jede Konfiguration und Datenklasse ab |\n| **Lokal oder selbst gehostet** | Modellquelle, Endgerät oder Infrastruktur, Patches, Telemetrie, Erweiterungen, Zugriffe und Protokollierung | Lokal bedeute automatisch offline, aktuell und sicher |\n| **Eingebettete Funktion** | konkrete Funktion und Version, Aktivierung, Datenflüsse, Berechtigungsvererbung und verantwortliche Stelle | Die Freigabe des Hauptprodukts decke jede neue KI-Funktion ab |\n\nAnbieterunterlagen und Vertragsbedingungen ändern sich. Prüfe sie bei Beschaffung, wesentlichen Funktionsänderungen und den in der Organisation festgelegten Review-Auslösern erneut.",
+          "keyTakeaway": "Die konkrete Produktedition, Konfiguration und Freigabe bestimmen den zulässigen Einsatz. Betriebsmodell und Markenname sind keine Sicherheitsbewertung."
         },
         {
           "id": "block_1_lesson_2_section_2",
           "title": "Welches Tool passt wann?",
           "readTimeMinutes": 1,
-          "content": "Die einfache Faustregel:\n\n- **Private Texte, Lernaufgaben, keine vertraulichen Daten:** Ein Verbraucherangebot kann geeignet sein. Gib niemals persönliche Daten anderer Personen, Firmendaten oder Zugangsdaten ein.\n\n- **Berufliche Aufgaben mit internen Informationen:** Nutze nur ein von IT und Datenschutz freigegebenes Produkt in der genehmigten Konfiguration, zum Beispiel Microsoft 365 Copilot oder ChatGPT Business. Ein vorhandenes M365-Konto allein ist noch keine Freigabe.\n\n- **Hohe lokale Kontrolle:** Lokale KI-Modelle können auf dem eigenen Rechner laufen. Prüfe trotzdem, ob Erweiterungen, Telemetrie oder Modell-Downloads Netzwerkzugriffe auslösen.\n\nDen Unterschied zwischen privater und beruflicher Nutzung lernst du genauer in Block 2.",
-          "keyTakeaway": "Für private Aufgaben ohne vertrauliche Daten sind kostenlose Tools geeignet. Für berufliche Aufgaben immer zuerst die IT-Abteilung fragen."
+          "content": "Prüfe den konkreten Anwendungsfall:\n\n- **Private Lern- und Schreibaufgaben:** Ein Verbraucherangebot kann geeignet sein, wenn du den Inhalt rechtmäßig teilen darfst und Datenkontrollen, Aufbewahrung und Bedingungen für deinen Zweck akzeptabel sind. Verwende synthetische Platzhalter statt Angaben zu anderen Personen. Zugangsdaten gehören nie in Prompts.\n\n- **Berufliche Aufgaben:** Nutze nur ein Produkt, eine Konfiguration und einen Arbeitsablauf, die für den Zweck und die betroffenen Datenklassen freigegeben sind. Ein Business-Abonnement oder vorhandenes Unternehmenskonto ist noch keine Freigabe.\n\n- **Lokale Modelle:** Lokale Inferenz kann Datenflüsse begrenzen. Erweiterungen, Telemetrie, Modell-Downloads, gemeinsam genutzte Geräte und fehlende Zugriffskontrollen können trotzdem Risiken schaffen.\n\nBlock 2 zeigt die vollständige Prüfung aus Zweck, Daten, Rechten, System und Freigabe.",
+          "keyTakeaway": "Kostenlos, bezahlt, Cloud oder lokal sind keine Sicherheitsklassen. Entscheidend sind Zweck, Daten, Rechte, Vertrag, Konfiguration und konkrete Freigabe."
         }
       ],
       "quiz": [
         {
           "id": "block_1_lesson_2_q1",
-          "questionText": "Du möchtest einen persönlichen Brief mit einem KI-Assistenten schreiben. Welche Option ist für diesen Zweck geeignet?",
+          "questionText": "Du möchtest mit einem KI-Assistenten einen privaten Text entwerfen. Welche Aussage ist richtig?",
           "answerOptions": [
             {
               "id": "a",
@@ -144,7 +142,7 @@
             },
             {
               "id": "b",
-              "text": "ChatGPT (kostenlose Version), Gemini oder Le Chat sind für private Texte ohne vertrauliche Daten geeignet",
+              "text": "Ein Verbraucherangebot kann geeignet sein, wenn du die Inhalte teilen darfst und Datenkontrollen, Aufbewahrung und Bedingungen zum Zweck passen",
               "isCorrect": true
             },
             {
@@ -154,38 +152,38 @@
             },
             {
               "id": "d",
-              "text": "Nur Copilot, weil er der sicherste KI-Assistent ist",
+              "text": "Nur das bekannteste Produkt ist geeignet, weil eine Marke die Sicherheit bestimmt",
               "isCorrect": false
             }
           ],
-          "explanation": "Für private Texte ohne vertrauliche Daten sind kostenlose Tools wie ChatGPT, Gemini oder Le Chat geeignet. Wichtig: Keine persönlichen Daten anderer Personen oder Firmendaten eingeben."
+          "explanation": "Auch bei privaten Aufgaben hängt die Eignung von Inhalt, Rechten, Datenkontrollen, Aufbewahrung und Bedingungen ab. Nutze für Beispiele Platzhalter und gib keine Zugangsdaten ein."
         },
         {
           "id": "block_1_lesson_2_q2",
-          "questionText": "Was ist der wichtigste Unterschied zwischen den kostenlosem ChatGPT und Microsoft Copilot für Unternehmen?",
+          "questionText": "Was unterscheidet einen freigegebenen Unternehmens-Arbeitsablauf von einem beliebigen KI-Abonnement?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "ChatGPT liefert bessere Antworten als Copilot",
+              "text": "Ein Unternehmens-Arbeitsablauf liefert grundsätzlich bessere Antworten",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Ein freigegebenes Copilot-Setup arbeitet innerhalb der Microsoft-365-Dienstgrenze; ein Verbraucherangebot hat keinen betrieblich geprüften Vertrag oder Tenant-Kontext",
+              "text": "Die Freigabe bezieht Zweck, Datenklassen, Vertrag, Konfiguration, Berechtigungen und Verantwortlichkeiten ein; ein Abonnement allein tut das nicht",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Copilot ist kostenlos, ChatGPT ist kostenpflichtig",
+              "text": "Ein kostenpflichtiges Abonnement darf jede Datenklasse verarbeiten",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Es gibt keinen relevanten Unterschied",
+              "text": "Entscheidend ist nur, ob der Anbieter seinen Sitz in der EU hat",
               "isCorrect": false
             }
           ],
-          "explanation": "Microsoft 365 Copilot arbeitet innerhalb der Microsoft-365-Dienstgrenze und berücksichtigt Nutzerberechtigungen. Datenresidenz und zulässige Datenklassen müssen für den konkreten Tenant geprüft werden. Ein nicht freigegebenes Verbraucherangebot eignet sich nicht für Firmendaten."
+          "explanation": "Eine betriebliche Freigabe gilt für einen bestimmten Zweck, eine Produktedition, Konfiguration, Datenklasse und Rollenverteilung. Preis, Markenname oder Firmensitz ersetzen diese Prüfung nicht."
         }
       ]
     },
@@ -194,56 +192,52 @@
       "blockId": "block_1",
       "number": 3,
       "title": "Übung: Schnell-Inventar",
-      "subtitle": "Erstelle dein persönliches KI-Inventar in 3 Minuten",
+      "subtitle": "Erfasse die KI-Funktionen und Systeme, die du tatsächlich nutzt",
       "durationMinutes": 3,
-      "keyConcepts": [
-        "KI-Inventar",
-        "Shadow AI",
-        "Selbsteinschätzung"
-      ],
+      "keyConcepts": ["KI-Inventar", "Shadow AI", "Selbsteinschätzung"],
       "sections": [
         {
           "id": "block_1_lesson_3_section_1",
           "title": "Das KI-Inventar",
           "readTimeMinutes": 1,
-          "content": "Nimm dir drei Minuten. Geh die folgende Tabelle durch und fülle die letzten beiden Spalten aus. Sei ehrlich bei \"Wusste ich vorher?\". Es geht nicht um richtig oder falsch. Es geht darum, ein Bewusstsein zu schaffen.\n\n| Nr. | Tool | Hat KI? | Wusste ich vorher? |\n|-----|------|---------|---------------------|\n| 1 | Outlook (Copilot, Schnellantworten) | Ja | |\n| 2 | Excel (Copilot, Muster-Erkennung) | Ja | |\n| 3 | Teams (Copilot, Transkription) | Ja | |\n| 4 | Google-Suche | Ja | |\n| 5 | Spamfilter (Outlook / Gmail) | Ja | |\n| 6 | Smartphone-Tastatur (Wortvorhersage) | Ja | |\n| 7 | Navigation (Google Maps, Apple Maps) | Ja | |\n| 8 | | | |\n| 9 | | | |\n| 10 | | | |\n\nErgänze die leeren Zeilen mit Tools, die du täglich nutzt. Denk an: Übersetzungstools (DeepL, Google Translate), dein CRM-System, Buchhaltungssoftware, Scanner-Apps, Fotoverwaltung, Musikempfehlungen (Spotify), Online-Shopping-Empfehlungen (Amazon).",
-          "keyTakeaway": "Ein KI-Inventar ist der erste Schritt zur Kompetenz nach EU AI Act Art. 4."
+          "content": "Geh die folgende Tabelle durch und fülle die letzten Spalten aus. Produktnamen allein reichen nicht: Notiere Funktion, Anbieter oder Betreiber, Zweck, betroffene Daten und verantwortliche Stelle. Ob eine Funktion rechtlich ein KI-System ist, muss anhand der konkreten Version und Funktionsweise geprüft werden.\n\n| Nr. | Produkt und Funktion | Zweck | Betroffene Daten | Freigabe bekannt? |\n|-----|----------------------|-------|------------------|-------------------|\n| 1 | E-Mail: vorgeschlagene Antworten | | | |\n| 2 | Tabellenkalkulation: Assistenz oder Mustererkennung | | | |\n| 3 | Konferenzsoftware: Transkription oder Assistenz | | | |\n| 4 | Suchmaschine: KI-Zusammenfassung | | | |\n| 5 | E-Mail: Spamfilter | | | |\n| 6 | Smartphone-Tastatur: Wortvorhersage | | | |\n| 7 | Navigation: Routen- oder Verkehrsprognose | | | |\n| 8 | | | | |\n| 9 | | | | |\n| 10 | | | | |\n\nErgänze die leeren Zeilen mit tatsächlich genutzten Funktionen. Erfinde keine technische Einordnung: Markiere Unbekanntes zur Klärung durch Produktverantwortliche, IT oder Beschaffung.",
+          "keyTakeaway": "Ein brauchbares Inventar erfasst konkrete Funktion, Zweck, Daten, Freigabe und Verantwortung. Es unterstützt die rollen- und risikobezogene KI-Kompetenzplanung nach Artikel 4."
         },
         {
           "id": "block_1_lesson_3_section_2",
           "title": "Auswertung",
           "readTimeMinutes": 2,
-          "content": "**Was du vermutlich feststellst:** In der Praxis sind es oft deutlich mehr KI-Systeme als zunächst vermutet: häufig mehr als zehn, wenn man alle Werkzeuge mitzählt. Die meisten davon waren vorher nicht als KI bewusst.\n\nWenn du bei mehr als der Hälfte \"Nein\" angekreuzt hast, bist du in guter Gesellschaft. Das zeigt genau das, was Art. 4 EU AI Act adressiert: KI-Kompetenz beginnt mit Bewusstsein, nicht mit Technikwissen.\n\n**Dein Ergebnis ist dein erstes Artefakt:** ein ausgefülltes KI-Inventar. Heb es auf. Du wirst es noch brauchen. In Block 2 lernst du, welche Daten in welches dieser Tools gehören. Und welche auf keinen Fall.",
-          "keyTakeaway": "Viele Menschen nutzen mehr KI-Systeme als ihnen bewusst ist. Das KI-Inventar ist dein erstes Artefakt für die Umsetzung von Art. 4 EU AI Act."
+          "content": "Prüfe jeden Eintrag auf Vollständigkeit: konkrete Funktion und Version, Zweck, betroffene Daten, Nutzerrollen, verantwortliche Stelle und Freigabestatus. Markiere unbekannte Angaben ausdrücklich; eine Vermutung ist kein Inventarnachweis.\n\nFasse anschließend die offenen Punkte zusammen und ordne für jeden Punkt eine zuständige Stelle sowie den nächsten Prüfschritt zu. Das Ergebnis ist ein Arbeitsdokument, kein automatisch vollständiges Verzeichnis aller KI-Systeme.\n\nArtikel 4 schreibt kein bestimmtes Inventarformat vor. Ein gepflegtes Inventar kann jedoch helfen, kontextbezogene Kompetenzmaßnahmen, Datenregeln und Prüfroutinen den tatsächlich eingesetzten Funktionen zuzuordnen. Block 2 ergänzt die Prüfung um Datenklassen, Rechte und Systemfreigaben.",
+          "keyTakeaway": "Ein Inventar bleibt belastbar, wenn offene Angaben sichtbar sind, Verantwortliche feststehen und Änderungen nachgeführt werden. Es ist ein Steuerungsinstrument, kein vollständiger Artikel-4-Nachweis."
         }
       ],
       "quiz": [
         {
           "id": "block_1_lesson_3_q1",
-          "questionText": "Eine Kollegin sagt: 'Ich nutze keine KI bei der Arbeit.' Sie verwendet aber täglich Outlook-Schnellantworten, Teams-Transkription und Google Maps. Wie viele KI-Systeme nutzt sie mindestens?",
+          "questionText": "Eine Kollegin nutzt vorgeschlagene Antworten, eine Transkriptionsfunktion und eine Routenprognose. Was lässt sich daraus sicher ableiten?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "Keines, das sind normale Softwarefunktionen",
+              "text": "Keine der Funktionen kann KI enthalten",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Eines, nur die Teams-Transkription",
+              "text": "Genau ein KI-System, weil nur Transkription KI nutzt",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "Mindestens drei KI-Systeme",
-              "isCorrect": true
+              "text": "Genau drei eigenständige KI-Systeme im Sinne der KI-Verordnung",
+              "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Das lässt sich nicht feststellen",
-              "isCorrect": false
+              "text": "Die Funktionen gehören ins Inventar; ihre konkrete technische und rechtliche Einordnung muss anhand von Produkt und Version geprüft werden",
+              "isCorrect": true
             }
           ],
-          "explanation": "Outlook-Schnellantworten, Teams-Transkription und Google Maps nutzen jeweils KI. Viele Mitarbeitende nutzen täglich mehr KI-gestützte Systeme als ihnen bewusst ist, weil die Tools einfach funktionieren ohne als KI erkennbar zu sein."
+          "explanation": "KI-gestützte Funktionen können in Alltagsprodukten verborgen sein. Aus drei Produktnamen folgt aber nicht automatisch die Zahl eigenständiger KI-Systeme im rechtlichen Sinn. Das Inventar erfasst Funktion und Version für die anschließende Prüfung."
         },
         {
           "id": "block_1_lesson_3_q2",
@@ -270,7 +264,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Ein KI-Inventar ist die Grundlage jeder KI-Governance. Nur wer weiß, welche KI-Systeme im Einsatz sind, kann Risiken bewerten, Datenregeln zuordnen und die Anforderungen der EU-KI-Verordnung erfüllen."
+          "explanation": "Ein Inventar schafft die Datengrundlage für Risikobewertung, Datenregeln und Zuständigkeiten. Es unterstützt Governance und KI-Kompetenzmaßnahmen, erfüllt die Anforderungen der EU-KI-Verordnung aber nicht allein."
         }
       ]
     }

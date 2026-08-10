@@ -1,6 +1,14 @@
 import type { AnchorHTMLAttributes, ReactNode } from "react";
-import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { render, screen, within } from "@testing-library/react";
+
+const { getRequestLocaleMock } = vi.hoisted(() => ({
+  getRequestLocaleMock: vi.fn(),
+}));
+
+vi.mock("@/lib/i18n/request-locale", () => ({
+  getRequestLocale: getRequestLocaleMock,
+}));
 
 vi.mock("next/link", () => ({
   default: ({
@@ -19,76 +27,145 @@ vi.mock("next/link", () => ({
 
 import { Footer } from "./footer";
 
-describe("Footer data pill", () => {
-  it("renders the data pill with Stand date and last updated", () => {
-    render(<Footer />);
-    const pill = screen.getByTestId("footer-data-pill");
-    expect(pill).toBeInTheDocument();
-    expect(pill.textContent).toMatch(/Datenstand:/i);
-    expect(pill.textContent).toMatch(/Q3 2026/);
-    expect(pill.textContent).toMatch(/Letzte Aktualisierung:/i);
-    expect(pill.textContent).toMatch(/\d{4}-\d{2}-\d{2}/);
+async function renderFooter(locale: "de" | "en" = "de") {
+  getRequestLocaleMock.mockResolvedValueOnce(locale);
+  render(await Footer());
+}
+
+describe("Footer locale and information architecture", () => {
+  beforeEach(() => {
+    getRequestLocaleMock.mockReset();
   });
 
-  it("derives the copyright year from reviewed content instead of the wall clock", () => {
+  it("renders the German task groups and unprefixed internal links", async () => {
+    await renderFooter("de");
+
+    expect(
+      screen.getByRole("navigation", { name: "Navigation in der Fußzeile" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("heading", { level: 2 }).map((heading) => heading.textContent),
+    ).toEqual(["Kurse", "Praxis", "Wissen", "Plattform"]);
+    expect(screen.getByRole("link", { name: "Alle Kurse" })).toHaveAttribute(
+      "href",
+      "/kurse",
+    );
+    expect(
+      screen.getByRole("link", { name: "Grundlagenpfad" }),
+    ).toHaveAttribute("href", "/kurse#lernpfad");
+    expect(
+      screen.getByRole("link", { name: "Technikkurse" }),
+    ).toHaveAttribute("href", "/kurse#tiefer-gehen");
+
+    for (const link of document.querySelectorAll<HTMLAnchorElement>("a[href^='/']")) {
+      expect(link.getAttribute("href")).not.toMatch(/^\/en(?:\/|$)/);
+    }
+  });
+
+  it("renders reviewed English copy and preserves /en on every internal link", async () => {
+    await renderFooter("en");
+
+    expect(
+      screen.getByRole("navigation", { name: "Footer navigation" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("heading", { level: 2 }).map((heading) => heading.textContent),
+    ).toEqual(["Courses", "Practice", "Knowledge", "Platform"]);
+    expect(
+      screen.getByText(
+        "Free courses, workshops, and open-source materials for AI and data work. Course pages state scope, access requirements, and sources.",
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "All courses" })).toHaveAttribute(
+      "href",
+      "/en/kurse",
+    );
+    expect(
+      screen.getByRole("link", { name: "Foundation path" }),
+    ).toHaveAttribute("href", "/en/kurse#lernpfad");
+    expect(
+      screen.getByRole("link", { name: "Technical courses" }),
+    ).toHaveAttribute("href", "/en/kurse#tiefer-gehen");
+
+    for (const link of document.querySelectorAll<HTMLAnchorElement>("a[href^='/']")) {
+      expect(link.getAttribute("href")).toMatch(/^\/en(?:\/|#|$)/);
+    }
+    expect(screen.queryByText("Datenstand", { exact: false })).not.toBeInTheDocument();
+  });
+
+  it("keeps legal destinations separate and localized", async () => {
+    await renderFooter("en");
+    const legal = screen.getByRole("navigation", { name: "Legal information" });
+
+    expect(within(legal).getByRole("link", { name: "Legal notice" })).toHaveAttribute(
+      "href",
+      "/en/impressum",
+    );
+    expect(within(legal).getByRole("link", { name: "Privacy" })).toHaveAttribute(
+      "href",
+      "/en/datenschutz",
+    );
+    expect(
+      within(legal).getByRole("link", { name: "Licence policy" }),
+    ).toHaveAttribute("href", "/en/open-source/lizenzrichtlinie");
+  });
+});
+
+describe("Footer semantics and stable public dates", () => {
+  beforeEach(() => {
+    getRequestLocaleMock.mockReset();
+  });
+
+  it("renders semantic external links with visible labels and new-tab context", async () => {
+    await renderFooter("en");
+
+    const github = screen.getByRole("link", {
+      name: "GitHub (opens in a new tab)",
+    });
+    const linkedIn = screen.getByRole("link", {
+      name: "LinkedIn (opens in a new tab)",
+    });
+    expect(github).toHaveAttribute("href", "https://github.com/loehrning-ai");
+    expect(linkedIn).toHaveAttribute(
+      "href",
+      "https://www.linkedin.com/in/timloehr/",
+    );
+    for (const link of [github, linkedIn]) {
+      expect(link).toHaveAttribute("target", "_blank");
+      expect(link).toHaveAttribute("rel", "noopener noreferrer");
+      expect(link.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+      expect(link.className).toContain("min-h-11");
+    }
+  });
+
+  it("derives the copyright year from reviewed content instead of the wall clock", async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2042-01-01T00:00:00.000Z"));
     try {
-      render(<Footer />);
+      await renderFooter("de");
       expect(
-        screen.getByText("© 2026 loehrning.ai · Tim Löhr"),
-      ).toBeInTheDocument();
+        screen.getByTestId("footer-copyright"),
+      ).toHaveTextContent("© 2026 loehrning.ai · Tim Löhr");
     } finally {
       vi.useRealTimers();
     }
   });
-});
 
-describe("Footer learning links", () => {
-  function hrefs() {
-    render(<Footer />);
-    return Array.from(document.querySelectorAll("a")).map((a) =>
-      a.getAttribute("href"),
+  it("marks the reviewed update date as machine-readable in both locales", async () => {
+    await renderFooter("en");
+    const pill = screen.getByTestId("footer-data-pill");
+
+    expect(pill).toHaveTextContent("Content date: Q3 2026");
+    expect(pill).toHaveTextContent(/Updated: \d{4}-\d{2}-\d{2}/);
+    expect(within(pill).getByText(/\d{4}-\d{2}-\d{2}/)).toHaveAttribute(
+      "datetime",
+      expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
     );
-  }
-
-  it("links the /kurse hub, native courses, and imported course lane", () => {
-    const links = hrefs();
-    expect(links).toContain("/kurse");
-    expect(links).toContain("/open-source");
-    expect(links).toContain("/ki-fuehrerschein");
-    expect(links).toContain("/eu-ai-act-kurs");
-    expect(links).toContain("/ai-native");
   });
 
-  it("keeps profile and contact out of the primary learning columns", () => {
-    render(<Footer />);
-    // Footer column headings are <h2> to preserve heading order after the page h1.
-    const headings = Array.from(document.querySelectorAll("h2")).map((h) =>
-      h.textContent,
-    );
-    expect(headings).toEqual(["Lernen", "Anwenden", "Plattform"]);
-    expect(screen.queryByText("Projekt")).not.toBeInTheDocument();
-  });
+  it("disables below-the-fold prefetch for every internal destination", async () => {
+    await renderFooter("de");
 
-  it("links the verified GitHub organization without repository-status copy", () => {
-    render(<Footer />);
-    expect(screen.getByRole("link", { name: "GitHub-Organisation" })).toHaveAttribute(
-      "href",
-      "https://github.com/loehrning-ai",
-    );
-    expect(screen.queryByText(/erstes Repository|noch nicht veröffentlicht/)).not.toBeInTheDocument();
-  });
-
-  it("keeps the public license policy in permanent legal navigation", () => {
-    render(<Footer />);
-    expect(
-      screen.getByRole("link", { name: "Lizenzrichtlinie" }),
-    ).toHaveAttribute("href", "/open-source/lizenzrichtlinie");
-  });
-
-  it("does not prefetch below-the-fold destinations during initial load", () => {
-    render(<Footer />);
     for (const link of document.querySelectorAll("a[href^='/']")) {
       expect(link).toHaveAttribute("data-prefetch", "false");
     }

@@ -6,11 +6,17 @@ import {
   AI_NATIVE_CONFIG,
   KI_UND_GESELLSCHAFT_CONFIG,
   CLAUDE_CONFIG,
+  CLAUDE_CONFIG_DE,
   CODEX_CONFIG,
+  CODEX_CONFIG_DE,
   DATA_INFRASTRUCTURE_CONFIG,
+  DATA_INFRASTRUCTURE_CONFIG_DE,
   DATA_ENGINEERING_FUNDAMENTALS_CONFIG,
+  DATA_ENGINEERING_FUNDAMENTALS_CONFIG_DE,
   DATA_SCIENCE_CONFIG,
+  DATA_SCIENCE_CONFIG_DE,
   AI_NATIVE_OPERATOR_CONFIG,
+  AI_NATIVE_OPERATOR_CONFIG_DE,
   getRegisteredCourseSlugs,
   isCourseRegistered,
   getCourseConfig,
@@ -63,8 +69,11 @@ describe("isCourseRegistered", () => {
 });
 
 describe("CLAUDE_CONFIG ", () => {
-  it("registers claude with English-language content and a quiz-gated cert path", () => {
-    expect(getCourseConfig("claude")).toBe(CLAUDE_CONFIG);
+  it("registers German as the unprefixed default and English under /en", () => {
+    expect(getCourseConfig("claude")).toBe(CLAUDE_CONFIG_DE);
+    expect(getCourseConfig("claude", "de")).toBe(CLAUDE_CONFIG_DE);
+    expect(getCourseConfig("claude", "en")).toBe(CLAUDE_CONFIG);
+    expect(CLAUDE_CONFIG_DE.language).toBe("de");
     expect(CLAUDE_CONFIG.slug).toBe("claude");
     expect(CLAUDE_CONFIG.language).toBe("en");
     expect(CLAUDE_CONFIG.basePath).toBe("/kurse/open-source/claude");
@@ -87,8 +96,11 @@ describe("CLAUDE_CONFIG ", () => {
 });
 
 describe("CODEX_CONFIG ", () => {
-  it("registers codex with English-language content and the all-lessons-completion cert path", () => {
-    expect(getCourseConfig("codex")).toBe(CODEX_CONFIG);
+  it("registers German as the unprefixed default and English under /en", () => {
+    expect(getCourseConfig("codex")).toBe(CODEX_CONFIG_DE);
+    expect(getCourseConfig("codex", "de")).toBe(CODEX_CONFIG_DE);
+    expect(getCourseConfig("codex", "en")).toBe(CODEX_CONFIG);
+    expect(CODEX_CONFIG_DE.language).toBe("de");
     expect(CODEX_CONFIG.slug).toBe("codex");
     expect(CODEX_CONFIG.language).toBe("en");
     expect(CODEX_CONFIG.basePath).toBe("/kurse/open-source/codex");
@@ -98,11 +110,22 @@ describe("CODEX_CONFIG ", () => {
 });
 
 describe("DATA_INFRASTRUCTURE_CONFIG ", () => {
-  it("registers data-infrastructure with English-language content and the all-lessons-completion cert path", () => {
-    expect(getCourseConfig("data-infrastructure")).toBe(DATA_INFRASTRUCTURE_CONFIG);
+  it("registers German as the unprefixed default and English under /en", () => {
+    expect(getCourseConfig("data-infrastructure")).toBe(
+      DATA_INFRASTRUCTURE_CONFIG_DE,
+    );
+    expect(getCourseConfig("data-infrastructure", "de")).toBe(
+      DATA_INFRASTRUCTURE_CONFIG_DE,
+    );
+    expect(getCourseConfig("data-infrastructure", "en")).toBe(
+      DATA_INFRASTRUCTURE_CONFIG,
+    );
+    expect(DATA_INFRASTRUCTURE_CONFIG_DE.language).toBe("de");
     expect(DATA_INFRASTRUCTURE_CONFIG.slug).toBe("data-infrastructure");
     expect(DATA_INFRASTRUCTURE_CONFIG.language).toBe("en");
-    expect(DATA_INFRASTRUCTURE_CONFIG.basePath).toBe("/kurse/open-source/data-infrastructure");
+    expect(DATA_INFRASTRUCTURE_CONFIG.basePath).toBe(
+      "/kurse/open-source/data-infrastructure",
+    );
     expect(DATA_INFRASTRUCTURE_CONFIG.coursePath).toBe(
       "/kurse/open-source/data-infrastructure/kurs",
     );
@@ -111,11 +134,20 @@ describe("DATA_INFRASTRUCTURE_CONFIG ", () => {
 });
 
 describe("DATA_ENGINEERING_FUNDAMENTALS_CONFIG ", () => {
-  it("registers data-engineering-fundamentals with English-language content and the all-lessons-completion cert path", () => {
+  it("registers German as the unprefixed default and English under /en", () => {
     expect(getCourseConfig("data-engineering-fundamentals")).toBe(
+      DATA_ENGINEERING_FUNDAMENTALS_CONFIG_DE,
+    );
+    expect(getCourseConfig("data-engineering-fundamentals", "de")).toBe(
+      DATA_ENGINEERING_FUNDAMENTALS_CONFIG_DE,
+    );
+    expect(getCourseConfig("data-engineering-fundamentals", "en")).toBe(
       DATA_ENGINEERING_FUNDAMENTALS_CONFIG,
     );
-    expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.slug).toBe("data-engineering-fundamentals");
+    expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG_DE.language).toBe("de");
+    expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.slug).toBe(
+      "data-engineering-fundamentals",
+    );
     expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.language).toBe("en");
     expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.basePath).toBe(
       "/kurse/open-source/data-engineering-fundamentals",
@@ -132,29 +164,56 @@ describe("DATA_ENGINEERING_FUNDAMENTALS_CONFIG ", () => {
 });
 
 describe("DATA_SCIENCE_CONFIG ", () => {
-  it("registers data-science with English-language content and the all-lessons-completion cert path", () => {
-    expect(getCourseConfig("data-science")).toBe(DATA_SCIENCE_CONFIG);
+  it("registers both reviewed locales with the same completion identity", () => {
+    expect(getCourseConfig("data-science")).toBe(DATA_SCIENCE_CONFIG_DE);
+    expect(getCourseConfig("data-science", "de")).toBe(DATA_SCIENCE_CONFIG_DE);
+    expect(getCourseConfig("data-science", "en")).toBe(DATA_SCIENCE_CONFIG);
+    expect(DATA_SCIENCE_CONFIG_DE.language).toBe("de");
     expect(DATA_SCIENCE_CONFIG.slug).toBe("data-science");
     expect(DATA_SCIENCE_CONFIG.language).toBe("en");
-    expect(DATA_SCIENCE_CONFIG.basePath).toBe("/kurse/open-source/data-science");
+    expect(DATA_SCIENCE_CONFIG.basePath).toBe(
+      "/kurse/open-source/data-science",
+    );
     // Like data-engineering-fundamentals, this course has no `/kurs`-nested
     // route — chapters live directly under `[chapterSlug]`, and the
     // Overview renders at the course root — so coursePath must point at
     // the real landing page, not a route that 404s.
-    expect(DATA_SCIENCE_CONFIG.coursePath).toBe("/kurse/open-source/data-science");
+    expect(DATA_SCIENCE_CONFIG.coursePath).toBe(
+      "/kurse/open-source/data-science",
+    );
     expect(DATA_SCIENCE_CONFIG.blockIds).toEqual([]);
+    expect(DATA_SCIENCE_CONFIG_DE.basePath).toBe(DATA_SCIENCE_CONFIG.basePath);
+    expect(DATA_SCIENCE_CONFIG_DE.coursePath).toBe(
+      DATA_SCIENCE_CONFIG.coursePath,
+    );
+    expect(DATA_SCIENCE_CONFIG_DE.blockIds).toEqual(
+      DATA_SCIENCE_CONFIG.blockIds,
+    );
   });
 });
 
 describe("AI_NATIVE_OPERATOR_CONFIG ", () => {
-  it("registers ai-native-operator with English-language content and a quiz-gated cert path", () => {
-    expect(getCourseConfig("ai-native-operator")).toBe(AI_NATIVE_OPERATOR_CONFIG);
+  it("registers German as the unprefixed default and English under /en", () => {
+    expect(getCourseConfig("ai-native-operator")).toBe(
+      AI_NATIVE_OPERATOR_CONFIG_DE,
+    );
+    expect(getCourseConfig("ai-native-operator", "de")).toBe(
+      AI_NATIVE_OPERATOR_CONFIG_DE,
+    );
+    expect(getCourseConfig("ai-native-operator", "en")).toBe(
+      AI_NATIVE_OPERATOR_CONFIG,
+    );
+    expect(AI_NATIVE_OPERATOR_CONFIG_DE.language).toBe("de");
     expect(AI_NATIVE_OPERATOR_CONFIG.slug).toBe("ai-native-operator");
     expect(AI_NATIVE_OPERATOR_CONFIG.language).toBe("en");
-    expect(AI_NATIVE_OPERATOR_CONFIG.basePath).toBe("/kurse/open-source/ai-native-operator");
+    expect(AI_NATIVE_OPERATOR_CONFIG.basePath).toBe(
+      "/kurse/open-source/ai-native-operator",
+    );
     // No "/kurs" segment (matching data-engineering-fundamentals/data-science):
     // modules and lessons live directly under the course root.
-    expect(AI_NATIVE_OPERATOR_CONFIG.coursePath).toBe("/kurse/open-source/ai-native-operator");
+    expect(AI_NATIVE_OPERATOR_CONFIG.coursePath).toBe(
+      "/kurse/open-source/ai-native-operator",
+    );
     expect(AI_NATIVE_OPERATOR_CONFIG.blockIds).toEqual([]);
     expect(AI_NATIVE_OPERATOR_CONFIG.workshopQuizQuestionCount).toBe(22);
     expect(AI_NATIVE_OPERATOR_CONFIG.workshopQuizPassThreshold).toBe(0.7);
@@ -162,7 +221,9 @@ describe("AI_NATIVE_OPERATOR_CONFIG ", () => {
   });
 
   it("has a non-empty certificate file stem and no em/en dashes in its copy", () => {
-    expect(AI_NATIVE_OPERATOR_CONFIG.certificateFileStem.length).toBeGreaterThan(0);
+    expect(
+      AI_NATIVE_OPERATOR_CONFIG.certificateFileStem.length,
+    ).toBeGreaterThan(0);
     const copy = [
       AI_NATIVE_OPERATOR_CONFIG.title,
       AI_NATIVE_OPERATOR_CONFIG.certificateTitle,
@@ -176,7 +237,9 @@ describe("AI_NATIVE_OPERATOR_CONFIG ", () => {
 
   it("never collides with the bare 'ai-native' slug's config", () => {
     expect(AI_NATIVE_OPERATOR_CONFIG.slug).not.toBe(AI_NATIVE_CONFIG.slug);
-    expect(AI_NATIVE_OPERATOR_CONFIG.basePath).not.toBe(AI_NATIVE_CONFIG.basePath);
+    expect(AI_NATIVE_OPERATOR_CONFIG.basePath).not.toBe(
+      AI_NATIVE_CONFIG.basePath,
+    );
   });
 });
 
@@ -301,7 +364,9 @@ describe("config object coherence", () => {
       ].join(" ");
       // Detect em-dash (U+2014) / en-dash (U+2013) via escapes so this file
       // stays free of literal long dashes while still guarding against them.
-      expect([...copy].some((ch) => ch === "\u2014" || ch === "\u2013")).toBe(false);
+      expect([...copy].some((ch) => ch === "\u2014" || ch === "\u2013")).toBe(
+        false,
+      );
     }
   });
 

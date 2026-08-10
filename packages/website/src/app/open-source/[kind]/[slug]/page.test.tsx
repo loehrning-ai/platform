@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ProjectArtifact } from "@/lib/open-source/artifacts";
 
 const { PROJECT } = vi.hoisted(() => {
@@ -97,12 +97,19 @@ const { PROJECT } = vi.hoisted(() => {
   };
 });
 
+const { getRequestLocaleMock } = vi.hoisted(() => ({
+  getRequestLocaleMock: vi.fn(),
+}));
+
 vi.mock("@/lib/open-source/artifacts", () => ({
   OPEN_SOURCE_PROJECT_ARTIFACTS: [PROJECT],
   OPEN_SOURCE_TOOL_ARTIFACTS: [],
   OPEN_SOURCE_VIDEO_ARTIFACTS: [],
   getOpenSourceArtifactByRoute: (kind: string, slug: string) =>
     kind === "projects" && slug === PROJECT.slug ? PROJECT : undefined,
+}));
+vi.mock("@/lib/i18n/request-locale", () => ({
+  getRequestLocale: getRequestLocaleMock,
 }));
 
 import OpenSourceArtifactDetailPage, {
@@ -116,6 +123,11 @@ const PARAMS = Promise.resolve({
 });
 
 describe("OpenSourceArtifactDetailPage", () => {
+  beforeEach(() => {
+    getRequestLocaleMock.mockReset();
+    getRequestLocaleMock.mockResolvedValue("de");
+  });
+
   it("keeps its mocked artifact aligned with the publication validator", async () => {
     const { assertOpenSourceArtifacts } = await vi.importActual<
       typeof import("@/lib/open-source/artifacts")
@@ -185,5 +197,53 @@ describe("OpenSourceArtifactDetailPage", () => {
         name: "Quellstand, öffnet in neuem Tab",
       }),
     ).toHaveAttribute("href", PROJECT.source.revisionHref);
+  });
+
+  it("renders English controls, localized routes, metadata, and breadcrumbs", async () => {
+    getRequestLocaleMock.mockResolvedValue("en");
+    const metadata = await generateMetadata({ params: PARAMS });
+    expect(metadata.alternates).toMatchObject({
+      canonical: `/en${PROJECT.href}`,
+    });
+    expect(metadata.openGraph).toMatchObject({
+      locale: "en_GB",
+      url: `https://loehrning.ai/en${PROJECT.href}`,
+    });
+
+    const { container } = render(
+      await OpenSourceArtifactDetailPage({ params: PARAMS }),
+    );
+    expect(screen.getByRole("link", { name: "Open source" })).toHaveAttribute(
+      "href",
+      "/en/open-source",
+    );
+    expect(
+      screen.getByRole("heading", { name: "Data flow" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Open, opens in a new tab" }),
+    ).toHaveAttribute("href", PROJECT.launchHref);
+    expect(
+      screen.getByRole("link", {
+        name: "Source revision, opens in a new tab",
+      }),
+    ).toHaveAttribute("href", PROJECT.source.revisionHref);
+    expect(
+      screen.getByRole("link", { name: "Open Source" }),
+    ).toHaveAttribute("href", "/en/open-source");
+
+    const graph = JSON.parse(
+      container.querySelector<HTMLScriptElement>(
+        `script#open-source-project-${PROJECT.slug}-jsonld`,
+      )?.textContent ?? "{}",
+    )["@graph"];
+    expect(graph[0].itemListElement).toEqual([
+      expect.objectContaining({
+        name: "Home",
+        item: "https://loehrning.ai/en",
+      }),
+      expect.objectContaining({ item: "https://loehrning.ai/en/open-source" }),
+      expect.objectContaining({ item: `https://loehrning.ai/en${PROJECT.href}` }),
+    ]);
   });
 });

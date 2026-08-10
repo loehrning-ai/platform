@@ -82,7 +82,7 @@ export function MarkdownRenderer({
               );
             }
             return (
-              <code className="border border-border bg-card px-1.5 py-0.5 font-mono text-sm text-brand-orange">
+              <code className="whitespace-normal border border-border bg-card px-1.5 py-0.5 font-mono text-sm text-brand-orange [overflow-wrap:anywhere]">
                 {children}
               </code>
             );

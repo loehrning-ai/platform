@@ -19,7 +19,10 @@
 import { describe, it, expect } from "vitest";
 import { getAllDataInfraLessons } from "./data";
 import { checkpointLessonId, type DataInfraLessonId } from "./types";
-import type { UnifiedCourseSlice, UnifiedLessonProgress } from "@/lib/progress/types";
+import type {
+  UnifiedCourseSlice,
+  UnifiedLessonProgress,
+} from "@/lib/progress/types";
 import { checkpointKey } from "@/lib/progress/types";
 
 const ROW_BYTE_CAP = 65536;

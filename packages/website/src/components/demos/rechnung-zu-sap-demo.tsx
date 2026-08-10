@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { DEMO } from "@/lib/demo-tokens";
 import { DEMO_HEIGHT, usePrefersReducedMotion, useVisibleAutoplay } from "./demo-utils";
+import { useDemoLocale } from "./demo-locale";
 
 interface Position {
   readonly pos: string;
@@ -45,11 +46,33 @@ const DATA: Extracted = {
   confidence: 0.97,
 };
 
+const DATA_EN: Extracted = {
+  ...DATA,
+  datum: "14 Apr 2026",
+  von: "FIKTIVWERK-BEISPIEL AG · Sample City (entirely fictional)",
+  faellig: "28 Apr 2026",
+  netto: "€84,300.00",
+  ust: "€16,017.00",
+  brutto: "€100,317.00",
+  positionen: [
+    { pos: "01", t: "Industrial sensors, type S-2200", menge: 12, ep: "4,850.00", sum: "58,200.00", conf: 0.98 },
+    { pos: "02", t: "Installation and briefing", menge: 1, ep: "18,400.00", sum: "18,400.00", conf: 0.92 },
+    { pos: "03", t: "12-month maintenance agreement", menge: 1, ep: "7,700.00", sum: "7,700.00", conf: 0.97 },
+  ],
+};
+
 const STAGES = [
   { s: 1, t: "OCR", d: "Azure Form Recognizer" },
   { s: 2, t: "Struktur-Parsing", d: "Claude Opus 4.5 · tool_use" },
   { s: 3, t: "Validierung", d: "UStG §14 · SKR03" },
   { s: 4, t: "SAP-Export vorbereiten", d: "IDoc INVOIC02 · Entwurf" },
+] as const;
+
+const STAGES_EN = [
+  { s: 1, t: "OCR", d: "Azure Form Recognizer" },
+  { s: 2, t: "Structure parsing", d: "Claude Opus 4.5 · tool use" },
+  { s: 3, t: "Validation", d: "Sample tax and account rules" },
+  { s: 4, t: "Prepare SAP export", d: "IDoc INVOIC02 · draft" },
 ] as const;
 
 // Abstract line-block pattern (like preview thumbnail), sized so that readable
@@ -66,6 +89,9 @@ const BLOCK_LINES: ReadonlyArray<{ w: string; dim?: boolean }> = [
 ];
 
 export default function RechnungZuSapDemo() {
+  const { locale, text } = useDemoLocale();
+  const data = locale === "de" ? DATA : DATA_EN;
+  const stages = locale === "de" ? STAGES : STAGES_EN;
   const reduced = usePrefersReducedMotion();
   const { ref, visible } = useVisibleAutoplay<HTMLDivElement>();
   const [stage, setStage] = useState<0 | 1 | 2 | 3 | 4>(0);
@@ -94,6 +120,8 @@ export default function RechnungZuSapDemo() {
     <div
       ref={ref}
       data-demo-id="rechnung-zu-sap"
+      role="region"
+      aria-label={text("Rechnung-zu-SAP-Beispiel", "Invoice-to-SAP example")}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -114,13 +142,19 @@ export default function RechnungZuSapDemo() {
             fontWeight: 700,
           }}
         >
-          Rechnungs-Automatisierung
+          {text("Rechnungs-Automatisierung", "Invoice automation")}
         </div>
         <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", marginTop: 6 }}>
-          Vom Scan zum <span style={{ color: "var(--color-brand-orange)" }}>SAP-Importentwurf</span>.
+          {text("Vom Scan zum", "From scan to")}{" "}
+          <span style={{ color: "var(--color-brand-orange)" }}>
+            {text("SAP-Importentwurf", "SAP import draft")}
+          </span>.
         </h2>
         <p style={{ fontSize: 12, color: DEMO.schiefer, marginTop: 4 }}>
-          Beispiel-Laufzeit und Fehlerquote hängen von Belegqualität, Regeln und Review ab.
+          {text(
+            "Laufzeit und Fehlerquote hängen von Belegqualität, Regeln und Review ab. Hier werden nur feste Beispieldaten verarbeitet.",
+            "Runtime and error rate depend on document quality, rules, and review. This interface processes fixed sample data only.",
+          )}
         </p>
       </div>
 
@@ -169,7 +203,7 @@ export default function RechnungZuSapDemo() {
                 marginTop: 2,
               }}
             >
-              00000 Musterstadt (DUMMY)
+              {text("00000 Musterstadt (DUMMY)", "00000 Sample City (DUMMY)")}
             </div>
 
             <div
@@ -183,7 +217,7 @@ export default function RechnungZuSapDemo() {
                 fontWeight: 700,
               }}
             >
-              Rechnung
+              {text("Rechnung", "Invoice")}
             </div>
             <div
               style={{
@@ -227,9 +261,9 @@ export default function RechnungZuSapDemo() {
               }}
             >
               <span style={{ fontSize: 9, color: DEMO.schiefer, letterSpacing: "0.1em", textTransform: "uppercase" }}>
-                Brutto
+                {text("Brutto", "Gross")}
               </span>
-              <span style={{ fontSize: 13, fontWeight: 700, color: DEMO.ink }}>100.317,00 €</span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: DEMO.ink }}>{data.brutto}</span>
             </div>
 
             {/* OCR scanline — only while stages 1-3 active */}
@@ -281,7 +315,7 @@ export default function RechnungZuSapDemo() {
               letterSpacing: "0.02em",
             }}
           >
-            siemens_re-2026-04211.pdf · 284 KB
+            fiktivwerk_re-2026-04211.pdf · 284 KB
           </div>
 
           <style>{`
@@ -292,6 +326,11 @@ export default function RechnungZuSapDemo() {
             @media (min-width: 640px) {
               [data-demo-id="rechnung-zu-sap"] .rechnung-grid {
                 grid-template-columns: 260px minmax(0, 1fr) !important;
+              }
+            }
+            @media (max-width: 479px) {
+              [data-demo-id="rechnung-zu-sap"] .rechnung-fields-grid {
+                grid-template-columns: minmax(0, 1fr) !important;
               }
             }
             @media (prefers-reduced-motion: reduce) {
@@ -305,7 +344,7 @@ export default function RechnungZuSapDemo() {
         {/* Stages + Extracted */}
         <div style={{ minWidth: 0 }}>
           <div style={{ display: "flex", flexDirection: "column", gap: 4, marginBottom: 12 }}>
-            {STAGES.map((st, idx) => {
+            {stages.map((st, idx) => {
               const done = stage > st.s;
               const active = stage === st.s;
               const payoff = st.s === 4 && stage >= 4;
@@ -337,7 +376,7 @@ export default function RechnungZuSapDemo() {
                   }}
                 >
                   {/* Connector line below (except last) */}
-                  {idx < STAGES.length - 1 && (
+                  {idx < stages.length - 1 && (
                     <span
                       aria-hidden
                       style={{
@@ -384,7 +423,7 @@ export default function RechnungZuSapDemo() {
                   >
                     {active && !done ? (
                       <span style={{ color: "var(--color-brand-orange)", fontWeight: 700 }}>
-                        läuft…
+                        {text("läuft…", "running…")}
                       </span>
                     ) : (
                       st.d
@@ -444,7 +483,7 @@ export default function RechnungZuSapDemo() {
                       fontWeight: 700,
                     }}
                   >
-                    IDoc INVOIC02 · Entwurf
+                    IDoc INVOIC02 · {text("Entwurf", "draft")}
                   </div>
                 </div>
                 <span
@@ -457,10 +496,11 @@ export default function RechnungZuSapDemo() {
                     fontWeight: 700,
                   }}
                 >
-                  Beispiel-Score {Math.round(DATA.confidence * 100)}%
+                  {text("Beispiel-Score", "Sample score")} {Math.round(data.confidence * 100)}%
                 </span>
               </div>
               <div
+                className="rechnung-fields-grid"
                 style={{
                   display: "grid",
                   gridTemplateColumns: "1fr 1fr",
@@ -472,12 +512,12 @@ export default function RechnungZuSapDemo() {
               >
                 {(
                   [
-                    ["Nr", DATA.nr],
-                    ["Datum", DATA.datum],
-                    ["Von", DATA.von],
-                    ["Fällig", DATA.faellig],
-                    ["USt-ID", DATA.ustId],
-                    ["IBAN", DATA.iban],
+                    [text("Nr.", "No."), data.nr],
+                    [text("Datum", "Date"), data.datum],
+                    [text("Von", "From"), data.von],
+                    [text("Fällig", "Due"), data.faellig],
+                    [text("USt-ID", "Tax ID"), data.ustId],
+                    ["IBAN", data.iban],
                   ] as const
                 ).map(([k, v]) => (
                   <div
@@ -490,7 +530,7 @@ export default function RechnungZuSapDemo() {
                     }}
                   >
                     <span style={{ color: DEMO.schiefer, minWidth: 56 }}>{k}</span>
-                    <span style={{ fontWeight: 600, color: DEMO.ink }}>{v}</span>
+                    <span style={{ minWidth: 0, overflowWrap: "anywhere", fontWeight: 600, color: DEMO.ink }}>{v}</span>
                   </div>
                 ))}
               </div>
@@ -507,9 +547,9 @@ export default function RechnungZuSapDemo() {
                     <tr style={{ borderBottom: `1px solid ${DEMO.ink}` }}>
                       {[
                         { h: "Pos", align: "left" as const },
-                        { h: "Leistung", align: "left" as const },
-                        { h: "Menge", align: "right" as const },
-                        { h: "Summe", align: "right" as const },
+                        { h: text("Leistung", "Item"), align: "left" as const },
+                        { h: text("Menge", "Qty"), align: "right" as const },
+                        { h: text("Summe", "Total"), align: "right" as const },
                         { h: "Conf.", align: "right" as const },
                       ].map(({ h, align }) => (
                         <th
@@ -530,7 +570,7 @@ export default function RechnungZuSapDemo() {
                     </tr>
                   </thead>
                   <tbody>
-                    {DATA.positionen.map((p) => {
+                    {data.positionen.map((p) => {
                       const low = p.conf < 0.95;
                       return (
                         <tr
@@ -581,7 +621,7 @@ export default function RechnungZuSapDemo() {
                           fontSize: 9,
                         }}
                       >
-                        Brutto
+                        {text("Brutto", "Gross")}
                       </td>
                       <td
                         style={{
@@ -592,7 +632,7 @@ export default function RechnungZuSapDemo() {
                           fontSize: 11,
                         }}
                       >
-                        {DATA.brutto}
+                        {data.brutto}
                       </td>
                       <td />
                     </tr>
@@ -623,9 +663,12 @@ export default function RechnungZuSapDemo() {
                   marginBottom: 4,
                 }}
               >
-                Pipeline läuft
+                {text("Pipeline läuft", "Pipeline running")}
               </div>
-              Extrahierte Felder erscheinen nach UStG-Validierung.
+              {text(
+                "Extrahierte Felder erscheinen nach UStG-Validierung.",
+                "Extracted fields appear after the rule checks.",
+              )}
             </div>
           )}
         </div>

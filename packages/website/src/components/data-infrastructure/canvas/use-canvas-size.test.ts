@@ -21,7 +21,10 @@ import { useCanvasAutoSize } from "./use-canvas-size";
 
 type ResizeCallback = () => void;
 
-function installMockResizeObserver(): { fireAll: () => void; observeCount: () => number } {
+function installMockResizeObserver(): {
+  fireAll: () => void;
+  observeCount: () => number;
+} {
   const callbacks: ResizeCallback[] = [];
   class MockResizeObserver {
     private readonly cb: ResizeCallback;

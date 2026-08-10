@@ -60,11 +60,16 @@ vi.mock("framer-motion", async () => {
       },
     },
   );
+  const Pass = ({ children }: { children?: React.ReactNode }) =>
+    React.createElement(React.Fragment, null, children);
   return {
     __esModule: true,
     m,
     motion: m,
     useReducedMotion: () => motionState.reduced,
+    LazyMotion: Pass,
+    MotionConfig: Pass,
+    domAnimation: {},
   };
 });
 

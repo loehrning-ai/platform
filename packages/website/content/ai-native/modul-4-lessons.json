@@ -124,7 +124,7 @@
       "moduleId": "modul_4",
       "number": 2,
       "title": "Sandbox-Build 1: E-Mail-Triage → Review-Liste",
-      "subtitle": "n8n + Claude + CRM-Beispiel in 12 Minuten",
+      "subtitle": "n8n + Modell-API + CRM-Beispiel als kontrollierte Sandbox",
       "durationMinutes": 12,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
@@ -220,15 +220,15 @@
           "id": "modul_4_lesson_2_section_1",
           "title": "Der Flow in 5 Knoten",
           "readTimeMinutes": 3,
-          "content": "Du bekommst pro Tag 15 E-Mails, die eigentlich sortiert oder ins CRM übertragen werden müssten. Kundenanfragen, Leads, Follow-ups. Zwei Minuten pro Übertragung werden schnell zu mehreren Stunden pro Monat.\n\n**In den nächsten 12 Minuten baust du den Sandbox-Flow, der daraus eine Review-Liste vorbereitet.**\n\n```\n  [Beispiel-Mail Trigger]\n         |\n         v\n  [Claude-Klassifikator]: Lead / Kunde / Intern / Spam?\n         |\n         v\n  [Switch-Knoten]\n    ├── Lead → [Claude-Extraktor] → [CRM-Review-Eintrag]\n    ├── Kunde → [Activity-Review-Eintrag]\n    └── Rest → [Ignorieren-Vorschlag]\n```\n\n**Warum zwei Claude-Calls:** der erste klassifiziert nur. Der zweite extrahiert Felder für die Review-Liste.",
-          "keyTakeaway": "5-Knoten-Sandbox. Zwei Claude-Calls: Klassifikation und Extraktion. Kein Auto-Write ohne Review."
+          "content": "Eingehende Kundenanfragen, Leads und Follow-ups müssen häufig sortiert und in einem CRM dokumentiert werden. Ob sich eine Automatisierung lohnt, ergibt sich erst aus dem gemessenen Volumen, der Bearbeitungszeit und der Fehlerquote.\n\nIn dieser Sandbox baust du einen Flow, der aus synthetischen E-Mails eine Review-Liste vorbereitet.\n\n```\n  [Beispiel-Mail Trigger]\n         |\n         v\n  [Modell-Klassifikator]: Lead / Kunde / Intern / Spam?\n         |\n         v\n  [Switch-Knoten]\n    ├── Lead → [Feld-Extraktion] → [CRM-Review-Eintrag]\n    ├── Kunde → [Activity-Review-Eintrag]\n    └── Rest → [Ignorieren-Vorschlag]\n```\n\nKlassifikation und Extraktion sind getrennte Schritte. Dadurch lassen sich Schema, Modellkonfiguration, Tests und Fehlerbehandlung pro Schritt unabhängig festlegen.",
+          "keyTakeaway": "Die Sandbox trennt Klassifikation, Extraktion und Review. Schreibzugriff bleibt bis zur fachlichen und technischen Freigabe deaktiviert."
         },
         {
           "id": "modul_4_lesson_2_section_2",
           "title": "Flow bauen",
           "readTimeMinutes": 5,
           "content": "**1. Beispiel-Mail-Trigger:**\n- Trigger: \"Neue Beispiel-Mail\"\n- Filter: keine internen Testdaten\n\n**2. Claude-Klassifikator-Knoten (HTTP Request):**\n- POST zu `https://api.anthropic.com/v1/messages`\n- Prompt:\n```\nKlassifiziere diese E-Mail:\n- LEAD: neue Anfrage, potenzieller Neukunde\n- KUNDE: bestehender Kunde\n- INTERN: interne Kommunikation\n- SPAM: Werbung, Newsletter\n\nE-Mail-Text: {{ $json.body }}\n\nAntwort STRIKT: nur \"LEAD\", \"KUNDE\", \"INTERN\" oder \"SPAM\".\n```\n\n**3. Switch-Knoten:**\n- Route 1: \"LEAD\" → Lead-Review-Pfad\n- Route 2: \"KUNDE\" → Kunden-Review-Pfad\n- Route 3: sonst → nichts\n\n**4. Lead-Pfad, Claude-Extraktor:**\n```\nAus dieser Lead-E-Mail extrahiere strikt JSON:\n{\n  \"firma\": \"...\",\n  \"ansprechpartner\": \"...\",\n  \"email\": \"...\",\n  \"dringlichkeit\": \"hoch | mittel | niedrig\"\n}\n```\n\n**5. Lead-Pfad:** Review-Eintrag vorbereiten.\n\n**6. Kunde-Pfad:** Activity-Review-Eintrag vorbereiten.",
-          "keyTakeaway": "Claude klassifiziert und extrahiert. Switch routet in Review-Pfade."
+          "keyTakeaway": "Das Modell liefert Klassifikation und strukturierte Felder. Schema-Validierung und Switch routen nur gültige Ergebnisse in Review-Pfade."
         },
         {
           "id": "modul_4_lesson_2_section_3",
@@ -248,7 +248,7 @@
       "quiz": [
         {
           "id": "modul_4_lesson_2_q1",
-          "questionText": "Warum zwei Claude-Calls in dieser Architektur?",
+          "questionText": "Warum trennt diese Architektur Klassifikation und Extraktion?",
           "answerOptions": [
             {
               "id": "a",
@@ -257,7 +257,7 @@
             },
             {
               "id": "b",
-              "text": "Haiku klassifiziert schneller + günstiger, Sonnet extrahiert präziser",
+              "text": "Beide Schritte können mit eigenen Schemas, Modellkonfigurationen, Tests und Fehlerregeln betrieben werden",
               "isCorrect": true
             },
             {
@@ -271,7 +271,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Haiku für Klassifikation (1 Wort Antwort, schneller, billiger). Sonnet für Extraktion (präzises JSON, höhere Qualität)."
+          "explanation": "Die Trennung macht jeden Schritt einzeln testbar. Modellwahl, Kosten und Qualität müssen mit den eigenen Daten und der aktuellen Anbieterkonfiguration gemessen werden."
         },
         {
           "id": "modul_4_lesson_2_q2",
@@ -284,7 +284,7 @@
             },
             {
               "id": "b",
-              "text": "AVVs/DPA für Mail, CRM und Claude, Datenschutzhinweis, keine Art-22-Einzelentscheidung",
+              "text": "Rollen und Datenflüsse bestimmen, erforderliche AVVs/DPA prüfen, Transparenzpflichten erfüllen und Art. 22 bei erheblichen automatisierten Entscheidungen gesondert bewerten",
               "isCorrect": true
             },
             {
@@ -298,7 +298,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "AVVs sind Art-28-Pflicht. Transparenz-Hinweis nach Art. 13. Art. 22 greift NICHT weil keine Einzel-Entscheidung mit Rechtswirkung, nur Sortierung."
+          "explanation": "Ein Vertrag nach Art. 28 ist erforderlich, wenn ein Dienst personenbezogene Daten im Auftrag verarbeitet. Transparenzpflichten und Rechtsgrundlage hängen vom konkreten Datenfluss ab. In der Sandbox entsteht nur eine Review-Liste; ändert sich die nachgelagerte Nutzung, muss Art. 22 erneut geprüft werden."
         }
       ]
     },
@@ -311,7 +311,7 @@
       "durationMinutes": 10,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
-      "voiceAnchor": "Meeting-Notizen schreiben ist 2024. Meeting-Aktions-Follow-up auch.",
+      "voiceAnchor": "Ein Transkript ist Rohmaterial. Erst strukturierte Extraktion und fachliche Prüfung machen daraus eine belastbare Aufgabenliste.",
       "keyConcepts": [
         "tl;dv",
         "Webhook",
@@ -326,17 +326,17 @@
       "sections": [
         {
           "id": "modul_4_lesson_3_section_1",
-          "title": "Das 20-Minuten-Problem",
+          "title": "Vom Transkript zur Review-Liste",
           "readTimeMinutes": 2,
-          "content": "Meeting zu Ende. Du hast Notizen, halb getippt, halb handschriftlich. Action-Items verschwinden schnell, wenn niemand sie strukturiert.\n\nIn den nächsten 10 Minuten baust du einen Sandbox-Flow, der aus einem Beispieltranskript eine Aufgabenliste vorbereitet.\n\n**Architektur:**\n```\n  [Beispiel-Transkript] → [Claude Extractor] → [Aufgabenliste] + [Review-Hinweis]\n```\n\n- Das Transkript ist Beispieldatenmaterial\n- Claude extrahiert strukturiert (JSON)\n- Die Aufgabenliste ist ein Review-Artefakt\n- Erst nach Prüfung wird sie in ein echtes Tool übertragen",
+          "content": "Nach einem Meeting liegen Entscheidungen und Aufgaben oft verteilt in Notizen oder einem Transkript. Diese Informationen müssen strukturiert werden, bevor Verantwortliche sie bestätigen können.\n\nIn dieser Sandbox baust du einen Flow, der aus einem synthetischen Beispieltranskript eine Aufgabenliste vorbereitet.\n\n**Architektur:**\n```\n  [Beispiel-Transkript] → [Strukturierte Extraktion] → [Aufgabenliste] + [Review-Hinweis]\n```\n\n- Das Transkript enthält nur Beispieldaten\n- Das Modell liefert strukturiertes JSON\n- Die Ausgabe wird gegen ein Schema validiert\n- Verantwortliche, Termine und Entscheidungen werden vor der Übertragung bestätigt",
           "keyTakeaway": "Meeting-Nachbereitung wird vorbereitet, nicht ersetzt. Transkript → Aufgabenliste → Review."
         },
         {
           "id": "modul_4_lesson_3_section_2",
           "title": "tl;dv + Claude-Extractor",
           "readTimeMinutes": 4,
-          "content": "**tl;dv Webhook aufsetzen:**\n\nIn tl;dv → Settings → Integrations → Webhook:\n- URL: `http://{n8n-server}/webhook/meeting-end`\n- Event: `meeting.completed`\n- Payload: Transkript + Meeting-Metadaten\n\n**n8n-Seite:** Webhook-Trigger-Knoten, URL notieren.\n\n**Claude-Extractor mit JSON-Output:**\n\n```\nAus diesem Meeting-Transkript extrahiere strikt valides JSON:\n\n{\n  \"meeting\": {\n    \"thema\": \"...\",\n    \"datum\": \"YYYY-MM-DD\",\n    \"teilnehmer\": [\"...\"]\n  },\n  \"entscheidungen\": [\n    {\"text\": \"...\", \"kontext\": \"...\"}\n  ],\n  \"action_items\": [\n    {\n      \"text\": \"...\",\n      \"verantwortlich\": \"... (Name)\",\n      \"faelligkeit\": \"YYYY-MM-DD oder null\",\n      \"prioritaet\": \"hoch | mittel | niedrig\"\n    }\n  ],\n  \"offene_fragen\": [\n    {\"text\": \"...\", \"wer_antwortet\": \"...\"}\n  ]\n}\n\nTranskript: {{ $json.transcript }}\n\nWichtig: NUR JSON. Kein Prosa. Wenn ein Feld unklar ist, setze null, erfinde nichts.\n```\n\n**Structured-Output-Best-Practice:** \"Denke Schritt für Schritt\" NICHT hinzufügen, das stoppt JSON-Output-Reinheit. Stattdessen: klare Felder + null-Regel.",
-          "keyTakeaway": "JSON-Output mit null-Regel. Kein CoT bei JSON, nur bei Prosa-Outputs."
+          "content": "**Webhook vorbereiten:**\n\nPrüfe in der aktuellen Dokumentation des Transkriptionsdienstes, ob Webhooks, Ereignisname, Signaturprüfung und Payload für deinen Tarif verfügbar sind. Verwende ausschließlich eine geschützte HTTPS-URL.\n\n**n8n-Seite:** Webhook-Trigger anlegen, Signatur oder gemeinsamen Secret-Wert prüfen und nur die benötigten Felder weiterreichen.\n\n**Extraktion mit JSON-Output:**\n\n```\nExtrahiere aus diesem Meeting-Transkript JSON nach diesem Schema:\n\n{\n  \"meeting\": {\n    \"thema\": \"...\",\n    \"datum\": \"YYYY-MM-DD\",\n    \"teilnehmer\": [\"...\"]\n  },\n  \"entscheidungen\": [\n    {\"text\": \"...\", \"kontext\": \"...\"}\n  ],\n  \"action_items\": [\n    {\n      \"text\": \"...\",\n      \"verantwortlich\": \"... (Name)\",\n      \"faelligkeit\": \"YYYY-MM-DD oder null\",\n      \"prioritaet\": \"hoch | mittel | niedrig\"\n    }\n  ],\n  \"offene_fragen\": [\n    {\"text\": \"...\", \"wer_antwortet\": \"...\"}\n  ]\n}\n\nTranskript: {{ $json.transcript }}\n\nGib nur ein JSON-Objekt aus. Wenn ein Feld nicht belegt ist, setze `null`; ergänze keine Information aus Vermutung.\n```\n\nValidiere die Antwort technisch gegen ein JSON-Schema. Eine Aufforderung, interne Denkschritte auszugeben, ist weder für gültiges JSON noch für die fachliche Prüfung erforderlich.",
+          "keyTakeaway": "Definiertes Schema, null-Regel und technische Validierung sind die belastbare Grundlage für strukturierte Ausgabe."
         },
         {
           "id": "modul_4_lesson_3_section_3",
@@ -376,7 +376,7 @@
         },
         {
           "id": "modul_4_lesson_3_q2",
-          "questionText": "Warum bei JSON-Output NICHT Chain-of-Thought hinzufügen?",
+          "questionText": "Welche Anweisung unterstützt einen belastbaren JSON-Output?",
           "answerOptions": [
             {
               "id": "a",
@@ -385,7 +385,7 @@
             },
             {
               "id": "b",
-              "text": "CoT macht Prosa vor dem JSON, stoppt JSON-Reinheit",
+              "text": "Ein eindeutiges Schema, eine null-Regel für fehlende Werte und anschließende technische Validierung",
               "isCorrect": true
             },
             {
@@ -399,7 +399,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Chain-of-Thought zwingt Claude zu Zwischen-Schritten, die als Prosa vor dem JSON erscheinen. Parsing bricht. Bei JSON-Output: klare Felder + null-Regel."
+          "explanation": "Ein Schema begrenzt Form und Datentypen; die null-Regel verhindert erfundene Pflichtwerte. Der Workflow muss die Antwort trotzdem parsen, validieren und bei Fehlern anhalten oder zur Prüfung geben."
         }
       ]
     },
@@ -502,8 +502,8 @@
           "id": "modul_4_lesson_4_section_2",
           "title": "Kritisch: Draft, nicht Send",
           "readTimeMinutes": 3,
-          "content": "**Kritischer Teil:** der Flow **erstellt einen Draft**, sendet nicht selbst. Du reviewst, schickst raus.\n\n**Warum so:** Wochenberichte gehen an Menschen. Vorgesetzte. Geschäftsführung. Vollautomatisches Versenden ist zu riskant. Draft + manueller Review = richtige Kombination.\n\n**Cron-Trigger + Notiz-Query:**\n\n1. **Cron-Trigger:**\n   - Cron-Expression: `0 16 * * 5` (Freitag 16:00 Uhr)\n   - Timezone: Europe/Berlin\n\n2. **Notiz-Query-Knoten**:\n   - Query 1: Daily Notes der aktuellen Woche\n   - Query 2: aktive Projekt-MOCs\n   - Query 3: Notizen mit Tag `#entscheidung` aus letzten 7 Tagen\n\nDer Knoten aggregiert Rohdaten in ein strukturiertes JSON.\n\n**Technischer Hinweis:** Der Kurs zeigt das Muster mit Beispieldaten. Eine echte Integration braucht Rechteprüfung, Logging, Fallback und Review-Prozess.",
-          "keyTakeaway": "Draft, nicht Send. Vollautomatik bei Menschen-Empfängern = Reputation-Risiko."
+          "content": "**Kritischer Teil:** Der Flow **erstellt einen Entwurf**, sendet ihn aber nicht selbst. Eine benannte Person prüft Quellen, Zahlen, Empfänger und Freigabestatus.\n\nOb ein automatischer Versand vertretbar ist, hängt von Inhalt, Empfängern, Fehlerfolgen und bestehenden Kontrollen ab. Für diesen Kurs bleibt der manuelle Review das feste Gate.\n\n**Cron-Trigger + Notiz-Query:**\n\n1. **Cron-Trigger:**\n   - Cron-Expression: `0 16 * * 5` (Freitag 16:00 Uhr)\n   - Timezone: Europe/Berlin\n\n2. **Notiz-Query-Knoten**:\n   - Query 1: Daily Notes der aktuellen Woche\n   - Query 2: aktive Projekt-MOCs\n   - Query 3: Notizen mit Tag `#entscheidung` aus letzten 7 Tagen\n\nDer Knoten aggregiert Rohdaten in ein strukturiertes JSON.\n\n**Technischer Hinweis:** Der Kurs zeigt das Muster mit Beispieldaten. Eine echte Integration braucht Rechteprüfung, Logging, Fallback und Review-Prozess.",
+          "keyTakeaway": "Entwurf statt Versand. Quellen, Zahlen, Empfänger und Freigabe werden vor jeder Weitergabe geprüft."
         },
         {
           "id": "modul_4_lesson_4_section_3",
@@ -532,7 +532,7 @@
             },
             {
               "id": "b",
-              "text": "Empfänger sind Menschen, Review ist 2-Min-Investment für Reputation-Schutz",
+              "text": "Der Review prüft Quellen, Zahlen, Empfänger und Freigabe vor der Weitergabe",
               "isCorrect": true
             },
             {
@@ -546,7 +546,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Wochenbericht geht an Vorgesetzte. Claude kann Fehler haben. 2-Min-Review-Investment = Reputations-Schutz wert."
+          "explanation": "Ein Entwurf kann Fakten auslassen, falsch zuordnen oder vertrauliche Angaben enthalten. Dauer und Tiefe des Reviews richten sich nach Inhalt und Fehlerfolgen."
         },
         {
           "id": "modul_4_lesson_4_q2",
@@ -559,7 +559,7 @@
             },
             {
               "id": "b",
-              "text": "Alle regelmäßigen Berichte: Cron + Vault-Daten + Claude + Review",
+              "text": "Ein Kandidatenmuster für wiederkehrende Berichte: Zeitplan + freigegebene Quellen + Modellentwurf + Review",
               "isCorrect": true
             },
             {
@@ -573,7 +573,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Monatsberichte, Quartals-Reviews, Kunden-Status-Updates, alles Cron + Vault + Claude + Draft. Ein Muster, viele Anwendungen."
+          "explanation": "Das Muster kann auf andere wiederkehrende Berichte übertragen werden, wenn Datenquellen, Berechtigungen, Fehlerfolgen und Review-Gate für den jeweiligen Zweck passen."
         }
       ]
     },
@@ -1101,11 +1101,11 @@
       "moduleId": "modul_4",
       "number": 7,
       "title": "Capstone Brief",
-      "subtitle": "Ship one workflow in 7 Tagen",
+      "subtitle": "Einen begrenzten Workflow als prüfbaren Pilot dokumentieren",
       "durationMinutes": 8,
       "premiumGated": false,
       "refreshCadence": "EVERGREEN",
-      "voiceAnchor": "Du hast bis jetzt gelernt. Ab jetzt lieferst du.",
+      "voiceAnchor": "Der Capstone überträgt eine Kursmethode auf einen begrenzten, messbaren Arbeitsablauf.",
       "keyConcepts": [
         "Capstone",
         "Capstone-Rubric",
@@ -1120,7 +1120,7 @@
             "lessonId": "modul_4_lesson_7",
             "moduleId": "modul_4",
             "title": "Definiere deinen Capstone: scharf und prüfbar",
-            "scenario": "Der Capstone ist dein Output-Nachweis. Keine Slides, keine Absichten, nur ein gebautes System. Fülle die 5 Felder präzise. Je schärfer jetzt, desto kürzer baust du später.",
+            "scenario": "Der Capstone dokumentiert einen gebauten Pilot-Workflow. Fülle die fünf Felder so aus, dass Umfang, Grenzen und Review-Kriterien vor der Umsetzung prüfbar sind.",
             "criteria": {
               "role": {
                 "minChars": 20,
@@ -1151,22 +1151,22 @@
           "id": "modul_4_lesson_7_section_1",
           "title": "Warum ein Capstone",
           "readTimeMinutes": 2,
-          "content": "Der schwierigste Teil von Weiterbildung ist nicht das Lernen. Es ist die Übertragung vom Kurs in die Arbeit.\n\nDie meisten Leute lernen etwas, nicken zustimmend, und machen dann: nichts. Zurück zum alten Workflow. Arbeitskurs-Zeit verpufft.\n\nDamit das nicht passiert, hast du sieben Tage Zeit für **einen konkreten Workflow, der als Pilot dokumentiert wird**. Kein blindes Deployment. Ein geprüfter, begrenzter Arbeitsversuch.",
-          "keyTakeaway": "Capstone = Übertragung vom Kurs in deine Arbeit. Ohne dokumentierten Pilot bleibt der Arbeitskurs Info-Konsum."
+          "content": "Ein Kursabschluss zeigt erst dann praktische Anwendung, wenn eine Methode auf einen realen Arbeitsablauf übertragen und anhand definierter Kriterien geprüft wird.\n\nDer Capstone ist deshalb **ein konkreter Workflow, der als begrenzter Pilot dokumentiert wird**. Er wird mit freigegebenen Daten getestet, gegen einen bisherigen Ablauf verglichen und nicht ungeprüft produktiv gesetzt.\n\nDer vorgeschlagene Projektzeitraum beträgt sieben Tage. Umfang und Zeitbudget legst du anhand der eigenen Verfügbarkeit und des Risikos fest.",
+          "keyTakeaway": "Der Capstone dokumentiert die Übertragung einer Kursmethode in einen begrenzten, messbaren und reviewbaren Pilot."
         },
         {
           "id": "modul_4_lesson_7_section_2",
           "title": "Was ein gutes Capstone ist",
           "readTimeMinutes": 3,
-          "content": "**Gutes Capstone:**\n- **Real:** löst ein echtes, wiederkehrendes Problem in deiner Arbeit\n- **Messbar:** du kannst \"vorher X Zeit, nachher Y Zeit\" quantifizieren\n- **Pilotiert:** läuft begrenzt, überprüfbar und mit Fallback\n- **Dokumentiert:** mit Workflow-Diagramm + DSGVO-Check + Fail-Mode\n- **Shareable:** könnte einem Kollegen übergeben werden, ohne 2-Stunden-Einarbeitung\n\n**Schlechtes Capstone:**\n- Tutorial-Replikation\n- Nicht angewendet: \"das hab ich mal ausprobiert, aber in meiner Arbeit brauche ich's nicht\"\n- Nicht gemessen: \"das spart bestimmt Zeit\"\n- Fragile Architektur: \"läuft, aber wenn X passiert, bricht alles zusammen\"\n\n**Drei Beispiele aus Mittelstand-Realität:**\n\n1. **Vertrieb, Angebots-Follow-up-Entwurf.** Angebot raus → Follow-up-Entwürfe zu Tag 3, 7, 14 → Mensch prüft und sendet.\n2. **Finanzen, Rechnungs-Ingestion.** Rechnungen per E-Mail → Extract via Claude → DATEV-CSV → Review + Import.\n3. **HR, Onboarding-Pack.** Neuer Mitarbeiter → Entwürfe für Welcome-Mail, Zugang-Requests und Willkommensdokumente.",
-          "keyTakeaway": "Real, messbar, pilotiert, dokumentiert, shareable. Nicht Demo. Nicht blindes Deployment."
+          "content": "**Prüfbarer Capstone:**\n- **Relevant:** bearbeitet ein echtes, wiederkehrendes Problem\n- **Messbar:** erfasst mindestens Qualität, Fehler, Review-Aufwand oder Durchlaufzeit vor und nach dem Pilot\n- **Begrenzt:** hat klaren Start, klares Ende, erlaubte Daten und einen Fallback\n- **Dokumentiert:** enthält Workflow-Diagramm, Risiko- und Datenschutzprüfung sowie Fehlerbehandlung\n- **Übergabefähig:** nennt Voraussetzungen, Betriebsschritte, Zuständigkeit und Abschaltweg\n\n**Nicht ausreichend:**\n- unveränderte Tutorial-Replikation\n- keine Anwendung auf den gewählten Arbeitsablauf\n- unbelegte Nutzenaussage ohne Ausgangswert\n- fehlender Umgang mit Fehlern, Ausfällen oder falschen Ergebnissen\n\n**Drei mögliche Pilotmuster:**\n\n1. **Vertrieb, Angebots-Follow-up-Entwurf.** Angebot erfasst → Entwurf nach definierter Frist → Mensch prüft Empfänger, Inhalt und Versand.\n2. **Finanzen, Rechnungs-Ingestion.** synthetische Rechnungen → Felder extrahieren → CSV validieren → fachlicher Review vor Import.\n3. **HR, Onboarding-Pack.** freigegebene Stammdaten → Dokumententwürfe → HR prüft Rechte, Vollständigkeit und Versand.",
+          "keyTakeaway": "Relevant, messbar, begrenzt, dokumentiert und übergabefähig. Der Capstone bleibt ein Pilot, bis die Produktionsfreigaben vorliegen."
         },
         {
           "id": "modul_4_lesson_7_section_3",
           "title": "Scope in 7 Tagen",
           "readTimeMinutes": 3,
-          "content": "**Zeitbudget realistisch:**\n- 7 Tage × 1-2 Stunden/Tag = 7-14 Stunden Gesamtaufwand\n- Davon: 3-5 Stunden Planung + Architektur\n- 4-7 Stunden Bauen + Testen\n- 1-2 Stunden Dokumentation\n\n**Scope \"zu groß\" (nicht machbar):**\n- \"Ich baue ein komplettes CRM-System mit AI\", split in 3 Sub-Projekte\n- \"Ich digitalisiere die ganze Buchhaltung\", zu viele Fachbereiche\n- \"Ich migriere die Firmen-Dokumentation zu Obsidian mit AI\", Migrations-Projekt\n\n**Scope \"genau richtig\":**\n- \"Angebots-Draft-Generator aus Briefing + Preisliste\", 2 Tools, klares Start/Ende\n- \"Tägliche Lead-Email-Triage mit Claude-Klassifikation\", wie Lesson 4.2\n- \"Wochen-Newsletter aus 30 Resources/Branche Obsidian-Notizen\", einfache Pipeline\n\n**Scope-Reduktion-Regel:** wenn Scope unklar ist, halbieren. Du kannst immer erweitern, aber nicht \"ich hab 50% geliefert\" präsentieren.\n\n**Pflicht-Elemente Capstone-Rubric:**\n1. Problem-Statement (1 Absatz)\n2. Workflow-Diagramm (Trigger → Steps → Output)\n3. Tool-Wahl-Begründung (3-5 Sätze)\n4. DSGVO-Check\n5. Zeit-Messung (mindestens 3 Durchläufe)\n6. Fail-Mode + Fallback\n7. Nächster-Schritt-Liste\n\n**Homework:** 48 Stunden → Workflow wählen + als interne Notiz dokumentieren: Titel, 1-Absatz-Problem-Statement, geplanter Stack, 7-Tage-Plan. Review anhand der Rubrik. Dann starten.",
-          "keyTakeaway": "7-14 h Aufwand. Scope halbieren bei Unklarheit. 7 Pflicht-Elemente nach Rubric."
+          "content": "**Zeitbudget festlegen:**\n- Verfügbare Arbeitszeit und Review-Kapazität notieren\n- Einen ersten prüfbaren Durchlauf innerhalb dieses Budgets planen\n- Zeit für Testdaten, Fehlerfälle, Dokumentation und Rückbau reservieren\n\n**Scope zu groß:**\n- \"Ich baue ein komplettes CRM-System mit KI\"\n- \"Ich digitalisiere die gesamte Buchhaltung\"\n- \"Ich migriere die komplette Firmendokumentation\"\n\n**Begrenzbarer Scope:**\n- \"Angebotsentwurf aus freigegebenem Briefing und versionierter Preisliste\"\n- \"Lead-E-Mail-Triage mit synthetischen Testmails und Review-Liste\"\n- \"Wochenbericht aus einem definierten Satz freigegebener Notizen\"\n\n**Scope-Reduktion:** Formuliere den kleinsten Durchlauf, der die zentrale Annahme prüft. Entferne weitere Datenquellen, automatische Schreibaktionen und Sonderfälle, bis Start, Ende, Review und Fallback eindeutig sind.\n\n**Sieben Pflicht-Elemente der Capstone-Rubrik:**\n1. Problem-Statement\n2. Workflow-Diagramm (Trigger → Schritte → Output)\n3. Begründung der Tool-Wahl\n4. Risiko- und Datenschutzprüfung\n5. Messung anhand von mindestens drei vergleichbaren Durchläufen\n6. Fehlerfall + Fallback\n7. Liste der offenen Entscheidungen und nächsten Schritte\n\n**Homework:** Workflow auswählen und intern dokumentieren: Titel, Problem, erlaubte Daten, geplanter Stack, Zeitbudget, Review-Kriterien und Abbruchbedingung. Vor dem Bau anhand der Rubrik prüfen.",
+          "keyTakeaway": "Das Zeitbudget kommt vor dem Scope. Reduziere auf einen prüfbaren Durchlauf und dokumentiere die sieben Rubrik-Elemente."
         }
       ],
       "quiz": [
@@ -1176,7 +1176,7 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Problem / Diagramm / Tool-Wahl / DSGVO / Zeit-Messung / Fail-Mode / Nächster-Schritt",
+              "text": "Problem / Diagramm / Tool-Wahl / Risiko und Datenschutz / Messung / Fehlerfall / offene Entscheidungen",
               "isCorrect": true
             },
             {
@@ -1195,11 +1195,11 @@
               "isCorrect": false
             }
           ],
-          "explanation": "7 Elemente: Problem-Statement, Workflow-Diagramm, Tool-Wahl-Begründung, DSGVO-Check, Zeit-Messung (vorher/nachher), Fail-Mode + Fallback, Nächster-Schritt-Liste."
+          "explanation": "Die sieben Elemente machen Zweck, Architektur, Auswahlentscheidung, Risiken, Messung, Fehlerbehandlung und weitere Entscheidungen nachvollziehbar."
         },
         {
           "id": "modul_4_lesson_7_q2",
-          "questionText": "Was ist die Scope-Reduktion-Regel?",
+          "questionText": "Wie reduzierst du einen zu großen Capstone-Scope?",
           "answerOptions": [
             {
               "id": "a",
@@ -1208,7 +1208,7 @@
             },
             {
               "id": "b",
-              "text": "Bei Unklarheit halbieren, du kannst immer erweitern",
+              "text": "Auf den kleinsten Durchlauf reduzieren, der die zentrale Annahme mit Review und Fallback prüft",
               "isCorrect": true
             },
             {
@@ -1222,7 +1222,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Halbierter Scope → 100% geliefert. Zu großer Scope → 50% geliefert, peinlich. Du kannst nachher erweitern."
+          "explanation": "Ein kleiner prüfbarer Durchlauf liefert belastbarere Erkenntnisse als ein breiter, unfertiger Aufbau. Erweiterungen folgen erst nach Auswertung des Piloten."
         }
       ]
     },
@@ -1231,11 +1231,11 @@
       "moduleId": "modul_4",
       "number": 8,
       "title": "Capstone Review + Privacy-Primer",
-      "subtitle": "Selbst-Bewertung + Tim's 3 Regeln + DSGVO-Redaktion",
+      "subtitle": "Selbstbewertung, Betriebsprüfung und Redaktion vor dem Teilen",
       "durationMinutes": 10,
       "premiumGated": false,
       "refreshCadence": "EVERGREEN",
-      "voiceAnchor": "Zwei Arten von Capstones: die, die deine Firma wirklich verändern, und der Rest.",
+      "voiceAnchor": "Ein Capstone ist belastbar, wenn Zweck, Grenzen, Messung, Fehlerbehandlung und Datenfreigabe nachvollziehbar dokumentiert sind.",
       "keyConcepts": [
         "Selbst-Bewertung",
         "Capstone-Beispielsammlung",
@@ -1277,35 +1277,35 @@
           "id": "modul_4_lesson_8_section_1",
           "title": "Capstone-Bewertung und Rubric",
           "readTimeMinutes": 3,
-          "content": "Du hast dein Capstone gebaut. Oder du baust noch. Gut. Jetzt die wichtigste Frage:\n\nTeilst du es nur mit dir selbst, oder mit der Community?\n\n**Selbst-Bewertung nach der Capstone-Rubric:**\n\nDas Zertifikat basiert auf deiner eigenen Einschätzung anhand der 7-Punkte-Rubric (binär: erfüllt / nicht erfüllt). Eine externe Prüfung findet nicht statt.\n\n**Ablauf:**\n1. **Capstone dokumentieren:** Workflow beschreiben und testen\n2. **Rubric abchecken:** 7 Punkte binär, ehrlich mit dir selbst\n3. **Optional teilen:** Nach Opt-in und Redaktion kann ein Beispiel in der öffentlichen Capstone-Gallery erscheinen\n4. **Du iterierst (optional):** Feedback einbauen, v2 erstellen\n\n**Selbst-Bewertungs-Fragen pro Rubric-Element:**\n- Funktioniert der Workflow ohne manuelle Eingriffe?\n- Ist der Fail-Mode explizit dokumentiert?\n- Kann ein Kollege den Workflow übernehmen?",
-          "keyTakeaway": "Selbst-Bewertung nach 7-Punkte-Rubric. Keine externe Prüfung. Teilen ist optional und nach Redaktion."
+          "content": "Sobald der Capstone einen prüfbaren Stand erreicht, bewertest du ihn gegen die dokumentierte Rubrik und entscheidest getrennt, ob er intern bleibt oder geteilt werden darf.\n\n**Selbstbewertung nach der Capstone-Rubrik:**\n\nDie Teilnahmebestätigung beruht auf deiner eigenen Angabe zu den sieben Kriterien (erfüllt / nicht erfüllt). Sie ist keine externe Prüfung des Systems oder deiner Kompetenz.\n\n**Ablauf:**\n1. **Capstone dokumentieren:** Workflow, Testdaten, Ergebnisse und Fehlerfälle festhalten\n2. **Rubrik prüfen:** jedes Kriterium mit einem Beleg versehen\n3. **Freigabe getrennt entscheiden:** Teilen erfordert ausdrückliches Opt-in sowie Datenschutz-, Geheimhaltungs- und Sicherheitsprüfung\n4. **Optional iterieren:** Feedback und Messwerte in einer neuen Version dokumentieren\n\n**Selbstbewertungsfragen:**\n- Funktioniert der Workflow innerhalb der definierten Automations- und Review-Grenzen?\n- Sind relevante Fehlerfälle, Stop-Bedingungen und Fallbacks dokumentiert?\n- Kann eine benannte Person den Workflow sicher betreiben und abschalten?",
+          "keyTakeaway": "Die sieben Kriterien brauchen Belege. Die Teilnahmebestätigung ist eine Selbstauskunft; Teilen und fachliche Freigabe sind getrennte Entscheidungen."
         },
         {
           "id": "modul_4_lesson_8_section_2",
-          "title": "Tim's 3 Regeln",
+          "title": "Drei Betriebsfragen",
           "readTimeMinutes": 3,
-          "content": "Nach der Bewertung von vielen Capstones, hier die 3 Kriterien, nach denen ich \"Exzellent\" vs. \"Solide\" unterscheide:\n\n**Regel 1: Der Workflow überlebt Krankheits-Urlaub.**\n\nDer Autor ist 2 Wochen nicht da. Kann das Capstone-System weiter laufen? Wenn jemand anderes kurz einspringen muss, ist Dokumentation gut genug?\n\nExzellent: ja, ohne Schluckauf. Solide: mit 30 Min Einarbeitung. Schwach: System bricht zusammen.\n\n**Regel 2: Der Fail-Mode ist explizit.**\n\nNicht \"es könnte Fehler geben\", sondern \"wenn Claude halluziniert → Flow logt + stoppt + Admin-Email.\" Nicht \"der Flow könnte fehlschlagen\", sondern \"wenn n8n-Server down, fällt zurück auf Queue, Retry nach 15 Min, max 3 Retries, dann Slack-Alert.\"\n\nExzellent: jeder plausible Fehler hat Plan B. Solide: Main-Fail-Mode dokumentiert. Schwach: \"müsste man mal überlegen.\"\n\n**Regel 3: Der Capstone lehrt etwas.**\n\nEin Kollege sieht dein Capstone und kann es adaptieren. Der Wert ist nicht nur in deinem spezifischen Use-Case, sondern auch in der Methodik.\n\nExzellent: \"Ich kann dasselbe für Situation X bauen.\" Solide: \"interessant, aber zu spezifisch für mich.\" Schwach: \"ich versteh's nicht.\"",
-          "keyTakeaway": "Drei Regeln: überlebt Krankheits-Urlaub, expliziter Fail-Mode, lehrt andere etwas."
+          "content": "Nutze drei Betriebsfragen für den Review:\n\n**1. Ist der Workflow übergabefähig?**\n\nKann eine benannte Vertretung Start, Review, Stopp und Wiederherstellung anhand der Dokumentation ausführen? Fehlende Zugangsvoraussetzungen oder implizites Wissen werden als offene Punkte notiert.\n\n**2. Sind die wichtigsten Fehlerfälle explizit?**\n\nDokumentiere mindestens Fehler bei Eingabedaten, Modellantwort, Schema-Validierung, Zielsystem und Berechtigung. Lege pro relevantem Risiko fest: erkennen, loggen, stoppen oder isoliert wiederholen, zuständige Person informieren und in einen manuellen Ablauf wechseln. Retry-Zahl und Intervall sind keine Universalwerte; sie richten sich nach Fehlerart und Nebenwirkungen.\n\n**3. Ist die Methode nachvollziehbar?**\n\nEine andere Person muss Zweck, Annahmen, Datenfluss, Messung und Grenzen verstehen können. Wiederverwendung ist erst sinnvoll, wenn sie diese Punkte für den neuen Zweck erneut prüft.",
+          "keyTakeaway": "Prüfe Übergabe, risikobasierte Fehlerbehandlung und nachvollziehbare Methodik."
         },
         {
           "id": "modul_4_lesson_8_section_3",
           "title": "Privacy-Primer",
           "readTimeMinutes": 2,
-          "content": "Dein Capstone involviert fast garantiert Kundendaten. Bevor irgendwas geteilt oder veröffentlicht wird, redaktiere strikt:\n\n```\nBEFORE POSTING, REDACT:\n- Klarnamen (Namen echter Personen) → Platzhalter \"Herr/Frau X\"\n- Firmennamen (Kunden, Lieferanten) → Platzhalter \"Kunde Alpha\"\n- E-Mail-Adressen → muster@example.com\n- Telefonnummern → +49 xxx xxxxxxx\n- Kontonummern, USt-IDs, Steuernummern → Platzhalter-Format\n- DSGVO-relevante Daten (Gesundheit, Religion, Ethnie) → komplett entfernen\n- Preise/Margen aus laufenden Verträgen → Platzhalter oder Range-Angabe\n- IP-Adressen → x.x.x.x\n- API-Keys / Tokens → immer entfernen\n```\n\n**Warum wichtig:**\n- DSGVO-Compliance: du als Deployer bist für Daten verantwortlich\n- Firmen-Geheimhaltungs-Klauseln: Preise, Kundennamen können vertraglich geheim sein\n- Professionelle Integrität: interne oder externe Reviewer sind dein Netzwerk\n\n**Mod-Review:** Vor Veröffentlichung werden Beispiele redaktionell geprüft. Bei Verdacht: nicht veröffentlichen, erst redigieren.",
-          "keyTakeaway": "Strenge Redaktions-Checkliste. Mods prüfen #capstone-public Posts vor Pinnen."
+          "content": "Ein Capstone kann personenbezogene, kundenbezogene oder vertrauliche Geschäftsdaten enthalten. Vor jeder Weitergabe prüfst du Datenklassen und Empfänger; Redaktion ersetzt keine Rechtsgrundlage oder Freigabe.\n\n```\nVOR DEM TEILEN PRÜFEN UND BEI BEDARF ENTFERNEN ODER ERSETZEN:\n- Namen realer Personen → kontextarmer Platzhalter\n- Kunden- und Lieferantennamen → neutraler Platzhalter\n- E-Mail-Adressen und Telefonnummern → synthetische Beispieldaten\n- Konto-, Steuer- und Vertragskennungen → entfernen\n- besondere Kategorien personenbezogener Daten → nicht in das Beispiel übernehmen\n- Preise, Margen und interne Kennzahlen → nur mit dokumentierter Freigabe; sonst entfernen\n- IP-Adressen, interne URLs und Hostnamen → entfernen\n- API-Keys, Tokens, Cookies und Secrets → immer entfernen und bei Offenlegung rotieren\n```\n\n**Zusätzliche Prüfung:**\n- Verantwortlicher, Empfänger, Zweck, Rechtsgrundlage und Aufbewahrung\n- vertragliche Geheimhaltung, Urheberrechte und interne Klassifizierung\n- indirekte Identifizierbarkeit durch Kombination verbleibender Angaben\n\nWenn eine Galerie oder ein anderer öffentlicher Kanal angeboten wird, ist die dortige Moderation nur eine zusätzliche Kontrolle. Die Freigabe durch die verantwortliche Organisation bleibt erforderlich.",
+          "keyTakeaway": "Datenklassifizierung und Freigabe kommen vor der Redaktion. Secrets werden entfernt und bei möglicher Offenlegung rotiert."
         },
         {
           "id": "modul_4_lesson_8_section_4",
           "title": "Abschluss",
           "readTimeMinutes": 2,
-          "content": "Das war Modul 4. Das war der Arbeitskurs.\n\nDu hast 27 Lektionen durchgemacht. Vier Module. Mindset-Shift. Claude-Stack. Obsidian. Automation.\n\nWenn du alle Lessons, Homeworks und das Capstone durchgezogen hast, hast du einen belastbaren Arbeitsstil aufgebaut. Das ist kein externer Kompetenznachweis, sondern ein dokumentierter Lernabschluss.\n\nDie Teilnahmebestätigung kannst du nach dem Quiz oder Capstone herunterladen. Der QR-Code enthält lesbare Abschlussdaten zur Prüfung.\n\n**Homework:**\n1. Prüfe mindestens 2 fremde oder ältere Workflows mit der Rubrik\n2. Dein eigenes Capstone final dokumentieren (inkl. Privacy-Redaktion)\n3. Reflexion: was war hart, was hast du gelernt?\n\nDer Kurs ist abgeschlossen.",
+          "content": "Modul 4 schließt den Arbeitskurs ab.\n\nDie 27 Lektionen behandeln Aufgabenanalyse, Modellnutzung, Wissensbasis und Workflow-Automation. Der Abschluss dokumentiert, welche Inhalte du bearbeitet und wie du den Capstone selbst bewertet hast. Er ist kein externes Audit und kein Nachweis für den sicheren Produktivbetrieb.\n\nDie Teilnahmebestätigung kann nach dem Quiz oder Capstone heruntergeladen werden. Der QR-Code enthält lesbare Abschlussdaten zur technischen Prüfung; er bestätigt keine externe Bewertung.\n\n**Abschlussarbeit:**\n1. Zwei fremde oder ältere Workflows anhand der Rubrik prüfen\n2. Den eigenen Capstone mit Messwerten, Fehlerfällen und Datenfreigabe dokumentieren\n3. Festhalten, welche Annahmen bestätigt, widerlegt oder noch offen sind",
           "keyTakeaway": "Abschluss = dokumentierter Lernstand und Capstone-Rubrik, kein externes Audit."
         }
       ],
       "quiz": [
         {
           "id": "modul_4_lesson_8_q1",
-          "questionText": "Was sind Tims 3 Regeln für 'Exzellent'?",
+          "questionText": "Welche drei Betriebsfragen gehören in den Capstone-Review?",
           "answerOptions": [
             {
               "id": "a",
@@ -1314,7 +1314,7 @@
             },
             {
               "id": "b",
-              "text": "Überlebt Krankheits-Urlaub / Fail-Mode explizit / Lehrt andere etwas",
+              "text": "Übergabefähigkeit / risikobasierte Fehlerbehandlung / nachvollziehbare Methodik",
               "isCorrect": true
             },
             {
@@ -1328,7 +1328,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Regel 1: läuft auch ohne Autor. Regel 2: jeder plausible Fehler hat Plan B. Regel 3: Peer kann's adaptieren, Methodik > spezifischer Use-Case."
+          "explanation": "Der Review prüft, ob eine benannte Vertretung den Workflow sicher betreiben kann, ob relevante Fehler erkannt und behandelt werden und ob Zweck, Annahmen, Datenfluss, Messung und Grenzen nachvollziehbar sind."
         },
         {
           "id": "modul_4_lesson_8_q2",
@@ -1341,7 +1341,7 @@
             },
             {
               "id": "b",
-              "text": "DSGVO-Compliance + Firmen-Geheimhaltung + professionelle Integrität",
+              "text": "Datenschutzpflichten + vertragliche Geheimhaltung + Schutz von Secrets und internen Informationen",
               "isCorrect": true
             },
             {
@@ -1355,7 +1355,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Drei Gründe: DSGVO (Deployer-Verantwortung), Vertrags-Klauseln (Preise/Kundennamen oft geheim), Professionalität (Community = Netzwerk)."
+          "explanation": "Vor dem Teilen sind Zweck, Empfänger, Freigabe und Datenklassen zu prüfen. Personenbezogene oder vertrauliche Angaben werden entfernt oder ersetzt; Secrets werden entfernt und bei möglicher Offenlegung rotiert."
         }
       ]
     }

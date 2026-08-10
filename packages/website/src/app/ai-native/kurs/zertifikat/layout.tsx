@@ -1,18 +1,31 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
 
-export const metadata: Metadata = {
-  title: "Zertifikat: AI-Native Arbeitskurs",
-  description:
-    "Lade eine lokal erzeugte Teilnahmebestätigung für den AI-Native Arbeitskurs herunter. Nicht signiert und nicht servergeprüft.",
-  robots: { index: false, follow: false },
-  // Utility page: suppress the canonical inherited from the root layout.
-  alternates: { canonical: null },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = resolveFoundationCourseContentLocale(
+    "ai-native",
+    await getRequestLocale(),
+  );
+  return {
+    title:
+      locale === "en"
+        ? "Course completion record: AI-Native Workflow Course"
+        : "Teilnahmebestätigung: AI-Native Arbeitskurs",
+    description:
+      locale === "en"
+        ? "Download a locally generated course completion record. It is unsigned, not server-verified and not an external assessment."
+        : "Lade eine lokal erzeugte Teilnahmebestätigung herunter. Sie ist nicht signiert, nicht servergeprüft und keine externe Prüfungsleistung.",
+    robots: { index: false, follow: false },
+    alternates: { canonical: null },
+  };
+}
 
 export default function AiNativeZertifikatLayout({
   children,
 }: {
-  readonly children: React.ReactNode;
+  readonly children: ReactNode;
 }) {
   return children;
 }

@@ -7,7 +7,11 @@ import type { AiNativeOperatorCallout } from "@/lib/ai-native-operator/types";
  * ported from `ai-native-operator/course-app.js:87` (Callout). English
  * copy. Presentational only, no store dependency.
  */
-export function Callout({ c }: { readonly c: AiNativeOperatorCallout }): JSX.Element {
+export function Callout({
+  c,
+}: {
+  readonly c: AiNativeOperatorCallout;
+}): JSX.Element {
   if (c.kind === "quote") {
     return (
       <aside className="my-8 border-l-[3px] border-brand-orange bg-card/40 p-6">
@@ -26,16 +30,28 @@ export function Callout({ c }: { readonly c: AiNativeOperatorCallout }): JSX.Ele
     return (
       <aside className="my-8 border-2 border-border bg-card/60">
         <div className="flex items-center gap-2 border-b border-border px-4 py-2.5">
-          <FileCode2 className="h-3.5 w-3.5 text-brand-orange" aria-hidden="true" />
+          <FileCode2
+            className="h-3.5 w-3.5 text-brand-orange"
+            aria-hidden="true"
+          />
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-brand-orange">
             {c.h}
           </p>
         </div>
-        <pre className="overflow-x-auto p-4 font-mono text-[12.5px] leading-[1.6] text-foreground">
+        <pre
+          role="region"
+          aria-label={c.h}
+          tabIndex={0}
+          className="max-w-full overflow-x-auto p-4 font-mono text-[12.5px] leading-[1.6] text-foreground"
+        >
           {c.lines.map((line, i) => (
             <span
               key={i}
-              className={line.startsWith("#") ? "block font-bold text-brand-orange" : "block"}
+              className={
+                line.startsWith("#")
+                  ? "block font-bold text-brand-orange"
+                  : "block"
+              }
             >
               {line || " "}
             </span>
@@ -56,14 +72,20 @@ export function Callout({ c }: { readonly c: AiNativeOperatorCallout }): JSX.Ele
     >
       <div className="flex items-center gap-2">
         <Icon
-          className={c.kind === "warn" ? "h-4 w-4 text-destructive" : "h-4 w-4 text-brand-orange"}
+          className={
+            c.kind === "warn"
+              ? "h-4 w-4 text-destructive"
+              : "h-4 w-4 text-brand-orange"
+          }
           aria-hidden="true"
         />
         <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.12em] text-foreground">
           {c.h}
         </p>
       </div>
-      <p className="mt-2 text-[14px] leading-[1.55] text-muted-foreground">{c.text}</p>
+      <p className="mt-2 text-[14px] leading-[1.55] text-muted-foreground">
+        {c.text}
+      </p>
     </aside>
   );
 }

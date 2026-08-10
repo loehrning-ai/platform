@@ -1,18 +1,27 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
 
-export const metadata: Metadata = {
-  title: "Workshop-Quiz: KI-Führerschein",
-  description:
-    "20 Praxisfragen zum EU AI Act Art. 4. 70% zum Bestehen, 25 Minuten Zeitlimit. Teste deine KI-Kompetenz.",
-  robots: { index: false, follow: false },
-  // Utility page: suppress the canonical inherited from the kurs layout.
-  alternates: { canonical: null },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = resolveFoundationCourseContentLocale(
+    "ki-fuehrerschein",
+    await getRequestLocale(),
+  );
+  return {
+    title:
+      locale === "en"
+        ? "Workshop quiz: Everyday AI Literacy"
+        : "Workshop-Quiz: KI-Führerschein",
+    description:
+      locale === "en"
+        ? "Twenty practical questions on everyday AI literacy. Pass mark: 70 percent. Time limit: 25 minutes."
+        : "20 Praxisfragen zur KI-Kompetenz. 70% zum Bestehen, 25 Minuten Zeitlimit.",
+    robots: { index: false, follow: false },
+    alternates: { canonical: null },
+  };
+}
 
-export default function QuizLayout({
-  children,
-}: {
-  readonly children: React.ReactNode;
-}) {
+export default function QuizLayout({ children }: { readonly children: ReactNode }) {
   return children;
 }

@@ -5,19 +5,24 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
 import { getCompletedLessonIds } from "@/lib/course/progress";
-import { CODEX_TRACKS } from "@/lib/codex/types";
+import { getCodexCourseCopy } from "@/lib/codex/course-copy";
+import type { CodexTrack, LessonId } from "@/lib/codex/types";
+import { canonicalLocalePathname, type Locale } from "@/lib/i18n/locale";
+import { technicalCourseHref } from "@/lib/technical-courses/routes";
 import { cn } from "@/lib/utils";
 import { subscribe } from "@/lib/progress";
 
 export interface CodexLessonNavItem {
-  readonly id: string;
+  readonly id: LessonId;
   readonly number: number;
   readonly title: string;
   readonly trackId: string;
 }
 
 interface CodexLessonSidebarProps {
+  readonly locale: Locale;
   readonly lessons: readonly CodexLessonNavItem[];
+  readonly tracks: readonly CodexTrack[];
 }
 
 /**
@@ -25,9 +30,17 @@ interface CodexLessonSidebarProps {
  * `sidebar` slot ( primitive), mirroring
  * `ClaudeLessonSidebar`'s own precedent.
  */
-export function CodexLessonSidebar({ lessons }: CodexLessonSidebarProps): JSX.Element {
+export function CodexLessonSidebar({
+  locale,
+  lessons,
+  tracks,
+}: CodexLessonSidebarProps): JSX.Element {
   const pathname = usePathname();
-  const [completedIds, setCompletedIds] = useState<ReadonlySet<string>>(new Set());
+  const routePathname = canonicalLocalePathname(pathname);
+  const copy = getCodexCourseCopy(locale).reader;
+  const [completedIds, setCompletedIds] = useState<ReadonlySet<string>>(
+    new Set(),
+  );
 
   useEffect(() => {
     return subscribe(() => {
@@ -36,8 +49,8 @@ export function CodexLessonSidebar({ lessons }: CodexLessonSidebarProps): JSX.El
   }, [pathname]);
 
   return (
-    <nav aria-label="Lesson navigation" className="flex flex-col gap-6">
-      {CODEX_TRACKS.map((track) => {
+    <nav aria-label={copy.navLabel} className="flex min-w-0 flex-col gap-6">
+      {tracks.map((track) => {
         const trackLessons = lessons.filter((l) => l.trackId === track.id);
         if (trackLessons.length === 0) return null;
         return (
@@ -47,8 +60,13 @@ export function CodexLessonSidebar({ lessons }: CodexLessonSidebarProps): JSX.El
             </p>
             <ul className="flex flex-col gap-0.5">
               {trackLessons.map((lesson) => {
-                const href = `/kurse/open-source/codex/kurs/${lesson.id}`;
-                const active = pathname === href;
+                const href = technicalCourseHref("codex", locale, {
+                  kind: "lesson",
+                  lessonId: lesson.id,
+                });
+                const active =
+                  routePathname !== null &&
+                  routePathname === canonicalLocalePathname(href);
                 return (
                   <li key={lesson.id}>
                     <Link
@@ -62,13 +80,19 @@ export function CodexLessonSidebar({ lessons }: CodexLessonSidebarProps): JSX.El
                       )}
                     >
                       {completedIds.has(lesson.id) ? (
-                        <CheckCircle2 size={13} className="shrink-0 text-risk-green" aria-hidden="true" />
+                        <CheckCircle2
+                          size={13}
+                          className="shrink-0 text-risk-green"
+                          aria-hidden="true"
+                        />
                       ) : (
                         <span className="w-[13px] shrink-0 text-center font-mono text-[10px] text-muted-foreground">
                           {lesson.number}
                         </span>
                       )}
-                      <span className="truncate">{lesson.title}</span>
+                      <span className="min-w-0 break-words">
+                        {lesson.title}
+                      </span>
                     </Link>
                   </li>
                 );

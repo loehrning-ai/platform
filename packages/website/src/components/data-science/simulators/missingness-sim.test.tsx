@@ -9,6 +9,9 @@ describe("MissingnessSim ", () => {
     const { container } = render(<MissingnessSim />);
     expect(container.querySelector("table")).not.toBeNull();
     expect(container.querySelector("canvas")).toBeNull();
+    expect(
+      screen.getByRole("region", { name: "Dataset with missing values" }),
+    ).toHaveAttribute("tabindex", "0");
   });
 
   it("renders the real panel copy and all three pattern buttons", () => {

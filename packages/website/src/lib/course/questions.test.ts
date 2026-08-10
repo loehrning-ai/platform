@@ -36,12 +36,24 @@ describe("loadWorkshopQuestions", () => {
 
   it("rejects with a descriptive error for a course with no registered loader", async () => {
     await expect(loadWorkshopQuestions(UNREGISTERED)).rejects.toThrow(
-      'Course "no-such-course" has no workshop quiz questions registered.',
+      'Course "no-such-course" is not registered in the shared engine.',
     );
   });
 
+  it("loads the audited English KI und Gesellschaft quiz without changing IDs", async () => {
+    const german = await loadWorkshopQuestions("ki-und-gesellschaft", "de");
+    const english = await loadWorkshopQuestions("ki-und-gesellschaft", "en");
+
+    expect(english).toHaveLength(15);
+    expect(english.map((question) => question.id)).toEqual(
+      german.map((question) => question.id),
+    );
+    expect(english[0]?.questionText).toContain("task exposure");
+    expect(english[0]?.questionText).not.toBe(german[0]?.questionText);
+  });
+
   it("loads the claude questions (19 questions, reusing the inline lesson Quiz content, )", async () => {
-    const questions = await loadWorkshopQuestions("claude");
+    const questions = await loadWorkshopQuestions("claude", "en");
     expect(questions).toHaveLength(19);
     assertValidQuizQuestions(questions);
     for (const q of questions) {
@@ -49,7 +61,9 @@ describe("loadWorkshopQuestions", () => {
       expect(q.answerOptions.length).toBeGreaterThanOrEqual(3);
     }
     // English content: no German quiz chrome/explanations leaked in.
-    const allText = questions.map((q) => q.questionText + q.explanation).join(" ");
+    const allText = questions
+      .map((q) => q.questionText + q.explanation)
+      .join(" ");
     expect(allText).not.toMatch(/\b(nicht|und|oder|der|die|das)\b/i);
   });
 });

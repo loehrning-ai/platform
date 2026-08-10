@@ -1,7 +1,11 @@
+"use client";
+
 // ─── DAGDiagram ───────────────────────────────────
 // Ported from `src/chapters/Ch4_Orchestrate.js`: static pipeline DAG —
 // raw_events -> clean_events/deduped_sessions -> daily_rollup -> two sinks.
 // No client state; pure presentational SVG.
+
+import { useDataEngineeringFundamentalsLocale } from "../locale-context";
 
 interface DagNode {
   readonly id: string;
@@ -30,6 +34,7 @@ const EDGES: readonly (readonly [string, string])[] = [
 ];
 
 export function DAGDiagram() {
+  const { text } = useDataEngineeringFundamentalsLocale();
   const byId = Object.fromEntries(NODES.map((n) => [n.id, n]));
 
   return (
@@ -62,7 +67,7 @@ export function DAGDiagram() {
                 textAnchor="middle"
                 style={{ fontFamily: "var(--font-mono)", fontSize: 10.5, fill: "var(--fg-2)", letterSpacing: "0.1em", textTransform: "uppercase" }}
               >
-                {n.kind}
+                {n.kind === "source" ? text("source", "Quelle") : n.kind === "sink" ? text("sink", "Ziel") : text("etl", "ETL")}
               </text>
             </g>
           );

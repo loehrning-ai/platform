@@ -15,11 +15,11 @@
       "moduleId": "modul_2",
       "number": 1,
       "title": "Projects, Memory, Artifacts: dein Claude-Arbeitsplatz",
-      "subtitle": "Vom Chat-Fenster zum Workspace",
+      "subtitle": "Vom einzelnen Chat zum gepflegten Arbeitsbereich",
       "durationMinutes": 10,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
-      "voiceAnchor": "Chat-Fenster ist 2024. Workspace ist jetzt.",
+      "voiceAnchor": "Ein Project trennt freigegebenen wiederkehrenden Kontext von fallspezifischen Chat-Eingaben.",
       "keyConcepts": [
         "Claude Project",
         "System-Prompt",
@@ -35,7 +35,7 @@
             "lessonId": "modul_2_lesson_1",
             "moduleId": "modul_2",
             "title": "Baue dein erstes Claude-Project-Briefing",
-            "scenario": "Lege dein System-Prompt an: das einmalige Onboarding, das Claude für alle Chats in diesem Project verwendet. Ohne dieses Briefing startet jeder Chat bei Null.",
+            "scenario": "Schreibe einen System-Prompt mit dem freigegebenen Kontext, der in diesem Project wiederverwendet werden soll. Halte fallspezifische und vertrauliche Daten aus dem dauerhaften Brief heraus.",
             "criteria": {
               "role": {
                 "minChars": 20,
@@ -43,7 +43,7 @@
               },
               "context": {
                 "minChars": 60,
-                "hint": "Firma, Branche, Größe, Produkte, Tonfall-Regeln. Dauerhafter Hintergrund, der nie mehr neu erklärt werden muss."
+                "hint": "Beschreibe Firma, Branche, Größe, Produkte und Kommunikationsregeln. Nimm nur Hintergrund auf, der für dauerhafte Speicherung freigegeben ist."
               },
               "task": {
                 "minChars": 25,
@@ -64,37 +64,37 @@
       "sections": [
         {
           "id": "modul_2_lesson_1_section_1",
-          "title": "Warum du kein Chat-Fenster mehr nutzen solltest",
+          "title": "Warum ein einzelner Chat für wiederkehrende Arbeit nicht ausreicht",
           "readTimeMinutes": 2,
-          "content": "Ich sehe Mittelstand-Mitarbeiter, die Claude seit 6 Monaten nutzen und immer noch jeden Tag neu anfangen. Kein Kontext. Kein Briefing. Immer wieder \"Ich bin Vertriebsmitarbeiter bei einem Maschinenbau-Unternehmen...\". Bei jedem verdammten Chat.\n\nDas ist, als würdest du morgens deinen Namen auf die Tür kleben, weil dein Büro dich sonst nicht erkennt.\n\nEin Project ist nicht ein Chat. Ein Project ist ein Arbeitsplatz mit: eigenem System-Prompt (wer bist du, wie willst du, dass ich klinge?), geteiltem Kontext (Dateien, die Claude bei jedem Chat in diesem Project kennt), eigenem Memory (lernt aus jedem Chat).",
-          "keyTakeaway": "Projects sind dein Dauer-Workspace. Claude kennt dich. Du erklärst dich nie wieder neu."
+          "content": "Ein einzelner Chat beginnt mit dem Kontext, der in diesem Gespräch bereitgestellt wird. Dieselben Rollen-, Organisations- und Stilvorgaben wiederholt einzugeben kostet Zeit und kann zu uneinheitlichen Ergebnissen führen.\n\nEin Project kann einen gepflegten System-Prompt und freigegebene Referenzdateien für einen definierten Arbeitsbereich enthalten. Funktionen, Speicherung und Aufbewahrung unterscheiden sich nach Tarif und Einstellung; prüfe das aktuelle Verhalten, bevor du dich darauf verlässt.\n\nNutze das Project für stabilen, nicht vertraulichen Kontext. Gib fallspezifische Eingaben getrennt an und prüfe, was das Produkt speichert.",
+          "keyTakeaway": "Ein Project kann freigegebenen wiederkehrenden Kontext halten; Datenkontrolle und Output-Prüfung bleiben erforderlich."
         },
         {
           "id": "modul_2_lesson_1_section_2",
-          "title": "Projects einrichten in 5 Minuten",
+          "title": "Einen Project-Brief einrichten",
           "readTimeMinutes": 3,
-          "content": "Drei Bausteine im System-Prompt:\n1. Wer ich bin (Rolle, Firma, Kundensegment)\n2. Wie ich kommuniziere (Tonalität, Du/Sie, Anglizismen-Politik)\n3. Was Tabu ist (sensitive Daten, Buzzword-Verbote)\n\nBeispiel für Vertrieb-Project:\n\n```\nIch bin Vertriebsmitarbeiter in einem Maschinenbau-Unternehmen\nin Bayern, 80 Mitarbeiter. Kunden in Deutschland + Österreich.\nTon: pragmatisch, bodenständig, klare Worte.\nDu-Form bei Stammkunden, Sie-Form bei Neukunden.\nKeine Marketing-Phrasen. Keine Superlativen.\nTabu: echte Kundennamen, laufende Verhandlungs-Margen.\n```\n\nZusätzlich lade ich eine Datei hoch: unser Angebots-Template von 2024 als Beispiel. Jetzt weiß Claude in diesem Project, wie unsere Angebote aussehen.\n\nAb jetzt: jede Anfrage in diesem Project kommt mit diesem Kontext. Ich schreibe nie wieder \"Du bist mein Assistent...\"",
-          "keyTakeaway": "5-Min-Setup. Lifetime-Rendite. Drei Bausteine: Rolle, Kommunikation, Tabus."
+          "content": "Nutze drei Teile im System-Prompt:\n1. Rolle und Organisationskontext\n2. Kommunikationsregeln\n3. Daten- und Entscheidungsgrenzen\n\nBeispiel für ein Vertriebs-Project:\n\n```\nIch arbeite im Vertrieb eines Maschinenbauunternehmens\nin Bayern mit 80 Mitarbeitenden und Kunden in Deutschland und Österreich.\nTon: pragmatisch, sachlich und direkt.\nDu-Form bei Stammkunden, Sie-Form bei Neukunden.\nKeine Werbeversprechen oder Superlative.\nKeine echten Kundennamen oder laufenden Verhandlungsmargen.\nKeine erfundenen Preise, Termine oder Zusagen.\n```\n\nDu kannst ein freigegebenes, bereinigtes Angebotstemplate von 2024 als Formatbeispiel hinzufügen. Prüfe vor jedem Upload die aktuellen Regeln zu Speicherung, Zugriff und Aufbewahrung.\n\nSpätere Anfragen können auf diesen gepflegten Kontext verweisen, statt ihn vollständig zu wiederholen.",
+          "keyTakeaway": "Definiere Rolle, Kommunikationsregeln und Datengrenzen in einem gepflegten Project-Brief."
         },
         {
           "id": "modul_2_lesson_1_section_3",
-          "title": "Artifacts: der Produktivitäts-Multiplikator",
+          "title": "Artifacts als bearbeitbare Ergebnisse",
           "readTimeMinutes": 2,
-          "content": "Statt dass Claude Text zurückliefert und ich kopiere/paste, öffnet Claude einen Artifact-Panel. Das ist ein Live-Dokument, in Echtzeit änderbar.\n\nIch kann direkt im Artifact editieren: einen Absatz umschreiben, Preis anpassen, Formulierung ändern. Claude merkt das. Kein Copy-Paste-Zyklus.\n\nArtifacts unterstützen: HTML, React-Components, SVG, Markdown, Code. Deine Outputs sind direkt nutzbar, nicht Zwischenschritt.\n\n**Warum das wichtig ist:** jedes Mal, wenn du \"Claude generiert → ich kopiere → ich paste in Tool X → ich editiere dort → ich paste zurück\" machst, verlierst du 3 Minuten. Multipliziert mit 20x pro Woche = eine Stunde jede Woche.",
-          "keyTakeaway": "Artifacts eliminieren den Copy-Paste-Zyklus. Outputs sind direkt nutzbar."
+          "content": "Artifacts zeigen unterstützte Output-Typen in einem eigenen bearbeitbaren Bereich statt nur im Chatverlauf. Abhängig vom Produkt und aktuellen Funktionsumfang können dazu Dokumente, Code, HTML, React-Komponenten, SVG oder Markdown gehören.\n\nEin Artifact kann Übertragungen zwischen Modelloberfläche und externem Editor reduzieren. Es macht das Ergebnis nicht final: fachliche, rechtliche, barrierefreie und technische Prüfungen bleiben erforderlich.\n\nMiss für die ausgewählte Aufgabe, ob der Artifact-Ablauf Übertragungs- und Überarbeitungsaufwand tatsächlich reduziert.",
+          "keyTakeaway": "Artifacts können Kopier- und Einfügeschritte reduzieren und halten den Output für Prüfung und Bearbeitung verfügbar."
         },
         {
           "id": "modul_2_lesson_1_section_4",
           "title": "Memory: was Claude behält",
           "readTimeMinutes": 2,
           "content": "Memory-Funktionen unterscheiden sich nach Produkt, Tarif und aktueller Einstellung. Prüfe vor der Nutzung, welche Informationen wo gespeichert, wie lange aufbewahrt und wie sie gelöscht werden.\n\n**Project-Kontext:** Verwende für Übungen ausschließlich fiktive Angaben wie \"Kunde Alpha (fiktiv), 80 Mitarbeitende, Beispiel-Zahlungsziel.\"\n\n**Was du NICHT in Memory schreibst:**\n- echte Kunden- oder Kontaktdaten\n- vertrauliche Finanz- oder Vertragsdaten\n- Passwörter, Tokens oder API-Keys\n\n**Was vertretbar sein kann:**\n- nicht vertrauliche Rollenbeschreibung\n- allgemeine Sprach- und Formatpräferenzen\n- freigegebene Standard-Aufgaben\n\nMemory ist eine persistente Datenfunktion, kein folgenloser Komfort. Kuratiere Einträge und prüfe Löschung sowie Zugriff regelmäßig.",
-          "keyTakeaway": "Project-Memory + Cross-Chat-Memory. Niemals echte Kundendaten oder Geheimnisse."
+          "keyTakeaway": "Nutze Memory nur für freigegebenen, nicht vertraulichen Kontext; speichere dort keine Geheimnisse."
         }
       ],
       "quiz": [
         {
           "id": "modul_2_lesson_1_q1",
-          "questionText": "Welche zwei Memory-Arten gibt es in Claude?",
+          "questionText": "Welche zwei Mechanismen für persistenten Kontext behandelt diese Lektion?",
           "answerOptions": [
             {
               "id": "a",
@@ -117,7 +117,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Project-Memory (per Project, automatisch aus Chats) + Cross-Chat-Memory (global, persistent über Sessions)."
+          "explanation": "Project-Kontext gilt innerhalb eines definierten Projects; Cross-Chat-Memory kann Einstellungen über Gespräche hinweg halten, wenn Produkt und Konfiguration dies unterstützen."
         },
         {
           "id": "modul_2_lesson_1_q2",
@@ -130,7 +130,7 @@
             },
             {
               "id": "b",
-              "text": "Echte Kundendaten, Passwörter, Finanzkennzahlen",
+              "text": "Passwörter, Zugriffstokens und nicht freigegebene vertrauliche Daten",
               "isCorrect": true
             },
             {
@@ -144,7 +144,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Alles was unter die 'Confidential'- oder 'Strictly Confidential'-Datenklassifizierung fällt: echte Kundendaten, Passwörter, Verhandlungs-Margen."
+          "explanation": "Speichere keine Geheimnisse. Wende vor der Speicherung von Kunden-, Finanz- oder Vertragsinformationen die Datenklassifizierung und Werkzeugrichtlinie der Organisation an."
         }
       ]
     },
@@ -157,7 +157,7 @@
       "durationMinutes": 12,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
-      "voiceAnchor": "Claude kennt deine E-Mails nicht. Erst ein freigegebener Connector ändert das.",
+      "voiceAnchor": "Claude kann nicht auf E-Mails zugreifen, solange keine autorisierte Integration diesen Zugriff gewährt.",
       "keyConcepts": [
         "Connector",
         "OAuth",
@@ -256,9 +256,9 @@
       "sections": [
         {
           "id": "modul_2_lesson_2_section_1",
-          "title": "Die Killer-Frage, die du bisher nicht stellen konntest",
+          "title": "Eine Frage, die verbundene Quellen benötigt",
           "readTimeMinutes": 2,
-          "content": "Frag dich mal ehrlich: wie viele \"ich hab dir das versprochen, muss nur noch\"-Momente hattest du diese Woche? Drei? Sieben? Zwölf?\n\nJeder dieser Momente lebt in einer E-Mail, die du dir nicht mehr erinnerst. In einem Meeting, das drei Tage her ist. In einem Dokument, das du \"später\" markiert hast.\n\nDiese Lektion verbindet keine echten Konten. Sie zeigt am Beispiel von Gmail, Kalender und Drive, wie ein sauber autorisierter Connector-Workflow gedacht wird: Quelle wählen, Rechte begrenzen, Datenfluss dokumentieren, Ergebnis prüfen.",
+          "content": "Zusagen liegen oft verteilt in E-Mails, Besprechungsnotizen und Dokumenten. Eine Suche in nur einer Quelle kann den an anderer Stelle dokumentierten Folgeschritt übersehen.\n\nDiese Lektion verbindet keine echten Konten. Gmail, Kalender und Drive dienen als Beispieldaten für einen autorisierten Connector-Ablauf: Quelle auswählen, Rechte minimieren, Datenfluss dokumentieren und Ergebnis prüfen.",
           "keyTakeaway": "Connectors erweitern den Input eines KI-Systems, aber nur mit expliziter Autorisierung, Scope-Begrenzung und Review."
         },
         {
@@ -270,27 +270,27 @@
         },
         {
           "id": "modul_2_lesson_2_section_3",
-          "title": "Die Killer-Query: Commitment-Audit",
+          "title": "Die Abfrage für einen Zusagenabgleich",
           "readTimeMinutes": 3,
           "content": "Die Übungsfrage lautet:\n\n> \"Nimm die Beispiel-Mails der letzten 7 Tage. Extrahiere alle 'ich mache X' / 'wir liefern Y' / 'bis Freitag Z': Commitments, die gemacht wurden. Prüfe gegen Beispiel-Kalender und Beispiel-Drive, ob Follow-ups dokumentiert sind. Gib mir: Liste der offenen Commitments, Absender, Fälligkeit, Status.\"\n\nDer Lernpunkt ist nicht die konkrete Gmail-Verbindung, sondern das Muster:\n- Quelle und Zeitraum begrenzen\n- Commitments strukturiert extrahieren\n- zweite Quelle als Gegencheck nutzen\n- Ergebnis als Tabelle ausgeben\n- Mensch prüft vor Aktion\n\nTypisches Übungsergebnis:\n- 14 Commitments\n- 9 bereits geliefert / dokumentiert\n- 3 überfällig\n- 2 unklar\n\nDie drei überfälligen Punkte werden nicht automatisch verschickt. Sie werden als Review-Liste vorbereitet.",
           "keyTakeaway": "Multi-Source-Query ersetzt keine Verantwortung. Sie erzeugt eine Review-Liste, keine automatische Wahrheit."
         },
         {
           "id": "modul_2_lesson_2_section_4",
-          "title": "Warum das alles ändert",
+          "title": "Zugriff verändert die Risikogrenze",
           "readTimeMinutes": 2,
           "content": "Ein Connector kann den manuellen Datentransfer reduzieren, erweitert aber den Zugriffs- und Risikoumfang. Berechtigungen, freigegebene Quellen, Protokollierung und Widerruf müssen vorab definiert sein.\n\n**Übungs-Prompts mit reinen Beispieldaten:**\n- \"Welche fiktiven Beispiel-Meetings stehen morgen an? Gib pro Meeting drei Vorbereitungsfragen.\"\n- \"Erstelle einen Briefentwurf an Kunde Alpha aus dem fiktiven Protokoll.\"\n- \"Finde in den Beispiel-Mails alle Anhänge von Kunde Alpha und fasse nur die Anhang-Titel zusammen.\"\n\nDas sind keine Live-Zugriffe. Produktive Nutzung setzt freigegebene Daten, minimalen Scope und menschliches Review voraus.",
-          "keyTakeaway": "Connector = Input-Engpass reduziert. Produktiv erst mit freigegebenen Quellen, Scope-Kontrolle und menschlichem Review."
+          "keyTakeaway": "Ein Connector reduziert manuelle Übertragung nur mit freigegebenen Quellen, minimalen Scopes und menschlicher Prüfung."
         }
       ],
       "quiz": [
         {
           "id": "modul_2_lesson_2_q1",
-          "questionText": "Was ist der Unterschied zwischen Connector und MCP?",
+          "questionText": "Was ist der relevante Unterschied zwischen einem Produkt-Connector und MCP?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "Connector = Web-only, MCP = lokal/tiefer",
+              "text": "Ein Connector wird durch ein Produkt verwaltet; MCP definiert eine protokollbasierte Werkzeug- und Ressourcenschnittstelle",
               "isCorrect": true
             },
             {
@@ -309,11 +309,11 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Connectors leben auf Claude.ai Web (OAuth, einfach). MCPs leben lokal oder auf deinem Server (tiefere Integration, mehr Kontrolle)."
+          "explanation": "Ein Produkt-Connector wird innerhalb eines Produkts konfiguriert. MCP definiert die Kommunikation eines kompatiblen Clients mit bereitgestellten Tools und Ressourcen; beide können je nach Implementierung lokal oder remote sein."
         },
         {
           "id": "modul_2_lesson_2_q2",
-          "questionText": "Nenne einen DSGVO-Vorteil von Connectors gegenüber manuellem Hochladen.",
+          "questionText": "Was kann ein Connector gegenüber wiederholten manuellen Uploads verbessern?",
           "answerOptions": [
             {
               "id": "a",
@@ -322,7 +322,7 @@
             },
             {
               "id": "b",
-              "text": "Connector-Daten werden pro Anfrage frisch abgerufen; Details regelt die Datenschutz-Doku des Anbieters",
+              "text": "Er kann autorisierte Daten für eine Anfrage abrufen, ohne wiederholte manuelle Kopien; Anbieterbedingungen und Datenschutzdokumentation gelten weiterhin",
               "isCorrect": true
             },
             {
@@ -336,7 +336,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Connector-Daten werden pro Anfrage frisch abgerufen; Details regelt die Datenschutz-Doku des Anbieters."
+          "explanation": "Ein Connector kann wiederholtes Kopieren reduzieren und Zugriffs-Scopes sichtbar machen. Er schafft keine DSGVO-Ausnahme; prüfe Anbieterdokumentation, Vertrag und konfigurierten Datenfluss."
         }
       ]
     },
@@ -344,12 +344,12 @@
       "id": "modul_2_lesson_3",
       "moduleId": "modul_2",
       "number": 3,
-      "title": "Skills: dein persönliches Kommando-Repertoire",
+      "title": "Skills: wiederverwendbare Befehle für wiederkehrende Arbeit",
       "subtitle": "Aus wiederkehrenden Aufgaben /slash-Commands bauen",
       "durationMinutes": 10,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
-      "voiceAnchor": "SOPs sind tot. Skills sind das Neue.",
+      "voiceAnchor": "Ein Skill bündelt gepflegte Anweisungen für eine wiederkehrende, begrenzte Aufgabe.",
       "keyConcepts": [
         "Skill",
         "SKILL.md",
@@ -405,37 +405,37 @@
       "sections": [
         {
           "id": "modul_2_lesson_3_section_1",
-          "title": "Warum SOPs scheitern (und Skills nicht)",
+          "title": "Warum gepflegte Skills ungenutzte SOPs ergänzen können",
           "readTimeMinutes": 2,
-          "content": "Wie viele SOPs hat deine Firma? Standard-Arbeits-Anweisungen, Checklisten, Process-Dokumente. Zwanzig? Fünfzig?\n\nWie viele davon werden aktuell wirklich gelebt? Ehrlich: wahrscheinlich fünf.\n\nDer Grund: SOPs zu lesen ist mehr Arbeit als sie zu ignorieren. Also ignoriert man sie.\n\nSkills sind SOPs, die sich selbst ausführen. Du rufst `/angebot-draft` auf und die SOP für \"wie schreibt unsere Firma ein Angebot\" passiert. Kein Lesen. Kein Memorieren. Nur aufrufen.",
-          "keyTakeaway": "Skills sind SOPs, die ausführen, nicht gelesen werden müssen."
+          "content": "Eine Standardarbeitsanweisung ist nur nützlich, wenn sie auffindbar ist und angewendet wird. Lange Dokumente werden bei zeitkritischen Aufgaben leicht übersprungen.\n\nEin Skill kann die relevanten Anweisungen in den Ausführungspfad bringen. Der Aufruf `/angebot-draft` wendet das gepflegte Verfahren für einen internen Angebotsentwurf an.\n\nDer Skill ersetzt weder den SOP-Verantwortlichen noch Freigaben oder Prüfbelege. Er erleichtert die konsistente Nutzung der aktuellen Anweisung.",
+          "keyTakeaway": "Ein Skill macht gepflegte Anweisungen innerhalb eines definierten Ablaufs ausführbar."
         },
         {
           "id": "modul_2_lesson_3_section_2",
           "title": "Was ist eine Skill?",
           "readTimeMinutes": 3,
           "content": "Eine Skill ist ein **benannter, wiederverwendbarer Prompt mit Tool-Zugriffen und Hooks**, den du mit einem Slash-Kommando aufrufst.\n\nTechnisch:\n- Liegt in `.claude/skills/skill-name/`\n- Besteht aus: `SKILL.md` (Meta), `PROMPT.md` (der Prompt), `EXAMPLES.md` (Beispiele)\n- Wird aufgerufen mit `/skill-name` in Claude Code oder Claude.ai\n\nMental:\n- Wie ein Makro, aber in natürlicher Sprache\n- Wie ein Shell-Alias, aber für kognitive Arbeit\n- Wie ein SOP, aber ausführbar\n\n**Drei Kategorien:**\n1. **Output-Skills:** generieren Content (`/angebot-draft`, `/wochenbericht-auto`)\n2. **Analyse-Skills:** strukturieren Input (`/meeting-summary-de`, `/invoice-parse`)\n3. **Check-Skills:** prüfen gegen Regel (`/gdpr-audit`, `/eu-ai-act-classify`)\n\nDie Kursmaterialien enthalten Beispiele für alle drei Kategorien.",
-          "keyTakeaway": "Skills = Prompt + Tools + Hooks, aufgerufen mit /slash-command. Drei Kategorien: Output, Analyse, Check."
+          "keyTakeaway": "Skills bündeln Anweisungen, Werkzeuge und Prüfungen hinter einem benannten Befehl."
         },
         {
           "id": "modul_2_lesson_3_section_3",
-          "title": "Eine Skill in 5 Minuten bauen",
+          "title": "Einen Skill als kleines, testbares Paket bauen",
           "readTimeMinutes": 3,
           "content": "Wir entwerfen `/angebot-draft` als wiederverwendbaren, prüfbaren Ablauf.\n\n**Schritt 1: SKILL.md**\n```markdown\n# /angebot-draft\nBeschreibung: Erstellt einen internen Angebotsentwurf.\nInput: freigegebenes oder fiktives Briefing\nOutput: Entwurf mit markierten Preis-, Termin- und Freigabefeldern\n```\n\n**Schritt 2: PROMPT.md**\n```\nErstelle aus einem fiktiven oder freigegebenen Briefing einen Angebotsentwurf.\nErfinde keine Preise, Lieferzusagen oder Vertragsbedingungen.\nMarkiere jedes offene Feld zur menschlichen Prüfung.\n```\n\n**Schritt 3: EXAMPLES.md**\nNutze zwei oder drei klar fiktive Beispiele, etwa `Kunde Alpha (fiktiv), 2 Beispielmaschinen`.\n\nZeitbedarf und Qualität werden im Test gemessen; der Skill übernimmt weder Freigabe noch Versand.",
-          "keyTakeaway": "5 Min bauen. Unbegrenzt oft abrufen. Drei Dateien: SKILL.md, PROMPT.md, EXAMPLES.md."
+          "keyTakeaway": "Nutze eine kleine Menge gepflegter Dateien und teste den Skill an repräsentativen Beispielen."
         },
         {
           "id": "modul_2_lesson_3_section_4",
           "title": "Die 3-mal-Regel",
           "readTimeMinutes": 2,
-          "content": "**Jede Aufgabe, die du mehr als dreimal im Monat machst, verdient eine Skill.**\n\nDrei ist die Grenze. Unter drei: ad-hoc. Ab drei: Skill.\n\nDie Zeitinvestition: 5-10 Minuten pro Skill. Die Zeitrendite hängt vom Use Case ab und muss gemessen werden.\n\n**Homework:** Nimm eine Aufgabe, die du diesen Monat mindestens dreimal gemacht hast. Schreibe SKILL.md, PROMPT.md, EXAMPLES.md. Ruf die Skill zweimal auf. Falls Outputs abweichen, adjustiere den Prompt.",
-          "keyTakeaway": "3-mal-Regel: Was du dreimal im Monat brauchst, lohnt sich als Skill. Einmal 5 Minuten bauen, dauerhaft nutzen."
+          "content": "Wenn eine Aufgabe wiederkehrt, prüfe, ob ein Skill ihre Ausführung konsistenter machen würde. Drei Vorkommen pro Monat sind ein nützlicher Prüftrigger, keine garantierte Rendite.\n\nSchätze Einrichtung, Pflege, Ausführung und Review für die konkrete Aufgabe. Ein kurzer Prompt mit uneinheitlichem Output ist keine Verbesserung.\n\n**Übung:** Wähle eine Aufgabe, die du in diesem Monat mindestens dreimal erledigt hast. Entwirf `SKILL.md`, `PROMPT.md` und `EXAMPLES.md`. Führe den Skill mit zwei verschiedenen Eingaben aus, vergleiche die Ergebnisse und passe die Anweisungen an.",
+          "keyTakeaway": "Nutze drei monatliche Vorkommen als Anlass zur Prüfung; behalte den Skill nur, wenn der Test einen Nutzen zeigt."
         }
       ],
       "quiz": [
         {
           "id": "modul_2_lesson_3_q1",
-          "questionText": "Ab wann verdient eine Aufgabe eine Skill?",
+          "questionText": "Wann solltest du eine wiederkehrende Aufgabe auf Eignung für einen Skill prüfen?",
           "answerOptions": [
             {
               "id": "a",
@@ -458,7 +458,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Die 3-mal-Regel: ab 3 Aufrufen pro Monat hat sich die 5-10-Min-Baueinvestition bereits amortisiert."
+          "explanation": "Der Kurs verwendet drei monatliche Vorkommen als Prüftrigger. Der tatsächliche Nutzen hängt von Einrichtung, Pflege und Review ab."
         },
         {
           "id": "modul_2_lesson_3_q2",
@@ -493,12 +493,12 @@
       "id": "modul_2_lesson_4",
       "moduleId": "modul_2",
       "number": 4,
-      "title": "Plugins + MCP: Claude trifft deine Systeme",
+      "title": "Plugins und MCP: Claude mit Systemen verbinden",
       "subtitle": "Plugins installieren, MCP-Server einbinden",
       "durationMinutes": 12,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
-      "voiceAnchor": "Plugins installieren ist wie Spezialisten einstellen. Nur schneller, billiger, skalierbarer.",
+      "voiceAnchor": "Plugins und MCP-Server erweitern gleichzeitig Funktionsumfang und Sicherheitsgrenze.",
       "keyConcepts": [
         "Plugin",
         "MCP",
@@ -514,31 +514,31 @@
       "sections": [
         {
           "id": "modul_2_lesson_4_section_1",
-          "title": "Spezialisten einstellen in 30 Sekunden",
+          "title": "Eine Integration erst nach Prüfung hinzufügen",
           "readTimeMinutes": 2,
-          "content": "Angenommen du brauchst jemanden, der Pull-Requests auf GitHub reviewed. Einstellen: 3 Monate Einarbeitung, 80.000 Euro Jahresgehalt, Kündigungsschutz.\n\nOder: `/plugin install github@claude-plugins-official`. 30 Sekunden. Claude hat jetzt GitHub-Expertise gebacken.\n\nDu hast Skills kennengelernt: ein `/slash-command`, eine Aufgabe.\n\nEin **Plugin = Paket aus mehreren Skills + MCP-Server + Hooks + Sub-agents**.\n\nBeispiel: `github`-Plugin enthält: `/github:clone`, `/github:pr-review`, `/github:search`, `/github:create-issue`, plus GitHub-MCP-Server, der Claude direkten API-Zugriff gibt.\n\n**Zwei Arten Plugins:**\n1. **Offizielle Plugins** von Anthropic gepflegt (github, notion, slack, figma)\n2. **Community-Plugins** (unvetted, Vorsicht)\n\nWir nutzen in diesem Kurs nur offizielle Plugins + unsere eigenen DACH-spezifischen.",
-          "keyTakeaway": "Plugin = Bundle aus Skills + MCP + Hooks. Offizielle Plugins sind safe, Community-Plugins vetten."
+          "content": "Ein Plugin kann mehrere Skills, MCP-Server, Hooks und Sub-Agents für zusammengehörige Arbeit bündeln. Eine GitHub-Integration kann beispielsweise Repository-Suche, Pull-Request-Prüfung und Issue-Aktionen über authentifizierte APIs bereitstellen.\n\nInstallation ist weder Fachkompetenz noch Autorisierung. Der Output braucht weiterhin Prüfung, und jede API-Aktion ist durch die vergebenen Kontorechte begrenzt.\n\nUnterscheide zwischen:\n1. **Vom Anbieter gepflegten Paketen** mit dokumentierter Herkunft und Release-Verantwortung\n2. **Community-Paketen**, die eine unabhängige Prüfung von Code, Berechtigungen und Updates benötigen\n\nNutze nur von der Organisation freigegebene Pakete und prüfe vor der Installation Quelle, Version und angeforderte Rechte.",
+          "keyTakeaway": "Ein Plugin bündelt Fähigkeiten; Herkunft, Berechtigungen und Output bleiben prüfpflichtig."
         },
         {
           "id": "modul_2_lesson_4_section_2",
           "title": "Plugins installieren",
           "readTimeMinutes": 2,
-          "content": "Die Übung zeigt, wie ein Plugin-Setup grundsätzlich gedacht wird:\n\n```bash\n/plugin install github@claude-plugins-official\n```\n\nClaude Code fragt: User-Scope oder Project-Scope. Danach folgen Authentifizierung, Scope-Prüfung und Neustart.\n\nWichtig: Keine Secrets in Scripts. Setup-Skripte dürfen nur interaktiv nach Tokens fragen und müssen Konfigurationsdateien sichern.\n\nBeispiel-Anfrage nach erfolgreicher, sauber autorisierter Verbindung:\n> \"Claude, durchsuche eine freigegebene Kundendatenbank nach Firmen in Bayern, die seit 6 Monaten keine Aktivität zeigen. Schreibe einen Reactivation-E-Mail-Entwurf für die Top 5.\"\n\nDer Lernpunkt ist der Multi-Tool-Workflow: Datenquelle abfragen, Text-Generation getrennt halten, Ergebnis reviewen.",
-          "keyTakeaway": "Plugin-Install = ein Command + OAuth/Token. Multi-Tool-Workflows in einer Anfrage."
+          "content": "Diese Übung modelliert die Einrichtungsreihenfolge:\n\n```bash\n/plugin install github@claude-plugins-official\n```\n\nEin unterstützter Client kann nach Benutzer- oder Project-Scope, Authentifizierung, Berechtigungsprüfung und Neustart fragen. Prüfe aktuellen Befehl und Paketquelle vor der Ausführung.\n\nÜbergib Secrets weder in Skripten noch als Befehlsargumente. Einrichtungstools sollten einen freigegebenen Secret-Store oder interaktive Authentifizierung verwenden, Konfigurationsdateien schützen und den Widerruf dokumentieren.\n\nBeispiel nach einer korrekt autorisierten Verbindung:\n> \"Durchsuche die freigegebene Beispiel-Kundendatenbank nach fiktiven Firmen in Bayern ohne Aktivität seit sechs Monaten. Erstelle für fünf Datensätze Reaktivierungsentwürfe und sende nichts.\"\n\nDer Ablauf trennt Datenabruf, Textgenerierung und menschliche Freigabe.",
+          "keyTakeaway": "Installation verlangt Quellenprüfung, Authentifizierung, Scope-Prüfung und einen definierten Widerrufsweg."
         },
         {
           "id": "modul_2_lesson_4_section_3",
-          "title": "MCP: das Nervensystem",
+          "title": "MCP als Werkzeugschnittstelle",
           "readTimeMinutes": 3,
-          "content": "**MCP = Model Context Protocol.** Offener Standard, wie Claude mit externen Systemen spricht.\n\nMentales Modell: MCP = definierte Werkzeug-Schnittstelle für LLMs.\n\n**MCP-Server enthält:**\n- **Tools**: Funktionen, die Claude aufrufen kann (`read_file`, `update_record`, `send_message`)\n- **Resources**: Dateien oder Daten, die Claude lesen kann\n\nWenn ein Plugin nicht existiert, kann ein MCP-Server die Alternative sein.\n\n**Typische Server für Lernzwecke:**\n- `filesystem`: lokale Dateien\n- `postgresql`: Datenbankzugriff\n- `playwright`: Browserautomation\n\nFür produktive Nutzung zählen: Rechte, Secrets, Logging, Least Privilege, Widerruf und Review.",
-          "keyTakeaway": "MCP = USB für LLMs. Für DACH: handelsregister-mcp, destatis-mcp, einvoice-mcp, ustidnr-mcp."
+          "content": "**MCP bedeutet Model Context Protocol.** Es definiert, wie ein kompatibler KI-Client externe Tools entdecken und aufrufen sowie bereitgestellte Ressourcen lesen kann.\n\nEin MCP-Server kann anbieten:\n- **Tools:** Funktionen wie `read_file`, `update_record` oder `send_message`\n- **Ressourcen:** Dateien oder Daten, die ein Client lesen darf\n\nEin MCP-Server kann eine Integration bereitstellen, für die kein Paket existiert.\n\n**Beispielkategorien für Lernzwecke:**\n- `filesystem`: lokale Dateien\n- `postgresql`: Datenbankzugriff\n- `playwright`: Browserautomation\n\nFür produktive Nutzung müssen Berechtigungen, Secret-Handhabung, Protokollierung, Least Privilege, Widerruf und menschliche Freigabe folgenreicher Schreibaktionen definiert sein.",
+          "keyTakeaway": "MCP definiert eine Tool- und Ressourcenschnittstelle; jeder Server benötigt eine eigene Sicherheitsprüfung."
         },
         {
           "id": "modul_2_lesson_4_section_4",
-          "title": "Live-Install: handelsregister-mcp",
+          "title": "Ein MCP-Setup als Dry-Run prüfen",
           "readTimeMinutes": 3,
           "content": "Ein MCP-Setup braucht eine nachvollziehbare, geprüfte Installationsquelle. Führe kein unbekanntes Skript und kein `curl | bash` aus.\n\nEin sicherer Test dokumentiert Konfigurationspfad, benötigte Berechtigungen, Secret-Quelle, Backup und Startprüfung. Verwende im Dry-Run nur einen fiktiven Suchbegriff wie `Fiktivwerk Alpha`; erwarte ausdrücklich keinen realen Registertreffer.\n\nFür eine reale Firmenrecherche müssen Quelle, Rechtsgrundlage, Suchumfang und Zweck freigegeben sein. Ergebnisse werden gegen die rechtsverbindliche Primärquelle geprüft.",
-          "keyTakeaway": "handelsregister-mcp + destatis-mcp = deutsche Firmen-/Statistik-Daten direkt in Claude. Rechtsverbindliche Quellen."
+          "keyTakeaway": "Behandle Register- und Statistikintegrationen als Recherchehilfen und prüfe Ergebnisse an maßgeblichen Quellen."
         }
       ],
       "quiz": [
@@ -571,7 +571,7 @@
         },
         {
           "id": "modul_2_lesson_4_q2",
-          "questionText": "Warum nur offizielle Plugins oder OS-Bundle-Scripts nutzen?",
+          "questionText": "Warum sollte die Installation auf geprüfte Anbieterpakete oder freigegebene Organisations-Bundles begrenzt werden?",
           "answerOptions": [
             {
               "id": "a",
@@ -594,7 +594,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Unbekannte Scripts können Settings überschreiben, Secrets exfiltrieren oder Backdoors installieren. Sicherheits-Prinzip: nur aus vertrauenswürdigen Quellen."
+          "explanation": "Ungeprüfte Skripte können Einstellungen überschreiben, Secrets ausleiten oder dauerhaften Zugriff hinzufügen. Prüfe Quelle, Code, Version und Berechtigungen."
         }
       ]
     },
@@ -602,12 +602,12 @@
       "id": "modul_2_lesson_5",
       "moduleId": "modul_2",
       "number": 5,
-      "title": "Design Skill + Artifacts",
-      "subtitle": "Outputs, die nicht nach ChatGPT aussehen",
+      "title": "Design Skill und Artifacts",
+      "subtitle": "Ergebnisse mit einem bewussten visuellen System",
       "durationMinutes": 10,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
-      "voiceAnchor": "Es gibt zwei Arten von AI-Outputs: die mit der lila Gradient-Background. Und deine.",
+      "voiceAnchor": "Ein Design-Brief sollte visuelle Entscheidungen definieren, bevor die Umsetzung beginnt.",
       "keyConcepts": [
         "Design Skill",
         "Artifact",
@@ -624,29 +624,29 @@
           "id": "modul_2_lesson_5_section_1",
           "title": "Warum AI-Outputs generisch aussehen",
           "readTimeMinutes": 2,
-          "content": "Du hast sie gesehen. Die ChatGPT-Landing-Pages. Inter als Font. Lila-zu-Pink-Gradient als Background. Drei Feature-Cards mit generischen Icons. Der gleiche Look seit 2023.\n\nWenn dein Output so aussieht, signalisiert er: \"Ich hab das in 30 Sekunden mit AI generiert.\"\n\nStandard-Prompt: \"Schreib mir eine Landing-Page für mein Produkt.\" Claude muss jetzt ohne Design-Anweisung entscheiden: Font? Farbe? Struktur? Motion?\n\nDefault-Entscheidungen: Inter (weil überall), Indigo/Purple (weil Tailwind-Default), Hero + 3 Cards + CTA (weil Pattern), Fade-In (weil safe).\n\nResultat: **jede AI-Landing-Page sieht gleich aus.** Nicht weil Claude schlecht ist. Weil die Anweisung die gesamte Ästhetik Claude überlässt, und Claude sicher spielt.",
-          "keyTakeaway": "Generisches Aussehen ist kein Claude-Problem. Es ist ein Briefing-Problem."
+          "content": "Eine offene Anfrage wie \"Erstelle eine Landingpage für mein Produkt\" lässt Typografie, Farbe, Layout, Hierarchie und Bewegung unbestimmt. Das Modell greift dann häufig auf Muster zurück, die seit 2023 in generierten Oberflächen und Standardkomponenten verbreitet sind.\n\nDas Ergebnis kann Inter, einen Indigo-Verlauf, einen Hero mit drei Karten und einen allgemeinen Call-to-Action kombinieren. Keine dieser Entscheidungen ist allein falsch. Zusammen zeigen sie jedoch, dass projektspezifische Designentscheidungen fehlen.\n\nGenerischer Output entsteht meist durch einen unvollständigen Design-Brief, nicht durch eine einzelne Schrift oder ein Framework.",
+          "keyTakeaway": "Definiere visuelles System, Inhaltshierarchie und Grenzen, bevor du die Umsetzung anforderst."
         },
         {
           "id": "modul_2_lesson_5_section_2",
           "title": "Design Skill installieren + erste Ausgabe",
           "readTimeMinutes": 3,
-          "content": "Installation: eine Zeile, 30 Sekunden.\n\n```\n/plugin install frontend-design@claude-plugins-official\n```\n\nAufruf:\n\n```\n/frontend-design \"Landing-Page für Maschinenbau-Unternehmen,\n80 Mitarbeiter, Zielgruppe: Handwerks-Betriebe mit 10-30 MA,\nUnternehmen hat 35 Jahre Tradition, Qualität vor Preis.\"\n```\n\nClaude startet **nicht** mit Code. Claude antwortet zuerst mit einer **Design-Direktion**:\n\n> **Vorschlag:**\n> - Ästhetik: \"Traditionell-Modern\", Handwerks-Betrieb digital\n> - Font: Serif-Headline (Fraunces) + Sans-Body (Inter Tight)\n> - Farbe: warmes Grau (stone-800) + Kupfer (amber-700)\n> - Struktur: Hero mit Bild + Story-Lead, Testimonial-Block, Vertrauens-Zahlen\n> - Motion: sparsam, Scroll-Fade auf Zahlen, kein Parallax\n>\n> Soll ich so weitermachen oder andere Richtung?\n\nIch bestätige. Claude generiert jetzt einen React + Tailwind-Entwurf, der geprüft, getestet und an das Projekt angepasst werden muss.",
-          "keyTakeaway": "Design Skill trennt zwei Phasen: Ästhetik-Entscheidung → Code-Generierung."
+          "content": "Beispiel für einen Installationsbefehl:\n\n```\n/plugin install frontend-design@claude-plugins-official\n```\n\nBeispielaufruf:\n\n```\n/frontend-design \"Landingpage für ein Maschinenbauunternehmen,\n80 Mitarbeitende, Zielgruppe: Handwerksbetriebe mit 10 bis 30 Mitarbeitenden,\n35 Jahre am Markt, Qualität vor niedrigstem Preis.\"\n```\n\nDer Ablauf sollte mit einer Designrichtung statt mit Code beginnen:\n\n> **Vorschlag:**\n> - Richtung: etabliertes Industrieunternehmen mit aktueller digitaler Oberfläche\n> - Typografie: Serifenschrift für Überschriften, zurückhaltende Sans-Serif für Text\n> - Farbe: warmes Grau mit Kupferakzent\n> - Struktur: bildgeführter Einstieg, belegte Unternehmensgeschichte, Nachweisblock\n> - Bewegung: nur für sinnvolle Zustandswechsel, kein dekoratives Parallax\n>\n> Diese Richtung vor der Umsetzung bestätigen oder korrigieren.\n\nErzeuge nach Freigabe einen React- und Tailwind-Entwurf. Prüfe Barrierefreiheit, Responsivität, Inhalte, Abhängigkeiten und Eignung für den Produktivbetrieb vor der Integration.",
+          "keyTakeaway": "Trenne Designrichtung und Codegenerierung und prüfe beide Stufen."
         },
         {
           "id": "modul_2_lesson_5_section_3",
           "title": "Warum das funktioniert",
           "readTimeMinutes": 2,
-          "content": "Der Trick: Design Skill **trennt zwei Phasen**:\n1. Ästhetik-Entscheidung (Phase 1)\n2. Code-Generierung (Phase 2)\n\nOhne Design Skill macht Claude beides parallel, fällt auf Default zurück.\n\nMit Design Skill wird Phase 1 explizit. Claude muss begründen. Du kannst korrigieren. Dann erst Code.\n\nDas ist Standard-Workflow von menschlichen Designern. Nur schneller.\n\n**Weitere Use-Cases:**\n\n**Präsentation:** `/frontend-design \"10-Folien-Präsentation zu Q1-Ergebnis, Audience: Geschäftsführung, Fokus: 3 Entscheidungen für Q2.\"`\nOutput: Slide-Deck als React-Component. Export als PDF direkt aus Claude.\n\n**Client-Dashboard:** `/frontend-design \"Dashboard für Kunde zum Status seines Bauprojekts. Zeigt: Fortschritt %, nächste Meilensteine, aktuelle Blocker.\"`\n\n**Angebot als Webdokument:** `/frontend-design \"Angebot als einseitiges Web-Dokument. Angebot-Header, Leistungsdetails, Preis, Referenzen, Signatur-Button.\"`\nOutput: shareable URL-Angebot. Nicht mehr PDF.",
-          "keyTakeaway": "5 Use-Cases: Landing, Präsentation, Dashboard, Angebot, Report."
+          "content": "Der Design Skill trennt zwei Entscheidungen:\n1. Designrichtung\n2. Umsetzung\n\nDie explizite erste Stufe macht die Begründung prüfbar. Du kannst allgemeine Entscheidungen verwerfen und vor dem Code ein zusammenhängendes visuelles System definieren. Die zweite Stufe setzt anschließend die geprüfte Richtung um.\n\n**Weitere Use Cases:**\n\n**Präsentation:** `/frontend-design \"Zehn Folien zum Q1-Ergebnis. Zielgruppe: Geschäftsführung. Fokus: drei Entscheidungen für Q2.\"`\n\n**Kundendashboard:** `/frontend-design \"Dashboard zum Status eines Bauprojekts. Zeige Fortschritt, nächste Meilensteine und aktuelle Blocker.\"`\n\n**Angebot als Webdokument:** `/frontend-design \"Einseitiges Angebot mit Umfang, geprüften Preisfeldern, Referenzen und Freigabeaktion.\"`\n\nJeder Output benötigt aufgabenspezifische Prüfungen zu Barrierefreiheit, Daten und Export.",
+          "keyTakeaway": "Dieselbe Briefing-Methode gilt für Landingpages, Präsentationen, Dashboards, Angebote und Berichte."
         },
         {
           "id": "modul_2_lesson_5_section_4",
           "title": "Design für Nicht-Designer",
           "readTimeMinutes": 2,
-          "content": "**Design Skill trennt Denken von Tippen in der Frontend-Welt.**\n\nDu denkst über Ästhetik nach. Du beschreibst sie. Claude tippt den Code.\n\nDas Ergebnis: deine Outputs sehen nicht mehr wie AI-Generierung aus. Sie sehen aus, als hätte ein Designer sie gemacht, der deine Firma und dein Publikum kennt.\n\n**Kein Code-Kenntnis nötig.** Design Skill produziert React/Tailwind, du siehst den fertigen Output im Artifact-Panel, editierst visuell, exportierst als Datei oder URL. Der Code darunter ist egal.\n\n**Homework:** Generiere eine reale Landing-Page-Variante für ein Produkt oder Service deiner Firma. Iteriere Design-Direktion (3-4 Runden). Finales Artifact exportieren. Wenn deine Firma aktuell keine Landing-Page hat, schick den Link deinem Vorgesetzten. Du hast gerade einen 5.000-Euro-Auftrag an eine Web-Agentur eingespart.",
-          "keyTakeaway": "Kein Code-Kenntnis nötig. Produktionsreifer React + Tailwind aus Prosa-Briefing."
+          "content": "Du kannst Zielgruppe, Hierarchie, Ton, visuelle Referenzen und Grenzen definieren, ohne React oder CSS selbst zu schreiben. Das Modell kann daraus einen Umsetzungsentwurf vorbereiten.\n\nErstellung ohne eigenen Code bedeutet nicht Betrieb ohne technische Prüfung. Prüfe responsive Verhalten, semantische Struktur, Tastaturbedienung, Kontrast, Ladeverhalten, Datenschutz und Wartbarkeit.\n\n**Übung:** Erstelle mit fiktiven oder freigegebenen Inhalten eine Landingpage-Variante. Prüfe drei inhaltlich verschiedene Designrichtungen, bevor du eine auswählst. Exportiere das finale Artifact erst nach Tests bei mobilen und Desktop-Breiten.",
+          "keyTakeaway": "Ein Prosa-Brief kann einen Umsetzungsentwurf erzeugen; Produktionsreife verlangt weiterhin technische und inhaltliche Prüfung."
         }
       ],
       "quiz": [
@@ -675,11 +675,11 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Design Skill zwingt Claude, zuerst eine explizite Design-Direktion zu erklären (Phase 1), bevor Code generiert wird (Phase 2)."
+          "explanation": "Der Ablauf prüft zuerst eine Designrichtung und erzeugt Code erst nach deren Freigabe."
         },
         {
           "id": "modul_2_lesson_5_q2",
-          "questionText": "Warum sehen AI-Landing-Pages standardmäßig gleich aus?",
+          "questionText": "Warum ähneln sich generierte Landingpages häufig?",
           "answerOptions": [
             {
               "id": "a",
@@ -688,7 +688,7 @@
             },
             {
               "id": "b",
-              "text": "Default-Entscheidungen: Inter-Font, Indigo-Gradient, Tailwind-Pattern",
+              "text": "Der Prompt lässt Typografie, Farbe und Struktur offen, sodass verbreitete Standardmuster wiederverwendet werden",
               "isCorrect": true
             },
             {
@@ -702,7 +702,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Ohne explizite Design-Anweisung fällt Claude auf Defaults zurück: Inter, Indigo/Purple, Hero + 3 Cards + CTA."
+          "explanation": "Ohne projektspezifische Grenzen wählt ein Modell häufig verbreitete Muster wie gängige Schriften, Verläufe und Kartenlayouts."
         }
       ]
     },
@@ -711,11 +711,11 @@
       "moduleId": "modul_2",
       "number": 6,
       "title": "Claude Code für Nicht-Entwickler",
-      "subtitle": "Der versteckte Superpower",
+      "subtitle": "Datei- und Dokumentabläufe im Terminal",
       "durationMinutes": 12,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
-      "voiceAnchor": "Claude Code sieht nach Entwickler-Tool aus. Es ist Claude mit Schlüsseln zu deinem Rechner.",
+      "voiceAnchor": "Claude Code kann lokale Dateien bearbeiten; Rechte, Backups und Prüfung sind deshalb ebenso wichtig wie der Prompt.",
       "keyConcepts": [
         "Claude Code",
         "Filesystem-Zugriff",
@@ -729,25 +729,25 @@
             "exerciseId": "modul_2_lesson_6_ex_1",
             "lessonId": "modul_2_lesson_6",
             "moduleId": "modul_2",
-            "title": "Welches Claude-Code-Kommando briefst du am besten?",
-            "scenario": "Du hast 120 PDFs in ~/rechnungen/ 2025/ und willst sie aufs CSV-Format runterbrechen (Datum, Lieferant, Betrag, Positionen). Welcher Prompt liefert beim ersten Versuch ein brauchbares Ergebnis?",
+            "title": "Welche Claude-Code-Anweisung ist ausreichend spezifiziert?",
+            "scenario": "Du hast 120 PDFs in `~/rechnungen/2025/` und benötigst eine CSV mit Datum, Lieferant, Betrag und Positionen. Welcher Prompt definiert einen prüfbaren ersten Versuch?",
             "candidates": [
               {
-                "label": "Variante A: die Anfrage",
+                "label": "Variante A: offene Anfrage",
                 "prompt": "Kannst du die Rechnungen in diesem Ordner auslesen?",
-                "critique": "Zu vage. Welcher Ordner? Welche Felder? Welches Output-Format? Claude macht irgendwas oder fragt 5x zurück, beides Zeitverlust.",
+                "critique": "Ordner, Felder, Ausgabeformat und Fehlerverhalten fehlen. Das System muss Details erfragen oder ableiten.",
                 "rating": 1
               },
               {
-                "label": "Variante B: halb-spezifiziert",
+                "label": "Variante B: teilweise spezifiziert",
                 "prompt": "Lies alle PDFs in ~/rechnungen/2025/ und extrahiere Datum, Lieferant, Betrag. Schreib die Ergebnisse in eine CSV.",
-                "critique": "Pfad, Input-Typ und 3 Felder sind da. Aber: was ist mit Positionen? Mit Fehlern? Mit Sortierung? Mit Namenskonventionen der Spalten? Claude ergänzt nach Gefühl.",
+                "critique": "Pfad, Eingabetyp und drei Felder sind definiert. Positionen, Parse-Fehler, Spaltennamen und Validierung fehlen weiterhin.",
                 "rating": 3
               },
               {
-                "label": "Variante C: das saubere Briefing",
-                "prompt": "Aufgabe: Extrahiere aus allen PDFs in ~/rechnungen/2025/ diese Felder: datum (ISO-8601), lieferant (string), brutto (EUR float), netto (EUR float), positionen (JSON-Array mit [{beschreibung, menge, einzelpreis}]). Schreib das Ergebnis in ~/rechnungen/2025_summary.csv mit Komma-Trennung und UTF-8. Bei Parsing-Fehlern: Datei-Name + Fehler in stderr loggen, restliche Dateien weiter verarbeiten. Finaler Bericht: Anzahl erfolgreich / fehlerhaft, Top-3-Lieferanten nach Summe.",
-                "critique": "Pfad, Felder mit Typen, Output-Datei mit Encoding, Fehler-Verhalten, Report-Format. Claude kann in einem Rutsch durchlaufen, du reviewst am Ende, nicht dazwischen.",
+                "label": "Variante C: prüfbarer Brief",
+                "prompt": "Aufgabe: Lies alle PDFs in `~/rechnungen/2025/`, ohne sie zu verändern. Extrahiere `datum` (ISO 8601), `lieferant` (String), `brutto` (EUR-Dezimalzahl), `netto` (EUR-Dezimalzahl) und `positionen` (JSON-Array mit `beschreibung`, `menge`, `einzelpreis`). Schreibe `~/rechnungen/2025_summary.csv` als kommagetrennte UTF-8-Datei. Protokolliere bei Parse-Fehlern Dateiname und Fehler auf stderr und fahre fort. Abschlussbericht: Anzahl erfolgreicher und fehlgeschlagener Dateien sowie die drei größten Lieferantensummen. Überschreibe keine vorhandene Ausgabedatei.",
+                "critique": "Die Anweisung definiert Quelle, Schema, Ausgabe, Encoding, Fehlerbehandlung, Überschreibschutz und Abstimmbericht.",
                 "rating": 5
               }
             ]
@@ -759,35 +759,35 @@
           "id": "modul_2_lesson_6_section_1",
           "title": "Was Claude Code wirklich ist",
           "readTimeMinutes": 3,
-          "content": "Claude Code wird oft missverstanden. Die Namen-Assoziation: \"Code\" = \"Programmieren\" = \"nicht für mich.\"\n\nWas Claude Code wirklich ist:\n- Ein Terminal-Client für Claude\n- Mit Zugriff auf dein Dateisystem (alles außer System-Ordner)\n- Mit Skills, Plugins, MCP-Servern\n- Mit Memory via CLAUDE.md\n\nJa, Entwickler nutzen es zum Programmieren. Aber **nur 40% der Features sind Coding-spezifisch.**\n\nFür Nicht-Entwickler gibt es die anderen 60%:\n- Datei-Operationen (rename, sort, merge, extract)\n- Dokument-Analyse (PDF-Extraktion, Excel-Cleanup, Image-OCR)\n- Batch-Verarbeitung (200 Kundenbriefe in Firmen-Stil, 500 Fotos nach Datum)\n- Obsidian-Automation\n- SOP-Generierung aus Diktat + Firmen-Stil-Leitfaden\n- Report-Zusammenstellung aus verteilten Quellen\n\nDu hast 2026 keine 500 PDFs mehr, die du manuell nach Datum sortieren musst. Du hast Claude Code.",
-          "keyTakeaway": "60% von Claude Code ist für Nicht-Entwickler. Datei-Ops, Batch-Verarbeitung, Dokument-Analyse."
+          "content": "Claude Code ist ein terminalbasierter Agent, der Dateien prüfen und bearbeiten sowie konfigurierte Werkzeuge aufrufen kann. Entwickler nutzen ihn für Softwarearbeit; dieselben Mechanismen können auch freigegebene Dokument- und Dateiabläufe unterstützen.\n\nBeispiele:\n- Dateioperationen wie Umbenennen, Sortieren, Zusammenführen und Extrahieren\n- Dokumentanalyse wie PDF-Extraktion, Tabellenbereinigung und OCR\n- Stapelverarbeitung mit definiertem Schema und Fehlerprotokoll\n- gepflegte Notiz- und SOP-Abläufe\n- Berichte aus freigegebenen lokalen Quellen\n\nDer Funktionsumfang hängt von installierter Version, Berechtigungen und konfigurierten Werkzeugen ab. Beginne in einem kopierten Testverzeichnis, begrenze den Zugriff und prüfe die vorgeschlagenen Aktionen vor der Freigabe.",
+          "keyTakeaway": "Claude Code unterstützt Dateiabläufe außerhalb der Entwicklung, verlangt aber klaren Scope, Backups und Validierung."
         },
         {
           "id": "modul_2_lesson_6_section_2",
           "title": "Erster Einsatz: 80 Rechnungen zu CSV",
           "readTimeMinutes": 3,
-          "content": "Download von `code.claude.com`. Claude Code ist kostenlos, läuft mit Claude.ai-Abo.\n\nInstallation: ein Klick. Erster Start: OAuth mit Claude.ai-Account. Fertig.\n\n**Mein erster Prompt:**\n> \"Ich habe in meinem Ordner `~/Desktop/Rechnungen-2025/` 80 PDFs. Extrahiere aus jedem: Datum, Betrag, Lieferant, Zweck. Gib das Ergebnis als CSV in denselben Ordner.\"\n\nClaude Code antwortet nicht mit Text. Claude Code **macht**:\n- Öffnet den Ordner, scannt die PDFs\n- Extrahiert pro PDF die Daten\n- Zeigt mir zwischendurch Fortschritt\n- Erstellt `Rechnungen-2025-export.csv`\n- Bestätigt Fertigstellung\n\n3 Minuten. 80 Rechnungen. Saubere Excel-Datei. Manuell: 8 Stunden.",
-          "keyTakeaway": "Ein einfacher Prompt ersetzt 8 Stunden manueller Arbeit."
+          "content": "Prüfe vor der Einrichtung die aktuellen Installations-, Tarif- und Authentifizierungsanforderungen auf `code.claude.com` und nutze ein freigegebenes Claude.ai-Konto.\n\nVerwende für die Übung fiktive oder bereinigte Rechnungen in einem kopierten Verzeichnis. Beispiel:\n> \"In `~/Desktop/Rechnungen-2025/` liegen 80 fiktive PDF-Rechnungen. Lies sie, ohne sie zu verändern. Extrahiere Datum, Betrag, Lieferant und Zweck. Schreibe `Rechnungen-2025-export.csv` in dasselbe Verzeichnis, protokolliere Parse-Fehler und gleiche Eingabe- und Ausgabeanzahl ab.\"\n\nPrüfe Plan und Berechtigungen vor der Ausführung. Validere anschließend jeden fehlgeschlagenen Datensatz und eine risikobasierte Stichprobe erfolgreicher Datensätze. Erfasse Ausführungszeit, Prüfzeit und Extraktionsfehler.\n\nBehaupte keine feste Zeitersparnis; dokumentiere das Ergebnis für den tatsächlichen Datensatz und die verwendete Hardware.",
+          "keyTakeaway": "Nutze kopierte, nicht sensible Testdaten und validiere den Output, bevor du den Ablauf auf reale Datensätze anwendest."
         },
         {
           "id": "modul_2_lesson_6_section_3",
-          "title": "Der Vertrauens-Aufbau",
+          "title": "Verlässlichkeit durch Validierung aufbauen",
           "readTimeMinutes": 2,
-          "content": "Hier der ehrliche Teil: beim ersten Mal traust du der Sache nicht.\n\n\"Was, wenn Claude Rechnungsdaten falsch liest?\"\n\"Was, wenn eine PDF korrupt ist und Claude erfindet etwas?\"\n\nAntwort: **du prüfst die ersten 10%.** Öffnest 8 der 80 PDFs und vergleichst mit den 8 Zeilen in der CSV. Wenn's passt: die restlichen 72 mit hoher Wahrscheinlichkeit auch.\n\nDas ist wie bei einem neuen Mitarbeiter. Beim ersten Projekt: engmaschige Kontrolle. Ab dem dritten: Stichprobe. Ab dem zehnten: Vertrauen.\n\n**Ausnahme:** hochsensible Domänen (Finanzamt-Meldung, Gehaltsabrechnung, Vertragliche Termine). Da bleibst du bei 100% Prüfung. Aber selbst da ist \"Claude macht den Output + ich prüfe\" schneller als \"ich mache beides.\"",
-          "keyTakeaway": "Stichproben-Strategie: erste 10% prüfen, dann Vertrauen aufbauen."
+          "content": "Rechnungsextraktion kann durch Scanqualität, Layoutunterschiede, OCR-Fehler oder beschädigte Dateien scheitern. Ein erfolgreicher Prozessabschluss belegt nicht, dass jeder Wert richtig ist.\n\nDefiniere Prüfungen vor der Ausführung:\n- Eingabe- und Ausgabemengen abgleichen\n- jede Parse-Warnung und jedes fehlende Pflichtfeld prüfen\n- Summen an den Quelldokumenten validieren\n- über Lieferanten, Formate und Konfidenzstufen hinweg stichprobenartig prüfen\n- rechtlich oder finanziell folgenreiche Felder vollständig kontrollieren\n\nErhöhe den Automatisierungsgrad erst, wenn wiederholte Durchläufe einen dokumentierten Fehlerschwellenwert einhalten. Quelldateien bleiben unverändert und Outputs umkehrbar.",
+          "keyTakeaway": "Nutze risikobasierte Validierung und vollständige Prüfung folgenreicher Felder; leite Zuverlässigkeit nicht aus einer einzelnen Stichprobe ab."
         },
         {
           "id": "modul_2_lesson_6_section_4",
-          "title": "Mittelstand-Use-Cases (Schnell-Sequenz)",
+          "title": "Beispiele für mittelständische Unternehmen",
           "readTimeMinutes": 3,
-          "content": "**Use-Case 1: Obsidian-Wochen-Report**: \"Lies alle Notizen aus `50 Daily/` der letzten 7 Tage. Extrahiere: Entscheidungen, Action-Items, Lessons. Schreibe einen 1-Seiten-Wochenbericht.\" → 60 Sekunden.\n\n**Use-Case 2: Berichtsheft für Handwerk**: \"Ich habe im Ordner `~/Berichtshefte/` handgeschriebene Berichtshefte als Fotos. Führe OCR durch. Strukturiere pro Tag: Datum, Arbeitsstunden, Arbeitsbeschreibung, Azubi-Unterschrift. Output als CSV.\" → 2-3 Minuten.\n\n**Use-Case 3: Massenpersonalisierte Kundenbriefe**: \"In `Kunden.csv` stehen 200 Kunden. Schreibe pro Kunde einen Weihnachtsgruß, persönlich, Bezug auf letzten Auftrag, unter 100 Wörter. Output als 200 `.docx`-Dateien.\" → 5-8 Minuten.\n\n**Manueller Vergleich:** 200 Briefe × 10 Min = 33 Stunden Arbeit. Mit Claude Code: 8 Minuten + 20 Minuten Review.\n\nClaude Code ist kein Entwickler-Werkzeug. Es ist der Kontextschalter vom \"mit Claude reden\" zum \"Claude arbeitet an meinem Rechner.\"",
-          "keyTakeaway": "Einstiegs-Reibung: 1 h Setup. Rendite: ~10 h pro Woche, jede Woche."
+          "content": "**Use Case 1: Wochenbericht aus Notizen**\nLies freigegebene Notizen aus `50 Daily/` für die letzten sieben Tage. Extrahiere Entscheidungen, Action-Items und Erkenntnisse in einen einseitigen Entwurf mit Links zu den Quellnotizen.\n\n**Use Case 2: Berichtshefte**\nFühre OCR auf fiktiven Fotos in `~/Berichtshefte/` aus. Extrahiere Datum, Stunden und Arbeitsbeschreibung als CSV, markiere unleserliche Felder und lasse Unterschriften für manuelle Bearbeitung.\n\n**Use Case 3: Briefentwürfe**\nLies eine fiktive `Kunden.csv` und erstelle individualisierte Briefentwürfe in einem neuen Ausgabeverzeichnis. Sende nichts und überschreibe keine vorhandenen Dateien.\n\nErfasse für jeden Ablauf Einrichtung, Ausführung, Korrektur und Freigabe. Die Stapelgröße allein belegt keine Zeitersparnis.",
+          "keyTakeaway": "Bewerte Dateiabläufe anhand gemessener Laufzeit, Fehlerquote und Prüfaufwand statt mit festen Einsparungsbehauptungen."
         }
       ],
       "quiz": [
         {
           "id": "modul_2_lesson_6_q1",
-          "questionText": "Welcher Prozentsatz der Claude Code Features ist für Nicht-Entwickler relevant?",
+          "questionText": "Welche Funktionen von Claude Code sind außerhalb der Softwareentwicklung relevant?",
           "answerOptions": [
             {
               "id": "a",
@@ -796,12 +796,12 @@
             },
             {
               "id": "b",
-              "text": "~60%",
+              "text": "Dateioperationen, Dokumentanalyse und kontrollierte Stapelverarbeitung",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "~95%",
+              "text": "Jede Funktion ohne zusätzliche Prüfung",
               "isCorrect": false
             },
             {
@@ -810,11 +810,11 @@
               "isCorrect": false
             }
           ],
-          "explanation": "40% sind Coding-spezifisch. 60% sind für alle: Datei-Ops, Batch-Verarbeitung, Dokument-Analyse, SOP-Generierung."
+          "explanation": "Außerhalb der Entwicklung sind unter anderem Dateioperationen, Dokumentextraktion und Stapelverarbeitung nutzbar. Ein belastbarer Prozentanteil wird nicht behauptet."
         },
         {
           "id": "modul_2_lesson_6_q2",
-          "questionText": "Was ist die richtige Vertrauens-Strategie beim ersten Einsatz?",
+          "questionText": "Welche Validierungsstrategie ist für den ersten Stapeldurchlauf angemessen?",
           "answerOptions": [
             {
               "id": "a",
@@ -823,21 +823,21 @@
             },
             {
               "id": "b",
-              "text": "Stichprobe der ersten 10% prüfen, dann Vertrauen aufbauen",
+              "text": "Mengen abgleichen, Fehler prüfen, risikobasiert stichprobenartig testen und folgenreiche Felder vollständig kontrollieren",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Nie vertrauen, alles manuell nachprüfen",
+              "text": "Keine Prüfung automatisieren und sämtliche Arbeit manuell wiederholen",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Nur hochsensible Bereiche prüfen",
+              "text": "Nur Hochrisikodateien prüfen und Parse-Warnungen ignorieren",
               "isCorrect": false
             }
           ],
-          "explanation": "Erste 10% prüfen, dann Vertrauen aufbauen. Ausnahme: Finanzamt, Gehalt, Verträge bleiben 100%-Kontrolle."
+          "explanation": "Validiere Mengen und Fehler, bilde eine Stichprobe über relevante Gruppen und prüfe jedes folgenreiche Feld. Erhöhe Automatisierung nur auf Basis dokumentierter Nachweise."
         }
       ]
     },
@@ -846,11 +846,11 @@
       "moduleId": "modul_2",
       "number": 7,
       "title": "Memory & CLAUDE.md",
-      "subtitle": "Wie Claude deinen Kontext lernt",
+      "subtitle": "Kontext pflegen, ohne falsche Daten zu speichern",
       "durationMinutes": 10,
       "premiumGated": false,
       "refreshCadence": "EVERGREEN",
-      "voiceAnchor": "Was du Claude einmal sagst, muss Claude dauerhaft wissen.",
+      "voiceAnchor": "Persistenter Kontext sollte minimal, freigegeben, aktuell und löschbar sein.",
       "keyConcepts": [
         "CLAUDE.md",
         "Cross-Chat-Memory",
@@ -865,7 +865,7 @@
             "lessonId": "modul_2_lesson_7",
             "moduleId": "modul_2",
             "title": "Baue deine CLAUDE.md: was darf rein, was nicht?",
-            "scenario": "Dein Budget ist 2.500 Tokens. Du entscheidest, was dauerhaft in deine CLAUDE.md gehört und was besser im Chat-Kontext, in Skills oder gar nicht bei Claude landet. Mehr Inhalt = Claude vergisst schneller, was wichtig ist.",
+            "scenario": "Dein Budget beträgt 2.500 Tokens. Entscheide, welcher Kontext dauerhaft in CLAUDE.md gehört, welcher in einen Chat oder Skill und welcher Claude nicht bereitgestellt werden darf. Mehr Inhalt kann wichtige Anweisungen abschwächen.",
             "budgetTokens": 2500,
             "blocks": [
               {
@@ -873,42 +873,42 @@
                 "label": "Rolle, Firma, Branche, Tonfall-Regeln",
                 "tokens": 400,
                 "mustHave": true,
-                "description": "Dauerhafter Kontext, gehört IMMER rein."
+                "description": "Nimm nur stabilen, freigegebenen Kontext auf, der für das Project relevant ist."
               },
               {
                 "id": "aktive-projekte",
                 "label": "Aktive Projekte mit Zielen (3-5 Zeilen pro Projekt)",
                 "tokens": 700,
                 "mustHave": true,
-                "description": "Worum es gerade geht. Kuratiert halten."
+                "description": "Nimm nur aktuelle, nicht vertrauliche Zusammenfassungen auf und halte sie gepflegt."
               },
               {
                 "id": "arbeits-regeln",
                 "label": "Arbeits-Regeln (Nie X, Immer Y, keine Preise)",
                 "tokens": 500,
                 "mustHave": true,
-                "description": "Die Regeln, die Claude sonst ständig verletzt."
+                "description": "Dokumentiere stabile Grenzen, die der Ablauf konsistent anwenden soll."
               },
               {
                 "id": "team-namen",
                 "label": "Team-Namen, Rollen, Zuständigkeiten",
                 "tokens": 400,
                 "mustHave": false,
-                "description": "Optional, nur wenn Claude Menschen namentlich erwähnen soll."
+                "description": "Optional und abhängig von der Datenrichtlinie; bevorzuge Rollen, wenn Namen nicht nötig sind."
               },
               {
                 "id": "letzte-chats",
                 "label": "Zusammenfassungen der letzten 10 Chats",
                 "tokens": 2200,
                 "mustHave": false,
-                "description": "GEHÖRT NICHT REIN. Im Chat-Kontext oder in Skills."
+                "description": "Nicht automatisch kopieren. Fallspezifischer Kontext bleibt im betreffenden Chat oder gepflegten Datensatz."
               },
               {
                 "id": "kundendaten",
                 "label": "Liste aller Kunden mit Umsätzen + Kontakten",
                 "tokens": 1800,
                 "mustHave": false,
-                "description": "GEHÖRT NICHT REIN. DSGVO + Memory ist nicht der richtige Ort."
+                "description": "Diese Liste gehört nicht in persistente Anweisungen; sie sind keine freigegebene Kundendatenbank."
               },
               {
                 "id": "skill-index",
@@ -931,31 +931,31 @@
       "sections": [
         {
           "id": "modul_2_lesson_7_section_1",
-          "title": "Der Kollege, der deinen Namen vergisst",
+          "title": "Wenn Kontext nicht fortbesteht",
           "readTimeMinutes": 2,
-          "content": "Stell dir vor, du stellst einen neuen Mitarbeiter ein. Am ersten Tag erklärst du: Firma, Rolle, Kunden, Stil, Tabus. Eine Stunde Einarbeitung.\n\nAm nächsten Tag kommst du ins Büro und der Mitarbeiter fragt: \"Hallo, wer bist du nochmal?\"\n\nDas ist Claude ohne Memory. Jeder Chat von vorne.\n\nIn den nächsten 10 Minuten richtest du Claude so ein, dass du diesen Zustand NIE wieder hast.\n\nZwei Memory-Arten:\n\n**Memory #1: CLAUDE.md** (für Claude Code): Markdown-Datei im Projektroot, die Claude Code bei jeder Session automatisch lädt. Permanent. Unter deiner Kontrolle. Versionierbar in Git.\n\n**Memory #2: Cross-Chat-Memory** (für Claude.ai): Claude merkt sich über Sessions hinweg Fakten über dich. Automatisch. Editierbar in Settings. Ab 2026 auch im Free-Tier.",
-          "keyTakeaway": "Zwei Arten Memory: CLAUDE.md (Projekt, explizit) + Cross-Chat (Claude.ai, automatisch)."
+          "content": "Ohne persistente Anweisungen beginnt jedes neue Gespräch mit dem darin bereitgestellten Kontext. Stabile Organisations- und Stilregeln wiederholt einzugeben ist ineffizient; alles zu speichern erzeugt dagegen Datenschutz-, Genauigkeits- und Pflegeprobleme.\n\nDiese Lektion behandelt zwei Mechanismen:\n\n**CLAUDE.md:** eine Markdown-Anweisungsdatei, die Claude Code gemäß den aktuellen Regeln zu Dateisuche und Priorität verwendet. Sie lässt sich prüfen und versionieren.\n\n**Cross-Chat-Memory:** eine Produktfunktion, die bei Aktivierung ausgewählte Informationen über Gespräche hinweg halten kann. Verfügbarkeit, Verhalten und Kontrollen unterscheiden sich nach Produkt, Tarif und Zeitpunkt.\n\nKeiner der Mechanismen ist eine Sicherheitsgrenze. Prüfe im aktuellen Produkt Ladeverhalten, Zugriff, Aufbewahrung und Löschung.",
+          "keyTakeaway": "CLAUDE.md und Cross-Chat-Memory speichern unterschiedliche Kontextarten und benötigen getrennte Kontrollen."
         },
         {
           "id": "modul_2_lesson_7_section_2",
           "title": "CLAUDE.md bauen",
           "readTimeMinutes": 3,
           "content": "Struktur einer CLAUDE.md mit klar fiktiven Daten:\n\n```markdown\n# CLAUDE.md: Fiktiv-Rolle Vertrieb\n\n## Kontext\n- Kennzeichnung: Fiktivnutzer Alpha\n- Organisation: Fiktivwerk Beispiel GmbH (fiktiv)\n- Rolle: Vertrieb für fiktive Beispielprodukte\n\n## Sprache und Format\n- Antworten: Deutsch, Du-Form\n- Stil: knapp, pragmatisch\n\n## Datengrenzen\n- Keine echten Kunden-, Finanz- oder Zugangsdaten\n- Preise, Termine und Zusagen bleiben Platzhalter bis zur Freigabe\n\n## Werkzeuge\n- Nur ausdrücklich erlaubte, minimal berechtigte Werkzeuge\n- Keine externen Nachrichten oder Schreibaktionen ohne Freigabe\n```\n\nPrüfe im konkreten Client, wann und aus welchem Pfad Projektanweisungen geladen werden. Eine Anweisungsdatei ist keine Sicherheitsgrenze.",
-          "keyTakeaway": "CLAUDE.md = Mitarbeiter-Onboarding als Markdown. Die Kursmaterialien liefern Rollen-Starter."
+          "keyTakeaway": "Nutze CLAUDE.md für minimale, freigegebene Arbeitsanweisungen; Berechtigungen werden außerhalb der Datei durchgesetzt."
         },
         {
           "id": "modul_2_lesson_7_section_3",
           "title": "Cross-Chat-Memory kuratieren",
           "readTimeMinutes": 2,
           "content": "Öffne im verwendeten Produkt die aktuellen Memory-Einstellungen und prüfe vorhandene Einträge. Beispiel mit reinen fiktiven Daten:\n- `Fiktivnutzer Alpha bevorzugt Deutsch`: prüfen und bei Bedarf korrigieren\n- `Fiktivnutzer arbeitet an Fiktivwerk Alpha`: zu spezifisch; löschen\n\nSpeichere nur notwendige, nicht vertrauliche Präferenzen. Memory ist zu kuratieren. Prüfe regelmäßig Richtigkeit, Zweck, Zugriff und Löschmöglichkeit; Menü und Funktionsumfang können sich ändern.",
-          "keyTakeaway": "Memory nicht passiv, aktiv kuriert. Einmal im Monat aufräumen."
+          "keyTakeaway": "Prüfe persistentes Memory regelmäßig und entferne Einträge ohne aktuellen Zweck."
         },
         {
           "id": "modul_2_lesson_7_section_4",
-          "title": "Was NIE in Memory gehört",
+          "title": "Daten, die nicht in persistentes Memory gehören",
           "readTimeMinutes": 2,
-          "content": "**DSGVO-Regel: keine Personen-Daten Dritter in Memory.**\n\nKonkret:\n- Kunden-Namen: nein\n- Kontonummern: nein\n- Email-Adressen Dritter: nein\n- Geschäftsgeheimnisse (Margen, Verhandlungsstrategien): nein\n- Personalabteilungs-Daten: nein\n\nErlaubt:\n- Deine eigene Rolle / Firma (öffentlich)\n- Deine Stil-Präferenzen\n- Deine bevorzugten Tools\n- Deine typischen Aufgabentypen\n\n**Memory ist der Unterschied zwischen \"Tool\" und \"Kollege.\"**\n\nEin Tool kennt dich nicht. Du musst jedes Mal alles erklären.\n\nEin Kollege kennt dich. Minimales Briefing genügt.\n\nIn 10 Minuten hast du deine CLAUDE.md geschrieben. In 5 Minuten hast du Memory kuratiert. Ab jetzt, für den Rest deines Arbeitslebens, bist du **einen Tag voraus** gegenüber Leuten, die ohne Memory arbeiten.",
-          "keyTakeaway": "Memory über DICH, nie über Dritte. 15-Min-Investment = Kompoundierung über Jahre."
+          "content": "Speichere personenbezogene Daten Dritter, Zugangsdaten oder vertrauliche Geschäftsinformationen nicht in persistentem Memory, sofern freigegebener Zweck, Rechtsgrundlage, Produktkonfiguration und Aufbewahrungsrichtlinie dies nicht ausdrücklich erlauben.\n\nBeispiele, die normalerweise nicht hineingehören:\n- Kundennamen und Kontaktdaten\n- Kontonummern\n- E-Mail-Adressen Dritter\n- Margen und Verhandlungsstrategien\n- HR-Datensätze\n\nNach Richtlinienprüfung möglicherweise geeignet:\n- deine öffentliche Rolle und Organisation\n- allgemeine Stilpräferenzen\n- freigegebene Werkzeuge\n- typische, nicht vertrauliche Aufgabenkategorien\n\nPersistenter Kontext reduziert wiederholtes Briefing. Jeder Eintrag erzeugt jedoch Pflichten zu Richtigkeit, Zugriff und Löschung.",
+          "keyTakeaway": "Halte persistenten Kontext auf freigegebene Arbeitspräferenzen beschränkt, nicht auf Geheimnisse oder nicht freigegebene Daten Dritter."
         }
       ],
       "quiz": [
@@ -984,11 +984,11 @@
               "isCorrect": false
             }
           ],
-          "explanation": "CLAUDE.md für Claude Code (explizit, Markdown, Git-versionierbar) + Cross-Chat-Memory für Claude.ai."
+          "explanation": "CLAUDE.md liefert explizite Project-Anweisungen nach den Laderegeln des Clients; Cross-Chat-Memory ist eine über Produkteinstellungen kontrollierte Funktion."
         },
         {
           "id": "modul_2_lesson_7_q2",
-          "questionText": "Was gehört NIE in Memory?",
+          "questionText": "Was sollte ohne ausdrückliche Freigabe und Kontrollen nicht in persistentem Memory gespeichert werden?",
           "answerOptions": [
             {
               "id": "a",
@@ -1011,7 +1011,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "DSGVO-Regel: Memory ist ein Notizbuch über DICH, nicht über andere."
+          "explanation": "Persistentes Memory ist keine allgemeine Kunden- oder HR-Datenbank. Vor der Speicherung personenbezogener Daten müssen Zweck, Rechtsgrundlage, Zugriff und Aufbewahrung geklärt sein."
         }
       ]
     }
