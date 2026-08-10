@@ -206,7 +206,7 @@ function LogoWordmark({
     <Link
       href={localizeHref("/", locale)}
       prefetch={false}
-      className="inline-flex min-h-11 items-center outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className="inline-flex min-h-11 min-w-0 shrink items-center overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       <m.div
         className="flex flex-shrink-0 items-center justify-center"
@@ -232,8 +232,14 @@ function LogoWordmark({
         </m.span>
       </m.div>
 
+      {/* Hidden below sm. The restored lockup is ~225px of fixed-size type, and
+          this nav also carries the DE/EN control the pre-rebrand one did not —
+          together they overflowed a 320px viewport by 59px, which is what the
+          responsive containment suites caught. The mark alone carries the brand
+          at that width; the full lockup returns at sm. */}
       <m.span
-        className="flex font-sans font-black uppercase text-foreground"
+        aria-hidden="true"
+        className="hidden whitespace-nowrap font-sans font-black uppercase text-foreground sm:flex"
         style={{
           transformOrigin: "left center",
           fontSize: wordmarkSize,
@@ -254,7 +260,7 @@ function LogoWordmark({
           </span>
         </span>
       </m.span>
-      <span className="sr-only"> - {homeLabel}</span>
+      <span className="sr-only">loehrning.ai - {homeLabel}</span>
     </Link>
   );
 }
