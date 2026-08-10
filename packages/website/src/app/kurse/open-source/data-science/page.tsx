@@ -3,7 +3,12 @@ import Link from "next/link";
 import { DataScienceLocaleProvider } from "@/components/data-science/locale-context";
 import { DsReaderShell } from "@/components/data-science/reader-shell";
 import { getDataScienceCourseCopy } from "@/lib/data-science/course-copy";
-import { getDsLocaleRegistry } from "@/lib/data-science/content";
+import { DATA_SCIENCE_CONFIG, DATA_SCIENCE_CONFIG_DE } from "@/lib/data-science/config";
+import {
+  DS_TRANSLATED_CORE_CHAPTER_IDS,
+  getDsTranslatedCoreChapterMeta,
+} from "@/lib/data-science/localized-core-meta";
+import { getDsOverviewComponent } from "@/lib/data-science/overview-content";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { JsonLd, SITE_URL, type JsonLdGraph } from "@/lib/seo/json-ld";
@@ -17,7 +22,6 @@ const CANONICAL_PATH = "/kurse/open-source/data-science";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
-  (await getDsLocaleRegistry()).get(locale);
   const copy = getDataScienceCourseCopy(locale).landingMetadata;
   return buildTechnicalCourseMetadata({
     courseSlug: "data-science",
@@ -31,8 +35,13 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function DataScienceOverviewPage() {
   const locale = await getRequestLocale();
-  const bundle = (await getDsLocaleRegistry()).get(locale);
-  const chapters = bundle.content.chapters;
+  // Metas come from data and the overview component from its own loader, so
+  // this route never reaches the chapter loader map. Pulling the map in placed
+  // every chapter's client simulators in this page's eager client entry.
+  const chapters = DS_TRANSLATED_CORE_CHAPTER_IDS.map((id) => ({
+    id,
+    meta: getDsTranslatedCoreChapterMeta(id, locale),
+  }));
   const overview = chapters[0];
   const next = chapters[1];
   if (!overview || overview.id !== "home") {
@@ -42,7 +51,8 @@ export default async function DataScienceOverviewPage() {
   const course = buildTechnicalCourseJsonLd({
     courseSlug: "data-science",
     locale,
-    name: bundle.config.title,
+    name: (locale === "en" ? DATA_SCIENCE_CONFIG : DATA_SCIENCE_CONFIG_DE)
+      .title,
     description: copy.jsonLdDescription,
     teaches: chapters
       .filter((chapter) => chapter.id !== "home")
@@ -90,7 +100,7 @@ export default async function DataScienceOverviewPage() {
       },
     ],
   };
-  const OverviewComponent = overview.component;
+  const OverviewComponent = await getDsOverviewComponent(locale);
 
   return (
     <DsReaderShell

@@ -704,7 +704,10 @@ describe("callback redirect-origin policy", () => {
     expect(exchangeCodeForSessionMock).not.toHaveBeenCalled();
   });
 
-  it("does not exchange a code received on an untrusted origin", async () => {
+  // A forwarded host is only applied alongside a forwarded protocol. Supplying
+  // the host alone leaves the request on its real authority, so this case is
+  // rejected for the same reason as any other hostile host.
+  it("ignores a forwarded host that arrives without a forwarded protocol", async () => {
     const response = await GET(
       callbackRequest(
         `https://loehrning.ai.evil.example/auth/callback?code=${VALID_CODE}`,
@@ -717,6 +720,30 @@ describe("callback redirect-origin policy", () => {
     expect(target.origin).toBe("https://loehrning.ai");
     expect(target.searchParams.get("reason")).toBe("untrusted-origin");
     expect(exchangeCodeForSessionMock).not.toHaveBeenCalled();
+  });
+
+  // The complementary case, asserted so the contract is visible rather than
+  // implied: a COMPLETE forwarded pair naming an allowlisted host is applied
+  // over the real authority. That is deliberate — behind the platform proxy the
+  // real authority is a placeholder, so the forwarded pair is the only true
+  // record of the request. Safety comes from trustedRequestOrigin accepting
+  // just the production hostnames and returning a fixed origin constant, never
+  // the forwarded value. Without this test the header path had no coverage at
+  // an allowlisted host, and a widened allowlist would have shipped green.
+  it("applies a complete forwarded pair that names an allowlisted host", async () => {
+    const response = await GET(
+      callbackRequest(
+        `https://loehrning.ai.evil.example/auth/callback?code=${VALID_CODE}`,
+        {
+          "x-forwarded-host": "loehrning.ai",
+          "x-forwarded-proto": "https",
+        },
+      ),
+    );
+
+    expect(location(response).searchParams.get("reason")).not.toBe(
+      "untrusted-origin",
+    );
   });
 
   it("canonicalizes the trusted www production host before consuming the one-time code", async () => {
