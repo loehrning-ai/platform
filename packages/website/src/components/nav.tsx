@@ -233,10 +233,10 @@ function LogoWordmark({
       </m.div>
 
       {/* Hidden below sm. The restored lockup is ~225px of fixed-size type, and
-          this nav also carries the DE/EN control the pre-rebrand one did not —
-          together they overflowed a 320px viewport by 59px, which is what the
-          responsive containment suites caught. The mark alone carries the brand
-          at that width; the full lockup returns at sm. */}
+          this nav also carries the DE/EN control that the pre-rebrand one did
+          not, so together they overflowed a 320px viewport by 59px. That is
+          what the responsive containment suites caught. The mark alone carries
+          the brand at that width; the full lockup returns at sm. */}
       <m.span
         aria-hidden="true"
         className="hidden whitespace-nowrap font-sans font-black uppercase text-foreground sm:flex"
