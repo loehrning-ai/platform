@@ -53,6 +53,11 @@
     "precontent:lint": "bun run registry:check",
     "content:lint": "node scripts/content-lint.mjs",
     "verify": "node scripts/run-provider-free.mjs bun run verify:internal",
+    "verify:static": "node scripts/run-provider-free.mjs bun run verify:static:internal",
+    "verify:static:internal": "bun run page-inventory:check && bun run test:env-contract && bun run test:provider-free-env && bun run test:e2e-auth-env-contract && bun run test:e2e-suite-contract && bun run test:build-freshness && bun run typecheck && bun run typecheck:test && bun run lint",
+    "verify:unit": "node scripts/run-provider-free.mjs bun run test:coverage",
+    "verify:build": "node scripts/run-provider-free.mjs bun run build",
+    "e2e:shard:built": "E2E_SERVER_MODE=production node scripts/run-provider-free.mjs node scripts/run-built-gate.mjs node scripts/run-playwright.mjs",
     "verify:internal": "bun run page-inventory:check && bun run test:env-contract && bun run test:provider-free-env && bun run test:e2e-auth-env-contract && bun run test:e2e-suite-contract && bun run test:build-freshness && bun run typecheck && bun run typecheck:test && bun run lint && bun run test:coverage && bun run build && bun run test:server-log-privacy:built"
   },
   "dependencies": {

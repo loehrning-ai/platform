@@ -35,8 +35,41 @@ internal reuse commands: run
 them only after `bun run verify` has produced the build in the same workspace.
 Each long-running built gate verifies source, toolchain, and artifact integrity
 both before and after execution, preventing a mixed-revision success.
-CI and `verify:public` use these internal commands after the blocking verify
-gate, avoiding a redundant build without weakening freshness.
+`verify:public` uses these internal commands after the blocking verify gate,
+avoiding a redundant build without weakening freshness.
+
+## CI job graph
+
+Verify runs as a parallel job graph rather than one serial job. The shared
+bootstrap (Node, checksum-verified Bun, `bun install --frozen-lockfile
+--ignore-scripts`, and optional Playwright browsers) lives in the composite
+action at `.github/actions/setup`.
+
+| Job | Command | Needs a build |
+| --- | --- | --- |
+| `fast` | `bun run verify:static` | no |
+| `unit` | `bun run --cwd packages/website verify:unit` | no |
+| `lighthouse` | `bun run lighthouse:ci:built` | yes |
+| `e2e` (16-way matrix) | `bun run --cwd packages/website e2e:shard:built` | yes |
+| `auth-scaffold` | `bun run test:e2e:auth-scaffold:built` | yes |
+| `server-log-privacy` | `bun run --cwd packages/website test:server-log-privacy:built` | yes |
+| `verify` | aggregation only | no |
+
+Each build-dependent job runs `bun run --cwd packages/website verify:build`
+itself. The build is deliberately **not** passed between jobs as an artifact:
+the build-freshness receipt re-hashes the artifact digest, the input digest, and
+the captured toolchain, so a transported `.next` must land byte-identical on an
+identically-imaged runner or every `:built` gate fails preflight. Rebuilding
+costs runner-minutes, which are free on a public repository, and buys a gate
+that cannot fail for transport reasons.
+
+`verify` is the only required status check. It declares `if: always()` and fails
+when any dependency did not succeed. That `always()` is load-bearing — a
+required job that is *skipped* is treated as passing by branch protection.
+
+The public browser gate is sharded across the matrix instead of looping shards
+inside one process. `scripts/run-e2e-suite.mjs` retains the serial loop for
+local runs, where process isolation is not otherwise available.
 
 The explicitly named
 `bun run --cwd packages/website test:e2e:dev` command is development

@@ -578,12 +578,22 @@ const ciWorkflow = readFileSync(
   join(here, "..", "..", "..", "..", ".github", "workflows", "ci.yml"),
   "utf8",
 );
-assert.match(ciWorkflow, /PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report\/public/);
+// The public browser gate runs as a sharded matrix, so each shard owns a
+// distinct artifact directory keyed by project and shard. That keeps the
+// original guarantee — no gate can overwrite or be mistaken for another's
+// output — and additionally makes every blob report independently mergeable.
+assert.match(
+  ciWorkflow,
+  /PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report\/\$\{\{ matrix\.project \}\}-\$\{\{ matrix\.shard \}\}/,
+);
 assert.match(
   ciWorkflow,
   /PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report\/auth-scaffold/,
 );
-assert.match(ciWorkflow, /PLAYWRIGHT_OUTPUT_DIR: test-results\/public/);
+assert.match(
+  ciWorkflow,
+  /PLAYWRIGHT_OUTPUT_DIR: test-results\/\$\{\{ matrix\.project \}\}-\$\{\{ matrix\.shard \}\}/,
+);
 assert.match(ciWorkflow, /PLAYWRIGHT_OUTPUT_DIR: test-results\/auth-scaffold/);
 const serverLogPrivacyRunner = readFileSync(
   join(here, "..", "verify-server-log-privacy.mjs"),

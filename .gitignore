@@ -88,3 +88,12 @@ docs/privacy/
 docs/operations/
 docs/launch-readiness.md
 docs/open-source/github-org-release.md
+
+# Editor swap and backup files. Vim writes these next to the source file, and
+# they carry NUL bytes, so the publication scanner rejects the whole candidate
+# tree until they are gone.
+*.swp
+*.swo
+*.swn
+*~
+.*.sw[a-p]

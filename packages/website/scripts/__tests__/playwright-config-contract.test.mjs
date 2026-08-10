@@ -71,13 +71,47 @@ test("CI gives public and auth browser gates independent bounded budgets", () =>
     new URL("../../../../.github/workflows/ci.yml", import.meta.url),
     "utf8",
   );
-  assert.match(workflow, /timeout-minutes:\s*110\b/);
-  assert.match(
-    workflow,
-    /Public browser gate[\s\S]*?E2E_GLOBAL_TIMEOUT:\s*4200000\b/,
+
+  // Both gates must still exist. Verify runs them as separate jobs now, so a
+  // gate can no longer be skipped by an earlier step's failure — but it could
+  // still be deleted, and that must fail here.
+  assert.match(workflow, /name: Public browser gate\b/);
+  assert.match(workflow, /name: Provider-free auth scaffold gate\b/);
+
+  // Split on job-level keys (exactly two spaces of indent under `jobs:`).
+  const jobs = workflow
+    .split(/\n {2}(?=[a-z][a-z0-9-]*:\n)/)
+    .filter((block) => block.includes("E2E_GLOBAL_TIMEOUT"));
+  assert.ok(
+    jobs.length >= 2,
+    "expected at least the public and auth-scaffold browser jobs to set a budget",
   );
-  assert.match(
-    workflow,
-    /Provider-free auth scaffold gate[\s\S]*?E2E_GLOBAL_TIMEOUT:\s*600000\b/,
-  );
+
+  for (const job of jobs) {
+    const jobTimeoutMinutes = Number(
+      /timeout-minutes:\s*(\d+)\b/.exec(job)?.[1],
+    );
+    assert.ok(
+      Number.isSafeInteger(jobTimeoutMinutes),
+      "every job running a browser gate must declare timeout-minutes",
+    );
+
+    const budgets = [...job.matchAll(/E2E_GLOBAL_TIMEOUT:\s*(\d+)\b/g)].map(
+      (match) => Number(match[1]),
+    );
+    for (const budget of budgets) {
+      // playwright.config.ts refuses anything outside this window.
+      assert.ok(
+        budget >= 65_000 && budget <= 2 * 60 * 60 * 1000,
+        `E2E_GLOBAL_TIMEOUT ${budget} is outside the range the config accepts`,
+      );
+      // The suite's own deadline must expire first. If the job timeout fired
+      // instead, the run would be killed with no per-test diagnosis and no
+      // uploaded artifacts.
+      assert.ok(
+        budget < jobTimeoutMinutes * 60_000,
+        `E2E_GLOBAL_TIMEOUT ${budget}ms must be under the ${jobTimeoutMinutes}m job timeout so the gate, not the runner, reports the failure`,
+      );
+    }
+  }
 });

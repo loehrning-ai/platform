@@ -10,71 +10,66 @@ permissions:
 
 concurrency:
   group: verify-${{ github.ref }}
-  cancel-in-progress: true
+  # A push to main is the only run that verifies the commit that actually
+  # landed (merges here are squash-only, so the PR run verified a different
+  # tree). Never cancel it. PR runs remain cancel-on-push.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  verify:
+  # ---------------------------------------------------------------------------
+  # Tier 1 — no production build required. First red arrives here, in ~2 min.
+  # ---------------------------------------------------------------------------
+  fast:
+    name: static checks
     runs-on: ubuntu-latest
-    # Public browsers own at most 70 minutes and the auth scaffold owns at
-    # most 10. The remaining 30 minutes cover install, full verification,
-    # artifact upload, and teardown without letting one phase borrow another's
-    # deadline.
-    timeout-minutes: 110
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: 24.17.0
-      - name: Install checksum-verified Bun
-        run: bash .github/scripts/install-verified-bun.sh
-      - run: bun install --frozen-lockfile --ignore-scripts
-      # Root verify ends with verify:workspaces, which runs the workspace
-      # verify (typecheck, lint, unit tests, production build). The built
-      # e2e gates below reuse that build via next start.
-      - run: bun run verify
+      - uses: ./.github/actions/setup
+      - run: bun run verify:static
       - name: Reject generated tracked-file drift
         run: git diff --exit-code --
-      # Resolve only the Playwright binary already installed from bun.lock.
-      - run: bun run --cwd packages/website playwright install --with-deps chromium webkit
-      - name: Blocking Lighthouse performance smoke (uses verified build)
+
+  unit:
+    name: unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - run: bun run --cwd packages/website verify:unit
+
+  # ---------------------------------------------------------------------------
+  # Tier 2 — each job builds its own production output.
+  #
+  # The build is deliberately NOT handed between jobs as an artifact. The
+  # build-freshness receipt re-hashes BUILD_ID, artifact digests, input digests
+  # and the captured toolchain (including platformRelease()), so a downloaded
+  # `.next` must land byte-identical on an identically-imaged runner or every
+  # `:built` gate fails preflight. Rebuilding costs runner-minutes, which are
+  # free on a public repo, and buys a gate that cannot fail for transport
+  # reasons. Revisit only with measurements.
+  # ---------------------------------------------------------------------------
+  lighthouse:
+    name: lighthouse
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          playwright-browsers: chromium
+      - run: bun run --cwd packages/website verify:build
+      - name: Blocking Lighthouse performance smoke
         run: |
           export CHROME_PATH="$(bun --cwd packages/website -e 'import { chromium } from "@playwright/test"; console.log(chromium.executablePath())')"
           bun run lighthouse:ci:built
-      - name: Public browser gate (uses verified build)
-        run: bun run test:e2e:public:built
-        env:
-          E2E_GLOBAL_TIMEOUT: 4200000
-          PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report/public
-          PLAYWRIGHT_OUTPUT_DIR: test-results/public
-      - name: Provider-free auth scaffold gate (uses verified build)
-        run: bun run test:e2e:auth-scaffold:built
-        env:
-          E2E_GLOBAL_TIMEOUT: 600000
-          PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report/auth-scaffold
-          PLAYWRIGHT_OUTPUT_DIR: test-results/auth-scaffold
-      - name: Upload browser failure artifacts
-        if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: browser-test-artifacts
-          path: |
-            packages/website/playwright-report/
-            packages/website/test-results/
-            packages/website/blob-report/
-          if-no-files-found: ignore
-          retention-days: 7
-      # lighthouserc.json writes reports to .lighthouseci/reports, but nothing
-      # collected them, so a Lighthouse assertion failure could only be read
-      # back as the single summary line in the job log. The per-run values are
-      # what distinguish a real regression from runner noise on a metric like
-      # total-blocking-time, so keep them.
-      # `.lighthouseci` is a dotfile directory, and upload-artifact skips hidden
-      # paths unless include-hidden-files is set. Without it the step reports
-      # success while uploading nothing, which is how the first attempt at this
-      # silently produced no reports. `warn` rather than `ignore` so a future
-      # empty match is visible in the log instead of passing quietly.
       - name: Upload Lighthouse reports
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -84,3 +79,174 @@ jobs:
           include-hidden-files: true
           if-no-files-found: warn
           retention-days: 7
+
+  e2e:
+    name: e2e ${{ matrix.project }} ${{ matrix.shard }}/${{ matrix.total }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      # One red shard must not hide the other fifteen. The aggregate `verify`
+      # job is what turns any failure into a red required check.
+      fail-fast: false
+      matrix:
+        include:
+          # Shard counts are sized from measured single-worker cost on run
+          # 31380300054: chromium 29.4m, mobile-chromium 14.3m, mobile-webkit
+          # ~30m extrapolated. Target is ~5 minutes of tests per shard.
+          - { project: chromium, shard: 1, total: 6, browsers: chromium }
+          - { project: chromium, shard: 2, total: 6, browsers: chromium }
+          - { project: chromium, shard: 3, total: 6, browsers: chromium }
+          - { project: chromium, shard: 4, total: 6, browsers: chromium }
+          - { project: chromium, shard: 5, total: 6, browsers: chromium }
+          - { project: chromium, shard: 6, total: 6, browsers: chromium }
+          - { project: mobile-chromium, shard: 1, total: 3, browsers: chromium }
+          - { project: mobile-chromium, shard: 2, total: 3, browsers: chromium }
+          - { project: mobile-chromium, shard: 3, total: 3, browsers: chromium }
+          - { project: mobile-webkit, shard: 1, total: 7, browsers: webkit }
+          - { project: mobile-webkit, shard: 2, total: 7, browsers: webkit }
+          - { project: mobile-webkit, shard: 3, total: 7, browsers: webkit }
+          - { project: mobile-webkit, shard: 4, total: 7, browsers: webkit }
+          - { project: mobile-webkit, shard: 5, total: 7, browsers: webkit }
+          - { project: mobile-webkit, shard: 6, total: 7, browsers: webkit }
+          - { project: mobile-webkit, shard: 7, total: 7, browsers: webkit }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          playwright-browsers: ${{ matrix.browsers }}
+      - run: bun run --cwd packages/website verify:build
+      - name: Public browser gate
+        run: >-
+          bun run --cwd packages/website e2e:shard:built
+          test
+          --project=${{ matrix.project }}
+          --shard=${{ matrix.shard }}/${{ matrix.total }}
+          --retries=0
+          --trace=retain-on-failure
+        env:
+          # Per-shard budget. The old 70-minute aggregate deadline is gone: it
+          # bounded 23 serial launches, and on run 31380300054 it expired after
+          # 7 of them, silently dropping ~500 tests. A shard now owns its own
+          # clock and the job timeout is the real backstop.
+          E2E_GLOBAL_TIMEOUT: 1800000
+          PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report/${{ matrix.project }}-${{ matrix.shard }}
+          PLAYWRIGHT_OUTPUT_DIR: test-results/${{ matrix.project }}-${{ matrix.shard }}
+      - name: Upload blob report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: blob-${{ matrix.project }}-${{ matrix.shard }}
+          path: packages/website/blob-report/
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Upload failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: failures-${{ matrix.project }}-${{ matrix.shard }}
+          path: packages/website/test-results/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  auth-scaffold:
+    name: auth scaffold gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          playwright-browsers: chromium
+      - run: bun run --cwd packages/website verify:build
+      - name: Provider-free auth scaffold gate
+        run: bun run test:e2e:auth-scaffold:built
+        env:
+          E2E_GLOBAL_TIMEOUT: 600000
+          PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report/auth-scaffold
+          PLAYWRIGHT_OUTPUT_DIR: test-results/auth-scaffold
+
+  server-log-privacy:
+    name: server log privacy
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - run: bun run --cwd packages/website verify:build
+      - run: bun run --cwd packages/website test:server-log-privacy:built
+
+  merge-reports:
+    name: merge browser reports
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [e2e]
+    if: ${{ always() }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - name: Download blob reports
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          path: packages/website/all-blob-reports
+          pattern: blob-*
+          merge-multiple: true
+      - name: Merge into one HTML report
+        working-directory: packages/website
+        run: node scripts/run-playwright.mjs merge-reports --reporter=html all-blob-reports
+        continue-on-error: true
+      - name: Upload merged report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: browser-report
+          path: packages/website/playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  # ---------------------------------------------------------------------------
+  # The required status check. Branch-protection ruleset 19653327 requires the
+  # literal context `verify`, so this job keeps that name and no matrix job is
+  # ever made required.
+  #
+  # `if: always()` is load-bearing: without it this job is *skipped* when any
+  # dependency fails, and GitHub branch protection treats a skipped required
+  # check as PASSING. The explicit result check below is what makes the gate red.
+  # ---------------------------------------------------------------------------
+  verify:
+    name: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: ${{ always() }}
+    needs:
+      - fast
+      - unit
+      - lighthouse
+      - e2e
+      - auth-scaffold
+      - server-log-privacy
+    steps:
+      - name: Report gate results
+        run: |
+          printf '%s\n' \
+            "fast................. ${{ needs.fast.result }}" \
+            "unit................. ${{ needs.unit.result }}" \
+            "lighthouse........... ${{ needs.lighthouse.result }}" \
+            "e2e.................. ${{ needs.e2e.result }}" \
+            "auth-scaffold........ ${{ needs.auth-scaffold.result }}" \
+            "server-log-privacy... ${{ needs.server-log-privacy.result }}"
+      - name: Fail if any gate did not succeed
+        if: >-
+          ${{ contains(needs.*.result, 'failure')
+           || contains(needs.*.result, 'cancelled')
+           || contains(needs.*.result, 'skipped') }}
+        run: |
+          echo "::error::At least one verification gate did not succeed."
+          exit 1
