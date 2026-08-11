@@ -223,8 +223,13 @@ function LogoWordmark({
   const lOpacity = useTransform(scrollY, [40, 120], [1, 0]);
   const lWidth = useTransform(scrollY, [40, 120], [14, 0]);
 
-  /* The "." in the icon fades out as it merges with the wordmark */
+  /* The "." in the icon fades out as it merges with the wordmark. Width
+     collapses over the same range as opacity — the dot is an inline sibling
+     of "L" inside a `justify-content: center` box, so fading it to
+     `opacity: 0` alone left its layout width in place, which kept "L" off
+     centre (reading as if the square clipped its left side once rotated). */
   const dotOpacity = useTransform(scrollY, [60, 130], [1, 0]);
+  const dotWidth = useTransform(scrollY, [60, 130], ["0.4em", "0em"]);
 
   return (
     /* No clip on this box. The square's rotated bounding box and its hard
@@ -260,7 +265,13 @@ function LogoWordmark({
             fontWeight: 900,
           }}
         >
-          L<m.span style={{ opacity: dotOpacity }}>.</m.span>
+          L
+          <m.span
+            className="inline-block overflow-hidden"
+            style={{ opacity: dotOpacity, width: dotWidth }}
+          >
+            .
+          </m.span>
         </m.span>
       </m.div>
 
@@ -550,7 +561,7 @@ export function Nav() {
           onClick={() => setOpenDropdown(openDropdown === id ? null : id)}
           onKeyDown={handleTriggerKeyDown(id)}
           className={cn(
-            "inline-flex min-h-11 items-center gap-1 px-1 text-sm outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+            "inline-flex min-h-11 cursor-pointer items-center gap-1 px-1 text-sm outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
             active ? "text-foreground" : "text-muted-foreground",
           )}
         >
@@ -773,7 +784,7 @@ export function Nav() {
             tabIndex={mobileOpen ? -1 : undefined}
             aria-hidden={mobileOpen || undefined}
             className={cn(
-              "js-mobile-nav-toggle inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg p-2 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+              "js-mobile-nav-toggle inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-lg p-2 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
               mobileOpen && "pointer-events-none invisible",
             )}
             aria-label={copy.openMenu}
@@ -863,7 +874,7 @@ export function Nav() {
               <button
                 type="button"
                 onClick={closeMobileMenu}
-                className="ml-auto inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="ml-auto inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-lg text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 aria-label={copy.closeMenu}
               >
                 <X size={19} aria-hidden="true" />
