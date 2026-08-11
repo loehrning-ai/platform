@@ -53,6 +53,26 @@ jobs:
   # `:built` gate fails preflight. Rebuilding costs runner-minutes, which are
   # free on a public repo, and buys a gate that cannot fail for transport
   # reasons. Revisit only with measurements.
+  #
+  # Every `verify:build` step below sets E2E_SERVER_MODE/E2E_PORT. The CSP's
+  # `upgrade-insecure-requests` directive is excluded only when
+  # environment-policy.mjs's providerFreeVerificationEnvironment() can prove,
+  # from those two vars, that this exact build is for loopback-HTTP
+  # verification (deliberately fail-closed — a build that can't prove that
+  # gets the production CSP, which DOES include the directive). Next.js
+  # resolves next.config.ts's headers() once, at this build step, and bakes
+  # the result into the output for `next start` to serve; setting these vars
+  # only on the later serve/test step (as before) has zero effect. Omitting
+  # them here means the served CSP always includes `upgrade-insecure-requests`,
+  # which WebKit enforces even for a page's own same-origin HTTP subresources —
+  # every asset request silently upgrades to HTTPS against a server that only
+  # speaks HTTP, fails with a TLS error, and the page never finishes hydrating.
+  # That is a test-infrastructure bug, not a WebKit defect: real production
+  # traffic is HTTPS already, so the directive is correct and unaffected there.
+  # The exact port does not need to match the later serve port — the
+  # exclusion only requires E2E_SERVER_MODE=production plus any
+  # structurally-valid E2E_PORT; server-log-privacy allocates its serve port
+  # at runtime; 3000 here is a valid placeholder, not a claim it will match.
   # ---------------------------------------------------------------------------
   lighthouse:
     name: lighthouse
@@ -66,6 +86,9 @@ jobs:
         with:
           playwright-browsers: chromium
       - run: bun run --cwd packages/website verify:build
+        env:
+          E2E_SERVER_MODE: production
+          E2E_PORT: "3000"
       - name: Blocking Lighthouse performance smoke
         run: |
           export CHROME_PATH="$(bun --cwd packages/website -e 'import { chromium } from "@playwright/test"; console.log(chromium.executablePath())')"
@@ -117,6 +140,9 @@ jobs:
         with:
           playwright-browsers: ${{ matrix.browsers }}
       - run: bun run --cwd packages/website verify:build
+        env:
+          E2E_SERVER_MODE: production
+          E2E_PORT: "3000"
       - name: Public browser gate
         run: >-
           bun run --cwd packages/website e2e:shard:built
@@ -162,6 +188,9 @@ jobs:
         with:
           playwright-browsers: chromium
       - run: bun run --cwd packages/website verify:build
+        env:
+          E2E_SERVER_MODE: production
+          E2E_PORT: "3000"
       - name: Provider-free auth scaffold gate
         run: bun run test:e2e:auth-scaffold:built
         env:
@@ -179,6 +208,9 @@ jobs:
           persist-credentials: false
       - uses: ./.github/actions/setup
       - run: bun run --cwd packages/website verify:build
+        env:
+          E2E_SERVER_MODE: production
+          E2E_PORT: "3000"
       - run: bun run --cwd packages/website test:server-log-privacy:built
 
   merge-reports:

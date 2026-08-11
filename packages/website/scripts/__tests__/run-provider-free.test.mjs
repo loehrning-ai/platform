@@ -595,6 +595,37 @@ assert.match(
   /PLAYWRIGHT_OUTPUT_DIR: test-results\/\$\{\{ matrix\.project \}\}-\$\{\{ matrix\.shard \}\}/,
 );
 assert.match(ciWorkflow, /PLAYWRIGHT_OUTPUT_DIR: test-results\/auth-scaffold/);
+// next.config.ts resolves headers() once, at the `verify:build` step, and
+// bakes the result into the build output — `next start` serves it as-is and
+// never re-evaluates next.config.ts's env reads. Every job that builds and
+// then serves+tests over loopback HTTP must set these two vars ON THAT BUILD
+// STEP specifically (setting them only on the later test-run step, as this
+// workflow did before, has zero effect on the already-baked CSP). Without
+// them, environment-policy.mjs's providerFreeVerificationEnvironment() —
+// deliberately fail-closed — cannot prove the build is for loopback
+// verification, so the production CSP ships with `upgrade-insecure-requests`.
+// WebKit then upgrades the page's own same-origin HTTP subresource requests
+// to HTTPS against a server that only speaks HTTP: every asset fails with a
+// TLS error and the page never finishes hydrating. Measured: this was the
+// root cause of hydration-marker timeouts across unrelated specs on every
+// route under mobile-webkit, not a set of individual page bugs.
+const verifyBuildInvocations = [
+  ...ciWorkflow.matchAll(
+    /run: bun run --cwd packages\/website verify:build[\s\S]{0,200}?(?=\n {6}- |\n {2}[a-z][a-z-]*:\n|$)/g,
+  ),
+].map((match) => match[0]);
+assert.equal(
+  verifyBuildInvocations.length,
+  4,
+  "expected exactly one verify:build step in each of lighthouse, e2e, auth-scaffold, and server-log-privacy",
+);
+for (const invocation of verifyBuildInvocations) {
+  assert.match(
+    invocation,
+    /env:\s*\n\s*E2E_SERVER_MODE: production\s*\n\s*E2E_PORT: "3000"/,
+    `every verify:build step must set E2E_SERVER_MODE/E2E_PORT so the baked CSP excludes upgrade-insecure-requests:\n${invocation}`,
+  );
+}
 const serverLogPrivacyRunner = readFileSync(
   join(here, "..", "verify-server-log-privacy.mjs"),
   "utf8",
