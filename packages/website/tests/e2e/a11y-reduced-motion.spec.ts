@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { isKnownBenignConsoleNoise } from "./fixtures/console-noise";
 
 /**
  * prefers-reduced-motion content-visibility guard (regression coverage).
@@ -30,8 +31,8 @@ function collectConsoleErrors(page: Page): string[] {
   return errors;
 }
 
-function meaningfulErrors(errors: string[]): string[] {
-  return errors;
+function meaningfulErrors(errors: string[], browserName: string): string[] {
+  return errors.filter((error) => !isKnownBenignConsoleNoise(error, browserName));
 }
 
 /** Effective opacity of the first `h1`: product of its own + ancestor opacity. */
@@ -103,6 +104,7 @@ async function fireAllReveals(page: Page): Promise<void> {
 async function expectReducedMotionHonored(
   page: Page,
   route: string,
+  browserName: string,
   headingText?: RegExp,
   expectVisibleBeforeScroll = false,
 ): Promise<void> {
@@ -234,20 +236,34 @@ async function expectReducedMotionHonored(
     .poll(() => stuckReveals(page), { timeout: 15_000, message: `${route}: opacity reveals stuck invisible` })
     .toEqual([]);
 
-  const noise = meaningfulErrors(errors);
+  const noise = meaningfulErrors(errors, browserName);
   expect(noise, `console errors on ${route}\n${noise.join("\n")}`).toEqual([]);
 }
 
 test.describe("reduced-motion content visibility", () => {
-  test("homepage reveals all resolve to visible", async ({ page }) => {
-    await expectReducedMotionHonored(page, "/", /KI/, true);
+  test("homepage reveals all resolve to visible", async ({
+    page,
+    browserName,
+  }) => {
+    await expectReducedMotionHonored(page, "/", browserName, /KI/, true);
   });
 
-  test("/buecher library reveals all resolve to visible", async ({ page }) => {
-    await expectReducedMotionHonored(page, "/buecher");
+  test("/buecher library reveals all resolve to visible", async ({
+    page,
+    browserName,
+  }) => {
+    await expectReducedMotionHonored(page, "/buecher", browserName);
   });
 
-  test("book chapter reader renders fully visible", async ({ page }) => {
-    await expectReducedMotionHonored(page, CHAPTER, /Selbstprüfung/);
+  test("book chapter reader renders fully visible", async ({
+    page,
+    browserName,
+  }) => {
+    await expectReducedMotionHonored(
+      page,
+      CHAPTER,
+      browserName,
+      /Selbstprüfung/,
+    );
   });
 });

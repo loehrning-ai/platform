@@ -117,11 +117,14 @@ test.describe("Data Engineering Fundamentals mobile geometry", () => {
 
         const prefix = locale === "en" ? "/en" : "";
         const landingResponse = await page.goto(`${prefix}${COURSE}`, {
-          waitUntil: "networkidle",
+          waitUntil: "load",
         });
         expect(landingResponse?.status(), `${locale} landing HTTP status`).toBe(
           200,
         );
+        await page
+          .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+          .waitFor({ state: "attached" });
         await expect(page.locator("html")).toHaveAttribute("lang", locale);
         await expect(page.locator("h1")).toHaveCount(1);
         expect(
@@ -135,11 +138,14 @@ test.describe("Data Engineering Fundamentals mobile geometry", () => {
           consoleErrors.length = 0;
           pageErrors.length = 0;
           const response = await page.goto(`${prefix}${COURSE}/${chapter}`, {
-            waitUntil: "networkidle",
+            waitUntil: "load",
           });
           expect(response?.status(), `${locale}/${chapter} HTTP status`).toBe(
             200,
           );
+          await page
+            .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+            .waitFor({ state: "attached" });
           await expect(page.locator("html")).toHaveAttribute("lang", locale);
           await expect(page.locator("h1")).toHaveCount(1);
           await expect(
@@ -214,7 +220,10 @@ test.describe("Data Engineering Fundamentals locale and metadata contract", () =
       const prefix = locale === "en" ? "/en" : "";
       const canonical = `${COURSE}`;
 
-      await page.goto(`${prefix}${COURSE}`, { waitUntil: "networkidle" });
+      await page.goto(`${prefix}${COURSE}`, { waitUntil: "load" });
+      await page
+        .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+        .waitFor({ state: "attached" });
       await expect(page.locator("html")).toHaveAttribute("lang", locale);
       await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
         "content",
@@ -235,8 +244,11 @@ test.describe("Data Engineering Fundamentals locale and metadata contract", () =
       ).toBeVisible();
 
       await page.goto(`${prefix}${COURSE}/fund`, {
-        waitUntil: "networkidle",
+        waitUntil: "load",
       });
+      await page
+        .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+        .waitFor({ state: "attached" });
       await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
         "content",
         /noindex,\s*follow|follow,\s*noindex/,

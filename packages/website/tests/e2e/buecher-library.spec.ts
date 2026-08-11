@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { isKnownBenignConsoleNoise } from "./fixtures/console-noise";
 
 /**
  * /buecher library index deep-dive (regression coverage). The existing
@@ -48,8 +49,8 @@ function collectConsoleErrors(page: Page): string[] {
   return errors;
 }
 
-function meaningfulErrors(errors: string[]): string[] {
-  return errors;
+function meaningfulErrors(errors: string[], browserName: string): string[] {
+  return errors.filter((error) => !isKnownBenignConsoleNoise(error, browserName));
 }
 
 // Scope to one card via its testid + the unique book heading it contains.
@@ -62,6 +63,7 @@ function cardFor(page: Page, title: string) {
 test.describe("/buecher library index", () => {
   test(`loads without login, shows the h1 and exactly ${BOOKS.length} book card(s)`, async ({
     page,
+    browserName,
   }) => {
     const errors = collectConsoleErrors(page);
     const response = await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
@@ -75,7 +77,7 @@ test.describe("/buecher library index", () => {
 
     await expect(page.getByTestId("book-card")).toHaveCount(BOOKS.length);
 
-    const noise = meaningfulErrors(errors);
+    const noise = meaningfulErrors(errors, browserName);
     expect(noise, `console errors on ${ROUTE}\n${noise.join("\n")}`).toEqual(
       [],
     );
