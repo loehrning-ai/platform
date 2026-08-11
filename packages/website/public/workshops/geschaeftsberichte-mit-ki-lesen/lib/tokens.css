@@ -4,10 +4,10 @@
    Legacy `--kupfer*` names are kept as ALIASES so existing deck.css/HTML hooks (var(--kupfer-full),
    .slide.kupfer, .over.k) keep working — do not reintroduce the old Kupfer hexes. */
 
-@font-face{font-family:'Typing';font-weight:400;font-style:normal;font-display:swap;src:url('../assets/fonts/Typing-Regular.ttf') format('truetype')}
-@font-face{font-family:'Typing';font-weight:500;font-style:normal;font-display:swap;src:url('../assets/fonts/Typing-Medium.ttf') format('truetype')}
-@font-face{font-family:'Typing';font-weight:600;font-style:normal;font-display:swap;src:url('../assets/fonts/Typing-SemiBold.ttf') format('truetype')}
-@font-face{font-family:'Typing';font-weight:700;font-style:normal;font-display:swap;src:url('../assets/fonts/Typing-Bold.ttf') format('truetype')}
+@font-face{font-family:'Typing';font-weight:400;font-style:normal;font-display:swap;src:url('../assets/fonts/Typing-Regular.woff2') format('woff2')}
+@font-face{font-family:'Typing';font-weight:500;font-style:normal;font-display:swap;src:url('../assets/fonts/Typing-Medium.woff2') format('woff2')}
+@font-face{font-family:'Typing';font-weight:600;font-style:normal;font-display:swap;src:url('../assets/fonts/Typing-SemiBold.woff2') format('woff2')}
+@font-face{font-family:'Typing';font-weight:700;font-style:normal;font-display:swap;src:url('../assets/fonts/Typing-Bold.woff2') format('woff2')}
 @font-face{font-family:'JetBrains Mono';font-weight:100 800;font-style:normal;font-display:swap;src:url('../assets/fonts/JetBrainsMono-var.woff2') format('woff2')}
 
 :root{

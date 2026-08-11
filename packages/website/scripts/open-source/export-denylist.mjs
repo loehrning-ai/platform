@@ -82,6 +82,8 @@ export const PRIVATE_PATH_RULES = [
         ".roorules",
         "claude.md",
         "agents.md",
+        "agent.md",
+        "integration.md",
         "notes.md",
         ["to", "do.md"].join(""),
         ["todo", "s.md"].join(""),
@@ -114,6 +116,7 @@ export const PRIVATE_PATH_RULES = [
       segments.some(
         (segment) =>
           segment === ".claude" ||
+          segment === ".claude-code" ||
           segment === ".agents" ||
           segment === ".cursor" ||
           segment === ".codex" ||

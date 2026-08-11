@@ -16,8 +16,8 @@ practice of committing every migration and were applied directly.
 | 20260421203611 | security_hardening |
 
 Reproducing them as a single committed baseline migration is real, valuable
-follow-up work (`plans/016-platform-hardening.md`, Stage 5), but it must
-reproduce the pre-`20260716160839` schema state exactly:
+follow-up work, but it must reproduce the pre-`20260716160839` schema state
+exactly:
 `005_drop_scan_insight_cache.sql` drops a table one of these fileless
 migrations (`scan_insight_cache`) creates, so a dump of the *current* schema
 would make that later migration a silent no-op if ever replayed against a

@@ -62,7 +62,10 @@ yarn.lock
 # Never commit internal planning or AI-tooling artifacts to a public repo
 CLAUDE.md
 AGENTS.md
+AGENT.md
+INTEGRATION.md
 .claude/
+.claude-code/
 .agents/
 .cursor/
 .codex/
