@@ -224,8 +224,8 @@ function LogoWordmark({
   const lWidth = useTransform(scrollY, [40, 120], [14, 0]);
 
   /* The "." in the icon fades out as it merges with the wordmark. Width
-     collapses over the same range as opacity — the dot is an inline sibling
-     of "L" inside a `justify-content: center` box, so fading it to
+     collapses over the same range as opacity, since the dot is an inline
+     sibling of "L" inside a `justify-content: center` box, so fading it to
      `opacity: 0` alone left its layout width in place, which kept "L" off
      centre (reading as if the square clipped its left side once rotated). */
   const dotOpacity = useTransform(scrollY, [60, 130], [1, 0]);
