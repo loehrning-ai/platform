@@ -48,6 +48,16 @@ for (const width of [320, 390, 768, 1440] as const) {
           name: locale === "de" ? route.deHeading : route.enHeading,
         })).toBeVisible();
         await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+        // Font metrics affect layout width. Without waiting for the real
+        // webfont, a slower runner can still be rendering a wider fallback
+        // face when geometry is measured, producing a transient overflow
+        // that has nothing to do with the actual, settled layout.
+        await page.evaluate(async () => {
+          await document.fonts.ready;
+          await new Promise<void>((resolve) =>
+            requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+          );
+        });
         await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
 
         const state = await page.evaluate(() => {
