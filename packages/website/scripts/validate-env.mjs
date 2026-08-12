@@ -243,6 +243,26 @@ if (googleOAuthConfigured && !accountSupabaseConfigured) {
   );
 }
 
+// Production and Preview deliberately diverge here. Cloudflare Turnstile
+// hostname allowlists cannot wildcard *.vercel.app (a public suffix), and
+// each preview URL would additionally need its own entry in Supabase's auth
+// uri_allow_list, which already accumulates stale entries from old branches.
+// Preview accounts still work; only the magic-link path degrades (the
+// runtime turns it off via isMagicLinkRuntimeReady, never advertising a
+// broken feature). Production has no such excuse: a real domain always has
+// exactly one Turnstile-eligible hostname, so a live account configuration
+// missing magic link there is a misconfiguration, not this same asymmetry.
+if (
+  process.env.VERCEL_ENV === "production" &&
+  accountSupabaseConfigured &&
+  !magicLinkConfigured
+) {
+  markError(
+    "Production Supabase Auth is configured without magic-link Turnstile protection. " +
+      "Preview is allowed to omit Turnstile (see the comment above); production is not.",
+  );
+}
+
 function validatePublicSupabaseKey(name, value) {
   if (!value) return;
   const keyKind = classifySupabaseKey(value);

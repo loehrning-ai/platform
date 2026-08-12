@@ -836,6 +836,44 @@ function main() {
     "good preview run must report that validation passed",
   );
 
+  // F. Production Supabase Auth without magic-link Turnstile FAILS. Preview
+  //    is allowed to omit Turnstile (hostname allowlists cannot wildcard
+  //    *.vercel.app); production has no such excuse.
+  const prodAccountWithoutMagicLink = runValidateEnv(
+    completeSupabase({ VERCEL_ENV: "production" }),
+  );
+  assert.equal(
+    prodAccountWithoutMagicLink.status,
+    1,
+    `production account config without magic link must fail\n${combined(prodAccountWithoutMagicLink)}`,
+  );
+  assert.match(
+    combined(prodAccountWithoutMagicLink),
+    /magic-link Turnstile protection/,
+  );
+
+  // G. The identical config PASSES in preview — the asymmetry is deliberate,
+  //    not an oversight this gate should ever start blocking.
+  const previewAccountWithoutMagicLink = runValidateEnv(
+    completeSupabase({ VERCEL_ENV: "preview" }),
+  );
+  assert.equal(
+    previewAccountWithoutMagicLink.status,
+    0,
+    `preview account config without magic link must pass\n${combined(previewAccountWithoutMagicLink)}`,
+  );
+
+  // H. Production WITH magic link configured still PASSES (regression guard:
+  //    the new check must not fire once Turnstile is actually present).
+  const prodAccountWithMagicLink = runValidateEnv(
+    completeMagicLinkSupabase({ VERCEL_ENV: "production" }),
+  );
+  assert.equal(
+    prodAccountWithMagicLink.status,
+    0,
+    `production account config with magic link must pass\n${combined(prodAccountWithMagicLink)}`,
+  );
+
   const deploymentDocs = readFileSync(
     join(here, "..", "..", "docs", "deployment.md"),
     "utf8",
