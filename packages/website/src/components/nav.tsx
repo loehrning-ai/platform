@@ -223,14 +223,6 @@ function LogoWordmark({
   const lOpacity = useTransform(scrollY, [40, 120], [1, 0]);
   const lWidth = useTransform(scrollY, [40, 120], [14, 0]);
 
-  /* The "." in the icon fades out as it merges with the wordmark. Width
-     collapses over the same range as opacity, since the dot is an inline
-     sibling of "L" inside a `justify-content: center` box, so fading it to
-     `opacity: 0` alone left its layout width in place, which kept "L" off
-     centre (reading as if the square clipped its left side once rotated). */
-  const dotOpacity = useTransform(scrollY, [60, 130], [1, 0]);
-  const dotWidth = useTransform(scrollY, [60, 130], ["0.4em", "0em"]);
-
   return (
     /* No clip on this box. The square's rotated bounding box and its hard
        offset shadow both grow past the flex item's edges, so an `overflow-hidden`
@@ -254,9 +246,6 @@ function LogoWordmark({
           backgroundColor: LOGO_ORIGINAL_ORANGE,
         }}
       >
-        {/* The dot stays in flow, as it does on the business site. Taking it
-            out with `position: absolute` left the mark centring the bare "L",
-            pushing the visible "L." off-centre inside the square. */}
         <m.span
           className="leading-none text-background"
           style={{
@@ -266,21 +255,6 @@ function LogoWordmark({
           }}
         >
           L
-          {/* `inline-block` defaults to `vertical-align: baseline`, which
-              aligns the dot's OWN baseline (its bottom edge, per spec, once
-              `overflow-hidden` is set) to L's text baseline - not to L's own
-              visible bottom. Measured at every font size this icon uses
-              (13-20px): that left the dot 4-6px above L's bottom edge.
-              `text-bottom` aligns to the bottom of the parent's font instead,
-              which lands exactly on L's bottom at every size (0px gap,
-              measured), with no magic-number offset to keep in sync with the
-              font. */}
-          <m.span
-            className="inline-block overflow-hidden align-text-bottom"
-            style={{ opacity: dotOpacity, width: dotWidth }}
-          >
-            .
-          </m.span>
         </m.span>
       </m.div>
 
