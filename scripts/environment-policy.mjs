@@ -185,7 +185,7 @@ export const PROVIDER_FREE_APPLICATION_ENVIRONMENT = Object.freeze({
   VERCEL_TELEMETRY_ENABLED: "false",
 });
 
-function localVerificationOrigin(source) {
+export function localVerificationOrigin(source) {
   if (source.E2E_SERVER_MODE !== "production") return "";
   const rawPort = source.E2E_PORT;
   if (typeof rawPort !== "string" || !/^[1-9]\d*$/.test(rawPort)) return "";

@@ -170,6 +170,45 @@ function main() {
     /Local verification redirect authority is forbidden/,
   );
 
+  // B2. LOEHRNING_LOCAL_VERIFICATION_ORIGIN in a gated (CI) build PASSES when
+  //     it is exactly what E2E_SERVER_MODE/E2E_PORT would themselves derive —
+  //     the self-consistent build ci.yml's verify:build step produces for its
+  //     own loopback-HTTP test server. Regression guard: this exact
+  //     combination broke CI (unit tests aside, every build-dependent gate
+  //     failed) the first time E2E_SERVER_MODE/E2E_PORT were added to the
+  //     build step to fix the CSP upgrade-insecure-requests issue, because
+  //     this check used to forbid the variable unconditionally.
+  const selfConsistentLocalOrigin = runValidateEnv({
+    CI: "true",
+    E2E_SERVER_MODE: "production",
+    E2E_PORT: "3000",
+    LOEHRNING_LOCAL_VERIFICATION_ORIGIN: "http://localhost:3000",
+  });
+  assert.equal(
+    selfConsistentLocalOrigin.status,
+    0,
+    `self-consistent E2E build origin must pass a gated build\n${combined(selfConsistentLocalOrigin)}`,
+  );
+
+  // B3. The self-consistency check compares values, not just presence: a
+  //     LOEHRNING_LOCAL_VERIFICATION_ORIGIN that does NOT match what
+  //     E2E_SERVER_MODE/E2E_PORT derive still fails, even though both are set.
+  const mismatchedLocalOrigin = runValidateEnv({
+    CI: "true",
+    E2E_SERVER_MODE: "production",
+    E2E_PORT: "3000",
+    LOEHRNING_LOCAL_VERIFICATION_ORIGIN: "http://localhost:9999",
+  });
+  assert.equal(
+    mismatchedLocalOrigin.status,
+    1,
+    `mismatched local verification origin must still fail a gated build\n${combined(mismatchedLocalOrigin)}`,
+  );
+  assert.match(
+    combined(mismatchedLocalOrigin),
+    /Local verification redirect authority is forbidden/,
+  );
+
   // C. bad PRODUCTION env still FAILS (regression guard for the original
   //    behaviour). Uses the AI-gate error branch: flag on, key absent.
   const badProd = runValidateEnv({
