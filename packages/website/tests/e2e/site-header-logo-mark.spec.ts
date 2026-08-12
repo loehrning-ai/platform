@@ -1,17 +1,31 @@
 import { test, expect, type Page } from "@playwright/test";
 
 /**
- * Header logo mark contract: the scroll-driven "L." icon must keep "L" and
- * "." on the same line, and "L" horizontally centred in the square, at every
- * point of its scroll transition (0-160px), not just at rest and at the end.
+ * Header logo mark contract: the scroll-driven "L." icon must keep "." sitting
+ * on L's own bottom edge (not merely overlapping its line), and "L" centred in
+ * the square, at every point of its scroll transition (0-160px), not just at
+ * rest and at the end.
  *
- * Regression this guards: the "." used to fade via `opacity` alone. Opacity
- * does not remove layout width, so the invisible dot kept reserving space
- * inside the square's `justify-content: center` box for the whole 60-130px
- * fade range, pushing "L" left of true centre the entire time - on a
- * rotated square this reads as a clipped corner rather than off-centre text
- * (fixed in #37). A future revert of the width-collapse fix, or a change
- * that makes the dot a block-level sibling of "L", fails here.
+ * Two regressions this guards, both about the "." span, both invisible to a
+ * plain screenshot at a glance:
+ *
+ * 1. (#37) The dot faded via `opacity` alone. Opacity does not remove layout
+ *    width, so the invisible dot kept reserving space inside the square's
+ *    `justify-content: center` box for the whole 60-130px fade range, pushing
+ *    "L" left of true centre the entire time - on a rotated square this reads
+ *    as a clipped corner rather than off-centre text.
+ * 2. The dot's `inline-block` defaulted to `vertical-align: baseline`, which
+ *    aligns the dot's OWN baseline - its bottom edge, per spec, once
+ *    `overflow-hidden` is set - to L's TEXT baseline, not to L's own visible
+ *    bottom. Measured 4-6px of gap depending on the icon's current font size
+ *    (13-20px across the scroll range): the dot visibly floated above L's
+ *    bottom rather than resting on it. `align-text-bottom` closes this to 0px
+ *    at every size, measured directly, not eyeballed.
+ *
+ * A same-line check that only asks "do these two elements' vertical bands
+ * overlap at all" passes even with the 4-6px gap from #2 - overlap is a much
+ * weaker property than "sits on the same baseline" and is why that bug shipped
+ * once already. `sitsOnBaseline` below asserts the tight version instead.
  */
 
 const HOME_LINK = 'nav a[href="/"]';
@@ -45,8 +59,12 @@ async function markGeometry(page: Page) {
   }, ICON_MARK);
 }
 
-function overlapsSameLine(g: Awaited<ReturnType<typeof markGeometry>>) {
-  return g.dotTop < g.lBottom + 2 && g.dotBottom > g.lTop - 2;
+// Deliberately NOT "do the two vertical bands overlap at all" - a 4-6px gap
+// between the dot's bottom and L's bottom (the #2 regression above) still
+// overlaps, since the dot's own height is well over 6px. This checks the
+// specific thing that matters: the dot's bottom edge sits where L's does.
+function sitsOnBaseline(g: Awaited<ReturnType<typeof markGeometry>>) {
+  return Math.abs(g.dotBottom - g.lBottom) < 1.5;
 }
 
 // The document sets `scroll-behavior: smooth`, so the two-argument
@@ -102,11 +120,12 @@ test.describe("primary navigation logo mark", () => {
     for (const scrollY of [0, 60, 95, 130, 200]) {
       settled = await scrollToAndSettle(page, scrollY);
 
-      // "Same line": the dot's vertical band must overlap L's vertical band,
-      // not sit below or above it as a wrapped second line would.
+      // The dot's bottom edge must sit on L's bottom edge (within 1.5px), not
+      // float above it - a looser "these two elements' lines merely overlap"
+      // check would miss the 4-6px baseline gap this guards.
       expect(
-        overlapsSameLine(settled),
-        `at scrollY=${scrollY}, dot [${settled.dotTop.toFixed(1)}, ${settled.dotBottom.toFixed(1)}] should overlap L [${settled.lTop.toFixed(1)}, ${settled.lBottom.toFixed(1)}]`,
+        sitsOnBaseline(settled),
+        `at scrollY=${scrollY}, dot bottom ${settled.dotBottom.toFixed(1)} should sit on L's bottom ${settled.lBottom.toFixed(1)} (within 1.5px)`,
       ).toBe(true);
     }
     if (settled === null) throw new Error("unreachable: loop always assigns");
@@ -130,6 +149,6 @@ test.describe("primary navigation logo mark", () => {
 
     expect(g.dotOpacity).toBeCloseTo(1, 1);
     expect(g.squareTransform).toBe("none");
-    expect(overlapsSameLine(g)).toBe(true);
+    expect(sitsOnBaseline(g)).toBe(true);
   });
 });

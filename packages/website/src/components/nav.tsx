@@ -266,8 +266,17 @@ function LogoWordmark({
           }}
         >
           L
+          {/* `inline-block` defaults to `vertical-align: baseline`, which
+              aligns the dot's OWN baseline (its bottom edge, per spec, once
+              `overflow-hidden` is set) to L's text baseline - not to L's own
+              visible bottom. Measured at every font size this icon uses
+              (13-20px): that left the dot 4-6px above L's bottom edge.
+              `text-bottom` aligns to the bottom of the parent's font instead,
+              which lands exactly on L's bottom at every size (0px gap,
+              measured), with no magic-number offset to keep in sync with the
+              font. */}
           <m.span
-            className="inline-block overflow-hidden"
+            className="inline-block overflow-hidden align-text-bottom"
             style={{ opacity: dotOpacity, width: dotWidth }}
           >
             .
