@@ -54,30 +54,45 @@ jobs:
   # free on a public repo, and buys a gate that cannot fail for transport
   # reasons. Revisit only with measurements.
   #
-  # Every `verify:build` step below sets E2E_SERVER_MODE/E2E_PORT. The CSP's
-  # `upgrade-insecure-requests` directive is excluded only when
-  # environment-policy.mjs's providerFreeVerificationEnvironment() can prove,
-  # from those two vars, that this exact build is for loopback-HTTP
+  # Every job below sets E2E_SERVER_MODE/E2E_PORT at the JOB level, so every
+  # step — the build and whatever serves/tests it — shares one identical
+  # environment. The CSP's `upgrade-insecure-requests` directive is excluded
+  # only when environment-policy.mjs's providerFreeVerificationEnvironment()
+  # can prove, from those two vars, that this exact build is for loopback-HTTP
   # verification (deliberately fail-closed — a build that can't prove that
   # gets the production CSP, which DOES include the directive). Next.js
-  # resolves next.config.ts's headers() once, at this build step, and bakes
-  # the result into the output for `next start` to serve; setting these vars
-  # only on the later serve/test step (as before) has zero effect. Omitting
-  # them here means the served CSP always includes `upgrade-insecure-requests`,
-  # which WebKit enforces even for a page's own same-origin HTTP subresources —
-  # every asset request silently upgrades to HTTPS against a server that only
-  # speaks HTTP, fails with a TLS error, and the page never finishes hydrating.
-  # That is a test-infrastructure bug, not a WebKit defect: real production
-  # traffic is HTTPS already, so the directive is correct and unaffected there.
-  # The exact port does not need to match the later serve port — the
+  # resolves next.config.ts's headers() once, at build time, and bakes the
+  # result into the output for `next start` to serve; setting these vars only
+  # on the serve/test step has zero effect on that already-baked CSP.
+  # Omitting them entirely means the served CSP always includes
+  # `upgrade-insecure-requests`, which WebKit enforces even for a page's own
+  # same-origin HTTP subresources — every asset request silently upgrades to
+  # HTTPS against a server that only speaks HTTP, fails with a TLS error, and
+  # the page never finishes hydrating. That is a test-infrastructure bug, not
+  # a WebKit defect: real production traffic is HTTPS already, so the
+  # directive is correct and unaffected there.
+  #
+  # Setting them only on the build step (not the job) was tried first and
+  # broke every gate below it in the same job: build-freshness's preflight
+  # (run-built-gate.mjs) re-captures the toolchain/environment at build time
+  # and compares it again before serving, so a build step with these vars and
+  # a later step without them is a real, detected environment mismatch —
+  # "Stale production build: source or build environment no longer matches
+  # .next" — not a false positive. Job-level env makes every step identical.
+  #
+  # The exact port does not need to match the later serve port — the CSP
   # exclusion only requires E2E_SERVER_MODE=production plus any
-  # structurally-valid E2E_PORT; server-log-privacy allocates its serve port
-  # at runtime; 3000 here is a valid placeholder, not a claim it will match.
+  # structurally-valid E2E_PORT; server-log-privacy allocates its actual serve
+  # port at runtime, so 3000 here is a valid placeholder, not a claim it will
+  # match what that job serves on.
   # ---------------------------------------------------------------------------
   lighthouse:
     name: lighthouse
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      E2E_SERVER_MODE: production
+      E2E_PORT: "3000"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -86,9 +101,6 @@ jobs:
         with:
           playwright-browsers: chromium
       - run: bun run --cwd packages/website verify:build
-        env:
-          E2E_SERVER_MODE: production
-          E2E_PORT: "3000"
       - name: Blocking Lighthouse performance smoke
         run: |
           export CHROME_PATH="$(bun --cwd packages/website -e 'import { chromium } from "@playwright/test"; console.log(chromium.executablePath())')"
@@ -107,6 +119,9 @@ jobs:
     name: e2e ${{ matrix.project }} ${{ matrix.shard }}/${{ matrix.total }}
     runs-on: ubuntu-latest
     timeout-minutes: 40
+    env:
+      E2E_SERVER_MODE: production
+      E2E_PORT: "3000"
     strategy:
       # One red shard must not hide the other fifteen. The aggregate `verify`
       # job is what turns any failure into a red required check.
@@ -140,9 +155,6 @@ jobs:
         with:
           playwright-browsers: ${{ matrix.browsers }}
       - run: bun run --cwd packages/website verify:build
-        env:
-          E2E_SERVER_MODE: production
-          E2E_PORT: "3000"
       - name: Public browser gate
         run: >-
           bun run --cwd packages/website e2e:shard:built
@@ -180,6 +192,9 @@ jobs:
     name: auth scaffold gate
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      E2E_SERVER_MODE: production
+      E2E_PORT: "3000"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -188,9 +203,6 @@ jobs:
         with:
           playwright-browsers: chromium
       - run: bun run --cwd packages/website verify:build
-        env:
-          E2E_SERVER_MODE: production
-          E2E_PORT: "3000"
       - name: Provider-free auth scaffold gate
         run: bun run test:e2e:auth-scaffold:built
         env:
@@ -202,15 +214,15 @@ jobs:
     name: server log privacy
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    env:
+      E2E_SERVER_MODE: production
+      E2E_PORT: "3000"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: ./.github/actions/setup
       - run: bun run --cwd packages/website verify:build
-        env:
-          E2E_SERVER_MODE: production
-          E2E_PORT: "3000"
       - run: bun run --cwd packages/website test:server-log-privacy:built
 
   merge-reports:
