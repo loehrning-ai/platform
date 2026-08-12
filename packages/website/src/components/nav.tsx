@@ -246,9 +246,6 @@ function LogoWordmark({
           backgroundColor: LOGO_ORIGINAL_ORANGE,
         }}
       >
-        {/* The dot stays in flow, as it does on the business site. Taking it
-            out with `position: absolute` left the mark centring the bare "L",
-            pushing the visible "L." off-centre inside the square. */}
         <m.span
           className="leading-none text-background"
           style={{
