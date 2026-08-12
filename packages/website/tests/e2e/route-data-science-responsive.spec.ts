@@ -160,6 +160,13 @@ async function expectCourseGeometryContained(page: Page, context: string) {
 }
 
 test.describe("Data Science responsive geometry", () => {
+  test.beforeEach(({}, testInfo) => {
+    test.skip(
+      testInfo.project.name !== "chromium",
+      "The explicit five-width matrix runs once in Chromium.",
+    );
+  });
+
   test("all 13 routes in both locales remain contained across five widths", async ({
     page,
   }) => {

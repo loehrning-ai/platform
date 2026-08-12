@@ -4,7 +4,13 @@ const GERMAN_ONLY_HOME_TOKENS =
   /\b(?:Freie KI-Lernplattform|Kostenfreie Kurse|Grundlagenpfad|Vier Kurse|Empfohlener Einstieg|Lektionen|Technikkurse|Ressourcen|Betriebsprinzipien|Keine Paywall|Den passenden Einstieg finden)\b/i;
 
 for (const width of [320, 390, 1440] as const) {
-  test(`homepage DE/EN copy and geometry are complete at ${width}px`, async ({ page }) => {
+  test(`homepage DE/EN copy and geometry are complete at ${width}px`, async ({
+    page,
+  }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== "chromium",
+      "The explicit width matrix runs once in Chromium.",
+    );
     test.setTimeout(90_000);
     await page.setViewportSize({ width, height: width < 768 ? 844 : 1000 });
 

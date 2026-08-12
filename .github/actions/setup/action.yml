@@ -1,0 +1,40 @@
+name: Set up toolchain
+description: Checkout-adjacent Node + verified Bun + workspace install, shared by every Verify job.
+
+inputs:
+  playwright-browsers:
+    description: >-
+      Space-separated Playwright browsers to install (for example "chromium" or
+      "chromium webkit"). Empty installs none.
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      with:
+        node-version: 24.17.0
+
+    - name: Install checksum-verified Bun
+      shell: bash
+      run: bash .github/scripts/install-verified-bun.sh
+
+    - name: Install workspace dependencies
+      shell: bash
+      run: bun install --frozen-lockfile --ignore-scripts
+
+    # bun.lock pins @playwright/test, so the browser build changes exactly when
+    # the lockfile does. Only the download is cacheable; `--with-deps` still runs
+    # apt every time, which is why the install step below is not skipped outright.
+    - name: Restore Playwright browsers
+      if: inputs.playwright-browsers != ''
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ~/.cache/ms-playwright
+        key: playwright-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+
+    - name: Install Playwright browsers
+      if: inputs.playwright-browsers != ''
+      shell: bash
+      run: bun run --cwd packages/website playwright install --with-deps ${{ inputs.playwright-browsers }}

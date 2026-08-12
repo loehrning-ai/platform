@@ -24,6 +24,7 @@ import {
   SUPABASE_KEY_KIND,
 } from "../src/lib/supabase/key-classification.mjs";
 import { isValidRateLimitHmacSecret } from "../src/lib/security/rate-limit-secret.mjs";
+import { localVerificationOrigin } from "../../../scripts/environment-policy.mjs";
 
 // Validate the same local environment files that `next build` will load.
 // Existing shell variables retain precedence, including explicit empty values
@@ -96,10 +97,27 @@ const LIVE_AUTH_E2E_ALLOWED_PUBLIC_VARIABLES = new Set([
   "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
   "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
 ]);
+// LOEHRNING_LOCAL_VERIFICATION_ORIGIN grants real trusted-redirect authority
+// (src/lib/auth/origin.ts) and must never reach a gated build unexplained.
+// It is trusted here in exactly one narrow case: its value is the *exact*
+// derivation environment-policy.mjs's localVerificationOrigin() would itself
+// produce from this same process's E2E_SERVER_MODE/E2E_PORT — i.e. this is a
+// self-consistent build the CI e2e/lighthouse/auth-scaffold pipeline
+// produced for its own loopback-HTTP test server, not an arbitrarily
+// injected value. Any other value, or a value present with no matching
+// E2E_SERVER_MODE/E2E_PORT to derive it from, still fails loudly.
+const selfConsistentVerificationOrigin = localVerificationOrigin(process.env);
 const localVerificationVariables = [
   "LOEHRNING_LOCAL_PROVIDER_FREE_RUNTIME",
   "LOEHRNING_LOCAL_VERIFICATION_ORIGIN",
-].filter((name) => Boolean(process.env[name]));
+].filter((name) => {
+  const value = process.env[name];
+  if (!value) return false;
+  if (name === "LOEHRNING_LOCAL_VERIFICATION_ORIGIN") {
+    return value !== selfConsistentVerificationOrigin;
+  }
+  return true;
+});
 
 if (localVerificationVariables.length > 0) {
   markError(
@@ -240,6 +258,26 @@ if (magicLinkConfigured && !accountSupabaseConfigured) {
 if (googleOAuthConfigured && !accountSupabaseConfigured) {
   markError(
     "Google OAuth is attested without Supabase Auth. Remove SUPABASE_GOOGLE_OAUTH_CONFIRMED_AT or provide the complete account configuration.",
+  );
+}
+
+// Production and Preview deliberately diverge here. Cloudflare Turnstile
+// hostname allowlists cannot wildcard *.vercel.app (a public suffix), and
+// each preview URL would additionally need its own entry in Supabase's auth
+// uri_allow_list, which already accumulates stale entries from old branches.
+// Preview accounts still work; only the magic-link path degrades (the
+// runtime turns it off via isMagicLinkRuntimeReady, never advertising a
+// broken feature). Production has no such excuse: a real domain always has
+// exactly one Turnstile-eligible hostname, so a live account configuration
+// missing magic link there is a misconfiguration, not this same asymmetry.
+if (
+  process.env.VERCEL_ENV === "production" &&
+  accountSupabaseConfigured &&
+  !magicLinkConfigured
+) {
+  markError(
+    "Production Supabase Auth is configured without magic-link Turnstile protection. " +
+      "Preview is allowed to omit Turnstile (see the comment above); production is not.",
   );
 }
 

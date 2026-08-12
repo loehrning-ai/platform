@@ -54,7 +54,11 @@ function collectErrors(page: Page): string[] {
 for (const width of VIEWPORTS) {
   test(`public information routes have DE/EN parity without overflow at ${width}px`, async ({
     page,
-  }) => {
+  }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== "chromium",
+      "The explicit width matrix runs once in Chromium.",
+    );
     test.setTimeout(180_000);
     await page.setViewportSize({ width, height: width < 768 ? 844 : 1000 });
     const errors = collectErrors(page);

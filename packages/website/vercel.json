@@ -3,5 +3,10 @@
   "framework": "nextjs",
   "buildCommand": "bun run build",
   "installCommand": "cd ../.. && bun install --frozen-lockfile --ignore-scripts",
-  "regions": ["dub1"]
+  "regions": ["dub1"],
+  "git": {
+    "deploymentEnabled": {
+      "main": false
+    }
+  }
 }

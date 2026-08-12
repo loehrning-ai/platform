@@ -109,7 +109,9 @@ test.describe("book chapter reader navigation", () => {
   test("ArrowRight and ArrowLeft move to the next / previous chapter", async ({ page }) => {
     // ArrowRight -> next chapter.
     await page.goto(chapterPath(MID.slug), { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle");
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
     await expect(page.getByRole("article", { name: MID.title })).toBeVisible();
     // Click the plain header heading so the document body
     // holds focus and the window keydown listener receives the key.
@@ -119,7 +121,9 @@ test.describe("book chapter reader navigation", () => {
 
     // ArrowLeft -> previous chapter (fresh load to reset focus to the body).
     await page.goto(chapterPath(MID.slug), { waitUntil: "domcontentloaded" });
-    await page.waitForLoadState("networkidle");
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
     await expect(page.getByRole("article", { name: MID.title })).toBeVisible();
     await page.getByRole("heading", { level: 1, name: MID.title }).click();
     await page.keyboard.press("ArrowLeft");

@@ -11,7 +11,11 @@ function migration(name: string): string {
 
 describe("production database migration contract", () => {
   it("uses migration versions that match the live Supabase history", () => {
-    expect(readdirSync(MIGRATIONS_DIR).sort()).toEqual([
+    expect(
+      readdirSync(MIGRATIONS_DIR)
+        .filter((name) => name.endsWith(".sql"))
+        .sort(),
+    ).toEqual([
       "20260716160504_004_user_course_progress.sql",
       "20260716160506_006_assessment_runs.sql",
       "20260716160507_20260714182753_feedback_retention.sql",

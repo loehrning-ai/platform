@@ -170,6 +170,45 @@ function main() {
     /Local verification redirect authority is forbidden/,
   );
 
+  // B2. LOEHRNING_LOCAL_VERIFICATION_ORIGIN in a gated (CI) build PASSES when
+  //     it is exactly what E2E_SERVER_MODE/E2E_PORT would themselves derive —
+  //     the self-consistent build ci.yml's verify:build step produces for its
+  //     own loopback-HTTP test server. Regression guard: this exact
+  //     combination broke CI (unit tests aside, every build-dependent gate
+  //     failed) the first time E2E_SERVER_MODE/E2E_PORT were added to the
+  //     build step to fix the CSP upgrade-insecure-requests issue, because
+  //     this check used to forbid the variable unconditionally.
+  const selfConsistentLocalOrigin = runValidateEnv({
+    CI: "true",
+    E2E_SERVER_MODE: "production",
+    E2E_PORT: "3000",
+    LOEHRNING_LOCAL_VERIFICATION_ORIGIN: "http://localhost:3000",
+  });
+  assert.equal(
+    selfConsistentLocalOrigin.status,
+    0,
+    `self-consistent E2E build origin must pass a gated build\n${combined(selfConsistentLocalOrigin)}`,
+  );
+
+  // B3. The self-consistency check compares values, not just presence: a
+  //     LOEHRNING_LOCAL_VERIFICATION_ORIGIN that does NOT match what
+  //     E2E_SERVER_MODE/E2E_PORT derive still fails, even though both are set.
+  const mismatchedLocalOrigin = runValidateEnv({
+    CI: "true",
+    E2E_SERVER_MODE: "production",
+    E2E_PORT: "3000",
+    LOEHRNING_LOCAL_VERIFICATION_ORIGIN: "http://localhost:9999",
+  });
+  assert.equal(
+    mismatchedLocalOrigin.status,
+    1,
+    `mismatched local verification origin must still fail a gated build\n${combined(mismatchedLocalOrigin)}`,
+  );
+  assert.match(
+    combined(mismatchedLocalOrigin),
+    /Local verification redirect authority is forbidden/,
+  );
+
   // C. bad PRODUCTION env still FAILS (regression guard for the original
   //    behaviour). Uses the AI-gate error branch: flag on, key absent.
   const badProd = runValidateEnv({
@@ -834,6 +873,44 @@ function main() {
     combined(goodPreview),
     /Environment validation passed/,
     "good preview run must report that validation passed",
+  );
+
+  // F. Production Supabase Auth without magic-link Turnstile FAILS. Preview
+  //    is allowed to omit Turnstile (hostname allowlists cannot wildcard
+  //    *.vercel.app); production has no such excuse.
+  const prodAccountWithoutMagicLink = runValidateEnv(
+    completeSupabase({ VERCEL_ENV: "production" }),
+  );
+  assert.equal(
+    prodAccountWithoutMagicLink.status,
+    1,
+    `production account config without magic link must fail\n${combined(prodAccountWithoutMagicLink)}`,
+  );
+  assert.match(
+    combined(prodAccountWithoutMagicLink),
+    /magic-link Turnstile protection/,
+  );
+
+  // G. The identical config PASSES in preview — the asymmetry is deliberate,
+  //    not an oversight this gate should ever start blocking.
+  const previewAccountWithoutMagicLink = runValidateEnv(
+    completeSupabase({ VERCEL_ENV: "preview" }),
+  );
+  assert.equal(
+    previewAccountWithoutMagicLink.status,
+    0,
+    `preview account config without magic link must pass\n${combined(previewAccountWithoutMagicLink)}`,
+  );
+
+  // H. Production WITH magic link configured still PASSES (regression guard:
+  //    the new check must not fire once Turnstile is actually present).
+  const prodAccountWithMagicLink = runValidateEnv(
+    completeMagicLinkSupabase({ VERCEL_ENV: "production" }),
+  );
+  assert.equal(
+    prodAccountWithMagicLink.status,
+    0,
+    `production account config with magic link must pass\n${combined(prodAccountWithMagicLink)}`,
   );
 
   const deploymentDocs = readFileSync(

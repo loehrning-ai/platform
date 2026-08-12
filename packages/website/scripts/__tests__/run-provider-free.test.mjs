@@ -578,13 +578,82 @@ const ciWorkflow = readFileSync(
   join(here, "..", "..", "..", "..", ".github", "workflows", "ci.yml"),
   "utf8",
 );
-assert.match(ciWorkflow, /PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report\/public/);
+// The public browser gate runs as a sharded matrix, so each shard owns a
+// distinct artifact directory keyed by project and shard. That keeps the
+// original guarantee — no gate can overwrite or be mistaken for another's
+// output — and additionally makes every blob report independently mergeable.
+assert.match(
+  ciWorkflow,
+  /PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report\/\$\{\{ matrix\.project \}\}-\$\{\{ matrix\.shard \}\}/,
+);
 assert.match(
   ciWorkflow,
   /PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report\/auth-scaffold/,
 );
-assert.match(ciWorkflow, /PLAYWRIGHT_OUTPUT_DIR: test-results\/public/);
+assert.match(
+  ciWorkflow,
+  /PLAYWRIGHT_OUTPUT_DIR: test-results\/\$\{\{ matrix\.project \}\}-\$\{\{ matrix\.shard \}\}/,
+);
 assert.match(ciWorkflow, /PLAYWRIGHT_OUTPUT_DIR: test-results\/auth-scaffold/);
+// next.config.ts resolves headers() once, at build time, and bakes the
+// result into the build output — `next start` serves it as-is and never
+// re-evaluates next.config.ts's env reads. Every job that builds and then
+// serves+tests over loopback HTTP must set E2E_SERVER_MODE/E2E_PORT at the
+// JOB level, not per-step: setting them only on the build step and not on
+// the later serve/test step in the same job is a real, detected environment
+// mismatch (run-built-gate.mjs's freshness preflight re-captures the
+// toolchain/environment at build time and compares it again before serving
+// — "Stale production build: source or build environment no longer matches
+// .next"), and setting them only on the later test-run step has zero effect
+// on the CSP, which is already baked by then. Without them present at build
+// time, environment-policy.mjs's providerFreeVerificationEnvironment() —
+// deliberately fail-closed — cannot prove the build is for loopback
+// verification, so the production CSP ships with `upgrade-insecure-requests`.
+// WebKit then upgrades the page's own same-origin HTTP subresource requests
+// to HTTPS against a server that only speaks HTTP: every asset fails with a
+// TLS error and the page never finishes hydrating. Measured: this was the
+// root cause of hydration-marker timeouts across unrelated specs on every
+// route under mobile-webkit, not a set of individual page bugs.
+const jobsNeedingLoopbackVerification = [
+  "lighthouse:",
+  "e2e:",
+  "auth-scaffold:",
+  "server-log-privacy:",
+];
+for (const jobHeader of jobsNeedingLoopbackVerification) {
+  const jobStart = ciWorkflow.indexOf(`\n  ${jobHeader}\n`);
+  assert.ok(jobStart >= 0, `expected a top-level ${jobHeader} job in ci.yml`);
+  // A real next job line is exactly 2-space indented (`  name:`), never more
+  // — every step/key inside a job is indented 4+ spaces. Matching "\n  " with
+  // no length bound also matches those deeper lines (e.g. "\n    name:"
+  // starts with "\n" + 2 spaces too), which truncated jobBlock immediately.
+  const nextJobMatch = /\n {2}[a-z][a-z0-9-]*:\n/.exec(
+    ciWorkflow.slice(jobStart + jobHeader.length + 3),
+  );
+  const nextJobStart =
+    nextJobMatch === null
+      ? -1
+      : jobStart + jobHeader.length + 3 + nextJobMatch.index;
+  const jobBlock = ciWorkflow.slice(
+    jobStart,
+    nextJobStart >= 0 ? nextJobStart : undefined,
+  );
+  // Job-level env: must appear before the first step (`steps:`), so it is
+  // impossible for the build step and a later step to disagree.
+  const stepsIndex = jobBlock.indexOf("\n    steps:\n");
+  assert.ok(stepsIndex >= 0, `expected ${jobHeader} to declare steps:`);
+  const preSteps = jobBlock.slice(0, stepsIndex);
+  assert.match(
+    preSteps,
+    /env:\s*\n\s*E2E_SERVER_MODE: production\s*\n\s*E2E_PORT: "3000"/,
+    `${jobHeader} must set E2E_SERVER_MODE/E2E_PORT at job level, before steps:, so build and serve/test steps cannot disagree:\n${preSteps}`,
+  );
+  assert.match(
+    jobBlock,
+    /run: bun run --cwd packages\/website verify:build\s*\n/,
+    `${jobHeader} must still build via verify:build:\n${jobBlock.slice(0, 400)}`,
+  );
+}
 const serverLogPrivacyRunner = readFileSync(
   join(here, "..", "verify-server-log-privacy.mjs"),
   "utf8",

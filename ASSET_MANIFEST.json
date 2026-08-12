@@ -451,9 +451,9 @@
       "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1-JetBrainsMono.txt"
     },
     {
-      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/fonts/Typing-Bold.ttf",
-      "sizeBytes": 879720,
-      "sha256": "0b68b5f13390656f1e283a51c702b266d8c4e46a17d0be2f67b7f6fcc3a32ded",
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/fonts/Typing-Bold.woff2",
+      "sizeBytes": 60916,
+      "sha256": "ca6dba1056629a9e0ff4fa578306666581a1ec56e48799538ae203e69ed745d2",
       "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
       "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
       "license": "OFL-1.1",
@@ -461,9 +461,9 @@
       "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/fonts/Typing-Medium.ttf",
-      "sizeBytes": 879740,
-      "sha256": "70bde4ea7e363336467a125e9d3d631bde090ebe24a569b2d6c39f90c2df3e97",
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/fonts/Typing-Medium.woff2",
+      "sizeBytes": 60948,
+      "sha256": "c67df698a4065d33f11a931c37b424d9653da9ad62217ec8de3b5a3cac01d2f3",
       "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
       "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
       "license": "OFL-1.1",
@@ -471,9 +471,9 @@
       "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/fonts/Typing-Regular.ttf",
-      "sizeBytes": 879708,
-      "sha256": "f21310e3ef46427a43f91a7c8d1ceb6836bbc3707965eee636206a6ee0b1c6e8",
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/fonts/Typing-Regular.woff2",
+      "sizeBytes": 61064,
+      "sha256": "53682db1ecfdd18db0af16fcb234a01e4b834ba6914d85806747bb011a59533c",
       "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
       "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
       "license": "OFL-1.1",
@@ -481,9 +481,9 @@
       "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/fonts/Typing-SemiBold.ttf",
-      "sizeBytes": 879756,
-      "sha256": "19f9c2cae411db1ab3e334a0ad269357a7dfc65232364601fad02329ab69ae98",
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/fonts/Typing-SemiBold.woff2",
+      "sizeBytes": 60860,
+      "sha256": "47338939923cdc67d4d95d0267efbf3d5f22d0beb171a56d90fd24ad6bee315f",
       "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
       "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
       "license": "OFL-1.1",

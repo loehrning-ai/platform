@@ -83,7 +83,11 @@ async function scrollIntoViewAndClick(
 for (const width of WIDTHS) {
   test(`KI check completes in German and English without overflow at ${width}px`, async ({
     page,
-  }) => {
+  }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== "chromium",
+      "The explicit width matrix runs once in Chromium.",
+    );
     test.setTimeout(90_000);
     await page.setViewportSize({ width, height: width < 768 ? 844 : 900 });
 

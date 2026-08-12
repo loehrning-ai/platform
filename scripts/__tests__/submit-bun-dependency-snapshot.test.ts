@@ -356,14 +356,25 @@ describe("Supply-chain install contract", () => {
   });
 
   it("denies lifecycle scripts consistently in Bun, CI, and Vercel", async () => {
-    const [bunfig, ciWorkflow, submissionWorkflow, deploymentDocs, ciDocs] =
-      await Promise.all([
-        repositoryFile("bunfig.toml"),
-        repositoryFile(".github/workflows/ci.yml"),
-        repositoryFile(".github/workflows/dependency-submission.yml"),
-        repositoryFile("packages/website/docs/deployment.md"),
-        repositoryFile("packages/website/docs/ci-contract.md"),
-      ]);
+    const [
+      bunfig,
+      ciWorkflow,
+      ciSetupAction,
+      submissionWorkflow,
+      deploymentDocs,
+      ciDocs,
+    ] = await Promise.all([
+      repositoryFile("bunfig.toml"),
+      repositoryFile(".github/workflows/ci.yml"),
+      repositoryFile(".github/actions/setup/action.yml"),
+      repositoryFile(".github/workflows/dependency-submission.yml"),
+      repositoryFile("packages/website/docs/deployment.md"),
+      repositoryFile("packages/website/docs/ci-contract.md"),
+    ]);
+    // Verify runs as a parallel job graph, so the shared bootstrap lives in the
+    // composite action rather than in every job. The guarantee is unchanged:
+    // every CI install still denies lifecycle scripts.
+    const ciBootstrap = `${ciWorkflow}\n${ciSetupAction}`;
     const vercel = JSON.parse(
       await repositoryFile("packages/website/vercel.json"),
     ) as { readonly installCommand?: string };
@@ -373,7 +384,7 @@ describe("Supply-chain install contract", () => {
     expect(bunfig).toMatch(
       /\[install\][\s\S]*\bignoreScripts\s*=\s*true\b/,
     );
-    expect(ciWorkflow).toContain(`run: ${installCommand}`);
+    expect(ciBootstrap).toContain(`run: ${installCommand}`);
     expect(submissionWorkflow).toContain(`run: ${installCommand}`);
     expect(vercel.installCommand).toBe(`cd ../.. && ${installCommand}`);
     expect(deploymentDocs).toContain(vercel.installCommand);
@@ -381,16 +392,23 @@ describe("Supply-chain install contract", () => {
   });
 
   it("installs browsers with the workspace-locked Playwright CLI", async () => {
-    const [ciWorkflow, contributing, testDocs] = await Promise.all([
-      repositoryFile(".github/workflows/ci.yml"),
-      repositoryFile("CONTRIBUTING.md"),
-      repositoryFile("packages/website/tests/README.md"),
-    ]);
-    const files = [ciWorkflow, contributing, testDocs];
+    const [ciWorkflow, ciSetupAction, contributing, testDocs] =
+      await Promise.all([
+        repositoryFile(".github/workflows/ci.yml"),
+        repositoryFile(".github/actions/setup/action.yml"),
+        repositoryFile("CONTRIBUTING.md"),
+        repositoryFile("packages/website/tests/README.md"),
+      ]);
+    const files = [ciWorkflow, ciSetupAction, contributing, testDocs];
 
-    expect(ciWorkflow).toContain(
-      "bun run --cwd packages/website playwright install --with-deps chromium webkit",
+    // Browsers install through the composite action so a shard pulls only the
+    // engine it runs. The workspace-locked CLI is still the only entry point,
+    // and both engines must still be requested somewhere in the job graph.
+    expect(ciSetupAction).toContain(
+      "bun run --cwd packages/website playwright install --with-deps ${{ inputs.playwright-browsers }}",
     );
+    expect(ciWorkflow).toContain("browsers: chromium");
+    expect(ciWorkflow).toContain("browsers: webkit");
     for (const contents of files) {
       expect(contents).not.toContain("bunx playwright");
     }

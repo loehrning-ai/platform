@@ -30,6 +30,16 @@ for (const width of [320, 390, 768, 1440] as const) {
   }) => {
     await page.setViewportSize({ width, height: width < 768 ? 844 : 1_000 });
 
+    // The brand font loads with `display: optional`, so a page's very first
+    // paint either gets it from cache within a ~100ms budget or commits to
+    // the fallback face for good — waiting afterwards never forces a swap.
+    // A fresh browser context (as every test gets) starts with an empty font
+    // cache, so warm it with a throwaway navigation before measuring the
+    // real one; a slow runner can otherwise land the fallback's slightly
+    // wider metrics permanently and report an overflow that isn't real.
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.evaluate(() => document.fonts.ready);
+
     for (const route of WORKSHOP_ROUTES) {
       for (const locale of ["de", "en"] as const) {
         const pageErrors: string[] = [];
@@ -48,6 +58,16 @@ for (const width of [320, 390, 768, 1440] as const) {
           name: locale === "de" ? route.deHeading : route.enHeading,
         })).toBeVisible();
         await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+        // Font metrics affect layout width. Without waiting for the real
+        // webfont, a slower runner can still be rendering a wider fallback
+        // face when geometry is measured, producing a transient overflow
+        // that has nothing to do with the actual, settled layout.
+        await page.evaluate(async () => {
+          await document.fonts.ready;
+          await new Promise<void>((resolve) =>
+            requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+          );
+        });
         await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
 
         const state = await page.evaluate(() => {
