@@ -200,11 +200,14 @@ const mockedSaveExerciseResult = vi.mocked(saveExerciseResultWithCheckpoint);
 const mockedSubscribe = vi.mocked(subscribe);
 let progressListener: ((snapshot: never) => void) | null = null;
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+
 function seedDurablyCompletedMissions(
   courseSlug: CourseProjectStudioProps["courseSlug"],
   missionIds: readonly string[],
 ): void {
   const profile = getLessonMissionProfile(courseSlug);
+  const seededAttemptAt = Date.now();
   const state = {
     ...createEmptyLessonMissionState(),
     predictionId: profile.predictionChoices[0].id,
@@ -219,8 +222,13 @@ function seedDurablyCompletedMissions(
     retrievalFirstChoiceId: profile.retrieval.correctId,
     retrievalAttemptCount: 1,
     retrievalSuccessLevel: 1 as const,
-    retrievalLastAttemptAt: "2026-08-13T12:00:00.000Z",
-    retrievalNextDueAt: "2026-08-14T12:00:00.000Z",
+    // Relative so the fixture never expires: the retrieval queue reads the
+    // real clock, so an absolute next-due date turns "0 reviews are due" red
+    // the day after it is written. The gap must stay exactly one interval
+    // (level 1 = 1 day) or hasExactRetrievalSchedule rejects the record and
+    // the whole state parses to null.
+    retrievalLastAttemptAt: new Date(seededAttemptAt).toISOString(),
+    retrievalNextDueAt: new Date(seededAttemptAt + DAY_MS).toISOString(),
     transferId: profile.transfer.correctId,
   };
   for (const mission of getCourseLessonMissions(courseSlug)) {
