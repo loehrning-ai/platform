@@ -667,8 +667,12 @@ export function WorkshopQuizPage({
   const correctOption = question?.answerOptions.find((o) => o.isCorrect);
   const isCorrectAnswer = selectedId === correctOption?.id;
 
+  // The wrapper below sets overflow-wrap: anywhere, which inherits to every
+  // descendant. It clips rather than scrolls, so a German answer explanation
+  // whose longest compound exceeds the column is cut off instead of wrapping —
+  // visible only at phone widths, where the course shell leaves the least room.
   return (
-    <div className="min-h-[100svh] overflow-x-clip bg-background">
+    <div className="min-h-[100svh] overflow-x-clip bg-background [overflow-wrap:anywhere]">
       <h1 className="sr-only">{copy.title}</h1>
       <div
         role="status"
