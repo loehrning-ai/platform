@@ -151,9 +151,12 @@ export function RetrievalQueue({
   return (
     <section
       aria-labelledby="course-retrieval-queue-title"
-      className="mb-8 min-w-0 border-2 border-foreground bg-card"
+      className="mb-8 min-w-0 border-2 border-foreground bg-card [overflow-wrap:anywhere]"
     >
-      <div className="grid min-w-0 lg:grid-cols-[minmax(0,1fr)_auto]">
+      {/* The second track is minmax(0,auto), not auto: a bare auto track is
+          sized to max-content and cannot shrink, so at high browser zoom the
+          side panel pushes the queue past the course shell, which clips it. */}
+      <div className="grid min-w-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,auto)]">
         <div className="min-w-0 p-5 sm:p-6">
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-brand-orange-dark">
             {copy.eyebrow}

@@ -853,7 +853,7 @@ export function LessonMissionControl({
     <button
       type="button"
       onClick={() => continueTo(nextStep)}
-      className="mt-5 inline-flex min-h-11 items-center justify-center border-2 border-foreground bg-brand-orange px-5 font-mono text-xs font-black uppercase tracking-[0.12em] text-white outline-none transition-transform hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border-2 border-foreground bg-brand-orange px-5 font-mono text-xs font-black uppercase tracking-[0.12em] text-white outline-none transition-transform hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       {copy.continue}{" "}
       <span aria-hidden="true" className="ml-2">
@@ -862,13 +862,18 @@ export function LessonMissionControl({
     </button>
   );
 
+  // overflow-wrap inherits, so declaring it once on the section lets every
+  // heading and label inside the mission break. German compounds such as
+  // "Promptvariante" and "Grounding-Komparator" are wider than a mission
+  // column at high browser zoom, and this section clips rather than scrolls,
+  // so without a break they are silently cut off.
   return (
     <section
       id="lesson-mission-control"
       data-lesson-mission={courseSlug}
       data-lesson-id={lessonId}
       aria-labelledby={headingId}
-      className="relative mb-10 min-w-0 scroll-mt-24 overflow-hidden border-2 border-foreground bg-background shadow-[7px_7px_0_0_var(--color-brand-orange)]"
+      className="relative mb-10 min-w-0 scroll-mt-24 overflow-hidden border-2 border-foreground bg-background shadow-[7px_7px_0_0_var(--color-brand-orange)] [overflow-wrap:anywhere]"
     >
       <header className="grid min-w-0 gap-0 border-b-2 border-foreground bg-foreground text-background lg:grid-cols-[minmax(0,1fr)_auto]">
         <div className="min-w-0 px-5 py-5 sm:px-7">
@@ -1104,7 +1109,7 @@ export function LessonMissionControl({
                       }
                       aria-controls={signalId}
                       onClick={revealPrediction}
-                      className="mt-5 inline-flex min-h-11 items-center justify-center border-2 border-foreground bg-brand-orange px-5 font-mono text-xs font-black uppercase tracking-[0.1em] text-white outline-none disabled:cursor-not-allowed disabled:border-border disabled:bg-card disabled:text-muted-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border-2 border-foreground bg-brand-orange px-5 font-mono text-xs font-black uppercase tracking-[0.1em] text-white outline-none disabled:cursor-not-allowed disabled:border-border disabled:bg-card disabled:text-muted-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                     >
                       {copy.reveal}
                     </button>
@@ -1146,7 +1151,7 @@ export function LessonMissionControl({
                     }}
                     aria-controls={workspaceId}
                     aria-expanded={workspaceActive}
-                    className="mt-5 inline-flex min-h-11 items-center justify-center border-2 border-foreground bg-foreground px-5 font-mono text-xs font-black uppercase tracking-[0.1em] text-background outline-none hover:border-brand-orange hover:text-[#ffc6aa] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border-2 border-foreground bg-foreground px-5 font-mono text-xs font-black uppercase tracking-[0.1em] text-background outline-none hover:border-brand-orange hover:text-[#ffc6aa] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     {workspaceActive ? copy.workspaceOpen : copy.openWorkspace}:{" "}
                     {profile.instrument[locale]}
@@ -1181,7 +1186,7 @@ export function LessonMissionControl({
                     onClick={onOpenWorkspace}
                     aria-controls={workspaceId}
                     aria-expanded={workspaceActive}
-                    className="mt-5 inline-flex min-h-11 items-center justify-center border-2 border-foreground bg-foreground px-5 font-mono text-xs font-black uppercase tracking-[0.1em] text-background outline-none hover:border-brand-orange hover:text-[#ffc6aa] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border-2 border-foreground bg-foreground px-5 font-mono text-xs font-black uppercase tracking-[0.1em] text-background outline-none hover:border-brand-orange hover:text-[#ffc6aa] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     {copy.runInstrument}: {profile.instrument[locale]}
                   </button>
@@ -1258,7 +1263,7 @@ export function LessonMissionControl({
                       <button
                         type="submit"
                         disabled={!controlsEnabled || !retrievalRecallReady}
-                        className="mt-5 inline-flex min-h-11 items-center justify-center border-2 border-foreground bg-brand-orange px-5 font-mono text-xs font-black uppercase tracking-[0.1em] text-white outline-none disabled:cursor-not-allowed disabled:border-border disabled:bg-card disabled:text-muted-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                        className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border-2 border-foreground bg-brand-orange px-5 font-mono text-xs font-black uppercase tracking-[0.1em] text-white outline-none disabled:cursor-not-allowed disabled:border-border disabled:bg-card disabled:text-muted-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                       >
                         {copy.retrievalRecallCommit}
                       </button>
@@ -1304,7 +1309,7 @@ export function LessonMissionControl({
                         <button
                           type="button"
                           onClick={beginRetrievalRepair}
-                          className="mt-5 inline-flex min-h-11 items-center justify-center border-2 border-foreground bg-foreground px-5 font-mono text-xs font-black uppercase tracking-[0.1em] text-background outline-none hover:border-brand-orange hover:text-[#ffc6aa] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                          className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border-2 border-foreground bg-foreground px-5 font-mono text-xs font-black uppercase tracking-[0.1em] text-background outline-none hover:border-brand-orange hover:text-[#ffc6aa] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                         >
                           {copy.repairRetrieval}
                         </button>

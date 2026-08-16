@@ -52,6 +52,30 @@ const STORAGE_ID = "frame-test";
 const STORAGE_KEY = `${COURSE_WORKSPACE_STORAGE_PREFIX}${STORAGE_ID}`;
 const DOCKED_LAYOUT_MEDIA_QUERY = "(min-width: 1024px)";
 const originalMatchMedia = window.matchMedia;
+const originalGetBoundingClientRect = Element.prototype.getBoundingClientRect;
+
+/**
+ * jsdom performs no layout, so every element measures 0 wide. The frame now
+ * treats an unmeasured container as too narrow to dock — stacking is the safe
+ * default until a real width proves otherwise — so a docked-layout test has to
+ * state the container width it is assuming, exactly as it already states the
+ * viewport via matchMedia.
+ */
+function setContainerWidth(width: number): void {
+  Element.prototype.getBoundingClientRect = function (): DOMRect {
+    return {
+      width,
+      height: 600,
+      top: 0,
+      left: 0,
+      right: width,
+      bottom: 600,
+      x: 0,
+      y: 0,
+      toJSON: () => ({}),
+    } as DOMRect;
+  };
+}
 
 function setDockedLayoutViewport(matches: boolean): void {
   window.matchMedia = vi.fn((query: string) => ({
@@ -110,6 +134,7 @@ beforeAll(() => {
 
 beforeEach(() => {
   setDockedLayoutViewport(true);
+  setContainerWidth(1200);
   window.localStorage.clear();
   document.body.style.overflow = "";
   document.documentElement.style.overflow = "";
@@ -117,6 +142,7 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup();
+  Element.prototype.getBoundingClientRect = originalGetBoundingClientRect;
   window.matchMedia = originalMatchMedia;
   document.body.style.overflow = "";
   document.documentElement.style.overflow = "";
@@ -170,8 +196,14 @@ describe("CourseWorkspaceFrame", () => {
     const frame = document.querySelector("#test-workspace-frame");
     const panes = screen.getByLabelText("Project workspace").parentElement;
     expect(panes).toHaveClass("lg:grid", "min-w-0");
-    expect(panes?.getAttribute("style")).toContain("minmax(16rem");
-    expect(panes?.getAttribute("style")).toContain("minmax(20rem");
+    // Both tracks floor at 0 so the docked grid can always shrink into its
+    // container. Fixed 16rem/20rem floors could not, which overflowed the
+    // pane whenever the measured width was stale - notably at browser zoom,
+    // where a rem is wider than the measurement implies. The real minimums
+    // are enforced in percentage terms by getSplitBounds instead.
+    expect(panes?.getAttribute("style")).toContain("minmax(0, 40fr)");
+    expect(panes?.getAttribute("style")).toContain("minmax(0, 60fr)");
+    expect(panes?.getAttribute("style")).not.toContain("16rem");
     expect(frame).toHaveClass("overflow-hidden");
     expect(
       screen.getByRole("separator", { name: "Resize project brief" }),

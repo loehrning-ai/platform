@@ -26,6 +26,16 @@ const MIN_BRIEF_WIDTH_PX = 16 * 16;
 const MIN_WORKSPACE_WIDTH_PX = 20 * 16;
 const SEPARATOR_WIDTH_PX = 12;
 const DOCKED_LAYOUT_MEDIA_QUERY = "(min-width: 1024px)";
+
+/**
+ * Cumulative CSS zoom applied to an element, or 1 where the browser does not
+ * report it. Used to convert a zoomed measurement back into CSS pixels.
+ */
+function cssZoomOf(element: Element): number {
+  const zoom = (element as Element & { currentCSSZoom?: number })
+    .currentCSSZoom;
+  return typeof zoom === "number" && zoom > 0 ? zoom : 1;
+}
 const FULLSCREEN_INERT_ATTRIBUTE = "data-course-workspace-inert";
 const EXTERNAL_INERT_OWNER_ATTRIBUTES = [
   LEARNING_OWNER_INERT_ATTRIBUTE,
@@ -70,8 +80,15 @@ let bodyStyleObserver: MutationObserver | null = null;
 
 function getSplitBounds(containerWidth: number | null): SplitBounds {
   if (containerWidth === null || containerWidth <= 0) {
+    // Unmeasured means unproven, so stay stacked. Reporting the split as
+    // feasible here docked a two-pane grid on the first paint of every
+    // workspace and only restacked once the resize observer reported a real
+    // width, which overflows for that frame whenever the container is
+    // narrower than the split needs - a phone, or a zoomed desktop. Stacking
+    // is correct at every width; docking is the enhancement that has to earn
+    // its place by measurement.
     return {
-      feasible: true,
+      feasible: false,
       minimum: MIN_BRIEF_PERCENT,
       maximum: MAX_BRIEF_PERCENT,
     };
@@ -464,7 +481,13 @@ export function CourseWorkspaceFrame({
     const panes = panesRef.current;
     if (!panes) return;
     const measure = () => {
-      const width = panes.getBoundingClientRect().width;
+      // getBoundingClientRect reports zoomed pixels, while the split minimums
+      // below are CSS pixels. Under browser zoom the two disagree by exactly
+      // the zoom factor, so an unconverted width makes getSplitBounds believe
+      // a narrow container is wide enough and dock a 36rem two-pane grid into
+      // a container that cannot hold it. Divide by the cumulative CSS zoom so
+      // both sides of that comparison are CSS pixels.
+      const width = panes.getBoundingClientRect().width / cssZoomOf(panes);
       if (width > 0) setPanesWidth(width);
     };
     measure();
@@ -544,11 +567,23 @@ export function CourseWorkspaceFrame({
     }
   }
 
+  // The frame below sets overflow-wrap: anywhere, which inherits to every
+  // label inside the workspace. The frame clips rather than scrolls, and a
+  // pane's automatic minimum size is its longest unbreakable word, so without
+  // a break a German compound holds the pane wider than its track and the text
+  // is silently cut off instead of wrapping.
   const splitFeasible = dockedLayoutViewport && splitBounds.feasible;
   const splitActive = docked && !briefCollapsed && splitFeasible;
   const paneGridStyle = splitActive
     ? {
-        gridTemplateColumns: `minmax(16rem, ${effectiveBriefPercent}fr) 0.75rem minmax(20rem, ${100 - effectiveBriefPercent}fr)`,
+        // Track minimums are 0, not 16rem/20rem. Those floors are already
+        // enforced in percentage terms by getSplitBounds, which refuses the
+        // split entirely below 36rem, so repeating them here as fixed lengths
+        // adds nothing but a failure mode: a grid whose tracks sum to 36rem
+        // cannot shrink into a narrower container, so any moment the measured
+        // width is stale — a browser zoom change, the tick before the resize
+        // observer re-renders — overflows the pane instead of squeezing it.
+        gridTemplateColumns: `minmax(0, ${effectiveBriefPercent}fr) 0.75rem minmax(0, ${100 - effectiveBriefPercent}fr)`,
       }
     : undefined;
 
@@ -568,8 +603,8 @@ export function CourseWorkspaceFrame({
       data-layout={splitActive ? "docked" : "stacked"}
       className={
         fullscreen
-          ? "fixed inset-0 z-[100] m-0 flex h-dvh min-w-0 flex-col overflow-hidden border-2 border-foreground bg-background pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] pt-[env(safe-area-inset-top)] shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-inset"
-          : "relative my-10 min-w-0 overflow-hidden border-2 border-foreground bg-background shadow-[7px_7px_0_0_var(--color-foreground)]"
+          ? "fixed inset-0 z-[100] m-0 flex h-dvh min-w-0 flex-col overflow-hidden border-2 border-foreground bg-background pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] pt-[env(safe-area-inset-top)] shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-inset [overflow-wrap:anywhere]"
+          : "relative my-10 min-w-0 overflow-hidden border-2 border-foreground bg-background shadow-[7px_7px_0_0_var(--color-foreground)] [overflow-wrap:anywhere]"
       }
     >
       {header}
