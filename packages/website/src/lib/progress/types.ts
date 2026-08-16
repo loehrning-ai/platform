@@ -107,13 +107,18 @@ export interface UnifiedStreak {
 export interface UnifiedCourseSlice {
   readonly lessons: Record<string, UnifiedLessonProgress>;
   readonly workshopQuiz: UnifiedWorkshopQuiz;
-  /** AI-Native capstone submission flag (false for the free courses). */
+  /**
+   * Historical AI-Native capstone self-review. This remains a certificate
+   * compatibility signal for that course only; applied-project completion is
+   * derived from the exact course-project exercise result.
+   */
   readonly capstoneSubmitted: boolean;
   readonly startedAt: string;
   readonly lastActivity: string;
   /**
-   * Server-issued reset epoch. A slice without the same epoch is older than
-   * the reset and must not be merged back in by another tab or offline device.
+   * Reset epoch propagated through local storage and server sync. A slice
+   * without the same epoch is older than the reset and must not be merged back
+   * in by another tab or offline device.
    */
   readonly resetAt?: string;
 }

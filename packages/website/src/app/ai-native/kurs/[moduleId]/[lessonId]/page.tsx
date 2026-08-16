@@ -8,8 +8,15 @@ import {
   TierChip,
 } from "@/components/ai-native/primitives";
 import { AiNativeLessonReader } from "@/components/ai-native/kurs/lesson-reader";
+import { AiNativeLessonPageShell } from "@/components/ai-native/kurs/lesson-page-shell";
+import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
 import { LessonProgressRing } from "@/components/ai-native/kurs/lesson-progress-ring";
-import { getModule, getModuleLessons, getLesson } from "@/lib/ai-native/data";
+import {
+  getModule,
+  getModuleLessons,
+  getLesson,
+  getModules,
+} from "@/lib/ai-native/data";
 import { MODULE_IDS, type ModuleId } from "@/lib/ai-native/types";
 import { SITE_URL } from "@/lib/seo/json-ld";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
@@ -77,95 +84,136 @@ export default async function AiNativeLessonPage({ params }: PageProps) {
   const nextLesson =
     currentIdx < lessons.length - 1 ? lessons[currentIdx + 1] : null;
   const isEnglish = locale === "en";
+  const navigationItems = (
+    await Promise.all(
+      getModules(locale).map(async (navigationModule) => {
+        const moduleLessons =
+          navigationModule.id === mod.id
+            ? lessons
+            : await getModuleLessons(navigationModule.id, locale);
+        return moduleLessons.map((navigationLesson) => ({
+          moduleId: navigationModule.id,
+          moduleNumber: navigationModule.number,
+          moduleTitle: navigationModule.title,
+          lessonId: navigationLesson.id,
+          lessonNumber: navigationLesson.number,
+          title: navigationLesson.title,
+        }));
+      }),
+    )
+  ).flat();
 
   return (
-    <div className="mx-auto max-w-[720px] px-6 py-12 md:py-16">
-      {/* Breadcrumb */}
-      <nav
-        aria-label="Breadcrumb"
-        className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
-      >
-        <Link
-          href={localizeHref("/ai-native", locale)}
-          className="hover:text-brand-orange"
-        >
-          {isEnglish ? "Course" : "Kurs"}
-        </Link>
-        <span className="mx-2 opacity-40">/</span>
-        <Link
-          href={localizeHref(`/ai-native/kurs/${mod.id}`, locale)}
-          className="hover:text-brand-orange"
-        >
-          {isEnglish ? "Module" : "Modul"} {mod.number}
-        </Link>
-        <span className="mx-2 opacity-40">/</span>
-        <span className="text-brand-orange">
-          {isEnglish ? "Lesson" : "Lektion"} {lesson.number}
-        </span>
-      </nav>
-
-      {/* Header */}
-      <header className="mt-10 border-b border-border pb-8">
-        <div className="flex flex-wrap items-start justify-between gap-5">
-          <div className="flex flex-wrap items-baseline gap-5">
-            <span
-              className="font-mono font-bold leading-none tracking-[-0.02em] text-brand-orange"
-              style={{ fontSize: "clamp(2.25rem, 4vw, 2.75rem)" }}
+    <AiNativeLessonPageShell lessons={navigationItems} locale={locale}>
+      <div className="min-w-0 py-10 md:py-14">
+        <div className="mx-auto max-w-[880px]">
+          {/* Breadcrumb */}
+          <nav
+            aria-label="Breadcrumb"
+            className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
+          >
+            <Link
+              href={localizeHref("/ai-native", locale)}
+              className="hover:text-brand-orange"
             >
-              § {lesson.number}
+              {isEnglish ? "Course" : "Kurs"}
+            </Link>
+            <span className="mx-2 opacity-40">/</span>
+            <Link
+              href={localizeHref(`/ai-native/kurs/${mod.id}`, locale)}
+              className="hover:text-brand-orange"
+            >
+              {isEnglish ? "Module" : "Modul"} {mod.number}
+            </Link>
+            <span className="mx-2 opacity-40">/</span>
+            <span className="text-brand-orange">
+              {isEnglish ? "Lesson" : "Lektion"} {lesson.number}
             </span>
-            <div className="flex flex-wrap items-center gap-3">
-              <TierChip tier="FREE" locale={locale} />
-              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                <Clock size={11} className="mr-1 inline" />
-                {lesson.durationMinutes} {isEnglish ? "min" : "Min."}
-              </span>
+          </nav>
+
+          {/* Header */}
+          <header className="mt-10 border-b border-border pb-8">
+            <div className="flex flex-wrap items-start justify-between gap-5">
+              <div className="flex flex-wrap items-baseline gap-5">
+                <span
+                  className="font-mono font-bold leading-none tracking-[-0.02em] text-brand-orange"
+                  style={{ fontSize: "clamp(2.25rem, 4vw, 2.75rem)" }}
+                >
+                  § {lesson.number}
+                </span>
+                <div className="flex flex-wrap items-center gap-3">
+                  <TierChip tier="FREE" locale={locale} />
+                  <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                    <Clock size={11} className="mr-1 inline" />
+                    {lesson.durationMinutes} {isEnglish ? "min" : "Min."}
+                  </span>
+                </div>
+              </div>
+              <LessonProgressRing
+                lessonId={lesson.id}
+                totalSections={lesson.sections.length}
+              />
             </div>
-          </div>
-          <LessonProgressRing
+            <ClipHeading
+              as="h1"
+              className="mt-5 break-words font-bold leading-[0.95] tracking-[-0.035em] text-foreground"
+              style={{ fontSize: "clamp(2rem, 4.5vw, 3rem)" }}
+            >
+              {lesson.title}
+            </ClipHeading>
+            <p className="mt-4 max-w-[640px] text-[18px] leading-[1.55] text-muted-foreground">
+              {lesson.subtitle}
+            </p>
+          </header>
+
+          {/* Voice anchor (module-level, printed on the lesson) */}
+          {mod.voiceAnchor && (
+            <div className="mt-12">
+              <VoiceAnchor
+                author={`${isEnglish ? "Module" : "Modul"} ${mod.number} · ${isEnglish ? "course note" : "Kursnotiz"}`}
+              >
+                {mod.voiceAnchor}
+              </VoiceAnchor>
+            </div>
+          )}
+
+          {/* Lesson-level voice anchor (if different from module's) */}
+          {lesson.voiceAnchor && lesson.voiceAnchor !== mod.voiceAnchor && (
+            <div className="mt-8">
+              <VoiceAnchor
+                author={`${isEnglish ? "Lesson" : "Lektion"} ${lesson.number}`}
+              >
+                {lesson.voiceAnchor}
+              </VoiceAnchor>
+            </div>
+          )}
+        </div>
+
+        <div className="my-10">
+          <CourseProjectStudio
+            courseSlug="ai-native"
             lessonId={lesson.id}
-            totalSections={lesson.sections.length}
+            locale={locale}
+            lessonContext={{
+              title: lesson.title,
+              objective: lesson.subtitle,
+              keyConcepts: lesson.keyConcepts,
+            }}
           />
         </div>
-        <ClipHeading
-          as="h1"
-          className="mt-5 break-words font-bold leading-[0.95] tracking-[-0.035em] text-foreground"
-          style={{ fontSize: "clamp(2rem, 4.5vw, 3rem)" }}
-        >
-          {lesson.title}
-        </ClipHeading>
-        <p className="mt-4 max-w-[640px] text-[18px] leading-[1.55] text-muted-foreground">
-          {lesson.subtitle}
-        </p>
-      </header>
 
-      {/* Voice anchor (module-level, printed on the lesson) */}
-      {mod.voiceAnchor && (
-        <div className="mt-12">
-          <VoiceAnchor author={`${isEnglish ? "Module" : "Modul"} ${mod.number} · ${isEnglish ? "course note" : "Kursnotiz"}`}>
-            {mod.voiceAnchor}
-          </VoiceAnchor>
+        {/* Progressive-disclosure reader (client — sections + quiz + prev/next inside) */}
+        <div className="mx-auto max-w-[1100px]">
+          <AiNativeLessonReader
+            module={mod}
+            lesson={lesson}
+            prevLesson={prevLesson ?? null}
+            nextLesson={nextLesson ?? null}
+            allModuleLessonIds={lessons.map((l) => l.id)}
+            locale={locale}
+          />
         </div>
-      )}
-
-      {/* Lesson-level voice anchor (if different from module's) */}
-      {lesson.voiceAnchor && lesson.voiceAnchor !== mod.voiceAnchor && (
-        <div className="mt-8">
-          <VoiceAnchor author={`${isEnglish ? "Lesson" : "Lektion"} ${lesson.number}`}>
-            {lesson.voiceAnchor}
-          </VoiceAnchor>
-        </div>
-      )}
-
-      {/* Progressive-disclosure reader (client — sections + quiz + prev/next inside) */}
-      <AiNativeLessonReader
-        module={mod}
-        lesson={lesson}
-        prevLesson={prevLesson ?? null}
-        nextLesson={nextLesson ?? null}
-        allModuleLessonIds={lessons.map((l) => l.id)}
-        locale={locale}
-      />
-    </div>
+      </div>
+    </AiNativeLessonPageShell>
   );
 }

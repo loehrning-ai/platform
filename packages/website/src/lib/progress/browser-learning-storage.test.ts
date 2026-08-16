@@ -6,6 +6,7 @@ import {
   activateAnonymousLearningOwner,
   beginAccountLearningCutoverRecovery,
   clearAccountLearningStorage,
+  getLearningOwnerContext,
   getOwnedLocalLearningItem,
   getOwnedSessionLearningItem,
   getActiveAccountLearningCutoverEpoch,
@@ -354,11 +355,15 @@ describe("browser learning storage ownership", () => {
         accountA.generation,
       ),
     ).toBe(false);
-    removeOwnedLocalLearningItem("reflect::lesson", accountA.generation);
-    removeOwnedSessionLearningItem(
-      "ai-native-exercise-draft-lesson",
-      accountA.generation,
-    );
+    expect(
+      removeOwnedLocalLearningItem("reflect::lesson", accountA.generation),
+    ).toBe(false);
+    expect(
+      removeOwnedSessionLearningItem(
+        "ai-native-exercise-draft-lesson",
+        accountA.generation,
+      ),
+    ).toBe(false);
 
     expect(getOwnedLocalLearningItem("reflect::lesson")).toBe("b-local");
     expect(getOwnedSessionLearningItem("ai-native-exercise-draft-lesson")).toBe(
@@ -474,7 +479,7 @@ describe("browser learning storage ownership", () => {
           );
         };
 
-        removeOwnedLocalLearningItem("progress");
+        expect(removeOwnedLocalLearningItem("progress")).toBe(false);
         local.beforeGetItem = undefined;
 
         expect(local.rawGetItem(target)).toBe(
@@ -751,5 +756,31 @@ describe("browser learning storage ownership", () => {
     expect(
       window.localStorage.getItem(accountKey(ACCOUNT_A, "progress")),
     ).toBeNull();
+  });
+
+  it("returns false and preserves the value when durable removal is denied", () => {
+    activateAnonymousLearningOwner();
+    expect(setOwnedLocalLearningItem("mission", "complete")).toBe(true);
+    vi.spyOn(window.localStorage, "removeItem").mockImplementation(() => {
+      throw new Error("storage denied");
+    });
+
+    expect(
+      removeOwnedLocalLearningItem(
+        "mission",
+        getLearningOwnerContext().generation,
+      ),
+    ).toBe(false);
+    expect(getOwnedLocalLearningItem("mission")).toBe("complete");
+  });
+
+  it("returns true when an owner-scoped value is already absent", () => {
+    activateAnonymousLearningOwner();
+    expect(
+      removeOwnedLocalLearningItem(
+        "missing",
+        getLearningOwnerContext().generation,
+      ),
+    ).toBe(true);
   });
 });

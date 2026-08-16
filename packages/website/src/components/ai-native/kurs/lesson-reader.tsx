@@ -18,7 +18,7 @@ import { LessonQuiz } from "@/components/course/kurs/lesson-quiz";
 import {
   saveLessonQuizScore,
   getLessonQuizScore,
-  markCapstoneSubmitted,
+  isAppliedProjectCompleted,
   isCapstoneSubmitted,
 } from "@/lib/progress";
 import {
@@ -42,6 +42,36 @@ import type {
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 import { isInteractiveShortcutTarget } from "@/lib/a11y/keyboard-shortcuts";
+
+export function canAdvanceLessonSection(
+  readSectionIds: ReadonlySet<string>,
+  currentSectionId: string | undefined,
+): boolean {
+  return currentSectionId !== undefined && readSectionIds.has(currentSectionId);
+}
+
+export function areLessonSectionsReady(
+  sectionIds: readonly string[],
+  persistedReadSectionIds: ReadonlySet<string>,
+): boolean {
+  return sectionIds.every((sectionId) =>
+    persistedReadSectionIds.has(sectionId),
+  );
+}
+
+export type AiNativeProjectStatus =
+  | "verified-project"
+  | "legacy-capstone"
+  | "pending";
+
+export function resolveAiNativeProjectStatus(
+  appliedProjectCompleted: boolean,
+  legacyCapstoneSubmitted: boolean,
+): AiNativeProjectStatus {
+  if (appliedProjectCompleted) return "verified-project";
+  if (legacyCapstoneSubmitted) return "legacy-capstone";
+  return "pending";
+}
 import { subscribe } from "@/lib/progress/store";
 import type { Locale } from "@/lib/i18n/locale";
 import { localizeHref } from "@/lib/i18n/locale";
@@ -102,15 +132,19 @@ function AiNativeLessonReaderContent({
           lessonComplete: "Lesson complete",
           progressSaved:
             "Progress is stored for your learning account. You can return later.",
-          capstoneQuestion: "Completed the capstone self-review?",
+          capstoneQuestion: "Applied project recorded?",
           capstoneComplete:
-            "Your capstone rubric is marked complete in local progress. The course completion record is now available without the workshop quiz.",
+            "Your applied project evidence is stored in learning progress. It is not a server-attested completion record and does not replace the workshop quiz.",
+          legacyCapstoneQuestion: "Historical capstone self-review recorded",
+          legacyCapstoneComplete:
+            "Your earlier capstone self-review remains an accepted certificate signal after every lesson is complete. It does not verify the new applied project artifact.",
           downloadRecord: "Download completion record",
+          takeQuiz: "Complete workshop quiz",
           capstonePrompt:
-            "If you documented and reviewed a workflow against the capstone rubric, mark the self-review complete. Passing the workshop quiz is the alternative route.",
-          markRubric: "Mark self-review complete",
+            "Complete the course workspace and its verification gate. This status updates only after the project produces a checked artifact.",
+          markRubric: "Open applied project",
           selfReport:
-            "This is a self-report that you worked through the task. No external assessment takes place.",
+            "Reading completion or self-reporting does not satisfy the applied-project requirement.",
           knowledgeCheck: "Knowledge check",
           lessonQuiz: "Short lesson quiz",
           quizIntro: (count: number) =>
@@ -142,15 +176,19 @@ function AiNativeLessonReaderContent({
           lessonComplete: "Lektion abgeschlossen",
           progressSaved:
             "Der Fortschritt ist deinem Lernkonto zugeordnet. Du kannst später zurückkehren.",
-          capstoneQuestion: "Capstone-Selbstprüfung abgeschlossen?",
+          capstoneQuestion: "Angewandtes Projekt gespeichert?",
           capstoneComplete:
-            "Deine Capstone-Rubrik ist im lokalen Fortschritt als vollständig markiert. Die Teilnahmebestätigung ist damit auch ohne Workshop-Quiz verfügbar.",
+            "Deine Projektnachweise sind im Lernfortschritt gespeichert. Sie sind kein serverbestätigter Abschlussnachweis und ersetzen das Workshop-Quiz nicht.",
+          legacyCapstoneQuestion: "Frühere Capstone-Selbstprüfung gespeichert",
+          legacyCapstoneComplete:
+            "Deine frühere Capstone-Selbstprüfung bleibt nach Abschluss aller Lektionen als Abschlussweg gültig. Sie bestätigt nicht das neue angewandte Projektartefakt.",
           downloadRecord: "Teilnahmebestätigung herunterladen",
+          takeQuiz: "Workshop-Quiz abschließen",
           capstonePrompt:
-            "Wenn du einen Workflow anhand der Capstone-Rubrik dokumentiert und geprüft hast, markiere die Selbstprüfung als vollständig. Alternativ genügt das bestandene Workshop-Quiz.",
-          markRubric: "Selbstprüfung als vollständig markieren",
+            "Schließe den Kurs-Workspace und seine Prüfschranke ab. Der Status ändert sich erst, wenn das Projekt ein geprüftes Artefakt erzeugt.",
+          markRubric: "Angewandtes Projekt öffnen",
           selfReport:
-            "Damit bestätigst du selbst, die Aufgabe bearbeitet zu haben. Eine externe Prüfung findet nicht statt.",
+            "Lesefortschritt oder Selbstbestätigung erfüllen die Projektanforderung nicht.",
           knowledgeCheck: "Verständnis-Check",
           lessonQuiz: "Kurzes Quiz zu dieser Lektion",
           quizIntro: (count: number) =>
@@ -174,14 +212,19 @@ function AiNativeLessonReaderContent({
     score: number;
     total: number;
   } | null>(null);
-  const [capstoneSubmitted, setCapstoneSubmitted] = useState(false);
+  const [legacyCapstoneSubmitted, setLegacyCapstoneSubmitted] = useState(false);
+  const [appliedProjectCompleted, setAppliedProjectCompleted] = useState(false);
   const sectionRefs = useRef<Array<HTMLElement | null>>([]);
 
-  // The capstone brief is the lesson that unlocks the certificate via the
-  // capstone path (shared course architecture). Submitting it sets the unified
-  // store's capstone flag, which makes `isCertificateEligible("ai-native")`
-  // true even without passing the workshop quiz.
+  // The historical capstone lesson explains the alternative certificate path.
+  // Its former self-report control is gone. Historical self-reviews remain a
+  // certificate compatibility signal, while the shared studio persists the
+  // new verified project as an exact exercise result.
   const isCapstoneLesson = lesson.id === "modul_4_lesson_7";
+  const projectStatus = resolveAiNativeProjectStatus(
+    appliedProjectCompleted,
+    legacyCapstoneSubmitted,
+  );
 
   const sections = lesson.sections;
   const quiz = lesson.quiz ?? [];
@@ -209,7 +252,8 @@ function AiNativeLessonReaderContent({
       setCurrentIndex(firstUnread === -1 ? sections.length - 1 : firstUnread);
       setCompleted(isLessonCompleted(lesson.id));
       setQuizBestScore(getLessonQuizScore("ai-native", lesson.id));
-      setCapstoneSubmitted(isCapstoneSubmitted("ai-native"));
+      setLegacyCapstoneSubmitted(isCapstoneSubmitted("ai-native"));
+      setAppliedProjectCompleted(isAppliedProjectCompleted("ai-native"));
       setShowModuleBanner(false);
     };
     loadOwnedProgress();
@@ -260,6 +304,11 @@ function AiNativeLessonReaderContent({
       case "J":
       case "ArrowDown": {
         e.preventDefault();
+        const currentSection = sections[currentIndex];
+        if (!canAdvanceLessonSection(readSet, currentSection?.id)) {
+          focusSection(currentIndex);
+          break;
+        }
         const next = Math.min(currentIndex + 1, sections.length - 1);
         if (next !== currentIndex) {
           setCurrentIndex(next);
@@ -290,6 +339,15 @@ function AiNativeLessonReaderContent({
   }
 
   function finalizeLesson() {
+    const persistedReadIds = getReadSectionIds(lesson.id);
+    if (
+      !areLessonSectionsReady(
+        sections.map((section) => section.id),
+        persistedReadIds,
+      )
+    ) {
+      return;
+    }
     if (isLessonCompleted(lesson.id)) {
       setCompleted(true);
       return;
@@ -315,11 +373,6 @@ function AiNativeLessonReaderContent({
         ? prev
         : { score, total },
     );
-  }
-
-  function handleCapstoneSubmit() {
-    markCapstoneSubmitted("ai-native");
-    setCapstoneSubmitted(true);
   }
 
   // For server render: always show index 0. Client hydration updates.
@@ -540,12 +593,30 @@ function AiNativeLessonReaderContent({
             ◆ Capstone
           </p>
           <h3 className="mt-2 text-[22px] font-bold tracking-[-0.02em] text-foreground">
-            {copy.capstoneQuestion}
+            {projectStatus === "verified-project"
+              ? copy.capstoneQuestion
+              : projectStatus === "legacy-capstone"
+                ? copy.legacyCapstoneQuestion
+                : copy.capstoneQuestion}
           </h3>
-          {capstoneSubmitted ? (
+          {projectStatus === "verified-project" ? (
             <>
               <p className="mt-2 max-w-[640px] text-[14.5px] leading-[1.55] text-muted-foreground">
                 {copy.capstoneComplete}
+              </p>
+              <div className="mt-5 flex flex-wrap gap-3">
+                <Link
+                  href={localizeHref("/ai-native/kurs/quiz", locale)}
+                  className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
+                >
+                  {copy.takeQuiz} <ArrowRight size={12} />
+                </Link>
+              </div>
+            </>
+          ) : projectStatus === "legacy-capstone" ? (
+            <>
+              <p className="mt-2 max-w-[640px] text-[14.5px] leading-[1.55] text-muted-foreground">
+                {copy.legacyCapstoneComplete}
               </p>
               <div className="mt-5 flex flex-wrap gap-3">
                 <Link
@@ -554,6 +625,12 @@ function AiNativeLessonReaderContent({
                 >
                   {copy.downloadRecord} <ArrowRight size={12} />
                 </Link>
+                <a
+                  href="#course-project-studio"
+                  className="inline-flex items-center gap-2 border-2 border-foreground bg-card px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-foreground shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
+                >
+                  {copy.markRubric} <CheckCircle2 size={12} />
+                </a>
               </div>
             </>
           ) : (
@@ -562,13 +639,12 @@ function AiNativeLessonReaderContent({
                 {copy.capstonePrompt}
               </p>
               <div className="mt-5">
-                <button
-                  type="button"
-                  onClick={handleCapstoneSubmit}
+                <a
+                  href="#course-project-studio"
                   className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
                 >
                   {copy.markRubric} <CheckCircle2 size={12} />
-                </button>
+                </a>
               </div>
               <p className="mt-3 text-[13px] text-muted-foreground">
                 {copy.selfReport}

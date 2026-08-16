@@ -20,15 +20,29 @@ const KEYS = [
   "FEEDBACK_ENABLED",
   "FEEDBACK_RETENTION_CRON_CONFIRMED_AT",
   "AI_NATIVE_PRACTICE_ENABLED",
+  "AI_NATIVE_PRACTICE_ALLOWED_MODELS",
+  "AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET",
+  "AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET",
   "ANTHROPIC_API_KEY",
   "ANTHROPIC_RETENTION_DAYS",
+  "GEMINI_API_KEY",
+  "GEMINI_DPA_CONFIRMED_AT",
+  "GEMINI_PAID_TIER_CONFIRMED_AT",
+  "GEMINI_RETENTION_DAYS",
+  "COURSE_TERMINAL_ENABLED",
+  "COURSE_TERMINAL_DAILY_RUN_BUDGET",
+  "COURSE_TERMINAL_POLICY_CONFIRMED_AT",
+  "COURSE_TERMINAL_SANDBOX_IMAGE",
   "VERCEL",
+  "VERCEL_DPA_CONFIRMED_AT",
+  "VERCEL_OIDC_TOKEN",
   "VERCEL_TELEMETRY_ENABLED",
   "ANTHROPIC_DPA_CONFIRMED_AT",
 ] as const;
 
 const SERVICE_CREDENTIAL_ENV_KEY = "SUPABASE_SERVICE_ROLE_KEY";
 const AI_PROVIDER_CREDENTIAL_ENV_KEY = "ANTHROPIC_API_KEY";
+const GEMINI_PROVIDER_CREDENTIAL_ENV_KEY = "GEMINI_API_KEY";
 const VALID_LIMITER_SECRET = `rlh1_${"a".repeat(64)}`;
 const original = new Map<string, string | undefined>();
 
@@ -63,6 +77,10 @@ describe("getRuntimeFeatures", () => {
       sentryRetentionDays: null,
       anthropic: false,
       anthropicRetentionDays: null,
+      gemini: false,
+      geminiRetentionDays: null,
+      practiceModels: [],
+      courseTerminal: false,
       vercelHosting: false,
       vercelTelemetry: false,
     });
@@ -145,6 +163,10 @@ describe("getRuntimeFeatures", () => {
 
   it("reports Anthropic active only with the complete quota backend", () => {
     process.env.AI_NATIVE_PRACTICE_ENABLED = "true";
+    process.env.AI_NATIVE_PRACTICE_ALLOWED_MODELS =
+      "anthropic/claude-haiku-4.5";
+    process.env.AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET = "10000";
+    process.env.AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET = "100000";
     process.env[AI_PROVIDER_CREDENTIAL_ENV_KEY] = "fake-anthropic-key";
     process.env.ANTHROPIC_RETENTION_DAYS = "30";
     process.env.ANTHROPIC_DPA_CONFIRMED_AT = "2026-07-01";
@@ -158,5 +180,74 @@ describe("getRuntimeFeatures", () => {
     const features = getRuntimeFeatures();
     expect(features.anthropic).toBe(true);
     expect(features.anthropicRetentionDays).toBe(30);
+    expect(features.practiceModels).toEqual([
+      "anthropic/claude-haiku-4.5",
+    ]);
+
+    process.env.AI_NATIVE_PRACTICE_ENABLED = "false";
+    expect(getRuntimeFeatures().anthropic).toBe(false);
+    process.env.AI_NATIVE_PRACTICE_ENABLED = "true";
+    process.env.AI_NATIVE_PRACTICE_ALLOWED_MODELS =
+      "google/gemini-2.5-flash-lite";
+    expect(getRuntimeFeatures().anthropic).toBe(false);
+  });
+
+  it("reports only the exact provider models that pass the complete practice gate", () => {
+    process.env.AI_NATIVE_PRACTICE_ENABLED = "true";
+    process.env.AI_NATIVE_PRACTICE_ALLOWED_MODELS =
+      "anthropic/claude-haiku-4.5,google/gemini-2.5-flash-lite";
+    process.env.AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET = "10000";
+    process.env.AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET = "100000";
+    process.env[AI_PROVIDER_CREDENTIAL_ENV_KEY] = "fake-anthropic-key";
+    process.env.ANTHROPIC_DPA_CONFIRMED_AT = "2026-07-01";
+    process.env.ANTHROPIC_RETENTION_DAYS = "30";
+    process.env[GEMINI_PROVIDER_CREDENTIAL_ENV_KEY] = "fake-gemini-key";
+    process.env.GEMINI_DPA_CONFIRMED_AT = "2026-07-01";
+    process.env.GEMINI_PAID_TIER_CONFIRMED_AT = "2026-07-01";
+    process.env.GEMINI_RETENTION_DAYS = "0";
+    process.env.NEXT_PUBLIC_SUPABASE_URL = "https://fake-project.supabase.co";
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = "fake-public-key";
+    process.env.SUPABASE_URL = "https://fake-project.supabase.co";
+    process.env[SERVICE_CREDENTIAL_ENV_KEY] = "fake-service-key";
+    vi.stubEnv("RATE_LIMIT_HMAC_SECRET", VALID_LIMITER_SECRET);
+
+    expect(getRuntimeFeatures()).toMatchObject({
+      anthropic: true,
+      gemini: true,
+      anthropicRetentionDays: 30,
+      geminiRetentionDays: 0,
+      practiceModels: [
+        "anthropic/claude-haiku-4.5",
+        "google/gemini-2.5-flash-lite",
+      ],
+    });
+
+    process.env.AI_NATIVE_PRACTICE_ALLOWED_MODELS =
+      "google/gemini-2.5-flash-lite";
+    expect(getRuntimeFeatures().practiceModels).toEqual([
+      "google/gemini-2.5-flash-lite",
+    ]);
+  });
+
+  it("reports the isolated terminal only when every runtime gate is ready", () => {
+    process.env.COURSE_TERMINAL_ENABLED = "true";
+    process.env.COURSE_TERMINAL_DAILY_RUN_BUDGET = "100";
+    process.env.COURSE_TERMINAL_POLICY_CONFIRMED_AT = "2026-08-13";
+    process.env.COURSE_TERMINAL_SANDBOX_IMAGE =
+      `vercel/sandbox/node@sha256:${"a".repeat(64)}`;
+    process.env.VERCEL = "1";
+    process.env.VERCEL_DPA_CONFIRMED_AT = "2026-07-01";
+    process.env.VERCEL_OIDC_TOKEN = "fake-runtime-oidc";
+    expect(getRuntimeFeatures().courseTerminal).toBe(false);
+
+    process.env.NEXT_PUBLIC_SUPABASE_URL = "https://fake-project.supabase.co";
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = "fake-public-key";
+    process.env.SUPABASE_URL = "https://fake-project.supabase.co";
+    process.env[SERVICE_CREDENTIAL_ENV_KEY] = "fake-service-key";
+    vi.stubEnv("RATE_LIMIT_HMAC_SECRET", VALID_LIMITER_SECRET);
+    expect(getRuntimeFeatures().courseTerminal).toBe(true);
+
+    process.env.VERCEL_OIDC_TOKEN = "";
+    expect(getRuntimeFeatures().courseTerminal).toBe(false);
   });
 });

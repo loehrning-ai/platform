@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { GeistMono } from "geist/font/mono";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ScrollToTop } from "@/components/scroll-to-top";
@@ -46,7 +45,8 @@ const loehrningSans = localFont({
   variable: "--font-loehrning-sans",
   // Four weight-specific files must not compete with content on every route.
   // They load on demand; `optional` prevents a late swap from resetting text
-  // LCP after content is ready. Geist Mono remains the single global preload.
+  // LCP after content is ready. Monospace UI uses the deterministic system
+  // stack declared in globals.css, so no display font is globally preloaded.
   display: "optional",
   preload: false,
 });
@@ -110,7 +110,7 @@ export default async function RootLayout({
     <html
       lang={locale}
       data-scroll-behavior="smooth"
-      className={`${loehrningSans.variable} ${GeistMono.variable}`}
+      className={loehrningSans.variable}
     >
       <body className="min-h-[100svh] bg-background text-foreground antialiased font-sans">
         <JsonLd data={SITE_GRAPH} id="site-jsonld" />

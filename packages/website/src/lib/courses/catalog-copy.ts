@@ -87,10 +87,10 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
       "4 tracks",
       "12 lessons",
       "Interactive exercises",
-      "Hosted on loehrning.ai",
+      "Native route in this source tree",
     ],
     integrationNote:
-      "Hosted on loehrning.ai with progress and completion tracking; originally imported from an open-source course.",
+      "The native route plus progress and completion logic are integrated in this source tree; deployment requires separate live verification. Originally imported from an open-source course.",
   },
   codex: {
     title: "Codex Course",
@@ -110,10 +110,10 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
       "12 lessons",
       "Capstone",
       "Parallel workflows",
-      "Hosted on loehrning.ai",
+      "Native route in this source tree",
     ],
     integrationNote:
-      "Hosted on loehrning.ai with progress and completion tracking; originally imported from an open-source course.",
+      "The native route plus progress and completion logic are integrated in this source tree; deployment requires separate live verification. Originally imported from an open-source course.",
   },
   "data-infrastructure": {
     title: "Data Infrastructure",
@@ -135,10 +135,10 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
       "4 tracks",
       "12 lessons",
       "Interactive simulations",
-      "Hosted on loehrning.ai",
+      "Native route in this source tree",
     ],
     integrationNote:
-      "Hosted on loehrning.ai with progress and completion tracking; originally imported from an open-source course.",
+      "The native route plus progress and completion logic are integrated in this source tree; deployment requires separate live verification. Originally imported from an open-source course.",
   },
   "data-engineering-fundamentals": {
     title: "Data Engineering Fundamentals",
@@ -156,10 +156,10 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
     sourceFacts: [
       "12 chapters",
       "17 interactive simulations",
-      "Hosted on loehrning.ai",
+      "Native route in this source tree",
     ],
     integrationNote:
-      "Hosted on loehrning.ai with progress and completion tracking; originally imported from an open-source course.",
+      "The native route plus progress and completion logic are integrated in this source tree; deployment requires separate live verification. Originally imported from an open-source course.",
   },
   "data-science": {
     title: "Data Science Fundamentals",
@@ -167,7 +167,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
     tagline:
       "Evaluate models, detect misinterpretation, and monitor production behavior.",
     description:
-      "Twelve chapters connect sampling, data cleaning, features, evaluation, interpretability, experiments, causality, and drift. Twenty-two simulations show how metrics can mislead.",
+      "Twelve chapters connect sampling, data cleaning, features, evaluation, interpretability, experiments, causality, and drift. Thirty-seven simulations show how metrics can mislead.",
     duration: "about 2 hrs",
     unitLabel: "chapters",
     audience: "Data scientists, ML engineers, and analysts",
@@ -177,11 +177,11 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
     language: "English + German",
     sourceFacts: [
       "12 chapters",
-      "22 interactive simulations",
-      "Hosted on loehrning.ai",
+      "37 interactive simulations",
+      "Native route in this source tree",
     ],
     integrationNote:
-      "Hosted on loehrning.ai with progress and completion tracking; originally imported from an open-source course.",
+      "The native route plus progress and completion logic are integrated in this source tree; deployment requires separate live verification. Originally imported from an open-source course.",
   },
   "ai-native-operator": {
     title: "The AI-Native Operator",
@@ -201,10 +201,10 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
       "9 modules",
       "39 lessons",
       "30 exercises",
-      "Hosted on loehrning.ai",
+      "Native route in this source tree",
     ],
     integrationNote:
-      "Hosted on loehrning.ai with progress and completion tracking; originally imported from an open-source course.",
+      "The native route plus progress and completion logic are integrated in this source tree; deployment requires separate live verification. Originally imported from an open-source course.",
   },
 };
 

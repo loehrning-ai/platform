@@ -22,6 +22,14 @@ describe("course catalogue locale copy", () => {
     expect(
       technical.flatMap((course) => course.sourceFacts ?? []).join(" "),
     ).not.toMatch(/Hands-on Widgets|Live-Simulationen/);
+    expect(
+      technical.flatMap((course) => course.sourceFacts ?? []).join(" "),
+    ).not.toMatch(/Auf loehrning\.ai gehostet/);
+    expect(
+      technical.every((course) =>
+        course.integrationNote?.includes("getrennte Live-Prüfung"),
+      ),
+    ).toBe(true);
   });
 
   it("translates all four foundation cards and all six technical summaries", () => {
@@ -38,6 +46,18 @@ describe("course catalogue locale copy", () => {
       title: "Codex Course",
       language: "English + German",
     });
+    expect(english.find(({ slug }) => slug === "data-science")?.description).toContain(
+      "Thirty-seven simulations",
+    );
+    const technical = english.slice(4);
+    expect(
+      technical.flatMap((course) => course.sourceFacts ?? []).join(" "),
+    ).not.toMatch(/Hosted on loehrning\.ai/);
+    expect(
+      technical.every((course) =>
+        course.integrationNote?.includes("separate live verification"),
+      ),
+    ).toBe(true);
     for (const course of english) {
       expect(course.description).not.toMatch(
         /\b(Der|Die|Das|Zwölf|Neun|Vier|Kurs|Lektionen behandeln)\b/,

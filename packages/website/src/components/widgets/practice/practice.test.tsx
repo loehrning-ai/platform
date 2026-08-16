@@ -78,8 +78,9 @@ function mockFetchUnavailable(): void {
   // 503 (flag off) — usePracticeApi treats any non-ok as "unavailable".
   vi.stubGlobal(
     "fetch",
-    vi.fn(async () =>
-      new Response(JSON.stringify({ error: "off" }), { status: 503 }),
+    vi.fn(
+      async () =>
+        new Response(JSON.stringify({ error: "off" }), { status: 503 }),
     ),
   );
 }
@@ -87,11 +88,12 @@ function mockFetchUnavailable(): void {
 function mockFetchComplete(text: string): void {
   vi.stubGlobal(
     "fetch",
-    vi.fn(async () =>
-      new Response(JSON.stringify({ mode: "complete", text }), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }),
+    vi.fn(
+      async () =>
+        new Response(JSON.stringify({ mode: "complete", text }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        }),
     ),
   );
 }
@@ -117,7 +119,9 @@ describe("PromptOrreryWidget", () => {
       screen.getByRole("button", { name: /Prompt live ausführen/i }),
     );
     await waitFor(() =>
-      expect(screen.getByText(/Live-Modus nicht verfügbar/i)).toBeInTheDocument(),
+      expect(
+        screen.getByText(/Live-Modus nicht verfügbar/i),
+      ).toBeInTheDocument(),
     );
   });
 
@@ -130,15 +134,16 @@ describe("PromptOrreryWidget", () => {
 describe("PromptTransformWidget", () => {
   it("renders three stages and shows the first stage prompt", () => {
     render(<PromptTransformWidget lessonId="L" cpId="pt" />);
-    expect(screen.getByRole("group", { name: /Prompt-Stufe wählen/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("group", { name: /Prompt-Stufe wählen/i }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /1 · vage/i })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
-    expect(screen.getByRole("button", { name: /3 · strukturiert/i })).toHaveAttribute(
-      "aria-pressed",
-      "false",
-    );
+    expect(
+      screen.getByRole("button", { name: /3 · strukturiert/i }),
+    ).toHaveAttribute("aria-pressed", "false");
   });
 
   it("awards the checkpoint offline once all three stages are viewed", () => {
@@ -192,8 +197,13 @@ describe("SemanticSpaceWidget", () => {
 
 describe("SemanticSpaceWidget — claude-course English override ", () => {
   it("renders the overridden English seed words, not the German defaults", async () => {
-    const { CLAUDE_SEMANTIC_SPACE_SEED, CLAUDE_SEMANTIC_SPACE_KEYWORDS, CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS, CLAUDE_SEMANTIC_SPACE_QUADRANT_LABELS, CLAUDE_SEMANTIC_SPACE_COPY } =
-      await import("@/lib/claude-course/widget-copy");
+    const {
+      CLAUDE_SEMANTIC_SPACE_SEED,
+      CLAUDE_SEMANTIC_SPACE_KEYWORDS,
+      CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS,
+      CLAUDE_SEMANTIC_SPACE_QUADRANT_LABELS,
+      CLAUDE_SEMANTIC_SPACE_COPY,
+    } = await import("@/lib/claude-course/widget-copy");
     render(
       <SemanticSpaceWidget
         lessonId="L"
@@ -212,9 +222,15 @@ describe("SemanticSpaceWidget — claude-course English override ", () => {
   });
 
   it("the offline heuristic matches an English word to the right group (functional, not just cosmetic)", async () => {
-    mockFetchUnavailable();
-    const { CLAUDE_SEMANTIC_SPACE_SEED, CLAUDE_SEMANTIC_SPACE_KEYWORDS, CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS, CLAUDE_SEMANTIC_SPACE_QUADRANT_LABELS, CLAUDE_SEMANTIC_SPACE_COPY } =
-      await import("@/lib/claude-course/widget-copy");
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const {
+      CLAUDE_SEMANTIC_SPACE_SEED,
+      CLAUDE_SEMANTIC_SPACE_KEYWORDS,
+      CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS,
+      CLAUDE_SEMANTIC_SPACE_QUADRANT_LABELS,
+      CLAUDE_SEMANTIC_SPACE_COPY,
+    } = await import("@/lib/claude-course/widget-copy");
     render(
       <SemanticSpaceWidget
         lessonId="L"
@@ -240,5 +256,6 @@ describe("SemanticSpaceWidget — claude-course English override ", () => {
       );
     expect(placementStatus).toBeInTheDocument();
     expect(screen.queryByText(/technik/)).not.toBeInTheDocument();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });

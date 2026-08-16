@@ -1,15 +1,13 @@
 import type Anthropic from "@anthropic-ai/sdk";
-import { isAnthropicRuntimeReady } from "@/lib/provider-readiness";
+import { isPracticeModelRuntimeReady } from "@/lib/provider-readiness";
 
+import { buildUserMessage, systemPromptFor } from "./prompt";
 import {
-  buildUserMessage,
-  COMPLETE_SYSTEM_PROMPT,
-  PLACE_SYSTEM_PROMPT,
-} from "./prompt";
-import type {
-  PlacedWord,
-  PracticeResponse,
-} from "./types";
+  callPracticeProvider,
+  type PracticeProviderUsage,
+} from "./provider-adapter";
+import type { PracticeModelId, PlacedWord, PracticeResponse } from "./types";
+import { DEFAULT_PRACTICE_MODEL_ID } from "./types";
 import type { PracticeRequestParsed } from "./validation";
 
 /**
@@ -32,8 +30,10 @@ const MAX_OUTPUT_CHARS = 4000;
  * provider-readiness contract: exact feature flag, credentials, DPA and
  * retention declarations, and persistence configuration.
  */
-export function isPracticeEnabled(): boolean {
-  return isAnthropicRuntimeReady();
+export function isPracticeEnabled(
+  model: PracticeModelId = DEFAULT_PRACTICE_MODEL_ID,
+): boolean {
+  return isPracticeModelRuntimeReady(model);
 }
 
 /** Response cache keyed on authenticated-user scope plus request hash — 1h TTL. */
@@ -98,6 +98,7 @@ function stripFences(raw: string): string {
 export function parsePlacement(
   raw: string,
   existingWords: readonly string[],
+  locale: "de" | "en" = "de",
 ): PlacedWord {
   const cleaned = stripFences(raw);
   const parsed = JSON.parse(cleaned) as Record<string, unknown>;
@@ -115,13 +116,18 @@ export function parsePlacement(
   // Clamp coordinates into the visible field [0.05, 0.95].
   const clamp = (n: number) => Math.max(0.05, Math.min(0.95, n));
   // If "near" hallucinated a word that doesn't exist, fall back to the first.
-  const resolvedNear =
-    existingWords.includes(near) ? near : (existingWords[0] ?? "");
+  const resolvedNear = existingWords.includes(near)
+    ? near
+    : (existingWords[0] ?? "");
   return {
     x: clamp(x),
     y: clamp(y),
     near: resolvedNear,
-    why: why || "Nahe an thematisch verwandten Begriffen platziert.",
+    why:
+      why ||
+      (locale === "de"
+        ? "Nahe an thematisch verwandten Begriffen platziert."
+        : "Placed near semantically related terms."),
   };
 }
 
@@ -131,12 +137,7 @@ interface CallClaudeArgs {
   readonly signal: AbortSignal;
 }
 
-export interface ClaudeUsage {
-  readonly inputTokens: number | null | undefined;
-  readonly outputTokens: number | null | undefined;
-  readonly cacheReadInputTokens: number | null | undefined;
-  readonly cacheCreationInputTokens: number | null | undefined;
-}
+export type ClaudeUsage = PracticeProviderUsage;
 
 export interface CallClaudeResult {
   readonly response: PracticeResponseBody;
@@ -148,33 +149,24 @@ export async function callClaude({
   req,
   signal,
 }: CallClaudeArgs): Promise<CallClaudeResult> {
-  const system =
-    req.mode === "complete" ? COMPLETE_SYSTEM_PROMPT : PLACE_SYSTEM_PROMPT;
-
-  const result = await anthropic.messages.create(
+  const providerResult = await callPracticeProvider(
+    { ...req, model: DEFAULT_PRACTICE_MODEL_ID },
+    signal,
     {
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: req.mode === "complete" ? 800 : 200,
-      temperature: req.mode === "complete" ? 0.4 : 0.1,
-      system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
-      messages: [{ role: "user", content: buildUserMessage(req) }],
+      anthropic,
+      readiness: () => true,
     },
-    { signal },
   );
-
-  const text =
-    result.content[0]?.type === "text" ? result.content[0].text : "";
-
-  const usage: ClaudeUsage = {
-    inputTokens: result.usage?.input_tokens,
-    outputTokens: result.usage?.output_tokens,
-    cacheReadInputTokens: result.usage?.cache_read_input_tokens,
-    cacheCreationInputTokens: result.usage?.cache_creation_input_tokens,
-  };
+  const { text, usage, model, provider } = providerResult;
 
   if (req.mode === "complete") {
     return {
-      response: { mode: "complete", text: text.slice(0, MAX_OUTPUT_CHARS) },
+      response: {
+        mode: "complete",
+        text: text.slice(0, MAX_OUTPUT_CHARS),
+        model,
+        provider,
+      },
       usage,
     };
   }
@@ -182,8 +174,65 @@ export async function callClaude({
   const placement = parsePlacement(
     text,
     req.existing.map((p) => p.w),
+    req.locale,
   );
-  return { response: { mode: "place-word", ...placement }, usage };
+  return {
+    response: { mode: "place-word", ...placement, model, provider },
+    usage,
+  };
+}
+
+export async function callPracticeModel({
+  req,
+  signal,
+}: {
+  readonly req: PracticeRequestParsed;
+  readonly signal: AbortSignal;
+}): Promise<CallClaudeResult> {
+  const { text, usage, model, provider } = await callPracticeProvider(
+    req,
+    signal,
+  );
+
+  if (req.mode === "complete") {
+    return {
+      response: {
+        mode: "complete",
+        text: text.slice(0, MAX_OUTPUT_CHARS),
+        model,
+        provider,
+      },
+      usage,
+    };
+  }
+
+  return {
+    response: {
+      mode: "place-word",
+      ...parsePlacement(
+        text,
+        req.existing.map((point) => point.w),
+        req.locale,
+      ),
+      model,
+      provider,
+    },
+    usage,
+  };
+}
+
+/**
+ * Conservative token reservation used by the durable pre-call budget. UTF-8
+ * byte count is a safe upper bound for input tokens, including adversarial
+ * Unicode; provider output is reserved at its configured token ceiling.
+ * Providers may bill fewer tokens and reservations are deliberately not
+ * refunded.
+ */
+export function reservedTokenBudget(req: PracticeRequestParsed): number {
+  const inputBytes = new TextEncoder().encode(
+    `${systemPromptFor(req.mode, req.locale)}${buildUserMessage(req)}`,
+  ).byteLength;
+  return inputBytes + (req.mode === "complete" ? 800 : 200);
 }
 
 /** Reset in-memory state. Used by unit tests only. */

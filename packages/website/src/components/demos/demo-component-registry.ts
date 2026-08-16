@@ -1,21 +1,8 @@
 import dynamic from "next/dynamic";
 import { createElement, type ComponentType } from "react";
-import {
-  AgentPipelinePreview,
-  CostDriftObservabilityPreview,
-  ExcelPreview,
-  FineTunePlaygroundPreview,
-  LlmObservabilityPreview,
-  N8nSupplyChainPreview,
-  OutboundWorkflowPreview,
-  PromptScannerPreview,
-  RagVertragsassistentPreview,
-  RechnungZuSapPreview,
-  RoiRechnerPreview,
-  WordPreview,
-} from "./demo-gallery-previews";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { useDemoLocale } from "./demo-locale";
+import PromptScannerLoader from "./prompt-scanner-loader";
 
 /**
  * Lazy-loaded demo component registry.
@@ -36,29 +23,15 @@ const LoadingPlaceholder = () => {
   );
 };
 
-/** Small static thumbnail components shown inside gallery tiles. */
-export const galleryPreviews: Readonly<Record<string, ComponentType>> = {
-  excel: ExcelPreview,
-  word: WordPreview,
-  "outbound-workflow": OutboundWorkflowPreview,
-  "agent-pipeline": AgentPipelinePreview,
-  "n8n-supply-chain": N8nSupplyChainPreview,
-  "rag-vertragsassistent": RagVertragsassistentPreview,
-  "rechnung-zu-sap": RechnungZuSapPreview,
-  "prompt-scanner": PromptScannerPreview,
-  "cost-drift-observability": CostDriftObservabilityPreview,
-  "fine-tune-playground": FineTunePlaygroundPreview,
-  "roi-rechner": RoiRechnerPreview,
-  "llm-observability": LlmObservabilityPreview,
-};
-
-export function getGalleryPreview(slug: string): ComponentType | undefined {
-  return galleryPreviews[slug];
-}
-
 export const demoComponents: Readonly<Record<string, ComponentType>> = {
-  excel: dynamic(() => import("./excel-demo"), { ssr: false, loading: LoadingPlaceholder }),
-  word: dynamic(() => import("./word-demo"), { ssr: false, loading: LoadingPlaceholder }),
+  excel: dynamic(() => import("./excel-demo"), {
+    ssr: false,
+    loading: LoadingPlaceholder,
+  }),
+  word: dynamic(() => import("./word-demo"), {
+    ssr: false,
+    loading: LoadingPlaceholder,
+  }),
   "outbound-workflow": dynamic(() => import("./outbound-workflow-demo"), {
     ssr: false,
     loading: LoadingPlaceholder,
@@ -71,22 +44,28 @@ export const demoComponents: Readonly<Record<string, ComponentType>> = {
     ssr: false,
     loading: LoadingPlaceholder,
   }),
-  "rag-vertragsassistent": dynamic(() => import("./rag-vertragsassistent-demo"), {
-    ssr: false,
-    loading: LoadingPlaceholder,
-  }),
+  "rag-vertragsassistent": dynamic(
+    () => import("./rag-vertragsassistent-demo"),
+    {
+      ssr: false,
+      loading: LoadingPlaceholder,
+    },
+  ),
   "rechnung-zu-sap": dynamic(() => import("./rechnung-zu-sap-demo"), {
     ssr: false,
     loading: LoadingPlaceholder,
   }),
-  "prompt-scanner": dynamic(() => import("./prompt-scanner-demo"), {
-    ssr: false,
-    loading: LoadingPlaceholder,
-  }),
-  "cost-drift-observability": dynamic(() => import("./cost-drift-observability-demo"), {
-    ssr: false,
-    loading: LoadingPlaceholder,
-  }),
+  // The loader is deliberately small and server-renderable. Keeping it in the
+  // initial shell avoids a second, late loading state while the substantial
+  // scanner itself remains gated by the loader's IntersectionObserver.
+  "prompt-scanner": PromptScannerLoader,
+  "cost-drift-observability": dynamic(
+    () => import("./cost-drift-observability-demo"),
+    {
+      ssr: false,
+      loading: LoadingPlaceholder,
+    },
+  ),
   "fine-tune-playground": dynamic(() => import("./fine-tune-playground-demo"), {
     ssr: false,
     loading: LoadingPlaceholder,

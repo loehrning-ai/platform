@@ -5,6 +5,7 @@ import {
   hashRequest,
   parseGradeJson,
   readCache,
+  reservedGradeTokenBudget,
   writeCache,
 } from "./engine";
 
@@ -239,6 +240,28 @@ describe("grade-exercise engine — pure helpers", () => {
 
       expect(userOne).not.toBe(userTwo);
       expect(userOne).not.toBe(anonymous);
+    });
+  });
+
+  describe("reservedGradeTokenBudget", () => {
+    it("uses UTF-8 bytes as a conservative Unicode-aware input bound", () => {
+      const base = {
+        kind: "exercise-free-response" as const,
+        scenario: "Bounded scenario",
+        rubric: [{ id: "criterion", label: "Criterion" }],
+      };
+
+      const ascii = reservedGradeTokenBudget({
+        ...base,
+        userInput: "a".repeat(100),
+      });
+      const unicode = reservedGradeTokenBudget({
+        ...base,
+        userInput: "🧠".repeat(100),
+      });
+
+      expect(unicode).toBeGreaterThan(ascii);
+      expect(ascii).toBeGreaterThan(700);
     });
   });
 });

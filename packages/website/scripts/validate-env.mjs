@@ -38,6 +38,7 @@ const INFO = (msg) => console.log(`[validate-env] ${msg}`);
 const MAX_ORIGIN_LENGTH = 2048;
 const SIDE_EFFECT_CREDENTIALS = [
   "ANTHROPIC_API_KEY",
+  "GEMINI_API_KEY",
   "SENTRY_AUTH_TOKEN",
   "SUPABASE_SERVICE_ROLE_KEY",
 ];
@@ -69,6 +70,12 @@ function requireAttestation(name, provider) {
       `${provider} is configured but ${name} is missing or is not a valid past-or-present YYYY-MM-DD attestation.`,
     );
   }
+}
+
+function isBoundedPositiveInteger(value, maximum) {
+  if (!/^[1-9]\d*$/.test(value ?? "")) return false;
+  const parsed = Number(value);
+  return Number.isSafeInteger(parsed) && parsed <= maximum;
 }
 
 const validationProfile = process.env.LOEHRNING_VALIDATION_PROFILE;
@@ -141,8 +148,10 @@ function isForbiddenLiveAuthE2EVariable(name) {
     name.startsWith("SENTRY_") ||
     name.startsWith("NEXT_PUBLIC_SENTRY_") ||
     name.startsWith("ANTHROPIC_") ||
+    name.startsWith("GEMINI_") ||
+    name.startsWith("COURSE_TERMINAL_") ||
     name.startsWith("FEEDBACK_") ||
-    name === "AI_NATIVE_PRACTICE_ENABLED" ||
+    name.startsWith("AI_NATIVE_PRACTICE_") ||
     name === "NEXT_PUBLIC_SITE_URL" ||
     name === "NEXT_PUBLIC_APP_URL" ||
     name === "VERCEL" ||
@@ -616,9 +625,29 @@ if (sentryConfigured) {
   }
 }
 
-// Anthropic: live practice requires both the feature flag and key. A planted
-// key still counts as configured and therefore needs a recorded DPA date.
+// Provider-backed practice: model IDs are a static public allowlist. Every
+// selected provider is configured server-side; no client key or arbitrary
+// upstream model string is accepted.
 const aiEnabled = process.env.AI_NATIVE_PRACTICE_ENABLED;
+const allowedModelEnv = process.env.AI_NATIVE_PRACTICE_ALLOWED_MODELS;
+const KNOWN_PRACTICE_MODELS = new Set([
+  "anthropic/claude-haiku-4.5",
+  "google/gemini-2.5-flash-lite",
+]);
+const allowedModels = allowedModelEnv ? allowedModelEnv.split(",") : [];
+const modelAllowlistValid =
+  allowedModels.length > 0 &&
+  allowedModels.every(
+    (model) =>
+      model.length > 0 &&
+      model === model.trim() &&
+      KNOWN_PRACTICE_MODELS.has(model),
+  ) &&
+  new Set(allowedModels).size === allowedModels.length;
+const anthropicSelected = allowedModels.includes(
+  "anthropic/claude-haiku-4.5",
+);
+const geminiSelected = allowedModels.includes("google/gemini-2.5-flash-lite");
 const anthropicKey = process.env.ANTHROPIC_API_KEY;
 const anthropicDpaAttestation = process.env.ANTHROPIC_DPA_CONFIRMED_AT;
 const anthropicRetention = process.env.ANTHROPIC_RETENTION_DAYS;
@@ -630,13 +659,30 @@ const configuredAnthropicComplianceVariables = [
   .map(([name]) => name);
 const anthropicComplianceMetadataPresent =
   configuredAnthropicComplianceVariables.length > 0;
+const geminiKey = process.env.GEMINI_API_KEY;
+const geminiDpaAttestation = process.env.GEMINI_DPA_CONFIRMED_AT;
+const geminiPaidTierAttestation =
+  process.env.GEMINI_PAID_TIER_CONFIRMED_AT;
+const geminiRetention = process.env.GEMINI_RETENTION_DAYS;
+const configuredGeminiComplianceVariables = [
+  ["GEMINI_DPA_CONFIRMED_AT", geminiDpaAttestation],
+  ["GEMINI_PAID_TIER_CONFIRMED_AT", geminiPaidTierAttestation],
+  ["GEMINI_RETENTION_DAYS", geminiRetention],
+]
+  .filter(([, value]) => Boolean(value))
+  .map(([name]) => name);
+const geminiComplianceMetadataPresent =
+  configuredGeminiComplianceVariables.length > 0;
 
 if (aiEnabled && aiEnabled !== "true" && aiEnabled !== "false") {
   markError("AI_NATIVE_PRACTICE_ENABLED must be exactly true or false when set.");
 }
-if (aiEnabled === "true" && !anthropicKey) {
+if (
+  !modelAllowlistValid &&
+  (aiEnabled === "true" || Boolean(allowedModelEnv))
+) {
   markError(
-    "AI_NATIVE_PRACTICE_ENABLED=true but ANTHROPIC_API_KEY is not set.",
+    "AI_NATIVE_PRACTICE_ENABLED=true requires AI_NATIVE_PRACTICE_ALLOWED_MODELS as a nonempty, comma-separated, duplicate-free list containing only anthropic/claude-haiku-4.5 and google/gemini-2.5-flash-lite, with no whitespace.",
   );
 }
 if (aiEnabled === "true" && !supabaseConfigured) {
@@ -645,15 +691,51 @@ if (aiEnabled === "true" && !supabaseConfigured) {
   );
 }
 if (
+  aiEnabled === "true" &&
+  !isBoundedPositiveInteger(
+    process.env.AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET,
+    2_000_000_000,
+  )
+) {
+  markError(
+    "AI_NATIVE_PRACTICE_ENABLED=true requires AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET as an integer between 1 and 2000000000.",
+  );
+}
+if (
+  aiEnabled === "true" &&
+  !isBoundedPositiveInteger(
+    process.env.AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET,
+    2_000_000_000,
+  )
+) {
+  markError(
+    "AI_NATIVE_PRACTICE_ENABLED=true requires AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET as an integer between 1 and 2000000000.",
+  );
+}
+if (aiEnabled === "true" && anthropicSelected && !anthropicKey) {
+  markError(
+    "Anthropic is selected in AI_NATIVE_PRACTICE_ALLOWED_MODELS but ANTHROPIC_API_KEY is not set.",
+  );
+}
+if (aiEnabled === "true" && geminiSelected && !geminiKey) {
+  markError(
+    "Gemini is selected in AI_NATIVE_PRACTICE_ALLOWED_MODELS but GEMINI_API_KEY is not set.",
+  );
+}
+if (
   anthropicComplianceMetadataPresent &&
   !anthropicKey &&
-  aiEnabled !== "true"
+  !(aiEnabled === "true" && anthropicSelected)
 ) {
   markError(
     `Anthropic compliance metadata (${configuredAnthropicComplianceVariables.join(", ")}) is present without ANTHROPIC_API_KEY or AI_NATIVE_PRACTICE_ENABLED=true. Remove the orphaned attestations or fully configure the provider.`,
   );
 }
-if (anthropicKey || aiEnabled === "true" || anthropicComplianceMetadataPresent) {
+if (
+  anthropicKey ||
+  (aiEnabled === "true" && anthropicSelected) ||
+  anthropicComplianceMetadataPresent
+) {
   requireAttestation("ANTHROPIC_DPA_CONFIRMED_AT", "Anthropic");
   const rawRetention = anthropicRetention;
   const retentionDays = rawRetention?.trim()
@@ -672,6 +754,101 @@ if (anthropicKey || aiEnabled === "true" || anthropicComplianceMetadataPresent) 
 if (anthropicKey && aiEnabled !== "true") {
   WARN(
     "ANTHROPIC_API_KEY is present while AI_NATIVE_PRACTICE_ENABLED is not true. The key is configured but live AI practice remains disabled.",
+  );
+}
+
+if (
+  geminiComplianceMetadataPresent &&
+  !geminiKey &&
+  !(aiEnabled === "true" && geminiSelected)
+) {
+  markError(
+    `Gemini compliance metadata (${configuredGeminiComplianceVariables.join(", ")}) is present without GEMINI_API_KEY or an enabled Gemini model. Remove the orphaned attestations or fully configure the provider.`,
+  );
+}
+if (
+  geminiKey ||
+  (aiEnabled === "true" && geminiSelected) ||
+  geminiComplianceMetadataPresent
+) {
+  requireAttestation("GEMINI_DPA_CONFIRMED_AT", "Google Gemini API");
+  requireAttestation(
+    "GEMINI_PAID_TIER_CONFIRMED_AT",
+    "Google Gemini API paid tier",
+  );
+  const retentionDays = geminiRetention?.trim()
+    ? Number(geminiRetention)
+    : Number.NaN;
+  if (
+    !Number.isInteger(retentionDays) ||
+    retentionDays < 0 ||
+    retentionDays > 3650
+  ) {
+    markError(
+      "Gemini is configured but GEMINI_RETENTION_DAYS is not an integer between 0 and 3650 matching the accepted paid-tier API contract.",
+    );
+  }
+}
+if (geminiKey && aiEnabled !== "true") {
+  WARN(
+    "GEMINI_API_KEY is present while AI_NATIVE_PRACTICE_ENABLED is not true. The key is configured but live AI practice remains disabled.",
+  );
+}
+
+// Real terminal execution is a separate, off-by-default capability. Build
+// validation covers the explicit feature contract; runtime readiness also
+// requires VERCEL_OIDC_TOKEN, which is injected at runtime and never forwarded
+// into provider-free verification child processes.
+const terminalEnabled = process.env.COURSE_TERMINAL_ENABLED;
+const terminalPolicyAttestation =
+  process.env.COURSE_TERMINAL_POLICY_CONFIRMED_AT;
+const terminalDailyBudget = process.env.COURSE_TERMINAL_DAILY_RUN_BUDGET;
+const terminalSandboxImage = process.env.COURSE_TERMINAL_SANDBOX_IMAGE;
+const immutableSandboxImagePattern =
+  /^(?=.{1,200}$)[a-z0-9]+(?:[._-][a-z0-9]+)*(?:\/[a-z0-9]+(?:[._-][a-z0-9]+)*)*@sha256:[a-f0-9]{64}$/u;
+if (
+  terminalEnabled &&
+  terminalEnabled !== "true" &&
+  terminalEnabled !== "false"
+) {
+  markError("COURSE_TERMINAL_ENABLED must be exactly true or false when set.");
+}
+if (terminalEnabled === "true") {
+  if (process.env.VERCEL !== "1") {
+    markError(
+      "COURSE_TERMINAL_ENABLED=true requires VERCEL=1; local or unknown runtimes fail closed.",
+    );
+  }
+  if (!supabaseConfigured) {
+    markError(
+      "COURSE_TERMINAL_ENABLED=true requires the complete Supabase configuration for authenticated durable quotas.",
+    );
+  }
+  requireAttestation(
+    "COURSE_TERMINAL_POLICY_CONFIRMED_AT",
+    "Course terminal synthetic-workspace policy",
+  );
+  if (!isBoundedPositiveInteger(terminalDailyBudget, 100_000)) {
+    markError(
+      "COURSE_TERMINAL_ENABLED=true requires COURSE_TERMINAL_DAILY_RUN_BUDGET as an integer between 1 and 100000.",
+    );
+  }
+  if (
+    !terminalSandboxImage ||
+    terminalSandboxImage !== terminalSandboxImage.trim() ||
+    !immutableSandboxImagePattern.test(terminalSandboxImage)
+  ) {
+    markError(
+      "COURSE_TERMINAL_ENABLED=true requires COURSE_TERMINAL_SANDBOX_IMAGE as an immutable OCI digest reference such as repository@sha256:<64 lowercase hex characters>; tags and bare names are rejected.",
+    );
+  }
+}
+if (
+  terminalEnabled !== "true" &&
+  (terminalPolicyAttestation || terminalDailyBudget || terminalSandboxImage)
+) {
+  markError(
+    "Course terminal policy, budget, or image metadata is present while COURSE_TERMINAL_ENABLED is not true. Remove the orphaned values or explicitly enable the terminal.",
   );
 }
 

@@ -25,6 +25,9 @@ const harness = vi.hoisted(() => ({
   router: { push: vi.fn() },
   generatePdf: vi.fn(),
   eligible: true,
+  quizPassed: true,
+  capstoneSubmitted: false,
+  projectCompleted: false,
 }));
 
 vi.mock("next/navigation", () => ({
@@ -33,11 +36,13 @@ vi.mock("next/navigation", () => ({
 
 vi.mock("@/lib/course/progress", () => ({
   getWorkshopQuizResult: () => ({
-    passed: true,
-    score: 0.9,
-    completedAt: "2026-07-29T10:00:00.000Z",
+    passed: harness.quizPassed,
+    score: harness.quizPassed ? 0.9 : 0,
+    completedAt: harness.quizPassed
+      ? "2026-07-29T10:00:00.000Z"
+      : null,
   }),
-  isCapstoneSubmitted: () => false,
+  isCapstoneSubmitted: () => harness.capstoneSubmitted,
   isCertificateEligible: () => harness.eligible,
 }));
 
@@ -45,6 +50,7 @@ vi.mock("@/lib/progress/store", () => ({
   getCourseSlice: () => ({
     lastActivity: "2026-07-29T10:00:00.000Z",
   }),
+  isAppliedProjectCompleted: () => harness.projectCompleted,
   subscribe: (listener: () => void) => {
     harness.progressListener = listener;
     listener();
@@ -111,6 +117,9 @@ beforeEach(() => {
   harness.router.push.mockReset();
   harness.generatePdf.mockReset();
   harness.eligible = true;
+  harness.quizPassed = true;
+  harness.capstoneSubmitted = false;
+  harness.projectCompleted = false;
 });
 
 afterEach(() => {
@@ -188,6 +197,74 @@ describe("<CertificatePage>", () => {
     expect(click).not.toHaveBeenCalled();
     expect(harness.router.push).toHaveBeenCalledWith(
       "/en/kurse/open-source/claude/kurs",
+    );
+  });
+
+  it.each([
+    {
+      name: "ignores a stale non-AI capstone bit",
+      courseSlug: "codex" as const,
+      capstoneSubmitted: true,
+      projectCompleted: false,
+      expectedMode: "completion",
+    },
+    {
+      name: "preserves the historical AI-Native capstone path",
+      courseSlug: "ai-native" as const,
+      capstoneSubmitted: true,
+      projectCompleted: false,
+      expectedMode: "capstone",
+    },
+    {
+      name: "does not treat unsigned AI-Native project evidence as capstone mode",
+      courseSlug: "ai-native" as const,
+      capstoneSubmitted: false,
+      projectCompleted: true,
+      expectedMode: "completion",
+    },
+  ])("$name", async ({ courseSlug, capstoneSubmitted, projectCompleted, expectedMode }) => {
+    harness.quizPassed = false;
+    harness.capstoneSubmitted = capstoneSubmitted;
+    harness.projectCompleted = projectCompleted;
+    harness.generatePdf.mockResolvedValue(
+      new Blob(["certificate"], { type: "application/pdf" }),
+    );
+    vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:certificate");
+    vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
+
+    render(<CertificatePage courseSlug={courseSlug} locale="en" />);
+    fireEvent.change(screen.getByRole("textbox", { name: "Full name" }), {
+      target: { value: "Learner Name" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Download/u }));
+
+    await waitFor(() => expect(harness.generatePdf).toHaveBeenCalledTimes(1));
+    expect(harness.generatePdf).toHaveBeenCalledWith(
+      expect.objectContaining({ completionMode: expectedMode }),
+      expect.anything(),
+    );
+  });
+
+  it("keeps quiz as the winning certificate mode", async () => {
+    harness.quizPassed = true;
+    harness.capstoneSubmitted = true;
+    harness.projectCompleted = true;
+    harness.generatePdf.mockResolvedValue(
+      new Blob(["certificate"], { type: "application/pdf" }),
+    );
+    vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:certificate");
+    vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => {});
+
+    render(<CertificatePage courseSlug="ai-native" locale="en" />);
+    fireEvent.change(screen.getByRole("textbox", { name: "Full name" }), {
+      target: { value: "Learner Name" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Download/u }));
+
+    await waitFor(() => expect(harness.generatePdf).toHaveBeenCalledTimes(1));
+    expect(harness.generatePdf).toHaveBeenCalledWith(
+      expect.objectContaining({ completionMode: "quiz" }),
+      expect.anything(),
     );
   });
 });

@@ -81,7 +81,7 @@ export function DataInfraLessonSidebar({
                       href={href}
                       aria-current={active ? "page" : undefined}
                       className={cn(
-                        "flex min-w-0 items-center gap-2 border-l-2 px-2.5 py-1.5 text-[13px] transition-colors",
+                        "flex min-h-11 min-w-0 items-start gap-2 border-l-2 px-2.5 py-2.5 text-[13px] leading-[1.35] transition-colors",
                         active
                           ? "border-brand-orange bg-brand-orange/10 font-semibold text-foreground"
                           : "border-transparent text-muted-foreground hover:border-brand-orange/40 hover:text-foreground",

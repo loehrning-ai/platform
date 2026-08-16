@@ -1,8 +1,13 @@
 import { z } from "zod";
 
-import { PRACTICE_MODES } from "./types";
+import {
+  DEFAULT_PRACTICE_MODEL_ID,
+  PRACTICE_LOCALES,
+  PRACTICE_MODEL_IDS,
+  PRACTICE_MODES,
+} from "./types";
 
-/** Max chars of prompt shipped to Claude — cost / prompt-injection bound. */
+/** Max chars of prompt shipped to the selected provider. */
 export const MAX_PROMPT_CHARS = 4000;
 
 /** Max chars for a single semantic-space word. */
@@ -19,6 +24,11 @@ const existingPointSchema = z
   })
   .strict();
 
+const executionFields = {
+  model: z.enum(PRACTICE_MODEL_IDS).default(DEFAULT_PRACTICE_MODEL_ID),
+  locale: z.enum(PRACTICE_LOCALES).default("de"),
+} as const;
+
 /**
  * "complete" requests carry a single assembled prompt string.
  */
@@ -26,6 +36,7 @@ const completeRequestSchema = z
   .object({
     mode: z.literal("complete"),
     prompt: z.string().min(1).max(MAX_PROMPT_CHARS),
+    ...executionFields,
   })
   .strict();
 
@@ -37,6 +48,7 @@ const placeRequestSchema = z
     mode: z.literal("place-word"),
     word: z.string().min(1).max(MAX_WORD_CHARS),
     existing: z.array(existingPointSchema).max(MAX_EXISTING_POINTS),
+    ...executionFields,
   })
   .strict();
 

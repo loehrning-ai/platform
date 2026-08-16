@@ -129,6 +129,7 @@ export interface AiNativeLessonProgress {
 export interface AiNativeCourseProgress {
   readonly schemaVersion: typeof AI_NATIVE_SCHEMA_VERSION;
   readonly lessons: Record<string, AiNativeLessonProgress>;
+  /** Historical capstone self-review; not proof of the new applied project. */
   readonly capstoneSubmitted: boolean;
   readonly premiumUnlocked: boolean;
   readonly startedAt: string;

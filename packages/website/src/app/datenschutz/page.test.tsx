@@ -13,6 +13,13 @@ const { runtime, requestLocale } = vi.hoisted(() => ({
     supabaseRegion: null as string | null,
     anthropic: false,
     anthropicRetentionDays: null as number | null,
+    gemini: false,
+    geminiRetentionDays: null as number | null,
+    practiceModels: [] as (
+      | "anthropic/claude-haiku-4.5"
+      | "google/gemini-2.5-flash-lite"
+    )[],
+    courseTerminal: false,
     vercelHosting: false,
     vercelTelemetry: false,
     sentry: false,
@@ -39,6 +46,13 @@ function accountSection(): HTMLElement {
   return section as HTMLElement;
 }
 
+function aiSection(name: RegExp): HTMLElement {
+  const heading = screen.getByRole("heading", { name });
+  const section = heading.closest("div");
+  expect(section).not.toBeNull();
+  return section as HTMLElement;
+}
+
 beforeEach(() => {
   requestLocale.value = "de";
   Object.assign(runtime, {
@@ -51,6 +65,10 @@ beforeEach(() => {
     supabaseRegion: null,
     anthropic: false,
     anthropicRetentionDays: null,
+    gemini: false,
+    geminiRetentionDays: null,
+    practiceModels: [],
+    courseTerminal: false,
     vercelHosting: false,
     vercelTelemetry: false,
     sentry: false,
@@ -152,5 +170,41 @@ describe("Datenschutz account-provider readiness copy", () => {
     expect(container.textContent).not.toMatch(
       /Datenschutzerklärung|Ihre Rechte|Aufbewahrungsfristen|Beschwerderecht/,
     );
+  });
+
+  it("discloses a Gemini-only model path instead of claiming provider feedback is disabled", async () => {
+    Object.assign(runtime, {
+      gemini: true,
+      geminiRetentionDays: 0,
+      practiceModels: ["google/gemini-2.5-flash-lite"],
+    });
+    render(await DatenschutzPage());
+
+    const section = within(
+      aiSection(/KI-Lernfeedback und isolierte Kursausführung/),
+    );
+    expect(section.getByText(/Google Gemini API .* ist für das Modell/s)).toBeVisible();
+    expect(section.getByText(/API-Schlüssel bleiben auf dem Server/)).toBeVisible();
+    expect(section.getByText(/Aufbewahrungsdauer beträgt 0 Tage/)).toBeVisible();
+    expect(section.getByText(/Anwendung liest oder beweist.*Abrechnungsstatus/s)).toBeVisible();
+    expect(section.queryByText(/Modellanbieter deaktiviert/)).toBeNull();
+  });
+
+  it("discloses the enabled synthetic terminal boundary in both languages", async () => {
+    runtime.courseTerminal = true;
+    const german = render(await DatenschutzPage());
+    expect(
+      within(aiSection(/KI-Lernfeedback und isolierte Kursausführung/)).getByText(
+        /Codex, Data Science, Data Engineering und Data Infrastructure/,
+      ),
+    ).toBeVisible();
+    german.unmount();
+
+    render(<EnglishPrivacyContent features={runtime} />);
+    expect(
+      within(
+        aiSection(/AI learning feedback and isolated course execution/),
+      ).getByText(/Codex, Data Science, Data Engineering, and Data Infrastructure/),
+    ).toBeVisible();
   });
 });

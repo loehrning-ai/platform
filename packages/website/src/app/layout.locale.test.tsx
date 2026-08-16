@@ -9,9 +9,6 @@ const { getRequestLocaleMock } = vi.hoisted(() => ({
 vi.mock("next/font/local", () => ({
   default: () => ({ variable: "font-loehrning-test" }),
 }));
-vi.mock("geist/font/mono", () => ({
-  GeistMono: { variable: "font-geist-test" },
-}));
 vi.mock("@/lib/i18n/request-locale", () => ({
   getRequestLocale: getRequestLocaleMock,
 }));

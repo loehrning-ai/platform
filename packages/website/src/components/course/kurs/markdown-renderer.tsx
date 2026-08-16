@@ -28,7 +28,7 @@ export function MarkdownRenderer({
   copyable = false,
 }: MarkdownRendererProps): JSX.Element {
   return (
-    <div className="prose-kupfer">
+    <div className="prose-kupfer max-w-[76ch]">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{

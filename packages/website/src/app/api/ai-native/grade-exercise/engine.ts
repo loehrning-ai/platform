@@ -1,12 +1,8 @@
 import type Anthropic from "@anthropic-ai/sdk";
-import { isAnthropicRuntimeReady } from "@/lib/provider-readiness";
+import { isPracticeModelRuntimeReady } from "@/lib/provider-readiness";
 
 import { buildUserMessage, SYSTEM_PROMPT } from "./prompt";
-import type {
-  GradeRubricEntry,
-  GradeResponse,
-  GradeableKind,
-} from "./types";
+import type { GradeRubricEntry, GradeResponse, GradeableKind } from "./types";
 
 const HOUR_MS = 3_600_000;
 
@@ -16,7 +12,7 @@ const HOUR_MS = 3_600_000;
  * declarations, and persistence configuration.
  */
 export function isGradeEnabled(): boolean {
-  return isAnthropicRuntimeReady();
+  return isPracticeModelRuntimeReady("anthropic/claude-haiku-4.5");
 }
 
 /**
@@ -219,6 +215,28 @@ export async function callHaiku({
       cacheCreationInputTokens: response.usage?.cache_creation_input_tokens,
     },
   };
+}
+
+/**
+ * Reserve a conservative upper bound before a paid grading call. UTF-8 bytes
+ * safely upper-bound input tokens for adversarial Unicode, while 700 matches
+ * the provider output ceiling. Reservations are intentionally not refunded.
+ */
+export function reservedGradeTokenBudget({
+  kind,
+  scenario,
+  rubric,
+  userInput,
+}: {
+  readonly kind: GradeableKind;
+  readonly scenario: string;
+  readonly rubric: unknown;
+  readonly userInput: unknown;
+}): number {
+  const inputBytes = new TextEncoder().encode(
+    `${SYSTEM_PROMPT}${buildUserMessage({ kind, scenario, rubric, userInput })}`,
+  ).byteLength;
+  return inputBytes + 700;
 }
 
 /** Reset in-memory state. Used by unit tests only. */

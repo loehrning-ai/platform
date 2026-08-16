@@ -1,21 +1,19 @@
-"use client";
-
-import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { m } from "framer-motion";
-import { BookOpen, Eye, Lock, X } from "lucide-react";
-import { EASE_OUT_EXPO } from "@/lib/animations";
-import { useFocusTrap } from "@/lib/a11y/use-focus-trap";
-import { BrandButton } from "@/components/ui/brand-button";
-import {
-  books,
-  getBookCover,
-  getBookPreviewPages,
-  type Book,
-} from "@/lib/books";
+import { BookOpen, Eye, Lock } from "lucide-react";
+import { books, getBookCover, type Book } from "@/lib/books";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { BOOK_PAGE_COPY, getBookDisplay } from "./book-copy";
+import { BookPreviewController } from "./book-preview-controller";
+
+const PRIMARY_BUTTON_CLASS =
+  "inline-flex max-w-full select-none items-center justify-center gap-1.5 whitespace-normal rounded-lg bg-brand-orange px-5 py-2.5 text-center text-xs font-bold uppercase tracking-wide text-white shadow-card transition-[background-color,border-color,color,opacity,transform,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-card-hover active:translate-y-0 active:shadow-tile sm:whitespace-nowrap";
+
+const PRIMARY_BUTTON_LARGE_CLASS =
+  "inline-flex max-w-full select-none items-center justify-center gap-2.5 whitespace-normal rounded-lg bg-brand-orange px-9 py-4.5 text-center text-base font-bold uppercase tracking-wide text-white shadow-card transition-[background-color,border-color,color,opacity,transform,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-card-hover active:translate-y-0 active:shadow-tile sm:whitespace-nowrap";
+
+const PREVIEW_BUTTON_CLASS =
+  "inline-flex max-w-full select-none items-center justify-center gap-1.5 whitespace-normal rounded-lg border border-border bg-card px-5 py-2.5 text-center text-xs font-bold uppercase tracking-wide text-foreground shadow-card transition-[background-color,border-color,color,opacity,transform,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/30 hover:shadow-card-hover active:translate-y-0 active:shadow-tile sm:whitespace-nowrap";
 
 function formatReviewDate(value: string, locale: Locale): string {
   return new Intl.DateTimeFormat(locale === "de" ? "de-DE" : "en-GB", {
@@ -24,108 +22,6 @@ function formatReviewDate(value: string, locale: Locale): string {
     year: "numeric",
     timeZone: "UTC",
   }).format(new Date(`${value}T00:00:00Z`));
-}
-
-function BookTeaser({
-  book,
-  locale,
-  onClose,
-}: {
-  readonly book: Book;
-  readonly locale: Locale;
-  readonly onClose: () => void;
-}) {
-  const closeRef = useRef<HTMLButtonElement>(null);
-  const trapRef = useFocusTrap<HTMLDivElement>(true, onClose);
-  const copy = BOOK_PAGE_COPY[locale].teaser;
-  const display = getBookDisplay(book, locale);
-
-  useEffect(() => {
-    closeRef.current?.focus();
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, []);
-
-  return (
-    <div
-      ref={trapRef}
-      className="fixed inset-0 z-[100] flex items-center justify-center overscroll-contain p-3 sm:p-6"
-      role="dialog"
-      aria-modal="true"
-      aria-label={copy.dialogLabel(display.title)}
-    >
-      <button
-        type="button"
-        aria-hidden="true"
-        tabIndex={-1}
-        onClick={onClose}
-        className="absolute inset-0 cursor-default bg-foreground/65 backdrop-blur-sm"
-      />
-
-      <m.div
-        initial={{ opacity: 0, y: 12, scale: 0.985 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.2, ease: EASE_OUT_EXPO }}
-        className="relative z-10 flex max-h-[92svh] min-w-0 w-full max-w-4xl flex-col overflow-hidden overscroll-contain rounded-2xl border border-border bg-background shadow-card-hover"
-      >
-        <div className="flex min-w-0 items-start justify-between gap-4 border-b border-border px-4 py-4 sm:px-6">
-          <div className="min-w-0">
-            <p className="overline mb-1 break-words">
-              {copy.kicker(book.chapters)}
-            </p>
-            <h2 className="break-words text-xl font-bold tracking-[-0.03em]">
-              {display.title}
-            </h2>
-            <p className="mt-1 break-words text-sm italic text-muted-foreground">
-              {display.subtitle}
-            </p>
-          </div>
-          <button
-            ref={closeRef}
-            type="button"
-            onClick={onClose}
-            aria-label={copy.close}
-            className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
-          >
-            <X size={18} aria-hidden="true" />
-          </button>
-        </div>
-
-        <div className="flex-1 overflow-y-auto overscroll-contain bg-card/30 px-4 py-6 sm:px-6">
-          <div className="flex gap-4 overflow-x-auto pb-3 sm:justify-center">
-            {getBookPreviewPages(book).map((src, index) => (
-              <Image
-                key={src}
-                src={src}
-                alt={copy.pageAlt(display.title, index + 1)}
-                width={778}
-                height={1100}
-                loading="lazy"
-                sizes="(max-width: 640px) 190px, 240px"
-                className="h-auto w-[190px] shrink-0 rounded-lg border border-border bg-background shadow-card sm:w-[240px]"
-              />
-            ))}
-          </div>
-          <p className="mx-auto mt-5 max-w-2xl break-words text-center text-sm leading-relaxed text-muted-foreground">
-            {display.description}
-          </p>
-        </div>
-
-        <div className="flex flex-col items-stretch gap-3 border-t border-border px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <span className="break-words font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
-            {copy.materialNote}
-          </span>
-          <BrandButton href={localizeHref(book.readerHref, locale)} size="sm">
-            <BookOpen size={14} aria-hidden="true" />
-            {copy.openOverview}
-          </BrandButton>
-        </div>
-      </m.div>
-    </div>
-  );
 }
 
 export function BuecherContent({
@@ -137,8 +33,6 @@ export function BuecherContent({
   readonly locale: Locale;
   readonly catalogBooks?: readonly Book[];
 }) {
-  const [active, setActive] = useState<Book | null>(null);
-  const closeTeaser = useCallback(() => setActive(null), []);
   const copy = BOOK_PAGE_COPY[locale].catalog;
   const localizedBooks = catalogBooks.map((book) => ({
     book,
@@ -230,7 +124,9 @@ export function BuecherContent({
                     </span>
                     <button
                       type="button"
-                      onClick={() => setActive(book)}
+                      data-book-preview-id={book.id}
+                      aria-haspopup="dialog"
+                      aria-controls={`book-teaser-${book.id}`}
                       className="group/cover my-6 block max-w-full"
                       aria-label={copy.coverPreviewAria(display.title)}
                     >
@@ -326,19 +222,20 @@ export function BuecherContent({
                     </div>
 
                     <div className="mt-8 flex min-w-0 flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:flex-wrap sm:items-center">
-                      <BrandButton href={detailHref} size="sm">
+                      <Link href={detailHref} className={PRIMARY_BUTTON_CLASS}>
                         <BookOpen size={14} aria-hidden="true" />
                         {copy.openOverview}
-                      </BrandButton>
-                      <BrandButton
-                        variant="outline"
-                        surface="light"
-                        size="sm"
-                        onClick={() => setActive(book)}
+                      </Link>
+                      <button
+                        type="button"
+                        data-book-preview-id={book.id}
+                        aria-haspopup="dialog"
+                        aria-controls={`book-teaser-${book.id}`}
+                        className={PREVIEW_BUTTON_CLASS}
                       >
                         <Eye size={14} aria-hidden="true" />
                         {copy.openPreview}
-                      </BrandButton>
+                      </button>
                       {pdfLoginHref &&
                         (accountEnabled ? (
                           <Link
@@ -402,15 +299,16 @@ export function BuecherContent({
               {copy.bridgeBody}
             </p>
           </div>
-          <BrandButton href={localizeHref("/kurse", locale)} size="lg">
+          <Link
+            href={localizeHref("/kurse", locale)}
+            className={PRIMARY_BUTTON_LARGE_CLASS}
+          >
             {copy.viewCourses}
-          </BrandButton>
+          </Link>
         </div>
       </section>
 
-      {active && (
-        <BookTeaser book={active} locale={locale} onClose={closeTeaser} />
-      )}
+      <BookPreviewController locale={locale} />
     </>
   );
 }

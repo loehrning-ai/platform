@@ -46,14 +46,21 @@
 
   /* Elevation — warm, soft card shadows (v3.1: replaces the brutalist offset
      shadow). Tinted with Druckertinte so they read warm on Kalkweiß, not grey. */
-  --shadow-card: 0 1px 2px rgba(11, 9, 8, 0.04), 0 3px 10px rgba(11, 9, 8, 0.05);
-  --shadow-card-hover: 0 2px 4px rgba(11, 9, 8, 0.05), 0 10px 24px rgba(11, 9, 8, 0.09);
+  --shadow-card:
+    0 1px 2px rgba(11, 9, 8, 0.04), 0 3px 10px rgba(11, 9, 8, 0.05);
+  --shadow-card-hover:
+    0 2px 4px rgba(11, 9, 8, 0.05), 0 10px 24px rgba(11, 9, 8, 0.09);
   --shadow-tile: 0 1px 3px rgba(11, 9, 8, 0.06);
 
-  /* Typography — Loehrning Sans primary, Inter/system fallback */
-  --font-sans:
-    var(--font-loehrning-sans), "Inter", system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), monospace;
+  /* Typography — Loehrning Sans primary, deterministic system fallbacks.
+     A globally preloaded Geist Mono variable font added more than 70 KiB to
+     every route's critical path. Preserve the public custom-property contract
+     for course/demo CSS without making typography compete with text LCP. */
+  --font-sans: var(--font-loehrning-sans), "Inter", system-ui, sans-serif;
+  --font-geist-mono:
+    ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+  --font-mono: var(--font-geist-mono);
 
   /* Fluid display type scale (responsive-layout hardening) — clamp()-based, no abrupt @media jumps.
      Available as `text-fluid-h1/h2/h3` utilities AND as var(--text-fluid-h1) in

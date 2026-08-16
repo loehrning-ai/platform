@@ -14,10 +14,12 @@
 //   false — last live call failed (route off, network, malformed, etc.)
 
 import { useCallback, useState } from "react";
-import type {
-  PlacedWord,
-  PracticeRequestBody,
-} from "./practice-types";
+import {
+  DEFAULT_PRACTICE_MODEL_ID,
+  type PracticeLocale,
+  type PracticeModelId,
+} from "@/app/api/ai-native/practice/types";
+import type { PlacedWord, PracticeRequestBody } from "./practice-types";
 
 export interface PracticeApiState {
   /** Whether the last live attempt succeeded. null = not yet attempted. */
@@ -31,13 +33,19 @@ export interface PracticeApi extends PracticeApiState {
   /** Place a word. Resolves to coordinates, or null if live mode failed. */
   readonly place: (
     word: string,
-    existing: readonly { readonly w: string; readonly x: number; readonly y: number }[],
+    existing: readonly {
+      readonly w: string;
+      readonly x: number;
+      readonly y: number;
+    }[],
   ) => Promise<PlacedWord | null>;
 }
 
 const ENDPOINT = "/api/ai-native/practice";
 
-async function postPractice(body: PracticeRequestBody): Promise<unknown | null> {
+async function postPractice(
+  body: PracticeRequestBody,
+): Promise<unknown | null> {
   try {
     const res = await fetch(ENDPOINT, {
       method: "POST",
@@ -51,46 +59,67 @@ async function postPractice(body: PracticeRequestBody): Promise<unknown | null> 
   }
 }
 
-export function usePracticeApi(): PracticeApi {
+export interface PracticeApiOptions {
+  readonly locale?: PracticeLocale;
+  readonly model?: PracticeModelId;
+}
+
+export function usePracticeApi({
+  locale = "de",
+  model = DEFAULT_PRACTICE_MODEL_ID,
+}: PracticeApiOptions = {}): PracticeApi {
   const [available, setAvailable] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const complete = useCallback(async (prompt: string): Promise<string | null> => {
-    setLoading(true);
-    const json = await postPractice({ mode: "complete", prompt });
-    setLoading(false);
-    const ok =
-      json !== null &&
-      typeof json === "object" &&
-      typeof (json as { text?: unknown }).text === "string";
-    setAvailable(ok);
-    return ok ? (json as { text: string }).text : null;
-  }, []);
+  const complete = useCallback(
+    async (prompt: string): Promise<string | null> => {
+      setLoading(true);
+      const json = await postPractice({
+        mode: "complete",
+        prompt,
+        locale,
+        model,
+      });
+      setLoading(false);
+      const ok =
+        json !== null &&
+        typeof json === "object" &&
+        typeof (json as { text?: unknown }).text === "string";
+      setAvailable(ok);
+      return ok ? (json as { text: string }).text : null;
+    },
+    [locale, model],
+  );
 
-  const place = useCallback<PracticeApi["place"]>(async (word, existing) => {
-    setLoading(true);
-    const json = await postPractice({
-      mode: "place-word",
-      word,
-      existing: existing.map((p) => ({ w: p.w, x: p.x, y: p.y })),
-    });
-    setLoading(false);
-    const obj = json as Partial<PlacedWord> | null;
-    const ok =
-      obj !== null &&
-      typeof obj === "object" &&
-      typeof obj.x === "number" &&
-      typeof obj.y === "number";
-    setAvailable(ok);
-    return ok
-      ? {
-          x: obj!.x as number,
-          y: obj!.y as number,
-          near: typeof obj!.near === "string" ? obj!.near : "",
-          why: typeof obj!.why === "string" ? obj!.why : "",
-        }
-      : null;
-  }, []);
+  const place = useCallback<PracticeApi["place"]>(
+    async (word, existing) => {
+      setLoading(true);
+      const json = await postPractice({
+        mode: "place-word",
+        word,
+        existing: existing.map((p) => ({ w: p.w, x: p.x, y: p.y })),
+        locale,
+        model,
+      });
+      setLoading(false);
+      const obj = json as Partial<PlacedWord> | null;
+      const ok =
+        obj !== null &&
+        typeof obj === "object" &&
+        typeof obj.x === "number" &&
+        typeof obj.y === "number";
+      setAvailable(ok);
+      return ok
+        ? {
+            x: obj!.x as number,
+            y: obj!.y as number,
+            near: typeof obj!.near === "string" ? obj!.near : "",
+            why: typeof obj!.why === "string" ? obj!.why : "",
+          }
+        : null;
+    },
+    [locale, model],
+  );
 
   return { available, loading, complete, place };
 }

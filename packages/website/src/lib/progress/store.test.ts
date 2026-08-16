@@ -30,10 +30,7 @@ function installLocalStoragePolyfill() {
   });
 }
 
-import {
-  UNIFIED_STORAGE_KEY,
-  XP,
-} from "./types";
+import { UNIFIED_STORAGE_KEY, XP, type UnifiedProgress } from "./types";
 import {
   LEGACY_AI_NATIVE_KEY,
   LEGACY_COURSE_KEY_PREFIX,
@@ -48,12 +45,14 @@ import {
   saveLessonQuizScore,
   getLessonQuizScore,
   saveExerciseResult,
+  saveExerciseResultWithCheckpoint,
   getExerciseResult,
   saveWorkshopQuizResult,
   getWorkshopQuizResult,
   isWorkshopQuizPassed,
   markCapstoneSubmitted,
   isCapstoneSubmitted,
+  isAppliedProjectCompleted,
   isCertificateEligible,
   completeCheckpoint,
   isCheckpointDone,
@@ -63,6 +62,7 @@ import {
   getTotalCompletedLessons,
   getOverallProgress,
   getUnifiedState,
+  replaceUnifiedState,
   getCourseSlice,
   localDateKey,
   rollStreak,
@@ -76,7 +76,19 @@ import {
   __resetCacheForTests,
 } from "./store";
 import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
-import { prepareAccountLearningStorage } from "./browser-learning-storage";
+import { getCourseProjectIdentity } from "@/lib/course-projects/identity";
+import { serializeCourseProjectProgress } from "@/lib/course-projects/persistence";
+import { verifiedCourseProjectArtifact } from "@/lib/course-projects/test-artifact";
+import {
+  getCourseProjectDraftStorageKey,
+  getLessonMissionStorageKey,
+} from "@/lib/course-projects/storage-keys";
+import {
+  getOwnedLocalLearningItem,
+  prepareAccountLearningStorage,
+  setOwnedLocalLearningItem,
+  subscribeLearningOwner,
+} from "./browser-learning-storage";
 
 const KF_LESSON_1 = "block_1_lesson_1";
 const KF_LESSON_2 = "block_1_lesson_2";
@@ -121,20 +133,14 @@ describe("unified progress store", () => {
       activateUnknownProgress();
       markLessonCompleted("ki-fuehrerschein", KF_LESSON_1);
 
-      expect(
-        isLessonCompleted("ki-fuehrerschein", KF_LESSON_1),
-      ).toBe(false);
+      expect(isLessonCompleted("ki-fuehrerschein", KF_LESSON_1)).toBe(false);
       expect(window.localStorage.getItem(UNIFIED_STORAGE_KEY)).toBeNull();
 
       activateAccountProgress("account-b");
-      expect(
-        isLessonCompleted("ki-fuehrerschein", KF_LESSON_1),
-      ).toBe(false);
+      expect(isLessonCompleted("ki-fuehrerschein", KF_LESSON_1)).toBe(false);
 
       activateAnonymousProgress();
-      expect(
-        isLessonCompleted("ki-fuehrerschein", KF_LESSON_1),
-      ).toBe(false);
+      expect(isLessonCompleted("ki-fuehrerschein", KF_LESSON_1)).toBe(false);
     });
 
     it("never replays transition-time interactions into B or mutates A", () => {
@@ -145,31 +151,53 @@ describe("unified progress store", () => {
       markLessonCompleted("ki-fuehrerschein", KF_LESSON_1);
       activateAccountProgress("account-b");
 
-      expect(
-        isLessonCompleted("ki-fuehrerschein", KF_LESSON_1),
-      ).toBe(false);
-      expect(
-        isLessonCompleted("eu-ai-act-kurs", EU_LESSON_1),
-      ).toBe(false);
+      expect(isLessonCompleted("ki-fuehrerschein", KF_LESSON_1)).toBe(false);
+      expect(isLessonCompleted("eu-ai-act-kurs", EU_LESSON_1)).toBe(false);
 
       activateAccountProgress("account-a");
-      expect(
-        isLessonCompleted("eu-ai-act-kurs", EU_LESSON_1),
-      ).toBe(true);
-      expect(
-        isLessonCompleted("ki-fuehrerschein", KF_LESSON_1),
-      ).toBe(false);
+      expect(isLessonCompleted("eu-ai-act-kurs", EU_LESSON_1)).toBe(true);
+      expect(isLessonCompleted("ki-fuehrerschein", KF_LESSON_1)).toBe(false);
+    });
+
+    it("invalidates the old cache before synchronous owner subscribers can write", () => {
+      activateAnonymousProgress();
+      markLessonCompleted("ki-fuehrerschein", KF_LESSON_1);
+      const unsubscribe = subscribeLearningOwner((owner) => {
+        if (owner.kind !== "account" || owner.accountId !== "account-b") return;
+        expect(isLessonCompleted("ki-fuehrerschein", KF_LESSON_1)).toBe(false);
+        markLessonCompleted("eu-ai-act-kurs", EU_LESSON_1);
+      });
+
+      activateAccountProgress("account-b");
+      unsubscribe();
+
+      expect(isLessonCompleted("ki-fuehrerschein", KF_LESSON_1)).toBe(false);
+      expect(isLessonCompleted("eu-ai-act-kurs", EU_LESSON_1)).toBe(true);
+      activateAnonymousProgress();
+      expect(isLessonCompleted("ki-fuehrerschein", KF_LESSON_1)).toBe(true);
+      expect(isLessonCompleted("eu-ai-act-kurs", EU_LESSON_1)).toBe(false);
+    });
+
+    it("keeps the cached anonymous state intact when the same owner is activated", () => {
+      const exactState = {
+        ...getUnifiedState(),
+        streak: { days: 0, last: null },
+      };
+      replaceUnifiedState(exactState);
+
+      expect(activateAnonymousProgress()).toEqual(exactState);
+      expect(getUnifiedState()).toEqual(exactState);
     });
 
     it("tracks sections + lessons per course slug independently", () => {
       markSectionRead("ki-fuehrerschein", KF_LESSON_1, KF_SECTION_1);
       markLessonCompleted("eu-ai-act-kurs", EU_LESSON_1);
-      expect(
-        isSectionRead("ki-fuehrerschein", KF_LESSON_1, KF_SECTION_1),
-      ).toBe(true);
-      expect(
-        isSectionRead("eu-ai-act-kurs", EU_LESSON_1, KF_SECTION_1),
-      ).toBe(false);
+      expect(isSectionRead("ki-fuehrerschein", KF_LESSON_1, KF_SECTION_1)).toBe(
+        true,
+      );
+      expect(isSectionRead("eu-ai-act-kurs", EU_LESSON_1, KF_SECTION_1)).toBe(
+        false,
+      );
       expect(isLessonCompleted("eu-ai-act-kurs", EU_LESSON_1)).toBe(true);
       expect(isLessonCompleted("ki-fuehrerschein", KF_LESSON_1)).toBe(false);
     });
@@ -224,11 +252,8 @@ describe("unified progress store", () => {
         skipped: false,
       });
       expect(
-        getExerciseResult(
-          "ai-native",
-          AI_NATIVE_LESSON_1,
-          "imported-exercise",
-        )?.attempts,
+        getExerciseResult("ai-native", AI_NATIVE_LESSON_1, "imported-exercise")
+          ?.attempts,
       ).toBe(5);
 
       saveExerciseResult("ai-native", AI_NATIVE_LESSON_1, {
@@ -241,11 +266,8 @@ describe("unified progress store", () => {
         skipped: false,
       });
       expect(
-        getExerciseResult(
-          "ai-native",
-          AI_NATIVE_LESSON_1,
-          "imported-exercise",
-        )?.attempts,
+        getExerciseResult("ai-native", AI_NATIVE_LESSON_1, "imported-exercise")
+          ?.attempts,
       ).toBe(6);
     });
 
@@ -265,7 +287,9 @@ describe("unified progress store", () => {
       });
       const r = getExerciseResult("ai-native", AI_NATIVE_LESSON_1, "ex2");
       expect(r?.summary).toBeDefined();
-      expect(new TextEncoder().encode(r?.summary ?? "").length).toBeLessThanOrEqual(500);
+      expect(
+        new TextEncoder().encode(r?.summary ?? "").length,
+      ).toBeLessThanOrEqual(500);
       expect(r?.summary?.length).toBeLessThan(longSummary.length);
     });
 
@@ -448,9 +472,9 @@ describe("unified progress store", () => {
       const persisted = JSON.parse(
         window.localStorage.getItem(UNIFIED_STORAGE_KEY) as string,
       );
-      expect(
-        persisted.courses["ki-fuehrerschein"].workshopQuiz.score,
-      ).toBe(0.95);
+      expect(persisted.courses["ki-fuehrerschein"].workshopQuiz.score).toBe(
+        0.95,
+      );
     });
 
     it("normalizes stale keys on load and never reports progress above 100%", () => {
@@ -538,7 +562,7 @@ describe("unified progress store", () => {
       expect(isCertificateEligible("ki-fuehrerschein")).toBe(true);
     });
 
-    it("requires every AI-Native lesson plus the submitted capstone", () => {
+    it("preserves the historical AI-Native capstone certificate path", () => {
       expect(isCapstoneSubmitted("ai-native")).toBe(false);
       markCapstoneSubmitted("ai-native");
       expect(isCapstoneSubmitted("ai-native")).toBe(true);
@@ -565,6 +589,61 @@ describe("unified progress store", () => {
       expect(isCapstoneSubmitted("ai-native")).toBe(true);
     });
 
+    it("ignores the historical capstone writer outside AI-Native", () => {
+      markCapstoneSubmitted("codex");
+
+      expect(isCapstoneSubmitted("codex")).toBe(false);
+      expect(getCourseSlice("codex").capstoneSubmitted).toBe(false);
+    });
+
+    it("derives applied-project status without treating local evidence as certificate proof", () => {
+      const identity = getCourseProjectIdentity("ai-native");
+      saveExerciseResult("ai-native", identity.progressLessonId, {
+        exerciseId: identity.id,
+        kind: `course-project-${identity.engineKind}`,
+        completed: true,
+        score: 1,
+        attempts: 1,
+        completedAt: "2026-08-13T10:00:00.000Z",
+        skipped: false,
+        summary: serializeCourseProjectProgress(
+          "Verified",
+          verifiedCourseProjectArtifact("ai-native"),
+        ),
+      });
+
+      expect(isAppliedProjectCompleted("ai-native")).toBe(true);
+      expect(isCapstoneSubmitted("ai-native")).toBe(false);
+
+      for (const lessonId of CANONICAL_LESSON_IDS["ai-native"]) {
+        markLessonCompleted("ai-native", lessonId);
+      }
+      expect(isCertificateEligible("ai-native")).toBe(false);
+    });
+
+    it("clears both exact project evidence and the legacy AI-Native bit on reset", () => {
+      const identity = getCourseProjectIdentity("ai-native");
+      saveExerciseResult("ai-native", identity.progressLessonId, {
+        exerciseId: identity.id,
+        kind: `course-project-${identity.engineKind}`,
+        completed: true,
+        score: 1,
+        attempts: 1,
+        completedAt: "2026-08-13T10:00:00.000Z",
+        skipped: false,
+        summary: serializeCourseProjectProgress(
+          "Verified",
+          verifiedCourseProjectArtifact("ai-native"),
+        ),
+      });
+      markCapstoneSubmitted("ai-native");
+
+      resetCourse("ai-native");
+
+      expect(isAppliedProjectCompleted("ai-native")).toBe(false);
+      expect(isCapstoneSubmitted("ai-native")).toBe(false);
+    });
+
     it("becomes eligible when every lesson of a no-assessment course is completed", () => {
       for (const lessonId of CANONICAL_LESSON_IDS["data-science"]) {
         markLessonCompleted("data-science", lessonId);
@@ -574,7 +653,10 @@ describe("unified progress store", () => {
     });
 
     it("stays ineligible below the full catalog lesson count", () => {
-      for (const lessonId of CANONICAL_LESSON_IDS["ki-fuehrerschein"].slice(0, -1)) {
+      for (const lessonId of CANONICAL_LESSON_IDS["ki-fuehrerschein"].slice(
+        0,
+        -1,
+      )) {
         markLessonCompleted("ki-fuehrerschein", lessonId);
       }
       expect(isCertificateEligible("ki-fuehrerschein")).toBe(false);
@@ -613,7 +695,10 @@ describe("unified progress store", () => {
     });
 
     it("stays ineligible below the full lesson count for data-infrastructure", () => {
-      for (const lessonId of CANONICAL_LESSON_IDS["data-infrastructure"].slice(0, -1)) {
+      for (const lessonId of CANONICAL_LESSON_IDS["data-infrastructure"].slice(
+        0,
+        -1,
+      )) {
         markLessonCompleted("data-infrastructure", lessonId);
       }
       expect(isCertificateEligible("data-infrastructure")).toBe(false);
@@ -623,7 +708,9 @@ describe("unified progress store", () => {
     // "live" (COURSE_CATALOG), reconciled to its real 12 chapters — this is
     // the explicit "all 12 chapters completed" criterion.
     it("resolves eligibility for data-engineering-fundamentals via the all-chapters-completed path", () => {
-      for (const lessonId of CANONICAL_LESSON_IDS["data-engineering-fundamentals"]) {
+      for (const lessonId of CANONICAL_LESSON_IDS[
+        "data-engineering-fundamentals"
+      ]) {
         markLessonCompleted("data-engineering-fundamentals", lessonId);
       }
       expect(isWorkshopQuizPassed("data-engineering-fundamentals")).toBe(false);
@@ -631,10 +718,14 @@ describe("unified progress store", () => {
     });
 
     it("stays ineligible below the full chapter count for data-engineering-fundamentals", () => {
-      for (const lessonId of CANONICAL_LESSON_IDS["data-engineering-fundamentals"].slice(0, -1)) {
+      for (const lessonId of CANONICAL_LESSON_IDS[
+        "data-engineering-fundamentals"
+      ].slice(0, -1)) {
         markLessonCompleted("data-engineering-fundamentals", lessonId);
       }
-      expect(isCertificateEligible("data-engineering-fundamentals")).toBe(false);
+      expect(isCertificateEligible("data-engineering-fundamentals")).toBe(
+        false,
+      );
     });
 
     it("never throws on corrupted storage, reads as not eligible", () => {
@@ -655,6 +746,93 @@ describe("unified progress store", () => {
       const xpAfter = getXp();
       expect(completeCheckpoint("l1", "cp1")).toBe(false);
       expect(getXp()).toBe(xpAfter);
+    });
+
+    it("commits project evidence and its checkpoint atomically before an owner switch", () => {
+      activateAccountProgress("account-a");
+      let switched = false;
+      const unsubscribe = subscribe((snapshot) => {
+        const result =
+          snapshot.courses["ai-native"]?.lessons[AI_NATIVE_LESSON_1]
+            ?.exercisesCompleted["atomic-project"];
+        if (!result || switched) return;
+        switched = true;
+        activateAccountProgress("account-b");
+      });
+
+      expect(
+        saveExerciseResultWithCheckpoint(
+          "ai-native",
+          AI_NATIVE_LESSON_1,
+          {
+            exerciseId: "atomic-project",
+            kind: "course-project-prompt",
+            completed: true,
+            score: 1,
+            attempts: 1,
+            completedAt: "2026-08-13T12:00:00.000Z",
+            skipped: false,
+          },
+          "atomic-checkpoint",
+        ),
+      ).toEqual({ checkpointWasNew: true, durable: true });
+      unsubscribe();
+
+      expect(switched).toBe(true);
+      expect(
+        getExerciseResult("ai-native", AI_NATIVE_LESSON_1, "atomic-project"),
+      ).toBeUndefined();
+      expect(isCheckpointDone(AI_NATIVE_LESSON_1, "atomic-checkpoint")).toBe(
+        false,
+      );
+
+      activateAccountProgress("account-a");
+      expect(
+        getExerciseResult("ai-native", AI_NATIVE_LESSON_1, "atomic-project")
+          ?.completed,
+      ).toBe(true);
+      expect(isCheckpointDone(AI_NATIVE_LESSON_1, "atomic-checkpoint")).toBe(
+        true,
+      );
+    });
+
+    it("does not cache, emit, or reload project evidence when durable storage rejects the write", () => {
+      activateAnonymousProgress();
+      const subscriber = vi.fn();
+      const unsubscribe = subscribe(subscriber);
+      subscriber.mockClear();
+      const setItem = vi
+        .spyOn(window.localStorage, "setItem")
+        .mockImplementation(() => {
+          throw new Error("storage denied");
+        });
+
+      const result = saveExerciseResultWithCheckpoint(
+        "data-science",
+        "cap",
+        {
+          exerciseId: "project-data-science-experiment",
+          kind: "course-project-data",
+          completed: true,
+          score: 1,
+          attempts: 1,
+          completedAt: "2026-08-13T12:00:00.000Z",
+          skipped: false,
+          summary: serializeCourseProjectProgress(
+            "Notebook and model card verified",
+            verifiedCourseProjectArtifact("data-science"),
+          ),
+        },
+        "project-data-science-experiment:verified",
+      );
+
+      expect(result).toEqual({ checkpointWasNew: false, durable: false });
+      expect(isAppliedProjectCompleted("data-science")).toBe(false);
+      expect(subscriber).not.toHaveBeenCalled();
+      setItem.mockRestore();
+      __resetCacheForTests();
+      expect(isAppliedProjectCompleted("data-science")).toBe(false);
+      unsubscribe();
     });
   });
 
@@ -733,16 +911,73 @@ describe("unified progress store", () => {
       expect(getXp()).toBe(xpBefore); // xp ledger untouched
     });
 
+    it("resetCourse clears only that course's owned project draft and lesson missions", () => {
+      const targetDraft = getCourseProjectDraftStorageKey("ki-fuehrerschein");
+      const targetMission = getLessonMissionStorageKey(
+        "ki-fuehrerschein",
+        KF_LESSON_1,
+      );
+      const otherDraft = getCourseProjectDraftStorageKey("eu-ai-act-kurs");
+      window.localStorage.setItem(targetDraft, "target-draft");
+      window.localStorage.setItem(targetMission, "target-mission");
+      window.localStorage.setItem(otherDraft, "other-draft");
+
+      resetCourse("ki-fuehrerschein");
+
+      expect(window.localStorage.getItem(targetDraft)).toBeNull();
+      expect(window.localStorage.getItem(targetMission)).toBeNull();
+      expect(window.localStorage.getItem(otherDraft)).toBe("other-draft");
+    });
+
+    it("clears the initiating owner's draft before a reset subscriber can switch accounts", () => {
+      const draftKey = getCourseProjectDraftStorageKey("ki-fuehrerschein");
+      activateAccountProgress("account-b");
+      expect(setOwnedLocalLearningItem(draftKey, "account-b-draft")).toBe(true);
+      activateAccountProgress("account-a");
+      expect(setOwnedLocalLearningItem(draftKey, "account-a-draft")).toBe(true);
+      let switched = false;
+      const unsubscribe = subscribe((snapshot) => {
+        if (switched || !snapshot.courses["ki-fuehrerschein"]?.resetAt) {
+          return;
+        }
+        switched = true;
+        activateAccountProgress("account-b");
+      });
+
+      resetCourse("ki-fuehrerschein");
+      unsubscribe();
+
+      expect(switched).toBe(true);
+      expect(getOwnedLocalLearningItem(draftKey)).toBe("account-b-draft");
+      activateAccountProgress("account-a");
+      expect(getOwnedLocalLearningItem(draftKey)).toBeNull();
+    });
+
+    it("resetCourse clears the Data Science overview mission outside certificate lesson IDs", () => {
+      const overviewMission = getLessonMissionStorageKey(
+        "data-science",
+        "home",
+      );
+      window.localStorage.setItem(overviewMission, "overview-mission");
+
+      resetCourse("data-science");
+
+      expect(window.localStorage.getItem(overviewMission)).toBeNull();
+    });
+
     it("resetAll wipes everything", () => {
       markLessonCompleted("ki-fuehrerschein", KF_LESSON_1);
       completeCheckpoint(KF_LESSON_1, "cp1");
+      const draftKey = getCourseProjectDraftStorageKey("ki-fuehrerschein");
+      window.localStorage.setItem(draftKey, "draft");
       resetAll();
       expect(getXp()).toBe(0);
       expect(getEarnedBadgeIds()).toHaveLength(0);
       expect(getCompletedLessonsCount("ki-fuehrerschein")).toBe(0);
+      expect(window.localStorage.getItem(draftKey)).toBeNull();
     });
 
-    it("clears unified, legacy, reader, draft, and session learning data", () => {
+    it("persists an empty reset-stamped root while clearing legacy, draft, and session data", () => {
       const ownedLocalKeys = [
         UNIFIED_STORAGE_KEY,
         `${LEGACY_COURSE_KEY_PREFIX}ki-fuehrerschein`,
@@ -755,20 +990,37 @@ describe("unified progress store", () => {
         "matrix::mindset/3::matrix",
         "plays::operations/1::moves",
       ];
-      for (const key of ownedLocalKeys) window.localStorage.setItem(key, "private");
+      for (const key of ownedLocalKeys)
+        window.localStorage.setItem(key, "private");
       window.localStorage.setItem("theme", "dark");
-      window.sessionStorage.setItem("ai-native-exercise-draft-l1-e1", "private");
+      window.sessionStorage.setItem(
+        "ai-native-exercise-draft-l1-e1",
+        "private",
+      );
       window.sessionStorage.setItem("ai-native-challenge-draft-1", "private");
       window.sessionStorage.setItem("ai-native-continue-dismissed", "1");
 
       clearAllLocalLearningData();
 
       for (const key of ownedLocalKeys) {
-        expect(window.localStorage.getItem(key), key).toBeNull();
+        if (key === UNIFIED_STORAGE_KEY) {
+          expect(window.localStorage.getItem(key), key).not.toBeNull();
+        } else {
+          expect(window.localStorage.getItem(key), key).toBeNull();
+        }
       }
       expect(window.localStorage.getItem("theme")).toBe("dark");
       expect(window.sessionStorage.length).toBe(0);
       expect(getCompletedLessonsCount("ki-fuehrerschein")).toBe(0);
+      const persistedReset = JSON.parse(
+        window.localStorage.getItem(UNIFIED_STORAGE_KEY) ?? "null",
+      ) as UnifiedProgress;
+      expect(persistedReset.courses["ki-fuehrerschein"]?.resetAt).toBeTruthy();
+
+      __resetCacheForTests();
+      expect(getCourseSlice("ki-fuehrerschein").resetAt).toBe(
+        persistedReset.courses["ki-fuehrerschein"]?.resetAt,
+      );
     });
   });
 
@@ -827,13 +1079,11 @@ describe("unified progress store", () => {
         }),
       );
       __resetCacheForTests();
-      const r = getExerciseResult(
-        "ai-native",
-        AI_NATIVE_LESSON_1,
-        "ex1",
-      );
+      const r = getExerciseResult("ai-native", AI_NATIVE_LESSON_1, "ex1");
       expect(r?.summary).toBeDefined();
-      expect(new TextEncoder().encode(r?.summary ?? "").length).toBeLessThanOrEqual(500);
+      expect(
+        new TextEncoder().encode(r?.summary ?? "").length,
+      ).toBeLessThanOrEqual(500);
       expect(getUnifiedState().schemaVersion).toBe(3);
     });
   });
@@ -927,18 +1177,22 @@ describe("forward migration from legacy schemas (golden files)", () => {
     expect(slice.startedAt).toBe("2026-03-10T08:00:00.000Z");
     // Legacy key NOT wiped.
     expect(
-      window.localStorage.getItem(`${LEGACY_COURSE_KEY_PREFIX}ki-fuehrerschein`),
+      window.localStorage.getItem(
+        `${LEGACY_COURSE_KEY_PREFIX}ki-fuehrerschein`,
+      ),
     ).not.toBe(null);
   });
 
   it("migrates an AI-Native payload forward, preserving exercises", () => {
-    window.localStorage.setItem(LEGACY_AI_NATIVE_KEY, JSON.stringify(GOLDEN_AI_NATIVE));
+    window.localStorage.setItem(
+      LEGACY_AI_NATIVE_KEY,
+      JSON.stringify(GOLDEN_AI_NATIVE),
+    );
     __resetCacheForTests();
     const slice = getCourseSlice("ai-native");
     expect(slice.lessons["modul_1_lesson_1"].completed).toBe(true);
     expect(slice.capstoneSubmitted).toBe(true);
-    const ex =
-      slice.lessons["modul_1_lesson_1"].exercisesCompleted["ex_fix"];
+    const ex = slice.lessons["modul_1_lesson_1"].exercisesCompleted["ex_fix"];
     expect(ex.score).toBe(0.9);
     expect(ex.attempts).toBe(2);
     expect(window.localStorage.getItem(LEGACY_AI_NATIVE_KEY)).not.toBe(null);
@@ -949,7 +1203,10 @@ describe("forward migration from legacy schemas (golden files)", () => {
       `${LEGACY_COURSE_KEY_PREFIX}ki-fuehrerschein`,
       JSON.stringify(GOLDEN_KI_F),
     );
-    window.localStorage.setItem(LEGACY_AI_NATIVE_KEY, JSON.stringify(GOLDEN_AI_NATIVE));
+    window.localStorage.setItem(
+      LEGACY_AI_NATIVE_KEY,
+      JSON.stringify(GOLDEN_AI_NATIVE),
+    );
     __resetCacheForTests();
     const s = getUnifiedState();
     expect(Object.keys(s.courses).sort()).toEqual([
@@ -962,7 +1219,10 @@ describe("forward migration from legacy schemas (golden files)", () => {
   });
 
   it("migrates the oldest flat ki-fuehrerschein-progress key", () => {
-    window.localStorage.setItem(LEGACY_KI_F_FLAT_KEY, JSON.stringify(GOLDEN_KI_F));
+    window.localStorage.setItem(
+      LEGACY_KI_F_FLAT_KEY,
+      JSON.stringify(GOLDEN_KI_F),
+    );
     __resetCacheForTests();
     expect(isLessonCompleted("ki-fuehrerschein", "block_1_lesson_1")).toBe(
       true,

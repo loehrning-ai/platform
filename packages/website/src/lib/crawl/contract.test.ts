@@ -40,6 +40,7 @@ describe("crawl contract", () => {
       "/api/account/delete",
       "/api/progress",
       "/api/ai-native/practice",
+      "/api/course-workspace/terminal",
       "/api/demos/example/future-write",
       "/ki-fuehrerschein/kurs",
       "/ki-fuehrerschein/kurs/block-1",

@@ -36,6 +36,13 @@ function installLocalStoragePolyfill() {
 import { AI_NATIVE_SCHEMA_VERSION, AI_NATIVE_STORAGE_KEY } from "./types";
 import { UNIFIED_STORAGE_KEY } from "@/lib/progress/types";
 import {
+  isAppliedProjectCompleted,
+  saveExerciseResult as saveUnifiedExerciseResult,
+} from "@/lib/progress/store";
+import { getCourseProjectIdentity } from "@/lib/course-projects/identity";
+import { serializeCourseProjectProgress } from "@/lib/course-projects/persistence";
+import { verifiedCourseProjectArtifact } from "@/lib/course-projects/test-artifact";
+import {
   markSectionRead,
   isSectionRead,
   markLessonCompleted,
@@ -463,6 +470,87 @@ describe("ai-native progress", () => {
           .attempts,
       ).toBe(5);
       expect(progress.capstoneSubmitted).toBe(true);
+    });
+
+    it("keeps project artifacts out of the privacy-stripped URL export", () => {
+      const identity = getCourseProjectIdentity("ai-native");
+      saveUnifiedExerciseResult("ai-native", identity.progressLessonId, {
+        exerciseId: identity.id,
+        kind: `course-project-${identity.engineKind}`,
+        completed: true,
+        score: 1,
+        attempts: 1,
+        completedAt: "2026-08-13T10:00:00.000Z",
+        skipped: false,
+        summary: serializeCourseProjectProgress(
+          "Verified",
+          verifiedCourseProjectArtifact("ai-native"),
+        ),
+      });
+      expect(isAppliedProjectCompleted("ai-native")).toBe(true);
+      expect(getAllProgress().capstoneSubmitted).toBe(false);
+      expect(serializeProgress()).toBe(null);
+      expect(buildProgressUrl("https://example.com/ai-native")).toBe(null);
+    });
+
+    it("rejects the project exercise kind outside its exact lesson and exercise ID", () => {
+      const identity = getCourseProjectIdentity("ai-native");
+      const encoded = encodeImportPayload({
+        schemaVersion: AI_NATIVE_SCHEMA_VERSION,
+        lessons: {
+          [CANONICAL_LESSON_ID]: {
+            sectionsRead: [],
+            quizScore: null,
+            quizTotal: null,
+            completed: false,
+            exercisesCompleted: {
+              [identity.id]: {
+                kind: `course-project-${identity.engineKind}`,
+                completed: true,
+                score: 1,
+                attempts: 1,
+                skipped: false,
+              },
+            },
+          },
+        },
+        capstoneSubmitted: false,
+        startedAt: "2026-08-13T10:00:00.000Z",
+        lastActivity: "2026-08-13T10:00:00.000Z",
+      });
+
+      expect(deserializeProgress(encoded)).toBe(null);
+      expect(importProgress(encoded)).toBe(false);
+    });
+
+    it("rejects an artifact-less project marker in the canonical import slot", () => {
+      const identity = getCourseProjectIdentity("ai-native");
+      const encoded = encodeImportPayload({
+        schemaVersion: AI_NATIVE_SCHEMA_VERSION,
+        lessons: {
+          [identity.progressLessonId]: {
+            sectionsRead: [],
+            quizScore: null,
+            quizTotal: null,
+            completed: false,
+            exercisesCompleted: {
+              [identity.id]: {
+                kind: `course-project-${identity.engineKind}`,
+                completed: true,
+                score: 1,
+                attempts: 1,
+                skipped: false,
+              },
+            },
+          },
+        },
+        capstoneSubmitted: false,
+        startedAt: "2026-08-13T10:00:00.000Z",
+        lastActivity: "2026-08-13T10:00:00.000Z",
+      });
+
+      expect(deserializeProgress(encoded)).toBe(null);
+      expect(importProgress(encoded)).toBe(false);
     });
 
     it("returns null when no progress exists", () => {

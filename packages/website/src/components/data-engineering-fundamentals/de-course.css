@@ -472,11 +472,11 @@
     color-mix(in oklab, var(--ch-ink) 70%, transparent);
 }
 .de-course .sb-item.active .sb-title {
-  color: var(--ch-ink);
+  color: var(--fg-1);
 }
 .de-course .sb-item.active .sb-time {
-  color: var(--ch-ink);
-  opacity: 0.9;
+  color: var(--fg-1);
+  opacity: 1;
 }
 .de-course .sb-num {
   width: 28px;

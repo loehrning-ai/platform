@@ -1,12 +1,20 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   anthropicRetentionDays,
+  courseTerminalDailyRunBudget,
+  courseTerminalSandboxImage,
+  geminiRetentionDays,
   hasCompleteSupabaseRuntimeConfig,
   isAccountAbuseProtectionReady,
   isAccountRuntimeReady,
   isAnthropicRuntimeReady,
+  isCourseTerminalRuntimeReady,
+  isGeminiRuntimeReady,
   isGoogleOAuthRuntimeReady,
   isMagicLinkRuntimeReady,
+  isPracticeModelRuntimeReady,
+  practiceAllowedModels,
+  practiceModelAllowlistDecision,
   turnstileSiteKey,
 } from "./provider-readiness";
 
@@ -15,6 +23,12 @@ function configureCompleteRuntime(): void {
   vi.stubEnv("ANTHROPIC_API_KEY", "obviously-fake-test-key");
   vi.stubEnv("ANTHROPIC_DPA_CONFIRMED_AT", "2026-07-01");
   vi.stubEnv("ANTHROPIC_RETENTION_DAYS", "30");
+  vi.stubEnv("AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET", "100000");
+  vi.stubEnv("AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET", "1000000");
+  vi.stubEnv(
+    "AI_NATIVE_PRACTICE_ALLOWED_MODELS",
+    "anthropic/claude-haiku-4.5",
+  );
   vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://fake-project.supabase.co");
   vi.stubEnv("SUPABASE_URL", "https://fake-project.supabase.co");
   vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "fake-public-key");
@@ -58,6 +72,153 @@ describe("provider runtime readiness", () => {
     for (const retention of ["", "-1", "1.5", "3651", "unknown"]) {
       vi.stubEnv("ANTHROPIC_RETENTION_DAYS", retention);
       expect(isAnthropicRuntimeReady(), retention).toBe(false);
+    }
+  });
+
+  it("enforces an exact deployment model allowlist and daily token budgets", () => {
+    configureCompleteRuntime();
+    expect(practiceAllowedModels()).toEqual([
+      "anthropic/claude-haiku-4.5",
+    ]);
+    expect(
+      isPracticeModelRuntimeReady("anthropic/claude-haiku-4.5"),
+    ).toBe(true);
+    expect(
+      isPracticeModelRuntimeReady("google/gemini-2.5-flash-lite"),
+    ).toBe(false);
+
+    for (const malformed of [
+      "anthropic/claude-haiku-4.5, anthropic/claude-haiku-4.5",
+      "anthropic/claude-haiku-4.5,anthropic/claude-haiku-4.5",
+      "google/gemini-latest",
+      ",",
+    ]) {
+      vi.stubEnv("AI_NATIVE_PRACTICE_ALLOWED_MODELS", malformed);
+      expect(practiceAllowedModels(), malformed).toEqual([]);
+      expect(
+        isPracticeModelRuntimeReady("anthropic/claude-haiku-4.5"),
+        malformed,
+      ).toBe(false);
+    }
+
+    configureCompleteRuntime();
+    vi.stubEnv("AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET", "0");
+    expect(
+      isPracticeModelRuntimeReady("anthropic/claude-haiku-4.5"),
+    ).toBe(false);
+  });
+
+  it("fails closed when the model allowlist is absent and distinguishes explicit denial", () => {
+    configureCompleteRuntime();
+    vi.stubEnv("AI_NATIVE_PRACTICE_ALLOWED_MODELS", "");
+    expect(practiceAllowedModels()).toEqual([]);
+    expect(
+      practiceModelAllowlistDecision("anthropic/claude-haiku-4.5"),
+    ).toBe("invalid");
+    expect(
+      isPracticeModelRuntimeReady("anthropic/claude-haiku-4.5"),
+    ).toBe(false);
+
+    vi.stubEnv(
+      "AI_NATIVE_PRACTICE_ALLOWED_MODELS",
+      "google/gemini-2.5-flash-lite",
+    );
+    expect(
+      practiceModelAllowlistDecision("anthropic/claude-haiku-4.5"),
+    ).toBe("denied");
+  });
+
+  it("activates Gemini only with paid-tier, DPA, retention, allowlist, quota, and Supabase gates", () => {
+    configureCompleteRuntime();
+    vi.stubEnv(
+      "AI_NATIVE_PRACTICE_ALLOWED_MODELS",
+      "google/gemini-2.5-flash-lite",
+    );
+    vi.stubEnv("GEMINI_API_KEY", "obviously-fake-gemini-key");
+    vi.stubEnv("GEMINI_DPA_CONFIRMED_AT", "2026-07-01");
+    vi.stubEnv("GEMINI_PAID_TIER_CONFIRMED_AT", "2026-07-01");
+    vi.stubEnv("GEMINI_RETENTION_DAYS", "0");
+
+    expect(geminiRetentionDays()).toBe(0);
+    expect(isGeminiRuntimeReady()).toBe(true);
+    expect(
+      isPracticeModelRuntimeReady("google/gemini-2.5-flash-lite"),
+    ).toBe(true);
+
+    for (const missing of [
+      "GEMINI_API_KEY",
+      "GEMINI_DPA_CONFIRMED_AT",
+      "GEMINI_PAID_TIER_CONFIRMED_AT",
+      "GEMINI_RETENTION_DAYS",
+      "SUPABASE_SERVICE_ROLE_KEY",
+    ]) {
+      vi.stubEnv(missing, "");
+      expect(isGeminiRuntimeReady(), missing).toBe(false);
+      configureCompleteRuntime();
+      vi.stubEnv(
+        "AI_NATIVE_PRACTICE_ALLOWED_MODELS",
+        "google/gemini-2.5-flash-lite",
+      );
+      vi.stubEnv("GEMINI_API_KEY", "obviously-fake-gemini-key");
+      vi.stubEnv("GEMINI_DPA_CONFIRMED_AT", "2026-07-01");
+      vi.stubEnv("GEMINI_PAID_TIER_CONFIRMED_AT", "2026-07-01");
+      vi.stubEnv("GEMINI_RETENTION_DAYS", "0");
+    }
+  });
+
+  it("keeps the real terminal off until every Vercel, policy, quota, and auth gate is ready", () => {
+    configureCompleteRuntime();
+    vi.stubEnv("COURSE_TERMINAL_ENABLED", "true");
+    vi.stubEnv("COURSE_TERMINAL_DAILY_RUN_BUDGET", "100");
+    vi.stubEnv("COURSE_TERMINAL_POLICY_CONFIRMED_AT", "2026-08-13");
+    vi.stubEnv(
+      "COURSE_TERMINAL_SANDBOX_IMAGE",
+      `vercel/sandbox/node@sha256:${"a".repeat(64)}`,
+    );
+    vi.stubEnv("VERCEL", "1");
+    vi.stubEnv("VERCEL_DPA_CONFIRMED_AT", "2026-07-01");
+    vi.stubEnv("VERCEL_OIDC_TOKEN", "fake-runtime-oidc");
+
+    expect(courseTerminalDailyRunBudget()).toBe(100);
+    expect(courseTerminalSandboxImage()).toBe(
+      `vercel/sandbox/node@sha256:${"a".repeat(64)}`,
+    );
+    expect(isCourseTerminalRuntimeReady()).toBe(true);
+
+    for (const missing of [
+      "COURSE_TERMINAL_ENABLED",
+      "COURSE_TERMINAL_DAILY_RUN_BUDGET",
+      "COURSE_TERMINAL_POLICY_CONFIRMED_AT",
+      "COURSE_TERMINAL_SANDBOX_IMAGE",
+      "VERCEL",
+      "VERCEL_DPA_CONFIRMED_AT",
+      "VERCEL_OIDC_TOKEN",
+      "SUPABASE_SERVICE_ROLE_KEY",
+    ]) {
+      vi.stubEnv(missing, "");
+      expect(isCourseTerminalRuntimeReady(), missing).toBe(false);
+      configureCompleteRuntime();
+      vi.stubEnv("COURSE_TERMINAL_ENABLED", "true");
+      vi.stubEnv("COURSE_TERMINAL_DAILY_RUN_BUDGET", "100");
+      vi.stubEnv("COURSE_TERMINAL_POLICY_CONFIRMED_AT", "2026-08-13");
+      vi.stubEnv(
+        "COURSE_TERMINAL_SANDBOX_IMAGE",
+        `vercel/sandbox/node@sha256:${"a".repeat(64)}`,
+      );
+      vi.stubEnv("VERCEL", "1");
+      vi.stubEnv("VERCEL_DPA_CONFIRMED_AT", "2026-07-01");
+      vi.stubEnv("VERCEL_OIDC_TOKEN", "fake-runtime-oidc");
+    }
+
+    for (const invalid of [
+      "vercel/sandbox/node:24",
+      "vercel/sandbox/node:24@sha256:abc",
+      `vercel/sandbox/node@sha256:${"A".repeat(64)}`,
+      ` vercel/sandbox/node@sha256:${"a".repeat(64)}`,
+    ]) {
+      vi.stubEnv("COURSE_TERMINAL_SANDBOX_IMAGE", invalid);
+      expect(courseTerminalSandboxImage(), invalid).toBeNull();
+      expect(isCourseTerminalRuntimeReady(), invalid).toBe(false);
     }
   });
 

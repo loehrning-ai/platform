@@ -1,5 +1,9 @@
 import type { AiRubricEntry, ExerciseKind } from "@/lib/ai-native/types";
 import { trackEvent } from "@/lib/ai-native/analytics";
+import {
+  GRADE_ERROR_CODES,
+  type GradeErrorCode,
+} from "@/app/api/ai-native/grade-exercise/types";
 
 /**
  * Shared helper for the 3 AI-graded exercises (fix-prompt, rctfc-checklist,
@@ -13,7 +17,9 @@ import { trackEvent } from "@/lib/ai-native/analytics";
 export interface GradeWithAIArgs<UserInput> {
   readonly kind: Extract<
     ExerciseKind,
-    "exercise-fix-prompt" | "exercise-rctfc-checklist" | "exercise-free-response"
+    | "exercise-fix-prompt"
+    | "exercise-rctfc-checklist"
+    | "exercise-free-response"
   >;
   readonly lessonId: string;
   readonly exerciseId: string;
@@ -33,12 +39,50 @@ export interface GradeWithAIResult {
 }
 
 type FallbackReason =
-  | "no-api-key"
+  | "provider-not-ready"
+  | "quota-unavailable"
+  | "budget-exhausted"
   | "rate-limited"
   | "network"
   | "parse-error"
   | "timeout"
   | "bad-request";
+
+function isGradeErrorCode(value: unknown): value is GradeErrorCode {
+  return (
+    typeof value === "string" &&
+    (GRADE_ERROR_CODES as readonly string[]).includes(value)
+  );
+}
+
+function fallbackReasonForCode(
+  code: GradeErrorCode | null,
+  status: number,
+): FallbackReason {
+  if (code === "rate_limited") return "rate-limited";
+  if (code === "budget_exhausted") return "budget-exhausted";
+  if (
+    code === "rate_limit_unavailable" ||
+    code === "budget_unavailable" ||
+    code === "budget_not_configured"
+  ) {
+    return "quota-unavailable";
+  }
+  if (code === "provider_not_configured") return "provider-not-ready";
+  if (
+    code === "unsupported_media_type" ||
+    code === "request_too_large" ||
+    code === "invalid_json" ||
+    code === "validation_failed" ||
+    code === "unknown_exercise"
+  ) {
+    return "bad-request";
+  }
+  if (code === "provider_failed") return "network";
+  if (status === 429) return "rate-limited";
+  if (status >= 400 && status < 500) return "bad-request";
+  return "network";
+}
 
 export async function gradeWithAI<UserInput>(
   args: GradeWithAIArgs<UserInput>,
@@ -63,14 +107,13 @@ export async function gradeWithAI<UserInput>(
     clearTimeout(timer);
 
     if (!res.ok) {
-      const reason: FallbackReason =
-        res.status === 503
-          ? "no-api-key"
-          : res.status === 429
-            ? "rate-limited"
-            : res.status === 400
-              ? "bad-request"
-              : "network";
+      const errorPayload = (await res.json().catch(() => null)) as {
+        code?: unknown;
+      } | null;
+      const reason = fallbackReasonForCode(
+        isGradeErrorCode(errorPayload?.code) ? errorPayload.code : null,
+        res.status,
+      );
       trackEvent({
         name: "ai_native_ai_grading_fallback",
         props: {
@@ -112,8 +155,7 @@ export async function gradeWithAI<UserInput>(
       return {
         id: typeof obj.id === "string" ? obj.id : `criterion-${idx + 1}`,
         passed: Boolean(obj.passed),
-        rationale:
-          typeof obj.rationale === "string" ? obj.rationale : "",
+        rationale: typeof obj.rationale === "string" ? obj.rationale : "",
       };
     });
 
@@ -139,9 +181,7 @@ export async function gradeWithAI<UserInput>(
   } catch (err) {
     clearTimeout(timer);
     const reason: FallbackReason =
-      err instanceof Error && err.name === "AbortError"
-        ? "timeout"
-        : "network";
+      err instanceof Error && err.name === "AbortError" ? "timeout" : "network";
     trackEvent({
       name: "ai_native_ai_grading_fallback",
       props: {

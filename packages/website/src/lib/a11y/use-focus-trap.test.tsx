@@ -1,5 +1,10 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, renderHook, fireEvent } from "@testing-library/react";
+import {
+  render,
+  renderHook,
+  fireEvent,
+  waitFor,
+} from "@testing-library/react";
 import type { ReactNode } from "react";
 import { useFocusTrap } from "./use-focus-trap";
 
@@ -201,6 +206,18 @@ describe("useFocusTrap", () => {
     expect(document.activeElement).toBe(middle);
   });
 
+  it("contains programmatic focus attempts that bypass keyboard navigation", () => {
+    const { getByTestId } = render(
+      <Trap open onClose={vi.fn()}>
+        {threeButtons}
+      </Trap>,
+    );
+    const outside = getByTestId("outside");
+    outside.focus();
+
+    expect(document.activeElement).toBe(getByTestId("first"));
+  });
+
   it("prevents default on Tab when the trap has no focusables", () => {
     const { getByTestId } = render(<Trap open onClose={vi.fn()} />);
     const node = getByTestId("trap");
@@ -208,7 +225,7 @@ describe("useFocusTrap", () => {
     expect(notPrevented).toBe(false);
   });
 
-  it("restores focus to the previously-focused element on close", () => {
+  it("restores focus to the previously-focused element on close", async () => {
     const onClose = vi.fn();
     const { getByTestId, rerender } = render(
       <Trap open={false} onClose={onClose}>
@@ -233,7 +250,22 @@ describe("useFocusTrap", () => {
         {threeButtons}
       </Trap>,
     );
-    expect(document.activeElement).toBe(outside);
+    await waitFor(() => expect(document.activeElement).toBe(outside));
+  });
+
+  it("removes programmatic focus containment when the trap closes", () => {
+    const { getByTestId, rerender } = render(
+      <Trap open onClose={vi.fn()}>
+        {threeButtons}
+      </Trap>,
+    );
+    rerender(
+      <Trap open={false} onClose={vi.fn()}>
+        {threeButtons}
+      </Trap>,
+    );
+    getByTestId("outside").focus();
+    expect(getByTestId("outside")).toHaveFocus();
   });
 
   it("detaches the keydown listener on close so Escape no longer fires onClose", () => {

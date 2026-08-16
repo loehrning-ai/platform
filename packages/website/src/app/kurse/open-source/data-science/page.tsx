@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { DataScienceLocaleProvider } from "@/components/data-science/locale-context";
-import { DsReaderShell } from "@/components/data-science/reader-shell";
 import { getDataScienceCourseCopy } from "@/lib/data-science/course-copy";
-import { DATA_SCIENCE_CONFIG, DATA_SCIENCE_CONFIG_DE } from "@/lib/data-science/config";
+import {
+  DATA_SCIENCE_CONFIG,
+  DATA_SCIENCE_CONFIG_DE,
+} from "@/lib/data-science/config";
 import {
   DS_TRANSLATED_CORE_CHAPTER_IDS,
   getDsTranslatedCoreChapterMeta,
@@ -17,6 +19,7 @@ import {
   buildTechnicalCourseMetadata,
   technicalCourseHref,
 } from "@/lib/technical-courses/routes";
+import { DataScienceLandingReaderShell } from "./landing-reader-shell";
 
 const CANONICAL_PATH = "/kurse/open-source/data-science";
 
@@ -103,8 +106,7 @@ export default async function DataScienceOverviewPage() {
   const OverviewComponent = await getDsOverviewComponent(locale);
 
   return (
-    <DsReaderShell
-      activeId="home"
+    <DataScienceLandingReaderShell
       locale={locale}
       chapters={chapters.map((chapter) => chapter.meta)}
     >
@@ -132,6 +134,6 @@ export default async function DataScienceOverviewPage() {
           </nav>
         </div>
       </DataScienceLocaleProvider>
-    </DsReaderShell>
+    </DataScienceLandingReaderShell>
   );
 }

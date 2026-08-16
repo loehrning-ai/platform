@@ -223,6 +223,7 @@ _None._
 | `/api/progress` | Private account, state, or provider-backed API surface. |
 | `/api/progress/:path*` | Private account, state, or provider-backed API surface. |
 | `/api/ai-native/:path*` | Private account, state, or provider-backed API surface. |
+| `/api/course-workspace/:path*` | Private account, state, or provider-backed API surface. |
 | `/api/demos/:path*` | Private account, state, or provider-backed API surface. |
 | `/ki-fuehrerschein/kurs` | Private account, state, or provider-backed API surface. |
 | `/ki-fuehrerschein/kurs/:path*` | Private account, state, or provider-backed API surface. |

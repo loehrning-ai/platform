@@ -2,6 +2,7 @@
 
 import { useState, type JSX } from "react";
 import { LessonShell } from "@/components/course/lesson-shell";
+import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
 import {
   AiNativeOperatorLessonSidebar,
   type AiNativeOperatorLessonNavItem,
@@ -45,10 +46,32 @@ export function AiNativeOperatorLessonPage({
       navLabel={copy.navLabel}
       openNavLabel={copy.openNav}
       closeNavLabel={copy.closeNav}
+      collapseNavLabel={
+        locale === "de"
+          ? "Modulnavigation einklappen"
+          : "Collapse module navigation"
+      }
+      expandNavLabel={
+        locale === "de"
+          ? "Modulnavigation ausklappen"
+          : "Expand module navigation"
+      }
       sidebar={
         <AiNativeOperatorLessonSidebar locale={locale} lessons={navItems} />
       }
     >
+      <div className="mb-10">
+        <CourseProjectStudio
+          courseSlug="ai-native-operator"
+          lessonId={lesson.id}
+          locale={locale}
+          lessonContext={{
+            title: lesson.title,
+            objective: lesson.objective,
+            keyConcepts: lesson.keyConcepts,
+          }}
+        />
+      </div>
       <AiNativeOperatorLessonReader
         locale={locale}
         lesson={lesson}

@@ -13,7 +13,7 @@ from the code in this tree (`scripts/validate-env.mjs`, `next.config.ts`,
 | Framework Preset                               | Next.js                 |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | Install / Build command                        | pinned in `vercel.json` | `packages/website/vercel.json` sets `framework: nextjs`, `buildCommand: bun run build` (triggers `prebuild`: `validate-env` + non-mutating `registry:check`), and `installCommand: cd ../.. && bun install --frozen-lockfile --ignore-scripts` — install must run from the repo root because `bun.lock` and the fail-closed `bunfig.toml` live there. Regenerate a reviewed legal-date change explicitly with `bun run registry:export` before commit. Keep the dashboard overrides empty so `vercel.json` wins. |
 | Node.js version                                | 22.x or 24.x            | `engines: ^22.18.0 \|\| ^24.0.0`, `.nvmrc` 24.x. The registry check/export imports a `.ts` module through plain `node` and relies on type stripping (Node >= 22.18).                                                                                                                                                                                                                                                                                                                                             |
-| Fluid Compute                                  | ON (default)            | `src/proxy.ts` uses Next.js 16's Node.js proxy runtime.                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Fluid Compute                                  | ON (default)            | `src/proxy.ts` uses Next.js 16's Node.js proxy runtime.                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 
 ## Environment variables
 
@@ -96,14 +96,49 @@ partial configuration and fails instead of surviving as stale release state.
 - Analytics: `VERCEL_TELEMETRY_ENABLED=true` requires
   `VERCEL_TDDDG_ASSESSMENT_AT=YYYY-MM-DD`. Without the pair, Web Analytics and
   Speed Insights are compiled out.
-- Anthropic (AI-Native practice grading): `ANTHROPIC_API_KEY` requires
-  `ANTHROPIC_DPA_CONFIRMED_AT` and `ANTHROPIC_RETENTION_DAYS` matching the
-  accepted API contract, plus the full Supabase group for durable rate
-  limiting. Feature-flagged by `AI_NATIVE_PRACTICE_ENABLED`.
+- Provider-backed practice is feature-flagged by `AI_NATIVE_PRACTICE_ENABLED` and
+  requires the full Supabase group, the applied
+  `20260813000000_add_usage_budget_counter.sql` migration with both
+  `usage_budget_consume_pair` and `rate_limit_consume_multi`, positive
+  `AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET` and
+  `AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET`, plus an exact
+  `AI_NATIVE_PRACTICE_ALLOWED_MODELS` list. `anthropic/claude-haiku-4.5`
+  requires `ANTHROPIC_API_KEY`, `ANTHROPIC_DPA_CONFIRMED_AT`, and
+  `ANTHROPIC_RETENTION_DAYS`. `google/gemini-2.5-flash-lite` requires the
+  server-only `GEMINI_API_KEY`, `GEMINI_DPA_CONFIRMED_AT`,
+  `GEMINI_PAID_TIER_CONFIRMED_AT`, and `GEMINI_RETENTION_DAYS`. Do not enable
+  Gemini free-tier traffic for learner text. The paid-tier date is a
+  deployer-supplied review marker; application code does not inspect or prove
+  the Google billing tier. Keys never enter client code.
+  Practice and AI exercise grading reserve the caller and global daily ledgers
+  together in one database transaction. Authenticated traffic from both routes
+  shares the `ai-model-token-day` caller namespace; anonymous grading remains
+  bound to a separate pseudonymous trusted-IP quota. These values reserve
+  estimated model tokens, not price, currency, provider balance, or spend.
+- The real synthetic course terminal is independently feature-flagged by
+  `COURSE_TERMINAL_ENABLED`. Activation requires Vercel runtime OIDC,
+  `VERCEL_DPA_CONFIRMED_AT`, `COURSE_TERMINAL_POLICY_CONFIRMED_AT`, a positive
+  `COURSE_TERMINAL_DAILY_RUN_BUDGET`, a reviewed immutable
+  `COURSE_TERMINAL_SANDBOX_IMAGE` in `repository@sha256:<64 lowercase hex>`
+  form, the full Supabase group, and the applied
+  `20260813000000_add_usage_budget_counter.sql` migration. Terminal account,
+  IP, and global run quotas use its service-role-only
+  `rate_limit_consume_multi` RPC atomically; provider-token reservations use
+  `usage_budget_consume_pair`. Run quotas count accepted runs and do not measure
+  Sandbox price or spend.
+  `VERCEL_OIDC_TOKEN` is runtime-injected; never place it in `.env.example` or a
+  client variable. Mutable image tags and bare image names fail closed; no
+  digest is guessed by source code. The route runs only each workspace's exact,
+  ordered synthetic command-ID contract in a non-persistent,
+  deny-all-network Sandbox and fails closed when any readiness input is absent.
+  The route covers the Codex repository fixture and the fixed Data Science,
+  Data Engineering, and Data Infrastructure programs. Their browser-entered
+  plans are not executable SQL and are never sent to Sandbox.
 
 Outside CI, Vercel, and release validation, credential-free local development
 can continue after a validation warning. An invalid environment containing
-`SENTRY_AUTH_TOKEN`, `SUPABASE_SERVICE_ROLE_KEY`, or `ANTHROPIC_API_KEY` fails
+`SENTRY_AUTH_TOKEN`, `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, or
+`GEMINI_API_KEY` fails
 instead because those credentials can authorize uploads, writes, or paid calls.
 
 ## Domain
