@@ -872,6 +872,7 @@ export function LessonMissionControl({
       id="lesson-mission-control"
       data-lesson-mission={courseSlug}
       data-lesson-id={lessonId}
+      data-keyboard-shortcuts="ignore"
       aria-labelledby={headingId}
       className="relative mb-10 min-w-0 scroll-mt-24 overflow-hidden border-2 border-foreground bg-background shadow-[7px_7px_0_0_var(--color-brand-orange)] [overflow-wrap:anywhere]"
     >

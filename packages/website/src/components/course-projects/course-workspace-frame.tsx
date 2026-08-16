@@ -567,7 +567,15 @@ export function CourseWorkspaceFrame({
     }
   }
 
-  // The frame below sets overflow-wrap: anywhere, which inherits to every
+  // The frame below carries data-keyboard-shortcuts="ignore". The chapter
+  // shells turn ArrowLeft/ArrowRight into chapter navigation unless the event
+  // came from something interactive, and the studio focuses tabIndex={-1}
+  // containers, which that check excludes by construction. Without the opt-out
+  // a single arrow press after opening the workspace navigates away and
+  // discards the prompt text, recall answers and terminal output this UI
+  // promises to keep in memory.
+  //
+  // It also sets overflow-wrap: anywhere, which inherits to every
   // label inside the workspace. The frame clips rather than scrolls, and a
   // pane's automatic minimum size is its longest unbreakable word, so without
   // a break a German compound holds the pane wider than its track and the text
@@ -599,6 +607,7 @@ export function CourseWorkspaceFrame({
       aria-describedby={fullscreen ? fullscreenHintId : undefined}
       data-course-project={projectId}
       data-engine-kind={engineKind}
+      data-keyboard-shortcuts="ignore"
       data-fullscreen={fullscreen ? "true" : "false"}
       data-layout={splitActive ? "docked" : "stacked"}
       className={
