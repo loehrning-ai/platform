@@ -425,7 +425,11 @@ describe("Supply-chain install contract", () => {
     expect(workflow).toContain(
       "bun install --frozen-lockfile --ignore-scripts",
     );
-    expect(workflow).toMatch(/\n\s*bun audit\s*\n/);
+    // The audit must still run on every pull request. It may carry --ignore
+    // for advisories with no published fix, but only for specific GHSA ids:
+    // --audit-level or a bare skip would silently stop gating everything else.
+    expect(workflow).toMatch(/\n\s*bun audit(\s+--ignore=GHSA-[\w-]+)*\s*\n/);
+    expect(workflow).not.toMatch(/bun audit[^\n]*--audit-level/);
     expect(workflow).toContain("actions/dependency-review-action@");
   });
 

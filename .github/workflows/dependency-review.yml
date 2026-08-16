@@ -29,7 +29,12 @@ jobs:
       - name: Validate and audit the complete Bun dependency tree
         run: |
           bun install --frozen-lockfile --ignore-scripts
-          bun audit
+          # GHSA-jmr9-qjv8-65gv (extract-zip symlink traversal) is reached
+          # only through @lhci/cli -> lighthouse -> puppeteer-core, a
+          # devDependency that never ships. extract-zip 2.0.1 is the latest
+          # published version and @lhci/cli 0.15.1 is the latest release, so
+          # no upgrade clears it. Drop this flag once either ships a fix.
+          bun audit --ignore=GHSA-jmr9-qjv8-65gv
       - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
         with:
           fail-on-severity: moderate
