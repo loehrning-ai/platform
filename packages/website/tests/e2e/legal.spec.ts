@@ -55,12 +55,12 @@ test.describe("/datenschutz", () => {
     ).toBeVisible();
     await expect(
       page.getByRole("heading", {
-        name: "7. KI-gestütztes Lernfeedback (Anthropic Claude)",
+        name: /KI-Lernfeedback und isolierte Kursausführung/,
       }),
     ).toBeVisible();
     await expect(
       page.getByRole("heading", {
-        name: "8. Lernkonto und Datenspeicherung (Supabase)",
+        name: /Lernkonto und Datenspeicherung \(Supabase\)/,
       }),
     ).toBeVisible();
     // Optional processors are named and truthfully marked inactive.
