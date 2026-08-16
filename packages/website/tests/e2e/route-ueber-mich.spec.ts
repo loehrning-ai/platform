@@ -50,19 +50,21 @@ async function settle(page: Page) {
   await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
   await page.evaluate(async () => {
     await document.fonts.ready;
-    // Scroll the page before awaiting images. The profile's partner logos are
-    // loading="lazy" and sit below the fold, and WebKit at this viewport does
-    // not fetch them until they approach it, so their load event never fires
-    // and awaiting them below hangs until the test times out. Chromium's
-    // lazy-loading distance threshold is generous enough to hide this.
-    const step = Math.max(320, Math.floor(window.innerHeight * 0.75));
-    for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
-      window.scrollTo(0, y);
-      await new Promise<void>((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-      );
+    // Bring pending images into view before awaiting them. The profile's
+    // partner logos are loading="lazy" and sit below the fold, and WebKit at
+    // this viewport does not fetch them until they approach it, so their load
+    // event never fires and awaiting them below hangs until the test times
+    // out. Chromium's lazy-loading distance threshold is generous enough to
+    // hide this.
+    //
+    // Promoting them to eager starts the fetch immediately, with no scrolling
+    // and no layout work. Scrolling the page instead costs two animation
+    // frames per viewport-height step on every call: invisible for a single
+    // settle, but it times out the caller that settles ten times across five
+    // widths and two locales.
+    for (const image of document.images) {
+      if (!image.complete && image.loading === "lazy") image.loading = "eager";
     }
-    window.scrollTo(0, 0);
     await Promise.all(
       Array.from(document.images, (image) =>
         image.complete
