@@ -362,6 +362,10 @@ export function DemosGalleryView({ locale = "de" }: { readonly locale?: Locale }
               <span className="pr-1 font-mono text-[12px] font-bold tracking-[0.12em] text-brand-orange">
                 ⌕
               </span>
+              {/* min-w-0 is load-bearing: an input carries an intrinsic default
+                  width, and a flex item cannot shrink below its automatic
+                  minimum, so flex-1 alone holds this row wider than a 320px
+                  viewport and pushes the result counter off-screen. */}
               <input
                 type="text"
                 value={query}
@@ -369,7 +373,7 @@ export function DemosGalleryView({ locale = "de" }: { readonly locale?: Locale }
                 readOnly={!hydrated}
                 aria-disabled={!hydrated}
                 placeholder={isEnglish ? "Search: RAG, GDPR, spreadsheet, workflow …" : "Suche: RAG, DSGVO, Excel, Workflow …"}
-                className="flex-1 bg-transparent py-3 text-[16px] text-[var(--color-dark-fg)] outline-none placeholder:text-[var(--color-dark-muted)] focus-visible:ring-2 focus-visible:ring-brand-orange"
+                className="min-w-0 flex-1 bg-transparent py-3 text-[16px] text-[var(--color-dark-fg)] outline-none placeholder:text-[var(--color-dark-muted)] focus-visible:ring-2 focus-visible:ring-brand-orange"
                 aria-label={isEnglish ? "Search course simulations" : "Kurssimulationen durchsuchen"}
               />
               {query && (
