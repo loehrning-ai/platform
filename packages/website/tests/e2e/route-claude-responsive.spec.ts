@@ -137,9 +137,25 @@ function visibleLanguageSwitchLink(page: Page, name: RegExp) {
 }
 
 async function settleFullPage(page: Page) {
-  await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+  // Both waits below are bounded explicitly. No actionTimeout is configured, so
+  // a Playwright wait defaults to no limit and a stalled one is capped only by
+  // the 300s test timeout — which reports as a bare "Test timeout exceeded"
+  // naming neither the route nor the step. Failing at 30s with a message that
+  // says which wait stalled is the difference between a diagnosable failure and
+  // an opaque one.
+  await page
+    .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+    .waitFor({ state: "attached", timeout: 30_000 });
   await page.evaluate(async () => {
-    await document.fonts.ready;
+    await Promise.race([
+      document.fonts.ready,
+      new Promise((_, reject) =>
+        setTimeout(
+          () => reject(new Error("settleFullPage: document.fonts.ready stalled")),
+          20_000,
+        ),
+      ),
+    ]);
     const step = Math.max(320, Math.floor(window.innerHeight * 0.75));
     // The bound matters. scrollHeight is re-read every iteration, and scrolling
     // is what makes lazy widgets load, so on a page that grows as it is walked
