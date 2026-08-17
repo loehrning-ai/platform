@@ -221,7 +221,7 @@ function WieKiLektionContent({
                 lektion.durationMinutes,
               )}
             </p>
-            <h1 className="mt-5 max-w-4xl break-words text-[clamp(2.25rem,6vw,4.5rem)] font-bold leading-[0.96] tracking-[-0.045em] text-foreground [overflow-wrap:anywhere]">
+            <h1 className="mt-5 max-w-4xl break-words text-[clamp(2.25rem,6vw,4.5rem)] font-bold leading-[0.96] tracking-[-0.04em] text-foreground [overflow-wrap:anywhere]">
               {lektion.title}
             </h1>
             <p className="mt-5 max-w-3xl break-words text-[17px] leading-[1.6] text-muted-foreground [overflow-wrap:anywhere] sm:text-[20px]">

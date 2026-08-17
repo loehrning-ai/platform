@@ -93,7 +93,7 @@ export default async function CodexCourseLandingPage() {
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
             {copy.eyebrow}
           </p>
-          <h1 className="mt-6 max-w-[960px] break-words text-[42px] font-bold leading-[0.98] tracking-[-0.045em] text-foreground sm:text-[60px] md:text-[76px]">
+          <h1 className="mt-6 max-w-[960px] break-words text-[42px] font-bold leading-[0.98] tracking-[-0.04em] text-foreground sm:text-[60px] md:text-[76px]">
             {copy.title}
           </h1>
           <p className="mt-7 max-w-[720px] text-[17px] leading-[1.65] text-muted-foreground sm:text-[18px]">

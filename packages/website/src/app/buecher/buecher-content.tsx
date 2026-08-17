@@ -151,7 +151,7 @@ export function BuecherContent({
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-12">
           <div className="min-w-0 lg:col-span-8">
             <p className="overline mb-5 break-words">{copy.kicker}</p>
-            <h1 className="max-w-4xl break-words text-4xl font-bold leading-[0.98] tracking-[-0.045em] sm:text-5xl lg:text-6xl">
+            <h1 className="max-w-4xl break-words text-4xl font-bold leading-[0.98] tracking-[-0.04em] sm:text-5xl lg:text-6xl">
               {copy.heading}{" "}
               <span className="text-brand-orange">{copy.headingAccent}</span>
             </h1>
