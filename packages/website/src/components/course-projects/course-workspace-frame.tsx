@@ -627,7 +627,7 @@ export function CourseWorkspaceFrame({
           type="button"
           aria-controls={briefId}
           aria-expanded={!briefCollapsed}
-          className="inline-flex min-h-10 items-center border-2 border-foreground/30 bg-background px-3 py-2 font-mono text-[0.68rem] font-black uppercase tracking-wide hover:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
+          className="inline-flex min-h-10 max-w-full items-center text-center border-2 border-foreground/30 bg-background px-3 py-2 font-mono text-[0.68rem] font-black uppercase tracking-wide hover:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
           onClick={() => {
             setPreferencesTouched(true);
             setBriefCollapsed((current) => !current);
@@ -638,7 +638,7 @@ export function CourseWorkspaceFrame({
         <button
           type="button"
           disabled={!splitFeasible || briefCollapsed}
-          className="inline-flex min-h-10 items-center border-2 border-foreground/30 bg-background px-3 py-2 font-mono text-[0.68rem] font-black uppercase tracking-wide hover:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex min-h-10 max-w-full items-center text-center border-2 border-foreground/30 bg-background px-3 py-2 font-mono text-[0.68rem] font-black uppercase tracking-wide hover:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           onClick={() => {
             if (!splitFeasible || briefCollapsed) return;
             setPreferencesTouched(true);
@@ -650,7 +650,7 @@ export function CourseWorkspaceFrame({
         <button
           ref={fullscreenButtonRef}
           type="button"
-          className="inline-flex min-h-10 items-center border-2 border-foreground bg-foreground px-3 py-2 font-mono text-[0.68rem] font-black uppercase tracking-wide text-background hover:bg-brand-orange hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:ml-auto"
+          className="inline-flex min-h-10 max-w-full items-center text-center border-2 border-foreground bg-foreground px-3 py-2 font-mono text-[0.68rem] font-black uppercase tracking-wide text-background hover:bg-brand-orange hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:ml-auto"
           onClick={() => (fullscreen ? exitFullscreen() : enterFullscreen())}
         >
           {fullscreen ? copy.exitFullscreen : copy.enterFullscreen}

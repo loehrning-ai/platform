@@ -147,6 +147,23 @@ async function settleFullPage(page: Page) {
     .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
     .waitFor({ state: "attached", timeout: 30_000 });
   await page.evaluate(async () => {
+    // requestAnimationFrame does not fire while a page is not being rendered.
+    // On CI the parallel workers leave pages backgrounded or occluded, so a
+    // promise that only resolves inside rAF never resolves, and awaiting it
+    // inside evaluate hangs with no error until the 300s test timeout. Racing
+    // a timer guarantees the walk keeps moving; on an active page the frame
+    // still wins, so nothing about the settle behaviour changes locally.
+    const nextFrame = () =>
+      new Promise<void>((resolve) => {
+        let settled = false;
+        const finish = () => {
+          if (settled) return;
+          settled = true;
+          resolve();
+        };
+        requestAnimationFrame(() => requestAnimationFrame(finish));
+        setTimeout(finish, 250);
+      });
     await Promise.race([
       document.fonts.ready,
       new Promise((_, reject) =>
@@ -168,14 +185,10 @@ async function settleFullPage(page: Page) {
       y += step, steps += 1
     ) {
       window.scrollTo(0, y);
-      await new Promise<void>((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-      );
+      await nextFrame();
     }
     window.scrollTo(0, 0);
-    await new Promise<void>((resolve) =>
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-    );
+    await nextFrame();
   });
   await expect(
     page.locator(

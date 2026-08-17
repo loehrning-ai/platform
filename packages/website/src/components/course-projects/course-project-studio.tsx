@@ -833,7 +833,7 @@ export function CourseProjectStudio({
         header={
           <div className="flex min-w-0 flex-col border-b-2 border-foreground bg-foreground text-background sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0 px-4 py-3 sm:px-5">
-              <p className="break-words font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#ffc6aa] [overflow-wrap:anywhere]">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#ffc6aa] [overflow-wrap:anywhere]">
                 {copy.eyebrow} · {config.engineKind}
               </p>
             </div>
