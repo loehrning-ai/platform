@@ -36,7 +36,6 @@ export {
   isWorkshopQuizPassed,
   markCapstoneSubmitted,
   isCapstoneSubmitted,
-  isAppliedProjectCompleted,
   isCertificateEligible,
   isCheckpointDone,
   completeCheckpoint,
@@ -54,3 +53,5 @@ export {
 } from "./store";
 export { useCheckpoint } from "./use-checkpoint";
 export type { UseCheckpointResult } from "./use-checkpoint";
+
+export { isAppliedProjectCompleted } from "@/lib/course-projects/applied-completion";

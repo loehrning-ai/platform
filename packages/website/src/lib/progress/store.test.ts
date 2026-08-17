@@ -52,7 +52,6 @@ import {
   isWorkshopQuizPassed,
   markCapstoneSubmitted,
   isCapstoneSubmitted,
-  isAppliedProjectCompleted,
   isCertificateEligible,
   completeCheckpoint,
   isCheckpointDone,
@@ -75,6 +74,7 @@ import {
   activateUnknownProgress,
   __resetCacheForTests,
 } from "./store";
+import { isAppliedProjectCompleted } from "@/lib/course-projects/applied-completion";
 import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
 import { getCourseProjectIdentity } from "@/lib/course-projects/identity";
 import { serializeCourseProjectProgress } from "@/lib/course-projects/persistence";

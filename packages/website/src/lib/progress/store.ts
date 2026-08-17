@@ -30,7 +30,6 @@ import {
   isCourseCompletionEarned,
   normalizeCanonicalProgress,
 } from "@/lib/courses/completion";
-import { hasAppliedProjectCompletion } from "@/lib/course-projects/identity";
 import {
   getCourseProjectDraftStorageKey,
   getLessonMissionStorageKey,
@@ -736,10 +735,10 @@ export function isCapstoneSubmitted(slug: CourseSlug): boolean {
   return slug === "ai-native" && getCourseSlice(slug).capstoneSubmitted;
 }
 
-/** Read the exact, artifact-bearing applied-project exercise milestone. */
-export function isAppliedProjectCompleted(slug: CourseSlug): boolean {
-  return hasAppliedProjectCompletion(getState(), slug);
-}
+// isAppliedProjectCompleted lives in @/lib/course-projects/applied-completion.
+// Reading that milestone needs the course-project persistence module, and this
+// store is in the root layout's client graph, so importing it here shipped
+// artifact parsing to every page.
 
 /**
  * Certificate eligibility (shared course architecture; fallback performance hardening).

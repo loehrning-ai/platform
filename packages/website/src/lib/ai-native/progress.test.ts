@@ -36,9 +36,9 @@ function installLocalStoragePolyfill() {
 import { AI_NATIVE_SCHEMA_VERSION, AI_NATIVE_STORAGE_KEY } from "./types";
 import { UNIFIED_STORAGE_KEY } from "@/lib/progress/types";
 import {
-  isAppliedProjectCompleted,
   saveExerciseResult as saveUnifiedExerciseResult,
 } from "@/lib/progress/store";
+import { isAppliedProjectCompleted } from "@/lib/course-projects/applied-completion";
 import { getCourseProjectIdentity } from "@/lib/course-projects/identity";
 import { serializeCourseProjectProgress } from "@/lib/course-projects/persistence";
 import { verifiedCourseProjectArtifact } from "@/lib/course-projects/test-artifact";
