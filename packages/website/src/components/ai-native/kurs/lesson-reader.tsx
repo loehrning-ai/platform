@@ -43,6 +43,7 @@ import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 import { isInteractiveShortcutTarget } from "@/lib/a11y/keyboard-shortcuts";
 import { subscribe } from "@/lib/progress/store";
+import { LessonDemoLinks } from "@/components/course/lesson-demo-links";
 import type { Locale } from "@/lib/i18n/locale";
 import { localizeHref } from "@/lib/i18n/locale";
 
@@ -664,6 +665,14 @@ function AiNativeLessonReaderContent({
           </m.div>
         )}
       </AnimatePresence>
+
+      {/* The demo catalog binds each demo to a courseSlug + lessonId; this is the
+          course those bindings point at, so the edge finally renders both ways. */}
+      <LessonDemoLinks
+        courseSlug="ai-native"
+        lessonId={lesson.id}
+        locale={locale}
+      />
 
       {/* Prev / Next */}
       <nav className="mt-14 grid gap-6 sm:grid-cols-2">

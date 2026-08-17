@@ -12,7 +12,7 @@ export const HOME_COPY = {
       platformLabel: "Freie KI-Lernplattform",
       headline: ["KI", "verstehen.", "Sicher anwenden."],
       introduction:
-        "Kostenfreie Kurse, Demos, Bücher und Workshops zu KI-Grundlagen, EU AI Act, Datenarbeit und agentischen Arbeitsabläufen. Vier Reader im Grundlagenpfad nutzen ein kostenloses Lernkonto; die übrigen Lernmaterialien sind öffentlich erreichbar.",
+        "Kostenfreie Kurse, Demos, Bücher und Workshops. Damit prüfst du KI-Antworten, ordnest Pflichten aus dem EU AI Act zu und baust Abläufe, die andere nachvollziehen können. Vier Reader im Grundlagenpfad nutzen ein kostenloses Lernkonto; alles andere ist öffentlich.",
       trustSignals: [
         "Deutsch + Englisch",
         "Quellenstand sichtbar",
@@ -28,15 +28,18 @@ export const HOME_COPY = {
       pillars: [
         {
           title: "Lernen",
-          body: "Kurse und Bücher erklären Begriffe, Regeln und technische Grundlagen.",
+          body: "Erklären, wie ein Modell antwortet und welche Regeln gelten.",
+          href: "/kurse",
         },
         {
           title: "Prüfen",
-          body: "Selbsttests und Demos machen Annahmen, Daten und Grenzen sichtbar.",
+          body: "Annahmen, Daten und Grenzen eines Ergebnisses offenlegen.",
+          href: "/demos",
         },
         {
           title: "Anwenden",
-          body: "Workshops und Technikkurse übersetzen Methoden in prüfbare Abläufe.",
+          body: "Einen Fall vom ersten Schritt bis zum Nachweis durchspielen.",
+          href: "/workshops",
         },
       ],
     },
@@ -44,7 +47,7 @@ export const HOME_COPY = {
       overline: "Grundlagenpfad",
       headline: ["Vier Kurse.", "Eine klare Reihenfolge."],
       introduction:
-        "Der KI-Führerschein legt die Grundlagen. Danach folgen gesellschaftliche Folgen, EU-AI-Act-Pflichten und der Aufbau überprüfbarer KI-Arbeitsabläufe. Alle vier Kurse sind auf Deutsch und Englisch verfügbar und nutzen ein kostenloses Lernkonto.",
+        "Der KI-Führerschein legt die Grundlagen. Danach ordnest du gesellschaftliche Folgen ein, klärst Pflichten aus dem EU AI Act und setzt überprüfbare KI-Abläufe auf.",
       personaLabel: "Ich möchte:",
       personas: [
         {
@@ -75,11 +78,11 @@ export const HOME_COPY = {
       duration: "Dauer",
       lessons: "Lektionen",
       deeperSummary: (count: number) =>
-        `Dazu ${count} technische Kurse auf Deutsch und Englisch, von Data Engineering bis System Design.`,
+        `Dazu ${count} technische Kurse von Data Engineering bis System Design.`,
       viewAllCourses: "Alle Kurse ansehen",
       technicalCourses: "Technikkurse",
       technicalDescription:
-        "Aus offenen GitHub-Repositories übernommen, auf Deutsch und Englisch verfügbar und mit selbst ausgestelltem Abschlussnachweis.",
+        "Aus offenen GitHub-Repositories übernommen, mit selbst ausgestelltem Abschlussnachweis.",
       viewTechnicalCourses: "Alle Technikkurse ansehen",
       detailsAria: (title: string) => `${title}: Details ansehen`,
       sourceAria: (title: string) => `Quellcode auf GitHub: ${title}`,
@@ -89,11 +92,11 @@ export const HOME_COPY = {
       overline: "Ressourcen",
       headline: "Nachlesen, prüfen, übertragen.",
       introduction:
-        "Bücher erklären Zusammenhänge, Demos prüfen einzelne Annahmen, Workshops führen durch abgegrenzte Fälle. Open-Source-Artefakte legen ihren Quellstand offen.",
+        "Blog und Bücher zum Nachlesen, Demos zum Prüfen, Workshops und Open Source zum Übertragen in die eigene Arbeit.",
       resources: [
         {
           label: "Blog",
-          body: "Einordnungen zu KI und Recht mit Primärquellen und geprüftem Stand.",
+          body: "Einordnungen zu KI und Recht mit Primärquellen und Quellenstand.",
           href: "/blog",
         },
         {
@@ -103,7 +106,7 @@ export const HOME_COPY = {
         },
         {
           label: "Praxisbeispiele",
-          body: "Interaktive Modelle mit ausgewiesenem Evidenzmodus und bekannten Grenzen.",
+          body: "Modelle zum Ausprobieren, mit ausgewiesenem Evidenzmodus und bekannten Grenzen.",
           href: "/demos",
         },
         {
@@ -113,7 +116,7 @@ export const HOME_COPY = {
         },
         {
           label: "Open Source",
-          body: "Veröffentlichte Werkzeuge mit festem Commit, Lizenz und bekannten Grenzen.",
+          body: "Werkzeuge zum Weiterverwenden, mit festem Commit, Lizenz und bekannten Grenzen.",
           href: "/open-source",
         },
       ],
@@ -132,7 +135,7 @@ export const HOME_COPY = {
         {
           label: "Sprachen",
           title: "Zwei vollständige Fassungen",
-          body: "Alle zehn Kurse sind auf Deutsch und Englisch verfügbar. Die Sprachwahl bleibt beim Wechsel zwischen Seiten erhalten.",
+          body: "Alle Kurse sind auf Deutsch und Englisch verfügbar. Die Sprachwahl bleibt beim Wechsel zwischen Seiten erhalten.",
         },
         {
           label: "Quellen",
@@ -142,7 +145,7 @@ export const HOME_COPY = {
         {
           label: "Redaktion",
           title: "Von Tim Löhr redigiert",
-          body: "Inhalte, Quellenstand und bekannte Grenzen werden namentlich verantwortet und über die Rückmeldung korrigiert.",
+          body: "Tim Löhr verantwortet Inhalte, Quellenstand und bekannte Grenzen. Korrekturen laufen über die Rückmeldung.",
         },
       ],
       summary:
@@ -150,7 +153,7 @@ export const HOME_COPY = {
     },
     finalCta: {
       headline: "Den passenden Einstieg finden.",
-      body: "Zehn Fragen ordnen deinen aktuellen Kenntnisstand einem sinnvollen Einstieg zu. Die Auswertung läuft im Browser und benötigt kein Konto.",
+      body: "Zehn Fragen ordnen deinen aktuellen Kenntnisstand einem Kurs zu. Die Auswertung läuft im Browser und benötigt kein Konto.",
       label: "KI-Check öffnen",
     },
   },
@@ -164,7 +167,7 @@ export const HOME_COPY = {
       platformLabel: "Open AI learning platform",
       headline: ["Understand", "AI.", "Apply it safely."],
       introduction:
-        "Free courses, demos, books and workshops on AI fundamentals, the EU AI Act, data work and agentic workflows. Four foundation-path readers require a free learning account; all other learning materials are public.",
+        "Free courses, demos, books and workshops. Use them to test AI answers, map your duties under the EU AI Act and build workflows other people can retrace. Four foundation-path readers require a free learning account; everything else is public.",
       trustSignals: [
         "German + English",
         "Sources dated",
@@ -180,15 +183,18 @@ export const HOME_COPY = {
       pillars: [
         {
           title: "Learn",
-          body: "Courses and books explain terms, rules and technical foundations.",
+          body: "Explain how a model answers and which rules apply.",
+          href: "/kurse",
         },
         {
           title: "Check",
-          body: "Self-tests and demos expose assumptions, data and limits.",
+          body: "Expose the assumptions, data and limits behind a result.",
+          href: "/demos",
         },
         {
           title: "Apply",
-          body: "Workshops and technical courses turn methods into verifiable workflows.",
+          body: "Run a case from the first step to the evidence.",
+          href: "/workshops",
         },
       ],
     },
@@ -196,7 +202,7 @@ export const HOME_COPY = {
       overline: "Foundation path",
       headline: ["Four courses.", "One defined order."],
       introduction:
-        "AI Fundamentals establishes the base. The next courses cover social effects, EU AI Act duties and verifiable AI workflows. All four courses are available in English and German and use a free learning account.",
+        "AI Fundamentals lays the base. After that you assess social effects, clarify duties under the EU AI Act and set up AI workflows you can verify.",
       personaLabel: "I want to:",
       personas: [
         {
@@ -227,11 +233,11 @@ export const HOME_COPY = {
       duration: "Duration",
       lessons: "Lessons",
       deeperSummary: (count: number) =>
-        `There are also ${count} technical courses in English and German, from data engineering to system design.`,
+        `Plus ${count} technical courses, from data engineering to system design.`,
       viewAllCourses: "View all courses",
       technicalCourses: "Technical courses",
       technicalDescription:
-        "Adapted from open GitHub repositories, available in English and German, with a completion record issued by loehrning.ai.",
+        "Adapted from open GitHub repositories, with a completion record issued by loehrning.ai.",
       viewTechnicalCourses: "View all technical courses",
       detailsAria: (title: string) => `${title}: view details`,
       sourceAria: (title: string) => `Source code on GitHub: ${title}`,
@@ -241,7 +247,7 @@ export const HOME_COPY = {
       overline: "Resources",
       headline: "Read, test, transfer.",
       introduction:
-        "Books explain connections, demos test individual assumptions, and workshops guide you through bounded cases. Open-source artifacts disclose the exact source revision.",
+        "Blog and books to read, demos to test, workshops and open source to transfer into your own work.",
       resources: [
         {
           label: "Blog",
@@ -255,7 +261,7 @@ export const HOME_COPY = {
         },
         {
           label: "Applied examples",
-          body: "Interactive models with a stated evidence mode and known limits.",
+          body: "Models you can try, with a stated evidence mode and known limits.",
           href: "/demos",
         },
         {
@@ -265,7 +271,7 @@ export const HOME_COPY = {
         },
         {
           label: "Open Source",
-          body: "Published tools with a pinned commit, licence and known limits.",
+          body: "Tools you can reuse, with a pinned commit, licence and known limits.",
           href: "/open-source",
         },
       ],
@@ -284,7 +290,7 @@ export const HOME_COPY = {
         {
           label: "Languages",
           title: "Two complete editions",
-          body: "All ten courses are available in English and German. The selected language persists between pages.",
+          body: "All courses are available in English and German. The selected language persists between pages.",
         },
         {
           label: "Sources",
@@ -294,7 +300,7 @@ export const HOME_COPY = {
         {
           label: "Editorial",
           title: "Edited by Tim Löhr",
-          body: "Tim Löhr takes named responsibility for the content, source dates and known limits, and corrects them through the feedback process.",
+          body: "Tim Löhr is responsible for the content, source dates and known limits. Corrections go through the feedback process.",
         },
       ],
       summary:
@@ -302,7 +308,7 @@ export const HOME_COPY = {
     },
     finalCta: {
       headline: "Find the right starting point.",
-      body: "Ten questions match your current knowledge to a suitable entry point. The assessment runs in your browser and requires no account.",
+      body: "Ten questions match your current knowledge to a course. The assessment runs in your browser and requires no account.",
       label: "Open AI check",
     },
   },

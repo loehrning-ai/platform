@@ -50,10 +50,13 @@ import {
 import type { UnifiedProgress } from "@/lib/progress/types";
 import { cn } from "@/lib/utils";
 
-// ─── One consistent card system ──────────────────────────────────────────
-// The redesign drops the three colour-banded "universes". Differentiation now
-// rides on honest badge chips (language, record, extern) — the same component
-// on every card — plus the icon tile and a single kupfer accent for the path.
+// ─── Two treatments, one honest vocabulary ───────────────────────────────
+// The spine renders as illustrated path cards: an ordered route, a step number,
+// a cover, a full fact grid. The deeper shelf renders as framed specimen rows —
+// a source screenshot on a mat, the stack it teaches, and a plate led by the
+// exercise the course actually runs — so the two are told apart before a word
+// is read. Both share the badge chips (language, record), the progress bar, and
+// the accents declared in COURSE_FACTS: kupfer for the path, sand for the shelf.
 
 const BADGE_TINT: Record<BadgeTone, string> = {
   record: "bg-kupfer-mist text-brand-orange",
@@ -109,6 +112,23 @@ function readStat(
     started: completed > 0 || hasCourseStarted(progress, course.slug),
     resumeHref: resolveCourseResumeHref(progress, course.slug),
   };
+}
+
+// `sourceFacts` mixes three kinds of claim: structure ("4 Tracks", "12
+// Lektionen"), practice ("22 interaktive Simulationen", "Abschlussfall") and
+// hosting ("Auf loehrning.ai gehostet"). The shelf's plate already states the
+// structure and its badge row already states where the course runs, so the
+// specimen keeps only what is left: what the course asks the learner to do.
+function practiceFacts(course: CatalogCourse): readonly string[] {
+  const structure = new Set([
+    String(course.unitCount),
+    String(course.totalLessons),
+  ]);
+  return (course.sourceFacts ?? []).filter((fact) => {
+    if (fact.includes("loehrning.ai")) return false;
+    const leadingCount = /^\d+/.exec(fact)?.[0];
+    return leadingCount === undefined || !structure.has(leadingCount);
+  });
 }
 
 function SectionHeader({
@@ -492,10 +512,11 @@ function CourseGalleryContent({
           blurb={sections.deeper.blurb}
         />
 
-        {/* Ported native courses as framed specimens, plus any pending imports. */}
+        {/* One full-width specimen row per ported course — a ledger, not a
+            second run of the path cards. */}
         <div id="open-source" className="scroll-mt-24">
           <m.ul
-            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            className="grid gap-4"
             variants={staggerContainer}
             initial={false}
             animate="visible"
@@ -529,6 +550,26 @@ function CourseGalleryContent({
                     .slice(0, 2)
                     .join("/")
                 : null;
+              const practice = practiceFacts(course);
+              const plate = [
+                // A course whose units are its lessons (12 Kapitel = 12
+                // Lektionen) would otherwise print the same count twice.
+                ...(course.unitCount === course.totalLessons
+                  ? []
+                  : [
+                      {
+                        label: copy.structure,
+                        value: `${course.unitCount} ${course.unitLabel}`,
+                      },
+                    ]),
+                {
+                  label: copy.scope,
+                  value:
+                    course.lessonCountLabel ??
+                    `${course.totalLessons} ${copy.lessons}`,
+                },
+                { label: copy.duration, value: course.duration },
+              ];
 
               return (
                 <m.li
@@ -536,299 +577,336 @@ function CourseGalleryContent({
                   variants={staggerItem}
                   className="js-reveal min-w-0"
                 >
-                  <Card
-                    interactive
-                    accent="sand"
-                    className="h-full min-w-0 overflow-hidden"
-                  >
-                    {/* Framed specimen: the pinned course screenshot mounted on
-                        a mat at its true 16:10, with the provenance caption
-                        (repo · MIT · commit) always visible. */}
-                    <div className="relative -mx-6 -mt-6 mb-5 rounded-t-xl border-b border-border bg-card-hover p-3">
-                      <div className="group/spec overflow-hidden border border-border bg-background">
-                        <Image
-                          src={course.coverImage ?? course.imageSrc ?? ""}
-                          alt={
-                            course.coverImageAlt ??
-                            course.imageAlt ??
-                            course.title
-                          }
-                          width={1280}
-                          height={800}
-                          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 48vw, calc(100vw - 48px)"
-                          className="aspect-[16/10] h-auto w-full object-cover transition-transform duration-300 group-hover/spec:scale-[1.02]"
-                        />
-                      </div>
-                      {repoPath &&
-                      course.sourceHref &&
-                      course.sourceCommit &&
-                      course.sourceCommitHref ? (
-                        <p className="mt-2 flex min-w-0 max-w-full items-center justify-between gap-3 overflow-hidden font-mono text-[9.5px] uppercase tracking-[0.08em] text-muted-foreground">
-                          <a
-                            href={course.sourceHref}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            // The visible repo path must appear in the
-                            // accessible name (WCAG 2.5.3 Label in Name), or
-                            // speech input cannot address the link by what it
-                            // reads. Same composition as the Werkverzeichnis
-                            // card's source action.
-                            aria-label={`${copy.sourceCode}: ${repoPath}, ${course.title}`}
-                            className="inline-flex min-w-0 items-center gap-1 truncate transition-colors hover:text-foreground"
-                          >
-                            <Github
-                              className="h-3 w-3 shrink-0"
-                              strokeWidth={1.75}
-                              aria-hidden="true"
-                            />
-                            <span className="truncate">{repoPath}</span>
-                          </a>
-                          <span className="flex shrink-0 items-center gap-3">
-                            <span>MIT</span>
-                            <a
-                              href={course.sourceCommitHref}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              aria-label={`${copy.sourceCommit} ${course.sourceCommit.slice(0, 7)} ${copy.onGitHub}`}
-                              className="transition-colors hover:text-foreground"
+                  <div className="grid min-w-0 grid-cols-1 border border-border border-t-[3px] border-t-brand-sand bg-card md:grid-cols-[minmax(0,300px)_minmax(0,1fr)]">
+                    {/* Specimen: the pinned course screenshot mounted on a mat
+                        at its true 16:10, labelled underneath with the stack
+                        the course teaches. */}
+                    <div className="relative border-b border-border bg-background p-4 md:border-b-0 md:border-r">
+                      <Image
+                        src={course.coverImage ?? course.imageSrc ?? ""}
+                        alt={
+                          course.coverImageAlt ??
+                          course.imageAlt ??
+                          course.title
+                        }
+                        width={1280}
+                        height={800}
+                        sizes="(min-width: 768px) 268px, calc(100vw - 80px)"
+                        className="aspect-[16/10] h-auto w-full border border-border object-cover"
+                      />
+                      {course.topics && course.topics.length > 0 ? (
+                        <ul
+                          aria-label={`${course.title}: ${copy.coreFacts}`}
+                          className="mt-3 flex flex-wrap gap-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground"
+                        >
+                          {course.topics.map((topic) => (
+                            <li
+                              key={topic}
+                              className="border border-border px-1.5 py-0.5"
                             >
-                              #{course.sourceCommit.slice(0, 7)}
-                            </a>
-                          </span>
-                        </p>
+                              {topic}
+                            </li>
+                          ))}
+                        </ul>
                       ) : null}
                       {hydrated && stat.certified && (
                         <span
                           data-testid={`certified-${course.slug}`}
-                          className="stamp-in absolute right-5 top-5 border border-brand-orange bg-background/90 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-brand-orange"
+                          className="stamp-in absolute right-6 top-6 border border-brand-orange bg-background/90 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-brand-orange"
                         >
                           {copy.achieved}
                         </span>
                       )}
                     </div>
 
-                    <h3 className="break-words text-[20px] font-bold leading-tight tracking-[-0.03em] text-foreground">
-                      {course.title}
-                    </h3>
-                    <p className="mt-2 text-[14px] font-semibold leading-snug text-foreground">
-                      {course.tagline}
-                    </p>
-                    <p className="mt-3 flex-1 text-[14px] leading-[1.55] text-muted-foreground">
-                      {course.description}
-                    </p>
+                    <div className="flex min-w-0 flex-col p-6">
+                      {/* The shelf leads with the work, the way the path leads
+                          with its step number. */}
+                      {practice.length > 0 ? (
+                        <p className="mb-2 font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-brand-orange">
+                          {practice.join(" · ")}
+                        </p>
+                      ) : null}
+                      <h3 className="break-words text-[21px] font-bold leading-tight tracking-[-0.03em] text-foreground">
+                        {course.title}
+                      </h3>
+                      <p className="mt-2 max-w-[62ch] text-[15px] leading-snug text-foreground">
+                        {course.tagline}
+                      </p>
 
-                    <BadgeRow
-                      slug={course.slug}
-                      locale={locale}
-                      label={`${course.title}: ${copy.features}`}
-                    />
-
-                    <dl className="mt-4 flex flex-wrap gap-x-5 gap-y-1 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
-                      <div>
-                        <dt className="sr-only">{copy.scope}</dt>
-                        <dd>
-                          {course.unitCount} {course.unitLabel} ·{" "}
-                          {course.totalLessons} {copy.lessons}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="sr-only">{copy.duration}</dt>
-                        <dd>{course.duration}</dd>
-                      </div>
-                    </dl>
-
-                    <div className="mt-5">
-                      <div className="flex min-w-0 items-start justify-between gap-3">
-                        <span className="min-w-0 break-words font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-                          {course.audience}
-                        </span>
-                        <span
-                          data-testid={`progress-pct-${course.slug}`}
-                          className="font-mono text-[11px] font-bold text-foreground"
-                        >
-                          {hydrated ? `${pct}%` : "—"}
-                        </span>
-                      </div>
-                      <div
-                        className="mt-3 h-2 overflow-hidden bg-border"
-                        role="progressbar"
-                        aria-valuemin={0}
-                        aria-valuemax={course.totalLessons}
-                        aria-valuenow={hydrated ? stat.completed : 0}
-                        aria-valuetext={
-                          hydrated
-                            ? copy.progressLoaded(
-                                stat.completed,
-                                course.totalLessons,
-                              )
-                            : copy.progressLoading(course.title)
-                        }
-                        aria-label={`${copy.progress} ${course.title}`}
-                        data-testid={`progress-dots-${course.slug}`}
-                      >
-                        <span
-                          aria-hidden="true"
-                          className="block h-full bg-brand-orange transition-[width] duration-300"
-                          style={{ width: hydrated ? `${pct}%` : "0%" }}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="mt-6 flex flex-wrap items-center gap-3">
-                      <BrandButton href={startHref} variant="primary" size="sm">
-                        {startLabel}
-                        <span className="sr-only">: {course.title}</span>
-                        <ArrowRight size={15} aria-hidden="true" />
-                      </BrandButton>
-                      <Link
-                        href={localizeHref(course.href, locale)}
-                        className="inline-flex min-h-11 items-center gap-1.5 px-1 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
-                      >
-                        {copy.details}
-                        <span className="sr-only">: {course.title}</span>
-                      </Link>
-                    </div>
-                  </Card>
-                </m.li>
-              );
-            })}
-            {pendingCourses.map((course) => {
-              const Icon = iconByName(courseIconName(course.slug));
-              return (
-                <m.li
-                  key={course.slug}
-                  variants={staggerItem}
-                  className="js-reveal min-w-0"
-                >
-                  <Card
-                    accent="sand"
-                    className="h-full min-w-0 overflow-hidden"
-                  >
-                    {/* Screenshot preview + stroke-only GitHub link */}
-                    <div className="relative overflow-hidden rounded-lg border border-border">
-                      <Image
-                        src={course.imageSrc}
-                        alt={course.imageAlt}
-                        width={1280}
-                        height={800}
-                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                        className="h-auto w-full object-cover"
+                      <BadgeRow
+                        slug={course.slug}
+                        locale={locale}
+                        label={`${course.title}: ${copy.features}`}
                       />
-                      <a
-                        href={course.sourceHref}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={copy.sourceCode}
-                        className="absolute right-2 top-2 inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-background/90 text-foreground shadow-tile transition-colors hover:bg-background"
-                      >
-                        <Github
-                          className="h-5 w-5"
-                          strokeWidth={1.75}
-                          aria-hidden="true"
-                        />
-                      </a>
-                    </div>
 
-                    <div className="mt-4 flex items-start justify-between gap-3">
-                      <IconTile icon={Icon} accent="sand" />
-                      <span className="whitespace-nowrap font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                        {course.duration}
-                      </span>
-                    </div>
+                      <dl className="mt-4 flex flex-wrap items-baseline gap-x-5 gap-y-1.5 border-y border-border py-3 font-mono text-[11px] uppercase tracking-[0.08em]">
+                        {plate.map((row) => (
+                          <div
+                            key={row.label}
+                            className="flex min-w-0 items-baseline gap-1.5"
+                          >
+                            <dt className="shrink-0 text-muted-foreground">
+                              {row.label}
+                            </dt>
+                            <dd className="min-w-0 break-words font-bold text-foreground">
+                              {row.value}
+                            </dd>
+                          </div>
+                        ))}
+                      </dl>
 
-                    <h3 className="mt-4 text-[22px] font-bold leading-tight tracking-[-0.03em] text-foreground">
-                      {course.title}
-                    </h3>
-                    <p className="mt-2 text-[15px] font-semibold leading-snug text-foreground">
-                      {course.tagline}
-                    </p>
-                    <p className="mt-3 flex-1 text-[14px] leading-[1.55] text-muted-foreground">
-                      {course.description}
-                    </p>
-
-                    {/* Honest badges: available languages · hosting boundary · licence */}
-                    <BadgeRow
-                      slug={course.slug}
-                      locale={locale}
-                      extra={[{ label: "MIT", tone: "external" }]}
-                      label={`${course.title}: ${copy.features}`}
-                    />
-
-                    <dl className="mt-4 flex flex-wrap gap-x-5 gap-y-1 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
-                      <div>
-                        <dt className="sr-only">{copy.scope}</dt>
-                        <dd>
-                          {course.unitCount} {course.unitLabel} ·{" "}
-                          {course.lessonCountLabel}
-                        </dd>
+                      {/* mt-auto: rows are as tall as their specimen, so the
+                          bar and the actions settle on the frame's floor. */}
+                      <div className="mt-auto pt-5">
+                        <div className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                          <span className="min-w-0 break-words text-[13px] leading-snug text-muted-foreground">
+                            {course.audience}
+                          </span>
+                          <span
+                            data-testid={`progress-pct-${course.slug}`}
+                            className="font-mono text-[11px] font-bold text-foreground"
+                          >
+                            {hydrated ? `${pct}%` : "—"}
+                          </span>
+                        </div>
+                        <div
+                          className="mt-3 h-2 overflow-hidden bg-border"
+                          role="progressbar"
+                          aria-valuemin={0}
+                          aria-valuemax={course.totalLessons}
+                          aria-valuenow={hydrated ? stat.completed : 0}
+                          aria-valuetext={
+                            hydrated
+                              ? copy.progressLoaded(
+                                  stat.completed,
+                                  course.totalLessons,
+                                )
+                              : copy.progressLoading(course.title)
+                          }
+                          aria-label={`${copy.progress} ${course.title}`}
+                          data-testid={`progress-dots-${course.slug}`}
+                        >
+                          <span
+                            aria-hidden="true"
+                            className="block h-full bg-brand-orange transition-[width] duration-300"
+                            style={{ width: hydrated ? `${pct}%` : "0%" }}
+                          />
+                        </div>
                       </div>
-                    </dl>
 
-                    <ul
-                      className="mt-4 flex flex-wrap gap-2"
-                      aria-label={`${course.title}: ${copy.coreFacts}`}
-                    >
-                      {course.sourceFacts.slice(0, 4).map((fact) => (
-                        <li
-                          key={fact}
-                          className="rounded-none bg-brand-sand/20 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-foreground"
+                      <div className="mt-6 flex flex-wrap items-center gap-3">
+                        <BrandButton
+                          href={startHref}
+                          variant="primary"
+                          size="sm"
                         >
-                          {fact}
-                        </li>
-                      ))}
-                      {course.topics.slice(0, 3).map((topic) => (
-                        <li
-                          key={topic}
-                          className="rounded-none bg-card-hover px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground"
+                          {startLabel}
+                          <span className="sr-only">: {course.title}</span>
+                          <ArrowRight size={15} aria-hidden="true" />
+                        </BrandButton>
+                        <Link
+                          href={localizeHref(course.href, locale)}
+                          className="inline-flex min-h-11 items-center gap-1.5 px-1 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
                         >
-                          {topic}
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* Commit pin: provenance to the exact source revision */}
-                    <a
-                      href={course.sourceCommitHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${copy.sourceCommit} ${course.sourceCommit.slice(0, 7)} ${copy.onGitHub}`}
-                      className="mt-4 inline-flex w-fit items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                      <GitCommitHorizontal
-                        className="h-3.5 w-3.5"
-                        strokeWidth={1.75}
-                        aria-hidden="true"
-                      />
-                      Commit {course.sourceCommit.slice(0, 7)}
-                    </a>
-
-                    <div className="mt-6 flex flex-wrap items-center gap-3">
-                      <BrandButton
-                        href={course.launchHref}
-                        external
-                        variant="primary"
-                        size="sm"
-                      >
-                        {copy.openCourse}
-                        <span className="sr-only">
-                          : {course.title}, {copy.externalNewTab}
-                        </span>
-                        <ExternalLink size={15} aria-hidden="true" />
-                      </BrandButton>
-                      <BrandButton
-                        href={localizeHref(course.href, locale)}
-                        variant="outline"
-                        size="sm"
-                      >
-                        {copy.pendingDetails}
-                        <span className="sr-only">: {course.title}</span>
-                      </BrandButton>
+                          {copy.details}
+                          <span className="sr-only">: {course.title}</span>
+                        </Link>
+                      </div>
                     </div>
-                  </Card>
+
+                    {/* Specimen label across the full frame: repo · MIT ·
+                        commit, no longer squeezed under the screenshot. */}
+                    {repoPath &&
+                    course.sourceHref &&
+                    course.sourceCommit &&
+                    course.sourceCommitHref ? (
+                      <p className="flex min-w-0 flex-wrap items-center gap-x-4 border-t border-border px-6 py-2 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground md:col-span-2">
+                        <a
+                          href={course.sourceHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          // The visible repo path must appear in the accessible
+                          // name (WCAG 2.5.3 Label in Name), or speech input
+                          // cannot address the link by what it reads. Same
+                          // composition as the Werkverzeichnis card's source
+                          // action.
+                          aria-label={`${copy.sourceCode}: ${repoPath}, ${course.title}`}
+                          className="inline-flex min-w-0 items-center gap-1.5 py-1 transition-colors hover:text-foreground"
+                        >
+                          <Github
+                            className="h-3 w-3 shrink-0"
+                            strokeWidth={1.75}
+                            aria-hidden="true"
+                          />
+                          <span className="truncate">{repoPath}</span>
+                        </a>
+                        <span className="py-1">MIT</span>
+                        <a
+                          href={course.sourceCommitHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`${copy.sourceCommit} ${course.sourceCommit.slice(0, 7)} ${copy.onGitHub}`}
+                          className="py-1 transition-colors hover:text-foreground"
+                        >
+                          #{course.sourceCommit.slice(0, 7)}
+                        </a>
+                      </p>
+                    ) : null}
+                  </div>
                 </m.li>
               );
             })}
           </m.ul>
+
+          {/* Pending imports keep the card grid: an externally hosted lab
+              is a different object again. The array is empty until one
+              starts its import window. */}
+          {pendingCourses.length > 0 && (
+            <m.ul
+              className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+              variants={staggerContainer}
+              initial={false}
+              animate="visible"
+            >
+              {pendingCourses.map((course) => {
+                const Icon = iconByName(courseIconName(course.slug));
+                return (
+                  <m.li
+                    key={course.slug}
+                    variants={staggerItem}
+                    className="js-reveal min-w-0"
+                  >
+                    <Card
+                      accent="sand"
+                      className="h-full min-w-0 overflow-hidden"
+                    >
+                      {/* Screenshot preview + stroke-only GitHub link */}
+                      <div className="relative overflow-hidden rounded-lg border border-border">
+                        <Image
+                          src={course.imageSrc}
+                          alt={course.imageAlt}
+                          width={1280}
+                          height={800}
+                          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                          className="h-auto w-full object-cover"
+                        />
+                        <a
+                          href={course.sourceHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={copy.sourceCode}
+                          className="absolute right-2 top-2 inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-background/90 text-foreground shadow-tile transition-colors hover:bg-background"
+                        >
+                          <Github
+                            className="h-5 w-5"
+                            strokeWidth={1.75}
+                            aria-hidden="true"
+                          />
+                        </a>
+                      </div>
+
+                      <div className="mt-4 flex items-start justify-between gap-3">
+                        <IconTile icon={Icon} accent="sand" />
+                        <span className="whitespace-nowrap font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                          {course.duration}
+                        </span>
+                      </div>
+
+                      <h3 className="mt-4 text-[22px] font-bold leading-tight tracking-[-0.03em] text-foreground">
+                        {course.title}
+                      </h3>
+                      <p className="mt-2 text-[15px] font-semibold leading-snug text-foreground">
+                        {course.tagline}
+                      </p>
+                      <p className="mt-3 flex-1 text-[14px] leading-[1.55] text-muted-foreground">
+                        {course.description}
+                      </p>
+
+                      {/* Honest badges: available languages · hosting boundary · licence */}
+                      <BadgeRow
+                        slug={course.slug}
+                        locale={locale}
+                        extra={[{ label: "MIT", tone: "external" }]}
+                        label={`${course.title}: ${copy.features}`}
+                      />
+
+                      <dl className="mt-4 flex flex-wrap gap-x-5 gap-y-1 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
+                        <div>
+                          <dt className="sr-only">{copy.scope}</dt>
+                          <dd>
+                            {course.unitCount} {course.unitLabel} ·{" "}
+                            {course.lessonCountLabel}
+                          </dd>
+                        </div>
+                      </dl>
+
+                      <ul
+                        className="mt-4 flex flex-wrap gap-2"
+                        aria-label={`${course.title}: ${copy.coreFacts}`}
+                      >
+                        {course.sourceFacts.slice(0, 4).map((fact) => (
+                          <li
+                            key={fact}
+                            className="rounded-none bg-brand-sand/20 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-foreground"
+                          >
+                            {fact}
+                          </li>
+                        ))}
+                        {course.topics.slice(0, 3).map((topic) => (
+                          <li
+                            key={topic}
+                            className="rounded-none bg-card-hover px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground"
+                          >
+                            {topic}
+                          </li>
+                        ))}
+                      </ul>
+
+                      {/* Commit pin: provenance to the exact source revision */}
+                      <a
+                        href={course.sourceCommitHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${copy.sourceCommit} ${course.sourceCommit.slice(0, 7)} ${copy.onGitHub}`}
+                        className="mt-4 inline-flex w-fit items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground transition-colors hover:text-foreground"
+                      >
+                        <GitCommitHorizontal
+                          className="h-3.5 w-3.5"
+                          strokeWidth={1.75}
+                          aria-hidden="true"
+                        />
+                        Commit {course.sourceCommit.slice(0, 7)}
+                      </a>
+
+                      <div className="mt-6 flex flex-wrap items-center gap-3">
+                        <BrandButton
+                          href={course.launchHref}
+                          external
+                          variant="primary"
+                          size="sm"
+                        >
+                          {copy.openCourse}
+                          <span className="sr-only">
+                            : {course.title}, {copy.externalNewTab}
+                          </span>
+                          <ExternalLink size={15} aria-hidden="true" />
+                        </BrandButton>
+                        <BrandButton
+                          href={localizeHref(course.href, locale)}
+                          variant="outline"
+                          size="sm"
+                        >
+                          {copy.pendingDetails}
+                          <span className="sr-only">: {course.title}</span>
+                        </BrandButton>
+                      </div>
+                    </Card>
+                  </m.li>
+                );
+              })}
+            </m.ul>
+          )}
 
           <p className="mt-8 text-sm leading-relaxed text-muted-foreground">
             {copy.workshopLead}{" "}
