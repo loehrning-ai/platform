@@ -164,7 +164,7 @@ export function RetrievalQueue({
           <div className="mt-2 flex min-w-0 flex-wrap items-baseline gap-x-4 gap-y-2">
             <h2
               id="course-retrieval-queue-title"
-              className="break-words text-2xl font-black tracking-[-0.03em] text-foreground"
+              className="[overflow-wrap:anywhere] text-2xl font-black tracking-[-0.03em] text-foreground"
             >
               {copy.title}
             </h2>

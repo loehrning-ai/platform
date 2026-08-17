@@ -884,7 +884,7 @@ export function LessonMissionControl({
           <div className="mt-2 flex min-w-0 flex-wrap items-end gap-x-4 gap-y-2">
             <h2
               id={headingId}
-              className="break-words text-[clamp(1.65rem,4vw,3rem)] font-black leading-[0.92] tracking-[-0.05em]"
+              className="[overflow-wrap:anywhere] text-[clamp(1.65rem,4vw,3rem)] font-black leading-[0.92] tracking-[-0.05em]"
             >
               {copy.title}
             </h2>
