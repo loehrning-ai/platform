@@ -141,7 +141,16 @@ async function settleFullPage(page: Page) {
   await page.evaluate(async () => {
     await document.fonts.ready;
     const step = Math.max(320, Math.floor(window.innerHeight * 0.75));
-    for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
+    // The bound matters. scrollHeight is re-read every iteration, and scrolling
+    // is what makes lazy widgets load, so on a page that grows as it is walked
+    // the loop's own exit condition keeps receding. That never returns, and
+    // because it hangs inside page.evaluate it surfaces as a silent test
+    // timeout rather than an error. 60 steps is far past any real page.
+    for (
+      let y = 0, steps = 0;
+      y < document.documentElement.scrollHeight && steps < 60;
+      y += step, steps += 1
+    ) {
       window.scrollTo(0, y);
       await new Promise<void>((resolve) =>
         requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
