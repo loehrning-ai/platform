@@ -138,7 +138,7 @@ function visibleLanguageSwitchLink(page: Page, name: RegExp) {
 
 async function settleFullPage(page: Page) {
   await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
-  await page.evaluate(async () => {
+  const walkThePage = () => page.evaluate(async () => {
     // requestAnimationFrame does not fire on a backgrounded or occluded page,
     // and document.fonts.ready can stay pending on a font that never resolves.
     // Every wait below therefore races its signal against a timer: unraced, a
@@ -176,6 +176,32 @@ async function settleFullPage(page: Page) {
     window.scrollTo(0, 0);
     await nextFrame();
   });
+
+  // Bound the walk from the driver side too. Every wait inside it already
+  // races a timer, and CI has still produced runs where this call never
+  // returns and consumes the entire 300s test budget while the same test
+  // normally finishes in ten seconds. A renderer that has stopped running
+  // timers cannot rescue itself from the inside, so the cap has to live out
+  // here. One retry covers a context replaced by a late client-side
+  // navigation; a second failure is reported as what it is.
+  for (let attempt = 0; ; attempt++) {
+    const walk = walkThePage();
+    // Keep a late rejection from surfacing as an unhandled rejection once the
+    // race below has already moved on.
+    walk.catch(() => {});
+    const outcome = await Promise.race([
+      walk.then(() => "settled" as const),
+      new Promise<"timeout">((resolve) => setTimeout(() => resolve("timeout"), 30_000)),
+    ]);
+    if (outcome === "settled") break;
+    if (attempt >= 1) {
+      throw new Error(
+        "settleFullPage: the page stopped settling within 30s on two attempts",
+      );
+    }
+    await page.waitForLoadState("domcontentloaded");
+  }
+
   await expect(
     page.locator(
       '[aria-label="Widget wird geladen"], [aria-label="Widget is loading"]',

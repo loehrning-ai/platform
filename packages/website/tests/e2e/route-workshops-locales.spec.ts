@@ -38,7 +38,16 @@ for (const width of [320, 390, 768, 1440] as const) {
     // real one; a slow runner can otherwise land the fallback's slightly
     // wider metrics permanently and report an overflow that isn't real.
     await page.goto("/", { waitUntil: "domcontentloaded" });
-    await page.evaluate(() => document.fonts.ready);
+    // Bound the wait. document.fonts.ready is not guaranteed to settle, and an
+    // unraced await here parks the whole test inside one evaluate until the
+    // project timeout kills it — the cache warm-up is an optimisation, so
+    // giving up on it is strictly better than hanging on it.
+    await page.evaluate(() =>
+      Promise.race([
+        document.fonts.ready,
+        new Promise((resolve) => setTimeout(resolve, 10_000)),
+      ]),
+    );
 
     for (const route of WORKSHOP_ROUTES) {
       for (const locale of ["de", "en"] as const) {
@@ -63,10 +72,25 @@ for (const width of [320, 390, 768, 1440] as const) {
         // face when geometry is measured, producing a transient overflow
         // that has nothing to do with the actual, settled layout.
         await page.evaluate(async () => {
-          await document.fonts.ready;
-          await new Promise<void>((resolve) =>
-            requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-          );
+          // Both signals can fail to arrive: a font that never resolves keeps
+          // fonts.ready pending, and requestAnimationFrame does not fire at
+          // all on a backgrounded or occluded page. Race each against a timer
+          // so a settle that cannot complete costs a moment rather than the
+          // entire test budget.
+          await Promise.race([
+            document.fonts.ready,
+            new Promise((resolve) => setTimeout(resolve, 10_000)),
+          ]);
+          await new Promise<void>((resolve) => {
+            let settled = false;
+            const done = () => {
+              if (settled) return;
+              settled = true;
+              resolve();
+            };
+            requestAnimationFrame(() => requestAnimationFrame(done));
+            setTimeout(done, 250);
+          });
         });
         await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
 
