@@ -192,17 +192,29 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
         rect.height > 1
       );
     };
-    const description = (element: Element) => ({
-      tag: element.tagName.toLowerCase(),
-      className:
-        typeof element.className === "string"
-          ? element.className.slice(0, 120)
-          : "",
-      text: (element.textContent ?? "")
-        .trim()
-        .replace(/\s+/g, " ")
-        .slice(0, 120),
-    });
+    // Geometry belongs in the failure message. A tag/class/text triple names
+    // the offender but not by how much it escapes, and the difference between
+    // a sub-pixel rounding artifact and a genuinely wide box decides the fix.
+    // Reproducing this locally is expensive when it only appears on CI, so the
+    // numbers have to survive in the report itself.
+    const description = (element: Element) => {
+      const rect = element.getBoundingClientRect();
+      return {
+        tag: element.tagName.toLowerCase(),
+        className:
+          typeof element.className === "string"
+            ? element.className.slice(0, 120)
+            : "",
+        text: (element.textContent ?? "")
+          .trim()
+          .replace(/\s+/g, " ")
+          .slice(0, 120),
+        left: Math.round(rect.left * 100) / 100,
+        right: Math.round(rect.right * 100) / 100,
+        width: Math.round(rect.width * 100) / 100,
+        viewport: window.innerWidth,
+      };
+    };
 
     const descendants = Array.from(root.querySelectorAll("*"));
     const viewportOffenders = descendants
