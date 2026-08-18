@@ -139,18 +139,42 @@ function visibleLanguageSwitchLink(page: Page, name: RegExp) {
 async function settleFullPage(page: Page) {
   await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
   await page.evaluate(async () => {
-    await document.fonts.ready;
+    // requestAnimationFrame does not fire on a backgrounded or occluded page,
+    // and document.fonts.ready can stay pending on a font that never resolves.
+    // Every wait below therefore races its signal against a timer: unraced, a
+    // shard that loses the foreground hangs inside this evaluate until the
+    // test timeout kills it, which reads as a mysterious 300s failure rather
+    // than a settle that took a moment too long.
+    const nextFrame = () =>
+      new Promise<void>((resolve) => {
+        let settled = false;
+        const done = () => {
+          if (settled) return;
+          settled = true;
+          resolve();
+        };
+        requestAnimationFrame(() => requestAnimationFrame(done));
+        setTimeout(done, 250);
+      });
+
+    await Promise.race([
+      document.fonts.ready,
+      new Promise((resolve) => setTimeout(resolve, 20_000)),
+    ]);
+
     const step = Math.max(320, Math.floor(window.innerHeight * 0.75));
-    for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
+    // Bound the walk as well. Lazy content can extend scrollHeight while the
+    // loop consumes it, so the exit condition alone is not a guarantee.
+    for (
+      let y = 0, steps = 0;
+      y < document.documentElement.scrollHeight && steps < 60;
+      y += step, steps++
+    ) {
       window.scrollTo(0, y);
-      await new Promise<void>((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-      );
+      await nextFrame();
     }
     window.scrollTo(0, 0);
-    await new Promise<void>((resolve) =>
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-    );
+    await nextFrame();
   });
   await expect(
     page.locator(
@@ -178,7 +202,7 @@ async function waitForWorkshopQuestionTransition(page: Page) {
 }
 
 async function expectClaudeGeometryContained(page: Page, context: string) {
-  const geometry = await page.evaluate(() => {
+  const measure = () => page.evaluate(() => {
     const root = document.querySelector("main");
     if (!root) throw new Error("Main content region is missing");
 
@@ -309,6 +333,26 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
       focusableOffenders,
     };
   });
+
+  // One sample can land mid-animation. The quiz slides its question frame in
+  // horizontally, so a child is legitimately outside the viewport for a few
+  // frames before it settles, and the wrapper reflows with it. CI is slow
+  // enough to catch that frame: the offender it reported measured flush with
+  // the viewport again by the time it was described. Settle first, then assert,
+  // so a transient frame cannot fail the run while a box that stays outside
+  // still does.
+  const settleDeadline = Date.now() + 3_000;
+  let geometry = await measure();
+  while (
+    geometry.viewportOffenders.length +
+      geometry.clippedContent.length +
+      geometry.focusableOffenders.length >
+      0 &&
+    Date.now() < settleDeadline
+  ) {
+    await page.waitForTimeout(100);
+    geometry = await measure();
+  }
 
   expect(geometry.bodyScrollWidth, context).toBeLessThanOrEqual(
     geometry.viewportWidth + 1,
