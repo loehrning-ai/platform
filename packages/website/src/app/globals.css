@@ -19,6 +19,11 @@
      #4f4640 to reach ~7.0:1 against Kalkweiß #F3F0E9 — meets WCAG AAA per
      Brand CI v3.0 contrast targets. */
   --color-muted-foreground: #4f4640;
+  /* Leinen. NOTE: at 1.37:1 on Kalkweiss this is under the 3:1 WCAG 1.4.11
+     floor for a boundary, but it is also the FILL of ~14 progress tracks and
+     inactive-state chips via bg-border, where a dark value drops the track to
+     1.73:1 against the Kupfer bar. One token cannot hold both roles; fixing it
+     needs a separate --color-track and a triage of all 70 bg-border sites. */
   --color-border: #d4cec5; /* Leinen — linen white */
   --color-card: #e8e3d9; /* Birke — birch-pale surface */
   --color-card-hover: #e0d9ce; /* Birke darkened */
@@ -98,8 +103,15 @@
     overflow-x: clip;
   }
 
+  /* One focus treatment for the whole site: a 3px Kupfer bracket held 2px off the
+     element. 3px is the card accent stroke, so the ring reads as part of the
+     system rather than a UA default, and the gap keeps it legible around a
+     Kupfer-filled button, where ring and fill share a hue. Kupfer stays ≥4.75:1
+     against every surface token (Kalkweiß, Birke, Birke-hover, Kupfer-Mist,
+     white); .dark-section swaps it to #E07050 at 6.18:1. The offset stays at 2px
+     because several bordered grids clip their children with overflow-hidden. */
   :focus-visible {
-    outline: 2px solid var(--color-brand-orange);
+    outline: 3px solid var(--color-brand-orange);
     outline-offset: 2px;
   }
 

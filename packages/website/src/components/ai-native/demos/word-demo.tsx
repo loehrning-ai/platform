@@ -133,7 +133,7 @@ export function WordDemo(): JSX.Element {
           ))}
           <div className="flex items-center gap-2 border border-border bg-card/60 px-2.5 py-2">
             <div
-              className="flex h-6 w-6 items-center justify-center text-[12px] font-black text-white"
+              className="flex h-6 w-6 items-center justify-center text-[12px] font-bold text-white"
               style={{ backgroundColor: "#2B579A" }}
             >
               W
@@ -201,7 +201,7 @@ export function WordDemo(): JSX.Element {
             style={{ backgroundColor: "#2B579A" }}
           >
             <div
-              className="flex h-4 w-4 items-center justify-center text-[11px] font-black"
+              className="flex h-4 w-4 items-center justify-center text-[11px] font-bold"
               style={{ backgroundColor: "white", color: "#2B579A" }}
             >
               W

@@ -138,20 +138,70 @@ function visibleLanguageSwitchLink(page: Page, name: RegExp) {
 
 async function settleFullPage(page: Page) {
   await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
-  await page.evaluate(async () => {
-    await document.fonts.ready;
+  const walkThePage = () => page.evaluate(async () => {
+    // requestAnimationFrame does not fire on a backgrounded or occluded page,
+    // and document.fonts.ready can stay pending on a font that never resolves.
+    // Every wait below therefore races its signal against a timer: unraced, a
+    // shard that loses the foreground hangs inside this evaluate until the
+    // test timeout kills it, which reads as a mysterious 300s failure rather
+    // than a settle that took a moment too long.
+    const nextFrame = () =>
+      new Promise<void>((resolve) => {
+        let settled = false;
+        const done = () => {
+          if (settled) return;
+          settled = true;
+          resolve();
+        };
+        requestAnimationFrame(() => requestAnimationFrame(done));
+        setTimeout(done, 250);
+      });
+
+    await Promise.race([
+      document.fonts.ready,
+      new Promise((resolve) => setTimeout(resolve, 20_000)),
+    ]);
+
     const step = Math.max(320, Math.floor(window.innerHeight * 0.75));
-    for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
+    // Bound the walk as well. Lazy content can extend scrollHeight while the
+    // loop consumes it, so the exit condition alone is not a guarantee.
+    for (
+      let y = 0, steps = 0;
+      y < document.documentElement.scrollHeight && steps < 60;
+      y += step, steps++
+    ) {
       window.scrollTo(0, y);
-      await new Promise<void>((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-      );
+      await nextFrame();
     }
     window.scrollTo(0, 0);
-    await new Promise<void>((resolve) =>
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-    );
+    await nextFrame();
   });
+
+  // Bound the walk from the driver side too. Every wait inside it already
+  // races a timer, and CI has still produced runs where this call never
+  // returns and consumes the entire 300s test budget while the same test
+  // normally finishes in ten seconds. A renderer that has stopped running
+  // timers cannot rescue itself from the inside, so the cap has to live out
+  // here. One retry covers a context replaced by a late client-side
+  // navigation; a second failure is reported as what it is.
+  for (let attempt = 0; ; attempt++) {
+    const walk = walkThePage();
+    // Keep a late rejection from surfacing as an unhandled rejection once the
+    // race below has already moved on.
+    walk.catch(() => {});
+    const outcome = await Promise.race([
+      walk.then(() => "settled" as const),
+      new Promise<"timeout">((resolve) => setTimeout(() => resolve("timeout"), 30_000)),
+    ]);
+    if (outcome === "settled") break;
+    if (attempt >= 1) {
+      throw new Error(
+        "settleFullPage: the page stopped settling within 30s on two attempts",
+      );
+    }
+    await page.waitForLoadState("domcontentloaded");
+  }
+
   await expect(
     page.locator(
       '[aria-label="Widget wird geladen"], [aria-label="Widget is loading"]',
@@ -178,7 +228,7 @@ async function waitForWorkshopQuestionTransition(page: Page) {
 }
 
 async function expectClaudeGeometryContained(page: Page, context: string) {
-  const geometry = await page.evaluate(() => {
+  const measure = () => page.evaluate(() => {
     const root = document.querySelector("main");
     if (!root) throw new Error("Main content region is missing");
 
@@ -192,17 +242,29 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
         rect.height > 1
       );
     };
-    const description = (element: Element) => ({
-      tag: element.tagName.toLowerCase(),
-      className:
-        typeof element.className === "string"
-          ? element.className.slice(0, 120)
-          : "",
-      text: (element.textContent ?? "")
-        .trim()
-        .replace(/\s+/g, " ")
-        .slice(0, 120),
-    });
+    // Geometry belongs in the failure message. A tag/class/text triple names
+    // the offender but not by how much it escapes, and the difference between
+    // a sub-pixel rounding artifact and a genuinely wide box decides the fix.
+    // Reproducing this locally is expensive when it only appears on CI, so the
+    // numbers have to survive in the report itself.
+    const description = (element: Element) => {
+      const rect = element.getBoundingClientRect();
+      return {
+        tag: element.tagName.toLowerCase(),
+        className:
+          typeof element.className === "string"
+            ? element.className.slice(0, 120)
+            : "",
+        text: (element.textContent ?? "")
+          .trim()
+          .replace(/\s+/g, " ")
+          .slice(0, 120),
+        left: Math.round(rect.left * 100) / 100,
+        right: Math.round(rect.right * 100) / 100,
+        width: Math.round(rect.width * 100) / 100,
+        viewport: window.innerWidth,
+      };
+    };
 
     const descendants = Array.from(root.querySelectorAll("*"));
     const viewportOffenders = descendants
@@ -297,6 +359,26 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
       focusableOffenders,
     };
   });
+
+  // One sample can land mid-animation. The quiz slides its question frame in
+  // horizontally, so a child is legitimately outside the viewport for a few
+  // frames before it settles, and the wrapper reflows with it. CI is slow
+  // enough to catch that frame: the offender it reported measured flush with
+  // the viewport again by the time it was described. Settle first, then assert,
+  // so a transient frame cannot fail the run while a box that stays outside
+  // still does.
+  const settleDeadline = Date.now() + 3_000;
+  let geometry = await measure();
+  while (
+    geometry.viewportOffenders.length +
+      geometry.clippedContent.length +
+      geometry.focusableOffenders.length >
+      0 &&
+    Date.now() < settleDeadline
+  ) {
+    await page.waitForTimeout(100);
+    geometry = await measure();
+  }
 
   expect(geometry.bodyScrollWidth, context).toBeLessThanOrEqual(
     geometry.viewportWidth + 1,

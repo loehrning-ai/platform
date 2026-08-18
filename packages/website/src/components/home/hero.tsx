@@ -7,20 +7,13 @@ import {
   useMotionValue,
   useMotionValueEvent,
 } from "framer-motion";
-import {
-  ArrowRight,
-  Check,
-  FlaskConical,
-  GraduationCap,
-  Wrench,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { heroNetworkSteps } from "@/components/home/hero-network-steps";
 import { HOME_COPY } from "@/components/home/home-copy";
 import { BrandButton } from "@/components/ui/brand-button";
-import { IconTile, type CardAccent } from "@/components/ui/card";
 import { withMotionProvider } from "@/components/motion/with-motion-provider";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
@@ -84,15 +77,6 @@ const BERLIN_LON = 13.405;
    ────────────────────────────────────────────────────────────────────────── */
 
 const EASE = EASE_OUT_EXPO;
-// The three ways the platform is used, shown as warm icon cards under the hero.
-const pillarPresentation: ReadonlyArray<{
-  readonly icon: LucideIcon;
-  readonly accent: CardAccent;
-}> = [
-  { icon: GraduationCap, accent: "kupfer" },
-  { icon: FlaskConical, accent: "sand" },
-  { icon: Wrench, accent: "amber" },
-];
 
 /* ──────────────────────────────────────────────────────────────────────────
    Tiny decorative atoms
@@ -540,32 +524,49 @@ function HeroSectionContent({
         ) : null}
       </m.div>
 
-      <div className="relative z-10 mx-auto mt-12 w-full max-w-6xl md:mt-16">
-        <div className="grid gap-4 sm:grid-cols-3">
-          {copy.pillars.map((pillar, i) => {
-            const presentation = pillarPresentation[i];
-            return (
-            <div
-              key={pillar.title}
-              className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5 shadow-card"
-            >
-              <div className="flex items-center justify-between">
-                <IconTile icon={presentation.icon} accent={presentation.accent} />
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-                  {String(i + 1).padStart(2, "0")}
+      {/* The three uses of the platform, as a hairline register in the same
+          instrument language as the side rails, with no card surface. The list
+          carries the sequence, so the printed numeral is decorative. */}
+      <ol className="relative z-10 mx-auto mt-12 grid w-full max-w-6xl grid-cols-1 divide-y divide-border border-t border-border sm:grid-cols-3 sm:divide-x sm:divide-y-0 md:mt-16">
+        {copy.pillars.map((pillar, index) => {
+          const href = pillar.href;
+          const entry = (
+            <>
+              <span className="flex items-baseline gap-3">
+                <span
+                  aria-hidden="true"
+                  className="font-mono text-[11px] font-bold leading-none tracking-[0.14em] text-brand-orange"
+                >
+                  {String(index + 1).padStart(2, "0")}
                 </span>
-              </div>
-              <p className="text-base font-bold tracking-[-0.02em] text-foreground">
-                {pillar.title}
-              </p>
-              <p className="text-sm leading-relaxed text-muted-foreground">
+                <span className="text-base font-bold tracking-[-0.02em] text-foreground group-hover:text-brand-orange">
+                  {pillar.title}
+                </span>
+              </span>
+              <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
                 {pillar.body}
               </p>
-            </div>
-            );
-          })}
-        </div>
-      </div>
+            </>
+          );
+          return (
+            <li
+              key={pillar.title}
+              className="py-5 transition-colors hover:bg-card/60 sm:px-6 sm:py-6 sm:first:pl-0 sm:last:pr-0"
+            >
+              {href ? (
+                <Link
+                  href={localizeHref(href, locale)}
+                  className="group block outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                >
+                  {entry}
+                </Link>
+              ) : (
+                entry
+              )}
+            </li>
+          );
+        })}
+      </ol>
     </section>
   );
 }

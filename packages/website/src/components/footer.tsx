@@ -198,7 +198,7 @@ export async function Footer() {
             <Link
               href={localizeHref("/", locale)}
               prefetch={false}
-              className="mt-4 inline-flex min-h-11 max-w-full items-center py-1 text-[2rem] font-bold leading-none tracking-[-0.055em] text-foreground outline-none transition-colors hover:text-brand-orange focus-visible:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:text-[2.5rem]"
+              className="mt-4 inline-flex min-h-11 max-w-full items-center py-1 text-[2rem] font-bold leading-none tracking-[-0.04em] text-foreground outline-none transition-colors hover:text-brand-orange focus-visible:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-4 focus-visible:ring-offset-background sm:text-[2.5rem]"
               aria-label={`loehrning.ai - ${copy.homeLabel}`}
               translate="no"
             >

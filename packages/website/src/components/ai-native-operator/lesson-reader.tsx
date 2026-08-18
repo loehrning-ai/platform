@@ -7,6 +7,7 @@ import {
   RenderWidget,
   resolveWidgetsForSlot,
 } from "@/components/widgets/registry";
+import { PathwayStageBanner } from "@/components/course/pathway-stage-banner";
 import {
   isCheckpointDone,
   isLessonCompleted,
@@ -18,6 +19,7 @@ import { getModuleMeta } from "@/lib/ai-native-operator/types";
 import { courseHref } from "@/lib/ai-native-operator/routes";
 import { Callout } from "./callout";
 import type { AiNativeOperatorLesson } from "@/lib/ai-native-operator/types";
+import type { LearningStage } from "@/lib/learning-graph/types";
 import type { NextTarget } from "./lesson-page";
 import type { Locale } from "@/lib/i18n/locale";
 
@@ -28,6 +30,14 @@ interface AiNativeOperatorLessonReaderProps {
   readonly prevTitle: string | null;
   readonly next: NextTarget;
 }
+
+/**
+ * Where this course sits on the six-stage path, mirroring the module-private
+ * `COURSE_NODE_META["ai-native-operator"]` in `@/lib/learning-graph/data`.
+ * Restated rather than looked up in `LEARNING_NODES`, which would pull the
+ * whole graph (books, demos, workshops) into this client bundle.
+ */
+const COURSE_STAGE: LearningStage = "anwenden";
 
 /**
  * LessonCompletionButton — owns the reader's progress-readiness state.
@@ -152,7 +162,7 @@ export function AiNativeOperatorLessonReader({
         <h1 className="mt-1 break-words text-[28px] font-bold tracking-[-0.03em] text-foreground md:text-[34px]">
           {lesson.title}
         </h1>
-        <p className="mt-2 max-w-[640px] break-words text-[16px] leading-[1.55] text-muted-foreground">
+        <p className="mt-2 max-w-[68ch] break-words text-[16px] leading-[1.55] text-muted-foreground">
           {lesson.objective}
         </p>
         <div className="mt-4 flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.06em] text-muted-foreground">
@@ -166,9 +176,15 @@ export function AiNativeOperatorLessonReader({
         </div>
       </header>
 
+      <PathwayStageBanner
+        stage={COURSE_STAGE}
+        locale={locale}
+        className="mb-8"
+      />
+
       {lesson.kind === "quiz" ? (
         <div className="flex flex-col gap-6">
-          <p className="break-words text-[14px] leading-relaxed text-muted-foreground">
+          <p className="max-w-[68ch] break-words text-[14px] leading-relaxed text-muted-foreground">
             {courseCopy.quizIntro}
           </p>
           {lesson.quiz.map((question) => {
@@ -201,8 +217,13 @@ export function AiNativeOperatorLessonReader({
         </div>
       ) : (
         <article className="space-y-8">
+          {/*
+            The measure cap belongs on each prose section, not on the
+            <article>: the callout's spec listing and the end widgets below
+            keep the shell's full column for their tables and diagrams.
+          */}
           {lesson.sections.map((section) => (
-            <section key={section.id}>
+            <section key={section.id} className="max-w-[68ch]">
               <h2 className="break-words text-[19px] font-semibold text-foreground">
                 {section.title}
               </h2>

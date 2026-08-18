@@ -143,7 +143,7 @@ export function DemoTile({
               <span className="mt-2 h-1.5 w-2/3 bg-brand-orange" />
             </div>
             <div className={`grid place-items-center border ${dark ? "border-background/20 bg-background/5" : "border-foreground/15 bg-foreground/5"}`}>
-              <span className={`font-mono text-xl font-black ${accent}`}>{demo.n}</span>
+              <span className={`font-mono text-xl font-bold ${accent}`}>{demo.n}</span>
             </div>
           </div>
         ) : Preview ? (

@@ -155,7 +155,7 @@ export function DemoDetailLayout({
               </span>
             )}
           </div>
-          <h1 className="mt-5 max-w-5xl break-words text-[clamp(2.25rem,8vw,4.75rem)] font-black leading-[0.98] tracking-[-0.04em]">
+          <h1 className="mt-5 max-w-5xl break-words text-[clamp(2.25rem,8vw,4.75rem)] font-bold leading-[0.98] tracking-[-0.04em]">
             {demo.title}{" "}
             <span className="text-brand-orange">{demo.titleKicker}</span>
           </h1>

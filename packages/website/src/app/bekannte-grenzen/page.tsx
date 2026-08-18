@@ -130,7 +130,7 @@ function BekannteGrenzenContent({
           <p className="mt-7 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
             {copy.eyebrow}
           </p>
-          <h1 className="mt-5 max-w-4xl text-pretty text-[clamp(2.5rem,6vw,5rem)] font-bold leading-[0.94] tracking-[-0.05em] text-foreground">
+          <h1 className="mt-5 max-w-4xl text-pretty text-[clamp(2.5rem,6vw,5rem)] font-bold leading-[0.94] tracking-[-0.04em] text-foreground">
             {copy.title}
           </h1>
           <p className="mt-7 max-w-3xl text-pretty text-lg leading-relaxed text-muted-foreground sm:text-xl">

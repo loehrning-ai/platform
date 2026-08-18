@@ -138,7 +138,7 @@ function WieKiFunktioniertContent({ locale }: { readonly locale: Locale }) {
           <p className="mt-7 break-words font-mono text-[11px] font-bold uppercase tracking-[0.15em] text-brand-orange sm:tracking-[0.18em]">
             {copy.eyebrow}
           </p>
-          <h1 className="mt-5 max-w-5xl break-words text-[clamp(2.5rem,7vw,5.5rem)] font-bold leading-[0.92] tracking-[-0.055em] text-foreground [overflow-wrap:anywhere]">
+          <h1 className="mt-5 max-w-5xl break-words text-[clamp(2.5rem,7vw,5.5rem)] font-bold leading-[0.92] tracking-[-0.04em] text-foreground [overflow-wrap:anywhere]">
             {meta.title}
           </h1>
           <p className="mt-6 max-w-3xl break-words text-[18px] leading-[1.6] text-muted-foreground sm:text-[21px]">

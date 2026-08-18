@@ -196,7 +196,7 @@ export function ExcelDemo(): JSX.Element {
             style={{ backgroundColor: "#107C41" }}
           >
             <div
-              className="flex h-4 w-4 items-center justify-center text-[11px] font-black"
+              className="flex h-4 w-4 items-center justify-center text-[11px] font-bold"
               style={{ backgroundColor: "white", color: "#107C41" }}
             >
               X
