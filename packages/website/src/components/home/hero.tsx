@@ -525,7 +525,7 @@ function HeroSectionContent({
       </m.div>
 
       {/* The three uses of the platform, as a hairline register in the same
-          instrument language as the side rails — no card surface. The list
+          instrument language as the side rails, with no card surface. The list
           carries the sequence, so the printed numeral is decorative. */}
       <ol className="relative z-10 mx-auto mt-12 grid w-full max-w-6xl grid-cols-1 divide-y divide-border border-t border-border sm:grid-cols-3 sm:divide-x sm:divide-y-0 md:mt-16">
         {copy.pillars.map((pillar, index) => {

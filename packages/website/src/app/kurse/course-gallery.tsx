@@ -732,7 +732,7 @@ function CourseGalleryContent({
                           // composition as the Werkverzeichnis card's source
                           // action.
                           aria-label={`${copy.sourceCode}: ${repoPath}, ${course.title}`}
-                          className="inline-flex min-w-0 items-center gap-1.5 py-1 transition-colors hover:text-foreground"
+                          className="inline-flex min-h-6 min-w-0 items-center gap-1.5 py-1 transition-colors hover:text-foreground"
                         >
                           <Github
                             className="h-3 w-3 shrink-0"
@@ -747,7 +747,7 @@ function CourseGalleryContent({
                           target="_blank"
                           rel="noopener noreferrer"
                           aria-label={`${copy.sourceCommit} ${course.sourceCommit.slice(0, 7)} ${copy.onGitHub}`}
-                          className="py-1 transition-colors hover:text-foreground"
+                          className="inline-flex min-h-6 items-center py-1 transition-colors hover:text-foreground"
                         >
                           #{course.sourceCommit.slice(0, 7)}
                         </a>
