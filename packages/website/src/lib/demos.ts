@@ -527,6 +527,21 @@ export function getDemosByIndustry(industry: string): readonly Demo[] {
   return demos.filter((d) => d.industries.includes(industry));
 }
 
+/**
+ * Demos bound to one lesson, in catalog order. `/demos/[slug]` already reads
+ * `courseSlug` + `lessonId` to link a demo to its lesson; this reads the same
+ * binding in the other direction so the course side needs no second list.
+ * Most lessons have no bound demo and get an empty array.
+ */
+export function demosForLesson(
+  courseSlug: CourseSlug,
+  lessonId: string,
+): readonly Demo[] {
+  return demos.filter(
+    (d) => d.courseSlug === courseSlug && d.lessonId === lessonId,
+  );
+}
+
 export function filterDemos(opts: {
   readonly category?: string;
   readonly level?: string;

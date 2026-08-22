@@ -10,6 +10,7 @@
 
 import { test, expect, type Page } from "@playwright/test";
 import sharp from "sharp";
+import { settleFontsAndFrame } from "./fixtures/settle";
 
 interface ScreenshotStats {
   readonly uniqueColorBuckets: number;
@@ -46,7 +47,15 @@ async function prepareReviewedFont(page: Page) {
     // so the face is available before first paint. Without the reload, a cold
     // Linux runner retains its OS fallback after the optional no-swap window,
     // making the supposedly portable baseline meaningless.
-    await document.fonts.ready;
+    //
+    // Bounded, because fonts.ready can stay pending indefinitely. Giving up on
+    // it does not weaken the check: loadedCounts is asserted below, so a face
+    // that genuinely failed to load still fails the test, and does so in
+    // seconds with a legible reason rather than as a budget timeout.
+    await Promise.race([
+      document.fonts.ready,
+      new Promise((resolve) => setTimeout(resolve, 10_000)),
+    ]);
     return { primaryFamily, loadedCounts };
   }, REVIEWED_FONT_WEIGHTS);
 
@@ -68,13 +77,25 @@ async function prepareReviewedFont(page: Page) {
       document.documentElement,
     ).getPropertyValue("--font-loehrning-sans");
     const primaryFamily = configuredFamilies.split(",")[0]?.trim() ?? "";
-    await document.fonts.ready;
+    // Bounded for the same reason as the warm-up above; availableWeights is
+    // asserted afterwards, so a face that never arrived still fails loudly.
+    await Promise.race([
+      document.fonts.ready,
+      new Promise((resolve) => setTimeout(resolve, 10_000)),
+    ]);
     const availableWeights = weights.map((weight) =>
       document.fonts.check(`${weight} 64px ${primaryFamily}`),
     );
-    await new Promise<void>((resolve) =>
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-    );
+    await new Promise<void>((resolve) => {
+      let settled = false;
+      const done = () => {
+        if (settled) return;
+        settled = true;
+        resolve();
+      };
+      requestAnimationFrame(() => requestAnimationFrame(done));
+      setTimeout(done, 250);
+    });
     return { primaryFamily, availableWeights };
   }, REQUIRED_REVIEWED_FONT_WEIGHTS);
 
@@ -158,12 +179,7 @@ async function assertVisualSmoke(page: Page, route: string) {
   await expect(page.locator("h1").first()).toBeVisible();
   await expect(page.locator("body")).not.toContainText("Application error");
   await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
-  await page.evaluate(async () => {
-    await document.fonts.ready;
-    await new Promise<void>((resolve) =>
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-    );
-  });
+  await settleFontsAndFrame(page);
   const visibleContentRegions = await page
     .locator("main h1, main h2, main p, main a, main button, main img")
     .evaluateAll((elements) =>

@@ -3,8 +3,9 @@ import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
 import { getCourseConfig } from "@/lib/course/config";
 import type { CourseSlug } from "@/lib/course/types";
 import { demos } from "@/lib/demos";
+import type { Locale } from "@/lib/i18n/locale";
 import { WORKSHOPS } from "@/lib/workshops";
-import type { LearningEdge, LearningNode } from "./types";
+import type { LearningEdge, LearningNode, LearningStage } from "./types";
 
 type CourseNodeMeta = Pick<
   LearningNode,
@@ -378,45 +379,98 @@ export const PATHWAY_STAGES = [
   },
 ] as const;
 
+export interface PathwayStageCopy {
+  readonly displayLabel: string;
+  readonly subtitle: string;
+  readonly description: string;
+}
+
+/**
+ * Learner-facing wording for the six stages. German is the source text; the
+ * English labels are the ones the KI-Check already ships
+ * (@/lib/ki-check/localization), so every surface names a stage identically.
+ */
+export const PATHWAY_STAGE_COPY: Readonly<
+  Record<Locale, Readonly<Record<LearningStage, PathwayStageCopy>>>
+> = {
+  de: {
+    pruefen: {
+      displayLabel: "Prüfen",
+      subtitle: "Wo stehe ich?",
+      description: "Finde deinen Einstiegspunkt auf dem KI-Kompetenzweg.",
+    },
+    grundlagen: {
+      displayLabel: "Verstehen",
+      subtitle: "KI im Alltag sicher nutzen",
+      description: "KI-Grundlagen für die alltägliche sichere Nutzung.",
+    },
+    regeln: {
+      displayLabel: "Einordnen",
+      subtitle: "Regeln kennen und anwenden",
+      description: "Was die EU-KI-Verordnung für dich bedeutet.",
+    },
+    anwenden: {
+      displayLabel: "Umsetzen",
+      subtitle: "Mit KI arbeiten",
+      description: "Praktische Arbeit mit KI-Tools im Berufsalltag.",
+    },
+    dokumentieren: {
+      displayLabel: "Belegen",
+      subtitle: "Nachweise und Vorlagen",
+      description: "Dokumentation, Vorlagen und Nachweise für dein Team.",
+    },
+    vertiefen: {
+      displayLabel: "Vertiefen",
+      subtitle: "Bücher, Demos, Labore",
+      description:
+        "Bücher, Praxisbeispiele und technische Labore für mehr Tiefe.",
+    },
+  },
+  en: {
+    pruefen: {
+      displayLabel: "Assess",
+      subtitle: "Where do I stand?",
+      description: "Find your entry point on the AI competency path.",
+    },
+    grundlagen: {
+      displayLabel: "Understand",
+      subtitle: "Using AI safely day to day",
+      description: "AI fundamentals for safe everyday use.",
+    },
+    regeln: {
+      displayLabel: "Classify",
+      subtitle: "Know the rules and apply them",
+      description: "What the EU AI Act means for you.",
+    },
+    anwenden: {
+      displayLabel: "Apply",
+      subtitle: "Working with AI",
+      description: "Practical work with AI tools on the job.",
+    },
+    dokumentieren: {
+      displayLabel: "Document",
+      subtitle: "Records and templates",
+      description: "Documentation, templates and records for your team.",
+    },
+    vertiefen: {
+      displayLabel: "Deepen",
+      subtitle: "Books, demos, labs",
+      description:
+        "Books, practice examples and technical labs for more depth.",
+    },
+  },
+};
+
+/**
+ * German copy plus the lucide icon name per stage. Icons are locale-invariant,
+ * so localized surfaces read them here and take their text from
+ * `PATHWAY_STAGE_COPY[locale]`.
+ */
 export const PATHWAY_STAGE_DISPLAY = {
-  pruefen: {
-    displayLabel: "Prüfen",
-    subtitle: "Wo stehe ich?",
-    description: "Finde deinen Einstiegspunkt auf dem KI-Kompetenzweg.",
-    icon: "MapPin",
-  },
-  grundlagen: {
-    displayLabel: "Verstehen",
-    subtitle: "KI im Alltag sicher nutzen",
-    description: "KI-Grundlagen für die alltägliche sichere Nutzung.",
-    icon: "Lightbulb",
-  },
-  regeln: {
-    displayLabel: "Einordnen",
-    subtitle: "Regeln kennen und anwenden",
-    description: "Was die EU-KI-Verordnung für dich bedeutet.",
-    icon: "Scale",
-  },
-  anwenden: {
-    displayLabel: "Umsetzen",
-    subtitle: "Mit KI arbeiten",
-    description: "Praktische Arbeit mit KI-Tools im Berufsalltag.",
-    icon: "Wrench",
-  },
-  dokumentieren: {
-    displayLabel: "Belegen",
-    subtitle: "Nachweise und Vorlagen",
-    description: "Dokumentation, Vorlagen und Nachweise für dein Team.",
-    icon: "FileCheck",
-  },
-  vertiefen: {
-    displayLabel: "Vertiefen",
-    subtitle: "Bücher, Demos, Labore",
-    description:
-      "Bücher, Praxisbeispiele und technische Labore für mehr Tiefe.",
-    icon: "BookOpen",
-  },
-} as const satisfies Record<
-  import("./types").LearningStage,
-  { displayLabel: string; subtitle: string; description: string; icon: string }
->;
+  pruefen: { ...PATHWAY_STAGE_COPY.de.pruefen, icon: "MapPin" },
+  grundlagen: { ...PATHWAY_STAGE_COPY.de.grundlagen, icon: "Lightbulb" },
+  regeln: { ...PATHWAY_STAGE_COPY.de.regeln, icon: "Scale" },
+  anwenden: { ...PATHWAY_STAGE_COPY.de.anwenden, icon: "Wrench" },
+  dokumentieren: { ...PATHWAY_STAGE_COPY.de.dokumentieren, icon: "FileCheck" },
+  vertiefen: { ...PATHWAY_STAGE_COPY.de.vertiefen, icon: "BookOpen" },
+} satisfies Record<LearningStage, PathwayStageCopy & { icon: string }>;

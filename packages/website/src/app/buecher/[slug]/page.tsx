@@ -213,7 +213,7 @@ export default async function BookOverviewPage({ params }: Params) {
             <p className="break-words font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-brand-orange">
               {copy.detail.kicker}
             </p>
-            <h1 className="mt-5 max-w-4xl break-words text-4xl font-bold leading-[0.96] tracking-[-0.045em] text-foreground sm:text-5xl lg:text-6xl">
+            <h1 className="mt-5 max-w-4xl break-words text-4xl font-bold leading-[0.96] tracking-[-0.04em] text-foreground sm:text-5xl lg:text-6xl">
               {display.title}
             </h1>
             <p className="mt-4 break-words text-lg italic text-muted-foreground sm:text-xl">

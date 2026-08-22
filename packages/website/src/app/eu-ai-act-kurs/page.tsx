@@ -283,7 +283,7 @@ export default async function EuAiActKursLandingPage() {
             <p className="break-words font-mono text-[11px] font-bold uppercase tracking-[0.15em] text-brand-orange sm:tracking-[0.18em]">
               {copy.eyebrow}
             </p>
-            <h1 className="mt-6 max-w-[900px] break-words text-[40px] font-bold leading-[0.94] tracking-[-0.05em] text-foreground [overflow-wrap:anywhere] sm:text-[56px] md:text-[76px]">
+            <h1 className="mt-6 max-w-[900px] break-words text-[40px] font-bold leading-[0.94] tracking-[-0.04em] text-foreground [overflow-wrap:anywhere] sm:text-[56px] md:text-[76px]">
               {copy.heading}
               <br />
               {" "}

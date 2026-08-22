@@ -147,7 +147,7 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
             <div className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-kupfer-light">
               {copy.catalog.kicker}
             </div>
-            <h1 className="mt-5 max-w-4xl text-balance text-[clamp(2.35rem,7vw,5.4rem)] font-black leading-[0.94] tracking-[-0.045em]">
+            <h1 className="mt-5 max-w-4xl text-balance text-[clamp(2.35rem,7vw,5.4rem)] font-bold leading-[0.94] tracking-[-0.04em]">
               {copy.catalog.headingLead}{" "}
               <span className="text-kupfer-light">{copy.catalog.headingAccent}</span>
             </h1>
@@ -176,7 +176,7 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
         <div className="relative mx-auto mt-10 grid max-w-7xl grid-cols-1 border-y border-background/20 sm:grid-cols-3">
           {copy.catalog.stats.map((stat) => (
             <div key={stat.label} className="grid grid-cols-[3.5rem_minmax(0,1fr)] items-center gap-3 border-b border-background/20 py-3 last:border-b-0 sm:block sm:border-b-0 sm:border-r sm:px-5 sm:last:border-r-0">
-              <div className="font-mono text-2xl font-black tabular-nums text-kupfer-light">{stat.value}</div>
+              <div className="font-mono text-2xl font-bold tabular-nums text-kupfer-light">{stat.value}</div>
               <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-background/60">{stat.label}</div>
             </div>
           ))}

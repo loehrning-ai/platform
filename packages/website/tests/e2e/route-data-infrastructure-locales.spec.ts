@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { settleFontsAndFrame } from "./fixtures/settle";
 
 const LESSON_IDS = [
   "mental-model",
@@ -64,12 +65,7 @@ function encodeCertificateHash(): string {
 
 async function settle(page: Page) {
   await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
-  await page.evaluate(async () => {
-    await document.fonts.ready;
-    await new Promise<void>((resolve) =>
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-    );
-  });
+  await settleFontsAndFrame(page);
 }
 
 async function expectContainedLayout(page: Page, label: string) {

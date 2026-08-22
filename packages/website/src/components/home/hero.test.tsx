@@ -37,6 +37,27 @@ describe("HeroSection learning-platform positioning", () => {
     );
   });
 
+  it("links each pillar to the surface it names, preserving locale", () => {
+    const { unmount } = render(<HeroSection />);
+    for (const [name, href] of [
+      ["Lernen", "/kurse"],
+      ["Prüfen", "/demos"],
+      ["Anwenden", "/workshops"],
+    ] as const) {
+      expect(
+        screen.getByRole("link", { name: new RegExp(name) }),
+      ).toHaveAttribute("href", href);
+    }
+    unmount();
+
+    render(<HeroSection locale="en" />);
+    // The pillars are the only demos/workshops links in the hero, so a locale
+    // regression here would otherwise ship silently.
+    expect(
+      screen.getAllByRole("link").map((a) => a.getAttribute("href")),
+    ).toEqual(expect.arrayContaining(["/en/kurse", "/en/demos", "/en/workshops"]));
+  });
+
   it("renders an in-flow primary CTA linking to the diagnostic start", () => {
     render(<HeroSection />);
     const cta = screen.getByRole("link", { name: /KI-Check öffnen/i });

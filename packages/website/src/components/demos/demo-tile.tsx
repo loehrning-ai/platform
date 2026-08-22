@@ -164,7 +164,7 @@ export function DemoTile({
             <div
               className={`grid place-items-center border ${dark ? "border-background/20 bg-background/5" : "border-foreground/15 bg-foreground/5"}`}
             >
-              <span className={`font-mono text-xl font-black ${accent}`}>
+              <span className={`font-mono text-xl font-bold ${accent}`}>
                 {demo.n}
               </span>
             </div>

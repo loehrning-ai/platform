@@ -94,7 +94,7 @@ export default async function KursePage() {
           {copy.kicker}
         </div>
 
-        <h1 className="mt-6 max-w-[1180px] text-[40px] font-bold leading-[0.94] tracking-[-0.05em] text-foreground sm:text-[56px] md:text-[80px]">
+        <h1 className="mt-6 max-w-[1180px] text-[40px] font-bold leading-[0.94] tracking-[-0.04em] text-foreground sm:text-[56px] md:text-[80px]">
           {copy.headingLead}
           <br />
           <span className="text-brand-orange">{copy.headingAccent}</span>

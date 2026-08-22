@@ -13,12 +13,19 @@ export async function exposeAllAuditedContent(page: Page): Promise<void> {
 
   for (let sweep = 0; sweep < 2; sweep += 1) {
     await page.evaluate(async () => {
+      // Bounded: requestAnimationFrame does not fire on a backgrounded or
+      // occluded page, and this loop runs up to 1000 times. See settle.ts.
       const frame = () =>
-        new Promise<void>((resolve) =>
-          requestAnimationFrame(() =>
-            requestAnimationFrame(() => resolve()),
-          ),
-        );
+        new Promise<void>((resolve) => {
+          let settled = false;
+          const done = () => {
+            if (settled) return;
+            settled = true;
+            resolve();
+          };
+          requestAnimationFrame(() => requestAnimationFrame(done));
+          setTimeout(done, 250);
+        });
       const step = Math.max(200, Math.floor(window.innerHeight * 0.8));
       let position = 0;
       let steps = 0;

@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { settleWholePage } from "./fixtures/settle";
 
 const LESSON_IDS = [
   "mental-model",
@@ -137,59 +138,10 @@ function visibleLanguageSwitchLink(page: Page, name: RegExp) {
 }
 
 async function settleFullPage(page: Page) {
-  // Both waits below are bounded explicitly. No actionTimeout is configured, so
-  // a Playwright wait defaults to no limit and a stalled one is capped only by
-  // the 300s test timeout — which reports as a bare "Test timeout exceeded"
-  // naming neither the route nor the step. Failing at 30s with a message that
-  // says which wait stalled is the difference between a diagnosable failure and
-  // an opaque one.
-  await page
-    .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
-    .waitFor({ state: "attached", timeout: 30_000 });
-  await page.evaluate(async () => {
-    // requestAnimationFrame does not fire while a page is not being rendered.
-    // On CI the parallel workers leave pages backgrounded or occluded, so a
-    // promise that only resolves inside rAF never resolves, and awaiting it
-    // inside evaluate hangs with no error until the 300s test timeout. Racing
-    // a timer guarantees the walk keeps moving; on an active page the frame
-    // still wins, so nothing about the settle behaviour changes locally.
-    const nextFrame = () =>
-      new Promise<void>((resolve) => {
-        let settled = false;
-        const finish = () => {
-          if (settled) return;
-          settled = true;
-          resolve();
-        };
-        requestAnimationFrame(() => requestAnimationFrame(finish));
-        setTimeout(finish, 250);
-      });
-    await Promise.race([
-      document.fonts.ready,
-      new Promise((_, reject) =>
-        setTimeout(
-          () => reject(new Error("settleFullPage: document.fonts.ready stalled")),
-          20_000,
-        ),
-      ),
-    ]);
-    const step = Math.max(320, Math.floor(window.innerHeight * 0.75));
-    // The bound matters. scrollHeight is re-read every iteration, and scrolling
-    // is what makes lazy widgets load, so on a page that grows as it is walked
-    // the loop's own exit condition keeps receding. That never returns, and
-    // because it hangs inside page.evaluate it surfaces as a silent test
-    // timeout rather than an error. 60 steps is far past any real page.
-    for (
-      let y = 0, steps = 0;
-      y < document.documentElement.scrollHeight && steps < 60;
-      y += step, steps += 1
-    ) {
-      window.scrollTo(0, y);
-      await nextFrame();
-    }
-    window.scrollTo(0, 0);
-    await nextFrame();
-  });
+  // Two frames per step: this spec's original walk paired them, and a
+  // single frame leaves the first click after the walk racing an
+  // unstable element on WebKit.
+  await settleWholePage(page, { framesPerStep: 2 });
   await expect(
     page.locator(
       '[aria-label="Widget wird geladen"], [aria-label="Widget is loading"]',
@@ -216,7 +168,7 @@ async function waitForWorkshopQuestionTransition(page: Page) {
 }
 
 async function expectClaudeGeometryContained(page: Page, context: string) {
-  const geometry = await page.evaluate(() => {
+  const measure = () => page.evaluate(() => {
     const root = document.querySelector("main");
     if (!root) throw new Error("Main content region is missing");
 
@@ -230,17 +182,29 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
         rect.height > 1
       );
     };
-    const description = (element: Element) => ({
-      tag: element.tagName.toLowerCase(),
-      className:
-        typeof element.className === "string"
-          ? element.className.slice(0, 120)
-          : "",
-      text: (element.textContent ?? "")
-        .trim()
-        .replace(/\s+/g, " ")
-        .slice(0, 120),
-    });
+    // Geometry belongs in the failure message. A tag/class/text triple names
+    // the offender but not by how much it escapes, and the difference between
+    // a sub-pixel rounding artifact and a genuinely wide box decides the fix.
+    // Reproducing this locally is expensive when it only appears on CI, so the
+    // numbers have to survive in the report itself.
+    const description = (element: Element) => {
+      const rect = element.getBoundingClientRect();
+      return {
+        tag: element.tagName.toLowerCase(),
+        className:
+          typeof element.className === "string"
+            ? element.className.slice(0, 120)
+            : "",
+        text: (element.textContent ?? "")
+          .trim()
+          .replace(/\s+/g, " ")
+          .slice(0, 120),
+        left: Math.round(rect.left * 100) / 100,
+        right: Math.round(rect.right * 100) / 100,
+        width: Math.round(rect.width * 100) / 100,
+        viewport: window.innerWidth,
+      };
+    };
 
     const descendants = Array.from(root.querySelectorAll("*"));
     const viewportOffenders = descendants
@@ -335,6 +299,26 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
       focusableOffenders,
     };
   });
+
+  // One sample can land mid-animation. The quiz slides its question frame in
+  // horizontally, so a child is legitimately outside the viewport for a few
+  // frames before it settles, and the wrapper reflows with it. CI is slow
+  // enough to catch that frame: the offender it reported measured flush with
+  // the viewport again by the time it was described. Settle first, then assert,
+  // so a transient frame cannot fail the run while a box that stays outside
+  // still does.
+  const settleDeadline = Date.now() + 3_000;
+  let geometry = await measure();
+  while (
+    geometry.viewportOffenders.length +
+      geometry.clippedContent.length +
+      geometry.focusableOffenders.length >
+      0 &&
+    Date.now() < settleDeadline
+  ) {
+    await page.waitForTimeout(100);
+    geometry = await measure();
+  }
 
   expect(geometry.bodyScrollWidth, context).toBeLessThanOrEqual(
     geometry.viewportWidth + 1,

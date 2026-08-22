@@ -36,7 +36,7 @@ export function UeberMichContent({ locale }: { readonly locale: Locale }) {
             <p className="mt-7 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
               {copy.hero.eyebrow}
             </p>
-            <h1 className="mt-5 max-w-5xl break-words text-pretty text-[clamp(2.7rem,6.4vw,6.2rem)] font-bold leading-[0.91] tracking-[-0.06em] text-foreground [overflow-wrap:anywhere]">
+            <h1 className="mt-5 max-w-5xl break-words text-pretty text-[clamp(2.7rem,6.4vw,6.2rem)] font-bold leading-[0.91] tracking-[-0.04em] text-foreground [overflow-wrap:anywhere]">
               {copy.hero.title}
             </h1>
             <p className="mt-7 max-w-3xl text-pretty text-lg font-medium leading-relaxed text-foreground sm:text-xl">
@@ -280,7 +280,7 @@ export function UeberMichContent({ locale }: { readonly locale: Locale }) {
             <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
               {copy.cta.eyebrow}
             </p>
-            <h2 className="mt-4 max-w-4xl break-words text-pretty text-3xl font-bold tracking-[-0.045em] text-foreground [overflow-wrap:anywhere] sm:text-4xl lg:text-5xl">
+            <h2 className="mt-4 max-w-4xl break-words text-pretty text-3xl font-bold tracking-[-0.04em] text-foreground [overflow-wrap:anywhere] sm:text-4xl lg:text-5xl">
               {copy.cta.title}
             </h2>
             <p className="mt-5 max-w-3xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">

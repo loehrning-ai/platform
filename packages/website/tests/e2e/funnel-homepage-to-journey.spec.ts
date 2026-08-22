@@ -16,6 +16,15 @@ test("homepage primary CTA uses the KI-Check to determine the learner's start", 
 test("navigation remains task-oriented on both viewports", async ({ page }) => {
   test.setTimeout(60_000);
   await page.goto("/");
+  // The dropdown triggers are server-rendered but inert until React attaches
+  // their handlers. A click that lands before then is swallowed with no error
+  // and never retried, so the menu simply never opens and the assertion below
+  // times out looking for a link that was never revealed. The mobile branch
+  // survives this because its open step is wrapped in toPass; the desktop
+  // branch clicks once, so it has to wait for hydration first.
+  await page
+    .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+    .waitFor({ state: "attached" });
   const desktopLearning = page.getByRole("button", { name: "Lernen" });
   if (await desktopLearning.isVisible()) {
     const nav = page.getByRole("navigation", { name: "Hauptnavigation" });
