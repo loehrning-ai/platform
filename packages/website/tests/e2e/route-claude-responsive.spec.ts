@@ -172,9 +172,27 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
     const root = document.querySelector("main");
     if (!root) throw new Error("Main content region is missing");
 
+    // The 200%-zoom audit sets documentElement.style.zoom, and under CSS zoom
+    // getBoundingClientRect() reports zoomed pixels while window.innerWidth
+    // stays in CSS pixels. Comparing them directly makes every full-width
+    // element look twice as wide as the viewport at zoom 2 — an element that
+    // exactly fills the layout width lands on innerWidth and tips over on any
+    // sub-pixel rounding. Normalise the rect back to CSS pixels first, which
+    // is the space the viewport is measured in.
+    const cssPixelRect = (element: Element) => {
+      const rect = element.getBoundingClientRect();
+      const zoom = (element as HTMLElement).currentCSSZoom || 1;
+      return {
+        left: rect.left / zoom,
+        right: rect.right / zoom,
+        width: rect.width / zoom,
+        height: rect.height / zoom,
+      };
+    };
+
     const isVisible = (element: Element) => {
       const style = getComputedStyle(element);
-      const rect = element.getBoundingClientRect();
+      const rect = cssPixelRect(element);
       return (
         style.display !== "none" &&
         style.visibility !== "hidden" &&
@@ -188,7 +206,7 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
     // Reproducing this locally is expensive when it only appears on CI, so the
     // numbers have to survive in the report itself.
     const description = (element: Element) => {
-      const rect = element.getBoundingClientRect();
+      const rect = cssPixelRect(element);
       return {
         tag: element.tagName.toLowerCase(),
         className:
@@ -214,7 +232,7 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
           '[data-horizontal-scroll], [data-claude-horizontal-scroll="true"]',
         );
         if (scroller && element !== scroller) return false;
-        const rect = element.getBoundingClientRect();
+        const rect = cssPixelRect(element);
         return rect.left < -1 || rect.right > window.innerWidth + 1;
       })
       .map(description);
@@ -261,7 +279,7 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
         );
       })
       .map((element) => {
-        const rect = element.getBoundingClientRect();
+        const rect = cssPixelRect(element);
         return {
           ...description(element),
           role: element.getAttribute("role"),
@@ -279,7 +297,7 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
     )
       .filter((element) => {
         if (!isVisible(element)) return false;
-        const rect = element.getBoundingClientRect();
+        const rect = cssPixelRect(element);
         return (
           rect.left < -1 ||
           rect.right > window.innerWidth + 1 ||
