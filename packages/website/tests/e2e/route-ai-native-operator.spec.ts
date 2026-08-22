@@ -138,7 +138,10 @@ function localizedRoutes(prefix: string) {
 }
 
 async function settleFullPage(page: Page) {
-  await settleWholePage(page);
+  // Two frames per step: this spec's original walk paired them, and a
+  // single frame leaves the first click after the walk racing an
+  // unstable element on WebKit.
+  await settleWholePage(page, { framesPerStep: 2 });
   await expect(
     page.locator(
       '[aria-label="Widget wird geladen"], [aria-label="Widget is loading"]',

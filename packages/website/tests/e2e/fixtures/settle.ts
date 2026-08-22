@@ -77,17 +77,26 @@ export async function settleFontsAndFrame(page: Page): Promise<void> {
  */
 export async function settleWholePage(
   page: Page,
-  { stepFactor = 0.75 }: { stepFactor?: number } = {},
+  {
+    stepFactor = 0.75,
+    framesPerStep = 1,
+  }: { stepFactor?: number; framesPerStep?: 1 | 2 } = {},
 ): Promise<void> {
   await page
     .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
     .waitFor({ state: "attached" });
 
-  await capped(
-    page.evaluate(
-      async ([factor, fontBudget, frameBudget, maxSteps, walkBudget]) => {
+  await cappedWithRetry(
+    () => page.evaluate(
+      async ([factor, fontBudget, frameBudget, maxSteps, walkBudget, perStep]) => {
         const startedAt = Date.now();
-        const nextFrame = () =>
+        // Frames per scroll step is per-caller because the specs this helper
+        // replaced did not agree. The locale specs waited one frame per step;
+        // route-claude-responsive and route-ai-native-operator waited two, and
+        // standardising them all on one was measured to break the first click
+        // after the walk on WebKit (4 of 5 runs). Each call site keeps the
+        // cadence it had; only the bounding is new.
+        const nextFrame = (frames: 1 | 2 = 1) =>
           new Promise<void>((resolve) => {
             let settled = false;
             const done = () => {
@@ -95,7 +104,11 @@ export async function settleWholePage(
               settled = true;
               resolve();
             };
-            requestAnimationFrame(() => requestAnimationFrame(done));
+            if (frames === 2) {
+              requestAnimationFrame(() => requestAnimationFrame(done));
+            } else {
+              requestAnimationFrame(done);
+            }
             setTimeout(done, frameBudget);
           });
 
@@ -114,11 +127,14 @@ export async function settleWholePage(
           // starved each step costs the full frame budget, and the walk is an
           // optimisation for lazy content, not a correctness requirement.
           if (Date.now() - startedAt > walkBudget) break;
-          window.scrollTo(0, y);
-          await nextFrame();
+          // Explicitly instant: the walk wants to place the viewport, not
+          // animate to it, and it must not depend on whatever the page's
+          // scroll-behavior happens to be.
+          window.scrollTo({ top: y, left: 0, behavior: "instant" });
+          await nextFrame(perStep);
         }
-        window.scrollTo(0, 0);
-        await nextFrame();
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+        await nextFrame(2);
       },
       [
         stepFactor,
@@ -126,6 +142,7 @@ export async function settleWholePage(
         FRAME_BUDGET_MS,
         MAX_SCROLL_STEPS,
         WALK_BUDGET_MS,
+        framesPerStep,
       ] as const,
     ),
     "settleWholePage",
@@ -153,4 +170,21 @@ export async function capped<T>(work: Promise<T>, label: string): Promise<T> {
     );
   }
   return work;
+}
+
+/**
+ * `capped`, retried once. A settle can lose its execution context to a late
+ * client-side navigation, and a runner under memory pressure can stall a
+ * renderer for tens of seconds; both recover on a second attempt against the
+ * current document. A second failure is reported as what it is.
+ */
+export async function cappedWithRetry<T>(
+  attempt: () => Promise<T>,
+  label: string,
+): Promise<T> {
+  try {
+    return await capped(attempt(), label);
+  } catch {
+    return await capped(attempt(), label);
+  }
 }
