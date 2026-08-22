@@ -229,4 +229,20 @@ describe("course resume routes", () => {
     );
     expect(hasCourseStarted(null, "claude")).toBe(false);
   });
+
+  it("treats capstoneSubmitted as an AI-Native legacy signal only", () => {
+    const codex = progress("codex", 0);
+    codex.courses.codex = {
+      ...codex.courses.codex!,
+      capstoneSubmitted: true,
+    };
+    const aiNative = progress("ai-native", 0);
+    aiNative.courses["ai-native"] = {
+      ...aiNative.courses["ai-native"]!,
+      capstoneSubmitted: true,
+    };
+
+    expect(hasCourseStarted(codex, "codex")).toBe(false);
+    expect(hasCourseStarted(aiNative, "ai-native")).toBe(true);
+  });
 });

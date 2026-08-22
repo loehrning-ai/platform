@@ -260,7 +260,14 @@ test.describe("Data Engineering Fundamentals locale and metadata contract", () =
       await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(
         0,
       );
-      const sidebarLinks = page.locator(`.sb-nav a[href*="${COURSE}/"]`);
+      // The chapter rail moved from the legacy .sb-nav stylesheet onto the
+      // shared course shell, so select it by its navigation landmark instead
+      // of a class the reader no longer carries.
+      const sidebarLinks = page
+        .getByRole("navigation", {
+          name: locale === "en" ? "Chapter navigation" : "Kapitelnavigation",
+        })
+        .locator(`a[href*="${COURSE}/"]`);
       expect(await sidebarLinks.count()).toBeGreaterThanOrEqual(12);
       for (const href of await sidebarLinks.evaluateAll((links) =>
         links.map((link) => link.getAttribute("href") ?? ""),

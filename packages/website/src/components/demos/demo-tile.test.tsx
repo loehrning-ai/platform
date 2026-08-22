@@ -20,15 +20,25 @@ import { render, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
 import type { Demo } from "@/lib/demos";
 import { DemoTile } from "./demo-tile";
-import { getGalleryPreview } from "./demo-component-registry";
+import { getGalleryPreview } from "./demo-gallery-registry";
 
 vi.mock("next/link", () => ({
-  default: ({ children, prefetch, ...props }: { children: ReactNode; prefetch?: boolean; [key: string]: unknown }) => (
-    <a {...props} data-prefetch={String(prefetch)}>{children}</a>
+  default: ({
+    children,
+    prefetch,
+    ...props
+  }: {
+    children: ReactNode;
+    prefetch?: boolean;
+    [key: string]: unknown;
+  }) => (
+    <a {...props} data-prefetch={String(prefetch)}>
+      {children}
+    </a>
   ),
 }));
 
-vi.mock("./demo-component-registry", () => ({
+vi.mock("./demo-gallery-registry", () => ({
   getGalleryPreview: vi.fn(() => undefined),
 }));
 
@@ -73,13 +83,20 @@ describe("<DemoTile>", () => {
   it("links to the detail page with the gallery source and an accessible label", () => {
     render(
       <DemoTile
-        demo={makeDemo({ slug: "word", title: "Claude in Word.", titleKicker: "Verträge." })}
+        demo={makeDemo({
+          slug: "word",
+          title: "Claude in Word.",
+          titleKicker: "Verträge.",
+        })}
         total={12}
       />,
     );
     const link = screen.getByRole("link");
     expect(link).toHaveAttribute("href", "/demos/word?source=gallery");
-    expect(link).toHaveAttribute("aria-label", "Praxisbeispiel öffnen: Claude in Word. Verträge.");
+    expect(link).toHaveAttribute(
+      "aria-label",
+      "Praxisbeispiel öffnen: Claude in Word. Verträge.",
+    );
     expect(link).toHaveAttribute("data-demo-tile", "word");
     expect(link).toHaveAttribute("data-prefetch", "false");
     expect(link).toHaveClass("demo-gallery-tile");
@@ -113,7 +130,13 @@ describe("<DemoTile>", () => {
 
   it("appends the lead industry to the category when one is present", () => {
     const { container } = render(
-      <DemoTile demo={makeDemo({ category: "Grundlagen", industries: ["Controlling", "Finance"] })} total={7} />,
+      <DemoTile
+        demo={makeDemo({
+          category: "Grundlagen",
+          industries: ["Controlling", "Finance"],
+        })}
+        total={7}
+      />,
     );
     // Only the FIRST industry is shown next to the category.
     expect(container.textContent).toContain("Controlling");
@@ -122,21 +145,31 @@ describe("<DemoTile>", () => {
 
   it("shows the bare category (no separator) when there is no industry", () => {
     const { container } = render(
-      <DemoTile demo={makeDemo({ category: "Grundlagen", industries: [] })} total={7} />,
+      <DemoTile
+        demo={makeDemo({ category: "Grundlagen", industries: [] })}
+        total={7}
+      />,
     );
     expect(container.textContent).toContain("Grundlagen");
     expect(container.textContent).not.toContain("Controlling");
   });
 
   it("uses a light-tile ink for the level badge on a light demo", () => {
-    render(<DemoTile demo={makeDemo({ level: "einstieg", dark: false })} total={7} />);
+    render(
+      <DemoTile
+        demo={makeDemo({ level: "einstieg", dark: false })}
+        total={7}
+      />,
+    );
     const badge = screen.getByText("Einstieg");
     // Light einstieg badge uses the darker green ink #166534 for AA on cream.
     expect(badge.className).toContain("#166534");
   });
 
   it("uses a dark-tile ink for the level badge on a dark demo", () => {
-    render(<DemoTile demo={makeDemo({ level: "einstieg", dark: true })} total={7} />);
+    render(
+      <DemoTile demo={makeDemo({ level: "einstieg", dark: true })} total={7} />,
+    );
     const badge = screen.getByText("Einstieg");
     // Dark einstieg badge uses the bright green var, not the light-tile ink.
     expect(badge.className).toContain("text-[var(--color-risk-green)]");

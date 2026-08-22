@@ -1,6 +1,10 @@
 "use client";
 
 import { useEffect, useState, type JSX } from "react";
+import type {
+  PracticeLocale,
+  PracticeModelId,
+} from "@/app/api/ai-native/practice/types";
 import { useCheckpoint } from "@/lib/progress";
 import { cn } from "@/lib/utils";
 import { WidgetFrame } from "../tier-a/_frame";
@@ -69,6 +73,8 @@ export interface PromptTransformWidgetProps {
   readonly cpId: string;
   readonly title?: string;
   readonly scenario?: string;
+  readonly locale?: PracticeLocale;
+  readonly model?: PracticeModelId;
 }
 
 export function PromptTransformWidget({
@@ -76,12 +82,14 @@ export function PromptTransformWidget({
   cpId,
   title = "Vom Wunsch zum Auftrag",
   scenario = "Dieselbe Aufgabe, drei Stufen Prompt-Handwerk. Spüre den Sprung von Stufe 1 zu Stufe 3.",
+  locale = "de",
+  model,
 }: PromptTransformWidgetProps): JSX.Element {
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [stageIdx, setStageIdx] = useState(0);
   const [output, setOutput] = useState<string | null>(null);
   const [viewed, setViewed] = useState<Set<number>>(new Set([0]));
-  const api = usePracticeApi();
+  const api = usePracticeApi({ locale, ...(model ? { model } : {}) });
 
   const active = STAGES[stageIdx]!;
 
@@ -122,7 +130,11 @@ export function PromptTransformWidget({
       done={done}
       xpLabel="+15 XP"
     >
-      <div className="mb-4 flex items-center gap-2" role="group" aria-label="Prompt-Stufe wählen">
+      <div
+        className="mb-4 flex items-center gap-2"
+        role="group"
+        aria-label="Prompt-Stufe wählen"
+      >
         {STAGES.map((s, i) => (
           <button
             key={s.label}

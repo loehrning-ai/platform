@@ -269,10 +269,10 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
       "4 Tracks",
       "12 Lektionen",
       "Interaktive Übungen",
-      "Auf loehrning.ai gehostet",
+      "Native Route in diesem Quellstand",
     ],
     integrationNote:
-      "Auf loehrning.ai gehostet und in Fortschritts- und Abschlusslogik eingebunden; ursprünglich als Open-Source-Kurs importiert.",
+      "Native Route sowie Fortschritts- und Abschlusslogik sind in diesem Quellstand integriert; eine Bereitstellung erfordert getrennte Live-Prüfung. Ursprünglich als Open-Source-Kurs importiert.",
   },
   // Codex Course: second imported course flipped from
   // "pending" to "live" now that it has real native routes, per-lesson
@@ -326,10 +326,10 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
       "12 Lektionen",
       "Abschlussfall",
       "Parallele Arbeitsabläufe",
-      "Auf loehrning.ai gehostet",
+      "Native Route in diesem Quellstand",
     ],
     integrationNote:
-      "Auf loehrning.ai gehostet und in Fortschritts- und Abschlusslogik eingebunden; ursprünglich als Open-Source-Kurs importiert.",
+      "Native Route sowie Fortschritts- und Abschlusslogik sind in diesem Quellstand integriert; eine Bereitstellung erfordert getrennte Live-Prüfung. Ursprünglich als Open-Source-Kurs importiert.",
   },
   // Data Infrastructure: third imported course flipped
   // from "pending" to "live" now that it has real native routes, per-lesson
@@ -390,10 +390,10 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
       "4 Tracks",
       "12 Lektionen",
       "Interaktive Simulationen",
-      "Auf loehrning.ai gehostet",
+      "Native Route in diesem Quellstand",
     ],
     integrationNote:
-      "Auf loehrning.ai gehostet und in Fortschritts- und Abschlusslogik eingebunden; ursprünglich als Open-Source-Kurs importiert.",
+      "Native Route sowie Fortschritts- und Abschlusslogik sind in diesem Quellstand integriert; eine Bereitstellung erfordert getrennte Live-Prüfung. Ursprünglich als Open-Source-Kurs importiert.",
   },
   // Data Engineering Fundamentals: fourth imported
   // course flipped from "pending" to "live". totalLessons/unitCount
@@ -449,10 +449,10 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     sourceFacts: [
       "12 Kapitel",
       "17 interaktive Simulationen",
-      "Auf loehrning.ai gehostet",
+      "Native Route in diesem Quellstand",
     ],
     integrationNote:
-      "Auf loehrning.ai gehostet und in Fortschritts- und Abschlusslogik eingebunden; ursprünglich als Open-Source-Kurs importiert.",
+      "Native Route sowie Fortschritts- und Abschlusslogik sind in diesem Quellstand integriert; eine Bereitstellung erfordert getrennte Live-Prüfung. Ursprünglich als Open-Source-Kurs importiert.",
   },
   // Data Science: fifth imported course flipped from
   // "pending" to "live". Like data-engineering-fundamentals, chapters live
@@ -469,7 +469,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     tagline:
       "Modelle bewerten, Fehlinterpretationen erkennen und Betrieb überwachen.",
     description:
-      "Zwölf Kapitel verbinden Stichproben, Datenbereinigung, Features, Evaluation, Interpretierbarkeit, Experimente, Kausalität und Drift. Zweiundzwanzig Simulationen zeigen, wie Kennzahlen täuschen können.",
+      "Zwölf Kapitel verbinden Stichproben, Datenbereinigung, Features, Evaluation, Interpretierbarkeit, Experimente, Kausalität und Drift. Siebenunddreißig Simulationen zeigen, wie Kennzahlen täuschen können.",
     href: "/kurse/open-source/data-science",
     startHref: "/kurse/open-source/data-science",
     continueHref: "/kurse/open-source/data-science",
@@ -503,11 +503,11 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     topics: ["Python", "pandas", "scikit-learn", "PyTorch", "MLflow"],
     sourceFacts: [
       "12 Kapitel",
-      "22 interaktive Simulationen",
-      "Auf loehrning.ai gehostet",
+      "37 interaktive Simulationen",
+      "Native Route in diesem Quellstand",
     ],
     integrationNote:
-      "Auf loehrning.ai gehostet und in Fortschritts- und Abschlusslogik eingebunden; ursprünglich als Open-Source-Kurs importiert.",
+      "Native Route sowie Fortschritts- und Abschlusslogik sind in diesem Quellstand integriert; eine Bereitstellung erfordert getrennte Live-Prüfung. Ursprünglich als Open-Source-Kurs importiert.",
   },
   // AI-Native Operator: sixth and last imported course
   // flipped from "pending" to "live". Its URL structure stays under
@@ -565,10 +565,10 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
       "9 Module",
       "39 Lektionen",
       "30 Übungen",
-      "Auf loehrning.ai gehostet",
+      "Native Route in diesem Quellstand",
     ],
     integrationNote:
-      "Auf loehrning.ai gehostet und in Fortschritts- und Abschlusslogik eingebunden; ursprünglich als Open-Source-Kurs importiert.",
+      "Native Route sowie Fortschritts- und Abschlusslogik sind in diesem Quellstand integriert; eine Bereitstellung erfordert getrennte Live-Prüfung. Ursprünglich als Open-Source-Kurs importiert.",
   },
 ] as const;
 

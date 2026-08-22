@@ -35,6 +35,27 @@ describe("keyboard shortcut guards", () => {
     ).toBe(false);
   });
 
+  it("treats aria-modal dialogs and their descendants as shortcut boundaries", () => {
+    document.body.innerHTML = `
+      <section role="dialog" aria-modal="true" id="dialog">
+        <p id="dialog-content">Modal content</p>
+      </section>
+      <section role="alertdialog" aria-modal="true" id="alert-dialog">
+        <p id="alert-content">Modal alert</p>
+      </section>
+    `;
+
+    expect(
+      isInteractiveShortcutTarget(document.querySelector("#dialog")),
+    ).toBe(true);
+    expect(
+      isInteractiveShortcutTarget(document.querySelector("#dialog-content")),
+    ).toBe(true);
+    expect(
+      isInteractiveShortcutTarget(document.querySelector("#alert-content")),
+    ).toBe(true);
+  });
+
   it("recognises descendants of horizontal overflow regions", () => {
     document.body.innerHTML = `
       <div style="overflow-x: auto"><table><tbody><tr><td id="cell">Wert</td></tr></tbody></table></div>

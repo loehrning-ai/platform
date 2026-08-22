@@ -1,11 +1,13 @@
 import "server-only";
 import {
   anthropicRetentionDays,
+  geminiRetentionDays,
   hasCompleteSupabaseRuntimeConfig,
   isAccountRuntimeReady,
-  isAnthropicRuntimeReady,
+  isCourseTerminalRuntimeReady,
   isGoogleOAuthRuntimeReady,
   isMagicLinkRuntimeReady,
+  isPracticeModelRuntimeReady,
   turnstileSiteKey,
 } from "@/lib/provider-readiness";
 
@@ -21,6 +23,13 @@ export interface RuntimeFeatures {
   readonly sentryRetentionDays: number | null;
   readonly anthropic: boolean;
   readonly anthropicRetentionDays: number | null;
+  readonly gemini: boolean;
+  readonly geminiRetentionDays: number | null;
+  readonly practiceModels: readonly (
+    | "anthropic/claude-haiku-4.5"
+    | "google/gemini-2.5-flash-lite"
+  )[];
+  readonly courseTerminal: boolean;
   readonly vercelHosting: boolean;
   readonly vercelTelemetry: boolean;
 }
@@ -41,11 +50,22 @@ export function getRuntimeFeatures(): RuntimeFeatures {
   const serviceSupabase = hasCompleteSupabaseRuntimeConfig();
   const retention = Number(process.env.SENTRY_RETENTION_DAYS);
   const anthropicRetention = anthropicRetentionDays();
+  const geminiRetention = geminiRetentionDays();
   const vercelHosting = process.env.VERCEL === "1";
   const supabaseRegion = process.env.SUPABASE_REGION || null;
   const accountReady = isAccountRuntimeReady();
   const magicLinkReady = isMagicLinkRuntimeReady();
   const googleReady = isGoogleOAuthRuntimeReady();
+  const anthropicReady = isPracticeModelRuntimeReady(
+    "anthropic/claude-haiku-4.5",
+  );
+  const geminiReady = isPracticeModelRuntimeReady(
+    "google/gemini-2.5-flash-lite",
+  );
+  const practiceModels = ([
+    "anthropic/claude-haiku-4.5",
+    "google/gemini-2.5-flash-lite",
+  ] as const).filter(isPracticeModelRuntimeReady);
 
   return {
     account: accountReady,
@@ -61,8 +81,12 @@ export function getRuntimeFeatures(): RuntimeFeatures {
     sentry: Boolean(process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN),
     sentryRetentionDays:
       Number.isInteger(retention) && retention > 0 ? retention : null,
-    anthropic: isAnthropicRuntimeReady(),
+    anthropic: anthropicReady,
     anthropicRetentionDays: anthropicRetention,
+    gemini: geminiReady,
+    geminiRetentionDays: geminiRetention,
+    practiceModels,
+    courseTerminal: isCourseTerminalRuntimeReady(),
     vercelHosting,
     vercelTelemetry:
       vercelHosting && process.env.VERCEL_TELEMETRY_ENABLED === "true",

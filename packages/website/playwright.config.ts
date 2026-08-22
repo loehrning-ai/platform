@@ -108,13 +108,24 @@ const TEST_SERVER_SYSTEM_ENVIRONMENT_KEYS = new Set([
   "USER",
 ]);
 const TEST_SERVER_DENIED_PROVIDER_KEYS = [
+  "AI_NATIVE_PRACTICE_ALLOWED_MODELS",
   "AI_NATIVE_PRACTICE_ENABLED",
+  "AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET",
+  "AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET",
   "ANTHROPIC_API_KEY",
   "ANTHROPIC_DPA_CONFIRMED_AT",
   "ANTHROPIC_RETENTION_DAYS",
+  "COURSE_TERMINAL_DAILY_RUN_BUDGET",
+  "COURSE_TERMINAL_ENABLED",
+  "COURSE_TERMINAL_POLICY_CONFIRMED_AT",
+  "COURSE_TERMINAL_SANDBOX_IMAGE",
   "E2E_AUTH_LIVE",
   "FEEDBACK_ENABLED",
   "FEEDBACK_RETENTION_CRON_CONFIRMED_AT",
+  "GEMINI_API_KEY",
+  "GEMINI_DPA_CONFIRMED_AT",
+  "GEMINI_PAID_TIER_CONFIRMED_AT",
+  "GEMINI_RETENTION_DAYS",
   "LOEHRNING_LOCAL_PROVIDER_FREE_RUNTIME",
   "LOEHRNING_VALIDATION_PROFILE",
   "NEXT_PUBLIC_APP_URL",
@@ -259,7 +270,7 @@ export default defineConfig({
     },
     {
       name: "mobile-chromium",
-      testIgnore: /\.authed\.spec\.ts$/,
+      testIgnore: [/\.authed\.spec\.ts$/, /course-workspace\.spec\.ts$/],
       use: { ...devices["iPhone 13"], browserName: "chromium" },
     },
     {
@@ -270,7 +281,7 @@ export default defineConfig({
       // Keep the timeout strict so an actual hang still fails.
       workers: 1,
       timeout: 60_000,
-      testIgnore: /\.authed\.spec\.ts$/,
+      testIgnore: [/\.authed\.spec\.ts$/, /course-workspace\.spec\.ts$/],
       use: { ...devices["iPhone 13"], video: "on-first-retry" },
     },
 
@@ -309,7 +320,7 @@ export default defineConfig({
       ? [
           {
             name: "webkit",
-            testIgnore: /\.authed\.spec\.ts$/,
+            testIgnore: [/\.authed\.spec\.ts$/, /course-workspace\.spec\.ts$/],
             use: { ...devices["Desktop Safari"] },
           },
         ]

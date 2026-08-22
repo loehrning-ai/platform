@@ -237,7 +237,11 @@ export function PromptLibraryShaperWidget({
       done={done}
       xpLabel="+20 XP"
     >
-      <div className="grid gap-4 md:grid-cols-[1.1fr_1fr]">
+      {/* minmax(0, …) rather than a bare fr: a grid item's automatic minimum
+          size is min-content, so the monospace prompt column refuses to
+          shrink past its longest line and overflows the lesson column at high
+          browser zoom, where the shell has less width to give. */}
+      <div className="grid gap-4 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
         <div className="flex flex-col">
           <div className="mb-1.5 flex items-center justify-between">
             <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground">

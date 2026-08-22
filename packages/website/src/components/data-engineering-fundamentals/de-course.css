@@ -210,6 +210,23 @@
   font-weight: var(--weight-semibold);
   margin: 0;
 }
+/* The shared course studio and lesson mission mount inside .de-course but
+   ship their own type scale in Tailwind utilities. This stylesheet is
+   unlayered, so its element rules outrank anything in @layer utilities no
+   matter how specific the utility is, and every studio h3 rendered at 24px
+   instead of 12px. In German that overflows the results heading past its
+   column, where the shell clips without a scrollbar and the word is simply
+   unreadable. revert-layer hands these properties back to the utilities
+   layer for the embedded subtrees only. */
+.de-course #course-project-studio h3,
+.de-course #course-project-studio .theme-h3,
+.de-course #lesson-mission-control h3,
+.de-course #lesson-mission-control .theme-h3 {
+  font-size: revert-layer;
+  line-height: revert-layer;
+  letter-spacing: revert-layer;
+  font-weight: revert-layer;
+}
 .de-course h4,
 .de-course .theme-h4 {
   font-size: var(--text-xl);
@@ -472,11 +489,11 @@
     color-mix(in oklab, var(--ch-ink) 70%, transparent);
 }
 .de-course .sb-item.active .sb-title {
-  color: var(--ch-ink);
+  color: var(--fg-1);
 }
 .de-course .sb-item.active .sb-time {
-  color: var(--ch-ink);
-  opacity: 0.9;
+  color: var(--fg-1);
+  opacity: 1;
 }
 .de-course .sb-num {
   width: 28px;

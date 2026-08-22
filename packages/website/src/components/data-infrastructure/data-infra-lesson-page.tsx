@@ -2,6 +2,7 @@
 
 import { useState, type JSX } from "react";
 import { LessonShell } from "@/components/course/lesson-shell";
+import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
 import {
   DataInfraLessonSidebar,
   type DataInfraLessonNavItem,
@@ -42,6 +43,24 @@ export function DataInfraLessonPage({
       navOpen={navOpen}
       onNavOpenChange={setNavOpen}
       navLabel={copy.navLabel}
+      openNavLabel={
+        locale === "de" ? "Lektionsnavigation öffnen" : "Open lesson navigation"
+      }
+      closeNavLabel={
+        locale === "de"
+          ? "Lektionsnavigation schließen"
+          : "Close lesson navigation"
+      }
+      collapseNavLabel={
+        locale === "de"
+          ? "Lektionsnavigation einklappen"
+          : "Collapse lesson navigation"
+      }
+      expandNavLabel={
+        locale === "de"
+          ? "Lektionsnavigation ausklappen"
+          : "Expand lesson navigation"
+      }
       sidebar={
         <DataInfraLessonSidebar
           locale={locale}
@@ -50,6 +69,18 @@ export function DataInfraLessonPage({
         />
       }
     >
+      <div className="mb-10">
+        <CourseProjectStudio
+          courseSlug="data-infrastructure"
+          lessonId={lesson.id}
+          locale={locale}
+          lessonContext={{
+            title: lesson.title,
+            objective: lesson.hook,
+            keyConcepts: lesson.keyConcepts,
+          }}
+        />
+      </div>
       <DataInfraLessonReader
         locale={locale}
         lesson={lesson}

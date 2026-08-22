@@ -9,39 +9,39 @@ expect.extend(matchers);
 /* ------------------------------------------------------------------ */
 
 if (typeof window !== "undefined") {
-  // jsdom can expose localStorage as missing or unusable when a worker is
-  // created without a stable origin. Progress tests share one deterministic
-  // Storage implementation instead of installing file-local variants that can
-  // leak different backing maps across imported modules.
-  let hasUsableLocalStorage = false;
-  try {
-    hasUsableLocalStorage =
-      typeof window.localStorage?.getItem === "function" &&
-      typeof window.localStorage?.setItem === "function";
-  } catch {
-    hasUsableLocalStorage = false;
-  }
-  if (!hasUsableLocalStorage) {
-    const values = new Map<string, string>();
-    const storage: Storage = {
-      get length() {
-        return values.size;
-      },
-      clear: () => values.clear(),
-      getItem: (key) => values.get(key) ?? null,
-      key: (index) => Array.from(values.keys())[index] ?? null,
-      removeItem: (key) => {
-        values.delete(key);
-      },
-      setItem: (key, value) => {
-        values.set(key, String(value));
-      },
-    };
-    Object.defineProperty(window, "localStorage", {
-      configurable: true,
-      value: storage,
-    });
-  }
+  // Progress tests share one deterministic Storage implementation instead of
+  // installing file-local variants that can leak different backing maps across
+  // imported modules.
+  //
+  // This is installed unconditionally, and that is load-bearing. jsdom can
+  // expose localStorage as missing or unusable when a worker is created
+  // without a stable origin, so whether its own Storage appears at all varies
+  // by Node version. Worse, jsdom implements Storage as a Proxy whose
+  // prototype methods cannot be shadowed by an own property, so
+  // `vi.spyOn(window.localStorage, "setItem")` silently fails to intercept
+  // against it while working normally against this plain object. Installing
+  // conditionally therefore gave the suite two different storage semantics:
+  // on Node 26 the polyfill won and denial mocks fired, on Node 24 (CI) real
+  // jsdom won and eight tests asserted against mocks that never ran.
+  const values = new Map<string, string>();
+  const storage: Storage = {
+    get length() {
+      return values.size;
+    },
+    clear: () => values.clear(),
+    getItem: (key) => values.get(key) ?? null,
+    key: (index) => Array.from(values.keys())[index] ?? null,
+    removeItem: (key) => {
+      values.delete(key);
+    },
+    setItem: (key, value) => {
+      values.set(key, String(value));
+    },
+  };
+  Object.defineProperty(window, "localStorage", {
+    configurable: true,
+    value: storage,
+  });
 
   if (!("IntersectionObserver" in window)) {
     class MockIntersectionObserver {

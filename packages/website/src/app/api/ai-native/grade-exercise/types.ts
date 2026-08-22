@@ -28,6 +28,27 @@ export interface GradeResponse {
   readonly cached?: boolean;
 }
 
+export const GRADE_ERROR_CODES = [
+  "unsupported_media_type",
+  "request_read_failed",
+  "request_too_large",
+  "invalid_json",
+  "validation_failed",
+  "rate_limit_unavailable",
+  "unknown_exercise",
+  "canonical_load_failed",
+  "request_hash_failed",
+  "rate_limited",
+  "provider_not_configured",
+  "budget_not_configured",
+  "budget_unavailable",
+  "budget_exhausted",
+  "provider_failed",
+] as const;
+
+export type GradeErrorCode = (typeof GRADE_ERROR_CODES)[number];
+
 export interface GradeError {
+  readonly code: GradeErrorCode;
   readonly error: string;
 }

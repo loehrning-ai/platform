@@ -46,7 +46,9 @@ const loehrningSans = localFont({
   variable: "--font-loehrning-sans",
   // Four weight-specific files must not compete with content on every route.
   // They load on demand; `optional` prevents a late swap from resetting text
-  // LCP after content is ready. Geist Mono remains the single global preload.
+  // LCP after content is ready. Geist Mono remains the single global preload:
+  // course and demo layouts depend on its advance widths, so its metrics must
+  // not vary with whichever monospace face the visitor's OS happens to have.
   display: "optional",
   preload: false,
 });

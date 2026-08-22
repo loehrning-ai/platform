@@ -13,6 +13,7 @@ import {
   isCourseCompletionEarned,
   isCourseFullyCompleted,
 } from "@/lib/courses/completion";
+import { hasAppliedProjectCompletion } from "@/lib/course-projects/identity";
 import {
   getLearningOwnerContext,
   subscribeLearningOwner,
@@ -35,6 +36,8 @@ interface AssessmentProgress {
   readonly courseCompleted: boolean;
   readonly quizPassed: boolean;
   readonly certificateEligible: boolean;
+  readonly projectCompleted: boolean;
+  readonly legacyCapstoneSubmitted: boolean;
 }
 
 interface AssessmentCopy {
@@ -50,7 +53,8 @@ interface AssessmentCopy {
   readonly locked: (remaining: number, total: number) => string;
   readonly ready: (total: number) => string;
   readonly passed: (recordPossessive: string) => string;
-  readonly capstoneEligible: (recordPossessive: string) => string;
+  readonly projectEligible: (recordPossessive: string) => string;
+  readonly legacyCapstoneEligible: (recordPossessive: string) => string;
   readonly localRecordNotice: string;
   readonly lockedLabel: string;
   readonly startQuiz: string;
@@ -75,8 +79,10 @@ const ASSESSMENT_COPY: Readonly<Record<"de" | "en", AssessmentCopy>> = {
       `Alle ${total} Lektionen sind abgeschlossen. Das Workshop-Quiz ist jetzt freigeschaltet.`,
     passed: (recordPossessive) =>
       `Bestanden. Du kannst das Quiz wiederholen. ${recordPossessive} steht zum Download bereit.`,
-    capstoneEligible: (recordPossessive) =>
-      `Alle Lektionen und die Capstone-Rubrik sind abgeschlossen. ${recordPossessive} steht zum Download bereit; das Quiz bleibt verfügbar.`,
+    projectEligible: (recordPossessive) =>
+      `Alle Lektionen und das angewandte Projekt sind abgeschlossen. Das Projekt ist eine lokal gespeicherte Lernleistung, aber kein serverbestätigter Abschlussnachweis. Bestehe das Quiz, um ${recordPossessive} freizuschalten.`,
+    legacyCapstoneEligible: (recordPossessive) =>
+      `Alle Lektionen und deine frühere Capstone-Selbstprüfung sind abgeschlossen. ${recordPossessive} steht weiterhin zum Download bereit; das neue angewandte Projekt ist damit nicht verifiziert.`,
     localRecordNotice:
       "Die PDF wird lokal erzeugt, ist nicht servergeprüft und kein akkreditierter Abschluss.",
     lockedLabel: "Quiz gesperrt",
@@ -99,8 +105,10 @@ const ASSESSMENT_COPY: Readonly<Record<"de" | "en", AssessmentCopy>> = {
       `All ${total} lessons are complete. The workshop quiz is now unlocked.`,
     passed: (recordPossessive) =>
       `Passed. You can retake the quiz. ${recordPossessive} is ready to download.`,
-    capstoneEligible: (recordPossessive) =>
-      `Every lesson and the capstone rubric are complete. ${recordPossessive} is ready to download; the quiz remains available.`,
+    projectEligible: (recordPossessive) =>
+      `Every lesson and the applied project are complete. The project is locally stored learning evidence, not a server-attested completion record. Pass the quiz to unlock ${recordPossessive}.`,
+    legacyCapstoneEligible: (recordPossessive) =>
+      `Every lesson and your historical capstone self-review are complete. ${recordPossessive} remains ready to download; this does not verify the new applied project.`,
     localRecordNotice:
       "The PDF is generated locally, is not server-verified, and is not an accredited qualification.",
     lockedLabel: "Quiz locked",
@@ -114,11 +122,15 @@ function deriveAssessmentProgress(
   progress: UnifiedProgress,
   courseSlug: CourseSlug,
 ): AssessmentProgress {
+  const slice = progress.courses[courseSlug];
   return {
     completedLessons: completedCanonicalLessonCount(progress, courseSlug),
     courseCompleted: isCourseFullyCompleted(progress, courseSlug),
-    quizPassed: progress.courses[courseSlug]?.workshopQuiz.passed === true,
+    quizPassed: slice?.workshopQuiz.passed === true,
     certificateEligible: isCourseCompletionEarned(progress, courseSlug),
+    projectCompleted: hasAppliedProjectCompletion(progress, courseSlug),
+    legacyCapstoneSubmitted:
+      courseSlug === "ai-native" && slice?.capstoneSubmitted === true,
   };
 }
 
@@ -176,8 +188,14 @@ export function CourseAssessmentCta({
       stateCopy = copy.locked(remainingLessons, totalLessons);
     } else if (progress.quizPassed) {
       stateCopy = copy.passed(config.recordNoun.possessive);
-    } else if (courseSlug === "ai-native" && progress.certificateEligible) {
-      stateCopy = copy.capstoneEligible(config.recordNoun.possessive);
+    } else if (courseSlug === "ai-native" && progress.projectCompleted) {
+      stateCopy = copy.projectEligible(config.recordNoun.possessive);
+    } else if (
+      courseSlug === "ai-native" &&
+      progress.legacyCapstoneSubmitted &&
+      progress.certificateEligible
+    ) {
+      stateCopy = copy.legacyCapstoneEligible(config.recordNoun.possessive);
     } else {
       stateCopy = copy.ready(totalLessons);
     }

@@ -33,6 +33,11 @@ describe("<WorkshopsContent>", () => {
     expect(
       screen.getByRole("link", { name: "Can AI predict the future?" }),
     ).toHaveAttribute("href", "/en/workshops/ki-prognosen-einschaetzen");
+    for (const label of screen.getAllByText("Open workshop")) {
+      expect(label).toHaveClass("text-brand-orange");
+      expect(label).not.toHaveClass("opacity-70");
+      expect(label.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+    }
     expect(screen.getByRole("link", { name: /View courses/ })).toHaveAttribute(
       "href",
       "/en/kurse",

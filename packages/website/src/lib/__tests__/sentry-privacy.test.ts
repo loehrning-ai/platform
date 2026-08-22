@@ -325,6 +325,21 @@ describe("Sentry certificate and payload privacy", () => {
     ).toEqual(["GlobalHandlers", "Dedupe"]);
   });
 
+  it("retains only stable provider-execution error classes", () => {
+    for (const type of [
+      "PracticeProviderError",
+      "SyntheticTerminalExecutionError",
+    ]) {
+      const result = prepareSentryEvent({
+        exception: {
+          values: [{ type, value: "private provider detail" }],
+        },
+      });
+      expect(result?.exception.values[0]).toEqual({ type, value: type });
+      expect(JSON.stringify(result)).not.toContain("private provider detail");
+    }
+  });
+
   it("removes private verification data from an already active span", () => {
     const fragment = certificateFragment();
     const span = {

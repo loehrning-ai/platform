@@ -2,6 +2,7 @@
 
 import { useState, type JSX } from "react";
 import { LessonShell } from "@/components/course/lesson-shell";
+import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
 import {
   ClaudeLessonSidebar,
   type ClaudeLessonNavItem,
@@ -35,8 +36,38 @@ export function ClaudeLessonPage({
       navOpen={navOpen}
       onNavOpenChange={setNavOpen}
       navLabel={locale === "de" ? "Lektionsnavigation" : "Lesson navigation"}
+      openNavLabel={
+        locale === "de" ? "Lektionsnavigation öffnen" : "Open lesson navigation"
+      }
+      closeNavLabel={
+        locale === "de"
+          ? "Lektionsnavigation schließen"
+          : "Close lesson navigation"
+      }
+      collapseNavLabel={
+        locale === "de"
+          ? "Lektionsnavigation einklappen"
+          : "Collapse lesson navigation"
+      }
+      expandNavLabel={
+        locale === "de"
+          ? "Lektionsnavigation ausklappen"
+          : "Expand lesson navigation"
+      }
       sidebar={<ClaudeLessonSidebar lessons={navItems} locale={locale} />}
     >
+      <div className="mb-10">
+        <CourseProjectStudio
+          courseSlug="claude"
+          lessonId={lesson.id}
+          locale={locale}
+          lessonContext={{
+            title: lesson.title,
+            objective: lesson.hook,
+            keyConcepts: lesson.keyConcepts,
+          }}
+        />
+      </div>
       <ClaudeLessonReader
         lesson={lesson}
         totalLessons={totalLessons}

@@ -1,36 +1,19 @@
-import { describe, expect, it, vi } from "vitest";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { createElement, type ComponentType } from "react";
 import { render, screen } from "@testing-library/react";
-
-/**
- * demo-component-registry.test.ts (regression coverage)
- *
- * Guards the demo registry's real logic: the slug -> component routing done by
- * getGalleryPreview / getDemoComponent, and the invariant that the static
- * gallery previews and the lazy demo components cover exactly the same slug set.
- *
- * next/dynamic is stubbed (like next/image / next/link elsewhere) so importing
- * the module is environment-independent; the stub only affects the lazy demo
- * values, never the real preview components or the key routing we assert.
- */
+import { describe, expect, it, vi } from "vitest";
 
 vi.mock("next/dynamic", () => ({
   __esModule: true,
-  default: (
-    _loader: unknown,
-    options?: { loading?: ComponentType },
-  ) => {
+  default: (_loader: unknown, options?: { loading?: ComponentType }) => {
     const Stub = () => null;
     return options?.loading ?? Stub;
   },
 }));
 
-import {
-  demoComponents,
-  galleryPreviews,
-  getDemoComponent,
-  getGalleryPreview,
-} from "./demo-component-registry";
+import { demoComponents, getDemoComponent } from "./demo-component-registry";
+import { galleryPreviews, getGalleryPreview } from "./demo-gallery-registry";
 
 const EXPECTED_SLUGS = [
   "agent-pipeline",
@@ -47,44 +30,59 @@ const EXPECTED_SLUGS = [
   "word",
 ];
 
-describe("demo-component-registry", () => {
-  it("registers a gallery preview for every expected demo slug", () => {
+describe("demo component registries", () => {
+  it("keeps gallery previews and lazy detail components in separate modules", () => {
+    const detailSource = readFileSync(
+      resolve(process.cwd(), "src/components/demos/demo-component-registry.ts"),
+      "utf8",
+    );
+    const shellSource = readFileSync(
+      resolve(process.cwd(), "src/components/demos/demo-shell.tsx"),
+      "utf8",
+    );
+    const scannerLoaderSource = readFileSync(
+      resolve(process.cwd(), "src/components/demos/prompt-scanner-loader.tsx"),
+      "utf8",
+    );
+
+    expect(detailSource).not.toContain("demo-gallery-previews");
+    expect(detailSource).not.toContain("demo-gallery-registry");
+    expect(detailSource).toContain(
+      'import PromptScannerLoader from "./prompt-scanner-loader"',
+    );
+    expect(detailSource).not.toContain(
+      'dynamic(() => import("./prompt-scanner-loader")',
+    );
+    expect(detailSource).toContain('"prompt-scanner": PromptScannerLoader');
+    expect(shellSource).toContain('from "./demo-component-registry"');
+    expect(shellSource).not.toContain("demo-gallery-registry");
+    expect(scannerLoaderSource).not.toContain("demo-gallery-registry");
+    expect(scannerLoaderSource).not.toContain("demo-gallery-previews");
+  });
+
+  it("registers every expected slug in both isolated registries", () => {
     expect(Object.keys(galleryPreviews).sort()).toEqual(EXPECTED_SLUGS);
+    expect(Object.keys(demoComponents).sort()).toEqual(EXPECTED_SLUGS);
   });
 
-  it("getGalleryPreview returns the mapped preview component for a known slug", () => {
-    const preview = getGalleryPreview("excel");
-    // Identity with the real (unmocked) preview component in the record.
-    expect(preview).toBe(galleryPreviews.excel);
-    expect(typeof preview).toBe("function");
-  });
-
-  it("getGalleryPreview returns undefined for an unknown slug", () => {
+  it("routes known and unknown gallery preview slugs", () => {
+    expect(getGalleryPreview("excel")).toBe(galleryPreviews.excel);
+    expect(typeof getGalleryPreview("excel")).toBe("function");
     expect(getGalleryPreview("does-not-exist")).toBeUndefined();
   });
 
-  it("getDemoComponent routes a known slug to its registry entry", () => {
+  it("routes known and unknown interactive detail slugs", () => {
     expect(getDemoComponent("agent-pipeline")).toBe(
       demoComponents["agent-pipeline"],
     );
-    expect(getDemoComponent("agent-pipeline")).toBeDefined();
+    expect(getDemoComponent("nope")).toBeUndefined();
   });
 
-  it("renders a semantic status while a lazy demo chunk loads", () => {
+  it("renders a semantic status while a detail chunk loads", () => {
     const Loading = getDemoComponent("excel")!;
     render(createElement(Loading));
     expect(screen.getByRole("status")).toHaveTextContent(
       "Praxisbeispiel wird geladen…",
-    );
-  });
-
-  it("getDemoComponent returns undefined for an unknown slug", () => {
-    expect(getDemoComponent("nope")).toBeUndefined();
-  });
-
-  it("exposes the same slug set for previews and lazy components", () => {
-    expect(Object.keys(demoComponents).sort()).toEqual(
-      Object.keys(galleryPreviews).sort(),
     );
   });
 });

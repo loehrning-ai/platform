@@ -48,8 +48,10 @@ import {
   isCanonicalLessonId,
   isCanonicalSectionId,
 } from "@/lib/courses/completion";
+import { getCourseProjectIdentity } from "@/lib/course-projects/identity";
 
 const SLUG = "ai-native" as const;
+const PROJECT_IDENTITY = getCourseProjectIdentity(SLUG);
 
 /** Hard caps on imported payloads to prevent DoS. */
 const MAX_IMPORT_BYTES = 200 * 1024; // 200 KB
@@ -320,6 +322,7 @@ function validateExerciseResult(
       "attempts",
       "skipped",
     ]) ||
+    typeof value.kind !== "string" ||
     !isExerciseKind(value.kind) ||
     typeof value.completed !== "boolean" ||
     !(
@@ -350,24 +353,30 @@ function sanitizeForExport(state: AiNativeCourseProgress): SerializedProgress {
   return {
     schemaVersion: state.schemaVersion,
     lessons: Object.fromEntries(
-      Object.entries(state.lessons).map(([id, lesson]) => [
-        id,
+      Object.entries(state.lessons).map(([lessonId, lesson]) => [
+        lessonId,
         {
           sectionsRead: lesson.sectionsRead,
           quizScore: lesson.quizScore,
           quizTotal: lesson.quizTotal,
           completed: lesson.completed,
           exercisesCompleted: Object.fromEntries(
-            Object.entries(lesson.exercisesCompleted).map(([exId, r]) => [
-              exId,
-              {
-                kind: r.kind,
-                completed: r.completed,
-                score: r.score,
-                attempts: r.attempts,
-                skipped: r.skipped,
-              },
-            ]),
+            Object.entries(lesson.exercisesCompleted)
+              .filter(
+                ([exerciseId, result]) =>
+                  exerciseId !== PROJECT_IDENTITY.id &&
+                  !result.kind.startsWith("course-project-"),
+              )
+              .map(([exId, r]) => [
+                exId,
+                {
+                  kind: r.kind,
+                  completed: r.completed,
+                  score: r.score,
+                  attempts: r.attempts,
+                  skipped: r.skipped,
+                },
+              ]),
           ),
         },
       ]),
@@ -384,11 +393,18 @@ function sanitizeForExport(state: AiNativeCourseProgress): SerializedProgress {
  */
 export function serializeProgress(): string | null {
   const state = getAllProgress();
-  const hasProgress =
-    Object.keys(state.lessons).length > 0 || state.capstoneSubmitted;
-  if (!hasProgress) return null;
-
   const sanitized = sanitizeForExport(state);
+  const hasExportableProgress =
+    sanitized.capstoneSubmitted ||
+    Object.values(sanitized.lessons).some(
+      (lesson) =>
+        lesson.sectionsRead.length > 0 ||
+        lesson.quizScore !== null ||
+        lesson.completed ||
+        Object.keys(lesson.exercisesCompleted).length > 0,
+    );
+  if (!hasExportableProgress) return null;
+
   const json = JSON.stringify(sanitized);
   const encoded = btoa(
     encodeURIComponent(json).replace(/%([0-9A-F]{2})/g, (_, p1) =>

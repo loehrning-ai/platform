@@ -9,21 +9,21 @@ import {
 } from "@/lib/demos-localization";
 import { DEMOS_PAGE_COPY, DEMO_EVIDENCE_COPY } from "@/lib/demos-ui-copy";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
-import { getGalleryPreview } from "./demo-component-registry";
+import { getGalleryPreview } from "./demo-gallery-registry";
 import { DemoLocaleProvider } from "./demo-locale";
 
 const SIZE_CLASS: Record<Demo["size"], string> = {
   "s-hero": "md:[grid-column:span_8] md:[grid-row:span_4]",
   "s-wide": "md:[grid-column:span_8] md:[grid-row:span_3]",
   "s-tall": "md:[grid-column:span_4] md:[grid-row:span_4]",
-  "s-med":  "md:[grid-column:span_4] md:[grid-row:span_3]",
+  "s-med": "md:[grid-column:span_4] md:[grid-row:span_3]",
 };
 
 const TITLE_SIZE: Record<Demo["size"], string> = {
   "s-hero": "text-[clamp(1.75rem,8vw,2.45rem)]",
   "s-wide": "text-[clamp(1.55rem,7vw,2.05rem)]",
   "s-tall": "text-[clamp(1.4rem,6vw,1.75rem)]",
-  "s-med":  "text-[clamp(1.3rem,6vw,1.6rem)]",
+  "s-med": "text-[clamp(1.3rem,6vw,1.6rem)]",
 };
 
 // Level badges sit on a translucent tint of their own hue, so the readable
@@ -93,35 +93,48 @@ export function DemoTile({
 
       {/* Header: number + level badge */}
       <div className="flex items-center justify-between border-b border-current/15 px-4 py-2">
-        <span className={`font-mono text-[10px] font-bold tracking-[0.14em] uppercase ${accent}`}>
+        <span
+          className={`font-mono text-[10px] font-bold tracking-[0.14em] uppercase ${accent}`}
+        >
           {copy.kind} <strong>{demo.n}</strong>{" "}
           {/* No opacity de-emphasis: the kupfer accent at <100% opacity drops
              below 4.5:1 on both tile themes. Full opacity keeps it AA. */}
           <span aria-hidden="true">/</span>{" "}
           <span>{String(total).padStart(2, "0")}</span>
         </span>
-        <span className={`font-mono text-[9px] font-bold uppercase tracking-[0.1em] border px-2 py-0.5 ${levelColorClass(demo.level, dark)}`}>
+        <span
+          className={`font-mono text-[9px] font-bold uppercase tracking-[0.1em] border px-2 py-0.5 ${levelColorClass(demo.level, dark)}`}
+        >
           {levelLabel}
         </span>
       </div>
 
       {/* Title + description */}
       <div className="min-w-0 px-4 pb-2 pt-4 sm:px-5">
-        <div className={`mb-3 flex flex-wrap items-center gap-2 font-mono text-[9px] font-bold uppercase tracking-[0.1em] ${dark ? "text-background/70" : "text-muted-foreground"}`}>
-          <span className={`border border-current/25 px-2 py-1 ${accent}`}>{evidenceLabel}</span>
+        <div
+          className={`mb-3 flex flex-wrap items-center gap-2 font-mono text-[9px] font-bold uppercase tracking-[0.1em] ${dark ? "text-background/70" : "text-muted-foreground"}`}
+        >
+          <span className={`border border-current/25 px-2 py-1 ${accent}`}>
+            {evidenceLabel}
+          </span>
           <span>{categoryLabel}</span>
         </div>
-        <h2 className={`break-words font-bold leading-[1.02] tracking-[-0.03em] ${TITLE_SIZE[demo.size]}`}>
-          {demo.title}{" "}
-          <span className={accent}>{demo.titleKicker}</span>
+        <h2
+          className={`break-words font-bold leading-[1.02] tracking-[-0.03em] ${TITLE_SIZE[demo.size]}`}
+        >
+          {demo.title} <span className={accent}>{demo.titleKicker}</span>
         </h2>
-        <p className={`mt-3 break-words text-[13px] leading-[1.55] ${dark ? "text-background/75" : "text-muted-foreground"}`}>
+        <p
+          className={`mt-3 break-words text-[13px] leading-[1.55] ${dark ? "text-background/75" : "text-muted-foreground"}`}
+        >
           {demo.description}
         </p>
       </div>
 
       {/* Tech-stack subtitle */}
-      <div className={`min-w-0 px-4 pb-3 font-mono text-[9px] tracking-[0.08em] leading-relaxed flex gap-1.5 items-start sm:px-5 ${dark ? "text-background/55" : "text-muted-foreground"}`}>
+      <div
+        className={`min-w-0 px-4 pb-3 font-mono text-[9px] tracking-[0.08em] leading-relaxed flex gap-1.5 items-start sm:px-5 ${dark ? "text-background/55" : "text-muted-foreground"}`}
+      >
         <span className={`${accent} shrink-0`}>◆</span>
         <span className="min-w-0 break-words">{demo.background}</span>
       </div>
@@ -137,13 +150,23 @@ export function DemoTile({
         {locale === "en" ? (
           <div className="grid min-h-28 grid-cols-[minmax(0,1.35fr)_minmax(72px,0.65fr)] gap-3 p-4">
             <div className="grid content-end gap-2">
-              <span className={`h-2 w-3/4 ${dark ? "bg-background/25" : "bg-foreground/20"}`} />
-              <span className={`h-2 w-full ${dark ? "bg-background/15" : "bg-foreground/10"}`} />
-              <span className={`h-2 w-5/6 ${dark ? "bg-background/15" : "bg-foreground/10"}`} />
+              <span
+                className={`h-2 w-3/4 ${dark ? "bg-background/25" : "bg-foreground/20"}`}
+              />
+              <span
+                className={`h-2 w-full ${dark ? "bg-background/15" : "bg-foreground/10"}`}
+              />
+              <span
+                className={`h-2 w-5/6 ${dark ? "bg-background/15" : "bg-foreground/10"}`}
+              />
               <span className="mt-2 h-1.5 w-2/3 bg-brand-orange" />
             </div>
-            <div className={`grid place-items-center border ${dark ? "border-background/20 bg-background/5" : "border-foreground/15 bg-foreground/5"}`}>
-              <span className={`font-mono text-xl font-bold ${accent}`}>{demo.n}</span>
+            <div
+              className={`grid place-items-center border ${dark ? "border-background/20 bg-background/5" : "border-foreground/15 bg-foreground/5"}`}
+            >
+              <span className={`font-mono text-xl font-bold ${accent}`}>
+                {demo.n}
+              </span>
             </div>
           </div>
         ) : Preview ? (
@@ -154,7 +177,9 @@ export function DemoTile({
       </div>
 
       {/* Footer: category + CTA */}
-      <div className={`flex min-w-0 flex-wrap items-center justify-between gap-2 border-t border-current/15 px-4 py-3 font-mono text-[10px] uppercase tracking-[0.1em] sm:px-5 ${dark ? "text-background/70" : "text-muted-foreground"}`}>
+      <div
+        className={`flex min-w-0 flex-wrap items-center justify-between gap-2 border-t border-current/15 px-4 py-3 font-mono text-[10px] uppercase tracking-[0.1em] sm:px-5 ${dark ? "text-background/70" : "text-muted-foreground"}`}
+      >
         <span className="min-w-0 break-words">
           ◆ {categoryLabel}
           {demo.industries[0] ? ` · ${demo.industries[0]}` : ""}

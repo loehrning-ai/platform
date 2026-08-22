@@ -6,6 +6,7 @@ import {
   isPracticeEnabled,
   parsePlacement,
   readCache,
+  reservedTokenBudget,
   writeCache,
 } from "./engine";
 import type { PracticeRequestParsed } from "./validation";
@@ -32,6 +33,12 @@ describe("practice engine — pure helpers", () => {
       vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "fake-public-key");
       vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", "fake-service-key");
       vi.stubEnv("RATE_LIMIT_HMAC_SECRET", `rlh1_${"a".repeat(64)}`);
+      vi.stubEnv("AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET", "100000");
+      vi.stubEnv("AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET", "1000000");
+      vi.stubEnv(
+        "AI_NATIVE_PRACTICE_ALLOWED_MODELS",
+        "anthropic/claude-haiku-4.5",
+      );
     }
 
     it("is OFF when the env var is unset", () => {
@@ -98,6 +105,13 @@ describe("practice engine — pure helpers", () => {
       expect(result.why.length).toBeGreaterThan(0);
     });
 
+    it("localizes the fallback explanation", () => {
+      const raw = JSON.stringify({ x: 0.5, y: 0.5, near: "Kunde" });
+      expect(parsePlacement(raw, existing, "en").why).toBe(
+        "Placed near semantically related terms.",
+      );
+    });
+
     it("throws on invalid JSON", () => {
       expect(() => parsePlacement("not json", existing)).toThrow();
     });
@@ -109,10 +123,21 @@ describe("practice engine — pure helpers", () => {
   });
 
   describe("cache + hash", () => {
-    const req: PracticeRequestParsed = { mode: "complete", prompt: "hi" };
+    const req: PracticeRequestParsed = {
+      mode: "complete",
+      prompt: "hi",
+      model: "anthropic/claude-haiku-4.5",
+      locale: "de",
+    };
 
     it("round-trips a response", () => {
-      const response = { mode: "complete", text: "out", cached: false } as const;
+      const response = {
+        mode: "complete",
+        text: "out",
+        model: "anthropic/claude-haiku-4.5",
+        provider: "anthropic",
+        cached: false,
+      } as const;
       writeCache("k1", response);
       expect(readCache("k1")).toEqual(response);
     });
@@ -126,15 +151,37 @@ describe("practice engine — pure helpers", () => {
       const b = await hashRequest("user-1", {
         mode: "complete",
         prompt: "hi",
+        model: "anthropic/claude-haiku-4.5",
+        locale: "de",
       });
       const c = await hashRequest("user-1", {
         mode: "complete",
         prompt: "bye",
+        model: "anthropic/claude-haiku-4.5",
+        locale: "de",
       });
       const otherUser = await hashRequest("user-2", req);
       expect(a).toBe(b);
       expect(a).not.toBe(c);
       expect(a).not.toBe(otherUser);
     });
+  });
+
+  it("reserves UTF-8 bytes so Unicode cannot undercount the input budget", () => {
+    const ascii: PracticeRequestParsed = {
+      mode: "complete",
+      prompt: "a".repeat(100),
+      model: "anthropic/claude-haiku-4.5",
+      locale: "en",
+    };
+    const unicode: PracticeRequestParsed = {
+      ...ascii,
+      prompt: "🧪".repeat(100),
+    };
+
+    expect(reservedTokenBudget(unicode)).toBeGreaterThan(
+      reservedTokenBudget(ascii),
+    );
+    expect(reservedTokenBudget(unicode)).toBeGreaterThanOrEqual(1_200);
   });
 });

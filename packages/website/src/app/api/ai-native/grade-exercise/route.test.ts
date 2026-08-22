@@ -12,13 +12,23 @@ const mockGetAuthenticatedUser = vi.fn<
 }));
 const mockHashedClientRateLimitKey = vi.fn<
   (namespace: string, request: Request) => Promise<string>
->(async () => `ai-native-grade:ip-hmac-sha256-v1:${"a".repeat(64)}`);
+>(
+  async (namespace, request) =>
+    `${namespace}:ip-hmac-sha256-v1:${
+      request.headers.get("x-vercel-forwarded-for") === "10.0.0.2"
+        ? "b".repeat(64)
+        : "a".repeat(64)
+    }`,
+);
 const mockHashedAuthenticatedRateLimitKey = vi.fn<
   (namespace: string, request: Request, userId: string) => Promise<string>
->(async () => `ai-native-grade:user-hmac-sha256-v1:${"c".repeat(64)}`);
-const mockConsumeRateLimit = vi.fn<
-  (args: unknown) => Promise<boolean>
->(async () => true);
+>(async (namespace) => `${namespace}:user-hmac-sha256-v1:${"c".repeat(64)}`);
+const mockConsumeRateLimit = vi.fn<(args: unknown) => Promise<boolean>>(
+  async () => true,
+);
+const mockConsumeUsageBudget = vi.fn<(args: unknown) => Promise<boolean>>(
+  async () => true,
+);
 const mockReportApiError = vi.fn<(...args: unknown[]) => void>();
 const mockResolveCanonicalExercise = vi.fn();
 const mockTryGetAnthropicClient = vi.fn(() => ({
@@ -35,6 +45,8 @@ vi.mock("@/lib/supabase/auth-server", () => ({
 
 vi.mock("@/lib/security/rate-limit", () => ({
   consumeRateLimit: (args: unknown) => mockConsumeRateLimit(args),
+  consumeMultiRateLimit: (args: unknown) => mockConsumeRateLimit(args),
+  consumePairedUsageBudget: (args: unknown) => mockConsumeUsageBudget(args),
   hashedClientRateLimitKey: (namespace: string, req: Request) =>
     mockHashedClientRateLimitKey(namespace, req),
   hashedAuthenticatedRateLimitKey: (
@@ -69,12 +81,12 @@ const NON_JSON_MEDIA_TYPES = [
   ["JSON lookalike", "application/jsonp"],
 ] as const;
 
-function makeReq(): Request {
+function makeReq(ip = "10.0.0.1"): Request {
   return new Request("http://localhost/api/ai-native/grade-exercise", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "x-vercel-forwarded-for": "10.0.0.1",
+      "x-vercel-forwarded-for": ip,
     },
     body: JSON.stringify(VALID_REQUEST),
   });
@@ -99,9 +111,7 @@ function gradeBlock(summary: string) {
 
 function expectPrivateNoStore(res: Response) {
   expect(res.headers.get("cache-control")).toBe("private, no-store");
-  expect(res.headers.get("x-robots-tag")).toBe(
-    "noindex, nofollow, noarchive",
-  );
+  expect(res.headers.get("x-robots-tag")).toBe("noindex, nofollow, noarchive");
 }
 
 async function responseBody(res: Response) {
@@ -122,12 +132,22 @@ describe("POST /api/ai-native/grade-exercise cache isolation", () => {
       user: { id: "user-1" },
     });
     mockHashedClientRateLimitKey.mockReset();
-    mockHashedClientRateLimitKey.mockResolvedValue(
-      `ai-native-grade:ip-hmac-sha256-v1:${"a".repeat(64)}`,
+    mockHashedClientRateLimitKey.mockImplementation(
+      async (namespace, request) =>
+        `${namespace}:ip-hmac-sha256-v1:${
+          request.headers.get("x-vercel-forwarded-for") === "10.0.0.2"
+            ? "b".repeat(64)
+            : "a".repeat(64)
+        }`,
     );
-    mockHashedAuthenticatedRateLimitKey.mockClear();
+    mockHashedAuthenticatedRateLimitKey.mockReset();
+    mockHashedAuthenticatedRateLimitKey.mockImplementation(
+      async (namespace) => `${namespace}:user-hmac-sha256-v1:${"c".repeat(64)}`,
+    );
     mockConsumeRateLimit.mockReset();
     mockConsumeRateLimit.mockResolvedValue(true);
+    mockConsumeUsageBudget.mockReset();
+    mockConsumeUsageBudget.mockResolvedValue(true);
     mockReportApiError.mockReset();
     mockResolveCanonicalExercise.mockReset();
     mockResolveCanonicalExercise.mockResolvedValue({
@@ -139,6 +159,12 @@ describe("POST /api/ai-native/grade-exercise cache isolation", () => {
       rubricIds: ["criterion"],
     });
     vi.stubEnv("AI_NATIVE_PRACTICE_ENABLED", "true");
+    vi.stubEnv(
+      "AI_NATIVE_PRACTICE_ALLOWED_MODELS",
+      "anthropic/claude-haiku-4.5",
+    );
+    vi.stubEnv("AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET", "10000");
+    vi.stubEnv("AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET", "100000");
     vi.stubEnv("ANTHROPIC_API_KEY", "obviously-fake-test-key");
     vi.stubEnv("ANTHROPIC_DPA_CONFIRMED_AT", "2026-07-01");
     vi.stubEnv("ANTHROPIC_RETENTION_DAYS", "30");
@@ -161,9 +187,7 @@ describe("POST /api/ai-native/grade-exercise cache isolation", () => {
         "http://localhost/api/ai-native/grade-exercise",
         {
           method: "POST",
-          headers: contentType
-            ? { "Content-Type": contentType }
-            : undefined,
+          headers: contentType ? { "Content-Type": contentType } : undefined,
           body: contentType ? "{}" : new Uint8Array([123, 125]),
         },
       );
@@ -172,6 +196,7 @@ describe("POST /api/ai-native/grade-exercise cache isolation", () => {
 
       expect(res.status).toBe(415);
       expect(await res.json()).toEqual({
+        code: "unsupported_media_type",
         error: "Nicht unterstützter Medientyp.",
       });
       expectPrivateNoStore(res);
@@ -179,12 +204,50 @@ describe("POST /api/ai-native/grade-exercise cache isolation", () => {
       expect(mockHashedAuthenticatedRateLimitKey).not.toHaveBeenCalled();
       expect(mockHashedClientRateLimitKey).not.toHaveBeenCalled();
       expect(mockConsumeRateLimit).not.toHaveBeenCalled();
+      expect(mockConsumeUsageBudget).not.toHaveBeenCalled();
       expect(mockResolveCanonicalExercise).not.toHaveBeenCalled();
       expect(mockTryGetAnthropicClient).not.toHaveBeenCalled();
       expect(mockCreate).not.toHaveBeenCalled();
       expect(mockReportApiError).not.toHaveBeenCalled();
     },
   );
+
+  it("rejects malformed JSON before auth, quotas, canonical loading, or provider work", async () => {
+    const res = await POST(
+      new Request("http://localhost/api/ai-native/grade-exercise", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: "not-json",
+      }),
+    );
+
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({
+      code: "invalid_json",
+      error: "Ungültiger JSON-Body.",
+    });
+    expect(mockGetAuthenticatedUser).not.toHaveBeenCalled();
+    expect(mockResolveCanonicalExercise).not.toHaveBeenCalled();
+    expect(mockConsumeRateLimit).not.toHaveBeenCalled();
+    expect(mockConsumeUsageBudget).not.toHaveBeenCalled();
+    expect(mockTryGetAnthropicClient).not.toHaveBeenCalled();
+  });
+
+  it("rejects unknown exercises before request or paid-token quota", async () => {
+    mockResolveCanonicalExercise.mockResolvedValueOnce(null);
+
+    const res = await POST(makeReq());
+
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({
+      code: "unknown_exercise",
+      error: "Unbekannte Aufgabe.",
+    });
+    expect(mockConsumeRateLimit).not.toHaveBeenCalled();
+    expect(mockConsumeUsageBudget).not.toHaveBeenCalled();
+    expect(mockTryGetAnthropicClient).not.toHaveBeenCalled();
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
 
   it("scopes authenticated cache entries by user ID and reports hits truthfully", async () => {
     mockCreate
@@ -222,6 +285,17 @@ describe("POST /api/ai-native/grade-exercise cache isolation", () => {
       }),
     );
     expect(mockCreate).toHaveBeenCalledTimes(2);
+    expect(mockConsumeUsageBudget).toHaveBeenCalledTimes(2);
+    expect(mockConsumeUsageBudget).toHaveBeenCalledWith(
+      expect.objectContaining({
+        callerKey: `ai-model-token-day:user-hmac-sha256-v1:${"c".repeat(64)}`,
+        globalKey: "ai-practice-global-token-day-v1",
+        windowSeconds: 86_400,
+        callerMax: 10000,
+        globalMax: 100000,
+        cost: expect.any(Number),
+      }),
+    );
   });
 
   it("scopes anonymous cache entries by trusted-IP digest and reports hits truthfully", async () => {
@@ -229,12 +303,6 @@ describe("POST /api/ai-native/grade-exercise cache isolation", () => {
       configured: true,
       user: null,
     });
-    const ipOne = `ai-native-grade:ip-hmac-sha256-v1:${"a".repeat(64)}`;
-    const ipTwo = `ai-native-grade:ip-hmac-sha256-v1:${"b".repeat(64)}`;
-    mockHashedClientRateLimitKey
-      .mockResolvedValueOnce(ipOne)
-      .mockResolvedValueOnce(ipTwo)
-      .mockResolvedValueOnce(ipOne);
     mockCreate
       .mockResolvedValueOnce(gradeBlock("Antwort für IP eins."))
       .mockResolvedValueOnce(gradeBlock("Antwort für IP zwei."));
@@ -247,7 +315,7 @@ describe("POST /api/ai-native/grade-exercise cache isolation", () => {
       }),
     );
 
-    const second = await POST(makeReq());
+    const second = await POST(makeReq("10.0.0.2"));
     expect(await responseBody(second)).toEqual(
       expect.objectContaining({
         summary: "Antwort für IP zwei.",
@@ -263,6 +331,17 @@ describe("POST /api/ai-native/grade-exercise cache isolation", () => {
       }),
     );
     expect(mockCreate).toHaveBeenCalledTimes(2);
+    expect(mockConsumeUsageBudget).toHaveBeenCalledTimes(2);
+    expect(mockConsumeUsageBudget).toHaveBeenCalledWith(
+      expect.objectContaining({
+        callerKey: `ai-grade-token-day:ip-hmac-sha256-v1:${"a".repeat(64)}`,
+        globalKey: "ai-practice-global-token-day-v1",
+        windowSeconds: 86_400,
+        callerMax: 10000,
+        globalMax: 100000,
+        cost: expect.any(Number),
+      }),
+    );
   });
 
   it("keeps the provider-disabled fallback private and non-indexable", async () => {
@@ -275,6 +354,7 @@ describe("POST /api/ai-native/grade-exercise cache isolation", () => {
       expect.objectContaining({ cached: false }),
     );
     expect(mockCreate).not.toHaveBeenCalled();
+    expect(mockConsumeUsageBudget).not.toHaveBeenCalled();
   });
 
   it("returns 503 when the durable limiter is unavailable", async () => {
@@ -284,7 +364,43 @@ describe("POST /api/ai-native/grade-exercise cache isolation", () => {
     const res = await POST(makeReq());
 
     expect(res.status).toBe(503);
+    expect(await res.json()).toEqual({
+      code: "rate_limit_unavailable",
+      error: "Anfragelimit ist vorübergehend nicht verfügbar.",
+    });
     expectPrivateNoStore(res);
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
+
+  it("fails closed before Anthropic when the daily token ledger is unavailable", async () => {
+    mockConsumeUsageBudget.mockRejectedValueOnce({
+      code: "RATE_LIMIT_UNAVAILABLE",
+    });
+
+    const res = await POST(makeReq());
+
+    expect(res.status).toBe(503);
+    expect(await res.json()).toEqual({
+      code: "budget_unavailable",
+      error: "Das Nutzungsbudget ist vorübergehend nicht verfügbar.",
+    });
+    expect(mockCreate).not.toHaveBeenCalled();
+    expect(mockReportApiError).toHaveBeenCalledWith(
+      expect.objectContaining({ step: "rate-limit" }),
+    );
+  });
+
+  it("fails closed before Anthropic when the atomic caller/global reservation is refused", async () => {
+    mockConsumeUsageBudget.mockResolvedValueOnce(false);
+
+    const res = await POST(makeReq());
+
+    expect(res.status).toBe(429);
+    expect(await res.json()).toEqual({
+      code: "budget_exhausted",
+      error: "Das Tagesbudget für Modell-Tokens ist erreicht.",
+    });
+    expect(mockConsumeUsageBudget).toHaveBeenCalledTimes(1);
     expect(mockCreate).not.toHaveBeenCalled();
   });
 

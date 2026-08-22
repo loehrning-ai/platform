@@ -224,7 +224,7 @@ export function TerminalReplayWidget({
         </div>
         <div className="max-h-[280px] overflow-y-auto p-3">
           {revealedCount === 0 && status !== "running" ? (
-            <p className="font-mono text-[12px] text-muted-foreground/70">
+            <p className="font-mono text-[12px] text-muted-foreground">
               # press &quot;Run replay&quot; to watch this session play out
             </p>
           ) : (

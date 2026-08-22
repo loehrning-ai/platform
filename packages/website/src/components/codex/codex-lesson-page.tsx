@@ -2,7 +2,11 @@
 
 import { useState, type JSX } from "react";
 import { LessonShell } from "@/components/course/lesson-shell";
-import { CodexLessonSidebar, type CodexLessonNavItem } from "./codex-lesson-sidebar";
+import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
+import {
+  CodexLessonSidebar,
+  type CodexLessonNavItem,
+} from "./codex-lesson-sidebar";
 import { CodexLessonReader } from "./codex-lesson-reader";
 import { getCodexCourseCopy } from "@/lib/codex/course-copy";
 import type { CodexLesson, CodexTrack } from "@/lib/codex/types";
@@ -36,8 +40,44 @@ export function CodexLessonPage({
       navOpen={navOpen}
       onNavOpenChange={setNavOpen}
       navLabel={copy.navLabel}
-      sidebar={<CodexLessonSidebar locale={locale} lessons={navItems} tracks={tracks} />}
+      openNavLabel={
+        locale === "de" ? "Lektionsnavigation öffnen" : "Open lesson navigation"
+      }
+      closeNavLabel={
+        locale === "de"
+          ? "Lektionsnavigation schließen"
+          : "Close lesson navigation"
+      }
+      collapseNavLabel={
+        locale === "de"
+          ? "Lektionsnavigation einklappen"
+          : "Collapse lesson navigation"
+      }
+      expandNavLabel={
+        locale === "de"
+          ? "Lektionsnavigation ausklappen"
+          : "Expand lesson navigation"
+      }
+      sidebar={
+        <CodexLessonSidebar
+          locale={locale}
+          lessons={navItems}
+          tracks={tracks}
+        />
+      }
     >
+      <div className="mb-10">
+        <CourseProjectStudio
+          courseSlug="codex"
+          lessonId={lesson.id}
+          locale={locale}
+          lessonContext={{
+            title: lesson.title,
+            objective: lesson.hook,
+            keyConcepts: lesson.keyConcepts,
+          }}
+        />
+      </div>
       <CodexLessonReader
         locale={locale}
         lesson={lesson}

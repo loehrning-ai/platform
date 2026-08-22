@@ -63,9 +63,21 @@ const CONTROLLED_KEYS = [
   "SENTRY_PROJECT",
   "SENTRY_RETENTION_DAYS",
   "AI_NATIVE_PRACTICE_ENABLED",
+  "AI_NATIVE_PRACTICE_ALLOWED_MODELS",
+  "AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET",
+  "AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET",
   "ANTHROPIC_API_KEY",
   "ANTHROPIC_DPA_CONFIRMED_AT",
   "ANTHROPIC_RETENTION_DAYS",
+  "GEMINI_API_KEY",
+  "GEMINI_DPA_CONFIRMED_AT",
+  "GEMINI_PAID_TIER_CONFIRMED_AT",
+  "GEMINI_RETENTION_DAYS",
+  "COURSE_TERMINAL_ENABLED",
+  "COURSE_TERMINAL_DAILY_RUN_BUDGET",
+  "COURSE_TERMINAL_POLICY_CONFIRMED_AT",
+  "COURSE_TERMINAL_SANDBOX_IMAGE",
+  "VERCEL_OIDC_TOKEN",
 ];
 
 function runValidateEnv(overrides) {
@@ -224,6 +236,9 @@ function main() {
   const anthropicWithoutDurableLimiter = runValidateEnv({
     CI: "true",
     AI_NATIVE_PRACTICE_ENABLED: "true",
+    AI_NATIVE_PRACTICE_ALLOWED_MODELS: "anthropic/claude-haiku-4.5",
+    AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET: "10000",
+    AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET: "100000",
     ANTHROPIC_API_KEY: "sk-ant-obviously-fake",
     ANTHROPIC_DPA_CONFIRMED_AT: "2026-07-01",
     ANTHROPIC_RETENTION_DAYS: "30",
@@ -700,6 +715,9 @@ function main() {
     SENTRY_DPA_CONFIRMED_AT: "2026-07-01",
     SENTRY_RETENTION_DAYS: "30",
     AI_NATIVE_PRACTICE_ENABLED: "true",
+    AI_NATIVE_PRACTICE_ALLOWED_MODELS: "anthropic/claude-haiku-4.5",
+    AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET: "10000",
+    AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET: "100000",
     ANTHROPIC_API_KEY: "sk-ant-obviously-fake",
     ANTHROPIC_DPA_CONFIRMED_AT: "2026-07-01",
     ANTHROPIC_RETENTION_DAYS: "30",
@@ -710,6 +728,140 @@ function main() {
     `fully attested provider config must pass\n${combined(verifiedProviders)}`,
   );
   assert.match(combined(verifiedProviders), /Environment validation passed/);
+
+  const enabledWithoutPracticeAllowlist = runValidateEnv(
+    completeSupabase({
+      AI_NATIVE_PRACTICE_ENABLED: "true",
+      AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET: "10000",
+      AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET: "100000",
+      ANTHROPIC_API_KEY: "sk-ant-obviously-fake",
+      ANTHROPIC_DPA_CONFIRMED_AT: "2026-07-01",
+      ANTHROPIC_RETENTION_DAYS: "30",
+    }),
+  );
+  assert.equal(
+    enabledWithoutPracticeAllowlist.status,
+    1,
+    combined(enabledWithoutPracticeAllowlist),
+  );
+  assert.match(
+    combined(enabledWithoutPracticeAllowlist),
+    /requires AI_NATIVE_PRACTICE_ALLOWED_MODELS as a nonempty/,
+  );
+
+  const verifiedGeminiOnly = runValidateEnv(
+    completeSupabase({
+      AI_NATIVE_PRACTICE_ENABLED: "true",
+      AI_NATIVE_PRACTICE_ALLOWED_MODELS:
+        "google/gemini-2.5-flash-lite",
+      AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET: "10000",
+      AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET: "100000",
+      GEMINI_API_KEY: "obviously-fake-gemini-key",
+      GEMINI_DPA_CONFIRMED_AT: "2026-07-01",
+      GEMINI_PAID_TIER_CONFIRMED_AT: "2026-07-01",
+      GEMINI_RETENTION_DAYS: "0",
+    }),
+  );
+  assert.equal(
+    verifiedGeminiOnly.status,
+    0,
+    `fully attested Gemini-only practice must pass\n${combined(verifiedGeminiOnly)}`,
+  );
+
+  const invalidPracticeAllowlist = runValidateEnv(
+    completeSupabase({
+      AI_NATIVE_PRACTICE_ENABLED: "true",
+      AI_NATIVE_PRACTICE_ALLOWED_MODELS:
+        "google/gemini-2.5-flash-lite, arbitrary-model",
+      AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET: "10000",
+      AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET: "100000",
+      GEMINI_API_KEY: "obviously-fake-gemini-key",
+      GEMINI_DPA_CONFIRMED_AT: "2026-07-01",
+      GEMINI_PAID_TIER_CONFIRMED_AT: "2026-07-01",
+      GEMINI_RETENTION_DAYS: "0",
+    }),
+  );
+  assert.equal(invalidPracticeAllowlist.status, 1, combined(invalidPracticeAllowlist));
+  assert.match(combined(invalidPracticeAllowlist), /duplicate-free list containing only/);
+
+  const geminiWithoutPaidTierContract = runValidateEnv(
+    completeSupabase({
+      AI_NATIVE_PRACTICE_ENABLED: "true",
+      AI_NATIVE_PRACTICE_ALLOWED_MODELS:
+        "google/gemini-2.5-flash-lite",
+      AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET: "10000",
+      AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET: "100000",
+      GEMINI_API_KEY: "obviously-fake-gemini-key",
+      GEMINI_DPA_CONFIRMED_AT: "2026-07-01",
+      GEMINI_RETENTION_DAYS: "0",
+    }),
+  );
+  assert.equal(
+    geminiWithoutPaidTierContract.status,
+    1,
+    combined(geminiWithoutPaidTierContract),
+  );
+  assert.match(
+    combined(geminiWithoutPaidTierContract),
+    /GEMINI_PAID_TIER_CONFIRMED_AT/,
+  );
+
+  const verifiedTerminal = runValidateEnv(
+    completeSupabase({
+      VERCEL: "1",
+      VERCEL_ENV: "preview",
+      VERCEL_DPA_CONFIRMED_AT: "2026-07-01",
+      COURSE_TERMINAL_ENABLED: "true",
+      COURSE_TERMINAL_DAILY_RUN_BUDGET: "100",
+      COURSE_TERMINAL_POLICY_CONFIRMED_AT: "2026-08-13",
+      COURSE_TERMINAL_SANDBOX_IMAGE:
+        `vercel/sandbox/node@sha256:${"a".repeat(64)}`,
+    }),
+  );
+  assert.equal(
+    verifiedTerminal.status,
+    0,
+    `fully attested terminal contract must pass build validation\n${combined(verifiedTerminal)}`,
+  );
+
+  const terminalWithoutRuntimeOrBudget = runValidateEnv(
+    completeSupabase({ COURSE_TERMINAL_ENABLED: "true" }),
+  );
+  assert.equal(
+    terminalWithoutRuntimeOrBudget.status,
+    1,
+    combined(terminalWithoutRuntimeOrBudget),
+  );
+  assert.match(combined(terminalWithoutRuntimeOrBudget), /requires VERCEL=1/);
+  assert.match(
+    combined(terminalWithoutRuntimeOrBudget),
+    /COURSE_TERMINAL_DAILY_RUN_BUDGET/,
+  );
+  assert.match(
+    combined(terminalWithoutRuntimeOrBudget),
+    /COURSE_TERMINAL_SANDBOX_IMAGE/,
+  );
+
+  const terminalWithMutableImage = runValidateEnv(
+    completeSupabase({
+      VERCEL: "1",
+      VERCEL_ENV: "preview",
+      VERCEL_DPA_CONFIRMED_AT: "2026-07-01",
+      COURSE_TERMINAL_ENABLED: "true",
+      COURSE_TERMINAL_DAILY_RUN_BUDGET: "100",
+      COURSE_TERMINAL_POLICY_CONFIRMED_AT: "2026-08-13",
+      COURSE_TERMINAL_SANDBOX_IMAGE: "vercel/sandbox/node:24",
+    }),
+  );
+  assert.equal(
+    terminalWithMutableImage.status,
+    1,
+    combined(terminalWithMutableImage),
+  );
+  assert.match(
+    combined(terminalWithMutableImage),
+    /immutable OCI digest reference/,
+  );
 
   // I. Sentry retention is not guessed from a provider default.
   const sentryWithoutRetention = runValidateEnv({

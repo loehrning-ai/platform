@@ -1,6 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState, type JSX } from "react";
+import type {
+  PracticeLocale,
+  PracticeModelId,
+} from "@/app/api/ai-native/practice/types";
 import { useCheckpoint } from "@/lib/progress";
 import { cn } from "@/lib/utils";
 import { WidgetFrame } from "../tier-a/_frame";
@@ -85,6 +89,8 @@ export interface PromptOrreryWidgetProps {
   readonly cpId: string;
   readonly title?: string;
   readonly scenario?: string;
+  readonly locale?: PracticeLocale;
+  readonly model?: PracticeModelId;
 }
 
 export function PromptOrreryWidget({
@@ -92,13 +98,15 @@ export function PromptOrreryWidget({
   cpId,
   title = "Die Prompt-Schmiede",
   scenario = "Fünf Bausteine. Schalte jeden zu oder ab und beobachte, wie der Qualitätswert reagiert.",
+  locale = "de",
+  model,
 }: PromptOrreryWidgetProps): JSX.Element {
   const { done, complete } = useCheckpoint(lessonId, cpId);
   const [active, setActive] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(PARTS.map((p) => [p.id, p.default])),
   );
   const [output, setOutput] = useState<string | null>(null);
-  const api = usePracticeApi();
+  const api = usePracticeApi({ locale, ...(model ? { model } : {}) });
 
   const activeParts = useMemo(
     () => PARTS.filter((p) => active[p.id]),
@@ -110,7 +118,9 @@ export function PromptOrreryWidget({
   );
   const assembled = useMemo(
     () =>
-      activeParts.map((p) => `${p.label.toUpperCase()}\n${p.content}`).join("\n\n"),
+      activeParts
+        .map((p) => `${p.label.toUpperCase()}\n${p.content}`)
+        .join("\n\n"),
     [activeParts],
   );
 
@@ -120,8 +130,7 @@ export function PromptOrreryWidget({
     if (quality >= 80) complete();
   }, [quality, complete]);
 
-  const toggle = (id: string) =>
-    setActive((a) => ({ ...a, [id]: !a[id] }));
+  const toggle = (id: string) => setActive((a) => ({ ...a, [id]: !a[id] }));
 
   const run = async () => {
     if (!assembled.trim()) return;
@@ -152,7 +161,11 @@ export function PromptOrreryWidget({
       xpLabel="+15 XP"
     >
       <div className="grid gap-5 md:grid-cols-[1fr_auto] md:items-start">
-        <div role="group" aria-label="Prompt-Bausteine" className="flex flex-col gap-2">
+        <div
+          role="group"
+          aria-label="Prompt-Bausteine"
+          className="flex flex-col gap-2"
+        >
           {PARTS.map((p) => {
             const on = !!active[p.id];
             return (
@@ -186,7 +199,12 @@ export function PromptOrreryWidget({
           <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
             Qualität
           </p>
-          <p className={cn("mt-1 font-mono text-[34px] font-bold leading-none", qColor)}>
+          <p
+            className={cn(
+              "mt-1 font-mono text-[34px] font-bold leading-none",
+              qColor,
+            )}
+          >
             {quality}
           </p>
           <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground">

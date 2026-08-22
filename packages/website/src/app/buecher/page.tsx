@@ -4,10 +4,7 @@ import { BuecherContent } from "./buecher-content";
 import { BOOK_PAGE_COPY, getBookDisplay } from "./book-copy";
 import { JsonLd, ORG_ID, PERSON_ID, SITE_URL } from "@/lib/seo/json-ld";
 import { books, type Book } from "@/lib/books";
-import {
-  loadBookManifest,
-  type BookManifest,
-} from "@/lib/book-reader-content";
+import { loadBookManifest, type BookManifest } from "@/lib/book-reader-content";
 import { getRuntimeFeatures } from "@/lib/runtime-features";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import {
@@ -16,7 +13,6 @@ import {
   type Locale,
 } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
-import { MotionProvider } from "@/components/motion-provider";
 
 const CATALOG_PATH = "/buecher";
 
@@ -145,13 +141,11 @@ export default async function BuecherPage() {
   return (
     <>
       <JsonLd data={graph} id="buecher-jsonld" />
-      <MotionProvider>
-        <BuecherContent
-          accountEnabled={accountEnabled}
-          locale={locale}
-          catalogBooks={localizedCatalog.map(({ book }) => book)}
-        />
-      </MotionProvider>
+      <BuecherContent
+        accountEnabled={accountEnabled}
+        locale={locale}
+        catalogBooks={localizedCatalog.map(({ book }) => book)}
+      />
     </>
   );
 }

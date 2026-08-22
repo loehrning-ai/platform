@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { LessonShell } from "@/components/course/lesson-shell";
+import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
 import { DsChapterSidebar } from "@/components/data-science/ds-chapter-sidebar";
 import { isInteractiveShortcutTarget } from "@/lib/a11y/keyboard-shortcuts";
 import { getDataScienceCourseCopy } from "@/lib/data-science/course-copy";
@@ -43,6 +44,7 @@ export function DsReaderShell({
 
   const copy = getDataScienceCourseCopy(locale).reader;
   const currentIndex = chapters.findIndex((c) => c.id === activeId);
+  const currentChapter = currentIndex >= 0 ? chapters[currentIndex] : null;
   const prev = currentIndex > 0 ? chapters[currentIndex - 1] : null;
   const next =
     currentIndex >= 0 && currentIndex < chapters.length - 1
@@ -71,6 +73,26 @@ export function DsReaderShell({
         navOpen={navOpen}
         onNavOpenChange={setNavOpen}
         navLabel={copy.navLabel}
+        openNavLabel={
+          locale === "de"
+            ? "Kapitelnavigation öffnen"
+            : "Open chapter navigation"
+        }
+        closeNavLabel={
+          locale === "de"
+            ? "Kapitelnavigation schließen"
+            : "Close chapter navigation"
+        }
+        collapseNavLabel={
+          locale === "de"
+            ? "Kapitelnavigation einklappen"
+            : "Collapse chapter navigation"
+        }
+        expandNavLabel={
+          locale === "de"
+            ? "Kapitelnavigation ausklappen"
+            : "Expand chapter navigation"
+        }
         sidebar={
           <DsChapterSidebar
             activeId={activeId}
@@ -80,6 +102,19 @@ export function DsReaderShell({
           />
         }
       >
+        {currentChapter ? (
+          <div className="mb-10">
+            <CourseProjectStudio
+              courseSlug="data-science"
+              lessonId={activeId}
+              locale={locale}
+              lessonContext={{
+                title: currentChapter.title,
+                objective: currentChapter.subtitle,
+              }}
+            />
+          </div>
+        ) : null}
         {children}
       </LessonShell>
     </div>
