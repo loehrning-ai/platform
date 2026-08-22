@@ -87,10 +87,20 @@ function stuckReveals(page: Page, rootSelector?: string): Promise<string[]> {
 /** Step the page top->bottom so every whileInView IntersectionObserver fires. */
 async function fireAllReveals(page: Page): Promise<void> {
   await page.evaluate(async () => {
+    // Bounded: requestAnimationFrame does not fire on a backgrounded or
+    // occluded page, so an unraced frame wait parks this evaluate until the
+    // test budget runs out. See tests/e2e/fixtures/settle.ts.
     const frame = () =>
-      new Promise<void>((r) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => r())),
-      );
+      new Promise<void>((r) => {
+        let settled = false;
+        const done = () => {
+          if (settled) return;
+          settled = true;
+          r();
+        };
+        requestAnimationFrame(() => requestAnimationFrame(done));
+        setTimeout(done, 250);
+      });
     const step = Math.max(200, Math.floor(window.innerHeight * 0.8));
     for (let y = 0; y <= document.body.scrollHeight; y += step) {
       window.scrollTo(0, y);

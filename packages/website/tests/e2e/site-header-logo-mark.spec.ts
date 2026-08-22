@@ -49,8 +49,17 @@ async function scrollToAndSettle(page: Page, y: number) {
   await page.evaluate((yy) => {
     window.scrollTo({ top: yy, left: 0, behavior: "instant" });
     window.dispatchEvent(new Event("scroll"));
+    // Bounded: requestAnimationFrame does not fire on a backgrounded or
+    // occluded page. See tests/e2e/fixtures/settle.ts.
     return new Promise<void>((resolve) => {
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      let settled = false;
+      const done = () => {
+        if (settled) return;
+        settled = true;
+        resolve();
+      };
+      requestAnimationFrame(() => requestAnimationFrame(done));
+      setTimeout(done, 250);
     });
   }, y);
   return markGeometry(page);

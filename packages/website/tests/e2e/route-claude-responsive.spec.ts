@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { settleWholePage } from "./fixtures/settle";
 
 const LESSON_IDS = [
   "mental-model",
@@ -137,71 +138,10 @@ function visibleLanguageSwitchLink(page: Page, name: RegExp) {
 }
 
 async function settleFullPage(page: Page) {
-  await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
-  const walkThePage = () => page.evaluate(async () => {
-    // requestAnimationFrame does not fire on a backgrounded or occluded page,
-    // and document.fonts.ready can stay pending on a font that never resolves.
-    // Every wait below therefore races its signal against a timer: unraced, a
-    // shard that loses the foreground hangs inside this evaluate until the
-    // test timeout kills it, which reads as a mysterious 300s failure rather
-    // than a settle that took a moment too long.
-    const nextFrame = () =>
-      new Promise<void>((resolve) => {
-        let settled = false;
-        const done = () => {
-          if (settled) return;
-          settled = true;
-          resolve();
-        };
-        requestAnimationFrame(() => requestAnimationFrame(done));
-        setTimeout(done, 250);
-      });
-
-    await Promise.race([
-      document.fonts.ready,
-      new Promise((resolve) => setTimeout(resolve, 20_000)),
-    ]);
-
-    const step = Math.max(320, Math.floor(window.innerHeight * 0.75));
-    // Bound the walk as well. Lazy content can extend scrollHeight while the
-    // loop consumes it, so the exit condition alone is not a guarantee.
-    for (
-      let y = 0, steps = 0;
-      y < document.documentElement.scrollHeight && steps < 60;
-      y += step, steps++
-    ) {
-      window.scrollTo(0, y);
-      await nextFrame();
-    }
-    window.scrollTo(0, 0);
-    await nextFrame();
-  });
-
-  // Bound the walk from the driver side too. Every wait inside it already
-  // races a timer, and CI has still produced runs where this call never
-  // returns and consumes the entire 300s test budget while the same test
-  // normally finishes in ten seconds. A renderer that has stopped running
-  // timers cannot rescue itself from the inside, so the cap has to live out
-  // here. One retry covers a context replaced by a late client-side
-  // navigation; a second failure is reported as what it is.
-  for (let attempt = 0; ; attempt++) {
-    const walk = walkThePage();
-    // Keep a late rejection from surfacing as an unhandled rejection once the
-    // race below has already moved on.
-    walk.catch(() => {});
-    const outcome = await Promise.race([
-      walk.then(() => "settled" as const),
-      new Promise<"timeout">((resolve) => setTimeout(() => resolve("timeout"), 30_000)),
-    ]);
-    if (outcome === "settled") break;
-    if (attempt >= 1) {
-      throw new Error(
-        "settleFullPage: the page stopped settling within 30s on two attempts",
-      );
-    }
-    await page.waitForLoadState("domcontentloaded");
-  }
-
+  // Two frames per step: this spec's original walk paired them, and a
+  // single frame leaves the first click after the walk racing an
+  // unstable element on WebKit.
+  await settleWholePage(page, { framesPerStep: 2 });
   await expect(
     page.locator(
       '[aria-label="Widget wird geladen"], [aria-label="Widget is loading"]',

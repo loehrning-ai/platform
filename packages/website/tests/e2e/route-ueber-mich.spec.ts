@@ -49,7 +49,26 @@ function visibleLanguageSwitchLink(page: Page, href: string) {
 async function settle(page: Page) {
   await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
   await page.evaluate(async () => {
-    await document.fonts.ready;
+    // Bounded: document.fonts.ready stays pending on a font that never
+    // resolves, and requestAnimationFrame does not fire on a backgrounded or
+    // occluded page, so either can park this evaluate until the test budget
+    // runs out. See tests/e2e/fixtures/settle.ts.
+    const nextFrame = () =>
+      new Promise<void>((resolve) => {
+        let settled = false;
+        const done = () => {
+          if (settled) return;
+          settled = true;
+          resolve();
+        };
+        requestAnimationFrame(() => requestAnimationFrame(done));
+        setTimeout(done, 250);
+      });
+
+    await Promise.race([
+      document.fonts.ready,
+      new Promise((resolve) => setTimeout(resolve, 10_000)),
+    ]);
     // Bring pending images into view before awaiting them. The profile's
     // partner logos are loading="lazy" and sit below the fold, and WebKit at
     // this viewport does not fetch them until they approach it, so their load
@@ -65,19 +84,22 @@ async function settle(page: Page) {
     for (const image of document.images) {
       if (!image.complete && image.loading === "lazy") image.loading = "eager";
     }
-    await Promise.all(
-      Array.from(document.images, (image) =>
-        image.complete
-          ? Promise.resolve()
-          : new Promise<void>((resolve) => {
-              image.addEventListener("load", () => resolve(), { once: true });
-              image.addEventListener("error", () => resolve(), { once: true });
-            }),
+    // Eager promotion makes the load event fire, but an image that 404s at the
+    // network layer can still leave both events unfired, so cap the wait.
+    await Promise.race([
+      Promise.all(
+        Array.from(document.images, (image) =>
+          image.complete
+            ? Promise.resolve()
+            : new Promise<void>((resolve) => {
+                image.addEventListener("load", () => resolve(), { once: true });
+                image.addEventListener("error", () => resolve(), { once: true });
+              }),
+        ),
       ),
-    );
-    await new Promise<void>((resolve) =>
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-    );
+      new Promise((resolve) => setTimeout(resolve, 15_000)),
+    ]);
+    await nextFrame();
   });
 }
 

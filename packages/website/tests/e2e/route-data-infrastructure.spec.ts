@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { settleFontsAndFrame } from "./fixtures/settle";
 
 /**
  * Data Infrastructure golden path: home -> lesson ->
@@ -144,12 +145,7 @@ test.describe("Data Infrastructure golden path", () => {
     const res = await page.goto(LESSON_ROUTE, { waitUntil: "load" });
     expect(res?.status()).toBe(200);
     await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
-    await page.evaluate(async () => {
-      await document.fonts.ready;
-      await new Promise<void>((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-      );
-    });
+    await settleFontsAndFrame(page);
 
     const title = page.getByText(/Model · The stack, in motion/);
     const card = title.locator("..");

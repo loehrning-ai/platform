@@ -4,6 +4,7 @@ import {
   MODULE_IDS,
   MODULE_LESSON_COUNTS,
 } from "../../src/lib/ai-native-operator/types";
+import { settleWholePage } from "./fixtures/settle";
 
 /**
  * AI-Native Operator Course golden path: home -> module
@@ -137,21 +138,10 @@ function localizedRoutes(prefix: string) {
 }
 
 async function settleFullPage(page: Page) {
-  await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
-  await page.evaluate(async () => {
-    await document.fonts.ready;
-    const step = Math.max(320, Math.floor(window.innerHeight * 0.75));
-    for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
-      window.scrollTo(0, y);
-      await new Promise<void>((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-      );
-    }
-    window.scrollTo(0, 0);
-    await new Promise<void>((resolve) =>
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-    );
-  });
+  // Two frames per step: this spec's original walk paired them, and a
+  // single frame leaves the first click after the walk racing an
+  // unstable element on WebKit.
+  await settleWholePage(page, { framesPerStep: 2 });
   await expect(
     page.locator(
       '[aria-label="Widget wird geladen"], [aria-label="Widget is loading"]',
@@ -557,7 +547,13 @@ test.describe("AI-Native Operator Course golden path", () => {
       `${LANDING}#final-assessment`,
     );
     await continueToAssessment.click();
-    await expect(page).toHaveURL(new RegExp(`${LANDING}#final-assessment$`));
+    // Cross-document navigation carrying a fragment. The href is asserted
+    // above, so what is being waited on here is only WebKit completing the
+    // navigation, which intermittently takes longer than the 5s default
+    // expect timeout on a loaded runner.
+    await expect(page).toHaveURL(new RegExp(`${LANDING}#final-assessment$`), {
+      timeout: 15_000,
+    });
 
     const assessment = page.locator("#final-assessment");
     await expect(assessment).toHaveAttribute("data-assessment-state", "ready");
