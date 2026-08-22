@@ -21,19 +21,23 @@ const FONT_BUDGET_MS = 10_000;
 /** Two frames at 60Hz is ~32ms; 250ms is slack for a loaded runner. */
 const FRAME_BUDGET_MS = 250;
 /**
- * The walk stops here regardless of how far down the page it has reached.
- * A step budget alone is not enough: when frames are starved every step costs
- * the full frame budget, so 60 steps can burn 15s on their own.
+ * Enough to reach the bottom of every page here, and a hard stop regardless.
+ *
+ * Deliberately NOT paired with an elapsed-time cutoff. The walk looks like an
+ * optimisation for lazy content, but several specs count "Mark as read"
+ * buttons, and sections auto-mark as read when scrolled into view — so how far
+ * the walk gets is load-bearing. An elapsed cutoff truncated it on a slow
+ * WebKit runner and left a section unvisited, which surfaced as an off-by-one
+ * button count rather than as anything resembling a timing problem. Bound the
+ * walk by steps and by the per-frame budget, never by total elapsed time.
  */
-const WALK_BUDGET_MS = 10_000;
-/** Enough to reach the bottom of every page here, and a hard stop regardless. */
 const MAX_SCROLL_STEPS = 60;
 /**
  * Must exceed the in-page worst case with room to spare, or the driver cap
  * fires on a page that is merely slow rather than stuck. Worst case is the
- * font budget plus the walk budget plus a final frame; this is roughly double.
+ * font budget plus every step costing the full frame budget, ~25s.
  */
-const DRIVER_BUDGET_MS = 45_000;
+const DRIVER_BUDGET_MS = 60_000;
 
 /**
  * Wait for the webfont to settle and for layout to be painted, so geometry
@@ -88,8 +92,7 @@ export async function settleWholePage(
 
   await cappedWithRetry(
     () => page.evaluate(
-      async ([factor, fontBudget, frameBudget, maxSteps, walkBudget, perStep]) => {
-        const startedAt = Date.now();
+      async ([factor, fontBudget, frameBudget, maxSteps, perStep]) => {
         // Frames per scroll step is per-caller because the specs this helper
         // replaced did not agree. The locale specs waited one frame per step;
         // route-claude-responsive and route-ai-native-operator waited two, and
@@ -123,10 +126,6 @@ export async function settleWholePage(
           y < document.documentElement.scrollHeight && steps < maxSteps;
           y += step, steps++
         ) {
-          // Elapsed time, not just step count: on a runner where frames are
-          // starved each step costs the full frame budget, and the walk is an
-          // optimisation for lazy content, not a correctness requirement.
-          if (Date.now() - startedAt > walkBudget) break;
           // Explicitly instant: the walk wants to place the viewport, not
           // animate to it, and it must not depend on whatever the page's
           // scroll-behavior happens to be.
@@ -141,7 +140,6 @@ export async function settleWholePage(
         FONT_BUDGET_MS,
         FRAME_BUDGET_MS,
         MAX_SCROLL_STEPS,
-        WALK_BUDGET_MS,
         framesPerStep,
       ] as const,
     ),
