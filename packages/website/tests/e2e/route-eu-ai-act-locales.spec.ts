@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { settleWholePage } from "./fixtures/settle";
 
 const WIDTHS = [320, 390, 768, 1440] as const;
 
@@ -10,23 +11,6 @@ interface HorizontalEscape {
   readonly text: string;
 }
 
-async function settleWholePage(page: Page): Promise<void> {
-  await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
-  await page.evaluate(async () => {
-    await document.fonts.ready;
-    const step = Math.max(320, Math.floor(window.innerHeight * 0.75));
-    for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
-      window.scrollTo(0, y);
-      await new Promise<void>((resolve) =>
-        requestAnimationFrame(() => resolve()),
-      );
-    }
-    window.scrollTo(0, 0);
-    await new Promise<void>((resolve) =>
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-    );
-  });
-}
 
 async function horizontalEscapes(
   page: Page,

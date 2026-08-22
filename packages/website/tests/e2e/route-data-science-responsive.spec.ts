@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { settleFontsAndFrame } from "./fixtures/settle";
 
 const COURSE_ROOT = "/kurse/open-source/data-science";
 const CHAPTER_SLUGS = [
@@ -48,12 +49,7 @@ function courseRoot(locale: (typeof LOCALES)[number]): string {
 
 async function settleLayout(page: Page) {
   await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
-  await page.evaluate(async () => {
-    await document.fonts.ready;
-    await new Promise<void>((resolve) =>
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-    );
-  });
+  await settleFontsAndFrame(page);
 }
 
 async function expectCourseGeometryContained(page: Page, context: string) {

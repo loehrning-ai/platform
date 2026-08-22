@@ -1,4 +1,5 @@
 import { devices, test, expect, type Page } from "@playwright/test";
+import { settleFontsAndFrame } from "./fixtures/settle";
 
 /**
  * Responsive / mobile matrix (regression coverage). Codifies responsive-layout hardening's manual
@@ -130,14 +131,7 @@ test.describe("responsive: no horizontal overflow across the width matrix", () =
           await widthPage
             .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
             .waitFor({ state: "attached" });
-          await widthPage.evaluate(async () => {
-            await document.fonts.ready;
-            await new Promise<void>((resolve) =>
-              requestAnimationFrame(() =>
-                requestAnimationFrame(() => resolve()),
-              ),
-            );
-          });
+          await settleFontsAndFrame(widthPage);
 
           const { scrollWidth, innerWidth } = await widthPage.evaluate(() => ({
             scrollWidth: document.documentElement.scrollWidth,
@@ -246,12 +240,7 @@ test.describe("responsive: book reader wide-table containment", () => {
   }) => {
     await page.goto(TABLE_URL, { waitUntil: "load" });
     await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
-    await page.evaluate(async () => {
-      await document.fonts.ready;
-      await new Promise<void>((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-      );
-    });
+    await settleFontsAndFrame(page);
 
     const article = page.getByRole("article", { name: TABLE_TITLE });
     await expect(article).toBeVisible();

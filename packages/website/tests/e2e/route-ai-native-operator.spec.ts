@@ -4,6 +4,7 @@ import {
   MODULE_IDS,
   MODULE_LESSON_COUNTS,
 } from "../../src/lib/ai-native-operator/types";
+import { settleWholePage } from "./fixtures/settle";
 
 /**
  * AI-Native Operator Course golden path: home -> module
@@ -137,21 +138,7 @@ function localizedRoutes(prefix: string) {
 }
 
 async function settleFullPage(page: Page) {
-  await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
-  await page.evaluate(async () => {
-    await document.fonts.ready;
-    const step = Math.max(320, Math.floor(window.innerHeight * 0.75));
-    for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
-      window.scrollTo(0, y);
-      await new Promise<void>((resolve) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-      );
-    }
-    window.scrollTo(0, 0);
-    await new Promise<void>((resolve) =>
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-    );
-  });
+  await settleWholePage(page);
   await expect(
     page.locator(
       '[aria-label="Widget wird geladen"], [aria-label="Widget is loading"]',
