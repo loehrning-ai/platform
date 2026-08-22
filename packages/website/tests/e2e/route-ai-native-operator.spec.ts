@@ -544,7 +544,13 @@ test.describe("AI-Native Operator Course golden path", () => {
       `${LANDING}#final-assessment`,
     );
     await continueToAssessment.click();
-    await expect(page).toHaveURL(new RegExp(`${LANDING}#final-assessment$`));
+    // Cross-document navigation carrying a fragment. The href is asserted
+    // above, so what is being waited on here is only WebKit completing the
+    // navigation, which intermittently takes longer than the 5s default
+    // expect timeout on a loaded runner.
+    await expect(page).toHaveURL(new RegExp(`${LANDING}#final-assessment$`), {
+      timeout: 15_000,
+    });
 
     const assessment = page.locator("#final-assessment");
     await expect(assessment).toHaveAttribute("data-assessment-state", "ready");

@@ -20,10 +20,20 @@ import type { Page } from "@playwright/test";
 const FONT_BUDGET_MS = 10_000;
 /** Two frames at 60Hz is ~32ms; 250ms is slack for a loaded runner. */
 const FRAME_BUDGET_MS = 250;
-/** The in-page waits sum to well under this. Exceeding it means a stuck page. */
-const DRIVER_BUDGET_MS = 30_000;
+/**
+ * The walk stops here regardless of how far down the page it has reached.
+ * A step budget alone is not enough: when frames are starved every step costs
+ * the full frame budget, so 60 steps can burn 15s on their own.
+ */
+const WALK_BUDGET_MS = 10_000;
 /** Enough to reach the bottom of every page here, and a hard stop regardless. */
 const MAX_SCROLL_STEPS = 60;
+/**
+ * Must exceed the in-page worst case with room to spare, or the driver cap
+ * fires on a page that is merely slow rather than stuck. Worst case is the
+ * font budget plus the walk budget plus a final frame; this is roughly double.
+ */
+const DRIVER_BUDGET_MS = 45_000;
 
 /**
  * Wait for the webfont to settle and for layout to be painted, so geometry
@@ -75,7 +85,8 @@ export async function settleWholePage(
 
   await capped(
     page.evaluate(
-      async ([factor, fontBudget, frameBudget, maxSteps]) => {
+      async ([factor, fontBudget, frameBudget, maxSteps, walkBudget]) => {
+        const startedAt = Date.now();
         const nextFrame = () =>
           new Promise<void>((resolve) => {
             let settled = false;
@@ -99,13 +110,23 @@ export async function settleWholePage(
           y < document.documentElement.scrollHeight && steps < maxSteps;
           y += step, steps++
         ) {
+          // Elapsed time, not just step count: on a runner where frames are
+          // starved each step costs the full frame budget, and the walk is an
+          // optimisation for lazy content, not a correctness requirement.
+          if (Date.now() - startedAt > walkBudget) break;
           window.scrollTo(0, y);
           await nextFrame();
         }
         window.scrollTo(0, 0);
         await nextFrame();
       },
-      [stepFactor, FONT_BUDGET_MS, FRAME_BUDGET_MS, MAX_SCROLL_STEPS] as const,
+      [
+        stepFactor,
+        FONT_BUDGET_MS,
+        FRAME_BUDGET_MS,
+        MAX_SCROLL_STEPS,
+        WALK_BUDGET_MS,
+      ] as const,
     ),
     "settleWholePage",
   );
