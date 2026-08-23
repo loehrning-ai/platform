@@ -36,8 +36,15 @@ const MAX_SCROLL_STEPS = 60;
  * Must exceed the in-page worst case with room to spare, or the driver cap
  * fires on a page that is merely slow rather than stuck. Worst case is the
  * font budget plus every step costing the full frame budget, ~25s.
+ *
+ * Raised to 120s because the reflow specs are the heaviest in the suite -- one
+ * test walks sixteen routes end to end, and that shard runs 14-18 minutes -- and
+ * the cap was firing there while the same walk finishes in seconds everywhere
+ * else. This cap exists to turn an unbounded hang into a legible failure, not
+ * to enforce a performance budget, and 120s still leaves headroom under the
+ * 300s test timeout.
  */
-const DRIVER_BUDGET_MS = 60_000;
+const DRIVER_BUDGET_MS = 120_000;
 
 /**
  * Wait for the webfont to settle and for layout to be painted, so geometry
@@ -201,7 +208,10 @@ export async function capped<T>(
                   .__settleProgress ?? null,
             )
             .catch(() => "unreadable"),
-          new Promise((resolve) => setTimeout(() => resolve("unreadable"), 2_000)),
+          // 15s, not 2s: under contention a CDP round trip on a busy page can
+          // take seconds, so a short race reports 'unreadable' for a page that
+          // is merely slow. That is the distinction this read exists to make.
+          new Promise((resolve) => setTimeout(() => resolve("unreadable"), 15_000)),
         ])
       : "not captured";
     throw new Error(
