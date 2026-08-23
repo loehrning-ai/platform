@@ -100,7 +100,12 @@ export function FillBlankWidget({
                 )
               }
               placeholder={blank.hint}
-              className="border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+              // w-full min-w-0: an input carries an intrinsic default width and
+              // will not shrink below it on its own, so at 200% zoom these three
+              // blanks overhang the lesson's clip wrapper by 33.5px and their
+              // right-hand side is silently cut off. Every sibling widget input
+              // already carries one of these; this one was the exception.
+              className="w-full min-w-0 border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
             />
           </div>
         ))}
