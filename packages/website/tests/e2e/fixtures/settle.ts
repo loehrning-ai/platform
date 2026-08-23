@@ -33,18 +33,17 @@ const FRAME_BUDGET_MS = 250;
  */
 const MAX_SCROLL_STEPS = 60;
 /**
- * Must exceed the in-page worst case with room to spare, or the driver cap
- * fires on a page that is merely slow rather than stuck. Worst case is the
- * font budget plus every step costing the full frame budget, ~25s.
+ * Must exceed the in-page worst case with room to spare, or the cap fires on a
+ * page that is merely slow rather than stuck. Worst case is the font budget
+ * plus every step costing the full frame budget, ~25s.
  *
- * Raised to 120s because the reflow specs are the heaviest in the suite -- one
- * test walks sixteen routes end to end, and that shard runs 14-18 minutes -- and
- * the cap was firing there while the same walk finishes in seconds everywhere
- * else. This cap exists to turn an unbounded hang into a legible failure, not
- * to enforce a performance budget, and 120s still leaves headroom under the
- * 300s test timeout.
+ * Was briefly raised to 120s on the theory that the heaviest specs were slow
+ * rather than blocked. That is now disproven: at 120s, with the progress read
+ * raced over 15s, the page still answered nothing. An idle page waiting on a
+ * timer would have replied, so the main thread is genuinely not executing and
+ * more budget cannot help. Back to 60s -- a stuck page should fail fast.
  */
-const DRIVER_BUDGET_MS = 120_000;
+const DRIVER_BUDGET_MS = 60_000;
 
 /**
  * Wait for the webfont to settle and for layout to be painted, so geometry
