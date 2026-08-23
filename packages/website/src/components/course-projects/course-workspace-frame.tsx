@@ -488,7 +488,25 @@ export function CourseWorkspaceFrame({
       // a container that cannot hold it. Divide by the cumulative CSS zoom so
       // both sides of that comparison are CSS pixels.
       const width = panes.getBoundingClientRect().width / cssZoomOf(panes);
-      if (width > 0) setPanesWidth(width);
+      if (width <= 0) return;
+      // Quantise before storing. This observer watches an element whose size
+      // depends on the state this callback sets, which is a feedback loop
+      // whenever the measurement is not exactly stable. Under CSS zoom the
+      // width is fractional and the division above makes it more so, so it can
+      // alternate between two neighbouring floats forever: observer fires,
+      // state changes, layout changes, observer fires. React's identity bail-out
+      // does not help because each value genuinely differs. A loop like that
+      // saturates the main thread and the whole renderer stops answering, which
+      // is indistinguishable from a hang from the outside.
+      //
+      // Half a pixel is far below the smallest split adjustment that matters and
+      // far above the sub-pixel jitter that causes the oscillation.
+      const quantised = Math.round(width * 2) / 2;
+      setPanesWidth((current) =>
+        current !== null && Math.abs(current - quantised) < 0.5
+          ? current
+          : quantised,
+      );
     };
     measure();
     const observer =

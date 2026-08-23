@@ -266,20 +266,23 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
         );
       })
       // Naming the clipping ancestor is not enough to fix anything: the box
-      // that has to change is whichever descendant is too wide to fit inside
-      // it. Report the overflow and the widest child so the failure points at
-      // the element to fix rather than at the one that noticed.
+      // that has to change is whichever descendant sticks out past it. Report
+      // by right-edge overhang rather than by width, because a child can be
+      // narrower than the container and still overflow it by being offset.
       .map((element) => {
-        let widest: {
+        const clipper = cssPixelRect(element);
+        const overhanging: {
           tag: string;
           className: string;
           text: string;
-          width: number;
-        } | null = null;
+          right: number;
+          overhangBy: number;
+        }[] = [];
         for (const child of element.querySelectorAll("*")) {
-          const width = cssPixelRect(child).width;
-          if (widest && width <= widest.width) continue;
-          widest = {
+          const rect = cssPixelRect(child);
+          const overhangBy = rect.right - clipper.right;
+          if (overhangBy <= 0.5) continue;
+          overhanging.push({
             tag: child.tagName.toLowerCase(),
             className:
               typeof child.className === "string"
@@ -288,16 +291,18 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
             text: (child.textContent ?? "")
               .trim()
               .replace(/\s+/g, " ")
-              .slice(0, 60),
-            width: Math.round(width * 100) / 100,
-          };
+              .slice(0, 50),
+            right: Math.round(rect.right * 100) / 100,
+            overhangBy: Math.round(overhangBy * 100) / 100,
+          });
         }
+        overhanging.sort((a, b) => b.overhangBy - a.overhangBy);
         return {
           ...description(element),
           clientWidth: element.clientWidth,
           scrollWidth: element.scrollWidth,
           overflowBy: element.scrollWidth - element.clientWidth,
-          widestChild: widest,
+          overhanging: overhanging.slice(0, 3),
         };
       });
 
