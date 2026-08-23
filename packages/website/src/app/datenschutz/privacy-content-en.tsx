@@ -20,7 +20,7 @@ export function EnglishPrivacyContent({
           Privacy policy
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Last updated: 8 August 2026
+          Last updated: 13 August 2026
         </p>
 
         <div className="mt-12 space-y-8 text-sm leading-relaxed text-muted-foreground">
@@ -70,18 +70,18 @@ export function EnglishPrivacyContent({
               <p>
                 This deployment is hosted by Vercel Inc. (USA). Technically
                 necessary connection and server data, such as IP address,
-                browser type, and access time, is processed in that context.
-                The legal basis is Article 6(1)(f) GDPR (secure and efficient
+                browser type, and access time, is processed in that context. The
+                legal basis is Article 6(1)(f) GDPR (secure and efficient
                 delivery). Acceptance of the Vercel DPA was documented with a
                 date before activation. Transfers to third countries are
                 governed by the safeguards documented in that DPA.
               </p>
             ) : (
               <p>
-                No external hosting provider is configured in this
-                provider-free deployment. Before a public deployment, the
-                actual operator must state the hosting provider used, the legal
-                basis, and any transfers to third countries here.
+                No external hosting provider is configured in this provider-free
+                deployment. Before a public deployment, the actual operator must
+                state the hosting provider used, the legal basis, and any
+                transfers to third countries here.
               </p>
             )}
           </LegalSection>
@@ -99,14 +99,13 @@ export function EnglishPrivacyContent({
                 and the time in Supabase. Name and email address are not
                 requested as separate fields. Free text can still contain
                 personal or confidential information; do not enter such
-                information. Messages are removed after no more than 180 days
-                by a daily deletion job. For abuse prevention, the trusted
-                client IP supplied by the hosting layer is combined with a
-                separate server-side secret to produce an HMAC-SHA-256 value
-                used as a rate-limit key. The key is valid for no more than 24
-                hours. Expired counters are ignored and removed during a later
-                limiter call. Removal at the exact second of expiry is not
-                guaranteed.
+                information. Messages are removed after no more than 180 days by
+                a daily deletion job. For abuse prevention, the trusted client
+                IP supplied by the hosting layer is combined with a separate
+                server-side secret to produce an HMAC-SHA-256 value used as a
+                rate-limit key. The key is valid for no more than 24 hours.
+                Expired counters are ignored and removed during a later limiter
+                call. Removal at the exact second of expiry is not guaranteed.
               </p>
             ) : (
               <p className="mt-2">
@@ -132,20 +131,20 @@ export function EnglishPrivacyContent({
               , consent is generally required when information is stored on or
               read from a terminal device. The exception in Section 25(2)(2)
               TDDDG applies only where access is strictly necessary for a
-              digital service expressly requested by the user. The platform
-              does not treat a technology as exempt from consent merely because
-              it does not use cookies.
+              digital service expressly requested by the user. The platform does
+              not treat a technology as exempt from consent merely because it
+              does not use cookies.
             </p>
             {features.account ? (
               <p className="mt-2">
-                After a successfully coordinated account deletion, the
-                technical account identifier remains stored as a local deletion
-                marker for no more than 30 days. During that period, the marker
-                prevents a suspended tab from synchronising obsolete learning
-                data and instructs that tab to delete the associated browser
-                learning data. An expired marker is removed automatically in an
-                open tab or at the next platform start. After a deletion request
-                has definitively failed and been cancelled, a corresponding
+                After a successfully coordinated account deletion, the technical
+                account identifier remains stored as a local deletion marker for
+                no more than 30 days. During that period, the marker prevents a
+                suspended tab from synchronising obsolete learning data and
+                instructs that tab to delete the associated browser learning
+                data. An expired marker is removed automatically in an open tab
+                or at the next platform start. After a deletion request has
+                definitively failed and been cancelled, a corresponding
                 cancellation marker also remains for no more than 30 days so
                 that a delayed signal from another tab cannot overwrite the
                 newer state. If the outcome of a deletion request is technically
@@ -155,11 +154,11 @@ export function EnglishPrivacyContent({
                 technical generation for account data and no more than 128
                 deletion identifiers derived with SHA-256. Raw account
                 identifiers are not stored permanently for this purpose. These
-                controls prevent an old tab from reading or writing retired
-                data after deletion or a security cleanup. Once the limit is
-                reached, a new global generation replaces the previous
-                individual deletion identifiers. Only the identifier for the
-                current deletion remains available for idempotent processing.
+                controls prevent an old tab from reading or writing retired data
+                after deletion or a security cleanup. Once the limit is reached,
+                a new global generation replaces the previous individual
+                deletion identifiers. Only the identifier for the current
+                deletion remains available for idempotent processing.
               </p>
             ) : null}
             {features.vercelTelemetry ? (
@@ -167,8 +166,8 @@ export function EnglishPrivacyContent({
                 Vercel Web Analytics and Speed Insights are explicitly enabled
                 in this deployment. They are used for audience measurement and
                 technical monitoring. The data-protection legal basis and the
-                technical assessment under Section 25 TDDDG were documented
-                with a date before activation. This platform does not perform
+                technical assessment under Section 25 TDDDG were documented with
+                a date before activation. This platform does not perform
                 advertising tracking.
               </p>
             ) : (
@@ -191,9 +190,9 @@ export function EnglishPrivacyContent({
                 context, and interaction histories are removed before
                 transmission. sendDefaultPii is disabled. Performance tracing,
                 release-health sessions, client reports, breadcrumbs, and
-                session replay are disabled. Error events are discarded
-                entirely on certificate-verification pages. The legal basis is
-                Article 6(1)(f) GDPR. The DPA and actual retention period were
+                session replay are disabled. Error events are discarded entirely
+                on certificate-verification pages. The legal basis is Article
+                6(1)(f) GDPR. The DPA and actual retention period were
                 documented before activation.
               </p>
             ) : (
@@ -206,55 +205,109 @@ export function EnglishPrivacyContent({
 
           <LegalSection
             id="ki"
-            title="7. AI-assisted learning feedback (Anthropic Claude)"
+            title="7. AI learning feedback and isolated course execution"
           >
-            {features.anthropic ? (
+            {features.anthropic || features.gemini ? (
               <>
                 <p>
                   When a user expressly starts an interactive AI exercise, the
-                  learning text entered is sent to the Claude API operated by
-                  Anthropic PBC (USA) to generate automated learning feedback.
-                  The application protocol does not add paths, email addresses,
-                  or account identifiers to the prompt.
+                  learning text entered is sent to the active provider according
+                  to the requested model and this deployment&apos;s allowlist.
+                  Model selection transmits only a public model identifier. API
+                  keys remain on the server. The application does not add paths,
+                  email addresses, or account identifiers to the prompt; prompts
+                  and responses are not logged.
+                </p>
+                {features.anthropic ? (
+                  <p className="mt-2">
+                    Anthropic Claude (Anthropic PBC, USA) is active. The
+                    configured retention period for this API traffic is{" "}
+                    {features.anthropicRetentionDays} days. Activation requires
+                    a dated DPA review marker; that technical marker does not by
+                    itself establish legal compliance.
+                  </p>
+                ) : null}
+                {features.gemini ? (
+                  <p className="mt-2">
+                    Google Gemini API (Google LLC, USA) is active for Gemini 2.5
+                    Flash-Lite. Its configured retention period is{" "}
+                    {features.geminiRetentionDays} days. Runtime activation
+                    requires dated DPA and paid-tier review markers and does not
+                    admit Gemini free-tier traffic as a learner-text path. The
+                    paid-tier marker is an operator-supplied review attestation;
+                    the application does not read or prove Google billing-tier
+                    status. Those technical markers do not by themselves
+                    establish legal compliance.
+                  </p>
+                ) : null}
+                <p className="mt-2">
+                  Users must not enter personal, confidential, or otherwise
+                  unapproved real-world data in exercise fields. A model denied
+                  by the deployment, incomplete readiness, or an exhausted
+                  token quota ends the call without invented provider output.
                 </p>
                 <p className="mt-2">
-                  The legal basis is Article 6(1)(b) GDPR. Acceptance of the
-                  Anthropic DPA was documented with a date before activation.
-                  Users must not enter personal or confidential real-world data
-                  in exercise fields.
-                </p>
-                <p className="mt-2">
-                  The contractually reviewed retention period for the inputs
-                  and outputs of this API use is{" "}
-                  {features.anthropicRetentionDays} days. Changing this value
-                  requires a new review of the provider contract and the public
-                  statement.
-                </p>
-                <p className="mt-2">
-                  To avoid identical provider calls, each running server process
-                  keeps no more than 500 responses in memory for a maximum of
-                  one hour. The stored data consists of a SHA-256 request key
+                  To avoid identical provider calls, each individual function or
+                  runtime instance keeps no more than 500 responses in memory for
+                  a maximum of one hour. The cache is not shared across all
+                  instances. The stored data consists of a SHA-256 request key
                   and the provider response, not the input as a separate
-                  plaintext field. The response can repeat parts of the input.
-                  A restart or eviction from the bounded cache can remove the
-                  data earlier.
+                  plaintext field. The response can repeat parts of the input. A
+                  restart or eviction from the bounded cache can remove the data
+                  earlier.
                 </p>
                 <p className="mt-2">
-                  For abuse prevention, the trusted client IP supplied by the
-                  hosting layer is combined with a separate server-side secret
-                  to produce an HMAC-SHA-256 value used as a pseudonymous
-                  rate-limit key in Supabase. The counter is valid for no more
-                  than one hour. Expired entries are ignored and removed during
-                  a later limiter call. Physical removal at the exact second of
-                  expiry is not guaranteed. The raw address is not stored in
-                  the rate-limit table.
+                  For hourly abuse limits, the authenticated account identifier
+                  and Vercel&apos;s trusted client IP are separately converted
+                  into HMAC-SHA-256 keys with a dedicated server secret.
+                  Practice provider calls also reserve daily token quotas
+                  before a call: per pseudonymous account, or per pseudonymous
+                  IP for open-access AI grading, and for the deployment as a
+                  whole. Supabase stores counters and expiry times, not the raw
+                  address or learning text. Expired counters are ignored and
+                  removed during a later limiter call; physical removal at the
+                  exact second of expiry is not guaranteed.
                 </p>
               </>
             ) : (
               <p>
-                Anthropic Claude is disabled in this deployment. Exercises use
-                local or rule-based learning feedback and send no input to
-                Anthropic.
+                Anthropic Claude and Google Gemini API are disabled for AI
+                learning feedback in this deployment. Exercises use local or
+                rule-based feedback and send no input to these model providers.
+              </p>
+            )}
+            {features.courseTerminal ? (
+              <p className="mt-2">
+                When expressly started, the Codex, Data Science, Data
+                Engineering, and Data Infrastructure course projects can each
+                transmit a fixed sequence of allowed command identifiers to
+                Vercel Sandbox. Browser-side analysis plans are structurally
+                checked only; they are not executable SQL and are not sent to
+                Sandbox. Every run creates a new non-persistent Node 24 workspace
+                containing only server-generated synthetic files, with deny-all
+                networking, a maximum 60-second lifetime, and a 10-second limit
+                per command. Free-form shell input, learner repositories,
+                credentials, and network installs are not accepted. stdout,
+                stderr, exit codes, and the Git diff are returned in a private,
+                non-cacheable response and are not stored in learning progress.
+                Data-course runs additionally return fixed synthetic metric
+                evidence. Successful server logs retain only route, status,
+                command count, and duration; error logs use bounded technical
+                step and error classes only. Workspace contents and result
+                transcripts are not logged. The server requests Sandbox
+                termination in all cases; non-persistent
+                execution is not a promise of physical deletion at an exact
+                second inside provider infrastructure. Account, IP, and global
+                run quotas count accepted executions through the same
+                pseudonymous Supabase counters. They do not measure cost or spend.
+              </p>
+            ) : (
+              <p className="mt-2">
+                Real isolated course execution through Vercel Sandbox is
+                disabled in this deployment. The Codex repository lab explicitly
+                labels its separate browser fallback as a simulation. The three
+                data labs do not present simulated metrics as execution when no
+                real run exists.
               </p>
             )}
           </LegalSection>
@@ -288,13 +341,13 @@ export function EnglishPrivacyContent({
                     necessary security check. Turnstile processes connection
                     data and signals from the browser and device to distinguish
                     automated requests from regular use. The platform does not
-                    send the email address entered as a Turnstile parameter.
-                    The short-lived, single-use token is passed to Supabase with
-                    the OTP request and checked there against the Turnstile
+                    send the email address entered as a Turnstile parameter. The
+                    short-lived, single-use token is passed to Supabase with the
+                    OTP request and checked there against the Turnstile
                     configuration stored in Supabase. The function is used only
                     to protect the public login and email-delivery budgets;
-                    feedback collection in the Turnstile widget is disabled.
-                    The legal basis is Article 6(1)(f) GDPR. Access to terminal
+                    feedback collection in the Turnstile widget is disabled. The
+                    legal basis is Article 6(1)(f) GDPR. Access to terminal
                     device information relies on Section 25(2)(2) TDDDG only to
                     the extent that it is strictly necessary for this expressly
                     requested, protected sign-in. The hostname restriction,
@@ -316,11 +369,11 @@ export function EnglishPrivacyContent({
                     platform. Google and Supabase process the connection,
                     account, and profile data required for sign-in, including
                     the email address. The platform requests no additional
-                    Google permissions and, in particular, receives no access
-                    to Google Drive, Calendar, or other Google content.
-                    Cloudflare Turnstile is neither loaded nor passed as a
-                    parameter for Google sign-in. The provider and callback
-                    configuration was verified and dated before activation.
+                    Google permissions and, in particular, receives no access to
+                    Google Drive, Calendar, or other Google content. Cloudflare
+                    Turnstile is neither loaded nor passed as a parameter for
+                    Google sign-in. The provider and callback configuration was
+                    verified and dated before activation.
                   </p>
                 ) : null}
                 {!features.magicLink && !features.google ? (
@@ -348,13 +401,13 @@ export function EnglishPrivacyContent({
             ) : (
               <p>
                 The Supabase learning account, magic-link and Google sign-in,
-                server-side progress synchronisation, and account management
-                are disabled in this deployment. Progress remains exclusively
-                in the relevant browser. Later activation of the learning
-                account requires a complete server configuration, a confirmed
-                EU region, and a dated Supabase DPA. Each sign-in method also
-                remains disabled until its own technical and legal
-                configuration has been verified.
+                server-side progress synchronisation, and account management are
+                disabled in this deployment. Progress remains exclusively in the
+                relevant browser. Later activation of the learning account
+                requires a complete server configuration, a confirmed EU region,
+                and a dated Supabase DPA. Each sign-in method also remains
+                disabled until its own technical and legal configuration has
+                been verified.
               </p>
             )}
           </LegalSection>
@@ -398,8 +451,8 @@ export function EnglishPrivacyContent({
                     attempts: until account deletion or a valid erasure request.
                   </li>
                   <li>
-                    Account rate limits: effective for no more than one hour,
-                    or 24 hours for account deletions; physical cleanup no later
+                    Account rate limits: effective for no more than one hour, or
+                    24 hours for account deletions; physical cleanup no later
                     than eight days after expiry.
                   </li>
                   <li>
@@ -413,8 +466,8 @@ export function EnglishPrivacyContent({
                     128 deletion identifiers derived with SHA-256 from the
                     technical account identifier: no fixed expiry period, as a
                     permanent block against old browser tabs. Raw account
-                    identifiers are not stored in these permanent controls.
-                    Once the limit is reached, a global generation replaces the
+                    identifiers are not stored in these permanent controls. Once
+                    the limit is reached, a global generation replaces the
                     previous individual deletion identifiers. Only the
                     identifier for the current deletion remains available for
                     idempotent processing.

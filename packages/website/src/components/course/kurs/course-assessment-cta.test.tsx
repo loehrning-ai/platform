@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, screen } from "@testing-library/react";
 import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
+import { getCourseProjectIdentity } from "@/lib/course-projects/identity";
+import { serializeCourseProjectProgress } from "@/lib/course-projects/persistence";
+import { verifiedCourseProjectArtifact } from "@/lib/course-projects/test-artifact";
 import type { CourseSlug } from "@/lib/course/types";
 import type { UnifiedProgress, UnifiedCourseSlice } from "@/lib/progress/types";
 
@@ -71,6 +74,7 @@ function courseSlice(
   completedLessons: number,
   quizPassed: boolean,
   capstoneSubmitted = false,
+  projectCompleted = false,
 ): UnifiedCourseSlice {
   const now = "2026-07-29T10:00:00.000Z";
   const lessons = Object.fromEntries(
@@ -87,6 +91,35 @@ function courseSlice(
         },
       ]),
   );
+  if (projectCompleted) {
+    const identity = getCourseProjectIdentity(courseSlug);
+    const lesson = lessons[identity.progressLessonId] ?? {
+      sectionsRead: [],
+      quizScore: null,
+      quizTotal: null,
+      completed: false,
+      exercisesCompleted: {},
+    };
+    lessons[identity.progressLessonId] = {
+      ...lesson,
+      exercisesCompleted: {
+        ...lesson.exercisesCompleted,
+        [identity.id]: {
+          exerciseId: identity.id,
+          kind: `course-project-${identity.engineKind}`,
+          completed: true,
+          score: 1,
+          attempts: 1,
+          completedAt: now,
+          skipped: false,
+          summary: serializeCourseProjectProgress(
+            "Verified",
+            verifiedCourseProjectArtifact(courseSlug),
+          ),
+        },
+      },
+    };
+  }
   return {
     lessons,
     workshopQuiz: {
@@ -105,6 +138,7 @@ function progressFor(
   completedLessons: number,
   quizPassed = false,
   capstoneSubmitted = false,
+  projectCompleted = false,
 ): UnifiedProgress {
   return {
     schemaVersion: 3,
@@ -114,6 +148,7 @@ function progressFor(
         completedLessons,
         quizPassed,
         capstoneSubmitted,
+        projectCompleted,
       ),
     },
     xp: 0,
@@ -258,7 +293,7 @@ describe("<CourseAssessmentCta>", () => {
     );
   });
 
-  it("keeps the German AI-Native capstone alternative and localized actions", () => {
+  it("preserves the historical German AI-Native capstone alternative without calling it a verified project", () => {
     render(<AiNativeQuizCertCta />);
     resolveOwner();
 
@@ -272,7 +307,12 @@ describe("<CourseAssessmentCta>", () => {
 
     emitProgress(progressFor("ai-native", 27, false, true));
 
-    expect(screen.getByRole("status")).toHaveTextContent("Capstone-Rubrik");
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "frühere Capstone-Selbstprüfung",
+    );
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "neue angewandte Projekt ist damit nicht verifiziert",
+    );
     expect(
       screen.getByRole("link", { name: "Workshop-Quiz starten" }),
     ).toHaveAttribute("href", "/ai-native/kurs/quiz");
@@ -286,5 +326,27 @@ describe("<CourseAssessmentCta>", () => {
     expect(
       screen.getByRole("link", { name: "Quiz wiederholen" }),
     ).toBeInTheDocument();
+  });
+
+  it("labels exact AI-Native project evidence as the applied-project path", () => {
+    render(<AiNativeQuizCertCta />);
+    resolveOwner();
+
+    emitProgress(progressFor("ai-native", 27, false, false, true));
+
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "angewandte Projekt sind abgeschlossen",
+    );
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "kein serverbestätigter Abschlussnachweis",
+    );
+    expect(
+      screen.queryByRole("link", {
+        name: "Teilnahmebestätigung herunterladen",
+      }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("status")).not.toHaveTextContent(
+      "frühere Capstone-Selbstprüfung",
+    );
   });
 });

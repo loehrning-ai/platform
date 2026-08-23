@@ -30,25 +30,34 @@ export function useFocusTrap<T extends HTMLElement>(
     if (!open) return;
     const node = ref.current;
     if (!node) return;
+    const trapNode: T = node;
 
     // Snapshot the previously-focused element so we can restore on close.
     restoreRef.current = (document.activeElement as HTMLElement | null) ?? null;
 
     const focusables = () =>
       Array.from(
-        node.querySelectorAll<HTMLElement>(
+        trapNode.querySelectorAll<HTMLElement>(
           'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"]), input:not([disabled]), select:not([disabled]), textarea:not([disabled])',
         ),
-      ).filter((el) => !el.hasAttribute("aria-hidden"));
+      ).filter(
+        (el) =>
+          !el.closest('[hidden], [inert], [aria-hidden="true"]') &&
+          el.getAttribute("tabindex") !== "-1",
+      );
+
+    const focusInside = () => {
+      const all = focusables();
+      if (all.length > 0) {
+        all[0].focus();
+      } else {
+        trapNode.tabIndex = -1;
+        trapNode.focus();
+      }
+    };
 
     // Move focus into the trap on open.
-    const all = focusables();
-    if (all.length > 0) {
-      all[0].focus();
-    } else {
-      node.tabIndex = -1;
-      node.focus();
-    }
+    focusInside();
 
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") {
@@ -74,10 +83,35 @@ export function useFocusTrap<T extends HTMLElement>(
       }
     }
 
+    // Keyboard wrapping alone is not modal containment. Scripted focus,
+    // assistive-technology navigation, and browser UI can all move focus
+    // without a Tab keydown. Capture focusin at the document boundary and
+    // return every escape attempt to the first usable control in the dialog.
+    function onFocusIn(event: FocusEvent) {
+      const target = event.target;
+      if (target instanceof Node && trapNode.contains(target)) return;
+      focusInside();
+    }
+
     document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("focusin", onFocusIn, true);
     return () => {
       document.removeEventListener("keydown", onKeyDown);
-      if (restoreFocus) restoreRef.current?.focus?.();
+      document.removeEventListener("focusin", onFocusIn, true);
+      if (!restoreFocus) return;
+
+      const restoreTarget = restoreRef.current;
+      // Modal owners release their inert markers in sibling effects during the
+      // same commit. Restore after those cleanups, never while the opener is
+      // still inert, and never focus a detached or independently locked node.
+      queueMicrotask(() => {
+        if (
+          restoreTarget?.isConnected &&
+          !restoreTarget.closest('[inert], [aria-hidden="true"]')
+        ) {
+          restoreTarget.focus();
+        }
+      });
     };
   }, [open, onClose, restoreFocus]);
 

@@ -51,13 +51,19 @@
 
   /* Elevation — warm, soft card shadows (v3.1: replaces the brutalist offset
      shadow). Tinted with Druckertinte so they read warm on Kalkweiß, not grey. */
-  --shadow-card: 0 1px 2px rgba(11, 9, 8, 0.04), 0 3px 10px rgba(11, 9, 8, 0.05);
-  --shadow-card-hover: 0 2px 4px rgba(11, 9, 8, 0.05), 0 10px 24px rgba(11, 9, 8, 0.09);
+  --shadow-card:
+    0 1px 2px rgba(11, 9, 8, 0.04), 0 3px 10px rgba(11, 9, 8, 0.05);
+  --shadow-card-hover:
+    0 2px 4px rgba(11, 9, 8, 0.05), 0 10px 24px rgba(11, 9, 8, 0.09);
   --shadow-tile: 0 1px 3px rgba(11, 9, 8, 0.06);
 
-  /* Typography — Loehrning Sans primary, Inter/system fallback */
-  --font-sans:
-    var(--font-loehrning-sans), "Inter", system-ui, sans-serif;
+  /* Typography — Loehrning Sans primary, Inter/system fallback.
+     Geist Mono is bundled rather than resolved from an OS stack. Course and
+     demo layouts are laid out against its advance widths, and a system stack
+     resolves to a wider face on Linux than on macOS, so prompt and code blocks
+     overflow their columns on some machines and not others. Deterministic
+     monospace metrics are worth the bundle cost here. */
+  --font-sans: var(--font-loehrning-sans), "Inter", system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
 
   /* Fluid display type scale (responsive-layout hardening) — clamp()-based, no abrupt @media jumps.

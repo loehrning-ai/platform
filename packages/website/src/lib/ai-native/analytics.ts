@@ -12,14 +12,26 @@
  */
 
 export type AiNativeEvent =
-  | { readonly name: "ai_native_section_read"; readonly props: SectionReadProps }
-  | { readonly name: "ai_native_exercise_submit"; readonly props: ExerciseSubmitProps }
+  | {
+      readonly name: "ai_native_section_read";
+      readonly props: SectionReadProps;
+    }
+  | {
+      readonly name: "ai_native_exercise_submit";
+      readonly props: ExerciseSubmitProps;
+    }
   | {
       readonly name: "ai_native_exercise_error_boundary";
       readonly props: ExerciseErrorProps;
     }
-  | { readonly name: "ai_native_module_complete"; readonly props: ModuleCompleteProps }
-  | { readonly name: "ai_native_challenge_reveal"; readonly props: ChallengeRevealProps }
+  | {
+      readonly name: "ai_native_module_complete";
+      readonly props: ModuleCompleteProps;
+    }
+  | {
+      readonly name: "ai_native_challenge_reveal";
+      readonly props: ChallengeRevealProps;
+    }
   | {
       readonly name: "ai_native_demo_interaction_start";
       readonly props: DemoInteractionProps;
@@ -99,7 +111,9 @@ export interface AiGradingFallbackProps {
   readonly lessonId: string;
   readonly exerciseId: string;
   readonly reason:
-    | "no-api-key"
+    | "provider-not-ready"
+    | "quota-unavailable"
+    | "budget-exhausted"
     | "rate-limited"
     | "network"
     | "parse-error"
@@ -141,6 +155,9 @@ export function recordForDebug(event: AiNativeEvent): void {
   if (_recentEvents.length > _MAX_RECENT) _recentEvents.shift();
 }
 
-export function getRecentEvents(): ReadonlyArray<{ at: number; event: AiNativeEvent }> {
+export function getRecentEvents(): ReadonlyArray<{
+  at: number;
+  event: AiNativeEvent;
+}> {
   return _recentEvents.slice();
 }

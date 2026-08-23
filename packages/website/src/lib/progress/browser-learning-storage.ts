@@ -801,29 +801,38 @@ function removeStorageItem(
   storage: Storage | undefined,
   key: string,
   expectedGeneration?: number,
-): void {
+): boolean {
   if (
     expectedGeneration !== undefined &&
     context.generation !== expectedGeneration
   ) {
-    return;
+    return false;
   }
   const ownedKey = ownedLearningStorageKey(key);
-  if (!storage || !ownedKey) return;
+  if (!storage || !ownedKey) return false;
+  const ownerAtStart = context;
+  const ownerStillCurrent = () =>
+    context.generation === ownerAtStart.generation &&
+    context.kind === ownerAtStart.kind &&
+    (context.kind !== "account" ||
+      (ownerAtStart.kind === "account" &&
+        context.accountId === ownerAtStart.accountId));
 
   const accountId = context.kind === "account" ? context.accountId : null;
   const activeGeneration = activeAccountCutover?.generation ?? null;
   const preflight = accountId ? currentAccountCutover() : null;
-  if (accountId && (!preflight || activeGeneration === null)) return;
+  if (accountId && (!preflight || activeGeneration === null)) return false;
 
   try {
     if (!accountId || !preflight || activeGeneration === null) {
       storage.removeItem(ownedKey);
-      return;
+      return ownerStillCurrent() && storage.getItem(ownedKey) === null;
     }
 
     const candidate = storage.getItem(ownedKey);
-    if (candidate === null) return;
+    if (candidate === null) {
+      return ownerStillCurrent() && currentAccountCutover() !== null;
+    }
     const candidateGeneration = storedAccountValueGeneration(
       candidate,
       preflight,
@@ -832,18 +841,23 @@ function removeStorageItem(
       candidateGeneration !== null &&
       candidateGeneration > activeGeneration
     ) {
-      return;
+      return false;
     }
 
     // A marker recheck plus an exact byte comparison prevents an old tab from
     // deleting a newer-generation value already committed by another tab.
     // localStorage exposes no atomic compare-and-remove; a write in the final
     // interval between this comparison and removeItem cannot be distinguished.
-    if (!currentAccountCutover()) return;
-    if (storage.getItem(ownedKey) !== candidate) return;
+    if (!currentAccountCutover()) return false;
+    if (storage.getItem(ownedKey) !== candidate) return false;
     storage.removeItem(ownedKey);
+    return (
+      ownerStillCurrent() &&
+      currentAccountCutover() !== null &&
+      storage.getItem(ownedKey) === null
+    );
   } catch {
-    // Storage denial is non-fatal.
+    return false;
   }
 }
 
@@ -870,8 +884,8 @@ export function setOwnedLocalLearningItem(
 export function removeOwnedLocalLearningItem(
   key: string,
   expectedGeneration?: number,
-): void {
-  removeStorageItem(
+): boolean {
+  return removeStorageItem(
     typeof window === "undefined" ? undefined : window.localStorage,
     key,
     expectedGeneration,
@@ -901,8 +915,8 @@ export function setOwnedSessionLearningItem(
 export function removeOwnedSessionLearningItem(
   key: string,
   expectedGeneration?: number,
-): void {
-  removeStorageItem(
+): boolean {
+  return removeStorageItem(
     typeof window === "undefined" ? undefined : window.sessionStorage,
     key,
     expectedGeneration,

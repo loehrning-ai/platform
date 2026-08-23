@@ -33,9 +33,15 @@ const FRAME_BUDGET_MS = 250;
  */
 const MAX_SCROLL_STEPS = 60;
 /**
- * Must exceed the in-page worst case with room to spare, or the driver cap
- * fires on a page that is merely slow rather than stuck. Worst case is the
- * font budget plus every step costing the full frame budget, ~25s.
+ * Must exceed the in-page worst case with room to spare, or the cap fires on a
+ * page that is merely slow rather than stuck. Worst case is the font budget
+ * plus every step costing the full frame budget, ~25s.
+ *
+ * Was briefly raised to 120s on the theory that the heaviest specs were slow
+ * rather than blocked. That is now disproven: at 120s, with the progress read
+ * raced over 15s, the page still answered nothing. An idle page waiting on a
+ * timer would have replied, so the main thread is genuinely not executing and
+ * more budget cannot help. Back to 60s -- a stuck page should fail fast.
  */
 const DRIVER_BUDGET_MS = 60_000;
 
@@ -66,6 +72,7 @@ export async function settleFontsAndFrame(page: Page): Promise<void> {
       [FONT_BUDGET_MS, FRAME_BUDGET_MS] as const,
     ),
     "settleFontsAndFrame",
+    page,
   );
 }
 
@@ -120,20 +127,40 @@ export async function settleWholePage(
           new Promise((resolve) => setTimeout(resolve, fontBudget)),
         ]);
 
+        // Publish progress as the walk runs. When this evaluate never returns
+        // the driver has no idea whether it stalled on the fonts, on the first
+        // frame, or two thirds of the way down a long page, and those have
+        // different causes. The driver reads this back on timeout.
+        const progress = {
+          phase: "fonts" as string,
+          steps: 0,
+          y: 0,
+          scrollHeight: document.documentElement.scrollHeight,
+          startedAt: Date.now(),
+        };
+        (window as unknown as Record<string, unknown>).__settleProgress =
+          progress;
+
         const step = Math.max(320, Math.floor(window.innerHeight * factor));
+        progress.phase = "walking";
         for (
           let y = 0, steps = 0;
           y < document.documentElement.scrollHeight && steps < maxSteps;
           y += step, steps++
         ) {
+          progress.steps = steps;
+          progress.y = y;
+          progress.scrollHeight = document.documentElement.scrollHeight;
           // Explicitly instant: the walk wants to place the viewport, not
           // animate to it, and it must not depend on whatever the page's
           // scroll-behavior happens to be.
           window.scrollTo({ top: y, left: 0, behavior: "instant" });
           await nextFrame(perStep);
         }
+        progress.phase = "returning";
         window.scrollTo({ top: 0, left: 0, behavior: "instant" });
         await nextFrame(2);
+        progress.phase = "done";
       },
       [
         stepFactor,
@@ -144,6 +171,7 @@ export async function settleWholePage(
       ] as const,
     ),
     "settleWholePage",
+    page,
   );
 }
 
@@ -152,7 +180,11 @@ export async function settleWholePage(
  * timers fails in seconds with a legible message instead of consuming the
  * whole test budget and reporting an unattributable timeout.
  */
-export async function capped<T>(work: Promise<T>, label: string): Promise<T> {
+export async function capped<T>(
+  work: Promise<T>,
+  label: string,
+  page?: Page,
+): Promise<T> {
   // Keep a late rejection from surfacing as an unhandled rejection once the
   // race below has already moved on.
   work.catch(() => {});
@@ -163,8 +195,27 @@ export async function capped<T>(work: Promise<T>, label: string): Promise<T> {
     ),
   ]);
   if (outcome === "timeout") {
+    // A wedged renderer will not answer this either, so the read is itself
+    // raced. Whatever comes back says how far the walk got, which separates a
+    // stall in the fonts from one two thirds of the way down a long page.
+    const progress = page
+      ? await Promise.race([
+          page
+            .evaluate(
+              () =>
+                (window as unknown as Record<string, unknown>)
+                  .__settleProgress ?? null,
+            )
+            .catch(() => "unreadable"),
+          // 15s, not 2s: under contention a CDP round trip on a busy page can
+          // take seconds, so a short race reports 'unreadable' for a page that
+          // is merely slow. That is the distinction this read exists to make.
+          new Promise((resolve) => setTimeout(() => resolve("unreadable"), 15_000)),
+        ])
+      : "not captured";
     throw new Error(
-      `${label}: the page stopped settling within ${DRIVER_BUDGET_MS}ms`,
+      `${label}: the page stopped settling within ${DRIVER_BUDGET_MS}ms; ` +
+        `progress=${JSON.stringify(progress)}`,
     );
   }
   return work;
@@ -179,10 +230,11 @@ export async function capped<T>(work: Promise<T>, label: string): Promise<T> {
 export async function cappedWithRetry<T>(
   attempt: () => Promise<T>,
   label: string,
+  page?: Page,
 ): Promise<T> {
   try {
-    return await capped(attempt(), label);
+    return await capped(attempt(), label, page);
   } catch {
-    return await capped(attempt(), label);
+    return await capped(attempt(), label, page);
   }
 }

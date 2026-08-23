@@ -115,6 +115,30 @@ describe("usePracticeApi", () => {
       expect(JSON.parse(init?.body as string)).toEqual({
         mode: "complete",
         prompt: "Fasse den Text zusammen.",
+        model: "anthropic/claude-haiku-4.5",
+        locale: "de",
+      });
+    });
+
+    it("sends the explicit English locale and selected model", async () => {
+      const fetchMock = mockFetch(() => jsonResponse({ text: "ok" }));
+      const { result } = renderHook(() =>
+        usePracticeApi({
+          locale: "en",
+          model: "google/gemini-2.5-flash-lite",
+        }),
+      );
+
+      await act(async () => {
+        await result.current.complete("Summarize the source.");
+      });
+
+      const [, init] = fetchMock.mock.calls[0]!;
+      expect(JSON.parse(init?.body as string)).toEqual({
+        mode: "complete",
+        prompt: "Summarize the source.",
+        model: "google/gemini-2.5-flash-lite",
+        locale: "en",
       });
     });
 
@@ -208,6 +232,8 @@ describe("usePracticeApi", () => {
         mode: "place-word",
         word: "Fräse",
         existing: [{ w: "Kunde", x: 0.2, y: 0.4 }],
+        model: "anthropic/claude-haiku-4.5",
+        locale: "de",
       });
     });
   });

@@ -29,6 +29,12 @@ import {
   mergeUnifiedProgress,
 } from "./server-sync";
 import { COURSE_SLUGS } from "@/lib/course/types";
+import {
+  getCourseProjectIdentity,
+  hasAppliedProjectCompletion,
+} from "@/lib/course-projects/identity";
+import { serializeCourseProjectProgress } from "@/lib/course-projects/persistence";
+import { verifiedCourseProjectArtifact } from "@/lib/course-projects/test-artifact";
 import { MAX_EXERCISE_SUMMARY_BYTES, XP } from "./types";
 import type {
   UnifiedCourseSlice,
@@ -155,6 +161,76 @@ describe("isUnifiedProgress", () => {
         }),
       ),
     ).toBe(true);
+  });
+
+  it.each([
+    ["missing", undefined],
+    ["plain-text", "Legacy project"],
+    ["malformed", '@cp1:{"k":"prompt","f":'],
+    ["empty", '@cp1:{"k":"prompt","f":{}}'],
+    [
+      "mismatched",
+      serializeCourseProjectProgress("Verified", {
+        version: 1,
+        engineKind: "case",
+        fields: { verified: true },
+      }),
+    ],
+  ] as const)("rejects a canonical project result with %s artifact evidence", (_label, summary) => {
+    const identity = getCourseProjectIdentity("ai-native");
+    const state = progress({
+      courses: {
+        "ai-native": slice({
+          lessons: {
+            [identity.progressLessonId]: lesson({
+              exercisesCompleted: {
+                [identity.id]: exercise({
+                  exerciseId: identity.id,
+                  kind: `course-project-${identity.engineKind}`,
+                  completed: true,
+                  score: 1,
+                  attempts: 1,
+                  skipped: false,
+                  summary,
+                }),
+              },
+            }),
+          },
+        }),
+      },
+    });
+
+    expect(isUnifiedProgress(state)).toBe(false);
+  });
+
+  it("accepts a canonical project result only with a bounded matching artifact", () => {
+    const identity = getCourseProjectIdentity("ai-native");
+    const state = progress({
+      courses: {
+        "ai-native": slice({
+          lessons: {
+            [identity.progressLessonId]: lesson({
+              exercisesCompleted: {
+                [identity.id]: exercise({
+                  exerciseId: identity.id,
+                  kind: `course-project-${identity.engineKind}`,
+                  completed: true,
+                  score: 1,
+                  attempts: 1,
+                  skipped: false,
+                  summary: serializeCourseProjectProgress(
+                    "Verified",
+                    verifiedCourseProjectArtifact("ai-native"),
+                  ),
+                }),
+              },
+            }),
+          },
+        }),
+      },
+    });
+
+    expect(isUnifiedProgress(state)).toBe(true);
   });
 
   it("rejects a store containing an unknown course slug", () => {
@@ -696,6 +772,50 @@ describe("mergeUnifiedProgress - lesson merge", () => {
 });
 
 describe("mergeUnifiedProgress - exercise merge", () => {
+  it("retains exact applied-project completion across device merge", () => {
+    const identity = getCourseProjectIdentity("claude");
+    const local = progress({
+      courses: {
+        claude: slice({
+          lessons: {
+            [identity.progressLessonId]: lesson({
+              completed: false,
+              exercisesCompleted: {},
+            }),
+          },
+        }),
+      },
+    });
+    const remote = progress({
+      courses: {
+        claude: slice({
+          lessons: {
+            [identity.progressLessonId]: lesson({
+              completed: false,
+              exercisesCompleted: {
+                [identity.id]: exercise({
+                  exerciseId: identity.id,
+                  kind: `course-project-${identity.engineKind}`,
+                  completed: true,
+                  score: 1,
+                  skipped: false,
+                  summary: serializeCourseProjectProgress(
+                    "Verified",
+                    verifiedCourseProjectArtifact("claude"),
+                  ),
+                }),
+              },
+            }),
+          },
+        }),
+      },
+    });
+
+    const merged = mergeUnifiedProgress(local, remote);
+
+    expect(hasAppliedProjectCompletion(merged, "claude")).toBe(true);
+  });
+
   it("merges a shared exercise: completed OR, score max, attempts max, completedAt latest, skipped OR", () => {
     const local = progress({
       courses: {

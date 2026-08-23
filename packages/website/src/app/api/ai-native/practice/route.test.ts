@@ -29,6 +29,16 @@ const mockConsumeRateLimit = vi.fn<
     readonly max: number;
   }) => Promise<boolean>
 >(async () => true);
+const mockConsumeUsageBudget = vi.fn<
+  (args: {
+    readonly callerKey: string;
+    readonly globalKey: string;
+    readonly windowSeconds: number;
+    readonly callerMax: number;
+    readonly globalMax: number;
+    readonly cost: number;
+  }) => Promise<boolean>
+>(async () => true);
 
 vi.mock("@/lib/anthropic", () => ({
   tryGetAnthropicClient: () => mockTryGetAnthropicClient(),
@@ -44,6 +54,15 @@ vi.mock("@/lib/security/rate-limit", () => ({
     readonly windowSeconds: number;
     readonly max: number;
   }) => mockConsumeRateLimit(args),
+  consumeMultiRateLimit: (args: unknown) => mockConsumeRateLimit(args as never),
+  consumePairedUsageBudget: (args: {
+    readonly callerKey: string;
+    readonly globalKey: string;
+    readonly windowSeconds: number;
+    readonly callerMax: number;
+    readonly globalMax: number;
+    readonly cost: number;
+  }) => mockConsumeUsageBudget(args),
   hashedClientRateLimitKey: (namespace: string, request: Request) =>
     mockHashedClientRateLimitKey(namespace, request),
   hashedAuthenticatedRateLimitKey: (
@@ -115,9 +134,7 @@ function textBlock(text: string) {
 
 function expectPrivateNoStore(res: Response) {
   expect(res.headers.get("cache-control")).toBe("private, no-store");
-  expect(res.headers.get("x-robots-tag")).toBe(
-    "noindex, nofollow, noarchive",
-  );
+  expect(res.headers.get("x-robots-tag")).toBe("noindex, nofollow, noarchive");
 }
 
 describe("POST /api/ai-native/practice", () => {
@@ -128,13 +145,15 @@ describe("POST /api/ai-native/practice", () => {
     mockedAuth.mockClear();
     mockedRateLimit.mockReset();
     mockedRateLimit.mockResolvedValue(true);
+    mockConsumeUsageBudget.mockReset();
+    mockConsumeUsageBudget.mockResolvedValue(true);
     mockHashedClientRateLimitKey.mockReset();
     mockHashedClientRateLimitKey.mockResolvedValue(
       `ai-native-practice:ip-hmac-sha256-v1:${"b".repeat(64)}`,
     );
     mockHashedAuthenticatedRateLimitKey.mockReset();
-    mockHashedAuthenticatedRateLimitKey.mockResolvedValue(
-      `ai-native-practice:user-hmac-sha256-v1:${"c".repeat(64)}`,
+    mockHashedAuthenticatedRateLimitKey.mockImplementation(
+      async (namespace) => `${namespace}:user-hmac-sha256-v1:${"c".repeat(64)}`,
     );
     mockReportApiError.mockReset();
     mockedAuth.mockResolvedValue({
@@ -142,9 +161,15 @@ describe("POST /api/ai-native/practice", () => {
       user: { id: "user-1" },
     });
     vi.stubEnv("AI_NATIVE_PRACTICE_ENABLED", "true");
+    vi.stubEnv(
+      "AI_NATIVE_PRACTICE_ALLOWED_MODELS",
+      "anthropic/claude-haiku-4.5",
+    );
     vi.stubEnv("ANTHROPIC_API_KEY", "obviously-fake-test-key");
     vi.stubEnv("ANTHROPIC_DPA_CONFIRMED_AT", "2026-07-01");
     vi.stubEnv("ANTHROPIC_RETENTION_DAYS", "30");
+    vi.stubEnv("AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET", "100000");
+    vi.stubEnv("AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET", "1000000");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://fake-project.supabase.co");
     vi.stubEnv("SUPABASE_URL", "https://fake-project.supabase.co");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "fake-public-key");
@@ -160,21 +185,17 @@ describe("POST /api/ai-native/practice", () => {
   it.each(NON_JSON_MEDIA_TYPES)(
     "returns 415 for a %s media type before auth, quotas, or Anthropic",
     async (_label, contentType) => {
-      const request = new Request(
-        "http://localhost/api/ai-native/practice",
-        {
-          method: "POST",
-          headers: contentType
-            ? { "Content-Type": contentType }
-            : undefined,
-          body: contentType ? "{}" : new Uint8Array([123, 125]),
-        },
-      );
+      const request = new Request("http://localhost/api/ai-native/practice", {
+        method: "POST",
+        headers: contentType ? { "Content-Type": contentType } : undefined,
+        body: contentType ? "{}" : new Uint8Array([123, 125]),
+      });
       expect(request.headers.get("content-type")).toBe(contentType ?? null);
       const res = await POST(request);
 
       expect(res.status).toBe(415);
       expect(await res.json()).toEqual({
+        code: "unsupported_media_type",
         error: "unsupported_media_type",
       });
       expectPrivateNoStore(res);
@@ -190,8 +211,12 @@ describe("POST /api/ai-native/practice", () => {
 
   it("returns 503 when the feature flag is OFF by default", async () => {
     delete process.env.AI_NATIVE_PRACTICE_ENABLED;
-    const res = await POST(makeReq(VALID_COMPLETE));
+    const res = await POST(makeReq({ ...VALID_COMPLETE, locale: "en" }));
     expect(res.status).toBe(503);
+    expect(await res.json()).toEqual({
+      code: "practice_disabled",
+      error: "Live mode is not enabled.",
+    });
     expectPrivateNoStore(res);
     expect(mockCreate).not.toHaveBeenCalled();
   });
@@ -207,13 +232,19 @@ describe("POST /api/ai-native/practice", () => {
   it("returns 400 for malformed JSON", async () => {
     const res = await POST(makeReq("not-json"));
     expect(res.status).toBe(400);
-    const json = (await res.json()) as { error: string };
-    expect(json.error).toMatch(/JSON/);
+    expect(await res.json()).toEqual({
+      code: "invalid_json",
+      error: "invalid_json",
+    });
   });
 
   it("returns 400 when payload fails Zod validation", async () => {
     const res = await POST(makeReq({ mode: "complete" }));
     expect(res.status).toBe(400);
+    expect(mockedRateLimit).not.toHaveBeenCalled();
+    expect(mockConsumeUsageBudget).not.toHaveBeenCalled();
+    expect(mockHashedAuthenticatedRateLimitKey).not.toHaveBeenCalled();
+    expect(mockHashedClientRateLimitKey).not.toHaveBeenCalled();
   });
 
   it("returns 400 when prompt exceeds the length cap", async () => {
@@ -223,6 +254,48 @@ describe("POST /api/ai-native/practice", () => {
     expect(res.status).toBe(400);
     expect(mockCreate).not.toHaveBeenCalled();
   });
+
+  it("returns an explicit policy code when the configured allowlist excludes the model", async () => {
+    vi.stubEnv(
+      "AI_NATIVE_PRACTICE_ALLOWED_MODELS",
+      "google/gemini-2.5-flash-lite",
+    );
+
+    const res = await POST(makeReq({ ...VALID_COMPLETE, locale: "en" }));
+
+    expect(res.status).toBe(503);
+    expect(await res.json()).toEqual({
+      code: "model_not_allowed",
+      error: "The requested model is not enabled by the course policy.",
+    });
+    expect(mockedRateLimit).not.toHaveBeenCalled();
+    expect(mockConsumeUsageBudget).not.toHaveBeenCalled();
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ["missing allowlist", "AI_NATIVE_PRACTICE_ALLOWED_MODELS"],
+    ["missing credential", "ANTHROPIC_API_KEY"],
+    ["missing DPA attestation", "ANTHROPIC_DPA_CONFIRMED_AT"],
+    ["missing retention declaration", "ANTHROPIC_RETENTION_DAYS"],
+    ["missing durable backend", "SUPABASE_SERVICE_ROLE_KEY"],
+  ])(
+    "returns operational model-not-ready for %s",
+    async (_label, missingVariable) => {
+      vi.stubEnv(missingVariable, "");
+
+      const res = await POST(makeReq({ ...VALID_COMPLETE, locale: "en" }));
+
+      expect(res.status).toBe(503);
+      expect(await res.json()).toEqual({
+        code: "model_not_ready",
+        error: "The requested model is not operationally ready.",
+      });
+      expect(mockedRateLimit).not.toHaveBeenCalled();
+      expect(mockConsumeUsageBudget).not.toHaveBeenCalled();
+      expect(mockCreate).not.toHaveBeenCalled();
+    },
+  );
 
   it("returns 413 when a no-length streamed body exceeds the byte cap", async () => {
     const request = makeStreamingReq(
@@ -243,16 +316,34 @@ describe("POST /api/ai-native/practice", () => {
     const json = (await res.json()) as { mode: string; text: string };
     expect(json.mode).toBe("complete");
     expect(json.text).toBe("Hier ist deine Mail.");
+    expect(json).toMatchObject({
+      model: "anthropic/claude-haiku-4.5",
+      provider: "anthropic",
+    });
     expect(mockedRateLimit).toHaveBeenCalledWith(
       expect.objectContaining({
-        key: `ai-native-practice:user-hmac-sha256-v1:${"c".repeat(64)}`,
+        entries: expect.arrayContaining([
+          expect.objectContaining({
+            key: `ai-native-practice:user-hmac-sha256-v1:${"c".repeat(64)}`,
+          }),
+          expect.objectContaining({
+            key: `ai-native-practice:ip-hmac-sha256-v1:${"b".repeat(64)}`,
+          }),
+        ]),
       }),
     );
-    expect(mockedRateLimit).toHaveBeenCalledWith(
+    expect(mockConsumeUsageBudget).toHaveBeenCalledTimes(1);
+    expect(mockConsumeUsageBudget).toHaveBeenCalledWith(
       expect.objectContaining({
-        key: `ai-native-practice:ip-hmac-sha256-v1:${"b".repeat(64)}`,
+        callerKey: `ai-model-token-day:user-hmac-sha256-v1:${"c".repeat(64)}`,
+        globalKey: "ai-practice-global-token-day-v1",
+        windowSeconds: 86_400,
+        callerMax: 100000,
+        globalMax: 1000000,
+        cost: expect.any(Number),
       }),
     );
+    expect(mockedRateLimit).toHaveBeenCalledTimes(1);
   });
 
   it("ok: parses placement JSON for a 'place-word' request", async () => {
@@ -314,12 +405,13 @@ describe("POST /api/ai-native/practice", () => {
   });
 
   // ── timeout / error ─────────────────────────────────────────────
-  it("timeout: returns 500 with an honest German error when the SDK rejects", async () => {
+  it("maps an opaque SDK rejection to a sanitized provider-unavailable response", async () => {
     mockCreate.mockRejectedValueOnce(new Error("Request was aborted"));
     const res = await POST(makeReq(VALID_COMPLETE));
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(503);
     const json = (await res.json()) as { error: string };
-    expect(json.error).toMatch(/Live-Modus/);
+    expect(json.error).toBe("Der Provider ist vorübergehend nicht verfügbar.");
+    expect(json.error).not.toContain("aborted");
   });
 
   // ── malformed ───────────────────────────────────────────────────
@@ -369,15 +461,93 @@ describe("POST /api/ai-native/practice", () => {
     expect(blocked.status).toBe(429);
   });
 
+  it("localizes an hourly request-limit rejection for English consumers", async () => {
+    mockedRateLimit.mockResolvedValueOnce(false);
+
+    const res = await POST(makeReq({ ...VALID_COMPLETE, locale: "en" }));
+
+    expect(res.status).toBe(429);
+    expect(await res.json()).toEqual({
+      code: "rate_limited",
+      error: "Too many requests. Try again in one hour.",
+    });
+  });
+
   it("returns 503 when the durable limiter is unavailable", async () => {
     mockedRateLimit.mockRejectedValueOnce({
       code: "RATE_LIMIT_UNAVAILABLE",
     });
-    const res = await POST(makeReq(VALID_COMPLETE));
+    const res = await POST(makeReq({ ...VALID_COMPLETE, locale: "en" }));
 
     expect(res.status).toBe(503);
+    expect(await res.json()).toEqual({
+      code: "rate_limit_unavailable",
+      error: "The request limit is temporarily unavailable.",
+    });
     expectPrivateNoStore(res);
     expect(mockCreate).not.toHaveBeenCalled();
+  });
+
+  it("fails closed before the provider when the durable token budget is unavailable", async () => {
+    mockConsumeUsageBudget.mockRejectedValueOnce({
+      code: "RATE_LIMIT_UNAVAILABLE",
+    });
+    const res = await POST(makeReq({ ...VALID_COMPLETE, locale: "en" }));
+
+    expect(res.status).toBe(503);
+    expect(await res.json()).toEqual({
+      code: "budget_unavailable",
+      error: "The usage budget is temporarily unavailable.",
+    });
+    expect(mockCreate).not.toHaveBeenCalled();
+    expect(mockReportApiError).toHaveBeenCalledWith(
+      expect.objectContaining({ step: "rate-limit" }),
+    );
+  });
+
+  it("localizes a missing daily budget for English consumers", async () => {
+    delete process.env.AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET;
+
+    const res = await POST(makeReq({ ...VALID_COMPLETE, locale: "en" }));
+
+    expect(res.status).toBe(503);
+    expect(await res.json()).toEqual({
+      code: "budget_not_configured",
+      error: "The usage budget is not configured.",
+    });
+    expect(mockConsumeUsageBudget).not.toHaveBeenCalled();
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
+
+  it("localizes an exhausted daily budget for English consumers", async () => {
+    mockConsumeUsageBudget.mockResolvedValueOnce(false);
+
+    const res = await POST(makeReq({ ...VALID_COMPLETE, locale: "en" }));
+
+    expect(res.status).toBe(429);
+    expect(await res.json()).toEqual({
+      code: "budget_exhausted",
+      error: "The daily model-token budget is exhausted.",
+    });
+    expect(mockCreate).not.toHaveBeenCalled();
+  });
+
+  it("rejects arbitrary model IDs before any provider call", async () => {
+    const res = await POST(
+      makeReq({
+        mode: "complete",
+        prompt: "bounded test",
+        model: "google/arbitrary-latest",
+        locale: "en",
+      }),
+    );
+
+    expect(res.status).toBe(400);
+    expect(mockCreate).not.toHaveBeenCalled();
+    expect(mockConsumeUsageBudget).not.toHaveBeenCalled();
+    expect(mockedRateLimit).not.toHaveBeenCalled();
+    expect(mockHashedAuthenticatedRateLimitKey).not.toHaveBeenCalled();
+    expect(mockHashedClientRateLimitKey).not.toHaveBeenCalled();
   });
 
   it("returns one reported 503 when the auth helper rejects", async () => {
@@ -387,7 +557,10 @@ describe("POST /api/ai-native/practice", () => {
     const res = await POST(makeReq(VALID_COMPLETE));
 
     expect(res.status).toBe(503);
-    expect(await res.json()).toEqual({ error: "auth_unavailable" });
+    expect(await res.json()).toEqual({
+      code: "auth_unavailable",
+      error: "auth_unavailable",
+    });
     expect(mockCreate).not.toHaveBeenCalled();
     expect(mockReportApiError).toHaveBeenCalledTimes(1);
     expect(mockReportApiError).toHaveBeenCalledWith(
@@ -402,9 +575,13 @@ describe("POST /api/ai-native/practice", () => {
     const hashError = new Error("trusted-client hash rejected");
     mockHashedClientRateLimitKey.mockRejectedValueOnce(hashError);
 
-    const res = await POST(makeReq(VALID_COMPLETE));
+    const res = await POST(makeReq({ ...VALID_COMPLETE, locale: "en" }));
 
     expect(res.status).toBe(503);
+    expect(await res.json()).toEqual({
+      code: "rate_limit_unavailable",
+      error: "The request limit is temporarily unavailable.",
+    });
     expect(mockCreate).not.toHaveBeenCalled();
     expect(mockReportApiError).toHaveBeenCalledTimes(1);
     expect(mockReportApiError).toHaveBeenCalledWith(
@@ -421,9 +598,13 @@ describe("POST /api/ai-native/practice", () => {
       .spyOn(globalThis.crypto.subtle, "digest")
       .mockRejectedValueOnce(hashError);
 
-    const res = await POST(makeReq(VALID_COMPLETE));
+    const res = await POST(makeReq({ ...VALID_COMPLETE, locale: "en" }));
 
     expect(res.status).toBe(500);
+    expect(await res.json()).toEqual({
+      code: "request_hash_failed",
+      error: "Live mode failed.",
+    });
     expect(mockCreate).not.toHaveBeenCalled();
     expect(mockReportApiError).toHaveBeenCalledTimes(1);
     expect(mockReportApiError).toHaveBeenCalledWith(

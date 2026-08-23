@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import {
+  DATA_ENGINEERING_FUNDAMENTALS_CONFIG,
+  DATA_ENGINEERING_FUNDAMENTALS_CONFIG_DE,
+} from "@/lib/data-engineering-fundamentals/config";
 import { getDataEngineeringFundamentalsCourseCopy } from "@/lib/data-engineering-fundamentals/course-copy";
-import { getDefLocaleRegistry } from "@/lib/data-engineering-fundamentals/content";
+import {
+  DEF_CHAPTERS,
+  type ChapterMeta,
+  type DefChapterId,
+} from "@/lib/data-engineering-fundamentals/types";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { JsonLd, SITE_URL, type JsonLdGraph } from "@/lib/seo/json-ld";
@@ -14,9 +21,37 @@ import {
 
 const CANONICAL_PATH = "/kurse/open-source/data-engineering-fundamentals";
 
+const GERMAN_LANDING_CHAPTER_META: Readonly<
+  Record<DefChapterId, Pick<ChapterMeta, "title" | "subtitle">>
+> = {
+  home: {
+    title: "Überblick",
+    subtitle: "Die Pipeline vom Anfang bis zum Ende",
+  },
+  fund: { title: "Grundlagen", subtitle: "Speicher, Formate und Engines" },
+  ingest: { title: "Datenaufnahme", subtitle: "Wo Daten entstehen" },
+  stream: { title: "Streaming", subtitle: "Die Brücke zum Warehouse" },
+  store: { title: "Speicherung", subtitle: "Wo Daten liegen" },
+  comp: { title: "Verarbeitung", subtitle: "Wie Daten gelesen werden" },
+  orch: { title: "Orchestrierung", subtitle: "Airflow und Idempotenz" },
+  qual: {
+    title: "Qualität",
+    subtitle: "Ausgeführt ist nicht gleich korrekt",
+  },
+  disc: { title: "Ermittlung", subtitle: "Katalog- und Lineage-Übung" },
+  serve: {
+    title: "Bereitstellung",
+    subtitle: "Metriken und semantische Modelle",
+  },
+  gov: { title: "Governance", subtitle: "Die Deployment-Schranke" },
+  cap: {
+    title: "Abschlussprojekt",
+    subtitle: "dim_users durchgängig aufbauen",
+  },
+};
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
-  (await getDefLocaleRegistry()).get(locale);
   const copy = getDataEngineeringFundamentalsCourseCopy(locale).landingMetadata;
   return buildTechnicalCourseMetadata({
     courseSlug: "data-engineering-fundamentals",
@@ -30,8 +65,20 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function DataEngineeringFundamentalsLandingPage() {
   const locale = await getRequestLocale();
-  const bundle = (await getDefLocaleRegistry()).get(locale);
-  const chapters = bundle.content.chapters;
+  // Landing pages need chapter identity and translated metadata, not the
+  // chapter component registry. Loading the full registry here puts every
+  // simulator in the landing page's eager client graph.
+  const chapters = DEF_CHAPTERS.map((meta) => ({
+    id: meta.id,
+    meta:
+      locale === "en"
+        ? meta
+        : { ...meta, ...GERMAN_LANDING_CHAPTER_META[meta.id] },
+  }));
+  const courseConfig =
+    locale === "en"
+      ? DATA_ENGINEERING_FUNDAMENTALS_CONFIG
+      : DATA_ENGINEERING_FUNDAMENTALS_CONFIG_DE;
   const copy = getDataEngineeringFundamentalsCourseCopy(locale).landing;
   const overviewHref = technicalCourseHref(
     "data-engineering-fundamentals",
@@ -41,7 +88,7 @@ export default async function DataEngineeringFundamentalsLandingPage() {
   const course = buildTechnicalCourseJsonLd({
     courseSlug: "data-engineering-fundamentals",
     locale,
-    name: bundle.config.title,
+    name: courseConfig.title,
     description: copy.jsonLdDescription,
     teaches: chapters
       .filter((chapter) => chapter.id !== "home")
@@ -116,7 +163,9 @@ export default async function DataEngineeringFundamentalsLandingPage() {
               className="inline-flex min-h-12 max-w-full items-center gap-2 break-words border-2 border-foreground bg-brand-orange px-5 py-3.5 font-mono text-[12px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)] sm:px-6 sm:text-[13px]"
             >
               {copy.start}
-              <ArrowRight size={15} className="shrink-0" aria-hidden="true" />
+              <span className="shrink-0" aria-hidden="true">
+                →
+              </span>
             </Link>
             <Link
               href="#chapters"
@@ -194,11 +243,12 @@ export default async function DataEngineeringFundamentalsLandingPage() {
                   <p className="mt-1.5 break-words text-[12.5px] leading-[1.5] text-muted-foreground [overflow-wrap:anywhere]">
                     {chapter.meta.subtitle}
                   </p>
-                  <ArrowRight
-                    size={15}
+                  <span
                     className="mt-auto self-end pt-3 text-brand-orange transition-transform group-hover:translate-x-0.5"
                     aria-hidden="true"
-                  />
+                  >
+                    →
+                  </span>
                 </Link>
               </li>
             ))}
@@ -221,7 +271,9 @@ export default async function DataEngineeringFundamentalsLandingPage() {
             className="mt-6 inline-flex min-h-12 max-w-full items-center gap-2 break-words border-2 border-foreground bg-brand-orange px-5 py-3.5 font-mono text-[12px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)] sm:px-6 sm:text-[13px]"
           >
             {copy.finalCta}
-            <ArrowRight size={15} className="shrink-0" aria-hidden="true" />
+            <span className="shrink-0" aria-hidden="true">
+              →
+            </span>
           </Link>
         </section>
       </main>

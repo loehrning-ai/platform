@@ -28,6 +28,7 @@ describe("production database migration contract", () => {
       "20260728190500_drop_dormant_assessment_browser_policies.sql",
       "20260728235900_close_retention_and_legacy_data_gaps.sql",
       "20260730010000_retire_unkeyed_rate_limit_identifiers.sql",
+      "20260813000000_add_usage_budget_counter.sql",
     ]);
   });
 
@@ -58,20 +59,14 @@ describe("production database migration contract", () => {
     expect(sql).toContain(
       "create or replace function public.journey_gdpr_cleanup()",
     );
-    expect(sql).toContain(
-      "where expires_at < now() - interval '7 days'",
-    );
-    expect(sql).toContain(
-      "delete from public.journey_consultations",
-    );
+    expect(sql).toContain("where expires_at < now() - interval '7 days'");
+    expect(sql).toContain("delete from public.journey_consultations");
     expect(sql).toContain(
       "drop table if exists public.zz_legacy_rate_limits_businesssite",
     );
     expect(sql).toContain("create extension if not exists pg_cron");
     expect(sql).toContain("'journey-gdpr-cleanup-daily'");
-    expect(sql).toContain(
-      "revoke execute on functions from public",
-    );
+    expect(sql).toContain("revoke execute on functions from public");
     expect(sql).toContain(
       "revoke execute on functions from anon, authenticated",
     );
@@ -156,9 +151,7 @@ describe("production database migration contract", () => {
     expect(environmentExample).toContain(
       "migration-created beta-feedback-retention-daily job",
     );
-    expect(environmentExample).toContain(
-      "Do not create a second job manually",
-    );
+    expect(environmentExample).toContain("Do not create a second job manually");
     expect(sql).toContain(
       "to_regclass('private.user_course_progress_v4_legacy')",
     );
@@ -180,9 +173,7 @@ describe("production database migration contract", () => {
       /'slice',\s*legacy\.progress -> 'courses' -> source_course\.course_slug/,
     );
     expect(sql).not.toContain("coalesce(legacy.progress");
-    expect(sql).toContain(
-      "drop table private.user_course_progress_v4_legacy",
-    );
+    expect(sql).toContain("drop table private.user_course_progress_v4_legacy");
     expect(sql).not.toMatch(/\bdrop\s+table\b[^;]*\bcascade\b/);
   });
 
@@ -242,5 +233,89 @@ describe("production database migration contract", () => {
     expect(sql).not.toContain("truncate");
     expect(sql).not.toContain("drop table");
     expect(sql).not.toContain("hmac-sha256-v1");
+  });
+
+  it("reserves multi-unit usage budgets atomically for service-role callers only", () => {
+    const sql = migration("20260813000000_add_usage_budget_counter.sql");
+    const pairStart = sql.indexOf(
+      "create or replace function public.usage_budget_consume_pair",
+    );
+    const pairSql = sql.slice(pairStart);
+    const pairOnlySql = pairSql.slice(
+      0,
+      pairSql.indexOf("create or replace function public.rate_limit_consume("),
+    );
+
+    expect(pairStart).toBeGreaterThan(-1);
+    expect(sql).toContain("security definer");
+    expect(sql).toContain("set search_path = ''");
+    expect(sql).toContain("on conflict (key) do update");
+    expect(sql).toContain("public.rate_limits.count + _cost");
+    expect(sql).toContain("current_count <= _max");
+    expect(sql).toContain("pg_catalog.pg_advisory_xact_lock");
+    expect(pairSql).toContain(
+      "pg_catalog.hashtextextended(least(_caller_key, _global_key), 0)",
+    );
+    expect(pairSql).toContain(
+      "pg_catalog.hashtextextended(greatest(_caller_key, _global_key), 0)",
+    );
+    expect(pairSql).toContain("_caller_key = _global_key");
+    expect(pairOnlySql.match(/insert into public\.rate_limits/g)).toHaveLength(
+      2,
+    );
+    expect(pairSql.indexOf("caller_count > _caller_max - _cost")).toBeLessThan(
+      pairSql.indexOf("insert into public.rate_limits"),
+    );
+    expect(pairSql.indexOf("global_count > _global_max - _cost")).toBeLessThan(
+      pairSql.indexOf("insert into public.rate_limits"),
+    );
+    expect(pairSql).not.toMatch(/\bexception\b/);
+    expect(sql).toContain(
+      "revoke all on function public.usage_budget_consume(text, integer, integer, integer)\n  from public, anon, authenticated",
+    );
+    expect(sql).toContain(
+      "grant execute on function public.usage_budget_consume(text, integer, integer, integer)\n  to service_role",
+    );
+    expect(sql).toContain(
+      "revoke all on function public.usage_budget_consume_pair(\n  text, text, integer, integer, integer, integer\n) from public, anon, authenticated",
+    );
+    expect(sql).toContain(
+      "grant execute on function public.usage_budget_consume_pair(\n  text, text, integer, integer, integer, integer\n) to service_role",
+    );
+    expect(sql).toContain(
+      "create or replace function public.rate_limit_consume_multi",
+    );
+    const singleStart = sql.indexOf(
+      "create or replace function public.rate_limit_consume(",
+    );
+    const multiStart = sql.indexOf(
+      "create or replace function public.rate_limit_consume_multi",
+    );
+    const singleSql = sql.slice(singleStart, multiStart);
+    expect(singleStart).toBeGreaterThan(-1);
+    expect(singleSql).toContain("_window_s is null");
+    expect(singleSql).toContain("_max is null");
+    expect(singleSql).toContain(
+      "pg_catalog.pg_advisory_xact_lock(\n    pg_catalog.hashtextextended(_key, 0)",
+    );
+    expect(singleSql).toContain("if current_count >= _max then return false");
+    expect(singleSql).toContain("on conflict (key) do update");
+    expect(sql).toContain(
+      "revoke all on function public.rate_limit_consume(text, integer, integer)\n  from public, anon, authenticated",
+    );
+    expect(sql).toContain(
+      "grant execute on function public.rate_limit_consume(text, integer, integer)\n  to service_role",
+    );
+    expect(sql).toContain("current_max is null");
+    expect(sql).toContain("from unnest(_keys) as entries(key)");
+    expect(sql).toContain(
+      "revoke all on function public.rate_limit_consume_multi(text[], integer, integer[])",
+    );
+    expect(sql).toContain(
+      "grant execute on function public.rate_limit_consume_multi(text[], integer, integer[])",
+    );
+    expect(sql).not.toMatch(
+      /\b(raw_prompt|user_id|ip_address|command_text|response_body)\b/,
+    );
   });
 });

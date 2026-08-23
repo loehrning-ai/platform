@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
+import type { ReactNode } from "react";
 
 const push = vi.fn();
 vi.mock("next/navigation", () => ({
@@ -11,7 +12,7 @@ import { DS_CHAPTERS } from "@/lib/data-science/types";
 
 function shell(
   activeId: Parameters<typeof DsReaderShell>[0]["activeId"],
-  body: string,
+  body: ReactNode,
 ) {
   return (
     <DsReaderShell activeId={activeId} locale="en" chapters={DS_CHAPTERS}>
@@ -33,10 +34,9 @@ describe("DsReaderShell ", () => {
 
   it("renders the sidebar with the active chapter marked", () => {
     render(shell("fund", "body"));
-    expect(screen.getByText("Fundamentals").closest("a")).toHaveAttribute(
-      "aria-current",
-      "page",
-    );
+    expect(
+      screen.getByRole("link", { name: /01 Fundamentals/ }),
+    ).toHaveAttribute("aria-current", "page");
   });
 
   it("navigates to the next chapter on ArrowRight and the previous on ArrowLeft", () => {
@@ -59,6 +59,22 @@ describe("DsReaderShell ", () => {
   it("ignores the shortcut when a modifier key is held", () => {
     render(shell("fund", "body"));
     fireEvent.keyDown(window, { key: "ArrowRight", metaKey: true });
+    expect(push).not.toHaveBeenCalled();
+  });
+
+  it("does not navigate when an arrow shortcut originates in an aria-modal dialog", () => {
+    render(
+      shell(
+        "fund",
+        <section role="dialog" aria-modal="true" aria-label="Project modal">
+          Modal content
+        </section>,
+      ),
+    );
+    const modal = screen.getByRole("dialog", { name: "Project modal" });
+
+    fireEvent.keyDown(modal, { key: "ArrowRight" });
+
     expect(push).not.toHaveBeenCalled();
   });
 });

@@ -16,7 +16,10 @@ import {
   isCapstoneSubmitted,
   getWorkshopQuizResult,
 } from "@/lib/course/progress";
-import { getCourseSlice, subscribe } from "@/lib/progress/store";
+import {
+  getCourseSlice,
+  subscribe,
+} from "@/lib/progress/store";
 import {
   getLearningOwnerContext,
   subscribeLearningOwner,
@@ -104,9 +107,12 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
       }
 
       const quizResult = getWorkshopQuizResult(courseSlug);
+      const aiNativeCapstonePath =
+        courseSlug === "ai-native" &&
+        isCapstoneSubmitted(courseSlug);
       const completionMode: CertificateCompletionMode = quizResult.passed
         ? "quiz"
-        : isCapstoneSubmitted(courseSlug)
+        : aiNativeCapstonePath
           ? "capstone"
           : "completion";
       const completedAt =

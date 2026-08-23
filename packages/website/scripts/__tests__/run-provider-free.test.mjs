@@ -21,6 +21,7 @@ import {
   minimalVerificationEnvironment,
   PROVIDER_FREE_APPLICATION_ENVIRONMENT,
   providerFreeVerificationEnvironment,
+  RUNTIME_ONLY_PROVIDER_ENVIRONMENT_KEYS,
   SYSTEM_ENVIRONMENT_KEYS,
   VERIFICATION_ENVIRONMENT_KEYS,
 } from "../../../../scripts/environment-policy.mjs";
@@ -111,6 +112,7 @@ for (const key of [
   "NEXT_PUBLIC_SUPABASE_URL",
   "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
   "TURNSTILE_CONFIGURATION_CONFIRMED_AT",
+  "GEMINI_API_KEY",
   "E2E_AUTH_LIVE",
   "LOEHRNING_VALIDATION_PROFILE",
   "SIMPLIFIED_SUPABASE_TEST_EMAIL",
@@ -129,7 +131,6 @@ for (const key of [
 for (const key of [
   "TURBO_TOKEN",
   "VERCEL_OIDC_TOKEN",
-  "GEMINI_API_KEY",
   "DATABASE_URL",
   "STRIPE_SECRET_KEY",
   "SSH_AUTH_SOCK",
@@ -743,6 +744,7 @@ for (const file of [
 }
 const explicitlyClassifiedApplicationEnvironment = new Set([
   ...APPLICATION_PROVIDER_ENVIRONMENT_KEYS,
+  ...RUNTIME_ONLY_PROVIDER_ENVIRONMENT_KEYS,
   ...SYSTEM_ENVIRONMENT_KEYS,
   ...VERIFICATION_ENVIRONMENT_KEYS,
   "ANALYZE",

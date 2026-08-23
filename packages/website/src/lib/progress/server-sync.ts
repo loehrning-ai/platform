@@ -23,6 +23,8 @@ import {
   isCanonicalLessonId,
   isCanonicalSectionId,
 } from "@/lib/courses/completion";
+import { getCourseProjectIdentity } from "@/lib/course-projects/identity";
+import { hasValidCourseProjectArtifact } from "@/lib/course-projects/persistence";
 
 // Derive the valid-slug set from the single canonical list so a new course can
 // never silently break progress sync. (This previously hardcoded only 3 of the
@@ -131,6 +133,29 @@ function isExerciseResultRecord(
   );
 }
 
+function hasOnlyValidCourseProjectResults(
+  slug: CourseSlug,
+  lessonId: string,
+  exercises: Readonly<Record<string, UnifiedExerciseResult>>,
+): boolean {
+  const identity = getCourseProjectIdentity(slug);
+  const expectedKind = `course-project-${identity.engineKind}`;
+
+  return Object.entries(exercises).every(([exerciseId, result]) => {
+    const usesReservedId = exerciseId === identity.id;
+    const usesProjectKind = result.kind.startsWith("course-project-");
+    if (!usesReservedId && !usesProjectKind) return true;
+
+    return (
+      lessonId === identity.progressLessonId &&
+      usesReservedId &&
+      result.exerciseId === identity.id &&
+      result.kind === expectedKind &&
+      hasValidCourseProjectArtifact(result.summary, identity.engineKind, slug)
+    );
+  });
+}
+
 function isUnifiedLessonProgress(value: unknown): value is UnifiedLessonProgress {
   return (
     isRecord(value) &&
@@ -155,8 +180,15 @@ function isLessonProgressRecord(
     if (new Set(lesson.sectionsRead).size !== lesson.sectionsRead.length) {
       return false;
     }
-    return lesson.sectionsRead.every((sectionId) =>
-      isCanonicalSectionId(slug, lessonId, sectionId),
+    return (
+      lesson.sectionsRead.every((sectionId) =>
+        isCanonicalSectionId(slug, lessonId, sectionId),
+      ) &&
+      hasOnlyValidCourseProjectResults(
+        slug,
+        lessonId,
+        lesson.exercisesCompleted,
+      )
     );
   });
 }

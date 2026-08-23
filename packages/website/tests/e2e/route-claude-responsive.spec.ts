@@ -172,9 +172,27 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
     const root = document.querySelector("main");
     if (!root) throw new Error("Main content region is missing");
 
+    // The 200%-zoom audit sets documentElement.style.zoom, and under CSS zoom
+    // getBoundingClientRect() reports zoomed pixels while window.innerWidth
+    // stays in CSS pixels. Comparing them directly makes every full-width
+    // element look twice as wide as the viewport at zoom 2 — an element that
+    // exactly fills the layout width lands on innerWidth and tips over on any
+    // sub-pixel rounding. Normalise the rect back to CSS pixels first, which
+    // is the space the viewport is measured in.
+    const cssPixelRect = (element: Element) => {
+      const rect = element.getBoundingClientRect();
+      const zoom = (element as HTMLElement).currentCSSZoom || 1;
+      return {
+        left: rect.left / zoom,
+        right: rect.right / zoom,
+        width: rect.width / zoom,
+        height: rect.height / zoom,
+      };
+    };
+
     const isVisible = (element: Element) => {
       const style = getComputedStyle(element);
-      const rect = element.getBoundingClientRect();
+      const rect = cssPixelRect(element);
       return (
         style.display !== "none" &&
         style.visibility !== "hidden" &&
@@ -188,7 +206,7 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
     // Reproducing this locally is expensive when it only appears on CI, so the
     // numbers have to survive in the report itself.
     const description = (element: Element) => {
-      const rect = element.getBoundingClientRect();
+      const rect = cssPixelRect(element);
       return {
         tag: element.tagName.toLowerCase(),
         className:
@@ -214,7 +232,7 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
           '[data-horizontal-scroll], [data-claude-horizontal-scroll="true"]',
         );
         if (scroller && element !== scroller) return false;
-        const rect = element.getBoundingClientRect();
+        const rect = cssPixelRect(element);
         return rect.left < -1 || rect.right > window.innerWidth + 1;
       })
       .map(description);
@@ -247,7 +265,46 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
           element.scrollWidth > element.clientWidth + 1
         );
       })
-      .map(description);
+      // Naming the clipping ancestor is not enough to fix anything: the box
+      // that has to change is whichever descendant sticks out past it. Report
+      // by right-edge overhang rather than by width, because a child can be
+      // narrower than the container and still overflow it by being offset.
+      .map((element) => {
+        const clipper = cssPixelRect(element);
+        const overhanging: {
+          tag: string;
+          className: string;
+          text: string;
+          right: number;
+          overhangBy: number;
+        }[] = [];
+        for (const child of element.querySelectorAll("*")) {
+          const rect = cssPixelRect(child);
+          const overhangBy = rect.right - clipper.right;
+          if (overhangBy <= 0.5) continue;
+          overhanging.push({
+            tag: child.tagName.toLowerCase(),
+            className:
+              typeof child.className === "string"
+                ? child.className.slice(0, 90)
+                : "",
+            text: (child.textContent ?? "")
+              .trim()
+              .replace(/\s+/g, " ")
+              .slice(0, 50),
+            right: Math.round(rect.right * 100) / 100,
+            overhangBy: Math.round(overhangBy * 100) / 100,
+          });
+        }
+        overhanging.sort((a, b) => b.overhangBy - a.overhangBy);
+        return {
+          ...description(element),
+          clientWidth: element.clientWidth,
+          scrollWidth: element.scrollWidth,
+          overflowBy: element.scrollWidth - element.clientWidth,
+          overhanging: overhanging.slice(0, 3),
+        };
+      });
 
     const horizontalScrollers = descendants
       .filter((element): element is HTMLElement => {
@@ -261,7 +318,7 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
         );
       })
       .map((element) => {
-        const rect = element.getBoundingClientRect();
+        const rect = cssPixelRect(element);
         return {
           ...description(element),
           role: element.getAttribute("role"),
@@ -279,7 +336,7 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
     )
       .filter((element) => {
         if (!isVisible(element)) return false;
-        const rect = element.getBoundingClientRect();
+        const rect = cssPixelRect(element);
         return (
           rect.left < -1 ||
           rect.right > window.innerWidth + 1 ||
@@ -326,9 +383,20 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
   expect(geometry.documentScrollWidth, context).toBeLessThanOrEqual(
     geometry.viewportWidth + 1,
   );
-  expect(geometry.viewportOffenders, context).toEqual([]);
-  expect(geometry.clippedContent, context).toEqual([]);
-  expect(geometry.focusableOffenders, context).toEqual([]);
+  // Distinct messages: these three arrays share a shape, so a shared
+  // context string leaves the report ambiguous about which check failed.
+  expect(
+    geometry.viewportOffenders,
+    `${context}: elements escape the viewport`,
+  ).toEqual([]);
+  expect(
+    geometry.clippedContent,
+    `${context}: content is clipped and unreachable`,
+  ).toEqual([]);
+  expect(
+    geometry.focusableOffenders,
+    `${context}: focusable controls are out of reach`,
+  ).toEqual([]);
   for (const scroller of geometry.horizontalScrollers) {
     expect(scroller.role, context).toBe("region");
     expect(scroller.ariaLabel, context).toBeTruthy();

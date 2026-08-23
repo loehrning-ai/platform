@@ -19,6 +19,8 @@ const INTERACTIVE_SELECTOR = [
   "[role='switch']",
   "[role='tab']",
   "[role='textbox']",
+  "[role='dialog'][aria-modal='true']",
+  "[role='alertdialog'][aria-modal='true']",
   "[tabindex]:not([tabindex='-1'])",
   "[data-keyboard-shortcuts='ignore']",
 ].join(",");

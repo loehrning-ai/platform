@@ -205,9 +205,9 @@ function WorkshopCard({
         {/* The format already reads on the plate chip over the preview, so
             this row carries only the call to action. */}
         <div className="flex items-center justify-end border-t border-border pt-3">
-          <span className="inline-flex items-center gap-1 text-xs font-medium text-brand-orange opacity-70 transition-opacity group-hover:opacity-100">
+          <span className="inline-flex items-center gap-1 text-xs font-medium text-brand-orange">
             {copy.openWorkshop}
-            <ChevronRight className="h-3 w-3 arrow-nudge" />
+            <ChevronRight aria-hidden="true" className="h-3 w-3 arrow-nudge" />
           </span>
         </div>
       </div>

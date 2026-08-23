@@ -132,12 +132,28 @@ describe("Grade-exercise feature flag", () => {
     vi.stubEnv("ANTHROPIC_API_KEY", "obviously-fake-test-key");
     vi.stubEnv("ANTHROPIC_DPA_CONFIRMED_AT", "2026-07-01");
     vi.stubEnv("ANTHROPIC_RETENTION_DAYS", "30");
+    vi.stubEnv("AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET", "100000");
+    vi.stubEnv("AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET", "1000000");
+    vi.stubEnv(
+      "AI_NATIVE_PRACTICE_ALLOWED_MODELS",
+      "anthropic/claude-haiku-4.5",
+    );
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://fake-project.supabase.co");
     vi.stubEnv("SUPABASE_URL", "https://fake-project.supabase.co");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "fake-public-key");
     vi.stubEnv("SUPABASE_SERVICE_ROLE_KEY", "fake-service-key");
     vi.stubEnv("RATE_LIMIT_HMAC_SECRET", `rlh1_${"a".repeat(64)}`);
     expect(isGradeEnabled()).toBe(true);
+
+    vi.stubEnv(
+      "AI_NATIVE_PRACTICE_ALLOWED_MODELS",
+      "google/gemini-2.5-flash-lite",
+    );
+    expect(isGradeEnabled()).toBe(false);
+    vi.stubEnv(
+      "AI_NATIVE_PRACTICE_ALLOWED_MODELS",
+      "anthropic/claude-haiku-4.5",
+    );
 
     process.env.AI_NATIVE_PRACTICE_ENABLED = "on";
     expect(isGradeEnabled()).toBe(false);

@@ -51,12 +51,18 @@ describe("gradeWithAI — hybrid fallback helper", () => {
     expect(body).not.toHaveProperty("rubric");
   });
 
-  it("falls back on 503 (no API key)", async () => {
+  it("falls back on a coded provider-readiness failure", async () => {
     vi.stubGlobal(
       "fetch",
-      vi
-        .fn()
-        .mockResolvedValue({ ok: false, status: 503 } as Response),
+      vi.fn().mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            code: "provider_not_configured",
+            error: "AI-Bewertung ist nicht konfiguriert.",
+          }),
+          { status: 503 },
+        ),
+      ),
     );
 
     const result = await gradeWithAI(baseArgs);
@@ -68,21 +74,39 @@ describe("gradeWithAI — hybrid fallback helper", () => {
   it("falls back on 429 (rate-limited)", async () => {
     vi.stubGlobal(
       "fetch",
-      vi
-        .fn()
-        .mockResolvedValue({ ok: false, status: 429 } as Response),
+      vi.fn().mockResolvedValue({ ok: false, status: 429 } as Response),
     );
 
     const result = await gradeWithAI(baseArgs);
     expect(result.source).toBe("fallback");
   });
 
-  it("falls back on 500 (server error)", async () => {
+  it.each([
+    ["budget_exhausted", 429],
+    ["budget_unavailable", 503],
+    ["rate_limit_unavailable", 503],
+    ["validation_failed", 400],
+  ] as const)("accepts stable failure code %s", async (code, status) => {
     vi.stubGlobal(
       "fetch",
       vi
         .fn()
-        .mockResolvedValue({ ok: false, status: 500 } as Response),
+        .mockResolvedValue(
+          new Response(JSON.stringify({ code, error: "sanitized" }), {
+            status,
+          }),
+        ),
+    );
+
+    const result = await gradeWithAI(baseArgs);
+
+    expect(result.source).toBe("fallback");
+  });
+
+  it("falls back on 500 (server error)", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: false, status: 500 } as Response),
     );
 
     const result = await gradeWithAI(baseArgs);

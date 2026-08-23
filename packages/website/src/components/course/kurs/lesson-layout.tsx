@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import { LessonSidebar } from "./lesson-sidebar";
 import { LessonContent } from "./lesson-content";
 import { LessonShell } from "@/components/course/lesson-shell";
+import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
 import {
   markSectionRead,
   markLessonCompleted,
@@ -107,8 +108,7 @@ export function LessonLayout({
   const activeLesson = lessons.find((l) => l.id === activeLessonId);
   const activeLessonIndex = lessons.findIndex((l) => l.id === activeLessonId);
   const hasNextLesson = activeLessonIndex < lessons.length - 1;
-  const progressReady =
-    readyProgressKey === `${courseSlug}:${activeLessonId}`;
+  const progressReady = readyProgressKey === `${courseSlug}:${activeLessonId}`;
 
   const handleSelectLesson = useCallback(
     (lessonId: string) => {
@@ -172,6 +172,16 @@ export function LessonLayout({
         navLabel={copy.shell.navigation}
         openNavLabel={copy.shell.open}
         closeNavLabel={copy.shell.close}
+        collapseNavLabel={
+          locale === "de"
+            ? "Lektionsnavigation einklappen"
+            : "Collapse lesson navigation"
+        }
+        expandNavLabel={
+          locale === "de"
+            ? "Lektionsnavigation ausklappen"
+            : "Expand lesson navigation"
+        }
         sidebar={sidebar}
       >
         {freshnessMeta?.lastReviewed && freshnessMeta?.nextReview && (
@@ -184,6 +194,18 @@ export function LessonLayout({
             />
           </div>
         )}
+        <div className="mb-10">
+          <CourseProjectStudio
+            courseSlug={courseSlug}
+            lessonId={activeLessonId}
+            locale={locale}
+            lessonContext={{
+              title: activeLesson.title,
+              objective: activeLesson.subtitle,
+              keyConcepts: activeLesson.keyConcepts,
+            }}
+          />
+        </div>
         <LessonContent
           courseSlug={courseSlug}
           lesson={activeLesson}

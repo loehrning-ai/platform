@@ -1,43 +1,8 @@
-import { createElement, forwardRef } from "react";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { createElement } from "react";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-
-vi.mock("framer-motion", () => {
-  const cache = new Map<string, unknown>();
-  const motionOnly = new Set([
-    "animate",
-    "custom",
-    "exit",
-    "initial",
-    "transition",
-    "variants",
-    "viewport",
-    "whileInView",
-  ]);
-
-  const m = new Proxy(
-    {},
-    {
-      get: (_target, tag: string) => {
-        if (!cache.has(tag)) {
-          cache.set(
-            tag,
-            forwardRef<HTMLElement, Record<string, unknown>>((props, ref) => {
-              const domProps: Record<string, unknown> = { ref };
-              for (const [key, value] of Object.entries(props)) {
-                if (!motionOnly.has(key)) domProps[key] = value;
-              }
-              return createElement(tag, domProps);
-            }),
-          );
-        }
-        return cache.get(tag);
-      },
-    },
-  );
-
-  return { m };
-});
 
 vi.mock("next/image", () => ({
   default: (props: Record<string, unknown>) => createElement("img", props),
@@ -54,6 +19,22 @@ vi.mock("@/lib/books", async (importOriginal) => {
 import { BuecherContent } from "./buecher-content";
 
 describe("BuecherContent visibility, loading, and locale behavior", () => {
+  it("keeps the LCP catalog server-owned and the teaser behind a conditional import", () => {
+    const contentSource = readFileSync(
+      resolve(process.cwd(), "src/app/buecher/buecher-content.tsx"),
+      "utf8",
+    );
+    const controllerSource = readFileSync(
+      resolve(process.cwd(), "src/app/buecher/book-preview-controller.tsx"),
+      "utf8",
+    );
+
+    expect(contentSource).not.toMatch(/^\s*["']use client["']/);
+    expect(contentSource).not.toContain("framer-motion");
+    expect(controllerSource).toContain('import("./book-teaser")');
+    expect(controllerSource).not.toContain("import { BookTeaser }");
+  });
+
   it("renders the German heading and every card in the initial document state", () => {
     const { container } = render(
       <BuecherContent accountEnabled={false} locale="de" />,
@@ -116,23 +97,22 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
     ).toBe(true);
   });
 
-  it("localizes the cover-preview dialog and keeps its material language explicit", () => {
+  it("loads and localizes the cover-preview dialog only after activation", async () => {
     render(<BuecherContent accountEnabled={false} locale="en" />);
 
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     fireEvent.click(
       screen.getByRole("button", {
         name: "Open the cover preview for “AI in German SMEs”",
       }),
     );
 
-    const dialog = screen.getByRole("dialog", {
+    const dialog = await screen.findByRole("dialog", {
       name: "Cover preview: AI in German SMEs",
     });
     expect(dialog).toBeVisible();
     expect(
-      within(dialog).getByText(
-        "Source cover in German · English HTML reader",
-      ),
+      within(dialog).getByText("Source cover in German · English HTML reader"),
     ).toBeVisible();
     expect(
       within(dialog).getByRole("link", { name: "Open book and chapters" }),

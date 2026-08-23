@@ -4,14 +4,12 @@ import { useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
 import { cn } from "@/lib/utils";
 import { WidgetFrame } from "../tier-a/_frame";
-import { LiveNote } from "./_live-note";
-import { usePracticeApi } from "./use-practice-api";
 
 /**
  * SemanticSpace, words live in a 2D meaning map; related words sit near each
- * other. With live mode Claude places a dropped word; without it a
- * deterministic local heuristic places it near a keyword-matched seed (so the
- * concept lands offline).
+ * other. This widget is deliberately local-only: a deterministic heuristic
+ * places a word near a keyword-matched seed. It neither calls a provider nor
+ * claims to calculate model embeddings.
  *
  * Ported from `claude/js/widgets.js:497` (SemanticSpace). Default vocabulary
  * is German Mittelstand (Technik / Vertrieb / Werkstatt / Verwaltung); the
@@ -23,7 +21,8 @@ import { usePracticeApi } from "./use-practice-api";
  * correctly for English words a learner types.
  */
 
-export type Cluster = "technik" | "vertrieb" | "werkstatt" | "verwaltung" | "user";
+export type Cluster =
+  "technik" | "vertrieb" | "werkstatt" | "verwaltung" | "user";
 
 export interface Point {
   readonly w: string;
@@ -102,7 +101,8 @@ const DEFAULT_COPY: SemanticSpaceCopy = {
   landedNearText: "landete nahe",
   emptyStatusText: "Wirf ein Wort ein und sieh, wo es landet.",
   nearPlacedTemplate: 'Nahe an "{cluster}" platziert (Stichwort-Treffer).',
-  heuristicTemplate: 'Ohne Live-Modus heuristisch in den Bereich "{cluster}" gelegt.',
+  heuristicTemplate:
+    'Ohne Live-Modus heuristisch in den Bereich "{cluster}" gelegt.',
 };
 
 const DEFAULT_CLUSTER_LABELS: Record<Exclude<Cluster, "user">, string> = {
@@ -129,7 +129,9 @@ function localPlace(
   let best: Exclude<Cluster, "user"> = clusterIds[clusterIds.length - 1];
   let bestHits = -1;
   for (const cluster of clusterIds) {
-    const hits = clusterKeywords[cluster].filter((k) => lower.includes(k)).length;
+    const hits = clusterKeywords[cluster].filter((k) =>
+      lower.includes(k),
+    ).length;
     if (hits > bestHits) {
       bestHits = hits;
       best = cluster;
@@ -161,7 +163,10 @@ export interface SemanticSpaceWidgetProps {
   /** Override the default German seed points. */
   readonly seed?: readonly Point[];
   /** Override the default German keyword-matching lists (functional, not just cosmetic). */
-  readonly clusterKeywords?: Record<Exclude<Cluster, "user">, readonly string[]>;
+  readonly clusterKeywords?: Record<
+    Exclude<Cluster, "user">,
+    readonly string[]
+  >;
   /** Override the human-readable cluster names interpolated into the "why" text. */
   readonly clusterLabels?: Record<Exclude<Cluster, "user">, string>;
   /** Override the default German quadrant overlay labels. */
@@ -185,27 +190,11 @@ export function SemanticSpaceWidget({
   const [points, setPoints] = useState<readonly Point[]>(seed);
   const [input, setInput] = useState("");
   const [highlight, setHighlight] = useState<string | null>(null);
-  const api = usePracticeApi();
-
-  const place = async () => {
+  const place = () => {
     const word = input.trim();
     if (!word) return;
 
-    const live = await api.place(
-      word,
-      points.map((p) => ({ w: p.w, x: p.x, y: p.y })),
-    );
-
-    const next: Point = live
-      ? {
-          w: word,
-          x: live.x,
-          y: live.y,
-          cluster: "user",
-          near: live.near,
-          why: live.why,
-        }
-      : localPlace(word, seed, clusterKeywords, clusterLabels, chrome);
+    const next = localPlace(word, seed, clusterKeywords, clusterLabels, chrome);
 
     setPoints((prev) => [...prev, next]);
     setHighlight(word);
@@ -255,7 +244,9 @@ export function SemanticSpaceWidget({
                 top: `${p.y * 100}%`,
                 borderColor: color,
                 color: isUser ? "var(--color-foreground)" : color,
-                background: isUser ? "rgba(249,115,22,0.15)" : "var(--color-background)",
+                background: isUser
+                  ? "rgba(249,115,22,0.15)"
+                  : "var(--color-background)",
               }}
             >
               {p.w}
@@ -272,7 +263,7 @@ export function SemanticSpaceWidget({
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               e.preventDefault();
-              void place();
+              place();
             }
           }}
           placeholder={chrome.placeholder}
@@ -282,12 +273,12 @@ export function SemanticSpaceWidget({
         <button
           type="button"
           onClick={place}
-          disabled={api.loading || !input.trim()}
+          disabled={!input.trim()}
           className={cn(
             "w-full border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-foreground shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:hover:translate-x-0 disabled:hover:translate-y-0 sm:w-auto sm:shrink-0",
           )}
         >
-          {api.loading ? chrome.placingLabel : chrome.placeLabel}
+          {chrome.placeLabel}
         </button>
       </div>
 
@@ -310,10 +301,11 @@ export function SemanticSpaceWidget({
             {highlighted.why}
           </span>
         ) : (
-          <span className="italic text-muted-foreground">{chrome.emptyStatusText}</span>
+          <span className="italic text-muted-foreground">
+            {chrome.emptyStatusText}
+          </span>
         )}
       </div>
-      <LiveNote available={api.available} />
     </WidgetFrame>
   );
 }

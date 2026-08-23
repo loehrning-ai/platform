@@ -71,7 +71,7 @@ export function hasCourseStarted(
       Object.hasOwn(slice.lessons, lessonId),
     ) ||
     slice.workshopQuiz.completedAt !== null ||
-    slice.capstoneSubmitted
+    (slug === "ai-native" && slice.capstoneSubmitted)
   );
 }
 

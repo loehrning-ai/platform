@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { LessonShell } from "@/components/course/lesson-shell";
+import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
 import { DefChapterSidebar } from "@/components/data-engineering-fundamentals/def-chapter-sidebar";
 import { getDataEngineeringFundamentalsCourseCopy } from "@/lib/data-engineering-fundamentals/course-copy";
 import {
@@ -32,6 +33,9 @@ export function DefChapterLayoutClient({
   const currentIndex = currentId
     ? chapters.findIndex((chapter) => chapter.id === currentId)
     : -1;
+  const missionChapter = chapters.find(
+    (chapter) => chapter.id === (currentId ?? "home"),
+  );
   const prev = currentIndex > 0 ? chapters[currentIndex - 1] : null;
   const next =
     currentIndex >= 0 && currentIndex < chapters.length - 1
@@ -85,6 +89,16 @@ export function DefChapterLayoutClient({
         navId="def-mobile-chapter-nav"
         openNavLabel={copy.openNavLabel}
         closeNavLabel={copy.closeNavLabel}
+        collapseNavLabel={
+          locale === "de"
+            ? "Kapitelnavigation einklappen"
+            : "Collapse chapter navigation"
+        }
+        expandNavLabel={
+          locale === "de"
+            ? "Kapitelnavigation ausklappen"
+            : "Expand chapter navigation"
+        }
         sidebar={
           <DefChapterSidebar
             activeId={currentId}
@@ -94,6 +108,19 @@ export function DefChapterLayoutClient({
           />
         }
       >
+        {missionChapter ? (
+          <div className="mb-10">
+            <CourseProjectStudio
+              courseSlug="data-engineering-fundamentals"
+              lessonId={currentId ?? "home"}
+              locale={locale}
+              lessonContext={{
+                title: missionChapter.title,
+                objective: missionChapter.subtitle,
+              }}
+            />
+          </div>
+        ) : null}
         {children}
       </LessonShell>
     </div>

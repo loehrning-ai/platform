@@ -23,12 +23,17 @@ import {
   type UnifiedProgress,
 } from "./types";
 import {
+  CANONICAL_LESSON_IDS,
   completedCanonicalLessonCount,
   isCanonicalLessonId,
   isCanonicalSectionId,
   isCourseCompletionEarned,
   normalizeCanonicalProgress,
 } from "@/lib/courses/completion";
+import {
+  getCourseProjectDraftStorageKey,
+  getLessonMissionStorageKey,
+} from "@/lib/course-projects/storage-keys";
 import { computeNewlyEarnedBadges } from "./badges";
 import {
   freshUnified,
@@ -48,6 +53,7 @@ import {
   getLearningOwnerContext,
   getOwnedLocalLearningItem,
   ownedLearningStorageKey,
+  removeOwnedLocalLearningItem,
   setUnknownLearningOwner,
   setOwnedLocalLearningItem,
 } from "./browser-learning-storage";
@@ -206,6 +212,10 @@ function persist(state: UnifiedProgress): void {
   setOwnedLocalLearningItem(UNIFIED_STORAGE_KEY, JSON.stringify(state));
 }
 
+function persistDurably(state: UnifiedProgress): boolean {
+  return setOwnedLocalLearningItem(UNIFIED_STORAGE_KEY, JSON.stringify(state));
+}
+
 function getState(): UnifiedProgress {
   if (cache) return cache;
   cache = bumpStreak(load());
@@ -260,6 +270,7 @@ function reloadActiveNamespace(): UnifiedProgress {
  */
 export function activateAccountProgress(userId: string): UnifiedProgress {
   const previous = getLearningOwnerContext();
+  cache = null;
   const next = activateAccountLearningOwner(userId);
   if (next === previous) return getState();
   return reloadActiveNamespace();
@@ -268,6 +279,8 @@ export function activateAccountProgress(userId: string): UnifiedProgress {
 /** Return to the persistent signed-out/offline namespace. */
 export function activateAnonymousProgress(): UnifiedProgress {
   const previous = getLearningOwnerContext();
+  if (previous.kind === "anonymous") return getState();
+  cache = null;
   const next = activateAnonymousLearningOwner();
   if (next === previous) return getState();
   return reloadActiveNamespace();
@@ -276,6 +289,7 @@ export function activateAnonymousProgress(): UnifiedProgress {
 /** Explicitly continue in the isolated local namespace for this page load. */
 export function continueWithAnonymousProgress(): UnifiedProgress {
   const previous = getLearningOwnerContext();
+  cache = null;
   const next = continueWithAnonymousLearningOwner();
   if (next === previous) return getState();
   return reloadActiveNamespace();
@@ -288,6 +302,7 @@ export function continueWithAnonymousProgress(): UnifiedProgress {
  */
 export function activateUnknownProgress(): UnifiedProgress {
   const previous = getLearningOwnerContext();
+  cache = null;
   const next = setUnknownLearningOwner();
   if (next === previous) return getState();
   return reloadActiveNamespace();
@@ -342,7 +357,10 @@ function totalLessonsCompleted(state: UnifiedProgress): number {
 }
 
 /** Add XP and award any newly-qualified badges (immutable). Returns next state. */
-function applyXpAndBadges(state: UnifiedProgress, deltaXp: number): UnifiedProgress {
+function applyXpAndBadges(
+  state: UnifiedProgress,
+  deltaXp: number,
+): UnifiedProgress {
   const xp = state.xp + deltaXp;
   const lessonsDone = totalLessonsCompleted(state);
   const newBadges = computeNewlyEarnedBadges(state, lessonsDone);
@@ -375,7 +393,10 @@ function withSlice(
   };
 }
 
-function lessonOf(slice: UnifiedCourseSlice, lessonId: string): UnifiedLessonProgress {
+function lessonOf(
+  slice: UnifiedCourseSlice,
+  lessonId: string,
+): UnifiedLessonProgress {
   return slice.lessons[lessonId] ?? defaultLesson();
 }
 
@@ -389,7 +410,10 @@ export function getCourseSlice(slug: CourseSlug): UnifiedCourseSlice {
   return sliceOf(getState(), slug);
 }
 
-export function getLesson(slug: CourseSlug, lessonId: string): UnifiedLessonProgress {
+export function getLesson(
+  slug: CourseSlug,
+  lessonId: string,
+): UnifiedLessonProgress {
   return lessonOf(getCourseSlice(slug), lessonId);
 }
 
@@ -557,6 +581,83 @@ export function saveExerciseResult(
   );
 }
 
+/**
+ * Record one exercise result and its XP checkpoint in one store commit. This
+ * is the project-studio boundary: subscribers cannot switch owner or reset the
+ * course between two separately emitting writes.
+ */
+export function saveExerciseResultWithCheckpoint(
+  slug: CourseSlug,
+  lessonId: string,
+  result: UnifiedExerciseResult,
+  checkpointId: string,
+): { readonly checkpointWasNew: boolean; readonly durable: boolean } {
+  if (!isCanonicalLessonId(slug, lessonId)) {
+    return { checkpointWasNew: false, durable: false };
+  }
+  const state = getState();
+  const slice = sliceOf(state, slug);
+  const lesson = lessonOf(slice, lessonId);
+  const previousResult = lesson.exercisesCompleted[result.exerciseId];
+  const mergedResult: UnifiedExerciseResult = {
+    ...result,
+    attempts: Math.max((previousResult?.attempts ?? 0) + 1, result.attempts),
+    score:
+      previousResult?.score != null && result.score != null
+        ? Math.max(previousResult.score, result.score)
+        : (result.score ?? previousResult?.score ?? null),
+    completed: (previousResult?.completed ?? false) || result.completed,
+    summary:
+      result.summary !== undefined
+        ? truncateToByteLength(result.summary, MAX_EXERCISE_SUMMARY_BYTES)
+        : result.summary,
+  };
+  const checkpoint = checkpointKey(lessonId, checkpointId);
+  const checkpointWasNew = state.checkpoints[checkpoint] !== true;
+  const withExercise = withSlice(state, slug, {
+    ...slice,
+    lessons: {
+      ...slice.lessons,
+      [lessonId]: {
+        ...lesson,
+        exercisesCompleted: {
+          ...lesson.exercisesCompleted,
+          [result.exerciseId]: mergedResult,
+        },
+      },
+    },
+  });
+  const withCheckpoint = checkpointWasNew
+    ? {
+        ...withExercise,
+        checkpoints: { ...withExercise.checkpoints, [checkpoint]: true },
+      }
+    : withExercise;
+  const next = checkpointWasNew
+    ? applyXpAndBadges(withCheckpoint, XP.CHECKPOINT)
+    : withCheckpoint;
+  const ownerAtStart = getLearningOwnerContext();
+  if (ownerAtStart.kind === "unknown") {
+    return { checkpointWasNew: false, durable: false };
+  }
+  const stamped: UnifiedProgress = { ...next, lastActivity: nowIso() };
+  const persisted = persistDurably(stamped);
+  const ownerAfterWrite = getLearningOwnerContext();
+  if (
+    !persisted ||
+    ownerAfterWrite.generation !== ownerAtStart.generation ||
+    ownerAfterWrite.kind !== ownerAtStart.kind ||
+    (ownerAfterWrite.kind === "account" &&
+      (ownerAtStart.kind !== "account" ||
+        ownerAfterWrite.accountId !== ownerAtStart.accountId))
+  ) {
+    return { checkpointWasNew: false, durable: false };
+  }
+  cache = stamped;
+  emit(stamped);
+  return { checkpointWasNew, durable: true };
+}
+
 export function getExerciseResult(
   slug: CourseSlug,
   lessonId: string,
@@ -601,7 +702,11 @@ export function saveWorkshopQuizResult(
     },
   });
   // Award the quiz-pass XP only on the first pass.
-  commit(passed && !alreadyPassed ? applyXpAndBadges(withQuiz, XP.QUIZ_PASS) : withQuiz);
+  commit(
+    passed && !alreadyPassed
+      ? applyXpAndBadges(withQuiz, XP.QUIZ_PASS)
+      : withQuiz,
+  );
 }
 
 export function getWorkshopQuizResult(slug: CourseSlug): {
@@ -619,6 +724,7 @@ export function isWorkshopQuizPassed(slug: CourseSlug): boolean {
 // ─── Capstone (AI-Native) ──────────────────────────────────────
 
 export function markCapstoneSubmitted(slug: CourseSlug): void {
+  if (slug !== "ai-native") return;
   const state = getState();
   const slice = sliceOf(state, slug);
   if (slice.capstoneSubmitted) return;
@@ -626,16 +732,23 @@ export function markCapstoneSubmitted(slug: CourseSlug): void {
 }
 
 export function isCapstoneSubmitted(slug: CourseSlug): boolean {
-  return getCourseSlice(slug).capstoneSubmitted;
+  return slug === "ai-native" && getCourseSlice(slug).capstoneSubmitted;
 }
+
+// isAppliedProjectCompleted lives in @/lib/course-projects/applied-completion.
+// Reading that milestone needs the course-project persistence module, and this
+// store is in the root layout's client graph, so importing it here shipped
+// artifact parsing to every page.
 
 /**
  * Certificate eligibility (shared course architecture; fallback performance hardening).
  *
  * Every course requires all canonical lessons. Courses with a final
- * assessment additionally require a passed workshop quiz; AI-Native also
- * accepts its submitted capstone. Never throws: corrupted storage reads as
- * not-eligible instead of crashing the zertifikat page.
+ * assessment additionally require a passed workshop quiz; AI-Native retains
+ * its historical capstone self-review compatibility path. Applied-project
+ * evidence is additional learning evidence, not a certificate substitute.
+ * Never throws: corrupted storage reads as not-eligible instead of crashing
+ * the zertifikat page.
  */
 export function isCertificateEligible(slug: CourseSlug): boolean {
   try {
@@ -708,7 +821,10 @@ export function areAllBlockLessonsCompleted(
   );
 }
 
-export function getOverallProgress(slug: CourseSlug, totalLessons: number): number {
+export function getOverallProgress(
+  slug: CourseSlug,
+  totalLessons: number,
+): number {
   if (!Number.isFinite(totalLessons) || totalLessons <= 0) return 0;
   const percentage = Math.round(
     (getCompletedLessonsCount(slug) / totalLessons) * 100,
@@ -718,9 +834,30 @@ export function getOverallProgress(slug: CourseSlug, totalLessons: number): numb
 
 // ─── Reset ─────────────────────────────────────────────────────
 
+function clearCourseProjectBrowserState(
+  slug: CourseSlug,
+  expectedGeneration = getLearningOwnerContext().generation,
+): void {
+  removeOwnedLocalLearningItem(
+    getCourseProjectDraftStorageKey(slug),
+    expectedGeneration,
+  );
+  const mountedLessonIds =
+    slug === "data-science"
+      ? [...CANONICAL_LESSON_IDS[slug], "home"]
+      : CANONICAL_LESSON_IDS[slug];
+  for (const lessonId of mountedLessonIds) {
+    removeOwnedLocalLearningItem(
+      getLessonMissionStorageKey(slug, lessonId),
+      expectedGeneration,
+    );
+  }
+}
+
 /** Reset a single course slice (keeps other courses + xp/streak/badges). */
 export function resetCourse(slug: CourseSlug, resetAt = nowIso()): void {
   const state = getState();
+  const ownerGeneration = getLearningOwnerContext().generation;
   const resetSlice: UnifiedCourseSlice = {
     lessons: {},
     workshopQuiz: { passed: false, score: 0, completedAt: null },
@@ -729,6 +866,7 @@ export function resetCourse(slug: CourseSlug, resetAt = nowIso()): void {
     lastActivity: resetAt,
     resetAt,
   };
+  clearCourseProjectBrowserState(slug, ownerGeneration);
   commit({
     ...state,
     courses: { ...state.courses, [slug]: resetSlice },
@@ -737,7 +875,29 @@ export function resetCourse(slug: CourseSlug, resetAt = nowIso()): void {
 
 /** Reset the entire unified store (all courses + gamification). */
 export function resetAll(): void {
-  commit(freshUnified());
+  const resetAt = nowIso();
+  const fresh = freshUnified();
+  const ownerGeneration = getLearningOwnerContext().generation;
+  for (const slug of COURSE_SLUGS) {
+    clearCourseProjectBrowserState(slug, ownerGeneration);
+  }
+  commit({
+    ...fresh,
+    courses: Object.fromEntries(
+      COURSE_SLUGS.map((slug) => [
+        slug,
+        {
+          lessons: {},
+          workshopQuiz: { passed: false, score: 0, completedAt: null },
+          capstoneSubmitted: false,
+          startedAt: resetAt,
+          lastActivity: resetAt,
+          resetAt,
+        } satisfies UnifiedCourseSlice,
+      ]),
+    ),
+    lastActivity: resetAt,
+  });
 }
 
 const LOCAL_LEARNING_STORAGE_PREFIXES = [
@@ -748,6 +908,8 @@ const LOCAL_LEARNING_STORAGE_PREFIXES = [
   "selfrate::",
   "matrix::",
   "plays::",
+  "loehrning:lesson-mission:v1:",
+  "loehrning:course-project-draft:v1:",
 ] as const;
 const SESSION_LEARNING_STORAGE_PREFIXES = [
   "ai-native-exercise-draft-",
@@ -763,7 +925,10 @@ function removeMatchingStorageKeys(
     storage.key(index),
   ).filter((key): key is string => key !== null);
   for (const key of keys) {
-    if (exactKeys.includes(key) || prefixes.some((prefix) => key.startsWith(prefix))) {
+    if (
+      exactKeys.includes(key) ||
+      prefixes.some((prefix) => key.startsWith(prefix))
+    ) {
       storage.removeItem(key);
     }
   }
@@ -803,17 +968,40 @@ export function clearAllLocalLearningData(): void {
     clearAccountLocalLearningData(owner.accountId);
     return;
   }
-  cache = freshUnified();
+  const resetAt = nowIso();
+  const fresh = freshUnified();
+  cache = {
+    ...fresh,
+    courses: Object.fromEntries(
+      COURSE_SLUGS.map((slug) => [
+        slug,
+        {
+          lessons: {},
+          workshopQuiz: { passed: false, score: 0, completedAt: null },
+          capstoneSubmitted: false,
+          startedAt: resetAt,
+          lastActivity: resetAt,
+          resetAt,
+        } satisfies UnifiedCourseSlice,
+      ]),
+    ),
+    lastActivity: resetAt,
+  };
   if (typeof window === "undefined" || owner.kind === "unknown") return;
   try {
     removeMatchingStorageKeys(
       window.localStorage,
-      [UNIFIED_STORAGE_KEY, LEGACY_AI_NATIVE_KEY, LEGACY_KI_F_FLAT_KEY],
+      [LEGACY_AI_NATIVE_KEY, LEGACY_KI_F_FLAT_KEY],
       LOCAL_LEARNING_STORAGE_PREFIXES,
     );
+    // Keep the empty reset-stamped root as the durable tombstone. Deleting the
+    // root would make other or later tabs reconstruct resetAt=null and accept
+    // stale pre-reset project drafts.
+    persist(cache);
   } catch {
     // Browser storage can be unavailable; the in-memory cache is still reset.
   }
+  emit(cache);
   try {
     removeMatchingStorageKeys(
       window.sessionStorage,

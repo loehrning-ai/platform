@@ -13,7 +13,7 @@ import type { Locale } from "@/lib/i18n/locale";
  *   brainster   — applied client workshops turned courses (Amber)
  */
 
-/** Applied ("Brainster") course track. Business reports is live; forecasting is in preparation. */
+/** Applied ("Brainster") course track. Both workshops have live local routes. */
 export interface BrainsterCourse {
   readonly slug: string;
   readonly title: string;
@@ -46,12 +46,12 @@ export const BRAINSTER_COURSE_CATALOG: readonly BrainsterCourse[] = [
     title: "AI-Forecasting",
     tagline: "Nachfrage und Kennzahlen mit KI vorhersagen und prüfen.",
     description:
-      "Von der Datenaufbereitung bis zur belastbaren Prognose: Wie KI bei Forecasting hilft, wo ihre Grenzen liegen und wie du Ergebnisse kritisch prüfst.",
-    href: "/kurse",
-    duration: "in Vorbereitung",
+      "Drei interaktive Entscheidungslabore, ein durchgerechneter Geschäftsfall und eine Übung verbinden Baseline, Fehlerkosten, Puffer, Rücktest und Freigabetor.",
+    href: "/workshops/ki-prognosen-einschaetzen",
+    duration: "ca. 90 Min.",
     language: "Deutsch",
     audience: "Planung, Supply Chain, Analytik",
-    status: "prep",
+    status: "live",
     iconName: "TrendingUp",
   },
 ];

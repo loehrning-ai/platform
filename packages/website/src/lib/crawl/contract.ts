@@ -268,6 +268,7 @@ const PROTECTED_PATHS = [
   "/api/progress",
   "/api/progress/:path*",
   "/api/ai-native/:path*",
+  "/api/course-workspace/:path*",
   "/api/demos/:path*",
   // The 4 native certified courses' lesson content requires login (unlike
   // every other course, which stays optional-account per policy D1 — see

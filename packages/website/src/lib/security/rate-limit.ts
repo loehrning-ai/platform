@@ -42,6 +42,31 @@ type RateLimitArgs = {
   readonly max: number;
 };
 
+type UsageBudgetArgs = RateLimitArgs & {
+  /** Positive integer units reserved atomically from the bounded window. */
+  readonly cost: number;
+};
+
+export type PairedUsageBudgetArgs = {
+  readonly callerKey: string;
+  readonly globalKey: string;
+  readonly windowSeconds: number;
+  readonly callerMax: number;
+  readonly globalMax: number;
+  /** Positive integer units reserved from both windows or neither. */
+  readonly cost: number;
+};
+
+export type MultiRateLimitEntry = Readonly<{
+  key: string;
+  max: number;
+}>;
+
+type MultiRateLimitArgs = Readonly<{
+  entries: readonly MultiRateLimitEntry[];
+  windowSeconds: number;
+}>;
+
 const inMemory = new Map<string, { count: number; reset: number }>();
 
 export class RateLimitUnavailableError extends Error {
@@ -59,11 +84,9 @@ export function isRateLimitUnavailableError(
   try {
     return (
       error instanceof RateLimitUnavailableError ||
-      (
-        typeof error === "object" &&
+      (typeof error === "object" &&
         error !== null &&
-        Reflect.get(error, "code") === "RATE_LIMIT_UNAVAILABLE"
-      )
+        Reflect.get(error, "code") === "RATE_LIMIT_UNAVAILABLE")
     );
   } catch {
     return false;
@@ -95,9 +118,12 @@ export async function consumeRateLimit(args: RateLimitArgs): Promise<boolean> {
     if (process.env.NODE_ENV === "production") {
       productionUnavailable("missing-client");
     }
-    console.warn("[rate-limit] client creation failed; using development fallback", {
-      reason: "missing-client",
-    });
+    console.warn(
+      "[rate-limit] client creation failed; using development fallback",
+      {
+        reason: "missing-client",
+      },
+    );
     return consumeInMemory(args);
   }
   if (supabase) {
@@ -121,18 +147,24 @@ export async function consumeRateLimit(args: RateLimitArgs): Promise<boolean> {
       } else if (process.env.NODE_ENV === "production") {
         productionUnavailable("invalid-response");
       } else {
-        console.warn("[rate-limit] invalid RPC response; using development fallback", {
-          reason: "invalid-response",
-        });
+        console.warn(
+          "[rate-limit] invalid RPC response; using development fallback",
+          {
+            reason: "invalid-response",
+          },
+        );
       }
     } catch (error) {
       if (isRateLimitUnavailableError(error)) throw error;
       if (process.env.NODE_ENV === "production") {
         productionUnavailable("rpc-throw");
       }
-      console.warn("[rate-limit] Supabase unreachable; using development fallback", {
-        reason: "rpc-throw",
-      });
+      console.warn(
+        "[rate-limit] Supabase unreachable; using development fallback",
+        {
+          reason: "rpc-throw",
+        },
+      );
     }
   }
   if (process.env.NODE_ENV === "production") {
@@ -141,15 +173,282 @@ export async function consumeRateLimit(args: RateLimitArgs): Promise<boolean> {
   return consumeInMemory(args);
 }
 
+/**
+ * Atomically reserve multiple units from a durable budget window. Production
+ * requires the `usage_budget_consume` service-role RPC; development may use
+ * the same process-local fallback as the request limiter.
+ */
+export async function consumeUsageBudget(
+  args: UsageBudgetArgs,
+): Promise<boolean> {
+  if (
+    !Number.isSafeInteger(args.cost) ||
+    args.cost < 1 ||
+    args.cost > 1_000_000 ||
+    !Number.isSafeInteger(args.max) ||
+    args.max < 1 ||
+    args.max > 2_000_000_000
+  ) {
+    throw new RateLimitUnavailableError();
+  }
+
+  let supabase: ReturnType<typeof tryCreateServiceClient>;
+  try {
+    supabase = tryCreateServiceClient();
+  } catch {
+    if (process.env.NODE_ENV === "production") {
+      productionUnavailable("missing-client");
+    }
+    return consumeInMemoryCost(args);
+  }
+
+  if (supabase) {
+    try {
+      const { data, error } = await supabase.rpc("usage_budget_consume", {
+        _key: args.key,
+        _window_s: args.windowSeconds,
+        _max: args.max,
+        _cost: args.cost,
+      });
+      if (!error && typeof data === "boolean") return data;
+      if (error) {
+        if (process.env.NODE_ENV === "production") {
+          productionUnavailable("rpc-error", error.code);
+        }
+      } else if (process.env.NODE_ENV === "production") {
+        productionUnavailable("invalid-response");
+      }
+    } catch (error) {
+      if (isRateLimitUnavailableError(error)) throw error;
+      if (process.env.NODE_ENV === "production") {
+        productionUnavailable("rpc-throw");
+      }
+    }
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    productionUnavailable("missing-client");
+  }
+  return consumeInMemoryCost(args);
+}
+
+/**
+ * Reserve the same units from caller and deployment-wide budgets in one
+ * transaction. Production requires the service-role-only paired RPC so a
+ * refusal or backend failure can never debit just one side of the ledger.
+ */
+export async function consumePairedUsageBudget(
+  args: PairedUsageBudgetArgs,
+): Promise<boolean> {
+  if (!isValidPairedUsageBudget(args)) {
+    throw new RateLimitUnavailableError();
+  }
+
+  let supabase: ReturnType<typeof tryCreateServiceClient>;
+  try {
+    supabase = tryCreateServiceClient();
+  } catch {
+    if (process.env.NODE_ENV === "production") {
+      productionUnavailable("missing-client");
+    }
+    return consumeInMemoryPair(args);
+  }
+
+  if (supabase) {
+    try {
+      const { data, error } = await supabase.rpc("usage_budget_consume_pair", {
+        _caller_key: args.callerKey,
+        _global_key: args.globalKey,
+        _window_s: args.windowSeconds,
+        _caller_max: args.callerMax,
+        _global_max: args.globalMax,
+        _cost: args.cost,
+      });
+      if (!error && typeof data === "boolean") return data;
+      if (error) {
+        if (process.env.NODE_ENV === "production") {
+          productionUnavailable("rpc-error", error.code);
+        }
+      } else if (process.env.NODE_ENV === "production") {
+        productionUnavailable("invalid-response");
+      }
+    } catch (error) {
+      if (isRateLimitUnavailableError(error)) throw error;
+      if (process.env.NODE_ENV === "production") {
+        productionUnavailable("rpc-throw");
+      }
+    }
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    productionUnavailable("missing-client");
+  }
+  return consumeInMemoryPair(args);
+}
+
+/**
+ * Reserve one request from every applicable scope in one transaction. A
+ * rejected user/IP/global combination mutates no counter, preventing a later
+ * scope from poisoning an earlier scope's quota.
+ */
+export async function consumeMultiRateLimit(
+  args: MultiRateLimitArgs,
+): Promise<boolean> {
+  if (!isValidMultiRateLimit(args)) throw new RateLimitUnavailableError();
+
+  let supabase: ReturnType<typeof tryCreateServiceClient>;
+  try {
+    supabase = tryCreateServiceClient();
+  } catch {
+    if (process.env.NODE_ENV === "production") {
+      productionUnavailable("missing-client");
+    }
+    return consumeInMemoryMulti(args);
+  }
+
+  if (supabase) {
+    try {
+      const { data, error } = await supabase.rpc("rate_limit_consume_multi", {
+        _keys: args.entries.map((entry) => entry.key),
+        _window_s: args.windowSeconds,
+        _maxes: args.entries.map((entry) => entry.max),
+      });
+      if (!error && typeof data === "boolean") return data;
+      if (error && process.env.NODE_ENV === "production") {
+        productionUnavailable("rpc-error", error.code);
+      }
+      if (!error && process.env.NODE_ENV === "production") {
+        productionUnavailable("invalid-response");
+      }
+    } catch (error) {
+      if (isRateLimitUnavailableError(error)) throw error;
+      if (process.env.NODE_ENV === "production") {
+        productionUnavailable("rpc-throw");
+      }
+    }
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    productionUnavailable("missing-client");
+  }
+  return consumeInMemoryMulti(args);
+}
+
 function consumeInMemory({ key, windowSeconds, max }: RateLimitArgs): boolean {
+  return consumeInMemoryCost({ key, windowSeconds, max, cost: 1 });
+}
+
+function consumeInMemoryCost({
+  key,
+  windowSeconds,
+  max,
+  cost,
+}: UsageBudgetArgs): boolean {
   const now = Date.now();
   const existing = inMemory.get(key);
   if (!existing || now > existing.reset) {
-    inMemory.set(key, { count: 1, reset: now + windowSeconds * 1000 });
-    return true;
+    inMemory.set(key, { count: cost, reset: now + windowSeconds * 1000 });
+    return cost <= max;
   }
-  if (existing.count >= max) return false;
-  existing.count += 1;
+  if (existing.count > max - cost) return false;
+  existing.count += cost;
+  return true;
+}
+
+function isValidPairedUsageBudget(args: PairedUsageBudgetArgs): boolean {
+  return (
+    args.callerKey.length >= 1 &&
+    args.callerKey.length <= 256 &&
+    args.globalKey.length >= 1 &&
+    args.globalKey.length <= 256 &&
+    args.callerKey !== args.globalKey &&
+    Number.isSafeInteger(args.windowSeconds) &&
+    args.windowSeconds >= 1 &&
+    args.windowSeconds <= 2_678_400 &&
+    Number.isSafeInteger(args.callerMax) &&
+    args.callerMax >= 1 &&
+    args.callerMax <= 2_000_000_000 &&
+    Number.isSafeInteger(args.globalMax) &&
+    args.globalMax >= 1 &&
+    args.globalMax <= 2_000_000_000 &&
+    Number.isSafeInteger(args.cost) &&
+    args.cost >= 1 &&
+    args.cost <= 1_000_000
+  );
+}
+
+function consumeInMemoryPair(args: PairedUsageBudgetArgs): boolean {
+  const now = Date.now();
+  const caller = inMemory.get(args.callerKey);
+  const global = inMemory.get(args.globalKey);
+  const callerCount = !caller || now > caller.reset ? 0 : caller.count;
+  const globalCount = !global || now > global.reset ? 0 : global.count;
+
+  if (
+    callerCount > args.callerMax - args.cost ||
+    globalCount > args.globalMax - args.cost
+  ) {
+    return false;
+  }
+
+  inMemory.set(args.callerKey, {
+    count: callerCount + args.cost,
+    reset: callerCount === 0 ? now + args.windowSeconds * 1000 : caller!.reset,
+  });
+  inMemory.set(args.globalKey, {
+    count: globalCount + args.cost,
+    reset: globalCount === 0 ? now + args.windowSeconds * 1000 : global!.reset,
+  });
+  return true;
+}
+
+function isValidMultiRateLimit(args: MultiRateLimitArgs): boolean {
+  if (
+    !Number.isSafeInteger(args.windowSeconds) ||
+    args.windowSeconds < 1 ||
+    args.windowSeconds > 2_678_400 ||
+    args.entries.length < 1 ||
+    args.entries.length > 4
+  ) {
+    return false;
+  }
+  const keys = new Set<string>();
+  return args.entries.every((entry) => {
+    if (
+      entry.key.length < 1 ||
+      entry.key.length > 256 ||
+      keys.has(entry.key) ||
+      !Number.isSafeInteger(entry.max) ||
+      entry.max < 1 ||
+      entry.max > 2_000_000_000
+    ) {
+      return false;
+    }
+    keys.add(entry.key);
+    return true;
+  });
+}
+
+function consumeInMemoryMulti(args: MultiRateLimitArgs): boolean {
+  const now = Date.now();
+  const snapshots = args.entries.map((entry) => {
+    const existing = inMemory.get(entry.key);
+    return {
+      ...entry,
+      existing,
+      count: !existing || now > existing.reset ? 0 : existing.count,
+    };
+  });
+  if (snapshots.some((entry) => entry.count >= entry.max)) return false;
+  for (const entry of snapshots) {
+    inMemory.set(entry.key, {
+      count: entry.count + 1,
+      reset:
+        entry.count === 0
+          ? now + args.windowSeconds * 1000
+          : entry.existing!.reset,
+    });
+  }
   return true;
 }
 
@@ -164,9 +463,7 @@ export function trustedClientIp(req: Request): string {
   if (process.env.VERCEL !== "1") return "unknown";
   const vercelFor = req.headers.get("x-vercel-forwarded-for");
   const candidate = vercelFor?.split(",")[0]?.trim();
-  return candidate &&
-    candidate.length <= 64 &&
-    /^[0-9a-f:.]+$/i.test(candidate)
+  return candidate && candidate.length <= 64 && /^[0-9a-f:.]+$/i.test(candidate)
     ? candidate
     : "unknown";
 }
@@ -180,9 +477,7 @@ async function keyedRateLimitDigest(
   namespace: string,
   identity: string,
 ): Promise<string> {
-  const secret = decodeRateLimitHmacSecret(
-    process.env.RATE_LIMIT_HMAC_SECRET,
-  );
+  const secret = decodeRateLimitHmacSecret(process.env.RATE_LIMIT_HMAC_SECRET);
   if (!secret) throw new RateLimitUnavailableError();
 
   try {
@@ -194,7 +489,12 @@ async function keyedRateLimitDigest(
       ["sign"],
     );
     const payload = new TextEncoder().encode(
-      JSON.stringify([RATE_LIMIT_KEY_FORMAT_VERSION, kind, namespace, identity]),
+      JSON.stringify([
+        RATE_LIMIT_KEY_FORMAT_VERSION,
+        kind,
+        namespace,
+        identity,
+      ]),
     );
     const digest = await crypto.subtle.sign("HMAC", key, payload);
     return Array.from(new Uint8Array(digest), (byte) =>

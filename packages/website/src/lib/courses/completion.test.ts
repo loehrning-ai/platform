@@ -22,6 +22,9 @@ import type {
   UnifiedLessonProgress,
   UnifiedProgress,
 } from "@/lib/progress/types";
+import { getCourseProjectIdentity } from "@/lib/course-projects/identity";
+import { serializeCourseProjectProgress } from "@/lib/course-projects/persistence";
+import { verifiedCourseProjectArtifact } from "@/lib/course-projects/test-artifact";
 
 const completedLesson: UnifiedLessonProgress = {
   sectionsRead: [],
@@ -50,6 +53,34 @@ function withLessons(
     badges: {},
     streak: { days: 0, last: null },
     lastActivity: "2026-07-28T00:00:00.000Z",
+  };
+}
+
+function addCompletedProject(
+  progress: UnifiedProgress,
+  slug: CourseSlug,
+): void {
+  const identity = getCourseProjectIdentity(slug);
+  const slice = progress.courses[slug]!;
+  const lesson = slice.lessons[identity.progressLessonId] ?? completedLesson;
+  slice.lessons[identity.progressLessonId] = {
+    ...lesson,
+    exercisesCompleted: {
+      ...lesson.exercisesCompleted,
+      [identity.id]: {
+        exerciseId: identity.id,
+        kind: `course-project-${identity.engineKind}`,
+        completed: true,
+        score: 1,
+        attempts: 1,
+        completedAt: "2026-08-13T10:00:00.000Z",
+        skipped: false,
+        summary: serializeCourseProjectProgress(
+          "Verified project",
+          verifiedCourseProjectArtifact(slug),
+        ),
+      },
+    },
   };
 }
 
@@ -210,5 +241,40 @@ describe("canonical course completion", () => {
       },
     };
     expect(isCourseCompletionEarned(progress, "eu-ai-act-kurs")).toBe(true);
+  });
+
+  it("preserves the historical AI-Native capstone certificate path", () => {
+    const progress = withLessons(
+      "ai-native",
+      CANONICAL_LESSON_IDS["ai-native"],
+    );
+    progress.courses["ai-native"] = {
+      ...progress.courses["ai-native"]!,
+      capstoneSubmitted: true,
+    };
+
+    expect(isCourseCompletionEarned(progress, "ai-native")).toBe(true);
+  });
+
+  it("records the exact AI-Native project without treating unsigned client evidence as certificate proof", () => {
+    const progress = withLessons(
+      "ai-native",
+      CANONICAL_LESSON_IDS["ai-native"],
+    );
+    addCompletedProject(progress, "ai-native");
+
+    expect(progress.courses["ai-native"]!.capstoneSubmitted).toBe(false);
+    expect(isCourseCompletionEarned(progress, "ai-native")).toBe(false);
+  });
+
+  it("does not let a non-AI capstone bit or applied project bypass its quiz", () => {
+    const progress = withLessons("claude", CANONICAL_LESSON_IDS.claude);
+    progress.courses.claude = {
+      ...progress.courses.claude!,
+      capstoneSubmitted: true,
+    };
+    addCompletedProject(progress, "claude");
+
+    expect(isCourseCompletionEarned(progress, "claude")).toBe(false);
   });
 });
