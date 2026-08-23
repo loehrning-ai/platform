@@ -265,7 +265,41 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
           element.scrollWidth > element.clientWidth + 1
         );
       })
-      .map(description);
+      // Naming the clipping ancestor is not enough to fix anything: the box
+      // that has to change is whichever descendant is too wide to fit inside
+      // it. Report the overflow and the widest child so the failure points at
+      // the element to fix rather than at the one that noticed.
+      .map((element) => {
+        let widest: {
+          tag: string;
+          className: string;
+          text: string;
+          width: number;
+        } | null = null;
+        for (const child of element.querySelectorAll("*")) {
+          const width = cssPixelRect(child).width;
+          if (widest && width <= widest.width) continue;
+          widest = {
+            tag: child.tagName.toLowerCase(),
+            className:
+              typeof child.className === "string"
+                ? child.className.slice(0, 90)
+                : "",
+            text: (child.textContent ?? "")
+              .trim()
+              .replace(/\s+/g, " ")
+              .slice(0, 60),
+            width: Math.round(width * 100) / 100,
+          };
+        }
+        return {
+          ...description(element),
+          clientWidth: element.clientWidth,
+          scrollWidth: element.scrollWidth,
+          overflowBy: element.scrollWidth - element.clientWidth,
+          widestChild: widest,
+        };
+      });
 
     const horizontalScrollers = descendants
       .filter((element): element is HTMLElement => {
@@ -344,9 +378,20 @@ async function expectClaudeGeometryContained(page: Page, context: string) {
   expect(geometry.documentScrollWidth, context).toBeLessThanOrEqual(
     geometry.viewportWidth + 1,
   );
-  expect(geometry.viewportOffenders, context).toEqual([]);
-  expect(geometry.clippedContent, context).toEqual([]);
-  expect(geometry.focusableOffenders, context).toEqual([]);
+  // Distinct messages: these three arrays share a shape, so a shared
+  // context string leaves the report ambiguous about which check failed.
+  expect(
+    geometry.viewportOffenders,
+    `${context}: elements escape the viewport`,
+  ).toEqual([]);
+  expect(
+    geometry.clippedContent,
+    `${context}: content is clipped and unreachable`,
+  ).toEqual([]);
+  expect(
+    geometry.focusableOffenders,
+    `${context}: focusable controls are out of reach`,
+  ).toEqual([]);
   for (const scroller of geometry.horizontalScrollers) {
     expect(scroller.role, context).toBe("region");
     expect(scroller.ariaLabel, context).toBeTruthy();
