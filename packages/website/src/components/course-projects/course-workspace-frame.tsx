@@ -509,13 +509,38 @@ export function CourseWorkspaceFrame({
       );
     };
     measure();
+
+    // Throttle to one measurement per frame. Quantising the width stops
+    // sub-pixel jitter but not the larger loop: when the workspace's height
+    // crosses the point where the page gains or loses its scrollbar, the
+    // available width changes by the scrollbar's ~15px, the content re-wraps,
+    // the height changes back, and the observer fires again. German lesson
+    // copy is longer, so it straddles that threshold far more often, which is
+    // why only the de reflow tests wedged and only at 320-768px.
+    //
+    // Re-entering synchronously on every notification blocks the main thread
+    // outright: the page stops answering even a fresh evaluate, which reads
+    // from outside as a hang with no error. A frame-throttled callback still
+    // converges on the real size but can never starve the thread.
+    let scheduled = 0;
+    const scheduleMeasure = () => {
+      if (scheduled) return;
+      scheduled = requestAnimationFrame(() => {
+        scheduled = 0;
+        measure();
+      });
+    };
+
     const observer =
-      typeof ResizeObserver === "function" ? new ResizeObserver(measure) : null;
+      typeof ResizeObserver === "function"
+        ? new ResizeObserver(scheduleMeasure)
+        : null;
     observer?.observe(panes);
-    window.addEventListener("resize", measure);
+    window.addEventListener("resize", scheduleMeasure);
     return () => {
+      if (scheduled) cancelAnimationFrame(scheduled);
       observer?.disconnect();
-      window.removeEventListener("resize", measure);
+      window.removeEventListener("resize", scheduleMeasure);
     };
   }, []);
 
