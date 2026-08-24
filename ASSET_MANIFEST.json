@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-08-09",
+  "generated": "2026-08-24",
   "hashAlgorithm": "sha256",
   "assets": [
     {
@@ -762,8 +762,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/courses-desktop.png",
-      "sizeBytes": 131442,
-      "sha256": "328e2c4196c35f2b767dc64c049c8593296edfb56897bd1de0b90df687bb2fd5",
+      "sizeBytes": 419713,
+      "sha256": "a0df9ca4fa745c516a52db6940e086ea562332079734bfd8e39791531c4e6971",
       "owner": "Tim Löhr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",
