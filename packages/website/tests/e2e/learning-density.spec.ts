@@ -82,6 +82,7 @@ async function expectFullyInFirstViewportBand(
   page: Page,
   locator: Locator,
   label: string,
+  maximumBottom = page.viewportSize()!.height,
 ): Promise<void> {
   await expectToStartInFirstViewportBand(page, locator, label);
   await expect
@@ -91,7 +92,9 @@ async function expectFullyInFirstViewportBand(
       if (!viewport || !bounds) return Number.POSITIVE_INFINITY;
       return bounds.y + bounds.height;
     }, { message: `${label} must fit completely inside the first viewport` })
-    .toBeLessThanOrEqual(page.viewportSize()!.height);
+    .toBeLessThanOrEqual(
+      Math.min(maximumBottom, page.viewportSize()!.height),
+    );
 }
 
 test.describe("learning density and value contract", () => {
@@ -163,6 +166,10 @@ test.describe("learning density and value contract", () => {
   test("How Language Models Work starts with a self-check and closed evidence", async ({
     page,
   }) => {
+    // The brand face is optional on a cold visit. Validate the denser fallback
+    // path explicitly so a warm local font cache cannot hide a first-visit
+    // overflow that Linux CI or a slow connection will expose.
+    await page.route("**/*.woff2", (route) => route.abort());
     await page.setViewportSize({ width: 375, height: 667 });
     await openLearningRoute(
       page,
@@ -172,7 +179,12 @@ test.describe("learning density and value contract", () => {
     const check = page.getByRole("button", {
       name: "Compare with criteria",
     });
-    await expectFullyInFirstViewportBand(page, check, "language-model check");
+    await expectFullyInFirstViewportBand(
+      page,
+      check,
+      "language-model check",
+      640,
+    );
     await expect(check).toBeDisabled();
     await expect(check).toHaveAttribute("aria-expanded", "false");
     await page.getByRole("textbox", { name: "Your answer" }).fill("x");

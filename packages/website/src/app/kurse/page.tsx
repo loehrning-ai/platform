@@ -78,7 +78,7 @@ export default async function KursePage() {
 
         <PersonaCourseLinks locale={locale} />
 
-        <section className="mt-10" data-learning-gallery>
+        <section className="mt-8" data-learning-gallery>
           <CourseGallery locale={locale} />
         </section>
 

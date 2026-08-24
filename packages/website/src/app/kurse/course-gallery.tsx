@@ -141,14 +141,14 @@ function SectionHeader({
   readonly blurb: string;
 }) {
   return (
-    <div className="mb-7 max-w-3xl">
+    <div className="mb-5 max-w-3xl">
       <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
         {eyebrow}
       </p>
-      <h2 className="mt-2 text-[28px] font-bold leading-tight tracking-[-0.03em] text-foreground sm:text-[34px]">
+      <h2 className="mt-1.5 text-[28px] font-bold leading-tight tracking-[-0.03em] text-foreground sm:text-[34px]">
         {title}
       </h2>
-      <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
+      <p className="mt-2 text-[15px] leading-[1.55] text-muted-foreground">
         {blurb}
       </p>
     </div>

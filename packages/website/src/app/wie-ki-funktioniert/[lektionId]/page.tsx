@@ -183,8 +183,8 @@ function WieKiLektionContent({
         id="wie-ki-lesson-jsonld"
       />
 
-      <div className="mx-auto w-full max-w-5xl min-w-0 px-4 pb-16 pt-6 sm:px-6 sm:pb-20 sm:pt-12 lg:px-10">
-        <nav aria-label={copy.breadcrumbLabel} className="mb-4 min-w-0 sm:mb-6">
+      <div className="mx-auto w-full max-w-5xl min-w-0 px-4 pb-16 pt-4 sm:px-6 sm:pb-20 sm:pt-10 lg:px-10">
+        <nav aria-label={copy.breadcrumbLabel} className="mb-3 min-w-0 sm:mb-5">
           <ol className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground sm:tracking-[0.1em]">
             <li>
               <Link
@@ -214,7 +214,7 @@ function WieKiLektionContent({
         </nav>
 
         <article className="min-w-0">
-          <header className="min-w-0 border-b-2 border-foreground pb-5 sm:pb-6">
+          <header className="min-w-0 border-b-2 border-foreground pb-3 sm:pb-5">
             <p className="break-words font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-brand-orange sm:tracking-[0.14em]">
               {copy.lessonProgress(
                 lektion.number,
@@ -222,16 +222,16 @@ function WieKiLektionContent({
                 lektion.durationMinutes,
               )}
             </p>
-            <h1 className="mt-3 max-w-4xl break-words text-[clamp(2rem,6vw,4.5rem)] font-bold leading-[0.96] tracking-[-0.04em] text-foreground [overflow-wrap:anywhere]">
+            <h1 className="mt-2 max-w-4xl break-words text-[clamp(1.875rem,6vw,4.5rem)] font-bold leading-[0.96] tracking-[-0.04em] text-foreground [overflow-wrap:anywhere]">
               {lektion.title}
             </h1>
-            <p className="mt-3 max-w-3xl break-words text-[16px] leading-[1.45] text-muted-foreground [overflow-wrap:anywhere] sm:text-[20px] sm:leading-[1.5]">
+            <p className="mt-2 max-w-3xl break-words text-[15px] leading-[1.4] text-muted-foreground [overflow-wrap:anywhere] sm:text-[19px] sm:leading-[1.45]">
               {lektion.subtitle}
             </p>
           </header>
 
           {check ? (
-            <div className="mt-4 max-w-3xl sm:mt-5">
+            <div className="mt-3 max-w-3xl sm:mt-4">
               <ComprehensionCheck
                 id={lektion.id}
                 question={check.question}
