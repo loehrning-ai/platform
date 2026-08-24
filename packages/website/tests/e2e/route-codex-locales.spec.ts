@@ -116,12 +116,14 @@ async function settle(page: Page) {
   await settleFontsAndFrame(page);
 }
 
-async function continueLocally(page: Page, locale: "de" | "en") {
+async function continueLocally(page: Page, locale?: "de" | "en") {
   const button = page.getByRole("button", {
     name:
       locale === "de"
-        ? "Lokal ohne Kontosynchronisierung fortfahren"
-        : "Continue locally without account sync",
+        ? "Lokal weiterlernen"
+        : locale === "en"
+          ? "Continue locally"
+          : /^(?:Lokal weiterlernen|Continue locally)$/,
   });
   const gateAppeared = await button
     .waitFor({ state: "visible", timeout: 1_500 })
@@ -136,6 +138,36 @@ async function continueLocally(page: Page, locale: "de" | "en") {
     });
     await expect(button).toBeHidden();
   }
+}
+
+async function openLessonReference(page: Page) {
+  await page
+    .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+    .waitFor({ state: "attached" });
+  await continueLocally(page);
+  await expect(page.locator("[data-learning-owner-panel]")).toBeHidden({
+    timeout: 15_000,
+  });
+  const reference = page.locator("details[data-lesson-reference]");
+  await expect(reference).toHaveCount(1);
+  await expect(reference).toBeVisible();
+  await expect(reference).toHaveJSProperty("open", false);
+  await reference.locator(":scope > summary").click();
+  await expect(reference).toHaveJSProperty("open", true);
+}
+
+async function expectVisibleRouteHeading(
+  page: Page,
+  route: string,
+  lessonRoutes: readonly string[],
+) {
+  if (lessonRoutes.includes(route)) {
+    const headings = page.getByRole("heading", { level: 1 });
+    await expect(headings, route).toHaveCount(1);
+    await expect(headings, route).toBeVisible();
+    return;
+  }
+  await expect(page.locator("h1").first(), route).toBeVisible();
 }
 
 function visibleLanguageSwitchLink(page: Page, name: RegExp) {
@@ -275,7 +307,11 @@ for (const width of VIEWPORTS) {
           });
           expect(response?.status(), route).toBe(200);
           await settle(page);
-          await expect(page.locator("h1").first(), route).toBeVisible();
+          if (routeSet.lessons.includes(route)) {
+            await openLessonReference(page);
+            await settle(page);
+          }
+          await expectVisibleRouteHeading(page, route, routeSet.lessons);
           await expect(page.locator("html"), route).toHaveAttribute(
             "lang",
             localeCase.locale,
@@ -314,6 +350,7 @@ test.describe("Codex locale continuity and record surfaces", () => {
     });
     await settle(page);
     await continueLocally(page, "de");
+    await openLessonReference(page);
     const unreadSections = page.getByRole("button", {
       name: "Als gelesen markieren",
     });
@@ -335,6 +372,7 @@ test.describe("Codex locale continuity and record surfaces", () => {
     await expect(page).toHaveURL(/\/en\/kurse\/open-source\/codex\/kurs\/L01$/);
     await settle(page);
     await continueLocally(page, "en");
+    await openLessonReference(page);
     await expect(page.getByText("Lesson complete", { exact: true })).toBeVisible();
   });
 
@@ -435,11 +473,14 @@ test.describe("Codex locale continuity and record surfaces", () => {
       const route = `/kurse/open-source/codex/kurs/${lessonId}`;
       await page.goto(route, { waitUntil: "domcontentloaded" });
       await settle(page);
+      await openLessonReference(page);
       await page.evaluate(() => {
         document.documentElement.style.zoom = "2";
       });
       await expectContainedLayout(page, `de/zoom-200/${lessonId}`);
-      await expect(page.locator("h1").first()).toBeVisible();
+      const headings = page.getByRole("heading", { level: 1 });
+      await expect(headings).toHaveCount(1);
+      await expect(headings).toBeVisible();
     }
   });
 });

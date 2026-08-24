@@ -42,9 +42,13 @@ for (const width of [320, 390, 768, 1440] as const) {
         "href",
         locale === "de" ? "/kurse" : "/en/kurse",
       );
-      await expect(page.getByRole("button", { name: /Google/i })).toHaveCount(0);
+      await expect(page.getByRole("button", { name: /Google/i })).toHaveCount(
+        0,
+      );
       await expect(page.getByRole("textbox")).toHaveCount(0);
-      await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+      await page
+        .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+        .waitFor({ state: "attached" });
 
       const geometry = await page.evaluate(() => {
         const viewportWidth = window.innerWidth;
@@ -99,12 +103,10 @@ for (const width of [320, 390, 768, 1440] as const) {
 
       await reasonLink.focus();
       await expect(reasonLink).toBeFocused();
-      await page.keyboard.press("Tab");
-      const nextFocus = await page.evaluate(() => ({
-        tag: document.activeElement?.tagName ?? null,
-        text: document.activeElement?.textContent?.trim().slice(0, 80) ?? null,
-      }));
-      expect(nextFocus.tag).toMatch(/^(A|BUTTON)$/);
+      await page.keyboard.press("Enter");
+      await expect(page).toHaveURL(
+        locale === "de" ? /\/kurse$/ : /\/en\/kurse$/,
+      );
 
       await page.goto(`${path}?reason=untrusted-origin`, {
         waitUntil: "domcontentloaded",

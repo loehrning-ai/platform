@@ -348,6 +348,7 @@ function CourseGalleryContent({
                       src={course.coverImage ?? ""}
                       alt={course.coverImageAlt ?? ""}
                       fill
+                      preload={index === 0}
                       sizes="(min-width: 768px) 58vw, calc(100vw - 48px)"
                       className="object-cover transition-transform duration-300 group-hover:scale-[1.015]"
                     />

@@ -3,6 +3,12 @@ import { test, expect } from "@playwright/test";
 const OLD_BLOG_COPY =
   /(Ich hatte genug|Nicken im Meeting|Beratungslücke|harte Zahlen|Scan starten|Jetzt KI|Ergebnis per E-Mail|Verkaufsprospekt|höfliche Lüge|verdammt|schreiben Sie mir|verkauft sich besser)/i;
 
+function isExpectedWebKitRscPrefetchCancellation(message: string): boolean {
+  return /^\/localhost:\d+\/[^\s]+[?&]_rsc=[A-Za-z0-9_-]+ due to access control checks\.$/u.test(
+    message,
+  );
+}
+
 async function expectNoOldBlogCopy(page: import("@playwright/test").Page) {
   const text = await page.locator("body").innerText();
   expect(text).not.toMatch(OLD_BLOG_COPY);
@@ -135,6 +141,7 @@ test("blog: English article states the enacted Omnibus and revised application d
 for (const variant of LOCALES) {
   for (const width of [320, 390, 768, 1024, 1440] as const) {
     test(`blog: ${variant.locale} routes reflow at ${width}px without runtime errors`, async ({
+      browserName,
       page,
     }) => {
       test.setTimeout(45_000);
@@ -142,7 +149,15 @@ for (const variant of LOCALES) {
       page.on("console", (message) => {
         if (message.type() === "error") runtimeErrors.push(message.text());
       });
-      page.on("pageerror", (error) => runtimeErrors.push(error.message));
+      page.on("pageerror", (error) => {
+        if (
+          browserName === "webkit" &&
+          isExpectedWebKitRscPrefetchCancellation(error.message)
+        ) {
+          return;
+        }
+        runtimeErrors.push(error.message);
+      });
       await page.setViewportSize({ width, height: 844 });
 
       for (const suffix of ["/blog", "/blog/eu-ai-act-grundlagen"] as const) {

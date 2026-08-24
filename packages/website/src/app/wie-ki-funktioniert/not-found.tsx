@@ -8,7 +8,7 @@ export default async function WieKiFunktioniertNotFound() {
   const copy = WIE_KI_ERROR_COPY[locale];
 
   return (
-    <main className="flex min-h-[70svh] min-w-0 items-center justify-center bg-background px-4 py-16 sm:px-6">
+    <div className="flex min-h-[70svh] min-w-0 items-center justify-center bg-background px-4 py-16 sm:px-6">
       <div className="w-full max-w-lg min-w-0 border-2 border-foreground bg-card p-6 shadow-[6px_6px_0_var(--color-foreground)] sm:p-8">
         <p className="break-words font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
           {copy.eyebrow}
@@ -26,6 +26,6 @@ export default async function WieKiFunktioniertNotFound() {
           {copy.back}
         </Link>
       </div>
-    </main>
+    </div>
   );
 }

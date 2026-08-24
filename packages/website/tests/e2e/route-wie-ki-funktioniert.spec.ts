@@ -4,7 +4,7 @@ import { test, expect, type Page } from "@playwright/test";
  * Route coverage for the "Wie Sprachmodelle arbeiten" conceptual block
  * (regression coverage). The hub at /wie-ki-funktioniert lists four lesson cards
  * that deep-link into /wie-ki-funktioniert/<lektionId>; every lesson page
- * carries a togglable "Kurze Selbstprüfung" comprehension check.
+ * starts with a visible question and an explicit answer check.
  *
  * Slugs are discovered from src/lib/wie-ki-funktioniert (backed by
  * content/wie-ki-funktioniert/*.json + generateStaticParams), not guessed.
@@ -88,23 +88,51 @@ test.describe("/wie-ki-funktioniert/[lektionId] lesson", () => {
     page,
   }) => {
     await gotoClean(page, `${HUB}/${FIRST_LESSON}`);
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
-    const check = page.getByRole("button", { name: /Kurze Selbstpr(ü|u)fung/ });
+    const check = page.locator('button[aria-controls^="check-"]');
     await expect(check).toBeVisible();
-    // Collapsed on load; aria-expanded is bound to the same state that unhides
-    // the answer region, so the toggle is a faithful proxy for "content shown".
+    await expect(check).toHaveAccessibleName("Mit Prüfkriterien vergleichen");
+    await expect(check).toBeDisabled();
+    await expect(check).toHaveAttribute("aria-expanded", "false");
+    await expect(
+      page.locator("details[data-lesson-reference]"),
+    ).not.toHaveAttribute("open", "");
+
+    const responseText =
+      "Das Modell berechnet Wahrscheinlichkeiten für das nächste Token.";
+    await page
+      .getByRole("textbox", { name: "Deine Antwort" })
+      .fill(responseText);
+    await expect(check).toBeEnabled();
+    await check.click();
+    await expect(check).toHaveAttribute("aria-expanded", "true");
+    await expect(check).toHaveAccessibleName("Prüfkriterien ausblenden");
+    await expect(
+      page.getByRole("heading", { level: 3, name: "Prüfkriterien" }),
+    ).toBeVisible();
+
+    await check.click();
     await expect(check).toHaveAttribute("aria-expanded", "false");
 
-    // Retry the click as a web-first assertion so a not-yet-hydrated first
-    // click (dev-mode React race) does not flake: the handler flips
-    // aria-expanded to true once React has wired up the client component.
-    await expect(async () => {
-      await check.click();
-      await expect(check).toHaveAttribute("aria-expanded", "true", {
-        timeout: 1000,
-      });
-    }).toPass({ timeout: 15000 });
+    const storedText = await page.evaluate(() =>
+      [window.localStorage, window.sessionStorage]
+        .flatMap((storage) =>
+          Array.from({ length: storage.length }, (_, index) =>
+            storage.getItem(storage.key(index) ?? ""),
+          ),
+        )
+        .join("\n"),
+    );
+    expect(storedText).not.toContain(responseText);
+
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await expect(
+      page.getByRole("textbox", { name: "Deine Antwort" }),
+    ).toHaveValue("");
   });
 
   test("an unknown lesson slug renders the not-found page", async ({

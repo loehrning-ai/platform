@@ -244,7 +244,7 @@ export default async function KiFuehrerscheinLandingPage() {
         data={courseGraph(locale)}
         id="ki-fuehrerschein-landing-jsonld"
       />
-      <main className="mx-auto w-full max-w-[1180px] px-4 pb-24 pt-12 sm:px-6 sm:pb-32 sm:pt-20">
+      <div className="mx-auto w-full max-w-[1180px] px-4 pb-24 pt-12 sm:px-6 sm:pb-32 sm:pt-20">
         <div className="mb-9 h-[3px] w-[132px] bg-brand-orange sm:w-[154px]" />
 
         <div className="grid min-w-0 gap-12 lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.55fr)] lg:items-end">
@@ -386,7 +386,7 @@ export default async function KiFuehrerscheinLandingPage() {
             <span aria-hidden="true">→</span>
           </Link>
         </div>
-      </main>
+      </div>
     </>
   );
 }

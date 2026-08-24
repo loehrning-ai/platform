@@ -16,8 +16,7 @@ import {
   type JSX,
 } from "react";
 import { useCheckpoint } from "@/lib/progress";
-import { useCanvasRAF } from "../canvas/use-canvas-raf";
-import { useCanvasAutoSize } from "../canvas/use-canvas-size";
+import { useAutoSizedCanvasRAF } from "../canvas/use-auto-sized-canvas-raf";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
 import { useDataInfraWidgetLocale } from "../widget-locale-context";
@@ -52,6 +51,17 @@ interface Flight {
   readonly dur: number;
   readonly born: number;
   readonly color: string;
+}
+
+function countTotalLag(
+  producedOffsets: readonly number[],
+  consumedOffsets: readonly number[],
+): number {
+  return producedOffsets.reduce(
+    (lag, offset, partition) =>
+      lag + offset - (consumedOffsets[partition] ?? 0),
+    0,
+  );
 }
 
 export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
@@ -89,6 +99,10 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
   const produceFlights = useRef<Flight[]>([]);
   const consumeFlights = useRef<Flight[]>([]);
   const rebalanceFlashRef = useRef(0);
+  const consumerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
+    null,
+  );
+  const sendTimeoutsRef = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
 
   const measureRects = useCallback(() => {
     const canvas = canvasRef.current;
@@ -114,11 +128,6 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
   useLayoutEffect(() => {
     measureRects();
   }, [measureRects]);
-
-  useCanvasAutoSize(canvasRef, wrapRef, {
-    minHeight: 320,
-    onResize: measureRects,
-  });
 
   const draw = useCallback((now: number): boolean => {
     const canvas = canvasRef.current;
@@ -200,7 +209,73 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
     );
   }, []);
 
-  const { wake } = useCanvasRAF(draw);
+  const { wake } = useAutoSizedCanvasRAF(canvasRef, wrapRef, draw, {
+    minHeight: 320,
+    onResize: measureRects,
+  });
+
+  const stopConsumerPolling = useCallback(() => {
+    if (consumerIntervalRef.current === null) return;
+    clearInterval(consumerIntervalRef.current);
+    consumerIntervalRef.current = null;
+  }, []);
+
+  const consumeAvailableMessages = useCallback(() => {
+    let consumed = false;
+    for (let c = 0; c < CONSUMERS; c++) {
+      if (deadRef.current.has(c)) continue;
+      let best = -1;
+      let bestLag = 0;
+      for (let p = 0; p < PARTITIONS; p++) {
+        if (assignsRef.current[p] !== c) continue;
+        const lag = offsetsRef.current[p] - cOffsetsRef.current[p];
+        if (lag > bestLag) {
+          bestLag = lag;
+          best = p;
+        }
+      }
+      if (best === -1) continue;
+      cOffsetsRef.current = cOffsetsRef.current.map((v, i) =>
+        i === best ? v + 1 : v,
+      );
+      nConsRef.current += 1;
+      consumed = true;
+      const part = partRectsRef.current[best];
+      const cons = consRectsRef.current[c];
+      if (part && cons) {
+        consumeFlights.current.push({
+          x: part.cx,
+          y: part.cy,
+          x0: part.cx,
+          y0: part.cy,
+          x1: cons.cx,
+          y1: cons.cy,
+          t: 0,
+          dur: 550,
+          born: performance.now(),
+          color: PALETTE[best],
+        });
+      }
+    }
+
+    const lag = countTotalLag(offsetsRef.current, cOffsetsRef.current);
+    if (consumed) {
+      setConsCount(nConsRef.current);
+      setTotalLag(lag);
+      wake();
+    }
+    if (lag <= 0) stopConsumerPolling();
+  }, [stopConsumerPolling, wake]);
+
+  const startConsumerPolling = useCallback(() => {
+    if (
+      consumerIntervalRef.current !== null ||
+      countTotalLag(offsetsRef.current, cOffsetsRef.current) <= 0
+    ) {
+      return;
+    }
+    consumerIntervalRef.current = setInterval(consumeAvailableMessages, 200);
+  }, [consumeAvailableMessages]);
 
   const send = useCallback(
     (speed = 1) => {
@@ -216,6 +291,7 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
       );
       setOffsets([...offsetsRef.current]);
       setProdCount(nProdRef.current);
+      setTotalLag(countTotalLag(offsetsRef.current, cOffsetsRef.current));
 
       const prod = prodRectRef.current;
       const part = partRectsRef.current[p];
@@ -233,19 +309,40 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
           color: PALETTE[p],
         });
       }
+      startConsumerPolling();
       wake();
       if (nProdRef.current >= 3) complete();
     },
-    [complete, wake],
+    [complete, startConsumerPolling, wake],
+  );
+
+  const scheduleSend = useCallback(
+    (speed: number, delay: number) => {
+      const timeout = setTimeout(() => {
+        sendTimeoutsRef.current.delete(timeout);
+        send(speed);
+      }, delay);
+      sendTimeoutsRef.current.add(timeout);
+    },
+    [send],
   );
 
   const burst = useCallback(() => {
-    for (let i = 0; i < 15; i++) setTimeout(() => send(1), i * 110);
-  }, [send]);
+    for (let i = 0; i < 15; i++) scheduleSend(1, i * 110);
+  }, [scheduleSend]);
 
   const storm = useCallback(() => {
-    for (let i = 0; i < 40; i++) setTimeout(() => send(1.5), i * 55);
-  }, [send]);
+    for (let i = 0; i < 40; i++) scheduleSend(1.5, i * 55);
+  }, [scheduleSend]);
+
+  useEffect(
+    () => () => {
+      stopConsumerPolling();
+      sendTimeoutsRef.current.forEach(clearTimeout);
+      sendTimeoutsRef.current.clear();
+    },
+    [stopConsumerPolling],
+  );
 
   const kill = useCallback(() => {
     if (deadRef.current.has(1)) return;
@@ -255,56 +352,6 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
     setAssigns({ ...assignsRef.current });
     rebalanceFlashRef.current = 1;
     wake();
-  }, [wake]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      let consumed = false;
-      for (let c = 0; c < CONSUMERS; c++) {
-        if (deadRef.current.has(c)) continue;
-        let best = -1;
-        let bestLag = 0;
-        for (let p = 0; p < PARTITIONS; p++) {
-          if (assignsRef.current[p] !== c) continue;
-          const lag = offsetsRef.current[p] - cOffsetsRef.current[p];
-          if (lag > bestLag) {
-            bestLag = lag;
-            best = p;
-          }
-        }
-        if (best === -1) continue;
-        cOffsetsRef.current = cOffsetsRef.current.map((v, i) =>
-          i === best ? v + 1 : v,
-        );
-        nConsRef.current += 1;
-        consumed = true;
-        const part = partRectsRef.current[best];
-        const cons = consRectsRef.current[c];
-        if (part && cons) {
-          consumeFlights.current.push({
-            x: part.cx,
-            y: part.cy,
-            x0: part.cx,
-            y0: part.cy,
-            x1: cons.cx,
-            y1: cons.cy,
-            t: 0,
-            dur: 550,
-            born: performance.now(),
-            color: PALETTE[best],
-          });
-        }
-      }
-      if (consumed) {
-        setConsCount(nConsRef.current);
-        let lag = 0;
-        for (let i = 0; i < PARTITIONS; i++)
-          lag += offsetsRef.current[i] - cOffsetsRef.current[i];
-        setTotalLag(lag);
-        wake();
-      }
-    }, 200);
-    return () => clearInterval(interval);
   }, [wake]);
 
   return (

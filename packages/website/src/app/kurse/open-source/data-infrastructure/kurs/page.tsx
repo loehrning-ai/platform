@@ -32,7 +32,7 @@ export default async function DataInfrastructureKursIndexPage() {
   const copy = getDataInfraCourseCopy(locale).index;
 
   return (
-    <main className="mx-auto w-full max-w-[980px] min-w-0 px-4 py-12 sm:px-6 sm:py-16">
+    <div className="mx-auto w-full max-w-[980px] min-w-0 px-4 py-12 sm:px-6 sm:py-16">
       <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
         {copy.eyebrow}
       </p>
@@ -105,6 +105,6 @@ export default async function DataInfrastructureKursIndexPage() {
         locale={locale}
         className="mt-12"
       />
-    </main>
+    </div>
   );
 }

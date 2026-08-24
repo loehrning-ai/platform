@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useLocale } from "@/components/i18n/locale-context";
 import {
@@ -10,101 +10,72 @@ import {
 } from "@/lib/progress/browser-learning-storage";
 import { continueWithAnonymousProgress } from "@/lib/progress/store";
 import { isLearningOwnerRoute } from "@/lib/progress/learning-route-policy";
-import {
-  LEARNING_OWNER_INERT_ATTRIBUTE,
-  setSharedInertOwner,
-} from "@/lib/a11y/shared-inert";
 import { useNavModalOpen } from "@/lib/a11y/nav-modal-state";
 
 /**
- * Prevent progress controls from accepting interactions before Auth has
- * selected an isolated account or anonymous namespace. The root `main`
- * remains server-owned; this component only owns the gate attributes and the
- * separate continuation panel.
+ * Keep progress persistence fail-closed until Auth selects an isolated account
+ * or anonymous namespace. Course content stays usable while the learner makes
+ * that storage choice explicitly.
  */
 export function LearningOwnerBoundaryRuntime() {
   const pathname = usePathname();
   const locale = useLocale();
   const navModalOpen = useNavModalOpen();
-  const continuationRef = useRef<HTMLButtonElement>(null);
-  // `null` keeps server/no-JS content fully navigable. The layout effect runs
-  // before the first interactive paint and applies `inert` when ownership is
-  // unresolved. The progress store itself remains fail-closed while the owner
-  // is unknown.
-  const [owner, setOwner] = useState<LearningOwnerContext | null>(null);
+  // Unknown is the fail-closed server state. The compact prompt is fixed so a
+  // returning anonymous/account learner does not see course content jump when
+  // hydration resolves the owner and removes it.
+  const [owner, setOwner] = useState<LearningOwnerContext>({
+    kind: "unknown",
+    generation: 0,
+  });
+  const [hydrated, setHydrated] = useState(false);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    setHydrated(true);
     setOwner(getLearningOwnerContext());
     return subscribeLearningOwner(setOwner);
   }, []);
 
-  const unresolved =
-    owner?.kind === "unknown" && isLearningOwnerRoute(pathname);
-
-  useLayoutEffect(() => {
-    const main = document.getElementById("main-content");
-    if (!main) return;
-
-    setSharedInertOwner(main, LEARNING_OWNER_INERT_ATTRIBUTE, unresolved);
-    if (unresolved) {
-      main.setAttribute("aria-busy", "true");
-    } else {
-      main.removeAttribute("aria-busy");
-    }
-
-    return () => {
-      setSharedInertOwner(main, LEARNING_OWNER_INERT_ATTRIBUTE, false);
-      main.removeAttribute("aria-busy");
-    };
-  }, [unresolved]);
-
-  useLayoutEffect(() => {
-    if (!unresolved || navModalOpen) return;
-    const main = document.getElementById("main-content");
-    const activeElement = document.activeElement;
-    if (
-      main &&
-      activeElement instanceof HTMLElement &&
-      main.contains(activeElement)
-    ) {
-      continuationRef.current?.focus();
-    }
-  }, [navModalOpen, unresolved]);
+  const unresolved = owner.kind === "unknown" && isLearningOwnerRoute(pathname);
 
   return (
     <>
       {unresolved && (
-        <aside
+        <section
           data-learning-owner-panel
-          className={`fixed inset-x-4 bottom-4 z-40 mx-auto max-w-xl border-2 border-foreground bg-card p-4 shadow-[4px_4px_0_0_var(--color-foreground)] ${navModalOpen ? "invisible pointer-events-none" : ""}`}
-          role="status"
+          aria-labelledby="learning-owner-title"
           aria-live="polite"
-          aria-atomic="true"
+          className={`fixed bottom-24 left-3 right-3 z-50 border-2 border-brand-orange bg-background px-3 py-2 shadow-[4px_4px_0_0_var(--color-foreground)] sm:bottom-4 sm:left-auto sm:right-4 sm:w-[min(28rem,calc(100vw-2rem))] sm:px-4 ${navModalOpen ? "invisible pointer-events-none" : ""}`}
           aria-hidden={navModalOpen || undefined}
           inert={navModalOpen || undefined}
           data-nav-menu-inert={navModalOpen ? "true" : undefined}
         >
-          <p className="text-sm font-semibold">
-            {locale === "de"
-              ? "Lernkonto wird sicher zugeordnet."
-              : "Learning account ownership is being resolved."}
-          </p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            {locale === "de"
-              ? "Fortschrittsaktionen bleiben gesperrt, bis das Konto geprüft ist. Ohne Verbindung kannst du für diesen Seitenaufruf getrennt lokal weiterlernen."
-              : "Progress actions stay locked until the account is verified. Without a connection, continue in the separate local learning space for this page load."}
-          </p>
-          <button
-            ref={continuationRef}
-            type="button"
-            onClick={() => continueWithAnonymousProgress()}
-            className="mt-3 min-h-11 border-2 border-foreground bg-background px-4 py-2 text-xs font-bold uppercase tracking-wide text-foreground"
-          >
-            {locale === "de"
-              ? "Lokal ohne Kontosynchronisierung fortfahren"
-              : "Continue locally without account sync"}
-          </button>
-        </aside>
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p
+                id="learning-owner-title"
+                className="text-xs font-semibold text-foreground"
+              >
+                {locale === "de"
+                  ? "Fortschritt bleibt getrennt."
+                  : "Progress stays isolated."}
+              </p>
+              <p className="mt-0.5 hidden text-[11px] leading-snug text-muted-foreground sm:block">
+                {locale === "de"
+                  ? "Speichern beginnt erst nach Kontoprüfung oder deiner lokalen Wahl."
+                  : "Saving starts only after account verification or your local choice."}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => continueWithAnonymousProgress()}
+              disabled={!hydrated}
+              className="min-h-11 shrink-0 border border-brand-orange bg-background px-3 py-2 text-[11px] font-bold uppercase tracking-[0.08em] text-foreground transition-colors hover:bg-brand-orange hover:text-white focus-visible:bg-brand-orange focus-visible:text-white disabled:cursor-wait disabled:border-border disabled:text-muted-foreground"
+            >
+              {locale === "de" ? "Lokal weiterlernen" : "Continue locally"}
+            </button>
+          </div>
+        </section>
       )}
     </>
   );

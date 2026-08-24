@@ -1,10 +1,11 @@
 import { describe, it, expect, afterEach, vi } from "vitest";
-import { render, screen, cleanup } from "@testing-library/react";
+import { fireEvent, render, screen, cleanup } from "@testing-library/react";
 import { PipelineBar, StageIcon, OV_STAGES } from "./pipeline-bar";
 
 afterEach(() => {
   cleanup();
   vi.useRealTimers();
+  vi.restoreAllMocks();
 });
 
 describe("PipelineBar ", () => {
@@ -34,6 +35,28 @@ describe("PipelineBar ", () => {
     expect(
       screen.getByRole("link", { name: /Chapter 05 · Orchestrate/ }),
     ).toHaveAttribute("aria-current", "step");
+  });
+
+  it("does not animate while hidden and starts only after an explicit play", () => {
+    const raf = vi
+      .spyOn(window, "requestAnimationFrame")
+      .mockImplementation(() => 1);
+    const interval = vi.spyOn(window, "setInterval");
+
+    render(
+      <PipelineBar activeId="ingest" setActiveId={() => {}} locale="en" />,
+    );
+
+    expect(raf).not.toHaveBeenCalled();
+    expect(interval).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole("button", { name: "Play flow" }));
+
+    expect(raf).toHaveBeenCalledTimes(1);
+    expect(interval).toHaveBeenCalledTimes(1);
+    expect(
+      screen.getByRole("button", { name: "Pause flow" }),
+    ).toBeEnabled();
   });
 });
 

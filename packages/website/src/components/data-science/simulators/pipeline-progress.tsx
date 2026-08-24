@@ -337,7 +337,10 @@ export function PipelineProgress() {
               <span style={{ color: "#9FE06B", animation: "none" }}>▋</span>
             )}
           </div>
-          <div style={{ display: "flex", gap: 10 }}>
+          <div
+            data-pipeline-actions
+            style={{ display: "flex", flexWrap: "wrap", gap: 10 }}
+          >
             <button
               type="button"
               onClick={runStep}

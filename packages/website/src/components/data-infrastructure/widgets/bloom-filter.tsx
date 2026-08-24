@@ -5,8 +5,7 @@
 
 import { useCallback, useRef, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
-import { useCanvasRAF } from "../canvas/use-canvas-raf";
-import { useCanvasAutoSize } from "../canvas/use-canvas-size";
+import { useAutoSizedCanvasRAF } from "../canvas/use-auto-sized-canvas-raf";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
 import { useDataInfraWidgetLocale } from "../widget-locale-context";
@@ -67,8 +66,6 @@ export function BloomFilter({ lessonId, cpId }: BloomFilterProps): JSX.Element {
   const bitsRef = useRef<number[]>(new Array(N_BITS).fill(0));
   const committedRef = useRef<number[]>(new Array(N_BITS).fill(0));
 
-  useCanvasAutoSize(canvasRef, wrapRef, { minHeight: 200 });
-
   const draw = useCallback((): boolean => {
     const canvas = canvasRef.current;
     if (!canvas) return false;
@@ -102,7 +99,9 @@ export function BloomFilter({ lessonId, cpId }: BloomFilterProps): JSX.Element {
     return false;
   }, [locale]);
 
-  const { wake } = useCanvasRAF(draw);
+  const { wake } = useAutoSizedCanvasRAF(canvasRef, wrapRef, draw, {
+    minHeight: 200,
+  });
 
   const add = useCallback(() => {
     const v = addValue.trim();

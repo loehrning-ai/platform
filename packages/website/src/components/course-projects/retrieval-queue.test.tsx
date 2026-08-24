@@ -8,8 +8,10 @@ import {
   type LessonMissionState,
 } from "@/lib/course-projects/lesson-mission-persistence";
 import { getLessonMissionProfile } from "@/lib/course-projects/lesson-missions";
+import { selectCourseProjectCheckpoints } from "@/lib/course-projects/checkpoint-selector";
 import type { RetrievalSuccessLevel } from "@/lib/course-projects/retrieval-schedule";
 import { getCourseProjectExecutionReceipt } from "@/lib/course-projects/types";
+import type { CourseSlug } from "@/lib/course/types";
 import {
   __resetLearningOwnerForTests,
   activateAnonymousLearningOwner,
@@ -20,13 +22,17 @@ import { RetrievalQueue } from "./retrieval-queue";
 
 const COURSE = "data-science" as const;
 const RESET_AT = "2026-08-01T00:00:00.000Z";
+const CHECKPOINT_LESSON_IDS = selectCourseProjectCheckpoints(COURSE).map(
+  ({ lessonId }) => lessonId,
+);
 
 function scheduledState(
+  courseSlug: CourseSlug,
   successLevel: RetrievalSuccessLevel,
   lastAttemptAt: string,
   nextDueAt: string,
 ): LessonMissionState {
-  const profile = getLessonMissionProfile(COURSE);
+  const profile = getLessonMissionProfile(courseSlug);
   const correct = profile.retrieval.correctId;
   return {
     ...createEmptyLessonMissionState(),
@@ -34,7 +40,7 @@ function scheduledState(
     revealed: true,
     workspaceOpened: true,
     manipulated: true,
-    executionReceipt: getCourseProjectExecutionReceipt(COURSE),
+    executionReceipt: getCourseProjectExecutionReceipt(courseSlug),
     evidenceId: profile.evidence.correctId,
     revisionId: profile.revision.correctId,
     retrievalId: correct,
@@ -54,12 +60,13 @@ function seed(
   lastAttemptAt: string,
   nextDueAt: string,
   resetAt = RESET_AT,
+  courseSlug: CourseSlug = COURSE,
 ): void {
   expect(
     setOwnedLocalLearningItem(
-      getLessonMissionStorageKey(COURSE, lessonId),
+      getLessonMissionStorageKey(courseSlug, lessonId),
       serializeLessonMissionState(
-        scheduledState(successLevel, lastAttemptAt, nextDueAt),
+        scheduledState(courseSlug, successLevel, lastAttemptAt, nextDueAt),
         resetAt,
       ),
     ),
@@ -83,7 +90,7 @@ afterEach(() => {
 
 describe("RetrievalQueue", () => {
   it("shows the English due count, current due state, and conservative level-1 label", () => {
-    const lessonId = CANONICAL_LESSON_IDS[COURSE][0];
+    const lessonId = CHECKPOINT_LESSON_IDS[0];
     seed(lessonId, 1, "2026-08-12T12:00:00.000Z", "2026-08-13T12:00:00.000Z");
 
     render(
@@ -110,7 +117,7 @@ describe("RetrievalQueue", () => {
   });
 
   it("uses the level-3 spaced-mastery label in German", () => {
-    const lessonId = CANONICAL_LESSON_IDS[COURSE][0];
+    const lessonId = CHECKPOINT_LESSON_IDS[0];
     seed(lessonId, 3, "2026-07-23T12:00:00.000Z", "2026-08-13T12:00:00.000Z");
 
     render(
@@ -132,7 +139,7 @@ describe("RetrievalQueue", () => {
   });
 
   it("routes v2 history through fresh Run evidence instead of claiming Retrieve is available", () => {
-    const lessonId = CANONICAL_LESSON_IDS[COURSE][0];
+    const lessonId = CHECKPOINT_LESSON_IDS[0];
     const profile = getLessonMissionProfile(COURSE);
     expect(
       setOwnedLocalLearningItem(
@@ -185,7 +192,7 @@ describe("RetrievalQueue", () => {
   });
 
   it("reports an established current review as scheduled without a due action", () => {
-    const lessonId = CANONICAL_LESSON_IDS[COURSE][0];
+    const lessonId = CHECKPOINT_LESSON_IDS[0];
     seed(lessonId, 2, "2026-08-13T12:00:00.000Z", "2026-08-20T12:00:00.000Z");
 
     render(
@@ -207,7 +214,7 @@ describe("RetrievalQueue", () => {
   });
 
   it("updates only after an explicit bounded refresh, without polling", () => {
-    const [currentLessonId, anotherLessonId] = CANONICAL_LESSON_IDS[COURSE];
+    const [currentLessonId, anotherLessonId] = CHECKPOINT_LESSON_IDS;
     seed(
       currentLessonId,
       1,
@@ -241,20 +248,18 @@ describe("RetrievalQueue", () => {
       screen.getByRole("list", { name: "Other due lessons" }),
     ).toHaveTextContent(anotherLessonId);
     expect(
-      screen.getByText(
-        "Open these stable lesson IDs from course navigation. Direct links appear only when the course route is known unambiguously.",
-      ),
-    ).toBeInTheDocument();
-    expect(
-      screen
-        .getByRole("list", { name: "Other due lessons" })
-        .querySelectorAll("a"),
-    ).toHaveLength(0);
+      screen.getByRole("link", {
+        name: `Open due lesson: ${anotherLessonId}`,
+      }),
+    ).toHaveAttribute(
+      "href",
+      `/en/kurse/open-source/data-science/${anotherLessonId}`,
+    );
     expect(vi.getTimerCount()).toBe(0);
   });
 
   it("refreshes same-tab writes when the bounded schedule revision changes", () => {
-    const [currentLessonId, anotherLessonId] = CANONICAL_LESSON_IDS[COURSE];
+    const [currentLessonId, anotherLessonId] = CHECKPOINT_LESSON_IDS;
     seed(
       currentLessonId,
       1,
@@ -292,9 +297,53 @@ describe("RetrievalQueue", () => {
     expect(vi.getTimerCount()).toBe(0);
   });
 
-  it("bounds the cross-lesson due list while preserving its exact total", () => {
-    const [currentLessonId, ...otherLessonIds] = CANONICAL_LESSON_IDS[COURSE];
-    for (const lessonId of [currentLessonId, ...otherLessonIds.slice(0, 10)]) {
+  it("uses a native same-document fragment for another due block lesson", () => {
+    const courseSlug = "ki-und-gesellschaft" as const;
+    const [currentLessonId, anotherLessonId] = selectCourseProjectCheckpoints(
+      courseSlug,
+    )
+      .map(({ lessonId }) => lessonId)
+      .filter((lessonId) => lessonId.startsWith("deepfake-"));
+    seed(
+      currentLessonId,
+      1,
+      "2026-08-12T12:00:00.000Z",
+      "2026-08-13T12:00:00.000Z",
+      RESET_AT,
+      courseSlug,
+    );
+    seed(
+      anotherLessonId,
+      1,
+      "2026-08-12T12:00:00.000Z",
+      "2026-08-13T12:00:00.000Z",
+      RESET_AT,
+      courseSlug,
+    );
+
+    render(
+      <RetrievalQueue
+        courseSlug={courseSlug}
+        currentLessonId={currentLessonId}
+        locale="de"
+        resetAt={RESET_AT}
+      />,
+    );
+
+    const dueLink = screen.getByRole("link", {
+      name: `Fällige Lektion öffnen: ${anotherLessonId}`,
+    });
+    expect(dueLink).toHaveAttribute(
+      "href",
+      `/ki-und-gesellschaft/kurs/block_2#lesson=${anotherLessonId}`,
+    );
+    expect(dueLink.tagName).toBe("A");
+    expect(dueLink).toHaveAttribute("data-native-lesson-fragment", "true");
+  });
+
+  it("lists every reachable due checkpoint without a dead overflow entry", () => {
+    const [currentLessonId, ...otherLessonIds] = CHECKPOINT_LESSON_IDS;
+    for (const lessonId of [currentLessonId, ...otherLessonIds]) {
       seed(lessonId, 1, "2026-08-12T12:00:00.000Z", "2026-08-13T12:00:00.000Z");
     }
 
@@ -307,16 +356,60 @@ describe("RetrievalQueue", () => {
       />,
     );
 
-    expect(screen.getByText("11 reviews are due")).toBeInTheDocument();
-    expect(screen.getByText("Other due lessons · 10")).toBeInTheDocument();
+    expect(screen.getByText("5 reviews are due")).toBeInTheDocument();
+    expect(screen.getByText("Other due lessons · 4")).toBeInTheDocument();
     const list = screen.getByRole("list", { name: "Other due lessons" });
-    expect(list.querySelectorAll("li")).toHaveLength(9);
-    expect(list).toHaveTextContent("and 2 more");
-    expect(list.querySelectorAll("a")).toHaveLength(0);
+    expect(list.querySelectorAll("li")).toHaveLength(4);
+    expect(list).not.toHaveTextContent(/and \d+ more/);
+    expect(list.querySelectorAll("a")).toHaveLength(4);
+    for (const lessonId of otherLessonIds) {
+      expect(
+        screen.getByRole("link", { name: `Open due lesson: ${lessonId}` }),
+      ).toHaveAttribute(
+        "href",
+        `/en/kurse/open-source/data-science/${lessonId}`,
+      );
+    }
+  });
+
+  it("does not render a due link for a historical non-checkpoint schedule", () => {
+    const checkpointIds = new Set(CHECKPOINT_LESSON_IDS);
+    const nonCheckpointLesson = CANONICAL_LESSON_IDS[COURSE].find(
+      (lessonId) => !checkpointIds.has(lessonId),
+    );
+    expect(nonCheckpointLesson).toBeDefined();
+    seed(
+      CHECKPOINT_LESSON_IDS[0],
+      1,
+      "2026-08-12T12:00:00.000Z",
+      "2026-08-13T12:00:00.000Z",
+    );
+    seed(
+      nonCheckpointLesson!,
+      1,
+      "2026-08-12T12:00:00.000Z",
+      "2026-08-13T12:00:00.000Z",
+    );
+
+    render(
+      <RetrievalQueue
+        courseSlug={COURSE}
+        currentLessonId={CHECKPOINT_LESSON_IDS[0]}
+        locale="en"
+        resetAt={RESET_AT}
+      />,
+    );
+
+    expect(screen.getByText("1 review is due")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", {
+        name: `Open due lesson: ${nonCheckpointLesson}`,
+      }),
+    ).not.toBeInTheDocument();
   });
 
   it("rechecks owner and reset boundaries without carrying a prior queue", () => {
-    const lessonId = CANONICAL_LESSON_IDS[COURSE][0];
+    const lessonId = CHECKPOINT_LESSON_IDS[0];
     seed(lessonId, 1, "2026-08-12T12:00:00.000Z", "2026-08-13T12:00:00.000Z");
     const { rerender } = render(
       <RetrievalQueue
@@ -332,10 +425,11 @@ describe("RetrievalQueue", () => {
       setUnknownLearningOwner();
     });
     expect(
-      screen.getAllByText(
+      screen.getByText(
         "Local learning state is not available for the current identity yet.",
       ),
-    ).toHaveLength(2);
+    ).toBeInTheDocument();
+    expect(screen.getByText("Local mode inactive")).toBeInTheDocument();
 
     act(() => {
       activateAnonymousLearningOwner();
@@ -359,17 +453,34 @@ describe("RetrievalQueue", () => {
     render(
       <RetrievalQueue
         courseSlug={COURSE}
-        currentLessonId={CANONICAL_LESSON_IDS[COURSE][0]}
+        currentLessonId={CHECKPOINT_LESSON_IDS[0]}
         locale="en"
         resetAt={RESET_AT}
       />,
     );
 
     expect(
-      screen.getAllByText(
+      screen.getByText(
         "Local learning state is not available for the current identity yet.",
       ),
-    ).toHaveLength(2);
+    ).toBeInTheDocument();
+    expect(screen.getByText("Local mode inactive")).toBeInTheDocument();
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
+
+    const header = document.querySelector("[data-retrieval-queue-header]");
+    expect(header).toHaveClass(
+      "grid",
+      "grid-cols-[auto_minmax(0,1fr)_auto]",
+      "sm:flex",
+    );
+    expect(screen.getByRole("status")).toHaveClass(
+      "col-start-2",
+      "row-start-2",
+      "[overflow-wrap:anywhere]",
+    );
+    expect(screen.getByRole("button", { name: "Retrieval queue" })).toHaveClass(
+      "col-start-3",
+      "row-span-2",
+    );
   });
 });

@@ -2305,11 +2305,14 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  min-width: 0;
+  flex-wrap: wrap;
   gap: 8px;
   font-size: 12px;
   color: var(--ink-2);
   font-weight: 600;
   margin-bottom: 6px;
+  overflow-wrap: anywhere;
 }
 .ds-v8-scope .sim-ctrl label .mono {
   color: var(--ink-1);
@@ -2592,6 +2595,12 @@
 .ds-v8-scope .panel-meta {
   overflow-wrap: anywhere;
 }
+.ds-v8-scope .panel-title .lab {
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
 .ds-v8-scope .panel-meta {
   flex: 0 1 auto;
   max-width: 100%;
@@ -2789,6 +2798,13 @@
 }
 
 @media (max-width: 460px) {
+  /* LessonReference owns the disclosure border; the reader's .content already
+     supplies the phone gutter. Avoid reducing a 320px lesson to a 220px
+     double-inset column. */
+  .ds-v8-scope [data-lesson-reference-content] {
+    padding-left: 0;
+    padding-right: 0;
+  }
   .ds-v8-scope .panel-head,
   .ds-v8-scope .panel-body,
   .ds-v8-scope .simulation-disclosure,

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ComprehensionCheck } from "@/components/wie-ki-funktioniert/ComprehensionCheck";
+import { LessonReference } from "@/components/course/lesson-reference";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import {
   buildLocaleAlternates,
@@ -182,8 +183,8 @@ function WieKiLektionContent({
         id="wie-ki-lesson-jsonld"
       />
 
-      <main className="mx-auto w-full max-w-5xl min-w-0 px-4 pb-24 pt-12 sm:px-6 sm:pb-32 sm:pt-20 lg:px-10">
-        <nav aria-label={copy.breadcrumbLabel} className="mb-10 min-w-0">
+      <div className="mx-auto w-full max-w-5xl min-w-0 px-4 pb-16 pt-6 sm:px-6 sm:pb-20 sm:pt-12 lg:px-10">
+        <nav aria-label={copy.breadcrumbLabel} className="mb-4 min-w-0 sm:mb-6">
           <ol className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground sm:tracking-[0.1em]">
             <li>
               <Link
@@ -213,7 +214,7 @@ function WieKiLektionContent({
         </nav>
 
         <article className="min-w-0">
-          <header className="min-w-0 border-b-2 border-foreground pb-10">
+          <header className="min-w-0 border-b-2 border-foreground pb-5 sm:pb-6">
             <p className="break-words font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-brand-orange sm:tracking-[0.14em]">
               {copy.lessonProgress(
                 lektion.number,
@@ -221,93 +222,110 @@ function WieKiLektionContent({
                 lektion.durationMinutes,
               )}
             </p>
-            <h1 className="mt-5 max-w-4xl break-words text-[clamp(2.25rem,6vw,4.5rem)] font-bold leading-[0.96] tracking-[-0.04em] text-foreground [overflow-wrap:anywhere]">
+            <h1 className="mt-3 max-w-4xl break-words text-[clamp(2rem,6vw,4.5rem)] font-bold leading-[0.96] tracking-[-0.04em] text-foreground [overflow-wrap:anywhere]">
               {lektion.title}
             </h1>
-            <p className="mt-5 max-w-3xl break-words text-[17px] leading-[1.6] text-muted-foreground [overflow-wrap:anywhere] sm:text-[20px]">
+            <p className="mt-3 max-w-3xl break-words text-[16px] leading-[1.45] text-muted-foreground [overflow-wrap:anywhere] sm:text-[20px] sm:leading-[1.5]">
               {lektion.subtitle}
             </p>
-            <p className="mt-5 break-words font-mono text-[11px] text-muted-foreground">
-              <time dateTime={meta.lastReviewed}>
-                {copy.reviewed}: {standDate}
-              </time>
-            </p>
-
-            <ul
-              className="mt-6 flex min-w-0 flex-wrap gap-2"
-              aria-label={copy.conceptsLabel}
-            >
-              {lektion.keyConcepts.map((concept) => (
-                <li
-                  key={concept}
-                  className="max-w-full break-words border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.06em] text-muted-foreground [overflow-wrap:anywhere] sm:tracking-[0.08em]"
-                >
-                  {concept}
-                </li>
-              ))}
-            </ul>
           </header>
 
-          <div className="mt-12 min-w-0 space-y-16">
-            {lektion.sections.map((section, index) => (
-              <section
-                key={section.id}
-                className="min-w-0 scroll-mt-24"
-                aria-labelledby={`section-${section.id}`}
-              >
-                <div className="mb-3 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
-                  <span className="break-words font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-brand-orange sm:tracking-[0.12em]">
-                    {copy.section(index + 1)}
-                  </span>
-                  <span className="break-words font-mono text-[10px] text-muted-foreground">
-                    {copy.readTime(section.readTimeMinutes)}
-                  </span>
-                </div>
-                <h2
-                  id={`section-${section.id}`}
-                  className="mb-6 max-w-3xl break-words text-[26px] font-bold leading-tight tracking-[-0.025em] text-foreground [overflow-wrap:anywhere] sm:text-[32px]"
-                >
-                  {section.title}
-                </h2>
+          {check ? (
+            <div className="mt-4 max-w-3xl sm:mt-5">
+              <ComprehensionCheck
+                id={lektion.id}
+                question={check.question}
+                criteria={check.criteria}
+                label={copy.selfCheck}
+                responseLabel={copy.responseLabel}
+                responsePlaceholder={copy.responsePlaceholder}
+                compareLabel={copy.compareCriteria}
+                hideLabel={copy.hideCriteria}
+                criteriaLabel={copy.criteriaHeading}
+                sessionOnlyLabel={copy.sessionOnly}
+              />
+            </div>
+          ) : null}
 
-                <div className="max-w-3xl min-w-0 space-y-5">
-                  {section.content.split("\n\n").map((paragraph, paragraphIndex) => (
-                    <p
-                      key={paragraphIndex}
-                      className="break-words text-[16px] leading-[1.75] text-foreground [overflow-wrap:anywhere] sm:text-[17px]"
+          <div className="mt-5 min-w-0">
+            <LessonReference
+              locale={locale}
+              title={copy.referenceTitle}
+              headingLevel={2}
+            >
+              <div className="min-w-0 space-y-10">
+                <div className="max-w-3xl border-b border-border pb-4">
+                  <p className="break-words font-mono text-[11px] text-muted-foreground">
+                    <time dateTime={meta.lastReviewed}>
+                      {copy.reviewed}: {standDate}
+                    </time>
+                  </p>
+                  <ul
+                    className="mt-3 flex min-w-0 flex-wrap gap-2"
+                    aria-label={copy.conceptsLabel}
+                  >
+                    {lektion.keyConcepts.map((concept) => (
+                      <li
+                        key={concept}
+                        className="max-w-full break-words border border-border bg-card px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.06em] text-muted-foreground [overflow-wrap:anywhere] sm:tracking-[0.08em]"
+                      >
+                        {concept}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                {lektion.sections.map((section, index) => (
+                  <section
+                    key={section.id}
+                    className="min-w-0 scroll-mt-24"
+                    aria-labelledby={`section-${section.id}`}
+                  >
+                    <div className="mb-2 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+                      <span className="break-words font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-brand-orange sm:tracking-[0.12em]">
+                        {copy.section(index + 1)}
+                      </span>
+                      <span className="break-words font-mono text-[10px] text-muted-foreground">
+                        {copy.readTime(section.readTimeMinutes)}
+                      </span>
+                    </div>
+                    <h3
+                      id={`section-${section.id}`}
+                      className="mb-4 max-w-3xl break-words text-[26px] font-bold leading-tight tracking-[-0.025em] text-foreground [overflow-wrap:anywhere] sm:text-[32px]"
                     >
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
+                      {section.title}
+                    </h3>
 
-                <aside className="mt-7 max-w-3xl min-w-0 border-l-4 border-brand-orange bg-brand-orange/5 py-4 pl-4 pr-4 sm:pl-5">
-                  <p className="break-words font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-brand-orange sm:tracking-[0.1em]">
-                    {copy.takeaway}
-                  </p>
-                  <p className="mt-2 break-words text-[15px] font-bold leading-[1.55] text-foreground [overflow-wrap:anywhere] sm:text-[16px]">
-                    {section.keyTakeaway}
-                  </p>
-                </aside>
+                    <div className="max-w-3xl min-w-0 space-y-4">
+                      {section.content
+                        .split("\n\n")
+                        .map((paragraph, paragraphIndex) => (
+                          <p
+                            key={paragraphIndex}
+                            className="break-words text-[16px] leading-[1.7] text-foreground [overflow-wrap:anywhere] sm:text-[17px]"
+                          >
+                            {paragraph}
+                          </p>
+                        ))}
+                    </div>
 
-                {index === lektion.sections.length - 1 && check && (
-                  <div className="max-w-3xl">
-                    <ComprehensionCheck
-                      id={lektion.id}
-                      question={check.question}
-                      answer={check.answer}
-                      label={copy.selfCheck}
-                    />
-                  </div>
-                )}
-              </section>
-            ))}
+                    <aside className="mt-5 max-w-3xl min-w-0 border-l-4 border-brand-orange bg-brand-orange/5 py-3 pl-4 pr-4 sm:pl-5">
+                      <p className="break-words font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-brand-orange sm:tracking-[0.1em]">
+                        {copy.takeaway}
+                      </p>
+                      <p className="mt-2 break-words text-[15px] font-bold leading-[1.5] text-foreground [overflow-wrap:anywhere] sm:text-[16px]">
+                        {section.keyTakeaway}
+                      </p>
+                    </aside>
+                  </section>
+                ))}
+              </div>
+            </LessonReference>
           </div>
         </article>
 
         <nav
           aria-label={copy.lessonNavigation}
-          className="mt-16 min-w-0 border-t border-border pt-8"
+          className="mt-8 min-w-0 border-t border-border pt-6"
         >
           <div className="grid min-w-0 gap-4 sm:grid-cols-2 sm:items-center">
             <div className="min-w-0">
@@ -362,7 +380,7 @@ function WieKiLektionContent({
             </aside>
           )}
         </nav>
-      </main>
+      </div>
     </>
   );
 }

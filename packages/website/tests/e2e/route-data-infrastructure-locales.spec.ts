@@ -68,6 +68,51 @@ async function settle(page: Page) {
   await settleFontsAndFrame(page);
 }
 
+async function continueLocally(page: Page) {
+  const button = page.getByRole("button", {
+    name: /^(?:Lokal weiterlernen|Continue locally)$/,
+  });
+  const gateAppeared = await button
+    .waitFor({ state: "visible", timeout: 1_500 })
+    .then(() => true)
+    .catch(() => false);
+  if (gateAppeared) {
+    await button.click({ timeout: 5_000 }).catch(async (error: unknown) => {
+      if (await button.isVisible().catch(() => false)) throw error;
+    });
+  }
+}
+
+async function openLessonReference(page: Page) {
+  await page
+    .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+    .waitFor({ state: "attached" });
+  await continueLocally(page);
+  await expect(page.locator("[data-learning-owner-panel]")).toBeHidden({
+    timeout: 15_000,
+  });
+  const reference = page.locator("details[data-lesson-reference]");
+  await expect(reference).toHaveCount(1);
+  await expect(reference).toBeVisible();
+  await expect(reference).toHaveJSProperty("open", false);
+  await reference.locator(":scope > summary").click();
+  await expect(reference).toHaveJSProperty("open", true);
+}
+
+async function expectVisibleRouteHeading(
+  page: Page,
+  route: string,
+  lessonRoutes: readonly string[],
+) {
+  if (lessonRoutes.includes(route)) {
+    const headings = page.getByRole("heading", { level: 1 });
+    await expect(headings, route).toHaveCount(1);
+    await expect(headings, route).toBeVisible();
+    return;
+  }
+  await expect(page.locator("h1").first(), route).toBeVisible();
+}
+
 async function expectContainedLayout(page: Page, label: string) {
   const geometry = await page.evaluate(() => ({
     bodyScrollWidth: document.body.scrollWidth,
@@ -220,7 +265,11 @@ for (const width of VIEWPORTS) {
           });
           expect(response?.status(), route).toBe(200);
           await settle(page);
-          await expect(page.locator("h1").first(), route).toBeVisible();
+          if (routeSet.lessons.includes(route)) {
+            await openLessonReference(page);
+            await settle(page);
+          }
+          await expectVisibleRouteHeading(page, route, routeSet.lessons);
           await expect(page.locator("html"), route).toHaveAttribute(
             "lang",
             localeCase.locale,
@@ -242,6 +291,8 @@ for (const width of VIEWPORTS) {
         }),
       ).toBeVisible();
       await page.goto(routeSet.lessons[0], { waitUntil: "domcontentloaded" });
+      await settle(page);
+      await openLessonReference(page);
       await expect(
         page.getByRole("heading", {
           level: 1,

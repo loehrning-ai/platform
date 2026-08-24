@@ -10,4 +10,5 @@ export const NO_SCRIPT_FALLBACK_CSS =
   ".js-desktop-nav{display:none!important}" +
   ".no-js-primary-nav{position:static!important}" +
   ".no-js-mobile-nav{display:block!important}" +
+  "[data-learning-owner-panel]{display:none!important}" +
   "#main-content{padding-top:0!important}";

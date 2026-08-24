@@ -17,8 +17,7 @@ import {
   type JSX,
 } from "react";
 import { useCheckpoint } from "@/lib/progress";
-import { useCanvasRAF } from "../canvas/use-canvas-raf";
-import { useCanvasAutoSize } from "../canvas/use-canvas-size";
+import { useAutoSizedCanvasRAF } from "../canvas/use-auto-sized-canvas-raf";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
 import { useDataInfraWidgetLocale } from "../widget-locale-context";
@@ -120,11 +119,6 @@ export function StackFlow({ lessonId, cpId }: StackFlowProps): JSX.Element {
     measureLanes();
   }, [measureLanes]);
 
-  useCanvasAutoSize(canvasRef, canvasWrapRef, {
-    minHeight: 260,
-    onResize: measureLanes,
-  });
-
   const draw = useCallback((now: number): boolean => {
     const canvas = canvasRef.current;
     if (!canvas) return false;
@@ -200,7 +194,10 @@ export function StackFlow({ lessonId, cpId }: StackFlowProps): JSX.Element {
     return particlesRef.current.length > 0 || pulsesRef.current.length > 0;
   }, []);
 
-  const { wake } = useCanvasRAF(draw);
+  const { wake } = useAutoSizedCanvasRAF(canvasRef, canvasWrapRef, draw, {
+    minHeight: 260,
+    onResize: measureLanes,
+  });
 
   const fire = useCallback(
     (speedMul = 1) => {

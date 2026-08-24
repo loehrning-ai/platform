@@ -22,6 +22,8 @@ const GROUPS: Record<string, readonly string[]> = {
     "/en/einstieg",
     "/wie-ki-funktioniert",
     "/en/wie-ki-funktioniert",
+    "/wie-ki-funktioniert/lektion-1-vorhersage",
+    "/en/wie-ki-funktioniert/lektion-1-vorhersage",
     "/ki-check",
     "/en/ki-check",
   ],

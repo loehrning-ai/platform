@@ -91,6 +91,16 @@ async function findUncontainedHorizontalEscapes(
   });
 }
 
+async function openLessonReference(page: Page) {
+  await page
+    .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+    .waitFor({ state: "attached" });
+  const reference = page.locator("details[data-lesson-reference]");
+  await expect(reference).toHaveCount(1);
+  await reference.locator("summary").click();
+  await expect(reference).toHaveAttribute("open", "");
+}
+
 test.describe("Data Engineering Fundamentals mobile geometry", () => {
   test.beforeEach(async ({ page }, testInfo) => {
     test.skip(
@@ -126,7 +136,7 @@ test.describe("Data Engineering Fundamentals mobile geometry", () => {
           .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
           .waitFor({ state: "attached" });
         await expect(page.locator("html")).toHaveAttribute("lang", locale);
-        await expect(page.locator("h1")).toHaveCount(1);
+        await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
         expect(
           await page.evaluate(() => document.documentElement.scrollWidth),
           `${locale} landing overflows at ${width}px`,
@@ -147,7 +157,8 @@ test.describe("Data Engineering Fundamentals mobile geometry", () => {
             .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
             .waitFor({ state: "attached" });
           await expect(page.locator("html")).toHaveAttribute("lang", locale);
-          await expect(page.locator("h1")).toHaveCount(1);
+          await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+          await openLessonReference(page);
           await expect(
             page.locator(
               "[data-nextjs-dialog], .vite-error-overlay, #webpack-dev-server-client-overlay",
@@ -301,7 +312,7 @@ test.describe("Data Engineering Fundamentals locale and metadata contract", () =
       });
       expect(landing?.status()).toBe(200);
       await expect(page.locator("html")).toHaveAttribute("lang", locale);
-      await expect(page.locator("h1")).toHaveCount(1);
+      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
       expect(
         await page.locator(`a[href^="${prefix}${COURSE}/"]`).count(),
       ).toBeGreaterThanOrEqual(12);
@@ -310,7 +321,7 @@ test.describe("Data Engineering Fundamentals locale and metadata contract", () =
         waitUntil: "domcontentloaded",
       });
       expect(chapter?.status()).toBe(200);
-      await expect(page.locator("h1")).toHaveCount(1);
+      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
       await expect(page.locator(".de-course")).not.toHaveText("");
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth),

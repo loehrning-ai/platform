@@ -11,8 +11,7 @@
 
 import { useCallback, useRef, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
-import { useCanvasRAF } from "../canvas/use-canvas-raf";
-import { useCanvasAutoSize } from "../canvas/use-canvas-size";
+import { useAutoSizedCanvasRAF } from "../canvas/use-auto-sized-canvas-raf";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
 import { useDataInfraWidgetLocale } from "../widget-locale-context";
@@ -90,8 +89,6 @@ export function CapTriangle({ lessonId, cpId }: CapTriangleProps): JSX.Element {
   const particlesRef = useRef<RequestParticle[]>([]);
   const pickRef = useRef<CapPick | null>(null);
   const splitRef = useRef(false);
-
-  useCanvasAutoSize(canvasRef, wrapRef, { minHeight: 300 });
 
   const draw = useCallback(
     (now: number): boolean => {
@@ -238,7 +235,9 @@ export function CapTriangle({ lessonId, cpId }: CapTriangleProps): JSX.Element {
     [locale],
   );
 
-  const { wake } = useCanvasRAF(draw);
+  const { wake } = useAutoSizedCanvasRAF(canvasRef, wrapRef, draw, {
+    minHeight: 300,
+  });
 
   const emitRequests = useCallback(() => {
     const c = clusterPos(splitTRef.current);

@@ -73,6 +73,37 @@ async function seedProgress(page: Page, value: object) {
   );
 }
 
+async function continueLocally(page: Page) {
+  const button = page.getByRole("button", {
+    name: /^(?:Lokal weiterlernen|Continue locally)$/,
+  });
+  const gateAppeared = await button
+    .waitFor({ state: "visible", timeout: 1_500 })
+    .then(() => true)
+    .catch(() => false);
+  if (gateAppeared) {
+    await button.click({ timeout: 5_000 }).catch(async (error: unknown) => {
+      if (await button.isVisible().catch(() => false)) throw error;
+    });
+  }
+}
+
+async function openLessonReference(page: Page) {
+  await page
+    .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+    .waitFor({ state: "attached" });
+  await continueLocally(page);
+  await expect(page.locator("[data-learning-owner-panel]")).toBeHidden({
+    timeout: 15_000,
+  });
+  const reference = page.locator("details[data-lesson-reference]");
+  await expect(reference).toHaveCount(1);
+  await expect(reference).toBeVisible();
+  await expect(reference).toHaveJSProperty("open", false);
+  await reference.locator(":scope > summary").click();
+  await expect(reference).toHaveJSProperty("open", true);
+}
+
 /** Encode a certificate payload exactly like generateCertificatePdf's QR does. */
 function encodeCertHash(payload: {
   n: string;
@@ -180,6 +211,7 @@ test.describe("Claude Course golden path", () => {
       waitUntil: "domcontentloaded",
     });
     expect(res?.status()).toBe(200);
+    await openLessonReference(page);
 
     // mental-model's first quick check keeps the stable `mental-model::q1`
     // checkpoint identity even when its reviewed answer copy changes.

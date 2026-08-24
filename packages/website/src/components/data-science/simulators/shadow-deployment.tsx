@@ -106,7 +106,11 @@ export function ShadowDeployment() {
           marginBottom: 12,
         }}
       >
-        <div className="sim-controls" style={{ flex: "0 0 210px" }}>
+        <div
+          className="sim-controls"
+          data-shadow-deployment-controls
+          style={{ flex: "0 1 210px", maxWidth: "100%", minWidth: 0 }}
+        >
           <div className="sim-ctrl">
             <label>
               {text("Synthetic v2 shift", "Synthetische v2-Verschiebung")}{" "}

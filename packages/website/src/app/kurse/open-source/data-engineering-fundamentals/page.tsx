@@ -144,7 +144,7 @@ export default async function DataEngineeringFundamentalsLandingPage() {
         data={courseJsonLd}
         id="data-engineering-fundamentals-course-jsonld"
       />
-      <main className="mx-auto w-full max-w-[1180px] min-w-0 px-4 pb-20 pt-14 sm:px-6 sm:pt-20">
+      <div className="mx-auto w-full max-w-[1180px] min-w-0 px-4 pb-20 pt-14 sm:px-6 sm:pt-20">
         <section className="min-w-0 border-y-2 border-foreground py-10 sm:py-14">
           <p className="break-words font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
             {copy.eyebrow}
@@ -276,7 +276,7 @@ export default async function DataEngineeringFundamentalsLandingPage() {
             </span>
           </Link>
         </section>
-      </main>
+      </div>
     </>
   );
 }

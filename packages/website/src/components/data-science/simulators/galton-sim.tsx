@@ -106,7 +106,7 @@ export function GaltonSim() {
   const [n, setN] = useState(25);
   const [rate, setRate] = useState(8);
   const [pop, setPop] = useState<Population>("bell");
-  const { running, toggle: toggleRunning } = useControllableAnimation();
+  const { running, toggle: toggleRunning } = useControllableAnimation(false);
   const [, setTick] = useState(0);
 
   const ballsRef = useRef<Ball[]>([]);

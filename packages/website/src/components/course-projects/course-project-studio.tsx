@@ -27,6 +27,7 @@ import {
   hasCourseProjectExecutionEvidence,
   hasCourseProjectLearningEvidence,
   hasValidCourseProjectArtifact,
+  isCourseProjectCheckpointLesson,
   normalizeCompletedLessonMissionIds,
   parseCourseProjectProgress,
   parseCourseProjectDraft,
@@ -74,6 +75,8 @@ export interface CourseProjectStudioProps {
   readonly locale: Locale;
   /** Minimal authored metadata from the active lesson already loaded by its route. */
   readonly lessonContext: AuthoredLessonMissionContext;
+  /** Use H2 only when the route already renders the lesson H1 before the studio. */
+  readonly missionHeadingLevel?: 1 | 2;
 }
 
 const ENGINE_COMPONENTS: Readonly<
@@ -172,6 +175,8 @@ const STUDIO_COPY = {
     scenario: "Synthetischer Fall",
     safety: "Daten- und Sicherheitsgrenze",
     completion: "Abnahmebedingungen",
+    briefDetails: "Brief, Fall und Grenzen",
+    projectMap: "Projektpfad und Abnahme",
     activate: "Werkstatt öffnen",
     activated: "Arbeitsbereich aktiv",
     ready: "Bereit zur Aktivierung",
@@ -198,6 +203,8 @@ const STUDIO_COPY = {
     scenario: "Synthetic case",
     safety: "Data and safety boundary",
     completion: "Acceptance criteria",
+    briefDetails: "Brief, case, and boundaries",
+    projectMap: "Project path and acceptance",
     activate: "Open studio",
     activated: "Workspace active",
     ready: "Ready to activate",
@@ -237,11 +244,21 @@ function EngineLoading(): JSX.Element {
   );
 }
 
-export function CourseProjectStudio({
+export function CourseProjectStudio(
+  props: CourseProjectStudioProps,
+): JSX.Element | null {
+  if (!isCourseProjectCheckpointLesson(props.courseSlug, props.lessonId)) {
+    return null;
+  }
+  return <CourseProjectCheckpointStudio {...props} />;
+}
+
+function CourseProjectCheckpointStudio({
   courseSlug,
   lessonId,
   locale,
   lessonContext,
+  missionHeadingLevel = 1,
 }: CourseProjectStudioProps): JSX.Element {
   const config = getCourseProjectConfig(courseSlug);
   const copy = STUDIO_COPY[locale];
@@ -697,7 +714,6 @@ export function CourseProjectStudio({
     () => (ownerReady ? completedStages : []),
     [completedStages, ownerReady],
   );
-  const effectiveActivated = ownerReady && activated;
   const done = ownerReady && persistedSummary !== null;
   const currentStageIndex = getCourseProjectStageIndex(courseSlug, lessonId);
   const currentStage = config.stages[currentStageIndex] ?? config.stages[0];
@@ -712,6 +728,7 @@ export function CourseProjectStudio({
   }, [courseSlug, lessonContext, lessonId, locale]);
   const currentStageUnlocked =
     ownerReady && visibleCompletedStages.length >= currentStageIndex;
+  const effectiveActivated = currentStageUnlocked && activated;
   const verificationEnabled =
     ownerReady &&
     hasCompletedAllCourseProjectStages(courseSlug, completedMissionIds) &&
@@ -783,36 +800,28 @@ export function CourseProjectStudio({
   return (
     <>
       {currentMission ? (
-        <>
-          <RetrievalQueue
-            courseSlug={courseSlug}
-            currentLessonId={lessonId}
-            locale={locale}
-            resetAt={currentResetAt}
-            scheduleRevision={retrievalScheduleRevision}
-          />
-          <LessonMissionControl
-            key={`${courseSlug}:${lessonId}:${ownerGeneration}:${resetNonce}`}
-            courseSlug={courseSlug}
-            lessonId={lessonId}
-            locale={locale}
-            mission={currentMission}
-            projectStage={currentStage}
-            projectStageIndex={currentStageIndex}
-            projectStageUnlocked={currentStageUnlocked}
-            workspaceId={`${config.id}-workspace`}
-            workspaceActive={effectiveActivated}
-            instrumentRevision={instrumentRevision}
-            executionReceipt={executionReceipt}
-            executionRevision={executionRevision}
-            missionResetEnabled={!done}
-            resetAt={currentResetAt}
-            onOpenWorkspace={handleActivate}
-            onMissionComplete={handleMissionComplete}
-            onMissionReset={handleMissionReset}
-            onRetrievalScheduleChange={handleRetrievalScheduleChange}
-          />
-        </>
+        <LessonMissionControl
+          key={`${courseSlug}:${lessonId}:${ownerGeneration}:${resetNonce}`}
+          courseSlug={courseSlug}
+          lessonId={lessonId}
+          locale={locale}
+          mission={currentMission}
+          projectStage={currentStage}
+          projectStageIndex={currentStageIndex}
+          projectStageUnlocked={currentStageUnlocked}
+          workspaceId={`${config.id}-workspace`}
+          workspaceActive={effectiveActivated}
+          instrumentRevision={instrumentRevision}
+          executionReceipt={executionReceipt}
+          executionRevision={executionRevision}
+          missionResetEnabled={!done}
+          resetAt={currentResetAt}
+          missionHeadingLevel={missionHeadingLevel}
+          onOpenWorkspace={handleActivate}
+          onMissionComplete={handleMissionComplete}
+          onMissionReset={handleMissionReset}
+          onRetrievalScheduleChange={handleRetrievalScheduleChange}
+        />
       ) : null}
       {persistFailure ? (
         <p
@@ -853,13 +862,13 @@ export function CourseProjectStudio({
           </div>
         }
         brief={
-          <header className="min-w-0 p-5 sm:p-7">
-            <div className="mb-7 flex items-start justify-between gap-4">
+          <header className="min-w-0 p-5">
+            <div className="mb-4 flex items-start justify-between gap-4">
               <span
-                className="font-mono text-[42px] font-black leading-none tracking-[-0.08em] text-brand-orange"
+                className="font-mono text-[32px] font-black leading-none tracking-[-0.08em] text-brand-orange"
                 aria-hidden="true"
               >
-                01
+                {String(currentStageIndex + 1).padStart(2, "0")}
               </span>
               <span className="border border-foreground px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.16em]">
                 {copy.workspace}
@@ -867,15 +876,11 @@ export function CourseProjectStudio({
             </div>
             <h2
               id={`${config.id}-title`}
-              className="max-w-[18ch] text-balance text-[clamp(1.75rem,4vw,3.25rem)] font-black leading-[0.96] tracking-[-0.055em] text-foreground"
+              className="max-w-[20ch] text-balance text-[clamp(1.55rem,3vw,2.5rem)] font-black leading-[0.98] tracking-[-0.05em] text-foreground"
             >
               {config.title[locale]}
             </h2>
-            <p className="mt-5 max-w-[55ch] text-[15px] leading-[1.65] text-muted-foreground">
-              {config.mission[locale]}
-            </p>
-
-            <dl className="mt-8 border-t-2 border-foreground">
+            <dl className="mt-5 border-t-2 border-foreground">
               <div className="grid min-w-0 gap-1 border-b border-border py-4 sm:grid-cols-[7rem_minmax(0,1fr)]">
                 <dt className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
                   {copy.artifact}
@@ -884,35 +889,50 @@ export function CourseProjectStudio({
                   {config.artifact[locale]}
                 </dd>
               </div>
-              <div className="grid min-w-0 gap-1 border-b border-border py-4 sm:grid-cols-[7rem_minmax(0,1fr)]">
-                <dt className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
-                  {copy.scenario}
-                </dt>
-                <dd className="min-w-0 text-sm leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
-                  {config.scenario[locale]}
-                </dd>
-              </div>
             </dl>
-
-            <aside className="mt-6 border-l-4 border-brand-orange bg-card p-4">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
-                {copy.safety}
-              </p>
-              <p className="mt-2 text-[13px] leading-relaxed text-foreground">
-                {config.safety[locale]}
-              </p>
-            </aside>
+            <details className="mt-4 border border-border bg-card/40">
+              <summary className="cursor-pointer px-3 py-3 font-mono text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground hover:text-foreground">
+                {copy.briefDetails}
+              </summary>
+              <div className="border-t border-border p-4">
+                <p className="text-sm font-semibold leading-snug text-foreground">
+                  {config.mission[locale]}
+                </p>
+                <dl className="mt-4 space-y-4">
+                  <div>
+                    <dt className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
+                      {copy.scenario}
+                    </dt>
+                    <dd className="mt-1 min-w-0 text-sm leading-snug text-muted-foreground [overflow-wrap:anywhere]">
+                      {config.scenario[locale]}
+                    </dd>
+                  </div>
+                  <div className="border-l-2 border-brand-orange pl-3">
+                    <dt className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
+                      {copy.safety}
+                    </dt>
+                    <dd className="mt-1 text-[13px] leading-snug text-foreground">
+                      {config.safety[locale]}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            </details>
           </header>
         }
         workspace={
-          <div className="min-w-0 p-5 sm:p-7">
-            <div
-              className="grid min-w-0 gap-6"
-              style={{
-                gridTemplateColumns:
-                  "repeat(auto-fit, minmax(min(100%, 20rem), 1fr))",
-              }}
-            >
+          <div className="min-w-0 p-5">
+            <details className="min-w-0 border border-border bg-card/30">
+              <summary className="cursor-pointer px-4 py-3 font-mono text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground hover:text-foreground">
+                {copy.projectMap}
+              </summary>
+              <div
+                className="grid min-w-0 gap-5 border-t border-border p-4"
+                style={{
+                  gridTemplateColumns:
+                    "repeat(auto-fit, minmax(min(100%, 20rem), 1fr))",
+                }}
+              >
               <div role="group" aria-label={copy.progress} className="min-w-0">
                 <ol
                   className="grid min-w-0 border-l border-t border-foreground"
@@ -985,11 +1005,12 @@ export function CourseProjectStudio({
                   ))}
                 </ol>
               </div>
-            </div>
+              </div>
+            </details>
 
             <section
               aria-labelledby={`${config.id}-current-stage`}
-              className="mt-6 min-w-0 border-2 border-foreground bg-card p-4"
+              className="mt-4 min-w-0 border-2 border-foreground bg-card p-4"
             >
               <p className="font-mono text-[0.68rem] font-black uppercase tracking-[0.14em] text-brand-orange-dark">
                 {copy.currentStage} ·{" "}
@@ -1020,12 +1041,6 @@ export function CourseProjectStudio({
                 </div>
               </dl>
             </section>
-
-            {!verificationEnabled ? (
-              <p className="mt-4 border-l-4 border-brand-orange bg-brand-orange/10 p-4 text-sm font-semibold leading-relaxed">
-                {copy.verifyLocked}
-              </p>
-            ) : null}
 
             {done ? (
               <div
@@ -1087,9 +1102,23 @@ export function CourseProjectStudio({
                 />
               </div>
             )}
+            {!verificationEnabled ? (
+              <p className="mt-4 border-l-4 border-brand-orange bg-brand-orange/10 p-3 text-xs font-semibold leading-snug">
+                {copy.verifyLocked}
+              </p>
+            ) : null}
           </div>
         }
       />
+      {currentMission ? (
+        <RetrievalQueue
+          courseSlug={courseSlug}
+          currentLessonId={lessonId}
+          locale={locale}
+          resetAt={currentResetAt}
+          scheduleRevision={retrievalScheduleRevision}
+        />
+      ) : null}
     </>
   );
 }

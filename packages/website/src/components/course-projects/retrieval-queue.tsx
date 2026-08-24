@@ -1,13 +1,15 @@
 "use client";
 
 import { useCallback, useEffect, useState, type JSX } from "react";
+import Link from "next/link";
 import type { CourseSlug } from "@/lib/course/types";
 import {
   readCourseRetrievalQueue,
   type CourseRetrievalQueueSnapshot,
   type RetrievalStanding,
 } from "@/lib/course-projects/retrieval-queue";
-import type { Locale } from "@/lib/i18n/locale";
+import { localizeHref, type Locale } from "@/lib/i18n/locale";
+import { courseLessonHref } from "@/lib/courses/resume";
 import { useLearningOwnerGeneration } from "@/lib/progress/use-learning-owner-generation";
 
 const QUEUE_COPY = {
@@ -17,6 +19,7 @@ const QUEUE_COPY = {
     due: (count: number) =>
       count === 1 ? "1 Abruf ist fällig" : `${count} Abrufe sind fällig`,
     current: "Aktuelle Lektion",
+    unavailableShort: "Lokal nicht aktiviert",
     unavailable:
       "Der lokale Lernstand ist für die aktuelle Identität noch nicht verfügbar.",
     unscheduled:
@@ -34,8 +37,7 @@ const QUEUE_COPY = {
     refresh: "Fälligkeit jetzt prüfen",
     checked: "Geprüft",
     otherDue: "Weitere fällige Lektionen",
-    otherDueInstruction:
-      "Öffne diese stabilen Lektions-IDs über die Kursnavigation. Direkte Links werden erst angezeigt, wenn die Kursroute eindeutig bekannt ist.",
+    openDueLesson: "Fällige Lektion öffnen",
     remainingDue: (count: number) => `und ${count} weitere`,
     localBoundary:
       "Die Anzeige liest nur feste Lektions-IDs, Stufen und Zeitpunkte aus dem lokalen Lernspeicher. Geschriebene Abrufe werden weder angezeigt noch gespeichert.",
@@ -52,6 +54,7 @@ const QUEUE_COPY = {
     due: (count: number) =>
       count === 1 ? "1 review is due" : `${count} reviews are due`,
     current: "Current lesson",
+    unavailableShort: "Local mode inactive",
     unavailable:
       "Local learning state is not available for the current identity yet.",
     unscheduled:
@@ -68,8 +71,7 @@ const QUEUE_COPY = {
     refresh: "Check due state now",
     checked: "Checked",
     otherDue: "Other due lessons",
-    otherDueInstruction:
-      "Open these stable lesson IDs from course navigation. Direct links appear only when the course route is known unambiguously.",
+    openDueLesson: "Open due lesson",
     remainingDue: (count: number) => `and ${count} more`,
     localBoundary:
       "This view reads only fixed lesson IDs, levels, and timestamps from local learning storage. Written recall is neither displayed nor stored.",
@@ -116,6 +118,9 @@ export function RetrievalQueue({
   const [snapshot, setSnapshot] = useState<CourseRetrievalQueueSnapshot | null>(
     null,
   );
+  const [manuallyExpanded, setManuallyExpanded] = useState<boolean | null>(
+    null,
+  );
 
   const refresh = useCallback(() => {
     setSnapshot(
@@ -135,6 +140,7 @@ export function RetrievalQueue({
 
   const available = snapshot?.available ?? false;
   const dueCount = available && snapshot ? snapshot.dueCount : 0;
+  const expanded = manuallyExpanded ?? (available && dueCount > 0);
   const current = available && snapshot ? snapshot.currentLesson : null;
   const legacyDue = current?.due === true && current.nextDueAt === null;
   const otherDueLessonIds =
@@ -147,50 +153,81 @@ export function RetrievalQueue({
   );
   const remainingDueCount =
     otherDueLessonIds.length - visibleOtherDueLessonIds.length;
+  const currentLessonHref = localizeHref(
+    courseLessonHref(courseSlug, currentLessonId),
+    locale,
+  );
+  const currentLessonPath = currentLessonHref.split("#", 1)[0];
 
   return (
     <section
       aria-labelledby="course-retrieval-queue-title"
-      className="mb-8 min-w-0 border-2 border-foreground bg-card [overflow-wrap:anywhere]"
+      className="mb-6 min-w-0 border-2 border-foreground bg-card [overflow-wrap:anywhere]"
     >
-      {/* The second track is minmax(0,auto), not auto: a bare auto track is
-          sized to max-content and cannot shrink, so at high browser zoom the
-          side panel pushes the queue past the course shell, which clips it. */}
-      <div className="grid min-w-0 lg:grid-cols-[minmax(0,1fr)_minmax(0,auto)]">
-        <div className="min-w-0 p-5 sm:p-6">
-          <p className="font-mono text-[10px] font-black uppercase tracking-[0.18em] text-brand-orange-dark">
+      <div
+        data-retrieval-queue-header
+        className="grid min-h-14 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 px-3 py-3 sm:flex sm:px-4"
+      >
+        <span className="h-3 w-3 shrink-0 rounded-full bg-brand-orange ring-4 ring-brand-orange/20" />
+        <span className="min-w-0 flex-1">
+          <span className="block font-mono text-[9px] font-black uppercase tracking-[0.16em] text-brand-orange-dark">
             {copy.eyebrow}
-          </p>
-          <div className="mt-2 flex min-w-0 flex-wrap items-baseline gap-x-4 gap-y-2">
-            <h2
-              id="course-retrieval-queue-title"
-              className="[overflow-wrap:anywhere] text-2xl font-black tracking-[-0.03em] text-foreground"
-            >
-              {copy.title}
-            </h2>
-            <p
-              role="status"
-              aria-live="polite"
-              className="font-mono text-xs font-black uppercase tracking-[0.08em] text-foreground"
-            >
-              {available ? copy.due(dueCount) : copy.unavailable}
-            </p>
-          </div>
+          </span>
+          <span
+            id="course-retrieval-queue-title"
+            className="block text-base font-black tracking-[-0.02em] text-foreground"
+          >
+            {copy.title}
+          </span>
+        </span>
+        <span
+          role="status"
+          aria-live="polite"
+          className="col-start-2 row-start-2 min-w-0 text-left font-mono text-[10px] font-black uppercase tracking-[0.06em] text-foreground [overflow-wrap:anywhere] sm:shrink-0 sm:text-right"
+        >
+          {available ? copy.due(dueCount) : copy.unavailableShort}
+        </span>
+        <button
+          type="button"
+          aria-expanded={expanded}
+          aria-controls="course-retrieval-queue-body"
+          onClick={() => {
+            setManuallyExpanded((value) =>
+              !(value ?? (available && dueCount > 0)),
+            );
+          }}
+          className="col-start-3 row-span-2 row-start-1 inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center border-2 border-foreground bg-background font-mono text-lg font-black outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+        >
+          <span
+            aria-hidden="true"
+            className={`transition-transform motion-reduce:transition-none ${expanded ? "rotate-45" : ""}`}
+          >
+            +
+          </span>
+          <span className="sr-only">{copy.title}</span>
+        </button>
+      </div>
 
-          <div className="mt-5 border-l-4 border-brand-orange bg-background p-4">
-            <p className="font-mono text-[10px] font-black uppercase tracking-[0.14em] text-brand-orange-dark">
+      <div
+        id="course-retrieval-queue-body"
+        hidden={!expanded}
+        className="grid min-w-0 border-t-2 border-foreground lg:grid-cols-[minmax(0,1fr)_minmax(0,auto)]"
+      >
+        <div className="min-w-0 p-4">
+          <div className="border-l-4 border-brand-orange bg-background p-3">
+            <p className="font-mono text-[9px] font-black uppercase tracking-[0.14em] text-brand-orange-dark">
               {copy.current}
             </p>
             {!available ? (
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {copy.unavailable}
               </p>
             ) : current === null ? (
-              <p className="mt-2 text-sm font-semibold leading-relaxed text-foreground">
+              <p className="mt-1 text-sm font-semibold text-foreground">
                 {copy.unscheduled}
               </p>
             ) : (
-              <div className="mt-2 text-sm leading-relaxed text-foreground">
+              <div className="mt-1 text-sm text-foreground">
                 <p className="font-black">
                   {legacyDue
                     ? copy.legacyDue
@@ -208,44 +245,69 @@ export function RetrievalQueue({
                   </p>
                 ) : null}
                 {current.due ? (
-                  <>
-                    <p className="mt-2 text-muted-foreground">
+                  <div className="mt-2 flex flex-wrap items-center gap-3">
+                    <p className="max-w-[68ch] text-muted-foreground">
                       {legacyDue ? copy.legacyInstruction : copy.dueInstruction}
                     </p>
                     <a
                       href="#lesson-mission-control"
-                      className="mt-4 inline-flex min-h-11 items-center justify-center border-2 border-foreground bg-brand-orange px-4 font-mono text-[10px] font-black uppercase tracking-[0.1em] text-white outline-none hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      className="inline-flex min-h-11 items-center justify-center border-2 border-foreground bg-brand-orange px-4 font-mono text-[10px] font-black uppercase tracking-[0.1em] text-white outline-none hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transform-none"
                     >
                       {legacyDue ? copy.legacyOpen : copy.open}
                     </a>
-                  </>
+                  </div>
                 ) : null}
               </div>
             )}
           </div>
-          <p className="mt-4 max-w-[76ch] text-xs leading-relaxed text-muted-foreground">
-            {copy.localBoundary}
-          </p>
+
           {otherDueLessonIds.length > 0 ? (
-            <div className="mt-5 border-t-2 border-foreground pt-4">
-              <h3 className="font-mono text-[10px] font-black uppercase tracking-[0.14em] text-foreground">
+            <div className="mt-3 border-t border-foreground pt-3">
+              <h3 className="font-mono text-[9px] font-black uppercase tracking-[0.14em] text-foreground">
                 {copy.otherDue} · {otherDueLessonIds.length}
               </h3>
-              <p className="mt-2 max-w-[76ch] text-xs leading-relaxed text-muted-foreground">
-                {copy.otherDueInstruction}
-              </p>
               <ul
                 aria-label={copy.otherDue}
-                className="mt-3 flex min-w-0 flex-wrap gap-2"
+                className="mt-2 flex min-w-0 flex-wrap gap-2"
               >
-                {visibleOtherDueLessonIds.map((lessonId) => (
-                  <li
-                    key={lessonId}
-                    className="max-w-full border border-foreground bg-background px-3 py-2 font-mono text-[10px] font-black [overflow-wrap:anywhere]"
-                  >
-                    {lessonId}
-                  </li>
-                ))}
+                {visibleOtherDueLessonIds.map((lessonId) => {
+                  const href = localizeHref(
+                    courseLessonHref(courseSlug, lessonId),
+                    locale,
+                  );
+                  const sameDocumentLessonFragment =
+                    href.includes("#lesson=") &&
+                    href.split("#", 1)[0] === currentLessonPath;
+                  const label = `${copy.openDueLesson}: ${lessonId}`;
+                  const className =
+                    "inline-flex min-h-11 max-w-full items-center border border-foreground bg-background px-3 py-2 font-mono text-[10px] font-black underline-offset-4 [overflow-wrap:anywhere] hover:text-brand-orange hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange";
+
+                  return (
+                    <li key={lessonId} className="max-w-full">
+                      {sameDocumentLessonFragment ? (
+                        /* Native navigation is intentional: the block reader
+                           consumes same-document lesson fragments through the
+                           browser's hashchange event. */
+                        <a
+                          href={href}
+                          aria-label={label}
+                          className={className}
+                          data-native-lesson-fragment="true"
+                        >
+                          {lessonId}
+                        </a>
+                      ) : (
+                        <Link
+                          href={href}
+                          aria-label={label}
+                          className={className}
+                        >
+                          {lessonId}
+                        </Link>
+                      )}
+                    </li>
+                  );
+                })}
                 {remainingDueCount > 0 ? (
                   <li className="border border-dashed border-foreground px-3 py-2 font-mono text-[10px] font-black">
                     {copy.remainingDue(remainingDueCount)}
@@ -254,9 +316,13 @@ export function RetrievalQueue({
               </ul>
             </div>
           ) : null}
+
+          <p className="mt-3 max-w-[76ch] text-[11px] leading-snug text-muted-foreground">
+            {copy.localBoundary}
+          </p>
         </div>
 
-        <div className="flex min-w-0 flex-col items-start justify-between gap-3 border-t-2 border-foreground p-4 lg:items-end lg:border-l-2 lg:border-t-0">
+        <div className="flex min-w-0 flex-col items-start justify-between gap-2 border-t-2 border-foreground p-3 lg:items-end lg:border-l-2 lg:border-t-0">
           <button
             type="button"
             onClick={refresh}
@@ -265,7 +331,7 @@ export function RetrievalQueue({
             {copy.refresh}
           </button>
           {snapshot ? (
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+            <p className="font-mono text-[9px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
               {copy.checked}:{" "}
               <time dateTime={snapshot.checkedAt}>
                 {formatTimestamp(snapshot.checkedAt, locale)}

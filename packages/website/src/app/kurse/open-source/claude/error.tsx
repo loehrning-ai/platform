@@ -20,7 +20,7 @@ export default function ClaudeCourseError({
   }, [error]);
 
   return (
-    <main
+    <div
       className="mx-auto max-w-2xl px-4 py-16 sm:px-6"
       lang={english ? "en" : "de"}
     >
@@ -56,6 +56,6 @@ export default function ClaudeCourseError({
           {english ? "Course overview" : "Kursübersicht"}
         </Link>
       </div>
-    </main>
+    </div>
   );
 }

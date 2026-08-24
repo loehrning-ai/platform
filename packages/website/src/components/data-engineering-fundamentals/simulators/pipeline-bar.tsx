@@ -8,7 +8,7 @@ import {
   type CSSProperties,
 } from "react";
 import Link from "next/link";
-import { useMotionAllowed } from "@/lib/animation-policy";
+import { useControllableAnimation } from "@/lib/animation-policy";
 import type { DefChapterId } from "@/lib/data-engineering-fundamentals/types";
 import type { Locale } from "@/lib/i18n/locale";
 import { technicalCourseHref } from "@/lib/technical-courses/routes";
@@ -531,10 +531,10 @@ export function PipelineBar({
   const rafRef = useRef<number | null>(null);
   const idSeq = useRef(0);
   const [, setTick] = useState(0);
-  const motionAllowed = useMotionAllowed();
+  const { running, toggle: toggleRunning } = useControllableAnimation(false);
 
   useEffect(() => {
-    if (!motionAllowed) return;
+    if (!running) return;
     let last = performance.now();
     let spawn = 0.2;
     const step = (now: number) => {
@@ -563,15 +563,15 @@ export function PipelineBar({
     return () => {
       if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
     };
-  }, [STAGE_HUES, motionAllowed]);
+  }, [STAGE_HUES, running]);
 
   useEffect(() => {
-    if (!motionAllowed) return;
+    if (!running) return;
     const iv = setInterval(() => {
       setTokens((prev) => prev.filter((tk) => tRef.current - tk.t0 < tk.dur));
     }, 1500);
     return () => clearInterval(iv);
-  }, [motionAllowed]);
+  }, [running]);
 
   const pulse: Record<string, number> = {};
   for (const tk of tokens) {
@@ -584,8 +584,24 @@ export function PipelineBar({
   }
 
   return (
-    <div className="ov-pipe">
-      <svg
+    <div className="min-w-0">
+      <div className="mb-2 flex justify-end">
+        <button
+          type="button"
+          onClick={toggleRunning}
+          className="btn btn-sm"
+        >
+          {running
+            ? locale === "de"
+              ? "Datenfluss pausieren"
+              : "Pause flow"
+            : locale === "de"
+              ? "Datenfluss starten"
+              : "Play flow"}
+        </button>
+      </div>
+      <div className="ov-pipe">
+        <svg
         className="ov-pipe-svg"
         viewBox={`0 0 ${W} ${H}`}
         preserveAspectRatio="none"
@@ -631,9 +647,9 @@ export function PipelineBar({
             </g>
           );
         })}
-      </svg>
-      <div className="ov-pipe-stops">
-        {positions.map((p) => {
+        </svg>
+        <div className="ov-pipe-stops">
+          {positions.map((p) => {
           const isActive = activeId === p.id;
           const pulseV = pulse[p.id] ?? 0;
           return (
@@ -668,7 +684,8 @@ export function PipelineBar({
               <div className="ov-stop-tag">{p.tag}</div>
             </Link>
           );
-        })}
+          })}
+        </div>
       </div>
     </div>
   );

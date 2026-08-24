@@ -26,6 +26,7 @@ import {
   __resetCacheForTests,
   activateAccountProgress,
   activateAnonymousProgress,
+  continueWithAnonymousProgress,
   getAccountProgressStorageKey,
   getUnifiedState,
   replaceUnifiedState,
@@ -283,6 +284,53 @@ describe("<UserProgressSync>", () => {
     expect(createBrowserClientMock).not.toHaveBeenCalled();
     expect(fetchMock).not.toHaveBeenCalled();
     expect(getUnifiedState()).toEqual(learnerProgress);
+  });
+
+  it("keeps an explicit local owner selected across later auth events", async () => {
+    let authCallback: (() => void) | null = null;
+    let resolveInitialUser!: (value: {
+      data: { user: null };
+      error: null;
+    }) => void;
+    const initialUser = new Promise<{
+      data: { user: null };
+      error: null;
+    }>((resolve) => {
+      resolveInitialUser = resolve;
+    });
+    const getUserMock = vi.fn().mockReturnValue(initialUser);
+    createBrowserClientMock.mockReturnValue({
+      auth: {
+        getUser: getUserMock,
+        onAuthStateChange: vi.fn((callback: () => void) => {
+          authCallback = callback;
+          return {
+            data: { subscription: { unsubscribe: vi.fn() } },
+          };
+        }),
+      },
+    });
+
+    render(createElement(UserProgressSync));
+    await waitFor(() => expect(getUserMock).toHaveBeenCalledTimes(1));
+    expect(getLearningOwnerContext().kind).toBe("unknown");
+
+    continueWithAnonymousProgress();
+    expect(getLearningOwnerContext().kind).toBe("anonymous");
+
+    await act(async () => {
+      authCallback?.();
+      await Promise.resolve();
+    });
+
+    expect(getLearningOwnerContext().kind).toBe("anonymous");
+    expect(getUserMock).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      resolveInitialUser({ data: { user: null }, error: null });
+      await initialUser;
+    });
+    expect(getLearningOwnerContext().kind).toBe("anonymous");
   });
 
   it("preserves and uploads local progress when the initial remote read fails", async () => {

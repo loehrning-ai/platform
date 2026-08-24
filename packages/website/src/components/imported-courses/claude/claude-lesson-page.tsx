@@ -2,7 +2,9 @@
 
 import { useState, type JSX } from "react";
 import { LessonShell } from "@/components/course/lesson-shell";
+import { LessonReference } from "@/components/course/lesson-reference";
 import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
+import { isCourseProjectCheckpointLesson } from "@/lib/course-projects/checkpoint-selector";
 import {
   ClaudeLessonSidebar,
   type ClaudeLessonNavItem,
@@ -30,6 +32,10 @@ export function ClaudeLessonPage({
   locale,
 }: ClaudeLessonPageProps): JSX.Element {
   const [navOpen, setNavOpen] = useState(false);
+  const isProjectCheckpoint = isCourseProjectCheckpointLesson(
+    "claude",
+    lesson.id,
+  );
 
   return (
     <LessonShell
@@ -56,25 +62,35 @@ export function ClaudeLessonPage({
       }
       sidebar={<ClaudeLessonSidebar lessons={navItems} locale={locale} />}
     >
-      <div className="mb-10">
-        <CourseProjectStudio
-          courseSlug="claude"
-          lessonId={lesson.id}
-          locale={locale}
-          lessonContext={{
-            title: lesson.title,
-            objective: lesson.hook,
-            keyConcepts: lesson.keyConcepts,
-          }}
-        />
-      </div>
-      <ClaudeLessonReader
-        lesson={lesson}
-        totalLessons={totalLessons}
-        prevHref={prevHref}
-        nextHref={nextHref}
+      {isProjectCheckpoint ? (
+        <div className="mb-10">
+          <CourseProjectStudio
+            courseSlug="claude"
+            lessonId={lesson.id}
+            locale={locale}
+            lessonContext={{
+              title: lesson.title,
+              objective: lesson.hook,
+              keyConcepts: lesson.keyConcepts,
+            }}
+          />
+        </div>
+      ) : null}
+      <LessonReference
+        key={lesson.id}
         locale={locale}
-      />
+        title={lesson.title}
+        objective={lesson.hook}
+        headingLevel={isProjectCheckpoint ? 2 : 1}
+      >
+        <ClaudeLessonReader
+          lesson={lesson}
+          totalLessons={totalLessons}
+          prevHref={prevHref}
+          nextHref={nextHref}
+          locale={locale}
+        />
+      </LessonReference>
     </LessonShell>
   );
 }

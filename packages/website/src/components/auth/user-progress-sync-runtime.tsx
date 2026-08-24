@@ -983,6 +983,20 @@ export function UserProgressSyncRuntime() {
       unsubscribeStore?.();
       unsubscribeStore = null;
 
+      // "Continue locally" is an explicit page-lifetime ownership choice.
+      // Supabase can emit an auth event after that click while its startup
+      // verification is still settling. Re-entering unknown here would make
+      // the owner panel reappear and strand controls that just wrote to the
+      // anonymous namespace. Keep the isolated namespace selected until the
+      // next page load, where identity verification starts from scratch.
+      if (hasLocalAnonymousLearningOverride()) {
+        bootstrapped = true;
+        syncDisabled = true;
+        activateAnonymousProgress();
+        setProgressSyncFailure(null);
+        return;
+      }
+
       // An auth event is not identity proof. Hide every account namespace
       // until a fresh getUser() verification identifies the new owner.
       activateUnknownProgress();

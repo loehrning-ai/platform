@@ -1,5 +1,6 @@
 import { COURSE_SLUGS, type CourseSlug } from "@/lib/course/types";
 import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
+import { selectCourseProjectCheckpoints } from "./checkpoint-selector";
 import { COURSE_PROJECT_STAGE_IDS, type CourseProjectStageId } from "./types";
 import { resolveCourseProjectMilestone } from "./milestone-manifest";
 
@@ -62,6 +63,34 @@ const COURSE_MISSIONS: Readonly<
   ),
 ) as Readonly<Record<CourseSlug, readonly LessonMissionDefinition[]>>;
 
+const COURSE_CHECKPOINT_MISSIONS: Readonly<
+  Record<CourseSlug, readonly LessonMissionDefinition[]>
+> = Object.freeze(
+  Object.fromEntries(
+    COURSE_SLUGS.map((courseSlug) => [
+      courseSlug,
+      Object.freeze(
+        selectCourseProjectCheckpoints(courseSlug).map((checkpoint) => {
+          const definition =
+            LESSON_MISSION_CATALOG[
+              missionId(courseSlug, checkpoint.lessonId)
+            ];
+          if (
+            !definition ||
+            definition.stageId !== checkpoint.stageId ||
+            definition.lessonId !== checkpoint.lessonId
+          ) {
+            throw new Error(
+              `Invalid course-project checkpoint mission: ${courseSlug}/${checkpoint.stageId}`,
+            );
+          }
+          return definition;
+        }),
+      ),
+    ]),
+  ),
+) as Readonly<Record<CourseSlug, readonly LessonMissionDefinition[]>>;
+
 export function getLessonMissionDefinition(
   courseSlug: CourseSlug,
   lessonId: string,
@@ -85,17 +114,24 @@ export function getCourseLessonMissions(
   return COURSE_MISSIONS[courseSlug];
 }
 
+export function getCourseProjectCheckpointMissions(
+  courseSlug: CourseSlug,
+): readonly LessonMissionDefinition[] {
+  return COURSE_CHECKPOINT_MISSIONS[courseSlug];
+}
+
 export function normalizeCompletedLessonMissionIds(
   courseSlug: CourseSlug,
   value: unknown,
 ): readonly LessonMissionId[] {
   if (!Array.isArray(value)) return [];
   const courseMissions = COURSE_MISSIONS[courseSlug];
-  if (value.length > courseMissions.length) return [];
-  const requested = new Set(value);
+  const entries: readonly unknown[] = Array.from(value);
+  if (entries.length > courseMissions.length) return [];
+  const requested = new Set(entries);
   if (
-    requested.size !== value.length ||
-    value.some(
+    requested.size !== entries.length ||
+    entries.some(
       (entry) =>
         typeof entry !== "string" ||
         LESSON_MISSION_CATALOG[entry as LessonMissionId]?.courseSlug !==
@@ -116,20 +152,12 @@ export function deriveCompletedCourseProjectStages(
   const completed = new Set(
     normalizeCompletedLessonMissionIds(courseSlug, completedMissionIds),
   );
-  const courseMissions = COURSE_MISSIONS[courseSlug];
+  const checkpointMissions = COURSE_CHECKPOINT_MISSIONS[courseSlug];
   const completedStages: CourseProjectStageId[] = [];
 
-  for (const stageId of COURSE_PROJECT_STAGE_IDS) {
-    const requiredMissions = courseMissions.filter(
-      (definition) => definition.stageId === stageId,
-    );
-    if (
-      requiredMissions.length === 0 ||
-      requiredMissions.some((definition) => !completed.has(definition.id))
-    ) {
-      break;
-    }
-    completedStages.push(stageId);
+  for (const checkpoint of checkpointMissions) {
+    if (!completed.has(checkpoint.id)) break;
+    completedStages.push(checkpoint.stageId);
   }
   return completedStages;
 }

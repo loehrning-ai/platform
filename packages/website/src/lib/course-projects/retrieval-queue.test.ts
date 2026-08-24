@@ -15,6 +15,7 @@ import {
   serializeLessonMissionState,
   type LessonMissionState,
 } from "./lesson-mission-persistence";
+import { selectCourseProjectCheckpoints } from "./checkpoint-selector";
 import { getLessonMissionProfile } from "./lesson-missions";
 import {
   getRetrievalStanding,
@@ -25,6 +26,9 @@ import { getCourseProjectExecutionReceipt } from "./types";
 
 const COURSE: CourseSlug = "data-science";
 const RESET_AT = "2026-08-01T00:00:00.000Z";
+const CHECKPOINT_LESSON_IDS = selectCourseProjectCheckpoints(COURSE).map(
+  ({ lessonId }) => lessonId,
+);
 
 function scheduledMissionState(
   successLevel: RetrievalSuccessLevel,
@@ -107,7 +111,7 @@ afterEach(() => {
 describe("course retrieval queue", () => {
   it("makes the canonical 1, 7, and 21 day schedules actionable at their exact boundaries", () => {
     const [oneDayLesson, sevenDayLesson, twentyOneDayLesson] =
-      CANONICAL_LESSON_IDS[COURSE];
+      CHECKPOINT_LESSON_IDS;
     seedSchedule(
       oneDayLesson,
       1,
@@ -178,7 +182,7 @@ describe("course retrieval queue", () => {
   });
 
   it("surfaces a validated v2 migration as due now without inventing a timestamp", () => {
-    const lessonId = CANONICAL_LESSON_IDS[COURSE][0];
+    const lessonId = CHECKPOINT_LESSON_IDS[0];
     const profile = getLessonMissionProfile(COURSE);
     expect(
       setOwnedLocalLearningItem(
@@ -213,25 +217,57 @@ describe("course retrieval queue", () => {
     });
   });
 
-  it("reads every canonical mission key exactly once and no invented key", () => {
+  it("reads every reachable checkpoint key exactly once and no dead destination", () => {
     const getItem = vi.spyOn(window.localStorage, "getItem");
 
     const snapshot = readCourseRetrievalQueue(
       COURSE,
-      CANONICAL_LESSON_IDS[COURSE][0],
+      CHECKPOINT_LESSON_IDS[0],
       RESET_AT,
     );
 
     expect(snapshot.available).toBe(true);
     expect(getItem.mock.calls.map(([key]) => key)).toEqual(
-      CANONICAL_LESSON_IDS[COURSE].map((lessonId) =>
+      CHECKPOINT_LESSON_IDS.map((lessonId) =>
         getLessonMissionStorageKey(COURSE, lessonId),
       ),
     );
   });
 
+  it("keeps historical non-checkpoint schedules out of the actionable queue", () => {
+    const checkpointIds = new Set(CHECKPOINT_LESSON_IDS);
+    const nonCheckpointLesson = CANONICAL_LESSON_IDS[COURSE].find(
+      (lessonId) => !checkpointIds.has(lessonId),
+    );
+    expect(nonCheckpointLesson).toBeDefined();
+    seedSchedule(
+      nonCheckpointLesson!,
+      1,
+      "2026-08-12T12:00:00.000Z",
+      "2026-08-13T12:00:00.000Z",
+    );
+    const getItem = vi.spyOn(window.localStorage, "getItem");
+
+    const snapshot = readCourseRetrievalQueue(
+      COURSE,
+      nonCheckpointLesson!,
+      RESET_AT,
+    );
+
+    expect(snapshot).toMatchObject({
+      available: true,
+      dueCount: 0,
+      scheduledCount: 0,
+      dueLessonIds: [],
+      currentLesson: null,
+    });
+    expect(getItem).not.toHaveBeenCalledWith(
+      getLessonMissionStorageKey(COURSE, nonCheckpointLesson!),
+    );
+  });
+
   it("fails closed across course reset and account-owner boundaries", () => {
-    const lessonId = CANONICAL_LESSON_IDS[COURSE][0];
+    const lessonId = CHECKPOINT_LESSON_IDS[0];
     seedSchedule(
       lessonId,
       1,
@@ -283,7 +319,7 @@ describe("course retrieval queue", () => {
 
   it("drops malformed schedules and never returns or writes unexpected free text", () => {
     const [malformedLesson, forgedLesson, privateTextLesson] =
-      CANONICAL_LESSON_IDS[COURSE];
+      CHECKPOINT_LESSON_IDS;
     window.localStorage.setItem(
       getLessonMissionStorageKey(COURSE, malformedLesson),
       "{not-json",

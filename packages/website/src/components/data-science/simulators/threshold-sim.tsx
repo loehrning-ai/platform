@@ -49,6 +49,13 @@ function xMap(s: number): number {
   return 30 + s * (W - 60);
 }
 
+// Node and browser math libraries can differ in the final bits of the
+// Box-Muller output. Canonicalize rendered SVG coordinates so server markup
+// and the first client render hydrate to the same attribute strings.
+function svgCoordinate(value: number): number {
+  return round(value, 8);
+}
+
 export function ThresholdSim() {
   const { text } = useDataScienceLocale();
   const [thr, setThr] = useState(0.5);
@@ -369,8 +376,8 @@ export function ThresholdSim() {
                 return (
                   <circle
                     key={i}
-                    cx={xMap(d.score)}
-                    cy={baseY}
+                    cx={svgCoordinate(xMap(d.score))}
+                    cy={svgCoordinate(baseY)}
                     r="3.3"
                     fill={fill}
                     opacity="0.85"

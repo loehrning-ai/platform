@@ -22,6 +22,9 @@ describe("no-script accessibility fallback", () => {
       ".no-js-primary-nav{position:static!important}",
     );
     expect(NO_SCRIPT_FALLBACK_CSS).toContain(
+      "[data-learning-owner-panel]{display:none!important}",
+    );
+    expect(NO_SCRIPT_FALLBACK_CSS).toContain(
       "#main-content{padding-top:0!important}",
     );
     expect(NO_SCRIPT_FALLBACK_CSS).not.toContain(

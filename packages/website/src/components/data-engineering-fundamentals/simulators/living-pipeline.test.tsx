@@ -5,6 +5,7 @@ import { LivingPipeline } from "./living-pipeline";
 afterEach(() => {
   cleanup();
   vi.useRealTimers();
+  vi.restoreAllMocks();
 });
 
 describe("LivingPipeline ", () => {
@@ -30,6 +31,16 @@ describe("LivingPipeline ", () => {
     expect(screen.getByText("Modeled controls enabled")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /stop tutorial/ }));
     expect(screen.queryByText("Modeled controls enabled")).not.toBeInTheDocument();
+  });
+
+  it("starts no RAF before explicit Start and begins after activation", () => {
+    const rafSpy = vi.spyOn(window, "requestAnimationFrame");
+    render(<LivingPipeline />);
+
+    expect(rafSpy).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: /start/ }));
+    expect(rafSpy).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("button", { name: /pause/ })).toBeInTheDocument();
   });
 
   it("fix all clears every broken contract", () => {

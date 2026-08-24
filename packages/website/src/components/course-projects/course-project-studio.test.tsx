@@ -23,6 +23,7 @@ import {
 } from "@/lib/course-projects/types";
 import {
   getCourseLessonMissions,
+  getCourseProjectCheckpointMissions,
   type LessonMissionId,
 } from "@/lib/course-projects/lesson-mission-catalog";
 import { getLessonMissionProfile } from "@/lib/course-projects/lesson-missions";
@@ -271,9 +272,8 @@ beforeEach(() => {
 });
 
 describe("CourseProjectStudio", () => {
-  it("keeps a noncanonical overview workspace non-credit-bearing", async () => {
-    const draftKey = getCourseProjectDraftStorageKey("data-science");
-    render(
+  it("renders no studio for noncheckpoint or noncanonical lessons", () => {
+    const view = render(
       <CourseProjectStudio
         courseSlug="data-science"
         lessonId="home"
@@ -281,29 +281,17 @@ describe("CourseProjectStudio", () => {
       />,
     );
 
-    expect(screen.queryByText(/Lesson mission ·/i)).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole("button", { name: /Commit prediction/i }),
-    ).not.toBeInTheDocument();
-    fireEvent.click(await screen.findByRole("button", { name: "Open studio" }));
-    fireEvent.click(screen.getByRole("button", { name: "Run artifact" }));
-
-    await waitFor(() => {
-      const stored = getOwnedLocalLearningItem(draftKey);
-      const draft = parseCourseProjectDraft(
-        stored,
-        "data-science",
-        "data",
-        null,
-      );
-      expect(draft?.completedMissionIds).toEqual([]);
-    });
-    expect(screen.queryByText("Lesson loop closed")).not.toBeInTheDocument();
+    expect(view.container).toBeEmptyDOMElement();
     expect(mockedSaveExerciseResult).not.toHaveBeenCalled();
+
+    view.rerender(
+      <CourseProjectStudio courseSlug="codex" lessonId="L02" locale="en" />,
+    );
+    expect(view.container).toBeEmptyDOMElement();
   });
 
   it("renders the active lesson's authored frame around the stable course probe", async () => {
-    render(
+    const { container } = render(
       <CourseProjectStudio
         courseSlug="codex"
         lessonId="L01"
@@ -318,8 +306,16 @@ describe("CourseProjectStudio", () => {
 
     expect(
       await screen.findByRole("heading", {
+        level: 1,
         name: "A mental model for delegated work",
       }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    expect(
+      container.querySelector('h1, [role="heading"][aria-level="1"], h2, h3'),
+    ).toHaveAttribute("aria-level", "1");
+    expect(
+      screen.getByRole("heading", { level: 2, name: "The Repository Mission" }),
     ).toBeInTheDocument();
     expect(
       screen.getByText("Separate intent, execution, and verification."),
@@ -327,9 +323,53 @@ describe("CourseProjectStudio", () => {
     expect(
       screen.getByRole("list", { name: "Key concepts" }),
     ).toHaveTextContent("Bounded autonomy");
+
+    const lessonHeading = screen.getByRole("heading", {
+      level: 1,
+      name: "A mental model for delegated work",
+    });
+    const collapse = screen.getByRole("button", {
+      name: "Collapse signal circuit",
+    });
+    const controlledBody = document.getElementById(
+      collapse.getAttribute("aria-controls") ?? "missing",
+    );
+    expect(controlledBody).not.toContainElement(lessonHeading);
+
+    fireEvent.click(collapse);
+
+    expect(controlledBody).toHaveAttribute("hidden");
     expect(
-      screen.getByRole("heading", { name: "Retrieval queue" }),
+      screen.getByRole("heading", {
+        level: 1,
+        name: "A mental model for delegated work",
+      }),
+    ).toBeVisible();
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    expect(container.querySelectorAll("h1")).toHaveLength(0);
+  });
+
+  it("nests its lesson heading when a custom route already owns H1", async () => {
+    render(
+      <CourseProjectStudio
+        courseSlug="codex"
+        lessonId="L01"
+        locale="en"
+        missionHeadingLevel={2}
+        lessonContext={{
+          title: "A mental model for delegated work",
+          objective: "Separate intent, execution, and verification.",
+        }}
+      />,
+    );
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 2,
+        name: "A mental model for delegated work",
+      }),
     ).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { level: 1 })).not.toBeInTheDocument();
   });
 
   it("does not activate or report project evidence while the learning owner is unknown", async () => {
@@ -457,6 +497,22 @@ describe("CourseProjectStudio", () => {
       "Workspace active: The Repository Mission",
     );
     await waitFor(() => expect(workspace).toHaveFocus());
+  });
+
+  it("unmounts an active engine when navigation reaches a locked checkpoint", async () => {
+    const view = render(
+      <CourseProjectStudio courseSlug="codex" lessonId="L01" locale="en" />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Open studio" }));
+    expect(await screen.findByTestId("mock-project-engine")).toBeInTheDocument();
+
+    view.rerender(
+      <CourseProjectStudio courseSlug="codex" lessonId="L12" locale="en" />,
+    );
+
+    expect(screen.queryByTestId("mock-project-engine")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Open studio" })).toBeDisabled();
   });
 
   it("uses container-width auto-fit grids for stages and acceptance criteria", () => {
@@ -837,11 +893,7 @@ describe("CourseProjectStudio", () => {
     });
 
     render(
-      <CourseProjectStudio
-        courseSlug="data-science"
-        lessonId="home"
-        locale="en"
-      />,
+      <CourseProjectStudio courseSlug="data-science" lessonId="fund" locale="en" />,
     );
 
     expect(
@@ -864,7 +916,7 @@ describe("CourseProjectStudio", () => {
 
   it("keeps unverified artifact edits in session without inflating persisted attempts", () => {
     render(
-      <CourseProjectStudio courseSlug="codex" lessonId="L03" locale="en" />,
+      <CourseProjectStudio courseSlug="codex" lessonId="L01" locale="en" />,
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Open studio" }));
@@ -877,7 +929,7 @@ describe("CourseProjectStudio", () => {
   });
 
   it("preserves earlier receipts and re-adds only the current receipt after reset and recompletion", async () => {
-    const missions = getCourseLessonMissions("codex");
+    const missions = getCourseProjectCheckpointMissions("codex");
     const first = missions[0]!;
     const second = missions[1]!;
     const draftKey = getCourseProjectDraftStorageKey("codex");

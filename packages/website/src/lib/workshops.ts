@@ -67,6 +67,44 @@ export interface WorkshopRealWorldCase {
   readonly decisionQuestion: string;
 }
 
+export interface WorkshopDecisionOption {
+  readonly id: string;
+  readonly label: string;
+}
+
+export interface WorkshopDecisionFeedback {
+  readonly title: string;
+  readonly body: string;
+}
+
+/**
+ * One bounded first decision rendered locally on the workshop detail page.
+ * The component receives this copy-only configuration and never persists or
+ * transmits a learner's selection.
+ */
+export interface WorkshopDecisionLabConfig {
+  readonly kicker: string;
+  readonly title: string;
+  readonly prompt: string;
+  readonly facts: readonly string[];
+  readonly decisionLegend: string;
+  readonly evidenceLegend: string;
+  readonly choices: readonly WorkshopDecisionOption[];
+  readonly evidence: readonly WorkshopDecisionOption[];
+  readonly recommendedChoiceId: string;
+  readonly strongestEvidenceId: string;
+  readonly submitLabel: string;
+  readonly resetLabel: string;
+  readonly privacyNote: string;
+  readonly resultLabel: string;
+  readonly feedback: {
+    readonly aligned: WorkshopDecisionFeedback;
+    readonly decisionOnly: WorkshopDecisionFeedback;
+    readonly evidenceOnly: WorkshopDecisionFeedback;
+    readonly unsupported: WorkshopDecisionFeedback;
+  };
+}
+
 export interface Workshop {
   readonly slug: string;
   readonly title: string;
@@ -77,7 +115,10 @@ export interface Workshop {
   readonly description: string;
   readonly format: string;
   readonly duration: string;
+  /** Concise tool, transfer, or provider boundary shown before materials. */
+  readonly accessNote: string;
   readonly audience: readonly string[];
+  readonly decisionLab: WorkshopDecisionLabConfig;
   readonly steps: readonly WorkshopStep[];
   readonly caseStudy: WorkshopCaseStudy;
   readonly realWorldCase?: WorkshopRealWorldCase;
@@ -97,11 +138,87 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       "Eine Prognose verdient ihren Aufwand erst, wenn sie eine Entscheidung verändert. Dieses Material lässt die Modellfrage bewusst hinten an und arbeitet an dem, was davor kommt: Schlägt das Modell überhaupt das Verfahren, das heute schon im Einsatz ist? Was kostet zu viel, was kostet zu wenig, und welcher Puffer bringt beides ins Gleichgewicht? Woran erkennt man im Betrieb, dass eine Prognose kippt? Drei interaktive Entscheidungslabore und ein durchgerechneter Geschäftsfall führen zu einer Go/No-Go-Entscheidung, die man auch verteidigen kann. Ohne Programmierung, ohne Installation, ohne KI-Zugang: alles läuft als statische Seite im Browser.",
     format: "Selbstlern-Kit",
     duration: "~90 Minuten",
+    accessNote:
+      "Kein KI-Zugang nötig. Alles läuft statisch im Browser; Übungsdaten bleiben lokal.",
     audience: [
       "Planung, Supply Chain und Operations, die mit Absatz- oder Kapazitätsprognosen arbeiten",
       "Fach- und Führungskräfte, die Prognosen verantworten, ohne sie selbst zu rechnen",
       "Data- und Analytics-Teams, die ein Modell gegen den bestehenden Prozess verteidigen müssen",
     ],
+    decisionLab: {
+      kicker: "Entscheidung 01 · Liefergrenze",
+      title: "1.050 Stück. Wer bekommt sie?",
+      prompt:
+        "Drei Standorte melden 1.370 Stück an. Das Modell schätzt 1.180 Stück Nachfrage, lieferbar sind 1.050. Welche Regel darf jetzt laufen?",
+      facts: [
+        "Anmeldungen 1.370",
+        "Nachfrage p50 1.180",
+        "Liefergrenze 1.050",
+      ],
+      decisionLegend: "Deine erste Entscheidung",
+      evidenceLegend: "Der stärkste Beleg",
+      choices: [
+        {
+          id: "controlled-allocation",
+          label:
+            "Proportional nach geschätzter Nachfrage zuteilen; Ausnahmen menschlich freigeben.",
+        },
+        {
+          id: "raw-requests",
+          label:
+            "Nach den 1.370 Standortanmeldungen verteilen und automatisch ausführen.",
+        },
+        {
+          id: "equal-split",
+          label:
+            "Jeden Standort gleich bedienen, unabhängig von Größe und Nachfrage.",
+        },
+      ],
+      evidence: [
+        {
+          id: "constraint-and-error",
+          label:
+            "Die Liefergrenze liegt 130 Stück unter der geschätzten Nachfrage; das Modell weicht trotz Verbesserung noch 12 % ab.",
+        },
+        {
+          id: "accuracy-only",
+          label: "12 % Modellabweichung schlagen die Baseline mit 21 %.",
+        },
+        {
+          id: "request-gap",
+          label: "320 angeforderte Einheiten bleiben unbedient.",
+        },
+      ],
+      recommendedChoiceId: "controlled-allocation",
+      strongestEvidenceId: "constraint-and-error",
+      submitLabel: "Entscheidung prüfen",
+      resetLabel: "Neu entscheiden",
+      privacyNote:
+        "Läuft nur in dieser Seite. Auswahl und Ergebnis werden weder gespeichert noch gesendet.",
+      resultLabel: "Auswertung der Entscheidung",
+      feedback: {
+        aligned: {
+          title: "Freigabe mit Tor",
+          body:
+            "Die Knappheit verlangt eine nachvollziehbare Zuteilungsregel. Der verbleibende Modellfehler verlangt zusätzlich eine benannte menschliche Freigabe für Ausnahmen.",
+        },
+        decisionOnly: {
+          title: "Richtige Richtung, zu schwacher Beleg",
+          body:
+            "Die bessere Modellgüte allein rechtfertigt keine Automatik. Entscheidend sind die harte Liefergrenze und der verbleibende Fehler gemeinsam.",
+        },
+        evidenceOnly: {
+          title: "Der Beleg widerspricht der Freigabe",
+          body:
+            "Du hast Knappheit und Restfehler erkannt. Eine rohe oder gleiche Verteilung übersetzt diese Evidenz aber nicht in eine belastbare Regel.",
+        },
+        unsupported: {
+          title: "Noch nicht freigabefähig",
+          body:
+            "Weder Anmeldungen noch ein einzelner Genauigkeitswert bestimmen allein die Zuteilung. Verknüpfe Liefergrenze, Nachfrage und Restfehler.",
+        },
+      },
+    },
     steps: [
       {
         n: "01",
@@ -222,11 +339,85 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       "In fünf Prompts baust du in der Claude-App einen kleinen KI-Analysten: Du arbeitest für ein synthetisches Unternehmen, bekommst dessen Monatsbericht samt der Rohdaten, aus denen er geschrieben wurde, und hältst in Klartext fest, was die Zahlen hier bedeuten. Aus diesen Regeln wird ein wiederverwendbarer Skill, der den Bericht ausliest, ein Dashboard befüllt und eine begründete Entscheidung stützt. In Fall 2 verlässt du die Sandbox und wendest dieselbe Methode auf die öffentlichen Quartalszahlen eines echten Unternehmens an. Ohne Programmierung und API-Key; für die Schritte in Claude brauchst du einen passenden Claude-Zugang.",
     format: "Selbstlern-Kit",
     duration: "~90 Minuten",
+    accessNote:
+      "Claude-Zugang nötig. Nur das fiktive Kit verwenden; Dateien können an den Dienst gehen.",
     audience: [
       "Mitarbeitende, die Monats- oder Quartalsberichte lesen oder erstellen",
       "Controlling- und Finance-Teams im Mittelstand",
       "Alle, die Claude als Analysewerkzeug kennenlernen wollen, ohne selbst zu programmieren",
     ],
+    decisionLab: {
+      kicker: "Entscheidung 01 · CRAFT",
+      title: "Mehr Nachfrage oder erst das Produkt reparieren?",
+      prompt:
+        "CRAFT erzielt 4,12 Mio. € Umsatz bei geringem Volumen, hat aber den zweiten Monat in Folge die meisten Qualitätsmängel. Der Vertrieb fordert mehr Q3-Marketingbudget. Was tust du zuerst?",
+      facts: [
+        "Umsatz 4,12 Mio. €",
+        "Einheiten 9.162",
+        "Meiste Mängel · Monat 2",
+      ],
+      decisionLegend: "Deine erste Entscheidung",
+      evidenceLegend: "Der stärkste Beleg",
+      choices: [
+        {
+          id: "quality-gate",
+          label:
+            "Budgeterhöhung stoppen; Qualitätsursache prüfen und Nacharbeit bewerten.",
+        },
+        {
+          id: "increase-marketing",
+          label: "Q3-Marketing sofort erhöhen, weil der Umsatz stark ist.",
+        },
+        {
+          id: "discontinue-line",
+          label: "CRAFT sofort einstellen und das Budget umverteilen.",
+        },
+      ],
+      evidence: [
+        {
+          id: "repeated-defects",
+          label:
+            "CRAFT hat die meisten Qualitätsmängel im Sortiment, den zweiten Monat in Folge.",
+        },
+        {
+          id: "revenue-rank",
+          label: "CRAFT erzielt den zweithöchsten Umsatz der Produktlinien.",
+        },
+        {
+          id: "low-volume",
+          label: "CRAFT liegt beim Absatz nur auf Rang 6 von 7 Linien.",
+        },
+      ],
+      recommendedChoiceId: "quality-gate",
+      strongestEvidenceId: "repeated-defects",
+      submitLabel: "Entscheidung prüfen",
+      resetLabel: "Neu entscheiden",
+      privacyNote:
+        "Läuft nur in dieser Seite. Auswahl und Ergebnis werden weder gespeichert noch gesendet.",
+      resultLabel: "Auswertung der Entscheidung",
+      feedback: {
+        aligned: {
+          title: "Qualität vor zusätzlicher Nachfrage",
+          body:
+            "Die wiederholten Mängel sind ein belastbarer Stop-Grund. Ohne Stückkosten, Retourenzuordnung und Marketingattribution ist weder mehr Budget noch die Einstellung der Linie belegt.",
+        },
+        decisionOnly: {
+          title: "Richtige Reihenfolge, falscher Hauptbeleg",
+          body:
+            "Umsatz und Volumen beschreiben die Linie, aber der wiederholte Qualitätsbefund begründet den unmittelbaren Prüfauftrag.",
+        },
+        evidenceOnly: {
+          title: "Der Beleg widerspricht der Entscheidung",
+          body:
+            "Wiederholte Qualitätsmängel sprechen gegen zusätzliche Nachfrage und belegen zugleich noch keine sofortige Einstellung. Zuerst Ursache und Nacharbeit prüfen.",
+        },
+        unsupported: {
+          title: "Die Entscheidung springt über die Evidenz",
+          body:
+            "Ein starker Umsatz ist kein Qualitätsbeleg; geringes Volumen ist kein Einstellungsgrund. Beginne mit dem wiederholten Mängelsignal.",
+        },
+      },
+    },
     steps: [
       {
         n: "01",
@@ -347,11 +538,85 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       "A forecast earns its cost only when it changes a decision. This workshop therefore starts before model selection: does the model beat the process already in use? What does excess capacity cost, what does insufficient capacity cost, and which buffer balances the two? How does a team detect that a live forecast is failing? Three interactive decision labs and one worked business case lead to a defensible go or no-go decision. No programming, installation, or AI account is required; the material runs as static pages in the browser.",
     format: "Self-study kit",
     duration: "About 90 minutes",
+    accessNote:
+      "No AI account is required. Everything runs statically in the browser; practice data stays local.",
     audience: [
       "Planning, supply-chain, and operations teams that work with demand or capacity forecasts",
       "Specialists and managers who are accountable for forecasts but do not build the models",
       "Data and analytics teams that must compare a model with the existing process",
     ],
+    decisionLab: {
+      kicker: "Decision 01 · Supply limit",
+      title: "1,050 units. Who gets them?",
+      prompt:
+        "Three sites request 1,370 units. The model estimates demand at 1,180; only 1,050 can be supplied. Which rule may run now?",
+      facts: [
+        "Requests 1,370",
+        "Demand p50 1,180",
+        "Supply limit 1,050",
+      ],
+      decisionLegend: "Your first decision",
+      evidenceLegend: "The strongest evidence",
+      choices: [
+        {
+          id: "controlled-allocation",
+          label:
+            "Allocate proportionally to estimated demand; send exceptions to a person.",
+        },
+        {
+          id: "raw-requests",
+          label: "Allocate against the 1,370 site requests and run automatically.",
+        },
+        {
+          id: "equal-split",
+          label: "Give every site the same amount regardless of size and demand.",
+        },
+      ],
+      evidence: [
+        {
+          id: "constraint-and-error",
+          label:
+            "Supply is 130 units below estimated demand, and the improved model still deviates by 12%.",
+        },
+        {
+          id: "accuracy-only",
+          label: "The model's 12% deviation beats the 21% baseline.",
+        },
+        {
+          id: "request-gap",
+          label: "Three hundred and twenty requested units cannot be supplied.",
+        },
+      ],
+      recommendedChoiceId: "controlled-allocation",
+      strongestEvidenceId: "constraint-and-error",
+      submitLabel: "Check decision",
+      resetLabel: "Decide again",
+      privacyNote:
+        "Runs only on this page. Your selection and result are neither stored nor sent.",
+      resultLabel: "Decision feedback",
+      feedback: {
+        aligned: {
+          title: "Release with a gate",
+          body:
+            "Scarcity requires a traceable allocation rule. The remaining model error also requires a named human release for exceptions.",
+        },
+        decisionOnly: {
+          title: "Right direction, weak evidence",
+          body:
+            "Better model accuracy alone does not justify automation. The hard supply limit and residual error matter together.",
+        },
+        evidenceOnly: {
+          title: "The evidence contradicts the release",
+          body:
+            "You identified scarcity and residual error. A raw or equal split does not translate that evidence into a defensible rule.",
+        },
+        unsupported: {
+          title: "Not ready for release",
+          body:
+            "Neither requests nor one accuracy number determines allocation on its own. Connect supply, demand, and residual error.",
+        },
+      },
+    },
     steps: [
       {
         n: "01",
@@ -472,11 +737,85 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       "Five prompts in the Claude app build a small AI analyst. You work with a synthetic company's monthly report and the raw data from which it was written, then define what its metrics mean in plain language. Those rules become a reusable skill that extracts the report, populates a dashboard, and supports a reasoned decision. In the second case, apply the same method to a real company's public quarterly figures. No programming or API key is required. The Claude steps require access to a suitable Claude product.",
     format: "Self-study kit",
     duration: "About 90 minutes",
+    accessNote:
+      "Claude steps require suitable Claude access. Use only the fictional kit; files may reach that service.",
     audience: [
       "People who read or prepare monthly and quarterly business reports",
       "Controlling and finance teams in small and medium-sized companies",
       "People evaluating Claude as an analysis tool without writing code",
     ],
+    decisionLab: {
+      kicker: "Decision 01 · CRAFT",
+      title: "Create more demand or repair the product first?",
+      prompt:
+        "CRAFT generates €4.12m of revenue at low volume, but records the most quality defects for a second month. Sales wants more Q3 marketing budget. What happens first?",
+      facts: [
+        "Revenue €4.12m",
+        "Units 9,162",
+        "Most defects · month 2",
+      ],
+      decisionLegend: "Your first decision",
+      evidenceLegend: "The strongest evidence",
+      choices: [
+        {
+          id: "quality-gate",
+          label:
+            "Hold the budget increase; investigate the quality cause and assess rework.",
+        },
+        {
+          id: "increase-marketing",
+          label: "Increase Q3 marketing immediately because revenue is strong.",
+        },
+        {
+          id: "discontinue-line",
+          label: "Discontinue CRAFT immediately and reallocate its budget.",
+        },
+      ],
+      evidence: [
+        {
+          id: "repeated-defects",
+          label:
+            "CRAFT has the most quality defects in the range for the second month in succession.",
+        },
+        {
+          id: "revenue-rank",
+          label: "CRAFT generates the second-highest product-line revenue.",
+        },
+        {
+          id: "low-volume",
+          label: "CRAFT ranks only sixth of seven product lines by unit volume.",
+        },
+      ],
+      recommendedChoiceId: "quality-gate",
+      strongestEvidenceId: "repeated-defects",
+      submitLabel: "Check decision",
+      resetLabel: "Decide again",
+      privacyNote:
+        "Runs only on this page. Your selection and result are neither stored nor sent.",
+      resultLabel: "Decision feedback",
+      feedback: {
+        aligned: {
+          title: "Quality before more demand",
+          body:
+            "Repeated defects are a defensible stop signal. Without unit costs, assigned returns, or marketing attribution, neither more budget nor discontinuing the line is supported.",
+        },
+        decisionOnly: {
+          title: "Right sequence, wrong primary evidence",
+          body:
+            "Revenue and volume describe the line, but the repeated quality result justifies the immediate investigation.",
+        },
+        evidenceOnly: {
+          title: "The evidence contradicts the decision",
+          body:
+            "Repeated defects argue against creating more demand and do not yet prove the line should close. Investigate cause and rework first.",
+        },
+        unsupported: {
+          title: "The decision outruns the evidence",
+          body:
+            "Strong revenue is not quality evidence; low volume is not a closure case. Start with the repeated defect signal.",
+        },
+      },
+    },
     steps: [
       {
         n: "01",

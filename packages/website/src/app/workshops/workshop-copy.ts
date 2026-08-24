@@ -66,10 +66,9 @@ export interface WorkshopPageCopy {
     readonly source: string;
     readonly stepsHeading: (count: number) => string;
     readonly stepsIntroduction: string;
-    readonly classification: string;
-    readonly classificationHeading: string;
-    readonly classificationBodyBeforeEmail: string;
-    readonly classificationBodyAfterEmail: string;
+    readonly referenceHeading: string;
+    readonly referenceIntroduction: string;
+    readonly accessBoundary: string;
   };
 }
 
@@ -161,11 +160,10 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         `Die ${NUMBER_WORDS.de[count] ?? String(count)} Schritte`,
       stepsIntroduction:
         "Der Ablauf zum Nachbauen: von der ersten Prüfung der Rohdaten bis zur begründeten Entscheidung.",
-      classification: "Einordnung",
-      classificationHeading: "Selbstlern-Material, kein buchbarer Live-Termin.",
-      classificationBodyBeforeEmail:
-        "Diese Seite enthält eine geführte Übung und Dateien. Es gibt derzeit keinen Terminplan und keine Buchungsfunktion. Sachliche Fehler kannst du per E-Mail an",
-      classificationBodyAfterEmail: "melden.",
+      referenceHeading: "Referenz",
+      referenceIntroduction:
+        "Zielgruppe, Fall und Ablauf bleiben greifbar, ohne vor der ersten Entscheidung zu stehen.",
+      accessBoundary: "Zugang und Datenfluss",
     },
   },
   en: {
@@ -250,11 +248,10 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         `${NUMBER_WORDS.en[count] ?? String(count)} steps`,
       stepsIntroduction:
         "The sequence to rebuild, from the first check of the raw data to a reasoned decision.",
-      classification: "Availability",
-      classificationHeading: "Self-study material, not a bookable live session.",
-      classificationBodyBeforeEmail:
-        "This page contains a guided exercise and files. There is currently no schedule and no booking function. Report factual errors by email to",
-      classificationBodyAfterEmail: ".",
+      referenceHeading: "Reference",
+      referenceIntroduction:
+        "Audience, case, and sequence remain available without delaying the first decision.",
+      accessBoundary: "Access and data flow",
     },
   },
 };

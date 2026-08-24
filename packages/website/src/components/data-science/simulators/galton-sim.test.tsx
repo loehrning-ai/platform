@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { render, cleanup, screen } from "@testing-library/react";
+import { render, cleanup, fireEvent, screen } from "@testing-library/react";
 import { GaltonSim } from "./galton-sim";
 
 afterEach(() => {
@@ -29,11 +29,11 @@ describe("GaltonSim ", () => {
     expect(screen.getByRole("button", { name: "bimodal" })).toBeInTheDocument();
     expect(screen.getByLabelText("Sample size")).toBeInTheDocument();
     expect(screen.getByLabelText("Drop rate per second")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Pause" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Play" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Reset" })).toBeInTheDocument();
   });
 
-  it("cleans up its RAF loop correctly under React 18 Strict Mode's double-invoked effects", () => {
+  it("starts no RAF before explicit Play and cleans up the started loop", () => {
     const rafSpy = vi.spyOn(window, "requestAnimationFrame");
     const cafSpy = vi.spyOn(window, "cancelAnimationFrame");
 
@@ -43,22 +43,17 @@ describe("GaltonSim ", () => {
       </StrictMode>,
     );
 
-    // StrictMode mounts the effect, tears it down, then mounts it again —
-    // two requestAnimationFrame calls, one matching cancelAnimationFrame
-    // from the throwaway first mount's cleanup.
-    expect(rafSpy).toHaveBeenCalledTimes(2);
-    expect(cafSpy).toHaveBeenCalledTimes(1);
+    expect(rafSpy).not.toHaveBeenCalled();
+    expect(cafSpy).not.toHaveBeenCalled();
 
-    const requestedIds = rafSpy.mock.results.map((r) => r.value);
-    const canceledIds = cafSpy.mock.calls.map((c) => c[0]);
-    expect(canceledIds).toEqual([requestedIds[0]]);
+    fireEvent.click(screen.getByRole("button", { name: "Play" }));
+    expect(rafSpy).toHaveBeenCalledTimes(1);
+    const requestedId = rafSpy.mock.results[0]?.value;
 
     unmount();
 
-    // Real unmount cancels the second (surviving) RAF handle — no stale
-    // handle keeps firing after unmount, no duplicate loop left running.
-    expect(cafSpy).toHaveBeenCalledTimes(2);
-    expect(cafSpy.mock.calls[1]?.[0]).toBe(requestedIds[1]);
+    expect(cafSpy).toHaveBeenCalledTimes(1);
+    expect(cafSpy).toHaveBeenCalledWith(requestedId);
   });
 
   it("reproduces the same seeded layout on first paint (mulberry32(42), not Math.random)", () => {

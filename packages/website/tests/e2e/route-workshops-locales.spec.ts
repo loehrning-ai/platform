@@ -24,8 +24,15 @@ const WORKSHOP_ROUTES = [
 const GERMAN_INTERFACE_TOKENS =
   /(?:Für wen|Alle Workshops|Die offene Entscheidung|Einordnung|Kostenlos und ohne Anmeldung|Material zum Mitnehmen|Verfügbare Workshops)/;
 
+function isExpectedWebKitRscPrefetchCancellation(message: string): boolean {
+  return /^\/localhost:\d+\/[^\s]+[?&]_rsc=[A-Za-z0-9_-]+ due to access control checks\.$/u.test(
+    message,
+  );
+}
+
 for (const width of [320, 390, 768, 1440] as const) {
   test(`workshop DE/EN pages are complete and contain their layout at ${width}px`, async ({
+    browserName,
     page,
   }) => {
     await page.setViewportSize({ width, height: width < 768 ? 844 : 1_000 });
@@ -52,7 +59,15 @@ for (const width of [320, 390, 768, 1440] as const) {
     for (const route of WORKSHOP_ROUTES) {
       for (const locale of ["de", "en"] as const) {
         const pageErrors: string[] = [];
-        const onPageError = (error: Error) => pageErrors.push(error.message);
+        const onPageError = (error: Error) => {
+          if (
+            browserName === "webkit" &&
+            isExpectedWebKitRscPrefetchCancellation(error.message)
+          ) {
+            return;
+          }
+          pageErrors.push(error.message);
+        };
         page.on("pageerror", onPageError);
 
         const localizedPath = locale === "de" ? route.path : `/en${route.path}`;
@@ -62,11 +77,15 @@ for (const width of [320, 390, 768, 1440] as const) {
 
         expect(response?.status(), localizedPath).toBe(200);
         await expect(page.locator("html")).toHaveAttribute("lang", locale);
-        await expect(page.getByRole("heading", {
-          level: 1,
-          name: locale === "de" ? route.deHeading : route.enHeading,
-        })).toBeVisible();
-        await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+        await expect(
+          page.getByRole("heading", {
+            level: 1,
+            name: locale === "de" ? route.deHeading : route.enHeading,
+          }),
+        ).toBeVisible();
+        await page
+          .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+          .waitFor({ state: "attached" });
         // Font metrics affect layout width. Without waiting for the real
         // webfont, a slower runner can still be rendering a wider fallback
         // face when geometry is measured, producing a transient overflow
@@ -92,7 +111,9 @@ for (const width of [320, 390, 768, 1440] as const) {
             setTimeout(done, 250);
           });
         });
-        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+        await page.evaluate(() =>
+          window.scrollTo(0, document.body.scrollHeight),
+        );
 
         const state = await page.evaluate(() => {
           const main = document.querySelector("main");
@@ -102,8 +123,8 @@ for (const width of [320, 390, 768, 1440] as const) {
           const materialHrefs = internalHrefs.filter((href) =>
             /\.(?:html|zip)$/.test(href),
           );
-          const pageHrefs = internalHrefs.filter((href) =>
-            !/\.(?:html|zip)$/.test(href),
+          const pageHrefs = internalHrefs.filter(
+            (href) => !/\.(?:html|zip)$/.test(href),
           );
           return {
             bodyWidth: document.body.scrollWidth,
@@ -114,15 +135,19 @@ for (const width of [320, 390, 768, 1440] as const) {
           };
         });
 
-        expect(state.bodyWidth, `${localizedPath} body overflow`).toBeLessThanOrEqual(width + 1);
+        expect(
+          state.bodyWidth,
+          `${localizedPath} body overflow`,
+        ).toBeLessThanOrEqual(width + 1);
         expect(
           state.documentWidth,
           `${localizedPath} document overflow`,
         ).toBeLessThanOrEqual(width + 1);
-        expect(state.materialHrefs).toHaveLength(route.materialCount * 2);
+        expect(state.materialHrefs).toHaveLength(route.materialCount);
         expect(
           state.materialHrefs.every(
-            (href) => href.startsWith("/workshops/") && !href.startsWith("/en/"),
+            (href) =>
+              href.startsWith("/workshops/") && !href.startsWith("/en/"),
           ),
           `${localizedPath} source-language asset paths`,
         ).toBe(true);
@@ -145,7 +170,9 @@ for (const width of [320, 390, 768, 1440] as const) {
             );
           }
         } else {
-          expect(state.pageHrefs.every((href) => !href.startsWith("/en"))).toBe(true);
+          expect(state.pageHrefs.every((href) => !href.startsWith("/en"))).toBe(
+            true,
+          );
         }
 
         expect(pageErrors, `${localizedPath} page errors`).toEqual([]);

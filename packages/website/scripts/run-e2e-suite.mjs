@@ -12,7 +12,7 @@ const PLAYWRIGHT_CLI = require.resolve("@playwright/test/cli");
 const DEFAULT_SUITE_TIMEOUT_MS = 70 * 60 * 1000;
 const MINIMUM_CHILD_BUDGET_MS = 65_000;
 const CHILD_SHUTDOWN_BUDGET_MS = 5_000;
-export const MOBILE_WEBKIT_SHARD_COUNT = 21;
+export const MOBILE_WEBKIT_SHARD_COUNT = 22;
 
 const ARTIFACT_DIRECTORIES = [
   ["PLAYWRIGHT_OUTPUT_DIR", "test-results"],

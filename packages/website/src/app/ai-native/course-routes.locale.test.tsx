@@ -8,6 +8,7 @@ vi.mock("@/lib/i18n/request-locale", () => ({
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { AiNativeHero } from "@/components/ai-native/hero";
 import { AiNativeLessonReader } from "@/components/ai-native/kurs/lesson-reader";
+import { LessonReference } from "@/components/course/lesson-reference";
 import LandingPage, {
   generateMetadata as generateLandingMetadata,
 } from "./page";
@@ -80,6 +81,20 @@ describe("AI-Native locale propagation across the complete course lifecycle", ()
         title: "When you stop drafting from scratch",
       },
     });
+    const lessonReference = findElement(lesson, LessonReference);
+    expect(lessonReference?.props).toMatchObject({
+      locale: "en",
+      title: "When you stop drafting from scratch",
+    });
+    const lessonReferenceText = textContent(
+      (lessonReference?.props as { children?: ReactNode }).children,
+    );
+    expect(lessonReferenceText).toContain(
+      "Start with the tools you already use. Connect them through explicit instructions, review points and repeatable handoffs.",
+    );
+    expect(lessonReferenceText).toContain(
+      "You already have tools. The relevant question is how to combine them.",
+    );
 
     expect((await QuizPage()).props).toMatchObject({
       courseSlug: "ai-native",
