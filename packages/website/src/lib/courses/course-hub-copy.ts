@@ -7,26 +7,12 @@ export const COURSE_HUB_COPY = {
       "Zehn Kurse auf Deutsch und Englisch sowie Workshops und Lernbücher mit ausgewiesenem Umfang, Zugang und Quellstand.",
     metadataImageAlt:
       "loehrning.ai Kursübersicht mit Grundlagenpfad und Technikkursen",
-    kicker: "10 Kurse · DE + EN · klarer Umfang",
     headingLead: "KI verstehen,",
     headingAccent: "einsetzen und prüfen.",
     intro:
-      "Zehn Kurse sind vollständig auf Deutsch und Englisch verfügbar. Vier Grundlagenkurse bilden einen festen Lernpfad; sechs Technikkurse behandeln Prompting, Coding Agents, Datenarbeit und Betriebsmodelle. Dauer, Voraussetzungen, Zugang und Nachweis stehen direkt am Kurs.",
-    firstStep: "Dein erster Schritt:",
-    checkLabel: "Der KI-Check in rund fünf Minuten",
-    checkExplanation:
-      "ordnet deinen Stand ein und verweist auf einen passenden Einstieg. Er ersetzt keine Prüfung und erzeugt keinen Nachweis.",
-    offersLabel: "Lernangebote",
-    foundations: "Grundlagenpfad",
-    technical: "Technikkurse",
-    workshops: "Workshops",
-    books: "Lernbücher",
-    differenceLabel: "Was ist der Unterschied zwischen den zwei Kursarten?",
-    differenceHeading: "Was ist der Unterschied?",
-    foundationDifference:
-      "vier Kurse in fester Reihenfolge. Umfang, Zugang und selbst ausgestellter Nachweis stehen auf jeder Karte.",
-    technicalDifference:
-      "sechs einzeln wählbare Kurse zu Prompting, Coding Agents, Datenarbeit und Betriebsmodellen. Lizenz und übernommener Quellstand bleiben sichtbar.",
+      "Vier Grundlagenkurse bilden den Lernpfad; sechs Technikkurse vertiefen einzelne Werkzeuge. Jede Karte nennt Dauer, Zugang und Ergebnis.",
+    firstStep: "Unsicher beim Einstieg?",
+    checkLabel: "In fünf Minuten einordnen",
     accessKicker: "§ Warum kostenlos",
     accessHeading:
       "Zugang, Fortschritt und Nachweise sind getrennt ausgewiesen.",
@@ -41,26 +27,12 @@ export const COURSE_HUB_COPY = {
       "Ten courses in English and German, plus workshops and learning books with explicit scope, access requirements, and source revisions.",
     metadataImageAlt:
       "loehrning.ai course catalogue with a foundation path and technical courses",
-    kicker: "10 courses · DE + EN · explicit scope",
     headingLead: "Understand AI.",
     headingAccent: "Use it and check the result.",
     intro:
-      "All ten courses are available in English and German. Four foundation courses form a fixed path; six technical courses cover prompting, coding agents, data work, and operating models. Duration, prerequisites, access, and completion record are stated on each course.",
-    firstStep: "Starting point:",
-    checkLabel: "The AI check, about five minutes",
-    checkExplanation:
-      "maps your current knowledge to a suitable entry point. It is not an exam and does not issue a completion record.",
-    offersLabel: "Learning catalogue",
-    foundations: "Foundation path",
-    technical: "Technical courses",
-    workshops: "Workshops",
-    books: "Learning books",
-    differenceLabel: "Difference between the two course collections",
-    differenceHeading: "How the collections differ",
-    foundationDifference:
-      "four courses in a fixed order. Each card states scope, access, and the record issued by loehrning.ai.",
-    technicalDifference:
-      "six independently selectable courses on prompting, coding agents, data work, and operating models. The licence and imported source revision remain visible.",
+      "Four foundation courses form the learning path; six technical courses deepen individual tools. Every card states duration, access, and outcome.",
+    firstStep: "Unsure where to start?",
+    checkLabel: "Map it in five minutes",
     accessKicker: "§ Access model",
     accessHeading:
       "Access, progress, and completion records are stated separately.",

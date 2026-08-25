@@ -30,6 +30,13 @@ const CONTENT_WIDTH_CLASS: Record<LessonShellContentMode, string> = {
   workspace: "max-w-[1600px]",
 };
 
+// Next's development tools occupy the lower-left corner. Production keeps the
+// expected edge inset; local browser verification keeps the control clickable.
+const MOBILE_TOGGLE_LEFT_CLASS =
+  process.env.NODE_ENV === "development"
+    ? "left-[max(5rem,env(safe-area-inset-left))]"
+    : "left-[max(1.5rem,env(safe-area-inset-left))]";
+
 function readPersistedSidebarState(): boolean {
   try {
     return (
@@ -330,7 +337,7 @@ export function LessonShell({
         aria-expanded={navOpen}
         aria-controls={navId}
         aria-label={openNavLabel}
-        className={`fixed bottom-[max(1.5rem,env(safe-area-inset-bottom))] left-[max(1.5rem,env(safe-area-inset-left))] z-40 flex h-12 w-12 items-center justify-center border-2 border-foreground bg-brand-orange text-white shadow-[4px_4px_0_0_var(--color-foreground)] lg:hidden ${
+        className={`fixed bottom-[max(1.5rem,env(safe-area-inset-bottom))] ${MOBILE_TOGGLE_LEFT_CLASS} z-40 flex h-12 w-12 items-center justify-center border-2 border-foreground bg-brand-orange text-white shadow-[4px_4px_0_0_var(--color-foreground)] lg:hidden ${
           navOpen ? "pointer-events-none invisible" : ""
         }`}
       >

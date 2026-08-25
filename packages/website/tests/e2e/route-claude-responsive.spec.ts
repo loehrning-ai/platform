@@ -113,21 +113,41 @@ function encodeCertificateHash(): string {
     .replace(/=+$/, "");
 }
 
-async function continueLocally(page: Page, locale: "de" | "en") {
+async function continueLocally(page: Page, locale?: "de" | "en") {
   const button = page.getByRole("button", {
     name:
       locale === "de"
-        ? "Lokal ohne Kontosynchronisierung fortfahren"
-        : "Continue locally without account sync",
+        ? "Lokal weiterlernen"
+        : locale === "en"
+          ? "Continue locally"
+          : /^(?:Lokal weiterlernen|Continue locally)$/,
   });
   const appeared = await button
     .waitFor({ state: "visible", timeout: 1_500 })
     .then(() => true)
     .catch(() => false);
   if (appeared) {
-    await button.click();
+    await button.click({ timeout: 5_000 }).catch(async (error: unknown) => {
+      if (await button.isVisible().catch(() => false)) throw error;
+    });
     await expect(button).toBeHidden();
   }
+}
+
+async function openLessonReference(page: Page) {
+  await page
+    .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+    .waitFor({ state: "attached" });
+  await continueLocally(page);
+  await expect(page.locator("[data-learning-owner-panel]")).toBeHidden({
+    timeout: 15_000,
+  });
+  const reference = page.locator("details[data-lesson-reference]");
+  await expect(reference).toHaveCount(1);
+  await expect(reference).toBeVisible();
+  await expect(reference).toHaveJSProperty("open", false);
+  await reference.locator(":scope > summary").click();
+  await expect(reference).toHaveJSProperty("open", true);
 }
 
 function visibleLanguageSwitchLink(page: Page, name: RegExp) {
@@ -469,7 +489,9 @@ for (const width of VIEWPORT_WIDTHS) {
       page,
     }, testInfo) => {
       test.skip(
-        testInfo.project.name !== "chromium",
+        !["chromium", "chromium-claude-responsive"].includes(
+          testInfo.project.name,
+        ),
         "The explicit five-width matrix runs once in Chromium.",
       );
       test.setTimeout(300_000);
@@ -499,6 +521,12 @@ for (const width of VIEWPORT_WIDTHS) {
           });
           expect(response?.status(), `${width}px ${route}`).toBe(200);
           await expect(page).not.toHaveURL(/\/login(?:\?|$)/);
+          if (routeSet.lessons.includes(route)) {
+            await openLessonReference(page);
+          }
+          // The expanded reference is the denser lesson state. Walk it once;
+          // a preliminary walk of the collapsed page doubles scroll work
+          // without checking any additional geometry.
           await settleFullPage(page);
           await expect(page.locator("html"), route).toHaveAttribute(
             "lang",
@@ -554,6 +582,7 @@ test.describe("Claude locale continuity and record surfaces", () => {
     });
     await settleFullPage(page);
     await continueLocally(page, "de");
+    await openLessonReference(page);
 
     const unread = page.getByRole("button", {
       name: "Als gelesen markieren",
@@ -580,6 +609,7 @@ test.describe("Claude locale continuity and record surfaces", () => {
     );
     await settleFullPage(page);
     await continueLocally(page, "en");
+    await openLessonReference(page);
     await expect(
       page.getByText("Lesson complete", { exact: true }),
     ).toBeVisible();
@@ -721,7 +751,9 @@ test.describe("Claude locale continuity and record surfaces", () => {
     page,
   }, testInfo) => {
     test.skip(
-      testInfo.project.name !== "chromium",
+      !["chromium", "chromium-claude-responsive"].includes(
+        testInfo.project.name,
+      ),
       "The explicit zoom audit runs once in Chromium.",
     );
     test.setTimeout(240_000);
@@ -731,6 +763,7 @@ test.describe("Claude locale continuity and record surfaces", () => {
       for (const route of routes(localeCase.prefix).lessons) {
         await page.goto(route, { waitUntil: "domcontentloaded" });
         await settleFullPage(page);
+        await openLessonReference(page);
         await page.evaluate(() => {
           document.documentElement.style.zoom = "2";
         });
@@ -738,7 +771,9 @@ test.describe("Claude locale continuity and record surfaces", () => {
           page,
           `${localeCase.locale}/zoom-200/${route}`,
         );
-        await expect(page.locator("h1").first()).toBeVisible();
+        const headings = page.getByRole("heading", { level: 1 });
+        await expect(headings).toHaveCount(1);
+        await expect(headings).toBeVisible();
       }
     }
   });

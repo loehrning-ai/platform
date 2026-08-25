@@ -2,7 +2,9 @@
 
 import { useState, type JSX } from "react";
 import { LessonShell } from "@/components/course/lesson-shell";
+import { LessonReference } from "@/components/course/lesson-reference";
 import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
+import { isCourseProjectCheckpointLesson } from "@/lib/course-projects/checkpoint-selector";
 import {
   CodexLessonSidebar,
   type CodexLessonNavItem,
@@ -34,6 +36,10 @@ export function CodexLessonPage({
 }: CodexLessonPageProps): JSX.Element {
   const [navOpen, setNavOpen] = useState(false);
   const copy = getCodexCourseCopy(locale).reader;
+  const isProjectCheckpoint = isCourseProjectCheckpointLesson(
+    "codex",
+    lesson.id,
+  );
 
   return (
     <LessonShell
@@ -66,25 +72,35 @@ export function CodexLessonPage({
         />
       }
     >
-      <div className="mb-10">
-        <CourseProjectStudio
-          courseSlug="codex"
-          lessonId={lesson.id}
-          locale={locale}
-          lessonContext={{
-            title: lesson.title,
-            objective: lesson.hook,
-            keyConcepts: lesson.keyConcepts,
-          }}
-        />
-      </div>
-      <CodexLessonReader
+      {isProjectCheckpoint ? (
+        <div className="mb-10">
+          <CourseProjectStudio
+            courseSlug="codex"
+            lessonId={lesson.id}
+            locale={locale}
+            lessonContext={{
+              title: lesson.title,
+              objective: lesson.hook,
+              keyConcepts: lesson.keyConcepts,
+            }}
+          />
+        </div>
+      ) : null}
+      <LessonReference
+        key={lesson.id}
         locale={locale}
-        lesson={lesson}
-        totalLessons={totalLessons}
-        prevHref={prevHref}
-        nextHref={nextHref}
-      />
+        title={lesson.title}
+        objective={lesson.hook}
+        headingLevel={isProjectCheckpoint ? 2 : 1}
+      >
+        <CodexLessonReader
+          locale={locale}
+          lesson={lesson}
+          totalLessons={totalLessons}
+          prevHref={prevHref}
+          nextHref={nextHref}
+        />
+      </LessonReference>
     </LessonShell>
   );
 }

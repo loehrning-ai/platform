@@ -71,8 +71,10 @@ describe("course catalogue locale copy", () => {
     expect(
       courseBadges("ki-fuehrerschein", "en").map(({ label }) => label),
     ).toEqual(["DE + EN", "participation record"]);
-    expect(COURSE_HUB_COPY.de.intro).toContain("Zehn Kurse");
-    expect(COURSE_HUB_COPY.en.intro).toContain("All ten courses");
+    expect(COURSE_HUB_COPY.de.intro).toContain("Vier Grundlagenkurse");
+    expect(COURSE_HUB_COPY.en.intro).toContain("Four foundation courses");
+    expect(COURSE_HUB_COPY.de.intro.split(/\s+/).length).toBeLessThanOrEqual(20);
+    expect(COURSE_HUB_COPY.en.intro.split(/\s+/).length).toBeLessThanOrEqual(20);
     expect(COURSE_HUB_COPY.en.metadataTitle).toContain("AI courses");
     expect(COURSE_HUB_COPY.de.metadataTitle).toContain("KI-Kurse");
     expect(COURSE_HUB_COPY.de.accessBody).toContain(

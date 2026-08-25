@@ -23,6 +23,11 @@ describe("PipelineProgress ", () => {
   it("no canvas element in the DOM", () => {
     const { container } = render(<PipelineProgress />);
     expect(container.querySelector("canvas")).toBeNull();
+    expect(container.querySelector("[data-pipeline-actions]")).toHaveStyle({
+      display: "flex",
+      flexWrap: "wrap",
+      gap: "10px",
+    });
   });
 
   it("running a step types the log lines one at a time and completes the step", () => {

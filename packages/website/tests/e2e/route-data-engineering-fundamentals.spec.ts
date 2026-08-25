@@ -48,7 +48,13 @@ function allChaptersCompletedDefState() {
   const lessons = Object.fromEntries(
     DEF_CHAPTER_IDS.map((id) => [
       id,
-      { sectionsRead: [], quizScore: null, quizTotal: null, completed: true, exercisesCompleted: {} },
+      {
+        sectionsRead: [],
+        quizScore: null,
+        quizTotal: null,
+        completed: true,
+        exercisesCompleted: {},
+      },
     ]),
   );
   return {
@@ -77,6 +83,36 @@ async function seedProgress(page: Page, value: object) {
     },
     [UNIFIED_KEY, JSON.stringify(value)] as const,
   );
+}
+
+async function continueLocally(page: Page) {
+  const button = page.getByRole("button", { name: "Continue locally" });
+  const gateAppeared = await button
+    .waitFor({ state: "visible", timeout: 1_500 })
+    .then(() => true)
+    .catch(() => false);
+  if (gateAppeared) {
+    await button.click({ timeout: 5_000 }).catch(async (error: unknown) => {
+      // Ownership resolution can remove the optional gate between the
+      // visibility probe and the click. Only that resolved state is success.
+      if (await button.isVisible().catch(() => false)) throw error;
+    });
+    await expect(button).toBeHidden();
+  }
+}
+
+async function openLessonReference(page: Page) {
+  await page
+    .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+    .waitFor({ state: "attached" });
+  await continueLocally(page);
+  await expect(page.locator("[data-learning-owner-panel]")).toBeHidden({
+    timeout: 15_000,
+  });
+  const reference = page.locator("details[data-lesson-reference]");
+  await expect(reference).toHaveCount(1);
+  await reference.locator("summary").click();
+  await expect(reference).toHaveAttribute("open", "");
 }
 
 /** Encode a certificate payload exactly like generateCertificatePdf's QR does. */
@@ -108,19 +144,20 @@ test.describe("Data Engineering Fundamentals golden path", () => {
     await expect(chapterLink).toBeVisible();
     await chapterLink.click();
     await expect(page).toHaveURL(new RegExp(`${CHAPTER_ROUTE}$`));
-    await expect(page.locator("h1")).toHaveCount(1);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 
   test("chapter: explicit confirmation marks it completed in the unified progress store", async ({
     page,
   }) => {
-    const res = await page.goto(CHAPTER_ROUTE, { waitUntil: "domcontentloaded" });
+    const res = await page.goto(CHAPTER_ROUTE, {
+      waitUntil: "domcontentloaded",
+    });
     expect(res?.status()).toBe(200);
-    await expect(page.locator("h1")).toHaveCount(1);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await openLessonReference(page);
 
-    await page
-      .getByRole("button", { name: "Complete chapter" })
-      .click();
+    await page.getByRole("button", { name: "Complete chapter" }).click();
     await expect
       .poll(
         () =>
@@ -128,11 +165,15 @@ test.describe("Data Engineering Fundamentals golden path", () => {
             const raw = window.localStorage.getItem(key);
             if (!raw) return false;
             const parsed = JSON.parse(raw) as {
-              courses?: Record<string, { lessons?: Record<string, { completed?: boolean }> }>;
+              courses?: Record<
+                string,
+                { lessons?: Record<string, { completed?: boolean }> }
+              >;
             };
             return (
-              parsed.courses?.["data-engineering-fundamentals"]?.lessons?.["home"]?.completed ===
-              true
+              parsed.courses?.["data-engineering-fundamentals"]?.lessons?.[
+                "home"
+              ]?.completed === true
             );
           }, UNIFIED_KEY),
         { timeout: 10_000 },
@@ -161,12 +202,18 @@ test.describe("Data Engineering Fundamentals golden path", () => {
       c: "data-engineering-fundamentals",
       v: 1,
     });
-    await page.goto(`${VERIFY_ROUTE}#${hash}`, { waitUntil: "domcontentloaded" });
+    await page.goto(`${VERIFY_ROUTE}#${hash}`, {
+      waitUntil: "domcontentloaded",
+    });
 
     await expect(page.getByText("QR data read", { exact: true })).toBeVisible();
     await expect(page.getByText("Ada Lovelace")).toBeVisible();
-    await expect(page.getByText("Completion path: all lessons finished")).toBeVisible();
-    await expect(page.getByRole("heading", { name: /Data Engineering Fundamentals/ })).toBeVisible();
+    await expect(
+      page.getByText("Completion path: all lessons finished"),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /Data Engineering Fundamentals/ }),
+    ).toBeVisible();
     await expect(page.getByText("Certificate code unreadable")).toHaveCount(0);
   });
 });

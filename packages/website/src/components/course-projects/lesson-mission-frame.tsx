@@ -5,47 +5,64 @@ import type { LessonMissionFrame as LessonMissionFrameData } from "@/lib/course-
 export interface LessonMissionFrameProps {
   readonly frame: LessonMissionFrameData;
   readonly locale: Locale;
+  readonly headingLevel?: 1 | 2 | 3;
+  /** The persistent mission header can own the lesson heading while collapsed. */
+  readonly showHeading?: boolean;
 }
 
 /** Visible authored-content bridge between the active lesson and its lab. */
 export function LessonMissionFrame({
   frame,
   locale,
+  headingLevel = 3,
+  showHeading = true,
 }: LessonMissionFrameProps): JSX.Element {
+  const NestedHeading = headingLevel === 2 ? "h2" : "h3";
+  const headingClass =
+    "mt-1 block text-balance text-lg font-black leading-tight text-foreground";
+
   return (
     <article
       data-lesson-mission-id={frame.missionId}
       data-lesson-skill-id={frame.skillId}
       data-lesson-scenario-seed={frame.scenarioSeed}
-      className="border-b border-border pb-5"
+      className="grid min-w-0 gap-3 sm:grid-cols-[minmax(12rem,0.8fr)_minmax(0,1.2fr)] sm:items-start"
     >
-      <p className="font-mono text-[10px] font-black uppercase tracking-[0.16em] text-brand-orange-dark">
-        {frame.label}
-      </p>
-      <h3 className="mt-2 text-balance text-lg font-black leading-tight text-foreground">
-        {frame.title}
-      </h3>
-      <p className="mt-2 break-words text-sm leading-relaxed text-muted-foreground">
-        {frame.objective}
-      </p>
-      {frame.keyConcepts.length > 0 ? (
-        <ul
-          aria-label={locale === "de" ? "Schlüsselkonzepte" : "Key concepts"}
-          className="mt-3 flex min-w-0 flex-wrap gap-2"
-        >
-          {frame.keyConcepts.map((concept) => (
-            <li
-              key={concept}
-              className="max-w-full break-words border border-border bg-background px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.08em] text-foreground"
-            >
-              {concept}
-            </li>
-          ))}
-        </ul>
-      ) : null}
-      <p className="mt-4 border-l-4 border-brand-orange pl-3 text-xs font-semibold leading-relaxed text-foreground">
-        {frame.bridge}
-      </p>
+      <div className="min-w-0">
+        <p className="font-mono text-[10px] font-black uppercase tracking-[0.16em] text-brand-orange-dark">
+          {frame.label}
+        </p>
+        {showHeading ? (
+          headingLevel === 1 ? (
+            <span role="heading" aria-level={1} className={headingClass}>
+              {frame.title}
+            </span>
+          ) : (
+            <NestedHeading className={headingClass}>{frame.title}</NestedHeading>
+          )
+        ) : null}
+      </div>
+      <div className="min-w-0 border-l-4 border-brand-orange pl-3">
+        <p className="break-words text-sm font-semibold leading-snug text-foreground">
+          {frame.objective}
+        </p>
+        {frame.keyConcepts.length > 0 ? (
+          <ul
+            aria-label={locale === "de" ? "Schlüsselkonzepte" : "Key concepts"}
+            className="mt-2 flex min-w-0 flex-wrap gap-1.5"
+          >
+            {frame.keyConcepts.map((concept) => (
+              <li
+                key={concept}
+                className="max-w-full break-words border border-border bg-background px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.08em] text-foreground"
+              >
+                {concept}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
+      <p className="sr-only">{frame.bridge}</p>
     </article>
   );
 }

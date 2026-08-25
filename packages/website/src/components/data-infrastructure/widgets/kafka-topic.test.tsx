@@ -53,6 +53,7 @@ beforeEach(() => {
 afterEach(() => {
   cleanup();
   vi.useRealTimers();
+  vi.restoreAllMocks();
 });
 
 describe("KafkaTopic", () => {
@@ -117,7 +118,88 @@ describe("KafkaTopic", () => {
     unmount();
   });
 
-  it("burst and storm controls can be clicked without crashing, and the consumer-poll interval is cleared on unmount", () => {
+  it("starts consumer polling only after Send and stops when the lag drains", () => {
+    vi.useFakeTimers();
+    const intervalSpy = vi.spyOn(globalThis, "setInterval");
+    const clearIntervalSpy = vi.spyOn(globalThis, "clearInterval");
+    render(<KafkaTopic lessonId="di-streaming" cpId="kafka" />);
+    const consumerPollCalls = () =>
+      intervalSpy.mock.calls.filter(([, delay]) => delay === 200);
+
+    expect(consumerPollCalls()).toHaveLength(0);
+
+    act(() => {
+      fireEvent.click(screen.getByRole("button", { name: /send 1/ }));
+    });
+    expect(consumerPollCalls()).toEqual([[expect.any(Function), 200]]);
+    const consumerPollCallIndex = intervalSpy.mock.calls.findIndex(
+      ([, delay]) => delay === 200,
+    );
+    const consumerInterval =
+      intervalSpy.mock.results[consumerPollCallIndex]?.value;
+    expect(screen.getByText(/produced/)).toHaveTextContent(
+      "produced 1 · consumed 0 · Lag 1",
+    );
+
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
+    expect(clearIntervalSpy).toHaveBeenCalledWith(consumerInterval);
+    expect(screen.getByText(/produced/)).toHaveTextContent(
+      "produced 1 · consumed 1 · Lag 0",
+    );
+
+    act(() => {
+      vi.advanceTimersByTime(1000);
+    });
+    expect(consumerPollCalls()).toHaveLength(1);
+  });
+
+  it("clears an active consumer-poll interval on unmount", () => {
+    vi.useFakeTimers();
+    const intervalSpy = vi.spyOn(globalThis, "setInterval");
+    const clearIntervalSpy = vi.spyOn(globalThis, "clearInterval");
+    const { unmount } = render(
+      <KafkaTopic lessonId="di-streaming" cpId="kafka" />,
+    );
+    const consumerPollCalls = () =>
+      intervalSpy.mock.calls.filter(([, delay]) => delay === 200);
+
+    expect(consumerPollCalls()).toHaveLength(0);
+
+    act(() => {
+      fireEvent.click(screen.getByRole("button", { name: /send 1/ }));
+    });
+    expect(consumerPollCalls()).toHaveLength(1);
+    const consumerPollCallIndex = intervalSpy.mock.calls.findIndex(
+      ([, delay]) => delay === 200,
+    );
+    const interval = intervalSpy.mock.results[consumerPollCallIndex]?.value;
+
+    unmount();
+    expect(clearIntervalSpy).toHaveBeenCalledWith(interval);
+  });
+
+  it("does not restart polling from queued batch sends after unmount", () => {
+    vi.useFakeTimers();
+    const intervalSpy = vi.spyOn(globalThis, "setInterval");
+    const { unmount } = render(
+      <KafkaTopic lessonId="di-streaming" cpId="kafka" />,
+    );
+    const consumerPollStarted = () =>
+      intervalSpy.mock.calls.some(([, delay]) => delay === 200);
+
+    expect(consumerPollStarted()).toBe(false);
+    fireEvent.click(screen.getByRole("button", { name: /burst/ }));
+    unmount();
+    act(() => {
+      vi.advanceTimersByTime(5000);
+    });
+
+    expect(consumerPollStarted()).toBe(false);
+  });
+
+  it("burst and storm controls can be clicked without crashing", () => {
     vi.useFakeTimers();
     const { unmount } = render(
       <KafkaTopic lessonId="di-streaming" cpId="kafka" />,

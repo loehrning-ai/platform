@@ -112,8 +112,8 @@ function WieKiFunktioniertContent({ locale }: { readonly locale: Locale }) {
         id="wie-ki-funktioniert-course-jsonld"
       />
 
-      <main className="mx-auto w-full max-w-6xl min-w-0 px-4 pb-24 pt-12 sm:px-6 sm:pb-32 sm:pt-20 lg:px-10">
-        <nav aria-label={copy.breadcrumbLabel} className="mb-10 min-w-0">
+      <div className="mx-auto w-full max-w-6xl min-w-0 px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-12 lg:px-10">
+        <nav aria-label={copy.breadcrumbLabel} className="mb-6 min-w-0">
           <ol className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground sm:tracking-[0.1em]">
             <li>
               <Link
@@ -133,18 +133,18 @@ function WieKiFunktioniertContent({ locale }: { readonly locale: Locale }) {
           </ol>
         </nav>
 
-        <header className="min-w-0 border-b-2 border-foreground pb-12">
+        <header className="min-w-0 border-b-2 border-foreground pb-7">
           <div className="h-[3px] w-[120px] bg-brand-orange" />
-          <p className="mt-7 break-words font-mono text-[11px] font-bold uppercase tracking-[0.15em] text-brand-orange sm:tracking-[0.18em]">
+          <p className="mt-4 break-words font-mono text-[11px] font-bold uppercase tracking-[0.15em] text-brand-orange sm:tracking-[0.18em]">
             {copy.eyebrow}
           </p>
-          <h1 className="mt-5 max-w-5xl break-words text-[clamp(2.5rem,7vw,5.5rem)] font-bold leading-[0.92] tracking-[-0.04em] text-foreground [overflow-wrap:anywhere]">
+          <h1 className="mt-3 max-w-5xl break-words text-[clamp(2.5rem,7vw,5.5rem)] font-bold leading-[0.92] tracking-[-0.04em] text-foreground [overflow-wrap:anywhere]">
             {meta.title}
           </h1>
-          <p className="mt-6 max-w-3xl break-words text-[18px] leading-[1.6] text-muted-foreground sm:text-[21px]">
+          <p className="mt-3 max-w-3xl break-words text-[18px] leading-[1.5] text-muted-foreground sm:text-[21px]">
             {meta.subtitle}
           </p>
-          <div className="mt-8 grid min-w-0 gap-2 font-mono text-[12px] text-muted-foreground sm:max-w-3xl sm:grid-cols-2 sm:gap-6">
+          <div className="mt-5 grid min-w-0 gap-2 font-mono text-[12px] text-muted-foreground sm:max-w-3xl sm:grid-cols-2 sm:gap-6">
             <p className="break-words">
               {copy.lessonSummary(meta.durationMinutes)}
             </p>
@@ -153,14 +153,14 @@ function WieKiFunktioniertContent({ locale }: { readonly locale: Locale }) {
         </header>
 
         <ol
-          className="mt-10 grid min-w-0 gap-px border border-border bg-border md:grid-cols-2"
+          className="mt-6 grid min-w-0 gap-px border border-border bg-border md:grid-cols-2"
           data-testid="lektion-cards"
         >
           {lektionen.map((lektion) => (
             <li key={lektion.id} className="min-w-0 bg-background">
               <Link
                 href={localizeHref(`${PATH}/${lektion.id}`, locale)}
-                className="group flex h-full min-w-0 flex-col p-5 transition-colors hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange sm:p-7"
+                className="group flex h-full min-w-0 flex-col p-5 transition-colors hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange sm:p-6"
               >
                 <span className="break-words font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-brand-orange sm:tracking-[0.14em]">
                   {copy.lessonLabel(
@@ -168,13 +168,13 @@ function WieKiFunktioniertContent({ locale }: { readonly locale: Locale }) {
                     lektion.durationMinutes,
                   )}
                 </span>
-                <h2 className="mt-4 break-words text-[20px] font-bold leading-[1.16] tracking-[-0.025em] text-foreground [overflow-wrap:anywhere] group-hover:text-brand-orange sm:text-[24px]">
+                <h2 className="mt-3 break-words text-[20px] font-bold leading-[1.16] tracking-[-0.025em] text-foreground [overflow-wrap:anywhere] group-hover:text-brand-orange sm:text-[24px]">
                   {lektion.title}
                 </h2>
                 <p className="mt-3 min-w-0 break-words text-[14px] leading-[1.6] text-muted-foreground [overflow-wrap:anywhere] sm:text-[15px]">
                   {lektion.subtitle}
                 </p>
-                <span className="mt-7 block break-words font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-brand-orange sm:tracking-[0.1em]">
+                <span className="mt-5 block break-words font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-brand-orange sm:tracking-[0.1em]">
                   {copy.startLesson} <span aria-hidden="true">→</span>
                 </span>
               </Link>
@@ -182,7 +182,7 @@ function WieKiFunktioniertContent({ locale }: { readonly locale: Locale }) {
           ))}
         </ol>
 
-        <aside className="mt-16 grid min-w-0 gap-6 border-2 border-foreground bg-card p-5 shadow-[5px_5px_0_var(--color-foreground)] sm:p-7 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+        <aside className="mt-8 grid min-w-0 gap-6 border-2 border-foreground bg-card p-5 shadow-[5px_5px_0_var(--color-foreground)] sm:p-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
           <div className="min-w-0">
             <p className="break-words font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
               {copy.nextEyebrow}
@@ -206,7 +206,7 @@ function WieKiFunktioniertContent({ locale }: { readonly locale: Locale }) {
             </Link>
           </div>
         </aside>
-      </main>
+      </div>
     </>
   );
 }

@@ -6,8 +6,7 @@
 
 import { useCallback, useEffect, useRef, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
-import { useCanvasRAF } from "../canvas/use-canvas-raf";
-import { useCanvasAutoSize } from "../canvas/use-canvas-size";
+import { useAutoSizedCanvasRAF } from "../canvas/use-auto-sized-canvas-raf";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
 import { useDataInfraWidgetLocale } from "../widget-locale-context";
@@ -93,8 +92,6 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const wakeRef = useRef<() => void>(() => {});
   const feedSeqRef = useRef(0);
-
-  useCanvasAutoSize(canvasRef, wrapRef, { minHeight: 420 });
 
   const draw = useCallback((): boolean => {
     const canvas = canvasRef.current;
@@ -227,7 +224,9 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
     return timerRef.current != null;
   }, [locale]);
 
-  const { wake } = useCanvasRAF(draw);
+  const { wake } = useAutoSizedCanvasRAF(canvasRef, wrapRef, draw, {
+    minHeight: 420,
+  });
   wakeRef.current = wake;
 
   const tick = useCallback(() => {

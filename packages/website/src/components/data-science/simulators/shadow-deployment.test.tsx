@@ -13,6 +13,9 @@ describe("ShadowDeployment ", () => {
     expect(
       screen.getByRole("region", { name: "Shadow deployment comparison" }),
     ).toHaveAttribute("tabindex", "0");
+    expect(
+      container.querySelector("[data-shadow-deployment-controls]"),
+    ).toHaveStyle({ flex: "0 1 210px", maxWidth: "100%", minWidth: "0" });
   });
 
   it("renders the real panel copy and strategy buttons", () => {

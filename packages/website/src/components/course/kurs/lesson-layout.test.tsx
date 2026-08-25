@@ -197,6 +197,25 @@ describe("<LessonLayout>", () => {
     expect(window.location.hash).toBe("#lesson=l2");
   });
 
+  it("collapses the native reference when an in-place lesson switch occurs", () => {
+    const { container } = renderLayout();
+    const firstReference = container.querySelector<HTMLDetailsElement>(
+      "details[data-lesson-reference]",
+    );
+    expect(firstReference).not.toBeNull();
+    firstReference!.open = true;
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Lektion 2: Zweite Lektion" }),
+    );
+
+    const nextReference = container.querySelector<HTMLDetailsElement>(
+      "details[data-lesson-reference]",
+    );
+    expect(nextReference).not.toBe(firstReference);
+    expect(nextReference).not.toHaveAttribute("open");
+  });
+
   it("replaces a stale resume fragment so reload restores the latest selection", () => {
     window.history.replaceState(
       {},

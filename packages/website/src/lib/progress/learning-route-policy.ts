@@ -37,12 +37,11 @@ export function isProgressUiRoute(pathname: string): boolean {
 }
 
 /**
- * Whole-page fencing is reserved for course surfaces whose controls depend on
- * the shared progress store. Book-reader position persistence uses the owned
- * storage API directly; its reads and writes already fail closed while the
- * owner is unknown, so the public reader itself must remain interactive.
+ * Show the explicit local-continuation choice only on course surfaces whose
+ * controls depend on the shared progress store. Reads and writes fail closed
+ * in the store while the owner is unknown; the page itself remains interactive.
  * Open-source landing and verification pages either do not use progress or
- * render owner-aware readouts; their public navigation must remain available.
+ * render owner-aware readouts, so they do not need the choice.
  */
 export function isLearningOwnerRoute(pathname: string): boolean {
   const routePathname = canonicalLocalePathname(pathname);

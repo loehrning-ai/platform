@@ -20,6 +20,7 @@ export type { CourseProjectDraft } from "./project-draft";
 export {
   deriveCompletedCourseProjectStages,
   getCourseLessonMissions,
+  getCourseProjectCheckpointMissions,
   getLessonMissionDefinition,
   hasCompletedAllCourseProjectStages,
   LESSON_MISSION_CATALOG,
@@ -29,6 +30,12 @@ export type {
   LessonMissionDefinition,
   LessonMissionId,
 } from "./lesson-mission-catalog";
+export {
+  isCourseProjectCheckpointLesson,
+  resolveCourseProjectCheckpoint,
+  selectCourseProjectCheckpoints,
+} from "./checkpoint-selector";
+export type { CourseProjectCheckpoint } from "./checkpoint-selector";
 export { bindLessonMission } from "./lesson-mission-binding";
 export type {
   AuthoredLessonMissionContext,

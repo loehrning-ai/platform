@@ -29,7 +29,7 @@ export function ShuffleSim() {
   const [skew, setSkew] = useState(20);
   const [workers, setWorkers] = useState(6);
   const [strategy, setStrategy] = useState<Strategy>("hash");
-  const { running, toggle: toggleRunning } = useControllableAnimation();
+  const { running, toggle: toggleRunning } = useControllableAnimation(false);
   const [hydrated, setHydrated] = useState(false);
   const [tick, setTick] = useState(0);
 

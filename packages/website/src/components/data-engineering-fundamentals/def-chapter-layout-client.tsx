@@ -3,7 +3,9 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { LessonShell } from "@/components/course/lesson-shell";
+import { LessonReference } from "@/components/course/lesson-reference";
 import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
+import { isCourseProjectCheckpointLesson } from "@/lib/course-projects/checkpoint-selector";
 import { DefChapterSidebar } from "@/components/data-engineering-fundamentals/def-chapter-sidebar";
 import { getDataEngineeringFundamentalsCourseCopy } from "@/lib/data-engineering-fundamentals/course-copy";
 import {
@@ -36,6 +38,13 @@ export function DefChapterLayoutClient({
   const missionChapter = chapters.find(
     (chapter) => chapter.id === (currentId ?? "home"),
   );
+  const projectLessonId = currentId ?? "home";
+  const isProjectCheckpoint =
+    missionChapter !== undefined &&
+    isCourseProjectCheckpointLesson(
+      "data-engineering-fundamentals",
+      projectLessonId,
+    );
   const prev = currentIndex > 0 ? chapters[currentIndex - 1] : null;
   const next =
     currentIndex >= 0 && currentIndex < chapters.length - 1
@@ -108,11 +117,11 @@ export function DefChapterLayoutClient({
           />
         }
       >
-        {missionChapter ? (
+        {missionChapter && isProjectCheckpoint ? (
           <div className="mb-10">
             <CourseProjectStudio
               courseSlug="data-engineering-fundamentals"
-              lessonId={currentId ?? "home"}
+              lessonId={projectLessonId}
               locale={locale}
               lessonContext={{
                 title: missionChapter.title,
@@ -121,7 +130,15 @@ export function DefChapterLayoutClient({
             />
           </div>
         ) : null}
-        {children}
+        <LessonReference
+          key={projectLessonId}
+          locale={locale}
+          title={missionChapter?.title ?? copy.navLabel}
+          objective={missionChapter?.subtitle}
+          headingLevel={isProjectCheckpoint ? 2 : 1}
+        >
+          {children}
+        </LessonReference>
       </LessonShell>
     </div>
   );

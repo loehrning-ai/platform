@@ -75,7 +75,7 @@ const READERS: readonly ReaderCase[] = [
     slug: "data-engineering-fundamentals",
     name: "Data Engineering Fundamentals",
     locale: "de",
-    route: "/kurse/open-source/data-engineering-fundamentals/fund",
+    route: "/kurse/open-source/data-engineering-fundamentals/home",
     engine: "data",
     surface: "workspace",
     engineMarker: "Deduplizierungs- und Zeitplan",
@@ -187,7 +187,9 @@ async function gotoHydrated(page: Page, route: string, locale: Locale) {
     .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
     .waitFor({ state: "attached" });
   await expect(page.locator("html")).toHaveAttribute("lang", locale);
-  await expect(page.locator("h1")).toHaveCount(1);
+  const primaryHeading = page.getByRole("heading", { level: 1 });
+  await expect(primaryHeading).toHaveCount(1);
+  await expect(primaryHeading).toBeVisible();
   await expect(
     page.locator(
       "[data-nextjs-dialog], .vite-error-overlay, #webpack-dev-server-client-overlay",

@@ -251,7 +251,10 @@ test.describe("How AI Works DE/EN public sequence", () => {
       "/en/wie-ki-funktioniert/lektion-2-trainingsdaten",
     );
     await expect(
-      page.getByRole("button", { name: "Quick self-check" }),
+      page.getByRole("button", { name: "Compare with criteria" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("textbox", { name: "Your answer" }),
     ).toBeVisible();
   });
 });

@@ -19,8 +19,7 @@ import {
   handleRovingFocusKeyDown,
   rovingTabIndex,
 } from "@/lib/a11y/roving-focus";
-import { useCanvasRAF } from "../canvas/use-canvas-raf";
-import { useCanvasAutoSize } from "../canvas/use-canvas-size";
+import { useAutoSizedCanvasRAF } from "../canvas/use-auto-sized-canvas-raf";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
 import type { Locale } from "@/lib/i18n/locale";
@@ -139,8 +138,6 @@ export function SnapshotTimeline({
   const [cur, setCur] = useState(0);
   const hoverRef = useRef(-1);
 
-  useCanvasAutoSize(canvasRef, wrapRef, { minHeight: 180 });
-
   const draw = useCallback((): boolean => {
     const canvas = canvasRef.current;
     if (!canvas) return false;
@@ -184,7 +181,7 @@ export function SnapshotTimeline({
     return false;
   }, [cur]);
 
-  useCanvasRAF(draw);
+  useAutoSizedCanvasRAF(canvasRef, wrapRef, draw, { minHeight: 180 });
 
   const select = useCallback(
     (i: number) => {

@@ -50,7 +50,7 @@ action at `.github/actions/setup`.
 | `fast` | `bun run verify:static` | no |
 | `unit` | `bun run --cwd packages/website verify:unit` | no |
 | `lighthouse` | `bun run lighthouse:ci:built` | yes |
-| `e2e` (16-way matrix) | `bun run --cwd packages/website e2e:shard:built` | yes |
+| `e2e` (18-way matrix) | `bun run --cwd packages/website e2e:shard:built` | yes |
 | `auth-scaffold` | `bun run test:e2e:auth-scaffold:built` | yes |
 | `server-log-privacy` | `bun run --cwd packages/website test:server-log-privacy:built` | yes |
 | `verify` | aggregation only | no |

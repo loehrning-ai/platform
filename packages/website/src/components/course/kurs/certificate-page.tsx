@@ -23,6 +23,7 @@ import {
 import {
   getLearningOwnerContext,
   subscribeLearningOwner,
+  type LearningOwnerContext,
 } from "@/lib/progress/browser-learning-storage";
 // JSON-free config module (performance hardening): importing from ./data here
 // would pull the full lesson/quiz JSON graph into this client bundle.
@@ -73,6 +74,9 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
   const [downloaded, setDownloaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [ownerKind, setOwnerKind] = useState<LearningOwnerContext["kind"]>(
+    "unknown",
+  );
   const nameInputRef = useRef<HTMLInputElement>(null);
   const downloadAttemptRef = useRef(0);
   // Derived from localStorage / the client clock — must not run during render
@@ -135,8 +139,10 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
   }, [router, courseSlug, config.language, localizedCoursePath]);
 
   useEffect(() => {
-    const unsubscribe = subscribeLearningOwner(() => {
+    setOwnerKind(getLearningOwnerContext().kind);
+    const unsubscribe = subscribeLearningOwner((owner) => {
       downloadAttemptRef.current += 1;
+      setOwnerKind(owner.kind);
       setCompletion(null);
       setEligible(false);
       setName("");
@@ -230,7 +236,42 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
     }
   };
 
-  if (!eligible || !completion) return null;
+  if (!eligible || !completion) {
+    return (
+      <div className="min-h-[100svh] bg-background">
+        <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-14">
+          <Link
+            href={localizedCoursePath}
+            className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            {config.language === "en" ? "Back to course" : "Zurück zum Kurs"}
+          </Link>
+          <section className="mt-5 border-2 border-brand-orange bg-card p-5 sm:p-7">
+            <GraduationCap
+              className="h-10 w-10 text-brand-orange"
+              aria-hidden="true"
+            />
+            <h1 className="mt-3 break-words text-3xl font-bold tracking-[-0.03em] [overflow-wrap:anywhere]">
+              {config.certificateTitle}
+            </h1>
+            <p
+              role="status"
+              className="mt-3 max-w-[58ch] text-sm leading-relaxed text-muted-foreground"
+            >
+              {ownerKind === "unknown"
+                ? config.language === "en"
+                  ? "Choose Continue locally above or wait for account verification to load your completion record."
+                  : "Wähle oben Lokal weiterlernen oder warte auf die Kontoprüfung, um deinen Abschlussstand zu laden."
+                : config.language === "en"
+                  ? "Checking the completion record."
+                  : "Abschlussstand wird geprüft."}
+            </p>
+          </section>
+        </div>
+      </div>
+    );
+  }
   const { quizResult, completionMode, completionDate } = completion;
 
   return (

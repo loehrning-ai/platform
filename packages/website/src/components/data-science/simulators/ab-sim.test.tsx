@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { render, cleanup, screen } from "@testing-library/react";
+import { render, cleanup, fireEvent, screen } from "@testing-library/react";
 import { ABSim } from "./ab-sim";
 
 afterEach(() => {
@@ -27,13 +27,13 @@ describe("ABSim ", () => {
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Daily visitors")).toBeInTheDocument();
     expect(screen.getByLabelText("Simulation speed")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Pause/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Play/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Reset/ })).toBeInTheDocument();
     expect(screen.getByText("CONTROL")).toBeInTheDocument();
     expect(screen.getByText("VARIANT")).toBeInTheDocument();
   });
 
-  it("cleans up its RAF loop correctly under React 18 Strict Mode's double-invoked effects", () => {
+  it("starts no RAF before explicit Play and cleans up the started loop", () => {
     const rafSpy = vi.spyOn(window, "requestAnimationFrame");
     const cafSpy = vi.spyOn(window, "cancelAnimationFrame");
 
@@ -43,16 +43,16 @@ describe("ABSim ", () => {
       </StrictMode>,
     );
 
-    expect(rafSpy).toHaveBeenCalledTimes(2);
-    expect(cafSpy).toHaveBeenCalledTimes(1);
+    expect(rafSpy).not.toHaveBeenCalled();
+    expect(cafSpy).not.toHaveBeenCalled();
 
-    const requestedIds = rafSpy.mock.results.map((r) => r.value);
-    const canceledIds = cafSpy.mock.calls.map((c) => c[0]);
-    expect(canceledIds).toEqual([requestedIds[0]]);
+    fireEvent.click(screen.getByRole("button", { name: /Play/ }));
+    expect(rafSpy).toHaveBeenCalledTimes(1);
+    const requestedId = rafSpy.mock.results[0]?.value;
 
     unmount();
 
-    expect(cafSpy).toHaveBeenCalledTimes(2);
-    expect(cafSpy.mock.calls[1]?.[0]).toBe(requestedIds[1]);
+    expect(cafSpy).toHaveBeenCalledTimes(1);
+    expect(cafSpy).toHaveBeenCalledWith(requestedId);
   });
 });

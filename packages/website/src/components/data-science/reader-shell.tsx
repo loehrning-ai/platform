@@ -3,7 +3,9 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { LessonShell } from "@/components/course/lesson-shell";
+import { LessonReference } from "@/components/course/lesson-reference";
 import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
+import { isCourseProjectCheckpointLesson } from "@/lib/course-projects/checkpoint-selector";
 import { DsChapterSidebar } from "@/components/data-science/ds-chapter-sidebar";
 import { isInteractiveShortcutTarget } from "@/lib/a11y/keyboard-shortcuts";
 import { getDataScienceCourseCopy } from "@/lib/data-science/course-copy";
@@ -45,6 +47,9 @@ export function DsReaderShell({
   const copy = getDataScienceCourseCopy(locale).reader;
   const currentIndex = chapters.findIndex((c) => c.id === activeId);
   const currentChapter = currentIndex >= 0 ? chapters[currentIndex] : null;
+  const isProjectCheckpoint =
+    currentChapter !== null &&
+    isCourseProjectCheckpointLesson("data-science", activeId);
   const prev = currentIndex > 0 ? chapters[currentIndex - 1] : null;
   const next =
     currentIndex >= 0 && currentIndex < chapters.length - 1
@@ -102,7 +107,7 @@ export function DsReaderShell({
           />
         }
       >
-        {currentChapter ? (
+        {currentChapter && isProjectCheckpoint ? (
           <div className="mb-10">
             <CourseProjectStudio
               courseSlug="data-science"
@@ -115,7 +120,15 @@ export function DsReaderShell({
             />
           </div>
         ) : null}
-        {children}
+        <LessonReference
+          key={activeId}
+          locale={locale}
+          title={currentChapter?.title ?? copy.navLabel}
+          objective={currentChapter?.subtitle}
+          headingLevel={isProjectCheckpoint ? 2 : 1}
+        >
+          {children}
+        </LessonReference>
       </LessonShell>
     </div>
   );

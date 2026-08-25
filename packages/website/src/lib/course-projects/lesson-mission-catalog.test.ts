@@ -6,6 +6,7 @@ import { resolveCourseProjectMilestone } from "./milestone-manifest";
 import {
   deriveCompletedCourseProjectStages,
   getCourseLessonMissions,
+  getCourseProjectCheckpointMissions,
   getLessonMissionDefinition,
   hasCompletedAllCourseProjectStages,
   LESSON_MISSION_CATALOG,
@@ -46,38 +47,69 @@ describe("lesson mission catalog", () => {
     ).toThrow(/Unknown canonical lesson mission/);
   });
 
-  it("derives stages only from complete per-lesson mission sets", () => {
-    const courseSlug = "data-science" as const;
-    const missions = getCourseLessonMissions(courseSlug);
-    const ground = missions.filter((mission) => mission.stageId === "ground");
-    const build = missions.filter((mission) => mission.stageId === "build");
+  it("derives all five stages from ordered checkpoint missions for every course", () => {
+    for (const courseSlug of COURSE_SLUGS) {
+      const checkpoints = getCourseProjectCheckpointMissions(courseSlug);
+      const completed: (typeof checkpoints)[number]["id"][] = [];
 
-    expect(deriveCompletedCourseProjectStages(courseSlug, [])).toEqual([]);
-    expect(
-      deriveCompletedCourseProjectStages(
+      expect(checkpoints, courseSlug).toHaveLength(5);
+      expect(
+        checkpoints.map((mission) => mission.stageId),
         courseSlug,
-        ground.slice(0, -1).map((mission) => mission.id),
-      ),
-    ).toEqual([]);
-    expect(
-      deriveCompletedCourseProjectStages(
+      ).toEqual(COURSE_PROJECT_STAGE_IDS);
+      expect(
+        checkpoints.map((mission) => mission.id),
         courseSlug,
-        ground.map((mission) => mission.id),
-      ),
-    ).toEqual(["ground"]);
-    expect(
-      deriveCompletedCourseProjectStages(
+      ).toEqual(
+        checkpoints.map(
+          (mission) => `${courseSlug}:${mission.lessonId}:v1`,
+        ),
+      );
+      expect(deriveCompletedCourseProjectStages(courseSlug, [])).toEqual([]);
+
+      for (const [index, checkpoint] of checkpoints.entries()) {
+        completed.push(checkpoint.id);
+        expect(
+          deriveCompletedCourseProjectStages(courseSlug, completed),
+          `${courseSlug}/${checkpoint.stageId}`,
+        ).toEqual(COURSE_PROJECT_STAGE_IDS.slice(0, index + 1));
+      }
+
+      expect(hasCompletedAllCourseProjectStages(courseSlug, completed)).toBe(
+        true,
+      );
+    }
+  });
+
+  it("accepts legacy all-lesson mission arrays while requiring only checkpoints", () => {
+    for (const courseSlug of COURSE_SLUGS) {
+      const missions = getCourseLessonMissions(courseSlug);
+      const legacyIds = missions.map((mission) => mission.id);
+      const checkpoints = getCourseProjectCheckpointMissions(courseSlug);
+      const nonCheckpointIds = legacyIds.filter(
+        (id) => !checkpoints.some((checkpoint) => checkpoint.id === id),
+      );
+
+      expect(
+        normalizeCompletedLessonMissionIds(courseSlug, [...legacyIds].reverse()),
         courseSlug,
-        [...ground, ...build].map((mission) => mission.id),
-      ),
-    ).toEqual(["ground", "build"]);
-    expect(
-      hasCompletedAllCourseProjectStages(
+      ).toEqual(legacyIds);
+      expect(
+        deriveCompletedCourseProjectStages(courseSlug, legacyIds),
         courseSlug,
-        missions.map((mission) => mission.id),
-      ),
-    ).toBe(true);
-    expect(COURSE_PROJECT_STAGE_IDS).toHaveLength(5);
+      ).toEqual(COURSE_PROJECT_STAGE_IDS);
+      expect(
+        deriveCompletedCourseProjectStages(courseSlug, nonCheckpointIds),
+        courseSlug,
+      ).toEqual([]);
+      expect(
+        deriveCompletedCourseProjectStages(
+          courseSlug,
+          checkpoints.map((checkpoint) => checkpoint.id),
+        ),
+        courseSlug,
+      ).toEqual(COURSE_PROJECT_STAGE_IDS);
+    }
   });
 
   it("rejects duplicates and cross-course mission IDs", () => {
@@ -91,6 +123,23 @@ describe("lesson mission catalog", () => {
     ).toEqual([]);
     expect(
       normalizeCompletedLessonMissionIds("data-science", [codexMission]),
+    ).toEqual([]);
+  });
+
+  it("rejects sparse arrays instead of granting checkpoint credit", () => {
+    const groundCheckpoint =
+      getCourseProjectCheckpointMissions("data-science")[0]!.id;
+    const sparse: unknown[] = new Array(2);
+    sparse[1] = groundCheckpoint;
+
+    expect(
+      normalizeCompletedLessonMissionIds("data-science", sparse),
+    ).toEqual([]);
+    expect(
+      deriveCompletedCourseProjectStages(
+        "data-science",
+        sparse as readonly (typeof groundCheckpoint)[],
+      ),
     ).toEqual([]);
   });
 });

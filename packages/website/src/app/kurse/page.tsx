@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BookOpen, GraduationCap, Presentation } from "lucide-react";
-import { Github } from "@/components/icons/brand";
 import { JsonLd, SITE_URL } from "@/lib/seo/json-ld";
 import { createCoursesGraph } from "@/lib/seo/course-discovery";
-import { Card, IconTile } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { BrandButton } from "@/components/ui/brand-button";
 import { COURSE_HUB_COPY } from "@/lib/courses/course-hub-copy";
 import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
@@ -53,121 +51,34 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function KursePage() {
   const locale = await getRequestLocale();
   const copy = COURSE_HUB_COPY[locale];
-  const trackDiff = [
-    {
-      icon: GraduationCap,
-      accent: "kupfer" as const,
-      label: copy.foundations,
-      text: copy.foundationDifference,
-    },
-    {
-      icon: Github,
-      accent: "sand" as const,
-      label: copy.technical,
-      text: copy.technicalDifference,
-    },
-  ];
-  const collectionLinks = [
-    {
-      href: "/kurse#lernpfad",
-      label: copy.foundations,
-      count: 4,
-      icon: GraduationCap,
-    },
-    {
-      href: "/kurse#tiefer-gehen",
-      label: copy.technical,
-      count: 6,
-      icon: Github,
-    },
-    { href: "/workshops", label: copy.workshops, count: 2, icon: Presentation },
-    { href: "/buecher", label: copy.books, count: null, icon: BookOpen },
-  ] as const;
 
   return (
     <>
       <JsonLd data={createCoursesGraph(locale)} id="kurse-hub-jsonld" />
-      <div className="mx-auto max-w-[1180px] px-6 pb-32 pt-20">
-        <div className="mb-9 h-[3px] w-[154px] bg-brand-orange" />
-
-        <div className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-          {copy.kicker}
-        </div>
-
-        <h1 className="mt-6 max-w-[1180px] text-[40px] font-bold leading-[0.94] tracking-[-0.04em] text-foreground sm:text-[56px] md:text-[80px]">
+      <div className="mx-auto max-w-[1180px] px-4 pb-24 pt-10 sm:px-6 sm:pt-14">
+        <h1 className="max-w-[980px] text-[38px] font-bold leading-[0.96] tracking-[-0.04em] text-foreground sm:text-[52px] md:text-[68px]">
           {copy.headingLead}
           <br />
           <span className="text-brand-orange">{copy.headingAccent}</span>
         </h1>
 
-        <p className="mt-9 max-w-[720px] text-[18px] leading-[1.5] text-muted-foreground sm:text-[21px]">
+        <p className="mt-5 max-w-[700px] text-[16px] leading-[1.5] text-muted-foreground sm:text-[18px]">
           {copy.intro}
         </p>
 
-        <div className="mt-8 rounded-lg border border-border bg-card px-5 py-3 shadow-tile">
-          <p className="text-[14px] text-muted-foreground">
-            <span className="font-bold text-foreground">{copy.firstStep}</span>{" "}
-            <Link
-              href={localizeHref("/ki-check", locale)}
-              className="text-brand-orange underline underline-offset-4"
-            >
-              {copy.checkLabel}
-            </Link>{" "}
-            {copy.checkExplanation}
-          </p>
-        </div>
-
-        <nav
-          aria-label={copy.offersLabel}
-          className="mt-8 grid gap-2 sm:grid-cols-2 lg:grid-cols-4"
-        >
-          {collectionLinks.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={localizeHref(item.href, locale)}
-                className="group flex min-w-0 items-center justify-between gap-3 border border-border bg-card px-4 py-3 text-sm font-semibold text-foreground shadow-tile transition-[border-color,background-color] hover:border-brand-orange hover:bg-card-hover"
-              >
-                <span className="inline-flex min-w-0 items-center gap-2">
-                  <Icon
-                    className="h-4 w-4 shrink-0 text-brand-orange"
-                    aria-hidden="true"
-                  />
-                  <span className="break-words">{item.label}</span>
-                </span>
-                {item.count === null ? null : (
-                  <span className="font-mono text-[11px] text-muted-foreground">
-                    {item.count}
-                  </span>
-                )}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <section
-          aria-label={copy.differenceLabel}
-          className="mt-10 rounded-2xl border border-border bg-kupfer-mist p-6 sm:p-7"
-        >
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-            {copy.differenceHeading}
-          </p>
-          <ul className="mt-5 grid gap-5 sm:grid-cols-2">
-            {trackDiff.map((item) => (
-              <li key={item.label} className="flex items-start gap-3">
-                <IconTile icon={item.icon} accent={item.accent} />
-                <span className="text-[14px] leading-snug text-foreground">
-                  <span className="font-bold">{item.label}:</span> {item.text}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </section>
+        <p className="mt-5 text-[13px] text-muted-foreground">
+          <span className="font-semibold text-foreground">{copy.firstStep}</span>{" "}
+          <Link
+            href={localizeHref("/ki-check", locale)}
+            className="font-semibold text-brand-orange underline decoration-brand-orange/40 underline-offset-4 transition-colors hover:text-foreground focus-visible:text-foreground"
+          >
+            {copy.checkLabel}
+          </Link>
+        </p>
 
         <PersonaCourseLinks locale={locale} />
 
-        <section className="mt-16">
+        <section className="mt-8" data-learning-gallery>
           <CourseGallery locale={locale} />
         </section>
 

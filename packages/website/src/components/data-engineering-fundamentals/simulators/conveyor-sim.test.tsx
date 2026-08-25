@@ -5,6 +5,7 @@ import { ConveyorSim } from "./conveyor-sim";
 afterEach(() => {
   cleanup();
   vi.useRealTimers();
+  vi.restoreAllMocks();
 });
 
 describe("ConveyorSim ", () => {
@@ -22,10 +23,15 @@ describe("ConveyorSim ", () => {
     expect(screen.getByText("Drop late (past watermark)")).toBeInTheDocument();
   });
 
-  it("pauses and resets the simulation without throwing", () => {
+  it("starts no RAF before explicit Start, then pauses and resets", () => {
+    const rafSpy = vi.spyOn(window, "requestAnimationFrame");
     render(<ConveyorSim />);
+
+    expect(rafSpy).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: /Start/ }));
+    expect(rafSpy).toHaveBeenCalledTimes(1);
     fireEvent.click(screen.getByRole("button", { name: /Pause/ }));
-    expect(screen.getByRole("button", { name: /Resume/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Start/ })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /Reset/ }));
     expect(screen.getByText("ledger empty")).toBeInTheDocument();
   });

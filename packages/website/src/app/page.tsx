@@ -5,7 +5,6 @@ import { Offering } from "@/components/home/offering";
 import { Workflow } from "@/components/home/workflow";
 import { FinalCta } from "@/components/home/final-cta";
 import { HOME_COPY } from "@/components/home/home-copy";
-import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
@@ -52,9 +51,6 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Scroll progress — 2px Kupfer line at viewport top */}
-      <ScrollProgress />
-
       {/* 1. Hero — the promise, stated once */}
       <HeroSection locale={locale} />
 

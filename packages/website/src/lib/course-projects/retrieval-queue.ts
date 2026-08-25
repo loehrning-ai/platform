@@ -1,9 +1,9 @@
 import type { CourseSlug } from "@/lib/course/types";
-import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
 import {
   getLearningOwnerContext,
   getOwnedLocalLearningItem,
 } from "@/lib/progress/browser-learning-storage";
+import { selectCourseProjectCheckpoints } from "./checkpoint-selector";
 import {
   getLessonMissionStorageKey,
   parseLessonMissionState,
@@ -56,12 +56,15 @@ export function getRetrievalStanding(
 }
 
 /**
- * Reads exactly the canonical lesson-mission keys for one course through the
- * owner-scoped browser-learning boundary. Invalid, reset-mismatched, and
- * owner-raced records fail closed and never enter the queue. A validated
- * legacy fixed-choice attempt enters as due now with no invented timestamp.
- * The returned projection contains only fixed canonical IDs, bounded levels,
- * and validated timestamps; written recall and other free text are absent.
+ * Reads exactly the reachable checkpoint mission keys for one course through
+ * the owner-scoped browser-learning boundary. Historical non-checkpoint
+ * schedules stay stored for backward compatibility but cannot enter a queue
+ * whose destination no longer mounts a completion surface. Invalid,
+ * reset-mismatched, and owner-raced records fail closed. A validated legacy
+ * fixed-choice attempt on a checkpoint enters as due now with no invented
+ * timestamp. The returned projection contains only fixed canonical IDs,
+ * bounded levels, and validated timestamps; written recall and other free text
+ * are absent.
  */
 export function readCourseRetrievalQueue(
   courseSlug: CourseSlug,
@@ -83,7 +86,7 @@ export function readCourseRetrievalQueue(
   const profile = getLessonMissionProfile(courseSlug);
   const scheduled: ScheduledLessonRetrieval[] = [];
 
-  for (const lessonId of CANONICAL_LESSON_IDS[courseSlug]) {
+  for (const { lessonId } of selectCourseProjectCheckpoints(courseSlug)) {
     const activeOwner = getLearningOwnerContext();
     if (
       activeOwner.kind !== ownerAtStart.kind ||

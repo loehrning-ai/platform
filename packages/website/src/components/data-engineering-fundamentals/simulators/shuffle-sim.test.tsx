@@ -5,6 +5,7 @@ import { ShuffleSim } from "./shuffle-sim";
 afterEach(() => {
   cleanup();
   vi.useRealTimers();
+  vi.restoreAllMocks();
 });
 
 describe("ShuffleSim ", () => {
@@ -28,8 +29,13 @@ describe("ShuffleSim ", () => {
     expect(screen.getByText("overloaded")).toBeInTheDocument();
   });
 
-  it("pauses and resumes", () => {
+  it("starts no interval before explicit Run and pauses after activation", () => {
+    const intervalSpy = vi.spyOn(globalThis, "setInterval");
     render(<ShuffleSim />);
+
+    expect(intervalSpy).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: /Run/ }));
+    expect(intervalSpy).toHaveBeenCalledTimes(1);
     fireEvent.click(screen.getByRole("button", { name: /Pause/ }));
     expect(screen.getByRole("button", { name: /Run/ })).toBeInTheDocument();
   });

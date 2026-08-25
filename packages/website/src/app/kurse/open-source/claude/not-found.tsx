@@ -5,7 +5,7 @@ import { technicalCourseHref } from "@/lib/technical-courses/routes";
 export default async function ClaudeCourseNotFound() {
   const locale = await getRequestLocale();
   return (
-    <main lang={locale} className="mx-auto max-w-2xl px-4 py-16 sm:px-6">
+    <div lang={locale} className="mx-auto max-w-2xl px-4 py-16 sm:px-6">
       <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
         404
       </p>
@@ -23,6 +23,6 @@ export default async function ClaudeCourseNotFound() {
       >
         {locale === "de" ? "Zum Kursplan" : "Open course map"}
       </Link>
-    </main>
+    </div>
   );
 }

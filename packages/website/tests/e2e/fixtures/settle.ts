@@ -97,8 +97,8 @@ export async function settleWholePage(
     .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
     .waitFor({ state: "attached" });
 
-  await cappedWithRetry(
-    () => page.evaluate(
+  await capped(
+    page.evaluate(
       async ([factor, fontBudget, frameBudget, maxSteps, perStep]) => {
         // Frames per scroll step is per-caller because the specs this helper
         // replaced did not agree. The locale specs waited one frame per step;
@@ -219,22 +219,4 @@ export async function capped<T>(
     );
   }
   return work;
-}
-
-/**
- * `capped`, retried once. A settle can lose its execution context to a late
- * client-side navigation, and a runner under memory pressure can stall a
- * renderer for tens of seconds; both recover on a second attempt against the
- * current document. A second failure is reported as what it is.
- */
-export async function cappedWithRetry<T>(
-  attempt: () => Promise<T>,
-  label: string,
-  page?: Page,
-): Promise<T> {
-  try {
-    return await capped(attempt(), label, page);
-  } catch {
-    return await capped(attempt(), label, page);
-  }
 }

@@ -98,6 +98,14 @@ describe("CourseGallery (learner-first: path + deeper shelf)", () => {
     expect(screen.getByTestId("progress-dots-ai-native")).toBeInTheDocument();
   });
 
+  it("does not lazy-load the above-the-fold first course cover", () => {
+    const { container } = render(<CourseGallery />);
+    const firstCover = container.querySelector("img");
+
+    expect(firstCover).not.toBeNull();
+    expect(firstCover).not.toHaveAttribute("loading", "lazy");
+  });
+
   it("labels the path and the deeper shelf so their difference is legible", () => {
     render(<CourseGallery />);
     expect(screen.getByText("Grundlagenpfad")).toBeInTheDocument();

@@ -141,6 +141,7 @@ export default async function ClaudeCourseLandingPage() {
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
             href={firstLessonHref}
+            prefetch={false}
             className="inline-flex min-h-12 items-center gap-2 border-2 border-foreground bg-brand-orange px-6 py-3 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)]"
           >
             {copy.startLesson}
@@ -212,6 +213,7 @@ export default async function ClaudeCourseLandingPage() {
                             kind: "lesson",
                             lessonId: lesson.id,
                           })}
+                          prefetch={false}
                           className="block h-full min-w-0 border-2 border-border bg-card p-4 transition-colors hover:border-brand-orange"
                         >
                           <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-brand-orange">
@@ -245,6 +247,7 @@ export default async function ClaudeCourseLandingPage() {
           </p>
           <Link
             href={firstLessonHref}
+            prefetch={false}
             className="mt-6 inline-flex min-h-12 items-center gap-2 border-2 border-foreground bg-brand-orange px-6 py-3 font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)]"
           >
             {copy.begin}

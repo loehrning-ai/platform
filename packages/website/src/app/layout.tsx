@@ -11,6 +11,7 @@ import { LearningOwnerBoundary } from "@/components/progress/learning-owner-boun
 import { UserProgressSync } from "@/components/auth/user-progress-sync";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
+import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { LocaleProvider } from "@/components/i18n/locale-context";
 import { NO_SCRIPT_FALLBACK_CSS } from "@/lib/a11y/no-script";
 import { GLOBAL_NAVIGATION_COPY } from "@/lib/i18n/global-copy";
@@ -132,6 +133,7 @@ export default async function RootLayout({
           }}
         />
         <div className="pointer-events-none fixed inset-0 z-0 bg-grid opacity-[0.3]" />
+        <ScrollProgress />
         <LocaleProvider locale={locale}>
           <MotionProvider>
             <Nav />
@@ -141,13 +143,13 @@ export default async function RootLayout({
             streamed subtree through a root client provider can make a retry
             resume with React's hydration cursor inside the next server host. */}
         <main id="main-content" className="relative pt-16">
+          <LocaleProvider locale={locale}>
+            <LearningOwnerBoundary />
+          </LocaleProvider>
           {children}
         </main>
         <ScrollToTop />
         <HydrationMarker />
-        <LocaleProvider locale={locale}>
-          <LearningOwnerBoundary />
-        </LocaleProvider>
         <Footer />
         <UserProgressSync />
         {/* Cross-course gamification toasts (shared course architecture). Mounted

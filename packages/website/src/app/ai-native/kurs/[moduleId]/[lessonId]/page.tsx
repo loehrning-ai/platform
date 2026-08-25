@@ -10,6 +10,7 @@ import {
 import { AiNativeLessonReader } from "@/components/ai-native/kurs/lesson-reader";
 import { AiNativeLessonPageShell } from "@/components/ai-native/kurs/lesson-page-shell";
 import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
+import { LessonReference } from "@/components/course/lesson-reference";
 import { LessonProgressRing } from "@/components/ai-native/kurs/lesson-progress-ring";
 import {
   getModule,
@@ -22,6 +23,7 @@ import { SITE_URL } from "@/lib/seo/json-ld";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { localizeHref } from "@/lib/i18n/locale";
 import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
+import { isCourseProjectCheckpointLesson } from "@/lib/course-projects/checkpoint-selector";
 
 interface PageProps {
   params: Promise<{ moduleId: string; lessonId: string }>;
@@ -102,6 +104,10 @@ export default async function AiNativeLessonPage({ params }: PageProps) {
       }),
     )
   ).flat();
+  const isProjectCheckpoint = isCourseProjectCheckpointLesson(
+    "ai-native",
+    lesson.id,
+  );
 
   return (
     <AiNativeLessonPageShell lessons={navigationItems} locale={locale}>
@@ -166,53 +172,62 @@ export default async function AiNativeLessonPage({ params }: PageProps) {
             </p>
           </header>
 
-          {/* Voice anchor (module-level, printed on the lesson) */}
-          {mod.voiceAnchor && (
-            <div className="mt-12">
+        </div>
+
+        {isProjectCheckpoint ? (
+          <div className="my-10">
+            <CourseProjectStudio
+              courseSlug="ai-native"
+              lessonId={lesson.id}
+              locale={locale}
+              missionHeadingLevel={2}
+              lessonContext={{
+                title: lesson.title,
+                objective: lesson.subtitle,
+                keyConcepts: lesson.keyConcepts,
+              }}
+            />
+          </div>
+        ) : null}
+
+        {/* Progressive-disclosure reader (client — sections + quiz + prev/next inside) */}
+        <LessonReference
+          key={lesson.id}
+          locale={locale}
+          title={lesson.title}
+          objective={lesson.subtitle}
+          headingLevel={2}
+        >
+          {/* Authored perspective remains available as supporting reference. */}
+          {mod.voiceAnchor ? (
+            <div className="mx-auto mb-8 max-w-[880px]">
               <VoiceAnchor
                 author={`${isEnglish ? "Module" : "Modul"} ${mod.number} · ${isEnglish ? "course note" : "Kursnotiz"}`}
               >
                 {mod.voiceAnchor}
               </VoiceAnchor>
             </div>
-          )}
-
-          {/* Lesson-level voice anchor (if different from module's) */}
-          {lesson.voiceAnchor && lesson.voiceAnchor !== mod.voiceAnchor && (
-            <div className="mt-8">
+          ) : null}
+          {lesson.voiceAnchor && lesson.voiceAnchor !== mod.voiceAnchor ? (
+            <div className="mx-auto mb-8 max-w-[880px]">
               <VoiceAnchor
                 author={`${isEnglish ? "Lesson" : "Lektion"} ${lesson.number}`}
               >
                 {lesson.voiceAnchor}
               </VoiceAnchor>
             </div>
-          )}
-        </div>
-
-        <div className="my-10">
-          <CourseProjectStudio
-            courseSlug="ai-native"
-            lessonId={lesson.id}
-            locale={locale}
-            lessonContext={{
-              title: lesson.title,
-              objective: lesson.subtitle,
-              keyConcepts: lesson.keyConcepts,
-            }}
-          />
-        </div>
-
-        {/* Progressive-disclosure reader (client — sections + quiz + prev/next inside) */}
-        <div className="mx-auto max-w-[1100px]">
-          <AiNativeLessonReader
-            module={mod}
-            lesson={lesson}
-            prevLesson={prevLesson ?? null}
-            nextLesson={nextLesson ?? null}
-            allModuleLessonIds={lessons.map((l) => l.id)}
-            locale={locale}
-          />
-        </div>
+          ) : null}
+          <div className="mx-auto max-w-[1100px]">
+            <AiNativeLessonReader
+              module={mod}
+              lesson={lesson}
+              prevLesson={prevLesson ?? null}
+              nextLesson={nextLesson ?? null}
+              allModuleLessonIds={lessons.map((l) => l.id)}
+              locale={locale}
+            />
+          </div>
+        </LessonReference>
       </div>
     </AiNativeLessonPageShell>
   );

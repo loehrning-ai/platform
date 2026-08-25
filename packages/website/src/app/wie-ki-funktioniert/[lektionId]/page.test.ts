@@ -67,7 +67,18 @@ describe("/wie-ki-funktioniert/[lektionId] static route contract", () => {
       }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Quick self-check" }),
+      screen.getByRole("button", { name: "Compare with criteria" }),
+    ).toBeDisabled();
+    expect(screen.getByRole("textbox", { name: "Your answer" })).toBeVisible();
+    expect(
+      screen.getByText(
+        "How can a language model answer a question correctly without actually 'knowing' the answer?",
+      ),
+    ).toBeVisible();
+    const reference = document.querySelector("details[data-lesson-reference]");
+    expect(reference).not.toHaveAttribute("open");
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Concepts and evidence" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute(
       "href",

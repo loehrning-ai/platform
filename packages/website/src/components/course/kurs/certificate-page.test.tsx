@@ -128,6 +128,22 @@ afterEach(() => {
 });
 
 describe("<CertificatePage>", () => {
+  it("renders a useful certificate state while learning ownership is unresolved", () => {
+    harness.owner = { kind: "unknown", generation: 2 };
+
+    render(<CertificatePage courseSlug="claude" locale="en" />);
+
+    expect(
+      screen.getByRole("heading", { name: "Claude Course" }),
+    ).toBeVisible();
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Choose Continue locally above",
+    );
+    expect(
+      screen.queryByRole("textbox", { name: "Full name" }),
+    ).not.toBeInTheDocument();
+  });
+
   it("cancels a prior owner's in-flight PDF before it can download", async () => {
     const pending = deferred<Blob>();
     harness.generatePdf.mockReturnValue(pending.promise);

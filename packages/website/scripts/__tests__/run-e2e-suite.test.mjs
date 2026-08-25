@@ -25,7 +25,20 @@ function collectSpecIds(suites) {
   ]);
 }
 
-function listIds(arguments_) {
+function collectSpecKeys(suites, parents = []) {
+  return suites.flatMap((suite) => {
+    const titles = [...parents, suite.title];
+    return [
+      ...(suite.specs ?? []).map(
+        (spec) =>
+          `${spec.file}:${spec.line}:${spec.column}:${titles.join(" > ")}:${spec.title}`,
+      ),
+      ...collectSpecKeys(suite.suites ?? [], titles),
+    ];
+  });
+}
+
+function listReport(arguments_) {
   const result = spawnSync(
     process.execPath,
     [playwrightCli, ...arguments_, "--list", "--reporter=json"],
@@ -38,7 +51,15 @@ function listIds(arguments_) {
   assert.equal(result.status, 0, result.stderr);
   const report = JSON.parse(result.stdout);
   assert.deepEqual(report.errors, []);
-  return collectSpecIds(report.suites);
+  return report;
+}
+
+function listIds(arguments_) {
+  return collectSpecIds(listReport(arguments_).suites);
+}
+
+function listKeys(arguments_) {
+  return collectSpecKeys(listReport(arguments_).suites);
 }
 
 async function assertProcessGone(pid, timeoutMs = 1_500) {
@@ -57,12 +78,17 @@ async function assertProcessGone(pid, timeoutMs = 1_500) {
 
 test("public plan isolates Chromium engines and recycles WebKit processes", () => {
   const plan = buildE2ePlan("public");
-  assert.equal(plan.length, 2 + MOBILE_WEBKIT_SHARD_COUNT);
+  assert.equal(plan.length, 4 + MOBILE_WEBKIT_SHARD_COUNT);
   assert.deepEqual(
-    plan.slice(0, 2).map((step) => step.label),
-    ["chromium", "mobile-chromium"],
+    plan.slice(0, 4).map((step) => step.label),
+    [
+      "chromium",
+      "chromium-ai-native-operator",
+      "chromium-claude-responsive",
+      "mobile-chromium",
+    ],
   );
-  const webkit = plan.slice(2);
+  const webkit = plan.slice(4);
   assert.equal(new Set(webkit.map((step) => step.label)).size, webkit.length);
   assert.deepEqual(
     webkit.map((step) =>
@@ -79,13 +105,39 @@ test("public plan isolates Chromium engines and recycles WebKit processes", () =
   }
 });
 
+test("public plan covers every desktop Chromium test exactly once", () => {
+  const desktopSteps = buildE2ePlan("public").slice(0, 3);
+  const projectKeys = desktopSteps.map((step) => listKeys(step.arguments));
+  for (const [index, keys] of projectKeys.entries()) {
+    assert.ok(keys.length > 0, `${desktopSteps[index].label} must not be empty`);
+    assert.equal(new Set(keys).size, keys.length);
+  }
+
+  const combined = projectKeys.flat();
+  assert.equal(new Set(combined).size, combined.length);
+
+  // Mobile Chromium carries every public spec except the intentionally
+  // desktop-only course-workspace matrix. Together they are the authoritative
+  // public inventory the three managed desktop projects must partition.
+  const reference = new Set([
+    ...listKeys(["test", "--project=mobile-chromium", "--retries=0"]),
+    ...listKeys([
+      "test",
+      "course-workspace.spec.ts",
+      "--project=chromium",
+      "--retries=0",
+    ]),
+  ]);
+  assert.deepEqual([...new Set(combined)].sort(), [...reference].sort());
+});
+
 test("real WebKit shard lists cover the complete project exactly once", () => {
   const full = listIds(["test", "--project=mobile-webkit", "--retries=0"]);
   assert.ok(full.length > 0, "the mobile WebKit project must not be empty");
   assert.equal(new Set(full).size, full.length);
 
   const shardIds = [];
-  const webkitSteps = buildE2ePlan("public").slice(2);
+  const webkitSteps = buildE2ePlan("public").slice(4);
   assert.equal(webkitSteps.length, MOBILE_WEBKIT_SHARD_COUNT);
   for (const step of webkitSteps) {
     const ids = listIds(step.arguments);
@@ -167,10 +219,10 @@ test("suite execution continues after a failed shard and returns failure", async
     stdio: "ignore",
   });
   assert.equal(status, 1);
-  assert.equal(invocations.length, 2 + MOBILE_WEBKIT_SHARD_COUNT);
+  assert.equal(invocations.length, 4 + MOBILE_WEBKIT_SHARD_COUNT);
   assert.equal(
     new Set(invocations.map((entry) => entry.label)).size,
-    2 + MOBILE_WEBKIT_SHARD_COUNT,
+    4 + MOBILE_WEBKIT_SHARD_COUNT,
   );
   assert.ok(invocations.every((entry) => entry.args.includes("--retries=0")));
 });
@@ -236,7 +288,7 @@ test("signals propagate as failure while a forced timeout is terminal", async ()
     stdio: "ignore",
   });
   assert.equal(signalled, 1);
-  assert.equal(signalInvocations, 2 + MOBILE_WEBKIT_SHARD_COUNT);
+  assert.equal(signalInvocations, 4 + MOBILE_WEBKIT_SHARD_COUNT);
 
   let timeoutInvocations = 0;
   const timedOut = await executeE2eSuite({

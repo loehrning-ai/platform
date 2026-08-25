@@ -86,6 +86,48 @@ async function seedProgress(page: Page, value: object) {
   );
 }
 
+async function continueLocally(page: Page) {
+  const button = page.getByRole("button", { name: "Continue locally" });
+  const gateAppeared = await button
+    .waitFor({ state: "visible", timeout: 1_500 })
+    .then(() => true)
+    .catch(() => false);
+  if (gateAppeared) {
+    await button.click({ timeout: 5_000 }).catch(async (error: unknown) => {
+      // Ownership resolution can remove the optional gate between the
+      // visibility probe and the click. Only that resolved state is success.
+      if (await button.isVisible().catch(() => false)) throw error;
+    });
+    await expect(button).toBeHidden();
+  }
+}
+
+async function openLessonReference(page: Page) {
+  await page
+    .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+    .waitFor({ state: "attached" });
+  const reference = page.locator("details[data-lesson-reference]");
+  await expect(reference).toHaveCount(1);
+  await reference.locator("summary").click();
+  await expect(reference).toHaveAttribute("open", "");
+}
+
+async function isFundChapterStoredAsCompleted(page: Page): Promise<boolean> {
+  return page.evaluate((key) => {
+    const raw = window.localStorage.getItem(key);
+    if (!raw) return false;
+    const parsed = JSON.parse(raw) as {
+      courses?: Record<
+        string,
+        { lessons?: Record<string, { completed?: boolean }> }
+      >;
+    };
+    return (
+      parsed.courses?.["data-science"]?.lessons?.fund?.completed === true
+    );
+  }, UNIFIED_KEY);
+}
+
 /** Encode a certificate payload exactly like generateCertificatePdf's QR does. */
 function encodeCertHash(payload: {
   n: string;
@@ -115,7 +157,7 @@ test.describe("Data Science Fundamentals golden path", () => {
     await expect(beginLink).toBeVisible();
     await beginLink.click();
     await expect(page).toHaveURL(new RegExp(`${CHAPTER_ROUTE}$`));
-    await expect(page.locator("h1")).toHaveCount(1);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 
   test("chapter: explicit confirmation marks it completed in the unified progress store", async ({
@@ -125,27 +167,45 @@ test.describe("Data Science Fundamentals golden path", () => {
       waitUntil: "domcontentloaded",
     });
     expect(res?.status()).toBe(200);
-    await expect(page.locator("h1")).toHaveCount(1);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await openLessonReference(page);
 
-    await page.getByRole("button", { name: "Mark chapter complete" }).click();
+    const completion = page.getByRole("button", {
+      name: "Mark chapter complete",
+    });
+    const localChoice = page.getByRole("button", { name: "Continue locally" });
+    const ownerChoiceVisible = await localChoice
+      .isVisible()
+      .catch(() => false);
+
+    if (ownerChoiceVisible) {
+      await expect(completion).toBeDisabled();
+      await expect(completion).toHaveAccessibleDescription(
+        "Choose account or local progress above first.",
+      );
+      await completion.evaluate((button: HTMLButtonElement) => button.click());
+      await expect.poll(() => isFundChapterStoredAsCompleted(page)).toBe(false);
+      await continueLocally(page);
+      await expect(page.locator("[data-learning-owner-panel]")).toBeHidden({
+        timeout: 15_000,
+      });
+    }
+
+    await expect(completion).toBeEnabled();
+    await completion.click();
     await expect
-      .poll(async () =>
-        page.evaluate((key) => {
-          const raw = window.localStorage.getItem(key);
-          if (!raw) return false;
-          const parsed = JSON.parse(raw) as {
-            courses?: Record<
-              string,
-              { lessons?: Record<string, { completed?: boolean }> }
-            >;
-          };
-          return (
-            parsed.courses?.["data-science"]?.lessons?.["fund"]?.completed ===
-            true
-          );
-        }, UNIFIED_KEY),
-      )
+      .poll(() => isFundChapterStoredAsCompleted(page))
       .toBe(true);
+
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
+    await continueLocally(page);
+    await openLessonReference(page);
+    await expect(
+      page.getByRole("button", { name: "Chapter completed" }),
+    ).toBeDisabled();
   });
 
   test("certificate: all 12 numbered chapters completed unlocks the public certificate surface", async ({
@@ -155,6 +215,7 @@ test.describe("Data Science Fundamentals golden path", () => {
     const res = await page.goto(CERT_ROUTE, { waitUntil: "domcontentloaded" });
     expect(res?.status()).toBe(200);
     await expect(page).not.toHaveURL(/\/login/);
+    await continueLocally(page);
     await expect(page.locator("h1").first()).toBeVisible();
 
     const name = page.getByRole("textbox", { name: "Full name" });

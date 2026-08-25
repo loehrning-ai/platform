@@ -77,6 +77,8 @@ const MISSION_COPY = {
     stepIncomplete: "offen",
     stepLocked: "gesperrt",
     complete: "Lektionsschleife geschlossen",
+    ownerRequired:
+      "Aktiviere den lokalen Lernmodus, bevor du diese Mission startest.",
     stageLocked:
       "Diese Projektphase ist gesperrt. Schließe zuerst die vorherigen Projektphasen ab.",
     correct: "Signal trägt.",
@@ -151,6 +153,8 @@ const MISSION_COPY = {
     stepIncomplete: "incomplete",
     stepLocked: "locked",
     complete: "Lesson loop closed",
+    ownerRequired:
+      "Activate local learning before starting this mission.",
     stageLocked:
       "This project phase is locked. Complete the preceding project stages first.",
     correct: "Signal holds.",
@@ -227,6 +231,8 @@ export interface LessonMissionControlProps {
   readonly executionRevision: number;
   readonly missionResetEnabled?: boolean;
   readonly resetAt?: string | null;
+  /** The lesson title owns H1 unless a custom route already rendered one. */
+  readonly missionHeadingLevel?: 1 | 2;
   onOpenWorkspace(): void;
   onMissionComplete?(): void;
   onMissionReset?(): void;
@@ -316,6 +322,7 @@ interface ChoiceProbeProps {
   readonly feedback?: string;
   readonly locked?: boolean;
   readonly headingRef?: Ref<HTMLHeadingElement>;
+  readonly headingLevel: 2 | 3;
   onSelect(id: string): void;
 }
 
@@ -328,20 +335,22 @@ function ChoiceProbe({
   feedback,
   locked = false,
   headingRef,
+  headingLevel,
   onSelect,
 }: ChoiceProbeProps): JSX.Element {
   const answered = selectedId !== null;
   const correct = selectedId === probe.correctId;
+  const Heading = headingLevel === 2 ? "h2" : "h3";
 
   return (
     <div>
-      <h3
+      <Heading
         ref={headingRef}
         tabIndex={-1}
         className="max-w-[62ch] text-balance text-xl font-black leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
       >
         {probe.prompt[locale]}
-      </h3>
+      </Heading>
       <div
         className="mt-5 grid gap-3"
         style={{
@@ -415,6 +424,7 @@ export function LessonMissionControl({
   executionRevision,
   missionResetEnabled = true,
   resetAt = null,
+  missionHeadingLevel = 1,
   onOpenWorkspace,
   onMissionComplete,
   onMissionReset,
@@ -422,6 +432,9 @@ export function LessonMissionControl({
 }: LessonMissionControlProps): JSX.Element {
   const { profile, frame } = mission;
   const copy = MISSION_COPY[locale];
+  const MissionHeading = missionHeadingLevel === 1 ? "span" : "h2";
+  const StepHeading = missionHeadingLevel === 1 ? "h2" : "h3";
+  const stepHeadingLevel = missionHeadingLevel === 1 ? 2 : 3;
   const storageKey = getLessonMissionStorageKey(courseSlug, lessonId);
   const headingId = useId();
   const signalId = useId();
@@ -874,20 +887,23 @@ export function LessonMissionControl({
       data-lesson-id={lessonId}
       data-keyboard-shortcuts="ignore"
       aria-labelledby={headingId}
-      className="relative mb-10 min-w-0 scroll-mt-24 overflow-hidden border-2 border-foreground bg-background shadow-[7px_7px_0_0_var(--color-brand-orange)] [overflow-wrap:anywhere]"
+      className="relative mb-6 min-w-0 scroll-mt-24 overflow-hidden border-2 border-foreground bg-background shadow-[5px_5px_0_0_var(--color-brand-orange)] [overflow-wrap:anywhere]"
     >
       <header className="grid min-w-0 gap-0 border-b-2 border-foreground bg-foreground text-background lg:grid-cols-[minmax(0,1fr)_auto]">
-        <div className="min-w-0 px-5 py-5 sm:px-7">
+        <div className="min-w-0 px-4 py-3 sm:px-5">
           <p className="font-mono text-[10px] font-black uppercase tracking-[0.2em] text-[#ffc6aa]">
-            {copy.eyebrow} · {profile.instrument[locale]}
+            {copy.eyebrow} · {copy.title} · {profile.instrument[locale]}
           </p>
-          <div className="mt-2 flex min-w-0 flex-wrap items-end gap-x-4 gap-y-2">
-            <h2
+          <div className="mt-1 flex min-w-0 flex-wrap items-baseline gap-x-4 gap-y-1">
+            <MissionHeading
               id={headingId}
-              className="[overflow-wrap:anywhere] text-[clamp(1.65rem,4vw,3rem)] font-black leading-[0.92] tracking-[-0.05em]"
+              {...(missionHeadingLevel === 1
+                ? { role: "heading", "aria-level": 1 }
+                : {})}
+              className="[overflow-wrap:anywhere] text-[clamp(1.35rem,3vw,2rem)] font-black leading-none tracking-[-0.04em]"
             >
-              {copy.title}
-            </h2>
+              {frame.title}
+            </MissionHeading>
             <p
               className="pb-1 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-background/70"
               aria-live="polite"
@@ -896,7 +912,7 @@ export function LessonMissionControl({
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2 border-t border-background/30 px-3 py-3 lg:border-l lg:border-t-0">
+        <div className="flex items-center gap-2 border-t border-background/30 px-3 py-2 lg:border-l lg:border-t-0">
           <button
             type="button"
             onClick={() =>
@@ -915,45 +931,48 @@ export function LessonMissionControl({
       </header>
 
       <div id={`${headingId}-body`} hidden={displayState.collapsed}>
-        <div className="grid min-w-0 border-b-2 border-foreground lg:grid-cols-[minmax(15rem,0.7fr)_minmax(0,1.3fr)]">
-          <aside className="min-w-0 border-b-2 border-foreground bg-card p-5 lg:border-b-0 lg:border-r-2 sm:p-6">
-            <LessonMissionFrame frame={frame} locale={locale} />
-            <p className="font-mono text-[10px] font-black uppercase tracking-[0.16em] text-brand-orange-dark">
-              {copy.stage} · {String(projectStageIndex + 1).padStart(2, "0")}
-              /05
-            </p>
-            <dl className="mt-5 space-y-5">
-              <div>
-                <dt className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
-                  {copy.objective}
-                </dt>
-                <dd className="mt-2 break-words text-sm font-semibold leading-relaxed">
-                  {projectStage.objective[locale]}
-                </dd>
-              </div>
-              <div className="border-l-4 border-brand-orange pl-4">
-                <dt className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
-                  {copy.expectedEvidence}
-                </dt>
-                <dd className="mt-2 break-words text-sm leading-relaxed">
-                  {projectStage.evidence[locale]}
-                </dd>
-              </div>
-            </dl>
-            <p className="mt-6 border-t border-border pt-4 text-xs leading-relaxed text-muted-foreground">
-              {copy.localBoundary} {copy.syntheticOnly}
-            </p>
-          </aside>
+        <div className="min-w-0 border-b-2 border-foreground">
+          <div className="min-w-0 border-b border-border bg-card p-4 sm:p-5">
+            <LessonMissionFrame
+              frame={frame}
+              locale={locale}
+              headingLevel={missionHeadingLevel}
+              showHeading={false}
+            />
+            <details className="mt-3 border-t border-border pt-3">
+              <summary className="cursor-pointer font-mono text-[10px] font-black uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground">
+                {copy.stage} · {String(projectStageIndex + 1).padStart(2, "0")}
+                /05 · {copy.expectedEvidence}
+              </summary>
+              <dl className="mt-3 grid min-w-0 gap-3 sm:grid-cols-2">
+                <div>
+                  <dt className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                    {copy.objective}
+                  </dt>
+                  <dd className="mt-1 break-words text-sm font-semibold leading-snug">
+                    {projectStage.objective[locale]}
+                  </dd>
+                </div>
+                <div className="border-l-2 border-brand-orange pl-3">
+                  <dt className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                    {copy.expectedEvidence}
+                  </dt>
+                  <dd className="mt-1 break-words text-sm leading-snug">
+                    {projectStage.evidence[locale]}
+                  </dd>
+                </div>
+              </dl>
+              <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                {copy.syntheticOnly}
+              </p>
+            </details>
+          </div>
 
-          <div className="min-w-0 p-4 sm:p-6">
+          <div className="min-w-0 p-4 sm:p-5">
             <ol
-              className="grid min-w-0 gap-2"
+              className="grid min-w-0 grid-cols-4 gap-1 lg:grid-cols-7"
               aria-label={copy.title}
               aria-describedby={`${headingId}-sequence-help`}
-              style={{
-                gridTemplateColumns:
-                  "repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr))",
-              }}
             >
               {STEP_IDS.map((stepId, index) => {
                 const available =
@@ -980,28 +999,30 @@ export function LessonMissionControl({
                             : copy.stepLocked
                       }`}
                       className={cn(
-                        "flex min-h-[4.25rem] w-full min-w-0 flex-col items-start justify-center gap-1 border-2 px-3 text-left outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                        "flex min-h-16 w-full min-w-0 flex-col items-center justify-center gap-1 border-b-[3px] px-1 py-2 text-center outline-none transition-[border-color,color,background-color] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none lg:min-h-11 lg:flex-row lg:gap-2 lg:px-2 lg:text-left",
                         selected
-                          ? "border-foreground bg-foreground text-background"
+                          ? "border-brand-orange bg-foreground text-background"
                           : complete
                             ? "border-risk-green bg-risk-green/10 text-foreground"
                             : available
                               ? "border-brand-orange bg-background text-foreground hover:bg-brand-orange/10"
-                              : "cursor-not-allowed border-foreground/40 bg-card text-foreground/70",
+                              : "cursor-not-allowed border-border bg-card text-foreground/70",
                       )}
                     >
                       <span
                         className={cn(
-                          "font-mono text-[10px] font-black",
+                          "grid h-6 w-6 shrink-0 place-items-center rounded-full border font-mono text-[9px] font-black",
                           selected
-                            ? "text-[#ffc6aa]"
-                            : "text-brand-orange-dark",
+                            ? "border-[#ffc6aa] text-[#ffc6aa]"
+                            : complete
+                              ? "border-risk-green text-risk-green"
+                              : "border-brand-orange text-brand-orange-dark",
                         )}
                         aria-hidden="true"
                       >
                         {complete ? "OK" : String(index + 1).padStart(2, "0")}
                       </span>
-                      <span className="min-w-0 break-words font-mono text-[10px] font-black uppercase tracking-[0.06em] [overflow-wrap:normal]">
+                      <span className="min-w-0 max-w-full font-mono text-[9px] font-black uppercase tracking-[0.03em] [overflow-wrap:anywhere]">
                         {label}
                       </span>
                     </button>
@@ -1011,7 +1032,7 @@ export function LessonMissionControl({
             </ol>
             <p
               id={`${headingId}-sequence-help`}
-              className="mt-3 text-xs leading-relaxed text-muted-foreground"
+              className="sr-only"
             >
               {copy.locked}. {copy.predictionHint}
             </p>
@@ -1020,20 +1041,20 @@ export function LessonMissionControl({
                 role="status"
                 className="mt-3 border-l-4 border-brand-orange bg-brand-orange/10 p-4 text-sm font-bold leading-relaxed"
               >
-                {copy.stageLocked}
+                {ownerReady ? copy.stageLocked : copy.ownerRequired}
               </p>
             ) : null}
 
-            <div className="mt-7 min-w-0 border-t-2 border-foreground pt-6">
+            <div className="mt-4 min-w-0 border-t-2 border-foreground pt-5">
               {displayActivePanel === 0 ? (
                 <div>
-                  <h3
+                  <StepHeading
                     ref={panelHeadingRef}
                     tabIndex={-1}
                     className="max-w-[62ch] text-balance text-xl font-black leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
                   >
                     {profile.predictionPrompt[locale]}
-                  </h3>
+                  </StepHeading>
                   <p className="mt-3 max-w-[72ch] text-sm leading-relaxed text-muted-foreground">
                     {copy.predictionHint}
                   </p>
@@ -1121,13 +1142,13 @@ export function LessonMissionControl({
 
               {displayActivePanel === 1 ? (
                 <div>
-                  <h3
+                  <StepHeading
                     ref={panelHeadingRef}
                     tabIndex={-1}
                     className="max-w-[62ch] text-balance text-xl font-black leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
                   >
                     {profile.manipulation[locale]}
-                  </h3>
+                  </StepHeading>
                   <p className="mt-3 max-w-[72ch] text-sm leading-relaxed text-muted-foreground">
                     {copy.manipulateRequired}
                   </p>
@@ -1163,13 +1184,13 @@ export function LessonMissionControl({
 
               {displayActivePanel === 2 ? (
                 <div>
-                  <h3
+                  <StepHeading
                     ref={panelHeadingRef}
                     tabIndex={-1}
                     className="max-w-[62ch] text-balance text-xl font-black leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
                   >
                     {copy.steps.run}: {profile.instrument[locale]}
-                  </h3>
+                  </StepHeading>
                   <p className="mt-3 max-w-[72ch] text-sm leading-relaxed text-muted-foreground">
                     {copy.runRequired}
                   </p>
@@ -1198,6 +1219,7 @@ export function LessonMissionControl({
               {displayActivePanel === 3 ? (
                 <div>
                   <ChoiceProbe
+                    headingLevel={stepHeadingLevel}
                     headingRef={panelHeadingRef}
                     probe={profile.evidence}
                     locale={locale}
@@ -1226,13 +1248,13 @@ export function LessonMissionControl({
                         commitRetrievalRecall();
                       }}
                     >
-                      <h3
+                      <StepHeading
                         ref={panelHeadingRef}
                         tabIndex={-1}
                         className="max-w-[62ch] text-balance text-xl font-black leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
                       >
                         {copy.retrievalRecall}
-                      </h3>
+                      </StepHeading>
                       <p className="mt-3 max-w-[72ch] text-sm leading-relaxed text-muted-foreground">
                         {copy.retrievalRecallPrompt}
                       </p>
@@ -1259,7 +1281,8 @@ export function LessonMissionControl({
                         id={`${headingId}-retrieval-recall-hint`}
                         className="mt-2 text-xs leading-relaxed text-muted-foreground"
                       >
-                        {copy.retrievalRecallHint} {copy.syntheticOnly}
+                        {copy.retrievalRecallHint} {copy.localBoundary}{" "}
+                        {copy.syntheticOnly}
                       </p>
                       <button
                         type="submit"
@@ -1278,6 +1301,7 @@ export function LessonMissionControl({
                         {copy.retrievalRecallCommitted}
                       </p>
                       <ChoiceProbe
+                        headingLevel={stepHeadingLevel}
                         headingRef={panelHeadingRef}
                         probe={profile.retrieval}
                         locale={locale}
@@ -1330,13 +1354,13 @@ export function LessonMissionControl({
                     </>
                   ) : (
                     <div>
-                      <h3
+                      <StepHeading
                         ref={panelHeadingRef}
                         tabIndex={-1}
                         className="max-w-[62ch] text-balance text-xl font-black leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
                       >
                         {copy.retrievalRecall}
-                      </h3>
+                      </StepHeading>
                       <p
                         role="status"
                         className="mt-5 border-l-4 border-risk-green bg-risk-green/10 p-4 text-sm font-semibold"
@@ -1364,6 +1388,7 @@ export function LessonMissionControl({
                     </p>
                   ) : null}
                   <ChoiceProbe
+                    headingLevel={stepHeadingLevel}
                     headingRef={panelHeadingRef}
                     probe={profile.revision}
                     locale={locale}
@@ -1414,6 +1439,7 @@ export function LessonMissionControl({
                     </p>
                   </div>
                   <ChoiceProbe
+                    headingLevel={stepHeadingLevel}
                     headingRef={panelHeadingRef}
                     probe={profile.transfer}
                     locale={locale}

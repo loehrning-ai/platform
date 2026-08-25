@@ -13,6 +13,7 @@ export interface DataScienceCourseCopy {
     readonly certificate: string;
     readonly markComplete: string;
     readonly completed: string;
+    readonly completionOwnerRequired: string;
     readonly notFoundTitle: string;
   };
   readonly breadcrumbs: readonly [string, string, string];
@@ -54,6 +55,8 @@ export const DATA_SCIENCE_COURSE_COPY = Object.freeze({
       certificate: "Teilnahmebestätigung öffnen →",
       markComplete: "Kapitel abschließen",
       completed: "Kapitel abgeschlossen",
+      completionOwnerRequired:
+        "Wähle oben zuerst Konto oder lokalen Fortschritt.",
       notFoundTitle: "Kapitel nicht gefunden",
     },
     breadcrumbs: ["Start", "Kurse", "Data Science Fundamentals"],
@@ -96,6 +99,8 @@ export const DATA_SCIENCE_COURSE_COPY = Object.freeze({
       certificate: "Open completion record →",
       markComplete: "Mark chapter complete",
       completed: "Chapter completed",
+      completionOwnerRequired:
+        "Choose account or local progress above first.",
       notFoundTitle: "Chapter not found",
     },
     breadcrumbs: ["Home", "Courses", "Data Science Fundamentals"],

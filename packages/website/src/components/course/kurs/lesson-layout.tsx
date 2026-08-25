@@ -4,7 +4,9 @@ import { useState, useCallback, useEffect } from "react";
 import { LessonSidebar } from "./lesson-sidebar";
 import { LessonContent } from "./lesson-content";
 import { LessonShell } from "@/components/course/lesson-shell";
+import { LessonReference } from "@/components/course/lesson-reference";
 import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
+import { isCourseProjectCheckpointLesson } from "@/lib/course-projects/checkpoint-selector";
 import {
   markSectionRead,
   markLessonCompleted,
@@ -153,6 +155,10 @@ export function LessonLayout({
   }, [activateLesson, hasNextLesson, lessons, activeLessonIndex]);
 
   if (!activeLesson) return null;
+  const isProjectCheckpoint = isCourseProjectCheckpointLesson(
+    courseSlug,
+    activeLessonId,
+  );
 
   const sidebar = (
     <LessonSidebar
@@ -194,33 +200,43 @@ export function LessonLayout({
             />
           </div>
         )}
-        <div className="mb-10">
-          <CourseProjectStudio
-            courseSlug={courseSlug}
-            lessonId={activeLessonId}
-            locale={locale}
-            lessonContext={{
-              title: activeLesson.title,
-              objective: activeLesson.subtitle,
-              keyConcepts: activeLesson.keyConcepts,
-            }}
-          />
-        </div>
-        <LessonContent
-          courseSlug={courseSlug}
-          lesson={activeLesson}
-          totalLessons={lessons.length}
-          progressReady={progressReady}
-          readSectionIds={readIds}
-          isCompleted={completedIds.has(activeLessonId)}
-          quizBestScore={quizScores.get(activeLessonId) ?? null}
-          hasNextLesson={hasNextLesson}
-          onMarkSectionRead={handleMarkSectionRead}
-          onMarkLessonComplete={handleMarkLessonComplete}
-          onQuizComplete={handleQuizComplete}
-          onNextLesson={handleNextLesson}
+        {isProjectCheckpoint ? (
+          <div className="mb-10">
+            <CourseProjectStudio
+              courseSlug={courseSlug}
+              lessonId={activeLessonId}
+              locale={locale}
+              lessonContext={{
+                title: activeLesson.title,
+                objective: activeLesson.subtitle,
+                keyConcepts: activeLesson.keyConcepts,
+              }}
+            />
+          </div>
+        ) : null}
+        <LessonReference
+          key={activeLessonId}
           locale={locale}
-        />
+          title={activeLesson.title}
+          objective={activeLesson.subtitle}
+          headingLevel={isProjectCheckpoint ? 2 : 1}
+        >
+          <LessonContent
+            courseSlug={courseSlug}
+            lesson={activeLesson}
+            totalLessons={lessons.length}
+            progressReady={progressReady}
+            readSectionIds={readIds}
+            isCompleted={completedIds.has(activeLessonId)}
+            quizBestScore={quizScores.get(activeLessonId) ?? null}
+            hasNextLesson={hasNextLesson}
+            onMarkSectionRead={handleMarkSectionRead}
+            onMarkLessonComplete={handleMarkLessonComplete}
+            onQuizComplete={handleQuizComplete}
+            onNextLesson={handleNextLesson}
+            locale={locale}
+          />
+        </LessonReference>
       </LessonShell>
     </MotionProvider>
   );

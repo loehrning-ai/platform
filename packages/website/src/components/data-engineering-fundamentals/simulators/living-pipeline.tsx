@@ -523,7 +523,7 @@ export function LivingPipeline() {
     running,
     play: playAnimation,
     toggle: toggleRunning,
-  } = useControllableAnimation();
+  } = useControllableAnimation(false);
   const [tutorialStep, setTutorialStep] = useState(-1);
   const tutorial = tutorialStep >= 0 ? tutorialSteps[tutorialStep] : null;
   const [stats, setStats] = useState<Stats>(EMPTY_STATS);
@@ -1139,7 +1139,7 @@ export function LivingPipeline() {
               onClick={toggleRunning}
               disabled={!!tutorial}
             >
-              {running ? text("⏸ pause", "⏸ pausieren") : text("▶ resume", "▶ fortsetzen")}
+              {running ? text("⏸ pause", "⏸ pausieren") : text("▶ start", "▶ starten")}
             </button>
             <button
               type="button"

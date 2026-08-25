@@ -11,8 +11,7 @@ import { useCallback, useMemo, useRef, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
 import { INTERVIEW_MOVES as INTERVIEW_MOVES_EN } from "@/lib/data-infrastructure/lessons/interview-playbook";
 import { INTERVIEW_MOVES as INTERVIEW_MOVES_DE } from "@/lib/data-infrastructure/lessons/de/interview-playbook";
-import { useCanvasRAF } from "../canvas/use-canvas-raf";
-import { useCanvasAutoSize } from "../canvas/use-canvas-size";
+import { useAutoSizedCanvasRAF } from "../canvas/use-auto-sized-canvas-raf";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
 import { SafeLessonMarkup } from "@/components/safe-lesson-markup";
@@ -75,8 +74,6 @@ export function InterviewMove({
     [moves.length, complete],
   );
 
-  useCanvasAutoSize(canvasRef, wrapRef, { minHeight: 130 });
-
   const draw = useCallback((): boolean => {
     const canvas = canvasRef.current;
     if (!canvas) return false;
@@ -122,7 +119,7 @@ export function InterviewMove({
     return false;
   }, [moves]);
 
-  useCanvasRAF(draw);
+  useAutoSizedCanvasRAF(canvasRef, wrapRef, draw, { minHeight: 130 });
 
   const current = moves[cur];
   const currentColor = useMemo(() => tagColor(current.tag), [current.tag]);

@@ -6,8 +6,7 @@
 
 import { useCallback, useRef, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
-import { useCanvasRAF } from "../canvas/use-canvas-raf";
-import { useCanvasAutoSize } from "../canvas/use-canvas-size";
+import { useAutoSizedCanvasRAF } from "../canvas/use-auto-sized-canvas-raf";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
 import type { Locale } from "@/lib/i18n/locale";
@@ -172,8 +171,6 @@ export function PartitionSim({
   const meta = buildStrategy(strategy, locale);
   const scanningRef = useRef(false);
 
-  useCanvasAutoSize(canvasRef, wrapRef, { minHeight: 300 });
-
   const draw = useCallback((): boolean => {
     const canvas = canvasRef.current;
     if (!canvas) return false;
@@ -209,7 +206,9 @@ export function PartitionSim({
     return scanningRef.current;
   }, [meta]);
 
-  const { wake } = useCanvasRAF(draw);
+  const { wake } = useAutoSizedCanvasRAF(canvasRef, wrapRef, draw, {
+    minHeight: 300,
+  });
 
   const scan = useCallback(() => {
     scanningRef.current = true;

@@ -35,7 +35,7 @@ export function AiNativeOperatorCourseErrorState({
   }, [boundary, error]);
 
   return (
-    <main className="flex min-h-[70svh] min-w-0 items-center justify-center overflow-x-clip bg-background px-4 py-16 sm:px-6">
+    <div className="flex min-h-[70svh] min-w-0 items-center justify-center overflow-x-clip bg-background px-4 py-16 sm:px-6">
       <div className="w-full max-w-lg min-w-0 border-2 border-foreground bg-card p-6 shadow-[6px_6px_0_var(--color-foreground)] sm:p-8">
         <p className="break-words font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-destructive [overflow-wrap:anywhere]">
           AI-Native Operator / {copy.eyebrow}
@@ -64,6 +64,6 @@ export function AiNativeOperatorCourseErrorState({
           </Link>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

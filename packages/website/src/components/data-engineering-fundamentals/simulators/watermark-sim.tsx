@@ -22,21 +22,51 @@ const INITIAL_WATERMARK = 720;
 export function WatermarkSim() {
   const { text } = useDataEngineeringFundamentalsLocale();
   const [watermark, setWatermark] = useState(INITIAL_WATERMARK);
-  const { running, toggle: toggleRunning } = useControllableAnimation();
+  const { running, toggle: toggleRunning } = useControllableAnimation(false);
   const [events, setEvents] = useState<readonly SimEvent[]>([]);
   const [lateness, setLateness] = useState(20);
   const stageScrollRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  const initialCenterObserverRef = useRef<ResizeObserver | null>(null);
+  const watermarkInteractedRef = useRef(false);
 
   useEffect(() => {
-    const frame = requestAnimationFrame(() => {
-      const viewport = stageScrollRef.current;
-      const stage = stageRef.current;
-      if (!viewport || !stage || viewport.scrollWidth <= viewport.clientWidth) return;
-      const watermarkX = (INITIAL_WATERMARK / 1000) * stage.clientWidth;
-      viewport.scrollLeft = Math.max(0, watermarkX - viewport.clientWidth / 2);
+    const viewport = stageScrollRef.current;
+    const stage = stageRef.current;
+    if (!viewport || !stage) return;
+
+    const stopObserving = () => {
+      initialCenterObserverRef.current?.disconnect();
+      initialCenterObserverRef.current = null;
+    };
+    const centerWatermark = (): boolean => {
+      if (watermarkInteractedRef.current) {
+        stopObserving();
+        return false;
+      }
+
+      const viewportWidth = viewport.clientWidth;
+      const stageWidth = stage.clientWidth;
+      const scrollWidth = viewport.scrollWidth;
+      if (viewportWidth <= 0 || stageWidth <= 0 || scrollWidth <= 0) {
+        return false;
+      }
+      if (scrollWidth <= viewportWidth) return true;
+
+      const watermarkX = (INITIAL_WATERMARK / 1000) * stageWidth;
+      viewport.scrollLeft = Math.max(0, watermarkX - viewportWidth / 2);
+      return true;
+    };
+
+    if (centerWatermark()) return;
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(() => {
+      if (centerWatermark()) stopObserving();
     });
-    return () => cancelAnimationFrame(frame);
+    initialCenterObserverRef.current = observer;
+    observer.observe(viewport);
+    observer.observe(stage);
+    return stopObserving;
   }, []);
 
   useEffect(() => {
@@ -57,6 +87,9 @@ export function WatermarkSim() {
   }, [running, lateness]);
 
   const onDragStart = () => {
+    watermarkInteractedRef.current = true;
+    initialCenterObserverRef.current?.disconnect();
+    initialCenterObserverRef.current = null;
     const rect = stageRef.current!.getBoundingClientRect();
     const move = (e: MouseEvent) => {
       const x = e.clientX - rect.left;
@@ -183,7 +216,20 @@ export function WatermarkSim() {
             <label className="lab" htmlFor="watermark-position">{text("Watermark position", "Watermark-Position")}</label>
             <span className="val">t−{((1000 - watermark) / 100).toFixed(1)}m</span>
           </div>
-          <input id="watermark-position" type="range" min={150} max={920} step={5} value={watermark} onChange={(e) => setWatermark(+e.target.value)} />
+          <input
+            id="watermark-position"
+            type="range"
+            min={150}
+            max={920}
+            step={5}
+            value={watermark}
+            onChange={(e) => {
+              watermarkInteractedRef.current = true;
+              initialCenterObserverRef.current?.disconnect();
+              initialCenterObserverRef.current = null;
+              setWatermark(+e.target.value);
+            }}
+          />
           <span className="hint">{text("drag the slider or the blue line above", "Regler oder blaue Linie verschieben")}</span>
         </div>
         <div className="ctl-slider warn" style={{ flex: 1 }}>
@@ -195,7 +241,7 @@ export function WatermarkSim() {
           <span className="hint">% {text("of events arriving late", "verspätet eintreffende Ereignisse")}</span>
         </div>
         <button type="button" className="btn" onClick={toggleRunning}>
-          {running ? text("⏸ Pause stream", "⏸ Stream pausieren") : text("▶ Resume", "▶ Fortsetzen")}
+          {running ? text("⏸ Pause stream", "⏸ Stream pausieren") : text("▶ Start stream", "▶ Stream starten")}
         </button>
       </div>
     </Panel>

@@ -1,6 +1,7 @@
 import { Children, isValidElement } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { HydrationMarker } from "@/components/hydration-marker";
+import { ScrollProgress } from "@/components/ui/scroll-progress";
 
 const { getRequestLocaleMock } = vi.hoisted(() => ({
   getRequestLocaleMock: vi.fn(),
@@ -51,16 +52,21 @@ describe("root layout locale", () => {
     expect(isValidElement(main)).toBe(true);
     if (!isValidElement(main)) throw new Error("Root main is missing");
 
-    const routeContent = Children.only(
-      (main as React.ReactElement<{ children: React.ReactNode }>).props
-        .children,
+    const mainChildren = Children.toArray(
+      (main as React.ReactElement<{ children: React.ReactNode }>).props.children,
     );
-    expect(isValidElement(routeContent) && routeContent.type).toBe("p");
+    expect(mainChildren).toHaveLength(2);
+    expect(isValidElement(mainChildren[1]) && mainChildren[1].type).toBe("p");
     expect(
       bodyChildren.some(
         (child) => isValidElement(child) && child.type === HydrationMarker,
       ),
     ).toBe(true);
+    expect(
+      bodyChildren.filter(
+        (child) => isValidElement(child) && child.type === ScrollProgress,
+      ),
+    ).toHaveLength(1);
   });
 
   it.each([

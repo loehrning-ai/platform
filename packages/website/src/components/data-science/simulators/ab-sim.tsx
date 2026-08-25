@@ -70,7 +70,7 @@ export function ABSim() {
   const [baseline, setBaseline] = useState(0.12);
   const [dailyN, setDailyN] = useState(2000);
   const [speed, setSpeed] = useState(1);
-  const { running, toggle: toggleRunning } = useControllableAnimation();
+  const { running, toggle: toggleRunning } = useControllableAnimation(false);
   const [tick, setTick] = useState(0);
   const stateRef = useRef<ABState | null>(null);
   if (!stateRef.current) stateRef.current = fresh();

@@ -72,7 +72,9 @@ describe("Framer Motion provider ownership", () => {
     for (const match of providerBodies) {
       expect(match[1]).not.toContain("{children}");
     }
-    expect(rootLayout).toMatch(/<main[^>]*>\s*\{children\}\s*<\/main>/);
+    // Route children may have server-owned siblings, but must remain a direct
+    // child of main rather than crossing a root client-provider boundary.
+    expect(rootLayout).toMatch(/<main[^>]*>[\s\S]*?\{children\}[\s\S]*?<\/main>/);
     expect(rootLayout.indexOf("<ScrollToTop />")).toBeGreaterThan(
       rootLayout.indexOf("</main>"),
     );

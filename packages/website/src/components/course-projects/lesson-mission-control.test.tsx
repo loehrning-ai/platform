@@ -5,6 +5,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import {
   afterEach,
@@ -633,6 +634,19 @@ describe("LessonMissionControl", () => {
     expect(props.onMissionComplete).not.toHaveBeenCalled();
   });
 
+  it("explains the unresolved local owner without claiming the stage is locked", async () => {
+    setUnknownLearningOwner();
+    render(<LessonMissionControl {...missionProps()} />);
+
+    expect(
+      await screen.findByText(/activate local learning before/i),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/project phase is locked/i)).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("radio", { name: /Target leakage/ }),
+    ).toBeDisabled();
+  });
+
   it("localizes the course-specific instrument and exposes a collapsible region", async () => {
     render(<LessonMissionControl {...missionProps({ locale: "de" })} />);
 
@@ -955,17 +969,29 @@ describe("LessonMissionControl", () => {
     expect(getOwnedLocalLearningItem(key)).toBeNull();
   });
 
-  it("keeps all seven step labels container-safe without viewport columns", async () => {
+  it("keeps all seven step targets in a bounded responsive grid", async () => {
     render(<LessonMissionControl {...missionProps({ locale: "de" })} />);
 
     const circuit = await screen.findByRole("list", { name: "Signalstrecke" });
-    expect(circuit.style.gridTemplateColumns).toContain("9.5rem");
-    const manipulate = screen.getByRole("button", {
-      name: /Manipulieren:/,
-    });
-    expect(manipulate).toHaveClass("flex-col");
-    expect(manipulate.querySelector("span:last-child")).toHaveClass(
-      "[overflow-wrap:normal]",
-    );
+    expect(circuit).toHaveClass("grid", "grid-cols-4", "lg:grid-cols-7");
+    expect(circuit).not.toHaveClass("overflow-x-auto");
+    expect(circuit).not.toHaveAttribute("tabindex");
+    expect(circuit).not.toHaveAttribute("style");
+    const targets = within(circuit).getAllByRole("button");
+    expect(targets).toHaveLength(7);
+    for (const target of targets) {
+      expect(target).toHaveClass(
+        "min-h-16",
+        "flex-col",
+        "lg:min-h-11",
+        "lg:flex-row",
+        "motion-reduce:transition-none",
+      );
+      expect(target.closest("li")).toHaveClass("min-w-0");
+      expect(target.querySelector("span:last-child")).toHaveClass(
+        "max-w-full",
+        "[overflow-wrap:anywhere]",
+      );
+    }
   });
 });

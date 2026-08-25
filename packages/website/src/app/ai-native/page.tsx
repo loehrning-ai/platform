@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
-import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { AiNativeContinueBanner } from "@/components/ai-native/continue-banner";
 import { AiNativeHero } from "@/components/ai-native/hero";
 import { AiNativeModulesOverview } from "@/components/ai-native/modules-overview";
@@ -147,7 +146,6 @@ export default async function AiNativePage() {
   return (
     <>
       <JsonLd data={buildCourseJsonLd(locale)} id="ai-native-landing-jsonld" />
-      <ScrollProgress />
 
       {/* Continue-where-you-left-off banner (renders only when progress exists) */}
       <AiNativeContinueBanner locale={locale} />

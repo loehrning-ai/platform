@@ -6,8 +6,7 @@
 
 import { useCallback, useMemo, useRef, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
-import { useCanvasRAF } from "../canvas/use-canvas-raf";
-import { useCanvasAutoSize } from "../canvas/use-canvas-size";
+import { useAutoSizedCanvasRAF } from "../canvas/use-auto-sized-canvas-raf";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
 import { useDataInfraWidgetLocale } from "../widget-locale-context";
@@ -60,8 +59,6 @@ export function RowColumn({ lessonId, cpId }: RowColumnProps): JSX.Element {
   const sweepRowRef = useRef(-1);
   const sweepColRef = useRef(-1);
   const activeRef = useRef(false);
-
-  useCanvasAutoSize(canvasRef, wrapRef, { minHeight: 340 });
 
   const draw = useCallback((): boolean => {
     const canvas = canvasRef.current;
@@ -168,7 +165,9 @@ export function RowColumn({ lessonId, cpId }: RowColumnProps): JSX.Element {
     return activeRef.current;
   }, [data, locale, stats.rb]);
 
-  const { wake } = useCanvasRAF(draw);
+  const { wake } = useAutoSizedCanvasRAF(canvasRef, wrapRef, draw, {
+    minHeight: 340,
+  });
 
   const run = useCallback(() => {
     sweepRowRef.current = -1;

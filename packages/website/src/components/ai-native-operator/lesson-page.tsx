@@ -2,7 +2,9 @@
 
 import { useState, type JSX } from "react";
 import { LessonShell } from "@/components/course/lesson-shell";
+import { LessonReference } from "@/components/course/lesson-reference";
 import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
+import { isCourseProjectCheckpointLesson } from "@/lib/course-projects/checkpoint-selector";
 import {
   AiNativeOperatorLessonSidebar,
   type AiNativeOperatorLessonNavItem,
@@ -38,6 +40,10 @@ export function AiNativeOperatorLessonPage({
 }: AiNativeOperatorLessonPageProps): JSX.Element {
   const [navOpen, setNavOpen] = useState(false);
   const copy = getAiNativeOperatorCourseCopy(locale).lesson;
+  const isProjectCheckpoint = isCourseProjectCheckpointLesson(
+    "ai-native-operator",
+    lesson.id,
+  );
 
   return (
     <LessonShell
@@ -60,25 +66,35 @@ export function AiNativeOperatorLessonPage({
         <AiNativeOperatorLessonSidebar locale={locale} lessons={navItems} />
       }
     >
-      <div className="mb-10">
-        <CourseProjectStudio
-          courseSlug="ai-native-operator"
-          lessonId={lesson.id}
-          locale={locale}
-          lessonContext={{
-            title: lesson.title,
-            objective: lesson.objective,
-            keyConcepts: lesson.keyConcepts,
-          }}
-        />
-      </div>
-      <AiNativeOperatorLessonReader
+      {isProjectCheckpoint ? (
+        <div className="mb-10">
+          <CourseProjectStudio
+            courseSlug="ai-native-operator"
+            lessonId={lesson.id}
+            locale={locale}
+            lessonContext={{
+              title: lesson.title,
+              objective: lesson.objective,
+              keyConcepts: lesson.keyConcepts,
+            }}
+          />
+        </div>
+      ) : null}
+      <LessonReference
+        key={lesson.id}
         locale={locale}
-        lesson={lesson}
-        prevHref={prevHref}
-        prevTitle={prevTitle}
-        next={next}
-      />
+        title={lesson.title}
+        objective={lesson.objective}
+        headingLevel={isProjectCheckpoint ? 2 : 1}
+      >
+        <AiNativeOperatorLessonReader
+          locale={locale}
+          lesson={lesson}
+          prevHref={prevHref}
+          prevTitle={prevTitle}
+          next={next}
+        />
+      </LessonReference>
     </LessonShell>
   );
 }

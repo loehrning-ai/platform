@@ -5,8 +5,7 @@
 
 import { useCallback, useRef, useState, type JSX } from "react";
 import { useCheckpoint } from "@/lib/progress";
-import { useCanvasRAF } from "../canvas/use-canvas-raf";
-import { useCanvasAutoSize } from "../canvas/use-canvas-size";
+import { useAutoSizedCanvasRAF } from "../canvas/use-auto-sized-canvas-raf";
 import { CanvasFallbackNotice } from "../canvas/canvas-fallback";
 import { cn } from "@/lib/utils";
 import { useDataInfraWidgetLocale } from "../widget-locale-context";
@@ -52,8 +51,6 @@ export function Watermark({ lessonId, cpId }: WatermarkProps): JSX.Element {
   const ptRef = useRef(0);
   const watermarkRef = useRef(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  useCanvasAutoSize(canvasRef, wrapRef, { minHeight: 340 });
 
   const draw = useCallback((): boolean => {
     const canvas = canvasRef.current;
@@ -116,7 +113,9 @@ export function Watermark({ lessonId, cpId }: WatermarkProps): JSX.Element {
     return false;
   }, []);
 
-  const { wake } = useCanvasRAF(draw);
+  const { wake } = useAutoSizedCanvasRAF(canvasRef, wrapRef, draw, {
+    minHeight: 340,
+  });
 
   const reset = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);

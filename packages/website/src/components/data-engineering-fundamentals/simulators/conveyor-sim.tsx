@@ -60,7 +60,7 @@ export function ConveyorSim() {
   const [dedupOn, setDedupOn] = useState(true);
   const [lateGateOn, setLateGateOn] = useState(true);
   const [beginner, setBeginner] = useState(true);
-  const { running, toggle: toggleRunning } = useControllableAnimation();
+  const { running, toggle: toggleRunning } = useControllableAnimation(false);
   const [ledger, setLedger] = useState<readonly string[]>([]);
   const [lateDrawer, setLateDrawer] = useState<readonly LateEntry[]>([]);
   const [rtCount, setRtCount] = useState(0);
@@ -473,7 +473,7 @@ export function ConveyorSim() {
         </div>
         <div className="cv-btns">
           <button type="button" className="btn btn-primary" onClick={toggleRunning}>
-            {running ? text("⏸ Pause", "⏸ Pausieren") : text("▶ Resume", "▶ Fortsetzen")}
+            {running ? text("⏸ Pause", "⏸ Pausieren") : text("▶ Start", "▶ Starten")}
           </button>
           <button type="button" className="btn" onClick={reset}>
             {text("↻ Reset", "↻ Zurücksetzen")}

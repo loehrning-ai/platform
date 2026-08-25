@@ -46,6 +46,10 @@ describe("workshops catalog", () => {
         `${workshop.slug}.duration`,
       ).toBeGreaterThan(0);
       expect(
+        workshop.accessNote.trim().length,
+        `${workshop.slug}.accessNote`,
+      ).toBeGreaterThan(0);
+      expect(
         workshop.summary.trim().length,
         `${workshop.slug}.summary`,
       ).toBeGreaterThan(0);
@@ -120,6 +124,30 @@ describe("workshops catalog", () => {
           `${workshop.slug} step.tool`,
         ).toBeGreaterThan(0);
       }
+    }
+  });
+
+  it("gives every workshop one bounded, internally consistent first decision", () => {
+    for (const workshop of WORKSHOPS) {
+      const lab = workshop.decisionLab;
+      expect(lab.facts).toHaveLength(3);
+      expect(lab.choices.length).toBeGreaterThanOrEqual(2);
+      expect(lab.evidence.length).toBeGreaterThanOrEqual(2);
+      expect(new Set(lab.choices.map(({ id }) => id)).size).toBe(
+        lab.choices.length,
+      );
+      expect(new Set(lab.evidence.map(({ id }) => id)).size).toBe(
+        lab.evidence.length,
+      );
+      expect(lab.choices.map(({ id }) => id)).toContain(
+        lab.recommendedChoiceId,
+      );
+      expect(lab.evidence.map(({ id }) => id)).toContain(
+        lab.strongestEvidenceId,
+      );
+      expect(JSON.stringify(lab)).not.toMatch(
+        /localStorage|sessionStorage|cookie|upload/i,
+      );
     }
   });
 
@@ -198,6 +226,18 @@ describe("workshops catalog", () => {
       );
       expect(Boolean(englishWorkshop?.realWorldCase)).toBe(
         Boolean(germanWorkshop.realWorldCase),
+      );
+      expect(englishWorkshop?.decisionLab.choices.map(({ id }) => id)).toEqual(
+        germanWorkshop.decisionLab.choices.map(({ id }) => id),
+      );
+      expect(englishWorkshop?.decisionLab.evidence.map(({ id }) => id)).toEqual(
+        germanWorkshop.decisionLab.evidence.map(({ id }) => id),
+      );
+      expect(englishWorkshop?.decisionLab.recommendedChoiceId).toBe(
+        germanWorkshop.decisionLab.recommendedChoiceId,
+      );
+      expect(englishWorkshop?.decisionLab.strongestEvidenceId).toBe(
+        germanWorkshop.decisionLab.strongestEvidenceId,
       );
     }
   });

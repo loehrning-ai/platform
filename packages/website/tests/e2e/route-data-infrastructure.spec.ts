@@ -93,6 +93,37 @@ async function seedProgress(page: Page, value: object) {
   );
 }
 
+async function continueLocally(page: Page) {
+  const button = page.getByRole("button", {
+    name: /^(?:Lokal weiterlernen|Continue locally)$/,
+  });
+  const gateAppeared = await button
+    .waitFor({ state: "visible", timeout: 1_500 })
+    .then(() => true)
+    .catch(() => false);
+  if (gateAppeared) {
+    await button.click({ timeout: 5_000 }).catch(async (error: unknown) => {
+      if (await button.isVisible().catch(() => false)) throw error;
+    });
+  }
+}
+
+async function openLessonReference(page: Page) {
+  await page
+    .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+    .waitFor({ state: "attached" });
+  await continueLocally(page);
+  await expect(page.locator("[data-learning-owner-panel]")).toBeHidden({
+    timeout: 15_000,
+  });
+  const reference = page.locator("details[data-lesson-reference]");
+  await expect(reference).toHaveCount(1);
+  await expect(reference).toBeVisible();
+  await expect(reference).toHaveJSProperty("open", false);
+  await reference.locator(":scope > summary").click();
+  await expect(reference).toHaveJSProperty("open", true);
+}
+
 /** Encode a certificate payload exactly like generateCertificatePdf's QR does. */
 function encodeCertHash(payload: {
   n: string;
@@ -146,6 +177,7 @@ test.describe("Data Infrastructure golden path", () => {
     expect(res?.status()).toBe(200);
     await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
     await settleFontsAndFrame(page);
+    await openLessonReference(page);
 
     const title = page.getByText(/Model · The stack, in motion/);
     const card = title.locator("..");
@@ -191,6 +223,7 @@ test.describe("Data Infrastructure golden path", () => {
       waitUntil: "domcontentloaded",
     });
     expect(res?.status()).toBe(200);
+    await openLessonReference(page);
 
     // mental-model's "q1" quiz widget (lib/data-infrastructure/lessons/
     // mental-model.ts): option index 1 is correct, and
@@ -218,6 +251,7 @@ test.describe("Data Infrastructure golden path", () => {
     expect(res?.status()).toBe(200);
     await expect(page).not.toHaveURL(/\/login/);
     await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+    await openLessonReference(page);
 
     const markAsRead = page.getByRole("button", {
       name: "Mark as read",

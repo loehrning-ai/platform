@@ -149,6 +149,16 @@ async function settleFullPage(page: Page) {
   ).toHaveCount(0, { timeout: 15_000 });
 }
 
+async function openLessonReference(page: Page) {
+  await page
+    .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+    .waitFor({ state: "attached" });
+  const reference = page.locator("details[data-lesson-reference]");
+  await expect(reference).toHaveCount(1);
+  await reference.locator("summary").click();
+  await expect(reference).toHaveAttribute("open", "");
+}
+
 async function expectOperatorGeometryContained(page: Page, context: string) {
   const geometry = await page.evaluate(() => {
     const root = document.querySelector("main") ?? document.body;
@@ -356,7 +366,9 @@ for (const width of VIEWPORT_WIDTHS) {
       page,
     }, testInfo) => {
       test.skip(
-        testInfo.project.name !== "chromium",
+        !["chromium", "chromium-ai-native-operator"].includes(
+          testInfo.project.name,
+        ),
         "The explicit bilingual five-width matrix runs once in Chromium.",
       );
       test.setTimeout(600_000);
@@ -413,12 +425,18 @@ for (const width of VIEWPORT_WIDTHS) {
             ).toBe(target.hash);
           }
           await expect(page).not.toHaveURL(/\/login(?:\?|$)/);
+          if (routeSet.lessons.includes(route.path)) {
+            await openLessonReference(page);
+          }
           await settleFullPage(page);
           await expect(page.locator("html"), route.path).toHaveAttribute(
             "lang",
             localeCase.locale,
           );
-          await expect(page.locator("h1").first(), route.path).toBeVisible();
+          await expect(
+            page.getByRole("heading", { level: 1 }).first(),
+            route.path,
+          ).toBeVisible();
           await expect(
             page.locator(
               "[data-nextjs-dialog], .vite-error-overlay, #webpack-dev-server-client-overlay",
@@ -515,7 +533,10 @@ test.describe("AI-Native Operator Course golden path", () => {
     await page.goto(FINAL_LESSON_ROUTE, {
       waitUntil: "domcontentloaded",
     });
-    await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
+    await openLessonReference(page);
 
     await page
       .getByRole("link", { name: "Continue to final assessment" })
@@ -537,7 +558,10 @@ test.describe("AI-Native Operator Course golden path", () => {
     await page.goto(FINAL_LESSON_ROUTE, {
       waitUntil: "domcontentloaded",
     });
-    await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
+    await openLessonReference(page);
 
     const continueToAssessment = page.getByRole("link", {
       name: "Continue to final assessment",
@@ -571,7 +595,9 @@ test.describe("AI-Native Operator Course golden path", () => {
   }) => {
     await seedProgress(page, passedAiNativeOperatorState());
     await page.goto(LANDING, { waitUntil: "domcontentloaded" });
-    await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
 
     const assessment = page.locator("#final-assessment");
     await expect(assessment).toHaveAttribute("data-assessment-state", "passed");
@@ -593,7 +619,9 @@ test.describe("AI-Native Operator Course golden path", () => {
     });
     expect(res?.status()).toBe(200);
     await expect(page).not.toHaveURL(/\/login/);
-    await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
 
     const lessonLink = page.locator(`a[href="${LESSON_ROUTE}"]`).first();
     await expect(lessonLink).toBeVisible();
@@ -609,7 +637,10 @@ test.describe("AI-Native Operator Course golden path", () => {
       waitUntil: "domcontentloaded",
     });
     expect(res?.status()).toBe(200);
-    await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
+    await openLessonReference(page);
 
     // mindset/1's exercise (modules/m01-mindset.ts): a reflect-box widget
     // with the source's own prompt text.

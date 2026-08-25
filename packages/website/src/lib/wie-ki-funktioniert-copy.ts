@@ -37,6 +37,13 @@ type LessonCopy = {
   readonly readTime: (minutes: number) => string;
   readonly takeaway: string;
   readonly selfCheck: string;
+  readonly responseLabel: string;
+  readonly responsePlaceholder: string;
+  readonly compareCriteria: string;
+  readonly hideCriteria: string;
+  readonly criteriaHeading: string;
+  readonly sessionOnly: string;
+  readonly referenceTitle: string;
   readonly previousLesson: string;
   readonly nextLesson: string;
   readonly completedEyebrow: string;
@@ -112,11 +119,17 @@ export const WIE_KI_LESSON_COPY: Readonly<Record<Locale, LessonCopy>> = {
     readTime: (minutes) => `${minutes} Min. Lesezeit`,
     takeaway: "Das Wichtigste aus diesem Abschnitt",
     selfCheck: "Kurze Selbstprüfung",
+    responseLabel: "Deine Antwort",
+    responsePlaceholder: "Formuliere die Kernidee.",
+    compareCriteria: "Mit Prüfkriterien vergleichen",
+    hideCriteria: "Prüfkriterien ausblenden",
+    criteriaHeading: "Prüfkriterien",
+    sessionOnly: "Nur auf dieser Seite. Nicht gespeichert.",
+    referenceTitle: "Konzepte und Belege",
     previousLesson: "Vorherige Lektion",
     nextLesson: "Nächste Lektion",
-    completedEyebrow: "Konzeptblock abgeschlossen",
-    completedHeading:
-      "Du kennst jetzt die grundlegende Arbeitsweise und Grenzen von KI.",
+    completedEyebrow: "Nächster Schritt",
+    completedHeading: "Übertrage die vier Konzepte jetzt in die Praxis.",
     completedBody:
       "Der KI-Führerschein überträgt diese Grundlagen auf Datenregeln, Ergebnisprüfung und Zuständigkeiten im Arbeitsalltag. Er ist kostenlos und setzt kein technisches Vorwissen voraus.",
     driverLicense: "Zum KI-Führerschein",
@@ -139,10 +152,17 @@ export const WIE_KI_LESSON_COPY: Readonly<Record<Locale, LessonCopy>> = {
     readTime: (minutes) => `${minutes} min read`,
     takeaway: "Key point from this section",
     selfCheck: "Quick self-check",
+    responseLabel: "Your answer",
+    responsePlaceholder: "State the core idea.",
+    compareCriteria: "Compare with criteria",
+    hideCriteria: "Hide criteria",
+    criteriaHeading: "Check criteria",
+    sessionOnly: "This page only. Not saved.",
+    referenceTitle: "Concepts and evidence",
     previousLesson: "Previous lesson",
     nextLesson: "Next lesson",
-    completedEyebrow: "Concept block complete",
-    completedHeading: "You now know the basic operation and limits of AI.",
+    completedEyebrow: "Next step",
+    completedHeading: "Apply the four concepts in practice.",
     completedBody:
       "Everyday AI Literacy applies these foundations to data rules, output review, and responsibility at work. It is free and requires no technical background.",
     driverLicense: "Go to Everyday AI Literacy",
@@ -153,58 +173,79 @@ export const WIE_KI_LESSON_COPY: Readonly<Record<Locale, LessonCopy>> = {
 };
 
 export const WIE_KI_COMPREHENSION_CHECKS: Readonly<
-  Record<Locale, Readonly<Record<string, { question: string; answer: string }>>>
+  Record<
+    Locale,
+    Readonly<
+      Record<string, { question: string; criteria: readonly string[] }>
+    >
+  >
 > = {
   de: {
     "lektion-1-vorhersage": {
       question:
         "Warum kann ein Sprachmodell eine Frage richtig beantworten, ohne die Antwort wirklich zu 'wissen'?",
-      answer:
-        "Weil die Modellparameter Beziehungen zwischen Begriffen aus dem Training abbilden und die Eingabe passenden Kontext liefert. Eine richtige Fortsetzung kann daraus entstehen, ohne dass die Generierung die Aussage gegen eine geprüfte Faktendatenbank verifiziert. Quellen oder Werkzeugergebnisse müssen getrennt geprüft werden.",
+      criteria: [
+        "Benennt gelernte Muster und Eingabekontext als Grundlage der Fortsetzung.",
+        "Trennt eine plausible Fortsetzung von der Prüfung gegen eine verlässliche Quelle.",
+      ],
     },
     "lektion-2-trainingsdaten": {
       question:
         "Ein KI-Modell schreibt bei einem Text über Krankenpflege automatisch in der weiblichen Form. Ist das ein Programmierfehler?",
-      answer:
-        "Nein, nicht zwingend. Die Zuordnung kann aus Trainingsdaten stammen, aber auch Auswahl, Kennzeichnung, Trainingsziel oder Systemanweisung können sie beeinflussen. Um die Ursache und Wirkung zu bewerten, braucht es mehrere kontrollierte Tests mit der konkreten Modellversion.",
+      criteria: [
+        "Behandelt Trainingsdaten als mögliche, nicht als einzige Ursache.",
+        "Fordert kontrollierte Tests mit der konkreten Modellversion und ihrem Kontext.",
+      ],
     },
     "lektion-3-halluzinationen": {
       question:
         "Du bittest ein KI-Modell, eine wissenschaftliche Quelle zu nennen, die deine These belegt. Das Modell nennt eine Studie mit Autor, Zeitschrift und Jahr. Was solltest du tun?",
-      answer:
-        "Prüfe die Quelle, bevor du sie verwendest. KI-Modelle können Quellen erfinden oder Angaben vermischen. Suche die Studie in einer Literaturdatenbank oder über eine Websuche. Wenn du sie nicht findest, gehe davon aus, dass sie nicht existiert.",
+      criteria: [
+        "Prüft die Studie unabhängig in einer Literaturdatenbank oder Primärquelle.",
+        "Verwendet die Angabe nicht, wenn sich die Studie nicht verifizieren lässt.",
+      ],
     },
     "lektion-4-grenzen": {
       question:
         "Du verwendest ein KI-Modell, um aktuelle Informationen zu einem Gesetz zu erhalten. Welche Grenze ist hier besonders relevant?",
-      answer:
-        "Die Aktualität und Herkunft der verwendeten Informationen. Ein System kann nur aus seinem Modellstand antworten oder zusätzlich Suche und andere Werkzeuge verwenden. Prüfe, welche Quellen tatsächlich genutzt wurden, öffne aktuelle amtliche Fassungen und beziehe für die konkrete Rechtsfrage eine qualifizierte Fachperson ein.",
+      criteria: [
+        "Prüft Aktualität, Herkunft und tatsächlich genutzte Werkzeuge gegen den amtlichen Text.",
+        "Zieht für die konkrete Rechtsfrage eine qualifizierte Fachperson hinzu.",
+      ],
     },
   },
   en: {
     "lektion-1-vorhersage": {
       question:
         "How can a language model answer a question correctly without actually 'knowing' the answer?",
-      answer:
-        "The model parameters encode relationships learned during training, and the prompt supplies relevant context. A correct continuation can result without the generation process verifying the claim against an authoritative fact database. Sources and tool results still require separate review.",
+      criteria: [
+        "Names learned patterns and prompt context as the basis of the continuation.",
+        "Separates a plausible continuation from verification against an authoritative source.",
+      ],
     },
     "lektion-2-trainingsdaten": {
       question:
         "An AI model automatically uses female pronouns in a text about nursing. Is that necessarily a programming error?",
-      answer:
-        "Not necessarily. The association may come from training data, but selection, labels, training objectives, or system instructions can also influence it. Assessing the cause and effect requires several controlled tests with the actual model version.",
+      criteria: [
+        "Treats training data as one possible cause, not the only cause.",
+        "Calls for controlled tests with the actual model version and context.",
+      ],
     },
     "lektion-3-halluzinationen": {
       question:
         "You ask an AI model for a scientific source supporting your claim. It names a study, author, journal, and year. What should you do?",
-      answer:
-        "Check the source before using it. AI models can invent sources or combine details from different works. Search for the study in a literature database or through a web search. If you cannot find it, assume it does not exist.",
+      criteria: [
+        "Checks the study independently in a literature database or primary source.",
+        "Does not use the citation when the study cannot be verified.",
+      ],
     },
     "lektion-4-grenzen": {
       question:
         "You use an AI model to obtain current information about a law. Which limit is especially relevant?",
-      answer:
-        "The currency and origin of the information. A system may answer from its model state or use search and other tools. Check which sources were actually used, open the current official text, and involve a qualified professional for the specific legal question.",
+      criteria: [
+        "Checks currency, origin, and actual tool use against the current official text.",
+        "Involves a qualified professional for the specific legal question.",
+      ],
     },
   },
 };

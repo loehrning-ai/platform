@@ -34,6 +34,19 @@ describe("ThresholdSim ", () => {
     expect(first).toBe(second);
   });
 
+  it("canonicalizes seeded SVG coordinates for server/client hydration", () => {
+    const { container } = render(<ThresholdSim />);
+    const firstPlot = container.querySelector(".plot-wrap svg");
+    expect(firstPlot).not.toBeNull();
+    const dots = firstPlot!.querySelectorAll("circle");
+
+    expect(dots).toHaveLength(160);
+    for (const dot of dots) {
+      expect(dot.getAttribute("cx")).toMatch(/^\d+(?:\.\d{1,8})?$/);
+      expect(dot.getAttribute("cy")).toMatch(/^\d+(?:\.\d{1,8})?$/);
+    }
+  });
+
   it("dragging the threshold slider updates the displayed tau and stats", () => {
     render(<ThresholdSim />);
     const slider = screen.getByLabelText("Decision threshold");
