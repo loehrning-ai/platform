@@ -59,6 +59,10 @@ const RUN_WEBKIT = process.env.RUN_WEBKIT === "1";
 // Live auth is excluded from the default project graph. Only the explicit,
 // fail-closed `test:e2e:authenticated-live(:built)` command sets this flag.
 const RUN_LIVE_AUTH = process.env.E2E_AUTH_LIVE === "1";
+const DESKTOP_CHROMIUM_ISOLATED_SPECS = [
+  /route-ai-native-operator\.spec\.ts$/,
+  /route-claude-responsive\.spec\.ts$/,
+] as const;
 const STORAGE_STATE = RUN_LIVE_AUTH
   ? validateLiveAuthStorageStatePath(
       process.env.E2E_AUTH_STORAGE_STATE,
@@ -265,7 +269,23 @@ export default defineConfig({
     // No auth dependency, so these carry the whole public suite.
     {
       name: "chromium",
-      testIgnore: /\.authed\.spec\.ts$/,
+      // These two exhaustive route matrices each get a fresh browser process
+      // below. Running both after sustained route walking in one worker
+      // reproduced a Chromium renderer deadlock on two protected CI runs.
+      testIgnore: [
+        /\.authed\.spec\.ts$/,
+        ...DESKTOP_CHROMIUM_ISOLATED_SPECS,
+      ],
+      use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      name: "chromium-ai-native-operator",
+      testMatch: DESKTOP_CHROMIUM_ISOLATED_SPECS[0],
+      use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      name: "chromium-claude-responsive",
+      testMatch: DESKTOP_CHROMIUM_ISOLATED_SPECS[1],
       use: { ...devices["Desktop Chrome"] },
     },
     {

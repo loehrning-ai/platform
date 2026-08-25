@@ -489,7 +489,9 @@ for (const width of VIEWPORT_WIDTHS) {
       page,
     }, testInfo) => {
       test.skip(
-        testInfo.project.name !== "chromium",
+        !["chromium", "chromium-claude-responsive"].includes(
+          testInfo.project.name,
+        ),
         "The explicit five-width matrix runs once in Chromium.",
       );
       test.setTimeout(300_000);
@@ -519,11 +521,13 @@ for (const width of VIEWPORT_WIDTHS) {
           });
           expect(response?.status(), `${width}px ${route}`).toBe(200);
           await expect(page).not.toHaveURL(/\/login(?:\?|$)/);
-          await settleFullPage(page);
           if (routeSet.lessons.includes(route)) {
             await openLessonReference(page);
-            await settleFullPage(page);
           }
+          // The expanded reference is the denser lesson state. Walk it once;
+          // a preliminary walk of the collapsed page doubles scroll work
+          // without checking any additional geometry.
+          await settleFullPage(page);
           await expect(page.locator("html"), route).toHaveAttribute(
             "lang",
             localeCase.locale,
@@ -747,7 +751,9 @@ test.describe("Claude locale continuity and record surfaces", () => {
     page,
   }, testInfo) => {
     test.skip(
-      testInfo.project.name !== "chromium",
+      !["chromium", "chromium-claude-responsive"].includes(
+        testInfo.project.name,
+      ),
       "The explicit zoom audit runs once in Chromium.",
     );
     test.setTimeout(240_000);

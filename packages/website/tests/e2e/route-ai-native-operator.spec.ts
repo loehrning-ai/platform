@@ -366,7 +366,9 @@ for (const width of VIEWPORT_WIDTHS) {
       page,
     }, testInfo) => {
       test.skip(
-        testInfo.project.name !== "chromium",
+        !["chromium", "chromium-ai-native-operator"].includes(
+          testInfo.project.name,
+        ),
         "The explicit bilingual five-width matrix runs once in Chromium.",
       );
       test.setTimeout(600_000);

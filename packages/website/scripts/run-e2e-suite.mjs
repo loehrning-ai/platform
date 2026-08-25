@@ -221,6 +221,24 @@ function publicSteps() {
       ],
     },
     {
+      label: "chromium-ai-native-operator",
+      arguments: [
+        "test",
+        "--project=chromium-ai-native-operator",
+        "--retries=0",
+        "--trace=retain-on-failure",
+      ],
+    },
+    {
+      label: "chromium-claude-responsive",
+      arguments: [
+        "test",
+        "--project=chromium-claude-responsive",
+        "--retries=0",
+        "--trace=retain-on-failure",
+      ],
+    },
+    {
       label: "mobile-chromium",
       arguments: [
         "test",
