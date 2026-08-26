@@ -155,9 +155,13 @@ const DEFAULT_SCENARIOS: readonly RedactionScenario[] = [
         text: "kunde-alpha@example.invalid",
         sensitive: "Kunden-E-Mail (personenbezogen)",
       },
-      { text: " betrag=128,40 EUR\n[2026-05-14 14:22] fehler: ZAHLUNG_ABGELEHNT (Versuch 3 von 3)\nlieferschein=" },
+      {
+        text: " betrag=128,40 EUR\n[2026-05-14 14:22] fehler: ZAHLUNG_ABGELEHNT (Versuch 3 von 3)\nlieferschein=",
+      },
       { text: "LS-2026-04881" },
-      { text: "\n\nWarum schlägt die Zahlung fehl und was soll die Wiederholung tun?" },
+      {
+        text: "\n\nWarum schlägt die Zahlung fehl und was soll die Wiederholung tun?",
+      },
     ],
   },
   {
@@ -167,9 +171,13 @@ const DEFAULT_SCENARIOS: readonly RedactionScenario[] = [
       "Diese Beschwerde-Mail soll von der KI zusammengefasst werden. Achtung: hier stecken die sensiblen Stellen zwischen harmlosen. Markiere nur, was wirklich geschützt gehört.",
     segments: [
       { text: "Fasse diese Kundenbeschwerde in zwei Sätzen zusammen:\n\n" },
-      { text: "Sehr geehrte Damen und Herren, ich beziehe mich auf Bestellung " },
+      {
+        text: "Sehr geehrte Damen und Herren, ich beziehe mich auf Bestellung ",
+      },
       { text: "BST-99214" },
-      { text: " der ausdrücklich fiktiven Fiktivwerk Beispiel GmbH. Die Lieferung kam beschädigt an. Bitte erstatten Sie den Betrag auf mein Konto " },
+      {
+        text: " der ausdrücklich fiktiven Fiktivwerk Beispiel GmbH. Die Lieferung kam beschädigt an. Bitte erstatten Sie den Betrag auf mein Konto ",
+      },
       {
         text: "DE00 0000 0000 0000 0000 00 (DUMMY)",
         sensitive: "IBAN (Bankverbindung)",
@@ -219,9 +227,7 @@ export function RedactionDrillWidget({
 
   const sensitiveIdxs = useMemo(
     () =>
-      sc.segments
-        .map((s, i) => (s.sensitive ? i : -1))
-        .filter((i) => i >= 0),
+      sc.segments.map((s, i) => (s.sensitive ? i : -1)).filter((i) => i >= 0),
     [sc],
   );
   const caught = sensitiveIdxs.filter((i) => scRedacted.has(i)).length;
@@ -265,9 +271,7 @@ export function RedactionDrillWidget({
           .map((seg, i) => (seg.sensitive ? i : -1))
           .filter((i) => i >= 0);
         const c = sens.filter((i) => r.has(i)).length;
-        const m = Array.from(r).filter(
-          (i) => !s.segments[i]?.sensitive,
-        ).length;
+        const m = Array.from(r).filter((i) => !s.segments[i]?.sensitive).length;
         return c === sens.length && m === 0 && next.has(s.id);
       });
       if (everyOk) complete();
@@ -289,7 +293,6 @@ export function RedactionDrillWidget({
       title={title}
       scenario={scenario}
       done={done}
-      xpLabel="+20 XP"
     >
       {/* Scenario tabs */}
       <div
@@ -319,15 +322,13 @@ export function RedactionDrillWidget({
               aria-pressed={isActive}
               onClick={() => setActive(i)}
               className={cn(
-                "inline-flex items-center gap-1.5 border-2 px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.12em] transition-colors",
+                "inline-flex min-h-11 items-center gap-1.5 border-2 px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.12em] transition-colors",
                 isActive
                   ? "border-brand-orange bg-brand-orange/10 text-foreground"
                   : "border-border bg-background text-muted-foreground hover:border-brand-orange/60",
               )}
             >
-              {sDone && (
-                <CheckCircle2 size={12} className="text-risk-green" />
-              )}
+              {sDone && <CheckCircle2 size={12} className="text-risk-green" />}
               {chrome.scenarioWord} {i + 1}
             </button>
           );
@@ -372,7 +373,7 @@ export function RedactionDrillWidget({
                 aria-pressed={true}
                 aria-label={`${chrome.redactedAriaPrefix} ${seg.sensitive ?? "harmlos"} ${chrome.redactedAriaSuffix}`}
                 className={cn(
-                  "mx-0.5 inline-block px-2 align-baseline font-mono text-[12px] font-bold uppercase tracking-[0.05em] text-white",
+                  "mx-0.5 inline-flex min-h-11 min-w-11 items-center justify-center px-2 align-baseline font-mono text-[12px] font-bold uppercase tracking-[0.05em] text-white",
                   isMistake
                     ? "bg-brand-amber"
                     : submitted
@@ -396,7 +397,7 @@ export function RedactionDrillWidget({
               aria-pressed={false}
               aria-label={`${chrome.riskyAriaPrefix} ${seg.sensitive} ${chrome.riskyAriaSuffix}`}
               className={cn(
-                "mx-0.5 inline align-baseline border-b-2 px-1 font-mono text-[13px] transition-colors",
+                "mx-0.5 inline-flex min-h-11 min-w-11 items-center justify-center align-baseline border-b-2 px-1 font-mono text-[13px] transition-colors",
                 isMissed
                   ? "border-destructive bg-destructive/15 font-semibold text-foreground"
                   : "border-dashed border-brand-amber bg-brand-amber/20 text-foreground hover:bg-brand-amber/35",
@@ -420,7 +421,7 @@ export function RedactionDrillWidget({
         <span className="inline-flex items-center gap-1.5">
           <span
             aria-hidden="true"
-            className="inline-block bg-foreground px-1.5 font-mono text-[8px] font-bold uppercase text-white"
+            className="inline-block bg-foreground px-1.5 font-mono text-xs font-bold uppercase text-white"
           >
             {chrome.legendRedactedChip}
           </span>
@@ -489,7 +490,7 @@ export function RedactionDrillWidget({
 
       {/* Actions */}
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-        <span className="font-mono text-[11px] tracking-[0.1em] text-muted-foreground">
+        <span className="font-mono text-xs tracking-[0.1em] text-muted-foreground">
           {allScenariosClean
             ? chrome.allScenariosCleanLabel
             : `${chrome.scenarioWord} ${active + 1} ${chrome.scenarioOfWord} ${scenarios.length}`}
@@ -498,7 +499,7 @@ export function RedactionDrillWidget({
           <button
             type="button"
             onClick={submit}
-            className="inline-flex items-center gap-1.5 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
+            className="inline-flex min-h-11 items-center gap-1.5 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
           >
             {chrome.submitLabel}
           </button>
@@ -506,7 +507,7 @@ export function RedactionDrillWidget({
           <div className="flex items-center gap-3">
             <span
               className={cn(
-                "inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em]",
+                "inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-[0.14em]",
                 allClean ? "text-risk-green" : "text-destructive",
               )}
             >
@@ -516,7 +517,7 @@ export function RedactionDrillWidget({
             <button
               type="button"
               onClick={reset}
-              className="border-2 border-foreground bg-background px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-foreground shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
+              className="min-h-11 border-2 border-foreground bg-background px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-foreground shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
             >
               {chrome.resetLabel}
             </button>

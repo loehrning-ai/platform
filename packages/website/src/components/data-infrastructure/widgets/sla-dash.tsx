@@ -224,9 +224,14 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
     return timerRef.current != null;
   }, [locale]);
 
-  const { wake } = useAutoSizedCanvasRAF(canvasRef, wrapRef, draw, {
-    minHeight: 420,
-  });
+  const { wake, isReducedMotion } = useAutoSizedCanvasRAF(
+    canvasRef,
+    wrapRef,
+    draw,
+    {
+      minHeight: 420,
+    },
+  );
   wakeRef.current = wake;
 
   const tick = useCallback(() => {
@@ -314,16 +319,23 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
 
   const start = useCallback(
     (withIncident: boolean) => {
+      if (timerRef.current) clearInterval(timerRef.current);
+      timerRef.current = null;
       incidentRef.current = withIncident;
       tRef.current = 0;
       feedSeqRef.current = 0;
       seriesRef.current = { fresh: [], vol: [], null: [], lag: [] };
       setFeed([]);
-      if (timerRef.current) clearInterval(timerRef.current);
+
+      if (isReducedMotion()) {
+        for (let minute = 0; minute <= 60; minute += 1) tick();
+        return;
+      }
+
       timerRef.current = setInterval(tick, 200);
       wakeRef.current();
     },
-    [tick],
+    [isReducedMotion, tick],
   );
 
   const pause = useCallback(() => {
@@ -336,12 +348,13 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
   useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
+      timerRef.current = null;
     };
   }, []);
 
   return (
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-3 sm:p-5 md:p-6">
-      <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {locale === "de"
           ? "Modell · Pipeline-Beobachtbarkeit · Betriebsübersicht"
           : "Model · Pipeline observability · operations view"}{" "}
@@ -373,7 +386,7 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
       )}
 
       <div
-        className="mt-3 max-h-[120px] overflow-y-auto font-mono text-[11px]"
+        className="mt-3 max-h-[120px] overflow-y-auto font-mono text-xs"
         aria-live="polite"
       >
         {feed.map((entry) => (
@@ -395,25 +408,25 @@ export function SLAdash({ lessonId, cpId }: SlaDashProps): JSX.Element {
         <button
           type="button"
           onClick={() => start(false)}
-          className="border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wide text-white"
+          className="min-h-11 border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wide text-white"
         >
           {locale === "de" ? "1 Stunde abspielen" : "▶ play 1 hour"}
         </button>
         <button
           type="button"
           onClick={() => start(true)}
-          className="border-2 border-border px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
+          className="min-h-11 border-2 border-border px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
         >
           {locale === "de" ? "Störung auslösen" : "⚠ inject incident"}
         </button>
         <button
           type="button"
           onClick={pause}
-          className="border-2 border-border px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
+          className="min-h-11 border-2 border-border px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
         >
           {locale === "de" ? "Pausieren" : "⏸ pause"}
         </button>
-        <span className="ml-auto font-mono text-[11px] text-muted-foreground">
+        <span className="ml-auto font-mono text-xs text-muted-foreground">
           t = <b className="text-foreground">{clock}</b> ·{" "}
           {locale === "de" ? "Status" : "status"}{" "}
           <b

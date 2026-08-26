@@ -10,7 +10,7 @@ const require = createRequire(import.meta.url);
 const playwrightCli = require.resolve("@playwright/test/cli");
 const packageRoot = fileURLToPath(new URL("../..", import.meta.url));
 
-function listWith(environment) {
+function listWith(environment, project = "chromium") {
   const childEnvironment = minimalVerificationEnvironment(process.env);
   // These tests define their own execution tier. Do not let an outer CI runner
   // silently turn the explicit development case into a production-strict run.
@@ -20,7 +20,7 @@ function listWith(environment) {
 
   return spawnSync(
     process.execPath,
-    [playwrightCli, "test", "--list", "--project=chromium"],
+    [playwrightCli, "test", "--list", `--project=${project}`],
     {
       cwd: packageRoot,
       encoding: "utf8",
@@ -32,6 +32,40 @@ function listWith(environment) {
     },
   );
 }
+
+test("manual visual capture is isolated from every mandatory public project", () => {
+  const ordinaryVisualProject = listWith({}, "chromium-visual-qa");
+  assert.notEqual(ordinaryVisualProject.status, 0);
+  assert.match(
+    `${ordinaryVisualProject.stdout}\n${ordinaryVisualProject.stderr}`,
+    /Project\(s\) "chromium-visual-qa" not found/,
+  );
+
+  const optedInVisualProject = listWith(
+    { PLAYWRIGHT_CAPTURE_VISUALS: "1" },
+    "chromium-visual-qa",
+  );
+  assert.equal(optedInVisualProject.status, 0, optedInVisualProject.stderr);
+  assert.equal(
+    optedInVisualProject.stdout.match(/qa-visuals\.spec\.ts/g)?.length,
+    25,
+  );
+
+  for (const project of [
+    "chromium",
+    "chromium-ai-native-operator",
+    "chromium-claude-responsive",
+    "mobile-chromium",
+    "mobile-webkit",
+  ]) {
+    const ordinary = listWith({}, project);
+    const optedIn = listWith({ PLAYWRIGHT_CAPTURE_VISUALS: "1" }, project);
+    assert.equal(ordinary.status, 0, ordinary.stderr);
+    assert.equal(optedIn.status, 0, optedIn.stderr);
+    assert.equal(optedIn.stdout, ordinary.stdout);
+    assert.doesNotMatch(optedIn.stdout, /qa-visuals\.spec\.ts/);
+  }
+});
 
 test("production verification rejects reuse of an arbitrary existing server", () => {
   const result = listWith({

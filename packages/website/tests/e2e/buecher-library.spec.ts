@@ -21,7 +21,7 @@ import { isKnownBenignConsoleNoise } from "./fixtures/console-noise";
 
 const ROUTE = "/buecher";
 const BOOK_OVERVIEW_LINK_NAME =
-  /^(?:Buch und Kapitel öffnen|Open book and chapters)$/i;
+  /^(?:Buch und Kapitel öffnen|Open book and chapters): .+$/i;
 
 // Exact catalog metadata as rendered by src/lib/books.ts. `·` is U+00B7 and
 // the umlauts are literal, matching the DOM text (CSS uppercase is visual only).
@@ -50,7 +50,9 @@ function collectConsoleErrors(page: Page): string[] {
 }
 
 function meaningfulErrors(errors: string[], browserName: string): string[] {
-  return errors.filter((error) => !isKnownBenignConsoleNoise(error, browserName));
+  return errors.filter(
+    (error) => !isKnownBenignConsoleNoise(error, browserName),
+  );
 }
 
 // Scope to one card via its testid + the unique book heading it contains.

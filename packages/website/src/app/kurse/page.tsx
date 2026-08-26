@@ -2,13 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { JsonLd, SITE_URL } from "@/lib/seo/json-ld";
 import { createCoursesGraph } from "@/lib/seo/course-discovery";
-import { Card } from "@/components/ui/card";
-import { BrandButton } from "@/components/ui/brand-button";
 import { COURSE_HUB_COPY } from "@/lib/courses/course-hub-copy";
 import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
-import { CourseGallery } from "./course-gallery";
-import { PersonaCourseLinks } from "./persona-filter";
+import { LearningAtlas } from "./learning-atlas";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -55,64 +52,72 @@ export default async function KursePage() {
   return (
     <>
       <JsonLd data={createCoursesGraph(locale)} id="kurse-hub-jsonld" />
-      <div className="mx-auto max-w-[1180px] px-4 pb-24 pt-10 sm:px-6 sm:pt-14">
-        <h1 className="max-w-[980px] text-[38px] font-bold leading-[0.96] tracking-[-0.04em] text-foreground sm:text-[52px] md:text-[68px]">
-          {copy.headingLead}
-          <br />
-          <span className="text-brand-orange">{copy.headingAccent}</span>
-        </h1>
+      <div className="mx-auto max-w-[1180px] px-4 pb-12 pt-8 sm:px-6 sm:pt-10">
+        <header className="grid gap-4 border-b border-border pb-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.65fr)] lg:items-end">
+          <h1 className="max-w-[820px] text-[38px] font-bold leading-[0.98] tracking-[-0.04em] text-foreground sm:text-[48px] md:text-[56px]">
+            {copy.headingLead}
+            <br />
+            <span className="text-brand-orange">{copy.headingAccent}</span>
+          </h1>
 
-        <p className="mt-5 max-w-[700px] text-[16px] leading-[1.5] text-muted-foreground sm:text-[18px]">
-          {copy.intro}
-        </p>
+          <p className="text-sm text-muted-foreground">
+            <span className="font-semibold text-foreground">
+              {copy.firstStep}
+            </span>{" "}
+            <Link
+              href={localizeHref("/ki-check", locale)}
+              className="inline-flex min-h-11 items-center font-semibold text-brand-orange underline decoration-brand-orange/40 underline-offset-4 transition-colors duration-150 hover:text-foreground focus-visible:text-foreground motion-reduce:transition-none"
+            >
+              {copy.checkLabel}
+            </Link>
+          </p>
+        </header>
 
-        <p className="mt-5 text-[13px] text-muted-foreground">
-          <span className="font-semibold text-foreground">{copy.firstStep}</span>{" "}
-          <Link
-            href={localizeHref("/ki-check", locale)}
-            className="font-semibold text-brand-orange underline decoration-brand-orange/40 underline-offset-4 transition-colors hover:text-foreground focus-visible:text-foreground"
-          >
-            {copy.checkLabel}
-          </Link>
-        </p>
-
-        <PersonaCourseLinks locale={locale} />
-
-        <section className="mt-8" data-learning-gallery>
-          <CourseGallery locale={locale} />
+        <section className="mt-6" data-learning-gallery>
+          <LearningAtlas locale={locale} />
         </section>
 
-        <section className="mt-20">
-          <Card accent="kupfer" className="bg-kupfer-mist p-8 sm:p-10">
-            <div className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-              {copy.accessKicker}
-            </div>
-            <h2 className="mt-3 max-w-[760px] text-[24px] font-bold tracking-[-0.02em] text-foreground sm:text-[30px]">
-              {copy.accessHeading}
-            </h2>
-            <p className="mt-5 max-w-[720px] text-[16px] leading-[1.6] text-muted-foreground">
-              {copy.accessBody}
-            </p>
-            <div className="mt-7 flex flex-wrap items-center gap-4">
-              <BrandButton
-                href={localizeHref("/ueber-die-plattform", locale)}
-                variant="outline"
-                size="md"
+        <aside className="mt-10 border border-border border-t-[3px] border-t-brand-orange bg-kupfer-mist">
+          <details className="group">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 text-left marker:content-none sm:px-5 [&::-webkit-details-marker]:hidden">
+              <span>
+                <span className="block font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+                  {copy.accessKicker}
+                </span>
+                <span className="mt-1 block text-lg font-bold tracking-[-0.02em] text-foreground">
+                  {copy.accessHeading}
+                </span>
+              </span>
+              <span
+                aria-hidden="true"
+                className="font-mono text-lg transition-transform duration-150 group-open:rotate-45 motion-reduce:transition-none"
               >
-                {copy.aboutPlatform}
-                <span aria-hidden="true">→</span>
-              </BrandButton>
-              <BrandButton
-                href={localizeHref("/ki-check", locale)}
-                variant="outline"
-                size="md"
-              >
-                {copy.aiCheck}
-                <span aria-hidden="true">→</span>
-              </BrandButton>
+                +
+              </span>
+            </summary>
+            <div className="border-t border-border px-4 py-4 sm:px-5">
+              <p className="max-w-[72ch] text-sm leading-relaxed text-muted-foreground">
+                {copy.accessBody}
+              </p>
+              <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
+                <Link
+                  href={localizeHref("/ueber-die-plattform", locale)}
+                  className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
+                >
+                  {copy.aboutPlatform}
+                  <span aria-hidden="true">→</span>
+                </Link>
+                <Link
+                  href={localizeHref("/ki-check", locale)}
+                  className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
+                >
+                  {copy.aiCheck}
+                  <span aria-hidden="true">→</span>
+                </Link>
+              </div>
             </div>
-          </Card>
-        </section>
+          </details>
+        </aside>
       </div>
     </>
   );

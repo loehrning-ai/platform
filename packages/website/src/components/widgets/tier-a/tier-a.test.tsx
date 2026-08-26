@@ -1,11 +1,4 @@
-import {
-  describe,
-  it,
-  expect,
-  beforeAll,
-  beforeEach,
-  afterEach,
-} from "vitest";
+import { describe, it, expect, beforeAll, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 
 function installLocalStoragePolyfill(): void {
@@ -109,7 +102,7 @@ describe("QuizWidget", () => {
     expect(screen.getAllByRole("radio")).toHaveLength(3);
   });
 
-  it("awards the checkpoint XP once on a correct answer", () => {
+  it("records the checkpoint once on a correct answer", () => {
     render(<QuizWidget {...base} />);
     fireEvent.click(screen.getByText("Mit Akzeptanzkriterien"));
     expect(isCheckpointDone("l1", "quiz1")).toBe(true);
@@ -118,7 +111,7 @@ describe("QuizWidget", () => {
     expect(getXp()).toBe(XP.CHECKPOINT);
   });
 
-  it("does not award XP for a wrong answer", () => {
+  it("does not change the progress ledger for a wrong answer", () => {
     render(<QuizWidget {...base} />);
     fireEvent.click(screen.getByText("Vage"));
     expect(isCheckpointDone("l1", "quiz1")).toBe(false);
@@ -182,9 +175,8 @@ describe("FlashcardsWidget", () => {
     render(<FlashcardsWidget lessonId="l1" cpId="fc1" cards={cards} />);
     expect(isCheckpointDone("l1", "fc1")).toBe(false);
     // Keydown listener is on the deck container (button's grandparent).
-    const deck =
-      screen.getByRole("button", { name: /Karte 1 von 2/ }).parentElement!
-        .parentElement!;
+    const deck = screen.getByRole("button", { name: /Karte 1 von 2/ })
+      .parentElement!.parentElement!;
     fireEvent.keyDown(deck, { key: "ArrowRight" });
     expect(screen.getByText(matchCount("2 / 2"))).toBeInTheDocument();
     expect(isCheckpointDone("l1", "fc1")).toBe(true);
@@ -218,7 +210,8 @@ describe("FlashcardsWidget", () => {
           prevLabel: "← Prev",
           nextLabel: "Next →",
           emptyLabel: "No cards available.",
-          ariaLabelTemplate: "Card {current} of {total}. Press Space or click to flip.",
+          ariaLabelTemplate:
+            "Card {current} of {total}. Press Space or click to flip.",
         }}
       />,
     );
@@ -227,7 +220,9 @@ describe("FlashcardsWidget", () => {
     expect(screen.getByText("← Prev")).toBeInTheDocument();
     expect(screen.getByText("Next →")).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /Card 1 of 2\. Press Space or click to flip\./ }),
+      screen.getByRole("button", {
+        name: /Card 1 of 2\. Press Space or click to flip\./,
+      }),
     ).toBeInTheDocument();
     expect(screen.queryByText("Karten")).not.toBeInTheDocument();
     expect(screen.queryByText(/Klick zum Aufdecken/)).not.toBeInTheDocument();
@@ -266,19 +261,16 @@ describe("CompareWidget", () => {
 
   it("uses custom column labels", () => {
     render(
-      <CompareWidget
-        bad="A"
-        good="B"
-        badLabel="Vorher"
-        goodLabel="Nachher"
-      />,
+      <CompareWidget bad="A" good="B" badLabel="Vorher" goodLabel="Nachher" />,
     );
     expect(screen.getByText("Vorher")).toBeInTheDocument();
     expect(screen.getByText("Nachher")).toBeInTheDocument();
   });
 
   it("supports an English kindLabel override without touching the German default ", () => {
-    const { container } = render(<CompareWidget bad="A" good="B" kindLabel="Compare" />);
+    const { container } = render(
+      <CompareWidget bad="A" good="B" kindLabel="Compare" />,
+    );
     expect(container.textContent).toContain("Compare");
     expect(container.textContent).not.toContain("Vergleich");
   });
@@ -340,7 +332,11 @@ describe("TaskSpecWidget", () => {
 
 describe("SelfRateWidget", () => {
   const axes = [
-    { id: "freq", label: "Wie oft nutzt du KI?", anchors: ["Nie", "Manchmal", "Täglich"] },
+    {
+      id: "freq",
+      label: "Wie oft nutzt du KI?",
+      anchors: ["Nie", "Manchmal", "Täglich"],
+    },
     { id: "depth", label: "Wie tief?", anchors: ["Oberfläche", "Workflows"] },
   ];
 
@@ -373,7 +369,9 @@ describe("SelfRateWidget", () => {
   it("moves and selects with Arrow/Home/End while keeping one Tab stop", () => {
     render(<SelfRateWidget lessonId="l1" cpId="sr1" axes={axes} />);
     const firstGroup = screen.getAllByRole("radiogroup")[0];
-    const radios = Array.from(firstGroup.querySelectorAll<HTMLElement>('[role="radio"]'));
+    const radios = Array.from(
+      firstGroup.querySelectorAll<HTMLElement>('[role="radio"]'),
+    );
 
     expect(radios.map((radio) => radio.tabIndex)).toEqual([0, -1, -1]);
     radios[0].focus();
@@ -400,7 +398,7 @@ describe("PlaysWidget", () => {
     expect(screen.getByText(/0 \/ 1 gewählt/)).toBeInTheDocument();
   });
 
-  it("locks the commitment + awards XP when minPick reached", () => {
+  it("locks the commitment and records completion when minPick is reached", () => {
     render(
       <PlaysWidget lessonId="l1" cpId="p1" options={options} minPick={2} />,
     );

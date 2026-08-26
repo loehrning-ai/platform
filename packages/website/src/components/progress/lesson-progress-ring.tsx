@@ -14,7 +14,8 @@
 import { useEffect, useState, type JSX } from "react";
 import { useReducedMotion } from "framer-motion";
 import { subscribe } from "@/lib/progress/store";
-import { getReadSectionIds, isLessonCompleted } from "@/lib/progress/store";
+import { getReadSectionIds } from "@/lib/progress/store";
+import { isEvidenceBackedLessonCompleted } from "@/lib/progress/completion-evidence";
 import type { CourseSlug } from "@/lib/course/types";
 import { cn } from "@/lib/utils";
 import type { Locale } from "@/lib/i18n/locale";
@@ -47,7 +48,7 @@ export function LessonProgressRing({
     // change (local writes + cross-tab via the storage listener).
     const unsubscribe = subscribe(() => {
       setSectionsRead(getReadSectionIds(courseSlug, lessonId).size);
-      setCompleted(isLessonCompleted(courseSlug, lessonId));
+      setCompleted(isEvidenceBackedLessonCompleted(courseSlug, lessonId));
     });
     return unsubscribe;
   }, [courseSlug, lessonId]);
@@ -60,17 +61,20 @@ export function LessonProgressRing({
       ? 0
       : Math.min(1, Math.max(0, sectionsRead / totalSections));
   const offset = c * (1 - fraction);
-  const isDone = completed || fraction >= 1;
+  const isDone = completed;
 
   return (
     <div
-      className={cn("relative inline-flex items-center justify-center", className)}
+      className={cn(
+        "relative inline-flex items-center justify-center",
+        className,
+      )}
       role="img"
       aria-label={
         mounted
           ? locale === "en"
-            ? `${sectionsRead} of ${totalSections} sections read`
-            : `${sectionsRead} von ${totalSections} Abschnitten gelesen`
+            ? `${sectionsRead} of ${totalSections} sections reviewed`
+            : `${sectionsRead} von ${totalSections} Abschnitten geprüft`
           : locale === "en"
             ? `${totalSections} sections`
             : `${totalSections} Abschnitte`
@@ -90,7 +94,9 @@ export function LessonProgressRing({
           cy={size / 2}
           r={r}
           fill="none"
-          stroke={isDone ? "var(--color-risk-green)" : "var(--color-brand-orange)"}
+          stroke={
+            isDone ? "var(--color-risk-green)" : "var(--color-brand-orange)"
+          }
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={c}
@@ -109,11 +115,15 @@ export function LessonProgressRing({
       <span
         aria-hidden="true"
         className={cn(
-          "absolute font-mono text-[10px] font-bold tracking-[0.06em]",
+          "absolute font-mono text-xs font-bold tracking-[0.06em]",
           isDone ? "text-risk-green" : "text-foreground",
         )}
       >
-        {mounted ? (isDone ? "✓" : `${sectionsRead}/${totalSections}`) : `, /${totalSections}`}
+        {mounted
+          ? isDone
+            ? "✓"
+            : `${sectionsRead}/${totalSections}`
+          : `, /${totalSections}`}
       </span>
     </div>
   );

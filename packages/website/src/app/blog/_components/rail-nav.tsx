@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
+import { notifyUrlStateChanged } from "@/lib/navigation/url-state";
+import { getMotionAwareScrollBehavior } from "@/lib/animation-policy";
 
 export interface RailItem {
   readonly id: string;
@@ -62,8 +64,12 @@ export function RailNav({
       // Account for the fixed site Nav (64px) + sticky railbar (~50px).
       const offset = 120;
       const targetTop = t.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top: targetTop, behavior: "smooth" });
+      window.scrollTo({
+        top: targetTop,
+        behavior: getMotionAwareScrollBehavior(),
+      });
       window.history.replaceState(null, "", `#${id}`);
+      notifyUrlStateChanged();
     };
 
   return (

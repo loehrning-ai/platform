@@ -39,8 +39,7 @@ const IMPRINT_COPY = {
     provider: "Provider",
     email: "Email",
     contact: "Contact",
-    contentResponsibility:
-      "Responsible for content under Section 18(2) MStV",
+    contentResponsibility: "Responsible for content under Section 18(2) MStV",
     fallbackResponsibility: (email: string) =>
       ". Available by email at " + email + ".",
     liability: "Liability notice",
@@ -95,7 +94,7 @@ function ImpressumContent({ locale }: { readonly locale: Locale }) {
   const formattedAddress = formatServiceAddress(address);
 
   return (
-    <section className="py-24" aria-labelledby="imprint-title">
+    <section className="py-12" aria-labelledby="imprint-title">
       <div className="mx-auto max-w-3xl break-words px-6">
         <h1
           id="imprint-title"
@@ -103,9 +102,7 @@ function ImpressumContent({ locale }: { readonly locale: Locale }) {
         >
           {copy.title}
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {copy.legalBasis}
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">{copy.legalBasis}</p>
 
         <div className="mt-12 space-y-8 text-sm leading-relaxed text-muted-foreground">
           <div

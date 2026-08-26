@@ -141,7 +141,7 @@ export function DifferenceInDifferences() {
           >
             <div
               style={{
-                fontSize: 11,
+                fontSize: 12,
                 color: "var(--ink-3)",
                 fontFamily: "'JetBrains Mono',monospace",
               }}
@@ -158,7 +158,7 @@ export function DifferenceInDifferences() {
             >
               {round(DiD, 1)} {text("pts", "Pkt.")}
             </div>
-            <div style={{ fontSize: 10, color: "var(--ink-3)", marginTop: 4 }}>
+            <div style={{ fontSize: 12, color: "var(--ink-3)", marginTop: 4 }}>
               = (T_post − T_pre) − (C_post − C_pre)
             </div>
           </div>
@@ -170,7 +170,7 @@ export function DifferenceInDifferences() {
                 borderRadius: 6,
                 background: "rgba(255,77,162,0.08)",
                 border: "1px solid rgba(255,77,162,0.3)",
-                fontSize: 11,
+                fontSize: 12,
                 color: "var(--magenta-ink)",
               }}
             >

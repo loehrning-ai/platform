@@ -4,7 +4,6 @@ import { useEffect, useState, type JSX } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
-import { getCompletedLessonIds } from "@/lib/course/progress";
 import {
   MODULE_IDS,
   getModuleMeta,
@@ -14,7 +13,7 @@ import {
 import { lessonHref } from "@/lib/ai-native-operator/routes";
 import { canonicalLocalePathname, type Locale } from "@/lib/i18n/locale";
 import { cn } from "@/lib/utils";
-import { subscribe } from "@/lib/progress";
+import { getEvidenceBackedCompletedLessonIds, subscribe } from "@/lib/progress";
 
 export interface AiNativeOperatorLessonNavItem {
   readonly moduleId: ModuleId;
@@ -44,7 +43,9 @@ export function AiNativeOperatorLessonSidebar({
 
   useEffect(() => {
     return subscribe(() => {
-      setCompletedIds(getCompletedLessonIds("ai-native-operator"));
+      setCompletedIds(
+        getEvidenceBackedCompletedLessonIds("ai-native-operator"),
+      );
     });
   }, [pathname]);
 
@@ -59,7 +60,7 @@ export function AiNativeOperatorLessonSidebar({
         if (moduleLessons.length === 0) return null;
         return (
           <div key={moduleId}>
-            <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+            <p className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
               {meta.code} · {meta.name}
             </p>
             <ul className="flex flex-col gap-0.5">
@@ -94,7 +95,7 @@ export function AiNativeOperatorLessonSidebar({
                           aria-hidden="true"
                         />
                       ) : (
-                        <span className="w-[13px] shrink-0 text-center font-mono text-[10px] text-muted-foreground">
+                        <span className="w-[13px] shrink-0 text-center font-mono text-xs text-muted-foreground">
                           {lesson.lessonNumber}
                         </span>
                       )}

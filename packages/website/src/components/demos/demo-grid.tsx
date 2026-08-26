@@ -15,6 +15,7 @@ import {
 } from "@/lib/demos-localization";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
+import { notifyUrlStateChanged } from "@/lib/navigation/url-state";
 import { trackDemoFilter } from "@/lib/analytics";
 import { DemoTile } from "./demo-tile";
 
@@ -35,7 +36,7 @@ export function DemoGrid({
   locale = "de",
   catalog = demos,
 }: DemoGridProps) {
-  const gridRef = useRef<HTMLDivElement | null>(null);
+  const atlasRef = useRef<HTMLDivElement | null>(null);
   const copy = DEMOS_PAGE_COPY[locale].catalog;
   const levelLabels = DEMO_LEVEL_LABELS_BY_LOCALE[locale];
   const categoryLabels = DEMO_CATEGORY_LABELS[locale];
@@ -50,12 +51,13 @@ export function DemoGrid({
   const [industry, setIndustry] = useState<string>(initialFilters.industry);
 
   const filtered = useMemo<readonly Demo[]>(
-    () => catalog.filter((demo) => {
-      if (cat && cat !== "Alle" && demo.category !== cat) return false;
-      if (level && level !== "alle" && demo.level !== level) return false;
-      if (industry && !demo.industries.includes(industry)) return false;
-      return true;
-    }),
+    () =>
+      catalog.filter((demo) => {
+        if (cat && cat !== "Alle" && demo.category !== cat) return false;
+        if (level && level !== "alle" && demo.level !== level) return false;
+        if (industry && !demo.industries.includes(industry)) return false;
+        return true;
+      }),
     [catalog, level, cat, industry],
   );
 
@@ -63,18 +65,26 @@ export function DemoGrid({
     trackDemoFilter(cat, level, industry || "alle");
   }, [cat, level, industry]);
 
-  const syncUrl = useCallback((nextLevel: string, nextCat: string, nextIndustry: string) => {
-    if (typeof window === "undefined") return;
-    const sp = new URLSearchParams();
-    if (nextLevel && nextLevel !== "alle") sp.set("level", nextLevel);
-    if (nextCat && nextCat !== "Alle") sp.set("cat", nextCat);
-    if (nextIndustry) sp.set("industry", nextIndustry);
-    const qs = sp.toString();
-    // History API updates the URL (deep-link / share) without a Next
-    // navigation, so the scroll position is left untouched.
-    const catalogPath = localizeHref("/demos", locale);
-    window.history.replaceState(null, "", qs ? `${catalogPath}?${qs}` : catalogPath);
-  }, [locale]);
+  const syncUrl = useCallback(
+    (nextLevel: string, nextCat: string, nextIndustry: string) => {
+      if (typeof window === "undefined") return;
+      const sp = new URLSearchParams();
+      if (nextLevel && nextLevel !== "alle") sp.set("level", nextLevel);
+      if (nextCat && nextCat !== "Alle") sp.set("cat", nextCat);
+      if (nextIndustry) sp.set("industry", nextIndustry);
+      const qs = sp.toString();
+      // History API updates the URL (deep-link / share) without a Next
+      // navigation, so the scroll position is left untouched.
+      const catalogPath = localizeHref("/demos", locale);
+      window.history.replaceState(
+        null,
+        "",
+        qs ? `${catalogPath}?${qs}` : catalogPath,
+      );
+      notifyUrlStateChanged();
+    },
+    [locale],
+  );
 
   const setParam = useCallback(
     (key: "level" | "cat", value: string, fallback: string) => {
@@ -101,16 +111,18 @@ export function DemoGrid({
   useEffect(() => {
     if (typeof window === "undefined") return;
     const handler = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      )
         return;
-      const grid = gridRef.current;
-      if (!grid) return;
+      const atlas = atlasRef.current;
+      if (!atlas) return;
 
       if (e.key === "/") {
         e.preventDefault();
-        const firstChip = grid.parentElement?.querySelector<HTMLButtonElement>(
-          "[data-filter-chip]",
-        );
+        const firstChip =
+          atlas.querySelector<HTMLButtonElement>("[data-filter-chip]");
         firstChip?.focus();
         return;
       }
@@ -119,7 +131,10 @@ export function DemoGrid({
         return;
       }
       if (e.key === "j" || e.key === "k") {
-        const tiles = Array.from(grid.querySelectorAll<HTMLElement>("[data-demo-tile]"));
+        e.preventDefault();
+        const tiles = Array.from(
+          atlas.querySelectorAll<HTMLElement>("[data-demo-tile]"),
+        );
         if (tiles.length === 0) return;
         const currentIdx = tiles.findIndex((t) => t === document.activeElement);
         const nextIdx =
@@ -134,11 +149,40 @@ export function DemoGrid({
   }, [clearAll]);
 
   return (
-    <div>
-      {/* Filter chips */}
-      <div className="space-y-4 border-y border-foreground/20 bg-card/30 px-3 py-4 sm:px-5 md:px-6">
-        <FilterRow label={copy.level}>
-          <Chip active={level === "alle"} onClick={() => setParam("level", "alle", "alle")}>
+    <div ref={atlasRef}>
+      <div className="space-y-3 border border-border border-t-[3px] border-t-brand-orange bg-card px-3 py-3 sm:px-4">
+        <FilterRow
+          label={copy.level}
+          mobileControl={
+            <select
+              data-filter-select="level"
+              aria-label={copy.level}
+              value={level}
+              onChange={(event) =>
+                setParam("level", event.currentTarget.value, "alle")
+              }
+              className="min-h-11 w-full border border-border bg-background px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+            >
+              <option value="alle">
+                {copy.all} ({catalog.length})
+              </option>
+              {DEMO_LEVELS.map((item) => {
+                const count = catalog.filter(
+                  (demo) => demo.level === item,
+                ).length;
+                return (
+                  <option key={item} value={item}>
+                    {levelLabels[item]} ({count})
+                  </option>
+                );
+              })}
+            </select>
+          }
+        >
+          <Chip
+            active={level === "alle"}
+            onClick={() => setParam("level", "alle", "alle")}
+          >
             {copy.all} ({catalog.length})
           </Chip>
           {DEMO_LEVELS.map((l) => {
@@ -155,8 +199,37 @@ export function DemoGrid({
           })}
         </FilterRow>
 
-        <FilterRow label={copy.category}>
-          <Chip active={cat === "Alle"} onClick={() => setParam("cat", "Alle", "Alle")}>
+        <FilterRow
+          label={copy.category}
+          mobileControl={
+            <select
+              data-filter-select="category"
+              aria-label={copy.category}
+              value={cat}
+              onChange={(event) =>
+                setParam("cat", event.currentTarget.value, "Alle")
+              }
+              className="min-h-11 w-full border border-border bg-background px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+            >
+              <option value="Alle">{copy.all}</option>
+              {DEMO_CATEGORIES.map((item) => {
+                const count = catalog.filter(
+                  (demo) => demo.category === item,
+                ).length;
+                if (count === 0) return null;
+                return (
+                  <option key={item} value={item}>
+                    {categoryLabels[item]} ({count})
+                  </option>
+                );
+              })}
+            </select>
+          }
+        >
+          <Chip
+            active={cat === "Alle"}
+            onClick={() => setParam("cat", "Alle", "Alle")}
+          >
             {copy.all}
           </Chip>
           {DEMO_CATEGORIES.map((c) => {
@@ -177,7 +250,7 @@ export function DemoGrid({
         <div
           role="status"
           aria-live="polite"
-          className="pt-1 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground"
+          className="border-t border-border pt-3 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground"
         >
           <span>
             {filtered.length}{" "}
@@ -189,8 +262,8 @@ export function DemoGrid({
 
       {/* Grid / empty state */}
       {filtered.length === 0 ? (
-        <div className="mt-10 flex flex-col items-center justify-center gap-4 border border-dashed border-border px-6 py-16 text-center">
-          <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+        <div className="mt-6 flex flex-col items-start gap-3 border border-border border-l-[3px] border-l-brand-orange px-4 py-6">
+          <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
             {copy.emptyKicker}
           </div>
           <div className="text-xl font-bold tracking-[-0.02em] text-foreground">
@@ -202,18 +275,20 @@ export function DemoGrid({
           <button
             type="button"
             onClick={clearAll}
-            className="mt-2 inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
+            className="inline-flex min-h-11 items-center gap-2 border border-brand-orange bg-brand-orange px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white hover:border-foreground hover:bg-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
           >
             {copy.reset}
           </button>
         </div>
       ) : (
-        <div
-          ref={gridRef}
-          className="mt-6 demo-gallery-grid"
-        >
+        <div className="mt-6 grid gap-px overflow-hidden border border-border bg-border md:grid-cols-2">
           {filtered.map((d) => (
-            <DemoTile key={d.slug} demo={d} total={catalog.length} locale={locale} />
+            <DemoTile
+              key={d.slug}
+              demo={d}
+              total={catalog.length}
+              locale={locale}
+            />
           ))}
         </div>
       )}
@@ -224,16 +299,23 @@ export function DemoGrid({
 function FilterRow({
   label,
   children,
+  mobileControl,
 }: {
   label: string;
   children: React.ReactNode;
+  mobileControl?: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-wrap items-center gap-2" role="group" aria-label={label}>
-      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+    <div className="min-w-0" role="group" aria-label={label}>
+      <span className="mb-2 block font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
         {label}:
       </span>
-      {children}
+      {mobileControl ? <div className="sm:hidden">{mobileControl}</div> : null}
+      <div
+        className={`flex flex-wrap gap-2 ${mobileControl ? "hidden sm:flex" : ""}`}
+      >
+        {children}
+      </div>
     </div>
   );
 }
@@ -253,7 +335,7 @@ function Chip({
       data-filter-chip
       onClick={onClick}
       aria-pressed={active}
-      className={`min-h-11 border px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.08em] transition-colors ${
+      className={`min-h-11 border px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange ${
         active
           ? "border-brand-orange bg-brand-orange text-white"
           : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"

@@ -43,7 +43,7 @@ describe("blog stylesheet isolation", () => {
 
     expect(declarations.get("--font-sans")).toContain("var(--font-typing)");
     expect(declarations.get("--font-mono")).toContain("var(--font-geist-mono)");
-    expect(declarations.get("--kupfer")).toBe("#A5370F");
+    expect(declarations.get("--kupfer")?.toLowerCase()).toBe("#a5370f");
   });
 
   it("does not preload or late-swap four editorial fonts around above-fold content", () => {
@@ -55,7 +55,7 @@ describe("blog stylesheet isolation", () => {
     const mobileFontRules: string[] = [];
 
     root.walkAtRules("media", (rule) => {
-      if (rule.params !== "(max-width:900px)") return;
+      if (rule.params.replaceAll(" ", "") !== "(max-width:900px)") return;
       rule.walkRules(".blog-root", (nestedRule) => {
         nestedRule.walkDecls("--font-sans", (declaration) => {
           mobileFontRules.push(declaration.value);

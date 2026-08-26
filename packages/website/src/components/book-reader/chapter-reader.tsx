@@ -8,10 +8,7 @@ import type {
   BookChapterMeta,
 } from "@/lib/book-reader-content";
 import { renderChapterMarkdownHtml } from "./chapter-markdown";
-import {
-  ChapterReaderClient,
-  ChapterTocLinks,
-} from "./chapter-reader-client";
+import { ChapterReaderClient, ChapterTocLinks } from "./chapter-reader-client";
 
 interface ChapterReaderProps {
   readonly book: Book;
@@ -116,21 +113,21 @@ export function ChapterReader({
   );
 
   return (
-    <div className="mx-auto min-w-0 max-w-6xl px-4 pb-24 pt-10 sm:px-6 sm:pb-28 sm:pt-16">
+    <div className="mx-auto min-w-0 max-w-6xl px-4 pb-12 pt-5 sm:px-6 sm:pt-7">
       <nav
         aria-label={copy.breadcrumbAria}
-        className="no-print mb-8 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground"
+        className="no-print mb-4 flex min-w-0 flex-wrap items-center gap-x-2 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground"
       >
         <Link
           href={localizeHref("/buecher", locale)}
-          className="break-words hover:text-brand-orange"
+          className="inline-flex min-h-11 items-center break-words hover:text-brand-orange"
         >
           {copy.books}
         </Link>
         <span aria-hidden="true">/</span>
         <Link
           href={localizeHref(`/buecher/${book.id}`, locale)}
-          className="min-w-0 break-words hover:text-brand-orange"
+          className="inline-flex min-h-11 min-w-0 items-center break-words hover:text-brand-orange"
         >
           {bookTitle}
         </Link>
@@ -140,18 +137,18 @@ export function ChapterReader({
         </span>
       </nav>
 
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-12 lg:grid-cols-[minmax(0,1fr)_240px]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_224px]">
         <div className="min-w-0">
-          <header className="mb-8">
-            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+          <header className="mb-6 border-l-[3px] border-brand-orange pl-4">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
               {copy.chapterPosition(chapterNumber, allChapters.length)}
             </p>
             <h1 className="mt-2 break-words text-3xl font-bold tracking-[-0.03em] text-foreground sm:text-4xl">
               {chapter.meta.title}
             </h1>
-            <div className="mt-3 flex min-w-0 flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[11px] text-muted-foreground">
+            <div className="mt-3 flex min-w-0 flex-wrap items-center gap-x-4 gap-y-2 font-mono text-xs text-muted-foreground">
               <span className="flex min-w-0 items-center gap-1.5">
-                <Clock size={11} aria-hidden="true" />
+                <Clock className="h-4 w-4" aria-hidden="true" />
                 <span className="break-words">
                   {copy.readingTime(chapter.readingTimeMinutes)}
                 </span>
@@ -160,7 +157,7 @@ export function ChapterReader({
                 ·
               </span>
               <span className="hidden items-center gap-1.5 sm:flex">
-                <BookOpen size={11} aria-hidden="true" />
+                <BookOpen className="h-4 w-4" aria-hidden="true" />
                 {bookTitle}
               </span>
             </div>
@@ -170,7 +167,7 @@ export function ChapterReader({
 
           <nav
             aria-label={copy.chapterNavigationAria}
-            className="no-print mt-12 grid min-w-0 grid-cols-2 items-center gap-3 border-t border-border pt-6 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]"
+            className="no-print mt-10 grid min-w-0 grid-cols-2 items-center gap-3 border-t border-border pt-5 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]"
           >
             {neighbours.prev ? (
               <Link
@@ -198,7 +195,7 @@ export function ChapterReader({
             )}
 
             <span
-              className="hidden font-mono text-[10px] text-muted-foreground sm:block"
+              className="hidden font-mono text-xs text-muted-foreground sm:block"
               aria-hidden="true"
             >
               ← → {copy.keyboardHint}
@@ -230,10 +227,10 @@ export function ChapterReader({
             )}
           </nav>
 
-          <div className="mt-6 text-center">
+          <div className="no-print mt-5 flex justify-center border-t border-border pt-3">
             <Link
               href={localizeHref(book.relatedResourceHref, locale)}
-              className="font-mono text-[11px] text-muted-foreground underline-offset-4 hover:text-brand-orange hover:underline"
+              className="inline-flex min-h-11 items-center text-center text-sm text-muted-foreground underline-offset-4 hover:text-brand-orange hover:underline"
             >
               {copy.relatedCourse(relatedResourceLabel)}
             </Link>
@@ -246,7 +243,7 @@ export function ChapterReader({
             aria-label={copy.tocRegion}
             className="sticky top-24"
           >
-            <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+            <p className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
               {copy.tocHeading}
             </p>
             <nav aria-label={copy.tocRegion}>
@@ -254,12 +251,12 @@ export function ChapterReader({
             </nav>
 
             <div className="mt-6 border-t border-border pt-4">
-              <p className="text-[11px] leading-relaxed text-muted-foreground">
+              <p className="text-xs leading-relaxed text-muted-foreground">
                 {book.pdfPath ? copy.pdfAvailable : copy.pdfUnavailable}
               </p>
               <Link
                 href={localizeHref(`/buecher/${book.id}`, locale)}
-                className="mt-2 inline-flex font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground underline-offset-4 hover:text-brand-orange"
+                className="mt-2 inline-flex min-h-11 items-center text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground underline-offset-4 hover:text-brand-orange"
               >
                 {copy.allChapters}
               </Link>

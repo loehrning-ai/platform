@@ -175,13 +175,13 @@ export function ClaudeMdBuilderWidget({
           : "Local template with no model or API call. Do not enter secrets; review the generated draft."
       }
       done={done}
-      xpLabel="+25 XP"
+      doneLabel={german ? "Erledigt" : "Done"}
     >
       <div className="grid gap-6 md:grid-cols-2">
         <div className="flex flex-col gap-3">
           {fieldsDefinition.map((field) => (
             <label key={field.key} className="block">
-              <span className="mb-1 block font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground">
+              <span className="mb-1 block font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
                 {field.label}
               </span>
               <textarea
@@ -194,7 +194,7 @@ export function ClaudeMdBuilderWidget({
                   }))
                 }
                 placeholder={field.placeholder}
-                className="w-full border-2 border-border bg-background px-3 py-2 text-[13.5px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                className="min-h-11 w-full border-2 border-border bg-background px-3 py-2 text-[13.5px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
               />
             </label>
           ))}
@@ -203,7 +203,7 @@ export function ClaudeMdBuilderWidget({
             onClick={build}
             disabled={loading || !canBuild}
             className={cn(
-              "inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none",
+              "inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none",
             )}
           >
             {loading
@@ -216,7 +216,7 @@ export function ClaudeMdBuilderWidget({
           </button>
         </div>
         <div className="relative flex flex-col">
-          <p className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground">
+          <p className="mb-1.5 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
             {german ? "Ausgabe" : "Output"}
           </p>
           <pre className="min-h-[360px] flex-1 overflow-auto whitespace-pre-wrap break-words border border-border bg-card/40 p-3 font-mono text-[12.5px] text-foreground">
@@ -236,7 +236,7 @@ export function ClaudeMdBuilderWidget({
               aria-describedby={
                 copyState === "error" ? "claude-md-copy-error" : undefined
               }
-              className="absolute right-2 top-8 border-2 border-foreground bg-background px-2 py-1 font-mono text-[10px] font-bold uppercase text-foreground shadow-[2px_2px_0_0_var(--color-foreground)]"
+              className="absolute right-2 top-8 inline-flex min-h-11 min-w-11 items-center justify-center border-2 border-foreground bg-background px-2 py-1 font-mono text-xs font-bold uppercase text-foreground shadow-[2px_2px_0_0_var(--color-foreground)]"
             >
               {copyState === "copied"
                 ? german

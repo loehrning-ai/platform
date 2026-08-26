@@ -1,11 +1,21 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, screen } from "@testing-library/react";
-import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
+import {
+  CANONICAL_LESSON_IDS,
+  CANONICAL_SECTION_IDS,
+  isEvidenceGatedCourseSlug,
+  lessonCompletionEvidenceCheckpointId,
+  operatorLessonEvidenceCheckpointIds,
+} from "@/lib/courses/completion";
 import { getCourseProjectIdentity } from "@/lib/course-projects/identity";
 import { serializeCourseProjectProgress } from "@/lib/course-projects/persistence";
 import { verifiedCourseProjectArtifact } from "@/lib/course-projects/test-artifact";
 import type { CourseSlug } from "@/lib/course/types";
-import type { UnifiedProgress, UnifiedCourseSlice } from "@/lib/progress/types";
+import {
+  checkpointKey,
+  type UnifiedProgress,
+  type UnifiedCourseSlice,
+} from "@/lib/progress/types";
 
 type Owner = {
   readonly kind: "unknown" | "anonymous";
@@ -83,9 +93,11 @@ function courseSlice(
       .map((lessonId) => [
         lessonId,
         {
-          sectionsRead: [],
-          quizScore: null,
-          quizTotal: null,
+          sectionsRead: isEvidenceGatedCourseSlug(courseSlug)
+            ? (CANONICAL_SECTION_IDS[courseSlug][lessonId] ?? [])
+            : [],
+          quizScore: isEvidenceGatedCourseSlug(courseSlug) ? 1 : null,
+          quizTotal: isEvidenceGatedCourseSlug(courseSlug) ? 1 : null,
           completed: true,
           exercisesCompleted: {},
         },
@@ -140,6 +152,10 @@ function progressFor(
   capstoneSubmitted = false,
   projectCompleted = false,
 ): UnifiedProgress {
+  const completedIds = CANONICAL_LESSON_IDS[courseSlug].slice(
+    0,
+    completedLessons,
+  );
   return {
     schemaVersion: 3,
     courses: {
@@ -152,7 +168,27 @@ function progressFor(
       ),
     },
     xp: 0,
-    checkpoints: {},
+    checkpoints: isEvidenceGatedCourseSlug(courseSlug)
+      ? Object.fromEntries(
+          completedIds.flatMap((lessonId) => [
+            [
+              checkpointKey(
+                lessonId,
+                lessonCompletionEvidenceCheckpointId(courseSlug),
+              ),
+              true,
+            ],
+            ...(courseSlug === "ai-native-operator"
+              ? operatorLessonEvidenceCheckpointIds(lessonId).map(
+                  (checkpointId) => [
+                    checkpointKey(lessonId, checkpointId),
+                    true,
+                  ],
+                )
+              : []),
+          ]),
+        )
+      : {},
     badges: {},
     streak: { days: 0, last: null },
     lastActivity: "2026-07-29T10:00:00.000Z",

@@ -23,8 +23,11 @@ export function LessonSidebar({
 }: LessonSidebarProps) {
   const copy = getCourseReaderCopy(locale);
   return (
-    <nav className="flex min-w-0 flex-col gap-0.5" aria-label={copy.sidebar.navigation}>
-      <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+    <nav
+      className="flex min-w-0 flex-col gap-0.5"
+      aria-label={copy.sidebar.navigation}
+    >
+      <p className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
         {copy.sidebar.heading}
       </p>
       {lessons.map((lesson) => {
@@ -59,7 +62,7 @@ export function LessonSidebar({
               ) : isActive ? (
                 <Circle className="h-4 w-4 text-brand-orange" />
               ) : (
-                <span className="inline-block w-4 text-center font-mono text-[10px] text-muted-foreground">
+                <span className="inline-block w-4 text-center font-mono text-xs text-muted-foreground">
                   {lesson.number}
                 </span>
               )}
@@ -77,7 +80,7 @@ export function LessonSidebar({
               >
                 {lesson.title}
               </p>
-              <span className="mt-1 inline-flex items-center gap-1 font-mono text-[11px] text-muted-foreground">
+              <span className="mt-1 inline-flex items-center gap-1 font-mono text-xs text-muted-foreground">
                 <Clock className="h-2.5 w-2.5" />
                 {copy.sidebar.minutes(lesson.durationMinutes)}
               </span>

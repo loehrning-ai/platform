@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { GLOBAL_NAVIGATION_COPY } from "@/lib/i18n/global-copy";
 import { localizeHref } from "@/lib/i18n/locale";
+import { URL_STATE_CHANGE_EVENT } from "@/lib/navigation/url-state";
 import { useLocale } from "./locale-context";
 
 interface LanguageSwitchProps {
@@ -31,7 +32,7 @@ function SwitchLinks({
       aria-label={copy.language}
       data-language-switch
       className={cn(
-        "inline-flex min-h-11 shrink-0 items-center rounded-full border border-border bg-background p-1",
+        "inline-flex min-h-11 shrink-0 items-center overflow-hidden rounded-md border border-border bg-background",
         className,
       )}
     >
@@ -50,7 +51,8 @@ function SwitchLinks({
             aria-current={active ? "true" : undefined}
             aria-label={active ? `${label}, ${copy.language}` : actionLabel}
             className={cn(
-              "inline-flex min-h-9 min-w-9 items-center justify-center rounded-full px-2 font-mono text-[11px] font-bold uppercase tracking-[0.08em] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+              "inline-flex min-h-11 min-w-11 items-center justify-center px-2 font-mono text-xs font-bold uppercase tracking-[0.08em] outline-none transition-colors duration-150 focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange motion-reduce:transition-none",
+              targetLocale === "en" && "border-l border-border",
               active
                 ? "bg-foreground text-background"
                 : "text-muted-foreground hover:bg-card-hover hover:text-foreground",
@@ -76,9 +78,11 @@ export function LanguageSwitch({ className }: LanguageSwitchProps) {
     updateSuffix();
     window.addEventListener("hashchange", updateSuffix);
     window.addEventListener("popstate", updateSuffix);
+    window.addEventListener(URL_STATE_CHANGE_EVENT, updateSuffix);
     return () => {
       window.removeEventListener("hashchange", updateSuffix);
       window.removeEventListener("popstate", updateSuffix);
+      window.removeEventListener(URL_STATE_CHANGE_EVENT, updateSuffix);
     };
   }, [pathname]);
 

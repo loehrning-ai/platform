@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { DEMO } from "@/lib/demo-tokens";
-import { DEMO_HEIGHT, usePrefersReducedMotion, useVisibleAutoplay } from "./demo-utils";
+import {
+  DEMO_HEIGHT,
+  usePrefersReducedMotion,
+  useVisibleAutoplay,
+} from "./demo-utils";
 import { SimulationDisclosure } from "./evidence-badge";
 import { useDemoLocale } from "./demo-locale";
 
@@ -59,13 +63,16 @@ const LEADS: readonly Lead[] = [
 
 export default function OutboundWorkflowDemo() {
   const { locale } = useDemoLocale();
-  return locale === "en" ? <OutboundWorkflowDemoEnglish /> : <OutboundWorkflowDemoGerman />;
+  return locale === "en" ? (
+    <OutboundWorkflowDemoEnglish />
+  ) : (
+    <OutboundWorkflowDemoGerman />
+  );
 }
 
 function OutboundWorkflowDemoGerman() {
   const reduced = usePrefersReducedMotion();
   const { ref, visible } = useVisibleAutoplay<HTMLDivElement>();
-  const [leadIdx, setLeadIdx] = useState(0);
   const [stage, setStage] = useState<0 | 1 | 2 | 3 | 4>(0);
   const [showChecklist, setShowChecklist] = useState(false);
 
@@ -74,21 +81,21 @@ function OutboundWorkflowDemoGerman() {
       setStage(4);
       return;
     }
-    if (!visible) return;
+    if (!visible) {
+      setStage(0);
+      return;
+    }
     setStage(0);
     const timers = [
       setTimeout(() => setStage(1), 400),
       setTimeout(() => setStage(2), 1100),
       setTimeout(() => setStage(3), 2000),
       setTimeout(() => setStage(4), 3000),
-      setTimeout(() => {
-        setLeadIdx((i) => (i + 1) % LEADS.length);
-      }, 6500),
     ];
     return () => timers.forEach(clearTimeout);
-  }, [visible, reduced, leadIdx]);
+  }, [visible, reduced]);
 
-  const lead = LEADS[leadIdx];
+  const lead = LEADS[0];
   const email = lead.address;
 
   return (
@@ -139,7 +146,7 @@ function OutboundWorkflowDemoGerman() {
         <div
           style={{
             fontFamily: DEMO.font.mono,
-            fontSize: 10,
+            fontSize: 12,
             color: "var(--color-brand-orange)",
             letterSpacing: "0.14em",
             textTransform: "uppercase",
@@ -148,7 +155,14 @@ function OutboundWorkflowDemoGerman() {
         >
           Signalbasierte Nachricht · Pipeline
         </div>
-        <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", marginTop: 6 }}>
+        <h2
+          style={{
+            fontSize: 22,
+            fontWeight: 700,
+            letterSpacing: "-0.03em",
+            marginTop: 6,
+          }}
+        >
           Öffentliche Signale.{" "}
           <span style={{ color: "var(--color-brand-orange)" }}>
             Begründet schreiben. Vor Versand prüfen.
@@ -172,8 +186,16 @@ function OutboundWorkflowDemoGerman() {
           [
             { label: "DB · Kontakte", sub: "Beispieldaten", s: 1 },
             { label: "Signal-Scan", sub: "LinkedIn · News · CB", s: 2 },
-            { label: "Text-Generierung", sub: "Claude Sonnet · 247 Tokens", s: 3 },
-            { label: "Versandfreigabe simuliert", sub: "DKIM · Freigabe-Schritt (simuliert) · kein Versand", s: 4 },
+            {
+              label: "Text-Generierung",
+              sub: "Claude Sonnet · 247 Tokens",
+              s: 3,
+            },
+            {
+              label: "Versandfreigabe simuliert",
+              sub: "DKIM · Freigabe-Schritt (simuliert) · kein Versand",
+              s: 4,
+            },
           ] as const
         ).map((n) => {
           const active = stage >= n.s;
@@ -189,20 +211,28 @@ function OutboundWorkflowDemoGerman() {
                 borderBottom: `1px solid ${active ? "var(--color-brand-orange)" : DEMO.leinen}`,
                 borderLeft: `3px solid var(--color-brand-orange)`,
                 padding: "8px 10px",
-                transition: "all 200ms ease-out",
+                transition: reduced
+                  ? "none"
+                  : "background-color 200ms ease-out, color 200ms ease-out, border-color 200ms ease-out, box-shadow 200ms ease-out, transform 200ms ease-out",
                 transform: current ? "translate(-1px,-1px)" : "none",
                 boxShadow: active
                   ? `3px 3px 0 0 var(--color-brand-orange)`
                   : "3px 3px 0 0 transparent",
               }}
             >
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "-0.02em" }}>
+              <div
+                style={{
+                  fontSize: 12,
+                  fontWeight: 700,
+                  letterSpacing: "-0.02em",
+                }}
+              >
                 {n.label}
               </div>
               <div
                 style={{
                   fontFamily: DEMO.font.mono,
-                  fontSize: 9,
+                  fontSize: 12,
                   color: current ? "rgba(243,240,233,0.75)" : DEMO.schiefer,
                   marginTop: 3,
                   letterSpacing: "0.04em",
@@ -218,7 +248,11 @@ function OutboundWorkflowDemoGerman() {
       {/* Lead + email */}
       <div
         data-outbound-body
-        style={{ display: "grid", gridTemplateColumns: "minmax(240px, 300px) 1fr", gap: 14 }}
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(240px, 300px) 1fr",
+          gap: 14,
+        }}
       >
         <div
           style={{
@@ -241,7 +275,7 @@ function OutboundWorkflowDemoGerman() {
               background: "rgba(249,115,22,0.12)",
               border: "1px solid rgba(249,115,22,0.4)",
               fontFamily: DEMO.font.mono,
-              fontSize: 9,
+              fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.12em",
               textTransform: "uppercase",
@@ -250,11 +284,17 @@ function OutboundWorkflowDemoGerman() {
           >
             FIKTIVES SZENARIO · BEISPIELDATEN
           </div>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <div
               style={{
                 fontFamily: DEMO.font.mono,
-                fontSize: 9,
+                fontSize: 12,
                 color: "var(--color-brand-orange)",
                 letterSpacing: "0.18em",
                 fontWeight: 700,
@@ -270,20 +310,19 @@ function OutboundWorkflowDemoGerman() {
                   height: 6,
                   background: "var(--color-brand-orange)",
                   borderRadius: "50%",
-                  animation: reduced ? "none" : "outbound-pulse 1.6s ease-out infinite",
                 }}
               />
-              LEAD #{String(leadIdx + 412).padStart(4, "0")}
+              LEAD #0412
             </div>
             <div
               style={{
                 fontFamily: DEMO.font.mono,
-                fontSize: 9,
+                fontSize: 12,
                 color: DEMO.schiefer,
                 letterSpacing: "0.12em",
               }}
             >
-              CRM · ROW {leadIdx + 1}/{LEADS.length}
+              CRM · ROW 1/{LEADS.length}
             </div>
           </div>
           <div
@@ -333,7 +372,7 @@ function OutboundWorkflowDemoGerman() {
               </div>
               <div
                 style={{
-                  fontSize: 10,
+                  fontSize: 12,
                   color: DEMO.schiefer,
                   marginTop: 1,
                   overflow: "hidden",
@@ -360,12 +399,19 @@ function OutboundWorkflowDemoGerman() {
                   letterSpacing: "0.12em",
                   textTransform: "uppercase",
                   fontWeight: 700,
-                  fontSize: 8,
+                  fontSize: 12,
                 }}
               >
                 Last Contact
               </div>
-              <div style={{ color: DEMO.ink, marginTop: 3, fontWeight: 700, fontSize: 12 }}>
+              <div
+                style={{
+                  color: DEMO.ink,
+                  marginTop: 3,
+                  fontWeight: 700,
+                  fontSize: 12,
+                }}
+              >
                 {lead.last}
               </div>
             </div>
@@ -376,7 +422,7 @@ function OutboundWorkflowDemoGerman() {
                   letterSpacing: "0.12em",
                   textTransform: "uppercase",
                   fontWeight: 700,
-                  fontSize: 8,
+                  fontSize: 12,
                 }}
               >
                 Intent-Score
@@ -391,7 +437,15 @@ function OutboundWorkflowDemoGerman() {
                 }}
               >
                 {lead.score}
-                <span style={{ color: DEMO.schiefer, fontSize: 10, fontWeight: 400 }}>/100</span>
+                <span
+                  style={{
+                    color: DEMO.schiefer,
+                    fontSize: 12,
+                    fontWeight: 400,
+                  }}
+                >
+                  /100
+                </span>
               </div>
             </div>
           </div>
@@ -405,7 +459,7 @@ function OutboundWorkflowDemoGerman() {
               transition: "background 300ms ease-out",
             }}
           >
-            {stage === 1 && !reduced && (
+            {stage === 1 && visible && !reduced && (
               <div
                 aria-hidden
                 style={{
@@ -421,7 +475,7 @@ function OutboundWorkflowDemoGerman() {
             <div
               style={{
                 fontFamily: DEMO.font.mono,
-                fontSize: 8,
+                fontSize: 12,
                 color: "var(--color-brand-orange)",
                 letterSpacing: "0.14em",
                 fontWeight: 700,
@@ -433,7 +487,7 @@ function OutboundWorkflowDemoGerman() {
             </div>
             <div
               style={{
-                fontSize: 11,
+                fontSize: 12,
                 color: DEMO.ink,
                 marginTop: 3,
                 fontWeight: 600,
@@ -450,7 +504,7 @@ function OutboundWorkflowDemoGerman() {
               gap: 10,
               marginTop: 2,
               fontFamily: DEMO.font.mono,
-              fontSize: 9,
+              fontSize: 12,
               letterSpacing: "0.08em",
             }}
           >
@@ -464,7 +518,8 @@ function OutboundWorkflowDemoGerman() {
               <div
                 key={s.key}
                 style={{
-                  color: stage >= s.at ? "var(--color-brand-orange)" : DEMO.schiefer,
+                  color:
+                    stage >= s.at ? "var(--color-brand-orange)" : DEMO.schiefer,
                   fontWeight: stage >= s.at ? 700 : 400,
                   transition: "color 200ms ease-out",
                 }}
@@ -495,7 +550,7 @@ function OutboundWorkflowDemoGerman() {
               background: DEMO.ink,
               color: DEMO.kalk,
               fontFamily: DEMO.font.mono,
-              fontSize: 10,
+              fontSize: 12,
               letterSpacing: "0.12em",
               fontWeight: 700,
             }}
@@ -520,7 +575,11 @@ function OutboundWorkflowDemoGerman() {
                 flexShrink: 0,
               }}
             >
-              {stage >= 4 ? "● Versand simuliert 09:14" : stage >= 3 ? "◆ DRAFT" : "○ WARTE…"}
+              {stage >= 4
+                ? "● Versand simuliert 09:14"
+                : stage >= 3
+                  ? "◆ DRAFT"
+                  : "○ WARTE…"}
             </span>
           </div>
           <div
@@ -528,7 +587,7 @@ function OutboundWorkflowDemoGerman() {
               padding: "12px 16px 6px",
               borderBottom: `1px solid ${DEMO.leinen}`,
               fontFamily: DEMO.font.mono,
-              fontSize: 10,
+              fontSize: 12,
               color: DEMO.schiefer,
               letterSpacing: "0.06em",
               display: "flex",
@@ -538,13 +597,25 @@ function OutboundWorkflowDemoGerman() {
           >
             <div>
               Von:{" "}
-              <span style={{ color: DEMO.ink, fontWeight: 700, letterSpacing: 0 }}>
+              <span
+                style={{ color: DEMO.ink, fontWeight: 700, letterSpacing: 0 }}
+              >
                 vertrieb@fiktivwerk.example
               </span>
             </div>
-            <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            <div
+              style={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
               An:{" "}
-              <span style={{ color: DEMO.ink, fontWeight: 700, letterSpacing: 0 }}>{email}</span>
+              <span
+                style={{ color: DEMO.ink, fontWeight: 700, letterSpacing: 0 }}
+              >
+                {email}
+              </span>
             </div>
             <div
               style={{
@@ -586,7 +657,7 @@ function OutboundWorkflowDemoGerman() {
                   alignItems: "center",
                   padding: "32px 0",
                   fontFamily: DEMO.font.mono,
-                  fontSize: 11,
+                  fontSize: 12,
                   color: DEMO.schiefer,
                 }}
               >
@@ -596,11 +667,16 @@ function OutboundWorkflowDemoGerman() {
                     width: 10,
                     height: 10,
                     background: "var(--color-brand-orange)",
-                    animation: reduced ? "none" : "outbound-pulse 1.2s ease-out infinite",
+                    animation:
+                      visible && !reduced
+                        ? "outbound-pulse 1.2s ease-out infinite"
+                        : "none",
                   }}
                 />
                 <span>
-                  {stage === 1 ? "// Signal-Scan läuft" : "// Claude Sonnet generiert"}
+                  {stage === 1
+                    ? "// Signal-Scan läuft"
+                    : "// Claude Sonnet generiert"}
                   <span
                     style={{
                       display: "inline-block",
@@ -609,7 +685,10 @@ function OutboundWorkflowDemoGerman() {
                       marginLeft: 4,
                       background: "var(--color-brand-orange)",
                       verticalAlign: "-2px",
-                      animation: reduced ? "none" : "outbound-caret 0.9s step-end infinite",
+                      animation:
+                        visible && !reduced
+                          ? "outbound-caret 0.9s step-end infinite"
+                          : "none",
                     }}
                   />
                 </span>
@@ -622,13 +701,17 @@ function OutboundWorkflowDemoGerman() {
                     marginTop: 14,
                     paddingTop: 10,
                     borderTop: `1px solid ${DEMO.leinen}`,
-                    fontSize: 11,
+                    fontSize: 12,
                     color: DEMO.schiefer,
                     fontFamily: "Georgia, serif",
                   }}
                 >
-                  Beste Grüße<br />
-                  <span style={{ color: "#222", fontWeight: 700 }}>T. Muster</span> · Muster AG
+                  Beste Grüße
+                  <br />
+                  <span style={{ color: "#222", fontWeight: 700 }}>
+                    T. Muster
+                  </span>{" "}
+                  · Muster AG
                 </div>
               </div>
             )}
@@ -643,7 +726,7 @@ function OutboundWorkflowDemoGerman() {
                 display: "flex",
                 gap: 12,
                 fontFamily: DEMO.font.mono,
-                fontSize: 9,
+                fontSize: 12,
                 color: DEMO.schiefer,
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
@@ -669,7 +752,14 @@ function OutboundWorkflowDemoGerman() {
         </div>
       </div>
 
-      <div data-outbound-metrics style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 8 }}>
+      <div
+        data-outbound-metrics
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4,1fr)",
+          gap: 8,
+        }}
+      >
         {(
           [
             ["Quellencheck", "Beispiel vollständig"],
@@ -692,7 +782,7 @@ function OutboundWorkflowDemoGerman() {
             <div
               style={{
                 fontFamily: DEMO.font.mono,
-                fontSize: 9,
+                fontSize: 12,
                 color: DEMO.schiefer,
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
@@ -717,7 +807,9 @@ function OutboundWorkflowDemoGerman() {
       </div>
 
       <SimulationDisclosure>
-        Kein Versand findet statt. Dieses Praxisbeispiel zeigt den Entwurfsprozess, nicht die tatsächliche Zustellung. Alle Kontaktdaten sind fiktive Beispieldaten.
+        Kein Versand findet statt. Dieses Praxisbeispiel zeigt den
+        Entwurfsprozess, nicht die tatsächliche Zustellung. Alle Kontaktdaten
+        sind fiktive Beispieldaten.
       </SimulationDisclosure>
 
       {/* Failure mode beat: was fehlt vor echtem Versand? */}
@@ -732,7 +824,7 @@ function OutboundWorkflowDemoGerman() {
           <div
             style={{
               fontFamily: DEMO.font.mono,
-              fontSize: 10,
+              fontSize: 12,
               letterSpacing: "0.12em",
               textTransform: "uppercase",
               fontWeight: 700,
@@ -747,19 +839,22 @@ function OutboundWorkflowDemoGerman() {
             onClick={() => setShowChecklist((v) => !v)}
             aria-expanded={showChecklist}
             style={{
+              minHeight: 44,
               background: "transparent",
               border: "1px solid rgba(249,115,22,0.4)",
               color: "var(--color-brand-orange)",
               padding: "5px 12px",
               fontFamily: DEMO.font.mono,
-              fontSize: 10,
+              fontSize: 12,
               fontWeight: 700,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
               cursor: "pointer",
             }}
           >
-            {showChecklist ? "Verbergen" : "Was fehlt vor einem echten Versand?"}
+            {showChecklist
+              ? "Verbergen"
+              : "Was fehlt vor einem echten Versand?"}
           </button>
           {showChecklist && (
             <ul
@@ -773,10 +868,26 @@ function OutboundWorkflowDemoGerman() {
               }}
             >
               {[
-                { icon: "◻", label: "Rechtliche Grundlage: Einwilligung oder berechtigtes Interesse nachweisen (DSGVO Art. 6)" },
-                { icon: "◻", label: "Opt-out-Mechanismus: Abmeldelink in jeder E-Mail, sofortige Umsetzung" },
-                { icon: "◻", label: "Quellenprüfung: Woher stammt die Kontaktadresse? Wird sie aktuell gehalten?" },
-                { icon: "◻", label: "Menschliche Freigabe: Entwurf gelesen und bestätigt, bevor etwas verschickt wird" },
+                {
+                  icon: "◻",
+                  label:
+                    "Rechtliche Grundlage: Einwilligung oder berechtigtes Interesse nachweisen (DSGVO Art. 6)",
+                },
+                {
+                  icon: "◻",
+                  label:
+                    "Opt-out-Mechanismus: Abmeldelink in jeder E-Mail, sofortige Umsetzung",
+                },
+                {
+                  icon: "◻",
+                  label:
+                    "Quellenprüfung: Woher stammt die Kontaktadresse? Wird sie aktuell gehalten?",
+                },
+                {
+                  icon: "◻",
+                  label:
+                    "Menschliche Freigabe: Entwurf gelesen und bestätigt, bevor etwas verschickt wird",
+                },
               ].map((item, i) => (
                 <li
                   key={i}
@@ -792,7 +903,13 @@ function OutboundWorkflowDemoGerman() {
                     border: `1px solid ${DEMO.leinen}`,
                   }}
                 >
-                  <span style={{ color: "var(--color-brand-orange)", fontWeight: 700, flexShrink: 0 }}>
+                  <span
+                    style={{
+                      color: "var(--color-brand-orange)",
+                      fontWeight: 700,
+                      flexShrink: 0,
+                    }}
+                  >
                     {item.icon}
                   </span>
                   {item.label}
@@ -815,7 +932,8 @@ const LEADS_EN: readonly Lead[] = [
     signal: "Fictional hiring signal · 42 employees",
     score: 87,
     subject: "Order handling: a specific follow-up",
-    email: "Hello,\n\nwe last discussed order handling 14 months ago. The fictional public sample now shows a larger operations team.\n\nA useful first check would cover status updates and inventory requests. This is a draft for human review, not an offer and not a sent email.\n\nReply only if the topic is relevant.",
+    email:
+      "Hello,\n\nwe last discussed order handling 14 months ago. The fictional public sample now shows a larger operations team.\n\nA useful first check would cover status updates and inventory requests. This is a draft for human review, not an offer and not a sent email.\n\nReply only if the topic is relevant.",
     address: "contact-alpha@fictional.example",
   },
   {
@@ -826,7 +944,8 @@ const LEADS_EN: readonly Lead[] = [
     signal: "Fictional support-system update",
     score: 74,
     subject: "Support workload: one follow-up question",
-    email: "Hello,\n\nour last fictional exchange marked support automation as premature. A bounded review could now examine ticket grouping and suggested replies, with manual approval before delivery.\n\nThis sample creates a review draft only.",
+    email:
+      "Hello,\n\nour last fictional exchange marked support automation as premature. A bounded review could now examine ticket grouping and suggested replies, with manual approval before delivery.\n\nThis sample creates a review draft only.",
     address: "contact-beta@fictional.example",
   },
   {
@@ -837,7 +956,8 @@ const LEADS_EN: readonly Lead[] = [
     signal: "Fictional machinery upgrade in 2024",
     score: 91,
     subject: "Maintenance data after the equipment update",
-    email: "Hello,\n\nour earlier fictional discussion stopped because the data was incomplete. After an equipment update, the next valid check is still the same: failure history, ownership, and an escalation threshold.\n\nHas the sample data position changed? No message is sent from this page.",
+    email:
+      "Hello,\n\nour earlier fictional discussion stopped because the data was incomplete. After an equipment update, the next valid check is still the same: failure history, ownership, and an escalation threshold.\n\nHas the sample data position changed? No message is sent from this page.",
     address: "contact-gamma@fictional.example",
   },
 ];
@@ -852,35 +972,129 @@ function OutboundWorkflowDemoEnglish() {
       data-demo-id="outbound-workflow"
       role="region"
       aria-label="Outbound review workflow example"
-      style={{ display: "flex", flexDirection: "column", gap: 16, minHeight: DEMO_HEIGHT, minWidth: 0, fontFamily: DEMO.font.sans, color: DEMO.ink }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 16,
+        minHeight: DEMO_HEIGHT,
+        minWidth: 0,
+        fontFamily: DEMO.font.sans,
+        color: DEMO.ink,
+      }}
     >
       <div>
-        <div style={{ fontFamily: DEMO.font.mono, fontSize: 10, color: "var(--color-brand-orange)", letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 700 }}>Signal-based draft · review required</div>
-        <h2 style={{ margin: "6px 0 0", fontSize: "clamp(20px, 4vw, 28px)", lineHeight: 1.08 }}>
-          State the evidence. <span style={{ color: "var(--color-brand-orange)" }}>Stop before delivery.</span>
+        <div
+          style={{
+            fontFamily: DEMO.font.mono,
+            fontSize: 12,
+            color: "var(--color-brand-orange)",
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            fontWeight: 700,
+          }}
+        >
+          Signal-based draft · review required
+        </div>
+        <h2
+          style={{
+            margin: "6px 0 0",
+            fontSize: "clamp(20px, 4vw, 28px)",
+            lineHeight: 1.08,
+          }}
+        >
+          State the evidence.{" "}
+          <span style={{ color: "var(--color-brand-orange)" }}>
+            Stop before delivery.
+          </span>
         </h2>
-        <p style={{ margin: "8px 0 0", maxWidth: 760, color: DEMO.schiefer, fontSize: 12, lineHeight: 1.55 }}>
-          All people, companies, addresses, and signals below are fictional. The interface drafts locally and cannot send email.
+        <p
+          style={{
+            margin: "8px 0 0",
+            maxWidth: 760,
+            color: DEMO.schiefer,
+            fontSize: 12,
+            lineHeight: 1.55,
+          }}
+        >
+          All people, companies, addresses, and signals below are fictional. The
+          interface drafts locally and cannot send email.
         </p>
       </div>
 
-      <div aria-label="Workflow stages" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 160px), 1fr))", gap: 8 }}>
+      <div
+        aria-label="Workflow stages"
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(auto-fit, minmax(min(100%, 160px), 1fr))",
+          gap: 8,
+        }}
+      >
         {[
           ["01", "Sample contact", "fictional CRM row"],
           ["02", "Evidence check", "public-source field"],
           ["03", "Draft", "fixed browser copy"],
           ["04", "Human review", "no delivery action"],
         ].map(([number, title, detail]) => (
-          <div key={number} style={{ minWidth: 0, border: `1px solid ${DEMO.leinen}`, borderTop: "3px solid var(--color-brand-orange)", background: DEMO.birke, padding: "10px 12px" }}>
-            <span style={{ fontFamily: DEMO.font.mono, fontSize: 9, color: DEMO.schiefer }}>{number}</span>
-            <strong style={{ display: "block", marginTop: 3, overflowWrap: "anywhere" }}>{title}</strong>
-            <span style={{ display: "block", marginTop: 2, fontSize: 10, color: DEMO.schiefer }}>{detail}</span>
+          <div
+            key={number}
+            style={{
+              minWidth: 0,
+              border: `1px solid ${DEMO.leinen}`,
+              borderTop: "3px solid var(--color-brand-orange)",
+              background: DEMO.birke,
+              padding: "10px 12px",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: DEMO.font.mono,
+                fontSize: 12,
+                color: DEMO.schiefer,
+              }}
+            >
+              {number}
+            </span>
+            <strong
+              style={{
+                display: "block",
+                marginTop: 3,
+                overflowWrap: "anywhere",
+              }}
+            >
+              {title}
+            </strong>
+            <span
+              style={{
+                display: "block",
+                marginTop: 2,
+                fontSize: 12,
+                color: DEMO.schiefer,
+              }}
+            >
+              {detail}
+            </span>
           </div>
         ))}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 300px), 1fr))", gap: 14 }}>
-        <section aria-label="Fictional contacts" style={{ minWidth: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
+          gap: 14,
+        }}
+      >
+        <section
+          aria-label="Fictional contacts"
+          style={{
+            minWidth: 0,
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+          }}
+        >
           {LEADS_EN.map((item, index) => {
             const selected = index === leadIndex;
             return (
@@ -889,44 +1103,198 @@ function OutboundWorkflowDemoEnglish() {
                 type="button"
                 aria-pressed={selected}
                 onClick={() => setLeadIndex(index)}
-                style={{ minWidth: 0, minHeight: 68, padding: "10px 12px", textAlign: "left", border: `1px solid ${DEMO.ink}`, background: selected ? DEMO.ink : DEMO.kalk, color: selected ? DEMO.kalk : DEMO.ink, boxShadow: selected ? "3px 3px 0 var(--color-brand-orange)" : "none", cursor: "pointer" }}
+                style={{
+                  minWidth: 0,
+                  minHeight: 68,
+                  padding: "10px 12px",
+                  textAlign: "left",
+                  border: `1px solid ${DEMO.ink}`,
+                  background: selected ? DEMO.ink : DEMO.kalk,
+                  color: selected ? DEMO.kalk : DEMO.ink,
+                  boxShadow: selected
+                    ? "3px 3px 0 var(--color-brand-orange)"
+                    : "none",
+                  cursor: "pointer",
+                }}
               >
-                <strong style={{ display: "block", overflowWrap: "anywhere" }}>{item.name}</strong>
-                <span style={{ display: "block", marginTop: 3, fontSize: 11, opacity: 0.72, overflowWrap: "anywhere" }}>{item.role} · {item.company}</span>
+                <strong style={{ display: "block", overflowWrap: "anywhere" }}>
+                  {item.name}
+                </strong>
+                <span
+                  style={{
+                    display: "block",
+                    marginTop: 3,
+                    fontSize: 12,
+                    opacity: 0.72,
+                    overflowWrap: "anywhere",
+                  }}
+                >
+                  {item.role} · {item.company}
+                </span>
               </button>
             );
           })}
-          <div style={{ border: `1px solid ${DEMO.leinen}`, background: DEMO.birke, padding: 12 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 8, fontFamily: DEMO.font.mono, fontSize: 10 }}><span>Last contact</span><strong>{lead.last}</strong></div>
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginTop: 6, fontFamily: DEMO.font.mono, fontSize: 10 }}><span>Sample score</span><strong style={{ color: "var(--color-brand-orange)" }}>{lead.score}/100</strong></div>
-            <div style={{ marginTop: 10, borderLeft: "3px solid var(--color-brand-orange)", paddingLeft: 9, fontSize: 11, lineHeight: 1.5 }}>{lead.signal}</div>
+          <div
+            style={{
+              border: `1px solid ${DEMO.leinen}`,
+              background: DEMO.birke,
+              padding: 12,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                gap: 8,
+                fontFamily: DEMO.font.mono,
+                fontSize: 12,
+              }}
+            >
+              <span>Last contact</span>
+              <strong>{lead.last}</strong>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                gap: 8,
+                marginTop: 6,
+                fontFamily: DEMO.font.mono,
+                fontSize: 12,
+              }}
+            >
+              <span>Sample score</span>
+              <strong style={{ color: "var(--color-brand-orange)" }}>
+                {lead.score}/100
+              </strong>
+            </div>
+            <div
+              style={{
+                marginTop: 10,
+                borderLeft: "3px solid var(--color-brand-orange)",
+                paddingLeft: 9,
+                fontSize: 12,
+                lineHeight: 1.5,
+              }}
+            >
+              {lead.signal}
+            </div>
           </div>
         </section>
 
-        <section aria-label="Draft email" style={{ minWidth: 0, border: `1px solid ${DEMO.ink}`, background: "white", color: "#222", boxShadow: `3px 3px 0 ${DEMO.ink}` }}>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", padding: "8px 12px", background: DEMO.ink, color: DEMO.kalk, fontFamily: DEMO.font.mono, fontSize: 10 }}>
-            <strong style={{ color: "var(--color-brand-orange)" }}>REVIEW DRAFT</strong>
+        <section
+          aria-label="Draft email"
+          style={{
+            minWidth: 0,
+            border: `1px solid ${DEMO.ink}`,
+            background: "white",
+            color: "#222",
+            boxShadow: `3px 3px 0 ${DEMO.ink}`,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 8,
+              alignItems: "center",
+              padding: "8px 12px",
+              background: DEMO.ink,
+              color: DEMO.kalk,
+              fontFamily: DEMO.font.mono,
+              fontSize: 12,
+            }}
+          >
+            <strong style={{ color: "var(--color-brand-orange)" }}>
+              REVIEW DRAFT
+            </strong>
             <span style={{ overflowWrap: "anywhere" }}>to: {lead.address}</span>
-            <span style={{ marginLeft: "auto", color: "#fbbf24" }}>NOT SENT</span>
+            <span style={{ marginLeft: "auto", color: "#fbbf24" }}>
+              NOT SENT
+            </span>
           </div>
-          <div style={{ padding: "10px 14px", borderBottom: `1px solid ${DEMO.leinen}`, fontSize: 11, lineHeight: 1.5 }}>
-            <span style={{ color: DEMO.schiefer }}>Subject: </span><strong>{lead.subject}</strong>
+          <div
+            style={{
+              padding: "10px 14px",
+              borderBottom: `1px solid ${DEMO.leinen}`,
+              fontSize: 12,
+              lineHeight: 1.5,
+            }}
+          >
+            <span style={{ color: DEMO.schiefer }}>Subject: </span>
+            <strong>{lead.subject}</strong>
           </div>
-          <div style={{ minHeight: 260, padding: "16px 18px", whiteSpace: "pre-wrap", overflowWrap: "anywhere", fontFamily: "Georgia, serif", fontSize: 12, lineHeight: 1.6 }}>{lead.email}</div>
-          <div style={{ padding: "8px 14px", borderTop: `1px dashed ${DEMO.leinen}`, background: DEMO.birke, fontFamily: DEMO.font.mono, fontSize: 9, color: DEMO.schiefer }}>247 sample tokens · Sonnet 4.6 label · source status: unverified sample</div>
+          <div
+            style={{
+              minHeight: 260,
+              padding: "16px 18px",
+              whiteSpace: "pre-wrap",
+              overflowWrap: "anywhere",
+              fontFamily: "Georgia, serif",
+              fontSize: 12,
+              lineHeight: 1.6,
+            }}
+          >
+            {lead.email}
+          </div>
+          <div
+            style={{
+              padding: "8px 14px",
+              borderTop: `1px dashed ${DEMO.leinen}`,
+              background: DEMO.birke,
+              fontFamily: DEMO.font.mono,
+              fontSize: 12,
+              color: DEMO.schiefer,
+            }}
+          >
+            247 sample tokens · Sonnet 4.6 label · source status: unverified
+            sample
+          </div>
         </section>
       </div>
 
       <SimulationDisclosure>
-        No delivery takes place. The interface demonstrates draft review with fictional data; it has no SMTP, CRM, or provider connection.
+        No delivery takes place. The interface demonstrates draft review with
+        fictional data; it has no SMTP, CRM, or provider connection.
       </SimulationDisclosure>
 
-      <section style={{ border: "1px solid rgba(249,115,22,0.35)", background: "rgba(249,115,22,0.05)", padding: "12px 14px" }}>
-        <button type="button" aria-expanded={showControls} onClick={() => setShowControls((current) => !current)} style={{ minHeight: 40, border: "1px solid var(--color-brand-orange)", background: "transparent", color: "var(--color-brand-orange)", padding: "7px 11px", fontFamily: DEMO.font.mono, fontSize: 10, fontWeight: 700, textTransform: "uppercase", cursor: "pointer" }}>
+      <section
+        style={{
+          border: "1px solid rgba(249,115,22,0.35)",
+          background: "rgba(249,115,22,0.05)",
+          padding: "12px 14px",
+        }}
+      >
+        <button
+          type="button"
+          aria-expanded={showControls}
+          onClick={() => setShowControls((current) => !current)}
+          style={{
+            minHeight: 44,
+            border: "1px solid var(--color-brand-orange)",
+            background: "transparent",
+            color: "var(--color-brand-orange)",
+            padding: "7px 11px",
+            fontFamily: DEMO.font.mono,
+            fontSize: 12,
+            fontWeight: 700,
+            textTransform: "uppercase",
+            cursor: "pointer",
+          }}
+        >
           {showControls ? "Hide pre-send controls" : "Show pre-send controls"}
         </button>
         {showControls && (
-          <ul style={{ margin: "10px 0 0", paddingLeft: 20, display: "grid", gap: 7, fontSize: 12, lineHeight: 1.5 }}>
+          <ul
+            style={{
+              margin: "10px 0 0",
+              paddingLeft: 20,
+              display: "grid",
+              gap: 7,
+              fontSize: 12,
+              lineHeight: 1.5,
+            }}
+          >
             <li>Document the lawful basis and purpose limitation.</li>
             <li>Verify the contact source, address, and current relevance.</li>
             <li>Provide a working opt-out path before any real delivery.</li>

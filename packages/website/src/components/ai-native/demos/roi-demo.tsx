@@ -149,7 +149,7 @@ export function RoiDemo(): JSX.Element {
             className="border border-border bg-card/60 p-3.5"
           >
             <div className="mb-2 flex items-center justify-between">
-              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+              <span className="font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
                 {spec.label}
               </span>
               <span className="font-mono text-[14px] font-bold text-brand-orange">
@@ -164,7 +164,7 @@ export function RoiDemo(): JSX.Element {
               value={value}
               onChange={(e) => setter(parseFloat(e.target.value))}
               aria-label={spec.label}
-              className="ai-range w-full cursor-pointer accent-brand-orange"
+              className="ai-range min-h-11 w-full cursor-pointer accent-brand-orange"
             />
           </div>
         ))}
@@ -173,7 +173,7 @@ export function RoiDemo(): JSX.Element {
       {/* Headline KPIs — dark panel */}
       <div className="dark-section grid grid-cols-2 gap-4 border-t-[3px] border-brand-orange bg-[var(--color-dark-bg)] px-5 py-5 md:grid-cols-[1.5fr_1fr_1fr_1fr] md:gap-5 md:px-6">
         <div>
-          <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--color-dark-muted)]">
+          <div className="font-mono text-[12px] font-bold uppercase tracking-[0.14em] text-[var(--color-dark-muted)]">
             {text(
               "Modellierter Netto-Wert · 3 Jahre",
               "Modelled net value · 3 years",
@@ -197,7 +197,7 @@ export function RoiDemo(): JSX.Element {
           ],
         ].map(([label, val]) => (
           <div key={label}>
-            <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--color-dark-muted)]">
+            <div className="font-mono text-[12px] font-bold uppercase tracking-[0.14em] text-[var(--color-dark-muted)]">
               {label}
             </div>
             <div className="mt-1.5 font-mono text-[22px] font-bold text-[var(--color-dark-fg)] md:text-[26px]">
@@ -233,7 +233,7 @@ export function RoiDemo(): JSX.Element {
                   )}
                   aria-hidden="true"
                 />
-                <div className="font-mono text-[10px] tracking-[0.1em] text-muted-foreground">
+                <div className="font-mono text-[12px] tracking-[0.1em] text-muted-foreground">
                   {bar.label}
                 </div>
               </div>
@@ -244,7 +244,7 @@ export function RoiDemo(): JSX.Element {
 
       {/* Assumption disclosure */}
       <div className="flex gap-3.5 border-l-[3px] border-brand-orange bg-card/60 px-4 py-3">
-        <div className="shrink-0 font-mono text-[10px] font-bold tracking-[0.14em] text-brand-orange">
+        <div className="shrink-0 font-mono text-[12px] font-bold tracking-[0.14em] text-brand-orange">
           ◆ {text("ANNAHMEN", "ASSUMPTIONS")}
         </div>
         <div className="text-[12px] leading-[1.5] text-muted-foreground">

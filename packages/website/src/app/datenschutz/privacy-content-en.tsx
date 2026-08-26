@@ -11,7 +11,7 @@ export function EnglishPrivacyContent({
   const formattedAddress = formatServiceAddress(address);
 
   return (
-    <section className="py-24" aria-labelledby="privacy-title">
+    <section className="py-12" aria-labelledby="privacy-title">
       <div className="mx-auto max-w-3xl break-words px-6">
         <h1
           id="privacy-title"
@@ -243,13 +243,13 @@ export function EnglishPrivacyContent({
                 <p className="mt-2">
                   Users must not enter personal, confidential, or otherwise
                   unapproved real-world data in exercise fields. A model denied
-                  by the deployment, incomplete readiness, or an exhausted
-                  token quota ends the call without invented provider output.
+                  by the deployment, incomplete readiness, or an exhausted token
+                  quota ends the call without invented provider output.
                 </p>
                 <p className="mt-2">
                   To avoid identical provider calls, each individual function or
-                  runtime instance keeps no more than 500 responses in memory for
-                  a maximum of one hour. The cache is not shared across all
+                  runtime instance keeps no more than 500 responses in memory
+                  for a maximum of one hour. The cache is not shared across all
                   instances. The stored data consists of a SHA-256 request key
                   and the provider response, not the input as a separate
                   plaintext field. The response can repeat parts of the input. A
@@ -260,13 +260,13 @@ export function EnglishPrivacyContent({
                   For hourly abuse limits, the authenticated account identifier
                   and Vercel&apos;s trusted client IP are separately converted
                   into HMAC-SHA-256 keys with a dedicated server secret.
-                  Practice provider calls also reserve daily token quotas
-                  before a call: per pseudonymous account, or per pseudonymous
-                  IP for open-access AI grading, and for the deployment as a
-                  whole. Supabase stores counters and expiry times, not the raw
-                  address or learning text. Expired counters are ignored and
-                  removed during a later limiter call; physical removal at the
-                  exact second of expiry is not guaranteed.
+                  Practice provider calls also reserve daily token quotas before
+                  a call: per pseudonymous account, or per pseudonymous IP for
+                  open-access AI grading, and for the deployment as a whole.
+                  Supabase stores counters and expiry times, not the raw address
+                  or learning text. Expired counters are ignored and removed
+                  during a later limiter call; physical removal at the exact
+                  second of expiry is not guaranteed.
                 </p>
               </>
             ) : (
@@ -283,23 +283,24 @@ export function EnglishPrivacyContent({
                 transmit a fixed sequence of allowed command identifiers to
                 Vercel Sandbox. Browser-side analysis plans are structurally
                 checked only; they are not executable SQL and are not sent to
-                Sandbox. Every run creates a new non-persistent Node 24 workspace
-                containing only server-generated synthetic files, with deny-all
-                networking, a maximum 60-second lifetime, and a 10-second limit
-                per command. Free-form shell input, learner repositories,
-                credentials, and network installs are not accepted. stdout,
-                stderr, exit codes, and the Git diff are returned in a private,
-                non-cacheable response and are not stored in learning progress.
-                Data-course runs additionally return fixed synthetic metric
-                evidence. Successful server logs retain only route, status,
-                command count, and duration; error logs use bounded technical
-                step and error classes only. Workspace contents and result
-                transcripts are not logged. The server requests Sandbox
-                termination in all cases; non-persistent
+                Sandbox. Every run creates a new non-persistent Node 24
+                workspace containing only server-generated synthetic files, with
+                deny-all networking, a maximum 60-second lifetime, and a
+                10-second limit per command. Free-form shell input, learner
+                repositories, credentials, and network installs are not
+                accepted. stdout, stderr, exit codes, and the Git diff are
+                returned in a private, non-cacheable response and are not stored
+                in learning progress. Data-course runs additionally return fixed
+                synthetic metric evidence. Successful server logs retain only
+                route, status, command count, and duration; error logs use
+                bounded technical step and error classes only. Workspace
+                contents and result transcripts are not logged. The server
+                requests Sandbox termination in all cases; non-persistent
                 execution is not a promise of physical deletion at an exact
                 second inside provider infrastructure. Account, IP, and global
                 run quotas count accepted executions through the same
-                pseudonymous Supabase counters. They do not measure cost or spend.
+                pseudonymous Supabase counters. They do not measure cost or
+                spend.
               </p>
             ) : (
               <p className="mt-2">

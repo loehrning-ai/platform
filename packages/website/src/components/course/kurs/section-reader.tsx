@@ -1,21 +1,12 @@
 "use client";
 
-import { m } from "framer-motion";
-import { CheckCircle2, Circle, Lightbulb } from "lucide-react";
+import { Lightbulb } from "lucide-react";
 import { MarkdownRenderer } from "./markdown-renderer";
 import { LegalClaimBadge } from "@/components/legal-claim-badge";
+import { LessonSectionCheckpoint } from "@/components/course/lesson-proof-checkpoint";
 import type { LessonSection } from "@/lib/course/types";
 import type { Locale } from "@/lib/i18n/locale";
 import { getCourseReaderCopy } from "./course-ui-copy";
-
-const checkSpring = {
-  hidden: { scale: 0, opacity: 0 },
-  visible: {
-    scale: 1,
-    opacity: 1,
-    transition: { type: "spring" as const, stiffness: 400, damping: 15 },
-  },
-};
 
 interface SectionReaderProps {
   readonly section: LessonSection;
@@ -39,7 +30,7 @@ export function SectionReader({
         <h3 className="min-w-0 break-words text-lg font-semibold text-foreground">
           {section.title}
         </h3>
-        <span className="shrink-0 font-mono text-[11px] text-muted-foreground">
+        <span className="shrink-0 font-mono text-xs text-muted-foreground">
           {copy.minutes(section.readTimeMinutes)}
         </span>
       </div>
@@ -70,35 +61,12 @@ export function SectionReader({
         </div>
       )}
 
-      {/* 7f (accessibility and quality hardening): aria-live region announces state transition to screen readers.
-          Must be present in DOM from the initial render (not injected on click). */}
-      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
-        {isRead ? copy.readAnnouncement : ""}
-      </div>
-
-      <button
-        type="button"
-        onClick={() => onMarkRead(section.id)}
-        disabled={!interactionReady || isRead}
-        className="inline-flex items-center gap-2 text-sm font-medium transition-colors disabled:cursor-default"
-      >
-        {isRead ? (
-          <m.span
-            initial="hidden"
-            animate="visible"
-            variants={checkSpring}
-            className="inline-flex items-center gap-2 text-brand-sand"
-          >
-            <CheckCircle2 className="h-4 w-4" />
-            {copy.read}
-          </m.span>
-        ) : (
-          <span className="inline-flex items-center gap-2 text-muted-foreground hover:text-brand-orange">
-            <Circle className="h-4 w-4" />
-            {copy.markRead}
-          </span>
-        )}
-      </button>
+      <LessonSectionCheckpoint
+        locale={locale}
+        checked={isRead}
+        progressReady={interactionReady}
+        onCheck={() => onMarkRead(section.id)}
+      />
     </div>
   );
 }

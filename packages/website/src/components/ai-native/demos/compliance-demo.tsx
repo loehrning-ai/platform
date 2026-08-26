@@ -171,7 +171,7 @@ function renderDetectMode(
         {d.text}
         <sup
           className={cn(
-            "ml-0.5 font-mono text-[9px] font-bold uppercase",
+            "ml-0.5 font-mono text-[12px] font-bold uppercase",
             supColor,
           )}
         >
@@ -206,7 +206,7 @@ function renderMaskMode(
     parts.push(
       <span
         key={`m${i}`}
-        className="bg-foreground px-1.5 py-0.5 font-mono text-[11px] font-bold text-background"
+        className="bg-foreground px-1.5 py-0.5 font-mono text-[12px] font-bold text-background"
       >
         {maskLabel}
       </span>,
@@ -257,7 +257,7 @@ export function ComplianceDemo(): JSX.Element {
                 type="button"
                 onClick={() => setText(s)}
                 className={cn(
-                  "border px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.1em] transition-colors",
+                  "inline-flex min-h-11 min-w-11 items-center justify-center border px-2.5 py-1 font-mono text-[12px] font-bold uppercase tracking-[0.1em] transition-colors",
                   active
                     ? "border-foreground bg-foreground text-background"
                     : "border-border text-foreground hover:border-foreground",
@@ -305,7 +305,7 @@ export function ComplianceDemo(): JSX.Element {
                 })
               }
               className={cn(
-                "px-3.5 py-1.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] transition-colors",
+                "min-h-11 px-3.5 py-1.5 font-mono text-[12px] font-bold uppercase tracking-[0.14em] transition-colors",
                 mode === m
                   ? "bg-foreground text-background"
                   : "text-foreground hover:bg-card",
@@ -315,7 +315,7 @@ export function ComplianceDemo(): JSX.Element {
             </button>
           ))}
         </div>
-        <div className="font-mono text-[11px] text-muted-foreground">
+        <div className="font-mono text-[12px] text-muted-foreground">
           {detections.length} Treffer · 42ms · local LLM
         </div>
       </div>
@@ -341,7 +341,7 @@ export function ComplianceDemo(): JSX.Element {
         <div>
           <div
             className={cn(
-              "font-mono text-[11px] font-bold tracking-[0.14em]",
+              "font-mono text-[12px] font-bold tracking-[0.14em]",
               verdict.color,
             )}
           >
@@ -356,7 +356,7 @@ export function ComplianceDemo(): JSX.Element {
             <div className="font-mono text-[18px] font-bold text-destructive">
               {blockCount}
             </div>
-            <div className="font-mono text-[9px] tracking-[0.1em] text-muted-foreground">
+            <div className="font-mono text-[12px] tracking-[0.1em] text-muted-foreground">
               PII
             </div>
           </div>
@@ -364,7 +364,7 @@ export function ComplianceDemo(): JSX.Element {
             <div className="font-mono text-[18px] font-bold text-brand-amber">
               {reviewCount}
             </div>
-            <div className="font-mono text-[9px] tracking-[0.1em] text-muted-foreground">
+            <div className="font-mono text-[12px] tracking-[0.1em] text-muted-foreground">
               REVIEW
             </div>
           </div>
@@ -372,7 +372,7 @@ export function ComplianceDemo(): JSX.Element {
             <div className="font-mono text-[18px] font-bold text-brand-orange">
               {maskCount}
             </div>
-            <div className="font-mono text-[9px] tracking-[0.1em] text-muted-foreground">
+            <div className="font-mono text-[12px] tracking-[0.1em] text-muted-foreground">
               MASK
             </div>
           </div>

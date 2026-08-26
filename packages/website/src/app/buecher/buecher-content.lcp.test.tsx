@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { createElement } from "react";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import type { Locale } from "@/lib/i18n/locale";
 
 vi.mock("next/image", () => ({
   default: (props: Record<string, unknown>) => createElement("img", props),
@@ -17,6 +18,8 @@ vi.mock("@/lib/books", async (importOriginal) => {
 });
 
 import { BuecherContent } from "./buecher-content";
+import { BOOK_PAGE_COPY, getBookDisplay } from "./book-copy";
+import { books } from "@/lib/books";
 
 describe("BuecherContent visibility, loading, and locale behavior", () => {
   it("keeps the LCP catalog server-owned and the teaser behind a conditional import", () => {
@@ -47,6 +50,10 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
       }),
     ).toBeVisible();
     expect(screen.getAllByTestId("book-card")).toHaveLength(2);
+    expect(screen.getAllByText(/von Tim Löhr/)).toHaveLength(2);
+    expect(screen.getAllByText("Nach der Lektüre")).toHaveLength(2);
+    expect(screen.getAllByText(/Redaktion: editorial:books/)).toHaveLength(2);
+    expect(screen.getAllByText("Ausgabe, Quellen und Zugang")).toHaveLength(2);
     expect(
       container.querySelectorAll('[data-motion-initial*="opacity"]').length,
     ).toBe(0);
@@ -81,13 +88,13 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
       screen.getAllByText("Material language", { exact: true }).length,
     ).toBeGreaterThan(0);
     expect(screen.getAllByText("English").length).toBeGreaterThan(0);
-    expect(
-      screen.getAllByRole("link", { name: "Open book and chapters" })[0],
-    ).toHaveAttribute("href", "/en/buecher/ki-landschaft");
-    expect(screen.getByRole("link", { name: "View courses" })).toHaveAttribute(
-      "href",
-      "/en/kurse",
-    );
+    const overview = screen.getByRole("link", {
+      name: "Open book and chapters: AI in German SMEs",
+    });
+    expect(overview).toHaveAttribute("href", "/en/buecher/ki-landschaft");
+    expect(overview).toHaveClass("min-h-11");
+    expect(screen.getAllByText("After reading")).toHaveLength(2);
+    expect(screen.queryByRole("link", { name: "View courses" })).toBeNull();
 
     const pageLinks = Array.from(
       container.querySelectorAll<HTMLAnchorElement>('a[href^="/"]'),
@@ -117,5 +124,81 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
     expect(
       within(dialog).getByRole("link", { name: "Open book and chapters" }),
     ).toHaveAttribute("href", "/en/buecher/ki-landschaft");
+  });
+
+  it("states the PDF boundary and exposes the login route only when accounts are enabled", () => {
+    const disabled = render(
+      <BuecherContent accountEnabled={false} locale="en" />,
+    );
+
+    expect(screen.getAllByText("PDF download unavailable")).toHaveLength(2);
+    expect(
+      screen.queryByRole("link", { name: "German PDF after sign-in" }),
+    ).toBeNull();
+    disabled.unmount();
+
+    render(<BuecherContent accountEnabled locale="en" />);
+    expect(
+      screen.getByRole("link", {
+        name: "German PDF after sign-in: AI in German SMEs",
+      }),
+    ).toHaveAttribute(
+      "href",
+      "/en/login?next=%2Fapi%2Fbuecher%2Fki-landschaft%2Fdownload.pdf",
+    );
+  });
+
+  it.each(["de", "en"] as const)(
+    "gives every repeated ledger control a unique accessible name in %s",
+    (locale: Locale) => {
+      const { container } = render(
+        <BuecherContent accountEnabled locale={locale} />,
+      );
+      const copy = BOOK_PAGE_COPY[locale].catalog;
+      const displays = books.map((book) => getBookDisplay(book, locale));
+
+      const overviewLinks = books
+        .map((book, index) => ({ book, display: displays[index] }))
+        .filter(({ book }) => book.publicationStatus === "published")
+        .map(({ display }) =>
+          screen.getByRole("link", {
+            name: `${copy.openOverview}: ${display.title}`,
+          }),
+        );
+      const pdfLinks = books
+        .map((book, index) => ({ book, display: displays[index] }))
+        .filter(({ book }) => Boolean(book.pdfPath))
+        .map(({ display }) =>
+          screen.getByRole("link", {
+            name: `${copy.pdfAfterLogin}: ${display.title}`,
+          }),
+        );
+      const disclosures = Array.from(container.querySelectorAll("summary"));
+
+      expect(disclosures).toHaveLength(displays.length);
+      disclosures.forEach((disclosure, index) => {
+        expect(disclosure).toHaveAccessibleName(
+          `${copy.detailsLabel}: ${displays[index].title}`,
+        );
+      });
+
+      const names = [...overviewLinks, ...pdfLinks, ...disclosures].map(
+        (control) => control.getAttribute("aria-label"),
+      );
+      expect(names.every(Boolean)).toBe(true);
+      expect(new Set(names).size).toBe(names.length);
+    },
+  );
+
+  it("uses flat editorial rows without undersized labels or decorative motion", () => {
+    const source = readFileSync(
+      resolve(process.cwd(), "src/app/buecher/buecher-content.tsx"),
+      "utf8",
+    );
+
+    expect(source).not.toContain("transition-all");
+    expect(source).not.toMatch(/text-\[(?:9|10|11)(?:\.\d+)?px\]/);
+    expect(source).not.toMatch(/rounded-(?:lg|xl|2xl|3xl|full)/);
+    expect(source).not.toContain("copy.bridgeHeading");
   });
 });

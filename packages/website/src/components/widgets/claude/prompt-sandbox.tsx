@@ -27,7 +27,7 @@ export interface PromptSandboxWidgetProps {
 }
 
 const RUN_BUTTON_CLASS = cn(
-  "inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:hover:translate-x-0 disabled:hover:translate-y-0",
+  "inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:hover:translate-x-0 disabled:hover:translate-y-0",
 );
 
 export function PromptSandboxWidget({
@@ -68,7 +68,7 @@ export function PromptSandboxWidget({
       title={resolvedTitle}
       scenario={hint}
       done={done}
-      xpLabel="+10 XP"
+      doneLabel={german ? "Erledigt" : "Done"}
     >
       <textarea
         rows={5}
@@ -76,10 +76,10 @@ export function PromptSandboxWidget({
         onChange={(e) => setValue(e.target.value)}
         placeholder={resolvedPlaceholder}
         aria-label={resolvedTitle}
-        className="w-full border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+        className="min-h-11 w-full border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
       />
       <div className="mt-2 flex items-center justify-between gap-3">
-        <span className="font-mono text-[11px] text-muted-foreground">
+        <span className="font-mono text-xs text-muted-foreground">
           {value.length} {german ? "Zeichen" : "chars"}
         </span>
         <button

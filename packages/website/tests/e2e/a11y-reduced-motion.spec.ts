@@ -19,7 +19,7 @@ test.describe.configure({ timeout: 60_000 });
 
 const CHAPTER = "/buecher/ki-landschaft/03_reifegrad_ueberblick";
 const HOMEPAGE_STATIC_REVEAL_ROOTS =
-  '[data-testid="kurse-section"], [data-testid="platform-principles"], [data-testid="final-cta"]';
+  '[data-testid="kurse-section"], [data-testid="ressourcen-section"], [data-testid="platform-principles"]';
 
 // Every captured console error and uncaught page error fails the check.
 function collectConsoleErrors(page: Page): string[] {
@@ -32,7 +32,9 @@ function collectConsoleErrors(page: Page): string[] {
 }
 
 function meaningfulErrors(errors: string[], browserName: string): string[] {
-  return errors.filter((error) => !isKnownBenignConsoleNoise(error, browserName));
+  return errors.filter(
+    (error) => !isKnownBenignConsoleNoise(error, browserName),
+  );
 }
 
 /** Effective opacity of the first `h1`: product of its own + ancestor opacity. */
@@ -76,7 +78,8 @@ function stuckReveals(page: Page, rootSelector?: string): Promise<string[]> {
     return candidates
       .filter((el) => {
         if (el.closest('[data-section="hero"]')) return false; // scroll-linked
-        if (el.closest("svg") || el.closest('[aria-hidden="true"]')) return false;
+        if (el.closest("svg") || el.closest('[aria-hidden="true"]'))
+          return false;
         const r = el.getBoundingClientRect();
         return r.width >= 2 && r.height >= 2 && eff(el) < 0.05;
       })
@@ -123,7 +126,9 @@ async function expectReducedMotionHonored(
 
   // Guard the test itself: the context truly reports reduced motion.
   expect(
-    await page.evaluate(() => matchMedia("(prefers-reduced-motion: reduce)").matches),
+    await page.evaluate(
+      () => matchMedia("(prefers-reduced-motion: reduce)").matches,
+    ),
     "context should honor prefers-reduced-motion: reduce",
   ).toBe(true);
 
@@ -186,14 +191,9 @@ async function expectReducedMotionHonored(
               );
             }
             if (style.contentVisibility === "hidden") {
-              blockers.push(
-                `${candidate.tagName}: content-visibility=hidden`,
-              );
+              blockers.push(`${candidate.tagName}: content-visibility=hidden`);
             }
-            if (
-              style.clipPath !== "none" &&
-              style.clipPath !== "inset(0px)"
-            ) {
+            if (style.clipPath !== "none" && style.clipPath !== "inset(0px)") {
               blockers.push(
                 `${candidate.tagName}: clip-path=${style.clipPath}`,
               );
@@ -203,9 +203,7 @@ async function expectReducedMotionHonored(
             )) {
               const value = Number(match[1]) / (match[2] ? 100 : 1);
               if (Number.isFinite(value) && value < 0.05) {
-                blockers.push(
-                  `${candidate.tagName}: filter-opacity=${value}`,
-                );
+                blockers.push(`${candidate.tagName}: filter-opacity=${value}`);
               }
             }
             if (node === document.body) break;
@@ -233,7 +231,10 @@ async function expectReducedMotionHonored(
   await expect(h1).toBeVisible();
   if (headingText) await expect(h1).toContainText(headingText);
   await expect
-    .poll(() => firstH1Opacity(page), { timeout: 6000, message: `${route}: h1 stuck below full opacity` })
+    .poll(() => firstH1Opacity(page), {
+      timeout: 6000,
+      message: `${route}: h1 stuck below full opacity`,
+    })
     .toBeGreaterThan(0.99);
 
   // Below-fold whileInView reveals fire and settle -> nothing stuck invisible.
@@ -243,7 +244,10 @@ async function expectReducedMotionHonored(
   await fireAllReveals(page);
   await fireAllReveals(page);
   await expect
-    .poll(() => stuckReveals(page), { timeout: 15_000, message: `${route}: opacity reveals stuck invisible` })
+    .poll(() => stuckReveals(page), {
+      timeout: 15_000,
+      message: `${route}: opacity reveals stuck invisible`,
+    })
     .toEqual([]);
 
   const noise = meaningfulErrors(errors, browserName);

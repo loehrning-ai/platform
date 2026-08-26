@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { LernbegleiterStrip } from "@/components/learning/lernbegleiter-strip";
-import { ReadingProgressBar } from "@/components/progress/reading-progress-bar";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
@@ -72,7 +70,11 @@ function courseGraph(locale: Locale) {
   };
 }
 
-export default async function AiNativeKursLayout({ children }: { readonly children: ReactNode }) {
+export default async function AiNativeKursLayout({
+  children,
+}: {
+  readonly children: ReactNode;
+}) {
   const locale = resolveFoundationCourseContentLocale(
     "ai-native",
     await getRequestLocale(),
@@ -80,11 +82,7 @@ export default async function AiNativeKursLayout({ children }: { readonly childr
   return (
     <>
       <JsonLd data={courseGraph(locale)} id="ai-native-course-jsonld" />
-      <ReadingProgressBar />
-      <div className="pb-16">
-        {children}
-      </div>
-      <LernbegleiterStrip locale={locale} />
+      <div className="pb-12">{children}</div>
     </>
   );
 }

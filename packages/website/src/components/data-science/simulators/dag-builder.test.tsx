@@ -19,12 +19,23 @@ describe("DAGBuilder ", () => {
       screen.getByText("DAG patterns · should you adjust for Z?"),
     ).toBeInTheDocument();
     expect(screen.getByText("Yes, directly.")).toBeInTheDocument();
+    expect(
+      screen.getByRole("group", { name: "DAG pattern" }),
+    ).toBeInTheDocument();
+    const direct = screen.getByRole("button", { name: /Direct effect/ });
+    expect(direct).toHaveAttribute("aria-pressed", "true");
+    expect(direct).toHaveClass("min-h-11");
   });
 
   it("clicking through all 4 patterns renders each pattern's own distinct answer/explanation — verifies edgePath stayed scoped to its own data across the file split", () => {
     render(<DAGBuilder />);
 
-    fireEvent.click(screen.getByText(/^Fork \/ Confounder/));
+    const fork = screen.getByRole("button", { name: /^Fork \/ Confounder/ });
+    fireEvent.click(fork);
+    expect(fork).toHaveAttribute("aria-pressed", "true");
+    expect(
+      screen.getByRole("button", { name: /^Direct effect/ }),
+    ).toHaveAttribute("aria-pressed", "false");
     expect(
       screen.getByText("Yes, but only after controlling for Z."),
     ).toBeInTheDocument();

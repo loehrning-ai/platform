@@ -8,6 +8,7 @@ import {
   within,
 } from "@testing-library/react";
 import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
+import { localizeCatalog } from "@/lib/courses/catalog-copy";
 import type { AccountDeletionControlState } from "@/lib/progress/account-deletion-control";
 import type { ProgressSyncFailure } from "@/lib/progress/sync-status";
 import { isDefiniteDeleteFailure } from "./deletion-response-policy";
@@ -147,12 +148,38 @@ describe("DatenschutzPage course-reset list", () => {
       }),
     ).toBeVisible();
     expect(screen.getByText("AI Fundamentals")).toBeVisible();
-    expect(screen.getByRole("link", { name: "← Back to account" })).toHaveAttribute(
-      "href",
-      "/en/konto",
-    );
+    expect(
+      screen.getByRole("link", { name: "← Back to account" }),
+    ).toHaveAttribute("href", "/en/konto");
+    expect(
+      screen.getByRole("navigation", { name: "Account navigation" }),
+    ).toBeVisible();
     expect(container.textContent).not.toMatch(
       /Datenschutz & Datenverwaltung|Meine Daten exportieren|Konto löschen/,
+    );
+  });
+
+  it("keeps secondary lineage collapsed and gives destructive confirmation one clear action", () => {
+    render(<DatenschutzPage />);
+
+    for (const label of [
+      "Umfang und Exporthistorie",
+      "Technische Lösch- und Sperrmarker",
+    ]) {
+      const disclosure = screen.getByText(label).closest("details");
+      expect(disclosure).not.toBeNull();
+      expect(disclosure).not.toHaveAttribute("open");
+    }
+
+    for (const control of screen.getAllByRole("button")) {
+      expect(control).toHaveClass("min-h-11");
+    }
+
+    const deleteButton = screen.getByRole("button", { name: "Konto löschen" });
+    fireEvent.click(deleteButton);
+    expect(deleteButton).toHaveClass("bg-red-700", "text-white");
+    expect(screen.getByRole("button", { name: "Abbrechen" })).toHaveClass(
+      "min-h-11",
     );
   });
 
@@ -163,6 +190,46 @@ describe("DatenschutzPage course-reset list", () => {
     }
   });
 
+  it.each([
+    ["de", "Zurücksetzen", "Ja, endgültig zurücksetzen", "Abbrechen"],
+    ["en", "Reset", "Yes, reset permanently", "Cancel"],
+  ] as const)(
+    "gives every per-course reset and cancel control a unique accessible name in %s",
+    (locale, resetLabel, confirmLabel, cancelLabel) => {
+      render(<DatenschutzPage locale={locale} />);
+      const courses = localizeCatalog(COURSE_CATALOG, locale);
+      const resetButtons = courses.map((course) =>
+        screen.getByRole("button", {
+          name: `${resetLabel}: ${course.title}`,
+        }),
+      );
+
+      expect(
+        new Set(resetButtons.map((button) => button.getAttribute("aria-label")))
+          .size,
+      ).toBe(courses.length);
+      resetButtons.forEach((button) => fireEvent.click(button));
+
+      const confirmButtons = courses.map((course) =>
+        screen.getByRole("button", {
+          name: `${confirmLabel}: ${course.title}`,
+        }),
+      );
+      const cancelButtons = courses.map((course) =>
+        screen.getByRole("button", {
+          name: `${cancelLabel}: ${course.title}`,
+        }),
+      );
+
+      for (const controls of [confirmButtons, cancelButtons]) {
+        expect(
+          new Set(controls.map((button) => button.getAttribute("aria-label")))
+            .size,
+        ).toBe(courses.length);
+      }
+    },
+  );
+
   it("requires explicit confirmation before resetting a course", () => {
     const fetchMock = vi.spyOn(globalThis, "fetch");
     render(<DatenschutzPage />);
@@ -170,7 +237,7 @@ describe("DatenschutzPage course-reset list", () => {
     const courseRow = screen.getByText(COURSE_CATALOG[0].title).closest("li");
     expect(courseRow).not.toBeNull();
     const reset = within(courseRow!).getByRole("button", {
-      name: "Zurücksetzen",
+      name: `Zurücksetzen: ${COURSE_CATALOG[0].title}`,
     });
     expect(reset).not.toHaveAttribute("aria-controls");
     fireEvent.click(reset);
@@ -183,14 +250,16 @@ describe("DatenschutzPage course-reset list", () => {
     );
     expect(
       within(courseRow!).getByRole("button", {
-        name: "Ja, endgültig zurücksetzen",
+        name: `Ja, endgültig zurücksetzen: ${COURSE_CATALOG[0].title}`,
       }),
     ).toBe(reset);
     expect(within(courseRow!).getByRole("alert")).toHaveTextContent(
       `Fortschritt für ${COURSE_CATALOG[0].title} wirklich zurücksetzen?`,
     );
     expect(
-      within(courseRow!).getByRole("button", { name: "Abbrechen" }),
+      within(courseRow!).getByRole("button", {
+        name: `Abbrechen: ${COURSE_CATALOG[0].title}`,
+      }),
     ).toBeVisible();
   });
 
@@ -201,11 +270,13 @@ describe("DatenschutzPage course-reset list", () => {
     const courseRow = screen.getByText(COURSE_CATALOG[0].title).closest("li");
     expect(courseRow).not.toBeNull();
     const reset = within(courseRow!).getByRole("button", {
-      name: "Zurücksetzen",
+      name: `Zurücksetzen: ${COURSE_CATALOG[0].title}`,
     });
     fireEvent.click(reset);
     fireEvent.click(
-      within(courseRow!).getByRole("button", { name: "Abbrechen" }),
+      within(courseRow!).getByRole("button", {
+        name: `Abbrechen: ${COURSE_CATALOG[0].title}`,
+      }),
     );
 
     expect(fetchMock).not.toHaveBeenCalled();
@@ -476,10 +547,7 @@ describe("DatenschutzPage course-reset list", () => {
 
   it("uses provider-neutral reauthentication copy after a stale session", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      Response.json(
-        { error: "reauthentication_required" },
-        { status: 403 },
-      ),
+      Response.json({ error: "reauthentication_required" }, { status: 403 }),
     );
     render(<DatenschutzPage />);
 
@@ -669,10 +737,14 @@ describe("DatenschutzPage course-reset list", () => {
       "Kontozuordnung ist noch nicht sicher bestätigt",
     );
 
-    const reset = screen.getAllByRole("button", { name: "Zurücksetzen" })[0];
+    const reset = screen.getByRole("button", {
+      name: `Zurücksetzen: ${COURSE_CATALOG[0].title}`,
+    });
     fireEvent.click(reset);
     fireEvent.click(
-      screen.getByRole("button", { name: "Ja, endgültig zurücksetzen" }),
+      screen.getByRole("button", {
+        name: `Ja, endgültig zurücksetzen: ${COURSE_CATALOG[0].title}`,
+      }),
     );
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
@@ -711,10 +783,14 @@ describe("DatenschutzPage course-reset list", () => {
     );
     render(<DatenschutzPage />);
 
-    const reset = screen.getAllByRole("button", { name: "Zurücksetzen" })[0];
+    const reset = screen.getByRole("button", {
+      name: `Zurücksetzen: ${COURSE_CATALOG[0].title}`,
+    });
     fireEvent.click(reset);
     fireEvent.click(
-      screen.getByRole("button", { name: "Ja, endgültig zurücksetzen" }),
+      screen.getByRole("button", {
+        name: `Ja, endgültig zurücksetzen: ${COURSE_CATALOG[0].title}`,
+      }),
     );
 
     await waitFor(() => {
@@ -724,7 +800,9 @@ describe("DatenschutzPage course-reset list", () => {
       );
     });
     expect(
-      screen.getByRole("button", { name: "Zurückgesetzt" }),
+      screen.getByRole("button", {
+        name: `Zurückgesetzt: ${COURSE_CATALOG[0].title}`,
+      }),
     ).toBeDisabled();
     expect(fetchMock).toHaveBeenCalledWith(
       "/api/account/reset-progress",
@@ -746,13 +824,19 @@ describe("DatenschutzPage course-reset list", () => {
     const fetchMock = vi.spyOn(globalThis, "fetch").mockReturnValue(response);
     render(<DatenschutzPage />);
 
-    const reset = screen.getAllByRole("button", { name: "Zurücksetzen" })[0];
+    const reset = screen.getByRole("button", {
+      name: `Zurücksetzen: ${COURSE_CATALOG[0].title}`,
+    });
     fireEvent.click(reset);
     fireEvent.click(
-      screen.getByRole("button", { name: "Ja, endgültig zurücksetzen" }),
+      screen.getByRole("button", {
+        name: `Ja, endgültig zurücksetzen: ${COURSE_CATALOG[0].title}`,
+      }),
     );
 
-    const pending = screen.getByRole("button", { name: "Zurücksetzen…" });
+    const pending = screen.getByRole("button", {
+      name: `Zurücksetzen…: ${COURSE_CATALOG[0].title}`,
+    });
     expect(pending).toBeDisabled();
     expect(pending).toHaveAttribute("aria-busy", "true");
     fireEvent.click(pending);
@@ -774,7 +858,9 @@ describe("DatenschutzPage course-reset list", () => {
       await response;
     });
     expect(
-      await screen.findByRole("button", { name: "Zurückgesetzt" }),
+      await screen.findByRole("button", {
+        name: `Zurückgesetzt: ${COURSE_CATALOG[0].title}`,
+      }),
     ).toBeDisabled();
   });
 
@@ -790,10 +876,14 @@ describe("DatenschutzPage course-reset list", () => {
     );
     render(<DatenschutzPage />);
 
-    const reset = screen.getAllByRole("button", { name: "Zurücksetzen" })[0];
+    const reset = screen.getByRole("button", {
+      name: `Zurücksetzen: ${COURSE_CATALOG[0].title}`,
+    });
     fireEvent.click(reset);
     fireEvent.click(
-      screen.getByRole("button", { name: "Ja, endgültig zurücksetzen" }),
+      screen.getByRole("button", {
+        name: `Ja, endgültig zurücksetzen: ${COURSE_CATALOG[0].title}`,
+      }),
     );
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
@@ -817,10 +907,14 @@ describe("DatenschutzPage course-reset list", () => {
     );
     render(<DatenschutzPage />);
 
-    const reset = screen.getAllByRole("button", { name: "Zurücksetzen" })[0];
+    const reset = screen.getByRole("button", {
+      name: `Zurücksetzen: ${COURSE_CATALOG[0].title}`,
+    });
     fireEvent.click(reset);
     fireEvent.click(
-      screen.getByRole("button", { name: "Ja, endgültig zurücksetzen" }),
+      screen.getByRole("button", {
+        name: `Ja, endgültig zurücksetzen: ${COURSE_CATALOG[0].title}`,
+      }),
     );
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
@@ -835,10 +929,14 @@ describe("DatenschutzPage course-reset list", () => {
       .mockResolvedValue(new Response(null, { status: 503 }));
     render(<DatenschutzPage />);
 
-    const reset = screen.getAllByRole("button", { name: "Zurücksetzen" })[0];
+    const reset = screen.getByRole("button", {
+      name: `Zurücksetzen: ${COURSE_CATALOG[0].title}`,
+    });
     fireEvent.click(reset);
     fireEvent.click(
-      screen.getByRole("button", { name: "Ja, endgültig zurücksetzen" }),
+      screen.getByRole("button", {
+        name: `Ja, endgültig zurücksetzen: ${COURSE_CATALOG[0].title}`,
+      }),
     );
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Fehler 503");
@@ -849,7 +947,9 @@ describe("DatenschutzPage course-reset list", () => {
     fireEvent.click(reset);
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(
-      screen.getByRole("button", { name: "Ja, endgültig zurücksetzen" }),
+      screen.getByRole("button", {
+        name: `Ja, endgültig zurücksetzen: ${COURSE_CATALOG[0].title}`,
+      }),
     ).toBeVisible();
   });
 

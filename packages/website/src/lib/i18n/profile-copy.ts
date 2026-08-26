@@ -38,10 +38,6 @@ type ProfileCopy = Readonly<{
     focusValue: string;
     accessLabel: string;
     accessValue: string;
-    linksLabel: string;
-    linkedIn: string;
-    personalGithub: string;
-    organizationGithub: string;
   }>;
   stations: Readonly<{
     ariaLabel: string;
@@ -82,14 +78,6 @@ type ProfileCopy = Readonly<{
     feedbackPrefix: string;
     feedbackLabel: string;
   }>;
-  cta: Readonly<{
-    eyebrow: string;
-    title: string;
-    body: string;
-    linksLabel: string;
-    courses: string;
-    openSource: string;
-  }>;
 }>;
 
 export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
@@ -126,10 +114,6 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       focusValue: "KI-Kompetenz · Datenarbeit · technische Praxis",
       accessLabel: "Plattform",
       accessValue: "Freier Zugang · öffentliche Quellen",
-      linksLabel: "Profile und Repositories",
-      linkedIn: "LinkedIn-Profil",
-      personalGithub: "Persönliches GitHub-Profil",
-      organizationGithub: "loehrning.ai auf GitHub",
     },
     stations: {
       ariaLabel: "Frühere berufliche Stationen",
@@ -142,7 +126,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       eyebrow: "Laufbahn",
       title: "Berufliche Stationen",
       intro:
-        "Die Übersicht nennt Rolle und Arbeitsschwerpunkt. Firmennamen dokumentieren frühere Beschäftigungen, keine Partnerschaften.",
+        "Die Chronologie zeigt Zeitraum, Rolle und Arbeitsschwerpunkt jeder Station.",
       ariaLabel: "Chronologie der beruflichen Stationen",
       currentLabel: "Aktuell",
       milestones: [
@@ -254,15 +238,6 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       feedbackPrefix: "Inhaltliche Fehler lassen sich auch über",
       feedbackLabel: "das Feedback-Formular",
     },
-    cta: {
-      eyebrow: "Weiterlesen",
-      title:
-        "Die Inhalte beginnen mit dem Thema, nicht mit einer Verkaufsstrecke.",
-      body: "Der Kurskatalog ordnet Grundlagen, technische Vertiefungen und praktische Formate. Der Open-Source-Hub dokumentiert veröffentlichte Artefakte.",
-      linksLabel: "Weiterführende Bereiche",
-      courses: "Kurse öffnen",
-      openSource: "Open-Source-Hub öffnen",
-    },
   },
   en: {
     metadata: {
@@ -297,10 +272,6 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       focusValue: "AI literacy · data work · technical practice",
       accessLabel: "Platform",
       accessValue: "Free access · public sources",
-      linksLabel: "Profiles and repositories",
-      linkedIn: "LinkedIn profile",
-      personalGithub: "Personal GitHub profile",
-      organizationGithub: "loehrning.ai on GitHub",
     },
     stations: {
       ariaLabel: "Previous professional roles",
@@ -313,7 +284,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       eyebrow: "Career",
       title: "Professional timeline",
       intro:
-        "This overview records each role and area of work. Company names document previous employment, not partnerships.",
+        "The chronology shows the period, role, and area of work for each position.",
       ariaLabel: "Chronology of professional roles",
       currentLabel: "Current",
       milestones: [
@@ -423,14 +394,6 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       github: "Open GitHub profile",
       feedbackPrefix: "Content errors can also be reported through",
       feedbackLabel: "the feedback form",
-    },
-    cta: {
-      eyebrow: "Continue reading",
-      title: "The material starts with the subject, not a sales flow.",
-      body: "The course catalog organizes foundations, technical deep dives, and practical formats. The open-source hub documents published artifacts.",
-      linksLabel: "Related sections",
-      courses: "Open course catalog",
-      openSource: "Open open-source hub",
     },
   },
 } as const;

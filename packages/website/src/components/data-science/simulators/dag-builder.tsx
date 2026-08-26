@@ -225,16 +225,22 @@ export function DAGBuilder() {
     >
       <div className="sim-row" style={{ gridTemplateColumns: "1fr 1fr" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <div className="seg" style={{ flexDirection: "column", gap: 4 }}>
+          <div
+            className="seg"
+            role="group"
+            aria-label={text("DAG pattern", "DAG-Muster")}
+            style={{ flexDirection: "column", gap: 4 }}
+          >
             {DAGS.map((d, i) => (
               <button
                 key={i}
                 type="button"
-                className={active === i ? "on" : ""}
+                className={active === i ? "on min-h-11" : "min-h-11"}
+                aria-pressed={active === i}
                 onClick={() => setActive(i)}
               >
                 {locale === "de" ? DAGS_DE[i]!.title : d.title}{" "}
-                <span style={{ opacity: 0.55, fontSize: 10 }}>{d.tag}</span>
+                <span style={{ opacity: 0.55, fontSize: 12 }}>{d.tag}</span>
               </button>
             ))}
           </div>
@@ -249,7 +255,7 @@ export function DAGBuilder() {
           >
             <div
               style={{
-                fontSize: 11,
+                fontSize: 12,
                 color: "var(--ink-3)",
                 fontFamily: "'JetBrains Mono',monospace",
                 marginBottom: 6,
@@ -272,7 +278,7 @@ export function DAGBuilder() {
                 display: "inline-block",
                 padding: "3px 10px",
                 borderRadius: 20,
-                fontSize: 11,
+                fontSize: 12,
                 fontWeight: 700,
                 fontFamily: "'JetBrains Mono',monospace",
                 background: `${adjustColor}22`,
@@ -285,7 +291,7 @@ export function DAGBuilder() {
             </div>
             <p
               className="prose"
-              style={{ fontSize: 11.5, margin: 0, color: "var(--ink-3)" }}
+              style={{ fontSize: 12, margin: 0, color: "var(--ink-3)" }}
             >
               {dagCopy.explanation}
             </p>

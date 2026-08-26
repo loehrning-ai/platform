@@ -8,10 +8,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { getLegalClaim } from "../legal-registry";
 
-const CONTENT_DIR = join(
-  process.cwd(),
-  "content/eu-ai-act-kurs"
-);
+const CONTENT_DIR = join(process.cwd(), "content/eu-ai-act-kurs");
 
 const COURSE_DIR = join(process.cwd(), "src");
 
@@ -29,21 +26,26 @@ function readFile(relativePath: string): string {
 
 describe("block-1 sanctions date", () => {
   it("does NOT contain 'August 2025 scharf' or 'scharf seit August 2025'", () => {
-    const raw = readFileSync(join(CONTENT_DIR, "block-1-grundlagen-lessons.json"), "utf-8");
+    const raw = readFileSync(
+      join(CONTENT_DIR, "block-1-grundlagen-lessons.json"),
+      "utf-8",
+    );
     expect(raw).not.toContain("August 2025 scharf");
     expect(raw).not.toContain("scharf seit August 2025");
     expect(raw).not.toContain("Seit August 2025 durchsetzbar");
   });
 
   it("block-1 L4 s3 title is 'Wann greift die Durchsetzung?'", () => {
-    const data = readJson("block-1-grundlagen-lessons.json") as { lessons: { sections: { title: string }[] }[] };
+    const data = readJson("block-1-grundlagen-lessons.json") as {
+      lessons: { sections: { title: string }[] }[];
+    };
     const s3 = data.lessons[3]?.sections[2];
     expect(s3?.title).toBe("Wann greift die Durchsetzung?");
   });
 
   it("block-1 L4 s3 keyTakeaway reflects the amended Article 4 timeline", () => {
     const data = readJson("block-1-grundlagen-lessons.json") as {
-      lessons: { sections: { keyTakeaway?: string }[] }[]
+      lessons: { sections: { keyTakeaway?: string }[] }[];
     };
     const s3 = data.lessons[3]?.sections[2];
     expect(s3?.keyTakeaway).toContain("Februar 2025");
@@ -52,10 +54,15 @@ describe("block-1 sanctions date", () => {
   });
 
   it("Dec 2027 and Aug 2028 dates in block-1 carry pending qualifier", () => {
-    const raw = readFileSync(join(CONTENT_DIR, "block-1-grundlagen-lessons.json"), "utf-8");
+    const raw = readFileSync(
+      join(CONTENT_DIR, "block-1-grundlagen-lessons.json"),
+      "utf-8",
+    );
     // If file contains these dates, it must also contain the qualifier
     if (raw.includes("2027") && raw.includes("2028")) {
-      expect(raw).toMatch(/beschlossen|noch nicht veröffentlicht|noch nicht in Kraft/);
+      expect(raw).toMatch(
+        /beschlossen|noch nicht veröffentlicht|noch nicht in Kraft/,
+      );
     }
   });
 });
@@ -64,15 +71,23 @@ describe("block-1 sanctions date", () => {
 
 describe("quiz questions integrity", () => {
   it("q_w02 has claimId set to ai-literacy-supervision-2026-08-02", () => {
-    const questions = readJson("quiz/questions.json") as Array<{ id: string; claimId?: string }>;
+    const questions = readJson("quiz/questions.json") as Array<{
+      id: string;
+      claimId?: string;
+    }>;
     const q = questions.find((q) => q.id === "q_w02");
     expect(q?.claimId).toBe("ai-literacy-supervision-2026-08-02");
   });
 
   it("q_w17 explanation does NOT use 'Konformitätsvermutung' as what CoP signatories enjoy", () => {
-    const questions = readJson("quiz/questions.json") as Array<{ id: string; explanation?: string }>;
+    const questions = readJson("quiz/questions.json") as Array<{
+      id: string;
+      explanation?: string;
+    }>;
     const q = questions.find((q) => q.id === "q_w17");
-    expect(q?.explanation).not.toContain("gilt als Weg zur Vermutung der Konformität");
+    expect(q?.explanation).not.toContain(
+      "gilt als Weg zur Vermutung der Konformität",
+    );
     // Must contain the corrected formulation
     expect(q?.explanation).toContain("Mittel zum Nachweis");
   });
@@ -104,7 +119,10 @@ describe("landing page duration", () => {
 
   it("landing page mentions ca. 1 Std. 50 Min. or 110 min", () => {
     const content = readFile("app/eu-ai-act-kurs/page.tsx");
-    const hasTimeRef = content.includes("1 Std. 50 Min") || content.includes("110 min") || content.includes("16–20 Minuten");
+    const hasTimeRef =
+      content.includes("1 Std. 50 Min") ||
+      content.includes("110 min") ||
+      content.includes("16–20 Minuten");
     expect(hasTimeRef).toBe(true);
   });
 });
@@ -113,13 +131,19 @@ describe("landing page duration", () => {
 
 describe("GPAI Code wording", () => {
   it("block-4 does NOT contain 'genießen eine Konformitätsvermutung'", () => {
-    const raw = readFileSync(join(CONTENT_DIR, "block-4-gpai-transparenz-lessons.json"), "utf-8");
+    const raw = readFileSync(
+      join(CONTENT_DIR, "block-4-gpai-transparenz-lessons.json"),
+      "utf-8",
+    );
     expect(raw).not.toContain("genießen eine Konformitätsvermutung");
     expect(raw).not.toContain("gilt als Weg zur Vermutung der Konformität");
   });
 
   it("block-4 contains the corrected 'Mittel zum Nachweis' formulation", () => {
-    const raw = readFileSync(join(CONTENT_DIR, "block-4-gpai-transparenz-lessons.json"), "utf-8");
+    const raw = readFileSync(
+      join(CONTENT_DIR, "block-4-gpai-transparenz-lessons.json"),
+      "utf-8",
+    );
     expect(raw).toContain("Mittel zum Nachweis");
   });
 });
@@ -145,7 +169,10 @@ describe("personal brand removal", () => {
   }
 
   it("block-6 does NOT contain anti-consultancy dig '30.000 Euro' or 'Beratungsprodukte verkaufen'", () => {
-    const raw = readFileSync(join(CONTENT_DIR, "block-6-praxis-lessons.json"), "utf-8");
+    const raw = readFileSync(
+      join(CONTENT_DIR, "block-6-praxis-lessons.json"),
+      "utf-8",
+    );
     expect(raw).not.toContain("30.000 Euro");
     expect(raw).not.toContain("Beratungsprodukte verkaufen");
   });
@@ -155,7 +182,10 @@ describe("personal brand removal", () => {
 
 describe("template count 12→8 fix", () => {
   it("block-6 does NOT contain 'zwölf' as template count", () => {
-    const raw = readFileSync(join(CONTENT_DIR, "block-6-praxis-lessons.json"), "utf-8");
+    const raw = readFileSync(
+      join(CONTENT_DIR, "block-6-praxis-lessons.json"),
+      "utf-8",
+    );
     expect(raw).not.toContain("zwölf lebende Dokumente");
     expect(raw).not.toContain("zwölf Vorlagen");
     // Numerals are fine in other contexts, but not as template count
@@ -164,7 +194,7 @@ describe("template count 12→8 fix", () => {
 
   it("block-6 L3 s1 keyTakeaway references '8' or 'acht' (8 honest templates)", () => {
     const data = readJson("block-6-praxis-lessons.json") as {
-      lessons: { sections: { keyTakeaway?: string }[] }[]
+      lessons: { sections: { keyTakeaway?: string }[] }[];
     };
     const s1 = data.lessons[2]?.sections[0];
     const kt = s1?.keyTakeaway?.toLowerCase() ?? "";
@@ -177,7 +207,7 @@ describe("template count 12→8 fix", () => {
 describe("Art. 50 consumer rights section", () => {
   it("block-2 L3 has 4 sections (consumer-rights section added)", () => {
     const data = readJson("block-2-risikoklassen-lessons.json") as {
-      lessons: { sections: unknown[] }[]
+      lessons: { sections: unknown[] }[];
     };
     const l3sections = data.lessons[2]?.sections;
     expect(l3sections?.length).toBeGreaterThanOrEqual(4);
@@ -185,7 +215,7 @@ describe("Art. 50 consumer rights section", () => {
 
   it("block-2 L3 s4 keyTakeaway distinguishes the Article 50 duties", () => {
     const data = readJson("block-2-risikoklassen-lessons.json") as {
-      lessons: { sections: { keyTakeaway?: string }[] }[]
+      lessons: { sections: { keyTakeaway?: string }[] }[];
     };
     const s4 = data.lessons[2]?.sections[3];
     expect(s4?.keyTakeaway).toContain("Art. 50");
@@ -194,7 +224,7 @@ describe("Art. 50 consumer rights section", () => {
 
   it("block-2 L3 Art.50 section cites Code of Practice 2026", () => {
     const data = readJson("block-2-risikoklassen-lessons.json") as {
-      lessons: { sections: { content?: string }[] }[]
+      lessons: { sections: { content?: string }[] }[];
     };
     const s4 = data.lessons[2]?.sections[3];
     expect(s4?.content).toContain("10. Juni 2026");
@@ -214,10 +244,14 @@ describe("Art. 50 consumer rights section", () => {
 describe("Art. 2(10) private carve-out", () => {
   it("block-1 L2 has named section for Art. 2 Abs. 10 private carve-out", () => {
     const data = readJson("block-1-grundlagen-lessons.json") as {
-      lessons: { sections: { title: string; keyTakeaway?: string }[] }[]
+      lessons: { sections: { title: string; keyTakeaway?: string }[] }[];
     };
     const l2sections = data.lessons[1]?.sections;
-    const carveOutSection = l2sections?.find((s) => s.title.includes("Art. 2 Abs. 10") || s.title.includes("private Ausnahme"));
+    const carveOutSection = l2sections?.find(
+      (s) =>
+        s.title.includes("Art. 2 Abs. 10") ||
+        s.title.includes("private Ausnahme"),
+    );
     expect(carveOutSection).toBeDefined();
     expect(carveOutSection?.keyTakeaway).toContain("rein privat");
   });
@@ -246,7 +280,9 @@ describe("quiz count consistency", () => {
 
   it("quiz has at least 2 citizen-perspective questions (Art.50 and Art.2(10))", () => {
     const questions = readJson("quiz/questions.json") as Array<{ id: string }>;
-    const citizenQuestions = questions.filter((q) => ["q_w26", "q_w27"].includes(q.id));
+    const citizenQuestions = questions.filter((q) =>
+      ["q_w26", "q_w27"].includes(q.id),
+    );
     expect(citizenQuestions.length).toBe(2);
   });
 });
@@ -267,7 +303,10 @@ describe("certificate wording", () => {
   it("EU AI Act config says 'Teilnahme bestätigt' and cites the amended regulation", () => {
     const config = readFile("lib/course/config.ts");
     // Find the EU_AI_ACT_KURS_CONFIG section
-    const euSection = config.slice(config.indexOf("EU_AI_ACT_KURS_CONFIG"), config.indexOf("AI_NATIVE_CONFIG"));
+    const euSection = config.slice(
+      config.indexOf("EU_AI_ACT_KURS_CONFIG"),
+      config.indexOf("AI_NATIVE_CONFIG"),
+    );
     expect(euSection).toContain("Teilnahme bestätigt");
     expect(euSection).toContain("Verordnung (EU) 2026/1744");
   });
@@ -303,10 +342,14 @@ describe("landing page reframe", () => {
     expect(content).toContain("Blöcke 3");
   });
 
-  it("landing page has disclaimer about Art.4 not requiring a certificate", () => {
+  it("landing page states that participation or its record does not prove Article 4 compliance", () => {
     const content = readFile("app/eu-ai-act-kurs/page.tsx");
-    expect(content).toContain("Eine Teilnahme allein begründet keine Vermutung");
-    expect(content).toContain("Artikel 4");
+    expect(content).toContain(
+      "Teilnahme oder Teilnahmenachweis allein belegen weder Kompetenz noch die Erfüllung von Artikel 4",
+    );
+    expect(content).toContain(
+      "Participation or a completion record alone establishes neither competence nor compliance with Article 4",
+    );
   });
 
   it("landing page does NOT contain 'Compliance-Roadmap 2026-2028'", () => {

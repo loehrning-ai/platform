@@ -16,6 +16,10 @@ describe("LessonReference", () => {
 
     const details = container.querySelector("details[data-lesson-reference]");
     expect(details).not.toHaveAttribute("open");
+    expect(details?.querySelector("summary")).toHaveClass("grid-cols-1");
+    expect(details?.querySelector("summary")).toHaveClass(
+      "sm:grid-cols-[minmax(0,1fr)_auto]",
+    );
     expect(screen.getByText("Lesson reference")).toBeInTheDocument();
     expect(screen.getByText("Evidence before automation")).toBeInTheDocument();
     expect(
@@ -59,9 +63,7 @@ describe("LessonReference", () => {
     const details = container.querySelector(
       "details[data-lesson-reference]",
     ) as HTMLDetailsElement;
-    const content = container.querySelector(
-      "[data-lesson-reference-content]",
-    );
+    const content = container.querySelector("[data-lesson-reference-content]");
 
     expect(container.querySelectorAll("h1")).toHaveLength(1);
     expect(content).toHaveClass("[&_h1]:hidden");

@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import {
+  TECHNICAL_COURSE_LEDGER_LINK_CLASS,
+  TECHNICAL_COURSE_PRIMARY_ACTION_CLASS,
+  TechnicalCourseFrame,
+  TechnicalCourseHeader,
+  TechnicalCourseSectionHeading,
+} from "@/components/course/technical-course-landing";
+import { TechnicalCourseProgressBar } from "@/components/course/technical-course-progress";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
-import { getBlocks } from "@/lib/course/data";
+import { getBlocks, getTotalLessonCount } from "@/lib/course/data";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
 import {
@@ -37,13 +44,20 @@ interface LandingCopy {
   readonly allCourses: string;
   readonly facts: readonly { readonly value: string; readonly label: string }[];
   readonly whyEyebrow: string;
+  readonly decisionHeading: string;
+  readonly decisions: readonly string[];
   readonly whyBody: string;
+  readonly curriculumEyebrow: string;
   readonly curriculumHeading: string;
   readonly blockLabel: (number: number) => string;
   readonly minutes: (count: number) => string;
   readonly evidenceEyebrow: string;
   readonly evidenceHeading: string;
   readonly evidence: readonly string[];
+  readonly factsLabel: string;
+  readonly progressLabel: string;
+  readonly lessonsLabel: string;
+  readonly boundarySummary: string;
   readonly related: string;
 }
 
@@ -81,19 +95,28 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
       { value: "Lokal", label: "Teilnahmebestätigung" },
     ],
     whyEyebrow: "§ Warum dieser Kurs",
+    decisionHeading: "Drei Entscheidungen für jeden KI-Einsatz.",
+    decisions: [
+      "Datengrenze: Welche Angaben bleiben außerhalb eines KI-Tools?",
+      "Prüfweg: Welche Quelle oder Gegenprobe kann den Output widerlegen?",
+      "Verantwortung: Wer entscheidet, wenn der Output Folgen hat?",
+    ],
     whyBody:
-      "Artikel 4 der EU-KI-Verordnung ist seit dem 2. Februar 2025 anwendbar. In der seit 27. Juli 2026 geltenden Fassung müssen Anbieter und Betreiber Maßnahmen treffen, die die Entwicklung von KI-Kompetenz bei Personen unterstützen, die in ihrem Auftrag mit KI-Systemen arbeiten. Vorwissen, Rolle, Einsatzkontext und betroffene Personen sind zu berücksichtigen. Die Verordnung schreibt weder ein einheitliches Kursformat noch ein Zertifikat vor. Dieser Kurs kann ein Lernprogramm ergänzen; er belegt keine organisationsweite Compliance.",
+      "Artikel 4 der EU-KI-Verordnung gilt seit dem 2. Februar 2025. In der seit 27. Juli 2026 geltenden Fassung müssen Anbieter und Betreiber kontextbezogene Maßnahmen treffen, die die Entwicklung der KI-Kompetenz unterstützen; Vorwissen, Rolle, Einsatzkontext und betroffene Personen zählen. Vorgeschrieben ist weder ein einheitliches Kursformat noch ein Zertifikat. Dieser Kurs kann solche Maßnahmen ergänzen, belegt aber keine organisationsweite Compliance.",
+    curriculumEyebrow: "§ Kursweg",
     curriculumHeading: "Was du lernst.",
     blockLabel: (number) => `Block ${String(number).padStart(2, "0")}`,
     minutes: (count) => `${count} Min.`,
     evidenceEyebrow: "§ Aussagekraft",
     evidenceHeading: "Was die Teilnahmebestätigung belegt.",
     evidence: [
-      "Artikel 4 ist seit 2. Februar 2025 anwendbar; seine geänderte Fassung gilt seit 27. Juli 2026.",
-      "Artikel 4 verlangt kontextbezogene Maßnahmen, kein fixes Kurs- oder Zertifikatsformat.",
-      "Die lokal erzeugte PDF dokumentiert nur den Abschluss dieses Kurses. Sie ist kein Rechts- oder Kompetenznachweis.",
-      "Hochrisiko-Pflichten erfordern zusätzlich Systeminventar, Risikoklassifizierung und interne Prozesse.",
+      "Die lokal erzeugte PDF dokumentiert den Abschluss dieses Kurses; sie ist kein Rechts-, Compliance- oder unabhängiger Kompetenznachweis.",
+      "Für Hochrisiko-Systeme bleiben Systeminventar, Risikoklassifizierung und organisationsbezogene Kontrollen erforderlich.",
     ],
+    factsLabel: "Kursrahmen",
+    progressLabel: "Fortschritt im KI-Führerschein",
+    lessonsLabel: "Lektionen",
+    boundarySummary: "Rechtsgrundlage und Aussagekraft",
     related: "EU AI Act vertiefen",
   },
   en: {
@@ -129,19 +152,28 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
       { value: "Local", label: "Completion record" },
     ],
     whyEyebrow: "§ Why this course exists",
+    decisionHeading: "Three decisions for every AI use.",
+    decisions: [
+      "Data boundary: which information must stay outside an AI tool?",
+      "Review path: which source or counter-check could disprove the output?",
+      "Responsibility: who decides when the output has consequences?",
+    ],
     whyBody:
-      "Article 4 of the EU AI Act has applied since 2 February 2025. Under the version in force since 27 July 2026, providers and deployers must take measures that support the development of AI literacy among people who deal with AI systems on their behalf. Prior knowledge, experience, education and training, use context, and affected people or groups matter. The Regulation does not prescribe one course or certificate. This course can support a wider learning programme; it does not establish organization-wide compliance.",
+      "Article 4 of the EU AI Act has applied since 2 February 2025. Under the version in force since 27 July 2026, providers and deployers must support context-specific AI-literacy measures; prior knowledge, role, use context, and affected people matter. It prescribes neither one course format nor a certificate. This course can support those measures; it does not establish organization-wide compliance.",
+    curriculumEyebrow: "§ Course path",
     curriculumHeading: "What you will learn.",
     blockLabel: (number) => `Block ${String(number).padStart(2, "0")}`,
     minutes: (count) => `${count} min`,
     evidenceEyebrow: "§ Scope of the record",
     evidenceHeading: "What the completion record proves.",
     evidence: [
-      "Article 4 has applied since 2 February 2025; its amended version has been in force since 27 July 2026.",
-      "Article 4 requires context-specific measures, not one fixed course or certificate format.",
-      "The locally generated PDF records completion of this course only. It is not legal advice or independent proof of competence.",
-      "High-risk-system duties also require an inventory, risk classification, and internal controls.",
+      "The locally generated PDF records completion of this course; it is not legal, compliance, or independent competence evidence.",
+      "High-risk systems still require an inventory, risk classification, and organization-specific controls.",
     ],
+    factsLabel: "Course frame",
+    progressLabel: "Everyday AI Literacy progress",
+    lessonsLabel: "lessons",
+    boundarySummary: "Legal basis and scope of the record",
     related: "Study the EU AI Act in depth",
   },
 };
@@ -223,12 +255,6 @@ function courseGraph(locale: Locale) {
   };
 }
 
-const PRIMARY_CTA =
-  "inline-flex min-h-12 max-w-full items-center gap-2 break-words border-2 border-foreground bg-brand-orange px-5 py-3.5 text-left font-mono text-[12px] font-bold uppercase tracking-[0.05em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:bg-[#A5370F] hover:shadow-[6px_6px_0_var(--color-foreground)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0_var(--color-foreground)] sm:px-6 sm:text-[13px]";
-
-const SECONDARY_CTA =
-  "inline-flex min-h-12 max-w-full items-center gap-2 break-words border-2 border-foreground bg-background px-5 py-3.5 text-left font-mono text-[12px] font-bold uppercase tracking-[0.05em] text-foreground shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:bg-card hover:shadow-[6px_6px_0_var(--color-foreground)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0_var(--color-foreground)] sm:px-6 sm:text-[13px]";
-
 export default async function KiFuehrerscheinLandingPage() {
   const locale = resolveFoundationCourseContentLocale(
     COURSE_SLUG,
@@ -236,157 +262,139 @@ export default async function KiFuehrerscheinLandingPage() {
   );
   const copy = LANDING_COPY[locale];
   const blocks = getBlocks(COURSE_SLUG, locale);
+  const totalLessons = getTotalLessonCount(COURSE_SLUG, locale);
   const courseHref = localizeHref(`${COURSE_PATH}/kurs`, locale);
 
   return (
     <>
-      <JsonLd
-        data={courseGraph(locale)}
-        id="ki-fuehrerschein-landing-jsonld"
-      />
-      <div className="mx-auto w-full max-w-[1180px] px-4 pb-24 pt-12 sm:px-6 sm:pb-32 sm:pt-20">
-        <div className="mb-9 h-[3px] w-[132px] bg-brand-orange sm:w-[154px]" />
-
-        <div className="grid min-w-0 gap-12 lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.55fr)] lg:items-end">
-          <div className="min-w-0">
-            <p className="break-words font-mono text-[11px] font-bold uppercase tracking-[0.15em] text-brand-orange sm:tracking-[0.18em]">
-              {copy.eyebrow}
-            </p>
-            <h1 className="mt-6 max-w-[900px] break-words text-[40px] font-bold leading-[0.94] tracking-[-0.04em] text-foreground [overflow-wrap:anywhere] sm:text-[56px] md:text-[76px]">
-              {copy.heading}
-              <br />
-              <span className="text-brand-orange">{copy.headingAccent}</span>
-            </h1>
-            <p className="mt-8 max-w-[780px] break-words text-[17px] leading-[1.55] text-muted-foreground sm:text-[20px]">
-              {copy.introduction}
-            </p>
-            <div className="mt-10 flex min-w-0 flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-5">
-              <Link
-                href={courseHref}
-                prefetch={false}
-                className={PRIMARY_CTA}
-              >
-                {copy.start}
-                <span aria-hidden="true">→</span>
-              </Link>
-              <Link
-                href={localizeHref("/kurse", locale)}
-                className={SECONDARY_CTA}
-              >
-                {copy.allCourses}
-                <span aria-hidden="true">→</span>
-              </Link>
-            </div>
-          </div>
-
-          <figure className="relative mx-auto aspect-[4/5] w-full max-w-[360px] overflow-hidden border-2 border-foreground bg-card shadow-[7px_7px_0_var(--color-foreground)] lg:mx-0">
-            <Image
-              src="/course-covers/ki-fuehrerschein-cover-v2.webp"
-              alt={copy.imageAlt}
-              fill
-              priority
-              sizes="(max-width: 1023px) min(360px, 100vw), 360px"
-              className="object-cover"
-            />
-            <figcaption className="absolute inset-x-0 bottom-0 border-t-2 border-foreground bg-background/95 px-4 py-3 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-foreground backdrop-blur-sm">
-              {copy.imageLabel}
-            </figcaption>
-          </figure>
-        </div>
-
-        <dl className="mt-14 grid grid-cols-2 border-l border-t border-border sm:grid-cols-4">
-          {copy.facts.map((fact) => (
-            <div
-              key={fact.label}
-              className="min-w-0 border-b border-r border-border bg-card/30 p-4 sm:p-5"
+      <JsonLd data={courseGraph(locale)} id="ki-fuehrerschein-landing-jsonld" />
+      <TechnicalCourseFrame courseId={COURSE_SLUG} lang={locale}>
+        <TechnicalCourseHeader
+          eyebrow={copy.eyebrow}
+          title={`${copy.heading} ${copy.headingAccent}`}
+          intro={copy.introduction}
+          primaryAction={
+            <Link
+              href={courseHref}
+              prefetch={false}
+              className={TECHNICAL_COURSE_PRIMARY_ACTION_CLASS}
             >
-              <dt className="break-words font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
-                {fact.label}
-              </dt>
-              <dd className="mt-2 break-words text-[24px] font-bold tracking-[-0.03em] text-foreground sm:text-[28px]">
-                {fact.value}
-              </dd>
-            </div>
-          ))}
-        </dl>
+              {copy.start} <span aria-hidden="true">→</span>
+            </Link>
+          }
+          facts={copy.facts.map((fact) => `${fact.value} ${fact.label}`)}
+          factsLabel={copy.factsLabel}
+          progress={
+            <TechnicalCourseProgressBar
+              courseSlug={COURSE_SLUG}
+              totalLessons={totalLessons}
+              label={copy.progressLabel}
+              unitLabel={copy.lessonsLabel}
+            />
+          }
+        />
 
-        <section className="mt-20 border-l-4 border-brand-orange bg-card p-5 sm:p-8">
-          <h2 className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange sm:tracking-[0.18em]">
-            {copy.whyEyebrow}
-          </h2>
-          <p className="mt-4 max-w-[980px] break-words text-[16px] leading-[1.65] text-muted-foreground">
-            {copy.whyBody}
-          </p>
-        </section>
+        <div>
+          <section className="mt-10 grid min-w-0 gap-5 lg:grid-cols-[280px_minmax(0,1fr)]">
+            <TechnicalCourseSectionHeading
+              eyebrow={copy.whyEyebrow}
+              title={copy.decisionHeading}
+            />
+            <ol className="border-y border-border">
+              {copy.decisions.map((decision, index) => (
+                <li
+                  key={decision}
+                  className="grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-3 border-b border-border py-3 last:border-b-0"
+                >
+                  <span className="font-mono text-xs tabular-nums text-brand-orange">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="break-words text-sm font-medium leading-relaxed text-foreground">
+                    {decision}
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </section>
 
-        <section className="mt-24">
-          <div className="mb-10 flex items-baseline gap-4">
-            <span className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-              §
-            </span>
-            <h2 className="break-words text-[28px] font-bold tracking-[-0.02em] text-foreground sm:text-[36px]">
-              {copy.curriculumHeading}
-            </h2>
-          </div>
-
-          <ol className="border-t border-border">
-            {blocks.map((block, index) => (
-              <li
-                key={block.id}
-                className="grid min-w-0 gap-4 border-b border-border py-7 md:grid-cols-[140px_minmax(0,1fr)_auto] md:items-baseline md:gap-8"
-              >
-                <div className="font-mono text-[12px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-                  {copy.blockLabel(index + 1)}
-                </div>
-                <div className="min-w-0">
-                  <h3 className="break-words text-[18px] font-semibold leading-snug text-foreground sm:text-[20px]">
-                    {block.title}
-                  </h3>
-                  <p className="mt-2 max-w-[680px] break-words text-[15px] leading-[1.6] text-muted-foreground">
-                    {block.description}
+          <section className="mt-10">
+            <TechnicalCourseSectionHeading
+              eyebrow={copy.curriculumEyebrow}
+              title={copy.curriculumHeading}
+            />
+            <ol className="mt-5 border-t border-border">
+              {blocks.map((block, index) => (
+                <li
+                  key={block.id}
+                  className="grid min-w-0 gap-3 border-b border-border py-4 md:grid-cols-[6rem_minmax(0,1fr)_8rem] md:items-start md:gap-5"
+                >
+                  <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
+                    {copy.blockLabel(index + 1)}
                   </p>
-                </div>
-                <div className="font-mono text-[12px] font-medium tracking-wide text-muted-foreground">
-                  {copy.minutes(block.durationMinutes)}
-                </div>
-              </li>
-            ))}
-          </ol>
-        </section>
+                  <div className="min-w-0">
+                    <h3 className="break-words text-base font-semibold text-foreground">
+                      {block.title}
+                    </h3>
+                    <p className="mt-1 max-w-[720px] break-words text-sm leading-relaxed text-muted-foreground">
+                      {block.description}
+                    </p>
+                  </div>
+                  <p className="font-mono text-xs text-muted-foreground md:text-right">
+                    {block.lessons.length} {copy.lessonsLabel} ·{" "}
+                    {copy.minutes(block.durationMinutes)}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </section>
 
-        <section className="mt-24 border-2 border-foreground bg-card p-5 shadow-[6px_6px_0_var(--color-foreground)] sm:p-10">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange sm:tracking-[0.18em]">
-            {copy.evidenceEyebrow}
-          </p>
-          <h2 className="mt-3 max-w-[780px] break-words text-[24px] font-bold tracking-[-0.02em] text-foreground sm:text-[30px]">
-            {copy.evidenceHeading}
-          </h2>
-          <ul className="mt-6 grid gap-4 text-[15px] leading-[1.6] text-foreground md:grid-cols-2 md:gap-x-10">
-            {copy.evidence.map((item) => (
-              <li key={item} className="grid min-w-0 grid-cols-[auto_minmax(0,1fr)] gap-3">
-                <span className="font-mono text-brand-orange" aria-hidden="true">
-                  ↳
-                </span>
-                <span className="break-words">{item}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
+          <details className="mt-10 border-y border-border">
+            <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-4 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground">
+              {copy.boundarySummary}
+              <span className="text-brand-orange" aria-hidden="true">
+                +
+              </span>
+            </summary>
+            <div className="grid gap-5 border-t border-border py-4 lg:grid-cols-2">
+              <div>
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
+                  {copy.whyEyebrow}
+                </p>
+                <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
+                  {copy.whyBody}
+                </p>
+              </div>
+              <div>
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
+                  {copy.evidenceHeading}
+                </p>
+                <ul className="mt-2 border-t border-border">
+                  {copy.evidence.map((item) => (
+                    <li
+                      key={item}
+                      className="border-b border-border py-2 text-[13px] leading-relaxed text-muted-foreground"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </details>
 
-        <div className="mt-16 flex min-w-0 flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-5">
-          <Link href={courseHref} prefetch={false} className={PRIMARY_CTA}>
-            {copy.start}
-            <span aria-hidden="true">→</span>
-          </Link>
           <Link
             href={localizeHref("/eu-ai-act-kurs", locale)}
-            className={SECONDARY_CTA}
+            className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} mt-8 sm:grid-cols-[minmax(0,1fr)_auto]`}
           >
-            {copy.related}
-            <span aria-hidden="true">→</span>
+            <span className="text-sm font-semibold text-foreground">
+              {copy.related}
+            </span>
+            <span className="text-brand-orange" aria-hidden="true">
+              →
+            </span>
           </Link>
         </div>
-      </div>
+      </TechnicalCourseFrame>
     </>
   );
 }

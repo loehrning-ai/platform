@@ -116,7 +116,7 @@ export function L05ScopeSlider({
 
   return (
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-5 md:p-6">
-      <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {copy.heading}
       </p>
       <div className="flex flex-col gap-3">
@@ -137,12 +137,24 @@ export function L05ScopeSlider({
             aria-label={copy.sliderLabel}
             aria-valuetext={copy.valueText(Math.round(value * 100))}
             disabled={locked}
-            className="relative z-10 w-full accent-[var(--brand-orange)]"
+            className="relative z-10 min-h-11 w-full accent-[var(--brand-orange)]"
           />
         </div>
-        <div className="flex justify-between font-mono text-[10.5px] text-muted-foreground">
-          {copy.units.map((unit) => (
-            <span key={unit}>{unit}</span>
+        <div className="grid grid-cols-2 gap-2 font-mono text-xs text-muted-foreground sm:grid-cols-4">
+          {copy.units.map((unit, index) => (
+            <span
+              key={unit}
+              className={cn(
+                "min-w-0",
+                index === 0 && "text-left",
+                index === copy.units.length - 1 && "text-right",
+                index > 0 && index < copy.units.length - 1
+                  ? "hidden text-center sm:block"
+                  : "block",
+              )}
+            >
+              {unit}
+            </span>
           ))}
         </div>
 
@@ -160,12 +172,12 @@ export function L05ScopeSlider({
             {copy.score}: {pct}/100
           </span>
           {inFocusedRange && !locked && (
-            <span className="font-mono text-[11px] text-muted-foreground">
+            <span className="font-mono text-xs text-muted-foreground">
               {copy.holding}
             </span>
           )}
           {locked && (
-            <span className="font-mono text-[11px] font-bold text-risk-green">
+            <span className="font-mono text-xs font-bold text-risk-green">
               {copy.locked} {done ? "✓" : ""}
             </span>
           )}

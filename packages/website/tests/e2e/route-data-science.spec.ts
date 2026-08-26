@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY } from "@/lib/progress/types";
 
 /**
  * Data Science Fundamentals golden path: landing ->
@@ -13,13 +14,12 @@ import { test, expect, type Page } from "@playwright/test";
  *     spec verifies navigation through the public link contract.
  *   - "home" is never a [chapterSlug] route entry (Done Criteria: no home
  *     route collision) — the first real chapter route is "/fund".
- *   - no checkpoint/quiz leg: the learner explicitly marks each numbered
- *     chapter complete after reading it. The chapter leg verifies that action
- *     writes the canonical completion record; route entry alone does not.
- *   - the certificate/QR-verify seeds "all 12 numbered chapters completed"
- *     with m: "completion", s: null, exactly like codex/data-infrastructure/
- *     data-engineering-fundamentals's own no-quiz "completion" eligibility
- *     path.
+ *   - no quiz leg: each numbered chapter ends in an ephemeral transfer prompt.
+ *     Only a meaningful response records the versioned completion checkpoint;
+ *     route entry and raw post-cutover completion bits do not count. Historical
+ *     pre-cutover completions retain compatibility evidence through migration.
+ *   - the certificate/QR-verify seed includes all 12 current evidence
+ *     checkpoints with m: "completion" and s: null.
  */
 
 const LANDING = "/en/kurse/open-source/data-science";
@@ -43,7 +43,9 @@ const DS_NUMBERED_CHAPTER_IDS = [
   "cap",
 ] as const;
 
-/** A minimal unified-store payload with all 12 numbered chapters completed. */
+const EVIDENCE_CHECKPOINT_ID = "lesson-proof-v1:data-science";
+
+/** A minimal unified-store payload with all 12 evidence checkpoints. */
 function allChaptersCompletedDsState() {
   const now = new Date().toISOString();
   const lessons = Object.fromEntries(
@@ -70,7 +72,12 @@ function allChaptersCompletedDsState() {
       },
     },
     xp: 50,
-    checkpoints: {},
+    checkpoints: Object.fromEntries(
+      DS_NUMBERED_CHAPTER_IDS.map((id) => [
+        `${id}::${EVIDENCE_CHECKPOINT_ID}`,
+        true,
+      ]),
+    ),
     badges: {},
     streak: { days: 1, last: now.slice(0, 10) },
     lastActivity: now,
@@ -112,20 +119,33 @@ async function openLessonReference(page: Page) {
   await expect(reference).toHaveAttribute("open", "");
 }
 
-async function isFundChapterStoredAsCompleted(page: Page): Promise<boolean> {
-  return page.evaluate((key) => {
-    const raw = window.localStorage.getItem(key);
-    if (!raw) return false;
-    const parsed = JSON.parse(raw) as {
-      courses?: Record<
-        string,
-        { lessons?: Record<string, { completed?: boolean }> }
-      >;
-    };
-    return (
-      parsed.courses?.["data-science"]?.lessons?.fund?.completed === true
-    );
-  }, UNIFIED_KEY);
+async function isFundChapterEvidenceStored(
+  page: Page,
+  decision: string,
+): Promise<boolean> {
+  return page.evaluate(
+    ({ key, checkpointKey, ephemeralDecision }) => {
+      const raw = window.localStorage.getItem(key);
+      if (!raw) return false;
+      const parsed = JSON.parse(raw) as {
+        courses?: Record<
+          string,
+          { lessons?: Record<string, { completed?: boolean }> }
+        >;
+        checkpoints?: Record<string, boolean>;
+      };
+      return (
+        parsed.courses?.["data-science"]?.lessons?.fund?.completed === true &&
+        parsed.checkpoints?.[checkpointKey] === true &&
+        !raw.includes(ephemeralDecision)
+      );
+    },
+    {
+      key: UNIFIED_KEY,
+      checkpointKey: `fund::${EVIDENCE_CHECKPOINT_ID}`,
+      ephemeralDecision: decision,
+    },
+  );
 }
 
 /** Encode a certificate payload exactly like generateCertificatePdf's QR does. */
@@ -160,7 +180,7 @@ test.describe("Data Science Fundamentals golden path", () => {
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 
-  test("chapter: explicit confirmation marks it completed in the unified progress store", async ({
+  test("chapter: meaningful transfer evidence records the versioned checkpoint without storing prose", async ({
     page,
   }) => {
     const res = await page.goto(CHAPTER_ROUTE, {
@@ -170,31 +190,36 @@ test.describe("Data Science Fundamentals golden path", () => {
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await openLessonReference(page);
 
-    const completion = page.getByRole("button", {
-      name: "Mark chapter complete",
+    const decisionInput = page.getByRole("textbox", {
+      name: "Decision or revision",
     });
+    const save = page.getByRole("button", { name: "Save checkpoint" });
     const localChoice = page.getByRole("button", { name: "Continue locally" });
-    const ownerChoiceVisible = await localChoice
-      .isVisible()
-      .catch(() => false);
+    const ownerChoiceVisible = await localChoice.isVisible().catch(() => false);
 
     if (ownerChoiceVisible) {
-      await expect(completion).toBeDisabled();
-      await expect(completion).toHaveAccessibleDescription(
-        "Choose account or local progress above first.",
-      );
-      await completion.evaluate((button: HTMLButtonElement) => button.click());
-      await expect.poll(() => isFundChapterStoredAsCompleted(page)).toBe(false);
+      await expect(decisionInput).toBeDisabled();
+      await expect(
+        page.getByText("Choose account or local progress above first."),
+      ).toBeVisible();
+      await expect(save).toBeDisabled();
       await continueLocally(page);
       await expect(page.locator("[data-learning-owner-panel]")).toBeHidden({
         timeout: 15_000,
       });
     }
 
-    await expect(completion).toBeEnabled();
-    await completion.click();
+    await expect(decisionInput).toBeEnabled();
+    await expect(save).toBeDisabled();
+    await decisionInput.fill("blah blah blah blah");
+    await expect(save).toBeDisabled();
+
+    const decision = "I will challenge this metric with a counterexample";
+    await decisionInput.fill(decision);
+    await expect(save).toBeEnabled();
+    await save.click();
     await expect
-      .poll(() => isFundChapterStoredAsCompleted(page))
+      .poll(() => isFundChapterEvidenceStored(page, decision))
       .toBe(true);
 
     await page.reload({ waitUntil: "domcontentloaded" });
@@ -203,9 +228,25 @@ test.describe("Data Science Fundamentals golden path", () => {
       .waitFor({ state: "attached" });
     await continueLocally(page);
     await openLessonReference(page);
+    await expect(page.getByText("Navigation checkpoint saved")).toBeVisible();
     await expect(
-      page.getByRole("button", { name: "Chapter completed" }),
-    ).toBeDisabled();
+      page.getByText(/not a mastery assessment or credential/i),
+    ).toBeVisible();
+  });
+
+  test("certificate: raw post-cutover completion flags do not unlock the record", async ({
+    page,
+  }) => {
+    const postCutover = allChaptersCompletedDsState();
+    postCutover.checkpoints = {
+      [COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY]: true,
+    };
+    await seedProgress(page, postCutover);
+    await page.goto(CERT_ROUTE, { waitUntil: "domcontentloaded" });
+    await continueLocally(page);
+    await expect(page).toHaveURL(new RegExp(`${LANDING}$`), {
+      timeout: 15_000,
+    });
   });
 
   test("certificate: all 12 numbered chapters completed unlocks the public certificate surface", async ({

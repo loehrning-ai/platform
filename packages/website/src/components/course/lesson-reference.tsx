@@ -42,9 +42,9 @@ export function LessonReference({
       className="group min-w-0 border-l-2 border-brand-orange bg-card/20"
       data-lesson-reference
     >
-      <summary className="grid min-h-16 cursor-pointer list-none grid-cols-[minmax(0,1fr)_auto] items-center gap-5 px-4 py-3 text-foreground outline-none hover:bg-brand-orange/5 focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:px-5 [&::-webkit-details-marker]:hidden">
+      <summary className="grid min-h-16 cursor-pointer list-none grid-cols-1 items-center gap-3 px-4 py-3 text-foreground outline-none hover:bg-brand-orange/5 focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-5 sm:px-5 [&::-webkit-details-marker]:hidden">
         <span className="min-w-0 [overflow-wrap:anywhere]">
-          <span className="block font-mono text-[10px] font-black uppercase tracking-[0.16em] text-brand-orange-dark">
+          <span className="block font-mono text-xs font-black uppercase tracking-[0.16em] text-brand-orange-dark">
             {copy.eyebrow}
           </span>
           <span
@@ -60,7 +60,7 @@ export function LessonReference({
             </span>
           ) : null}
         </span>
-        <span className="flex shrink-0 items-center gap-2 font-mono text-[10px] font-black uppercase tracking-[0.1em] text-brand-orange-dark">
+        <span className="flex shrink-0 items-center gap-2 font-mono text-xs font-black uppercase tracking-[0.1em] text-brand-orange-dark sm:justify-self-end">
           <span className="group-open:hidden">{copy.open}</span>
           <span className="hidden group-open:inline">{copy.close}</span>
           <span

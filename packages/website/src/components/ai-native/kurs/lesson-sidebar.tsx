@@ -4,7 +4,7 @@ import { useEffect, useState, type JSX } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
-import { getCompletedLessonIds, subscribe } from "@/lib/progress";
+import { getEvidenceBackedCompletedLessonIds, subscribe } from "@/lib/progress";
 import { MODULE_IDS, type ModuleId } from "@/lib/ai-native/types";
 import {
   canonicalLocalePathname,
@@ -43,7 +43,7 @@ export function AiNativeLessonSidebar({
   useEffect(
     () =>
       subscribe(() => {
-        setCompletedIds(getCompletedLessonIds("ai-native"));
+        setCompletedIds(getEvidenceBackedCompletedLessonIds("ai-native"));
       }),
     [],
   );
@@ -64,7 +64,7 @@ export function AiNativeLessonSidebar({
           <section key={moduleId} aria-labelledby={`${idPrefix}-${moduleId}`}>
             <h2
               id={`${idPrefix}-${moduleId}`}
-              className="mb-2 truncate font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground"
+              className="mb-2 truncate font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground"
               title={`${locale === "de" ? "Modul" : "Module"} ${first.moduleNumber}: ${first.moduleTitle}`}
             >
               {locale === "de" ? "Modul" : "Module"} {first.moduleNumber} ·{" "}
@@ -101,7 +101,7 @@ export function AiNativeLessonSidebar({
                           aria-hidden="true"
                         />
                       ) : (
-                        <span className="w-[13px] shrink-0 text-center font-mono text-[10px] text-muted-foreground">
+                        <span className="w-[13px] shrink-0 text-center font-mono text-xs text-muted-foreground">
                           {lesson.lessonNumber}
                         </span>
                       )}

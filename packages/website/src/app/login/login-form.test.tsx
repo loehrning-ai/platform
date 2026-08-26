@@ -288,7 +288,7 @@ describe("<LoginForm>", () => {
     expect(googleButton).toBeEnabled();
     expect(googleButton).toHaveAttribute("data-google-brand-button", "light");
     expect(googleButton).toHaveClass(
-      "h-10",
+      "min-h-11",
       "border-[#747775]",
       "bg-white",
       "text-[14px]",

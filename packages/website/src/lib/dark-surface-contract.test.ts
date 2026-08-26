@@ -23,23 +23,19 @@ describe("explicit dark-surface token scope", () => {
     expect(agent).toContain(
       'className="dark-section min-h-[220px] overflow-y-auto',
     );
-    expect(logistics).toContain(
-      'className="dark-section min-h-[170px]',
-    );
+    expect(logistics).toContain('className="dark-section min-h-[170px]');
     expect(excel).toContain(
       'className="dark-section border-t-[3px] border-brand-orange bg-[var(--color-dark-bg)]',
     );
-    expect(debug).toContain(
-      'className="dark-section fixed right-4 bottom-4',
-    );
+    expect(debug).toContain('className="dark-section fixed right-4 bottom-4');
   });
 
   it("uses dark ink on solid light-copper badges inside dark scope", () => {
     expect(observ).toContain(
-      'bg-brand-orange px-2 py-0.5 font-mono text-[10px] font-bold tracking-[0.14em] text-[var(--color-dark-bg)]',
+      "bg-brand-orange px-2 py-0.5 font-mono text-xs font-bold tracking-[0.14em] text-[var(--color-dark-bg)]",
     );
     expect(excel).toContain(
-      'bg-brand-orange px-2 py-0.5 font-mono text-[10px] font-bold tracking-[0.12em] text-[var(--color-dark-bg)]',
+      "bg-brand-orange px-2 py-0.5 font-mono text-[12px] font-bold tracking-[0.12em] text-[var(--color-dark-bg)]",
     );
   });
 

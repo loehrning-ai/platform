@@ -70,21 +70,6 @@ function withMailto(text: string): ReactNode {
   );
 }
 
-function withInternalLink(
-  text: string,
-  label: string,
-  href: string,
-): ReactNode {
-  const [before, after = ""] = text.split(label);
-  return (
-    <>
-      {before}
-      <Link href={href}>{label}</Link>
-      {after}
-    </>
-  );
-}
-
 function signInAnswer(
   answers: (typeof HELP_COPY)[Locale]["answers"],
   features: RuntimeFeatures,
@@ -112,7 +97,9 @@ function getFaqItems(
       answer: (
         <>
           {a.startBeforeCheck}
-          <Link href={localizeHref("/ki-check", locale)}>{a.startCheckLink}</Link>
+          <Link href={localizeHref("/ki-check", locale)}>
+            {a.startCheckLink}
+          </Link>
           {formatCount(a.startBetween, "courseCount", COURSE_CATALOG.length)}
           <Link href={localizeHref("/kurse", locale)}>
             {a.startCatalogLink}
@@ -188,7 +175,9 @@ function getFaqItems(
           </Link>
           {withMailto(a.dataAvailableAfterLink)}
         </>
-      ) : withMailto(a.dataUnavailable),
+      ) : (
+        withMailto(a.dataUnavailable)
+      ),
     },
     {
       id: "rueckmeldung",
@@ -199,7 +188,9 @@ function getFaqItems(
           <Link href={localizeHref("/feedback", locale)}>{a.feedbackLink}</Link>
           {a.feedbackAvailableAfterLink}
         </>
-      ) : withMailto(a.feedbackUnavailable),
+      ) : (
+        withMailto(a.feedbackUnavailable)
+      ),
     },
     {
       id: "grenzen",
@@ -228,35 +219,35 @@ function HilfeContent({
   const faqItems = getFaqItems(locale, features);
 
   return (
-    <article className="mx-auto w-full max-w-6xl px-5 pb-28 pt-16 sm:px-8 sm:pt-20 lg:px-10">
-      <header className="border-b border-border pb-12">
-        <div className="h-[3px] w-24 bg-brand-orange" />
-        <p className="mt-7 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
+    <article className="mx-auto w-full max-w-[70rem] px-4 pb-12 pt-8 sm:px-6 sm:pt-12 lg:px-8">
+      <header className="border-b border-border pb-8">
+        <div className="h-[3px] w-16 bg-brand-orange" />
+        <p className="mt-4 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
           {copy.eyebrow}
         </p>
-        <h1 className="mt-5 max-w-4xl text-pretty text-[clamp(2.5rem,6vw,5rem)] font-bold leading-[0.94] tracking-[-0.04em] text-foreground">
+        <h1 className="mt-3 max-w-4xl text-pretty text-[clamp(2.25rem,5vw,4.5rem)] font-bold leading-[0.96] tracking-[-0.04em] text-foreground">
           {copy.title}
         </h1>
-        <p className="mt-7 max-w-3xl text-pretty text-lg leading-relaxed text-muted-foreground sm:text-xl">
+        <p className="mt-4 max-w-[68ch] text-pretty text-base leading-7 text-muted-foreground sm:text-lg">
           {copy.intro}
         </p>
       </header>
 
-      <div className="grid gap-12 pt-12 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-16">
-        <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
-          <h2 className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+      <div className="pt-8">
+        <aside className="min-w-0">
+          <h2 className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
             {copy.indexLabel}
           </h2>
-          <nav aria-label={copy.indexLabel} className="mt-5">
-            <ol className="divide-y divide-border border-y border-border">
+          <nav aria-label={copy.indexLabel} className="mt-3">
+            <ol className="grid grid-cols-2 gap-px border border-border bg-border sm:grid-cols-3 lg:grid-cols-4">
               {faqItems.map((item, index) => (
-                <li key={item.id}>
+                <li key={item.id} className="min-w-0 bg-background">
                   <Link
                     href={localizeHref(`${PATH}#${item.id}`, locale)}
                     aria-label={item.question}
-                    className="grid min-h-11 grid-cols-[2rem_minmax(0,1fr)] items-center gap-2 py-2 text-xs text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange"
+                    className="grid min-h-11 grid-cols-[1.75rem_minmax(0,1fr)] items-center gap-2 px-2 py-2 text-xs leading-4 text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange"
                   >
-                    <span className="font-mono text-[10px] text-brand-orange">
+                    <span className="font-mono text-xs text-brand-orange">
                       {String(index + 1).padStart(2, "0")}
                     </span>
                     <span className="min-w-0 break-words">
@@ -269,22 +260,22 @@ function HilfeContent({
           </nav>
         </aside>
 
-        <section aria-labelledby="faq-heading" className="min-w-0">
+        <section aria-labelledby="faq-heading" className="mt-8 min-w-0">
           <h2
             id="faq-heading"
             className="text-3xl font-bold tracking-[-0.035em] text-foreground sm:text-4xl"
           >
             {copy.faqHeading}
           </h2>
-          <div className="mt-8 divide-y divide-border border-y border-border">
+          <div className="mt-6 divide-y divide-border border-y border-border">
             {faqItems.map((item, index) => (
               <details
                 key={item.id}
                 id={item.id}
                 className="group scroll-mt-24 py-1"
               >
-                <summary className="grid min-h-16 cursor-pointer list-none grid-cols-[2.5rem_minmax(0,1fr)_1.5rem] items-center gap-3 py-4 font-semibold text-foreground outline-none hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background [&::-webkit-details-marker]:hidden">
-                  <span className="font-mono text-[10px] text-brand-orange">
+                <summary className="grid min-h-12 cursor-pointer list-none grid-cols-[2rem_minmax(0,1fr)_1.5rem] items-center gap-3 py-3 font-semibold text-foreground outline-none hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background [&::-webkit-details-marker]:hidden">
+                  <span className="font-mono text-xs text-brand-orange">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <span className="min-w-0 text-pretty">{item.question}</span>
@@ -295,57 +286,31 @@ function HilfeContent({
                     +
                   </span>
                 </summary>
-                <div className="pb-6 pl-[3.25rem] pr-5 text-sm leading-relaxed text-muted-foreground [overflow-wrap:anywhere] [&_a]:text-foreground [&_a]:underline [&_a]:decoration-brand-orange/50 [&_a]:underline-offset-4 [&_a]:outline-none [&_a]:hover:decoration-brand-orange [&_a]:focus-visible:ring-2 [&_a]:focus-visible:ring-brand-orange">
+                <div className="pb-4 pl-11 pr-4 text-sm leading-6 text-muted-foreground [overflow-wrap:anywhere] [&_a]:text-foreground [&_a]:underline [&_a]:decoration-brand-orange/50 [&_a]:underline-offset-4 [&_a]:outline-none [&_a]:hover:decoration-brand-orange [&_a]:focus-visible:ring-2 [&_a]:focus-visible:ring-brand-orange">
                   <p>{item.answer}</p>
                 </div>
               </details>
             ))}
           </div>
 
-          <div className="mt-10 grid gap-px border border-border bg-border sm:grid-cols-2">
-            <section className="min-w-0 bg-card/50 p-6">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-brand-orange">
-                {copy.actionEyebrow}
-              </p>
-              <h3 className="mt-4 text-lg font-bold text-foreground">
-                {copy.actionHeading}
-              </h3>
-              <p className="mt-3 break-words text-sm leading-relaxed text-muted-foreground">
-                {features.feedback ? (
-                  <span className="[&_a]:text-foreground [&_a]:underline [&_a]:decoration-brand-orange/50 [&_a]:underline-offset-4 [&_a]:hover:decoration-brand-orange [&_a]:focus-visible:outline-none [&_a]:focus-visible:ring-2 [&_a]:focus-visible:ring-brand-orange">
-                    {withInternalLink(
-                      copy.contactAvailable,
-                      copy.contactLink,
-                      localizeHref("/feedback", locale),
-                    )}
-                  </span>
-                ) : (
-                  <span className="[&_a]:text-foreground [&_a]:underline [&_a]:decoration-brand-orange/50 [&_a]:underline-offset-4 [&_a]:hover:decoration-brand-orange [&_a]:focus-visible:outline-none [&_a]:focus-visible:ring-2 [&_a]:focus-visible:ring-brand-orange">
-                    {withMailto(copy.contactUnavailable)}
-                  </span>
-                )}
-              </p>
-            </section>
-
-            <section className="min-w-0 bg-card/50 p-6">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-brand-orange">
-                {copy.updatesEyebrow}
-              </p>
-              <h3 className="mt-4 text-lg font-bold text-foreground">
-                {copy.updatesHeading}
-              </h3>
-              <p className="mt-3 break-words text-sm leading-relaxed text-muted-foreground">
-                {copy.updatesBody}{" "}
-                <Link
-                  href={localizeHref("/neuigkeiten", locale)}
-                  className="text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-                >
-                  {copy.updatesLink}
-                </Link>
-                .
-              </p>
-            </section>
-          </div>
+          <aside className="mt-8 border border-border bg-card/50 p-4 sm:p-6">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
+              {copy.updatesEyebrow}
+            </p>
+            <h3 className="mt-3 text-lg font-bold text-foreground">
+              {copy.updatesHeading}
+            </h3>
+            <p className="mt-3 break-words text-sm leading-relaxed text-muted-foreground">
+              {copy.updatesBody}{" "}
+              <Link
+                href={localizeHref("/neuigkeiten", locale)}
+                className="text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+              >
+                {copy.updatesLink}
+              </Link>
+              .
+            </p>
+          </aside>
         </section>
       </div>
     </article>

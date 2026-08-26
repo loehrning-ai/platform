@@ -3,7 +3,10 @@
 import { useEffect, useMemo, useRef, useCallback } from "react";
 import { useReducedMotion, type MotionValue } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { COUNTRY_POLYLINES_3D, type CountryKey3D } from "@/lib/country-polylines-3d";
+import {
+  COUNTRY_POLYLINES_3D,
+  type CountryKey3D,
+} from "@/lib/country-polylines-3d";
 import { heroNetworkSteps, STEPS } from "@/components/home/hero-network-steps";
 import type { Locale } from "@/lib/i18n/locale";
 
@@ -15,12 +18,12 @@ export { STEPS };
 
 /** Maps STEPS index → country key. Aligned 1:1 with the STEPS array below. */
 const STEP_COUNTRY: readonly CountryKey3D[] = [
-  "BERLIN",         // STEPS[0] Germany
-  "SAO_PAULO",      // STEPS[1] Brazil
-  "BEIJING",        // STEPS[2] China
-  "SAN_FRANCISCO",  // STEPS[3] USA
-  "MUMBAI",         // STEPS[4] India (EU AI Act extraterritorial reach)
-  "TOKYO",          // STEPS[5] Japan
+  "BERLIN", // STEPS[0] Germany
+  "SAO_PAULO", // STEPS[1] Brazil
+  "BEIJING", // STEPS[2] China
+  "SAN_FRANCISCO", // STEPS[3] USA
+  "MUMBAI", // STEPS[4] India (EU AI Act extraterritorial reach)
+  "TOKYO", // STEPS[5] Japan
 ];
 
 // ─── Constants ──────────────────────────────────────────────────────────────
@@ -44,20 +47,44 @@ const DWELL = 0.78;
 // ─── Math ───────────────────────────────────────────────────────────────────
 
 function ll3d(lat: number, lon: number): [number, number, number] {
-  const la = lat * DEG, lo = lon * DEG;
-  return [Math.cos(la) * Math.cos(lo), Math.sin(la), Math.cos(la) * Math.sin(lo)];
+  const la = lat * DEG,
+    lo = lon * DEG;
+  return [
+    Math.cos(la) * Math.cos(lo),
+    Math.sin(la),
+    Math.cos(la) * Math.sin(lo),
+  ];
 }
-function rY(x: number, y: number, z: number, a: number): [number, number, number] {
-  const c = Math.cos(a), s = Math.sin(a); return [x*c+z*s, y, -x*s+z*c];
+function rY(
+  x: number,
+  y: number,
+  z: number,
+  a: number,
+): [number, number, number] {
+  const c = Math.cos(a),
+    s = Math.sin(a);
+  return [x * c + z * s, y, -x * s + z * c];
 }
-function rX(x: number, y: number, z: number, a: number): [number, number, number] {
-  const c = Math.cos(a), s = Math.sin(a); return [x, y*c-z*s, y*s+z*c];
+function rX(
+  x: number,
+  y: number,
+  z: number,
+  a: number,
+): [number, number, number] {
+  const c = Math.cos(a),
+    s = Math.sin(a);
+  return [x, y * c - z * s, y * s + z * c];
 }
 /** Project (lat, lon) to screen, with the globe rotated so that
  *  (rLat, rLon) lands dead center on the front face (z ≈ 1). The -0.15 rad
  *  X tilt biases the city slightly above the equator-of-view so it sits
  *  comfortably alongside the typing word in the upper-right area. */
-function project(lat: number, lon: number, rLon: number, rLat: number): { sx: number; sy: number; z: number } {
+function project(
+  lat: number,
+  lon: number,
+  rLon: number,
+  rLat: number,
+): { sx: number; sy: number; z: number } {
   let [x, y, z] = ll3d(lat, lon);
   [x, y, z] = rY(x, y, z, (rLon - 90) * DEG);
   [x, y, z] = rX(x, y, z, rLat * DEG - 0.15);
@@ -71,12 +98,19 @@ function sfEase(t: number): number {
   return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
 function lerpLon(a: number, b: number, t: number): number {
-  let d = b - a; if (d > 180) d -= 360; if (d < -180) d += 360; return a + d * t;
+  let d = b - a;
+  if (d > 180) d -= 360;
+  if (d < -180) d += 360;
+  return a + d * t;
 }
 
 // ─── Grid builder ───────────────────────────────────────────────────────────
 
-interface Seg { d: string; dp: number; len?: number }
+interface Seg {
+  d: string;
+  dp: number;
+  len?: number;
+}
 
 /** Project a set of [lat, lon] polylines onto the sphere at (rLon, rLat),
  *  emitting only front-facing (z > 0) sub-paths. Each Seg carries the
@@ -89,7 +123,13 @@ function projectRings(
 ): Seg[] {
   const out: Seg[] = [];
   for (const ring of rings) {
-    let d = "", live = false, sumDp = 0, n = 0, len = 0, lastSx = 0, lastSy = 0;
+    let d = "",
+      live = false,
+      sumDp = 0,
+      n = 0,
+      len = 0,
+      lastSx = 0,
+      lastSy = 0;
     for (const [lat, lon] of ring) {
       const pt = project(lat, lon, rLon, rLat);
       if (pt.z > 0) {
@@ -100,13 +140,18 @@ function projectRings(
         } else {
           d += `M${c}`;
         }
-        lastSx = pt.sx; lastSy = pt.sy;
+        lastSx = pt.sx;
+        lastSy = pt.sy;
         live = true;
         sumDp += dp(pt.sx, pt.sy, pt.z);
         n++;
       } else if (live) {
         out.push({ d, dp: n > 0 ? sumDp / n : 0, len });
-        d = ""; live = false; sumDp = 0; n = 0; len = 0;
+        d = "";
+        live = false;
+        sumDp = 0;
+        n = 0;
+        len = 0;
       }
     }
     if (live) out.push({ d, dp: n > 0 ? sumDp / n : 0, len });
@@ -132,7 +177,8 @@ function projectRingsClosed(
     if (n === 0) continue;
 
     // Fast path 1: ring fully behind the limb — skip.
-    let anyFront = false, anyBack = false;
+    let anyFront = false,
+      anyBack = false;
     for (const p of pts) {
       if (p.z > 0) anyFront = true;
       else anyBack = true;
@@ -142,7 +188,8 @@ function projectRingsClosed(
 
     // Fast path 2: ring fully in front — single straight closed path.
     if (!anyBack) {
-      let d = "", sumDp = 0;
+      let d = "",
+        sumDp = 0;
       pts.forEach((p, i) => {
         const c = `${p.sx.toFixed(1)},${p.sy.toFixed(1)}`;
         d += i === 0 ? `M${c}` : ` L${c}`;
@@ -178,7 +225,11 @@ function projectRingsClosed(
         const sxRaw = prev.sx + (cur.sx - prev.sx) * t;
         const syRaw = prev.sy + (cur.sy - prev.sy) * t;
         const ang = Math.atan2(syRaw - CY, sxRaw - CX);
-        curEntry = { ang, sx: CX + R * Math.cos(ang), sy: CY + R * Math.sin(ang) };
+        curEntry = {
+          ang,
+          sx: CX + R * Math.cos(ang),
+          sy: CY + R * Math.sin(ang),
+        };
         curVis = [];
         inArc = true;
       }
@@ -215,7 +266,8 @@ function projectRingsClosed(
     //   limb arc → arc[1] entry → … → arc[last] exit
     //   limb arc back to arc[0] entry (the implicit Z)
     let d = "";
-    let sumDp = 0, vcount = 0;
+    let sumDp = 0,
+      vcount = 0;
     arcs.forEach((arc, ai) => {
       // Move to arc entry (or line, if not the first arc)
       const entryC = `${arc.entrySx.toFixed(1)},${arc.entrySy.toFixed(1)}`;
@@ -253,28 +305,66 @@ const BERLIN_LAT = 52.5;
 const BERLIN_LON = 13.4;
 
 function buildGrid(rLon: number, rLat: number): { front: Seg[]; back: Seg[] } {
-  const front: Seg[] = [], back: Seg[] = [];
+  const front: Seg[] = [],
+    back: Seg[] = [];
   const trace = (points: { sx: number; sy: number; z: number }[]) => {
-    let pF = "", pB = "", lF = false, lB = false, sF = 0, cF = 0, sB = 0, cB = 0;
+    let pF = "",
+      pB = "",
+      lF = false,
+      lB = false,
+      sF = 0,
+      cF = 0,
+      sB = 0,
+      cB = 0;
     for (const p of points) {
       const c = `${p.sx.toFixed(1)},${p.sy.toFixed(1)}`;
       if (p.z > 0) {
-        if (!lF && pB) { back.push({ d: pB, dp: cB > 0 ? sB/cB : 0 }); pB = ""; sB = 0; cB = 0; }
-        pF += lF ? ` L${c}` : `M${c}`; lF = true; lB = false; sF += dp(p.sx, p.sy, p.z); cF++;
+        if (!lF && pB) {
+          back.push({ d: pB, dp: cB > 0 ? sB / cB : 0 });
+          pB = "";
+          sB = 0;
+          cB = 0;
+        }
+        pF += lF ? ` L${c}` : `M${c}`;
+        lF = true;
+        lB = false;
+        sF += dp(p.sx, p.sy, p.z);
+        cF++;
       } else {
-        if (!lB && pF) { front.push({ d: pF, dp: cF > 0 ? sF/cF : 0 }); pF = ""; sF = 0; cF = 0; }
-        pB += lB ? ` L${c}` : `M${c}`; lB = true; lF = false; sB += Math.abs(p.z); cB++;
+        if (!lB && pF) {
+          front.push({ d: pF, dp: cF > 0 ? sF / cF : 0 });
+          pF = "";
+          sF = 0;
+          cF = 0;
+        }
+        pB += lB ? ` L${c}` : `M${c}`;
+        lB = true;
+        lF = false;
+        sB += Math.abs(p.z);
+        cB++;
       }
     }
-    if (pF) front.push({ d: pF, dp: cF > 0 ? Math.round(sF/cF * 10000) / 10000 : 0 });
-    if (pB) back.push({ d: pB, dp: cB > 0 ? Math.round(sB/cB * 10000) / 10000 : 0 });
+    if (pF)
+      front.push({
+        d: pF,
+        dp: cF > 0 ? Math.round((sF / cF) * 10000) / 10000 : 0,
+      });
+    if (pB)
+      back.push({
+        d: pB,
+        dp: cB > 0 ? Math.round((sB / cB) * 10000) / 10000 : 0,
+      });
   };
   for (let lat = -80; lat <= 80; lat += GRID_STEP) {
-    const pts = []; for (let lon = -180; lon <= 180; lon += 4) pts.push(project(lat, lon, rLon, rLat));
+    const pts = [];
+    for (let lon = -180; lon <= 180; lon += 4)
+      pts.push(project(lat, lon, rLon, rLat));
     trace(pts);
   }
   for (let lon = -180; lon < 180; lon += GRID_STEP) {
-    const pts = []; for (let lat = -90; lat <= 90; lat += 4) pts.push(project(lat, lon, rLon, rLat));
+    const pts = [];
+    for (let lat = -90; lat <= 90; lat += 4)
+      pts.push(project(lat, lon, rLon, rLat));
     trace(pts);
   }
   return { front, back };
@@ -288,6 +378,8 @@ interface HeroNetworkProps {
   className?: string;
   mobile?: boolean;
   frozen?: MotionValue<number>;
+  paused?: boolean;
+  reducedMotion?: boolean;
   /** Optional outputs — receive the current pan target each frame. */
   latOut?: MotionValue<number>;
   lonOut?: MotionValue<number>;
@@ -295,9 +387,19 @@ interface HeroNetworkProps {
   stepIdxOut?: MotionValue<number>;
 }
 
-export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, lonOut, stepIdxOut }: HeroNetworkProps) {
+export function HeroNetwork({
+  locale = "de",
+  className,
+  mobile,
+  frozen,
+  paused = false,
+  reducedMotion = false,
+  latOut,
+  lonOut,
+  stepIdxOut,
+}: HeroNetworkProps) {
   const localizedSteps = useMemo(() => heroNetworkSteps(locale), [locale]);
-  const prefersReduced = useReducedMotion();
+  const prefersReduced = Boolean(useReducedMotion() || reducedMotion);
   const containerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef(0);
   const startRef = useRef(0);
@@ -349,7 +451,9 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
     const nextRLat = next.rLat ?? next.lat;
     const nextRLon = next.rLon ?? next.lon;
 
-    let targetLat: number, targetLon: number, isTransitioning = false;
+    let targetLat: number,
+      targetLon: number,
+      isTransitioning = false;
 
     if (isFrozen || stepT < DWELL) {
       targetLat = curRLat;
@@ -386,10 +490,16 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
       while (gbEl.children.length > grid.back.length) gbEl.lastChild?.remove();
       grid.back.forEach((s, i) => {
         let p = gbEl.children[i] as SVGPathElement | undefined;
-        if (!p) { p = document.createElementNS("http://www.w3.org/2000/svg", "path"); gbEl.appendChild(p); }
+        if (!p) {
+          p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          gbEl.appendChild(p);
+        }
         p.setAttribute("d", s.d);
         p.setAttribute("stroke", LC);
-        p.setAttribute("stroke-opacity", String((0.025 + s.dp * 0.035) * entrance));
+        p.setAttribute(
+          "stroke-opacity",
+          String((0.025 + s.dp * 0.035) * entrance),
+        );
         p.setAttribute("stroke-width", "0.4");
         p.setAttribute("fill", "none");
       });
@@ -398,14 +508,21 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
     // Front grid shadow (drawn ink effect)
     const gfsEl = gridFrontShadowRef.current;
     if (gfsEl) {
-      while (gfsEl.children.length > grid.front.length) gfsEl.lastChild?.remove();
+      while (gfsEl.children.length > grid.front.length)
+        gfsEl.lastChild?.remove();
       grid.front.forEach((s, i) => {
         let p = gfsEl.children[i] as SVGPathElement | undefined;
-        if (!p) { p = document.createElementNS("http://www.w3.org/2000/svg", "path"); gfsEl.appendChild(p); }
+        if (!p) {
+          p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          gfsEl.appendChild(p);
+        }
         const w = 0.45 + s.dp * 0.4;
         p.setAttribute("d", s.d);
         p.setAttribute("stroke", LC);
-        p.setAttribute("stroke-opacity", String((0.02 + s.dp * 0.05) * entrance));
+        p.setAttribute(
+          "stroke-opacity",
+          String((0.02 + s.dp * 0.05) * entrance),
+        );
         p.setAttribute("stroke-width", String(w * 2.5));
         p.setAttribute("fill", "none");
       });
@@ -417,12 +534,18 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
       while (gfEl.children.length > grid.front.length) gfEl.lastChild?.remove();
       grid.front.forEach((s, i) => {
         let p = gfEl.children[i] as SVGPathElement | undefined;
-        if (!p) { p = document.createElementNS("http://www.w3.org/2000/svg", "path"); gfEl.appendChild(p); }
+        if (!p) {
+          p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          gfEl.appendChild(p);
+        }
         const shimmer = 1 + Math.sin(t * 1.5 + i * 0.7) * 0.04;
         const w = 0.45 + s.dp * 0.4;
         p.setAttribute("d", s.d);
         p.setAttribute("stroke", LC);
-        p.setAttribute("stroke-opacity", String((0.06 + s.dp * 0.16) * entrance * shimmer));
+        p.setAttribute(
+          "stroke-opacity",
+          String((0.06 + s.dp * 0.16) * entrance * shimmer),
+        );
         p.setAttribute("stroke-width", String(w));
         p.setAttribute("fill", "none");
       });
@@ -471,15 +594,21 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
       const fillSegs: Seg[] = [];
       for (const key of STEP_COUNTRY) {
         const rings = COUNTRY_POLYLINES_3D[key];
-        for (const seg of projectRings(rings, targetLon, targetLat)) outlineSegs.push(seg);
-        for (const seg of projectRingsClosed(rings, targetLon, targetLat)) fillSegs.push(seg);
+        for (const seg of projectRings(rings, targetLon, targetLat))
+          outlineSegs.push(seg);
+        for (const seg of projectRingsClosed(rings, targetLon, targetLat))
+          fillSegs.push(seg);
       }
       // 1. Radial glow — barely there, just a soft tint at the centroid.
       //    Uses limb-arc closed paths so the glow stays on visible front only.
-      while (glowEl.children.length > fillSegs.length) glowEl.lastChild?.remove();
+      while (glowEl.children.length > fillSegs.length)
+        glowEl.lastChild?.remove();
       fillSegs.forEach((s, i) => {
         let p = glowEl.children[i] as SVGPathElement | undefined;
-        if (!p) { p = document.createElementNS("http://www.w3.org/2000/svg", "path"); glowEl.appendChild(p); }
+        if (!p) {
+          p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          glowEl.appendChild(p);
+        }
         p.setAttribute("d", s.d);
         p.setAttribute("fill", "url(#countryGlow)");
         p.setAttribute("fill-opacity", String((0.03 + s.dp * 0.03) * entrance));
@@ -487,13 +616,17 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
       });
       // 2. Hatch overlay — uniform Kupfer alpha across the country.
       //    Same limb-arc closed paths so the hatch never crosses the chord.
-      while (fillEl.children.length > fillSegs.length) fillEl.lastChild?.remove();
+      while (fillEl.children.length > fillSegs.length)
+        fillEl.lastChild?.remove();
       fillSegs.forEach((s, i) => {
         let fp = fillEl.children[i] as SVGPathElement | undefined;
-        if (!fp) { fp = document.createElementNS("http://www.w3.org/2000/svg", "path"); fillEl.appendChild(fp); }
+        if (!fp) {
+          fp = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          fillEl.appendChild(fp);
+        }
         fp.setAttribute("d", s.d);
         fp.setAttribute("fill", "url(#countryHatch)");
-        fp.setAttribute("fill-opacity", String(0.10 * entrance));
+        fp.setAttribute("fill-opacity", String(0.1 * entrance));
         fp.setAttribute("stroke", "none");
       });
       // 3. Outline — solid Kupfer, uniform alpha (no top→bottom gradient).
@@ -501,10 +634,16 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
       while (cE.children.length > outlineSegs.length) cE.lastChild?.remove();
       outlineSegs.forEach((s, i) => {
         let p = cE.children[i] as SVGPathElement | undefined;
-        if (!p) { p = document.createElementNS("http://www.w3.org/2000/svg", "path"); cE.appendChild(p); }
+        if (!p) {
+          p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          cE.appendChild(p);
+        }
         p.setAttribute("d", s.d);
         p.setAttribute("stroke", KUPFER);
-        p.setAttribute("stroke-opacity", String((0.13 + s.dp * 0.05) * entrance));
+        p.setAttribute(
+          "stroke-opacity",
+          String((0.13 + s.dp * 0.05) * entrance),
+        );
         p.setAttribute("stroke-width", "2.0");
         p.setAttribute("stroke-linecap", "round");
         p.setAttribute("fill", "none");
@@ -525,9 +664,15 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
         const holdEnd = 0.82;
 
         // Character-by-character typing
-        const charsToShow = dwellT < fadeInStart ? 0
-          : dwellT < fadeInEnd ? Math.floor(((dwellT - fadeInStart) / (fadeInEnd - fadeInStart)) * word.length)
-          : word.length;
+        const charsToShow =
+          dwellT < fadeInStart
+            ? 0
+            : dwellT < fadeInEnd
+              ? Math.floor(
+                  ((dwellT - fadeInStart) / (fadeInEnd - fadeInStart)) *
+                    word.length,
+                )
+              : word.length;
 
         // Build displayed text
         const displayedWord = word.slice(0, Math.min(charsToShow, word.length));
@@ -545,7 +690,9 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
 
         // Blinking cursor _
         const showCursor = dwellT < holdEnd;
-        const cursorBlink = showCursor && (charsToShow < word.length || Math.floor(t * 1.8) % 2 === 0);
+        const cursorBlink =
+          showCursor &&
+          (charsToShow < word.length || Math.floor(t * 1.8) % 2 === 0);
         cursorEl.textContent = cursorBlink ? "_" : "";
         cursorEl.setAttribute("opacity", String(textOp * entrance));
 
@@ -559,7 +706,6 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
             : estimatedTextWidth;
         const cursorGap = word === "Demos" ? 1 : 2;
         cursorEl.setAttribute("x", String(CX + textWidth / 2 + cursorGap));
-
       } else {
         textEl.setAttribute("opacity", "0");
         cursorEl.setAttribute("opacity", "0");
@@ -573,7 +719,10 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
         const c = stepsEl.children[i] as SVGCircleElement;
         c.setAttribute("r", i === stepIdx ? "2.2" : "1.2");
         c.setAttribute("fill", i === stepIdx ? KUPFER : LC);
-        c.setAttribute("opacity", String((i === stepIdx ? 0.8 : 0.2) * entrance));
+        c.setAttribute(
+          "opacity",
+          String((i === stepIdx ? 0.8 : 0.2) * entrance),
+        );
       }
     }
 
@@ -583,7 +732,7 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
   }, [frozen, latOut, localizedSteps, lonOut, stepIdxOut]);
 
   useEffect(() => {
-    if (prefersReduced || mobile) return;
+    if (prefersReduced || mobile || paused) return;
     const el = containerRef.current;
     if (!el) return;
 
@@ -626,10 +775,11 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
     return () => {
       io.disconnect();
       document.removeEventListener("visibilitychange", sync);
+      if (runningRef.current) pausedAtRef.current = performance.now();
       cancelAnimationFrame(rafRef.current);
       runningRef.current = false;
     };
-  }, [animate, prefersReduced, mobile]);
+  }, [animate, paused, prefersReduced, mobile]);
 
   // Static fallback (prefers-reduced-motion / mobile): a single canonical
   // composition centered on Berlin, with ALL 6 countries on the globe so the
@@ -637,7 +787,7 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
   // projection math is expensive and the inputs only change with the
   // reduced-motion / mobile flags.
   const staticGrid = useMemo(
-    () => ((prefersReduced || mobile) ? buildGrid(BERLIN_LON, BERLIN_LAT) : null),
+    () => (prefersReduced || mobile ? buildGrid(BERLIN_LON, BERLIN_LAT) : null),
     [prefersReduced, mobile],
   );
   // Outlines: open per-arc paths.
@@ -655,13 +805,27 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
     () =>
       prefersReduced && !mobile
         ? STEP_COUNTRY.flatMap((key) =>
-            projectRingsClosed(COUNTRY_POLYLINES_3D[key], BERLIN_LON, BERLIN_LAT),
+            projectRingsClosed(
+              COUNTRY_POLYLINES_3D[key],
+              BERLIN_LON,
+              BERLIN_LAT,
+            ),
           )
         : null,
     [prefersReduced, mobile],
   );
   return (
-    <div ref={containerRef} className={cn("pointer-events-none select-none [contain:content]", className)} aria-hidden="true">
+    <div
+      ref={containerRef}
+      className={cn(
+        "pointer-events-none select-none [contain:content]",
+        className,
+      )}
+      aria-hidden="true"
+      data-hero-network-motion={
+        prefersReduced || mobile ? "static" : paused ? "paused" : "running"
+      }
+    >
       <svg
         viewBox="-120 -20 660 620"
         fill="none"
@@ -683,7 +847,9 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
             <stop offset="95%" stopColor={LC} stopOpacity="0.08" />
             <stop offset="100%" stopColor={LC} stopOpacity="0.14" />
           </radialGradient>
-          <clipPath id="gc"><circle cx={CX} cy={CY} r={R} /></clipPath>
+          <clipPath id="gc">
+            <circle cx={CX} cy={CY} r={R} />
+          </clipPath>
           {/* Soft halo around the limb so the sphere reads as 3D, not a flat disc */}
           <filter id="limbHalo" x="-15%" y="-15%" width="130%" height="130%">
             <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
@@ -694,16 +860,25 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
           <pattern
             id="countryHatch"
             patternUnits="userSpaceOnUse"
-            width="6" height="6"
+            width="6"
+            height="6"
             patternTransform="rotate(45)"
           >
-            <line x1="0" y1="0" x2="0" y2="6" stroke={KUPFER} strokeOpacity="1" strokeWidth="0.85" />
+            <line
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="6"
+              stroke={KUPFER}
+              strokeOpacity="1"
+              strokeWidth="0.85"
+            />
           </pattern>
           {/* Radial inner-glow — soft Kupfer wash at the centroid (uniform
                radially: same opacity at top edge and bottom edge of the
                country). Whispers the country's presence behind the hatch. */}
           <radialGradient id="countryGlow" cx="50%" cy="50%" r="58%">
-            <stop offset="0%"  stopColor={KUPFER} stopOpacity="0.55" />
+            <stop offset="0%" stopColor={KUPFER} stopOpacity="0.55" />
             <stop offset="55%" stopColor={KUPFER} stopOpacity="0.22" />
             <stop offset="100%" stopColor={KUPFER} stopOpacity="0" />
           </radialGradient>
@@ -713,8 +888,13 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
         <circle cx={CX} cy={CY} r={R} fill="url(#limb)" />
         {/* Limb halo — blurred outer ring sells the spherical depth */}
         <circle
-          cx={CX} cy={CY} r={R + 1}
-          stroke={LC} strokeOpacity={0.12} strokeWidth={2.4} fill="none"
+          cx={CX}
+          cy={CY}
+          r={R + 1}
+          stroke={LC}
+          strokeOpacity={0.12}
+          strokeWidth={2.4}
+          fill="none"
           filter="url(#limbHalo)"
         />
 
@@ -731,24 +911,71 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
           <g ref={countryRef} />
 
           {/* Static fallback for prefers-reduced-motion */}
-          {staticGrid && staticGrid.back.map((s, i) => (
-            <path key={`sb${i}`} d={s.d} stroke={LC} strokeOpacity={Math.round((0.025 + s.dp * 0.035) * 1000) / 1000} strokeWidth={0.4} fill="none" />
-          ))}
-          {staticGrid && staticGrid.front.map((s, i) => (
-            <path key={`sf${i}`} d={s.d} stroke={LC} strokeOpacity={Math.round((0.06 + s.dp * 0.16) * 1000) / 1000} strokeWidth={Math.round((0.45 + s.dp * 0.4) * 1000) / 1000} fill="none" />
-          ))}
-          {staticCountryFill && staticCountryFill.map((s, i) => (
-            <path key={`scg${i}`} d={s.d} fill="url(#countryGlow)" fillOpacity={Math.round((0.03 + s.dp * 0.03) * 1000) / 1000} stroke="none" />
-          ))}
-          {staticCountryFill && staticCountryFill.map((s, i) => (
-            <path key={`scf${i}`} d={s.d} fill="url(#countryHatch)" fillOpacity={0.10} stroke="none" />
-          ))}
-          {staticCountry && staticCountry.map((s, i) => (
-            <path key={`sc${i}`} d={s.d} stroke={KUPFER} strokeOpacity={Math.round((0.13 + s.dp * 0.05) * 1000) / 1000} strokeWidth={2.0} fill="none" strokeLinecap="round" />
-          ))}
+          {staticGrid &&
+            staticGrid.back.map((s, i) => (
+              <path
+                key={`sb${i}`}
+                d={s.d}
+                stroke={LC}
+                strokeOpacity={Math.round((0.025 + s.dp * 0.035) * 1000) / 1000}
+                strokeWidth={0.4}
+                fill="none"
+              />
+            ))}
+          {staticGrid &&
+            staticGrid.front.map((s, i) => (
+              <path
+                key={`sf${i}`}
+                d={s.d}
+                stroke={LC}
+                strokeOpacity={Math.round((0.06 + s.dp * 0.16) * 1000) / 1000}
+                strokeWidth={Math.round((0.45 + s.dp * 0.4) * 1000) / 1000}
+                fill="none"
+              />
+            ))}
+          {staticCountryFill &&
+            staticCountryFill.map((s, i) => (
+              <path
+                key={`scg${i}`}
+                d={s.d}
+                fill="url(#countryGlow)"
+                fillOpacity={Math.round((0.03 + s.dp * 0.03) * 1000) / 1000}
+                stroke="none"
+              />
+            ))}
+          {staticCountryFill &&
+            staticCountryFill.map((s, i) => (
+              <path
+                key={`scf${i}`}
+                d={s.d}
+                fill="url(#countryHatch)"
+                fillOpacity={0.1}
+                stroke="none"
+              />
+            ))}
+          {staticCountry &&
+            staticCountry.map((s, i) => (
+              <path
+                key={`sc${i}`}
+                d={s.d}
+                stroke={KUPFER}
+                strokeOpacity={Math.round((0.13 + s.dp * 0.05) * 1000) / 1000}
+                strokeWidth={2.0}
+                fill="none"
+                strokeLinecap="round"
+              />
+            ))}
         </g>
 
-        <circle cx={CX} cy={CY} r={R} stroke={LC} strokeOpacity={0.04} strokeWidth={0.3} fill="none" />
+        <circle
+          cx={CX}
+          cy={CY}
+          r={R}
+          stroke={LC}
+          strokeOpacity={0.04}
+          strokeWidth={0.3}
+          fill="none"
+        />
 
         {/* Typing word — placed just above the country shape so it reads as
             a label for the visible country, not a floating header. */}
@@ -756,18 +983,28 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
           <>
             <text
               ref={textRef}
-              x={CX} y={CY - R * 0.45}
+              x={CX}
+              y={CY - R * 0.45}
               fontFamily="var(--font-loehrning-sans), sans-serif"
-              fontSize="30" fontWeight="600" letterSpacing="-0.02em"
-              fill={KUPFER} textAnchor="middle" opacity="0"
+              fontSize="30"
+              fontWeight="600"
+              letterSpacing="-0.02em"
+              fill={KUPFER}
+              textAnchor="middle"
+              opacity="0"
             />
             <text
               ref={cursorRef}
-              x={CX + 110} y={CY - R * 0.45}
+              x={CX + 110}
+              y={CY - R * 0.45}
               fontFamily="var(--font-geist-mono), monospace"
-              fontSize="30" fontWeight="300"
-              fill={KUPFER} opacity="0"
-            >_</text>
+              fontSize="30"
+              fontWeight="300"
+              fill={KUPFER}
+              opacity="0"
+            >
+              _
+            </text>
           </>
         )}
 
@@ -775,7 +1012,14 @@ export function HeroNetwork({ locale = "de", className, mobile, frozen, latOut, 
         {!mobile && (
           <g ref={stepDotsRef} opacity="0.5">
             {localizedSteps.map((_, i) => (
-              <circle key={i} cx={CX - ((localizedSteps.length - 1) * 7) / 2 + i * 7} cy={CY + R + 16} r={1.2} fill={LC} opacity={0.2} />
+              <circle
+                key={i}
+                cx={CX - ((localizedSteps.length - 1) * 7) / 2 + i * 7}
+                cy={CY + R + 16}
+                r={1.2}
+                fill={LC}
+                opacity={0.2}
+              />
             ))}
           </g>
         )}

@@ -30,14 +30,13 @@ import {
   getWorkshopTimeLimitMinutes,
 } from "@/lib/course/config";
 import { loadWorkshopQuestions } from "@/lib/course/questions";
-import { saveWorkshopQuizResult } from "@/lib/course/progress";
 import { isCourseFullyCompleted } from "@/lib/courses/completion";
 import { reportClientBoundaryError } from "@/lib/observability/client-boundary-error";
 import {
   getLearningOwnerContext,
   subscribeLearningOwner,
 } from "@/lib/progress/browser-learning-storage";
-import { subscribe } from "@/lib/progress/store";
+import { saveWorkshopQuizResultDurably, subscribe } from "@/lib/progress/store";
 import type { CourseSlug, QuizQuestion } from "@/lib/course/types";
 import type { Locale } from "@/lib/i18n/locale";
 import { localizeHref } from "@/lib/i18n/locale";
@@ -65,6 +64,10 @@ interface QuizCopy {
   readonly loading: string;
   readonly loadErrorTitle: string;
   readonly loadErrorBody: string;
+  readonly savingResult: string;
+  readonly saveErrorTitle: string;
+  readonly saveErrorBody: string;
+  readonly retrySave: string;
   readonly retry: string;
   readonly backToCourse: string;
   readonly completeLessonsTitle: string;
@@ -96,6 +99,11 @@ const QUIZ_COPY: Readonly<Record<"de" | "en", QuizCopy>> = {
     loadErrorTitle: "Quiz konnte nicht geladen werden.",
     loadErrorBody:
       "Die Quizfragen konnten nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.",
+    savingResult: "Ergebnis wird gespeichert…",
+    saveErrorTitle: "Ergebnis wurde nicht gespeichert.",
+    saveErrorBody:
+      "Der lokale Speicher hat den Eintrag abgelehnt. Es wurde kein Abschluss freigeschaltet.",
+    retrySave: "Speichern erneut versuchen",
     retry: "Erneut versuchen",
     backToCourse: "Zurück zum Kurs",
     completeLessonsTitle: "Schließe zuerst alle Lektionen ab",
@@ -128,6 +136,11 @@ const QUIZ_COPY: Readonly<Record<"de" | "en", QuizCopy>> = {
     loadErrorTitle: "Quiz couldn't be loaded.",
     loadErrorBody:
       "The quiz questions could not be loaded. Check your connection and try again.",
+    savingResult: "Saving result…",
+    saveErrorTitle: "Result was not saved.",
+    saveErrorBody:
+      "Browser storage rejected the write. No completion record was unlocked.",
+    retrySave: "Retry saving",
     retry: "Try again",
     backToCourse: "Back to course",
     completeLessonsTitle: "Complete every lesson first",
@@ -219,6 +232,10 @@ export function WorkshopQuizPage({
   const [ownerGeneration, setOwnerGeneration] = useState<number | null>(null);
   const [loadError, setLoadError] = useState(false);
   const [loadAttempt, setLoadAttempt] = useState(0);
+  const [resultSaveStatus, setResultSaveStatus] = useState<
+    "pending" | "saved" | "error"
+  >("pending");
+  const [resultSaveAttempt, setResultSaveAttempt] = useState(0);
   const activeQuizGenerationRef = useRef<number | null>(null);
   const feedbackRef = useRef<HTMLDivElement>(null);
   const scoreRef = useRef<HTMLDivElement>(null);
@@ -254,6 +271,8 @@ export function WorkshopQuizPage({
   const resetQuizSession = useCallback(() => {
     activeQuizGenerationRef.current = null;
     setLoadError(false);
+    setResultSaveStatus("pending");
+    setResultSaveAttempt(0);
     setQuestions([]);
     setAnswers([]);
     setCurrentIndex(0);
@@ -480,7 +499,17 @@ export function WorkshopQuizPage({
       finished &&
       total > 0
     ) {
-      saveWorkshopQuizResult(courseSlug, score / total, passed);
+      const saved = saveWorkshopQuizResultDurably(
+        courseSlug,
+        score / total,
+        passed,
+      );
+      if (
+        activeQuizGenerationRef.current === ownerGeneration &&
+        getLearningOwnerContext().generation === ownerGeneration
+      ) {
+        setResultSaveStatus(saved ? "saved" : "error");
+      }
     }
   }, [
     accessAllowed,
@@ -488,6 +517,7 @@ export function WorkshopQuizPage({
     finished,
     ownerGeneration,
     passed,
+    resultSaveAttempt,
     score,
     total,
   ]);
@@ -498,7 +528,8 @@ export function WorkshopQuizPage({
       ownerGeneration === null ||
       activeQuizGenerationRef.current !== ownerGeneration ||
       !finished ||
-      total === 0
+      total === 0 ||
+      resultSaveStatus !== "saved"
     ) {
       return;
     }
@@ -510,7 +541,16 @@ export function WorkshopQuizPage({
       );
     }
     scoreRef.current?.focus();
-  }, [accessAllowed, copy, finished, ownerGeneration, pct, score, total]);
+  }, [
+    accessAllowed,
+    copy,
+    finished,
+    ownerGeneration,
+    pct,
+    resultSaveStatus,
+    score,
+    total,
+  ]);
 
   const sessionIsCurrent =
     accessAllowed === true &&
@@ -553,7 +593,7 @@ export function WorkshopQuizPage({
             <button
               type="button"
               onClick={() => setLoadAttempt((attempt) => attempt + 1)}
-              className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 text-sm font-bold text-white"
+              className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 text-sm font-bold text-white transition-colors hover:bg-foreground hover:text-background"
             >
               <RotateCcw className="h-4 w-4" aria-hidden="true" />
               {copy.retry}
@@ -583,6 +623,51 @@ export function WorkshopQuizPage({
   }
 
   if (finished) {
+    if (resultSaveStatus === "pending") {
+      return (
+        <div className="flex min-h-[100svh] items-center justify-center bg-background px-6">
+          <p role="status" aria-live="polite" className="text-muted-foreground">
+            {copy.savingResult}
+          </p>
+        </div>
+      );
+    }
+
+    if (resultSaveStatus === "error") {
+      return (
+        <div className="flex min-h-[100svh] items-center justify-center bg-background px-6">
+          <div className="max-w-lg text-center">
+            <h1 className="text-2xl font-bold text-foreground">
+              {copy.saveErrorTitle}
+            </h1>
+            <p role="alert" className="mt-3 text-muted-foreground">
+              {copy.saveErrorBody}
+            </p>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+              <button
+                type="button"
+                onClick={() => {
+                  setResultSaveStatus("pending");
+                  setResultSaveAttempt((attempt) => attempt + 1);
+                }}
+                className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 text-sm font-bold text-white transition-colors hover:bg-foreground hover:text-background"
+              >
+                <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                {copy.retrySave}
+              </button>
+              <Link
+                href={localizedCoursePath}
+                className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                {copy.backToCourse}
+              </Link>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="min-h-[100svh] bg-background">
         <h1 className="sr-only">{copy.title}</h1>
@@ -593,7 +678,7 @@ export function WorkshopQuizPage({
           className="sr-only"
           ref={feedbackRef}
         />
-        <div className="mx-auto max-w-2xl px-6 py-16">
+        <div className="mx-auto max-w-2xl px-6 py-12">
           <MotionProvider>
             <m.div
               initial={{ opacity: 0, y: 20 }}
@@ -601,62 +686,65 @@ export function WorkshopQuizPage({
               transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
               className="text-center"
             >
-            <Trophy
-              aria-hidden="true"
-              className={cn(
-                "mx-auto h-16 w-16",
-                passed ? "text-brand-sand" : "text-muted-foreground",
-              )}
-            />
-            <div
-              ref={scoreRef}
-              tabIndex={-1}
-              className={cn(
-                "mt-4 font-mono text-6xl font-bold outline-none focus-visible:ring-2 focus-visible:ring-brand-orange",
-                passed ? "text-brand-sand" : "text-destructive",
-              )}
-            >
-              {pct}%
-            </div>
-            <p className="mt-2 text-xl font-semibold">
-              {copy.correctCount(score, total)}
-            </p>
-            <p className="mt-2 text-muted-foreground">
-              {passed
-                ? config.quizPassMessage
-                : copy.passRequired(Math.round(passThreshold * 100))}
-            </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-              {passed ? (
-                <Link
-                  href={
-                    locale
-                      ? localizeHref(`${config.coursePath}/zertifikat`, locale)
-                      : `${config.coursePath}/zertifikat`
-                  }
-                  className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
-                >
-                  {copy.downloadRecord(config.recordNoun.label)}
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => window.location.reload()}
-                  className="inline-flex items-center gap-2 border border-border px-5 py-2.5 text-sm font-medium transition-colors hover:bg-card"
-                >
-                  <RotateCcw className="h-4 w-4" aria-hidden="true" />
-                  {copy.retry}
-                </button>
-              )}
-              <Link
-                href={localizedCoursePath}
-                className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              <Trophy
+                aria-hidden="true"
+                className={cn(
+                  "mx-auto h-16 w-16",
+                  passed ? "text-brand-sand" : "text-muted-foreground",
+                )}
+              />
+              <div
+                ref={scoreRef}
+                tabIndex={-1}
+                className={cn(
+                  "mt-4 font-mono text-6xl font-bold outline-none focus-visible:ring-2 focus-visible:ring-brand-orange",
+                  passed ? "text-brand-sand" : "text-destructive",
+                )}
               >
-                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-                {copy.backToCourse}
-              </Link>
-            </div>
+                {pct}%
+              </div>
+              <p className="mt-2 text-xl font-semibold">
+                {copy.correctCount(score, total)}
+              </p>
+              <p className="mt-2 text-muted-foreground">
+                {passed
+                  ? config.quizPassMessage
+                  : copy.passRequired(Math.round(passThreshold * 100))}
+              </p>
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+                {passed ? (
+                  <Link
+                    href={
+                      locale
+                        ? localizeHref(
+                            `${config.coursePath}/zertifikat`,
+                            locale,
+                          )
+                        : `${config.coursePath}/zertifikat`
+                    }
+                    className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-foreground hover:text-background"
+                  >
+                    {copy.downloadRecord(config.recordNoun.label)}
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => window.location.reload()}
+                    className="inline-flex min-h-11 items-center gap-2 border border-border px-5 py-2.5 text-sm font-medium transition-colors hover:bg-card"
+                  >
+                    <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                    {copy.retry}
+                  </button>
+                )}
+                <Link
+                  href={localizedCoursePath}
+                  className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                  {copy.backToCourse}
+                </Link>
+              </div>
             </m.div>
           </MotionProvider>
         </div>
@@ -684,13 +772,13 @@ export function WorkshopQuizPage({
       {/* Header */}
       <header
         data-testid="workshop-quiz-header"
-        className="fixed left-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur-sm"
+        className="fixed left-0 z-40 w-full border-b border-border bg-background"
         style={{ top: GLOBAL_NAV_OFFSET_PX }}
       >
         <div className="mx-auto grid min-h-14 max-w-3xl grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 px-4 py-2 sm:flex sm:h-14 sm:px-6 sm:py-0">
           <Link
             href={localizedCoursePath}
-            className="min-w-0 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+            className="inline-flex min-h-11 min-w-0 items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             {copy.cancel}
@@ -713,7 +801,7 @@ export function WorkshopQuizPage({
         </div>
       </header>
 
-      <div className="mx-auto max-w-2xl px-6 pt-24 pb-16">
+      <div className="mx-auto max-w-2xl px-6 pb-12 pt-12">
         {/* Progress */}
         <div className="mb-2 flex items-center justify-between">
           <span className="font-mono text-xs text-muted-foreground">
@@ -737,134 +825,134 @@ export function WorkshopQuizPage({
         <MotionProvider>
           <AnimatePresence mode="wait" custom={direction}>
             <m.div
-            key={currentIndex}
-            custom={direction}
-            variants={SLIDE}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
-          >
-            <h2
-              id={`workshop-quiz-question-${currentIndex}`}
-              ref={setQuestionHeadingRef}
-              tabIndex={-1}
-              className="mb-6 text-lg font-semibold leading-snug outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+              key={currentIndex}
+              custom={direction}
+              variants={SLIDE}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
             >
-              {question?.questionText}
-            </h2>
-            <div
-              role="radiogroup"
-              aria-labelledby={`workshop-quiz-question-${currentIndex}`}
-              className="space-y-2"
-            >
-              {shuffledOptions.map((option, optionIndex) => {
-                const isSelected = selectedId === option.id;
-                const isCorrect = option.isCorrect;
-                let optionClass =
-                  "border-border bg-card hover:border-brand-orange/30";
-                if (showExplanation) {
-                  if (isCorrect)
-                    optionClass = "border-brand-sand bg-brand-sand/5";
-                  else if (isSelected)
-                    optionClass = "border-destructive/50 bg-destructive/5";
-                  else optionClass = "border-border bg-card opacity-50";
-                }
-                return (
-                  <button
-                    key={option.id}
-                    ref={(element) => {
-                      optionRefs.current[optionIndex] = element;
-                    }}
-                    type="button"
-                    role="radio"
-                    aria-checked={isSelected}
-                    tabIndex={
-                      !showExplanation && focusedOptionIndex === optionIndex
-                        ? 0
-                        : -1
-                    }
-                    onFocus={() => setFocusedOptionIndex(optionIndex)}
-                    onKeyDown={(event) =>
-                      handleOptionKeyDown(event, optionIndex)
-                    }
-                    onClick={() => handleSelect(option.id)}
-                    disabled={showExplanation}
-                    className={cn(
-                      "flex w-full items-center gap-3 border px-4 py-3 text-left text-sm transition-[background-color,border-color,color,opacity,transform,box-shadow]",
-                      optionClass,
-                    )}
-                  >
-                    <span className="shrink-0 font-mono text-xs font-bold uppercase text-muted-foreground">
-                      {option.id}
-                    </span>
-                    <span className="min-w-0 flex-1 break-words">
-                      {option.text}
-                    </span>
-                    {showExplanation && isCorrect && (
-                      <>
-                        <span className="sr-only">{copy.correctAnswer}</span>
-                        <CheckCircle2
-                          className="h-4 w-4 shrink-0 text-brand-sand"
-                          aria-hidden="true"
-                        />
-                      </>
-                    )}
-                    {showExplanation && isSelected && !isCorrect && (
-                      <>
-                        <span className="sr-only">
-                          {copy.selectedIncorrect}
-                        </span>
-                        <XCircle
-                          className="h-4 w-4 shrink-0 text-destructive"
-                          aria-hidden="true"
-                        />
-                      </>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-
-            {showExplanation && question && (
-              <m.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
-                className={cn(
-                  "mt-4 border-l-2 px-4 py-3",
-                  isCorrectAnswer
-                    ? "border-brand-sand bg-brand-sand/5"
-                    : "border-destructive/50 bg-destructive/5",
-                )}
+              <h2
+                id={`workshop-quiz-question-${currentIndex}`}
+                ref={setQuestionHeadingRef}
+                tabIndex={-1}
+                className="mb-6 text-lg font-semibold leading-snug outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
               >
-                <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  {isCorrectAnswer ? copy.correct : copy.incorrect}
-                </p>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                  {question.explanation}
-                </p>
-              </m.div>
-            )}
-
-            {showExplanation && (
-              <m.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="mt-5"
+                {question?.questionText}
+              </h2>
+              <div
+                role="radiogroup"
+                aria-labelledby={`workshop-quiz-question-${currentIndex}`}
+                className="space-y-2"
               >
-                <button
-                  ref={nextButtonRef}
-                  type="button"
-                  onClick={handleNext}
-                  className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
+                {shuffledOptions.map((option, optionIndex) => {
+                  const isSelected = selectedId === option.id;
+                  const isCorrect = option.isCorrect;
+                  let optionClass =
+                    "border-border bg-card hover:border-brand-orange/30";
+                  if (showExplanation) {
+                    if (isCorrect)
+                      optionClass = "border-brand-sand bg-brand-sand/5";
+                    else if (isSelected)
+                      optionClass = "border-destructive/50 bg-destructive/5";
+                    else optionClass = "border-border bg-card opacity-50";
+                  }
+                  return (
+                    <button
+                      key={option.id}
+                      ref={(element) => {
+                        optionRefs.current[optionIndex] = element;
+                      }}
+                      type="button"
+                      role="radio"
+                      aria-checked={isSelected}
+                      tabIndex={
+                        !showExplanation && focusedOptionIndex === optionIndex
+                          ? 0
+                          : -1
+                      }
+                      onFocus={() => setFocusedOptionIndex(optionIndex)}
+                      onKeyDown={(event) =>
+                        handleOptionKeyDown(event, optionIndex)
+                      }
+                      onClick={() => handleSelect(option.id)}
+                      disabled={showExplanation}
+                      className={cn(
+                        "flex min-h-11 w-full items-center gap-3 border px-4 py-3 text-left text-sm transition-[background-color,border-color,color,opacity]",
+                        optionClass,
+                      )}
+                    >
+                      <span className="shrink-0 font-mono text-xs font-bold uppercase text-muted-foreground">
+                        {option.id}
+                      </span>
+                      <span className="min-w-0 flex-1 break-words">
+                        {option.text}
+                      </span>
+                      {showExplanation && isCorrect && (
+                        <>
+                          <span className="sr-only">{copy.correctAnswer}</span>
+                          <CheckCircle2
+                            className="h-4 w-4 shrink-0 text-brand-sand"
+                            aria-hidden="true"
+                          />
+                        </>
+                      )}
+                      {showExplanation && isSelected && !isCorrect && (
+                        <>
+                          <span className="sr-only">
+                            {copy.selectedIncorrect}
+                          </span>
+                          <XCircle
+                            className="h-4 w-4 shrink-0 text-destructive"
+                            aria-hidden="true"
+                          />
+                        </>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {showExplanation && question && (
+                <m.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
+                  className={cn(
+                    "mt-4 border-l-2 px-4 py-3",
+                    isCorrectAnswer
+                      ? "border-brand-sand bg-brand-sand/5"
+                      : "border-destructive/50 bg-destructive/5",
+                  )}
                 >
-                  {currentIndex < total - 1 ? copy.next : copy.result}
-                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                </button>
-              </m.div>
-            )}
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    {isCorrectAnswer ? copy.correct : copy.incorrect}
+                  </p>
+                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                    {question.explanation}
+                  </p>
+                </m.div>
+              )}
+
+              {showExplanation && (
+                <m.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="mt-5"
+                >
+                  <button
+                    ref={nextButtonRef}
+                    type="button"
+                    onClick={handleNext}
+                    className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-white transition-colors hover:bg-foreground hover:text-background"
+                  >
+                    {currentIndex < total - 1 ? copy.next : copy.result}
+                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                  </button>
+                </m.div>
+              )}
             </m.div>
           </AnimatePresence>
         </MotionProvider>

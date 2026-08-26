@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import {
+  TECHNICAL_COURSE_LEDGER_LINK_CLASS,
+  TECHNICAL_COURSE_PRIMARY_ACTION_CLASS,
+  TechnicalCourseFrame,
+  TechnicalCourseHeader,
+  TechnicalCourseSectionHeading,
+} from "@/components/course/technical-course-landing";
+import { TechnicalCourseProgressBar } from "@/components/course/technical-course-progress";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
-import { getBlocks } from "@/lib/course/data";
+import { getBlocks, getTotalLessonCount } from "@/lib/course/data";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
 import {
@@ -79,17 +86,20 @@ const LANDING_COPY = {
       "verbotene Praktiken, Hochrisiko-Systeme und Transparenzfälle getrennt prüfen",
       "offene Pflichten als belegbare Aufgaben mit Zuständigkeit und Prüfkriterium erfassen",
     ],
+    decisionsHeading: "Drei Entscheidungen statt einer Compliance-Behauptung.",
     evidenceEyebrow: "§ Aussagekraft",
     evidenceHeading: "Was der Teilnahmenachweis belegt.",
     evidence: [
       "Er dokumentiert den Abschluss dieses Kurses und das Ergebnis des lokalen Abschlussquiz.",
-      "Er ist nicht akkreditiert, nicht serverseitig signiert und keine Rechts- oder Compliance-Bestätigung.",
-      "Ein Kurs ersetzt weder eine Systeminventur noch Rollenklärung, Risikoklassifizierung oder organisationsbezogene Kontrollen.",
       "Zeitabhängige Rechtsangaben im Kurs wurden zuletzt am 28. Juli 2026 geprüft.",
     ],
     disclaimerLabel: "Hinweis:",
     disclaimer:
-      "Der Kurs dient der Bildung und ersetzt keine Rechtsberatung. Eine Teilnahme allein begründet keine Vermutung der Erfüllung von Artikel 4 oder anderer Pflichten der EU-KI-Verordnung.",
+      "Bildungsangebot, keine Rechtsberatung: Der Nachweis ist weder akkreditiert noch serverseitig signiert. Teilnahme oder Teilnahmenachweis allein belegen weder Kompetenz noch die Erfüllung von Artikel 4; Systeminventur, Rollenklärung, Risikoklassifizierung und organisationsbezogene Kontrollen bleiben erforderlich.",
+    factsLabel: "Kursrahmen",
+    progressLabel: "Fortschritt im EU AI Act Kurs",
+    lessonsLabel: "Lektionen",
+    boundarySummary: "Rechtsstand, Nachweis und Haftungsgrenze",
     nextCourse: "Weiter zu AI-Native",
   },
   en: {
@@ -156,17 +166,20 @@ const LANDING_COPY = {
       "assess prohibited practices, high-risk systems, and transparency cases separately",
       "record open duties as evidence-based tasks with an owner and verification criterion",
     ],
+    decisionsHeading: "Three decisions instead of a compliance claim.",
     evidenceEyebrow: "§ Scope of the record",
     evidenceHeading: "What the completion record establishes.",
     evidence: [
       "It records completion of this course and the result of the locally administered final quiz.",
-      "It is not accredited, server-signed, or evidence of legal compliance.",
-      "A course does not replace a system inventory, role analysis, risk classification, or organization-specific controls.",
       "Time-dependent legal statements in the course were last reviewed on 28 July 2026.",
     ],
     disclaimerLabel: "Scope:",
     disclaimer:
-      "This course is educational and is not legal advice. Participation alone does not create a presumption of compliance with Article 4 or any other obligation under the EU AI Act.",
+      "Educational material, not legal advice: the record is neither accredited nor server-signed. Participation or a completion record alone establishes neither competence nor compliance with Article 4; a system inventory, role analysis, risk classification, and organization-specific controls remain necessary.",
+    factsLabel: "Course frame",
+    progressLabel: "EU AI Act Course progress",
+    lessonsLabel: "lessons",
+    boundarySummary: "Legal state, record, and liability boundary",
     nextCourse: "Continue to AI-Native",
   },
 } as const satisfies Record<Locale, Record<string, unknown>>;
@@ -257,12 +270,6 @@ function courseGraph(locale: Locale) {
   };
 }
 
-const PRIMARY_CTA =
-  "inline-flex min-h-12 max-w-full items-center gap-2 break-words border-2 border-foreground bg-brand-orange px-5 py-3.5 text-left font-mono text-[12px] font-bold uppercase tracking-[0.05em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:bg-[#A5370F] hover:shadow-[6px_6px_0_var(--color-foreground)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0_var(--color-foreground)] sm:px-6 sm:text-[13px]";
-
-const SECONDARY_CTA =
-  "inline-flex min-h-12 max-w-full items-center gap-2 break-words border-2 border-foreground bg-background px-5 py-3.5 text-left font-mono text-[12px] font-bold uppercase tracking-[0.05em] text-foreground shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:bg-card hover:shadow-[6px_6px_0_var(--color-foreground)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0_var(--color-foreground)] sm:px-6 sm:text-[13px]";
-
 export default async function EuAiActKursLandingPage() {
   const locale = resolveFoundationCourseContentLocale(
     COURSE_SLUG,
@@ -270,216 +277,173 @@ export default async function EuAiActKursLandingPage() {
   );
   const copy = LANDING_COPY[locale];
   const blocks = getBlocks(COURSE_SLUG, locale);
+  const totalLessons = getTotalLessonCount(COURSE_SLUG, locale);
   const courseHref = localizeHref(`${COURSE_PATH}/kurs`, locale);
 
   return (
     <>
       <JsonLd data={courseGraph(locale)} id="eu-ai-act-landing-jsonld" />
-      <div className="mx-auto w-full max-w-[1180px] px-4 pb-24 pt-12 sm:px-6 sm:pb-32 sm:pt-20">
-        <div className="mb-9 h-[3px] w-[132px] bg-brand-orange sm:w-[154px]" />
-
-        <div className="grid min-w-0 gap-12 lg:grid-cols-[minmax(0,1.45fr)_minmax(280px,0.55fr)] lg:items-end">
-          <div className="min-w-0">
-            <p className="break-words font-mono text-[11px] font-bold uppercase tracking-[0.15em] text-brand-orange sm:tracking-[0.18em]">
-              {copy.eyebrow}
-            </p>
-            <h1 className="mt-6 max-w-[900px] break-words text-[40px] font-bold leading-[0.94] tracking-[-0.04em] text-foreground [overflow-wrap:anywhere] sm:text-[56px] md:text-[76px]">
-              {copy.heading}
-              <br />
-              {" "}
-              <span className="text-brand-orange">{copy.headingAccent}</span>
-            </h1>
-            <p className="mt-8 max-w-[780px] break-words text-[17px] leading-[1.55] text-muted-foreground sm:text-[20px]">
-              {copy.introduction}
-            </p>
-            <div className="mt-10 flex min-w-0 flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-5">
-              <Link href={courseHref} prefetch={false} className={PRIMARY_CTA}>
-                {copy.start}
-                <span aria-hidden="true">→</span>
-              </Link>
-              <Link
-                href={localizeHref("/kurse", locale)}
-                className={SECONDARY_CTA}
-              >
-                {copy.allCourses}
-                <span aria-hidden="true">→</span>
-              </Link>
-            </div>
-          </div>
-
-          <figure className="relative mx-auto aspect-square w-full max-w-[360px] overflow-hidden border-2 border-foreground bg-card shadow-[7px_7px_0_var(--color-foreground)] lg:mx-0">
-            <Image
-              src="/course-covers/eu-ai-act-kurs-cover-v2.webp"
-              alt={copy.imageAlt}
-              fill
-              priority
-              sizes="(max-width: 1023px) min(360px, 100vw), 360px"
-              className="object-cover"
-            />
-            <figcaption className="absolute inset-x-0 bottom-0 border-t-2 border-foreground bg-background/95 px-4 py-3 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-foreground backdrop-blur-sm">
-              {copy.imageLabel}
-            </figcaption>
-          </figure>
-        </div>
-
-        <dl className="mt-14 grid grid-cols-2 border-l border-t border-border sm:grid-cols-4">
-          {copy.facts.map((fact) => (
-            <div
-              key={fact.label}
-              className="min-w-0 border-b border-r border-border px-4 py-5 sm:px-5"
+      <TechnicalCourseFrame courseId={COURSE_SLUG} lang={locale}>
+        <TechnicalCourseHeader
+          eyebrow={copy.eyebrow}
+          title={`${copy.heading} ${copy.headingAccent}`}
+          intro={copy.introduction}
+          primaryAction={
+            <Link
+              href={courseHref}
+              prefetch={false}
+              className={TECHNICAL_COURSE_PRIMARY_ACTION_CLASS}
             >
-              <dt className="break-words font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
-                {fact.label}
-              </dt>
-              <dd className="mt-1 break-words text-[22px] font-bold tracking-[-0.03em] text-foreground">
-                {fact.value}
-              </dd>
+              {copy.start} <span aria-hidden="true">→</span>
+            </Link>
+          }
+          facts={copy.facts.map((fact) => `${fact.value} ${fact.label}`)}
+          factsLabel={copy.factsLabel}
+          progress={
+            <TechnicalCourseProgressBar
+              courseSlug={COURSE_SLUG}
+              totalLessons={totalLessons}
+              label={copy.progressLabel}
+              unitLabel={copy.lessonsLabel}
+            />
+          }
+        />
+
+        <div>
+          <section className="mt-10 grid min-w-0 gap-5 lg:grid-cols-[280px_minmax(0,1fr)]">
+            <TechnicalCourseSectionHeading
+              eyebrow={copy.audienceEyebrow}
+              title={copy.decisionsHeading}
+            />
+            <div className="border-y border-border">
+              <p className="border-b border-border py-3 text-sm leading-relaxed text-muted-foreground">
+                {copy.audienceBody}
+              </p>
+              <ol>
+                {copy.outcomes.map((outcome, index) => (
+                  <li
+                    key={outcome}
+                    className="grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-3 border-b border-border py-3 last:border-b-0"
+                  >
+                    <span className="font-mono text-xs tabular-nums text-brand-orange">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="break-words text-sm font-medium leading-relaxed text-foreground">
+                      {outcome}
+                    </span>
+                  </li>
+                ))}
+              </ol>
             </div>
-          ))}
-        </dl>
+          </section>
 
-        <section className="mt-20 grid gap-7 border-t-2 border-foreground pt-8 md:grid-cols-[minmax(0,0.55fr)_minmax(0,1.45fr)] md:gap-12">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-            {copy.legalEyebrow}
-          </p>
-          <div className="min-w-0">
-            <h2 className="break-words text-[28px] font-bold tracking-[-0.03em] text-foreground sm:text-[38px]">
-              {copy.legalHeading}
-            </h2>
-            <p className="mt-5 max-w-[760px] break-words text-[16px] leading-[1.65] text-muted-foreground sm:text-[18px]">
-              {copy.legalBody}
-            </p>
-          </div>
-        </section>
-
-        <section className="mt-16 border-2 border-foreground bg-card p-6 shadow-[6px_6px_0_var(--color-foreground)] sm:p-9">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-            {copy.tracksEyebrow}
-          </p>
-          <div className="mt-6 grid gap-px bg-border sm:grid-cols-2">
-            {copy.tracks.map((track) => (
-              <article key={track.title} className="min-w-0 bg-card p-5 sm:p-6">
-                <h2 className="break-words text-[18px] font-bold text-foreground [overflow-wrap:anywhere]">
-                  {track.title}
-                </h2>
-                <p className="mt-3 break-words text-[14px] leading-[1.6] text-muted-foreground">
-                  {track.body}
-                </p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="mt-24">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-            {copy.curriculumEyebrow}
-          </p>
-          <h2 className="mt-4 max-w-[820px] break-words text-[30px] font-bold tracking-[-0.03em] text-foreground sm:text-[42px]">
-            {copy.curriculumHeading}
-          </h2>
-
-          <ol className="mt-10 border-t border-border">
-            {blocks.map((block, index) => (
-              <li
-                key={block.id}
-                className="grid min-w-0 gap-3 border-b border-border py-7 sm:grid-cols-[120px_minmax(0,1fr)_auto] sm:items-baseline sm:gap-7"
-              >
-                <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-                  {copy.blockLabel(index + 1)}
-                </p>
-                <div className="min-w-0">
-                  <h3 className="break-words text-[18px] font-semibold leading-snug text-foreground [overflow-wrap:anywhere] sm:text-[20px]">
-                    {block.title}
-                  </h3>
-                  <p className="mt-2 max-w-[680px] break-words text-[15px] leading-[1.6] text-muted-foreground">
-                    {block.description}
-                  </p>
-                </div>
-                <p className="font-mono text-[12px] text-muted-foreground">
-                  {copy.minutes(block.durationMinutes)}
-                </p>
-              </li>
-            ))}
-          </ol>
-          <p className="mt-6 break-words font-mono text-[12px] text-muted-foreground">
-            {copy.total}
-          </p>
-        </section>
-
-        <section className="mt-24 grid min-w-0 gap-8 border-2 border-foreground bg-card p-6 shadow-[6px_6px_0_var(--color-foreground)] md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:p-10">
-          <div className="min-w-0">
-            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-              {copy.audienceEyebrow}
-            </p>
-            <h2 className="mt-3 break-words text-[25px] font-bold tracking-[-0.025em] text-foreground sm:text-[31px]">
-              {copy.audienceHeading}
-            </h2>
-            <p className="mt-4 break-words text-[15px] leading-[1.65] text-muted-foreground">
-              {copy.audienceBody}
-            </p>
-          </div>
-          <ul className="min-w-0 border-t border-border md:border-l md:border-t-0 md:pl-8">
-            {copy.outcomes.map((outcome, index) => (
-              <li
-                key={outcome}
-                className="grid min-w-0 grid-cols-[30px_minmax(0,1fr)] gap-3 border-b border-border py-4 text-[15px] leading-[1.55] text-foreground"
-              >
-                <span className="font-mono text-brand-orange">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span className="break-words [overflow-wrap:anywhere]">
-                  {outcome}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="mt-20 grid gap-7 border-t-2 border-foreground pt-8 md:grid-cols-[minmax(0,0.55fr)_minmax(0,1.45fr)] md:gap-12">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-            {copy.evidenceEyebrow}
-          </p>
-          <div className="min-w-0">
-            <h2 className="break-words text-[28px] font-bold tracking-[-0.03em] text-foreground sm:text-[38px]">
-              {copy.evidenceHeading}
-            </h2>
-            <ul className="mt-6 border-t border-border">
-              {copy.evidence.map((item) => (
-                <li
-                  key={item}
-                  className="grid min-w-0 grid-cols-[18px_minmax(0,1fr)] gap-3 border-b border-border py-4 text-[15px] leading-[1.6] text-muted-foreground"
+          <section className="mt-10">
+            <TechnicalCourseSectionHeading
+              eyebrow={copy.tracksEyebrow}
+              title={copy.audienceHeading}
+            />
+            <div className="mt-5 grid border-y border-border sm:grid-cols-2">
+              {copy.tracks.map((track) => (
+                <article
+                  key={track.title}
+                  className="min-w-0 border-b border-border py-4 sm:border-b-0 sm:border-r sm:px-4 sm:first:pl-0 sm:last:border-r-0"
                 >
-                  <span aria-hidden="true" className="text-brand-orange">
-                    →
-                  </span>
-                  <span className="break-words [overflow-wrap:anywhere]">
-                    {item}
-                  </span>
+                  <h3 className="text-base font-semibold text-foreground">
+                    {track.title}
+                  </h3>
+                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                    {track.body}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="mt-10">
+            <TechnicalCourseSectionHeading
+              eyebrow={copy.curriculumEyebrow}
+              title={copy.curriculumHeading}
+              intro={copy.total}
+            />
+            <ol className="mt-5 border-t border-border">
+              {blocks.map((block, index) => (
+                <li
+                  key={block.id}
+                  className="grid min-w-0 gap-3 border-b border-border py-4 md:grid-cols-[6rem_minmax(0,1fr)_8rem] md:items-start md:gap-5"
+                >
+                  <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
+                    {copy.blockLabel(index + 1)}
+                  </p>
+                  <div className="min-w-0">
+                    <h3 className="break-words text-base font-semibold text-foreground">
+                      {block.title}
+                    </h3>
+                    <p className="mt-1 max-w-[720px] break-words text-sm leading-relaxed text-muted-foreground">
+                      {block.description}
+                    </p>
+                  </div>
+                  <p className="font-mono text-xs text-muted-foreground md:text-right">
+                    {block.lessons.length} {copy.lessonsLabel} ·{" "}
+                    {copy.minutes(block.durationMinutes)}
+                  </p>
                 </li>
               ))}
-            </ul>
-          </div>
-        </section>
+            </ol>
+          </section>
 
-        <aside className="mt-12 border border-border bg-muted/30 p-5 text-[13px] leading-[1.65] text-muted-foreground sm:p-6">
-          <strong className="text-foreground">{copy.disclaimerLabel}</strong>{" "}
-          {copy.disclaimer}
-        </aside>
+          <details className="mt-10 border-y border-border">
+            <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-4 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground">
+              {copy.boundarySummary}
+              <span className="text-brand-orange" aria-hidden="true">
+                +
+              </span>
+            </summary>
+            <div className="grid gap-5 border-t border-border py-4 lg:grid-cols-2">
+              <div>
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
+                  {copy.legalHeading}
+                </p>
+                <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
+                  {copy.legalBody}
+                </p>
+              </div>
+              <div>
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
+                  {copy.evidenceHeading}
+                </p>
+                <ul className="mt-2 border-t border-border">
+                  {copy.evidence.map((item) => (
+                    <li
+                      key={item}
+                      className="border-b border-border py-2 text-[13px] leading-relaxed text-muted-foreground"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">
+                  <strong className="text-foreground">
+                    {copy.disclaimerLabel}
+                  </strong>{" "}
+                  {copy.disclaimer}
+                </p>
+              </div>
+            </div>
+          </details>
 
-        <div className="mt-16 flex min-w-0 flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-5">
-          <Link href={courseHref} prefetch={false} className={PRIMARY_CTA}>
-            {copy.start}
-            <span aria-hidden="true">→</span>
-          </Link>
           <Link
             href={localizeHref("/ai-native", locale)}
-            className={SECONDARY_CTA}
+            className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} mt-8 sm:grid-cols-[minmax(0,1fr)_auto]`}
           >
-            {copy.nextCourse}
-            <span aria-hidden="true">→</span>
+            <span className="text-sm font-semibold text-foreground">
+              {copy.nextCourse}
+            </span>
+            <span className="text-brand-orange" aria-hidden="true">
+              →
+            </span>
           </Link>
         </div>
-      </div>
+      </TechnicalCourseFrame>
     </>
   );
 }

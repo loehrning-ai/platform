@@ -53,10 +53,15 @@ const DEFAULT_FLASHCARDS_COPY: FlashcardsWidgetCopy = {
   prevLabel: "← Zurück",
   nextLabel: "Weiter →",
   emptyLabel: "Keine Karten vorhanden.",
-  ariaLabelTemplate: "Karte {current} von {total}. Leertaste oder Klick zum Umdrehen.",
+  ariaLabelTemplate:
+    "Karte {current} von {total}. Leertaste oder Klick zum Umdrehen.",
 };
 
-function renderAriaLabel(template: string, current: number, total: number): string {
+function renderAriaLabel(
+  template: string,
+  current: number,
+  total: number,
+): string {
   return template
     .replace("{current}", String(current))
     .replace("{total}", String(total));
@@ -134,7 +139,7 @@ export function FlashcardsWidget({
   const card = cards[idx];
 
   return (
-    <WidgetFrame kindLabel={c.kindLabel} title={title} done={done} xpLabel="+5 XP">
+    <WidgetFrame kindLabel={c.kindLabel} title={title} done={done}>
       <div ref={deckRef}>
         <div className="[perspective:1200px]">
           <button
@@ -155,14 +160,14 @@ export function FlashcardsWidget({
               )}
             >
               {card.term && (
-                <span className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+                <span className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
                   {card.term}
                 </span>
               )}
               <span className="text-[16px] font-semibold leading-[1.4] text-foreground">
                 {card.q}
               </span>
-              <span className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted-foreground">
+              <span className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
                 {c.revealHint}
               </span>
             </span>
@@ -174,13 +179,13 @@ export function FlashcardsWidget({
                 reduced && !flipped && "invisible",
               )}
             >
-              <span className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-risk-green">
+              <span className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-risk-green">
                 {c.backLabel}
               </span>
               <span className="text-[15px] leading-[1.5] text-foreground">
                 {card.a}
               </span>
-              <span className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted-foreground">
+              <span className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
                 {c.flipBackHint}
               </span>
             </span>
@@ -209,17 +214,17 @@ export function FlashcardsWidget({
           <button
             type="button"
             onClick={() => go(-1)}
-            className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-brand-orange"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-brand-orange"
           >
             {c.prevLabel}
           </button>
-          <span className="font-mono text-[11px] tracking-[0.1em] text-muted-foreground">
+          <span className="font-mono text-xs tracking-[0.1em] text-muted-foreground">
             {idx + 1} / {total}
           </span>
           <button
             type="button"
             onClick={() => go(1)}
-            className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-brand-orange"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-brand-orange"
           >
             {c.nextLabel}
           </button>

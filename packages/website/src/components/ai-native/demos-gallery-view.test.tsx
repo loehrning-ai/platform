@@ -115,6 +115,34 @@ afterEach(() => {
 });
 
 describe("<DemosGalleryView> default listing", () => {
+  it("puts the search instrument in the header and keeps one 44px+ primary action", () => {
+    const { container } = render(<DemosGalleryView />);
+    const frame = container.querySelector(
+      '[data-technical-course="ai-native-demos"]',
+    );
+    const search = screen.getByLabelText(SEARCH_LABEL);
+    expect(frame?.querySelector("header")?.contains(search)).toBe(true);
+    expect(search).toHaveClass("min-h-12");
+
+    const primary = frame?.querySelectorAll(
+      '[data-workspace-primary-action="true"]',
+    );
+    expect(primary).toHaveLength(1);
+    expect(primary?.[0]).toHaveClass("min-h-12");
+
+    for (const link of frame?.querySelectorAll(
+      'nav[aria-label="Simulationskategorien"] a',
+    ) ?? []) {
+      expect(link).toHaveClass("min-h-11");
+    }
+
+    typeQuery("excel");
+    expect(screen.getByRole("button", { name: "Leeren" })).toHaveClass(
+      "min-h-11",
+      "min-w-11",
+    );
+  });
+
   it("shows all 9 demos, a 9/9 counter, and only the non-empty categories", () => {
     render(<DemosGalleryView />);
 
@@ -138,17 +166,20 @@ describe("<DemosGalleryView> default listing", () => {
 
   it("hides the Clear button until a query is entered", () => {
     render(<DemosGalleryView />);
-    expect(screen.queryByRole("button", { name: "Clear" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Leeren" })).toBeNull();
   });
 
   it("renders the English catalog and localized course route", () => {
     render(<DemosGalleryView locale="en" />);
-    expect(screen.getByText("Contract retrieval assistant")).toBeInTheDocument();
-    expect(screen.getByLabelText("Search course simulations")).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: /Start the course/ })[0]).toHaveAttribute(
-      "href",
-      "/en/ai-native/kurs/modul_1",
-    );
+    expect(
+      screen.getByText("Contract retrieval assistant"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Search course simulations"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("link", { name: /Start the course/ })[0],
+    ).toHaveAttribute("href", "/en/ai-native/kurs/modul_1");
     expect(screen.queryByText("RAG Vertrags-Assistent")).toBeNull();
   });
 });
@@ -215,7 +246,7 @@ describe("<DemosGalleryView> Clear affordance", () => {
     typeQuery("excel");
     expect(screen.getByText("1/9")).toBeInTheDocument();
 
-    const clear = screen.getByRole("button", { name: "Clear" });
+    const clear = screen.getByRole("button", { name: "Leeren" });
     fireEvent.click(clear);
 
     // Query cleared -> counter back to the full 9/9 and input emptied.

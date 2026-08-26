@@ -2,19 +2,15 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, type JSX } from "react";
-import { ArrowRight } from "lucide-react";
-import { BrandButton } from "@/components/ui/brand-button";
 import {
-  ClipHeading,
-  Eyebrow,
-  FadeBlock,
-  DrawRule,
-  SectionShell,
-} from "@/components/ai-native/primitives";
+  TECHNICAL_COURSE_PRIMARY_ACTION_CLASS,
+  TECHNICAL_COURSE_SECONDARY_ACTION_CLASS,
+  TechnicalCourseFrame,
+  TechnicalCourseSectionHeading,
+} from "@/components/course/technical-course-landing";
 import { RenderWidget } from "@/components/widgets/registry";
 import type { WidgetKind } from "@/lib/widgets/types";
 import { DEMO_KINDS } from "@/lib/widgets/types";
-import { cn } from "@/lib/utils";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 
 /**
@@ -43,16 +39,20 @@ interface DemoEntry {
   readonly teachesIn?: string;
 }
 
-const CATEGORIES: readonly { readonly id: Category; readonly label: string }[] = [
-  { id: "chat-knowledge", label: "Chat & Wissen" },
-  { id: "document-processing", label: "Dokumente" },
-  { id: "agents-workflows", label: "Agents & Workflows" },
-  { id: "business-roi", label: "ROI & Reife" },
-  { id: "compliance-governance", label: "Compliance" },
-  { id: "observability", label: "Observability" },
-];
+const CATEGORIES: readonly { readonly id: Category; readonly label: string }[] =
+  [
+    { id: "chat-knowledge", label: "Chat & Wissen" },
+    { id: "document-processing", label: "Dokumente" },
+    { id: "agents-workflows", label: "Agents & Workflows" },
+    { id: "business-roi", label: "ROI & Reife" },
+    { id: "compliance-governance", label: "Compliance" },
+    { id: "observability", label: "Observability" },
+  ];
 
-const CATEGORIES_EN: readonly { readonly id: Category; readonly label: string }[] = [
+const CATEGORIES_EN: readonly {
+  readonly id: Category;
+  readonly label: string;
+}[] = [
   { id: "chat-knowledge", label: "Chat and knowledge" },
   { id: "document-processing", label: "Documents" },
   { id: "agents-workflows", label: "Agents and workflows" },
@@ -77,7 +77,8 @@ const DEMOS: readonly DemoEntry[] = [
   {
     kind: "demo-compliance",
     title: "Compliance Prompt-Scanner",
-    tagline: "Regelbasierter DSGVO-Prompt-Check. Beispielregeln, keine Live-Messung.",
+    tagline:
+      "Regelbasierter DSGVO-Prompt-Check. Beispielregeln, keine Live-Messung.",
     category: "compliance-governance",
     teachesIn: "Modul 4 · Lektion 4.3 (DSGVO-sicher prompten)",
   },
@@ -91,7 +92,8 @@ const DEMOS: readonly DemoEntry[] = [
   {
     kind: "demo-doc",
     title: "Invoice OCR",
-    tagline: "PDF rein, strukturierte Daten raus. Beispiel-Output, synthetisch.",
+    tagline:
+      "PDF rein, strukturierte Daten raus. Beispiel-Output, synthetisch.",
     category: "document-processing",
     teachesIn: "Modul 2 · Lektion 2.3 (Artifacts + Dokumente)",
   },
@@ -112,7 +114,8 @@ const DEMOS: readonly DemoEntry[] = [
   {
     kind: "demo-excel",
     title: "Excel-Automation",
-    tagline: "Tabellen-Transformation mit Claude. Beispiel-Output, synthetisch.",
+    tagline:
+      "Tabellen-Transformation mit Claude. Beispiel-Output, synthetisch.",
     category: "document-processing",
     teachesIn: "Modul 3 · Lektion 3.3 (Office-Integration)",
   },
@@ -136,21 +139,24 @@ const DEMOS_EN: readonly DemoEntry[] = [
   {
     kind: "demo-chat-rag",
     title: "Contract retrieval assistant",
-    tagline: "Ask a synthetic contract archive and inspect source-linked answers.",
+    tagline:
+      "Ask a synthetic contract archive and inspect source-linked answers.",
     category: "chat-knowledge",
     teachesIn: "Module 2 · Lesson 2.4 (grounding and retrieval)",
   },
   {
     kind: "demo-compliance",
     title: "Prompt data scanner",
-    tagline: "A rule-based check for obvious sensitive-data patterns. Not a compliance decision.",
+    tagline:
+      "A rule-based check for obvious sensitive-data patterns. Not a compliance decision.",
     category: "compliance-governance",
     teachesIn: "Module 4 · Lesson 4.3 (data-aware prompting)",
   },
   {
     kind: "demo-roi",
     title: "ROI scenario calculator",
-    tagline: "Change explicit assumptions and inspect the resulting scenario. Not a forecast.",
+    tagline:
+      "Change explicit assumptions and inspect the resulting scenario. Not a forecast.",
     category: "business-roi",
     teachesIn: "Course reference · business-case method",
   },
@@ -185,22 +191,25 @@ const DEMOS_EN: readonly DemoEntry[] = [
   {
     kind: "demo-word",
     title: "Document drafting",
-    tagline: "Turn a structured brief into a reviewable synthetic document draft.",
+    tagline:
+      "Turn a structured brief into a reviewable synthetic document draft.",
     category: "document-processing",
     teachesIn: "Module 3 · Lesson 3.4 (document generation)",
   },
   {
     kind: "demo-finetune",
     title: "Fine-tuning decision exercise",
-    tagline: "Compare fine-tuning with prompting and retrieval under stated assumptions.",
+    tagline:
+      "Compare fine-tuning with prompting and retrieval under stated assumptions.",
     category: "business-roi",
     teachesIn: "Post-course reference",
   },
 ];
 
 /** Sanity: the gallery lists one card per active (non-retired) DemoKind. */
-const _assertAllDemoKindsCovered: ReadonlyArray<WidgetKind> =
-  DEMOS.map((d) => d.kind);
+const _assertAllDemoKindsCovered: ReadonlyArray<WidgetKind> = DEMOS.map(
+  (d) => d.kind,
+);
 void _assertAllDemoKindsCovered;
 void DEMO_KINDS;
 
@@ -259,7 +268,11 @@ function DemoPlaceholderFrame(): JSX.Element {
   );
 }
 
-export function DemosGalleryView({ locale = "de" }: { readonly locale?: Locale }): JSX.Element {
+export function DemosGalleryView({
+  locale = "de",
+}: {
+  readonly locale?: Locale;
+}): JSX.Element {
   const isEnglish = locale === "en";
   const categories = isEnglish ? CATEGORIES_EN : CATEGORIES;
   const demos = isEnglish ? DEMOS_EN : DEMOS;
@@ -281,233 +294,204 @@ export function DemosGalleryView({ locale = "de" }: { readonly locale?: Locale }
     );
   };
 
-  const groupsRaw = categories.map((cat) => ({
-    ...cat,
-    items: demos.filter((d) => d.category === cat.id && matches(d)),
-  })).filter((g) => g.items.length > 0);
+  const groupsRaw = categories
+    .map((cat) => ({
+      ...cat,
+      items: demos.filter((d) => d.category === cat.id && matches(d)),
+    }))
+    .filter((g) => g.items.length > 0);
   const groups = groupsRaw;
   const totalFiltered = demos.filter(matches).length;
 
   return (
-    <>
-      {/* Hero */}
-      <section className="dark-section relative bg-[var(--color-dark-bg)] bg-dot-pattern-dark py-20 md:py-28">
-        <div className="mx-auto max-w-[960px] px-6 lg:px-12">
-          <nav
-            aria-label="Breadcrumb"
-            className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--color-dark-muted)]"
+    <TechnicalCourseFrame courseId="ai-native-demos" lang={locale}>
+      <header className="border-y border-foreground py-6 sm:py-8">
+        <nav
+          aria-label={isEnglish ? "Breadcrumb" : "Brotkrümelnavigation"}
+          className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground"
+        >
+          <Link
+            href={localizeHref("/ai-native", locale)}
+            className="inline-flex min-h-11 items-center transition-colors hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            <Link href={localizeHref("/ai-native", locale)} className="hover:text-brand-orange">
-              {isEnglish ? "AI-Native Workflow Course" : "AI-Native Arbeitskurs"}
-            </Link>
-            <span className="mx-2 opacity-40">/</span>
-            <span className="text-brand-orange">{isEnglish ? "Simulations" : "Simulationen"}</span>
-          </nav>
+            {isEnglish ? "AI-Native Workflow Course" : "AI-Native Arbeitskurs"}
+          </Link>
+          <span className="mx-2" aria-hidden="true">
+            /
+          </span>
+          <span className="text-brand-orange">
+            {isEnglish ? "Simulations" : "Simulationen"}
+          </span>
+        </nav>
 
-          <FadeBlock delay={0}>
-            <div className="mt-8 space-y-2">
-              <div className="border border-[rgba(107,114,128,0.4)] bg-[rgba(107,114,128,0.08)] px-3.5 py-2 font-mono text-[11px] font-semibold tracking-[0.08em] text-[rgba(243,240,233,0.65)]">
-                {isEnglish
-                  ? "These simulations are connected to AI-Native course lessons."
-                  : "Diese Simulationen gehören zu Lektionen des AI-Native-Kurses."}{" "}
-                <Link href={localizeHref("/demos", locale)} className="text-brand-orange underline hover:no-underline">
-                  {isEnglish ? "Open the complete simulation catalog" : "Vollständigen Beispielkatalog öffnen"}
-                </Link>
-              </div>
-              <span className="inline-flex items-center gap-2 border border-brand-orange/35 bg-brand-orange/10 px-3.5 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-orange">
-                9 {isEnglish ? "course simulations · synthetic data · in-browser" : "Kurssimulationen · synthetische Daten · im Browser"}
-              </span>
-            </div>
-          </FadeBlock>
-
-          <ClipHeading
-            as="h1"
-            className="mt-6 font-bold leading-[0.92] tracking-[-0.04em] text-[var(--color-dark-fg)]"
-            style={{ fontSize: "clamp(2.5rem, 7vw, 5rem)" }}
-          >
-            {isEnglish ? "Inspect the process." : "Ablauf prüfen."}
-            <br />
-            <span className="text-brand-orange">{isEnglish ? "Change the assumptions." : "Annahmen verändern."}</span>
-          </ClipHeading>
-
-          <FadeBlock delay={2}>
-            <p className="mt-7 max-w-[620px] text-[18px] leading-[1.6] text-[var(--color-dark-muted)]">
+        <div className="mt-5 grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-10">
+          <div className="min-w-0">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
+              09 ·{" "}
               {isEnglish
-                ? "Each panel is a browser simulation with synthetic data. It illustrates a process and its controls; it does not call a provider or measure real operational performance."
-                : "Jedes Panel ist eine Browser-Simulation mit synthetischen Daten. Es zeigt einen Ablauf und seine Kontrollen; es ruft keinen Anbieter auf und misst keine reale Betriebsleistung."}
+                ? "synthetic browser labs"
+                : "synthetische Browser-Labs"}
             </p>
-          </FadeBlock>
+            <h1 className="mt-3 max-w-[720px] break-words text-[38px] font-bold leading-[1.02] tracking-[-0.035em] text-foreground [overflow-wrap:anywhere] sm:text-[48px]">
+              {isEnglish
+                ? "Inspect the process. Change one assumption."
+                : "Ablauf prüfen. Eine Annahme ändern."}
+            </h1>
+            <p className="mt-4 max-w-[680px] text-sm leading-relaxed text-muted-foreground">
+              {isEnglish
+                ? "Each lab uses synthetic data and runs in the browser. It demonstrates controls; it does not call a provider or measure live performance."
+                : "Jedes Lab nutzt synthetische Daten und läuft im Browser. Es zeigt Kontrollen; es ruft keinen Anbieter auf und misst keine reale Leistung."}
+            </p>
+            <div className="mt-5 flex min-w-0 flex-wrap items-center gap-x-5 gap-y-2">
+              <Link
+                href={localizeHref("/ai-native/kurs/modul_1", locale)}
+                prefetch={false}
+                className={TECHNICAL_COURSE_PRIMARY_ACTION_CLASS}
+                data-workspace-primary-action="true"
+              >
+                {isEnglish ? "Start the course" : "Kurs starten"}
+                <span aria-hidden="true">→</span>
+              </Link>
+              <Link
+                href={localizeHref("/ai-native", locale)}
+                className={TECHNICAL_COURSE_SECONDARY_ACTION_CLASS}
+              >
+                {isEnglish ? "Course overview" : "Kursübersicht"}
+              </Link>
+            </div>
+          </div>
 
-          <FadeBlock delay={3} className="mt-8 flex flex-wrap gap-3">
-            <BrandButton
-              href={localizeHref("/ai-native/kurs/modul_1", locale)}
-              prefetch={false}
-              variant="primary"
-              surface="dark"
+          <aside className="min-w-0 border-t border-border pt-4 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
+            <label
+              htmlFor="course-simulation-search"
+              className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground"
             >
-              {isEnglish ? "Start the course" : "Kurs starten"} <ArrowRight size={15} />
-            </BrandButton>
-            <BrandButton
-              href={localizeHref("/ai-native", locale)}
-              variant="outline"
-              surface="dark"
+              {isEnglish ? "Find a simulation" : "Simulation finden"}
+            </label>
+            <div
+              role="search"
+              className="mt-2 flex min-w-0 items-center border-y border-foreground"
             >
-              {isEnglish ? "Back to the course" : "Zurück zum Arbeitskurs"}
-            </BrandButton>
-          </FadeBlock>
-
-          {/* Search */}
-          <FadeBlock delay={3}>
-            <div className="mt-10 flex max-w-[480px] items-center gap-2 border-b border-[var(--color-dark-border)]">
-              <span className="pr-1 font-mono text-[12px] font-bold tracking-[0.12em] text-brand-orange">
-                ⌕
-              </span>
-              {/* min-w-0 is load-bearing: an input carries an intrinsic default
-                  width, and a flex item cannot shrink below its automatic
-                  minimum, so flex-1 alone holds this row wider than a 320px
-                  viewport and pushes the result counter off-screen. */}
               <input
-                type="text"
+                id="course-simulation-search"
+                type="search"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(event) => setQuery(event.target.value)}
                 readOnly={!hydrated}
                 aria-disabled={!hydrated}
-                placeholder={isEnglish ? "Search: RAG, GDPR, spreadsheet, workflow …" : "Suche: RAG, DSGVO, Excel, Workflow …"}
-                className="min-w-0 flex-1 bg-transparent py-3 text-[16px] text-[var(--color-dark-fg)] outline-none placeholder:text-[var(--color-dark-muted)] focus-visible:ring-2 focus-visible:ring-brand-orange"
-                aria-label={isEnglish ? "Search course simulations" : "Kurssimulationen durchsuchen"}
+                placeholder={
+                  isEnglish ? "RAG, GDPR, spreadsheet …" : "RAG, DSGVO, Excel …"
+                }
+                className="min-h-12 min-w-0 flex-1 bg-transparent px-1 text-base text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange"
+                aria-label={
+                  isEnglish
+                    ? "Search course simulations"
+                    : "Kurssimulationen durchsuchen"
+                }
               />
-              {query && (
+              {query ? (
                 <button
                   type="button"
                   onClick={() => setQuery("")}
-                  className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--color-dark-muted)] transition-colors hover:text-brand-orange"
+                  className="inline-flex min-h-11 min-w-11 items-center justify-center px-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground transition-colors hover:text-brand-orange focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
                 >
-                  Clear
+                  {isEnglish ? "Clear" : "Leeren"}
                 </button>
-              )}
-              <span className="pl-2 font-mono text-[10px] tracking-[0.1em] text-[var(--color-dark-muted)]">
+              ) : null}
+            </div>
+            <p
+              role="status"
+              aria-live="polite"
+              className="mt-2 font-mono text-xs text-muted-foreground"
+            >
+              <span>
                 {totalFiltered}/{demos.length}
-              </span>
-            </div>
-          </FadeBlock>
-
-          {/* Category jump-nav */}
-          <FadeBlock delay={4}>
-            <div className="mt-8 flex flex-wrap gap-2">
-              {groups.map((g) => (
-                <a
-                  key={g.id}
-                  href={`#${g.id}`}
-                  className={cn(
-                    "border border-[var(--color-dark-border)] px-3 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.14em] transition-colors",
-                    "text-[var(--color-dark-muted)] hover:border-brand-orange hover:text-brand-orange",
-                  )}
-                >
-                  {g.label} ({g.items.length})
-                </a>
-              ))}
-            </div>
-          </FadeBlock>
-
-          <div className="mt-16">
-            <DrawRule dark />
-          </div>
+              </span>{" "}
+              {isEnglish ? "shown" : "sichtbar"}
+            </p>
+            <Link
+              href={localizeHref("/demos", locale)}
+              className="mt-3 inline-flex min-h-11 items-center border-b border-border font-mono text-xs font-bold uppercase tracking-[0.06em] text-foreground transition-colors hover:border-brand-orange hover:text-brand-orange"
+            >
+              {isEnglish
+                ? "Complete simulation catalog"
+                : "Vollständiger Beispielkatalog"}
+            </Link>
+          </aside>
         </div>
-      </section>
+      </header>
 
-      {/* Category sections */}
-      {groups.map((group, groupIdx) => (
-        <SectionShell
-          key={group.id}
-          id={group.id}
-          num={String(groupIdx + 1).padStart(2, "0")}
-          label={group.label}
-          className="py-16 md:py-20"
-        >
-          <Eyebrow>{group.label}</Eyebrow>
-          <ClipHeading
-            as="h2"
-            className="mt-2.5 font-bold leading-none tracking-[-0.035em]"
-            style={{ fontSize: "clamp(1.75rem, 4vw, 2.75rem)" }}
+      <div>
+        {groups.length > 0 ? (
+          <nav
+            aria-label={
+              isEnglish ? "Simulation categories" : "Simulationskategorien"
+            }
+            className="mt-6 flex min-w-0 flex-wrap border-y border-border"
           >
-            {group.label}.
-          </ClipHeading>
+            {groups.map((group) => (
+              <a
+                key={group.id}
+                href={`#${group.id}`}
+                className="inline-flex min-h-11 items-center border-r border-border px-3 font-mono text-xs font-bold uppercase tracking-[0.06em] text-foreground transition-colors hover:bg-card hover:text-brand-orange focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
+              >
+                {group.label} ({group.items.length})
+              </a>
+            ))}
+          </nav>
+        ) : (
+          <p className="mt-8 border-y border-border py-5 text-sm text-muted-foreground">
+            {isEnglish
+              ? "No simulation matches this search."
+              : "Keine Simulation passt zu dieser Suche."}
+          </p>
+        )}
 
-          <div className="mt-10 grid min-w-0 gap-8 md:grid-cols-1 lg:gap-12">
-            {group.items.map((demo, i) => (
-              <FadeBlock key={demo.kind} delay={i} className="min-w-0">
-                <article className="min-w-0 border border-border bg-card/30 p-6 lg:p-8">
-                  <header className="mb-5 flex flex-wrap items-start justify-between gap-4 border-b border-border pb-4">
+        {groups.map((group, groupIndex) => (
+          <section key={group.id} id={group.id} className="mt-10 scroll-mt-24">
+            <TechnicalCourseSectionHeading
+              eyebrow={`${String(groupIndex + 1).padStart(2, "0")} · ${group.label}`}
+              title={`${group.label}.`}
+            />
+            <div className="mt-5 border-t border-foreground">
+              {group.items.map((demo) => (
+                <article
+                  key={demo.kind}
+                  className="min-w-0 border-b border-border py-6"
+                >
+                  <header className="grid min-w-0 gap-3 md:grid-cols-[minmax(0,1fr)_17rem] md:gap-6">
                     <div className="min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-                          {isEnglish ? "Simulation" : "Simulation"} {String(demos.indexOf(demo) + 1).padStart(2, "0")}
-                        </p>
-                        <span className="inline-flex items-center gap-1.5 border border-[rgba(107,114,128,0.4)] bg-[rgba(107,114,128,0.08)] px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-[rgba(243,240,233,0.55)]">
-                          ◆ {isEnglish ? "simulated" : "simuliert"}
-                        </span>
-                      </div>
-                      <h3 className="mt-2 text-[22px] font-bold leading-[1.15] tracking-[-0.02em] text-foreground">
+                      <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+                        {isEnglish ? "Simulation" : "Simulation"}{" "}
+                        {String(demos.indexOf(demo) + 1).padStart(2, "0")} ·{" "}
+                        {isEnglish ? "synthetic" : "synthetisch"}
+                      </p>
+                      <h3 className="mt-1.5 break-words text-xl font-bold leading-tight tracking-[-0.02em] text-foreground">
                         {demo.title}
                       </h3>
-                      <p className="mt-1.5 text-[14.5px] text-muted-foreground">
+                      <p className="mt-1 max-w-[680px] break-words text-sm leading-relaxed text-muted-foreground">
                         {demo.tagline}
                       </p>
                     </div>
-                    {demo.teachesIn && (
-                      <span className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-brand-amber">
-                        → {demo.teachesIn}
-                      </span>
-                    )}
+                    {demo.teachesIn ? (
+                      <p className="font-mono text-xs leading-relaxed text-muted-foreground md:text-right">
+                        {isEnglish ? "Course link" : "Kursbezug"}
+                        <br />
+                        <span className="text-foreground">
+                          {demo.teachesIn}
+                        </span>
+                      </p>
+                    ) : null}
                   </header>
-                  <LazyDemoMount kind={demo.kind} locale={locale} />
+                  <div className="mt-4 min-w-0 border-t border-border pt-4">
+                    <LazyDemoMount kind={demo.kind} locale={locale} />
+                  </div>
                 </article>
-              </FadeBlock>
-            ))}
-          </div>
-        </SectionShell>
-      ))}
-
-      {/* Footer CTA */}
-      <section className="dark-section bg-[var(--color-dark-bg)] py-20">
-        <div className="mx-auto max-w-[720px] px-6 text-center">
-          <ClipHeading
-            as="h2"
-            className="font-bold leading-none tracking-[-0.035em] text-[var(--color-dark-fg)]"
-            style={{ fontSize: "clamp(2rem, 4.5vw, 3rem)" }}
-          >
-            {isEnglish ? "From simulation" : "Von der Simulation"}
-            <br />
-            <span className="text-brand-orange">{isEnglish ? "to a bounded workflow." : "zum begrenzten Workflow."}</span>
-          </ClipHeading>
-          <FadeBlock delay={1}>
-            <p className="mt-6 text-[17px] leading-[1.6] text-[var(--color-dark-muted)]">
-              {isEnglish
-                ? "The course explains the assumptions, review criteria and failure modes behind these examples before you adapt a workflow to your own context."
-                : "Der Kurs erklärt Annahmen, Prüfkriterien und Fehlermöglichkeiten hinter den Beispielen, bevor du einen Ablauf an deinen Kontext anpasst."}
-            </p>
-          </FadeBlock>
-          <FadeBlock delay={2}>
-            <div className="mt-8 flex flex-wrap justify-center gap-3.5">
-              <BrandButton
-                href={localizeHref("/ai-native/kurs/modul_1", locale)}
-                prefetch={false}
-                variant="primary"
-                surface="dark"
-              >
-                {isEnglish ? "Start the course" : "Kurs starten"} <ArrowRight size={15} />
-              </BrandButton>
-              <BrandButton
-                href={localizeHref("/ai-native#os-bundle", locale)}
-                variant="outline"
-                surface="dark"
-              >
-                {isEnglish ? "View course materials" : "Lernmaterialien ansehen"}
-              </BrandButton>
+              ))}
             </div>
-          </FadeBlock>
-        </div>
-      </section>
-    </>
+          </section>
+        ))}
+      </div>
+    </TechnicalCourseFrame>
   );
 }

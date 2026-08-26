@@ -56,6 +56,12 @@ const STEP_IDS = [
   "transfer",
 ] as const;
 
+const BEATS = [
+  { id: "commit", firstStep: 0, lastStep: 0 },
+  { id: "test", firstStep: 1, lastStep: 3 },
+  { id: "revise", firstStep: 4, lastStep: 6 },
+] as const;
+
 const RETRIEVAL_RECALL_MIN_LENGTH = 12;
 const RETRIEVAL_RECALL_MAX_LENGTH = 280;
 
@@ -66,13 +72,15 @@ const MISSION_COPY = {
     stage: "Projektphase",
     objective: "Aktueller Auftrag",
     expectedEvidence: "Gesuchter Beleg",
-    progress: "abgeschlossene Signale",
+    progress: "Phasen abgeschlossen",
     collapse: "Signalstrecke einklappen",
     expand: "Signalstrecke ausklappen",
     localBoundary:
       "Gespeichert werden nur feste Auswahl-IDs, Abrufzähler und Fälligkeitszeitpunkte in diesem Browser. Geschriebene Abrufe und Notizen werden weder gespeichert noch gesendet.",
     syntheticOnly: "Nur synthetischen Kontext verwenden.",
-    locked: "Vorheriges Signal zuerst abschließen",
+    locked: "Vorherige Phase zuerst abschließen",
+    current: "aktuell",
+    currentStep: "Aktueller Schritt",
     stepComplete: "abgeschlossen",
     stepIncomplete: "offen",
     stepLocked: "gesperrt",
@@ -89,6 +97,8 @@ const MISSION_COPY = {
     revealed: "Aufgedecktes Störsignal",
     predictionHint:
       "Lege dich vor der Beobachtung fest. Die Auswahl wird nach dem Aufdecken gesperrt; revidiert wird später mit Evidenz.",
+    predictionHintCompact:
+      "Vor der Beobachtung festlegen; danach ist die Auswahl gesperrt.",
     openWorkspace: "Instrument öffnen",
     workspaceOpen: "Instrument offen",
     manipulateRequired:
@@ -135,6 +145,11 @@ const MISSION_COPY = {
       retrieve: "Abruf",
       transfer: "Transfer",
     },
+    beats: {
+      commit: "Festlegen",
+      test: "Testen",
+      revise: "Revidieren",
+    },
   },
   en: {
     eyebrow: "Lesson mission",
@@ -142,19 +157,20 @@ const MISSION_COPY = {
     stage: "Project phase",
     objective: "Current assignment",
     expectedEvidence: "Evidence target",
-    progress: "signals completed",
+    progress: "beats complete",
     collapse: "Collapse signal circuit",
     expand: "Expand signal circuit",
     localBoundary:
       "Only fixed choice IDs, retrieval counts, and due timestamps are stored in this browser. Written recall and scratch notes are neither saved nor sent.",
     syntheticOnly: "Use synthetic context only.",
-    locked: "Complete the previous signal first",
+    locked: "Complete the previous beat first",
+    current: "current",
+    currentStep: "Current step",
     stepComplete: "complete",
     stepIncomplete: "incomplete",
     stepLocked: "locked",
     complete: "Lesson loop closed",
-    ownerRequired:
-      "Activate local learning before starting this mission.",
+    ownerRequired: "Activate local learning before starting this mission.",
     stageLocked:
       "This project phase is locked. Complete the preceding project stages first.",
     correct: "Signal holds.",
@@ -165,6 +181,7 @@ const MISSION_COPY = {
     revealed: "Revealed failure signal",
     predictionHint:
       "Commit before observing. The choice locks after reveal; revision happens later against evidence.",
+    predictionHintCompact: "Commit before observing; the choice then locks.",
     openWorkspace: "Open instrument",
     workspaceOpen: "Instrument open",
     manipulateRequired:
@@ -210,6 +227,11 @@ const MISSION_COPY = {
       revise: "Revise",
       retrieve: "Retrieve",
       transfer: "Transfer",
+    },
+    beats: {
+      commit: "Commit",
+      test: "Test",
+      revise: "Revise",
     },
   },
 } as const;
@@ -286,6 +308,33 @@ function getStepCompletion(
 function getFirstIncompleteStep(completion: readonly boolean[]): number {
   const firstIncomplete = completion.findIndex((done) => !done);
   return firstIncomplete < 0 ? STEP_IDS.length - 1 : firstIncomplete;
+}
+
+function getBeatTargetStep(
+  beat: (typeof BEATS)[number],
+  completion: readonly boolean[],
+): number {
+  for (let step = beat.firstStep; step <= beat.lastStep; step += 1) {
+    if (!completion[step]) return step;
+  }
+  return beat.lastStep;
+}
+
+function isBeatComplete(
+  beat: (typeof BEATS)[number],
+  completion: readonly boolean[],
+): boolean {
+  for (let step = beat.firstStep; step <= beat.lastStep; step += 1) {
+    if (!completion[step]) return false;
+  }
+  return true;
+}
+
+function getBeatIndexForStep(step: number): number {
+  const beatIndex = BEATS.findIndex(
+    (beat) => step >= beat.firstStep && step <= beat.lastStep,
+  );
+  return beatIndex < 0 ? 0 : beatIndex;
 }
 
 function clearRetrievalRecord(state: LessonMissionState): LessonMissionState {
@@ -378,7 +427,7 @@ function ChoiceProbe({
             >
               <span
                 className={cn(
-                  "block font-mono text-[10px] font-black uppercase tracking-[0.16em]",
+                  "block font-mono text-xs font-black uppercase tracking-[0.16em]",
                   selected ? "text-[#ffc6aa]" : "text-brand-orange-dark",
                 )}
               >
@@ -682,6 +731,12 @@ export function LessonMissionControl({
   const firstIncompleteStep = getFirstIncompleteStep(stepCompletion);
   const completedCount = stepCompletion.filter(Boolean).length;
   const allComplete = completedCount === STEP_IDS.length;
+  const beatCompletion = BEATS.map((beat) =>
+    isBeatComplete(beat, stepCompletion),
+  );
+  const completedBeatCount = beatCompletion.filter(Boolean).length;
+  const currentBeatIndex = getBeatIndexForStep(displayActivePanel);
+  const currentStepId = STEP_IDS[displayActivePanel] ?? STEP_IDS[0];
   const completionScope = `${storageKey}:${projectStage.id}`;
 
   useEffect(() => {
@@ -889,10 +944,12 @@ export function LessonMissionControl({
       aria-labelledby={headingId}
       className="relative mb-6 min-w-0 scroll-mt-24 overflow-hidden border-2 border-foreground bg-background shadow-[5px_5px_0_0_var(--color-brand-orange)] [overflow-wrap:anywhere]"
     >
-      <header className="grid min-w-0 gap-0 border-b-2 border-foreground bg-foreground text-background lg:grid-cols-[minmax(0,1fr)_auto]">
-        <div className="min-w-0 px-4 py-3 sm:px-5">
-          <p className="font-mono text-[10px] font-black uppercase tracking-[0.2em] text-[#ffc6aa]">
-            {copy.eyebrow} · {copy.title} · {profile.instrument[locale]}
+      <header className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-0 border-b-2 border-foreground bg-foreground text-background sm:grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto]">
+        <div className="min-w-0 px-4 py-2 sm:px-5">
+          <p className="font-mono text-xs font-black uppercase tracking-[0.2em] text-[#ffc6aa]">
+            {copy.eyebrow} ·{" "}
+            <span className="hidden sm:inline">{copy.title} · </span>
+            {profile.instrument[locale]}
           </p>
           <div className="mt-1 flex min-w-0 flex-wrap items-baseline gap-x-4 gap-y-1">
             <MissionHeading
@@ -905,14 +962,14 @@ export function LessonMissionControl({
               {frame.title}
             </MissionHeading>
             <p
-              className="pb-1 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-background/70"
+              className="pb-1 font-mono text-xs font-bold uppercase tracking-[0.14em] text-background/70"
               aria-live="polite"
             >
-              {completedCount}/{STEP_IDS.length} {copy.progress}
+              {completedBeatCount}/{BEATS.length} {copy.progress}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2 border-t border-background/30 px-3 py-2 lg:border-l lg:border-t-0">
+        <div className="flex items-center gap-2 border-l border-background/30 px-1 py-1 sm:border-l-0 sm:border-t sm:px-3 lg:border-l lg:border-t-0">
           <button
             type="button"
             onClick={() =>
@@ -921,32 +978,39 @@ export function LessonMissionControl({
                 collapsed: !current.collapsed,
               }))
             }
+            aria-label={displayState.collapsed ? copy.expand : copy.collapse}
             aria-expanded={!displayState.collapsed}
             aria-controls={`${headingId}-body`}
-            className="inline-flex min-h-11 items-center justify-center border border-background/60 px-4 font-mono text-[10px] font-black uppercase tracking-[0.12em] text-background outline-none hover:border-[#ffc6aa] hover:text-[#ffc6aa] focus-visible:ring-2 focus-visible:ring-[#ffc6aa]"
+            className="inline-flex h-11 w-11 items-center justify-center border border-background/60 px-0 font-mono text-xs font-black uppercase tracking-[0.12em] text-background outline-none hover:border-[#ffc6aa] hover:text-[#ffc6aa] focus-visible:ring-2 focus-visible:ring-[#ffc6aa] sm:h-auto sm:w-auto sm:min-h-11 sm:px-4"
           >
-            {displayState.collapsed ? copy.expand : copy.collapse}
+            <span aria-hidden="true" className="text-lg sm:hidden">
+              {displayState.collapsed ? "+" : "−"}
+            </span>
+            <span className="hidden sm:inline">
+              {displayState.collapsed ? copy.expand : copy.collapse}
+            </span>
           </button>
         </div>
       </header>
 
       <div id={`${headingId}-body`} hidden={displayState.collapsed}>
         <div className="min-w-0 border-b-2 border-foreground">
-          <div className="min-w-0 border-b border-border bg-card p-4 sm:p-5">
+          <div className="min-w-0 border-b border-border bg-card p-2 sm:p-4">
             <LessonMissionFrame
               frame={frame}
               locale={locale}
               headingLevel={missionHeadingLevel}
               showHeading={false}
+              compactOnMobile
             />
-            <details className="mt-3 border-t border-border pt-3">
-              <summary className="cursor-pointer font-mono text-[10px] font-black uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground">
+            <details className="mt-2 border-t border-border pt-2">
+              <summary className="min-h-11 cursor-pointer py-3 font-mono text-xs font-black uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground">
                 {copy.stage} · {String(projectStageIndex + 1).padStart(2, "0")}
                 /05 · {copy.expectedEvidence}
               </summary>
               <dl className="mt-3 grid min-w-0 gap-3 sm:grid-cols-2">
                 <div>
-                  <dt className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                  <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
                     {copy.objective}
                   </dt>
                   <dd className="mt-1 break-words text-sm font-semibold leading-snug">
@@ -954,7 +1018,7 @@ export function LessonMissionControl({
                   </dd>
                 </div>
                 <div className="border-l-2 border-brand-orange pl-3">
-                  <dt className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                  <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
                     {copy.expectedEvidence}
                   </dt>
                   <dd className="mt-1 break-words text-sm leading-snug">
@@ -968,38 +1032,43 @@ export function LessonMissionControl({
             </details>
           </div>
 
-          <div className="min-w-0 p-4 sm:p-5">
+          <div className="min-w-0 p-2 sm:p-4">
             <ol
-              className="grid min-w-0 grid-cols-4 gap-1 lg:grid-cols-7"
+              className="grid min-w-0 grid-cols-3 gap-1"
               aria-label={copy.title}
               aria-describedby={`${headingId}-sequence-help`}
             >
-              {STEP_IDS.map((stepId, index) => {
+              {BEATS.map((beat, index) => {
                 const available =
                   controlsEnabled &&
-                  (allComplete || index <= firstIncompleteStep);
-                const selected = index === displayActivePanel;
-                const complete = stepCompletion[index];
-                const label = copy.steps[stepId];
+                  (allComplete || beat.firstStep <= firstIncompleteStep);
+                const selected = index === currentBeatIndex;
+                const complete = beatCompletion[index] ?? false;
+                const label = copy.beats[beat.id];
+                const status = complete
+                  ? copy.stepComplete
+                  : available
+                    ? copy.stepIncomplete
+                    : copy.stepLocked;
                 return (
-                  <li key={stepId} className="min-w-0">
+                  <li key={beat.id} className="min-w-0">
                     <button
                       type="button"
                       disabled={!available}
                       aria-disabled={!available}
                       onClick={() => {
-                        if (available) setActivePanel(index);
+                        if (available) {
+                          setActivePanel(
+                            getBeatTargetStep(beat, stepCompletion),
+                          );
+                        }
                       }}
                       aria-current={selected ? "step" : undefined}
-                      aria-label={`${label}: ${
-                        complete
-                          ? copy.stepComplete
-                          : available
-                            ? copy.stepIncomplete
-                            : copy.stepLocked
+                      aria-label={`${label}: ${status}${
+                        selected ? `, ${copy.current}` : ""
                       }`}
                       className={cn(
-                        "flex min-h-16 w-full min-w-0 flex-col items-center justify-center gap-1 border-b-[3px] px-1 py-2 text-center outline-none transition-[border-color,color,background-color] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none lg:min-h-11 lg:flex-row lg:gap-2 lg:px-2 lg:text-left",
+                        "flex min-h-11 w-full min-w-0 items-center justify-center gap-2 border-b-[3px] px-2 py-1.5 text-center outline-none transition-[border-color,color,background-color] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
                         selected
                           ? "border-brand-orange bg-foreground text-background"
                           : complete
@@ -1011,7 +1080,7 @@ export function LessonMissionControl({
                     >
                       <span
                         className={cn(
-                          "grid h-6 w-6 shrink-0 place-items-center rounded-full border font-mono text-[9px] font-black",
+                          "grid h-6 w-6 shrink-0 place-items-center rounded-full border font-mono text-xs font-black",
                           selected
                             ? "border-[#ffc6aa] text-[#ffc6aa]"
                             : complete
@@ -1022,7 +1091,7 @@ export function LessonMissionControl({
                       >
                         {complete ? "OK" : String(index + 1).padStart(2, "0")}
                       </span>
-                      <span className="min-w-0 max-w-full font-mono text-[9px] font-black uppercase tracking-[0.03em] [overflow-wrap:anywhere]">
+                      <span className="min-w-0 max-w-full font-mono text-xs font-black uppercase tracking-[0.06em] [overflow-wrap:anywhere]">
                         {label}
                       </span>
                     </button>
@@ -1031,9 +1100,17 @@ export function LessonMissionControl({
               })}
             </ol>
             <p
-              id={`${headingId}-sequence-help`}
-              className="sr-only"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+              className="mt-2 font-mono text-xs font-black uppercase tracking-[0.1em] text-muted-foreground"
             >
+              {copy.currentStep}:{" "}
+              {String(displayActivePanel + 1).padStart(2, "0")}/
+              {String(STEP_IDS.length).padStart(2, "0")} ·{" "}
+              {copy.steps[currentStepId]}
+            </p>
+            <p id={`${headingId}-sequence-help`} className="sr-only">
               {copy.locked}. {copy.predictionHint}
             </p>
             {!controlsEnabled ? (
@@ -1045,21 +1122,26 @@ export function LessonMissionControl({
               </p>
             ) : null}
 
-            <div className="mt-4 min-w-0 border-t-2 border-foreground pt-5">
+            <div className="mt-3 min-w-0 border-t-2 border-foreground pt-4">
               {displayActivePanel === 0 ? (
                 <div>
                   <StepHeading
                     ref={panelHeadingRef}
                     tabIndex={-1}
-                    className="max-w-[62ch] text-balance text-xl font-black leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
+                    className="max-w-[62ch] text-balance text-lg font-black leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
                   >
                     {profile.predictionPrompt[locale]}
                   </StepHeading>
-                  <p className="mt-3 max-w-[72ch] text-sm leading-relaxed text-muted-foreground">
-                    {copy.predictionHint}
+                  <p className="mt-2 max-w-[72ch] text-[13px] leading-snug text-muted-foreground sm:mt-3 sm:text-sm sm:leading-relaxed">
+                    <span className="sm:hidden">
+                      {copy.predictionHintCompact}
+                    </span>
+                    <span className="hidden sm:inline">
+                      {copy.predictionHint}
+                    </span>
                   </p>
                   <fieldset
-                    className="mt-5 grid gap-3"
+                    className="mt-3 grid gap-3 sm:mt-5"
                     disabled={displayState.revealed || !controlsEnabled}
                     style={{
                       gridTemplateColumns:
@@ -1072,8 +1154,9 @@ export function LessonMissionControl({
                     {profile.predictionChoices.map((entry, index) => (
                       <label
                         key={entry.id}
+                        data-lesson-prediction-choice
                         className={cn(
-                          "relative flex min-h-14 min-w-0 cursor-pointer items-start gap-3 border-2 p-4 transition-[border-color,background-color,transform] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand-orange has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-background",
+                          "relative flex min-h-14 min-w-0 cursor-pointer items-start gap-3 border-2 p-3 transition-[border-color,background-color,transform] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand-orange has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-background sm:p-4",
                           displayState.predictionId === entry.id
                             ? "border-foreground bg-foreground text-background"
                             : "border-border bg-background hover:-translate-y-0.5 hover:border-brand-orange",
@@ -1094,7 +1177,7 @@ export function LessonMissionControl({
                           className="mt-1 h-4 w-4 shrink-0 accent-[var(--color-brand-orange)]"
                         />
                         <span className="min-w-0 break-words text-sm font-bold leading-relaxed">
-                          <span className="mr-2 font-mono text-[10px] opacity-70">
+                          <span className="mr-2 font-mono text-xs opacity-70">
                             {String(index + 1).padStart(2, "0")}
                           </span>
                           {entry.label[locale]}
@@ -1111,10 +1194,10 @@ export function LessonMissionControl({
                   >
                     {displayState.revealed ? (
                       <>
-                        <p className="font-mono text-[10px] font-black uppercase tracking-[0.14em] text-brand-orange-dark">
+                        <p className="font-mono text-xs font-black uppercase tracking-[0.14em] text-brand-orange-dark">
                           {copy.committed}: {predictedLabel}
                         </p>
-                        <p className="mt-3 font-mono text-[10px] font-black uppercase tracking-[0.14em] text-foreground">
+                        <p className="mt-3 font-mono text-xs font-black uppercase tracking-[0.14em] text-foreground">
                           {copy.revealed}
                         </p>
                         <p className="mt-2 max-w-[72ch] text-sm leading-relaxed">
@@ -1260,7 +1343,7 @@ export function LessonMissionControl({
                       </p>
                       <label
                         htmlFor={`${headingId}-retrieval-recall`}
-                        className="mt-5 block font-mono text-[10px] font-black uppercase tracking-[0.14em] text-foreground"
+                        className="mt-5 block font-mono text-xs font-black uppercase tracking-[0.14em] text-foreground"
                       >
                         {copy.retrievalRecall}
                       </label>
@@ -1379,7 +1462,7 @@ export function LessonMissionControl({
                 <div>
                   {predictedLabel ? (
                     <p className="mb-5 border-l-4 border-foreground bg-card p-4 text-sm">
-                      <span className="font-mono text-[10px] font-black uppercase tracking-[0.14em] text-brand-orange-dark">
+                      <span className="font-mono text-xs font-black uppercase tracking-[0.14em] text-brand-orange-dark">
                         {copy.committed}
                       </span>
                       <span className="mt-1 block font-bold">
@@ -1405,7 +1488,7 @@ export function LessonMissionControl({
                   <div className="mt-5">
                     <label
                       htmlFor={`${headingId}-scratch`}
-                      className="font-mono text-[10px] font-black uppercase tracking-[0.14em] text-foreground"
+                      className="font-mono text-xs font-black uppercase tracking-[0.14em] text-foreground"
                     >
                       {copy.scratch}
                     </label>
@@ -1431,7 +1514,7 @@ export function LessonMissionControl({
               {displayActivePanel === 6 ? (
                 <div>
                   <div className="mb-5 border-2 border-foreground bg-card p-4">
-                    <p className="font-mono text-[10px] font-black uppercase tracking-[0.14em] text-brand-orange-dark">
+                    <p className="font-mono text-xs font-black uppercase tracking-[0.14em] text-brand-orange-dark">
                       {copy.transferCase}
                     </p>
                     <p className="mt-2 max-w-[72ch] text-sm leading-relaxed">
@@ -1460,7 +1543,7 @@ export function LessonMissionControl({
                     >
                       <p className="font-black">{copy.complete}</p>
                       <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                        {completedCount}/{STEP_IDS.length} {copy.progress}.{" "}
+                        {completedBeatCount}/{BEATS.length} {copy.progress}.{" "}
                         {copy.localBoundary}
                       </p>
                     </div>
@@ -1475,7 +1558,7 @@ export function LessonMissionControl({
                 onClick={resetMission}
                 disabled={!missionResetEnabled}
                 title={missionResetEnabled ? copy.resetLabel : copy.resetLocked}
-                className="min-h-11 border border-border px-3 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground outline-none hover:border-brand-orange hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-60"
+                className="min-h-11 border border-border px-3 font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground outline-none hover:border-brand-orange hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {missionResetEnabled ? copy.reset : copy.resetLocked}
               </button>

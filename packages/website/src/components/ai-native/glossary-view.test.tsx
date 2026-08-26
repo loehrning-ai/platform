@@ -94,6 +94,32 @@ function renderView() {
 }
 
 describe("<GlossaryView> search", () => {
+  it("keeps search, category navigation, and disclosure controls at 44px or larger", () => {
+    const { container } = renderView();
+    const search = screen.getByLabelText("Glossar durchsuchen");
+    expect(
+      container
+        .querySelector('[data-technical-course="ai-native-glossary"] header')
+        ?.contains(search),
+    ).toBe(true);
+    expect(search).toHaveClass("min-h-12");
+    for (const link of screen.getAllByRole("link", {
+      name: /Claude|Regulatorik/,
+    })) {
+      if (link.getAttribute("href")?.startsWith("#cat-")) {
+        expect(link).toHaveClass("min-h-11");
+      }
+    }
+    fireEvent.change(search, { target: { value: "prompt" } });
+    expect(screen.getByRole("button", { name: "Leeren" })).toHaveClass(
+      "min-h-11",
+      "min-w-11",
+    );
+    expect(screen.getByText("Referenzstatus").closest("summary")).toHaveClass(
+      "min-h-12",
+    );
+  });
+
   it("shows the grouped browse view (all terms + category headings) with no query", () => {
     renderView();
     expect(screen.getByLabelText("Glossar durchsuchen")).not.toHaveAttribute(
@@ -111,9 +137,10 @@ describe("<GlossaryView> search", () => {
     expect(
       screen.getByText("Version 1.4 · zuletzt aktualisiert 14. Juli 2026"),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: /Regulatorik/ }),
-    ).toHaveAttribute("aria-current", "location");
+    expect(screen.getByRole("link", { name: /Regulatorik/ })).toHaveAttribute(
+      "aria-current",
+      "location",
+    );
   });
 
   it("renders a related-term link whose anchor is the encoded lowercase term", () => {

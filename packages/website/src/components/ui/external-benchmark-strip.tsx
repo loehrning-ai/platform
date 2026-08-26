@@ -62,7 +62,7 @@ function ExternalBenchmarkStripContent({
       data-testid={testId}
       className="border-t border-border/60 bg-card/30 py-6"
     >
-      <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
+      <p className="mb-4 font-mono text-xs uppercase tracking-[0.14em] text-muted">
         {kicker}
       </p>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
@@ -89,7 +89,7 @@ function ExternalBenchmarkStripContent({
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               {item.plain}
             </p>
-            <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
+            <p className="mt-3 font-mono text-xs uppercase tracking-[0.14em] text-muted">
               {item.publisher} · {item.year}
               {item.sampleSize ? ` · ${item.sampleSize}` : ""}
             </p>

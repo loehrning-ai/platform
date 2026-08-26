@@ -141,11 +141,14 @@ function ScoreChip({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 border px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.1em]",
+        "inline-flex items-center gap-1 border px-2 py-0.5 font-mono text-xs font-bold uppercase tracking-[0.1em]",
         SCORE_COLORS[score],
       )}
     >
-      {label}: {locale === "de" ? SCORE_LABELS[score] : ({ hoch: "HIGH", mittel: "MEDIUM", niedrig: "LOW" } as const)[score]}
+      {label}:{" "}
+      {locale === "de"
+        ? SCORE_LABELS[score]
+        : ({ hoch: "HIGH", mittel: "MEDIUM", niedrig: "LOW" } as const)[score]}
     </span>
   );
 }
@@ -168,7 +171,10 @@ export function LlmObservabilityDemo(): JSX.Element {
     <div
       className="flex flex-col gap-5"
       role="region"
-      aria-label={text("LLM-Qualitätsmessung Praxisbeispiel", "LLM quality measurement practice example")}
+      aria-label={text(
+        "LLM-Qualitätsmessung Praxisbeispiel",
+        "LLM quality measurement practice example",
+      )}
     >
       <SimulationDisclosure>
         {text(
@@ -212,20 +218,22 @@ export function LlmObservabilityDemo(): JSX.Element {
               accent ? "border-l-brand-amber" : "border-l-foreground/30",
             )}
           >
-            <div className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+            <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
               {label}
             </div>
             <div className="mt-1 font-mono text-[20px] font-bold leading-[1.1] tracking-[-0.02em] text-foreground">
               {value}
             </div>
-            <div className="mt-1 font-mono text-[10px] text-muted-foreground">{sub}</div>
+            <div className="mt-1 font-mono text-xs text-muted-foreground">
+              {sub}
+            </div>
           </div>
         ))}
       </div>
 
       {/* Eval row picker */}
       <div>
-        <div className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+        <div className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
           {text("Eval-Szenarien (Beispiele)", "Evaluation scenarios (samples)")}
         </div>
         <div className="flex flex-col gap-1.5">
@@ -238,7 +246,7 @@ export function LlmObservabilityDemo(): JSX.Element {
                 onClick={() => setSelectedId(row.id)}
                 aria-pressed={active}
                 className={cn(
-                  "flex items-start justify-between gap-3 border p-3 text-left transition-colors",
+                  "flex min-h-11 items-start justify-between gap-3 border p-3 text-left transition-colors",
                   active
                     ? "border-brand-orange bg-foreground text-background"
                     : "border-border bg-card/60 text-foreground hover:border-foreground",
@@ -251,15 +259,16 @@ export function LlmObservabilityDemo(): JSX.Element {
                 </div>
                 <div className="flex shrink-0 flex-col items-end gap-1">
                   {row.driftFlag && (
-                    <span className="border border-brand-amber bg-brand-amber/10 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-brand-amber">
+                    <span className="border border-brand-amber bg-brand-amber/10 px-1.5 py-0.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-amber">
                       DRIFT
                     </span>
                   )}
-                  {row.humanScore !== null && row.humanScore !== row.autoScore && (
-                    <span className="border border-destructive bg-destructive/10 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-destructive">
-                      {text("DIVERGENZ", "MISMATCH")}
-                    </span>
-                  )}
+                  {row.humanScore !== null &&
+                    row.humanScore !== row.autoScore && (
+                      <span className="border border-destructive bg-destructive/10 px-1.5 py-0.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-destructive">
+                        {text("DIVERGENZ", "MISMATCH")}
+                      </span>
+                    )}
                 </div>
               </button>
             );
@@ -269,27 +278,39 @@ export function LlmObservabilityDemo(): JSX.Element {
 
       {/* Selected row detail */}
       <div className="border border-border bg-background p-4">
-        <div className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+        <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
           {text("Beispiel-Output", "Sample output")}
         </div>
-        <p className="mt-2 text-[13px] leading-[1.7] text-foreground">{selected.output}</p>
+        <p className="mt-2 text-[13px] leading-[1.7] text-foreground">
+          {selected.output}
+        </p>
         <div className="mt-4 flex flex-wrap gap-2">
-          <ScoreChip score={selected.autoScore} label={text("Auto-Eval", "Automated evaluation")} locale={locale} />
+          <ScoreChip
+            score={selected.autoScore}
+            label={text("Auto-Eval", "Automated evaluation")}
+            locale={locale}
+          />
           {selected.humanScore !== null ? (
-            <ScoreChip score={selected.humanScore} label={text("Mensch", "Human review")} locale={locale} />
+            <ScoreChip
+              score={selected.humanScore}
+              label={text("Mensch", "Human review")}
+              locale={locale}
+            />
           ) : (
-            <span className="border border-border px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.1em] text-muted-foreground">
+            <span className="border border-border px-2 py-0.5 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
               {text("Mensch: ausstehend", "Human review: pending")}
             </span>
           )}
           {selected.driftFlag && (
-            <span className="border border-brand-amber bg-brand-amber/10 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-brand-amber">
+            <span className="border border-brand-amber bg-brand-amber/10 px-2 py-0.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-amber">
               {text("DRIFT-INDIKATOR AKTIV", "DRIFT FLAG ACTIVE")}
             </span>
           )}
         </div>
         <div className="mt-3 border-l-2 border-border bg-card/30 p-3">
-          <p className="text-[12px] leading-[1.6] text-muted-foreground">{selected.note}</p>
+          <p className="text-[12px] leading-[1.6] text-muted-foreground">
+            {selected.note}
+          </p>
         </div>
       </div>
 
@@ -298,17 +319,20 @@ export function LlmObservabilityDemo(): JSX.Element {
         <button
           type="button"
           onClick={() => setShowFailureBeat((v) => !v)}
-          className="w-full text-left"
+          className="min-h-11 w-full text-left"
           aria-expanded={showFailureBeat}
         >
           <div className="flex items-center justify-between gap-2">
-            <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+            <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
               {text(
                 "Grenzfall: Was passiert, wenn Auto-Eval und Mensch sich widersprechen?",
                 "Boundary case: what happens when automated and human ratings disagree?",
               )}
             </div>
-            <span className="shrink-0 font-mono text-[10px] text-muted-foreground" aria-hidden="true">
+            <span
+              className="shrink-0 font-mono text-xs text-muted-foreground"
+              aria-hidden="true"
+            >
               {showFailureBeat ? "▲" : "▼"}
             </span>
           </div>
@@ -321,11 +345,26 @@ export function LlmObservabilityDemo(): JSX.Element {
                 : `Human review disagrees with the automated score in ${divergenceRows.length} of ${rows.filter((r) => r.humanScore !== null).length} reviewed examples:`}
             </p>
             {divergenceRows.map((row) => (
-              <div key={row.id} className="border border-destructive/30 bg-destructive/5 p-3">
-                <div className="text-[12px] font-bold text-foreground">{row.prompt}</div>
+              <div
+                key={row.id}
+                className="border border-destructive/30 bg-destructive/5 p-3"
+              >
+                <div className="text-[12px] font-bold text-foreground">
+                  {row.prompt}
+                </div>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  <ScoreChip score={row.autoScore} label={text("Auto-Eval", "Automated evaluation")} locale={locale} />
-                  {row.humanScore && <ScoreChip score={row.humanScore} label={text("Mensch", "Human review")} locale={locale} />}
+                  <ScoreChip
+                    score={row.autoScore}
+                    label={text("Auto-Eval", "Automated evaluation")}
+                    locale={locale}
+                  />
+                  {row.humanScore && (
+                    <ScoreChip
+                      score={row.humanScore}
+                      label={text("Mensch", "Human review")}
+                      locale={locale}
+                    />
+                  )}
                 </div>
                 <p className="mt-2 text-[12px] leading-[1.5] text-muted-foreground">
                   {row.note}

@@ -52,12 +52,17 @@ describe("platform operating-model locale content", () => {
         name: "Öffentliche Inhalte. Kontogebundene Zustände. Belegte Grenzen.",
       }),
     ).toBeVisible();
-    expect(screen.getAllByText("Nicht verfügbar")).toHaveLength(2);
+    expect(screen.queryByText("Nicht verfügbar")).not.toBeInTheDocument();
+    expect(
+      screen.getByText(/Kontofunktion ist in dieser Laufzeit/),
+    ).toBeVisible();
+    expect(
+      screen.getByText(/Feedback-Formular ist in dieser Laufzeit/),
+    ).toBeVisible();
     expect(screen.getByText(/nicht amtlich, nicht akkreditiert/)).toBeVisible();
-    expect(screen.getByRole("link", { name: "Bekannte Grenzen" })).toHaveAttribute(
-      "href",
-      "/bekannte-grenzen",
-    );
+    expect(
+      screen.getByRole("link", { name: "Bekannte Grenzen" }),
+    ).toHaveAttribute("href", "/bekannte-grenzen");
   });
 
   it("renders complete English copy and locale-preserving links", async () => {
@@ -69,16 +74,18 @@ describe("platform operating-model locale content", () => {
         name: "Public content. Account-bound state. Documented limits.",
       }),
     ).toBeVisible();
-    expect(screen.getByText(/account system is not fully configured/)).toBeVisible();
-    expect(screen.getByRole("link", { name: "Known limitations" })).toHaveAttribute(
-      "href",
-      "/en/bekannte-grenzen",
+    expect(
+      screen.getByText(/account system is not fully configured/),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("link", { name: "Known limitations" }),
+    ).toHaveAttribute("href", "/en/bekannte-grenzen");
+    expect(
+      screen.getByRole("link", { name: "Open-source hub" }),
+    ).toHaveAttribute("href", "/en/open-source");
+    expect(document.body).not.toHaveTextContent(
+      "Warum der Zugang kostenlos ist",
     );
-    expect(screen.getByRole("link", { name: "Open-source hub" })).toHaveAttribute(
-      "href",
-      "/en/open-source",
-    );
-    expect(document.body).not.toHaveTextContent("Warum der Zugang kostenlos ist");
   });
 
   it("reports configured account and feedback state from the runtime", async () => {
@@ -87,12 +94,13 @@ describe("platform operating-model locale content", () => {
     runtime.feedback = true;
     await renderPage("en");
 
-    expect(screen.getAllByText("Configured")).toHaveLength(2);
-    expect(screen.getByText(/synchronizes progress, quiz status/)).toBeVisible();
-    expect(screen.getByRole("link", { name: "Report a correction" })).toHaveAttribute(
-      "href",
-      "/en/feedback",
-    );
+    expect(screen.queryByText("Configured")).not.toBeInTheDocument();
+    expect(
+      screen.getByText(/synchronizes progress, quiz status/),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("link", { name: "Report a correction" }),
+    ).toHaveAttribute("href", "/en/feedback");
   });
 
   it.each([

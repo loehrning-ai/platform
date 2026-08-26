@@ -61,6 +61,28 @@ export function LoginForm({
   const busy = state === "sending-otp" || state === "redirecting-google";
   const copy = LOGIN_COPY[locale].form;
 
+  if (!magicLinkAvailable && !googleAvailable) {
+    return (
+      <section
+        aria-labelledby="login-form-title"
+        className="min-w-0 border border-border border-t-[3px] border-t-brand-orange bg-card p-4 sm:p-5"
+      >
+        <h2
+          id="login-form-title"
+          className="text-xl font-bold tracking-[-0.025em] text-foreground sm:text-2xl"
+        >
+          {copy.title}
+        </h2>
+        <p
+          role="note"
+          className="mt-3 break-words font-mono text-xs uppercase leading-relaxed tracking-[0.08em] text-muted-foreground"
+        >
+          {copy.unavailable[unavailableReason]}
+        </p>
+      </section>
+    );
+  }
+
   function callbackRedirectTo(): string {
     return `${window.location.origin}/auth/callback?next=${encodeURIComponent(cleanNext)}`;
   }
@@ -138,9 +160,9 @@ export function LoginForm({
     <form
       onSubmit={submit}
       aria-labelledby="login-form-title"
-      className="min-w-0 border-2 border-foreground bg-card p-5 shadow-[6px_6px_0_var(--color-foreground)] sm:p-6"
+      className="min-w-0 border border-border border-t-[3px] border-t-brand-orange bg-card p-4 sm:p-5"
     >
-      <div className="mb-6 border-b border-border pb-5">
+      <div className="mb-4 border-b border-border pb-4">
         <h2
           id="login-form-title"
           className="text-xl font-bold tracking-[-0.025em] text-foreground sm:text-2xl"
@@ -160,7 +182,7 @@ export function LoginForm({
           disabled={!supabase || busy}
           aria-busy={state === "redirecting-google"}
           data-google-brand-button="light"
-          className="relative inline-flex h-10 w-full items-center justify-center gap-2 rounded-[4px] border border-[#747775] bg-white px-12 text-[14px] font-medium leading-5 text-[#1f1f1f] transition-colors hover:bg-[#f7f8f8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1a73e8] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70"
+          className="relative inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-[4px] border border-[#747775] bg-white px-12 text-[14px] font-medium leading-5 text-[#1f1f1f] hover:bg-[#f7f8f8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1a73e8] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70"
           style={{
             fontFamily: '"Google Sans", Roboto, Arial, sans-serif',
           }}
@@ -190,9 +212,9 @@ export function LoginForm({
         </button>
       ) : null}
       {googleAvailable && magicLinkAvailable ? (
-        <div className="my-6 flex items-center gap-3" aria-hidden="true">
+        <div className="my-4 flex items-center gap-3" aria-hidden="true">
           <span className="h-px flex-1 bg-border" />
-          <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+          <span className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
             {copy.emailSeparator}
           </span>
           <span className="h-px flex-1 bg-border" />
@@ -202,7 +224,7 @@ export function LoginForm({
         <>
           <label
             htmlFor="email"
-            className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange"
+            className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange"
           >
             {copy.emailLabel}
           </label>
@@ -231,7 +253,7 @@ export function LoginForm({
                 spellCheck={false}
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                className="h-12 min-w-0 w-full border-2 border-foreground bg-background pl-10 pr-3 text-base text-foreground outline-none focus:ring-2 focus:ring-brand-orange focus:ring-offset-2 focus:ring-offset-background"
+                className="h-12 min-w-0 w-full border border-border bg-background pl-10 pr-3 text-base text-foreground outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange focus:ring-offset-2 focus:ring-offset-background"
                 placeholder="name@example.com"
               />
             </div>
@@ -239,7 +261,7 @@ export function LoginForm({
               type="submit"
               disabled={!supabase || !captchaToken || busy}
               aria-busy={state === "sending-otp"}
-              className="inline-flex h-12 items-center justify-center gap-2 border-2 border-foreground bg-brand-orange px-5 font-mono text-[12px] font-bold uppercase tracking-[0.08em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] hover:bg-[#A5370F] hover:shadow-[6px_6px_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-70"
+              className="inline-flex h-12 items-center justify-center gap-2 border border-brand-orange bg-brand-orange px-5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white hover:border-foreground hover:bg-foreground disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               {state === "sending-otp" ? (
                 <Loader2
@@ -266,28 +288,28 @@ export function LoginForm({
       <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
         {accountReady ? copy.accountReadyNote : copy.accountUnavailableNote}
       </p>
-      {message && (
+      {message ? (
         <p
           role={state === "error" ? "alert" : "status"}
           id="login-form-message"
           aria-live={state === "error" ? "assertive" : "polite"}
           className={
             state === "error"
-              ? "mt-4 break-words text-sm leading-relaxed text-destructive"
-              : "mt-4 break-words text-sm leading-relaxed text-foreground"
+              ? "mt-4 break-words border-l-[3px] border-destructive pl-3 text-sm leading-relaxed text-destructive"
+              : "mt-4 break-words border-l-[3px] border-brand-orange pl-3 text-sm leading-relaxed text-foreground"
           }
         >
           {message}
         </p>
-      )}
-      {!supabase && (
+      ) : null}
+      {!supabase ? (
         <p
           role="note"
-          className="mt-4 border border-border bg-background p-3 font-mono text-[11px] uppercase leading-relaxed tracking-[0.08em] text-muted-foreground"
+          className="mt-4 border border-border bg-background p-3 font-mono text-xs uppercase leading-relaxed tracking-[0.08em] text-muted-foreground"
         >
           {copy.unavailable[unavailableReason]}
         </p>
-      )}
+      ) : null}
     </form>
   );
 }

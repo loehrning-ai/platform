@@ -256,7 +256,7 @@ export function GlobalVsLocal() {
             {localShap === null ? (
               <p
                 className="prose"
-                style={{ fontSize: 11, padding: "8px 0", opacity: 0.5 }}
+                style={{ fontSize: 12, padding: "8px 0", opacity: 0.5 }}
               >
                 {text(
                   "Select a data point to see its local explanation.",

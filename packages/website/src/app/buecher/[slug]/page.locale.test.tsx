@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { createElement } from "react";
 import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -62,6 +64,7 @@ describe("book detail locale metadata and UI", () => {
     ).toBeVisible();
     expect(screen.getByText("Material language")).toBeVisible();
     expect(screen.getAllByText("English").length).toBeGreaterThan(0);
+    expect(screen.getByText(/by Tim Löhr/)).toBeVisible();
 
     const contents = screen.getByRole("navigation", {
       name: "Table of contents",
@@ -75,6 +78,7 @@ describe("book detail locale metadata and UI", () => {
     expect(chapterLinks[0]).toHaveAttribute("hreflang", "en");
     expect(chapterLinks[0]).toHaveAttribute("lang", "en");
     expect(chapterLinks[0]).toHaveTextContent("The iceberg problem");
+    expect(chapterLinks[0]).toHaveClass("min-h-16");
 
     expect(screen.getByRole("link", { name: "Back to books" })).toHaveAttribute(
       "href",
@@ -103,5 +107,18 @@ describe("book detail locale metadata and UI", () => {
         }),
       ]),
     });
+  });
+
+  it("uses a compact flat overview while preserving server-owned metadata", () => {
+    const source = readFileSync(
+      resolve(process.cwd(), "src/app/buecher/[slug]/page.tsx"),
+      "utf8",
+    );
+
+    expect(source).toContain("priority");
+    expect(source).toContain('id="book-detail-jsonld"');
+    expect(source).not.toMatch(/text-\[(?:9|10|11)(?:\.\d+)?px\]/);
+    expect(source).not.toMatch(/rounded-(?:lg|xl|2xl|3xl|full)/);
+    expect(source).not.toMatch(/shadow-|motion-safe|animate-/);
   });
 });

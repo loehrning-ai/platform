@@ -140,7 +140,7 @@ export function BloomFilter({ lessonId, cpId }: BloomFilterProps): JSX.Element {
 
   return (
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-3 sm:p-5 md:p-6">
-      <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {locale === "de" ? "Modell · Bloom-Filter" : "Model · Bloom filter"}{" "}
         {done ? "✓" : ""}
       </p>
@@ -174,12 +174,12 @@ export function BloomFilter({ lessonId, cpId }: BloomFilterProps): JSX.Element {
           aria-label={locale === "de" ? "Schlüssel hinzufügen" : "key to add"}
           value={addValue}
           onChange={(e) => setAddValue(e.target.value)}
-          className="border-2 border-border bg-background px-2 py-1.5 font-mono text-[12px]"
+          className="min-h-11 border-2 border-border bg-background px-2 py-1.5 font-mono text-[12px]"
         />
         <button
           type="button"
           onClick={add}
-          className="border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
+          className="min-h-11 border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
         >
           {locale === "de" ? "+ hinzufügen" : "+ add"}
         </button>
@@ -187,12 +187,12 @@ export function BloomFilter({ lessonId, cpId }: BloomFilterProps): JSX.Element {
           aria-label={locale === "de" ? "Schlüssel prüfen" : "key to check"}
           value={checkValue}
           onChange={(e) => setCheckValue(e.target.value)}
-          className="border-2 border-border bg-background px-2 py-1.5 font-mono text-[12px]"
+          className="min-h-11 border-2 border-border bg-background px-2 py-1.5 font-mono text-[12px]"
         />
         <button
           type="button"
           onClick={check}
-          className="border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90"
+          className="min-h-11 border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90"
         >
           {locale === "de" ? "prüfen" : "? check"}
         </button>
@@ -200,13 +200,13 @@ export function BloomFilter({ lessonId, cpId }: BloomFilterProps): JSX.Element {
           type="button"
           onClick={resetAll}
           className={cn(
-            "border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60",
+            "min-h-11 border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60",
           )}
         >
           {locale === "de" ? "zurücksetzen" : "reset"}
         </button>
       </div>
-      <p className="mt-2 font-mono text-[11px] text-muted-foreground">
+      <p className="mt-2 font-mono text-xs text-muted-foreground">
         {locale === "de" ? "Einträge" : "added"}{" "}
         <b className="text-foreground">{added}</b> ·{" "}
         {locale === "de" ? "gesetzte Bits" : "bits set"}{" "}

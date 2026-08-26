@@ -26,7 +26,7 @@ export function EuAiActInline({ firstMention, testId }: EuAiActInlineProps) {
         className="inline-flex flex-wrap items-baseline gap-2"
       >
         <span className="font-semibold text-foreground">EU AI Act</span>
-        <span className="inline-block border border-border/60 bg-card/60 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+        <span className="inline-block border border-border/60 bg-card/60 px-2 py-0.5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
           {entry.short}
         </span>
       </span>

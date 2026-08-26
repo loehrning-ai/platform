@@ -25,10 +25,15 @@ import { DemoCta } from "./demo-cta";
  */
 function lessonLabel(
   lessonId: string,
-  labels: { readonly module: string; readonly lesson: string; readonly block: string },
+  labels: {
+    readonly module: string;
+    readonly lesson: string;
+    readonly block: string;
+  },
 ): string {
   const moduleMatch = lessonId.match(/^modul_(\d+)_lesson_(\d+)$/);
-  if (moduleMatch) return `${labels.module} ${moduleMatch[1]} · ${labels.lesson} ${moduleMatch[2]}`;
+  if (moduleMatch)
+    return `${labels.module} ${moduleMatch[1]} · ${labels.lesson} ${moduleMatch[2]}`;
   const blockMatch = lessonId.match(/^block_(\d+)$/);
   if (blockMatch) return `${labels.block} ${blockMatch[1]}`;
   return lessonId;
@@ -40,7 +45,11 @@ function lessonLabel(
  * - ki-fuehrerschein: /ki-fuehrerschein/kurs/block_2
  * - eu-ai-act-kurs: /eu-ai-act-kurs/kurs/block_2
  */
-function lessonHref(courseSlug: string, basePath: string, lessonId: string): string {
+function lessonHref(
+  courseSlug: string,
+  basePath: string,
+  lessonId: string,
+): string {
   const moduleMatch = lessonId.match(/^(modul_\d+)_lesson_\d+$/);
   if (moduleMatch) return `${basePath}/kurs/${moduleMatch[1]}/${lessonId}`;
   return `${basePath}/kurs/${lessonId}`;
@@ -56,120 +65,119 @@ export function DemoDetailLayout({
   const copy = getDemoCopy(demo.slug, locale);
   const pageCopy = DEMOS_PAGE_COPY[locale].detail;
   const next = getNextDemoForLocale(demo, locale);
-  const baseCourse = COURSE_CATALOG.find((item) => item.slug === demo.courseSlug);
-  const course = baseCourse ? localizeCatalogCourse(baseCourse, locale) : undefined;
+  const baseCourse = COURSE_CATALOG.find(
+    (item) => item.slug === demo.courseSlug,
+  );
+  const course = baseCourse
+    ? localizeCatalogCourse(baseCourse, locale)
+    : undefined;
   const relatedBooks = demo.bookSlugs
     .map((slug) => books.find((book) => book.id === slug))
     .filter((book): book is (typeof books)[number] => book !== undefined);
 
   const stufe = pageCopy.stages[demo.level];
-  const lessonLink = demo.lessonId && course
-    ? lessonHref(demo.courseSlug, course.href, demo.lessonId)
-    : (course?.startHref ?? "/kurse");
-  const lessonDisplay = demo.lessonId ? lessonLabel(demo.lessonId, pageCopy) : null;
+  const lessonLink =
+    demo.lessonId && course
+      ? lessonHref(demo.courseSlug, course.href, demo.lessonId)
+      : (course?.startHref ?? "/kurse");
+  const lessonDisplay = demo.lessonId
+    ? lessonLabel(demo.lessonId, pageCopy)
+    : null;
   const catalogHref = localizeHref("/demos", locale);
   const categoryLabel = DEMO_CATEGORY_LABELS[locale][demo.category];
   const levelLabel = DEMO_LEVEL_LABELS_BY_LOCALE[locale][demo.level];
   const localizedLessonLink = localizeHref(lessonLink, locale);
-  const localizedCourseLink = localizeHref(course?.startHref ?? "/kurse", locale);
+  const localizedCourseLink = localizeHref(
+    course?.startHref ?? "/kurse",
+    locale,
+  );
 
   return (
-    <article className="min-h-[100svh] overflow-x-clip pt-20">
-      {/* Breadcrumb */}
-      <div className="border-b border-border/40 bg-card/10 px-4 py-3 sm:px-6 md:px-10">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-[0.11em] text-muted-foreground sm:text-xs sm:tracking-[0.14em]">
-          <Link
-            href={catalogHref}
-            className="inline-flex min-h-11 items-center gap-2 hover:text-foreground"
-          >
-            <ArrowLeft size={12} strokeWidth={2.5} />
-            {pageCopy.allExamples}
-          </Link>
-          <span className="break-words text-right">
-            {pageCopy.example} {demo.n} · {categoryLabel} · {levelLabel}
-          </span>
-        </div>
-      </div>
-
-      {/* Kurskontext banner — visible without scrolling, primary navigation signal */}
-      <div className="border-b border-brand-orange/30 bg-brand-orange/5 px-4 py-3 sm:px-6 md:px-10">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4">
-          <div className="flex min-w-0 flex-wrap items-center gap-3">
-            <BookOpen
-              size={14}
-              strokeWidth={2}
-              className="shrink-0 text-brand-orange"
-              aria-hidden="true"
-            />
-            <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-              {pageCopy.courseContext}
-            </div>
-            <div className="min-w-0 break-words font-mono text-[11px] text-foreground">
-              <span className="font-bold text-brand-orange">
-                {course ? course.title : demo.courseSlug}
-              </span>
-              {lessonDisplay && (
-                <span className="text-muted-foreground"> · {lessonDisplay}</span>
-              )}
-              <span className="ml-0 mt-1 inline-block border border-border bg-card/40 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.08em] text-muted-foreground sm:ml-3 sm:mt-0 sm:tracking-[0.1em]">
-                {pageCopy.pathway} · {stufe}
-              </span>
-            </div>
+    <article className="min-h-[100svh] overflow-x-clip">
+      <header className="border-b border-border bg-background px-4 sm:px-6 md:px-10">
+        <div className="mx-auto max-w-6xl">
+          <div className="flex min-h-11 flex-wrap items-center justify-between gap-2 font-mono text-xs uppercase tracking-[0.11em] text-muted-foreground sm:tracking-[0.14em]">
+            <Link
+              href={catalogHref}
+              className="inline-flex min-h-11 items-center gap-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+            >
+              <ArrowLeft size={14} strokeWidth={2.5} aria-hidden="true" />
+              {pageCopy.allExamples}
+            </Link>
+            <span className="break-words text-right">
+              {pageCopy.example} {demo.n} · {categoryLabel} · {levelLabel}
+            </span>
           </div>
-          <div className="flex flex-wrap items-center gap-4">
+
+          <div className="grid gap-2 border-t border-border py-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-4">
+            <div className="flex min-w-0 items-start gap-3">
+              <BookOpen
+                size={16}
+                strokeWidth={2}
+                className="mt-0.5 shrink-0 text-brand-orange"
+                aria-hidden="true"
+              />
+              <div className="min-w-0">
+                <div className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                  {pageCopy.courseContext}
+                </div>
+                <div className="mt-1 break-words text-sm text-foreground">
+                  <span className="font-bold text-brand-orange">
+                    {course ? course.title : demo.courseSlug}
+                  </span>
+                  {lessonDisplay ? ` · ${lessonDisplay}` : ""} ·{" "}
+                  {pageCopy.pathway} · {stufe}
+                </div>
+              </div>
+            </div>
             <Link
               href={localizedLessonLink}
               prefetch={false}
-              className="inline-flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-brand-orange hover:underline"
+              className="inline-flex min-h-11 items-center gap-2 border border-border px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.1em] text-foreground hover:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
             >
               {pageCopy.toLesson}
-              <ArrowUpRight size={11} strokeWidth={2.5} />
-            </Link>
-            <Link
-              href={catalogHref}
-              className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground hover:text-foreground"
-            >
-              {pageCopy.toGallery}
-              <ArrowUpRight size={11} strokeWidth={2.5} />
+              <ArrowUpRight size={14} strokeWidth={2.5} aria-hidden="true" />
             </Link>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Hero */}
-      <section className="px-4 py-12 sm:px-6 md:px-10 md:py-16">
+      <section className="px-4 py-6 sm:px-6 sm:py-8 md:px-10">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="border border-brand-orange bg-brand-orange/10 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-brand-orange">
+            <span className="border border-brand-orange bg-brand-orange/10 px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
               {categoryLabel}
             </span>
-            <span className="border border-foreground/40 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-foreground">
+            <span className="border border-border px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground">
               {levelLabel}
             </span>
-            {demo.illustrative && (
+            {demo.illustrative ? (
               <span
-                className="border border-foreground/20 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground"
+                className="border border-border px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground"
                 title={pageCopy.illustrativeTitle}
               >
                 ◆ {pageCopy.illustrative}
               </span>
-            )}
+            ) : null}
           </div>
-          <h1 className="mt-5 max-w-5xl break-words text-[clamp(2.25rem,8vw,4.75rem)] font-bold leading-[0.98] tracking-[-0.04em]">
+          <h1 className="mt-3 max-w-5xl break-words text-[clamp(2.25rem,6vw,3.75rem)] font-bold leading-[0.98] tracking-[-0.04em]">
             {demo.title}{" "}
             <span className="text-brand-orange">{demo.titleKicker}</span>
           </h1>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
             {demo.description}
           </p>
-          <div className="mt-3 max-w-3xl break-words font-mono text-[11px] uppercase leading-5 tracking-[0.1em] text-muted-foreground sm:text-xs sm:tracking-[0.12em]">
+          <div className="mt-3 max-w-4xl break-words font-mono text-xs uppercase leading-5 tracking-[0.1em] text-muted-foreground">
             ◆ {demo.background}
           </div>
         </div>
       </section>
 
-      {/* Interactive demo */}
-      <section className="border-y border-border/40 bg-card/10 px-2 py-8 sm:px-4 sm:py-10 md:px-10">
+      <section
+        data-demo-instrument
+        className="border-y border-border bg-card px-2 py-6 sm:px-4 md:px-10"
+        aria-label={`${demo.title} ${demo.titleKicker}`}
+      >
         <div className="mx-auto max-w-6xl">
           <EvidenceBadge
             evidenceMode={demo.evidenceMode}
@@ -180,162 +188,169 @@ export function DemoDetailLayout({
         </div>
       </section>
 
-      {/* Learning CTAs */}
-      <section className="border-b border-border/40 px-4 py-8 sm:px-6 md:px-10">
-        <div className="mx-auto flex max-w-6xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-            {pageCopy.continueLearning}
-          </div>
-          <div className="grid gap-3 sm:flex sm:flex-wrap">
-            <Link
-              href={localizedCourseLink}
-              prefetch={false}
-              className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
-            >
-              {course ? pageCopy.openCourse(course.title) : pageCopy.openSuitableCourse}
-              <ArrowUpRight size={14} strokeWidth={2.5} />
-            </Link>
-            <Link
-              href="#demo-notes"
-              className="inline-flex items-center gap-2 border-2 border-foreground bg-background px-5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-foreground shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
-            >
-              {pageCopy.inspectAssumptions}
-              <ArrowUpRight size={14} strokeWidth={2.5} />
-            </Link>
-            {relatedBooks.slice(0, 1).map((book) => (
-              <Link
-                key={book.id}
-                href={localizeHref(book.readerHref, locale)}
-                className="inline-flex items-center gap-2 border-2 border-foreground bg-background px-5 py-2.5 text-xs font-bold uppercase tracking-[0.08em] text-foreground shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
-              >
-                {pageCopy.readBook}
-                <ArrowUpRight size={14} strokeWidth={2.5} />
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Meta + Why */}
-      <section id="demo-notes" className="scroll-mt-24 px-4 py-12 sm:px-6 md:px-10">
-        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:gap-14">
+      <section
+        id="demo-notes"
+        data-demo-notes
+        className="scroll-mt-24 px-4 py-8 sm:px-6 md:px-10"
+      >
+        <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-2 lg:gap-8">
           <div className="min-w-0">
-            <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+            <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
               {pageCopy.practiceData}
             </div>
-            <h2 className="mt-1 text-2xl font-bold tracking-[-0.02em]">
+            <h2 className="mt-2 text-2xl font-bold tracking-[-0.02em]">
               {pageCopy.outputHeading}
             </h2>
-            <div className="mt-5">
+            <div className="mt-4">
               <AnimatedMetaTable meta={demo.meta} locale={locale} />
             </div>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {demo.tags.map((t) => (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {demo.tags.map((tag) => (
                 <span
-                  key={t}
-                  className="border border-border bg-card/40 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground"
+                  key={tag}
+                  className="border border-border bg-card px-2.5 py-1 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground"
                 >
-                  {t}
+                  {tag}
                 </span>
               ))}
             </div>
           </div>
+
           <div className="min-w-0">
-            <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+            <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
               {pageCopy.learningContext}
             </div>
-            <h2 className="mt-1 text-2xl font-bold tracking-[-0.02em]">
+            <h2 className="mt-2 text-2xl font-bold tracking-[-0.02em]">
               {pageCopy.sandboxScenario}
             </h2>
-            {copy && (
+            {copy ? (
               <>
-                <p className="mt-5 text-base leading-relaxed text-foreground/90">{copy.why}</p>
-                <div className="mt-6 border-l-4 border-brand-orange bg-card/30 p-4">
-                  <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+                <p className="mt-4 text-sm leading-relaxed text-foreground sm:text-base">
+                  {copy.why}
+                </p>
+                <div className="mt-4 border border-border border-l-[3px] border-l-brand-orange bg-card p-4">
+                  <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
                     ◆ {pageCopy.illustrative}
                   </div>
-                  <p className="mt-2 text-sm leading-relaxed text-foreground">{copy.proof}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-foreground">
+                    {copy.proof}
+                  </p>
                 </div>
               </>
-            )}
-            <div className="mt-6 border border-border bg-background p-4">
-              <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+            ) : null}
+            <div className="mt-4 border border-border bg-background p-4">
+              <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
                 {pageCopy.sandboxBoundary}
               </div>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 {demo.syntheticDataLabel}
               </p>
-              {demo.riskNotes.length > 0 && (
-                <ul className="mt-3 space-y-1 text-sm leading-relaxed text-muted-foreground">
+              {demo.riskNotes.length > 0 ? (
+                <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted-foreground">
                   {demo.riskNotes.map((note) => (
-                    <li key={note} className="grid grid-cols-[0.75rem_minmax(0,1fr)] gap-1">
+                    <li
+                      key={note}
+                      className="grid grid-cols-[0.75rem_minmax(0,1fr)] gap-1"
+                    >
                       <span aria-hidden="true">/</span>
                       <span className="min-w-0 break-words">{note}</span>
                     </li>
                   ))}
                 </ul>
-              )}
+              ) : null}
             </div>
-            <div className="mt-6">
-              <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+
+            <details className="mt-4 border border-border bg-background">
+              <summary className="flex min-h-11 cursor-pointer items-center px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange">
                 {pageCopy.workContexts}
-              </div>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {demo.industries.map((i) => (
+              </summary>
+              <div className="flex flex-wrap gap-2 border-t border-border p-3">
+                {demo.industries.map((industry) => (
                   <Link
-                    key={i}
-                    href={localizeHref(`/demos?industry=${encodeURIComponent(i)}`, locale)}
-                    className="min-h-11 break-words border border-border bg-background px-2.5 py-2.5 font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-foreground hover:border-brand-orange hover:text-brand-orange"
+                    key={industry}
+                    href={localizeHref(
+                      `/demos?industry=${encodeURIComponent(industry)}`,
+                      locale,
+                    )}
+                    className="inline-flex min-h-11 min-w-11 items-center justify-center break-words border border-border bg-background px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground hover:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
                   >
-                    {i}
+                    {industry}
                   </Link>
                 ))}
               </div>
-            </div>
-            {relatedBooks.length > 0 && (
-              <div className="mt-6 border border-border bg-background p-4">
-                <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+            </details>
+
+            {relatedBooks.length > 0 ? (
+              <details className="mt-3 border border-border bg-background">
+                <summary className="flex min-h-11 cursor-pointer items-center px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange">
                   {pageCopy.relatedBooks}
-                </div>
-                <div className="mt-3 space-y-2">
+                </summary>
+                <div className="grid gap-px border-t border-border bg-border">
                   {relatedBooks.map((book) => (
                     <Link
                       key={book.id}
                       href={localizeHref(book.readerHref, locale)}
-                      className="flex items-center justify-between gap-3 border border-border bg-card/30 px-3 py-2 text-sm font-medium text-foreground hover:border-brand-orange hover:text-brand-orange"
+                      className="flex min-h-11 items-center justify-between gap-3 bg-background px-3 py-2 text-sm font-medium text-foreground hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange"
                     >
                       <span className="min-w-0 break-words">
                         {locale === "en" && book.id === "ki-landschaft"
                           ? "AI in German small and medium-sized businesses"
                           : book.title}
                       </span>
-                      <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
+                      <span className="shrink-0 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
                         {pageCopy.publicLabel}
                       </span>
                     </Link>
                   ))}
                 </div>
-              </div>
-            )}
+              </details>
+            ) : null}
           </div>
         </div>
       </section>
 
-      {/* Next demo */}
-      <section className="border-t border-border/40 bg-card/10 px-4 py-10 sm:px-6 md:px-10">
-        <div className="mx-auto flex max-w-6xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <section
+        data-demo-continuation
+        className="border-y border-border bg-card px-4 py-6 sm:px-6 md:px-10"
+      >
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
+            <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+              {pageCopy.continueLearning}
+            </div>
+            <div className="mt-1 break-words text-sm font-semibold text-foreground">
+              {course ? course.title : demo.courseSlug}
+            </div>
+          </div>
+          <Link
+            href={localizedCourseLink}
+            prefetch={false}
+            className="inline-flex min-h-11 items-center gap-2 border border-brand-orange bg-brand-orange px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-white hover:border-foreground hover:bg-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+          >
+            {course
+              ? pageCopy.openCourse(course.title)
+              : pageCopy.openSuitableCourse}
+            <ArrowUpRight size={14} strokeWidth={2.5} aria-hidden="true" />
+          </Link>
+        </div>
+      </section>
+
+      <section className="px-4 py-6 sm:px-6 md:px-10">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <div className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+            <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
               {pageCopy.nextExample} · {next.n}
             </div>
-            <div className="mt-1 text-xl font-bold tracking-[-0.02em]">
-              {next.title} <span className="text-brand-orange">{next.titleKicker}</span>
+            <div className="mt-1 text-lg font-bold tracking-[-0.02em]">
+              {next.title}{" "}
+              <span className="text-brand-orange">{next.titleKicker}</span>
             </div>
           </div>
           <DemoCta
             slug={demo.slug}
             target="next-demo"
             href={localizeHref(`/demos/${next.slug}?source=next-demo`, locale)}
+            variant="secondary"
           >
             {pageCopy.next}
           </DemoCta>

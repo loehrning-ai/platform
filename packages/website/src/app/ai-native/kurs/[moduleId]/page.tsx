@@ -73,15 +73,15 @@ export default async function AiNativeModulePage({ params }: PageProps) {
   return (
     <>
       {/* Module hero */}
-      <section className="bg-background py-14 md:py-20">
+      <section className="bg-background py-12">
         <div className="mx-auto max-w-[960px] px-6 lg:px-12">
           <nav
-            aria-label="Breadcrumb"
-            className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
+            aria-label={isEnglish ? "Breadcrumb" : "Brotkrümelnavigation"}
+            className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground"
           >
             <Link
               href={localizeHref("/ai-native", locale)}
-              className="transition-colors hover:text-brand-orange"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center transition-colors hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               {isEnglish ? "Course" : "Kurs"}
             </Link>
@@ -101,7 +101,7 @@ export default async function AiNativeModulePage({ params }: PageProps) {
             <div className="min-w-0 flex-[1_1_260px]">
               <div className="mb-2.5 flex flex-wrap items-center gap-3.5">
                 <TierChip tier="FREE" locale={locale} />
-                <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                <span className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
                   {mod.subtitle} · {lessons.length}{" "}
                   {isEnglish ? "lessons" : "Lektionen"} · {mod.durationMinutes}{" "}
                   {isEnglish ? "min" : "Min."}
@@ -120,7 +120,11 @@ export default async function AiNativeModulePage({ params }: PageProps) {
           {mod.voiceAnchor && (
             <div className="mt-12">
               <VoiceAnchor
-                author={`Voice-Anchor · Modul ${mod.number}`}
+                author={
+                  isEnglish
+                    ? `Voice anchor · Module ${mod.number}`
+                    : `Voice-Anchor · Modul ${mod.number}`
+                }
                 className="text-foreground"
               >
                 {mod.voiceAnchor}
@@ -135,11 +139,11 @@ export default async function AiNativeModulePage({ params }: PageProps) {
       </section>
 
       {/* Lesson list */}
-      <section className="py-16 md:py-20">
+      <section className="py-12">
         <div className="mx-auto max-w-[960px] px-6 lg:px-12">
           <div className="flex flex-wrap items-baseline justify-between gap-5">
             <div>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-orange">
+              <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-brand-orange">
                 {isEnglish ? "Contents" : "Inhalt"}
               </p>
               <h2
@@ -149,7 +153,7 @@ export default async function AiNativeModulePage({ params }: PageProps) {
                 {isEnglish ? "Lessons" : "Lektionen"}
               </h2>
             </div>
-            <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+            <span className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
               {lessons.length} {isEnglish ? "entries" : "Einträge"}
             </span>
           </div>
@@ -173,7 +177,7 @@ export default async function AiNativeModulePage({ params }: PageProps) {
                         <h3 className="min-w-0 break-words text-[17px] font-semibold tracking-[-0.01em] text-foreground">
                           {lesson.title}
                         </h3>
-                        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+                        <span className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
                           · {isEnglish ? "free" : "frei"}
                         </span>
                       </div>
@@ -195,13 +199,13 @@ export default async function AiNativeModulePage({ params }: PageProps) {
           </ol>
 
           {/* Prev / Next module navigation */}
-          <div className="mt-16 grid gap-6 border-t border-border pt-8 sm:grid-cols-2">
+          <div className="mt-12 grid gap-6 border-t border-border pt-8 sm:grid-cols-2">
             {prev ? (
               <Link
                 href={localizeHref(`/ai-native/kurs/${prev.id}`, locale)}
-                className="group block"
+                className="group flex min-h-11 flex-col justify-center focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
-                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+                <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
                   ← {isEnglish ? "Previous" : "Vorher"}
                 </p>
                 <p className="mt-1.5 text-[16px] font-semibold tracking-[-0.01em] text-foreground transition-colors group-hover:text-brand-orange">
@@ -214,9 +218,9 @@ export default async function AiNativeModulePage({ params }: PageProps) {
             {next ? (
               <Link
                 href={localizeHref(`/ai-native/kurs/${next.id}`, locale)}
-                className="group block text-right"
+                className="group flex min-h-11 flex-col justify-center text-right focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
-                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-brand-orange">
+                <p className="font-mono text-xs uppercase tracking-[0.14em] text-brand-orange">
                   {isEnglish ? "Next" : "Nächstes"} →
                 </p>
                 <p className="mt-1.5 text-[16px] font-semibold tracking-[-0.01em] text-foreground transition-colors group-hover:text-brand-orange">

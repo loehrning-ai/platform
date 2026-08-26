@@ -1,12 +1,11 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
-  describe,
-  it,
-  expect,
-  vi,
-  beforeEach,
-  afterEach,
-} from "vitest";
-import { render, screen, cleanup, act, fireEvent } from "@testing-library/react";
+  render,
+  screen,
+  cleanup,
+  act,
+  fireEvent,
+} from "@testing-library/react";
 import type { ReactElement, ReactNode } from "react";
 
 /**
@@ -27,10 +26,11 @@ import type { ReactElement, ReactNode } from "react";
  * accessible name is the label text - exactly what the nav exposes.
  */
 
-const { mockCreateBrowserSupabaseClient, mockHasSupabasePublicConfig } = vi.hoisted(() => ({
-  mockCreateBrowserSupabaseClient: vi.fn(),
-  mockHasSupabasePublicConfig: vi.fn(),
-}));
+const { mockCreateBrowserSupabaseClient, mockHasSupabasePublicConfig } =
+  vi.hoisted(() => ({
+    mockCreateBrowserSupabaseClient: vi.fn(),
+    mockHasSupabasePublicConfig: vi.fn(),
+  }));
 
 vi.mock("@/lib/supabase/browser", () => ({
   createBrowserSupabaseClient: mockCreateBrowserSupabaseClient,
@@ -182,16 +182,17 @@ describe("<AuthStatus>", () => {
     );
   });
 
-  it("adds the 44px mobile touch-target classes only when mobile is set", () => {
+  it("keeps a 44px target at every breakpoint and softens the mobile border", () => {
     mockCreateBrowserSupabaseClient.mockReturnValue(null);
 
     const { rerender } = renderGerman(<AuthStatus mobile />);
     const mobileLink = screen.getByRole("link");
-    expect(mobileLink.className).toContain("min-h-[44px]");
+    expect(mobileLink.className).toContain("min-h-11");
     expect(mobileLink.className).toContain("border-border");
 
     rerender(<AuthStatus />);
-    expect(screen.getByRole("link").className).not.toContain("min-h-[44px]");
+    expect(screen.getByRole("link").className).toContain("min-h-11");
+    expect(screen.getByRole("link").className).not.toContain("border-border");
   });
 
   it("notifies the mobile navigation shell before following its link", () => {
@@ -222,13 +223,16 @@ describe("<AuthStatus>", () => {
       new Error("learner@example.com provider-secret"),
     );
     mockCreateBrowserSupabaseClient.mockReturnValue(sb.client);
-    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
 
     renderGerman(<AuthStatus />);
 
-    expect(
-      await screen.findByRole("link", { name: /login/i }),
-    ).toHaveAttribute("href", "/login");
+    expect(await screen.findByRole("link", { name: /login/i })).toHaveAttribute(
+      "href",
+      "/login",
+    );
     await act(async () => {
       await Promise.resolve();
     });
@@ -300,13 +304,16 @@ describe("<AuthStatus>", () => {
     mockCreateBrowserSupabaseClient.mockImplementation(() => {
       throw new Error("provider-url-with-secret");
     });
-    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
 
     renderGerman(<AuthStatus />);
 
-    expect(
-      await screen.findByRole("link", { name: /login/i }),
-    ).toHaveAttribute("href", "/login");
+    expect(await screen.findByRole("link", { name: /login/i })).toHaveAttribute(
+      "href",
+      "/login",
+    );
     await act(async () => {
       await Promise.resolve();
     });
@@ -328,9 +335,8 @@ describe("<AuthStatus>", () => {
       "href",
       "/en/login",
     );
-    expect(await screen.findByRole("link", { name: "Account" })).toHaveAttribute(
-      "href",
-      "/en/konto",
-    );
+    expect(
+      await screen.findByRole("link", { name: "Account" }),
+    ).toHaveAttribute("href", "/en/konto");
   });
 });

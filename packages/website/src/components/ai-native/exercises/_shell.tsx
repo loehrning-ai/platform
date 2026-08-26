@@ -8,12 +8,23 @@ import {
   type ReactNode,
 } from "react";
 import { m } from "framer-motion";
-import { AlertTriangle, ArrowRight, CheckCircle2, RotateCcw } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowRight,
+  CheckCircle2,
+  RotateCcw,
+} from "lucide-react";
 import {
   getExerciseResult,
   saveExerciseResult,
   isExerciseCompleted,
 } from "@/lib/ai-native/progress";
+import { getLearningOwnerContext } from "@/lib/progress/browser-learning-storage";
+import {
+  getOwnerRequiredHint,
+  persistForActiveLearningOwner,
+  useOwnerAwareProgressReadiness,
+} from "@/components/course/owner-aware-progress";
 import { reportClientBoundaryError } from "@/lib/observability/client-boundary-error";
 import { useDemoLocale } from "@/components/demos/demo-locale";
 import type {
@@ -61,9 +72,18 @@ interface ExerciseSubmitOptions {
   readonly aiFeedback?: readonly AiRubricEntry[];
   readonly summary?: string;
   readonly gradingSource?: GradingSource;
+  readonly expectedOwnerGeneration?: number;
 }
 
-export function submitExercise(opts: ExerciseSubmitOptions): void {
+export function submitExercise(opts: ExerciseSubmitOptions): boolean {
+  const owner = getLearningOwnerContext();
+  if (
+    owner.kind === "unknown" ||
+    (opts.expectedOwnerGeneration !== undefined &&
+      owner.generation !== opts.expectedOwnerGeneration)
+  ) {
+    return false;
+  }
   const result: ExerciseResult = {
     exerciseId: opts.exerciseId,
     kind: opts.kind,
@@ -76,7 +96,13 @@ export function submitExercise(opts: ExerciseSubmitOptions): void {
     ...(opts.summary ? { summary: opts.summary } : {}),
     ...(opts.gradingSource ? { gradingSource: opts.gradingSource } : {}),
   };
-  saveExerciseResult(opts.moduleId, opts.lessonId, result);
+  let durable = false;
+  return persistForActiveLearningOwner(
+    () => {
+      durable = saveExerciseResult(opts.moduleId, opts.lessonId, result);
+    },
+    () => durable && isExerciseCompleted(opts.lessonId, opts.exerciseId),
+  );
 }
 
 export function ExerciseShell({
@@ -92,34 +118,59 @@ export function ExerciseShell({
   const isEnglish = locale === "en";
   const [completed, setCompleted] = useState(false);
   const [prevScore, setPrevScore] = useState<number | null>(null);
+  const [readyIdentity, setReadyIdentity] = useState<string | null>(null);
+  const [loadedOwnerGeneration, setLoadedOwnerGeneration] = useState<
+    number | null
+  >(null);
+  const identity = `ai-native:${lessonId}:${exerciseId}`;
+  const readiness = useOwnerAwareProgressReadiness(
+    identity,
+    readyIdentity,
+    loadedOwnerGeneration,
+  );
 
   useEffect(() => {
-    const result = getExerciseResult(lessonId, exerciseId);
-    if (result?.completed) setCompleted(true);
+    const owner = getLearningOwnerContext();
+    const resolved = owner.kind !== "unknown";
+    const result = resolved
+      ? getExerciseResult(lessonId, exerciseId)
+      : undefined;
+    setCompleted(result?.completed === true);
     setPrevScore(result?.score ?? null);
-    const alreadyDone = isExerciseCompleted(lessonId, exerciseId);
-    if (alreadyDone) setCompleted(true);
-  }, [lessonId, exerciseId]);
+    if (resolved && isExerciseCompleted(lessonId, exerciseId)) {
+      setCompleted(true);
+    }
+    setLoadedOwnerGeneration(owner.generation);
+    setReadyIdentity(identity);
+  }, [exerciseId, identity, lessonId, readiness.checkpointKey]);
 
   const handleSkip = () => {
-    submitExercise({
-      moduleId,
-      lessonId,
-      exerciseId,
-      kind,
-      score: null,
-      skipped: true,
-    });
-    setCompleted(true);
+    if (
+      submitExercise({
+        moduleId,
+        lessonId,
+        exerciseId,
+        kind,
+        score: null,
+        skipped: true,
+      })
+    ) {
+      setCompleted(true);
+    }
   };
+
+  const exerciseCompleted = readiness.interactionReady && completed;
 
   return (
     <ExerciseErrorBoundary
+      key={readiness.checkpointKey}
       fallback={
         <ExerciseFallback
           title={title}
           onSkip={handleSkip}
           isEnglish={isEnglish}
+          interactionReady={readiness.interactionReady}
+          ownerHint={getOwnerRequiredHint(locale)}
         />
       }
     >
@@ -129,15 +180,15 @@ export function ExerciseShell({
         data-exercise-kind={kind}
       >
         <div className="mb-3 flex flex-wrap items-baseline justify-between gap-3">
-          <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
             ◆ {text("Übung", "Exercise")} · {kindLabel(kind, isEnglish)}
           </p>
-          {completed && (
+          {exerciseCompleted && (
             <m.span
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
-              className="inline-flex items-center gap-1.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-risk-green"
+              className="inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-risk-green"
             >
               <CheckCircle2 size={12} />
               {prevScore != null
@@ -152,15 +203,36 @@ export function ExerciseShell({
         <p className="mb-5 max-w-[640px] text-[14px] leading-[1.6] text-muted-foreground">
           {scenario}
         </p>
-        <div className="mt-4">{children}</div>
+        {readiness.hydrated && !readiness.ownerReady ? (
+          <p
+            className="mt-4 border-l-2 border-brand-orange pl-3 text-[13px] text-muted-foreground"
+            role="status"
+          >
+            {getOwnerRequiredHint(locale)}
+          </p>
+        ) : null}
+        <fieldset
+          className="m-0 min-w-0 border-0 p-0 disabled:opacity-60"
+          disabled={!readiness.interactionReady}
+          aria-busy={!readiness.hydrated || undefined}
+        >
+          <div
+            className="mt-4"
+            inert={!readiness.interactionReady || undefined}
+          >
+            {children}
+          </div>
+        </fieldset>
 
         {/* Escape hatch */}
-        {!completed && (
+        {!exerciseCompleted && (
           <div className="mt-5 border-t border-dashed border-border pt-4">
             <button
               type="button"
               onClick={handleSkip}
-              className="inline-flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-brand-orange"
+              disabled={!readiness.interactionReady}
+              aria-busy={!readiness.hydrated || undefined}
+              className="inline-flex min-h-11 items-center gap-1.5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-brand-orange"
             >
               {text("Ich hab's verstanden → weiter", "Understood, continue")}
               <ArrowRight size={11} />
@@ -180,7 +252,9 @@ function kindLabel(kind: ExerciseKind, isEnglish: boolean): string {
     "exercise-prompt-diff": "Prompt-Diff",
     "exercise-workflow-builder": "Workflow-Builder",
     "exercise-role-scenario": "Role-Scenario",
-    "exercise-rctfc-checklist": isEnglish ? "RCTFC checklist" : "RCTFC-Checkliste",
+    "exercise-rctfc-checklist": isEnglish
+      ? "RCTFC checklist"
+      : "RCTFC-Checkliste",
     "exercise-free-response": isEnglish ? "Free response" : "Freie Antwort",
   };
   return labels[kind];
@@ -190,31 +264,47 @@ function ExerciseFallback({
   title,
   onSkip,
   isEnglish,
+  interactionReady,
+  ownerHint,
 }: {
   readonly title: string;
   readonly onSkip: () => void;
   readonly isEnglish: boolean;
+  readonly interactionReady: boolean;
+  readonly ownerHint: string;
 }): JSX.Element {
   return (
     <div className="border border-destructive bg-destructive/5 p-5">
       <div className="flex items-start gap-3">
         <AlertTriangle size={18} className="mt-0.5 shrink-0 text-destructive" />
         <div className="flex-1">
-          <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-destructive">
-            {isEnglish ? "Exercise currently unavailable" : "Übung aktuell nicht verfügbar"}
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-destructive">
+            {isEnglish
+              ? "Exercise currently unavailable"
+              : "Übung aktuell nicht verfügbar"}
           </p>
-          <h3 className="mt-1 text-[16px] font-bold text-foreground">{title}</h3>
+          <h3 className="mt-1 text-[16px] font-bold text-foreground">
+            {title}
+          </h3>
           <p className="mt-2 text-[13.5px] leading-[1.55] text-muted-foreground">
             {isEnglish
               ? "This exercise cannot be evaluated right now. You can continue; it will be recorded as skipped."
               : "Diese Übung lässt sich gerade nicht auswerten. Du kannst weiterlernen; sie wird als übersprungen markiert."}
           </p>
+          {!interactionReady ? (
+            <p className="mt-2 text-[13px] text-muted-foreground" role="status">
+              {ownerHint}
+            </p>
+          ) : null}
           <button
             type="button"
             onClick={onSkip}
-            className="mt-3 inline-flex items-center gap-1.5 border border-foreground bg-transparent px-3 py-1.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.12em] text-foreground transition-colors hover:bg-foreground hover:text-background"
+            disabled={!interactionReady}
+            className="mt-3 inline-flex min-h-11 items-center gap-1.5 border border-foreground bg-transparent px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground transition-colors hover:bg-foreground hover:text-background"
           >
-            {isEnglish ? "Understood, continue" : "Ich hab's verstanden → weiter"}
+            {isEnglish
+              ? "Understood, continue"
+              : "Ich hab's verstanden → weiter"}
             <ArrowRight size={11} />
           </button>
         </div>
@@ -263,7 +353,7 @@ export function ExerciseResetButton({
     <button
       type="button"
       onClick={onReset}
-      className="inline-flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-brand-orange"
+      className="inline-flex min-h-11 items-center gap-1.5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-brand-orange"
     >
       <RotateCcw size={11} />
       {text("Nochmal", "Try again")}

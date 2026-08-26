@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, beforeAll } from "vitest";
+import { describe, it, expect, beforeEach, beforeAll, vi } from "vitest";
 
 /**
  * Minimal localStorage polyfill for the test environment.
@@ -36,12 +36,20 @@ function installLocalStoragePolyfill() {
 import { AI_NATIVE_SCHEMA_VERSION, AI_NATIVE_STORAGE_KEY } from "./types";
 import { UNIFIED_STORAGE_KEY } from "@/lib/progress/types";
 import {
+  completeCheckpoint,
+  markSectionRead as markUnifiedSectionRead,
+  saveLessonQuizScore,
   saveExerciseResult as saveUnifiedExerciseResult,
 } from "@/lib/progress/store";
+import {
+  CANONICAL_SECTION_IDS,
+  lessonCompletionEvidenceCheckpointId,
+} from "@/lib/courses/completion";
 import { isAppliedProjectCompleted } from "@/lib/course-projects/applied-completion";
 import { getCourseProjectIdentity } from "@/lib/course-projects/identity";
 import { serializeCourseProjectProgress } from "@/lib/course-projects/persistence";
 import { verifiedCourseProjectArtifact } from "@/lib/course-projects/test-artifact";
+import { getRecentEvents } from "./analytics";
 import {
   markSectionRead,
   isSectionRead,
@@ -65,6 +73,20 @@ import {
 
 const CANONICAL_LESSON_ID = "modul_1_lesson_1";
 const CANONICAL_SECTION_ID = "modul_1_lesson_1_section_1";
+
+function recordCurrentLessonEvidence(lessonId: string): void {
+  for (const sectionId of CANONICAL_SECTION_IDS["ai-native"][lessonId] ?? []) {
+    markUnifiedSectionRead("ai-native", lessonId, sectionId);
+  }
+  if (lessonId !== "modul_3_lesson_0") {
+    saveLessonQuizScore("ai-native", lessonId, 1, 1);
+  }
+  completeCheckpoint(
+    lessonId,
+    lessonCompletionEvidenceCheckpointId("ai-native"),
+  );
+  markLessonCompleted(lessonId);
+}
 
 function encodeImportPayload(payload: unknown): string {
   return btoa(JSON.stringify(payload))
@@ -93,30 +115,15 @@ describe("ai-native progress", () => {
       expect(isSectionRead(CANONICAL_LESSON_ID, CANONICAL_SECTION_ID)).toBe(
         false,
       );
-      markSectionRead(
-        "modul_1",
-        CANONICAL_LESSON_ID,
-        CANONICAL_SECTION_ID,
-        0,
-      );
+      markSectionRead("modul_1", CANONICAL_LESSON_ID, CANONICAL_SECTION_ID, 0);
       expect(isSectionRead(CANONICAL_LESSON_ID, CANONICAL_SECTION_ID)).toBe(
         true,
       );
     });
 
     it("is idempotent on repeated marks", () => {
-      markSectionRead(
-        "modul_1",
-        CANONICAL_LESSON_ID,
-        CANONICAL_SECTION_ID,
-        0,
-      );
-      markSectionRead(
-        "modul_1",
-        CANONICAL_LESSON_ID,
-        CANONICAL_SECTION_ID,
-        0,
-      );
+      markSectionRead("modul_1", CANONICAL_LESSON_ID, CANONICAL_SECTION_ID, 0);
+      markSectionRead("modul_1", CANONICAL_LESSON_ID, CANONICAL_SECTION_ID, 0);
       // Writes now flow into the unified store under the "ai-native" slug.
       const raw = JSON.parse(
         window.localStorage.getItem(UNIFIED_STORAGE_KEY) as string,
@@ -135,8 +142,8 @@ describe("ai-native progress", () => {
     });
 
     it("counts completed lessons across module", () => {
-      markLessonCompleted("modul_1_lesson_1");
-      markLessonCompleted("modul_1_lesson_2");
+      recordCurrentLessonEvidence("modul_1_lesson_1");
+      recordCurrentLessonEvidence("modul_1_lesson_2");
       expect(
         getModuleCompletedLessonCount("modul_1", [
           "modul_1_lesson_1",
@@ -149,9 +156,9 @@ describe("ai-native progress", () => {
     it("areAllModuleLessonsCompleted requires all completed", () => {
       const ids = ["modul_1_lesson_1", "modul_1_lesson_2"];
       expect(areAllModuleLessonsCompleted(ids)).toBe(false);
-      markLessonCompleted("modul_1_lesson_1");
+      recordCurrentLessonEvidence("modul_1_lesson_1");
       expect(areAllModuleLessonsCompleted(ids)).toBe(false);
-      markLessonCompleted("modul_1_lesson_2");
+      recordCurrentLessonEvidence("modul_1_lesson_2");
       expect(areAllModuleLessonsCompleted(ids)).toBe(true);
     });
 
@@ -164,9 +171,9 @@ describe("ai-native progress", () => {
     });
 
     it("getOverallProgress returns rounded percentage", () => {
-      markLessonCompleted("modul_1_lesson_1");
-      markLessonCompleted("modul_1_lesson_2");
-      markLessonCompleted("modul_1_lesson_3");
+      recordCurrentLessonEvidence("modul_1_lesson_1");
+      recordCurrentLessonEvidence("modul_1_lesson_2");
+      recordCurrentLessonEvidence("modul_1_lesson_3");
       expect(getOverallProgress(10)).toBe(30);
     });
   });
@@ -232,6 +239,36 @@ describe("ai-native progress", () => {
         skipped: false,
       });
       expect(isExerciseCompleted("modul_1_lesson_1", "ex_1")).toBe(true);
+    });
+
+    it("does not track a submission when durable storage rejects it", () => {
+      const exerciseId = "rejected-exercise-event";
+      const setItem = vi
+        .spyOn(window.localStorage, "setItem")
+        .mockImplementation(() => {
+          throw new DOMException("quota", "QuotaExceededError");
+        });
+
+      expect(
+        saveExerciseResult("modul_1", "modul_1_lesson_1", {
+          exerciseId,
+          kind: "exercise-fix-prompt",
+          completed: true,
+          score: 1,
+          attempts: 1,
+          completedAt: null,
+          skipped: false,
+        }),
+      ).toBe(false);
+      expect(
+        getRecentEvents().some(
+          ({ event }) =>
+            event.name === "ai_native_exercise_submit" &&
+            event.props.exerciseId === exerciseId,
+        ),
+      ).toBe(false);
+
+      setItem.mockRestore();
     });
   });
 
@@ -345,9 +382,9 @@ describe("ai-native progress", () => {
 
         expect(deserializeProgress(encoded)).toBe(null);
         expect(importProgress(encoded)).toBe(false);
-        expect(
-          isSectionRead(CANONICAL_LESSON_ID, CANONICAL_SECTION_ID),
-        ).toBe(false);
+        expect(isSectionRead(CANONICAL_LESSON_ID, CANONICAL_SECTION_ID)).toBe(
+          false,
+        );
       },
     );
 
@@ -466,8 +503,7 @@ describe("ai-native progress", () => {
         quizTotal: 4,
       });
       expect(
-        progress.lessons[CANONICAL_LESSON_ID].exercisesCompleted.ex_1
-          .attempts,
+        progress.lessons[CANONICAL_LESSON_ID].exercisesCompleted.ex_1.attempts,
       ).toBe(5);
       expect(progress.capstoneSubmitted).toBe(true);
     });
@@ -561,7 +597,9 @@ describe("ai-native progress", () => {
     it("buildProgressUrl returns hash-fragment URL with encoded progress", () => {
       markLessonCompleted("modul_1_lesson_1");
       const url = buildProgressUrl("https://example.com/ai-native");
-      expect(url).toMatch(/^https:\/\/example\.com\/ai-native#ai-native-progress=/);
+      expect(url).toMatch(
+        /^https:\/\/example\.com\/ai-native#ai-native-progress=/,
+      );
     });
 
     it("sanitizeForExport excludes completedAt (privacy constraint)", () => {
@@ -618,9 +656,9 @@ describe("ai-native progress", () => {
       __resetCacheForTests();
       // First read migrates the legacy payload forward.
       expect(isLessonCompleted("modul_1_lesson_1")).toBe(true);
-      expect(
-        isSectionRead(CANONICAL_LESSON_ID, CANONICAL_SECTION_ID),
-      ).toBe(true);
+      expect(isSectionRead(CANONICAL_LESSON_ID, CANONICAL_SECTION_ID)).toBe(
+        true,
+      );
       // The legacy key is NOT wiped (recoverable).
       expect(window.localStorage.getItem(AI_NATIVE_STORAGE_KEY)).not.toBe(null);
     });

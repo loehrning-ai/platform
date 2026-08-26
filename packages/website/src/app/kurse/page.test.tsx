@@ -7,15 +7,9 @@ vi.mock("@/lib/i18n/request-locale", () => ({
   getRequestLocale: vi.fn(() => Promise.resolve(localeState.value)),
 }));
 
-vi.mock("./course-gallery", () => ({
-  CourseGallery: ({ locale }: { readonly locale: "de" | "en" }) => (
-    <div data-testid="course-gallery">{locale}</div>
-  ),
-}));
-
-vi.mock("./persona-filter", () => ({
-  PersonaCourseLinks: ({ locale }: { readonly locale: "de" | "en" }) => (
-    <nav aria-label="persona links" data-locale={locale} />
+vi.mock("./learning-atlas", () => ({
+  LearningAtlas: ({ locale }: { readonly locale: "de" | "en" }) => (
+    <div data-testid="learning-atlas" data-locale={locale} />
   ),
 }));
 
@@ -26,7 +20,7 @@ describe("course hub introduction", () => {
     localeState.value = "de";
   });
 
-  it("puts the diagnostic and learner routes directly before the catalogue", async () => {
+  it("puts the diagnostic and learning atlas in the first route section", async () => {
     render(await KursePage());
 
     expect(
@@ -36,22 +30,24 @@ describe("course hub introduction", () => {
       }),
     ).toBeVisible();
     expect(
-      screen.getByText(/Vier Grundlagenkurse bilden den Lernpfad/),
-    ).toBeVisible();
+      screen.queryByText(/Vier Grundlagenkurse bilden das Fundament/),
+    ).not.toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: "In fünf Minuten einordnen" }),
     ).toHaveAttribute("href", "/ki-check");
 
-    const personaLinks = screen.getByRole("navigation", {
-      name: "persona links",
+    const diagnostic = screen.getByRole("link", {
+      name: "In fünf Minuten einordnen",
     });
-    const gallery = screen.getByTestId("course-gallery");
+    const atlas = screen.getByTestId("learning-atlas");
     expect(
-      personaLinks.compareDocumentPosition(gallery) &
+      diagnostic.compareDocumentPosition(atlas) &
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
 
-    expect(screen.queryByText("Was ist der Unterschied?")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Was ist der Unterschied?"),
+    ).not.toBeInTheDocument();
     expect(
       screen.queryByRole("navigation", { name: "Lernangebote" }),
     ).not.toBeInTheDocument();
@@ -62,12 +58,12 @@ describe("course hub introduction", () => {
     render(await KursePage());
 
     expect(
-      screen.getByText(/Four foundation courses form the learning path/),
-    ).toBeVisible();
+      screen.queryByText(/Four foundation courses establish the base/),
+    ).not.toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: "Map it in five minutes" }),
     ).toHaveAttribute("href", "/en/ki-check");
-    expect(screen.getByRole("navigation", { name: "persona links" })).toHaveAttribute(
+    expect(screen.getByTestId("learning-atlas")).toHaveAttribute(
       "data-locale",
       "en",
     );

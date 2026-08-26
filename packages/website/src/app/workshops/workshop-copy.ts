@@ -15,30 +15,18 @@ export interface WorkshopPageCopy {
     readonly headingLead: string;
     readonly headingSecond: string;
     readonly introduction: (count: number) => string;
-    readonly principles: readonly {
-      readonly label: string;
-      readonly body: string;
-    }[];
     readonly available: string;
     readonly availableDescription: string;
     readonly empty: string;
-    readonly learningPathKicker: string;
-    readonly learningPathHeading: string;
-    readonly learningPathBody: string;
-    readonly viewCourses: string;
+    readonly decision: string;
+    readonly proofTarget: string;
+    readonly proofOutput: string;
     readonly duration: string;
     readonly steps: string;
-    readonly audiences: string;
     readonly materials: string;
-    readonly downloads: string;
+    readonly stepCount: (count: number) => string;
+    readonly materialCount: (count: number) => string;
     readonly openWorkshop: string;
-    readonly cardFacts: (args: {
-      format: string;
-      duration: string;
-      steps: number;
-      audiences: number;
-      materials: number;
-    }) => string;
   };
   readonly detail: {
     readonly navigation: string;
@@ -72,10 +60,11 @@ export interface WorkshopPageCopy {
   };
 }
 
-const NUMBER_WORDS: Readonly<Record<Locale, Readonly<Record<number, string>>>> = {
-  de: { 4: "vier", 5: "fünf", 6: "sechs", 7: "sieben", 8: "acht", 9: "neun" },
-  en: { 4: "Four", 5: "Five", 6: "Six", 7: "Seven", 8: "Eight", 9: "Nine" },
-};
+const NUMBER_WORDS: Readonly<Record<Locale, Readonly<Record<number, string>>>> =
+  {
+    de: { 4: "vier", 5: "fünf", 6: "sechs", 7: "sieben", 8: "acht", 9: "neun" },
+    en: { 4: "Four", 5: "Five", 6: "Six", 7: "Seven", 8: "Eight", 9: "Nine" },
+  };
 
 export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
   de: {
@@ -92,42 +81,23 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       detailTitleSuffix: "Workshop",
     },
     catalog: {
-      kicker: "Selbstlern-Workshops · Zum Nachbauen",
+      kicker: "Entscheidungswerkstatt · Selbstgeführt",
       headingLead: "Selbstlern-Workshops",
       headingSecond: "für konkrete Entscheidungen.",
       introduction: (count) =>
-        `${count} geführte${count === 1 ? "r Workshop" : " Workshops"} mit vollständigem Fall, nachvollziehbarem Ablauf und Material zum Nachbauen. Benötigte Werkzeuge und Voraussetzungen stehen direkt am Einstieg.`,
-      principles: [
-        {
-          label: "Geführter Ablauf",
-          body: "Jeder Schritt benennt Aufgabe, Werkzeug und erwartetes Ergebnis. Es gibt keinen Termin und keine Buchung.",
-        },
-        {
-          label: "Prüfbare Grundlage",
-          body: "Fiktive Daten sind als solche markiert. Reale Fallstudien nennen Unternehmen, Zeitraum, Quelle und Grenzen.",
-        },
-        {
-          label: "Wiederverwendbares Material",
-          body: "Browserfassung und Dateien sind ohne Konto abrufbar. Sprache und Dateiformat stehen am jeweiligen Material.",
-        },
-      ],
-      available: "Verfügbare Workshops",
-      availableDescription:
-        "Direkt im Browser, ohne Konto. Benötigte externe Werkzeuge stehen auf der jeweiligen Workshop-Seite.",
+        `${count} geführte${count === 1 ? "r Fall" : " Fälle"}. Erst entscheiden, dann Belege prüfen und die Methode auf den eigenen Kontext übertragen.`,
+      available: "Wähle die Entscheidung",
+      availableDescription: "Jeder Fall beginnt direkt im Entscheidungslabor.",
       empty: "Derzeit ist kein Workshop veröffentlicht.",
-      learningPathKicker: "Workshops im Lernpfad",
-      learningPathHeading: "Grundlagen zuerst. Anwendung danach.",
-      learningPathBody:
-        "Die Kurse erklären Begriffe und Grenzen. Die Workshops wenden sie auf einen abgegrenzten Fall an.",
-      viewCourses: "Kurse ansehen",
+      decision: "Deine erste Entscheidung",
+      proofTarget: "Ergebnis",
+      proofOutput: "Entscheidung + Beleg",
       duration: "Dauer",
       steps: "Schritte",
-      audiences: "Zielgruppen",
       materials: "Material",
-      downloads: "Dateien",
+      stepCount: (count) => `${count} Schritte`,
+      materialCount: (count) => `${count} ${count === 1 ? "Datei" : "Dateien"}`,
       openWorkshop: "Workshop öffnen",
-      cardFacts: ({ format, duration, steps, audiences, materials }) =>
-        `${format}. Dauer: ${duration}. ${steps} Schritte. ${audiences} Zielgruppen. ${materials} Dateien.`,
     },
     detail: {
       navigation: "Workshopnavigation",
@@ -144,7 +114,8 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       download: "Download",
       openInBrowser: "Im Browser öffnen",
       language: "Sprache",
-      materialLanguageNote: "Das Material selbst bleibt in der angegebenen Sprache.",
+      materialLanguageNote:
+        "Das Material selbst bleibt in der angegebenen Sprache.",
       practiceCase: "Der Übungsfall",
       syntheticCase: "Synthetisches Fallbeispiel",
       realCompanyData: "Echte Unternehmensdaten",
@@ -180,42 +151,23 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       detailTitleSuffix: "Workshop",
     },
     catalog: {
-      kicker: "Self-study workshops · Rebuild the method",
+      kicker: "Decision workshop · Self-guided",
       headingLead: "Self-study workshops",
       headingSecond: "for concrete decisions.",
       introduction: (count) =>
-        `${count} guided workshop${count === 1 ? "" : "s"} with a complete case, a traceable sequence, and reusable materials. Required tools and prerequisites are stated before you start.`,
-      principles: [
-        {
-          label: "Guided sequence",
-          body: "Every step names the task, tool, and expected result. There is no scheduled session and no booking flow.",
-        },
-        {
-          label: "Traceable evidence",
-          body: "Fictional data is labelled. Real cases state the company, reporting period, source, and limitations.",
-        },
-        {
-          label: "Reusable materials",
-          body: "Browser exercises and files are available without an account. Each item states its language and format.",
-        },
-      ],
-      available: "Available workshops",
-      availableDescription:
-        "Open them directly in the browser without an account. Each workshop page states any external tool requirements.",
+        `${count} guided case${count === 1 ? "" : "s"}. Decide first, test the evidence, then transfer the method to your own context.`,
+      available: "Choose the decision",
+      availableDescription: "Every case opens directly in the decision lab.",
       empty: "No workshop is currently published.",
-      learningPathKicker: "Workshops in the learning path",
-      learningPathHeading: "Learn the concepts. Then apply them.",
-      learningPathBody:
-        "The courses explain terms and limitations. The workshops apply them to a bounded decision case.",
-      viewCourses: "View courses",
+      decision: "Your first decision",
+      proofTarget: "Output",
+      proofOutput: "Decision + evidence",
       duration: "Duration",
       steps: "Steps",
-      audiences: "Audiences",
       materials: "Materials",
-      downloads: "Files",
+      stepCount: (count) => `${count} steps`,
+      materialCount: (count) => `${count} file${count === 1 ? "" : "s"}`,
       openWorkshop: "Open workshop",
-      cardFacts: ({ format, duration, steps, audiences, materials }) =>
-        `${format}. Duration: ${duration}. ${steps} steps. ${audiences} audience groups. ${materials} files.`,
     },
     detail: {
       navigation: "Workshop navigation",
@@ -232,7 +184,8 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       download: "Download",
       openInBrowser: "Open in browser",
       language: "Language",
-      materialLanguageNote: "The material itself remains in the stated language.",
+      materialLanguageNote:
+        "The material itself remains in the stated language.",
       practiceCase: "Practice case",
       syntheticCase: "Synthetic case",
       realCompanyData: "Real company data",
@@ -256,7 +209,11 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
   },
 };
 
-export function materialLanguageLabel(locale: Locale, materialLanguage: Locale): string {
-  if (locale === "de") return materialLanguage === "de" ? "Deutsch" : "Englisch";
+export function materialLanguageLabel(
+  locale: Locale,
+  materialLanguage: Locale,
+): string {
+  if (locale === "de")
+    return materialLanguage === "de" ? "Deutsch" : "Englisch";
   return materialLanguage === "de" ? "German" : "English";
 }

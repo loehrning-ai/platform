@@ -1,5 +1,10 @@
 import { test, expect, type Page } from "@playwright/test";
-import { CANONICAL_LESSON_IDS } from "../../src/lib/courses/completion";
+import {
+  CANONICAL_LESSON_IDS,
+  CANONICAL_SECTION_IDS,
+  lessonCompletionEvidenceCheckpointId,
+} from "../../src/lib/courses/completion";
+import { checkpointKey } from "../../src/lib/progress/types";
 
 /**
  * Claude Course golden path: home -> lesson -> checkpoint
@@ -23,7 +28,7 @@ const VERIFY_ROUTE = "/en/kurse/open-source/claude/verifizierung";
 
 const UNIFIED_KEY = "loehrning-progress-v2";
 
-/** A complete unified-store payload with an optional current-format quiz pass. */
+/** A complete evidence-backed payload with an optional current-format quiz pass. */
 function completedClaudeState(quizPassed: boolean) {
   const now = new Date().toISOString();
   return {
@@ -34,7 +39,7 @@ function completedClaudeState(quizPassed: boolean) {
           CANONICAL_LESSON_IDS.claude.map((lessonId) => [
             lessonId,
             {
-              sectionsRead: [],
+              sectionsRead: [...CANONICAL_SECTION_IDS.claude[lessonId]],
               quizScore: null,
               quizTotal: null,
               completed: true,
@@ -53,7 +58,12 @@ function completedClaudeState(quizPassed: boolean) {
       },
     },
     xp: 50,
-    checkpoints: {},
+    checkpoints: Object.fromEntries(
+      CANONICAL_LESSON_IDS.claude.map((lessonId) => [
+        checkpointKey(lessonId, lessonCompletionEvidenceCheckpointId("claude")),
+        true,
+      ]),
+    ),
     badges: {},
     streak: { days: 1, last: now.slice(0, 10) },
     lastActivity: now,

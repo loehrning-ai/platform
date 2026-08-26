@@ -7,12 +7,12 @@ export function CareerTimeline({ locale }: { readonly locale: Locale }) {
   return (
     <section
       id="laufbahn"
-      className="border-t border-border py-20 sm:py-24"
+      className="border-t border-border py-12"
       aria-labelledby="career-heading"
     >
-      <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(14rem,0.34fr)_minmax(0,1fr)] lg:gap-14 lg:px-10">
+      <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[minmax(14rem,0.34fr)_minmax(0,1fr)] lg:gap-12 lg:px-10">
         <header className="min-w-0 lg:sticky lg:top-24 lg:self-start">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-brand-orange">
             {copy.eyebrow}
           </p>
           <h2
@@ -40,7 +40,7 @@ export function CareerTimeline({ locale }: { readonly locale: Locale }) {
                 }`}
               >
                 <div className="flex items-start justify-between gap-4">
-                  <span className="font-mono text-[11px] font-bold tabular-nums text-muted-foreground">
+                  <span className="font-mono text-xs font-bold tabular-nums text-muted-foreground">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <span
@@ -68,7 +68,7 @@ export function CareerTimeline({ locale }: { readonly locale: Locale }) {
                   {milestone.description}
                 </p>
                 {current ? (
-                  <p className="mt-6 inline-flex border border-brand-orange px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-brand-orange">
+                  <p className="mt-6 inline-flex border border-brand-orange px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
                     {copy.currentLabel}
                   </p>
                 ) : null}

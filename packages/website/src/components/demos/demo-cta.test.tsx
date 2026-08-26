@@ -8,8 +8,8 @@ import { trackDemoCta } from "@/lib/analytics";
  * demo-cta.test.tsx (regression coverage)
  *
  * DemoCta is the retro-button link used across the /demos surfaces. Its only
- * logic is (1) the variant -> className switch (primary = orange fill + offset
- * shadow recipe, secondary = plain outline) and (2) firing
+ * logic is (1) the variant -> className switch (primary = orange fill,
+ * secondary = plain outline) and (2) firing
  * trackDemoCta(slug, target) on click. next/link renders a plain <a> under
  * jsdom, so we assert the real href, the real class recipe per variant, and the
  * analytics call. @/lib/analytics is mocked so the console.debug dispatcher does
@@ -59,7 +59,7 @@ describe("<DemoCta>", () => {
     expect(link).toHaveTextContent("Kurs öffnen");
   });
 
-  it("uses the primary (orange fill + offset shadow) recipe by default", () => {
+  it("uses the flat primary recipe by default", () => {
     render(
       <DemoCta slug="excel" target="kurs" href="/kurse">
         Weiter
@@ -67,8 +67,9 @@ describe("<DemoCta>", () => {
     );
     const cls = screen.getByRole("link").className;
     expect(cls).toContain("bg-brand-orange");
-    expect(cls).toContain("border-2");
-    expect(cls).toContain("shadow-[3px_3px_0_0_var(--color-foreground)]");
+    expect(cls).toContain("min-h-11");
+    expect(cls).toContain("border-brand-orange");
+    expect(cls).not.toContain("shadow-");
   });
 
   it("uses the plain outline recipe (no orange fill) for the secondary variant", () => {
@@ -85,8 +86,8 @@ describe("<DemoCta>", () => {
     const cls = screen.getByRole("link").className;
     expect(cls).not.toContain("bg-brand-orange");
     expect(cls).not.toContain("border-2");
-    expect(cls).toContain("transition-colors");
-    expect(cls).toContain("hover:bg-foreground");
+    expect(cls).toContain("border-border");
+    expect(cls).toContain("min-h-11");
   });
 
   it("fires trackDemoCta with the slug and target on click", () => {
@@ -101,6 +102,9 @@ describe("<DemoCta>", () => {
     );
     fireEvent.click(screen.getByRole("link"));
     expect(trackDemoCta).toHaveBeenCalledTimes(1);
-    expect(trackDemoCta).toHaveBeenCalledWith("rag-vertragsassistent", "lektion");
+    expect(trackDemoCta).toHaveBeenCalledWith(
+      "rag-vertragsassistent",
+      "lektion",
+    );
   });
 });

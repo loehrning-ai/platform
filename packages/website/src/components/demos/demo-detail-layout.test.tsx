@@ -135,6 +135,26 @@ describe("<DemoDetailLayout>", () => {
     expect(screen.getByText(excel.syntheticDataLabel)).toBeInTheDocument();
   });
 
+  it("places the instrument before evidence notes and the single primary continuation", () => {
+    const { container } = render(<DemoDetailLayout demo={excel} />);
+    const orderedSections = Array.from(
+      container.querySelectorAll(
+        "[data-demo-instrument], [data-demo-notes], [data-demo-continuation]",
+      ),
+    ).map((element) =>
+      element.hasAttribute("data-demo-instrument")
+        ? "instrument"
+        : element.hasAttribute("data-demo-notes")
+          ? "notes"
+          : "continuation",
+    );
+
+    expect(orderedSections).toEqual(["instrument", "notes", "continuation"]);
+    const continuation = container.querySelector("[data-demo-continuation]");
+    expect(continuation?.querySelectorAll("a")).toHaveLength(1);
+    expect(continuation?.querySelector("a")).toHaveClass("bg-brand-orange");
+  });
+
   it("wires each industry to a filtered gallery link", () => {
     render(<DemoDetailLayout demo={excel} />);
     // excel.industries[0] === 'Controlling' -> /demos?industry=Controlling

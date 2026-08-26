@@ -210,7 +210,6 @@ export function SemanticSpaceWidget({
       title={title}
       scenario={scenario}
       done={done}
-      xpLabel="+15 XP"
     >
       <div
         className="relative w-full overflow-hidden rounded-lg border-2 border-border bg-card/40"
@@ -221,7 +220,7 @@ export function SemanticSpaceWidget({
         {quadrantLabels.map((q) => (
           <span
             key={q.label}
-            className="pointer-events-none absolute select-none font-mono text-[10px] font-semibold uppercase tracking-[0.16em] opacity-50"
+            className="pointer-events-none absolute select-none font-mono text-xs font-semibold uppercase tracking-[0.16em] opacity-50"
             style={{ left: `${q.x}%`, top: `${q.y}%` }}
           >
             {q.label}
@@ -268,14 +267,14 @@ export function SemanticSpaceWidget({
           }}
           placeholder={chrome.placeholder}
           aria-label={chrome.inputAriaLabel}
-          className="min-w-0 flex-1 border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+          className="min-h-11 min-w-0 flex-1 border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
         />
         <button
           type="button"
           onClick={place}
           disabled={!input.trim()}
           className={cn(
-            "w-full border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-foreground shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:hover:translate-x-0 disabled:hover:translate-y-0 sm:w-auto sm:shrink-0",
+            "min-h-11 w-full border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-foreground shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:hover:translate-x-0 disabled:hover:translate-y-0 sm:w-auto sm:shrink-0",
           )}
         >
           {chrome.placeLabel}

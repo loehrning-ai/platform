@@ -139,7 +139,7 @@ export function L07PrXray({
 
   return (
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-5 md:p-6">
-      <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {copy.eyebrow}
       </p>
       <div className="grid min-w-0 gap-5 md:grid-cols-[minmax(0,1fr)_220px]">
@@ -155,7 +155,7 @@ export function L07PrXray({
                   onClick={() => handleClick(lineNumber)}
                   aria-label={`${copy.ariaLine} ${lineNumber}${isFound ? ` (${copy.ariaCaught})` : ""}`}
                   className={cn(
-                    "flex w-full items-start gap-3 px-1.5 py-0.5 text-left font-mono text-[12.5px] transition-colors",
+                    "flex min-h-11 w-full items-start gap-3 px-1.5 py-0.5 text-left font-mono text-[12.5px] transition-colors",
                     isFound && "border border-risk-green bg-risk-green/10",
                     flashLine === lineNumber && "bg-destructive/20",
                     !isFound && "hover:bg-card",
@@ -174,16 +174,16 @@ export function L07PrXray({
           <h3 className="mb-2 font-mono text-[13px] font-bold text-foreground">
             {copy.title}
           </h3>
-          <p className="font-mono text-[11px] text-muted-foreground">
+          <p className="font-mono text-xs text-muted-foreground">
             {copy.bugsCaught}: {found.size} / {TOTAL_BUGS}
           </p>
-          <p className="font-mono text-[11px] text-muted-foreground">
+          <p className="font-mono text-xs text-muted-foreground">
             {copy.falseAlarms}: {falseAlarms}
           </p>
-          <h4 className="mt-3 font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+          <h4 className="mt-3 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
             {copy.caught}:
           </h4>
-          <div className="mt-1 flex flex-col gap-1 font-mono text-[11.5px] text-foreground">
+          <div className="mt-1 flex flex-col gap-1 font-mono text-xs text-foreground">
             {[...found]
               .sort((a, b) => a - b)
               .map((line) => (
@@ -196,7 +196,7 @@ export function L07PrXray({
             )}
           </div>
           {found.size === TOTAL_BUGS && (
-            <p className="mt-3 border-2 border-risk-green bg-risk-green/10 px-2 py-1 font-mono text-[11px] font-bold text-risk-green">
+            <p className="mt-3 border-2 border-risk-green bg-risk-green/10 px-2 py-1 font-mono text-xs font-bold text-risk-green">
               {copy.reviewer} {done ? "✓" : ""}
             </p>
           )}

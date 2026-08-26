@@ -29,10 +29,6 @@ vi.mock("@/lib/course/questions", () => ({
   loadWorkshopQuestions: quizMocks.loadQuestions,
 }));
 
-vi.mock("@/lib/course/progress", () => ({
-  saveWorkshopQuizResult: quizMocks.saveResult,
-}));
-
 vi.mock("@/lib/courses/completion", () => ({
   isCourseFullyCompleted: vi.fn(() => true),
 }));
@@ -60,6 +56,7 @@ vi.mock("@/lib/progress/browser-learning-storage", () => ({
 }));
 
 vi.mock("@/lib/progress/store", () => ({
+  saveWorkshopQuizResultDurably: quizMocks.saveResult,
   subscribe: (listener: (progress: unknown) => void) => {
     quizMocks.progressListener = listener;
     listener({});
@@ -140,6 +137,7 @@ beforeEach(() => {
   quizMocks.ownerListener = null;
   quizMocks.progressListener = null;
   quizMocks.loadQuestions.mockResolvedValue(QUESTIONS);
+  quizMocks.saveResult.mockReturnValue(true);
 });
 
 afterEach(cleanup);
@@ -335,6 +333,40 @@ describe("<WorkshopQuizPage>", () => {
       }),
     ).toBeInTheDocument();
     expect(quizMocks.saveResult).toHaveBeenCalledWith("claude", 1, true);
+  });
+
+  it("does not render a pass or certificate when durable result storage rejects the write", async () => {
+    quizMocks.saveResult.mockReturnValue(false);
+    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+
+    await screen.findByRole("heading", {
+      level: 2,
+      name: "Which answer is correct?",
+    });
+    fireEvent.click(screen.getByRole("radio", { name: /Correct option/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Result" }));
+
+    expect(
+      await screen.findByRole("heading", { name: "Result was not saved." }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "No completion record was unlocked.",
+    );
+    expect(screen.queryByText("100%")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", {
+        name: "Download Certificate of Completion",
+      }),
+    ).not.toBeInTheDocument();
+
+    quizMocks.saveResult.mockReturnValue(true);
+    fireEvent.click(screen.getByRole("button", { name: "Retry saving" }));
+    expect(await screen.findByText("100%")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", {
+        name: "Download Certificate of Completion",
+      }),
+    ).toBeInTheDocument();
   });
 
   it("moves focus to the next question after the animated question swap", async () => {

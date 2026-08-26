@@ -30,10 +30,10 @@ test.describe("Homepage learning-platform transparency", () => {
     await expect(section).toContainText("Stand und Herkunft sichtbar");
     await expect(section).toContainText("Von Tim Löhr redigiert");
     await expect(section).toContainText(
-      "Bücher, Demos, KI-Check und technische Vertiefungen sind öffentlich",
+      "Kein Abo. Vier Reader benötigen ein kostenloses Lernkonto.",
     );
     await expect(section).toContainText(
-      "Für die vier Reader des Grundlagenpfads brauchst du ein kostenloses Konto",
+      "Fakten verweisen auf Quellen. Annahmen und Simulationen sind markiert.",
     );
   });
 
@@ -63,7 +63,7 @@ test.describe("Homepage learning-platform transparency", () => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
     await expect(
-      page.getByRole("link", { name: "KI-Check öffnen" }).first(),
+      page.getByRole("link", { name: "Lernroute wählen" }).first(),
     ).toBeVisible();
     await expect(page.getByTestId("footer-data-pill")).toBeVisible();
   });

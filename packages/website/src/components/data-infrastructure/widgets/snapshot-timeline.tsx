@@ -233,7 +233,7 @@ export function SnapshotTimeline({
 
   return (
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-3 sm:p-5 md:p-6">
-      <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {locale === "de"
           ? "Modell · Iceberg-Snapshots und Zeitreise"
           : "Model · Iceberg snapshots and time travel"}{" "}
@@ -272,7 +272,7 @@ export function SnapshotTimeline({
             {locale === "de" ? "Snapshot" : "snapshot"} @ {current.t}
           </b>
           <span
-            className="border px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase"
+            className="border px-1.5 py-0.5 font-mono text-xs font-bold uppercase"
             style={{
               borderColor: OP_COLOR[current.op],
               color: OP_COLOR[current.op],
@@ -284,13 +284,13 @@ export function SnapshotTimeline({
         <p className="mt-1 break-words text-[13px] text-muted-foreground">
           {currentDescription}
         </p>
-        <pre className="mt-2 whitespace-pre-wrap font-mono text-[10.5px] text-muted-foreground">
+        <pre className="mt-2 whitespace-pre-wrap font-mono text-xs text-muted-foreground">
           {`manifest_list: snap-${1000 + cur}.avro\n${locale === "de" ? "Dateien" : "files"}:        ${current.files.toLocaleString(locale === "de" ? "de-DE" : "en-US")}\n${locale === "de" ? "Bytes" : "bytes"}:          ${current.bytes}\n${locale === "de" ? "Vorgänger" : "parent"}:     ${cur > 0 ? `snap-${999 + cur}` : locale === "de" ? "(keiner)" : "(none)"}`}
         </pre>
       </div>
 
       <div className="mt-4">
-        <p className="mb-1.5 font-mono text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+        <p className="mb-1.5 font-mono text-xs font-bold uppercase tracking-wide text-muted-foreground">
           {locale === "de"
             ? "Snapshot auswählen (mit Tastatur bedienbar)"
             : "Select a snapshot (keyboard accessible)"}
@@ -321,7 +321,7 @@ export function SnapshotTimeline({
                 })
               }
               className={cn(
-                "border-2 px-2 py-1 font-mono text-[10.5px] font-semibold transition-colors",
+                "min-h-11 border-2 px-2 py-1 font-mono text-xs font-semibold transition-colors",
                 i === cur
                   ? "border-foreground bg-brand-orange text-white"
                   : "border-border bg-background text-foreground hover:border-brand-orange/60",
@@ -337,21 +337,21 @@ export function SnapshotTimeline({
         <button
           type="button"
           onClick={() => select(Math.max(0, cur - 1))}
-          className="border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
+          className="min-h-11 border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
         >
           {locale === "de" ? "vorheriger" : "◀ prev"}
         </button>
         <button
           type="button"
           onClick={() => select(Math.min(SNAPS.length - 1, cur + 1))}
-          className="border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
+          className="min-h-11 border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
         >
           {locale === "de" ? "nächster" : "next ▶"}
         </button>
         <button
           type="button"
           onClick={() => select(4)}
-          className="border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90"
+          className="min-h-11 border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90"
         >
           {locale === "de" ? "Rollback auf 12:33" : "⏎ rollback to 12:33"}
         </button>

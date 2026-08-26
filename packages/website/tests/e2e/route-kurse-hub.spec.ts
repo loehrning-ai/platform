@@ -2,14 +2,14 @@ import { test, expect, type Page } from "@playwright/test";
 
 /**
  * /kurse hub smoke + interaction (regression coverage). The unified course hub:
- * four ordered foundation cards with cross-course progress indicators
- * and direct learning-goal recommendations. Assertions target roles and stable
- * test IDs so a wording refresh stays green while a real regression (missing track cards,
- * dead "Kurs starten" CTA, broken progress dots, mobile overflow) fails.
+ * four ordered foundation rows with cross-course progress indicators,
+ * a learning-goal decision, and one explicit next proof. Assertions target roles
+ * and stable test IDs so a wording refresh stays green while a real regression
+ * (missing rows, dead proof CTA, broken progress bars, mobile overflow) fails.
  *
  * Complementary to courses.spec.ts, which already covers the imported
  * open-source lane, link visibility, and axe - this file adds the console-error
- * smoke, a real navigation click into a track, and the persona interaction.
+ * smoke, a real navigation click into a track, and the goal interaction.
  */
 
 const ROUTE = "/kurse";
@@ -61,13 +61,20 @@ test.describe("/kurse hub", () => {
   }) => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
+    // The selected-path instrument intentionally repeats its next course in
+    // the complete ledger. Scope card assertions to the ledger so the test
+    // keeps strict locator semantics while preserving that useful repetition.
+    const allCourses = page.getByRole("region", { name: "Alle Kurse" });
+
     for (const title of NATIVE_TRACKS) {
-      await expect(page.getByRole("heading", { name: title })).toBeVisible();
+      await expect(
+        allCourses.getByRole("heading", { name: title, exact: true }),
+      ).toBeVisible();
     }
 
     await expect(
-      page.getByRole("heading", {
-        level: 2,
+      allCourses.getByRole("heading", {
+        level: 3,
         name: "Grundlagenpfad",
         exact: true,
       }),
@@ -75,7 +82,9 @@ test.describe("/kurse hub", () => {
 
     for (const title of NATIVE_TRACKS) {
       await expect(
-        page.getByRole("progressbar", { name: `Fortschritt ${title}` }),
+        allCourses.getByRole("progressbar", {
+          name: `Fortschritt ${title}`,
+        }),
       ).toBeVisible();
     }
   });
@@ -87,9 +96,9 @@ test.describe("/kurse hub", () => {
     // hydration cancels the client navigation and the URL stays on /kurse.
     await page.goto(ROUTE, { waitUntil: "load" });
 
-    // Fresh visitor → label "Kurs starten", href = startHref of the track.
+    // Fresh visitor → one explicit next proof, href = startHref of the track.
     const startCta = page.getByRole("link", {
-      name: /Kurs starten.*KI-Führerschein/i,
+      name: /Nachweis beginnen.*KI-Führerschein/i,
     });
     await expect(startCta).toBeVisible();
     await expect(startCta).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
@@ -108,37 +117,33 @@ test.describe("/kurse hub", () => {
     expect(url.searchParams.get("reason")).toBe("auth-not-configured");
   });
 
-  test("learning-goal recommendations link directly to the matching courses", async ({
+  test("learning goals reorder the path and expose one matching next proof", async ({
     page,
   }) => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
-    await expect(page.getByTestId("persona-filter")).toBeVisible();
+    const goals = page.getByRole("group", { name: "Lernziel auswählen" });
+    await expect(goals).toBeVisible();
 
-    const recommendations = [
+    const decisions = [
+      ["Sicher starten", "start", "/ki-fuehrerschein/kurs"],
+      ["Folgen beurteilen", "judge", "/ki-und-gesellschaft/kurs"],
+      ["Mit KI bauen", "build", "/ai-native/kurs/modul_1"],
       [
-        "Alltag und sicherer Einsatz: direkt zum Kurs KI-Führerschein",
-        "/ki-fuehrerschein",
-      ],
-      [
-        "Deepfakes und Bias prüfen: direkt zum Kurs KI und Gesellschaft",
-        "/ki-und-gesellschaft",
-      ],
-      [
-        "Pflichten und Risiken einordnen: direkt zum Kurs EU AI Act Kurs",
-        "/eu-ai-act-kurs",
-      ],
-      [
-        "KI-Arbeit strukturieren: direkt zum Kurs AI-Native Arbeitskurs",
-        "/ai-native",
+        "Daten entscheiden",
+        "data",
+        "/kurse/open-source/data-engineering-fundamentals/home",
       ],
     ] as const;
 
-    for (const [name, href] of recommendations) {
-      await expect(page.getByRole("link", { name })).toHaveAttribute(
-        "href",
-        href,
-      );
+    for (const [label, goal, href] of decisions) {
+      const button = goals.getByRole("button", { name: label });
+      await button.click();
+      await expect(button).toHaveAttribute("aria-pressed", "true");
+      await expect(page).toHaveURL(new RegExp(`[?&]goal=${goal}(?:&|$)`));
+      await expect(
+        page.getByTestId("next-proof").getByRole("link"),
+      ).toHaveAttribute("href", href);
     }
   });
 });
@@ -151,8 +156,12 @@ test.describe("/kurse mobile", () => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    const allCourses = page.getByRole("region", { name: "Alle Kurse" });
     await expect(
-      page.getByRole("heading", { name: "KI-Führerschein" }),
+      allCourses.getByRole("heading", {
+        name: "KI-Führerschein",
+        exact: true,
+      }),
     ).toBeVisible();
 
     const { scrollWidth, innerWidth } = await page.evaluate(() => ({
@@ -167,35 +176,23 @@ test.describe("/kurse mobile", () => {
 });
 
 for (const route of ["/kurse", "/en/kurse"] as const) {
-  test(`${route} loads every course-card cover when it enters the viewport`, async ({
+  test(`${route} renders the complete image-free course ledger`, async ({
     page,
   }) => {
-    test.setTimeout(60_000);
     await page.setViewportSize({ width: 390, height: 844 });
     const response = await page.goto(route, { waitUntil: "domcontentloaded" });
     expect(response?.status()).toBe(200);
 
-    const covers = page.locator("main img");
-    await expect(covers).toHaveCount(10);
-    for (let index = 0; index < (await covers.count()); index += 1) {
-      const cover = covers.nth(index);
-      await cover.scrollIntoViewIfNeeded();
-      await expect
-        .poll(
-          () =>
-            cover.evaluate((image) => ({
-              complete: (image as HTMLImageElement).complete,
-              naturalWidth: (image as HTMLImageElement).naturalWidth,
-            })),
-          { timeout: 15_000 },
-        )
-        .toMatchObject({ complete: true });
-      expect(
-        await cover.evaluate(
-          (image) => (image as HTMLImageElement).naturalWidth,
-        ),
-        `${route} cover ${index + 1} must decode to non-zero width`,
-      ).toBeGreaterThan(0);
-    }
+    const atlas = page.getByTestId("learning-atlas");
+    await expect(atlas).toBeVisible();
+    await expect(atlas.locator("[data-course-slug]")).toHaveCount(10);
+    await expect(atlas.locator("img")).toHaveCount(0);
+    await expect(
+      page.getByRole("group", {
+        name: route.startsWith("/en/")
+          ? "Choose a learning goal"
+          : "Lernziel auswählen",
+      }),
+    ).toBeVisible();
   });
 }

@@ -1,7 +1,12 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { PORTED_COURSE_CATALOG } from "../../src/lib/courses/catalog";
-import { CANONICAL_LESSON_IDS } from "../../src/lib/courses/completion";
+import {
+  CANONICAL_LESSON_IDS,
+  CANONICAL_SECTION_IDS,
+  lessonCompletionEvidenceCheckpointId,
+} from "../../src/lib/courses/completion";
+import { checkpointKey } from "../../src/lib/progress/types";
 import { exposeAllAuditedContent } from "./fixtures/a11y-visibility";
 
 /**
@@ -33,12 +38,18 @@ async function assertNoBlockingAxe(page: Page, label: string) {
   // mid-fade reports false color-contrast failures because the opacity tween
   // blends the (AA-safe) token colour toward the card behind it. We honour the
   // page's final, settled state — which is what a real user reads.
-  await page.waitForFunction(() => {
-    const animations = document.getAnimations?.() ?? [];
-    return animations.every((a) => a.playState !== "running");
-  }, null, { timeout: 5_000 }).catch(() => {
-    /* no Web Animations in flight (or unsupported) — proceed */
-  });
+  await page
+    .waitForFunction(
+      () => {
+        const animations = document.getAnimations?.() ?? [];
+        return animations.every((a) => a.playState !== "running");
+      },
+      null,
+      { timeout: 5_000 },
+    )
+    .catch(() => {
+      /* no Web Animations in flight (or unsupported) — proceed */
+    });
   await page.waitForTimeout(150);
   await exposeAllAuditedContent(page);
 
@@ -62,7 +73,9 @@ test.describe("/kurse unified hub", () => {
     expect(PORTED_COURSE_CATALOG).toHaveLength(6);
   });
 
-  test("renders the native progression and ported open-source lane (no 404)", async ({ page }) => {
+  test("renders the native progression and ported open-source lane (no 404)", async ({
+    page,
+  }) => {
     const res = await page.goto("/kurse", { waitUntil: "domcontentloaded" });
     expect(res?.status(), "/kurse should not 404").toBeLessThan(400);
 
@@ -75,9 +88,7 @@ test.describe("/kurse unified hub", () => {
     await expect(page.locator("body")).toContainText("Grundlagenpfad");
     await expect(page.locator("body")).toContainText("Technikkurse");
     for (const course of PORTED_COURSE_CATALOG) {
-      await expect(
-        page.locator("body"),
-      ).toContainText(course.title);
+      await expect(page.locator("body")).toContainText(course.title);
     }
   });
 
@@ -85,9 +96,7 @@ test.describe("/kurse unified hub", () => {
     await page.goto("/kurse", { waitUntil: "domcontentloaded" });
     const main = page.getByRole("main");
     for (const href of ["/ki-fuehrerschein", "/eu-ai-act-kurs", "/ai-native"]) {
-      await expect(
-        main.locator(`a[href^="${href}"]`).first(),
-      ).toBeVisible();
+      await expect(main.locator(`a[href^="${href}"]`).first()).toBeVisible();
     }
     for (const href of [
       "/kurse/open-source/data-engineering-fundamentals",
@@ -102,8 +111,12 @@ test.describe("/kurse unified hub", () => {
   });
 
   for (const course of PORTED_COURSE_CATALOG) {
-    test(`renders native ported detail page: ${course.slug}`, async ({ page }) => {
-      const res = await page.goto(course.href, { waitUntil: "domcontentloaded" });
+    test(`renders native ported detail page: ${course.slug}`, async ({
+      page,
+    }) => {
+      const res = await page.goto(course.href, {
+        waitUntil: "domcontentloaded",
+      });
       expect(res?.status()).toBeLessThan(400);
 
       await expect(page.locator("h1")).toHaveCount(1);
@@ -114,7 +127,9 @@ test.describe("/kurse unified hub", () => {
     });
   }
 
-  test("serves every ported screenshot and license asset", async ({ request }) => {
+  test("serves every ported screenshot and license asset", async ({
+    request,
+  }) => {
     expect(PORTED_COURSE_CATALOG).toHaveLength(6);
     for (const course of PORTED_COURSE_CATALOG) {
       const image = await request.get(course.imageSrc);
@@ -137,13 +152,15 @@ test.describe("/kurse unified hub", () => {
   test("ported-course progress feeds the native progress UI", async ({
     page,
   }) => {
+    const claudeLessonId = CANONICAL_LESSON_IDS.claude[0];
+    const dataScienceLessonId = CANONICAL_LESSON_IDS["data-science"][0];
     await seedProgress(page, {
       schemaVersion: 3,
       courses: {
         claude: {
           lessons: {
-            [CANONICAL_LESSON_IDS.claude[0]]: {
-              sectionsRead: [],
+            [claudeLessonId]: {
+              sectionsRead: [...CANONICAL_SECTION_IDS.claude[claudeLessonId]],
               quizScore: null,
               quizTotal: null,
               completed: true,
@@ -157,7 +174,7 @@ test.describe("/kurse unified hub", () => {
         },
         "data-science": {
           lessons: {
-            [CANONICAL_LESSON_IDS["data-science"][0]]: {
+            [dataScienceLessonId]: {
               sectionsRead: [],
               quizScore: null,
               quizTotal: null,
@@ -172,19 +189,35 @@ test.describe("/kurse unified hub", () => {
         },
       },
       xp: 999,
-      checkpoints: {},
+      checkpoints: {
+        [checkpointKey(
+          claudeLessonId,
+          lessonCompletionEvidenceCheckpointId("claude"),
+        )]: true,
+        [checkpointKey(
+          dataScienceLessonId,
+          lessonCompletionEvidenceCheckpointId("data-science"),
+        )]: true,
+      },
       badges: {},
       streak: { days: 9, last: "2026-06-18" },
       lastActivity: "2026-06-18T00:00:00.000Z",
     });
 
     await page.goto("/kurse", { waitUntil: "domcontentloaded" });
-    // The six ported courses are native since the interactive-courses
-    // migration: stored progress hydrates their dots and the shared
-    // gamification banner exactly like the German spine courses.
-    await expect(page.getByTestId("kurse-gamification")).toBeVisible();
-    await expect(page.getByTestId("progress-dots-claude")).toHaveCount(1);
-    await expect(page.getByTestId("progress-dots-data-science")).toHaveCount(1);
+    // Current-format evidence hydrates the shared progress bars. Historical
+    // raw completion bits deliberately remain excluded from these claims.
+    await expect(page.getByTestId("progress-dots-claude")).toHaveAttribute(
+      "aria-valuenow",
+      "1",
+    );
+    await expect(
+      page.getByTestId("progress-dots-data-science"),
+    ).toHaveAttribute("aria-valuenow", "1");
+    await expect(page.getByTestId("progress-pct-claude")).not.toHaveText("0%");
+    await expect(page.getByTestId("progress-pct-data-science")).not.toHaveText(
+      "0%",
+    );
   });
 
   test("is axe-clean", async ({ page }) => {

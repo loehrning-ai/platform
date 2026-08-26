@@ -39,6 +39,7 @@ export {
   isCertificateEligible,
   isCheckpointDone,
   completeCheckpoint,
+  recordLessonCompletionEvidenceDurably,
   getXp,
   getStreak,
   getEarnedBadgeIds,
@@ -53,5 +54,13 @@ export {
 } from "./store";
 export { useCheckpoint } from "./use-checkpoint";
 export type { UseCheckpointResult } from "./use-checkpoint";
+export {
+  getEvidenceBackedBlockCompletedLessons,
+  getEvidenceBackedCompletedLessonIds,
+  getEvidenceBackedCompletedLessonsCount,
+  getEvidenceBackedOverallProgress,
+  isEvidenceBackedCertificateEligible,
+  isEvidenceBackedLessonCompleted,
+} from "./completion-evidence";
 
 export { isAppliedProjectCompleted } from "@/lib/course-projects/applied-completion";

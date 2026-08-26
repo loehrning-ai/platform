@@ -116,7 +116,7 @@ export function LeakageDetector() {
                 onClick={() => toggle(f.name)}
                 style={{
                   fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: 11,
+                  fontSize: 12,
                   padding: "4px 10px",
                   borderRadius: 4,
                   border: isLeaky
@@ -141,7 +141,8 @@ export function LeakageDetector() {
                         ? "var(--cyan-ink)"
                         : "var(--ink-3)",
                   cursor: "pointer",
-                  transition: "all 0.2s",
+                  transition:
+                    "background-color 200ms, border-color 200ms, color 200ms",
                 }}
               >
                 {f.name}

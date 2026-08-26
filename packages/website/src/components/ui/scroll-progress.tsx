@@ -19,14 +19,6 @@ function ScrollProgressContent() {
           style={{ scaleX: scrollYProgress }}
         />
       </div>
-
-      <div className="absolute bottom-7 right-4 top-20 hidden w-px bg-brand-orange/20 lg:block xl:right-6">
-        <m.div
-          data-scroll-progress-fill="side"
-          className="h-full w-px origin-top bg-brand-orange motion-reduce:hidden"
-          style={{ scaleY: scrollYProgress }}
-        />
-      </div>
     </div>
   );
 }

@@ -1,5 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 import { OPEN_SOURCE_ARTIFACTS } from "../../src/lib/open-source/artifacts";
+import type { Locale } from "../../src/lib/i18n/locale";
+import { SUPPLEMENTAL_A11Y_ROUTE_CASES } from "./fixtures/a11y-route-registry";
 
 /**
  * Landmark / document-structure sweep (regression coverage).
@@ -10,19 +12,25 @@ import { OPEN_SOURCE_ARTIFACTS } from "../../src/lib/open-source/artifacts";
  * that strips a landmark, doubles the <main>, or drops the h1 fails loudly.
  *
  * Assertions target ROLES and the html lang attribute, never copy, so a
- * content refresh stays green. Routes span the public surface and include
- * two (/hilfe, /einstieg) that a11y.spec.ts does not scan.
+ * content refresh stays green. The supplemental route registry is shared with
+ * a11y-routes-new.spec.ts so axe and structure coverage cannot drift apart.
  */
 
-const ROUTES = [
-  "/",
-  "/kurse",
-  "/buecher",
-  "/hilfe",
-  "/ueber-mich",
-  "/einstieg",
-  ...OPEN_SOURCE_ARTIFACTS.map((artifact) => artifact.href),
-] as const;
+const CORE_ROUTE_CASES: readonly {
+  readonly route: string;
+  readonly locale: Locale;
+}[] = [
+  { route: "/", locale: "de" },
+  { route: "/kurse", locale: "de" },
+  { route: "/buecher", locale: "de" },
+  { route: "/ueber-mich", locale: "de" },
+  ...OPEN_SOURCE_ARTIFACTS.map((artifact) => ({
+    route: artifact.href,
+    locale: "de" as const,
+  })),
+];
+
+const ROUTE_CASES = [...CORE_ROUTE_CASES, ...SUPPLEMENTAL_A11Y_ROUTE_CASES];
 
 const TECHNICAL_COURSE_ROUTES = [
   "/kurse/open-source/claude",
@@ -64,14 +72,14 @@ async function structuralOffenders(page: Page) {
 }
 
 test.describe("landmark + structure sweep", () => {
-  for (const route of ROUTES) {
-    test(`${route} exposes one main, one h1, a nav, a footer and lang="de"`, async ({
+  for (const { route, locale } of ROUTE_CASES) {
+    test(`${route} exposes one main, one h1, a nav, a footer and lang="${locale}"`, async ({
       page,
     }) => {
       await page.goto(route, { waitUntil: "domcontentloaded" });
 
       // Document language: assistive-tech pronunciation depends on it.
-      await expect(page.locator("html")).toHaveAttribute("lang", "de");
+      await expect(page.locator("html")).toHaveAttribute("lang", locale);
 
       // Exactly one main landmark. The layout renders a single <main>; a page
       // that nests its own would double it (a real, shipped-before bug class).
@@ -117,10 +125,9 @@ test.describe("landmark + structure sweep", () => {
 
       const heading = page.getByRole("heading", { level: 1 });
       await expect(heading).toBeVisible();
-      await expect(heading.locator("xpath=ancestor-or-self::*[@lang][1]")).toHaveAttribute(
-        "lang",
-        locale,
-      );
+      await expect(
+        heading.locator("xpath=ancestor-or-self::*[@lang][1]"),
+      ).toHaveAttribute("lang", locale);
     });
   }
 });

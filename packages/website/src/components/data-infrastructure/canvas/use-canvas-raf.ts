@@ -4,8 +4,8 @@
 //
 // Ports the source's shared `RAF()` helper (js/data-widgets.js lines 13-25):
 // pause entirely while the tab is hidden (background tabs never burn CPU
-// repainting an offscreen canvas), and throttle to ~4fps under
-// prefers-reduced-motion instead of 60fps. Adds one thing the source never
+// repainting an offscreen canvas), and render only explicit static frames under
+// prefers-reduced-motion. Adds one thing the source never
 // had: a "settled" concept. The source's `loop()` functions call `RAF(loop)`
 // unconditionally at the end of every frame, so every canvas widget animates
 // forever at its target frame rate for as long as it stays mounted, even
@@ -24,8 +24,6 @@
 import { useCallback, useEffect, useRef } from "react";
 
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
-/** ~4fps, matching the source's own reduced-motion cadence. */
-const REDUCED_MOTION_INTERVAL_MS = 250;
 
 function readReducedMotion(): boolean {
   if (typeof window === "undefined" || typeof window.matchMedia !== "function")
@@ -65,7 +63,6 @@ export function useCanvasRAF(
   drawRef.current = draw;
 
   const rafIdRef = useRef<number | null>(null);
-  const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const visibilityListenerRef = useRef<(() => void) | null>(null);
   const scheduledRef = useRef(false);
   const unmountedRef = useRef(false);
@@ -74,10 +71,6 @@ export function useCanvasRAF(
     if (rafIdRef.current != null) {
       cancelAnimationFrame(rafIdRef.current);
       rafIdRef.current = null;
-    }
-    if (timeoutIdRef.current != null) {
-      clearTimeout(timeoutIdRef.current);
-      timeoutIdRef.current = null;
     }
     if (visibilityListenerRef.current) {
       document.removeEventListener(
@@ -108,20 +101,13 @@ export function useCanvasRAF(
 
     const runFrame = (now: number) => {
       rafIdRef.current = null;
-      timeoutIdRef.current = null;
       scheduledRef.current = false;
       if (unmountedRef.current) return;
       const hasPending = drawRef.current(now);
-      if (hasPending) scheduleRef.current();
+      if (hasPending && !readReducedMotion()) scheduleRef.current();
     };
 
-    if (readReducedMotion()) {
-      timeoutIdRef.current = setTimeout(() => {
-        rafIdRef.current = requestAnimationFrame(runFrame);
-      }, REDUCED_MOTION_INTERVAL_MS);
-    } else {
-      rafIdRef.current = requestAnimationFrame(runFrame);
-    }
+    rafIdRef.current = requestAnimationFrame(runFrame);
   };
 
   const wake = useCallback(() => {
@@ -135,7 +121,7 @@ export function useCanvasRAF(
     // (Done Criteria: "a single static frame") — this call is direct, not
     // scheduled through RAF, so it happens before paint.
     const hasPending = drawRef.current(performance.now());
-    if (hasPending) scheduleRef.current();
+    if (hasPending && !readReducedMotion()) scheduleRef.current();
     return () => {
       unmountedRef.current = true;
       clearPending();

@@ -3,12 +3,10 @@ import { cn } from "@/lib/utils";
 import type { ComponentType, ReactNode } from "react";
 
 /*
- * Card — warm surface primitive (CI v3.1).
+ * Card — flat editorial frame for the Berliner Learning Instrument.
  *
- * Replaces the brutalist offset-shadow + hard-corner blocks with a rounded,
- * softly-elevated Birke card. `accent` tints the top border and pairs with an
- * IconTile in the same hue to encode a course track at a glance:
- *   kupfer = Zertifikatskurse · sand = GitHub-Labs · amber = Brainster
+ * A structural 1px boundary carries the surface. The optional 3px top signal
+ * preserves the course-track accents without adding ornamental elevation.
  */
 
 export type CardAccent = "kupfer" | "sand" | "amber" | "none";
@@ -48,10 +46,10 @@ export function Card({
 }: CardProps) {
   const isInteractive = interactive ?? Boolean(href);
   const classes = cn(
-    "group relative flex flex-col rounded-xl border border-border bg-card p-6 shadow-card",
+    "group relative flex flex-col rounded-md border border-border bg-card p-4 sm:p-6",
     ACCENT_BORDER[accent],
     isInteractive &&
-      "transition-[transform,box-shadow,background-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-card-hover hover:shadow-card-hover",
+      "transition-[background-color,border-color] duration-150 ease-out hover:border-brand-orange hover:bg-card-hover",
     className,
   );
 
@@ -82,7 +80,7 @@ interface IconTileProps {
   readonly className?: string;
 }
 
-/** Rounded, tinted icon tile. Encodes the track hue alongside the Card accent. */
+/** Bounded icon marker. Encodes the track hue alongside the Card accent. */
 export function IconTile({
   icon: Icon,
   accent = "kupfer",
@@ -92,14 +90,17 @@ export function IconTile({
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center justify-center rounded-lg shadow-tile",
-        size === "lg" ? "h-14 w-14" : "h-11 w-11",
+        "inline-flex shrink-0 items-center justify-center rounded-sm border border-border",
+        size === "lg" ? "h-12 w-12" : "h-11 w-11",
         ACCENT_TILE[accent],
         className,
       )}
       aria-hidden="true"
     >
-      <Icon className={size === "lg" ? "h-6 w-6" : "h-5 w-5"} strokeWidth={1.75} />
+      <Icon
+        className={size === "lg" ? "h-6 w-6" : "h-5 w-5"}
+        strokeWidth={1.75}
+      />
     </span>
   );
 }

@@ -135,7 +135,7 @@ export function CorrelationMatrix() {
           </div>
           <div
             style={{
-              fontSize: 10,
+              fontSize: 12,
               opacity: 0.5,
               lineHeight: 1.6,
               marginTop: 8,
@@ -161,7 +161,7 @@ export function CorrelationMatrix() {
             </div>
           </div>
           <div style={{ marginTop: 12 }}>
-            <div style={{ fontSize: 9, opacity: 0.4, marginBottom: 4 }}>
+            <div style={{ fontSize: 12, opacity: 0.4, marginBottom: 4 }}>
               {text("Color scale", "Farbskala")}
             </div>
             <svg width={80} height={14}>

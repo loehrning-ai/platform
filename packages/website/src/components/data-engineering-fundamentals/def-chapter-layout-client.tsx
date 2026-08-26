@@ -15,6 +15,7 @@ import {
 import { isInteractiveShortcutTarget } from "@/lib/a11y/keyboard-shortcuts";
 import type { Locale } from "@/lib/i18n/locale";
 import { technicalCourseHref } from "@/lib/technical-courses/routes";
+import { getMotionAwareScrollBehavior } from "@/lib/animation-policy";
 import "@/components/data-engineering-fundamentals/de-course.css";
 
 export function DefChapterLayoutClient({
@@ -79,9 +80,15 @@ export function DefChapterLayoutClient({
           }),
         );
       } else if (event.key === "j") {
-        window.scrollBy({ top: 120, behavior: "smooth" });
+        window.scrollBy({
+          top: 120,
+          behavior: getMotionAwareScrollBehavior(),
+        });
       } else if (event.key === "k") {
-        window.scrollBy({ top: -120, behavior: "smooth" });
+        window.scrollBy({
+          top: -120,
+          behavior: getMotionAwareScrollBehavior(),
+        });
       }
     }
 

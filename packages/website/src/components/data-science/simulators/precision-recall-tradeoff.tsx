@@ -217,7 +217,7 @@ export function PrecisionRecallTradeoff() {
                 <div
                   style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: 9.5,
+                    fontSize: 12,
                     color: "var(--ink-4)",
                     letterSpacing: "0.1em",
                     textTransform: "uppercase",
@@ -250,7 +250,7 @@ export function PrecisionRecallTradeoff() {
             <div
               style={{
                 fontFamily: "var(--font-mono)",
-                fontSize: 10,
+                fontSize: 12,
                 color: "var(--lime-ink)",
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",

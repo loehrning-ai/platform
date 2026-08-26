@@ -79,8 +79,8 @@ export function AuthStatus({
       prefetch={false}
       onClick={onNavigate}
       className={cn(
-        "inline-flex items-center gap-2 border border-foreground px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-foreground transition-colors hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-        mobile && "min-h-[44px] border-border",
+        "inline-flex min-h-11 items-center gap-2 border border-foreground px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground transition-colors duration-150 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+        mobile && "border-border",
       )}
     >
       <Icon size={14} aria-hidden="true" />

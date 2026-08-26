@@ -48,7 +48,7 @@ export function EngineFrame({
         className="min-w-0 border-2 border-foreground bg-card shadow-[5px_5px_0_0_rgba(11,9,8,0.16)]"
       >
         <header className="border-b-2 border-foreground bg-foreground px-4 py-4 text-background sm:px-6">
-          <p className="font-mono text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[#ffc6aa]">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-[#ffc6aa]">
             {engineLabel} · {config.id}
           </p>
           <h2
@@ -64,7 +64,7 @@ export function EngineFrame({
 
         <div className="grid min-w-0 border-b border-foreground/20 lg:grid-cols-2">
           <div className="min-w-0 border-b border-foreground/20 p-4 lg:border-b-0 lg:border-r sm:p-5">
-            <p className="font-mono text-[0.68rem] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground">
               {scenarioLabel}
             </p>
             <p className="mt-2 break-words text-sm leading-relaxed">
@@ -72,7 +72,7 @@ export function EngineFrame({
             </p>
           </div>
           <div className="min-w-0 bg-brand-orange/[0.06] p-4 sm:p-5">
-            <p className="font-mono text-[0.68rem] font-bold uppercase tracking-[0.15em] text-brand-orange-dark">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.15em] text-brand-orange-dark">
               {safetyLabel}
             </p>
             <p className="mt-2 break-words text-sm leading-relaxed">
@@ -98,7 +98,7 @@ export function EvidenceItem({ complete, children }: EvidenceItemProps) {
     <li className="flex min-w-0 items-start gap-2 text-sm leading-relaxed">
       <span
         aria-hidden="true"
-        className={`mt-0.5 inline-flex size-5 shrink-0 items-center justify-center border font-mono text-[0.65rem] font-black ${
+        className={`mt-0.5 inline-flex size-5 shrink-0 items-center justify-center border font-mono text-xs font-black ${
           complete
             ? "border-emerald-800 bg-emerald-100 text-emerald-950"
             : "border-foreground/25 bg-background text-muted-foreground"
@@ -161,7 +161,7 @@ export function VerifyPanel({
           <ul className="mt-3 space-y-2">{criteria}</ul>
         </div>
         <span
-          className={`w-fit shrink-0 border px-2 py-1 font-mono text-[0.68rem] font-bold uppercase tracking-wider ${
+          className={`w-fit shrink-0 border px-2 py-1 font-mono text-xs font-bold uppercase tracking-wider ${
             verified
               ? "border-emerald-800 bg-emerald-100 text-emerald-950"
               : ready

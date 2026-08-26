@@ -66,10 +66,22 @@ function PlateForm({ family, rotation }: { family: number; rotation: number }) {
 function Rivets() {
   return (
     <>
-      <span aria-hidden="true" className="absolute left-2 top-2 h-1 w-1 bg-foreground/25" />
-      <span aria-hidden="true" className="absolute right-2 top-2 h-1 w-1 bg-foreground/25" />
-      <span aria-hidden="true" className="absolute bottom-2 left-2 h-1 w-1 bg-foreground/25" />
-      <span aria-hidden="true" className="absolute bottom-2 right-2 h-1 w-1 bg-foreground/25" />
+      <span
+        aria-hidden="true"
+        className="absolute left-2 top-2 h-1 w-1 bg-foreground/25"
+      />
+      <span
+        aria-hidden="true"
+        className="absolute right-2 top-2 h-1 w-1 bg-foreground/25"
+      />
+      <span
+        aria-hidden="true"
+        className="absolute bottom-2 left-2 h-1 w-1 bg-foreground/25"
+      />
+      <span
+        aria-hidden="true"
+        className="absolute bottom-2 right-2 h-1 w-1 bg-foreground/25"
+      />
     </>
   );
 }
@@ -134,7 +146,7 @@ export function CoursePlate({
         <div className="min-w-0">
           <div
             aria-hidden="true"
-            className="flex items-baseline justify-between gap-4 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground"
+            className="flex items-baseline justify-between gap-4 font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground"
           >
             <span>Lernpfad</span>
             <span>
@@ -149,7 +161,7 @@ export function CoursePlate({
             {rows.map((row, i) => (
               <div
                 key={row.label}
-                className="plate-row flex items-baseline justify-between gap-4 border-b border-border/60 py-[7px] font-mono text-[10.5px] uppercase tracking-[0.08em]"
+                className="plate-row flex items-baseline justify-between gap-4 border-b border-border/60 py-[7px] font-mono text-xs uppercase tracking-[0.08em]"
                 style={{ "--row-i": i } as React.CSSProperties}
               >
                 <dt className="text-muted-foreground">{row.label}</dt>
@@ -178,7 +190,7 @@ export function CoursePlate({
       {certified && (
         <span
           data-testid={certifiedTestId}
-          className="stamp-in absolute bottom-3 right-5 border border-brand-orange bg-background/90 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-brand-orange"
+          className="stamp-in absolute bottom-3 right-5 border border-brand-orange bg-background/90 px-2 py-0.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange"
         >
           erreicht
         </span>

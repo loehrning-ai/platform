@@ -37,7 +37,7 @@ export function DiffViewerWidget({
   return (
     <WidgetFrame kindLabel="Diff" title={title}>
       <div className="border-2 border-border bg-background">
-        <div className="flex items-center justify-between border-b border-border bg-card/60 px-3 py-2 font-mono text-[11px] text-muted-foreground">
+        <div className="flex items-center justify-between border-b border-border bg-card/60 px-3 py-2 font-mono text-xs text-muted-foreground">
           <span>{file}</span>
           <span className="flex gap-2">
             <span className="text-risk-green">+{plus}</span>
@@ -47,7 +47,8 @@ export function DiffViewerWidget({
         <div className="overflow-x-auto">
           {lines.map((line, i) => {
             const shown = line.type === "remove" ? "" : lineNumber++;
-            const marker = line.type === "add" ? "+" : line.type === "remove" ? "−" : " ";
+            const marker =
+              line.type === "add" ? "+" : line.type === "remove" ? "−" : " ";
             return (
               <div
                 key={i}
@@ -79,7 +80,9 @@ export function DiffViewerWidget({
         </div>
       </div>
       {note && (
-        <p className="mt-3 text-[13px] leading-[1.55] text-muted-foreground">{note}</p>
+        <p className="mt-3 text-[13px] leading-[1.55] text-muted-foreground">
+          {note}
+        </p>
       )}
     </WidgetFrame>
   );

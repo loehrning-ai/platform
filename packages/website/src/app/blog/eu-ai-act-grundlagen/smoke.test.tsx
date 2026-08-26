@@ -40,6 +40,7 @@ describe("EuAiActGrundlagenPage", () => {
     expect(text).toContain("2. August 2026");
     expect(text).toContain("2. Dezember 2027");
     expect(text).toContain("28. Juli 2026");
+    expect(text).not.toContain("Weiterlesen");
   });
 
   it("renders the reviewed English article, links, and metadata without German UI copy", async () => {
@@ -61,6 +62,7 @@ describe("EuAiActGrundlagenPage", () => {
     expect(document.body).toHaveTextContent("Current to 28 July 2026");
     expect(document.body).not.toHaveTextContent("Deine Rechte");
     expect(document.body).not.toHaveTextContent("Weiterlesen");
+    expect(document.body).not.toHaveTextContent("Continue reading");
 
     const metadata = await generateMetadata();
     expect(metadata.alternates).toMatchObject({

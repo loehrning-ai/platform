@@ -842,12 +842,12 @@ function CourseProjectCheckpointStudio({
         header={
           <div className="flex min-w-0 flex-col border-b-2 border-foreground bg-foreground text-background sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0 px-4 py-3 sm:px-5">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#ffc6aa] [overflow-wrap:anywhere]">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#ffc6aa] [overflow-wrap:anywhere]">
                 {copy.eyebrow} · {config.engineKind}
               </p>
             </div>
             <div
-              className="flex shrink-0 items-center gap-2 border-t border-background/30 px-4 py-3 font-mono text-[10px] font-bold uppercase tracking-[0.14em] sm:border-l sm:border-t-0 sm:px-5"
+              className="flex shrink-0 items-center gap-2 border-t border-background/30 px-4 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] sm:border-l sm:border-t-0 sm:px-5"
               role="status"
               aria-live="polite"
             >
@@ -870,7 +870,7 @@ function CourseProjectCheckpointStudio({
               >
                 {String(currentStageIndex + 1).padStart(2, "0")}
               </span>
-              <span className="border border-foreground px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.16em]">
+              <span className="border border-foreground px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.16em]">
                 {copy.workspace}
               </span>
             </div>
@@ -882,7 +882,7 @@ function CourseProjectCheckpointStudio({
             </h2>
             <dl className="mt-5 border-t-2 border-foreground">
               <div className="grid min-w-0 gap-1 border-b border-border py-4 sm:grid-cols-[7rem_minmax(0,1fr)]">
-                <dt className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
+                <dt className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
                   {copy.artifact}
                 </dt>
                 <dd className="min-w-0 text-sm font-semibold leading-relaxed [overflow-wrap:anywhere]">
@@ -891,7 +891,7 @@ function CourseProjectCheckpointStudio({
               </div>
             </dl>
             <details className="mt-4 border border-border bg-card/40">
-              <summary className="cursor-pointer px-3 py-3 font-mono text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground hover:text-foreground">
+              <summary className="min-h-11 cursor-pointer px-3 py-3 font-mono text-xs font-black uppercase tracking-[0.12em] text-muted-foreground hover:text-foreground">
                 {copy.briefDetails}
               </summary>
               <div className="border-t border-border p-4">
@@ -900,7 +900,7 @@ function CourseProjectCheckpointStudio({
                 </p>
                 <dl className="mt-4 space-y-4">
                   <div>
-                    <dt className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
+                    <dt className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
                       {copy.scenario}
                     </dt>
                     <dd className="mt-1 min-w-0 text-sm leading-snug text-muted-foreground [overflow-wrap:anywhere]">
@@ -908,7 +908,7 @@ function CourseProjectCheckpointStudio({
                     </dd>
                   </div>
                   <div className="border-l-2 border-brand-orange pl-3">
-                    <dt className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
+                    <dt className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
                       {copy.safety}
                     </dt>
                     <dd className="mt-1 text-[13px] leading-snug text-foreground">
@@ -923,7 +923,7 @@ function CourseProjectCheckpointStudio({
         workspace={
           <div className="min-w-0 p-5">
             <details className="min-w-0 border border-border bg-card/30">
-              <summary className="cursor-pointer px-4 py-3 font-mono text-[10px] font-black uppercase tracking-[0.12em] text-muted-foreground hover:text-foreground">
+              <summary className="min-h-11 cursor-pointer px-4 py-3 font-mono text-xs font-black uppercase tracking-[0.12em] text-muted-foreground hover:text-foreground">
                 {copy.projectMap}
               </summary>
               <div
@@ -933,78 +933,82 @@ function CourseProjectCheckpointStudio({
                     "repeat(auto-fit, minmax(min(100%, 20rem), 1fr))",
                 }}
               >
-              <div role="group" aria-label={copy.progress} className="min-w-0">
-                <ol
-                  className="grid min-w-0 border-l border-t border-foreground"
-                  style={{
-                    gridTemplateColumns:
-                      "repeat(auto-fit, minmax(min(100%, 9rem), 1fr))",
-                  }}
+                <div
+                  role="group"
+                  aria-label={copy.progress}
+                  className="min-w-0"
                 >
-                  {config.stages.map((stage, index) => (
-                    <li
-                      key={stage.id}
-                      aria-current={
-                        index === currentStageIndex ? "step" : undefined
-                      }
-                      className={`min-w-0 border-b border-r border-foreground p-3 ${
-                        index === currentStageIndex
-                          ? "bg-brand-orange/[0.09] shadow-[inset_0_-3px_0_0_var(--color-brand-orange)]"
-                          : index < visibleCompletedStages.length
-                            ? "bg-risk-green/10"
-                            : ""
-                      }`}
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="font-mono text-[9px] font-black tracking-[0.12em] text-brand-orange-dark">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
-                        <span
-                          className="h-px min-w-3 flex-1 bg-border"
-                          aria-hidden="true"
-                        />
-                      </div>
-                      <p className="mt-4 font-mono text-[10px] font-bold uppercase tracking-[0.08em]">
-                        {COURSE_PROJECT_STAGE_LABELS[stage.id][locale]}
-                      </p>
-                      <p className="mt-2 text-[11px] leading-[1.45] text-muted-foreground">
-                        {stage.evidence[locale]}
-                      </p>
-                      <p className="mt-3 font-mono text-[9px] font-black uppercase tracking-[0.08em] text-foreground">
-                        {index < visibleCompletedStages.length
-                          ? copy.stageDone
-                          : index > visibleCompletedStages.length
-                            ? copy.stageLocked
-                            : copy.pending}
-                      </p>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-
-              <div className="min-w-0 border-2 border-border bg-card p-4">
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
-                  {copy.completion}
-                </p>
-                <ol className="mt-3 space-y-3">
-                  {config.completionCriteria.map((criterion, index) => (
-                    <li
-                      key={`${config.id}-criterion-${index}`}
-                      className="flex min-w-0 gap-3 text-[12px] leading-relaxed"
-                    >
-                      <span
-                        className="font-mono font-black text-brand-orange-dark"
-                        aria-hidden="true"
+                  <ol
+                    className="grid min-w-0 border-l border-t border-foreground"
+                    style={{
+                      gridTemplateColumns:
+                        "repeat(auto-fit, minmax(min(100%, 9rem), 1fr))",
+                    }}
+                  >
+                    {config.stages.map((stage, index) => (
+                      <li
+                        key={stage.id}
+                        aria-current={
+                          index === currentStageIndex ? "step" : undefined
+                        }
+                        className={`min-w-0 border-b border-r border-foreground p-3 ${
+                          index === currentStageIndex
+                            ? "bg-brand-orange/[0.09] shadow-[inset_0_-3px_0_0_var(--color-brand-orange)]"
+                            : index < visibleCompletedStages.length
+                              ? "bg-risk-green/10"
+                              : ""
+                        }`}
                       >
-                        {index + 1}.
-                      </span>
-                      <span className="min-w-0 [overflow-wrap:anywhere]">
-                        {criterion[locale]}
-                      </span>
-                    </li>
-                  ))}
-                </ol>
-              </div>
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-mono text-xs font-black tracking-[0.12em] text-brand-orange-dark">
+                            {String(index + 1).padStart(2, "0")}
+                          </span>
+                          <span
+                            className="h-px min-w-3 flex-1 bg-border"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <p className="mt-4 font-mono text-xs font-bold uppercase tracking-[0.08em]">
+                          {COURSE_PROJECT_STAGE_LABELS[stage.id][locale]}
+                        </p>
+                        <p className="mt-2 text-xs leading-[1.45] text-muted-foreground">
+                          {stage.evidence[locale]}
+                        </p>
+                        <p className="mt-3 font-mono text-xs font-black uppercase tracking-[0.08em] text-foreground">
+                          {index < visibleCompletedStages.length
+                            ? copy.stageDone
+                            : index > visibleCompletedStages.length
+                              ? copy.stageLocked
+                              : copy.pending}
+                        </p>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+
+                <div className="min-w-0 border-2 border-border bg-card p-4">
+                  <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
+                    {copy.completion}
+                  </p>
+                  <ol className="mt-3 space-y-3">
+                    {config.completionCriteria.map((criterion, index) => (
+                      <li
+                        key={`${config.id}-criterion-${index}`}
+                        className="flex min-w-0 gap-3 text-[12px] leading-relaxed"
+                      >
+                        <span
+                          className="font-mono font-black text-brand-orange-dark"
+                          aria-hidden="true"
+                        >
+                          {index + 1}.
+                        </span>
+                        <span className="min-w-0 [overflow-wrap:anywhere]">
+                          {criterion[locale]}
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
               </div>
             </details>
 
@@ -1012,7 +1016,7 @@ function CourseProjectCheckpointStudio({
               aria-labelledby={`${config.id}-current-stage`}
               className="mt-4 min-w-0 border-2 border-foreground bg-card p-4"
             >
-              <p className="font-mono text-[0.68rem] font-black uppercase tracking-[0.14em] text-brand-orange-dark">
+              <p className="font-mono text-xs font-black uppercase tracking-[0.14em] text-brand-orange-dark">
                 {copy.currentStage} ·{" "}
                 {String(currentStageIndex + 1).padStart(2, "0")}/05
               </p>
@@ -1024,7 +1028,7 @@ function CourseProjectCheckpointStudio({
               </h3>
               <dl className="mt-3 grid min-w-0 gap-3 md:grid-cols-2">
                 <div className="min-w-0 border-l-2 border-brand-orange pl-3">
-                  <dt className="font-mono text-[0.65rem] font-black uppercase tracking-wide text-muted-foreground">
+                  <dt className="font-mono text-xs font-black uppercase tracking-wide text-muted-foreground">
                     {copy.objective}
                   </dt>
                   <dd className="mt-1 break-words text-sm leading-relaxed">
@@ -1032,7 +1036,7 @@ function CourseProjectCheckpointStudio({
                   </dd>
                 </div>
                 <div className="min-w-0 border-l-2 border-foreground/30 pl-3">
-                  <dt className="font-mono text-[0.65rem] font-black uppercase tracking-wide text-muted-foreground">
+                  <dt className="font-mono text-xs font-black uppercase tracking-wide text-muted-foreground">
                     {copy.evidence}
                   </dt>
                   <dd className="mt-1 break-words text-sm font-semibold leading-relaxed">
@@ -1047,7 +1051,7 @@ function CourseProjectCheckpointStudio({
                 className="mt-6 border-2 border-risk-green bg-risk-green/10 p-4"
                 role="status"
               >
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-risk-green">
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-risk-green">
                   {copy.completedSummary}
                 </p>
                 <p className="mt-2 text-sm font-semibold leading-relaxed">
@@ -1062,7 +1066,7 @@ function CourseProjectCheckpointStudio({
             {!effectiveActivated ? (
               <div className="mt-6 flex min-w-0 flex-col gap-4 border-2 border-dashed border-foreground p-5 sm:flex-row sm:items-center sm:justify-between">
                 <div className="min-w-0">
-                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
+                  <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
                     {copy.ready}
                   </p>
                   <p className="mt-1 text-sm text-muted-foreground">
@@ -1075,7 +1079,7 @@ function CourseProjectCheckpointStudio({
                   disabled={!currentStageUnlocked}
                   aria-controls={`${config.id}-workspace`}
                   aria-expanded={effectiveActivated}
-                  className="inline-flex min-h-11 shrink-0 items-center justify-center border-2 border-foreground bg-brand-orange px-5 py-3 font-mono text-[11px] font-black uppercase tracking-[0.12em] text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[transform,box-shadow] hover:-translate-x-px hover:-translate-y-px hover:shadow-[6px_6px_0_0_var(--color-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:border-border disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none"
+                  className="inline-flex min-h-11 shrink-0 items-center justify-center border-2 border-foreground bg-brand-orange px-5 py-3 font-mono text-xs font-black uppercase tracking-[0.12em] text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[transform,box-shadow] hover:-translate-x-px hover:-translate-y-px hover:shadow-[6px_6px_0_0_var(--color-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:border-border disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none"
                 >
                   {copy.activate}
                 </button>

@@ -148,13 +148,13 @@ export function AgentLoopWidget({
           : "Fixed local demonstration with no model or tool call. The goal and every result are example data."
       }
       done={done}
-      xpLabel="+20 XP"
+      doneLabel={german ? "Erledigt" : "Done"}
     >
       <div className="mb-4 grid gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
         <div>
           <label
             htmlFor={`agent-loop-goal-${lessonId}-${cpId}`}
-            className="mb-1 block font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground"
+            className="mb-1 block font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground"
           >
             {german ? "Ziel" : "Goal"}
           </label>
@@ -163,7 +163,7 @@ export function AgentLoopWidget({
             type="text"
             value={goal}
             readOnly
-            className="w-full border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+            className="min-h-11 w-full border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
           />
         </div>
         <button
@@ -171,7 +171,7 @@ export function AgentLoopWidget({
           onClick={run}
           disabled={running}
           className={cn(
-            "inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none",
+            "inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none",
           )}
         >
           {running
@@ -202,7 +202,7 @@ export function AgentLoopWidget({
           >
             <span
               className={cn(
-                "font-mono text-[10.5px] uppercase tracking-[0.08em]",
+                "font-mono text-xs uppercase tracking-[0.08em]",
                 step.type === "tool"
                   ? "text-brand-amber"
                   : step.type === "final"

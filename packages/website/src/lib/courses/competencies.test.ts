@@ -1,21 +1,27 @@
 import { describe, expect, it } from "vitest";
 import {
-  COURSE_COMPETENCIES,
-  competencyProgress,
-  earnedCompetencies,
+  COURSE_OUTCOMES,
+  courseOutcomeCoverage,
+  coveredCourseOutcomes,
   isCourseRecordEarned,
-  totalCompetencyCount,
+  totalCourseOutcomeCount,
 } from "./competencies";
 import { COURSE_CATALOG } from "./catalog";
-import { UNIFIED_SCHEMA_VERSION } from "@/lib/progress/types";
+import { checkpointKey, UNIFIED_SCHEMA_VERSION } from "@/lib/progress/types";
 import type { UnifiedCourseSlice, UnifiedProgress } from "@/lib/progress/types";
 import type { CourseSlug } from "@/lib/course/types";
-import { CANONICAL_LESSON_IDS } from "./completion";
+import {
+  CANONICAL_LESSON_IDS,
+  CANONICAL_SECTION_IDS,
+  isEvidenceGatedCourseSlug,
+  lessonCompletionEvidenceCheckpointId,
+} from "./completion";
 
 /**
- * competencies.test.ts — pins the honest "earned skills" contract:
- *   • every certified course grants competencies (nothing else does),
- *   • a competency is earned ONLY when the record bar is met,
+ * competencies.test.ts — pins the covered-course-outcomes contract:
+ *   • every catalog course publishes outcomes,
+ *   • outcomes appear only after the course record bar is met,
+ *   • visible descriptions name covered content, not demonstrated ability,
  *   • the selectors are pure and null-safe.
  */
 
@@ -35,11 +41,26 @@ function slice(
 function progressWith(
   courses: Partial<Record<CourseSlug, UnifiedCourseSlice>>,
 ): UnifiedProgress {
+  const checkpoints = Object.fromEntries(
+    Object.entries(courses).flatMap(([slug, courseSlice]) => {
+      const courseSlug = slug as CourseSlug;
+      if (!courseSlice || !isEvidenceGatedCourseSlug(courseSlug)) return [];
+      return Object.entries(courseSlice.lessons)
+        .filter(([, lesson]) => lesson.completed)
+        .map(([lessonId]) => [
+          checkpointKey(
+            lessonId,
+            lessonCompletionEvidenceCheckpointId(courseSlug),
+          ),
+          true,
+        ]);
+    }),
+  );
   return {
     schemaVersion: UNIFIED_SCHEMA_VERSION,
     courses,
     xp: 0,
-    checkpoints: {},
+    checkpoints,
     badges: {},
     streak: { days: 0, last: null },
     lastActivity: "2026-01-01T00:00:00.000Z",
@@ -51,9 +72,21 @@ function completedLessons(slug: CourseSlug): UnifiedCourseSlice["lessons"] {
     CANONICAL_LESSON_IDS[slug].map((lessonId) => [
       lessonId,
       {
-        sectionsRead: [],
-        quizScore: null,
-        quizTotal: null,
+        sectionsRead: isEvidenceGatedCourseSlug(slug)
+          ? (CANONICAL_SECTION_IDS[slug][lessonId] ?? [])
+          : [],
+        quizScore:
+          isEvidenceGatedCourseSlug(slug) &&
+          slug !== "data-engineering-fundamentals" &&
+          slug !== "data-science"
+            ? 1
+            : null,
+        quizTotal:
+          isEvidenceGatedCourseSlug(slug) &&
+          slug !== "data-engineering-fundamentals" &&
+          slug !== "data-science"
+            ? 1
+            : null,
         completed: true,
         exercisesCompleted: {},
       },
@@ -61,47 +94,47 @@ function completedLessons(slug: CourseSlug): UnifiedCourseSlice["lessons"] {
   );
 }
 
-function competenciesFor(slug: CourseSlug) {
-  const competencies = COURSE_COMPETENCIES[slug];
-  if (!competencies) {
-    throw new Error(`missing competencies for ${slug}`);
+function outcomesFor(slug: CourseSlug) {
+  const outcomes = COURSE_OUTCOMES[slug];
+  if (!outcomes) {
+    throw new Error(`missing outcomes for ${slug}`);
   }
-  return competencies;
+  return outcomes;
 }
 
-describe("earned competencies", () => {
-  it("grants competencies to every certified course, and only those", () => {
+describe("covered course outcomes", () => {
+  it("publishes outcomes for every catalog course", () => {
     for (const course of COURSE_CATALOG) {
       expect(
-        competenciesFor(course.slug).length,
-        `no competencies for ${course.slug}`,
+        outcomesFor(course.slug).length,
+        `no outcomes for ${course.slug}`,
       ).toBeGreaterThan(0);
     }
     // total matches the sum of all lists
-    const total = Object.values(COURSE_COMPETENCIES).reduce(
+    const total = Object.values(COURSE_OUTCOMES).reduce(
       (n, l) => n + l.length,
       0,
     );
-    expect(totalCompetencyCount()).toBe(total);
+    expect(totalCourseOutcomeCount()).toBe(total);
   });
 
-  it("uses unique competency ids across all courses", () => {
-    const ids = Object.values(COURSE_COMPETENCIES)
+  it("uses unique outcome ids across all courses", () => {
+    const ids = Object.values(COURSE_OUTCOMES)
       .flat()
       .map((c) => c.id);
     expect(new Set(ids).size).toBe(ids.length);
   });
 
   it("returns nothing for null or empty progress", () => {
-    expect(earnedCompetencies(null)).toEqual([]);
-    expect(earnedCompetencies(progressWith({}))).toEqual([]);
-    expect(competencyProgress(null)).toEqual({
-      earned: 0,
-      total: totalCompetencyCount(),
+    expect(coveredCourseOutcomes(null)).toEqual([]);
+    expect(coveredCourseOutcomes(progressWith({}))).toEqual([]);
+    expect(courseOutcomeCoverage(null)).toEqual({
+      covered: 0,
+      total: totalCourseOutcomeCount(),
     });
   });
 
-  it("does not grant competencies for mere lesson progress without the record", () => {
+  it("does not show outcomes for mere lesson progress without the record", () => {
     const started = progressWith({
       "ki-fuehrerschein": slice({
         lessons: {
@@ -116,38 +149,27 @@ describe("earned competencies", () => {
       }),
     });
     expect(isCourseRecordEarned(started, "ki-fuehrerschein")).toBe(false);
-    expect(earnedCompetencies(started)).toEqual([]);
+    expect(coveredCourseOutcomes(started)).toEqual([]);
   });
 
-  it("grants records and competencies through complete canonical lesson paths", () => {
+  it("shows covered outcomes through complete canonical lesson paths", () => {
     for (const slug of [
       "data-engineering-fundamentals",
       "data-science",
     ] as const) {
       const completed = progressWith({
         [slug]: slice({
-          lessons: Object.fromEntries(
-            CANONICAL_LESSON_IDS[slug].map((lessonId) => [
-              lessonId,
-              {
-                sectionsRead: [],
-                quizScore: null,
-                quizTotal: null,
-                completed: true,
-                exercisesCompleted: {},
-              },
-            ]),
-          ),
+          lessons: completedLessons(slug),
         }),
       });
       expect(isCourseRecordEarned(completed, slug)).toBe(true);
-      expect(earnedCompetencies(completed)).toHaveLength(
-        competenciesFor(slug).length,
+      expect(coveredCourseOutcomes(completed)).toHaveLength(
+        outcomesFor(slug).length,
       );
     }
   });
 
-  it("grants a course's competencies after all lessons and its workshop quiz", () => {
+  it("shows a course's covered outcomes after all lessons and its workshop quiz", () => {
     const passed = progressWith({
       "eu-ai-act-kurs": slice({
         lessons: completedLessons("eu-ai-act-kurs"),
@@ -159,15 +181,17 @@ describe("earned competencies", () => {
       }),
     });
     expect(isCourseRecordEarned(passed, "eu-ai-act-kurs")).toBe(true);
-    const earned = earnedCompetencies(passed);
-    expect(earned.map((c) => c.id)).toEqual(
-      competenciesFor("eu-ai-act-kurs").map((c) => c.id),
+    const covered = coveredCourseOutcomes(passed);
+    expect(covered.map((outcome) => outcome.id)).toEqual(
+      outcomesFor("eu-ai-act-kurs").map((outcome) => outcome.id),
     );
-    expect(earned.every((c) => c.courseSlug === "eu-ai-act-kurs")).toBe(true);
-    expect(earned[0].courseTitle).toBe("EU AI Act Kurs");
+    expect(
+      covered.every((outcome) => outcome.courseSlug === "eu-ai-act-kurs"),
+    ).toBe(true);
+    expect(covered[0].courseTitle).toBe("EU AI Act Kurs");
   });
 
-  it("grants AI-Native competencies after all lessons via the capstone path", () => {
+  it("shows AI-Native outcomes after all lessons via the capstone path", () => {
     const capstone = progressWith({
       "ai-native": slice({
         lessons: completedLessons("ai-native"),
@@ -175,12 +199,12 @@ describe("earned competencies", () => {
       }),
     });
     expect(isCourseRecordEarned(capstone, "ai-native")).toBe(true);
-    expect(earnedCompetencies(capstone)).toHaveLength(
-      competenciesFor("ai-native").length,
+    expect(coveredCourseOutcomes(capstone)).toHaveLength(
+      outcomesFor("ai-native").length,
     );
   });
 
-  it("accumulates competencies across multiple completed courses, in course order", () => {
+  it("accumulates covered outcomes across completed courses, in course order", () => {
     const both = progressWith({
       "ki-fuehrerschein": slice({
         lessons: completedLessons("ki-fuehrerschein"),
@@ -191,17 +215,16 @@ describe("earned competencies", () => {
         capstoneSubmitted: true,
       }),
     });
-    const earned = earnedCompetencies(both);
+    const covered = coveredCourseOutcomes(both);
     const expected =
-      competenciesFor("ki-fuehrerschein").length +
-      competenciesFor("ai-native").length;
-    expect(earned).toHaveLength(expected);
+      outcomesFor("ki-fuehrerschein").length + outcomesFor("ai-native").length;
+    expect(covered).toHaveLength(expected);
     // ki-fuehrerschein (catalog step 1) comes before ai-native (step 4)
-    expect(earned[0].courseSlug).toBe("ki-fuehrerschein");
-    expect(earned.at(-1)?.courseSlug).toBe("ai-native");
-    expect(competencyProgress(both)).toEqual({
-      earned: expected,
-      total: totalCompetencyCount(),
+    expect(covered[0].courseSlug).toBe("ki-fuehrerschein");
+    expect(covered.at(-1)?.courseSlug).toBe("ai-native");
+    expect(courseOutcomeCoverage(both)).toEqual({
+      covered: expected,
+      total: totalCourseOutcomeCount(),
     });
   });
 
@@ -220,8 +243,8 @@ describe("earned competencies", () => {
       }),
     });
 
-    const english = earnedCompetencies(state, "en");
-    const german = earnedCompetencies(state, "de");
+    const english = coveredCourseOutcomes(state, "en");
+    const german = coveredCourseOutcomes(state, "de");
 
     expect(
       english.find((item) => item.id === "ki-grundlagen-verstehen"),
@@ -237,6 +260,21 @@ describe("earned competencies", () => {
     });
     expect(english.map((item) => item.id)).toEqual(
       german.map((item) => item.id),
+    );
+  });
+
+  it("describes curriculum coverage without claiming demonstrated competence", () => {
+    const descriptions = Object.values(COURSE_OUTCOMES)
+      .flat()
+      .map((outcome) => outcome.description);
+
+    expect(
+      descriptions.every((description) =>
+        /^(Behandelt|Covers)\b/.test(description),
+      ),
+    ).toBe(true);
+    expect(descriptions.join(" ")).not.toMatch(
+      /\b(?:earns?|demonstrates?|masters?|beherrscht|erreicht)\b/i,
     );
   });
 });

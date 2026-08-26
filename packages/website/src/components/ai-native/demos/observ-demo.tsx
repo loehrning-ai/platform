@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type JSX } from "react";
+import { useEffect, useState, type JSX } from "react";
 import { DemoOverline } from "./_shared";
 import { cn } from "@/lib/utils";
 
@@ -8,9 +8,9 @@ import { cn } from "@/lib/utils";
  * ObservDemo — simulated LLM observability dashboard.
  *
  * 4 headline KPIs + per-application sparkline + scrolling log stream.
- * Ticks every 1.2s (respects prefers-reduced-motion → static values only).
- * Randomness is intentional cosmetic noise, NOT grading logic, so use of
- * Math.random in the series generator is allowed here (demos vs. exercises).
+ * The learner can run one bounded six-step sequence; the dashboard never
+ * updates indefinitely in the background. Reduced-motion users receive the
+ * final static state immediately.
  *
  * Provenance: first-party loehrning.ai implementation by Tim Löhr.
  * Ported 2026-04-21. See AI-native demo gallery implementation.
@@ -66,45 +66,57 @@ const APPS: readonly AppRow[] = [
 ];
 
 const SERIES_LENGTH = 60;
+const OBSERVATION_STEPS = 6;
 
-function makeSeedSeries(
+export function makeSeedSeries(
   length: number,
   base: number,
   amplitude: number,
 ): number[] {
-  const arr: number[] = [];
-  let v = base;
-  for (let i = 0; i < length; i++) {
-    v += (Math.random() - 0.5) * amplitude;
-    arr.push(Math.max(0.1, v));
-  }
-  return arr;
+  return Array.from({ length }, (_, index) => {
+    const phase = index + 1;
+    const variation =
+      Math.sin(phase * 1.618) * amplitude * 0.42 +
+      Math.cos(phase * 0.53) * amplitude * 0.18;
+    return Math.max(0.1, base + variation);
+  });
 }
 
 export function ObservDemo(): JSX.Element {
   const [selectedAppId, setSelectedAppId] = useState<string>(APPS[0].id);
-  const [tick, setTick] = useState(0);
+  const [tick, setTick] = useState(12);
   const [series, setSeries] = useState<number[]>(() =>
     makeSeedSeries(SERIES_LENGTH, 1.2, 0.4),
   );
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [running, setRunning] = useState(false);
 
   useEffect(() => {
-    const reducedMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reducedMotion) return;
-    intervalRef.current = setInterval(() => {
+    if (!running) return;
+    let completedSteps = 0;
+    const interval = window.setInterval(() => {
+      completedSteps += 1;
       setTick((t) => t + 1);
       setSeries((prev) => [
         ...prev.slice(1),
         Math.max(0.2, prev[prev.length - 1] + (Math.random() - 0.5) * 0.5),
       ]);
+      if (completedSteps >= OBSERVATION_STEPS) {
+        window.clearInterval(interval);
+        setRunning(false);
+      }
     }, 1200);
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, []);
+    return () => window.clearInterval(interval);
+  }, [running]);
+
+  const runObservation = () => {
+    setTick(12);
+    setSeries(makeSeedSeries(SERIES_LENGTH, 1.2, 0.4));
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setTick(12 + OBSERVATION_STEPS);
+      return;
+    }
+    setRunning(true);
+  };
 
   const activeApp = APPS.find((a) => a.id === selectedAppId) ?? APPS[0];
   const total = APPS.reduce((s, a) => s + a.cost, 0);
@@ -170,6 +182,15 @@ export function ObservDemo(): JSX.Element {
           wie Drift, Halluzinations-Indikatoren und Kostenspitzen erkannt werden
           können.
         </p>
+        <button
+          type="button"
+          onClick={runObservation}
+          disabled={running}
+          aria-pressed={running}
+          className="mt-3 inline-flex min-h-11 items-center border border-foreground bg-background px-4 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground transition-colors hover:border-brand-orange hover:text-brand-orange disabled:cursor-wait disabled:border-border disabled:text-muted-foreground"
+        >
+          {running ? "Sequenz läuft" : "6 Schritte abspielen"}
+        </button>
       </div>
 
       {/* KPI strip */}
@@ -184,15 +205,13 @@ export function ObservDemo(): JSX.Element {
               color === "text-risk-green" && "border-l-risk-green",
             )}
           >
-            <div className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+            <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
               {label}
             </div>
             <div className="mt-1 font-mono text-[22px] font-bold tracking-[-0.02em] text-foreground md:text-[24px]">
               {val}
             </div>
-            <div className={cn("mt-1 font-mono text-[10px]", color)}>
-              {delta}
-            </div>
+            <div className={cn("mt-1 font-mono text-xs", color)}>{delta}</div>
           </div>
         ))}
       </div>
@@ -224,7 +243,7 @@ export function ObservDemo(): JSX.Element {
                   </div>
                   <div
                     className={cn(
-                      "mt-0.5 font-mono text-[9px] uppercase tracking-[0.1em]",
+                      "mt-0.5 font-mono text-xs uppercase tracking-[0.1em]",
                       active ? "text-background/60" : "text-muted-foreground",
                     )}
                   >
@@ -232,7 +251,7 @@ export function ObservDemo(): JSX.Element {
                   </div>
                   <div
                     className={cn(
-                      "mt-1.5 flex justify-between font-mono text-[10px]",
+                      "mt-1.5 flex justify-between font-mono text-xs",
                       active
                         ? "text-[var(--color-kupfer-light)]"
                         : "text-muted-foreground",
@@ -253,11 +272,11 @@ export function ObservDemo(): JSX.Element {
               <div className="text-[15px] font-bold tracking-[-0.02em] text-[var(--color-dark-fg)]">
                 {activeApp.name}
               </div>
-              <div className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-dark-muted)]">
+              <div className="mt-0.5 font-mono text-xs uppercase tracking-[0.12em] text-[var(--color-dark-muted)]">
                 Latenz · letzte 60 Min · tick {tick}
               </div>
             </div>
-            <span className="inline-flex items-center gap-1 self-start bg-brand-orange px-2 py-0.5 font-mono text-[10px] font-bold tracking-[0.14em] text-[var(--color-dark-bg)]">
+            <span className="inline-flex items-center gap-1 self-start bg-brand-orange px-2 py-0.5 font-mono text-xs font-bold tracking-[0.14em] text-[var(--color-dark-bg)]">
               SIM
             </span>
           </div>
@@ -312,7 +331,7 @@ export function ObservDemo(): JSX.Element {
               ["Fehler", `${activeApp.errorPct}%`],
             ].map(([label, val]) => (
               <div key={label}>
-                <div className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--color-dark-muted)]">
+                <div className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-[var(--color-dark-muted)]">
                   {label}
                 </div>
                 <div className="mt-0.5 font-mono text-[16px] font-bold text-[var(--color-dark-fg)] md:text-[18px]">
@@ -329,12 +348,10 @@ export function ObservDemo(): JSX.Element {
         <div className="mb-2">
           <DemoOverline>Log-Stream</DemoOverline>
         </div>
-        <div className="dark-section max-h-[150px] overflow-y-auto bg-[var(--color-dark-bg)] px-3.5 py-3 font-mono text-[11px] leading-[1.7] text-[var(--color-dark-fg)]">
+        <div className="dark-section max-h-[150px] overflow-y-auto bg-[var(--color-dark-bg)] px-3.5 py-3 font-mono text-xs leading-[1.7] text-[var(--color-dark-fg)]">
           {logLines.map(([t, lvl, tag, msg], i) => (
             <div key={i}>
-              <span className="text-muted-foreground">
-                {t.padStart(4)}{" "}
-              </span>
+              <span className="text-muted-foreground">{t.padStart(4)} </span>
               <span className={cn("tracking-[0.1em]", lvlColor[lvl])}>
                 [{lvl.toUpperCase().padEnd(5)}]
               </span>

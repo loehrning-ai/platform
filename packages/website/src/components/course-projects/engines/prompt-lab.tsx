@@ -1410,7 +1410,7 @@ export default function PromptLab({
                 invalidateProviderEvidence();
               }}
             />
-            <p className="mt-1 text-right font-mono text-[0.68rem] text-muted-foreground">
+            <p className="mt-1 text-right font-mono text-xs text-muted-foreground">
               {requestLength} / 3,800
             </p>
           </div>
@@ -1600,7 +1600,7 @@ export default function PromptLab({
                 {copy.success}
               </p>
               {providerIdentity ? (
-                <p className="mt-2 font-mono text-[0.68rem] uppercase tracking-wide text-[#aaa195]">
+                <p className="mt-2 font-mono text-xs uppercase tracking-wide text-[#aaa195]">
                   {providerIdentity}
                 </p>
               ) : null}
@@ -1615,7 +1615,7 @@ export default function PromptLab({
                         key={label}
                         className="min-w-0 border border-[#f8f5ee]/25 p-3"
                       >
-                        <h4 className="font-mono text-[0.68rem] font-black uppercase tracking-wide text-[#ffb08a]">
+                        <h4 className="font-mono text-xs font-black uppercase tracking-wide text-[#ffb08a]">
                           {label}
                         </h4>
                         <pre className="mt-2 max-h-72 overflow-auto whitespace-pre-wrap break-words font-mono text-sm leading-relaxed text-[#f8f5ee]">
@@ -1643,11 +1643,11 @@ export default function PromptLab({
                     {copy.partialPrimary}
                   </p>
                   {providerIdentity ? (
-                    <p className="mt-2 font-mono text-[0.68rem] uppercase tracking-wide text-[#aaa195]">
+                    <p className="mt-2 font-mono text-xs uppercase tracking-wide text-[#aaa195]">
                       {providerIdentity}
                     </p>
                   ) : null}
-                  <h4 className="mt-3 font-mono text-[0.68rem] font-black uppercase tracking-wide text-[#ffb08a]">
+                  <h4 className="mt-3 font-mono text-xs font-black uppercase tracking-wide text-[#ffb08a]">
                     {missionCopy.outputA}
                   </h4>
                   <pre className="mt-2 max-h-72 overflow-auto whitespace-pre-wrap break-words border-l-2 border-amber-300 pl-3 font-mono text-sm leading-relaxed text-[#f8f5ee]">
@@ -1657,7 +1657,7 @@ export default function PromptLab({
               ) : null}
               <div className="border-l-2 border-destructive pl-3">
                 {providerFailure ? (
-                  <p className="font-mono text-[0.68rem] font-black uppercase tracking-wide text-[#ffb08a]">
+                  <p className="font-mono text-xs font-black uppercase tracking-wide text-[#ffb08a]">
                     {copy.failureClass}:{" "}
                     {copy.failureClassLabels[providerFailure.kind]}
                   </p>
@@ -1695,7 +1695,7 @@ export default function PromptLab({
                 )}
                 {localLearningAvailable ? (
                   <div className="mt-4 border border-amber-300/50 bg-amber-300/10 p-3">
-                    <p className="font-mono text-[0.68rem] font-black uppercase tracking-wide text-amber-200">
+                    <p className="font-mono text-xs font-black uppercase tracking-wide text-amber-200">
                       {copy.localLearningTitle}
                     </p>
                     <p className="mt-2 text-sm leading-relaxed text-[#f8f5ee]">
@@ -1886,7 +1886,7 @@ export default function PromptLab({
                   key={response}
                   className="min-w-0 border-2 border-foreground/15 p-3"
                 >
-                  <h4 className="font-mono text-[0.68rem] font-black uppercase tracking-wide text-brand-orange-dark">
+                  <h4 className="font-mono text-xs font-black uppercase tracking-wide text-brand-orange-dark">
                     {groundingCopy[response]}
                   </h4>
                   <div className="mt-3 grid min-w-0 gap-3 sm:grid-cols-2">

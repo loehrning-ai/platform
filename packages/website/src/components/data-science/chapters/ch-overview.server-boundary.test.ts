@@ -29,6 +29,32 @@ describe("data-science overview server boundary", () => {
     expect(routeSource).not.toContain("getDsLocaleRegistry");
     expect(routeSource).not.toContain("getDsChapterComponent");
     expect(routeSource).toContain("prefetch={false}");
-    expect(source.match(/prefetch=\{false\}/g)).toHaveLength(5);
+    expect(source.match(/prefetch=\{false\}/g)).toHaveLength(2);
+  });
+
+  it("keeps both locale overviews measured and limited to one start action", () => {
+    const englishSource = readFileSync(
+      resolve(
+        process.cwd(),
+        "src/components/data-science/chapters/ch-overview.tsx",
+      ),
+      "utf8",
+    );
+    const germanSource = readFileSync(
+      resolve(
+        process.cwd(),
+        "src/components/data-science/chapters/de/ch-overview.tsx",
+      ),
+      "utf8",
+    );
+
+    for (const source of [englishSource, germanSource]) {
+      expect(source.match(/btn btn-primary ov-cta-btn/g)).toHaveLength(1);
+      expect(source).not.toContain('className="ov-cta-band"');
+    }
+
+    expect(englishSource).not.toMatch(
+      /the honest number|the only proof|without flailing|like a pro|No proprietary gatekeeping|not a wall of text/,
+    );
   });
 });

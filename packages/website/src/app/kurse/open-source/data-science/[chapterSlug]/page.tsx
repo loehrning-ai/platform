@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DataScienceLocaleProvider } from "@/components/data-science/locale-context";
-import { MarkChapterVisited } from "@/components/data-science/mark-chapter-visited";
+import { ChapterTransferCheckpoint } from "@/components/course/chapter-transfer-checkpoint";
 import { getDataScienceCourseCopy } from "@/lib/data-science/course-copy";
 import { getDsLocaleRegistry } from "@/lib/data-science/content";
 import { isDsNumberedChapterId } from "@/lib/data-science/types";
@@ -90,7 +90,11 @@ export default async function DsChapterRoute({ params }: PageProps) {
       <div className="content min-w-0">
         <ChapterComponent chapter={chapter.meta} />
         <div className="mt-8 min-w-0">
-          <MarkChapterVisited chapterId={chapterSlug} locale={locale} />
+          <ChapterTransferCheckpoint
+            courseSlug="data-science"
+            chapterId={chapterSlug}
+            locale={locale}
+          />
         </div>
         <nav
           className="tb mt-12 min-w-0 flex-wrap gap-3"

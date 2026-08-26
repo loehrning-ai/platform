@@ -95,7 +95,7 @@ export function SoftwareArtifactGuide({
         <div>
           <h2
             id={`${idPrefix}-status`}
-            className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground"
+            className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground"
           >
             {copy.publicationStatus}
           </h2>
@@ -169,7 +169,7 @@ export function SoftwareArtifactGuide({
                   >
                     <span
                       aria-hidden="true"
-                      className="font-mono text-[11px] font-bold text-brand-orange"
+                      className="font-mono text-xs font-bold text-brand-orange"
                     >
                       {String(index + 1).padStart(2, "0")}
                     </span>
@@ -219,9 +219,7 @@ export function SoftwareArtifactGuide({
                       className="inline-flex items-center gap-1 underline-offset-4 hover:underline"
                     >
                       {prerequisite.label}
-                      <span className="sr-only">
-                        {copy.externalTab}
-                      </span>
+                      <span className="sr-only">{copy.externalTab}</span>
                       <ExternalLink size={13} aria-hidden="true" />
                     </a>
                   ) : (
@@ -271,7 +269,7 @@ export function SoftwareArtifactGuide({
           {guide.integration.summary}
         </p>
         <dl className="mt-5">
-          <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+          <dt className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
             {copy.integrationTargets}
           </dt>
           <dd className="mt-2 flex flex-wrap gap-2">

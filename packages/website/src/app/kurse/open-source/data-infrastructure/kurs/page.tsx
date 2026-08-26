@@ -32,8 +32,8 @@ export default async function DataInfrastructureKursIndexPage() {
   const copy = getDataInfraCourseCopy(locale).index;
 
   return (
-    <div className="mx-auto w-full max-w-[980px] min-w-0 px-4 py-12 sm:px-6 sm:py-16">
-      <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
+    <div className="mx-auto w-full max-w-[980px] min-w-0 px-4 py-12 sm:px-6">
+      <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
         {copy.eyebrow}
       </p>
       <h1 className="mt-3 max-w-[780px] break-words text-[36px] font-bold tracking-[-0.03em] text-foreground [overflow-wrap:anywhere] md:text-[46px]">
@@ -50,7 +50,7 @@ export default async function DataInfrastructureKursIndexPage() {
           );
           return (
             <section key={track.id} className="min-w-0">
-              <p className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-brand-orange">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
                 {copy.trackLabel(trackIndex + 1)}
               </p>
               <h2 className="mt-1 break-words text-[22px] font-bold tracking-[-0.02em] text-foreground">
@@ -71,7 +71,7 @@ export default async function DataInfrastructureKursIndexPage() {
                       className="group flex h-full min-w-0 flex-col justify-between border-2 border-border bg-card p-4 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-brand-orange"
                     >
                       <div className="min-w-0">
-                        <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.08em] text-brand-orange">
+                        <p className="font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange">
                           {copy.lessonLabel(lesson.number)}
                         </p>
                         <h3 className="mt-1 break-words text-[16px] font-semibold text-foreground [overflow-wrap:anywhere]">
@@ -81,7 +81,7 @@ export default async function DataInfrastructureKursIndexPage() {
                           {lesson.hook}
                         </p>
                       </div>
-                      <div className="mt-4 flex min-w-0 items-center justify-between gap-3 font-mono text-[11px] text-muted-foreground">
+                      <div className="mt-4 flex min-w-0 items-center justify-between gap-3 font-mono text-xs text-muted-foreground">
                         <span className="break-words">
                           {copy.duration(lesson.durationMinutes)}
                         </span>

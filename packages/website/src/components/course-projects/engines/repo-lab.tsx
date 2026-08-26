@@ -697,7 +697,7 @@ export default function RepoLab({
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[#d7d0c4]">
             {copy.sandboxBoundary}
           </p>
-          <p className="mt-2 font-mono text-[0.68rem] uppercase tracking-wide text-[#aaa195]">
+          <p className="mt-2 font-mono text-xs uppercase tracking-wide text-[#aaa195]">
             {copy.sandboxRuntime}
           </p>
           <button
@@ -723,7 +723,7 @@ export default function RepoLab({
             {sandboxResult ? (
               <div className="mt-5 min-w-0 space-y-5">
                 <div>
-                  <h4 className="font-mono text-[0.68rem] font-black uppercase tracking-wide text-[#ffb08a]">
+                  <h4 className="font-mono text-xs font-black uppercase tracking-wide text-[#ffb08a]">
                     {copy.sandboxResult}
                   </h4>
                   <div className="mt-2 max-h-[30rem] min-w-0 space-y-4 overflow-auto border border-[#f8f5ee]/25 p-3 font-mono text-xs">
@@ -750,7 +750,7 @@ export default function RepoLab({
                   </div>
                 </div>
                 <div>
-                  <h4 className="font-mono text-[0.68rem] font-black uppercase tracking-wide text-[#ffb08a]">
+                  <h4 className="font-mono text-xs font-black uppercase tracking-wide text-[#ffb08a]">
                     {copy.sandboxDiff}
                   </h4>
                   <pre

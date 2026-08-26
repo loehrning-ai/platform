@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const push = vi.fn();
 
@@ -14,6 +14,11 @@ import { DefChapterLayoutClient } from "./def-chapter-layout-client";
 describe("DefChapterLayoutClient", () => {
   beforeEach(() => {
     push.mockClear();
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
   });
 
   it("does not run page shortcuts from an aria-modal dialog", () => {
@@ -32,5 +37,39 @@ describe("DefChapterLayoutClient", () => {
 
     expect(push).not.toHaveBeenCalled();
     expect(scrollBy).not.toHaveBeenCalled();
+  });
+
+  it("uses instant chapter scrolling when reduced motion is requested", () => {
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => ({
+        matches: true,
+        media: "(prefers-reduced-motion: reduce)",
+        onchange: null,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    );
+    const scrollBy = vi.spyOn(window, "scrollBy").mockImplementation(() => {});
+    render(
+      <DefChapterLayoutClient locale="en" chapters={DEF_CHAPTERS}>
+        <p>Chapter content</p>
+      </DefChapterLayoutClient>,
+    );
+
+    fireEvent.keyDown(window, { key: "j" });
+    fireEvent.keyDown(window, { key: "k" });
+
+    expect(scrollBy).toHaveBeenNthCalledWith(1, {
+      top: 120,
+      behavior: "auto",
+    });
+    expect(scrollBy).toHaveBeenNthCalledWith(2, {
+      top: -120,
+      behavior: "auto",
+    });
   });
 });

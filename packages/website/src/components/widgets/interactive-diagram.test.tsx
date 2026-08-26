@@ -1,11 +1,4 @@
-import {
-  describe,
-  it,
-  expect,
-  beforeAll,
-  beforeEach,
-  afterEach,
-} from "vitest";
+import { describe, it, expect, beforeAll, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 
 function installLocalStoragePolyfill(): void {
@@ -40,10 +33,7 @@ function installLocalStoragePolyfill(): void {
 import { __resetCacheForTests, getXp, isCheckpointDone } from "@/lib/progress";
 import { XP } from "@/lib/progress/types";
 
-import {
-  InteractiveDiagram,
-  type DiagramNode,
-} from "./interactive-diagram";
+import { InteractiveDiagram, type DiagramNode } from "./interactive-diagram";
 import {
   RiskPyramidDiagram,
   ObligationLayersDiagram,
@@ -131,7 +121,7 @@ describe("InteractiveDiagram (stack)", () => {
     expect(screen.getByText("Verlauf abspielen")).toBeInTheDocument();
   });
 
-  it("awards the checkpoint once when traced (reduced motion = instant)", () => {
+  it("records the checkpoint once when traced (reduced motion = instant)", () => {
     render(
       <InteractiveDiagram
         variant="stack"
@@ -148,7 +138,7 @@ describe("InteractiveDiagram (stack)", () => {
     expect(screen.getByText(/Durchlauf komplett/)).toBeInTheDocument();
   });
 
-  it("does not double-award on a second trace", () => {
+  it("does not duplicate completion on a second trace", () => {
     render(
       <InteractiveDiagram
         variant="stack"
@@ -168,7 +158,7 @@ describe("InteractiveDiagram (stack)", () => {
       <InteractiveDiagram variant="stack" nodes={STACK_NODES} reducedMotion />,
     );
     fireEvent.click(screen.getByText("Verlauf abspielen"));
-    // No XP awarded, no crash.
+    // No progress-ledger change, no crash.
     expect(getXp()).toBe(0);
     expect(screen.getByText(/Durchlauf komplett/)).toBeInTheDocument();
   });
@@ -186,9 +176,7 @@ describe("InteractiveDiagram (stack)", () => {
 
 describe("InteractiveDiagram (compare)", () => {
   it("shows a node detail panel on click (toggle)", () => {
-    render(
-      <InteractiveDiagram variant="compare" nodes={COMPARE_NODES} />,
-    );
+    render(<InteractiveDiagram variant="compare" nodes={COMPARE_NODES} />);
     // Empty state first.
     expect(screen.getByText("Schicht antippen")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /Schicht X/ }));
@@ -214,7 +202,7 @@ describe("InteractiveDiagram (compare)", () => {
     expect(screen.getByText("Was X tut.")).toBeInTheDocument();
   });
 
-  it("awards the checkpoint once every layer has been inspected", () => {
+  it("records the checkpoint once every layer has been inspected", () => {
     render(
       <InteractiveDiagram
         variant="compare"
@@ -248,7 +236,7 @@ describe("RiskPyramidDiagram", () => {
     expect(screen.getByText("Minimales Risiko")).toBeInTheDocument();
   });
 
-  it("traces to award its checkpoint (reduced motion)", () => {
+  it("traces to record its checkpoint (reduced motion)", () => {
     render(<RiskPyramidDiagram lessonId="eu1" cpId="pyr1" reducedMotion />);
     fireEvent.click(screen.getByText("Verlauf abspielen"));
     expect(isCheckpointDone("eu1", "pyr1")).toBe(true);

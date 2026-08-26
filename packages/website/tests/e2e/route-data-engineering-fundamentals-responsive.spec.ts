@@ -101,6 +101,87 @@ async function openLessonReference(page: Page) {
   await expect(reference).toHaveAttribute("open", "");
 }
 
+test.describe("Data Engineering Fundamentals learning instrument", () => {
+  test.use({ viewport: { width: 1024, height: 900 } });
+
+  test("uses compact flat chrome, legible labels, and 44px learner targets", async ({
+    page,
+  }, testInfo) => {
+    test.skip(
+      testInfo.project.name !== "chromium",
+      "Computed design contracts run once in Chromium.",
+    );
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto(`${COURSE}/fund`, { waitUntil: "load" });
+    await openLessonReference(page);
+
+    const instrument = await page.locator(".de-course").evaluate((root) => {
+      const rootStyle = getComputedStyle(root);
+      const panel = root.querySelector<HTMLElement>(".panel");
+      const panelStyle = panel ? getComputedStyle(panel) : null;
+      const essentialSelectors = [
+        ".hero-eyebrow",
+        ".hero-meta .k",
+        ".section-label",
+        ".panel-title .lab",
+        ".panel-meta",
+        ".panel-caption",
+        ".ctl-lab",
+        ".readout .r-k",
+        ".readout .r-s",
+      ];
+      const undersizedLabels: string[] = [];
+      for (const selector of essentialSelectors) {
+        for (const element of root.querySelectorAll<HTMLElement>(selector)) {
+          if (getComputedStyle(element).display === "none") continue;
+          const size = Number.parseFloat(getComputedStyle(element).fontSize);
+          if (size < 12) undersizedLabels.push(`${selector}: ${size}px`);
+        }
+      }
+
+      const undersizedTargets: string[] = [];
+      for (const element of root.querySelectorAll<HTMLElement>(
+        "button, nav a, a.btn, input[type='range']",
+      )) {
+        const style = getComputedStyle(element);
+        const rect = element.getBoundingClientRect();
+        if (
+          style.display === "none" ||
+          style.visibility === "hidden" ||
+          rect.width === 0 ||
+          rect.height === 0
+        ) {
+          continue;
+        }
+        const requiresWidth = !element.matches("input[type='range']");
+        if (rect.height < 43.5 || (requiresWidth && rect.width < 43.5)) {
+          undersizedTargets.push(
+            `${element.tagName.toLowerCase()}.${element.className}: ${rect.width.toFixed(1)}x${rect.height.toFixed(1)}`,
+          );
+        }
+      }
+
+      return {
+        background: rootStyle.backgroundColor,
+        fontFamily: rootStyle.fontFamily,
+        panelRadius: panelStyle?.borderRadius ?? null,
+        panelShadow: panelStyle?.boxShadow ?? null,
+        undersizedLabels,
+        undersizedTargets,
+      };
+    });
+
+    expect(instrument.background).toBe("rgb(243, 240, 233)");
+    expect(instrument.fontFamily).toMatch(/loehrningSans/i);
+    expect(
+      Number.parseFloat(instrument.panelRadius ?? "99"),
+    ).toBeLessThanOrEqual(8);
+    expect(instrument.panelShadow).toBe("none");
+    expect(instrument.undersizedLabels).toEqual([]);
+    expect(instrument.undersizedTargets).toEqual([]);
+  });
+});
+
 test.describe("Data Engineering Fundamentals mobile geometry", () => {
   test.beforeEach(async ({ page }, testInfo) => {
     test.skip(

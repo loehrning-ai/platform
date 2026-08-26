@@ -58,21 +58,25 @@ export const DEMO = {
   kupferMist: "rgba(249,115,22,0.12)",
 
   // Dashboard layout tokens (Tailwind class strings)
-  container: "space-y-0 overflow-hidden rounded-none border border-border/40 bg-white/60",
-  header: "flex items-center justify-between border-b border-border/30 px-4 py-3",
+  container:
+    "space-y-0 overflow-hidden rounded-none border border-border/40 bg-white/60",
+  header:
+    "flex items-center justify-between border-b border-border/30 px-4 py-3",
   headerTitle: "text-sm font-bold tracking-tight text-foreground",
   body: "p-4",
-  badge: "rounded-none px-2 py-0.5 font-mono text-[10px] font-semibold",
+  badge: "rounded-none px-2 py-0.5 font-mono text-xs font-semibold",
   card: "rounded-none border border-border/30 bg-card/20 p-3",
   tabBar: "flex gap-1 border-b border-border/30 px-4 pt-3",
   tab: "rounded-none px-3 py-2 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground",
-  tabActive: "rounded-none border-b-2 border-brand-orange px-3 py-2 text-xs font-semibold text-brand-orange",
+  tabActive:
+    "rounded-none border-b-2 border-brand-orange px-3 py-2 text-xs font-semibold text-brand-orange",
   metric: "font-mono text-lg font-bold text-brand-orange",
-  metricLabel: "text-[10px] text-muted-foreground",
+  metricLabel: "text-xs text-muted-foreground",
 
   // Table tokens
   table: {
-    header: "text-[10px] font-medium uppercase tracking-wider text-muted-foreground",
+    header:
+      "text-xs font-medium uppercase tracking-wider text-muted-foreground",
     row: "border-b border-border/20",
     cell: "py-2.5 text-sm",
   },

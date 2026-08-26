@@ -204,7 +204,7 @@ export function OutlierDetector() {
                   display: "inline-block",
                 }}
               />
-              <span style={{ fontSize: 10, opacity: 0.6 }}>
+              <span style={{ fontSize: 12, opacity: 0.6 }}>
                 {text("inlier", "unauffälliger Punkt")}
               </span>
             </div>
@@ -218,7 +218,7 @@ export function OutlierDetector() {
                   display: "inline-block",
                 }}
               />
-              <span style={{ fontSize: 10, opacity: 0.6 }}>
+              <span style={{ fontSize: 12, opacity: 0.6 }}>
                 {text("flagged outlier", "markierter Ausreißer")}
               </span>
             </div>

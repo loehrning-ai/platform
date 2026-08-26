@@ -40,7 +40,7 @@ describe("KI-Führerschein landing page", () => {
     const startLinks = screen.getAllByRole("link", {
       name: /Kostenlos mit Lernkonto starten/,
     });
-    expect(startLinks).toHaveLength(2);
+    expect(startLinks).toHaveLength(1);
     for (const link of startLinks) {
       expect(link).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
       expect(link).toHaveAttribute("data-prefetch", "false");
@@ -61,19 +61,21 @@ describe("KI-Führerschein landing page", () => {
     expect(
       screen.getByText(/does not establish organization-wide compliance/),
     ).toBeInTheDocument();
+    expect(screen.getAllByText(/Article 4/)).toHaveLength(1);
+    expect(
+      screen.getByText(
+        /locally generated PDF records completion of this course/,
+      ),
+    ).toBeInTheDocument();
 
     const startLinks = screen.getAllByRole("link", {
       name: /Start with a free learning account/,
     });
-    expect(startLinks).toHaveLength(2);
+    expect(startLinks).toHaveLength(1);
     for (const link of startLinks) {
       expect(link).toHaveAttribute("href", "/en/ki-fuehrerschein/kurs");
       expect(link).toHaveAttribute("data-prefetch", "false");
     }
-    expect(screen.getByRole("link", { name: /All courses/ })).toHaveAttribute(
-      "href",
-      "/en/kurse",
-    );
     expect(
       screen.getByRole("link", { name: /Study the EU AI Act in depth/ }),
     ).toHaveAttribute("href", "/en/eu-ai-act-kurs");
@@ -83,9 +85,7 @@ describe("KI-Führerschein landing page", () => {
     localeState.value = "en";
     const metadata = await generateMetadata();
 
-    expect(metadata.title).toBe(
-      "Everyday AI Literacy: free foundation course",
-    );
+    expect(metadata.title).toBe("Everyday AI Literacy: free foundation course");
     expect(metadata.alternates).toEqual({
       canonical: "/en/ki-fuehrerschein",
       languages: {

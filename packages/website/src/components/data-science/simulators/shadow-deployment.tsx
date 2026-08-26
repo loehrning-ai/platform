@@ -146,7 +146,7 @@ export function ShadowDeployment() {
                   background: strategy === k ? v.color : "transparent",
                   color: strategy === k ? "#0D0D0C" : inkOf(v.color),
                   borderColor: v.color,
-                  fontSize: 10.5,
+                  fontSize: 12,
                   padding: "4px 8px",
                 }}
                 onClick={() => setStrategy(k)}
@@ -162,7 +162,7 @@ export function ShadowDeployment() {
               borderRadius: 7,
               background: "rgba(244,242,236,0.04)",
               border: `1px solid ${info.color}44`,
-              fontSize: 11.5,
+              fontSize: 12,
               color: "var(--ink-2)",
               lineHeight: 1.55,
             }}
@@ -181,7 +181,7 @@ export function ShadowDeployment() {
                   : "rgba(100,226,181,0.07)",
               border: `1px solid ${discRate > 0.3 ? "rgba(255,107,128,0.35)" : "rgba(100,226,181,0.25)"}`,
               fontFamily: "var(--font-mono)",
-              fontSize: 11,
+              fontSize: 12,
             }}
           >
             <span
@@ -198,7 +198,7 @@ export function ShadowDeployment() {
                 color: "var(--ink-3)",
                 marginTop: 3,
                 fontFamily: "inherit",
-                fontSize: 10.5,
+                fontSize: 12,
               }}
             >
               {discRate > 0.3
@@ -240,7 +240,7 @@ export function ShadowDeployment() {
                 border: "1px solid rgba(100,226,181,0.25)",
                 textAlign: "center",
                 fontFamily: "var(--font-mono)",
-                fontSize: 10.5,
+                fontSize: 12,
                 color: "var(--good-ink)",
               }}
             >
@@ -255,7 +255,7 @@ export function ShadowDeployment() {
                 border: "1px solid rgba(167,139,250,0.25)",
                 textAlign: "center",
                 fontFamily: "var(--font-mono)",
-                fontSize: 10.5,
+                fontSize: 12,
                 color: "var(--violet-ink)",
               }}
             >
@@ -267,7 +267,7 @@ export function ShadowDeployment() {
             style={{
               width: "100%",
               borderCollapse: "collapse",
-              fontSize: 11.5,
+              fontSize: 12,
             }}
           >
             <thead>
@@ -285,7 +285,7 @@ export function ShadowDeployment() {
                       padding: "5px 8px",
                       borderBottom: "1px solid rgba(244,242,236,0.1)",
                       fontFamily: "var(--font-mono)",
-                      fontSize: 9.5,
+                      fontSize: 12,
                       color: "var(--ink-3)",
                       letterSpacing: "0.06em",
                     }}
@@ -309,7 +309,7 @@ export function ShadowDeployment() {
                     style={{
                       padding: "5px 8px",
                       fontFamily: "var(--font-mono)",
-                      fontSize: 10.5,
+                      fontSize: 12,
                       color: "var(--ink-2)",
                     }}
                   >
@@ -319,7 +319,7 @@ export function ShadowDeployment() {
                     style={{
                       padding: "5px 8px",
                       fontFamily: "var(--font-mono)",
-                      fontSize: 10.5,
+                      fontSize: 12,
                       color: "var(--good-ink)",
                     }}
                   >
@@ -329,7 +329,7 @@ export function ShadowDeployment() {
                     style={{
                       padding: "5px 8px",
                       fontFamily: "var(--font-mono)",
-                      fontSize: 10.5,
+                      fontSize: 12,
                       color: "var(--violet-ink)",
                     }}
                   >

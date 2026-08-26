@@ -1,4 +1,10 @@
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import {
+  act,
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+} from "@testing-library/react";
 import { type ReactNode } from "react";
 import { renderToString } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -68,13 +74,13 @@ describe("<LearningOwnerBoundary>", () => {
     return render(boundaryTree(content, locale));
   }
 
-  it("server-renders a fixed ownership choice without reserving course space", () => {
+  it("server-renders an in-flow ownership choice that cannot cover course work", () => {
     const markup = renderToString(
       boundaryTree(<button type="button">Complete lesson</button>),
     );
 
     expect(markup).toContain("data-learning-owner-panel");
-    expect(markup).toContain("fixed");
+    expect(markup).not.toContain("fixed bottom");
     expect(markup).toContain("disabled");
   });
 
@@ -82,7 +88,9 @@ describe("<LearningOwnerBoundary>", () => {
     renderBoundary(<button type="button">Complete lesson</button>);
 
     const main = screen.getByRole("main");
-    expect(screen.getByRole("button", { name: "Complete lesson" })).toBeEnabled();
+    expect(
+      screen.getByRole("button", { name: "Complete lesson" }),
+    ).toBeEnabled();
     expect(main).not.toHaveAttribute("inert");
     expect(main).not.toHaveAttribute("aria-busy");
     expect(main).not.toHaveAttribute("data-learning-owner-unresolved");
@@ -90,7 +98,8 @@ describe("<LearningOwnerBoundary>", () => {
       screen.getByRole("region", { name: "Fortschritt bleibt getrennt." }),
     ).toBeVisible();
     expect(main).toContainElement(screen.getByRole("region"));
-    expect(screen.getByRole("region")).toHaveClass("fixed");
+    expect(screen.getByRole("region")).toHaveClass("relative");
+    expect(screen.getByRole("region")).not.toHaveClass("fixed");
     expect(getLearningOwnerContext().kind).toBe("unknown");
   });
 

@@ -27,11 +27,7 @@ import { WidgetFrame } from "./_frame";
  */
 
 export type TerminalReplaySegmentTone =
-  | "prompt"
-  | "comment"
-  | "error"
-  | "output"
-  | "plain";
+  "prompt" | "comment" | "error" | "output" | "plain";
 
 export interface TerminalReplaySegment {
   readonly text: string;
@@ -70,7 +66,10 @@ function frameText(frame: TerminalReplayFrame): string {
   return frame.segments.map((s) => s.text).join("");
 }
 
-function delay(ms: number, ref: { current: ReturnType<typeof setTimeout> | null }): Promise<void> {
+function delay(
+  ms: number,
+  ref: { current: ReturnType<typeof setTimeout> | null },
+): Promise<void> {
   return new Promise((resolve) => {
     ref.current = setTimeout(() => {
       ref.current = null;
@@ -98,7 +97,9 @@ function TypedLine({
     >
       {frame.segments.map((seg, i) => {
         if (remaining <= 0 && !full) return null;
-        const take = full ? seg.text.length : Math.min(seg.text.length, remaining);
+        const take = full
+          ? seg.text.length
+          : Math.min(seg.text.length, remaining);
         remaining -= take;
         const visible = seg.text.slice(0, take);
         if (visible.length === 0) return null;
@@ -203,12 +204,7 @@ export function TerminalReplayWidget({
         : "bg-muted-foreground";
 
   return (
-    <WidgetFrame
-      kindLabel="Replay"
-      title={title}
-      done={done}
-      xpLabel="+10 XP"
-    >
+    <WidgetFrame kindLabel="Replay" title={title} done={done}>
       <div className="border-2 border-border bg-background">
         <div className="flex items-center gap-3 border-b border-border bg-card/60 px-3 py-2">
           <span aria-hidden="true" className="flex gap-1">
@@ -216,9 +212,14 @@ export function TerminalReplayWidget({
             <span className="h-2 w-2 rounded-full bg-border" />
             <span className="h-2 w-2 rounded-full bg-border" />
           </span>
-          <span className="font-mono text-[11px] text-muted-foreground">{windowTitle}</span>
-          <span className="ml-auto inline-flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.1em] text-muted-foreground">
-            <span aria-hidden="true" className={cn("h-1.5 w-1.5 rounded-full", statusDotClass)} />
+          <span className="font-mono text-xs text-muted-foreground">
+            {windowTitle}
+          </span>
+          <span className="ml-auto inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
+            <span
+              aria-hidden="true"
+              className={cn("h-1.5 w-1.5 rounded-full", statusDotClass)}
+            />
             {statusLabel}
           </span>
         </div>
@@ -233,7 +234,10 @@ export function TerminalReplayWidget({
                 <TypedLine key={i} frame={frame} typedChars={null} />
               ))}
               {status === "running" && revealedCount < frames.length && (
-                <TypedLine frame={frames[revealedCount]} typedChars={typedChars} />
+                <TypedLine
+                  frame={frames[revealedCount]}
+                  typedChars={typedChars}
+                />
               )}
             </>
           )}
@@ -245,23 +249,23 @@ export function TerminalReplayWidget({
           type="button"
           onClick={run}
           disabled={status === "running"}
-          className="inline-flex items-center gap-1.5 border-2 border-foreground bg-brand-orange px-3.5 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-px hover:-translate-y-px hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+          className="inline-flex min-h-11 items-center gap-1.5 border-2 border-foreground bg-brand-orange px-3.5 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-px hover:-translate-y-px hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
         >
           ▶ Run replay
         </button>
         <button
           type="button"
           onClick={reset}
-          className="inline-flex items-center gap-1.5 border-2 border-border bg-background px-3.5 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-foreground transition-colors hover:border-brand-orange"
+          className="inline-flex min-h-11 items-center gap-1.5 border-2 border-border bg-background px-3.5 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground transition-colors hover:border-brand-orange"
         >
           ↺ Reset
         </button>
-        <label className="ml-auto flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
+        <label className="ml-auto flex items-center gap-2 font-mono text-xs text-muted-foreground">
           speed
           <select
             value={speed}
             onChange={(e) => setSpeed(Number.parseFloat(e.target.value) || 1)}
-            className="border border-border bg-background px-2 py-1 font-mono text-[11px] text-foreground"
+            className="min-h-11 border border-border bg-background px-2 py-1 font-mono text-xs text-foreground"
           >
             {SPEEDS.map((s) => (
               <option key={s} value={s}>

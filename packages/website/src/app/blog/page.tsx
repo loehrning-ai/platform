@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Dateline } from "./_components/dateline";
-import { Runline } from "./_components/runline";
 import { BLOG_POSTS, BLOG_LAST_MODIFIED } from "@/lib/blog-metadata";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import {
@@ -36,7 +35,6 @@ const COPY = {
     read: "Artikel lesen",
     noteLabel: "Kein Redaktionsplan.",
     note: "Dieser Blog erscheint unregelmäßig. Neue Artikel entstehen, wenn ein Thema sauber genug erklärt werden kann und die Quellen stimmen.",
-    runlineStatus: "Offen · Nachprüfbar · Lernorientiert",
     visual: {
       label: "Sieben Abschnitte · Bürgerperspektive",
       big: "2. Aug",
@@ -64,7 +62,6 @@ const COPY = {
     read: "Read article",
     noteLabel: "No publishing quota.",
     note: "Articles appear when a subject can be explained precisely and the source record is complete. There is no fixed publishing schedule.",
-    runlineStatus: "Open access · Verifiable · Built for learning",
     visual: {
       label: "Seven sections · Citizen perspective",
       big: "2 Aug",
@@ -124,14 +121,6 @@ function formatDate(date: string, locale: Locale): string {
 
 function BlogIndexContent({ locale }: { readonly locale: Locale }) {
   const copy = COPY[locale];
-  const runItems = [
-    ...BLOG_POSTS.map((post) => {
-      const localized = postCopy(post, locale);
-      return `${copy.articleNumber} ${String(post.postNumber).padStart(2, "0")}: ${localized.title}`;
-    }),
-    "loehrning.ai",
-    copy.runlineStatus,
-  ];
   const lastUpdated = formatDate(BLOG_LAST_MODIFIED, locale);
 
   return (
@@ -159,15 +148,12 @@ function BlogIndexContent({ locale }: { readonly locale: Locale }) {
         </div>
         <div className="mast__meta">
           <b>{copy.article(BLOG_POSTS.length)}</b>
-          {copy.lastUpdated}
-          <br />
-          {lastUpdated}
-          <br />
+          <span>
+            {copy.lastUpdated} {lastUpdated}
+          </span>
           <span className="live">{copy.ongoing}</span>
         </div>
       </section>
-
-      <Runline items={runItems} />
 
       <section className="feed">
         <div className="feed__head">

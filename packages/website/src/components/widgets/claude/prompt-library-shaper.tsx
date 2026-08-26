@@ -235,7 +235,7 @@ export function PromptLibraryShaperWidget({
           : "Five fixed local rules update immediately. Completion is recorded at 80 points."
       }
       done={done}
-      xpLabel="+20 XP"
+      doneLabel={german ? "Erledigt" : "Done"}
     >
       {/* minmax(0, …) rather than a bare fr: a grid item's automatic minimum
           size is min-content, so the monospace prompt column refuses to
@@ -244,13 +244,13 @@ export function PromptLibraryShaperWidget({
       <div className="grid gap-4 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
         <div className="flex flex-col">
           <div className="mb-1.5 flex items-center justify-between">
-            <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground">
+            <span className="font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
               {german ? "Prompt" : "Prompt"}
             </span>
             <button
               type="button"
               onClick={() => setValue(german ? IDEAL_DE : IDEAL)}
-              className="border border-border bg-background px-2 py-1 font-mono text-[10px] font-bold uppercase text-muted-foreground transition-colors hover:border-brand-orange/60"
+              className="min-h-11 border border-border bg-background px-2 py-1 font-mono text-xs font-bold uppercase text-muted-foreground transition-colors hover:border-brand-orange/60"
             >
               {german ? "Muster laden" : "Load example"}
             </button>
@@ -266,7 +266,7 @@ export function PromptLibraryShaperWidget({
           />
         </div>
         <div className="flex flex-col gap-2">
-          <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground">
+          <span className="font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
             {german ? "Prüfungen" : "Shareability checks"}
           </span>
           {checks.map((check) => (
@@ -284,7 +284,7 @@ export function PromptLibraryShaperWidget({
               <span
                 aria-hidden="true"
                 className={cn(
-                  "mt-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold text-white",
+                  "mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold text-white",
                   check.ok
                     ? "bg-risk-green"
                     : check.partial
@@ -309,7 +309,7 @@ export function PromptLibraryShaperWidget({
       <div className="mt-4 flex items-center justify-between gap-3">
         <span
           className={cn(
-            "font-mono text-[11px] font-bold uppercase tracking-[0.1em]",
+            "font-mono text-xs font-bold uppercase tracking-[0.1em]",
             scoreColor,
           )}
         >
@@ -320,7 +320,7 @@ export function PromptLibraryShaperWidget({
           onClick={showGuidance}
           disabled={loading}
           className={cn(
-            "inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none",
+            "inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none",
           )}
         >
           {loading

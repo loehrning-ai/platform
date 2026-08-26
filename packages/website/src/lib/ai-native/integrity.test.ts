@@ -185,13 +185,6 @@ describe("OS Bundle ghost copy removed", () => {
     expect(text).not.toContain("96 Artefakt");
     expect(text).not.toContain("~96");
   });
-
-  it("bundle-showcase.tsx does not contain ghost artifact strings", () => {
-    const text = readText("src/components/ai-native/bundle-showcase.tsx");
-    expect(text).not.toContain("Alles bei dir");
-    expect(text).not.toContain("13 Vault");
-    expect(text).not.toContain("50 Prompts");
-  });
 });
 
 // ─── 7. Module 1 hostile framing removed ─────────────────────────────────────

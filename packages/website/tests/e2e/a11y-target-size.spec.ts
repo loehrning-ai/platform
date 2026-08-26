@@ -1,17 +1,17 @@
 import { test, expect, type Locator } from "@playwright/test";
 
 /**
- * WCAG 2.2 Target Size (Minimum), SC 2.5.8, at the 390x844 mobile viewport
- * (regression coverage). Pointer targets on a touch-first surface must be at
- * least 24x24 CSS px. This spec spot-checks the highest-traffic interactive
+ * Product target-size floor at the 390x844 mobile viewport. WCAG 2.2 SC 2.5.8
+ * permits 24x24 CSS px with exceptions; the loehrning.ai interface contract is
+ * deliberately stricter and requires 44x44 CSS px for independent controls.
+ * This spec spot-checks the highest-traffic interactive
  * controls that axe cannot measure automatically: the nav hamburger toggle,
  * the book-overview links on /buecher, the chapter prev/next links in the
- * book reader, and the "Kurs starten" CTAs on /kurse.
+ * book reader, and the learning-atlas decisions on /kurse.
  *
- * Every control measured here clears 24px in BOTH dimensions outright, so the
- * SC 2.5.8 spacing exception (a sub-24px target still passes when a 24px circle
- * around it hits no other target) is never exercised - if a control shrinks
- * below 24px this fails loudly rather than silently leaning on the exception.
+ * Every control measured here must clear 44px in BOTH dimensions outright. If
+ * a control shrinks below the product floor this fails without relying on a
+ * WCAG spacing exception.
  *
  * Locators target roles + accessible names so a copy refresh stays green. Only
  * the canonical book id `ki-landschaft` (from src/lib/books.ts) is hardcoded;
@@ -19,9 +19,9 @@ import { test, expect, type Locator } from "@playwright/test";
  * slug is baked in.
  */
 
-const MIN = 24;
+const MIN = 44;
 const BOOK_OVERVIEW_LINK_NAME =
-  /^(?:Buch und Kapitel öffnen|Open book and chapters)$/i;
+  /^(?:Buch und Kapitel öffnen|Open book and chapters): .+$/i;
 
 async function expectMinTargetSize(
   locator: Locator,
@@ -33,15 +33,15 @@ async function expectMinTargetSize(
   if (!box) return;
   expect(
     box.width,
-    `${label}: width ${Math.round(box.width)}px < ${MIN}px (WCAG 2.5.8)`,
+    `${label}: width ${Math.round(box.width)}px < ${MIN}px (product floor)`,
   ).toBeGreaterThanOrEqual(MIN);
   expect(
     box.height,
-    `${label}: height ${Math.round(box.height)}px < ${MIN}px (WCAG 2.5.8)`,
+    `${label}: height ${Math.round(box.height)}px < ${MIN}px (product floor)`,
   ).toBeGreaterThanOrEqual(MIN);
 }
 
-test.describe("a11y: target size (WCAG 2.5.8) at 390x844", () => {
+test.describe("a11y: 44px product target floor at 390x844", () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
   test("nav hamburger toggle is a large-enough touch target", async ({
@@ -107,21 +107,61 @@ test.describe("a11y: target size (WCAG 2.5.8) at 390x844", () => {
     await expectMinTargetSize(prevLink, "reader prev-chapter link");
   });
 
-  test('"Kurs starten" CTAs on /kurse are large-enough touch targets', async ({
+  test("learning-atlas decisions are large-enough touch targets", async ({
     page,
   }) => {
     await page.goto("/kurse", { waitUntil: "domcontentloaded" });
-    // Native-course primary CTAs; imported-lab cards use "Details" instead, so
-    // this label matches only the on-platform course-start links.
-    const startCtas = page.getByRole("link", { name: /Kurs starten/i });
-    await expect(startCtas.first()).toBeVisible();
-    const count = await startCtas.count();
-    expect(
-      count,
-      "expected at least one native course start CTA",
-    ).toBeGreaterThan(0);
-    for (let i = 0; i < count; i++) {
-      await expectMinTargetSize(startCtas.nth(i), `Kurs-starten CTA #${i + 1}`);
+    const goals = page
+      .getByRole("group", { name: "Lernziel auswählen" })
+      .getByRole("button");
+    await expect(goals).toHaveCount(4);
+    for (let i = 0; i < 4; i++) {
+      await expectMinTargetSize(goals.nth(i), `Lernziel #${i + 1}`);
     }
+
+    const nextProof = page.getByTestId("next-proof").getByRole("link");
+    await expect(nextProof).toBeVisible();
+    await expectMinTargetSize(nextProof, "Nächster-Nachweis CTA");
+  });
+
+  test("AI-Native course navigation clears the target floor", async ({
+    page,
+  }) => {
+    // The course reader is intentionally account-gated. Measure the public
+    // landing and public companion navigation instead of asserting against the
+    // provider-free login fallback.
+    await page.goto("/ai-native", { waitUntil: "domcontentloaded" });
+    await expectMinTargetSize(
+      page.getByRole("link", { name: /Mit Modul 1 beginnen/i }),
+      "AI-Native start-module link",
+    );
+    await expectMinTargetSize(
+      page.getByRole("link", { name: /Kursstand öffnen/i }),
+      "AI-Native course-progress link",
+    );
+
+    await page.goto("/en/ai-native/demos", {
+      waitUntil: "domcontentloaded",
+    });
+    const demoBreadcrumb = page.getByRole("navigation", {
+      name: "Breadcrumb",
+    });
+    await expectMinTargetSize(
+      demoBreadcrumb.getByRole("link", {
+        name: "AI-Native Workflow Course",
+      }),
+      "AI-Native demo breadcrumb",
+    );
+
+    await page.goto("/ai-native/glossar", {
+      waitUntil: "domcontentloaded",
+    });
+    const glossaryBreadcrumb = page.getByRole("navigation", {
+      name: "Brotkrümelnavigation",
+    });
+    await expectMinTargetSize(
+      glossaryBreadcrumb.getByRole("link", { name: "Kurs" }),
+      "AI-Native glossary breadcrumb",
+    );
   });
 });

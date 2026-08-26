@@ -3,11 +3,7 @@
 import { useEffect, useState, type JSX } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { CheckCircle2, Loader2, Sparkles, XCircle } from "lucide-react";
-import {
-  ExerciseShell,
-  ExerciseResetButton,
-  submitExercise,
-} from "./_shell";
+import { ExerciseShell, ExerciseResetButton, submitExercise } from "./_shell";
 import { gradeWithAI, type GradeWithAIResult } from "./_ai-grade";
 import type { AiRubricEntry, ModuleId } from "@/lib/ai-native/types";
 import { EASE_OUT_EXPO } from "@/lib/animations";
@@ -99,7 +95,10 @@ function gradeField(
         : `Zu kurz (${trimmed.length} / min. ${spec.minChars} Zeichen).`,
     };
   }
-  if (spec.mustInclude && !trimmed.toLowerCase().includes(spec.mustInclude.toLowerCase())) {
+  if (
+    spec.mustInclude &&
+    !trimmed.toLowerCase().includes(spec.mustInclude.toLowerCase())
+  ) {
     return {
       passed: false,
       reason: isEnglish
@@ -136,8 +135,7 @@ function RctfcBody({
 }: RctfcSpec): JSX.Element {
   const { locale, text } = useDemoLocale();
   const isEnglish = locale === "en";
-  const [values, setValues] =
-    useState<Record<FieldKey, string>>(emptyValues);
+  const [values, setValues] = useState<Record<FieldKey, string>>(emptyValues);
   const [submitted, setSubmitted] = useState(false);
   const [isGrading, setIsGrading] = useState(false);
   const [aiResult, setAiResult] = useState<GradeWithAIResult | null>(null);
@@ -174,7 +172,9 @@ function RctfcBody({
   };
 
   const handleSubmit = async () => {
-    const ownerGeneration = getLearningOwnerContext().generation;
+    const owner = getLearningOwnerContext();
+    if (owner.kind === "unknown") return;
+    const ownerGeneration = owner.generation;
     saveDraft();
     setIsGrading(true);
 
@@ -204,10 +204,7 @@ function RctfcBody({
     });
 
     if (getLearningOwnerContext().generation !== ownerGeneration) return;
-    setAiResult(result);
-    setSubmitted(true);
-    setIsGrading(false);
-    submitExercise({
+    const persisted = submitExercise({
       moduleId,
       lessonId,
       exerciseId,
@@ -216,7 +213,12 @@ function RctfcBody({
       aiFeedback: result.rubric,
       summary: result.summary,
       gradingSource: result.source === "ai" ? "ai" : "fallback",
+      expectedOwnerGeneration: ownerGeneration,
     });
+    setIsGrading(false);
+    if (!persisted) return;
+    setAiResult(result);
+    setSubmitted(true);
   };
 
   const handleReset = () => {
@@ -227,9 +229,7 @@ function RctfcBody({
   };
 
   // Display either AI rubric entries or the rule-based grades.
-  const aiByKey = new Map(
-    (aiResult?.rubric ?? []).map((r) => [r.id, r]),
-  );
+  const aiByKey = new Map((aiResult?.rubric ?? []).map((r) => [r.id, r]));
   const grades = submitted
     ? FIELD_ORDER.map((k) => {
         const ai = aiByKey.get(k);
@@ -253,14 +253,14 @@ function RctfcBody({
               <div className="mb-1 flex items-center justify-between">
                 <label
                   htmlFor={`${exerciseId}-${k}`}
-                  className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-brand-orange"
+                  className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange"
                 >
                   {(isEnglish ? FIELD_LABELS_EN : FIELD_LABELS)[k]}
                 </label>
                 {grade && (
                   <span
                     className={cn(
-                      "inline-flex items-center gap-1 font-mono text-[10px]",
+                      "inline-flex items-center gap-1 font-mono text-xs",
                       grade.passed ? "text-risk-green" : "text-brand-amber",
                     )}
                   >
@@ -273,7 +273,9 @@ function RctfcBody({
                   </span>
                 )}
               </div>
-              <p className="mb-1 text-[12px] text-muted-foreground">{spec.hint}</p>
+              <p className="mb-1 text-[12px] text-muted-foreground">
+                {spec.hint}
+              </p>
               <textarea
                 id={`${exerciseId}-${k}`}
                 value={values[k]}
@@ -283,7 +285,7 @@ function RctfcBody({
                 rows={2}
                 disabled={submitted || isGrading}
                 className={cn(
-                  "w-full resize-y border border-border bg-background p-2.5 font-mono text-[13px] leading-[1.5] text-foreground outline-none",
+                  "min-h-11 w-full resize-y border border-border bg-background p-2.5 font-mono text-[13px] leading-[1.5] text-foreground outline-none",
                   submitted || isGrading
                     ? "cursor-not-allowed opacity-80"
                     : "focus-visible:border-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange",
@@ -312,23 +314,23 @@ function RctfcBody({
             <div className="flex flex-wrap items-center gap-3">
               <p
                 className={cn(
-                  "font-mono text-[11px] font-bold uppercase tracking-[0.14em]",
+                  "font-mono text-xs font-bold uppercase tracking-[0.14em]",
                   passed ? "text-risk-green" : "text-brand-amber",
                 )}
               >
                 Score {Math.round(score * 100)}%
               </p>
               {aiResult.source === "ai" ? (
-                <span className="inline-flex items-center gap-1 font-mono text-[10px] text-brand-orange">
+                <span className="inline-flex items-center gap-1 font-mono text-xs text-brand-orange">
                   <Sparkles size={11} /> AI
                 </span>
               ) : (
-                <span className="font-mono text-[10px] text-muted-foreground">
+                <span className="font-mono text-xs text-muted-foreground">
                   Rule-based
                 </span>
               )}
               {aiResult.cached && (
-                <span className="font-mono text-[10px] text-muted-foreground">
+                <span className="font-mono text-xs text-muted-foreground">
                   · cached
                 </span>
               )}
@@ -347,10 +349,10 @@ function RctfcBody({
             onClick={handleSubmit}
             disabled={isGrading}
             className={cn(
-              "inline-flex items-center gap-1.5 border-2 border-foreground px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white transition-[background-color,border-color,color,opacity,transform,box-shadow]",
+              "inline-flex min-h-11 items-center gap-1.5 border-2 border-foreground px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors",
               isGrading
                 ? "cursor-not-allowed bg-muted-foreground opacity-60"
-                : "bg-brand-orange shadow-[3px_3px_0_0_var(--color-foreground)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]",
+                : "bg-brand-orange hover:bg-foreground hover:text-background",
             )}
           >
             {isGrading ? (

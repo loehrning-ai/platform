@@ -11,7 +11,10 @@ import { bestIndex, type PromptCandidate } from "./prompt-diff";
  * tie-break and empty-list edges the source defends against.
  */
 
-const cand = (rating: PromptCandidate["rating"], label = "X"): PromptCandidate => ({
+const cand = (
+  rating: PromptCandidate["rating"],
+  label = "X",
+): PromptCandidate => ({
   label,
   prompt: `Prompt ${label}`,
   critique: `Kritik ${label}`,

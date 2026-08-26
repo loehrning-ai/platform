@@ -5,12 +5,10 @@ import { AnimatePresence, m } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, RotateCcw } from "lucide-react";
 import {
-  ClipHeading,
-  Eyebrow,
-  FadeBlock,
-  CountUp,
-} from "@/components/ai-native/primitives";
-import { BrandButton } from "@/components/ui/brand-button";
+  TECHNICAL_COURSE_PRIMARY_ACTION_CLASS,
+  TECHNICAL_COURSE_SECONDARY_ACTION_CLASS,
+  TechnicalCourseFrame,
+} from "@/components/course/technical-course-landing";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
@@ -21,7 +19,8 @@ import { withMotionProvider } from "@/components/motion/with-motion-provider";
  * auto-advance after selection, results panel with per-dimension bars +
  * weakest-dimension callout. */
 
-type Dimension = "drafting" | "delegation" | "automation" | "knowledge" | "governance";
+type Dimension =
+  "drafting" | "delegation" | "automation" | "knowledge" | "governance";
 
 interface DimensionMeta {
   readonly id: Dimension;
@@ -48,7 +47,8 @@ const DIMENSIONS: readonly DimensionMeta[] = [
   {
     id: "automation",
     label: "Automation",
-    shortDesc: "Welche wiederkehrenden Schritte haben ausdrückliche Kontrollen?",
+    shortDesc:
+      "Welche wiederkehrenden Schritte haben ausdrückliche Kontrollen?",
     weakestRecommendation:
       "Nutze die drei begrenzten Workflow-Übungen in Modul 4, Lektion 4.2 bis 4.4.",
   },
@@ -110,7 +110,10 @@ interface Scenario {
   readonly id: string;
   readonly dimension: Dimension;
   readonly question: string;
-  readonly options: readonly { readonly label: string; readonly score: 0 | 1 | 2 | 3 }[];
+  readonly options: readonly {
+    readonly label: string;
+    readonly score: 0 | 1 | 2 | 3;
+  }[];
 }
 
 const SCENARIOS: readonly Scenario[] = [
@@ -119,10 +122,24 @@ const SCENARIOS: readonly Scenario[] = [
     dimension: "drafting",
     question: "Eine Kundenmail braucht heute eine Antwort. Wie beginnst du?",
     options: [
-      { label: "Ich schreibe sie in einem leeren Dokument vollständig selbst", score: 0 },
-      { label: "Ich lasse aus wenigen Stichpunkten einen Entwurf erstellen", score: 1 },
-      { label: "Ich gebe freigegebene Mail, Rolle, Kontext, Auftrag und Ausgabegrenzen vor", score: 2 },
-      { label: "Ich nutze einen gepflegten Skill mit Pflichtkontext und Review-Checkliste", score: 3 },
+      {
+        label: "Ich schreibe sie in einem leeren Dokument vollständig selbst",
+        score: 0,
+      },
+      {
+        label: "Ich lasse aus wenigen Stichpunkten einen Entwurf erstellen",
+        score: 1,
+      },
+      {
+        label:
+          "Ich gebe freigegebene Mail, Rolle, Kontext, Auftrag und Ausgabegrenzen vor",
+        score: 2,
+      },
+      {
+        label:
+          "Ich nutze einen gepflegten Skill mit Pflichtkontext und Review-Checkliste",
+        score: 3,
+      },
     ],
   },
   {
@@ -131,9 +148,20 @@ const SCENARIOS: readonly Scenario[] = [
     question: "Du brauchst eine Stellenausschreibung.",
     options: [
       { label: "Ich schreibe sie vollständig selbst", score: 0 },
-      { label: "Ich fordere ohne weitere Angaben eine Stellenausschreibung an", score: 1 },
-      { label: "Ich gebe Rolle, freigegebenen Firmenkontext, Tätigkeitsprofil, Gehaltsrahmen und Format vor", score: 2 },
-      { label: "Ich nutze ein gepflegtes Project mit Quellenmaterial und Freigabekriterien", score: 3 },
+      {
+        label: "Ich fordere ohne weitere Angaben eine Stellenausschreibung an",
+        score: 1,
+      },
+      {
+        label:
+          "Ich gebe Rolle, freigegebenen Firmenkontext, Tätigkeitsprofil, Gehaltsrahmen und Format vor",
+        score: 2,
+      },
+      {
+        label:
+          "Ich nutze ein gepflegtes Project mit Quellenmaterial und Freigabekriterien",
+        score: 3,
+      },
     ],
   },
   {
@@ -143,30 +171,54 @@ const SCENARIOS: readonly Scenario[] = [
     options: [
       { label: "Ich übertrage sie manuell aus der E-Mail ins CRM", score: 0 },
       { label: "Das Formular schreibt direkt ins CRM", score: 1 },
-      { label: "Nach dem CRM-Eintrag entsteht ein Antwortentwurf zur Prüfung", score: 2 },
-      { label: "Ein überwachter Ablauf validiert, weist einen Review zu und führt ein Audit-Protokoll", score: 3 },
+      {
+        label: "Nach dem CRM-Eintrag entsteht ein Antwortentwurf zur Prüfung",
+        score: 2,
+      },
+      {
+        label:
+          "Ein überwachter Ablauf validiert, weist einen Review zu und führt ein Audit-Protokoll",
+        score: 3,
+      },
     ],
   },
   {
     id: "s4",
     dimension: "knowledge",
-    question: "Eine Führungskraft fragt nach einer Entscheidung aus dem Januar.",
+    question:
+      "Eine Führungskraft fragt nach einer Entscheidung aus dem Januar.",
     options: [
       { label: "Ich antworte aus dem Gedächtnis", score: 0 },
-      { label: "Ich suche getrennt in E-Mail, Notizen und Dateiablage", score: 1 },
+      {
+        label: "Ich suche getrennt in E-Mail, Notizen und Dateiablage",
+        score: 1,
+      },
       { label: "Ich durchsuche eine gepflegte Wissensbasis", score: 2 },
-      { label: "Ich rufe Entscheidung, Quelle, verantwortliche Person und spätere Änderungen zusammen ab", score: 3 },
+      {
+        label:
+          "Ich rufe Entscheidung, Quelle, verantwortliche Person und spätere Änderungen zusammen ab",
+        score: 3,
+      },
     ],
   },
   {
     id: "s5",
     dimension: "governance",
-    question: "Eine Person fragt, ob Kundendaten in ein KI-Werkzeug eingegeben werden dürfen.",
+    question:
+      "Eine Person fragt, ob Kundendaten in ein KI-Werkzeug eingegeben werden dürfen.",
     options: [
       { label: "Ich weiß es nicht", score: 0 },
       { label: "Ich nehme pauschal an, die DSGVO verbiete es", score: 1 },
-      { label: "Ich klassifiziere die Daten und prüfe Werkzeug sowie Verarbeitungsbedingungen", score: 2 },
-      { label: "Ich wende Organisationsrichtlinie, Werkzeugregister und Eskalationsweg an", score: 3 },
+      {
+        label:
+          "Ich klassifiziere die Daten und prüfe Werkzeug sowie Verarbeitungsbedingungen",
+        score: 2,
+      },
+      {
+        label:
+          "Ich wende Organisationsrichtlinie, Werkzeugregister und Eskalationsweg an",
+        score: 3,
+      },
     ],
   },
   {
@@ -174,10 +226,24 @@ const SCENARIOS: readonly Scenario[] = [
     dimension: "drafting",
     question: "Du brauchst eine Gliederung für eine Präsentation.",
     options: [
-      { label: "Ich entwickle und formatiere sie vollständig selbst", score: 0 },
-      { label: "Ich fordere ohne Quellen eine Präsentation zum Thema an", score: 1 },
-      { label: "Ich gebe Quellenmaterial, Zielgruppe, Länge, Ton und Ausgabestruktur vor", score: 2 },
-      { label: "Ich nutze ein gepflegtes Muster mit Quellen und Review-Checkliste je Folie", score: 3 },
+      {
+        label: "Ich entwickle und formatiere sie vollständig selbst",
+        score: 0,
+      },
+      {
+        label: "Ich fordere ohne Quellen eine Präsentation zum Thema an",
+        score: 1,
+      },
+      {
+        label:
+          "Ich gebe Quellenmaterial, Zielgruppe, Länge, Ton und Ausgabestruktur vor",
+        score: 2,
+      },
+      {
+        label:
+          "Ich nutze ein gepflegtes Muster mit Quellen und Review-Checkliste je Folie",
+        score: 3,
+      },
     ],
   },
   {
@@ -185,10 +251,21 @@ const SCENARIOS: readonly Scenario[] = [
     dimension: "delegation",
     question: "Du erstellst einen Wochenbericht für eine Führungskraft.",
     options: [
-      { label: "Ich schreibe ihn am Ende der Woche vollständig selbst", score: 0 },
+      {
+        label: "Ich schreibe ihn am Ende der Woche vollständig selbst",
+        score: 0,
+      },
       { label: "Ich lasse Stichpunkte in Fließtext umwandeln", score: 1 },
-      { label: "Ich erstelle einen Entwurf aus gepflegten Notizen und prüfe jede Aussage", score: 2 },
-      { label: "Ein geplanter Entwurf enthält Quellenlinks, Ausnahmehinweise und menschliche Freigabe", score: 3 },
+      {
+        label:
+          "Ich erstelle einen Entwurf aus gepflegten Notizen und prüfe jede Aussage",
+        score: 2,
+      },
+      {
+        label:
+          "Ein geplanter Entwurf enthält Quellenlinks, Ausnahmehinweise und menschliche Freigabe",
+        score: 3,
+      },
     ],
   },
   {
@@ -198,8 +275,16 @@ const SCENARIOS: readonly Scenario[] = [
     options: [
       { label: "Ich lese es und extrahiere Aufgaben manuell", score: 0 },
       { label: "Ich lasse Aufgaben ohne festes Schema extrahieren", score: 1 },
-      { label: "Ich nutze ein gepflegtes Muster und prüfe Namen, Termine und Verantwortliche", score: 2 },
-      { label: "Ein Ablauf validiert den Entwurf und holt Freigaben ein, bevor nachgelagerte Systeme schreiben", score: 3 },
+      {
+        label:
+          "Ich nutze ein gepflegtes Muster und prüfe Namen, Termine und Verantwortliche",
+        score: 2,
+      },
+      {
+        label:
+          "Ein Ablauf validiert den Entwurf und holt Freigaben ein, bevor nachgelagerte Systeme schreiben",
+        score: 3,
+      },
     ],
   },
   {
@@ -209,19 +294,36 @@ const SCENARIOS: readonly Scenario[] = [
     options: [
       { label: "Ich lasse den Browser-Tab geöffnet", score: 0 },
       { label: "Ich speichere die URL in einer Notiz", score: 1 },
-      { label: "Ich erfasse Titel, Datum, Quelle und eine eigene Zusammenfassung", score: 2 },
-      { label: "Ich verknüpfe sie mit aktueller Arbeit und dokumentiere, welche Aussage sie stützt oder infrage stellt", score: 3 },
+      {
+        label:
+          "Ich erfasse Titel, Datum, Quelle und eine eigene Zusammenfassung",
+        score: 2,
+      },
+      {
+        label:
+          "Ich verknüpfe sie mit aktueller Arbeit und dokumentiere, welche Aussage sie stützt oder infrage stellt",
+        score: 3,
+      },
     ],
   },
   {
     id: "s10",
     dimension: "governance",
-    question: "Ein neuer KI-gestützter Ablauf soll pilotiert werden. Was prüfst du?",
+    question:
+      "Ein neuer KI-gestützter Ablauf soll pilotiert werden. Was prüfst du?",
     options: [
       { label: "Ob die Demonstration funktioniert", score: 0 },
       { label: "Ob personenbezogene Daten verarbeitet werden", score: 1 },
-      { label: "Zweck, Daten, Rollen, Risikoklassifikation, Anbieterbedingungen und menschliche Prüfung", score: 2 },
-      { label: "Ein dokumentiertes Pilot-Gate mit Verantwortlichen, Belegen, nötiger Rechtsprüfung und Stoppbedingung", score: 3 },
+      {
+        label:
+          "Zweck, Daten, Rollen, Risikoklassifikation, Anbieterbedingungen und menschliche Prüfung",
+        score: 2,
+      },
+      {
+        label:
+          "Ein dokumentiertes Pilot-Gate mit Verantwortlichen, Belegen, nötiger Rechtsprüfung und Stoppbedingung",
+        score: 3,
+      },
     ],
   },
 ];
@@ -234,8 +336,15 @@ const SCENARIOS_EN: readonly Scenario[] = [
     options: [
       { label: "Open a blank document and write from scratch", score: 0 },
       { label: "Ask Claude to draft a reply from a few notes", score: 1 },
-      { label: "Provide the email, role, context, task and output constraints", score: 2 },
-      { label: "Use a maintained Skill with required context and a review checklist", score: 3 },
+      {
+        label: "Provide the email, role, context, task and output constraints",
+        score: 2,
+      },
+      {
+        label:
+          "Use a maintained Skill with required context and a review checklist",
+        score: 3,
+      },
     ],
   },
   {
@@ -245,8 +354,16 @@ const SCENARIOS_EN: readonly Scenario[] = [
     options: [
       { label: "Open a blank document and draft it manually", score: 0 },
       { label: "Ask Claude to write a job description", score: 1 },
-      { label: "Provide role, company context, responsibilities, range and format", score: 2 },
-      { label: "Use a maintained Project with source material and explicit approval criteria", score: 3 },
+      {
+        label:
+          "Provide role, company context, responsibilities, range and format",
+        score: 2,
+      },
+      {
+        label:
+          "Use a maintained Project with source material and explicit approval criteria",
+        score: 3,
+      },
     ],
   },
   {
@@ -256,8 +373,15 @@ const SCENARIOS_EN: readonly Scenario[] = [
     options: [
       { label: "Copy it from email into the CRM", score: 0 },
       { label: "Send the form directly to the CRM", score: 1 },
-      { label: "Create a reply draft after the CRM record is written", score: 2 },
-      { label: "Use a monitored workflow with validation, human approval and an audit trail", score: 3 },
+      {
+        label: "Create a reply draft after the CRM record is written",
+        score: 2,
+      },
+      {
+        label:
+          "Use a monitored workflow with validation, human approval and an audit trail",
+        score: 3,
+      },
     ],
   },
   {
@@ -268,18 +392,31 @@ const SCENARIOS_EN: readonly Scenario[] = [
       { label: "Answer from memory", score: 0 },
       { label: "Search email, notes and folders separately", score: 1 },
       { label: "Search a maintained knowledge base", score: 2 },
-      { label: "Retrieve the decision, source note, owner and later changes together", score: 3 },
+      {
+        label:
+          "Retrieve the decision, source note, owner and later changes together",
+        score: 3,
+      },
     ],
   },
   {
     id: "s5",
     dimension: "governance",
-    question: "A colleague asks whether customer data may be entered into an AI tool.",
+    question:
+      "A colleague asks whether customer data may be entered into an AI tool.",
     options: [
       { label: "Say that you are not sure", score: 0 },
       { label: "Assume it is prohibited because of the GDPR", score: 1 },
-      { label: "Classify the data and check the approved tool and processing terms", score: 2 },
-      { label: "Apply the organization policy, approved-tool register and escalation route", score: 3 },
+      {
+        label:
+          "Classify the data and check the approved tool and processing terms",
+        score: 2,
+      },
+      {
+        label:
+          "Apply the organization policy, approved-tool register and escalation route",
+        score: 3,
+      },
     ],
   },
   {
@@ -289,8 +426,16 @@ const SCENARIOS_EN: readonly Scenario[] = [
     options: [
       { label: "Brainstorm and format it manually", score: 0 },
       { label: "Ask Claude to make a presentation about the topic", score: 1 },
-      { label: "Provide source material, audience, length, tone and output structure", score: 2 },
-      { label: "Use a maintained pattern with citations and a slide-level review checklist", score: 3 },
+      {
+        label:
+          "Provide source material, audience, length, tone and output structure",
+        score: 2,
+      },
+      {
+        label:
+          "Use a maintained pattern with citations and a slide-level review checklist",
+        score: 3,
+      },
     ],
   },
   {
@@ -300,8 +445,15 @@ const SCENARIOS_EN: readonly Scenario[] = [
     options: [
       { label: "Write it manually at the end of the week", score: 0 },
       { label: "Ask Claude to turn notes into prose", score: 1 },
-      { label: "Create a draft from maintained notes and verify every claim", score: 2 },
-      { label: "Use a scheduled draft with source links, exception flags and human approval", score: 3 },
+      {
+        label: "Create a draft from maintained notes and verify every claim",
+        score: 2,
+      },
+      {
+        label:
+          "Use a scheduled draft with source links, exception flags and human approval",
+        score: 3,
+      },
     ],
   },
   {
@@ -311,8 +463,16 @@ const SCENARIOS_EN: readonly Scenario[] = [
     options: [
       { label: "Read it and extract actions manually", score: 0 },
       { label: "Ask Claude to extract action items", score: 1 },
-      { label: "Use a maintained summary pattern and review names, dates and owners", score: 2 },
-      { label: "Route a draft through validation and owner approval before writing downstream systems", score: 3 },
+      {
+        label:
+          "Use a maintained summary pattern and review names, dates and owners",
+        score: 2,
+      },
+      {
+        label:
+          "Route a draft through validation and owner approval before writing downstream systems",
+        score: 3,
+      },
     ],
   },
   {
@@ -322,19 +482,36 @@ const SCENARIOS_EN: readonly Scenario[] = [
     options: [
       { label: "Leave the browser tab open", score: 0 },
       { label: "Save the URL in a note", score: 1 },
-      { label: "Capture the article with title, date, source and your own summary", score: 2 },
-      { label: "Connect it to current work and record what claim it supports or challenges", score: 3 },
+      {
+        label:
+          "Capture the article with title, date, source and your own summary",
+        score: 2,
+      },
+      {
+        label:
+          "Connect it to current work and record what claim it supports or challenges",
+        score: 3,
+      },
     ],
   },
   {
     id: "s10",
     dimension: "governance",
-    question: "A new AI-supported workflow is proposed for a pilot. What do you review?",
+    question:
+      "A new AI-supported workflow is proposed for a pilot. What do you review?",
     options: [
       { label: "Whether the demonstration works", score: 0 },
       { label: "Whether personal data is processed", score: 1 },
-      { label: "Purpose, data, roles, risk classification, provider terms and human review", score: 2 },
-      { label: "A documented pilot gate with owners, evidence, legal review where required and a stop condition", score: 3 },
+      {
+        label:
+          "Purpose, data, roles, risk classification, provider terms and human review",
+        score: 2,
+      },
+      {
+        label:
+          "A documented pilot gate with owners, evidence, legal review where required and a stop condition",
+        score: 3,
+      },
     ],
   },
 ];
@@ -356,7 +533,10 @@ function FluencyTestContent({ locale = "de" }: { readonly locale?: Locale }) {
     setAnswers((prev) => ({ ...prev, [current.id]: optionIndex }));
     // Auto-advance after a beat (skips if last)
     if (idx < scenarios.length - 1) {
-      setTimeout(() => setIdx((i) => Math.min(scenarios.length - 1, i + 1)), 220);
+      setTimeout(
+        () => setIdx((i) => Math.min(scenarios.length - 1, i + 1)),
+        220,
+      );
     }
   };
 
@@ -364,7 +544,8 @@ function FluencyTestContent({ locale = "de" }: { readonly locale?: Locale }) {
     setAnswers({});
     setIdx(0);
     setSubmitted(false);
-    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+    if (typeof window !== "undefined")
+      window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   /* Scoring */
@@ -430,289 +611,331 @@ function FluencyTestContent({ locale = "de" }: { readonly locale?: Locale }) {
   /* ─── Result view ─── */
   if (submitted) {
     return (
-      <div className="mx-auto max-w-[960px] px-6 py-14 md:py-20">
-        <Eyebrow>{isEnglish ? "Your self-assessment" : "Deine Selbstprüfung"}</Eyebrow>
-        <ClipHeading
-          as="h1"
-          className="mt-2.5 font-bold leading-none tracking-[-0.035em] text-foreground"
-          style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}
-        >
-          {isEnglish ? "Your current pattern." : "Dein aktuelles Muster."}
-        </ClipHeading>
-
-        <div className="mt-12 grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
-          <FadeBlock delay={1}>
-            <div className="border-t-[3px] border-brand-orange pt-5">
-              <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-                Score
+      <TechnicalCourseFrame courseId="ai-native-fluency-result" lang={locale}>
+        <header className="border-y border-foreground py-6 sm:py-8">
+          <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_260px] lg:gap-10">
+            <div className="min-w-0">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
+                {isEnglish ? "Local self-assessment" : "Lokale Selbstprüfung"}
               </p>
-              <div className="mt-3 flex items-baseline gap-3">
-                <CountUp
-                  value={percent}
-                  suffix="%"
-                  className="text-[clamp(3.5rem,8vw,5rem)]"
-                />
-                <span className="font-mono text-[14px] text-muted-foreground">
-                  {totalScore} / {maxScore}
-                </span>
-              </div>
-              <p className="mt-5 text-[22px] font-bold tracking-[-0.02em] text-foreground">
-                {isEnglish ? "Profile" : "Profil"}: {level.title}.
-              </p>
-              <p className="mt-2 max-w-[480px] text-[15.5px] leading-[1.65] text-muted-foreground">
+              <h1 className="mt-3 text-[38px] font-bold leading-[1.02] tracking-[-0.035em] text-foreground sm:text-[48px]">
+                {isEnglish ? "Your current pattern." : "Dein aktuelles Muster."}
+              </h1>
+              <p className="mt-4 max-w-[680px] text-sm leading-relaxed text-muted-foreground">
                 {level.desc}
               </p>
             </div>
-          </FadeBlock>
-
-          <FadeBlock delay={2}>
-            <div>
-              <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
-                5 {isEnglish ? "dimensions" : "Dimensionen"}
+            <aside className="border-t border-border pt-4 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
+                Score
               </p>
-              <div className="mt-4 grid gap-5">
-                {perDim.map((d, i) => (
-                  <FadeBlock key={d.id} delay={3 + i}>
-                    <div>
-                      <div className="mb-1.5 flex items-baseline justify-between">
-                        <span className="text-[14px] font-semibold text-foreground">
-                          {d.label}
-                        </span>
-                        <span className="font-mono text-[12px] text-muted-foreground">
-                          {d.score}/{d.max}
-                        </span>
-                      </div>
-                      <div className="h-1.5 w-full overflow-hidden bg-border">
-                        <m.div
-                          className={cn(
-                            "h-full",
-                            d.id === weakest.id ? "bg-brand-orange" : "bg-brand-sand",
-                          )}
-                          initial={{ width: 0 }}
-                          animate={{ width: `${d.pct * 100}%` }}
-                          transition={{ duration: 0.7, ease: EASE_OUT_EXPO, delay: 0.3 + i * 0.1 }}
-                        />
-                      </div>
-                      <p className="mt-1.5 text-[12.5px] text-muted-foreground">
-                        {d.shortDesc}
-                      </p>
-                    </div>
-                  </FadeBlock>
-                ))}
-              </div>
-            </div>
-          </FadeBlock>
-        </div>
+              <p className="mt-2 text-[48px] font-bold leading-none tracking-[-0.04em] text-foreground">
+                {percent}%
+              </p>
+              <p className="mt-2 font-mono text-xs text-muted-foreground">
+                {totalScore} / {maxScore}
+              </p>
+              <p className="mt-3 text-base font-bold text-foreground">
+                {isEnglish ? "Profile" : "Profil"}: {level.title}.
+              </p>
+            </aside>
+          </div>
+        </header>
 
-        <FadeBlock delay={7}>
-          <div className="mt-14 border-l-[3px] border-brand-orange bg-[var(--color-kupfer-mist)] px-8 py-7">
-            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-              {isEnglish ? "Lowest-scoring dimension" : "Niedrigster Teilwert"}: {weakest.label}
+        <div>
+          <section className="mt-8">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
+              05 {isEnglish ? "dimensions" : "Dimensionen"}
             </p>
-            <p className="mt-3 max-w-[640px] text-[17px] leading-[1.55] text-foreground">
+            <div className="mt-3 border-t border-foreground">
+              {perDim.map((dimension, index) => (
+                <div
+                  key={dimension.id}
+                  className="grid gap-2 border-b border-border py-3 sm:grid-cols-[9rem_minmax(0,1fr)] sm:items-center sm:gap-4"
+                >
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">
+                      {dimension.label}
+                    </p>
+                    <p className="mt-0.5 font-mono text-xs text-muted-foreground">
+                      {dimension.score}/{dimension.max}
+                    </p>
+                  </div>
+                  <div>
+                    <div
+                      className="h-2 w-full overflow-hidden bg-border"
+                      role="progressbar"
+                      aria-label={`${dimension.label}: ${dimension.score} / ${dimension.max}`}
+                      aria-valuenow={Math.round(dimension.pct * 100)}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                    >
+                      <m.div
+                        className={cn(
+                          "h-full",
+                          dimension.id === weakest.id
+                            ? "bg-brand-orange"
+                            : "bg-brand-sand",
+                        )}
+                        initial={{ width: 0 }}
+                        animate={{ width: `${dimension.pct * 100}%` }}
+                        transition={{
+                          duration: 0.7,
+                          ease: EASE_OUT_EXPO,
+                          delay: 0.1 + index * 0.08,
+                        }}
+                      />
+                    </div>
+                    <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">
+                      {dimension.shortDesc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="mt-8 border-y border-brand-orange py-5">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
+              {isEnglish ? "Lowest-scoring dimension" : "Niedrigster Teilwert"}:{" "}
+              {weakest.label}
+            </p>
+            <p className="mt-2 max-w-[720px] text-sm leading-relaxed text-foreground">
               {weakest.weakestRecommendation}
             </p>
-          </div>
-        </FadeBlock>
+          </section>
 
-        <FadeBlock delay={8}>
-          <div className="mt-10 flex flex-wrap items-center gap-3.5">
-            <BrandButton
+          <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2">
+            <Link
               href={localizeHref("/ai-native/kurs/modul_1", locale)}
               prefetch={false}
-              variant="primary"
-              surface="light"
+              className={TECHNICAL_COURSE_PRIMARY_ACTION_CLASS}
+              data-workspace-primary-action="true"
             >
-              {isEnglish ? "Start the course" : "Kurs starten"} <ArrowRight size={14} />
-            </BrandButton>
-            <BrandButton href={localizeHref("/ai-native", locale)} variant="outline" surface="light">
-              {isEnglish ? "Back to overview" : "Zurück zur Übersicht"}
-            </BrandButton>
+              {isEnglish ? "Start module 1" : "Modul 1 starten"}
+              <ArrowRight size={14} aria-hidden="true" />
+            </Link>
+            <Link
+              href={localizeHref("/ai-native", locale)}
+              className={TECHNICAL_COURSE_SECONDARY_ACTION_CLASS}
+            >
+              {isEnglish ? "Course overview" : "Kursübersicht"}
+            </Link>
             <button
               type="button"
               onClick={reset}
-              className="inline-flex items-center gap-1.5 p-3.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground transition-colors hover:text-brand-orange"
+              className="inline-flex min-h-11 items-center gap-2 border-b border-border px-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground transition-colors hover:border-brand-orange hover:text-brand-orange focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
             >
-              <RotateCcw size={12} /> {isEnglish ? "Start again" : "Nochmal bearbeiten"}
+              <RotateCcw size={14} aria-hidden="true" />
+              {isEnglish ? "Start again" : "Nochmal bearbeiten"}
             </button>
           </div>
-        </FadeBlock>
-      </div>
+        </div>
+      </TechnicalCourseFrame>
     );
   }
 
   /* ─── Question view ─── */
   return (
-    <div className="mx-auto max-w-[960px] px-6 py-14 md:py-20">
-      <div className="flex flex-wrap items-baseline justify-between gap-5">
-        <div>
-          <Eyebrow>{isEnglish ? "Workflow self-assessment" : "Workflow-Selbsttest"}</Eyebrow>
-          <ClipHeading
-            as="h1"
-            className="mt-2.5 font-bold leading-none tracking-[-0.035em] text-foreground"
-            style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}
-          >
-            {isEnglish ? "How do you work today?" : "Wie arbeitest du heute?"}
-          </ClipHeading>
-        </div>
-        <span className="font-mono text-[12px] uppercase tracking-[0.14em] text-muted-foreground">
-          {String(idx + 1).padStart(2, "0")} / {String(scenarios.length).padStart(2, "0")}
-        </span>
-      </div>
+    <TechnicalCourseFrame courseId="ai-native-fluency-test" lang={locale}>
+      <header className="border-y border-foreground py-6 sm:py-8">
+        <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-10">
+          <div className="min-w-0">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
+              {isEnglish ? "Workflow self-assessment" : "Workflow-Selbsttest"}
+            </p>
+            <h1 className="mt-3 text-[38px] font-bold leading-[1.02] tracking-[-0.035em] text-foreground sm:text-[48px]">
+              {isEnglish ? "How do you work today?" : "Wie arbeitest du heute?"}
+            </h1>
+            <p className="mt-4 max-w-[680px] text-sm leading-relaxed text-muted-foreground">
+              {isEnglish
+                ? "Ten workplace scenarios across five dimensions. The result stays local and is neither a standardized test nor a comparison with other people."
+                : "Zehn Arbeitsszenarien in fünf Dimensionen. Das Ergebnis bleibt lokal und ist weder standardisierter Test noch Vergleich mit anderen Personen."}
+            </p>
+          </div>
 
-      <FadeBlock delay={1}>
-        <p className="mt-4 max-w-[640px] text-[16px] leading-[1.65] text-muted-foreground">
-          {isEnglish
-            ? "Ten workplace scenarios across five dimensions. The result is a local self-assessment, not a standardized test or comparison with other people."
-            : "Zehn Arbeitsszenarien in fünf Dimensionen. Das Ergebnis ist eine lokale Selbstprüfung, kein standardisierter Test und kein Vergleich mit anderen Personen."}
-        </p>
-      </FadeBlock>
-
-      {/* Progress bar */}
-      <div className="mt-10 flex items-center gap-3.5">
-        <div className="h-0.5 flex-1 overflow-hidden bg-border">
-          <m.div
-            className="h-full bg-brand-orange"
-            animate={{ width: `${(answered / scenarios.length) * 100}%` }}
-            transition={{ duration: 0.3 }}
-          />
-        </div>
-        <span className="font-mono text-[11px] tracking-[0.12em] text-muted-foreground">
-          {answered}/{scenarios.length}
-        </span>
-      </div>
-
-      {/* Step dots */}
-      <div className="mt-5 flex flex-wrap gap-1.5">
-        {scenarios.map((s, i) => {
-          const done = answers[s.id] != null;
-          const cur = i === idx;
-          return (
-            <button
-              key={s.id}
-              type="button"
-              onClick={() => setIdx(i)}
-              aria-label={`${isEnglish ? "Scenario" : "Szenario"} ${i + 1}`}
-              className={cn(
-                "inline-flex h-7 w-7 items-center justify-center border p-0 font-mono text-[11px] font-bold transition-[background-color,border-color,color,opacity,transform,box-shadow]",
-                cur
-                  ? "border-foreground bg-foreground text-background"
-                  : done
-                    ? "border-brand-orange bg-brand-orange text-white"
-                    : "border-border bg-transparent text-muted-foreground hover:border-foreground",
-              )}
+          <aside className="border-t border-border pt-4 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
+            <div className="flex items-baseline justify-between gap-4 font-mono text-xs text-muted-foreground">
+              <span>
+                {String(idx + 1).padStart(2, "0")} /{" "}
+                {String(scenarios.length).padStart(2, "0")}
+              </span>
+              <span>
+                {answered}/{scenarios.length}{" "}
+                {isEnglish ? "answered" : "beantwortet"}
+              </span>
+            </div>
+            <div
+              className="mt-2 h-2 overflow-hidden bg-border"
+              role="progressbar"
+              aria-label={
+                isEnglish ? "Answered scenarios" : "Beantwortete Szenarien"
+              }
+              aria-valuenow={answered}
+              aria-valuemin={0}
+              aria-valuemax={scenarios.length}
             >
-              {i + 1}
-            </button>
-          );
-        })}
-      </div>
+              <m.div
+                className="h-full bg-brand-orange"
+                animate={{ width: `${(answered / scenarios.length) * 100}%` }}
+                transition={{ duration: 0.3 }}
+              />
+            </div>
+          </aside>
+        </div>
+      </header>
 
-      {/* Current scenario */}
-      <AnimatePresence mode="wait">
-        <m.div
-          key={current.id}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.35, ease: EASE_OUT_EXPO }}
-          className="mt-14"
+      <div>
+        <nav
+          aria-label={isEnglish ? "Assessment scenarios" : "Testszenarien"}
+          className="mt-6 flex flex-wrap gap-1.5"
         >
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-            {isEnglish ? "Scenario" : "Szenario"} {String(idx + 1).padStart(2, "0")} ·{" "}
-            {dimensions.find((d) => d.id === current.dimension)?.label}
-          </p>
-          <h2
-            className="mt-3 font-bold leading-[1.15] tracking-[-0.03em] text-foreground"
-            style={{ fontSize: "clamp(1.5rem, 3vw, 2.25rem)" }}
-          >
-            „{current.question}"
-          </h2>
+          {scenarios.map((scenario, scenarioIndex) => {
+            const done = answers[scenario.id] != null;
+            const currentScenario = scenarioIndex === idx;
+            return (
+              <button
+                key={scenario.id}
+                type="button"
+                onClick={() => setIdx(scenarioIndex)}
+                aria-label={`${isEnglish ? "Scenario" : "Szenario"} ${scenarioIndex + 1}`}
+                aria-current={currentScenario ? "step" : undefined}
+                className={cn(
+                  "inline-flex h-11 w-11 items-center justify-center border p-0 font-mono text-xs font-bold transition-[background-color,border-color,color] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange",
+                  currentScenario
+                    ? "border-foreground bg-foreground text-background"
+                    : done
+                      ? "border-brand-orange text-brand-orange"
+                      : "border-border bg-transparent text-muted-foreground hover:border-foreground",
+                )}
+              >
+                {scenarioIndex + 1}
+              </button>
+            );
+          })}
+        </nav>
 
-          <div className="mt-8 grid gap-2.5">
-            {current.options.map((opt, i) => {
-              const selected = answers[current.id] === i;
-              return (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => selectAnswer(i)}
-                  className={cn(
-                    "flex items-start gap-3.5 border p-4 text-left transition-[background-color,border-color,color,opacity,transform,box-shadow] duration-150",
-                    selected
-                      ? "border-brand-orange border-l-[3px] bg-[var(--color-kupfer-mist)]"
-                      : "border-border bg-card/30 hover:border-foreground",
-                  )}
-                >
-                  <span
+        <AnimatePresence mode="wait">
+          <m.section
+            key={current.id}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
+            className="mt-8"
+            aria-labelledby={`scenario-heading-${current.id}`}
+          >
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
+              {isEnglish ? "Scenario" : "Szenario"}{" "}
+              {String(idx + 1).padStart(2, "0")} ·{" "}
+              {
+                dimensions.find(
+                  (dimension) => dimension.id === current.dimension,
+                )?.label
+              }
+            </p>
+            <h2
+              id={`scenario-heading-${current.id}`}
+              className="mt-2 max-w-[800px] text-[26px] font-bold leading-tight tracking-[-0.025em] text-foreground sm:text-[32px]"
+            >
+              „{current.question}“
+            </h2>
+
+            <div className="mt-5 grid border-t border-foreground">
+              {current.options.map((option, optionIndex) => {
+                const selected = answers[current.id] === optionIndex;
+                return (
+                  <button
+                    key={option.label}
+                    type="button"
+                    onClick={() => selectAnswer(optionIndex)}
+                    aria-pressed={selected}
                     className={cn(
-                      "w-4 pt-0.5 font-mono text-[13px] font-bold",
-                      selected ? "text-brand-orange" : "text-muted-foreground",
+                      "flex min-h-12 items-start gap-3 border-b border-border px-3 py-3 text-left transition-[background-color,border-color,color] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange",
+                      selected
+                        ? "border-l-2 border-l-brand-orange bg-[var(--color-kupfer-mist)]"
+                        : "hover:bg-card",
                     )}
                   >
-                    {String.fromCharCode(65 + i)}
-                  </span>
-                  <span className="flex-1 text-[14.5px] leading-[1.5] text-foreground">
-                    {opt.label}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </m.div>
-      </AnimatePresence>
+                    <span
+                      className={cn(
+                        "w-5 shrink-0 font-mono text-[13px] font-bold",
+                        selected
+                          ? "text-brand-orange"
+                          : "text-muted-foreground",
+                      )}
+                    >
+                      {String.fromCharCode(65 + optionIndex)}
+                    </span>
+                    <span className="flex-1 text-sm leading-relaxed text-foreground">
+                      {option.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </m.section>
+        </AnimatePresence>
 
-      {/* Footer nav */}
-      <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6">
-        <button
-          type="button"
-          onClick={() => setIdx(Math.max(0, idx - 1))}
-          disabled={idx === 0}
-          className={cn(
-            "font-mono text-[11px] font-bold uppercase tracking-[0.14em] transition-colors",
-            idx === 0
-              ? "cursor-not-allowed text-muted"
-              : "text-muted-foreground hover:text-brand-orange",
-          )}
-        >
-          ← {isEnglish ? "Back" : "Zurück"}
-        </button>
-        {idx < scenarios.length - 1 ? (
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
           <button
             type="button"
-            onClick={() => setIdx(Math.min(scenarios.length - 1, idx + 1))}
-            className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange transition-colors hover:text-brand-amber"
+            onClick={() => setIdx(Math.max(0, idx - 1))}
+            disabled={idx === 0}
+            className={cn(
+              "inline-flex min-h-11 items-center px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange",
+              idx === 0
+                ? "cursor-not-allowed text-muted"
+                : "text-muted-foreground hover:text-brand-orange",
+            )}
           >
-            {isEnglish ? "Next" : "Weiter"} →
+            ← {isEnglish ? "Back" : "Zurück"}
           </button>
-        ) : (
-          <BrandButton
-            variant="primary"
-            surface="light"
-            onClick={() => setSubmitted(true)}
-            disabled={answered < scenarios.length}
-          >
-            {isEnglish ? "Calculate result" : "Ergebnis berechnen"} <ArrowRight size={14} />
-          </BrandButton>
-        )}
-      </div>
+          {idx < scenarios.length - 1 ? (
+            <button
+              type="button"
+              onClick={() => setIdx(Math.min(scenarios.length - 1, idx + 1))}
+              className="inline-flex min-h-11 items-center border-b-2 border-foreground px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground transition-colors hover:border-brand-orange hover:text-brand-orange focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
+            >
+              {isEnglish ? "Next" : "Weiter"} →
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setSubmitted(true)}
+              disabled={answered < scenarios.length}
+              className={TECHNICAL_COURSE_PRIMARY_ACTION_CLASS}
+              data-workspace-primary-action="true"
+            >
+              {isEnglish ? "Calculate result" : "Ergebnis berechnen"}
+              <ArrowRight size={14} aria-hidden="true" />
+            </button>
+          )}
+        </div>
 
-      {/* Cross-link to KI-F */}
-      <FadeBlock delay={2}>
-        <p className="mt-10 text-center text-sm text-muted-foreground">
-          {isEnglish ? "Need the foundation first?" : "Fehlt noch die Grundlage?"}{" "}
-          <Link
-            href={localizeHref("/ki-fuehrerschein", locale)}
-            className="text-brand-orange underline decoration-brand-orange/40 underline-offset-4 hover:text-brand-amber"
-          >
-            {isEnglish ? "AI Fundamentals" : "KI-Führerschein"}
-          </Link>{" "}
-          {isEnglish
-            ? "is free and recommended before this course."
-            : "ist kostenlos und vor diesem Kurs empfohlen."}
-        </p>
-      </FadeBlock>
-    </div>
+        <details className="mt-8 border-y border-border">
+          <summary className="flex min-h-12 cursor-pointer items-center justify-between gap-4 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground">
+            {isEnglish
+              ? "Need the foundation first?"
+              : "Fehlt noch die Grundlage?"}
+            <span className="text-brand-orange" aria-hidden="true">
+              +
+            </span>
+          </summary>
+          <p className="border-t border-border py-4 text-sm leading-relaxed text-muted-foreground">
+            <Link
+              href={localizeHref("/ki-fuehrerschein", locale)}
+              className="border-b border-brand-orange text-brand-orange transition-colors hover:text-brand-amber"
+            >
+              {isEnglish ? "AI Fundamentals" : "KI-Führerschein"}
+            </Link>{" "}
+            {isEnglish
+              ? "is free and recommended before this course."
+              : "ist kostenlos und vor diesem Kurs empfohlen."}
+          </p>
+        </details>
+      </div>
+    </TechnicalCourseFrame>
   );
 }
 

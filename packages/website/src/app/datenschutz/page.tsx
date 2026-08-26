@@ -63,7 +63,7 @@ function GermanPrivacyContent() {
   const formattedAddress = formatServiceAddress(address);
 
   return (
-    <section className="py-24" aria-labelledby="privacy-title">
+    <section className="py-12" aria-labelledby="privacy-title">
       <div className="mx-auto max-w-3xl break-words px-6">
         <h1
           id="privacy-title"
@@ -318,9 +318,9 @@ function GermanPrivacyContent() {
                   Zur Vermeidung identischer Anbieteraufrufe hält jede einzelne
                   Funktions- oder Laufzeitinstanz höchstens 500 Antworten für
                   maximal eine Stunde im Arbeitsspeicher. Der Zwischenspeicher
-                  wird nicht zwischen allen Instanzen geteilt. Gespeichert werden ein
-                  SHA-256-Anfrageschlüssel und die Anbieterantwort, nicht die
-                  Eingabe als separates Klartextfeld. Die Antwort kann
+                  wird nicht zwischen allen Instanzen geteilt. Gespeichert
+                  werden ein SHA-256-Anfrageschlüssel und die Anbieterantwort,
+                  nicht die Eingabe als separates Klartextfeld. Die Antwort kann
                   Bestandteile der Eingabe wiedergeben. Neustart oder
                   Verdrängung aus dem begrenzten Zwischenspeicher können die
                   Daten früher entfernen.
@@ -351,30 +351,30 @@ function GermanPrivacyContent() {
             {features.courseTerminal ? (
               <p className="mt-2">
                 Die Kursprojekte für Codex, Data Science, Data Engineering und
-                Data Infrastructure können auf ausdrücklichen Start jeweils
-                eine feste Folge erlaubter Befehlskennungen an Vercel Sandbox
+                Data Infrastructure können auf ausdrücklichen Start jeweils eine
+                feste Folge erlaubter Befehlskennungen an Vercel Sandbox
                 übertragen. Browserseitige Analysepläne werden nur strukturell
                 geprüft; sie sind kein ausführbares SQL und werden nicht an die
-                Sandbox gesendet.
-                Jede Ausführung startet einen neuen, nicht persistenten
-                Node-24-Arbeitsbereich mit ausschließlich vom Server erzeugten
-                synthetischen Dateien, gesperrtem Netzwerk, höchstens 60
-                Sekunden Lebensdauer und 10 Sekunden Zeitlimit pro Befehl. Freie
-                Shell-Eingaben, Lernenden-Repositories, Zugangsdaten und externe
-                Installationen werden nicht angenommen. stdout, stderr,
-                Exit-Codes und Git-Diff werden als private, nicht cachebare
-                Antwort angezeigt und nicht im Lernfortschritt gespeichert.
-                Datenkursläufe liefern zusätzlich feste synthetische
-                Kennzahlenbelege. Der Server protokolliert bei Erfolg nur Route,
-                Status, Befehlsanzahl und Laufzeit; Fehlerprotokolle verwenden
-                ausschließlich begrenzte technische Schritt- und Fehlerklassen.
-                Workspace-Inhalte und Ergebnisprotokolle werden nicht geloggt. Die
-                Sandbox wird abschließend gestoppt; die nicht persistente
-                Ausführung ist keine Zusage über eine sekundengenaue physische
-                Löschung in Anbieter-Infrastruktur. Konto-, IP- und globale
-                Laufkontingente zählen angenommene Ausführungen und werden über
-                dieselben pseudonymisierten Supabase-Zähler begrenzt. Sie messen
-                keine Kosten oder Ausgaben.
+                Sandbox gesendet. Jede Ausführung startet einen neuen, nicht
+                persistenten Node-24-Arbeitsbereich mit ausschließlich vom
+                Server erzeugten synthetischen Dateien, gesperrtem Netzwerk,
+                höchstens 60 Sekunden Lebensdauer und 10 Sekunden Zeitlimit pro
+                Befehl. Freie Shell-Eingaben, Lernenden-Repositories,
+                Zugangsdaten und externe Installationen werden nicht angenommen.
+                stdout, stderr, Exit-Codes und Git-Diff werden als private,
+                nicht cachebare Antwort angezeigt und nicht im Lernfortschritt
+                gespeichert. Datenkursläufe liefern zusätzlich feste
+                synthetische Kennzahlenbelege. Der Server protokolliert bei
+                Erfolg nur Route, Status, Befehlsanzahl und Laufzeit;
+                Fehlerprotokolle verwenden ausschließlich begrenzte technische
+                Schritt- und Fehlerklassen. Workspace-Inhalte und
+                Ergebnisprotokolle werden nicht geloggt. Die Sandbox wird
+                abschließend gestoppt; die nicht persistente Ausführung ist
+                keine Zusage über eine sekundengenaue physische Löschung in
+                Anbieter-Infrastruktur. Konto-, IP- und globale Laufkontingente
+                zählen angenommene Ausführungen und werden über dieselben
+                pseudonymisierten Supabase-Zähler begrenzt. Sie messen keine
+                Kosten oder Ausgaben.
               </p>
             ) : (
               <p className="mt-2">

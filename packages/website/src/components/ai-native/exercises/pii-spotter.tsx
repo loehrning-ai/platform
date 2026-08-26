@@ -3,11 +3,7 @@
 import { useMemo, useState, type JSX } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { CheckCircle2, XCircle } from "lucide-react";
-import {
-  ExerciseShell,
-  ExerciseResetButton,
-  submitExercise,
-} from "./_shell";
+import { ExerciseShell, ExerciseResetButton, submitExercise } from "./_shell";
 import type { ModuleId } from "@/lib/ai-native/types";
 import { EASE_OUT_EXPO } from "@/lib/animations";
 import { cn } from "@/lib/utils";
@@ -51,7 +47,11 @@ function tokenize(text: string): readonly string[] {
 function computeF1(
   selected: ReadonlySet<number>,
   truth: ReadonlySet<number>,
-): { readonly precision: number; readonly recall: number; readonly f1: number } {
+): {
+  readonly precision: number;
+  readonly recall: number;
+  readonly f1: number;
+} {
   if (selected.size === 0 && truth.size === 0) {
     return { precision: 1, recall: 1, f1: 1 };
   }
@@ -62,7 +62,9 @@ function computeF1(
   const precision = selected.size === 0 ? 0 : tp / selected.size;
   const recall = truth.size === 0 ? 0 : tp / truth.size;
   const f1 =
-    precision + recall === 0 ? 0 : (2 * precision * recall) / (precision + recall);
+    precision + recall === 0
+      ? 0
+      : (2 * precision * recall) / (precision + recall);
   return { precision, recall, f1 };
 }
 
@@ -117,14 +119,17 @@ function PiiSpotterBody({
 
   const handleSubmit = () => {
     const { f1 } = computeF1(selected, truth);
-    setSubmitted(true);
-    submitExercise({
-      moduleId,
-      lessonId,
-      exerciseId,
-      kind: "exercise-pii-spotter",
-      score: f1,
-    });
+    if (
+      submitExercise({
+        moduleId,
+        lessonId,
+        exerciseId,
+        kind: "exercise-pii-spotter",
+        score: f1,
+      })
+    ) {
+      setSubmitted(true);
+    }
   };
 
   const handleReset = () => {
@@ -139,7 +144,7 @@ function PiiSpotterBody({
 
   return (
     <div>
-      <p className="mb-2 font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+      <p className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
         {copy(
           "Markiere PII / Geschäftsgeheimnis per Klick",
           "Select personal data or confidential business information",
@@ -147,7 +152,8 @@ function PiiSpotterBody({
       </p>
       <div className="min-h-[100px] border border-border bg-background p-4 text-[14.5px] leading-[1.9] text-foreground">
         {tokens.map((t, i) => {
-          if (/^\s+$/.test(t) || t.length === 0) return <span key={i}>{t}</span>;
+          if (/^\s+$/.test(t) || t.length === 0)
+            return <span key={i}>{t}</span>;
           const wordPos = onlyWordIndices.indexOf(i);
           const isSelected = selected.has(wordPos);
           const isTruth = truth.has(wordPos);
@@ -169,12 +175,20 @@ function PiiSpotterBody({
                 }
               }}
               className={cn(
-                "inline-block cursor-pointer rounded-none px-0.5 transition-colors",
+                "inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-none px-0.5 align-middle transition-colors",
                 submitted ? "cursor-default" : "hover:bg-brand-orange/10",
-                showFeedback && correct && "bg-risk-green/20 ring-1 ring-risk-green",
-                showFeedback && missed && "bg-destructive/20 ring-1 ring-destructive",
-                showFeedback && falsePositive && "bg-brand-amber/20 ring-1 ring-brand-amber",
-                !showFeedback && isSelected && "bg-brand-orange/20 ring-1 ring-brand-orange",
+                showFeedback &&
+                  correct &&
+                  "bg-risk-green/20 ring-1 ring-risk-green",
+                showFeedback &&
+                  missed &&
+                  "bg-destructive/20 ring-1 ring-destructive",
+                showFeedback &&
+                  falsePositive &&
+                  "bg-brand-amber/20 ring-1 ring-brand-amber",
+                !showFeedback &&
+                  isSelected &&
+                  "bg-brand-orange/20 ring-1 ring-brand-orange",
               )}
               aria-pressed={isSelected}
             >
@@ -193,7 +207,9 @@ function PiiSpotterBody({
             transition={{ duration: 0.28, ease: EASE_OUT_EXPO }}
             className={cn(
               "mt-4 border-l-[3px] p-4",
-              passed ? "border-risk-green bg-risk-green/5" : "border-brand-amber bg-brand-amber/5",
+              passed
+                ? "border-risk-green bg-risk-green/5"
+                : "border-brand-amber bg-brand-amber/5",
             )}
           >
             <div className="flex flex-wrap items-center gap-4">
@@ -205,19 +221,20 @@ function PiiSpotterBody({
                 )}
                 <span
                   className={cn(
-                    "font-mono text-[11px] font-bold uppercase tracking-[0.14em]",
+                    "font-mono text-xs font-bold uppercase tracking-[0.14em]",
                     passed ? "text-risk-green" : "text-brand-amber",
                   )}
                 >
                   F1 {Math.round(f1 * 100)}% · {passed ? "Passed" : "Review"}
                 </span>
               </div>
-              <span className="font-mono text-[10.5px] tracking-[0.1em] text-muted-foreground">
+              <span className="font-mono text-xs tracking-[0.1em] text-muted-foreground">
                 Precision {Math.round(precision * 100)}% · Recall{" "}
                 {Math.round(recall * 100)}%
               </span>
-              <span className="ml-auto font-mono text-[10.5px] text-muted-foreground">
-                {truth.size} {copy("sensible Tokens insgesamt", "sensitive tokens in total")}
+              <span className="ml-auto font-mono text-xs text-muted-foreground">
+                {truth.size}{" "}
+                {copy("sensible Tokens insgesamt", "sensitive tokens in total")}
               </span>
             </div>
             <p className="mt-2 text-[13.5px] leading-[1.55] text-foreground">
@@ -236,7 +253,7 @@ function PiiSpotterBody({
           <button
             type="button"
             onClick={handleSubmit}
-            className="inline-flex items-center gap-1.5 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
+            className="inline-flex min-h-11 items-center gap-1.5 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-foreground hover:text-background"
           >
             {copy(
               `Prüfen (${selected.size} markiert)`,

@@ -57,7 +57,7 @@ export function PromptDiffWidget({
     >
       <div className="grid gap-4 md:grid-cols-2">
         <div>
-          <p className="mb-1.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.1em] text-destructive">
+          <p className="mb-1.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-destructive">
             {german ? "Vorher" : "Before"}
           </p>
           <div className="border border-destructive/30 bg-destructive/5 p-3 text-[13px] leading-[1.7] text-foreground">
@@ -76,7 +76,7 @@ export function PromptDiffWidget({
           </div>
         </div>
         <div>
-          <p className="mb-1.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.1em] text-risk-green">
+          <p className="mb-1.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-risk-green">
             {german ? "Nachher" : "After"}
           </p>
           <div className="border border-risk-green/30 bg-risk-green/5 p-3 text-[13px] leading-[1.7] text-foreground">

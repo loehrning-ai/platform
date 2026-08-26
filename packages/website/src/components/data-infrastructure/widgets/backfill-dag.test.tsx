@@ -69,13 +69,15 @@ describe("BackfillDag", () => {
     expect(screen.getAllByText(/× speedup/).length).toBe(3);
   });
 
-  it("awards the checkpoint once on claiming XP, idempotently", () => {
+  it("records the checkpoint once, idempotently", () => {
     render(<BackfillDag lessonId="di-batch-elt" cpId="dag" />);
-    const btn = screen.getByRole("button", { name: /Got it/ });
+    const btn = screen.getByRole("button", { name: "Record checkpoint" });
     fireEvent.click(btn);
     expect(isCheckpointDone("di-batch-elt", "dag")).toBe(true);
     expect(getXp()).toBe(XP.CHECKPOINT);
-    fireEvent.click(screen.getByRole("button", { name: /claimed/ }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Checkpoint recorded" }),
+    );
     expect(getXp()).toBe(XP.CHECKPOINT);
   });
 });

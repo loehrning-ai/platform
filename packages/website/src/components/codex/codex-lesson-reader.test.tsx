@@ -68,6 +68,34 @@ const LESSON: CodexLesson = {
       blocks: [{ kind: "prose", markdown: "Section two content." }],
       keyTakeaway: "The key takeaway.",
     },
+    {
+      id: "s3",
+      title: "Section Three",
+      readTimeMinutes: 1,
+      content: "Section three content.",
+      blocks: [{ kind: "prose", markdown: "Section three content." }],
+    },
+    {
+      id: "s4",
+      title: "Section Four",
+      readTimeMinutes: 1,
+      content: "Section four content.",
+      blocks: [{ kind: "prose", markdown: "Section four content." }],
+    },
+    {
+      id: "s5",
+      title: "Section Five",
+      readTimeMinutes: 1,
+      content: "Section five content.",
+      blocks: [{ kind: "prose", markdown: "Section five content." }],
+    },
+    {
+      id: "s6",
+      title: "Section Six",
+      readTimeMinutes: 1,
+      content: "Section six content.",
+      blocks: [{ kind: "prose", markdown: "Section six content." }],
+    },
   ],
   widgets: [
     {
@@ -116,17 +144,17 @@ describe("CodexLessonReader ", () => {
     const host = document.createElement("div");
     host.innerHTML = markup;
     const buttons = Array.from(host.querySelectorAll("button"));
-    const markAsRead = buttons.filter((button) =>
-      button.textContent?.includes("Mark as read"),
+    const sectionChecks = buttons.filter((button) =>
+      button.textContent?.includes("Confirm section reviewed"),
     );
-    const completeLesson = buttons.find((button) =>
-      button.textContent?.includes("Complete lesson"),
+    const completionCheckpoint = buttons.find((button) =>
+      button.textContent?.includes("Loading progress"),
     );
 
-    expect(markAsRead).toHaveLength(LESSON.sections.length);
-    expect(markAsRead.every((button) => button.disabled)).toBe(true);
-    expect(completeLesson).toBeDefined();
-    expect(completeLesson?.disabled).toBe(true);
+    expect(sectionChecks).toHaveLength(LESSON.sections.length);
+    expect(sectionChecks.every((button) => button.disabled)).toBe(true);
+    expect(completionCheckpoint).toBeDefined();
+    expect(completionCheckpoint?.disabled).toBe(true);
   });
 
   it("renders the lesson header, sections, and key takeaway", () => {
@@ -185,7 +213,7 @@ describe("CodexLessonReader ", () => {
     ).toBeInTheDocument();
   });
 
-  it("gates the complete-lesson button until every section is marked read", () => {
+  it("requires every section checkpoint and a transfer decision", () => {
     render(
       <CodexLessonReader
         lesson={LESSON}
@@ -194,20 +222,33 @@ describe("CodexLessonReader ", () => {
         nextHref={null}
       />,
     );
-    const completeButton = screen.getByRole("button", {
-      name: /Complete lesson/i,
+    const saveCheckpoint = screen.getByRole("button", {
+      name: /Save checkpoint/i,
     });
-    expect(completeButton).toBeDisabled();
+    const decision = screen.getByLabelText("Decision or revision");
+    expect(decision).toBeDisabled();
+    expect(saveCheckpoint).toBeDisabled();
 
+    while (
+      screen.getAllByRole("button", { name: /Confirm section reviewed/i })
+        .length > 1
+    ) {
+      fireEvent.click(
+        screen.getAllByRole("button", {
+          name: /Confirm section reviewed/i,
+        })[0],
+      );
+    }
+    expect(decision).toBeDisabled();
     fireEvent.click(
-      screen.getAllByRole("button", { name: /Mark as read/i })[0],
+      screen.getByRole("button", { name: /Confirm section reviewed/i }),
     );
-    expect(completeButton).toBeDisabled();
-
-    fireEvent.click(
-      screen.getAllByRole("button", { name: /Mark as read/i })[0],
-    );
-    expect(completeButton).not.toBeDisabled();
+    expect(decision).not.toBeDisabled();
+    expect(saveCheckpoint).toBeDisabled();
+    fireEvent.change(decision, {
+      target: { value: "I will test the narrower task boundary" },
+    });
+    expect(saveCheckpoint).not.toBeDisabled();
   });
 
   it("marks the lesson complete in the unified store", () => {
@@ -220,13 +261,16 @@ describe("CodexLessonReader ", () => {
       />,
     );
     for (const button of screen.getAllByRole("button", {
-      name: /Mark as read/i,
+      name: /Confirm section reviewed/i,
     })) {
       fireEvent.click(button);
     }
-    fireEvent.click(screen.getByRole("button", { name: /Complete lesson/i }));
+    fireEvent.change(screen.getByLabelText("Decision or revision"), {
+      target: { value: "I will test the narrower task boundary" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Save checkpoint/i }));
     expect(isLessonCompleted("codex", "L01")).toBe(true);
-    expect(screen.getByText("Lesson complete")).toBeInTheDocument();
+    expect(screen.getByText("Navigation checkpoint saved")).toBeInTheDocument();
   });
 
   it("renders prev/next links when provided", () => {
@@ -245,5 +289,13 @@ describe("CodexLessonReader ", () => {
     expect(
       screen.getByRole("link", { name: /Previous lesson/i }),
     ).toHaveAttribute("href", "/kurse/open-source/codex/kurs/prev");
+    const routeLinks = Array.from(
+      screen
+        .getByRole("navigation", { name: "Lesson route" })
+        .querySelectorAll("a"),
+    );
+    expect(routeLinks[0]).toHaveTextContent(/Previous lesson/i);
+    expect(routeLinks[1]).toHaveTextContent(/Next lesson/i);
+    expect(routeLinks[1]).toHaveClass("ml-auto");
   });
 });

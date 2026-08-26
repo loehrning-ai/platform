@@ -15,7 +15,8 @@ describe("gradeFixPrompt — grading purity + correctness", () => {
   ];
 
   it("is deterministic — same input yields same result twice", () => {
-    const draft = "Rolle: Marketing-Lead. Kontext: SaaS. Format: LinkedIn-Post.";
+    const draft =
+      "Rolle: Marketing-Lead. Kontext: SaaS. Format: LinkedIn-Post.";
     const a = gradeFixPrompt(draft, criteria);
     const b = gradeFixPrompt(draft, criteria);
     expect(a).toEqual(b);
@@ -50,7 +51,9 @@ describe("gradeFixPrompt — grading purity + correctness", () => {
   });
 
   it("invalid regex pattern returns false (no throw)", () => {
-    const bad = [{ id: "x", label: "Broken", pattern: "[invalid(", regex: true }];
+    const bad = [
+      { id: "x", label: "Broken", pattern: "[invalid(", regex: true },
+    ];
     const { matches } = gradeFixPrompt("anything", bad);
     expect(matches[0]).toBe(false);
   });

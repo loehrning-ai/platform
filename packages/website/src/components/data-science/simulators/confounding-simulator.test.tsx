@@ -15,12 +15,22 @@ describe("ConfoundingSimulator ", () => {
 
   it("renders the real panel copy and scenario picker", () => {
     render(<ConfoundingSimulator />);
-    expect(screen.getByText("Confounding · the lurking variable")).toBeInTheDocument();
+    expect(
+      screen.getByText("Confounding · the lurking variable"),
+    ).toBeInTheDocument();
     // "Ice cream & drowning" appears twice: the scenario button and the
     // panel's own meta line (both show the active scenario's label).
-    expect(screen.getAllByText("Ice cream & drowning").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Ice cream & drowning").length).toBeGreaterThan(
+      0,
+    );
     expect(screen.getByText("Shoe size & reading")).toBeInTheDocument();
     expect(screen.getByText("OVERALL r")).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Scenario" })).toBeInTheDocument();
+    const iceCream = screen.getByRole("button", {
+      name: "Ice cream & drowning",
+    });
+    expect(iceCream).toHaveAttribute("aria-pressed", "true");
+    expect(iceCream).toHaveClass("min-h-11");
   });
 
   it("reproduces the same seeded scatter on first paint for the icecream scenario (mulberry32(42))", () => {
@@ -35,9 +45,18 @@ describe("ConfoundingSimulator ", () => {
 
   it("switching scenarios reseeds with mulberry32(77) and reveals per-group correlation on demand", () => {
     render(<ConfoundingSimulator />);
-    fireEvent.click(screen.getByText("Shoe size & reading"));
-    expect(screen.getAllByText("Shoe size & reading").length).toBeGreaterThan(0);
-    fireEvent.click(screen.getByText("Reveal confounder"));
+    const reading = screen.getByRole("button", {
+      name: "Shoe size & reading",
+    });
+    fireEvent.click(reading);
+    expect(reading).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getAllByText("Shoe size & reading").length).toBeGreaterThan(
+      0,
+    );
+    const reveal = screen.getByRole("button", { name: "Reveal confounder" });
+    expect(reveal).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(reveal);
+    expect(reveal).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByText("✓ Confounder visible")).toBeInTheDocument();
     expect(screen.getByText("within-group r ≈ 0")).toBeInTheDocument();
   });

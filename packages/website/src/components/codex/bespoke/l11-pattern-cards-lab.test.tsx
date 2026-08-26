@@ -52,14 +52,20 @@ describe("L11PatternCardsLab", () => {
     fireEvent.click(screen.getByLabelText("Flip card 1"));
     expect(screen.getByText("the AGENTS.md handshake")).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Use with review" }),
+      screen.getByRole("button", {
+        name: "Use with review: the AGENTS.md handshake",
+      }),
     ).toBeInTheDocument();
   });
 
   it("sorting into the wrong pile counts a mistake and keeps the card", () => {
     render(<L11PatternCardsLab lessonId="L11" cpId="bespoke" />);
     fireEvent.click(screen.getByLabelText("Flip card 1"));
-    fireEvent.click(screen.getByRole("button", { name: "High risk" }));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "High risk: the AGENTS.md handshake",
+      }),
+    );
     expect(screen.getByText("sorted: 0/8 · mistakes: 1")).toBeInTheDocument();
     expect(screen.getByText("the AGENTS.md handshake")).toBeInTheDocument();
   });
@@ -67,7 +73,11 @@ describe("L11PatternCardsLab", () => {
   it("sorting into the right pile removes the card and increments sorted", () => {
     render(<L11PatternCardsLab lessonId="L11" cpId="bespoke" />);
     fireEvent.click(screen.getByLabelText("Flip card 1"));
-    fireEvent.click(screen.getByRole("button", { name: "Use with review" }));
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Use with review: the AGENTS.md handshake",
+      }),
+    );
     expect(screen.getByText("sorted: 1/8 · mistakes: 0")).toBeInTheDocument();
     expect(
       screen.queryByText("the AGENTS.md handshake"),
@@ -75,18 +85,65 @@ describe("L11PatternCardsLab", () => {
   });
 
   it("awards the checkpoint once all 8 cards are correctly sorted", () => {
+    const provenTitles = [
+      "the AGENTS.md handshake",
+      "one PR one scope",
+      "tests as contract",
+      "parallel with git worktrees",
+      "independent review pass",
+    ];
+    const avoidTitles = [
+      "vague roving refactor",
+      "conflate local and cloud controls",
+      "skip the sandbox",
+    ];
     render(<L11PatternCardsLab lessonId="L11" cpId="bespoke" />);
     for (let id = 1; id <= 5; id++) {
       fireEvent.click(screen.getByLabelText(`Flip card ${id}`));
-      fireEvent.click(screen.getByRole("button", { name: "Use with review" }));
+      fireEvent.click(
+        screen.getByRole("button", {
+          name: `Use with review: ${provenTitles[id - 1]}`,
+        }),
+      );
     }
     for (let id = 6; id <= 8; id++) {
       fireEvent.click(screen.getByLabelText(`Flip card ${id}`));
-      fireEvent.click(screen.getByRole("button", { name: "High risk" }));
+      fireEvent.click(
+        screen.getByRole("button", {
+          name: `High risk: ${avoidTitles[id - 6]}`,
+        }),
+      );
     }
     expect(screen.getByText("sorted: 8/8 · mistakes: 0")).toBeInTheDocument();
     expect(isCheckpointDone("L11", "bespoke")).toBe(true);
     expect(getXp()).toBe(XP.CHECKPOINT);
     expect(screen.getByText(/All patterns classified/)).toBeInTheDocument();
+  });
+
+  it("keeps both action names unique when multiple cards are flipped", () => {
+    render(<L11PatternCardsLab lessonId="L11" cpId="bespoke" />);
+    fireEvent.click(screen.getByLabelText("Flip card 1"));
+    fireEvent.click(screen.getByLabelText("Flip card 6"));
+
+    expect(
+      screen.getByRole("button", {
+        name: "Use with review: the AGENTS.md handshake",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: "High risk: the AGENTS.md handshake",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: "Use with review: vague roving refactor",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: "High risk: vague roving refactor",
+      }),
+    ).toBeInTheDocument();
   });
 });

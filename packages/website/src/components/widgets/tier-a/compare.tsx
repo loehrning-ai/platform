@@ -80,7 +80,7 @@ function CompareColumn({
       <div className="mb-2 flex items-center justify-between">
         <span
           className={cn(
-            "font-mono text-[10.5px] font-bold uppercase tracking-[0.14em]",
+            "font-mono text-xs font-bold uppercase tracking-[0.14em]",
             good ? "text-risk-green" : "text-destructive",
           )}
         >
@@ -89,7 +89,11 @@ function CompareColumn({
         {good ? (
           <ThumbsUp size={14} className="text-risk-green" aria-hidden="true" />
         ) : (
-          <ThumbsDown size={14} className="text-destructive" aria-hidden="true" />
+          <ThumbsDown
+            size={14}
+            className="text-destructive"
+            aria-hidden="true"
+          />
         )}
       </div>
       <p className="text-[14px] leading-[1.6] text-foreground">{body}</p>

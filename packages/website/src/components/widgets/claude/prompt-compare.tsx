@@ -53,14 +53,14 @@ export function PromptCompareWidget({
       kindLabel={german ? "Vergleich" : "Compare"}
       title={german ? "Zwei Prompts vergleichen" : "Compare two prompts"}
       done={done}
-      xpLabel="+15 XP"
+      doneLabel={german ? "Erledigt" : "Done"}
     >
       <button
         type="button"
         onClick={run}
         disabled={loading}
         className={cn(
-          "inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none",
+          "inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none",
         )}
       >
         {loading
@@ -74,7 +74,7 @@ export function PromptCompareWidget({
 
       <div className="mt-4 grid gap-4 md:grid-cols-2">
         <div className="min-w-0">
-          <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.12em] text-destructive">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-destructive">
             {german ? "Unklarer Prompt" : "Weak prompt"}
           </p>
           <pre className="mt-1 max-h-[150px] overflow-y-auto whitespace-pre-wrap break-words border border-border bg-card/40 p-2 font-mono text-[12px] text-foreground">
@@ -94,7 +94,7 @@ export function PromptCompareWidget({
           />
         </div>
         <div className="min-w-0">
-          <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.12em] text-risk-green">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-risk-green">
             {german ? "Strukturierter Prompt" : "Structured prompt"}
           </p>
           <pre className="mt-1 max-h-[150px] overflow-y-auto whitespace-pre-wrap break-words border border-border bg-card/40 p-2 font-mono text-[12px] text-foreground">

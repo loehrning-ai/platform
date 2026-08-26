@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState, type JSX } from "react";
-import { getReadSectionIds, isLessonCompleted } from "@/lib/ai-native/progress";
-import { subscribe } from "@/lib/progress";
+import { getReadSectionIds } from "@/lib/ai-native/progress";
+import { isEvidenceBackedLessonCompleted, subscribe } from "@/lib/progress";
 import { cn } from "@/lib/utils";
 
 /**
@@ -35,7 +35,7 @@ export function LessonProgressRing({
       setMounted(true);
       const read = getReadSectionIds(lessonId);
       setSectionsRead(read.size);
-      setCompleted(isLessonCompleted(lessonId));
+      setCompleted(isEvidenceBackedLessonCompleted("ai-native", lessonId));
     });
   }, [lessonId]);
 
@@ -48,16 +48,20 @@ export function LessonProgressRing({
       : Math.min(1, Math.max(0, sectionsRead / totalSections));
   const offset = c * (1 - fraction);
 
-  // Show "completed" state if the lesson is fully done OR ring is at 100%.
-  const isDone = completed || fraction >= 1;
+  // Reviewing every section fills the orange arc. Only current lesson evidence
+  // turns it into the green completion check.
+  const isDone = completed;
 
   return (
     <div
-      className={cn("relative inline-flex items-center justify-center", className)}
+      className={cn(
+        "relative inline-flex items-center justify-center",
+        className,
+      )}
       role="img"
       aria-label={
         mounted
-          ? `${sectionsRead} von ${totalSections} Abschnitten gelesen`
+          ? `${sectionsRead} von ${totalSections} Abschnitten geprüft`
           : `${totalSections} Abschnitte`
       }
     >
@@ -77,32 +81,31 @@ export function LessonProgressRing({
           cy={size / 2}
           r={r}
           fill="none"
-          stroke={isDone ? "var(--color-risk-green)" : "var(--color-brand-orange)"}
+          stroke={
+            isDone ? "var(--color-risk-green)" : "var(--color-brand-orange)"
+          }
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={c}
           strokeDashoffset={offset}
           transform={`rotate(-90 ${size / 2} ${size / 2})`}
           style={{
-            transition: "stroke-dashoffset 400ms cubic-bezier(0.19, 1, 0.22, 1)",
+            transition:
+              "stroke-dashoffset 400ms cubic-bezier(0.19, 1, 0.22, 1)",
           }}
         />
       </svg>
       <span
         className={cn(
-          "absolute font-mono text-[10px] font-bold tracking-[0.06em]",
+          "absolute font-mono text-xs font-bold tracking-[0.06em]",
           isDone ? "text-risk-green" : "text-foreground",
         )}
       >
-        {mounted ? (
-          isDone ? (
-            "✓"
-          ) : (
-            `${sectionsRead}/${totalSections}`
-          )
-        ) : (
-          `0/${totalSections}`
-        )}
+        {mounted
+          ? isDone
+            ? "✓"
+            : `${sectionsRead}/${totalSections}`
+          : `0/${totalSections}`}
       </span>
     </div>
   );

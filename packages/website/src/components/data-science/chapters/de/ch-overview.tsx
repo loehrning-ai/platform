@@ -202,13 +202,6 @@ export default function ChOverviewDe() {
             >
               Beginnen &nbsp;→
             </Link>
-            <Link
-              className="ov-cta-ghost"
-              href={dsChapterHref("cap")}
-              prefetch={false}
-            >
-              Direkt zum Abschlussprojekt
-            </Link>
           </div>
           <div className="ov-hero-stats">
             <div className="ov-stat">
@@ -315,34 +308,6 @@ export default function ChOverviewDe() {
               <div className="ov-tool-r">{tool.r}</div>
             </div>
           ))}
-        </div>
-      </section>
-
-      <section className="ov-cta-band">
-        <div className="ov-cta-eyebrow">Kapitel 01</div>
-        <div className="ov-cta-title">
-          Eine Galton-Simulation macht Stichproben sichtbar.
-        </div>
-        <div className="ov-cta-sub">
-          Ziehe tausend Stichproben aus einer Grundgesamtheit und beobachte, wie
-          der zentrale Grenzwertsatz aus den Ergebnissen entsteht.{" "}
-          <em>Sieben Minuten.</em>
-        </div>
-        <div className="ov-cta-row">
-          <Link
-            className="btn btn-primary ov-cta-btn"
-            href={dsChapterHref("fund")}
-            prefetch={false}
-          >
-            Mit Kapitel 01 beginnen &nbsp;→
-          </Link>
-          <Link
-            className="ov-cta-ghost"
-            href={dsChapterHref("exp")}
-            prefetch={false}
-          >
-            Direkt zu Experimenten →
-          </Link>
         </div>
       </section>
     </DataScienceLocaleProvider>

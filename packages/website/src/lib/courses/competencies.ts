@@ -1,15 +1,9 @@
-// ─── Earned competencies ("Kompetenzen") ──────────────────────────────────
+// ─── Covered course outcomes ───────────────────────────────────────────────
 //
-// A person should be able to see WHAT they have learned, not just a percentage.
-// Each certified German course grants a small set of named competencies once
-// its record (Teilnahmebestätigung / Lernnachweis) is earned. This stays
-// honest by construction:
-//   • Competencies attach ONLY to the four certified courses that track real
-//     completion — never to the external GitHub labs or applied courses.
-//   • "Earned" uses the SAME bar as the certificate: all canonical lessons plus
-//     the configured quiz, or the AI-Native capstone. No faked credential.
-//   • Everything derives from the `UnifiedProgress` object that already syncs
-//     to Supabase, so earned competencies are already cloud-saved per user.
+// A completed course can show which outcomes its curriculum covered. It cannot
+// prove that the learner demonstrated every named ability. The account model
+// therefore attaches course outcomes only after the record gate is met, and
+// presents them as covered content rather than individual ability claims.
 //
 // The functions are PURE (progress in, result out) so the /konto server
 // component can compute them directly from the row it loads.
@@ -21,88 +15,86 @@ import type { Locale } from "@/lib/i18n/locale";
 import type { UnifiedProgress } from "@/lib/progress/types";
 import { isCourseCompletionEarned } from "./completion";
 
-/** One named thing a learner can demonstrably do after a course. */
-export interface Competency {
+/** One named topic or outcome covered by a course. */
+export interface CourseOutcome {
   /** Stable id (kebab-case), unique across all courses. */
   readonly id: string;
   /** Short human label shown as a chip on the profile. */
   readonly label: string;
-  /** One honest sentence describing the competency. */
+  /** One sentence describing what the course covers. */
   readonly description: string;
 }
 
-/** A competency joined to the course that granted it. */
-export interface EarnedCompetency extends Competency {
+/** A course outcome joined to the completed course that covered it. */
+export interface CoveredCourseOutcome extends CourseOutcome {
   readonly courseSlug: CourseSlug;
   readonly courseTitle: string;
 }
 
 /**
- * Competencies granted per certified course. `Partial` because `CourseSlug`
- * also spans the 6 imported open-source courses, which grant competencies
- * only once their own plan flips them to a certified record — see
+ * Outcomes covered per course. `Partial` because `CourseSlug` also spans
+ * courses that do not publish an outcome list — see
  * `isCourseRecordEarned`, which never looks up a slug outside `COURSE_CATALOG`.
  */
-export const COURSE_COMPETENCIES: Partial<
-  Record<CourseSlug, readonly Competency[]>
+export const COURSE_OUTCOMES: Partial<
+  Record<CourseSlug, readonly CourseOutcome[]>
 > = {
   "ki-fuehrerschein": [
     {
       id: "ki-grundlagen-verstehen",
       label: "KI-Grundlagen verstehen",
       description:
-        "Erkennt, was KI-Systeme leisten und wo ihre Grenzen liegen.",
+        "Behandelt Leistungen, Grenzen und typische Fehler von KI-Systemen.",
     },
     {
       id: "eu-ai-act-artikel-4",
       label: "EU AI Act, Artikel 4",
       description:
-        "Ordnet die Pflicht zu kontextbezogenen KI-Kompetenzmaßnahmen im Arbeitsalltag ein.",
+        "Behandelt die Pflicht zu kontextbezogenen KI-Kompetenzmaßnahmen im Arbeitsalltag.",
     },
     {
       id: "ki-output-pruefen",
       label: "KI-Output prüfen",
       description:
-        "Bewertet KI-Ergebnisse kritisch und dokumentiert die Prüfung.",
+        "Behandelt kritische Prüfung und Dokumentation von KI-Ergebnissen.",
     },
   ],
   "ki-und-gesellschaft": [
     {
       id: "ki-und-arbeit-einordnen",
       label: "KI und Arbeit einordnen",
-      description:
-        "Ordnet die Wirkung von KI auf Arbeit und Gesellschaft nüchtern ein.",
+      description: "Behandelt Wirkungen von KI auf Arbeit und Gesellschaft.",
     },
     {
       id: "deepfakes-erkennen",
       label: "Deepfakes erkennen",
-      description: "Erkennt manipulierte Medien und typische Fälschungsmuster.",
+      description:
+        "Behandelt manipulierte Medien und typische Fälschungsmuster.",
     },
     {
       id: "bias-und-ethik",
       label: "Bias und Ethik",
       description:
-        "Versteht, wie algorithmischer Bias entsteht und wo ethische Grenzen liegen.",
+        "Behandelt Ursachen algorithmischer Verzerrung und ethische Grenzen.",
     },
   ],
   "eu-ai-act-kurs": [
     {
       id: "risikoklassen-einordnen",
       label: "Risikoklassen einordnen",
-      description:
-        "Ordnet KI-Systeme nach Annex III in die Risikoklassen des EU AI Act ein.",
+      description: "Behandelt die Risikoklassen des EU AI Act und Annex III.",
     },
     {
       id: "pflichten-hochrisiko-gpai",
       label: "Pflichten für Hochrisiko und GPAI",
       description:
-        "Kennt die Anforderungen an Hochrisiko-Systeme und General-Purpose-KI.",
+        "Behandelt Anforderungen an Hochrisiko-Systeme und General-Purpose-KI.",
     },
     {
       id: "eu-ai-act-umsetzen",
       label: "Umsetzung planen",
       description:
-        "Plant die Umsetzung entlang der Fristen bis 2028 im Mittelstand.",
+        "Behandelt Umsetzungsplanung und die anwendbaren Fristen bis 2028.",
     },
   ],
   "ai-native": [
@@ -110,42 +102,42 @@ export const COURSE_COMPETENCIES: Partial<
       id: "ai-native-arbeiten",
       label: "AI-native arbeiten",
       description:
-        "Formuliert Intent, gibt Kontext und prüft Output systematisch.",
+        "Behandelt Intent, Kontext und systematische Output-Prüfung.",
     },
     {
       id: "claude-stack-nutzen",
       label: "Den Claude-Stack nutzen",
       description:
-        "Setzt Projects, Skills und MCP für wiederkehrende Aufgaben ein.",
+        "Behandelt Projects, Skills und MCP für wiederkehrende Aufgaben.",
     },
     {
       id: "automatisierung-mit-governance",
       label: "Automatisierung mit Governance",
       description:
-        "Baut Automationen mit n8n und beachtet dabei den EU AI Act.",
+        "Behandelt n8n-Automationen, Kontrollen und EU-AI-Act-Grenzen.",
     },
   ],
   // English course: the labels/descriptions stay English
   // to match the course's own content language (`CLAUDE_CONFIG.language`),
-  // unlike the four foundation-path competency sets above.
+  // unlike the four foundation-path outcome sets above.
   claude: [
     {
       id: "structured-prompting",
       label: "Structured prompting",
       description:
-        "Writes role, context, task, constraints, examples, and format instead of guessing.",
+        "Covers explicit role, context, task, constraints, examples, and output format.",
     },
     {
       id: "context-engineering",
       label: "Context engineering",
       description:
-        "Grounds Claude in real data and structures the context window deliberately.",
+        "Covers grounding Claude in source data and structuring the context window.",
     },
     {
       id: "safe-team-workflows",
       label: "Safe team workflows",
       description:
-        "Shares prompts and CLAUDE.md files safely, with evals and without leaking sensitive data.",
+        "Covers safe prompt and CLAUDE.md sharing, evaluations, and data boundaries.",
     },
   ],
   // English course: same reasoning as claude above.
@@ -154,19 +146,19 @@ export const COURSE_COMPETENCIES: Partial<
       id: "task-spec-authoring",
       label: "Task spec authoring",
       description:
-        "Writes goal, constraints, acceptance criteria, and out-of-scope so an agent lands the PR right the first time.",
+        "Covers goals, constraints, acceptance criteria, and explicit non-goals for agent tasks.",
     },
     {
       id: "agent-pr-review",
       label: "Agent PR review",
       description:
-        "Runs the review checklist that catches circular tests, scope creep, and Codex-specific security misses.",
+        "Covers review checks for circular tests, scope creep, and agent-specific security gaps.",
     },
     {
       id: "parallel-agent-workflows",
       label: "Parallel agent workflows",
       description:
-        "Decomposes work into independent tasks and runs multiple agents across git worktrees without merge conflicts.",
+        "Covers task decomposition and conflict-aware parallel work across git worktrees.",
     },
   ],
   // English course: same reasoning as claude/codex above.
@@ -175,19 +167,19 @@ export const COURSE_COMPETENCIES: Partial<
       id: "idempotent-pipeline-writes",
       label: "Idempotent pipeline writes",
       description:
-        "Writes every scheduled task as INSERT OVERWRITE keyed by <DATEID>, so retries and backfills never double-write or drift with wall-clock time.",
+        "Covers date-keyed idempotent writes for safe retries and backfills.",
     },
     {
       id: "streaming-boundary-guards",
       label: "Streaming boundary guards",
       description:
-        "Applies dedup-by-event_id and watermark-based late-drop as two independent guards at every stream-to-warehouse boundary.",
+        "Covers event deduplication and watermark-based late-data handling as separate guards.",
     },
     {
       id: "data-quality-signal-barrier",
       label: "Data-quality signal barrier",
       description:
-        "Gates downstream consumption on a signal table written only after row-count, freshness, schema, and uniqueness checks pass — never on the raw data table.",
+        "Covers downstream release through an explicit quality signal after row-count, freshness, schema, and uniqueness checks.",
     },
   ],
   // English course: same reasoning as claude/codex above.
@@ -196,19 +188,19 @@ export const COURSE_COMPETENCIES: Partial<
       id: "metric-before-model",
       label: "Choosing the metric before the model",
       description:
-        "Picks precision, recall, F1, or PR-AUC from the real cost of a false positive vs. a false negative, not library defaults.",
+        "Covers selecting precision, recall, F1, or PR-AUC from decision costs.",
     },
     {
       id: "sampling-clt-intuition",
       label: "Sampling & CLT intuition",
       description:
-        "Explains why a sampling distribution trends normal regardless of the population's shape, and uses it to size confidence intervals.",
+        "Covers sampling distributions, the central limit theorem, and confidence intervals.",
     },
     {
       id: "causal-dag-literacy",
       label: "Causal DAG literacy",
       description:
-        "Draws the DAG before the regression and identifies confounders, mediators, and colliders to choose the correct adjustment set.",
+        "Covers DAGs, confounders, mediators, colliders, and adjustment choices.",
     },
   ],
   // English course: same reasoning as claude/codex above.
@@ -217,19 +209,19 @@ export const COURSE_COMPETENCIES: Partial<
       id: "system-design-tradeoffs",
       label: "System-design trade-offs",
       description:
-        "Names the CAP/PACELC trade-off explicitly and matches storage/streaming choices to real latency and freshness targets.",
+        "Covers CAP and PACELC trade-offs against latency and freshness targets.",
     },
     {
       id: "storage-format-internals",
       label: "Storage-format internals",
       description:
-        "Reasons about row-vs-columnar layout, Parquet row groups, predicate pushdown, and lakehouse table formats at the byte level.",
+        "Covers row and columnar layouts, Parquet row groups, predicate pushdown, and lakehouse formats.",
     },
     {
       id: "ic5-interview-structure",
       label: "IC5 interview structure",
       description:
-        "Runs the five-act system-design interview structure — clarify, skeleton, deep dive, failure modes, trade-offs — under time pressure.",
+        "Covers a five-part system-design interview structure from clarification through trade-offs.",
     },
   ],
   // English course: same reasoning as claude/codex above.
@@ -238,19 +230,19 @@ export const COURSE_COMPETENCIES: Partial<
       id: "maturity-self-diagnosis",
       label: "Honest AI-maturity self-diagnosis",
       description:
-        "Places themselves and their team on the L0-L3 maturity ladder honestly, calibrating trust to task type and cost of error rather than a single global verdict.",
+        "Covers task-specific AI maturity, trust calibration, and error costs.",
     },
     {
       id: "spec-first-delegation",
       label: "Spec-first delegation",
       description:
-        "Writes an agent spec with a tight goal sentence, explicit non-goals, and concrete test cases, and directs a small fleet of agents against it instead of hand-typing the work.",
+        "Covers bounded agent specifications with goals, non-goals, and test cases.",
     },
     {
       id: "governance-as-speed",
       label: "Governance as a speed enabler",
       description:
-        "Builds the model registry, eval-driven release gate, and agent-identity audit trail that let a team move faster with agents, not slower.",
+        "Covers model registries, evaluation-driven release gates, and agent-identity audit trails.",
     },
   ],
 };
@@ -259,174 +251,174 @@ const COURSE_TITLE: Record<string, string> = Object.fromEntries(
   COURSE_CATALOG.map((c) => [c.slug, c.title]),
 );
 
-type CompetencyCopy = Pick<Competency, "label" | "description">;
+type CourseOutcomeCopy = Pick<CourseOutcome, "label" | "description">;
 
 /**
- * Only copy that differs from a competency's source language belongs here.
- * Stable competency IDs remain the cross-locale identity and completion gate.
+ * Only copy that differs from an outcome's source language belongs here.
+ * Stable outcome IDs remain the cross-locale identity.
  */
-const ENGLISH_COMPETENCY_COPY: Readonly<Record<string, CompetencyCopy>> = {
-  "ki-grundlagen-verstehen": {
-    label: "Understand AI fundamentals",
-    description:
-      "Identifies what AI systems can do and where their limits are.",
-  },
-  "eu-ai-act-artikel-4": {
-    label: "EU AI Act, Article 4",
-    description:
-      "Places the duty to provide context-specific AI literacy measures in day-to-day work.",
-  },
-  "ki-output-pruefen": {
-    label: "Review AI output",
-    description: "Evaluates AI output critically and records the review.",
-  },
-  "ki-und-arbeit-einordnen": {
-    label: "Put AI and work in context",
-    description:
-      "Assesses effects of AI on work and society without overclaiming.",
-  },
-  "deepfakes-erkennen": {
-    label: "Recognise deepfakes",
-    description:
-      "Identifies manipulated media and common signs of fabrication.",
-  },
-  "bias-und-ethik": {
-    label: "Bias and ethics",
-    description:
-      "Explains how algorithmic bias arises and where ethical limits apply.",
-  },
-  "risikoklassen-einordnen": {
-    label: "Classify risk categories",
-    description: "Classifies AI systems under the EU AI Act and Annex III.",
-  },
-  "pflichten-hochrisiko-gpai": {
-    label: "Duties for high-risk AI and GPAI",
-    description:
-      "Identifies requirements for high-risk systems and general-purpose AI.",
-  },
-  "eu-ai-act-umsetzen": {
-    label: "Plan implementation",
-    description:
-      "Maps implementation work to the applicable deadlines through 2028.",
-  },
-  "ai-native-arbeiten": {
-    label: "Work with AI systematically",
-    description:
-      "States intent, supplies context, and reviews output systematically.",
-  },
-  "claude-stack-nutzen": {
-    label: "Use the Claude tool stack",
-    description: "Uses Projects, Skills, and MCP for repeatable tasks.",
-  },
-  "automatisierung-mit-governance": {
-    label: "Automation with governance",
-    description:
-      "Builds n8n automations with explicit controls and EU AI Act checks.",
-  },
-};
+const ENGLISH_COURSE_OUTCOME_COPY: Readonly<Record<string, CourseOutcomeCopy>> =
+  {
+    "ki-grundlagen-verstehen": {
+      label: "Understand AI fundamentals",
+      description:
+        "Covers what AI systems can do, their limits, and common failure modes.",
+    },
+    "eu-ai-act-artikel-4": {
+      label: "EU AI Act, Article 4",
+      description:
+        "Covers the duty to provide context-specific AI literacy measures at work.",
+    },
+    "ki-output-pruefen": {
+      label: "Review AI output",
+      description: "Covers critical review and documentation of AI output.",
+    },
+    "ki-und-arbeit-einordnen": {
+      label: "Put AI and work in context",
+      description:
+        "Covers effects of AI on work and society without overclaiming.",
+    },
+    "deepfakes-erkennen": {
+      label: "Recognise deepfakes",
+      description: "Covers manipulated media and common signs of fabrication.",
+    },
+    "bias-und-ethik": {
+      label: "Bias and ethics",
+      description:
+        "Covers causes of algorithmic bias and relevant ethical limits.",
+    },
+    "risikoklassen-einordnen": {
+      label: "Classify risk categories",
+      description: "Covers EU AI Act risk categories and Annex III.",
+    },
+    "pflichten-hochrisiko-gpai": {
+      label: "Duties for high-risk AI and GPAI",
+      description:
+        "Covers requirements for high-risk systems and general-purpose AI.",
+    },
+    "eu-ai-act-umsetzen": {
+      label: "Plan implementation",
+      description:
+        "Covers implementation planning and applicable deadlines through 2028.",
+    },
+    "ai-native-arbeiten": {
+      label: "Work with AI systematically",
+      description: "Covers intent, context, and systematic output review.",
+    },
+    "claude-stack-nutzen": {
+      label: "Use the Claude tool stack",
+      description: "Covers Projects, Skills, and MCP for repeatable tasks.",
+    },
+    "automatisierung-mit-governance": {
+      label: "Automation with governance",
+      description:
+        "Covers n8n automation, explicit controls, and EU AI Act boundaries.",
+    },
+  };
 
-const GERMAN_COMPETENCY_COPY: Readonly<Record<string, CompetencyCopy>> = {
-  "structured-prompting": {
-    label: "Strukturiertes Prompting",
-    description:
-      "Formuliert Rolle, Kontext, Aufgabe, Grenzen, Beispiele und Ausgabeformat ausdrücklich.",
-  },
-  "context-engineering": {
-    label: "Kontextgestaltung",
-    description:
-      "Verankert Claude in geprüften Daten und strukturiert das Kontextfenster bewusst.",
-  },
-  "safe-team-workflows": {
-    label: "Sichere Team-Workflows",
-    description:
-      "Teilt Prompts und CLAUDE.md-Dateien mit Tests, ohne vertrauliche Daten offenzulegen.",
-  },
-  "task-spec-authoring": {
-    label: "Aufgabenspezifikationen verfassen",
-    description:
-      "Definiert Ziel, Grenzen, Akzeptanzkriterien und ausgeschlossene Änderungen für Coding-Agenten.",
-  },
-  "agent-pr-review": {
-    label: "Agenten-PRs prüfen",
-    description:
-      "Prüft Agentenänderungen auf zirkuläre Tests, unnötigen Umfang und Sicherheitsfehler.",
-  },
-  "parallel-agent-workflows": {
-    label: "Parallele Agenten-Workflows",
-    description:
-      "Zerlegt Arbeit in unabhängige Aufgaben und koordiniert Agenten ohne Merge-Konflikte.",
-  },
-  "idempotent-pipeline-writes": {
-    label: "Idempotente Pipeline-Schreibvorgänge",
-    description:
-      "Entwirft wiederholbare Schreibvorgänge, damit Retries und Backfills keine Daten doppelt schreiben.",
-  },
-  "streaming-boundary-guards": {
-    label: "Schutz an Streaming-Grenzen",
-    description:
-      "Trennt Ereignis-Deduplizierung und Watermarks als unabhängige Schutzmechanismen.",
-  },
-  "data-quality-signal-barrier": {
-    label: "Freigabe durch Datenqualitätssignal",
-    description:
-      "Gibt nachgelagerte Verarbeitung erst nach bestandenen Qualitätsprüfungen frei.",
-  },
-  "metric-before-model": {
-    label: "Metrik vor dem Modell wählen",
-    description:
-      "Wählt Bewertungsmetriken anhand der tatsächlichen Kosten falscher Entscheidungen.",
-  },
-  "sampling-clt-intuition": {
-    label: "Stichproben und zentralen Grenzwertsatz einordnen",
-    description:
-      "Erklärt Stichprobenverteilungen und leitet daraus Konfidenzintervalle ab.",
-  },
-  "causal-dag-literacy": {
-    label: "Kausale Diagramme lesen",
-    description:
-      "Unterscheidet Confounder, Mediatoren und Collider vor der Modellierung.",
-  },
-  "system-design-tradeoffs": {
-    label: "Zielkonflikte im Systemdesign",
-    description:
-      "Ordnet CAP- und PACELC-Zielkonflikte konkreten Latenz- und Aktualitätszielen zu.",
-  },
-  "storage-format-internals": {
-    label: "Interna von Speicherformaten",
-    description:
-      "Begründet Zeilen- und Spaltenlayout, Parquet-Row-Groups und Tabellenformate auf Byte-Ebene.",
-  },
-  "ic5-interview-structure": {
-    label: "IC5-Systemdesign-Interview strukturieren",
-    description:
-      "Bearbeitet Anforderungen, Grundstruktur, Vertiefung, Ausfälle und Zielkonflikte in fester Reihenfolge.",
-  },
-  "maturity-self-diagnosis": {
-    label: "KI-Reife nüchtern einordnen",
-    description:
-      "Ordnet Fähigkeiten nach Aufgabentyp, Prüfpraxis und Fehlerkosten ein.",
-  },
-  "spec-first-delegation": {
-    label: "Delegation mit Spezifikation",
-    description:
-      "Definiert Ziel, Nicht-Ziele und Tests, bevor ein Agent eine Aufgabe bearbeitet.",
-  },
-  "governance-as-speed": {
-    label: "Governance als Betriebskontrolle",
-    description:
-      "Verbindet Modellregister, Evaluationsgates und Agentenidentität zu einer prüfbaren Betriebskontrolle.",
-  },
-};
+const GERMAN_COURSE_OUTCOME_COPY: Readonly<Record<string, CourseOutcomeCopy>> =
+  {
+    "structured-prompting": {
+      label: "Strukturiertes Prompting",
+      description:
+        "Behandelt Rolle, Kontext, Aufgabe, Grenzen, Beispiele und Ausgabeformat.",
+    },
+    "context-engineering": {
+      label: "Kontextgestaltung",
+      description:
+        "Behandelt Datengrundlage und bewusste Strukturierung des Kontextfensters.",
+    },
+    "safe-team-workflows": {
+      label: "Sichere Team-Workflows",
+      description:
+        "Behandelt sichere Freigabe von Prompts und CLAUDE.md-Dateien, Tests und Datengrenzen.",
+    },
+    "task-spec-authoring": {
+      label: "Aufgabenspezifikationen verfassen",
+      description:
+        "Behandelt Ziel, Grenzen, Akzeptanzkriterien und Nicht-Ziele für Coding-Agenten.",
+    },
+    "agent-pr-review": {
+      label: "Agenten-PRs prüfen",
+      description:
+        "Behandelt Prüfungen auf zirkuläre Tests, unnötigen Umfang und Sicherheitslücken.",
+    },
+    "parallel-agent-workflows": {
+      label: "Parallele Agenten-Workflows",
+      description:
+        "Behandelt Aufgabenteilung und konfliktarme parallele Arbeit in Git-Worktrees.",
+    },
+    "idempotent-pipeline-writes": {
+      label: "Idempotente Pipeline-Schreibvorgänge",
+      description:
+        "Behandelt wiederholbare Schreibvorgänge für sichere Retries und Backfills.",
+    },
+    "streaming-boundary-guards": {
+      label: "Schutz an Streaming-Grenzen",
+      description:
+        "Behandelt Ereignis-Deduplizierung und Watermarks als unabhängige Schutzmechanismen.",
+    },
+    "data-quality-signal-barrier": {
+      label: "Freigabe durch Datenqualitätssignal",
+      description:
+        "Behandelt explizite Freigabesignale nach bestandenen Qualitätsprüfungen.",
+    },
+    "metric-before-model": {
+      label: "Metrik vor dem Modell wählen",
+      description:
+        "Behandelt die Wahl von Bewertungsmetriken anhand realer Fehlerkosten.",
+    },
+    "sampling-clt-intuition": {
+      label: "Stichproben und zentralen Grenzwertsatz einordnen",
+      description:
+        "Behandelt Stichprobenverteilungen, zentralen Grenzwertsatz und Konfidenzintervalle.",
+    },
+    "causal-dag-literacy": {
+      label: "Kausale Diagramme lesen",
+      description:
+        "Behandelt DAGs, Confounder, Mediatoren, Collider und Anpassungsentscheidungen.",
+    },
+    "system-design-tradeoffs": {
+      label: "Zielkonflikte im Systemdesign",
+      description:
+        "Behandelt CAP- und PACELC-Zielkonflikte sowie Latenz- und Aktualitätsziele.",
+    },
+    "storage-format-internals": {
+      label: "Interna von Speicherformaten",
+      description:
+        "Behandelt Zeilen- und Spaltenlayout, Parquet-Row-Groups und Tabellenformate.",
+    },
+    "ic5-interview-structure": {
+      label: "IC5-Systemdesign-Interview strukturieren",
+      description:
+        "Behandelt eine feste Interviewstruktur von Anforderungen bis Zielkonflikten.",
+    },
+    "maturity-self-diagnosis": {
+      label: "KI-Reife nüchtern einordnen",
+      description:
+        "Behandelt aufgabenspezifische KI-Reife, Prüfpraxis und Fehlerkosten.",
+    },
+    "spec-first-delegation": {
+      label: "Delegation mit Spezifikation",
+      description:
+        "Behandelt abgegrenzte Agentenspezifikationen mit Ziel, Nicht-Zielen und Tests.",
+    },
+    "governance-as-speed": {
+      label: "Governance als Betriebskontrolle",
+      description:
+        "Behandelt Modellregister, Evaluationsgates und Agentenidentität als Betriebskontrollen.",
+    },
+  };
 
-function localizeCompetency(
-  competency: Competency,
+function localizeCourseOutcome(
+  outcome: CourseOutcome,
   locale: Locale,
-): Competency {
+): CourseOutcome {
   const copy =
     locale === "en"
-      ? ENGLISH_COMPETENCY_COPY[competency.id]
-      : GERMAN_COMPETENCY_COPY[competency.id];
-  return copy ? { ...competency, ...copy } : competency;
+      ? ENGLISH_COURSE_OUTCOME_COPY[outcome.id]
+      : GERMAN_COURSE_OUTCOME_COPY[outcome.id];
+  return copy ? { ...outcome, ...copy } : outcome;
 }
 
 /**
@@ -442,46 +434,46 @@ export function isCourseRecordEarned(
 }
 
 /**
- * Every competency the learner has actually earned, in course order. Empty for
- * null progress or a learner who has not completed any certified course.
+ * Outcomes covered by courses whose record gate is complete, in course order.
+ * This does not claim that the learner demonstrated each outcome.
  */
-export function earnedCompetencies(
+export function coveredCourseOutcomes(
   progress: UnifiedProgress | null,
   locale: Locale = "de",
-): readonly EarnedCompetency[] {
+): readonly CoveredCourseOutcome[] {
   if (!progress) return [];
-  const earned: EarnedCompetency[] = [];
+  const covered: CoveredCourseOutcome[] = [];
   for (const course of COURSE_CATALOG) {
     if (!isCourseRecordEarned(progress, course.slug)) continue;
-    for (const competency of COURSE_COMPETENCIES[course.slug] ?? []) {
-      const localizedCompetency = localizeCompetency(competency, locale);
+    for (const outcome of COURSE_OUTCOMES[course.slug] ?? []) {
+      const localizedOutcome = localizeCourseOutcome(outcome, locale);
       const localizedCourse = localizeCatalogCourse(course, locale);
-      earned.push({
-        ...localizedCompetency,
+      covered.push({
+        ...localizedOutcome,
         courseSlug: course.slug,
         courseTitle:
           localizedCourse.title ?? COURSE_TITLE[course.slug] ?? course.title,
       });
     }
   }
-  return earned;
+  return covered;
 }
 
-/** Total number of competencies on offer across all certified courses. */
-export function totalCompetencyCount(): number {
-  return Object.values(COURSE_COMPETENCIES).reduce(
+/** Total number of outcomes covered across courses with published outcome lists. */
+export function totalCourseOutcomeCount(): number {
+  return Object.values(COURSE_OUTCOMES).reduce(
     (sum, list) => sum + list.length,
     0,
   );
 }
 
-/** Earned vs total competency counts, for a headline like "7 von 12". */
-export function competencyProgress(progress: UnifiedProgress | null): {
-  readonly earned: number;
+/** Covered vs total course-outcome counts, for a headline like "7 von 12". */
+export function courseOutcomeCoverage(progress: UnifiedProgress | null): {
+  readonly covered: number;
   readonly total: number;
 } {
   return {
-    earned: earnedCompetencies(progress).length,
-    total: totalCompetencyCount(),
+    covered: coveredCourseOutcomes(progress).length,
+    total: totalCourseOutcomeCount(),
   };
 }

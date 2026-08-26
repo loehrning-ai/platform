@@ -13,6 +13,10 @@ import {
   completeCheckpoint,
   isLessonCompleted,
 } from "@/lib/progress";
+import {
+  activateAnonymousProgress,
+  activateUnknownProgress,
+} from "@/lib/progress/store";
 import type { AiNativeOperatorLesson } from "@/lib/ai-native-operator/types";
 import type { NextTarget } from "./lesson-page";
 
@@ -104,6 +108,24 @@ const QUIZ_LESSON: AiNativeOperatorLesson = {
       ],
       explanation: "Because right is right.",
     },
+    {
+      id: "ano-mindset-q2",
+      questionText: "A second test question?",
+      answerOptions: [
+        { id: "a", text: "Second wrong", isCorrect: false },
+        { id: "b", text: "Second right", isCorrect: true },
+      ],
+      explanation: "Because the second answer is right.",
+    },
+    {
+      id: "ano-mindset-q3",
+      questionText: "A third test question?",
+      answerOptions: [
+        { id: "a", text: "Third wrong", isCorrect: false },
+        { id: "b", text: "Third right", isCorrect: true },
+      ],
+      explanation: "Because the third answer is right.",
+    },
   ],
 };
 
@@ -164,6 +186,11 @@ describe("AiNativeOperatorLessonReader ", () => {
     expect(screen.getByText("Section one prose.")).toBeInTheDocument();
     expect(screen.getByText("A note")).toBeInTheDocument();
     expect(screen.getByText("Note text.")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Course" })).toHaveClass(
+      "min-h-11",
+      "min-w-11",
+      "focus-visible:ring-2",
+    );
   });
 
   it("renders the exercise widget through the shared registry", async () => {
@@ -229,7 +256,7 @@ describe("AiNativeOperatorLessonReader ", () => {
     );
   });
 
-  it("requires explicit confirmation for a reading lesson", () => {
+  it("requires the transfer exercise and a concrete decision for a reading lesson", () => {
     expect(isLessonCompleted("ai-native-operator", "mindset/1")).toBe(false);
     render(
       <AiNativeOperatorLessonReader
@@ -240,8 +267,79 @@ describe("AiNativeOperatorLessonReader ", () => {
       />,
     );
     expect(isLessonCompleted("ai-native-operator", "mindset/1")).toBe(false);
-    fireEvent.click(screen.getByRole("button", { name: "Complete lesson" }));
+    const saveCheckpoint = screen.getByRole("button", {
+      name: "Save checkpoint",
+    });
+    const decision = screen.getByLabelText("Decision or revision");
+    expect(decision).toBeDisabled();
+    expect(
+      screen.getByText("Complete the transfer exercise first."),
+    ).toBeVisible();
+    expect(saveCheckpoint).toBeDisabled();
+    act(() => {
+      completeCheckpoint("mindset/1", "exercise");
+    });
+    expect(decision).not.toBeDisabled();
+    fireEvent.change(decision, {
+      target: { value: "I will narrow the approval boundary" },
+    });
+    fireEvent.click(saveCheckpoint);
     expect(isLessonCompleted("ai-native-operator", "mindset/1")).toBe(true);
+    expect(screen.getByText("Navigation checkpoint saved")).toBeInTheDocument();
+  });
+
+  it("does not claim or persist completion while the learning owner is unresolved", () => {
+    activateUnknownProgress();
+    render(
+      <AiNativeOperatorLessonReader
+        lesson={READING_LESSON}
+        prevHref={null}
+        prevTitle={null}
+        next={NEXT_LESSON}
+      />,
+    );
+
+    expect(screen.getByLabelText("Decision or revision")).toBeDisabled();
+    expect(
+      screen.getByText("Choose account or local progress above first."),
+    ).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: "Save checkpoint" }));
+    expect(isLessonCompleted("ai-native-operator", "mindset/1")).toBe(false);
+    expect(
+      screen.queryByText("Navigation checkpoint saved"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("drops an unsaved transfer decision when the learning owner changes", () => {
+    render(
+      <AiNativeOperatorLessonReader
+        lesson={READING_LESSON}
+        prevHref={null}
+        prevTitle={null}
+        next={NEXT_LESSON}
+      />,
+    );
+    act(() => {
+      completeCheckpoint("mindset/1", "exercise");
+    });
+    const decision = screen.getByLabelText("Decision or revision");
+    fireEvent.change(decision, {
+      target: { value: "I will narrow the approval boundary" },
+    });
+    expect(decision).toHaveValue("I will narrow the approval boundary");
+
+    act(() => {
+      activateUnknownProgress();
+    });
+    expect(screen.getByLabelText("Decision or revision")).toBeDisabled();
+    expect(screen.getByLabelText("Decision or revision")).toHaveValue("");
+
+    act(() => {
+      activateAnonymousProgress();
+    });
+    expect(screen.getByLabelText("Decision or revision")).not.toBeDisabled();
+    expect(screen.getByLabelText("Decision or revision")).toHaveValue("");
+    expect(isLessonCompleted("ai-native-operator", "mindset/1")).toBe(false);
   });
 
   it("requires every quiz checkpoint before a quiz lesson can be completed", () => {
@@ -254,15 +352,24 @@ describe("AiNativeOperatorLessonReader ", () => {
         next={NEXT_LESSON}
       />,
     );
+    const decision = screen.getByLabelText("Decision or revision");
+    expect(decision).toBeDisabled();
     expect(
-      screen.getByRole("button", {
-        name: "Answer every question correctly first",
-      }),
-    ).toBeDisabled();
+      screen.getByText("Answer every question correctly first."),
+    ).toBeVisible();
     act(() => {
       completeCheckpoint("mindset/5", "ano-mindset-q1");
     });
-    fireEvent.click(screen.getByRole("button", { name: "Complete lesson" }));
+    expect(decision).toBeDisabled();
+    act(() => {
+      completeCheckpoint("mindset/5", "ano-mindset-q2");
+      completeCheckpoint("mindset/5", "ano-mindset-q3");
+    });
+    expect(decision).not.toBeDisabled();
+    fireEvent.change(decision, {
+      target: { value: "I will revise the unsafe decision rule" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Save checkpoint" }));
     expect(isLessonCompleted("ai-native-operator", "mindset/5")).toBe(true);
   });
 

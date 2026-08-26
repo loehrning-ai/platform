@@ -4,7 +4,6 @@ import { useEffect, useState, type JSX } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
-import { getCompletedLessonIds } from "@/lib/course/progress";
 import {
   CLAUDE_TRACKS_BY_LOCALE,
   type ClaudeLessonId,
@@ -12,7 +11,7 @@ import {
 import { canonicalLocalePathname, type Locale } from "@/lib/i18n/locale";
 import { technicalCourseHref } from "@/lib/technical-courses/routes";
 import { cn } from "@/lib/utils";
-import { subscribe } from "@/lib/progress";
+import { getEvidenceBackedCompletedLessonIds, subscribe } from "@/lib/progress";
 
 export interface ClaudeLessonNavItem {
   readonly id: ClaudeLessonId;
@@ -43,7 +42,7 @@ export function ClaudeLessonSidebar({
 
   useEffect(() => {
     return subscribe(() => {
-      setCompletedIds(getCompletedLessonIds("claude"));
+      setCompletedIds(getEvidenceBackedCompletedLessonIds("claude"));
     });
   }, [pathname]);
 
@@ -57,7 +56,7 @@ export function ClaudeLessonSidebar({
         if (trackLessons.length === 0) return null;
         return (
           <div key={track.id}>
-            <p className="mb-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+            <p className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
               {track.label}
             </p>
             <ul className="flex flex-col gap-0.5">
@@ -88,7 +87,7 @@ export function ClaudeLessonSidebar({
                           aria-hidden="true"
                         />
                       ) : (
-                        <span className="w-[13px] shrink-0 text-center font-mono text-[10px] text-muted-foreground">
+                        <span className="w-[13px] shrink-0 text-center font-mono text-xs text-muted-foreground">
                           {lesson.number}
                         </span>
                       )}

@@ -106,7 +106,10 @@ function getLimitations(
       description:
         books.length === 1
           ? copy.books.descriptionOne
-          : copy.books.descriptionMany.replace("{bookCount}", String(books.length)),
+          : copy.books.descriptionMany.replace(
+              "{bookCount}",
+              String(books.length),
+            ),
       mitigation: copy.books.mitigation,
     },
   ];
@@ -123,32 +126,32 @@ function BekannteGrenzenContent({
   const limitations = getLimitations(locale, features);
 
   return (
-    <article className="mx-auto w-full max-w-6xl px-5 pb-28 pt-16 sm:px-8 sm:pt-20 lg:px-10">
-      <header className="grid gap-10 border-b border-border pb-12 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-end">
+    <article className="mx-auto w-full max-w-[70rem] px-4 pb-12 pt-8 sm:px-6 sm:pt-12 lg:px-8">
+      <header className="grid gap-6 border-b border-border pb-8 lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-end">
         <div className="min-w-0">
-          <div className="h-[3px] w-24 bg-brand-orange" />
-          <p className="mt-7 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
+          <div className="h-[3px] w-16 bg-brand-orange" />
+          <p className="mt-4 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
             {copy.eyebrow}
           </p>
-          <h1 className="mt-5 max-w-4xl text-pretty text-[clamp(2.5rem,6vw,5rem)] font-bold leading-[0.94] tracking-[-0.04em] text-foreground">
+          <h1 className="mt-3 max-w-4xl text-pretty text-[clamp(2.25rem,5vw,4.5rem)] font-bold leading-[0.96] tracking-[-0.04em] text-foreground">
             {copy.title}
           </h1>
-          <p className="mt-7 max-w-3xl text-pretty text-lg leading-relaxed text-muted-foreground sm:text-xl">
+          <p className="mt-4 max-w-[68ch] text-pretty text-base leading-7 text-muted-foreground sm:text-lg">
             {copy.intro}
           </p>
         </div>
 
         <dl className="border-y border-border lg:border-b-0">
-          <div className="py-4 lg:px-5">
-            <dt className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+          <div className="py-3 lg:px-4">
+            <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
               {copy.reviewedLabel}
             </dt>
             <dd className="mt-2 text-sm font-semibold text-foreground">
               <time dateTime="2026-08-08">{copy.reviewedDate}</time>
             </dd>
           </div>
-          <div className="border-t border-border py-4 lg:px-5">
-            <dt className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+          <div className="border-t border-border py-3 lg:px-4">
+            <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
               {copy.sourceLabel}
             </dt>
             <dd className="mt-2">
@@ -164,29 +167,29 @@ function BekannteGrenzenContent({
         </dl>
       </header>
 
-      <section aria-label={copy.title} className="pt-12">
+      <section aria-label={copy.title} className="pt-8">
         <div className="grid gap-px overflow-hidden border border-border bg-border md:grid-cols-2">
           {limitations.map((item, index) => (
             <article
               key={item.id}
               id={item.id}
-              className="min-w-0 scroll-mt-24 bg-background p-6 sm:p-8"
+              className="min-w-0 scroll-mt-24 bg-background p-4 sm:p-6"
             >
               <div className="flex items-center justify-between gap-5">
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-brand-orange">
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
                   {copy.scopeLabel}
                 </p>
-                <span className="font-mono text-[11px] text-muted-foreground">
+                <span className="font-mono text-xs text-muted-foreground">
                   {String(index + 1).padStart(2, "0")}
                 </span>
               </div>
-              <h2 className="mt-6 text-pretty text-2xl font-bold tracking-[-0.03em] text-foreground">
+              <h2 className="mt-4 text-pretty text-xl font-bold tracking-[-0.03em] text-foreground">
                 {item.title}
               </h2>
-              <p className="mt-4 break-words text-sm leading-relaxed text-muted-foreground">
+              <p className="mt-3 break-words text-sm leading-6 text-muted-foreground">
                 {item.description}
               </p>
-              <div className="mt-7 border-l-2 border-brand-orange pl-4 text-sm leading-relaxed text-muted-foreground [overflow-wrap:anywhere] [&_a]:text-foreground [&_a]:underline [&_a]:decoration-brand-orange/50 [&_a]:underline-offset-4 [&_a]:hover:decoration-brand-orange [&_a]:focus-visible:outline-none [&_a]:focus-visible:ring-2 [&_a]:focus-visible:ring-brand-orange">
+              <div className="mt-4 border-l-[3px] border-brand-orange pl-3 text-sm leading-6 text-muted-foreground [overflow-wrap:anywhere] [&_a]:text-foreground [&_a]:underline [&_a]:decoration-brand-orange/50 [&_a]:underline-offset-4 [&_a]:hover:decoration-brand-orange [&_a]:focus-visible:outline-none [&_a]:focus-visible:ring-2 [&_a]:focus-visible:ring-brand-orange">
                 <p>
                   <span className="font-semibold text-foreground">
                     {copy.consequenceLabel}{" "}
@@ -199,8 +202,8 @@ function BekannteGrenzenContent({
         </div>
       </section>
 
-      <section className="mt-10 grid gap-5 border-y border-border py-8 md:grid-cols-[12rem_minmax(0,1fr)] md:items-start">
-        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-brand-orange">
+      <section className="mt-8 grid gap-4 border-y border-border py-6 md:grid-cols-[12rem_minmax(0,1fr)] md:items-start">
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
           {copy.reportEyebrow}
         </p>
         <div className="min-w-0">

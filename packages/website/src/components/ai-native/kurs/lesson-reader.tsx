@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Fragment,
   useEffect,
   useMemo,
   useRef,
@@ -10,12 +11,18 @@ import {
 } from "react";
 import Link from "next/link";
 import { m, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, CheckCircle2, Circle } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 import { withMotionProvider } from "@/components/motion/with-motion-provider";
 import { MarkdownRenderer } from "@/components/course/kurs/markdown-renderer";
+import {
+  LessonProofCheckpoint,
+  LessonSectionCheckpoint,
+} from "@/components/course/lesson-proof-checkpoint";
 import { LegalClaimBadge } from "@/components/legal-claim-badge";
 import { LessonQuiz } from "@/components/course/kurs/lesson-quiz";
 import {
+  isEvidenceBackedLessonCompleted,
+  recordLessonCompletionEvidenceDurably,
   saveLessonQuizScore,
   getLessonQuizScore,
   isAppliedProjectCompleted,
@@ -27,10 +34,7 @@ import {
 } from "@/components/widgets/registry";
 import {
   markSectionRead,
-  markLessonCompleted,
-  isLessonCompleted,
   getReadSectionIds,
-  areAllModuleLessonsCompleted,
   notifyModuleCompleted,
 } from "@/lib/ai-native/progress";
 import type {
@@ -40,15 +44,7 @@ import type {
   ModuleId,
 } from "@/lib/ai-native/types";
 import { EASE_OUT_EXPO } from "@/lib/animations";
-import { cn } from "@/lib/utils";
 import { isInteractiveShortcutTarget } from "@/lib/a11y/keyboard-shortcuts";
-
-export function canAdvanceLessonSection(
-  readSectionIds: ReadonlySet<string>,
-  currentSectionId: string | undefined,
-): boolean {
-  return currentSectionId !== undefined && readSectionIds.has(currentSectionId);
-}
 
 export function areLessonSectionsReady(
   sectionIds: readonly string[],
@@ -59,10 +55,21 @@ export function areLessonSectionsReady(
   );
 }
 
+export function canPersistAiNativeLessonCompletion(
+  sectionIds: readonly string[],
+  persistedReadSectionIds: ReadonlySet<string>,
+  hasKnowledgeCheck: boolean,
+  knowledgeCheckComplete: boolean,
+  appliedProofComplete: boolean,
+): boolean {
+  if (!areLessonSectionsReady(sectionIds, persistedReadSectionIds)) {
+    return false;
+  }
+  return hasKnowledgeCheck ? knowledgeCheckComplete : appliedProofComplete;
+}
+
 export type AiNativeProjectStatus =
-  | "verified-project"
-  | "legacy-capstone"
-  | "pending";
+  "verified-project" | "legacy-capstone" | "pending";
 
 export function resolveAiNativeProjectStatus(
   appliedProjectCompleted: boolean,
@@ -73,23 +80,28 @@ export function resolveAiNativeProjectStatus(
   return "pending";
 }
 import { subscribe } from "@/lib/progress/store";
+import { getLearningOwnerContext } from "@/lib/progress/browser-learning-storage";
+import {
+  getOwnerRequiredHint,
+  persistForActiveLearningOwner,
+  useOwnerAwareProgressReadiness,
+} from "@/components/course/owner-aware-progress";
 import { LessonDemoLinks } from "@/components/course/lesson-demo-links";
 import type { Locale } from "@/lib/i18n/locale";
 import { localizeHref } from "@/lib/i18n/locale";
 
 /**
- * AiNativeLessonReader — progressive-disclosure lesson reader.
+ * AiNativeLessonReader — open lesson reader with explicit evidence gates.
  *
  * Behavior:
  *   - All sections are server-rendered (for SEO + crawlers).
- *   - On mount, we read localStorage progress and set `currentIndex` to
- *     the first unread section.
- *   - Sections past `currentIndex` are hidden via `data-state="locked"` +
- *     CSS. Each section has a "Gelesen ✓" button that marks it read.
- *   - The "Weiter" button advances to the next section.
+ *   - On mount, we read localStorage progress and set the keyboard focus index
+ *     to the first unreviewed section.
+ *   - Every section stays visible. Section checkpoints only preserve resume
+ *     navigation; they do not establish lesson completion or mastery.
  *   - Widget slots render between sections per the lesson's `widgets` array.
- *   - On completion of the last section, we mark the lesson complete +
- *     trigger module-completion detection.
+ *   - Completion is recorded only after all section checkpoints plus either a
+ *     completed knowledge check or the quizless lesson's transfer proof.
  *
  * Hydration strategy: server renders everything with data-reveal-index=0.
  * Client state changes only after the browser learning owner is verified;
@@ -121,18 +133,15 @@ function AiNativeLessonReaderContent({
           keyboard: "Keyboard",
           next: "next",
           previous: "previous",
-          readContinue: "read · continue",
+          reviewShortcut: "review section",
           readerLabel: "Lesson content with keyboard shortcuts",
+          lessonNavigationLabel: "Lesson navigation",
           section: "Section",
-          read: "read",
           keyTakeaway: "Key point",
-          markSection: (number: number) => `Mark section ${number} as read`,
-          markRead: "Mark as read",
-          continue: "Continue",
-          finishLesson: "Complete lesson",
-          lessonComplete: "Lesson complete",
+          lessonComplete: "Navigation checkpoint saved",
           progressSaved:
-            "Progress is stored for your learning account. You can return later.",
+            "The lesson route is recorded. This is not a mastery assessment or credential.",
+          proofPrerequisite: "Confirm every section as reviewed first.",
           capstoneQuestion: "Applied project recorded?",
           capstoneComplete:
             "Your applied project evidence is stored in learning progress. It is not a server-attested completion record and does not replace the workshop quiz.",
@@ -164,19 +173,15 @@ function AiNativeLessonReaderContent({
           keyboard: "Tastatur",
           next: "nächster",
           previous: "voriger",
-          readContinue: "gelesen · weiter",
+          reviewShortcut: "Abschnitt geprüft",
           readerLabel: "Lektionsinhalt mit Tastenkürzeln",
+          lessonNavigationLabel: "Lektionsnavigation",
           section: "Abschnitt",
-          read: "gelesen",
           keyTakeaway: "Kernaussage",
-          markSection: (number: number) =>
-            `Abschnitt ${number} als gelesen markieren`,
-          markRead: "Als gelesen markieren",
-          continue: "Weiter",
-          finishLesson: "Lektion abschließen",
-          lessonComplete: "Lektion abgeschlossen",
+          lessonComplete: "Navigations-Checkpoint gespeichert",
           progressSaved:
-            "Der Fortschritt ist deinem Lernkonto zugeordnet. Du kannst später zurückkehren.",
+            "Die Lektionsroute ist erfasst. Das ist keine Kompetenzprüfung und kein Nachweis.",
+          proofPrerequisite: "Bestätige zuerst jeden Abschnitt als geprüft.",
           capstoneQuestion: "Angewandtes Projekt gespeichert?",
           capstoneComplete:
             "Deine Projektnachweise sind im Lernfortschritt gespeichert. Sie sind kein serverbestätigter Abschlussnachweis und ersetzen das Workshop-Quiz nicht.",
@@ -207,6 +212,10 @@ function AiNativeLessonReaderContent({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [readSet, setReadSet] = useState<ReadonlySet<string>>(new Set());
   const [mounted, setMounted] = useState(false);
+  const [readyLessonId, setReadyLessonId] = useState<string | null>(null);
+  const [loadedOwnerGeneration, setLoadedOwnerGeneration] = useState<
+    number | null
+  >(null);
   const [completed, setCompleted] = useState(false);
   const [showModuleBanner, setShowModuleBanner] = useState(false);
   const [quizBestScore, setQuizBestScore] = useState<{
@@ -216,6 +225,12 @@ function AiNativeLessonReaderContent({
   const [legacyCapstoneSubmitted, setLegacyCapstoneSubmitted] = useState(false);
   const [appliedProjectCompleted, setAppliedProjectCompleted] = useState(false);
   const sectionRefs = useRef<Array<HTMLElement | null>>([]);
+  const progressIdentity = `ai-native:${lesson.id}`;
+  const readiness = useOwnerAwareProgressReadiness(
+    progressIdentity,
+    readyLessonId === lesson.id ? progressIdentity : null,
+    loadedOwnerGeneration,
+  );
 
   // The historical capstone lesson explains the alternative certificate path.
   // Its former self-report control is gone. Historical self-reviews remain a
@@ -223,8 +238,8 @@ function AiNativeLessonReaderContent({
   // new verified project as an exact exercise result.
   const isCapstoneLesson = lesson.id === "modul_4_lesson_7";
   const projectStatus = resolveAiNativeProjectStatus(
-    appliedProjectCompleted,
-    legacyCapstoneSubmitted,
+    readiness.interactionReady && appliedProjectCompleted,
+    readiness.interactionReady && legacyCapstoneSubmitted,
   );
 
   const sections = lesson.sections;
@@ -246,46 +261,53 @@ function AiNativeLessonReaderContent({
   // Hydrate from localStorage on mount.
   useEffect(() => {
     const loadOwnedProgress = () => {
+      const owner = getLearningOwnerContext();
+      const resolved = owner.kind !== "unknown";
       setMounted(true);
-      const read = getReadSectionIds(lesson.id);
+      const read = resolved ? getReadSectionIds(lesson.id) : new Set<string>();
       setReadSet(read);
       const firstUnread = sections.findIndex((s) => !read.has(s.id));
       setCurrentIndex(firstUnread === -1 ? sections.length - 1 : firstUnread);
-      setCompleted(isLessonCompleted(lesson.id));
-      setQuizBestScore(getLessonQuizScore("ai-native", lesson.id));
-      setLegacyCapstoneSubmitted(isCapstoneSubmitted("ai-native"));
-      setAppliedProjectCompleted(isAppliedProjectCompleted("ai-native"));
+      const bestScore = resolved
+        ? getLessonQuizScore("ai-native", lesson.id)
+        : null;
+      setCompleted(
+        resolved && isEvidenceBackedLessonCompleted("ai-native", lesson.id),
+      );
+      setQuizBestScore(bestScore);
+      setLegacyCapstoneSubmitted(resolved && isCapstoneSubmitted("ai-native"));
+      setAppliedProjectCompleted(
+        resolved && isAppliedProjectCompleted("ai-native"),
+      );
       setShowModuleBanner(false);
+      setLoadedOwnerGeneration(owner.generation);
+      setReadyLessonId(lesson.id);
     };
     loadOwnedProgress();
     return subscribe(loadOwnedProgress);
-  }, [lesson.id, sections]);
+  }, [lesson.id, quiz.length, sections]);
 
-  function markRead(sectionId: string, sectionIndex: number) {
-    markSectionRead(module.id as ModuleId, lesson.id, sectionId, sectionIndex);
-    setReadSet((prev) => {
-      const next = new Set(prev);
-      next.add(sectionId);
-      return next;
-    });
-  }
+  function markReviewed(sectionId: string, sectionIndex: number) {
+    if (!readiness.interactionReady) return;
+    const persisted = persistForActiveLearningOwner(
+      () =>
+        markSectionRead(
+          module.id as ModuleId,
+          lesson.id,
+          sectionId,
+          sectionIndex,
+        ),
+      () => getReadSectionIds(lesson.id).has(sectionId),
+    );
+    if (!persisted) return;
+    const persistedReadIds = getReadSectionIds(lesson.id);
+    setReadSet(persistedReadIds);
 
-  function advance() {
-    const section = sections[currentIndex];
-    if (!section) return;
-    markRead(section.id, currentIndex);
-    const nextIdx = Math.min(currentIndex + 1, sections.length - 1);
-    setCurrentIndex(nextIdx);
-    // Smooth scroll to the newly-revealed section
-    setTimeout(() => {
-      const el = sectionRefs.current[nextIdx];
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }, 50);
-    // If this was the last section → finalize lesson.
-    if (currentIndex === sections.length - 1) {
-      finalizeLesson();
+    if (quiz.length > 0 && getLessonQuizScore("ai-native", lesson.id)) {
+      finalizeLesson(
+        { knowledgeCheckComplete: true, appliedProofComplete: false },
+        persistedReadIds,
+      );
     }
   }
 
@@ -305,11 +327,6 @@ function AiNativeLessonReaderContent({
       case "J":
       case "ArrowDown": {
         e.preventDefault();
-        const currentSection = sections[currentIndex];
-        if (!canAdvanceLessonSection(readSet, currentSection?.id)) {
-          focusSection(currentIndex);
-          break;
-        }
         const next = Math.min(currentIndex + 1, sections.length - 1);
         if (next !== currentIndex) {
           setCurrentIndex(next);
@@ -330,33 +347,52 @@ function AiNativeLessonReaderContent({
       }
       case " ": {
         e.preventDefault();
+        if (!mounted) return;
         const section = sections[currentIndex];
         if (!section) return;
-        if (readSet.has(section.id)) advance();
-        else markRead(section.id, currentIndex);
+        if (!readSet.has(section.id)) {
+          markReviewed(section.id, currentIndex);
+          return;
+        }
+        const next = Math.min(currentIndex + 1, sections.length - 1);
+        if (next !== currentIndex) {
+          setCurrentIndex(next);
+          window.setTimeout(() => focusSection(next), 60);
+        }
         break;
       }
     }
   }
 
-  function finalizeLesson() {
-    const persistedReadIds = getReadSectionIds(lesson.id);
+  function finalizeLesson(
+    evidence: {
+      readonly knowledgeCheckComplete: boolean;
+      readonly appliedProofComplete: boolean;
+    },
+    persistedReadIds = getReadSectionIds(lesson.id),
+  ) {
     if (
-      !areLessonSectionsReady(
+      !canPersistAiNativeLessonCompletion(
         sections.map((section) => section.id),
         persistedReadIds,
+        quiz.length > 0,
+        evidence.knowledgeCheckComplete,
+        evidence.appliedProofComplete,
       )
     ) {
       return;
     }
-    if (isLessonCompleted(lesson.id)) {
-      setCompleted(true);
-      return;
-    }
-    markLessonCompleted(lesson.id);
+    const persisted = recordLessonCompletionEvidenceDurably(
+      "ai-native",
+      lesson.id,
+    );
+    if (!persisted) return;
     setCompleted(true);
-    // Check if this completes the entire module.
-    if (areAllModuleLessonsCompleted(allModuleLessonIds)) {
+    // Legacy lesson booleans do not satisfy the new module evidence boundary.
+    const moduleEvidenceComplete = allModuleLessonIds.every((moduleLessonId) =>
+      isEvidenceBackedLessonCompleted("ai-native", moduleLessonId),
+    );
+    if (moduleEvidenceComplete) {
       const completedCount = allModuleLessonIds.length;
       notifyModuleCompleted(
         module.id as ModuleId,
@@ -368,37 +404,43 @@ function AiNativeLessonReaderContent({
   }
 
   function handleQuizComplete(score: number, total: number) {
-    saveLessonQuizScore("ai-native", lesson.id, score, total);
-    setQuizBestScore((prev) =>
-      prev && prev.score / prev.total >= score / total
-        ? prev
-        : { score, total },
+    const persisted = persistForActiveLearningOwner(
+      () => saveLessonQuizScore("ai-native", lesson.id, score, total),
+      () => getLessonQuizScore("ai-native", lesson.id) !== null,
     );
+    if (!persisted) return;
+    const best = getLessonQuizScore("ai-native", lesson.id);
+    setQuizBestScore(best);
+    if (!best) return;
+    finalizeLesson({
+      knowledgeCheckComplete: true,
+      appliedProofComplete: false,
+    });
   }
 
   // For server render: always show index 0. Client hydration updates.
   const revealIndex = mounted ? currentIndex : 0;
 
   return (
-    <>
+    <Fragment key={readiness.checkpointKey}>
       {/* Keyboard shortcut hint — desktop only, visually subtle. */}
       <div
         aria-hidden="true"
-        className="mt-10 hidden items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.14em] text-muted-foreground md:flex"
+        className="mt-10 hidden items-center gap-2 font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground md:flex"
       >
         <span>{copy.keyboard}</span>
-        <kbd className="rounded-none border border-border bg-card px-1.5 py-0.5 text-[10px] text-foreground">
+        <kbd className="rounded-none border border-border bg-card px-1.5 py-0.5 text-xs text-foreground">
           j
         </kbd>
         <span>{copy.next}</span>
-        <kbd className="rounded-none border border-border bg-card px-1.5 py-0.5 text-[10px] text-foreground">
+        <kbd className="rounded-none border border-border bg-card px-1.5 py-0.5 text-xs text-foreground">
           k
         </kbd>
         <span>{copy.previous}</span>
-        <kbd className="rounded-none border border-border bg-card px-1.5 py-0.5 text-[10px] text-foreground">
+        <kbd className="rounded-none border border-border bg-card px-1.5 py-0.5 text-xs text-foreground">
           Space
         </kbd>
-        <span>{copy.readContinue}</span>
+        <span>{copy.reviewShortcut}</span>
       </div>
 
       {/* "after-intro" widget slot (above sections, below voice anchor) */}
@@ -415,19 +457,19 @@ function AiNativeLessonReaderContent({
         </div>
       )}
 
-      {/* Sections — all server-rendered; client progressive-reveals */}
+      {/* All authored sections remain visible. Checkpoints only retain the
+          learner's review position; they never hide content or imply mastery. */}
       <article
         id="lesson-body"
         tabIndex={0}
         aria-label={copy.readerLabel}
         aria-keyshortcuts="J K ArrowDown ArrowUp Space"
         onKeyDown={handleReaderKeyDown}
-        className="mt-14 space-y-14"
+        className="mt-12 space-y-12"
         data-current-index={revealIndex}
       >
         {sections.map((section, i) => {
-          const isRead = readSet.has(section.id);
-          const isLocked = mounted && i > currentIndex;
+          const isRead = readiness.interactionReady && readSet.has(section.id);
           const isCurrent = mounted && i === currentIndex;
           return (
             <section
@@ -436,22 +478,17 @@ function AiNativeLessonReaderContent({
                 sectionRefs.current[i] = el;
               }}
               data-section-index={i}
-              data-state={isLocked ? "locked" : isCurrent ? "current" : "done"}
-              aria-hidden={isLocked ? "true" : "false"}
-              className={cn(
-                "transition-opacity duration-500",
-                isLocked && "pointer-events-none select-none opacity-0",
-              )}
-              style={
-                isLocked ? { visibility: "hidden", maxHeight: 0 } : undefined
-              }
+              data-state={isRead ? "reviewed" : isCurrent ? "current" : "open"}
+              className="scroll-mt-24"
             >
-              <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
                 {copy.section} {String(i + 1).padStart(2, "0")}
                 {isRead && (
                   <span className="ml-2 inline-flex items-center gap-1 text-brand-sand">
                     <CheckCircle2 size={11} />
-                    <span className="font-mono text-[10px]">{copy.read}</span>
+                    <span className="font-mono text-xs">
+                      {locale === "de" ? "geprüft" : "reviewed"}
+                    </span>
                   </span>
                 )}
               </p>
@@ -473,7 +510,7 @@ function AiNativeLessonReaderContent({
               </div>
               {section.keyTakeaway && (
                 <div className="mt-7 border-l-[3px] border-brand-orange bg-[var(--color-kupfer-mist)] px-6 py-5">
-                  <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+                  <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
                     {copy.keyTakeaway}
                   </p>
                   <p className="mt-2 text-[16px] font-medium leading-[1.5] tracking-[-0.01em] text-foreground">
@@ -481,71 +518,14 @@ function AiNativeLessonReaderContent({
                   </p>
                 </div>
               )}
-
-              {/* Per-section "mark as read" + "Weiter" gate */}
-              {isCurrent && (
-                <div className="mt-8 flex flex-wrap items-center gap-3 border-t border-border pt-5">
-                  {!isRead ? (
-                    <button
-                      type="button"
-                      onClick={() => markRead(section.id, i)}
-                      className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-                      aria-label={copy.markSection(i + 1)}
-                    >
-                      <Circle size={14} />
-                      {copy.markRead}
-                    </button>
-                  ) : (
-                    <m.span
-                      initial={{ scale: 0.9, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 15,
-                      }}
-                      className="inline-flex items-center gap-2 text-sm text-brand-sand"
-                    >
-                      <CheckCircle2 size={14} />
-                      {copy.read}
-                    </m.span>
-                  )}
-                  <div className="ml-auto flex items-center gap-3">
-                    <span className="font-mono text-[10.5px] tracking-[0.12em] text-muted-foreground">
-                      {i + 1} / {sections.length}
-                    </span>
-                    {i < sections.length - 1 ? (
-                      <button
-                        type="button"
-                        onClick={advance}
-                        disabled={!isRead}
-                        className={cn(
-                          "inline-flex items-center gap-2 border-2 border-foreground px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
-                          isRead
-                            ? "bg-brand-orange text-white shadow-[3px_3px_0_0_var(--color-foreground)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
-                            : "cursor-not-allowed bg-card text-muted-foreground opacity-50",
-                        )}
-                      >
-                        {copy.continue} <ArrowRight size={12} />
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={advance}
-                        disabled={!isRead}
-                        className={cn(
-                          "inline-flex items-center gap-2 border-2 border-foreground px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
-                          isRead
-                            ? "bg-risk-green text-white shadow-[3px_3px_0_0_var(--color-foreground)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
-                            : "cursor-not-allowed bg-card text-muted-foreground opacity-50",
-                        )}
-                      >
-                        {copy.finishLesson} <CheckCircle2 size={12} />
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )}
+              <div className="mt-6 border-t border-border pt-4">
+                <LessonSectionCheckpoint
+                  locale={locale}
+                  checked={isRead}
+                  progressReady={readiness.interactionReady}
+                  onCheck={() => markReviewed(section.id, i)}
+                />
+              </div>
             </section>
           );
         })}
@@ -567,16 +547,16 @@ function AiNativeLessonReaderContent({
 
       {/* Completed-lesson confirmation */}
       <AnimatePresence>
-        {completed && (
+        {readiness.interactionReady && completed && quiz.length > 0 && (
           <m.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, ease: EASE_OUT_EXPO }}
-            className="mt-14 border-t-[3px] border-brand-orange bg-[var(--color-kupfer-mist)] px-6 py-5"
+            className="mt-12 border-t-[3px] border-brand-orange bg-[var(--color-kupfer-mist)] px-6 py-5"
           >
             <div className="flex items-center gap-3">
               <CheckCircle2 size={20} className="text-brand-orange" />
-              <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
                 {copy.lessonComplete}
               </p>
             </div>
@@ -588,9 +568,9 @@ function AiNativeLessonReaderContent({
       </AnimatePresence>
 
       {/* Capstone rubric completion can unlock the local participation PDF. */}
-      {mounted && isCapstoneLesson && (
-        <div className="mt-14 border-2 border-foreground bg-card/40 p-6 shadow-[4px_4px_0_0_var(--color-foreground)]">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      {readiness.hydrated && isCapstoneLesson && (
+        <div className="mt-12 border-2 border-foreground bg-card/40 p-6">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
             ◆ Capstone
           </p>
           <h3 className="mt-2 text-[22px] font-bold tracking-[-0.02em] text-foreground">
@@ -608,7 +588,7 @@ function AiNativeLessonReaderContent({
               <div className="mt-5 flex flex-wrap gap-3">
                 <Link
                   href={localizeHref("/ai-native/kurs/quiz", locale)}
-                  className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
+                  className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-foreground"
                 >
                   {copy.takeQuiz} <ArrowRight size={12} />
                 </Link>
@@ -622,13 +602,13 @@ function AiNativeLessonReaderContent({
               <div className="mt-5 flex flex-wrap gap-3">
                 <Link
                   href={localizeHref("/ai-native/kurs/zertifikat", locale)}
-                  className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
+                  className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-foreground"
                 >
                   {copy.downloadRecord} <ArrowRight size={12} />
                 </Link>
                 <a
                   href="#course-project-studio"
-                  className="inline-flex items-center gap-2 border-2 border-foreground bg-card px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-foreground shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
+                  className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-card px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-foreground transition-colors hover:bg-foreground hover:text-background"
                 >
                   {copy.markRubric} <CheckCircle2 size={12} />
                 </a>
@@ -642,7 +622,7 @@ function AiNativeLessonReaderContent({
               <div className="mt-5">
                 <a
                   href="#course-project-studio"
-                  className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
+                  className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-foreground"
                 >
                   {copy.markRubric} <CheckCircle2 size={12} />
                 </a>
@@ -655,18 +635,16 @@ function AiNativeLessonReaderContent({
         </div>
       )}
 
-      {/* Inline lesson quiz — the questions already live in every lesson's
-          JSON (BaseLesson.quiz) but were never surfaced in AI-Native.
-          Reuses the shared LessonQuiz (shared course architecture). Revealed once the
-          reader has worked through the lesson, mirroring the free courses. */}
-      {mounted && completed && quiz.length > 0 && (
+      {/* The knowledge check remains visible independently of section markers.
+          Submitting it is the evidence boundary for lesson completion. */}
+      {readiness.hydrated && quiz.length > 0 && (
         <m.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, ease: EASE_OUT_EXPO }}
-          className="mt-14 border-2 border-border bg-card/40 p-6"
+          className="mt-12 border-2 border-border bg-card/40 p-6"
         >
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
             ◆ {copy.knowledgeCheck}
           </p>
           <h3 className="mt-2 text-[22px] font-bold tracking-[-0.02em] text-foreground">
@@ -678,12 +656,43 @@ function AiNativeLessonReaderContent({
           <div className="mt-6">
             <LessonQuiz
               questions={quiz}
-              bestScore={quizBestScore}
+              bestScore={readiness.interactionReady ? quizBestScore : null}
               onComplete={handleQuizComplete}
               locale={locale}
             />
           </div>
         </m.div>
+      )}
+
+      {/* The single quizless bonus lesson uses a concrete transfer decision as
+          its applied evidence instead of converting section clicks into completion. */}
+      {readiness.hydrated && quiz.length === 0 && (
+        <div className="mt-12">
+          <LessonProofCheckpoint
+            key={readiness.checkpointKey}
+            locale={locale}
+            completed={readiness.interactionReady && completed}
+            progressReady={readiness.hydrated}
+            prerequisitesMet={
+              readiness.ownerReady &&
+              areLessonSectionsReady(
+                sections.map((section) => section.id),
+                readSet,
+              )
+            }
+            prerequisiteHint={
+              readiness.ownerReady
+                ? copy.proofPrerequisite
+                : getOwnerRequiredHint(locale)
+            }
+            onCommit={() =>
+              finalizeLesson({
+                knowledgeCheckComplete: false,
+                appliedProofComplete: true,
+              })
+            }
+          />
+        </div>
       )}
 
       {/* "end" widget slot */}
@@ -707,10 +716,10 @@ function AiNativeLessonReaderContent({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, ease: EASE_OUT_EXPO }}
-            className="mt-14 border-2 border-brand-orange bg-brand-orange/10 p-6 shadow-[4px_4px_0_0_var(--color-foreground)]"
+            className="mt-12 border-2 border-brand-orange bg-brand-orange/10 p-6"
             role="status"
           >
-            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
               ◆ {copy.moduleComplete(module.number)}
             </p>
             <h3 className="mt-2 text-[22px] font-bold tracking-[-0.02em] text-foreground">
@@ -722,7 +731,7 @@ function AiNativeLessonReaderContent({
             <div className="mt-5 flex flex-wrap gap-3">
               <Link
                 href={localizeHref("/ai-native", locale)}
-                className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
+                className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-foreground"
               >
                 {copy.overview} <ArrowRight size={12} />
               </Link>
@@ -732,7 +741,7 @@ function AiNativeLessonReaderContent({
                     `/ai-native/kurs/${module.id}/${nextLesson.id}`,
                     locale,
                   )}
-                  className="inline-flex items-center gap-2 border border-foreground bg-transparent px-4 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-foreground transition-colors hover:bg-foreground hover:text-background"
+                  className="inline-flex min-h-11 items-center gap-2 border border-foreground bg-transparent px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-foreground transition-colors hover:bg-foreground hover:text-background"
                 >
                   {copy.nextLesson} <ArrowRight size={12} />
                 </Link>
@@ -751,16 +760,19 @@ function AiNativeLessonReaderContent({
       />
 
       {/* Prev / Next */}
-      <nav className="mt-14 grid gap-6 sm:grid-cols-2">
+      <nav
+        aria-label={copy.lessonNavigationLabel}
+        className="mt-12 grid gap-6 sm:grid-cols-2"
+      >
         {prevLesson ? (
           <Link
             href={localizeHref(
               `/ai-native/kurs/${module.id}/${prevLesson.id}`,
               locale,
             )}
-            className="group block border-t border-border py-5"
+            className="group block min-h-11 border-t border-border py-5"
           >
-            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+            <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
               <ArrowLeft size={11} className="mr-1 inline" />
               {copy.previousShort} · {prevLesson.number}
             </p>
@@ -777,9 +789,9 @@ function AiNativeLessonReaderContent({
               `/ai-native/kurs/${module.id}/${nextLesson.id}`,
               locale,
             )}
-            className="group block border-t border-border py-5 text-right"
+            className="group block min-h-11 border-t border-border py-5 text-right"
           >
-            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-brand-orange">
+            <p className="font-mono text-xs uppercase tracking-[0.14em] text-brand-orange">
               {copy.nextShort} · {nextLesson.number}
               <ArrowRight size={11} className="ml-1 inline" />
             </p>
@@ -790,9 +802,9 @@ function AiNativeLessonReaderContent({
         ) : (
           <Link
             href={localizeHref(`/ai-native/kurs/${module.id}`, locale)}
-            className="group block border-t border-border py-5 text-right"
+            className="group block min-h-11 border-t border-border py-5 text-right"
           >
-            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-brand-orange">
+            <p className="font-mono text-xs uppercase tracking-[0.14em] text-brand-orange">
               {copy.backModule}
               <ArrowRight size={11} className="ml-1 inline" />
             </p>
@@ -802,7 +814,7 @@ function AiNativeLessonReaderContent({
           </Link>
         )}
       </nav>
-    </>
+    </Fragment>
   );
 }
 
@@ -825,7 +837,11 @@ function WidgetSlot({
       data-widget-kind={widget.kind}
       className="mt-6"
     >
-      <RenderWidget kind={widget.kind} props={widget.props ?? {}} locale={locale} />
+      <RenderWidget
+        kind={widget.kind}
+        props={widget.props ?? {}}
+        locale={locale}
+      />
     </div>
   );
 }

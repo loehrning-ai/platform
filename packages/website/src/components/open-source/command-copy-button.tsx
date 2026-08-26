@@ -31,10 +31,16 @@ export function CommandCopyButton({
     <button
       type="button"
       onClick={copy}
-      aria-label={copied ? `${label}: ${copyText.copied}` : `${label}: ${copyText.copy}`}
-      className="inline-flex min-h-9 items-center gap-1.5 border border-border bg-background px-2.5 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
+      aria-label={
+        copied ? `${label}: ${copyText.copied}` : `${label}: ${copyText.copy}`
+      }
+      className="inline-flex min-h-11 items-center gap-1.5 border border-border bg-background px-2.5 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
     >
-      {copied ? <Check size={12} aria-hidden="true" /> : <Copy size={12} aria-hidden="true" />}
+      {copied ? (
+        <Check size={12} aria-hidden="true" />
+      ) : (
+        <Copy size={12} aria-hidden="true" />
+      )}
       {copied ? copyText.copied : copyText.copy}
     </button>
   );

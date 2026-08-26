@@ -1,4 +1,9 @@
 import { test, expect, type Page } from "@playwright/test";
+import {
+  CANONICAL_SECTION_IDS,
+  lessonCompletionEvidenceCheckpointId,
+} from "../../src/lib/courses/completion";
+import { checkpointKey } from "../../src/lib/progress/types";
 import { settleFontsAndFrame } from "./fixtures/settle";
 
 /**
@@ -22,10 +27,8 @@ const LESSON_ROUTE =
   "/en/kurse/open-source/data-infrastructure/kurs/mental-model";
 const FINAL_LESSON_ROUTE =
   "/en/kurse/open-source/data-infrastructure/kurs/interview-playbook";
-const CERT_ROUTE =
-  "/en/kurse/open-source/data-infrastructure/kurs/zertifikat";
-const VERIFY_ROUTE =
-  "/en/kurse/open-source/data-infrastructure/verifizierung";
+const CERT_ROUTE = "/en/kurse/open-source/data-infrastructure/kurs/zertifikat";
+const VERIFY_ROUTE = "/en/kurse/open-source/data-infrastructure/verifizierung";
 
 const UNIFIED_KEY = "loehrning-progress-v2";
 const DATA_INFRA_LESSON_IDS = [
@@ -43,7 +46,7 @@ const DATA_INFRA_LESSON_IDS = [
   "interview-playbook",
 ] as const;
 
-/** A minimal unified-store payload with the selected lessons completed. */
+/** A minimal unified-store payload with selected lessons evidence-backed. */
 function completedDataInfraState(
   completedLessonIds: readonly string[] = DATA_INFRA_LESSON_IDS,
 ) {
@@ -52,7 +55,7 @@ function completedDataInfraState(
     completedLessonIds.map((id) => [
       id,
       {
-        sectionsRead: [],
+        sectionsRead: [...CANONICAL_SECTION_IDS["data-infrastructure"][id]],
         quizScore: null,
         quizTotal: null,
         completed: true,
@@ -72,7 +75,15 @@ function completedDataInfraState(
       },
     },
     xp: 50,
-    checkpoints: {},
+    checkpoints: Object.fromEntries(
+      completedLessonIds.map((id) => [
+        checkpointKey(
+          id,
+          lessonCompletionEvidenceCheckpointId("data-infrastructure"),
+        ),
+        true,
+      ]),
+    ),
     badges: {},
     streak: { days: 1, last: now.slice(0, 10) },
     lastActivity: now,
@@ -175,7 +186,9 @@ test.describe("Data Infrastructure golden path", () => {
     await page.setViewportSize({ width: 320, height: 900 });
     const res = await page.goto(LESSON_ROUTE, { waitUntil: "load" });
     expect(res?.status()).toBe(200);
-    await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
     await settleFontsAndFrame(page);
     await openLessonReference(page);
 
@@ -250,24 +263,32 @@ test.describe("Data Infrastructure golden path", () => {
     });
     expect(res?.status()).toBe(200);
     await expect(page).not.toHaveURL(/\/login/);
-    await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
     await openLessonReference(page);
 
-    const markAsRead = page.getByRole("button", {
-      name: "Mark as read",
+    const uncheckedSections = page.getByRole("button", {
+      name: "Confirm section reviewed",
       exact: true,
     });
-    const sectionCount = await markAsRead.count();
+    const sectionCount = await uncheckedSections.count();
     expect(sectionCount).toBeGreaterThan(0);
     for (let remaining = sectionCount; remaining > 0; remaining -= 1) {
-      await markAsRead.first().click();
-      await expect(markAsRead).toHaveCount(remaining - 1);
+      await uncheckedSections.first().click();
+      await expect(uncheckedSections).toHaveCount(remaining - 1);
     }
-    const completeLesson = page.getByRole("button", {
-      name: "Complete lesson",
+    await page
+      .getByRole("textbox", { name: "Decision or revision" })
+      .fill("I will test this change in practice.");
+    const saveCheckpoint = page.getByRole("button", {
+      name: "Save checkpoint",
     });
-    await expect(completeLesson).toBeEnabled();
-    await completeLesson.click();
+    await expect(saveCheckpoint).toBeEnabled();
+    await saveCheckpoint.click();
+    await expect(
+      page.getByText("Navigation checkpoint saved", { exact: true }),
+    ).toBeVisible();
 
     const finalLessonCertificate = page.getByRole("link", {
       name: "Open Certificate of Completion",

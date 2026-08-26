@@ -60,7 +60,9 @@ export function FeedbackForm({ locale = "de" }: { readonly locale?: Locale }) {
   const messageRef = useRef<HTMLTextAreaElement>(null);
 
   const isValid = message.trim().length >= 10;
-  const numberFormatter = new Intl.NumberFormat(locale === "de" ? "de-DE" : "en-GB");
+  const numberFormatter = new Intl.NumberFormat(
+    locale === "de" ? "de-DE" : "en-GB",
+  );
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -111,9 +113,9 @@ export function FeedbackForm({ locale = "de" }: { readonly locale?: Locale }) {
       <div
         role="status"
         aria-live="polite"
-        className="mt-10 border border-border bg-card/50 p-7 sm:p-9"
+        className="mt-6 border border-border border-l-[3px] border-l-brand-orange bg-card p-4 sm:p-6"
       >
-        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-brand-orange">
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
           200 / OK
         </p>
         <h2 className="mt-4 text-2xl font-bold tracking-[-0.03em] text-foreground">
@@ -124,7 +126,7 @@ export function FeedbackForm({ locale = "de" }: { readonly locale?: Locale }) {
         </p>
         <Link
           href={localizeHref("/neuigkeiten", locale)}
-          className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+          className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
         >
           {locale === "de" ? "Neuigkeiten öffnen" : "Open updates"}
           <span aria-hidden="true">→</span>
@@ -141,7 +143,7 @@ export function FeedbackForm({ locale = "de" }: { readonly locale?: Locale }) {
         : null;
 
   return (
-    <form onSubmit={handleSubmit} className="mt-10 space-y-8" noValidate>
+    <form onSubmit={handleSubmit} className="mt-6 space-y-6" noValidate>
       <fieldset>
         <legend className="text-sm font-semibold text-foreground">
           {copy.categoryLegend}
@@ -154,11 +156,11 @@ export function FeedbackForm({ locale = "de" }: { readonly locale?: Locale }) {
               onClick={() => setCategory(item.value)}
               aria-pressed={category === item.value}
               className={[
-                "min-h-12 min-w-0 break-words bg-background px-4 py-3 text-left text-sm transition-colors",
+                "min-h-12 min-w-0 break-words border-l-[3px] bg-background px-4 py-3 text-left text-sm",
                 "focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange",
                 category === item.value
-                  ? "bg-brand-orange/[0.08] font-semibold text-foreground shadow-[inset_3px_0_0_var(--color-brand-orange)]"
-                  : "text-muted-foreground hover:bg-card hover:text-foreground",
+                  ? "border-l-brand-orange bg-kupfer-mist font-semibold text-foreground"
+                  : "border-l-transparent text-muted-foreground hover:bg-card hover:text-foreground",
               ].join(" ")}
             >
               {item.label}
@@ -177,7 +179,7 @@ export function FeedbackForm({ locale = "de" }: { readonly locale?: Locale }) {
           </label>
           <span
             id="feedback-message-requirement"
-            className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground"
+            className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground"
           >
             {copy.requirement}
           </span>
@@ -198,7 +200,7 @@ export function FeedbackForm({ locale = "de" }: { readonly locale?: Locale }) {
               setStatus("idle");
             }
           }}
-          rows={7}
+          rows={6}
           maxLength={2000}
           required
           minLength={10}
@@ -222,9 +224,10 @@ export function FeedbackForm({ locale = "de" }: { readonly locale?: Locale }) {
         ) : null}
         <p
           id="feedback-message-count"
-          className="mt-2 text-right font-mono text-[11px] tabular-nums text-muted-foreground"
+          className="mt-2 text-right font-mono text-xs tabular-nums text-muted-foreground"
         >
-          {numberFormatter.format(message.length)} / {numberFormatter.format(2000)}
+          {numberFormatter.format(message.length)} /{" "}
+          {numberFormatter.format(2000)}
         </p>
       </div>
 
@@ -241,7 +244,7 @@ export function FeedbackForm({ locale = "de" }: { readonly locale?: Locale }) {
       <button
         type="submit"
         disabled={status === "sending"}
-        className="inline-flex min-h-12 w-full select-none items-center justify-between gap-4 bg-brand-orange px-5 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white transition-[background-color,opacity,transform] duration-200 hover:-translate-y-0.5 hover:bg-kupfer-dark active:translate-y-0 disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:w-auto sm:min-w-56"
+        className="inline-flex min-h-12 w-full select-none items-center justify-between gap-4 border border-brand-orange bg-brand-orange px-5 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white hover:border-foreground hover:bg-foreground disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:w-auto sm:min-w-56"
       >
         <span>{status === "sending" ? copy.sending : copy.submit}</span>
         <span aria-hidden="true">{status === "sending" ? "···" : "→"}</span>

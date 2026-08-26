@@ -1,8 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { CourseProgressBar } from "@/components/ai-native-operator/course-progress-bar";
 import { CourseAssessmentCta } from "@/components/course/kurs/course-assessment-cta";
+import {
+  TECHNICAL_COURSE_LEDGER_LINK_CLASS,
+  TECHNICAL_COURSE_PRIMARY_ACTION_CLASS,
+  TECHNICAL_COURSE_SECONDARY_ACTION_CLASS,
+  TechnicalCourseFrame,
+  TechnicalCourseHeader,
+  TechnicalCourseSectionHeading,
+} from "@/components/course/technical-course-landing";
+import { TechnicalCourseProgressBar } from "@/components/course/technical-course-progress";
 import { getAiNativeOperatorCourseCopy } from "@/lib/ai-native-operator/course-copy";
 import { getAiNativeOperatorLocaleRegistry } from "@/lib/ai-native-operator/data";
 import { lessonHref, moduleHref } from "@/lib/ai-native-operator/routes";
@@ -98,105 +106,98 @@ export default async function AiNativeOperatorLandingPage() {
   return (
     <>
       <JsonLd data={courseJsonLd} id="ai-native-operator-course-jsonld" />
-      <section className="mx-auto w-full max-w-[1100px] overflow-x-clip px-4 pb-20 pt-14 sm:px-6 sm:pt-20">
-        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-          {copy.eyebrow}
-        </p>
-        <h1 className="mt-6 max-w-[900px] break-words text-[40px] font-bold leading-[0.98] tracking-[-0.04em] text-foreground sm:text-[60px] md:text-[76px]">
-          {copy.title}
-        </h1>
-        <p className="mt-7 max-w-[720px] text-[17px] leading-[1.65] text-muted-foreground sm:text-[18px]">
-          {courseMeta.subtitle}
-        </p>
-
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link
-            href={lessonHref(firstModuleId, 1, locale)}
-            className="inline-flex min-h-12 max-w-full items-center gap-2 break-words border-2 border-foreground bg-brand-orange px-5 py-3.5 font-mono text-[12px] font-bold uppercase tracking-[0.05em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)] sm:px-6 sm:text-[13px]"
-          >
-            {copy.start}
-            <ArrowRight size={15} className="shrink-0" aria-hidden="true" />
-          </Link>
-          <Link
-            href="#syllabus"
-            className="inline-flex min-h-12 max-w-full items-center break-words border-2 border-foreground bg-background px-5 py-3.5 font-mono text-[12px] font-bold uppercase tracking-[0.05em] text-foreground shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:bg-card sm:px-6 sm:text-[13px]"
-          >
-            {copy.syllabusLink}
-          </Link>
-        </div>
-
-        <div className="mt-6 flex flex-wrap gap-2">
-          {[
+      <TechnicalCourseFrame courseId="ai-native-operator" lang={locale}>
+        <TechnicalCourseHeader
+          eyebrow={copy.eyebrow}
+          title={copy.title}
+          intro={courseMeta.subtitle}
+          facts={[
             copy.moduleCount(modules.length),
             copy.lessonCount(TOTAL_LESSON_COUNT),
             copy.exerciseCount(TOTAL_EXERCISE_COUNT),
             copy.durationShort,
-          ].map((chip) => (
-            <span
-              key={chip}
-              className="max-w-full break-words border border-foreground bg-background px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-foreground"
+          ]}
+          factsLabel={locale === "de" ? "Kursdaten" : "Course facts"}
+          progress={
+            <TechnicalCourseProgressBar
+              courseSlug="ai-native-operator"
+              totalLessons={TOTAL_LESSON_COUNT}
+              label={
+                locale === "de" ? "Lektionsfortschritt" : "Lesson progress"
+              }
+              unitLabel={locale === "de" ? "Lektionen" : "lessons"}
+            />
+          }
+          primaryAction={
+            <Link
+              href={lessonHref(firstModuleId, 1, locale)}
+              className={TECHNICAL_COURSE_PRIMARY_ACTION_CLASS}
             >
-              {chip}
-            </span>
-          ))}
-        </div>
+              {copy.start}
+              <ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
+            </Link>
+          }
+          secondaryAction={
+            <Link
+              href="#syllabus"
+              className={TECHNICAL_COURSE_SECONDARY_ACTION_CLASS}
+            >
+              {copy.syllabusLink}
+            </Link>
+          }
+        />
 
-        <div className="mt-8 max-w-[420px]">
-          <CourseProgressBar locale={locale} />
-        </div>
-
-        <div className="mt-16">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-            {copy.outcomesEyebrow}
-          </p>
-          <h2 className="mt-2 text-[28px] font-bold tracking-[-0.03em] text-foreground sm:text-[34px]">
-            {copy.outcomesTitle}
-          </h2>
-          <div className="mt-8 grid min-w-0 gap-6 sm:grid-cols-2">
+        <section className="mt-12">
+          <TechnicalCourseSectionHeading
+            eyebrow={copy.outcomesEyebrow}
+            title={copy.outcomesTitle}
+          />
+          <ol className="mt-4 min-w-0 border-y border-border">
             {courseMeta.outcomes.map((outcome, index) => (
-              <div key={outcome} className="flex min-w-0 gap-4">
-                <span className="shrink-0 font-mono text-[13px] font-bold text-brand-orange">
+              <li
+                key={outcome}
+                className="grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] gap-3 border-b border-border py-3 last:border-b-0"
+              >
+                <span className="shrink-0 font-mono text-xs font-bold tabular-nums text-brand-orange">
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <p className="min-w-0 break-words text-[15px] leading-[1.55] text-foreground">
+                <p className="min-w-0 break-words text-sm leading-[1.5] text-foreground">
                   {outcome}
                 </p>
-              </div>
+              </li>
             ))}
-          </div>
-        </div>
+          </ol>
+        </section>
 
-        <section id="syllabus" className="mt-20 scroll-mt-24">
-          <div className="flex flex-wrap items-baseline justify-between gap-3">
-            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-              {copy.syllabusEyebrow}
-            </p>
-            <p className="font-mono text-[11px] text-muted-foreground">
+        <section id="syllabus" className="mt-12 scroll-mt-24">
+          <div className="flex min-w-0 flex-wrap items-end justify-between gap-3">
+            <TechnicalCourseSectionHeading
+              eyebrow={copy.syllabusEyebrow}
+              title={copy.syllabusTitle}
+            />
+            <p className="pb-1 font-mono text-xs text-muted-foreground">
               {copy.syllabusMode}
             </p>
           </div>
-          <h2 className="mt-2 break-words text-[28px] font-bold tracking-[-0.03em] text-foreground sm:text-[34px]">
-            {copy.syllabusTitle}
-          </h2>
 
-          <div className="mt-8 flex min-w-0 flex-col divide-y divide-border border-t border-border">
+          <div className="mt-4 min-w-0 border-y border-border">
             {modules.map((module) => (
               <Link
                 key={module.id}
                 href={moduleHref(module.id, locale)}
-                className="group grid min-w-0 grid-cols-[44px_minmax(0,1fr)_16px] items-center gap-3 py-5 transition-colors hover:bg-card sm:grid-cols-[56px_minmax(0,1fr)_16px] sm:gap-5"
+                className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} grid-cols-[3.25rem_minmax(0,1fr)_1rem] sm:grid-cols-[4rem_minmax(0,1fr)_1rem] sm:gap-4`}
               >
-                <div className="font-mono text-[12px] font-bold text-brand-orange sm:text-[13px]">
+                <div className="font-mono text-xs font-bold tabular-nums text-brand-orange sm:text-[13px]">
                   {module.code}
                 </div>
                 <div className="min-w-0">
                   <h3 className="break-words text-[16px] font-semibold text-foreground sm:text-[17px]">
                     {module.name}
                   </h3>
-                  <p className="mt-0.5 break-words text-[13px] leading-[1.45] text-muted-foreground sm:text-[13.5px]">
+                  <p className="mt-0.5 break-words text-[13px] leading-[1.45] text-muted-foreground">
                     {module.tagline}
                   </p>
-                  <div className="mt-2 flex flex-wrap items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.05em] text-muted-foreground">
+                  <div className="mt-1 flex flex-wrap items-center gap-2 font-mono text-xs uppercase tracking-[0.04em] text-muted-foreground">
                     <span>{module.difficulty}</span>
                     <span aria-hidden="true">·</span>
                     <span>{copy.lessonUnit(module.lessonCount)}</span>
@@ -205,7 +206,7 @@ export default async function AiNativeOperatorLandingPage() {
                   </div>
                 </div>
                 <ArrowRight
-                  className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5"
+                  className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-brand-orange"
                   aria-hidden="true"
                 />
               </Link>
@@ -213,8 +214,12 @@ export default async function AiNativeOperatorLandingPage() {
           </div>
         </section>
 
-        <CourseAssessmentCta courseSlug="ai-native-operator" locale={locale} />
-      </section>
+        <CourseAssessmentCta
+          courseSlug="ai-native-operator"
+          locale={locale}
+          className="mt-12 shadow-none [&_.font-mono]:!text-xs"
+        />
+      </TechnicalCourseFrame>
     </>
   );
 }

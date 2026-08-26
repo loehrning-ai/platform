@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { DEMO } from "@/lib/demo-tokens";
-import { DEMO_HEIGHT, usePrefersReducedMotion, useVisibleAutoplay } from "./demo-utils";
+import {
+  DEMO_HEIGHT,
+  usePrefersReducedMotion,
+  useVisibleAutoplay,
+} from "./demo-utils";
 import { SimulationDisclosure } from "./evidence-badge";
 import { useDemoLocale } from "./demo-locale";
 
@@ -17,10 +21,42 @@ interface App {
 }
 
 const APPS: readonly App[] = [
-  { id: "vertrag", n: "Vertrags-Assistent", model: "Claude Haiku 4.5", calls: 12_840, cost: 186.42, lat: 1.2, err: 0.2 },
-  { id: "rechnung", n: "Rechnungs-Extraktion", model: "Claude Opus 4.5", calls: 3_210, cost: 412.08, lat: 2.8, err: 0.4 },
-  { id: "agent", n: "Memo-Pipeline", model: "Multi-Model", calls: 842, cost: 298.15, lat: 14.6, err: 1.1 },
-  { id: "sales", n: "Anfrage-Klassifikation", model: "Claude Sonnet 4.6", calls: 7_420, cost: 96.33, lat: 0.9, err: 0.3 },
+  {
+    id: "vertrag",
+    n: "Vertrags-Assistent",
+    model: "Claude Haiku 4.5",
+    calls: 12_840,
+    cost: 186.42,
+    lat: 1.2,
+    err: 0.2,
+  },
+  {
+    id: "rechnung",
+    n: "Rechnungs-Extraktion",
+    model: "Claude Opus 4.5",
+    calls: 3_210,
+    cost: 412.08,
+    lat: 2.8,
+    err: 0.4,
+  },
+  {
+    id: "agent",
+    n: "Memo-Pipeline",
+    model: "Multi-Model",
+    calls: 842,
+    cost: 298.15,
+    lat: 14.6,
+    err: 1.1,
+  },
+  {
+    id: "sales",
+    n: "Anfrage-Klassifikation",
+    model: "Claude Sonnet 4.6",
+    calls: 7_420,
+    cost: 96.33,
+    lat: 0.9,
+    err: 0.3,
+  },
 ];
 
 const APP_NAMES_EN: Readonly<Record<string, string>> = {
@@ -46,26 +82,31 @@ export default function CostDriftObservabilityDemo() {
   const { ref, visible } = useVisibleAutoplay<HTMLDivElement>();
   const [selApp, setSelApp] = useState("vertrag");
   const [tick, setTick] = useState(0);
-  const [series, setSeries] = useState<readonly number[]>(() => makeSeries(60, 1.2, 0.4));
+  const [series, setSeries] = useState<readonly number[]>(() =>
+    makeSeries(60, 1.2, 0.4),
+  );
 
   useEffect(() => {
     if (!visible || reduced) return;
-    const iv = setInterval(() => {
+    let updates = 0;
+    let timer: ReturnType<typeof setTimeout>;
+    const advance = () => {
       setTick((t) => t + 1);
       setSeries((s) => [
         ...s.slice(1),
         Math.max(0.2, s[s.length - 1] + (Math.random() - 0.5) * 0.5),
       ]);
-    }, 1200);
-    return () => clearInterval(iv);
+      updates += 1;
+      if (updates < 5) timer = setTimeout(advance, 1200);
+    };
+    timer = setTimeout(advance, 1200);
+    return () => clearTimeout(timer);
   }, [visible, reduced]);
 
   const activeApp = APPS.find((a) => a.id === selApp) ?? APPS[0];
   const total = APPS.reduce((s, a) => s + a.cost, 0);
   const appName = (app: App) =>
-    locale === "de"
-      ? app.n
-      : APP_NAMES_EN[app.id] ?? app.n;
+    locale === "de" ? app.n : (APP_NAMES_EN[app.id] ?? app.n);
 
   const W = 600;
   const H = 100;
@@ -123,22 +164,12 @@ export default function CostDriftObservabilityDemo() {
             flex: 0 0 auto;
           }
         }
-        @keyframes demoCdoPulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.4; transform: scale(0.82); }
-        }
-        .demo-cdo-pulse {
-          animation: demoCdoPulse 1.4s ease-in-out infinite;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .demo-cdo-pulse { animation: none; }
-        }
       `}</style>
       <div>
         <div
           style={{
             fontFamily: DEMO.font.mono,
-            fontSize: 10,
+            fontSize: 12,
             color: "var(--color-brand-orange)",
             letterSpacing: "0.14em",
             textTransform: "uppercase",
@@ -147,7 +178,14 @@ export default function CostDriftObservabilityDemo() {
         >
           {text("Observability & Kosten", "Observability and cost")}
         </div>
-        <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", marginTop: 6 }}>
+        <h2
+          style={{
+            fontSize: 22,
+            fontWeight: 700,
+            letterSpacing: "-0.03em",
+            marginTop: 6,
+          }}
+        >
           {text("LLM-Kosten und Drift:", "LLM cost and drift:")}{" "}
           <span style={{ color: "var(--color-brand-orange)" }}>
             {text("ein Beispiel-Szenario.", "a seeded scenario.")}
@@ -173,10 +211,38 @@ export default function CostDriftObservabilityDemo() {
       >
         {(
           [
-            [text("Spend · MTD", "Spend · month to date"), `€${total.toFixed(0)}`, text("+12 % vs. Vormo.", "+12% versus prior month"), "var(--color-brand-orange)", true, [3, 4, 3, 5, 6, 7, 8, 9]],
-            [text("Aufrufe · 24 h", "Calls · 24h"), text("5.284", "5,284"), text("+3,2 %", "+3.2%"), DEMO.ink, false, [5, 6, 5, 7, 6, 8, 7, 9]],
-            [text("p95-Latenz", "p95 latency"), text("2,4 s", "2.4 s"), text("−8 % verbessert", "8% lower"), DEMO.statusGreen, false, [8, 7, 8, 6, 5, 5, 4, 3]],
-            [text("Fehlerquote", "Error rate"), text("0,41 %", "0.41%"), text("innerhalb SLA", "within SLA"), DEMO.statusGreen, false, [2, 3, 2, 3, 2, 2, 3, 2]],
+            [
+              text("Spend · MTD", "Spend · month to date"),
+              `€${total.toFixed(0)}`,
+              text("+12 % vs. Vormo.", "+12% versus prior month"),
+              "var(--color-brand-orange)",
+              true,
+              [3, 4, 3, 5, 6, 7, 8, 9],
+            ],
+            [
+              text("Aufrufe · 24 h", "Calls · 24h"),
+              text("5.284", "5,284"),
+              text("+3,2 %", "+3.2%"),
+              DEMO.ink,
+              false,
+              [5, 6, 5, 7, 6, 8, 7, 9],
+            ],
+            [
+              text("p95-Latenz", "p95 latency"),
+              text("2,4 s", "2.4 s"),
+              text("−8 % verbessert", "8% lower"),
+              DEMO.statusGreen,
+              false,
+              [8, 7, 8, 6, 5, 5, 4, 3],
+            ],
+            [
+              text("Fehlerquote", "Error rate"),
+              text("0,41 %", "0.41%"),
+              text("innerhalb SLA", "within SLA"),
+              DEMO.statusGreen,
+              false,
+              [2, 3, 2, 3, 2, 2, 3, 2],
+            ],
           ] as const
         ).map(([l, v, d, c, alerting, spark]) => {
           const smax = Math.max(...spark);
@@ -204,13 +270,15 @@ export default function CostDriftObservabilityDemo() {
                 borderLeft: `3px solid ${c}`,
                 padding: 12,
                 scrollSnapAlign: "start",
-                boxShadow: alerting ? "0 0 0 2px rgba(249,115,22,0.08)" : "none",
+                boxShadow: alerting
+                  ? "0 0 0 2px rgba(249,115,22,0.08)"
+                  : "none",
               }}
             >
               <div
                 style={{
                   fontFamily: DEMO.font.mono,
-                  fontSize: 9,
+                  fontSize: 12,
                   color: DEMO.schiefer,
                   letterSpacing: "0.14em",
                   textTransform: "uppercase",
@@ -259,7 +327,7 @@ export default function CostDriftObservabilityDemo() {
               <div
                 style={{
                   fontFamily: DEMO.font.mono,
-                  fontSize: 10,
+                  fontSize: 12,
                   color: DEMO.schiefer,
                   marginTop: 3,
                 }}
@@ -276,7 +344,7 @@ export default function CostDriftObservabilityDemo() {
           <div
             style={{
               fontFamily: DEMO.font.mono,
-              fontSize: 10,
+              fontSize: 12,
               color: "var(--color-brand-orange)",
               letterSpacing: "0.14em",
               textTransform: "uppercase",
@@ -293,6 +361,7 @@ export default function CostDriftObservabilityDemo() {
                 type="button"
                 onClick={() => setSelApp(a.id)}
                 style={{
+                  minHeight: 44,
                   textAlign: "left",
                   padding: "8px 10px",
                   background: selApp === a.id ? DEMO.ink : DEMO.birke,
@@ -302,14 +371,21 @@ export default function CostDriftObservabilityDemo() {
                   fontFamily: "inherit",
                 }}
               >
-                <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "-0.02em" }}>
+                <div
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 700,
+                    letterSpacing: "-0.02em",
+                  }}
+                >
                   {appName(a)}
                 </div>
                 <div
                   style={{
                     fontFamily: DEMO.font.mono,
-                    fontSize: 9,
-                    color: selApp === a.id ? "rgba(243,240,233,0.6)" : DEMO.schiefer,
+                    fontSize: 12,
+                    color:
+                      selApp === a.id ? "rgba(243,240,233,0.6)" : DEMO.schiefer,
                     letterSpacing: "0.1em",
                     marginTop: 2,
                   }}
@@ -322,12 +398,16 @@ export default function CostDriftObservabilityDemo() {
                     justifyContent: "space-between",
                     marginTop: 4,
                     fontFamily: DEMO.font.mono,
-                    fontSize: 10,
+                    fontSize: 12,
                     color: selApp === a.id ? DEMO.kupferLight : DEMO.schiefer,
                   }}
                 >
                   <span>€{a.cost.toFixed(0)}</span>
-                  <span>{a.calls.toLocaleString(locale === "de" ? "de-DE" : "en-GB")}</span>
+                  <span>
+                    {a.calls.toLocaleString(
+                      locale === "de" ? "de-DE" : "en-GB",
+                    )}
+                  </span>
                 </div>
               </button>
             ))}
@@ -350,20 +430,29 @@ export default function CostDriftObservabilityDemo() {
             }}
           >
             <div>
-              <div style={{ fontSize: 14, fontWeight: 700, letterSpacing: "-0.02em" }}>
+              <div
+                style={{
+                  fontSize: 14,
+                  fontWeight: 700,
+                  letterSpacing: "-0.02em",
+                }}
+              >
                 {appName(activeApp)}
               </div>
               <div
                 style={{
                   fontFamily: DEMO.font.mono,
-                  fontSize: 10,
+                  fontSize: 12,
                   color: "rgba(243,240,233,0.55)",
                   letterSpacing: "0.12em",
                   textTransform: "uppercase",
                   marginTop: 2,
                 }}
               >
-                {text("Latenz · Seed-Szenario (simuliert)", "Latency · seeded scenario (simulated)")}
+                {text(
+                  "Latenz · Seed-Szenario (simuliert)",
+                  "Latency · seeded scenario (simulated)",
+                )}
               </div>
             </div>
             <span
@@ -374,7 +463,7 @@ export default function CostDriftObservabilityDemo() {
               )}
               style={{
                 fontFamily: DEMO.font.mono,
-                fontSize: 11,
+                fontSize: 12,
                 padding: "3px 10px",
                 background: "#1e40af",
                 color: "#bfdbfe",
@@ -396,12 +485,23 @@ export default function CostDriftObservabilityDemo() {
             viewBox={`0 0 ${W} ${H}`}
             preserveAspectRatio="none"
             style={{ display: "block" }}
-            aria-label={text("Latenz-Verlauf, letzte 60 Minuten", "Latency series, last 60 minutes")}
+            aria-label={text(
+              "Latenz-Verlauf, letzte 60 Minuten",
+              "Latency series, last 60 minutes",
+            )}
           >
             <defs>
               <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--color-brand-orange)" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="var(--color-brand-orange)" stopOpacity="0" />
+                <stop
+                  offset="0%"
+                  stopColor="var(--color-brand-orange)"
+                  stopOpacity="0.4"
+                />
+                <stop
+                  offset="100%"
+                  stopColor="var(--color-brand-orange)"
+                  stopOpacity="0"
+                />
               </linearGradient>
             </defs>
             {[0.25, 0.5, 0.75].map((g) => (
@@ -414,7 +514,11 @@ export default function CostDriftObservabilityDemo() {
                 stroke="rgba(243,240,233,0.08)"
               />
             ))}
-            <polyline points={`0,${H} ${pts} ${W},${H}`} fill="url(#area)" stroke="none" />
+            <polyline
+              points={`0,${H} ${pts} ${W},${H}`}
+              fill="url(#area)"
+              stroke="none"
+            />
             <polyline
               points={pts}
               fill="none"
@@ -437,7 +541,12 @@ export default function CostDriftObservabilityDemo() {
           >
             {(
               [
-                [text("Aufrufe", "Calls"), activeApp.calls.toLocaleString(locale === "de" ? "de-DE" : "en-GB")],
+                [
+                  text("Aufrufe", "Calls"),
+                  activeApp.calls.toLocaleString(
+                    locale === "de" ? "de-DE" : "en-GB",
+                  ),
+                ],
                 [text("Kosten", "Cost"), `€${activeApp.cost.toFixed(2)}`],
                 [text("Ø Latenz", "Average latency"), `${activeApp.lat} s`],
                 [text("Fehler", "Errors"), `${activeApp.err} %`],
@@ -447,7 +556,7 @@ export default function CostDriftObservabilityDemo() {
                 <div
                   style={{
                     fontFamily: DEMO.font.mono,
-                    fontSize: 9,
+                    fontSize: 12,
                     color: "rgba(243,240,233,0.5)",
                     letterSpacing: "0.12em",
                     textTransform: "uppercase",
@@ -476,7 +585,7 @@ export default function CostDriftObservabilityDemo() {
         <div
           style={{
             fontFamily: DEMO.font.mono,
-            fontSize: 10,
+            fontSize: 12,
             color: "var(--color-brand-orange)",
             letterSpacing: "0.14em",
             textTransform: "uppercase",
@@ -492,7 +601,7 @@ export default function CostDriftObservabilityDemo() {
             color: DEMO.kalk,
             padding: "10px 12px",
             fontFamily: DEMO.font.mono,
-            fontSize: 10,
+            fontSize: 12,
             lineHeight: 1.7,
             maxHeight: 140,
             overflowY: "auto",
@@ -500,16 +609,60 @@ export default function CostDriftObservabilityDemo() {
         >
           {(
             [
-              [`${tick}s`, "info", "haiku·42ms", text("Abfrage: 'Kündigungsfrist Q3'", "Query: 'Q3 cancellation period'"), DEMO.statusGreen],
-              [`${tick - 2}s`, "info", "haiku·38ms", text("Abfrage: 'Haftungsgrenze'", "Query: 'liability limit'"), DEMO.statusGreen],
-              [`${tick - 4}s`, "warn", "opus·3.2s", text("Wiederholung nach Timeout", "Retry after timeout"), DEMO.statusAmber],
-              [`${tick - 7}s`, "info", "sonnet·1.8s", text("Pipeline: Anfrage-Klassifikation", "Pipeline: request classification"), DEMO.statusGreen],
-              [`${tick - 9}s`, "error", "opus·0ms", text("Ratenbegrenzung (org-1)", "Rate limit (org-1)"), DEMO.statusRed],
-              [`${tick - 12}s`, "info", "haiku·29ms", text("Cache-Treffer", "Cache hit"), DEMO.statusGreen],
+              [
+                `${tick}s`,
+                "info",
+                "haiku·42ms",
+                text(
+                  "Abfrage: 'Kündigungsfrist Q3'",
+                  "Query: 'Q3 cancellation period'",
+                ),
+                DEMO.statusGreen,
+              ],
+              [
+                `${tick - 2}s`,
+                "info",
+                "haiku·38ms",
+                text("Abfrage: 'Haftungsgrenze'", "Query: 'liability limit'"),
+                DEMO.statusGreen,
+              ],
+              [
+                `${tick - 4}s`,
+                "warn",
+                "opus·3.2s",
+                text("Wiederholung nach Timeout", "Retry after timeout"),
+                DEMO.statusAmber,
+              ],
+              [
+                `${tick - 7}s`,
+                "info",
+                "sonnet·1.8s",
+                text(
+                  "Pipeline: Anfrage-Klassifikation",
+                  "Pipeline: request classification",
+                ),
+                DEMO.statusGreen,
+              ],
+              [
+                `${tick - 9}s`,
+                "error",
+                "opus·0ms",
+                text("Ratenbegrenzung (org-1)", "Rate limit (org-1)"),
+                DEMO.statusRed,
+              ],
+              [
+                `${tick - 12}s`,
+                "info",
+                "haiku·29ms",
+                text("Cache-Treffer", "Cache hit"),
+                DEMO.statusGreen,
+              ],
             ] as const
           ).map(([t, lvl, tag, msg, c], i) => (
             <div key={i}>
-              <span style={{ color: "rgba(243,240,233,0.4)" }}>{String(t).padStart(4)} </span>
+              <span style={{ color: "rgba(243,240,233,0.4)" }}>
+                {String(t).padStart(4)}{" "}
+              </span>
               <span style={{ color: c, letterSpacing: "0.1em" }}>
                 [{lvl.toUpperCase().padEnd(5)}]
               </span>

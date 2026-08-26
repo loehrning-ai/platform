@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { Fragment, useState, useCallback, useEffect } from "react";
 import { LessonSidebar } from "./lesson-sidebar";
 import { LessonContent } from "./lesson-content";
 import { LessonShell } from "@/components/course/lesson-shell";
@@ -9,19 +9,28 @@ import { CourseProjectStudio } from "@/components/course-projects/course-project
 import { isCourseProjectCheckpointLesson } from "@/lib/course-projects/checkpoint-selector";
 import {
   markSectionRead,
-  markLessonCompleted,
   saveLessonQuizScore,
-  getCompletedLessonIds,
   getReadSectionIds,
   getLessonQuizScore,
 } from "@/lib/course/progress";
-import { subscribe } from "@/lib/progress";
+import {
+  getEvidenceBackedCompletedLessonIds,
+  recordLessonCompletionEvidenceDurably,
+  subscribe,
+} from "@/lib/progress";
 import type { CourseSlug, Lesson } from "@/lib/course/types";
 import { FreshnessBadge } from "@/components/ui/freshness-badge";
 import { MotionProvider } from "@/components/motion-provider";
 import type { BlockFreshness } from "@/lib/course/data";
 import type { Locale } from "@/lib/i18n/locale";
 import { getCourseReaderCopy } from "./course-ui-copy";
+import { getLearningOwnerContext } from "@/lib/progress/browser-learning-storage";
+import {
+  persistForActiveLearningOwner,
+  useOwnerAwareProgressReadiness,
+} from "@/components/course/owner-aware-progress";
+import { notifyUrlStateChanged } from "@/lib/navigation/url-state";
+import { getMotionAwareScrollBehavior } from "@/lib/animation-policy";
 
 interface LessonLayoutProps {
   readonly courseSlug: CourseSlug;
@@ -48,6 +57,9 @@ export function LessonLayout({
     ReadonlyMap<string, { score: number; total: number }>
   >(() => new Map());
   const [readyProgressKey, setReadyProgressKey] = useState<string | null>(null);
+  const [loadedOwnerGeneration, setLoadedOwnerGeneration] = useState<
+    number | null
+  >(null);
 
   // Block-based course routes contain several lessons at one URL. Resume links
   // use a bounded `#lesson=<id>` fragment so they can restore the first
@@ -77,18 +89,31 @@ export function LessonLayout({
   // Load from localStorage after mount
   useEffect(() => {
     return subscribe(() => {
-      setCompletedIds(new Set(getCompletedLessonIds(courseSlug)));
-      setReadIds(new Set(getReadSectionIds(courseSlug, activeLessonId)));
-      const score = getLessonQuizScore(courseSlug, activeLessonId);
+      const owner = getLearningOwnerContext();
+      const resolved = owner.kind !== "unknown";
+      setCompletedIds(
+        resolved
+          ? new Set(getEvidenceBackedCompletedLessonIds(courseSlug))
+          : new Set(),
+      );
+      setReadIds(
+        resolved
+          ? new Set(getReadSectionIds(courseSlug, activeLessonId))
+          : new Set(),
+      );
+      const score = resolved
+        ? getLessonQuizScore(courseSlug, activeLessonId)
+        : null;
       setQuizScores((prev) => {
         const next = new Map(prev);
         if (score) next.set(activeLessonId, score);
         else next.delete(activeLessonId);
         return next;
       });
+      setLoadedOwnerGeneration(owner.generation);
       setReadyProgressKey(`${courseSlug}:${activeLessonId}`);
     });
-  }, [courseSlug, activeLessonId]);
+  }, [courseSlug, activeLessonId, lessons]);
 
   const activateLesson = useCallback(
     (lessonId: string) => {
@@ -101,6 +126,7 @@ export function LessonLayout({
           "",
           `${window.location.pathname}${window.location.search}${lessonFragment}`,
         );
+        notifyUrlStateChanged();
       }
       setActiveLessonId(lessonId);
     },
@@ -110,7 +136,12 @@ export function LessonLayout({
   const activeLesson = lessons.find((l) => l.id === activeLessonId);
   const activeLessonIndex = lessons.findIndex((l) => l.id === activeLessonId);
   const hasNextLesson = activeLessonIndex < lessons.length - 1;
-  const progressReady = readyProgressKey === `${courseSlug}:${activeLessonId}`;
+  const progressIdentity = `${courseSlug}:${activeLessonId}`;
+  const readiness = useOwnerAwareProgressReadiness(
+    progressIdentity,
+    readyProgressKey,
+    loadedOwnerGeneration,
+  );
 
   const handleSelectLesson = useCallback(
     (lessonId: string) => {
@@ -125,22 +156,48 @@ export function LessonLayout({
 
   const handleMarkSectionRead = useCallback(
     (sectionId: string) => {
-      markSectionRead(courseSlug, activeLessonId, sectionId);
-      setReadIds(new Set(getReadSectionIds(courseSlug, activeLessonId)));
+      if (
+        persistForActiveLearningOwner(
+          () => markSectionRead(courseSlug, activeLessonId, sectionId),
+          () => getReadSectionIds(courseSlug, activeLessonId).has(sectionId),
+        )
+      ) {
+        setReadIds(new Set(getReadSectionIds(courseSlug, activeLessonId)));
+      }
     },
     [courseSlug, activeLessonId],
   );
 
   const handleMarkLessonComplete = useCallback(() => {
-    markLessonCompleted(courseSlug, activeLessonId);
-    setCompletedIds(new Set(getCompletedLessonIds(courseSlug)));
-  }, [courseSlug, activeLessonId]);
+    const lesson = lessons.find((entry) => entry.id === activeLessonId);
+    if (!lesson) return;
+    const persistedReadIds = getReadSectionIds(courseSlug, activeLessonId);
+    const everySectionReviewed = lesson.sections.every((section) =>
+      persistedReadIds.has(section.id),
+    );
+    const knowledgeCheckComplete =
+      lesson.quiz.length === 0 ||
+      getLessonQuizScore(courseSlug, activeLessonId) !== null;
+    if (!everySectionReviewed || !knowledgeCheckComplete) return;
+
+    const persisted = recordLessonCompletionEvidenceDurably(
+      courseSlug,
+      activeLessonId,
+    );
+    if (persisted) {
+      setCompletedIds(new Set(getEvidenceBackedCompletedLessonIds(courseSlug)));
+    }
+  }, [courseSlug, activeLessonId, lessons]);
 
   const handleQuizComplete = useCallback(
     (score: number, total: number) => {
-      saveLessonQuizScore(courseSlug, activeLessonId, score, total);
-      const best = getLessonQuizScore(courseSlug, activeLessonId);
-      if (best) {
+      const persisted = persistForActiveLearningOwner(
+        () => saveLessonQuizScore(courseSlug, activeLessonId, score, total),
+        () => getLessonQuizScore(courseSlug, activeLessonId) !== null,
+      );
+      if (persisted) {
+        const best = getLessonQuizScore(courseSlug, activeLessonId);
+        if (!best) return;
         setQuizScores((prev) => new Map(prev).set(activeLessonId, best));
       }
     },
@@ -150,7 +207,10 @@ export function LessonLayout({
   const handleNextLesson = useCallback(() => {
     if (hasNextLesson) {
       activateLesson(lessons[activeLessonIndex + 1].id);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({
+        top: 0,
+        behavior: getMotionAwareScrollBehavior(),
+      });
     }
   }, [activateLesson, hasNextLesson, lessons, activeLessonIndex]);
 
@@ -164,7 +224,7 @@ export function LessonLayout({
     <LessonSidebar
       lessons={lessons}
       activeLessonId={activeLessonId}
-      completedLessonIds={completedIds}
+      completedLessonIds={readiness.interactionReady ? completedIds : new Set()}
       onSelectLesson={handleSelectLesson}
       locale={locale}
     />
@@ -190,53 +250,63 @@ export function LessonLayout({
         }
         sidebar={sidebar}
       >
-        {freshnessMeta?.lastReviewed && freshnessMeta?.nextReview && (
-          <div className="mb-4">
-            <FreshnessBadge
-              lastReviewed={freshnessMeta.lastReviewed}
-              nextReview={freshnessMeta.nextReview}
-              riskClass={freshnessMeta.riskClass}
-              locale={locale}
-            />
-          </div>
-        )}
-        {isProjectCheckpoint ? (
-          <div className="mb-10">
-            <CourseProjectStudio
-              courseSlug={courseSlug}
-              lessonId={activeLessonId}
-              locale={locale}
-              lessonContext={{
-                title: activeLesson.title,
-                objective: activeLesson.subtitle,
-                keyConcepts: activeLesson.keyConcepts,
-              }}
-            />
-          </div>
-        ) : null}
-        <LessonReference
-          key={activeLessonId}
-          locale={locale}
-          title={activeLesson.title}
-          objective={activeLesson.subtitle}
-          headingLevel={isProjectCheckpoint ? 2 : 1}
-        >
-          <LessonContent
-            courseSlug={courseSlug}
-            lesson={activeLesson}
-            totalLessons={lessons.length}
-            progressReady={progressReady}
-            readSectionIds={readIds}
-            isCompleted={completedIds.has(activeLessonId)}
-            quizBestScore={quizScores.get(activeLessonId) ?? null}
-            hasNextLesson={hasNextLesson}
-            onMarkSectionRead={handleMarkSectionRead}
-            onMarkLessonComplete={handleMarkLessonComplete}
-            onQuizComplete={handleQuizComplete}
-            onNextLesson={handleNextLesson}
+        <Fragment key={readiness.checkpointKey}>
+          {freshnessMeta?.lastReviewed && freshnessMeta?.nextReview && (
+            <div className="mb-4">
+              <FreshnessBadge
+                lastReviewed={freshnessMeta.lastReviewed}
+                nextReview={freshnessMeta.nextReview}
+                riskClass={freshnessMeta.riskClass}
+                locale={locale}
+              />
+            </div>
+          )}
+          {isProjectCheckpoint ? (
+            <div className="mb-10">
+              <CourseProjectStudio
+                courseSlug={courseSlug}
+                lessonId={activeLessonId}
+                locale={locale}
+                lessonContext={{
+                  title: activeLesson.title,
+                  objective: activeLesson.subtitle,
+                  keyConcepts: activeLesson.keyConcepts,
+                }}
+              />
+            </div>
+          ) : null}
+          <LessonReference
             locale={locale}
-          />
-        </LessonReference>
+            title={activeLesson.title}
+            objective={activeLesson.subtitle}
+            headingLevel={isProjectCheckpoint ? 2 : 1}
+          >
+            <LessonContent
+              courseSlug={courseSlug}
+              lesson={activeLesson}
+              totalLessons={lessons.length}
+              progressReady={readiness.interactionReady}
+              progressHydrated={readiness.hydrated}
+              ownerReady={readiness.ownerReady}
+              checkpointKey={readiness.checkpointKey}
+              readSectionIds={readiness.interactionReady ? readIds : new Set()}
+              isCompleted={
+                readiness.interactionReady && completedIds.has(activeLessonId)
+              }
+              quizBestScore={
+                readiness.interactionReady
+                  ? (quizScores.get(activeLessonId) ?? null)
+                  : null
+              }
+              hasNextLesson={hasNextLesson}
+              onMarkSectionRead={handleMarkSectionRead}
+              onMarkLessonComplete={handleMarkLessonComplete}
+              onQuizComplete={handleQuizComplete}
+              onNextLesson={handleNextLesson}
+              locale={locale}
+            />
+          </LessonReference>
+        </Fragment>
       </LessonShell>
     </MotionProvider>
   );

@@ -141,14 +141,14 @@ export function L02SandboxBox({
 
   return (
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-5 md:p-6">
-      <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {copy.heading}
       </p>
       <div className="flex flex-col gap-2">
         {CAPABILITIES.map((cap) => (
           <label
             key={cap.id}
-            className="flex cursor-pointer items-center justify-between gap-3 border-2 border-border bg-background px-3 py-2 transition-colors hover:border-brand-orange/60"
+            className="flex min-h-11 cursor-pointer items-center justify-between gap-3 border-2 border-border bg-background px-3 py-2 transition-colors hover:border-brand-orange/60"
           >
             <span className="font-mono text-[13px] text-foreground">
               {copy.capabilityLabels[cap.id]}
@@ -176,20 +176,20 @@ export function L02SandboxBox({
       {warning && (
         <p
           role="alert"
-          className="mt-2 font-mono text-[11px] font-bold text-destructive"
+          className="mt-2 font-mono text-xs font-bold text-destructive"
         >
           {warning}
         </p>
       )}
 
-      <p className="mt-3 font-mono text-[10.5px] uppercase tracking-[0.1em] text-muted-foreground">
+      <p className="mt-3 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
         {CAPABILITIES.map((c) => `${c.id} ${state[c.id] ? "y" : "n"}`).join(
           " ",
         )}
       </p>
 
       {toggledOnce.size === CAPABILITIES.length && (
-        <p className="mt-3 font-mono text-[11px] text-risk-green">
+        <p className="mt-3 font-mono text-xs text-risk-green">
           {copy.explored} {done ? "✓" : ""}
         </p>
       )}

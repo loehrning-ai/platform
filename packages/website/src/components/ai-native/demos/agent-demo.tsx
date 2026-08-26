@@ -241,7 +241,7 @@ export function AgentDemo(): JSX.Element {
               )}
               <div
                 className={cn(
-                  "font-mono text-[9px] font-bold tracking-[0.12em]",
+                  "font-mono text-[12px] font-bold tracking-[0.12em]",
                   isActive ? "text-brand-amber" : "text-muted-foreground",
                 )}
               >
@@ -252,7 +252,7 @@ export function AgentDemo(): JSX.Element {
               </div>
               <div
                 className={cn(
-                  "mt-1 font-mono text-[10px]",
+                  "mt-1 font-mono text-[12px]",
                   isActive ? "text-background/70" : "text-muted-foreground",
                 )}
               >
@@ -260,7 +260,7 @@ export function AgentDemo(): JSX.Element {
               </div>
               <div
                 className={cn(
-                  "mt-2 text-[11px] leading-[1.4]",
+                  "mt-2 text-[12px] leading-[1.4]",
                   isActive ? "text-background/85" : "text-muted-foreground",
                 )}
               >
@@ -276,7 +276,7 @@ export function AgentDemo(): JSX.Element {
         onClick={() => !running && setRunning(true)}
         disabled={running}
         className={cn(
-          "self-start border-2 border-foreground bg-brand-orange px-4 py-3 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
+          "min-h-11 self-start border-2 border-foreground bg-brand-orange px-4 py-3 font-mono text-[12px] font-bold uppercase tracking-[0.14em] text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
           running
             ? "cursor-wait opacity-75"
             : "hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0_0_var(--color-foreground)]",
@@ -296,7 +296,7 @@ export function AgentDemo(): JSX.Element {
           ref={logRef}
           className="dark-section min-h-[220px] overflow-y-auto border-l-[3px] border-brand-orange bg-[var(--color-dark-bg)] p-4 font-mono text-[12px] text-[var(--color-dark-fg)]"
         >
-          <div className="sticky top-0 mb-2 flex items-center justify-between border-b border-[var(--color-dark-border)] bg-[var(--color-dark-bg)] pb-2 font-mono text-[10px] tracking-[0.14em] text-[var(--color-dark-muted)]">
+          <div className="sticky top-0 mb-2 flex items-center justify-between border-b border-[var(--color-dark-border)] bg-[var(--color-dark-bg)] pb-2 font-mono text-[12px] tracking-[0.14em] text-[var(--color-dark-muted)]">
             <span>› AGENT.LOG</span>
             <span>{logs.length} ereignisse</span>
           </div>
@@ -332,12 +332,12 @@ export function AgentDemo(): JSX.Element {
           )}
         >
           {!done && !running && (
-            <div className="flex h-full items-center justify-center p-5 text-center font-mono text-[10px] tracking-[0.14em] text-muted-foreground">
+            <div className="flex h-full items-center justify-center p-5 text-center font-mono text-[12px] tracking-[0.14em] text-muted-foreground">
               → MEMO ERSCHEINT NACH PIPELINE-ABSCHLUSS
             </div>
           )}
           {running && !done && (
-            <div className="flex h-full items-center justify-center font-mono text-[10px] tracking-[0.14em] text-brand-orange">
+            <div className="flex h-full items-center justify-center font-mono text-[12px] tracking-[0.14em] text-brand-orange">
               <span
                 className="mr-2 inline-block h-2 w-2 animate-pulse bg-brand-orange"
                 aria-hidden="true"
@@ -355,7 +355,7 @@ export function AgentDemo(): JSX.Element {
               >
                 <div className="mb-2 flex items-center justify-between">
                   <DemoOverline>◆ Memo · Geschäftsführung</DemoOverline>
-                  <span className="font-mono text-[9px] tracking-[0.1em] text-muted-foreground">
+                  <span className="font-mono text-[12px] tracking-[0.1em] text-muted-foreground">
                     2,4k TOKENS · 18 QUELLEN
                   </span>
                 </div>
@@ -365,7 +365,7 @@ export function AgentDemo(): JSX.Element {
                     KI-Einführung in 2 Phasen, Start Q3/2026.
                   </span>
                 </h4>
-                <div className="flex-1 space-y-2 overflow-y-auto text-[11.5px] leading-[1.55] text-muted-foreground">
+                <div className="flex-1 space-y-2 overflow-y-auto text-[12px] leading-[1.55] text-muted-foreground">
                   <MemoSection title="§1 · KERNTHESE">
                     3 von 4 Thesen tragen. Evidenz-Score Ø 0,84, robust genug
                     für Vorstands-Vorlage.
@@ -380,10 +380,10 @@ export function AgentDemo(): JSX.Element {
                   </MemoSection>
                 </div>
                 <div className="mt-2.5 flex items-center justify-between border-t border-dashed border-border pt-2.5">
-                  <span className="font-mono text-[9px] tracking-[0.1em] text-muted-foreground">
+                  <span className="font-mono text-[12px] tracking-[0.1em] text-muted-foreground">
                     4 SEKTIONEN · PEER-REVIEWED
                   </span>
-                  <span className="font-mono text-[10px] font-bold tracking-[0.12em] text-brand-orange">
+                  <span className="font-mono text-[12px] font-bold tracking-[0.12em] text-brand-orange">
                     PDF EXPORT →
                   </span>
                 </div>
@@ -405,7 +405,7 @@ function MemoSection({
 }): JSX.Element {
   return (
     <div>
-      <div className="mb-0.5 font-mono text-[9px] font-bold tracking-[0.14em] text-brand-orange">
+      <div className="mb-0.5 font-mono text-[12px] font-bold tracking-[0.14em] text-brand-orange">
         {title}
       </div>
       <p>{children}</p>

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
+  act,
   render,
   screen,
   cleanup,
@@ -107,6 +108,16 @@ vi.mock("./lesson-content", async () => {
             ? "none"
             : `${props.quizBestScore.score}/${props.quizBestScore.total}`,
         ),
+        React.createElement(
+          "p",
+          { "data-testid": "evidence-backed-completion" },
+          props.isCompleted ? "complete" : "open",
+        ),
+        React.createElement(
+          "p",
+          { "data-testid": "progress-readiness" },
+          `${props.progressHydrated}:${props.ownerReady}:${props.progressReady}`,
+        ),
         props.hasNextLesson
           ? React.createElement(
               "button",
@@ -114,6 +125,25 @@ vi.mock("./lesson-content", async () => {
               "go-next",
             )
           : null,
+        React.createElement(
+          "button",
+          {
+            type: "button",
+            onClick: () => {
+              const sectionId = props.lesson.sections[0]?.id;
+              if (sectionId) props.onMarkSectionRead(sectionId);
+            },
+          },
+          "review-section",
+        ),
+        React.createElement(
+          "button",
+          {
+            type: "button",
+            onClick: () => props.onQuizComplete(1, 1),
+          },
+          "finish-quiz",
+        ),
         React.createElement(
           "button",
           { type: "button", onClick: props.onMarkLessonComplete },
@@ -124,7 +154,26 @@ vi.mock("./lesson-content", async () => {
 });
 
 import { LessonLayout } from "./lesson-layout";
-import type { Lesson } from "@/lib/course/types";
+import { lessonCompletionEvidenceCheckpointId } from "@/lib/courses/completion";
+import {
+  isLessonCompleted,
+  markLessonCompleted,
+  markSectionRead,
+  resetProgress,
+  saveLessonQuizScore,
+} from "@/lib/course/progress";
+import { isCheckpointDone } from "@/lib/progress";
+import { URL_STATE_CHANGE_EVENT } from "@/lib/navigation/url-state";
+import {
+  __resetCacheForTests,
+  activateAnonymousProgress,
+  activateUnknownProgress,
+} from "@/lib/progress/store";
+import type {
+  Lesson,
+  LessonQuizQuestion,
+  LessonSection,
+} from "@/lib/course/types";
 
 function mkLesson(over: Pick<Lesson, "id" | "number" | "title">): Lesson {
   return {
@@ -151,6 +200,9 @@ beforeEach(() => {
   } catch {
     /* no-op storage in some jsdom combos */
   }
+  __resetCacheForTests();
+  activateAnonymousProgress();
+  resetProgress("ki-fuehrerschein");
   window.history.replaceState({}, "", "/ki-fuehrerschein/kurs/block_1");
   scrollSpy = vi.fn();
   // jsdom does not implement scrollTo; install a spy so we can assert the call.
@@ -161,7 +213,26 @@ beforeEach(() => {
   });
 });
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.unstubAllGlobals();
+});
+
+function setReducedMotion(matches: boolean) {
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn(() => ({
+      matches,
+      media: "(prefers-reduced-motion: reduce)",
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  );
+}
 
 function renderLayout(lessons: readonly Lesson[] = LESSONS) {
   return render(
@@ -186,6 +257,8 @@ describe("<LessonLayout>", () => {
   });
 
   it("switches the active lesson when a sidebar lesson is selected", () => {
+    const urlStateListener = vi.fn();
+    window.addEventListener(URL_STATE_CHANGE_EVENT, urlStateListener);
     renderLayout();
 
     fireEvent.click(
@@ -195,6 +268,8 @@ describe("<LessonLayout>", () => {
       "Zweite Lektion",
     );
     expect(window.location.hash).toBe("#lesson=l2");
+    expect(urlStateListener).toHaveBeenCalledOnce();
+    window.removeEventListener(URL_STATE_CHANGE_EVENT, urlStateListener);
   });
 
   it("collapses the native reference when an in-place lesson switch occurs", () => {
@@ -312,6 +387,172 @@ describe("<LessonLayout>", () => {
     expect(scrollSpy).toHaveBeenCalledWith({ top: 0, behavior: "smooth" });
     // On the last lesson there is no further next affordance.
     expect(screen.queryByRole("button", { name: "go-next" })).toBeNull();
+  });
+
+  it("advances with an instant scroll when reduced motion is requested", () => {
+    setReducedMotion(true);
+    renderLayout();
+
+    fireEvent.click(screen.getByRole("button", { name: "go-next" }));
+
+    expect(screen.getByTestId("active-title")).toHaveTextContent(
+      "Zweite Lektion",
+    );
+    expect(scrollSpy).toHaveBeenCalledWith({ top: 0, behavior: "auto" });
+  });
+
+  it("rejects completion writes until persisted section and quiz evidence exist", () => {
+    const section: LessonSection = {
+      id: "block_1_lesson_1_section_1",
+      title: "Prüfabschnitt",
+      readTimeMinutes: 2,
+      content: "Prüfe den Fall.",
+    };
+    const secondSection: LessonSection = {
+      id: "block_1_lesson_1_section_2",
+      title: "Transferabschnitt",
+      readTimeMinutes: 2,
+      content: "Übertrage die Entscheidung.",
+    };
+    const question: LessonQuizQuestion = {
+      id: "block_1_lesson_1_question_1",
+      questionText: "Was gilt?",
+      answerOptions: [
+        { id: "a", text: "A", isCorrect: true },
+        { id: "b", text: "B", isCorrect: false },
+      ],
+      explanation: "A gilt.",
+    };
+    const protectedLesson: Lesson = {
+      ...mkLesson({
+        id: "block_1_lesson_1",
+        number: 1,
+        title: "Geschützte Lektion",
+      }),
+      sections: [section, secondSection],
+      quiz: [question],
+    };
+
+    renderLayout([protectedLesson]);
+    fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
+    expect(isLessonCompleted("ki-fuehrerschein", protectedLesson.id)).toBe(
+      false,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "review-section" }));
+    fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
+    expect(isLessonCompleted("ki-fuehrerschein", protectedLesson.id)).toBe(
+      false,
+    );
+
+    markSectionRead("ki-fuehrerschein", protectedLesson.id, secondSection.id);
+    fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
+    expect(isLessonCompleted("ki-fuehrerschein", protectedLesson.id)).toBe(
+      false,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "finish-quiz" }));
+    fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
+    expect(isLessonCompleted("ki-fuehrerschein", protectedLesson.id)).toBe(
+      true,
+    );
+    expect(
+      isCheckpointDone(
+        protectedLesson.id,
+        lessonCompletionEvidenceCheckpointId("ki-fuehrerschein"),
+      ),
+    ).toBe(true);
+    expect(screen.getByTestId("evidence-backed-completion")).toHaveTextContent(
+      "complete",
+    );
+  });
+
+  it("invalidates foundation-course writes when ownership becomes unresolved", () => {
+    const section: LessonSection = {
+      id: "block_1_lesson_1_section_1",
+      title: "Prüfabschnitt",
+      readTimeMinutes: 2,
+      content: "Prüfe den Fall.",
+    };
+    const protectedLesson: Lesson = {
+      ...mkLesson({
+        id: "block_1_lesson_1",
+        number: 1,
+        title: "Geschützte Lektion",
+      }),
+      sections: [section],
+    };
+    renderLayout([protectedLesson]);
+    expect(screen.getByTestId("progress-readiness")).toHaveTextContent(
+      "true:true:true",
+    );
+
+    act(() => {
+      activateUnknownProgress();
+    });
+    expect(screen.getByTestId("progress-readiness")).toHaveTextContent(
+      "true:false:false",
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "review-section" }));
+    fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
+    expect(isLessonCompleted("ki-fuehrerschein", protectedLesson.id)).toBe(
+      false,
+    );
+    expect(screen.getByTestId("evidence-backed-completion")).toHaveTextContent(
+      "open",
+    );
+  });
+
+  it("retains but does not present a legacy completion without the evidence checkpoint", () => {
+    const section: LessonSection = {
+      id: "block_1_lesson_1_section_1",
+      title: "Prüfabschnitt",
+      readTimeMinutes: 2,
+      content: "Prüfe den Fall.",
+    };
+    const secondSection: LessonSection = {
+      id: "block_1_lesson_1_section_2",
+      title: "Transferabschnitt",
+      readTimeMinutes: 2,
+      content: "Übertrage die Entscheidung.",
+    };
+    const question: LessonQuizQuestion = {
+      id: "block_1_lesson_1_q1",
+      questionText: "Was gilt?",
+      answerOptions: [
+        { id: "a", text: "A", isCorrect: true },
+        { id: "b", text: "B", isCorrect: false },
+      ],
+      explanation: "A gilt.",
+    };
+    const legacyLesson: Lesson = {
+      ...mkLesson({
+        id: "block_1_lesson_1",
+        number: 1,
+        title: "Frühere Lektion",
+      }),
+      sections: [section, secondSection],
+      quiz: [question],
+    };
+
+    markSectionRead("ki-fuehrerschein", legacyLesson.id, section.id);
+    markSectionRead("ki-fuehrerschein", legacyLesson.id, secondSection.id);
+    saveLessonQuizScore("ki-fuehrerschein", legacyLesson.id, 1, 1);
+    markLessonCompleted("ki-fuehrerschein", legacyLesson.id);
+    expect(isLessonCompleted("ki-fuehrerschein", legacyLesson.id)).toBe(true);
+
+    renderLayout([legacyLesson]);
+
+    expect(screen.getByTestId("evidence-backed-completion")).toHaveTextContent(
+      "open",
+    );
+    expect(
+      isCheckpointDone(
+        legacyLesson.id,
+        lessonCompletionEvidenceCheckpointId("ki-fuehrerschein"),
+      ),
+    ).toBe(false);
   });
 
   it("renders nothing when there are no lessons", () => {

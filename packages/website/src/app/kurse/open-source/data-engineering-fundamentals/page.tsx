@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
+  TECHNICAL_COURSE_LEDGER_LINK_CLASS,
+  TECHNICAL_COURSE_PRIMARY_ACTION_CLASS,
+  TECHNICAL_COURSE_SECONDARY_ACTION_CLASS,
+  TechnicalCourseFrame,
+  TechnicalCourseHeader,
+  TechnicalCourseSectionHeading,
+} from "@/components/course/technical-course-landing";
+import {
   DATA_ENGINEERING_FUNDAMENTALS_CONFIG,
   DATA_ENGINEERING_FUNDAMENTALS_CONFIG_DE,
 } from "@/lib/data-engineering-fundamentals/config";
@@ -144,77 +152,45 @@ export default async function DataEngineeringFundamentalsLandingPage() {
         data={courseJsonLd}
         id="data-engineering-fundamentals-course-jsonld"
       />
-      <div className="mx-auto w-full max-w-[1180px] min-w-0 px-4 pb-20 pt-14 sm:px-6 sm:pt-20">
-        <section className="min-w-0 border-y-2 border-foreground py-10 sm:py-14">
-          <p className="break-words font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-            {copy.eyebrow}
-          </p>
-          <h1 className="mt-6 max-w-[980px] break-words text-[42px] font-bold leading-[0.98] tracking-[-0.04em] text-foreground [overflow-wrap:anywhere] sm:text-[60px] md:text-[76px]">
-            {copy.title}
-          </h1>
-          <p className="mt-7 max-w-[760px] break-words text-[17px] leading-[1.65] text-muted-foreground [overflow-wrap:anywhere] sm:text-[18px]">
-            {copy.intro}
-          </p>
-
-          <div className="mt-8 flex min-w-0 flex-wrap gap-3">
+      <TechnicalCourseFrame
+        courseId="data-engineering-fundamentals"
+        lang={locale}
+      >
+        <TechnicalCourseHeader
+          eyebrow={copy.eyebrow}
+          title={copy.title}
+          intro={copy.intro}
+          facts={copy.facts}
+          factsLabel={locale === "de" ? "Kursdaten" : "Course facts"}
+          primaryAction={
             <Link
               href={overviewHref}
               prefetch={false}
-              className="inline-flex min-h-12 max-w-full items-center gap-2 break-words border-2 border-foreground bg-brand-orange px-5 py-3.5 font-mono text-[12px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)] sm:px-6 sm:text-[13px]"
+              className={TECHNICAL_COURSE_PRIMARY_ACTION_CLASS}
             >
               {copy.start}
               <span className="shrink-0" aria-hidden="true">
                 →
               </span>
             </Link>
+          }
+          secondaryAction={
             <Link
               href="#chapters"
-              className="inline-flex min-h-12 max-w-full items-center break-words border-2 border-foreground bg-background px-5 py-3.5 font-mono text-[12px] font-bold uppercase tracking-[0.06em] text-foreground shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow,background-color] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:bg-card sm:px-6 sm:text-[13px]"
+              className={TECHNICAL_COURSE_SECONDARY_ACTION_CLASS}
             >
               {copy.browse}
             </Link>
-          </div>
+          }
+        />
 
-          <ul className="mt-7 grid min-w-0 gap-px border border-foreground bg-foreground sm:grid-cols-2 lg:grid-cols-4">
-            {copy.facts.map((fact) => (
-              <li
-                key={fact}
-                className="min-w-0 break-words bg-background px-4 py-3 font-mono text-[11px] font-bold uppercase tracking-[0.07em] text-foreground [overflow-wrap:anywhere]"
-              >
-                {fact}
-              </li>
-            ))}
-          </ul>
-        </section>
+        <section id="chapters" className="mt-12 min-w-0 scroll-mt-24">
+          <TechnicalCourseSectionHeading
+            eyebrow={copy.courseEyebrow}
+            title={copy.courseTitle}
+          />
 
-        <dl className="mt-12 grid min-w-0 grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-          {copy.stats.map((stat) => (
-            <div
-              key={stat.label}
-              className="min-w-0 border-2 border-border bg-card p-4 text-center"
-            >
-              <dd className="break-words font-mono text-[24px] font-bold text-foreground sm:text-[26px]">
-                {stat.value}
-              </dd>
-              <dt className="mt-1 break-words font-mono text-[10px] uppercase tracking-[0.08em] text-muted-foreground [overflow-wrap:anywhere] sm:text-[11px]">
-                {stat.label}
-              </dt>
-            </div>
-          ))}
-        </dl>
-
-        <section id="chapters" className="mt-16 min-w-0 scroll-mt-24 sm:mt-20">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-            {copy.courseEyebrow}
-          </p>
-          <h2 className="mt-2 max-w-[900px] break-words text-[28px] font-bold tracking-[-0.03em] text-foreground [overflow-wrap:anywhere] sm:text-[36px]">
-            {copy.courseTitle}
-          </h2>
-          <p className="mt-3 max-w-[700px] break-words text-[15px] leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
-            {copy.courseIntro}
-          </p>
-
-          <ol className="mt-9 grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <ol className="mt-5 min-w-0 border-y border-border">
             {chapters.map((chapter) => (
               <li key={chapter.id} className="min-w-0">
                 <Link
@@ -224,27 +200,24 @@ export default async function DataEngineeringFundamentalsLandingPage() {
                     { kind: "chapter", chapterId: chapter.id },
                   )}
                   prefetch={false}
-                  className="group flex h-full min-w-0 flex-col border-2 border-border bg-card p-4 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-brand-orange"
+                  className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} grid-cols-[5.75rem_minmax(0,1fr)_4rem_1rem]`}
                 >
-                  <div className="flex min-w-0 items-start justify-between gap-3">
-                    <p className="min-w-0 break-words font-mono text-[10px] font-bold uppercase tracking-[0.08em] text-brand-orange [overflow-wrap:anywhere]">
-                      {copy.chapterLabel(
-                        chapter.meta.displayNumber,
-                        chapter.id,
-                      )}
-                    </p>
-                    <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
-                      {copy.duration(chapter.meta.estimatedMinutes)}
-                    </span>
-                  </div>
-                  <h3 className="mt-2 break-words text-[16px] font-semibold text-foreground [overflow-wrap:anywhere]">
-                    {chapter.meta.title}
-                  </h3>
-                  <p className="mt-1.5 break-words text-[12.5px] leading-[1.5] text-muted-foreground [overflow-wrap:anywhere]">
-                    {chapter.meta.subtitle}
+                  <p className="min-w-0 break-words font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange [overflow-wrap:anywhere]">
+                    {copy.chapterLabel(chapter.meta.displayNumber, chapter.id)}
                   </p>
+                  <div className="min-w-0">
+                    <h3 className="break-words text-[15px] font-semibold text-foreground [overflow-wrap:anywhere]">
+                      {chapter.meta.title}
+                    </h3>
+                    <p className="mt-0.5 break-words text-[13px] leading-[1.4] text-muted-foreground [overflow-wrap:anywhere]">
+                      {chapter.meta.subtitle}
+                    </p>
+                  </div>
+                  <span className="shrink-0 text-right font-mono text-xs tabular-nums text-muted-foreground">
+                    {copy.duration(chapter.meta.estimatedMinutes)}
+                  </span>
                   <span
-                    className="mt-auto self-end pt-3 text-brand-orange transition-transform group-hover:translate-x-0.5"
+                    className="text-muted-foreground transition-colors group-hover:text-brand-orange"
                     aria-hidden="true"
                   >
                     →
@@ -254,29 +227,7 @@ export default async function DataEngineeringFundamentalsLandingPage() {
             ))}
           </ol>
         </section>
-
-        <section className="mt-16 min-w-0 border-2 border-foreground bg-card p-6 shadow-[6px_6px_0_var(--color-foreground)] sm:mt-20 sm:p-8">
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-            {copy.finalEyebrow}
-          </p>
-          <h2 className="mt-2 break-words text-[26px] font-bold text-foreground [overflow-wrap:anywhere] sm:text-[32px]">
-            {copy.finalTitle}
-          </h2>
-          <p className="mt-3 max-w-[620px] break-words text-[14px] leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
-            {copy.finalBody}
-          </p>
-          <Link
-            href={overviewHref}
-            prefetch={false}
-            className="mt-6 inline-flex min-h-12 max-w-full items-center gap-2 break-words border-2 border-foreground bg-brand-orange px-5 py-3.5 font-mono text-[12px] font-bold uppercase tracking-[0.06em] text-white shadow-[4px_4px_0_var(--color-foreground)] transition-[transform,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--color-foreground)] sm:px-6 sm:text-[13px]"
-          >
-            {copy.finalCta}
-            <span className="shrink-0" aria-hidden="true">
-              →
-            </span>
-          </Link>
-        </section>
-      </div>
+      </TechnicalCourseFrame>
     </>
   );
 }

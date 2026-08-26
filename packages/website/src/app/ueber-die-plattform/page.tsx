@@ -103,65 +103,37 @@ export default async function UeberDiePlattformPage() {
   return (
     <>
       <JsonLd data={platformGraph(locale)} id="plattform-jsonld" />
-      <article className="mx-auto w-full max-w-7xl px-5 pb-28 pt-16 sm:px-8 sm:pt-20 lg:px-10">
-        <header className="grid gap-10 border-b border-border pb-12 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
-          <div className="min-w-0">
-            <div className="h-[3px] w-24 bg-brand-orange" />
-            <p className="mt-7 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
-              {copy.eyebrow}
-            </p>
-            <h1 className="mt-5 max-w-5xl text-pretty text-[clamp(2.5rem,6vw,5.5rem)] font-bold leading-[0.93] tracking-[-0.04em] text-foreground">
-              {copy.title}
-            </h1>
-            <p className="mt-7 max-w-3xl text-pretty text-lg leading-relaxed text-muted-foreground sm:text-xl">
-              {copy.intro}
-            </p>
-          </div>
-
-          <aside className="min-w-0 border-2 border-foreground bg-card shadow-[5px_5px_0_var(--color-foreground)]">
-            <p className="border-b border-foreground px-5 py-4 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-brand-orange">
-              {copy.statusEyebrow}
-            </p>
-            <dl className="divide-y divide-border">
-              <div className="flex min-w-0 items-center justify-between gap-4 px-5 py-4">
-                <dt className="text-sm font-semibold text-foreground">
-                  {copy.accountLabel}
-                </dt>
-                <dd className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                  {accountReady ? copy.accountReady : copy.accountUnavailable}
-                </dd>
-              </div>
-              <div className="flex min-w-0 items-center justify-between gap-4 px-5 py-4">
-                <dt className="text-sm font-semibold text-foreground">
-                  {copy.feedbackLabel}
-                </dt>
-                <dd className="font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
-                  {features.feedback
-                    ? copy.feedbackReady
-                    : copy.feedbackUnavailable}
-                </dd>
-              </div>
-            </dl>
-          </aside>
+      <article className="mx-auto w-full max-w-[70rem] px-4 pb-12 pt-8 sm:px-6 sm:pt-12 lg:px-8">
+        <header className="border-b border-border pb-8">
+          <div className="h-[3px] w-16 bg-brand-orange" />
+          <p className="mt-4 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
+            {copy.eyebrow}
+          </p>
+          <h1 className="mt-3 max-w-4xl text-pretty text-[clamp(2.25rem,4vw,4rem)] font-bold leading-[0.96] tracking-[-0.04em] text-foreground">
+            {copy.title}
+          </h1>
+          <p className="mt-4 max-w-[68ch] text-pretty text-base leading-7 text-muted-foreground sm:text-lg">
+            {copy.intro}
+          </p>
         </header>
 
-        <section className="pt-12" aria-label={copy.metadata.title}>
+        <section className="pt-8" aria-label={copy.metadata.title}>
           <div className="grid gap-px overflow-hidden border border-border bg-border md:grid-cols-2 xl:grid-cols-3">
             {operationalSections.map((section, index) => (
               <section
                 key={section.title}
-                className="min-w-0 bg-background p-6 sm:p-8"
+                className="min-w-0 bg-background p-4 sm:p-6"
               >
                 <div className="flex items-center justify-between gap-4">
                   <span className="h-2.5 w-2.5 bg-brand-orange" />
-                  <span className="font-mono text-[11px] text-muted-foreground">
+                  <span className="font-mono text-xs text-muted-foreground">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                 </div>
-                <h2 className="mt-8 text-pretty text-2xl font-bold tracking-[-0.03em] text-foreground">
+                <h2 className="mt-4 text-pretty text-xl font-bold tracking-[-0.03em] text-foreground">
                   {section.title}
                 </h2>
-                <p className="mt-4 break-words text-sm leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
+                <p className="mt-3 break-words text-sm leading-6 text-muted-foreground [overflow-wrap:anywhere]">
                   {section.body}
                 </p>
               </section>
@@ -171,31 +143,31 @@ export default async function UeberDiePlattformPage() {
 
         <nav
           aria-label={copy.linksEyebrow}
-          className="mt-12 grid gap-px overflow-hidden border-y border-border bg-border sm:grid-cols-2 lg:grid-cols-3"
+          className="mt-8 grid gap-px overflow-hidden border-y border-border bg-border sm:grid-cols-2 lg:grid-cols-3"
         >
           <Link
             href={localizeHref("/bekannte-grenzen", locale)}
-            className="min-h-20 min-w-0 bg-background px-5 py-5 text-sm font-semibold text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange"
+            className="inline-flex min-h-12 min-w-0 items-center bg-background px-4 py-3 text-sm font-semibold text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange"
           >
             {copy.limitsLink}
           </Link>
           <Link
             href={localizeHref("/open-source", locale)}
-            className="min-h-20 min-w-0 bg-background px-5 py-5 text-sm font-semibold text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange"
+            className="inline-flex min-h-12 min-w-0 items-center bg-background px-4 py-3 text-sm font-semibold text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange"
           >
             {copy.sourceLink}
           </Link>
           {features.feedback ? (
             <Link
               href={localizeHref("/feedback", locale)}
-              className="min-h-20 min-w-0 bg-background px-5 py-5 text-sm font-semibold text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange sm:col-span-2 lg:col-span-1"
+              className="inline-flex min-h-12 min-w-0 items-center bg-background px-4 py-3 text-sm font-semibold text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange sm:col-span-2 lg:col-span-1"
             >
               {copy.feedbackLink}
             </Link>
           ) : (
             <a
               href="mailto:tim@loehrning.ai"
-              className="min-h-20 min-w-0 bg-background px-5 py-5 text-sm font-semibold text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange sm:col-span-2 lg:col-span-1"
+              className="inline-flex min-h-12 min-w-0 items-center bg-background px-4 py-3 text-sm font-semibold text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange sm:col-span-2 lg:col-span-1"
             >
               {copy.emailLink}
             </a>

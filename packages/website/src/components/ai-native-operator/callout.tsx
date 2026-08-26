@@ -19,7 +19,7 @@ export function Callout({
         <p className="mt-2 text-[18px] font-medium leading-[1.5] text-foreground">
           &ldquo;{c.text}&rdquo;
         </p>
-        <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
+        <p className="mt-3 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
           {c.attr}
         </p>
       </aside>
@@ -34,7 +34,7 @@ export function Callout({
             className="h-3.5 w-3.5 text-brand-orange"
             aria-hidden="true"
           />
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-brand-orange">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
             {c.h}
           </p>
         </div>
@@ -79,7 +79,7 @@ export function Callout({
           }
           aria-hidden="true"
         />
-        <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.12em] text-foreground">
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground">
           {c.h}
         </p>
       </div>

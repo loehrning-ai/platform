@@ -36,15 +36,10 @@ interface BookPageCopy {
     readonly heading: string;
     readonly headingAccent: string;
     readonly introduction: (count: number) => string;
-    readonly ledgerLabel: string;
-    readonly ledgerFacts: readonly {
-      readonly label: string;
-      readonly value: string;
-    }[];
-    readonly collectionLabel: string;
     readonly collectionHeading: string;
     readonly collectionDescription: string;
     readonly publicationNumber: (position: number) => string;
+    readonly byAuthor: (author: string) => string;
     readonly coverPreviewAria: (title: string) => string;
     readonly coverAlt: (title: string) => string;
     readonly previewLabel: string;
@@ -58,16 +53,14 @@ interface BookPageCopy {
     readonly materialLanguageValue: string;
     readonly contents: string;
     readonly openOverview: string;
-    readonly openPreview: string;
     readonly pdfAfterLogin: string;
     readonly pdfUnavailable: string;
     readonly sourceNote: string;
-    readonly pdfAvailability: (accountEnabled: boolean) => string;
+    readonly editorialOwner: (owner: string) => string;
+    readonly detailsLabel: string;
+    readonly sourceInputs: string;
+    readonly nextReview: (date: string) => string;
     readonly reviewed: (date: string) => string;
-    readonly bridgeKicker: string;
-    readonly bridgeHeading: string;
-    readonly bridgeBody: string;
-    readonly viewCourses: string;
   };
   readonly teaser: {
     readonly dialogLabel: (title: string) => string;
@@ -171,6 +164,19 @@ const BOOK_DISPLAY_EN: Readonly<Record<string, LocalizedBookDisplay>> = {
   },
 };
 
+const BOOK_SOURCE_INPUTS_DE: Readonly<Record<string, string>> = {
+  "Public primary sources cited in the book":
+    "Im Buch zitierte öffentliche Primärquellen",
+  "Qualitative AI-readiness frameworks": "Qualitative Rahmenwerke zur KI-Reife",
+  "Simplified learning-platform editorial review":
+    "Redaktionelle Prüfung der Lernplattform-Fassung",
+  "KI-Führerschein lesson content": "Lektionsinhalte des KI-Führerscheins",
+  "European Commission AI literacy guidance":
+    "Leitlinien der Europäischen Kommission zur KI-Kompetenz",
+  "AI-Native course content": "Kursinhalte des AI-Native-Arbeitskurses",
+  "Tool-selection editorial notes": "Redaktionelle Notizen zur Werkzeugauswahl",
+};
+
 export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
   de: {
     metadata: {
@@ -198,19 +204,12 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       heading: "Sachbücher mit",
       headingAccent: "sichtbaren Quellen und Grenzen.",
       introduction: (count) =>
-        `${count} redaktionell freigegebene${count === 1 ? " Lesefassung" : " Lesefassungen"}. Der HTML-Reader ist ohne Konto zugänglich. Sprache, Bearbeitungsstand und Download-Zugang stehen direkt am Titel.`,
-      ledgerLabel: "Bestand",
-      ledgerFacts: [
-        { label: "Veröffentlicht", value: "1 Titel" },
-        { label: "Materialsprache", value: "Deutsch" },
-        { label: "Online-Zugang", value: "Ohne Konto" },
-      ],
-      collectionLabel: "Veröffentlichte Titel",
+        `${count} redaktionell freigegebene${count === 1 ? " Lesefassung" : " Lesefassungen"}. Autor, Lernziel, Quellenstand und Zugang stehen direkt am Titel.`,
       collectionHeading: "Der aktuelle Bestand",
-      collectionDescription:
-        "Nur Titel mit dokumentierter redaktioneller Freigabe erscheinen hier.",
+      collectionDescription: "Offener HTML-Reader. Kein Konto erforderlich.",
       publicationNumber: (position) =>
         `Ausgabe ${String(position).padStart(2, "0")}`,
+      byAuthor: (author) => `von ${author}`,
       coverPreviewAria: (title) => `Vorschau von „${title}“ öffnen`,
       coverAlt: (title) => `Deutsche Titelseite: ${title}`,
       previewLabel: "Titelseite ansehen",
@@ -223,23 +222,17 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       chapterCount: (chapters, pages) =>
         `${chapters} Kapitel · ca. ${pages} Seiten`,
       materialLanguageValue: "Deutsch",
-      contents: "Behandelte Fragen",
+      contents: "Nach der Lektüre",
       openOverview: "Buch und Kapitel öffnen",
-      openPreview: "Titelseite ansehen",
       pdfAfterLogin: "Deutsches PDF nach Login",
       pdfUnavailable: "PDF-Download nicht verfügbar",
       sourceNote:
         "Die veröffentlichte Lesefassung basiert auf redaktioneller Arbeit aus 2025–2026. Primärquellen und Einschränkungen stehen in den jeweiligen Kapiteln.",
-      pdfAvailability: (accountEnabled) =>
-        accountEnabled
-          ? "Der PDF-Download erfordert ein Konto."
-          : "Der PDF-Download ist in dieser Version deaktiviert.",
+      editorialOwner: (owner) => `Redaktion: ${owner}`,
+      detailsLabel: "Ausgabe, Quellen und Zugang",
+      sourceInputs: "Dokumentierte Quellengrundlage",
+      nextReview: (date) => `Nächste Prüfung: ${date}`,
       reviewed: (date) => `Geprüft: ${date}`,
-      bridgeKicker: "Lernpfad",
-      bridgeHeading: "Lesen schafft Kontext. Übungen prüfen das Verständnis.",
-      bridgeBody:
-        "Die Bücher ordnen Begriffe, Quellen und Grenzen ein. Die Kurse zerlegen dieselben Themen in Lektionen, Aufgaben und Wissenstests.",
-      viewCourses: "Kurse ansehen",
     },
     teaser: {
       dialogLabel: (title) => `Titelseiten-Vorschau: ${title}`,
@@ -314,19 +307,12 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       heading: "Reference books with",
       headingAccent: "visible sources and limits.",
       introduction: (count) =>
-        `${count} editorially approved English reading edition${count === 1 ? "" : "s"}. The HTML reader is available without an account. Language, review date, and download access are stated on the title.`,
-      ledgerLabel: "Current collection",
-      ledgerFacts: [
-        { label: "Published", value: "1 title" },
-        { label: "Material language", value: "English" },
-        { label: "Online access", value: "No account" },
-      ],
-      collectionLabel: "Published titles",
+        `${count} editorially approved English reading edition${count === 1 ? "" : "s"}. Author, reading outcome, source record, and access are stated on the title.`,
       collectionHeading: "The current collection",
-      collectionDescription:
-        "Only titles with a recorded editorial approval appear here.",
+      collectionDescription: "Open HTML reader. No account required.",
       publicationNumber: (position) =>
         `Edition ${String(position).padStart(2, "0")}`,
+      byAuthor: (author) => `by ${author}`,
       coverPreviewAria: (title) => `Open the cover preview for “${title}”`,
       coverAlt: (title) => `Source-edition cover for ${title}`,
       previewLabel: "View the cover",
@@ -338,23 +324,17 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       },
       chapterCount: (chapters) => `${chapters} chapters · HTML edition`,
       materialLanguageValue: "English",
-      contents: "Questions covered",
+      contents: "After reading",
       openOverview: "Open book and chapters",
-      openPreview: "View the cover",
       pdfAfterLogin: "German PDF after sign-in",
       pdfUnavailable: "PDF download unavailable",
       sourceNote:
         "The published English reading edition is based on editorial work from 2025–2026. Primary sources and limitations are stated in the relevant chapters.",
-      pdfAvailability: (accountEnabled) =>
-        accountEnabled
-          ? "The PDF download requires an account."
-          : "The PDF download is disabled in this version.",
+      editorialOwner: (owner) => `Editorial owner: ${owner}`,
+      detailsLabel: "Edition, sources, and access",
+      sourceInputs: "Documented source basis",
+      nextReview: (date) => `Next review: ${date}`,
       reviewed: (date) => `Reviewed: ${date}`,
-      bridgeKicker: "Learning path",
-      bridgeHeading: "Reading builds context. Exercises test understanding.",
-      bridgeBody:
-        "The books explain terms, sources, and limitations. The courses break the same subjects into lessons, tasks, and knowledge checks.",
-      viewCourses: "View courses",
     },
     teaser: {
       dialogLabel: (title) => `Cover preview: ${title}`,
@@ -430,4 +410,14 @@ export function getBookDisplay(
         ? "Die offene Ausgabe entfernt Beratungsmarkt-Preisgestaltung, private Unternehmensdaten, proprietäre Scores und daraus abgeleitete Rankings. Sie nutzt stattdessen nachvollziehbare Selbstprüfungen und verlinkte Primärquellen."
         : "",
   };
+}
+
+export function getBookSourceInputs(
+  book: Book,
+  locale: Locale,
+): readonly string[] {
+  if (locale === "en") return book.sourceInputs;
+  return book.sourceInputs.map(
+    (source) => BOOK_SOURCE_INPUTS_DE[source] ?? source,
+  );
 }

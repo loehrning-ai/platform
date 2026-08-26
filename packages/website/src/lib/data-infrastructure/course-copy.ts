@@ -1,13 +1,5 @@
 import type { Locale } from "@/lib/i18n/locale";
 
-export interface DataInfraStackRowCopy {
-  readonly n: string;
-  readonly name: string;
-  readonly head: string;
-  readonly body: string;
-  readonly tools: readonly string[];
-}
-
 export interface DataInfraCourseCopy {
   readonly landingMetadata: {
     readonly title: string;
@@ -20,9 +12,6 @@ export interface DataInfraCourseCopy {
     readonly start: string;
     readonly map: string;
     readonly facts: readonly string[];
-    readonly stackTitle: string;
-    readonly stackFile: string;
-    readonly stackRows: readonly DataInfraStackRowCopy[];
     readonly stats: readonly {
       readonly value: string;
       readonly label: string;
@@ -92,15 +81,6 @@ export interface DataInfraCourseCopy {
   };
 }
 
-const SHARED_TOOLS = {
-  source: ["Postgres", "iOS SDK", "Stripe"],
-  log: ["Kafka", "Kinesis", "Pub/Sub"],
-  process: ["Flink", "Spark", "dbt"],
-  store: ["S3", "Iceberg", "Parquet"],
-  serve: ["Snowflake", "Trino", "DynamoDB"],
-  consume: ["Looker", "Feature Store", "API"],
-} as const;
-
 export const DATA_INFRA_COURSE_COPY = Object.freeze({
   de: {
     landingMetadata: {
@@ -120,52 +100,6 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
         "4 Tracks",
         "14 interaktive Modelle",
         "Systemdesign-Fall in Lektion 12",
-      ],
-      stackTitle: "Datenfluss · Quelle bis Nutzung",
-      stackFile: "data-flow.svg",
-      stackRows: [
-        {
-          n: "01",
-          name: "quelle",
-          head: "Hier entstehen Daten.",
-          body: "Anwendungsserver, mobile Clients, Sensoren und externe APIs erzeugen Ereignisse und Zustände.",
-          tools: SHARED_TOOLS.source,
-        },
-        {
-          n: "02",
-          name: "log",
-          head: "Die nur erweiterbare Ereignisfolge.",
-          body: "Ein geordnetes, dauerhaftes und partitioniertes Log entkoppelt Produzenten und Konsumenten.",
-          tools: SHARED_TOOLS.log,
-        },
-        {
-          n: "03",
-          name: "verarbeitung",
-          head: "Hier ändert sich die Form.",
-          body: "Stream- und Batch-Jobs filtern, verknüpfen, aggregieren und prüfen Daten.",
-          tools: SHARED_TOOLS.process,
-        },
-        {
-          n: "04",
-          name: "speicherung",
-          head: "Dauerhafte, abfragbare Bytes.",
-          body: "Object Storage hält Rohdaten; Tabellenformate ergänzen Transaktionen; Dateiformate bestimmen die Scan-Kosten.",
-          tools: SHARED_TOOLS.store,
-        },
-        {
-          n: "05",
-          name: "bereitstellung",
-          head: "Antworten für konkrete Zugriffsmuster.",
-          body: "OLAP-Engines, Suchindizes und Key-Value-Stores bedienen unterschiedliche Latenz- und Abfrageziele.",
-          tools: SHARED_TOOLS.serve,
-        },
-        {
-          n: "06",
-          name: "nutzung",
-          head: "Der Zweck des Systems.",
-          body: "Dashboards, Modelle, Abrechnung, Betrugserkennung und Produktfunktionen verwenden die Ergebnisse.",
-          tools: SHARED_TOOLS.consume,
-        },
       ],
       stats: [
         { value: "12", label: "Lektionen" },
@@ -262,52 +196,6 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
         "4 tracks",
         "14 interactive models",
         "system-design case in lesson 12",
-      ],
-      stackTitle: "Data flow · source to use",
-      stackFile: "data-flow.svg",
-      stackRows: [
-        {
-          n: "01",
-          name: "source",
-          head: "Where data originates.",
-          body: "Application servers, mobile clients, sensors, and external APIs create events and state.",
-          tools: SHARED_TOOLS.source,
-        },
-        {
-          n: "02",
-          name: "log",
-          head: "The append-only event sequence.",
-          body: "An ordered, durable, partitioned log decouples producers from consumers.",
-          tools: SHARED_TOOLS.log,
-        },
-        {
-          n: "03",
-          name: "process",
-          head: "Where shape changes.",
-          body: "Stream and batch jobs filter, join, aggregate, and validate data.",
-          tools: SHARED_TOOLS.process,
-        },
-        {
-          n: "04",
-          name: "store",
-          head: "Durable, queryable bytes.",
-          body: "Object storage retains raw data; table formats add transactions; file formats determine scan cost.",
-          tools: SHARED_TOOLS.store,
-        },
-        {
-          n: "05",
-          name: "serve",
-          head: "Answers for specific access patterns.",
-          body: "OLAP engines, search indexes, and key-value stores serve different latency and query targets.",
-          tools: SHARED_TOOLS.serve,
-        },
-        {
-          n: "06",
-          name: "consume",
-          head: "The purpose of the system.",
-          body: "Dashboards, models, billing, fraud detection, and product features use the output.",
-          tools: SHARED_TOOLS.consume,
-        },
       ],
       stats: [
         { value: "12", label: "lessons" },

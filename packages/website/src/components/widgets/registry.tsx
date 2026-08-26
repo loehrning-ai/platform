@@ -30,10 +30,14 @@ type WidgetComponent = ComponentType<Record<string, unknown>>;
  * actually rendered. WidgetKind is exhaustive, so every declared kind must
  * have a real registered component.
  */
-const REGISTRY: Record<WidgetKind, () => Promise<{ default: WidgetComponent }>> = {
+const REGISTRY: Record<
+  WidgetKind,
+  () => Promise<{ default: WidgetComponent }>
+> = {
   // ─── Demos (AI-native demo gallery implementation) ───
   "demo-chat-rag": () => import("@/components/ai-native/demos/chat-demo"),
-  "demo-compliance": () => import("@/components/ai-native/demos/compliance-demo"),
+  "demo-compliance": () =>
+    import("@/components/ai-native/demos/compliance-demo"),
   "demo-roi": () => import("@/components/ai-native/demos/roi-demo"),
   "demo-doc": () => import("@/components/ai-native/demos/doc-demo"),
   "demo-agent": () => import("@/components/ai-native/demos/agent-demo"),
@@ -221,12 +225,16 @@ const REGISTRY: Record<WidgetKind, () => Promise<{ default: WidgetComponent }>> 
     import("@/components/widgets/claude/prompt-library-shaper").then((m) => ({
       default: m.PromptLibraryShaperWidget as unknown as WidgetComponent,
     })),
-} as const satisfies Record<WidgetKind, () => Promise<{ default: WidgetComponent }>>;
+} as const satisfies Record<
+  WidgetKind,
+  () => Promise<{ default: WidgetComponent }>
+>;
 
 const ENGLISH_DEMO_REGISTRY: Partial<
   Record<WidgetKind, () => Promise<{ default: WidgetComponent }>>
 > = {
-  "demo-chat-rag": () => import("@/components/demos/rag-vertragsassistent-demo"),
+  "demo-chat-rag": () =>
+    import("@/components/demos/rag-vertragsassistent-demo"),
   "demo-compliance": () => import("@/components/demos/prompt-scanner-demo"),
   "demo-roi": () => import("@/components/demos/roi-rechner-demo"),
   "demo-doc": () => import("@/components/demos/rechnung-zu-sap-demo"),
@@ -250,7 +258,9 @@ function getLazyComponent(
   const cached = lazyCache.get(cacheKey);
   if (cached) return cached;
   const loader =
-    locale === "en" ? ENGLISH_DEMO_REGISTRY[kind] ?? REGISTRY[kind] : REGISTRY[kind];
+    locale === "en"
+      ? (ENGLISH_DEMO_REGISTRY[kind] ?? REGISTRY[kind])
+      : REGISTRY[kind];
   const Component = lazy(loader);
   lazyCache.set(cacheKey, Component);
   return Component;
@@ -269,7 +279,6 @@ export function RenderWidget({
   readonly locale?: Locale;
 }) {
   if (!isWidgetKind(kind)) {
-     
     console.error(`[ai-native] Unknown widget kind: ${kind}`);
     if (process.env.NODE_ENV === "development") {
       return (
@@ -278,7 +287,7 @@ export function RenderWidget({
             Unknown widget kind
           </p>
           <p className="mt-1 break-all">{kind}</p>
-          <p className="mt-1 text-[10.5px]">
+          <p className="mt-1 text-xs">
             Add it to REGISTRY in <code>widgets/registry.tsx</code>.
           </p>
         </div>
@@ -309,7 +318,6 @@ export function resolveWidgetsForSlot(
   if (!widgets) return [];
   return widgets.filter((w) => {
     if (!isWidgetPlacement(w.placement)) {
-       
       console.warn(
         `[ai-native] Invalid widget placement "${w.placement}", falling back to 'end'.`,
       );

@@ -122,14 +122,14 @@ export function L01ThreeBodyContract({
 
   return (
     <div className="border-2 border-border bg-card/40 p-5 md:p-6">
-      <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {copy.heading}
       </p>
       <div className="grid gap-6 md:grid-cols-[1fr_auto]">
         <div className="flex flex-col gap-3">
           {LEVERS.map((lever) => (
             <div key={lever}>
-              <div className="mb-1 flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+              <div className="mb-1 flex items-center justify-between font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
                 <span
                   className={cn(weakened.has(lever) && "text-brand-orange")}
                 >
@@ -151,7 +151,7 @@ export function L01ThreeBodyContract({
                 key={lever}
                 type="button"
                 onClick={() => weaken(lever)}
-                className="border-2 border-border bg-background px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-foreground transition-colors hover:border-brand-orange"
+                className="min-h-11 border-2 border-border bg-background px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.06em] text-foreground transition-colors hover:border-brand-orange"
               >
                 {copy.actions[lever]}
               </button>
@@ -159,7 +159,7 @@ export function L01ThreeBodyContract({
             <button
               type="button"
               onClick={reset}
-              className="border-2 border-brand-orange bg-background px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-brand-orange transition-colors hover:bg-brand-orange/10"
+              className="min-h-11 border-2 border-brand-orange bg-background px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange transition-colors hover:bg-brand-orange/10"
             >
               {copy.reset}
             </button>
@@ -182,14 +182,14 @@ export function L01ThreeBodyContract({
           <span className="font-mono text-[14px] font-bold text-foreground">
             {quality}
           </span>
-          <span className="font-mono text-[9.5px] uppercase tracking-[0.1em] text-muted-foreground">
+          <span className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
             {copy.quality}
           </span>
         </div>
       </div>
       {weakened.size === LEVERS.length && (
         <p
-          className="mt-4 font-mono text-[11px] text-risk-green"
+          className="mt-4 font-mono text-xs text-risk-green"
           data-testid="l01-completion-message"
         >
           {copy.complete} {done ? "✓" : ""}

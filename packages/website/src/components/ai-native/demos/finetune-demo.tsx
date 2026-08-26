@@ -81,7 +81,7 @@ export function FineTuneDemo(): JSX.Element {
               onClick={() => setSelIdx(i)}
               aria-pressed={isActive}
               className={cn(
-                "flex-1 basis-[180px] border px-3 py-2 text-left text-[11px] transition-colors",
+                "min-h-11 flex-1 basis-[180px] border px-3 py-2 text-left text-[12px] transition-colors",
                 isActive
                   ? "border-foreground bg-foreground text-background"
                   : "border-border bg-transparent text-foreground hover:border-foreground",
@@ -89,7 +89,7 @@ export function FineTuneDemo(): JSX.Element {
             >
               <span
                 className={cn(
-                  "font-mono text-[9px] font-bold uppercase tracking-[0.12em]",
+                  "font-mono text-[12px] font-bold uppercase tracking-[0.12em]",
                   isActive
                     ? "text-[var(--color-kupfer-light)]"
                     : "text-muted-foreground",
@@ -110,17 +110,17 @@ export function FineTuneDemo(): JSX.Element {
       <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2">
         <div className="border border-border bg-card/60 p-4">
           <div className="mb-2.5 flex items-center justify-between">
-            <span className="inline-flex items-center gap-1 border border-border bg-background px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+            <span className="inline-flex items-center gap-1 border border-border bg-background px-2 py-0.5 font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
               Base Model
             </span>
-            <span className="font-mono text-[10px] text-muted-foreground">
+            <span className="font-mono text-[12px] text-muted-foreground">
               Basismodell · Simulation
             </span>
           </div>
           <p className="text-[13px] leading-[1.55] text-muted-foreground">
             {active.base}
           </p>
-          <div className="mt-3.5 flex gap-3.5 border-t border-border pt-2.5 font-mono text-[10px] text-muted-foreground">
+          <div className="mt-3.5 flex flex-wrap gap-3.5 border-t border-border pt-2.5 font-mono text-[12px] text-muted-foreground">
             <span>
               <strong className="text-foreground">generisch</strong> Antworttyp
             </span>
@@ -132,23 +132,24 @@ export function FineTuneDemo(): JSX.Element {
 
         <div className="border border-brand-orange border-t-[3px] border-t-brand-orange bg-background p-4 shadow-[3px_3px_0_0_var(--color-foreground)]">
           <div className="mb-2.5 flex items-center justify-between">
-            <span className="inline-flex items-center gap-1 border border-brand-orange bg-brand-orange/10 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-brand-orange">
+            <span className="inline-flex items-center gap-1 border border-brand-orange bg-brand-orange/10 px-2 py-0.5 font-mono text-[12px] font-bold uppercase tracking-[0.12em] text-brand-orange">
               Simuliert
             </span>
-            <span className="font-mono text-[10px] text-muted-foreground">
+            <span className="font-mono text-[12px] text-muted-foreground">
               + fiktive Domänendokumente
             </span>
           </div>
           <p className="text-[13px] leading-[1.55] text-foreground">
             {active.tuned}
           </p>
-          <div className="mt-3.5 flex gap-3.5 border-t border-border pt-2.5 font-mono text-[10px] text-muted-foreground">
+          <div className="mt-3.5 flex flex-wrap gap-3.5 border-t border-border pt-2.5 font-mono text-[12px] text-muted-foreground">
             <span>
               <strong className="text-brand-orange">domänenspezifisch</strong>{" "}
               Antworttyp
             </span>
             <span>
-              <strong className="text-brand-orange">offen</strong> Quellenprüfung
+              <strong className="text-brand-orange">offen</strong>{" "}
+              Quellenprüfung
             </span>
           </div>
         </div>
@@ -158,7 +159,7 @@ export function FineTuneDemo(): JSX.Element {
       <div>
         <div className="mb-2 flex items-center justify-between">
           <DemoOverline>Simulationskurve · Epoche {epoch}</DemoOverline>
-          <div className="font-mono text-[10px] text-muted-foreground">
+          <div className="font-mono text-[12px] text-muted-foreground">
             LoRA rank 16 · batch 32
           </div>
         </div>
@@ -169,7 +170,7 @@ export function FineTuneDemo(): JSX.Element {
             ["Domänen-Score · simuliert", `${metrics.specificity}%`, "↑"],
           ].map(([label, val, dir]) => (
             <div key={label}>
-              <div className="font-mono text-[10px] tracking-[0.14em] text-[var(--color-dark-muted)]">
+              <div className="font-mono text-[12px] tracking-[0.14em] text-[var(--color-dark-muted)]">
                 {label}
               </div>
               <div
@@ -186,7 +187,7 @@ export function FineTuneDemo(): JSX.Element {
           ))}
         </div>
         <div className="mt-3 flex items-center gap-3">
-          <span className="font-mono text-[10px] tracking-[0.12em] text-muted-foreground">
+          <span className="font-mono text-[12px] tracking-[0.12em] text-muted-foreground">
             EPOCHE
           </span>
           <input
@@ -196,16 +197,17 @@ export function FineTuneDemo(): JSX.Element {
             step={1}
             value={epoch}
             onChange={(e) => setEpoch(+e.target.value)}
-            className="flex-1 accent-brand-orange"
+            className="min-h-11 flex-1 accent-brand-orange"
             aria-label="Epoche auswählen"
           />
-          <span className="min-w-[30px] font-mono text-[11px] font-bold text-brand-orange">
+          <span className="min-w-[30px] font-mono text-[12px] font-bold text-brand-orange">
             {epoch}/6
           </span>
         </div>
-        <p className="mt-2 text-[11px] leading-[1.5] text-muted-foreground">
+        <p className="mt-2 text-[12px] leading-[1.5] text-muted-foreground">
           Didaktische Werte, keine gemessene Modellgüte. Ein reales Training
-          benötigt getrennte Evaluationsdaten, Fehlersichten und Freigabekriterien.
+          benötigt getrennte Evaluationsdaten, Fehlersichten und
+          Freigabekriterien.
         </p>
       </div>
     </div>

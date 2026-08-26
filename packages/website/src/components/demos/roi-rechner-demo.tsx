@@ -1,6 +1,12 @@
 "use client";
 
-import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
+import {
+  type CSSProperties,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { DEMO } from "@/lib/demo-tokens";
 import { DEMO_HEIGHT, usePrefersReducedMotion } from "./demo-utils";
 import { useDemoLocale } from "./demo-locale";
@@ -44,7 +50,11 @@ function useIsNarrow(breakpoint = 640): boolean {
  * Animates a number toward `target` over `durationMs` using requestAnimationFrame.
  * Respects prefers-reduced-motion (snaps to target immediately).
  */
-function useAnimatedNumber(target: number, durationMs = 300, reduced = false): number {
+function useAnimatedNumber(
+  target: number,
+  durationMs = 300,
+  reduced = false,
+): number {
   const [display, setDisplay] = useState(target);
   const fromRef = useRef(target);
   const startRef = useRef<number | null>(null);
@@ -141,16 +151,26 @@ export default function RoiRechnerDemo() {
         <div
           style={{
             fontFamily: DEMO.font.mono,
-            fontSize: 10,
+            fontSize: 12,
             color: "var(--color-brand-orange)",
             letterSpacing: "0.14em",
             textTransform: "uppercase",
             fontWeight: 700,
           }}
         >
-          {text("Annahmen-Rechner · Transparente Formel", "Assumptions calculator · explicit formula")}
+          {text(
+            "Annahmen-Rechner · Transparente Formel",
+            "Assumptions calculator · explicit formula",
+          )}
         </div>
-        <h2 style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.03em", marginTop: 6 }}>
+        <h2
+          style={{
+            fontSize: 22,
+            fontWeight: 700,
+            letterSpacing: "-0.03em",
+            marginTop: 6,
+          }}
+        >
           {text("Zahlen statt", "Inspect the")}{" "}
           <span style={{ color: "var(--color-brand-orange)" }}>
             {text("Bauchgefühl.", "assumptions.")}
@@ -197,7 +217,10 @@ export default function RoiRechnerDemo() {
             onChange={(x) => set("adoption", x)}
           />
           <Slider
-            label={text("Gesparte Std. / Woche / Person", "Hours saved / week / person")}
+            label={text(
+              "Gesparte Std. / Woche / Person",
+              "Hours saved / week / person",
+            )}
             value={v.hoursPerWeek}
             min={1}
             max={12}
@@ -221,7 +244,7 @@ export default function RoiRechnerDemo() {
           <div
             style={{
               fontFamily: DEMO.font.mono,
-              fontSize: 9,
+              fontSize: 12,
               color: "rgba(243,240,233,0.6)",
               letterSpacing: "0.14em",
               textTransform: "uppercase",
@@ -248,7 +271,7 @@ export default function RoiRechnerDemo() {
           <div
             style={{
               fontFamily: DEMO.font.mono,
-              fontSize: 10,
+              fontSize: 12,
               color: "rgba(243,240,233,0.45)",
               letterSpacing: "0.12em",
               textTransform: "uppercase",
@@ -258,7 +281,14 @@ export default function RoiRechnerDemo() {
             {text("/ Jahr", "/ year")}
           </div>
 
-          <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 10 }}>
+          <div
+            style={{
+              marginTop: 20,
+              display: "flex",
+              flexDirection: "column",
+              gap: 10,
+            }}
+          >
             <Row
               label={text(
                 `Lizenzen (€${LICENSE_PER_USER_PER_MONTH}/Person/Monat)`,
@@ -266,8 +296,22 @@ export default function RoiRechnerDemo() {
               )}
               value={`− ${Math.round(licenseAnim).toLocaleString(numberLocale)} €`}
             />
-            <Row label={text("Szenario nach Lizenzkosten", "Scenario after licence cost")} value={`${Math.round(netAnim).toLocaleString(numberLocale)} €`} highlight />
-            <Row label={text("Verhältnis Netto/Lizenzkosten", "Net-to-licence-cost ratio")} value={`${Math.round(roiAnim).toLocaleString(numberLocale)} %`} highlight />
+            <Row
+              label={text(
+                "Szenario nach Lizenzkosten",
+                "Scenario after licence cost",
+              )}
+              value={`${Math.round(netAnim).toLocaleString(numberLocale)} €`}
+              highlight
+            />
+            <Row
+              label={text(
+                "Verhältnis Netto/Lizenzkosten",
+                "Net-to-licence-cost ratio",
+              )}
+              value={`${Math.round(roiAnim).toLocaleString(numberLocale)} %`}
+              highlight
+            />
           </div>
 
           {/* Transparent inline formula */}
@@ -281,7 +325,7 @@ export default function RoiRechnerDemo() {
             <div
               style={{
                 fontFamily: DEMO.font.mono,
-                fontSize: 9,
+                fontSize: 12,
                 color: "rgba(243,240,233,0.45)",
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
@@ -294,29 +338,56 @@ export default function RoiRechnerDemo() {
             <div
               style={{
                 fontFamily: DEMO.font.mono,
-                fontSize: 11,
+                fontSize: 12,
                 lineHeight: 1.7,
                 color: "rgba(243,240,233,0.75)",
                 letterSpacing: "0.01em",
                 wordBreak: "break-word",
               }}
             >
-              <span style={{ color: DEMO.kalk, fontWeight: 700 }}>{v.headcount}</span>
-              <span style={{ color: "rgba(243,240,233,0.4)" }}> {text("MA", "people")} </span>
+              <span style={{ color: DEMO.kalk, fontWeight: 700 }}>
+                {v.headcount}
+              </span>
+              <span style={{ color: "rgba(243,240,233,0.4)" }}>
+                {" "}
+                {text("MA", "people")}{" "}
+              </span>
               <span style={{ color: "rgba(243,240,233,0.5)" }}>×</span>
-              <span style={{ color: DEMO.kalk, fontWeight: 700 }}> {v.hourly} €</span>
+              <span style={{ color: DEMO.kalk, fontWeight: 700 }}>
+                {" "}
+                {v.hourly} €
+              </span>
               <span style={{ color: "rgba(243,240,233,0.4)" }}>/h </span>
               <span style={{ color: "rgba(243,240,233,0.5)" }}>×</span>
-              <span style={{ color: DEMO.kalk, fontWeight: 700 }}> {v.hoursPerWeek} h</span>
-              <span style={{ color: "rgba(243,240,233,0.4)" }}>{text("/Wo", "/wk")} </span>
+              <span style={{ color: DEMO.kalk, fontWeight: 700 }}>
+                {" "}
+                {v.hoursPerWeek} h
+              </span>
+              <span style={{ color: "rgba(243,240,233,0.4)" }}>
+                {text("/Wo", "/wk")}{" "}
+              </span>
               <span style={{ color: "rgba(243,240,233,0.5)" }}>×</span>
-              <span style={{ color: DEMO.kalk, fontWeight: 700 }}> {adoptionDecimal}</span>
-              <span style={{ color: "rgba(243,240,233,0.4)" }}> {text("Adoption", "adoption")} </span>
+              <span style={{ color: DEMO.kalk, fontWeight: 700 }}>
+                {" "}
+                {adoptionDecimal}
+              </span>
+              <span style={{ color: "rgba(243,240,233,0.4)" }}>
+                {" "}
+                {text("Adoption", "adoption")}{" "}
+              </span>
               <span style={{ color: "rgba(243,240,233,0.5)" }}>×</span>
-              <span style={{ color: DEMO.kalk, fontWeight: 700 }}> {WEEKS_PER_YEAR}</span>
-              <span style={{ color: "rgba(243,240,233,0.4)" }}> {text("Wochen", "weeks")} </span>
+              <span style={{ color: DEMO.kalk, fontWeight: 700 }}>
+                {" "}
+                {WEEKS_PER_YEAR}
+              </span>
+              <span style={{ color: "rgba(243,240,233,0.4)" }}>
+                {" "}
+                {text("Wochen", "weeks")}{" "}
+              </span>
               <span style={{ color: "rgba(243,240,233,0.5)" }}> = </span>
-              <span style={{ color: "var(--color-brand-orange)", fontWeight: 700 }}>
+              <span
+                style={{ color: "var(--color-brand-orange)", fontWeight: 700 }}
+              >
                 {yearly.toLocaleString(numberLocale)} €
               </span>
             </div>
@@ -339,12 +410,13 @@ export default function RoiRechnerDemo() {
           style={{
             all: "unset",
             display: "flex",
+            minHeight: 44,
             alignItems: "center",
             justifyContent: "space-between",
             width: "100%",
             cursor: "pointer",
             fontFamily: DEMO.font.mono,
-            fontSize: 10,
+            fontSize: 12,
             letterSpacing: "0.14em",
             textTransform: "uppercase",
             fontWeight: 700,
@@ -380,7 +452,7 @@ export default function RoiRechnerDemo() {
               flexDirection: "column",
               gap: 6,
               fontFamily: DEMO.font.mono,
-              fontSize: 11,
+              fontSize: 12,
               lineHeight: 1.55,
               color: DEMO.schiefer,
               letterSpacing: "0.01em",
@@ -456,11 +528,17 @@ function Slider({
 }) {
   return (
     <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "baseline",
+        }}
+      >
         <span
           style={{
             fontFamily: DEMO.font.mono,
-            fontSize: 10,
+            fontSize: 12,
             color: DEMO.schiefer,
             letterSpacing: "0.12em",
             textTransform: "uppercase",
@@ -496,6 +574,7 @@ function Slider({
         aria-valuenow={value}
         style={
           {
+            minHeight: 44,
             ["--roi-fill" as string]: `${((value - min) / (max - min)) * 100}%`,
           } as CSSProperties
         }
@@ -504,7 +583,15 @@ function Slider({
   );
 }
 
-function Row({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) {
+function Row({
+  label,
+  value,
+  highlight = false,
+}: {
+  label: string;
+  value: string;
+  highlight?: boolean;
+}) {
   return (
     <div
       style={{
@@ -518,7 +605,7 @@ function Row({ label, value, highlight = false }: { label: string; value: string
       <span
         style={{
           fontFamily: DEMO.font.mono,
-          fontSize: 10,
+          fontSize: 12,
           color: "rgba(243,240,233,0.6)",
           letterSpacing: "0.1em",
           textTransform: "uppercase",
@@ -545,21 +632,36 @@ function Row({ label, value, highlight = false }: { label: string; value: string
 
 function Assumption({ k, d }: { k: string; d: string }) {
   return (
-    <li style={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "baseline" }}>
+    <li
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 10,
+        alignItems: "baseline",
+      }}
+    >
       <span
         style={{
           color: "var(--color-brand-orange)",
           fontWeight: 700,
           letterSpacing: "0.08em",
           textTransform: "uppercase",
-          fontSize: 10,
+          fontSize: 12,
           flex: "1 1 128px",
           overflowWrap: "anywhere",
         }}
       >
         {k}
       </span>
-      <span style={{ color: DEMO.text.primary, flex: "2 1 220px", overflowWrap: "anywhere" }}>{d}</span>
+      <span
+        style={{
+          color: DEMO.text.primary,
+          flex: "2 1 220px",
+          overflowWrap: "anywhere",
+        }}
+      >
+        {d}
+      </span>
     </li>
   );
 }

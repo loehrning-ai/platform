@@ -209,7 +209,7 @@ export function CourseAssessmentCta({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: EASE_OUT_EXPO }}
         className={cn(
-          "mt-12 scroll-mt-24 border-2 border-foreground bg-card/40 p-6 shadow-[4px_4px_0_0_var(--color-foreground)] md:p-8",
+          "mt-12 scroll-mt-24 border-2 border-foreground bg-card/40 p-6 md:p-8",
           className,
         )}
         aria-labelledby={headingId}
@@ -225,76 +225,76 @@ export function CourseAssessmentCta({
               : "locked"
         }
       >
-      <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
-        <Award size={12} className="mr-1.5 inline" aria-hidden="true" />
-        {copy.eyebrow}
-      </p>
-      <h2
-        id={headingId}
-        className="mt-2 text-[22px] font-bold tracking-[-0.02em] text-foreground"
-      >
-        {copy.heading(config.recordNoun.label)}
-      </h2>
-      <p className="mt-2 font-mono text-[11px] text-muted-foreground">
-        {copy.details(
-          config.workshopQuizQuestionCount,
-          passPercentage,
-          config.workshopQuizTimeLimitMinutes,
-        )}
-      </p>
-      <p
-        className="mt-3 max-w-[680px] text-[14.5px] leading-[1.55] text-muted-foreground"
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        {stateCopy}
-      </p>
-
-      {progress && (
-        <p className="mt-2 font-mono text-[11px] text-muted-foreground">
-          {copy.progress(progress.completedLessons, totalLessons)}
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
+          <Award size={12} className="mr-1.5 inline" aria-hidden="true" />
+          {copy.eyebrow}
         </p>
-      )}
+        <h2
+          id={headingId}
+          className="mt-2 text-[22px] font-bold tracking-[-0.02em] text-foreground"
+        >
+          {copy.heading(config.recordNoun.label)}
+        </h2>
+        <p className="mt-2 font-mono text-xs text-muted-foreground">
+          {copy.details(
+            config.workshopQuizQuestionCount,
+            passPercentage,
+            config.workshopQuizTimeLimitMinutes,
+          )}
+        </p>
+        <p
+          className="mt-3 max-w-[680px] text-[14.5px] leading-[1.55] text-muted-foreground"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {stateCopy}
+        </p>
 
-      <div className="mt-6 flex flex-wrap items-center gap-4">
-        {progress === null ? null : progress.courseCompleted ? (
-          <>
-            <Link
-              href={quizHref}
-              className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-7 py-3 text-sm font-bold uppercase tracking-wide text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
-            >
-              <Trophy className="h-4 w-4" aria-hidden="true" />
-              {progress.quizPassed ? copy.retakeQuiz : copy.startQuiz}
-            </Link>
+        {progress && (
+          <p className="mt-2 font-mono text-xs text-muted-foreground">
+            {copy.progress(progress.completedLessons, totalLessons)}
+          </p>
+        )}
 
-            {progress.certificateEligible && (
+        <div className="mt-6 flex flex-wrap items-center gap-4">
+          {progress === null ? null : progress.courseCompleted ? (
+            <>
               <Link
-                href={certificateHref}
-                className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-card px-5 py-3 text-sm font-bold uppercase tracking-wide text-foreground shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
+                href={quizHref}
+                className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-7 py-3 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-foreground hover:text-background"
               >
-                <GraduationCap className="h-4 w-4" aria-hidden="true" />
-                {copy.downloadRecord(config.recordNoun.label)}
+                <Trophy className="h-4 w-4" aria-hidden="true" />
+                {progress.quizPassed ? copy.retakeQuiz : copy.startQuiz}
               </Link>
-            )}
-          </>
-        ) : (
-          <button
-            type="button"
-            disabled
-            className="inline-flex min-h-11 cursor-not-allowed items-center gap-2 border border-border bg-background px-5 py-3 text-sm font-bold uppercase tracking-wide text-muted-foreground"
-          >
-            <LockKeyhole className="h-4 w-4" aria-hidden="true" />
-            {copy.lockedLabel}
-          </button>
-        )}
-      </div>
 
-      {progress?.certificateEligible && (
-        <p className="mt-4 max-w-[680px] text-xs leading-relaxed text-muted-foreground">
-          {copy.localRecordNotice}
-        </p>
-      )}
+              {progress.certificateEligible && (
+                <Link
+                  href={certificateHref}
+                  className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-card px-5 py-3 text-sm font-bold uppercase tracking-wide text-foreground transition-colors hover:bg-foreground hover:text-background"
+                >
+                  <GraduationCap className="h-4 w-4" aria-hidden="true" />
+                  {copy.downloadRecord(config.recordNoun.label)}
+                </Link>
+              )}
+            </>
+          ) : (
+            <button
+              type="button"
+              disabled
+              className="inline-flex min-h-11 cursor-not-allowed items-center gap-2 border border-border bg-background px-5 py-3 text-sm font-bold uppercase tracking-wide text-muted-foreground"
+            >
+              <LockKeyhole className="h-4 w-4" aria-hidden="true" />
+              {copy.lockedLabel}
+            </button>
+          )}
+        </div>
+
+        {progress?.certificateEligible && (
+          <p className="mt-4 max-w-[680px] text-xs leading-relaxed text-muted-foreground">
+            {copy.localRecordNotice}
+          </p>
+        )}
       </m.section>
     </MotionProvider>
   );

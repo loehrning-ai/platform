@@ -18,10 +18,7 @@
 // isUnifiedProgress/mergeUnifiedProgress) — only persistence is per-row.
 
 import type { SupabaseClient } from "@supabase/supabase-js";
-import {
-  COURSE_SLUGS,
-  type CourseSlug,
-} from "@/lib/course/types";
+import { COURSE_SLUGS, type CourseSlug } from "@/lib/course/types";
 import {
   META_ROW_COURSE_SLUG,
   calculateEarnedXp,
@@ -32,6 +29,7 @@ import {
   mergeMetaFields,
   type UnifiedMetaFields,
 } from "./server-sync";
+import { upgradeHistoricalCompletionEvidence } from "./migrate";
 import {
   UNIFIED_SCHEMA_VERSION,
   normalizeWorkshopQuizScore,
@@ -134,7 +132,10 @@ function isCourseResetPayload(value: unknown): value is CourseResetPayload {
 function isMetaRowPayload(value: unknown): value is MetaRowPayload {
   if (typeof value !== "object" || value === null) return false;
   const record = value as Record<string, unknown>;
-  return record.schemaVersion === UNIFIED_SCHEMA_VERSION && isUnifiedMetaFields(record);
+  return (
+    record.schemaVersion === UNIFIED_SCHEMA_VERSION &&
+    isUnifiedMetaFields(record)
+  );
 }
 
 function freshMetaFields(): UnifiedMetaFields {
@@ -185,15 +186,10 @@ function assemble(rows: readonly StoredProgressRow[]): UnifiedProgress | null {
     }
     if (!isCourseSlug(row.course_slug)) continue;
     if (isCourseResetPayload(row.progress)) {
-      courses[row.course_slug] = resetSlice(
-        row.progress.resetAt,
-      );
+      courses[row.course_slug] = resetSlice(row.progress.resetAt);
       continue;
     }
-    const payload = coerceStoredCourseRowPayload(
-      row.progress,
-      row.course_slug,
-    );
+    const payload = coerceStoredCourseRowPayload(row.progress, row.course_slug);
     if (payload) {
       courses[row.course_slug] = payload.slice;
     }
@@ -204,10 +200,11 @@ function assemble(rows: readonly StoredProgressRow[]): UnifiedProgress | null {
     courses,
     ...(meta ?? freshMetaFields()),
   };
-  if (!isUnifiedProgress(assembled)) return null;
+  const upgraded = upgradeHistoricalCompletionEvidence(assembled);
+  if (!isUnifiedProgress(upgraded)) return null;
   return {
-    ...assembled,
-    xp: Math.max(assembled.xp, calculateEarnedXp(assembled)),
+    ...upgraded,
+    xp: Math.max(upgraded.xp, calculateEarnedXp(upgraded)),
   };
 }
 
@@ -330,7 +327,9 @@ async function readStoredProgressRow(
  * read-merge-write-with-retry dance the old single-row route used, now
  * scoped to one (user_id, course_slug) instead of the whole blob).
  */
-async function upsertRow<T extends { schemaVersion: typeof UNIFIED_SCHEMA_VERSION }>(
+async function upsertRow<
+  T extends { schemaVersion: typeof UNIFIED_SCHEMA_VERSION },
+>(
   supabase: SupabaseClient,
   userId: string,
   rowSlug: RowSlug,
@@ -344,7 +343,9 @@ async function upsertRow<T extends { schemaVersion: typeof UNIFIED_SCHEMA_VERSIO
     if (!read.ok) return { ok: false, error: read.error };
     const existing = read.row;
 
-    const merged = existing?.progress ? mergeExisting(incoming, existing.progress) : incoming;
+    const merged = existing?.progress
+      ? mergeExisting(incoming, existing.progress)
+      : incoming;
     const updatedAt = new Date().toISOString();
 
     if (existing?.updated_at) {
@@ -367,7 +368,12 @@ async function upsertRow<T extends { schemaVersion: typeof UNIFIED_SCHEMA_VERSIO
     try {
       insertResult = await supabase
         .from(PROGRESS_TABLE)
-        .insert({ user_id: userId, course_slug: rowSlug, progress: merged, updated_at: updatedAt })
+        .insert({
+          user_id: userId,
+          course_slug: rowSlug,
+          progress: merged,
+          updated_at: updatedAt,
+        })
         .select("progress, updated_at")
         .maybeSingle();
     } catch (error) {
@@ -422,7 +428,11 @@ async function upsertRow<T extends { schemaVersion: typeof UNIFIED_SCHEMA_VERSIO
 
 export type UpsertOutcome =
   | { readonly ok: true; readonly result: FetchResult }
-  | { readonly ok: false; readonly conflict: true; readonly result: FetchResult }
+  | {
+      readonly ok: false;
+      readonly conflict: true;
+      readonly result: FetchResult;
+    }
   | { readonly ok: false; readonly conflict?: false; readonly error: unknown };
 
 /**
@@ -480,9 +490,7 @@ async function upsertUnifiedProgressForUserUnchecked(
       (inc, existingRaw) => {
         if (!isCourseRowPayload(inc, slug)) return inc;
         if (isCourseResetPayload(existingRaw)) {
-          return inc.slice.resetAt === existingRaw.resetAt
-            ? inc
-            : existingRaw;
+          return inc.slice.resetAt === existingRaw.resetAt ? inc : existingRaw;
         }
         const existing = coerceStoredCourseRowPayload(existingRaw, slug);
         return existing
@@ -514,7 +522,10 @@ async function upsertUnifiedProgressForUserUnchecked(
     metaPayload,
     (inc, existingRaw) =>
       isMetaRowPayload(existingRaw)
-        ? { schemaVersion: UNIFIED_SCHEMA_VERSION, ...mergeMetaFields(inc, existingRaw) }
+        ? {
+            schemaVersion: UNIFIED_SCHEMA_VERSION,
+            ...mergeMetaFields(inc, existingRaw),
+          }
         : inc,
   );
   if (!metaOutcome.ok) {

@@ -1,28 +1,7 @@
-// No "use client": zero hooks/interactivity — plain static markup, rendered as
-// a Server Component from the homepage (keeps it out of the client JS bundle).
-// Card + IconTile are server-safe (no hooks).
-//
-// This is the ONE place the supporting resources live on the homepage. They
-// used to be duplicated (once under the courses, once in the closing chips);
-// now they sit here as a single compact set, lighter than the course cards so
-// the courses stay the main event.
-import { BookOpen, GraduationCap, LayoutDashboard, Pencil, Presentation, type LucideIcon } from "lucide-react";
-import { Github } from "@/components/icons/brand";
 import Link from "next/link";
-import { Card, IconTile, type CardAccent } from "@/components/ui/card";
+import { ArrowRight } from "lucide-react";
 import { HOME_COPY } from "@/components/home/home-copy";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
-
-const resourcePresentation: ReadonlyArray<{
-  readonly icon: LucideIcon;
-  readonly accent: CardAccent;
-}> = [
-  { icon: Pencil, accent: "kupfer" },
-  { icon: BookOpen, accent: "amber" },
-  { icon: LayoutDashboard, accent: "sand" },
-  { icon: Presentation, accent: "amber" },
-  { icon: Github, accent: "sand" },
-];
 
 export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
   const copy = HOME_COPY[locale].workflow;
@@ -30,61 +9,66 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
   return (
     <section
       id="ressourcen"
-      className="relative scroll-mt-24 bg-background pt-16 pb-10 md:pt-20 md:pb-12"
+      className="relative scroll-mt-24 border-b border-border bg-background py-12"
       data-testid="ressourcen-section"
     >
       <div className="mx-auto max-w-5xl px-6">
-        <p className="overline mb-4">{copy.overline}</p>
-        <h2
-          className="text-balance font-bold leading-[1.02] tracking-[-0.035em] text-foreground"
-          style={{ fontSize: "clamp(2rem, 4.5vw, 3.5rem)" }}
-        >
-          {copy.headline}
-        </h2>
-        <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
-          {copy.introduction}
-        </p>
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:gap-12">
+          <header>
+            <p className="overline border-l-[3px] border-brand-orange pl-3">
+              {copy.overline}
+            </p>
+            <h2 className="mt-4 text-fluid-h2 font-bold tracking-[-0.035em] text-foreground">
+              {copy.headline}
+            </h2>
+            <p className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">
+              {copy.introduction}
+            </p>
+          </header>
 
-        <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {copy.resources.map((row, index) => {
-            const presentation = resourcePresentation[index];
-            return (
-            <Card
-              key={row.label}
-              href={localizeHref(row.href, locale)}
-              accent={presentation.accent}
-              className="h-full gap-3"
-            >
-              <div className="flex items-start gap-3">
-                <IconTile icon={presentation.icon} accent={presentation.accent} />
-                <div className="min-w-0">
-                  <span className="text-base font-bold tracking-[-0.02em] text-foreground group-hover:text-brand-orange">
-                    {row.label}
+          <ul className="border-t border-border">
+            {copy.resources.map((resource, index) => (
+              <li key={resource.label} className="border-b border-border">
+                <Link
+                  href={localizeHref(resource.href, locale)}
+                  className="group grid min-h-20 grid-cols-[2.75rem_minmax(0,1fr)_auto] items-center gap-3 py-3 sm:gap-5"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="font-mono text-xs font-bold tabular-nums text-brand-orange"
+                  >
+                    R{String(index + 1).padStart(2, "0")}
                   </span>
-                  <span className="mt-1.5 block text-sm leading-relaxed text-muted-foreground">
-                    {row.body}
+                  <span className="min-w-0">
+                    <span className="block text-base font-bold text-foreground transition-colors group-hover:text-brand-orange">
+                      {resource.label}
+                    </span>
+                    <span className="mt-1 block text-sm leading-snug text-muted-foreground">
+                      {resource.body}
+                    </span>
                   </span>
-                </div>
-              </div>
-            </Card>
-            );
-          })}
+                  <ArrowRight
+                    aria-hidden="true"
+                    size={18}
+                    className="text-brand-orange transition-transform duration-150 group-hover:translate-x-1 motion-reduce:transition-none"
+                  />
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        {/* Honest progress/login note — showcases the account feature once. */}
-        <div className="mt-8 flex flex-col gap-4 rounded-xl border border-border bg-kupfer-mist p-6 md:flex-row md:items-center md:justify-between">
-          <div className="flex items-start gap-3 md:items-center">
-            <IconTile icon={GraduationCap} accent="kupfer" />
-            <p className="text-sm leading-relaxed text-foreground">
-              {copy.accountBody}
-            </p>
-          </div>
+        <div className="mt-6 flex flex-col gap-3 border-l-[3px] border-brand-orange bg-kupfer-mist px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm leading-relaxed text-foreground">
+            {copy.accountBody}
+          </p>
           <Link
             href={localizeHref("/konto", locale)}
             prefetch={false}
-            className="shrink-0 font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-brand-orange underline-offset-4 hover:underline"
+            className="inline-flex min-h-11 shrink-0 items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange"
           >
-            {copy.accountCta} &#8594;
+            {copy.accountCta}
+            <ArrowRight aria-hidden="true" size={16} />
           </Link>
         </div>
       </div>

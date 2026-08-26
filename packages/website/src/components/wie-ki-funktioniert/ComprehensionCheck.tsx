@@ -52,7 +52,7 @@ export function ComprehensionCheck({
       <div className="px-3 pt-3 sm:px-5 sm:pt-4">
         <h2
           id={headingId}
-          className="font-mono text-[10px] font-black uppercase tracking-[0.14em] text-brand-orange-dark"
+          className="font-mono text-xs font-black uppercase tracking-[0.14em] text-brand-orange-dark"
         >
           {label}
         </h2>
@@ -61,7 +61,7 @@ export function ComprehensionCheck({
         </p>
         <label
           htmlFor={responseId}
-          className="mt-2 block font-mono text-[10px] font-black uppercase tracking-[0.1em] text-foreground"
+          className="mt-2 block font-mono text-xs font-black uppercase tracking-[0.1em] text-foreground"
         >
           {responseLabel}
         </label>
@@ -79,7 +79,7 @@ export function ComprehensionCheck({
         />
         <p
           id={privacyId}
-          className="mt-1 font-mono text-[9px] uppercase tracking-[0.08em] text-muted-foreground"
+          className="mt-1 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground"
         >
           {sessionOnlyLabel}
         </p>
@@ -90,7 +90,7 @@ export function ComprehensionCheck({
         aria-controls={contentId}
         onClick={() => setOpen((prev) => !prev)}
         disabled={!open && !responseReady}
-        className="mt-3 flex min-h-11 w-full min-w-0 items-center justify-between gap-3 border-t border-foreground px-3 py-2.5 text-left font-mono text-[11px] font-black uppercase tracking-[0.08em] text-brand-orange-dark outline-none hover:bg-background focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange disabled:cursor-not-allowed disabled:text-muted-foreground disabled:hover:bg-transparent sm:px-5 sm:tracking-[0.1em]"
+        className="mt-3 flex min-h-11 w-full min-w-0 items-center justify-between gap-3 border-t border-foreground px-3 py-2.5 text-left font-mono text-xs font-black uppercase tracking-[0.08em] text-brand-orange-dark outline-none hover:bg-background focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange disabled:cursor-not-allowed disabled:text-muted-foreground disabled:hover:bg-transparent sm:px-5 sm:tracking-[0.1em]"
       >
         <span className="min-w-0 break-words [overflow-wrap:anywhere]">
           {open ? hideLabel : compareLabel}
@@ -105,13 +105,16 @@ export function ComprehensionCheck({
         hidden={!open}
         className="min-w-0 scroll-mb-3 border-t border-foreground bg-background px-3 py-3 sm:px-5 sm:py-4"
       >
-        <h3 className="font-mono text-[10px] font-black uppercase tracking-[0.1em] text-brand-orange-dark">
+        <h3 className="font-mono text-xs font-black uppercase tracking-[0.1em] text-brand-orange-dark">
           {criteriaLabel}
         </h3>
         <ul className="mt-2 space-y-1.5 text-[14px] leading-[1.4] text-foreground">
           {criteria.map((criterion) => (
             <li key={criterion} className="flex min-w-0 gap-2">
-              <span aria-hidden="true" className="shrink-0 text-brand-orange-dark">
+              <span
+                aria-hidden="true"
+                className="shrink-0 text-brand-orange-dark"
+              >
                 →
               </span>
               <span className="min-w-0 break-words [overflow-wrap:anywhere]">

@@ -53,7 +53,7 @@ export interface TaskSpecWidgetProps {
   readonly desc?: string;
   readonly goal?: string;
   readonly items: readonly TaskSpecItem[];
-  /** How many items must be on to count as "stark" + award XP. Default 3. */
+  /** How many items must be on to count as "stark" and record completion. Default 3. */
   readonly threshold?: number;
   readonly tierLabels?: Partial<TaskSpecTierLabels>;
 }
@@ -110,13 +110,7 @@ export function TaskSpecWidget({
   }, [items, on, goal]);
 
   return (
-    <WidgetFrame
-      kindLabel="Drill"
-      title={title}
-      scenario={desc}
-      done={done}
-      xpLabel="+20 XP"
-    >
+    <WidgetFrame kindLabel="Drill" title={title} scenario={desc} done={done}>
       <div className="grid gap-4 md:grid-cols-2">
         {/* Toggles */}
         <div className="flex flex-col gap-2">
@@ -129,7 +123,7 @@ export function TaskSpecWidget({
                 aria-pressed={active}
                 onClick={() => toggle(i)}
                 className={cn(
-                  "flex items-start gap-3 border-2 border-border bg-background px-3 py-2.5 text-left transition-colors",
+                  "flex min-h-11 items-start gap-3 border-2 border-border bg-background px-3 py-2.5 text-left transition-colors",
                   active
                     ? "border-brand-orange bg-brand-orange/10"
                     : "hover:border-brand-orange/60",
@@ -138,7 +132,7 @@ export function TaskSpecWidget({
                 <span
                   aria-hidden="true"
                   className={cn(
-                    "mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center border-2 text-[10px] font-bold",
+                    "mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center border-2 text-xs font-bold",
                     active
                       ? "border-brand-orange bg-brand-orange text-white"
                       : "border-border text-transparent",
@@ -171,13 +165,13 @@ export function TaskSpecWidget({
               <span className="font-mono text-[18px] font-bold text-brand-orange">
                 {count}
               </span>
-              <span className="font-mono text-[11px] tracking-[0.1em] text-muted-foreground">
+              <span className="font-mono text-xs tracking-[0.1em] text-muted-foreground">
                 / {total} Signale
               </span>
               <span
                 data-tier={tierLevel}
                 className={cn(
-                  "ml-auto font-mono text-[10.5px] font-bold uppercase tracking-[0.14em]",
+                  "ml-auto font-mono text-xs font-bold uppercase tracking-[0.14em]",
                   tierLevel === "strong"
                     ? "text-risk-green"
                     : tierLevel === "meh"

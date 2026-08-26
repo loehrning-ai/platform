@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DataEngineeringFundamentalsLocaleProvider } from "@/components/data-engineering-fundamentals/locale-context";
-import { MarkChapterVisited } from "@/components/data-engineering-fundamentals/mark-chapter-visited";
+import { ChapterTransferCheckpoint } from "@/components/course/chapter-transfer-checkpoint";
 import { getDataEngineeringFundamentalsCourseCopy } from "@/lib/data-engineering-fundamentals/course-copy";
 import { getDefLocaleRegistry } from "@/lib/data-engineering-fundamentals/content";
 import { isDefChapterId } from "@/lib/data-engineering-fundamentals/types";
@@ -92,7 +92,11 @@ export default async function DefChapterRoute({ params }: PageProps) {
       <div className="content min-w-0">
         <ChapterComponent chapter={chapter.meta} />
         <div className="mt-8 min-w-0">
-          <MarkChapterVisited chapterId={chapterId} locale={locale} />
+          <ChapterTransferCheckpoint
+            courseSlug="data-engineering-fundamentals"
+            chapterId={chapterId}
+            locale={locale}
+          />
         </div>
         <nav
           className="tb mt-12 min-w-0 flex-wrap gap-3"

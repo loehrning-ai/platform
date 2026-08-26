@@ -296,7 +296,7 @@ export function DriftSimulator() {
             <div
               style={{
                 fontFamily: "var(--font-mono)",
-                fontSize: 9.5,
+                fontSize: 12,
                 fontWeight: 700,
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
@@ -307,23 +307,17 @@ export function DriftSimulator() {
                 ? text("DEMO LINE CROSSED", "DEMOGRENZE ÜBERSCHRITTEN")
                 : text("WITHIN DEMO LINE", "INNERHALB DER DEMOGRENZE")}
             </div>
-            <div
-              style={{ fontSize: 11.5, color: "var(--ink-2)", marginTop: 5 }}
-            >
+            <div style={{ fontSize: 12, color: "var(--ink-2)", marginTop: 5 }}>
               PSI = {round(current.psi, 3)}{" "}
               {psiAlarm
                 ? text("> 0.2 → investigate", "> 0.2 → untersuchen")
                 : text("≤ 0.2 → no demo alert", "≤ 0.2 → kein Demoalarm")}
             </div>
-            <div
-              style={{ fontSize: 11.5, color: "var(--ink-2)", marginTop: 3 }}
-            >
+            <div style={{ fontSize: 12, color: "var(--ink-2)", marginTop: 3 }}>
               {text("Accuracy", "Genauigkeit")} = {round(current.acc, 3)}{" "}
               {accAlarm ? text("⬇ degraded", "⬇ verschlechtert") : ""}
             </div>
-            <div
-              style={{ fontSize: 11.5, color: "var(--ink-2)", marginTop: 3 }}
-            >
+            <div style={{ fontSize: 12, color: "var(--ink-2)", marginTop: 3 }}>
               {text("Decision boundary", "Entscheidungsgrenze")} ={" "}
               {round(current.boundary, 3)}
             </div>
@@ -335,7 +329,7 @@ export function DriftSimulator() {
               borderRadius: 7,
               background: "rgba(244,242,236,0.04)",
               border: "1px solid rgba(244,242,236,0.08)",
-              fontSize: 11,
+              fontSize: 12,
               color: "var(--ink-3)",
               lineHeight: 1.5,
             }}

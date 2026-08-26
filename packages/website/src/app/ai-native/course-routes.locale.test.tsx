@@ -6,9 +6,11 @@ vi.mock("@/lib/i18n/request-locale", () => ({
 }));
 
 import { getRequestLocale } from "@/lib/i18n/request-locale";
-import { AiNativeHero } from "@/components/ai-native/hero";
+import { getModules } from "@/lib/ai-native/data";
+import { TechnicalCourseFrame } from "@/components/course/technical-course-landing";
 import { AiNativeLessonReader } from "@/components/ai-native/kurs/lesson-reader";
 import { LessonReference } from "@/components/course/lesson-reference";
+import { VoiceAnchor } from "@/components/ai-native/primitives";
 import LandingPage, {
   generateMetadata as generateLandingMetadata,
 } from "./page";
@@ -38,6 +40,20 @@ function findElement(node: ReactNode, type: unknown): ReactElement | null {
   return null;
 }
 
+function findElements(node: ReactNode, type: unknown): ReactElement[] {
+  if (!isValidElement(node)) {
+    return Array.isArray(node)
+      ? node.flatMap((child) => findElements(child, type))
+      : [];
+  }
+  const matches = node.type === type ? [node] : [];
+  const children = (node.props as { children?: ReactNode }).children;
+  return [
+    ...matches,
+    ...findElements(Array.isArray(children) ? children : [children], type),
+  ];
+}
+
 function textContent(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
   if (Array.isArray(node)) return node.map(textContent).join(" ");
@@ -52,9 +68,24 @@ describe("AI-Native locale propagation across the complete course lifecycle", ()
 
   it("passes the audited English bundle through landing, reader, quiz, record, and verification routes", async () => {
     const landing = await LandingPage();
-    expect(findElement(landing, AiNativeHero)?.props).toMatchObject({
-      locale: "en",
+    expect(findElement(landing, TechnicalCourseFrame)?.props).toMatchObject({
+      courseId: "ai-native",
+      lang: "en",
     });
+    const moduleDisclosureNames = findElements(landing, "summary")
+      .map(
+        (summary) =>
+          (summary.props as { readonly "aria-label"?: unknown })["aria-label"],
+      )
+      .filter((label): label is string => typeof label === "string");
+    expect(moduleDisclosureNames).toEqual(
+      getModules("en").map(
+        (module) => `Decisions and exercises: ${module.title}`,
+      ),
+    );
+    expect(new Set(moduleDisclosureNames).size).toBe(
+      moduleDisclosureNames.length,
+    );
 
     const hub = await CourseHubPage();
     expect(textContent(hub)).toContain("AI-Native Workflow Course");
@@ -67,6 +98,9 @@ describe("AI-Native locale propagation across the complete course lifecycle", ()
     expect(textContent(modulePage)).toContain(
       "When you stop drafting from scratch",
     );
+    expect(findElement(modulePage, VoiceAnchor)?.props).toMatchObject({
+      author: "Voice anchor · Module 1",
+    });
 
     const lesson = await LessonPage({
       params: Promise.resolve({

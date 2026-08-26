@@ -87,11 +87,11 @@ export function BlockPageShell({
   return (
     <div className="min-h-[100svh] bg-background">
       {/* Sub-header below site nav */}
-      <header className="sticky top-16 z-40 w-full border-b border-border bg-background/95 backdrop-blur-sm">
+      <header className="sticky top-16 z-40 w-full border-b border-border bg-background">
         <div className="mx-auto grid min-h-14 max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 px-4 py-2 sm:flex sm:h-12 sm:min-h-0 sm:px-6 sm:py-0">
           <Link
             href={localizeHref(config.coursePath, locale)}
-            className="min-w-0 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <ArrowLeft className="h-4 w-4" />
             {copy.block.allBlocks}

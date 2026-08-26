@@ -102,17 +102,17 @@ function EinstiegContent({ locale }: { readonly locale: Locale }) {
     <>
       <JsonLd data={article} id="einstieg-article-jsonld" />
 
-      <article className="mx-auto w-full max-w-6xl px-5 pb-28 pt-16 sm:px-8 sm:pt-20 lg:px-10">
-        <header className="grid gap-10 border-b border-border pb-12 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-end">
+      <article className="mx-auto w-full max-w-[70rem] px-4 pb-12 pt-8 sm:px-6 sm:pt-12 lg:px-8">
+        <header className="grid gap-6 border-b border-border pb-8 lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-end">
           <div className="min-w-0">
-            <div className="h-[3px] w-24 bg-brand-orange" />
-            <p className="mt-7 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange">
+            <div className="h-[3px] w-16 bg-brand-orange" />
+            <p className="mt-4 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
               {copy.eyebrow}
             </p>
-            <h1 className="mt-5 max-w-4xl text-pretty text-[clamp(2.5rem,7vw,5.75rem)] font-bold leading-[0.92] tracking-[-0.04em] text-foreground">
+            <h1 className="mt-3 max-w-4xl text-pretty text-[clamp(2.25rem,5vw,4.5rem)] font-bold leading-[0.96] tracking-[-0.04em] text-foreground">
               {copy.title}
             </h1>
-            <p className="mt-7 max-w-2xl text-pretty text-lg leading-relaxed text-muted-foreground sm:text-xl">
+            <p className="mt-4 max-w-[68ch] text-pretty text-base leading-7 text-muted-foreground sm:text-lg">
               {copy.intro}
             </p>
           </div>
@@ -121,9 +121,9 @@ function EinstiegContent({ locale }: { readonly locale: Locale }) {
             {copy.facts.map((fact, index) => (
               <div
                 key={fact}
-                className="min-w-0 border-b border-border py-4 sm:border-r sm:px-4 lg:border-r-0 lg:px-6"
+                className="min-w-0 border-b border-border py-3 sm:border-r sm:px-3 lg:border-r-0 lg:px-4"
               >
-                <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                <dt className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
                   {String(index + 1).padStart(2, "0")}
                 </dt>
                 <dd className="mt-1 break-words text-sm font-semibold text-foreground">
@@ -136,25 +136,28 @@ function EinstiegContent({ locale }: { readonly locale: Locale }) {
 
         <section
           aria-labelledby="definition-heading"
-          className="grid gap-8 border-b border-border py-14 md:grid-cols-[12rem_minmax(0,1fr)] lg:gap-14"
+          className="grid gap-6 border-b border-border py-8 md:grid-cols-[12rem_minmax(0,1fr)]"
         >
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
             {copy.definitionIndex}
           </p>
           <div className="min-w-0">
             <h2
               id="definition-heading"
-              className="text-pretty text-3xl font-bold tracking-[-0.035em] text-foreground sm:text-4xl"
+              className="text-pretty text-2xl font-bold tracking-[-0.035em] text-foreground sm:text-3xl"
             >
               {copy.definitionHeading}
             </h2>
-            <p className="mt-7 border-l-4 border-brand-orange pl-5 text-pretty text-xl leading-relaxed text-foreground sm:pl-7 sm:text-2xl">
+            <p className="mt-4 border-l-[3px] border-brand-orange pl-4 text-pretty text-lg leading-7 text-foreground sm:text-xl">
               {copy.definition}
             </p>
-            <details className="group mt-7 border-t border-border pt-4">
+            <details className="group mt-4 border-t border-border pt-3">
               <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 text-sm font-semibold text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background [&::-webkit-details-marker]:hidden">
                 <span>{copy.definitionSourceLabel}</span>
-                <span aria-hidden="true" className="font-mono group-open:rotate-45">
+                <span
+                  aria-hidden="true"
+                  className="font-mono group-open:rotate-45"
+                >
                   +
                 </span>
               </summary>
@@ -171,47 +174,47 @@ function EinstiegContent({ locale }: { readonly locale: Locale }) {
           </div>
         </section>
 
-        <section aria-labelledby="beispiele-heading" className="py-14">
-          <div className="grid gap-5 md:grid-cols-[12rem_minmax(0,1fr)] lg:gap-14">
-            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+        <section aria-labelledby="beispiele-heading" className="py-8">
+          <div className="grid gap-4 md:grid-cols-[12rem_minmax(0,1fr)]">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
               {copy.examplesIndex}
             </p>
             <div>
               <h2
                 id="beispiele-heading"
-                className="text-pretty text-3xl font-bold tracking-[-0.035em] text-foreground sm:text-4xl"
+                className="text-pretty text-2xl font-bold tracking-[-0.035em] text-foreground sm:text-3xl"
               >
                 {copy.examplesHeading}
               </h2>
-              <p className="mt-4 max-w-2xl text-pretty leading-relaxed text-muted-foreground">
+              <p className="mt-3 max-w-[68ch] text-pretty leading-7 text-muted-foreground">
                 {copy.examplesIntro}
               </p>
             </div>
           </div>
 
           <div
-            className="mt-10 grid gap-px overflow-hidden border border-border bg-border md:grid-cols-3"
+            className="mt-6 grid gap-px overflow-hidden border border-border bg-border md:grid-cols-3"
             data-testid="beispiel-cards"
           >
             {copy.examples.map((example) => (
               <article
                 key={example.id}
-                className="group min-w-0 bg-background p-6 sm:p-7"
+                className="min-w-0 bg-background p-4 sm:p-6"
                 data-testid={`beispiel-${example.id}`}
               >
                 <div className="flex items-start justify-between gap-4 text-brand-orange">
                   <ExampleIcon id={example.id} />
-                  <span className="font-mono text-[11px] tracking-[0.16em]">
+                  <span className="font-mono text-xs tracking-[0.12em]">
                     {example.number}
                   </span>
                 </div>
-                <p className="mt-8 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+                <p className="mt-4 font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
                   {example.task}
                 </p>
                 <h3 className="mt-2 text-pretty text-xl font-bold tracking-[-0.02em] text-foreground">
                   {example.heading}
                 </h3>
-                <p className="mt-4 break-words text-sm leading-relaxed text-muted-foreground">
+                <p className="mt-3 break-words text-sm leading-6 text-muted-foreground">
                   {example.body}
                 </p>
               </article>
@@ -219,11 +222,11 @@ function EinstiegContent({ locale }: { readonly locale: Locale }) {
           </div>
 
           <div className="grid border-x border-b border-border bg-card/40 md:grid-cols-[12rem_minmax(0,1fr)]">
-            <p className="border-b border-border p-6 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-brand-orange md:border-b-0 md:border-r">
+            <p className="border-b border-border p-4 font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange md:border-b-0 md:border-r sm:p-6">
               {copy.boundaryLabel}
             </p>
-            <div className="min-w-0 p-6 sm:p-8">
-              <h3 className="text-pretty text-2xl font-bold tracking-[-0.03em] text-foreground">
+            <div className="min-w-0 p-4 sm:p-6">
+              <h3 className="text-pretty text-xl font-bold tracking-[-0.03em] text-foreground">
                 {copy.boundaryHeading}
               </h3>
               <p className="mt-3 max-w-3xl break-words leading-relaxed text-muted-foreground">
@@ -235,22 +238,22 @@ function EinstiegContent({ locale }: { readonly locale: Locale }) {
 
         <section
           aria-labelledby="faq-heading"
-          className="grid gap-8 border-y border-border py-14 md:grid-cols-[12rem_minmax(0,1fr)] lg:gap-14"
+          className="grid gap-6 border-y border-border py-8 md:grid-cols-[12rem_minmax(0,1fr)]"
         >
-          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
             {copy.faqIndex}
           </p>
           <div className="min-w-0">
             <h2
               id="faq-heading"
-              className="text-pretty text-3xl font-bold tracking-[-0.035em] text-foreground sm:text-4xl"
+              className="text-pretty text-2xl font-bold tracking-[-0.035em] text-foreground sm:text-3xl"
             >
               {copy.faqHeading}
             </h2>
-            <div className="mt-8 divide-y divide-border border-y border-border">
+            <div className="mt-6 divide-y divide-border border-y border-border">
               {copy.faqs.map((faq) => (
                 <details key={faq.question} className="group scroll-mt-24 py-1">
-                  <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-5 py-4 font-semibold text-foreground outline-none hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background [&::-webkit-details-marker]:hidden">
+                  <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 py-3 font-semibold text-foreground outline-none hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background [&::-webkit-details-marker]:hidden">
                     <span className="min-w-0 text-pretty">{faq.question}</span>
                     <span
                       className="shrink-0 font-mono text-muted-foreground group-open:rotate-45"
@@ -259,7 +262,7 @@ function EinstiegContent({ locale }: { readonly locale: Locale }) {
                       +
                     </span>
                   </summary>
-                  <p className="max-w-3xl pb-5 pr-8 text-sm leading-relaxed text-muted-foreground">
+                  <p className="max-w-[68ch] pb-4 pr-6 text-sm leading-6 text-muted-foreground">
                     {"answer" in faq ? faq.answer : faq.answerBeforeLink}
                     {"linkLabel" in faq ? (
                       <Link
@@ -277,79 +280,79 @@ function EinstiegContent({ locale }: { readonly locale: Locale }) {
           </div>
         </section>
 
-        <section aria-labelledby="weiter-heading" className="pt-14">
+        <section aria-labelledby="weiter-heading" className="pt-8">
           <div className="max-w-3xl">
-            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
               {copy.nextIndex}
             </p>
             <h2
               id="weiter-heading"
-              className="mt-4 text-pretty text-3xl font-bold tracking-[-0.035em] text-foreground sm:text-4xl"
+              className="mt-3 text-pretty text-2xl font-bold tracking-[-0.035em] text-foreground sm:text-3xl"
             >
               {copy.nextHeading}
             </h2>
-            <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
+            <p className="mt-3 text-pretty leading-7 text-muted-foreground">
               {copy.nextIntro}
             </p>
           </div>
 
-          <div className="mt-9 grid gap-px overflow-hidden border border-border bg-border lg:grid-cols-3">
-            <article className="flex min-w-0 flex-col bg-brand-orange/[0.06] p-6 sm:p-8">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-foreground">
+          <div className="mt-6 grid gap-px overflow-hidden border border-border bg-border lg:grid-cols-3">
+            <article className="flex min-w-0 flex-col bg-brand-orange/[0.06] p-4 sm:p-6">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground">
                 {copy.primaryLabel}
               </p>
-              <div className="mt-5 flex flex-wrap items-baseline justify-between gap-2">
-                <h3 className="text-2xl font-bold tracking-[-0.03em] text-foreground">
+              <div className="mt-3 flex flex-wrap items-baseline justify-between gap-2">
+                <h3 className="text-xl font-bold tracking-[-0.03em] text-foreground">
                   {copy.primaryTitle}
                 </h3>
-                <span className="font-mono text-[11px] text-muted-foreground">
+                <span className="font-mono text-xs text-foreground">
                   {copy.primaryMeta}
                 </span>
               </div>
-              <p className="mt-4 flex-1 break-words text-sm leading-relaxed text-muted-foreground">
+              <p className="mt-3 flex-1 break-words text-sm leading-6 text-foreground">
                 {copy.primaryBody.replace("{count}", String(TOTAL_QUESTIONS))}
               </p>
               <Link
                 href={localizeHref("/ki-check", locale)}
-                className="mt-7 inline-flex min-h-11 items-center justify-between gap-4 border border-brand-orange bg-brand-orange px-4 py-3 font-mono text-xs font-bold text-white transition-colors hover:bg-kupfer-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="mt-4 inline-flex min-h-11 items-center justify-between gap-4 border border-brand-orange bg-brand-orange px-4 py-3 font-mono text-xs font-bold text-white transition-colors hover:bg-kupfer-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <span>{copy.primaryCta}</span>
                 <span aria-hidden="true">→</span>
               </Link>
             </article>
 
-            <article className="flex min-w-0 flex-col bg-background p-6 sm:p-8">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+            <article className="flex min-w-0 flex-col bg-background p-4 sm:p-6">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
                 {copy.courseLabel}
               </p>
-              <h3 className="mt-5 text-2xl font-bold tracking-[-0.03em] text-foreground">
+              <h3 className="mt-3 text-xl font-bold tracking-[-0.03em] text-foreground">
                 {copy.courseTitle}
               </h3>
-              <p className="mt-4 flex-1 break-words text-sm leading-relaxed text-muted-foreground">
+              <p className="mt-3 flex-1 break-words text-sm leading-6 text-muted-foreground">
                 {copy.courseBody}
               </p>
               <Link
                 href={localizeHref("/ki-fuehrerschein", locale)}
-                className="mt-7 inline-flex min-h-11 items-center justify-between gap-4 border border-border px-4 py-3 font-mono text-xs font-bold text-foreground transition-colors hover:border-foreground hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="mt-4 inline-flex min-h-11 items-center justify-between gap-4 border border-border px-4 py-3 font-mono text-xs font-bold text-foreground transition-colors hover:border-foreground hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <span>{copy.courseCta}</span>
                 <span aria-hidden="true">→</span>
               </Link>
             </article>
 
-            <article className="flex min-w-0 flex-col bg-background p-6 sm:p-8">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+            <article className="flex min-w-0 flex-col bg-background p-4 sm:p-6">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
                 {copy.primerLabel}
               </p>
-              <h3 className="mt-5 text-2xl font-bold tracking-[-0.03em] text-foreground">
+              <h3 className="mt-3 text-xl font-bold tracking-[-0.03em] text-foreground">
                 {copy.primerTitle}
               </h3>
-              <p className="mt-4 flex-1 break-words text-sm leading-relaxed text-muted-foreground">
+              <p className="mt-3 flex-1 break-words text-sm leading-6 text-muted-foreground">
                 {copy.primerBody}
               </p>
               <Link
                 href={localizeHref("/wie-ki-funktioniert", locale)}
-                className="mt-7 inline-flex min-h-11 items-center justify-between gap-4 border border-border px-4 py-3 font-mono text-xs font-bold text-foreground transition-colors hover:border-foreground hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="mt-4 inline-flex min-h-11 items-center justify-between gap-4 border border-border px-4 py-3 font-mono text-xs font-bold text-foreground transition-colors hover:border-foreground hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <span>{copy.primerCta}</span>
                 <span aria-hidden="true">→</span>

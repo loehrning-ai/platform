@@ -58,7 +58,9 @@ export function LessonQuiz({
       setAnswers(next);
 
       // 7b: Announce feedback to screen readers via the live region
-      const correctOption = questions[currentIndex].answerOptions.find((o) => o.isCorrect);
+      const correctOption = questions[currentIndex].answerOptions.find(
+        (o) => o.isCorrect,
+      );
       const isCorrect = optionId === correctOption?.id;
       const explanation = questions[currentIndex].explanation;
       if (feedbackRef.current) {
@@ -167,14 +169,24 @@ export function LessonQuiz({
         className="py-8 text-center"
       >
         {/* 7b: aria-live feedback region (present in DOM from mount) */}
-        <div role="status" aria-live="polite" aria-atomic="true" className="sr-only" ref={feedbackRef} />
+        <div
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+          className="sr-only"
+          ref={feedbackRef}
+        />
         {/* 7g: score element receives focus on mount for keyboard/SR users */}
         <div
           ref={scoreRef}
           tabIndex={-1}
           className={cn(
             "font-mono text-5xl font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange",
-            pct === 100 ? "text-brand-sand" : pct >= 50 ? "text-brand-orange" : "text-destructive",
+            pct === 100
+              ? "text-brand-sand"
+              : pct >= 50
+                ? "text-brand-orange"
+                : "text-destructive",
           )}
         >
           {pct}%
@@ -193,7 +205,7 @@ export function LessonQuiz({
           <button
             type="button"
             onClick={handleRetry}
-            className="inline-flex items-center gap-2 border border-border px-4 py-2 text-sm font-medium transition-colors hover:bg-card"
+            className="inline-flex min-h-11 items-center gap-2 border border-border px-4 py-2 text-sm font-medium transition-colors hover:bg-card"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             {copy.retry}
@@ -209,7 +221,13 @@ export function LessonQuiz({
   return (
     <div>
       {/* 7b: aria-live feedback region (present in DOM from mount, empty until selection) */}
-      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only" ref={feedbackRef} />
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+        ref={feedbackRef}
+      />
       <div className="mb-4 flex items-center justify-between">
         <span className="font-mono text-xs text-muted-foreground">
           {copy.progress(currentIndex + 1, questions.length)}
@@ -255,10 +273,13 @@ export function LessonQuiz({
               const isSelected = selectedId === option.id;
               const isCorrect = option.isCorrect;
               const isFocused = focusedIndex === i;
-              let optionClass = "border-border bg-card hover:border-brand-orange/30";
+              let optionClass =
+                "border-border bg-card hover:border-brand-orange/30";
               if (showExplanation) {
-                if (isCorrect) optionClass = "border-brand-sand bg-brand-sand/5";
-                else if (isSelected) optionClass = "border-destructive/50 bg-destructive/5";
+                if (isCorrect)
+                  optionClass = "border-brand-sand bg-brand-sand/5";
+                else if (isSelected)
+                  optionClass = "border-destructive/50 bg-destructive/5";
                 else optionClass = "border-border bg-card opacity-50";
               }
               return (
@@ -268,26 +289,38 @@ export function LessonQuiz({
                   aria-checked={isSelected}
                   tabIndex={isFocused && !showExplanation ? 0 : -1}
                   onClick={() => !showExplanation && handleSelect(option.id, i)}
-                  onKeyDown={(e) => !showExplanation && handleRadioKeyDown(e, i, option.id)}
+                  onKeyDown={(e) =>
+                    !showExplanation && handleRadioKeyDown(e, i, option.id)
+                  }
                   aria-disabled={showExplanation}
                   className={cn(
-                    "flex w-full cursor-pointer items-center gap-3 border px-4 py-3 text-left text-sm transition-[background-color,border-color,color,opacity,transform,box-shadow]",
+                    "flex min-h-11 w-full cursor-pointer items-center gap-3 border px-4 py-3 text-left text-sm transition-[background-color,border-color,color,opacity]",
                     optionClass,
                     showExplanation && "cursor-default",
                   )}
                 >
-                  <span className="shrink-0 font-mono text-xs font-bold uppercase text-muted-foreground">{option.id}</span>
-                  <span className="min-w-0 flex-1 break-words">{option.text}</span>
+                  <span className="shrink-0 font-mono text-xs font-bold uppercase text-muted-foreground">
+                    {option.id}
+                  </span>
+                  <span className="min-w-0 flex-1 break-words">
+                    {option.text}
+                  </span>
                   {showExplanation && isCorrect && (
                     <span className="sr-only">{copy.correctAnswer}</span>
                   )}
-                  {showExplanation && isCorrect && <CheckCircle2 className="h-4 w-4 shrink-0 text-brand-sand" aria-hidden="true" />}
+                  {showExplanation && isCorrect && (
+                    <CheckCircle2
+                      className="h-4 w-4 shrink-0 text-brand-sand"
+                      aria-hidden="true"
+                    />
+                  )}
                   {showExplanation && isSelected && !isCorrect && (
                     <>
-                      <span className="sr-only">
-                        {copy.incorrectSelection}
-                      </span>
-                      <XCircle className="h-4 w-4 shrink-0 text-destructive" aria-hidden="true" />
+                      <span className="sr-only">{copy.incorrectSelection}</span>
+                      <XCircle
+                        className="h-4 w-4 shrink-0 text-destructive"
+                        aria-hidden="true"
+                      />
                     </>
                   )}
                 </div>
@@ -300,25 +333,35 @@ export function LessonQuiz({
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
-              className={cn("mt-4 border-l-2 px-4 py-3", isCorrectAnswer ? "border-brand-sand bg-brand-sand/5" : "border-destructive/50 bg-destructive/5")}
+              className={cn(
+                "mt-4 border-l-2 px-4 py-3",
+                isCorrectAnswer
+                  ? "border-brand-sand bg-brand-sand/5"
+                  : "border-destructive/50 bg-destructive/5",
+              )}
             >
               <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                 {isCorrectAnswer ? copy.correct : copy.incorrect}
               </p>
-              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{question.explanation}</p>
+              <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                {question.explanation}
+              </p>
             </m.div>
           )}
 
           {showExplanation && (
-            <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="mt-5">
+            <m.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="mt-5"
+            >
               <button
                 type="button"
                 onClick={handleNext}
-                className="inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
+                className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-white transition-colors hover:bg-foreground hover:text-background"
               >
-                {currentIndex < questions.length - 1
-                  ? copy.next
-                  : copy.result}
+                {currentIndex < questions.length - 1 ? copy.next : copy.result}
                 <ArrowRight className="h-3.5 w-3.5" />
               </button>
             </m.div>

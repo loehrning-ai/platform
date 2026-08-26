@@ -89,13 +89,11 @@ describe("gradeWithAI — hybrid fallback helper", () => {
   ] as const)("accepts stable failure code %s", async (code, status) => {
     vi.stubGlobal(
       "fetch",
-      vi
-        .fn()
-        .mockResolvedValue(
-          new Response(JSON.stringify({ code, error: "sanitized" }), {
-            status,
-          }),
-        ),
+      vi.fn().mockResolvedValue(
+        new Response(JSON.stringify({ code, error: "sanitized" }), {
+          status,
+        }),
+      ),
     );
 
     const result = await gradeWithAI(baseArgs);

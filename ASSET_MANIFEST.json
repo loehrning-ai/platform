@@ -753,8 +753,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/books-desktop.png",
-      "sizeBytes": 133075,
-      "sha256": "8e262593a364768a68435df2ae571a69c07917f9f97b736251dc2352c644e178",
+      "sizeBytes": 158225,
+      "sha256": "9eea0b0d66961a16effd77505e7a2cf8317717138d9ec721780fe54fca0ac7d4",
       "owner": "Tim Löhr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",
@@ -762,8 +762,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/courses-desktop.png",
-      "sizeBytes": 441427,
-      "sha256": "589a1cd225825f103872e4635aad2153bfcdc5aadc920543b3a541529efbc9a1",
+      "sizeBytes": 109172,
+      "sha256": "5edae5e1156b20e9d677f6e80b3071d8fcdf9906aaf900351cb3fdd7a9d0c7e5",
       "owner": "Tim Löhr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",
@@ -771,8 +771,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/legal-desktop.png",
-      "sizeBytes": 96581,
-      "sha256": "45763e5e860c9c64f73743033b80bb546b5f491b1177944a5ed59a8d3502d19a",
+      "sizeBytes": 109979,
+      "sha256": "768d36d7706a6b04679bfd83bfef8cb6b8a72b592c5a798df4ad2dbab205fb6d",
       "owner": "Tim Löhr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",
@@ -780,8 +780,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/open-source-desktop.png",
-      "sizeBytes": 198903,
-      "sha256": "f57be13e9651b1b10fa509e58249769d5496aaca36f45dae3070b45dceb4fbf3",
+      "sizeBytes": 132024,
+      "sha256": "fb5c532b217bdae0b0cdd473dea5c44f88edefc5ce167e5680c0b04802acfd22",
       "owner": "Tim Löhr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",

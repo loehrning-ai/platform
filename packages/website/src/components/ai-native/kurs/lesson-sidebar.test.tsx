@@ -1,6 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { cleanup, render, screen } from "@testing-library/react";
-import { __resetCacheForTests, markLessonCompleted } from "@/lib/progress";
+import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
+import {
+  __resetCacheForTests,
+  completeCheckpoint,
+  markLessonCompleted,
+  markSectionRead,
+  saveLessonQuizScore,
+} from "@/lib/progress";
+import { lessonCompletionEvidenceCheckpointId } from "@/lib/courses/completion";
 import { AiNativeLessonSidebar } from "./lesson-sidebar";
 
 const ITEMS = [
@@ -37,19 +44,35 @@ describe("AiNativeLessonSidebar", () => {
     expect(screen.getByText(/Module 2/)).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /Vom Werkzeug zum System/ }),
-    ).toHaveAttribute(
-      "href",
-      "/en/ai-native/kurs/modul_1/modul_1_lesson_1",
-    );
+    ).toHaveAttribute("href", "/en/ai-native/kurs/modul_1/modul_1_lesson_1");
   });
 
-  it("reflects unified completion state", async () => {
+  it("keeps a legacy completion bit open until current evidence exists", async () => {
     markLessonCompleted("ai-native", "modul_1_lesson_1");
     render(<AiNativeLessonSidebar lessons={ITEMS} locale="de" />);
 
-    expect(
-      await screen.findByRole("link", { name: /Vom Werkzeug zum System/ }),
-    ).toBeInTheDocument();
+    const link = await screen.findByRole("link", {
+      name: /Vom Werkzeug zum System/,
+    });
+    expect(link.querySelector("svg")).toBeNull();
+
+    act(() => {
+      for (const sectionId of [
+        "modul_1_lesson_1_section_1",
+        "modul_1_lesson_1_section_2",
+        "modul_1_lesson_1_section_3",
+        "modul_1_lesson_1_section_4",
+      ]) {
+        markSectionRead("ai-native", "modul_1_lesson_1", sectionId);
+      }
+      saveLessonQuizScore("ai-native", "modul_1_lesson_1", 1, 1);
+      completeCheckpoint(
+        "modul_1_lesson_1",
+        lessonCompletionEvidenceCheckpointId("ai-native"),
+      );
+    });
+
+    await waitFor(() => expect(link.querySelector("svg")).not.toBeNull());
   });
 
   it("supports unique heading namespaces for simultaneous desktop and mobile copies", () => {

@@ -54,7 +54,9 @@ for (const width of [320, 390, 768, 1440] as const) {
         const viewportWidth = window.innerWidth;
         const main = document.querySelector("main");
         const alert = main?.querySelector<HTMLElement>('[role="alert"]');
-        const form = main?.querySelector<HTMLElement>("form");
+        const methodSurface = main?.querySelector<HTMLElement>(
+          '[aria-labelledby="login-form-title"]',
+        );
         const outside = Array.from(
           main?.querySelectorAll<HTMLElement>("*") ?? [],
         )
@@ -79,7 +81,8 @@ for (const width of [320, 390, 768, 1440] as const) {
           documentWidth: document.documentElement.scrollWidth,
           viewportWidth,
           alertRect: alert?.getBoundingClientRect().toJSON() ?? null,
-          formRect: form?.getBoundingClientRect().toJSON() ?? null,
+          methodSurfaceRect:
+            methodSurface?.getBoundingClientRect().toJSON() ?? null,
           mainText: main?.textContent ?? "",
           outside,
         };
@@ -96,7 +99,7 @@ for (const width of [320, 390, 768, 1440] as const) {
         [],
       );
       expect(geometry.alertRect?.width).toBeGreaterThan(0);
-      expect(geometry.formRect?.width).toBeGreaterThan(0);
+      expect(geometry.methodSurfaceRect?.width).toBeGreaterThan(0);
       if (locale === "en") {
         expect(geometry.mainText).not.toMatch(GERMAN_LOGIN_TOKENS);
       }

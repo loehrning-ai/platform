@@ -212,7 +212,7 @@ export function DistributionExplorer() {
           </div>
           <div
             style={{
-              fontSize: 11,
+              fontSize: 12,
               opacity: 0.5,
               lineHeight: 1.4,
               marginTop: 4,

@@ -24,64 +24,64 @@ const STAGES: readonly StageCard[] = [
     id: "fund",
     n: "01",
     title: "Fundamentals",
-    tag: "sample vs population",
-    blurb: "The CLT made physical. Watch the sampling distribution converge.",
+    tag: "sample and population",
+    blurb: "Generate samples and observe how their means converge.",
     hue: "#5B3EE8",
   },
   {
     id: "explore",
     n: "02",
     title: "Explore",
-    tag: "look before you leap",
-    blurb: "Distributions, outliers, correlation mazes.",
+    tag: "inspect before modelling",
+    blurb: "Inspect distributions, outliers, and correlation structures.",
     hue: "#1CA5D9",
   },
   {
     id: "clean",
     n: "03",
     title: "Clean",
-    tag: "missing · drifting · leaky",
-    blurb: "Impute. Scale. Protect the future from the present.",
+    tag: "missing · shifted · leaky",
+    blurb: "Impute and scale data without leaking information from the future.",
     hue: "#1FAF7E",
   },
   {
     id: "feature",
     n: "04",
     title: "Feature",
-    tag: "information, engineered",
-    blurb: "Encode, interact, bucket, normalize.",
+    tag: "represent information deliberately",
+    blurb: "Encode categories, form interactions, and select features.",
     hue: "#6BCF3F",
   },
   {
     id: "model",
     n: "05",
     title: "Model",
-    tag: "the bias/variance dance",
-    blurb: "Fit, cross-validate, tune, watch train and test separate.",
+    tag: "bias and variance",
+    blurb: "Fit models and compare training and test error.",
     hue: "#E8A031",
   },
   {
     id: "eval",
     n: "06",
     title: "Evaluate",
-    tag: "the honest number",
-    blurb: "Confusion, ROC, calibration, threshold sliders.",
+    tag: "defensible metrics",
+    blurb: "Work with confusion matrices, ROC, calibration, and thresholds.",
     hue: "#F25F3A",
   },
   {
     id: "interp",
     n: "07",
     title: "Interpret",
-    tag: "ask why",
-    blurb: "SHAP waterfalls, permutation, partial dependence.",
+    tag: "inspect model drivers",
+    blurb: "Use SHAP, permutation importance, and partial dependence.",
     hue: "#E8318F",
   },
   {
     id: "exp",
     n: "08",
     title: "Experiment",
-    tag: "the only proof",
-    blurb: "A/B, power, MDE, watch 10k visitors roll in, live.",
+    tag: "measure effects under control",
+    blurb: "Plan A/B tests, power, and MDE, then analyse 10k visitors.",
     hue: "#5B3EE8",
   },
   {
@@ -96,24 +96,24 @@ const STAGES: readonly StageCard[] = [
     id: "peek",
     n: "10",
     title: "Peeking",
-    tag: "how p-values lie",
-    blurb: "Run 50 experiments in parallel, watch false positives bloom.",
+    tag: "when p-values mislead",
+    blurb: "Run 50 experiments in parallel and observe false positives.",
     hue: "#D83A3A",
   },
   {
     id: "deploy",
     n: "11",
     title: "Deploy",
-    tag: "alive in production",
-    blurb: "Monitor drift. Retrain on signal, not schedule.",
+    tag: "models in production",
+    blurb: "Monitor drift and retrain on a signal rather than a schedule.",
     hue: "#1FAF7E",
   },
   {
     id: "cap",
     n: "12",
     title: "Capstone",
-    tag: "the whole loop",
-    blurb: "Ship one end-to-end. Noise → decision → feedback.",
+    tag: "the complete cycle",
+    blurb: "Complete the workflow end to end: noise → decision → feedback.",
     hue: "#E8318F",
   },
 ];
@@ -134,33 +134,33 @@ const HUE_INK: Record<string, string> = {
 const OUTCOMES = [
   {
     icon: "◇",
-    t: "Explore any dataset without flailing",
-    d: "Distributions, missingness, correlation maps, a mental checklist for your first 30 minutes with new data.",
+    t: "Inspect an unfamiliar dataset systematically",
+    d: "Check distributions, missingness, and correlations with a clear first-30-minutes checklist.",
   },
   {
     icon: "○",
-    t: "Train a model that doesn't secretly cheat",
-    d: "Spot leakage. Split honestly. Pick the metric before the algorithm.",
+    t: "Train a model without hidden leakage",
+    d: "Detect leakage, split data correctly, and choose the metric before the algorithm.",
   },
   {
     icon: "△",
-    t: "Read a confusion matrix like a pro",
-    d: "Threshold slider, precision/recall tradeoff, calibration, class imbalance.",
+    t: "Interpret a confusion matrix correctly",
+    d: "Assess thresholds, precision and recall, calibration, and class imbalance.",
   },
   {
     icon: "□",
-    t: "Design an A/B test that holds up",
-    d: "Power, MDE, sample size, novelty effects, SRM checks, CUPED.",
+    t: "Design a defensible A/B test",
+    d: "Account for power, MDE, sample size, novelty effects, SRM checks, and CUPED.",
   },
   {
     icon: "◈",
-    t: "Tell correlation from causation",
-    d: "DAGs, confounders, backdoor paths, when regression adjustment saves you.",
+    t: "Distinguish correlation from causation",
+    d: "Inspect DAGs, confounders, and backdoor paths, then apply regression deliberately.",
   },
   {
     icon: "✕",
-    t: "Keep a model alive in production",
-    d: "Drift monitoring, retraining cadence, shadow mode, rollback.",
+    t: "Operate a model reliably in production",
+    d: "Monitor drift, trigger retraining, use shadow mode, and prepare rollbacks.",
   },
 ] as const;
 
@@ -186,14 +186,15 @@ export default function ChOverview() {
         <div className="ov-hero-copy">
           <div className="ov-hero-eyebrow">Data Science Fundamentals · v8</div>
           <h1 className="ov-hero-title">
-            A data scientist is <em>a person who</em>
+            Data Science means
             <br />
-            <span className="accent">turns noise into decisions.</span>
+            <span className="accent">turning data into decisions.</span>
           </h1>
           <p className="ov-hero-hook">
-            Twelve chapters. One animated loop. Built for the graduate who wants
-            to ship real work , not memorize equations. Every chapter opens with
-            a<strong> simulation you can break</strong>, not a wall of text.
+            Twelve chapters form one connected workflow. Each chapter begins
+            with
+            <strong> an adjustable simulation</strong> and uses it to explain
+            concepts, methods, and limits.
           </p>
           <div className="ov-hero-cta">
             <Link
@@ -202,13 +203,6 @@ export default function ChOverview() {
               prefetch={false}
             >
               Begin &nbsp;→
-            </Link>
-            <Link
-              className="ov-cta-ghost"
-              href={dsChapterHref("cap", "en")}
-              prefetch={false}
-            >
-              Or skip to the capstone
             </Link>
           </div>
           <div className="ov-hero-stats">
@@ -233,11 +227,11 @@ export default function ChOverview() {
 
       <section className="section ov-outcomes-section">
         <div className="ov-section-head">
-          <div className="ov-kicker">By the end</div>
+          <div className="ov-kicker">Outcomes</div>
           <h2 className="ov-h2">
-            You&apos;ll know how to <em>do the work</em>,
+            Apply the methods and inspect
             <br />
-            not just pass the interview.
+            <em> what the evidence supports.</em>
           </h2>
         </div>
         <div className="ov-outcomes">
@@ -255,13 +249,14 @@ export default function ChOverview() {
         <div className="ov-section-head">
           <div className="ov-kicker">The curriculum</div>
           <h2 className="ov-h2">
-            Twelve chapters. Build the model.
+            Twelve chapters: build the model,
             <br />
-            Then prove it works.
+            then test its effect.
           </h2>
           <p className="ov-lede">
-            Half the course is how to build a model. The other half is how to
-            <em> know if it worked</em>, the part most courses skip.
+            The first half covers model development. The second half tests
+            <em> whether the result holds</em>: evaluation, interpretation,
+            experiments, and operation.
           </p>
         </div>
         <div className="ov-curriculum">
@@ -296,15 +291,15 @@ export default function ChOverview() {
 
       <section className="section">
         <div className="ov-section-head ov-sh-tight">
-          <div className="ov-kicker">Tools you&apos;ll see</div>
+          <div className="ov-kicker">Tools in the course</div>
           <h2 className="ov-h2">
-            Standard industry kit.
+            Common open-source tools
             <br />
-            No proprietary gatekeeping.
+            for day-to-day data science.
           </h2>
           <p className="ov-lede">
-            The sims render the <em>behavior</em> of these tools. Muscle memory
-            transfers to whichever stack your employer uses.
+            The simulations show the <em>behaviour</em> of these tools. The
+            concepts can be applied across other technical stacks.
           </p>
         </div>
         <div className="ov-tools">
@@ -314,34 +309,6 @@ export default function ChOverview() {
               <div className="ov-tool-r">{t.r}</div>
             </div>
           ))}
-        </div>
-      </section>
-
-      <section className="ov-cta-band">
-        <div className="ov-cta-eyebrow">Ready?</div>
-        <div className="ov-cta-title">
-          Chapter 01 opens with a falling-ball sampler.
-        </div>
-        <div className="ov-cta-sub">
-          Drop a thousand samples through a physical Galton board. Watch the
-          central limit theorem emerge from chaos. <em>Seven minutes.</em> Then
-          you&apos;re in.
-        </div>
-        <div className="ov-cta-row">
-          <Link
-            className="btn btn-primary ov-cta-btn"
-            href={dsChapterHref("fund", "en")}
-            prefetch={false}
-          >
-            Begin with Chapter 01 &nbsp;→
-          </Link>
-          <Link
-            className="ov-cta-ghost"
-            href={dsChapterHref("exp", "en")}
-            prefetch={false}
-          >
-            Or jump to Experimentation →
-          </Link>
         </div>
       </section>
     </>

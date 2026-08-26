@@ -65,15 +65,15 @@ export function CompletionCertificateCta({
 
   return (
     <section
-      className={cn(
-        "border-2 border-foreground bg-card p-5 shadow-[4px_4px_0_0_var(--color-foreground)]",
-        className,
-      )}
+      className={cn("border-2 border-foreground bg-card p-5", className)}
       aria-labelledby={headingId}
       data-certificate-cta={courseSlug}
     >
-      <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-brand-orange">
-        <GraduationCap className="mr-1.5 inline h-3.5 w-3.5" aria-hidden="true" />
+      <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
+        <GraduationCap
+          className="mr-1.5 inline h-3.5 w-3.5"
+          aria-hidden="true"
+        />
         {isGerman ? "Kurs abgeschlossen" : "Course complete"}
       </p>
       <h2
@@ -91,7 +91,7 @@ export function CompletionCertificateCta({
       </p>
       <Link
         href={certificateHref}
-        className="mt-4 inline-flex min-h-11 max-w-full items-center gap-2 break-words border-2 border-foreground bg-brand-orange px-5 py-3 text-left text-[12px] font-bold uppercase tracking-wide text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-[1px] hover:-translate-y-[2px] hover:shadow-[6px_6px_0_0_var(--color-foreground)]"
+        className="mt-4 inline-flex min-h-11 max-w-full items-center gap-2 break-words border-2 border-foreground bg-brand-orange px-5 py-3 text-left text-[12px] font-bold uppercase tracking-wide text-white transition-colors hover:bg-brand-orange/90"
       >
         {isGerman
           ? `${config.recordNoun.label} öffnen`

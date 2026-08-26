@@ -74,7 +74,7 @@ export function TokenizerWidget({
           : "Local heuristic, not a Claude tokenizer. Use the selected model's tool for real counts."
       }
       done={done}
-      xpLabel="+10 XP"
+      doneLabel={german ? "Erledigt" : "Done"}
     >
       <textarea
         rows={3}
@@ -85,9 +85,9 @@ export function TokenizerWidget({
           if (next.length > 80) complete();
         }}
         aria-label={german ? "Zu tokenisierender Text" : "Text to tokenize"}
-        className="w-full border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+        className="min-h-11 w-full border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
       />
-      <p className="mt-2 font-mono text-[11px] text-muted-foreground">
+      <p className="mt-2 font-mono text-xs text-muted-foreground">
         {nonWhitespaceCount}{" "}
         {german ? "simulierte Segmente" : "simulated segments"} · {text.length}{" "}
         {german ? "Zeichen" : "chars"}

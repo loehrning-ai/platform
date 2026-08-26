@@ -62,6 +62,10 @@ export interface WorkshopMaterial {
 export interface WorkshopRealWorldCase {
   readonly companyName: string;
   readonly source: string;
+  readonly sourceHref: string;
+  readonly sourcePublishedAt: string;
+  readonly sourceReviewedAt: string;
+  readonly sourceLimitation: string;
   readonly narrative: string;
   readonly metrics: readonly WorkshopCaseMetric[];
   readonly decisionQuestion: string;
@@ -150,11 +154,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       title: "1.050 Stück. Wer bekommt sie?",
       prompt:
         "Drei Standorte melden 1.370 Stück an. Das Modell schätzt 1.180 Stück Nachfrage, lieferbar sind 1.050. Welche Regel darf jetzt laufen?",
-      facts: [
-        "Anmeldungen 1.370",
-        "Nachfrage p50 1.180",
-        "Liefergrenze 1.050",
-      ],
+      facts: ["Anmeldungen 1.370", "Nachfrage p50 1.180", "Liefergrenze 1.050"],
       decisionLegend: "Deine erste Entscheidung",
       evidenceLegend: "Der stärkste Beleg",
       choices: [
@@ -199,23 +199,19 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       feedback: {
         aligned: {
           title: "Freigabe mit Tor",
-          body:
-            "Die Knappheit verlangt eine nachvollziehbare Zuteilungsregel. Der verbleibende Modellfehler verlangt zusätzlich eine benannte menschliche Freigabe für Ausnahmen.",
+          body: "Die Knappheit verlangt eine nachvollziehbare Zuteilungsregel. Der verbleibende Modellfehler verlangt zusätzlich eine benannte menschliche Freigabe für Ausnahmen.",
         },
         decisionOnly: {
           title: "Richtige Richtung, zu schwacher Beleg",
-          body:
-            "Die bessere Modellgüte allein rechtfertigt keine Automatik. Entscheidend sind die harte Liefergrenze und der verbleibende Fehler gemeinsam.",
+          body: "Die bessere Modellgüte allein rechtfertigt keine Automatik. Entscheidend sind die harte Liefergrenze und der verbleibende Fehler gemeinsam.",
         },
         evidenceOnly: {
           title: "Der Beleg widerspricht der Freigabe",
-          body:
-            "Du hast Knappheit und Restfehler erkannt. Eine rohe oder gleiche Verteilung übersetzt diese Evidenz aber nicht in eine belastbare Regel.",
+          body: "Du hast Knappheit und Restfehler erkannt. Eine rohe oder gleiche Verteilung übersetzt diese Evidenz aber nicht in eine belastbare Regel.",
         },
         unsupported: {
           title: "Noch nicht freigabefähig",
-          body:
-            "Weder Anmeldungen noch ein einzelner Genauigkeitswert bestimmen allein die Zuteilung. Verknüpfe Liefergrenze, Nachfrage und Restfehler.",
+          body: "Weder Anmeldungen noch ein einzelner Genauigkeitswert bestimmen allein die Zuteilung. Verknüpfe Liefergrenze, Nachfrage und Restfehler.",
         },
       },
     },
@@ -398,23 +394,19 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       feedback: {
         aligned: {
           title: "Qualität vor zusätzlicher Nachfrage",
-          body:
-            "Die wiederholten Mängel sind ein belastbarer Stop-Grund. Ohne Stückkosten, Retourenzuordnung und Marketingattribution ist weder mehr Budget noch die Einstellung der Linie belegt.",
+          body: "Die wiederholten Mängel sind ein belastbarer Stop-Grund. Ohne Stückkosten, Retourenzuordnung und Marketingattribution ist weder mehr Budget noch die Einstellung der Linie belegt.",
         },
         decisionOnly: {
           title: "Richtige Reihenfolge, falscher Hauptbeleg",
-          body:
-            "Umsatz und Volumen beschreiben die Linie, aber der wiederholte Qualitätsbefund begründet den unmittelbaren Prüfauftrag.",
+          body: "Umsatz und Volumen beschreiben die Linie, aber der wiederholte Qualitätsbefund begründet den unmittelbaren Prüfauftrag.",
         },
         evidenceOnly: {
           title: "Der Beleg widerspricht der Entscheidung",
-          body:
-            "Wiederholte Qualitätsmängel sprechen gegen zusätzliche Nachfrage und belegen zugleich noch keine sofortige Einstellung. Zuerst Ursache und Nacharbeit prüfen.",
+          body: "Wiederholte Qualitätsmängel sprechen gegen zusätzliche Nachfrage und belegen zugleich noch keine sofortige Einstellung. Zuerst Ursache und Nacharbeit prüfen.",
         },
         unsupported: {
           title: "Die Entscheidung springt über die Evidenz",
-          body:
-            "Ein starker Umsatz ist kein Qualitätsbeleg; geringes Volumen ist kein Einstellungsgrund. Beginne mit dem wiederholten Mängelsignal.",
+          body: "Ein starker Umsatz ist kein Qualitätsbeleg; geringes Volumen ist kein Einstellungsgrund. Beginne mit dem wiederholten Mängelsignal.",
         },
       },
     },
@@ -493,8 +485,13 @@ const WORKSHOPS_DE: readonly Workshop[] = [
     },
     realWorldCase: {
       companyName: "Meta Platforms, Inc.",
-      source:
-        "Quartalsmitteilung Q2 2026, veröffentlicht am 29. Juli 2026 und als SEC-Filing eingereicht. Claude ruft sie im Workshop live ab; im Kit wird nichts davon weiterverteilt.",
+      source: "Meta Q2 2026 Results · SEC Exhibit 99.1",
+      sourceHref:
+        "https://www.sec.gov/Archives/edgar/data/1326801/000162828026050596/meta-06302026xexhibit991.htm",
+      sourcePublishedAt: "2026-07-29",
+      sourceReviewedAt: "2026-08-26",
+      sourceLimitation:
+        "Unternehmensmitteilung mit ungeprüften Quartalszahlen. Der freie Cashflow ist eine ergänzende Non-GAAP-Kennzahl; die Quelle belegt Werte, nicht die Investitionsentscheidung.",
       narrative:
         "Dasselbe Muster wie im Übungsfall, nur in echt: eine starke Schlagzeile mit einer Frage darunter. Der Umsatz wächst deutlich, das operative Ergebnis fällt trotzdem, und praktisch der gesamte operative Cashflow des Quartals fließt in Infrastruktur. Du definierst sechs Kennzahlen für ein Quartal, extrahierst die Zahlen und lässt Claude diesmal ein Dashboard ohne Vorlage selbst entwerfen.",
       metrics: [
@@ -550,11 +547,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       title: "1,050 units. Who gets them?",
       prompt:
         "Three sites request 1,370 units. The model estimates demand at 1,180; only 1,050 can be supplied. Which rule may run now?",
-      facts: [
-        "Requests 1,370",
-        "Demand p50 1,180",
-        "Supply limit 1,050",
-      ],
+      facts: ["Requests 1,370", "Demand p50 1,180", "Supply limit 1,050"],
       decisionLegend: "Your first decision",
       evidenceLegend: "The strongest evidence",
       choices: [
@@ -565,11 +558,13 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         },
         {
           id: "raw-requests",
-          label: "Allocate against the 1,370 site requests and run automatically.",
+          label:
+            "Allocate against the 1,370 site requests and run automatically.",
         },
         {
           id: "equal-split",
-          label: "Give every site the same amount regardless of size and demand.",
+          label:
+            "Give every site the same amount regardless of size and demand.",
         },
       ],
       evidence: [
@@ -597,23 +592,19 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       feedback: {
         aligned: {
           title: "Release with a gate",
-          body:
-            "Scarcity requires a traceable allocation rule. The remaining model error also requires a named human release for exceptions.",
+          body: "Scarcity requires a traceable allocation rule. The remaining model error also requires a named human release for exceptions.",
         },
         decisionOnly: {
           title: "Right direction, weak evidence",
-          body:
-            "Better model accuracy alone does not justify automation. The hard supply limit and residual error matter together.",
+          body: "Better model accuracy alone does not justify automation. The hard supply limit and residual error matter together.",
         },
         evidenceOnly: {
           title: "The evidence contradicts the release",
-          body:
-            "You identified scarcity and residual error. A raw or equal split does not translate that evidence into a defensible rule.",
+          body: "You identified scarcity and residual error. A raw or equal split does not translate that evidence into a defensible rule.",
         },
         unsupported: {
           title: "Not ready for release",
-          body:
-            "Neither requests nor one accuracy number determines allocation on its own. Connect supply, demand, and residual error.",
+          body: "Neither requests nor one accuracy number determines allocation on its own. Connect supply, demand, and residual error.",
         },
       },
     },
@@ -749,11 +740,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       title: "Create more demand or repair the product first?",
       prompt:
         "CRAFT generates €4.12m of revenue at low volume, but records the most quality defects for a second month. Sales wants more Q3 marketing budget. What happens first?",
-      facts: [
-        "Revenue €4.12m",
-        "Units 9,162",
-        "Most defects · month 2",
-      ],
+      facts: ["Revenue €4.12m", "Units 9,162", "Most defects · month 2"],
       decisionLegend: "Your first decision",
       evidenceLegend: "The strongest evidence",
       choices: [
@@ -783,7 +770,8 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         },
         {
           id: "low-volume",
-          label: "CRAFT ranks only sixth of seven product lines by unit volume.",
+          label:
+            "CRAFT ranks only sixth of seven product lines by unit volume.",
         },
       ],
       recommendedChoiceId: "quality-gate",
@@ -796,23 +784,19 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       feedback: {
         aligned: {
           title: "Quality before more demand",
-          body:
-            "Repeated defects are a defensible stop signal. Without unit costs, assigned returns, or marketing attribution, neither more budget nor discontinuing the line is supported.",
+          body: "Repeated defects are a defensible stop signal. Without unit costs, assigned returns, or marketing attribution, neither more budget nor discontinuing the line is supported.",
         },
         decisionOnly: {
           title: "Right sequence, wrong primary evidence",
-          body:
-            "Revenue and volume describe the line, but the repeated quality result justifies the immediate investigation.",
+          body: "Revenue and volume describe the line, but the repeated quality result justifies the immediate investigation.",
         },
         evidenceOnly: {
           title: "The evidence contradicts the decision",
-          body:
-            "Repeated defects argue against creating more demand and do not yet prove the line should close. Investigate cause and rework first.",
+          body: "Repeated defects argue against creating more demand and do not yet prove the line should close. Investigate cause and rework first.",
         },
         unsupported: {
           title: "The decision outruns the evidence",
-          body:
-            "Strong revenue is not quality evidence; low volume is not a closure case. Start with the repeated defect signal.",
+          body: "Strong revenue is not quality evidence; low volume is not a closure case. Start with the repeated defect signal.",
         },
       },
     },
@@ -891,8 +875,13 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     },
     realWorldCase: {
       companyName: "Meta Platforms, Inc.",
-      source:
-        "Q2 2026 quarterly release, published on 29 July 2026 and filed with the SEC. Claude retrieves it during the workshop; the kit does not redistribute it.",
+      source: "Meta Q2 2026 Results · SEC Exhibit 99.1",
+      sourceHref:
+        "https://www.sec.gov/Archives/edgar/data/1326801/000162828026050596/meta-06302026xexhibit991.htm",
+      sourcePublishedAt: "2026-07-29",
+      sourceReviewedAt: "2026-08-26",
+      sourceLimitation:
+        "Company release with unaudited quarterly figures. Free cash flow is a supplemental non-GAAP measure; the source supports the figures, not the investment decision.",
       narrative:
         "Use the same pattern with real disclosures: a strong headline with an unresolved question underneath. Revenue rises materially, operating income falls, and almost all quarterly operating cash flow is spent on infrastructure. Define six quarterly metrics, extract the figures, and ask Claude to design the dashboard without a template.",
       metrics: [

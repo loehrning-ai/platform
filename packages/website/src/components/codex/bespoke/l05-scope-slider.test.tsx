@@ -64,6 +64,17 @@ describe("L05ScopeSlider", () => {
     ).toBeInTheDocument();
   });
 
+  it("keeps only the scale endpoints visible on narrow screens", () => {
+    render(<L05ScopeSlider lessonId="L05" cpId="bespoke" locale="de" />);
+
+    expect(screen.getByText("ein Verhalten").className).toContain("text-left");
+    expect(screen.getByText("Initiative").className).toContain("text-right");
+    expect(screen.getByText("gekoppelt").className).toContain("hidden");
+    expect(screen.getByText("mehrere Änderungen").className).toContain(
+      "hidden",
+    );
+  });
+
   it("dwelling in the focused range for 800ms awards the checkpoint", () => {
     vi.useFakeTimers();
     render(<L05ScopeSlider lessonId="L05" cpId="bespoke" />);

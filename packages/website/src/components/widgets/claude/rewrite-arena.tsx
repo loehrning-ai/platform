@@ -83,15 +83,15 @@ export function RewriteArenaWidget({
       }
       scenario={`${german ? "Aufgabe" : "Task"}: ${task}`}
       done={done}
-      xpLabel="+15 XP"
+      doneLabel={german ? "Erledigt" : "Done"}
     >
-      <p className="mb-1 font-mono text-[10.5px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+      <p className="mb-1 font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
         {german ? "Original (unklar)" : "Original (unclear)"}
       </p>
       <pre className="mb-3 max-h-[150px] overflow-y-auto whitespace-pre-wrap break-words border border-border bg-card/40 p-2 font-mono text-[12px] text-foreground">
         {original}
       </pre>
-      <p className="mb-1 font-mono text-[10.5px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+      <p className="mb-1 font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
         {german ? "Deine Überarbeitung" : "Your rewrite"}
       </p>
       <textarea
@@ -104,7 +104,7 @@ export function RewriteArenaWidget({
             : "Rewrite it with clear structure, specifics, and no ambiguity."
         }
         aria-label={german ? "Deine Überarbeitung" : "Your rewrite"}
-        className="w-full border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+        className="min-h-11 w-full border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
       />
       <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
         <span className="min-w-0 flex-1 text-[12px] text-muted-foreground">
@@ -118,7 +118,7 @@ export function RewriteArenaWidget({
           onClick={judge}
           disabled={loading || value.trim().length < 20}
           className={cn(
-            "inline-flex shrink-0 items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none",
+            "inline-flex min-h-11 shrink-0 items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none",
           )}
         >
           {loading

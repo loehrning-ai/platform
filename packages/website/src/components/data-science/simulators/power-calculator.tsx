@@ -164,7 +164,7 @@ export function PowerCalculator() {
             >
               <div
                 style={{
-                  fontSize: 10,
+                  fontSize: 12,
                   color: BLUE,
                   textTransform: "uppercase",
                   letterSpacing: "0.08em",
@@ -192,7 +192,7 @@ export function PowerCalculator() {
             >
               <div
                 style={{
-                  fontSize: 10,
+                  fontSize: 12,
                   color: BLUE,
                   textTransform: "uppercase",
                   letterSpacing: "0.08em",
@@ -209,7 +209,7 @@ export function PowerCalculator() {
               >
                 {minN.toLocaleString()}
               </div>
-              <div style={{ fontSize: 10, color: INK3 }}>
+              <div style={{ fontSize: 12, color: INK3 }}>
                 {text("per arm", "je Gruppe")}
               </div>
             </div>
@@ -218,7 +218,7 @@ export function PowerCalculator() {
         <div>
           <div
             style={{
-              fontSize: 11,
+              fontSize: 12,
               color: INK3,
               marginBottom: 6,
               textTransform: "uppercase",

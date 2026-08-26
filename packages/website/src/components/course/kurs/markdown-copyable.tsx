@@ -48,7 +48,7 @@ function CopyButton({
       onClick={onClick}
       aria-label={copied ? "Kopiert" : "Prompt kopieren"}
       className={cn(
-        "inline-flex items-center gap-1 border border-border bg-background/80 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:border-foreground hover:text-foreground",
+        "inline-flex min-h-11 items-center gap-1 border border-border bg-background/80 px-2 py-1 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:border-foreground hover:text-foreground",
         className,
       )}
     >

@@ -10,10 +10,14 @@ import {
   MAX_EXERCISE_SUMMARY_BYTES,
   UNIFIED_SCHEMA_VERSION,
   XP,
+  isCompletionCompatibilityCheckpointKey,
   normalizeWorkshopQuizScore,
   truncateToByteLength,
 } from "./types";
-import { truncateExerciseSummaries } from "./migrate";
+import {
+  truncateExerciseSummaries,
+  upgradeHistoricalCompletionEvidence,
+} from "./migrate";
 import {
   COURSE_SLUGS as CANONICAL_COURSE_SLUGS,
   type CourseSlug,
@@ -21,6 +25,7 @@ import {
 import {
   getCanonicalSectionIds,
   isCanonicalLessonId,
+  isLessonCompletionEvidenceBacked,
   isCanonicalSectionId,
 } from "@/lib/courses/completion";
 import { getCourseProjectIdentity } from "@/lib/course-projects/identity";
@@ -59,11 +64,18 @@ function isStringOrNull(value: unknown): value is string | null {
 }
 
 function isStringArray(value: unknown): value is readonly string[] {
-  return Array.isArray(value) && value.every((item) => typeof item === "string");
+  return (
+    Array.isArray(value) && value.every((item) => typeof item === "string")
+  );
 }
 
-function isBooleanRecord(value: unknown): value is Readonly<Record<string, boolean>> {
-  return isRecord(value) && Object.values(value).every((item) => typeof item === "boolean");
+function isBooleanRecord(
+  value: unknown,
+): value is Readonly<Record<string, boolean>> {
+  return (
+    isRecord(value) &&
+    Object.values(value).every((item) => typeof item === "boolean")
+  );
 }
 
 function isIsoTimestamp(value: unknown): value is string {
@@ -97,11 +109,15 @@ function isIsoTimestamp(value: unknown): value is string {
   return Number.isFinite(Date.parse(value));
 }
 
-function isTimestampRecord(value: unknown): value is Readonly<Record<string, string>> {
+function isTimestampRecord(
+  value: unknown,
+): value is Readonly<Record<string, string>> {
   return isRecord(value) && Object.values(value).every(isIsoTimestamp);
 }
 
-function isUnifiedExerciseResult(value: unknown): value is UnifiedExerciseResult {
+function isUnifiedExerciseResult(
+  value: unknown,
+): value is UnifiedExerciseResult {
   return (
     isRecord(value) &&
     typeof value.exerciseId === "string" &&
@@ -127,8 +143,7 @@ function isExerciseResultRecord(
   return (
     isRecord(value) &&
     Object.entries(value).every(
-      ([key, item]) =>
-        isUnifiedExerciseResult(item) && item.exerciseId === key,
+      ([key, item]) => isUnifiedExerciseResult(item) && item.exerciseId === key,
     )
   );
 }
@@ -156,7 +171,9 @@ function hasOnlyValidCourseProjectResults(
   });
 }
 
-function isUnifiedLessonProgress(value: unknown): value is UnifiedLessonProgress {
+function isUnifiedLessonProgress(
+  value: unknown,
+): value is UnifiedLessonProgress {
   return (
     isRecord(value) &&
     isStringArray(value.sectionsRead) &&
@@ -221,7 +238,9 @@ export function isUnifiedCourseSlice(
 
 function isCourseRecord(
   value: unknown,
-): value is Partial<Record<keyof UnifiedProgress["courses"], UnifiedCourseSlice>> {
+): value is Partial<
+  Record<keyof UnifiedProgress["courses"], UnifiedCourseSlice>
+> {
   return (
     isRecord(value) &&
     Object.entries(value).every(
@@ -246,7 +265,9 @@ function isUnifiedStreak(value: unknown): value is UnifiedStreak {
 }
 
 /** Row-shape validator for the "_meta" DB row. */
-export function isUnifiedMetaFields(value: unknown): value is UnifiedMetaFields {
+export function isUnifiedMetaFields(
+  value: unknown,
+): value is UnifiedMetaFields {
   return (
     isRecord(value) &&
     isFiniteNonNegativeNumber(value.xp) &&
@@ -257,7 +278,10 @@ export function isUnifiedMetaFields(value: unknown): value is UnifiedMetaFields 
   );
 }
 
-function latestIso(a: string | null | undefined, b: string | null | undefined): string | null {
+function latestIso(
+  a: string | null | undefined,
+  b: string | null | undefined,
+): string | null {
   if (!a) return b ?? null;
   if (!b) return a;
   const aTime = Date.parse(a);
@@ -266,7 +290,10 @@ function latestIso(a: string | null | undefined, b: string | null | undefined): 
   return a >= b ? a : b;
 }
 
-function earliestIso(a: string | null | undefined, b: string | null | undefined): string | null {
+function earliestIso(
+  a: string | null | undefined,
+  b: string | null | undefined,
+): string | null {
   if (!a) return b ?? null;
   if (!b) return a;
   const aTime = Date.parse(a);
@@ -288,7 +315,10 @@ function normalizedScore(score: number | null, total: number | null): number {
  * matters here specifically: mergeUnifiedProgress(x, y) must equal
  * mergeUnifiedProgress(y, x) regardless of which side is "local".
  */
-function pickSummary(a: UnifiedExerciseResult, b: UnifiedExerciseResult): string | undefined {
+function pickSummary(
+  a: UnifiedExerciseResult,
+  b: UnifiedExerciseResult,
+): string | undefined {
   const latest = latestIso(a.completedAt, b.completedAt);
   if (latest === a.completedAt && latest !== b.completedAt) return a.summary;
   if (latest === b.completedAt && latest !== a.completedAt) return b.summary;
@@ -335,9 +365,10 @@ function mergeLesson(
       exerciseId: id,
       kind: a.kind === b.kind ? a.kind : [a.kind, b.kind].sort()[0],
       completed: a.completed || b.completed,
-      score: Math.max(a.score ?? -1, b.score ?? -1) < 0
-        ? null
-        : Math.max(a.score ?? -1, b.score ?? -1),
+      score:
+        Math.max(a.score ?? -1, b.score ?? -1) < 0
+          ? null
+          : Math.max(a.score ?? -1, b.score ?? -1),
       attempts: Math.max(a.attempts, b.attempts),
       completedAt: latestIso(a.completedAt, b.completedAt),
       skipped: a.skipped || b.skipped,
@@ -429,14 +460,22 @@ export function mergeCourseSlice(
     lessons,
     workshopQuiz: mergeWorkshopQuiz(local.workshopQuiz, remote.workshopQuiz),
     capstoneSubmitted: local.capstoneSubmitted || remote.capstoneSubmitted,
-    startedAt: earliestIso(local.startedAt, remote.startedAt) ?? local.startedAt,
-    lastActivity: latestIso(local.lastActivity, remote.lastActivity) ?? local.lastActivity,
+    startedAt:
+      earliestIso(local.startedAt, remote.startedAt) ?? local.startedAt,
+    lastActivity:
+      latestIso(local.lastActivity, remote.lastActivity) ?? local.lastActivity,
     ...(resetAt ? { resetAt } : {}),
   });
 }
 
-function mergeStreak(local: UnifiedStreak, remote: UnifiedStreak): UnifiedStreak {
-  if (!local.last) return remote.last ? remote : { days: Math.max(local.days, remote.days), last: null };
+function mergeStreak(
+  local: UnifiedStreak,
+  remote: UnifiedStreak,
+): UnifiedStreak {
+  if (!local.last)
+    return remote.last
+      ? remote
+      : { days: Math.max(local.days, remote.days), last: null };
   if (!remote.last) return local;
   if (local.last !== remote.last) {
     return local.last > remote.last ? local : remote;
@@ -463,19 +502,22 @@ export function calculateEarnedXp(progress: UnifiedProgress): number {
     for (const lessonId of Object.keys(course.lessons)) {
       if (!isCanonicalLessonId(slug, lessonId)) continue;
       const lesson = course.lessons[lessonId];
-      const canonicalSections = new Set(
-        getCanonicalSectionIds(slug, lessonId),
-      );
+      const canonicalSections = new Set(getCanonicalSectionIds(slug, lessonId));
       sections += new Set(
         lesson.sectionsRead.filter((sectionId) =>
           canonicalSections.has(sectionId),
         ),
       ).size;
-      if (lesson.completed) lessons += 1;
+      if (isLessonCompletionEvidenceBacked(progress, slug, lessonId)) {
+        lessons += 1;
+      }
     }
     if (course.workshopQuiz.passed) passedWorkshopQuizzes += 1;
   }
-  const checkpoints = Object.values(progress.checkpoints).filter(Boolean).length;
+  const checkpoints = Object.entries(progress.checkpoints).filter(
+    ([key, completed]) =>
+      completed && !isCompletionCompatibilityCheckpointKey(key),
+  ).length;
   return (
     sections * XP.SECTION +
     lessons * XP.LESSON +
@@ -532,7 +574,8 @@ export function mergeMetaFields(
     badges,
     streak: mergeStreak(local.streak, remote.streak),
     lastActivity:
-      latestIso(local.lastActivity, remote.lastActivity) ?? new Date().toISOString(),
+      latestIso(local.lastActivity, remote.lastActivity) ??
+      new Date().toISOString(),
   };
 }
 
@@ -540,24 +583,24 @@ export function mergeUnifiedProgress(
   local: UnifiedProgress,
   remote: UnifiedProgress,
 ): UnifiedProgress {
+  const upgradedLocal = upgradeHistoricalCompletionEvidence(local);
+  const upgradedRemote = upgradeHistoricalCompletionEvidence(remote);
   const courseIds = new Set([
-    ...Object.keys(local.courses),
-    ...Object.keys(remote.courses),
+    ...Object.keys(upgradedLocal.courses),
+    ...Object.keys(upgradedRemote.courses),
   ]);
   const courses: UnifiedProgress["courses"] = {};
   for (const id of courseIds) {
     courses[id as keyof UnifiedProgress["courses"]] = mergeCourseSlice(
-      local.courses[id as keyof UnifiedProgress["courses"]],
-      remote.courses[id as keyof UnifiedProgress["courses"]],
+      upgradedLocal.courses[id as keyof UnifiedProgress["courses"]],
+      upgradedRemote.courses[id as keyof UnifiedProgress["courses"]],
     );
   }
 
-  const meta = mergeMetaFields(local, remote);
+  const meta = mergeMetaFields(upgradedLocal, upgradedRemote);
 
-  // v2->v3 migration step, wired into this real read path:
-  // any exercise summary carried over from a payload that predates the byte
-  // cap gets re-normalized here, so a merge can never produce a result that
-  // violates the per-row DB size constraint.
+  // Re-normalize any historical exercise summary after the compatibility
+  // upgrade and merge so the result cannot violate the per-row DB size cap.
   const merged = truncateExerciseSummaries({
     schemaVersion: UNIFIED_SCHEMA_VERSION,
     courses,

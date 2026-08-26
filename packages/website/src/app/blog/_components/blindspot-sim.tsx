@@ -12,11 +12,46 @@ interface AxisCfg {
 }
 
 const AXES: readonly AxisCfg[] = [
-  { key: "daten", short: "Daten", name: "Datenfundament", scraped: 0.2, self: 0.8, color: "#7C3AED" },
-  { key: "tech", short: "Tech", name: "Technologie", scraped: 0.7, self: 0.3, color: "#1E40AF" },
-  { key: "org", short: "Org", name: "Organisation", scraped: 0.4, self: 0.6, color: "#B45309" },
-  { key: "strat", short: "Strat", name: "Strategie", scraped: 0.3, self: 0.7, color: "#C4431A" },
-  { key: "comp", short: "Comp", name: "Compliance", scraped: 0.5, self: 0.5, color: "#065F46" },
+  {
+    key: "daten",
+    short: "Daten",
+    name: "Datenfundament",
+    scraped: 0.2,
+    self: 0.8,
+    color: "#7C3AED",
+  },
+  {
+    key: "tech",
+    short: "Tech",
+    name: "Technologie",
+    scraped: 0.7,
+    self: 0.3,
+    color: "#1E40AF",
+  },
+  {
+    key: "org",
+    short: "Org",
+    name: "Organisation",
+    scraped: 0.4,
+    self: 0.6,
+    color: "#B45309",
+  },
+  {
+    key: "strat",
+    short: "Strat",
+    name: "Strategie",
+    scraped: 0.3,
+    self: 0.7,
+    color: "#C4431A",
+  },
+  {
+    key: "comp",
+    short: "Comp",
+    name: "Compliance",
+    scraped: 0.5,
+    self: 0.5,
+    color: "#065F46",
+  },
 ];
 
 const THRESHOLD = 20;
@@ -31,7 +66,12 @@ function scanId(seed: number): string {
   return s;
 }
 
-function narrativeFor(sc: number, se: number, delta: number, name: string): string {
+function narrativeFor(
+  sc: number,
+  se: number,
+  delta: number,
+  name: string,
+): string {
   if (delta >= THRESHOLD) {
     if (se > sc) {
       return `${name}: Die Innensicht liegt bei ${se}/100, die Außensicht bei ${sc}/100. Die Differenz kann auf interne Werkzeuge ohne öffentliche Spuren oder auf ambitionierte Pläne hinweisen.`;
@@ -50,9 +90,13 @@ export function BlindspotSim() {
   const [scraped, setScraped] = useState(34);
   const [self, setSelf] = useState(78);
 
-  const axis = useMemo(() => AXES.find((a) => a.key === axisKey) ?? AXES[0]!, [axisKey]);
+  const axis = useMemo(
+    () => AXES.find((a) => a.key === axisKey) ?? AXES[0]!,
+    [axisKey],
+  );
   const delta = Math.abs(scraped - self);
-  const combined = Math.round((scraped * axis.scraped + self * axis.self) * 10) / 10;
+  const combined =
+    Math.round((scraped * axis.scraped + self * axis.self) * 10) / 10;
   const flagged = delta >= THRESHOLD;
   const tag = !flagged
     ? "Kein Blindspot"
@@ -60,12 +104,22 @@ export function BlindspotSim() {
       ? "! Blindspot · Überschätzung"
       : "! Blindspot · Unterschätzung";
 
-  const id = useMemo(() => scanId(scraped * 1000 + self * 13 + axis.key.length), [scraped, self, axis.key]);
+  const id = useMemo(
+    () => scanId(scraped * 1000 + self * 13 + axis.key.length),
+    [scraped, self, axis.key],
+  );
 
   return (
-    <div className="sim" style={{ ["--sim-color" as string]: axis.color } as React.CSSProperties}>
+    <div
+      className="sim"
+      style={{ ["--sim-color" as string]: axis.color } as React.CSSProperties}
+    >
       <div className="sim__controls">
-        <div className="sim__axis-switch" role="group" aria-label="Achse wählen">
+        <div
+          className="sim__axis-switch"
+          role="group"
+          aria-label="Achse wählen"
+        >
           {AXES.map((a) => (
             <button
               type="button"
@@ -85,7 +139,9 @@ export function BlindspotSim() {
             <span>
               Außensicht
               <br />
-              <span style={{ color: "var(--muted)", fontSize: 9 }}>öffentliche Signale</span>
+              <span style={{ color: "var(--muted)", fontSize: 12 }}>
+                öffentliche Signale
+              </span>
             </span>
             <span className="v">{scraped}</span>
           </div>
@@ -104,7 +160,9 @@ export function BlindspotSim() {
             <span>
               Selbsteinschätzung
               <br />
-              <span style={{ color: "var(--muted)", fontSize: 9 }}>interne Sicht</span>
+              <span style={{ color: "var(--muted)", fontSize: 12 }}>
+                interne Sicht
+              </span>
             </span>
             <span className="v">{self}</span>
           </div>
@@ -119,8 +177,9 @@ export function BlindspotSim() {
           />
         </div>
         <div className="sim__weights">
-          Achse: <b>{axis.name}</b> · Gewichte: <b>{Math.round(axis.scraped * 100)}%</b>{" "}
-          Scraped / <b>{Math.round(axis.self * 100)}%</b> Selbst
+          Achse: <b>{axis.name}</b> · Gewichte:{" "}
+          <b>{Math.round(axis.scraped * 100)}%</b> Scraped /{" "}
+          <b>{Math.round(axis.self * 100)}%</b> Selbst
         </div>
       </div>
 
@@ -129,7 +188,9 @@ export function BlindspotSim() {
         <div className="sim__tag">{tag}</div>
         <div className="sim__delta">{delta}</div>
         <div className="sim__delta-label">Punkte Differenz · Schwelle: 20</div>
-        <p className="sim__narrative">{narrativeFor(scraped, self, delta, axis.name)}</p>
+        <p className="sim__narrative">
+          {narrativeFor(scraped, self, delta, axis.name)}
+        </p>
         <div className="sim__combined">
           <span className="sim__combined-label">Kombinierter Achsen-Score</span>
           <span className="sim__combined-val">{combined}</span>

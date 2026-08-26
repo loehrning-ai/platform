@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, beforeEach } from "vitest";
+import { describe, it, expect, beforeAll, beforeEach, vi } from "vitest";
 
 // progress.ts is a thin facade over the unified store (src/lib/progress/store).
 // It adds its OWN logic on top of pure delegation: legacy-shape projection
@@ -36,8 +36,21 @@ function installLocalStoragePolyfill() {
   });
 }
 
-import { __resetCacheForTests } from "@/lib/progress/store";
-import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
+import {
+  __resetCacheForTests,
+  activateAccountProgress,
+  activateAnonymousProgress,
+  recordLessonCompletionEvidenceDurably,
+  subscribe,
+} from "@/lib/progress/store";
+import {
+  CANONICAL_LESSON_IDS,
+  CANONICAL_SECTION_IDS,
+  LESSON_COMPLETION_EVIDENCE_VERSION,
+  isLessonCompletionEvidenceBacked,
+} from "@/lib/courses/completion";
+import { prepareAccountLearningStorage } from "@/lib/progress/browser-learning-storage";
+import { isEvidenceBackedLessonCompleted } from "@/lib/progress/completion-evidence";
 import { getAllLessons } from "./data";
 import {
   markSectionRead,
@@ -84,6 +97,19 @@ const SHARE_COURSES = [
   },
 ] as const;
 
+function recordCurrentLessonEvidence(
+  courseSlug: (typeof SHARE_COURSES)[number]["courseSlug"],
+  lessonId: string,
+): void {
+  for (const sectionId of CANONICAL_SECTION_IDS[courseSlug][lessonId] ?? []) {
+    markSectionRead(courseSlug, lessonId, sectionId);
+  }
+  saveLessonQuizScore(courseSlug, lessonId, 1, 1);
+  expect(recordLessonCompletionEvidenceDurably(courseSlug, lessonId)).toBe(
+    true,
+  );
+}
+
 function encodeTextAsBase64Url(value: string): string {
   const bytes = new TextEncoder().encode(value);
   let binary = "";
@@ -102,15 +128,11 @@ function decodePayload(encoded: string): unknown {
   let base64 = encoded.replace(/-/g, "+").replace(/_/g, "/");
   while (base64.length % 4) base64 += "=";
   const binary = atob(base64);
-  const bytes = Uint8Array.from(binary, (character) =>
-    character.charCodeAt(0),
-  );
+  const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
   return JSON.parse(new TextDecoder().decode(bytes)) as unknown;
 }
 
-function validSharePayload(
-  course = SHARE_COURSES[0],
-): {
+function validSharePayload(course = SHARE_COURSES[0]): {
   version: number;
   courseSlug: (typeof SHARE_COURSES)[number]["courseSlug"];
   progress: {
@@ -155,6 +177,20 @@ function validSharePayload(
   };
 }
 
+function validCurrentSharePayload(
+  course = SHARE_COURSES[0],
+  lessonIds: readonly string[] = [],
+) {
+  return {
+    ...validSharePayload(course),
+    version: 2,
+    completionEvidence: {
+      version: LESSON_COMPLETION_EVIDENCE_VERSION,
+      lessonIds,
+    },
+  };
+}
+
 describe("course progress facade", () => {
   beforeAll(() => {
     if (
@@ -165,33 +201,38 @@ describe("course progress facade", () => {
     }
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     window.localStorage.clear();
+    Object.defineProperty(window.navigator, "locks", {
+      configurable: true,
+      value: {
+        request: vi.fn(
+          async (
+            name: string,
+            _options: LockOptions,
+            callback: (lock: Lock | null) => unknown,
+          ) =>
+            callback({
+              name,
+              mode: "exclusive",
+            } as Lock),
+        ),
+      },
+    });
     __resetCacheForTests();
+    expect(await prepareAccountLearningStorage()).toBe(true);
   });
 
   // ─── Delegation: writes and reads flow through with the right args ───
 
   describe("delegation to the unified store", () => {
     it("marks and reads a section, exposing read ids as a Set", () => {
-      markSectionRead(
-        COURSE,
-        "block_1_lesson_1",
-        "block_1_lesson_1_section_1",
-      );
+      markSectionRead(COURSE, "block_1_lesson_1", "block_1_lesson_1_section_1");
       expect(
-        isSectionRead(
-          COURSE,
-          "block_1_lesson_1",
-          "block_1_lesson_1_section_1",
-        ),
+        isSectionRead(COURSE, "block_1_lesson_1", "block_1_lesson_1_section_1"),
       ).toBe(true);
       expect(
-        isSectionRead(
-          COURSE,
-          "block_1_lesson_1",
-          "block_1_lesson_1_section_2",
-        ),
+        isSectionRead(COURSE, "block_1_lesson_1", "block_1_lesson_1_section_2"),
       ).toBe(false);
       const ids = getReadSectionIds(COURSE, "block_1_lesson_1");
       expect(ids).toBeInstanceOf(Set);
@@ -201,12 +242,14 @@ describe("course progress facade", () => {
     it("keeps section/lesson state isolated per course slug", () => {
       markLessonCompleted(COURSE, "block_1_lesson_1");
       expect(isLessonCompleted(COURSE, "block_1_lesson_1")).toBe(true);
-      expect(
-        isLessonCompleted("eu-ai-act-kurs", "block_1_lesson_1"),
-      ).toBe(false);
-      expect([...getCompletedLessonIds(COURSE)]).toEqual([
-        "block_1_lesson_1",
-      ]);
+      expect(isLessonCompleted("eu-ai-act-kurs", "block_1_lesson_1")).toBe(
+        false,
+      );
+      expect([...getCompletedLessonIds(COURSE)]).toEqual(["block_1_lesson_1"]);
+      expect(getCompletedLessonsCount(COURSE)).toBe(0);
+
+      recordCurrentLessonEvidence(COURSE, "block_1_lesson_1");
+      expect([...getCompletedLessonIds(COURSE)]).toEqual(["block_1_lesson_1"]);
       expect(getCompletedLessonsCount(COURSE)).toBe(1);
     });
 
@@ -219,16 +262,16 @@ describe("course progress facade", () => {
     });
 
     it("computes block + overall progress from completed lessons", () => {
-      markLessonCompleted(COURSE, "block_1_lesson_1");
+      recordCurrentLessonEvidence(COURSE, "block_1_lesson_1");
       expect(
         getBlockCompletedLessons(COURSE, [
           "block_1_lesson_1",
           "block_1_lesson_2",
         ]),
       ).toBe(1);
-      expect(
-        areAllBlockLessonsCompleted(COURSE, ["block_1_lesson_1"]),
-      ).toBe(true);
+      expect(areAllBlockLessonsCompleted(COURSE, ["block_1_lesson_1"])).toBe(
+        true,
+      );
       expect(
         areAllBlockLessonsCompleted(COURSE, [
           "block_1_lesson_1",
@@ -248,7 +291,7 @@ describe("course progress facade", () => {
       expect(isWorkshopQuizPassed(COURSE)).toBe(true);
       expect(isCertificateEligible(COURSE)).toBe(false);
       for (const lessonId of CANONICAL_LESSON_IDS[COURSE]) {
-        markLessonCompleted(COURSE, lessonId);
+        recordCurrentLessonEvidence(COURSE, lessonId);
       }
       expect(isCertificateEligible(COURSE)).toBe(true);
       const result = getWorkshopQuizResult(COURSE);
@@ -262,11 +305,7 @@ describe("course progress facade", () => {
 
   describe("getAllProgress", () => {
     it("projects the store slice down to the legacy lesson shape", () => {
-      markSectionRead(
-        COURSE,
-        "block_1_lesson_1",
-        "block_1_lesson_1_section_1",
-      );
+      markSectionRead(COURSE, "block_1_lesson_1", "block_1_lesson_1_section_1");
       markLessonCompleted(COURSE, "block_1_lesson_1");
       const all = getAllProgress(COURSE);
       expect(all.lessons.block_1_lesson_1).toEqual({
@@ -299,9 +338,9 @@ describe("course progress facade", () => {
       expect(isLessonCompleted(COURSE, "block_1_lesson_1")).toBe(false);
       expect(getAllProgress(COURSE).lessons).toEqual({});
       // other courses are untouched
-      expect(
-        isLessonCompleted("eu-ai-act-kurs", "block_1_lesson_2"),
-      ).toBe(true);
+      expect(isLessonCompleted("eu-ai-act-kurs", "block_1_lesson_2")).toBe(
+        true,
+      );
     });
   });
 
@@ -313,11 +352,7 @@ describe("course progress facade", () => {
     });
 
     it("emits a URL-safe base64 string (no +, /, or = padding)", () => {
-      markSectionRead(
-        COURSE,
-        "block_1_lesson_1",
-        "block_1_lesson_1_section_1",
-      );
+      markSectionRead(COURSE, "block_1_lesson_1", "block_1_lesson_1_section_1");
       const encoded = serializeProgress(COURSE);
       expect(encoded).not.toBeNull();
       expect(encoded).not.toMatch(/[+/=]/);
@@ -335,11 +370,66 @@ describe("course progress facade", () => {
         const encoded = serializeProgress(courseSlug);
         expect(encoded).not.toBeNull();
         expect(decodePayload(encoded as string)).toEqual({
-          version: 1,
+          version: 2,
           courseSlug,
           progress: snapshot,
+          completionEvidence: {
+            version: LESSON_COMPLETION_EVIDENCE_VERSION,
+            lessonIds: [],
+          },
         });
         expect(deserializeProgress(encoded as string)).toEqual(snapshot);
+      },
+    );
+
+    it.each(SHARE_COURSES)(
+      "round-trips current completion evidence for an actual $courseSlug lesson",
+      ({ courseSlug, lessonId }) => {
+        recordCurrentLessonEvidence(courseSlug, lessonId);
+        const encoded = serializeProgress(courseSlug);
+
+        expect(encoded).not.toBeNull();
+        expect(decodePayload(encoded as string)).toMatchObject({
+          version: 2,
+          courseSlug,
+          completionEvidence: {
+            version: LESSON_COMPLETION_EVIDENCE_VERSION,
+            lessonIds: [lessonId],
+          },
+        });
+
+        activateAccountProgress(`target-${courseSlug}`);
+        expect(isEvidenceBackedLessonCompleted(courseSlug, lessonId)).toBe(
+          false,
+        );
+        const writes = vi.spyOn(window.localStorage, "setItem");
+        expect(importProgress(courseSlug, encoded as string)).toBe(true);
+        expect(writes).toHaveBeenCalledTimes(1);
+        writes.mockRestore();
+        expect(isEvidenceBackedLessonCompleted(courseSlug, lessonId)).toBe(
+          true,
+        );
+      },
+    );
+
+    it.each(SHARE_COURSES)(
+      "round-trips full $courseSlug evidence and certificate eligibility",
+      ({ courseSlug }) => {
+        for (const lessonId of CANONICAL_LESSON_IDS[courseSlug]) {
+          recordCurrentLessonEvidence(courseSlug, lessonId);
+        }
+        saveWorkshopQuizResult(courseSlug, 0.9, true);
+        expect(isCertificateEligible(courseSlug)).toBe(true);
+        const encoded = serializeProgress(courseSlug);
+        expect(encoded).not.toBeNull();
+
+        activateAccountProgress(`certificate-target-${courseSlug}`);
+        expect(isCertificateEligible(courseSlug)).toBe(false);
+        expect(importProgress(courseSlug, encoded as string)).toBe(true);
+        expect(getCompletedLessonsCount(courseSlug)).toBe(
+          CANONICAL_LESSON_IDS[courseSlug].length,
+        );
+        expect(isCertificateEligible(courseSlug)).toBe(true);
       },
     );
 
@@ -387,9 +477,7 @@ describe("course progress facade", () => {
 
     it("rejects the former unversioned raw-progress format", () => {
       const payload = validSharePayload();
-      expect(
-        deserializeProgress(encodePayload(payload.progress)),
-      ).toBeNull();
+      expect(deserializeProgress(encodePayload(payload.progress))).toBeNull();
       expect(importProgress(COURSE, encodePayload(payload.progress))).toBe(
         false,
       );
@@ -398,7 +486,7 @@ describe("course progress facade", () => {
     it.each([
       {
         label: "unsupported envelope version",
-        payload: () => ({ ...validSharePayload(), version: 2 }),
+        payload: () => ({ ...validSharePayload(), version: 3 }),
       },
       {
         label: "extra envelope key",
@@ -453,12 +541,58 @@ describe("course progress facade", () => {
       expect(deserializeProgress(encodePayload(payload()))).toBeNull();
     });
 
+    it.each([
+      {
+        label: "forged evidence version",
+        payload: () => ({
+          ...validCurrentSharePayload(),
+          completionEvidence: {
+            version: "lesson-proof-v999",
+            lessonIds: [],
+          },
+        }),
+      },
+      {
+        label: "extra evidence key",
+        payload: () => ({
+          ...validCurrentSharePayload(),
+          completionEvidence: {
+            version: LESSON_COMPLETION_EVIDENCE_VERSION,
+            lessonIds: [],
+            forged: true,
+          },
+        }),
+      },
+      {
+        label: "noncanonical evidence lesson ID",
+        payload: () =>
+          validCurrentSharePayload(SHARE_COURSES[0], ["forged-lesson"]),
+      },
+      {
+        label: "duplicate evidence lesson ID",
+        payload: () =>
+          validCurrentSharePayload(SHARE_COURSES[0], [
+            SHARE_COURSES[0].lessonId,
+            SHARE_COURSES[0].lessonId,
+          ]),
+      },
+      {
+        label: "proof without every canonical prerequisite",
+        payload: () =>
+          validCurrentSharePayload(SHARE_COURSES[0], [
+            SHARE_COURSES[0].lessonId,
+          ]),
+      },
+    ])("rejects $label", ({ payload }) => {
+      const encoded = encodePayload(payload());
+      expect(deserializeProgress(encoded)).toBeNull();
+      expect(importProgress(COURSE, encoded)).toBe(false);
+    });
+
     it("rejects non-plain and prototype-pollution lesson records", () => {
       const payload = validSharePayload();
       const pollutedLessons = {
-        ["__proto__"]: payload.progress.lessons[
-          SHARE_COURSES[0].lessonId
-        ],
+        ["__proto__"]: payload.progress.lessons[SHARE_COURSES[0].lessonId],
       };
       expect(
         deserializeProgress(
@@ -494,12 +628,8 @@ describe("course progress facade", () => {
         },
       };
 
-      expect(
-        deserializeProgress(encodePayload(badLessonPayload)),
-      ).toBeNull();
-      expect(
-        deserializeProgress(encodePayload(badSectionPayload)),
-      ).toBeNull();
+      expect(deserializeProgress(encodePayload(badLessonPayload))).toBeNull();
+      expect(deserializeProgress(encodePayload(badSectionPayload))).toBeNull();
     });
 
     it("rejects duplicate canonical section IDs and excessive counts", () => {
@@ -537,12 +667,8 @@ describe("course progress facade", () => {
           },
         },
       };
-      expect(
-        deserializeProgress(encodePayload(duplicateSections)),
-      ).toBeNull();
-      expect(
-        deserializeProgress(encodePayload(excessiveSections)),
-      ).toBeNull();
+      expect(deserializeProgress(encodePayload(duplicateSections))).toBeNull();
+      expect(deserializeProgress(encodePayload(excessiveSections))).toBeNull();
     });
 
     it.each([
@@ -659,6 +785,43 @@ describe("course progress facade", () => {
       expect(getAllProgress(COURSE).lessons).toEqual({});
     });
 
+    it("keeps a legacy v1 link parseable without creating completion evidence", () => {
+      const payload = validSharePayload();
+      const encoded = encodePayload(payload);
+
+      expect(deserializeProgress(encoded)).toEqual(payload.progress);
+      expect(importProgress(COURSE, encoded)).toBe(true);
+      expect(isLessonCompleted(COURSE, SHARE_COURSES[0].lessonId)).toBe(true);
+      expect(
+        isEvidenceBackedLessonCompleted(COURSE, SHARE_COURSES[0].lessonId),
+      ).toBe(false);
+      expect(getCompletedLessonsCount(COURSE)).toBe(0);
+      expect(isCertificateEligible(COURSE)).toBe(false);
+    });
+
+    it("keeps a full legacy v1 snapshot ineligible for a certificate", () => {
+      for (const lessonId of CANONICAL_LESSON_IDS[COURSE]) {
+        recordCurrentLessonEvidence(COURSE, lessonId);
+      }
+      saveWorkshopQuizResult(COURSE, 0.9, true);
+      const current = decodePayload(serializeProgress(COURSE) as string) as {
+        progress: ReturnType<typeof getAllProgress>;
+      };
+      const legacy = encodePayload({
+        version: 1,
+        courseSlug: COURSE,
+        progress: current.progress,
+      });
+
+      activateAccountProgress("legacy-certificate-target");
+      expect(importProgress(COURSE, legacy)).toBe(true);
+      expect(getCompletedLessonIds(COURSE).size).toBe(
+        CANONICAL_LESSON_IDS[COURSE].length,
+      );
+      expect(getCompletedLessonsCount(COURSE)).toBe(0);
+      expect(isCertificateEligible(COURSE)).toBe(false);
+    });
+
     it("merges a valid snapshot only into its bound course", () => {
       const { lessonId, sectionId } = SHARE_COURSES[0];
       markSectionRead(COURSE, lessonId, sectionId);
@@ -737,6 +900,97 @@ describe("course progress facade", () => {
       expect(importProgress(COURSE, invalid)).toBe(false);
       expect(getAllProgress(COURSE).lessons).toEqual({});
     });
+
+    it("returns false and leaves cache and storage unchanged when durable storage rejects the import", () => {
+      recordCurrentLessonEvidence(COURSE, SHARE_COURSES[0].lessonId);
+      const encoded = serializeProgress(COURSE) as string;
+      activateAccountProgress("quota-target");
+      expect(getAllProgress(COURSE).lessons).toEqual({});
+
+      const subscriber = vi.fn();
+      const unsubscribe = subscribe(subscriber);
+      subscriber.mockClear();
+      const setItem = vi
+        .spyOn(window.localStorage, "setItem")
+        .mockImplementation(() => {
+          throw new DOMException("quota", "QuotaExceededError");
+        });
+
+      expect(importProgress(COURSE, encoded)).toBe(false);
+      expect(getAllProgress(COURSE).lessons).toEqual({});
+      expect(subscriber).not.toHaveBeenCalled();
+
+      setItem.mockRestore();
+      unsubscribe();
+      __resetCacheForTests();
+      activateAccountProgress("quota-target");
+      expect(getAllProgress(COURSE).lessons).toEqual({});
+    });
+
+    it("fails closed across an owner switch and never exposes the import to the new owner", () => {
+      activateAnonymousProgress();
+      recordCurrentLessonEvidence(COURSE, SHARE_COURSES[0].lessonId);
+      const encoded = serializeProgress(COURSE) as string;
+      activateAccountProgress("race-owner-a");
+      expect(getAllProgress(COURSE).lessons).toEqual({});
+
+      const originalSetItem = window.localStorage.setItem.bind(
+        window.localStorage,
+      );
+      let switched = false;
+      const setItem = vi
+        .spyOn(window.localStorage, "setItem")
+        .mockImplementation((key, value) => {
+          if (!switched) {
+            switched = true;
+            activateAccountProgress("race-owner-b");
+          }
+          originalSetItem(key, value);
+        });
+
+      expect(importProgress(COURSE, encoded)).toBe(false);
+      setItem.mockRestore();
+      expect(switched).toBe(true);
+      expect(getAllProgress(COURSE).lessons).toEqual({});
+      expect(
+        isEvidenceBackedLessonCompleted(COURSE, SHARE_COURSES[0].lessonId),
+      ).toBe(false);
+    });
+
+    it("returns false when a progress subscriber switches owner during the import emit", () => {
+      activateAnonymousProgress();
+      recordCurrentLessonEvidence(COURSE, SHARE_COURSES[0].lessonId);
+      const encoded = serializeProgress(COURSE) as string;
+      activateAccountProgress("emit-owner-a");
+      expect(getAllProgress(COURSE).lessons).toEqual({});
+
+      let armed = false;
+      const unsubscribeSwitch = subscribe((snapshot) => {
+        if (
+          armed &&
+          isLessonCompletionEvidenceBacked(
+            snapshot,
+            COURSE,
+            SHARE_COURSES[0].lessonId,
+          )
+        ) {
+          armed = false;
+          activateAccountProgress("emit-owner-b");
+        }
+      });
+      armed = true;
+
+      expect(importProgress(COURSE, encoded)).toBe(false);
+      expect(
+        isEvidenceBackedLessonCompleted(COURSE, SHARE_COURSES[0].lessonId),
+      ).toBe(false);
+
+      unsubscribeSwitch();
+      activateAccountProgress("emit-owner-a");
+      expect(
+        isEvidenceBackedLessonCompleted(COURSE, SHARE_COURSES[0].lessonId),
+      ).toBe(true);
+    });
   });
 
   // ─── buildProgressUrl ──────────────────────────────────────────────
@@ -747,11 +1001,7 @@ describe("course progress facade", () => {
     });
 
     it("appends the encoded progress to the base URL hash", () => {
-      markSectionRead(
-        COURSE,
-        "block_1_lesson_1",
-        "block_1_lesson_1_section_1",
-      );
+      markSectionRead(COURSE, "block_1_lesson_1", "block_1_lesson_1_section_1");
       const encoded = serializeProgress(COURSE);
       const url = buildProgressUrl(COURSE, "https://x.test/kurs");
       expect(url).toBe(`https://x.test/kurs#progress=${encoded}`);

@@ -1,17 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
-import type { FC, ReactNode, HTMLAttributes } from "react";
+import { act, render, screen, fireEvent } from "@testing-library/react";
+import { useState, type FC, type ReactNode, type HTMLAttributes } from "react";
 import {
   getExerciseResult,
   saveExerciseResult,
   isExerciseCompleted,
 } from "@/lib/ai-native/progress";
-import {
-  ExerciseShell,
-  ExerciseResetButton,
-  submitExercise,
-} from "./_shell";
+import { ExerciseShell, ExerciseResetButton, submitExercise } from "./_shell";
 import { DemoLocaleProvider } from "@/components/demos/demo-locale";
+import {
+  __resetLearningOwnerForTests,
+  setUnknownLearningOwner,
+} from "@/lib/progress/browser-learning-storage";
 
 /**
  * _shell.test.tsx (regression coverage)
@@ -96,13 +96,18 @@ const mockedIsDone = vi.mocked(isExerciseCompleted);
 
 beforeEach(() => {
   vi.clearAllMocks();
+  __resetLearningOwnerForTests("anonymous");
   mockedGet.mockReturnValue(undefined);
   mockedIsDone.mockReturnValue(false);
+  mockedSave.mockImplementation(() => {
+    mockedIsDone.mockReturnValue(true);
+    return true;
+  });
 });
 
 describe("submitExercise", () => {
   it("persists a completed result with default flags for the minimal option set", () => {
-    submitExercise({
+    const persisted = submitExercise({
       moduleId: "modul_1",
       lessonId: "l1",
       exerciseId: "l1_ex1",
@@ -110,6 +115,7 @@ describe("submitExercise", () => {
       score: 1,
     });
 
+    expect(persisted).toBe(true);
     expect(mockedSave).toHaveBeenCalledTimes(1);
     const [moduleId, lessonId, result] = mockedSave.mock.calls[0];
     expect(moduleId).toBe("modul_1");
@@ -161,6 +167,49 @@ describe("submitExercise", () => {
       gradingSource: "ai",
     });
     expect(result.aiFeedback).toEqual(aiFeedback);
+  });
+
+  it("rejects unresolved and stale-owner submissions before writing", () => {
+    setUnknownLearningOwner();
+    expect(
+      submitExercise({
+        moduleId: "modul_1",
+        lessonId: "l1",
+        exerciseId: "l1_ex1",
+        kind: "exercise-prompt-diff",
+        score: 1,
+      }),
+    ).toBe(false);
+    expect(mockedSave).not.toHaveBeenCalled();
+
+    __resetLearningOwnerForTests("anonymous");
+    expect(
+      submitExercise({
+        moduleId: "modul_1",
+        lessonId: "l1",
+        exerciseId: "l1_ex1",
+        kind: "exercise-prompt-diff",
+        score: 1,
+        expectedOwnerGeneration: 7,
+      }),
+    ).toBe(false);
+    expect(mockedSave).not.toHaveBeenCalled();
+  });
+
+  it("rejects a failed repeat write even when an older completion is cached", () => {
+    mockedIsDone.mockReturnValue(true);
+    mockedSave.mockReturnValue(false);
+
+    expect(
+      submitExercise({
+        moduleId: "modul_1",
+        lessonId: "l1",
+        exerciseId: "l1_ex1",
+        kind: "exercise-prompt-diff",
+        score: 0.25,
+      }),
+    ).toBe(false);
+    expect(mockedSave).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -240,6 +289,48 @@ describe("<ExerciseShell>", () => {
     expect(screen.queryByRole("button", { name: /verstanden/ })).toBeNull();
   });
 
+  it("disables exercise writes and does not claim completion for an unresolved owner", () => {
+    __resetLearningOwnerForTests("unknown");
+    render(
+      <ExerciseShell {...baseProps} kind="exercise-prompt-diff">
+        <button type="button">Inner action</button>
+      </ExerciseShell>,
+    );
+
+    expect(screen.getByRole("button", { name: "Inner action" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /verstanden/ })).toBeDisabled();
+    expect(
+      screen.getByText("Wähle oben zuerst Konto oder lokalen Fortschritt."),
+    ).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: /verstanden/ }));
+    expect(mockedSave).not.toHaveBeenCalled();
+    expect(screen.queryByText("Erledigt")).not.toBeInTheDocument();
+  });
+
+  it("remounts child interaction state when the owner generation changes", () => {
+    function StatefulExercise() {
+      const [count, setCount] = useState(0);
+      return (
+        <button type="button" onClick={() => setCount((value) => value + 1)}>
+          Count {count}
+        </button>
+      );
+    }
+
+    render(
+      <ExerciseShell {...baseProps} kind="exercise-prompt-diff">
+        <StatefulExercise />
+      </ExerciseShell>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Count 0" }));
+    expect(screen.getByRole("button", { name: "Count 1" })).toBeInTheDocument();
+
+    act(() => {
+      setUnknownLearningOwner();
+    });
+    expect(screen.getByRole("button", { name: "Count 0" })).toBeDisabled();
+  });
+
   it("restores the completed badge with the rounded score from a prior result", async () => {
     mockedGet.mockReturnValue({
       exerciseId: "ex1",
@@ -265,7 +356,11 @@ describe("<ExerciseShell>", () => {
       throw new Error("kaputt");
     };
     render(
-      <ExerciseShell {...baseProps} kind="exercise-prompt-diff" title="Kaputte Übung">
+      <ExerciseShell
+        {...baseProps}
+        kind="exercise-prompt-diff"
+        title="Kaputte Übung"
+      >
         <Boom />
       </ExerciseShell>,
     );

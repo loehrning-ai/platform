@@ -184,12 +184,18 @@ export function ConfoundingSimulator() {
         <div className="sim-controls">
           <div className="sim-ctrl">
             <label>{text("Scenario", "Szenario")}</label>
-            <div className="seg" style={{ flexDirection: "column", gap: 4 }}>
+            <div
+              className="seg"
+              role="group"
+              aria-label={text("Scenario", "Szenario")}
+              style={{ flexDirection: "column", gap: 4 }}
+            >
               {Object.entries(SCENARIOS).map(([k, v]) => (
                 <button
                   key={k}
                   type="button"
-                  className={scenario === k ? "on" : ""}
+                  className={scenario === k ? "on min-h-11" : "min-h-11"}
+                  aria-pressed={scenario === k}
                   onClick={() => {
                     setScenario(k as ScenarioKey);
                     setRevealed(false);
@@ -206,6 +212,7 @@ export function ConfoundingSimulator() {
             <button
               type="button"
               className={`btn btn-sm ${revealed ? "btn-primary" : ""}`}
+              aria-pressed={revealed}
               onClick={() => setRevealed((r) => !r)}
             >
               {revealed
@@ -241,7 +248,7 @@ export function ConfoundingSimulator() {
                   >
                     <span
                       style={{
-                        fontSize: 11,
+                        fontSize: 12,
                         color: inkOf(sc.zColors[g]),
                         fontFamily: "'JetBrains Mono',monospace",
                       }}
@@ -267,7 +274,7 @@ export function ConfoundingSimulator() {
           </div>
           <p
             className="prose"
-            style={{ fontSize: 11.5, marginTop: 10, color: "var(--ink-3)" }}
+            style={{ fontSize: 12, marginTop: 10, color: "var(--ink-3)" }}
           >
             {display.zLab}{" "}
             {text(

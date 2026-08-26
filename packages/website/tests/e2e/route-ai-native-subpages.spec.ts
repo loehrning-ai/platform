@@ -33,7 +33,7 @@ const SUBPAGES: ReadonlyArray<{
   {
     path: "/ai-native/glossar",
     anchor: (page) =>
-      page.getByRole("textbox", { name: "Glossar durchsuchen" }),
+      page.getByRole("searchbox", { name: "Glossar durchsuchen" }),
   },
   {
     path: "/ai-native/fluency-test",
@@ -43,11 +43,12 @@ const SUBPAGES: ReadonlyArray<{
   {
     path: "/ai-native/demos",
     anchor: (page) =>
-      page.getByRole("textbox", { name: "Kurssimulationen durchsuchen" }),
+      page.getByRole("searchbox", { name: "Kurssimulationen durchsuchen" }),
   },
   {
     path: "/ai-native/capstone-gallery",
-    anchor: (page) => page.getByRole("navigation", { name: "Breadcrumb" }),
+    anchor: (page) =>
+      page.getByRole("complementary", { name: "Veröffentlichungsgrenze" }),
   },
 ];
 
@@ -102,7 +103,9 @@ test.describe("ai-native sub-page interactions", () => {
   }) => {
     // "load" so the client island hydrates before the search input reacts to fill().
     await page.goto("/ai-native/glossar", { waitUntil: "load" });
-    const search = page.getByRole("textbox", { name: "Glossar durchsuchen" });
+    const search = page.getByRole("searchbox", {
+      name: "Glossar durchsuchen",
+    });
     await expect(search).not.toHaveAttribute("readonly", "");
 
     await search.fill("qxzkwvzznope");
@@ -118,7 +121,7 @@ test.describe("ai-native sub-page interactions", () => {
   }) => {
     // "load" so the client island hydrates before the search input reacts to fill().
     await page.goto("/ai-native/demos", { waitUntil: "load" });
-    const search = page.getByRole("textbox", {
+    const search = page.getByRole("searchbox", {
       name: "Kurssimulationen durchsuchen",
     });
 
@@ -126,7 +129,7 @@ test.describe("ai-native sub-page interactions", () => {
     // Counter renders `${totalFiltered}/${DEMOS.length}`; no match drives it to 0.
     await expect(page.getByText(/^0\/\d+$/)).toBeVisible();
 
-    await page.getByRole("button", { name: "Clear", exact: true }).click();
+    await page.getByRole("button", { name: "Leeren", exact: true }).click();
     await expect(search).toHaveValue("");
   });
 

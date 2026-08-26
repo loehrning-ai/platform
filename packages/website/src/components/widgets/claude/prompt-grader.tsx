@@ -69,7 +69,7 @@ export function PromptGraderWidget({
       }
       scenario={`${german ? "Aufgabe" : "Task"}: ${task}`}
       done={done}
-      xpLabel="+20 XP"
+      doneLabel={german ? "Erledigt" : "Done"}
     >
       <p className="mb-2 text-[13px] leading-[1.5] text-muted-foreground">
         {german
@@ -87,10 +87,10 @@ export function PromptGraderWidget({
             : "Write a prompt for that task…"
         }
         aria-label={german ? "Dein Prompt" : "Your prompt"}
-        className="w-full border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+        className="min-h-11 w-full border-2 border-border bg-background px-3 py-2 text-[14px] text-foreground placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
       />
       <div className="mt-2 flex items-center justify-between gap-3">
-        <span className="font-mono text-[11px] text-muted-foreground">
+        <span className="font-mono text-xs text-muted-foreground">
           {value.length} {german ? "Zeichen" : "chars"} · min. 20
         </span>
         <button
@@ -98,7 +98,7 @@ export function PromptGraderWidget({
           onClick={grade}
           disabled={loading || value.trim().length < 20}
           className={cn(
-            "inline-flex items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none",
+            "inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none",
           )}
         >
           {loading
@@ -133,7 +133,7 @@ export function PromptGraderWidget({
             <div className="text-[13px] leading-[1.5]">
               {result.strengths.length > 0 && (
                 <div className="mb-2">
-                  <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.1em] text-risk-green">
+                  <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-risk-green">
                     {german ? "Erkannte Merkmale" : "Detected markers"}
                   </p>
                   <ul className="mt-1 list-disc pl-4">
@@ -145,7 +145,7 @@ export function PromptGraderWidget({
               )}
               {result.weaknesses.length > 0 && (
                 <div className="mb-2">
-                  <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.1em] text-destructive">
+                  <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-destructive">
                     {german ? "Fehlend oder unklar" : "Missing or unclear"}
                   </p>
                   <ul className="mt-1 list-disc pl-4">
@@ -156,7 +156,7 @@ export function PromptGraderWidget({
                 </div>
               )}
               <details className="mt-2">
-                <summary className="cursor-pointer font-semibold text-foreground">
+                <summary className="inline-flex min-h-11 cursor-pointer items-center font-semibold text-foreground">
                   {german
                     ? "Überarbeitete Fassung anzeigen"
                     : "View a revised version"}

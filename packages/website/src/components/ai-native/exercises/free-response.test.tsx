@@ -1,7 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import type { FC, ReactNode, HTMLAttributes } from "react";
-import { saveExerciseResult } from "@/lib/ai-native/progress";
+import {
+  isExerciseCompleted,
+  saveExerciseResult,
+} from "@/lib/ai-native/progress";
 import { __resetLearningOwnerForTests } from "@/lib/progress/browser-learning-storage";
 import { FreeResponseExercise, type FreeResponseSpec } from "./free-response";
 
@@ -79,6 +82,7 @@ vi.mock("framer-motion", async () => {
 });
 
 const mockedSave = vi.mocked(saveExerciseResult);
+const mockedIsDone = vi.mocked(isExerciseCompleted);
 
 const spec: FreeResponseSpec = {
   exerciseId: "fr1",
@@ -88,7 +92,11 @@ const spec: FreeResponseSpec = {
   scenario: "Beschreibe deinen Workflow.",
   rubric: [
     { id: "r1", label: "Klarheit", description: "Ist die Antwort klar?" },
-    { id: "r2", label: "Vollständigkeit", description: "Sind alle Schritte da?" },
+    {
+      id: "r2",
+      label: "Vollständigkeit",
+      description: "Sind alle Schritte da?",
+    },
   ],
 };
 
@@ -98,6 +106,11 @@ beforeEach(() => {
   vi.clearAllMocks();
   sessionStorage.clear();
   __resetLearningOwnerForTests("anonymous");
+  mockedIsDone.mockReturnValue(false);
+  mockedSave.mockImplementation(() => {
+    mockedIsDone.mockReturnValue(true);
+    return true;
+  });
 });
 
 afterEach(() => {
@@ -107,10 +120,15 @@ afterEach(() => {
 
 describe("<FreeResponseExercise>", () => {
   it("restores a saved draft from sessionStorage on mount", async () => {
-    sessionStorage.setItem(storageKey, "Mein gespeicherter Entwurf zum Workflow.");
+    sessionStorage.setItem(
+      storageKey,
+      "Mein gespeicherter Entwurf zum Workflow.",
+    );
     render(<FreeResponseExercise {...spec} />);
     expect(
-      await screen.findByDisplayValue("Mein gespeicherter Entwurf zum Workflow."),
+      await screen.findByDisplayValue(
+        "Mein gespeicherter Entwurf zum Workflow.",
+      ),
     ).toBeInTheDocument();
   });
 
@@ -149,12 +167,16 @@ describe("<FreeResponseExercise>", () => {
 
     render(<FreeResponseExercise {...spec} />);
     fireEvent.change(screen.getByLabelText("Deine Antwort"), {
-      target: { value: "Eine ausreichend lange und sinnvolle Antwort zum Workflow." },
+      target: {
+        value: "Eine ausreichend lange und sinnvolle Antwort zum Workflow.",
+      },
     });
     fireEvent.click(screen.getByRole("button", { name: "Antwort einreichen" }));
 
     expect(await screen.findByText(/Score 80%/)).toBeInTheDocument();
-    expect(screen.getByText("Insgesamt eine gute Antwort.")).toBeInTheDocument();
+    expect(
+      screen.getByText("Insgesamt eine gute Antwort."),
+    ).toBeInTheDocument();
     // The rubric panel shows the authored label (from spec) + the AI rationale.
     expect(screen.getByText("Klarheit")).toBeInTheDocument();
     expect(screen.getByText("Sehr klar formuliert.")).toBeInTheDocument();
@@ -176,7 +198,9 @@ describe("<FreeResponseExercise>", () => {
   it("marks the exercise unavailable (null score, fallback source) when the grader fails", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValue({ ok: false, status: 503 } as unknown as Response),
+      vi
+        .fn()
+        .mockResolvedValue({ ok: false, status: 503 } as unknown as Response),
     );
 
     render(<FreeResponseExercise {...spec} />);

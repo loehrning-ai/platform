@@ -109,7 +109,10 @@ test("public plan covers every desktop Chromium test exactly once", () => {
   const desktopSteps = buildE2ePlan("public").slice(0, 3);
   const projectKeys = desktopSteps.map((step) => listKeys(step.arguments));
   for (const [index, keys] of projectKeys.entries()) {
-    assert.ok(keys.length > 0, `${desktopSteps[index].label} must not be empty`);
+    assert.ok(
+      keys.length > 0,
+      `${desktopSteps[index].label} must not be empty`,
+    );
     assert.equal(new Set(keys).size, keys.length);
   }
 
@@ -152,6 +155,23 @@ test("real WebKit shard lists cover the complete project exactly once", () => {
   assert.equal(shardIds.length, full.length);
   assert.equal(new Set(shardIds).size, shardIds.length);
   assert.deepEqual([...new Set(shardIds)].sort(), [...full].sort());
+});
+
+test("mobile WebKit and Chromium expose the same public inventory", () => {
+  const mobileChromium = listKeys([
+    "test",
+    "--project=mobile-chromium",
+    "--retries=0",
+  ]);
+  const mobileWebKit = listKeys([
+    "test",
+    "--project=mobile-webkit",
+    "--retries=0",
+  ]);
+
+  assert.equal(new Set(mobileChromium).size, mobileChromium.length);
+  assert.equal(new Set(mobileWebKit).size, mobileWebKit.length);
+  assert.deepEqual([...mobileWebKit].sort(), [...mobileChromium].sort());
 });
 
 test("all mode adds the provider-free authentication scaffold", () => {

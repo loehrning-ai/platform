@@ -21,17 +21,11 @@ describe("HeroSection learning-platform positioning", () => {
       screen.getByRole("heading", { name: "Understand AI. Apply it safely." }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(
-        /Four foundation-path readers require a free learning account/,
-      ),
+      screen.getByText(/Commit to a decision\. Test it against a model/),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /Open AI check/i }),
-    ).toHaveAttribute("href", "/en/ki-check");
-    expect(screen.getByRole("link", { name: /Open Source/i })).toHaveAttribute(
-      "href",
-      "/en/open-source",
-    );
+      screen.getByRole("link", { name: /Choose a learning route/i }),
+    ).toHaveAttribute("href", "/en/kurse");
     expect(container.textContent).not.toMatch(
       /\b(?:verstehen|Sicher anwenden|Kostenfreie|Kurse|Bücher|Deutsch|Quellenstand|Öffnen)\b/,
     );
@@ -55,19 +49,24 @@ describe("HeroSection learning-platform positioning", () => {
     // regression here would otherwise ship silently.
     expect(
       screen.getAllByRole("link").map((a) => a.getAttribute("href")),
-    ).toEqual(expect.arrayContaining(["/en/kurse", "/en/demos", "/en/workshops"]));
+    ).toEqual(
+      expect.arrayContaining(["/en/kurse", "/en/demos", "/en/workshops"]),
+    );
   });
 
-  it("renders an in-flow primary CTA linking to the diagnostic start", () => {
+  it("renders one in-flow primary CTA linking to the course atlas", () => {
     render(<HeroSection />);
-    const cta = screen.getByRole("link", { name: /KI-Check öffnen/i });
-    expect(cta).toHaveAttribute("href", "/ki-check");
+    const cta = screen.getByRole("link", { name: /Lernroute wählen/i });
+    expect(cta).toHaveAttribute("href", "/kurse");
+    expect(
+      screen.queryByRole("link", { name: /Open Source/i }),
+    ).not.toBeInTheDocument();
   });
 
   it("renders the above-fold introduction without a delayed clipping reveal", () => {
     render(<HeroSection />);
     const introduction = screen.getByText(
-      /Kostenfreie Kurse, Demos, Bücher und Workshops/,
+      /Wähle ein Ziel\. Triff eine Entscheidung/,
     );
 
     expect(introduction.tagName).toBe("P");

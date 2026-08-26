@@ -18,17 +18,17 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function LoginPage({
   searchParams,
 }: {
-  readonly searchParams: Promise<{ readonly next?: string; readonly reason?: string }>;
+  readonly searchParams: Promise<{
+    readonly next?: string;
+    readonly reason?: string;
+  }>;
 }) {
   const [params, locale, auth] = await Promise.all([
     searchParams,
     getRequestLocale(),
     getAuthenticatedUser(),
   ]);
-  const next = localizeHref(
-    sanitizeNextPath(params.next ?? "/konto"),
-    locale,
-  );
+  const next = localizeHref(sanitizeNextPath(params.next ?? "/konto"), locale);
   const { configured, user, error: authError } = auth;
   const runtime = getRuntimeFeatures();
   const copy = LOGIN_COPY[locale];
@@ -39,23 +39,49 @@ export default async function LoginPage({
   const loginAvailable = magicLinkReady || googleReady;
   if (accountReady && user) redirect(next);
 
+  const loginForm = (
+    <LoginForm
+      next={next}
+      accountReady={accountReady}
+      magicLinkReady={magicLinkReady}
+      googleReady={googleReady}
+      turnstileSiteKey={runtime.turnstileSiteKey}
+      locale={locale}
+      unavailableReason={
+        authError
+          ? "outage"
+          : configured && !runtime.account
+            ? "configuration"
+            : accountReady && !loginAvailable
+              ? "methods"
+              : "disabled"
+      }
+    />
+  );
+
   return (
-    <section className="min-h-[calc(100svh-4rem)] py-12 sm:py-16 lg:py-20">
+    <section className="min-h-[calc(100svh-4rem)] py-8 sm:py-10">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="grid min-w-0 items-start gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)] lg:gap-16">
+        <div
+          className={
+            loginAvailable
+              ? "grid min-w-0 items-start gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(22rem,0.9fr)] lg:gap-8"
+              : "min-w-0 max-w-3xl"
+          }
+        >
           <div className="min-w-0">
-            <div className="h-[3px] w-24 bg-brand-orange sm:w-28" />
-            <p className="mt-7 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange sm:mt-8 sm:tracking-[0.18em]">
+            <div className="h-[3px] w-16 bg-brand-orange" />
+            <p className="mt-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
               {copy.eyebrow}
             </p>
-            <h1 className="mt-5 max-w-3xl break-words text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-foreground sm:text-6xl lg:text-7xl">
+            <h1 className="mt-3 max-w-3xl break-words text-[clamp(2.25rem,4vw,4rem)] font-bold leading-[0.98] tracking-[-0.04em] text-foreground">
               {authError
                 ? copy.heading.outage
                 : loginAvailable
                   ? copy.heading.available
                   : copy.heading.unavailable}
             </h1>
-            <p className="mt-6 max-w-2xl break-words text-base leading-relaxed text-muted-foreground sm:text-lg">
+            <p className="mt-4 max-w-2xl break-words text-base leading-relaxed text-muted-foreground">
               {copy.introduction.publicAccess}{" "}
               {authError
                 ? copy.introduction.outage
@@ -69,29 +95,14 @@ export default async function LoginPage({
             {params.reason ? (
               <div
                 role="alert"
-                className="mt-7 max-w-2xl break-words border-l-4 border-brand-orange bg-card p-4 text-sm leading-relaxed text-muted-foreground sm:p-5"
+                className="mt-4 max-w-2xl break-words border border-border border-l-[3px] border-l-brand-orange bg-card p-4 text-sm leading-relaxed text-muted-foreground"
               >
                 {loginReasonMessage(params.reason, loginAvailable, locale)}
               </div>
             ) : null}
+            {!loginAvailable ? <div className="mt-5">{loginForm}</div> : null}
           </div>
-          <LoginForm
-            next={next}
-            accountReady={accountReady}
-            magicLinkReady={magicLinkReady}
-            googleReady={googleReady}
-            turnstileSiteKey={runtime.turnstileSiteKey}
-            locale={locale}
-            unavailableReason={
-              authError
-                ? "outage"
-                : configured && !runtime.account
-                  ? "configuration"
-                  : accountReady && !loginAvailable
-                    ? "methods"
-                    : "disabled"
-            }
-          />
+          {loginAvailable ? loginForm : null}
         </div>
       </div>
     </section>

@@ -246,7 +246,7 @@ export function StackFlow({ lessonId, cpId }: StackFlowProps): JSX.Element {
 
   return (
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-4 sm:p-5 md:p-6">
-      <p className="mb-4 font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-orange">
+      <p className="mb-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
         {locale === "de"
           ? "Modell · Der Datenfluss"
           : "Model · The stack, in motion"}{" "}
@@ -273,10 +273,10 @@ export function StackFlow({ lessonId, cpId }: StackFlowProps): JSX.Element {
                 }}
                 className="flex flex-1 flex-col justify-center gap-0.5 rounded-sm border border-border bg-background px-2 py-1"
               >
-                <span className="font-mono text-[9px] text-muted-foreground">
+                <span className="font-mono text-xs text-muted-foreground">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className="break-words text-[11px] font-semibold text-foreground">
+                <span className="break-words text-xs font-semibold text-foreground">
                   {locale === "de"
                     ? [
                         "Quelle",
@@ -310,7 +310,7 @@ export function StackFlow({ lessonId, cpId }: StackFlowProps): JSX.Element {
         <button
           type="button"
           onClick={() => fire(1)}
-          className="border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90"
+          className="min-h-11 border-2 border-foreground bg-brand-orange px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-white hover:opacity-90"
         >
           {locale === "de" ? "1 Ereignis verfolgen" : "▶ trace 1 event"}
         </button>
@@ -318,7 +318,7 @@ export function StackFlow({ lessonId, cpId }: StackFlowProps): JSX.Element {
           type="button"
           onClick={burst}
           className={cn(
-            "border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60",
+            "min-h-11 border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60",
           )}
         >
           {locale === "de" ? "10 Ereignisse" : "▶▶ burst"}
@@ -326,11 +326,11 @@ export function StackFlow({ lessonId, cpId }: StackFlowProps): JSX.Element {
         <button
           type="button"
           onClick={storm}
-          className="border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
+          className="min-h-11 border-2 border-border bg-background px-3 py-1.5 font-mono text-[12px] font-bold uppercase tracking-wide text-foreground hover:border-brand-orange/60"
         >
           {locale === "de" ? "40 Ereignisse" : "⚡ storm"}
         </button>
-        <span className="min-w-0 max-w-full break-words font-mono text-[11px] text-muted-foreground">
+        <span className="min-w-0 max-w-full break-words font-mono text-xs text-muted-foreground">
           {locale === "de" ? "verarbeitet" : "processed"}{" "}
           <b className="text-foreground">{counts.n}</b> ·{" "}
           {locale === "de" ? "im Fluss" : "flowing"}{" "}

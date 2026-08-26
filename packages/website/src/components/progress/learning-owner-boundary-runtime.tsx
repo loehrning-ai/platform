@@ -21,9 +21,8 @@ export function LearningOwnerBoundaryRuntime() {
   const pathname = usePathname();
   const locale = useLocale();
   const navModalOpen = useNavModalOpen();
-  // Unknown is the fail-closed server state. The compact prompt is fixed so a
-  // returning anonymous/account learner does not see course content jump when
-  // hydration resolves the owner and removes it.
+  // Unknown is the fail-closed server state. The prompt stays in document flow
+  // so it cannot cover the first learning action or an active simulator.
   const [owner, setOwner] = useState<LearningOwnerContext>({
     kind: "unknown",
     generation: 0,
@@ -45,7 +44,7 @@ export function LearningOwnerBoundaryRuntime() {
           data-learning-owner-panel
           aria-labelledby="learning-owner-title"
           aria-live="polite"
-          className={`fixed bottom-24 left-3 right-3 z-50 border-2 border-brand-orange bg-background px-3 py-2 shadow-[4px_4px_0_0_var(--color-foreground)] sm:bottom-4 sm:left-auto sm:right-4 sm:w-[min(28rem,calc(100vw-2rem))] sm:px-4 ${navModalOpen ? "invisible pointer-events-none" : ""}`}
+          className={`relative z-20 border-b border-brand-orange bg-kupfer-mist px-4 py-2 sm:px-6 ${navModalOpen ? "invisible pointer-events-none" : ""}`}
           aria-hidden={navModalOpen || undefined}
           inert={navModalOpen || undefined}
           data-nav-menu-inert={navModalOpen ? "true" : undefined}
@@ -60,7 +59,7 @@ export function LearningOwnerBoundaryRuntime() {
                   ? "Fortschritt bleibt getrennt."
                   : "Progress stays isolated."}
               </p>
-              <p className="mt-0.5 hidden text-[11px] leading-snug text-muted-foreground sm:block">
+              <p className="mt-0.5 hidden text-xs leading-snug text-muted-foreground sm:block">
                 {locale === "de"
                   ? "Speichern beginnt erst nach Kontoprüfung oder deiner lokalen Wahl."
                   : "Saving starts only after account verification or your local choice."}
@@ -70,7 +69,7 @@ export function LearningOwnerBoundaryRuntime() {
               type="button"
               onClick={() => continueWithAnonymousProgress()}
               disabled={!hydrated}
-              className="min-h-11 shrink-0 border border-brand-orange bg-background px-3 py-2 text-[11px] font-bold uppercase tracking-[0.08em] text-foreground transition-colors hover:bg-brand-orange hover:text-white focus-visible:bg-brand-orange focus-visible:text-white disabled:cursor-wait disabled:border-border disabled:text-muted-foreground"
+              className="min-h-11 shrink-0 border border-brand-orange bg-background px-3 py-2 text-xs font-bold uppercase tracking-[0.08em] text-foreground transition-colors hover:bg-brand-orange hover:text-white focus-visible:bg-brand-orange focus-visible:text-white disabled:cursor-wait disabled:border-border disabled:text-muted-foreground"
             >
               {locale === "de" ? "Lokal weiterlernen" : "Continue locally"}
             </button>

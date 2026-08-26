@@ -11,9 +11,12 @@
 
 import type { CourseSlug } from "@/lib/course/types";
 import { COURSE_SLUGS } from "@/lib/course/types";
+import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
 import {
+  COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY,
   MAX_EXERCISE_SUMMARY_BYTES,
   UNIFIED_SCHEMA_VERSION,
+  legacyCompletionEvidenceCheckpointKey,
   normalizeWorkshopQuizScore,
   truncateToByteLength,
   type UnifiedCourseSlice,
@@ -39,7 +42,9 @@ export function freshUnified(): UnifiedProgress {
     schemaVersion: UNIFIED_SCHEMA_VERSION,
     courses: {},
     xp: 0,
-    checkpoints: {},
+    // New stores are born after the evidence cutover. Only persisted stores
+    // without this marker are eligible for historical-completion migration.
+    checkpoints: { [COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY]: true },
     badges: {},
     streak: { days: 0, last: null },
     lastActivity: nowIso(),
@@ -55,7 +60,10 @@ function coerceLesson(raw: unknown): UnifiedLessonProgress | null {
     ? (r.sectionsRead.filter((s) => typeof s === "string") as string[])
     : [];
   const exercisesCompleted: Record<string, UnifiedExerciseResult> = {};
-  if (typeof r.exercisesCompleted === "object" && r.exercisesCompleted !== null) {
+  if (
+    typeof r.exercisesCompleted === "object" &&
+    r.exercisesCompleted !== null
+  ) {
     for (const [exId, exRaw] of Object.entries(
       r.exercisesCompleted as Record<string, unknown>,
     )) {
@@ -67,8 +75,7 @@ function coerceLesson(raw: unknown): UnifiedLessonProgress | null {
         completed: ex.completed === true,
         score: typeof ex.score === "number" ? ex.score : null,
         attempts: typeof ex.attempts === "number" ? ex.attempts : 0,
-        completedAt:
-          typeof ex.completedAt === "string" ? ex.completedAt : null,
+        completedAt: typeof ex.completedAt === "string" ? ex.completedAt : null,
         skipped: ex.skipped === true,
       };
     }
@@ -166,22 +173,100 @@ export function migrateLegacyToUnified(): UnifiedProgress {
     }
   }
 
-  return { ...unified, courses };
+  return upgradeHistoricalCompletionEvidence(
+    { ...unified, courses },
+    { force: true },
+  );
+}
+
+interface HistoricalCompletionUpgradeOptions {
+  /** Legacy-key migration starts from a fresh post-cutover root and must scan anyway. */
+  readonly force?: boolean;
+}
+
+function isHistoricalCompletionEpochEligible(
+  slice: UnifiedCourseSlice,
+): boolean {
+  if (!slice.resetAt) return true;
+
+  const resetTime = Date.parse(slice.resetAt);
+  const startedTime = Date.parse(slice.startedAt);
+  const lastActivityTime = Date.parse(slice.lastActivity);
+  return (
+    Number.isFinite(resetTime) &&
+    startedTime === resetTime &&
+    lastActivityTime >= resetTime
+  );
+}
+
+/**
+ * Grandfather canonical lesson completions that existed before the evidence
+ * cutover. The reserved cutover key makes this one-way and idempotent: a raw
+ * completion bit written by current code after cutover never gains a legacy
+ * marker on reload or sync. Reset-stamped slices are eligible only when their
+ * timestamps identify the active reset epoch; their per-lesson markers include
+ * that epoch so grow-only sync metadata cannot resurrect an older completion.
+ */
+export function upgradeHistoricalCompletionEvidence(
+  progress: UnifiedProgress,
+  options: HistoricalCompletionUpgradeOptions = {},
+): UnifiedProgress {
+  if (
+    !options.force &&
+    progress.checkpoints[COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY] === true
+  ) {
+    return progress;
+  }
+
+  let changed =
+    progress.checkpoints[COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY] !== true;
+  const checkpoints: Record<string, boolean> = {
+    ...progress.checkpoints,
+    [COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY]: true,
+  };
+
+  for (const slug of COURSE_SLUGS) {
+    const slice = progress.courses[slug];
+    if (!slice || !isHistoricalCompletionEpochEligible(slice)) continue;
+
+    for (const lessonId of CANONICAL_LESSON_IDS[slug]) {
+      if (slice.lessons[lessonId]?.completed !== true) continue;
+      const key = legacyCompletionEvidenceCheckpointKey(
+        slug,
+        lessonId,
+        slice.resetAt,
+      );
+      if (checkpoints[key] === true) continue;
+      checkpoints[key] = true;
+      changed = true;
+    }
+  }
+
+  return changed ? { ...progress, checkpoints } : progress;
 }
 
 // ─── v2->v3 migration step ────────────────────
 
-function truncateExerciseResult(result: UnifiedExerciseResult): UnifiedExerciseResult {
+function truncateExerciseResult(
+  result: UnifiedExerciseResult,
+): UnifiedExerciseResult {
   if (result.summary === undefined) return result;
-  const truncated = truncateToByteLength(result.summary, MAX_EXERCISE_SUMMARY_BYTES);
+  const truncated = truncateToByteLength(
+    result.summary,
+    MAX_EXERCISE_SUMMARY_BYTES,
+  );
   if (truncated === result.summary) return result;
   return { ...result, summary: truncated };
 }
 
-function truncateLessonSummaries(lesson: UnifiedLessonProgress): UnifiedLessonProgress {
+function truncateLessonSummaries(
+  lesson: UnifiedLessonProgress,
+): UnifiedLessonProgress {
   let changed = false;
   const exercisesCompleted: Record<string, UnifiedExerciseResult> = {};
-  for (const [exerciseId, result] of Object.entries(lesson.exercisesCompleted)) {
+  for (const [exerciseId, result] of Object.entries(
+    lesson.exercisesCompleted,
+  )) {
     const next = truncateExerciseResult(result);
     exercisesCompleted[exerciseId] = next;
     if (next !== result) changed = true;
@@ -208,7 +293,9 @@ function truncateSliceSummaries(slice: UnifiedCourseSlice): UnifiedCourseSlice {
  * truncation. Wired into store.ts's `parseUnified()` and server-sync.ts's
  * `mergeUnifiedProgress()` (both real read paths), not just tested standalone.
  */
-export function truncateExerciseSummaries(progress: UnifiedProgress): UnifiedProgress {
+export function truncateExerciseSummaries(
+  progress: UnifiedProgress,
+): UnifiedProgress {
   let changed = false;
   const courses: Partial<Record<CourseSlug, UnifiedCourseSlice>> = {};
   for (const [slug, slice] of Object.entries(progress.courses) as [
