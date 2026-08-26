@@ -216,7 +216,7 @@ function WieKiLektionContent({
         </nav>
 
         <article className="min-w-0">
-          <header className="min-w-0 border-y-2 border-foreground py-4 sm:py-5">
+          <header className="min-w-0 border-y-2 border-foreground py-2 sm:py-5">
             <p className="break-words font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
               {copy.lessonProgress(
                 lektion.number,
@@ -233,7 +233,7 @@ function WieKiLektionContent({
           </header>
 
           {check ? (
-            <div className="mt-3 max-w-3xl [&_.font-mono]:!text-xs [&>section]:!border-x-0 [&>section]:!shadow-none">
+            <div className="mt-1 max-w-3xl sm:mt-3 [&_.font-mono]:!text-xs [&>section]:!border-x-0 [&>section]:!shadow-none">
               <ComprehensionCheck
                 id={lektion.id}
                 question={check.question}

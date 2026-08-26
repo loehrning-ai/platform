@@ -1525,7 +1525,8 @@
   font-family: var(--font-mono);
   font-size: 10.5px;
   font-weight: 600;
-  color: var(--hue-ink, var(--hue, var(--violet)));
+  /* Course hues distinguish stages; action text must retain AA contrast. */
+  color: var(--ink-1);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-top: 10px;
@@ -3077,7 +3078,7 @@
 }
 .ds-v8-scope .ov-hero {
   gap: 48px;
-  padding: 48px 0;
+  padding: 36px 0;
   margin-bottom: 48px;
 }
 .ds-v8-scope .ov-cta-band {
@@ -3094,7 +3095,7 @@
 @media (max-width: 520px) {
   .ds-v8-scope .ov-hero {
     gap: 32px;
-    padding: 32px 0;
+    padding: 20px 0;
   }
   .ds-v8-scope .ov-cta-band {
     padding: 32px 20px;
